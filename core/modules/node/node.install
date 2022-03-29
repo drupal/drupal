@@ -19,7 +19,7 @@ function node_requirements($phase) {
     // in the {node_access} table, or if there are modules that
     // implement hook_node_grants().
     $grant_count = \Drupal::entityTypeManager()->getAccessControlHandler('node')->countGrants();
-    if ($grant_count != 1 || count(\Drupal::moduleHandler()->getImplementations('node_grants')) > 0) {
+    if ($grant_count != 1 || \Drupal::moduleHandler()->hasImplementations('node_grants')) {
       $value = \Drupal::translation()->formatPlural($grant_count, 'One permission in use', '@count permissions in use', ['@count' => $grant_count]);
     }
     else {

@@ -526,9 +526,6 @@ class ConfigEntityStorageTest extends UnitTestCase {
       ->willReturn($config_object->reveal());
     $this->configFactory->rename(Argument::cetera())->shouldNotBeCalled();
 
-    $this->moduleHandler->getImplementations('entity_load')->willReturn([]);
-    $this->moduleHandler->getImplementations('test_entity_type_load')->willReturn([]);
-
     $this->entityQuery->condition('uuid', 'baz')->willReturn($this->entityQuery);
     $this->entityQuery->execute()->willReturn(['foo']);
 
@@ -557,9 +554,6 @@ class ConfigEntityStorageTest extends UnitTestCase {
 
     $this->configFactory->loadMultiple(['the_provider.the_config_prefix.foo'])
       ->willReturn([$config_object->reveal()]);
-
-    $this->moduleHandler->getImplementations('entity_load')->willReturn([]);
-    $this->moduleHandler->getImplementations('test_entity_type_load')->willReturn([]);
 
     $entity = $this->entityStorage->load('foo');
     $this->assertInstanceOf(EntityInterface::class, $entity);
@@ -598,9 +592,6 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $this->configFactory->loadMultiple(['the_provider.the_config_prefix.foo', 'the_provider.the_config_prefix.bar'])
       ->willReturn([$foo_config_object->reveal(), $bar_config_object->reveal()]);
 
-    $this->moduleHandler->getImplementations('entity_load')->willReturn([]);
-    $this->moduleHandler->getImplementations('test_entity_type_load')->willReturn([]);
-
     $entities = $this->entityStorage->loadMultiple();
     $expected['foo'] = 'foo';
     $expected['bar'] = 'bar';
@@ -628,9 +619,6 @@ class ConfigEntityStorageTest extends UnitTestCase {
 
     $this->configFactory->loadMultiple(['the_provider.the_config_prefix.foo'])
       ->willReturn([$config_object->reveal()]);
-
-    $this->moduleHandler->getImplementations('entity_load')->willReturn([]);
-    $this->moduleHandler->getImplementations('test_entity_type_load')->willReturn([]);
 
     $entities = $this->entityStorage->loadMultiple(['foo']);
     $this->assertContainsOnlyInstancesOf(EntityInterface::class, $entities);
@@ -703,7 +691,6 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @covers ::doDelete
    */
   public function testDeleteNothing() {
-    $this->moduleHandler->getImplementations(Argument::cetera())->shouldNotBeCalled();
     $this->moduleHandler->invokeAll(Argument::cetera())->shouldNotBeCalled();
 
     $this->configFactory->get(Argument::cetera())->shouldNotBeCalled();

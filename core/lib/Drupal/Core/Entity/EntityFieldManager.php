@@ -282,9 +282,10 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     }
 
     // Retrieve base field definitions from modules.
-    foreach ($this->moduleHandler->getImplementations('entity_base_field_info') as $module) {
-      $module_definitions = $this->moduleHandler->invoke($module, 'entity_base_field_info', [$entity_type]);
-      if (!empty($module_definitions)) {
+    $this->moduleHandler->invokeAllWith(
+      'entity_base_field_info',
+      function (callable $hook, string $module) use (&$base_field_definitions, $entity_type) {
+        $module_definitions = $hook($entity_type) ?? [];
         // Ensure the provider key actually matches the name of the provider
         // defining the field.
         foreach ($module_definitions as $field_name => $definition) {
@@ -296,7 +297,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
           $base_field_definitions[$field_name] = $definition;
         }
       }
-    }
+    );
 
     // Automatically set the field name, target entity type and bundle
     // for non-configurable fields.
@@ -404,9 +405,10 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     }
 
     // Retrieve base field definitions from modules.
-    foreach ($this->moduleHandler->getImplementations('entity_bundle_field_info') as $module) {
-      $module_definitions = $this->moduleHandler->invoke($module, 'entity_bundle_field_info', [$entity_type, $bundle, $base_field_definitions]);
-      if (!empty($module_definitions)) {
+    $this->moduleHandler->invokeAllWith(
+      'entity_bundle_field_info',
+      function (callable $hook, string $module) use (&$bundle_field_definitions, $entity_type, $bundle, $base_field_definitions) {
+        $module_definitions = $hook($entity_type, $bundle, $base_field_definitions) ?? [];
         // Ensure the provider key actually matches the name of the provider
         // defining the field.
         foreach ($module_definitions as $field_name => $definition) {
@@ -418,7 +420,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
           $bundle_field_definitions[$field_name] = $definition;
         }
       }
-    }
+    );
 
     // Automatically set the field name, target entity type and bundle
     // for non-configurable fields.
@@ -580,9 +582,10 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     $field_definitions = [];
 
     // Retrieve base field definitions from modules.
-    foreach ($this->moduleHandler->getImplementations('entity_field_storage_info') as $module) {
-      $module_definitions = $this->moduleHandler->invoke($module, 'entity_field_storage_info', [$entity_type]);
-      if (!empty($module_definitions)) {
+    $this->moduleHandler->invokeAllWith(
+      'entity_field_storage_info',
+      function (callable $hook, string $module) use (&$field_definitions, $entity_type, $entity_type_id) {
+        $module_definitions = $hook($entity_type) ?? [];
         // Ensure the provider key actually matches the name of the provider
         // defining the field.
         foreach ($module_definitions as $field_name => $definition) {
@@ -596,7 +599,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
           $field_definitions[$field_name] = $definition;
         }
       }
-    }
+    );
 
     // Invoke alter hook.
     $this->moduleHandler->alter('entity_field_storage_info', $field_definitions, $entity_type);

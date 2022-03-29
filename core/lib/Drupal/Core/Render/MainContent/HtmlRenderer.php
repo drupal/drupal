@@ -307,10 +307,12 @@ class HtmlRenderer implements MainContentRendererInterface {
   public function invokePageAttachmentHooks(array &$page) {
     // Modules can add attachments.
     $attachments = [];
-    foreach ($this->moduleHandler->getImplementations('page_attachments') as $module) {
-      $function = $module . '_page_attachments';
-      $function($attachments);
-    }
+    $this->moduleHandler->invokeAllWith(
+      'page_attachments',
+      function (callable $hook, string $module) use (&$attachments) {
+        $hook($attachments);
+      }
+    );
     if (array_diff(array_keys($attachments), ['#attached', '#cache']) !== []) {
       throw new \LogicException('Only #attached and #cache may be set in hook_page_attachments().');
     }
@@ -346,14 +348,18 @@ class HtmlRenderer implements MainContentRendererInterface {
     // Modules can add render arrays to the top and bottom of the page.
     $page_top = [];
     $page_bottom = [];
-    foreach ($this->moduleHandler->getImplementations('page_top') as $module) {
-      $function = $module . '_page_top';
-      $function($page_top);
-    }
-    foreach ($this->moduleHandler->getImplementations('page_bottom') as $module) {
-      $function = $module . '_page_bottom';
-      $function($page_bottom);
-    }
+    $this->moduleHandler->invokeAllWith(
+      'page_top',
+      function (callable $hook, string $module) use (&$page_top) {
+        $hook($page_top);
+      }
+    );
+    $this->moduleHandler->invokeAllWith(
+      'page_bottom',
+      function (callable $hook, string $module) use (&$page_bottom) {
+        $hook($page_bottom);
+      }
+    );
     if (!empty($page_top)) {
       $html['page_top'] = $page_top;
     }

@@ -43,8 +43,7 @@ class NodeAccessCacheabilityWithNodeGrants extends BrowserTestBase {
     // Check that at least one module implements hook_node_grants() as this test
     // only tests this case.
     // @see \node_test_node_grants()
-    $node_grants_implementations = \Drupal::moduleHandler()->getImplementations('node_grants');
-    $this->assertNotEmpty($node_grants_implementations);
+    $this->assertTrue(\Drupal::moduleHandler()->hasImplementations('node_grants'));
 
     // Create an unpublished node.
     $referenced = $this->createNode(['status' => FALSE]);

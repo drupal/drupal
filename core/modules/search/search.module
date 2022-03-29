@@ -243,9 +243,12 @@ function search_index_split($text, $langcode = NULL) {
  */
 function search_invoke_preprocess(&$text, $langcode = NULL) {
   @trigger_error('search_invoke_preprocess() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use a custom implementation of SearchTextProcessorInterface instead. See https://www.drupal.org/node/3078162', E_USER_DEPRECATED);
-  foreach (\Drupal::moduleHandler()->getImplementations('search_preprocess') as $module) {
-    $text = \Drupal::moduleHandler()->invoke($module, 'search_preprocess', [$text, $langcode]);
-  }
+  \Drupal::moduleHandler()->invokeAllWith(
+    'search_preprocess',
+    function (callable $hook, string $module) use (&$text, &$langcode) {
+      $text = $hook($text, $langcode);
+    }
+  );
 }
 
 /**

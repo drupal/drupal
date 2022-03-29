@@ -352,9 +352,9 @@ class Registry implements DestructableInterface {
       $cache = $cached->data;
     }
     else {
-      foreach ($this->moduleHandler->getImplementations('theme') as $module) {
+      $this->moduleHandler->invokeAllWith('theme', function (callable $callback, string $module) use (&$cache) {
         $this->processExtension($cache, $module, 'module', $module, $this->moduleList->getPath($module));
-      }
+      });
       // Only cache this registry if all modules are loaded.
       if ($this->moduleHandler->isLoaded()) {
         $this->cache->set("theme_registry:build:modules", $cache, Cache::PERMANENT, ['theme_registry']);

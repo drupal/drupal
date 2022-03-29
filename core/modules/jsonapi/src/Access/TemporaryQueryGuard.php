@@ -442,14 +442,17 @@ class TemporaryQueryGuard {
     // hook_jsonapi_ENTITY_TYPE_filter_access() for each module and merge its
     // results with the combined results.
     foreach (['jsonapi_entity_filter_access', 'jsonapi_' . $entity_type->id() . '_filter_access'] as $hook) {
-      foreach (static::$moduleHandler->getImplementations($hook) as $module) {
-        $module_access_results = static::$moduleHandler->invoke($module, $hook, [$entity_type, $account]);
-        if ($module_access_results) {
-          foreach ($module_access_results as $subset => $access_result) {
-            $combined_access_results[$subset] = $combined_access_results[$subset]->orIf($access_result);
+      static::$moduleHandler->invokeAllWith(
+        $hook,
+        function (callable $hook, string $module) use (&$combined_access_results, $entity_type, $account) {
+          $module_access_results = $hook($entity_type, $account);
+          if ($module_access_results) {
+            foreach ($module_access_results as $subset => $access_result) {
+              $combined_access_results[$subset] = $combined_access_results[$subset]->orIf($access_result);
+            }
           }
         }
-      }
+      );
     }
 
     return $combined_access_results;
