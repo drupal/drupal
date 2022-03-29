@@ -139,7 +139,7 @@ class EntityFormDisplayAccessControlHandlerTest extends UnitTestCase {
     $this->moduleHandler = $this->createMock(ModuleHandlerInterface::class);
     $this->moduleHandler
       ->expects($this->any())
-      ->method('invokeAllWith')
+      ->method('getImplementations')
       ->will($this->returnValue([]));
     $this->moduleHandler
       ->expects($this->any())

@@ -113,20 +113,17 @@ function rdf_get_namespaces() {
   $namespaces = [];
   // In order to resolve duplicate namespaces by using the earliest defined
   // namespace, do not use \Drupal::moduleHandler()->invokeAll().
-  \Drupal::moduleHandler()->invokeAllWith(
-    'rdf_namespaces',
-    function (callable $hook, string $module) use (&$namespaces) {
-      $namespacesFromHook = $hook();
-      foreach ($namespacesFromHook as $prefix => $namespace) {
-        if (array_key_exists($prefix, $namespaces) && $namespace !== $namespaces[$prefix]) {
-          throw new Exception("Tried to map '$prefix' to '$namespace', but '$prefix' is already mapped to '{$namespaces[$prefix]}'.");
-        }
-        else {
-          $namespaces[$prefix] = $namespace;
-        }
+  foreach (\Drupal::moduleHandler()->getImplementations('rdf_namespaces') as $module) {
+    $function = $module . '_rdf_namespaces';
+    foreach ($function() as $prefix => $namespace) {
+      if (array_key_exists($prefix, $namespaces) && $namespace !== $namespaces[$prefix]) {
+        throw new Exception("Tried to map '$prefix' to '$namespace', but '$prefix' is already mapped to '{$namespaces[$prefix]}'.");
+      }
+      else {
+        $namespaces[$prefix] = $namespace;
       }
     }
-  );
+  }
   return $namespaces;
 }
 

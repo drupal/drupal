@@ -325,7 +325,6 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function getImplementations($hook) {
-    @trigger_error('ModuleHandlerInterface::getImplementations() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Instead you should use ModuleHandlerInterface::invokeAllWith() for hook invocations, or you should use ModuleHandlerInterface::hasImplementations() to determine if hooks implementations exist. See https://www.drupal.org/node/3000490', E_USER_DEPRECATED);
     $implementations = $this->getImplementationInfo($hook);
     return array_keys($implementations);
   }
@@ -356,8 +355,8 @@ class ModuleHandler implements ModuleHandlerInterface {
     // when non-database caching backends are used, so there will be more
     // significant gains when a large number of modules are installed or hooks
     // invoked, since this can quickly lead to
-    // \Drupal::moduleHandler()->hasImplementations() being called several
-    // thousand times per request.
+    // \Drupal::moduleHandler()->implementsHook() being called several thousand
+    // times per request.
     $this->cacheBackend->set('module_implements', []);
     $this->cacheBackend->delete('hook_info');
   }
@@ -365,56 +364,32 @@ class ModuleHandler implements ModuleHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function hasImplementations(string $hook, $modules = NULL): bool {
-    if ($modules !== NULL) {
-      foreach ((array) $modules as $module) {
-        // Hook implementations usually found in a module's .install file are
-        // not stored in the implementation info cache. In order to invoke hooks
-        // like hook_schema() and hook_requirements() the module's .install file
-        // must be included by the calling code. Additionally, this check avoids
-        // unnecessary work when a hook implementation is present in a module's
-        // .module file.
-        if (function_exists($module . '_' . $hook)) {
-          return TRUE;
-        }
-      }
-    }
-
-    $implementations = $this->getImplementationInfo($hook);
-    if ($modules === NULL && !empty($implementations)) {
+  public function implementsHook($module, $hook) {
+    $function = $module . '_' . $hook;
+    if (function_exists($function)) {
       return TRUE;
     }
-
-    return !empty(array_intersect((array) $modules, array_keys($implementations)));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function implementsHook($module, $hook) {
-    @trigger_error('ModuleHandlerInterface::implementsHook() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Instead you should use ModuleHandlerInterface::hasImplementations()  with the $modules argument. See https://www.drupal.org/node/3000490', E_USER_DEPRECATED);
-    return $this->hasImplementations($hook, $module);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function invokeAllWith(string $hook, callable $callback): void {
-    foreach (array_keys($this->getImplementationInfo($hook)) as $module) {
-      $hookInvoker = \Closure::fromCallable($module . '_' . $hook);
-      $callback($hookInvoker, $module);
+    // If the hook implementation does not exist, check whether it lives in an
+    // optional include file registered via hook_hook_info().
+    $hook_info = $this->getHookInfo();
+    if (isset($hook_info[$hook]['group'])) {
+      $this->loadInclude($module, 'inc', $module . '.' . $hook_info[$hook]['group']);
+      if (function_exists($function)) {
+        return TRUE;
+      }
     }
+    return FALSE;
   }
 
   /**
    * {@inheritdoc}
    */
   public function invoke($module, $hook, array $args = []) {
-    if (!$this->hasImplementations($hook, $module)) {
+    if (!$this->implementsHook($module, $hook)) {
       return;
     }
-    $hookInvoker = \Closure::fromCallable($module . '_' . $hook);
-    return call_user_func_array($hookInvoker, $args);
+    $function = $module . '_' . $hook;
+    return call_user_func_array($function, $args);
   }
 
   /**
@@ -422,15 +397,18 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   public function invokeAll($hook, array $args = []) {
     $return = [];
-    $this->invokeAllWith($hook, function (callable $hook, string $module) use ($args, &$return) {
-      $result = call_user_func_array($hook, $args);
+    $implementations = $this->getImplementations($hook);
+    foreach ($implementations as $module) {
+      $function = $module . '_' . $hook;
+      $result = call_user_func_array($function, $args);
       if (isset($result) && is_array($result)) {
         $return = NestedArray::mergeDeep($return, $result);
       }
       elseif (isset($result)) {
         $return[] = $result;
       }
-    });
+    }
+
     return $return;
   }
 
@@ -500,10 +478,10 @@ class ModuleHandler implements ModuleHandlerInterface {
     if (!isset($this->alterFunctions[$cid])) {
       $this->alterFunctions[$cid] = [];
       $hook = $type . '_alter';
-      $modules = array_keys($this->getImplementationInfo($hook));
+      $modules = $this->getImplementations($hook);
       if (!isset($extra_types)) {
         // For the more common case of a single hook, we do not need to call
-        // function_exists(), since $this->getImplementationInfo() returns only
+        // function_exists(), since $this->getImplementations() returns only
         // modules with implementations.
         foreach ($modules as $module) {
           $this->alterFunctions[$cid][] = $module . '_' . $hook;
@@ -514,21 +492,21 @@ class ModuleHandler implements ModuleHandlerInterface {
         // implements at least one of them.
         $extra_modules = [];
         foreach ($extra_types as $extra_type) {
-          $extra_modules[] = array_keys($this->getImplementationInfo($extra_type . '_alter'));
+          $extra_modules[] = $this->getImplementations($extra_type . '_alter');
         }
         $extra_modules = array_merge([], ...$extra_modules);
         // If any modules implement one of the extra hooks that do not implement
         // the primary hook, we need to add them to the $modules array in their
-        // appropriate order. $this->getImplementationInfo() can only return
+        // appropriate order. $this->getImplementations() can only return
         // ordered implementations of a single hook. To get the ordered
         // implementations of multiple hooks, we mimic the
-        // $this->getImplementationInfo() logic of first ordering by
+        // $this->getImplementations() logic of first ordering by
         // $this->getModuleList(), and then calling
         // $this->alter('module_implements').
         if (array_diff($extra_modules, $modules)) {
           // Merge the arrays and order by getModuleList().
           $modules = array_intersect(array_keys($this->moduleList), array_merge($modules, $extra_modules));
-          // Since $this->getImplementationInfo() already took care of loading the
+          // Since $this->getImplementations() already took care of loading the
           // necessary include files, we can safely pass FALSE for the array
           // values.
           $implementations = array_fill_keys($modules, FALSE);

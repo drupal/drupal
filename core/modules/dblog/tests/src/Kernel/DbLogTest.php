@@ -44,16 +44,10 @@ class DbLogTest extends KernelTestBase {
     $this->assertGreaterThan($row_limit, $count, new FormattableMarkup('Dblog row count of @count exceeds row limit of @limit', ['@count' => $count, '@limit' => $row_limit]));
 
     // Get the number of enabled modules. Cron adds a log entry for each module.
-    $implementation_count = 0;
-    \Drupal::moduleHandler()->invokeAllWith(
-      'cron',
-      function (callable $hook, string $module) use (&$implementation_count) {
-        $implementation_count++;
-      }
-    );
-
+    $list = $this->container->get('module_handler')->getImplementations('cron');
+    $module_count = count($list);
     $cron_detailed_count = $this->runCron();
-    $this->assertEquals($implementation_count + 2, $cron_detailed_count, new FormattableMarkup('Cron added @count of @expected new log entries', ['@count' => $cron_detailed_count, '@expected' => $implementation_count + 2]));
+    $this->assertEquals($module_count + 2, $cron_detailed_count, new FormattableMarkup('Cron added @count of @expected new log entries', ['@count' => $cron_detailed_count, '@expected' => $module_count + 2]));
 
     // Test disabling of detailed cron logging.
     $this->config('system.cron')->set('logging', 0)->save();

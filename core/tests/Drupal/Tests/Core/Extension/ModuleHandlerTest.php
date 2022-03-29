@@ -306,78 +306,36 @@ class ModuleHandlerTest extends UnitTestCase {
   /**
    * Tests implementations methods when module is enabled.
    *
-   * @covers ::hasImplementations
+   * @covers ::implementsHook
    * @covers ::loadAllIncludes
    */
   public function testImplementsHookModuleEnabled() {
     $module_handler = $this->getModuleHandler();
-    $this->assertTrue($module_handler->hasImplementations('hook', 'module_handler_test'), 'Installed module implementation found.');
+    $this->assertTrue($module_handler->implementsHook('module_handler_test', 'hook'), 'Installed module implementation found.');
 
     $module_handler->addModule('module_handler_test_added', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_added');
-    $this->assertTrue($module_handler->hasImplementations('hook', 'module_handler_test_added'), 'Runtime added module with implementation in include found.');
+    $this->assertTrue($module_handler->implementsHook('module_handler_test_added', 'hook'), 'Runtime added module with implementation in include found.');
 
     $module_handler->addModule('module_handler_test_no_hook', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_no_hook');
-    $this->assertFalse($module_handler->hasImplementations('hook', 'module_handler_test_no_hook'), 'Missing implementation not found.');
-  }
-
-  /**
-   * Tests deprecation of the ::getImplementations method.
-   *
-   * @covers ::getImplementations
-   * @covers ::getImplementationInfo
-   * @covers ::buildImplementationInfo
-   *
-   * @group legacy
-   */
-  public function testGetImplementations() {
-    $this->expectDeprecation('ModuleHandlerInterface::getImplementations() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Instead you should use ModuleHandlerInterface::invokeAllWith() for hook invocations, or you should use ModuleHandlerInterface::hasImplementations() to determine if hooks implementations exist. See https://www.drupal.org/node/3000490');
-    $this->assertEquals(['module_handler_test'], $this->getModuleHandler()->getImplementations('hook'));
-  }
-
-  /**
-   * Tests deprecation of the ::implementsHook method.
-   *
-   * @covers ::implementsHook
-   *
-   * @group legacy
-   */
-  public function testImplementsHook() {
-    $this->expectDeprecation('ModuleHandlerInterface::implementsHook() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Instead you should use ModuleHandlerInterface::hasImplementations()  with the $modules argument. See https://www.drupal.org/node/3000490');
-    $this->assertTrue($this->getModuleHandler()->implementsHook('module_handler_test', 'hook'));
-  }
-
-  /**
-   * Tests hasImplementations.
-   *
-   * @covers ::hasImplementations
-   */
-  public function testHasImplementations() {
-    $module_handler = $this->getMockBuilder(ModuleHandler::class)
-      ->setConstructorArgs([$this->root, [], $this->cacheBackend])
-      ->onlyMethods(['buildImplementationInfo'])
-      ->getMock();
-    $module_handler->expects($this->exactly(2))
-      ->method('buildImplementationInfo')
-      ->with('hook')
-      ->willReturnOnConsecutiveCalls(
-        [],
-        ['mymodule' => FALSE],
-      );
-
-    // ModuleHandler::buildImplementationInfo mock returns no implementations.
-    $this->assertFalse($module_handler->hasImplementations('hook'));
-
-    // Reset static caches.
-    $module_handler->resetImplementations();
-
-    // ModuleHandler::buildImplementationInfo mock returns an implementation.
-    $this->assertTrue($module_handler->hasImplementations('hook'));
+    $this->assertFalse($module_handler->implementsHook('module_handler_test_no_hook', 'hook', [TRUE]), 'Missing implementation not found.');
   }
 
   /**
    * Tests getImplementations.
    *
-   * @covers ::invokeAllWith
+   * @covers ::getImplementations
+   * @covers ::getImplementationInfo
+   * @covers ::buildImplementationInfo
+   */
+  public function testGetImplementations() {
+    $this->assertEquals(['module_handler_test'], $this->getModuleHandler()->getImplementations('hook'));
+  }
+
+  /**
+   * Tests getImplementations.
+   *
+   * @covers ::getImplementations
+   * @covers ::getImplementationInfo
    */
   public function testCachedGetImplementations() {
     $this->cacheBackend->expects($this->exactly(1))
@@ -403,20 +361,14 @@ class ModuleHandlerTest extends UnitTestCase {
 
     $module_handler->expects($this->never())->method('buildImplementationInfo');
     $module_handler->expects($this->once())->method('loadInclude');
-    $implementors = [];
-    $module_handler->invokeAllWith(
-      'hook',
-      function (callable $hook, string $module) use (&$implementors) {
-        $implementors[] = $module;
-      }
-    );
-    $this->assertEquals(['module_handler_test'], $implementors);
+    $this->assertEquals(['module_handler_test'], $module_handler->getImplementations('hook'));
   }
 
   /**
    * Tests getImplementations.
    *
-   * @covers ::invokeAllWith
+   * @covers ::getImplementations
+   * @covers ::getImplementationInfo
    */
   public function testCachedGetImplementationsMissingMethod() {
     $this->cacheBackend->expects($this->exactly(1))
@@ -446,14 +398,7 @@ class ModuleHandlerTest extends UnitTestCase {
     $module_handler->load('module_handler_test');
 
     $module_handler->expects($this->never())->method('buildImplementationInfo');
-    $implementors = [];
-    $module_handler->invokeAllWith(
-      'hook',
-      function (callable $hook, string $module) use (&$implementors) {
-        $implementors[] = $module;
-      }
-    );
-    $this->assertEquals(['module_handler_test'], $implementors);
+    $this->assertEquals(['module_handler_test'], $module_handler->getImplementations('hook'));
   }
 
   /**
@@ -483,7 +428,7 @@ class ModuleHandlerTest extends UnitTestCase {
       ->expects($this->exactly(2))
       ->method('set')
       ->with($this->logicalOr('module_implements', 'hook_info'));
-    $module_handler->invokeAllWith('hook', function (callable $hook, string $module) {});
+    $module_handler->getImplementations('hook');
     $module_handler->writeCache();
   }
 
@@ -524,7 +469,7 @@ class ModuleHandlerTest extends UnitTestCase {
   public function testResetImplementations() {
     $module_handler = $this->getModuleHandler();
     // Prime caches
-    $module_handler->invokeAllWith('hook', function (callable $hook, string $module) {});
+    $module_handler->getImplementations('hook');
     $module_handler->getHookInfo();
 
     // Reset all caches internal and external.
@@ -546,7 +491,7 @@ class ModuleHandlerTest extends UnitTestCase {
       ->expects($this->exactly(2))
       ->method('get')
       ->with($this->logicalOr('module_implements', 'hook_info'));
-    $module_handler->invokeAllWith('hook', function (callable $hook, string $module) {});
+    $module_handler->getImplementations('hook');
   }
 
   /**

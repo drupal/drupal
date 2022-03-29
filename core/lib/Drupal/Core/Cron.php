@@ -229,7 +229,8 @@ class Cron implements CronInterface {
     $logger = $time_logging_enabled ? $this->logger : new NullLogger();
 
     // Iterate through the modules calling their cron handlers (if any):
-    $this->moduleHandler->invokeAllWith('cron', function (callable $hook, string $module) use (&$module_previous, $logger) {
+    foreach ($this->moduleHandler->getImplementations('cron') as $module) {
+
       if (!$module_previous) {
         $logger->info('Starting execution of @module_cron().', [
           '@module' => $module,
@@ -246,7 +247,7 @@ class Cron implements CronInterface {
 
       // Do not let an exception thrown by one module disturb another.
       try {
-        $hook();
+        $this->moduleHandler->invoke($module, 'cron');
       }
       catch (\Exception $e) {
         watchdog_exception('cron', $e);
@@ -254,7 +255,7 @@ class Cron implements CronInterface {
 
       Timer::stop('cron_' . $module);
       $module_previous = $module;
-    });
+    }
     if ($module_previous) {
       $logger->info('Execution of @module_previous_cron() took @time.', [
         '@module_previous' => $module_previous,

@@ -119,6 +119,9 @@ class UserAccessControlHandlerTest extends UnitTestCase {
 
     $this->accessControlHandler = new UserAccessControlHandler($entity_type);
     $module_handler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $module_handler->expects($this->any())
+      ->method('getImplementations')
+      ->will($this->returnValue([]));
     $this->accessControlHandler->setModuleHandler($module_handler);
 
     $this->items = $this->getMockBuilder('Drupal\Core\Field\FieldItemList')

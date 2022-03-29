@@ -278,7 +278,7 @@ class ModulesListForm extends FormBase {
     // Generate link for module's help page. Assume that if a hook_help()
     // implementation exists then the module provides an overview page, rather
     // than checking to see if the page exists, which is costly.
-    if ($this->moduleHandler->moduleExists('help') && $module->status && $this->moduleHandler->hasImplementations('help', $module->getName())) {
+    if ($this->moduleHandler->moduleExists('help') && $module->status && in_array($module->getName(), $this->moduleHandler->getImplementations('help'))) {
       $row['links']['help'] = [
         '#type' => 'link',
         '#title' => $this->t('Help <span class="visually-hidden">for @module</span>', ['@module' => $module->info['name']]),

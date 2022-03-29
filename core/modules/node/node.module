@@ -913,7 +913,7 @@ function node_access_view_all_nodes($account = NULL) {
   }
 
   // If no modules implement the node access system, access is always TRUE.
-  if (!\Drupal::moduleHandler()->hasImplementations('node_grants')) {
+  if (!\Drupal::moduleHandler()->getImplementations('node_grants')) {
     $access[$account->id()] = TRUE;
   }
   else {
@@ -954,7 +954,7 @@ function node_query_node_access_alter(AlterableInterface $query) {
   if ($account->hasPermission('bypass node access')) {
     return;
   }
-  if (!\Drupal::moduleHandler()->hasImplementations('node_grants')) {
+  if (!count(\Drupal::moduleHandler()->getImplementations('node_grants'))) {
     return;
   }
   if ($op == 'view' && node_access_view_all_nodes($account)) {
@@ -1066,7 +1066,7 @@ function node_access_rebuild($batch_mode = FALSE) {
   $access_control_handler = \Drupal::entityTypeManager()->getAccessControlHandler('node');
   $access_control_handler->deleteGrants();
   // Only recalculate if the site is using a node_access module.
-  if (\Drupal::moduleHandler()->hasImplementations('node_grants')) {
+  if (count(\Drupal::moduleHandler()->getImplementations('node_grants'))) {
     if ($batch_mode) {
       $batch_builder = (new BatchBuilder())
         ->setTitle(t('Rebuilding content access permissions'))
@@ -1194,10 +1194,10 @@ function _node_access_rebuild_batch_finished($success, $results, $operations) {
 /**
  * Implements hook_modules_installed().
  */
-function node_modules_installed(array $modules) {
+function node_modules_installed($modules) {
   // Check if any of the newly enabled modules require the node_access table to
   // be rebuilt.
-  if (!node_access_needs_rebuild() && \Drupal::moduleHandler()->hasImplementations('node_grants', $modules)) {
+  if (!node_access_needs_rebuild() && array_intersect($modules, \Drupal::moduleHandler()->getImplementations('node_grants'))) {
     node_access_needs_rebuild(TRUE);
   }
 }
@@ -1214,14 +1214,14 @@ function node_modules_uninstalled($modules) {
     // check whether a hook implementation function exists and do not invoke it.
     // Node access also needs to be rebuilt if language module is disabled to
     // remove any language-specific grants.
-    if (!node_access_needs_rebuild() && (\Drupal::moduleHandler()->hasImplementations('node_grants', $module) || $module == 'language')) {
+    if (!node_access_needs_rebuild() && (\Drupal::moduleHandler()->implementsHook($module, 'node_grants') || $module == 'language')) {
       node_access_needs_rebuild(TRUE);
     }
   }
 
   // If there remains no more node_access module, rebuilding will be
   // straightforward, we can do it right now.
-  if (node_access_needs_rebuild() && !\Drupal::moduleHandler()->hasImplementations('node_grants')) {
+  if (node_access_needs_rebuild() && count(\Drupal::moduleHandler()->getImplementations('node_grants')) == 0) {
     node_access_rebuild();
   }
 }

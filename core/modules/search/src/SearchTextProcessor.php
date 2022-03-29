@@ -117,12 +117,9 @@ class SearchTextProcessor implements SearchTextProcessorInterface {
    *   Language code for the language of $text, if known.
    */
   protected function invokePreprocess(string &$text, ?string $langcode = NULL): void {
-    $this->moduleHandler->invokeAllWith(
-      'search_preprocess',
-      function (callable $hook, string $module) use (&$text, &$langcode) {
-        $text = $hook($text, $langcode);
-      }
-    );
+    foreach ($this->moduleHandler->getImplementations('search_preprocess') as $module) {
+      $text = $this->moduleHandler->invoke($module, 'search_preprocess', [$text, $langcode]);
+    }
   }
 
   /**
