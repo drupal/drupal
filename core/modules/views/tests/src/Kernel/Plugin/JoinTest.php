@@ -218,6 +218,26 @@ class JoinTest extends RelationshipJoinTestBase {
     $this->assertStringContainsString("views_test_data.status = :views_join_condition_8", $join_info['condition'], 'Make sure the second extra join condition appears in the query.');
     $this->assertStringContainsString("users6.name = views_test_data.name", $join_info['condition'], 'Make sure the third extra join condition appears in the query.');
     $this->assertEquals(['en', 0], array_values($join_info['arguments']), 'Make sure the arguments are in the right order');
+
+    $configuration = [
+      'left_table' => 'views_test_data',
+      'left_field' => 'uid',
+      'table' => 'users_field_data',
+      'field' => 'uid',
+      'adjusted' => TRUE,
+      'operator' => '<>',
+    ];
+    $join = $this->manager->createInstance('standard', $configuration);
+    $table = ['alias' => 'users_field_data'];
+    $query = Database::getConnection()->select('views_test_data');
+    $join->buildJoin($query, $table, $view->query);
+
+    $tables = $query->getTables();
+    $join_info = $tables['users_field_data'];
+    $this->assertEquals('LEFT', $join_info['join type']);
+    $this->assertEquals($configuration['table'], $join_info['table']);
+    $this->assertEquals('users_field_data', $join_info['alias']);
+    $this->assertEquals('views_test_data.uid <> users_field_data.uid', $join_info['condition']);
   }
 
 }
