@@ -283,8 +283,8 @@ class ThemeManager implements ThemeManagerInterface {
     }
     if (isset($info['preprocess functions'])) {
       foreach ($info['preprocess functions'] as $preprocessor_function) {
-        if (function_exists($preprocessor_function)) {
-          $preprocessor_function($variables, $hook, $info);
+        if (is_callable($preprocessor_function)) {
+          call_user_func_array($preprocessor_function, [&$variables, $hook, $info]);
         }
       }
       // Allow theme preprocess functions to set $variables['#attached'] and

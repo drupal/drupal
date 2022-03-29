@@ -88,6 +88,13 @@ theme_test.preprocess_suggestions:
   requirements:
     _access: 'TRUE'
 
+theme_test.preprocess_callback:
+  path: '/theme-test/preprocess-callback'
+  defaults:
+    _controller: '\Drupal\theme_test\ThemeTestController::preprocessCallback'
+  requirements:
+    _access: 'TRUE'
+
 theme_test.test_theme_class:
   path: '/theme-test/test-theme-class'
   defaults:

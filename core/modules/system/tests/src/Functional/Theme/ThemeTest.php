@@ -196,4 +196,12 @@ class ThemeTest extends BrowserTestBase {
     }
   }
 
+  /**
+   * Ensures that preprocess callbacks can be defined.
+   */
+  public function testPreprocessCallback() {
+    $this->drupalGet('theme-test/preprocess-callback');
+    $this->assertSession()->pageTextContains('Make Drupal full of kittens again!');
+  }
+
 }
