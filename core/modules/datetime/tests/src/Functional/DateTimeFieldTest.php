@@ -28,7 +28,7 @@ class DateTimeFieldTest extends DateTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -127,7 +127,7 @@ class DateTimeFieldTest extends DateTestBase {
               $expected = $date_formatter->format($date->getTimestamp(), $new_value, '', DateTimeItemInterface::STORAGE_TIMEZONE);
               $expected_iso = $date_formatter->format($date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', DateTimeItemInterface::STORAGE_TIMEZONE);
               $output = $this->renderTestEntity($id);
-              $expected_markup = '<time datetime="' . $expected_iso . '" class="datetime">' . $expected . '</time>';
+              $expected_markup = '<time datetime="' . $expected_iso . '">' . $expected . '</time>';
               $this->assertStringContainsString($expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute in %timezone.', [
                 '%value' => $new_value,
                 '%expected' => $expected,
@@ -299,7 +299,7 @@ class DateTimeFieldTest extends DateTestBase {
             $expected = $date_formatter->format($date->getTimestamp(), $new_value);
             $expected_iso = $date_formatter->format($date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
             $output = $this->renderTestEntity($id);
-            $expected_markup = '<time datetime="' . $expected_iso . '" class="datetime">' . $expected . '</time>';
+            $expected_markup = '<time datetime="' . $expected_iso . '">' . $expected . '</time>';
             $this->assertStringContainsString($expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', ['%value' => $new_value, '%expected' => $expected, '%expected_iso' => $expected_iso]));
             break;
         }
