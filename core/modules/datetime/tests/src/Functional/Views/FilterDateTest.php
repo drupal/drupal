@@ -29,7 +29,7 @@ class FilterDateTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * Nodes to test.
@@ -142,13 +142,13 @@ class FilterDateTest extends BrowserTestBase {
     // Filter the Preview by 'empty'.
     $this->getSession()->getPage()->findField($this->fieldName . '_value')->selectOption(1);
     $this->getSession()->getPage()->pressButton('Apply');
-    $results = $this->cssSelect('.view-content .field-content');
+    $results = $this->cssSelect('.views-row .field-content');
     $this->assertCount(1, $results);
 
     // Filter the Preview by 'not empty'.
     $this->getSession()->getPage()->findField($this->fieldName . '_value')->selectOption(2);
     $this->getSession()->getPage()->pressButton('Apply');
-    $results = $this->cssSelect('.view-content .field-content');
+    $results = $this->cssSelect('.views-row .field-content');
     $this->assertCount(3, $results);
   }
 
