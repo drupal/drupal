@@ -96,7 +96,7 @@ class Drupal {
    *   that Drupal no longer supports that PHP version.
    * - An error is shown in the status report that the PHP version is too old.
    */
-  const MINIMUM_SUPPORTED_PHP = '7.4.0';
+  const MINIMUM_SUPPORTED_PHP = '7.3.0';
 
   /**
    * Minimum allowed version of PHP for Drupal to be bootstrapped.
