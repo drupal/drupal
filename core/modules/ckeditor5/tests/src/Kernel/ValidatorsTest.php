@@ -844,7 +844,7 @@ class ValidatorsTest extends KernelTestBase {
         ],
         'plugins' => [
           'ckeditor5_sourceEditing' => [
-            'allowed_tags' => ['<$block data-llama>'],
+            'allowed_tags' => ['<$text-container data-llama>'],
           ],
         ],
       ],

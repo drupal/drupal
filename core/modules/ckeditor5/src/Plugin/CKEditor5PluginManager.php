@@ -179,8 +179,8 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
       $restrictions = new HTMLRestrictions($this->getProvidedElements(array_keys($definitions), $editor, FALSE));
       if ($restrictions->getWildcardSubset()->isEmpty()) {
         // This is only reached if arbitrary HTML is not enabled. If wildcard
-        // tags (such as $block) are present, they need to be resolved via the
-        // wildcardHtmlSupport plugin.
+        // tags (such as $text-container) are present, they need to
+        // be resolved via the wildcardHtmlSupport plugin.
         // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getCKEditor5PluginConfig()
         unset($definitions['ckeditor5_wildcardHtmlSupport']);
       }
