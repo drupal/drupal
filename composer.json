@@ -18,7 +18,7 @@
         "friends-of-behat/mink": "^1.10",
         "friends-of-behat/mink-browserkit-driver": "^1.4",
         "behat/mink-selenium2-driver": "^1.4",
-        "composer/composer": "^2.2.4",
+        "composer/composer": "^2.3.0",
         "drupal/coder": "^8.3.10",
         "instaclick/php-webdriver": "^1.4.1",
         "mglaman/phpstan-drupal": "^1.1.9",
