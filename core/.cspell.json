@@ -15,6 +15,7 @@
       "modules/**/Migrate*Test.php",
       "modules/ckeditor5/js/build/*",
       "modules/color/preview.html",
+      "modules/color/tests/fixtures/drupal7.php",
       "modules/color/tests/modules/color_test/themes/color_test_theme/color/preview.html",
       "modules/media/tests/fixtures/oembed/*",
       "modules/migrate_drupal/tests/fixtures/drupal6.php",
