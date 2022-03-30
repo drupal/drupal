@@ -111,9 +111,9 @@ class WildcardHtmlSupportTest extends KernelTestBase {
         ],
         ['link', 'blockQuote'],
       ],
-      '<$block> minimal configuration' => [
+      '<$text-container> minimal configuration' => [
         '<p data-llama> <br>',
-        ['<$block data-llama>'],
+        ['<$text-container data-llama>'],
         [
           [
             'name' => 'p',
@@ -126,9 +126,9 @@ class WildcardHtmlSupportTest extends KernelTestBase {
           ],
         ],
       ],
-      '<$block> from multiple plugins' => [
+      '<$text-container> from multiple plugins' => [
         '<p data-llama class="text-align-left text-align-center text-align-right text-align-justify"> <br>',
-        ['<$block data-llama>'],
+        ['<$text-container data-llama>'],
         [
           [
             'name' => 'p',
@@ -147,9 +147,9 @@ class WildcardHtmlSupportTest extends KernelTestBase {
         ],
         ['alignment'],
       ],
-      '<$block> with attribute from multiple plugins' => [
+      '<$text-container> with attribute from multiple plugins' => [
         '<p data-llama class"> <br>',
-        ['<$block data-llama>', '<p class>'],
+        ['<$text-container data-llama>', '<p class>'],
         [
           [
             'name' => 'p',
@@ -172,9 +172,9 @@ class WildcardHtmlSupportTest extends KernelTestBase {
         ],
         ['alignment'],
       ],
-      '<$block> realistic configuration' => [
-        '<p data-llama> <br> <a href> <blockquote data-llama> <div data-llama> <mark> <abbr title>',
-        ['<$block data-llama>', '<div>', '<mark>', '<abbr title>'],
+      '<$text-container> realistic configuration' => [
+        '<p data-llama> <br> <a href> <blockquote> <div data-llama> <mark> <abbr title>',
+        ['<$text-container data-llama>', '<div>', '<mark>', '<abbr title>'],
         [
           [
             'name' => 'div',
@@ -202,15 +202,6 @@ class WildcardHtmlSupportTest extends KernelTestBase {
           ],
           [
             'name' => 'div',
-            'attributes' => [
-              [
-                'key' => 'data-llama',
-                'value' => TRUE,
-              ],
-            ],
-          ],
-          [
-            'name' => 'blockquote',
             'attributes' => [
               [
                 'key' => 'data-llama',
