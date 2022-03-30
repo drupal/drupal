@@ -200,15 +200,17 @@ class SourceEditingTest extends CKEditor5TestBase {
         '<a class>',
       ],
 
-      // Edge case: $block wildcard with additional attribute.
-      '<$block data-llama>' => [
+      // Edge case: $text-container wildcard with additional
+      // attribute.
+      '<$text-container data-llama>' => [
         '<div class="llama" data-llama="🦙"><p data-llama="🦙">The <a href="https://example.com/pirate">pirate</a> is <a href="https://example.com/irate">irate</a>.</p></div>',
-        '<$block data-llama>',
+        '<$text-container data-llama>',
       ],
-      // Edge case: $block wildcard with stricter attribute constrain.
-      '<$block class="not-llama">' => [
+      // Edge case: $text-container wildcard with stricter attribute
+      // constrain.
+      '<$text-container class="not-llama">' => [
         '<div class="llama"><p>The <a href="https://example.com/pirate">pirate</a> is <a href="https://example.com/irate">irate</a>.</p></div>',
-        '<$block class="not-llama">',
+        '<$text-container class="not-llama">',
       ],
 
       // Edge case: wildcard attribute names:

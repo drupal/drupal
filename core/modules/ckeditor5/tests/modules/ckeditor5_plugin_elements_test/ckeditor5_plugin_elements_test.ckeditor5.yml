@@ -1,12 +1,12 @@
-# cspell:ignore everyblock justblockquote
-ckeditor5_plugin_elements_test_blockquoteCombo:
+# cspell:ignore everytextcontainer justheading
+ckeditor5_plugin_elements_test_headingCombo:
   ckeditor5:
     plugins: []
   drupal:
     label: TEST — block quote combo
     elements:
-      - <blockquote data-justblockquote>
-      - <$block data-everyblock>
+      - <h1 data-justheading>
+      - <$text-container data-everytextcontainer>
 
 ckeditor5_plugin_elements_test_headingsWithOtherAttributes:
   ckeditor5:

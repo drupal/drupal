@@ -355,7 +355,7 @@ ckeditor5_alignment:
       alignment:
         label: Text alignment
     elements:
-      - <$block class="text-align-left text-align-center text-align-right text-align-justify">
+      - <$text-container class="text-align-left text-align-center text-align-right text-align-justify">
 
 ckeditor5_alignment.left:
   ckeditor5: *alignment_ckeditor5_section
@@ -365,7 +365,7 @@ ckeditor5_alignment.left:
       "alignment:left":
         label: Align left
     elements:
-      - <$block class="text-align-left">
+      - <$text-container class="text-align-left">
     <<: *alignment_drupal_section
 
 ckeditor5_alignment.center:
@@ -376,7 +376,7 @@ ckeditor5_alignment.center:
       "alignment:center":
         label: Align center
     elements:
-      - <$block class="text-align-center">
+      - <$text-container class="text-align-center">
     <<: *alignment_drupal_section
 
 ckeditor5_alignment.right:
@@ -387,7 +387,7 @@ ckeditor5_alignment.right:
       "alignment:right":
         label: Align right
     elements:
-      - <$block class="text-align-right">
+      - <$text-container class="text-align-right">
     <<: *alignment_drupal_section
 
 ckeditor5_alignment.justify:
@@ -398,7 +398,7 @@ ckeditor5_alignment.justify:
       "alignment:justify":
         label: Justify
     elements:
-      - <$block class="text-align-justify">
+      - <$text-container class="text-align-justify">
     <<: *alignment_drupal_section
 
 ckeditor5_removeFormat:
