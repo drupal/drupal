@@ -58,6 +58,7 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'Blog API',
       'Book',
       'Calendar Signup',
+      // @todo Remove Color in https://www.drupal.org/project/drupal/issues/3270899
       'Color',
       'Comment',
       'Contact',

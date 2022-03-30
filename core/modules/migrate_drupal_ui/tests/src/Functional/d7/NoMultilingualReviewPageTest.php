@@ -57,6 +57,7 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'Bulk Export',
       'Chaos Tools (CTools) AJAX Example',
       'Chaos tools',
+      // @todo Remove Color in https://www.drupal.org/project/drupal/issues/3270899
       'Color',
       'Comment',
       'Contact',

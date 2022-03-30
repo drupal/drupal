@@ -138,6 +138,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'Block',
       'Book',
       'Chaos tools',
+      // @todo Remove Color in https://www.drupal.org/project/drupal/issues/3270899
       'Color',
       'Comment',
       'Contact',
