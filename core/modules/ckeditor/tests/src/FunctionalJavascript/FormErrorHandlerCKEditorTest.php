@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\inline_form_errors\FunctionalJavascript;
+namespace Drupal\Tests\ckeditor\FunctionalJavascript;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\editor\Entity\Editor;
