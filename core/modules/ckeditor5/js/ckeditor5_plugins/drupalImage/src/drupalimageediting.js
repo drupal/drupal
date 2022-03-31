@@ -471,6 +471,7 @@ export default class DrupalImageEditing extends Plugin {
         allowAttributes: [
           'dataEntityUuid',
           'dataEntityType',
+          'isDecorative',
           'width',
           'height',
         ],
@@ -482,6 +483,7 @@ export default class DrupalImageEditing extends Plugin {
         allowAttributes: [
           'dataEntityUuid',
           'dataEntityType',
+          'isDecorative',
           'width',
           'height',
         ],

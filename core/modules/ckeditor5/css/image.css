@@ -1,0 +1,82 @@
+/* cspell:ignore switchbutton */
+
+/* https://css-tricks.com/the-raven-technique-one-step-closer-to-container-queries */
+.ck .image,
+.ck .image-inline {
+  --base-size: 100%;
+  --breakpoint-wide: 400px;
+  --breakpoint-medium: 100px;
+  --is-wide: clamp(0px, var(--base-size) - var(--breakpoint-wide), 1px);
+  --is-medium: calc(clamp(0px, var(--base-size) - var(--breakpoint-medium), 1px) - var(--is-wide));
+  --is-small: calc(1px - (var(--is-medium) + var(--is-wide)));
+}
+
+.ck.ck-responsive-form.ck-text-alternative-form--with-decorative-toggle {
+  width: auto;
+}
+.ck.ck-responsive-form .ck.ck-text-alternative-form__decorative-toggle,
+.ck.ck-responsive-form .ck.ck-text-alternative-form__decorative-toggle .ck-switchbutton {
+  width: 100%;
+}
+
+.ck .image,
+.ck .image-inline {
+  position: relative;
+}
+.ck .image-alternative-text-missing-wrapper {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  overflow: hidden;
+  max-width:
+    calc(
+      (var(--is-small) * 0)
+      + (var(--is-medium) * 33)
+      + (var(--is-wide) * 999999)
+    );
+  border-left: calc((var(--is-small) * 0) + (var(--is-medium) * 3) + (var(--is-wide) * 3)) solid #ffd23f;
+  border-radius: 2px;
+  background: #232429;
+  font-size: 14px;
+}
+
+.ck figcaption ~ .image-alternative-text-missing-wrapper {
+  top: 10px;
+  bottom: auto;
+}
+
+.ck .image-alternative-text-missing-wrapper .ck.ck-button {
+  padding: 12px 12px 12px 8px;
+  cursor: pointer;
+  color: #fff;
+  background: none !important; /* Override background for all states. */
+}
+.ck .image-alternative-text-missing-wrapper .ck.ck-button:before {
+  width: 16px;
+  height: 16px;
+  padding-right: 8px;
+  content: "";
+  background: url("../icons/warning.svg") left center no-repeat;
+}
+.ck .image-alternative-text-missing-wrapper .ck.ck-button:after {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  padding-left: 2rem;
+  content: "";
+  background: url("../icons/caret.svg") right center no-repeat;
+  font-size: 18px;
+  font-weight: bold;
+}
+.ck .image-alternative-text-missing-wrapper .ck-tooltip {
+  display: block;
+  overflow: visible;
+}
+.ck .image-alternative-text-missing-wrapper:hover .ck-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+.ck .image-alternative-text-missing-wrapper:hover .ck-tooltip__text {
+  display: block;
+  width: 240px;
+}
