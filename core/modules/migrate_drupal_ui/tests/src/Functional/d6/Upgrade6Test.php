@@ -53,6 +53,9 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     $this->nodeStorage->delete($this->nodeStorage->loadMultiple());
 
     $this->loadFixture($this->getModulePath('migrate_drupal') . '/tests/fixtures/drupal6.php');
+
+    // @todo Remove this in https://www.drupal.org/node/3267515
+    \Drupal::service('module_installer')->uninstall(['rdf']);
   }
 
   /**
@@ -88,7 +91,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       // The 'book' module provides the 'book' node type, and the migration
       // creates 12 node types.
       'node_type' => 14,
-      'rdf_mapping' => 7,
       'search_page' => 2,
       'shortcut' => 2,
       'shortcut_set' => 1,

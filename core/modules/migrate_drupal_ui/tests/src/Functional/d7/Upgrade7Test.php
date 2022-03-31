@@ -56,6 +56,9 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
     $this->nodeStorage->delete($this->nodeStorage->loadMultiple());
 
     $this->loadFixture($this->getModulePath('migrate_drupal') . '/tests/fixtures/drupal7.php');
+
+    // @todo Remove this in https://www.drupal.org/node/3267515
+    \Drupal::service('module_installer')->uninstall(['rdf']);
   }
 
   /**
@@ -91,7 +94,6 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'language_content_settings' => 24,
       'node' => 7,
       'node_type' => 8,
-      'rdf_mapping' => 8,
       'search_page' => 2,
       'shortcut' => 6,
       'shortcut_set' => 2,
@@ -169,7 +171,6 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'Options',
       'Path',
       'Phone',
-      'RDF',
       'Search',
       'Shortcut',
       'Statistics',
@@ -205,6 +206,8 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
   protected function getMissingPaths() {
     return [
       'Aggregator',
+      // @todo Remove RDF in https://www.drupal.org/node/3267515
+      'RDF',
       'References',
       'Translation sets',
       'Variable realm',
