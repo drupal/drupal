@@ -672,6 +672,38 @@ class LayoutBuilderTest extends BrowserTestBase {
   }
 
   /**
+   * Tests preview-aware layout & block plugins.
+   */
+  public function testPreviewAwarePlugins() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]));
+
+    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
+    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+    $page->clickLink('Manage layout');
+    $page->clickLink('Add section');
+    $page->clickLink('Layout Builder Test Plugin');
+    $page->pressButton('Add section');
+    $page->clickLink('Add block');
+    $page->clickLink('Preview-aware block');
+    $page->pressButton('Add block');
+
+    $assert_session->elementExists('css', '.go-birds-preview');
+    $assert_session->pageTextContains('This block is being rendered in preview mode.');
+
+    $page->pressButton('Save layout');
+    $this->drupalGet('node/1');
+
+    $assert_session->elementNotExists('css', '.go-birds-preview');
+    $assert_session->pageTextContains('This block is being rendered normally.');
+  }
+
+  /**
    * Tests the interaction between full and default view modes.
    *
    * @see \Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage::getDefaultSectionStorage()

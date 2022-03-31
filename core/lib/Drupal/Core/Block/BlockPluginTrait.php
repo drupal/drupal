@@ -31,6 +31,13 @@ trait BlockPluginTrait {
   use PluginWithFormsTrait;
 
   /**
+   * Whether the plugin is being rendered in preview mode.
+   *
+   * @var bool
+   */
+  protected $inPreview = FALSE;
+
+  /**
    * The transliteration service.
    *
    * @var \Drupal\Component\Transliteration\TransliterationInterface
@@ -279,6 +286,13 @@ trait BlockPluginTrait {
    */
   public function setTransliteration(TransliterationInterface $transliteration) {
     $this->transliteration = $transliteration;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setInPreview(bool $in_preview): void {
+    $this->inPreview = $in_preview;
   }
 
 }
