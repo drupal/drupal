@@ -7,12 +7,12 @@
         "webflo/drupal-core-require-dev": "*"
     },
     "require": {
+        "behat/mink": "^1.10",
+        "behat/mink-browserkit-driver": "^2.1",
         "behat/mink-selenium2-driver": "^1.4",
         "composer/composer": "^2.3.0",
         "drupal/coder": "^8.3.10",
         "easyrdf/easyrdf": "^1.0",
-        "friends-of-behat/mink": "^1.10",
-        "friends-of-behat/mink-browserkit-driver": "^1.4",
         "instaclick/php-webdriver": "^1.4.1",
         "justinrainbow/json-schema": "^5.2",
         "mglaman/phpstan-drupal": "^1.1.9",
