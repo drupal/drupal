@@ -37,6 +37,9 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->loadFixture($this->getModulePath('migrate_drupal') . '/tests/fixtures/drupal7.php');
+
+    // @todo Remove this in https://www.drupal.org/node/3267515
+    \Drupal::service('module_installer')->uninstall(['rdf']);
   }
 
   /**
@@ -105,7 +108,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'Phone',
       'Poll',
       'Profile',
-      'RDF',
       'Search',
       'Search embedded form',
       'Shortcut',
@@ -166,6 +168,7 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'Multilingual select',
       'Path translation',
       'Picture',
+      'RDF',
       'References',
       'References UUID',
       'Translation redirect',
