@@ -23,6 +23,9 @@ class LayoutBuilderTestPlugin extends LayoutDefault {
   public function build(array $regions) {
     $build = parent::build($regions);
     $build['main']['#attributes']['class'][] = 'go-birds';
+    if ($this->inPreview) {
+      $build['main']['#attributes']['class'][] = 'go-birds-preview';
+    }
     return $build;
   }
 

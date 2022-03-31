@@ -8,6 +8,7 @@ use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Plugin\ContextAwarePluginTrait;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Plugin\PluginWithFormsInterface;
+use Drupal\Core\Plugin\PreviewAwarePluginInterface;
 use Drupal\Core\Render\PreviewFallbackInterface;
 
 /**
@@ -19,7 +20,7 @@ use Drupal\Core\Render\PreviewFallbackInterface;
  *
  * @ingroup block_api
  */
-abstract class BlockBase extends PluginBase implements BlockPluginInterface, PluginWithFormsInterface, PreviewFallbackInterface, ContextAwarePluginInterface {
+abstract class BlockBase extends PluginBase implements BlockPluginInterface, PluginWithFormsInterface, PreviewAwarePluginInterface, PreviewFallbackInterface, ContextAwarePluginInterface {
 
   use BlockPluginTrait {
     buildConfigurationForm as traitBuildConfigurationForm;
