@@ -55,7 +55,11 @@ drupal.ckeditor5.codeBlock:
 drupal.ckeditor5.image:
   js:
     js/build/drupalImage.js: { minified: true }
+  css:
+    theme:
+      css/image.css: { }
   dependencies:
+    - core/drupal
     - core/ckeditor5
     - core/ckeditor5.image
 

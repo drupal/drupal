@@ -454,7 +454,7 @@ ckeditor5_image:
       - drupalImage.DrupalImage
     config:
       image:
-        toolbar: [imageTextAlternative]
+        toolbar: [drupalImageAlternativeText]
   drupal:
     label: Image
     library: ckeditor5/drupal.ckeditor5.image
