@@ -4,9 +4,9 @@ dependencies:
   module:
     - block_content
   theme:
-    - classy
+    - stark
 id: call_to_action
-theme: classy
+theme: stark
 region: content
 weight: null
 provider: null

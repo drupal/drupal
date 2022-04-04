@@ -2,7 +2,7 @@ name: 'Test theme for configuration clash detection'
 type: theme
 description: 'Test theme for configuration clash detection'
 version: VERSION
-base theme: classy
+base theme: stark
 regions:
   content: Content
   left: Left

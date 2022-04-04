@@ -4,9 +4,9 @@ dependencies:
   module:
     - block_test
   theme:
-    - classy
+    - stark
 id: config_override_test
-theme: classy
+theme: stark
 region: content
 weight: 0
 plugin: test_cache
