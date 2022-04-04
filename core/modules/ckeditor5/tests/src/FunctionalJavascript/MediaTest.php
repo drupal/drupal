@@ -1059,6 +1059,43 @@ class MediaTest extends WebDriverTestBase {
   }
 
   /**
+   * Ensures that Drupal Media Styles can be displayed in a dropdown.
+   */
+  public function testDrupalMediaStyleInDropdown() {
+    \Drupal::service('module_installer')->install(['ckeditor5_drupalelementstyle_test']);
+    $this->resetAll();
+
+    $assert_session = $this->assertSession();
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+    // Wait for the media preview to load.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media img'));
+
+    // Ensure that by default the "Break text" alignment option is selected and
+    // that the split button title is displayed.
+    $this->click('.ck-widget.drupal-media');
+    $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
+    $this->assertNotEmpty(($split_button = $this->getBalloonButton('Test title: Break text'))->hasClass('ck-on'));
+
+    // Ensure that the split button can be opened.
+    $split_button->click();
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-dropdown__panel-visible'));
+
+    // Ensure that a button inside the split button can be clicked.
+    $this->assertNotEmpty($align_button = $this->getBalloonButton('Align center and break text'));
+    $align_button->click();
+
+    // Ensure that the "Align center and break text" option is selected and the
+    // split button title is displayed.
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-widget.drupal-media.drupal-media-style-align-center'));
+    $editor_dom = $this->getEditorDataAsDom();
+    $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')
+      ->item(0);
+    $this->assertEquals('center', $drupal_media_element->getAttribute('data-align'));
+    $this->assertNotEmpty(($this->getBalloonButton('Test title: Align center and break text'))->hasClass('ck-on'));
+  }
+
+  /**
    * Tests Drupal Media Style with a CSS class.
    */
   public function testDrupalMediaStyleWithClass() {

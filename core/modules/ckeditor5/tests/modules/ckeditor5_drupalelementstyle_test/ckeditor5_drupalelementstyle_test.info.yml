@@ -1,0 +1,7 @@
+name: CKEditor 5 Drupal Element Style Test
+type: module
+description: "Provides ability to run DrupalElementStyle CKEditor 5 plugin in multiple ways."
+package: Testing
+dependencies:
+  - drupal:ckeditor5
+  - drupal:media

@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ * Implements hooks for the CKEditor 5 Drupal Element Style Test module.
+ */
+
+declare(strict_types = 1);
+
+use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
+
+/**
+ * Implements hook_ckeditor4to5upgrade_plugin_info_alter().
+ */
+function ckeditor5_drupalelementstyle_test_ckeditor5_plugin_info_alter(array &$plugin_definitions): void {
+  // Update `media_mediaAlign`.
+  assert($plugin_definitions['media_mediaAlign'] instanceof CKEditor5PluginDefinition);
+  $media_align_plugin_definition = $plugin_definitions['media_mediaAlign']->toArray();
+  $media_align_plugin_definition['ckeditor5']['config']['drupalMedia']['toolbar'] = [
+    0 => [
+      'name' => 'drupalMedia:align',
+      'title' => 'Test title',
+      'items' => array_values(array_filter($media_align_plugin_definition['ckeditor5']['config']['drupalMedia']['toolbar'], function (string $toolbar_item): bool {
+        return $toolbar_item !== '|';
+      })),
+      'defaultItem' => 'drupalElementStyle:breakText',
+    ],
+  ];
+  $plugin_definitions['media_mediaAlign'] = new CKEditor5PluginDefinition($media_align_plugin_definition);
+}
