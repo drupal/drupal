@@ -182,7 +182,12 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
     },
     {
       pack: 'underscore',
+      library: 'internal.underscore',
       files: ['underscore-min.js', 'underscore-min.js.map'],
+    },
+    // Only used to update the version number of the deprecated library.
+    {
+      pack: 'underscore',
     },
     {
       pack: 'loadjs',

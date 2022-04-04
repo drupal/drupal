@@ -10,7 +10,7 @@ backbone:
   js:
     assets/vendor/backbone/backbone-min.js: { weight: -19, minified: true }
   dependencies:
-    - core/underscore
+    - core/internal.underscore
 
 ckeditor:
   remote: https://github.com/ckeditor/ckeditor4
@@ -1150,6 +1150,24 @@ underscore:
     gpl-compatible: true
   js:
     assets/vendor/underscore/underscore-min.js: { weight: -20, minified: true }
+  deprecated: The %library_id% asset library is deprecated in Drupal 9.4.0 and will be removed in Drupal 10.0.0.
+
+internal.underscore:
+  # Internal library, do not depend on it.
+  # The library will be removed as soon as the following issues are fixed:
+  #  - https://www.drupal.org/project/drupal/issues/3270395
+  #  - https://www.drupal.org/project/drupal/issues/3203920
+  #  - https://www.drupal.org/project/drupal/issues/3204011
+  #  - https://www.drupal.org/project/drupal/issues/3204015
+  remote: https://github.com/jashkenas/underscore
+  version: "1.13.2"
+  license:
+    name: MIT
+    url: https://raw.githubusercontent.com/jashkenas/underscore/1.13.2/LICENSE
+    gpl-compatible: true
+  js:
+    assets/vendor/underscore/underscore-min.js: { weight: -20, minified: true }
+
 
 drupal.dialog.off_canvas:
   version: VERSION
