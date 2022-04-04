@@ -17,5 +17,5 @@ quickedit.inPlaceEditor.image:
   dependencies:
     - core/jquery
     - core/drupal
-    - core/underscore
+    - core/internal.underscore
     - quickedit/quickedit

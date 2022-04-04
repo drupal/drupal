@@ -29,7 +29,7 @@ quickedit:
   dependencies:
     - core/jquery
     - core/once
-    - core/underscore
+    - core/internal.underscore
     - core/backbone
     - core/jquery.form
     - core/drupal
