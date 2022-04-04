@@ -78,6 +78,7 @@
 }
 
 .js .dropbutton {
+  min-width: 6rem; /* Help mitigate long dropbutton text from obscuring other dropbuttons. */
   height: var(--dropbutton-toggle-size);
 }
 
