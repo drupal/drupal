@@ -28,7 +28,7 @@ class ConfigImportUITest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * A user with the 'synchronize configuration' permission.

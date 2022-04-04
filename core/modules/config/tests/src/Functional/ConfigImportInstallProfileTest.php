@@ -68,12 +68,11 @@ class ConfigImportInstallProfileTest extends BrowserTestBase {
     $core['module']['testing_config_import'] = 0;
     unset($core['module']['syslog']);
     unset($core['theme']['stark']);
-    $core['theme']['stable'] = 0;
-    $core['theme']['classy'] = 0;
+    $core['theme']['test_theme_theme'] = 0;
     $sync->write('core.extension', $core);
     $sync->deleteAll('syslog.');
     $theme = $sync->read('system.theme');
-    $theme['default'] = 'classy';
+    $theme['default'] = 'test_theme_theme';
     $sync->write('system.theme', $theme);
     $this->drupalGet('admin/config/development/configuration');
     $this->submitForm([], 'Import all');
@@ -81,7 +80,7 @@ class ConfigImportInstallProfileTest extends BrowserTestBase {
     $this->rebuildContainer();
     $this->assertFalse(\Drupal::moduleHandler()->moduleExists('syslog'), 'The syslog module has been uninstalled.');
     $this->assertFalse(\Drupal::service('theme_handler')->themeExists('stark'), 'The stark theme has been uninstalled.');
-    $this->assertTrue(\Drupal::service('theme_handler')->themeExists('classy'), 'The classy theme has been installed.');
+    $this->assertTrue(\Drupal::service('theme_handler')->themeExists('test_theme_theme'), 'The test_theme_theme theme has been installed.');
   }
 
 }
