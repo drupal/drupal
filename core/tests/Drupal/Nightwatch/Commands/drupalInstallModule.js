@@ -12,7 +12,10 @@ exports.command = function drupalInstallModule(module, callback) {
   const self = this;
   this.drupalLoginAsAdmin(() => {
     this.drupalRelativeURL('/admin/modules')
-      .click(`input[data-drupal-selector="edit-modules-${module}-enable"]`)
+      // Filter module list to ensure that collapsable <details> elements are expanded.
+      .updateValue('[data-drupal-selector="edit-text"]', module)
+      .waitForElementVisible(`[name="modules[${module}][enable]"]`, 10000)
+      .click(`[name="modules[${module}][enable]"]`)
       .click('input[data-drupal-selector="edit-submit"]')
       // Wait for the install message to show up.
       .waitForElementVisible('.system-modules', 10000);
