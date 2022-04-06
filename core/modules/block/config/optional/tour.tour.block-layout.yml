@@ -29,7 +29,7 @@ tips:
     label: 'Block Region'
     weight: 3
     selector: .block-region-select
-    body: 'Assign or change the region of a block by clicking here. A dropdown list with all the regions will appear.You can place one block in multiple regions.'
+    body: 'Assign or change the region of a block by clicking here. A dropdown list with all the regions will appear. You can place one block in multiple regions.'
   configure-block:
     id: configure-block
     plugin: text
