@@ -38,7 +38,7 @@ class BlockTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -59,7 +59,7 @@ class BlockTest extends ConfigEntityResourceTestBase {
       'plugin' => 'llama_block',
       'region' => 'header',
       'id' => 'llama',
-      'theme' => 'classy',
+      'theme' => 'stark',
     ]);
     // All blocks can be viewed by the anonymous user by default. An interesting
     // side effect of this is that any anonymous user is also able to read the
@@ -111,10 +111,10 @@ class BlockTest extends ConfigEntityResourceTestBase {
           'status' => TRUE,
           'dependencies' => [
             'theme' => [
-              'classy',
+              'stark',
             ],
           ],
-          'theme' => 'classy',
+          'theme' => 'stark',
           'region' => 'header',
           'provider' => NULL,
           'plugin' => 'llama_block',
