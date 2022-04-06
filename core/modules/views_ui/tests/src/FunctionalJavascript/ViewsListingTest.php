@@ -20,7 +20,7 @@ class ViewsListingTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -97,10 +97,10 @@ class ViewsListingTest extends WebDriverTestBase {
 
     // Disable a View and see if it moves to the disabled listing.
     $enabled_view = $page->find('css', 'tr.views-ui-list-enabled');
-    $view_description = $enabled_view->find('css', '.views-ui-view-name h3')->getText();
+    $view_description = $enabled_view->find('css', '.views-ui-view-name strong')->getText();
     // Open the dropdown with additional actions.
     $enabled_view->find('css', 'li.dropbutton-toggle button')->click();
-    $disable_button = $enabled_view->find('css', 'li.disable.dropbutton-action a');
+    $disable_button = $enabled_view->findLink('Disable');
     // Check that the disable button is visible now.
     $this->assertTrue($disable_button->isVisible());
     $disable_button->click();
@@ -118,15 +118,15 @@ class ViewsListingTest extends WebDriverTestBase {
 
     // Test that the keyboard focus is on the dropdown button of the View we
     // just disabled.
-    $this->assertTrue($this->getSession()->evaluateScript("jQuery(document.activeElement).parent().is('li.enable.dropbutton-action')"));
-    $this->assertEquals($view_description, $this->getSession()->evaluateScript("jQuery(document.activeElement).parents('tr').find('h3').text()"));
+    $this->assertTrue($this->getSession()->evaluateScript("jQuery(document.activeElement).text() === 'Enable'"));
+    $this->assertEquals($view_description, $this->getSession()->evaluateScript("jQuery(document.activeElement).parents('tr').find('.views-ui-view-name strong').text()"));
 
     // Enable the view again and ensure we have the focus on the edit button.
     $this->getSession()->evaluateScript('jQuery(document.activeElement).click()');
     $session->assertWaitOnAjaxRequest();
 
-    $this->assertTrue($this->getSession()->evaluateScript("jQuery(document.activeElement).parent().is('li.edit.dropbutton-action')"));
-    $this->assertEquals($view_description, $this->getSession()->evaluateScript("jQuery(document.activeElement).parents('tr').find('h3').text()"));
+    $this->assertTrue($this->getSession()->evaluateScript("jQuery(document.activeElement).text() === 'Edit'"));
+    $this->assertEquals($view_description, $this->getSession()->evaluateScript("jQuery(document.activeElement).parents('tr').find('.views-ui-view-name strong').text()"));
   }
 
   /**
