@@ -15,10 +15,10 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * Usage example:
  * @code
- * $form['high_school']['tests_taken'] = array(
+ * $form['favorites']['colors'] = array(
  *   '#type' => 'checkboxes',
- *   '#options' => array('SAT' => $this->t('SAT'), 'ACT' => $this->t('ACT')),
- *   '#title' => $this->t('What standardized tests did you take?'),
+ *   '#options' => array('blue' => $this->t('Blue'), 'red' => $this->t('Red')),
+ *   '#title' => $this->t('Which colors do you like?'),
  *   ...
  * );
  * @endcode
@@ -26,7 +26,7 @@ use Drupal\Core\Form\FormStateInterface;
  * Element properties may be set on single option items as follows.
  *
  * @code
- * $form['high_school']['tests_taken']['SAT']['#description'] = $this->t('Description for the SAT option.');
+ * $form['favorites']['colors']['blue']['#description'] = $this->t('The color of the sky.');
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Radios
