@@ -68,11 +68,11 @@ class AdminUiTest extends CKEditor5TestBase {
     $assert_session->waitForText('Machine name');
     $page->checkField('roles[authenticated]');
 
-    // Enable a filter that is incompatible with CKEditor 5, so validation is
-    // triggered when attempting to switch.
+    // Enable a filter that is incompatible with CKEditor 5 if not configured
+    // correctly, so validation is triggered when attempting to switch.
     $number_ajax_instances_before = $this->getSession()->evaluateScript('Drupal.ajax.instances.length');
-    $this->assertTrue($page->hasUncheckedField('filters[filter_autop][status]'));
-    $page->checkField('filters[filter_autop][status]');
+    $this->assertTrue($page->hasUncheckedField('filters[filter_html][status]'));
+    $page->checkField('filters[filter_html][status]');
     $this->assertEmpty($assert_session->waitForElement('css', '.ajax-progress-throbber'));
     $assert_session->assertWaitOnAjaxRequest();
     $number_ajax_instances_after = $this->getSession()->evaluateScript('Drupal.ajax.instances.length');
@@ -83,16 +83,16 @@ class AdminUiTest extends CKEditor5TestBase {
 
     // The presence of this validation error message confirms the AJAX callback
     // was invoked.
-    $assert_session->pageTextContains('CKEditor 5 only works with HTML-based text formats');
+    $assert_session->pageTextContains('CKEditor 5 needs at least the <p> and <br> tags to be allowed to be able to function. They are not allowed by the "Limit allowed HTML tags and correct faulty HTML" (filter_html) filter.');
 
     // Disable the incompatible filter. This should trigger another AJAX rebuild
     // which will include the removal of the validation error as the issue has
     // been corrected.
-    $this->assertTrue($page->hasCheckedField('filters[filter_autop][status]'));
-    $page->uncheckField('filters[filter_autop][status]');
+    $this->assertTrue($page->hasCheckedField('filters[filter_html][status]'));
+    $page->uncheckField('filters[filter_html][status]');
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ajax-progress-throbber'));
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->pageTextNotContains('CKEditor 5 only works with HTML-based text formats');
+    $assert_session->pageTextNotContains('CKEditor 5 needs at least the <p> and <br> tags to be allowed to be able to function. They are not allowed by the "Limit allowed HTML tags and correct faulty HTML" (filter_html) filter.');
   }
 
   /**
@@ -149,25 +149,36 @@ class AdminUiTest extends CKEditor5TestBase {
     $this->addNewTextFormat($page, $assert_session);
     $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
 
+    // Add the source editing plugin to the CKEditor 5 toolbar.
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-sourceEditing'));
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-sourceEditing', 'ArrowDown');
+    $assert_session->assertWaitOnAjaxRequest();
+
     $find_validation_error_messages = function () use ($page): array {
-      return $page->findAll('css', '[role=alert]:contains("CKEditor 5 only works with HTML-based text formats.")');
+      return $page->findAll('css', '[role=alert]:contains("The following tag(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: Bold (<strong>).")');
     };
 
     // No validation errors when we start.
     $this->assertCount(0, $find_validation_error_messages());
 
-    // Enable a filter which is not compatible with CKEditor 5, to trigger a
+    // Configure Source Editing to allow editing `<strong>` to trigger
     // validation error.
-    $page->checkField('Convert URLs into links');
+    $assert_session->waitForText('Source editing');
+    $page->find('css', '[href^="#edit-editor-settings-plugins-ckeditor5-sourceediting"]')->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForText('Manually editable HTML tags');
+    $source_edit_tags_field = $assert_session->fieldExists('editor[settings][plugins][ckeditor5_sourceEditing][allowed_tags]');
+    $source_edit_tags_field->setValue('<strong>');
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertCount(1, $find_validation_error_messages());
 
-    // Disable it: validation messages should be gone.
-    $page->uncheckField('Convert URLs into links');
+    // Revert Source Editing it: validation messages should be gone.
+    $source_edit_tags_field->setValue('');
     $assert_session->assertWaitOnAjaxRequest();
+    $this->assertCount(0, $find_validation_error_messages());
 
-    // Re-enable it: validation messages should be back.
-    $page->checkField('Convert URLs into links');
+    // Add `<strong>` again: validation messages should be back.
+    $source_edit_tags_field->setValue('<strong>');
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertCount(1, $find_validation_error_messages());
   }
