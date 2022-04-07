@@ -417,8 +417,8 @@ ckeditor5_table:
     elements:
       - <table>
       - <tr>
-      - <td>
-      - <th>
+      - <td rowspan colspan>
+      - <th rowspan colspan>
       - <thead>
       - <tbody>
       - <tfoot>
