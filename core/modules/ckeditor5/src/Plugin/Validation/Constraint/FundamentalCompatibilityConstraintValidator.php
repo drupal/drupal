@@ -8,6 +8,8 @@ use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\editor\EditorInterface;
 use Drupal\filter\FilterFormatInterface;
+use Drupal\filter\Plugin\Filter\FilterAutoP;
+use Drupal\filter\Plugin\Filter\FilterUrl;
 use Drupal\filter\Plugin\FilterInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -74,6 +76,13 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
   /**
    * Checks no TYPE_MARKUP_LANGUAGE filters are present.
    *
+   * Two TYPE_MARKUP_LANGUAGE filters are exempted:
+   * - filter_autop: pointless but harmless to have enabled
+   * - filter_url: not recommended but also harmless to have enabled
+   *
+   * These two commonly enabled filters with a long history in Drupal are
+   * considered to be acceptable to have enabled.
+   *
    * @param \Drupal\filter\FilterFormatInterface $text_format
    *   The text format to validate.
    * @param \Drupal\ckeditor5\Plugin\Validation\Constraint\FundamentalCompatibilityConstraint $constraint
@@ -85,6 +94,9 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
       FilterInterface::TYPE_MARKUP_LANGUAGE
     );
     foreach ($markup_filters as $markup_filter) {
+      if ($markup_filter instanceof FilterAutoP || $markup_filter instanceof FilterUrl) {
+        continue;
+      }
       $this->context->buildViolation($constraint->noMarkupFiltersMessage)
         ->setParameter('%filter_label', $markup_filter->getLabel())
         ->setParameter('%filter_plugin_id', $markup_filter->getPluginId())
