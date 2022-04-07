@@ -138,24 +138,4 @@ trait AssertMailTrait {
     $this->assertTrue((bool) $regex_found, $message, $group);
   }
 
-  /**
-   * Outputs to verbose the most recent $count emails sent.
-   *
-   * @param int $count
-   *   Optional number of emails to output.
-   *
-   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
-   *   dump() instead.
-   *
-   * @see https://www.drupal.org/node/3197514
-   */
-  protected function verboseEmail($count = 1) {
-    @trigger_error('AssertMailTrait::verboseEmail() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use dump() instead. See https://www.drupal.org/node/3197514', E_USER_DEPRECATED);
-    $mails = $this->getMails();
-    for ($i = count($mails) - 1; $i >= count($mails) - $count && $i >= 0; $i--) {
-      $mail = $mails[$i];
-      $this->verbose('Email:<pre>' . print_r($mail, TRUE) . '</pre>');
-    }
-  }
-
 }
