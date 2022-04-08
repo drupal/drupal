@@ -170,11 +170,8 @@
       var $displayButtons = $menu.nextAll('input.add-display').detach();
       $displayButtons.appendTo($addDisplayDropdown.find('.action-list')).wrap('<li>').parent().eq(0).addClass('first').end().eq(-1).addClass('last');
       $displayButtons.each(function () {
-        var label = this.value;
-
-        if (label.substr(0, 4) === 'Add ') {
-          this.value = label.substr(4);
-        }
+        var $this = $(this);
+        this.value = $this.attr('data-drupal-dropdown-label');
       });
       $addDisplayDropdown.appendTo($menu);
       $menu.find('li.add > a').on('click', function (event) {
