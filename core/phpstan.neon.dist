@@ -15,6 +15,7 @@ parameters:
     # Skip settings.
     - ../*/settings*.php
     # Skip test fixtures.
+    - ../*/node_modules/*
     - */tests/fixtures/*.php
     - */tests/fixtures/*.php.gz
     # Skip data files.
@@ -30,10 +31,6 @@ parameters:
     - "#^Unsafe usage of new static#"
 
     # Ignore common errors for now.
-    - "#^Access to an undefined property#"
-    - "#^Call to an undefined method#"
-    - "#^Cannot unset offset#"
-    - "#should return .* but return statement is missing#"
     - "#Drupal calls should be avoided in classes, use dependency injection instead#"
     - "#^Plugin definitions cannot be altered.#"
     - "#^Missing cache backend declaration for performance.#"

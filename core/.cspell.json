@@ -33,7 +33,8 @@
       "MAINTAINERS.txt",
       "package.json",
       "yarn.lock",
-      "misc/cspell/dictionary.txt"
+      "misc/cspell/dictionary.txt",
+      "phpstan*"
     ],
     "ignoreRegExpList": [
       "^msgstr .*",
