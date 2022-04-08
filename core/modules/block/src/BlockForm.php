@@ -186,7 +186,7 @@ class BlockForm extends EntityForm {
       '#description' => $this->t('Select the region where this block should be displayed.'),
       '#default_value' => $region,
       '#required' => TRUE,
-      '#options' => system_region_list($theme, REGIONS_VISIBLE),
+      '#options' => system_region_list($form_state->getValue('theme', $theme), REGIONS_VISIBLE),
       '#prefix' => '<div id="edit-block-region-wrapper">',
       '#suffix' => '</div>',
     ];
@@ -198,7 +198,6 @@ class BlockForm extends EntityForm {
    * Handles switching the available regions based on the selected theme.
    */
   public function themeSwitch($form, FormStateInterface $form_state) {
-    $form['region']['#options'] = system_region_list($form_state->getValue('theme'), REGIONS_VISIBLE);
     return $form['region'];
   }
 
