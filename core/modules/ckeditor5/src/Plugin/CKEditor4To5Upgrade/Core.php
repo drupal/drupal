@@ -216,7 +216,7 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
         }
         // Otherwise, only enable headings that allowed by the restrictions.
         $configuration = [];
-        foreach (range(2, 6) as $index) {
+        foreach (range(1, 6) as $index) {
           // Merely checking the existence of the array key is sufficient; this
           // plugin does not set or need any additional attributes.
           // @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
