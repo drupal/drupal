@@ -386,14 +386,9 @@
         .end()
         .eq(-1)
         .addClass('last');
-      // Remove the 'Add ' prefix from the button labels since they're being
-      // placed in an 'Add' dropdown. @todo This assumes English, but so does
-      // $addDisplayDropdown above. Add support for translation.
       $displayButtons.each(function () {
-        const label = this.value;
-        if (label.substr(0, 4) === 'Add ') {
-          this.value = label.substr(4);
-        }
+        const $this = $(this);
+        this.value = $this.attr('data-drupal-dropdown-label');
       });
       $addDisplayDropdown.appendTo($menu);
 

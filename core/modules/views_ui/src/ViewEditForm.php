@@ -793,7 +793,10 @@ class ViewEditForm extends ViewFormBase {
         '#value' => $this->t('Add @display', ['@display' => $label]),
         '#limit_validation_errors' => [],
         '#submit' => ['::submitDisplayAdd', '::submitDelayDestination'],
-        '#attributes' => ['class' => ['add-display']],
+        '#attributes' => [
+          'class' => ['add-display'],
+          'data-drupal-dropdown-label' => $label,
+        ],
         // Allow JavaScript to remove the 'Add ' prefix from the button label when
         // placing the button in an "Add" dropdown menu.
         '#process' => array_merge(['views_ui_form_button_was_clicked'], $this->elementInfo->getInfoProperty('submit', '#process', [])),
