@@ -14,8 +14,8 @@ use Drupal\Core\Extension\Extension;
  */
 function module_test_system_info_alter(&$info, Extension $file, $type) {
   if (\Drupal::state()->get('module_test.dependency') == 'missing dependency') {
-    if ($file->getName() == 'color') {
-      // Make color module depend on config.
+    if ($file->getName() == 'dblog') {
+      // Make dblog module depend on config.
       $info['dependencies'][] = 'config';
     }
     elseif ($file->getName() == 'config') {
@@ -24,8 +24,8 @@ function module_test_system_info_alter(&$info, Extension $file, $type) {
     }
   }
   elseif (\Drupal::state()->get('module_test.dependency') == 'dependency') {
-    if ($file->getName() == 'color') {
-      // Make color module depend on config.
+    if ($file->getName() == 'dblog') {
+      // Make dblog module depend on config.
       $info['dependencies'][] = 'config';
     }
     elseif ($file->getName() == 'config') {
@@ -38,8 +38,8 @@ function module_test_system_info_alter(&$info, Extension $file, $type) {
     }
   }
   elseif (\Drupal::state()->get('module_test.dependency') == 'version dependency') {
-    if ($file->getName() == 'color') {
-      // Make color module depend on config.
+    if ($file->getName() == 'dblog') {
+      // Make dblog module depend on config.
       $info['dependencies'][] = 'config';
     }
     elseif ($file->getName() == 'config') {

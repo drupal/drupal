@@ -526,7 +526,7 @@ class EntityDisplayTest extends KernelTestBase {
    * Tests components dependencies additions.
    */
   public function testComponentDependencies() {
-    $this->enableModules(['dblog', 'color']);
+    $this->enableModules(['dblog', 'help']);
     $this->installSchema('dblog', ['watchdog']);
     $this->installEntitySchema('user');
     /** @var \Drupal\user\RoleInterface[] $roles */
@@ -577,7 +577,7 @@ class EntityDisplayTest extends KernelTestBase {
         'role2' => $roles[1]->id(),
       ],
       'third_party_settings' => [
-        'color' => ['foo' => 'bar'],
+        'help' => ['foo' => 'bar'],
       ],
     ];
     $form_display->setComponent($field_name, $component);
@@ -586,8 +586,8 @@ class EntityDisplayTest extends KernelTestBase {
     // Now, the form display should depend on both user roles $roles.
     $this->assertDependency('config', $dependencies[0], $form_display);
     $this->assertDependency('config', $dependencies[1], $form_display);
-    // The form display should depend on 'color' module.
-    $this->assertDependency('module', 'color', $form_display);
+    // The form display should depend on 'help' module.
+    $this->assertDependency('module', 'help', $form_display);
 
     // Delete the first user role entity.
     $roles[0]->delete();
@@ -600,14 +600,14 @@ class EntityDisplayTest extends KernelTestBase {
     $this->assertNoDependency('config', $dependencies[0], $form_display);
     // The form display should depend on 'anonymous' user role.
     $this->assertDependency('config', 'user.role.anonymous', $form_display);
-    // The form display should depend on 'color' module.
-    $this->assertDependency('module', 'color', $form_display);
+    // The form display should depend on 'help' module.
+    $this->assertDependency('module', 'help', $form_display);
 
     // Manually trigger the removal of configuration belonging to the module
     // because KernelTestBase::disableModules() is not aware of this.
-    $this->container->get('config.manager')->uninstall('module', 'color');
-    // Uninstall 'color' module.
-    $this->disableModules(['color']);
+    $this->container->get('config.manager')->uninstall('module', 'help');
+    // Uninstall 'help' module.
+    $this->disableModules(['help']);
 
     // Reload the form display.
     $form_display = EntityFormDisplay::load($form_display->id());
@@ -615,8 +615,8 @@ class EntityDisplayTest extends KernelTestBase {
     $this->assertNotEmpty($form_display);
     // The component is still enabled.
     $this->assertNotNull($form_display->getComponent($field_name));
-    // The form display should not depend on 'color' module anymore.
-    $this->assertNoDependency('module', 'color', $form_display);
+    // The form display should not depend on 'help' module anymore.
+    $this->assertNoDependency('module', 'help', $form_display);
 
     // Delete the 2nd user role entity.
     $roles[1]->delete();

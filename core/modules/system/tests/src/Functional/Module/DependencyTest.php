@@ -208,26 +208,26 @@ class DependencyTest extends ModuleTestBase {
     $this->assertModules(['module_test'], TRUE);
     \Drupal::state()->set('module_test.dependency', 'dependency');
     // module_test creates a dependency chain:
-    // - color depends on config
+    // - dblog depends on config
     // - config depends on help
-    $expected_order = ['help', 'config', 'color'];
+    $expected_order = ['help', 'config', 'dblog'];
 
     // Enable the modules through the UI, verifying that the dependency chain
     // is correct.
     $edit = [];
-    $edit['modules[color][enable]'] = 'color';
+    $edit['modules[dblog][enable]'] = 'dblog';
     $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
-    $this->assertModules(['color'], FALSE);
+    $this->assertModules(['dblog'], FALSE);
     // Note that dependencies are sorted alphabetically in the confirmation
     // message.
-    $this->assertSession()->pageTextContains('You must enable the Configuration Manager, Help modules to install Color.');
+    $this->assertSession()->pageTextContains('You must enable the Configuration Manager, Help modules to install Database Logging.');
 
     $edit['modules[config][enable]'] = 'config';
     $edit['modules[help][enable]'] = 'help';
     $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
-    $this->assertModules(['color', 'config', 'help'], TRUE);
+    $this->assertModules(['dblog', 'config', 'help'], TRUE);
 
     // Check the actual order which is saved by module_test_modules_enabled().
     $module_order = \Drupal::state()->get('module_test.install_order', []);
