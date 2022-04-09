@@ -19,7 +19,8 @@ class UpdateRegistryFactory implements ContainerAwareInterface {
    *   The update registry instance.
    */
   public function create() {
-    return new UpdateRegistry($this->container->getParameter('app.root'), $this->container->getParameter('site.path'), array_keys($this->container->get('module_handler')->getModuleList()), $this->container->get('keyvalue')->get('post_update'));
+    $extensions = array_merge(array_keys($this->container->get('module_handler')->getModuleList()), array_keys($this->container->get('theme_handler')->listInfo()));
+    return new UpdateRegistry($this->container->getParameter('app.root'), $this->container->getParameter('site.path'), $extensions, $this->container->get('keyvalue')->get('post_update'));
   }
 
 }

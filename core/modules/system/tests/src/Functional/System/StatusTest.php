@@ -85,7 +85,7 @@ class StatusTest extends BrowserTestBase {
     $update_registry->setInstalledVersion('update_test_postupdate', 8001);
     /** @var \Drupal\Core\Update\UpdateRegistry $post_update_registry */
     $post_update_registry = \Drupal::service('update.post_update_registry');
-    $post_update_registry->filterOutInvokedUpdatesByModule('update_test_postupdate');
+    $post_update_registry->filterOutInvokedUpdatesByExtension('update_test_postupdate');
     $this->drupalGet('admin/reports/status');
     $this->assertSession()->pageTextContains('Out of date');
 
