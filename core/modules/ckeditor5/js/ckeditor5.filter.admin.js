@@ -8,6 +8,13 @@
 (function (Drupal, once) {
   Drupal.behaviors.allowedTagsListener = {
     attach: function attach(context) {
+      once('ajax-conflict-prevention', '[data-drupal-selector="filter-format-edit-form"], [data-drupal-selector="filter-format-add-form"]', context).forEach(function (form) {
+        form.addEventListener('submit', function () {
+          once.filter('drupal-ajax', '[data-drupal-selector="filter-format-edit-form"] [disabled], [data-drupal-selector="filter-format-add-form"] [disabled]').forEach(function (disabledElement) {
+            disabledElement.removeAttribute('disabled');
+          });
+        });
+      });
       once('allowed-tags-listener', context.querySelector('[data-drupal-selector="edit-filters-filter-html-settings-allowed-html"]')).forEach(function (textarea) {
         var editorSelect = document.querySelector('[data-drupal-selector="edit-editor-editor"]');
         var filterCheckbox = document.querySelector('[data-drupal-selector="edit-filters-filter-html-status"]');

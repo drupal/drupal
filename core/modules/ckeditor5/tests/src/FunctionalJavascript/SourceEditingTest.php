@@ -9,7 +9,7 @@ use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Symfony\Component\Validator\ConstraintViolation;
 
-// cspell:ignore gramma
+// cspell:ignore gramma sourceediting
 
 /**
  * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing
@@ -115,6 +115,52 @@ class SourceEditingTest extends CKEditor5TestBase {
     $this->host->save();
 
     $this->drupalLogin($this->adminUser);
+  }
+
+  /**
+   * @covers \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing::buildConfigurationForm
+   */
+  public function testSourceEditingSettingsForm() {
+    $this->drupalLogin($this->drupalCreateUser(['administer filters']));
+
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    $this->createNewTextFormat($page, $assert_session);
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // The Source Editing plugin settings form should not be present.
+    $assert_session->elementNotExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-sourceediting"]');
+
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-sourceEditing'));
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-sourceEditing', 'ArrowDown');
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // The Source Editing plugin settings form should now be present and should
+    // have no allowed tags configured.
+    $page->clickLink('Source editing');
+    $this->assertNotNull($assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-sourceediting-allowed-tags"]'));
+
+    $javascript = <<<JS
+      const allowedTags = document.querySelector('[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-sourceediting-allowed-tags"]');
+      allowedTags.value = '<div data-foo>';
+      allowedTags.dispatchEvent(new Event('input'));
+JS;
+    $this->getSession()->executeScript($javascript);
+
+    // Immediately save the configuration. Intentionally do nothing that would
+    // trigger an AJAX rebuild.
+    $page->pressButton('Save configuration');
+
+    // Verify that the configuration was saved.
+    $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
+    $page->clickLink('Source editing');
+    $this->assertNotNull($ghs_textarea = $assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-sourceediting-allowed-tags"]'));
+
+    $ghs_string = '<div data-foo>';
+    $this->assertSame($ghs_string, $ghs_textarea->getValue());
+    $allowed_html_field = $assert_session->fieldExists('filters[filter_html][settings][allowed_html]');
+    $this->assertStringContainsString($ghs_string, $allowed_html_field->getValue(), "$ghs_string not found in the allowed tags value of: {$allowed_html_field->getValue()}");
   }
 
   /**
