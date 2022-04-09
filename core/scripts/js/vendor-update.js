@@ -55,7 +55,7 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
    *   is not defined the value of `pack` is used.
    * @prop {string} [library]
    *   The key under which the library is declared in core.libraries.yml.
-   * @prop {Array} files
+   * @prop {Array} [files]
    *   An array of files to be copied over.
    *     - A string if the file has the same name and is at the same level in
    *   the source and target folder.
@@ -76,7 +76,12 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
   const ASSET_LIST = [
     {
       pack: 'backbone',
+      library: 'internal.backbone',
       files: ['backbone.js', 'backbone-min.js', 'backbone-min.map'],
+    },
+    // Only used to update the version number of the deprecated library.
+    {
+      pack: 'backbone',
     },
     {
       pack: 'css.escape',

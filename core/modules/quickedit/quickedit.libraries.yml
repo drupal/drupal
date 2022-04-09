@@ -31,7 +31,7 @@ quickedit:
     - core/once
     - core/jquery.once.bc
     - core/internal.underscore
-    - core/backbone
+    - core/internal.backbone
     - core/jquery.form
     - core/drupal
     - core/drupal.displace

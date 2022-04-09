@@ -844,7 +844,7 @@ function hook_library_info_build() {
   // Add a library whose information changes depending on certain conditions.
   $libraries['mymodule.zombie'] = [
     'dependencies' => [
-      'core/backbone',
+      'core/once',
     ],
   ];
   if (Drupal::moduleHandler()->moduleExists('minifyzombies')) {

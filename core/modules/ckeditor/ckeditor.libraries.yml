@@ -51,7 +51,7 @@ drupal.ckeditor.admin:
     - core/drupalSettings
     - core/once
     - core/jquery.once.bc
-    - core/backbone
+    - core/internal.backbone
     - core/drupal.dialog
     - core/drupal.announce
     - core/ckeditor
