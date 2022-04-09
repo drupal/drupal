@@ -236,7 +236,6 @@ class ThemeInstaller implements ThemeInstallerInterface {
       }
 
       $themes_installed[] = $key;
-
       // Record the fact that it was installed.
       $this->logger->info('%theme theme installed.', ['%theme' => $key]);
     }
@@ -289,7 +288,6 @@ class ThemeInstaller implements ThemeInstallerInterface {
 
       // Remove all configuration belonging to the theme.
       $this->configManager->uninstall('theme', $key);
-
     }
     // Don't check schema when uninstalling a theme since we are only clearing
     // keys.

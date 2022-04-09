@@ -155,4 +155,57 @@ class ThemeTest extends KernelTestBase {
     $this->assertEquals('node--1', $templates['node__1']['template'], 'Template node--1.html.twig was found in test_theme.');
   }
 
+  /**
+   * Tests the update registry is correct during theme install and uninstall.
+   */
+  public function testThemeUpdateManagement() {
+    // Install modules the theme is dependent on and enable the post update
+    // function.
+    \Drupal::state()->set('test_theme_depending_on_modules.post_update', TRUE);
+    \Drupal::service('module_installer')->install([
+      'test_module_required_by_theme',
+      'test_another_module_required_by_theme',
+    ]);
+
+    /** @var \Drupal\Core\Update\UpdateRegistry $post_update_registry */
+    $post_update_registry = \Drupal::service('update.post_update_registry');
+    $this->assertEmpty($post_update_registry->getUpdateFunctions('test_theme_depending_on_modules'), 'No updates test_theme_depending_on_modules for prior to install.');
+    \Drupal::service('theme_installer')->install(['test_theme_depending_on_modules']);
+
+    // Ensure the post update function has been added to the list of
+    // existing updates.
+    $this->assertContains('test_theme_depending_on_modules_post_update_module_install', \Drupal::service('keyvalue')->get('post_update')->get('existing_updates'));
+
+    \Drupal::service('theme_installer')->uninstall(['test_theme_depending_on_modules']);
+    // Ensure the post update function has been removed from the list of
+    // existing updates.
+    $this->assertNotContains('test_theme_depending_on_modules_post_update_module_install', \Drupal::service('keyvalue')->get('post_update')->get('existing_updates'));
+  }
+
+  /**
+   * Tests the update registry is correct during theme install and uninstall.
+   */
+  public function testThemeUpdateManagementRemovedPostUpdates() {
+    // Install modules the theme is dependent on and enable the removed post
+    // updates function.
+    \Drupal::state()->set('test_theme_depending_on_modules.removed_post_updates', TRUE);
+    \Drupal::service('module_installer')->install([
+      'test_module_required_by_theme',
+      'test_another_module_required_by_theme',
+    ]);
+
+    $post_update_registry = \Drupal::service('update.post_update_registry');
+    $this->assertEmpty($post_update_registry->getUpdateFunctions('test_theme_depending_on_modules'), 'No updates test_theme_depending_on_modules for prior to install.');
+    \Drupal::service('theme_installer')->install(['test_theme_depending_on_modules']);
+
+    // Ensure the removed post update function has been added to the list of
+    // existing updates.
+    $this->assertContains('test_theme_depending_on_modules_post_update_foo', \Drupal::service('keyvalue')->get('post_update')->get('existing_updates'));
+
+    \Drupal::service('theme_installer')->uninstall(['test_theme_depending_on_modules']);
+    // Ensure the removed post update function has been removed from the list of
+    // existing updates.
+    $this->assertNotContains('test_theme_depending_on_modules_post_update_foo', \Drupal::service('keyvalue')->get('post_update')->get('existing_updates'));
+  }
+
 }

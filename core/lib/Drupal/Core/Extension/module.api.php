@@ -698,7 +698,8 @@ function hook_update_N(&$sandbox) {
 /**
  * Executes an update which is intended to update data, like entities.
  *
- * These implementations have to be placed in a MODULE.post_update.php file.
+ * These implementations have to be placed in a MODULE.post_update.php file or
+ * a THEME.post_update.php file.
  *
  * These updates are executed after all hook_update_N() implementations. At this
  * stage Drupal is already fully repaired so you can use any API as you wish.

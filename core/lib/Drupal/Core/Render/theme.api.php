@@ -178,6 +178,13 @@
  * @endcode
  * Note: all front matter is stripped from templates prior to rendering.
  *
+ * @section theme_updates Theme Update functions
+ * Themes support post updates in order to install module dependencies that have
+ * been added to the THEME.info.yml after the theme has been installed.
+ * Additionally, if a theme has changed its configuration schema, post updates
+ * can fix theme settings configuration. See @link hook_post_update_NAME hook_post_update_NAME @endlink
+ * for more information about post updates.
+ *
  * @see hooks
  * @see callbacks
  * @see theme_render
