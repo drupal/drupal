@@ -153,7 +153,7 @@ function theme_test_system_info_alter(array &$info, Extension $file, $type) {
   if ($type == 'theme' && $file->getName() == 'test_theme' && \Drupal::state()->get('theme_test.modify_info_files')) {
     // Add a library to see if the system picks it up.
     $info += ['libraries' => []];
-    $info['libraries'][] = 'core/backbone';
+    $info['libraries'][] = 'core/once';
   }
 }
 

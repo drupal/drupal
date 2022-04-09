@@ -50,7 +50,7 @@ drupal.ckeditor.admin:
     - core/drupal
     - core/drupalSettings
     - core/once
-    - core/backbone
+    - core/internal.backbone
     - core/drupal.dialog
     - core/drupal.announce
     - core/ckeditor

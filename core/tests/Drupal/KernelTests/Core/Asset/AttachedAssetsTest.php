@@ -283,14 +283,14 @@ class AttachedAssetsTest extends KernelTestBase {
    * Tests JavaScript versioning.
    */
   public function testVersionQueryString() {
-    $build['#attached']['library'][] = 'core/backbone';
+    $build['#attached']['library'][] = 'core/once';
     $assets = AttachedAssets::createFromRenderArray($build);
 
     $js = $this->assetResolver->getJsAssets($assets, FALSE)[1];
     $js_render_array = \Drupal::service('asset.js.collection_renderer')->render($js);
 
     $rendered_js = $this->renderer->renderPlain($js_render_array);
-    $this->assertStringContainsString('core/assets/vendor/backbone/backbone-min.js?v=1.4.0', $rendered_js, 'JavaScript version identifiers correctly appended to URLs');
+    $this->assertStringContainsString('core/assets/vendor/once/once.min.js?v=1.0.1', $rendered_js, 'JavaScript version identifiers correctly appended to URLs');
   }
 
   /**
