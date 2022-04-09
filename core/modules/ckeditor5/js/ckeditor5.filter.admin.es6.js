@@ -7,6 +7,26 @@
   Drupal.behaviors.allowedTagsListener = {
     attach: function attach(context) {
       once(
+        'ajax-conflict-prevention',
+        '[data-drupal-selector="filter-format-edit-form"], [data-drupal-selector="filter-format-add-form"]',
+        context,
+      ).forEach((form) => {
+        // When the form is submitted, remove the disabled attribute from all
+        // AJAX enabled form elements. The disabled state is added as part of
+        // AJAX processing, but will prevent the value from being added to
+        // $form_state.
+        form.addEventListener('submit', () => {
+          once
+            .filter(
+              'drupal-ajax',
+              '[data-drupal-selector="filter-format-edit-form"] [disabled], [data-drupal-selector="filter-format-add-form"] [disabled]',
+            )
+            .forEach((disabledElement) => {
+              disabledElement.removeAttribute('disabled');
+            });
+        });
+      });
+      once(
         'allowed-tags-listener',
         context.querySelector(
           '[data-drupal-selector="edit-filters-filter-html-settings-allowed-html"]',
