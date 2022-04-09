@@ -23,21 +23,47 @@ process:
   mail: site_mail
   slogan: site_slogan
   'page/front':
-    plugin: concat
-    source:
-      - constants/slash
-      - site_frontpage
+    -
+      plugin: concat
+      source:
+        - constants/slash
+        - site_frontpage
+    -
+      plugin: static_map
+      map:
+        # Drupal 6 and Drupal 7 default site_frontpage is 'node'. If this
+        # variable is set to 'node', to an empty string, or it is completely
+        # missing, we want to migrate the equivalent Drupal 9 value, which is
+        # '/node'.
+        '/': '/node'
+      bypass: true
   'page/403':
-    plugin: concat
-    source:
-      - constants/slash
-      - site_403
+    -
+      plugin: concat
+      source:
+        - constants/slash
+        - site_403
+    -
+      plugin: static_map
+      map:
+        '/': ''
+      bypass: true
   'page/404':
-    plugin: concat
-    source:
-      - constants/slash
-      - site_404
-  weight_select_max: drupal_weight_select_max
+    -
+      plugin: concat
+      source:
+        - constants/slash
+        - site_404
+    -
+      plugin: static_map
+      map:
+        '/': ''
+      bypass: true
+  weight_select_max:
+    plugin: default_value
+    source: drupal_weight_select_max
+    strict: true
+    default_value: 100
   admin_compact_mode: admin_compact_mode
 destination:
   plugin: config
