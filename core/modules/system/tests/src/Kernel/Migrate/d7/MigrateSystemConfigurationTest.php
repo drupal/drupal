@@ -105,12 +105,12 @@ class MigrateSystemConfigurationTest extends MigrateDrupal7TestBase {
       'mail' => 'joseph@flattandsons.com',
       'slogan' => 'The Slogan',
       'page' => [
-        '403' => '/node',
+        '403' => '',
         '404' => '/node',
         'front' => '/node',
       ],
       'admin_compact_mode' => TRUE,
-      'weight_select_max' => 40,
+      'weight_select_max' => 100,
       'default_langcode' => 'en',
     ],
   ];
@@ -132,6 +132,21 @@ class MigrateSystemConfigurationTest extends MigrateDrupal7TestBase {
         'value' => 's:16:"Drupal 6 message";',
       ])
       ->execute();
+
+    // Delete 'site_403' in order to test the migration of a non-existing error
+    // page link.
+    $this->sourceDatabase->delete('variable')
+      ->condition('name', 'site_403')
+      ->execute();
+    // Delete 'drupal_weight_select_max ' in order to test the migration when it
+    // is not set.
+    $this->sourceDatabase->delete('variable')
+      ->condition('name', 'drupal_weight_select_max')
+      ->execute();
+
+    $this->config('system.site')
+      ->set('weight_select_max', 5)
+      ->save();
 
     $migrations = [
       'd7_system_authorize',
@@ -162,7 +177,7 @@ class MigrateSystemConfigurationTest extends MigrateDrupal7TestBase {
         $actual = \Drupal::config($config_id)->get();
       }
       unset($actual['_core']);
-      $this->assertSame($actual, $values, $config_id . ' matches expected values.');
+      $this->assertSame($values, $actual, $config_id . ' matches expected values.');
     }
     // The d7_system_authorize migration should not create the system.authorize
     // config.
