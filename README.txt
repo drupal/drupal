@@ -115,6 +115,8 @@ More about developing:
    https://www.drupal.org/developing/modules
  * Follow programming best practices:
    https://www.drupal.org/developing/best-practices
+ * Drupal project issues
+   https://www.drupal.org/docs/develop/issues
  * Refer to the API documentation:
    https://api.drupal.org/api/drupal/8
  * Learn from documented Drupal API examples:
