@@ -16,8 +16,10 @@ content:
     type: image
     label: visually_hidden
     settings:
+      image_style: 'large'
       image_link: ''
-      image_style: large
+      image_loading:
+        attribute: lazy
     third_party_settings: {  }
     weight: 1
     region: content

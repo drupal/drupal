@@ -130,8 +130,10 @@ display:
           click_sort_column: target_id
           type: image
           settings:
-            image_link: ''
             image_style: thumbnail
+            image_link: ''
+            image_loading:
+              attribute: lazy
           group_column: ''
           group_columns: {  }
           group_rows: true
