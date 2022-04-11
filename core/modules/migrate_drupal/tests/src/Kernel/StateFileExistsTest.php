@@ -36,7 +36,6 @@ class StateFileExistsTest extends MigrateDrupalTestBase {
    * @var array
    */
   protected $stateFileRequired = [
-    'action',
     // @todo Remove aggregator in https://www.drupal.org/project/drupal/issues/3264120
     'aggregator',
     'ban',

@@ -17,4 +17,4 @@ process:
 destination:
   plugin: config
   config_name: null
-  destination_module: action
+  destination_module: system
