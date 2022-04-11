@@ -147,7 +147,13 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     // Test the image field formatter settings.
     $expected['weight'] = 9;
     $expected['type'] = 'image';
-    $expected['settings'] = ['image_link' => '', 'image_style' => ''];
+    $expected['settings'] = [
+      'image_link' => '',
+      'image_style' => '',
+      'image_loading' => [
+        'attribute' => 'lazy',
+      ],
+    ];
     $component = $display->getComponent('field_test_imagefield');
     $this->assertSame($expected, $component);
     $display = EntityViewDisplay::load('node.story.teaser');

@@ -30,8 +30,10 @@ content:
     type: image
     label: hidden
     settings:
-      image_link: content
       image_style: medium
+      image_link: content
+      image_loading:
+        attribute: lazy
     third_party_settings: {  }
     weight: -1
     region: content

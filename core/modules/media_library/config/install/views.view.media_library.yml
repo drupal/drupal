@@ -1130,6 +1130,8 @@ display:
           settings:
             image_link: ''
             image_style: media_library
+            image_loading:
+              attribute: eager
         name:
           id: name
           table: media_field_data

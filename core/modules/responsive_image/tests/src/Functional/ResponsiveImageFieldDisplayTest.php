@@ -211,6 +211,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       '#width' => 360,
       '#height' => 240,
       '#alt' => $alt,
+      '#attributes' => ['loading' => 'lazy'],
     ];
     $default_output = str_replace("\n", '', $renderer->renderRoot($image));
     $this->assertSession()->responseContains($default_output);
