@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\action\Kernel\Migrate\d6;
+namespace Drupal\Tests\system\Kernel\Migrate\d6;
 
 use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;

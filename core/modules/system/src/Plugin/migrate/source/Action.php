@@ -1,17 +1,12 @@
 <?php
 
-namespace Drupal\action\Plugin\migrate\source;
+namespace Drupal\system\Plugin\migrate\source;
 
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\migrate\Row;
 
 /**
- * Drupal 6/7 action source from database.
- *
- * For available configuration keys, refer to the parent classes.
- *
- * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
- * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ * Drupal action source from database.
  *
  * @MigrateSource(
  *   id = "action",

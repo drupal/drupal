@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\Tests\action\Kernel\Plugin\migrate\source;
+namespace Drupal\Tests\system\Kernel\Plugin\migrate\source;
 
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 /**
  * Tests actions source plugin.
  *
- * @covers \Drupal\action\Plugin\migrate\source\Action
+ * @covers \Drupal\system\Plugin\migrate\source\Action
  * @group action
  */
 class ActionTest extends MigrateSqlSourceTestBase {

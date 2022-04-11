@@ -36,7 +36,6 @@ class StateFileExistsTest extends MigrateDrupalTestBase {
    * @var array
    */
   protected $stateFileRequired = [
-    'action',
     'ban',
     'block',
     'block_content',
