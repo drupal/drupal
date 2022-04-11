@@ -2,13 +2,16 @@
 
 namespace Drupal\system\Form;
 
+use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Update\UpdateHookRegistry;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -154,6 +157,21 @@ class ModulesUninstallForm extends FormBase {
       $form['modules'][$module->getName()]['name']['#markup'] = $name;
       $form['modules'][$module->getName()]['description']['#markup'] = $this->t($module->info['description']);
 
+      $lifecycle = $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER];
+      if ($lifecycle !== ExtensionLifecycle::STABLE && !empty($module->info[ExtensionLifecycle::LIFECYCLE_LINK_IDENTIFIER])) {
+        $form['modules'][$module->getName()]['name']['#markup'] .= ' ' . Link::fromTextAndUrl('(' . $this->t('@lifecycle', ['@lifecycle' => ucfirst($lifecycle)]) . ')',
+            Url::fromUri($module->info[ExtensionLifecycle::LIFECYCLE_LINK_IDENTIFIER], [
+              'attributes' =>
+                [
+                  'class' => 'module-link--non-stable',
+                  'aria-label' => $this->t('View information on the @lifecycle status of the module @module', [
+                    '@lifecycle' => ucfirst($lifecycle),
+                    '@module' => $module->info['name'],
+                  ]),
+                ],
+            ])
+          )->toString();
+      }
       $form['uninstall'][$module->getName()] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Uninstall @module module', ['@module' => $name]),

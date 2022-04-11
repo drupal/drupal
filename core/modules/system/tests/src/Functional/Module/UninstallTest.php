@@ -59,8 +59,28 @@ class UninstallTest extends BrowserTestBase {
     ]);
     $node->save();
 
+    // Change the config directly to "install" non-stable modules.
+    $this->config('core.extension')
+      ->set('module.system_status_obsolete_test', 0)
+      ->set('module.deprecated_module', 0)
+      ->set('module.experimental_module_test', 0)
+      ->save();
+    $this->rebuildAll();
+
     $this->drupalGet('admin/modules/uninstall');
     $this->assertSession()->titleEquals('Uninstall | Drupal');
+
+    // Check that the experimental module link was rendered correctly.
+    $this->assertSession()->elementExists('xpath', "//a[contains(@aria-label, 'View information on the Experimental status of the module Experimental Test')]");
+    $this->assertSession()->elementExists('xpath', "//a[contains(@href, 'https://example.com/experimental')]");
+
+    // Check that the deprecated module link was rendered correctly.
+    $this->assertSession()->elementExists('xpath', "//a[contains(@aria-label, 'View information on the Deprecated status of the module Deprecated module')]");
+    $this->assertSession()->elementExists('xpath', "//a[contains(@href, 'http://example.com/deprecated')]");
+
+    // Check that the obsolete module link was rendered correctly.
+    $this->assertSession()->elementExists('xpath', "//a[contains(@aria-label, 'View information on the Obsolete status of the module System obsolete status test')]");
+    $this->assertSession()->elementExists('xpath', "//a[contains(@href, 'https://example.com/obsolete')]");
 
     foreach (\Drupal::service('extension.list.module')->getAllInstalledInfo() as $module => $info) {
       $field_name = "uninstall[$module]";

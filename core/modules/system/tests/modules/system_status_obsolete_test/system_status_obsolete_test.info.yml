@@ -4,4 +4,4 @@ description: 'Support module for testing an obsolete module extension.'
 package: Testing
 version: VERSION
 lifecycle: obsolete
-lifecycle_link: 'https://i.giphy.com/media/100JPq1ylYXEti/giphy.webp'
+lifecycle_link: 'https://example.com/obsolete'
