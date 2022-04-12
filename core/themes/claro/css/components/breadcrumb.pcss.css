@@ -27,12 +27,24 @@
 }
 
 .breadcrumb__item + .breadcrumb__item::before {
+  display: inline-block;
   padding: 0 0.75rem;
   content: url(../../images/icons/currentColor/arrow-breadcrumb.svg);
-}
 
-[dir="rtl"] .breadcrumb__item + .breadcrumb__item::before {
-  content: url(../../images/icons/currentColor/arrow-breadcrumb-rtl.svg);
+  @nest [dir="rtl"] & {
+    transform: scaleX(-1);
+  }
+
+  @media (forced-colors: active) {
+    width: 5px; /* Width and height of the SVG. */
+    height: 8px;
+    content: "";
+    background-color: canvastext;
+    mask-image: url(../../images/icons/currentColor/arrow-breadcrumb.svg);
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+  }
 }
 
 .breadcrumb__link:hover,
