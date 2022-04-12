@@ -157,15 +157,14 @@
   }
 }
 
-@media screen and (-ms-high-contrast: active) {
+@media (-ms-high-contrast: active), (forced-colors: active) {
   .claro-details__summary::before {
     width: 0.5625rem;
     height: 0.5625rem;
     transition: transform var(--details-transform-transition-duration) ease-in 0s, margin var(--details-transform-transition-duration) ease-in 0s;
     transform: rotate(135deg); /* LTR */
-    border: 0.125rem solid;
-    border-bottom-color: transparent;
-    border-left-color: transparent;
+    border-top: 0.125rem solid;
+    border-right: 0.125rem solid;
     background: none;
   }
 
@@ -274,7 +273,7 @@
   transform: rotate(-90deg); /* for LTR and RTL */
 }
 
-@media screen and (-ms-high-contrast: active) {
+@media (-ms-high-contrast: active), (forced-colors: active) {
   .claro-details__summary:hover::before,
   .claro-details__summary:hover:focus::before {
     background: none;
@@ -530,7 +529,7 @@
   font-weight: normal;
 }
 
-@media screen and (-ms-high-contrast: active) {
+@media (-ms-high-contrast: active), (forced-colors: active) {
   .collapse-processed[open] > .claro-details__summary--accordion .details-title:not(:focus)::after,
   .collapse-processed[open] > .claro-details__summary--accordion-item .details-title:not(:focus)::after,
   .collapse-processed[open] > .claro-details__summary--vertical-tabs-item .details-title:not(:focus)::after {
