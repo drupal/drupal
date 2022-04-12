@@ -47,6 +47,11 @@ drupal.ckeditor5.quickedit-temporary-work-around:
     theme:
       css/quickedit-override.css: {}
 
+drupal.ckeditor5.codeBlock:
+  dependencies:
+    - core/ckeditor5.codeBlock
+    - core/ckeditor5.htmlSupport
+
 drupal.ckeditor5.image:
   js:
     js/build/drupalImage.js: { minified: true }
@@ -210,3 +215,8 @@ admin.table:
   css:
     theme:
       css/table.admin.css: { }
+
+admin.codeBlock:
+  css:
+    theme:
+      css/code-block.admin.css: { }

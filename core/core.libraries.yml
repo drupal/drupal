@@ -284,6 +284,19 @@ ckeditor5.language:
     - core/ckeditor5
     - core/ckeditor5.translations
 
+ckeditor5.codeBlock:
+  remote: https://github.com/ckeditor/ckeditor5
+  version: "34.0.0"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/ckeditor/ckeditor5/blob/v34.0.0/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/ckeditor5/code-block/code-block.js: { minified: true }
+  dependencies:
+    - core/ckeditor5
+    - core/ckeditor5.translations
+
 ckeditor5.translations:
   # No sensible version can be specified, since the translations may change at
   # any time.

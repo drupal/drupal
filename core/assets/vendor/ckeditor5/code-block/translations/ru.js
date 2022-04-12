@@ -1,0 +1,1 @@
+!function(n){const i=n.ru=n.ru||{};i.dictionary=Object.assign(i.dictionary||{},{"Insert code block":"Вставить код","Plain text":"Простой текст"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

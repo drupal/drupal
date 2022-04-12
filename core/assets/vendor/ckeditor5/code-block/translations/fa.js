@@ -1,0 +1,1 @@
+!function(n){const i=n.fa=n.fa||{};i.dictionary=Object.assign(i.dictionary||{},{"Insert code block":"درج بلوک کد","Plain text":"متن ساده"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

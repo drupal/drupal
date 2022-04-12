@@ -1,0 +1,1 @@
+!function(n){const t=n.th=n.th||{};t.dictionary=Object.assign(t.dictionary||{},{"Insert code block":"เพิ่มโค้ดบล็อก","Plain text":"ข้อความธรรมดา"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

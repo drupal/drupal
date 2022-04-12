@@ -12,16 +12,3 @@ ckeditor5_plugin_conditions_test_plugins_condition:
         - ckeditor5_table
     elements:
       - <foo>
-
-# @todo remove in https://www.drupal.org/project/drupal/issues/3263384
-ckeditor5_plugin_conditions_test_codeBlock_until_3263384_lands:
-  ckeditor5:
-    plugins: []
-  drupal:
-    label: TEST until #3263384 lands
-    toolbar_items:
-      codeBlockPlaceholder:
-        label: TODO
-    elements:
-      - <pre>
-      - <code class="lang-*">

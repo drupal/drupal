@@ -178,6 +178,29 @@ ckeditor5_code:
     elements:
       - <code>
 
+ckeditor5_codeBlock:
+  ckeditor5:
+    plugins:
+      - codeBlock.CodeBlock
+      - htmlSupport.GeneralHtmlSupport
+    config:
+      # The CodeBlock plugin supports only `<pre><code>â€¦</code></pre>`.
+      # Configure GHS to support `<pre>â€¦</pre>` markup as well.
+      htmlSupport:
+        allow:
+          -
+            name: pre
+  drupal:
+    label: Code Block
+    library: ckeditor5/drupal.ckeditor5.codeBlock
+    admin_library: ckeditor5/admin.codeBlock
+    toolbar_items:
+      codeBlock:
+        label: Code Block
+    elements:
+      - <pre>
+      - <code class="language-*">
+
 ckeditor5_strikethrough:
   ckeditor5:
     plugins: [basicStyles.Strikethrough]

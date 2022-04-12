@@ -1,0 +1,1 @@
+!function(n){const i=n.zh=n.zh||{};i.dictionary=Object.assign(i.dictionary||{},{"Insert code block":"插入程式碼區塊","Plain text":"純文字"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
