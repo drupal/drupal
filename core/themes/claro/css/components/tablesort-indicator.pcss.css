@@ -13,7 +13,15 @@
   opacity: 0.5;
   background: url(../../images/icons/222330/sort--inactive--ltr.svg) no-repeat 0 50%;
   background-size: auto;
+
+  @media (forced-colors: active) {
+    background: linktext;
+    mask-image: url(../../images/icons/222330/sort--inactive--ltr.svg);
+    mask-repeat: no-repeat;
+    mask-position: 0 50%;
+  }
 }
+
 /* stylelint-disable-next-line selector-type-no-unknown */
 _:-ms-fullscreen, /* Only IE 11 */
 .tablesort {
@@ -26,6 +34,13 @@ _:-ms-fullscreen, /* Only IE 11 */
   right: auto;
   left: 1rem; /* 16px */
   background-image: url(../../images/icons/222330/sort--inactive--rtl.svg);
+
+  @media (forced-colors: active) {
+    background: linktext;
+    mask-image: url(../../images/icons/222330/sort--inactive--rtl.svg);
+    mask-repeat: no-repeat;
+    mask-position: 0 50%;
+  }
 }
 /* stylelint-disable-next-line selector-type-no-unknown */
 _:-ms-fullscreen, /* Only IE 11 */
@@ -38,9 +53,19 @@ _:-ms-fullscreen, /* Only IE 11 */
 [dir="rtl"] .tablesort--asc {
   opacity: 1;
   background-image: url(../../images/icons/004adc/sort--asc.svg);
+
+  @media (forced-colors: active) {
+    background: linktext;
+    mask-image: url(../../images/icons/004adc/sort--asc.svg);
+  }
 }
 .tablesort--desc,
 [dir="rtl"] .tablesort--desc {
   opacity: 1;
   background-image: url(../../images/icons/004adc/sort--desc.svg);
+
+  @media (forced-colors: active) {
+    background: linktext;
+    mask-image: url(../../images/icons/004adc/sort--desc.svg);
+  }
 }
