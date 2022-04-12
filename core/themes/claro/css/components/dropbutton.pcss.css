@@ -184,7 +184,7 @@
 }
 
 /* High contrast. */
-@media screen and (-ms-high-contrast: active) {
+@media (-ms-high-contrast: active), (forced-colors: active) {
   /* Default. */
   .dropbutton__toggle::before {
     width: 0.5625rem;

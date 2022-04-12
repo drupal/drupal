@@ -119,6 +119,16 @@ body.drag {
   }
 }
 
+@media (forced-colors: active) {
+  .tabledrag-handle::after {
+    content: "";
+    background: linktext;
+    mask-image: url(../../images/icons/222330/tabledrag-handle.svg);
+    mask-repeat: no-repeat;
+    mask-position: center;
+  }
+}
+
 .tabledrag-handle::after,
 .tabledrag-disabled .tabledrag-handle.tabledrag-handle.tabledrag-handle::after {
   transform: scale(1);

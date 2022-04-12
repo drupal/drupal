@@ -42,6 +42,25 @@
   background-image: url(../../images/core/73b355/check.svg);
 }
 
+@media (forced-colors: active) {
+  .system-status-counter__status-icon:before {
+    background-color: canvastext;
+    background-image: none;
+    mask-repeat: no-repeat;
+    mask-position: right center;
+    mask-size: 40px;
+  }
+  .system-status-counter__status-icon--error:before {
+    mask-image: url(../../images/core/e32700/error.svg);
+  }
+  .system-status-counter__status-icon--warning:before {
+    mask-image: url(../../images/core/e29700/warning.svg);
+  }
+  .system-status-counter__status-icon--checked:before {
+    mask-image: url(../../images/core/73b355/check.svg);
+  }
+}
+
 .system-status-counter__status-title {
   display: inline-block;
   padding: 0 18px;

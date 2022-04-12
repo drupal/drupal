@@ -106,6 +106,31 @@
   background-repeat: no-repeat;
   background-position: center;
 }
+
+@media (forced-colors: active) {
+  .pager__item--first .pager__link::before {
+    mask-image: url(../../images/icons/545560/pager-first.svg);
+  }
+  .pager__item--previous .pager__link::before {
+    mask-image: url(../../images/icons/545560/pager-prev.svg);
+  }
+  .pager__item--next .pager__link::after {
+    mask-image: url(../../images/icons/545560/pager-next.svg);
+  }
+  .pager__item--last .pager__link::after {
+    mask-image: url(../../images/icons/545560/pager-last.svg);
+  }
+  .pager__item--first .pager__link::before,
+  .pager__item--previous .pager__link::before,
+  .pager__item--next .pager__link::after,
+  .pager__item--last .pager__link::after {
+    background-color: linktext;
+    background-image: none;
+    mask-repeat: no-repeat;
+    mask-position: center;
+  }
+}
+
 [dir="rtl"] .pager__item--first .pager__link::before,
 [dir="rtl"] .pager__item--previous .pager__link::before,
 [dir="rtl"] .pager__item--next .pager__link::after,
@@ -146,7 +171,7 @@
   margin-left: 0.5rem;
 }
 
-@media (-ms-high-contrast: active) {
+@media (-ms-high-contrast: active), (forced-colors: active) {
   .pager__item a:hover {
     text-decoration: underline;
   }
