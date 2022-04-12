@@ -8,6 +8,7 @@ use Drupal\editor\Entity\Editor;
 use Drupal\file\Entity\File;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\node\Entity\Node;
+use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\RoleInterface;
 use Symfony\Component\Validator\ConstraintViolation;
@@ -23,6 +24,7 @@ use Symfony\Component\Validator\ConstraintViolation;
 class CKEditor5Test extends CKEditor5TestBase {
 
   use TestFileCreationTrait;
+  use CKEditor5TestTrait;
 
   /**
    * {@inheritdoc}
@@ -105,22 +107,22 @@ class CKEditor5Test extends CKEditor5TestBase {
     ));
 
     $this->drupalGet('node/add');
+    $this->waitForEditor();
     $page->fillField('title[0][value]', 'My test content');
+
+    // Ensure that CKEditor 5 is focused.
+    $this->click('.ck-content');
+
     $this->assertNotEmpty($image_upload_field = $page->find('css', '.ck-file-dialog-button input[type="file"]'));
     $image = $this->getTestFiles('image')[0];
     $image_upload_field->attachFile($this->container->get('file_system')->realpath($image->uri));
     $assert_session->waitForElementVisible('css', '.ck-widget.image');
 
-    $this->click('.ck-widget.image');
-    $balloon_panel = $page->find('css', '.ck-balloon-panel');
-    $balloon_buttons = $balloon_panel->findAll('css', '[aria-label="Image toolbar"] button');
-    $this->assertSame('Change image text alternative', $balloon_buttons[0]->find('css', '.ck-button__label')->getHtml());
-    $balloon_buttons[0]->click();
-    $assert_session->waitForElementVisible('css', '.ck-balloon-panel .ck-text-alternative-form');
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-balloon-panel .ck-text-alternative-form'));
     $alt_override_input = $page->find('css', '.ck-balloon-panel .ck-text-alternative-form input[type=text]');
     $this->assertSame('', $alt_override_input->getValue());
     $alt_override_input->setValue('</em> Kittens & llamas are cute');
-    $balloon_panel->pressButton('Save');
+    $this->getBalloonButton('Save')->click();
     $page->pressButton('Save');
 
     $uploaded_image = File::load(1);
@@ -378,6 +380,10 @@ class CKEditor5Test extends CKEditor5TestBase {
 
     $this->drupalGet('node/add');
     $page->fillField('title[0][value]', 'My test content');
+
+    // Ensure that CKEditor 5 is focused.
+    $this->click('.ck-content');
+
     $this->assertNotEmpty($image_upload_field = $page->find('css', '.ck-file-dialog-button input[type="file"]'));
     $image = $this->getTestFiles('image')[0];
     $image_upload_field->attachFile($this->container->get('file_system')->realpath($image->uri));
@@ -385,6 +391,13 @@ class CKEditor5Test extends CKEditor5TestBase {
     // upload has completed and the image has been downcast.
     // @see https://www.drupal.org/project/drupal/issues/3250587
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-content img[data-entity-uuid]'));
+
+    // Add alt text to the image.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.image.ck-widget > img'));
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-balloon-panel .ck-text-alternative-form'));
+    $alt_override_input = $page->find('css', '.ck-balloon-panel .ck-text-alternative-form input[type=text]');
+    $alt_override_input->setValue('There is now alt text');
+    $this->getBalloonButton('Save')->click();
     $page->pressButton('Save');
 
     $uploaded_image = File::load(1);
@@ -394,7 +407,7 @@ class CKEditor5Test extends CKEditor5TestBase {
 
     // Ensure that width, height, and length attributes are not stored in the
     // database.
-    $this->assertEquals(sprintf('<img data-entity-uuid="%s" data-entity-type="file" src="%s">', $image_uuid, $image_url), Node::load(1)->get('body')->value);
+    $this->assertEquals(sprintf('<img data-entity-uuid="%s" data-entity-type="file" src="%s" alt="There is now alt text">', $image_uuid, $image_url), Node::load(1)->get('body')->value);
 
     // Ensure that data-entity-uuid and data-entity-type attributes are upcasted
     // correctly to CKEditor model.
