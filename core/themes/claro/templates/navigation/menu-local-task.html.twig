@@ -15,7 +15,15 @@
  * @see template_preprocess_menu_local_task()
  */
 #}
-<li{{ attributes.addClass('tabs__tab', 'js-tab', is_active ? 'is-active', is_active ? 'js-active-tab') }}>
+{%
+  set classes = [
+    'tabs__tab',
+    level == 'primary' ? 'js-tab',
+    is_active ? 'is-active',
+    is_active ? 'js-active-tab',
+  ]
+%}
+<li{{ attributes.addClass(classes) }}>
   {{ link }}
   {% if is_active and level == 'primary' %}
     <button class="reset-appearance tabs__trigger" aria-label="{{ 'Tabs display toggle'|t }}" data-drupal-nav-tabs-trigger>
