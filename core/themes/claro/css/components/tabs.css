@@ -194,6 +194,11 @@
   .tabs-wrapper {
     display: flex;
   }
+
+  .tabs-wrapper--secondary {
+    position: relative;
+  }
+
   .is-horizontal .tabs {
     flex-direction: row;
     width: auto;
@@ -239,6 +244,7 @@
     background: none;
     font-size: 1rem;
   }
+
   .is-horizontal .tabs__tab.is-active {
     order: 0;
     background: none;
