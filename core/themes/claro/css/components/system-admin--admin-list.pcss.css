@@ -60,8 +60,19 @@
 [dir="rtl"] .admin-item__link::before {
   right: 0;
   left: auto;
-  background-image: url(../../images/icons/004adc/arrow-left.svg);
+  transform: scaleX(-1);
 }
+
+@media (forced-colors: active) {
+  .admin-item__link::before {
+    mask-image: url(../../images/icons/004adc/arrow-right.svg);
+    mask-repeat: no-repeat;
+    mask-position: center center;
+    background-color: linktext;
+    background-image: none;
+  }
+}
+
 .admin-item__description {
   margin: 0.5em 0 0.25em;
   color: var(--color-gray-800);

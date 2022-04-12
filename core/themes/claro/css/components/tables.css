@@ -98,8 +98,18 @@ _:-ms-fullscreen, /* Only IE 11 */
   content: "";
   opacity: 0.5;
   background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8'%3e%3cpath d='M1.75.25v1.5h10.5V.25zm0 3v1.5h7.5v-1.5zm0 3v1.5h4.5v-1.5z' fill='%23222330'/%3e%3c/svg%3e") no-repeat 50% 50%;
-  background-size: contain;
+  background-size: contain
 }
+
+@media (forced-colors: active) {
+
+.sortable-heading > a::after {
+    opacity: 1;
+    background: linktext;
+    -webkit-mask: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8'%3e%3cpath d='M1.75.25v1.5h10.5V.25zm0 3v1.5h7.5v-1.5zm0 3v1.5h4.5v-1.5z' fill='%23222330'/%3e%3c/svg%3e") no-repeat 50% 50%;
+    mask: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8'%3e%3cpath d='M1.75.25v1.5h10.5V.25zm0 3v1.5h7.5v-1.5zm0 3v1.5h4.5v-1.5z' fill='%23222330'/%3e%3c/svg%3e") no-repeat 50% 50%
+}
+  }
 
 /* stylelint-disable-next-line selector-type-no-unknown */
 
@@ -114,8 +124,17 @@ _:-ms-fullscreen, /* Only IE 11 */
 [dir="rtl"] .sortable-heading > a::after {
   right: auto;
   left: 1rem;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8'%3e%3cpath d='M12.25.25v1.5H1.75V.25zm0 3v1.5h-7.5v-1.5zm0 3v1.5h-4.5v-1.5z' fill='%23222330'/%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8'%3e%3cpath d='M12.25.25v1.5H1.75V.25zm0 3v1.5h-7.5v-1.5zm0 3v1.5h-4.5v-1.5z' fill='%23222330'/%3e%3c/svg%3e")
 }
+
+@media (forced-colors: active) {
+
+[dir="rtl"] .sortable-heading > a::after {
+    background: linktext;
+    -webkit-mask: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8'%3e%3cpath d='M12.25.25v1.5H1.75V.25zm0 3v1.5h-7.5v-1.5zm0 3v1.5h-4.5v-1.5z' fill='%23222330'/%3e%3c/svg%3e") no-repeat 50% 50%;
+    mask: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8'%3e%3cpath d='M12.25.25v1.5H1.75V.25zm0 3v1.5h-7.5v-1.5zm0 3v1.5h-4.5v-1.5z' fill='%23222330'/%3e%3c/svg%3e") no-repeat 50% 50%
+}
+  }
 
 /* stylelint-disable-next-line selector-type-no-unknown */
 

@@ -56,6 +56,32 @@
   background-image: url(../../images/core/ffffff/database.svg);
 }
 
+@media (forced-colors: active) {
+  .system-status-general-info__item-icon:before {
+    background-color: canvastext;
+    background-image: none;
+    mask-repeat: no-repeat;
+    mask-position: 50% center;
+    mask-size: 24px;
+  }
+  .system-status-general-info__item-icon--drupal:before {
+    mask-image: url(../../images/core/ffffff/drupal-logo.svg);
+  }
+  .system-status-general-info__item-icon--clock:before {
+    mask-image: url(../../images/core/ffffff/clock.svg);
+  }
+  .system-status-general-info__item-icon--server:before {
+    mask-image: url(../../images/core/ffffff/server.svg);
+  }
+  .system-status-general-info__item-icon--php:before {
+    mask-image: url(../../images/core/ffffff/php-logo.svg);
+    mask-size: 32px;
+  }
+  .system-status-general-info__item-icon--database:before {
+    mask-image: url(../../images/core/ffffff/database.svg);
+  }
+}
+
 .system-status-general-info__item-details {
   position: relative;
   display: inline-block;

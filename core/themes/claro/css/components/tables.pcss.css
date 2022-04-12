@@ -82,6 +82,12 @@ _:-ms-fullscreen, /* Only IE 11 */
   opacity: 0.5;
   background: url(../../images/icons/222330/sort--inactive--ltr.svg) no-repeat 50% 50%;
   background-size: contain;
+
+  @media (forced-colors: active) {
+    opacity: 1;
+    background: linktext;
+    mask: url(../../images/icons/222330/sort--inactive--ltr.svg) no-repeat 50% 50%;
+  }
 }
 /* stylelint-disable-next-line selector-type-no-unknown */
 _:-ms-fullscreen, /* Only IE 11 */
@@ -95,6 +101,11 @@ _:-ms-fullscreen, /* Only IE 11 */
   right: auto;
   left: 1rem;
   background-image: url(../../images/icons/222330/sort--inactive--rtl.svg);
+
+  @media (forced-colors: active) {
+    background: linktext;
+    mask: url(../../images/icons/222330/sort--inactive--rtl.svg) no-repeat 50% 50%;
+  }
 }
 /* stylelint-disable-next-line selector-type-no-unknown */
 _:-ms-fullscreen, /* Only IE 11 */
