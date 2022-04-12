@@ -233,6 +233,42 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-code-block/src/codeblock.js
+ *
+ * @typedef {module:code-block/codeblock} module:code-block/codeblock~CodeBlock
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-code-block/src/codeblockcommand.js
+ *
+ * @typedef {module:code-block/codeblockcommand} module:code-block/codeblockcommand~CodeBlockCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-code-block/src/codeblockediting.js
+ *
+ * @typedef {module:code-block/codeblockediting} module:code-block/codeblockediting~CodeBlockEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-code-block/src/codeblockui.js
+ *
+ * @typedef {module:code-block/codeblockui} module:code-block/codeblockui~CodeBlockUI
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-code-block/src/indentcodeblockcommand.js
+ *
+ * @typedef {module:code-block/indentcodeblockcommand} module:code-block/indentcodeblockcommand~IndentCodeBlockCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-code-block/src/outdentcodeblockcommand.js
+ *
+ * @typedef {module:code-block/outdentcodeblockcommand} module:code-block/outdentcodeblockcommand~OutdentCodeBlockCommand
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-core/src/command.js
  *
  * @typedef {module:core/command} module:core/command~Command
@@ -707,6 +743,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-engine/src/model/utils/insertobject.js
+ *
+ * @typedef {module:engine/model/utils/insertobject} module:engine/model/utils/insertobject~insertObject
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-engine/src/model/utils/modifyselection.js
  *
  * @typedef {module:engine/model/utils/modifyselection} module:engine/model/utils/modifyselection~modifySelection
@@ -890,6 +932,12 @@
  * Declared in file @ckeditor/ckeditor5-engine/src/view/observer/selectionobserver.js
  *
  * @typedef {module:engine/view/observer/selectionobserver} module:engine/view/observer/selectionobserver~SelectionObserver
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-engine/src/view/observer/tabobserver.js
+ *
+ * @typedef {module:engine/view/observer/tabobserver} module:engine/view/observer/tabobserver~TabObserver
  */
 
 /**
@@ -1094,6 +1142,12 @@
  * Declared in file @ckeditor/ckeditor5-html-support/src/integrations/codeblock.js
  *
  * @typedef {module:html-support/integrations/codeblock} module:html-support/integrations/codeblock~CodeBlockElementSupport
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-html-support/src/integrations/documentlist.js
+ *
+ * @typedef {module:html-support/integrations/documentlist} module:html-support/integrations/documentlist~DocumentListElementSupport
  */
 
 /**
@@ -1526,6 +1580,78 @@
  * Declared in file @ckeditor/ckeditor5-link/src/utils/manualdecorator.js
  *
  * @typedef {module:link/utils} module:link/utils~ManualDecorator
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/documentlist.js
+ *
+ * @typedef {module:list/documentlist} module:list/documentlist~DocumentList
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/documentlist/documentlistcommand.js
+ *
+ * @typedef {module:list/documentlist/documentlistcommand} module:list/documentlist/documentlistcommand~DocumentListCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/documentlist/documentlistediting.js
+ *
+ * @typedef {module:list/documentlist/documentlistediting} module:list/documentlist/documentlistediting~DocumentListEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/documentlist/documentlistindentcommand.js
+ *
+ * @typedef {module:list/documentlist/documentlistindentcommand} module:list/documentlist/documentlistindentcommand~DocumentListIndentCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/documentlist/documentlistmergecommand.js
+ *
+ * @typedef {module:list/documentlist/documentlistmergecommand} module:list/documentlist/documentlistmergecommand~DocumentListMergeCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/documentlist/documentlistsplitcommand.js
+ *
+ * @typedef {module:list/documentlist/documentlistsplitcommand} module:list/documentlist/documentlistsplitcommand~DocumentListSplitCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/documentlist/utils/listwalker.js
+ *
+ * @typedef {module:list/documentlist/utils/listwalker} module:list/documentlist/utils/listwalker~ListWalker
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/documentlistproperties.js
+ *
+ * @typedef {module:list/documentlistproperties} module:list/documentlistproperties~DocumentListProperties
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/documentlistproperties/documentlistpropertiesediting.js
+ *
+ * @typedef {module:list/documentlistproperties/documentlistpropertiesediting} module:list/documentlistproperties/documentlistpropertiesediting~DocumentListPropertiesEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/documentlistproperties/documentlistreversedcommand.js
+ *
+ * @typedef {module:list/documentlistproperties/documentlistreversedcommand} module:list/documentlistproperties/documentlistreversedcommand~DocumentListReversedCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/documentlistproperties/documentliststartcommand.js
+ *
+ * @typedef {module:list/documentlistproperties/documentliststartcommand} module:list/documentlistproperties/documentliststartcommand~DocumentListStartCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/documentlistproperties/documentliststylecommand.js
+ *
+ * @typedef {module:list/documentlistproperties/documentliststylecommand} module:list/documentlistproperties/documentliststylecommand~DocumentListStyleCommand
  */
 
 /**
@@ -2864,6 +2990,12 @@
  * Declared in file @ckeditor/ckeditor5-utils/src/focustracker.js
  *
  * @typedef {module:utils/focustracker} module:utils/focustracker~FocusTracker
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-utils/src/inserttopriorityarray.js
+ *
+ * @typedef {module:utils/inserttopriorityarray} module:utils/inserttopriorityarray~insertToPriorityArray
  */
 
 /**
