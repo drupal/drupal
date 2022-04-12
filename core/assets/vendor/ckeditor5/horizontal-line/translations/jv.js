@@ -1,0 +1,1 @@
+!function(i){const n=i.jv=i.jv||{};n.dictionary=Object.assign(n.dictionary||{},{"Horizontal line":"Garis horisontal"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

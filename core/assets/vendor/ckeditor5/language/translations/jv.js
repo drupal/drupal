@@ -1,0 +1,1 @@
+!function(a){const n=a.jv=a.jv||{};n.dictionary=Object.assign(n.dictionary||{},{"Choose language":"Pilih basa",Language:"Basa","Remove language":"Busek basa"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
