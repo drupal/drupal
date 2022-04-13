@@ -345,11 +345,13 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     }
 
     // The resulting Editor config entity should be valid.
-    $typed_config = $this->typedConfig->createFromNameAndData(
-      $updated_text_editor->getConfigDependencyName(),
-      $updated_text_editor->toArray(),
-    );
-    $this->assertCount(0, $typed_config->validate());
+    $violations = $this->validatePairToViolationsArray($updated_text_editor, $text_format, FALSE);
+    // At this point, the fundamental compatibility errors do not matter, they
+    // have been checked above; whatever remains is expected.
+    if (isset($violations[''])) {
+      unset($violations['']);
+    }
+    $this->assertSame([], $violations);
 
     // If the text format has HTML restrictions, ensure that a strict superset
     // is allowed after switching to CKEditor 5.
