@@ -22,10 +22,8 @@ content:
     type: image
     label: visually_hidden
     settings:
-      image_style: medium_8_7
       image_link: ''
-      image_loading:
-        attribute: lazy
+      image_style: medium_8_7
     third_party_settings: {  }
     weight: 1
     region: content

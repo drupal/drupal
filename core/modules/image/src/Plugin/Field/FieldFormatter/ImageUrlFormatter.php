@@ -34,7 +34,7 @@ class ImageUrlFormatter extends ImageFormatter {
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $element = parent::settingsForm($form, $form_state);
 
-    unset($element['image_link'], $element['image_loading']);
+    unset($element['image_link']);
 
     return $element;
   }

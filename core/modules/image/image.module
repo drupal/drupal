@@ -5,7 +5,6 @@
  * Exposes global functionality for creating image styles.
  */
 
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -15,7 +14,6 @@ use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\file\FileInterface;
 use Drupal\image\Entity\ImageStyle;
-use Drupal\image\ImageConfigUpdater;
 
 /**
  * The name of the query parameter for image derivative tokens.
@@ -368,15 +366,6 @@ function image_entity_presave(EntityInterface $entity) {
   // Both FieldStorageConfigInterface and FieldConfigInterface have a
   // setSetting() method.
   $entity->setSetting('default_image', $default_image);
-}
-
-/**
- * Implements hook_ENTITY_TYPE_presave() for entity_view_display.
- */
-function image_entity_view_display_presave(EntityViewDisplayInterface $view_display): void {
-  $config_updater = \Drupal::classResolver(ImageConfigUpdater::class);
-  assert($config_updater instanceof ImageConfigUpdater);
-  $config_updater->processImageLazyLoad($view_display);
 }
 
 /**
