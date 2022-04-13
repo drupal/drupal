@@ -3,6 +3,8 @@
 namespace Drupal\Tests\views\Kernel;
 
 use Drupal\Core\Config\FileStorage;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\views\ViewsConfigUpdater;
 
 /**
@@ -23,7 +25,12 @@ class ViewsConfigUpdaterTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['views_config_entity_test'];
+  protected static $modules = [
+    'views_config_entity_test',
+    'field',
+    'file',
+    'image',
+  ];
 
   /**
    * {@inheritdoc}
@@ -34,6 +41,18 @@ class ViewsConfigUpdaterTest extends ViewsKernelTestBase {
     $this->configUpdater = $this->container
       ->get('class_resolver')
       ->getInstanceFromDefinition(ViewsConfigUpdater::class);
+
+    FieldStorageConfig::create([
+      'field_name' => 'user_picture',
+      'entity_type' => 'user',
+      'type' => 'image',
+    ])->save();
+    FieldConfig::create([
+      'entity_type' => 'user',
+      'field_name' => 'user_picture',
+      'file_directory' => 'pictures/[date:custom:Y]-[date:custom:m]',
+      'bundle' => 'user',
+    ])->save();
   }
 
   /**
@@ -96,6 +115,15 @@ class ViewsConfigUpdaterTest extends ViewsKernelTestBase {
     $this->expectDeprecation('The operator defaults update for the "test_exposed_filters" view is deprecated in drupal:9.0.0 and is removed from drupal:10.0.0. Module-provided Views configuration should be updated to accommodate the changes described at https://www.drupal.org/node/2869168.');
     $test_view = $this->loadTestView('views.view.test_exposed_filters');
     $needs_update = $this->configUpdater->needsOperatorDefaultsUpdate($test_view);
+    $this->assertTrue($needs_update);
+  }
+
+  /**
+   * @covers ::needsImageLazyLoadFieldUpdate
+   */
+  public function testNeedsImageLazyLoadFieldUpdate() {
+    $test_view = $this->loadTestView('views.view.test_user_multi_value');
+    $needs_update = $this->configUpdater->needsImageLazyLoadFieldUpdate($test_view);
     $this->assertTrue($needs_update);
   }
 

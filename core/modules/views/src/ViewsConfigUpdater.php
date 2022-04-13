@@ -141,6 +141,9 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       if ($this->processSortFieldIdentifierUpdateHandler($handler, $handler_type)) {
         $changed = TRUE;
       }
+      if ($this->processImageLazyLoadFieldHandler($handler, $handler_type, $view)) {
+        $changed = TRUE;
+      }
       return $changed;
     });
   }
@@ -493,6 +496,50 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
     return $this->processDisplayHandlers($view, TRUE, function (array &$handler, string $handler_type): bool {
       return $this->processSortFieldIdentifierUpdateHandler($handler, $handler_type);
     });
+  }
+
+  /**
+   * Add lazy load options to all image type field configurations.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The View to update.
+   *
+   * @return bool
+   *   Whether the view was updated.
+   */
+  public function needsImageLazyLoadFieldUpdate(ViewEntityInterface $view) {
+    return $this->processDisplayHandlers($view, TRUE, function (&$handler, $handler_type) use ($view) {
+      return $this->processImageLazyLoadFieldHandler($handler, $handler_type, $view);
+    });
+  }
+
+  /**
+   * Processes image type fields.
+   *
+   * @param array $handler
+   *   A display handler.
+   * @param string $handler_type
+   *   The handler type.
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The View being updated.
+   *
+   * @return bool
+   *   Whether the handler was updated.
+   */
+  protected function processImageLazyLoadFieldHandler(array &$handler, string $handler_type, ViewEntityInterface $view) {
+    $changed = FALSE;
+
+    // Add any missing settings for lazy loading.
+    if (($handler_type === 'field')
+      && isset($handler['plugin_id'], $handler['type'])
+      && $handler['plugin_id'] === 'field'
+      && $handler['type'] === 'image'
+      && !isset($handler['settings']['image_loading'])) {
+      $handler['settings']['image_loading'] = ['attribute' => 'lazy'];
+      $changed = TRUE;
+    }
+
+    return $changed;
   }
 
   /**
