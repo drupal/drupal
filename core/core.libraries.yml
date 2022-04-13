@@ -1,18 +1,5 @@
 # All libraries are defined in alphabetical order.
 
-backbone:
-  remote: https://github.com/jashkenas/backbone
-  version: "1.4.0"
-  license:
-    name: MIT
-    url: https://raw.githubusercontent.com/jashkenas/backbone/1.4.0/LICENSE
-    gpl-compatible: true
-  js:
-    assets/vendor/backbone/backbone-min.js: { weight: -19, minified: true }
-  dependencies:
-    - core/underscore
-  deprecated: The %library_id% asset library is deprecated in Drupal 9.4.0 and will be removed in Drupal 10.0.0.
-
 internal.backbone:
   # Internal library. Do not depend on it outside core nor add new core usage.
   # The library will be removed as soon as the following issues are fixed:
@@ -1090,17 +1077,6 @@ tabbable.jquery.shim:
     - core/drupal
     - core/tabbable
     - core/jquery
-
-underscore:
-  remote: https://github.com/jashkenas/underscore
-  version: "1.13.2"
-  license:
-    name: MIT
-    url: https://raw.githubusercontent.com/jashkenas/underscore/1.13.2/LICENSE
-    gpl-compatible: true
-  js:
-    assets/vendor/underscore/underscore-min.js: { weight: -20, minified: true }
-  deprecated: The %library_id% asset library is deprecated in Drupal 9.4.0 and will be removed in Drupal 10.0.0.
 
 internal.underscore:
   # Internal library. Do not depend on it outside core nor add new core usage.
