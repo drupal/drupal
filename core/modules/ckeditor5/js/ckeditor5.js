@@ -337,26 +337,19 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       dialogSettings.dialogClass = classes.join(' ');
       dialogSettings.autoResize = window.matchMedia('(min-width: 600px)').matches;
       dialogSettings.width = 'auto';
-      var $content = $("<div class=\"ckeditor5-dialog-loading\"><span style=\"top: -40px;\" class=\"ckeditor5-dialog-loading-link\">".concat(Drupal.t('Loading...'), "</span></div>"));
-      $content.appendTo($('body'));
       var ckeditorAjaxDialog = Drupal.ajax({
         dialog: dialogSettings,
         dialogType: 'modal',
         selector: '.ckeditor5-dialog-loading-link',
         url: url,
         progress: {
-          type: 'throbber'
+          type: 'fullscreen'
         },
         submit: {
           editor_object: {}
         }
       });
       ckeditorAjaxDialog.execute();
-      window.setTimeout(function () {
-        $content.find('span').animate({
-          top: '0px'
-        });
-      }, 1000);
       Drupal.ckeditor5.saveCallback = saveCallback;
     }
   };
