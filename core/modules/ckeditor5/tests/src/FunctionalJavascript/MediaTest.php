@@ -791,16 +791,6 @@ class MediaTest extends WebDriverTestBase {
     // linking media.
     $this->assertNotEmpty($xpath->query('//a[@href="http://linking-embedded-media.com"]/drupal-media[@data-caption="baz"]'));
 
-    // Remove caption from media for now to avoid incompatibility issues in GHS
-    // linked media integration.
-    // @todo remove this step after
-    //   https://www.drupal.org/project/drupal/issues/3268318 has been resolved.
-    $this->assertNotEmpty($drupalmedia = $assert_session->waitForElementVisible('css', '.ck-content .ck-widget.drupal-media'));
-    $drupalmedia->click();
-    $this->assertVisibleBalloon('.ck-toolbar[aria-label="Drupal Media toolbar"]');
-    $this->getBalloonButton('Toggle caption off')->click();
-    $this->assertTrue($assert_session->waitForElementRemoved('css', '.ck-content .ck-widget.drupal-media figcaption'));
-
     // Add `class="trusted"` to the link.
     $this->assertEmpty($xpath->query('//a[@href="http://linking-embedded-media.com" and @class="trusted"]'));
     $this->pressEditorButton('Source');
@@ -856,6 +846,10 @@ class MediaTest extends WebDriverTestBase {
     // structure in detail.
     $assert_session->elementNotExists('css', '.ck-content a');
     $assert_session->elementExists('css', '.ck-content .drupal-media.ck-widget > div[aria-label] > article > div > img[src*="image-test.png"]');
+
+    // Ensure that figcaption exists.
+    // @see https://www.drupal.org/project/drupal/issues/3268318
+    $assert_session->elementExists('css', '.ck-content .drupal-media.ck-widget > figcaption');
 
     // Assert the "dataDowncast" HTML after making changes.
     $xpath = new \DOMXPath($this->getEditorDataAsDom());

@@ -40,7 +40,7 @@ function upcastMediaLink() {
 
         // There's an <drupal-media> inside an <a> element - we consume it so it
         // won't be picked up by the Link plugin.
-        const consumableAttributes = { attributes: ['href'] };
+        const consumableAttributes = { attributes: ['href'], name: true };
 
         // Consume the `href` attribute so the default one will not convert it to
         // $text attribute.
