@@ -29,7 +29,8 @@
     "spellcheck:core": "cspell \"**/*\" \".*\" \"../composer/**/*\" \"../composer.json\"",
     "vendor-update": "node ./scripts/js/vendor-update.js",
     "watch:ckeditor5": "webpack --config ./modules/ckeditor5/webpack.config.js --watch",
-    "build:ckeditor5": "webpack --config ./modules/ckeditor5/webpack.config.js"
+    "build:ckeditor5": "webpack --config ./modules/ckeditor5/webpack.config.js",
+    "build:ckeditor5-types": "node ./scripts/js/ckeditor5-types-documentation.js"
   },
   "optionalDependencies": {
     "@ckeditor/ckeditor5-alignment": "~34.0.0",
