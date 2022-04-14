@@ -10,7 +10,7 @@
         "behat/mink": "^1.10",
         "behat/mink-browserkit-driver": "^2.1",
         "behat/mink-selenium2-driver": "^1.4",
-        "composer/composer": "^2.3.0",
+        "composer/composer": "^2.3.5",
         "drupal/coder": "^8.3.10",
         "easyrdf/easyrdf": "^1.0",
         "instaclick/php-webdriver": "^1.4.1",
