@@ -679,7 +679,8 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         ],
         'plugins' => $basic_html_test_case['expected_ckeditor5_settings']['plugins'],
       ],
-      'expected_superset' => $basic_html_test_case['expected_superset'],
+      // @todo: Remove data-view-mode in https://www.drupal.org/project/drupal/issues/3269657.
+      'expected_superset' => $basic_html_test_case['expected_superset'] . ' <drupal-media data-view-mode>',
       'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
       'expected_messages' => array_merge($basic_html_test_case['expected_messages'], [
         "This format's HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol start type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;.",

@@ -89,7 +89,7 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
           'status' => TRUE,
           'weight' => -10,
           'settings' => [
-            'allowed_html' => "<p> <br> <drupal-media data-entity-type data-entity-uuid alt>",
+            'allowed_html' => "<p> <br> <drupal-media data-entity-type data-entity-uuid data-view-mode alt>",
             'filter_html_help' => TRUE,
             'filter_html_nofollow' => TRUE,
           ],
@@ -168,7 +168,7 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
 
     $this->drupalGet($path, ['query' => ['uuid' => $uuid, 'token' => $token]]);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSame(json_encode(['imageSourceMetadata' => ['alt' => 'default alt']]), $this->getSession()->getPage()->getContent());
+    $this->assertSame(json_encode(["type" => "image", 'imageSourceMetadata' => ['alt' => 'default alt']]), $this->getSession()->getPage()->getContent());
 
     $this->mediaImage->set('field_media_image', [
       'target_id' => 1,
@@ -177,11 +177,11 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
     ])->save();
     $this->drupalGet($path, ['query' => ['uuid' => $uuid, 'token' => $token]]);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSame(json_encode(['imageSourceMetadata' => ['alt' => '']]), $this->getSession()->getPage()->getContent());
+    $this->assertSame(json_encode(['type' => 'image', 'imageSourceMetadata' => ['alt' => '']]), $this->getSession()->getPage()->getContent());
 
     $this->drupalGet($path, ['query' => ['uuid' => $this->mediaFile->uuid(), 'token' => $token]]);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSame(json_encode([]), $this->getSession()->getPage()->getContent());
+    $this->assertSame(json_encode(['type' => 'file']), $this->getSession()->getPage()->getContent());
 
     // Ensure that unpublished media returns 403.
     $this->mediaImage->setUnpublished()->save();
@@ -245,13 +245,13 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
     $this->drupalGet($path, ['query' => ['uuid' => $uuid, 'token' => $token], 'language' => $media_fi->language()]);
     $this->assertSession()->statusCodeEquals(200);
     // cSpell:disable-next-line
-    $this->assertSame(json_encode(['imageSourceMetadata' => ['alt' => 'oletus alt-teksti kuvalle']]), $this->getSession()->getPage()->getContent());
+    $this->assertSame(json_encode(['type' => 'image', 'imageSourceMetadata' => ['alt' => 'oletus alt-teksti kuvalle']]), $this->getSession()->getPage()->getContent());
 
     // Ensure that default translation is returned when no language is
     // specified.
     $this->drupalGet($path, ['query' => ['uuid' => $uuid, 'token' => $token]]);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSame(json_encode(['imageSourceMetadata' => ['alt' => 'default alt']]), $this->getSession()->getPage()->getContent());
+    $this->assertSame(json_encode(['type' => 'image', 'imageSourceMetadata' => ['alt' => 'default alt']]), $this->getSession()->getPage()->getContent());
   }
 
 }

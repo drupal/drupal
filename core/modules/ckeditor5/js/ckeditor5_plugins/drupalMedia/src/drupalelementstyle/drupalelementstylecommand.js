@@ -1,52 +1,17 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:words documentselection */
 import { Command } from 'ckeditor5/src/core';
+import { getClosestElementWithElementStyleAttribute } from './utils';
+import { groupNameToModelAttributeKey } from '../utils';
 
 /**
  * @module drupalMedia/drupalelementstyle/drupalelementstylecommand
  */
 
 /**
- * Gets closest element that has drupalElementStyle attribute in schema.
- *
- * @param {module:engine/model/documentselection~DocumentSelection} selection
- *   The current document selection.
- * @param {module:engine/model/schema~Schema} schema
- *   The model schema.
- *
- * @return {null|module:engine/model/element~Element}
- *   The closest element that supports element styles.
- */
-function getClosestElementWithElementStyleAttribute(selection, schema) {
-  const selectedElement = selection.getSelectedElement();
-
-  if (
-    selectedElement &&
-    schema.checkAttribute(selectedElement, 'drupalElementStyle')
-  ) {
-    return selectedElement;
-  }
-
-  let parent = selection.getFirstPosition().parent;
-
-  while (parent) {
-    if (
-      parent.is('element') &&
-      schema.checkAttribute(parent, 'drupalElementStyle')
-    ) {
-      return parent;
-    }
-
-    parent = parent.parent;
-  }
-
-  return null;
-}
-
-/**
  * The Drupal Element style command.
  *
- * This is used to apply Drupal Element style option to supported model elements.
+ * This is used to apply the Drupal Element Style option to supported model
+ * elements.
  *
  * @extends module:core/command~Command
  *
@@ -58,81 +23,112 @@ export default class DrupalElementStyleCommand extends Command {
    *
    * @param {module:core/editor/editor~Editor} editor
    *   The editor instance.
-   * @param {Drupal.CKEditor5~DrupalElementStyle[]} styles
+   * @param {Object<string, Drupal.CKEditor5~DrupalElementStyleDefinition>} styles
    *   All available Drupal Element Styles.
    */
   constructor(editor, styles) {
     super(editor);
-    this._styles = new Map(
-      styles.map((style) => {
-        return [style.name, style];
-      }),
-    );
+    this.styles = {};
+    Object.keys(styles).forEach((group) => {
+      this.styles[group] = new Map(
+        styles[group].map((style) => {
+          return [style.name, style];
+        }),
+      );
+    });
+    this.modelAttributes = [];
+    // eslint-disable-next-line no-restricted-syntax
+    for (const group of Object.keys(styles)) {
+      const modelAttribute = groupNameToModelAttributeKey(group);
+      // Generate list of model attributes.
+      this.modelAttributes.push(modelAttribute);
+    }
   }
 
   /**
    * @inheritDoc
    */
   refresh() {
-    const editor = this.editor;
+    const { editor } = this;
     const element = getClosestElementWithElementStyleAttribute(
       editor.model.document.selection,
       editor.model.schema,
+      this.modelAttributes,
     );
 
     this.isEnabled = !!element;
 
     if (this.isEnabled) {
-      this.value = element.getAttribute('drupalElementStyle');
-
-      // If value is falsy, check if there is a default style to apply to the
-      // element.
-      if (!this.value) {
-        // eslint-disable-next-line no-restricted-syntax
-        for (const [name, style] of this._styles.entries()) {
-          if (style.isDefault) {
-            const appliesToCurrentElement = style.modelElements.find(
-              (modelElement) => element.is('element', modelElement),
-            );
-            if (appliesToCurrentElement) {
-              this.value = name;
-              break;
-            }
-          }
-        }
-      }
+      // Assign value to be corresponding command value based on the element's modelAttribute.
+      this.value = this.getValue(element);
     } else {
       this.value = false;
     }
   }
 
   /**
+   * Gets the command value including groups and values.
+   *
+   * @example {drupalAlign: 'left', drupalViewMode: 'full'}
+   *
+   * @param {module:engine/model/element~Element} element
+   *   The element.
+   *
+   * @return {Object}
+   *   The groups and values in the form of an object.
+   */
+  getValue(element) {
+    const value = {};
+    // Get value for each of the Drupal Element Style groups.
+    Object.keys(this.styles).forEach((group) => {
+      const modelAttribute = groupNameToModelAttributeKey(group);
+      if (element.hasAttribute(modelAttribute)) {
+        value[group] = element.getAttribute(modelAttribute);
+      } else {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const [, style] of this.styles[group]) {
+          // Set it to the default value.
+          if (style.isDefault) {
+            value[group] = style.name;
+          }
+        }
+      }
+    });
+    return value;
+  }
+
+  /**
    * Executes the command and applies the style to the selected model element.
    *
    * @example
-   *    editor.execute('drupalElementStyle', { value: 'alignLeft' });
+   *    editor.execute('drupalElementStyle', { value: 'left', group: 'align'});
    *
    * @param {Object} options
    *   The command options.
    * @param {string} options.value
    *   The name of the style as configured in the Drupal Element style
    *   configuration.
+   * @param {string} options.group
+   *   The group name of the drupalElementStyle.
    */
   execute(options = {}) {
-    const editor = this.editor;
-    const model = editor.model;
-
+    const {
+      editor: { model },
+    } = this;
+    const { value, group } = options;
+    const modelAttribute = groupNameToModelAttributeKey(group);
     model.change((writer) => {
-      const requestedStyle = options.value;
       const element = getClosestElementWithElementStyleAttribute(
         model.document.selection,
         model.schema,
+        this.modelAttributes,
       );
-
-      if (!requestedStyle || this._styles.get(requestedStyle).isDefault) {
-        writer.removeAttribute('drupalElementStyle', element);
+      if (!value || this.styles[group].get(value).isDefault) {
+        // Remove attribute from the element.
+        writer.removeAttribute(modelAttribute, element);
       } else {
-        writer.setAttribute('drupalElementStyle', requestedStyle, element);
+        // Set the attribute value on the element.
+        writer.setAttribute(modelAttribute, value, element);
       }
     });
   }

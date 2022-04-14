@@ -124,3 +124,22 @@ export function getPreviewContainer(children) {
 
   return null;
 }
+
+/**
+ * Gets model attribute key based on Drupal Element Style group.
+ *
+ * @example
+ *    Example: 'align' -> 'drupalElementStyleAlign'
+ *
+ * @param {string} group
+ *   The name of the group (ex. 'align', 'viewMode').
+ * @return {string}
+ *   Model attribute key.
+ *
+ * @internal
+ */
+export function groupNameToModelAttributeKey(group) {
+  // Manipulate string to have first letter capitalized to append in camel case.
+  const capitalizedFirst = group[0].toUpperCase() + group.substring(1);
+  return `drupalElementStyle${capitalizedFirst}`;
+}

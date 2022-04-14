@@ -20,10 +20,11 @@ function ckeditor5_drupalelementstyle_test_ckeditor5_plugin_info_alter(array &$p
     0 => [
       'name' => 'drupalMedia:align',
       'title' => 'Test title',
+      'display' => 'splitButton',
       'items' => array_values(array_filter($media_align_plugin_definition['ckeditor5']['config']['drupalMedia']['toolbar'], function (string $toolbar_item): bool {
         return $toolbar_item !== '|';
       })),
-      'defaultItem' => 'drupalElementStyle:breakText',
+      'defaultItem' => 'drupalElementStyle:align:breakText',
     ],
   ];
   $plugin_definitions['media_mediaAlign'] = new CKEditor5PluginDefinition($media_align_plugin_definition);
