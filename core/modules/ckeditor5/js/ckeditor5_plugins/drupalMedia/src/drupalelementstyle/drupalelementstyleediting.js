@@ -3,6 +3,7 @@
 import { Plugin, icons } from 'ckeditor5/src/core';
 import { first } from 'ckeditor5/src/utils';
 import DrupalElementStyleCommand from './drupalelementstylecommand';
+import { groupNameToModelAttributeKey } from '../utils';
 
 /**
  * @module drupalMedia/drupalelementstyle/drupalelementstyleediting
@@ -58,7 +59,10 @@ function modelToViewStyleAttribute(styles) {
     if (newStyle) {
       if (newStyle.attributeName === 'class') {
         viewWriter.addClass(newStyle.attributeValue, viewElement);
-      } else {
+      } else if (!newStyle.isDefault) {
+        // We only reach this condition if the style is not the default value.
+        // In those instances, there is no need to downcast as the default value
+        // is set automatically when necessary.
         viewWriter.setAttribute(
           newStyle.attributeName,
           newStyle.attributeValue,
@@ -75,9 +79,9 @@ function modelToViewStyleAttribute(styles) {
  * This view to model converted supports styles that are configured to use
  * either CSS class or an attribute.
  *
- * Note that only one style can be applied to each model element.
+ * Note that more than one style can be applied to each modelElement.
  */
-function viewToModelStyleAttribute(styles) {
+function viewToModelStyleAttribute(styles, modelAttribute) {
   // Convert only non–default styles.
   const nonDefaultStyles = styles.filter((style) => !style.isDefault);
 
@@ -94,11 +98,9 @@ function viewToModelStyleAttribute(styles) {
       return;
     }
 
-    // Stop conversion early if the drupalElementStyle attribute isn't allowed
+    // Stop conversion early if modelAttribute represents an attribute that isn't allowed
     // for the element.
-    if (
-      !conversionApi.schema.checkAttribute(modelElement, 'drupalElementStyle')
-    ) {
+    if (!conversionApi.schema.checkAttribute(modelElement, modelAttribute)) {
       return;
     }
 
@@ -114,7 +116,7 @@ function viewToModelStyleAttribute(styles) {
         ) {
           // And convert this style to model attribute.
           conversionApi.writer.setAttribute(
-            'drupalElementStyle',
+            modelAttribute,
             style.name,
             modelElement,
           );
@@ -131,7 +133,7 @@ function viewToModelStyleAttribute(styles) {
             viewElement.getAttribute(style.attributeName)
           ) {
             conversionApi.writer.setAttribute(
-              'drupalElementStyle',
+              modelAttribute,
               style.name,
               modelElement,
             );
@@ -145,21 +147,48 @@ function viewToModelStyleAttribute(styles) {
 /**
  * The Drupal Element Style editing plugin.
  *
- * Additional Drupal Element styles can be defined with `drupalElementStyles`
+ * Additional Drupal Element Styles can be defined with `drupalElementStyles`
  * configuration key.
+ *
+ * Additional Drupal Element Styles can support multiple axes (e.g. media
+ * alignment and media view modes) by adding the new group under
+ * drupalElementStyles.
  *
  * @example
  *    config:
  *      drupalElementStyles:
- *         options:
- *           - name: 'side'
- *             icon: 'objectBlockRight'
- *             title: 'Side image'
- *             attributeName: 'class'
- *             attributeValue: 'image-side'
- *             modelElement: ['drupalMedia']
+ *        side:
+ *          - name: 'side'
+ *            icon: 'objectBlockRight'
+ *            title: 'Side image'
+ *            attributeName: 'class'
+ *            attributeValue: 'image-side'
+ *            modelElements: ['drupalMedia']
+ *        align:
+ *           - name: 'right'
+ *             title: 'Right aligned media'
+ *             icon: 'objectRight'
+ *             attributeName: 'data-align'
+ *             modelElements: [ 'drupalMedia' ]
+ *           - name: 'left'
+ *             title: 'Left aligned media'
+ *             icon: 'objectLeft'
+ *             attributeName: 'data-align'
+ *             attributeValue: 'left'
+ *             modelElements: [ 'drupalMedia' ]
+ *        viewMode:
+ *           - name: 'full view mode'
+ *             title: 'Full view mode'
+ *             attributeName: 'data-view-mode'
+ *             attributeValue: 'full'
+ *             modelElements: [ 'drupalMedia' ]
+ *           - name: 'compact view mode'
+ *             title: 'Compact view mode'
+ *             attributeName: 'data-view-mode'
+ *             attributeValue: 'compact'
+ *             modelElements: [ 'drupalMedia' ]
  *
- * @see Drupal.CKEditor5~DrupalElementStyle
+ * @see Drupal.CKEditor5~DrupalElementStyleDefinition
  *
  * @extends module:core/plugin~Plugin
  *
@@ -170,16 +199,17 @@ export default class DrupalElementStyleEditing extends Plugin {
    * @inheritDoc
    */
   init() {
-    const editor = this.editor;
+    const { editor } = this;
 
-    // Ensure that the drupalElementStyles.options exists always.
-    editor.config.define('drupalElementStyles', { options: [] });
-    const stylesConfig = editor.config.get('drupalElementStyles').options;
+    const stylesConfig = editor.config.get('drupalElementStyles');
+    this.normalizedStyles = {};
 
     /**
-     * The Drupal Element Styles.
+     * The Drupal Element Style definitions.
      *
-     * @typedef {Object} Drupal.CKEditor5~DrupalElementStyle
+     * @typedef {Object} Drupal.CKEditor5~DrupalElementStyleDefinition
+     *   Object that contains an array of DrupalElementStyle objects for each
+     *   group.
      *
      * @prop {string} name
      *   The name of the style used for identifying the button.
@@ -195,43 +225,49 @@ export default class DrupalElementStyleEditing extends Plugin {
      *   An icon for the style button. This needs to either refer to an icon in
      *   the CKEditor 5 core icons, or this can be the XML content of the icon.
      *
-     * @type {Drupal.CKEditor5~DrupalElementStyle[]}
+     * @type {Drupal.CKEditor5~DrupalElementStyleDefinition}
      */
-    this.normalizedStyles = stylesConfig
-      .map((style) => {
-        // Allow defining style icon as a string that is referring to the
-        // CKEditor 5 default icons.
-        if (typeof style.icon === 'string') {
-          if (icons[style.icon]) {
-            style.icon = icons[style.icon];
+    Object.keys(stylesConfig).forEach((group) => {
+      this.normalizedStyles[group] = stylesConfig[group] // array of styles
+        .map((style) => {
+          // Allow defining style icon as a string that is referring to the
+          // CKEditor 5 default icons.
+          if (typeof style.icon === 'string') {
+            if (icons[style.icon]) {
+              style.icon = icons[style.icon];
+            }
           }
-        }
-        return style;
-      })
-      .filter((style) => {
-        if (
-          !style.isDefault &&
-          (!style.attributeName || !style.attributeValue)
-        ) {
-          console.warn(
-            'drupalElementStyles options must include attributeName and attributeValue.',
-          );
-          return false;
-        }
-        if (!style.modelElements || !Array.isArray(style.modelElements)) {
-          console.warn(
-            'drupalElementStyles options must include an array of supported modelElements.',
-          );
-          return false;
-        }
+          if (style.name) {
+            // Make sure names are all strings.
+            style.name = `${style.name}`;
+          }
+          return style;
+        })
+        .filter((style) => {
+          if (
+            !style.isDefault &&
+            (!style.attributeName || !style.attributeValue)
+          ) {
+            console.warn(
+              `${style.attributeValue} drupalElementStyles options must include attributeName and attributeValue.`,
+            );
+            return false;
+          }
+          if (!style.modelElements || !Array.isArray(style.modelElements)) {
+            console.warn(
+              'drupalElementStyles options must include an array of supported modelElements.',
+            );
+            return false;
+          }
 
-        if (!style.name) {
-          console.warn('drupalElementStyles options must include a name.');
-          return false;
-        }
+          if (!style.name) {
+            console.warn('drupalElementStyles options must include a name.');
+            return false;
+          }
 
-        return true;
-      });
+          return true;
+        });
+    });
 
     this._setupConversion();
 
@@ -250,48 +286,56 @@ export default class DrupalElementStyleEditing extends Plugin {
    * @private
    */
   _setupConversion() {
-    const editor = this.editor;
-    const schema = editor.model.schema;
+    const { editor } = this;
+    const { schema } = editor.model;
 
-    const modelToViewConverter = modelToViewStyleAttribute(
-      this.normalizedStyles,
-    );
-    const viewToModelConverter = viewToModelStyleAttribute(
-      this.normalizedStyles,
-    );
+    const groupNamesArr = Object.keys(this.normalizedStyles);
 
-    editor.editing.downcastDispatcher.on(
-      'attribute:drupalElementStyle',
-      modelToViewConverter,
-    );
-    editor.data.downcastDispatcher.on(
-      'attribute:drupalElementStyle',
-      modelToViewConverter,
-    );
+    groupNamesArr.forEach((group) => {
+      const modelAttribute = groupNameToModelAttributeKey(group);
 
-    // Allow drupalElementStyle on all model elements that have associated
-    // styles.
-    const modelElements = [
-      ...new Set(
-        this.normalizedStyles
-          .map((style) => {
-            return style.modelElements;
-          })
-          .flat(),
-      ),
-    ];
-    modelElements.forEach((modelElement) => {
-      schema.extend(modelElement, { allowAttributes: 'drupalElementStyle' });
+      const modelToViewConverter = modelToViewStyleAttribute(
+        this.normalizedStyles[group],
+      );
+      const viewToModelConverter = viewToModelStyleAttribute(
+        this.normalizedStyles[group],
+        modelAttribute,
+      );
+
+      editor.editing.downcastDispatcher.on(
+        `attribute:${modelAttribute}`,
+        modelToViewConverter,
+      );
+      editor.data.downcastDispatcher.on(
+        `attribute:${modelAttribute}`,
+        modelToViewConverter,
+      );
+
+      // Allow drupalElementStyle model attributes on all model elements that
+      // have associated styles.
+      const modelElements = [
+        ...new Set(
+          this.normalizedStyles[group]
+            .map((style) => {
+              return style.modelElements;
+            })
+            .flat(),
+        ),
+      ];
+      modelElements.forEach((modelElement) => {
+        schema.extend(modelElement, {
+          allowAttributes: modelAttribute,
+        });
+      });
+      // View to model converter that runs on all elements.
+      editor.data.upcastDispatcher.on(
+        'element',
+        viewToModelConverter,
+        // This needs to be set as low priority to ensure this runs always after
+        // the element has been converted to a model element.
+        { priority: 'low' },
+      );
     });
-
-    // View to model converter that runs on all elements.
-    editor.data.upcastDispatcher.on(
-      'element',
-      viewToModelConverter,
-      // This needs to be set as low priority to ensure this runs always after
-      // the element has been converted to a model element.
-      { priority: 'low' },
-    );
   }
 
   /**
