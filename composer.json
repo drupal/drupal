@@ -18,7 +18,7 @@
         "behat/mink": "^1.8",
         "friends-of-behat/mink-browserkit-driver": "^1.4",
         "behat/mink-selenium2-driver": "^1.4",
-        "composer/composer": "^2.0.2",
+        "composer/composer": "^2.2.12",
         "drupal/coder": "^8.3.10",
         "instaclick/php-webdriver": "^1.4.1",
         "mikey179/vfsstream": "^1.6.8",
