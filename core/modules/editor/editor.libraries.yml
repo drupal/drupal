@@ -7,7 +7,7 @@ drupal.editor.admin:
     - core/once
     - core/jquery.once.bc
     - core/drupal
-    - core/internal.underscore
+    - core/drupal.array.includes
 
 drupal.editor:
   version: VERSION

@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function ($, _, Drupal, document) {
+(function ($, Drupal, document) {
   Drupal.editorConfiguration = {
     addedFeature: function addedFeature(feature) {
       $(document).trigger('drupalEditorFeatureAdded', feature);
@@ -54,7 +54,7 @@
       }
 
       function findPropertyValueOnTag(universe, tag, property, propertyValue, allowing) {
-        if (!_.has(universe, tag)) {
+        if (!universe.hasOwnProperty(tag)) {
           return false;
         }
 
@@ -64,8 +64,8 @@
           universe[tag].touchedByAllowedPropertyRule = true;
         }
 
-        if (_.indexOf(propertyValue, '*') === -1) {
-          if (_.has(universe, tag) && _.has(universe[tag], key)) {
+        if (propertyValue.indexOf('*') === -1) {
+          if (universe.hasOwnProperty(tag) && universe[tag].hasOwnProperty(key)) {
             if (allowing) {
               universe[tag][key] = true;
             }
@@ -78,8 +78,7 @@
 
         var atLeastOneFound = false;
         var regex = key.replace(/\*/g, '[^ ]*');
-
-        _.each(_.keys(universe[tag]), function (key) {
+        Object.keys(universe[tag]).forEach(function (key) {
           if (key.match(regex)) {
             atLeastOneFound = true;
 
@@ -88,19 +87,16 @@
             }
           }
         });
-
         return atLeastOneFound;
       }
 
       function findPropertyValuesOnAllTags(universe, property, propertyValues, allowing) {
         var atLeastOneFound = false;
-
-        _.each(_.keys(universe), function (tag) {
+        Object.keys(universe).forEach(function (tag) {
           if (findPropertyValuesOnTag(universe, tag, property, propertyValues, allowing)) {
             atLeastOneFound = true;
           }
         });
-
         return atLeastOneFound;
       }
 
@@ -110,25 +106,21 @@
         }
 
         var atLeastOneFound = false;
-
-        _.each(propertyValues, function (propertyValue) {
+        propertyValues.forEach(function (propertyValue) {
           if (findPropertyValueOnTag(universe, tag, property, propertyValue, allowing)) {
             atLeastOneFound = true;
           }
         });
-
         return atLeastOneFound;
       }
 
       function deleteAllTagsFromUniverseIfAllowed(universe) {
         var atLeastOneDeleted = false;
-
-        _.each(_.keys(universe), function (tag) {
+        Object.keys(universe).forEach(function (tag) {
           if (deleteFromUniverseIfAllowed(universe, tag)) {
             atLeastOneDeleted = true;
           }
         });
-
         return atLeastOneDeleted;
       }
 
@@ -137,7 +129,11 @@
           return deleteAllTagsFromUniverseIfAllowed(universe);
         }
 
-        if (_.has(universe, tag) && _.every(_.omit(universe[tag], 'touchedByAllowedPropertyRule'))) {
+        if (universe.hasOwnProperty(tag) && Object.keys(universe[tag]).filter(function (key) {
+          return key !== 'touchedByAllowedPropertyRule';
+        }).every(function (key) {
+          return universe[tag][key];
+        })) {
           delete universe[tag];
           return true;
         }
@@ -147,16 +143,18 @@
 
       function anyForbiddenFilterRuleMatches(universe, filterStatus) {
         var properties = ['attributes', 'styles', 'classes'];
-
-        var allRequiredTags = _.keys(universe);
-
+        var allRequiredTags = Object.keys(universe);
         var filterRule;
 
         for (var i = 0; i < filterStatus.rules.length; i++) {
           filterRule = filterStatus.rules[i];
 
           if (filterRule.allow === false) {
-            if (_.intersection(allRequiredTags, filterRule.tags).length > 0) {
+            var intersection = filterRule.tags.filter(function (tag) {
+              return allRequiredTags.includes(tag);
+            });
+
+            if (intersection.length > 0) {
               return true;
             }
           }
@@ -188,14 +186,14 @@
         var filterRule;
         var tag;
 
-        for (var l = 0; !_.isEmpty(universe) && l < filterStatus.rules.length; l++) {
+        for (var l = 0; Object.keys(universe).length > 0 && l < filterStatus.rules.length; l++) {
           filterRule = filterStatus.rules[l];
 
           if (filterRule.allow === true) {
-            for (var m = 0; !_.isEmpty(universe) && m < filterRule.tags.length; m++) {
+            for (var m = 0; Object.keys(universe).length > 0 && m < filterRule.tags.length; m++) {
               tag = filterRule.tags[m];
 
-              if (_.has(universe, tag)) {
+              if (universe.hasOwnProperty(tag)) {
                 universe[tag].tag = true;
                 deleteFromUniverseIfAllowed(universe, tag);
               }
@@ -203,11 +201,11 @@
           }
         }
 
-        for (var i = 0; !_.isEmpty(universe) && i < filterStatus.rules.length; i++) {
+        for (var i = 0; Object.keys(universe).length > 0 && i < filterStatus.rules.length; i++) {
           filterRule = filterStatus.rules[i];
 
           if (filterRule.restrictedTags.tags.length && !emptyProperties(filterRule.restrictedTags.allowed)) {
-            for (var j = 0; !_.isEmpty(universe) && j < filterRule.restrictedTags.tags.length; j++) {
+            for (var j = 0; Object.keys(universe).length > 0 && j < filterRule.restrictedTags.tags.length; j++) {
               tag = filterRule.restrictedTags.tags[j];
 
               for (var k = 0; k < properties.length; k++) {
@@ -243,28 +241,33 @@
 
         markAllowedTagsAndPropertyValues(universe, filterStatus);
 
-        if (_.some(_.pluck(filterStatus.rules, 'allow'))) {
-          if (_.isEmpty(universe)) {
+        if (filterStatus.rules.some(function (_ref) {
+          var allow = _ref.allow;
+          return allow;
+        })) {
+          if (Object.keys(universe).length === 0) {
             return true;
           }
 
-          if (!_.every(_.pluck(universe, 'tag'))) {
+          if (!Object.keys(universe).every(function (tagName) {
+            return universe[tagName].tag;
+          })) {
             return false;
           }
 
-          var tags = _.keys(universe);
+          var tags = Object.keys(universe);
 
           for (var i = 0; i < tags.length; i++) {
             var tag = tags[i];
 
-            if (_.has(universe, tag)) {
+            if (universe.hasOwnProperty(tag)) {
               if (universe[tag].touchedByAllowedPropertyRule === false) {
                 delete universe[tag];
               }
             }
           }
 
-          return _.isEmpty(universe);
+          return Object.keys(universe).length === 0;
         }
 
         return true;
@@ -368,4 +371,4 @@
       });
     }
   };
-})(jQuery, _, Drupal, document);
+})(jQuery, Drupal, document);

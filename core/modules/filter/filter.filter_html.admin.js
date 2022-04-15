@@ -5,7 +5,19 @@
 * @preserve
 **/
 
-(function ($, Drupal, _, document) {
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+(function ($, Drupal, document) {
   if (Drupal.filterConfiguration) {
     Drupal.filterConfiguration.liveSettingParsers.filter_html = {
       getRules: function getRules() {
@@ -20,6 +32,18 @@
         return rules;
       }
     };
+  }
+
+  function difference() {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return args.reduce(function (mainData, otherData) {
+      return mainData.filter(function (data) {
+        return !otherData.includes(data);
+      });
+    });
   }
 
   Drupal.behaviors.filterFilterHtmlUpdating = {
@@ -52,19 +76,24 @@
           }
         });
         that.$allowedHTMLFormItem.on('change.updateUserTags', function () {
-          that.userTags = _.difference(that._parseSetting(this.value), that.autoTags);
+          that.userTags = difference(Object.values(that._parseSetting(this.value)), Object.values(that.autoTags));
         });
       });
     },
     _updateAllowedTags: function _updateAllowedTags() {
+      var _this = this;
+
       this.autoTags = this._calculateAutoAllowedTags(this.userTags, this.newFeatures);
       this.$allowedHTMLDescription.find('.editor-update-message').remove();
 
-      if (!_.isEmpty(this.autoTags)) {
+      if (Object.keys(this.autoTags).length > 0) {
         this.$allowedHTMLDescription.append(Drupal.theme('filterFilterHTMLUpdateMessage', this.autoTags));
-
-        var userTagsWithoutOverrides = _.omit(this.userTags, _.keys(this.autoTags));
-
+        var userTagsWithoutOverrides = {};
+        Object.keys(this.userTags).filter(function (tag) {
+          return !_this.autoTags.hasOwnProperty(tag);
+        }).forEach(function (tag) {
+          userTagsWithoutOverrides[tag] = _this.userTags[tag];
+        });
         this.$allowedHTMLFormItem.val("".concat(this._generateSetting(userTagsWithoutOverrides), " ").concat(this._generateSetting(this.autoTags)));
       } else {
         this.$allowedHTMLFormItem.val(this._generateSetting(this.userTags));
@@ -84,7 +113,7 @@
           for (var t = 0; t < featureRule.required.tags.length; t++) {
             tag = featureRule.required.tags[t];
 
-            if (!_.has(editorRequiredTags, tag)) {
+            if (!editorRequiredTags.hasOwnProperty(tag)) {
               filterRule = new Drupal.FilterHTMLRule();
               filterRule.restrictedTags.tags = [tag];
               filterRule.restrictedTags.allowed.attributes = featureRule.required.attributes.slice(0);
@@ -92,37 +121,34 @@
               editorRequiredTags[tag] = filterRule;
             } else {
               filterRule = editorRequiredTags[tag];
-              filterRule.restrictedTags.allowed.attributes = _.union(filterRule.restrictedTags.allowed.attributes, featureRule.required.attributes);
-              filterRule.restrictedTags.allowed.classes = _.union(filterRule.restrictedTags.allowed.classes, featureRule.required.classes);
+              filterRule.restrictedTags.allowed.attributes = [].concat(_toConsumableArray(filterRule.restrictedTags.allowed.attributes), _toConsumableArray(featureRule.required.attributes));
+              filterRule.restrictedTags.allowed.classes = [].concat(_toConsumableArray(filterRule.restrictedTags.allowed.classes), _toConsumableArray(featureRule.required.classes));
             }
           }
         }
       });
       var autoAllowedTags = {};
       Object.keys(editorRequiredTags).forEach(function (tag) {
-        if (!_.has(userAllowedTags, tag)) {
+        if (!userAllowedTags.hasOwnProperty(tag)) {
           autoAllowedTags[tag] = editorRequiredTags[tag];
         } else {
           var requiredAttributes = editorRequiredTags[tag].restrictedTags.allowed.attributes;
           var allowedAttributes = userAllowedTags[tag].restrictedTags.allowed.attributes;
-
-          var needsAdditionalAttributes = requiredAttributes.length && _.difference(requiredAttributes, allowedAttributes).length;
-
+          var needsAdditionalAttributes = requiredAttributes.length && difference(requiredAttributes, allowedAttributes).length;
           var requiredClasses = editorRequiredTags[tag].restrictedTags.allowed.classes;
           var allowedClasses = userAllowedTags[tag].restrictedTags.allowed.classes;
-
-          var needsAdditionalClasses = requiredClasses.length && _.difference(requiredClasses, allowedClasses).length;
+          var needsAdditionalClasses = requiredClasses.length && difference(requiredClasses, allowedClasses).length;
 
           if (needsAdditionalAttributes || needsAdditionalClasses) {
             autoAllowedTags[tag] = userAllowedTags[tag].clone();
           }
 
           if (needsAdditionalAttributes) {
-            autoAllowedTags[tag].restrictedTags.allowed.attributes = _.union(allowedAttributes, requiredAttributes);
+            autoAllowedTags[tag].restrictedTags.allowed.attributes = [].concat(_toConsumableArray(allowedAttributes), _toConsumableArray(requiredAttributes));
           }
 
           if (needsAdditionalClasses) {
-            autoAllowedTags[tag].restrictedTags.allowed.classes = _.union(allowedClasses, requiredClasses);
+            autoAllowedTags[tag].restrictedTags.allowed.classes = [].concat(_toConsumableArray(allowedClasses), _toConsumableArray(requiredClasses));
           }
         }
       });
@@ -161,7 +187,9 @@
       return rules;
     },
     _generateSetting: function _generateSetting(tags) {
-      return _.reduce(tags, function (setting, rule, tag) {
+      return Object.keys(tags).reduce(function (setting, tag) {
+        var rule = tags[tag];
+
         if (setting.length) {
           setting += ' ';
         }
@@ -194,4 +222,4 @@
     html += '</p>';
     return html;
   };
-})(jQuery, Drupal, _, document);
+})(jQuery, Drupal, document);
