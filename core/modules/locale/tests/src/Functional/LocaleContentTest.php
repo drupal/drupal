@@ -24,7 +24,7 @@ class LocaleContentTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * Verifies that machine name fields are always LTR.
@@ -214,25 +214,25 @@ class LocaleContentTest extends BrowserTestBase {
 
     // Check if English node does not have lang tag.
     $this->drupalGet('node/' . $nodes['en']->id());
-    $element = $this->cssSelect('article.node[lang="en"]');
+    $element = $this->cssSelect('article[lang="en"]');
     $this->assertEmpty($element, 'The lang tag has not been assigned to the English node.');
 
     // Check if English node does not have dir tag.
-    $element = $this->cssSelect('article.node[dir="ltr"]');
+    $element = $this->cssSelect('article[dir="ltr"]');
     $this->assertEmpty($element, 'The dir tag has not been assigned to the English node.');
 
     // Check if Arabic node has lang="ar" & dir="rtl" tags.
     $this->drupalGet('node/' . $nodes['ar']->id());
-    $element = $this->cssSelect('article.node[lang="ar"][dir="rtl"]');
+    $element = $this->cssSelect('article[lang="ar"][dir="rtl"]');
     $this->assertNotEmpty($element, 'The lang and dir tags have been assigned correctly to the Arabic node.');
 
     // Check if Spanish node has lang="es" tag.
     $this->drupalGet('node/' . $nodes['es']->id());
-    $element = $this->cssSelect('article.node[lang="es"]');
+    $element = $this->cssSelect('article[lang="es"]');
     $this->assertNotEmpty($element, 'The lang tag has been assigned correctly to the Spanish node.');
 
     // Check if Spanish node does not have dir="ltr" tag.
-    $element = $this->cssSelect('article.node[lang="es"][dir="ltr"]');
+    $element = $this->cssSelect('article[lang="es"][dir="ltr"]');
     $this->assertEmpty($element, 'The dir tag has not been assigned to the Spanish node.');
   }
 

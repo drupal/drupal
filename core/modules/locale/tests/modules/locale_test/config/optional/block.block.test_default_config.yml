@@ -2,9 +2,9 @@ langcode: en
 status: true
 dependencies:
   theme:
-    - classy
+    - stark
 id: test_default_config
-theme: classy
+theme: stark
 region: content
 weight: -40
 provider: null
