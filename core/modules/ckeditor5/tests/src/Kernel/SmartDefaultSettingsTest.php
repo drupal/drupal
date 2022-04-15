@@ -261,6 +261,30 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       ],
     ])->save();
 
+    FilterFormat::create([
+      'format' => 'cke4_contrib_plugins_now_in_core',
+      'name' => 'All CKEditor 4 contrib plugins now in core',
+    ])->save();
+    Editor::create([
+      'format' => 'cke4_contrib_plugins_now_in_core',
+      'editor' => 'ckeditor',
+      'settings' => [
+        'toolbar' => [
+          'rows' => [
+            0 => [
+              [
+                'name' => 'Contributed modules providing buttons without settings',
+                'items' => [
+                  // @see https://www.drupal.org/project/codetag
+                  'Code',
+                ],
+              ],
+            ],
+          ],
+        ],
+        'plugins' => [],
+      ],
+    ])->save();
   }
 
   /**
@@ -916,6 +940,22 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         'toolbar' => [
           'items' => [
             'bold',
+          ],
+        ],
+        'plugins' => [],
+      ],
+      'expected_superset' => '',
+      'expected_fundamental_compatibility_violations' => [],
+      'expected_messages' => [],
+    ];
+
+    yield "cke4_contrib_plugins_now_in_core can be switched to CKEditor 5 without problems" => [
+      'format_id' => 'cke4_contrib_plugins_now_in_core',
+      'filters_to_drop' => [],
+      'expected_ckeditor5_settings' => [
+        'toolbar' => [
+          'items' => [
+            'code',
           ],
         ],
         'plugins' => [],
