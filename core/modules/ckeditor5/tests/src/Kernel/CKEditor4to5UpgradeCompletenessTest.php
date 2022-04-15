@@ -20,6 +20,19 @@ use Drupal\KernelTests\KernelTestBase;
 class CKEditor4to5UpgradeCompletenessTest extends KernelTestBase {
 
   /**
+   * The CKEditor 4 toolbar buttons that no longer require a contrib module.
+   *
+   * @var string[]
+   *
+   * @see \Drupal\ckeditor5\Plugin\CKEditor4To5Upgrade\Contrib
+   */
+  const CONTRIB_BUTTONS_NOW_IN_CORE = [
+    // @see https://www.drupal.org/project/codetag
+    // @see ckeditor5_code's `basicStyles.Code` plugin
+    'Code',
+  ];
+
+  /**
    * The "CKEditor 4 plugin" plugin manager.
    *
    * @var \Drupal\ckeditor\CKEditorPluginManager
@@ -89,6 +102,7 @@ class CKEditor4to5UpgradeCompletenessTest extends KernelTestBase {
    */
   public function testButtons(): void {
     $cke4_buttons = array_keys(NestedArray::mergeDeepArray($this->cke4PluginManager->getButtons()));
+    $cke4_buttons = array_merge($cke4_buttons, self::CONTRIB_BUTTONS_NOW_IN_CORE);
 
     foreach ($cke4_buttons as $button) {
       $equivalent = $this->upgradePluginManager->mapCKEditor4ToolbarButtonToCKEditor5ToolbarItem($button, HTMLRestrictions::emptySet());
