@@ -1,0 +1,5 @@
+name: 'Link Test Theme'
+type: theme
+description: 'Theme for testing link module'
+version: VERSION
+base theme: stark
