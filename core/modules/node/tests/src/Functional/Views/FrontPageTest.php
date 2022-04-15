@@ -24,7 +24,7 @@ class FrontPageTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -189,7 +189,7 @@ class FrontPageTest extends ViewTestBase {
     $this->drupalGet('node');
     $this->assertSession()->statusCodeEquals(200);
     // Check that the frontpage view was rendered.
-    $this->assertSession()->responseMatches('/class=".+view-frontpage/');
+    $this->assertSession()->elementExists('css', '.views-element-container');
   }
 
   /**
