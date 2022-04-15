@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function ($, Drupal, _, document) {
+(function ($, Drupal, document) {
   if (Drupal.filterConfiguration) {
     Drupal.filterConfiguration.liveSettingParsers.filter_html = {
       getRules() {
@@ -21,6 +21,14 @@
       }
 
     };
+  }
+
+  function difference() {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return args.reduce((mainData, otherData) => mainData.filter(data => !otherData.includes(data)));
   }
 
   Drupal.behaviors.filterFilterHtmlUpdating = {
@@ -54,7 +62,7 @@
           }
         });
         that.$allowedHTMLFormItem.on('change.updateUserTags', function () {
-          that.userTags = _.difference(that._parseSetting(this.value), that.autoTags);
+          that.userTags = difference(Object.values(that._parseSetting(this.value)), Object.values(that.autoTags));
         });
       });
     },
@@ -63,11 +71,12 @@
       this.autoTags = this._calculateAutoAllowedTags(this.userTags, this.newFeatures);
       this.$allowedHTMLDescription.find('.editor-update-message').remove();
 
-      if (!_.isEmpty(this.autoTags)) {
+      if (Object.keys(this.autoTags).length > 0) {
         this.$allowedHTMLDescription.append(Drupal.theme('filterFilterHTMLUpdateMessage', this.autoTags));
-
-        const userTagsWithoutOverrides = _.omit(this.userTags, _.keys(this.autoTags));
-
+        const userTagsWithoutOverrides = {};
+        Object.keys(this.userTags).filter(tag => !this.autoTags.hasOwnProperty(tag)).forEach(tag => {
+          userTagsWithoutOverrides[tag] = this.userTags[tag];
+        });
         this.$allowedHTMLFormItem.val(`${this._generateSetting(userTagsWithoutOverrides)} ${this._generateSetting(this.autoTags)}`);
       } else {
         this.$allowedHTMLFormItem.val(this._generateSetting(this.userTags));
@@ -88,7 +97,7 @@
           for (let t = 0; t < featureRule.required.tags.length; t++) {
             tag = featureRule.required.tags[t];
 
-            if (!_.has(editorRequiredTags, tag)) {
+            if (!editorRequiredTags.hasOwnProperty(tag)) {
               filterRule = new Drupal.FilterHTMLRule();
               filterRule.restrictedTags.tags = [tag];
               filterRule.restrictedTags.allowed.attributes = featureRule.required.attributes.slice(0);
@@ -96,37 +105,34 @@
               editorRequiredTags[tag] = filterRule;
             } else {
               filterRule = editorRequiredTags[tag];
-              filterRule.restrictedTags.allowed.attributes = _.union(filterRule.restrictedTags.allowed.attributes, featureRule.required.attributes);
-              filterRule.restrictedTags.allowed.classes = _.union(filterRule.restrictedTags.allowed.classes, featureRule.required.classes);
+              filterRule.restrictedTags.allowed.attributes = [...filterRule.restrictedTags.allowed.attributes, ...featureRule.required.attributes];
+              filterRule.restrictedTags.allowed.classes = [...filterRule.restrictedTags.allowed.classes, ...featureRule.required.classes];
             }
           }
         }
       });
       const autoAllowedTags = {};
       Object.keys(editorRequiredTags).forEach(tag => {
-        if (!_.has(userAllowedTags, tag)) {
+        if (!userAllowedTags.hasOwnProperty(tag)) {
           autoAllowedTags[tag] = editorRequiredTags[tag];
         } else {
           const requiredAttributes = editorRequiredTags[tag].restrictedTags.allowed.attributes;
           const allowedAttributes = userAllowedTags[tag].restrictedTags.allowed.attributes;
-
-          const needsAdditionalAttributes = requiredAttributes.length && _.difference(requiredAttributes, allowedAttributes).length;
-
+          const needsAdditionalAttributes = requiredAttributes.length && difference(requiredAttributes, allowedAttributes).length;
           const requiredClasses = editorRequiredTags[tag].restrictedTags.allowed.classes;
           const allowedClasses = userAllowedTags[tag].restrictedTags.allowed.classes;
-
-          const needsAdditionalClasses = requiredClasses.length && _.difference(requiredClasses, allowedClasses).length;
+          const needsAdditionalClasses = requiredClasses.length && difference(requiredClasses, allowedClasses).length;
 
           if (needsAdditionalAttributes || needsAdditionalClasses) {
             autoAllowedTags[tag] = userAllowedTags[tag].clone();
           }
 
           if (needsAdditionalAttributes) {
-            autoAllowedTags[tag].restrictedTags.allowed.attributes = _.union(allowedAttributes, requiredAttributes);
+            autoAllowedTags[tag].restrictedTags.allowed.attributes = [...allowedAttributes, ...requiredAttributes];
           }
 
           if (needsAdditionalClasses) {
-            autoAllowedTags[tag].restrictedTags.allowed.classes = _.union(allowedClasses, requiredClasses);
+            autoAllowedTags[tag].restrictedTags.allowed.classes = [...allowedClasses, ...requiredClasses];
           }
         }
       });
@@ -167,7 +173,9 @@
     },
 
     _generateSetting(tags) {
-      return _.reduce(tags, (setting, rule, tag) => {
+      return Object.keys(tags).reduce((setting, tag) => {
+        const rule = tags[tag];
+
         if (setting.length) {
           setting += ' ';
         }
@@ -201,4 +209,4 @@
     html += '</p>';
     return html;
   };
-})(jQuery, Drupal, _, document);
+})(jQuery, Drupal, document);

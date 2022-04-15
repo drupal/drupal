@@ -15,7 +15,6 @@ drupal.filter.filter_html.admin:
   dependencies:
     - core/jquery
     - core/once
-    - core/internal.underscore
 
 drupal.filter:
   version: VERSION

@@ -6,7 +6,6 @@ drupal.editor.admin:
     - core/jquery
     - core/once
     - core/drupal
-    - core/internal.underscore
 
 drupal.editor:
   version: VERSION
