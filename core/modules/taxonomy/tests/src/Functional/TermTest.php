@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Tags;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 
 /**
  * Tests load, save and delete for taxonomy terms.
@@ -13,6 +14,8 @@ use Drupal\taxonomy\Entity\Term;
  * @group taxonomy
  */
 class TermTest extends TaxonomyTestBase {
+
+  use AssertBreadcrumbTrait;
 
   /**
    * Vocabulary for testing.
@@ -38,7 +41,7 @@ class TermTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -384,12 +387,12 @@ class TermTest extends TaxonomyTestBase {
     $this->assertSession()->pageTextContains($edit['description[0][value]']);
 
     // Did this page request display a 'term-listing-heading'?
-    $this->assertSession()->elementExists('xpath', '//div[contains(@class, "field--name-description")]');
+    $this->assertSession()->elementExists('xpath', '//div[@class="views-element-container"]/div/header/div/div/p');
     // Check that it does NOT show a description when description is blank.
     $term->setDescription(NULL);
     $term->save();
     $this->drupalGet('taxonomy/term/' . $term->id());
-    $this->assertSession()->elementNotExists('xpath', '//div[contains(@class, "field--entity-taxonomy-term--description")]');
+    $this->assertSession()->elementNotExists('xpath', '//div[@class="views-element-container"]/div/header/div/div/p');
 
     // Check that the description value is processed.
     $value = $this->randomMachineName();
@@ -580,20 +583,20 @@ class TermTest extends TaxonomyTestBase {
     $this->assertNotNull($term, 'Term found in database.');
 
     // Check the breadcrumb on the term edit page.
-    $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
-    $breadcrumbs = $this->getSession()->getPage()->findAll('css', 'nav.breadcrumb ol li a');
-    $this->assertCount(2, $breadcrumbs, 'The breadcrumbs are present on the page.');
-    $this->assertSame('Home', $breadcrumbs[0]->getText(), 'First breadcrumb text is Home');
-    $this->assertSame($term->label(), $breadcrumbs[1]->getText(), 'Second breadcrumb text is term name on term edit page.');
-    $this->assertSession()->assertEscaped($breadcrumbs[1]->getText());
+    $trail = [
+      '' => 'Home',
+      'taxonomy/term/' . $term->id() => $term->label(),
+    ];
+    $this->assertBreadcrumb('taxonomy/term/' . $term->id() . '/edit', $trail);
+    $this->assertSession()->assertEscaped($term->label());
 
     // Check the breadcrumb on the term delete page.
-    $this->drupalGet('taxonomy/term/' . $term->id() . '/delete');
-    $breadcrumbs = $this->getSession()->getPage()->findAll('css', 'nav.breadcrumb ol li a');
-    $this->assertCount(2, $breadcrumbs, 'The breadcrumbs are present on the page.');
-    $this->assertSame('Home', $breadcrumbs[0]->getText(), 'First breadcrumb text is Home');
-    $this->assertSame($term->label(), $breadcrumbs[1]->getText(), 'Second breadcrumb text is term name on term delete page.');
-    $this->assertSession()->assertEscaped($breadcrumbs[1]->getText());
+    $trail = [
+      '' => 'Home',
+      'taxonomy/term/' . $term->id() => $term->label(),
+    ];
+    $this->assertBreadcrumb('taxonomy/term/' . $term->id() . '/delete', $trail);
+    $this->assertSession()->assertEscaped($term->label());
   }
 
 }

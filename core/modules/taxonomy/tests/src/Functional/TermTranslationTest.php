@@ -41,7 +41,7 @@ class TermTranslationTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
