@@ -28,7 +28,7 @@ class NodeTypeTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * Ensures that node type functions (node_type_get_*) work correctly.
@@ -78,7 +78,7 @@ class NodeTypeTest extends NodeTestBase {
     $this->drupalGet('node/add');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:node_type_list');
     $this->assertCacheContext('user.permissions');
-    $elements = $this->cssSelect('dl.node-type-list dt');
+    $elements = $this->cssSelect('dl dt');
     $this->assertCount(3, $elements);
 
     $edit = [
@@ -92,7 +92,7 @@ class NodeTypeTest extends NodeTestBase {
     $this->assertTrue($type_exists, 'The new content type has been created in the database.');
 
     $this->drupalGet('node/add');
-    $elements = $this->cssSelect('dl.node-type-list dt');
+    $elements = $this->cssSelect('dl dt');
     $this->assertCount(4, $elements);
   }
 

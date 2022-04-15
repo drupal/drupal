@@ -23,7 +23,7 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -167,6 +167,8 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
     return [
       ['bartik', 'header', TRUE],
       ['claro', 'footer', TRUE],
+      // @todo Remove Classy from data provider in
+      // https://www.drupal.org/project/drupal/issues/3110137.
       ['classy', 'footer', TRUE],
       // @todo Add coverage for olivero after fixing
       // https://www.drupal.org/project/drupal/issues/3215220.
