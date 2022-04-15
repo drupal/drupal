@@ -25,7 +25,7 @@ class LocaleTranslatedSchemaDefinitionTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -95,7 +95,7 @@ class LocaleTranslatedSchemaDefinitionTest extends BrowserTestBase {
     // markup and a link instead of specific text because text may be
     // translated.
     $this->drupalGet($update_url . '/selection', ['external' => TRUE]);
-    $this->assertSession()->responseContains('messages--status');
+    $this->assertSession()->statusMessageExists('status');
     $this->assertSession()->linkByHrefNotExists('fr/update.php/run', 'No link to run updates.');
   }
 
