@@ -18,6 +18,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
 use Drupal\Core\Form\SubformStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\ckeditor5\SmartDefaultSettings;
 use Drupal\Core\Validation\Plugin\Validation\Constraint\PrimitiveTypeConstraint;
@@ -263,8 +264,15 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
       assert($editor->getSettings() === $this->getDefaultSettings());
       if (!$format->isNew()) {
         [$editor, $messages] = $this->smartDefaultSettings->computeSmartDefaultSettings($editor, $format);
-        foreach ($messages as $message) {
-          $this->messenger()->addMessage($message);
+        foreach ($messages as $type => $messages_per_type) {
+          foreach ($messages_per_type as $message) {
+            $this->messenger()->addMessage($message, $type);
+          }
+        }
+        if (isset($messages[MessengerInterface::TYPE_WARNING]) || isset($messages[MessengerInterface::TYPE_ERROR])) {
+          $this->messenger()->addMessage($this->t('Check <a href=":handbook">this handbook page</a> for details about compatibility issues of contrib modules.', [
+            ':handbook' => 'https://www.drupal.org/node/3273985',
+          ]), MessengerInterface::TYPE_WARNING);
         }
       }
       $eventual_editor_and_format = $this->getEventualEditorWithPrimedFilterFormat($form_state, $editor);
