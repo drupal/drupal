@@ -88,7 +88,7 @@
     "jquery-once": "^2.2.3",
     "jquery-ui": "~1.13.1",
     "js-cookie": "^3.0.1",
-    "jsdom": "^18.0.1",
+    "jsdom": "^19.0.0",
     "loadjs": "^4.2.0",
     "minimist": "^1.2.2",
     "mkdirp": "^1.0.4",
