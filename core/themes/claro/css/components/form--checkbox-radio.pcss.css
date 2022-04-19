@@ -67,11 +67,17 @@
   border: 1px solid var(--input-border-color);
   border-radius: 2px;
   background: var(--input-bg-color) no-repeat 50% 50%;
-  background-image: url(../../images/icons/ffffff/checkmark.svg);
   background-size: 100% 100%;
   box-shadow: 0 0 0 4px transparent;
   appearance: none;
 }
+
+@media (forced-colors: active) {
+  .form-boolean {
+    appearance: auto;
+  }
+}
+
 .form-boolean--type-radio {
   width: 19px;
   height: 19px;
