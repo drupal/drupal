@@ -60,8 +60,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'Bulk Export',
       'Chaos Tools (CTools) AJAX Example',
       'Chaos tools',
-      // @todo Remove Color in https://www.drupal.org/project/drupal/issues/3270899
-      'Color',
       'Comment',
       'Contact',
       'Custom content panes',
@@ -159,6 +157,8 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
     return [
       'Aggregator',
       'Breakpoints',
+      // @todo Remove Color in https://www.drupal.org/project/drupal/issues/3270899
+      'Color',
       'Contact translation',
       'Entity Translation Menu',
       'Entity Translation Upgrade',

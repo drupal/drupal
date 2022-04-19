@@ -8,7 +8,6 @@ install:
   - block
   - breakpoint
   - ckeditor
-  - color
   - config
   - comment
   - contextual

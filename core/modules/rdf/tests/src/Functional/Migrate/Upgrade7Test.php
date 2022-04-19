@@ -100,7 +100,6 @@ class Upgrade7Test extends MigrateUpgradeTestBase {
     return [
       'Block',
       'Blog',
-      'Color',
       'Comment',
       'Contextual links',
       'Dashboard',
@@ -135,6 +134,7 @@ class Upgrade7Test extends MigrateUpgradeTestBase {
    */
   protected function getMissingPaths() {
     return [
+      'Color',
       'Forum',
     ];
   }
