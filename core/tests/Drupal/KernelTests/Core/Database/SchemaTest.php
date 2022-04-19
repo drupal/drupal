@@ -1320,6 +1320,61 @@ class SchemaTest extends KernelTestBase {
     ];
     $this->assertEquals($expected, $tables, 'Two tables were found.');
 
+    // Check '_' and '%' wildcards.
+    $test_schema->createTable('test3table', $table_specification);
+    $test_schema->createTable('test4', $table_specification);
+    $test_schema->createTable('testTable', $table_specification);
+    $test_schema->createTable('test', $table_specification);
+
+    $tables = $test_schema->findTables('test%');
+    sort($tables);
+    $expected = [
+      'test',
+      'test3table',
+      'test4',
+      'testTable',
+      'test_1_table',
+      'test_2_table',
+    ];
+    $this->assertEquals($expected, $tables, 'All "test" prefixed tables were found.');
+
+    $tables = $test_schema->findTables('test_%');
+    sort($tables);
+    $expected = [
+      'test3table',
+      'test4',
+      'testTable',
+      'test_1_table',
+      'test_2_table',
+    ];
+    $this->assertEquals($expected, $tables, 'All "/^test..*?/" tables were found.');
+
+    $tables = $test_schema->findTables('test%table');
+    sort($tables);
+    $expected = [
+      'test3table',
+      'testTable',
+      'test_1_table',
+      'test_2_table',
+    ];
+    $this->assertEquals($expected, $tables, 'All "/^test.*?table/" tables were found.');
+
+    $tables = $test_schema->findTables('test_%table');
+    sort($tables);
+    $expected = [
+      'test3table',
+      'test_1_table',
+      'test_2_table',
+    ];
+    $this->assertEquals($expected, $tables, 'All "/^test..*?table/" tables were found.');
+
+    $tables = $test_schema->findTables('test_');
+    sort($tables);
+    $expected = [
+      'test4',
+    ];
+    $this->assertEquals($expected, $tables, 'All "/^test./" tables were found.');
+
     // Go back to the initial connection.
     Database::setActiveConnection('default');
   }
