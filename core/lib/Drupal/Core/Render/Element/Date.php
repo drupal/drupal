@@ -58,8 +58,14 @@ class Date extends FormElement {
    *
    * @return array
    *   The processed element.
+   *
+   * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. There is
+   *   no replacement.
+   *
+   * @see https://www.drupal.org/node/3258267
    */
   public static function processDate(&$element, FormStateInterface $form_state, &$complete_form) {
+    @trigger_error('Drupal\Core\Render\Element\Date::processDate() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3258267', E_USER_DEPRECATED);
     // Attach JS support for the date field, if we can determine which date
     // format should be used.
     if ($element['#attributes']['type'] == 'date' && !empty($element['#date_date_format'])) {

@@ -139,6 +139,9 @@ trait DeprecationListenerTrait {
       "The \"Drupal\Tests\Listeners\DrupalListener\" class implements \"PHPUnit\Framework\TestListener\" that is deprecated.",
       // Guzzle/PSR-7
       "Method \"Psr\Http\Message\StreamInterface::getMetadata()\" will return \"mixed\" as of its next major version. Doing the same in implementation \"GuzzleHttp\Psr7\Stream\" will be required when upgrading.",
+      // Drupal date library deprecated.
+      'The "core/drupal.date" asset library is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3258267',
+      "Drupal\Core\Render\Element\Date::processDate() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3258267",
     ];
   }
 
