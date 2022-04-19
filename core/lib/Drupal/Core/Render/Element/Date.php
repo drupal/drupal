@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Render\Element;
 
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 
 /**
@@ -34,39 +33,12 @@ class Date extends FormElement {
       '#theme' => 'input__date',
       '#process' => [
         [$class, 'processAjaxForm'],
-        [$class, 'processDate'],
       ],
       '#pre_render' => [[$class, 'preRenderDate']],
       '#theme_wrappers' => ['form_element'],
       '#attributes' => ['type' => 'date'],
       '#date_date_format' => 'Y-m-d',
     ];
-  }
-
-  /**
-   * Processes a date form element.
-   *
-   * @param array $element
-   *   The form element to process. Properties used:
-   *   - #attributes: An associative array containing:
-   *     - type: The type of date field rendered.
-   *   - #date_date_format: The date format used in PHP formats.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   * @param array $complete_form
-   *   The complete form structure.
-   *
-   * @return array
-   *   The processed element.
-   */
-  public static function processDate(&$element, FormStateInterface $form_state, &$complete_form) {
-    // Attach JS support for the date field, if we can determine which date
-    // format should be used.
-    if ($element['#attributes']['type'] == 'date' && !empty($element['#date_date_format'])) {
-      $element['#attached']['library'][] = 'core/drupal.date';
-      $element['#attributes']['data-drupal-date-format'] = [$element['#date_date_format']];
-    }
-    return $element;
   }
 
   /**

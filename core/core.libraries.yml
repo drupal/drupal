@@ -485,15 +485,6 @@ drupal.customevent:
   js:
     misc/polyfills/customevent.js: { weight: -20 }
 
-drupal.date:
-  version: VERSION
-  js:
-    misc/date.js: {}
-  dependencies:
-    - core/drupal
-    - core/modernizr
-    - core/once
-
 drupal.debounce:
   version: VERSION
   js:
