@@ -51,7 +51,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Bulk Export',
       'Chaos tools',
       'Chaos Tools (CTools) AJAX Example',
-      'Color',
       'Comment',
       'Contact',
       'Content translation',
@@ -134,6 +133,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
     return [
       'Book',
       'Breakpoints',
+      'Color',
       'Contact translation',
       'Entity Translation Menu',
       'Entity Translation Upgrade',

@@ -122,7 +122,6 @@ class UpgradeTest extends MigrateUpgradeExecuteTestBase {
       'Block',
       'Book',
       'Chaos tools',
-      'Color',
       'Comment',
       'Contact',
       'Content translation',
@@ -187,6 +186,7 @@ class UpgradeTest extends MigrateUpgradeExecuteTestBase {
    */
   protected function getMissingPaths() {
     return [
+      'Color',
       'References',
       'Translation sets',
       'Variable realm',
