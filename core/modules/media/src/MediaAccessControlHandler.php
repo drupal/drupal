@@ -135,7 +135,7 @@ class MediaAccessControlHandler extends EntityAccessControlHandler implements En
         $media_storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
         $access = $this->access($media_storage->load($entity->id()), 'view', $account, TRUE);
         if (!$entity->isDefaultRevision()) {
-          $access = $access->orIf($this->access($entity, 'view', $account, TRUE));
+          $access = $access->andIf($this->access($entity, 'view', $account, TRUE));
         }
         return $access->cachePerPermissions()->addCacheableDependency($entity);
 
