@@ -26,7 +26,7 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -65,7 +65,7 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
     $this->drupalGet('search/help');
     $this->submitForm(['keys' => 'notawordenglish'], 'Search');
     $this->assertSearchResultsCount(0);
-    $this->assertSession()->pageTextContains('is not fully indexed');
+    $this->assertSession()->statusMessageContains('Help search is not fully indexed', 'warning');
 
     // Run cron until the topics are fully indexed, with a limit of 100 runs
     // to avoid infinite loops.
@@ -85,7 +85,7 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
     $this->drupalGet('search/help');
     $this->submitForm(['keys' => 'notawordenglish'], 'Search');
     $this->assertSearchResultsCount(1);
-    $this->assertSession()->pageTextNotContains('is not fully indexed');
+    $this->assertSession()->statusMessageNotContains('Help search is not fully indexed');
   }
 
   /**
@@ -258,7 +258,7 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
     $this->drupalGet('admin/modules/uninstall');
     $this->submitForm($edit, 'Uninstall');
     $this->submitForm([], 'Uninstall');
-    $this->assertSession()->pageTextContains('The selected modules have been uninstalled.');
+    $this->assertSession()->statusMessageContains('The selected modules have been uninstalled.', 'status');
     $this->drupalGet('admin/help');
     $this->assertSession()->statusCodeEquals(200);
   }
@@ -275,7 +275,7 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
     $this->drupalGet('admin/modules/uninstall');
     $this->submitForm($edit, 'Uninstall');
     $this->submitForm([], 'Uninstall');
-    $this->assertSession()->pageTextContains('The selected modules have been uninstalled.');
+    $this->assertSession()->statusMessageContains('The selected modules have been uninstalled.', 'status');
     $this->drupalGet('admin/help');
     $this->assertSession()->statusCodeEquals(200);
 
