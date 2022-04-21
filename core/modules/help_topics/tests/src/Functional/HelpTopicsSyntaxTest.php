@@ -33,7 +33,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * Tests that all Core help topics can be rendered and have good syntax.
