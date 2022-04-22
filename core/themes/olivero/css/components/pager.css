@@ -87,6 +87,12 @@
   background-color: var(--color--primary-40);
 }
 
+@media (forced-colors: active) {
+    .pager__item--control path {
+      fill: linktext;
+    }
+  }
+
 .pager__link {
   display: flex;
   align-items: center;
