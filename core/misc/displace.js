@@ -6,12 +6,35 @@
 **/
 
 (function ($, Drupal, debounce) {
-  let offsets = {
-    top: 0,
+  const cache = {
     right: 0,
+    left: 0,
     bottom: 0,
-    left: 0
+    top: 0
   };
+  const cssVarPrefix = '--drupal-displace-offset';
+  const documentStyle = document.documentElement.style;
+  const offsetKeys = Object.keys(cache);
+  const offsetProps = {};
+  offsetKeys.forEach(edge => {
+    offsetProps[edge] = {
+      enumerable: true,
+
+      get() {
+        return cache[edge];
+      },
+
+      set(value) {
+        if (value !== cache[edge]) {
+          documentStyle.setProperty(`${cssVarPrefix}-${edge}`, `${value}px`);
+        }
+
+        cache[edge] = value;
+      }
+
+    };
+  });
+  const offsets = Object.seal(Object.defineProperties({}, offsetProps));
 
   function getRawOffset(el, edge) {
     const $el = $(el);
@@ -69,20 +92,17 @@
     return edgeOffset;
   }
 
-  function calculateOffsets() {
-    return {
-      top: calculateOffset('top'),
-      right: calculateOffset('right'),
-      bottom: calculateOffset('bottom'),
-      left: calculateOffset('left')
-    };
-  }
+  function displace() {
+    let broadcast = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+    const newOffsets = {};
+    offsetKeys.forEach(edge => {
+      newOffsets[edge] = calculateOffset(edge);
+    });
+    offsetKeys.forEach(edge => {
+      offsets[edge] = newOffsets[edge];
+    });
 
-  function displace(broadcast) {
-    offsets = calculateOffsets();
-    Drupal.displace.offsets = offsets;
-
-    if (typeof broadcast === 'undefined' || broadcast) {
+    if (broadcast) {
       $(document).trigger('drupalViewportOffsetChange', offsets);
     }
 
@@ -101,8 +121,9 @@
 
   };
   Drupal.displace = displace;
-  $.extend(Drupal.displace, {
-    offsets,
-    calculateOffset
+  Object.defineProperty(Drupal.displace, 'offsets', {
+    value: offsets,
+    writable: false
   });
+  Drupal.displace.calculateOffset = calculateOffset;
 })(jQuery, Drupal, Drupal.debounce);

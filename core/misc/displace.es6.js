@@ -23,25 +23,66 @@
  *
  * @event drupalViewportOffsetChange
  */
-
 (function ($, Drupal, debounce) {
   /**
+   *
+   * @type {Drupal~displaceOffset}
+   */
+  const cache = {
+    right: 0,
+    left: 0,
+    bottom: 0,
+    top: 0,
+  };
+  /**
+   * The prefix used for the css custom variable name.
+   *
+   * @type {string}
+   */
+  const cssVarPrefix = '--drupal-displace-offset';
+  const documentStyle = document.documentElement.style;
+  const offsetKeys = Object.keys(cache);
+  /**
+   * The object with accessors that update the CSS variable on value update.
+   *
+   * @type {Drupal~displaceOffset}
+   */
+  const offsetProps = {};
+  offsetKeys.forEach((edge) => {
+    offsetProps[edge] = {
+      // Show this property when using Object.keys().
+      enumerable: true,
+      get() {
+        return cache[edge];
+      },
+      set(value) {
+        // Only update the CSS custom variable when the value changed.
+        if (value !== cache[edge]) {
+          documentStyle.setProperty(`${cssVarPrefix}-${edge}`, `${value}px`);
+        }
+        cache[edge] = value;
+      },
+    };
+  });
+
+  /**
+   * Current value of the size of margins on the page.
+   *
+   * This property is read-only and the object is sealed to prevent key name
+   * modifications since key names are used to dynamically construct CSS custom
+   * variable names.
+   *
    * @name Drupal.displace.offsets
    *
    * @type {Drupal~displaceOffset}
    */
-  let offsets = {
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-  };
+  const offsets = Object.seal(Object.defineProperties({}, offsetProps));
 
   /**
    * Calculates displacement for element based on its dimensions and placement.
    *
    * @param {HTMLElement} el
-   *   The jQuery element whose dimensions and placement will be measured.
+   *   The element whose dimensions and placement will be measured.
    *
    * @param {string} edge
    *   The name of the edge of the viewport that the element is associated
@@ -140,32 +181,22 @@
   }
 
   /**
-   * Determines the viewport offsets.
-   *
-   * @return {Drupal~displaceOffset}
-   *   An object whose keys are the for sides an element -- top, right, bottom
-   *   and left. The value of each key is the viewport displacement distance for
-   *   that edge.
-   */
-  function calculateOffsets() {
-    return {
-      top: calculateOffset('top'),
-      right: calculateOffset('right'),
-      bottom: calculateOffset('bottom'),
-      left: calculateOffset('left'),
-    };
-  }
-
-  /**
    * Informs listeners of the current offset dimensions.
+   *
+   * Corresponding CSS custom variables are also updated.
+   * Corresponding CSS custom variables names are:
+   *  - `--drupal-displace-offset-top`
+   *  - `--drupal-displace-offset-right`
+   *  - `--drupal-displace-offset-bottom`
+   *  - `--drupal-displace-offset-left`
    *
    * @function Drupal.displace
    *
    * @prop {Drupal~displaceOffset} offsets
    *
-   * @param {bool} [broadcast]
-   *   When true or undefined, causes the recalculated offsets values to be
-   *   broadcast to listeners.
+   * @param {bool} [broadcast=true]
+   *   When true, causes the recalculated offsets values to be
+   *   broadcast to listeners. If none is given, defaults to true.
    *
    * @return {Drupal~displaceOffset}
    *   An object whose keys are the for sides an element -- top, right, bottom
@@ -174,10 +205,20 @@
    *
    * @fires event:drupalViewportOffsetChange
    */
-  function displace(broadcast) {
-    offsets = calculateOffsets();
-    Drupal.displace.offsets = offsets;
-    if (typeof broadcast === 'undefined' || broadcast) {
+  function displace(broadcast = true) {
+    const newOffsets = {};
+    // Getting the offset and setting the offset needs to be separated because
+    // of performance concerns. Only do DOM/style reading happening here.
+    offsetKeys.forEach((edge) => {
+      newOffsets[edge] = calculateOffset(edge);
+    });
+    // Once we have all the values, write to the DOM/style.
+    offsetKeys.forEach((edge) => {
+      // Updating the value in place also update Drupal.displace.offsets.
+      offsets[edge] = newOffsets[edge];
+    });
+
+    if (broadcast) {
       $(document).trigger('drupalViewportOffsetChange', offsets);
     }
     return offsets;
@@ -195,7 +236,6 @@
         return;
       }
       this.displaceProcessed = true;
-
       $(window).on('resize.drupalDisplace', debounce(displace, 200));
     },
   };
@@ -206,19 +246,22 @@
    * @ignore
    */
   Drupal.displace = displace;
-  $.extend(Drupal.displace, {
-    /**
-     * Expose offsets to other scripts to avoid having to recalculate offsets.
-     *
-     * @ignore
-     */
-    offsets,
 
-    /**
-     * Expose method to compute a single edge offsets.
-     *
-     * @ignore
-     */
-    calculateOffset,
+  /**
+   * Expose offsets to other scripts to avoid having to recalculate offsets.
+   *
+   * @ignore
+   */
+  Object.defineProperty(Drupal.displace, 'offsets', {
+    value: offsets,
+    // Make sure other scripts don't replace this object.
+    writable: false,
   });
+
+  /**
+   * Expose method to compute a single edge offsets.
+   *
+   * @ignore
+   */
+  Drupal.displace.calculateOffset = calculateOffset;
 })(jQuery, Drupal, Drupal.debounce);

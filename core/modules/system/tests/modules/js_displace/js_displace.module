@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Functions to support testing Drupal.displace() JavaScript API.
+ */
+
+/**
+ * Implements hook_preprocess_html().
+ */
+function js_displace_preprocess_html(&$variables) {
+  $variables['#attached']['library'][] = 'core/drupal.displace';
+}

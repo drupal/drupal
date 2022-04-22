@@ -1,0 +1,5 @@
+name: 'JS Displace Tests'
+type: module
+description: 'Support module for testing Drupal.displace() JavaScript API.'
+package: Testing
+version: VERSION
