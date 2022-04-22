@@ -17,10 +17,16 @@
   left: 50%;
   padding: 1px 0.625rem 2px;
   transform: translateX(-50%);
-  color: #fff;
+  color: var(--color-white);
   border-radius: 0 0 0.625rem 0.625rem;
-  background: #444;
+  background: var(--color-gray-800);
   font-size: 0.94em;
+}
+
+.skip-link:hover,
+.skip-link:active {
+  color: var(--color-white);
+  background-color: var(--color-gray);
 }
 
 .skip-link:focus {
