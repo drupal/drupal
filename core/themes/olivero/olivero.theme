@@ -497,21 +497,6 @@ function olivero_preprocess_filter_caption(&$variables) {
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function olivero_form_comment_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  $comment = $form_state->getFormObject()
-    ->getEntity();
-  /** @var \Drupal\comment\Entity\Comment $comment */
-  if ($comment->hasParentComment()) {
-    $form['actions']['submit']['#value'] = t('Reply to comment');
-  }
-  else {
-    $form['actions']['submit']['#value'] = t('Post comment');
-  }
-}
-
-/**
- * Implements hook_form_FORM_ID_alter().
- */
 function olivero_form_node_preview_form_select_alter(&$form, FormStateInterface $form_state, $form_id) {
   $form['backlink']['#options']['attributes']['class'][] = 'button';
   $form['backlink']['#options']['attributes']['class'][] = 'button--small';
