@@ -19,8 +19,14 @@
   transform: translateX(-50%);
   color: #fff;
   border-radius: 0 0 0.625rem 0.625rem;
-  background: #444;
+  background: #55565b;
   font-size: 0.94em;
+}
+
+.skip-link:hover,
+.skip-link:active {
+  color: #fff;
+  background-color: #232429;
 }
 
 .skip-link:focus {

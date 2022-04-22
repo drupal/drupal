@@ -5,15 +5,22 @@
  * Allows keyboard users to quickly skip to the main content of the page.
  */
 
+@import "../base/variables.pcss.css";
+
 .skip-link {
   z-index: 50;
   left: 50%;
   padding: 1px 10px 2px;
   transform: translateX(-50%);
-  color: #fff;
+  color: var(--color-white);
   border-radius: 0 0 10px 10px;
-  background: #444;
+  background: var(--color-gray-800);
   font-size: 0.94em;
+}
+.skip-link:hover,
+.skip-link:active {
+  color: var(--color-white);
+  background-color: var(--color-gray);
 }
 .skip-link:focus {
   text-decoration: none;
