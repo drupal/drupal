@@ -74,6 +74,24 @@
   background-color: #0d77b5;
 }
 
+.pager__item--control path {
+    /* IE11 Specific. */
+  }
+
+@media (-ms-high-contrast: active) {
+
+.pager__item--control path {
+      fill: currentColor
+  }
+    }
+
+@media (forced-colors: active) {
+
+.pager__item--control path {
+      fill: linktext
+  }
+    }
+
 .pager__link {
   display: flex;
   align-items: center;

@@ -43,6 +43,19 @@
   background-color: var(--color--blue-20);
 }
 
+.pager__item--control {
+  & path {
+    /* IE11 Specific. */
+    @media (-ms-high-contrast: active) {
+      fill: currentColor;
+    }
+
+    @media (forced-colors: active) {
+      fill: linktext;
+    }
+  }
+}
+
 .pager__link {
   display: flex;
   align-items: center;
