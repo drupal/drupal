@@ -25,6 +25,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     'ckeditor5',
     'media',
     'media_library',
+    'ckeditor5_incompatible_filter_test',
   ];
 
   /**
@@ -42,31 +43,39 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
   protected $defaultElementsWhenUpdatingNotCkeditor5 = '<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type> <li> <dl> <dt> <dd> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <img src alt data-entity-type data-entity-uuid>';
 
   /**
+   * The expected allowed elements after updating to CKEditor5.
+   *
+   * @var string
+   */
+  protected $defaultElementsAfterUpdatingToCkeditor5 = '<br> <p> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <cite> <dl> <dt> <dd> <a hreflang href> <blockquote cite> <ul type> <ol start type> <img src alt data-entity-type data-entity-uuid> <strong> <em> <code> <li>';
+
+  /**
    * Test enabling CKEditor 5 in a way that triggers validation.
    */
   public function testEnablingToVersion5Validation() {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
+    $incompatible_filter_name = 'filters[filter_incompatible][status]';
+    $filter_warning = 'CKEditor 5 only works with HTML-based text formats. The "A TYPE_MARKUP_LANGUAGE filter incompatible with CKEditor 5" (filter_incompatible) filter implies this text format is not HTML anymore.';
+
     $this->createNewTextFormat($page, $assert_session, 'ckeditor');
     $page->selectFieldOption('editor[editor]', 'ckeditor');
     $assert_session->assertWaitOnAjaxRequest();
     $page->checkField('filters[filter_html][status]');
+    $page->checkField($incompatible_filter_name);
     $assert_session->assertWaitOnAjaxRequest();
     $page->selectFieldOption('editor[editor]', 'ckeditor5');
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->pageTextContains('CKEditor 5 needs at least the <p> and <br> tags to be allowed to be able to function. They are not allowed by the "Limit allowed HTML tags and correct faulty HTML" (filter_html) filter.');
+    $assert_session->pageTextContains($filter_warning);
 
-    // Add the tags that must be included in the html filter for CKEditor 5
-    // defaults.
-    $allowed_html_field = $assert_session->fieldExists('filters[filter_html][settings][allowed_html]');
-    $allowed_html_field->setValue('<p> <br>');
+    // Disable the incompatible filter.
+    $page->uncheckField($incompatible_filter_name);
 
     // Confirm there are no longer any warnings.
     $assert_session->waitForElementRemoved('css', '[data-drupal-messages] [role="alert"]');
 
-    $page->pressButton('update-ckeditor5-allowed-tags');
-    $assert_session->assertWaitOnAjaxRequest();
+    // Confirm the text format can be saved.
     $this->saveNewTextFormat($page, $assert_session);
   }
 
@@ -153,16 +162,9 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $page->selectFieldOption('editor[editor]', 'ckeditor5');
     $assert_session->assertWaitOnAjaxRequest();
 
-    $this->assertTrue($page->find('css', '[name="editor[editor]"]')->hasClass('error'));
-    $this->assertNotEmpty($assert_session->waitForElement('css', '[data-ckeditor5-allowed-tags-info]'));
-    $this->assertHtmlEsqueFieldValueEquals('filters[filter_html][settings][allowed_html]', $this->defaultElementsWhenUpdatingNotCkeditor5);
+    $assert_session->pageTextContains('The following tag(s) were added to Limit allowed HTML tags and correct faulty HTML, because they are needed to provide fundamental CKEditor 5 functionality : <br> <p>');
+    $this->assertHtmlEsqueFieldValueEquals('filters[filter_html][settings][allowed_html]', $this->defaultElementsAfterUpdatingToCkeditor5);
 
-    $allowed_html_field = $assert_session->fieldExists('filters[filter_html][settings][allowed_html]');
-    $allowed_html_field->setValue('<p> <br>');
-
-    $page->pressButton('update-ckeditor5-allowed-tags');
-    $assert_session->assertWaitOnAjaxRequest();
-    $this->assertFalse($page->find('css', '[name="editor[editor]"]')->hasClass('error'));
     $page->pressButton('Save configuration');
 
     $assert_session->pageTextContains('The Image upload toolbar item requires image uploads to be enabled.');
@@ -170,6 +172,15 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $assert_session->waitForText('Enable image uploads');
     $this->assertTrue($page->hasUncheckedField('editor[settings][plugins][ckeditor5_imageUpload][status]'));
     $page->checkField('editor[settings][plugins][ckeditor5_imageUpload][status]');
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->pressButton('Save configuration');
+    $this->assertSession()->pageTextContains('The following attribute(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: Image (<img src alt data-entity-uuid data-entity-type>)');
+
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForText('Manually editable HTML tags');
+    $source_edit_tags_field = $assert_session->fieldExists('editor[settings][plugins][ckeditor5_sourceEditing][allowed_tags]');
+    $source_edit_tags_field_value = $source_edit_tags_field->getValue();
+    $source_edit_tags_field->setValue(str_replace('<img src alt data-entity-type data-entity-uuid>', '', $source_edit_tags_field_value));
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Save configuration');
 

@@ -15,65 +15,6 @@
           });
         });
       });
-      once('allowed-tags-listener', context.querySelector('[data-drupal-selector="edit-filters-filter-html-settings-allowed-html"]')).forEach(function (textarea) {
-        var editorSelect = document.querySelector('[data-drupal-selector="edit-editor-editor"]');
-        var filterCheckbox = document.querySelector('[data-drupal-selector="edit-filters-filter-html-status"]');
-        var formSubmit = document.querySelector('[data-drupal-selector="edit-actions-submit"]');
-        var wrapper = textarea.closest('div');
-
-        var resetChanges = function resetChanges() {
-          var updateButtonContainer = document.querySelector('[data-ckeditor5-allowed-tags-info]');
-
-          if (updateButtonContainer) {
-            updateButtonContainer.remove();
-          }
-
-          var allowedTagsDisabledHelp = document.querySelector('[data-ckeditor5-allowed-tags-disabled-help]');
-
-          if (allowedTagsDisabledHelp) {
-            allowedTagsDisabledHelp.remove();
-          }
-
-          formSubmit.removeAttribute('disabled');
-          wrapper.classList.remove('ckeditor5-filter-attention');
-        };
-
-        resetChanges();
-
-        var addAllowedTagsUpdateButton = function addAllowedTagsUpdateButton() {
-          resetChanges();
-
-          if (editorSelect.value === 'ckeditor5' && filterCheckbox && filterCheckbox.checked) {
-            if (!textarea.hasAttribute('readonly')) {
-              wrapper.classList.add('ckeditor5-filter-attention');
-              var container = document.createElement('div');
-              container.setAttribute('data-ckeditor5-allowed-tags-info', true);
-              var description = document.createElement('p');
-              description.innerText = Drupal.t('Switching to CKEditor 5 requires, at minimum, the tags "<p> <br>". After switching to CKEditor 5, this field will be read-only, and will be updated based on which CKEditor 5 plugins are enabled. When switching to CKEditor 5 from an existing text format with content, we recommend documenting what tags are in use and then enabling the CKEditor 5 plugins that support them.');
-              var updateButton = document.createElement('button');
-              updateButton.setAttribute('name', 'update-ckeditor5-allowed-tags');
-              updateButton.innerText = Drupal.t('Apply changes to allowed tags.');
-              updateButton.addEventListener('click', function () {
-                editorSelect.dispatchEvent(new CustomEvent('change'));
-                setTimeout(function () {
-                  resetChanges();
-                });
-              });
-              container.appendChild(description);
-              container.appendChild(updateButton);
-              wrapper.appendChild(container);
-              formSubmit.setAttribute('disabled', true);
-              var formSubmitHelp = document.createElement('p');
-              formSubmitHelp.setAttribute('data-ckeditor5-allowed-tags-disabled-help', true);
-              formSubmitHelp.textContent = Drupal.t('This form is not submittable when the editor is set to CKEditor 5 unless the "Limit allowed HTML tags and correct faulty HTML" filter\'s "Allowed HTML tags" field includes the tags required by CKEditor 5');
-              formSubmit.parentNode.append(formSubmitHelp);
-            }
-          }
-        };
-
-        editorSelect.addEventListener('change', addAllowedTagsUpdateButton);
-        filterCheckbox.addEventListener('change', addAllowedTagsUpdateButton);
-      });
     }
   };
   var originalAjaxEventResponse = Drupal.Ajax.prototype.eventResponse;

@@ -111,16 +111,11 @@ ie11.filter.warnings:
 drupal.ckeditor5.filter.admin:
   js:
     js/ckeditor5.filter.admin.js: {}
-  css:
-    theme:
-      css/filter.admin.css: { }
   dependencies:
     - core/drupal
-    - core/drupal.message
     - core/once
     - core/drupal.ajax
     - core/drupalSettings
-    - core/drupal.message
 
 admin:
   js:

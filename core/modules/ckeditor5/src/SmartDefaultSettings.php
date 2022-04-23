@@ -168,6 +168,21 @@ final class SmartDefaultSettings {
       }
     }
 
+    if ($editor->getFilterFormat()->filters('filter_html')->status) {
+      $filter_html_restrictions = HTMLRestrictions::fromTextFormat($editor->getFilterFormat());
+      $fundamental = new HTMLRestrictions($this->pluginManager->getProvidedElements([
+        'ckeditor5_essentials',
+        'ckeditor5_paragraph',
+      ]));
+      $missing_tags = $fundamental->diff($filter_html_restrictions);
+      if (!$missing_tags->isEmpty()) {
+        $editor->getFilterFormat()->setFilterConfig('filter_html', $filter_html_restrictions->merge($fundamental)->getAllowedElements());
+        $messages[MessengerInterface::TYPE_STATUS][] = $this->t("The following tag(s) were added to <em>Limit allowed HTML tags and correct faulty HTML</em>, because they are needed to provide fundamental CKEditor 5 functionality : @missing_tags.", [
+          '@missing_tags' => $missing_tags->toFilterHtmlAllowedTagsString(),
+        ]);
+      }
+    }
+
     // Finally: for all enabled plugins, find the ones that are configurable,
     // and add their default settings. For enabled plugins with element subsets,
     // compute the appropriate settings to achieve the subset that matches the
