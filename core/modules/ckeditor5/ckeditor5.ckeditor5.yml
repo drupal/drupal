@@ -427,9 +427,11 @@ ckeditor5_table:
     plugins:
       - table.Table
       - table.TableToolbar
+      - table.TableCaption
+      - table.PlainTableOutput
     config:
       table:
-        contentToolbar: [tableColumn, tableRow, mergeTableCells]
+        contentToolbar: [tableColumn, tableRow, mergeTableCells, toggleTableCaption]
   drupal:
     label: Table
     library: core/ckeditor5.table
@@ -445,6 +447,7 @@ ckeditor5_table:
       - <thead>
       - <tbody>
       - <tfoot>
+      - <caption>
 
 ckeditor5_image:
   ckeditor5:
