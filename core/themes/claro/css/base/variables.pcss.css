@@ -94,7 +94,7 @@
   --input-fg-color: var(--color-fg);
   --input-bg-color: var(--color-bg);
   --input-fg-color--description: var(--color-gray-800);
-  --input-fg-color--placeholder: var(--color-gray-500);
+  --input-fg-color--placeholder: var(--color-gray-700);
   --input-border-color: var(--color-gray-500);
   --input--hover-border-color: var(--color-text);
   --input--focus-border-color: var(--color-absolutezero);

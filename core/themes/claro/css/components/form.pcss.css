@@ -6,6 +6,7 @@
 @import "../base/variables.pcss.css";
 
 ::placeholder {
+  opacity: 1;
   color: var(--input-fg-color--placeholder);
 }
 /* IE 10 and 11 needs this set as important. */

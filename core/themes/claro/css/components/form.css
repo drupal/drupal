@@ -11,17 +11,19 @@
  */
 
 :-ms-input-placeholder {
-  color: #919297;
+  opacity: 1;
+  color: #75767b;
 }
 
 ::placeholder {
-  color: #919297;
+  opacity: 1;
+  color: #75767b;
 }
 
 /* IE 10 and 11 needs this set as important. */
 
 :-ms-input-placeholder {
-  color: #919297 !important;
+  color: #75767b !important;
 }
 
 /**
