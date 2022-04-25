@@ -21,7 +21,7 @@ class BlockHtmlTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   protected function setUp(): void {
     parent::setUp();
@@ -34,7 +34,7 @@ class BlockHtmlTest extends BrowserTestBase {
     $this->drupalPlaceBlock('test_html', ['id' => 'test_html_block']);
 
     // Enable a menu block, to test more complicated HTML.
-    $this->drupalPlaceBlock('system_menu_block:admin');
+    $this->drupalPlaceBlock('system_menu_block:admin', ['id' => 'test_menu_block']);
   }
 
   /**
@@ -48,7 +48,7 @@ class BlockHtmlTest extends BrowserTestBase {
     $this->assertSession()->elementExists('xpath', '//div[@id="block-test-html-block" and @data-custom-attribute="foo"]');
 
     // Ensure expected markup for a menu block.
-    $elements = $this->xpath('//nav[contains(@class, :nav-class)]/ul[contains(@class, :ul-class)]/li', [':nav-class' => 'block-menu', ':ul-class' => 'menu']);
+    $elements = $this->xpath('//nav[@id="block-test-menu-block"]/ul/li');
     $this->assertNotEmpty($elements, 'The proper block markup was found.');
   }
 

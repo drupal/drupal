@@ -69,7 +69,7 @@ class BlockConfigSchemaTest extends KernelTestBase {
       $id = strtolower($this->randomMachineName());
       $block = Block::create([
         'id' => $id,
-        'theme' => 'classy',
+        'theme' => 'stark',
         'weight' => 00,
         'status' => TRUE,
         'region' => 'content',
