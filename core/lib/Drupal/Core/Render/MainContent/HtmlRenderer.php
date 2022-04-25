@@ -108,7 +108,7 @@ class HtmlRenderer implements MainContentRendererInterface {
    * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
    *   The theme manager.
    */
-  public function __construct(TitleResolverInterface $title_resolver, PluginManagerInterface $display_variant_manager, EventDispatcherInterface $event_dispatcher, ModuleHandlerInterface $module_handler, RendererInterface $renderer, RenderCacheInterface $render_cache, array $renderer_config, ThemeManagerInterface $theme_manager = NULL) {
+  public function __construct(TitleResolverInterface $title_resolver, PluginManagerInterface $display_variant_manager, EventDispatcherInterface $event_dispatcher, ModuleHandlerInterface $module_handler, RendererInterface $renderer, RenderCacheInterface $render_cache, array $renderer_config, ThemeManagerInterface $theme_manager) {
     $this->titleResolver = $title_resolver;
     $this->displayVariantManager = $display_variant_manager;
     $this->eventDispatcher = $event_dispatcher;
@@ -116,10 +116,6 @@ class HtmlRenderer implements MainContentRendererInterface {
     $this->renderer = $renderer;
     $this->renderCache = $render_cache;
     $this->rendererConfig = $renderer_config;
-    if ($theme_manager === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $theme_manager argument is deprecated in drupal:9.1.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/3159762', E_USER_DEPRECATED);
-      $theme_manager = \Drupal::service('theme.manager');
-    }
     $this->themeManager = $theme_manager;
   }
 

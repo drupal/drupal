@@ -89,7 +89,8 @@ class RegistryTest extends UnitTestCase {
     $this->themeInitialization = $this->createMock('Drupal\Core\Theme\ThemeInitializationInterface');
     $this->themeManager = $this->createMock('Drupal\Core\Theme\ThemeManagerInterface');
     $this->moduleList = $this->createMock(ModuleExtensionList::class);
-    $this->setupTheme();
+    $this->registry = new Registry($this->root, $this->cache, $this->lock, $this->moduleHandler, $this->themeHandler, $this->themeInitialization, NULL, NULL, $this->moduleList);
+    $this->registry->setThemeManager($this->themeManager);
   }
 
   /**
@@ -482,21 +483,6 @@ class RegistryTest extends UnitTestCase {
     ];
 
     return $data;
-  }
-
-  protected function setupTheme() {
-    $this->registry = $this->getMockBuilder(Registry::class)
-      ->onlyMethods(['getPath'])
-      ->setConstructorArgs([$this->root, $this->cache, $this->lock, $this->moduleHandler, $this->themeHandler, $this->themeInitialization, NULL, NULL, $this->moduleList])
-      ->getMock();
-    $this->registry->expects($this->any())
-      ->method('getPath')
-      ->willReturnCallback(function ($module) {
-        if ($module == 'theme_test') {
-          return 'core/modules/system/tests/modules/theme_test';
-        }
-      });
-    $this->registry->setThemeManager($this->themeManager);
   }
 
 }

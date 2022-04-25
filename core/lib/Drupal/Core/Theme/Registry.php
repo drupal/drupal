@@ -812,22 +812,4 @@ class Registry implements DestructableInterface {
     return $grouped_functions;
   }
 
-  /**
-   * Wraps drupal_get_path().
-   *
-   * @param string $module
-   *   The name of the item for which the path is requested.
-   *
-   * @return string
-   *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
-   *   \Drupal\Core\Extension\ExtensionList::getPath() instead.
-   *
-   * @see https://www.drupal.org/node/2940438
-   */
-  protected function getPath($module) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Extension\ExtensionList::getPath() instead. See https://www.drupal.org/node/2940438', E_USER_DEPRECATED);
-    return $this->moduleList->getPath($module);
-  }
-
 }
