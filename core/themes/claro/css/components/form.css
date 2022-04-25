@@ -11,6 +11,7 @@
  */
 
 ::placeholder {
+  opacity: 1;
   color: var(--input-fg-color--placeholder);
 }
 
