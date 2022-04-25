@@ -23,7 +23,7 @@ class WorkspaceSwitcherTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -72,16 +72,16 @@ class WorkspaceSwitcherTest extends BrowserTestBase {
   public function testQueryParameterNegotiator() {
     $web_assert = $this->assertSession();
     // Initially the default workspace should be active.
-    $web_assert->elementContains('css', '.block-workspace-switcher', 'None');
+    $web_assert->elementContains('css', '#block-workspaceswitcher', 'None');
 
     // When adding a query parameter the workspace will be switched.
     $current_user_url = \Drupal::currentUser()->getAccount()->toUrl();
     $this->drupalGet($current_user_url, ['query' => ['workspace' => 'stage']]);
-    $web_assert->elementContains('css', '.block-workspace-switcher', 'Stage');
+    $web_assert->elementContains('css', '#block-workspaceswitcher', 'Stage');
 
     // The workspace switching via query parameter should persist.
     $this->drupalGet($current_user_url);
-    $web_assert->elementContains('css', '.block-workspace-switcher', 'Stage');
+    $web_assert->elementContains('css', '#block-workspaceswitcher', 'Stage');
 
     // Check that WorkspaceCacheContext provides the cache context used to
     // support its functionality.
