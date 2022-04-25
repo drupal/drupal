@@ -177,22 +177,6 @@ class FrontPageTest extends ViewTestBase {
   }
 
   /**
-   * Tests the frontpage when logged in as admin.
-   */
-  public function testAdminFrontPage() {
-    // When a user with sufficient permissions is logged in, views_ui adds
-    // contextual links to the homepage view. This verifies there are no errors.
-    \Drupal::service('module_installer')->install(['views_ui']);
-    // Log in root user with sufficient permissions.
-    $this->drupalLogin($this->rootUser);
-    // Test frontpage view.
-    $this->drupalGet('node');
-    $this->assertSession()->statusCodeEquals(200);
-    // Check that the frontpage view was rendered.
-    $this->assertSession()->elementExists('css', '.views-element-container');
-  }
-
-  /**
    * Tests the cache tags when using the "none" cache plugin.
    */
   public function testCacheTagsWithCachePluginNone() {
