@@ -27,8 +27,8 @@ class BlockRebuildTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->container->get('theme_installer')->install(['stable', 'classy']);
-    $this->container->get('config.factory')->getEditable('system.theme')->set('default', 'classy')->save();
+    $this->container->get('theme_installer')->install(['stark']);
+    $this->container->get('config.factory')->getEditable('system.theme')->set('default', 'stark')->save();
   }
 
   /**
@@ -96,7 +96,7 @@ class BlockRebuildTest extends KernelTestBase {
     $expected = ['warning' => [new TranslatableMarkup('The block %info was assigned to the invalid region %region and has been disabled.', ['%info' => $block1->id(), '%region' => 'INVALID'])]];
     $this->assertEquals($expected, $messages);
 
-    $default_region = system_default_region('classy');
+    $default_region = system_default_region('stark');
     $this->assertSame($default_region, $block1->getRegion());
     $this->assertFalse($block1->status());
     $this->assertSame($default_region, $block2->getRegion());

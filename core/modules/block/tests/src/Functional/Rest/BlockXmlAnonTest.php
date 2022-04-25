@@ -26,6 +26,6 @@ class BlockXmlAnonTest extends BlockResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
 }

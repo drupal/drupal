@@ -18,7 +18,7 @@ class BlockTest extends BlockTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * Tests block visibility.
@@ -44,7 +44,7 @@ class BlockTest extends BlockTestBase {
     $this->assertSession()->checkboxChecked('edit-visibility-request-path-negate-0');
 
     $this->submitForm($edit, 'Save block');
-    $this->assertSession()->pageTextContains('The block configuration has been saved.');
+    $this->assertSession()->statusMessageContains('The block configuration has been saved.', 'status');
 
     $this->clickLink('Configure');
     $this->assertSession()->checkboxChecked('edit-visibility-request-path-negate-1');
@@ -124,7 +124,7 @@ class BlockTest extends BlockTestBase {
     // authenticated users.
     $this->drupalGet('admin/structure/block/add/' . $block_name . '/' . $default_theme);
     $this->submitForm($edit, 'Save block');
-    $this->assertSession()->pageTextContains('The block configuration has been saved.');
+    $this->assertSession()->statusMessageContains('The block configuration has been saved.', 'status');
 
     // Confirm that block was not displayed according to block visibility
     // rules.
@@ -218,7 +218,7 @@ class BlockTest extends BlockTestBase {
       'id' => $block['id'],
       'region' => $block['region'],
     ], 'Save block');
-    $this->assertSession()->pageTextContains('The block configuration has been saved.');
+    $this->assertSession()->statusMessageContains('The block configuration has been saved.', 'status');
     // Check to see if the block was created by checking its configuration.
     $instance = Block::load($block['id']);
 
@@ -234,7 +234,7 @@ class BlockTest extends BlockTestBase {
     $this->clickLink('Disable');
 
     // Confirm that the block is now listed as disabled.
-    $this->assertSession()->pageTextContains('The block settings have been updated.');
+    $this->assertSession()->statusMessageContains('The block settings have been updated.', 'status');
 
     // Confirm that the block instance title and markup are not displayed.
     $this->drupalGet('node');
@@ -249,7 +249,7 @@ class BlockTest extends BlockTestBase {
     $this->clickLink('Remove block');
     $this->assertSession()->pageTextContains('Are you sure you want to remove the block ' . $block['settings[label]'] . ' from the Footer region?');
     $this->submitForm([], 'Remove');
-    $this->assertSession()->pageTextContains('The block ' . $block['settings[label]'] . ' has been removed from the Footer region.');
+    $this->assertSession()->statusMessageContains('The block ' . $block['settings[label]'] . ' has been removed from the Footer region.', 'status');
 
     // Test deleting a block via "Configure block" link.
     $block = $this->drupalPlaceBlock('system_powered_by_block', [
@@ -259,7 +259,7 @@ class BlockTest extends BlockTestBase {
     $this->clickLink('Remove block');
     $this->assertSession()->pageTextContains('Are you sure you want to remove the block ' . $block->label() . ' from the Left sidebar region?');
     $this->submitForm([], 'Remove');
-    $this->assertSession()->pageTextContains('The block ' . $block->label() . ' has been removed from the Left sidebar region.');
+    $this->assertSession()->statusMessageContains('The block ' . $block->label() . ' has been removed from the Left sidebar region.', 'status');
     $this->assertSession()->addressEquals('admin');
     $this->assertSession()->responseNotContains($block->id());
   }
@@ -287,7 +287,7 @@ class BlockTest extends BlockTestBase {
       $block['region'] = 'content';
       $this->drupalGet('admin/structure/block/add/system_powered_by_block');
       $this->submitForm($block, 'Save block');
-      $this->assertSession()->pageTextContains('The block configuration has been saved.');
+      $this->assertSession()->statusMessageContains('The block configuration has been saved.', 'status');
       $this->assertSession()->addressEquals('admin/structure/block/list/' . $theme . '?block-placement=' . Html::getClass($block['id']));
 
       // Set the default theme and ensure the block is placed.
@@ -331,7 +331,7 @@ class BlockTest extends BlockTestBase {
     ];
     $this->drupalGet('admin/structure/block/add/' . $block_name . '/' . $default_theme);
     $this->submitForm($edit, 'Save block');
-    $this->assertSession()->pageTextContains('The block configuration has been saved.');
+    $this->assertSession()->statusMessageContains('The block configuration has been saved.', 'status');
 
     // Confirm that the block is not displayed by default.
     $this->drupalGet('user');
@@ -342,7 +342,7 @@ class BlockTest extends BlockTestBase {
     ];
     $this->drupalGet('admin/structure/block/manage/' . $id);
     $this->submitForm($edit, 'Save block');
-    $this->assertSession()->pageTextContains('The block configuration has been saved.');
+    $this->assertSession()->statusMessageContains('The block configuration has been saved.', 'status');
 
     $this->drupalGet('admin/structure/block/manage/' . $id);
     $this->assertSession()->checkboxChecked('edit-settings-label-display');
@@ -373,15 +373,22 @@ class BlockTest extends BlockTestBase {
     $this->submitForm($edit, 'Save blocks');
 
     // Confirm that the block was moved to the proper region.
-    $this->assertSession()->pageTextContains('The block settings have been updated.');
+    $this->assertSession()->statusMessageContains('The block settings have been updated.', 'status');
 
     // Confirm that the block is being displayed.
     $this->drupalGet('');
     $this->assertSession()->pageTextContains($block['settings[label]']);
 
+    $region_xpath = [
+      'header' => '//header[@role = "banner"]',
+      'sidebar_first' => '//aside[contains(@class, "layout-sidebar-first")]',
+      'content' => '//div[contains(@class, "layout-content")]',
+      'sidebar_second' => '//aside[contains(@class, "layout-sidebar-second")]',
+      'footer' => '//footer[@role = "contentinfo"]',
+    ];
+
     // Confirm that the custom block was found at the proper region.
-    $xpath = $this->assertSession()->buildXPathQuery('//div[@class=:region-class]//div[@id=:block-id]/*', [
-      ':region-class' => 'region region-' . Html::getClass($region),
+    $xpath = $this->assertSession()->buildXPathQuery($region_xpath[$region] . '//div[@id=:block-id]/*', [
       ':block-id' => 'block-' . str_replace('_', '-', strtolower($block['id'])),
     ]);
     $this->assertSession()->elementExists('xpath', $xpath);
@@ -529,7 +536,7 @@ class BlockTest extends BlockTestBase {
     $this->drupalGet('<front>');
     $this->assertSession()->pageTextContains('Powered by Drupal');
 
-    $this->config('system.theme')->set('default', 'classy')->save();
+    $this->config('system.theme')->set('default', 'stark')->save();
     $theme_installer->uninstall(['seven']);
 
     // Ensure that the block configuration does not exist anymore.

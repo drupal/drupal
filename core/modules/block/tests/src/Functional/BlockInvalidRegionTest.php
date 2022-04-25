@@ -23,7 +23,7 @@ class BlockInvalidRegionTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   protected function setUp(): void {
     parent::setUp();
@@ -50,12 +50,12 @@ class BlockInvalidRegionTest extends BrowserTestBase {
     // Clearing the cache should disable the test block placed in the invalid region.
     $this->drupalGet('admin/config/development/performance');
     $this->submitForm([], 'Clear all caches');
-    $this->assertSession()->pageTextContains($warning_message);
+    $this->assertSession()->statusMessageContains($warning_message, 'warning');
 
     // Clear the cache to check if the warning message is not triggered.
     $this->drupalGet('admin/config/development/performance');
     $this->submitForm([], 'Clear all caches');
-    $this->assertSession()->pageTextNotContains($warning_message);
+    $this->assertSession()->statusMessageNotContains($warning_message, 'warning');
 
     // Place disabled test block in the invalid region of the default theme.
     \Drupal::configFactory()->getEditable('block.block.' . $block->id())->set('region', 'invalid_region')->save();
@@ -64,7 +64,7 @@ class BlockInvalidRegionTest extends BrowserTestBase {
     // Clear the cache to check if the warning message is not triggered.
     $this->drupalGet('admin/config/development/performance');
     $this->submitForm([], 'Clear all caches');
-    $this->assertSession()->pageTextNotContains($warning_message);
+    $this->assertSession()->statusMessageNotContains($warning_message, 'warning');
   }
 
 }
