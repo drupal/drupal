@@ -387,7 +387,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       $unsupported_tags_attributes = $allowed_tags->diff($updated_allowed_tags);
       $superset_tags_attributes = $updated_allowed_tags->diff($allowed_tags);
       $this->assertSame($expected_superset, $superset_tags_attributes->toFilterHtmlAllowedTagsString());
-      $this->assertTrue($unsupported_tags_attributes->isEmpty(), "The following tags/attributes are not allowed in the updated text format:" . $unsupported_tags_attributes->toFilterHtmlAllowedTagsString());
+      $this->assertTrue($unsupported_tags_attributes->allowsNothing(), "The following tags/attributes are not allowed in the updated text format:" . implode(' ', $unsupported_tags_attributes->toCKEditor5ElementsArray()));
 
       // Update the text format like ckeditor5_form_filter_format_form_alter()
       // would.

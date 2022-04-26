@@ -593,7 +593,7 @@ class ValidatorsTest extends KernelTestBase {
       'violations' => [
         'filters.filter_html' => sprintf(
           'The current CKEditor 5 build requires the following elements and attributes: <br><code>%s</code><br>The following elements are not supported: <br><code>%s</code>',
-          Html::escape('<br> <p>'),
+          Html::escape('<br> <p> <* dir="ltr rtl" lang>'),
           Html::escape('<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type="1 A I"> <li> <dl> <dt> <dd> <h2 id="jump-*"> <h3 id> <h4 id> <h5 id> <h6 id>'),
         ),
       ],
