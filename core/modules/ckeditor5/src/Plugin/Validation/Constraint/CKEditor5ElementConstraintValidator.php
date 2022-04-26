@@ -27,7 +27,7 @@ class CKEditor5ElementConstraintValidator extends ConstraintValidator {
     }
 
     $parsed = HTMLRestrictions::fromString($element);
-    if ($parsed->isEmpty() || count($parsed->getAllowedElements()) > 1 || $element !== $parsed->toCKEditor5ElementsArray()[0]) {
+    if ($parsed->allowsNothing() || count($parsed->getAllowedElements()) > 1 || $element !== $parsed->toCKEditor5ElementsArray()[0]) {
       $this->context->buildViolation($constraint->message)
         ->setParameter('%provided_element', $element)
         ->addViolation();

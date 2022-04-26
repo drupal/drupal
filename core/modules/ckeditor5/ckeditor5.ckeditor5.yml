@@ -93,6 +93,52 @@ ckeditor5_wildcardHtmlSupport:
     # @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface::getEnabledDefinitions()
     conditions: []
 
+# https://html.spec.whatwg.org/multipage/dom.html#attr-dir
+ckeditor5_globalAttributeDir:
+  ckeditor5:
+    plugins: [htmlSupport.GeneralHtmlSupport]
+    config:
+      htmlSupport:
+        allow:
+          -
+            # @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\GlobalAttribute::getDynamicPluginConfig()
+            name: ~
+            attributes:
+              - key: dir
+                value:
+                  regexp:
+                    pattern: /^(ltr|rtl)$/
+  drupal:
+    label: Global `dir` attribute
+    class: \Drupal\ckeditor5\Plugin\CKEditor5Plugin\GlobalAttribute
+    # @see \Drupal\filter\Plugin\Filter\FilterHtml::getHTMLRestrictions()
+    elements:
+      - <* dir="ltr rtl">
+    library: core/ckeditor5.htmlSupport
+    conditions:
+      filter: filter_html
+
+# https://html.spec.whatwg.org/multipage/dom.html#attr-lang
+ckeditor5_globalAttributeLang:
+  ckeditor5:
+    plugins: [htmlSupport.GeneralHtmlSupport]
+    config:
+      htmlSupport:
+        allow:
+          -
+            # @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\GlobalAttribute::getDynamicPluginConfig()
+            name: ~
+            attributes: lang
+  drupal:
+    label: Global `lang` attribute
+    class: \Drupal\ckeditor5\Plugin\CKEditor5Plugin\GlobalAttribute
+    # @see \Drupal\filter\Plugin\Filter\FilterHtml::getHTMLRestrictions()
+    elements:
+      - <* lang>
+    library: core/ckeditor5.htmlSupport
+    conditions:
+      filter: filter_html
+
 ckeditor5_specialCharacters:
   ckeditor5:
     plugins:
@@ -117,7 +163,9 @@ ckeditor5_sourceEditing:
     class: \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing
     # This is the only CKEditor 5 plugin allowed to generate a superset of elements.
     # @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing::getElementsSubset()
-    elements: ['<*>']
+    # @see \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition::validateDrupalAspects()
+    # @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getProvidedElements()
+    elements: []
     library: core/ckeditor5.sourceEditing
     admin_library: ckeditor5/admin.sourceEditing
     toolbar_items:
