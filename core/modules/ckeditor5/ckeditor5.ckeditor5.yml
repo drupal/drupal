@@ -585,7 +585,7 @@ media_media:
     library: ckeditor5/drupal.ckeditor5.media
     class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media
     elements:
-      - <drupal-media data-entity-type data-entity-uuid alt>
+      - <drupal-media data-entity-type data-entity-uuid data-view-mode alt>
     conditions:
       filter: media_embed
 
@@ -612,20 +612,20 @@ media_mediaAlign:
       - drupalMedia.DrupalElementStyle
     config:
       drupalElementStyles:
-        options:
-          - name: 'alignRight'
+        align:
+          - name: 'right'
             title: 'Align right and wrap text'
             icon: 'objectRight'
             attributeName: 'data-align'
             attributeValue: 'right'
             modelElements: [ 'drupalMedia' ]
-          - name: 'alignLeft'
+          - name: 'left'
             title: 'Align left and wrap text'
             icon: 'objectLeft'
             attributeName: 'data-align'
             attributeValue: 'left'
             modelElements: [ 'drupalMedia' ]
-          - name: 'alignCenter'
+          - name: 'center'
             title: 'Align center and break text'
             icon: 'objectCenter'
             attributeName: 'data-align'
@@ -639,10 +639,10 @@ media_mediaAlign:
       drupalMedia:
         toolbar:
           - '|'
-          - 'drupalElementStyle:breakText'
-          - 'drupalElementStyle:alignLeft'
-          - 'drupalElementStyle:alignCenter'
-          - 'drupalElementStyle:alignRight'
+          - 'drupalElementStyle:align:breakText'
+          - 'drupalElementStyle:align:left'
+          - 'drupalElementStyle:align:center'
+          - 'drupalElementStyle:align:right'
           - '|'
   drupal:
     label: Media align

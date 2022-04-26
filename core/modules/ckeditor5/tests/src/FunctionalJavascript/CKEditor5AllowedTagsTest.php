@@ -383,7 +383,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->responseContains('Media types selectable in the Media Library');
 
-    $allowed_with_media = $this->allowedElements . ' <drupal-media data-entity-type data-entity-uuid alt>';
+    $allowed_with_media = $this->allowedElements . ' <drupal-media data-entity-type data-entity-uuid data-view-mode alt>';
     $assert_session->responseContains('Media types selectable in the Media Library');
     $this->assertHtmlEsqueFieldValueEquals('filters[filter_html][settings][allowed_html]', $allowed_with_media);
     $this->saveNewTextFormat($page, $assert_session);
@@ -403,7 +403,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     // filter_align is enabled.
     $page->checkField('filters[filter_align][status]');
     $assert_session->assertWaitOnAjaxRequest();
-    $this->assertEquals($this->allowedElements . ' <drupal-media data-entity-type data-entity-uuid alt data-align>', $allowed_html_field->getValue());
+    $this->assertEquals($this->allowedElements . ' <drupal-media data-entity-type data-entity-uuid data-view-mode alt data-align>', $allowed_html_field->getValue());
 
     // Disable media embed.
     $this->assertTrue($page->hasCheckedField('filters[media_embed][status]'));

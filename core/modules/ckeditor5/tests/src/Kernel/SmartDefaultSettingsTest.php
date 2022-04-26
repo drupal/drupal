@@ -720,7 +720,8 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         ],
         'plugins' => $basic_html_test_case['expected_ckeditor5_settings']['plugins'],
       ],
-      'expected_superset' => $basic_html_test_case['expected_superset'],
+      // @todo: Remove data-view-mode in https://www.drupal.org/project/drupal/issues/3269657.
+      'expected_superset' => $basic_html_test_case['expected_superset'] . ' <drupal-media data-view-mode>',
       'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
       'expected_messages' => array_merge_recursive($basic_html_test_case['expected_messages'], [
         'status' => [
