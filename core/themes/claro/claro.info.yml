@@ -52,8 +52,6 @@ libraries-override:
     css:
       component:
         misc/vertical-tabs.css: false
-    js:
-      misc/vertical-tabs.js: js/vertical-tabs.js
 
   core/drupal.autocomplete:
     css:

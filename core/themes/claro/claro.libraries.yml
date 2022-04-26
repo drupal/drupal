@@ -264,6 +264,8 @@ vertical-tabs:
   css:
     component:
       css/components/vertical-tabs.css: {}
+  js:
+     js/vertical-tabs.js: {}
   dependencies:
     - claro/global-styling
 
