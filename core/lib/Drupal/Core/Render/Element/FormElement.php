@@ -56,6 +56,9 @@ use Drupal\Core\Url;
  *   this suffix are wrapped in a <span> element, so the value should not
  *   contain block level HTML. Any HTML must also be valid, i.e. any tags
  *   introduce inside this suffix must also be terminated within the suffix.
+ * - #value: (mixed) A value that cannot be edited by the user.
+ * - #has_garbage_value: (bool) Internal only. Set to TRUE to indicate that the
+ *   #value property of an element should not be used or processed.
  * - #input: (bool, internal) Whether or not the element accepts input.
  * - #parents: (string[], read-only) Array of names of the element's parents
  *   for purposes of getting values out of $form_state. See also
