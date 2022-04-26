@@ -42,7 +42,7 @@
             details: $that
           });
           tabList.append(verticalTab.item);
-          $that.removeClass('collapsed').attr('open', true).addClass('vertical-tabs__pane').data('verticalTab', verticalTab);
+          $that.removeClass('collapsed').removeAttr('open').addClass('vertical-tabs__pane').data('verticalTab', verticalTab);
 
           if (this.id === focusID) {
             tabFocus = $that;
@@ -93,8 +93,10 @@
       this.details.siblings('.vertical-tabs__pane').each(function () {
         var tab = $(this).data('verticalTab');
         tab.details.hide();
+        tab.details.removeAttr('open');
         tab.item.removeClass('is-selected');
       }).end().show().siblings(':hidden.vertical-tabs__active-tab')[0].value = this.details.attr('id');
+      this.details.attr('open', true);
       this.item.addClass('is-selected');
       $('#active-vertical-tab').remove();
       this.link.append("<span id=\"active-vertical-tab\" class=\"visually-hidden\">".concat(Drupal.t('(active tab)'), "</span>"));
@@ -113,7 +115,7 @@
     tabHide: function tabHide() {
       this.item.hide();
       this.item.parent().children('.vertical-tabs__menu-item').removeClass('first').filter(':visible').eq(0).addClass('first');
-      this.details.addClass('vertical-tab--hidden').hide();
+      this.details.addClass('vertical-tab--hidden').hide().removeAttr('open');
       var $firstTab = this.details.siblings('.vertical-tabs__pane:not(.vertical-tab--hidden)').eq(0);
 
       if ($firstTab.length) {

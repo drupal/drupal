@@ -92,9 +92,7 @@
             tabList.append(verticalTab.item);
             $that
               .removeClass('collapsed')
-              // prop() can't be used on browsers not supporting details element,
-              // the style won't apply to them if prop() is used.
-              .attr('open', true)
+              .removeAttr('open')
               .addClass('vertical-tabs__pane')
               .data('verticalTab', verticalTab);
             if (this.id === focusID) {
@@ -178,12 +176,14 @@
         .each(function () {
           const tab = $(this).data('verticalTab');
           tab.details.hide();
+          tab.details.removeAttr('open');
           tab.item.removeClass('is-selected');
         })
         .end()
         .show()
         .siblings(':hidden.vertical-tabs__active-tab')[0].value =
         this.details.attr('id');
+      this.details.attr('open', true);
       this.item.addClass('is-selected');
       // Mark the active tab for screen readers.
       $('#active-vertical-tab').remove();
@@ -249,7 +249,7 @@
         .eq(0)
         .addClass('first');
       // Hide the details element.
-      this.details.addClass('vertical-tab--hidden').hide();
+      this.details.addClass('vertical-tab--hidden').hide().removeAttr('open');
       // Focus the first visible tab (if there is one).
       const $firstTab = this.details
         .siblings('.vertical-tabs__pane:not(.vertical-tab--hidden)')

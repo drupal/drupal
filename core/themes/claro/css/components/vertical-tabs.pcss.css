@@ -28,7 +28,7 @@
  */
 .vertical-tabs__menu {
   position: relative;
-  display: none;
+  display: block;
   float: left; /* LTR */
   width: var(--vertical-tabs-menu-width);
   margin: 0;
@@ -39,13 +39,6 @@
 [dir="rtl"] .vertical-tabs__menu {
   float: right;
   margin: 0;
-}
-
-@media screen and (min-width: 85em) {
-  .vertical-tabs__menu {
-    display: block;
-    width: var(--vertical-tabs-menu-width);
-  }
 }
 
 /**
@@ -94,7 +87,7 @@
 /**
  * Making the separator line visible only if it follows an unhidden menu item.
  */
-.vertical-tabs__menu-item:not(.vertical-tabs__menu-item--hidden) ~ .vertical-tabs__menu-item::before {
+.vertical-tabs__menu-item:not(.vertical-tab--hidden) ~ .vertical-tabs__menu-item::before {
   content: "";
 }
 
@@ -105,7 +98,7 @@
 }
 
 .vertical-tabs__menu-item.is-selected::before,
-.vertical-tabs__menu-item:not(.vertical-tabs__menu-item--hidden) ~ .vertical-tabs__menu-item.is-selected::before {
+.vertical-tabs__menu-item:not(.vertical-tab--hidden) ~ .vertical-tabs__menu-item.is-selected::before {
   content: normal;
 }
 
@@ -261,7 +254,7 @@
 }
 
 /* This modifier is added by JavaScript (this is inherited from Drupal core). */
-.vertical-tabs__items--processed {
+.vertical-tabs__panes {
   position: relative;
   z-index: 1; /* The wrapper of the details of the vertical tabs should be on a higher level than the vertical tabs menu */
   top: -1px;
@@ -269,24 +262,22 @@
   margin-bottom: 0;
 }
 /* This clearfix makes the pane wrapper at least as tall as the menu. */
-.vertical-tabs__items--processed::after {
+.vertical-tabs__panes::after {
   display: block;
   clear: both;
   content: "";
 }
 
-@media screen and (min-width: 85em) {
-  .vertical-tabs__items--processed {
-    margin-left: var(--vertical-tabs-menu-width); /* LTR */
-    border-top-left-radius: 0; /* LTR */
-  }
+.vertical-tabs .vertical-tabs__panes {
+  margin-left: var(--vertical-tabs-menu-width); /* LTR */
+  border-top-left-radius: 0; /* LTR */
+}
 
-  .js[dir="rtl"] .vertical-tabs__items--processed {
-    margin-right: var(--vertical-tabs-menu-width);
-    margin-left: 0;
-    border-top-left-radius: var(--vertical-tabs-border-radius);
-    border-top-right-radius: 0;
-  }
+[dir="rtl"] .vertical-tabs .vertical-tabs__panes {
+  margin-right: var(--vertical-tabs-menu-width);
+  margin-left: 0;
+  border-top-left-radius: var(--vertical-tabs-border-radius);
+  border-top-right-radius: 0;
 }
 
 /**
@@ -301,30 +292,28 @@
   border-radius: 0;
 }
 
-.vertical-tabs__item--first {
+.vertical-tabs__item.first {
   border-top-left-radius: var(--details-accordion-border-size-radius);
   border-top-right-radius: var(--details-accordion-border-size-radius);
 }
 
-.vertical-tabs__item--last {
+.vertical-tabs__item.last {
   margin-bottom: calc(var(--vertical-tabs-border-size) * -1);
   border-bottom-right-radius: var(--details-accordion-border-size-radius);
   border-bottom-left-radius: var(--details-accordion-border-size-radius);
 }
 
-@media screen and (min-width: 85em) {
-  .js .vertical-tabs__item {
-    overflow: hidden;
-    margin: 0;
-    border: 0;
-  }
+.js .vertical-tabs .vertical-tabs__item {
+  overflow: hidden;
+  margin: 0;
+  border: 0;
+}
 
-  .js .vertical-tabs__item--first,
-  .js .vertical-tabs__item--last {
-    border-radius: 0;
-  }
+.js .vertical-tabs .vertical-tabs__item.first,
+.js .vertical-tabs .vertical-tabs__item.last {
+  border-radius: 0;
+}
 
-  .js .vertical-tabs__item > summary {
-    display: none;
-  }
+.js .vertical-tabs .vertical-tabs__item > summary {
+  display: none;
 }
