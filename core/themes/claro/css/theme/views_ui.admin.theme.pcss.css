@@ -594,7 +594,7 @@ td.group-title {
   display: inline-block;
   margin-top: 0;
   margin-bottom: 0;
-  color: #818181;
+  color: var(--color-gray-800);
   font-size: 13px;
   font-weight: normal;
   line-height: 1.6154;
