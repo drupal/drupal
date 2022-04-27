@@ -421,20 +421,28 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     // due to isEnabled() returning false, that should still have its config
     // form provided:
     // 1 - A conditionally enabled plugin that does not depend on a toolbar item
-    // to be active AND the plugins it depends on are enabled.
+    // to be active AND the plugins it depends on are enabled (if any) AND the
+    // filter it depends on is enabled (if any).
     // 2 - A conditionally enabled plugin that does depend on a toolbar item,
     // and that toolbar item is active.
     if ($definition->hasConditions()) {
       $conditions = $definition->getConditions();
       if (!array_key_exists('toolbarItem', $conditions)) {
+        $conclusion = TRUE;
+        // The filter this plugin depends on must be enabled.
+        if (array_key_exists('filter', $conditions)) {
+          $required_filter = $conditions['filter'];
+          $format_filters = $editor->getFilterFormat()->filters();
+          $conclusion = $conclusion && $format_filters->has($required_filter) && $format_filters->get($required_filter)->status;
+        }
         // The CKEditor 5 plugins this plugin depends on must be enabled.
         if (array_key_exists('plugins', $conditions)) {
           $all_plugins = $this->ckeditor5PluginManager->getDefinitions();
           $dependencies = array_intersect_key($all_plugins, array_flip($conditions['plugins']));
           $unmet_dependencies = array_diff_key($dependencies, $enabled_plugins);
-          return empty($unmet_dependencies);
+          $conclusion = $conclusion && empty($unmet_dependencies);
         }
-        return TRUE;
+        return $conclusion;
       }
       elseif (in_array($conditions['toolbarItem'], $editor->getSettings()['toolbar']['items'], TRUE)) {
         return TRUE;
