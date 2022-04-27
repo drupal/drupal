@@ -8,11 +8,11 @@ import DrupalHtmlBuilder from './drupalhtmlbuilder';
  * attributes.
  *
  * @see module:engine/dataprocessor/basichtmlwriter~BasicHtmlWriter
- * @implements {module:engine/dataprocessor/htmlwriter~HtmlWriter}
+ * @implements module:engine/dataprocessor/htmlwriter~HtmlWriter
  *
  * @see https://www.drupal.org/project/drupal/issues/3227831
  *
- * @internal
+ * @private
  */
 export default class DrupalHtmlWriter {
   /**

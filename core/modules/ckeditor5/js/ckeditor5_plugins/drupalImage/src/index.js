@@ -4,7 +4,7 @@ import DrupalImage from './drupalimage';
 import DrupalImageUpload from './imageupload/drupalimageupload';
 
 /**
- * @internal
+ * @private
  */
 export default {
   DrupalImage,

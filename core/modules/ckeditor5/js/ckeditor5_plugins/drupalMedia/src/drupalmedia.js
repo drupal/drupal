@@ -10,9 +10,21 @@ import MediaImageTextAlternative from './mediaimagetextalternative';
 import DrupalMediaGeneralHtmlSupport from './drupalmediageneralhtmlsupport';
 
 /**
- * @internal
+ * Main entrypoint to the Drupal media widget.
+ *
+ * See individual capabilities for details:
+ *  - {@link DrupalMediaEditing}
+ *  - {@link DrupalMediaGeneralHtmlSupport}
+ *  - {@link DrupalMediaUI}
+ *  - {@link DrupalMediaToolbar}
+ *  - {@link MediaImageTextAlternative}
+ *
+ * @private
  */
 export default class DrupalMedia extends Plugin {
+  /**
+   * @inheritdoc
+   */
   static get requires() {
     return [
       DrupalMediaEditing,

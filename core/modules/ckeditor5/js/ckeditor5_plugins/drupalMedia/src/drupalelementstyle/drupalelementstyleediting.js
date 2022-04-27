@@ -14,7 +14,7 @@ import { groupNameToModelAttributeKey } from '../utils';
  *
  * @param {string} name
  *   The name of the style definition.
- * @param styles
+ * @param {object} styles
  *   The styles to search from.
  * @return {Drupal.CKEditor5~DrupalElementStyle}
  */
@@ -34,6 +34,9 @@ function getStyleDefinitionByName(name, styles) {
  * or attribute.
  *
  * Note that only one style can be applied to a single model element.
+ *
+ * @param {object} styles
+ *  Existing styles.
  */
 function modelToViewStyleAttribute(styles) {
   return (evt, data, conversionApi) => {
@@ -192,11 +195,11 @@ function viewToModelStyleAttribute(styles, modelAttribute) {
  *
  * @extends module:core/plugin~Plugin
  *
- * @internal
+ * @private
  */
 export default class DrupalElementStyleEditing extends Plugin {
   /**
-   * @inheritDoc
+   * @inheritdoc
    */
   init() {
     const { editor } = this;
@@ -339,7 +342,7 @@ export default class DrupalElementStyleEditing extends Plugin {
   }
 
   /**
-   * @inheritDoc
+   * @inheritdoc
    */
   static get pluginName() {
     return 'DrupalElementStyleEditing';

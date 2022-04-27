@@ -25,14 +25,14 @@ import DrupalImageAlternativeTextUi from './imagealternativetext/drupalimagealte
  */
 export default class DrupalImageAlternativeText extends Plugin {
   /**
-   * @inheritDoc
+   * @inheritdoc
    */
   static get requires() {
     return [DrupalImageAlternativeTextEditing, DrupalImageAlternativeTextUi];
   }
 
   /**
-   * @inheritDoc
+   * @inheritdoc
    */
   static get pluginName() {
     return 'DrupalImageAlternativeText';
