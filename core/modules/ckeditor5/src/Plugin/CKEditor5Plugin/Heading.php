@@ -170,7 +170,7 @@ class Heading extends CKEditor5PluginDefault implements CKEditor5PluginConfigura
    * Filters the header options to those chosen in editor config.
    */
   public function getDynamicPluginConfig(array $static_plugin_config, EditorInterface $editor): array {
-    $enabled_headings = $this->getEnabledHeadings($editor);
+    $enabled_headings = $this->getEnabledHeadings();
     $all_heading_options = $static_plugin_config['heading']['options'];
 
     $configured_heading_options = array_filter($all_heading_options, function ($option) use ($enabled_headings) {
