@@ -38,7 +38,7 @@ use Drupal\filter\Plugin\FilterInterface;
  * @see ::WILDCARD_ELEMENT_METHODS
  *
  * NOTE: Currently only supports the 'allowed' portion.
- * @todo Add support for "forbidden" tags in https://www.drupal.org/project/drupal/issues/3231334
+ * @todo Add support for "forbidden" tags in https://www.drupal.org/project/drupal/issues/3231336
  *
  * @internal
  */
@@ -95,7 +95,7 @@ final class HTMLRestrictions {
    * - Is a string
    * - Does not contain leading or trailing whitespace
    * - Is a tag name, not a tag, e.g. `div` not `<div>`
-   * - Is a valid HTML tag name.
+   * - Is a valid HTML tag name (or the global attribute `*` tag).
    *
    * @param array $elements
    *   The allowed elements.
@@ -114,6 +114,13 @@ final class HTMLRestrictions {
         throw new \InvalidArgumentException(sprintf('"%s" is not a HTML tag name, it is an actual HTML tag. Omit the angular brackets.', $html_tag_name));
       }
       if (self::isWildcardTag($html_tag_name)) {
+        continue;
+      }
+      // Special case: the global attribute `*` HTML tag.
+      // @see https://html.spec.whatwg.org/multipage/dom.html#global-attributes
+      // @see validateAllowedRestrictionsPhase2()
+      // @see validateAllowedRestrictionsPhase4()
+      if ($html_tag_name === '*') {
         continue;
       }
       // HTML elements must have a valid tag name.
@@ -135,6 +142,17 @@ final class HTMLRestrictions {
    */
   private static function validateAllowedRestrictionsPhase2(array $elements): void {
     foreach ($elements as $html_tag_name => $html_tag_restrictions) {
+      // The global attribute `*` HTML tag is a special case: it allows
+      // specifying specific attributes that are allowed on all tags (f.e.
+      // `lang`) or disallowed on all tags (f.e. `style`) as translations and
+      // security are concerns orthogonal to the configured HTML restrictions
+      // of a text format.
+      // @see https://html.spec.whatwg.org/multipage/dom.html#global-attributes
+      // @see validateAllowedRestrictionsPhase4()
+      if ($html_tag_name === '*' && !is_array($html_tag_restrictions)) {
+        throw new \InvalidArgumentException(sprintf('The value for the special "*" global attribute HTML tag must be an array of attribute restrictions.'));
+      }
+
       // The value must be either a boolean (FALSE means no attributes are
       // allowed, TRUE means all attributes are allowed), or an array of allowed
       // The value must be either:
@@ -201,6 +219,17 @@ final class HTMLRestrictions {
         if ($html_tag_attribute_restrictions === TRUE) {
           continue;
         }
+        // Special case: the global attribute `*` HTML tag.
+        // The global attribute `*` HTML tag is a special case: it allows
+        // specifying specific attributes that are allowed on all tags (f.e.
+        // `lang`) or disallowed on all tags (f.e. `style`) as translations and
+        // security are concerns orthogonal to the configured HTML restrictions
+        // of a text format.
+        // @see https://html.spec.whatwg.org/multipage/dom.html#global-attributes
+        // @see validateAllowedRestrictionsPhase2()
+        if ($html_tag_name === '*' && $html_tag_attribute_restrictions === FALSE) {
+          continue;
+        }
         if (!is_array($html_tag_attribute_restrictions)) {
           throw new \InvalidArgumentException(sprintf('The "%s" HTML tag has an attribute restriction "%s" which is neither TRUE nor an array of attribute value restrictions.', $html_tag_name, $html_tag_attribute_name));
         }
@@ -234,14 +263,17 @@ final class HTMLRestrictions {
   }
 
   /**
-   * Whether this is the empty set of HTML restrictions.
+   * Whether this set of HTML restrictions allows nothing.
    *
    * @return bool
    *
    * @see ::emptySet()
    */
-  public function isEmpty(): bool {
-    return count($this->elements) === 0;
+  public function allowsNothing(): bool {
+    return count($this->elements) === 0
+      // If there are only forbidden attributes on the global attribute `*` HTML
+      // tag, that is equivalent to the set of restrictions being empty.
+      || count($this->elements) === 1 && isset($this->elements['*']) && empty(array_filter($this->elements['*']));
   }
 
   /**
@@ -316,11 +348,6 @@ final class HTMLRestrictions {
     }
 
     $allowed = $restrictions['allowed'];
-    // @todo Validate attributes allowed or forbidden on all elements
-    //   https://www.drupal.org/project/ckeditor5/issues/3231334.
-    if (isset($allowed['*'])) {
-      unset($allowed['*']);
-    }
 
     return new self($allowed);
   }
@@ -338,13 +365,16 @@ final class HTMLRestrictions {
    */
   public static function fromString(string $elements_string): HTMLRestrictions {
     // Preprocess wildcard tags: convert `<$text-container>` to
-    // `<__preprocessed-wildcard-text-container__>`.
+    // `<__preprocessed-wildcard-text-container__>` and `<*>` to
+    // `<__preprocessed-global-attribute__>`.
     // Note: unknown wildcard tags will trigger a validation error in
     // ::validateAllowedRestrictionsPhase1().
     $replaced_wildcard_tags = [];
-    $elements_string = preg_replace_callback('/<(\$[a-z][0-9a-z\-]*)/', function ($matches) use (&$replaced_wildcard_tags) {
+    $elements_string = preg_replace_callback('/<(\$[a-z][0-9a-z\-]*|\*)/', function ($matches) use (&$replaced_wildcard_tags) {
       $wildcard_tag_name = $matches[1];
-      $replacement = sprintf("__preprocessed-wildcard-%s__", substr($wildcard_tag_name, 1));
+      $replacement = $wildcard_tag_name === '*'
+        ? '__preprocessed-global-attribute__'
+        : sprintf("__preprocessed-wildcard-%s__", substr($wildcard_tag_name, 1));
       $replaced_wildcard_tags[$replacement] = $wildcard_tag_name;
       return "<$replacement";
     }, $elements_string);
@@ -566,6 +596,16 @@ final class HTMLRestrictions {
           $intersection[$tag][$attr] = $this->elements[$tag][$attr];
           continue;
         }
+        // If either allows no attribute values, nor does the intersection.
+        if ($this->elements[$tag][$attr] === FALSE || $other->elements[$tag][$attr] === FALSE) {
+          // Special case: the global attribute `*` HTML tag.
+          // @see https://html.spec.whatwg.org/multipage/dom.html#global-attributes
+          // @see validateAllowedRestrictionsPhase2()
+          // @see validateAllowedRestrictionsPhase4()
+          assert($tag === '*');
+          $intersection[$tag][$attr] = FALSE;
+          continue;
+        }
         assert(is_array($this->elements[$tag][$attr]));
         assert(is_array($other->elements[$tag][$attr]));
         $intersection[$tag][$attr] = array_intersect_key($this->elements[$tag][$attr], $other->elements[$tag][$attr]);
@@ -579,6 +619,13 @@ final class HTMLRestrictions {
       // HTML tags must not have an empty array of allowed attributes.
       if ($intersection[$tag] === []) {
         $intersection[$tag] = FALSE;
+        // Special case: the global attribute `*` HTML tag.
+        // @see https://html.spec.whatwg.org/multipage/dom.html#global-attributes
+        // @see validateAllowedRestrictionsPhase2()
+        // @see validateAllowedRestrictionsPhase4()
+        if ($tag === '*') {
+          unset($intersection[$tag]);
+        }
       }
     }
 
@@ -688,11 +735,30 @@ final class HTMLRestrictions {
         // If the HTML tag restrictions are arrays for both operands, similar
         // logic needs to be applied to the attribute-level restrictions.
         foreach ($tag_config as $html_tag_attribute_name => $html_tag_attribute_restrictions) {
-          if ($html_tag_attribute_restrictions === TRUE) {
+          if (is_bool($html_tag_attribute_restrictions)) {
             continue;
           }
 
           if (array_key_exists(0, $html_tag_attribute_restrictions)) {
+            // Special case: the global attribute `*` HTML tag.
+            // @see https://html.spec.whatwg.org/multipage/dom.html#global-attributes
+            // @see validateAllowedRestrictionsPhase2()
+            // @see validateAllowedRestrictionsPhase4()
+            if ($tag === '*') {
+              assert(is_bool($html_tag_attribute_restrictions[0]) || is_bool($html_tag_attribute_restrictions[1]));
+              // When both are boolean, pick the most permissive value.
+              if (is_bool($html_tag_attribute_restrictions[0]) && isset($html_tag_attribute_restrictions[1]) && is_bool($html_tag_attribute_restrictions[1])) {
+                $value = $html_tag_attribute_restrictions[0] || $html_tag_attribute_restrictions[1];
+              }
+              else {
+                $value = is_bool($html_tag_attribute_restrictions[0])
+                  ? $html_tag_attribute_restrictions[0]
+                  : $html_tag_attribute_restrictions[1];
+              }
+              $union[$tag][$html_tag_attribute_name] = $value;
+              continue;
+            }
+
             // The "twice FALSE" case cannot occur for attributes, because
             // attribute restrictions either have "TRUE" (to indicate any value
             // is allowed for the attribute) or a list of allowed attribute
@@ -955,10 +1021,27 @@ final class HTMLRestrictions {
             $attribute_string .= "$attribute_name=\"$attribute_values_string\" ";
           }
           else {
+            // Special case: the global attribute `*` HTML tag.
+            // @see https://html.spec.whatwg.org/multipage/dom.html#global-attributes
+            // @see validateAllowedRestrictionsPhase2()
+            // @see validateAllowedRestrictionsPhase4()
+            if ($attribute_values === FALSE) {
+              assert($tag === '*');
+              continue;
+            }
             $attribute_string .= "$attribute_name ";
           }
         }
       }
+
+      // Special case: the global attribute `*` HTML tag.
+      // @see https://html.spec.whatwg.org/multipage/dom.html#global-attributes
+      // @see validateAllowedRestrictionsPhase2()
+      // @see validateAllowedRestrictionsPhase4()
+      if ($tag === '*' && empty(array_filter($attributes))) {
+        continue;
+      }
+
       $joined = '<' . $tag . (!empty($attribute_string) ? ' ' . trim($attribute_string) : '') . '>';
       array_push($readable, $joined);
     }
@@ -980,6 +1063,9 @@ final class HTMLRestrictions {
     // Resolve wildcard tags, because Drupal's filter_html filter plugin does
     // not support those.
     $concrete = self::resolveWildcards($this);
+    // The filter_html plugin does not allow configuring additional globally
+    // allowed or disallowed attributes. It uses a hardcoded list.
+    $concrete = new HTMLRestrictions(array_diff_key($concrete->getAllowedElements(FALSE), ['*' => NULL]));
     return implode(' ', $concrete->toCKEditor5ElementsArray());
   }
 
@@ -1015,7 +1101,11 @@ final class HTMLRestrictions {
           if ($name === 'style') {
             continue;
           }
-          assert($value === TRUE || Inspector::assertAllStrings($value));
+          // Special case: the global attribute `*` HTML tag.
+          // @see https://html.spec.whatwg.org/multipage/dom.html#global-attributes
+          // @see validateAllowedRestrictionsPhase2()
+          // @see validateAllowedRestrictionsPhase4()
+          assert($value === TRUE || Inspector::assertAllStrings($value) || ($tag === '*' && $value === FALSE));
           // If a single attribute value is allowed, it must be TRUE (see the
           // assertion above). Otherwise, it must be an array of strings (see
           // the assertion above), which lists all allowed attribute values. To

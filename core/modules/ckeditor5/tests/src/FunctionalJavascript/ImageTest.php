@@ -398,8 +398,8 @@ class ImageTest extends CKEditor5TestBase {
     $xpath = new \DOMXPath($this->getEditorDataAsDom());
     $this->assertCount(0, $xpath->query('//a[@href="http://www.drupal.org/association"]/img[@alt="drupalimage test image"]'));
     $this->assertCount(1, $xpath->query('//img[@alt="drupalimage test image"]'));
-    // @todo Remove the different assertion for the "inline, unrestricted" case when https://www.drupal.org/project/ckeditor5/issues/3247634 is fixed.
-    if ($image_type === 'inline' && $unrestricted) {
+    // @todo Remove the different assertion for the inline cases when https://www.drupal.org/project/ckeditor5/issues/3247634 is fixed.
+    if ($image_type === 'inline') {
       $this->assertCount(1, $xpath->query('//a'));
     }
     else {

@@ -82,7 +82,7 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
       ->diff($enabled_plugin_overlap);
     foreach ([$enabled_plugin_overlap, $disabled_plugin_overlap] as $overlap) {
       $checking_enabled = $overlap === $enabled_plugin_overlap;
-      if (!$overlap->isEmpty()) {
+      if (!$overlap->allowsNothing()) {
         $plugins_to_check_against = $checking_enabled ? $enabled_plugins : $disabled_plugins;
         $tags_plugin_report = $this->pluginsSupplyingTagsMessage($overlap, $plugins_to_check_against, $enabled_plugin_tags);
         $message = $checking_enabled ? $constraint->enabledPluginsMessage : $constraint->availablePluginsMessage;
@@ -106,7 +106,7 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
         // (for example `<foo bar baz>`), only CKEditor 5 plugins providing an
         // exact match (`<foo bar baz>`) or a superset (`<foo bar baz qux>`) can
         // trigger a violation, not subsets (`<foo>`).
-        if (!$source_enabled_tags->diff($overlap)->isEmpty()) {
+        if (!$source_enabled_tags->diff($overlap)->allowsNothing()) {
           continue;
         }
 
@@ -161,7 +161,7 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
         $plugin_capabilities = HTMLRestrictions::fromString(implode(' ', $definition->getElements()));
 
         // If this plugin supports wildcards, resolve them.
-        if (!$plugin_capabilities->getWildcardSubset()->isEmpty()) {
+        if (!$plugin_capabilities->getWildcardSubset()->allowsNothing()) {
           $plugin_capabilities = $plugin_capabilities
             // Resolve wildcards.
             ->merge($enabled_plugin_restrictions)
@@ -172,7 +172,7 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
         // actually provides the overlap.
         // For example: avoid listing the image alignment/captioning plugins
         // when matching `<img src>`; only lists the main image plugin.
-        if (!$overlap->diff($plugin_capabilities)->isEmpty()) {
+        if (!$overlap->diff($plugin_capabilities)->allowsNothing()) {
           continue;
         }
         foreach ($plugin_capabilities->intersect($overlap)->toCKEditor5ElementsArray() as $element) {

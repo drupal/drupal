@@ -147,7 +147,7 @@ final class SmartDefaultSettings {
         );
       }
       // Warn user about unsupported tags.
-      if (!$unsupported->isEmpty()) {
+      if (!$unsupported->allowsNothing()) {
         $this->addTagsToSourceEditing($editor, $unsupported);
         $messages[MessengerInterface::TYPE_STATUS][] = $this->t("The following tags were permitted by this format's filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: @unsupported_string.", [
           '@unsupported_string' => $unsupported->toFilterHtmlAllowedTagsString(),
@@ -160,7 +160,7 @@ final class SmartDefaultSettings {
         );
       }
       // Warn user about supported tags but missing attributes.
-      if (!$missing_attributes->isEmpty()) {
+      if (!$missing_attributes->allowsNothing()) {
         $this->addTagsToSourceEditing($editor, $missing_attributes);
         $messages[MessengerInterface::TYPE_STATUS][] = $this->t("This format's HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: @missing_attributes.", [
           '@missing_attributes' => $missing_attributes->toFilterHtmlAllowedTagsString(),
@@ -175,7 +175,7 @@ final class SmartDefaultSettings {
         'ckeditor5_paragraph',
       ]));
       $missing_tags = $fundamental->diff($filter_html_restrictions);
-      if (!$missing_tags->isEmpty()) {
+      if (!$missing_tags->allowsNothing()) {
         $editor->getFilterFormat()->setFilterConfig('filter_html', $filter_html_restrictions->merge($fundamental)->getAllowedElements());
         $messages[MessengerInterface::TYPE_STATUS][] = $this->t("The following tag(s) were added to <em>Limit allowed HTML tags and correct faulty HTML</em>, because they are needed to provide fundamental CKEditor 5 functionality : @missing_tags.", [
           '@missing_tags' => $missing_tags->toFilterHtmlAllowedTagsString(),
@@ -473,7 +473,7 @@ final class SmartDefaultSettings {
    */
   private static function getCandidates(HTMLRestrictions $provided, HTMLRestrictions $still_needed, array $disabled_plugin_definitions): array {
     $plugin_candidates = [];
-    if (!$still_needed->isEmpty()) {
+    if (!$still_needed->allowsNothing()) {
       foreach ($disabled_plugin_definitions as $definition) {
         // Only proceed if the plugin has configured elements and the plugin
         // does not have conditions. In the future we could add support for
@@ -481,7 +481,7 @@ final class SmartDefaultSettings {
         // configuration cannot be modified.
         if (!$definition->hasConditions() && $definition->hasElements()) {
           [$net_new, $surplus_additions] = self::computeNetNewElementsForPlugin($provided, $still_needed, $definition);
-          if (!$net_new->isEmpty()) {
+          if (!$net_new->allowsNothing()) {
             $plugin_id = $definition->id();
             $surplus_score = static::computeSurplusScore($surplus_additions, $still_needed);
             foreach ($net_new->getAllowedElements() as $tag_name => $attributes_config) {
@@ -652,7 +652,7 @@ final class SmartDefaultSettings {
     $provided = new HTMLRestrictions($provided_elements);
     $still_needed = HTMLRestrictions::fromTextFormat($format)->diff($provided);
 
-    if (!$still_needed->isEmpty()) {
+    if (!$still_needed->allowsNothing()) {
       $plugin_candidates = self::getCandidates($provided, $still_needed, $disabled_definitions);
       $selected_plugins = self::selectCandidate($plugin_candidates, $still_needed, array_keys($provided->getAllowedElements()));
 

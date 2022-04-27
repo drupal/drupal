@@ -122,27 +122,23 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
     if (!isset($definition['drupal']['elements'])) {
       throw new InvalidPluginDefinitionException($id, sprintf('The "%s" CKEditor 5 plugin definition must contain a "drupal.elements" key.', $id));
     }
+    // ckeditor5_sourceEditing is the edge case here: it is the only plugin that
+    // is allowed to return a superset. It's a special case because it is
+    // through configuring this particular plugin that additional HTML tags can
+    // be allowed.
+    // The list of tags it supports is generated dynamically. In its default
+    // configuration it does support any HTML tags.
+    // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getProvidedElements()
+    elseif ($definition['id'] === 'ckeditor5_sourceEditing') {
+      assert($definition['drupal']['elements'] === []);
+    }
     elseif ($definition['drupal']['elements'] !== FALSE && !(is_array($definition['drupal']['elements']) && !empty($definition['drupal']['elements']) && Inspector::assertAllStrings($definition['drupal']['elements']))) {
       throw new InvalidPluginDefinitionException($id, sprintf('The "%s" CKEditor 5 plugin definition has a "drupal.elements" value that is neither a list of HTML tags/attributes nor false.', $id));
     }
     elseif (is_array($definition['drupal']['elements'])) {
       foreach ($definition['drupal']['elements'] as $index => $element) {
-        // ckeditor5_sourceEditing is the edge case here: it is the only plugin
-        // that is allowed to return a superset. It's a special case because it
-        // is through configuring this particular plugin that additional HTML
-        // tags can be allowed.
-        // Even though its plugin definition says '<*>' is supported, this is a
-        // little lie to convey that this plugin is capable of supporting any
-        // HTML tag … but which ones are actually supported depends on the
-        // configuration.
-        // This also means that without any configuration, it does not support
-        // any HTML tags.
-        // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getProvidedElements()
-        if ($definition['id'] === 'ckeditor5_sourceEditing') {
-          continue;
-        }
         $parsed = HTMLRestrictions::fromString($element);
-        if ($parsed->isEmpty()) {
+        if ($parsed->allowsNothing()) {
           throw new InvalidPluginDefinitionException($id, sprintf('The "%s" CKEditor 5 plugin definition has a value at "drupal.elements.%d" that is not an HTML tag with optional attributes: "%s". Expected structure: "<tag allowedAttribute="allowedValue1 allowedValue2">".', $id, $index, $element));
         }
         if (count($parsed->getAllowedElements()) > 1) {

@@ -23,6 +23,7 @@ use Symfony\Component\Validator\ConstraintViolation;
  */
 class CKEditor5Test extends CKEditor5TestBase {
 
+  use CKEditor5TestTrait;
   use TestFileCreationTrait;
   use CKEditor5TestTrait;
 
@@ -443,6 +444,46 @@ class CKEditor5Test extends CKEditor5TestBase {
     $page->pressButton('Save');
 
     $assert_session->responseContains('<p>This is a <em>test!</em></p>');
+  }
+
+  /**
+   * Ensures that CKEditor 5 retains filter_html's allowed global attributes.
+   *
+   * FilterHtml always forbids the `style` and `on*` attributes, and always
+   * allows the `lang` attribute (with any value) and the `dir` attribute (with
+   * either `ltr` or `rtl` as value). It's important that those last two
+   * attributes are guaranteed to be retained.
+   *
+   * @see \Drupal\filter\Plugin\Filter\FilterHtml::getHTMLRestrictions()
+   * @see ckeditor5_globalAttributeDir
+   * @see ckeditor5_globalAttributeLang
+   * @see https://html.spec.whatwg.org/multipage/dom.html#global-attributes
+   */
+  public function testFilterHtmlAllowedGlobalAttributes(): void {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    // Add a node with text rendered via the Plain Text format.
+    $this->drupalGet('node/add');
+    $page->fillField('title[0][value]', 'Multilingual Hello World');
+    // cSpell:disable-next-line
+    $page->fillField('body[0][value]', '<p dir="ltr" lang="en">Hello World</p><p dir="rtl" lang="ar">مرحبا بالعالم</p>');
+    $page->pressButton('Save');
+
+    $this->createNewTextFormat($page, $assert_session);
+    $this->saveNewTextFormat($page, $assert_session);
+
+    $this->drupalGet('node/1/edit');
+    $page->selectFieldOption('body[0][format]', 'ckeditor5');
+    $this->assertNotEmpty($assert_session->waitForText('Change text format?'));
+    $page->pressButton('Continue');
+
+    $this->waitForEditor();
+    $page->pressButton('Save');
+
+    // @todo Remove the expected `xml:lang` attributes in https://www.drupal.org/project/drupal/issues/1333730
+    // cSpell:disable-next-line
+    $assert_session->responseContains('<p dir="ltr" lang="en" xml:lang="en">Hello World</p><p dir="rtl" lang="ar" xml:lang="ar">مرحبا بالعالم</p>');
   }
 
 }
