@@ -128,7 +128,12 @@ class ValidatorsTest extends KernelTestBase {
             'foobar',
           ],
         ],
-        'plugins' => [],
+        'plugins' => [
+          'ckeditor5_list' => [
+            'reversed' => FALSE,
+            'startIndex' => FALSE,
+          ],
+        ],
       ],
       'violations' => [
         'settings.toolbar.items.5' => 'The provided toolbar item <em class="placeholder">foobar</em> is not valid.',

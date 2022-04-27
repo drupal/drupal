@@ -329,7 +329,9 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
         // work: otherwise it would not be able to know which plugins to enable.
         elseif (isset($editor)) {
           $subset = $this->getPlugin($id, $editor)->getElementsSubset();
-          $subset_violations = array_diff($subset, $defined_elements);
+          $subset_restrictions = HTMLRestrictions::fromString(implode($subset));
+          $defined_restrictions = HTMLRestrictions::fromString(implode($defined_elements));
+          $subset_violations = $subset_restrictions->diff($defined_restrictions)->toCKEditor5ElementsArray();
           if (!empty($subset_violations)) {
             throw new \LogicException(sprintf('The "%s" CKEditor 5 plugin implements ::getElementsSubset() and did not return a subset, the following tags are absent from the plugin definition: "%s".', $id, implode(' ', $subset_violations)));
           }
