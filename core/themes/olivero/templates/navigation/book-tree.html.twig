@@ -38,11 +38,10 @@
       {%
         set item_classes = [
           'book-navigation__item',
-          'menu-item',
           'menu__item--level-' ~ (menu_level + 1),
-          item.is_expanded ? 'menu-item--expanded',
-          item.is_collapsed ? 'menu-item--collapsed',
-          item.in_active_trail ? 'menu-item--active-trail',
+          item.is_expanded ? 'menu__item--expanded',
+          item.is_collapsed ? 'menu__item--collapsed',
+          item.in_active_trail ? 'menu__item--active-trail',
         ]
       %}
       {% set link_classes = [
