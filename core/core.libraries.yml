@@ -175,9 +175,10 @@ ckeditor5.link:
 
 ckeditor5.list:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.0.0"
+  version: "34.0.1"
   license:
     name: GNU-GPL-2.0-or-later
+    # @todo A 34.0.1 link does not exist; https://www.drupal.org/project/drupal/issues/3277438 will make this in sync again.
     url: https://github.com/ckeditor/ckeditor5/blob/v34.0.0/LICENSE.md
     gpl-compatible: true
   js:
