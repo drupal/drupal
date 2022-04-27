@@ -319,7 +319,7 @@ function upcastMediaLinkManualDecorator(editor, decorator) {
 /**
  * Model to view and view to model conversions for linked media elements.
  *
- * @internal
+ * @private
  *
  * @see https://github.com/ckeditor/ckeditor5/blob/v31.0.0/packages/ckeditor5-link/src/linkimage.js
  */

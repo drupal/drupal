@@ -12,7 +12,7 @@ import { getClosestSelectedDrupalMediaWidget } from '../utils';
  * @return {Object}
  *   The options.
  *
- * @internal
+ * @private
  */
 export function getBalloonPositionData(editor) {
   const editingView = editor.editing.view;
@@ -40,7 +40,7 @@ export function getBalloonPositionData(editor) {
  * @param {module:core/editor/editor~Editor} editor
  *   The editor instance.
  *
- * @internal
+ * @private
  */
 export function repositionContextualBalloon(editor) {
   const balloon = editor.plugins.get('ContextualBalloon');

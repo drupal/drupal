@@ -1,25 +1,77 @@
 /* eslint-disable import/no-extraneous-dependencies */
-// cSpell:words conversionutils downcasted linkimageediting
+// cSpell:words conversionutils downcasted linkimageediting emptyelement downcastdispatcher
 import { Plugin } from 'ckeditor5/src/core';
 import { setViewAttributes } from '@ckeditor/ckeditor5-html-support/src/conversionutils';
 
+/**
+ * @typedef {function} converterHandler
+ *
+ * Callback for a CKEditor 5 event.
+ *
+ * @param {Event} event
+ *  The CKEditor 5 event object.
+ * @param {object} data
+ *  The data associated with the event.
+ * @param {module:engine/conversion/downcastdispatcher~DowncastConversionApi} conversionApi
+ *  The CKEditor 5 conversion API object.
+ */
+
+/**
+ * Provides an empty image element.
+ *
+ * @param {writer} writer
+ *  The CKEditor 5 writer object.
+ *
+ * @return {module:engine/view/emptyelement~EmptyElement}
+ *  The empty image element.
+ *
+ * @private
+ */
 function createImageViewElement(writer) {
   return writer.createEmptyElement('img');
 }
 
-// A simple helper method to detect number strings.
+/**
+ * A simple helper method to detect number strings.
+ *
+ * @param {*} value
+ *  The value to test.
+ *
+ * @return {boolean}
+ *  True if the value is a string containing a number.
+ *
+ * @private
+ */
 function isNumberString(value) {
   const parsedValue = parseFloat(value);
 
   return !Number.isNaN(parsedValue) && value === String(parsedValue);
 }
 
+/**
+ * Generates a callback that saves the entity UUID to an attribute on data
+ * downcast.
+ *
+ * @return {function}
+ *  Callback that binds an event to its parameter.
+ *
+ * @private
+ */
 function modelEntityUuidToDataAttribute() {
-  function converter(evt, data, conversionApi) {
+  /**
+   * Callback for the attribute:dataEntityUuid event.
+   *
+   * Saves the UUID value to the data-entity-uuid attribute.
+   *
+   * @param {Event} event
+   * @param {object} data
+   * @param {module:engine/conversion/downcastdispatcher~DowncastConversionApi} conversionApi
+   */
+  function converter(event, data, conversionApi) {
     const { item } = data;
     const { consumable, writer } = conversionApi;
 
-    if (!consumable.consume(item, evt.name)) {
+    if (!consumable.consume(item, event.name)) {
       return;
     }
 
@@ -40,6 +92,9 @@ function modelEntityUuidToDataAttribute() {
   };
 }
 
+/**
+ * @type {Array.<{dataValue: string, modelValue: string}>}
+ */
 const alignmentMapping = [
   {
     modelValue: 'alignCenter',
@@ -55,16 +110,31 @@ const alignmentMapping = [
   },
 ];
 
-// Downcast `caption` model to `data-caption` attribute with its content
-// downcasted to plain HTML. This is needed because CKEditor 5 uses <caption>
-// element internally in various places, which differs from Drupal which uses
-// an attribute. For now to support that we have to manually repeat work done in
-// the DowncastDispatcher's private methods.
+/**
+ * Downcasts `caption` model to `data-caption` attribute with its content
+ * downcasted to plain HTML.
+ *
+ * This is needed because CKEditor 5 uses the `<caption>` element internally in
+ * various places, which differs from Drupal which uses an attribute. For now
+ * to support that we have to manually repeat work done in the
+ * DowncastDispatcher's private methods.
+ *
+ * @param {module:core/editor/editor~Editor} editor
+ *  The editor instance to use.
+ *
+ * @return {function}
+ *  Callback that binds an event to its parameter.
+ *
+ * @private
+ */
 function viewCaptionToCaptionAttribute(editor) {
   return (dispatcher) => {
     dispatcher.on(
       'insert:caption',
-      (evt, data, conversionApi) => {
+      /**
+       * @type {converterHandler}
+       */
+      (event, data, conversionApi) => {
         const { consumable, writer, mapper } = conversionApi;
         const imageUtils = editor.plugins.get('ImageUtils');
 
@@ -142,12 +212,28 @@ function viewCaptionToCaptionAttribute(editor) {
   };
 }
 
+/**
+ * Generates a callback that saves the entity type value to an attribute on
+ * data downcast.
+ *
+ * @return {function}
+ *  Callback that binds an event to it's parameter.
+ *
+ * @private
+ */
 function modelEntityTypeToDataAttribute() {
-  function converter(evt, data, conversionApi) {
+  /**
+   * Callback for the attribute:dataEntityType event.
+   *
+   * Saves the UUID value to the data-entity-type attribute.
+   *
+   * @type {converterHandler}
+   */
+  function converter(event, data, conversionApi) {
     const { item } = data;
     const { consumable, writer } = conversionApi;
 
-    if (!consumable.consume(item, evt.name)) {
+    if (!consumable.consume(item, event.name)) {
       return;
     }
 
@@ -168,8 +254,24 @@ function modelEntityTypeToDataAttribute() {
   };
 }
 
+/**
+ * Generates a callback that saves the align value to an attribute on
+ * data downcast.
+ *
+ * @return {function}
+ *  Callback that binds an event to its parameter.
+ *
+ * @private
+ */
 function modelImageStyleToDataAttribute() {
-  function converter(evt, data, conversionApi) {
+  /**
+   * Callback for the attribute:imageStyle event.
+   *
+   * Saves the alignment value to the data-align attribute.
+   *
+   * @type {converterHandler}
+   */
+  function converter(event, data, conversionApi) {
     const { item } = data;
     const { consumable, writer } = conversionApi;
 
@@ -178,7 +280,7 @@ function modelImageStyleToDataAttribute() {
     );
 
     // Consume only for the values that can be converted into data-align.
-    if (!mappedAlignment || !consumable.consume(item, evt.name)) {
+    if (!mappedAlignment || !consumable.consume(item, event.name)) {
       return;
     }
 
@@ -199,12 +301,28 @@ function modelImageStyleToDataAttribute() {
   };
 }
 
+/**
+ * Generates a callback that saves the width value to an attribute on
+ * data downcast.
+ *
+ * @return {function}
+ *  Callback that binds an event to its parameter.
+ *
+ * @private
+ */
 function modelImageWidthToAttribute() {
-  function converter(evt, data, conversionApi) {
+  /**
+   * Callback for the attribute:width event.
+   *
+   * Saves the width value to the width attribute.
+   *
+   * @type {converterHandler}
+   */
+  function converter(event, data, conversionApi) {
     const { item } = data;
     const { consumable, writer } = conversionApi;
 
-    if (!consumable.consume(item, evt.name)) {
+    if (!consumable.consume(item, event.name)) {
       return;
     }
 
@@ -230,12 +348,28 @@ function modelImageWidthToAttribute() {
   };
 }
 
+/**
+ * Generates a callback that saves the height value to an attribute on
+ * data downcast.
+ *
+ * @return {function}
+ *  Callback that binds an event to its parameter.
+ *
+ * @private
+ */
 function modelImageHeightToAttribute() {
-  function converter(evt, data, conversionApi) {
+  /**
+   * Callback for the attribute:height event.
+   *
+   * Saves the height value to the height attribute.
+   *
+   * @type {converterHandler}
+   */
+  function converter(event, data, conversionApi) {
     const { item } = data;
     const { consumable, writer } = conversionApi;
 
-    if (!consumable.consume(item, evt.name)) {
+    if (!consumable.consume(item, event.name)) {
       return;
     }
 
@@ -261,8 +395,23 @@ function modelImageHeightToAttribute() {
   };
 }
 
+/**
+ * Generates a callback that handles the data downcast for the img element.
+ *
+ * @return {function}
+ *  Callback that binds an event to its parameter.
+ *
+ * @private
+ */
 function viewImageToModelImage(editor) {
-  function converter(evt, data, conversionApi) {
+  /**
+   * Callback for the element:img event.
+   *
+   * Handles the Drupal specific attributes.
+   *
+   * @type {converterHandler}
+   */
+  function converter(event, data, conversionApi) {
     const { viewItem } = data;
     const { writer, consumable, safeInsert, updateConversionResult, schema } =
       conversionApi;
@@ -396,10 +545,22 @@ function viewImageToModelImage(editor) {
   };
 }
 
-// Modified alternative implementation of linkimageediting.js' downcastImageLink.
+/**
+ * Modified alternative implementation of linkimageediting.js' downcastImageLink.
+ *
+ * @return {function}
+ *  Callback that binds an event to its parameter.
+ *
+ * @private
+ */
 function downcastBlockImageLink() {
-  function converter(evt, data, conversionApi) {
-    if (!conversionApi.consumable.consume(data.item, evt.name)) {
+  /**
+   * Callback for the attribute:linkHref event.
+   *
+   * @type {converterHandler}
+   */
+  function converter(event, data, conversionApi) {
+    if (!conversionApi.consumable.consume(data.item, event.name)) {
       return;
     }
 
@@ -444,9 +605,15 @@ function downcastBlockImageLink() {
 }
 
 /**
- * @internal
+ * Add handling of 'dataEntityUuid', 'dataEntityType', 'isDecorative', 'width',
+ * 'height' attributes on image elements.
+ *
+ * @private
  */
 export default class DrupalImageEditing extends Plugin {
+  /**
+   * @inheritdoc
+   */
   static get requires() {
     return ['ImageUtils'];
   }

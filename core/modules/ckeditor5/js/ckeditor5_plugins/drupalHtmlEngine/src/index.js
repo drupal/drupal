@@ -2,7 +2,7 @@
 import DrupalHtmlEngine from './drupalhtmlengine';
 
 /**
- * @internal
+ * @private
  */
 export default {
   DrupalHtmlEngine,

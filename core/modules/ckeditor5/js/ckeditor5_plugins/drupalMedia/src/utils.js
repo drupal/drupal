@@ -8,9 +8,9 @@ import { isWidget } from 'ckeditor5/src/widget';
  * @param {module:engine/model/element~Element} modelElement
  *   The model element to be checked.
  * @return {boolean}
- *   A boolean indicating whether element is drupalMedia element.
+ *   A boolean indicating if the element is a drupalMedia element.
  *
- * @internal
+ * @private
  */
 export function isDrupalMedia(modelElement) {
   return !!modelElement && modelElement.is('element', 'drupalMedia');
@@ -22,9 +22,9 @@ export function isDrupalMedia(modelElement) {
  * @param {module:engine/view/element~Element} viewElement
  *   The view element.
  * @return {boolean}
- *   A boolean indicating whether element is <drupal-media> element.
+ *   A boolean indicating if the element is a <drupal-media> element.
  *
- * @internal
+ * @private
  */
 export function isDrupalMediaWidget(viewElement) {
   return (
@@ -37,12 +37,12 @@ export function isDrupalMediaWidget(viewElement) {
  *
  * @param {module:engine/model/selection~Selection|module:engine/model/documentselection~DocumentSelection} selection
  *   The current selection.
- * @returns {module:engine/model/element~Element|null}
+ * @return {module:engine/model/element~Element|null}
  *   The `drupalMedia` element which could be either the current selected an
  *   ancestor of the selection. Returns null if the selection has no Drupal
  *   Media element.
  *
- * @internal
+ * @private
  */
 export function getClosestSelectedDrupalMediaElement(selection) {
   const selectedElement = selection.getSelectedElement();
@@ -60,7 +60,7 @@ export function getClosestSelectedDrupalMediaElement(selection) {
  * @return {module:engine/view/element~Element|null}
  *   The currently selected Drupal Media widget or null.
  *
- * @internal
+ * @private
  */
 export function getClosestSelectedDrupalMediaWidget(selection) {
   const viewElement = selection.getSelectedElement();
@@ -98,7 +98,7 @@ export function isObject(value) {
 }
 
 /**
- * Gets preview container element from the media element.
+ * Gets the preview container element from the media element.
  *
  * @param {Iterable.<module:engine/view/element~Element>} children
  *   The child elements.

@@ -70,18 +70,18 @@ function getUIComponentName(name, group) {
  *
  * @extends module:core/plugin~Plugin
  *
- * @internal
+ * @private
  */
 export default class DrupalElementStyleUi extends Plugin {
   /**
-   * @inheritDoc
+   * @inheritdoc
    */
   static get requires() {
     return [DrupalElementStyleEditing];
   }
 
   /**
-   * @inheritDoc
+   * @inheritdoc
    */
   init() {
     const { plugins } = this.editor;
@@ -548,7 +548,7 @@ export default class DrupalElementStyleUi extends Plugin {
   }
 
   /**
-   * @inheritDoc
+   * @inheritdoc
    */
   static get pluginName() {
     return 'DrupalElementStyleUi';
