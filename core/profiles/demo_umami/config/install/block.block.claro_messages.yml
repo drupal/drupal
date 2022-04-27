@@ -4,9 +4,9 @@ dependencies:
   module:
     - system
   theme:
-    - seven
-id: seven_messages
-theme: seven
+    - claro
+id: claro_messages
+theme: claro
 region: highlighted
 weight: 0
 provider: null
