@@ -89,9 +89,23 @@ class EntityAutocompleteTest extends EntityKernelTestBase {
     ];
     $this->assertSame($target, reset($data), 'Autocomplete returns an entity label containing a comma and a slash.');
 
+    $input = '';
+    $data = $this->getAutocompleteResult($input);
+    $this->assertSame([], $data, 'Autocomplete of empty string returns empty result');
+
+    $input = ',';
+    $data = $this->getAutocompleteResult($input);
+    $this->assertSame(Html::escape($entity_1->name->value), $data[0]['label'], 'Autocomplete returned the first matching entity');
+    $this->assertSame(Html::escape($entity_2->name->value), $data[1]['label'], 'Autocomplete returned the second matching entity');
+    $this->assertSame(Html::escape($entity_3->name->value), $data[2]['label'], 'Autocomplete returned the third matching entity');
+
+    // Strange input that is mangled by
+    // \Drupal\Component\Utility\Tags::explode().
     $input = '"l!J>&Tw';
     $data = $this->getAutocompleteResult($input);
-    $this->assertSame([], $data, 'Autocomplete of invalid string returns empty result');
+    $this->assertSame(Html::escape($entity_1->name->value), $data[0]['label'], 'Autocomplete returned the first matching entity');
+    $this->assertSame(Html::escape($entity_2->name->value), $data[1]['label'], 'Autocomplete returned the second matching entity');
+    $this->assertSame(Html::escape($entity_3->name->value), $data[2]['label'], 'Autocomplete returned the third matching entity');
   }
 
   /**
