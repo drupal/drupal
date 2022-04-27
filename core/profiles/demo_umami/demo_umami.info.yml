@@ -48,6 +48,6 @@ install:
   - config_translation
   - content_translation
 themes:
-  - seven
+  - claro
   - umami
 keep_english: true
