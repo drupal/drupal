@@ -19,11 +19,6 @@ module.exports = {
       browser
         .drupalRelativeURL('/admin/appearance')
         .click('[title="Install Claro as default theme"]')
-        .waitForElementVisible(
-          '.system-themes-experimental-confirm-form input[value="Continue"]',
-          2000,
-        )
-        .submitForm('input[value="Continue"]')
         .waitForElementVisible('.system-themes-list', 10000); // Confirm installation.
     });
   },
