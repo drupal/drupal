@@ -1219,7 +1219,14 @@ class MediaTest extends WebDriverTestBase {
       'enabled' => TRUE,
       'label' => 'View Mode 3',
     ])->save();
-    // Enable view mode 1 & 2 and default for Image.
+    EntityViewMode::create([
+      'id' => 'media.view_mode_4',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'enabled' => TRUE,
+      'label' => 'View Mode 4',
+    ])->save();
+    // Enable view mode 1, 2, 4 for Image.
     EntityViewDisplay::create([
       'id' => 'media.image.view_mode_1',
       'targetEntityType' => 'media',
@@ -1233,6 +1240,13 @@ class MediaTest extends WebDriverTestBase {
       'status' => TRUE,
       'bundle' => 'image',
       'mode' => '22222',
+    ])->save();
+    EntityViewDisplay::create([
+      'id' => 'media.image.view_mode_4',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'bundle' => 'image',
+      'mode' => 'view_mode_4',
     ])->save();
 
     $filter_format = FilterFormat::load('test_format');
@@ -1423,6 +1437,45 @@ class MediaTest extends WebDriverTestBase {
     $this->getSession()->reload();
     $this->waitForEditor();
     $assert_session->waitForElementVisible('css', 'article.media--view-mode-view-mode-1');
+
+    // Test that having a default_view_mode that is not an allowed_view_mode
+    // will still be added to the editor.
+    $filter_format->setFilterConfig('media_embed', [
+      'status' => TRUE,
+      'settings' => [
+        'default_view_mode' => 'view_mode_1',
+        'allowed_media_types' => [],
+        'allowed_view_modes' => [
+          '22222' => '22222',
+          'view_mode_4' => 'view_mode_4',
+        ],
+      ],
+    ])->save();
+
+    // Test that the dependencies change when the allowed_view_modes change.
+    $expected_config_dependencies = [
+      'core.entity_view_mode.media.22222',
+      'core.entity_view_mode.media.view_mode_1',
+      'core.entity_view_mode.media.view_mode_4',
+    ];
+    $dependencies = $filter_format->getDependencies();
+    $this->assertArrayHasKey('config', $dependencies);
+    $this->assertEqualsCanonicalizing($expected_config_dependencies, $dependencies['config']);
+    $this->host->body->value = '<drupal-media data-entity-type="media" data-entity-uuid="' . $this->media->uuid() . '" data-caption="baz"></drupal-media>';
+    $this->host->save();
+    // Reload page to get new configuration.
+    $this->getSession()->reload();
+    $this->waitForEditor();
+    // Wait for the media preview to load.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media img'));
+    $this->click('.ck-widget.drupal-media');
+    $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
+    $this->click('.ck-widget.drupal-media');
+    // Check that all three view modes exist including the default view mode
+    // that was not originally included in the allowed_view_modes.
+    $this->assertNotEmpty($this->getBalloonButton('View Mode 1'));
+    $this->assertNotEmpty($this->getBalloonButton('View Mode 2 has Numeric ID'));
+    $this->assertNotEmpty($this->getBalloonButton('View Mode 4'));
   }
 
   /**

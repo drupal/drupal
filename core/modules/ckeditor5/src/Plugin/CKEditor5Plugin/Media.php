@@ -80,6 +80,13 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
     $all_view_modes = $this->entityDisplayRepository->getViewModeOptions('media');
     $allowed_view_modes = $media_embed_filter->settings['allowed_view_modes'];
     $default_view_mode = $media_embed_filter->settings['default_view_mode'];
+    // @todo Remove in https://www.drupal.org/project/drupal/issues/3277049.
+    // This is a workaround until the above issue is fixed to prevent the
+    // editor from crashing because the frontend expects the default view mode
+    // to exist in drupalElementStyles.
+    if (!array_key_exists($default_view_mode, $allowed_view_modes)) {
+      $allowed_view_modes[$default_view_mode] = $default_view_mode;
+    }
     // Return early since there is no need to configure if there
     // are less than 2 view modes.
     if ($allowed_view_modes < 2) {
@@ -96,7 +103,7 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
       }
     }
     // Limit to view modes allowed by filter.
-    $bundles_per_view_mode = array_intersect_key($bundles_per_view_mode, $media_embed_filter->settings['allowed_view_modes']);
+    $bundles_per_view_mode = array_intersect_key($bundles_per_view_mode, $allowed_view_modes);
 
     // Configure view mode element styles.
     foreach (array_keys($all_view_modes) as $view_mode) {
