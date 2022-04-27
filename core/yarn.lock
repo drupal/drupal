@@ -1104,10 +1104,10 @@
     ckeditor5 "^34.0.0"
     lodash-es "^4.17.15"
 
-"@ckeditor/ckeditor5-list@~34.0.0":
-  version "34.0.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-list/-/ckeditor5-list-34.0.0.tgz#14ed9fd6cae1a90e0acd7bb0bff90fde8e504865"
-  integrity sha512-nYssUwqqSmpjFk+qjZZGnkaLJVL9vqKAzkRyg9VYtmXguYGyx+lbKoCMEKbNrnGJA6F0kHSVPhb+1v/nD1KfKQ==
+"@ckeditor/ckeditor5-list@~34.0.1":
+  version "34.0.1"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-list/-/ckeditor5-list-34.0.1.tgz#4a06c7d87ff36f0ebb122e2ed36e95b2a9911796"
+  integrity sha512-wLAr6Ar77OHsi8FwimuDCUYQZHcOobKKlDBOWaUNzau4xHh6BPrf3UZRzl/eEiEmaSdolQWosSjNbcFwPNnB9g==
   dependencies:
     "@ckeditor/ckeditor5-ui" "^34.0.0"
     ckeditor5 "^34.0.0"
