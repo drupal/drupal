@@ -6,15 +6,66 @@ use Drupal\node\NodeInterface;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests that anonymous users are not served any JavaScript in the Standard
- * installation profile.
+ * Tests that anonymous users are not served any JavaScript.
+ *
+ * This is tested with the core modules that are enabled in the 'standard'
+ * profile.
  *
  * @group Common
  */
 class NoJavaScriptAnonymousTest extends BrowserTestBase {
 
-  protected $profile = 'standard';
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
+  /**
+   * Modules to enable.
+   *
+   * This is a list of modules that are enabled in the 'standard' profile.
+   *
+   * @var array
+   */
+  protected static $modules = [
+    'node',
+    'history',
+    'block',
+    'breakpoint',
+    'ckeditor',
+    'config',
+    'comment',
+    'contextual',
+    'contact',
+    'menu_link_content',
+    'datetime',
+    'block_content',
+    'editor',
+    'help',
+    'image',
+    'menu_ui',
+    'options',
+    'path',
+    'page_cache',
+    'dynamic_page_cache',
+    'big_pipe',
+    'taxonomy',
+    'dblog',
+    'search',
+    'shortcut',
+    'toolbar',
+    'field_ui',
+    'file',
+    'rdf',
+    'views',
+    'views_ui',
+    'tour',
+    'automated_cron',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -26,11 +77,12 @@ class NoJavaScriptAnonymousTest extends BrowserTestBase {
    * Tests that anonymous users are not served any JavaScript.
    */
   public function testNoJavaScript() {
-    // Create a node that is listed on the frontpage.
+    // Create a node of content type 'article' that is listed on the frontpage.
+    $this->drupalCreateContentType(['type' => 'article']);
     $this->drupalCreateNode([
+      'type' => 'article',
       'promote' => NodeInterface::PROMOTED,
     ]);
-    $user = $this->drupalCreateUser();
 
     // Test frontpage.
     $this->drupalGet('');
@@ -41,6 +93,7 @@ class NoJavaScriptAnonymousTest extends BrowserTestBase {
     $this->assertNoJavaScript();
 
     // Test user profile page.
+    $user = $this->drupalCreateUser();
     $this->drupalGet('user/' . $user->id());
     $this->assertNoJavaScript();
   }
