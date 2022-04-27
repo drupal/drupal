@@ -6,7 +6,7 @@ import DrupalImageEditing from './drupalimageediting';
 import DrupalImageAlternativeText from './drupalimagealternativetext';
 
 /**
- * @internal
+ * @private
  */
 class DrupalImage extends Plugin {
   /**

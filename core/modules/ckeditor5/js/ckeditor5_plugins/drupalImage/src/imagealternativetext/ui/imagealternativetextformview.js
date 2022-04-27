@@ -28,7 +28,7 @@ import { icons } from 'ckeditor5/src/core';
  */
 export default class ImageAlternativeTextFormView extends View {
   /**
-   * @inheritDoc
+   * @inheritdoc
    */
   constructor(locale) {
     super(locale);
@@ -163,7 +163,7 @@ export default class ImageAlternativeTextFormView extends View {
   }
 
   /**
-   * @inheritDoc
+   * @inheritdoc
    */
   render() {
     super.render();
@@ -187,7 +187,7 @@ export default class ImageAlternativeTextFormView extends View {
   }
 
   /**
-   * @inheritDoc
+   * @inheritdoc
    */
   destroy() {
     super.destroy();

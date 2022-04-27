@@ -15,7 +15,7 @@ import { groupNameToModelAttributeKey } from '../utils';
  *
  * @extends module:core/command~Command
  *
- * @internal
+ * @private
  */
 export default class DrupalElementStyleCommand extends Command {
   /**
@@ -46,7 +46,7 @@ export default class DrupalElementStyleCommand extends Command {
   }
 
   /**
-   * @inheritDoc
+   * @inheritdoc
    */
   refresh() {
     const { editor } = this;

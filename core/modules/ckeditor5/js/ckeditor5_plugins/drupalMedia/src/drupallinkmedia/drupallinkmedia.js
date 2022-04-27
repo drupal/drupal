@@ -6,7 +6,7 @@ import DrupalLinkMediaEditing from './drupallinkmediaediting';
 import DrupalLinkMediaUI from './drupallinkmediaui';
 
 /**
- * @internal
+ * @private
  */
 export default class DrupalLinkMedia extends Plugin {
   /**

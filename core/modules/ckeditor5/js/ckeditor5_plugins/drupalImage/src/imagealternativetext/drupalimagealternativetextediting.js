@@ -19,14 +19,14 @@ import ImageTextAlternativeCommand from '@ckeditor/ckeditor5-image/src/imagetext
  */
 export default class DrupalImageTextAlternativeEditing extends Plugin {
   /**
-   * @inheritDoc
+   * @inheritdoc
    */
   static get requires() {
     return ['ImageUtils'];
   }
 
   /**
-   * @inheritDoc
+   * @inheritdoc
    */
   static get pluginName() {
     return 'DrupalImageAlternativeTextEditing';
@@ -45,7 +45,7 @@ export default class DrupalImageTextAlternativeEditing extends Plugin {
   }
 
   /**
-   * @inheritDoc
+   * @inheritdoc
    */
   init() {
     const editor = this.editor;

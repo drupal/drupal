@@ -16,7 +16,7 @@ import { View, ButtonView } from 'ckeditor5/src/ui';
  */
 export default class MissingAlternativeTextView extends View {
   /**
-   * @inheritDoc
+   * @inheritdoc
    */
   constructor(locale) {
     super(locale);

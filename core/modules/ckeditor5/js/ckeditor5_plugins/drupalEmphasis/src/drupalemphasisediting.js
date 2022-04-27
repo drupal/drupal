@@ -2,10 +2,9 @@
 import { Plugin } from 'ckeditor5/src/core';
 
 /**
- * @internal
- */
-/**
- * Converts italic text into em.
+ * Alters the italic command to output `<em>` instead of `<i>`.
+ *
+ * @private
  */
 class DrupalEmphasisEditing extends Plugin {
   /**

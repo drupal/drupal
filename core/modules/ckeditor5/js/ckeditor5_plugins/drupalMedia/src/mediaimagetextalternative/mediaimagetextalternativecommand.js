@@ -15,7 +15,7 @@ export default class MediaImageTextAlternativeCommand extends Command {
    * The command value: `false` if there is no `alt` attribute, otherwise the value of the `alt` attribute.
 
   /**
-   * @inheritDoc
+   * @inheritdoc
    */
   refresh() {
     const drupalMediaElement = getClosestSelectedDrupalMediaElement(

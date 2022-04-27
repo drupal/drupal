@@ -26,7 +26,7 @@ const _fetchMetadata = async (url) => {
 };
 
 /**
- * @internal
+ * @private
  */
 export default class DrupalMediaMetadataRepository extends Plugin {
   /**
@@ -37,10 +37,11 @@ export default class DrupalMediaMetadataRepository extends Plugin {
   }
 
   /**
-   * Gets metadata for `drupalMedia` model element.
+   * Gets metadata for a `drupalMedia` model element.
    *
    * @param {module:engine/model/element~Element} modelElement
-   *   The model element which metadata should be retrieved.
+   *   The model element from which metadata should be retrieved.
+   *
    * @return {Promise<Object>}
    */
   getMetadata(modelElement) {

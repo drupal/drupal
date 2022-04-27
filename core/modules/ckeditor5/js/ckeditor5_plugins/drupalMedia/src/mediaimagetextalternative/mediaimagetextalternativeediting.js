@@ -16,21 +16,21 @@ import { METADATA_ERROR } from './utils';
  */
 export default class MediaImageTextAlternativeEditing extends Plugin {
   /**
-   * @inheritDoc
+   * @inheritdoc
    */
   static get requires() {
     return [DrupalMediaMetadataRepository];
   }
 
   /**
-   * @inheritDoc
+   * @inheritdoc
    */
   static get pluginName() {
     return 'MediaImageTextAlternativeEditing';
   }
 
   /**
-   * @inheritDoc
+   * @inheritdoc
    */
   init() {
     const {
