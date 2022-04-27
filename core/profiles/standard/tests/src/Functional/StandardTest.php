@@ -244,8 +244,9 @@ class StandardTest extends BrowserTestBase {
       // The name field should be hidden.
       $assert_session->fieldNotExists('Name', $form);
       // The source field should be shown before the vertical tabs.
-      $test_source_field = $assert_session->fieldExists($media_type->getSource()->getSourceFieldDefinition($media_type)->getLabel(), $form)->getOuterHtml();
-      $vertical_tabs = $assert_session->elementExists('css', '.form-type-vertical-tabs', $form)->getOuterHtml();
+      $source_field_label = $media_type->getSource()->getSourceFieldDefinition($media_type)->getLabel();
+      $test_source_field = $assert_session->elementExists('xpath', "//*[contains(text(), '$source_field_label')]", $form)->getOuterHtml();
+      $vertical_tabs = $assert_session->elementExists('css', '.js-form-type-vertical-tabs', $form)->getOuterHtml();
       $this->assertGreaterThan(strpos($form_html, $test_source_field), strpos($form_html, $vertical_tabs));
       // The "Published" checkbox should be the last element.
       $date_field = $assert_session->fieldExists('Date', $form)->getOuterHtml();
