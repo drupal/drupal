@@ -38,4 +38,4 @@ install:
   - automated_cron
 themes:
   - bartik
-  - seven
+  - claro
