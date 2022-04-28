@@ -982,7 +982,8 @@ PHP,
 
     // Configure the sneaky superset plugin to have a random tag as the subset.
     $sneaky_plugin_id = 'ckeditor5_plugin_elements_subset_sneakySuperset';
-    $random_tag = "<{$this->randomMachineName()}>";
+    $random_tag_name = strtolower($this->randomMachineName());
+    $random_tag = "<$random_tag_name>";
     $text_editor = Editor::create([
       'format' => 'dummy',
       'editor' => 'ckeditor5',
