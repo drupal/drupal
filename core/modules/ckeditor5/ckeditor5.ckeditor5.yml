@@ -352,11 +352,21 @@ ckeditor5_linkMedia:
 
 ckeditor5_list:
   ckeditor5:
-    plugins: [list.List]
+    plugins:
+     - list.List
+     - list.ListProperties
+    config:
+      list:
+        properties:
+          reversed: true
+          startIndex: true
+          # @todo Make this configurable in https://www.drupal.org/project/drupal/issues/3274635
+          styles: false
   drupal:
     label: List
     library: core/ckeditor5.list
     admin_library: ckeditor5/admin.list
+    class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\ListPlugin
     toolbar_items:
       bulletedList:
         label: Bulleted list
@@ -364,7 +374,7 @@ ckeditor5_list:
         label: Numbered list
     elements:
       - <ul>
-      - <ol>
+      - <ol reversed start>
       - <li>
 
 ckeditor5_horizontalLine:

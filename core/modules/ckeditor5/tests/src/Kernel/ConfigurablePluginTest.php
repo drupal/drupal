@@ -67,6 +67,10 @@ class ConfigurablePluginTest extends KernelTestBase {
       'ckeditor5_sourceEditing' => [
         'allowed_tags' => [],
       ],
+      'ckeditor5_list' => [
+        'reversed' => TRUE,
+        'startIndex' => TRUE,
+      ],
       'ckeditor5_imageResize' => [
         'allow_resize' => TRUE,
       ],
