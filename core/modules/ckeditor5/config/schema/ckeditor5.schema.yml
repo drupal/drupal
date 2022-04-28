@@ -85,6 +85,7 @@ ckeditor5.plugin.ckeditor5_sourceEditing:
         label: 'Allowed Tag'
         constraints:
           SourceEditingRedundantTags: []
+          SourceEditingPreventSelfXssConstraint: []
 
 # Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\ListPlugin
 ckeditor5.plugin.ckeditor5_list:
