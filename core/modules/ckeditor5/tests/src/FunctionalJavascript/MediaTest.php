@@ -1196,8 +1196,10 @@ class MediaTest extends WebDriverTestBase {
    * Tests that view mode is reflected onto the CKEditor 5 Widget wrapper, that
    * the media style toolbar allows changing the view mode and that the changes
    * are reflected on the widget and downcast drupal-media tag.
+   *
+   * @dataProvider providerTestViewMode
    */
-  public function testViewMode() {
+  public function testViewMode(bool $with_alignment) {
     EntityViewMode::create([
       'id' => 'media.view_mode_1',
       'targetEntityType' => 'media',
@@ -1262,6 +1264,10 @@ class MediaTest extends WebDriverTestBase {
         ],
       ],
     ])->save();
+
+    if (!$with_alignment) {
+      $filter_format->filters('filter_align')->setConfiguration(array_merge($filter_format->filters('filter_align')->getConfiguration(), ['status' => FALSE]));
+    }
 
     // Test that view mode dependencies are returned from the MediaEmbed
     // filter's ::getDependencies() method.
@@ -1476,6 +1482,16 @@ class MediaTest extends WebDriverTestBase {
     $this->assertNotEmpty($this->getBalloonButton('View Mode 1'));
     $this->assertNotEmpty($this->getBalloonButton('View Mode 2 has Numeric ID'));
     $this->assertNotEmpty($this->getBalloonButton('View Mode 4'));
+  }
+
+  /**
+   * For testing view modes in different scenarios.
+   */
+  public function providerTestViewMode(): array {
+    return [
+      'with alignment' => [TRUE],
+      'without alignment' => [FALSE],
+    ];
   }
 
   /**
