@@ -3,7 +3,7 @@
  * A Backbone View that renders the visual view of a contextual region element.
  */
 
-(function (Drupal, Backbone, Modernizr) {
+(function (Drupal, Backbone) {
   Drupal.contextual.RegionView = Backbone.View.extend(
     /** @lends Drupal.contextual.RegionView# */ {
       /**
@@ -13,19 +13,35 @@
        *   A mapping of events to be used in the view.
        */
       events() {
-        let mapping = {
+        // Used for tracking the presence of touch events. When true, the
+        // mousemove and mouseenter event handlers are effectively disabled.
+        // This is used instead of preventDefault() on touchstart as some
+        // touchstart events are not cancelable.
+        let touchStart = false;
+        return {
+          touchstart() {
+            // Set to true so the mouseenter and mouseleave events that follow
+            // know to not execute any hover related logic.
+            touchStart = true;
+          },
           mouseenter() {
-            this.model.set('regionIsHovered', true);
+            if (!touchStart) {
+              this.model.set('regionIsHovered', true);
+            }
           },
           mouseleave() {
-            this.model.close().blur().set('regionIsHovered', false);
+            if (!touchStart) {
+              this.model.close().blur().set('regionIsHovered', false);
+            }
+          },
+          mousemove() {
+            // Because there are scenarios where there are both touchscreens
+            // and pointer devices, the touchStart flag should be set back to
+            // false after mouseenter and mouseleave complete. It will be set to
+            // true if another touchstart event occurs.
+            touchStart = false;
           },
         };
-        // We don't want mouse hover events on touch.
-        if (Modernizr.touchevents) {
-          mapping = {};
-        }
-        return mapping;
       },
 
       /**
@@ -52,4 +68,4 @@
       },
     },
   );
-})(Drupal, Backbone, Modernizr);
+})(Drupal, Backbone);
