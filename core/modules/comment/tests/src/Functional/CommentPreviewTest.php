@@ -121,7 +121,7 @@ class CommentPreviewTest extends CommentTestBase {
     // Store the content of this page.
     $this->submitForm([], 'Save');
     $this->assertSession()->pageTextContains('Your comment has been posted.');
-    $elements = $this->xpath('//section[contains(@class, "comment-wrapper")]/article');
+    $elements = $this->xpath('//section[contains(@class, "comments")]/article');
     $this->assertCount(1, $elements);
 
     // Go back and re-submit the form.
@@ -129,7 +129,7 @@ class CommentPreviewTest extends CommentTestBase {
     $submit_button = $this->assertSession()->buttonExists('Save');
     $submit_button->click();
     $this->assertSession()->pageTextContains('Your comment has been posted.');
-    $this->assertSession()->elementsCount('xpath', '//section[contains(@class, "comment-wrapper")]/article', 2);
+    $this->assertSession()->elementsCount('xpath', '//section[contains(@class, "comments")]/article', 2);
   }
 
   /**
@@ -156,7 +156,7 @@ class CommentPreviewTest extends CommentTestBase {
     $edit['date[date]'] = $date->format('Y-m-d');
     $edit['date[time]'] = $date->format('H:i:s');
     $raw_date = $date->getTimestamp();
-    $expected_text_date = $this->container->get('date.formatter')->format($raw_date);
+    $expected_text_date = $this->container->get('date.formatter')->formatInterval(\Drupal::time()->getRequestTime() - $raw_date);
     $expected_form_date = $date->format('Y-m-d');
     $expected_form_time = $date->format('H:i:s');
     $comment = $this->postComment($this->node, $edit['subject[0][value]'], $edit['comment_body[0][value]'], TRUE);

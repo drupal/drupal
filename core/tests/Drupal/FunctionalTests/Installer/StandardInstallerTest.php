@@ -18,13 +18,9 @@ class StandardInstallerTest extends ConfigAfterInstallerTestBase {
    * Ensures that the user page is available after installation.
    */
   public function testInstaller() {
-    // Verify that the Standard install profile's default frontpage appears.
-    $this->assertSession()->pageTextContains('No front page content has been created yet.');
-    // Ensure that the contact link enabled in standard_install() works as
-    // expected.
-    $this->clickLink('Contact');
-    $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->addressEquals('contact');
+    // Verify that Olivero's default frontpage appears.
+    $this->assertSession()->pageTextContains('Congratulations and welcome to the Drupal community!');
+    $this->assertSession()->elementTextContains('css', '#block-olivero-powered', 'Powered by Drupal');
   }
 
   /**
@@ -32,7 +28,7 @@ class StandardInstallerTest extends ConfigAfterInstallerTestBase {
    */
   protected function setUpSite() {
     // Test that the correct theme is being used.
-    $this->assertSession()->responseNotContains('bartik');
+    $this->assertSession()->responseNotContains('olivero');
     $this->assertSession()->responseContains('themes/seven/css/theme/install-page.css');
     parent::setUpSite();
   }

@@ -61,7 +61,7 @@ class UpgradeTest extends MigrateUpgradeExecuteTestBase {
     return [
       'aggregator_item' => 1,
       'aggregator_feed' => 1,
-      'block' => 34,
+      'block' => 36,
       'block_content' => 2,
       'block_content_type' => 1,
       'comment' => 8,
@@ -96,7 +96,7 @@ class UpgradeTest extends MigrateUpgradeExecuteTestBase {
       'user_role' => 7,
       'menu_link_content' => 9,
       'view' => 16,
-      'date_format' => 11,
+      'date_format' => 12,
       'entity_form_display' => 31,
       'entity_form_mode' => 1,
       'entity_view_display' => 61,

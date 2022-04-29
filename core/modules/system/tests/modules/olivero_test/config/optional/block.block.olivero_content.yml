@@ -4,16 +4,16 @@ dependencies:
   module:
     - system
   theme:
-    - bartik
-id: bartik_breadcrumbs
-theme: bartik
-region: breadcrumb
+    - olivero
+id: olivero_content
+theme: olivero
+region: content
 weight: 0
 provider: null
-plugin: system_breadcrumb_block
+plugin: system_main_block
 settings:
-  id: system_breadcrumb_block
-  label: Breadcrumbs
+  id: system_main_block
+  label: 'Main page content'
   label_display: '0'
   provider: system
 visibility: {  }

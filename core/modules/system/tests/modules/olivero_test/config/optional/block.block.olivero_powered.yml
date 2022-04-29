@@ -4,11 +4,11 @@ dependencies:
   module:
     - system
   theme:
-    - bartik
-id: bartik_powered
-theme: bartik
-region: footer_fifth
-weight: 10
+    - olivero
+id: olivero_powered
+theme: olivero
+region: footer_bottom
+weight: 0
 provider: null
 plugin: system_powered_by_block
 settings:

@@ -13,13 +13,14 @@ use Drupal\Tests\BrowserTestBase;
  *
  * @group Cache
  * @see \Drupal\Tests\page_cache\Functional\PageCacheTest
- * @see \Drupal\node\Tests\NodePageCacheTest
- * @see \Drupal\menu_ui\Tests\MenuTest::testMenuBlockPageCacheTags()
  */
 class PageCacheTagsIntegrationTest extends BrowserTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;
 
+  /**
+   * {@inheritdoc}
+   */
   protected $profile = 'standard';
 
   protected $dumpHeaders = TRUE;
@@ -80,6 +81,7 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
       // These two cache contexts are added by BigPipe.
       'cookies:big_pipe_nojs',
       'session.exists',
+      'user.permissions',
       'user.roles:authenticated',
     ];
 
@@ -90,29 +92,28 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
       'block_view',
       'local_task',
       'config:block_list',
-      'config:block.block.bartik_branding',
-      'config:block.block.bartik_breadcrumbs',
-      'config:block.block.bartik_content',
-      'config:block.block.bartik_tools',
-      'config:block.block.bartik_footer',
-      'config:block.block.bartik_help',
-      'config:block.block.bartik_search',
+      'config:block.block.olivero_site_branding',
+      'config:block.block.olivero_breadcrumbs',
+      'config:block.block.olivero_content',
+      'config:block.block.olivero_help',
+      'config:block.block.olivero_search_form_narrow',
+      'config:block.block.olivero_search_form_wide',
       'config:block.block.' . $block->id(),
-      'config:block.block.bartik_powered',
-      'config:block.block.bartik_main_menu',
-      'config:block.block.bartik_account_menu',
-      'config:block.block.bartik_messages',
-      'config:block.block.bartik_local_actions',
-      'config:block.block.bartik_local_tasks',
-      'config:block.block.bartik_page_title',
+      'config:block.block.olivero_powered',
+      'config:block.block.olivero_main_menu',
+      'config:block.block.olivero_account_menu',
+      'config:block.block.olivero_messages',
+      'config:block.block.olivero_primary_local_tasks',
+      'config:block.block.olivero_secondary_local_tasks',
+      'config:block.block.olivero_syndicate',
+      'config:block.block.primary_admin_actions',
+      'config:block.block.olivero_page_title',
       'node_view',
       'node:' . $node_1->id(),
       'user:' . $author_1->id(),
       'config:filter.format.basic_html',
-      'config:node_type_list',
+      'config:search.settings',
       'config:system.menu.account',
-      'config:system.menu.tools',
-      'config:system.menu.footer',
       'config:system.menu.main',
       'config:system.site',
       // FinishResponseSubscriber adds this cache tag to responses that have the
@@ -130,29 +131,28 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
       'block_view',
       'local_task',
       'config:block_list',
-      'config:block.block.bartik_branding',
-      'config:block.block.bartik_breadcrumbs',
-      'config:block.block.bartik_content',
-      'config:block.block.bartik_tools',
-      'config:block.block.bartik_help',
-      'config:block.block.bartik_search',
+      'config:block.block.olivero_site_branding',
+      'config:block.block.olivero_breadcrumbs',
+      'config:block.block.olivero_content',
+      'config:block.block.olivero_help',
+      'config:block.block.olivero_search_form_narrow',
+      'config:block.block.olivero_search_form_wide',
       'config:block.block.' . $block->id(),
-      'config:block.block.bartik_footer',
-      'config:block.block.bartik_powered',
-      'config:block.block.bartik_main_menu',
-      'config:block.block.bartik_account_menu',
-      'config:block.block.bartik_messages',
-      'config:block.block.bartik_local_actions',
-      'config:block.block.bartik_local_tasks',
-      'config:block.block.bartik_page_title',
+      'config:block.block.olivero_powered',
+      'config:block.block.olivero_main_menu',
+      'config:block.block.olivero_account_menu',
+      'config:block.block.olivero_messages',
+      'config:block.block.olivero_primary_local_tasks',
+      'config:block.block.olivero_secondary_local_tasks',
+      'config:block.block.olivero_syndicate',
+      'config:block.block.primary_admin_actions',
+      'config:block.block.olivero_page_title',
       'node_view',
       'node:' . $node_2->id(),
       'user:' . $author_2->id(),
       'config:filter.format.full_html',
-      'config:node_type_list',
+      'config:search.settings',
       'config:system.menu.account',
-      'config:system.menu.tools',
-      'config:system.menu.footer',
       'config:system.menu.main',
       'config:system.site',
       'comment_list',

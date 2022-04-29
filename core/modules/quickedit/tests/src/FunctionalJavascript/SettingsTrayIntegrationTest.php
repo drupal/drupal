@@ -129,7 +129,7 @@ class SettingsTrayIntegrationTest extends SettingsTrayTestBase {
       $this->clickContextualLink($block_selector, "Quick edit");
       $this->waitForOffCanvasToOpen();
       // QuickEdit toolbar should be closed when opening off-canvas dialog.
-      $web_assert->elementNotExists('css', $quick_edit_selector);
+      $web_assert->waitForElementRemoved('css', $quick_edit_selector);
       // Open QuickEdit toolbar via contextual link while in Edit mode.
       $this->clickContextualLink($node_selector, "Quick edit", FALSE);
       $this->waitForOffCanvasToClose();

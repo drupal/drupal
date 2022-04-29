@@ -2,18 +2,18 @@ langcode: en
 status: true
 dependencies:
   theme:
-    - bartik
-id: bartik_local_tasks
-theme: bartik
-region: content
-weight: -40
+    - olivero
+id: olivero_secondary_local_tasks
+theme: olivero
+region: highlighted
+weight: -2
 provider: null
 plugin: local_tasks_block
 settings:
   id: local_tasks_block
-  label: Tabs
-  label_display: '0'
+  label: 'Secondary tabs'
   provider: core
-  primary: true
+  label_display: '0'
+  primary: false
   secondary: true
 visibility: {  }

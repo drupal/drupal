@@ -38,9 +38,7 @@ class StandardTest extends BrowserTestBase {
    */
   public function testStandard() {
     $this->drupalGet('');
-    $this->assertSession()->linkExists('Contact');
-    $this->clickLink('Contact');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('Powered by Drupal');
 
     // Test anonymous user can access 'Main navigation' block.
     $this->adminUser = $this->drupalCreateUser([
@@ -52,9 +50,9 @@ class StandardTest extends BrowserTestBase {
     ]);
     $this->drupalLogin($this->adminUser);
     // Configure the block.
-    $this->drupalGet('admin/structure/block/add/system_menu_block:main/bartik');
+    $this->drupalGet('admin/structure/block/add/system_menu_block:main/olivero');
     $this->submitForm([
-      'region' => 'sidebar_first',
+      'region' => 'sidebar',
       'id' => 'main_navigation',
     ], 'Save block');
     // Verify admin user can see the block.
@@ -63,7 +61,7 @@ class StandardTest extends BrowserTestBase {
 
     // Verify we have role = complementary on help_block blocks.
     $this->drupalGet('admin/structure/block');
-    $this->assertSession()->elementAttributeContains('xpath', "//div[@id='block-bartik-help']", 'role', 'complementary');
+    $this->assertSession()->elementAttributeContains('xpath', "//div[@id='block-olivero-help']", 'role', 'complementary');
 
     // Verify anonymous user can see the block.
     $this->drupalLogout();
