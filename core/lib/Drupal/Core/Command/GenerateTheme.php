@@ -2,11 +2,13 @@
 
 namespace Drupal\Core\Command;
 
+use Composer\Autoload\ClassLoader;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Extension\InfoParser;
 use Drupal\Core\File\FileSystem;
+use Drupal\Core\Theme\StarterKitInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -124,9 +126,6 @@ class GenerateTheme extends Command {
     $info = Yaml::decode(file_get_contents($info_file));
     $info['name'] = $input->getOption('name') ?: $destination_theme;
 
-    // Unhide hidden themes.
-    unset($info['hidden']);
-
     $info['core_version_requirement'] = '^' . $this->getVersion();
 
     if ($description = $input->getOption('description')) {
@@ -194,6 +193,21 @@ class GenerateTheme extends Command {
       $new_template_content = preg_replace("/(attach_library\(['\")])$source_theme_name(\/.*['\"]\))/", "$1$destination_theme$2", $contents);
       if (!file_put_contents($template_file, $new_template_content)) {
         $io->getErrorStyle()->error("The template file $template_file could not be written.");
+        return 1;
+      }
+    }
+
+    $loader = new ClassLoader();
+    $loader->addPsr4("Drupal\\$source_theme_name\\", "$source/src");
+    $loader->register();
+
+    $generator_classname = "Drupal\\$source_theme_name\\StarterKit";
+    if (class_exists($generator_classname)) {
+      if (is_a($generator_classname, StarterKitInterface::class, TRUE)) {
+        $generator_classname::postProcess($tmp_dir, $destination_theme, $info['name']);
+      }
+      else {
+        $io->getErrorStyle()->error("The $generator_classname does not implement \Drupal\Core\Theme\StarterKitInterface and cannot perform post-processing.");
         return 1;
       }
     }

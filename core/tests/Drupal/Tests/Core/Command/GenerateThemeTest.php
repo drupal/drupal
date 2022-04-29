@@ -3,6 +3,7 @@
 namespace Drupal\Tests\Core\Command;
 
 use Drupal\BuildTests\QuickStart\QuickStartTestBase;
+use Drupal\Core\Serialization\Yaml;
 use Drupal\sqlite\Driver\Database\sqlite\Install\Tasks;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
@@ -53,12 +54,14 @@ class GenerateThemeTest extends QuickStartTestBase {
     $process = new Process($install_command, NULL);
     $process->setTimeout(60);
     $result = $process->run();
-    $this->assertEquals('Theme generated successfully to themes/test_custom_theme', trim($process->getOutput()));
+    $this->assertEquals('Theme generated successfully to themes/test_custom_theme', trim($process->getOutput()), $process->getErrorOutput());
     $this->assertSame(0, $result);
 
     $theme_path_relative = 'themes/test_custom_theme';
     $theme_path_absolute = $this->getWorkspaceDirectory() . "/$theme_path_relative";
     $this->assertFileExists($theme_path_absolute . '/test_custom_theme.info.yml');
+    $info = Yaml::decode(file_get_contents($theme_path_absolute . '/test_custom_theme.info.yml'));
+    self::assertArrayNotHasKey('hidden', $info);
 
     // Ensure that the generated theme can be installed.
     $this->installQuickStart('minimal');
