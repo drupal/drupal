@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function (Drupal, Backbone, Modernizr) {
+(function (Drupal, Backbone) {
   Drupal.contextual.VisualView = Backbone.View.extend({
     events() {
       const touchEndToClick = function (event) {
@@ -13,7 +13,22 @@
         event.target.click();
       };
 
-      const mapping = {
+      let touchStart = false;
+      return {
+        touchstart() {
+          touchStart = true;
+        },
+
+        mouseenter() {
+          if (!touchStart) {
+            this.model.focus();
+          }
+        },
+
+        mousemove() {
+          touchStart = false;
+        },
+
         'click .trigger': function () {
           this.model.toggleOpen();
         },
@@ -23,14 +38,6 @@
         },
         'touchend .contextual-links a': touchEndToClick
       };
-
-      if (!Modernizr.touchevents) {
-        mapping.mouseenter = function () {
-          this.model.focus();
-        };
-      }
-
-      return mapping;
     },
 
     initialize() {
@@ -50,4 +57,4 @@
     }
 
   });
-})(Drupal, Backbone, Modernizr);
+})(Drupal, Backbone);

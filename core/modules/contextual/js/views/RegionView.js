@@ -5,25 +5,32 @@
 * @preserve
 **/
 
-(function (Drupal, Backbone, Modernizr) {
+(function (Drupal, Backbone) {
   Drupal.contextual.RegionView = Backbone.View.extend({
     events() {
-      let mapping = {
+      let touchStart = false;
+      return {
+        touchstart() {
+          touchStart = true;
+        },
+
         mouseenter() {
-          this.model.set('regionIsHovered', true);
+          if (!touchStart) {
+            this.model.set('regionIsHovered', true);
+          }
         },
 
         mouseleave() {
-          this.model.close().blur().set('regionIsHovered', false);
+          if (!touchStart) {
+            this.model.close().blur().set('regionIsHovered', false);
+          }
+        },
+
+        mousemove() {
+          touchStart = false;
         }
 
       };
-
-      if (Modernizr.touchevents) {
-        mapping = {};
-      }
-
-      return mapping;
     },
 
     initialize() {
@@ -36,4 +43,4 @@
     }
 
   });
-})(Drupal, Backbone, Modernizr);
+})(Drupal, Backbone);

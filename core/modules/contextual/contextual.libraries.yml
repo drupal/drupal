@@ -24,7 +24,6 @@ drupal.contextual-links:
     - core/drupalSettings
     # @todo Remove this in https://www.drupal.org/project/drupal/issues/3203920
     - core/internal.backbone
-    - core/modernizr
     - core/once
 
 drupal.contextual-toolbar:
