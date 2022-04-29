@@ -25,9 +25,9 @@ class OliveroTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
-    parent::setUp();
-  }
+  protected static $modules = [
+    'olivero_test',
+  ];
 
   /**
    * Tests that the Olivero theme always adds base library files.
