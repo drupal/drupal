@@ -159,7 +159,7 @@
     margin-left: 0;
   }
   & .form-item .form-item__description {
-    color: var(--color-whitesmoke);
+    color: var(--color-gray-050);
     font-size: 0.75rem;
   }
 }
