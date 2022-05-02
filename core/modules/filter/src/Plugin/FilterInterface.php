@@ -198,7 +198,7 @@ interface FilterInterface extends ConfigurableInterface, DependentPluginInterfac
    *             be attribute values (which may use a wildcard, e.g. "xsd:*"),
    *             the possible values are TRUE or FALSE: to mark the attribute
    *             value as allowed or forbidden, respectively
-   *     -  'forbidden_tags': (optional) the forbidden tags
+   *     -  'forbidden_tags': (deprecated) the forbidden tags
    *
    *   There is one special case: the "wildcard tag", "*": any attribute
    *   restrictions on that pseudotag apply to all tags.

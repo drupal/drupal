@@ -297,6 +297,10 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
       $restrictions = array_reduce($filters, function ($restrictions, $filter) {
         $new_restrictions = $filter->getHTMLRestrictions();
 
+        if (isset($new_restrictions['forbidden_tags'])) {
+          @trigger_error('forbidden_tags for FilterInterface::getHTMLRestrictions() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0', E_USER_DEPRECATED);
+        }
+
         // The first filter with HTML restrictions provides the initial set.
         if (!isset($restrictions)) {
           return $new_restrictions;
