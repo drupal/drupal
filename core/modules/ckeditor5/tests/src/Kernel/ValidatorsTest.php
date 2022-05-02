@@ -43,7 +43,6 @@ class ValidatorsTest extends KernelTestBase {
     'ckeditor5_plugin_conditions_test',
     'editor',
     'filter',
-    'filter_test',
     'media',
     'media_library',
     'views',
@@ -461,33 +460,6 @@ class ValidatorsTest extends KernelTestBase {
         ],
       ],
       'violations' => [],
-    ];
-    $data['INVALID: forbidden tags'] = [
-      'settings' => [
-        'toolbar' => [
-          'items' => [],
-        ],
-        'plugins' => [],
-      ],
-      'image_upload' => [
-        'status' => FALSE,
-      ],
-      'filters' => [
-        'filter_test_restrict_tags_and_attributes' => [
-          'id' => 'filter_test_restrict_tags_and_attributes',
-          'provider' => 'filter_test',
-          'status' => TRUE,
-          'weight' => 0,
-          'settings' => [
-            'restrictions' => [
-              'forbidden_tags' => ['p' => FALSE],
-            ],
-          ],
-        ],
-      ],
-      'violations' => [
-        '' => 'CKEditor 5 needs at least the &lt;p&gt; and &lt;br&gt; tags to be allowed to be able to function. They are forbidden by the "<em class="placeholder">Tag and attribute restricting filter</em>" (<em class="placeholder">filter_test_restrict_tags_and_attributes</em>) filter.',
-      ],
     ];
     $restricted_html_format_filters = Yaml::parseFile(__DIR__ . '/../../../../../profiles/standard/config/install/filter.format.restricted_html.yml')['filters'];
     $data['INVALID: the default restricted_html text format'] = [
