@@ -103,7 +103,7 @@ function contextual_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_preprocess().
  *
- * @see contextual_pre_render_placeholder()
+ * @see \Drupal\contextual\Element\ContextualLinksPlaceholder
  * @see contextual_page_attachments()
  * @see \Drupal\contextual\ContextualController::render()
  */
