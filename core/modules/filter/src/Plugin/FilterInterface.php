@@ -184,9 +184,9 @@ interface FilterInterface extends ConfigurableInterface, DependentPluginInterfac
    * format.
    *
    * @return array|false
-   *   A nested array with *either* of the following keys:
-   *     - 'allowed': (optional) the allowed tags as keys, and for each of those
-   *       tags (keys) either of the following values:
+   *   A nested array with the following structure:
+   *     - 'allowed': the allowed tags as keys, and for each of those tags
+   *       (keys) either of the following values:
    *       - TRUE to indicate any attribute is allowed
    *       - FALSE to indicate no attributes are allowed
    *       - an array to convey attribute restrictions: the keys must be
@@ -198,7 +198,6 @@ interface FilterInterface extends ConfigurableInterface, DependentPluginInterfac
    *             be attribute values (which may use a wildcard, e.g. "xsd:*"),
    *             the possible values are TRUE or FALSE: to mark the attribute
    *             value as allowed or forbidden, respectively
-   *     -  'forbidden_tags': (optional) the forbidden tags
    *
    *   There is one special case: the "wildcard tag", "*": any attribute
    *   restrictions on that pseudotag apply to all tags.
@@ -240,13 +239,6 @@ interface FilterInterface extends ConfigurableInterface, DependentPluginInterfac
    *           'on*' => FALSE,
    *         ),
    *       )
-   *     )
-   *     @endcode
-   *
-   *   A simpler example, for a very coarse filter:
-   *     @code
-   *     array(
-   *       'forbidden_tags' => array('iframe', 'script')
    *     )
    *     @endcode
    *

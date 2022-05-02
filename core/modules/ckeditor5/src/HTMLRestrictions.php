@@ -37,9 +37,6 @@ use Drupal\filter\Plugin\FilterInterface;
  *
  * @see ::WILDCARD_ELEMENT_METHODS
  *
- * NOTE: Currently only supports the 'allowed' portion.
- * @todo Add support for "forbidden" tags in https://www.drupal.org/project/drupal/issues/3231336
- *
  * @internal
  */
 final class HTMLRestrictions {
@@ -341,12 +338,6 @@ final class HTMLRestrictions {
     }
 
     $restrictions = $object->getHTMLRestrictions();
-    if (!isset($restrictions['allowed'])) {
-      // @todo Handle HTML restrictor filters that only set forbidden_tags
-      //   https://www.drupal.org/project/ckeditor5/issues/3231336.
-      throw new \DomainException('text formats with only filters that forbid tags rather than allowing tags are not yet supported.');
-    }
-
     $allowed = $restrictions['allowed'];
 
     return new self($allowed);

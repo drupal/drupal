@@ -114,22 +114,7 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
    */
   private function checkHtmlRestrictionsAreCompatible(FilterFormatInterface $text_format, FundamentalCompatibilityConstraint $constraint): void {
     $fundamental = new HTMLRestrictions($this->pluginManager->getProvidedElements(self::FUNDAMENTAL_CKEDITOR5_PLUGINS));
-
-    // @todo Remove in favor of HTMLRestrictions::diff() in https://www.drupal.org/project/drupal/issues/3231336
     $html_restrictions = $text_format->getHtmlRestrictions();
-    $minimum_tags = array_keys($fundamental->getAllowedElements());
-    $forbidden_minimum_tags = isset($html_restrictions['forbidden_tags'])
-      ? array_diff($minimum_tags, $html_restrictions['forbidden_tags'])
-      : [];
-    if (!empty($forbidden_minimum_tags)) {
-      $offending_filter = static::findHtmlRestrictorFilterForbiddingTags($text_format, $minimum_tags);
-      $this->context->buildViolation($constraint->forbiddenElementsMessage)
-        ->setParameter('%filter_label', (string) $offending_filter->getLabel())
-        ->setParameter('%filter_plugin_id', $offending_filter->getPluginId())
-        ->addViolation();
-    }
-
-    // @todo Remove early return in https://www.drupal.org/project/drupal/issues/3231336
     if (!isset($html_restrictions['allowed'])) {
       return;
     }
@@ -210,47 +195,6 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
         yield $id => $filter;
       }
     }
-  }
-
-  /**
-   * Analyzes a text format to find the filter not allowing required tags.
-   *
-   * @param \Drupal\filter\FilterFormatInterface $text_format
-   *   A text format whose filters to check for compatibility.
-   * @param string[] $required_tags
-   *   A list of HTML tags that are required.
-   *
-   * @return \Drupal\filter\Plugin\FilterInterface
-   *   The filter plugin instance not allowing the required tags.
-   *
-   * @throws \InvalidArgumentException
-   */
-  private static function findHtmlRestrictorFilterForbiddingTags(FilterFormatInterface $text_format, array $required_tags): FilterInterface {
-    // Get HTML restrictor filters that actually restrict HTML.
-    $filters = static::getFiltersInFormatOfType(
-      $text_format,
-      FilterInterface::TYPE_HTML_RESTRICTOR,
-      function (FilterInterface $filter) {
-        return $filter->getHTMLRestrictions() !== FALSE;
-      }
-    );
-
-    foreach ($filters as $filter) {
-      $restrictions = $filter->getHTMLRestrictions();
-
-      // @todo Fix
-      //   \Drupal\filter_test\Plugin\Filter\FilterTestRestrictTagsAndAttributes::getHTMLRestrictions(),
-      //   whose computed value for forbidden_tags does not comply with the API
-      //   https://www.drupal.org/project/drupal/issues/3231331.
-      if (array_keys($restrictions['forbidden_tags']) != range(0, count($restrictions['forbidden_tags']))) {
-        $restrictions['forbidden_tags'] = array_keys($restrictions['forbidden_tags']);
-      }
-      if (isset($restrictions['forbidden_tags']) && !empty(array_intersect($required_tags, $restrictions['forbidden_tags']))) {
-        return $filter;
-      }
-    }
-
-    throw new \InvalidArgumentException('This text format does not have a "tags forbidden" restriction that includes the required tags.');
   }
 
   /**

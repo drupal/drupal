@@ -42,25 +42,14 @@ class Standard extends Xss implements EditorXssFilterInterface {
     // <embed>, for example? Then we would strip that tag, even though it is
     // allowed, thereby causing data loss!
     // Therefore, we want to be smarter still. We want to take into account
-    // which HTML tags are allowed and forbidden by the text format we're
-    // filtering for, and if we're switching from another text format, we want
-    // to take that format's allowed and forbidden tags into account as well.
+    // which HTML tags are allowed by the text format we're filtering for, and
+    // if we're switching from another text format, we want to take that
+    // format's allowed tags into account as well.
     // In other words: we only expect markup allowed in both the original and
     // the new format to continue to exist.
     $format_restrictions = $format->getHtmlRestrictions();
     if ($original_format !== NULL) {
       $original_format_restrictions = $original_format->getHtmlRestrictions();
-    }
-
-    // Any tags that are explicitly blacklisted by the text format must be
-    // appended to the list of default dangerous tags: if they're explicitly
-    // forbidden, then we must respect that configuration.
-    // When switching from another text format, we must use the union of
-    // forbidden tags: if either text format is more restrictive, then the
-    // safety expectations of *both* text formats apply.
-    $forbidden_tags = self::getForbiddenTags($format_restrictions);
-    if ($original_format !== NULL) {
-      $forbidden_tags = array_merge($forbidden_tags, self::getForbiddenTags($original_format_restrictions));
     }
 
     // Any tags that are explicitly whitelisted by the text format must be
@@ -77,9 +66,6 @@ class Standard extends Xss implements EditorXssFilterInterface {
     // Don't blacklist dangerous tags that are explicitly allowed in both text
     // formats.
     $blacklisted_tags = array_diff($dangerous_tags, $allowed_tags);
-
-    // Also blacklist tags that are explicitly forbidden in either text format.
-    $blacklisted_tags = array_merge($blacklisted_tags, $forbidden_tags);
 
     $output = static::filter($html, $blacklisted_tags);
 
@@ -138,26 +124,6 @@ class Standard extends Xss implements EditorXssFilterInterface {
     $allowed_tags = array_diff($allowed_tags, ['*']);
 
     return $allowed_tags;
-  }
-
-  /**
-   * Get all forbidden tags from a restrictions data structure.
-   *
-   * @param array|false $restrictions
-   *   Restrictions as returned by FilterInterface::getHTMLRestrictions().
-   *
-   * @return array
-   *   An array of forbidden HTML tags.
-   *
-   * @see \Drupal\filter\Plugin\Filter\FilterInterface::getHTMLRestrictions()
-   */
-  protected static function getForbiddenTags($restrictions) {
-    if ($restrictions === FALSE || !isset($restrictions['forbidden_tags'])) {
-      return [];
-    }
-    else {
-      return $restrictions['forbidden_tags'];
-    }
   }
 
   /**

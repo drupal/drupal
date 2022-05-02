@@ -54,11 +54,6 @@ class FilterTestRestrictTagsAndAttributes extends FilterBase {
         }
       }
     }
-    if (isset($restrictions['forbidden_tags'])) {
-      foreach ($restrictions['forbidden_tags'] as $tag => $bool) {
-        $restrictions['forbidden_tags'][$tag] = (bool) $bool;
-      }
-    }
 
     return $restrictions;
   }

@@ -26,13 +26,6 @@ class FundamentalCompatibilityConstraint extends Constraint {
   public $noMarkupFiltersMessage = 'CKEditor 5 only works with HTML-based text formats. The "%filter_label" (%filter_plugin_id) filter implies this text format is not HTML anymore.';
 
   /**
-   * The violation message when fundamental HTML elements are forbidden.
-   *
-   * @var string
-   */
-  public $forbiddenElementsMessage = 'CKEditor 5 needs at least the &lt;p&gt; and &lt;br&gt; tags to be allowed to be able to function. They are forbidden by the "%filter_label" (%filter_plugin_id) filter.';
-
-  /**
    * The violation message when fundamental HTML elements are not allowed.
    *
    * @var string
