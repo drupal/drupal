@@ -10,6 +10,12 @@
  * @see template_preprocess_form()
  */
 #}
-<form{{ attributes.addClass('search-form', 'search-block-form') }}>
+{%
+  set classes = [
+    'search-form',
+    'search-block-form',
+  ]
+%}
+<form{{ attributes.addClass(classes) }}>
   {{ children }}
 </form>
