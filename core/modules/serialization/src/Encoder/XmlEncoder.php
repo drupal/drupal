@@ -71,7 +71,7 @@ class XmlEncoder implements SerializerAwareInterface, EncoderInterface, DecoderI
   /**
    * {@inheritdoc}
    */
-  public function supportsEncoding($format): bool {
+  public function supportsEncoding(string $format, array $context = []): bool {
     return in_array($format, static::$format);
   }
 
@@ -85,7 +85,7 @@ class XmlEncoder implements SerializerAwareInterface, EncoderInterface, DecoderI
   /**
    * {@inheritdoc}
    */
-  public function supportsDecoding($format): bool {
+  public function supportsDecoding(string $format, array $context = []): bool {
     return in_array($format, static::$format);
   }
 

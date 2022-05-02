@@ -47,7 +47,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
   /**
    * {@inheritdoc}
    */
-  public function supportsDenormalization($data, $type, $format = NULL) {
+  public function supportsDenormalization($data, string $type, string $format = NULL, array $context = []): bool {
     return FALSE;
   }
 

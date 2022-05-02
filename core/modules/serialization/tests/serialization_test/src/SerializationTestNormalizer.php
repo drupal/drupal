@@ -25,17 +25,9 @@ class SerializationTestNormalizer implements NormalizerInterface {
   }
 
   /**
-   * Checks whether format is supported by this normalizer.
-   *
-   * @param mixed $data
-   *   Data to normalize.
-   * @param string $format
-   *   Format the normalization result will be encoded as.
-   *
-   * @return bool
-   *   Returns TRUE if the normalizer can handle the request.
+   * {@inheritdoc}
    */
-  public function supportsNormalization($data, $format = NULL): bool {
+  public function supportsNormalization($data, string $format = NULL, array $context = []): bool {
     return static::$format === $format;
   }
 

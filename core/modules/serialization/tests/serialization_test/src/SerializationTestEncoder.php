@@ -24,7 +24,7 @@ class SerializationTestEncoder implements EncoderInterface {
   /**
    * {@inheritdoc}
    */
-  public function supportsEncoding($format): bool {
+  public function supportsEncoding(string $format, array $context = []): bool {
     return static::$format === $format;
   }
 
