@@ -1,8 +1,0 @@
-tour_test.legacy:
-  path: '/tour-test-legacy'
-  defaults:
-    _controller: '\Drupal\tour_test\Controller\TourTestController::tourTest1'
-  options:
-    _admin_route: TRUE
-  requirements:
-    _access: 'TRUE'

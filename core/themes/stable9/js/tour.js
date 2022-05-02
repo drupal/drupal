@@ -37,29 +37,15 @@
     shepherdCancel.setAttribute('role', 'button');
     shepherdElement.setAttribute('data-index', shepherdTour.currentStep.options.index);
     shepherdElement.querySelector('footer').remove();
-
-    if (shepherdElement.classList.contains('tip-uses-get-output')) {
-      shepherdText.appendChild(shepherdNext);
-      shepherdText.appendChild(shepherdCancel);
-      shepherdContent.querySelector('.shepherd-header').remove();
-      Array.from(shepherdText.children).forEach(node => {
-        if (node.tagName === 'P' && node.textContent === '' && node.classList.length === 0) {
-          node.remove();
-        }
-      });
-      shepherdContent.innerHTML = shepherdText.innerHTML;
-    } else {
-      shepherdContent.insertBefore(shepherdTitle, shepherdContent.firstChild);
-      shepherdContent.insertBefore(tourProgress, shepherdText.nextSibling);
-      shepherdContent.appendChild(shepherdCancel);
-      shepherdContent.querySelector('.shepherd-header').remove();
-      shepherdContent.insertBefore(shepherdNext, tourProgress.nextSibling);
-      shepherdCancel.innerHTML = '<span aria-hidden="true">×</span>';
-      shepherdTitle.classList.add('tour-tip-label');
-      changeTag(shepherdTitle, 'h2');
-      shepherdText.outerHTML = shepherdText.innerHTML;
-    }
-
+    shepherdContent.insertBefore(shepherdTitle, shepherdContent.firstChild);
+    shepherdContent.insertBefore(tourProgress, shepherdText.nextSibling);
+    shepherdContent.appendChild(shepherdCancel);
+    shepherdContent.querySelector('.shepherd-header').remove();
+    shepherdContent.insertBefore(shepherdNext, tourProgress.nextSibling);
+    shepherdCancel.innerHTML = '<span aria-hidden="true">×</span>';
+    shepherdTitle.classList.add('tour-tip-label');
+    changeTag(shepherdTitle, 'h2');
+    shepherdText.outerHTML = shepherdText.innerHTML;
     changeTag(shepherdElement.querySelector('.joyride-close-tip'), 'a');
     changeTag(shepherdElement.querySelector('.joyride-next-tip'), 'a');
     const shepherdArrow = shepherdElement.querySelector('.shepherd-arrow');

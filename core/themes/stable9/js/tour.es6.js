@@ -61,50 +61,20 @@
     );
     shepherdElement.querySelector('footer').remove();
 
-    // If the class list includes `tip-uses-get-output`, then the tip was created
-    // by a deprecated tip plugin. This means the markup has some differences
-    // that require some different steps to rebuild it as Joyride BC markup.
-    // @todo remove the contents of the 'if' in this conditional in
-    //   https://drupal.org/node/3195193.
-    if (shepherdElement.classList.contains('tip-uses-get-output')) {
-      // Move the next button.
-      shepherdText.appendChild(shepherdNext);
+    // Rearrange elements so their structure matches Joyride's.
+    shepherdContent.insertBefore(shepherdTitle, shepherdContent.firstChild);
+    shepherdContent.insertBefore(tourProgress, shepherdText.nextSibling);
+    shepherdContent.appendChild(shepherdCancel);
+    shepherdContent.querySelector('.shepherd-header').remove();
+    shepherdContent.insertBefore(shepherdNext, tourProgress.nextSibling);
+    shepherdCancel.innerHTML = '<span aria-hidden="true">×</span>';
+    shepherdTitle.classList.add('tour-tip-label');
 
-      // Move the cancel button and remove the now unnecessary header.
-      shepherdText.appendChild(shepherdCancel);
-      shepherdContent.querySelector('.shepherd-header').remove();
+    // Convert elements to use the tags they used in Joyride.
+    changeTag(shepherdTitle, 'h2');
 
-      // Remove empty paragraphs from the text container markup.
-      Array.from(shepherdText.children).forEach((node) => {
-        if (
-          node.tagName === 'P' &&
-          node.textContent === '' &&
-          node.classList.length === 0
-        ) {
-          node.remove();
-        }
-      });
-
-      // Move the contents of shepherdText directly into shepherdContent to
-      // remove the now redundant `<p>` provided by TipPlugin. Shepherd already
-      // wraps its content in a `<p>`, so the Plugin provided tag is redundant.
-      shepherdContent.innerHTML = shepherdText.innerHTML;
-    } else {
-      // Rearrange elements so their structure matches Joyride's.
-      shepherdContent.insertBefore(shepherdTitle, shepherdContent.firstChild);
-      shepherdContent.insertBefore(tourProgress, shepherdText.nextSibling);
-      shepherdContent.appendChild(shepherdCancel);
-      shepherdContent.querySelector('.shepherd-header').remove();
-      shepherdContent.insertBefore(shepherdNext, tourProgress.nextSibling);
-      shepherdCancel.innerHTML = '<span aria-hidden="true">×</span>';
-      shepherdTitle.classList.add('tour-tip-label');
-
-      // Convert elements to use the tags they used in Joyride.
-      changeTag(shepherdTitle, 'h2');
-
-      // Remove the wrapper Shepherd adds for tip content.
-      shepherdText.outerHTML = shepherdText.innerHTML;
-    }
+    // Remove the wrapper Shepherd adds for tip content.
+    shepherdText.outerHTML = shepherdText.innerHTML;
 
     // Convert the next and cancel buttons to links so they match Joyride's
     // markup. They must be re-queried as they were potentially moved elsewhere

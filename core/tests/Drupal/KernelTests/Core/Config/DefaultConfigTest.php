@@ -40,10 +40,6 @@ class DefaultConfigTest extends KernelTestBase {
     'config_schema_test.someschema.somemodule.section_two.subsection',
     'config_schema_test.someschema.with_parents',
     'config_schema_test.someschema',
-    // Skip tour-test-legacy files as they intentionally have deprecated
-    // properties.
-    'tour.tour.tour-test-legacy',
-    'tour.tour.tour-test-legacy-location',
   ];
 
   /**

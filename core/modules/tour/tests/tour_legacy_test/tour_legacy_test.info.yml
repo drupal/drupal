@@ -1,8 +1,0 @@
-name: Tour legacy plugin tests
-type: module
-description: Tests related to deprecated plugins.
-package: Testing
-version: VERSION
-dependencies:
-  - drupal:tour
-  - drupal:tour_test
