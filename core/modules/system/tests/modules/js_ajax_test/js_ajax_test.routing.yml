@@ -1,6 +1,0 @@
-js_ajax_test.js_ajax_test:
-  path: '/js_ajax_test'
-  defaults:
-    _form: '\Drupal\js_ajax_test\Form\JsAjaxTestForm'
-  requirements:
-    _access: 'TRUE'

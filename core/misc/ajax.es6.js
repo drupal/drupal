@@ -418,16 +418,6 @@
     this.element = element;
 
     /**
-     * @deprecated in drupal:8.5.0 and is removed from drupal:10.0.0.
-     *   Use elementSettings.
-     *
-     * @see https://www.drupal.org/node/2928117
-     *
-     * @type {Drupal.Ajax~elementSettings}
-     */
-    this.element_settings = elementSettings;
-
-    /**
      * @type {Drupal.Ajax~elementSettings}
      */
     this.elementSettings = elementSettings;

@@ -175,7 +175,6 @@
     }
 
     this.element = element;
-    this.element_settings = elementSettings;
     this.elementSettings = elementSettings;
 
     if (this.element && this.element.form) {

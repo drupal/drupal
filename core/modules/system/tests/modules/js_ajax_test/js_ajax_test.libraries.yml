@@ -1,8 +1,0 @@
-ajax:
-  version: VERSION
-  js:
-    js/js_ajax_test.ajax.js: {}
-  dependencies:
-    - core/jquery
-    - core/drupal
-    - core/drupal.ajax
