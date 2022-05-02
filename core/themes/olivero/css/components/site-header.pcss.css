@@ -48,20 +48,8 @@
     & .site-header__fixable.is-fixed {
       position: fixed;
       z-index: 102; /* Appear above body content that is position: relative */
-      inset-block-start: calc(-1 * var(--sp4));
+      inset-block-start: calc(var(--drupal-displace-offset-top, 0px) - var(--sp4));
       max-width: var(--max-bg-color);
-    }
-
-    /* Toolbar is fixed, and tray is either vertical or closed and horizontal. */
-    &.toolbar-vertical.toolbar-fixed,
-    &.toolbar-horizontal.toolbar-fixed {
-      & .site-header__fixable.is-fixed {
-        inset-block-start: calc(var(--toolbar-height) - var(--sp4));
-      }
-    }
-    /* Toolbar is fixed, and tray is open and horizontal. */
-    &.toolbar-horizontal.toolbar-fixed.toolbar-tray-open .site-header__fixable.is-fixed {
-      inset-block-start: calc(var(--toolbar-tray-height) + var(--toolbar-height) - var(--sp4));
     }
   }
 }
