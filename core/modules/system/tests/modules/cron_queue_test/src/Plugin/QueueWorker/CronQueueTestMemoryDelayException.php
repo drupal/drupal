@@ -11,7 +11,10 @@ use Drupal\Core\Queue\QueueWorkerBase;
  * @QueueWorker(
  *   id = "cron_queue_test_memory_delay_exception",
  *   title = @Translation("Memory delay exception test"),
- *   cron = {"time" = 1}
+ *   cron = {
+ *     "time" = 1,
+ *     "lease_time" = 2
+ *   }
  * )
  */
 class CronQueueTestMemoryDelayException extends QueueWorkerBase {
