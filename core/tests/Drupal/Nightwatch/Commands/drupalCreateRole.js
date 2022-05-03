@@ -20,40 +20,29 @@ exports.command = function drupalCreateRole(
   const roleName = name || Math.random().toString(36).substring(2, 15);
 
   let machineName;
-  this.drupalLoginAsAdmin(() => {
-    this.drupalRelativeURL('/admin/people/roles/add')
-      .setValue('input[name="label"]', roleName)
+  this.drupalLoginAsAdmin(async () => {
+    this.drupalRelativeURL('/admin/people/roles/add');
+
+    this.setValue('input[name="label"]', roleName)
       // Wait for the machine name to appear so that it can be used later to
       // select the permissions from the permission page.
       .expect.element('.user-role-form .machine-name-value')
       .to.be.visible.before(2000);
 
-    this.perform((done) => {
-      this.getText('.user-role-form .machine-name-value', (element) => {
-        machineName = element.value;
-        done();
-      });
-    })
-      .submitForm('#user-role-form')
-      .drupalRelativeURL('/admin/people/permissions')
-      .perform((client, done) => {
-        Promise.all(
-          permissions.map(
-            (permission) =>
-              new Promise((resolve) => {
-                client.click(
-                  `input[name="${machineName}[${permission}]"]`,
-                  () => {
-                    resolve();
-                  },
-                );
-              }),
-          ),
-        ).then(() => {
-          done();
-        });
-      })
-      .submitForm('#user-admin-permissions');
+    machineName = await this.getText('.user-role-form .machine-name-value');
+    this.submitForm('#user-role-form').waitForElementVisible('body');
+
+    this.drupalRelativeURL('/admin/people/permissions');
+
+    await Promise.all(
+      permissions.map(async (permission) =>
+        this.click(`input[name="${machineName}[${permission}]"]`),
+      ),
+    );
+
+    this.submitForm('#user-admin-permissions').waitForElementVisible('body');
+
+    this.drupalRelativeURL('/admin/people/permissions');
   }).perform(() => {
     if (typeof callback === 'function') {
       callback.call(self, machineName);

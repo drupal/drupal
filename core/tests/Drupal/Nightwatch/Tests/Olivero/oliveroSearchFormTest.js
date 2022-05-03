@@ -28,7 +28,7 @@ module.exports = {
   },
   'search wide form is accessible and altered': (browser) => {
     browser
-      .resizeWindow(1400, 800)
+      .setWindowSize(1400, 800)
       .drupalRelativeURL('/')
       .waitForElementVisible(searchButtonSelector)
       .assert.attributeEquals(searchButtonSelector, 'aria-expanded', 'false')
@@ -86,7 +86,7 @@ module.exports = {
   },
   'search narrow form is accessible': (browser) => {
     browser
-      .resizeWindow(1000, 800)
+      .setWindowSize(1000, 800)
       .drupalRelativeURL('/')
       .click(mobileNavButtonSelector)
       .waitForElementVisible(headerNavSelector)
@@ -94,7 +94,7 @@ module.exports = {
   },
   'submit button styled as primary on forms with <= 2 actions': (browser) => {
     browser
-      .resizeWindow(1400, 800)
+      .setWindowSize(1400, 800)
       .drupalRelativeURL('/form-test/object-controller-builder')
       .assert.elementPresent(
         '#edit-actions input[type=submit].button--primary',
@@ -102,7 +102,7 @@ module.exports = {
   },
   'search page is altered': (browser) => {
     browser
-      .resizeWindow(1400, 800)
+      .setWindowSize(1400, 800)
       .drupalRelativeURL('/search')
       .assert.attributeContains(
         '.search-form input[name=keys]',

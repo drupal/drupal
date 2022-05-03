@@ -18,7 +18,7 @@ module.exports = {
         permissions: ['administer nodes'],
       })
       .drupalLogin({ name: 'user', password: '123' });
-    browser.resizeWindow(1600, 800);
+    browser.setWindowSize(1600, 800);
   },
   after(browser) {
     browser.drupalUninstall();
@@ -33,7 +33,7 @@ module.exports = {
   },
   'Verify mobile tab display and click functionality': (browser) => {
     browser
-      .resizeWindow(699, 800)
+      .setWindowSize(699, 800)
       .drupalRelativeURL('/node/1')
       .waitForElementVisible(primaryTabsWrapper)
       .assert.visible(activeTab)

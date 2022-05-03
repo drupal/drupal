@@ -23,15 +23,15 @@ module.exports = {
   },
   'correct classes added to table and header': (browser) => {
     browser
-      .resizeWindow(1400, 800)
+      .setWindowSize(1400, 800)
       .drupalRelativeURL('/contact/olivero_test_contact_form')
       .waitForElementVisible(tableSelector, 1000)
-      .assert.cssClassPresent(tableSelector, [
+      .assert.hasClass(tableSelector, [
         'tabledrag-disabled',
         'js-tabledrag-disabled',
       ])
-      .assert.cssClassPresent(tableHeaderSelector, 'is-disabled')
-      .assert.cssClassPresent(headerSelector, [
+      .assert.hasClass(tableHeaderSelector, 'is-disabled')
+      .assert.hasClass(headerSelector, [
         'form-item__label',
         'form-item__label--multiple-value-form',
         'js-form-required',

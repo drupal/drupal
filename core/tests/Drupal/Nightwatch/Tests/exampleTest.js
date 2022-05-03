@@ -12,7 +12,7 @@ module.exports = {
     browser
       .drupalRelativeURL('/test-page')
       .waitForElementVisible('body', 1000)
-      .assert.containsText('body', 'Test page text')
+      .assert.textContains('body', 'Test page text')
       .drupalLogAndEnd({ onlyOnError: false });
   },
   'Page objects test page': (browser) => {
@@ -21,7 +21,7 @@ module.exports = {
     testPage
       .drupalRelativeURL('/test-page')
       .waitForElementVisible('@body', testPage.props.timeout)
-      .assert.containsText('@body', testPage.props.text)
+      .assert.textContains('@body', testPage.props.text)
       .assert.noDeprecationErrors()
       .drupalLogAndEnd({ onlyOnError: false });
   },

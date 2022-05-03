@@ -21,7 +21,7 @@ module.exports = {
           .click('[data-drupal-selector="edit-actions-submit"]')
           .waitForElementVisible('body');
       });
-    browser.resizeWindow(1600, 800);
+    browser.setWindowSize(1600, 800);
   },
   after(browser) {
     browser.drupalUninstall();

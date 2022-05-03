@@ -26,21 +26,21 @@ module.exports = {
           'administer users',
         ],
       })
-      .drupalLogin({ name: 'user', password: '123' })
-      .drupalRelativeURL('/')
-      .waitForElementPresent('#toolbar-administration', 10000);
+      .drupalLogin({ name: 'user', password: '123' });
   },
   beforeEach(browser) {
     // Set the resolution to the default desktop resolution. Ensure the default
     // toolbar is horizontal in headless mode.
-    browser.resizeWindow(1920, 1080);
-    // To clear active tab/tray from previous tests
-    browser.execute(function () {
-      localStorage.clear();
-      // Clear escapeAdmin url values.
-      sessionStorage.clear();
-    });
-    browser.drupalRelativeURL('/');
+    browser
+      .setWindowSize(1920, 1080)
+      // To clear active tab/tray from previous tests
+      .execute(function () {
+        localStorage.clear();
+        // Clear escapeAdmin url values.
+        sessionStorage.clear();
+      })
+      .drupalRelativeURL('/')
+      .waitForElementPresent('#toolbar-administration', 50000, 1000, false);
   },
   after(browser) {
     browser.drupalUninstall();

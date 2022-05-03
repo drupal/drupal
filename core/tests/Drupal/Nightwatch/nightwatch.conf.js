@@ -62,7 +62,7 @@ module.exports = {
       desiredCapabilities: {
         browserName: 'chrome',
         acceptSslCerts: true,
-        chromeOptions: {
+        'goog:chromeOptions': {
           w3c: false,
           args: process.env.DRUPAL_TEST_WEBDRIVER_CHROME_ARGS
             ? process.env.DRUPAL_TEST_WEBDRIVER_CHROME_ARGS.split(' ')
@@ -87,7 +87,7 @@ module.exports = {
       desiredCapabilities: {
         browserName: 'chrome',
         acceptSslCerts: true,
-        chromeOptions: {
+        'goog:chromeOptions': {
           w3c: false,
           args: process.env.DRUPAL_TEST_WEBDRIVER_CHROME_ARGS
             ? process.env.DRUPAL_TEST_WEBDRIVER_CHROME_ARGS.split(' ')

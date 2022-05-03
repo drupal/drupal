@@ -20,24 +20,24 @@ exports.command = function drupalCreateUser(
 ) {
   const self = this;
 
-  let role;
+  // Define the name here because the callback from drupalCreateRole can be
+  // undefined in some cases.
+  const roleName = Math.random()
+    .toString(36)
+    .replace(/[^\w\d]/g, '')
+    .substring(2, 15);
   this.perform((client, done) => {
-    if (permissions) {
-      client.drupalCreateRole({ permissions, name: null }, (newRole) => {
-        role = newRole;
-        done();
-      });
-    } else {
-      done();
+    if (permissions.length) {
+      this.drupalCreateRole({ permissions, name: roleName }, done);
     }
-  }).drupalLoginAsAdmin(() => {
+  }).drupalLoginAsAdmin(async () => {
     this.drupalRelativeURL('/admin/people/create')
       .setValue('input[name="name"]', name)
       .setValue('input[name="pass[pass1]"]', password)
       .setValue('input[name="pass[pass2]"]', password)
       .perform((client, done) => {
-        if (role) {
-          client.click(`input[name="roles[${role}]`, () => {
+        if (permissions.length) {
+          client.click(`input[name="roles[${roleName}]`, () => {
             done();
           });
         } else {
@@ -45,7 +45,7 @@ exports.command = function drupalCreateUser(
         }
       })
       .submitForm('#user-register-form')
-      .assert.containsText(
+      .assert.textContains(
         '[data-drupal-messages]',
         'Created a new user account',
         `User "${name}" was created successfully.`,

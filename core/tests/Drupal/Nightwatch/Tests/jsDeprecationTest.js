@@ -20,7 +20,7 @@ module.exports = {
     browser
       .drupalRelativeURL('/js_deprecation_test')
       .waitForElementVisible('body', 1000)
-      .assert.containsText('h1', 'JsDeprecationTest')
+      .assert.textContains('h1', 'JsDeprecationTest')
       .assert.deprecationErrorExists(
         'This function is deprecated for testing purposes.',
       )

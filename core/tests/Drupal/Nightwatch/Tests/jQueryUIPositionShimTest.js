@@ -782,7 +782,7 @@ module.exports = {
   },
   'test position': (browser) => {
     browser
-      .resizeWindow(1200, 600)
+      .setWindowSize(1200, 600)
       .drupalRelativeURL('/position-shim-test')
       .waitForElementPresent('#position-reference-1', 1000)
       .executeAsync(

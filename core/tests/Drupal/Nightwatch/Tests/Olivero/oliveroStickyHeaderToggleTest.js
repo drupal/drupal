@@ -9,7 +9,7 @@ module.exports = {
         'core/tests/Drupal/TestSite/TestSiteOliveroInstallTestScript.php',
       installProfile: 'minimal',
     });
-    browser.resizeWindow(1400, 800);
+    browser.setWindowSize(1400, 800);
   },
   after(browser) {
     browser.drupalUninstall();
