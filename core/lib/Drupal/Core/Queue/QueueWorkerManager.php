@@ -40,11 +40,16 @@ class QueueWorkerManager extends DefaultPluginManager implements QueueWorkerMana
   public function processDefinition(&$definition, $plugin_id) {
     parent::processDefinition($definition, $plugin_id);
 
-    // Assign a default time if a cron is specified.
+    // Safeguard to ensure the default lease time is used in the case of a
+    // malformed queue worker annotation where cron is specified without a time,
+    // or an invalid time is provided.
+    //
+    // @see \Drupal\Core\Cron::processQueues()
     if (isset($definition['cron'])) {
-      $definition['cron'] += [
-        'time' => 15,
-      ];
+      $time = $definition['cron']['time'] ?? 0;
+      if ($time <= 0) {
+        $definition['cron']['time'] = self::DEFAULT_QUEUE_CRON_TIME;
+      }
     }
   }
 
