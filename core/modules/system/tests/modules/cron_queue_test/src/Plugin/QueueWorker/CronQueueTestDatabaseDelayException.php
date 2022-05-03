@@ -11,10 +11,7 @@ use Drupal\Core\Queue\QueueWorkerBase;
  * @QueueWorker(
  *   id = "cron_queue_test_database_delay_exception",
  *   title = @Translation("Database delay exception test"),
- *   cron = {
- *     "time" = 1,
- *     "lease_time" = 2
- *   }
+ *   cron = {"time" = 1}
  * )
  */
 class CronQueueTestDatabaseDelayException extends QueueWorkerBase {
