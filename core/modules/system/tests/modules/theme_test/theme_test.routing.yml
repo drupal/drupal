@@ -1,10 +1,3 @@
-theme_test.info_stylesheets:
-  path: '/theme-test/info/stylesheets'
-  defaults:
-    _controller: '\Drupal\theme_test\ThemeTestController::testInfoStylesheets'
-  requirements:
-    _access: 'TRUE'
-
 theme_test.template_test:
   path: '/theme-test/template-test'
   defaults:

@@ -63,13 +63,6 @@ class ActiveTheme {
   protected $extension;
 
   /**
-   * The stylesheets which are set to be removed by the theme.
-   *
-   * @var array
-   */
-  protected $styleSheetsRemove;
-
-  /**
    * The libraries provided by the theme.
    *
    * @var array
@@ -109,7 +102,6 @@ class ActiveTheme {
       'engine' => 'twig',
       'owner' => 'twig',
       'logo' => '',
-      'stylesheets_remove' => [],
       'libraries' => [],
       'extension' => 'html.twig',
       'base_theme_extensions' => [],
@@ -123,7 +115,6 @@ class ActiveTheme {
     $this->path = $values['path'];
     $this->engine = $values['engine'];
     $this->owner = $values['owner'];
-    $this->styleSheetsRemove = $values['stylesheets_remove'];
     $this->libraries = $values['libraries'];
     $this->extension = $values['extension'];
     $this->baseThemeExtensions = $values['base_theme_extensions'];
@@ -186,26 +177,6 @@ class ActiveTheme {
    */
   public function getLibraries() {
     return $this->libraries;
-  }
-
-  /**
-   * Returns the removed stylesheets by the theme.
-   *
-   * This method is used as a BC layer to access the contents of the deprecated
-   * stylesheets-remove key in theme info.yml files. It will be removed once it
-   * is no longer needed in Drupal 10.
-   *
-   * @return mixed
-   *   The removed stylesheets.
-   *
-   * @see https://www.drupal.org/node/2497313
-   *
-   * @todo Remove in Drupal 10.0.x.
-   *
-   * @internal
-   */
-  public function getStyleSheetsRemove() {
-    return $this->styleSheetsRemove;
   }
 
   /**

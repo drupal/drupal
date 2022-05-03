@@ -56,7 +56,7 @@ class ThemeInfoTest extends BrowserTestBase {
   }
 
   /**
-   * Tests stylesheets-remove.
+   * Tests libraries-override.
    */
   public function testStylesheets() {
     $this->themeInstaller->install(['test_basetheme', 'test_subtheme']);
