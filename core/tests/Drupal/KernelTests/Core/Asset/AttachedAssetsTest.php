@@ -290,7 +290,7 @@ class AttachedAssetsTest extends KernelTestBase {
     $js_render_array = \Drupal::service('asset.js.collection_renderer')->render($js);
 
     $rendered_js = $this->renderer->renderPlain($js_render_array);
-    $this->assertStringContainsString('core/assets/vendor/backbone/backbone-min.js?v=1.4.0', $rendered_js, 'JavaScript version identifiers correctly appended to URLs');
+    $this->assertStringContainsString('core/assets/vendor/backbone/backbone-min.js?v=1.4.1', $rendered_js, 'JavaScript version identifiers correctly appended to URLs');
   }
 
   /**
