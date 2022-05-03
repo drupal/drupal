@@ -241,7 +241,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
     try {
       // Clean up the queue for failed batches.
       $this->connection->delete(static::TABLE_NAME)
-        ->condition('created', \Drupal::time()->getRequestTime() - 864000, '<')
+        ->condition('created', REQUEST_TIME - 864000, '<')
         ->condition('name', 'drupal_batch:%', 'LIKE')
         ->execute();
 
@@ -252,7 +252,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
           'expire' => 0,
         ])
         ->condition('expire', 0, '<>')
-        ->condition('expire', \Drupal::time()->getRequestTime(), '<')
+        ->condition('expire', REQUEST_TIME, '<')
         ->execute();
     }
     catch (\Exception $e) {
