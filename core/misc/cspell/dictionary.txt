@@ -32,6 +32,8 @@ alternatif
 amet
 amphibius
 ampm
+analyse
+analysed
 andif
 annot
 anonyme
@@ -255,6 +257,7 @@ codesniffer
 colgroups
 collegehumor
 colonpos
+colour
 colspans
 columnschange
 comida
@@ -942,7 +945,6 @@ nodo
 noemptytag
 noevent
 nofields
-noindex
 nojs
 nolink
 nomask
@@ -1154,6 +1156,7 @@ readmore
 readonlydir
 readystate
 realelement
+realise
 realpaths
 realword
 rebuilder
