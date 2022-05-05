@@ -22,7 +22,6 @@
   font-size: 1rem;
   line-height: 1.5rem;
   -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none; /* Being able to control inner box shadow on iOS. */
 }
 
@@ -40,7 +39,6 @@
 
 .form-element--type-search[type="search"] {
   -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none;
   box-sizing: border-box;
 }

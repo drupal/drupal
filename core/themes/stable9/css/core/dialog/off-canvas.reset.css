@@ -170,7 +170,6 @@
     perspective-origin: 50% 50%;
     position: static;
     right: auto;
-    -moz-tab-size: 8;
     -o-tab-size: 8;
     tab-size: 8;
     table-layout: auto;
@@ -436,7 +435,6 @@
       perspective-origin: 50% 50%;
       position: static;
       right: auto;
-      -moz-tab-size: 8;
       -o-tab-size: 8;
       tab-size: 8;
       table-layout: auto;

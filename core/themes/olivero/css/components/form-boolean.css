@@ -24,7 +24,6 @@ input[type="radio"] {
   background-position: 50% 50%;
   background-size: 1.125rem 1.125rem;
   -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none
 }
 

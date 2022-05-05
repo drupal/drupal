@@ -41,7 +41,6 @@ select {
   font-family: inherit;
   font-size: inherit;
   -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none
 }
 
@@ -115,16 +114,14 @@ select {
 select {
     background-image: none;
     -webkit-appearance: listbox;
-    -moz-appearance: listbox;
     appearance: listbox /* Default <select> appearance value for modern browsers. */
 
     /* Lets browser set <select> appearance to whatever the browser's default is. */
 }
-    @supports ((-webkit-appearance: revert) or (-moz-appearance: revert) or (appearance: revert)) {
+    @supports ((-webkit-appearance: revert) or (appearance: revert)) {
 
 select {
       -webkit-appearance: revert;
-      -moz-appearance: revert;
       appearance: revert
 }
     }
