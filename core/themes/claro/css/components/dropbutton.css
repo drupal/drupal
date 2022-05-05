@@ -142,7 +142,6 @@
   background: var(--button-bg-color);
   font-size: 1px; /* iOS Safari sets a minimum button-width based on font-size. */
   -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none;
 }
 
@@ -263,7 +262,6 @@
   font-weight: 700;
   line-height: var(--dropbutton-line-height);
   -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none;
   -webkit-font-smoothing: antialiased;
 }

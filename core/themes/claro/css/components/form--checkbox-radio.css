@@ -85,14 +85,12 @@
   background-size: 100% 100%;
   box-shadow: 0 0 0 4px transparent;
   -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none;
 }
 
 @media (forced-colors: active) {
   .form-boolean {
     -webkit-appearance: auto;
-    -moz-appearance: auto;
     appearance: auto;
   }
 }

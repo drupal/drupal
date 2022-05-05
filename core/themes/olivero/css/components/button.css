@@ -59,7 +59,6 @@
   font-size: var(--font-size-l);
   font-weight: 700;
   -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none;
   -webkit-font-smoothing: antialiased
 }

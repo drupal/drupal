@@ -37,7 +37,6 @@ input[type="radio"] {
   background-position: 50% 50%;
   background-size: var(--sp1) var(--sp1);
   -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none
 }
 
