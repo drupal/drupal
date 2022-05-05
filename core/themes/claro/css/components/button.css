@@ -50,7 +50,6 @@
   font-weight: 700;
   line-height: 1rem;
   -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none;
   -webkit-font-smoothing: antialiased;  /* 3 */
 }
@@ -205,6 +204,5 @@ a.button--danger:active {
   border: 0;
   background: none;
   -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none;
 }

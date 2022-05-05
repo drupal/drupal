@@ -25,6 +25,8 @@ alternatif
 amet
 amphibius
 ampm
+analyse
+analysed
 andif
 annot
 anonyme
@@ -66,7 +68,6 @@ autocompleting
 autocreate
 autocreated
 autocreation
-autodetect
 autoescape
 autoescaped
 autoescaping
@@ -89,7 +90,6 @@ autowired
 autowiring
 backlink
 backlinks
-backport
 backreferences
 backtraces
 bakeware
@@ -236,6 +236,7 @@ codesniffer
 colgroups
 collegehumor
 colonpos
+colour
 colspans
 columnschange
 comida
@@ -435,7 +436,6 @@ enim
 enoki
 enregistrer
 entit
-entitynodeedit
 entitytype
 entityviewedit
 eridani
@@ -791,7 +791,7 @@ metapackage
 metapackages
 metatag
 metatags
-meΦΩ
+meφω
 miaus
 middlewares
 midgardmvc
@@ -904,7 +904,6 @@ nodo
 noemptytag
 noevent
 nofields
-noindex
 nojs
 nolink
 nomask
@@ -1112,6 +1111,7 @@ readmore
 readonlydir
 readystate
 realelement
+realise
 realpaths
 realword
 rebuilder
@@ -1368,7 +1368,6 @@ testcase
 testcases
 testcontent
 testcontextawareblock
-testcontextual
 testdescription
 testdialog
 testdisplay
@@ -1507,7 +1506,6 @@ unflagged
 ungenerated
 ungroup
 ungroupable
-ungrouped
 unhashed
 unhide
 unidecode
@@ -1532,7 +1530,6 @@ unmunged
 unmunging
 unoptimized
 unpad
-unparsable
 unparseable
 unpermissioned
 unprefix
@@ -1692,9 +1689,8 @@ zwei
 zwjhek
 zxvf
 zzgroup
-Èxample
-Über
-Übersetzung
 åwesome
+èxample
 über
-Ȅchȏ
+übersetzung
+ȅchȏ
