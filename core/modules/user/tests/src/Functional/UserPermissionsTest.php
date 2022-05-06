@@ -247,48 +247,4 @@ class UserPermissionsTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(403);
   }
 
-  /**
-   * Verify that bundle-specific pages work properly.
-   */
-  public function testAccessBundlePermission() {
-    $this->drupalLogin($this->adminUser);
-
-    \Drupal::service('module_installer')->install(['block_content', 'taxonomy']);
-    $this->grantPermissions(Role::load($this->rid), ['administer blocks', 'administer taxonomy']);
-
-    // Bundles that do not have permissions have no permissions pages.
-    $edit = [];
-    $edit['label'] = 'Test block type';
-    $edit['id'] = 'test_block_type';
-    $this->drupalGet('admin/structure/block/block-content/types/add');
-    $this->submitForm($edit, 'Save');
-    $this->drupalGet('admin/structure/block/block-content/manage/test_block_type/permissions');
-    $this->assertSession()->statusCodeEquals(403);
-
-    // Permissions can be changed using the bundle-specific pages.
-    $edit = [];
-    $edit['name'] = 'Test vocabulary';
-    $edit['vid'] = 'test_vocabulary';
-    $this->drupalGet('admin/structure/taxonomy/add');
-    $this->submitForm($edit, 'Save');
-
-    $this->drupalGet('admin/structure/taxonomy/manage/test_vocabulary/overview/permissions');
-    $this->assertSession()->checkboxNotChecked('authenticated[create terms in test_vocabulary]');
-    $this->assertSession()->fieldExists('authenticated[create terms in test_vocabulary]')->check();
-    $this->getSession()->getPage()->pressButton('Save permissions');
-    $this->assertSession()->pageTextContains('The changes have been saved.');
-    $this->assertSession()->checkboxChecked('authenticated[create terms in test_vocabulary]');
-
-    // Typos produce 404 response, not server errors.
-    $this->drupalGet('admin/structure/taxonomy/manage/test_typo/overview/permissions');
-    $this->assertSession()->statusCodeEquals(404);
-
-    // Anonymous users cannot access any of these pages.
-    $this->drupalLogout();
-    $this->drupalGet('admin/structure/taxonomy/manage/test_vocabulary/overview/permissions');
-    $this->assertSession()->statusCodeEquals(403);
-    $this->drupalGet('admin/structure/block/block-content/manage/test_block_type/permissions');
-    $this->assertSession()->statusCodeEquals(403);
-  }
-
 }

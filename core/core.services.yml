@@ -1074,11 +1074,6 @@ services:
     class: Drupal\Core\Entity\Enhancer\EntityRouteEnhancer
     tags:
       - { name: route_enhancer, priority: 20 }
-  route_enhancer.entity_bundle:
-    class: Drupal\Core\Entity\Enhancer\EntityBundleRouteEnhancer
-    arguments: ['@entity_type.manager']
-    tags:
-      - { name: route_enhancer }
   route_enhancer.entity_revision:
     class: Drupal\Core\Routing\Enhancer\EntityRevisionRouteEnhancer
     tags:
