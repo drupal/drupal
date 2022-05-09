@@ -26,6 +26,9 @@ use Drupal\Core\Url;
  *       "add" = "Drupal\contact\ContactFormEditForm",
  *       "edit" = "Drupal\contact\ContactFormEditForm",
  *       "delete" = "Drupal\Core\Entity\EntityDeleteForm"
+ *     },
+ *     "route_provider" = {
+ *       "permissions" = "Drupal\user\Entity\EntityPermissionsRouteProviderWithCheck",
  *     }
  *   },
  *   config_prefix = "form",
@@ -38,6 +41,7 @@ use Drupal\Core\Url;
  *   links = {
  *     "delete-form" = "/admin/structure/contact/manage/{contact_form}/delete",
  *     "edit-form" = "/admin/structure/contact/manage/{contact_form}",
+ *     "entity-permissions-form" = "/admin/structure/contact/manage/{contact_form}/permissions",
  *     "collection" = "/admin/structure/contact",
  *     "canonical" = "/contact/{contact_form}",
  *   },
