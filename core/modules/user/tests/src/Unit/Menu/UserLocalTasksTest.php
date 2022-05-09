@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\user\Unit\Menu;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
 
 /**
@@ -14,6 +15,14 @@ class UserLocalTasksTest extends LocalTaskIntegrationTestBase {
   protected function setUp(): void {
     $this->directoryList = ['user' => 'core/modules/user'];
     parent::setUp();
+
+    // Add services required for user local tasks.
+    $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
+    $entity_type_manager->expects($this->any())
+      ->method('getDefinitions')
+      ->will($this->returnValue([]));
+    $this->container->set('entity_type.manager', $entity_type_manager);
+    $this->container->set('string_translation', $this->getStringTranslationStub());
   }
 
   /**
