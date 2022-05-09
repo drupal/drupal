@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Route;
  *
  * @internal
  */
-class UserPermissionsBundleForm extends UserPermissionsForm {
+class EntityPermissionsForm extends UserPermissionsForm {
 
   /**
    * The configuration entity manager.
@@ -46,7 +46,7 @@ class UserPermissionsBundleForm extends UserPermissionsForm {
   protected $bundle;
 
   /**
-   * Constructs a new UserPermissionsBundleForm.
+   * Constructs a new EntityPermissionsForm.
    *
    * @param \Drupal\user\PermissionHandlerInterface $permission_handler
    *   The permission handler.
@@ -170,12 +170,7 @@ class UserPermissionsBundleForm extends UserPermissionsForm {
       return AccessResult::forbidden();
     }
 
-    $granularity = $this->entityTypeManager
-      ->getDefinition($this->bundle->getEntityType()->getBundleOf())
-      ->getPermissionGranularity();
-    $bundle_has_permissions = $granularity === 'bundle' || (bool) $this->permissionsByProvider();
-
-    return AccessResult::allowedIf($bundle_has_permissions);
+    return AccessResult::allowedIf((bool) $this->permissionsByProvider());
   }
 
 }

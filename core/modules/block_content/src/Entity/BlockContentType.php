@@ -26,7 +26,8 @@ use Drupal\block_content\BlockContentTypeInterface;
  *       "delete" = "Drupal\block_content\Form\BlockContentTypeDeleteForm"
  *     },
  *     "route_provider" = {
- *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider"
+ *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
+ *       "permissions" = "Drupal\user\Entity\EntityPermissionsRouteProviderWithCheck",
  *     },
  *     "list_builder" = "Drupal\block_content\BlockContentTypeListBuilder"
  *   },
@@ -40,6 +41,7 @@ use Drupal\block_content\BlockContentTypeInterface;
  *   links = {
  *     "delete-form" = "/admin/structure/block/block-content/manage/{block_content_type}/delete",
  *     "edit-form" = "/admin/structure/block/block-content/manage/{block_content_type}",
+ *     "entity-permissions-form" = "/admin/structure/block/block-content/manage/{block_content_type}/permissions",
  *     "collection" = "/admin/structure/block/block-content/types",
  *   },
  *   config_export = {

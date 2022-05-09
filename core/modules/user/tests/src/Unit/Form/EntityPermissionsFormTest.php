@@ -11,7 +11,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Tests\UnitTestCase;
-use Drupal\user\Form\UserPermissionsBundleForm;
+use Drupal\user\Form\EntityPermissionsForm;
 use Drupal\user\PermissionHandlerInterface;
 use Drupal\user\RoleStorageInterface;
 use Symfony\Component\Routing\Route;
@@ -19,10 +19,10 @@ use Symfony\Component\Routing\Route;
 /**
  * Tests the permissions administration form for a bundle.
  *
- * @coversDefaultClass \Drupal\user\Form\UserPermissionsBundleForm
+ * @coversDefaultClass \Drupal\user\Form\EntityPermissionsForm
  * @group user
  */
-class UserPermissionsBundleFormTest extends UnitTestCase {
+class EntityPermissionsFormTest extends UnitTestCase {
 
   /**
    * Tests generating the permissions list.
@@ -73,7 +73,7 @@ class UserPermissionsBundleFormTest extends UnitTestCase {
       ->willReturn($entity_type);
     $entity_type_manager = $prophecy->reveal();
 
-    $bundle_form = new UserPermissionsBundleForm($permission_handler, $role_storage, $module_handler, $config_manager, $entity_type_manager);
+    $bundle_form = new EntityPermissionsForm($permission_handler, $role_storage, $module_handler, $config_manager, $entity_type_manager);
 
     // Mock the method parameters.
     $route = new Route('some.path');
