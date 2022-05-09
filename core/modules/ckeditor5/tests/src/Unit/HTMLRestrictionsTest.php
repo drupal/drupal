@@ -902,7 +902,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
     yield 'attribute restrictions are different: <a hreflang=*> vs <a hreflang="en"> — vice versa' => [
       'a' => new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
       'b' => new HTMLRestrictions(['a' => ['hreflang' => TRUE]]),
-      'diff' => 'a',
+      'diff' => HTMLRestrictions::emptySet(),
       'intersection' => 'a',
       'union' => 'b',
     ];
@@ -1196,7 +1196,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
     yield 'global attribute tag + global attribute tag: overlap in attributes, different attribute value restrictions' => [
       'a' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
       'b' => new HTMLRestrictions(['*' => ['bar' => TRUE, 'dir' => TRUE, 'foo' => FALSE]]),
-      'diff' => 'a',
+      'diff' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE]]),
       'intersection' => new HTMLRestrictions(['*' => ['bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE], 'foo' => FALSE]]),
       'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => TRUE, 'dir' => TRUE]]),
     ];
