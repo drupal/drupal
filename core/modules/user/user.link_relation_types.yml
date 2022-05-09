@@ -1,0 +1,5 @@
+# User extension relation types.
+# See https://tools.ietf.org/html/rfc5988#section-4.2.
+entity-permissions-form:
+  uri: https://drupal.org/link-relations/permissions
+  description: A form where bundle-related permissions can be managed.

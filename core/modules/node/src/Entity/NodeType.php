@@ -26,6 +26,9 @@ use Drupal\node\NodeTypeInterface;
  *       "edit" = "Drupal\node\NodeTypeForm",
  *       "delete" = "Drupal\node\Form\NodeTypeDeleteConfirm"
  *     },
+ *     "route_provider" = {
+ *       "permissions" = "Drupal\user\Entity\EntityPermissionsRouteProvider",
+ *     },
  *     "list_builder" = "Drupal\node\NodeTypeListBuilder",
  *   },
  *   admin_permission = "administer content types",
@@ -38,6 +41,7 @@ use Drupal\node\NodeTypeInterface;
  *   links = {
  *     "edit-form" = "/admin/structure/types/manage/{node_type}",
  *     "delete-form" = "/admin/structure/types/manage/{node_type}/delete",
+ *     "entity-permissions-form" = "/admin/structure/types/manage/{node_type}/permissions",
  *     "collection" = "/admin/structure/types",
  *   },
  *   config_export = {

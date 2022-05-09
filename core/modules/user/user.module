@@ -1303,12 +1303,14 @@ function user_filter_format_disable(FilterFormatInterface $filter_format) {
  * Implements hook_entity_operation().
  */
 function user_entity_operation(EntityInterface $entity) {
-  // Add Manage permissions link if this entity type is the bundle of another.
-  if (!$bundle_entity_type = $entity->bundle()) {
+  // Add Manage permissions link if this entity type defines the permissions
+  // link template.
+  if (!$entity->hasLinkTemplate('entity-permissions-form')) {
     return [];
   }
 
-  $route = "entity.$bundle_entity_type.permission_form";
+  $bundle_entity_type = $entity->bundle();
+  $route = "entity.$bundle_entity_type.entity_permissions_form";
   if (empty(\Drupal::service('router.route_provider')->getRoutesByNames([$route]))) {
     return [];
   }

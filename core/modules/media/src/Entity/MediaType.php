@@ -30,6 +30,7 @@ use Drupal\media\MediaTypeInterface;
  *     "list_builder" = "Drupal\media\MediaTypeListBuilder",
  *     "route_provider" = {
  *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
+ *       "permissions" = "Drupal\user\Entity\EntityPermissionsRouteProvider",
  *     }
  *   },
  *   admin_permission = "administer media types",
@@ -55,6 +56,7 @@ use Drupal\media\MediaTypeInterface;
  *     "add-form" = "/admin/structure/media/add",
  *     "edit-form" = "/admin/structure/media/manage/{media_type}",
  *     "delete-form" = "/admin/structure/media/manage/{media_type}/delete",
+ *     "entity-permissions-form" = "/admin/structure/media/manage/{media_type}/permissions",
  *     "collection" = "/admin/structure/media",
  *   },
  * )
