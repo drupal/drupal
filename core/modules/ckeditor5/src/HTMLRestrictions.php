@@ -477,7 +477,8 @@ final class HTMLRestrictions {
           return FALSE;
         }
         // Both objects have lists of allowed attributes: keep the DiffArray
-        // result.
+        // result and apply postprocessing after this array_filter() call,
+        // because this can only affect tag-level differences.
         // @see ::validateAllowedRestrictionsPhase3()
         assert(is_array($other->elements[$tag]));
         return TRUE;
@@ -485,17 +486,22 @@ final class HTMLRestrictions {
       ARRAY_FILTER_USE_BOTH
     );
 
-    // Special case: wildcard attributes, and the ability to define restrictions
-    // for all concrete attributes matching them using:
-    // - prefix wildcard, f.e. `data-*`, to match `data-foo`, `data-bar`, etc.
-    // - infix wildcard, f.e. `*-entity-*`
-    // - suffix wildcard, f.e. `foo-*`
+    // Attribute-level postprocessing for two special cases:
+    // - wildcard attribute names
+    // - per attribute name: attribute value restrictions in $this vs all values
+    //   allowed in $other
     foreach ($diff_elements as $tag => $tag_config) {
       // If there are no per-attribute restrictions for this tag in either
-      // operand, then no wildcard attribute postprocessing is needed.
-      if (!(isset($other->elements[$tag]) && is_array($other->elements[$tag]))) {
+      // operand, then no postprocessing is needed.
+      if (!is_array($tag_config) || !(isset($other->elements[$tag]) && is_array($other->elements[$tag]))) {
         continue;
       }
+
+      // Special case: wildcard attributes, and the ability to define
+      // restrictions for all concrete attributes matching them using:
+      // - prefix wildcard, f.e. `*-foo`
+      // - infix wildcard, f.e. `*-entity-*`
+      // - suffix wildcard, f.e. `data-*`, to match `data-foo`, `data-bar`, etc.
       $wildcard_attributes = array_filter(array_keys($other->elements[$tag]), [__CLASS__, 'isWildcardAttributeName']);
       foreach ($wildcard_attributes as $wildcard_attribute_name) {
         $regex = self::getRegExForWildCardAttributeName($wildcard_attribute_name);
@@ -509,13 +515,22 @@ final class HTMLRestrictions {
             unset($tag_config[$html_tag_attribute_name]);
           }
         }
+      }
 
-        if ($tag_config !== []) {
-          $diff_elements[$tag] = $tag_config;
+      // Attribute value restrictions in $this, all values allowed in $other.
+      foreach ($tag_config as $html_tag_attribute_name => $html_tag_attribute_restrictions) {
+        if (is_array($html_tag_attribute_restrictions) && isset($other->elements[$tag][$html_tag_attribute_name]) && $other->elements[$tag][$html_tag_attribute_name] === TRUE) {
+          unset($tag_config[$html_tag_attribute_name]);
         }
-        else {
-          unset($diff_elements[$tag]);
-        }
+      }
+
+      // Ensure $diff_elements continues to be structured in a way that is valid
+      // for a HTMLRestrictions object to be constructed from it.
+      if ($tag_config !== []) {
+        $diff_elements[$tag] = $tag_config;
+      }
+      else {
+        unset($diff_elements[$tag]);
       }
     }
 
@@ -631,9 +646,9 @@ final class HTMLRestrictions {
 
     // Special case: wildcard attributes, and the ability to define restrictions
     // for all concrete attributes matching them using:
-    // - prefix wildcard, f.e. `data-*`, to match `data-foo`, `data-bar`, etc.
+    // - prefix wildcard, f.e. `*-foo`
     // - infix wildcard, f.e. `*-entity-*`
-    // - suffix wildcard, f.e. `foo-*`
+    // - suffix wildcard, f.e. `data-*`, to match `data-foo`, `data-bar`, etc.
     foreach ($intersection as $tag => $tag_config) {
       // If there are no per-attribute restrictions for this tag in either
       // operand, then no wildcard attribute postprocessing is needed.
@@ -789,9 +804,9 @@ final class HTMLRestrictions {
 
     // Special case: wildcard attributes, and the ability to define restrictions
     // for all concrete attributes matching them using:
-    // - prefix wildcard, f.e. `data-*`, to match `data-foo`, `data-bar`, etc.
+    // - prefix wildcard, f.e. `*-foo`
     // - infix wildcard, f.e. `*-entity-*`
-    // - suffix wildcard, f.e. `foo-*`
+    // - suffix wildcard, f.e. `data-*`, to match `data-foo`, `data-bar`, etc.
     foreach ($union as $tag => $tag_config) {
       // If there are no per-attribute restrictions for this tag, then no
       // wildcard attribute postprocessing is needed.
