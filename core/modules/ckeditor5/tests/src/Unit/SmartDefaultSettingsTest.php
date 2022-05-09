@@ -200,15 +200,15 @@ class SmartDefaultSettingsTest extends UnitTestCase {
             // Because `<foo bar="a">` allowed.
             'a' => [
               TRUE => [
-                'test_attr_values' => 1002,
-                'test_tags_and_attr_values' => 2002102,
+                'test_attr_values' => 0,
+                'test_tags_and_attr_values' => 2001100,
               ],
             ],
             // Because `<foo bar="b">` allowed.
             'b' => [
               TRUE => [
-                'test_attr_values' => 1002,
-                'test_tags_and_attr_values' => 2002102,
+                'test_attr_values' => 0,
+                'test_tags_and_attr_values' => 2001100,
               ],
             ],
           ],
@@ -216,9 +216,9 @@ class SmartDefaultSettingsTest extends UnitTestCase {
           '-attributes-none-' => [
             'test_all_attrs' => 100000,
             'test_attrs' => 1100,
-            'test_attr_values' => 1002,
+            'test_attr_values' => 0,
             'test_tags_and_attrs' => 2001100,
-            'test_tags_and_attr_values' => 2002102,
+            'test_tags_and_attr_values' => 2001100,
           ],
         ],
       ],
