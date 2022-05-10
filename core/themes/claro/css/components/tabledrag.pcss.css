@@ -105,7 +105,7 @@ body.drag {
   padding: var(--space-xs) var(--space-m);
   content: "";
   transition: transform 0.1s ease-in-out 0s;
-  background: url(../../images/icons/222330/tabledrag-handle.svg) no-repeat center;
+  background: url(../../images/icons/000f33/tabledrag-handle.svg) no-repeat center;
 }
 [dir="rtl"] .tabledrag-handle::after {
   margin-right: calc(var(--space-m) * -1);
@@ -123,7 +123,7 @@ body.drag {
   .tabledrag-handle::after {
     content: "";
     background: linktext;
-    mask-image: url(../../images/icons/222330/tabledrag-handle.svg);
+    mask-image: url(../../images/icons/000f33/tabledrag-handle.svg);
     mask-repeat: no-repeat;
     mask-position: center;
   }

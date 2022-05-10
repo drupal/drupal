@@ -24,7 +24,7 @@ body {
 
 a,
 .link {
-  color: #003cc5;
+  color: #003ecc;
 }
 
 a:hover,
@@ -42,7 +42,7 @@ a:hover,
 
 a:active,
 .link:active {
-  color: #00339a;
+  color: #002e9a;
 }
 
 hr {
@@ -144,7 +144,7 @@ blockquote::before {
   position: absolute;
   left: -2.5rem; /* LTR */
   content: open-quote;
-  color: #003cc5;
+  color: #003ecc;
   font-family: "Times New Roman", times, serif;
   font-size: 3rem;
   line-height: 1em;

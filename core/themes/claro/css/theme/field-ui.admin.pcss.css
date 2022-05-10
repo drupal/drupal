@@ -53,7 +53,7 @@
 /* Settings editing subform. */
 .draggable.field-plugin-settings-editing,
 .draggable.drag-previous.field-plugin-settings-editing {
-  background: #d5e9f2;
+  background: var(--color-blue-050);
 }
 
 .field-plugin-settings-editing td {

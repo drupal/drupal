@@ -50,7 +50,7 @@
 .form-boolean--type-radio:checked::-ms-check {
   color: transparent; /* IE */
   border-color: var(--input--focus-border-color);
-  background-image: url(../../images/icons/004adc/circle.svg);
+  background-image: url(../../images/icons/003ecc/circle.svg);
   box-shadow: inset 0 0 0 1px var(--input--focus-border-color);
 }
 .form-boolean--type-checkbox:checked:active::-ms-check,
@@ -60,7 +60,7 @@
 }
 .form-boolean--type-radio:checked::-ms-check {
   border-color: var(--input--focus-border-color);
-  background-image: url(../../images/icons/004adc/circle.svg);
+  background-image: url(../../images/icons/003ecc/circle.svg);
   box-shadow: inset 0 0 0 1px var(--input--focus-border-color);
 }
 .form-boolean--type-radio:checked:focus::-ms-check {
@@ -69,7 +69,7 @@
 .form-boolean--type-radio:checked:active::-ms-check,
 .form-boolean--type-radio:checked:hover::-ms-check {
   border-color: var(--input-fg-color);
-  background-image: url(../../images/icons/222330/circle.svg);
+  background-image: url(../../images/icons/000f33/circle.svg);
   box-shadow: inset 0 0 0 1px var(--input-fg-color);
 }
 .form-boolean--type-radio:checked:focus:active::-ms-check,

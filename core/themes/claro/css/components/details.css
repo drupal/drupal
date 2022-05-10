@@ -265,7 +265,7 @@
 [open] .claro-details__summary--accordion,
 [open] .claro-details__summary--accordion-item,
 [open] .claro-details__summary--vertical-tabs-item {
-  color: #003cc5;
+  color: #003ecc;
 }
 
 .claro-details__summary:hover::before,
@@ -307,8 +307,8 @@
 }
 
 .claro-details__summary:hover {
-  color: #003cc5;
-  background-color: #f0f5fd;
+  color: #003ecc;
+  background-color: #f5f8ff;
 }
 
 /**
@@ -327,7 +327,7 @@
 [open] > .claro-details__summary--vertical-tabs-item:not(:focus):not(:active)::after,
 .collapse-processed[open] > .claro-details__summary--vertical-tabs-item .details-title:not(:focus)::after {
   opacity: 1;
-  border: 3px solid #003cc5;
+  border: 3px solid #003ecc;
   border-width: 0 0 0 3px; /* LTR */
   box-shadow: none;
 }
@@ -362,7 +362,7 @@
 }
 
 .claro-details[open] > .claro-details__summary:focus {
-  color: #003cc5;
+  color: #003ecc;
 }
 
 /**

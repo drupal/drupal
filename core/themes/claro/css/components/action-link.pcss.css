@@ -191,7 +191,7 @@
   background-image: url(../../images/icons/0036b1/plus.svg);
 }
 .action-link--icon-plus:active::before {
-  background-image: url(../../images/icons/00309e/plus.svg);
+  background-image: url(../../images/icons/002e9a/plus.svg);
 }
 
 /* Plus — danger */
@@ -228,7 +228,7 @@
   background-image: url(../../images/icons/0036b1/trash.svg);
 }
 .action-link--icon-trash:active::before {
-  background-image: url(../../images/icons/00309e/trash.svg);
+  background-image: url(../../images/icons/002e9a/trash.svg);
 }
 
 /* Trash — danger */
@@ -265,7 +265,7 @@
   background-image: url(../../images/icons/0036b1/ex.svg);
 }
 .action-link--icon-ex:active::before {
-  background-image: url(../../images/icons/00309e/ex.svg);
+  background-image: url(../../images/icons/002e9a/ex.svg);
 }
 
 /* Ex — danger */
@@ -302,7 +302,7 @@
   background-image: url(../../images/icons/0036b1/checkmark.svg);
 }
 .action-link--icon-checkmark:active::before {
-  background-image: url(../../images/icons/00309e/checkmark.svg);
+  background-image: url(../../images/icons/002e9a/checkmark.svg);
 }
 
 /* Checkmark — danger */
@@ -339,7 +339,7 @@
   background-image: url(../../images/icons/0036b1/cog.svg);
 }
 .action-link--icon-cog:active::before {
-  background-image: url(../../images/icons/00309e/cog.svg);
+  background-image: url(../../images/icons/002e9a/cog.svg);
 }
 
 /* Cog — danger */
@@ -376,7 +376,7 @@
   background-image: url(../../images/icons/0036b1/show.svg);
 }
 .action-link--icon-show:active::before {
-  background-image: url(../../images/icons/00309e/show.svg);
+  background-image: url(../../images/icons/002e9a/show.svg);
 }
 
 /* Show - danger */
@@ -413,7 +413,7 @@
   background-image: url(../../images/icons/0036b1/hide.svg);
 }
 .action-link--icon-hide:active::before {
-  background-image: url(../../images/icons/00309e/hide.svg);
+  background-image: url(../../images/icons/002e9a/hide.svg);
 }
 
 /* Hide - danger */
@@ -450,7 +450,7 @@
   background-image: url("../../images/icons/0036b1/key.svg");
 }
 .action-link--icon-key:active::before {
-  background-image: url("../../images/icons/00309e/key.svg");
+  background-image: url("../../images/icons/002e9a/key.svg");
 }
 
 /* Key — danger */
@@ -487,7 +487,7 @@
   background-image: url("../../images/icons/0036b1/questionmark.svg");
 }
 .action-link--icon-questionmark:active::before {
-  background-image: url("../../images/icons/00309e/questionmark.svg");
+  background-image: url("../../images/icons/002e9a/questionmark.svg");
 }
 
 /* Question Mark - danger */

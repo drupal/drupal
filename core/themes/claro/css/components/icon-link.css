@@ -26,7 +26,7 @@
 
 .icon-link:hover {
   border-color: rgba(212, 212, 218, 0.8);
-  background-color: #f0f5fd;
+  background-color: #f5f8ff;
 }
 
 .icon-link:focus {
@@ -35,8 +35,8 @@
 
 .icon-link:active,
 .open > .icon-link {
-  border-color: #003cc5;
-  background-color: #003cc5;
+  border-color: #003ecc;
+  background-color: #003ecc;
 }
 
 .icon-link--small:focus {
