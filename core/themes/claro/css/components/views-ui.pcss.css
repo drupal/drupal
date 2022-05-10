@@ -181,7 +181,7 @@ details.fieldset-no-legend {
 /* @group Attachment details */
 
 #edit-display-settings-title {
-  color: #008bcb;
+  color: var(--color-blue-400);
 }
 
 /* @end */

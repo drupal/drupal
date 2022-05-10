@@ -126,7 +126,7 @@ a.button:active {
 
 .button--primary {
   color: #fff;
-  background-color: #003cc5;
+  background-color: #003ecc;
 }
 
 .button--primary:hover {
@@ -135,7 +135,7 @@ a.button:active {
 }
 
 .button--primary:active {
-  background-color: #00339a;
+  background-color: #002e9a;
 }
 
 a.button--primary:hover,

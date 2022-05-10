@@ -55,7 +55,7 @@
   height: 1.5em;
   content: "";
   background: transparent no-repeat 50% 50%;
-  background-image: url(../../images/icons/004adc/arrow-right.svg);
+  background-image: url(../../images/icons/003ecc/arrow-right.svg);
 }
 [dir="rtl"] .admin-item__link::before {
   right: 0;
@@ -65,7 +65,7 @@
 
 @media (forced-colors: active) {
   .admin-item__link::before {
-    mask-image: url(../../images/icons/004adc/arrow-right.svg);
+    mask-image: url(../../images/icons/003ecc/arrow-right.svg);
     mask-repeat: no-repeat;
     mask-position: center center;
     background-color: linktext;

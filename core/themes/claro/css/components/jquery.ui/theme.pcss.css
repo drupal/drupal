@@ -374,7 +374,7 @@
 }
 .ui-progressbar .ui-progressbar-value {
   height: 1.5em;
-  background: #0072b9 url(../../../../misc/progress.gif);
+  background: var(--color-blue-600) url(../../../../misc/progress.gif);
 }
 
 /**
@@ -411,7 +411,7 @@
 .ui-autocomplete .ui-menu-item.ui-state-focus,
 .autocomplete .ui-menu-item.ui-state-hover {
   margin: 0;
-  background: #0072b9;
+  background: var(--color-blue-600);
 }
 .ui-autocomplete .ui-state-focus a,
 .autocomplete .ui-state-hover a {

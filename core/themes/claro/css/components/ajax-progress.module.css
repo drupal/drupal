@@ -72,7 +72,7 @@
   width: 1.125rem;
   height: 1.125rem;
   animation: claro-throbber 0.75s linear infinite;
-  border: 2px solid #003cc5;
+  border: 2px solid #003ecc;
   border-right: 2px dotted transparent;
   border-radius: 50%;
 }
@@ -117,7 +117,7 @@
   height: 1.75rem; /* 28px */
   margin: -0.875rem;
   content: "";
-  border: 3px solid #003cc5;
+  border: 3px solid #003ecc;
   border-right: 3px dotted transparent;
 }
 

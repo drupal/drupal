@@ -47,9 +47,9 @@
   margin-top: -1px;
   margin-left: -1px; /* LTR */
   transition: width 0.5s ease-out;
-  border: 1px #003cc5 solid;
+  border: 1px #003ecc solid;
   border-radius: 1rem;
-  background-color: #003cc5;
+  background-color: #003ecc;
 }
 
 [dir="rtl"] .progress__bar {

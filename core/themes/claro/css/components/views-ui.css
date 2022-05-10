@@ -201,7 +201,7 @@ details.fieldset-no-legend {
 /* @group Attachment details */
 
 #edit-display-settings-title {
-  color: #008bcb;
+  color: #3371ff;
 }
 
 /* @end */
@@ -328,7 +328,7 @@ details.fieldset-no-legend {
 
 .views-tabs .add a:hover {
   color: #0036b1;
-  background-color: #f0f5fd;
+  background-color: #f5f8ff;
 }
 
 .views-tabs .add a:hover::before {
@@ -337,13 +337,13 @@ details.fieldset-no-legend {
 }
 
 .views-tabs .add a:focus {
-  background-color: #e6ecf8;
+  background-color: #e5edff;
   box-shadow: 0 0 0 3px #26a769;
 }
 
 .views-tabs .add.open a {
   color: #fff;
-  background-color: #003cc5;
+  background-color: #003ecc;
 }
 
 .views-tabs .add.open a::before {
@@ -418,7 +418,7 @@ details.fieldset-no-legend {
 .views-tabs__action-list-button.button:hover,
 .views-tabs__action-list-button.button:focus {
   color: #fff;
-  background-color: #003cc5;
+  background-color: #003ecc;
 }
 
 /* Remove outline provided by default styling */

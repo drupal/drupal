@@ -11,12 +11,12 @@
   height: 1rem; /* 16px */
   margin-top: -0.5rem; /* -8px */
   opacity: 0.5;
-  background: url(../../images/icons/222330/sort--inactive--ltr.svg) no-repeat 0 50%;
+  background: url(../../images/icons/000f33/sort--inactive--ltr.svg) no-repeat 0 50%;
   background-size: auto;
 
   @media (forced-colors: active) {
     background: linktext;
-    mask-image: url(../../images/icons/222330/sort--inactive--ltr.svg);
+    mask-image: url(../../images/icons/000f33/sort--inactive--ltr.svg);
     mask-repeat: no-repeat;
     mask-position: 0 50%;
   }
@@ -33,11 +33,11 @@ _:-ms-fullscreen, /* Only IE 11 */
 [dir="rtl"] .tablesort {
   right: auto;
   left: 1rem; /* 16px */
-  background-image: url(../../images/icons/222330/sort--inactive--rtl.svg);
+  background-image: url(../../images/icons/000f33/sort--inactive--rtl.svg);
 
   @media (forced-colors: active) {
     background: linktext;
-    mask-image: url(../../images/icons/222330/sort--inactive--rtl.svg);
+    mask-image: url(../../images/icons/000f33/sort--inactive--rtl.svg);
     mask-repeat: no-repeat;
     mask-position: 0 50%;
   }
@@ -52,20 +52,20 @@ _:-ms-fullscreen, /* Only IE 11 */
 .tablesort--asc,
 [dir="rtl"] .tablesort--asc {
   opacity: 1;
-  background-image: url(../../images/icons/004adc/sort--asc.svg);
+  background-image: url(../../images/icons/003ecc/sort--asc.svg);
 
   @media (forced-colors: active) {
     background: linktext;
-    mask-image: url(../../images/icons/004adc/sort--asc.svg);
+    mask-image: url(../../images/icons/003ecc/sort--asc.svg);
   }
 }
 .tablesort--desc,
 [dir="rtl"] .tablesort--desc {
   opacity: 1;
-  background-image: url(../../images/icons/004adc/sort--desc.svg);
+  background-image: url(../../images/icons/003ecc/sort--desc.svg);
 
   @media (forced-colors: active) {
     background: linktext;
-    mask-image: url(../../images/icons/004adc/sort--desc.svg);
+    mask-image: url(../../images/icons/003ecc/sort--desc.svg);
   }
 }

@@ -105,11 +105,11 @@
 
 .media-library-menu__link:hover {
   text-decoration: none;
-  color: #003cc5;
+  color: #003ecc;
   /* These borders are necessary to replace the dividing lines while in the hover state. */
   border-top: 1px solid #d3d4d9;
   border-bottom: 1px solid #d3d4d9;
-  background: #f0f5fd;
+  background: #f5f8ff;
 }
 
 /* This pseudo element provides the background for the hover state. */
@@ -146,7 +146,7 @@
 
 .media-library-menu__link.active {
   z-index: 2; /* The selected menu link should be on a higher level than the white masking line that hides the gray separator. */
-  color: #003cc5;
+  color: #003ecc;
   border-color: #dedfe4 transparent;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -154,17 +154,17 @@
 
 .media-library-menu__link.active:hover {
   color: #0036b1;
-  background-color: #f0f5fd;
+  background-color: #f5f8ff;
 }
 
 .media-library-menu__link.active::before {
   z-index: 1; /* The blue active-tab indication should be on a higher level than the green focus border. */
-  border-left: 4px solid #003cc5; /* LTR */
+  border-left: 4px solid #003ecc; /* LTR */
   border-radius: 2px 0 0 2px; /* LTR */
 }
 
 [dir=rtl] .media-library-menu__link.active::before {
-  border-right: 4px solid #003cc5;
+  border-right: 4px solid #003ecc;
   border-left: 0;
   border-radius: 0 2px 2px 0;
 }
@@ -451,7 +451,7 @@
   width: 1.75rem;
   height: 1.75rem;
   margin: -0.875rem;
-  border: 3px solid #003cc5;
+  border: 3px solid #003ecc;
   border-right: 3px dotted transparent;
 }
 
@@ -610,12 +610,12 @@
 }
 
 .media-library-item--grid.checked:before {
-  border-color: #5a8bed;
+  border-color: #6694ff;
 }
 
 .media-library-item--grid .form-boolean--type-checkbox:checked {
-  border-color: #5a8bed;
-  background-color: #5a8bed;
+  border-color: #6694ff;
+  background-color: #6694ff;
 }
 
 .media-library-item__click-to-select-checkbox {
@@ -833,7 +833,7 @@
 .media-library-item__remove.button:active,
 .media-library-item__remove.button:disabled:active {
   /* !important to override button class border. */
-  border-color: #003cc5 !important;
+  border-color: #003ecc !important;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3cpath fill='%23ffffff' d='M3.51 13.925c.194.194.512.195.706.001l3.432-3.431c.194-.194.514-.194.708 0l3.432 3.431c.192.194.514.193.707-.001l1.405-1.417c.191-.195.189-.514-.002-.709l-3.397-3.4c-.192-.193-.192-.514-.002-.708l3.401-3.43c.189-.195.189-.515 0-.709l-1.407-1.418c-.195-.195-.513-.195-.707-.001l-3.43 3.431c-.195.194-.516.194-.708 0l-3.432-3.431c-.195-.195-.512-.194-.706.001l-1.407 1.417c-.194.195-.194.515 0 .71l3.403 3.429c.193.195.193.514-.001.708l-3.4 3.399c-.194.195-.195.516-.001.709l1.406 1.419z'/%3e%3c/svg%3e");
 }
 
