@@ -15,7 +15,7 @@
   --tabs-base-border: 1px solid var(--color-gray-200);
   --tabs-base-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   --tabs-trigger-border: 1px solid rgba(216, 217, 224, 0.8);
-  --tabs--hover-bg-color: #e6ecf8;
+  --tabs--hover-bg-color: var(--color-bgblue-active);
 }
 
 .tabs-wrapper > nav {

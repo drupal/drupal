@@ -8,7 +8,7 @@
   /*
    * Color Palette.
    */
-  --color-absolutezero: #003cc5;
+  --color-absolutezero: var(--color-blue-600);
   --color-white: #fff;
   --color-text: var(--color-gray);
   --color-text-light: var(--color-gray-500);
@@ -21,12 +21,12 @@
   --color-lightninggreen: #26a769;
   --color-focus: var(--color-lightninggreen);
   /* Variations. */
-  --color-absolutezero-hover: #0036b1; /* 10% darker than base. */
-  --color-absolutezero-active: #00339a; /* 20% darker than base. */
+  --color-absolutezero-hover: var(--color-blue-650); /* 5% darker than base. */
+  --color-absolutezero-active: var(--color-blue-700); /* 10% darker than base. */
   --color-maximumred-hover: #c11f1f; /* 5% darker than base. */
   --color-maximumred-active: #ab1b1b; /* 10% darker than base. */
-  --color-bgblue-hover: #f0f5fd; /* 5% darker than base. */
-  --color-bgblue-active: #e6ecf8; /* 10% darker than base. */
+  --color-bgblue-hover: var(--color-blue-020); /* 2% darker than base. */
+  --color-bgblue-active: var(--color-blue-050); /* 5% darker than base. */
   --color-bgred-hover: #fdf5f5; /* 5% darker than base. */
   --color-bgred-active: #fceded; /* 10% darker than base. */
   /* Gray variations. */
@@ -42,6 +42,21 @@
   --color-gray-100: #dedfe4;
   --color-gray-050: #f3f4f9;
   --color-gray-025: #f9faff;
+  /* Blue variations. */
+  --color-blue: var(--color-blue-600);
+  --color-blue-900: #000f33;
+  --color-blue-800: #001f66;
+  --color-blue-700: #002e9a;
+  --color-blue-650: #0036b1;
+  --color-blue-600: #003ecc;
+  --color-blue-500: #004eff;
+  --color-blue-400: #3371ff;
+  --color-blue-300: #6694ff;
+  --color-blue-200: #99b8ff;
+  --color-blue-100: #ccdbff;
+  --color-blue-070: #f3f4f9;
+  --color-blue-050: #e5edff;
+  --color-blue-020: #f5f8ff;
   /*
    * Base.
    */
@@ -104,7 +119,6 @@
   --input-border-color: var(--color-gray-500);
   --input--hover-border-color: var(--color-text);
   --input--focus-border-color: var(--color-absolutezero);
-  --input--focus-shadow-color: rgba(0, 74, 220, 0.3); /* Absolute zero with opacity. */
   --input--error-color: var(--color-maximumred);
   --input--error-border-color: var(--color-maximumred);
   --input--disabled-color: rgba(84, 85, 96, 0.6); /* Davy's gray with 0.6 opacity. */
@@ -149,7 +163,7 @@
   /**
    * Buttons.
    */
-  --button--focus-border-color: #5a8bed;
+  --button--focus-border-color: var(--color-blue-300);
   --button-border-radius-size: var(--base-border-radius);
   --button-fg-color: var(--color-text);
   --button-bg-color: var(--color-gray-200);

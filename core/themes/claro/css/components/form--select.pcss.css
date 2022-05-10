@@ -39,7 +39,7 @@
  * Select states.
  */
 .form-element--type-select:focus {
-  background-image: url(../../images/icons/004adc/chevron-down.svg);
+  background-image: url(../../images/icons/003ecc/chevron-down.svg);
 }
 .form-element--type-select[disabled] {
   background-image: url(../../images/icons/8e929c/chevron-down.svg);
