@@ -3,6 +3,7 @@
 namespace Drupal\system\Theme;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Theme\ThemeNegotiatorInterface;
@@ -20,13 +21,23 @@ class DbUpdateNegotiator implements ThemeNegotiatorInterface {
   protected $configFactory;
 
   /**
+   * The theme handler.
+   *
+   * @var \Drupal\Core\Extension\ThemeHandlerInterface
+   */
+  protected $themeHandler;
+
+  /**
    * Constructs a DbUpdateNegotiator.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   *   The theme handler.
    */
-  public function __construct(ConfigFactoryInterface $config_factory) {
+  public function __construct(ConfigFactoryInterface $config_factory, ThemeHandlerInterface $theme_handler) {
     $this->configFactory = $config_factory;
+    $this->themeHandler = $theme_handler;
   }
 
   /**
@@ -40,10 +51,9 @@ class DbUpdateNegotiator implements ThemeNegotiatorInterface {
    * {@inheritdoc}
    */
   public function determineActiveTheme(RouteMatchInterface $route_match) {
-    $custom_theme = Settings::get('maintenance_theme', 'seven');
+    $custom_theme = Settings::get('maintenance_theme');
     if (!$custom_theme) {
-      $config = $this->configFactory->get('system.theme');
-      $custom_theme = $config->get('default');
+      $custom_theme = $this->themeHandler->themeExists('claro') ? 'claro' : 'seven';
     }
 
     return $custom_theme;

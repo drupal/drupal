@@ -30,7 +30,7 @@ services:
       - { name: theme_negotiator, priority: 1000 }
   theme.negotiator.system.db_update:
     class: Drupal\system\Theme\DbUpdateNegotiator
-    arguments: ['@config.factory']
+    arguments: ['@config.factory', '@theme_handler']
     tags:
       - { name: theme_negotiator, priority: 100 }
   system.config_subscriber:
