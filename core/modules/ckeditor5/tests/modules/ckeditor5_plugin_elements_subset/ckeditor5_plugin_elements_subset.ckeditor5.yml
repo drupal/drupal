@@ -7,6 +7,3 @@ ckeditor5_plugin_elements_subset_sneakySuperset:
     elements:
       - <foo>
       - <bar>
-    # @todo Remove in https://www.drupal.org/project/drupal/issues/3269657
-    conditions:
-      filter: media_embed
