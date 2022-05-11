@@ -644,7 +644,7 @@ media_media:
     library: ckeditor5/drupal.ckeditor5.media
     class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media
     elements:
-      - <drupal-media data-entity-type data-entity-uuid data-view-mode alt>
+      - <drupal-media data-entity-type data-entity-uuid alt data-view-mode>
     conditions:
       filter: media_embed
 

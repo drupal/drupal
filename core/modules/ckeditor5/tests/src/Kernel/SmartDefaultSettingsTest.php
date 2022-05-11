@@ -6,6 +6,7 @@ namespace Drupal\Tests\ckeditor5\Kernel;
 
 use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\KernelTests\KernelTestBase;
@@ -169,6 +170,25 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     $basic_html_editor_with_media_embed->setSettings($settings);
     $basic_html_editor_with_media_embed->save();
 
+    $basic_html_format_with_media_embed_view_mode_invalid = $basic_html_format_with_media_embed;
+    $basic_html_format_with_media_embed_view_mode_invalid['name'] = ' (with Media Embed support, view mode enabled but no view modes configured)';
+    $basic_html_format_with_media_embed_view_mode_invalid['format'] = 'basic_html_with_media_embed_view_mode_enabled_no_view_modes_configured';
+    $current_value_media_embed = NestedArray::getValue($basic_html_format_with_media_embed, $allowed_html_parents);
+    $new_value = str_replace('<drupal-media data-entity-type data-entity-uuid data-align data-caption alt>', '<drupal-media data-entity-type data-entity-uuid data-align data-caption alt data-view-mode>', $current_value_media_embed);
+    NestedArray::setValue($basic_html_format_with_media_embed_view_mode_invalid, $allowed_html_parents, $new_value);
+    FilterFormat::create($basic_html_format_with_media_embed_view_mode_invalid)->save();
+    $basic_html_editor_with_media_embed_view_mode_enabled_no_view_modes_configured = Editor::create(
+      ['format' => 'basic_html_with_media_embed_view_mode_enabled_no_view_modes_configured']
+      +
+      Yaml::parseFile('core/profiles/standard/config/install/editor.editor.basic_html.yml')
+    );
+    $settings = $basic_html_editor_with_media_embed_view_mode_enabled_no_view_modes_configured->getSettings();
+    // Add "insert media from library" button to CKEditor 4 configuration, the
+    // pre-existing toolbar item group labeled "Media".
+    $settings['toolbar']['rows'][0][3]['items'][] = 'DrupalMediaLibrary';
+    $basic_html_editor_with_media_embed_view_mode_enabled_no_view_modes_configured->setSettings($settings);
+    $basic_html_editor_with_media_embed_view_mode_enabled_no_view_modes_configured->save();
+
     $new_value = str_replace('<img src alt height width data-entity-type data-entity-uuid data-align data-caption>', '<img src alt height width data-*>', $current_value);
     $basic_html_format_with_any_data_attr = $basic_html_format;
     $basic_html_format_with_any_data_attr['name'] .= ' (with any data-* attribute on images)';
@@ -180,6 +200,48 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       +
       Yaml::parseFile('core/profiles/standard/config/install/editor.editor.basic_html.yml')
     )->save();
+
+    $basic_html_format_with_media_embed_view_mode_enabled_two_view_modes_configured = $basic_html_format_with_media_embed_view_mode_invalid;
+    $basic_html_format_with_media_embed_view_mode_enabled_two_view_modes_configured['name'] = ' (with Media Embed support, view mode enabled and two view modes configured )';
+    $basic_html_format_with_media_embed_view_mode_enabled_two_view_modes_configured['format'] = 'basic_html_with_media_embed_view_mode_enabled_two_view_modes_configured';
+    FilterFormat::create($basic_html_format_with_media_embed_view_mode_enabled_two_view_modes_configured)->save();
+    $basic_html_editor_with_media_embed_view_mode_enabled_two_view_modes_configured = Editor::create(
+      ['format' => 'basic_html_with_media_embed_view_mode_enabled_two_view_modes_configured']
+      +
+      Yaml::parseFile('core/profiles/standard/config/install/editor.editor.basic_html.yml')
+    );
+    $settings = $basic_html_editor_with_media_embed_view_mode_enabled_two_view_modes_configured->getSettings();
+    // Add "insert media from library" button to CKEditor 4 configuration, the
+    // pre-existing toolbar item group labeled "Media".
+    $settings['toolbar']['rows'][0][3]['items'][] = 'DrupalMediaLibrary';
+    $basic_html_editor_with_media_embed_view_mode_enabled_two_view_modes_configured->setSettings($settings);
+    $basic_html_editor_with_media_embed_view_mode_enabled_two_view_modes_configured->save();
+    EntityViewMode::create([
+      'id' => 'media.view_mode_1',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'enabled' => TRUE,
+      'label' => 'View Mode 1',
+    ])->save();
+    EntityViewMode::create([
+      'id' => 'media.view_mode_2',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'enabled' => TRUE,
+      'label' => 'View Mode 2',
+    ])->save();
+    $filter_format = FilterFormat::load('basic_html_with_media_embed_view_mode_enabled_two_view_modes_configured');
+    $filter_format->setFilterConfig('media_embed', [
+      'status' => TRUE,
+      'settings' => [
+        'default_view_mode' => 'view_mode_1',
+        'allowed_media_types' => [],
+        'allowed_view_modes' => [
+          'view_mode_1' => 'view_mode_1',
+          'view_mode_2' => 'view_mode_2',
+        ],
+      ],
+    ])->save();
 
     $filter_plugin_manager = $this->container->get('plugin.manager.filter');
     FilterFormat::create([
@@ -309,10 +371,13 @@ class SmartDefaultSettingsTest extends KernelTestBase {
    * @param array|null $expected_post_filter_drop_fundamental_compatibility_violations
    *   All expected fundamental compatibility violations for the given text
    *   format, after dropping filters specified in $filters_to_drop.
+   * @param array|null $expected_post_update_text_editor_violations
+   *   All expected media and filter settings violations for the given text
+   *   format.
    *
    * @dataProvider provider
    */
-  public function test(string $format_id, array $filters_to_drop, array $expected_ckeditor5_settings, string $expected_superset, array $expected_fundamental_compatibility_violations, array $expected_messages, ?array $expected_post_filter_drop_fundamental_compatibility_violations = NULL): void {
+  public function test(string $format_id, array $filters_to_drop, array $expected_ckeditor5_settings, string $expected_superset, array $expected_fundamental_compatibility_violations, array $expected_messages, ?array $expected_post_filter_drop_fundamental_compatibility_violations = NULL, ?array $expected_post_update_text_editor_violations = NULL): void {
     $text_format = FilterFormat::load($format_id);
     $text_editor = Editor::load($format_id);
 
@@ -401,8 +466,14 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       $updated_text_format = $text_format;
     }
 
-    // The resulting pair should be valid.
-    $this->assertSame([], $this->validatePairToViolationsArray($updated_text_editor, $updated_text_format, TRUE));
+    $updated_validation_errors = $this->validatePairToViolationsArray($updated_text_editor, $updated_text_format, TRUE);
+    if (is_null($expected_post_update_text_editor_violations)) {
+      // If a violation is not expected, it should be compared against an empty array.
+      $this->assertSame([], $updated_validation_errors);
+    }
+    else {
+      $this->assertSame($expected_post_update_text_editor_violations, $updated_validation_errors);
+    }
 
     // Transforms TranslatableMarkup objects to string.
     foreach ($messages as $type => $messages_per_type) {
@@ -714,7 +785,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       ]),
     ];
 
-    yield "basic_html with media_embed added => <drupal-media> needed => supported through sourceEditing (3 upgrade messages)" => [
+    yield "basic_html with media_embed added (3 upgrade messages)" => [
       'format_id' => 'basic_html_with_media_embed',
       'filters_to_drop' => $basic_html_test_case['filters_to_drop'],
       'expected_ckeditor5_settings' => [
@@ -725,16 +796,65 @@ class SmartDefaultSettingsTest extends KernelTestBase {
             array_slice($basic_html_test_case['expected_ckeditor5_settings']['toolbar']['items'], 10),
           ),
         ],
-        'plugins' => $basic_html_test_case['expected_ckeditor5_settings']['plugins'],
+        'plugins' => array_merge($basic_html_test_case['expected_ckeditor5_settings']['plugins'], ['media_media' => ['allow_view_mode_override' => FALSE]]),
       ],
-      // @todo: Remove data-view-mode in https://www.drupal.org/project/drupal/issues/3269657.
-      'expected_superset' => $basic_html_test_case['expected_superset'] . ' <drupal-media data-view-mode>',
+      'expected_superset' => $basic_html_test_case['expected_superset'],
       'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
       'expected_messages' => array_merge_recursive($basic_html_test_case['expected_messages'], [
         'status' => [
           "This format's HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;.",
         ],
       ]),
+    ];
+
+    yield "basic_html with media_embed added with data-view-mode allowed but no view modes configured (3 upgrade messages, 1 violation)" => [
+      'format_id' => 'basic_html_with_media_embed_view_mode_enabled_no_view_modes_configured',
+      'filters_to_drop' => $basic_html_test_case['filters_to_drop'],
+      'expected_ckeditor5_settings' => [
+        'toolbar' => [
+          'items' => array_merge(
+            array_slice($basic_html_test_case['expected_ckeditor5_settings']['toolbar']['items'], 0, 10),
+            ['drupalMedia'],
+            array_slice($basic_html_test_case['expected_ckeditor5_settings']['toolbar']['items'], 10),
+          ),
+        ],
+        'plugins' => array_merge($basic_html_test_case['expected_ckeditor5_settings']['plugins'], ['media_media' => ['allow_view_mode_override' => TRUE]]),
+      ],
+      'expected_superset' => $basic_html_test_case['expected_superset'],
+      'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
+      'expected_messages' => array_merge_recursive($basic_html_test_case['expected_messages'], [
+        'status' => [
+          "This format's HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;.",
+        ],
+      ]),
+      'expected_post_filter_drop_fundamental_compatibility_violations' => [],
+      'expected_post_update_text_editor_violations' => [
+        '' => 'The CKEditor 5 "<em class="placeholder">Media</em>" plugin\'s "<em class="placeholder">Allow the user to override the default view mode</em>" setting should be in sync with the "<em class="placeholder">Embed media</em>" filter\'s "<em class="placeholder">View modes selectable in the &quot;Edit media&quot; dialog</em>" setting: when checked, two or more view modes must be allowed by the filter.',
+      ],
+    ];
+
+    yield "basic_html with media_embed added with data-view-mode allowed and 2 view modes configured (3 upgrade messages)" => [
+      'format_id' => 'basic_html_with_media_embed_view_mode_enabled_two_view_modes_configured',
+      'filters_to_drop' => $basic_html_test_case['filters_to_drop'],
+      'expected_ckeditor5_settings' => [
+        'toolbar' => [
+          'items' => array_merge(
+            array_slice($basic_html_test_case['expected_ckeditor5_settings']['toolbar']['items'], 0, 10),
+            ['drupalMedia'],
+            array_slice($basic_html_test_case['expected_ckeditor5_settings']['toolbar']['items'], 10),
+          ),
+        ],
+        'plugins' => array_merge($basic_html_test_case['expected_ckeditor5_settings']['plugins'], ['media_media' => ['allow_view_mode_override' => TRUE]]),
+      ],
+      'expected_superset' => $basic_html_test_case['expected_superset'],
+      'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
+      'expected_messages' => array_merge_recursive($basic_html_test_case['expected_messages'], [
+        'status' => [
+          "This format's HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;.",
+        ],
+      ]),
+      'expected_post_filter_drop_fundamental_compatibility_violations' => [],
+      'expected_post_update_text_editor_violations' => [],
     ];
 
     yield "basic_html_with_any_data_attr can be switched to CKEditor 5 without problems (3 upgrade messages)" => [

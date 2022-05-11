@@ -4,6 +4,7 @@ ckeditor5_valid_pair__format_and_editor:
   label: 'Text Format plus Text Editor pair using CKEditor 5'
   constraints:
     CKEditor5FundamentalCompatibility: []
+    CKEditor5MediaAndFilterSettingsInSync: []
   mapping:
     settings:
       type: editor.settings.ckeditor5
