@@ -79,21 +79,33 @@ trait RequirementsPageTrait {
    *   The type of requirement, either 'warning' or 'error'.
    */
   protected function assertRequirementSummaries(array $summaries, string $type) {
-    // Allow only details elements that are directly after the warning/error
-    // header or each other. There is no guaranteed wrapper we can rely on
-    // across distributions. When there are multiple warnings, the selectors
-    // will be:
-    // - h3#warning+details summary
-    // - h3#warning+details+details summary
-    // - etc.
-    // For errors, the selectors are the same except that they are h3#error.
-    // We add one more selector than expected requirements to confirm that
-    // there isn't any other requirement message before clicking the link.
-    // @todo Make this more reliable in
-    //   https://www.drupal.org/project/drupal/issues/2927345.
+    // The selectors are different for Seven and Claro.
+    $is_claro = stripos($this->getSession()->getPage()->getContent(), 'claro/css/theme/maintenance-page.css') !== FALSE;
+
     $selectors = [];
-    for ($i = 0; $i <= count($summaries); $i++) {
-      $selectors[] = 'h3#' . $type . implode('', array_fill(0, $i + 1, '+details')) . ' summary';
+    if ($is_claro) {
+      // In Claro each requirement heading is present in a div with the class
+      // system-status-report__status-title. There is one summary element per
+      // requirement type and it is adjacent to a div with the class
+      // claro-details__wrapper.
+      $selectors[] = 'summary#' . $type . '+.claro-details__wrapper .system-status-report__status-title';
+    }
+    else {
+      // Allow only details elements that are directly after the warning/error
+      // header or each other. There is no guaranteed wrapper we can rely on
+      // across distributions. When there are multiple warnings, the selectors
+      // will be:
+      // - h3#warning+details summary
+      // - h3#warning+details+details summary
+      // - etc.
+      // For errors, the selectors are the same except that they are h3#error.
+      // We add one more selector than expected requirements to confirm that
+      // there isn't any other requirement message before clicking the link.
+      // @todo Make this more reliable in
+      //   https://www.drupal.org/project/drupal/issues/2927345.
+      for ($i = 0; $i <= count($summaries); $i++) {
+        $selectors[] = 'h3#' . $type . implode('', array_fill(0, $i + 1, '+details')) . ' summary';
+      }
     }
     $elements = $this->cssSelect(implode(', ', $selectors));
 
