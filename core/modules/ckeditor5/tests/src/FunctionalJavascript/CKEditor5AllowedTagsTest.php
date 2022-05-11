@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
+use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Symfony\Component\Yaml\Yaml;
@@ -369,6 +370,20 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
 
     $this->createNewTextFormat($page, $assert_session);
 
+    EntityViewMode::create([
+      'id' => 'media.view_mode_1',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'enabled' => TRUE,
+      'label' => 'View Mode 1',
+    ])->save();
+    EntityViewMode::create([
+      'id' => 'media.view_mode_2',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'enabled' => TRUE,
+      'label' => 'View Mode 2',
+    ])->save();
     // Allowed HTML field is readonly and its wrapper has a form-disabled class.
     $this->assertNotEmpty($assert_session->waitForElement('css', '.js-form-item-filters-filter-html-settings-allowed-html.form-disabled'));
     $allowed_html_field = $assert_session->fieldExists('filters[filter_html][settings][allowed_html]');
@@ -383,8 +398,20 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->responseContains('Media types selectable in the Media Library');
 
-    $allowed_with_media = $this->allowedElements . ' <drupal-media data-entity-type data-entity-uuid data-view-mode alt>';
+    $page->clickLink('Embed media');
+    $page->checkField('filters[media_embed][settings][allowed_view_modes][view_mode_1]');
+    $page->checkField('filters[media_embed][settings][allowed_view_modes][view_mode_2]');
+    $assert_session->assertWaitOnAjaxRequest();
+
+    $allowed_with_media = $this->allowedElements . ' <drupal-media data-entity-type data-entity-uuid alt data-view-mode>';
+    $allowed_with_media_without_view_mode = $this->allowedElements . ' <drupal-media data-entity-type data-entity-uuid alt>';
     $assert_session->responseContains('Media types selectable in the Media Library');
+    $page->clickLink('Media');
+    $assert_session->waitForText('Allow the user to override the default view mode');
+    $this->assertTrue($page->hasUncheckedField('editor[settings][plugins][media_media][allow_view_mode_override]'));
+    $this->assertHtmlEsqueFieldValueEquals('filters[filter_html][settings][allowed_html]', $allowed_with_media_without_view_mode);
+    $page->checkField('editor[settings][plugins][media_media][allow_view_mode_override]');
+    $assert_session->assertWaitOnAjaxRequest();
     $this->assertHtmlEsqueFieldValueEquals('filters[filter_html][settings][allowed_html]', $allowed_with_media);
     $this->saveNewTextFormat($page, $assert_session);
     $assert_session->pageTextContains('Added text format ckeditor5.');
@@ -403,7 +430,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     // filter_align is enabled.
     $page->checkField('filters[filter_align][status]');
     $assert_session->assertWaitOnAjaxRequest();
-    $this->assertEquals($this->allowedElements . ' <drupal-media data-entity-type data-entity-uuid data-view-mode alt data-align>', $allowed_html_field->getValue());
+    $this->assertEquals($this->allowedElements . ' <drupal-media data-entity-type data-entity-uuid alt data-view-mode data-align>', $allowed_html_field->getValue());
 
     // Disable media embed.
     $this->assertTrue($page->hasCheckedField('filters[media_embed][status]'));

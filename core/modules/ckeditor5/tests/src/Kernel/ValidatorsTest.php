@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\Tests\ckeditor5\Kernel;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\editor\EditorInterface;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
@@ -21,6 +22,7 @@ use Symfony\Component\Yaml\Yaml;
  * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\EnabledConfigurablePluginsConstraintValidator
  * @covers \Drupal\ckeditor5\Plugin\Editor\CKEditor5::validatePair()
  * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\FundamentalCompatibilityConstraintValidator
+ * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\CKEditor5MediaAndFilterSettingsInSyncConstraintValidator
  * @group ckeditor5
  */
 class ValidatorsTest extends KernelTestBase {
@@ -355,6 +357,20 @@ class ValidatorsTest extends KernelTestBase {
       'settings' => $ckeditor5_settings,
       'image_upload' => $editor_image_upload_settings,
     ]);
+    EntityViewMode::create([
+      'id' => 'media.view_mode_1',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'enabled' => TRUE,
+      'label' => 'View Mode 1',
+    ])->save();
+    EntityViewMode::create([
+      'id' => 'media.view_mode_2',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'enabled' => TRUE,
+      'label' => 'View Mode 2',
+    ])->save();
     assert($text_editor instanceof EditorInterface);
     $this->assertConfigSchema(
       $this->typedConfig,
@@ -375,6 +391,71 @@ class ValidatorsTest extends KernelTestBase {
   public function providerPair(): array {
     // cspell:ignore donk
     $data = [];
+    $data['INVALID: allow_view_mode_override condition not met: filter must be configured to allow 2 or more view modes'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [],
+        ],
+        'plugins' => [
+          'media_media' => [
+            'allow_view_mode_override' => TRUE,
+          ],
+        ],
+      ],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
+      'filters' => [
+        'media_embed' => [
+          'id' => 'media_embed',
+          'provider' => 'media',
+          'status' => TRUE,
+          'weight' => 0,
+          'settings' => [
+            'default_view_mode' => 'default',
+            'allowed_view_modes' => [],
+            'allowed_media_types' => [],
+          ],
+        ],
+      ],
+      'violations' => [
+        '' => 'The CKEditor 5 "<em class="placeholder">Media</em>" plugin\'s "<em class="placeholder">Allow the user to override the default view mode</em>" setting should be in sync with the "<em class="placeholder">Embed media</em>" filter\'s "<em class="placeholder">View modes selectable in the &quot;Edit media&quot; dialog</em>" setting: when checked, two or more view modes must be allowed by the filter.',
+      ],
+    ];
+    $data['VALID: allow_view_mode_override condition met: filter must be configured to allow 2 or more view modes'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'drupalMedia',
+          ],
+        ],
+        'plugins' => [
+          'media_media' => [
+            'allow_view_mode_override' => TRUE,
+          ],
+        ],
+      ],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
+      'filters' => [
+        'media_embed' => [
+          'id' => 'media_embed',
+          'provider' => 'media',
+          'status' => TRUE,
+          'weight' => 0,
+          'settings' => [
+            'default_view_mode' => 'view_mode_1',
+            'allowed_view_modes' => [
+              'view_mode_1' => 'view_mode_1',
+              'view_mode_2' => 'view_mode_2',
+            ],
+            'allowed_media_types' => [],
+          ],
+        ],
+      ],
+      'violations' => [],
+    ];
     $data['VALID: legacy format: filter_autop'] = [
       'settings' => [
         'toolbar' => [

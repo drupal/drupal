@@ -102,3 +102,14 @@ ckeditor5.plugin.ckeditor5_list:
       label: 'Allow start index'
       constraints:
         NotNull: []
+
+# Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media
+ckeditor5.plugin.media_media:
+  type: mapping
+  label: List
+  mapping:
+    allow_view_mode_override:
+      type: boolean
+      label: 'Allow view mode override'
+      constraints:
+        NotNull: []

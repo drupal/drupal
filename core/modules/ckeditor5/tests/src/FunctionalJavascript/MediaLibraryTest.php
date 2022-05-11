@@ -83,6 +83,9 @@ class MediaLibraryTest extends WebDriverTestBase {
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => [],
           ],
+          'media_media' => [
+            'allow_view_mode_override' => FALSE,
+          ],
         ],
       ],
     ])->save();

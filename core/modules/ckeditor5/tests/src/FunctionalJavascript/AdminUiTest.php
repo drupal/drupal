@@ -18,8 +18,6 @@ class AdminUiTest extends CKEditor5TestBase {
   protected static $modules = [
     'media_library',
     'ckeditor',
-    // @todo Remove in https://www.drupal.org/project/drupal/issues/3269657
-    'ckeditor5_plugin_elements_subset',
     'ckeditor5_incompatible_filter_test',
   ];
 
@@ -223,9 +221,7 @@ class AdminUiTest extends CKEditor5TestBase {
     $assert_session->elementExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-sourceediting"]');
 
     // The filter-dependent configurable plugin should not be present.
-    // @todo Change to `media_media` plugin in https://www.drupal.org/project/drupal/issues/3269657
-    // cSpell:disable-next-line
-    $assert_session->elementNotExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-plugin-elements-subset-sneakysuperset"]');
+    $assert_session->elementNotExists('css', '[data-drupal-selector="edit-editor-settings-plugins-media-media"]');
 
     // Enable the filter that the configurable plugin depends on.
     $this->assertTrue($page->hasUncheckedField('filters[media_embed][status]'));
@@ -233,8 +229,7 @@ class AdminUiTest extends CKEditor5TestBase {
     $assert_session->assertWaitOnAjaxRequest();
 
     // The filter-dependent configurable plugin should be present.
-    // cSpell:disable-next-line
-    $assert_session->elementExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-plugin-elements-subset-sneakysuperset"]');
+    $assert_session->elementExists('css', '[data-drupal-selector="edit-editor-settings-plugins-media-media"]');
   }
 
   /**
