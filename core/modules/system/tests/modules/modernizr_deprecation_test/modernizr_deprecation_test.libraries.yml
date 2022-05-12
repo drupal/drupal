@@ -1,0 +1,12 @@
+modernizr_and_touchevents:
+  dependencies:
+    - core/modernizr
+    - core/drupal.touchevents-test
+
+access_unsupported_property:
+  js:
+    js/access-unsupported-property.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+    - core/modernizr

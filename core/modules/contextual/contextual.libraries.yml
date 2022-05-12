@@ -26,6 +26,8 @@ drupal.contextual-links:
     - core/internal.backbone
     - core/once
     - core/jquery.once.bc
+    - core/drupal.touchevents-test
+
 
 drupal.contextual-toolbar:
   version: VERSION

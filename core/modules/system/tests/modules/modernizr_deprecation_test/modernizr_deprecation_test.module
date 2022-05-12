@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Helper module for checking Modernizr related deprecations.
+ */
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function modernizr_deprecation_test_library_info_alter(&$libraries, $extension) {
+  if ($extension === 'core') {
+    unset($libraries['modernizr']['header']);
+    $libraries['modernizr']['js']['assets/vendor/modernizr/modernizr.min.js']['weight'] = -15;
+    $libraries['modernizr']['js']['misc/modernizr-additional-tests.js']['weight'] = -14;
+  }
+  if ($extension === 'js_testing_log_test') {
+    $libraries['deprecation_log']['js']['js/js_testing_log.js']['weight'] = -16;
+  }
+}
