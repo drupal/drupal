@@ -1,0 +1,22 @@
+uuid: f962b8c7-4c74-4100-b6de-08e6a65ff43d
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.test_format
+  module:
+    - ckeditor5
+format: test_format
+editor: ckeditor5
+settings:
+  toolbar:
+    items:
+      - link
+      - bold
+      - italic
+      - 'alignment:center'
+      - sourceEditing
+  plugins:
+    ckeditor5_sourceEditing:
+      allowed_tags: {  }
+image_upload: {  }
