@@ -787,10 +787,10 @@ jquery.form:
 
 shepherd:
   remote: https://github.com/shipshapecode/shepherd
-  version: "9.0.0"
+  version: "9.1.0"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/shipshapecode/shepherd/v9.0.0/LICENSE
+    url: https://raw.githubusercontent.com/shipshapecode/shepherd/v9.1.0/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/shepherd/shepherd.min.js: { minified: true }
@@ -1041,20 +1041,20 @@ popperjs:
 
 sortable:
   remote: https://github.com/SortableJS/Sortable
-  version: "1.14.0"
+  version: "1.15.0"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/SortableJS/Sortable/1.14.0/LICENSE
+    url: https://raw.githubusercontent.com/SortableJS/Sortable/1.15.0/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/sortable/Sortable.min.js: { minified: true }
 
 tabbable:
   remote: https://github.com/focus-trap/tabbable
-  version: "5.2.1"
+  version: "5.3.2"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/focus-trap/tabbable/v5.2.1/LICENSE
+    url: https://raw.githubusercontent.com/focus-trap/tabbable/v5.3.2/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/tabbable/index.umd.min.js: { weight: -1, minified: true }
