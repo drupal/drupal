@@ -39,6 +39,13 @@ class DbLogResourceTest extends ResourceTestBase {
   protected static $modules = ['rest', 'dblog'];
 
   /**
+   * The entity type ID.
+   *
+   * @var string
+   */
+  protected static $entityTypeId = '';
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -150,5 +157,13 @@ class DbLogResourceTest extends ResourceTestBase {
       ->setCacheTags(['4xx-response', 'http_response'])
       ->setCacheContexts(['user.permissions']);
   }
+
+  /**
+   * Empty function.
+   *
+   * Needed by PHPStan for unused function
+   * CookieResourceTestTrait::assertResponseWhenMissingAuthentication().
+   */
+  protected function getExpectedUnauthorizedEntityAccessCacheability($is_authenticated) {}
 
 }
