@@ -105,6 +105,8 @@ class TableDragTest extends WebDriverTestBase {
     $session = $this->getSession();
     $page = $session->getPage();
 
+    // Confirm touchevents detection is loaded with Tabledrag
+    $this->assertNotNull($this->assertSession()->waitForElement('css', 'html.no-touchevents'));
     $weight_select1 = $page->findField("table[1][weight]");
     $weight_select2 = $page->findField("table[2][weight]");
     $weight_select3 = $page->findField("table[3][weight]");

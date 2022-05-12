@@ -72,12 +72,13 @@ global-styling:
     # such as inputs, action links, buttons, dropbuttons. For usability and
     # accessibility reasons, we keep target sizes big enough on touch screen
     # devices (by not making these elements smaller than their default size).
-    # Modernizr is used for recognizing whether user is using a touch device or
+    # Modernizr was used for recognizing whether user is using a touch device or
     # not. This allows conditionally rendering small variation of the control
-    # elements on non-touch devices. In some cases, such as when rendering
-    # links, it is hard recognize when Modernizr should be attached, therefore
-    # it has to be always attached.
-    - core/modernizr
+    # elements on non-touch devices. Modernizr's touch detection has since been
+    # replaced by core/drupal.touchevents-test.
+    # In some cases, such as when rendering links, it is hard recognize when
+    # this detection should be attached, therefore it is always attached.
+    - core/drupal.touchevents-test
 
 node-form:
   version: VERSION

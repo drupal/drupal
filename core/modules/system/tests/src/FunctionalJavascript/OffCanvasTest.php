@@ -42,6 +42,9 @@ class OffCanvasTest extends OffCanvasTestBase {
     $page = $this->getSession()->getPage();
     $web_assert = $this->assertSession();
 
+    // Confirm touchevents detection is loaded with Off Canvas assets.
+    $this->assertNotNull($web_assert->waitForElement('css', 'html.no-touchevents'));
+
     // Make sure off-canvas dialog is on page when first loaded.
     $web_assert->elementNotExists('css', '#drupal-off-canvas');
 

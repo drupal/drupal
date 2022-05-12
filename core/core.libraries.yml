@@ -682,6 +682,7 @@ drupal.tabledrag:
     - core/drupal
     - core/drupalSettings
     - core/once
+    - core/drupal.touchevents-test
 
 drupal.tableheader:
   version: VERSION
@@ -722,6 +723,14 @@ drupal.timezone:
     - core/jquery
     - core/once
     - core/drupal
+
+drupal.touchevents-test:
+  header: true
+  version: VERSION
+  js:
+    # Set weight to -21 so it loads alongside Modernizr, the library previously
+    # responsible for this detection.
+    misc/touchevents-test.js: { weight: -21 }
 
 drupal.vertical-tabs:
   version: VERSION
@@ -990,7 +999,6 @@ modernizr:
   version: "3.11.7"
   js:
     assets/vendor/modernizr/modernizr.min.js: { preprocess: 0, weight: -21, minified: true }
-    misc/modernizr-additional-tests.js: { preprocess: 0, weight: -20 }
 
 normalize:
   remote: https://github.com/necolas/normalize.css
@@ -1116,6 +1124,7 @@ drupal.dialog.off_canvas:
     - core/drupal.announce
     - core/drupal.dialog
     - core/drupal.dialog.ajax
+    - core/drupal.touchevents-test
 
 js-cookie:
   remote: https://github.com/js-cookie/js-cookie

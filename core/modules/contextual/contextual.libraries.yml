@@ -25,6 +25,7 @@ drupal.contextual-links:
     # @todo Remove this in https://www.drupal.org/project/drupal/issues/3203920
     - core/internal.backbone
     - core/once
+    - core/drupal.touchevents-test
 
 drupal.contextual-toolbar:
   version: VERSION

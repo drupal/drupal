@@ -37,6 +37,8 @@ class ToolbarIntegrationTest extends WebDriverTestBase {
     $this->drupalGet('<front>');
     $this->assertNotEmpty($this->assertSession()->waitForElement('css', 'body.toolbar-horizontal'));
     $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', '.toolbar-tray'));
+    // Confirm touchevents detection is loaded with the toolbar.
+    $this->assertNotNull($this->assertSession()->waitForElement('css', 'html.no-touchevents'));
 
     $page = $this->getSession()->getPage();
 
