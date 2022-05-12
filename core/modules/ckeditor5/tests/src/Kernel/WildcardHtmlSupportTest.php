@@ -57,7 +57,7 @@ class WildcardHtmlSupportTest extends KernelTestBase {
         ],
       ],
     ])->save();
-    $editor = Editor::create([
+    $editor_config = [
       'editor' => 'ckeditor5',
       'format' => 'test_format',
       'settings' => [
@@ -73,7 +73,14 @@ class WildcardHtmlSupportTest extends KernelTestBase {
       'image_upload' => [
         'status' => FALSE,
       ],
-    ]);
+    ];
+    if (in_array('alignment', $additional_toolbar_items, TRUE)) {
+      $editor_config['settings']['plugins']['ckeditor5_alignment'] = [
+        'enabled_alignments' => ['left', 'center', 'right', 'justify'],
+      ];
+    }
+
+    $editor = Editor::create($editor_config);
     $editor->save();
     $this->assertSame([], array_map(
       function (ConstraintViolation $v) {
