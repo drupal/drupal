@@ -1119,11 +1119,11 @@ PHP,
 
     // Case 7: GHS is enabled for other text editors if they are using a
     // CKEditor 5 plugin that uses wildcard tags.
-    $settings['toolbar']['items'][] = 'alignment:center';
+    $settings['toolbar']['items'][] = 'alignment';
     $editor->setSettings($settings);
     $plugin_ids = array_keys($this->manager->getEnabledDefinitions($editor));
     $expected_plugins = array_merge($expected_plugins, [
-      'ckeditor5_alignment.center',
+      'ckeditor5_alignment',
       'ckeditor5_wildcardHtmlSupport',
     ]);
     sort($expected_plugins);
