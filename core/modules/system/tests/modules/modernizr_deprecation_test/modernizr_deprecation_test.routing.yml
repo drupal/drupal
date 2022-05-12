@@ -1,0 +1,7 @@
+modernizr_deprecation_test.a_page:
+  path: '/load-a-library/{extension}/{library}'
+  defaults:
+    _controller: '\Drupal\modernizr_deprecation_test\Controller\LoadLibraryController::build'
+    _title: 'Load a library'
+  requirements:
+    _access: 'TRUE'

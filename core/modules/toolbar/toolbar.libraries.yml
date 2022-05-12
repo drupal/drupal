@@ -19,6 +19,12 @@ toolbar:
       css/toolbar.icons.theme.css: {}
   dependencies:
     - core/modernizr
+    # Toolbar does not use touchevents detection, nor does it use Modernizr.
+    # Despite not using Modernizr, it loads it. Sites that expect modernizr to
+    # be available may be getting it due to it being part of Toolbar. Because
+    # of this, we must include drupal.touchevents-test so the expected
+    # `touchevents/no-touchevents` classes are still added to the page.
+    - core/drupal.touchevents-test
     - core/jquery
     - core/drupal
     - core/drupalSettings

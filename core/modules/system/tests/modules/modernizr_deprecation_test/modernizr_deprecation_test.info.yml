@@ -1,0 +1,5 @@
+name: 'Modernizr deprecation test'
+type: module
+description: 'Test Modernizr deprecations via a basic page that loads a library based on the path.'
+package: Testing
+version: VERSION

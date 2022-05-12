@@ -713,6 +713,7 @@ drupal.tabledrag:
     - core/drupalSettings
     - core/once
     - core/jquery.once.bc
+    - core/drupal.touchevents-test
 
 drupal.tableheader:
   version: VERSION
@@ -757,6 +758,17 @@ drupal.timezone:
     - core/once
     - core/jquery.once.bc
     - core/drupal
+
+drupal.touchevents-test:
+  header: true
+  version: VERSION
+  js:
+    # Set weight to -22 so it loads before the Modernizr test it is
+    # replacing, located in modernizr-additional-tests.js. If the deprecated
+    # Modernizr test sees either of the classes this test adds to <body>, the
+    # test will not be added to Modernizr and deprecation warnings will not be
+    # triggered.
+    misc/touchevents-test.js: { weight: -22 }
 
 drupal.vertical-tabs:
   version: VERSION
@@ -1219,6 +1231,7 @@ drupal.dialog.off_canvas:
     - core/drupal.announce
     - core/drupal.dialog
     - core/drupal.dialog.ajax
+    - core/drupal.touchevents-test
 
 js-cookie:
   remote: https://github.com/js-cookie/js-cookie
