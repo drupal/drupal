@@ -23,7 +23,7 @@ class TabbableShimTestController extends ControllerBase {
           'id' => 'tabbable-test-container',
         ],
       ],
-      '#attached' => ['library' => ['core/jquery.ui']],
+      '#attached' => ['library' => ['core/drupal.autocomplete']],
     ];
   }
 
