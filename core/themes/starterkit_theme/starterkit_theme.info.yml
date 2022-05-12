@@ -3,6 +3,7 @@ type: theme
 'base theme': stable9
 hidden: true
 starterkit: true
+version: VERSION
 libraries:
   - starterkit_theme/base
   - starterkit_theme/messages
