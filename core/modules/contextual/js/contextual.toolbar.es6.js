@@ -69,12 +69,17 @@
    * Namespace for the contextual toolbar.
    *
    * @namespace
+   *
+   * @private
    */
   Drupal.contextualToolbar = {
     /**
      * The {@link Drupal.contextualToolbar.StateModel} instance.
      *
      * @type {?Drupal.contextualToolbar.StateModel}
+     *
+     * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. There is
+     * no replacement.
      */
     model: null,
   };
