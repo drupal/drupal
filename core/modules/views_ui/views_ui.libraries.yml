@@ -10,7 +10,7 @@ views_ui.admin:
     - core/drupalSettings
     - core/once
     - core/jquery.once.bc
-    - core/jquery.form
+    - core/internal.jquery.form
     - core/drupal.form
     - core/drupal.ajax
     - core/drupal.dropbutton

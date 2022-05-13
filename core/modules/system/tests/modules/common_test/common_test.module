@@ -174,7 +174,7 @@ function common_test_library_info_alter(&$libraries, $module) {
     // Change the version of Farbtastic to 0.0.
     $libraries['jquery.farbtastic']['version'] = '0.0';
     // Make Farbtastic depend on jQuery Form to test library dependencies.
-    $libraries['jquery.farbtastic']['dependencies'][] = 'core/jquery.form';
+    $libraries['jquery.farbtastic']['dependencies'][] = 'core/internal.jquery.form';
   }
 
   // Alter the dynamically registered library definition.

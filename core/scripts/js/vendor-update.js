@@ -120,12 +120,16 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
     },
     {
       pack: 'jquery-form',
-      library: 'jquery.form',
+      library: 'internal.jquery.form',
       files: [
         { from: 'dist/jquery.form.min.js', to: 'jquery.form.min.js' },
         { from: 'dist/jquery.form.min.js.map', to: 'jquery.form.min.js.map' },
         { from: 'src/jquery.form.js', to: 'src/jquery.form.js' },
       ],
+    },
+    // Only used to update the version number of the deprecated library.
+    {
+      pack: 'jquery-form',
     },
     {
       pack: 'joyride',
