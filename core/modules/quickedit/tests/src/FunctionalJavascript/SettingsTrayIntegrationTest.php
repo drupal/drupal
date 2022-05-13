@@ -168,9 +168,8 @@ class SettingsTrayIntegrationTest extends SettingsTrayTestBase {
   /**
    * Creates a custom block.
    *
-   * @param bool|string $title
-   *   (optional) Title of block. When no value is given uses a random name.
-   *   Defaults to FALSE.
+   * @param string $title
+   *   Title of block.
    * @param string $bundle
    *   (optional) Bundle name. Defaults to 'basic'.
    * @param bool $save
@@ -179,8 +178,7 @@ class SettingsTrayIntegrationTest extends SettingsTrayTestBase {
    * @return \Drupal\block_content\Entity\BlockContent
    *   Created custom block.
    */
-  protected function createBlockContent($title = FALSE, $bundle = 'basic', $save = TRUE) {
-    $title = $title ?: $this->randomName();
+  protected function createBlockContent(string $title, string $bundle = 'basic', bool $save = TRUE): BlockContent {
     $block_content = BlockContent::create([
       'info' => $title,
       'type' => $bundle,
