@@ -356,6 +356,13 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $this->assertWorkspaceStatus($test_scenarios['push_stage_to_live'], 'node');
     $this->assertWorkspaceAssociation($expected_workspace_association['push_stage_to_live'], 'node');
 
+    // Check that all the revisions that were published to 'Live' were also
+    // marked as default revisions in their revision metadata field.
+    $published_revisions = $this->entityTypeManager->getStorage('node')->loadMultipleRevisions(array_keys($expected['node']));
+    foreach ($published_revisions as $published_revision) {
+      $this->assertTrue($published_revision->wasDefaultRevision());
+    }
+
     // Check that there are no more revisions to push.
     $this->assertEmpty($workspace_publisher->getDifferringRevisionIdsOnSource());
   }
