@@ -10,6 +10,9 @@
    * @constructor
    *
    * @augments Backbone.Model
+   *
+   * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. There is no
+   *  replacement.
    */
   Drupal.contextual.StateModel = Backbone.Model.extend(
     /** @lends Drupal.contextual.StateModel# */ {

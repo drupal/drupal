@@ -84,11 +84,15 @@
       model
     }, options)));
     contextual.collection.add(model);
-    $(document).trigger('drupalContextualLinkAdded', {
-      $el: $contextual,
-      $region,
-      model
-    });
+    $(document).trigger('drupalContextualLinkAdded', Drupal.deprecatedProperty({
+      target: {
+        $el: $contextual,
+        $region,
+        model
+      },
+      deprecatedProperty: 'model',
+      message: 'The model property is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. There is no replacement.'
+    }));
     adjustIfNestedAndOverlapping($contextual);
   }
 

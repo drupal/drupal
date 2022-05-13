@@ -132,11 +132,19 @@
     contextual.collection.add(model);
 
     // Let other JavaScript react to the adding of a new contextual link.
-    $(document).trigger('drupalContextualLinkAdded', {
-      $el: $contextual,
-      $region,
-      model,
-    });
+    $(document).trigger(
+      'drupalContextualLinkAdded',
+      Drupal.deprecatedProperty({
+        target: {
+          $el: $contextual,
+          $region,
+          model,
+        },
+        deprecatedProperty: 'model',
+        message:
+          'The model property is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. There is no replacement.',
+      }),
+    );
 
     // Fix visual collisions between contextual link triggers.
     adjustIfNestedAndOverlapping($contextual);
@@ -240,6 +248,8 @@
    * Namespace for contextual related functionality.
    *
    * @namespace
+   *
+   * @private
    */
   Drupal.contextual = {
     /**
@@ -247,6 +257,9 @@
      * element of contextual links.
      *
      * @type {Array}
+     *
+     * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. There is no
+     *  replacement.
      */
     views: [],
 
@@ -255,6 +268,9 @@
      * contextual region element.
      *
      * @type {Array}
+     *
+     * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. There is no
+     *  replacement.
      */
     regionViews: [],
   };
@@ -263,6 +279,9 @@
    * A Backbone.Collection of {@link Drupal.contextual.StateModel} instances.
    *
    * @type {Backbone.Collection}
+   *
+   * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. There is no
+   *  replacement.
    */
   Drupal.contextual.collection = new Backbone.Collection([], {
     model: Drupal.contextual.StateModel,
