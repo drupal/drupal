@@ -782,7 +782,8 @@ jquery.farbtastic:
   dependencies:
     - core/jquery
 
-jquery.form:
+internal.jquery.form:
+  # Internal library. Do not depend on it outside core nor add new core usage.
   remote: https://github.com/jquery-form/form
   version: "4.3.0"
   license:

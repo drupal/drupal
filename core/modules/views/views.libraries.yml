@@ -14,5 +14,5 @@ views.ajax:
     - core/drupal
     - core/drupalSettings
     - core/once
-    - core/jquery.form
+    - core/internal.jquery.form
     - core/drupal.ajax
