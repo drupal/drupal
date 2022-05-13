@@ -546,16 +546,6 @@ parameters:
 			path: lib/Drupal/Core/Render/Element/RenderElement.php
 
 		-
-			message: "#^The \"\\#lazy_builder\" expects a callable array with arguments\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Render/PlaceholderGenerator.php
-
-		-
-			message: "#^The \"\\#lazy_builder\" expects a callable array with arguments\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Render/Renderer.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: lib/Drupal/Core/Session/SessionHandler.php
@@ -574,11 +564,6 @@ parameters:
 			message: "#^Method Drupal\\\\Core\\\\Template\\\\AttributeValueBase\\:\\:render\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Template/AttributeValueBase.php
-
-		-
-			message: "#^Function twig_escape_filter not found\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Template/TwigExtension.php
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\Core\\\\Template\\\\TwigNodeVisitor\\:\\:\\$skipRenderVarFunction\\.$#"
@@ -734,11 +719,6 @@ parameters:
 			message: "#^Method Drupal\\\\Tests\\\\block\\\\Functional\\\\Rest\\\\BlockResourceTestBase\\:\\:getNormalizedPostEntity\\(\\) should return array but return statement is missing\\.$#"
 			count: 1
 			path: modules/block/tests/src/Functional/Rest/BlockResourceTestBase.php
-
-		-
-			message: "#^Cannot unset offset string on array\\<int, string\\>\\.$#"
-			count: 1
-			path: modules/block/tests/src/Kernel/NewDefaultThemeBlocksTest.php
 
 		-
 			message: "#^Method Drupal\\\\block_content\\\\BlockContentForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
@@ -2379,16 +2359,6 @@ parameters:
 			path: modules/pgsql/src/Driver/Database/pgsql/Upsert.php
 
 		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/quickedit/tests/src/FunctionalJavascript/QuickEditJavascriptTestBase.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\quickedit\\\\FunctionalJavascript\\\\SettingsTrayIntegrationTest\\:\\:randomName\\(\\)\\.$#"
-			count: 1
-			path: modules/quickedit/tests/src/FunctionalJavascript/SettingsTrayIntegrationTest.php
-
-		-
 			message: "#^Method Drupal\\\\Tests\\\\rdf\\\\Functional\\\\Rest\\\\RdfMappingResourceTestBase\\:\\:getNormalizedPostEntity\\(\\) should return array but return statement is missing\\.$#"
 			count: 1
 			path: modules/rdf/tests/src/Functional/Rest/RdfMappingResourceTestBase.php
@@ -3674,16 +3644,6 @@ parameters:
 			path: tests/Drupal/FunctionalJavascriptTests/Ajax/FormValuesTest.php
 
 		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalTests/Installer/InstallerExistingConfigNoSystemSiteTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalTests/Installer/InstallerExistingConfigTest.php
-
-		-
 			message: "#^Method Drupal\\\\FunctionalTests\\\\Rest\\\\BaseFieldOverrideResourceTestBase\\:\\:getNormalizedPostEntity\\(\\) should return array but return statement is missing\\.$#"
 			count: 1
 			path: tests/Drupal/FunctionalTests/Rest/BaseFieldOverrideResourceTestBase.php
@@ -4090,11 +4050,6 @@ parameters:
 
 		-
 			message: "#^Cannot unset offset '\\#cache' on array\\{\\#lazy_builder\\: array\\{'Drupal\\\\\\\\Tests\\\\\\\\Core…', array\\{mixed\\}\\}\\}\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Render/RendererPlaceholdersTest.php
-
-		-
-			message: "#^The \"\\#lazy_builder\" expects a callable array with arguments\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Render/RendererPlaceholdersTest.php
 
