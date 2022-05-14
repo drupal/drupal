@@ -34,6 +34,12 @@ class ViewsFormTest extends ViewTestBase {
     // Ensure we don't have nested form elements.
     $result = (bool) preg_match('#<form[^>]*?>(?!/form).*<form#s', $this->getSession()->getPage()->getContent());
     $this->assertFalse($result, 'The views form element is not nested.');
+
+    // Test the form isn't shown when the display doesn't use fields.
+    $this->drupalGet('display-without-fields');
+    // Ensure there's no form.
+    $xpath = $this->cssSelect('.views-form form');
+    $this->assertCount(0, $xpath);
   }
 
 }
