@@ -936,7 +936,7 @@ class MediaTest extends WebDriverTestBase {
    *
    * @dataProvider providerLinkability
    */
-  public function testLinkManualDecoratorRestricted(bool $unrestricted) {
+  public function testLinkManualDecorator(bool $unrestricted) {
     \Drupal::service('module_installer')->install(['ckeditor5_manual_decorator_test']);
     $this->resetAll();
 
@@ -984,21 +984,17 @@ class MediaTest extends WebDriverTestBase {
     $this->assertNotEmpty($xpath->query("//a[@href='http://linking-embedded-media.com']$decorator_attributes"));
     $this->assertNotEmpty($xpath->query("//a[@href='http://linking-embedded-media.com']$decorator_attributes/drupal-media"));
 
-    // @todo enable for unrestricted test case after
-    //   https://www.drupal.org/project/drupal/issues/3268318 has been resolved.
-    if (!$unrestricted) {
-      // Finally, ensure that media can be unlinked.
-      $drupalmedia->click();
-      $this->assertVisibleBalloon('.ck-toolbar[aria-label="Drupal Media toolbar"]');
-      $this->getBalloonButton('Link media')->click();
-      $this->assertVisibleBalloon('.ck-link-actions');
-      $this->getBalloonButton('Unlink')->click();
+    // Finally, ensure that media can be unlinked.
+    $drupalmedia->click();
+    $this->assertVisibleBalloon('.ck-toolbar[aria-label="Drupal Media toolbar"]');
+    $this->getBalloonButton('Link media')->click();
+    $this->assertVisibleBalloon('.ck-link-actions');
+    $this->getBalloonButton('Unlink')->click();
 
-      $this->assertTrue($assert_session->waitForElementRemoved('css', '.drupal-media a'));
-      $xpath = new \DOMXPath($this->getEditorDataAsDom());
-      $this->assertEmpty($xpath->query('//a'));
-      $this->assertNotEmpty($xpath->query('//drupal-media'));
-    }
+    $this->assertTrue($assert_session->waitForElementRemoved('css', '.drupal-media a'));
+    $xpath = new \DOMXPath($this->getEditorDataAsDom());
+    $this->assertEmpty($xpath->query('//a'));
+    $this->assertNotEmpty($xpath->query('//drupal-media'));
   }
 
   /**
