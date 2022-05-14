@@ -2450,9 +2450,11 @@ class ViewExecutable {
    *   FALSE otherwise.
    */
   public function hasFormElements() {
-    foreach ($this->field as $field) {
-      if (method_exists($field, 'viewsForm')) {
-        return TRUE;
+    if ($this->getDisplay()->usesFields()) {
+      foreach ($this->field as $field) {
+        if (method_exists($field, 'viewsForm')) {
+          return TRUE;
+        }
       }
     }
     $area_handlers = array_merge(array_values($this->header), array_values($this->footer));
