@@ -178,3 +178,30 @@ display:
         empty: false
         style: false
       path: test_bulk_form_empty
+  page_3:
+    id: page_3
+    display_title: 'Page 3'
+    display_plugin: page
+    position: 3
+    display_options:
+      style:
+        type: grid
+        options:
+          grouping: { }
+          columns: 3
+          automatic_width: true
+          alignment: horizontal
+          row_class_custom: ''
+          row_class_default: true
+          col_class_custom: ''
+          col_class_default: true
+      row:
+        type: 'entity:node'
+        options:
+          relationship: none
+          view_mode: teaser
+      defaults:
+        style: false
+        row: false
+      display_extenders: { }
+      path: display-without-fields
