@@ -30,7 +30,15 @@ class LanguageSwitchingTest extends BrowserTestBase {
   ];
 
   /**
-   * {@inheritdoc}
+   * The theme to install as the default for testing.
+   *
+   * @var string
+   *
+   * @todo This test's focus on classes in ::doTestLanguageBlockAuthenticated()
+   *   and ::testLanguageBodyClass() make Stark a bad fit as a base theme.
+   *   Change the default theme to Starterkit once it is stable.
+   *
+   *  @see https://www.drupal.org/project/drupal/issues/3275543
    */
   protected $defaultTheme = 'classy';
 
@@ -207,7 +215,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/language/detection/url');
     $this->submitForm($edit, 'Save configuration');
-    $this->assertSession()->pageTextContains('The domain may not be left blank for English');
+    $this->assertSession()->statusMessageContains('The domain may not be left blank for English', 'error');
 
     // Change the domain for the Italian language.
     $edit = [
@@ -217,7 +225,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/language/detection/url');
     $this->submitForm($edit, 'Save configuration');
-    $this->assertSession()->pageTextContains('The configuration options have been saved');
+    $this->assertSession()->statusMessageContains('The configuration options have been saved', 'status');
 
     // Enable the language switcher block.
     $this->drupalPlaceBlock('language_block:' . LanguageInterface::TYPE_INTERFACE, ['id' => 'test_language_block']);
