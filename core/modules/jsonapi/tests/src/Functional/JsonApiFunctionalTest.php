@@ -606,7 +606,6 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
       'auth' => [$this->user->getAccountName(), $this->user->pass_raw],
       'headers' => ['Accept' => 'application/vnd.api+json'],
     ]);
-    $created_response = Json::decode($response->getBody()->__toString());
     $this->assertEquals(415, $response->getStatusCode());
 
     // 4. Article with a duplicate ID.
@@ -633,7 +632,6 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
       'auth' => [$this->user->getAccountName(), $this->user->pass_raw],
       'headers' => ['Content-Type' => 'application/vnd.api+json'],
     ]);
-    $created_response = Json::decode($response->getBody()->__toString());
     $this->assertEquals(404, $response->getStatusCode());
     // 6. Decoding error.
     $response = $this->request('POST', $collection_url, [
