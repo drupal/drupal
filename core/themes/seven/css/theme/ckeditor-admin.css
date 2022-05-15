@@ -1,0 +1,15 @@
+/**
+ * @file
+ * Seven specific styling for CKEditor admin.
+ */
+
+/*
+ * This rule is needed to provide Seven's blue focus outline.
+ */
+.ckeditor-toolbar-disabled .ckeditor-buttons li a:focus {
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 8px #40b6ff;
+}
+
+.ckeditor-toolbar-active .ckeditor-buttons li a:focus {
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 0 8px #40b6ff;
+}

@@ -137,6 +137,12 @@ seven.drupal.dialog:
     theme:
       css/components/dialog.css: {}
 
+ckeditor-admin:
+  version: VERSION
+  css:
+    theme:
+      css/theme/ckeditor-admin.css: {}
+
 ckeditor-dialog:
   version: VERSION
   css:

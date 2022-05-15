@@ -52,6 +52,7 @@ libraries-override:
 libraries-extend:
   core/ckeditor:
     - seven/ckeditor-dialog
+    - seven/ckeditor-admin
   core/drupal.autocomplete:
     - seven/seven.jquery.ui
   core/drupal.dialog:
