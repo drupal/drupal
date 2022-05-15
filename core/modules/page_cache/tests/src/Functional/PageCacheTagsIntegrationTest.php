@@ -23,8 +23,6 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
    */
   protected $profile = 'standard';
 
-  protected $dumpHeaders = TRUE;
-
   /**
    * {@inheritdoc}
    */

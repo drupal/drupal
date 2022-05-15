@@ -27,11 +27,6 @@ class FrontPageTest extends ViewTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * {@inheritdoc}
-   */
-  protected $dumpHeaders = TRUE;
-
-  /**
    * The entity storage for nodes.
    *
    * @var \Drupal\node\NodeStorage

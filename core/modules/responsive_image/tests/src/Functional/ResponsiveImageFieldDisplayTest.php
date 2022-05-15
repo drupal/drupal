@@ -26,8 +26,6 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected $dumpHeaders = TRUE;
-
   /**
    * Responsive image style entity instance we test with.
    *

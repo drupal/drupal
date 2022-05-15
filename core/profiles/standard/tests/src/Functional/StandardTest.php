@@ -170,7 +170,6 @@ class StandardTest extends BrowserTestBase {
 
     // Verify certain routes' responses are cacheable by Dynamic Page Cache, to
     // ensure these responses are very fast for authenticated users.
-    $this->dumpHeaders = TRUE;
     $this->drupalLogin($this->adminUser);
     $url = Url::fromRoute('contact.site_page');
     $this->drupalGet($url);

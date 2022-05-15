@@ -2179,11 +2179,6 @@ parameters:
 			path: modules/node/src/Plugin/views/row/Rss.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeAccessCacheabilityTest\\:\\:\\$dumpHeaders\\.$#"
-			count: 1
-			path: modules/node/tests/src/Functional/NodeAccessCacheabilityTest.php
-
-		-
 			message: "#^Access to an undefined property Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeAccessGrantsCacheContextTest\\:\\:\\$noAccessUser2\\.$#"
 			count: 1
 			path: modules/node/tests/src/Functional/NodeAccessGrantsCacheContextTest.php
@@ -2653,10 +2648,6 @@ parameters:
 			count: 1
 			path: modules/system/tests/modules/service_provider_test/src/TestFileUsage.php
 
-		-
-			message: "#^Access to an undefined property Drupal\\\\Tests\\\\system\\\\Functional\\\\Cache\\\\SessionExistsCacheContextTest\\:\\:\\$dumpHeaders\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/Cache/SessionExistsCacheContextTest.php
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\Tests\\\\system\\\\Functional\\\\Entity\\\\EntityListBuilderTest\\:\\:\\$webUser\\.$#"
@@ -3603,10 +3594,6 @@ parameters:
 			count: 1
 			path: modules/workspaces/src/WorkspacePublisher.php
 
-		-
-			message: "#^Access to an undefined property Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\WorkspaceCacheContextTest\\:\\:\\$dumpHeaders\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Functional/WorkspaceCacheContextTest.php
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\EntityReferenceSupportedNewEntitiesConstraintValidatorTest\\:\\:\\$entityTypeManager\\.$#"
@@ -3622,11 +3609,6 @@ parameters:
 			message: "#^Access to an undefined property Drupal\\\\demo_umami_content\\\\InstallHelper\\:\\:\\$module_path\\.$#"
 			count: 5
 			path: profiles/demo_umami/modules/demo_umami_content/src/InstallHelper.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Tests\\\\standard\\\\Functional\\\\StandardTest\\:\\:\\$dumpHeaders\\.$#"
-			count: 1
-			path: profiles/standard/tests/src/Functional/StandardTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
