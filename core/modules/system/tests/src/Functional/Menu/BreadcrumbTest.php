@@ -294,7 +294,7 @@ class BreadcrumbTest extends BrowserTestBase {
       $tree += [
         $link_path => $link->getTitle(),
       ];
-      $this->assertBreadcrumb($link_path, $trail, $term->getName(), $tree);
+      $this->assertBreadcrumb($link_path, $trail, $term->getName(), $tree, TRUE, 'menu__item--active-trail');
       // Ensure that the tagged node is found.
       $this->assertSession()->assertEscaped($parent->getTitle());
 
