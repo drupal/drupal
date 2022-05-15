@@ -186,7 +186,7 @@ class ContentTranslationController extends ControllerBase {
           $source = $metadata->getSource() ?: LanguageInterface::LANGCODE_NOT_SPECIFIED;
           $is_original = $langcode == $original;
           $label = $entity->getTranslation($langcode)->label() ?? $entity->id();
-          $link = isset($links->links[$langcode]['url']) ? $links->links[$langcode] : ['url' => $entity->toUrl()];
+          $link = ['url' => $entity->toUrl()];
           if (!empty($link['url'])) {
             $link['url']->setOption('language', $language);
             $row_title = Link::fromTextAndUrl($label, $link['url'])->toString();
