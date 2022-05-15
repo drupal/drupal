@@ -34,7 +34,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * Tests image formatters on node display for public files.
@@ -289,7 +289,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     $file_url_generator = \Drupal::service('file_url_generator');
     $url = $file_url_generator->transformRelative(ImageStyle::load('medium')->buildUrl($file->getFileUri()));
-    $this->assertSession()->elementExists('css', 'img[width=40][height=20][class=image-style-medium][src="' . $url . '"]');
+    $this->assertSession()->elementExists('css', 'img[width=40][height=20][src="' . $url . '"]');
 
     // Add alt/title fields to the image and verify that they are displayed.
     $image = [
@@ -319,8 +319,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->drupalGet('node/' . $nid . '/edit');
     $this->submitForm($edit, 'Save');
     $schema = $field->getFieldStorageDefinition()->getSchema();
-    $this->assertSession()->pageTextContains("Alternative text cannot be longer than {$schema['columns']['alt']['length']} characters but is currently {$test_size} characters long.");
-    $this->assertSession()->pageTextContains("Title cannot be longer than {$schema['columns']['title']['length']} characters but is currently {$test_size} characters long.");
+    $this->assertSession()->statusMessageContains("Alternative text cannot be longer than {$schema['columns']['alt']['length']} characters but is currently {$test_size} characters long.", 'error');
+    $this->assertSession()->statusMessageContains("Title cannot be longer than {$schema['columns']['title']['length']} characters but is currently {$test_size} characters long.", 'error');
 
     // Set cardinality to unlimited and add upload a second image.
     // The image widget is extending on the file widget, but the image field
@@ -340,7 +340,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->submitForm($edit, 'Save');
     // Add the required alt text.
     $this->submitForm([$field_name . '[1][alt]' => $alt], 'Save');
-    $this->assertSession()->pageTextContains('Article ' . $node->getTitle() . ' has been updated.');
+    $this->assertSession()->statusMessageContains('Article ' . $node->getTitle() . ' has been updated.', 'status');
 
     // Assert ImageWidget::process() calls FieldWidget::process().
     $this->drupalGet('node/' . $node->id() . '/edit');
