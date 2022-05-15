@@ -15,11 +15,6 @@ class EarlyRenderingControllerTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $dumpHeaders = TRUE;
-
-  /**
-   * {@inheritdoc}
-   */
   protected static $modules = ['system', 'early_rendering_controller_test'];
 
   /**

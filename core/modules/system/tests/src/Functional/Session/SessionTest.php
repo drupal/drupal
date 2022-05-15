@@ -24,8 +24,6 @@ class SessionTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected $dumpHeaders = TRUE;
-
   /**
    * Tests for \Drupal\Core\Session\WriteSafeSessionHandler::setSessionWritable()
    * ::isSessionWritable and \Drupal\Core\Session\SessionManager::regenerate().

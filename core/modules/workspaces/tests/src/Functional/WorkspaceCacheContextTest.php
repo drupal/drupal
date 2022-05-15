@@ -31,8 +31,6 @@ class WorkspaceCacheContextTest extends BrowserTestBase {
    * Tests the 'workspace' cache context.
    */
   public function testWorkspaceCacheContext() {
-    $this->dumpHeaders = TRUE;
-
     $renderer = \Drupal::service('renderer');
     $cache_contexts_manager = \Drupal::service("cache_contexts_manager");
 

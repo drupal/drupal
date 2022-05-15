@@ -24,8 +24,6 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     compareFiles as drupalCompareFiles;
   }
 
-  protected $dumpHeaders = TRUE;
-
   /**
    * Modules to enable.
    *

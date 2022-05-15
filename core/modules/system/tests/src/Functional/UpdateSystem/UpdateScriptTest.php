@@ -38,11 +38,6 @@ class UpdateScriptTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * {@inheritdoc}
-   */
-  protected $dumpHeaders = TRUE;
-
-  /**
    * The URL to the status report page.
    *
    * @var \Drupal\Core\Url

@@ -20,8 +20,6 @@ class PageCacheTest extends BrowserTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;
 
-  protected $dumpHeaders = TRUE;
-
   /**
    * Modules to enable.
    *

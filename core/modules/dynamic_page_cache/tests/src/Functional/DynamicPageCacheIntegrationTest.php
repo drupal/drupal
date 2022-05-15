@@ -25,11 +25,6 @@ class DynamicPageCacheIntegrationTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $dumpHeaders = TRUE;
-
-  /**
-   * {@inheritdoc}
-   */
   protected static $modules = ['dynamic_page_cache_test'];
 
   /**
