@@ -52,8 +52,9 @@ interface InlineBlockUsageInterface {
    * @param int $block_content_id
    *   The block content entity ID.
    *
-   * @return object
-   *   The usage record with properties layout_entity_id and layout_entity_type.
+   * @return object|false
+   *   The usage record with properties layout_entity_id and layout_entity_type
+   *   or FALSE if there is no usage.
    */
   public function getUsage($block_content_id);
 
