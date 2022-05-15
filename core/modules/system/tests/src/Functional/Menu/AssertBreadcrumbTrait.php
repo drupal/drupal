@@ -32,8 +32,13 @@ trait AssertBreadcrumbTrait {
    * @param $last_active
    *   (optional) Whether the last link in $tree is expected to be active (TRUE)
    *   or just to be in the active trail (FALSE).
+   * @param string $active_trail_class
+   *   (optional) The class of the active trail. Defaults to
+   *   'menu-item--active-trail'.
+   * @param string $active_class
+   *   (optional) The class of the active element. Defaults to 'is-active'.
    */
-  protected function assertBreadcrumb($goto, array $trail, $page_title = NULL, array $tree = [], $last_active = TRUE) {
+  protected function assertBreadcrumb($goto, array $trail, $page_title = NULL, array $tree = [], $last_active = TRUE, $active_trail_class = 'menu-item--active-trail', $active_class = 'is-active') {
     if (isset($goto)) {
       $this->drupalGet($goto);
     }
@@ -46,7 +51,7 @@ trait AssertBreadcrumbTrait {
 
     // Additionally assert active trail in a menu tree output, if given.
     if ($tree) {
-      $this->assertMenuActiveTrail($tree, $last_active);
+      $this->assertMenuActiveTrail($tree, $last_active, $active_trail_class, $active_class);
     }
   }
 
