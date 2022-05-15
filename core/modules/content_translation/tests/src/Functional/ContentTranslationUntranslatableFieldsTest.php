@@ -139,7 +139,7 @@ class ContentTranslationUntranslatableFieldsTest extends ContentTranslationPendi
     $this->assertSession()->pageTextContains('Untranslatable-but-visible test field');
 
     // Verify a warning is displayed.
-    $this->assertSession()->pageTextContains('Fields that apply to all languages are hidden to avoid conflicting changes.');
+    $this->assertSession()->statusMessageContains('Fields that apply to all languages are hidden to avoid conflicting changes.', 'warning');
     $edit_path = $entity->toUrl('edit-form')->toString();
     $link_xpath = '//a[@href=:edit_path and text()="Edit them on the original language form"]';
     $elements = $this->xpath($link_xpath, [':edit_path' => $edit_path]);
@@ -167,7 +167,7 @@ class ContentTranslationUntranslatableFieldsTest extends ContentTranslationPendi
     $this->assertEmpty($this->xpath($clue_xpath));
 
     // Verify a warning is displayed.
-    $this->assertSession()->pageTextContains('Fields that apply to all languages are hidden to avoid conflicting changes.');
+    $this->assertSession()->statusMessageContains('Fields that apply to all languages are hidden to avoid conflicting changes.', 'warning');
     $elements = $this->xpath($link_xpath, [':edit_path' => $edit_path]);
     $this->assertNotEmpty($elements);
 

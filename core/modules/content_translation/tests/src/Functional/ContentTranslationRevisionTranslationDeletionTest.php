@@ -90,7 +90,7 @@ class ContentTranslationRevisionTranslationDeletionTest extends ContentTranslati
     $it_delete_href = $it_delete_url->toString();
     $this->assertSession()->linkByHrefNotExists($it_delete_href);
     $warning = 'The "Delete translation" action is only available for published translations.';
-    $this->assertSession()->pageTextContains($warning);
+    $this->assertSession()->statusMessageContains($warning, 'warning');
     $this->drupalGet($this->getEditUrl($it_revision));
     $this->assertSession()->buttonNotExists('Delete translation');
 
@@ -106,7 +106,7 @@ class ContentTranslationRevisionTranslationDeletionTest extends ContentTranslati
     $this->assertTrue($it_revision->hasTranslation('it'));
     $this->drupalGet($overview_url);
     $this->assertSession()->linkByHrefExists($it_delete_href);
-    $this->assertSession()->pageTextNotContains($warning);
+    $this->assertSession()->statusMessageNotContains($warning);
     $this->drupalGet($this->getEditUrl($it_revision));
     $this->assertSession()->buttonExists('Delete translation');
 

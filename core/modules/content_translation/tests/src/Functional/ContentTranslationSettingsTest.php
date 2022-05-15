@@ -37,7 +37,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   protected function setUp(): void {
     parent::setUp();
@@ -98,8 +98,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
       'settings[comment][comment_article][fields][uid]' => FALSE,
     ];
     $this->assertSettings('comment', 'comment_article', FALSE, $edit);
-    $xpath_err = '//div[contains(@class, "error")]';
-    $this->assertNotEmpty($this->xpath($xpath_err), 'Enabling translation only for entity bundles generates a form error.');
+    $this->assertSession()->statusMessageContains('At least one field needs to be translatable to enable Comment_article for translation.', 'error');
 
     // Test that the translation settings are not stored if a non-configurable
     // language is set as default and the language selector is hidden.
@@ -111,7 +110,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
       'settings[comment][comment_article][fields][comment_body]' => TRUE,
     ];
     $this->assertSettings('comment', 'comment_article', FALSE, $edit);
-    $this->assertNotEmpty($this->xpath($xpath_err), 'Enabling translation with a fixed non-configurable language generates a form error.');
+    $this->assertSession()->statusMessageContains('Translation is not supported if language is always one of: Not specified, Not applicable', 'error');
 
     // Test that a field shared among different bundles can be enabled without
     // needing to make all the related bundles translatable.
@@ -245,7 +244,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
     $this->drupalGet('admin/config/people/accounts');
     $this->submitForm(['anonymous' => 'Save me please!'], 'Save configuration');
     $this->assertSession()->fieldValueEquals('anonymous', 'Save me please!');
-    $this->assertSession()->pageTextContains('The configuration options have been saved.');
+    $this->assertSession()->statusMessageContains('The configuration options have been saved.', 'status');
   }
 
   /**
