@@ -23,7 +23,7 @@ class FileListingTest extends FileFieldTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * An authenticated user.
@@ -119,8 +119,8 @@ class FileListingTest extends FileFieldTestBase {
       $this->assertSession()->linkByHrefExists($file->createFileUrl());
       $this->assertSession()->linkByHrefExists('admin/content/files/usage/' . $file->id());
     }
-    $this->assertSession()->elementTextNotContains('css', 'table.views-table', 'Temporary');
-    $this->assertSession()->elementTextContains('css', 'table.views-table', 'Permanent');
+    $this->assertSession()->elementTextNotContains('css', '.views-element-container table', 'Temporary');
+    $this->assertSession()->elementTextContains('css', '.views-element-container table', 'Permanent');
 
     // Use one file two times and check usage information.
     $orphaned_file = $nodes[1]->file->target_id;

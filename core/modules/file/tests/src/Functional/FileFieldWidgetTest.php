@@ -33,7 +33,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -395,7 +395,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $html_name = str_replace('_', '-', $field_name);
     $this->createFileField($field_name, 'node', 'article', ['cardinality' => FieldStorageConfig::CARDINALITY_UNLIMITED]);
     $file = $this->getTestFile('text');
-    $xpath = "//details[@data-drupal-selector='edit-$html_name']/div[@class='details-wrapper']/table";
+    $xpath = "//details[@data-drupal-selector='edit-$html_name']/table";
 
     $this->drupalGet('node/add/article');
 
