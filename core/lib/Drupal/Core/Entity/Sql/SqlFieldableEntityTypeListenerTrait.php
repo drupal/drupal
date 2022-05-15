@@ -11,8 +11,8 @@ use Drupal\Core\Site\Settings;
  *
  * @see \Drupal\Core\Entity\EntityTypeListenerInterface
  *
- * @property \Drupal\Core\Entity\EntityTypeManagerInterface entityTypeManager
- * @property \Drupal\Core\Database\Connection database
+ * @property \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+ * @property \Drupal\Core\Database\Connection $database
  *
  * @internal
  */

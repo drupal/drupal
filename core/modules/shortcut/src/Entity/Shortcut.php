@@ -13,7 +13,7 @@ use Drupal\shortcut\ShortcutInterface;
 /**
  * Defines the shortcut entity class.
  *
- * @property \Drupal\link\LinkItemInterface link
+ * @property \Drupal\link\LinkItemInterface $link
  *
  * @ContentEntityType(
  *   id = "shortcut",

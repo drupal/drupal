@@ -24,7 +24,7 @@ use Drupal\layout_builder\Section;
  *   cardinality = \Drupal\Core\Field\FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED
  * )
  *
- * @property \Drupal\layout_builder\Section section
+ * @property \Drupal\layout_builder\Section $section
  */
 class LayoutSectionItem extends FieldItemBase {
 
