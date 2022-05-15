@@ -101,7 +101,7 @@ class ThemeInstaller implements ThemeInstallerInterface {
    * @param \Drupal\Core\Extension\ModuleExtensionList $module_extension_list
    *   The module extension list.
    */
-  public function __construct(ThemeHandlerInterface $theme_handler, ConfigFactoryInterface $config_factory, ConfigInstallerInterface $config_installer, ModuleHandlerInterface $module_handler, ConfigManagerInterface $config_manager, AssetCollectionOptimizerInterface $css_collection_optimizer, RouteBuilderInterface $route_builder, LoggerInterface $logger, StateInterface $state, ModuleExtensionList $module_extension_list = NULL) {
+  public function __construct(ThemeHandlerInterface $theme_handler, ConfigFactoryInterface $config_factory, ConfigInstallerInterface $config_installer, ModuleHandlerInterface $module_handler, ConfigManagerInterface $config_manager, AssetCollectionOptimizerInterface $css_collection_optimizer, RouteBuilderInterface $route_builder, LoggerInterface $logger, StateInterface $state, ModuleExtensionList $module_extension_list) {
     $this->themeHandler = $theme_handler;
     $this->configFactory = $config_factory;
     $this->configInstaller = $config_installer;
@@ -111,10 +111,6 @@ class ThemeInstaller implements ThemeInstallerInterface {
     $this->routeBuilder = $route_builder;
     $this->logger = $logger;
     $this->state = $state;
-    if ($module_extension_list === NULL) {
-      @trigger_error('The extension.list.module service must be passed to ' . __NAMESPACE__ . '\ThemeInstaller::__construct(). It was added in drupal:8.9.0 and will be required before drupal:10.0.0.', E_USER_DEPRECATED);
-      $module_extension_list = \Drupal::service('extension.list.module');
-    }
     $this->moduleExtensionList = $module_extension_list;
   }
 
