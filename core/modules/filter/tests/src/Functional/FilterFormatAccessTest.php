@@ -282,7 +282,7 @@ class FilterFormatAccessTest extends BrowserTestBase {
     $edit['title[0][value]'] = $new_title;
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->submitForm($edit, 'Save');
-    $this->assertSession()->pageTextContains('Text format field is required.');
+    $this->assertSession()->statusMessageContains('Text format field is required.', 'error');
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->pageTextContains($old_title);
     $this->assertSession()->pageTextNotContains($new_title);
@@ -320,7 +320,7 @@ class FilterFormatAccessTest extends BrowserTestBase {
     $edit['title[0][value]'] = $new_title;
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->submitForm($edit, 'Save');
-    $this->assertSession()->pageTextContains('Text format field is required.');
+    $this->assertSession()->statusMessageContains('Text format field is required.', 'error');
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->pageTextContains($old_title);
     $this->assertSession()->pageTextNotContains($new_title);
