@@ -50,7 +50,7 @@ class LanguageBrowserDetectionTest extends BrowserTestBase {
     $this->drupalGet('admin/config/regional/language/detection/browser/delete/' . $browser_langcode);
     $this->submitForm($edit, 'Confirm');
 
-    $this->assertSession()->pageTextContains("The mapping for the {$browser_langcode} browser language code has been deleted.");
+    $this->assertSession()->statusMessageContains("The mapping for the {$browser_langcode} browser language code has been deleted.", 'status');
 
     // Check we went back to the browser negotiation mapping overview.
     $this->assertSession()->addressEquals(Url::fromRoute('language.negotiation_browser'));
@@ -71,7 +71,7 @@ class LanguageBrowserDetectionTest extends BrowserTestBase {
     // Add the same custom mapping again.
     $this->drupalGet('admin/config/regional/language/detection/browser');
     $this->submitForm($edit, 'Save configuration');
-    $this->assertSession()->pageTextContains('Browser language codes must be unique.');
+    $this->assertSession()->statusMessageContains('Browser language codes must be unique.', 'error');
 
     // Change browser language code of our custom mapping to zh-sg.
     $edit = [
@@ -80,7 +80,7 @@ class LanguageBrowserDetectionTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/language/detection/browser');
     $this->submitForm($edit, 'Save configuration');
-    $this->assertSession()->pageTextContains('Browser language codes must be unique.');
+    $this->assertSession()->statusMessageContains('Browser language codes must be unique.', 'error');
 
     // Change Drupal language code of our custom mapping to zh-hans.
     $edit = [
