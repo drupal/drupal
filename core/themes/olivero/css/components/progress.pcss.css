@@ -16,3 +16,7 @@
   height: var(--sp);
   background-color: var(--color--blue-20);
 }
+
+.progress__percentage {
+  margin-inline-start: 1rem;
+}
