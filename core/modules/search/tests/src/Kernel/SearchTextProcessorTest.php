@@ -6,11 +6,11 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\search\SearchTextProcessorInterface;
 
 /**
- * Tests that the search_simply() function works as intended.
+ * Test search text preprocessing functionality.
  *
  * @group search
  */
-class SearchSimplifyTest extends KernelTestBase {
+class SearchTextProcessorTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
@@ -18,16 +18,16 @@ class SearchSimplifyTest extends KernelTestBase {
   protected static $modules = ['search'];
 
   /**
-   * Tests that all Unicode characters simplify correctly.
+   * Tests that text processing handles Unicode characters correctly.
    */
-  public function testSearchSimplifyUnicode() {
+  public function testSearchTextProcessorUnicode() {
     // This test uses a file that was constructed so that the even lines are
     // boundary characters, and the odd lines are valid word characters. (It
     // was generated as a sequence of all the Unicode characters, and then the
     // boundary characters (punctuation, spaces, etc.) were split off into
-    // their own lines).  So the even-numbered lines should simplify to nothing,
+    // their own lines). So the even-numbered lines should simplify to nothing,
     // and the odd-numbered lines we need to split into shorter chunks and
-    // verify that simplification doesn't lose any characters.
+    // verify that text processing doesn't lose any characters.
     $input = file_get_contents($this->root . '/core/modules/search/tests/UnicodeTest.txt');
     $basestrings = explode(chr(10), $input);
     $strings = [];
@@ -75,7 +75,7 @@ class SearchSimplifyTest extends KernelTestBase {
   /**
    * Tests that text analysis does the right thing with punctuation.
    */
-  public function testSearchSimplifyPunctuation() {
+  public function testSearchTextProcessorPunctuation() {
     $cases = [
       ['20.03/94-28,876', '20039428876', 'Punctuation removed from numbers'],
       ['great...drupal--module', 'great drupal module', 'Multiple dot and dashes are word boundaries'],
