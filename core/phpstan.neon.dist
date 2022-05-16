@@ -18,6 +18,9 @@ parameters:
     - ../*/node_modules/*
     - */tests/fixtures/*.php
     - */tests/fixtures/*.php.gz
+    # Skip Drupal 6 & 7 code.
+    - core/scripts/generate-d6-content.sh
+    - core/scripts/generate-d7-content.sh
     # Skip data files.
     - lib/Drupal/Component/Transliteration/data/*.php
     # Below extends on purpose a non existing class for testing.

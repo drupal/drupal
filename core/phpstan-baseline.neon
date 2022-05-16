@@ -1,24 +1,9 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: includes/bootstrap.inc
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: includes/common.inc
-
-		-
 			message: "#^Function format_size\\(\\) should return Drupal\\\\Core\\\\StringTranslation\\\\TranslatableMarkup but return statement is missing\\.$#"
 			count: 1
 			path: includes/common.inc
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: includes/install.core.inc
 
 		-
 			message: "#^Function install_config_download_translations\\(\\) should return string but return statement is missing\\.$#"
@@ -2618,7 +2603,6 @@ parameters:
 			count: 1
 			path: modules/system/tests/modules/service_provider_test/src/TestFileUsage.php
 
-
 		-
 			message: "#^Access to an undefined property Drupal\\\\Tests\\\\system\\\\Functional\\\\Entity\\\\EntityListBuilderTest\\:\\:\\$webUser\\.$#"
 			count: 1
@@ -3524,7 +3508,6 @@ parameters:
 			count: 1
 			path: modules/workspaces/src/WorkspacePublisher.php
 
-
 		-
 			message: "#^Access to an undefined property Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\EntityReferenceSupportedNewEntitiesConstraintValidatorTest\\:\\:\\$entityTypeManager\\.$#"
 			count: 2
@@ -3539,11 +3522,6 @@ parameters:
 			message: "#^Access to an undefined property Drupal\\\\demo_umami_content\\\\InstallHelper\\:\\:\\$module_path\\.$#"
 			count: 5
 			path: profiles/demo_umami/modules/demo_umami_content/src/InstallHelper.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: rebuild.php
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\BuildTests\\\\Framework\\\\BuildTestBase\\:\\:\\$phpFinder\\.$#"
