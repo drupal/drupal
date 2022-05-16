@@ -15,7 +15,10 @@ class ResponsiveImageStylesTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['responsive_image'];
+  protected static $modules = [
+    'migrate_drupal',
+    'responsive_image',
+  ];
 
   /**
    * {@inheritdoc}
