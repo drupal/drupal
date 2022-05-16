@@ -1,0 +1,3 @@
+view update notifications:
+  title: 'View update notifications'
+  description: 'These messages are displayed on most administrative pages when updates become available.'
