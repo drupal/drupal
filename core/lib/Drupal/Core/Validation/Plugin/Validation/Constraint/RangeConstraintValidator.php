@@ -50,7 +50,21 @@ class RangeConstraintValidator extends ConstraintValidator {
       }
     }
 
-    if (NULL !== $constraint->max && $value > $max) {
+    $hasLowerLimit = NULL !== $constraint->min;
+    $hasUpperLimit = NULL !== $constraint->max;
+
+    if ($hasLowerLimit && $hasUpperLimit && ($value < $min || $value > $max)) {
+      $this->context->buildViolation($constraint->notInRangeMessage)
+        ->setParameter('{{ value }}', $this->formatValue($value, self::PRETTY_DATE))
+        ->setParameter('{{ min }}', $this->formatValue($min, self::PRETTY_DATE))
+        ->setParameter('{{ max }}', $this->formatValue($max, self::PRETTY_DATE))
+        ->setCode(Range::NOT_IN_RANGE_ERROR)
+        ->addViolation();
+
+      return;
+    }
+
+    if ($hasUpperLimit && $value > $max) {
       $this->context->buildViolation($constraint->maxMessage)
         ->setParameter('{{ value }}', $this->formatValue($value, self::PRETTY_DATE))
         ->setParameter('{{ limit }}', $this->formatValue($max, self::PRETTY_DATE))
@@ -60,7 +74,7 @@ class RangeConstraintValidator extends ConstraintValidator {
       return;
     }
 
-    if (NULL !== $constraint->min && $value < $min) {
+    if ($hasLowerLimit && $value < $min) {
       $this->context->buildViolation($constraint->minMessage)
         ->setParameter('{{ value }}', $this->formatValue($value, self::PRETTY_DATE))
         ->setParameter('{{ limit }}', $this->formatValue($min, self::PRETTY_DATE))
