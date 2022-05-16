@@ -108,11 +108,6 @@ function contextual_help($route_name, RouteMatchInterface $route_match) {
  * @see \Drupal\contextual\ContextualController::render()
  */
 function contextual_preprocess(&$variables, $hook, $info) {
-  $variables['#cache']['contexts'][] = 'user.permissions';
-  if (!\Drupal::currentUser()->hasPermission('access contextual links')) {
-    return;
-  }
-
   // Determine the primary theme function argument.
   if (!empty($info['variables'])) {
     $keys = array_keys($info['variables']);
@@ -126,18 +121,21 @@ function contextual_preprocess(&$variables, $hook, $info) {
   }
 
   if (isset($element) && is_array($element) && !empty($element['#contextual_links'])) {
-    // Mark this element as potentially having contextual links attached to it.
-    $variables['attributes']['class'][] = 'contextual-region';
+    $variables['#cache']['contexts'][] = 'user.permissions';
+    if (\Drupal::currentUser()->hasPermission('access contextual links')) {
+      // Mark this element as potentially having contextual links attached to it.
+      $variables['attributes']['class'][] = 'contextual-region';
 
-    // Renders a contextual links placeholder unconditionally, thus not breaking
-    // the render cache. Although the empty placeholder is rendered for all
-    // users, contextual_page_attachments() only adds the asset library for
-    // users with the 'access contextual links' permission, thus preventing
-    // unnecessary HTTP requests for users without that permission.
-    $variables['title_suffix']['contextual_links'] = [
-      '#type' => 'contextual_links_placeholder',
-      '#id' => _contextual_links_to_id($element['#contextual_links']),
-    ];
+      // Renders a contextual links placeholder unconditionally, thus not breaking
+      // the render cache. Although the empty placeholder is rendered for all
+      // users, contextual_page_attachments() only adds the asset library for
+      // users with the 'access contextual links' permission, thus preventing
+      // unnecessary HTTP requests for users without that permission.
+      $variables['title_suffix']['contextual_links'] = [
+        '#type' => 'contextual_links_placeholder',
+        '#id' => _contextual_links_to_id($element['#contextual_links']),
+      ];
+    }
   }
 }
 
