@@ -217,12 +217,12 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\Core\\\\Database\\\\Query\\\\Select\\:\\:\\$alterMetaData\\.$#"
-			count: 2
+			count: 1
 			path: lib/Drupal/Core/Database/Query/Select.php
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\Core\\\\Database\\\\Query\\\\Select\\:\\:\\$alterTags\\.$#"
-			count: 4
+			count: 3
 			path: lib/Drupal/Core/Database/Query/Select.php
 
 		-
@@ -277,11 +277,6 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\EntityBase\\:\\:\\$id\\.$#"
-			count: 2
-			path: lib/Drupal/Core/Entity/EntityBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\EntityBase\\:\\:\\$uuid\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Entity/EntityBase.php
 
@@ -361,19 +356,9 @@ parameters:
 			path: lib/Drupal/Core/Extension/Discovery/RecursiveExtensionFilterIterator.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Extension\\\\Extension\\:\\:\\$info\\.$#"
-			count: 3
-			path: lib/Drupal/Core/Extension/Extension.php
-
-		-
 			message: "#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\Entity\\\\BaseFieldOverride\\:\\:\\$original\\.$#"
 			count: 5
 			path: lib/Drupal/Core/Field/Entity/BaseFieldOverride.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\FieldConfigBase\\:\\:\\$definition\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Field/FieldConfigBase.php
 
 		-
 			message: "#^Method Drupal\\\\Core\\\\Field\\\\FieldItemBase\\:\\:generateSampleValue\\(\\) should return array but return statement is missing\\.$#"
@@ -707,7 +692,7 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\block\\\\Plugin\\\\migrate\\\\process\\\\BlockTheme\\:\\:\\$themes\\.$#"
-			count: 2
+			count: 1
 			path: modules/block/src/Plugin/migrate/process/BlockTheme.php
 
 		-
@@ -1259,11 +1244,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/file/file.module
-
-		-
-			message: "#^Function uploadprogress_get_info not found\\.$#"
-			count: 1
-			path: modules/file/src/Controller/FileWidgetAjaxController.php
 
 		-
 			message: "#^Method Drupal\\\\file\\\\Plugin\\\\Field\\\\FieldType\\\\FileFieldItemList\\:\\:defaultValuesForm\\(\\) should return array but return statement is missing\\.$#"
@@ -2384,11 +2364,6 @@ parameters:
 			path: modules/rest/src/Plugin/Deriver/EntityDeriver.php
 
 		-
-			message: "#^Method Drupal\\\\rest\\\\Plugin\\\\rest\\\\resource\\\\EntityResource\\:\\:calculateDependencies\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: modules/rest/src/Plugin/rest/resource/EntityResource.php
-
-		-
 			message: "#^Method Drupal\\\\rest\\\\Routing\\\\ResourceRoutes\\:\\:onDynamicRouteEvent\\(\\) should return array but return statement is missing\\.$#"
 			count: 1
 			path: modules/rest/src/Routing/ResourceRoutes.php
@@ -2437,11 +2412,6 @@ parameters:
 			message: "#^Access to an undefined property Drupal\\\\search\\\\Plugin\\\\views\\\\argument\\\\Search\\:\\:\\$search_score\\.$#"
 			count: 1
 			path: modules/search/src/Plugin/views/argument/Search.php
-
-		-
-			message: "#^Method Drupal\\\\search\\\\Plugin\\\\views\\\\field\\\\Score\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#"
-			count: 1
-			path: modules/search/src/Plugin/views/field/Score.php
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\search\\\\Plugin\\\\views\\\\filter\\\\Search\\:\\:\\$search_score\\.$#"
@@ -2960,13 +2930,8 @@ parameters:
 			path: modules/views/src/ManyToOneHelper.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\ManyToOneHelper\\:\\:\\$definition\\.$#"
-			count: 1
-			path: modules/views/src/ManyToOneHelper.php
-
-		-
 			message: "#^Access to an undefined property Drupal\\\\views\\\\ManyToOneHelper\\:\\:\\$handler\\.$#"
-			count: 72
+			count: 58
 			path: modules/views/src/ManyToOneHelper.php
 
 		-
@@ -3161,7 +3126,7 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\Boolean\\:\\:\\$formats\\.$#"
-			count: 5
+			count: 4
 			path: modules/views/src/Plugin/views/field/Boolean.php
 
 		-
@@ -3295,11 +3260,6 @@ parameters:
 			path: modules/views/src/Plugin/views/relationship/GroupwiseMax.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\row\\\\OpmlFields\\:\\:\\$field_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/row/OpmlFields.php
-
-		-
 			message: "#^Access to an undefined property \\$this\\(Drupal\\\\views\\\\Plugin\\\\views\\\\row\\\\RowPluginBase\\)\\:\\:\\$base_field\\.$#"
 			count: 2
 			path: modules/views/src/Plugin/views/row/RowPluginBase.php
@@ -3308,16 +3268,6 @@ parameters:
 			message: "#^Access to an undefined property \\$this\\(Drupal\\\\views\\\\Plugin\\\\views\\\\row\\\\RowPluginBase\\)\\:\\:\\$field_alias\\.$#"
 			count: 2
 			path: modules/views/src/Plugin/views/row/RowPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\row\\\\RowPluginBase\\:\\:\\$field_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/row/RowPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\row\\\\RssFields\\:\\:\\$field_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/row/RssFields.php
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\sort\\\\GroupByNumeric\\:\\:\\$handler\\.$#"
@@ -3346,26 +3296,6 @@ parameters:
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/views/src/ViewExecutable.php
-
-		-
-			message: "#^Method Drupal\\\\views\\\\ViewExecutable\\:\\:getCurrentPage\\(\\) should return int but return statement is missing\\.$#"
-			count: 1
-			path: modules/views/src/ViewExecutable.php
-
-		-
-			message: "#^Method Drupal\\\\views\\\\ViewExecutable\\:\\:getItemsPerPage\\(\\) should return int but return statement is missing\\.$#"
-			count: 1
-			path: modules/views/src/ViewExecutable.php
-
-		-
-			message: "#^Method Drupal\\\\views\\\\ViewExecutable\\:\\:getOffset\\(\\) should return int but return statement is missing\\.$#"
-			count: 1
-			path: modules/views/src/ViewExecutable.php
-
-		-
-			message: "#^Method Drupal\\\\views\\\\ViewExecutable\\:\\:usePager\\(\\) should return bool but return statement is missing\\.$#"
 			count: 1
 			path: modules/views/src/ViewExecutable.php
 
@@ -3761,11 +3691,6 @@ parameters:
 			path: tests/Drupal/KernelTests/KernelTestBase.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\KernelTests\\\\KernelTestBase\\:\\:\\$url\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/KernelTestBase.php
-
-		-
 			message: "#^Method Drupal\\\\KernelTests\\\\KernelTestBase\\:\\:assertEscaped\\(\\) should return bool but return statement is missing\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/KernelTestBase.php
@@ -4036,7 +3961,7 @@ parameters:
 			path: tests/Drupal/Tests/Core/Render/RendererPlaceholdersTest.php
 
 		-
-			message: "#^\\#access_callback value 'literal\\-string&non\\-empty\\-string' at key '0' is invalid\\.$#"
+			message: "#^\\#access_callback value ''Drupal\\\\\\\\Tests\\\\\\\\Core…'\\|'Drupal\\\\\\\\Tests\\\\\\\\Core…'\\|'Drupal\\\\\\\\Tests\\\\\\\\Core…'\\|'Drupal\\\\\\\\Tests\\\\\\\\Core…'' at key '0' is invalid\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Render/RendererTest.php
 
@@ -4064,11 +3989,6 @@ parameters:
 			message: "#^Access to an undefined property Drupal\\\\Tests\\\\Core\\\\Routing\\\\AccessAwareRouterTest\\:\\:\\$router\\.$#"
 			count: 2
 			path: tests/Drupal/Tests/Core/Routing/AccessAwareRouterTest.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Tests\\\\Core\\\\Test\\\\TestClass\\:\\:\\$url\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
 
 		-
 			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Test\\\\TestClass\\:\\:assertArrayHasKey\\(\\)\\.$#"
