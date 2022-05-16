@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\quickedit\FunctionalJavascript;
 
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\file\Functional\FileFieldCreationTrait;
@@ -39,6 +40,13 @@ class QuickEditFileTest extends QuickEditJavascriptTestBase {
 
     // Add file field to Article node type.
     $this->createFileField('field_file', 'node', 'article', ['file_extensions' => 'txt']);
+
+    // Move file field to the top of all fields, so its QuickEdit Toolbar won't
+    // overlap any QuickEdit-able fields, which causes (semi-)random test
+    // failures.
+    $entity_display = EntityViewDisplay::load('node.article.default');
+    $entity_display->setComponent('field_file', ['weight' => 0]);
+    $entity_display->save();
 
     // Log in as a content author who can use Quick Edit and edit Articles.
     $user = $this->drupalCreateUser([
