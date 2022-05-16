@@ -64,8 +64,8 @@ class MessageEntityTest extends EntityKernelTestBase {
 
     $this->assertFalse(\Drupal::entityTypeManager()->getAccessControlHandler('contact_message')->createAccess(NULL, $no_access_user));
     $this->assertTrue(\Drupal::entityTypeManager()->getAccessControlHandler('contact_message')->createAccess(NULL, $access_user));
-    $this->assertTrue($message->access('edit', $admin));
-    $this->assertFalse($message->access('edit', $access_user));
+    $this->assertTrue($message->access('update', $admin));
+    $this->assertFalse($message->access('update', $access_user));
   }
 
 }
