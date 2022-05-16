@@ -2,8 +2,8 @@
 
 namespace Drupal\responsive_image\Plugin\migrate\source\d7;
 
-use Drupal\migrate\Plugin\migrate\source\SqlBase;
 use Drupal\migrate\Row;
+use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
  * Gets Drupal responsive image styles source from database.
@@ -20,7 +20,7 @@ use Drupal\migrate\Row;
  *   source_module = "picture"
  * )
  */
-class ResponsiveImageStyles extends SqlBase {
+class ResponsiveImageStyles extends DrupalSqlBase {
 
   /**
    * {@inheritdoc}

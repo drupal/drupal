@@ -22,6 +22,11 @@ class MigrateResponsiveImageStylesTest extends MigrateDrupal7TestBase {
    */
   public function setUp(): void {
     parent::setUp();
+    // Ensure the 'picture' module is enabled in the source.
+    $this->sourceDatabase->update('system')
+      ->condition('name', 'picture')
+      ->fields(['status' => 1])
+      ->execute();
     $this->executeMigrations(['d7_image_styles', 'd7_responsive_image_styles']);
   }
 
