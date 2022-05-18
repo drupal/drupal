@@ -752,14 +752,19 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         'toolbar' => [
           'items' => array_merge(
             array_slice($basic_html_test_case['expected_ckeditor5_settings']['toolbar']['items'], 0, -1),
-            [
-              'alignment:center',
-              'alignment:justify',
-            ],
+            ['alignment'],
             array_slice($basic_html_test_case['expected_ckeditor5_settings']['toolbar']['items'], -1)
           ),
         ],
-        'plugins' => $basic_html_test_case['expected_ckeditor5_settings']['plugins'],
+        'plugins' => array_merge(
+          array_slice($basic_html_test_case['expected_ckeditor5_settings']['plugins'], 0, 1),
+          [
+            'ckeditor5_alignment' => [
+              'enabled_alignments' => ['center', 'justify'],
+            ],
+          ],
+          array_slice($basic_html_test_case['expected_ckeditor5_settings']['plugins'], 1),
+        ),
       ],
       'expected_superset' => implode(' ', [
         // Note that aligning left and right is being added, on top of what the
@@ -779,7 +784,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
       'expected_messages' => array_merge_recursive($basic_html_test_case['expected_messages'], [
         'status' => [
-          'The following plugins were enabled to support specific attributes that are allowed by this text format: <em class="placeholder">Align center ( for tag: &lt;p&gt; to support: class with value(s):  text-align-center), Justify ( for tag: &lt;p&gt; to support: class with value(s):  text-align-justify)</em>.',
+          'The following plugins were enabled to support specific attributes that are allowed by this text format: <em class="placeholder">Alignment ( for tag: &lt;p&gt; to support: class with value(s):  text-align-center, text-align-justify)</em>.',
           'This format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;.',
         ],
       ]),

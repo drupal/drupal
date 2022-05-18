@@ -59,6 +59,7 @@ use Drupal\filter\FilterFormatInterface;
  *   },
  *   cke5_plugin_elements_subset_configuration = {
  *    "ckeditor5_heading",
+ *    "ckeditor5_alignment",
  *    "ckeditor5_list",
  *    "media_media",
  *   }
@@ -73,6 +74,7 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
    * {@inheritdoc}
    */
   public function mapCKEditor4ToolbarButtonToCKEditor5ToolbarItem(string $cke4_button, HTMLRestrictions $text_format_html_restrictions): ?array {
+    static $alignment_mapped;
     switch ($cke4_button) {
       // @see \Drupal\ckeditor\Plugin\CKEditorPlugin\DrupalImage
       case 'DrupalImage':
@@ -103,16 +105,14 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
         return ['blockQuote'];
 
       case 'JustifyLeft':
-        return ["alignment:left"];
-
       case 'JustifyCenter':
-        return ["alignment:center"];
-
       case 'JustifyRight':
-        return ["alignment:right"];
-
       case 'JustifyBlock':
-        return ["alignment:justify"];
+        if (!isset($alignment_mapped)) {
+          $alignment_mapped = TRUE;
+          return ['alignment'];
+        }
+        return NULL;
 
       case 'HorizontalRule':
         return ['horizontalLine'];
@@ -225,6 +225,37 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
           if (array_key_exists("h$index", $restrictions['allowed'])) {
             $configuration['enabled_headings'][] = "heading$index";
           }
+        }
+        return $configuration;
+
+      case 'ckeditor5_alignment':
+        $alignment_classes_to_types = [
+          'text-align-left' => 'left',
+          'text-align-right' => 'right',
+          'text-align-center' => 'center',
+          'text-align-justify' => 'justify',
+        ];
+        $restrictions = $text_format->getHtmlRestrictions();
+        if ($restrictions === FALSE) {
+          // The default is to allow all alignments. This makes sense when there
+          // are no restrictions.
+          // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Alignment::DEFAULT_CONFIGURATION
+          return NULL;
+        }
+        // Otherwise, enable alignment types based on the provided restrictions.
+        // I.e. if a tag is found with a text-align-{alignment type} class,
+        // activate that alignment type.
+        $configuration = [];
+        foreach ($restrictions['allowed'] as $tag) {
+          $classes = isset($tag['class']) && is_array($tag['class']) ? $tag['class'] : [];
+          foreach (array_keys($classes) as $class) {
+            if (isset($alignment_classes_to_types[$class])) {
+              $configuration['enabled_alignments'][] = $alignment_classes_to_types[$class];
+            }
+          }
+        }
+        if (isset($configuration['enabled_alignments'])) {
+          $configuration['enabled_alignments'] = array_unique($configuration['enabled_alignments']);
         }
         return $configuration;
 

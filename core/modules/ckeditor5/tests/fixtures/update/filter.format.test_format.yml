@@ -1,0 +1,17 @@
+uuid: 343a36d6-5852-45f5-b4de-437551cb9caf
+langcode: en
+status: true
+dependencies: {  }
+name: 'Test format'
+format: test_format
+weight: 0
+filters:
+  filter_html:
+    id: filter_html
+    provider: filter
+    status: true
+    weight: -10
+    settings:
+      allowed_html: '<br> <p class="text-align-center"> <strong> <em> <a href>'
+      filter_html_help: true
+      filter_html_nofollow: false
