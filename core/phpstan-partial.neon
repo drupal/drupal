@@ -1,5 +1,5 @@
 # Configuration file for PHPStan static code checking, see https://phpstan.org .
-# PHPStan is triggered on Drupal CI in commit-code-check.sh.
+# PHPStan with partial analysis is triggered in commit-code-check.sh.
 includes:
   - phpstan.neon.dist
 

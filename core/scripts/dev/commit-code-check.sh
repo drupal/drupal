@@ -216,15 +216,17 @@ printf "\n"
 printf -- '-%.0s' {1..100}
 printf "\n"
 
-# Run PHPStan on all files in one go for better performance. APCu is disabled to
-# ensure that the composer classmap is not corrupted.
-if [[ $PHPSTAN_DIST_FILE_CHANGED == "1" ]]; then
+# Run PHPStan on all files on DrupalCI or when phpstan files are changed.
+# APCu is disabled to ensure that the composer classmap is not corrupted.
+if [[ $PHPSTAN_DIST_FILE_CHANGED == "1" ]] || [[ "$DRUPALCI" == "1" ]]; then
   printf "\nRunning PHPStan on *all* files.\n"
   php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --no-progress --configuration="$TOP_LEVEL/core/phpstan.neon.dist"
 else
+  # Only run PHPStan on changed files locally.
   printf "\nRunning PHPStan on changed files.\n"
   php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --no-progress --configuration="$TOP_LEVEL/core/phpstan-partial.neon" $ABS_FILES
 fi
+
 if [ "$?" -ne "0" ]; then
   # If there are failures set the status to a number other than 0.
   FINAL_STATUS=1
