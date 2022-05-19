@@ -39,11 +39,13 @@ final class ProjectSecurityData {
    *
    * @see \Drupal\update\ProjectSecurityRequirement::getDateEndRequirement()
    */
-  const SECURITY_COVERAGE_END_DATE_8_8 = '2020-12-02';
+  const SECURITY_COVERAGE_END_DATE_9_4 = '2023-06-21';
 
-  const SECURITY_COVERAGE_ENDING_WARN_DATE_8_8 = '2020-06-02';
+  const SECURITY_COVERAGE_ENDING_WARN_DATE_9_4 = '2022-12-14';
 
-  const SECURITY_COVERAGE_END_DATE_8_9 = '2021-11';
+  const SECURITY_COVERAGE_END_DATE_9_5 = '2023-11';
+
+  const SECURITY_COVERAGE_ENDING_WARN_DATE_9_5 = '2023-05-14';
 
   /**
    * The existing (currently installed) version of the project.
