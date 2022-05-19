@@ -54,7 +54,8 @@
             "composer/installers": true,
             "drupal/core-project-message": true,
             "drupal/core-vendor-hardening": true,
-            "phpstan/extension-installer": true
+            "phpstan/extension-installer": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
     "extra": {
@@ -109,8 +110,8 @@
         "post-update-cmd": [
             "Drupal\\Composer\\Composer::generateMetapackages"
         ],
-        "phpcs": "phpcs --standard=core/phpcs.xml.dist --runtime-set installed_paths $($COMPOSER_BINARY config vendor-dir)/drupal/coder/coder_sniffer --",
-        "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --runtime-set installed_paths $($COMPOSER_BINARY config vendor-dir)/drupal/coder/coder_sniffer --"
+        "phpcs": "phpcs --standard=core/phpcs.xml.dist --",
+        "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --"
     },
     "repositories": [
         {

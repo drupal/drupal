@@ -243,7 +243,7 @@ printf "\n"
 # When the file core/phpcs.xml.dist has been changed, then PHPCS must check all files.
 if [[ $PHPCS_XML_DIST_FILE_CHANGED == "1" ]]; then
   # Test all files with phpcs rules.
-  vendor/bin/phpcs -ps --runtime-set installed_paths "$TOP_LEVEL/vendor/drupal/coder/coder_sniffer" --standard="$TOP_LEVEL/core/phpcs.xml.dist"
+  vendor/bin/phpcs -ps --standard="$TOP_LEVEL/core/phpcs.xml.dist"
   PHPCS=$?
   if [ "$PHPCS" -ne "0" ]; then
     # If there are failures set the status to a number other than 0.
@@ -354,7 +354,7 @@ for FILE in $FILES; do
   ############################################################################
   if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.(inc|install|module|php|profile|test|theme|yml)$ ]] && [[ $PHPCS_XML_DIST_FILE_CHANGED == "0" ]]; then
     # Test files with phpcs rules.
-    vendor/bin/phpcs "$TOP_LEVEL/$FILE" --runtime-set installed_paths "$TOP_LEVEL/vendor/drupal/coder/coder_sniffer" --standard="$TOP_LEVEL/core/phpcs.xml.dist"
+    vendor/bin/phpcs "$TOP_LEVEL/$FILE" --standard="$TOP_LEVEL/core/phpcs.xml.dist"
     PHPCS=$?
     if [ "$PHPCS" -ne "0" ]; then
       # If there are failures set the status to a number other than 0.
