@@ -251,6 +251,7 @@ class Block extends DisplayPluginBase {
 
   /**
    * Perform any necessary changes to the form values prior to storage.
+   *
    * There is no need for this function to actually store the data.
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
