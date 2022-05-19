@@ -356,16 +356,16 @@ final class HTMLRestrictions {
    */
   public static function fromString(string $elements_string): HTMLRestrictions {
     // Preprocess wildcard tags: convert `<$text-container>` to
-    // `<__preprocessed-wildcard-text-container__>` and `<*>` to
-    // `<__preprocessed-global-attribute__>`.
+    // `<preprocessed-wildcard-text-container__>` and `<*>` to
+    // `<preprocessed-global-attribute__>`.
     // Note: unknown wildcard tags will trigger a validation error in
     // ::validateAllowedRestrictionsPhase1().
     $replaced_wildcard_tags = [];
     $elements_string = preg_replace_callback('/<(\$[a-z][0-9a-z\-]*|\*)/', function ($matches) use (&$replaced_wildcard_tags) {
       $wildcard_tag_name = $matches[1];
       $replacement = $wildcard_tag_name === '*'
-        ? '__preprocessed-global-attribute__'
-        : sprintf("__preprocessed-wildcard-%s__", substr($wildcard_tag_name, 1));
+        ? 'preprocessed-global-attribute__'
+        : sprintf("preprocessed-wildcard-%s__", substr($wildcard_tag_name, 1));
       $replaced_wildcard_tags[$replacement] = $wildcard_tag_name;
       return "<$replacement";
     }, $elements_string);
@@ -382,7 +382,7 @@ final class HTMLRestrictions {
     unset($allowed_elements['__zqh6vxfbk3cg__']);
 
     // Postprocess tag wildcards: convert
-    // `<__preprocessed-wildcard-text-container__>` to `<$text-container>`.
+    // `<preprocessed-wildcard-text-container__>` to `<$text-container>`.
     foreach ($replaced_wildcard_tags as $processed => $original) {
       if (isset($allowed_elements[$processed])) {
         $allowed_elements[$original] = $allowed_elements[$processed];
