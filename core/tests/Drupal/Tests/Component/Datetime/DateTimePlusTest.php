@@ -270,6 +270,7 @@ class DateTimePlusTest extends TestCase {
 
   /**
    * Tests that DrupalDateTime can detect the right timezone to use.
+   *
    * When specified or not.
    *
    * @param mixed $input
