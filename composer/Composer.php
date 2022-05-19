@@ -85,6 +85,7 @@ class Composer {
 
   /**
    * Ensure that the minimum required version of Composer is running.
+   *
    * Throw an exception if Composer is too old.
    */
   public static function ensureComposerVersion(): void {

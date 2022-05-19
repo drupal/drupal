@@ -151,6 +151,7 @@ class ManyToOneHelper {
 
   /**
    * Override ensureMyTable so we can control how this joins in.
+   *
    * The operator actually has influence over joining.
    */
   public function ensureMyTable() {
