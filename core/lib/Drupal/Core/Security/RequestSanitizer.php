@@ -22,15 +22,6 @@ class RequestSanitizer {
   const SANITIZE_INPUT_SAFE_KEYS = 'sanitize_input_safe_keys';
 
   /**
-   * Previous name of SANITIZE_INPUT_SAFE_KEYS.
-   *
-   * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
-   *   SANITIZE_INPUT_SAFE_KEYS instead.
-   * @see https://www.drupal.org/node/3163148
-   */
-  const SANITIZE_WHITELIST = 'sanitize_input_whitelist';
-
-  /**
    * The name of the setting that determines if sanitized keys are logged.
    */
   const SANITIZE_LOG = 'sanitize_input_logging';
