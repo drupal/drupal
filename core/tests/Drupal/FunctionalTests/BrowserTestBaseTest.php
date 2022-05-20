@@ -671,20 +671,6 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   /**
-   * Tests deprecation of drupalPostForm().
-   *
-   * @group legacy
-   */
-  public function testLegacyDrupalPostForm(): void {
-    $this->expectDeprecation('UiHelperTrait::drupalPostForm() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use $this->submitForm() instead. See https://www.drupal.org/node/3168858');
-    $this->expectDeprecation('Calling Drupal\Tests\UiHelperTrait::drupalPostForm() with $submit as an object is deprecated in drupal:9.2.0 and the method is removed in drupal:10.0.0. Use $this->submitForm() instead. See https://www.drupal.org/node/3168858');
-    $this->expectDeprecation('Calling Drupal\Tests\UiHelperTrait::drupalPostForm() with $edit set to NULL is deprecated in drupal:9.1.0 and the method is removed in drupal:10.0.0. Use $this->submitForm() instead. See https://www.drupal.org/node/3168858');
-    $this->drupalPostForm('form-test/object-builder', NULL, t('Save'));
-    $this->expectDeprecation('Calling Drupal\Tests\UiHelperTrait::drupalPostForm() with $path set to NULL is deprecated in drupal:9.2.0 and the method is removed in drupal:10.0.0. Use $this->submitForm() instead. See https://www.drupal.org/node/3168858');
-    $this->drupalPostForm(NULL, [], 'Save');
-  }
-
-  /**
    * Tests that deprecation headers do not get duplicated.
    *
    * @group legacy
@@ -713,17 +699,6 @@ class BrowserTestBaseTest extends BrowserTestBase {
       return $message === 'Test deprecation message';
     });
     $this->assertCount(1, $test_deprecation_messages);
-  }
-
-  /**
-   * Tests legacy drupalGetHeader().
-   *
-   * @group legacy
-   */
-  public function testDrupalGetHeader() {
-    $this->expectDeprecation('BrowserTestBase::drupalGetHeader() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use $this->getSession()->getResponseHeader() instead. See https://www.drupal.org/node/3168383');
-    $this->drupalGet('test-page');
-    $this->drupalGetHeader('Content-Type');
   }
 
   /**

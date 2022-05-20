@@ -17,7 +17,6 @@ use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\Plugin\DataType\StringData;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\Traits\ExpectDeprecationTrait;
 
 /**
  * @coversDefaultClass \Drupal\Core\Plugin\ContextAwarePluginTrait
@@ -25,8 +24,6 @@ use Drupal\Tests\Traits\ExpectDeprecationTrait;
  * @group Plugin
  */
 class ContextAwarePluginTraitTest extends KernelTestBase {
-
-  use ExpectDeprecationTrait;
 
   /**
    * The plugin instance under test.

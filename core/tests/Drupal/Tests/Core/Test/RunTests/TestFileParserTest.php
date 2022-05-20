@@ -89,10 +89,6 @@ COMPOUND
       ['Drupal\KernelTests\Core\Datetime\Element\TimezoneTest'],
       $parser->getTestListFromFile(__DIR__ . '/../../../../KernelTests/Core/Datetime/Element/TimezoneTest.php')
     );
-    // Not a test.
-    $this->assertEmpty(
-      $parser->getTestListFromFile(__DIR__ . '/../../../AssertHelperTrait.php')
-    );
   }
 
 }
