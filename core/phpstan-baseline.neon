@@ -3759,11 +3759,6 @@ parameters:
 			path: tests/Drupal/TestTools/Extension/SchemaInspector.php
 
 		-
-			message: "#^Instantiated class Drupal\\\\Tests\\\\AssertHelperTestClass not found\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/AssertHelperTraitTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: tests/Drupal/Tests/BrowserTestBase.php
