@@ -294,4 +294,29 @@ class TokenTest extends UnitTestCase {
     return $data;
   }
 
+  /**
+   * @covers ::replacePlain
+   */
+  public function testReplacePlain() {
+    $this->setupSiteTokens();
+    $base = 'Wow, great "[site:name]" has a slogan "[site:slogan]"';
+    $plain = $this->token->replacePlain($base);
+    $this->assertEquals($plain, 'Wow, great "Your <best> buys" has a slogan "We are best"');
+  }
+
+  /**
+   * Sets up the token library to return site tokens.
+   */
+  protected function setupSiteTokens() {
+    // The site name is plain text, but the slogan is markup.
+    $tokens = [
+      '[site:name]' => 'Your <best> buys',
+      '[site:slogan]' => Markup::Create('We are <b>best</b>'),
+    ];
+
+    $this->moduleHandler->expects($this->any())
+      ->method('invokeAll')
+      ->willReturn($tokens);
+  }
+
 }
