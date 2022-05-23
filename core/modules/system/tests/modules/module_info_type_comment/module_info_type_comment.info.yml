@@ -1,0 +1,5 @@
+name: 'Module info type comment test'
+type: module # Test that extension discovery works with a trailing comment for the type element.
+description: 'Support module for module system testing.'
+package: Testing
+version: VERSION
