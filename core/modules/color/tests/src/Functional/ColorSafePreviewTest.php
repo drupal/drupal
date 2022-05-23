@@ -9,6 +9,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests sanitizing color preview loaded from theme.
  *
  * @group color
+ * @group legacy
  */
 class ColorSafePreviewTest extends BrowserTestBase {
 
