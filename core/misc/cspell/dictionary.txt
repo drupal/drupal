@@ -163,6 +163,7 @@ bundleless
 bundlenode
 buttonpane
 buttonset
+buttontext
 buytaert
 cacheability
 cacheable

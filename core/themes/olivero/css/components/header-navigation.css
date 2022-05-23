@@ -53,8 +53,10 @@
   top: 0;
   visibility: hidden;
   overflow: auto;
-  /* Ensure that header nav not use additional space and force
-     system branding block text to unnecessarily wrap. */
+  /**
+   * Ensure that header nav not use additional space and force system branding
+   * block text to unnecessarily wrap.
+   */
   flex-basis: 0;
   flex-grow: 1; /* Necessary for IE11. */
   width: 100%;
@@ -62,7 +64,13 @@
   height: 100%;
   padding-top: 0;
   padding-bottom: var(--sp);
-  border-top: solid var(--color--white) var(--sp3); /* Create room for the "close" button. */
+  /**
+   * Create room for the "close" button. We cannot use margin because the
+   * mobile navigation needs to slide beneath the button, but we also cannot
+   * use padding because that would enable the button to scroll out of the
+   * viewport on short screens.
+   */
+  border-top: solid var(--color--white) var(--sp3);
   background-color: var(--color--white);
   box-shadow: 0 0 72px rgba(0, 0, 0, 0.1)
 }
@@ -106,6 +114,20 @@
 
 .header-nav {
     grid-column: 5 / 14
+}
+  }
+
+.header-nav {
+
+  /*
+   * Ensure top border has the same color as the background when in forced colors.
+   */
+}
+
+@media (forced-colors: active) {
+
+.header-nav {
+    border-top-color: canvas
 }
   }
 
@@ -267,6 +289,13 @@ body.is-always-mobile-nav .header-nav {
   opacity: 0.2;
   background: var(--color--primary-40)
 }
+
+@media (forced-colors: active) {
+
+.header-nav-overlay {
+    background: canvastext
+}
+  }
 
 .is-overlay-active .header-nav-overlay {
     display: block

@@ -134,8 +134,8 @@
   position: relative;
   display: block;
   width: var(--sp2);
-  height: 0.1875rem;
-  background-color: var(--color--primary-50)
+  height: 0;
+  border-top: solid 3px var(--color--primary-50)
 }
 
 [dir="ltr"] .mobile-nav-button__icon:before {
@@ -148,12 +148,12 @@
 
 .mobile-nav-button__icon:before {
     position: absolute;
-    top: -0.5rem;
+    top: -0.6875rem;
     width: 100%;
-    height: 0.1875rem;
+    height: 0;
     content: "";
     transition: all 0.2s;
-    background-color: var(--color--primary-50);
+    border-top: solid 3px var(--color--primary-50);
   }
 
 [dir="ltr"] .mobile-nav-button__icon:after {
@@ -169,14 +169,14 @@
     top: auto;
     bottom: -0.5rem;
     width: 100%;
-    height: 0.1875rem;
+    height: 0;
     content: "";
     transition: all 0.2s;
-    background-color: var(--color--primary-50);
+    border-top: solid 3px var(--color--primary-50);
   }
 
 .mobile-nav-button[aria-expanded="true"] .mobile-nav-button__icon {
-  background-color: transparent
+  border-top: 0
 }
 
 .mobile-nav-button[aria-expanded="true"] .mobile-nav-button__icon:before {
