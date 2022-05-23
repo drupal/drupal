@@ -98,9 +98,6 @@ class MigrateMenuLinkTest extends MigrateNodeTestBase {
     $this->assertEntity('460', 'Le Vrai McCoy', 'primary-links', NULL, TRUE, FALSE, ['attributes' => ['title' => ''], 'alter' => TRUE], 'entity:node/10', 0);
     $this->assertEntity('461', 'Abantu zulu', 'primary-links', NULL, TRUE, FALSE, ['attributes' => ['title' => ''], 'alter' => TRUE], 'entity:node/12', 0);
     $this->assertEntity('462', 'The Zulu People', 'primary-links', NULL, TRUE, FALSE, ['attributes' => ['title' => ''], 'alter' => TRUE], 'entity:node/12', 0);
-
-    // Test the migration of menu links translation.
-    $this->assertEntity('463', 'fr - Test 1', 'secondary-links', 'fr - Test menu link 1', TRUE, FALSE, ['attributes' => ['title' => 'fr - Test menu link 1'], 'langcode' => 'fr', 'alter' => TRUE], 'internal:/user/login', -49);
   }
 
 }
