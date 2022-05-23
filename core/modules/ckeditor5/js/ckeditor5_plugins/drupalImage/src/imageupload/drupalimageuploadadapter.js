@@ -5,11 +5,6 @@
  * Upload adapter.
  *
  * Copied from @ckeditor5/ckeditor5-upload/src/adapters/simpleuploadadapter
- * Adds a mapping from `response.uuid` to `dataEntityUuid` and
- * `response.entity_type` to `dataEntityType` for the callback after the file
- * upload in the `_initListeners` method.
- *
- * @todo use response.entity_type directly instead of converting it https://www.drupal.org/project/drupal/issues/3275237
  *
  * @private
  * @implements module:upload/filerepository~UploadAdapter
@@ -110,10 +105,11 @@ export default class DrupalImageUploadAdapter {
             : genericErrorText,
         );
       }
+      // Resolve with the `urls` property and pass the response
+      // to allow customizing the behavior of features relying on the upload adapters.
       resolve({
+        response,
         urls: { default: response.url },
-        dataEntityUuid: response.uuid ? response.uuid : '',
-        dataEntityType: response.entity_type ? response.entity_type : '',
       });
     });
 
