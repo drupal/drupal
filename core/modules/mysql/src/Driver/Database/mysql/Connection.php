@@ -271,7 +271,7 @@ class Connection extends DatabaseConnection {
    */
   protected function getServerVersion(): string {
     if (!$this->serverVersion) {
-      $this->serverVersion = $this->connection->query('SELECT VERSION()')->fetchColumn();
+      $this->serverVersion = $this->query('SELECT VERSION()')->fetchField();
     }
     return $this->serverVersion;
   }

@@ -5,9 +5,10 @@ namespace Drupal\Core\Database;
 /**
  * Base Database exception handler class.
  *
- * This class handles exceptions thrown by the database layer. Database driver
- * implementation can provide an alternative implementation to support special
- * handling required by that database.
+ * This class handles exceptions thrown by the database layer of a PDO-based
+ * database connection. Database driver implementations can provide an
+ * alternative implementation to support special handling required by that
+ * database.
  */
 class ExceptionHandler {
 

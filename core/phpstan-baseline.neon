@@ -186,11 +186,6 @@ parameters:
 			path: lib/Drupal/Core/Config/TypedConfigManager.php
 
 		-
-			message: "#^Method Drupal\\\\Core\\\\Database\\\\Connection\\:\\:open\\(\\) should return PDO but return statement is missing\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Database/Connection.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\Database\\\\Query\\\\Delete\\:\\:execute\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Database/Query/Delete.php

@@ -20,8 +20,15 @@ class DatabaseExceptionWrapperTest extends KernelTestBase {
    * class, which defer the statement check to the moment of the execution.
    */
   public function testPrepareStatementFailOnExecution() {
+    $connection = Database::getConnection();
+    $connection_reflection_class = new \ReflectionClass($connection);
+    $client_connection_property = $connection_reflection_class->getProperty('connection');
+    $client_connection = $client_connection_property->getValue($connection);
+    if (!$client_connection instanceof \PDO) {
+      $this->markTestSkipped("This tests can only run for drivers wrapping \\PDO connections.");
+    }
     $this->expectException(\PDOException::class);
-    $stmt = Database::getConnection()->prepareStatement('bananas', []);
+    $stmt = $connection->prepareStatement('bananas', []);
     $stmt->execute();
   }
 

@@ -8,7 +8,9 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Database installer structure.
  *
- * Defines basic Drupal requirements for databases.
+ * Defines basic Drupal requirements for databases connecting via PDO.
+ * Every database driver implementation must provide a concrete implementation
+ * of it to support special handling required by that database.
  */
 abstract class Tasks {
 

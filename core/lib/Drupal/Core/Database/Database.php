@@ -390,8 +390,8 @@ abstract class Database {
 
     $driver_class = self::$databaseInfo[$key][$target]['namespace'] . '\\Connection';
 
-    $pdo_connection = $driver_class::open(self::$databaseInfo[$key][$target]);
-    $new_connection = new $driver_class($pdo_connection, self::$databaseInfo[$key][$target]);
+    $client_connection = $driver_class::open(self::$databaseInfo[$key][$target]);
+    $new_connection = new $driver_class($client_connection, self::$databaseInfo[$key][$target]);
     $new_connection->setTarget($target);
     $new_connection->setKey($key);
 
@@ -424,8 +424,8 @@ abstract class Database {
     else {
       unset(self::$connections[$key]);
     }
-    // Force garbage collection to run. This ensures that PDO connection objects
-    // and destroyed and results in the connections being closed.
+    // Force garbage collection to run. This ensures that client connection
+    // objects and results in the connection being being closed are destroyed.
     gc_collect_cycles();
   }
 
