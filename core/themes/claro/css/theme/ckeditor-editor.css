@@ -64,7 +64,7 @@
 .error + .cke .cke_contents,
 .error + .cke .cke_top,
 .error + .cke .cke_bottom {
-  border-color: #d72222;
+  border-color: #dc2323;
 }
 /* Disabled. */
 [disabled] + .cke.cke_chrome {

@@ -138,16 +138,16 @@
 /* Danger. */
 
 .action-link--danger {
-  color: #d72222;
+  color: #dc2323;
 }
 
 .action-link--danger:hover {
-  color: #c11f1f;
+  color: #c61f1f;
   background-color: #fdf5f5;
 }
 
 .action-link--danger:active {
-  color: #ab1b1b;
+  color: #b01c1c;
   background-color: #fceded;
 }
 

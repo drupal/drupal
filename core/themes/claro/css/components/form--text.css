@@ -121,7 +121,7 @@ _:-ms-fullscreen,
 
 .form-element.error {
   border-width: 2px;
-  border-color: #d72222;
+  border-color: #dc2323;
 }
 
 .form-element.error:hover {
@@ -133,7 +133,7 @@ _:-ms-fullscreen,
 }
 
 .form-element--type-textarea.error + .cke {
-  border-color: #d72222;
+  border-color: #dc2323;
 }
 
 .form-element[disabled] {
@@ -165,5 +165,5 @@ _:-ms-fullscreen,
 }
 
 .form-element--type-textarea.error + .ck-editor > .ck-editor__main {
-  border: 2px solid #d72222;
+  border: 2px solid #dc2323;
 }
