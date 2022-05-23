@@ -78,24 +78,6 @@ class MigrateMenuLinkTranslationTest extends MigrateDrupal6TestBase {
     $this->assertSame(['attributes' => ['title' => '']], $menu_link->link->options);
     $this->assertSame('https://www.drupal.org', $menu_link->link->uri);
     $this->assertSame(-50, $menu_link->getWeight());
-
-    $menu_link = MenuLinkContent::load(463);
-    $this->assertInstanceOf(MenuLinkContent::class, $menu_link);
-    $this->assertSame('fr - Test 1', $menu_link->getTitle());
-    $this->assertSame('fr - Test menu link 1', $menu_link->getDescription());
-    $this->assertSame('secondary-links', $menu_link->getMenuName());
-    $this->assertTrue($menu_link->isEnabled());
-    $this->assertFalse($menu_link->isExpanded());
-    $attributes = [
-      'attributes' => [
-        'title' => 'fr - Test menu link 1',
-      ],
-      'langcode' => 'fr',
-      'alter' => TRUE,
-    ];
-    $this->assertSame($attributes, $menu_link->link->options);
-    $this->assertSame('internal:/user/login', $menu_link->link->uri);
-    $this->assertSame(-49, $menu_link->getWeight());
   }
 
 }
