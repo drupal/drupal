@@ -15,7 +15,7 @@
   --color-gray-050-o-40: rgba(243, 244, 249, 0.4);
   /* Secondary. */
   --color-gray-200-o-80: rgba(212, 212, 218, 0.8);
-  --color-maximumred: #d72222;
+  --color-maximumred: var(--color-red-500);
   --color-sunglow: #ffd23f;
   --color-sunglow-shaded: #977405;
   --color-lightninggreen: #26a769;
@@ -23,12 +23,12 @@
   /* Variations. */
   --color-absolutezero-hover: var(--color-blue-650); /* 5% darker than base. */
   --color-absolutezero-active: var(--color-blue-700); /* 10% darker than base. */
-  --color-maximumred-hover: #c11f1f; /* 5% darker than base. */
-  --color-maximumred-active: #ab1b1b; /* 10% darker than base. */
+  --color-maximumred-hover: var(--color-red-550); /* 5% darker than base. */
+  --color-maximumred-active: var(--color-red-600); /* 10% darker than base. */
   --color-bgblue-hover: var(--color-blue-020); /* 2% darker than base. */
   --color-bgblue-active: var(--color-blue-050); /* 5% darker than base. */
-  --color-bgred-hover: #fdf5f5; /* 5% darker than base. */
-  --color-bgred-active: #fceded; /* 10% darker than base. */
+  --color-bgred-hover: var(--color-red-020); /* 5% darker than base. */
+  --color-bgred-active: var(--color-red-050); /* 10% darker than base. */
   /* Gray variations. */
   --color-gray: #232429;
   --color-gray-900: #393a3f;
@@ -57,6 +57,21 @@
   --color-blue-070: #f3f4f9;
   --color-blue-050: #e5edff;
   --color-blue-020: #f5f8ff;
+  /* Red variations. */
+  --color-red: var(--color-red-500);
+  --color-red-900: #2c0707;
+  --color-red-800: #580e0e;
+  --color-red-700: #841515;
+  --color-red-600: #b01c1c;
+  --color-red-550: #c61f1f;
+  --color-red-500: #dc2323;
+  --color-red-400: #e34f4f;
+  --color-red-300: #ea7b7b;
+  --color-red-200: #f1a7a7;
+  --color-red-100: #f8d3d3;
+  --color-red-070: #fae0e0;
+  --color-red-050: #fce9e9;
+  --color-red-020: #fdf5f5;
   /*
    * Base.
    */
