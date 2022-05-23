@@ -9,7 +9,6 @@ install:
   - block
   - breakpoint
   - ckeditor
-  - color
   - config
   - contextual
   - contact
