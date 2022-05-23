@@ -99,6 +99,17 @@ class ExtensionDiscoveryTest extends UnitTestCase {
   }
 
   /**
+   * Tests finding modules that have a trailing comment on the type property.
+   *
+   * @covers ::scan
+   */
+  public function testExtensionDiscoveryTypeComment(): void {
+    $extension_discovery = new ExtensionDiscovery($this->root, TRUE, [], 'sites/default');
+    $modules = $extension_discovery->scan('module', TRUE);
+    $this->assertArrayHasKey('module_info_type_comment', $modules);
+  }
+
+  /**
    * Adds example files to the filesystem structure.
    *
    * @param array $filesystem_structure
