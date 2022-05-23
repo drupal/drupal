@@ -99,32 +99,32 @@
  */
 
 .form-boolean.error::-ms-check {
-  border-color: #d72222;
+  border-color: #dc2323;
   background-color: #fff;
-  box-shadow: inset 0 0 0 1px #d72222;
+  box-shadow: inset 0 0 0 1px #dc2323;
 }
 
 .form-boolean.error:active::-ms-check,
 .form-boolean.error:hover::-ms-check {
-  box-shadow: inset 0 0 0 1px #d72222;
+  box-shadow: inset 0 0 0 1px #dc2323;
 }
 
 .form-boolean.error:focus::-ms-check,
 .form-boolean.error:focus:active::-ms-check,
 .form-boolean.error:focus:hover::-ms-check {
-  box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769, inset 0 0 0 1px #d72222;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769, inset 0 0 0 1px #dc2323;
 }
 
 .form-boolean.error:checked:active::-ms-check,
 .form-boolean.error:checked:hover::-ms-check {
-  border-color: #d72222;
+  border-color: #dc2323;
   background-color: #fff;
 }
 
 .form-boolean--type-checkbox.error:checked::-ms-check,
 .form-boolean--type-checkbox.error:checked:active::-ms-check,
 .form-boolean--type-checkbox.error:checked:hover::-ms-check {
-  background-color: #d72222;
+  background-color: #dc2323;
 }
 
 .form-boolean--type-radio.error:checked::-ms-check,
@@ -134,7 +134,7 @@
 }
 
 .form-boolean--type-radio.error:checked:focus::-ms-check {
-  box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769, inset 0 0 0 1px #d72222;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769, inset 0 0 0 1px #dc2323;
 }
 
 /**

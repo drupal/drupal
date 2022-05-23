@@ -50,7 +50,7 @@
   left: auto;
 }
 .system-status-report__status-icon--error:before {
-  background-image: url(../../images/core/e32700/error.svg);
+  background-image: url(../../../../misc/icons/dc2323/error.svg);
 }
 .system-status-report__status-icon--warning:before {
   background-image: url(../../images/core/e29700/warning.svg);
