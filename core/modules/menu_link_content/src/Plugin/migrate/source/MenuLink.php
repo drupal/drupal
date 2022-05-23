@@ -141,6 +141,20 @@ class MenuLink extends DrupalSqlBase {
         $row->setSourceProperty('skip_translation', FALSE);
       }
     }
+    // In Drupal 6 the language for the menu is in the options array. Set
+    // property 'is_localized' so that the process pipeline can determine if
+    // the menu link is localize or not.
+    $row->setSourceProperty('is_localized', NULL);
+    $default_language = $this->variableGet('language_default', (object) ['language' => 'und']);
+    $default_language = $default_language->language;
+    $options = unserialize($row->getSourceProperty('options'));
+    if (isset($options['langcode'])) {
+      if ($options['langcode'] != $default_language) {
+        $row->setSourceProperty('language', $options['langcode']);
+        $row->setSourceProperty('is_localized', 'localized');
+      }
+    }
+
     $row->setSourceProperty('options', unserialize($row->getSourceProperty('options')));
     $row->setSourceProperty('enabled', !$row->getSourceProperty('hidden'));
     $description = $row->getSourceProperty('options/attributes/title');

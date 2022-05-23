@@ -1,23 +1,22 @@
-id: d6_menu_links
-label: Menu links
-audit: true
+id: d6_menu_links_localized
+label: Menu links localized
 migration_tags:
   - Drupal 6
   - Content
+  - Multilingual
 source:
   plugin: menu_link
+  constants:
+    bundle: menu_link_content
 process:
-  skip_localized:
-    -
-      plugin: callback
-      callable: is_null
-      source: is_localized
-    -
-      plugin: skip_on_empty
-      method: row
+  skip_not_localized:
+    plugin: skip_on_empty
+    source: is_localized
+    method: row
   id: mlid
   title: link_title
   description: description
+  langcode: language
   menu_name:
     -
       plugin: migration_lookup
@@ -60,10 +59,11 @@ process:
   changed: updated
 destination:
   plugin: entity:menu_link_content
-  default_bundle: menu_link_content
   no_stub: true
+  translations: true
+  destination_module: content_translation
 migration_dependencies:
   required:
-    - d6_menu
-  optional:
-    - d6_node
+    - language
+    - d6_language_content_menu_settings
+    - d6_menu_links
