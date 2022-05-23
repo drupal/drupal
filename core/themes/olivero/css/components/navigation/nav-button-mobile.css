@@ -122,8 +122,8 @@
   position: relative;
   display: block;
   width: 2.25rem;
-  height: 0.1875rem;
-  background-color: #2494db
+  height: 0;
+  border-top: solid 3px #2494db
 }
 
 [dir="ltr"] .mobile-nav-button__icon:before {
@@ -136,12 +136,12 @@
 
 .mobile-nav-button__icon:before {
     position: absolute;
-    top: -0.5rem;
+    top: -0.6875rem;
     width: 100%;
-    height: 0.1875rem;
+    height: 0;
     content: "";
     transition: all 0.2s;
-    background-color: #2494db;
+    border-top: solid 3px #2494db;
   }
 
 [dir="ltr"] .mobile-nav-button__icon:after {
@@ -157,14 +157,14 @@
     top: auto;
     bottom: -0.5rem;
     width: 100%;
-    height: 0.1875rem;
+    height: 0;
     content: "";
     transition: all 0.2s;
-    background-color: #2494db;
+    border-top: solid 3px #2494db;
   }
 
 .mobile-nav-button[aria-expanded="true"] .mobile-nav-button__icon {
-  background-color: transparent
+  border-top: 0
 }
 
 .mobile-nav-button[aria-expanded="true"] .mobile-nav-button__icon:before {
