@@ -8,6 +8,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  * Tests migration of Color variables to configuration.
  *
  * @group color
+ * @group legacy
  */
 class MigrateColorTest extends MigrateDrupal7TestBase {
 
