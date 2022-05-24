@@ -19,7 +19,7 @@ class StandardInstallerTest extends ConfigAfterInstallerTestBase {
    */
   public function testInstaller() {
     // Verify that Olivero's default frontpage appears.
-    $this->assertSession()->pageTextContains('Congratulations and welcome to the Drupal community!');
+    $this->assertSession()->pageTextContains('Congratulations and welcome to the Drupal community.');
     $this->assertSession()->elementTextContains('css', '#block-olivero-powered', 'Powered by Drupal');
   }
 
