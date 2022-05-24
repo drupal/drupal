@@ -32,3 +32,13 @@ olivero_test.anchor_link:
   url: "internal:#footer"
   menu_name: main
   weight: 200
+olivero_test.long_item_1:
+  title: Long long long long
+  route_name: <front>
+  menu_name: main
+  weight: 200
+olivero_test.long_item_2:
+  title: Long long long long
+  route_name: <front>
+  menu_name: main
+  weight: 200

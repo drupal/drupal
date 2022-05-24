@@ -214,6 +214,10 @@ navigation-primary:
   js:
     js/navigation.js: {}
     js/second-level-navigation.js: {}
+    js/nav-resize.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
 
 navigation-secondary:
   version: VERSION
