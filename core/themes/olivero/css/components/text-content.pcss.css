@@ -20,7 +20,7 @@
     text-decoration-color supported by Chrome, FF, & Safari
   */
 
-  & a {
+  & a:where(:not(.button)) {
     color: var(--color--primary-40);
     text-decoration-color: var(--color--primary-40);
     text-decoration-thickness: 2px;

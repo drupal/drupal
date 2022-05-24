@@ -55,7 +55,7 @@
   border: solid 2px var(--color--primary-40);
   border-radius: var(--border-radius);
   background-color: var(--color--white);
-  font-family: inherit;
+  font-family: var(--font-sans);
   font-size: var(--font-size-l);
   font-weight: 700;
   -webkit-appearance: none;
