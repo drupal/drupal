@@ -531,7 +531,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "5ee7c279ca3cbef8b2ba2c3a7ebe7fb78dee9b7c"
+                "reference": "232d135ecf054a91a09ed87d08d5d200c2e11a6a"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -552,7 +552,7 @@
                 "ext-spl": "*",
                 "ext-tokenizer": "*",
                 "ext-xml": "*",
-                "guzzlehttp/guzzle": "^6.5.2",
+                "guzzlehttp/guzzle": "^6.5.2 || ^7.4.1",
                 "laminas/laminas-diactoros": "^2.1",
                 "laminas/laminas-feed": "^2.12",
                 "masterminds/html5": "^2.1",
