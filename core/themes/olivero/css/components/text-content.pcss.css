@@ -20,7 +20,7 @@
     text-decoration-color supported by Chrome, FF, & Safari
   */
 
-  & a {
+  & a:not(.button) {
     color: var(--color--blue-20);
     text-decoration-color: var(--color--blue-20);
     text-decoration-thickness: 2px;
