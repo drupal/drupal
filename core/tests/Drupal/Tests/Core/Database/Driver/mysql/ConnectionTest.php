@@ -4,7 +4,6 @@ namespace Drupal\Tests\Core\Database\Driver\mysql;
 
 use Drupal\mysql\Driver\Database\mysql\Connection;
 use Drupal\Tests\UnitTestCase;
-use Prophecy\Argument;
 
 /**
  * Tests MySQL database connections.
@@ -42,21 +41,6 @@ class ConnectionTest extends UnitTestCase {
    * @return \Drupal\mysql\Driver\Database\mysql\Connection
    */
   private function createConnection(): Connection {
-    $this->pdoStatement
-      ->setFetchMode(Argument::any())
-      ->shouldBeCalled()
-      ->willReturn(TRUE);
-
-    $this->pdoStatement
-      ->execute(Argument::any())
-      ->shouldBeCalled()
-      ->willReturn(TRUE);
-
-    $this->pdoConnection
-      ->prepare('SELECT VERSION()', Argument::any())
-      ->shouldBeCalled()
-      ->willReturn($this->pdoStatement->reveal());
-
     /** @var \PDO $pdo_connection */
     $pdo_connection = $this->pdoConnection->reveal();
 
@@ -64,7 +48,6 @@ class ConnectionTest extends UnitTestCase {
 
       public function __construct(\PDO $connection) {
         $this->connection = $connection;
-        $this->setPrefix('');
       }
 
     };
@@ -77,9 +60,14 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testVersionAndIsMariaDb(bool $expected_is_mariadb, string $server_version, string $expected_version): void {
     $this->pdoStatement
-      ->fetchColumn(Argument::any())
+      ->fetchColumn()
       ->shouldBeCalled()
       ->willReturn($server_version);
+
+    $this->pdoConnection
+      ->query('SELECT VERSION()')
+      ->shouldBeCalled()
+      ->willReturn($this->pdoStatement->reveal());
 
     $connection = $this->createConnection();
 

@@ -6,8 +6,9 @@ namespace Drupal\Core\Database;
 /**
  * Interface for a database exception.
  *
- * Database drivers should catch lower-level database client exceptions and
- * throw exceptions that implement this interface to allow database
- * abstraction in Drupal.
+ * All Database exceptions should implement this interface so that they can be
+ * caught collectively.  Note that this applies only to Drupal-spawned
+ * exceptions.  PDOException will not implement this interface and module
+ * developers should account for it separately.
  */
 interface DatabaseException { }
