@@ -95,7 +95,7 @@ display:
           plugin_id: title
           label: ''
           empty: true
-          title: 'Welcome to [site:name]'
+          title: 'Welcome!'
       sorts:
         sticky:
           id: sticky

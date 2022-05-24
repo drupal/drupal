@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\node\Functional\Views;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
@@ -78,7 +77,7 @@ class FrontPageTest extends ViewTestBase {
     $this->executeView($view);
     $view->preview();
 
-    $this->assertEquals(new FormattableMarkup('Welcome to @site_name', ['@site_name' => $site_name]), $view->getTitle(), 'The welcome title is used for the empty view.');
+    $this->assertEquals('Welcome!', $view->getTitle(), 'The welcome title is used for the empty view.');
     $view->destroy();
 
     // Create some nodes on the frontpage view. Add more than 10 nodes in order
@@ -247,7 +246,6 @@ class FrontPageTest extends ViewTestBase {
     ];
 
     $render_cache_tags = Cache::mergeTags($empty_node_listing_cache_tags, $cache_context_tags);
-    $render_cache_tags = Cache::mergeTags($render_cache_tags, ['config:system.site']);
     $this->assertViewsCacheTags(
       $view,
       $empty_node_listing_cache_tags,
@@ -255,7 +253,7 @@ class FrontPageTest extends ViewTestBase {
       $render_cache_tags
     );
     $expected_tags = Cache::mergeTags($empty_node_listing_cache_tags, $cache_context_tags);
-    $expected_tags = Cache::mergeTags($expected_tags, ['http_response', 'rendered', 'config:user.role.anonymous', 'config:system.site']);
+    $expected_tags = Cache::mergeTags($expected_tags, ['http_response', 'rendered', 'config:user.role.anonymous']);
     $this->assertPageCacheContextsAndTags(
       Url::fromRoute('view.frontpage.page_1'),
       $cache_contexts,
