@@ -33,7 +33,7 @@
         "symfony/yaml": "^6.0",
         "twig/twig": "^3.3.8",
         "doctrine/annotations": "^1.12",
-        "guzzlehttp/guzzle": "^7.3.0",
+        "guzzlehttp/guzzle": "^7.4.3",
         "guzzlehttp/psr7": "^2.2.0",
         "egulias/email-validator": "^2.1.22|^3.0",
         "masterminds/html5": "^2.1",
