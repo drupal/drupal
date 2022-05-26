@@ -1,0 +1,1 @@
+!function(a){const o=a.lv=a.lv||{};o.dictionary=Object.assign(o.dictionary||{},{"Choose language":"Izvēlēties valodu",Language:"Valoda","Remove language":"Dzēst valodu"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
