@@ -16,6 +16,7 @@ use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Utility\PhpRequirements;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PrivateStream;
@@ -31,6 +32,10 @@ use Symfony\Component\HttpFoundation\Request;
  */
 function system_requirements($phase) {
   global $install_state;
+
+  // Get the current default PHP requirements for this version of Drupal.
+  $minimum_supported_php = PhpRequirements::getMinimumSupportedPhp();
+
   // Reset the extension lists.
   /** @var \Drupal\Core\Extension\ModuleExtensionList $module_extension_list */
   $module_extension_list = \Drupal::service('extension.list.module');
@@ -284,10 +289,10 @@ function system_requirements($phase) {
   }
 
   // Check if the PHP version is below what Drupal supports.
-  if (version_compare($phpversion, \Drupal::MINIMUM_SUPPORTED_PHP) < 0) {
+  if (version_compare($phpversion, $minimum_supported_php) < 0) {
     $requirements['php']['description'] = t('Your PHP installation is too old. Drupal requires at least PHP %version. It is recommended to upgrade to PHP version %recommended or higher for the best ongoing support. See <a href="http://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal PHP requirements</a> page for more information.',
       [
-        '%version' => \Drupal::MINIMUM_SUPPORTED_PHP,
+        '%version' => $minimum_supported_php,
         '%recommended' => \Drupal::RECOMMENDED_PHP,
         ':php_requirements' => 'https://www.drupal.org/docs/system-requirements/php-requirements',
       ]
