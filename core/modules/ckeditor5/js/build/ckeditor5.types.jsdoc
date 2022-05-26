@@ -2165,6 +2165,18 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-table/src/tablecolumnresize.js
+ *
+ * @typedef {module:table/tablecolumnresize} module:table/tablecolumnresize~TableColumnResize
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-table/src/tablecolumnresize/tablecolumnresizeediting.js
+ *
+ * @typedef {module:table/tablecolumnresize/tablecolumnresizeediting} module:table/tablecolumnresize/tablecolumnresizeediting~TableColumnResizeEditing
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-table/src/tableediting.js
  *
  * @typedef {module:table/tableediting} module:table/tableediting~TableEditing
