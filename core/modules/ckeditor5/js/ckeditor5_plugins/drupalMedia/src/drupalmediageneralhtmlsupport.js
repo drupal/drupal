@@ -19,7 +19,7 @@ function viewToModelDrupalMediaAttributeConverter(dataFilter) {
       'element:drupal-media',
       (evt, data, conversionApi) => {
         function preserveElementAttributes(viewElement, attributeName) {
-          const viewAttributes = dataFilter._consumeAllowedAttributes(
+          const viewAttributes = dataFilter.processViewAttributes(
             viewElement,
             conversionApi,
           );

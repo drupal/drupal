@@ -1,0 +1,1 @@
+!function(n){const i=n.ur=n.ur||{};i.dictionary=Object.assign(i.dictionary||{},{"Insert code block":"کوڈ خانہ نصب کیرں","Plain text":"سادہ متن"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

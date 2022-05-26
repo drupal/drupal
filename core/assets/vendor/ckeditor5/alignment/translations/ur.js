@@ -1,0 +1,1 @@
+!function(n){const i=n.ur=n.ur||{};i.dictionary=Object.assign(i.dictionary||{},{"Align center":"درمیانی سیدھ","Align left":"بائیں سیدھ","Align right":"دائیں سیدھ",Justify:"برابر سیدھ","Text alignment":"متن کی سیدھ","Text alignment toolbar":"خانہ آلات برائے سیدھ"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
