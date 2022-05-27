@@ -1918,7 +1918,6 @@ function comment_form($form, &$form_state, $comment) {
   if ($is_admin) {
     $author = (!$comment->uid && $comment->name ? $comment->name : $comment->registered_name);
     $status = (isset($comment->status) ? $comment->status : COMMENT_NOT_PUBLISHED);
-    $date = (!empty($comment->date) ? $comment->date : format_date($comment->created, 'custom', 'Y-m-d H:i O'));
   }
   else {
     if ($user->uid) {
@@ -1928,7 +1927,11 @@ function comment_form($form, &$form_state, $comment) {
       $author = ($comment->name ? $comment->name : '');
     }
     $status = (user_access('skip comment approval') ? COMMENT_PUBLISHED : COMMENT_NOT_PUBLISHED);
-    $date = '';
+  }
+
+  $date = '';
+  if ($comment->cid) {
+    $date = !empty($comment->date) ? $comment->date : format_date($comment->created, 'custom', 'Y-m-d H:i:s O');
   }
 
   // Add the author name field depending on the current user.
@@ -2176,7 +2179,7 @@ function comment_submit($comment) {
   if (empty($comment->date)) {
     $comment->date = 'now';
   }
-  $comment->created = strtotime($comment->date);
+  $comment->created = strtotime($comment->date, REQUEST_TIME);
   $comment->changed = REQUEST_TIME;
 
   // If the comment was posted by a registered user, assign the author's ID.

@@ -1003,7 +1003,7 @@ class CommentPreviewTest extends CommentHelperCase {
    */
   function testCommentEditPreviewSave() {
     $langcode = LANGUAGE_NONE;
-    $web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'skip comment approval'));
+    $web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'skip comment approval', 'edit own comments'));
     $this->drupalLogin($this->admin_user);
     $this->setCommentPreview(DRUPAL_OPTIONAL);
     $this->setCommentForm(TRUE);
@@ -1017,7 +1017,7 @@ class CommentPreviewTest extends CommentHelperCase {
     $edit['date'] = '2008-03-02 17:23 +0300';
     $raw_date = strtotime($edit['date']);
     $expected_text_date = format_date($raw_date);
-    $expected_form_date = format_date($raw_date, 'custom', 'Y-m-d H:i O');
+    $expected_form_date = format_date($raw_date, 'custom', 'Y-m-d H:i:s O');
     $comment = $this->postComment($this->node, $edit['subject'], $edit['comment_body[' . $langcode . '][0][value]'], TRUE);
     $this->drupalPost('comment/' . $comment->id . '/edit', $edit, t('Preview'));
 
@@ -1059,7 +1059,16 @@ class CommentPreviewTest extends CommentHelperCase {
     $this->assertEqual($comment_loaded->comment_body[$langcode][0]['value'], $edit['comment_body[' . $langcode . '][0][value]'], 'Comment body loaded.');
     $this->assertEqual($comment_loaded->name, $edit['name'], 'Name loaded.');
     $this->assertEqual($comment_loaded->created, $raw_date, 'Date loaded.');
+    $this->drupalLogout();
 
+    // Check that the date and time of the comment are correct when edited by
+    // non-admin users.
+    $user_edit = array();
+    $expected_created_time = $comment_loaded->created;
+    $this->drupalLogin($web_user);
+    $this->drupalPost('comment/' . $comment->id . '/edit', $user_edit, t('Save'));
+    $comment_loaded = comment_load($comment->id, TRUE);
+    $this->assertEqual($comment_loaded->created, $expected_created_time, 'Expected date and time for comment edited.');
   }
 
 }
