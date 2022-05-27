@@ -3788,4 +3788,16 @@ class EntityPropertiesTestCase extends FieldTestCase {
       }
     }
   }
+
+  /**
+   * Tests entity_extract_ids() with an empty entity info.
+   */
+  function testEntityKeys(){
+    $entity_type = 'test_entity2';
+    $entity = field_test_create_stub_entity();
+    list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
+
+    $this->assertNull($id, 'Entity id for test_entity2 returned NULL.');
+    $this->assertNull($vid, 'Entity vid for test_entity2 returned NULL.');
+  }
 }
