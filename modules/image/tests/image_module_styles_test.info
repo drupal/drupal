@@ -1,0 +1,8 @@
+name = Image Styles test
+description = Provides additional hook implementations for testing Image Styles functionality.
+package = Core
+version = VERSION
+core = 7.x
+files[] = image_module_styles_test.module
+dependencies[] = image_module_test
+hidden = TRUE

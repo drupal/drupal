@@ -20,7 +20,8 @@ function image_module_test_file_download($uri) {
 function image_module_test_image_effect_info() {
   $effects = array(
     'image_module_test_null' => array(
-    'effect callback' => 'image_module_test_null_effect',
+      'label' => 'image_module_test_null',
+      'effect callback' => 'image_module_test_null_effect',
     ),
   );
 
@@ -38,7 +39,7 @@ function image_module_test_image_effect_info() {
  * @return
  *   TRUE
  */
-function image_module_test_null_effect(array &$image, array $data) {
+function image_module_test_null_effect(&$image, array $data) {
   return TRUE;
 }
 

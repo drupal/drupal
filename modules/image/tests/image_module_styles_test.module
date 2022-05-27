@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @file
+ * Provides additional Image module hook implementations for testing purposes.
+ */
+
+/**
+ * Implements hook_image_default_styles().
+ */
+function image_module_styles_test_image_default_styles() {
+  $styles = array();
+
+  $styles['test_image_style'] = array(
+    'label' => 'Test Image Style',
+    'effects' => array(
+      array(
+        'name' => 'image_scale',
+        'data' => array('width' => 100, 'height' => 100, 'upscale' => 1),
+        'weight' => 0,
+      ),
+      array(
+        'name' => 'image_module_test_null',
+      ),
+    )
+  );
+
+  return $styles;
+}

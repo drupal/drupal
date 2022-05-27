@@ -583,8 +583,18 @@ function image_styles() {
           $style['storage'] = IMAGE_STORAGE_DEFAULT;
           foreach ($style['effects'] as $key => $effect) {
             $definition = image_effect_definition_load($effect['name']);
-            $effect = array_merge($definition, $effect);
-            $style['effects'][$key] = $effect;
+            if ($definition) {
+              $effect = array_merge($definition, $effect);
+              $style['effects'][$key] = $effect;
+            }
+            else {
+              watchdog('image', 'Image style %style_name has an effect %effect_name with no definition.',
+                array(
+                  '%style_name' => $style_name,
+                  '%effect_name' => $effect['name'],
+                  ),
+                WATCHDOG_ERROR);
+            }
           }
           $styles[$style_name] = $style;
         }
