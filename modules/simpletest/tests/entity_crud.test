@@ -46,4 +46,16 @@ class EntityLoadTestCase extends DrupalWebTestCase {
     $this->assertIdentical($nodes_loaded[$node_2->nid], $all_nodes[$node_2->nid], 'Loaded node 2 is identical to cached node.');
     $this->assertIdentical($nodes_loaded[$node_3->nid], $all_nodes[$node_3->nid], 'Loaded node 3 is identical to cached node.');
   }
+
+  public function testEntityLoadIds() {
+    $this->drupalCreateNode(array('title' => 'Node 1'));
+    $this->drupalCreateNode(array('title' => 'Node 2'));
+
+    $nodes_loaded = entity_load('node', array('1', '2'));
+    $this->assertEqual(count($nodes_loaded), 2);
+
+    // Ensure that an id with a trailing decimal place is ignored.
+    $nodes_loaded = entity_load('node', array('1.', '2'));
+    $this->assertEqual(count($nodes_loaded), 1);
+  }
 }

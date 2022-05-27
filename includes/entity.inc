@@ -254,7 +254,10 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
    * Callback for array_filter that removes non-integer IDs.
    */
   protected function filterId($id) {
-    return is_numeric($id) && $id == (int) $id;
+    // ctype_digit() is used here instead of a strict comparison as sometimes
+    // the id is passed as a string containing '0' which may represent a bug
+    // elsewhere but would fail with a strict comparison.
+    return is_numeric($id) && $id == (int) $id && ctype_digit((string) $id);
   }
 
   /**
