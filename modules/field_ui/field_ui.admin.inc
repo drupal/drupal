@@ -795,6 +795,14 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
 
   $destinations = array();
 
+  // Check if the target entity uses a non numeric ID.
+  $entity_info = entity_get_info($entity_type);
+  if (!empty($entity_info['entity_id_type']) && $entity_info['entity_id_type'] === 'string') {
+    $entity_id_type = 'string';
+  } else {
+    $entity_id_type = NULL;
+  }
+
   // Create new field.
   $field = array();
   if (!empty($form_values['_add_new_field']['field_name'])) {
@@ -804,6 +812,7 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
       'field_name' => $values['field_name'],
       'type' => $values['type'],
       'translatable' => $values['translatable'],
+      'entity_id_type' => $entity_id_type,
     );
     $instance = array(
       'field_name' => $field['field_name'],

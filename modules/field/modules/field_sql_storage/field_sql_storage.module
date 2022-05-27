@@ -212,6 +212,18 @@ function _field_sql_storage_schema($field) {
     ),
   );
 
+  // If the target entity type uses a string for its entity ID then update
+  // the fields entity_id and revision_id columns from INT to VARCHAR.
+  if (!empty($field['entity_id_type']) && $field['entity_id_type'] === 'string') {
+    $current['fields']['entity_id']['type'] = 'varchar';
+    $current['fields']['entity_id']['length'] = 128;
+    unset($current['fields']['entity_id']['unsigned']);
+
+    $current['fields']['revision_id']['type'] = 'varchar';
+    $current['fields']['revision_id']['length'] = 128;
+    unset($current['fields']['revision_id']['unsigned']);
+  }
+
   $field += array('columns' => array(), 'indexes' => array(), 'foreign keys' => array());
   // Add field columns.
   foreach ($field['columns'] as $column_name => $attributes) {

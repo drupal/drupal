@@ -105,6 +105,29 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Tests adding a field with an entity ID type of string.
+   */
+  function testFieldSqlSchemaForEntityWithStringIdentifier() {
+    // Test programmatically adding field with string ID.
+    $field_name = 'string_id_example';
+    $field = array('field_name' => $field_name, 'type' => 'text', 'settings' => array('max_length' => 255), 'entity_id_type' => 'string');
+    field_create_field($field);
+    $schema = drupal_get_schema('field_data_' . $field_name);
+
+    $this->assertEqual($schema['fields']['entity_id']['type'], 'varchar');
+    $this->assertEqual($schema['fields']['revision_id']['type'], 'varchar');
+
+    // Test programmatically adding field with default ID(int).
+    $field_name = 'default_id_example';
+    $field = array('field_name' => $field_name, 'type' => 'text', 'settings' => array('max_length' => 255));
+    field_create_field($field);
+    $schema = drupal_get_schema('field_data_' . $field_name);
+
+    $this->assertEqual($schema['fields']['entity_id']['type'], 'int');
+    $this->assertEqual($schema['fields']['revision_id']['type'], 'int');
+  }
+
+  /**
    * Reads mysql to verify correct data is
    * written when using insert and update.
    */
