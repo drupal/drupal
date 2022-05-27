@@ -13,6 +13,13 @@
 class DatabaseSchema_pgsql extends DatabaseSchema {
 
   /**
+   * PostgreSQL's temporary namespace name.
+   *
+   * @var string
+   */
+  protected $tempNamespaceName;
+
+  /**
    * A cache of information about blob columns and sequences of tables.
    *
    * This is collected by DatabaseConnection_pgsql->queryTableInformation(),
@@ -97,23 +104,47 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
   public function queryTableInformation($table) {
     // Generate a key to reference this table's information on.
     $key = $this->connection->prefixTables('{' . $table . '}');
-    if (!strpos($key, '.')) {
+
+    // Take into account that temporary tables are stored in a different schema.
+    // \DatabaseConnection::generateTemporaryTableName() sets 'db_temporary_'
+    // prefix to all temporary tables.
+    if (strpos($key, '.') === FALSE && strpos($table, 'db_temporary_') === FALSE) {
       $key = 'public.' . $key;
+    }
+    else {
+      $key = $this->getTempNamespaceName() . '.' . $key;
     }
 
     if (!isset($this->tableInformation[$key])) {
-      // Split the key into schema and table for querying.
-      list($schema, $table_name) = explode('.', $key);
       $table_information = (object) array(
         'blob_fields' => array(),
         'sequences' => array(),
       );
-      // Don't use {} around information_schema.columns table.
-      $result = $this->connection->query("SELECT column_name, data_type, column_default FROM information_schema.columns WHERE table_schema = :schema AND table_name = :table AND (data_type = 'bytea' OR (numeric_precision IS NOT NULL AND column_default LIKE :default))", array(
-        ':schema' => $schema,
-        ':table' => $table_name,
-        ':default' => '%nextval%',
+
+      // The bytea columns and sequences for a table can be found in
+      // pg_attribute, which is significantly faster than querying the
+      // information_schema. The data type of a field can be found by lookup
+      // of the attribute ID, and the default value must be extracted from the
+      // node tree for the attribute definition instead of the historical
+      // human-readable column, adsrc.
+      $sql = <<<'EOD'
+SELECT pg_attribute.attname AS column_name, format_type(pg_attribute.atttypid, pg_attribute.atttypmod) AS data_type, pg_get_expr(pg_attrdef.adbin, pg_attribute.attrelid) AS column_default
+FROM pg_attribute
+LEFT JOIN pg_attrdef ON pg_attrdef.adrelid = pg_attribute.attrelid AND pg_attrdef.adnum = pg_attribute.attnum
+WHERE pg_attribute.attnum > 0
+AND NOT pg_attribute.attisdropped
+AND pg_attribute.attrelid = :key::regclass
+AND (format_type(pg_attribute.atttypid, pg_attribute.atttypmod) = 'bytea'
+OR pg_attrdef.adsrc LIKE 'nextval%')
+EOD;
+      $result = $this->connection->query($sql, array(
+        ':key' => $key,
       ));
+
+      if (empty($result)) {
+        return $table_information;
+      }
+
       foreach ($result as $column) {
         if ($column->data_type == 'bytea') {
           $table_information->blob_fields[$column->column_name] = TRUE;
@@ -129,6 +160,19 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
       $this->tableInformation[$key] = $table_information;
     }
     return $this->tableInformation[$key];
+  }
+
+  /**
+   * Gets PostgreSQL's temporary namespace name.
+   *
+   * @return string
+   *   PostgreSQL's temporary namespace anme.
+   */
+  protected function getTempNamespaceName() {
+    if (!isset($this->tempNamespaceName)) {
+      $this->tempNamespaceName = $this->connection->query('SELECT nspname FROM pg_namespace WHERE oid = pg_my_temp_schema()')->fetchField();
+    }
+    return $this->tempNamespaceName;
   }
 
   /**
