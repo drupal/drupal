@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests;
 
-use Drupal\Core\Utility\PhpRequirements;
-
 /**
  * Provides helper methods for the requirements page.
  */
@@ -15,9 +13,7 @@ trait RequirementsPageTrait {
   protected function updateRequirementsProblem() {
     // Assert a warning is shown on older test environments.
     $links = $this->getSession()->getPage()->findAll('named', ['link', 'try again']);
-
-    // Get the default Drupal core PHP requirements.
-    if ($links && version_compare(phpversion(), PhpRequirements::getMinimumSupportedPhp()) < 0) {
+    if ($links && version_compare(phpversion(), \Drupal::MINIMUM_SUPPORTED_PHP) < 0) {
       $this->assertSession()->pageTextNotContains('Errors found');
       $this->assertWarningSummaries(['PHP']);
       $this->clickLink('try again');

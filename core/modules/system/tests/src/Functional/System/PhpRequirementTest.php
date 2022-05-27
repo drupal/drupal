@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\system\Functional\System;
 
-use Drupal\Core\Utility\PhpRequirements;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;
 
@@ -48,7 +47,6 @@ class PhpRequirementTest extends BrowserTestBase {
    * Tests status report messages regarding the PHP version.
    */
   public function testStatusPage() {
-    $minimum_php_version = PhpRequirements::getMinimumSupportedPhp();
     // Go to Administration.
     $this->drupalGet('admin/reports/status');
     $this->assertSession()->statusCodeEquals(200);
@@ -59,13 +57,13 @@ class PhpRequirementTest extends BrowserTestBase {
 
     // Verify that an error is displayed about the PHP version if it is below
     // the minimum supported PHP.
-    if (version_compare($phpversion, $minimum_php_version) < 0) {
+    if (version_compare($phpversion, \Drupal::MINIMUM_SUPPORTED_PHP) < 0) {
       $this->assertErrorSummaries(['PHP']);
-      $this->assertSession()->pageTextContains('Your PHP installation is too old. Drupal requires at least PHP ' . $minimum_php_version);
+      $this->assertSession()->pageTextContains('Your PHP installation is too old. Drupal requires at least PHP ' . \Drupal::MINIMUM_SUPPORTED_PHP);
     }
     // Otherwise, there should be no error.
     else {
-      $this->assertSession()->pageTextNotContains('Your PHP installation is too old. Drupal requires at least PHP ' . $minimum_php_version);
+      $this->assertSession()->pageTextNotContains('Your PHP installation is too old. Drupal requires at least PHP ' . \Drupal::MINIMUM_SUPPORTED_PHP);
       $this->assertSession()->pageTextNotContains('Errors found');
     }
 
