@@ -6,16 +6,10 @@ admin:
 
 quickedit.inPlaceEditor.image:
   version: VERSION
-  js:
-    js/editors/image.js: {}
-    js/theme.js: {}
-  css:
-    component:
-      css/editors/image.css: {}
-    theme:
-      css/editors/image.theme.css: {}
   dependencies:
     - core/jquery
     - core/drupal
     - core/internal.underscore
     - quickedit/quickedit
+    - quickedit/quickedit.inPlaceEditor.image
+  deprecated: The image/quickedit.inPlaceEditor.image asset library is deprecated in Drupal 9.4.0 and will be removed in Drupal 10.0.0. Instead use quickedit/quickedit.inPlaceEditor.image. See https://www.drupal.org/node/3280366

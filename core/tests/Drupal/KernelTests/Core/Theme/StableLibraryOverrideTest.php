@@ -42,7 +42,10 @@ class StableLibraryOverrideTest extends StableLibraryOverrideTestBase {
    *
    * @var string[]
    */
-  protected $librariesToSkip = [];
+  protected $librariesToSkip = [
+    // This is a deprecated library that will trigger warnings.
+    'image/quickedit.inPlaceEditor.image',
+  ];
 
   /**
    * {@inheritdoc}
