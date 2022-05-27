@@ -141,6 +141,13 @@ function system_test_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['system-test/empty-page'] = array(
+    'title' => 'Test page cache with empty page.',
+    'page callback' => 'system_test_empty_page',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -530,6 +537,12 @@ function system_test_drupal_get_filename_with_schema_rebuild() {
   drupal_get_schema(NULL, TRUE);
 
   return '';
+}
+
+/**
+ * Page callback to output an empty page.
+ */
+function system_test_empty_page() {
 }
 
 /**

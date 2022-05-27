@@ -236,6 +236,9 @@ class BootstrapPageCacheTestCase extends DrupalWebTestCase {
     $this->assertTitle(t('Welcome to @site-name | @site-name', array('@site-name' => variable_get('site_name', 'Drupal'))), 'Site title matches.');
     $this->assertRaw('</html>', 'Page was not compressed.');
 
+    // Verify that an empty page doesn't throw an error when being decompressed.
+    $this->drupalGet('system-test/empty-page');
+
     // Disable compression mode.
     variable_set('page_compression', FALSE);
 
