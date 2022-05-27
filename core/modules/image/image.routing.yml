@@ -71,29 +71,3 @@ image.effect_edit_form:
 
 route_callbacks:
   - '\Drupal\image\Routing\ImageStyleRoutes::routes'
-
-image.upload:
-  path: '/quickedit/image/upload/{entity_type}/{entity}/{field_name}/{langcode}/{view_mode_id}'
-  defaults:
-    _controller: '\Drupal\image\Controller\QuickEditImageController::upload'
-  options:
-    parameters:
-      entity:
-        type: entity:{entity_type}
-  requirements:
-    _permission: 'access in-place editing'
-    _access_quickedit_entity_field: 'TRUE'
-    _method: 'POST'
-
-image.info:
-  path: '/quickedit/image/info/{entity_type}/{entity}/{field_name}/{langcode}/{view_mode_id}'
-  defaults:
-    _controller: '\Drupal\image\Controller\QuickEditImageController::getInfo'
-  options:
-    parameters:
-      entity:
-        type: entity:{entity_type}
-  requirements:
-    _permission: 'access in-place editing'
-    _access_quickedit_entity_field: 'TRUE'
-    _method: 'GET'
