@@ -148,6 +148,12 @@ function system_test_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['system-test/page-cache-headers'] = array(
+    'page callback' => 'system_test_page_cache_headers',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -228,6 +234,28 @@ function system_test_redirect_noparse() {
 function system_test_redirect_invalid_scheme() {
   header("Location: ftp://localhost/path", TRUE, 301);
   exit;
+}
+
+/**
+ * Menu callback to test headers stored in the page cache.
+ */
+function system_test_page_cache_headers() {
+  if (!isset($_GET['return_headers'])) {
+    return t('Content to store in the page cache if it is enabled.');
+  }
+  global $base_root;
+  // Remove the test query param but try to preserve any remaining query string.
+  $url = parse_url($base_root . request_uri());
+  $query_parts = explode('&', $url['query']);
+  $query_string = implode('&', array_diff($query_parts, array('return_headers=TRUE')));
+  $request_uri = $url['path'] . '?' . $query_string;
+  $cache = cache_get($base_root . $request_uri, 'cache_page');
+  // If there are any headers stored in the cache, output them.
+  if (isset($cache->data['headers'])) {
+    drupal_add_http_header('Page-Cache-Headers', json_encode($cache->data['headers']));
+    return 'Headers from cache_page returned in the Page-Cache-Headers http response header.';
+  }
+  return 'No headers retrieved from cache_page.';
 }
 
 /**

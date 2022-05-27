@@ -2696,6 +2696,7 @@ function drupal_deliver_html_page($page_callback_result) {
   if ($frame_options && is_null(drupal_get_http_header('X-Frame-Options'))) {
     drupal_add_http_header('X-Frame-Options', $frame_options);
   }
+  drupal_add_http_header('X-Content-Type-Options', 'nosniff');
 
   if (variable_get('block_interest_cohort', TRUE)) {
     $permissions_policy = drupal_get_http_header('Permissions-Policy');

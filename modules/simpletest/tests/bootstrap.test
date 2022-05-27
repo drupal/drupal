@@ -187,6 +187,7 @@ class BootstrapPageCacheTestCase extends DrupalWebTestCase {
     $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'public, max-age=0', 'Cache-Control header was sent.');
     $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', 'Expires header was sent.');
     $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', 'Custom header was sent.');
+    $this->assertEqual($this->drupalGetHeader('X-Content-Type-Options'), 'nosniff', 'X-Content-Type-Options header was sent.');
 
     // Check replacing default headers.
     $this->drupalGet('system-test/set-header', array('query' => array('name' => 'Expires', 'value' => 'Fri, 19 Nov 2008 05:00:00 GMT')));
@@ -250,6 +251,27 @@ class BootstrapPageCacheTestCase extends DrupalWebTestCase {
     // Verify if cached page is still available for a client without compression support.
     $this->drupalGet('');
     $this->assertRaw('</html>', 'Page was delivered after compression mode is changed (compression support disabled).');
+  }
+
+  /**
+   * Test page cache headers.
+   */
+  function testPageCacheHeaders() {
+    variable_set('cache', 1);
+    // First request should store a response in the page cache.
+    $this->drupalGet('system-test/page-cache-headers');
+
+    // The test callback should remove the query string leaving the same path
+    // as the previous request, which we'll try to retrieve from cache_page.
+    $this->drupalGet('system-test/page-cache-headers', array('query' => array('return_headers' => 'TRUE')));
+
+    $headers = json_decode($this->drupalGetHeader('Page-Cache-Headers'), TRUE);
+    if (is_null($headers)) {
+      $this->fail('No headers were retrieved from the page cache.');
+    }
+    else {
+      $this->assertEqual($headers['X-Content-Type-Options'], 'nosniff', 'X-Content-Type-Options header retrieved from response in the page cache.');
+    }
   }
 }
 
