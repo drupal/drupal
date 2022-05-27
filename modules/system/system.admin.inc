@@ -2366,6 +2366,10 @@ function system_status($check = FALSE) {
  * Menu callback: run cron manually.
  */
 function system_run_cron() {
+  if (!isset($_GET['token']) || !drupal_valid_token($_GET['token'], 'run-cron')) {
+    return MENU_ACCESS_DENIED;
+  }
+
   // Run cron manually
   if (drupal_cron_run()) {
     drupal_set_message(t('Cron ran successfully.'));

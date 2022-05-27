@@ -339,7 +339,7 @@ function system_requirements($phase) {
       $description = $t('Cron has not run recently.') . ' ' . $help;
     }
 
-    $description .= ' ' . $t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/reports/status/run-cron')));
+    $description .= ' ' . $t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/reports/status/run-cron', array('query' => array('token' => drupal_get_token('run-cron'))))));
     $description .= '<br />' . $t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => url($base_url . '/cron.php', array('external' => TRUE, 'query' => array('cron_key' => variable_get('cron_key', 'drupal'))))));
 
     $requirements['cron'] = array(

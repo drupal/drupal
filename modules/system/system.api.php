@@ -3175,7 +3175,7 @@ function hook_requirements($phase) {
       );
     }
 
-    $requirements['cron']['description'] .= ' ' . $t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/reports/status/run-cron')));
+    $requirements['cron']['description'] .= ' ' . $t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/reports/status/run-cron', array('query' => array('token' => drupal_get_token('run-cron'))))));
 
     $requirements['cron']['title'] = $t('Cron maintenance tasks');
   }

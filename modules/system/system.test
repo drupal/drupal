@@ -926,6 +926,22 @@ class CronRunTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Ensure that the manual cron run is working.
+   */
+  function testManualCron() {
+    $admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $this->drupalLogin($admin_user);
+
+    $this->drupalGet('admin/reports/status/run-cron');
+    $this->assertResponse(403);
+
+    $this->drupalGet('admin/reports/status');
+    $this->clickLink(t('run cron manually'));
+    $this->assertResponse(200);
+    $this->assertText(t('Cron ran successfully.'));
+  }
+
+  /**
    * Tests that hook_flush_caches() is not invoked on every single cron run.
    *
    * @see system_cron()

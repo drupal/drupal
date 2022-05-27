@@ -367,8 +367,9 @@ function update_cache_clear_submit($form, &$form_state) {
  */
 function _update_no_data() {
   $destination = drupal_get_destination();
+  $cron_token = array('token' => drupal_get_token('run-cron'));
   return t('No update information available. <a href="@run_cron">Run cron</a> or <a href="@check_manually">check manually</a>.', array(
-    '@run_cron' => url('admin/reports/status/run-cron', array('query' => $destination)),
+    '@run_cron' => url('admin/reports/status/run-cron', array('query' => $cron_token + $destination)),
     '@check_manually' => url('admin/reports/updates/check', array('query' => $destination)),
   ));
 }
