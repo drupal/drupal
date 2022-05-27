@@ -297,6 +297,28 @@ class LocaleJavascriptTranslationTest extends DrupalWebTestCase {
 
     $this->assertEqual(count($source_strings), count($test_strings), 'Found correct number of source strings.');
   }
+
+  /**
+   * Test handling of null values in JS parsing for PHP8.0+ deprecations.
+   */
+  function testNullValuesLocalesSource() {
+    db_insert('locales_source')
+      ->fields(array(
+        'location' => NULL,
+        'source' => 'Standard Call t',
+        'context' => '',
+        'textgroup' => 'default',
+      ))
+      ->execute();
+
+    $filename = drupal_get_path('module', 'locale_test') . '/locale_test.js';
+
+    // Parse the file to look for source strings.
+    _locale_parse_js_file($filename);
+
+    $num_records = db_select('locales_source')->fields(NULL, array('lid'))->countQuery()->execute()->fetchField();
+    $this->assertEqual($num_records, 32, 'Correct number of strings parsed from JS file');
+  }
 }
 /**
  * Functional test for string translation and validation.
