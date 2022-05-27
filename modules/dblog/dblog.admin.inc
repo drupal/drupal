@@ -286,13 +286,19 @@ function theme_dblog_message($variables) {
   $event = $variables['event'];
   // Check for required properties.
   if (isset($event->message) && isset($event->variables)) {
+    $event_variables = @unserialize($event->variables);
     // Messages without variables or user specified text.
-    if ($event->variables === 'N;') {
+    if ($event_variables === NULL) {
       $output = $event->message;
+    }
+    elseif (!is_array($event_variables)) {
+      $output = t('Log data is corrupted and cannot be unserialized: @message', array(
+        '@message' => $event->message,
+      ));
     }
     // Message to translate with injected variables.
     else {
-      $output = t($event->message, unserialize($event->variables));
+      $output = t($event->message, $event_variables);
     }
     // If the output is expected to be a link, strip all the tags and
     // special characters by using filter_xss() without any allowed tags.
