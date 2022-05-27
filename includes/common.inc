@@ -1500,7 +1500,7 @@ function filter_xss($string, $allowed_tags = array('a', 'em', 'strong', 'cite', 
   // Store the text format.
   _filter_xss_split($allowed_tags, TRUE);
   // Remove NULL characters (ignored by some browsers).
-  $string = str_replace(chr(0), '', $string);
+  $string = str_replace(chr(0), '', (string) $string);
   // Remove Netscape 4 JS entities.
   $string = preg_replace('%&\s*\{[^}]*(\}\s*;?|$)%', '', $string);
 
