@@ -348,6 +348,11 @@ function _text_sanitize($instance, $langcode, $item, $column) {
  */
 function text_summary($text, $format = NULL, $size = NULL) {
 
+  // If the input text is NULL, return unchanged.
+  if (is_null($text)) {
+    return NULL;
+  }
+
   if (!isset($size)) {
     // What used to be called 'teaser' is now called 'summary', but
     // the variable 'teaser_length' is preserved for backwards compatibility.

@@ -379,6 +379,14 @@ class TextSummaryTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Test for the NULL value.
+   */
+  function testNullSentence() {
+    $summary = text_summary(NULL);
+    $this->assertNull($summary, 'text_summary() casts returned null');
+  }
+
+  /**
    * Calls text_summary() and asserts that the expected teaser is returned.
    */
   function callTextSummary($text, $expected, $format = NULL, $size = NULL) {
