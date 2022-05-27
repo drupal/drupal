@@ -53,18 +53,34 @@ function file_requirements($phase) {
 
   // Check the server's ability to indicate upload progress.
   if ($phase == 'runtime') {
-    $implementation = file_progress_implementation();
-    $apache = strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') !== FALSE;
-    $fastcgi = strpos($_SERVER['SERVER_SOFTWARE'], 'mod_fastcgi') !== FALSE || strpos($_SERVER["SERVER_SOFTWARE"], 'mod_fcgi') !== FALSE;
     $description = NULL;
-    if (!$apache) {
+    $implementation = file_progress_implementation();
+    // Test the web server identity.
+    $server_software = $_SERVER['SERVER_SOFTWARE'];
+    if (preg_match("/Nginx/i", $server_software)) {
+      $is_nginx = TRUE;
+      $is_apache = FALSE;
+      $fastcgi = FALSE;
+    }
+    elseif (preg_match("/Apache/i", $server_software)) {
+      $is_nginx = FALSE;
+      $is_apache = TRUE;
+      $fastcgi = strpos($server_software, 'mod_fastcgi') !== FALSE || strpos($server_software, 'mod_fcgi') !== FALSE;
+    }
+    else {
+      $is_nginx = FALSE;
+      $is_apache = FALSE;
+      $fastcgi = FALSE;
+    }
+
+    if (!$is_apache && !$is_nginx) {
       $value = t('Not enabled');
-      $description = t('Your server is not capable of displaying file upload progress. File upload progress requires an Apache server running PHP with mod_php.');
+      $description = t('Your server is not capable of displaying file upload progress. File upload progress requires an Apache server running PHP with mod_php or Nginx with PHP-FPM.');
       $severity = REQUIREMENT_INFO;
     }
     elseif ($fastcgi) {
       $value = t('Not enabled');
-      $description = t('Your server is not capable of displaying file upload progress. File upload progress requires PHP be run with mod_php and not as FastCGI.');
+      $description = t('Your server is not capable of displaying file upload progress. File upload progress requires PHP be run with mod_php or PHP-FPM and not as FastCGI.');
       $severity = REQUIREMENT_INFO;
     }
     elseif (!$implementation && extension_loaded('apc')) {
