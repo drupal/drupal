@@ -493,6 +493,17 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     $this->connection->query('ALTER TABLE {' . $table . '} ALTER COLUMN "' . $field . '" DROP DEFAULT');
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function fieldExists($table, $column) {
+    // In PostgreSQL "unquoted names are always folded to lower case."
+    // @see DatabaseSchema_pgsql::buildTableNameCondition().
+    $prefixInfo = $this->getPrefixInfo(strtolower($table));
+
+    return (bool) $this->connection->query("SELECT 1 FROM pg_attribute WHERE attrelid = :key::regclass AND attname = :column AND NOT attisdropped AND attnum > 0", array(':key' => $prefixInfo['schema'] . '.' . $prefixInfo['table'], ':column' => $column))->fetchField();
+  }
+
   public function indexExists($table, $name) {
     // Details https://www.postgresql.org/docs/10/view-pg-indexes.html
     $index_name = $this->ensureIdentifiersLength($table, $name, 'idx');

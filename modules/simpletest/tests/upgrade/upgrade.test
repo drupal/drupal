@@ -362,6 +362,9 @@ class BasicUpgradePath extends UpgradePathTestCase {
    * Test a failed upgrade, and verify that the failure is reported.
    */
   public function testFailedUpgrade() {
+    if ($this->skipUpgradeTest) {
+      return;
+    }
     // Destroy a table that the upgrade process needs.
     db_drop_table('access');
     // Assert that the upgrade fails.
@@ -372,6 +375,9 @@ class BasicUpgradePath extends UpgradePathTestCase {
    * Test a successful upgrade.
    */
   public function testBasicUpgrade() {
+    if ($this->skipUpgradeTest) {
+      return;
+    }
     $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // Hit the frontpage.
