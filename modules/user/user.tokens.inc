@@ -96,7 +96,12 @@ function user_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'mail':
-          $replacements[$original] = $sanitize ? check_plain($account->mail) : $account->mail;
+          if (empty($account->mail)) {
+            $replacements[$original] = '';
+          }
+          else {
+            $replacements[$original] = $sanitize ? check_plain($account->mail) : $account->mail;
+          }
           break;
 
         case 'url':

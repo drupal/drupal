@@ -2566,6 +2566,25 @@ class UserTokenReplaceTestCase extends DrupalWebTestCase {
       $this->assertEqual($output, $expected, format_string('Unsanitized user token %token replaced.', array('%token' => $input)));
     }
   }
+
+  /**
+   * Uses an anonymous user, then tests the tokens generated from it.
+   */
+  function testAnonymousUserTokenReplacement() {
+    global $language;
+
+    // Load anonymous user data.
+    $account = drupal_anonymous_user();
+
+    // Generate and test sanitized tokens.
+    $tests = array();
+    $tests['[user:mail]'] = '';
+
+    foreach ($tests as $input => $expected) {
+      $output = token_replace($input, array('user' => $account), array('language' => $language));
+      $this->assertEqual($output, $expected, format_string('Sanitized user token %token replaced.', array('%token' => $input)));
+    }
+  }
 }
 
 /**
