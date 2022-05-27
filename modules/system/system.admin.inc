@@ -935,6 +935,8 @@ function system_modules($form, $form_state = array()) {
       ),
       // Ensure that the "Core" package fieldset comes first.
       '#weight' => $package == 'Core' ? -10 : NULL,
+      // Hide this package unless we're running a test.
+      '#access' => !($package == 'Only For Testing' && !drupal_valid_test_ua()),
     );
   }
 

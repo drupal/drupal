@@ -1,6 +1,6 @@
 name = "System requires null version test"
 description = "Support module for testing system_modules()."
-package = Testing
+package = Only For Testing
 core = 7.x
 version = VERSION
 hidden = FALSE
