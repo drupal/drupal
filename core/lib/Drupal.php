@@ -90,10 +90,11 @@ class Drupal {
   /**
    * Minimum supported version of PHP.
    *
-   * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use
-   *   \Drupal\Core\Utility\PhpRequirements::getMinimumSupportedPhp() instead.
-   *
-   * @see https://www.drupal.org/node/3261451
+   * Below this version:
+   * - New sites cannot be installed, except from within tests.
+   * - Updates from previous Drupal versions can be run, but users are warned
+   *   that Drupal no longer supports that PHP version.
+   * - An error is shown in the status report that the PHP version is too old.
    */
   const MINIMUM_SUPPORTED_PHP = '7.4.0';
 
