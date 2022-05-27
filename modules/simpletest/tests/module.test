@@ -123,6 +123,19 @@ class ModuleUnitTest extends DrupalWebTestCase {
   }
 
   /**
+   * Test system_modules() with a module with a broken configure path.
+   */
+  function testSystemModulesBrokenConfigure() {
+    module_enable(array('system_admin_test'));
+    $this->resetAll();
+    $admin = $this->drupalCreateUser(array('administer modules'));
+    $this->drupalLogin($admin);
+    $this->drupalGet('admin/modules');
+    $module_log = db_query_range('SELECT message FROM {watchdog} WHERE type = :type ORDER BY wid DESC', 0, 1, array(':type' => 'system'))->fetchField();
+    $this->assertEqual('Module %module specifies an invalid path for configuration: %configure', $module_log, 'An error was logged for the module\'s broken configure path.');
+  }
+
+  /**
    * Test that module_invoke() can load a hook defined in hook_hook_info().
    */
   function testModuleInvoke() {

@@ -886,7 +886,13 @@ function system_modules($form, $form_state = array()) {
     // one.
     if ($module->status && isset($module->info['configure'])) {
       $configure_link = menu_get_item($module->info['configure']);
-      if ($configure_link['access']) {
+      if ($configure_link === FALSE) {
+        watchdog('system', 'Module %module specifies an invalid path for configuration: %configure', array(
+          '%module' => $module->info['name'],
+          '%configure' => $module->info['configure'],
+        ));
+      }
+      else if ($configure_link['access']) {
         $extra['links']['configure'] = array(
           '#type' => 'link',
           '#title' => t('Configure'),
