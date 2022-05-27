@@ -88,6 +88,17 @@ class Drupal {
   const CORE_MINIMUM_SCHEMA_VERSION = 8000;
 
   /**
+   * Minimum supported version of PHP.
+   *
+   * Below this version:
+   * - New sites cannot be installed, except from within tests.
+   * - Updates from previous Drupal versions can be run, but users are warned
+   *   that Drupal no longer supports that PHP version.
+   * - An error is shown in the status report that the PHP version is too old.
+   */
+  const MINIMUM_SUPPORTED_PHP = '8.1.0';
+
+  /**
    * Minimum allowed version of PHP for Drupal to be bootstrapped.
    *
    * Below this version:
