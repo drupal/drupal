@@ -3,7 +3,7 @@
 namespace Drupal\Tests\quickedit\FunctionalJavascript;
 
 /**
- * @see \Drupal\image\Plugin\InPlaceEditor\Image
+ * @see \Drupal\quickedit\Plugin\InPlaceEditor\Image
  * @see \Drupal\Tests\quickedit\FunctionalJavascript\QuickEditJavascriptTestBase
  */
 trait QuickEditImageEditorTestTrait {

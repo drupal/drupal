@@ -1,6 +1,6 @@
 /**
  * @file
- * Theme styles for the Image module's in-place editor.
+ * Theme styles for the QuickEdit module's in-place editor.
  */
 
 .quickedit-image-dropzone {
@@ -22,11 +22,11 @@
 }
 
 .quickedit-image-dropzone.upload .quickedit-image-icon {
-  background-image: url("../../images/upload.svg");
+  background-image: url("../../../images/image/upload.svg");
 }
 
 .quickedit-image-dropzone.error .quickedit-image-icon {
-  background-image: url("../../images/error.svg");
+  background-image: url("../../../images/image/error.svg");
 }
 
 .quickedit-image-dropzone.loading .quickedit-image-icon {

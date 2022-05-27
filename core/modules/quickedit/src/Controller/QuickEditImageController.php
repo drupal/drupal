@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\image\Controller;
+namespace Drupal\quickedit\Controller;
 
 use Drupal\Core\Cache\CacheableJsonResponse;
 use Drupal\Core\Controller\ControllerBase;

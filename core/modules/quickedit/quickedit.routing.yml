@@ -35,3 +35,29 @@ quickedit.entity_save:
     parameters:
       entity:
         type: entity:{entity_type}
+
+quickedit.image_upload:
+  path: '/quickedit/image/upload/{entity_type}/{entity}/{field_name}/{langcode}/{view_mode_id}'
+  defaults:
+    _controller: '\Drupal\quickedit\Controller\QuickEditImageController::upload'
+  options:
+    parameters:
+      entity:
+        type: entity:{entity_type}
+  requirements:
+    _permission: 'access in-place editing'
+    _access_quickedit_entity_field: 'TRUE'
+    _method: 'POST'
+
+quickedit.image_info:
+  path: '/quickedit/image/info/{entity_type}/{entity}/{field_name}/{langcode}/{view_mode_id}'
+  defaults:
+    _controller: '\Drupal\quickedit\Controller\QuickEditImageController::getInfo'
+  options:
+    parameters:
+      entity:
+        type: entity:{entity_type}
+  requirements:
+    _permission: 'access in-place editing'
+    _access_quickedit_entity_field: 'TRUE'
+    _method: 'GET'

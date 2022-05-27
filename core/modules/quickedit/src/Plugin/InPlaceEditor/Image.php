@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\image\Plugin\InPlaceEditor;
+namespace Drupal\quickedit\Plugin\InPlaceEditor;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\quickedit\Plugin\InPlaceEditorBase;
@@ -31,7 +31,7 @@ class Image extends InPlaceEditorBase {
   public function getAttachments() {
     return [
       'library' => [
-        'image/quickedit.inPlaceEditor.image',
+        'quickedit/quickedit.inPlaceEditor.image',
       ],
     ];
   }

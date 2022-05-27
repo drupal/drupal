@@ -54,3 +54,18 @@ quickedit.inPlaceEditor.plainText:
     js/editors/plainTextEditor.js: {}
   dependencies:
     - quickedit/quickedit
+
+quickedit.inPlaceEditor.image:
+  version: VERSION
+  js:
+    js/editors/image.js: {}
+  css:
+    component:
+      css/editors/image.css: {}
+    theme:
+      css/editors/image.theme.css: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/underscore
+    - quickedit/quickedit
