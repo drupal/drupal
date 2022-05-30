@@ -1173,7 +1173,7 @@ final class HTMLRestrictions {
    */
   private static function getTextContainerElementList(): array {
     return [
-      'div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'li',
+      'div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre',
     ];
   }
 
