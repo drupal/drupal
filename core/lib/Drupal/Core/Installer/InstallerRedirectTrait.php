@@ -3,6 +3,7 @@
 namespace Drupal\Core\Installer;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\DatabaseNotFoundException;
@@ -51,7 +52,7 @@ trait InstallerRedirectTrait {
     // If the database wasn't found, assume the user hasn't entered it properly
     // and redirect to the installer. This check needs to come first because a
     // DatabaseNotFoundException is also an instance of DatabaseException.
-    if ($exception instanceof DatabaseNotFoundException) {
+    if ($exception instanceof DatabaseNotFoundException || $exception instanceof ConnectionNotDefinedException) {
       return TRUE;
     }
 
