@@ -62,7 +62,7 @@ class SourceEditingTest extends CKEditor5TestBase {
         'filter_html' => [
           'status' => TRUE,
           'settings' => [
-            'allowed_html' => '<div class> <p> <br> <a href>',
+            'allowed_html' => '<div class> <p> <br> <a href> <ol> <ul> <li>',
           ],
         ],
         'filter_align' => ['status' => TRUE],
@@ -77,11 +77,17 @@ class SourceEditingTest extends CKEditor5TestBase {
           'items' => [
             'sourceEditing',
             'link',
+            'bulletedList',
+            'numberedList',
           ],
         ],
         'plugins' => [
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => ['<div class>'],
+          ],
+          'ckeditor5_list' => [
+            'reversed' => FALSE,
+            'startIndex' => FALSE,
           ],
         ],
       ],
@@ -108,7 +114,7 @@ class SourceEditingTest extends CKEditor5TestBase {
       'type' => 'page',
       'title' => 'Animals with strange names',
       'body' => [
-        'value' => '<div class="llama" data-llama="🦙"><p data-llama="🦙">The <a href="https://example.com/pirate" class="button" data-grammar="subject">pirate</a> is <a href="https://example.com/irate" class="use-ajax" data-grammar="adjective">irate</a>.</p></div>',
+        'value' => '',
         'format' => 'test_format',
       ],
     ]);
@@ -168,7 +174,10 @@ JS;
    *
    * @dataProvider providerAllowingExtraAttributes
    */
-  public function testAllowingExtraAttributes(string $expected_markup, ?string $allowed_elements_string = NULL) {
+  public function testAllowingExtraAttributes(string $original_markup, string $expected_markup, ?string $allowed_elements_string = NULL) {
+    $this->host->body->value = $original_markup;
+    $this->host->save();
+
     if ($allowed_elements_string) {
       // Allow creating additional HTML using SourceEditing.
       $text_editor = Editor::load('test_format');
@@ -213,35 +222,43 @@ JS;
    *   The test cases.
    */
   public function providerAllowingExtraAttributes(): array {
+    $general_test_case_markup = '<div class="llama" data-llama="🦙"><p data-llama="🦙">The <a href="https://example.com/pirate" class="button" data-grammar="subject">pirate</a> is <a href="https://example.com/irate" class="use-ajax" data-grammar="adjective">irate</a>.</p></div>';
     return [
       'no extra attributes allowed' => [
+        $general_test_case_markup,
         '<div class="llama"><p>The <a href="https://example.com/pirate">pirate</a> is <a href="https://example.com/irate">irate</a>.</p></div>',
       ],
 
       // Common case: any attribute that is not `style` or `class`.
       '<a data-grammar="subject">' => [
+        $general_test_case_markup,
         '<div class="llama"><p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate">irate</a>.</p></div>',
         '<a data-grammar="subject">',
       ],
       '<a data-grammar="adjective">' => [
+        $general_test_case_markup,
         '<div class="llama"><p>The <a href="https://example.com/pirate">pirate</a> is <a href="https://example.com/irate" data-grammar="adjective">irate</a>.</p></div>',
         '<a data-grammar="adjective">',
       ],
       '<a data-grammar>' => [
+        $general_test_case_markup,
         '<div class="llama"><p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate" data-grammar="adjective">irate</a>.</p></div>',
         '<a data-grammar>',
       ],
 
       // Edge case: `class`.
       '<a class="button">' => [
+        $general_test_case_markup,
         '<div class="llama"><p>The <a class="button" href="https://example.com/pirate">pirate</a> is <a href="https://example.com/irate">irate</a>.</p></div>',
         '<a class="button">',
       ],
       '<a class="use-ajax">' => [
+        $general_test_case_markup,
         '<div class="llama"><p>The <a href="https://example.com/pirate">pirate</a> is <a class="use-ajax" href="https://example.com/irate">irate</a>.</p></div>',
         '<a class="use-ajax">',
       ],
       '<a class>' => [
+        $general_test_case_markup,
         '<div class="llama"><p>The <a class="button" href="https://example.com/pirate">pirate</a> is <a class="use-ajax" href="https://example.com/irate">irate</a>.</p></div>',
         '<a class>',
       ],
@@ -249,12 +266,14 @@ JS;
       // Edge case: $text-container wildcard with additional
       // attribute.
       '<$text-container data-llama>' => [
+        $general_test_case_markup,
         '<div class="llama" data-llama="🦙"><p data-llama="🦙">The <a href="https://example.com/pirate">pirate</a> is <a href="https://example.com/irate">irate</a>.</p></div>',
         '<$text-container data-llama>',
       ],
       // Edge case: $text-container wildcard with stricter attribute
       // constrain.
       '<$text-container class="not-llama">' => [
+        $general_test_case_markup,
         '<div class="llama"><p>The <a href="https://example.com/pirate">pirate</a> is <a href="https://example.com/irate">irate</a>.</p></div>',
         '<$text-container class="not-llama">',
       ],
@@ -264,38 +283,75 @@ JS;
       // - infix, f.e. `*gramma*`
       // - suffix, f.e. `*-grammar`
       '<a data-*>' => [
+        $general_test_case_markup,
         '<div class="llama"><p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate" data-grammar="adjective">irate</a>.</p></div>',
         '<a data-*>',
       ],
       '<a *gramma*>' => [
+        $general_test_case_markup,
         '<div class="llama"><p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate" data-grammar="adjective">irate</a>.</p></div>',
         '<a *gramma*>',
       ],
       '<a *-grammar>' => [
+        $general_test_case_markup,
         '<div class="llama"><p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate" data-grammar="adjective">irate</a>.</p></div>',
         '<a *-grammar>',
       ],
 
       // Edge case: concrete attribute with wildcard class value.
       '<a class="use-*">' => [
+        $general_test_case_markup,
         '<div class="llama"><p>The <a href="https://example.com/pirate">pirate</a> is <a class="use-ajax" href="https://example.com/irate">irate</a>.</p></div>',
         '<a class="use-*">',
       ],
 
       // Edge case: concrete attribute with wildcard attribute value.
       '<a data-grammar="sub*">' => [
+        $general_test_case_markup,
         '<div class="llama"><p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate">irate</a>.</p></div>',
         '<a data-grammar="sub*">',
       ],
 
       // Edge case: `data-*` with wildcard attribute value.
       '<a data-*="sub*">' => [
+        $general_test_case_markup,
         '<div class="llama"><p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate">irate</a>.</p></div>',
         '<a data-*="sub*">',
       ],
 
       // Edge case: `style`.
       // @todo https://www.drupal.org/project/drupal/issues/3260857
+
+      // Edge case: `type` attribute on lists.
+      // @todo Remove in https://www.drupal.org/project/drupal/issues/3274635.
+      'no numberedList-related additions to the Source Editing configuration' => [
+        '<ol type="A"><li>foo</li><li>bar</li></ol>',
+        '<ol><li>foo</li><li>bar</li></ol>',
+      ],
+      '<ol type>' => [
+        '<ol type="A"><li>foo</li><li>bar</li></ol>',
+        '<ol type="A"><li>foo</li><li>bar</li></ol>',
+        '<ol type>',
+      ],
+      '<ol type="A">' => [
+        '<ol type="A"><li>foo</li><li>bar</li></ol>',
+        '<ol type="A"><li>foo</li><li>bar</li></ol>',
+        '<ol type="A">',
+      ],
+      'no bulletedList-related additions to the Source Editing configuration' => [
+        '<ul type="circle"><li>foo</li><li>bar</li></ul>',
+        '<ul><li>foo</li><li>bar</li></ul>',
+      ],
+      '<ul type>' => [
+        '<ul type="circle"><li>foo</li><li>bar</li></ul>',
+        '<ul type="circle"><li>foo</li><li>bar</li></ul>',
+        '<ul type>',
+      ],
+      '<ul type="circle">' => [
+        '<ul type="circle"><li>foo</li><li>bar</li></ul>',
+        '<ul type="circle"><li>foo</li><li>bar</li></ul>',
+        '<ul type="circle">',
+      ],
     ];
   }
 
