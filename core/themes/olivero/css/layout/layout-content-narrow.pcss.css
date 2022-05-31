@@ -76,7 +76,6 @@
 
     & pre {
       @media (--grid-md) {
-        width: calc(10 * var(--grid-col-width) + 9 * var(--grid-gap));
         margin-block: var(--sp3);
       }
 

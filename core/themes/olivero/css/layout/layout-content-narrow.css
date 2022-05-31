@@ -142,7 +142,6 @@
 @media (min-width: 43.75rem) {
 
 .layout--content-narrow.text-content pre, .layout--content-narrow .text-content pre, .layout--pass--content-narrow > *.text-content pre, .layout--pass--content-narrow > * .text-content pre {
-        width: calc(var(--grid-col-width)*10 + var(--grid-gap)*9);
         margin-top: var(--sp3);
         margin-bottom: var(--sp3)
     }
