@@ -112,7 +112,6 @@
 
     & pre {
       @media (--grid-md) {
-        width: calc(10 * var(--grid-col-width--md) + 9 * var(--grid-gap--md));
         margin-block: var(--sp3);
       }
 
@@ -123,10 +122,12 @@
 
       @media (--nav) {
         width: calc(12 * var(--grid-col-width--nav) + 11 * var(--grid-gap--nav));
+        margin-inline-start: calc(-1 * (var(--grid-col-width--nav) + var(--grid-gap--nav)));
       }
 
       @media (--grid-max) {
         width: calc(12 * var(--grid-col-width--max) + 11 * var(--grid-gap--max));
+        margin-inline-start: calc(-1 * (var(--grid-col-width--max) + var(--grid-gap--max)));
       }
     }
   }
