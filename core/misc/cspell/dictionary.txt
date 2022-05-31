@@ -458,6 +458,7 @@ fatals
 favourite
 favstar
 fcgi
+fdiv
 februar
 fetchmode
 fffffg
@@ -489,6 +490,7 @@ fixnull
 flickr
 flipfit
 floatingspace
+fmod
 foaf
 foat
 focusring
@@ -571,6 +573,7 @@ herpderp
 herro
 heure
 heures
+hexcode
 hidpi
 hilfetestmodul
 hilited

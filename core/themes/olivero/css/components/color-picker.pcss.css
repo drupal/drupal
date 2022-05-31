@@ -1,0 +1,11 @@
+/**
+ * @file
+ * Color picker styles. These appear within theme settings when selecting a custom color.
+ */
+
+[data-drupal-selector="olivero-color-picker"] {
+  & input[type="color"] {
+    margin-left: 13px;
+    vertical-align: bottom;
+  }
+}

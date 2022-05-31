@@ -75,6 +75,18 @@ cke-dialog:
     component:
       css/components/cke-dialog.css: {}
 
+color-picker:
+  version: VERSION
+  css:
+    component:
+      css/components/color-picker.css: {}
+  js:
+    js/color-picker.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+    - core/drupal.announce
+
 comments:
   version: VERSION
   css:

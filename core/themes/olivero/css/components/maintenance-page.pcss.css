@@ -20,4 +20,8 @@
 .maintenance-page-icon {
   display: block;
   margin-block: var(--sp3);
+
+  & path {
+    fill: var(--color--primary-50);
+  }
 }

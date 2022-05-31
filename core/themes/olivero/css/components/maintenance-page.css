@@ -38,5 +38,9 @@
 .maintenance-page-icon {
   display: block;
   margin-top: var(--sp3);
-  margin-bottom: var(--sp3);
+  margin-bottom: var(--sp3)
 }
+
+.maintenance-page-icon path {
+    fill: var(--color--primary-50);
+  }

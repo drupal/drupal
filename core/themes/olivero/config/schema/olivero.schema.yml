@@ -17,7 +17,10 @@ olivero.settings:
               label: 'Module Link'
     mobile_menu_all_widths:
       type: integer
-      label: "Mobile menu all widths"
+      label: 'Mobile menu all widths'
     site_branding_bg_color:
       type: string
-      label: "Site branding background color"
+      label: 'Site branding background color'
+    base_primary_color:
+      type: color_hex
+      label: 'Base Primary Color'
