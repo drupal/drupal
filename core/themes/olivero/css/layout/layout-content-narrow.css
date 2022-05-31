@@ -226,7 +226,6 @@
 @media (min-width: 43.75rem) {
 
 .layout--content-narrow.text-content pre, .layout--content-narrow .text-content pre, .layout--pass--content-narrow > *.text-content pre, .layout--pass--content-narrow > * .text-content pre {
-        width: calc(71.42857vw - 2.25rem);
         margin-top: 3.375rem;
         margin-bottom: 3.375rem
     }
@@ -249,12 +248,28 @@
 
 @media (min-width: 75rem) {
 
+[dir="ltr"] .layout--content-narrow.text-content pre,[dir="ltr"]  .layout--content-narrow .text-content pre,[dir="ltr"]  .layout--pass--content-narrow > *.text-content pre,[dir="ltr"]  .layout--pass--content-narrow > * .text-content pre {
+        margin-left: calc(-7.14286vw - -0.62946rem)
+  }
+
+[dir="rtl"] .layout--content-narrow.text-content pre,[dir="rtl"]  .layout--content-narrow .text-content pre,[dir="rtl"]  .layout--pass--content-narrow > *.text-content pre,[dir="rtl"]  .layout--pass--content-narrow > * .text-content pre {
+        margin-right: calc(-7.14286vw - -0.62946rem)
+  }
+
 .layout--content-narrow.text-content pre, .layout--content-narrow .text-content pre, .layout--pass--content-narrow > *.text-content pre, .layout--pass--content-narrow > * .text-content pre {
         width: calc(85.71429vw - 9.80357rem)
     }
       }
 
 @media (min-width: 90rem) {
+
+[dir="ltr"] .layout--content-narrow.text-content pre,[dir="ltr"]  .layout--content-narrow .text-content pre,[dir="ltr"]  .layout--pass--content-narrow > *.text-content pre,[dir="ltr"]  .layout--pass--content-narrow > * .text-content pre {
+        margin-left: -5.86607rem
+  }
+
+[dir="rtl"] .layout--content-narrow.text-content pre,[dir="rtl"]  .layout--content-narrow .text-content pre,[dir="rtl"]  .layout--pass--content-narrow > *.text-content pre,[dir="rtl"]  .layout--pass--content-narrow > * .text-content pre {
+        margin-right: -5.86607rem
+  }
 
 .layout--content-narrow.text-content pre, .layout--content-narrow .text-content pre, .layout--pass--content-narrow > *.text-content pre, .layout--pass--content-narrow > * .text-content pre {
         width: 68.14286rem
