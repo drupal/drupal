@@ -41,11 +41,21 @@ a.tabledrag-handle .handle {
   height: 14px;
   margin: -0.4em 0.5em 0;
   padding: 0.42em 0.5em;
-  background: url(../../../../misc/icons/787878/move.svg) no-repeat 6px 7px;
+  background: #787878;
+  -webkit-mask: url(../../../../misc/icons/787878/move.svg) no-repeat 6px 7px;
+  mask: url(../../../../misc/icons/787878/move.svg) no-repeat 6px 7px;
 }
 a.tabledrag-handle:hover .handle,
 a.tabledrag-handle:focus .handle {
-  background-image: url(../../../../misc/icons/000000/move.svg);
+  background: #000;
+}
+
+@media (forced-colors: active) {
+  a.tabledrag-handle .handle,
+  a.tabledrag-handle:hover .handle,
+  a.tabledrag-handle:focus .handle {
+    background: canvastext;
+  }
 }
 .touchevents .draggable td {
   padding: 0 10px;

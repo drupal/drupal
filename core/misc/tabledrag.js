@@ -1009,7 +1009,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
       return show ? Drupal.t('Hide row weights') : Drupal.t('Show row weights');
     },
     tableDragHandle: function tableDragHandle() {
-      return "<a href=\"#\" title=\"".concat(Drupal.t('Drag to re-order'), "\"\n        class=\"tabledrag-handle\"><div class=\"handle\">&nbsp;</div></a>");
+      return "<a href=\"#\" title=\"".concat(Drupal.t('Drag to re-order'), "\"\n        class=\"tabledrag-handle\"><div class=\"handle\"></div></a>");
     }
   });
 })(jQuery, Drupal, drupalSettings);
