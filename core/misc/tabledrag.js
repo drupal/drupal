@@ -975,7 +975,7 @@
 
     tableDragHandle() {
       return `<a href="#" title="${Drupal.t('Drag to re-order')}"
-        class="tabledrag-handle"><div class="handle">&nbsp;</div></a>`;
+        class="tabledrag-handle"><div class="handle"></div></a>`;
     }
 
   });

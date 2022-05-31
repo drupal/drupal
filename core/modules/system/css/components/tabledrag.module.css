@@ -47,6 +47,21 @@ a.tabledrag-handle:hover .handle,
 a.tabledrag-handle:focus .handle {
   background-image: url(../../../../misc/icons/000000/move.svg);
 }
+
+@media (forced-colors: active) {
+  a.tabledrag-handle .handle,
+  a.tabledrag-handle:hover .handle,
+  a.tabledrag-handle:focus .handle {
+    background: linktext;
+    -webkit-mask: url(../../../../misc/icons/787878/move.svg) no-repeat 6px 7px;
+    mask: url(../../../../misc/icons/787878/move.svg) no-repeat 6px 7px;
+  }
+
+  a.tabledrag-handle:focus {
+    outline: solid 1px transparent;
+  }
+}
+
 .touchevents .draggable td {
   padding: 0 10px;
 }
