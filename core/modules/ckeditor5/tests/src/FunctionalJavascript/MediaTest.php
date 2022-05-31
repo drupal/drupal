@@ -332,6 +332,66 @@ class MediaTest extends WebDriverTestBase {
   }
 
   /**
+   * Ensures arbitrary attributes can be added on links wrapping media via GHS.
+   *
+   * @dataProvider providerLinkability
+   */
+  public function testLinkedMediaArbitraryHtml(bool $unrestricted): void {
+    $assert_session = $this->assertSession();
+
+    $editor = Editor::load('test_format');
+    $settings = $editor->getSettings();
+    $filter_format = $editor->getFilterFormat();
+    if ($unrestricted) {
+      $filter_format
+        ->setFilterConfig('filter_html', ['status' => FALSE]);
+    }
+    else {
+      // Allow the data-foo attribute in <a> via GHS. Also, add support for div's
+      // with data-foo attribute to ensure that linked drupal-media elements can
+      // be wrapped with <div>.
+      $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = ['<a data-foo>', '<div data-bar>'];
+      $editor->setSettings($settings);
+      $filter_format->setFilterConfig('filter_html', [
+        'status' => TRUE,
+        'settings' => [
+          'allowed_html' => '<p> <br> <strong> <em> <a href data-foo> <drupal-media data-entity-type data-entity-uuid data-align data-caption alt data-view-mode> <div data-bar>',
+        ],
+      ]);
+    }
+    $editor->save();
+    $filter_format->save();
+    $this->assertSame([], array_map(
+      function (ConstraintViolation $v) {
+        return (string) $v->getMessage();
+      },
+      iterator_to_array(CKEditor5::validatePair(
+        Editor::load('test_format'),
+        FilterFormat::load('test_format')
+      ))
+    ));
+
+    // Wrap the existing drupal-media tag with a div and an a that include
+    // attributes allowed via GHS.
+    $original_value = $this->host->body->value;
+    $this->host->body->value = '<div data-bar="baz"><a href="https://drupal.org" data-foo="bar">' . $original_value . '</a></div>';
+    $this->host->save();
+    $this->drupalGet($this->host->toUrl('edit-form'));
+
+    // Confirm data-foo is present in the editing view.
+    $this->assertNotEmpty($link = $assert_session->waitForElementVisible('css', 'a[href="https://drupal.org"]'));
+    $this->assertEquals('bar', $link->getAttribute('data-foo'));
+
+    // Confirm that the media is wrapped by the div on the editing view.
+    $assert_session->elementExists('css', 'div[data-bar="baz"] > .drupal-media > a[href="https://drupal.org"] > div[data-drupal-media-preview]');
+
+    // Confirm that drupal-media is wrapped by the div and a, and that GHS has
+    // retained arbitrary HTML allowed by source editing.
+    $editor_dom = new \DOMXPath($this->getEditorDataAsDom());
+    $this->assertNotEmpty($editor_dom->query('//div[@data-bar="baz"]/a[@data-foo="bar"]/drupal-media'));
+  }
+
+  /**
    * Tests that failed media embed preview requests inform the end user.
    */
   public function testErrorMessages() {
