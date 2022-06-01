@@ -294,6 +294,14 @@ class HTMLRestrictionsTest extends UnitTestCase {
       '<a target class>',
       ['a' => ['target' => TRUE, 'class' => TRUE]],
     ];
+    yield 'tag with allowed attribute value that happen to be numbers' => [
+      '<ol type="1 A I">',
+      ['ol' => ['type' => [1 => TRUE, 'A' => TRUE, 'I' => TRUE]]],
+    ];
+    yield 'tag with allowed attribute value that happen to be numbers (reversed)' => [
+      '<ol type="I A 1">',
+      ['ol' => ['type' => ['I' => TRUE, 'A' => TRUE, 1 => TRUE]]],
+    ];
 
     // Multiple tag cases.
     yield 'two tags' => [
@@ -682,6 +690,27 @@ class HTMLRestrictionsTest extends UnitTestCase {
         ],
       ],
     ];
+
+    yield '<ol type="1 A">' => [
+      new HTMLRestrictions(['ol' => ['type' => ['1' => TRUE, 'A' => TRUE]]]),
+      ['<ol type="1 A">'],
+      '<ol type="1 A">',
+      [
+        [
+          'name' => 'ol',
+          'attributes' => [
+            [
+              'key' => 'type',
+              'value' => [
+                'regexp' => [
+                  'pattern' => '/^(1|A)$/',
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
+    ];
   }
 
   /**
@@ -902,6 +931,34 @@ class HTMLRestrictionsTest extends UnitTestCase {
     yield 'attribute restrictions are different: <a hreflang=*> vs <a hreflang="en"> — vice versa' => [
       'a' => new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
       'b' => new HTMLRestrictions(['a' => ['hreflang' => TRUE]]),
+      'diff' => HTMLRestrictions::emptySet(),
+      'intersection' => 'a',
+      'union' => 'b',
+    ];
+    yield 'attribute restrictions are different: <ol type=*> vs <ol type="A">' => [
+      'a' => new HTMLRestrictions(['ol' => ['type' => TRUE]]),
+      'b' => new HTMLRestrictions(['ol' => ['type' => ['A' => TRUE]]]),
+      'diff' => 'a',
+      'intersection' => 'b',
+      'union' => 'a',
+    ];
+    yield 'attribute restrictions are different: <ol type=*> vs <ol type="A"> — vice versa' => [
+      'b' => new HTMLRestrictions(['ol' => ['type' => ['A' => TRUE]]]),
+      'a' => new HTMLRestrictions(['ol' => ['type' => TRUE]]),
+      'diff' => HTMLRestrictions::emptySet(),
+      'intersection' => 'a',
+      'union' => 'b',
+    ];
+    yield 'attribute restrictions are different: <ol type=*> vs <ol type="1">' => [
+      'a' => new HTMLRestrictions(['ol' => ['type' => TRUE]]),
+      'b' => new HTMLRestrictions(['ol' => ['type' => ['1' => TRUE]]]),
+      'diff' => 'a',
+      'intersection' => 'b',
+      'union' => 'a',
+    ];
+    yield 'attribute restrictions are different: <ol type=*> vs <ol type="1"> — vice versa' => [
+      'b' => new HTMLRestrictions(['ol' => ['type' => ['1' => TRUE]]]),
+      'a' => new HTMLRestrictions(['ol' => ['type' => TRUE]]),
       'diff' => HTMLRestrictions::emptySet(),
       'intersection' => 'a',
       'union' => 'b',
