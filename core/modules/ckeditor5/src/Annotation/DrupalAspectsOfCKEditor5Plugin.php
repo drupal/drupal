@@ -75,7 +75,20 @@ class DrupalAspectsOfCKEditor5Plugin extends Plugin {
    * - <element data-*> only allows that HTML element with any attribute that
    *   has the given prefix.
    *
+   * Note that <element> means such an element (tag) can be created, whereas
+   * <element attrA attrB> means that `attrA` and `attrB` can be created on the
+   * tag. If a plugin supports both creating the element as well as setting some
+   * attributes or attribute values on it, it should have distinct entries in
+   * the list.
+   * For example, for a link plugin: `<a>` and `<a href>`. The first indicates
+   * the plugin can create such tags, the second indicates it can set the `href`
+   * attribute on it. If the first were omitted, the Drupal CKEditor 5 module
+   * would interpret that as "this plugin cannot create `<a>`, it can only set
+   * the `href` attribute on it".
+   *
    * @var string[]|false
+   *
+   * @see \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition::getCreatableElements()
    */
   public $elements;
 

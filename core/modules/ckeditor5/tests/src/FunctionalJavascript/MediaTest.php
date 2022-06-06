@@ -1228,13 +1228,22 @@ class MediaTest extends WebDriverTestBase {
     $editor->setSettings([
       'toolbar' => [
         'items' => [
+          'heading',
           'sourceEditing',
           'simpleBox',
         ],
       ],
       'plugins' => [
+        'ckeditor5_heading' => [
+          'enabled_headings' => [
+            'heading1',
+          ],
+        ],
         'ckeditor5_sourceEditing' => [
-          'allowed_tags' => [],
+          'allowed_tags' => [
+            '<div>',
+            '<section>',
+          ],
         ],
         'media_media' => [
           'allow_view_mode_override' => TRUE,

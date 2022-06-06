@@ -517,8 +517,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
             '|',
             // The 'code' button added because <code> is allowed.
             'code',
-            // The 'textPartLanguage' button added because <span> is allowed.
-            'textPartLanguage',
           ],
         ],
         'plugins' => [
@@ -528,6 +526,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
               '<dl>',
               '<dt>',
               '<dd>',
+              '<span>',
               '<a hreflang>',
               '<blockquote cite>',
               '<ul type>',
@@ -551,21 +550,18 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           'ckeditor5_imageResize' => [
             'allow_resize' => TRUE,
           ],
-          'ckeditor5_language' => [
-            'language_list' => 'un',
-          ],
           'ckeditor5_list' => [
             'reversed' => FALSE,
             'startIndex' => TRUE,
           ],
         ],
       ],
-      'expected_superset' => '<span lang dir>',
+      'expected_superset' => '',
       'expected_fundamental_compatibility_violations' => [],
       'expected_messages' => [
         'status' => [
-          'The following plugins were enabled to support tags that are allowed by this text format: <em class="placeholder">Code (for tags: &lt;code&gt;) Language (for tags: &lt;span&gt;)</em>.',
-          'The following tags were permitted by this format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;cite&gt; &lt;dl&gt; &lt;dt&gt; &lt;dd&gt;.',
+          'The following plugins were enabled to support tags that are allowed by this text format: <em class="placeholder">Code (for tags: &lt;code&gt;)</em>.',
+          'The following tags were permitted by this format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;cite&gt; &lt;dl&gt; &lt;dt&gt; &lt;dd&gt; &lt;span&gt;.',
         ],
       ],
     ];
@@ -645,7 +641,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
             ],
           ],
           'ckeditor5_imageResize' => ['allow_resize' => TRUE],
-          'ckeditor5_language' => $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_language'],
           'ckeditor5_list' => ['reversed' => FALSE, 'startIndex' => TRUE],
         ],
       ],
@@ -678,7 +673,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
             ],
           ],
           'ckeditor5_imageResize' => ['allow_resize' => TRUE],
-          'ckeditor5_language' => $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_language'],
           'ckeditor5_list' => ['reversed' => FALSE, 'startIndex' => TRUE],
         ],
       ],
@@ -709,7 +703,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
             )),
           ],
           'ckeditor5_imageResize' => ['allow_resize' => TRUE],
-          'ckeditor5_language' => $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_language'],
           'ckeditor5_list' => ['reversed' => FALSE, 'startIndex' => TRUE],
         ],
       ],
@@ -734,11 +727,11 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         ],
         'plugins' => $basic_html_test_case['expected_ckeditor5_settings']['plugins'],
       ],
-      'expected_superset' => '<code class="language-*"> ' . $basic_html_test_case['expected_superset'],
+      'expected_superset' => '<code class="language-*">',
       'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
       'expected_messages' => [
         'status' => [
-          'The following plugins were enabled to support tags that are allowed by this text format: <em class="placeholder">Code (for tags: &lt;code&gt;) Language (for tags: &lt;span&gt;) Code Block (for tags: &lt;pre&gt;)</em>.',
+          'The following plugins were enabled to support tags that are allowed by this text format: <em class="placeholder">Code (for tags: &lt;code&gt;) Code Block (for tags: &lt;pre&gt;)</em>.',
           $basic_html_test_case['expected_messages']['status'][1],
           'This format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;.',
         ],
@@ -751,9 +744,8 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_ckeditor5_settings' => [
         'toolbar' => [
           'items' => array_merge(
-            array_slice($basic_html_test_case['expected_ckeditor5_settings']['toolbar']['items'], 0, -1),
+            $basic_html_test_case['expected_ckeditor5_settings']['toolbar']['items'],
             ['alignment'],
-            array_slice($basic_html_test_case['expected_ckeditor5_settings']['toolbar']['items'], -1)
           ),
         ],
         'plugins' => array_merge(
@@ -778,7 +770,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         '<h4 class="text-align-center text-align-justify">',
         '<h5 class="text-align-center text-align-justify">',
         '<h6 class="text-align-center text-align-justify">',
-        $basic_html_test_case['expected_superset'],
       ]),
       'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
       'expected_messages' => array_merge_recursive($basic_html_test_case['expected_messages'], [

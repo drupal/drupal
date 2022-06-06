@@ -6,7 +6,7 @@ namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 
-// cspell:ignore คำพูดบล็อก
+// cspell:ignore คำพูดบล็อก sourceediting
 
 /**
  * Tests for CKEditor 5 UI translations.
@@ -41,6 +41,28 @@ class LanguageTest extends CKEditor5TestBase {
     $assert_session = $this->assertSession();
 
     $this->createNewTextFormat($page, $assert_session);
+    // Special case: textPartLanguage toolbar item can only create `<span lang>`
+    // but not `<span>`. The purpose of this test is to test translations, not
+    // the configuration of the textPartLanguage functionality. So, make sure
+    // that `<span>` can be created so we can test how UI translations work when
+    // using `textPartLanguage`.
+    if ($toolbar_item_name === 'textPartLanguage') {
+      $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-sourceEditing'));
+      $this->triggerKeyUp('.ckeditor5-toolbar-item-sourceEditing', 'ArrowDown');
+      $assert_session->assertWaitOnAjaxRequest();
+
+      // The Source Editing plugin settings form should now be present and should
+      // have no allowed tags configured.
+      $page->clickLink('Source editing');
+      $this->assertNotNull($assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-sourceediting-allowed-tags"]'));
+
+      $javascript = <<<JS
+        const allowedTags = document.querySelector('[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-sourceediting-allowed-tags"]');
+        allowedTags.value = '<span>';
+        allowedTags.dispatchEvent(new Event('input'));
+JS;
+      $this->getSession()->executeScript($javascript);
+    }
     $this->assertNotEmpty($assert_session->waitForElement('css', ".ckeditor5-toolbar-item-$toolbar_item_name"));
     $this->triggerKeyUp(".ckeditor5-toolbar-item-$toolbar_item_name", 'ArrowDown');
     $assert_session->assertWaitOnAjaxRequest();
