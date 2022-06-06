@@ -110,10 +110,15 @@ interface CKEditor5PluginManagerInterface extends DiscoveryInterface {
    *   (optional) Whether to resolve wildcards. Defaults to TRUE. When set to
    *   FALSE, the raw allowed elements will be returned (with no processing
    *   applied hence no resolved wildcards).
+   * @param bool $creatable_elements_only
+   *   (optional) Whether to retrieve only the creatable elements. Defaults to
+   *   FALSE.
    *
    * @return array
    *   A nested array with a structure as described in
    *   \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions().
+   *
+   * @see \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition::getCreatableElements()
    *
    * @throws \LogicException
    *   Thrown when an invalid CKEditor5PluginElementsSubsetInterface
@@ -121,6 +126,6 @@ interface CKEditor5PluginManagerInterface extends DiscoveryInterface {
    *
    * @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
    */
-  public function getProvidedElements(array $plugin_ids = [], EditorInterface $editor = NULL, bool $resolve_wildcards = TRUE): array;
+  public function getProvidedElements(array $plugin_ids = [], EditorInterface $editor = NULL, bool $resolve_wildcards = TRUE, bool $creatable_elements_only = FALSE): array;
 
 }

@@ -249,6 +249,31 @@ class AdminUiTest extends CKEditor5TestBase {
     $this->triggerKeyUp('.ckeditor5-toolbar-item-textPartLanguage', 'ArrowDown');
     $assert_session->assertWaitOnAjaxRequest();
 
+    // The CKEditor 5 module should warn that `<span>` cannot be created.
+    $assert_session->waitForElement('css', '[role=alert][data-drupal-message-type="warning"]:contains("The Language plugin needs another plugin to create <span>, for it to be able to create the following attributes: <span lang dir>. Enable a plugin that supports creating this tag. If none exists, you can configure the Source Editing plugin to support it.")');
+
+    // Make `<span>` creatable.
+    $this->assertNotEmpty($assert_session->elementExists('css', '.ckeditor5-toolbar-item-sourceEditing'));
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-sourceEditing', 'ArrowDown');
+    $assert_session->assertWaitOnAjaxRequest();
+    // The Source Editing plugin settings form should now be present and should
+    // have no allowed tags configured.
+    $page->clickLink('Source editing');
+    $this->assertNotNull($assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-sourceediting-allowed-tags"]'));
+    $javascript = <<<JS
+      const allowedTags = document.querySelector('[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-sourceediting-allowed-tags"]');
+      allowedTags.value = '<span>';
+      allowedTags.dispatchEvent(new Event('input'));
+JS;
+    $this->getSession()->executeScript($javascript);
+    // Dispatching an `input` event does not work in WebDriver. Enabling another
+    // toolbar item which has no associated HTML elements forces it.
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-undo', 'ArrowDown');
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // Confirm there are no longer any warnings.
+    $assert_session->waitForElementRemoved('css', '[data-drupal-messages] [role="alert"]');
+
     // The language plugin config form should now be present.
     $assert_session->elementExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-language"]');
 

@@ -1315,15 +1315,21 @@ class HTMLRestrictionsTest extends UnitTestCase {
   /**
    * @covers ::getWildcardSubset
    * @covers ::getConcreteSubset
+   * @covers ::getPlainTagsSubset()
+   * @covers ::extractPlainTagsSubset()
    * @dataProvider providerSubsets
    */
-  public function testSubsets(HTMLRestrictions $input, HTMLRestrictions $expected_wildcard_subset, HTMLRestrictions $expected_concrete_subset): void {
+  public function testSubsets(HTMLRestrictions $input, HTMLRestrictions $expected_wildcard_subset, HTMLRestrictions $expected_concrete_subset, HTMLRestrictions $expected_plain_tags_subset, HTMLRestrictions $expected_extracted_plain_tags_subset): void {
     $this->assertEquals($expected_wildcard_subset, $input->getWildcardSubset());
     $this->assertEquals($expected_concrete_subset, $input->getConcreteSubset());
+    $this->assertEquals($expected_plain_tags_subset, $input->getPlainTagsSubset());
+    $this->assertEquals($expected_extracted_plain_tags_subset, $input->extractPlainTagsSubset());
   }
 
   public function providerSubsets(): \Generator {
     yield 'empty set' => [
+      new HTMLRestrictions([]),
+      new HTMLRestrictions([]),
       new HTMLRestrictions([]),
       new HTMLRestrictions([]),
       new HTMLRestrictions([]),
@@ -1333,23 +1339,39 @@ class HTMLRestrictionsTest extends UnitTestCase {
       new HTMLRestrictions(['div' => FALSE]),
       new HTMLRestrictions([]),
       new HTMLRestrictions(['div' => FALSE]),
+      new HTMLRestrictions(['div' => FALSE]),
+      new HTMLRestrictions(['div' => FALSE]),
+    ];
+
+    yield 'without wildcards with attributes' => [
+      new HTMLRestrictions(['div' => ['foo' => ['bar' => TRUE]]]),
+      new HTMLRestrictions([]),
+      new HTMLRestrictions(['div' => ['foo' => ['bar' => TRUE]]]),
+      new HTMLRestrictions([]),
+      new HTMLRestrictions(['div' => FALSE]),
     ];
 
     yield 'with wildcards' => [
       new HTMLRestrictions(['div' => FALSE, '$text-container' => ['data-llama' => TRUE], '*' => ['on*' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
       new HTMLRestrictions(['$text-container' => ['data-llama' => TRUE]]),
       new HTMLRestrictions(['div' => FALSE, '*' => ['on*' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
+      new HTMLRestrictions(['div' => FALSE]),
+      new HTMLRestrictions(['div' => FALSE]),
     ];
 
     yield 'wildcards and global attribute tag' => [
       new HTMLRestrictions(['$text-container' => ['data-llama' => TRUE], '*' => ['on*' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
       new HTMLRestrictions(['$text-container' => ['data-llama' => TRUE]]),
       new HTMLRestrictions(['*' => ['on*' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
+      new HTMLRestrictions([]),
+      new HTMLRestrictions([]),
     ];
 
     yield 'only wildcards' => [
       new HTMLRestrictions(['$text-container' => ['data-llama' => TRUE]]),
       new HTMLRestrictions(['$text-container' => ['data-llama' => TRUE]]),
+      new HTMLRestrictions([]),
+      new HTMLRestrictions([]),
       new HTMLRestrictions([]),
     ];
   }
