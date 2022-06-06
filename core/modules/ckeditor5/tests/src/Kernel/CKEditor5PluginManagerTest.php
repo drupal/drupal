@@ -1466,4 +1466,28 @@ PHP,
     ];
   }
 
+  /**
+   * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition::validateCKEditor5Aspects()
+   */
+  public function testAutomaticLinkDecoratorsDisallowed(): void {
+    $this->expectException(InvalidPluginDefinitionException::class);
+    $this->expectExceptionMessage('The "ckeditor5_automatic_link_decorator_test_llamaClass" CKEditor 5 plugin definition specifies an automatic decorator, this is not supported. Use the Drupal filter system instead.');
+
+    $this->enableModules(['ckeditor5_automatic_link_decorator_test']);
+
+    $this->manager->getDefinitions();
+  }
+
+  /**
+   * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition::validateCKEditor5Aspects()
+   */
+  public function testExternalLinkAutomaticLinkDecoratorDisallowed(): void {
+    $this->expectException(InvalidPluginDefinitionException::class);
+    $this->expectExceptionMessage('The "ckeditor5_automatic_link_decorator_test_2_addTargetToExternalLinks" CKEditor 5 plugin definition specifies an automatic decorator, this is not supported. Use the Drupal filter system instead.');
+
+    $this->enableModules(['ckeditor5_automatic_link_decorator_test_2']);
+
+    $this->manager->getDefinitions();
+  }
+
 }
