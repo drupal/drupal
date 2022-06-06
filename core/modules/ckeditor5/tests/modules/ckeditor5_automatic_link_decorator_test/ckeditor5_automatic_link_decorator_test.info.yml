@@ -1,0 +1,6 @@
+name: CKEditor 5 Automatic Link Decorator Test
+type: module
+description: "Provides infrastructure for testing CKEditor 5 automatic link decorators."
+package: Testing
+dependencies:
+  - ckeditor5:ckeditor5

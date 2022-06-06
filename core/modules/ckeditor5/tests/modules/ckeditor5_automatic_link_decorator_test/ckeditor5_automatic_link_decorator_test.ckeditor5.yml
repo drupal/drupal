@@ -1,0 +1,17 @@
+ckeditor5_automatic_link_decorator_test_llamaClass:
+  ckeditor5:
+    plugins: []
+    config:
+      link:
+        decorators:
+          pinkColor:
+            mode: 'automatic'
+            attributes:
+              class: 'llama'
+  drupal:
+    label: Links must have 'llama' class!
+    elements:
+      - <a class>
+    conditions:
+      plugins:
+        - ckeditor5_link

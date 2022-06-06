@@ -352,6 +352,13 @@ export default class DrupalLinkMediaEditing extends Plugin {
     editor.conversion.for('dataDowncast').add(dataDowncastMediaLink());
 
     this._enableManualDecorators();
+
+    const linkCommand = editor.commands.get('link');
+    if (linkCommand.automaticDecorators.length > 0) {
+      throw new Error(
+        'The Drupal Media plugin is not compatible with automatic link decorators. To use Drupal Media, disable any plugins providing automatic link decorators.',
+      );
+    }
   }
 
   /**
