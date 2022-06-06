@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\ckeditor5\Plugin\Validation\Constraint;
 
 use Drupal\ckeditor5\HTMLRestrictions;
+use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\editor\EditorInterface;
 use Drupal\filter\FilterFormatInterface;
@@ -21,7 +22,8 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  * Fundamental requirements:
  * 1. No TYPE_MARKUP_LANGUAGE filters allowed.
  * 2. Fundamental CKEditor 5 plugins' HTML tags are allowed.
- * 3. The HTML restrictions of all TYPE_HTML_RESTRICTOR filters allow the
+ * 3. All tags are actually creatable.
+ * 4. The HTML restrictions of all TYPE_HTML_RESTRICTOR filters allow the
  *    configured CKEditor 5 plugins to work.
  *
  * @see \Drupal\filter\Plugin\FilterInterface::TYPE_HTML_RESTRICTOR
@@ -67,6 +69,9 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
     if ($this->context->getViolations()->count() > 0) {
       return;
     }
+
+    // Second: ensure that all tags can actually be created.
+    $this->checkAllHtmlTagsAreCreatable($text_editor, $constraint);
 
     // Finally: ensure the CKEditor 5 configuration's ability to generate HTML
     // markup precisely matches that of the text format.
@@ -179,6 +184,71 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
           ->setParameter('@diff', implode(' ', $diff_elements->toCKEditor5ElementsArray()))
           ->atPath("filters.$filter_plugin_id")
           ->addViolation();
+      }
+    }
+  }
+
+  /**
+   * Checks all HTML tags supported by enabled CKEditor 5 plugins are creatable.
+   *
+   * @param \Drupal\editor\EditorInterface $text_editor
+   *   The text editor to validate.
+   * @param \Drupal\ckeditor5\Plugin\Validation\Constraint\FundamentalCompatibilityConstraint $constraint
+   *   The constraint to validate.
+   */
+  private function checkAllHtmlTagsAreCreatable(EditorInterface $text_editor, FundamentalCompatibilityConstraint $constraint): void {
+    $enabled_definitions = $this->pluginManager->getEnabledDefinitions($text_editor);
+    $enabled_plugins = array_keys($enabled_definitions);
+
+    // When arbitrary HTML is supported, all tags are creatable.
+    if (in_array('ckeditor5_arbitraryHtmlSupport', $enabled_plugins, TRUE)) {
+      return;
+    }
+
+    $tags_and_attributes = new HTMLRestrictions($this->pluginManager->getProvidedElements($enabled_plugins, $text_editor));
+    $creatable_tags = new HTMLRestrictions($this->pluginManager->getProvidedElements($enabled_plugins, $text_editor, FALSE, TRUE));
+
+    $needed_tags = $tags_and_attributes->extractPlainTagsSubset();
+    $non_creatable_tags = $needed_tags->diff($creatable_tags);
+    if (!$non_creatable_tags->allowsNothing()) {
+      foreach ($non_creatable_tags->toCKEditor5ElementsArray() as $non_creatable_tag) {
+        // Find the plugin which has a non-creatable tag.
+        $needle = HTMLRestrictions::fromString($non_creatable_tag);
+        $matching_plugins = array_filter($enabled_definitions, function (CKEditor5PluginDefinition $d) use ($needle) {
+          if (!$d->hasElements()) {
+            return FALSE;
+          }
+          $haystack = HTMLRestrictions::fromString(implode($d->getElements()));
+          return !$haystack->intersect($needle)->allowsNothing();
+        });
+        assert(count($matching_plugins) === 1);
+        $plugin_definition = reset($matching_plugins);
+        assert($plugin_definition instanceof CKEditor5PluginDefinition);
+
+        // Compute which attributes it would be able to create on this tag.
+        $matching_elements = array_filter($plugin_definition->getElements(), function (string $element) use ($needle) {
+          $haystack = HTMLRestrictions::fromString($element);
+          return !$haystack->intersect($needle)->allowsNothing();
+        });
+        $attributes_on_tag = HTMLRestrictions::fromString(implode($matching_elements));
+
+        $violation = $this->context->buildViolation($constraint->nonCreatableTagMessage)
+          ->setParameter('@non_creatable_tag', $non_creatable_tag)
+          ->setParameter('%plugin', $plugin_definition->label())
+          ->setParameter('@attributes_on_tag', implode(', ', $attributes_on_tag->toCKEditor5ElementsArray()));
+
+        // If this plugin is associated with a toolbar item, associate the
+        // violation with the property path pointing to the active toolbar item.
+        if ($plugin_definition->hasToolbarItems()) {
+          $toolbar_items = $plugin_definition->getToolbarItems();
+          $active_toolbar_items = array_intersect(
+            $text_editor->getSettings()['toolbar']['items'],
+            array_keys($toolbar_items)
+          );
+          $violation->atPath(sprintf('settings.toolbar.items.%d', array_keys($active_toolbar_items)[0]));
+        }
+
+        $violation->addViolation();
       }
     }
   }
