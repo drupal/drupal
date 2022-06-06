@@ -90,6 +90,27 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
     if (!isset($definition['ckeditor5']['plugins'])) {
       throw new InvalidPluginDefinitionException($id, sprintf('The "%s" CKEditor 5 plugin definition must contain a "ckeditor5.plugins" key.', $id));
     }
+
+    // Automatic link decorators make sense in CKEditor 5, where the generated
+    // HTML must be assumed to be served as-is. But it does not make sense in
+    // in Drupal, where we prefer not storing (hardcoding) such decisions in the
+    // database. Drupal instead filters it on output, using the filter system.
+    if (isset($definition['ckeditor5']['config']['link'])) {
+      // @see https://ckeditor.com/docs/ckeditor5/latest/api/module_link_link-LinkDecoratorAutomaticDefinition.html
+      if (isset($definition['ckeditor5']['config']['link']['decorators']) && is_array($definition['ckeditor5']['config']['link']['decorators'])) {
+        foreach ($definition['ckeditor5']['config']['link']['decorators'] as $decorator) {
+          if ($decorator['mode'] === 'automatic') {
+            throw new InvalidPluginDefinitionException($id, sprintf('The "%s" CKEditor 5 plugin definition specifies an automatic decorator, this is not supported. Use the Drupal filter system instead.', $id));
+          }
+        }
+      }
+      // CKEditor 5 offers one preconfigured automatic link decorator under a
+      // special config flag.
+      // @see https://ckeditor.com/docs/ckeditor5/latest/api/module_link_link-LinkConfig.html#member-addTargetToExternalLinks
+      if (isset($definition['ckeditor5']['config']['link']['addTargetToExternalLinks']) && $definition['ckeditor5']['config']['link']['addTargetToExternalLinks']) {
+        throw new InvalidPluginDefinitionException($id, sprintf('The "%s" CKEditor 5 plugin definition specifies an automatic decorator, this is not supported. Use the Drupal filter system instead.', $id));
+      }
+    }
   }
 
   /**
