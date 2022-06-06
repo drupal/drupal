@@ -200,7 +200,8 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
     if (!$view_mode_override_enabled) {
       $subset = $subset->diff(HTMLRestrictions::fromString('<drupal-media data-view-mode>'));
     }
-    return $subset->toCKEditor5ElementsArray();
+    // @todo Simplify in https://www.drupal.org/project/drupal/issues/3278636, that will allow removing all uses of HTMLRestrictions in this class.
+    return array_merge(['<drupal-media>'], $subset->toCKEditor5ElementsArray());
   }
 
   /**

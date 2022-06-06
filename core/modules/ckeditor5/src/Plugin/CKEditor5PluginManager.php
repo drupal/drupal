@@ -298,7 +298,7 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
   /**
    * {@inheritdoc}
    */
-  public function getProvidedElements(array $plugin_ids = [], EditorInterface $editor = NULL, bool $resolve_wildcards = TRUE): array {
+  public function getProvidedElements(array $plugin_ids = [], EditorInterface $editor = NULL, bool $resolve_wildcards = TRUE, bool $creatable_elements_only = FALSE): array {
     $plugins = $this->getDefinitions();
     if (!empty($plugin_ids)) {
       $plugins = array_intersect_key($plugins, array_flip($plugin_ids));
@@ -335,10 +335,25 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
           if (!empty($subset_violations)) {
             throw new \LogicException(sprintf('The "%s" CKEditor 5 plugin implements ::getElementsSubset() and did not return a subset, the following tags are absent from the plugin definition: "%s".', $id, implode(' ', $subset_violations)));
           }
+          // Also detect what is technically a valid subset, but has lost the
+          // ability to create tags that are still in the subset. This points to
+          // a bug in the plugin's ::getElementsSubset() logic.
+          $defined_creatable = HTMLRestrictions::fromString(implode($definition->getCreatableElements()));
+          $subset_creatable_actual = HTMLRestrictions::fromString(implode(array_filter($subset, [CKEditor5PluginDefinition::class, 'isCreatableElement'])));
+          $subset_creatable_needed = $subset_restrictions->extractPlainTagsSubset()
+            ->intersect($defined_creatable);
+          $missing_creatable_for_subset = $subset_creatable_needed->diff($subset_creatable_actual);
+          if (!$missing_creatable_for_subset->allowsNothing()) {
+            throw new \LogicException(sprintf('The "%s" CKEditor 5 plugin implements ::getElementsSubset() and did return a subset ("%s") but the following tags can no longer be created: "%s".', $id, implode($subset_restrictions->toCKEditor5ElementsArray()), implode($missing_creatable_for_subset->toCKEditor5ElementsArray())));
+          }
           $defined_elements = $subset;
         }
       }
       assert(Inspector::assertAllStrings($defined_elements));
+      if ($creatable_elements_only) {
+        // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition::getCreatableElements()
+        $defined_elements = array_filter($defined_elements, [CKEditor5PluginDefinition::class, 'isCreatableElement']);
+      }
       foreach ($defined_elements as $element) {
         $additional_elements = HTMLRestrictions::fromString($element);
         $elements = $elements->merge($additional_elements);
