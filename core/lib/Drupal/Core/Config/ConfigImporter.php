@@ -729,6 +729,7 @@ class ConfigImporter {
    */
   public function validate() {
     if (!$this->validated) {
+      $this->errors = [];
       // Create the list of installs and uninstalls.
       $this->createExtensionChangelist();
       // Validate renames.
