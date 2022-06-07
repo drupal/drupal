@@ -37,7 +37,7 @@ use Drupal\user\UserInterface;
  *
  * @todo Remove when https://www.drupal.org/node/1029708 lands.
  */
-define('COMMENT_NEW_LIMIT', REQUEST_TIME - 2592000);
+define('COMMENT_NEW_LIMIT', REQUEST_TIME - 30 * 24 * 60 * 60);
 
 /**
  * Implements hook_help().

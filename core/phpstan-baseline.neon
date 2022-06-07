@@ -1671,7 +1671,7 @@ parameters:
 			path: modules/language/tests/src/Unit/LanguageNegotiationUrlTest.php
 
 		-
-			message: "#^Method Drupal\\\\layout_builder_test\\\\Plugin\\\\SectionStorage\\\\TestStateBasedSectionStorage\\:\\:access\\(\\) should return \\(\\$return_as_object is true \\? Drupal\\\\Core\\\\Access\\\\AccessResultInterface \\: bool\\) but return statement is missing\\.$#"
+			message: "#^Method Drupal\\\\layout_builder_test\\\\Plugin\\\\SectionStorage\\\\TestStateBasedSectionStorage\\:\\:access\\(\\) should return bool\\|Drupal\\\\Core\\\\Access\\\\AccessResultInterface but return statement is missing\\.$#"
 			count: 1
 			path: modules/layout_builder/tests/modules/layout_builder_test/src/Plugin/SectionStorage/TestStateBasedSectionStorage.php
 
