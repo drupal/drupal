@@ -119,6 +119,13 @@ drupal.dialog:
     theme:
       css/components/ui-dialog.css: {}
 
+drupal.message:
+  version: VERSION
+  js:
+    js/message.theme.js: {}
+  dependencies:
+    - olivero/messages
+
 drupal.node.preview:
   version: VERSION
   css:

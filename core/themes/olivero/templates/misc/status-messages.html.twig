@@ -22,52 +22,54 @@
 {{ attach_library('olivero/messages') }}
 
 <div data-drupal-messages class="messages-list">
-  {% for type, messages in message_list %}
-    {%
-      set classes = [
-      'messages-list__item',
-      'messages',
-      'messages--' ~ type,
-    ]
-    %}
+  <div class="messages__wrapper layout-container">
+    {% for type, messages in message_list %}
+      {%
+        set classes = [
+        'messages-list__item',
+        'messages',
+        'messages--' ~ type,
+      ]
+      %}
 
-    <div{{ attributes
-      .addClass(classes)
-      .setAttribute('data-drupal-selector', 'messages')
-      .setAttribute('role', 'contentinfo')
-      .setAttribute('aria-label', status_headings[type])
-      }}>
-      <div class="messages__container" data-drupal-selector="messages-container"{% if type == 'error' %} role="alert"{% endif %}>
-        {% if status_headings[type] %}
-          <div class="messages__header">
-           <h2 class="visually-hidden">{{ status_headings[type] }}</h2>
-            <div class="messages__icon">
-              {% if type == 'error' %}
-                {% include "@olivero/../images/error.svg" %}
-              {% elseif type == 'warning' %}
-                {% include "@olivero/../images/warning.svg" %}
-              {% elseif type == 'status' %}
-                {% include "@olivero/../images/status.svg" %}
-              {% elseif type == 'info' %}
-                {% include "@olivero/../images/info.svg" %}
-              {% endif %}
+      <div{{ attributes
+        .addClass(classes)
+        .setAttribute('data-drupal-selector', 'messages')
+        .setAttribute('role', 'contentinfo')
+        .setAttribute('aria-label', status_headings[type])
+        }}>
+        <div class="messages__container" data-drupal-selector="messages-container"{% if type == 'error' %} role="alert"{% endif %}>
+          {% if status_headings[type] %}
+            <div class="messages__header">
+            <h2 class="visually-hidden">{{ status_headings[type] }}</h2>
+              <div class="messages__icon">
+                {% if type == 'error' %}
+                  {% include "@olivero/../images/error.svg" %}
+                {% elseif type == 'warning' %}
+                  {% include "@olivero/../images/warning.svg" %}
+                {% elseif type == 'status' %}
+                  {% include "@olivero/../images/status.svg" %}
+                {% elseif type == 'info' %}
+                  {% include "@olivero/../images/info.svg" %}
+                {% endif %}
+              </div>
             </div>
-          </div>
-        {% endif %}
-        <div class="messages__content">
-          {% if messages|length > 1 %}
-            <ul class="messages__list">
-              {% for message in messages %}
-                <li class="messages__item">{{ message }}</li>
-              {% endfor %}
-            </ul>
-          {% else %}
-            {{ messages|first }}
           {% endif %}
+          <div class="messages__content">
+            {% if messages|length > 1 %}
+              <ul class="messages__list">
+                {% for message in messages %}
+                  <li class="messages__item">{{ message }}</li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              {{ messages|first }}
+            {% endif %}
+          </div>
         </div>
       </div>
-    </div>
-    {# Remove type specific classes. #}
-    {% set attributes = attributes.removeClass(classes) %}
-  {% endfor %}
+      {# Remove type specific classes. #}
+      {% set attributes = attributes.removeClass(classes) %}
+    {% endfor %}
+  </div>
 </div>
