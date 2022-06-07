@@ -140,16 +140,12 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   /**
    * Constructs a WizardPluginBase object.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeBundleInfoInterface $bundle_info_service, MenuParentFormSelectorInterface $parent_form_selector = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeBundleInfoInterface $bundle_info_service, MenuParentFormSelectorInterface $parent_form_selector) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->bundleInfoService = $bundle_info_service;
     $this->base_table = $this->definition['base_table'];
 
-    if (!$parent_form_selector) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $parent_form_selector argument is deprecated in drupal:9.3.0 and the $parent_form_selector argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3027559', E_USER_DEPRECATED);
-      $parent_form_selector = \Drupal::service('menu.parent_form_selector');
-    }
     $this->parentFormSelector = $parent_form_selector;
 
     $entity_types = \Drupal::entityTypeManager()->getDefinitions();

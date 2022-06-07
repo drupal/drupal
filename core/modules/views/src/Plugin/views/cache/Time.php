@@ -6,7 +6,6 @@ use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Cache\Cache;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Simple caching of query results for Views displays.
@@ -47,27 +46,8 @@ class Time extends CachePluginBase {
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, DateFormatterInterface $date_formatter) {
     $this->dateFormatter = $date_formatter;
-    if (func_num_args() == 5 && func_get_arg(4) instanceof Request) {
-      @trigger_error('The request object must not be passed to ' . __METHOD__ . '(). It is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. See https://www.drupal.org/node/3154016', E_USER_DEPRECATED);
-    }
 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-  }
-
-  /**
-   * Returns replacements for deprecated properties.
-   *
-   * @param string $name
-   *   The property name.
-   *
-   * @return mixed
-   *   The value.
-   */
-  public function __get($name) {
-    if ($name === 'request') {
-      @trigger_error('The request property of ' . __CLASS__ . ' is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. See https://www.drupal.org/node/3154016', E_USER_DEPRECATED);
-      return $this->view->getRequest();
-    }
   }
 
   /**

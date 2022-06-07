@@ -75,13 +75,9 @@ class Page extends PathPluginBase {
    * @param \Drupal\Core\Menu\MenuParentFormSelectorInterface $parent_form_selector
    *   The parent form selector service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, StateInterface $state, EntityStorageInterface $menu_storage, MenuParentFormSelectorInterface $parent_form_selector = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, StateInterface $state, EntityStorageInterface $menu_storage, MenuParentFormSelectorInterface $parent_form_selector) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $route_provider, $state);
     $this->menuStorage = $menu_storage;
-    if (!$parent_form_selector) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $parent_form_selector argument is deprecated in drupal:9.3.0 and the $parent_form_selector argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3027559', E_USER_DEPRECATED);
-      $parent_form_selector = \Drupal::service('menu.parent_form_selector');
-    }
     $this->parentFormSelector = $parent_form_selector;
   }
 

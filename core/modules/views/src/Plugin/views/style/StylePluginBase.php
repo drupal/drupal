@@ -379,25 +379,6 @@ abstract class StylePluginBase extends PluginBase {
   }
 
   /**
-   * Provide a form in the views wizard if this style is selected.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   * @param string $type
-   *   The display type, either block or page.
-   *
-   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. No direct
-   *   replacement is provided.
-   *
-   * @see https://www.drupal.org/node/3186502
-   */
-  public function wizardForm(&$form, FormStateInterface $form_state, $type) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3186502', E_USER_DEPRECATED);
-  }
-
-  /**
    * Alter the options of a display before they are added to the view.
    *
    * @param array $form

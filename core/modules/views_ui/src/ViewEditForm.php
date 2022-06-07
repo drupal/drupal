@@ -75,15 +75,11 @@ class ViewEditForm extends ViewFormBase {
    * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
    *   The theme manager.
    */
-  public function __construct(SharedTempStoreFactory $temp_store_factory, RequestStack $requestStack, DateFormatterInterface $date_formatter, ElementInfoManagerInterface $element_info, ThemeManagerInterface $theme_manager = NULL) {
+  public function __construct(SharedTempStoreFactory $temp_store_factory, RequestStack $requestStack, DateFormatterInterface $date_formatter, ElementInfoManagerInterface $element_info, ThemeManagerInterface $theme_manager) {
     $this->tempStore = $temp_store_factory->get('views');
     $this->requestStack = $requestStack;
     $this->dateFormatter = $date_formatter;
     $this->elementInfo = $element_info;
-    if ($theme_manager === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $theme_manager argument is deprecated in drupal:9.1.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/3159506', E_USER_DEPRECATED);
-      $theme_manager = \Drupal::service('theme.manager');
-    }
     $this->themeManager = $theme_manager;
   }
 

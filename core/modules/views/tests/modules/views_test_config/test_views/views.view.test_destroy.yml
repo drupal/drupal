@@ -77,10 +77,11 @@ display:
           entity_type: node
           entity_field: nid
         path:
-          field: path
+          field: view_node
           id: path
           table: node
-          plugin_id: node_path
+          output_url_as_text: true
+          plugin_id: entity_link
           entity_type: node
       filters:
         nid:
