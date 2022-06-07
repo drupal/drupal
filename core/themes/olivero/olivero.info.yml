@@ -58,7 +58,7 @@ libraries-override:
   layout_builder/fourcol_section: olivero/layout_builder_fourcol_section
 libraries-extend:
   core/drupal.message:
-    - olivero/messages
+    - olivero/drupal.message
   core/drupal.collapse:
     - olivero/details
   core/drupal.dialog:

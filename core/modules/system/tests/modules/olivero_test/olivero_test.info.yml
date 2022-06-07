@@ -12,3 +12,4 @@ dependencies:
   - drupal:search
   - drupal:taxonomy
   - drupal:views
+  - drupal:js_message_test
