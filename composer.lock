@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ff19361e7e9a5766f37cf73a99d3e5ba",
+    "content-hash": "55c2ddc9e5620ea486de1415d2485266",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -5250,21 +5250,21 @@
         },
         {
             "name": "mglaman/phpstan-drupal",
-            "version": "1.1.16",
+            "version": "1.1.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mglaman/phpstan-drupal.git",
-                "reference": "2c72ac675e5630e1f421adb1bf4e6546310d6b05"
+                "reference": "f9d8493835cc50ab9e3592486d129c2b355db335"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mglaman/phpstan-drupal/zipball/2c72ac675e5630e1f421adb1bf4e6546310d6b05",
-                "reference": "2c72ac675e5630e1f421adb1bf4e6546310d6b05",
+                "url": "https://api.github.com/repos/mglaman/phpstan-drupal/zipball/f9d8493835cc50ab9e3592486d129c2b355db335",
+                "reference": "f9d8493835cc50ab9e3592486d129c2b355db335",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.4 || ^8.0",
-                "phpstan/phpstan": "^1.0",
+                "phpstan/phpstan": "^1.7.0",
                 "symfony/finder": "~3.4.5 ||^4.2 || ^5.0 || ^6.0",
                 "symfony/yaml": "~3.4.5 || ^4.2|| ^5.0 || ^6.0",
                 "webflo/drupal-finder": "^1.2"
@@ -5317,9 +5317,6 @@
                 }
             },
             "autoload": {
-                "files": [
-                    "drupal-phpunit-hack.php"
-                ],
                 "psr-4": {
                     "mglaman\\PHPStanDrupal\\": "src/"
                 }
@@ -5337,7 +5334,7 @@
             "description": "Drupal extension and rules for PHPStan",
             "support": {
                 "issues": "https://github.com/mglaman/phpstan-drupal/issues",
-                "source": "https://github.com/mglaman/phpstan-drupal/tree/1.1.16"
+                "source": "https://github.com/mglaman/phpstan-drupal/tree/1.1.20"
             },
             "funding": [
                 {
@@ -5353,7 +5350,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-04-13T20:19:23+00:00"
+            "time": "2022-06-07T14:32:27+00:00"
         },
         {
             "name": "mikey179/vfsstream",
@@ -6002,16 +5999,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.6.8",
+            "version": "1.7.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "d76498c5531232cb8386ceb6004f7e013138d3ba"
+                "reference": "62fcadcde81b4037e42ad2489119d31c46f00191"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/d76498c5531232cb8386ceb6004f7e013138d3ba",
-                "reference": "d76498c5531232cb8386ceb6004f7e013138d3ba",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/62fcadcde81b4037e42ad2489119d31c46f00191",
+                "reference": "62fcadcde81b4037e42ad2489119d31c46f00191",
                 "shasum": ""
             },
             "require": {
@@ -6037,7 +6034,7 @@
             "description": "PHPStan - PHP Static Analysis Tool",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/1.6.8"
+                "source": "https://github.com/phpstan/phpstan/tree/1.7.11"
             },
             "funding": [
                 {
@@ -6057,7 +6054,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-05-10T06:54:21+00:00"
+            "time": "2022-06-07T08:47:03+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
