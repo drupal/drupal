@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\Core\Site;
 
+use Composer\Autoload\ClassLoader;
+use Drupal\Core\Database\Database;
 use Drupal\Core\Site\Settings;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
@@ -320,6 +322,84 @@ class SettingsTest extends UnitTestCase {
         'twig_sandbox_whitelisted_prefixes',
         'The "twig_sandbox_whitelisted_prefixes" setting is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use "twig_sandbox_allowed_prefixes" instead. See https://www.drupal.org/node/3162897.',
       ],
+    ];
+  }
+
+  /**
+   * Tests initialization performed for the $databases variable.
+   *
+   * @dataProvider providerTestDatabaseInfoInitialization
+   */
+  public function testDatabaseInfoInitialization(string $driver, ?string $namespace, ?string $autoload, string $expected_namespace, ?string $expected_autoload): void {
+    $databases['mock'][$driver] = [
+      'driver' => $driver,
+      'prefix' => '',
+    ];
+    if (!is_null($namespace)) {
+      $databases['mock'][$driver]['namespace'] = $namespace;
+    }
+    if (!is_null($autoload)) {
+      $databases['mock'][$driver]['autoload'] = $autoload;
+    }
+    $settings_file_content = "<?php\n\$databases = " . var_export($databases, TRUE) . ";\n";
+
+    $vfs_root = vfsStream::setup('root');
+    $sites_directory = vfsStream::newDirectory('sites')->at($vfs_root);
+    vfsStream::newFile('settings.php')
+      ->at($sites_directory)
+      ->setContent($settings_file_content);
+
+    $class_loader = $this->createMock(ClassLoader::class);
+    if (!empty($expected_autoload)) {
+      $class_loader->expects($this->once())
+        ->method('addPsr4')
+        ->with($expected_namespace . '\\', $expected_autoload);
+    }
+    else {
+      $class_loader->expects($this->never())
+        ->method('addPsr4');
+    }
+
+    Settings::initialize(vfsStream::url('root'), 'sites', $class_loader);
+
+    $expected = [
+      $driver => [
+        'driver' => $driver,
+        'namespace' => $expected_namespace,
+        'prefix' => '',
+      ],
+    ];
+    if (!is_null($expected_autoload)) {
+      $expected[$driver]['autoload'] = $expected_autoload;
+    }
+    $this->assertEquals($expected, Database::getConnectionInfo('mock'));
+  }
+
+  /**
+   * Provides data for testDatabaseInfoInitialization().
+   */
+  public function providerTestDatabaseInfoInitialization(): array {
+    return [
+      ['mysql', NULL, NULL, 'Drupal\\mysql\\Driver\\Database\\mysql', 'core/modules/mysql/src/Driver/Database/mysql/'],
+      ['mysql', '', NULL, 'Drupal\\mysql\\Driver\\Database\\mysql', 'core/modules/mysql/src/Driver/Database/mysql/'],
+      ['mysql', 'Drupal\\Core\\Database\\Driver\\mysql', NULL, 'Drupal\\mysql\\Driver\\Database\\mysql', 'core/modules/mysql/src/Driver/Database/mysql/'],
+      ['mysql', 'Drupal\\mysql\\Driver\\Database\\mysql', NULL, 'Drupal\\mysql\\Driver\\Database\\mysql', 'core/modules/mysql/src/Driver/Database/mysql/'],
+      ['mysql', 'Drupal\\Driver\\Database\\mysql', NULL, 'Drupal\\Driver\\Database\\mysql', NULL],
+      ['mysql', 'Drupal\\mysql\\Driver\\Database\\mysql', 'modules/custom/mysql/src/Driver/Database/mysql/', 'Drupal\\mysql\\Driver\\Database\\mysql', 'modules/custom/mysql/src/Driver/Database/mysql/'],
+
+      ['pgsql', NULL, NULL, 'Drupal\\pgsql\\Driver\\Database\\pgsql', 'core/modules/pgsql/src/Driver/Database/pgsql/'],
+      ['pgsql', '', NULL, 'Drupal\\pgsql\\Driver\\Database\\pgsql', 'core/modules/pgsql/src/Driver/Database/pgsql/'],
+      ['pgsql', 'Drupal\\Core\\Database\\Driver\\pgsql', NULL, 'Drupal\\pgsql\\Driver\\Database\\pgsql', 'core/modules/pgsql/src/Driver/Database/pgsql/'],
+      ['pgsql', 'Drupal\\pgsql\\Driver\\Database\\pgsql', NULL, 'Drupal\\pgsql\\Driver\\Database\\pgsql', 'core/modules/pgsql/src/Driver/Database/pgsql/'],
+      ['pgsql', 'Drupal\\Driver\\Database\\pgsql', NULL, 'Drupal\\Driver\\Database\\pgsql', NULL],
+      ['pgsql', 'Drupal\\pgsql\\Driver\\Database\\pgsql', 'modules/custom/pgsql/src/Driver/Database/pgsql/', 'Drupal\\pgsql\\Driver\\Database\\pgsql', 'modules/custom/pgsql/src/Driver/Database/pgsql/'],
+
+      ['sqlite', NULL, NULL, 'Drupal\\sqlite\\Driver\\Database\\sqlite', 'core/modules/sqlite/src/Driver/Database/sqlite/'],
+      ['sqlite', '', NULL, 'Drupal\\sqlite\\Driver\\Database\\sqlite', 'core/modules/sqlite/src/Driver/Database/sqlite/'],
+      ['sqlite', 'Drupal\\Core\\Database\\Driver\\sqlite', NULL, 'Drupal\\sqlite\\Driver\\Database\\sqlite', 'core/modules/sqlite/src/Driver/Database/sqlite/'],
+      ['sqlite', 'Drupal\\sqlite\\Driver\\Database\\sqlite', NULL, 'Drupal\\sqlite\\Driver\\Database\\sqlite', 'core/modules/sqlite/src/Driver/Database/sqlite/'],
+      ['sqlite', 'Drupal\\Driver\\Database\\sqlite', NULL, 'Drupal\\Driver\\Database\\sqlite', NULL],
+      ['sqlite', 'Drupal\\sqlite\\Driver\\Database\\sqlite', 'modules/custom/sqlite/src/Driver/Database/sqlite/', 'Drupal\\sqlite\\Driver\\Database\\sqlite', 'modules/custom/sqlite/src/Driver/Database/sqlite/'],
     ];
   }
 
