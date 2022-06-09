@@ -4,3 +4,10 @@ ckeditor5_test.off_canvas:
     _controller: '\Drupal\ckeditor5_test\Controller\CKEditor5OffCanvasTestController::testOffCanvas'
   requirements:
     _access: 'TRUE'
+
+ckeditor5_test.dialog:
+  path: '/ckeditor5_test/dialog'
+  defaults:
+    _controller: '\Drupal\ckeditor5_test\Controller\CKEditor5DialogTestController::testDialog'
+  requirements:
+    _access: 'TRUE'
