@@ -60,7 +60,7 @@ class SysLog implements LoggerInterface {
   /**
    * {@inheritdoc}
    */
-  public function log($level, $message, array $context = []) {
+  public function log($level, string|\Stringable $message, array $context = []): void {
     global $base_url;
 
     $format = $this->config->get('format');

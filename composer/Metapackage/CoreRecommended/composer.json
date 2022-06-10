@@ -27,7 +27,7 @@
         "psr/http-client": "1.0.1",
         "psr/http-factory": "1.0.1",
         "psr/http-message": "1.0.1",
-        "psr/log": "2.0.0",
+        "psr/log": "3.0.0",
         "ralouphie/getallheaders": "3.0.3",
         "symfony/console": "v6.1.1",
         "symfony/dependency-injection": "v6.1.0",

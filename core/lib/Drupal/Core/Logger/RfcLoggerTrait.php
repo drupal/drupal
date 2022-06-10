@@ -17,62 +17,62 @@ trait RfcLoggerTrait {
   /**
    * {@inheritdoc}
    */
-  public function emergency($message, array $context = []) {
+  public function emergency(string|\Stringable $message, array $context = []): void {
     $this->log(RfcLogLevel::EMERGENCY, $message, $context);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function alert($message, array $context = []) {
+  public function alert(string|\Stringable $message, array $context = []): void {
     $this->log(RfcLogLevel::ALERT, $message, $context);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function critical($message, array $context = []) {
+  public function critical(string|\Stringable $message, array $context = []): void {
     $this->log(RfcLogLevel::CRITICAL, $message, $context);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function error($message, array $context = []) {
+  public function error(string|\Stringable $message, array $context = []): void {
     $this->log(RfcLogLevel::ERROR, $message, $context);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function warning($message, array $context = []) {
+  public function warning(string|\Stringable $message, array $context = []): void {
     $this->log(RfcLogLevel::WARNING, $message, $context);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function notice($message, array $context = []) {
+  public function notice(string|\Stringable $message, array $context = []): void {
     $this->log(RfcLogLevel::NOTICE, $message, $context);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function info($message, array $context = []) {
+  public function info(string|\Stringable $message, array $context = []): void {
     $this->log(RfcLogLevel::INFO, $message, $context);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function debug($message, array $context = []) {
+  public function debug(string|\Stringable $message, array $context = []): void {
     $this->log(RfcLogLevel::DEBUG, $message, $context);
   }
 
   /**
    * {@inheritdoc}
    */
-  abstract public function log($level, $message, array $context = []);
+  abstract public function log($level, string|\Stringable $message, array $context = []): void;
 
 }

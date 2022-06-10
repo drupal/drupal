@@ -52,7 +52,7 @@ class DbLog implements LoggerInterface {
   /**
    * {@inheritdoc}
    */
-  public function log($level, $message, array $context = []) {
+  public function log($level, string|\Stringable $message, array $context = []): void {
     // Remove backtrace and exception since they may contain an unserializable variable.
     unset($context['backtrace'], $context['exception']);
 

@@ -16,7 +16,7 @@ class TestLog implements LoggerInterface {
   /**
    * {@inheritdoc}
    */
-  public function log($level, $message, array $context = []) {
+  public function log($level, string|\Stringable $message, array $context = []): void {
     $trigger = [
       '%type' => 'Exception',
       '@message' => 'Deforestation',

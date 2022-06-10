@@ -243,7 +243,7 @@ class UpdateFetcherTest extends UnitTestCase implements LoggerInterface {
   /**
    * {@inheritdoc}
    */
-  public function log($level, $message, array $context = []) {
+  public function log($level, string|\Stringable $message, array $context = []): void {
     $this->logMessages[] = $context['@message'];
   }
 
