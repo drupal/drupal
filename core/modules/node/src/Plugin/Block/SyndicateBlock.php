@@ -78,7 +78,7 @@ class SyndicateBlock extends BlockBase implements ContainerFactoryPluginInterfac
    * {@inheritdoc}
    */
   public function build() {
-    $title = $this->configFactory->get('system.site')->get('name');
+    $title = $this->configuration['label'];
     return [
       '#theme' => 'feed_icon',
       '#url' => Url::fromUri('internal:/rss.xml'),
