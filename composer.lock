@@ -535,7 +535,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "d3a6c5f5df9c0daec096047d22f1a9f536683da1"
+                "reference": "2f638157a581f10e4d1067d68f3ebcb864903d1b"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -556,7 +556,7 @@
                 "ext-spl": "*",
                 "ext-tokenizer": "*",
                 "ext-xml": "*",
-                "guzzlehttp/guzzle": "^6.5.6",
+                "guzzlehttp/guzzle": "^6.5.7",
                 "laminas/laminas-diactoros": "^2.1",
                 "laminas/laminas-feed": "^2.12",
                 "masterminds/html5": "^2.1",
@@ -922,16 +922,16 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "6.5.6",
+            "version": "6.5.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "f092dd734083473658de3ee4bef093ed77d2689c"
+                "reference": "724562fa861e21a4071c652c8a159934e4f05592"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/f092dd734083473658de3ee4bef093ed77d2689c",
-                "reference": "f092dd734083473658de3ee4bef093ed77d2689c",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/724562fa861e21a4071c652c8a159934e4f05592",
+                "reference": "724562fa861e21a4071c652c8a159934e4f05592",
                 "shasum": ""
             },
             "require": {
@@ -1017,7 +1017,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/guzzle/issues",
-                "source": "https://github.com/guzzle/guzzle/tree/6.5.6"
+                "source": "https://github.com/guzzle/guzzle/tree/6.5.7"
             },
             "funding": [
                 {
@@ -1033,7 +1033,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-05-25T13:19:12+00:00"
+            "time": "2022-06-09T21:36:50+00:00"
         },
         {
             "name": "guzzlehttp/promises",

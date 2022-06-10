@@ -36,7 +36,7 @@
         "twig/twig": "^2.12.0",
         "doctrine/reflection": "^1.1",
         "doctrine/annotations": "^1.12",
-        "guzzlehttp/guzzle": "^6.5.6",
+        "guzzlehttp/guzzle": "^6.5.7",
         "symfony-cmf/routing": "^2.1",
         "laminas/laminas-feed": "^2.12",
         "stack/builder": "^1.0",
