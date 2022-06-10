@@ -13,7 +13,7 @@
         "doctrine/annotations": "1.13.2",
         "doctrine/lexer": "1.2.3",
         "egulias/email-validator": "3.1.2",
-        "guzzlehttp/guzzle": "7.4.3",
+        "guzzlehttp/guzzle": "7.4.4",
         "guzzlehttp/promises": "1.5.1",
         "guzzlehttp/psr7": "2.2.1",
         "masterminds/html5": "2.7.5",
