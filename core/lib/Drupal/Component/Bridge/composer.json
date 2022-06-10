@@ -1,5 +1,9 @@
 {
   "name": "drupal/core-bridge",
+  "abandoned": true,
+  "extra": [
+        "This component package has been deprecated. See the change record here: https://www.drupal.org/node/3258656"
+  ],
   "description": "Bridge.",
   "keywords": ["drupal"],
   "homepage": "https://www.drupal.org/project/drupal",
