@@ -105,16 +105,6 @@ hook_js_alter:
   dependencies:
     - core/drupal.tableselect
 
-browsers:
-  js:
-    old-ie.js:
-      browsers:
-        'IE': 'lte IE 8'
-        '!IE': false
-    no-ie.js:
-      browsers:
-        IE: false
-
 querystring:
   js:
     querystring.js?arg1=value1&arg2=value2: {}

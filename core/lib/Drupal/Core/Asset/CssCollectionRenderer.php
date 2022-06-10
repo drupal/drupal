@@ -61,7 +61,6 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
     foreach ($css_assets as $css_asset) {
       $element = $link_element_defaults;
       $element['#attributes']['media'] = $css_asset['media'];
-      $element['#browsers'] = $css_asset['browsers'];
 
       switch ($css_asset['type']) {
         // For file items, output a LINK tag for file CSS assets.

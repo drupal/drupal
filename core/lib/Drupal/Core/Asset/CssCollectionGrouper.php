@@ -11,13 +11,13 @@ class CssCollectionGrouper implements AssetCollectionGrouperInterface {
    * {@inheritdoc}
    *
    * Puts multiple items into the same group if they are groupable and if they
-   * are for the same 'media' and 'browsers'. Items of the 'file' type are
-   * groupable if their 'preprocess' flag is TRUE, and items of the 'external'
-   * type are never groupable.
+   * are for the same 'media'. Items of the 'file' type are groupable if their
+   * 'preprocess' flag is TRUE, and items of the 'external' type are never
+   * groupable.
    *
    * Also ensures that the process of grouping items does not change their
    * relative order. This requirement may result in multiple groups for the same
-   * type, media, and browsers, if needed to accommodate other items in between.
+   * type and media, if needed to accommodate other items in between.
    */
   public function group(array $css_assets) {
     $groups = [];
@@ -30,11 +30,6 @@ class CssCollectionGrouper implements AssetCollectionGrouperInterface {
     // -1, the first group will have index 0.
     $i = -1;
     foreach ($css_assets as $item) {
-      // The browsers for which the CSS item needs to be loaded is part of the
-      // information that determines when a new group is needed, but the order
-      // of keys in the array doesn't matter, and we don't want a new group if
-      // all that's different is that order.
-      ksort($item['browsers']);
 
       // If the item can be grouped with other items, set $group_keys to an
       // array of information that must be the same for all items in its group.
@@ -52,7 +47,7 @@ class CssCollectionGrouper implements AssetCollectionGrouperInterface {
           // Group file items if their 'preprocess' flag is TRUE.
           // Help ensure maximum reuse of aggregate files by only grouping
           // together items that share the same 'group' value.
-          $group_keys = $item['preprocess'] ? [$item['type'], $item['group'], $item['media'], $item['browsers']] : FALSE;
+          $group_keys = $item['preprocess'] ? [$item['type'], $item['group'], $item['media']] : FALSE;
           break;
 
         case 'external':

@@ -10,13 +10,13 @@ class JsCollectionGrouper implements AssetCollectionGrouperInterface {
   /**
    * {@inheritdoc}
    *
-   * Puts multiple items into the same group if they are groupable and if they
-   * are for the same browsers. Items of the 'file' type are groupable if their
-   * 'preprocess' flag is TRUE. Items of the 'external' type are not groupable.
+   * Puts multiple items into the same group if they are groupable. Items of
+   * the 'file' type are groupable if their 'preprocess' flag is TRUE. Items of
+   * the 'external' type are not groupable.
    *
    * Also ensures that the process of grouping items does not change their
    * relative order. This requirement may result in multiple groups for the same
-   * type and browsers, if needed to accommodate other items in between.
+   * type, if needed to accommodate other items in between.
    */
   public function group(array $js_assets) {
     $groups = [];
@@ -27,18 +27,12 @@ class JsCollectionGrouper implements AssetCollectionGrouperInterface {
     $current_group_keys = NULL;
     $index = -1;
     foreach ($js_assets as $item) {
-      // The browsers for which the JavaScript item needs to be loaded is part
-      // of the information that determines when a new group is needed, but the
-      // order of keys in the array doesn't matter, and we don't want a new
-      // group if all that's different is that order.
-      ksort($item['browsers']);
-
       switch ($item['type']) {
         case 'file':
           // Group file items if their 'preprocess' flag is TRUE.
           // Help ensure maximum reuse of aggregate files by only grouping
           // together items that share the same 'group' value.
-          $group_keys = $item['preprocess'] ? [$item['type'], $item['group'], $item['browsers']] : FALSE;
+          $group_keys = $item['preprocess'] ? [$item['type'], $item['group']] : FALSE;
           break;
 
         case 'external':

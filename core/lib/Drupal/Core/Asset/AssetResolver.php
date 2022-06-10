@@ -126,7 +126,6 @@ class AssetResolver implements AssetResolverInterface {
       'weight' => 0,
       'media' => 'all',
       'preprocess' => TRUE,
-      'browsers' => [],
     ];
 
     foreach ($libraries_to_load as $library) {
@@ -135,10 +134,6 @@ class AssetResolver implements AssetResolverInterface {
       if (isset($definition['css'])) {
         foreach ($definition['css'] as $options) {
           $options += $default_options;
-          $options['browsers'] += [
-            'IE' => TRUE,
-            '!IE' => TRUE,
-          ];
 
           // Files with a query string cannot be preprocessed.
           if ($options['type'] === 'file' && $options['preprocess'] && strpos($options['data'], '?') !== FALSE) {
@@ -220,7 +215,6 @@ class AssetResolver implements AssetResolverInterface {
         'preprocess' => TRUE,
         'attributes' => [],
         'version' => NULL,
-        'browsers' => [],
       ];
 
       // Collect all libraries that contain JS assets and are in the header.
@@ -324,7 +318,6 @@ class AssetResolver implements AssetResolverInterface {
         'type' => 'setting',
         'group' => JS_SETTING,
         'weight' => 0,
-        'browsers' => [],
         'data' => $settings,
       ];
       $settings_js_asset = ['drupalSettings' => $settings_as_inline_javascript];

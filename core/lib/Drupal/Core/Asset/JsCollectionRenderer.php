@@ -66,9 +66,7 @@ class JsCollectionRenderer implements AssetCollectionRendererInterface {
 
     // Loop through all JS assets.
     foreach ($js_assets as $js_asset) {
-      // Element properties that do not depend on JS asset type.
       $element = $element_defaults;
-      $element['#browsers'] = $js_asset['browsers'];
 
       // Element properties that depend on item type.
       switch ($js_asset['type']) {
