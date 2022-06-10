@@ -114,6 +114,9 @@ trait DeprecationListenerTrait {
       "The \"PHPUnit\Framework\TestSuite\" class is considered internal This class is not covered by the backward compatibility promise for PHPUnit. It may change without further notice. You should not use it from \"Drupal\Tests\TestSuites\TestSuiteBase\".",
       "The \"PHPUnit\TextUI\DefaultResultPrinter\" class is considered internal This class is not covered by the backward compatibility promise for PHPUnit. It may change without further notice. You should not use it from \"Drupal\Tests\Listeners\HtmlOutputPrinter\".",
       "The \"Drupal\Tests\Listeners\DrupalListener\" class implements \"PHPUnit\Framework\TestListener\" that is deprecated.",
+      // Symfony 6.1.
+      "Since symfony/routing 6.1: Construction of \"Symfony\Component\Routing\Exception\MissingMandatoryParametersException\" with an exception message is deprecated, provide the route name and an array of missing parameters instead.",
+      "Since symfony/routing 6.1: The \"Symfony\Component\Routing\Matcher\UrlMatcher::handleRouteRequirements()\" method will have a new \"array \$routeParameters\" argument in version 7.0, not defining it is deprecated.",
     ];
   }
 
