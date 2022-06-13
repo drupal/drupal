@@ -41,7 +41,7 @@ class DrupalCoreRecommendedBuilder extends DrupalPackageBuilder {
       // If there is no 'source' record, then this is a path repository
       // or something else that we do not want to include.
       if (isset($package['source']) && !in_array($package['name'], $remove_list)) {
-        $composer['require'][$package['name']] = $package['version'];
+        $composer['require'][$package['name']] = '~' . $package['version'];
       }
     }
     return $composer;
@@ -56,7 +56,7 @@ class DrupalCoreRecommendedBuilder extends DrupalPackageBuilder {
     return [
       "name" => "drupal/core-recommended",
       "type" => "metapackage",
-      "description" => "Locked core dependencies; require this project INSTEAD OF drupal/core.",
+      "description" => "Core and its dependencies with known-compatible minor versions. Require this project INSTEAD OF drupal/core.",
       "license" => "GPL-2.0-or-later",
       "conflict" => [
         "webflo/drupal-core-strict" => "*",
