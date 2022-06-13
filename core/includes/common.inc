@@ -465,7 +465,7 @@ function show(&$element) {
  *   (optional) The Drupal Kernel. It is the caller's responsibility to rebuild
  *   the container if this is passed in. Sometimes drupal_flush_all_caches is
  *   used as a batch operation so $kernel will be an array, in this instance it
- *   will be treated as if it it NULL.
+ *   will be treated as if it is NULL.
  */
 function drupal_flush_all_caches($kernel = NULL) {
   // This is executed based on old/previously known information if $kernel is
