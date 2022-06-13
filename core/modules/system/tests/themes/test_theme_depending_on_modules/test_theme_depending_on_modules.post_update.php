@@ -12,6 +12,7 @@ if (\Drupal::state()->get('test_theme_depending_on_modules.post_update')) {
    */
   function test_theme_depending_on_modules_post_update_module_install(&$sandbox = NULL) {
     \Drupal::service('module_installer')->install(['test_another_module_required_by_theme']);
+    return 'Post update message from theme post update function';
   }
 
 }
