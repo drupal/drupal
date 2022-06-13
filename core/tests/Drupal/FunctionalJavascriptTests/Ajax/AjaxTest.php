@@ -22,9 +22,9 @@ class AjaxTest extends WebDriverTestBase {
   protected $defaultTheme = 'stark';
 
   public function testAjaxWithAdminRoute() {
-    \Drupal::service('theme_installer')->install(['stable', 'seven']);
+    \Drupal::service('theme_installer')->install(['stable', 'claro']);
     $theme_config = \Drupal::configFactory()->getEditable('system.theme');
-    $theme_config->set('admin', 'seven');
+    $theme_config->set('admin', 'claro');
     $theme_config->set('default', 'stable');
     $theme_config->save();
 
@@ -35,7 +35,7 @@ class AjaxTest extends WebDriverTestBase {
     // admin theme.
     $this->drupalGet('admin/ajax-test/theme');
     $assert = $this->assertSession();
-    $assert->pageTextContains('Current theme: seven');
+    $assert->pageTextContains('Current theme: claro');
 
     // Now click the modal, which should also use the admin theme.
     $this->drupalGet('ajax-test/dialog');
@@ -44,7 +44,7 @@ class AjaxTest extends WebDriverTestBase {
     $assert->assertWaitOnAjaxRequest();
 
     $assert->pageTextContains('Current theme: stable');
-    $assert->pageTextNotContains('Current theme: seven');
+    $assert->pageTextNotContains('Current theme: claro');
   }
 
   /**
