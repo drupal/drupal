@@ -36,6 +36,10 @@ class ThemeUpdateTest extends BrowserTestBase {
     $this->assertFalse(\Drupal::moduleHandler()->moduleExists('test_another_module_required_by_theme'));
     $this->runUpdates();
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('test_another_module_required_by_theme'));
+
+    $this->assertSession()->addressEquals('update.php/results');
+    $this->assertSession()->responseContains('test_theme_depending_on_modules theme');
+    $this->assertSession()->responseContains('Post update message from theme post update function');
   }
 
   /**
@@ -43,7 +47,7 @@ class ThemeUpdateTest extends BrowserTestBase {
    */
   protected function doSelectionTest() {
     // Ensure that the theme's post update appears as expected.
-    $this->assertSession()->responseContains('test_theme_depending_on_modules module');
+    $this->assertSession()->responseContains('test_theme_depending_on_modules theme');
     $this->assertSession()->responseContains('Install a dependent module.');
   }
 
