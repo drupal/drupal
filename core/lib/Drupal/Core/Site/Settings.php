@@ -167,23 +167,17 @@ final class Settings {
         // arrays. Those do not have the 'autoload' key set for core database
         // drivers.
         if (empty($info['autoload'])) {
-          switch (strtolower($info['driver'])) {
-            case 'mysql':
-              if (trim($info['namespace'], '\\') === "Drupal\\mysql\\Driver\\Database\\mysql") {
-                $info['autoload'] = "core/modules/mysql/src/Driver/Database/mysql/";
-              }
+          switch (trim($info['namespace'], '\\')) {
+            case "Drupal\\mysql\\Driver\\Database\\mysql":
+              $info['autoload'] = "core/modules/mysql/src/Driver/Database/mysql/";
               break;
 
-            case 'pgsql':
-              if (trim($info['namespace'], '\\') === "Drupal\\pgsql\\Driver\\Database\\pgsql") {
-                $info['autoload'] = "core/modules/pgsql/src/Driver/Database/pgsql/";
-              }
+            case "Drupal\\pgsql\\Driver\\Database\\pgsql":
+              $info['autoload'] = "core/modules/pgsql/src/Driver/Database/pgsql/";
               break;
 
-            case 'sqlite':
-              if (trim($info['namespace'], '\\') === "Drupal\\sqlite\\Driver\\Database\\sqlite") {
-                $info['autoload'] = "core/modules/sqlite/src/Driver/Database/sqlite/";
-              }
+            case "Drupal\\sqlite\\Driver\\Database\\sqlite":
+              $info['autoload'] = "core/modules/sqlite/src/Driver/Database/sqlite/";
               break;
           }
         }
