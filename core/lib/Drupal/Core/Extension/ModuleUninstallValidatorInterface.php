@@ -8,6 +8,14 @@ namespace Drupal\Core\Extension;
  * A module uninstall validator must implement this interface and be defined in
  * a Drupal @link container service @endlink that is tagged
  * module_install.uninstall_validator.
+ *
+ * Validators are called during module uninstall and prior to running a
+ * configuration import. If different logic is required when uninstalling via
+ * configuration import implement ConfigImportModuleUninstallValidatorInterface.
+ *
+ * @see \Drupal\Core\Extension\ModuleInstaller::validateUninstall()
+ * @see \Drupal\Core\EventSubscriber\ConfigImportSubscriber::validateModules()
+ * @see \Drupal\Core\Extension\ConfigImportModuleUninstallValidatorInterface
  */
 interface ModuleUninstallValidatorInterface {
 

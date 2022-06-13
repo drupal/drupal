@@ -146,11 +146,11 @@ class ThemeInstaller implements ThemeInstallerInterface {
       foreach ($theme_list as $theme => $value) {
         $module_dependencies = $theme_data[$theme]->module_dependencies;
         // $theme_data[$theme]->requires contains both theme and module
-        // dependencies keyed by the extension machine names and
-        // $theme_data[$theme]->module_dependencies contains only modules keyed
-        // by the module extension machine name. Therefore we can find the theme
-        // dependencies by finding array keys for 'requires' that are not in
-        // $module_dependencies.
+        // dependencies keyed by the extension machine names.
+        // $theme_data[$theme]->module_dependencies contains only the module
+        // dependencies keyed by the module extension machine name. Therefore,
+        // we can find the theme dependencies by finding array keys for
+        // 'requires' that are not in $module_dependencies.
         $theme_dependencies = array_diff_key($theme_data[$theme]->requires, $module_dependencies);
         // We can find the unmet module dependencies by finding the module
         // machine names keys that are not in $installed_modules keys.
