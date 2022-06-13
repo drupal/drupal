@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\Response;
  * string or an object with a __toString() method, which is not a requirement
  * for data used here.
  *
+ * Routes that return this response must specify the '_format' requirement.
+ *
  * @see \Drupal\rest\ModifiedResourceResponse
  */
 class ResourceResponse extends Response implements CacheableResponseInterface, ResourceResponseInterface {
