@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Installer\Form;
 
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -19,8 +18,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class SiteConfigureForm extends ConfigFormBase {
 
-  use DeprecatedServicePropertyTrait;
-
   /**
    * The site path.
    *
@@ -34,11 +31,6 @@ class SiteConfigureForm extends ConfigFormBase {
    * @var \Drupal\user\UserStorageInterface
    */
   protected $userStorage;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['state' => 'state'];
 
   /**
    * The module installer.
@@ -64,13 +56,6 @@ class SiteConfigureForm extends ConfigFormBase {
   /**
    * Constructs a new SiteConfigureForm.
    *
-   * Note, for BC reasons, we cannot typehint the last 2 parameters since this
-   * function used to take 6 arguments, including the 'state' service as the
-   * fourth parameter.
-   *
-   * @todo Clean this up in drupal:10.0.0.
-   * @see https://www.drupal.org/node/3159456
-   *
    * @param string $root
    *   The app root.
    * @param string $site_path
@@ -81,26 +66,11 @@ class SiteConfigureForm extends ConfigFormBase {
    *   The module installer.
    * @param \Drupal\Core\Locale\CountryManagerInterface $country_manager
    *   The country manager.
-   *
-   * @throws \InvalidArgumentException
-   *   Thrown when either the $module_installer or $country_manager parameters
-   *   are not of the correct type.
    */
-  public function __construct($root, $site_path, UserStorageInterface $user_storage, $module_installer, $country_manager) {
+  public function __construct($root, $site_path, UserStorageInterface $user_storage, ModuleInstallerInterface $module_installer, CountryManagerInterface $country_manager) {
     $this->root = $root;
     $this->sitePath = $site_path;
     $this->userStorage = $user_storage;
-    if (!$module_installer instanceof ModuleInstallerInterface) {
-      @trigger_error('Passing the state service to ' . __METHOD__ . '() is deprecated in drupal:9.1.0 and will be removed before drupal:10.0.0. Only pass five parameters instead. See https://www.drupal.org/node/3158440', E_USER_DEPRECATED);
-      $module_installer = $country_manager;
-      $country_manager = @func_get_arg(5);
-    }
-    if (!$module_installer instanceof ModuleInstallerInterface) {
-      throw new \InvalidArgumentException('The fourth argument must implement \Drupal\Core\Extension\ModuleInstallerInterface.');
-    }
-    if (!$country_manager instanceof CountryManagerInterface) {
-      throw new \InvalidArgumentException('The fifth argument must implement \Drupal\Core\Locale\CountryManager.');
-    }
     $this->moduleInstaller = $module_installer;
     $this->countryManager = $country_manager;
   }
