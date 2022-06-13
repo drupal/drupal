@@ -256,25 +256,6 @@ class UpdateRegistry implements EventSubscriberInterface {
   }
 
   /**
-   * Returns all available updates for a given module.
-   *
-   * @param string $module_name
-   *   The module name.
-   *
-   * @return callable[]
-   *   A list of update functions.
-   *
-   * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use
-   *   \Drupal\Core\Update\UpdateRegistry::getUpdateFunctions() instead.
-   *
-   * @see https://www.drupal.org/node/3260162
-   */
-  public function getModuleUpdateFunctions($module_name) {
-    @trigger_error(__CLASS__ . '\getModuleUpdateFunctions() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Update\UpdateRegistry::getUpdateFunctions() instead. See https://www.drupal.org/node/3260162', E_USER_DEPRECATED);
-    return $this->getUpdateFunctions($module_name);
-  }
-
-  /**
    * Scans all module, theme, and profile extensions and load the update files.
    */
   protected function scanExtensionsAndLoadUpdateFiles() {
@@ -302,23 +283,6 @@ class UpdateRegistry implements EventSubscriberInterface {
     });
 
     $this->keyValue->set('existing_updates', array_values($remaining_update_functions));
-  }
-
-  /**
-   * Filters out already executed update functions by module.
-   *
-   * @param string $module
-   *   The module name.
-   *
-   * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use
-   *   \Drupal\Core\Update\UpdateRegistry::filterOutInvokedUpdatesByExtension()
-   *   instead.
-   *
-   * @see https://www.drupal.org/node/3260162
-   */
-  public function filterOutInvokedUpdatesByModule($module) {
-    @trigger_error(__CLASS__ . '\filterOutInvokedUpdatesByModule() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Update\UpdateRegistry::filterOutInvokedUpdatesByExtension() instead. See https://www.drupal.org/node/3260162', E_USER_DEPRECATED);
-    $this->filterOutInvokedUpdatesByExtension($module);
   }
 
   /**

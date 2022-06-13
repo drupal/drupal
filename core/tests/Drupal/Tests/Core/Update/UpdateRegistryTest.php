@@ -343,24 +343,6 @@ EOS;
   }
 
   /**
-   * @covers ::getModuleUpdateFunctions
-   * @group legacy
-   */
-  public function testGetModuleUpdateFunctions() {
-    $this->expectDeprecation('Drupal\Core\Update\UpdateRegistry\getModuleUpdateFunctions() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Update\UpdateRegistry::getUpdateFunctions() instead. See https://www.drupal.org/node/3260162');
-    $this->setupBasicExtensions();
-    $key_value = $this->prophesize(KeyValueStoreInterface::class)->reveal();
-
-    $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
-      'module_a',
-      'module_b',
-    ], $key_value, FALSE);
-
-    $this->assertEquals(['module_a_post_update_a', 'module_a_post_update_b'], array_values($update_registry->getModuleUpdateFunctions('module_a')));
-    $this->assertEquals(['module_b_post_update_a'], array_values($update_registry->getModuleUpdateFunctions('module_b')));
-  }
-
-  /**
    * @covers ::registerInvokedUpdates
    */
   public function testRegisterInvokedUpdatesWithoutExistingUpdates() {
@@ -446,30 +428,6 @@ EOS;
     ], $key_value, FALSE);
 
     $update_registry->filterOutInvokedUpdatesByExtension('module_a');
-  }
-
-  /**
-   * @covers ::filterOutInvokedUpdatesByModule
-   * @group legacy
-   */
-  public function testFilterOutInvokedUpdatesByModule() {
-    $this->expectDeprecation('Drupal\Core\Update\UpdateRegistry\filterOutInvokedUpdatesByModule() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Update\UpdateRegistry::filterOutInvokedUpdatesByExtension() instead. See https://www.drupal.org/node/3260162');
-    $this->setupBasicExtensions();
-    $key_value = $this->prophesize(KeyValueStoreInterface::class);
-    $key_value->get('existing_updates', [])
-      ->willReturn(['module_a_post_update_b', 'module_a_post_update_a', 'module_b_post_update_a'])
-      ->shouldBeCalledTimes(1);
-    $key_value->set('existing_updates', ['module_b_post_update_a'])
-      ->willReturn(NULL)
-      ->shouldBeCalledTimes(1);
-    $key_value = $key_value->reveal();
-
-    $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
-      'module_a',
-      'module_b',
-    ], $key_value, FALSE);
-
-    $update_registry->filterOutInvokedUpdatesByModule('module_a');
   }
 
 }
