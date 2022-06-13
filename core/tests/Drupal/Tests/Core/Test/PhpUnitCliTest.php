@@ -51,7 +51,7 @@ class PhpUnitCliTest extends UnitTestCase {
       'OUTPUT: ' . $process->getOutput() . "\n" .
       'ERROR: ' . $process->getErrorOutput() . "\n");
     $this->assertStringContainsString('HTML output was generated', $process->getOutput());
-    $this->assertStringContainsString('Drupal_Tests_image_Functional_ImageDimensionsTest-1', $process->getOutput());
+    $this->assertStringContainsString('Drupal_Tests_image_Functional_ImageDimensionsTest', $process->getOutput());
 
     // Test with a wrong output directory.
     $process = Process::fromShellCommandline('vendor/bin/phpunit --configuration core --verbose core/modules/image/tests/src/Functional/ImageDimensionsTest.php');
