@@ -25,13 +25,13 @@ class BuilderTest extends TestCase {
         [
           'name' => 'drupal/core-recommended',
           'type' => 'metapackage',
-          'description' => 'Locked core dependencies; require this project INSTEAD OF drupal/core.',
+          'description' => 'Core and its dependencies with known-compatible minor versions. Require this project INSTEAD OF drupal/core.',
           'license' => 'GPL-2.0-or-later',
           'require' =>
           [
             'drupal/core' => Composer::drupalVersionBranch(),
-            'symfony/polyfill-ctype' => 'v1.12.0',
-            'symfony/yaml' => 'v3.4.32',
+            'symfony/polyfill-ctype' => '~v1.12.0',
+            'symfony/yaml' => '~v3.4.32',
           ],
           'conflict' =>
           [
