@@ -661,6 +661,30 @@ class ConfigImporterTest extends KernelTestBase {
   }
 
   /**
+   * Tests uninstall validators being called during synchronization.
+   *
+   * @see \Drupal\Core\EventSubscriber\ConfigImportSubscriber
+   */
+  public function testRequiredModuleValidation() {
+    $sync = $this->container->get('config.storage.sync');
+
+    $extensions = $sync->read('core.extension');
+    unset($extensions['module']['system']);
+    $sync->write('core.extension', $extensions);
+
+    $config_importer = $this->configImporter();
+    try {
+      $config_importer->import();
+      $this->fail('ConfigImporterException not thrown, invalid import was not stopped due to missing dependencies.');
+    }
+    catch (ConfigImporterException $e) {
+      $this->assertStringContainsString('There were errors validating the config synchronization.', $e->getMessage());
+      $error_log = $config_importer->getErrors();
+      $this->assertEquals('Unable to uninstall the <em class="placeholder">System</em> module because: The System module is required.', $error_log[0]);
+    }
+  }
+
+  /**
    * Tests install profile validation during configuration import.
    *
    * @see \Drupal\Core\EventSubscriber\ConfigImportSubscriber

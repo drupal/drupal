@@ -2,13 +2,14 @@
 
 namespace Drupal\Core\Extension;
 
+use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 
 /**
  * Ensures modules cannot be uninstalled if enabled themes depend on them.
  */
-class ModuleRequiredByThemesUninstallValidator implements ModuleUninstallValidatorInterface {
+class ModuleRequiredByThemesUninstallValidator implements ConfigImportModuleUninstallValidatorInterface {
 
   use StringTranslationTrait;
 
@@ -62,13 +63,35 @@ class ModuleRequiredByThemesUninstallValidator implements ModuleUninstallValidat
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function validateConfigImport(string $module, StorageInterface $source_storage): array {
+    $reasons = [];
+
+    $themes_depending_on_module = $this->getThemesDependingOnModule($module);
+    if (!empty($themes_depending_on_module)) {
+      $installed_themes_after_import = $source_storage->read('core.extension')['theme'];
+      $themes_depending_on_module_still_installed = array_intersect_key($themes_depending_on_module, $installed_themes_after_import);
+      // Ensure that any dependent themes will be uninstalled by the module.
+      if (!empty($themes_depending_on_module_still_installed)) {
+        $reasons[] = $this->formatPlural(count($themes_depending_on_module_still_installed),
+          'Required by the theme: @theme_names',
+          'Required by the themes: @theme_names',
+          ['@theme_names' => implode(', ', $themes_depending_on_module_still_installed)]);
+      }
+    }
+    return $reasons;
+  }
+
+  /**
    * Returns themes that depend on a module.
    *
    * @param string $module
    *   The module machine name.
    *
    * @return string[]
-   *   An array of the names of themes that depend on $module.
+   *   An array of the names of themes that depend on $module keyed by the
+   *   theme's machine name.
    */
   protected function getThemesDependingOnModule($module) {
     $installed_themes = $this->themeExtensionList->getAllInstalledInfo();
