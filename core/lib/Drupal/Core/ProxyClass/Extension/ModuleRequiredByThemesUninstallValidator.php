@@ -12,7 +12,7 @@ namespace Drupal\Core\ProxyClass\Extension {
      *
      * @see \Drupal\Component\ProxyBuilder
      */
-    class ModuleRequiredByThemesUninstallValidator implements \Drupal\Core\Extension\ModuleUninstallValidatorInterface
+    class ModuleRequiredByThemesUninstallValidator implements \Drupal\Core\Extension\ConfigImportModuleUninstallValidatorInterface
     {
 
         use \Drupal\Core\DependencyInjection\DependencySerializationTrait;
@@ -73,6 +73,14 @@ namespace Drupal\Core\ProxyClass\Extension {
         public function validate($module)
         {
             return $this->lazyLoadItself()->validate($module);
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function validateConfigImport(string $module, \Drupal\Core\Config\StorageInterface $source_storage): array
+        {
+            return $this->lazyLoadItself()->validateConfigImport($module, $source_storage);
         }
 
         /**
