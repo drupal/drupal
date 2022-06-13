@@ -107,7 +107,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * @param string $key
    *   The name of the entity key to return.
    *
-   * @return string|bool
+   * @return string|false
    *   The entity key, or FALSE if it does not exist.
    *
    * @see self::getKeys()
