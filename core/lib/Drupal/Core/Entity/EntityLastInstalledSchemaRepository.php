@@ -41,12 +41,8 @@ class EntityLastInstalledSchemaRepository implements EntityLastInstalledSchemaRe
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache backend.
    */
-  public function __construct(KeyValueFactoryInterface $key_value_factory, CacheBackendInterface $cache = NULL) {
+  public function __construct(KeyValueFactoryInterface $key_value_factory, CacheBackendInterface $cache) {
     $this->keyValueFactory = $key_value_factory;
-    if (!$cache) {
-      @trigger_error('The cache.discovery service must be passed to EntityLastInstalledSchemaRepository::__construct(), it is required before drupal:10.0.0.', E_USER_DEPRECATED);
-      $cache = \Drupal::cache('discovery');
-    }
     $this->cacheBackend = $cache;
   }
 

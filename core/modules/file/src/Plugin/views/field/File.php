@@ -38,12 +38,8 @@ class File extends FieldPluginBase {
    * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
    *   The file URL generator.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, FileUrlGeneratorInterface $file_url_generator = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, FileUrlGeneratorInterface $file_url_generator) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    if (!$file_url_generator) {
-      @trigger_error('Calling File::__construct() without the $file_url_generator argument is deprecated in drupal:9.3.0 and the $file_url_generator argument will be required in drupal:10.0.0. See https://www.drupal.org/node/2940031', E_USER_DEPRECATED);
-      $file_url_generator = \Drupal::service('file_url_generator');
-    }
     $this->fileUrlGenerator = $file_url_generator;
   }
 

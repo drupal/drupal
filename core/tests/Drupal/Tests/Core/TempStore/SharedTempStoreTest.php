@@ -2,11 +2,8 @@
 
 namespace Drupal\Tests\Core\TempStore;
 
-use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\TempStore\Lock;
-use Drupal\Core\TempStore\SharedTempStoreFactory;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\TempStore\SharedTempStore;
 use Drupal\Core\TempStore\TempStoreException;
@@ -375,52 +372,6 @@ class SharedTempStoreTest extends UnitTestCase {
     $request_stack = $reflected_request_stack->getValue($store);
     $this->assertEquals($this->requestStack, $request_stack);
     $this->assertSame($unserializable_request, $request_stack->pop());
-  }
-
-  /**
-   * @group legacy
-   */
-  public function testLegacyConstructor() {
-    $this->expectDeprecation('Calling Drupal\Core\TempStore\SharedTempStore::__construct() without the $current_user argument is deprecated in drupal:9.2.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/3006268');
-
-    $container = new ContainerBuilder();
-    $current_user = $this->createMock(AccountProxyInterface::class);
-    $container->set('current_user', $current_user);
-    \Drupal::setContainer($container);
-    $store = new SharedTempStore($this->keyValue, $this->lock, 2, $this->requestStack, 1000);
-    $reflection_class = new \ReflectionClass(SharedTempStore::class);
-
-    $current_user_property = $reflection_class->getProperty('currentUser');
-    $current_user_property->setAccessible(TRUE);
-    $this->assertSame($current_user, $current_user_property->getValue($store));
-
-    $expire_property = $reflection_class->getProperty('expire');
-    $expire_property->setAccessible(TRUE);
-    $this->assertSame(1000, $expire_property->getValue($store));
-  }
-
-  /**
-   * @group legacy
-   * @covers \Drupal\Core\TempStore\SharedTempStoreFactory::__construct
-   */
-  public function testLegacyFactoryConstructor() {
-    $this->expectDeprecation('Calling Drupal\Core\TempStore\SharedTempStoreFactory::__construct() without the $current_user argument is deprecated in drupal:9.2.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/3006268');
-
-    $container = new ContainerBuilder();
-    $current_user = $this->createMock(AccountProxyInterface::class);
-    $container->set('current_user', $current_user);
-    \Drupal::setContainer($container);
-    $key_value_factory = $this->prophesize(KeyValueExpirableFactoryInterface::class);
-    $store = new SharedTempStoreFactory($key_value_factory->reveal(), $this->lock, $this->requestStack, 1000);
-    $reflection_class = new \ReflectionClass(SharedTempStoreFactory::class);
-
-    $current_user_property = $reflection_class->getProperty('currentUser');
-    $current_user_property->setAccessible(TRUE);
-    $this->assertSame($current_user, $current_user_property->getValue($store));
-
-    $expire_property = $reflection_class->getProperty('expire');
-    $expire_property->setAccessible(TRUE);
-    $this->assertSame(1000, $expire_property->getValue($store));
   }
 
 }
