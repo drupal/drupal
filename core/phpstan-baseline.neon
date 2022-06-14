@@ -3324,11 +3324,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/Image/ImageTest.php
 
 		-
-			message: "#^Array has 2 duplicate keys with value 'default' \\('default', 'default'\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Mail/MailManagerTest.php
-
-		-
 			message: "#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
 			count: 3
 			path: tests/Drupal/Tests/Core/Plugin/CategorizingPluginManagerTraitTest.php
