@@ -136,6 +136,7 @@ class BlockTest extends ConfigEntityResourceTestBase {
    */
   protected function getPostDocument() {
     // @todo Update once https://www.drupal.org/node/2300677 is fixed.
+    return [];
   }
 
   /**

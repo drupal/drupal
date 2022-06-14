@@ -501,6 +501,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
         static::recursiveKSort($value);
       }
     }
+
+    return $array;
   }
 
 }

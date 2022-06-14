@@ -86,9 +86,7 @@ abstract class LazyPluginCollectionTestBase extends UnitTestCase {
    *   The mock plugin object.
    */
   public function returnPluginMap($plugin_id) {
-    if (isset($this->pluginInstances[$plugin_id])) {
-      return $this->pluginInstances[$plugin_id];
-    }
+    return $this->pluginInstances[$plugin_id];
   }
 
   /**

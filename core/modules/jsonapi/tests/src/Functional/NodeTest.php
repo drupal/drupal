@@ -265,6 +265,7 @@ class NodeTest extends ResourceTestBase {
       case 'DELETE':
         return "The 'access content' permission is required.";
     }
+    return '';
   }
 
   /**

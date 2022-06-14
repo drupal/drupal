@@ -117,6 +117,7 @@ abstract class ResponsiveImageStyleResourceTestBase extends ConfigEntityResource
    */
   protected function getNormalizedPostEntity() {
     // @todo Update in https://www.drupal.org/node/2300677.
+    return [];
   }
 
   /**

@@ -179,9 +179,7 @@ class CommentNonNodeTest extends BrowserTestBase {
       $this->assertArrayHasKey(1, $match);
     }
 
-    if (isset($match[1])) {
-      return Comment::load($match[1]);
-    }
+    return Comment::load($match[1]);
   }
 
   /**

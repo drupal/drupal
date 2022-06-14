@@ -73,6 +73,7 @@ abstract class FieldStorageConfigResourceTestBase extends ConfigEntityResourceTe
    */
   protected function getNormalizedPostEntity() {
     // @todo Update in https://www.drupal.org/node/2300677.
+    return [];
   }
 
   /**
