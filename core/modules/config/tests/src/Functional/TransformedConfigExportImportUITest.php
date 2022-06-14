@@ -35,8 +35,7 @@ class TransformedConfigExportImportUITest extends BrowserTestBase {
       'import configuration',
       'synchronize configuration',
     ];
-    $this->webUser = $this->drupalCreateUser($permissions);
-    $this->drupalLogin($this->webUser);
+    $this->drupalLogin($this->drupalCreateUser($permissions));
 
     // Start off with the sync storage being the same as the active storage.
     $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.sync'));

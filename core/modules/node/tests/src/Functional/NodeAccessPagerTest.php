@@ -6,6 +6,7 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\comment\Entity\Comment;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\user\Entity\User;
 
 /**
  * Tests access controlled node views have the right amount of comment pages.
@@ -15,6 +16,13 @@ use Drupal\Tests\BrowserTestBase;
 class NodeAccessPagerTest extends BrowserTestBase {
 
   use CommentTestTrait;
+
+  /**
+   * An user.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected User $webUser;
 
   /**
    * Modules to enable.

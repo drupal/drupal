@@ -261,7 +261,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * @internal
    */
   protected function bootEnvironment() {
-    $this->streamWrappers = [];
     \Drupal::unsetContainer();
 
     $this->classLoader = require $this->root . '/autoload.php';

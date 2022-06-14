@@ -6,6 +6,7 @@ use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Queue\DatabaseQueue;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
 
@@ -24,6 +25,11 @@ class QueueSerializationTest extends KernelTestBase implements FormInterface {
    * @var array
    */
   protected static $modules = ['system', 'user'];
+
+  /**
+   * @var \Drupal\Core\Queue\DatabaseQueue
+   */
+  protected DatabaseQueue $queue;
 
   /**
    * {@inheritdoc}

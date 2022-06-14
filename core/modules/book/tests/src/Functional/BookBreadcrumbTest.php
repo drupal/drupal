@@ -59,18 +59,6 @@ class BookBreadcrumbTest extends BrowserTestBase {
       'edit own book content',
       'add content to books',
     ]);
-    $this->adminUser = $this->drupalCreateUser([
-      'create new books',
-      'create book content',
-      'edit any book content',
-      'delete any book content',
-      'add content to books',
-      'administer blocks',
-      'administer permissions',
-      'administer book outlines',
-      'administer content types',
-      'administer site configuration',
-    ]);
   }
 
   /**

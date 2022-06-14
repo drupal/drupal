@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\locale\Unit;
 
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\locale\LocaleTranslation;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -18,6 +20,20 @@ class LocaleTranslationTest extends UnitTestCase {
    * @var \PHPUnit\Framework\MockObject\MockObject
    */
   protected $storage;
+
+  /**
+   * A mocked lock to use when instantiating LocaleTranslation objects.
+   *
+   * @var \Drupal\Core\Lock\LockBackendInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected LockBackendInterface $lock;
+
+  /**
+   * A mocked cache to use when instantiating LocaleTranslation objects.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected CacheBackendInterface $cache;
 
   /**
    * A mocked language manager built from LanguageManagerInterface.

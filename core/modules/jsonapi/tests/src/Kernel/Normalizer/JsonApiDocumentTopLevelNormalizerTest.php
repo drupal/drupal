@@ -66,11 +66,46 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
   protected $node;
 
   /**
+   * The node type.
+   *
+   * @var \Drupal\node\Entity\NodeType
+   */
+  protected NodeType $nodeType;
+
+  /**
    * A user to normalize.
    *
    * @var \Drupal\user\Entity\User
    */
   protected $user;
+
+  /**
+   * A user.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected User $user2;
+
+  /**
+   * A vocabulary.
+   *
+   * @var \Drupal\taxonomy\Entity\Vocabulary
+   */
+  protected Vocabulary $vocabulary;
+
+  /**
+   * A term.
+   *
+   * @var \Drupal\taxonomy\Entity\Term
+   */
+  protected Term $term1;
+
+  /**
+   * A term.
+   *
+   * @var \Drupal\taxonomy\Entity\Term
+   */
+  protected Term $term2;
 
   /**
    * The include resolver.

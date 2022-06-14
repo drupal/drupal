@@ -3,6 +3,7 @@
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\Core\Database\Database;
+use Drupal\user\Entity\User;
 
 /**
  * Tests that node access queries are properly altered by the node module.
@@ -32,6 +33,13 @@ class NodeQueryAlterTest extends NodeTestBase {
    * User without permission to view content.
    */
   protected $noAccessUser;
+
+  /**
+   * User without permission to view content.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected User $noAccessUser2;
 
   protected function setUp(): void {
     parent::setUp();

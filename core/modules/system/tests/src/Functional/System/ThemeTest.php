@@ -4,6 +4,7 @@ namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
+use Drupal\node\Entity\Node;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 
@@ -37,6 +38,13 @@ class ThemeTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected $defaultTheme = 'classy';
+
+  /**
+   * A test node.
+   *
+   * @var \Drupal\node\Entity\Node
+   */
+  protected Node $node;
 
   protected function setUp(): void {
     parent::setUp();

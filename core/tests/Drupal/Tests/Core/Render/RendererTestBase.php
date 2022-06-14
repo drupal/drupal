@@ -59,7 +59,7 @@ abstract class RendererTestBase extends UnitTestCase {
   /**
    * @var \Drupal\Core\Cache\Context\CacheContextsManager|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $cacheContexts;
+  protected $cacheContextsManager;
 
   /**
    * The mocked controller resolver.

@@ -3,6 +3,7 @@
 namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use Drupal\locale\StringStorageInterface;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
@@ -30,6 +31,11 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
+
+  /**
+   * @var \Drupal\locale\StringStorageInterface
+   */
+  protected StringStorageInterface $storage;
 
   /**
    * {@inheritdoc}

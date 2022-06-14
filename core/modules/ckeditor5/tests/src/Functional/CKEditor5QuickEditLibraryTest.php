@@ -7,6 +7,7 @@ use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\RoleInterface;
+use Drupal\user\Entity\User;
 use Symfony\Component\Validator\ConstraintViolation;
 
 /**
@@ -30,6 +31,13 @@ class CKEditor5QuickEditLibraryTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
+
+  /**
+   * The admin user.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected User $adminUser;
 
   /**
    * {@inheritdoc}

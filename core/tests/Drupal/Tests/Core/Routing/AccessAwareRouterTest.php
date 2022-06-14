@@ -5,6 +5,7 @@ namespace Drupal\Tests\Core\Routing;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Routing\AccessAwareRouter;
 use Drupal\Core\Routing\AccessAwareRouterInterface;
+use Drupal\Core\Routing\Router;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +17,11 @@ use Symfony\Component\Routing\Route;
  * @group Routing
  */
 class AccessAwareRouterTest extends UnitTestCase {
+
+  /**
+   * @var \Drupal\Core\Routing\Router
+   */
+  protected Router $router;
 
   /**
    * @var \Symfony\Component\Routing\Route
