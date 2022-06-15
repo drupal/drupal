@@ -42,7 +42,7 @@
         "symfony/event-dispatcher": "~v4.4.42",
         "symfony/event-dispatcher-contracts": "~v1.1.12",
         "symfony/http-client-contracts": "~v2.5.1",
-        "symfony/http-foundation": "~v4.4.42",
+        "symfony/http-foundation": "~v4.4.41",
         "symfony/http-kernel": "~v4.4.42",
         "symfony/mime": "~v5.4.9",
         "symfony/polyfill-ctype": "~v1.25.0",
