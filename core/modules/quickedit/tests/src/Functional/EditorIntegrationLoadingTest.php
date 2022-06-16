@@ -93,7 +93,7 @@ class EditorIntegrationLoadingTest extends BrowserTestBase {
 
       // Retrieving the untransformed text should result in a 403 response and
       // return a different error message depending of the missing permission.
-      $response = $client->post($this->buildUrl('editor/node/1/body/en/full'), [
+      $response = $client->post($this->buildUrl('quickedit/node/1/body/en/full'), [
         'query' => http_build_query([MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']),
         'cookies' => $this->getSessionCookies(),
         'headers' => [
@@ -127,7 +127,7 @@ class EditorIntegrationLoadingTest extends BrowserTestBase {
     // Ensure the text is transformed.
     $this->assertSession()->responseContains('<p>Do you also love Drupal?</p><figure role="group" class="caption caption-img"><img src="druplicon.png" /><figcaption>Druplicon</figcaption></figure>');
     $client = $this->getHttpClient();
-    $response = $client->post($this->buildUrl('editor/node/1/body/en/full'), [
+    $response = $client->post($this->buildUrl('quickedit/node/1/body/en/full'), [
       'query' => http_build_query([MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']),
       'cookies' => $this->getSessionCookies(),
       'headers' => [

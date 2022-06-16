@@ -48,6 +48,16 @@ quickedit.inPlaceEditor.form:
   dependencies:
     - quickedit/quickedit
 
+quickedit.inPlaceEditor.formattedText:
+  version: VERSION
+  js:
+    js/editors/formattedTextEditor.js: { attributes: { defer: true } }
+  dependencies:
+    - quickedit/quickedit
+    - editor/drupal.editor
+    - core/drupal.ajax
+    - core/drupalSettings
+
 quickedit.inPlaceEditor.plainText:
   version: VERSION
   js:

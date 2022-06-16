@@ -219,7 +219,7 @@
           url: Drupal.quickedit.util.buildUrl(
             fieldID,
             Drupal.url(
-              'editor/!entity_type/!id/!field_name/!langcode/!view_mode',
+              'quickedit/!entity_type/!id/!field_name/!langcode/!view_mode',
             ),
           ),
           submit: { nocssjs: true },

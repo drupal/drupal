@@ -1,12 +1,11 @@
 <?php
 
-namespace Drupal\editor\Ajax;
+namespace Drupal\quickedit\Ajax;
 
 use Drupal\Core\Ajax\BaseCommand;
 
 /**
- * AJAX command to rerender a formatted text field without any transformation
- * filters.
+ * AJAX command to rerender formatted text field without transformation filters.
  */
 class GetUntransformedTextCommand extends BaseCommand {
 

@@ -8,8 +8,8 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\editor\Entity\Editor;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\quickedit\MetadataGenerator;
+use Drupal\quickedit\QuickEditController;
 use Drupal\quickedit_test\MockQuickEditEntityFieldAccessCheck;
-use Drupal\editor\EditorController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -56,7 +56,7 @@ class EditorIntegrationTest extends QuickEditTestBase {
   protected $accessChecker;
 
   /**
-   * The name of the field ued for tests.
+   * The name of the field used for tests.
    *
    * @var string
    */
@@ -147,7 +147,8 @@ class EditorIntegrationTest extends QuickEditTestBase {
     $entity->{$this->fieldName}->format = 'filtered_html';
     $entity->save();
 
-    // Editor selection w/ cardinality 1, text format w/o associated text editor.
+    // Editor selection with cardinality 1, text format without associated text
+    // editor.
     $this->assertEquals('form', $this->getSelectedEditor($entity->id(), $this->fieldName), "With cardinality 1, and the filtered_html text format, the 'form' editor is selected.");
 
     // Editor selection w/ cardinality 1, text format w/ associated text editor.
@@ -155,7 +156,7 @@ class EditorIntegrationTest extends QuickEditTestBase {
     $entity->save();
     $this->assertEquals('editor', $this->getSelectedEditor($entity->id(), $this->fieldName), "With cardinality 1, and the full_html text format, the 'editor' editor is selected.");
 
-    // Editor selection with text processing, cardinality >1
+    // Editor selection with text processing, cardinality > 1.
     $this->fields->field_textarea_field_storage->setCardinality(2);
     $this->fields->field_textarea_field_storage->save();
     $this->assertEquals('form', $this->getSelectedEditor($entity->id(), $this->fieldName), "With cardinality >1, and both items using the full_html text format, the 'form' editor is selected.");
@@ -205,13 +206,18 @@ class EditorIntegrationTest extends QuickEditTestBase {
 
     $editors = ['editor'];
     $attachments = $this->editorSelector->getEditorAttachments($editors);
-    $this->assertSame(['library' => ['editor/quickedit.inPlaceEditor.formattedText']], $attachments, "Expected attachments for Editor module's in-place editor found.");
+    $this->assertSame(['library' => ['quickedit/quickedit.inPlaceEditor.formattedText']], $attachments, "Expected attachments for Editor module's in-place editor found.");
   }
 
   /**
    * Tests GetUntransformedTextCommand AJAX command.
    */
   public function testGetUntransformedTextCommand() {
+    $this->accessChecker = new MockQuickEditEntityFieldAccessCheck();
+    $this->editorSelector = $this->container->get('quickedit.editor.selector');
+    $this->editorManager = $this->container->get('plugin.manager.quickedit.editor');
+    $this->metadataGenerator = new MetadataGenerator($this->accessChecker, $this->editorSelector, $this->editorManager);
+
     // Create an entity with values for the field.
     $entity = EntityTest::create();
     $entity->{$this->fieldName}->value = 'Test';
@@ -220,7 +226,14 @@ class EditorIntegrationTest extends QuickEditTestBase {
     $entity = EntityTest::load($entity->id());
 
     // Verify AJAX response.
-    $controller = new EditorController();
+    $controller = new QuickEditController(
+      $this->container->get('tempstore.private'),
+      $this->metadataGenerator,
+      $this->editorSelector,
+      $this->container->get('renderer'),
+      $this->container->get('entity_display.repository'),
+      $this->container->get('entity.repository'),
+    );
     $request = new Request();
     $response = $controller->getUntransformedText($entity, $this->fieldName, LanguageInterface::LANGCODE_DEFAULT, 'default');
     $expected = [

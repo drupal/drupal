@@ -124,7 +124,7 @@
     _getUntransformedText(callback) {
       const fieldID = this.fieldModel.get('fieldID');
       const textLoaderAjax = Drupal.ajax({
-        url: Drupal.quickedit.util.buildUrl(fieldID, Drupal.url('editor/!entity_type/!id/!field_name/!langcode/!view_mode')),
+        url: Drupal.quickedit.util.buildUrl(fieldID, Drupal.url('quickedit/!entity_type/!id/!field_name/!langcode/!view_mode')),
         submit: {
           nocssjs: true
         }
