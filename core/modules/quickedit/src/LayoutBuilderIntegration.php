@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\layout_builder;
+namespace Drupal\quickedit;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheableMetadata;
@@ -19,12 +19,12 @@ use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Helper methods for Quick Edit module integration.
+ * Helper methods for Layout Builder module integration.
  *
  * @internal
  *   This is an internal utility class wrapping hook implementations.
  */
-class QuickEditIntegration implements ContainerInjectionInterface {
+class LayoutBuilderIntegration implements ContainerInjectionInterface {
 
   use LoggerChannelTrait;
 
@@ -50,7 +50,7 @@ class QuickEditIntegration implements ContainerInjectionInterface {
   protected $entityTypeManager;
 
   /**
-   * Constructs a new QuickEditIntegration object.
+   * Constructs a new LayoutBuilderIntegration object.
    *
    * @param \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface $section_storage_manager
    *   The section storage manager.
@@ -77,7 +77,7 @@ class QuickEditIntegration implements ContainerInjectionInterface {
   }
 
   /**
-   * Alters the entity view build for Quick Edit compatibility.
+   * Alters the entity view build for Layout Builder compatibility.
    *
    * When rendering fields outside of normal view modes, Quick Edit requires
    * that modules identify themselves with a view mode ID in the format
@@ -191,7 +191,7 @@ class QuickEditIntegration implements ContainerInjectionInterface {
    * @return string
    *   The Quick Edit view mode ID.
    *
-   * @see \Drupal\layout_builder\QuickEditIntegration::deconstructViewModeId()
+   * @see \Drupal\quickedit\LayoutBuilderIntegration::deconstructViewModeId()
    */
   private static function getViewModeId(EntityInterface $entity, EntityViewDisplayInterface $display, $delta, $component_uuid, $sections_hash) {
     return implode('-', [
@@ -216,7 +216,7 @@ class QuickEditIntegration implements ContainerInjectionInterface {
    *   An array containing the entity view mode ID, the delta, the component
    *   UUID, and the entity ID.
    *
-   * @see \Drupal\layout_builder\QuickEditIntegration::getViewModeId()
+   * @see \Drupal\quickedit\LayoutBuilderIntegration::getViewModeId()
    */
   public static function deconstructViewModeId($quick_edit_view_mode_id) {
     [, $entity_view_mode_id, $delta, $component_uuid, $entity_id] = explode('-', $quick_edit_view_mode_id, 7);

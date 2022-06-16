@@ -14,7 +14,7 @@ use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 /**
  * @group quickedit
  */
-class QuickEditIntegrationTest extends QuickEditJavascriptTestBase {
+class LayoutBuilderIntegrationTest extends QuickEditJavascriptTestBase {
 
   use EntityReferenceTestTrait;
 

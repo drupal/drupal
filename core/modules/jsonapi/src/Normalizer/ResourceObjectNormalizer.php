@@ -192,7 +192,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
       // @todo Replace this workaround after https://www.drupal.org/node/3043245
       //   or remove the need for this in https://www.drupal.org/node/2942975.
       //   See \Drupal\layout_builder\Normalizer\LayoutEntityDisplayNormalizer.
-      if ($context['resource_object']->getResourceType()->getDeserializationTargetClass() === 'Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay' && $context['resource_object']->getField('third_party_settings') === $field) {
+      if (is_a($context['resource_object']->getResourceType()->getDeserializationTargetClass(), 'Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay', TRUE) && $context['resource_object']->getField('third_party_settings') === $field) {
         unset($field['layout_builder']['sections']);
       }
 

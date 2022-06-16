@@ -26,7 +26,6 @@ use Drupal\layout_builder\InlineBlockEntityOperations;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
-use Drupal\layout_builder\QuickEditIntegration;
 
 /**
  * Implements hook_help().
@@ -161,12 +160,6 @@ function layout_builder_entity_view_alter(array &$build, EntityInterface $entity
   // placeholders.
   if ($display instanceof LayoutBuilderEntityViewDisplay && strpos($route_name, 'layout_builder.') === 0) {
     unset($build['#contextual_links']);
-  }
-
-  if (\Drupal::moduleHandler()->moduleExists('quickedit')) {
-    /** @var \Drupal\layout_builder\QuickEditIntegration $quick_edit_integration */
-    $quick_edit_integration = \Drupal::classResolver(QuickEditIntegration::class);
-    $quick_edit_integration->entityViewAlter($build, $entity, $display);
   }
 }
 
@@ -349,15 +342,6 @@ function layout_builder_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMa
     $breadcrumb->setLinks($links);
     $breadcrumb->addCacheableDependency($cacheability);
   }
-}
-
-/**
- * Implements hook_quickedit_render_field().
- */
-function layout_builder_quickedit_render_field(EntityInterface $entity, $field_name, $view_mode_id, $langcode) {
-  /** @var \Drupal\layout_builder\QuickEditIntegration $quick_edit_integration */
-  $quick_edit_integration = \Drupal::classResolver(QuickEditIntegration::class);
-  return $quick_edit_integration->quickEditRenderField($entity, $field_name, $view_mode_id, $langcode);
 }
 
 /**
