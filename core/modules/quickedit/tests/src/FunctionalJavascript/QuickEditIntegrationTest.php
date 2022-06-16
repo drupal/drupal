@@ -119,7 +119,6 @@ class QuickEditIntegrationTest extends QuickEditJavascriptTestBase {
    * Tests if an article node can be in-place edited with Quick Edit.
    */
   public function testArticleNode() {
-    $this->markTestSkipped();
     $term = Term::create([
       'name' => 'foo',
       'vid' => 'tags',
@@ -137,6 +136,17 @@ class QuickEditIntegrationTest extends QuickEditJavascriptTestBase {
         ['target_id' => $term->id()],
       ],
     ]);
+
+    // Move "tags" field to the top of all fields, so its Quick Edit Toolbar
+    // won't overlap any Quick Edit-able fields, which causes (semi-)random test
+    // failures.
+    \Drupal::entityTypeManager()
+      ->getStorage('entity_view_display')
+      ->load('node.article.default')
+      ->setComponent('field_tags', [
+        'type' => 'entity_reference_label',
+        'weight' => 0,
+      ])->save();
 
     $this->drupalGet('node/' . $node->id());
 
