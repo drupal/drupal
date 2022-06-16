@@ -69,18 +69,6 @@ function editor_element_info_alter(&$types) {
 }
 
 /**
- * Implements hook_field_formatter_info_alter().
- *
- * @see quickedit_field_formatter_info_alter()
- */
-function editor_field_formatter_info_alter(&$info) {
-  // Update \Drupal\text\Plugin\Field\FieldFormatter\TextDefaultFormatter's
-  // annotation to indicate that it supports the 'editor' in-place editor
-  // provided by this module.
-  $info['text_default']['quickedit'] = ['editor' => 'editor'];
-}
-
-/**
  * Implements hook_form_FORM_ID_alter().
  */
 function editor_form_filter_admin_overview_alter(&$form, FormStateInterface $form_state) {

@@ -1,34 +1,22 @@
 <?php
 
-namespace Drupal\editor\Plugin\InPlaceEditor;
+namespace Drupal\quickedit\Plugin\InPlaceEditor;
 
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\quickedit\Plugin\InPlaceEditorInterface;
 use Drupal\filter\Plugin\FilterInterface;
+use Drupal\quickedit\Plugin\InPlaceEditorInterface;
 
 /**
  * Defines the formatted text in-place editor.
  *
  * @InPlaceEditor(
- *   id = "editor"
+ *   id = "editor",
+ *   provider = "editor",
  * )
- *
- * @deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. There is no
- * replacement.
- *
- * @see https://www.drupal.org/node/3271653
  */
 class Editor extends PluginBase implements InPlaceEditorInterface {
-
-  /**
-   * Constructs an Editor object.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
-    @trigger_error('Drupal\editor\InPlaceEditor\Editor is deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3271653', E_USER_DEPRECATED);
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-  }
 
   /**
    * {@inheritdoc}
@@ -100,7 +88,7 @@ class Editor extends PluginBase implements InPlaceEditorInterface {
     // Get the attachments for all text editors that the user might use.
     $attachments = $manager->getAttachments($formats);
 
-    // Also include editor.module's formatted text editor.
+    // Also include quickedit.module's formatted text editor.
     $attachments['library'][] = 'quickedit/quickedit.inPlaceEditor.formattedText';
 
     return $attachments;

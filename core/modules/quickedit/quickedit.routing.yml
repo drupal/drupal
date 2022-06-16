@@ -61,3 +61,15 @@ quickedit.image_info:
     _permission: 'access in-place editing'
     _access_quickedit_entity_field: 'TRUE'
     _method: 'GET'
+
+quickedit.field_untransformed_text:
+  path: '/quickedit/{entity_type}/{entity}/{field_name}/{langcode}/{view_mode_id}'
+  defaults:
+    _controller: '\Drupal\quickedit\QuickEditController::getUntransformedText'
+  options:
+    parameters:
+      entity:
+        type: entity:{entity_type}
+  requirements:
+    _permission: 'access in-place editing'
+    _access_quickedit_entity_field: 'TRUE'

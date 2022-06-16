@@ -2,11 +2,7 @@
 
 namespace Drupal\editor;
 
-use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\editor\Ajax\GetUntransformedTextCommand;
-use Drupal\filter\Plugin\FilterInterface;
 use Drupal\filter\FilterFormatInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,33 +12,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * Returns responses for Editor module routes.
  */
 class EditorController extends ControllerBase {
-
-  /**
-   * Returns an Ajax response to render a text field without transformation filters.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity of which a formatted text field is being rerendered.
-   * @param string $field_name
-   *   The name of the (formatted text) field that is being rerendered
-   * @param string $langcode
-   *   The name of the language for which the formatted text field is being
-   *   rerendered.
-   * @param string $view_mode_id
-   *   The view mode the formatted text field should be rerendered in.
-   *
-   * @return \Drupal\Core\Ajax\AjaxResponse
-   *   The Ajax response.
-   */
-  public function getUntransformedText(EntityInterface $entity, $field_name, $langcode, $view_mode_id) {
-    $response = new AjaxResponse();
-
-    // Direct text editing is only supported for single-valued fields.
-    $field = $entity->getTranslation($langcode)->$field_name;
-    $editable_text = check_markup($field->value, $field->format, $langcode, [FilterInterface::TYPE_TRANSFORM_REVERSIBLE, FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE]);
-    $response->addCommand(new GetUntransformedTextCommand($editable_text));
-
-    return $response;
-  }
 
   /**
    * Apply the necessary XSS filtering for using a certain text format's editor.

@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormState;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
+use Drupal\filter\Plugin\FilterInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,6 +21,7 @@ use Drupal\quickedit\Ajax\FieldFormCommand;
 use Drupal\quickedit\Ajax\FieldFormSavedCommand;
 use Drupal\quickedit\Ajax\FieldFormValidationErrorsCommand;
 use Drupal\quickedit\Ajax\EntitySavedCommand;
+use Drupal\quickedit\Ajax\GetUntransformedTextCommand;
 
 /**
  * Returns responses for Quick Edit module routes.
@@ -353,6 +355,36 @@ class QuickEditController extends ControllerBase {
     // Respond to client that the entity was saved properly.
     $response = new AjaxResponse();
     $response->addCommand(new EntitySavedCommand($output));
+    return $response;
+  }
+
+  /**
+   * Returns Ajax response to render text field without transformation filters.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity of which a formatted text field is being rerendered.
+   * @param string $field_name
+   *   The name of the (formatted text) field that is being rerendered.
+   * @param string $langcode
+   *   The name of the language for which the formatted text field is being
+   *   rerendered.
+   * @param string $view_mode_id
+   *   The view mode the formatted text field should be rerendered in.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   The Ajax response.
+   */
+  public function getUntransformedText(EntityInterface $entity, $field_name, $langcode, $view_mode_id) {
+    $response = new AjaxResponse();
+
+    // Direct text editing is only supported for single-valued fields.
+    $field = $entity->getTranslation($langcode)->$field_name;
+    $editable_text = check_markup($field->value, $field->format, $langcode, [
+      FilterInterface::TYPE_TRANSFORM_REVERSIBLE,
+      FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE,
+    ]);
+    $response->addCommand(new GetUntransformedTextCommand($editable_text));
+
     return $response;
   }
 

@@ -5,18 +5,6 @@ editor.filter_xss:
   requirements:
     _entity_access: 'filter_format.use'
 
-editor.field_untransformed_text:
-  path: '/editor/{entity_type}/{entity}/{field_name}/{langcode}/{view_mode_id}'
-  defaults:
-    _controller: '\Drupal\editor\EditorController::getUntransformedText'
-  options:
-    parameters:
-      entity:
-        type: entity:{entity_type}
-  requirements:
-    _permission: 'access in-place editing'
-    _access_quickedit_entity_field: 'TRUE'
-
 editor.image_dialog:
   path: '/editor/dialog/image/{editor}'
   defaults:
