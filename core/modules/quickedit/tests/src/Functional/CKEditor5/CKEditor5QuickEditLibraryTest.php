@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\ckeditor5\Functional;
+namespace Drupal\Tests\quickedit\Functional\CKEditor5;
 
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
@@ -14,6 +14,7 @@ use Symfony\Component\Validator\ConstraintViolation;
  * Tests that a Quick Edit specific library loads when Quick Edit is enabled.
  *
  * @group ckeditor5
+ * @group quickedit
  * @group legacy
  */
 class CKEditor5QuickEditLibraryTest extends BrowserTestBase {
@@ -85,11 +86,8 @@ class CKEditor5QuickEditLibraryTest extends BrowserTestBase {
    */
   public function testQuickeditTemporaryWorkaround() {
     $assert_session = $this->assertSession();
-
-    $this->expectDeprecation('Temporary work-around until https://www.drupal.org/project/drupal/issues/3196689 lands.');
-
     $this->drupalGet('node/add/article');
-    $assert_session->responseContains('css/quickedit-override.css');
+    $assert_session->responseContains('css/editors/formattedText/ckeditor5.workaround.css');
   }
 
 }

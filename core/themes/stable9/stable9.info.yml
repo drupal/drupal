@@ -219,6 +219,11 @@ libraries-override:
         css/editors/image.css: css/quickedit/editors/image.css
       theme:
         css/editors/image.theme.css: css/quickedit/editors/image.theme.css
+  quickedit/quickedit.ckeditor5-temporary-work-around:
+    # "Temporary work-around until https://www.drupal.org/project/drupal/issues/3196689 lands."
+    css:
+      theme:
+        css/editors/formattedText/ckeditor5.workaround.css: css/quickedit/editors/formattedText/ckeditor5.workaround.css
 
   settings_tray/drupal.settings_tray:
     css:

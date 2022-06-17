@@ -434,10 +434,6 @@ function ckeditor5_library_info_alter(&$libraries, $extension) {
         'theme' => array_fill_keys(array_values($css), []),
       ],
     ];
-
-    if ($moduleHandler->moduleExists('quickedit')) {
-      $libraries['drupal.ckeditor5']['dependencies'][] = 'ckeditor5/drupal.ckeditor5.quickedit-temporary-work-around';
-    }
   }
 
   if ($extension === 'core') {

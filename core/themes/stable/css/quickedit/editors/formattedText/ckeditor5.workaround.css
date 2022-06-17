@@ -1,0 +1,9 @@
+.quickedit-editable,
+.quickedit-editing.ck.ck-editor__editable_inline {
+  top: inherit !important;
+  left: inherit !important;
+  margin-bottom: inherit !important;
+}
+.quickedit-editing.ck.ck-editor__editable_inline > :first-child {
+  margin-top: inherit;
+}
