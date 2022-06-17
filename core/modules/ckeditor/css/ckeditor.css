@@ -23,17 +23,3 @@
   font-size: 14px;
   -webkit-touch-callout: none;
 }
-
-/**
- * Adjust the style of in-place editing CKEditor instances.
- */
-.quickedit-toolgroup.wysiwyg-main .cke_chrome,
-.quickedit-toolgroup.wysiwyg-main .cke_inner,
-.quickedit-toolgroup.wysiwyg-main .cke_top {
-  border-top: none;
-  border-right: none;
-  border-bottom: none;
-  border-left: none;
-  background: transparent;
-  box-shadow: none;
-}

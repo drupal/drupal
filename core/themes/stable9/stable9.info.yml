@@ -208,6 +208,11 @@ libraries-override:
       theme:
         css/quickedit.theme.css: css/quickedit/quickedit.theme.css
         css/quickedit.icons.theme.css: css/quickedit/quickedit.icons.theme.css
+  quickedit/quickedit.inPlaceEditor.formattedText:
+    css:
+      component:
+        css/editors/formattedText.ckeditor.css: css/quickedit/editors/formattedText.ckeditor.css
+        css/editors/formattedText.ckeditor5.css: css/quickedit/editors/formattedText.ckeditor5.css
   quickedit/quickedit.inPlaceEditor.image:
     css:
       component:
