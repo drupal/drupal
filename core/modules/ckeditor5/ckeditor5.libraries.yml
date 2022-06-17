@@ -17,9 +17,6 @@ drupal.ckeditor5.internal:
 drupal.ckeditor5:
   js:
     js/ckeditor5.js: {}
-  css:
-    theme:
-      css/quickedit.css: { }
   dependencies:
     - core/jquery
     - core/once

@@ -50,6 +50,10 @@ quickedit.inPlaceEditor.form:
 
 quickedit.inPlaceEditor.formattedText:
   version: VERSION
+  css:
+    component:
+      css/editors/formattedText.ckeditor.css: {}
+      css/editors/formattedText.ckeditor5.css: {}
   js:
     js/editors/formattedTextEditor.js: { attributes: { defer: true } }
   dependencies:
