@@ -56,6 +56,14 @@ class RegistryTest extends UnitTestCase {
   protected $themeInitialization;
 
   /**
+   * The mocked cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $runtimeCache;
+
+
+  /**
    * The theme manager.
    *
    * @var \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
@@ -87,6 +95,7 @@ class RegistryTest extends UnitTestCase {
     $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->themeHandler = $this->createMock('Drupal\Core\Extension\ThemeHandlerInterface');
     $this->themeInitialization = $this->createMock('Drupal\Core\Theme\ThemeInitializationInterface');
+    $this->runtimeCache = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->themeManager = $this->createMock('Drupal\Core\Theme\ThemeManagerInterface');
     $this->moduleList = $this->createMock(ModuleExtensionList::class);
     $this->setupTheme();
@@ -487,7 +496,7 @@ class RegistryTest extends UnitTestCase {
   protected function setupTheme() {
     $this->registry = $this->getMockBuilder(Registry::class)
       ->onlyMethods(['getPath'])
-      ->setConstructorArgs([$this->root, $this->cache, $this->lock, $this->moduleHandler, $this->themeHandler, $this->themeInitialization, NULL, NULL, $this->moduleList])
+      ->setConstructorArgs([$this->root, $this->cache, $this->lock, $this->moduleHandler, $this->themeHandler, $this->themeInitialization, $this->runtimeCache, $this->moduleList])
       ->getMock();
     $this->registry->expects($this->any())
       ->method('getPath')

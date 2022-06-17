@@ -33,7 +33,7 @@ class RegistryLegacyTest extends KernelTestBase {
     \Drupal::service('module_installer')->install(['theme_legacy_test']);
     \Drupal::service('theme_installer')->install(['test_basetheme']);
 
-    $registry_base_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_basetheme');
+    $registry_base_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), \Drupal::service('cache.bootstrap'), \Drupal::service('extension.list.module'), 'test_basetheme');
     $registry_base_theme->setThemeManager(\Drupal::theme());
 
     $preprocess_functions = $registry_base_theme->get()['theme_test_function_suggestions']['preprocess functions'];
@@ -51,7 +51,7 @@ class RegistryLegacyTest extends KernelTestBase {
     $theme_handler = \Drupal::service('theme_handler');
     \Drupal::service('theme_installer')->install(['test_legacy_theme']);
 
-    $registry_deprecated_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_legacy_theme');
+    $registry_deprecated_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), \Drupal::service('cache.bootstrap'), \Drupal::service('extension.list.module'), 'test_legacy_theme');
     $registry_deprecated_theme->setThemeManager(\Drupal::theme());
 
     $expected_preprocess_functions = [
@@ -63,6 +63,14 @@ class RegistryLegacyTest extends KernelTestBase {
 
     $preprocess_functions = $registry_deprecated_theme->get()['theme_test_preprocess_suggestions__kitten__meerkat']['preprocess functions'];
     $this->assertSame($expected_preprocess_functions, $preprocess_functions, 'Suggestion implemented as a function correctly inherits preprocess functions.');
+  }
+
+  /**
+   * Tests the order of registry parameters.
+   */
+  public function testRegistryConstructorParameters() {
+    $this->expectDeprecation('Calling Registry::__construct() without the $runtime_cache as an instance of CacheBackendInterface or the $module_list as an instance of ModuleExtensionList is deprecated in drupal:9.5.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/3285131');
+    new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), \Drupal::service('theme_handler'), \Drupal::service('theme.initialization'), 'test_legacy_theme', \Drupal::service('cache.bootstrap'), \Drupal::service('extension.list.module'));
   }
 
 }

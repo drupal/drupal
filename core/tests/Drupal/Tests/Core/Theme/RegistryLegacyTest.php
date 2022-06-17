@@ -59,6 +59,13 @@ class RegistryLegacyTest extends UnitTestCase {
   protected $themeInitialization;
 
   /**
+   * The mocked cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $runtimeCache;
+
+  /**
    * The theme manager.
    *
    * @var \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
@@ -83,6 +90,7 @@ class RegistryLegacyTest extends UnitTestCase {
     $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->themeHandler = $this->createMock('Drupal\Core\Extension\ThemeHandlerInterface');
     $this->themeInitialization = $this->createMock('Drupal\Core\Theme\ThemeInitializationInterface');
+    $this->runtimeCache = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->themeManager = $this->createMock('Drupal\Core\Theme\ThemeManagerInterface');
     $this->moduleList = $this->createMock(ModuleExtensionList::class);
 
@@ -155,8 +163,7 @@ class RegistryLegacyTest extends UnitTestCase {
         $this->moduleHandler,
         $this->themeHandler,
         $this->themeInitialization,
-        NULL,
-        NULL,
+        $this->runtimeCache,
         $this->moduleList,
       ])
       ->getMock();
