@@ -284,15 +284,4 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function getTestThemes() {
-    // Remove 'seven' theme. Setting Tray "Edit Mode" will not work with 'seven'
-    // because it removes all contextual links the off-canvas dialog should.
-    return array_filter(parent::getTestThemes(), function ($theme) {
-      return $theme !== 'seven';
-    });
-  }
-
 }
