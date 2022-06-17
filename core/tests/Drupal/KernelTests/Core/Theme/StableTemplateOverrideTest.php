@@ -85,7 +85,7 @@ class StableTemplateOverrideTest extends KernelTestBase {
    * Ensures that Stable overrides all relevant core templates.
    */
   public function testStableTemplateOverrides() {
-    $registry = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $this->themeHandler, \Drupal::service('theme.initialization'), 'stable', NULL, \Drupal::service('extension.list.module'));
+    $registry = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $this->themeHandler, \Drupal::service('theme.initialization'), \Drupal::service('cache.bootstrap'), \Drupal::service('extension.list.module'), 'stable');
     $registry->setThemeManager(\Drupal::theme());
 
     $registry_full = $registry->get();

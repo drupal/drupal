@@ -174,19 +174,18 @@ class Registry implements DestructableInterface {
    *   The theme handler.
    * @param \Drupal\Core\Theme\ThemeInitializationInterface $theme_initialization
    *   The theme initialization.
-   * @param string $theme_name
-   *   (optional) The name of the theme for which to construct the registry.
    * @param \Drupal\Core\Cache\CacheBackendInterface $runtime_cache
    *   The cache backend interface to use for the runtime theme registry data.
    * @param \Drupal\Core\Extension\ModuleExtensionList $module_list
    *   The module list.
+   * @param string $theme_name
+   *   (optional) The name of the theme for which to construct the registry.
    */
-  public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, $theme_name = NULL, CacheBackendInterface $runtime_cache = NULL, ModuleExtensionList $module_list = NULL) {
+  public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, CacheBackendInterface $runtime_cache, ModuleExtensionList $module_list, $theme_name = NULL) {
     $this->root = $root;
     $this->cache = $cache;
     $this->lock = $lock;
     $this->moduleHandler = $module_handler;
-    $this->themeName = $theme_name;
     $this->themeHandler = $theme_handler;
     $this->themeInitialization = $theme_initialization;
     $this->runtimeCache = $runtime_cache;
@@ -195,6 +194,7 @@ class Registry implements DestructableInterface {
       $module_list = \Drupal::service('extension.list.module');
     }
     $this->moduleList = $module_list;
+    $this->themeName = $theme_name;
   }
 
   /**
