@@ -37,8 +37,8 @@ abstract class TestSuiteBase extends TestSuite {
    *   SubNamespace used to separate test suite. Examples: Unit, Functional.
    */
   protected function addTestsBySuiteNamespace($root, $suite_namespace) {
-    // Core's tests are in the namespace Drupal\${suite_namespace}Tests\ and are
-    // always inside of core/tests/Drupal/${suite_namespace}Tests. The exception
+    // Core's tests are in the namespace Drupal\{$suite_namespace}Tests\ and are
+    // always inside of core/tests/Drupal/{$suite_namespace}Tests. The exception
     // to this is Unit tests for historical reasons.
     if ($suite_namespace == 'Unit') {
       $tests = TestDiscovery::scanDirectory("Drupal\\Tests\\", "$root/core/tests/Drupal/Tests");
@@ -50,7 +50,7 @@ abstract class TestSuiteBase extends TestSuite {
       $this->addTestFiles($tests);
     }
     else {
-      $this->addTestFiles(TestDiscovery::scanDirectory("Drupal\\${suite_namespace}Tests\\", "$root/core/tests/Drupal/${suite_namespace}Tests"));
+      $this->addTestFiles(TestDiscovery::scanDirectory("Drupal\\{$suite_namespace}Tests\\", "$root/core/tests/Drupal/{$suite_namespace}Tests"));
     }
 
     // Extensions' tests will always be in the namespace

@@ -101,7 +101,7 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
    * by one module, set the plugin ID as the value for the key corresponding to
    * the module name. To specify a plugin for a particular message sent by one
    * module, set the plugin ID as the value for the array key that is the
-   * message ID, which is "${module}_${key}".
+   * message ID, which is "{$module}_{$key}".
    *
    * For example to debug all mail sent by the user module by logging it to a
    * file, you might set the variable as something like:
