@@ -8,6 +8,8 @@ use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\help\Plugin\HelpSection\HelpSectionPluginBase;
 
+// cspell:ignore asdrsad barmm foomm sqruct wcsrefsdf sdeeeee
+
 /**
  * Provides a searchable help section for testing.
  *
@@ -47,13 +49,13 @@ class TestHelpSection extends HelpSectionPluginBase implements SearchableHelpInt
         if ($language->getId() == 'en') {
           return [
             'title' => 'Foo in English title wcsrefsdf',
-            'text' => 'Something about foo body notawordenglish sqruct',
+            'text' => 'Something about foo body not-a-word-english sqruct',
             'url' => Url::fromUri('https://foo.com'),
           ];
         }
         return [
           'title' => 'Foomm Foreign heading',
-          'text' => 'Fake foreign foo text notawordgerman asdrsad',
+          'text' => 'Fake foreign foo text not-a-word-german asdrsad',
           'url' => Url::fromUri('https://mm.foo.com'),
         ];
 
@@ -61,13 +63,13 @@ class TestHelpSection extends HelpSectionPluginBase implements SearchableHelpInt
         if ($language->getId() == 'en') {
           return [
             'title' => 'Bar in English',
-            'text' => 'Something about bar anotherwordenglish asdrsad',
+            'text' => 'Something about bar another-word-english asdrsad',
             'url' => Url::fromUri('https://bar.com'),
           ];
         }
         return [
           'title' => \Drupal::state()->get('help_topics_test:translated_title', 'Barmm Foreign sdeeeee'),
-          'text' => 'Fake foreign barmm anotherwordgerman sqruct',
+          'text' => 'Fake foreign barmm another-word-german sqruct',
           'url' => Url::fromUri('https://mm.bar.com'),
         ];
 

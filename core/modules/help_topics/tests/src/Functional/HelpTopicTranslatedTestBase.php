@@ -4,6 +4,8 @@ namespace Drupal\Tests\help_topics\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 
+// cspell:ignore hilfetestmodul übersetzung
+
 /**
  * Provides a base class for functional help topic tests that use translation.
  *
@@ -73,8 +75,8 @@ msgstr "ABC-Hilfetestmodul"
 msgid "Test translation."
 msgstr "Übersetzung testen."
 
-msgid "Nonworditem totranslate."
-msgstr "Nonwordgerman sdfwedrsdf."
+msgid "Non-word-item to translate."
+msgstr "Non-word-german sdfwedrsdf."
 
 ENDPO;
     include_once $this->root . '/core/includes/install.core.inc';
