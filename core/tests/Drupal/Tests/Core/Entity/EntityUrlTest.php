@@ -407,7 +407,7 @@ class EntityUrlTest extends UnitTestCase {
     $url_generator->expects($this->any())
       ->method('generateFromRoute')
       ->with($route_name_1)
-      ->willThrowException(new MissingMandatoryParametersException());
+      ->willThrowException(new MissingMandatoryParametersException($route_name_1, ['missing_parameter']));
     $this->assertEquals([], $entity->uriRelationships());
   }
 

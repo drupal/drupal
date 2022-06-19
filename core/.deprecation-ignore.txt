@@ -32,5 +32,4 @@
 %"PHPUnit\\TextUI\\DefaultResultPrinter".*is considered internal%
 
 # Symfony 6.1 deprecations.
-%Since symfony\/routing 6\.1: Construction of .*MissingMandatoryParametersException.* with an exception message is deprecated, provide the route name and an array of missing parameters instead%
 %Since symfony\/routing 6\.1: The .*UrlMatcher::handleRouteRequirements\(\).* method will have a new .*routeParameters.* argument in version 7\.0, not defining it is deprecated%
