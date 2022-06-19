@@ -1,0 +1,10 @@
+{
+  "name": "fixtures/empty-file",
+  "extra": {
+    "drupal-scaffold": {
+      "file-mapping": {
+        "[web-root]/empty_file.txt": "assets/empty_file.txt"
+      }
+    }
+  }
+}

@@ -92,8 +92,7 @@ class ReplaceOp extends AbstractOperation {
   protected function copyScaffold(ScaffoldFilePath $destination, IOInterface $io) {
     $interpolator = $destination->getInterpolator();
     $this->source->addInterpolationData($interpolator);
-    $success = file_put_contents($destination->fullPath(), $this->contents());
-    if (!$success) {
+    if (file_put_contents($destination->fullPath(), $this->contents()) === FALSE) {
       throw new \RuntimeException($interpolator->interpolate("Could not copy source file <info>[src-rel-path]</info> to <info>[dest-rel-path]</info>!"));
     }
     $io->write($interpolator->interpolate("  - Copy <info>[dest-rel-path]</info> from <info>[src-rel-path]</info>"));
