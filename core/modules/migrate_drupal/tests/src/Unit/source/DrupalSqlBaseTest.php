@@ -184,6 +184,7 @@ class TestDrupalSqlBase extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function query() {
+    throw new \RuntimeException(__METHOD__ . " not implemented for " . __CLASS__);
   }
 
   /**

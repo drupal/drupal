@@ -27,12 +27,9 @@ trait ViewResultAssertionTrait {
    * @param string $message
    *   (optional) A custom message to display with the assertion. Defaults to
    *   'Identical result set.'
-   *
-   * @return bool
-   *   TRUE if the assertion succeeded, or FALSE otherwise.
    */
-  protected function assertIdenticalResultset($view, $expected_result, $column_map = [], $message = NULL) {
-    return $this->assertIdenticalResultsetHelper($view, $expected_result, $column_map, 'assertIdentical', $message);
+  protected function assertIdenticalResultset($view, $expected_result, $column_map = [], $message = NULL): void {
+    $this->assertIdenticalResultsetHelper($view, $expected_result, $column_map, 'assertIdentical', $message);
   }
 
   /**
@@ -50,12 +47,9 @@ trait ViewResultAssertionTrait {
    * @param string $message
    *   (optional) A custom message to display with the assertion. Defaults to
    *   'Non-identical result set.'
-   *
-   * @return bool
-   *   TRUE if the assertion succeeded, or FALSE otherwise.
    */
-  protected function assertNotIdenticalResultset($view, $expected_result, $column_map = [], $message = NULL) {
-    return $this->assertIdenticalResultsetHelper($view, $expected_result, $column_map, 'assertNotIdentical', $message);
+  protected function assertNotIdenticalResultset($view, $expected_result, $column_map = [], $message = NULL): void {
+    $this->assertIdenticalResultsetHelper($view, $expected_result, $column_map, 'assertNotIdentical', $message);
   }
 
   /**
@@ -76,11 +70,8 @@ trait ViewResultAssertionTrait {
    *   'assertNotIdentical').
    * @param string $message
    *   (optional) The message to display with the assertion.
-   *
-   * @return bool
-   *   TRUE if the assertion succeeded.
    */
-  protected function assertIdenticalResultsetHelper($view, $expected_result, $column_map, $assert_method, $message = NULL) {
+  protected function assertIdenticalResultsetHelper($view, $expected_result, $column_map, $assert_method, $message = NULL): void {
     // Convert $view->result to an array of arrays.
     $result = [];
     foreach ($view->result as $key => $value) {
@@ -142,11 +133,11 @@ trait ViewResultAssertionTrait {
     switch ($assert_method) {
       case 'assertIdentical':
         $this->assertSame($expected_result, $result, $message);
-        return TRUE;
+        break;
 
       case 'assertNotIdentical':
         $this->assertNotSame($expected_result, $result, $message);
-        return TRUE;
+        break;
 
     }
   }
