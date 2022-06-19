@@ -25,9 +25,6 @@ parameters:
     - lib/Drupal/Component/Transliteration/data/*.php
     # Below extends on purpose a non existing class for testing.
     - modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/fruit/ExtendingNonInstalledClass.php
-    # @todo files below need to be excluded as they prevent baseline generation.
-    # Fixing them is a priority.
-    - modules/link/tests/src/Kernel/LinkItemTest.php
 
   ignoreErrors:
     # new static() is a best practice in Drupal, so we cannot fix that.
