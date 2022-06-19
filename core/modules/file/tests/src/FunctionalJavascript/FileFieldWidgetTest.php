@@ -184,9 +184,9 @@ class FileFieldWidgetTest extends WebDriverTestBase {
   }
 
   /**
-   * Tests uploading more files then allowed at once.
+   * Tests uploading more files than allowed at once.
    */
-  public function testUploadingMoreFilesThenAllowed() {
+  public function testUploadingMoreFilesThanAllowed() {
     $type_name = 'article';
     $field_name = 'test_file_field_1';
     $cardinality = 2;
