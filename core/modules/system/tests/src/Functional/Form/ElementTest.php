@@ -144,6 +144,7 @@ class ElementTest extends BrowserTestBase {
     $this->assertSession()->elementsCount('xpath', '//div[@id="edit-container"]//div[@class="details-wrapper"]//label', 1);
     $this->drupalGet('form-test/group-fieldset');
     $this->assertSession()->elementsCount('xpath', '//fieldset[@id="edit-fieldset"]//div[@id="edit-meta"]//label', 1);
+    $this->assertSession()->elementTextEquals('xpath', '//fieldset[@id="edit-fieldset-zero"]//legend', '0');
     $this->drupalGet('form-test/group-vertical-tabs');
     $this->assertSession()->elementsCount('xpath', '//div[@data-vertical-tabs-panes]//details[@id="edit-meta"]//label', 1);
     $this->assertSession()->elementsCount('xpath', '//div[@data-vertical-tabs-panes]//details[@id="edit-meta-2"]//label', 1);
