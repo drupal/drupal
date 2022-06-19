@@ -28,7 +28,7 @@ Drupal Core provides three metapackages that serve different purposes.
 Note that a project that uses both drupal/core-recommended and
 drupal/core-dev-pinned must update them both at the same time, e.g.:
 
-  composer update drupal/core-recommended drupal/core-dev-pinned --with-updates
+  composer update drupal/core-recommended drupal/core-dev-pinned --with-dependencies
 
 Composer may have trouble with the update if one of these projects is listed
 on the command line without the other. Running composer update without any
