@@ -44,24 +44,28 @@ class IdConflictTest extends MigrateUpgradeExecuteTestBase {
    * {@inheritdoc}
    */
   protected function getEntityCounts() {
+    return [];
   }
 
   /**
    * {@inheritdoc}
    */
   protected function getEntityCountsIncremental() {
+    return [];
   }
 
   /**
    * {@inheritdoc}
    */
   protected function getAvailablePaths() {
+    return [];
   }
 
   /**
    * {@inheritdoc}
    */
   protected function getMissingPaths() {
+    return [];
   }
 
   /**

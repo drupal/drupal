@@ -4,6 +4,7 @@ namespace Drupal\Tests\rest\Functional;
 
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Url;
 use Drupal\entity_test\Entity\EntityTest;
@@ -819,6 +820,7 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
   protected function getExpectedUnauthorizedAccessCacheability() {
     // There is cacheability metadata to check as file uploads only allows POST
     // requests, which will not return cacheable responses.
+    return new CacheableMetadata();
   }
 
 }

@@ -3,6 +3,7 @@
 namespace Drupal\Tests\layout_builder\Functional\Rest;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Url;
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use Drupal\Tests\rest\Functional\ResourceTestBase;
@@ -131,7 +132,9 @@ abstract class LayoutRestTestBase extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedUnauthorizedAccessCacheability() {}
+  protected function getExpectedUnauthorizedAccessCacheability() {
+    return (new CacheableMetadata());
+  }
 
   /**
    * Gets the decoded contents.

@@ -317,16 +317,17 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
    */
   protected function getExpectedUnauthorizedAccessMessage($method) {
     switch ($method) {
-      case 'GET';
+      case 'GET':
         return "The 'access comments' permission is required and the comment must be published.";
 
-      case 'POST';
+      case 'POST':
         return "The 'post comments' permission is required.";
 
-      case 'PATCH';
+      case 'PATCH':
         return "The 'edit own comments' permission is required, the user must be the comment author, and the comment must be published.";
 
       case 'DELETE':
+      default:
         // \Drupal\comment\CommentAccessControlHandler::checkAccess() does not
         // specify a reason for not allowing a comment to be deleted.
         return '';

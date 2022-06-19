@@ -429,11 +429,8 @@ trait AssertContentTrait {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
-   *
-   * @return bool
-   *   TRUE on pass, FALSE on fail.
    */
-  protected function assertRaw($raw, $message = '', $group = 'Other') {
+  protected function assertRaw($raw, $message = '', $group = 'Other'): void {
     if (!$message) {
       $message = 'Raw "' . Html::escape($raw) . '" found';
     }
@@ -457,11 +454,8 @@ trait AssertContentTrait {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
-   *
-   * @return bool
-   *   TRUE on pass, FALSE on fail.
    */
-  protected function assertNoRaw($raw, $message = '', $group = 'Other') {
+  protected function assertNoRaw($raw, $message = '', $group = 'Other'): void {
     if (!$message) {
       $message = 'Raw "' . Html::escape($raw) . '" not found';
     }
@@ -485,11 +479,8 @@ trait AssertContentTrait {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
-   *
-   * @return bool
-   *   TRUE on pass, FALSE on fail.
    */
-  protected function assertEscaped($raw, $message = '', $group = 'Other') {
+  protected function assertEscaped($raw, $message = '', $group = 'Other'): void {
     if (!$message) {
       $message = 'Escaped "' . Html::escape($raw) . '" found';
     }
@@ -514,11 +505,8 @@ trait AssertContentTrait {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
-   *
-   * @return bool
-   *   TRUE on pass, FALSE on fail.
    */
-  protected function assertNoEscaped($raw, $message = '', $group = 'Other') {
+  protected function assertNoEscaped($raw, $message = '', $group = 'Other'): void {
     if (!$message) {
       $message = 'Escaped "' . Html::escape($raw) . '" not found';
     }
@@ -544,13 +532,10 @@ trait AssertContentTrait {
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
    *
-   * @return bool
-   *   TRUE on pass, FALSE on fail.
-   *
    * @see \Drupal\simpletest\AssertContentTrait::assertRaw()
    */
-  protected function assertText($text, $message = '', $group = 'Other') {
-    return $this->assertTextHelper($text, $message, $group, FALSE);
+  protected function assertText($text, $message = '', $group = 'Other'): void {
+    $this->assertTextHelper($text, $message, $group, FALSE);
   }
 
   /**
@@ -572,13 +557,10 @@ trait AssertContentTrait {
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
    *
-   * @return bool
-   *   TRUE on pass, FALSE on fail.
-   *
    * @see \Drupal\simpletest\AssertContentTrait::assertNoRaw()
    */
-  protected function assertNoText($text, $message = '', $group = 'Other') {
-    return $this->assertTextHelper($text, $message, $group, TRUE);
+  protected function assertNoText($text, $message = '', $group = 'Other'): void {
+    $this->assertTextHelper($text, $message, $group, TRUE);
   }
 
   /**
@@ -601,11 +583,8 @@ trait AssertContentTrait {
    * @param bool $not_exists
    *   (optional) TRUE if this text should not exist, FALSE if it should.
    *   Defaults to TRUE.
-   *
-   * @return bool
-   *   TRUE on pass, FALSE on fail.
    */
-  protected function assertTextHelper($text, $message = '', $group = 'Other', $not_exists = TRUE) {
+  protected function assertTextHelper($text, $message = '', $group = 'Other', $not_exists = TRUE): void {
     if (!$message) {
       $message = !$not_exists ? new FormattableMarkup('"@text" found', ['@text' => $text]) : new FormattableMarkup('"@text" not found', ['@text' => $text]);
     }
