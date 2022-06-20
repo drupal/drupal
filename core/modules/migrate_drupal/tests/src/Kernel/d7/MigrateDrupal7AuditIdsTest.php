@@ -39,6 +39,7 @@ class MigrateDrupal7AuditIdsTest extends MigrateDrupal7TestBase {
     $this->installSchema('node', ['node_access']);
     $this->installSchema('search', ['search_dataset']);
     $this->installSchema('system', ['sequences']);
+    // @todo Remove tracker in https://www.drupal.org/project/drupal/issues/3261452
     $this->installSchema('tracker', ['tracker_node', 'tracker_user']);
 
     // Enable content moderation for nodes of type page.
