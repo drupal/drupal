@@ -37,6 +37,7 @@ finished:
     ping: core
     poll: core
     throttle: core
+    # @todo Remove tracker in https://www.drupal.org/project/drupal/issues/3261452
     tracker: core
     translation: core
     trigger: core
