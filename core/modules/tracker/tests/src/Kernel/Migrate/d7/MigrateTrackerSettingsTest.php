@@ -2,12 +2,14 @@
 
 namespace Drupal\Tests\tracker\Kernel\Migrate\d7;
 
+use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+
 /**
  * Tests migration of Tracker settings to configuration.
  *
  * @group tracker
  */
-class MigrateTrackerSettingsTest extends MigrateDrupalTestBase {
+class MigrateTrackerSettingsTest extends MigrateDrupal7TestBase {
 
   protected static $modules = ['tracker'];
 

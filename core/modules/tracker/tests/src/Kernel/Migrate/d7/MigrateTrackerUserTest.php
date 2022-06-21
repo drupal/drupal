@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\tracker\Kernel\Migrate\d7;
 
+use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use Drupal\Core\Database\Database;
 
 /**
@@ -9,7 +10,7 @@ use Drupal\Core\Database\Database;
  *
  * @group tracker
  */
-class MigrateTrackerUserTest extends MigrateDrupalTestBase {
+class MigrateTrackerUserTest extends MigrateDrupal7TestBase {
 
   /**
    * {@inheritdoc}

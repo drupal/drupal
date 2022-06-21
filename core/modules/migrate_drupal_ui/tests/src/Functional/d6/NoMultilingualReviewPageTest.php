@@ -27,7 +27,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
     'forum',
     'statistics',
     'syslog',
-    // @todo Remove tracker in https://www.drupal.org/project/drupal/issues/3261452
     'tracker',
     'update',
     // Test migrations states.
@@ -114,7 +113,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'Taxonomy',
       'Text',
       'Throttle',
-      // @todo Remove tracker in https://www.drupal.org/project/drupal/issues/3261452
       'Tracker',
       'Trigger',
       'Update status',
