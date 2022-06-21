@@ -28,7 +28,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
     'forum',
     'statistics',
     'syslog',
-    'tracker',
     'update',
     // Test migrations states.
     'migrate_state_finished_test',
@@ -134,7 +133,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Text',
       'Title',
       'Toolbar',
-      'Tracker',
       'Trigger',
       'Update manager',
       'User',
@@ -173,6 +171,8 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'RDF',
       'References',
       'References UUID',
+      // @todo Remove tracker in https://www.drupal.org/project/drupal/issues/3261452
+      'Tracker',
       'Translation redirect',
       'Translation sets',
       'User mail translation',
