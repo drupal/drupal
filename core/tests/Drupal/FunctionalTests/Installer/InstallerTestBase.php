@@ -76,6 +76,19 @@ abstract class InstallerTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
+  protected function installParameters() {
+    $params = parent::installParameters();
+    // Set the checkbox values to FALSE so that
+    // \Drupal\Tests\BrowserTestBase::translatePostValues() does not remove
+    // them.
+    $params['forms']['install_configure_form']['enable_update_status_module'] = FALSE;
+    $params['forms']['install_configure_form']['enable_update_status_emails'] = FALSE;
+    return $params;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUpAppRoot();
 

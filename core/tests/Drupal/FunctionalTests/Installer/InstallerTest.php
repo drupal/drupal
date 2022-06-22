@@ -131,6 +131,9 @@ class InstallerTest extends InstallerTestBase {
     $module = $database->getProvider();
     $module_handler = \Drupal::service('module_handler');
 
+    // Ensure the update module is not installed.
+    $this->assertFalse($module_handler->moduleExists('update'), 'The Update module is not installed.');
+
     // Assert that the module that is providing the database driver has been
     // installed.
     $this->assertTrue($module_handler->moduleExists($module));
