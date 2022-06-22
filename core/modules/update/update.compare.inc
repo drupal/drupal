@@ -415,6 +415,11 @@ function update_calculate_project_update_status(&$project_data, $available) {
     ) {
       continue;
     }
+    // Ignore dev releases with no date. These are either broken releases or
+    // stub releases to allow them to be selected on drupal.org project issues.
+    elseif ($release->getDate() === NULL && $release_module_version->getVersionExtra() === 'dev') {
+      continue;
+    }
 
     $release_major_version = $release_module_version->getMajorVersion();
     // See if this is a higher major version than our target and yet still
