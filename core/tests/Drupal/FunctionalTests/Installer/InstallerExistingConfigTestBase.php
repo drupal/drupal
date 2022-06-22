@@ -105,7 +105,8 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
     // existing configuration.
     unset($parameters['forms']['install_configure_form']['site_name']);
     unset($parameters['forms']['install_configure_form']['site_mail']);
-    unset($parameters['forms']['install_configure_form']['update_status_module']);
+    unset($parameters['forms']['install_configure_form']['enable_update_status_module']);
+    unset($parameters['forms']['install_configure_form']['enable_update_status_emails']);
 
     return $parameters;
   }
