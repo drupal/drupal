@@ -59,7 +59,7 @@ class UpdatePathLastRemovedTest extends BrowserTestBase {
     $update_registry = \Drupal::service('update.update_hook_registry');
 
     $update_registry->setInstalledVersion('update_test_last_removed', 8000);
-    $update_registry->setInstalledVersion('system', 8804);
+    $update_registry->setInstalledVersion('user', 9300);
 
     // Access the update page with a schema version that is too old for system
     // and the test module, only the generic core message should be shown.
@@ -68,14 +68,14 @@ class UpdatePathLastRemovedTest extends BrowserTestBase {
     $assert_session = $this->assertSession();
     $assert_session->pageTextContains('Requirements problem');
     $assert_session->pageTextContains('The version of Drupal you are trying to update from is too old');
-    $assert_session->pageTextContains('Updating to Drupal 9 is only supported from Drupal version 8.8.0 or higher. If you are trying to update from an older version, first update to the latest version of Drupal 8');
+    $assert_session->pageTextContains('Updating to Drupal 10 is only supported from Drupal version 9.3.0 or higher. If you are trying to update from an older version, first update to the latest version of Drupal 9');
     $assert_session->pageTextNotContains('Unsupported schema version: Update test with hook_update_last_removed() implementation');
 
     $assert_session->linkNotExists('Continue');
 
     // Update the installed version of system and then assert that now,
     // the test module is shown instead.
-    $update_registry->setInstalledVersion('system', 8902);
+    $update_registry->setInstalledVersion('user', 9301);
     $this->drupalGet($this->updateUrl);
 
     $assert_session->pageTextNotContains('The version of Drupal you are trying to update from is too old');

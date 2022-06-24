@@ -1368,18 +1368,16 @@ function system_requirements($phase) {
       }
     );
 
-    // If system or workspaces is in the list then only show a specific message
-    // for Drupal core.
-    if (isset($module_list['system']) || isset($module_list['workspaces'])) {
-      $requirements['system_update_last_removed'] = [
+    // If user module is in the list then only show a specific message for
+    // Drupal core.
+    if (isset($module_list['user'])) {
+      $requirements['user_update_last_removed'] = [
         'title' => t('The version of Drupal you are trying to update from is too old'),
-        'description' => t('Updating to Drupal @current_major is only supported from Drupal version @required_min_version or higher. If you are trying to update from an older version, first update to the latest version of Drupal @previous_major. (<a href=":url">Drupal 9 upgrade guide</a>)', [
-          '@current_major' => 9,
-          // Workspaces is special cased due to updates being removed after
-          // 8.8.0.
-          '@required_min_version' => isset($module_list['workspaces']) ? '8.8.2' : '8.8.0',
-          '@previous_major' => 8,
-          ':url' => 'https://www.drupal.org/docs/9/how-to-prepare-your-drupal-7-or-8-site-for-drupal-9/upgrading-a-drupal-8-site-to-drupal-9',
+        'description' => t('Updating to Drupal @current_major is only supported from Drupal version @required_min_version or higher. If you are trying to update from an older version, first update to the latest version of Drupal @previous_major. (<a href=":url">Drupal upgrade guide</a>)', [
+          '@current_major' => 10,
+          '@required_min_version' => '9.3.0',
+          '@previous_major' => 9,
+          ':url' => 'https://www.drupal.org/docs/upgrading-drupal/drupal-8-and-higher',
         ]),
         'severity' => REQUIREMENT_ERROR,
       ];
