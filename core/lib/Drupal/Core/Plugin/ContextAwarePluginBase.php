@@ -9,7 +9,7 @@ use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\TypedData\TypedDataTrait;
 
-@trigger_error(__NAMESPACE__ . '\ContextAwarePluginBase is deprecated in drupal:9.1.0 and will be removed before drupal:10.0.0. Instead, use \Drupal\Core\Plugin\ContextAwarePluginTrait. See https://www.drupal.org/node/3120980', E_USER_DEPRECATED);
+@trigger_error(__NAMESPACE__ . '\ContextAwarePluginBase is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Plugin\ContextAwarePluginTrait instead. See https://www.drupal.org/node/3120980', E_USER_DEPRECATED);
 
 /**
  * Base class for plugins that are context aware.
