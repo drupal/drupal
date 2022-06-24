@@ -24,6 +24,7 @@ views_ui.listing:
   dependencies:
     - core/jquery
     - core/drupal
+    - core/drupal.string.includes
     - core/once
     - views_ui/admin.styling
 

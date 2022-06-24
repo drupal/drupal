@@ -78,7 +78,7 @@
   }
 
 .node--view-mode-teaser .primary-image + .node__title {
-      flex-basis: calc(100% - calc(4.5 * var(--sp)))
+      flex-basis: calc(100% - var(--sp)*4.5)
     }
 
 @media (min-width: 62.5rem) {
@@ -93,8 +93,8 @@
     }
 
 .node--view-mode-teaser .primary-image img {
-      width: calc(3.5 * var(--sp));
-      height: calc(3.5 * var(--sp));
+      width: calc(var(--sp)*3.5);
+      height: calc(var(--sp)*3.5);
       object-fit: cover;
       border-radius: 50%
     }
@@ -110,11 +110,11 @@
 @media (min-width: 62.5rem) {
 
 [dir="ltr"] .node--view-mode-teaser .primary-image {
-      left: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))))
+      left: calc(var(--grid-col-width)*-1 + var(--grid-gap)*-1)
   }
 
 [dir="rtl"] .node--view-mode-teaser .primary-image {
-      right: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))))
+      right: calc(var(--grid-col-width)*-1 + var(--grid-gap)*-1)
   }
 
 .node--view-mode-teaser .primary-image {

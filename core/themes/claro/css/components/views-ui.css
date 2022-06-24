@@ -99,14 +99,14 @@ details.fieldset-no-legend {
 }
 
 .views-ui-dialog .form-element {
-  min-height: calc(((var(--input-padding-vertical--small) + var(--input-border-size)) * 2) + var(--input-line-height--small)); /* iOS. */
+  min-height: calc(var(--input-padding-vertical--small)*2 + var(--input-border-size)*2 + var(--input-line-height--small)); /* iOS. */
   padding: var(--input-padding-vertical--small) var(--input-padding-horizontal--small);
   font-size: var(--input-font-size--small);
   line-height: var(--input-line-height--small);
 }
 
 .views-ui-dialog .form-element--type-select {
-  padding-right: calc((var(--space-m) * 2) + var(--input-border-size) * 2);
+  padding-right: calc(var(--space-m)*2 + var(--input-border-size)*2);
   background-position: 100% 56%;
 }
 
@@ -184,7 +184,7 @@ details.fieldset-no-legend {
 }
 
 .views-display-top__extra-actions-wrapper {
-  margin: calc(var(--space-xs) / 2) var(--space-xs) var(--space-xs);
+  margin: calc(var(--space-xs)/2) var(--space-xs) var(--space-xs);
 }
 
 /* @end */
@@ -320,7 +320,7 @@ details.fieldset-no-legend {
 .views-tabs .add a::before {
   display: inline-block;
   width: 1em;
-  height: calc(1em - (var(--input-border-size) * 2));
+  height: calc(1em - var(--input-border-size)*2);
   content: "";
   /* Copy of icon from .action-link--icon-plus */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' stroke-width='2' stroke='%23545560'%3E%3Cpath d='m3 8h10'/%3E%3Cpath d='m8 3v10'/%3E%3C/svg%3E");
@@ -686,6 +686,6 @@ details.fieldset-no-legend {
   }
   [dir="rtl"] .views-display-top__extra-actions-wrapper {
     margin-right: auto;
-    margin-left: calc(var(--space-xs) / 2);
+    margin-left: calc(var(--space-xs)/2);
   }
 }

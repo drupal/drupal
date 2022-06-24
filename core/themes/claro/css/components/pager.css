@@ -47,8 +47,8 @@
 
 .pager__item {
   display: inline-block;
-  margin-right: calc(var(--space-xs) / 2);
-  margin-left: calc(var(--space-xs) / 2);
+  margin-right: calc(var(--space-xs)/2);
+  margin-left: calc(var(--space-xs)/2);
   vertical-align: top;
 }
 
@@ -161,8 +161,8 @@
 }
 
 .pager__item--mini {
-  margin-right: calc(var(--space-m) / 2);
-  margin-left: calc(var(--space-m) / 2);
+  margin-right: calc(var(--space-m)/2);
+  margin-left: calc(var(--space-m)/2);
 }
 
 .pager__link--mini {

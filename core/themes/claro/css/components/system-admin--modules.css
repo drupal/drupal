@@ -12,7 +12,7 @@
 
 :root {
   --module-table-cell-padding-vertical: var(--space-m);
-  --module-table-cell-padding-horizontal: calc(var(--space-m) - (var(--input-border-size) * 2));
+  --module-table-cell-padding-horizontal: calc(var(--space-m) - var(--input-border-size)*2);
 }
 
 .modules-table-filter {
@@ -147,7 +147,7 @@ td.module-list__description {
 .module-details__links {
   position: relative;
   /* Negative margin matches the value of action link's top padding. */
-  margin-top: calc((var(--space-s) - ((var(--space-l) - var(--space-s)) / 2)) * -1);
+  margin-top: calc(var(--space-s)*-1 - var(--space-l)/2*-1 + var(--space-s)/2*-1);
   margin-bottom: var(--space-m);
 }
 
@@ -169,7 +169,7 @@ td.module-list__description {
   position: relative;
   top: -1px;
   display: inline-block;
-  width: calc(var(--space-m) * 2);
+  width: calc(var(--space-m)*2);
   height: 1.25rem;
   content: "";
   cursor: pointer;

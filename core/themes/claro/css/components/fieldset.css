@@ -63,10 +63,10 @@ _:-ms-fullscreen,
   float: none;
   width: auto;
   margin-top: 0; /* IE11 and Edge do not collapse this margin. Ideally this would be 4px */
-  margin-bottom: calc(var(--space-xs) / 2); /* 4px */
+  margin-bottom: calc(var(--space-xs)/2); /* 4px */
   color: inherit;
   font-size: var(--font-size-s); /* 14px */
-  line-height: calc(18rem / 16); /* 18px */
+  line-height: 1.125rem; /* 18px */
 }
 
 /* This is used only on install configure form. */
@@ -103,11 +103,11 @@ _:-ms-fullscreen,
 }
 
 .fieldset__description {
-  margin-top: calc(6rem / 16); /* 6px */
-  margin-bottom: calc(6rem / 16); /* 6px */
+  margin-top: 0.375rem; /* 6px */
+  margin-bottom: 0.375rem; /* 6px */
   color: var(--input-fg-color--description);
   font-size: var(--font-size-xs); /* ~13px */
-  line-height: calc(17rem / 16); /* 17px */
+  line-height: 1.0625rem; /* 17px */
 }
 
 .fieldset__description.is-disabled {
@@ -117,12 +117,12 @@ _:-ms-fullscreen,
 /* Error message (Inline form errors). */
 
 .fieldset__error-message {
-  margin-top: calc(6rem / 16); /* 6px */
-  margin-bottom: calc(6rem / 16); /* 6px */
+  margin-top: 0.375rem; /* 6px */
+  margin-bottom: 0.375rem; /* 6px */
   color: var(--input--error-color);
   font-size: var(--font-size-xs); /* ~13px */
   font-weight: normal;
-  line-height: calc(17rem / 16); /* 17px */
+  line-height: 1.0625rem; /* 17px */
 }
 
 .fieldset__wrapper {

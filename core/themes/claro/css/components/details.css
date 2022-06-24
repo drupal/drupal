@@ -37,7 +37,7 @@
 
 :root {
   --size-summary-border-radius: calc(var(--details-border-size-radius) - var(--details-border-size));
-  --summary-accordion-padding-vertical: calc(var(--space-l) + ((var(--space-m) - var(--space-l)) / 2));
+  --summary-accordion-padding-vertical: calc(var(--space-l) + var(--space-m)/2 - var(--space-l)/2);
   --summary-accordion-line-height: var(--space-l);
 }
 
@@ -148,7 +148,7 @@
   display: inline-block;
   width: var(--space-m);
   height: var(--space-m);
-  margin-top: calc(var(--space-m) / -2);
+  margin-top: calc(var(--space-m)/-2);
   content: "";
   transition: transform var(--details-transform-transition-duration) ease-in 0s;
   transform: rotate(90deg); /* LTR */
@@ -298,7 +298,7 @@
 
   .claro-details[open] > .claro-details__summary::before,
   [dir="rtl"] .claro-details[open] > .claro-details__summary::before {
-    margin-top: calc(0.125rem / -2);
+    margin-top: -0.0625rem;
     margin-right: 0.125rem;
     transform: rotate(-45deg); /* for LTR and RTL */
     background: none;
@@ -451,7 +451,7 @@
   margin-bottom: var(--space-m);
   color: var(--input-fg-color--description);
   font-size: var(--font-size-xs); /* ~13px */
-  line-height: calc(17rem / 16); /* 17px */
+  line-height: 1.0625rem; /* 17px */
 }
 
 .claro-details__description.is-disabled {

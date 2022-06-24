@@ -24,8 +24,8 @@
 /* Width of the entire grid maxes out. */
 
 .block-search-narrow {
-  margin-left: calc(-1 * var(--sp));
-  margin-right: calc(-1 * var(--sp));
+  margin-left: calc(var(--sp)*-1);
+  margin-right: calc(var(--sp)*-1);
   margin-bottom: var(--sp2);
   background: var(--color--black)
 }
@@ -61,7 +61,7 @@
 
 .block-search-narrow input[type="search"] {
     width: calc(100% + var(--sp2));
-    height: calc(3 * var(--sp));
+    height: calc(var(--sp)*3);
     padding-top: 0;
     padding-bottom: 0;
     transition: background-size 0.4s;
@@ -120,7 +120,7 @@
   }
 
 .block-search-narrow input[type="search"] {
-      height: calc(4 * var(--sp))
+      height: calc(var(--sp)*4)
   }
     }
 

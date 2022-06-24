@@ -9,6 +9,7 @@ module.exports = ctx => ({
         './themes/claro/css/src/base/variables.css'
       ]
     }),
+    require("postcss-calc"),
     require('autoprefixer')({
       cascade: false
     }),

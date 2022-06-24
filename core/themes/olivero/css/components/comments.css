@@ -241,12 +241,12 @@
 
 [dir="ltr"] .add-comment__picture,[dir="ltr"] 
 .comment__picture {
-    left: calc(-1 * var(--sp5));
+    left: calc(var(--sp5)*-1);
   }
 
 [dir="rtl"] .add-comment__picture,[dir="rtl"] 
 .comment__picture {
-    right: calc(-1 * var(--sp5));
+    right: calc(var(--sp5)*-1);
   }
 
 .add-comment__picture,
@@ -259,11 +259,11 @@
 @media (min-width: 43.75rem) {
 
 [dir="ltr"] .indented .comment__picture {
-    left: calc(-1 * var(--sp4));
+    left: calc(var(--sp4)*-1);
   }
 
 [dir="rtl"] .indented .comment__picture {
-    right: calc(-1 * var(--sp4));
+    right: calc(var(--sp4)*-1);
   }
 
 .indented .comment__picture {
@@ -312,11 +312,11 @@
 }
 
 [dir="ltr"] .indented > .comment:not(:last-of-type):not(.has-children):before {
-    left: calc(-1 * var(--comment-indentation) - var(--sp));
+    left: calc(var(--comment-indentation)*-1 - var(--sp));
 }
 
 [dir="rtl"] .indented > .comment:not(:last-of-type):not(.has-children):before {
-    right: calc(-1 * var(--comment-indentation) - var(--sp));
+    right: calc(var(--comment-indentation)*-1 - var(--sp));
 }
 
 [dir="ltr"] .indented > .comment:not(:last-of-type):not(.has-children):before {
@@ -338,11 +338,11 @@
 @media (min-width: 43.75rem) {
 
 [dir="ltr"] .indented > .comment:not(:last-of-type):not(.has-children):before {
-      left: calc(-1 * var(--comment-indentation--md) + var(--sp));
+      left: calc(var(--comment-indentation--md)*-1 + var(--sp));
   }
 
 [dir="rtl"] .indented > .comment:not(:last-of-type):not(.has-children):before {
-      right: calc(-1 * var(--comment-indentation--md) + var(--sp));
+      right: calc(var(--comment-indentation--md)*-1 + var(--sp));
   }
     }
 

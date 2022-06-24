@@ -39,16 +39,16 @@
     }
 
 [dir="ltr"] .block-system-powered-by-block .drupal-logo {
-    margin-left: calc(var(--sp) / 4)
+    margin-left: calc(var(--sp)/4)
 }
 
 [dir="rtl"] .block-system-powered-by-block .drupal-logo {
-    margin-right: calc(var(--sp) / 4)
+    margin-right: calc(var(--sp)/4)
 }
 
 .block-system-powered-by-block .drupal-logo {
     display: inline-block;
-    margin-top: calc(-1 * var(--sp) / 4);
+    margin-top: calc(var(--sp)*-1/4);
   }
 
 .block-system-powered-by-block svg {

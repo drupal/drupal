@@ -30,15 +30,15 @@
 
 .form-type--boolean .form-boolean {
   position: relative;
-  top: calc(var(--space-l) / 2);
+  top: calc(var(--space-l)/2);
   float: left; /* LTR */
-  margin-left: calc(var(--input--label-spacing) * -1); /* LTR */
+  margin-left: calc(var(--input--label-spacing)*-1); /* LTR */
   transform: translateY(-50%);
 }
 
 [dir="rtl"] .form-type--boolean .form-boolean {
   float: right;
-  margin-right: calc(var(--input--label-spacing) * -1);
+  margin-right: calc(var(--input--label-spacing)*-1);
   margin-left: 0;
 }
 

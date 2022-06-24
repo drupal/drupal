@@ -88,7 +88,7 @@
   --font-family-serif: "Times New Roman", times, serif;
   --line-height: 1.5;
   --line-height-heading: 1.3;
-  --line-height-form-label: calc(18rem / 16); /* 18px */
+  --line-height-form-label: 1.125rem; /* 18px */
   --font-size-base: 1rem; /* 1rem = 16px if font root is 100% ands browser defaults are used. */
   --font-size-h1: 2.027rem; /* ~32px */
   --font-size-h2: 1.802rem; /* ~29px */
@@ -148,7 +148,7 @@
   --input-padding-horizontal: calc(var(--space-m) - var(--input-border-size));
   --input-font-size: var(--font-size-base);
   --input-line-height: var(--space-l);
-  --input-padding-vertical--small: calc(var(--space-xs) - (var(--input-border-size) * 2));
+  --input-padding-vertical--small: calc(var(--space-xs) - var(--input-border-size)*2);
   --input-padding-horizontal--small: calc(var(--space-m) - var(--input-border-size));
   --input-font-size--small: var(--font-size-xs);
   --input-line-height--small: 1.3125rem;
@@ -212,12 +212,12 @@
   --jui-dialog-title-color: var(--color-white);
   --jui-dialog-title-bg-color: var(--color-text);
   --jui-dialog-title-font-size: var(--font-size-h4);
-  --jui-dialog-close-button-size: calc(var(--space-m) * 2);
+  --jui-dialog-close-button-size: calc(var(--space-m)*2);
   --jui-dialog-close-button-border-radius: 50%;
-  --jui-dialog-close-button-reserved-space: calc(var(--space-m) * 4);
-  --jui-dialog-off-canvas-close-button-reserved-space: calc(var(--space-m) * 3);
+  --jui-dialog-close-button-reserved-space: calc(var(--space-m)*4);
+  --jui-dialog-off-canvas-close-button-reserved-space: calc(var(--space-m)*3);
   --jui-dialog-border-radius: 0.25rem;
-  --jui-dialog-box-shadow: 0 0 var(--space-m) calc(var(--space-m) / -4) var(--color-text);
+  --jui-dialog-box-shadow: 0 0 var(--space-m) calc(var(--space-m)/-4) var(--color-text);
   --jui-dialog--focus-outline: 2px dotted transparent;
   --jui-dialog--focus-box-shadow: 0 0 0 0.1875rem var(--color-focus);
   --jui-dialog-z-index: 1260;
@@ -226,7 +226,7 @@
    * Progress bar.
    */
   --progress-bar-border-size: 1px;
-  --progress-bar-small-size: calc(var(--space-xs) - (2 * var(--progress-bar-border-size)));
+  --progress-bar-small-size: calc(var(--space-xs) - var(--progress-bar-border-size)*2);
   --progress-bar-small-size-radius: var(--space-xs);
   --progress-bar-spacing-size: var(--space-xs);
   --progress-bar-transition: width 0.5s ease-out;
@@ -238,7 +238,7 @@
   /**
    * Tabledrag icon size.
    */
-  --tabledrag-handle-icon-size: calc(17rem / 16); /* 17px */
+  --tabledrag-handle-icon-size: 1.0625rem; /* 17px */
   /**
    * Ajax progress.
    */
@@ -257,10 +257,10 @@
   --vertical-tabs-border-size: 1px;
   --vertical-tabs-border: var(--vertical-tabs-border-size) solid var(--vertical-tabs-border-color);
   --vertical-tabs-menu-item-shadow-extraspace: 0.5rem;
-  --vertical-tabs-menu-item--top-margin: calc(var(--vertical-tabs-menu-item-shadow-extraspace) * -2);
-  --vertical-tabs-menu-item--right-margin: calc(var(--vertical-tabs-border-size) * -1);
-  --vertical-tabs-menu-item--bottom-margin: calc(var(--vertical-tabs-menu-item-shadow-extraspace) * -1);
-  --vertical-tabs-menu-item--left-margin: calc(var(--vertical-tabs-menu-item-shadow-extraspace) * -1);
+  --vertical-tabs-menu-item--top-margin: calc(var(--vertical-tabs-menu-item-shadow-extraspace)*-2);
+  --vertical-tabs-menu-item--right-margin: calc(var(--vertical-tabs-border-size)*-1);
+  --vertical-tabs-menu-item--bottom-margin: calc(var(--vertical-tabs-menu-item-shadow-extraspace)*-1);
+  --vertical-tabs-menu-item--left-margin: calc(var(--vertical-tabs-menu-item-shadow-extraspace)*-1);
   --vertical-tabs-menu-separator-color: var(--color-gray-200);
   --vertical-tabs-menu-separator-size: 1px;
   --vertical-tabs-menu-width: 20em;

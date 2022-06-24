@@ -62,7 +62,7 @@
 .tabs__tab {
   display: none;
   margin: 0;
-  margin-bottom: calc(-1 * var(--tabs-border-width))
+  margin-bottom: calc(var(--tabs-border-width)*-1)
 }
 
 .tabs__tab.is-active {
@@ -72,11 +72,11 @@
 @media (min-width: 43.75rem) {
 
 [dir="ltr"] .tabs__tab {
-    margin-left: calc(-1 * var(--tabs-border-width))
+    margin-left: calc(var(--tabs-border-width)*-1)
   }
 
 [dir="rtl"] .tabs__tab {
-    margin-right: calc(-1 * var(--tabs-border-width))
+    margin-right: calc(var(--tabs-border-width)*-1)
   }
 
 .tabs__tab {
@@ -160,11 +160,11 @@ html:not(.js) .tabs__tab {
   }
 
 [dir="ltr"] .tabs__link.is-active:after {
-      left: calc(-1 * var(--tabs-border-width))
+      left: calc(var(--tabs-border-width)*-1)
 }
 
 [dir="rtl"] .tabs__link.is-active:after {
-      right: calc(-1 * var(--tabs-border-width))
+      right: calc(var(--tabs-border-width)*-1)
 }
 
 [dir="ltr"] .tabs__link.is-active:after {
@@ -177,8 +177,8 @@ html:not(.js) .tabs__tab {
 
 .tabs__link.is-active:after {
       position: absolute;
-      top: calc(-1 * var(--tabs-border-width));
-      height: calc(100% + var(--tabs-border-width) * 2);
+      top: calc(var(--tabs-border-width)*-1);
+      height: calc(100% + var(--tabs-border-width)*2);
       content: ""
     }
 
@@ -194,8 +194,8 @@ html:not(.js) .tabs__tab {
 
 .tabs__link.is-active:after {
         top: auto;
-        bottom: calc(-1 * var(--tabs-border-width));
-        width: calc(100% + 2 * var(--tabs-border-width));
+        bottom: calc(var(--tabs-border-width)*-1);
+        width: calc(100% + var(--tabs-border-width)*2);
         height: 0;
         border-top: var(--tabs-active-border-size) solid var(--tabs-highlight-color)
     }
@@ -217,12 +217,12 @@ html:not(.js) .tabs__tab {
 /* Button that opens and closes primary tabs at narrow viewports. */
 
 [dir="ltr"] .tabs__trigger {
-  margin-left: calc(-1 * var(--tabs-border-width));
+  margin-left: calc(var(--tabs-border-width)*-1);
   margin-right: 0
 }
 
 [dir="rtl"] .tabs__trigger {
-  margin-right: calc(-1 * var(--tabs-border-width));
+  margin-right: calc(var(--tabs-border-width)*-1);
   margin-left: 0
 }
 
@@ -269,7 +269,7 @@ html:not(.js) .tabs__trigger {
   display: block;
   width: var(--sp);
   height: 0.625rem;
-  margin-top: calc(-2 * var(--tabs-border-width))
+  margin-top: calc(var(--tabs-border-width)*-2)
 }
 
 [dir="ltr"] .tabs__trigger-icon > span {
