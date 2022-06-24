@@ -2,7 +2,7 @@
 
 namespace Drupal\layout_builder;
 
-@trigger_error(__NAMESPACE__ . '\QuickEditIntegration is deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. Instead, use \Drupal\quickedit\LayoutBuilderIntegration. See https://www.drupal.org/node/3265518', E_USER_DEPRECATED);
+@trigger_error(__NAMESPACE__ . '\QuickEditIntegration is deprecated in drupal:9.4.2 and is removed from drupal:10.0.0. Instead, use \Drupal\quickedit\LayoutBuilderIntegration. See https://www.drupal.org/node/3265518', E_USER_DEPRECATED);
 
 use Drupal\quickedit\LayoutBuilderIntegration;
 
