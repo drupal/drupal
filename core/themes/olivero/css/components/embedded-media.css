@@ -145,12 +145,12 @@ figcaption {
 
 [dir="ltr"] .layout--content-narrow .align-right,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-right: calc(var(--grid-col-width)*-1 + var(--grid-gap)*-1);
+    margin-right: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))));
   }
 
 [dir="rtl"] .layout--content-narrow .align-right,[dir="rtl"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-left: calc(var(--grid-col-width)*-1 + var(--grid-gap)*-1);
+    margin-left: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))));
   }
   }
 
@@ -158,12 +158,12 @@ figcaption {
 
 [dir="ltr"] .layout--content-narrow .align-right,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-right: calc(var(--grid-col-width)*-2 + var(--grid-gap)*-2);
+    margin-right: calc(-2 * ((var(--grid-col-width) + var(--grid-gap))));
   }
 
 [dir="rtl"] .layout--content-narrow .align-right,[dir="rtl"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-left: calc(var(--grid-col-width)*-2 + var(--grid-gap)*-2);
+    margin-left: calc(-2 * ((var(--grid-col-width) + var(--grid-gap))));
   }
   }
 
@@ -171,12 +171,12 @@ figcaption {
 
 [dir="ltr"] .layout--content-narrow .align-right,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-right: calc(var(--grid-col-width)*-3 + var(--grid-gap)*-3);
+    margin-right: calc(-3 * ((var(--grid-col-width) + var(--grid-gap))));
   }
 
 [dir="rtl"] .layout--content-narrow .align-right,[dir="rtl"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-left: calc(var(--grid-col-width)*-3 + var(--grid-gap)*-3);
+    margin-left: calc(-3 * ((var(--grid-col-width) + var(--grid-gap))));
   }
   }
 
@@ -184,12 +184,12 @@ figcaption {
 
 [dir="ltr"] .layout--content-narrow .align-right,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-right: calc(var(--grid-col-width)*-3 + var(--grid-gap)*-3);
+    margin-right: calc(-3 * ((var(--grid-col-width) + var(--grid-gap))));
   }
 
 [dir="rtl"] .layout--content-narrow .align-right,[dir="rtl"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-left: calc(var(--grid-col-width)*-3 + var(--grid-gap)*-3);
+    margin-left: calc(-3 * ((var(--grid-col-width) + var(--grid-gap))));
   }
   }
 
@@ -255,12 +255,12 @@ figcaption {
 
 [dir="ltr"] .layout--content-narrow .align-left,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-left {
-    margin-left: calc(var(--grid-col-width)*-1 + var(--grid-gap)*-1);
+    margin-left: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))));
   }
 
 [dir="rtl"] .layout--content-narrow .align-left,[dir="rtl"] 
 .layout--pass--content-narrow > * .align-left {
-    margin-right: calc(var(--grid-col-width)*-1 + var(--grid-gap)*-1);
+    margin-right: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))));
   }
   }
 

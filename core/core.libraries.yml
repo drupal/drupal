@@ -311,16 +311,6 @@ ckeditor5.translations:
     # are not allowed.
     assets/vendor/ckeditor5/translation.js: {}
 
-css.escape:
-  remote: https://github.com/mathiasbynens/CSS.escape
-  version: "1.5.1"
-  license:
-    name: MIT
-    url: https://raw.githubusercontent.com/mathiasbynens/CSS.escape/v1.5.1/LICENSE-MIT.txt
-    gpl-compatible: true
-  js:
-    assets/vendor/css-escape/css.escape.js: { weight: -20 }
-
 drupal:
   version: VERSION
   js:
@@ -372,7 +362,6 @@ drupal.ajax:
     - core/jquery
     - core/drupal
     - core/drupalSettings
-    - core/drupal.nodelist.foreach
     - core/drupal.progress
     - core/once
     - core/tabbable
@@ -437,17 +426,6 @@ drupal.autocomplete:
     - core/tabbable.jquery.shim
     - core/drupal.jquery.position
 
-
-drupal.array.find:
-  version: VERSION
-  js:
-    misc/polyfills/array.find.js: { weight: -20 }
-
-drupal.array.includes:
-  version: VERSION
-  js:
-    misc/polyfills/array.includes.js: { weight: -20 }
-
 drupal.batch:
   version: VERSION
   js:
@@ -479,11 +457,6 @@ drupal.collapse:
     - core/drupal
     - core/drupal.form
     - core/once
-
-drupal.customevent:
-  version: VERSION
-  js:
-    misc/polyfills/customevent.js: { weight: -20 }
 
 drupal.debounce:
   version: VERSION
@@ -581,18 +554,6 @@ drupal.dropbutton:
     - core/drupalSettings
     - core/once
 
-drupal.element.closest:
-  version: VERSION
-  js:
-    misc/polyfills/element.closest.js: { weight: -20 }
-  dependencies:
-    - core/drupal.element.matches
-
-drupal.element.matches:
-  version: VERSION
-  js:
-    misc/polyfills/element.matches.js: { weight: -20 }
-
 drupal.entity-form:
   version: VERSION
   js:
@@ -629,16 +590,6 @@ drupal.message:
     - core/drupal
     - core/drupal.announce
 
-drupal.nodelist.foreach:
-  version: VERSION
-  js:
-    misc/polyfills/nodelist.foreach.js: { weight: -20 }
-
-drupal.object.assign:
-  version: VERSION
-  js:
-    misc/polyfills/object.assign.js: { weight: -20 }
-
 drupal.progress:
   version: VERSION
   js:
@@ -657,11 +608,6 @@ drupal.states:
     - core/drupal
     - core/drupalSettings
     - core/once
-
-drupal.string.includes:
-  version: VERSION
-  js:
-    misc/polyfills/string.includes.js: { weight: -20 }
 
 drupal.tabbingmanager:
   version: VERSION
@@ -718,7 +664,6 @@ drupal.timezone:
   js:
     misc/timezone.js: {}
   dependencies:
-    - core/drupal.nodelist.foreach
     - core/jquery
     - core/once
     - core/drupal
@@ -745,15 +690,6 @@ drupal.vertical-tabs:
     - core/drupal
     - core/drupalSettings
     - core/drupal.form
-
-es6-promise:
-  version: "4.2.8"
-  license:
-    name: MIT
-    url: https://raw.githubusercontent.com/stefanpenner/es6-promise/v4.2.8/LICENSE
-    gpl-compatible: true
-  js:
-    assets/vendor/es6-promise/es6-promise.auto.min.js: { weight: -20, minified: true }
 
 jquery:
   remote: https://github.com/jquery/jquery
@@ -849,18 +785,6 @@ once:
     gpl-compatible: true
   js:
     assets/vendor/once/once.min.js: { weight: -19, minified: true }
-  dependencies:
-    - core/drupal.element.matches
-
-picturefill:
-  remote: https://github.com/scottjehl/picturefill
-  version: "3.0.3"
-  license:
-    name: MIT
-    url: https://raw.githubusercontent.com/scottjehl/picturefill/3.0.3/LICENSE
-    gpl-compatible: true
-  js:
-    assets/vendor/picturefill/picturefill.min.js: { weight: -10, minified: true }
 
 popperjs:
   version: "2.11.5"
@@ -870,10 +794,6 @@ popperjs:
     gpl-compatible: true
   js:
     assets/vendor/popperjs/popper.min.js: { minified: true }
-  dependencies:
-    - core/drupal.array.find
-    - core/es6-promise
-    - core/drupal.object.assign
 
 sortable:
   remote: https://github.com/SortableJS/Sortable
@@ -894,8 +814,6 @@ tabbable:
     gpl-compatible: true
   js:
     assets/vendor/tabbable/index.umd.min.js: { weight: -1, minified: true }
-  dependencies:
-    - core/css.escape
 
 tabbable.jquery.shim:
   version: VERSION

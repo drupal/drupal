@@ -56,9 +56,6 @@ global-styling:
     js/navigation-utils.js: {}
 
   dependencies:
-    - core/drupal.element.closest
-    - core/drupal.element.matches
-    - core/drupal.nodelist.foreach
     - core/drupal
     - core/once
     - core/tabbable
@@ -220,8 +217,6 @@ messages:
   version: VERSION
   js:
     js/messages.js: {}
-  dependencies:
-    - core/drupal.array.includes
 
 navigation-primary:
   version: VERSION

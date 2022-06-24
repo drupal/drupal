@@ -17,9 +17,6 @@ class ResponsiveImage extends RenderElement {
   public function getInfo() {
     return [
       '#theme' => 'responsive_image',
-      '#attached' => [
-        'library' => ['core/picturefill'],
-      ],
     ];
   }
 

@@ -270,7 +270,6 @@ ctund
 cucurbitaceae
 curle
 curlopt
-customevent
 customly
 customrequest
 cweagans
@@ -292,6 +291,7 @@ dblog
 dbtng
 dburl
 ddev
+dealerdirect
 deckard
 deconstructor
 deduplicated
@@ -486,7 +486,6 @@ fixnull
 flickr
 flipfit
 floatingspace
-fmod
 foaf
 foat
 focusring
@@ -561,7 +560,6 @@ hasher
 hashmarks
 hateoas
 hbox
-heartz
 heke
 heroless
 herpderp
@@ -584,6 +582,7 @@ hostnames
 hreflang
 hreflangs
 hrefs
+htdocs
 htkey
 htmlcorrector
 htmlto
@@ -770,7 +769,7 @@ metapackage
 metapackages
 metatag
 metatags
-meφω
+meΦΩ
 mglaman
 miaus
 middlewares
@@ -966,6 +965,7 @@ permissionless
 persistable
 phpass
 phpcbf
+phpcodesniffer
 phpcs
 phpdocumentor
 phpfile
@@ -976,7 +976,6 @@ phpunit
 phpunit's
 pianura
 pickable
-picturefill
 pingback
 pioggia
 pjpeg
@@ -1198,6 +1197,7 @@ skiptags
 skos
 skynet
 slatkin
+slevomat
 sloopal
 smacss
 smalldatetime
@@ -1414,8 +1414,6 @@ toplevel
 topop
 torder
 totalcount
-totranslate
-touchevent
 touchevents
 tparams
 trackback
@@ -1648,7 +1646,8 @@ zwei
 zwjhek
 zxvf
 zzgroup
+Èxample
+Über
 åwesome
-èxample
 über
-ȅchȏ
+Ȅchȏ

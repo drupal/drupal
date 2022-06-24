@@ -58,11 +58,11 @@ body.drag {
 
 .draggable .tabledrag-changed {
   position: relative;
-  left: calc(var(--space-xs)*-1); /* LTR */
+  left: calc(var(--space-xs) * -1); /* LTR */
 }
 
 [dir="rtl"] .draggable .tabledrag-changed {
-  right: calc(var(--space-xs)*-1); /* LTR */
+  right: calc(var(--space-xs) * -1); /* LTR */
   left: auto;
 }
 
@@ -124,7 +124,7 @@ body.drag {
   display: inline-block;
   width: var(--tabledrag-handle-icon-size);
   height: var(--tabledrag-handle-icon-size);
-  margin-left: calc(var(--space-m)*-1); /* LTR */
+  margin-left: calc(var(--space-m) * -1); /* LTR */
   padding: var(--space-xs) var(--space-m);
   content: "";
   transition: transform 0.1s ease-in-out 0s;
@@ -132,7 +132,7 @@ body.drag {
 }
 
 [dir="rtl"] .tabledrag-handle::after {
-  margin-right: calc(var(--space-m)*-1);
+  margin-right: calc(var(--space-m) * -1);
   margin-left: 0;
 }
 
@@ -174,9 +174,9 @@ body.drag {
 
 .tabledrag-handle:focus::before {
   display: block;
-  width: calc(var(--space-m) + var(--space-xs)*2); /* Same as height. */
-  height: calc(var(--space-m) + var(--space-xs)*2); /* Hande svg height + its vertical padding */
-  margin: 0 calc(var(--space-xs)*-1) calc(var(--space-m)*-1 + var(--space-xs)*2*-1); /* Bottom: handle height as negative value. */
+  width: calc(var(--space-m) + (var(--space-xs) * 2)); /* Same as height. */
+  height: calc(var(--space-m) + (var(--space-xs) * 2)); /* Hande svg height + its vertical padding */
+  margin: 0 calc(var(--space-xs) * -1) calc((var(--space-m) + (var(--space-xs) * 2)) * -1); /* Bottom: handle height as negative value. */
   content: "";
   border-radius: var(--base-border-radius);
   outline: var(--outline-size) dotted transparent;
@@ -317,16 +317,16 @@ body.drag {
 
 .indentation {
   position: relative;
-  left: calc(var(--space-xs)*-0.5); /* LTR */
+  left: calc(var(--space-xs) * -0.5); /* LTR */
   float: left; /* LTR */
-  width: 1.5625rem; /* 25px */
-  height: 1.5625rem; /* 25px */
+  width: calc(25rem / 16); /* 25px */
+  height: calc(25rem / 16); /* 25px */
   background: none !important;
   line-height: 0;
 }
 
 [dir="rtl"] .indentation {
-  right: calc(var(--space-xs)*-0.5);
+  right: calc(var(--space-xs) * -0.5);
   left: auto;
   float: right;
 }
@@ -340,8 +340,8 @@ body.drag {
  */
 
 .tree {
-  width: 1.5625rem; /* 25px */
-  height: 1.5625rem; /* 25px */
+  width: calc(25rem / 16); /* 25px */
+  height: calc(25rem / 16); /* 25px */
 }
 
 .tree__item {

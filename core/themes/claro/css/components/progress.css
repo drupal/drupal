@@ -17,7 +17,7 @@
   --progress-bar-border-color: var(--color-absolutezero);
   --progress-bar-label-font-size: var(--font-size-base);
   --progress-bar-small-label-font-size: var(--font-size-label);
-  --progress-bar-default-size: calc(var(--space-m) - var(--progress-bar-border-size)*2);
+  --progress-bar-default-size: calc(var(--space-m) - (2 * var(--progress-bar-border-size)));
   --progress-bar-default-size-radius: var(--space-m);
 }
 
@@ -53,8 +53,8 @@
   width: var(--progress-bar-default-size);
   min-width: var(--progress-bar-default-size);
   height: var(--progress-bar-default-size);
-  margin-top: calc(var(--progress-bar-border-size)*-1);
-  margin-left: calc(var(--progress-bar-border-size)*-1); /* LTR */
+  margin-top: calc(var(--progress-bar-border-size) * -1);
+  margin-left: calc(var(--progress-bar-border-size) * -1); /* LTR */
   transition: var(--progress-bar-transition);
   border: var(--progress-bar-border-size) var(--progress-bar-border-color) solid;
   border-radius: var(--progress-bar-default-size-radius);
@@ -62,7 +62,7 @@
 }
 
 [dir="rtl"] .progress__bar {
-  margin-right: calc(var(--progress-bar-border-size)*-1);
+  margin-right: calc(var(--progress-bar-border-size) * -1);
   margin-left: 0;
 }
 
