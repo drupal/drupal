@@ -29,18 +29,6 @@ trait ContextAwarePluginTrait {
   protected $context = [];
 
   /**
-   * Tracks whether the context has been initialized from configuration.
-   *
-   * @var bool
-   *
-   * @todo Remove this in Drupal 10.0.x.
-   *   See https://www.drupal.org/project/drupal/issues/3153956.
-   *
-   * @internal
-   */
-  protected $initializedContextConfig = FALSE;
-
-  /**
    * {@inheritdoc}
    */
   public function getContexts() {
@@ -58,28 +46,6 @@ trait ContextAwarePluginTrait {
    *   The context object.
    */
   public function getContext($name) {
-    // @todo Remove this entire block in Drupal 10.0.x.
-    //   See https://www.drupal.org/project/drupal/issues/3153956.
-    if (!$this->initializedContextConfig) {
-      $this->initializedContextConfig = TRUE;
-      if ($this instanceof ConfigurableInterface) {
-        $configuration = $this->getConfiguration();
-      }
-      else {
-        $reflection = new \ReflectionProperty($this, 'configuration');
-        $reflection->setAccessible(TRUE);
-        $configuration = $reflection->getValue($this);
-      }
-
-      if (isset($configuration['context'])) {
-        @trigger_error('Passing context values to plugins via configuration is deprecated in drupal:9.1.0 and will be removed before drupal:10.0.0. Instead, call ::setContextValue() on the plugin itself. See https://www.drupal.org/node/3120980', E_USER_DEPRECATED);
-        foreach ($configuration['context'] as $key => $value) {
-          $context_definition = $this->getContextDefinition($key);
-          $this->context[$key] = new Context($context_definition, $value);
-        }
-      }
-    }
-
     // Check for a valid context value.
     if (!isset($this->context[$name])) {
       $this->context[$name] = new Context($this->getContextDefinition($name));
