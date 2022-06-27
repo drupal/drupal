@@ -71,9 +71,9 @@
         "symfony/filesystem": "v6.1.0",
         "symfony/finder": "v6.1.0",
         "symfony/lock": "v6.1.1",
-        "symfony/phpunit-bridge": "v6.1.0",
+        "symfony/phpunit-bridge": "v6.1.2",
         "theseer/tokenizer": "1.2.1",
         "webflo/drupal-finder": "1.2.2",
-        "webmozart/assert": "1.10.0"
+        "webmozart/assert": "1.11.0"
     }
 }
