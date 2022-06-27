@@ -28,7 +28,7 @@
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan": "^1.4.0 <1.7",
         "symfony/css-selector": "^6.1",
-        "symfony/phpunit-bridge": "^6.1",
+        "symfony/phpunit-bridge": "^6.1.2",
         "symfony/var-dumper": "^6.1",
         "symfony/error-handler": "^6.1",
         "justinrainbow/json-schema": "^5.2",
