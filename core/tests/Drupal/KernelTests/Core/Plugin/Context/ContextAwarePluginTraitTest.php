@@ -76,34 +76,6 @@ class ContextAwarePluginTraitTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::getContextValue
-   * @group legacy
-   */
-  public function testGetContextValueFromConfiguration() {
-    $this->expectDeprecation('Passing context values to plugins via configuration is deprecated in drupal:9.1.0 and will be removed before drupal:10.0.0. Instead, call ::setContextValue() on the plugin itself. See https://www.drupal.org/node/3120980');
-    $configuration = [
-      'context' => [
-        'nato_letter' => 'Alpha',
-      ],
-    ];
-    $this->plugin = new TestContextAwarePlugin($configuration, 'the_sisko', $this->plugin->getPluginDefinition());
-    // Assert that the context value passed in the plugin configuration is
-    // available.
-    $this->assertSame('Alpha', $this->plugin->getContextValue('nato_letter'));
-  }
-
-  /**
-   * @covers ::getContextValue
-   * @group legacy
-   */
-  public function testConfigurableGetContextValueFromConfiguration() {
-    $this->expectDeprecation('Passing context values to plugins via configuration is deprecated in drupal:9.1.0 and will be removed before drupal:10.0.0. Instead, call ::setContextValue() on the plugin itself. See https://www.drupal.org/node/3120980');
-    // Assert that the context value passed in the plugin configuration is
-    // available.
-    $this->assertSame('Alpha', $this->configurablePlugin->getContextValue('nato_letter'));
-  }
-
-  /**
    * @covers ::setContextValue
    */
   public function testSetContextValue() {
