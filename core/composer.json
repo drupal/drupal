@@ -227,9 +227,6 @@
         }
     },
     "scripts": {
-        "pre-autoload-dump": "Drupal\\Core\\Composer\\Composer::preAutoloadDump",
-        "post-autoload-dump": [
-          "Drupal\\Core\\Composer\\Composer::ensureHtaccess"
-        ]
+        "pre-autoload-dump": "Drupal\\Core\\Composer\\Composer::preAutoloadDump"
     }
 }

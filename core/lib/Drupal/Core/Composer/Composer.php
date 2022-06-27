@@ -154,8 +154,15 @@ class Composer {
    *
    * @param \Composer\Script\Event $event
    *   The event.
+   *
+   * @deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. Any
+   * "scripts" section mentioning this in composer.json can be removed and
+   * replaced with the drupal/core-vendor-hardening Composer plugin, as needed.
+   *
+   * @see https://www.drupal.org/node/3260624
    */
   public static function ensureHtaccess(Event $event) {
+    trigger_error('Calling ' . __METHOD__ . ' from composer.json is deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. Any "scripts" section mentioning this in composer.json can be removed and replaced with the drupal/core-vendor-hardening Composer plugin, as needed. See https://www.drupal.org/node/3260624', E_USER_DEPRECATED);
 
     // The current working directory for composer scripts is where you run
     // composer from.
@@ -174,8 +181,16 @@ class Composer {
    * @param \Composer\Installer\PackageEvent $event
    *   A PackageEvent object to get the configured composer vendor directories
    *   from.
+   *
+   * @deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. Any
+   * "scripts" section mentioning this in composer.json can be removed and
+   * replaced with the drupal/core-vendor-hardening Composer plugin, as needed.
+   *
+   * @see https://www.drupal.org/node/3260624
    */
   public static function vendorTestCodeCleanup(PackageEvent $event) {
+    trigger_error('Calling ' . __METHOD__ . ' from composer.json is deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. Any "scripts" section mentioning this in composer.json can be removed and replaced with the drupal/core-vendor-hardening Composer plugin, as needed. See https://www.drupal.org/node/3260624', E_USER_DEPRECATED);
+
     $vendor_dir = $event->getComposer()->getConfig()->get('vendor-dir');
     $io = $event->getIO();
     $op = $event->getOperation();
@@ -231,6 +246,8 @@ class Composer {
    *
    * @return string|null
    *   The string key, or NULL if none was found.
+   *
+   * @internal
    */
   protected static function findPackageKey($package_name) {
     $package_key = NULL;
@@ -254,8 +271,15 @@ class Composer {
 
   /**
    * Removes Composer's timeout so that scripts can run indefinitely.
+   *
+   * @deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3260624
    */
   public static function removeTimeout() {
+    trigger_error('Calling ' . __METHOD__ . ' from composer.json is deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3260624', E_USER_DEPRECATED);
+
     ProcessExecutor::setTimeout(0);
   }
 
@@ -267,6 +291,8 @@ class Composer {
    *
    * @return bool
    *   TRUE on success or FALSE on failure.
+   *
+   * @internal
    */
   protected static function deleteRecursive($path) {
     if (is_file($path) || is_link($path)) {
@@ -291,6 +317,8 @@ class Composer {
    *
    * @param \Composer\Script\Event $event
    *   The event.
+   *
+   * @internal
    */
   public static function upgradePHPUnit(Event $event) {
     $repository = $event->getComposer()->getRepositoryManager()->getLocalRepository();
@@ -324,6 +352,8 @@ class Composer {
    *
    * @return bool
    *   TRUE if the PHPUnit needs to be upgraded, FALSE if not.
+   *
+   * @internal
    */
   public static function upgradePHPUnitCheck($phpunit_version) {
     return !(version_compare(PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION, '7.4') >= 0 && version_compare($phpunit_version, '9.0') < 0);
