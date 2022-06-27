@@ -77,7 +77,7 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
     {
       pack: 'backbone',
       library: 'internal.backbone',
-      files: ['backbone.js', 'backbone-min.js', 'backbone-min.map'],
+      files: ['backbone.js', 'backbone-min.js', 'backbone-min.js.map'],
     },
     {
       pack: 'css.escape',
