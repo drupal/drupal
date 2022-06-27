@@ -2492,8 +2492,6 @@ class ViewExecutable {
     // state during unserialization.
     $this->serializationData = [
       'storage' => $this->storage->id(),
-      'views_data' => $this->viewsData->_serviceId,
-      'route_provider' => $this->routeProvider->_serviceId,
       'current_display' => $this->current_display,
       'args' => $this->args,
       'current_page' => $this->current_page,
@@ -2520,8 +2518,8 @@ class ViewExecutable {
 
       // Attach all necessary services.
       $this->user = \Drupal::currentUser();
-      $this->viewsData = \Drupal::service($this->serializationData['views_data']);
-      $this->routeProvider = \Drupal::service($this->serializationData['route_provider']);
+      $this->viewsData = \Drupal::service('views.views_data');
+      $this->routeProvider = \Drupal::service('router.route_provider');
 
       // Restore the state of this executable.
       if ($request = \Drupal::request()) {
