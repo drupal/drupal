@@ -111,7 +111,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     if (strpos($key, '.') === FALSE && strpos($table, 'db_temporary_') === FALSE) {
       $key = 'public.' . $key;
     }
-    else {
+    elseif($this->getTempNamespaceName()) {
       $key = $this->getTempNamespaceName() . '.' . $key;
     }
 
