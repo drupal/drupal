@@ -190,7 +190,9 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
         }
       }
 
-      $status = $this->handleRouteRequirements($pathinfo, $name, $route);
+      $attributes = $this->getAttributes($route, $name, array_replace($matches, $hostMatches));
+
+      $status = $this->handleRouteRequirements($pathinfo, $name, $route, $attributes);
 
       if (self::ROUTE_MATCH === $status[0]) {
         return $status[1];
@@ -201,7 +203,7 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
         continue;
       }
 
-      return $this->getAttributes($route, $name, array_replace($matches, $hostMatches));
+      return $attributes;
     }
   }
 
