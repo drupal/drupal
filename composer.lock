@@ -441,7 +441,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "f55bdf6d63ce1252ba155322d79022e6f01495d1"
+                "reference": "7a14ac685e89051f02233b6122279d70570eab1a"
             },
             "require": {
                 "asm89/stack-cors": "^2.0.2",
@@ -665,9 +665,6 @@
             "scripts": {
                 "pre-autoload-dump": [
                     "Drupal\\Core\\Composer\\Composer::preAutoloadDump"
-                ],
-                "post-autoload-dump": [
-                    "Drupal\\Core\\Composer\\Composer::ensureHtaccess"
                 ]
             },
             "license": [
