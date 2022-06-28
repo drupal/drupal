@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\media_library\FunctionalJavascript;
+namespace Drupal\Tests\ckeditor\FunctionalJavascript;
 
 use Drupal\Component\Utility\Html;
 use Drupal\editor\Entity\Editor;
@@ -14,10 +14,10 @@ use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
- * @coversDefaultClass \Drupal\media_library\Plugin\CKEditorPlugin\DrupalMediaLibrary
- * @group media_library
+ * @coversDefaultClass \Drupal\ckeditor\Plugin\CKEditorPlugin\DrupalMediaLibrary
+ * @group ckeditor
  */
-class CKEditorIntegrationTest extends WebDriverTestBase {
+class MediaLibraryTest extends WebDriverTestBase {
 
   use CKEditorTestTrait;
   use CKEditorAdminSortTrait;

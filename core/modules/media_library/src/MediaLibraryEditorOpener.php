@@ -11,10 +11,8 @@ use Drupal\editor\Ajax\EditorDialogSave;
 /**
  * The media library opener for text editors.
  *
- * @see \Drupal\media_library\Plugin\CKEditorPlugin\DrupalMediaLibrary
- *
  * @internal
- *   This service is an internal part of Media Library's CKEditor integration.
+ *   This is an internal part of Media Library's text editor integration.
  */
 class MediaLibraryEditorOpener implements MediaLibraryOpenerInterface {
 
