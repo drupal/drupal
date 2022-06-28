@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\media_library\Plugin\CKEditorPlugin;
+namespace Drupal\ckeditor\Plugin\CKEditorPlugin;
 
 use Drupal\ckeditor\CKEditorPluginBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -18,6 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @CKEditorPlugin(
  *   id = "drupalmedialibrary",
  *   label = @Translation("Embed media from the Media Library"),
+ *   provider = "media_library",
  * )
  *
  * @internal
@@ -101,7 +102,7 @@ class DrupalMediaLibrary extends CKEditorPluginBase implements ContainerFactoryP
    * {@inheritdoc}
    */
   public function getFile() {
-    return $this->moduleExtensionList->getPath('media_library') . '/js/plugins/drupalmedialibrary/plugin.js';
+    return $this->moduleExtensionList->getPath('ckeditor') . '/js/plugins/drupalmedialibrary/plugin.js';
   }
 
   /**
@@ -162,7 +163,7 @@ class DrupalMediaLibrary extends CKEditorPluginBase implements ContainerFactoryP
     return [
       'DrupalMediaLibrary' => [
         'label' => $this->t('Insert from Media Library'),
-        'image' => $this->moduleExtensionList->getPath('media_library') . '/js/plugins/drupalmedialibrary/icons/drupalmedialibrary.png',
+        'image' => $this->moduleExtensionList->getPath('ckeditor') . '/js/plugins/drupalmedialibrary/icons/drupalmedialibrary.png',
       ],
     ];
   }

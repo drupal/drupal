@@ -26,8 +26,6 @@ use Drupal\media_library\Form\OEmbedForm;
 use Drupal\media_library\MediaLibraryState;
 use Drupal\views\Plugin\views\cache\CachePluginBase;
 use Drupal\views\ViewExecutable;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Component\Serialization\Json;
 
 /**
  * Implements hook_help().
@@ -473,74 +471,4 @@ function _media_library_configure_view_display(MediaTypeInterface $type) {
     ],
   ]);
   return (bool) $display->save();
-}
-
-/**
- * Implements hook_form_FORM_ID_alter().
- */
-function media_library_form_filter_format_edit_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
-  // Add an additional validate callback so we can ensure the media_embed filter
-  // is enabled when the DrupalMediaLibrary button is enabled.
-  $form['#validate'][] = 'media_library_filter_format_edit_form_validate';
-}
-
-/**
- * Implements hook_form_FORM_ID_alter().
- */
-function media_library_form_filter_format_add_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
-  // Add an additional validate callback so we can ensure the media_embed filter
-  // is enabled when the DrupalMediaLibrary button is enabled.
-  $form['#validate'][] = 'media_library_filter_format_edit_form_validate';
-}
-
-/**
- * Validate callback to ensure the DrupalMediaLibrary button can work correctly.
- */
-function media_library_filter_format_edit_form_validate($form, FormStateInterface $form_state) {
-  if ($form_state->getTriggeringElement()['#name'] !== 'op') {
-    return;
-  }
-
-  // The "DrupalMediaLibrary" button is for the CKEditor text editor.
-  if ($form_state->getValue(['editor', 'editor']) !== 'ckeditor') {
-    return;
-  }
-
-  $button_group_path = [
-    'editor',
-    'settings',
-    'toolbar',
-    'button_groups',
-  ];
-
-  if ($button_groups = $form_state->getValue($button_group_path)) {
-    $buttons = [];
-    $button_groups = Json::decode($button_groups);
-
-    foreach ($button_groups as $button_row) {
-      foreach ($button_row as $button_group) {
-        $buttons = array_merge($buttons, array_values($button_group['items']));
-      }
-    }
-
-    $get_filter_label = function ($filter_plugin_id) use ($form) {
-      return (string) $form['filters']['order'][$filter_plugin_id]['filter']['#markup'];
-    };
-
-    if (in_array('DrupalMediaLibrary', $buttons, TRUE)) {
-      $media_embed_enabled = $form_state->getValue([
-        'filters',
-        'media_embed',
-        'status',
-      ]);
-
-      if (!$media_embed_enabled) {
-        $error_message = new TranslatableMarkup('The %media-embed-filter-label filter must be enabled to use the %drupal-media-library-button button.', [
-          '%media-embed-filter-label' => $get_filter_label('media_embed'),
-          '%drupal-media-library-button' => new TranslatableMarkup('Insert from Media Library'),
-        ]);
-        $form_state->setErrorByName('filters', $error_message);
-      }
-    }
-  }
 }
