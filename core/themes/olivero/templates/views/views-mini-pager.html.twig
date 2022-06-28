@@ -38,7 +38,7 @@
         {% apply spaceless %}
           <li class="pager__item pager__item--control pager__item--next">
             <a href="{{ items.next.href }}" class="pager__link" title="{{ 'Go to next page'|t }}" rel="next"{{ items.next.attributes|without('href', 'title', 'rel') }}>
-              <span class="visually-hidden">{{ 'Previous page'|t }}</span>
+              <span class="visually-hidden">{{ 'Next page'|t }}</span>
               {% include "@olivero/../images/pager-previous.svg" %}
             </a>
           </li>
