@@ -56,6 +56,9 @@ class ComposerDeprecationTest extends UnitTestCase {
     $package = $this->prophesize(Package::class);
     $operation->getTargetPackage()->willReturn($package->reveal());
 
+    $package->getName()->willReturn('foo');
+    $package->getPrettyName()->willReturn('foo');
+
     $io = $this->prophesize(IOInterface::class);
     $event->getIO()->willReturn($io->reveal());
 
