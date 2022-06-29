@@ -1,0 +1,5 @@
+name: 'Decorated Service Test'
+type: module
+description: 'Support module for decorated service test.'
+package: Testing
+version: VERSION
