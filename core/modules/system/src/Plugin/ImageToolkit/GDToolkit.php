@@ -30,7 +30,7 @@ class GDToolkit extends ImageToolkitBase {
   /**
    * A GD image resource.
    *
-   * @var resource|\GdImage|null
+   * @var \GdImage|null
    */
   protected $resource = NULL;
 
@@ -97,19 +97,6 @@ class GDToolkit extends ImageToolkitBase {
   }
 
   /**
-   * Destructs a GDToolkit object.
-   *
-   * Frees memory associated with a GD image resource.
-   *
-   * @todo Remove the method for PHP 8.0+ https://www.drupal.org/node/3173031
-   */
-  public function __destruct() {
-    if (is_resource($this->resource)) {
-      imagedestroy($this->resource);
-    }
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -128,20 +115,15 @@ class GDToolkit extends ImageToolkitBase {
   /**
    * Sets the GD image resource.
    *
-   * @param resource|\GdImage $resource
+   * @param \GdImage $resource
    *   The GD image resource.
    *
    * @return $this
    *   An instance of the current toolkit object.
    */
   public function setResource($resource) {
-    if (!(is_object($resource) && $resource instanceof \GdImage)) {
-      // Since PHP 8.0 resource should be \GdImage, for previous versions it
-      // should be resource.
-      // @TODO clean-up for PHP 8.0+ https://www.drupal.org/node/3173031
-      if (!is_resource($resource) || get_resource_type($resource) != 'gd') {
-        throw new \InvalidArgumentException('Invalid resource argument');
-      }
+    if (!$resource instanceof \GdImage) {
+      throw new \InvalidArgumentException('Invalid resource argument');
     }
     $this->preLoadInfo = NULL;
     $this->resource = $resource;
@@ -151,12 +133,11 @@ class GDToolkit extends ImageToolkitBase {
   /**
    * Retrieves the GD image resource.
    *
-   * @return resource|\GdImage|null
+   * @return \GdImage|null
    *   The GD image resource, or NULL if not available.
    */
   public function getResource() {
-    // @TODO clean-up for PHP 8.0+ https://www.drupal.org/node/3173031
-    if (!(is_resource($this->resource) || (is_object($this->resource) && $this->resource instanceof \GdImage))) {
+    if (!$this->resource) {
       $this->load();
     }
     return $this->resource;
