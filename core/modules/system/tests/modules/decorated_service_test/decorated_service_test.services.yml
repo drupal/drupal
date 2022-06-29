@@ -1,0 +1,17 @@
+services:
+  test_service:
+    class: 'Drupal\decorated_service_test\TestService'
+  test_service_decorator:
+    class: 'Drupal\decorated_service_test\TestServiceDecorator'
+    public: false
+    decorates: test_service
+  test_service2:
+    class: 'Drupal\decorated_service_test\TestService'
+  test_service2_decorator:
+    class: 'Drupal\decorated_service_test\TestServiceDecorator'
+    public: false
+    decorates: test_service2
+  test_service2_decorator2:
+    class: 'Drupal\decorated_service_test\TestServiceDecorator'
+    public: false
+    decorates: test_service2
