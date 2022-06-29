@@ -189,10 +189,6 @@ class Registry implements DestructableInterface {
     $this->themeHandler = $theme_handler;
     $this->themeInitialization = $theme_initialization;
     $this->runtimeCache = $runtime_cache;
-    if (!$module_list) {
-      @trigger_error('Calling Registry::__construct() without the $module_list argument is deprecated in drupal:9.3.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/2940438', E_USER_DEPRECATED);
-      $module_list = \Drupal::service('extension.list.module');
-    }
     $this->moduleList = $module_list;
     $this->themeName = $theme_name;
   }
