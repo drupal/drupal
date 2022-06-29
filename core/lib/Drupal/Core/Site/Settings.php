@@ -190,7 +190,7 @@ final class Settings {
         // the database. Therefore, allow the connection info to specify an
         // autoload directory for the driver.
         if (isset($info['autoload'])) {
-          $class_loader->addPsr4($info['namespace'] . '\\', $info['autoload']);
+          $class_loader->addPsr4($info['namespace'] . '\\', $app_root . '/' . $info['autoload']);
         }
       }
     }
