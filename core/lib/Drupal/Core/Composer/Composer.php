@@ -130,13 +130,6 @@ class Composer {
         $vendor_dir . '/symfony/http-kernel/TerminableInterface.php',
       ]);
     }
-    if ($repository->findPackage('symfony/http-kernel', $constraint)) {
-      $autoload['classmap'] = array_merge($autoload['classmap'], [
-        $vendor_dir . '/symfony/http-kernel/HttpKernel.php',
-        $vendor_dir . '/symfony/http-kernel/HttpKernelInterface.php',
-        $vendor_dir . '/symfony/http-kernel/TerminableInterface.php',
-      ]);
-    }
     if ($repository->findPackage('symfony/dependency-injection', $constraint)) {
       $autoload['classmap'] = array_merge($autoload['classmap'], [
         $vendor_dir . '/symfony/dependency-injection/ContainerAwareInterface.php',
