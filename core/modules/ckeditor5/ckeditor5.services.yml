@@ -12,7 +12,6 @@ services:
     arguments:
       - '@plugin.manager.ckeditor5.plugin'
       - '@plugin.manager.ckeditor4to5upgrade.plugin'
-      - '@?plugin.manager.ckeditor.plugin'
   ckeditor5.stylesheets.message:
     class: Drupal\ckeditor5\CKEditor5StylesheetsMessage
     arguments:
