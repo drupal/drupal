@@ -437,39 +437,6 @@ class ToolkitGdTest extends KernelTestBase {
   }
 
   /**
-   * Tests that GD resources are freed from memory.
-   *
-   * @todo Remove the method for PHP 8.0+ https://www.drupal.org/node/3179058
-   */
-  public function testResourceDestruction() {
-    if (PHP_VERSION_ID >= 80000) {
-      $this->markTestSkipped('In PHP8 resources are no longer used. \GdImage objects are used instead. These will be garbage collected like the regular objects they are.');
-    }
-    // Test that an Image object going out of scope releases its GD resource.
-    $image = $this->imageFactory->get('core/tests/fixtures/files/image-test.png');
-    $res = $image->getToolkit()->getResource();
-    $this->assertIsResource($res);
-    $image = NULL;
-    // @todo In https://www.drupal.org/node/3133236 convert this to
-    //   $this->assertIsNotResource($res).
-    $this->assertFalse(is_resource($res), 'Image resource was destroyed after losing scope.');
-
-    // Test that 'create_new' operation does not leave orphaned GD resources.
-    $image = $this->imageFactory->get('core/tests/fixtures/files/image-test.png');
-    $old_res = $image->getToolkit()->getResource();
-    // Check if resource has been created successfully.
-    $this->assertIsResource($old_res);
-    $image->createNew(20, 20);
-    $new_res = $image->getToolkit()->getResource();
-    // Check if the original resource has been destroyed.
-    // @todo In https://www.drupal.org/node/3133236 convert this to
-    //   $this->assertIsNotResource($old_res).
-    $this->assertFalse(is_resource($old_res));
-    // Check if a new resource has been created successfully.
-    $this->assertIsResource($new_res);
-  }
-
-  /**
    * Tests for GIF images with transparency.
    */
   public function testGifTransparentImages() {
