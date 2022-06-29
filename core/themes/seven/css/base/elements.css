@@ -30,9 +30,6 @@ summary,
   text-transform: uppercase;
   font-weight: bold;
 }
-.simpletest-results-form summary {
-  text-transform: none;
-}
 
 /**
  * Reusable heading classes are included to help modules change the styling of
