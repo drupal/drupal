@@ -321,32 +321,6 @@ class ModuleHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Tests deprecation of the ::getImplementations method.
-   *
-   * @covers ::getImplementations
-   * @covers ::getImplementationInfo
-   * @covers ::buildImplementationInfo
-   *
-   * @group legacy
-   */
-  public function testGetImplementations() {
-    $this->expectDeprecation('ModuleHandlerInterface::getImplementations() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Instead you should use ModuleHandlerInterface::invokeAllWith() for hook invocations, or you should use ModuleHandlerInterface::hasImplementations() to determine if hooks implementations exist. See https://www.drupal.org/node/3000490');
-    $this->assertEquals(['module_handler_test'], $this->getModuleHandler()->getImplementations('hook'));
-  }
-
-  /**
-   * Tests deprecation of the ::implementsHook method.
-   *
-   * @covers ::implementsHook
-   *
-   * @group legacy
-   */
-  public function testImplementsHook() {
-    $this->expectDeprecation('ModuleHandlerInterface::implementsHook() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Instead you should use ModuleHandlerInterface::hasImplementations()  with the $modules argument. See https://www.drupal.org/node/3000490');
-    $this->assertTrue($this->getModuleHandler()->implementsHook('module_handler_test', 'hook'));
-  }
-
-  /**
    * Tests hasImplementations.
    *
    * @covers ::hasImplementations

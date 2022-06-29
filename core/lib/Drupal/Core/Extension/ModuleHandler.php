@@ -324,15 +324,6 @@ class ModuleHandler implements ModuleHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getImplementations($hook) {
-    @trigger_error('ModuleHandlerInterface::getImplementations() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Instead you should use ModuleHandlerInterface::invokeAllWith() for hook invocations, or you should use ModuleHandlerInterface::hasImplementations() to determine if hooks implementations exist. See https://www.drupal.org/node/3000490', E_USER_DEPRECATED);
-    $implementations = $this->getImplementationInfo($hook);
-    return array_keys($implementations);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function writeCache() {
     if ($this->cacheNeedsWriting) {
       $this->cacheBackend->set('module_implements', $this->implementations);
@@ -386,14 +377,6 @@ class ModuleHandler implements ModuleHandlerInterface {
     }
 
     return !empty(array_intersect((array) $modules, array_keys($implementations)));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function implementsHook($module, $hook) {
-    @trigger_error('ModuleHandlerInterface::implementsHook() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Instead you should use ModuleHandlerInterface::hasImplementations()  with the $modules argument. See https://www.drupal.org/node/3000490', E_USER_DEPRECATED);
-    return $this->hasImplementations($hook, $module);
   }
 
   /**
