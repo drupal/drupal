@@ -353,7 +353,7 @@ class SettingsTest extends UnitTestCase {
     if (!empty($expected_autoload)) {
       $class_loader->expects($this->once())
         ->method('addPsr4')
-        ->with($expected_namespace . '\\', $expected_autoload);
+        ->with($expected_namespace . '\\', vfsStream::url('root') . '/' . $expected_autoload);
     }
     else {
       $class_loader->expects($this->never())
