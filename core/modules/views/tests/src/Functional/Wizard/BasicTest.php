@@ -155,9 +155,6 @@ class BasicTest extends WizardTestBase {
     $this->assertSession()->pageTextContains($node1->label());
     $this->assertSession()->pageTextNotContains($node2->label());
 
-    // Make sure the listing page doesn't show disabled default views.
-    $this->assertSession()->pageTextNotContains('tracker');
-
     // Create a view with only a REST export.
     $view4 = [];
     $view4['label'] = $this->randomMachineName(16);
