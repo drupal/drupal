@@ -44,18 +44,12 @@ class InlineBlockEntityOperations implements ContainerInjectionInterface {
   /**
    * Constructs a new EntityOperations object.
    *
-   * @todo This constructor has one optional parameter, $section_storage_manager
-   *    and one totally unused $database parameter. Deprecate the current
-   *    constructor signature in https://www.drupal.org/node/3031492 after the
-   *    general policy for constructor backwards compatibility is determined in
-   *    https://www.drupal.org/node/3030640.
-   *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager service.
    * @param \Drupal\layout_builder\InlineBlockUsageInterface $usage
    *   Inline block usage tracking service.
    * @param \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface $section_storage_manager
-   *   (optional) The section storage manager.
+   *   The section storage manager.
    */
   public function __construct(EntityTypeManagerInterface $entityTypeManager, InlineBlockUsageInterface $usage, SectionStorageManagerInterface $section_storage_manager) {
     $this->entityTypeManager = $entityTypeManager;
