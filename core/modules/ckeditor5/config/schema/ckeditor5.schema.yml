@@ -127,7 +127,7 @@ ckeditor5.plugin.ckeditor5_list:
 # Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media
 ckeditor5.plugin.media_media:
   type: mapping
-  label: List
+  label: Media
   mapping:
     allow_view_mode_override:
       type: boolean
