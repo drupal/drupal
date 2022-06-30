@@ -841,11 +841,6 @@ parameters:
 			path: modules/comment/tests/src/Functional/Views/DefaultViewRecentCommentsTest.php
 
 		-
-			message: "#^Access to constant DEFAULT_COLLECTION on an unknown class Drupal\\\\config_override_test\\\\StorageInterface\\.$#"
-			count: 1
-			path: modules/config/tests/config_override_test/src/ConfigOverrider.php
-
-		-
 			message: "#^Method Drupal\\\\config_test\\\\ConfigTestForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/config/tests/config_test/src/ConfigTestForm.php
