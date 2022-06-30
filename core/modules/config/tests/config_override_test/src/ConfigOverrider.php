@@ -4,6 +4,7 @@ namespace Drupal\config_override_test;
 
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryOverrideInterface;
+use Drupal\Core\Config\StorageInterface;
 
 /**
  * Tests module overrides for configuration.
