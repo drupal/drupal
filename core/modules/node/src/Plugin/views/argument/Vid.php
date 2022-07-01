@@ -75,6 +75,7 @@ class Vid extends NumericArgument {
       ->accessCheck(FALSE)
       ->allRevisions()
       ->groupBy('title')
+      ->condition('vid', $this->value, 'IN')
       ->execute();
 
     foreach ($results as $result) {
