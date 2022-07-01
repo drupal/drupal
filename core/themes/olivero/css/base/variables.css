@@ -55,11 +55,6 @@
 
 :root {
 
-  /* Drupal administrative toolbar heights and width. */
-  --toolbar-height: 2.4375rem;
-  --toolbar-tray-height: 2.5rem;
-  --toolbar-tray-vertical-width: 14.9375rem;
-
   /**
    * Grid helpers.
    *

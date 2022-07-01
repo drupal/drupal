@@ -121,11 +121,9 @@ body:not(.is-always-mobile-nav) {
       visibility: hidden;
       overflow: auto;
       width: 250px;
-      /**
-       * Ensure that long level-2 menus will never overflow viewport (focused
-       * elements should always be in viewport per accessibility guidelines).
-       */
-      max-height: calc(100vh - var(--site-header-height-wide) - var(--sp));
+      /* Ensure that long level-2 menus will never overflow viewport (focused
+       * elements should always be in viewport per accessibility guidelines). */
+      max-height: calc(100vh - var(--site-header-height-wide) - var(--drupal-displace-offset-top, 0px) - var(--drupal-displace-offset-bottom, 0px) - var(--sp));
       margin-block-start: 0;
       margin-inline-start: 0;
       padding-block: calc(3 * var(--sp));
@@ -167,8 +165,12 @@ body:not(.is-always-mobile-nav) {
         padding-inline-end: 0;
 
         &:after {
-          transform-origin: left;
+          transform-origin: left; /* LTR */
           border-top-width: 3px;
+
+          &:dir(rtl) {
+            transform-origin: right;
+          }
         }
       }
     }
@@ -204,38 +206,7 @@ body:not(.is-always-mobile-nav) {
      * little extra room when the toolbar is fixed (and is shorter).
      */
     & .is-fixed .primary-nav__menu--level-2 {
-      max-height: calc(100vh - var(--site-header-height-wide) - var(--sp) + var(--sp4));
-    }
-  }
-}
-
-/*
- * Take into account Drupal's admin toolbars when ensuring that long level-2
- * menus will never overflow viewport.
- */
-@media (--nav) {
-  body:not(.is-always-mobile-nav) {
-    /* Toolbar is fixed, and tray is vertical or toolbar is horizontal and tray is closed. */
-    &.toolbar-vertical,
-    &.toolbar-horizontal.toolbar-fixed {
-      & .primary-nav__menu--level-2 {
-        max-height: calc(100vh - var(--site-header-height-wide) - var(--sp) - var(--toolbar-height));
-      }
-
-      & .is-fixed .primary-nav__menu--level-2 {
-        max-height: calc(100vh - var(--site-header-height-wide) - var(--sp) - var(--toolbar-height) + var(--sp4));
-      }
-    }
-
-    /* Toolbar is horizontal fixed, and tray is open. */
-    &.toolbar-horizontal.toolbar-fixed.toolbar-tray-open {
-      & .primary-nav__menu--level-2 {
-        max-height: calc(100vh - var(--site-header-height-wide) - var(--sp) - var(--toolbar-height) - var(--toolbar-tray-height));
-      }
-
-      & .is-fixed .primary-nav__menu--level-2 {
-        max-height: calc(100vh - var(--site-header-height-wide) - var(--sp) - var(--toolbar-height) - var(--toolbar-tray-height) + var(--sp4));
-      }
+      max-height: calc(100vh - var(--site-header-height-wide) - var(--drupal-displace-offset-top, 0px) - var(--drupal-displace-offset-bottom, 0px) - var(--sp) + var(--sp4));
     }
   }
 }
@@ -249,18 +220,6 @@ html.js body:not(.is-always-mobile-nav) {
     & .primary-nav__menu--level-2,
     & .primary-nav__menu-🥕 {
       transition: visibility 0.2s, transform 0.2s, opacity 0.2s;
-    }
-  }
-}
-
-[dir="rtl"] {
-  & body:not(.is-always-mobile-nav) {
-    @media (--nav) {
-      & .primary-nav__menu-link--level-2 {
-        & .primary-nav__menu-link-inner:after {
-          transform-origin: right;
-        }
-      }
     }
   }
 }
