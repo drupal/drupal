@@ -159,7 +159,7 @@
 /* Description */
 .olivero-details__description {
   margin-block-end: var(--sp1);
-  color: var(--color--gray-20);
+  color: var(--color-text-neutral-medium);
   font-size: var(--font-size-xs);
   line-height: var(--line-height-s);
 }

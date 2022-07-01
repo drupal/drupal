@@ -43,7 +43,7 @@
   display: inline-flex;
   align-items: center;
   text-decoration: none;
-  color: var(--color--primary-40);
+  color: var(--color-text-primary-medium);
   font-family: var(--font-serif);
   font-size: 18px;
   font-weight: 600;

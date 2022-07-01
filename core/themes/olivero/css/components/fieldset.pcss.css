@@ -83,7 +83,7 @@ _:-ms-fullscreen,
 }
 
 .fieldset__label.is-disabled {
-  color: var(--color--gray-45);
+  color: var(--color-text-neutral-soft);
 }
 
 .fieldset__description {

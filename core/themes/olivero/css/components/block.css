@@ -27,7 +27,7 @@
   margin-top: 0;
   margin-bottom: var(--sp);
   letter-spacing: 0.02em;
-  color: var(--color--gray-45);
+  color: var(--color-text-neutral-soft);
   font-size: var(--font-size-s);
   line-height: var(--sp);
 }

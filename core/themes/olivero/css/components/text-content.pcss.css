@@ -7,7 +7,7 @@
 
 .text-content,
 .cke_editable {
-  color: var(--color--gray-20);
+  color: var(--color-text-neutral-medium);
   font-family: var(--font-serif);
   line-height: var(--sp1-5);
 
@@ -21,8 +21,8 @@
   */
 
   & a:where(:not(.button)) {
-    color: var(--color--primary-40);
-    text-decoration-color: var(--color--primary-40);
+    color: var(--color-text-primary-medium);
+    text-decoration-color: currentColor;
     text-decoration-thickness: 2px;
     overflow-wrap: break-word;
 
@@ -70,7 +70,7 @@
     padding-block: var(--sp);
     padding-inline-start: var(--sp);
     padding-inline-end: var(--sp);
-    color: var(--color--gray-45);
+    color: var(--color-text-neutral-soft);
   }
 
   & blockquote {

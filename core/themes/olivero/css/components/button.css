@@ -51,8 +51,8 @@
   cursor: pointer;
   text-align: center;
   text-decoration: none;
-  color: var(--color--primary-40);
-  border: solid 2px var(--color--primary-40);
+  color: var(--color-text-primary-medium);
+  border: solid 2px currentColor;
   border-radius: var(--border-radius);
   background-color: var(--color--white);
   font-family: var(--font-sans);
@@ -66,8 +66,8 @@
 .button:hover,
   .button:focus {
     text-decoration: none;
-    color: var(--color--primary-30);
-    border: solid 2px var(--color--primary-30);
+    color: var(--color-text-primary-loud);
+    border: solid 2px currentColor;
     background: none;
     font-weight: 700;
   }
@@ -78,8 +78,8 @@
   }
 
 .button:active {
-    color: var(--color--primary-40);
-    border-color: var(--color--primary-40);
+    color: var(--color-text-primary-medium);
+    border-color: currentColor;
   }
 
 .button:disabled,

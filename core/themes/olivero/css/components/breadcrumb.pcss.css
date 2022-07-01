@@ -102,7 +102,7 @@
 
 .breadcrumb__link {
   text-decoration: none;
-  color: var(--color--primary-40);
+  color: var(--color-text-primary-medium);
 
   &:hover,
   &:focus {

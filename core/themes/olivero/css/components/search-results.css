@@ -72,7 +72,7 @@
 .search-result__title {
   margin-top: 0;
   margin-bottom: 0;
-  color: var(--color--gray-5);
+  color: var(--color-text-neutral-loud);
   font-size: 1.25rem;
   line-height: var(--line-height-base)
 }
@@ -89,7 +89,7 @@
   }
 
 .search-result__title a:hover {
-      color: var(--color--primary-40);
+      color: var(--color-text-primary-medium);
     }
 
 @media (min-width: 62.5rem) {
@@ -120,13 +120,13 @@
   display: flex;
   align-items: center;
   margin-bottom: var(--sp1);
-  color: var(--color--gray-45);
+  color: var(--color-text-neutral-soft);
   font-size: 0.875rem;
   line-height: var(--sp)
 }
 
 .search-result__meta a {
-    color: var(--color--primary-40);
+    color: var(--color-text-primary-medium);
     font-weight: bold;
   }
 

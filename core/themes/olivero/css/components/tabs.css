@@ -33,7 +33,7 @@
   --tabs-padding-inline: var(--sp1-5);
   --tabs-active-border-size: 0.375rem;
   --tabs-highlight-color: var(--color--primary-50); /* Minimum 3:1 contrast ratio against --tabs-background-color and --tabs-background-color-hover. */
-  --tabs-text-color: var(--color--gray-45); /* Minimum 4.5:1 contrast ratio against --tabs-background-color and --tabs-background-color-hover. */
+  --tabs-text-color: var(--color-text-neutral-soft); /* Minimum 4.5:1 contrast ratio against --tabs-background-color and --tabs-background-color-hover. */
   --tabs-text-color-active: var(--color--gray-5); /* Minimum 4.5:1 contrast ratio against --tabs-background-color and --tabs-background-color-hover. */
   --tabs-letter-spacing: 1px;
   --tabs-font-size: var(--font-size-s);

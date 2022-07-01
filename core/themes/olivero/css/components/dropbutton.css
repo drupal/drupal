@@ -151,7 +151,7 @@
     margin-bottom: -2px; /* Account for borders. */
     padding: 0 0.5625rem;
     text-decoration: none;
-    color: var(--color--gray-20);
+    color: var(--color-text-neutral-medium);
     font-weight: 600
   }
 

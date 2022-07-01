@@ -12,7 +12,7 @@
   margin-block-start: var(--sp2);
   margin-block-end: var(--sp2);
   border-spacing: 0;
-  color: var(--color--gray-20);
+  color: var(--color-text-neutral-medium);
   border: 0;
   border-collapse: collapse;
   font-family: var(--font-sans);
@@ -22,7 +22,7 @@
   & caption {
     margin-block-end: var(--sp1);
     text-align: start;
-    color: var(--color--gray-20);
+    color: var(--color-text-neutral-medium);
     font-family: var(--font-serif);
     font-size: 14px;
     font-style: italic;
@@ -51,7 +51,7 @@
     margin-inline-end: 0;
     text-align: start;
     letter-spacing: 0.02em;
-    color: var(--color--gray-5);
+    color: var(--color-text-neutral-loud);
     border-block-end: 2px solid var(--color--primary-50);
     font-family: var(--font-sans);
     font-size: 14px;
