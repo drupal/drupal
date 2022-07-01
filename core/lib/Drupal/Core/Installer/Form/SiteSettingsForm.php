@@ -219,7 +219,7 @@ class SiteSettingsForm extends FormBase {
   public static function getDatabaseErrorsTemplate(array $errors) {
     return [
       '#type' => 'inline_template',
-      '#template' => '{% trans %}Resolve all issues below to continue the installation. For help configuring your database server, see the <a href="https://www.drupal.org/docs/8/install">installation handbook</a>, or contact your hosting provider.{% endtrans %}{{ errors }}',
+      '#template' => '{% trans %}Resolve all issues below to continue the installation. For help configuring your database server, see the <a href="https://www.drupal.org/docs/installing-drupal">installation handbook</a>, or contact your hosting provider.{% endtrans %}{{ errors }}',
       '#context' => [
         'errors' => [
           '#theme' => 'item_list',
