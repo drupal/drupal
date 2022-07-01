@@ -67,5 +67,10 @@
       "libraries/{$name}": ["type:drupal-library"],
       "drush/Commands/contrib/{$name}": ["type:drupal-drush"]
     }
-  }
+  },
+   "config": {
+      "allow-plugins": {
+        "drupal/core-composer-scaffold": true
+      }
+   }
 }
