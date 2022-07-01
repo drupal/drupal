@@ -81,7 +81,7 @@
 
 .menu--sidebar .menu__link--link {
     text-decoration: none;
-    color: var(--color--gray-5);
+    color: var(--color-text-neutral-loud);
     font-weight: 600
   }
 

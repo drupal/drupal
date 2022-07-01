@@ -123,7 +123,7 @@
   padding-top: var(--sp0-5);
   padding-bottom: var(--sp0-5);
   text-decoration: none;
-  color: var(--color--primary-30);
+  color: var(--color-text-primary-loud);
   background-color: var(--color--gray-95)
 }
 

@@ -39,7 +39,7 @@
 .field--tags__label {
   margin: 0;
   letter-spacing: 0.02em;
-  color: var(--color--gray-45);
+  color: var(--color-text-neutral-soft);
   font-size: var(--font-size-s);
   font-weight: 600;
   line-height: 1.6
@@ -153,7 +153,7 @@
   align-items: center;
   text-decoration: none;
   letter-spacing: 0.02em;
-  color: var(--color--primary-40);
+  color: var(--color-text-primary-medium);
   font-size: var(--font-size-base);
   font-weight: 700;
   line-height: 1.5;

@@ -197,7 +197,7 @@
   width: var(--sp3);
   height: var(--sp6);
   cursor: pointer;
-  color: var(--color--gray-5); /* Affects SVG search icon. */
+  color: var(--color-text-neutral-loud); /* Affects SVG search icon. */
   border: 0;
   background: transparent;
   -webkit-appearance: none;

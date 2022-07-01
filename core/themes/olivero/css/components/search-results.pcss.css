@@ -21,7 +21,7 @@
   margin-block: 0;
   margin-inline-start: 0;
   margin-inline-end: 0;
-  color: var(--color--gray-5);
+  color: var(--color-text-neutral-loud);
   font-size: 20px;
   line-height: var(--line-height-base);
 
@@ -36,7 +36,7 @@
     background-size: 0 3px;
 
     &:hover {
-      color: var(--color--primary-40);
+      color: var(--color-text-primary-medium);
     }
   }
 
@@ -63,12 +63,12 @@
   display: flex;
   align-items: center;
   margin-block-end: var(--sp1);
-  color: var(--color--gray-45);
+  color: var(--color-text-neutral-soft);
   font-size: 14px;
   line-height: var(--sp);
 
   & a {
-    color: var(--color--primary-40);
+    color: var(--color-text-primary-medium);
     font-weight: bold;
   }
 }

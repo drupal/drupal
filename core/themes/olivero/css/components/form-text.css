@@ -42,7 +42,7 @@ textarea {
   max-width: 100%;
   min-height: var(--sp3);
   padding: 0 var(--sp);
-  color: var(--color--gray-5);
+  color: var(--color-text-neutral-loud);
   border: 1px solid var(--color--gray-60);
   border-radius: var(--border-radius);
   background-color: var(--color--white);

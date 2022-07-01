@@ -15,7 +15,7 @@ select {
   padding-block: 0;
   padding-inline-start: var(--sp);
   padding-inline-end: var(--sp3);
-  color: var(--color--gray-5);
+  color: var(--color-text-neutral-loud);
   border: 1px solid var(--color--gray-60);
   border-radius: var(--border-radius);
   background-color: var(--color--white);

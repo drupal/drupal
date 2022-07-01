@@ -25,7 +25,7 @@
   width: var(--sp2-5);
   height: var(--sp2-5);
   cursor: default;
-  color: var(--color--gray-45);
+  color: var(--color-text-neutral-soft);
   background-color: var(--color--white);
 
   @media (--sm) {
@@ -58,7 +58,7 @@
   width: 100%;
   height: 100%;
   text-decoration: none;
-  color: var(--color--gray-45);
+  color: var(--color-text-neutral-soft);
 }
 
 .pager__link:hover {
@@ -66,8 +66,8 @@
 }
 
 .pager__link:focus {
-  color: var(--color--primary-40);
-  outline: solid 2px var(--color--primary-40);
+  color: var(--color-text-primary-medium);
+  outline: solid 2px currentColor;
   outline-offset: -2px;
 }
 

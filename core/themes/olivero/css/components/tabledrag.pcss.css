@@ -18,7 +18,7 @@
 }
 
 .drag-previous a {
-  color: var(--color--gray-20); /* Ensure proper contrast. */
+  color: var(--color-text-neutral-medium); /* Ensure proper contrast. */
 }
 
 a.tabledrag-handle,

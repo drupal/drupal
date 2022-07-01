@@ -25,7 +25,7 @@
 
 .text-content,
 .cke_editable {
-  color: var(--color--gray-20);
+  color: var(--color-text-neutral-medium);
   font-family: var(--font-serif);
   line-height: var(--sp1-5)
 
@@ -40,9 +40,9 @@
 }
 
 .text-content a:where(:not(.button)), .cke_editable a:where(:not(.button)) {
-    color: var(--color--primary-40);
-    -webkit-text-decoration-color: var(--color--primary-40);
-    text-decoration-color: var(--color--primary-40);
+    color: var(--color-text-primary-medium);
+    -webkit-text-decoration-color: currentColor;
+    text-decoration-color: currentColor;
     text-decoration-thickness: 2px;
     overflow-wrap: break-word
   }
@@ -112,7 +112,7 @@
     overflow: auto;
     padding-top: var(--sp);
     padding-bottom: var(--sp);
-    color: var(--color--gray-45);
+    color: var(--color-text-neutral-soft);
   }
 
 [dir="ltr"] .text-content blockquote,[dir="ltr"]  .cke_editable blockquote {

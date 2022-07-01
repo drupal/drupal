@@ -30,7 +30,7 @@
   margin-top: var(--sp2);
   margin-bottom: var(--sp2);
   border-spacing: 0;
-  color: var(--color--gray-20);
+  color: var(--color-text-neutral-medium);
   border: 0;
   border-collapse: collapse;
   font-family: var(--font-sans);
@@ -48,7 +48,7 @@
 
 .forum table caption, .text-content table caption, .views-table caption, .draggable-table caption {
     margin-bottom: var(--sp1);
-    color: var(--color--gray-20);
+    color: var(--color-text-neutral-medium);
     font-family: var(--font-serif);
     font-size: 0.875rem;
     font-style: italic;
@@ -144,7 +144,7 @@
     margin-top: 0;
     margin-bottom: 0;
     letter-spacing: 0.02em;
-    color: var(--color--gray-5);
+    color: var(--color-text-neutral-loud);
     border-bottom: 2px solid var(--color--primary-50);
     font-family: var(--font-sans);
     font-size: 0.875rem;

@@ -51,7 +51,7 @@
 .primary-nav__menu-link {
   flex-grow: 1;
   text-decoration: none;
-  color: var(--color--gray-5);
+  color: var(--color-text-neutral-loud);
   font-size: 1.75rem;
   font-weight: bold;
   line-height: var(--sp2)
@@ -85,7 +85,7 @@
 .primary-nav__menu-link--nolink {
   padding-top: var(--sp0-5);
   padding-bottom: var(--sp0-5);
-  color: var(--color--gray-45);
+  color: var(--color-text-neutral-soft);
   font-weight: normal;
 }
 
