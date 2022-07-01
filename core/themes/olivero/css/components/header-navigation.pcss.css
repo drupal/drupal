@@ -12,45 +12,40 @@
   inset-inline-start: 100%;
   visibility: hidden;
   overflow: auto;
-  /**
-   * Ensure that header nav not use additional space and force system branding
-   * block text to unnecessarily wrap.
-   */
-  flex-basis: 0;
-  flex-grow: 1; /* Necessary for IE11. */
+  /* Ensure that header nav not use additional space and force system branding
+   * block text to unnecessarily wrap. */
+  flex-basis: max-content;
   width: 100%;
   max-width: var(--mobile-nav-width);
   height: 100%;
   padding-block: 0 var(--sp);
   padding-inline-start: var(--sp);
   padding-inline-end: var(--sp);
-  /**
-   * Create room for the "close" button. We cannot use margin because the
+  /* Create room for the "close" button. We cannot use margin because the
    * mobile navigation needs to slide beneath the button, but we also cannot
    * use padding because that would enable the button to scroll out of the
-   * viewport on short screens.
-   */
-  border-block-start: solid var(--color--white) var(--sp3);
+   * viewport on short screens. */
+  border-block-start: solid var(--color--white) calc(var(--sp3) + var(--drupal-displace-offset-top, 0px));
   background-color: var(--color--white);
   box-shadow: 0 0 72px rgba(0, 0, 0, 0.1);
 
   &.is-active {
     visibility: visible;
     transform: translateX(-100%); /* LTR */
-  }
 
-  @supports (flex-basis: max-content) {
-    flex-basis: max-content;
+    &:dir(rtl) {
+      transform: translateX(100%);
+    }
   }
 
   @media (--sm) {
-    border-top-width: var(--sp5);
+    border-top-width: calc(var(--sp5) + var(--drupal-displace-offset-top, 0px));
   }
 
   @media (--md) {
     padding-block-end: var(--sp3);
     padding-inline-start: var(--sp3);
-    border-top-width: var(--sp7);
+    border-top-width: calc(var(--sp7) + var(--drupal-displace-offset-top, 0px));
   }
 
   @media (--lg) {
@@ -71,30 +66,6 @@
  */
 html.js .header-nav {
   transition: visibility 0.2s, transform 0.2s;
-}
-
-/* Toolbar is fixed, and tray is vertical. */
-body.toolbar-vertical .header-nav {
-  border-top-width: calc(var(--toolbar-height) + var(--sp3));
-
-  @media (--sm) {
-    border-top-width: calc(var(--toolbar-height) + var(--sp5));
-  }
-}
-
-/* Toolbar is fixed, and tray is vertical or toolbar is horizontal and tray is closed. */
-body.toolbar-vertical .header-nav,
-body.toolbar-horizontal.toolbar-fixed .header-nav {
-  @media (--md) {
-    border-top-width: calc(var(--toolbar-height) + var(--sp7));
-  }
-}
-
-/* Toolbar is horizontal fixed, and tray is open. */
-body.toolbar-horizontal.toolbar-fixed.toolbar-tray-open .header-nav {
-  @media (--md) {
-    border-top-width: calc(var(--toolbar-height) + var(--toolbar-tray-height) + var(--sp7));
-  }
 }
 
 body:not(.is-always-mobile-nav) .header-nav {
@@ -120,28 +91,13 @@ body:not(.is-always-mobile-nav) .header-nav {
 }
 
 body.is-always-mobile-nav {
-  /* Toolbar is fixed, and tray is vertical or toolbar is horizontal and tray is closed. */
-  &.toolbar-vertical .header-nav,
-  &.toolbar-horizontal.toolbar-fixed .header-nav {
-    @media (--nav) {
-      border-top-width: calc(var(--toolbar-height) + var(--sp11));
-    }
-  }
-
-  /* Toolbar is horizontal fixed, and tray is open. */
-  &.toolbar-horizontal.toolbar-fixed.toolbar-tray-open .header-nav {
-    @media (--nav) {
-      border-top-width: calc(var(--toolbar-height) + var(--toolbar-tray-height) + var(--sp11));
-    }
-  }
-
   & .header-nav {
     @media (--nav) {
       overflow: auto;
       max-width: calc((7 * (var(--grid-col-width) + var(--grid-gap))));
       padding-inline-end: var(--sp);
       transition: transform 0.2s, visibility 0.2s;
-      border-top-width: var(--sp11);
+      border-top-width: calc(var(--drupal-displace-offset-top, 0px) + var(--sp11));
     }
 
     @media (--grid-max) {
@@ -149,10 +105,6 @@ body.is-always-mobile-nav {
       padding-inline-end: calc(100vw - (var(--max-width) + var(--content-left) - var(--sp)));
     }
   }
-}
-
-[dir="rtl"] .header-nav.is-active {
-  transform: translateX(100%);
 }
 
 .header-nav-overlay {
