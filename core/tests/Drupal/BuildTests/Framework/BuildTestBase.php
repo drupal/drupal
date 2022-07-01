@@ -266,6 +266,16 @@ abstract class BuildTestBase extends TestCase {
   }
 
   /**
+   * Assert text is not present in the error output of the most recent command.
+   *
+   * @param string $expected
+   *   Text we expect not to find in the error output of the command.
+   */
+  public function assertErrorOutputNotContains($expected) {
+    $this->assertStringNotContainsString($expected, $this->commandProcess->getErrorOutput());
+  }
+
+  /**
    * Assert that text is present in the output of the most recent command.
    *
    * @param string $expected
