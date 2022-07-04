@@ -1,4 +1,3 @@
-const chalk = require('chalk');
 const log = require('./log');
 const fs = require('fs');
 const postcss = require('postcss');
@@ -81,7 +80,7 @@ module.exports = (filePath, callback) => {
       callback(result.css);
     })
     .catch(error => {
-      log(chalk.red(error));
+      log(error);
       process.exitCode = 1;
     });
   });
