@@ -20,7 +20,7 @@ use Drupal\views\Plugin\views\PluginBase;
 function views_views_query_substitutions(ViewExecutable $view) {
   $substitutions = [
     '***CURRENT_VERSION***' => \Drupal::VERSION,
-    '***CURRENT_TIME***' => REQUEST_TIME,
+    '***CURRENT_TIME***' => \Drupal::time()->getRequestTime(),
   ] + PluginBase::queryLanguageSubstitutions();
 
   return $substitutions;

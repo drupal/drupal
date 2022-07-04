@@ -956,7 +956,7 @@ function template_preprocess_views_view_opml(&$variables) {
   }
   $variables['title'] = $title;
   $variables['items'] = $items;
-  $variables['updated'] = gmdate(DATE_RFC2822, REQUEST_TIME);
+  $variables['updated'] = gmdate(DATE_RFC2822, \Drupal::time()->getRequestTime());
 
   // During live preview we don't want to output the header since the contents
   // of the feed are being displayed inside a normal HTML page.

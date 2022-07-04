@@ -33,6 +33,7 @@ function _update_cron_notify() {
     $notify_list = $update_config->get('notification.emails');
     if (!empty($notify_list)) {
       $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
+      $request_time = \Drupal::time()->getRequestTime();
       foreach ($notify_list as $target) {
         if ($target_user = user_load_by_mail($target)) {
           $target_langcode = $target_user->getPreferredLangcode();
@@ -44,7 +45,7 @@ function _update_cron_notify() {
         // Track when the last mail was successfully sent to avoid sending
         // too many emails.
         if ($message['result']) {
-          \Drupal::state()->set('update.last_email_notification', REQUEST_TIME);
+          \Drupal::state()->set('update.last_email_notification', $request_time);
         }
       }
     }

@@ -177,7 +177,8 @@ function update_cron() {
   $frequency = $update_config->get('check.interval_days');
   $interval = 60 * 60 * 24 * $frequency;
   $last_check = \Drupal::state()->get('update.last_check', 0);
-  if ((REQUEST_TIME - $last_check) > $interval) {
+  $request_time = \Drupal::time()->getRequestTime();
+  if (($request_time - $last_check) > $interval) {
     // If the configured update interval has elapsed, we want to invalidate
     // the data for all projects, attempt to re-fetch, and trigger any
     // configured notifications about the new status.
@@ -190,7 +191,7 @@ function update_cron() {
     update_get_available(TRUE);
   }
   $last_email_notice = \Drupal::state()->get('update.last_email_notification', 0);
-  if ((REQUEST_TIME - $last_email_notice) > $interval) {
+  if (($request_time - $last_email_notice) > $interval) {
     // If configured time between notifications elapsed, send email about
     // updates possibly available.
     \Drupal::moduleHandler()->loadInclude('update', 'inc', 'update.fetch');
@@ -702,8 +703,8 @@ function update_delete_file_if_stale($path) {
   if (file_exists($path)) {
     $filectime = filectime($path);
     $max_age = \Drupal::config('system.file')->get('temporary_maximum_age');
-
-    if (REQUEST_TIME - $filectime > $max_age || (preg_match('/.*-dev\.(tar\.gz|zip)/i', $path) && REQUEST_TIME - $filectime > 300)) {
+    $request_time = \Drupal::time()->getRequestTime();
+    if ($request_time - $filectime > $max_age || (preg_match('/.*-dev\.(tar\.gz|zip)/i', $path) && $request_time - $filectime > 300)) {
       try {
         \Drupal::service('file_system')->deleteRecursive($path);
         return TRUE;

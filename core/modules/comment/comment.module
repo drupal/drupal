@@ -35,9 +35,9 @@ use Drupal\user\UserInterface;
  * Comments changed after this time may be marked new, updated, or read,
  * depending on their state for the current user. Defaults to 30 days ago.
  *
- * @todo Remove when https://www.drupal.org/node/1029708 lands.
+ * @todo Remove when https://www.drupal.org/node/2006632 lands.
  */
-define('COMMENT_NEW_LIMIT', REQUEST_TIME - 30 * 24 * 60 * 60);
+define('COMMENT_NEW_LIMIT', ((int) $_SERVER['REQUEST_TIME']) - 30 * 24 * 60 * 60);
 
 /**
  * Implements hook_help().
