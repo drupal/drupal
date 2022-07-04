@@ -1,4 +1,3 @@
-const chalk = require('chalk');
 const log = require('./log');
 const babel = require('@babel/core');
 
@@ -20,7 +19,7 @@ module.exports = (filePath, callback) => {
     },
     (err, result) => {
       if (err) {
-        log(chalk.red(err));
+        log(err);
         process.exitCode = 1;
       }
       else {
