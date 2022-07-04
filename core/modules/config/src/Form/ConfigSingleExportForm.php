@@ -136,7 +136,7 @@ class ConfigSingleExportForm extends FormBase {
    */
   public function updateConfigurationType($form, FormStateInterface $form_state) {
     $form['config_name']['#options'] = $this->findConfiguration($form_state->getValue('config_type'));
-    unset($form['export']['#value']);
+    $form['export']['#value'] = NULL;
     return $form;
   }
 
