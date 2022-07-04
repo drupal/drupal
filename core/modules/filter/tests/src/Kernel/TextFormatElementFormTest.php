@@ -132,13 +132,4 @@ class TextFormatElementFormTest extends KernelTestBase implements FormInterface 
     $this->assertNoPattern('|<h4[^>]*></h4>|', 'No empty H4 element found.');
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function getUrl() {
-    // \Drupal\simpletest\AssertContentTrait needs this for ::assertFieldByName
-    // to work.
-    return 'Internal rendering';
-  }
-
 }

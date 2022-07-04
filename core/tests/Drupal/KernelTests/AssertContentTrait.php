@@ -137,16 +137,6 @@ trait AssertContentTrait {
   }
 
   /**
-   * Get the current URL from the cURL handler.
-   *
-   * @return string
-   *   The current URL.
-   */
-  protected function getUrl() {
-    return 'no-url';
-  }
-
-  /**
    * Builds an XPath query.
    *
    * Builds an XPath query by replacing placeholders in the query by the value
