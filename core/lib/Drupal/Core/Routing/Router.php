@@ -311,11 +311,15 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
   }
 
   /**
-   * {@inheritdoc}
+   * This method is intentionally not implemented. Use
+   * Drupal\Core\Url instead.
+   *
+   * @see https://www.drupal.org/node/2820197
+   *
+   * @throws \BadMethodCallException
    */
   public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): string {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:8.3.0 and will throw an exception from drupal:10.0.0. Use the \Drupal\Core\Url object instead. See https://www.drupal.org/node/2820197', E_USER_DEPRECATED);
-    return $this->urlGenerator->generate($name, $parameters, $referenceType);
+    throw new \BadMethodCallException(__METHOD__ . '() is not supported. Use the \Drupal\Core\Url object instead. See https://www.drupal.org/node/2820197');
   }
 
 }
