@@ -14,13 +14,13 @@ use Prophecy\Argument;
  * @group Routing
  * @group legacy
  */
-class RouterLegacyTest extends UnitTestCase {
+class RouterUnsupportedTest extends UnitTestCase {
 
   /**
    * @covers ::generate
    */
-  public function testGenerateDeprecated() {
-    $this->expectDeprecation('Drupal\Core\Routing\Router::generate() is deprecated in drupal:8.3.0 and will throw an exception from drupal:10.0.0. Use the \Drupal\Core\Url object instead. See https://www.drupal.org/node/2820197');
+  public function testGenerateUnsupported() {
+    $this->expectException(\BadMethodCallException::class);
     $route_provider = $this->prophesize(RouteProviderInterface::class);
     $current_path_stack = $this->prophesize(CurrentPathStack::class);
     $url_generator = $this->prophesize(UrlGeneratorInterface::class);
@@ -30,7 +30,7 @@ class RouterLegacyTest extends UnitTestCase {
       ->generate($route_name, Argument::any(), Argument::any())
       ->willReturn($route_path);
     $router = new Router($route_provider->reveal(), $current_path_stack->reveal(), $url_generator->reveal());
-    $this->assertEquals($route_path, $router->generate($route_name));
+    $router->generate($route_name);
   }
 
 }
