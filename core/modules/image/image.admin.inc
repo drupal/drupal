@@ -27,7 +27,7 @@ function template_preprocess_image_style_preview(&$variables) {
   $variables['style_name'] = $style->label();
 
   // Cache bypass token.
-  $variables['cache_bypass'] = REQUEST_TIME;
+  $variables['cache_bypass'] = \Drupal::time()->getRequestTime();
 
   // Sample image info.
   $sample_width = 160;

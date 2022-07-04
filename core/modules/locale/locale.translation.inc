@@ -331,7 +331,8 @@ function locale_cron_fill_queue() {
   $config = \Drupal::config('locale.settings');
 
   // Determine which project+language should be updated.
-  $last = REQUEST_TIME - $config->get('translation.update_interval_days') * 3600 * 24;
+  $request_time = \Drupal::time()->getRequestTime();
+  $last = $request_time - $config->get('translation.update_interval_days') * 3600 * 24;
   $projects = \Drupal::service('locale.project')->getAll();
   $projects = array_filter($projects, function ($project) {
     return $project['status'] == 1;
@@ -348,7 +349,7 @@ function locale_cron_fill_queue() {
     // Update the last_checked timestamp of the project+language that will
     // be checked for updates.
     $connection->update('locale_file')
-      ->fields(['last_checked' => REQUEST_TIME])
+      ->fields(['last_checked' => $request_time])
       ->condition('project', $file->project)
       ->condition('langcode', $file->langcode)
       ->execute();

@@ -275,6 +275,7 @@ function locale_translate_batch_import($file, array $options, &$context) {
  */
 function locale_translate_batch_import_save($context) {
   if (isset($context['results']['files'])) {
+    $request_time = \Drupal::time()->getRequestTime();
     foreach ($context['results']['files'] as $file) {
       // Update the file history if both project and version are known. This
       // table is used by the automated translation update function which tracks
@@ -282,7 +283,7 @@ function locale_translate_batch_import_save($context) {
       // translation files are not tracked and are therefore not stored in this
       // table.
       if ($file->project && $file->version) {
-        $file->last_checked = REQUEST_TIME;
+        $file->last_checked = $request_time;
         locale_translation_update_file_history($file);
       }
     }

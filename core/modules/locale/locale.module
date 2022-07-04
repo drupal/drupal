@@ -912,6 +912,7 @@ function locale_translation_status_save($project, $langcode, $type, $data) {
 
   // Merge the new status data with the existing status.
   if (isset($status[$project][$langcode])) {
+    $request_time = \Drupal::time()->getRequestTime();
     switch ($type) {
       case LOCALE_TRANSLATION_REMOTE:
       case LOCALE_TRANSLATION_LOCAL:
@@ -923,14 +924,14 @@ function locale_translation_status_save($project, $langcode, $type, $data) {
         if (isset($data->timestamp) && $data->timestamp) {
           if ($data->timestamp > $status[$project][$langcode]->timestamp) {
             $status[$project][$langcode]->timestamp = $data->timestamp;
-            $status[$project][$langcode]->last_checked = REQUEST_TIME;
+            $status[$project][$langcode]->last_checked = $request_time;
             $status[$project][$langcode]->type = $type;
           }
         }
         break;
 
       case LOCALE_TRANSLATION_CURRENT:
-        $data->last_checked = REQUEST_TIME;
+        $data->last_checked = $request_time;
         $status[$project][$langcode]->timestamp = $data->timestamp;
         $status[$project][$langcode]->last_checked = $data->last_checked;
         $status[$project][$langcode]->type = $type;
@@ -939,7 +940,7 @@ function locale_translation_status_save($project, $langcode, $type, $data) {
     }
 
     \Drupal::keyValue('locale.translation_status')->set($project, $status[$project]);
-    \Drupal::state()->set('locale.translation_last_checked', REQUEST_TIME);
+    \Drupal::state()->set('locale.translation_last_checked', $request_time);
   }
 }
 

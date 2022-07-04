@@ -446,7 +446,7 @@ function file_cron() {
     $fids = Drupal::entityQuery('file')
       ->accessCheck(FALSE)
       ->condition('status', FileInterface::STATUS_PERMANENT, '<>')
-      ->condition('changed', REQUEST_TIME - $age, '<')
+      ->condition('changed', \Drupal::time()->getRequestTime() - $age, '<')
       ->range(0, 100)
       ->execute();
     $files = $file_storage->loadMultiple($fids);
