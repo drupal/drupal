@@ -20,8 +20,10 @@ use Drupal\user\UserInterface;
  *
  * Entities changed within this time may be marked as new, updated, or read,
  * depending on their state for the current user. Defaults to 30 days ago.
+ *
+ * @todo Remove when https://www.drupal.org/node/2006632 lands.
  */
-define('HISTORY_READ_LIMIT', REQUEST_TIME - 30 * 24 * 60 * 60);
+define('HISTORY_READ_LIMIT', ((int) $_SERVER['REQUEST_TIME']) - 30 * 24 * 60 * 60);
 
 /**
  * Implements hook_help().
@@ -109,16 +111,17 @@ function history_write($nid, $account = NULL) {
   }
 
   if ($account->isAuthenticated()) {
+    $request_time = \Drupal::time()->getRequestTime();
     \Drupal::database()->merge('history')
       ->keys([
         'uid' => $account->id(),
         'nid' => $nid,
       ])
-      ->fields(['timestamp' => REQUEST_TIME])
+      ->fields(['timestamp' => $request_time])
       ->execute();
     // Update static cache.
     $history = &drupal_static('history_read_multiple', []);
-    $history[$nid] = REQUEST_TIME;
+    $history[$nid] = $request_time;
   }
 }
 

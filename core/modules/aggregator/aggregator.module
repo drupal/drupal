@@ -163,12 +163,13 @@ function aggregator_entity_extra_field_info() {
  */
 function aggregator_cron() {
   $queue = \Drupal::queue('aggregator_feeds');
+  $request_time = \Drupal::time()->getRequestTime();
 
   $ids = \Drupal::entityTypeManager()->getStorage('aggregator_feed')->getFeedIdsToRefresh();
   foreach (Feed::loadMultiple($ids) as $feed) {
     if ($queue->createItem($feed)) {
       // Add timestamp to avoid queueing item more than once.
-      $feed->setQueuedTime(REQUEST_TIME);
+      $feed->setQueuedTime($request_time);
       $feed->save();
     }
   }
@@ -176,7 +177,7 @@ function aggregator_cron() {
   // Delete queued timestamp after 6 hours assuming the update has failed.
   $ids = \Drupal::entityQuery('aggregator_feed')
     ->accessCheck(FALSE)
-    ->condition('queued', REQUEST_TIME - (3600 * 6), '<')
+    ->condition('queued', $request_time - (3600 * 6), '<')
     ->execute();
 
   if ($ids) {

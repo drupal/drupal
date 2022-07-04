@@ -459,7 +459,7 @@ function user_login_finalize(UserInterface $account) {
   \Drupal::logger('user')->notice('Session opened for %name.', ['%name' => $account->getAccountName()]);
   // Update the user table timestamp noting user has logged in.
   // This is also used to invalidate one-time login links.
-  $account->setLastLoginTime(REQUEST_TIME);
+  $account->setLastLoginTime(\Drupal::time()->getRequestTime());
   \Drupal::entityTypeManager()
     ->getStorage('user')
     ->updateLastLoginTimestamp($account);
@@ -521,7 +521,7 @@ function user_user_logout(AccountInterface $account) {
  *   they can change their password.
  */
 function user_pass_reset_url($account, $options = []) {
-  $timestamp = REQUEST_TIME;
+  $timestamp = \Drupal::time()->getRequestTime();
   $langcode = $options['langcode'] ?? $account->getPreferredLangcode();
   return Url::fromRoute('user.reset',
     [
@@ -554,7 +554,7 @@ function user_pass_reset_url($account, $options = []) {
  * @see \Drupal\user\Controller\UserController::confirmCancel()
  */
 function user_cancel_url(UserInterface $account, $options = []) {
-  $timestamp = REQUEST_TIME;
+  $timestamp = \Drupal::time()->getRequestTime();
   $langcode = $options['langcode'] ?? $account->getPreferredLangcode();
   $url_options = ['absolute' => TRUE, 'language' => \Drupal::languageManager()->getLanguage($langcode)];
   return Url::fromRoute('user.cancel_confirm', [
@@ -579,7 +579,7 @@ function user_cancel_url(UserInterface $account, $options = []) {
  * @param \Drupal\user\UserInterface $account
  *   An object containing the user account.
  * @param int $timestamp
- *   A UNIX timestamp, typically REQUEST_TIME.
+ *   A UNIX timestamp, typically \Drupal::time()->getRequestTime().
  *
  * @return string
  *   A string that is safe for use in URLs and SQL statements.
@@ -1141,9 +1141,10 @@ function user_modules_uninstalled($modules) {
  *   An array of key/value pairs to be saved into a cookie.
  */
 function user_cookie_save(array $values) {
+  $request_time = \Drupal::time()->getRequestTime();
   foreach ($values as $field => $value) {
     // Set cookie for 365 days.
-    setrawcookie('Drupal.visitor.' . $field, rawurlencode($value), REQUEST_TIME + 31536000, '/');
+    setrawcookie('Drupal.visitor.' . $field, rawurlencode($value), $request_time + 31536000, '/');
   }
 }
 
@@ -1154,7 +1155,7 @@ function user_cookie_save(array $values) {
  *   A cookie name such as 'homepage'.
  */
 function user_cookie_delete($cookie_name) {
-  setrawcookie('Drupal.visitor.' . $cookie_name, '', REQUEST_TIME - 3600, '/');
+  setrawcookie('Drupal.visitor.' . $cookie_name, '', \Drupal::time()->getRequestTime() - 3600, '/');
 }
 
 /**
