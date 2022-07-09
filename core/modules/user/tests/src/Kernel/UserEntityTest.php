@@ -91,16 +91,4 @@ class UserEntityTest extends KernelTestBase {
     $this->assertFalse((bool) $violations->count());
   }
 
-  /**
-   * Tests that ::existingPassword can be used for chaining.
-   */
-  public function testChainExistingPasswordMethod() {
-    /** @var \Drupal\user\Entity\User $user */
-    $user = User::create([
-      'name' => $this->randomMachineName(),
-    ]);
-    $user = $user->setExistingPassword('existing_pass');
-    $this->assertInstanceOf(User::class, $user);
-  }
-
 }

@@ -398,7 +398,6 @@ class User extends ContentEntityBase implements UserInterface {
    */
   public function setExistingPassword($password) {
     $this->get('pass')->existing = $password;
-    return $this;
   }
 
   /**
