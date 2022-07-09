@@ -375,8 +375,8 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
         // Try to set fields provided by the media source and mapped in
         // media type config.
         foreach ($translation->bundle->entity->getFieldMap() as $metadata_attribute_name => $entity_field_name) {
-          // Only save value in entity field if empty. Do not overwrite existing
-          // data.
+          // Only save value in the entity if the field is empty or if the
+          // source field changed.
           if ($translation->hasField($entity_field_name) && ($translation->get($entity_field_name)->isEmpty() || $translation->hasSourceFieldChanged())) {
             $translation->set($entity_field_name, $media_source->getMetadata($translation, $metadata_attribute_name));
           }
