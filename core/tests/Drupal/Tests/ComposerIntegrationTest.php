@@ -6,7 +6,6 @@ use Drupal\Composer\Plugin\VendorHardening\Config;
 use Drupal\Core\Composer\Composer;
 use Drupal\Tests\Composer\ComposerIntegrationTrait;
 use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * Tests Composer integration.
@@ -85,52 +84,6 @@ class ComposerIntegrationTest extends UnitTestCase {
       $data[$composer_json->getPathname()] = [$composer_json->getPathname()];
     }
     return $data;
-  }
-
-  /**
-   * Tests core's composer.json replace section.
-   *
-   * Verify that all core modules are also listed in the 'replace' section of
-   * core's composer.json.
-   */
-  public function testAllModulesReplaced() {
-    // Assemble a path to core modules.
-    $module_path = $this->root . '/core/modules';
-
-    // Grab the 'replace' section of the core composer.json file.
-    $json = json_decode(file_get_contents($this->root . '/core/composer.json'));
-    $composer_replace_packages = (array) $json->replace;
-
-    // Get a list of all the files in the module path.
-    $folders = scandir($module_path);
-
-    // Make sure we only deal with directories that aren't . or ..
-    $module_names = [];
-    $discard = ['.', '..'];
-    foreach ($folders as $file_name) {
-      if ((!in_array($file_name, $discard)) && is_dir($module_path . '/' . $file_name)) {
-        // Skip any modules marked as hidden.
-        $info_yml = $module_path . '/' . $file_name . '/' . $file_name . '.info.yml';
-        if (file_exists($info_yml)) {
-          $info = Yaml::parseFile($info_yml);
-          if (!empty($info['hidden'])) {
-            continue;
-          }
-        }
-        $module_names[] = $file_name;
-      }
-    }
-    $this->assertNotEmpty($module_names);
-
-    // Assert that each core module has a corresponding 'replace' in
-    // composer.json.
-    foreach ($module_names as $module_name) {
-      $this->assertArrayHasKey(
-        'drupal/' . $module_name,
-        $composer_replace_packages,
-        'Unable to find ' . $module_name . ' in replace list of composer.json'
-      );
-    }
   }
 
   /**
