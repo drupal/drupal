@@ -346,7 +346,7 @@ function menu_ui_form_node_form_submit($form, FormStateInterface $form_state) {
  * Adds menu options to the node type form.
  *
  * @see NodeTypeForm::form()
- * @see menu_ui_form_node_type_form_submit()
+ * @see menu_ui_form_node_type_form_builder()
  */
 function menu_ui_form_node_type_form_alter(&$form, FormStateInterface $form_state) {
   /** @var \Drupal\Core\Menu\MenuParentFormSelectorInterface $menu_parent_selector */
