@@ -31,6 +31,13 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
   protected function setUp(): void {
     parent::setUp();
 
+    // Remove the file_directory_path to test site_path setting.
+    // @see \Drupal\Tests\file\Kernel\Migrate\d6\FileMigrationTestTrait::prepareMigration()
+    Database::getConnection('default', 'migrate')
+      ->delete('variable')
+      ->condition('name', 'file_directory_path')
+      ->execute();
+
     $this->setUpMigratedFiles();
   }
 
@@ -97,11 +104,11 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
       ->truncate($map_table)
       ->execute();
 
-    // Update the file_directory_path.
+    // Set the file_directory_path.
     Database::getConnection('default', 'migrate')
-      ->update('variable')
-      ->fields(['value' => serialize('files/test')])
-      ->condition('name', 'file_directory_path')
+      ->insert('variable')
+      ->fields(['name', 'value'])
+      ->values(['name' => 'file_directory_path', 'value' => serialize('files/test')])
       ->execute();
 
     $this->executeMigration('d6_file');
