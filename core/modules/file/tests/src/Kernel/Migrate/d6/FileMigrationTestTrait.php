@@ -29,7 +29,7 @@ trait FileMigrationTestTrait {
     if ($destination['plugin'] === 'entity:file') {
       // Make sure we have a single trailing slash.
       $source = $migration->getSourceConfiguration();
-      $source['site_path'] = 'core/modules/simpletest';
+      $source['site_path'] = 'core/tests/fixtures';
       $source['constants']['source_base_path'] = $this->root . '/';
       $migration->set('source', $source);
     }
