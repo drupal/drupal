@@ -1734,11 +1734,6 @@ parameters:
 			path: modules/user/src/Controller/UserController.php
 
 		-
-			message: "#^Method Drupal\\\\user\\\\Entity\\\\User\\:\\:setExistingPassword\\(\\) should return \\$this\\(Drupal\\\\user\\\\Entity\\\\User\\) but return statement is missing\\.$#"
-			count: 1
-			path: modules/user/src/Entity/User.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/user/src/EventSubscriber/UserRequestSubscriber.php
