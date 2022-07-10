@@ -66,22 +66,22 @@ class TermName extends Entity {
       $argument = str_replace('-', ' ', $argument);
       $this->argument->argument = $argument;
     }
-    $terms = $this->termStorage->loadByProperties(['name' => $argument]);
-
-    if (!$terms) {
-      // Returned empty array no terms with the name.
-      return FALSE;
+    // If bundles is set then restrict the loaded terms to the given bundles.
+    if (!empty($this->options['bundles'])) {
+      $terms = $this->termStorage->loadByProperties(['name' => $argument, 'vid' => $this->options['bundles']]);
+    }
+    else {
+      $terms = $this->termStorage->loadByProperties(['name' => $argument]);
     }
 
-    // Not knowing which term will be used if more than one is returned check
-    // each one.
+    // $terms are already bundle tested but we need to test access control.
     foreach ($terms as $term) {
-      if (!$this->validateEntity($term)) {
-        return FALSE;
+      if ($this->validateEntity($term)) {
+        return TRUE;
       }
     }
 
-    return TRUE;
+    return FALSE;
   }
 
 }
