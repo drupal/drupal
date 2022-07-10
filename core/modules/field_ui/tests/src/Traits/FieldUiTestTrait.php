@@ -82,7 +82,7 @@ trait FieldUiTestTrait {
    *   ('Field settings' form).
    */
   public function fieldUIAddExistingField($bundle_path, $existing_storage_name, $label = NULL, array $field_edit = []) {
-    $label = $label ?: $this->randomString();
+    $label = $label ?: $this->randomMachineName();
     $initial_edit = [
       'existing_storage_name' => $existing_storage_name,
       'existing_storage_label' => $label,
