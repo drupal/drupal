@@ -204,6 +204,17 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
       $this->assertEquals($definitions['body']->isTranslatable(), $field->isTranslatable(), 'Configurable field translatability correctly switched.');
     }
 
+    // Test that we can't use the 'Not specified' default language when it is
+    // not showing in the language selector.
+    $edit = [
+      'language_configuration[langcode]' => 'und',
+      'language_configuration[language_alterable]' => FALSE,
+      'language_configuration[content_translation]' => TRUE,
+    ];
+    $this->drupalGet('admin/structure/types/manage/article');
+    $this->submitForm($edit, 'Save content type');
+    $this->getSession()->getPage()->hasContent('"Show language selector" is not compatible with translating content that has default language: und. Either do not hide the language selector or pick a specific language.');
+
     // Test that the order of the language list is similar to other language
     // lists, such as in Views UI.
     $this->drupalGet('admin/config/regional/content-language');
