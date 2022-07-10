@@ -69,8 +69,8 @@ class WidgetPluginManager extends DefaultPluginManager {
    *     - third_party_settings: (array) Settings provided by other extensions
    *       through hook_field_formatter_third_party_settings_form().
    *
-   * @return \Drupal\Core\Field\WidgetInterface|null
-   *   A Widget object or NULL when plugin is not found.
+   * @return \Drupal\Core\Field\WidgetInterface|false
+   *   A Widget object or FALSE when plugin is not found.
    */
   public function getInstance(array $options) {
     // Fill in defaults for missing properties.
@@ -99,7 +99,7 @@ class WidgetPluginManager extends DefaultPluginManager {
       // Grab the default widget for the field type.
       $field_type_definition = $this->fieldTypeManager->getDefinition($field_type);
       if (empty($field_type_definition['default_widget'])) {
-        return NULL;
+        return FALSE;
       }
       $plugin_id = $field_type_definition['default_widget'];
     }
@@ -107,7 +107,7 @@ class WidgetPluginManager extends DefaultPluginManager {
     $configuration += [
       'field_definition' => $field_definition,
     ];
-    return $this->createInstance($plugin_id, $configuration);
+    return $this->createInstance($plugin_id, $configuration) ?? FALSE;
   }
 
   /**
