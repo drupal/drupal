@@ -183,7 +183,7 @@ class TwigExtension extends AbstractExtension {
    * @param $name
    *   The name of the route.
    * @param array $parameters
-   *   An associative array of route parameters names and values.
+   *   (optional) An associative array of route parameters names and values.
    * @param array $options
    *   (optional) An associative array of additional options. The 'absolute'
    *   option is forced to be FALSE.
