@@ -90,8 +90,8 @@ class FormatterPluginManager extends DefaultPluginManager {
    *     - third_party_settings: (array) Settings provided by other extensions
    *       through hook_field_formatter_third_party_settings_form().
    *
-   * @return \Drupal\Core\Field\FormatterInterface|null
-   *   A formatter object or NULL when plugin is not found.
+   * @return \Drupal\Core\Field\FormatterInterface|false
+   *   A formatter object or FALSE when plugin is not found.
    */
   public function getInstance(array $options) {
     $configuration = $options['configuration'];
@@ -114,7 +114,7 @@ class FormatterPluginManager extends DefaultPluginManager {
       // Grab the default widget for the field type.
       $field_type_definition = $this->fieldTypeManager->getDefinition($field_type);
       if (empty($field_type_definition['default_formatter'])) {
-        return NULL;
+        return FALSE;
       }
       $plugin_id = $field_type_definition['default_formatter'];
     }
@@ -123,7 +123,7 @@ class FormatterPluginManager extends DefaultPluginManager {
       'field_definition' => $field_definition,
       'view_mode' => $options['view_mode'],
     ];
-    return $this->createInstance($plugin_id, $configuration);
+    return $this->createInstance($plugin_id, $configuration) ?? FALSE;
   }
 
   /**
