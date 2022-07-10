@@ -45,28 +45,31 @@ class RequirementsTest extends BrowserTestBase {
     ]);
     $this->drupalLogin($admin_user);
 
-    // Change the isolation level to force the warning message.
+    // Set the isolation level to a level that produces a warning.
     $this->writeIsolationLevelSettings('REPEATABLE READ');
 
-    // Check if the warning message is being displayed.
+    // Check the message is not a warning.
     $this->drupalGet('admin/reports/status');
     $elements = $this->xpath('//details[@class="system-status-report__entry"]//div[contains(text(), :text)]', [
       ':text' => 'For the best performance and to minimize locking issues, the READ-COMMITTED',
     ]);
     $this->assertCount(1, $elements);
-    $this->assertStringStartsWith('Transaction Isolation Level', $elements[0]->getParent()->getText());
+    $this->assertStringStartsWith('REPEATABLE-READ', $elements[0]->getParent()->getText());
+    // Ensure it is a warning.
+    $this->assertStringContainsString('warning', $elements[0]->getParent()->getParent()->find('css', 'summary')->getAttribute('class'));
 
     // Rollback the isolation level to read committed.
     $this->writeIsolationLevelSettings('READ COMMITTED');
 
-    // Check if the warning message is gone.
+    // Check the message is not a warning.
     $this->drupalGet('admin/reports/status');
-    $this->assertSession()->pageTextNotContains('Database Isolation Level');
     $elements = $this->xpath('//details[@class="system-status-report__entry"]//div[contains(text(), :text)]', [
       ':text' => 'For the best performance and to minimize locking issues, the READ-COMMITTED',
     ]);
-
-    $this->assertCount(0, $elements);
+    $this->assertCount(1, $elements);
+    $this->assertStringStartsWith('READ-COMMITTED', $elements[0]->getParent()->getText());
+    // Ensure it is a not a warning.
+    $this->assertStringNotContainsString('warning', $elements[0]->getParent()->getParent()->find('css', 'summary')->getAttribute('class'));
   }
 
   /**
