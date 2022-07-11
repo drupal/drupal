@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\migrate_drupal_ui\Functional;
 
-use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
 
 /**
@@ -13,27 +12,6 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
   use CreateTestContentEntitiesTrait;
 
   /**
-   * Indicates if the watchdog logs should be output.
-   *
-   * @var bool
-   */
-  protected $outputLogs = FALSE;
-
-  /**
-   * The admin username after the migration.
-   *
-   * @var string
-   */
-  protected $migratedAdminUserName = 'admin';
-
-  /**
-   * The number of expected logged errors of type migrate_drupal_ui.
-   *
-   * @var string
-   */
-  protected $expectedLoggedErrors = 0;
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -42,17 +20,6 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
     // Create content.
     $this->createContent();
 
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function tearDown(): void {
-    if ($this->outputLogs) {
-      $this->outputLogs($this->migratedAdminUserName);
-      $this->assertLogError();
-    }
-    parent::tearDown();
   }
 
   /**
@@ -101,38 +68,6 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
       'required' => TRUE,
     ];
     $this->writeSettings($settings);
-  }
-
-  /**
-   * Asserts log errors.
-   */
-  public function assertLogError() {
-    $db = \Drupal::service('database');
-    $num_errors = $db->select('watchdog', 'w')
-      ->fields('w')
-      ->condition('type', 'migrate_drupal_ui')
-      ->condition('severity', RfcLogLevel::ERROR)
-      ->countQuery()
-      ->execute()
-      ->fetchField();
-    $this->assertSame($this->expectedLoggedErrors, (int) $num_errors);
-  }
-
-  /**
-   * Preserve the logs pages.
-   */
-  public function outputLogs($username) {
-    // Ensure user 1 is accessing the admin log. Change the username because
-    // the migration changes the username of user 1 but not the password.
-    if (\Drupal::currentUser()->id() != 1) {
-      $this->rootUser->name = $username;
-      $this->drupalLogin($this->rootUser);
-    }
-    $this->drupalGet('/admin/reports/dblog');
-    while ($next_link = $this->getSession()->getPage()->findLink('Next page')) {
-      $next_link->click();
-    }
-
   }
 
 }

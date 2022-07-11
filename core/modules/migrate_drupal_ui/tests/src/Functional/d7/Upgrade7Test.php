@@ -45,9 +45,6 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    // Install the Drupal 6 and Drupal 7 administration theme.
-    \Drupal::service('theme_installer')->install(['seven']);
-
     // @todo remove in https://www.drupal.org/project/drupal/issues/3267040
     // Delete the existing content made to test the ID Conflict form. Migrations
     // are to be done on a site without content. The test of the ID Conflict
@@ -59,11 +56,6 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
     $this->nodeStorage->delete($this->nodeStorage->loadMultiple());
 
     $this->loadFixture($this->getModulePath('migrate_drupal') . '/tests/fixtures/drupal7.php');
-
-    // Enable saving the logs and set the post migration admin user name.
-    $this->outputLogs = TRUE;
-    $this->migratedAdminUserName = 'admin';
-    $this->expectedLoggedErrors = 25;
 
     // @todo Remove this in https://www.drupal.org/node/3267515
     \Drupal::service('module_installer')->uninstall(['rdf']);
@@ -81,7 +73,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getEntityCounts() {
     return [
-      'block' => 43,
+      'block' => 27,
       'block_content' => 1,
       'block_content_type' => 1,
       'comment' => 4,
@@ -243,10 +235,6 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
     $this->assertFollowUpMigrationResults();
 
     $this->assertEmailsSent();
-
-    // Save logs and check the error count.
-    $this->outputLogs('admin');
-    $this->assertLogError();
   }
 
   /**
