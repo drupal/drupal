@@ -47,6 +47,9 @@
       return false;
     }
 
+    once('big-pipe-early-behaviors', 'body', context).forEach(el => {
+      Drupal.attachBehaviors(el);
+    });
     once('big-pipe', 'script[data-big-pipe-replacement-for-placeholder-with-id]', context).forEach(bigPipeProcessPlaceholderReplacement);
 
     if (context.querySelector('script[data-big-pipe-event="stop"]')) {
