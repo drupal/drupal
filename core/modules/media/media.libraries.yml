@@ -32,6 +32,8 @@ filter.caption:
   dependencies:
     - filter/caption
 
+# Despite the name, this is actually not specific to CKEditor 4, and can be
+# used by all text editor plugins.
 media_embed_ckeditor_theme:
   version: VERSION
   js:

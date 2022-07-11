@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\media\FunctionalJavascript;
+namespace Drupal\Tests\ckeditor\FunctionalJavascript;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Database\Database;
@@ -21,10 +21,10 @@ use Drupal\user\RoleInterface;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 
 /**
- * @coversDefaultClass \Drupal\media\Plugin\CKEditorPlugin\DrupalMedia
- * @group media
+ * @coversDefaultClass \Drupal\ckeditor\Plugin\CKEditorPlugin\DrupalMedia
+ * @group ckeditor
  */
-class CKEditorIntegrationTest extends WebDriverTestBase {
+class MediaTest extends WebDriverTestBase {
 
   use CKEditorTestTrait;
   use MediaTypeCreationTrait;
