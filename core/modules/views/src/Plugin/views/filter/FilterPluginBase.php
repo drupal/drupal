@@ -882,7 +882,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
         }
         unset($form[$value]['#default_value']);
         $user_input = $form_state->getUserInput();
-        if (empty($user_input)) {
+        if (empty($user_input[$value])) {
           $user_input[$value] = $this->group_info;
           $form_state->setUserInput($user_input);
         }
