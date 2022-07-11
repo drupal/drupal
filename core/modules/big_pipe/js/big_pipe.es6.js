@@ -93,6 +93,11 @@
       return false;
     }
 
+    // Attach Drupal behaviors early, if possible.
+    once('big-pipe-early-behaviors', 'body', context).forEach((el) => {
+      Drupal.attachBehaviors(el);
+    });
+
     once(
       'big-pipe',
       'script[data-big-pipe-replacement-for-placeholder-with-id]',
