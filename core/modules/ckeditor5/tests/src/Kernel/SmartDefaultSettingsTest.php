@@ -298,32 +298,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     ])->save();
 
     FilterFormat::create([
-      'format' => 'cke4_plugins_with_settings_for_disabled_plugins',
-      'name' => 'All CKEditor 4 core plugins with settings for disabled plugins',
-    ])->save();
-    Editor::create([
-      'format' => 'cke4_plugins_with_settings_for_disabled_plugins',
-      'editor' => 'ckeditor',
-      'settings' => [
-        // Empty toolbar.
-        'toolbar' => [
-          'rows' => [
-            0 => [
-              [
-                'name' => 'Only buttons without settings',
-                'items' => [
-                  'Bold',
-                ],
-              ],
-            ],
-          ],
-        ],
-        // Same plugin settings as `cke4_plugins_with_settings`.
-        'plugins' => Editor::load('cke4_plugins_with_settings')->getSettings()['plugins'],
-      ],
-    ])->save();
-
-    FilterFormat::create([
       'format' => 'cke4_contrib_plugins_now_in_core',
       'name' => 'All CKEditor 4 contrib plugins now in core',
     ])->save();
@@ -1092,26 +1066,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_messages' => [
         'warning' => [
           'The CKEditor 4 button <em class="placeholder">Llama</em> does not have a known upgrade path. If it allowed editing markup, then you can do so now through the Source Editing functionality.',
-          'The <em class="placeholder">llama_contextual_and_button</em> plugin settings do not have a known upgrade path.',
-        ],
-      ],
-    ];
-
-    yield "cke4_plugins_with_settings_for_disabled_plugins can be switched to CKEditor 5 without problems; irrelevant settings are dropped" => [
-      'format_id' => 'cke4_plugins_with_settings_for_disabled_plugins',
-      'filters_to_drop' => [],
-      'expected_ckeditor5_settings' => [
-        'toolbar' => [
-          'items' => [
-            'bold',
-          ],
-        ],
-        'plugins' => [],
-      ],
-      'expected_superset' => '',
-      'expected_fundamental_compatibility_violations' => [],
-      'expected_messages' => [
-        'warning' => [
           'The <em class="placeholder">llama_contextual_and_button</em> plugin settings do not have a known upgrade path.',
         ],
       ],

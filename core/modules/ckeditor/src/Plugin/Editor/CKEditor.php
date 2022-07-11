@@ -174,7 +174,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
           ],
         ],
       ],
-      'plugins' => ['language' => ['language_list' => 'un']],
+      'plugins' => [],
     ];
   }
 
@@ -295,6 +295,24 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
     if ($form_state->hasValue('plugins')) {
       $form_state->unsetValue('plugin_settings');
     }
+
+    // Ensure plugin settings are only saved for plugins that are actually
+    // enabled.
+    $about_to_be_saved_editor = Editor::create([
+      'editor' => 'ckeditor',
+      'settings' => [
+        'toolbar' => $form_state->getValue('toolbar'),
+        'plugins' => $form_state->getValue('plugins'),
+      ],
+    ]);
+    $enabled_plugins = _ckeditor_get_enabled_plugins($about_to_be_saved_editor);
+    $plugin_settings = $form_state->getValue('plugins', []);
+    foreach (array_keys($plugin_settings) as $plugin_id) {
+      if (!in_array($plugin_id, $enabled_plugins, TRUE)) {
+        unset($plugin_settings[$plugin_id]);
+      }
+    }
+    $form_state->setValue('plugins', $plugin_settings);
   }
 
   /**
