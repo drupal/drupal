@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\media\Plugin\CKEditorPlugin;
+namespace Drupal\ckeditor\Plugin\CKEditorPlugin;
 
 use Drupal\ckeditor\CKEditorPluginContextualInterface;
 use Drupal\ckeditor\CKEditorPluginCssInterface;
@@ -16,6 +16,7 @@ use Drupal\editor\Entity\Editor;
  * @CKEditorPlugin(
  *   id = "drupalmedia",
  *   label = @Translation("Media Embed"),
+ *   provider = "media",
  * )
  *
  * @internal
@@ -83,7 +84,10 @@ class DrupalMedia extends PluginBase implements ContainerFactoryPluginInterface,
       'core/jquery',
       'core/drupal',
       'core/drupal.ajax',
+      // @see Drupal.theme.mediaEmbedPreviewError()
       'media/media_embed_ckeditor_theme',
+      // @see Drupal.theme.mediaEmbedEditButton()
+      'ckeditor/drupal.ckeditor.plugins.drupalmedia',
     ];
   }
 
@@ -91,7 +95,7 @@ class DrupalMedia extends PluginBase implements ContainerFactoryPluginInterface,
    * {@inheritdoc}
    */
   public function getFile() {
-    return $this->moduleExtensionList->getPath('media') . '/js/plugins/drupalmedia/plugin.js';
+    return $this->moduleExtensionList->getPath('ckeditor') . '/js/plugins/drupalmedia/plugin.js';
   }
 
   /**
@@ -124,7 +128,7 @@ class DrupalMedia extends PluginBase implements ContainerFactoryPluginInterface,
    */
   public function getCssFiles(Editor $editor) {
     return [
-      $this->moduleExtensionList->getPath('media') . '/css/plugins/drupalmedia/ckeditor.drupalmedia.css',
+      $this->moduleExtensionList->getPath('ckeditor') . '/css/plugins/drupalmedia/ckeditor.drupalmedia.css',
       $this->moduleExtensionList->getPath('system') . '/css/components/hidden.module.css',
     ];
   }

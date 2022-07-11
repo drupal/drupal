@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Helper module for the Media Embed CKEditor plugin tests.
+ * Helper module for the Media Embed text editor plugin tests.
  */
 
 use Drupal\Core\Access\AccessResult;
@@ -14,7 +14,6 @@ use Drupal\Core\Session\AccountInterface;
  * Implements hook_entity_view_alter().
  */
 function media_test_embed_entity_view_alter(&$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
-  // @see \Drupal\Tests\media\FunctionalJavascript\CKEditorIntegrationTest::testPreviewUsesDefaultThemeAndIsClientCacheable()
   $build['#attributes']['data-media-embed-test-active-theme'] = \Drupal::theme()->getActiveTheme()->getName();
   $build['#attributes']['data-media-embed-test-view-mode'] = $display->getMode();
 }

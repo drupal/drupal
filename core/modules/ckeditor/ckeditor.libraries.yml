@@ -92,3 +92,10 @@ drupal.ckeditor.language.admin:
     - core/jquery
     - core/drupal
     - core/drupal.vertical-tabs
+
+drupal.ckeditor.plugins.drupalmedia:
+  version: VERSION
+  js:
+    js/ckeditor.drupalmedia.theme.js: {}
+  dependencies:
+    - core/drupal
