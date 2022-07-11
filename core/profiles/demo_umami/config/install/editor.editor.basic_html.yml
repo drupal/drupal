@@ -39,11 +39,7 @@ settings:
           name: Tools
           items:
             - Source
-  plugins:
-    language:
-      language_list: un
-    stylescombo:
-      styles: ''
+  plugins: {}
 image_upload:
   status: false
   scheme: public

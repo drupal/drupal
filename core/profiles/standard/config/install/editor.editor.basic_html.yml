@@ -39,9 +39,7 @@ settings:
           name: Tools
           items:
             - Source
-  plugins:
-    stylescombo:
-      styles: ''
+  plugins: {}
 image_upload:
   status: true
   scheme: public
