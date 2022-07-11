@@ -29,10 +29,8 @@ class Rss extends RssPluginBase {
 
   /**
    * The base field for this row plugin.
-   *
-   * @var string
    */
-  public $base_field = 'nid';
+  public string $base_field = 'nid';
 
   /**
    * Stores the nodes loaded with preRender.

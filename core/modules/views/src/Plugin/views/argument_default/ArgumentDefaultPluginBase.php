@@ -38,6 +38,11 @@ abstract class ArgumentDefaultPluginBase extends PluginBase {
   protected $argument;
 
   /**
+   * The option name.
+   */
+  public string $option_name;
+
+  /**
    * Return the default argument.
    *
    * This needs to be overridden by every default argument handler to properly do what is needed.

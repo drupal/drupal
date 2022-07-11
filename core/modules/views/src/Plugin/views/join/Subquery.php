@@ -20,6 +20,11 @@ namespace Drupal\views\Plugin\views\join;
 class Subquery extends JoinPluginBase {
 
   /**
+   * The left join query.
+   */
+  public string $left_query;
+
+  /**
    * Constructs a Subquery object.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {

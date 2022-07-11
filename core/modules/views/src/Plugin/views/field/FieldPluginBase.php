@@ -107,6 +107,21 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
   protected $renderer;
 
   /**
+   * The last rendered value.
+   */
+  public string|MarkupInterface|NULL $last_render;
+
+  /**
+   * The last rendered text.
+   */
+  public string|MarkupInterface|NULL $last_render_text;
+
+  /**
+   * The last rendered tokens.
+   */
+  public array $last_tokens;
+
+  /**
    * Keeps track of the last render index.
    *
    * @var int|null

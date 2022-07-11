@@ -27,7 +27,12 @@ class Rss extends RssPluginBase {
   /**
    * {@inheritdoc}
    */
-  protected $base_field = 'cid';
+  public string $base_field = 'cid';
+
+  /**
+   * The field alias.
+   */
+  public string $field_alias;
 
   /**
    * @var \Drupal\comment\CommentInterface[]

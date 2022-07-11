@@ -16,6 +16,16 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EntityReverse extends RelationshipPluginBase {
 
   /**
+   * The views plugin join manager.
+   */
+  public ViewsHandlerManager $joinManager;
+
+  /**
+   * The alias for the left table.
+   */
+  public string $first_alias;
+
+  /**
    * Constructs an EntityReverse object.
    *
    * @param array $configuration

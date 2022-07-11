@@ -48,6 +48,11 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
   protected $limit;
 
   /**
+   * The OFFSET on the query.
+   */
+  public int $offset;
+
+  /**
    * Generate a query and a countquery from all of the information supplied
    * to the object.
    *

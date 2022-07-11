@@ -16,6 +16,11 @@ use Drupal\views\ResultRow;
 class StatisticsLastCommentName extends FieldPluginBase {
 
   /**
+   * The user id.
+   */
+  public string $uid;
+
+  /**
    * {@inheritdoc}
    */
   public function query() {

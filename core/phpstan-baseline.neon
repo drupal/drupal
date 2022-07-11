@@ -196,16 +196,6 @@ parameters:
 			path: lib/Drupal/Core/Database/Query/Merge.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Database\\\\Query\\\\Select\\:\\:\\$alterMetaData\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Database/Query/Select.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Database\\\\Query\\\\Select\\:\\:\\$alterTags\\.$#"
-			count: 3
-			path: lib/Drupal/Core/Database/Query/Select.php
-
-		-
 			message: "#^Access to an undefined property Drupal\\\\Core\\\\Database\\\\Query\\\\Truncate\\:\\:\\$condition\\.$#"
 			count: 2
 			path: lib/Drupal/Core/Database/Query/Truncate.php
@@ -334,11 +324,6 @@ parameters:
 			message: "#^Call to an undefined method Drupal\\\\Core\\\\Extension\\\\Discovery\\\\RecursiveExtensionFilterIterator\\:\\:isDir\\(\\)\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Extension/Discovery/RecursiveExtensionFilterIterator.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\Entity\\\\BaseFieldOverride\\:\\:\\$original\\.$#"
-			count: 5
-			path: lib/Drupal/Core/Field/Entity/BaseFieldOverride.php
 
 		-
 			message: "#^Method Drupal\\\\Core\\\\Field\\\\FieldItemBase\\:\\:generateSampleValue\\(\\) should return array but return statement is missing\\.$#"
@@ -771,11 +756,6 @@ parameters:
 			path: modules/comment/src/Plugin/views/field/NodeNewComments.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\comment\\\\Plugin\\\\views\\\\field\\\\StatisticsLastCommentName\\:\\:\\$uid\\.$#"
-			count: 2
-			path: modules/comment/src/Plugin/views/field/StatisticsLastCommentName.php
-
-		-
 			message: "#^Access to an undefined property Drupal\\\\comment\\\\Plugin\\\\views\\\\field\\\\StatisticsLastCommentName\\:\\:\\$user_field\\.$#"
 			count: 1
 			path: modules/comment/src/Plugin/views/field/StatisticsLastCommentName.php
@@ -794,11 +774,6 @@ parameters:
 			message: "#^Access to an undefined property Drupal\\\\comment\\\\Plugin\\\\views\\\\filter\\\\StatisticsLastUpdated\\:\\:\\$node_table\\.$#"
 			count: 1
 			path: modules/comment/src/Plugin/views/filter/StatisticsLastUpdated.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\comment\\\\Plugin\\\\views\\\\row\\\\Rss\\:\\:\\$field_alias\\.$#"
-			count: 1
-			path: modules/comment/src/Plugin/views/row/Rss.php
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\comment\\\\Plugin\\\\views\\\\sort\\\\StatisticsLastCommentName\\:\\:\\$user_field\\.$#"
@@ -929,16 +904,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/dblog/tests/src/Kernel/DbLogTest.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\field\\\\Entity\\\\FieldConfig\\:\\:\\$original\\.$#"
-			count: 4
-			path: modules/field/src/Entity/FieldConfig.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\field\\\\Entity\\\\FieldStorageConfig\\:\\:\\$original\\.$#"
-			count: 6
-			path: modules/field/src/Entity/FieldStorageConfig.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1324,16 +1289,6 @@ parameters:
 			path: modules/node/src/NodeViewBuilder.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\node\\\\Plugin\\\\views\\\\argument\\\\Type\\:\\:\\$name_alias\\.$#"
-			count: 1
-			path: modules/node/src/Plugin/views/argument/Type.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\node\\\\Plugin\\\\views\\\\row\\\\Rss\\:\\:\\$field_alias\\.$#"
-			count: 2
-			path: modules/node/src/Plugin/views/row/Rss.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/node/tests/src/Functional/NodeAdminTest.php
@@ -1399,16 +1354,6 @@ parameters:
 			path: modules/options/src/Plugin/Field/FieldType/ListStringItem.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\options\\\\Plugin\\\\views\\\\argument\\\\NumberListField\\:\\:\\$name_alias\\.$#"
-			count: 1
-			path: modules/options/src/Plugin/views/argument/NumberListField.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\options\\\\Plugin\\\\views\\\\argument\\\\StringListField\\:\\:\\$name_alias\\.$#"
-			count: 1
-			path: modules/options/src/Plugin/views/argument/StringListField.php
-
-		-
 			message: "#^Method Drupal\\\\path\\\\PathAliasForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/path/src/PathAliasForm.php
@@ -1462,21 +1407,6 @@ parameters:
 			message: "#^Method Drupal\\\\search\\\\Form\\\\SearchPageFormBase\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/search/src/Form/SearchPageFormBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\search\\\\Plugin\\\\views\\\\argument\\\\Search\\:\\:\\$operator\\.$#"
-			count: 1
-			path: modules/search/src/Plugin/views/argument/Search.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\search\\\\Plugin\\\\views\\\\argument\\\\Search\\:\\:\\$search_score\\.$#"
-			count: 1
-			path: modules/search/src/Plugin/views/argument/Search.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\search\\\\Plugin\\\\views\\\\filter\\\\Search\\:\\:\\$search_score\\.$#"
-			count: 1
-			path: modules/search/src/Plugin/views/filter/Search.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1654,11 +1584,6 @@ parameters:
 			path: modules/taxonomy/src/Plugin/migrate/source/d7/TermTranslation.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\taxonomy\\\\Plugin\\\\views\\\\argument\\\\IndexTidDepthModifier\\:\\:\\$position\\.$#"
-			count: 1
-			path: modules/taxonomy/src/Plugin/views/argument/IndexTidDepthModifier.php
-
-		-
 			message: "#^Call to function unset\\(\\) contains undefined variable \\$handler\\.$#"
 			count: 1
 			path: modules/taxonomy/src/Plugin/views/argument/IndexTidDepthModifier.php
@@ -1744,11 +1669,6 @@ parameters:
 			path: modules/user/src/Plugin/views/field/UserData.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\user\\\\Plugin\\\\views\\\\filter\\\\Current\\:\\:\\$value_value\\.$#"
-			count: 1
-			path: modules/user/src/Plugin/views/filter/Current.php
-
-		-
 			message: "#^Access to an undefined property Drupal\\\\user\\\\Plugin\\\\views\\\\filter\\\\Name\\:\\:\\$validated_exposed_input\\.$#"
 			count: 1
 			path: modules/user/src/Plugin/views/filter/Name.php
@@ -1814,21 +1734,6 @@ parameters:
 			path: modules/views/src/Form/ViewsFormMainForm.php
 
 		-
-			message: "#^Access to an undefined property \\$this\\(Drupal\\\\views\\\\ManyToOneHelper\\)\\:\\:\\$handler\\.$#"
-			count: 1
-			path: modules/views/src/ManyToOneHelper.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\ManyToOneHelper\\:\\:\\$handler\\.$#"
-			count: 58
-			path: modules/views/src/ManyToOneHelper.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\HandlerBase\\:\\:\\$is_handler\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/HandlerBase.php
-
-		-
 			message: "#^Call to an undefined method \\$this\\(Drupal\\\\views\\\\Plugin\\\\views\\\\HandlerBase\\)\\:\\:getFormula\\(\\)\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/HandlerBase.php
@@ -1844,139 +1749,9 @@ parameters:
 			path: modules/views/src/Plugin/views/area/HTTPStatusCode.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\ArgumentPluginBase\\:\\:\\$argument_validated\\.$#"
-			count: 2
-			path: modules/views/src/Plugin/views/argument/ArgumentPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\ArgumentPluginBase\\:\\:\\$base_alias\\.$#"
-			count: 3
-			path: modules/views/src/Plugin/views/argument/ArgumentPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\ArgumentPluginBase\\:\\:\\$count_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/ArgumentPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\ArgumentPluginBase\\:\\:\\$is_default\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/ArgumentPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\ArgumentPluginBase\\:\\:\\$name_alias\\.$#"
-			count: 5
-			path: modules/views/src/Plugin/views/argument/ArgumentPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\ArgumentPluginBase\\:\\:\\$name_table_alias\\.$#"
-			count: 3
-			path: modules/views/src/Plugin/views/argument/ArgumentPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\ArgumentPluginBase\\:\\:\\$operator\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/ArgumentPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\ArgumentPluginBase\\:\\:\\$position\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/ArgumentPluginBase.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/views/src/Plugin/views/argument/Date.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\DayDate\\:\\:\\$base_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/DayDate.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\DayDate\\:\\:\\$name_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/DayDate.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\Formula\\:\\:\\$base_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/Formula.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\Formula\\:\\:\\$name_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/Formula.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\FullDate\\:\\:\\$name_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/FullDate.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\LanguageArgument\\:\\:\\$name_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/LanguageArgument.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\ManyToOne\\:\\:\\$base_alias\\.$#"
-			count: 2
-			path: modules/views/src/Plugin/views/argument/ManyToOne.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\ManyToOne\\:\\:\\$helper\\.$#"
-			count: 5
-			path: modules/views/src/Plugin/views/argument/ManyToOne.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\ManyToOne\\:\\:\\$operator\\.$#"
-			count: 4
-			path: modules/views/src/Plugin/views/argument/ManyToOne.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\MonthDate\\:\\:\\$base_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/MonthDate.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\MonthDate\\:\\:\\$name_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/MonthDate.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\StringArgument\\:\\:\\$base_alias\\.$#"
-			count: 3
-			path: modules/views/src/Plugin/views/argument/StringArgument.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\StringArgument\\:\\:\\$helper\\.$#"
-			count: 5
-			path: modules/views/src/Plugin/views/argument/StringArgument.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\StringArgument\\:\\:\\$operator\\.$#"
-			count: 4
-			path: modules/views/src/Plugin/views/argument/StringArgument.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\WeekDate\\:\\:\\$name_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/WeekDate.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\YearMonthDate\\:\\:\\$name_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/YearMonthDate.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument_default\\\\ArgumentDefaultPluginBase\\:\\:\\$option_name\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument_default/ArgumentDefaultPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument_validator\\\\ArgumentValidatorPluginBase\\:\\:\\$option_name\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument_validator/ArgumentValidatorPluginBase.php
 
 		-
 			message: "#^Undefined variable\\: \\$arg$#"
@@ -1994,39 +1769,9 @@ parameters:
 			path: modules/views/src/Plugin/views/cache/Time.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\display\\\\DisplayPluginBase\\:\\:\\$default_display\\.$#"
-			count: 2
-			path: modules/views/src/Plugin/views/display/DisplayPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\display\\\\DisplayPluginBase\\:\\:\\$has_exposed\\.$#"
-			count: 3
-			path: modules/views/src/Plugin/views/display/DisplayPluginBase.php
-
-		-
 			message: "#^Cannot unset offset 'items_per_page' on array\\{access\\: array\\{'access'\\}, cache\\: array\\{'cache'\\}, title\\: array\\{'title'\\}, css_class\\: array\\{'css_class'\\}, use_ajax\\: array\\{'use_ajax'\\}, hide_attachment_summary\\: array\\{'hide_attachment…'\\}, show_admin_links\\: array\\{'show_admin_links'\\}, group_by\\: array\\{'group_by'\\}, \\.\\.\\.\\}\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/display/DisplayPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\display\\\\EntityReference\\:\\:\\$id_field_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/display/EntityReference.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\Boolean\\:\\:\\$formats\\.$#"
-			count: 4
-			path: modules/views/src/Plugin/views/field/Boolean.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\BulkForm\\:\\:\\$last_render\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/BulkForm.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\Counter\\:\\:\\$last_render\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/Counter.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -2039,11 +1784,6 @@ parameters:
 			path: modules/views/src/Plugin/views/field/Date.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\EntityField\\:\\:\\$group_fields\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/EntityField.php
-
-		-
 			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\EntityField\\:\\:getFieldStorageDefinition\\(\\) should return Drupal\\\\Core\\\\Field\\\\FieldStorageDefinitionInterface but return statement is missing\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/field/EntityField.php
@@ -2052,31 +1792,6 @@ parameters:
 			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\EntityField\\:\\:renderItems\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/field/EntityField.php
-
-		-
-			message: "#^Access to an undefined property \\$this\\(Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\FieldPluginBase\\)&Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\MultiItemsFieldHandlerInterface\\:\\:\\$last_render\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/FieldPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\FieldPluginBase\\:\\:\\$last_render\\.$#"
-			count: 10
-			path: modules/views/src/Plugin/views/field/FieldPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\FieldPluginBase\\:\\:\\$last_render_text\\.$#"
-			count: 2
-			path: modules/views/src/Plugin/views/field/FieldPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\FieldPluginBase\\:\\:\\$last_tokens\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/FieldPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\Markup\\:\\:\\$format\\.$#"
-			count: 2
-			path: modules/views/src/Plugin/views/field/Markup.php
 
 		-
 			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\Markup\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#"
@@ -2089,29 +1804,9 @@ parameters:
 			path: modules/views/src/Plugin/views/field/PrerenderList.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\filter\\\\BooleanOperator\\:\\:\\$valueOptions\\.$#"
-			count: 7
-			path: modules/views/src/Plugin/views/filter/BooleanOperator.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\filter\\\\BooleanOperator\\:\\:\\$value_value\\.$#"
-			count: 3
-			path: modules/views/src/Plugin/views/filter/BooleanOperator.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\filter\\\\Bundle\\:\\:\\$real_field\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/filter/Bundle.php
-
-		-
 			message: "#^Call to an undefined method Drupal\\\\views\\\\Plugin\\\\views\\\\filter\\\\FilterPluginBase\\:\\:operators\\(\\)\\.$#"
 			count: 2
 			path: modules/views/src/Plugin/views/filter/FilterPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\join\\\\Subquery\\:\\:\\$left_query\\.$#"
-			count: 2
-			path: modules/views/src/Plugin/views/join/Subquery.php
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\query\\\\QueryPluginBase\\:\\:\\$groupOperator\\.$#"
@@ -2119,69 +1814,14 @@ parameters:
 			path: modules/views/src/Plugin/views/query/QueryPluginBase.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\query\\\\QueryPluginBase\\:\\:\\$offset\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/query/QueryPluginBase.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\query\\\\Sql\\:\\:\\$count_field\\.$#"
-			count: 2
-			path: modules/views/src/Plugin/views/query/Sql.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\relationship\\\\EntityReverse\\:\\:\\$first_alias\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/relationship/EntityReverse.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\relationship\\\\EntityReverse\\:\\:\\$joinManager\\.$#"
-			count: 3
-			path: modules/views/src/Plugin/views/relationship/EntityReverse.php
-
-		-
 			message: "#^Undefined variable\\: \\$def$#"
 			count: 2
 			path: modules/views/src/Plugin/views/relationship/EntityReverse.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\relationship\\\\GroupwiseMax\\:\\:\\$subquery_namespace\\.$#"
-			count: 2
-			path: modules/views/src/Plugin/views/relationship/GroupwiseMax.php
-
-		-
-			message: "#^Access to an undefined property \\$this\\(Drupal\\\\views\\\\Plugin\\\\views\\\\row\\\\RowPluginBase\\)\\:\\:\\$base_field\\.$#"
-			count: 2
-			path: modules/views/src/Plugin/views/row/RowPluginBase.php
-
-		-
-			message: "#^Access to an undefined property \\$this\\(Drupal\\\\views\\\\Plugin\\\\views\\\\row\\\\RowPluginBase\\)\\:\\:\\$field_alias\\.$#"
-			count: 2
-			path: modules/views/src/Plugin/views/row/RowPluginBase.php
-
-		-
 			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\sort\\\\GroupByNumeric\\:\\:\\$handler\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/sort/GroupByNumeric.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\style\\\\Rss\\:\\:\\$channel_elements\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/style/Rss.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\style\\\\Rss\\:\\:\\$namespaces\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/style/Rss.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\ViewExecutable\\:\\:\\$build_time\\.$#"
-			count: 2
-			path: modules/views/src/ViewExecutable.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views\\\\ViewExecutable\\:\\:\\$plugin_name\\.$#"
-			count: 1
-			path: modules/views/src/ViewExecutable.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -2192,11 +1832,6 @@ parameters:
 			message: "#^Configuration entity must define a `config_export` key\\. See https\\://www\\.drupal\\.org/node/2481909$#"
 			count: 1
 			path: modules/views/tests/modules/views_config_entity_test/src/Entity/ViewsConfigEntityTest.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\field\\\\FieldFormButtonTest\\:\\:\\$last_render\\.$#"
-			count: 1
-			path: modules/views/tests/modules/views_test_data/src/Plugin/views/field/FieldFormButtonTest.php
 
 		-
 			message: "#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\filter\\\\FilterTest\\:\\:buildOptionsForm\\(\\) should return array but return statement is missing\\.$#"

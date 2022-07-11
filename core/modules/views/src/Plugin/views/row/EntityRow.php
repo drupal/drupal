@@ -31,13 +31,6 @@ class EntityRow extends RowPluginBase {
   public $base_table;
 
   /**
-   * The actual field which is used for the entity id.
-   *
-   * @var string
-   */
-  public $base_field;
-
-  /**
    * Stores the entity type ID of the result entities.
    *
    * @var string
