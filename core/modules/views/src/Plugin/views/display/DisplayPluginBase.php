@@ -123,6 +123,16 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   public $display;
 
   /**
+   * Keeps track whether the display uses exposed filters.
+   */
+  public bool $has_exposed;
+
+  /**
+   * The default display.
+   */
+  public DisplayPluginInterface $default_display;
+
+  /**
    * Constructs a new DisplayPluginBase object.
    *
    * Because DisplayPluginBase::initDisplay() takes the display configuration by

@@ -30,6 +30,11 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
 class Boolean extends FieldPluginBase {
 
   /**
+   * The allowed formats.
+   */
+  public array $formats;
+
+  /**
    * {@inheritdoc}
    */
   protected function defineOptions() {

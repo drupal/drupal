@@ -50,6 +50,16 @@ abstract class RowPluginBase extends PluginBase {
   protected $usesFields = FALSE;
 
   /**
+   * The actual field used.
+   */
+  public string $base_field;
+
+  /**
+   * The field alias.
+   */
+  public string $field_alias;
+
+  /**
    * Returns the usesFields property.
    *
    * @return bool

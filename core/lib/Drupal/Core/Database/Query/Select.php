@@ -119,6 +119,16 @@ class Select extends Query implements SelectInterface {
   protected $forUpdate = FALSE;
 
   /**
+   * The query metadata for alter purposes.
+   */
+  public array $alterMetaData;
+
+  /**
+   * The query tags.
+   */
+  public array $alterTags;
+
+  /**
    * Constructs a Select object.
    *
    * @param \Drupal\Core\Database\Connection $connection

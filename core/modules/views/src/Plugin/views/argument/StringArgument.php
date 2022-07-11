@@ -20,6 +20,11 @@ use Drupal\views\ManyToOneHelper;
 class StringArgument extends ArgumentPluginBase {
 
   /**
+   * The many-to-one helper.
+   */
+  public ManyToOneHelper $helper;
+
+  /**
    * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {

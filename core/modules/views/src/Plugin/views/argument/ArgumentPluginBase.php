@@ -66,12 +66,52 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   public $name_table;
 
   /**
+   * The name table alias.
+   */
+  public string $name_table_alias;
+
+  /**
    * The field to use for the name to use in the summary, which is
    * the displayed output. For example, for the node: nid argument,
    * the argument itself is the nid, but node.title is displayed.
    * @var string
    */
   public $name_field;
+
+  /**
+   * The alias for the field.
+   */
+  public string $name_alias;
+
+  /**
+   * The base table alias.
+   */
+  public string $base_alias;
+
+  /**
+   * The alias count.
+   */
+  public string $count_alias;
+
+  /**
+   * Is argument validated.
+   */
+  public ?bool $argument_validated;
+
+  /**
+   * Is argument a default.
+   */
+  public bool $is_default;
+
+  /**
+   * The operator used for the query: or|and.
+   */
+  public string $operator;
+
+  /**
+   * The argument position.
+   */
+  public int $position;
 
   /**
    * Overrides Drupal\views\Plugin\views\HandlerBase:init().

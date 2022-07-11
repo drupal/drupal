@@ -32,6 +32,11 @@ class Search extends ArgumentPluginBase {
   protected $searchType;
 
   /**
+   * The search score.
+   */
+  public string $search_score;
+
+  /**
    * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {

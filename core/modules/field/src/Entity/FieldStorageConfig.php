@@ -230,6 +230,11 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
   protected static $inDeletion = FALSE;
 
   /**
+   * Copy of the field before changes.
+   */
+  public FieldStorageConfigInterface $original;
+
+  /**
    * Constructs a FieldStorageConfig object.
    *
    * In most cases, Field entities are created via

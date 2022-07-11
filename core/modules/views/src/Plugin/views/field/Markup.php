@@ -22,6 +22,11 @@ use Drupal\views\ViewExecutable;
 class Markup extends FieldPluginBase {
 
   /**
+   * The format to use for this field.
+   */
+  public string $format;
+
+  /**
    * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
