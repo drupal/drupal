@@ -187,8 +187,8 @@ class Element {
   /**
    * Indicates whether the given element is empty.
    *
-   * An element that only has #cache set is considered empty, because it will
-   * render to the empty string.
+   * An element that only has #cache, #weight, or #attached set is considered
+   * empty, because it will render to the empty string.
    *
    * @param array $elements
    *   The element.
@@ -197,7 +197,7 @@ class Element {
    *   Whether the given element is empty.
    */
   public static function isEmpty(array $elements) {
-    return empty($elements) || (count($elements) === 1 && array_keys($elements) === ['#cache']);
+    return \array_diff(\array_keys($elements), ['#cache', '#weight', '#attached']) === [];
   }
 
 }
