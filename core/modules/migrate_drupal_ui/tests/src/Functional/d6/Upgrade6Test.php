@@ -54,11 +54,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
 
     $this->loadFixture($this->getModulePath('migrate_drupal') . '/tests/fixtures/drupal6.php');
 
-    // Enable saving the logs and set the post migration admin user name.
-    $this->outputLogs = TRUE;
-    $this->migratedAdminUserName = 'root';
-    $this->expectedLoggedErrors = 36;
-
     // @todo Remove this in https://www.drupal.org/node/3267515
     \Drupal::service('module_installer')->uninstall(['rdf']);
   }
@@ -210,10 +205,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     $this->assertFollowUpMigrationResults();
 
     $this->assertEmailsSent();
-
-    // Save logs and check the error count.
-    $this->outputLogs('root');
-    $this->assertLogError();
   }
 
   /**
