@@ -51,9 +51,16 @@ class CKEditorStylesComboTranslationTest extends BrowserTestBase {
       'filters' => [],
     ]);
     $filter_format->save();
+    $ckeditor = $this->container->get('plugin.manager.editor')->createInstance('ckeditor');
+    $settings = $ckeditor->getDefaultSettings();
+    $settings['toolbar']['rows'][0][] = [
+      'name' => 'Styles dropdown',
+      'items' => ['Styles'],
+    ];
     $editor = Editor::create([
       'format' => $this->format,
       'editor' => 'ckeditor',
+      'settings' => $settings,
     ]);
     $editor->save();
 
