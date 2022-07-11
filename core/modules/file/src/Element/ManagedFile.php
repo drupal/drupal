@@ -194,10 +194,6 @@ class ManagedFile extends FormElement {
     if (isset($form['#file_upload_delta']) && $current_file_count < $form['#file_upload_delta']) {
       $form[$current_file_count]['#attributes']['class'][] = 'ajax-new-content';
     }
-    // Otherwise just add the new content class on a placeholder.
-    else {
-      $form['#suffix'] .= '<span class="ajax-new-content"></span>';
-    }
 
     $status_messages = ['#type' => 'status_messages'];
     $form['#prefix'] .= $renderer->renderRoot($status_messages);
