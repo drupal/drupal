@@ -477,7 +477,7 @@
   "ignoreFiles": [
     "assets/vendor/**/*.css",
     "tests/Drupal/Tests/Core/Asset/css_test_files/**/*.css",
-    "modules/media/css/plugins/drupalmedia/ckeditor.drupalmedia.css",
+    "modules/ckeditor/css/plugins/drupalmedia/ckeditor.drupalmedia.css",
     "themes/stable/css/core/assets/vendor/**/*.css",
     "themes/stable9/css/core/assets/vendor/**/*.css",
     "themes/stable9/css/media/plugins/drupalmedia/ckeditor.drupalmedia.css"

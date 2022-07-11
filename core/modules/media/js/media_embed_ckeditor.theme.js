@@ -7,6 +7,4 @@
 
 (Drupal => {
   Drupal.theme.mediaEmbedPreviewError = () => `<div>${Drupal.t('An error occurred while trying to preview the media. Please save your work and reload this page.')}</div>`;
-
-  Drupal.theme.mediaEmbedEditButton = () => `<button class="media-library-item__edit">${Drupal.t('Edit media')}</button>`;
 })(Drupal);
