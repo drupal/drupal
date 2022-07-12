@@ -43,12 +43,14 @@ class NodePermissions {
       ],
       "edit own $type_id content" => [
         'title' => $this->t('%type_name: Edit own content', $type_params),
+        'description' => $this->t('Note that anonymous users with this permission are able to edit any content created by any anonymous user.'),
       ],
       "edit any $type_id content" => [
         'title' => $this->t('%type_name: Edit any content', $type_params),
       ],
       "delete own $type_id content" => [
         'title' => $this->t('%type_name: Delete own content', $type_params),
+        'description' => $this->t('Note that anonymous users with this permission are able to delete any content created by any anonymous user.'),
       ],
       "delete any $type_id content" => [
         'title' => $this->t('%type_name: Delete any content', $type_params),
