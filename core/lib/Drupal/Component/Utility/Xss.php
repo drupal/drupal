@@ -237,6 +237,7 @@ class Xss {
               'alt',
               'rel',
               'property',
+              'class',
             ]);
 
             $working = $mode = 1;
