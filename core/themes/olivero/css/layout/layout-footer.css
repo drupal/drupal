@@ -42,7 +42,7 @@
 
 .site-footer__inner {
     padding-top: var(--sp4);
-    padding-bottom: calc(var(--sp)*13)
+    padding-bottom: calc(13 * var(--sp))
 }
   }
 

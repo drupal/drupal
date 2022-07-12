@@ -182,7 +182,7 @@ body:not(.is-always-mobile-nav) .header-nav {
 
 body.is-always-mobile-nav .header-nav {
       overflow: auto;
-      max-width: calc(var(--grid-col-width)*7 + var(--grid-gap)*7);
+      max-width: calc((7 * (var(--grid-col-width) + var(--grid-gap))));
       transition: transform 0.2s, visibility 0.2s;
       border-top-width: calc(var(--drupal-displace-offset-top, 0px) + var(--sp11))
   }
@@ -191,15 +191,15 @@ body.is-always-mobile-nav .header-nav {
 @media (min-width: 90rem) {
 
 [dir="ltr"] body.is-always-mobile-nav .header-nav {
-      padding-right: calc(100vw - var(--max-width) - var(--content-left) + var(--sp))
+      padding-right: calc(100vw - (var(--max-width) + var(--content-left) - var(--sp)))
   }
 
 [dir="rtl"] body.is-always-mobile-nav .header-nav {
-      padding-left: calc(100vw - var(--max-width) - var(--content-left) + var(--sp))
+      padding-left: calc(100vw - (var(--max-width) + var(--content-left) - var(--sp)))
   }
 
 body.is-always-mobile-nav .header-nav {
-      max-width: calc(100vw - var(--max-width) - var(--content-left) + var(--grid-col-width)*7 + var(--grid-gap)*7)
+      max-width: calc(100vw - (var(--max-width) + var(--content-left)) + ((7 * (var(--grid-col-width) + var(--grid-gap)))))
   }
     }
 

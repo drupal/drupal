@@ -87,7 +87,7 @@
 
 .no-touchevents .button--extrasmall {
   margin: var(--space-xs) var(--space-xs) var(--space-xs) 0; /* LTR */
-  padding: calc(var(--space-xs)/2 - 1px) calc(var(--space-s) - 1px); /* 1 */
+  padding: calc(calc(var(--space-xs) / 2) - 1px) calc(var(--space-s) - 1px); /* 1 */
   font-size: var(--font-size-xs);
 }
 

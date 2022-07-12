@@ -66,7 +66,7 @@
   --grid-gap: var(--sp);
   --grid-gap-count: calc(var(--grid-col-count) - 1); /* Count of grid-gaps. */
   --grid-full-width: calc(100vw - var(--sp2) - var(--scrollbar-width)); /* Width of the entire grid. */
-  --grid-col-width: calc((var(--grid-full-width) - var(--grid-gap-count)*var(--grid-gap))/var(--grid-col-count)); /* Width of a grid column. */
+  --grid-col-width: calc((var(--grid-full-width) - (var(--grid-gap-count) * var(--grid-gap))) / var(--grid-col-count)); /* Width of a grid column. */
 }
 
 @media (min-width: 43.75rem) {
@@ -101,23 +101,23 @@
 :root {
 
   /* Layout helpers */
-  --sp0-25: calc(var(--sp)*0.25);
-  --sp0-5: calc(var(--sp)*0.5);
-  --sp0-75: calc(var(--sp)*0.75);
-  --sp1: calc(var(--sp)*1);
-  --sp1-5: calc(var(--sp)*1.5);
-  --sp2: calc(var(--sp)*2);
-  --sp2-5: calc(var(--sp)*2.5);
-  --sp3: calc(var(--sp)*3);
-  --sp4: calc(var(--sp)*4);
-  --sp5: calc(var(--sp)*5);
-  --sp6: calc(var(--sp)*6);
-  --sp7: calc(var(--sp)*7);
-  --sp8: calc(var(--sp)*8);
-  --sp9: calc(var(--sp)*9);
-  --sp10: calc(var(--sp)*10);
-  --sp11: calc(var(--sp)*11);
-  --sp12: calc(var(--sp)*12);
+  --sp0-25: calc(0.25 * var(--sp));
+  --sp0-5: calc(0.5 * var(--sp));
+  --sp0-75: calc(0.75 * var(--sp));
+  --sp1: calc(1 * var(--sp));
+  --sp1-5: calc(1.5 * var(--sp));
+  --sp2: calc(2 * var(--sp));
+  --sp2-5: calc(2.5 * var(--sp));
+  --sp3: calc(3 * var(--sp));
+  --sp4: calc(4 * var(--sp));
+  --sp5: calc(5 * var(--sp));
+  --sp6: calc(6 * var(--sp));
+  --sp7: calc(7 * var(--sp));
+  --sp8: calc(8 * var(--sp));
+  --sp9: calc(9 * var(--sp));
+  --sp10: calc(10 * var(--sp));
+  --sp11: calc(11 * var(--sp));
+  --sp12: calc(12 * var(--sp));
 
   /**
    * Gray colors.
@@ -145,10 +145,10 @@
   --color--primary-hue: 202;
   --color--primary-saturation: 79%;
   --color--primary-lightness: 50;
-  --color--primary-30: hsl(var(--color--primary-hue), var(--color--primary-saturation), calc(1%*(var(--color--primary-lightness) - var(--color--primary-lightness)*0.36)));
-  --color--primary-40: hsl(var(--color--primary-hue), var(--color--primary-saturation), calc(1%*(var(--color--primary-lightness) - var(--color--primary-lightness)*0.24))); /* Blue dark */
-  --color--primary-50: hsl(var(--color--primary-hue), var(--color--primary-saturation), calc(1%*var(--color--primary-lightness))); /* Blue medium */
-  --color--primary-60: hsl(var(--color--primary-hue), var(--color--primary-saturation), calc(1%*(var(--color--primary-lightness) + 24 - var(--color--primary-lightness)*0.24))); /* Blue bright */
+  --color--primary-30: hsl(var(--color--primary-hue), var(--color--primary-saturation), calc(1% * (var(--color--primary-lightness) - (0.36 * var(--color--primary-lightness)))));
+  --color--primary-40: hsl(var(--color--primary-hue), var(--color--primary-saturation), calc(1% * (var(--color--primary-lightness) - (0.24 * var(--color--primary-lightness))))); /* Blue dark */
+  --color--primary-50: hsl(var(--color--primary-hue), var(--color--primary-saturation), calc(1% * var(--color--primary-lightness))); /* Blue medium */
+  --color--primary-60: hsl(var(--color--primary-hue), var(--color--primary-saturation), calc(1% * (var(--color--primary-lightness) + (0.24 * (100 - var(--color--primary-lightness)))))); /* Blue bright */
 
   /**
    * Variables specific to text.
@@ -170,7 +170,7 @@
   --color--green: #3fa21c; /* Green */
 
   /* Header */
-  --header-height-wide-when-fixed: calc(var(--sp)*6);
+  --header-height-wide-when-fixed: calc(6 * var(--sp));
 
   /* Width of slide out navigation */
   --mobile-nav-width: 31.25rem;

@@ -16,7 +16,7 @@
   background-position: left 0.0625rem;
   background-size: var(--space-m) var(--space-m);
   font-size: var(--font-size-s);
-  line-height: 1.125rem;
+  line-height: calc(18rem / 16);
 }
 
 [dir="rtl"] .file {

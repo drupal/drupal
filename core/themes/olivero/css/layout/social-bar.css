@@ -76,8 +76,8 @@
 .social-bar__inner {
     position: relative;
     width: var(--content-left);
-    padding-top: calc(var(--sp)*5);
-    padding-bottom: calc(var(--sp)*5)
+    padding-top: calc(5 * var(--sp));
+    padding-bottom: calc(5 * var(--sp))
 }
 
     [dir="ltr"] .social-bar__inner.is-fixed {
@@ -91,7 +91,7 @@
     .social-bar__inner.is-fixed {
       position: fixed;
       top: var(--sp6);
-      height: calc(100vh - var(--sp)*6);
+      height: calc(100vh - 6 * var(--sp));
     }
   }
 

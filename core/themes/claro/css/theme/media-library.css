@@ -61,7 +61,7 @@
   z-index: var(--vertical-tabs-menu--z-index); /* The line should be kept above the vertical tabs menu link to keep it visible even if the link is hovered and gets the 'hover' background color. */
   display: block;
   width: 100%;
-  margin-top: calc(var(--vertical-tabs-menu-separator-size)*-1);
+  margin-top: calc(var(--vertical-tabs-menu-separator-size) * -1);
   content: "";
   border-top: var(--vertical-tabs-menu-separator-size) solid var(--vertical-tabs-menu-separator-color);
 }
@@ -69,7 +69,7 @@
 .media-library-menu__link {
   position: relative;
   display: block;
-  margin-top: calc(var(--vertical-tabs-border-size)*-1);
+  margin-top: calc(var(--vertical-tabs-border-size) * -1);
   padding: var(--space-s) var(--space-s) var(--space-s) calc(var(--space-l) - var(--vertical-tabs-menu-link--active-border-size)); /* LTR */
   text-decoration: none;
   word-wrap: break-word;
@@ -116,17 +116,17 @@
 .media-library-menu__link::before {
   position: absolute;
   z-index: calc(var(--vertical-tabs-menu--z-index) - 1); /* This should be on a lower level than the menu-item separator lines. */
-  top: calc(var(--vertical-tabs-border-size)*-1);
+  top: calc(var(--vertical-tabs-border-size) * -1);
   right: 0; /* LTR */
-  bottom: calc(var(--vertical-tabs-border-size)*-1);
-  left: calc(var(--vertical-tabs-menu-link--active-border-size)*-1); /* LTR */
+  bottom: calc(var(--vertical-tabs-border-size) * -1);
+  left: calc(var(--vertical-tabs-menu-link--active-border-size) * -1); /* LTR */
   content: "";
   pointer-events: none;
   background-clip: padding-box;
 }
 
 [dir="rtl"] .media-library-menu__link::before {
-  right: calc(var(--vertical-tabs-menu-link--active-border-size)*-1);
+  right: calc(var(--vertical-tabs-menu-link--active-border-size) * -1);
   left: 0;
 }
 
@@ -136,7 +136,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  margin: calc(var(--vertical-tabs-border-size)*-1) calc(var(--vertical-tabs-menu-link--active-border-size)*-1);
+  margin: calc(var(--vertical-tabs-border-size) * -1) calc(var(--vertical-tabs-menu-link--active-border-size) * -1);
   content: "";
   pointer-events: none;
   border: var(--vertical-tabs-menu-link-focus-border-size) solid var(--color-focus);
@@ -217,7 +217,7 @@
 .media-library-add-form__added-media .media-library-add-form__remove-button.button--extrasmall {
   margin: var(--space-xs) 0; /* LTR */
   /* Left padding is double the background size of the button icon. */
-  padding: calc(var(--space-xs)/2 - 1px) calc(var(--space-s) - 1px) calc(var(--space-xs)/2 - 1px) calc(var(--space-s)*2);
+  padding: calc(calc(var(--space-xs) / 2) - 1px) calc(var(--space-s) - 1px) calc(calc(var(--space-xs) / 2) - 1px) calc(var(--space-s) * 2);
 }
 
 /* This is needed to override the default extrasmall button left margin. */
@@ -259,10 +259,10 @@
 
 @media all and (-ms-high-contrast: active), (-ms-high-contrast: none) {
   .ui-dialog > .ui-dialog-content {
-    padding-right: calc(var(--space-s) - var(--focus-border-size) - var(--focus-border-offset-size) - 2px);
+    padding-right: calc(var(--space-s) - calc(var(--focus-border-size) + var(--focus-border-offset-size) + 2px));
   }
   [dir="rtl"] .ui-dialog > .ui-dialog-content {
-    padding-left: calc(var(--space-s) - var(--focus-border-size) - var(--focus-border-offset-size) - 2px);
+    padding-left: calc(var(--space-s) - calc(var(--focus-border-size) + var(--focus-border-offset-size) + 2px));
   }
 }
 
@@ -702,7 +702,7 @@
 .media-library-item__name {
   display: block;
   overflow: hidden;
-  margin: calc(var(--space-xs)/2) var(--space-xs);
+  margin: calc(var(--space-xs) / 2) var(--space-xs);
   white-space: nowrap;
   text-overflow: ellipsis;
   font-size: 0.875rem;
