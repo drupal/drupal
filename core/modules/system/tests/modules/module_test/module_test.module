@@ -51,7 +51,7 @@ function module_test_system_info_alter(&$info, Extension $file, $type) {
       $info['version'] = '8.x-1.0';
     }
   }
-  if ($file->getName() == 'seven' && $type == 'theme') {
+  if ($file->getName() == 'stark' && $type == 'theme') {
     $info['regions']['test_region'] = 'Test region';
   }
 }
