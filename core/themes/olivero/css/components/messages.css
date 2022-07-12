@@ -68,7 +68,7 @@
 }
 
 .messages {
-  min-height: calc(var(--messages-icon-size) + var(--sp1)*2);
+  min-height: calc(var(--messages-icon-size) + 2 * var(--sp1));
   padding-top: var(--sp1);
   padding-bottom: var(--sp1);
   color: var(--color--white);

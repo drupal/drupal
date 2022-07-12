@@ -242,7 +242,6 @@ form.password-confirm:
   js:
     js/user.theme.js: {}
   dependencies:
-    - core/drupal.object.assign
     - core/drupal
     - claro/global-styling
 

@@ -50,7 +50,7 @@
 
 .action-link {
   display: inline-block;
-  padding: calc(var(--space-m) - var(--space-l)/2 + var(--space-m)/2) var(--space-m);
+  padding: calc(var(--space-m) - ((var(--space-l) - var(--space-m)) / 2)) var(--space-m);
   cursor: pointer;
   text-decoration: none;
   color: var(--color-gray-800);
@@ -65,7 +65,7 @@
 /* Small variant. */
 
 .no-touchevents .action-link--small {
-  padding: calc(var(--space-s) - var(--space-l)/2 + var(--space-s)/2) var(--space-s);
+  padding: calc(var(--space-s) - ((var(--space-l) - var(--space-s)) / 2)) var(--space-s);
   font-size: var(--font-size-s);
 }
 

@@ -207,7 +207,7 @@
     body:not(.is-always-mobile-nav) .primary-nav__menu--level-2 {
       position: absolute;
       z-index: 105; /* Appear above search container. */
-      top: calc(100% - var(--sp)*0.5);
+      top: calc(100% - (0.5 * var(--sp)));
       left: 50%;
       visibility: hidden;
       overflow: auto;
@@ -216,8 +216,8 @@
        * elements should always be in viewport per accessibility guidelines). */
       max-height: calc(100vh - var(--site-header-height-wide) - var(--drupal-displace-offset-top, 0px) - var(--drupal-displace-offset-bottom, 0px) - var(--sp));
       margin-top: 0;
-      padding-top: calc(var(--sp)*3);
-      padding-bottom: calc(var(--sp)*3);
+      padding-top: calc(3 * var(--sp));
+      padding-bottom: calc(3 * var(--sp));
       transition: none;
       transform: translate(-50%, -1.25rem);
       opacity: 0;
@@ -244,7 +244,7 @@
 
       body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2:focus:before {
         top: 0;
-        left: calc(var(--sp0-5)*-1);
+        left: calc(var(--sp0-5) * -1);
         height: 100%;
         transform: none;
       }

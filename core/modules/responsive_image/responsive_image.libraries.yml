@@ -1,4 +1,0 @@
-ajax:
-  version: VERSION
-  js:
-    js/responsive_image.ajax.js: {}

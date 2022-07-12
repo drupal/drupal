@@ -24,12 +24,12 @@
 /* Width of the entire grid maxes out. */
 
 [dir="ltr"] .site-branding {
-  margin-left: calc(var(--container-padding)*-1);
+  margin-left: calc(-1 * var(--container-padding));
   margin-right: var(--sp)
 }
 
 [dir="rtl"] .site-branding {
-  margin-right: calc(var(--container-padding)*-1);
+  margin-right: calc(-1 * var(--container-padding));
   margin-left: var(--sp)
 }
 
@@ -53,7 +53,7 @@
   display: flex;
   flex-shrink: 1;
   align-items: flex-end;
-  min-width: calc(var(--grid-col-width)*2 + var(--grid-gap)*2 + var(--container-padding)); /* Span minimum of 2 column widths. */
+  min-width: calc((2 * var(--grid-col-width)) + (2 * var(--grid-gap)) + var(--container-padding)); /* Span minimum of 2 column widths. */
   min-height: var(--sp3); /* Negative margin to break out of .container element. */
   padding-top: 0;
   padding-bottom: var(--sp0-5);
@@ -70,7 +70,7 @@
 @media (min-width: 43.75rem) {
 
 .site-branding {
-    min-width: calc(var(--grid-col-width)*4 + var(--grid-gap)*4 + var(--container-padding)); /* Span minimum of 4 column widths. */
+    min-width: calc((4 * var(--grid-col-width)) + (4 * var(--grid-gap)) + var(--container-padding)); /* Span minimum of 4 column widths. */
     min-height: var(--sp6);
     padding-bottom: var(--sp)
 }
@@ -79,18 +79,18 @@
 @media (min-width: 62.5rem) {
 
 .site-branding {
-    min-width: calc(var(--grid-col-width)*2 + var(--grid-gap)*2 + var(--container-padding)) /* Span minimum of 2 column widths. */
+    min-width: calc((2 * var(--grid-col-width)) + (2 * var(--grid-gap)) + var(--container-padding)) /* Span minimum of 2 column widths. */
 }
   }
 
 @media (min-width: 75rem) {
 
 [dir="ltr"] .site-branding {
-    margin-left: calc(var(--container-padding)*-1)
+    margin-left: calc(-1 * var(--container-padding))
   }
 
 [dir="rtl"] .site-branding {
-    margin-right: calc(var(--container-padding)*-1)
+    margin-right: calc(-1 * var(--container-padding))
   }
 
 .site-branding {
