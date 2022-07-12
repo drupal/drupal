@@ -47,22 +47,6 @@ class DefaultConfigTest extends KernelTestBase {
   ];
 
   /**
-   * Themes which provide default configuration and need enabling.
-   *
-   * If a theme provides default configuration but does not have a schema
-   * because it can rely on schemas added by system_config_schema_info_alter()
-   * then this test needs to enable it.
-   *
-   * @var array
-   */
-  protected $themes = ['seven'];
-
-  protected function setUp(): void {
-    parent::setUp();
-    \Drupal::service('theme_installer')->install($this->themes);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function register(ContainerBuilder $container) {
