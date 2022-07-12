@@ -504,8 +504,8 @@ class XssTest extends TestCase {
   public function providerTestAttributes() {
     return [
       [
-        '<img src="http://example.com/foo.jpg" title="Example: title" alt="Example: alt">',
-        '<img src="http://example.com/foo.jpg" title="Example: title" alt="Example: alt">',
+        '<img src="http://example.com/foo.jpg" title="Example: title" alt="Example: alt" class="md:block">',
+        '<img src="http://example.com/foo.jpg" title="Example: title" alt="Example: alt" class="md:block">',
         'Image tag with alt and title attribute',
         ['img'],
       ],
