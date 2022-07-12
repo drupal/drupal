@@ -80,22 +80,6 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       files: ['backbone.js', 'backbone-min.js', 'backbone-min.js.map'],
     },
     {
-      pack: 'css.escape',
-      folder: 'css-escape',
-      library: 'css.escape',
-      files: ['css.escape.js'],
-    },
-    {
-      pack: 'es6-promise',
-      files: [
-        { from: 'dist/es6-promise.auto.min.js', to: 'es6-promise.auto.min.js' },
-        {
-          from: 'dist/es6-promise.auto.min.map',
-          to: 'es6-promise.auto.min.map',
-        },
-      ],
-    },
-    {
       pack: 'farbtastic',
       library: 'jquery.farbtastic',
       files: [
@@ -141,10 +125,6 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
         { from: 'dist/once.min.js', to: 'once.min.js' },
         { from: 'dist/once.min.js.map', to: 'once.min.js.map' },
       ],
-    },
-    {
-      pack: 'picturefill',
-      files: [{ from: 'dist/picturefill.min.js', to: 'picturefill.min.js' }],
     },
     {
       pack: '@popperjs/core',

@@ -38,7 +38,7 @@
 }
 
 .admin-item:not(:last-child) {
-  border-bottom: 0.0625em solid var(--color-gray-200);
+  border-bottom: calc(1em / 16) solid var(--color-gray-200);
 }
 
 .admin-item__title {
