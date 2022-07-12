@@ -29,9 +29,6 @@ class MediaThumbnailFormatterTest extends MediaFunctionalTestBase {
   public function testRender() {
     $this->drupalLogin($this->adminUser);
 
-    /** @var \Drupal\Core\Render\Renderer $renderer */
-    $renderer = $this->container->get('renderer');
-
     /** @var \Drupal\node\NodeStorage $node_storage */
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
 
@@ -70,7 +67,7 @@ class MediaThumbnailFormatterTest extends MediaFunctionalTestBase {
       ])
       ->save();
 
-    // The first case is validate the image with media link.
+    // Change the image thumbnail to point into the media.
     $this->changeMediaReferenceFieldLinkType('media');
 
     // Create and upload a file to the media.
@@ -86,41 +83,28 @@ class MediaThumbnailFormatterTest extends MediaFunctionalTestBase {
     $mediaImage->save();
 
     // Save the article node.
+    $title = $this->randomMachineName();
     $edit = [
-      'title[0][value]' => $this->randomMachineName(),
+      'title[0][value]' => $title,
     ];
     $edit['field_media_reference[0][target_id]'] = $mediaImage->getName();
     $this->drupalGet('node/add/article');
     $this->submitForm($edit, 'Save');
 
-    // Retrieve node id.
-    $matches = [];
-    preg_match('/node\/([0-9]+)/', $this->getUrl(), $matches);
-    $nid = $matches[1];
+    // Validate the image being loaded with the media reference.
+    $this->assertSession()->responseContains('<a href="' . $mediaImage->toUrl('edit-form')->toString());
 
-    // Loads the new node entity.
-    $node = $node_storage->load($nid);
+    // Retrieve the created node.
+    $node = $this->drupalGetNodeByTitle($title);
+    $nid = $node->id();
 
-    /** @var \Drupal\media\Entity\Media $media */
-    $media = $node->field_media_reference->entity;
-    $image = [
-      '#theme' => 'image_formatter',
-      '#item' => $media->get('thumbnail')->first(),
-      '#item_attributes' => [],
-      '#image_style' => '',
-      '#url' => $media->toUrl(),
-    ];
-    // Check the image being loaded.
-    $this->assertSession()->responseContains($renderer->renderRoot($image));
-    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $media->getCacheTags()[0]);
-
-    // The second scenario is to validate the image thumbnail with content link.
+    // Change the image thumbnail to point into the content node.
     $this->changeMediaReferenceFieldLinkType('content');
     $node_storage->resetCache([$nid]);
+    $this->drupalGet('node/' . $nid);
 
-    $image['#url'] = $node->toUrl();
-    $this->assertSession()->responseContains($renderer->renderRoot($image));
-    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $media->getCacheTags()[0]);
+    // Validate image being loaded with the content on the link.
+    $this->assertSession()->responseContains('<a href="' . $node->toUrl()->toString());
   }
 
   /**
