@@ -8,7 +8,10 @@
 use Drupal\Core\Url;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\ckeditor\CKEditorPluginButtonsInterface;
+use Drupal\ckeditor\CKEditorPluginContextualInterface;
 use Drupal\editor\Entity\Editor;
+use Drupal\editor\EditorInterface;
 
 /**
  * Implements hook_help().
@@ -120,6 +123,59 @@ function _ckeditor_theme_css($theme = NULL) {
 }
 
 /**
+ * Gets all enabled CKEditor 4 plugins.
+ *
+ * @param \Drupal\editor\EditorInterface $editor
+ *   A text editor config entity configured to use CKEditor 4.
+ *
+ * @return string[]
+ *   The enabled CKEditor 4 plugin IDs.
+ *
+ * @internal
+ */
+function _ckeditor_get_enabled_plugins(EditorInterface $editor): array {
+  assert($editor->getEditor() === 'ckeditor');
+
+  $cke4_plugin_manager = \Drupal::service('plugin.manager.ckeditor.plugin');
+
+  // This is largely copied from the CKEditor 4 plugin manager, because it
+  // unfortunately does not provide the API this needs.
+  // @see \Drupal\ckeditor\CKEditorPluginManager::getEnabledPluginFiles()
+  $plugins = array_keys($cke4_plugin_manager->getDefinitions());
+  $toolbar_buttons = $cke4_plugin_manager->getEnabledButtons($editor);
+  $enabled_plugins = [];
+  $additional_plugins = [];
+  foreach ($plugins as $plugin_id) {
+    $plugin = $cke4_plugin_manager->createInstance($plugin_id);
+
+    $enabled = FALSE;
+    // Plugin is enabled if it provides a button that has been enabled.
+    if ($plugin instanceof CKEditorPluginButtonsInterface) {
+      $plugin_buttons = array_keys($plugin->getButtons());
+      $enabled = (count(array_intersect($toolbar_buttons, $plugin_buttons)) > 0);
+    }
+    // Otherwise plugin is enabled if it declares itself as enabled.
+    if (!$enabled && $plugin instanceof CKEditorPluginContextualInterface) {
+      $enabled = $plugin->isEnabled($editor);
+    }
+
+    if ($enabled) {
+      $enabled_plugins[$plugin_id] = $plugin_id;
+      // Check if this plugin has dependencies that should be considered
+      // enabled.
+      $additional_plugins = array_merge($additional_plugins, array_diff($plugin->getDependencies($editor), $additional_plugins));
+    }
+  }
+
+  // Add the list of dependent plugins.
+  foreach ($additional_plugins as $plugin_id) {
+    $enabled_plugins[$plugin_id] = $plugin_id;
+  }
+
+  return $enabled_plugins;
+}
+
+/**
  * Implements hook_library_info_alter().
  */
 function ckeditor_library_info_alter(&$libraries, $extension) {
@@ -128,5 +184,36 @@ function ckeditor_library_info_alter(&$libraries, $extension) {
   if ($extension === 'ckeditor' && isset($libraries['drupal.ckeditor'])) {
     $query_string = \Drupal::state()->get('system.css_js_query_string', '0');
     $libraries['drupal.ckeditor']['drupalSettings']['ckeditor']['timestamp'] = $query_string;
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function ckeditor_editor_presave(EditorInterface $editor) {
+  // Only try to update editors using CKEditor 4.
+  if ($editor->getEditor() !== 'ckeditor') {
+    return FALSE;
+  }
+
+  $enabled_plugins = _ckeditor_get_enabled_plugins($editor);
+
+  // Only update if the editor has plugin settings for disabled plugins.
+  $needs_update = FALSE;
+  $settings = $editor->getSettings();
+
+  // Updates are not needed if plugin settings are not defined for the editor.
+  if (!isset($settings['plugins'])) {
+    return;
+  }
+
+  foreach (array_keys($settings['plugins']) as $plugin_id) {
+    if (!in_array($plugin_id, $enabled_plugins, TRUE)) {
+      unset($settings['plugins'][$plugin_id]);
+      $needs_update = TRUE;
+    }
+  }
+  if ($needs_update) {
+    $editor->setSettings($settings);
   }
 }

@@ -40,6 +40,13 @@ class CKEditorStylesComboAdminTest extends BrowserTestBase {
   protected $format;
 
   /**
+   * The default editor settings.
+   *
+   * @var array
+   */
+  protected $defaultSettings;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -52,9 +59,16 @@ class CKEditorStylesComboAdminTest extends BrowserTestBase {
       'filters' => [],
     ]);
     $filter_format->save();
+    $ckeditor = $this->container->get('plugin.manager.editor')->createInstance('ckeditor');
+    $this->defaultSettings = $ckeditor->getDefaultSettings();
+    $this->defaultSettings['toolbar']['rows'][0][] = [
+      'name' => 'Styles dropdown',
+      'items' => ['Styles'],
+    ];
     $editor = Editor::create([
       'format' => $this->format,
       'editor' => 'ckeditor',
+      'settings' => $this->defaultSettings,
     ]);
     $editor->save();
 
@@ -65,14 +79,11 @@ class CKEditorStylesComboAdminTest extends BrowserTestBase {
    * Tests StylesCombo settings for an existing text format.
    */
   public function testExistingFormat() {
-    $ckeditor = $this->container->get('plugin.manager.editor')->createInstance('ckeditor');
-    $default_settings = $ckeditor->getDefaultSettings();
-
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/config/content/formats/manage/' . $this->format);
 
     // Ensure an Editor config entity exists, with the proper settings.
-    $expected_settings = $default_settings;
+    $expected_settings = $this->defaultSettings;
     $editor = Editor::load($this->format);
     $this->assertEquals($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
 
