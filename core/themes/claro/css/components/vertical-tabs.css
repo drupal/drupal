@@ -77,7 +77,7 @@
   z-index: 1; /* The line should be kept above the vertical tabs menu link to keep it visible even if the link is hovered and gets the 'hover' background color. */
   display: block;
   width: 100%;
-  margin-top: calc(var(--vertical-tabs-menu-separator-size) * -1);
+  margin-top: calc(var(--vertical-tabs-menu-separator-size)*-1);
   border-top: var(--vertical-tabs-menu-separator-size) solid var(--vertical-tabs-menu-separator-color);
 }
 
@@ -129,7 +129,7 @@
 .vertical-tabs__menu-link {
   position: relative;
   display: block;
-  margin-top: calc(var(--vertical-tabs-border-size) * -1);
+  margin-top: calc(var(--vertical-tabs-border-size)*-1);
   padding: var(--space-s) var(--space-s) var(--space-s) calc(var(--space-l) - var(--vertical-tabs-menu-link--active-border-size)); /* LTR */
   text-decoration: none;
   word-wrap: break-word;
@@ -172,17 +172,17 @@
 .vertical-tabs__menu-link::before {
   position: absolute;
   z-index: 0; /* This should be on a lower level than the menu-item separator lines. */
-  top: calc(var(--vertical-tabs-border-size) * -1);
+  top: calc(var(--vertical-tabs-border-size)*-1);
   right: 0; /* LTR */
-  bottom: calc(var(--vertical-tabs-border-size) * -1);
-  left: calc(var(--vertical-tabs-menu-link--active-border-size) * -1); /* LTR */
+  bottom: calc(var(--vertical-tabs-border-size)*-1);
+  left: calc(var(--vertical-tabs-menu-link--active-border-size)*-1); /* LTR */
   content: "";
   pointer-events: none;
   background-clip: padding-box;
 }
 
 [dir="rtl"] .vertical-tabs__menu-link::before {
-  right: calc(var(--vertical-tabs-menu-link--active-border-size) * -1);
+  right: calc(var(--vertical-tabs-menu-link--active-border-size)*-1);
   left: 0;
 }
 
@@ -196,7 +196,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  margin: calc(var(--vertical-tabs-border-size) * -1) calc(var(--vertical-tabs-menu-link--active-border-size) * -1);
+  margin: calc(var(--vertical-tabs-border-size)*-1) calc(var(--vertical-tabs-menu-link--active-border-size)*-1);
   content: "";
   pointer-events: none;
   border: var(--vertical-tabs-menu-link-focus-border-size) solid var(--color-focus);
@@ -316,7 +316,7 @@
 
 .vertical-tabs__item {
   /* Render on top of the border of vertical-tabs__items. */
-  margin: calc(var(--vertical-tabs-border-size) * -1) calc(var(--vertical-tabs-border-size) * -1) 0;
+  margin: calc(var(--vertical-tabs-border-size)*-1) calc(var(--vertical-tabs-border-size)*-1) 0;
   border-radius: 0;
 }
 
@@ -326,7 +326,7 @@
 }
 
 .vertical-tabs__item.last {
-  margin-bottom: calc(var(--vertical-tabs-border-size) * -1);
+  margin-bottom: calc(var(--vertical-tabs-border-size)*-1);
   border-bottom-right-radius: var(--details-accordion-border-size-radius);
   border-bottom-left-radius: var(--details-accordion-border-size-radius);
 }

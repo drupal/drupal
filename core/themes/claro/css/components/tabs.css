@@ -161,7 +161,7 @@
 }
 
 .tabs__tab.is-active:focus::before {
-  top: calc(var(--tabs--focus-height) * -1);
+  top: calc(var(--tabs--focus-height)*-1);
   height: calc(var(--tabs-link-height) + 2px);
 }
 
@@ -219,7 +219,7 @@
 
   .is-horizontal .tabs--secondary {
     overflow: hidden;
-    margin: calc(calc(var(--tabs--focus-height) + 0.1875rem) * -1) calc(calc(var(--tabs--focus-height) + 0.1875rem) * -1) 0;
+    margin: calc(var(--tabs--focus-height)*-1 + -0.1875rem) calc(var(--tabs--focus-height)*-1 + -0.1875rem) 0;
     padding: calc(var(--tabs--focus-height) + 0.1875rem) calc(var(--tabs--focus-height) + 0.1875rem) 0;
     border-radius: 0;
   }

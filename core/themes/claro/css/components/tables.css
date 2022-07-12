@@ -302,7 +302,7 @@ td.priority-medium {
 
 .tabledrag-toggle-weight-wrapper {
   margin-top: var(--space-l);
-  line-height: calc(28rem / 16);
+  line-height: 1.75rem;
 }
 
 .tabledrag-toggle-weight-wrapper + table,

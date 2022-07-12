@@ -6,6 +6,9 @@ node_modules/**/*
 !modules/ckeditor5/js/ckeditor5_plugins/**/*.js
 modules/locale/tests/locale_test.es6.js
 !tests/Drupal/Nightwatch/**/*.js
+misc/polyfills/array.find.es6.js
+misc/polyfills/element.closest.es6.js
+misc/polyfills/object.assign.es6.js
 
 # Ignore deliberately malformed YAML files.
 modules/system/tests/fixtures/HtaccessTest/access_test.yml

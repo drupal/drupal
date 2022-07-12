@@ -38,8 +38,8 @@
    * Calculated values.
    */
   --views-grid--gap-count: calc(var(--views-grid--column-count) - 1);
-  --views-grid--total-gap-width: calc(var(--views-grid--gap-count) * var(--views-grid--layout-gap));
-  --views-grid-item--max-width: calc((100% - var(--views-grid--total-gap-width)) / var(--views-grid--column-count));
+  --views-grid--total-gap-width: calc(var(--views-grid--gap-count)*var(--views-grid--layout-gap));
+  --views-grid-item--max-width: calc((100% - var(--views-grid--total-gap-width))/var(--views-grid--column-count));
 
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(max(var(--views-grid-item--min-width), var(--views-grid-item--max-width)), 1fr));
@@ -47,7 +47,7 @@
 }
 
 .views-view-grid--vertical {
-  margin-bottom: calc(-1 * var(--views-grid--layout-gap)); /* Offset the bottom row's padding. */
+  margin-bottom: calc(var(--views-grid--layout-gap)*-1); /* Offset the bottom row's padding. */
   column-width: var(--views-grid-item--min-width);
   column-count: var(--views-grid--column-count);
   grid-column-gap: var(--views-grid--layout-gap)

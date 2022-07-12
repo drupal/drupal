@@ -41,7 +41,7 @@
   border-top-left-radius: var(--jui-dialog-border-radius);
   border-top-right-radius: var(--jui-dialog-border-radius);
   background: var(--jui-dialog-title-bg-color);
-  line-height: calc(var(--space-m) * 2);
+  line-height: calc(var(--space-m)*2);
 }
 
 [dir="rtl"] .ui-dialog .ui-dialog-titlebar {

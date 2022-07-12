@@ -109,10 +109,10 @@
 
 @media (min-width: 75rem) {
     [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__button-toggle {
-      margin-right: calc(-1 * var(--sp2))
+      margin-right: calc(var(--sp2)*-1)
   }
     [dir="rtl"] body:not(.is-always-mobile-nav) .primary-nav__button-toggle {
-      margin-left: calc(-1 * var(--sp2))
+      margin-left: calc(var(--sp2)*-1)
   }
     body:not(.is-always-mobile-nav) .primary-nav__button-toggle {
       flex-shrink: 0;

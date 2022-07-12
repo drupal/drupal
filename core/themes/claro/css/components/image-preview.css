@@ -12,7 +12,7 @@
 
 :root {
   --color-pattern: var(--color-gray-200);
-  --size-pattern-square: calc(7rem / 16);
+  --size-pattern-square: 0.4375rem;
 }
 
 /**
@@ -41,7 +41,7 @@
     var(--size-pattern-square) var(--size-pattern-square),
     var(--size-pattern-square) var(--size-pattern-square),
     0 0;
-  background-size: calc(var(--size-pattern-square) * 2) calc(var(--size-pattern-square) * 2);
+  background-size: calc(var(--size-pattern-square)*2) calc(var(--size-pattern-square)*2);
 }
 
 @media screen and (-ms-high-contrast: active) {

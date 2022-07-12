@@ -90,7 +90,7 @@ _:-ms-fullscreen,
   color: var(--color-link);
   font-size: var(--font-size-xxs); /* ~11px */
   font-weight: bold;
-  line-height: calc(18rem / 16); /* 18px */
+  line-height: 1.125rem; /* 18px */
 }
 
 [dir="rtl"] .claro-autocomplete__message {

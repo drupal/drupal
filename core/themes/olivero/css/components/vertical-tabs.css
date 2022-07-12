@@ -70,7 +70,7 @@
   }
 
 .vertical-tabs__panes {
-  margin-top: calc(var(--vertical-tabs-menu-border-width) * -1)
+  margin-top: calc(var(--vertical-tabs-menu-border-width)*-1)
 }
 
 @media (min-width: 62.5rem) {
@@ -140,11 +140,11 @@
 @media (min-width: 62.5rem) {
 
 [dir="ltr"] .vertical-tabs__menu-item.is-selected {
-    margin-right: calc(var(--vertical-tabs-menu-border-width) * -1);
+    margin-right: calc(var(--vertical-tabs-menu-border-width)*-1);
   }
 
 [dir="rtl"] .vertical-tabs__menu-item.is-selected {
-    margin-left: calc(var(--vertical-tabs-menu-border-width) * -1);
+    margin-left: calc(var(--vertical-tabs-menu-border-width)*-1);
   }
 
 [dir="ltr"] .vertical-tabs__menu-item.is-selected {
