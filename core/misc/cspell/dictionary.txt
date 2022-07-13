@@ -224,7 +224,6 @@ clearfix
 cleartype
 clicksorter
 clist
-cloner
 closethick
 cnenzrgre
 cnfi
@@ -298,6 +297,7 @@ dblog
 dbtng
 dburl
 ddev
+dealerdirect
 deckard
 deconstructor
 deduplicated
@@ -332,7 +332,6 @@ desaturated
 desaturates
 desaturating
 descripcion
-deserialization
 destructable
 deutsch
 deutscher
@@ -438,7 +437,6 @@ entityviewedit
 eridani
 errmode
 errrf
-eslintignore
 espagnol
 estraven
 etag
@@ -980,11 +978,13 @@ permissionless
 persistable
 phpass
 phpcbf
+phpcodesniffer
 phpcs
 phpdocumentor
 phpfile
 phpserialize
 phpspec
+phpstan
 phpunit
 phpunit's
 pianura
@@ -1024,7 +1024,6 @@ precache
 precompiled
 preconfigure
 preconfigured
-preconnect
 precreated
 predelete
 prefetches
@@ -1100,7 +1099,6 @@ rdfa
 rdfs
 readmore
 readonlydir
-readystate
 realelement
 realise
 realpaths
@@ -1120,7 +1118,6 @@ referencers
 referer
 refinable
 regexes
-reimplement
 reindex
 reindexing
 reinject
@@ -1215,6 +1212,7 @@ skynet
 slashentry
 slashrendererentry
 slatkin
+slevomat
 sloopal
 smacss
 smalldatetime
@@ -1251,7 +1249,6 @@ starterkit
 starzzzz
 statuscode
 stdclass
-stdlib
 stitle
 streamwrapper
 streamwrappers
@@ -1435,8 +1432,6 @@ toplevel
 topop
 torder
 totalcount
-totranslate
-touchevent
 touchevents
 tparams
 trackback
@@ -1464,6 +1459,7 @@ typemanager
 tzid
 tést
 uberawesome
+ui's
 uicrud
 uids
 ulwa
@@ -1560,7 +1556,6 @@ uploaders
 uploadprogress
 uppercased
 upscaling
-upsert
 urandom
 urlalias
 urldecoding

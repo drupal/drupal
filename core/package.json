@@ -69,7 +69,7 @@
     "chromedriver": "^98.0.1",
     "ckeditor5": "34.1.x",
     "cross-env": "^7.0.2",
-    "cspell": "^5.0.0",
+    "cspell": "^6.0.0",
     "css.escape": "1.5.x",
     "dotenv-safe": "^8.2.0",
     "es6-promise": "4.2.x",
