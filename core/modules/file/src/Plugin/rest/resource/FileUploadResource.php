@@ -166,7 +166,7 @@ class FileUploadResource extends ResourceBase {
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, $serializer_formats, LoggerInterface $logger, FileSystemInterface $file_system, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, AccountInterface $current_user, $mime_type_guesser, Token $token, LockBackendInterface $lock, Config $system_file_config, EventDispatcherInterface $event_dispatcher = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, $serializer_formats, LoggerInterface $logger, FileSystemInterface $file_system, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, AccountInterface $current_user, $mime_type_guesser, Token $token, LockBackendInterface $lock, Config $system_file_config, EventDispatcherInterface $event_dispatcher) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     $this->fileSystem = $file_system;
     $this->entityTypeManager = $entity_type_manager;
@@ -176,10 +176,6 @@ class FileUploadResource extends ResourceBase {
     $this->token = $token;
     $this->lock = $lock;
     $this->systemFileConfig = $system_file_config;
-    if (!$event_dispatcher) {
-      @trigger_error('The event dispatcher service should be passed to FileUploadResource::__construct() since 9.2.0. This will be required in Drupal 10.0.0. See https://www.drupal.org/node/3032541', E_USER_DEPRECATED);
-      $event_dispatcher = \Drupal::service('event_dispatcher');
-    }
     $this->eventDispatcher = $event_dispatcher;
   }
 
