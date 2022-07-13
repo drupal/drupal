@@ -78,6 +78,7 @@ class ConfigHandler extends ViewsFormBase {
       }
       else {
         $types = ViewExecutable::getHandlerTypes();
+        $form['#title'] = $this->t('Configure @type: @item', ['@type' => $types[$type]['lstitle'], '@item' => $handler->adminLabel()]);
 
         // If this item can come from the default display, show a dropdown
         // that lets the user choose which display the changes should apply to.
@@ -149,8 +150,6 @@ class ConfigHandler extends ViewsFormBase {
             '#value' => 'none',
           ];
         }
-
-        $form['#title'] = $this->t('Configure @type: @item', ['@type' => $types[$type]['lstitle'], '@item' => $handler->adminLabel()]);
 
         if (!empty($handler->definition['help'])) {
           $form['options']['form_description'] = [
