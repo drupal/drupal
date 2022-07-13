@@ -143,7 +143,7 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
    */
   public function testVerifyTemplateTestProviderIsAccurate() {
     $root = $this->getDrupalRoot();
-    $data = $this->provideTemplateCreateProject($root);
+    $data = $this->provideTemplateCreateProject();
 
     // Find all the templates.
     $template_files = Composer::composerSubprojectPaths($root, 'Template');
