@@ -548,8 +548,9 @@ trait FunctionalTestSetupTrait {
               'pass2' => $this->rootUser->pass_raw ?? $this->rootUser->passRaw,
             ],
           ],
-          // form_type_checkboxes_value() requires NULL instead of FALSE values
-          // for programmatic form submissions to disable a checkbox.
+          // \Drupal\Core\Render\Element\Checkboxes::valueCallback() requires
+          // NULL instead of FALSE values for programmatic form submissions to
+          // disable a checkbox.
           'enable_update_status_module' => NULL,
           'enable_update_status_emails' => NULL,
         ],
