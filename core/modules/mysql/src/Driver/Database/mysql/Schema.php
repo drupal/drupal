@@ -48,7 +48,7 @@ class Schema extends DatabaseSchema {
    *   A keyed array with information about the database, table name and prefix.
    */
   protected function getPrefixInfo($table = 'default', $add_prefix = TRUE) {
-    $info = ['prefix' => $this->connection->tablePrefix($table)];
+    $info = ['prefix' => $this->connection->getPrefix()];
     if ($add_prefix) {
       $table = $info['prefix'] . $table;
     }

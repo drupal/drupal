@@ -171,7 +171,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
 
     // Default generated table names, limited to 63 characters.
     $machine_name = str_replace(':', '__', $this->migration->id());
-    $prefix_length = strlen($this->database->tablePrefix());
+    $prefix_length = strlen($this->database->getPrefix());
     $this->mapTableName = 'migrate_map_' . mb_strtolower($machine_name);
     $this->mapTableName = mb_substr($this->mapTableName, 0, 63 - $prefix_length);
     $this->messageTableName = 'migrate_message_' . mb_strtolower($machine_name);

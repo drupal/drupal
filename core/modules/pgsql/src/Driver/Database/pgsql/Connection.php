@@ -299,7 +299,7 @@ class Connection extends DatabaseConnection {
    */
   public function getFullQualifiedTableName($table) {
     $options = $this->getConnectionOptions();
-    $prefix = $this->tablePrefix($table);
+    $prefix = $this->getPrefix();
 
     // The fully qualified table name in PostgreSQL is in the form of
     // <database>.<schema>.<table>, so we have to include the 'public' schema in

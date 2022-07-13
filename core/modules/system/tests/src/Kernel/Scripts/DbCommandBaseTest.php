@@ -87,13 +87,13 @@ class DbCommandBaseTest extends KernelTestBase {
       '--database' => 'magic_db',
       '--prefix' => 'extra',
     ]);
-    $this->assertEquals('extra', $command->getDatabaseConnection($command_tester->getInput())->tablePrefix());
+    $this->assertEquals('extra', $command->getDatabaseConnection($command_tester->getInput())->getPrefix());
 
     $command_tester->execute([
       '-db-url' => Database::getConnectionInfoAsUrl(),
       '--prefix' => 'extra2',
     ]);
-    $this->assertEquals('extra2', $command->getDatabaseConnection($command_tester->getInput())->tablePrefix());
+    $this->assertEquals('extra2', $command->getDatabaseConnection($command_tester->getInput())->getPrefix());
 
     // This breaks simpletest cleanup.
     // @code

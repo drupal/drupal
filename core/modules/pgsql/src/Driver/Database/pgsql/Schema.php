@@ -511,7 +511,7 @@ EOD;
    * {@inheritdoc}
    */
   public function findTables($table_expression) {
-    $prefix = $this->connection->tablePrefix();
+    $prefix = $this->connection->getPrefix();
     $prefix_length = strlen($prefix);
     $tables = [];
 
