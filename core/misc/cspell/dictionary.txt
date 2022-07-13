@@ -220,7 +220,6 @@ clearfix
 cleartype
 clicksorter
 clist
-cloner
 closethick
 cnenzrgre
 cnfi
@@ -292,6 +291,7 @@ dblog
 dbtng
 dburl
 ddev
+dealerdirect
 deckard
 deconstructor
 deduplicated
@@ -326,7 +326,6 @@ desaturated
 desaturates
 desaturating
 descripcion
-deserialization
 destructable
 deutsch
 deutscher
@@ -427,7 +426,6 @@ entityviewedit
 eridani
 errmode
 errrf
-eslintignore
 espagnol
 estraven
 etag
@@ -486,7 +484,6 @@ fixnull
 flickr
 flipfit
 floatingspace
-fmod
 foaf
 foat
 focusring
@@ -561,7 +558,6 @@ hasher
 hashmarks
 hateoas
 hbox
-heartz
 heke
 heroless
 herpderp
@@ -966,6 +962,7 @@ permissionless
 persistable
 phpass
 phpcbf
+phpcodesniffer
 phpcs
 phpdocumentor
 phpfile
@@ -1009,7 +1006,6 @@ precache
 precompiled
 preconfigure
 preconfigured
-preconnect
 precreated
 predelete
 prefetches
@@ -1085,7 +1081,6 @@ rdfa
 rdfs
 readmore
 readonlydir
-readystate
 realelement
 realise
 realpaths
@@ -1105,7 +1100,6 @@ referencers
 referer
 refinable
 regexes
-reimplement
 reindex
 reindexing
 reinject
@@ -1198,6 +1192,7 @@ skiptags
 skos
 skynet
 slatkin
+slevomat
 sloopal
 smacss
 smalldatetime
@@ -1414,8 +1409,6 @@ toplevel
 topop
 torder
 totalcount
-totranslate
-touchevent
 touchevents
 tparams
 trackback
@@ -1442,6 +1435,7 @@ typehints
 typemanager
 tzid
 uberawesome
+ui's
 uicrud
 uids
 ulwa
@@ -1534,7 +1528,6 @@ uploaders
 uploadprogress
 uppercased
 upscaling
-upsert
 urandom
 urlalias
 urldecoding
