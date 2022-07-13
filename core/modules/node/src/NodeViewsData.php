@@ -27,12 +27,9 @@ class NodeViewsData extends EntityViewsData {
     ];
 
     $data['node_field_data']['title']['field']['default_formatter_settings'] = ['link_to_entity' => TRUE];
-
     $data['node_field_data']['title']['field']['link_to_node default'] = TRUE;
 
     $data['node_field_data']['type']['argument']['id'] = 'node_type';
-
-    $data['node_field_data']['langcode']['help'] = $this->t('The language of the content or translation.');
 
     $data['node_field_data']['status']['filter']['label'] = $this->t('Published status');
     $data['node_field_data']['status']['filter']['type'] = 'yes-no';
