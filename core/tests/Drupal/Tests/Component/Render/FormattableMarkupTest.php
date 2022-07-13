@@ -99,17 +99,8 @@ class FormattableMarkupTest extends TestCase {
       // Ensure that where the placeholder is located in the string is
       // irrelevant.
       ['placeholder', ['placeholder' => 'replaced'], E_USER_WARNING, 'Invalid placeholder (placeholder) with string: "placeholder"'],
+      ['No replacements', ['foo' => 'bar'], E_USER_WARNING, 'Invalid placeholder (foo) with string: "No replacements"'],
     ];
-  }
-
-  /**
-   * @group legacy
-   */
-  public function testNoReplacementUnsupportedVariable() {
-    $this->expectDeprecation('Support for keys without a placeholder prefix is deprecated in Drupal 9.1.0 and will be removed in Drupal 10.0.0. Invalid placeholder (foo) with string: "No replacements"');
-    $markup = new FormattableMarkup('No replacements', ['foo' => 'bar']);
-    // Cast it to a string which will generate the deprecation notice.
-    $output = (string) $markup;
   }
 
 }
