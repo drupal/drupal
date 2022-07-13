@@ -145,7 +145,7 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
  *   @encode
  * - drupal.conditions: Conditions required for the plugin to load (other than
  *   module dependencies, which are defined by the 'provider' property).
- *   Conditions can check for three different things:
+ *   Conditions can check for five different things:
  *   - 'toolbarItem': a toolbar item that must be enabled
  *   - 'filter': a filter that must be enabled
  *   - 'imageUploadStatus': TRUE if image upload must be enabled, FALSE if it
@@ -153,6 +153,10 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
  *   - 'requiresConfiguration': a subset of the configuration for this plugin
  *      that must match (exactly)
  *   - 'plugins': a list of CKEditor 5 Drupal plugin IDs that must be enabled
+ *   Plugins requiring more complex conditions, such as requiring multiple
+ *   toolbar items or multiple filters, have not yet been identified. If this
+ *   need arises, see
+ *   https://www.drupal.org/docs/drupal-apis/ckeditor-5-api/overview#conditions.
  *
  * All of these can be defined in YAML or annotations. A given plugin should
  * choose one or the other, as a definition can't parse both at once.
