@@ -3,7 +3,7 @@
     "language": "en-US",
     "allowCompoundWords": false,
     "ignorePaths": [
-      ".*.json",
+      "**/.*.json",
       ".*ignore",
       "composer.lock",
       "assets/vendor/**",
