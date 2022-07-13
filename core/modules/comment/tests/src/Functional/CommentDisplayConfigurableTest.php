@@ -18,7 +18,7 @@ class CommentDisplayConfigurableTest extends CommentTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'bartik';
+  protected $defaultTheme = 'olivero';
 
   protected function setUp(): void {
     parent::setUp();

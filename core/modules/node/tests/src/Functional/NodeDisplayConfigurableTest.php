@@ -165,7 +165,6 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
    */
   public function provideThemes() {
     return [
-      ['bartik', 'header', TRUE],
       ['claro', 'footer', TRUE],
       // @todo Remove Classy from data provider in
       // https://www.drupal.org/project/drupal/issues/3110137.
@@ -173,7 +172,6 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
       // @todo Add coverage for olivero after fixing
       // https://www.drupal.org/project/drupal/issues/3215220.
       // ['olivero', 'footer', TRUE],
-      ['seven', 'footer', TRUE],
       ['stable', 'footer', FALSE],
       ['stable9', 'footer', FALSE],
     ];
