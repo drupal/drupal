@@ -6,7 +6,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
 
 /**
- * Tests that the new default theme gets blocks.
+ * Tests that a new default theme gets blocks.
  *
  * @group block
  */
@@ -23,7 +23,7 @@ class NewDefaultThemeBlocksTest extends KernelTestBase {
   ];
 
   /**
-   * Check the enabled Bartik blocks are correctly copied over.
+   * Check the blocks are correctly copied by block_themes_installed().
    */
   public function testNewDefaultThemeBlocks() {
     $this->installConfig(['system']);
@@ -44,8 +44,8 @@ class NewDefaultThemeBlocksTest extends KernelTestBase {
       'id' => $default_theme . '_' . strtolower($this->randomMachineName(8)),
     ]);
 
-    // Install a different theme.
-    $new_theme = 'bartik';
+    // Install a different theme that does not have blocks.
+    $new_theme = 'test_theme';
     // The new theme is different from the previous default theme.
     $this->assertNotEquals($new_theme, $default_theme);
 
@@ -69,7 +69,7 @@ class NewDefaultThemeBlocksTest extends KernelTestBase {
     foreach ($default_block_names as $default_block_name) {
       // Remove the matching block from the list of blocks in the new theme.
       // E.g., if the old theme has block.block.stark_admin,
-      // unset block.block.bartik_admin.
+      // unset block.block.olivero_admin.
       unset($new_blocks[str_replace($default_theme . '_', $new_theme . '_', $default_block_name)]);
     }
     $this->assertEmpty($new_blocks);

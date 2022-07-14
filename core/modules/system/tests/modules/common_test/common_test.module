@@ -52,7 +52,7 @@ function common_test_drupal_alter_alter(&$data, &$arg2 = NULL, &$arg3 = NULL) {
  * Same as common_test_drupal_alter_alter(), but here, we verify that themes
  * can also alter and come last.
  */
-function bartik_drupal_alter_alter(&$data, &$arg2 = NULL, &$arg3 = NULL) {
+function olivero_drupal_alter_alter(&$data, &$arg2 = NULL, &$arg3 = NULL) {
   // Alter first argument.
   if (is_array($data)) {
     $data['foo'] .= ' theme';

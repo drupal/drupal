@@ -27,10 +27,10 @@ class AlterTest extends BrowserTestBase {
    * Tests if the theme has been altered.
    */
   public function testDrupalAlter() {
-    // This test depends on Bartik, so make sure that it is always the current
+    // This test depends on Olivero, so make sure that it is always the current
     // active theme.
-    \Drupal::service('theme_installer')->install(['bartik']);
-    \Drupal::theme()->setActiveTheme(\Drupal::service('theme.initialization')->initTheme('bartik'));
+    \Drupal::service('theme_installer')->install(['olivero']);
+    \Drupal::theme()->setActiveTheme(\Drupal::service('theme.initialization')->initTheme('olivero'));
 
     $array = ['foo' => 'bar'];
     $entity = new \stdClass();

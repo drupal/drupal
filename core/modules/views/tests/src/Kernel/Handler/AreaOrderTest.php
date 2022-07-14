@@ -35,18 +35,18 @@ class AreaOrderTest extends ViewsKernelTestBase {
    */
   protected function setUpFixtures() {
     // Install the themes used for this test.
-    $this->container->get('theme_installer')->install(['bartik']);
+    $this->container->get('theme_installer')->install(['olivero']);
 
     $this->placeBlock('system_branding_block', [
-      'id' => 'bartik_branding',
-      'theme' => 'bartik',
+      'id' => 'id_olivero_branding',
+      'theme' => 'olivero',
       'plugin' => 'system_branding_block',
       'weight' => 1,
     ]);
 
     $this->placeBlock('system_powered_by_block', [
-      'id' => 'bartik_powered',
-      'theme' => 'bartik',
+      'id' => 'id_olivero_powered',
+      'theme' => 'olivero',
       'weight' => 2,
     ]);
 
@@ -61,11 +61,11 @@ class AreaOrderTest extends ViewsKernelTestBase {
     $renderable = $view->buildRenderable();
     $output = $this->render($renderable);
 
-    $position_powered = strpos($output, 'block-bartik-powered');
-    $position_branding = strpos($output, 'block-bartik-branding');
+    $position_powered = strpos($output, 'block-id-olivero-powered');
+    $position_branding = strpos($output, 'block-id-olivero-branding');
 
-    $this->assertNotEquals(0, $position_powered, 'ID bartik-powered found.');
-    $this->assertNotEquals(0, $position_branding, 'ID bartik-branding found');
+    $this->assertNotEquals(0, $position_powered, 'ID olivero-powered found.');
+    $this->assertNotEquals(0, $position_branding, 'ID olivero-branding found');
 
     // Make sure "powered" is before "branding", so it reflects the position
     // in the configuration, and not the weight of the blocks.

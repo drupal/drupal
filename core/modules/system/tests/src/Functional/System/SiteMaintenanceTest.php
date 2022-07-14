@@ -154,11 +154,11 @@ class SiteMaintenanceTest extends BrowserTestBase {
     $this->submitForm([], 'Log in');
     $this->assertSession()->pageTextContains($user_message);
 
-    // Regression test to check if title displays in Bartik on maintenance page.
-    \Drupal::service('theme_installer')->install(['bartik']);
-    $this->config('system.theme')->set('default', 'bartik')->save();
+    // Check if title displays in Olivero on maintenance page.
+    \Drupal::service('theme_installer')->install(['olivero']);
+    $this->config('system.theme')->set('default', 'olivero')->save();
 
-    // Logout and verify that offline message is displayed in Bartik.
+    // Logout and verify that offline message is displayed in Olivero.
     $this->drupalLogout();
     $this->drupalGet('');
     $this->assertEquals('Site under maintenance', $this->cssSelect('main h1')[0]->getText());
