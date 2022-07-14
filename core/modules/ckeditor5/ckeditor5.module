@@ -36,8 +36,6 @@ function ckeditor5_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dl>';
       $output .= '<dt>' . t('Enabling CKEditor 5 for individual text formats') . '</dt>';
       $output .= '<dd>' . t('CKEditor 5 has to be enabled and configured separately for individual text formats from the <a href=":formats">Text formats and editors page</a> because the filter settings for each text format can be different. For more information, see the <a href=":text_editor">Text Editor help page</a> and <a href=":filter">Filter help page</a>.', [':formats' => Url::fromRoute('filter.admin_overview')->toString(), ':text_editor' => Url::fromRoute('help.page', ['name' => 'editor'])->toString(), ':filter' => Url::fromRoute('help.page', ['name' => 'filter'])->toString()]) . '</dd>';
-      $output .= '<dt>' . t('Migration for existing text formats switching to CKEditor 5') . '</dt>';
-      $output .= '<dd>' . t('Text formats switching to CKEditor 5 from CKEditor 4 (or no text editor) should be able to do so with minimal effort and zero data loss. Existing configuration will be automatically migrated to CKEditor 5 compatible configuration. In instances where functionality can not be migrated, detailed messages are provided explaining what is necessary for feature parity.') . '</dd>';
       $output .= '<dt>' . t('Configuring the toolbar') . '</dt>';
       $output .= '<dd>' . t('When CKEditor 5 is chosen from the <em>Text editor</em> drop-down menu, its toolbar configuration is displayed. You can add and remove buttons from the <em>Active toolbar</em> by dragging and dropping them. Separators and rows can be added to organize the buttons.') . '</dd>';
       $output .= '<dt>' . t('Filtering HTML content') . '</dt>';
@@ -61,6 +59,20 @@ function ckeditor5_help($route_name, RouteMatchInterface $route_match) {
       $output .= '</ul>';
       $output .= '</dd>';
       $output .= '</dl>';
+      $output .= '<h3 id="migration-settings">' . t('Migrating an Existing Text Format to CKEditor 5') . '</h3>';
+      $output .= '<p>' . t('When switching an existing text format to use CKEditor 5, an automatic process is initiated that helps text formats switching to CKEditor 5 from CKEditor 4 (or no text editor) to do so with minimal effort and zero data loss.') . '</p>';
+      $output .= '<p>' . t("This process is designed for there to be no data loss risk in switching to CKEditor 5. However some of your editor's functionality may not be 100% equivalent to what was available previously. In most cases, these changes are minimal. After the process completes, status and/or warning messages will summarize any changes that occurred, and more detailed information will be available in the site's logs.") . '</p>';
+      $output .= '<p>' . t('CKEditor 5 will attempt to enable plugins that provide equivalent toolbar items to those used prior to switching to CKEditor 5. All core CKEditor 4 plugins and many popular contrib plugins already have CKEditor 5 equivalents. In some cases, functionality that required contrib modules is now built into CKEditor 5. In instances where a plugin does not have an equivalent, no data loss will occur but elements previously provided via the plugin may need to be added manually as HTML via source editing.') . '</p>';
+      $output .= '<h4>' . t('Additional migration considerations for text formats with restricted HTML') . '</h4>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('The “Allowed HTML tags" field in the “Limit allowed HTML tags and correct Faulty HTML" filter is now read-only') . '</dt>';
+      $output .= '<dd>' . t('This field accurately represents the tags/attributes allowed by a text format, but the allowed tags are based on which plugins are enabled and how they are configured. For example, enabling the Underline plugin adds the &lt;u&gt; tag to “Allowed HTML tags".') . '</dd>';
+      $output .= '<dt id="required-tags">' . t('The &lt;p&gt; and &lt;br &gt; tags will be automatically added to your text format.') . '</dt>';
+      $output .= '<dd>' . t('CKEditor 5 requires the &lt;p&gt; and &lt;br &gt; tags to achieve basic functionality. They will be automatically added to “Allowed HTML tags" on formats that previously did not allow them.') . '</dd>';
+      $output .= '<dt id="source-editing">' . t('Tags/attributes that are not explicitly supported by any plugin are supported by Source Editing') . '</dt>';
+      $output .= '<dd>' . t('When a necessary tag/attribute is not directly supported by an available plugin, the "Source Editing" plugin is enabled. This plugin is typically used for by passing the CKEditor 5 UI and editing contents as HTML source. In the settings for Source Editing, tags/attributes that aren\'t available via other plugins are added to Source Editing\'s "Manually editable HTML tags" setting so they are supported by the text format.') . '</dd>';
+      $output .= '</dl>';
+
       return $output;
   }
 }
