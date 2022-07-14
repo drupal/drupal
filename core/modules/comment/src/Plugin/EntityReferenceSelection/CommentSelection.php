@@ -2,6 +2,7 @@
 
 namespace Drupal\comment\Plugin\EntityReferenceSelection;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection;
 use Drupal\comment\CommentInterface;
@@ -76,19 +77,75 @@ class CommentSelection extends DefaultSelection {
       $query->innerJoin($data_table, NULL, "[base_table].[cid] = [$data_table].[cid] AND [$data_table].[default_langcode] = 1");
     }
 
-    // The Comment module doesn't implement any proper comment access,
-    // and as a consequence doesn't make sure that comments cannot be viewed
-    // when the user doesn't have access to the node.
-    $node_alias = $query->innerJoin('node_field_data', 'n', "[%alias].[nid] = [$data_table].[entity_id] AND [$data_table].[entity_type] = 'node'");
-    // Pass the query to the node access control.
-    $this->reAlterQuery($query, 'node_access', $node_alias);
+    // Find the host entity type the comment field is on.
+    $comment = $this->getConfiguration()['entity'];
+    if ($comment) {
+      $host_entity_type_id = $comment->getCommentedEntityTypeId();
 
-    // Passing the query to node_query_node_access_alter() is sadly
-    // insufficient for nodes.
-    // @see \Drupal\node\Plugin\EntityReferenceSelection\NodeSelection::buildEntityQuery()
-    if (!$this->currentUser->hasPermission('bypass node access') && !$this->moduleHandler->hasImplementations('node_grants')) {
-      $query->condition($node_alias . '.status', 1);
+      /** @var \Drupal\Core\Entity\EntityTypeInterface $host_entity_type */
+      $host_entity_type = $this->entityTypeManager->getDefinition($host_entity_type_id);
+      $host_entity_field_data_table = $host_entity_type->getDataTable();
+
+      // Not all entities have a data table, so check first.
+      if ($host_entity_field_data_table) {
+        $id_key = $host_entity_type->getKey('id');
+
+        // The Comment module doesn't implement per-comment access, so it
+        // checks instead that the user has access to the host entity.
+        $entity_alias = $query->innerJoin($host_entity_field_data_table, 'n', "[%alias].[$id_key] = [$data_table].[entity_id] AND [$data_table].[entity_type] = '$host_entity_type_id'");
+        // Pass the query to the entity access control.
+        $this->reAlterQuery($query, $host_entity_type_id . '_access', $entity_alias);
+
+        // Additional checks for "node" entities.
+        if ($host_entity_type_id === 'node') {
+          // Passing the query to node_query_node_access_alter() is sadly
+          // insufficient for nodes.
+          // @see \Drupal\node\Plugin\EntityReferenceSelection\NodeSelection::buildEntityQuery()
+          if (!$this->currentUser->hasPermission('bypass node access') && !$this->moduleHandler->hasImplementations('node_grants')) {
+            $query->condition($entity_alias . '.status', 1);
+          }
+        }
+      }
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getReferenceableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
+    $target_type = $this->getConfiguration()['target_type'];
+
+    $query = $this->buildEntityQuery($match, $match_operator);
+    if ($limit > 0) {
+      $query->range(0, $limit);
+    }
+
+    $result = $query->execute();
+
+    if (empty($result)) {
+      return [];
+    }
+
+    $options = [];
+    $entities = $this->entityTypeManager->getStorage($target_type)->loadMultiple($result);
+    foreach ($entities as $entity_id => $entity) {
+      // Additional access check as comments might be attached to entities
+      // which the current user does not have access to.
+      if ($entity->access('view', $this->currentUser)) {
+        $bundle = $entity->bundle();
+        $options[$bundle][$entity_id] = Html::escape($this->entityRepository->getTranslationFromContext($entity)->label() ?? '');
+      }
+    }
+
+    return $options;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function countReferenceableEntities($match = NULL, $match_operator = 'CONTAINS') {
+    $options = $this->getReferenceableEntities($match, $match_operator);
+    return count($options, COUNT_RECURSIVE) - count($options);
   }
 
 }
