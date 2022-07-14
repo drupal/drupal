@@ -19,14 +19,14 @@ display:
           field: entity_block
           id: entity_block
           table: views
-          target: 'bartik_powered'
+          target: 'id_olivero_powered'
           view_mode: full
           plugin_id: entity
         entity_block_1:
           field: entity_block
           id: entity_block
           table: views
-          target: 'bartik_branding'
+          target: 'id_olivero_branding'
           view_mode: full
           plugin_id: entity
       fields:

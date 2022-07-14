@@ -29,10 +29,10 @@ class PageTest extends BrowserTestBase {
   public function testBatchProgressPageTheme() {
     // Make sure that the page which starts the batch (an administrative page)
     // is using a different theme than would normally be used by the batch API.
-    $this->container->get('theme_installer')->install(['seven', 'bartik']);
+    $this->container->get('theme_installer')->install(['claro', 'olivero']);
     $this->config('system.theme')
-      ->set('default', 'bartik')
-      ->set('admin', 'seven')
+      ->set('default', 'olivero')
+      ->set('admin', 'claro')
       ->save();
 
     // Log in as an administrator who can see the administrative theme.
@@ -45,7 +45,7 @@ class PageTest extends BrowserTestBase {
     $this->drupalGet('admin/batch-test/test-theme');
     // The stack should contain the name of the theme used on the progress
     // page.
-    $this->assertEquals(['seven'], batch_test_stack(), 'A progressive batch correctly uses the theme of the page that started the batch.');
+    $this->assertEquals(['claro'], batch_test_stack(), 'A progressive batch correctly uses the theme of the page that started the batch.');
   }
 
   /**
