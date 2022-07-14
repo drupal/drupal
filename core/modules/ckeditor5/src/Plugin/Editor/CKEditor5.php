@@ -26,6 +26,7 @@ use Drupal\editor\EditorInterface;
 use Drupal\editor\Entity\Editor;
 use Drupal\editor\Plugin\EditorBase;
 use Drupal\filter\FilterFormatInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -108,6 +109,13 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
   private $stylesheetsMessage;
 
   /**
+   * A logger instance.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
    * Constructs a CKEditor5 editor plugin.
    *
    * @param array $configuration
@@ -128,8 +136,10 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
    *   The cache.
    * @param \Drupal\ckeditor5\CKEditor5StylesheetsMessage $stylesheets_message
    *   The ckeditor_stylesheets message utility.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   A logger instance.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, CKEditor5PluginManagerInterface $ckeditor5_plugin_manager, LanguageManagerInterface $language_manager, ModuleHandlerInterface $module_handler, SmartDefaultSettings $smart_default_settings, CacheBackendInterface $cache, CKEditor5StylesheetsMessage $stylesheets_message) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, CKEditor5PluginManagerInterface $ckeditor5_plugin_manager, LanguageManagerInterface $language_manager, ModuleHandlerInterface $module_handler, SmartDefaultSettings $smart_default_settings, CacheBackendInterface $cache, CKEditor5StylesheetsMessage $stylesheets_message, LoggerInterface $logger) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->ckeditor5PluginManager = $ckeditor5_plugin_manager;
     $this->languageManager = $language_manager;
@@ -137,6 +147,7 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     $this->smartDefaultSettings = $smart_default_settings;
     $this->cache = $cache;
     $this->stylesheetsMessage = $stylesheets_message;
+    $this->logger = $logger;
   }
 
   /**
@@ -152,7 +163,8 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
       $container->get('module_handler'),
       $container->get('ckeditor5.smart_default_settings'),
       $container->get('cache.default'),
-      $container->get('ckeditor5.stylesheets.message')
+      $container->get('ckeditor5.stylesheets.message'),
+      $container->get('logger.channel.ckeditor5')
     );
   }
 
@@ -264,6 +276,7 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
       assert($editor->getSettings() === $this->getDefaultSettings());
       if (!$format->isNew()) {
         [$editor, $messages] = $this->smartDefaultSettings->computeSmartDefaultSettings($editor, $format);
+        $form_state->set('used_smart_default_settings', TRUE);
         foreach ($messages as $type => $messages_per_type) {
           foreach ($messages_per_type as $message) {
             $this->messenger()->addMessage($message, $type);
@@ -880,6 +893,10 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     $form_state->setValues($editor->getSettings());
 
     parent::submitConfigurationForm($form, $form_state);
+    if ($form_state->get('used_smart_default_settings')) {
+      $format_name = $editor->getFilterFormat()->get('name');
+      $this->logger->info($this->t('The migration of %text_format to CKEditor 5 has been saved.', ['%text_format' => $format_name]));
+    }
   }
 
   /**
