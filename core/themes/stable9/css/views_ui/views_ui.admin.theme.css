@@ -632,23 +632,6 @@ td.group-title {
 .views-ui-dialog .views-override > * {
   margin: 0;
 }
-.views-ui-dialog .views-progress-indicator {
-  position: absolute;
-  top: 32px;
-  right: 10px; /* LTR */
-  color: #fff;
-  font-size: 11px;
-}
-[dir="rtl"] .views-ui-dialog .views-progress-indicator {
-  right: auto;
-  left: 10px;
-}
-.views-ui-dialog .views-progress-indicator:before {
-  content: "\003C\00A0";
-}
-.views-ui-dialog .views-progress-indicator:after {
-  content: "\00A0\003E";
-}
 .views-ui-dialog details .item-list {
   padding-left: 2em; /* LTR */
 }
