@@ -490,27 +490,6 @@ td.group-title {
   margin: 0 var(--space-s) var(--space-s) 0;
 }
 
-.views-ui-dialog .views-progress-indicator {
-  position: absolute;
-  z-index: 1;
-  top: 0;
-  right: var(--jui-dialog-close-button-reserved-space); /* LTR */
-  color: var(--jui-dialog-title-color);
-  font-size: var(--font-size-xxs);
-  line-height: var(--jui-dialog-close-button-reserved-space);
-}
-[dir="rtl"] .views-ui-dialog .views-progress-indicator {
-  right: auto;
-  left: var(--jui-dialog-close-button-reserved-space);
-}
-
-.views-ui-dialog .views-progress-indicator:before {
-  content: "\003C\00A0";
-}
-.views-ui-dialog .views-progress-indicator:after {
-  content: "\00A0\003E";
-}
-
 .views-ui-dialog .tabledrag-toggle-weight-wrapper {
   margin: 0 0 var(--space-m) 0;
 }
