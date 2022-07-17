@@ -135,9 +135,9 @@ class TourLegacyTest extends WebDriverTestBase {
    */
   public function providerTestTourTipMarkup() {
     return [
-      'Using the the deprecated TipPlugin with Stable theme' => ['tour-test-legacy'],
+      'Using the deprecated TipPlugin with Stable theme' => ['tour-test-legacy'],
       'Using current TourTipPlugin with Stable theme' => ['tour-test-1'],
-      'Using the the deprecated TipPlugin with Stable 9 theme' => ['tour-test-legacy', 'stable9'],
+      'Using the deprecated TipPlugin with Stable 9 theme' => ['tour-test-legacy', 'stable9'],
       'Using current TourTipPlugin with Stable 9 theme' => ['tour-test-1', 'stable9'],
     ];
   }

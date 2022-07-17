@@ -163,7 +163,7 @@ class BlockTest extends BlockTestBase {
         'theme' => $default_theme,
       ]);
 
-      // Verify that one link is found, with the the expected link text.
+      // Verify that one link is found, with the expected link text.
       $xpath = $this->assertSession()->buildXPathQuery('//a[contains(@href, :href)]', [':href' => $add_url->toString()]);
       $this->assertSession()->elementsCount('xpath', $xpath, 1);
       $this->assertSession()->elementTextEquals('xpath', $xpath, 'Place block');

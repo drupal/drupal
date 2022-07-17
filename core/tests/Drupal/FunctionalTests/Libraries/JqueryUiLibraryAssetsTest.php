@@ -288,7 +288,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
    * Confirms jQuery UI assets load as expected.
    *
    * Compares the jQuery assets that currently load against a list of the assets
-   * that loaded prior to the the deprecation of all remaining core jQuery UI
+   * that loaded prior to the deprecation of all remaining core jQuery UI
    * libraries.
    *
    * While this is similar to testLibraryAssetLoadingOrder(), it is a separate
