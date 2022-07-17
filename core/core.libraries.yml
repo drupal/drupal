@@ -395,7 +395,7 @@ drupal.autocomplete:
     misc/autocomplete.js: { weight: -1 }
     # The remaining JavaScript assets previously came from core/jquery.ui, a
     # deprecated library.
-    # All weights are based on on the requirements defined within each file.
+    # All weights are based on the requirements defined within each file.
     # @todo replace with solution in https://drupal.org/node/3076171
     assets/vendor/jquery.ui/ui/widgets/autocomplete-min.js: { weight: -11.7, minified: true }
     assets/vendor/jquery.ui/ui/labels-min.js: { weight: -11.7, minified: true }
@@ -494,7 +494,7 @@ drupal.dialog:
     misc/dialog/dialog.jquery-ui.js: {}
     # The remaining JavaScript assets previously came from core/jquery.ui, a
     # deprecated library.
-    # All weights are based on on the requirements defined within each file.
+    # All weights are based on the requirements defined within each file.
     # @todo replace with solution in https://drupal.org/node/2158943
     assets/vendor/jquery.ui/ui/widgets/dialog-min.js: { weight: -11.4, minified: true }
     assets/vendor/jquery.ui/ui/widgets/button-min.js: { weight: -11.5, minified: true }
