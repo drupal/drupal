@@ -425,7 +425,7 @@ abstract class Database {
       unset(self::$connections[$key]);
     }
     // Force garbage collection to run. This ensures that client connection
-    // objects and results in the connection being being closed are destroyed.
+    // objects and results in the connection being closed are destroyed.
     gc_collect_cycles();
   }
 

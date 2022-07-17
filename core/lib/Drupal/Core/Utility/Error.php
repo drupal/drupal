@@ -21,7 +21,7 @@ class Error {
   const ERROR = 3;
 
   /**
-   * The the default message for logging errors.
+   * The default message for logging errors.
    */
   const DEFAULT_ERROR_MESSAGE = '%type: @message in %function (line %line of %file).';
 

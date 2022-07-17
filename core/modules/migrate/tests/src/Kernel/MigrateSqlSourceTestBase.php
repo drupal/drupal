@@ -97,7 +97,7 @@ abstract class MigrateSqlSourceTestBase extends MigrateSourceTestBase {
     /** @var MemoryCounterBackend $cache **/
     $cache = \Drupal::cache('migrate');
     if ($expected_cache_key) {
-      // Verify the the computed cache key.
+      // Verify the computed cache key.
       $property = $reflector->getProperty('cacheKey');
       $property->setAccessible(TRUE);
       $this->assertSame($expected_cache_key, $property->getValue($plugin));

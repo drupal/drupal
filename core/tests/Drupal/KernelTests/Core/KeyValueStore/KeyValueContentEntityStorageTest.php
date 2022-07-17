@@ -139,7 +139,7 @@ class KeyValueContentEntityStorageTest extends KernelTestBase {
     $this->assertTrue($same_id->isNew());
     try {
       $same_id->save();
-      $this->fail('Not possible to overwrite an entity entity.');
+      $this->fail('Not possible to overwrite an entity.');
     }
     catch (EntityStorageException $e) {
       // Expected exception; just continue testing.
