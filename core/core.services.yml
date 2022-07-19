@@ -1299,7 +1299,7 @@ services:
     class: Drupal\Core\EventSubscriber\Fast404ExceptionHtmlSubscriber
     tags:
       - { name: event_subscriber }
-    arguments: ['@config.factory', '@http_kernel']
+    arguments: ['@config.factory', '@cache_tags.invalidator']
   exception.enforced_form_response:
     class: Drupal\Core\EventSubscriber\EnforcedFormResponseSubscriber
     tags:
