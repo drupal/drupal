@@ -15,7 +15,6 @@ services:
       - '@logger.channel.ckeditor5'
       - '@module_handler'
       - '@current_user'
-      - '@?plugin.manager.ckeditor.plugin'
 
   ckeditor5.stylesheets.message:
     class: Drupal\ckeditor5\CKEditor5StylesheetsMessage

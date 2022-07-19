@@ -4,9 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\ckeditor5;
 
-use Drupal\ckeditor\CKEditorPluginButtonsInterface;
-use Drupal\ckeditor\CKEditorPluginContextualInterface;
-use Drupal\ckeditor\CKEditorPluginManager;
+use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableInterface;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginElementsSubsetInterface;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface;
@@ -48,13 +46,6 @@ final class SmartDefaultSettings {
   protected $upgradePluginManager;
 
   /**
-   * The "CKEditor 4 plugin" plugin manager.
-   *
-   * @var \Drupal\ckeditor\CKEditorPluginManager
-   */
-  protected $cke4PluginManager;
-
-  /**
    * The module handler.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
@@ -88,16 +79,13 @@ final class SmartDefaultSettings {
    *   The module handler.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
-   * @param \Drupal\ckeditor\CKEditorPluginManager $cke4_plugin_manager
-   *   The CKEditor 4 plugin manager.
    */
-  public function __construct(CKEditor5PluginManagerInterface $plugin_manager, PluginManagerInterface $upgrade_plugin_manager, LoggerInterface $logger, ModuleHandlerInterface $module_handler, AccountInterface $current_user, CKEditorPluginManager $cke4_plugin_manager = NULL) {
+  public function __construct(CKEditor5PluginManagerInterface $plugin_manager, PluginManagerInterface $upgrade_plugin_manager, LoggerInterface $logger, ModuleHandlerInterface $module_handler, AccountInterface $current_user) {
     $this->pluginManager = $plugin_manager;
     $this->upgradePluginManager = $upgrade_plugin_manager;
     $this->logger = $logger;
     $this->moduleHandler = $module_handler;
     $this->currentUser = $current_user;
-    $this->cke4PluginManager = $cke4_plugin_manager;
   }
 
   /**
@@ -163,8 +151,7 @@ final class SmartDefaultSettings {
     $old_editor = $editor->id() ? Editor::load($editor->id()) : NULL;
     $old_editor_restrictions = $old_editor ? HTMLRestrictions::fromTextFormat($old_editor->getFilterFormat()) : HTMLRestrictions::emptySet();
     if ($old_editor && $old_editor->getEditor() === 'ckeditor') {
-      $enabled_cke4_plugins = $this->getEnabledCkeditor4Plugins($old_editor);
-      [$upgraded_settings, $messages] = $this->createSettingsFromCKEditor4($old_editor->getSettings(), $enabled_cke4_plugins, HTMLRestrictions::fromTextFormat($old_editor->getFilterFormat()));
+      [$upgraded_settings, $messages] = $this->createSettingsFromCKEditor4($old_editor->getSettings(), HTMLRestrictions::fromTextFormat($old_editor->getFilterFormat()));
       $editor->setSettings($upgraded_settings);
       $editor->setImageUploadSettings($old_editor->getImageUploadSettings());
     }
@@ -240,6 +227,23 @@ final class SmartDefaultSettings {
     // original text format restrictions.
     $this->addDefaultSettingsForEnabledConfigurablePlugins($editor);
     $this->computeSubsetSettingForEnabledPluginsWithSubsets($editor, $text_format);
+
+    // In CKEditor 4, it's possible for settings to exist for plugins that are
+    // not actually enabled. During the upgrade path, these would then be mapped
+    // to equivalent CKEditor 5 configuration. But CKEditor 5 does not allow
+    // configuration to be stored for disabled plugins. Therefore determine
+    // which plugins actually are enabled, and omit the (upgraded) plugin
+    // configuration for disabled plugins.
+    // @see \Drupal\ckeditor5\Plugin\CKEditor4To5UpgradePluginInterface::mapCKEditor4SettingsToCKEditor5Configuration()
+    if ($old_editor && $old_editor->getEditor() === 'ckeditor') {
+      $enabled_definitions = $this->pluginManager->getEnabledDefinitions($editor);
+      $enabled_configurable_definitions = array_filter($enabled_definitions, function (CKEditor5PluginDefinition $definition): bool {
+        return is_a($definition->getClass(), CKEditor5PluginConfigurableInterface::class, TRUE);
+      });
+      $settings = $editor->getSettings();
+      $settings['plugins'] = array_intersect_key($settings['plugins'], $enabled_configurable_definitions);
+      $editor->setSettings($settings);
+    }
 
     if ($has_html_restrictions) {
       // Determine what tags/attributes are allowed in this text format that were
@@ -398,9 +402,6 @@ final class SmartDefaultSettings {
    * @param array $ckeditor4_settings
    *   The value for "settings" in a Text Editor config entity configured to use
    *   CKEditor 4.
-   * @param string[] $enabled_ckeditor4_plugins
-   *   The list of enabled CKEditor 4 plugins: their settings will be mapped to
-   *   the CKEditor 5 equivalents, if they have any.
    * @param \Drupal\ckeditor5\HTMLRestrictions $text_format_html_restrictions
    *   The restrictions of the text format, to allow an upgrade plugin to
    *   inspect the text format's HTML restrictions to make a decision.
@@ -414,7 +415,7 @@ final class SmartDefaultSettings {
    *   Thrown when an upgrade plugin is attempting to generate plugin settings
    *   for a CKEditor 4 plugin upgrade path that have already been generated.
    */
-  private function createSettingsFromCKEditor4(array $ckeditor4_settings, array $enabled_ckeditor4_plugins, HTMLRestrictions $text_format_html_restrictions): array {
+  private function createSettingsFromCKEditor4(array $ckeditor4_settings, HTMLRestrictions $text_format_html_restrictions): array {
     $settings = [
       'toolbar' => [
         'items' => [],
@@ -459,7 +460,7 @@ final class SmartDefaultSettings {
 
     // Second: plugin settings.
     // @see \Drupal\ckeditor\CKEditorPluginConfigurableInterface
-    $enabled_ckeditor4_plugins_with_settings = array_intersect_key($ckeditor4_settings['plugins'], array_flip($enabled_ckeditor4_plugins));
+    $enabled_ckeditor4_plugins_with_settings = $ckeditor4_settings['plugins'];
     foreach ($enabled_ckeditor4_plugins_with_settings as $cke4_plugin_id => $cke4_plugin_settings) {
       try {
         $cke5_plugin_settings = $this->upgradePluginManager->mapCKEditor4SettingsToCKEditor5Configuration($cke4_plugin_id, $cke4_plugin_settings);
@@ -485,54 +486,6 @@ final class SmartDefaultSettings {
     }
 
     return [$settings, $messages];
-  }
-
-  /**
-   * Gets all enabled CKEditor 4 plugins.
-   *
-   * @param \Drupal\editor\EditorInterface $editor
-   *   A text editor config entity configured to use CKEditor 4.
-   *
-   * @return string[]
-   *   The enabled CKEditor 4 plugin IDs.
-   */
-  protected function getEnabledCkeditor4Plugins(EditorInterface $editor): array {
-    assert($editor->getEditor() === 'ckeditor');
-
-    // This is largely copied from the CKEditor 4 plugin manager, because it
-    // unfortunately does not provide the API this needs.
-    // @see \Drupal\ckeditor\CKEditorPluginManager::getEnabledPluginFiles()
-    $plugins = array_keys($this->cke4PluginManager->getDefinitions());
-    $toolbar_buttons = $this->cke4PluginManager->getEnabledButtons($editor);
-    $enabled_plugins = [];
-    $additional_plugins = [];
-    foreach ($plugins as $plugin_id) {
-      $plugin = $this->cke4PluginManager->createInstance($plugin_id);
-
-      $enabled = FALSE;
-      // Enable this plugin if it provides a button that has been enabled.
-      if ($plugin instanceof CKEditorPluginButtonsInterface) {
-        $plugin_buttons = array_keys($plugin->getButtons());
-        $enabled = (count(array_intersect($toolbar_buttons, $plugin_buttons)) > 0);
-      }
-      // Otherwise enable this plugin if it declares itself as enabled.
-      if (!$enabled && $plugin instanceof CKEditorPluginContextualInterface) {
-        $enabled = $plugin->isEnabled($editor);
-      }
-
-      if ($enabled) {
-        $enabled_plugins[] = $plugin_id;
-        // Check if this plugin has dependencies that also need to be enabled.
-        $additional_plugins = array_merge($additional_plugins, array_diff($plugin->getDependencies($editor), $additional_plugins));
-      }
-    }
-
-    // Add the list of dependent plugins.
-    foreach ($additional_plugins as $plugin_id) {
-      $enabled_plugins[$plugin_id] = $plugin_id;
-    }
-
-    return $enabled_plugins;
   }
 
   /**
