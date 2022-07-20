@@ -27,6 +27,8 @@ use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\Queue\QueueGarbageCollectionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
+use Drupal\Core\Site\Settings;
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\Url;
 use GuzzleHttp\Exception\TransferException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -1374,6 +1376,24 @@ function system_page_top() {
           $display_as_errors ? $messenger->addError($help_link) : $messenger->addWarning($help_link);
         }
       }
+    }
+  }
+}
+
+/**
+ * Implements hook_file_download().
+ */
+function system_file_download($uri) {
+  $core_schemes = ['public', 'private', 'temporary'];
+  $additional_public_schemes = array_diff(Settings::get('file_additional_public_schemes', []), $core_schemes);
+  if ($additional_public_schemes) {
+    $scheme = StreamWrapperManager::getScheme($uri);
+    if (in_array($scheme, $additional_public_schemes, TRUE)) {
+      return [
+        // Returning any header grants access, and setting the 'Cache-Control'
+        // header is appropriate for public files.
+        'Cache-Control' => 'public',
+      ];
     }
   }
 }
