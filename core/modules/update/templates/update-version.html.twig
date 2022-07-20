@@ -34,11 +34,6 @@
     </div>
     <div class="layout-column layout-column--half">
       <ul class="project-update__version-links">
-        {% if version.core_compatible is not defined or version.core_compatible %}
-          <li class="project-update__download-link">
-            <a href="{{ version.download_link }}">{{ 'Download'|t }}</a>
-          </li>
-        {% endif %}
         <li class="project-update__release-notes-link">
           <a href="{{ version.release_link }}">{{ 'Release notes'|t }}</a>
         </li>
