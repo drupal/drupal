@@ -928,6 +928,27 @@ class DrupalPublicStreamWrapper extends DrupalLocalStreamWrapper {
     $path = str_replace('\\', '/', $this->getTarget());
     return $GLOBALS['base_url'] . '/' . self::getDirectoryPath() . '/' . drupal_encode_path($path);
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getLocalPath($uri = NULL) {
+    $path = parent::getLocalPath($uri);
+
+    if (variable_get('sa_core_2022_012_override', FALSE)) {
+      return $path;
+    }
+
+    $private_path = variable_get('file_private_path', FALSE);
+    if ($private_path) {
+      $private_path = realpath($private_path);
+      if ($private_path && strpos($path, $private_path) === 0) {
+        return FALSE;
+      }
+    }
+
+    return $path;
+  }
 }
 
 
