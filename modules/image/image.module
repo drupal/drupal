@@ -820,16 +820,19 @@ function image_style_deliver($style, $scheme = NULL) {
   array_shift($args);
   $target = implode('/', $args);
 
-  // Check that the style is defined, the scheme is valid, and the image
-  // derivative token is valid. (Sites which require image derivatives to be
-  // generated without a token can set the 'image_allow_insecure_derivatives'
+  // Check that the style is defined, the scheme is valid.
+  $valid = !empty($style) && !empty($scheme) && file_stream_wrapper_valid_scheme($scheme);
+
+  // Also validate the derivative token. Sites which require image derivatives
+  // to be generated without a token can set the 'image_allow_insecure_derivatives'
   // variable to TRUE to bypass the latter check, but this will increase the
   // site's vulnerability to denial-of-service attacks. To prevent this
   // variable from leaving the site vulnerable to the most serious attacks, a
   // token is always required when a derivative of a derivative is requested.)
-  $valid = !empty($style) && !empty($scheme) && file_stream_wrapper_valid_scheme($scheme);
+  $token = isset($_GET[IMAGE_DERIVATIVE_TOKEN]) ? $_GET[IMAGE_DERIVATIVE_TOKEN] : '';
+  $token_is_valid = $token === image_style_path_token($style['name'], $scheme . '://' . $target);
   if (!variable_get('image_allow_insecure_derivatives', FALSE) || strpos(ltrim($target, '\/'), 'styles/') === 0) {
-    $valid = $valid && isset($_GET[IMAGE_DERIVATIVE_TOKEN]) && $_GET[IMAGE_DERIVATIVE_TOKEN] === image_style_path_token($style['name'], $scheme . '://' . $target);
+    $valid = $valid && $token_is_valid;
   }
   if (!$valid) {
     return MENU_ACCESS_DENIED;
@@ -837,28 +840,33 @@ function image_style_deliver($style, $scheme = NULL) {
 
   $image_uri = $scheme . '://' . $target;
   $derivative_uri = image_style_path($style['name'], $image_uri);
+  $derivative_scheme = file_uri_scheme($derivative_uri);
 
-  // If using the private scheme, let other modules provide headers and
-  // control access to the file.
-  if ($scheme == 'private') {
-    if (file_exists($derivative_uri)) {
-      file_download($scheme, file_uri_target($derivative_uri));
-    }
-    else {
-      $headers = file_download_headers($image_uri);
-      if (empty($headers)) {
-        return MENU_ACCESS_DENIED;
-      }
-      if (count($headers)) {
-        foreach ($headers as $name => $value) {
-          drupal_add_http_header($name, $value);
-        }
-      }
+  if ($token_is_valid) {
+    $is_public = ($scheme !== 'private');
+  }
+  else {
+    $core_schemes = array('public', 'private', 'temporary');
+    $additional_public_schemes = array_diff(variable_get('file_additional_public_schemes', array()), $core_schemes);
+    $public_schemes = array_merge(array('public'), $additional_public_schemes);
+    $is_public = in_array($derivative_scheme, $public_schemes, TRUE);
+  }
+
+  if ($scheme == 'private' && file_exists($derivative_uri)) {
+    file_download($scheme, file_uri_target($derivative_uri));
+  }
+
+  $headers = array();
+
+  if (!$is_public) {
+    $headers = file_download_headers($image_uri);
+    if (empty($headers)) {
+      return MENU_ACCESS_DENIED;
     }
   }
 
   // Confirm that the original source image exists before trying to process it.
-  if (!is_file($image_uri)) {
+  if (!_image_source_image_exists($image_uri, $token_is_valid)) {
     watchdog('image', 'Source image at %source_image_path not found while trying to generate derivative image at %derivative_path.',  array('%source_image_path' => $image_uri, '%derivative_path' => $derivative_uri));
     return MENU_NOT_FOUND;
   }
@@ -889,7 +897,11 @@ function image_style_deliver($style, $scheme = NULL) {
 
   if ($success) {
     $image = image_load($derivative_uri);
-    file_transfer($image->source, array('Content-Type' => $image->info['mime_type'], 'Content-Length' => $image->info['file_size']));
+    $headers += array(
+      'Content-Type' => $image->info['mime_type'],
+      'Content-Length' => $image->info['file_size']
+    );
+    file_transfer($image->source, $headers);
   }
   else {
     watchdog('image', 'Unable to generate the derived image located at %path.', array('%path' => $derivative_uri));
@@ -898,6 +910,48 @@ function image_style_deliver($style, $scheme = NULL) {
     print t('Error generating image.');
     drupal_exit();
   }
+}
+
+/**
+ * Checks whether the provided source image exists.
+ *
+ * When a valid token is provided for the image URI, this function is
+ * equivalent to calling file_exists($image_uri).
+ *
+ * @param string $image_uri
+ *   The URI for the source image.
+ * @param bool $token_is_valid
+ *   Whether a valid image token was supplied.
+ *
+ * @return bool
+ *   Whether the source image exists.
+ */
+function _image_source_image_exists($image_uri, $token_is_valid) {
+  $exists = file_exists($image_uri);
+
+  // If the file doesn't exist, we can stop here.
+  if (!$exists) {
+    return FALSE;
+  }
+
+  if ($token_is_valid) {
+    return TRUE;
+  }
+
+  if (file_uri_scheme($image_uri) !== 'public') {
+    return TRUE;
+  }
+
+  $image_path = drupal_realpath($image_uri);
+  $private_path = variable_get('file_private_path', FALSE);
+  if ($private_path) {
+    $private_path = realpath($private_path);
+    if ($private_path && strpos($image_path, $private_path) === 0) {
+      return FALSE;
+    }
+  }
+
+  return TRUE;
 }
 
 /**

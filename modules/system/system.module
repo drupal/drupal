@@ -4088,3 +4088,21 @@ function system_admin_paths() {
   );
   return $paths;
 }
+
+/**
+ * Implements hook_file_download().
+ */
+function system_file_download($uri) {
+  $core_schemes = array('public', 'private', 'temporary');
+  $additional_public_schemes = array_diff(variable_get('file_additional_public_schemes', array()), $core_schemes);
+  if ($additional_public_schemes) {
+    $scheme = file_uri_scheme($uri);
+    if (in_array($scheme, $additional_public_schemes, TRUE)) {
+      return array(
+        // Returning any header grants access, and setting the 'Cache-Control'
+        // header is appropriate for public files.
+        'Cache-Control' => 'public',
+      );
+    }
+  }
+}
