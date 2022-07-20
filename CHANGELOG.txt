@@ -1,3 +1,8 @@
+Drupal 7.91, 2022-07-20
+-----------------------
+- Fixed security issues:
+   - SA-CORE-2022-012
+
 Drupal 7.90, 2022-06-01
 -----------------------
 - Improved support for PHP 8.1
