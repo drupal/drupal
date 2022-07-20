@@ -84,7 +84,8 @@ class SecurityFileUploadEventSubscriberTest extends UnitTestCase {
       'filename is munged' => ['foo.phar.png.php.jpg', 'jpg png', 'foo.phar_.png_.php_.jpg'],
       'filename is munged regardless of case' => ['FOO.pHAR.PNG.PhP.jpg', 'jpg png', 'FOO.pHAR_.PNG_.PhP_.jpg'],
       'null bytes are removed' => ['foo' . chr(0) . '.txt' . chr(0), '', 'foo.txt'],
-      'dot files are renamed' => ['.htaccess', '', 'htaccess'],
+      'dot files are renamed' => ['.git', '', 'git'],
+      'htaccess files are renamed even if allowed' => ['.htaccess', 'htaccess txt', '.htaccess_.txt', '.htaccess'],
     ];
   }
 
