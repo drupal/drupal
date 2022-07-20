@@ -876,25 +876,18 @@ class UpdateContribTest extends UpdateTestBase {
     $this->assertStringContainsString("Requires Drupal core: $expected_range", $compatibility_details->getText());
     $details_summary_element = $compatibility_details->find('css', 'summary');
     if ($is_compatible) {
-      $download_version = str_replace('.', '-', $version);
       // If an update is compatible with the installed version of Drupal core,
-      // it should have a download link and the details element should be closed
-      // by default.
+      // the details element should be closed by default.
       $this->assertFalse($compatibility_details->hasAttribute('open'));
       $this->assertSame('Compatible', $details_summary_element->getText());
-      $this->assertEquals(
-        "http://example.com/{$this->updateProject}-$download_version.tar.gz",
-        $update_element->findLink('Download')->getAttribute('href')
-      );
     }
     else {
       // If an update is not compatible with the installed version of Drupal
-      // core, it should not have a download link and the details element should
-      // be open by default.
+      // core, the details element should be open by default.
       $this->assertTrue($compatibility_details->hasAttribute('open'));
       $this->assertSame('Not compatible', $details_summary_element->getText());
-      $this->assertFalse($update_element->hasLink('Download'));
     }
+    $this->assertFalse($update_element->hasLink('Download'));
   }
 
 }
