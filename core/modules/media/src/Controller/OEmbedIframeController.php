@@ -116,10 +116,23 @@ class OEmbedIframeController implements ContainerInjectionInterface {
    *   The response object.
    *
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
-   *   Will be thrown if the 'hash' parameter does not match the expected hash
-   *   of the 'url' parameter.
+   *   Will be thrown if either
+   *   - the 'hash' parameter does not match the expected hash of the 'url'
+   *     parameter;
+   *   - the iframe_domain is set in media.settings and does not match the host
+   *     in the request.
    */
   public function render(Request $request) {
+    // @todo Move domain check logic to a separate method.
+    $allowed_domain = \Drupal::config('media.settings')->get('iframe_domain');
+    if ($allowed_domain) {
+      $allowed_host = parse_url($allowed_domain, PHP_URL_HOST);
+      $host = parse_url($request->getSchemeAndHttpHost(), PHP_URL_HOST);
+      if ($allowed_host !== $host) {
+        throw new AccessDeniedHttpException('This resource is not available');
+      }
+    }
+
     $url = $request->query->get('url');
     $max_width = $request->query->getInt('max_width');
     $max_height = $request->query->getInt('max_height');
