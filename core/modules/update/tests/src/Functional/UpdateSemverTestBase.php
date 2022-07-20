@@ -156,7 +156,6 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
           $this->standardTests();
           $this->assertUpdateTableTextNotContains('Security update required!');
           $this->assertUpdateTableElementContains(Link::fromTextAndUrl('9.0.0', Url::fromUri("http://example.com/{$this->updateProject}-9-0-0-release"))->toString());
-          $this->assertUpdateTableElementContains(Link::fromTextAndUrl('Download', Url::fromUri("http://example.com/{$this->updateProject}-9-0-0.tar.gz"))->toString());
           $this->assertUpdateTableElementContains(Link::fromTextAndUrl('Release notes', Url::fromUri("http://example.com/{$this->updateProject}-9-0-0-release"))->toString());
           $this->assertUpdateTableTextNotContains('Up to date');
           $this->assertUpdateTableTextContains('Not supported!');
@@ -423,16 +422,6 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
       $this->standardTests();
       $this->confirmUnsupportedStatus('8.0.3', '8.1.0', 'Recommended version:');
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function assertVersionUpdateLinks($label, $version, $download_version = NULL) {
-    // Test XML files for Drupal core use '-' in the version number for the
-    // download link.
-    $download_version = str_replace('.', '-', $version);
-    parent::assertVersionUpdateLinks($label, $version, $download_version);
   }
 
   /**
