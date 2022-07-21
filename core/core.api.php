@@ -587,9 +587,10 @@
  *
  * @section configuration Configuration
  *
- * By default cached data is stored in the database. This can be configured
- * though so that all cached data, or that of an individual cache bin, uses a
- * different cache backend, such as APCu or Memcache, for storage.
+ * By default, cached data is stored in the database. However, Drupal can be
+ * configured to use a different backend (specified in their service
+ * definition), e.g. APCu or Memcache. This configuration can nominate a
+ * different backend for all cached data or for specific cache bins.
  *
  * In a settings.php file, you can override the service used for a particular
  * cache bin. For example, if your service implementation of
