@@ -286,7 +286,7 @@ EOD;
 
     $dom = new \DOMDocument();
     // Ignore warnings during HTML soup loading.
-    @$dom->loadHTML($document);
+    @$dom->loadHTML($document, LIBXML_NOBLANKS);
 
     return $dom;
   }

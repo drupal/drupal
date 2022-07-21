@@ -125,7 +125,7 @@ trait AssertContentTrait {
       // DOM can load HTML soup. But, HTML soup can throw warnings, suppress
       // them.
       $html_dom = new \DOMDocument();
-      @$html_dom->loadHTML('<?xml encoding="UTF-8">' . $this->getRawContent());
+      @$html_dom->loadHTML('<?xml encoding="UTF-8">' . $this->getRawContent(), LIBXML_NOBLANKS);
       if ($html_dom) {
         // It's much easier to work with simplexml than DOM, luckily enough
         // we can just simply import our DOM tree.
