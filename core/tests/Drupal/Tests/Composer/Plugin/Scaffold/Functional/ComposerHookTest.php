@@ -115,16 +115,6 @@ class ComposerHookTest extends BuildTestBase {
     $this->assertDirectoryExists($sut);
     $this->assertStringContainsString('Scaffolding files for fixtures/drupal-drupal', $stdout);
     $this->assertScaffoldedFile($sut . '/index.php', FALSE, 'Test version of index.php from drupal/core');
-    $topLevelProjectDir = 'composer-hooks-nothing-allowed-fixture';
-    $sut = $this->fixturesDir . '/' . $topLevelProjectDir;
-    // Run composer install on an empty project.
-    $this->mustExec("composer install --no-ansi", $sut);
-    // Require a project that is not allowed to scaffold and confirm that we
-    // get a warning, and it does not scaffold.
-    $this->executeCommand("composer require --no-ansi --no-interaction fixtures/drupal-assets-fixture:dev-main fixtures/scaffold-override-fixture:dev-main", $sut);
-    $this->assertCommandSuccessful();
-    $this->assertFileDoesNotExist($sut . '/sites/default/default.settings.php');
-    $this->assertErrorOutputContains('See https://getcomposer.org/allow-plugins');
   }
 
   /**
