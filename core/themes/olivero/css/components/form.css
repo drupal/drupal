@@ -27,12 +27,6 @@
   color: var(--color--gray-60);
 }
 
-/* IE 10 and 11 needs this set as important. */
-
-:-ms-input-placeholder {
-  color: var(--color--gray-60) !important;
-}
-
 /**
  * General form item.
  */
