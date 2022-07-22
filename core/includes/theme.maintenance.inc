@@ -33,7 +33,7 @@ function _drupal_maintenance_theme() {
       $custom_theme = $GLOBALS['install_state']['theme'];
     }
     else {
-      $custom_theme = Settings::get('maintenance_theme', 'seven');
+      $custom_theme = Settings::get('maintenance_theme', 'claro');
     }
   }
   else {
