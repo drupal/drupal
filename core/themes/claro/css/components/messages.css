@@ -25,6 +25,7 @@
 }
 
 .messages {
+  overflow: auto; /* Required to prevent text clipping. */
   box-sizing: border-box;
   margin-top: 1rem;
   margin-bottom: 1rem;

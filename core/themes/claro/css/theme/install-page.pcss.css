@@ -5,20 +5,12 @@
  * Unfortunately we have to make our styling quite strong, to override the
  * .maintenance-page styling.
  */
+
+@import "../base/variables.pcss.css";
+
 .install-page {
   min-height: 100%;
-  background-color: #1275b2;
-  background-image:
-    url(../../images/noise-low.png),
-    -webkit-radial-gradient(hsl(203, 80%, 45%), hsl(203, 80%, 32%));
-  background-image:
-    url(../../images/noise-low.png),
-    radial-gradient(hsl(203, 80%, 45%), hsl(203, 80%, 32%));
-  background-repeat: repeat;
-  background-position: left top, 50% 50%; /* LTR */
-}
-[dir="rtl"] .install-page {
-  background-position: right top, 50% 50%;
+  background-color: var(--color-gray-100);
 }
 
 /**
@@ -38,8 +30,9 @@
 
 .install-page .site-version {
   vertical-align: super;
-  color: #595959;
+  color: var(--color-gray-500);
   font-size: 0.5em;
+  font-weight: 500;
 }
 
 @media all and (max-width: 1010px) and (min-width: 48em) {

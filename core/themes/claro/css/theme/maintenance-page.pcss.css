@@ -1,6 +1,8 @@
 /**
  * @file
  * Maintenance theming.
+ *
+ * These styles affect the installation UI, maintenance page, and the database update UI.
  */
 
 @import "../base/variables.pcss.css";
@@ -10,15 +12,33 @@
   background-color: var(--color-gray-100);
 }
 
-.title {
-  margin-top: 0;
+h1,
+h2 {
+  font-size: var(--font-size-h3);
+}
+
+h3 {
+  font-size: var(--font-size-h4);
 }
 
 .site-name {
-  margin-top: var(--space-m);
+  margin-top: var(--space-s);
   word-wrap: break-word;
+  color: var(--color-gray);
+  font-size: var(--font-size-xl);
+}
+.site-name--subtle {
+  margin-top: var(--space-s);
   color: var(--color-gray-800);
   font-size: var(--font-size-h4);
+}
+
+.title {
+  margin-top: 0;
+  font-size: var(--font-size-h3);
+}
+.title--broad {
+  font-size: var(--font-size-h1);
 }
 
 .site-name,
@@ -28,17 +48,21 @@
 
 .content {
   margin-bottom: var(--space-m);
+  color: var(--color-gray);
+}
+.content--subtle {
   color: var(--color-gray-800);
 }
 
 .site-name,
 .title,
 .content {
-  max-width: 512px;
+  max-width: 34rem;
 }
 
 /**
- * Task list & step indicator
+ * Task list & step indicator.
+ * Shows on both the install screen and the database update page.
  */
 @media all and (max-width: 48em) { /* 768px */
   header[role="banner"] {
@@ -55,9 +79,6 @@
     right: auto;
     left: 0.5em;
   }
-  .task-list {
-    display: none;
-  }
 }
 
 @media all and (min-width: 48em) { /* 768px */
@@ -65,49 +86,44 @@
     display: none;
   }
   .task-list {
-    margin-left: 0; /* LTR */
-    padding-bottom: 1em;
-    padding-left: 0; /* LTR */
+    margin-left: -3rem; /* LTR */
+    padding: 0;
     list-style-type: none;
+    counter-reset: steps;
+    font-weight: bold;
   }
   [dir="rtl"] .task-list {
-    margin-right: 0;
-    padding-right: 0;
+    margin-right: -3rem;
+    margin-left: 0;
   }
   .task-list li {
-    padding: 0.5em 1em 0.5em 3.85em; /* LTR */
-    color: #1a1a1a;
+    padding: 1rem 1rem 1rem 3rem; /* LTR */
+    counter-increment: steps;
+    color: var(--color-gray);
+    border-radius: 0 2rem 2rem 0 /* LTR */;
+    font-weight: 500;
   }
   [dir="rtl"] .task-list li {
-    padding: 0.5em 3.85em 0.5em 1em;
+    padding: 1rem 3rem 1rem 1rem;
+    border-radius: 2rem 0 0 2rem;
   }
+  .task-list li:before {
+    margin-right: 0.375rem;
+    content: counter(steps);
+  }
+  [dir="rtl"] .task-list li:before {
+    margin-right: 0;
+    margin-left: 0.375rem;
+  }
+
   .task-list .is-active {
-    position: relative;
-    background: #ebeae4;
-    font-weight: normal;
-  }
-  .task-list .is-active:after {
-    position: absolute;
-    top: 50%;
-    left: 100%; /* LTR */
-    width: 0;
-    height: 0;
-    margin-top: -1.269em;
-    content: " ";
-    pointer-events: none;
-    border: solid transparent;
-    border-width: 1.269em;
-    border-color: rgba(235, 234, 228, 0);
-    border-left-color: #ebeae4; /* LTR */
-  }
-  [dir="rtl"] .task-list .is-active:after {
-    right: 100%;
-    left: auto;
-    border-right-color: #ebeae4;
-    border-left-color: transparent;
+    color: var(--color-absolutezero);
+    border: 1px solid transparent; /* Required for forced-colors mode. */
+    background: var(--color-bgblue-active);
+    font-weight: 500;
   }
   .task-list .done {
-    color: #adadad;
+    color: var(--color-gray-700);
   }
 }
 
@@ -119,11 +135,12 @@
   margin-right: 1.25em;
   margin-left: 1.25em;
   padding: var(--space-xl);
+  border: 1px solid transparent; /* Required for forced-colors mode. */
   border-radius: 8px;
   background: #fff;
   box-shadow: var(--shadow-z3);
 }
-.layout-container:after { /* no reason for a clearfix in the markup */
+.layout-container:after { /* No reason for a clearfix in the markup. */
   display: table;
   clear: both;
   content: "";
@@ -133,6 +150,10 @@
   .layout-container {
     margin: 1.25em;
     padding: var(--space-m) var(--space-l);
+  }
+
+  .layout-sidebar-first {
+    display: none;
   }
 }
 
@@ -166,8 +187,10 @@
     padding: 15px;
   }
   [dir="rtl"] ul {
-    margin-right: 0; /* Overrides default [dir="rtl"] ul margin */
+    margin-right: 0; /* Overrides default [dir="rtl"] ul margin. */
   }
+
+  /* Positioning sidebar & content. */
   .layout-sidebar-first {
     float: left; /* LTR */
     width: 35%;
@@ -175,17 +198,20 @@
   [dir="rtl"] .layout-sidebar-first {
     float: right;
   }
-  /* Positioning sidebar & content */
-  main {
+
+  .main-content {
     float: left; /* LTR */
     clear: none;
     box-sizing: border-box;
     width: 65%;
     padding-left: 3.85em; /* LTR */
   }
-  [dir="rtl"] main {
+  [dir="rtl"] .main-content {
     float: right;
     padding-right: 3.85em;
+    padding-left: 0;
+  }
+  .main-content--attached {
     padding-left: 0;
   }
 }
@@ -206,4 +232,29 @@
 [dir="rtl"] .system-status-report__entry__value {
   padding-right: 3em;
   padding-left: 1em;
+}
+
+/**
+ * Updates list customization for update page.
+ */
+.update-results {
+  overflow: auto; /* Required to prevent text clipping. */
+  margin-top: 0;
+  padding: var(--space-s);
+  border: 1px solid var(--color-gray-100);
+  border-radius: var(--base-border-radius);
+  background: var(--color-gray-050);
+}
+.update-results > h3:first-child {
+  margin-top: 0;
+}
+.update-results .failure strong {
+  color: var(--color-maximumred);
+}
+
+.item-list > h3 {
+  font-size: var(--font-size-h5);
+}
+.item-list > ul {
+  margin-left: 0;
 }

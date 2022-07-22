@@ -34,6 +34,7 @@
 }
 
 .messages {
+  overflow: auto; /* Required to prevent text clipping. */
   box-sizing: border-box;
   margin-top: var(--space-m);
   margin-bottom: var(--space-m);

@@ -84,6 +84,7 @@
   --line-height-heading: 1.3;
   --line-height-form-label: calc(18rem / 16); /* 18px */
   --font-size-base: 1rem; /* 1rem = 16px if font root is 100% ands browser defaults are used. */
+  --font-size-xl: 2.25rem; /* ~36px */
   --font-size-h1: 2.027rem; /* ~32px */
   --font-size-h2: 1.802rem; /* ~29px */
   --font-size-h3: 1.602rem; /* ~26px */
