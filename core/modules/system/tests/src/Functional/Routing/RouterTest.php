@@ -319,17 +319,18 @@ class RouterTest extends BrowserTestBase {
   }
 
   /**
-   * Ensure that multiple leading slashes are redirected.
+   * Ensure that multiple successive slashes are redirected.
    */
-  public function testLeadingSlashes() {
+  public function testSuccessiveSlashes() {
     $request = $this->container->get('request_stack')->getCurrentRequest();
-    $url = $request->getUriForPath('//router_test/test1');
+
+    // Test a simple path with successive leading slashes.
+    $url = $request->getUriForPath('//////router_test/test1');
     $this->drupalGet($url);
     $this->assertSession()->addressEquals($request->getUriForPath('/router_test/test1'));
 
-    // It should not matter how many leading slashes are used and query strings
-    // should be preserved.
-    $url = $request->getUriForPath('/////////////////////////////////////////////////router_test/test1') . '?qs=test';
+    // Test successive slashes in the middle.
+    $url = $request->getUriForPath('/router_test//////test1') . '?qs=test';
     $this->drupalGet($url);
     $this->assertSession()->addressEquals($request->getUriForPath('/router_test/test1') . '?qs=test');
 
