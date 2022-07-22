@@ -45,7 +45,7 @@ class AjaxBasePageNegotiatorTest extends UnitTestCase {
     parent::setUp();
 
     $this->tokenGenerator = $this->prophesize(CsrfTokenGenerator::class);
-    $config_factory = $this->getConfigFactoryStub(['system.theme' => ['default' => 'bartik']]);
+    $config_factory = $this->getConfigFactoryStub(['system.theme' => ['default' => 'stark']]);
     $this->requestStack = new RequestStack();
     $this->negotiator = new AjaxBasePageNegotiator($this->tokenGenerator->reveal(), $config_factory, $this->requestStack);
   }
@@ -68,8 +68,8 @@ class AjaxBasePageNegotiatorTest extends UnitTestCase {
     $data = [];
     $data['empty'] = [[], FALSE];
     $data['no_theme'] = [['ajax_page_state' => ['theme' => '', 'theme_token' => '']], FALSE];
-    $data['valid_theme_empty_theme_token'] = [['ajax_page_state' => ['theme' => 'seven', 'theme_token' => '']], TRUE];
-    $data['valid_theme_valid_theme_token'] = [['ajax_page_state' => ['theme' => 'seven', 'theme_token' => 'valid_theme_token']], TRUE];
+    $data['valid_theme_empty_theme_token'] = [['ajax_page_state' => ['theme' => 'claro', 'theme_token' => '']], TRUE];
+    $data['valid_theme_valid_theme_token'] = [['ajax_page_state' => ['theme' => 'claro', 'theme_token' => 'valid_theme_token']], TRUE];
     return $data;
   }
 
@@ -77,7 +77,7 @@ class AjaxBasePageNegotiatorTest extends UnitTestCase {
    * @covers ::determineActiveTheme
    */
   public function testDetermineActiveThemeValidToken() {
-    $theme = 'seven';
+    $theme = 'claro';
     $theme_token = 'valid_theme_token';
 
     $request = new Request([], ['ajax_page_state' => ['theme' => $theme, 'theme_token' => $theme_token]]);
@@ -95,7 +95,7 @@ class AjaxBasePageNegotiatorTest extends UnitTestCase {
    * @covers ::determineActiveTheme
    */
   public function testDetermineActiveThemeInvalidToken() {
-    $theme = 'seven';
+    $theme = 'claro';
     $theme_token = 'invalid_theme_token';
 
     $request = new Request([], ['ajax_page_state' => ['theme' => $theme, 'theme_token' => $theme_token]]);
@@ -113,7 +113,7 @@ class AjaxBasePageNegotiatorTest extends UnitTestCase {
    * @covers ::determineActiveTheme
    */
   public function testDetermineActiveThemeDefaultTheme() {
-    $theme = 'bartik';
+    $theme = 'stark';
     // When the theme is the system default, an empty string is provided as the
     // theme token. See system_js_settings_alter().
     $theme_token = '';

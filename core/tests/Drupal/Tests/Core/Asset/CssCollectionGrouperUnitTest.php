@@ -81,7 +81,7 @@ class CssCollectionGrouperUnitTest extends UnitTestCase {
         'type' => 'file',
         'weight' => 0.001,
         'preprocess' => TRUE,
-        'data' => 'core/themes/bartik/css/base/elements.css',
+        'data' => 'core/themes/example/css/base/elements.css',
         'basename' => 'elements.css',
       ],
       'print.css' => [
@@ -90,7 +90,7 @@ class CssCollectionGrouperUnitTest extends UnitTestCase {
         'type' => 'file',
         'weight' => 0.003,
         'preprocess' => TRUE,
-        'data' => 'core/themes/bartik/css/print.css',
+        'data' => 'core/themes/example/css/print.css',
         'basename' => 'print.css',
       ],
     ];

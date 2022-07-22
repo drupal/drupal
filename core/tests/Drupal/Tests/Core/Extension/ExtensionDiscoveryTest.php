@@ -141,13 +141,6 @@ class ExtensionDiscoveryTest extends UnitTestCase {
       'core/modules/user/user.info.yml' => [],
       'profiles/other_profile/modules/other_profile_nested_module/other_profile_nested_module.info.yml' => [],
       'core/modules/system/system.info.yml' => [],
-      'core/themes/seven/seven.info.yml' => [
-        'type' => 'theme',
-      ],
-      // Override the core instance of the 'seven' theme.
-      'sites/default/themes/seven/seven.info.yml' => [
-        'type' => 'theme',
-      ],
       'modules/devel/devel.info.yml' => [],
       'modules/poorly_placed_theme/poorly_placed_theme.info.yml' => [
         'type' => 'theme',

@@ -80,18 +80,18 @@ class ThemeHandlerTest extends UnitTestCase {
     $this->themeList->expects($this->once())
       ->method('getList')
       ->will($this->returnValue([
-        'seven' => new Extension($this->root, 'theme', 'core/themes/seven/seven.info.yml', 'seven.theme'),
+        'stark' => new Extension($this->root, 'theme', 'core/themes/stark/stark.info.yml', 'stark.theme'),
       ]));
 
     $theme_data = $this->themeHandler->rebuildThemeData();
     $this->assertCount(1, $theme_data);
-    $info = $theme_data['seven'];
+    $info = $theme_data['stark'];
 
     // Ensure some basic properties.
     $this->assertInstanceOf('Drupal\Core\Extension\Extension', $info);
-    $this->assertEquals('seven', $info->getName());
-    $this->assertEquals('core/themes/seven/seven.info.yml', $info->getPathname());
-    $this->assertEquals('core/themes/seven/seven.theme', $info->getExtensionPathname());
+    $this->assertEquals('stark', $info->getName());
+    $this->assertEquals('core/themes/stark/stark.info.yml', $info->getPathname());
+    $this->assertEquals('core/themes/stark/stark.theme', $info->getExtensionPathname());
 
   }
 
