@@ -8,12 +8,12 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Redirects paths starting with multiple slashes to a single slash.
+ * Redirects paths containing successive slashes to those with single slashes.
  */
 class RedirectLeadingSlashesSubscriber implements EventSubscriberInterface {
 
   /**
-   * Redirects paths starting with multiple slashes to a single slash.
+   * Redirects paths containing successive slashes to those with single slashes.
    *
    * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
    *   The RequestEvent to process.
@@ -28,8 +28,8 @@ class RedirectLeadingSlashesSubscriber implements EventSubscriberInterface {
     // submits back to the same URI this presents an open redirect
     // vulnerability. Also, Drupal 7 renders the same page for
     // http://www.example.org/foo and http://www.example.org////foo.
-    if (strpos($path, '//') === 0) {
-      $path = '/' . ltrim($path, '/');
+    if (strpos($path, '//') !== FALSE) {
+      $path = preg_replace('/\/+/', '/', $path);
       $qs = $request->getQueryString();
       if ($qs) {
         $qs = '?' . $qs;
