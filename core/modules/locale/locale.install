@@ -230,12 +230,14 @@ function locale_schema() {
         'not null' => FALSE,
         'default' => 0,
         'description' => 'Unix timestamp of the imported file.',
+        'size' => 'big',
       ],
       'last_checked' => [
         'type' => 'int',
         'not null' => FALSE,
         'default' => 0,
         'description' => 'Unix timestamp of the last time this translation was confirmed to be the most recent release available.',
+        'size' => 'big',
       ],
     ],
     'primary key' => ['project', 'langcode'],
@@ -312,4 +314,30 @@ function locale_requirements($phase) {
  */
 function locale_update_last_removed() {
   return 9101;
+}
+
+/**
+ * Remove the year 2038 date limitation.
+ */
+function locale_update_10100(&$sandbox = NULL) {
+  $connection = \Drupal::database();
+  if ($connection->schema()->tableExists('locale_file') && $connection->databaseType() != 'sqlite') {
+    $new = [
+      'type' => 'int',
+      'not null' => FALSE,
+      'default' => 0,
+      'description' => 'Unix timestamp of the imported file.',
+      'size' => 'big',
+    ];
+    $connection->schema()->changeField('locale_file', 'timestamp', 'timestamp', $new);
+
+    $new = [
+      'type' => 'int',
+      'not null' => FALSE,
+      'default' => 0,
+      'description' => 'Unix timestamp of the last time this translation was confirmed to be the most recent release available.',
+      'size' => 'big',
+    ];
+    $connection->schema()->changeField('locale_file', 'last_checked', 'last_checked', $new);
+  }
 }

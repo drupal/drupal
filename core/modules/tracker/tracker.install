@@ -52,6 +52,7 @@ function tracker_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
+        'size' => 'big',
       ],
     ],
     'indexes' => [
@@ -96,6 +97,7 @@ function tracker_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
+        'size' => 'big',
       ],
     ],
     'indexes' => [
@@ -115,4 +117,34 @@ function tracker_schema() {
   ];
 
   return $schema;
+}
+
+/**
+ * Remove the year 2038 date limitation.
+ */
+function tracker_update_10100(&$sandbox = NULL) {
+  $connection = \Drupal::database();
+  if ($connection->schema()->tableExists('tracker_node') && $connection->databaseType() != 'sqlite') {
+    $new = [
+      'description' => 'The Unix timestamp when the node was most recently saved or commented on.',
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+      'default' => 0,
+      'size' => 'big',
+    ];
+    $connection->schema()->changeField('tracker_node', 'changed', 'changed', $new);
+  }
+  if ($connection->schema()->tableExists('tracker_user') && $connection->databaseType() != 'sqlite') {
+    $new = [
+      'description' => 'The Unix timestamp when the node was most recently saved or commented on.',
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+      'default' => 0,
+      'size' => 'big',
+    ];
+    $connection->schema()->changeField('tracker_user', 'changed', 'changed', $new);
+  }
+
 }

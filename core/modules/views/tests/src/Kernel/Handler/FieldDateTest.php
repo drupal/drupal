@@ -31,6 +31,7 @@ class FieldDateTest extends ViewsKernelTestBase {
       'unsigned' => TRUE,
       'not null' => FALSE,
       'default' => 0,
+      'size' => 'big',
     ];
     return $schema;
   }

@@ -50,6 +50,7 @@ function statistics_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
+        'size' => 'big',
       ],
     ],
     'primary key' => ['nid'],
@@ -63,4 +64,22 @@ function statistics_schema() {
  */
 function statistics_update_last_removed() {
   return 8300;
+}
+
+/**
+ * Remove the year 2038 date limitation.
+ */
+function statistics_update_10100(&$sandbox = NULL) {
+  $connection = \Drupal::database();
+  if ($connection->schema()->tableExists('node_counter') && $connection->databaseType() != 'sqlite') {
+    $new = [
+      'description' => 'The most recent time the {node} has been viewed.',
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+      'default' => 0,
+      'size' => 'big',
+    ];
+    $connection->schema()->changeField('node_counter', 'timestamp', 'timestamp', $new);
+  }
 }

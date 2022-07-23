@@ -97,6 +97,7 @@ class ViewTestData {
           'unsigned' => TRUE,
           'not null' => TRUE,
           'default' => 0,
+          'size' => 'big',
         ],
         'status' => [
           'description' => "The status of this record",

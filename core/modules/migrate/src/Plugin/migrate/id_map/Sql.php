@@ -370,6 +370,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
         'not null' => TRUE,
         'default' => 0,
         'description' => 'UNIX timestamp of the last time this row was imported',
+        'size' => 'big',
       ];
       $fields['hash'] = [
         'type' => 'varchar',

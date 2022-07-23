@@ -498,6 +498,7 @@ class DatabaseBackend implements CacheBackendInterface {
           'type' => 'int',
           'not null' => TRUE,
           'default' => 0,
+          'size' => 'big',
         ],
         'created' => [
           'description' => 'A timestamp with millisecond precision indicating when the cache entry was created.',

@@ -139,12 +139,14 @@ function forum_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
+        'size' => 'big',
       ],
       'last_comment_timestamp' => [
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
         'description' => 'The Unix timestamp of the last comment that was posted within this node, from {comment}.timestamp.',
+        'size' => 'big',
       ],
       'comment_count' => [
         'type' => 'int',
@@ -174,4 +176,31 @@ function forum_schema() {
   ];
 
   return $schema;
+}
+
+/**
+ * Remove the year 2038 date limitation.
+ */
+function forum_update_10100(&$sandbox = NULL) {
+  $connection = \Drupal::database();
+  if ($connection->schema()->tableExists('forum_index') && $connection->databaseType() != 'sqlite') {
+    $new = [
+      'description' => 'The Unix timestamp when the node was created.',
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+      'default' => 0,
+      'size' => 'big',
+    ];
+    $connection->schema()->changeField('forum_index', 'created', 'created', $new);
+
+    $new = [
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+      'description' => 'The Unix timestamp of the last comment that was posted within this node, from {comment}.timestamp.',
+      'size' => 'big',
+    ];
+    $connection->schema()->changeField('forum_index', 'last_comment_timestamp', 'last_comment_timestamp', $new);
+  }
 }

@@ -11,3 +11,24 @@
 function migrate_update_last_removed() {
   return 8001;
 }
+
+/**
+ * Remove the year 2038 date limitation.
+ */
+function migrate_update_10100(&$sandbox = NULL) {
+  $connection = \Drupal::database();
+  $tables = $connection->schema()->findTables('migrate_map_%');
+  if (!empty($tables) && $connection->databaseType() != 'sqlite') {
+    foreach ($tables as $table) {
+      $new = [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'UNIX timestamp of the last time this row was imported',
+        'size' => 'big',
+      ];
+      $connection->schema()->changeField($table, 'last_imported', 'last_imported', $new);
+    }
+  }
+}

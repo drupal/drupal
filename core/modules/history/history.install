@@ -30,6 +30,7 @@ function history_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
+        'size' => 'big',
       ],
     ],
     'primary key' => ['uid', 'nid'],
@@ -46,4 +47,21 @@ function history_schema() {
  */
 function history_update_last_removed() {
   return 8101;
+}
+
+/**
+ * Remove the year 2038 date limitation.
+ */
+function history_update_10100(&$sandbox = NULL) {
+  $connection = \Drupal::database();
+  if ($connection->schema()->tableExists('history') && $connection->databaseType() != 'sqlite') {
+    $new = [
+      'description' => 'The Unix timestamp at which the read occurred.',
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+      'size' => 'big',
+    ];
+    $connection->schema()->changeField('history', 'timestamp', 'timestamp', $new);
+  }
 }

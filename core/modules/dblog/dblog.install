@@ -78,6 +78,7 @@ function dblog_schema() {
         'not null' => TRUE,
         'default' => 0,
         'description' => 'Unix timestamp of when event occurred.',
+        'size' => 'big',
       ],
     ],
     'primary key' => ['wid'],
@@ -96,4 +97,21 @@ function dblog_schema() {
  */
 function dblog_update_last_removed() {
   return 8600;
+}
+
+/**
+ * Remove the year 2038 date limitation.
+ */
+function dblog_update_10100(&$sandbox = NULL) {
+  $connection = \Drupal::database();
+  if ($connection->schema()->tableExists('watchdog') && $connection->databaseType() != 'sqlite') {
+    $new = [
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+      'description' => 'Unix timestamp of when event occurred.',
+      'size' => 'big',
+    ];
+    $connection->schema()->changeField('watchdog', 'timestamp', 'timestamp', $new);
+  }
 }
