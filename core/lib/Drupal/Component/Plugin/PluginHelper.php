@@ -2,10 +2,15 @@
 
 namespace Drupal\Component\Plugin;
 
+@trigger_error('The ' . __NAMESPACE__ . '\PluginHelper is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead, use instanceof() to check for \Drupal\Component\Plugin\ConfigurableInterface. See http://drupal.org/node/3198285', E_USER_DEPRECATED);
+
 /**
  * A helper class to determine if a plugin is configurable.
  *
- * @todo Deprecate this class. https://www.drupal.org/node/3105685
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead, use
+ *   instanceof() to check for \Drupal\Component\Plugin\ConfigurableInterface.
+ *
+ * @see https://www.drupal.org/node/3198285
  */
 class PluginHelper {
 

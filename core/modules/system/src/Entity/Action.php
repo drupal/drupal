@@ -2,7 +2,7 @@
 
 namespace Drupal\system\Entity;
 
-use Drupal\Component\Plugin\PluginHelper;
+use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
@@ -133,7 +133,7 @@ class Action extends ConfigEntityBase implements ActionConfigEntityInterface, En
    * {@inheritdoc}
    */
   public function isConfigurable() {
-    return PluginHelper::isConfigurable($this->getPlugin());
+    return $this->getPlugin() instanceof ConfigurableInterface;
   }
 
   /**
