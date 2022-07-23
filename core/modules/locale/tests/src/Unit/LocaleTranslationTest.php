@@ -20,6 +20,20 @@ class LocaleTranslationTest extends UnitTestCase {
   protected $storage;
 
   /**
+   * A mocked lock to use when instantiating LocaleTranslation objects.
+   *
+   * @var \Drupal\Core\Lock\LockBackendInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $lock;
+
+  /**
+   * A mocked cache to use when instantiating LocaleTranslation objects.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $cache;
+
+  /**
    * A mocked language manager built from LanguageManagerInterface.
    *
    * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit\Framework\MockObject\MockObject

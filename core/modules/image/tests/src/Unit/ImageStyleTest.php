@@ -78,11 +78,11 @@ class ImageStyleTest extends UnitTestCase {
    */
   protected function setUp(): void {
     $this->entityTypeId = $this->randomMachineName();
-    $this->provider = $this->randomMachineName();
+    $provider = $this->randomMachineName();
     $this->entityType = $this->createMock('\Drupal\Core\Entity\EntityTypeInterface');
     $this->entityType->expects($this->any())
       ->method('getProvider')
-      ->will($this->returnValue($this->provider));
+      ->will($this->returnValue($provider));
     $this->entityTypeManager = $this->createMock('\Drupal\Core\Entity\EntityTypeManagerInterface');
     $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')

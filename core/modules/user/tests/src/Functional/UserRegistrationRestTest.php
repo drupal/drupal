@@ -43,6 +43,13 @@ class UserRegistrationRestTest extends ResourceTestBase {
    */
   protected static $modules = ['user', 'rest'];
 
+  /**
+   * Entity type ID for this storage.
+   *
+   * @var string
+   */
+  protected static $entityTypeId;
+
   const USER_EMAIL_DOMAIN = '@example.com';
 
   const TEST_EMAIL_DOMAIN = 'simpletest@example.com';

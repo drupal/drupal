@@ -30,6 +30,11 @@ class ViewsDataTest extends OptionsTestBase {
   protected $fieldStorage;
 
   /**
+   * @var int
+   */
+  protected $field;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp($import_test_views = TRUE): void {

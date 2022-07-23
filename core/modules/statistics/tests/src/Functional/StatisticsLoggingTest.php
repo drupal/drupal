@@ -49,6 +49,13 @@ class StatisticsLoggingTest extends BrowserTestBase {
    */
   protected $client;
 
+  /**
+   * A test node.
+   *
+   * @var \Drupal\node\Entity\Node
+   */
+  protected $node;
+
   protected function setUp(): void {
     parent::setUp();
 

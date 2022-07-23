@@ -64,7 +64,6 @@ class FormValuesTest extends WebDriverTestBase {
     $this->assertFileDoesNotExist(DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log');
     // We don't need to check for the X-Drupal-Ajax-Token header with these
     // invalid requests.
-    $this->assertAjaxHeader = FALSE;
     foreach (['null', 'empty', 'nonexistent'] as $key) {
       $element_name = 'select_' . $key . '_callback';
       // Updating the field will trigger an AJAX request/response.

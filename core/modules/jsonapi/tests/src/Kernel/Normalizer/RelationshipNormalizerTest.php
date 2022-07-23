@@ -88,6 +88,55 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
   ];
 
   /**
+   * A user.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected $user1;
+
+  /**
+   * A user.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected $user2;
+
+  /**
+   * An image.
+   *
+   * @var \Drupal\file\Entity\File
+   */
+  protected $image1;
+
+  /**
+   * An image.
+   *
+   * @var \Drupal\file\Entity\File
+   */
+  protected $image2;
+
+  /**
+   * A referencer node.
+   *
+   * @var \Drupal\node\Entity\Node
+   */
+  protected $referencer;
+
+  /**
+   * The node type.
+   *
+   * @var \Drupal\jsonapi\ResourceType\ResourceType
+   */
+  protected $referencingResourceType;
+
+  /**
+   * The normalizer.
+   *
+   * @var \Drupal\jsonapi\Normalizer\RelationshipNormalizer
+   */
+  protected $normalizer;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {

@@ -57,6 +57,20 @@ class ContentModerationStateTest extends KernelTestBase {
   protected $entityTypeManager;
 
   /**
+   * The state object.
+   *
+   * @var \Drupal\Core\State\StateInterface
+   */
+  protected $state;
+
+  /**
+   * The entity definition update manager.
+   *
+   * @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
+   */
+  protected $entityDefinitionUpdateManager;
+
+  /**
    * The ID of the revisionable entity type used in the tests.
    *
    * @var string

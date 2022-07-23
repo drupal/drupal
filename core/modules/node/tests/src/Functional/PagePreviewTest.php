@@ -65,6 +65,13 @@ class PagePreviewTest extends NodeTestBase {
    */
   protected $fieldName;
 
+  /**
+   * A term.
+   *
+   * @var \Drupal\taxonomy\Entity\Term
+   */
+  protected $term;
+
   protected function setUp(): void {
     parent::setUp();
     $this->addDefaultCommentField('node', 'page');
@@ -86,13 +93,11 @@ class PagePreviewTest extends NodeTestBase {
     ]);
     $vocabulary->save();
 
-    $this->vocabulary = $vocabulary;
-
     // Add a term to the vocabulary.
     $term = Term::create([
       'name' => $this->randomMachineName(),
       'description' => $this->randomMachineName(),
-      'vid' => $this->vocabulary->id(),
+      'vid' => $vocabulary->id(),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ]);
     $term->save();
@@ -122,7 +127,7 @@ class PagePreviewTest extends NodeTestBase {
     $this->fieldName = mb_strtolower($this->randomMachineName());
     $handler_settings = [
       'target_bundles' => [
-        $this->vocabulary->id() => $this->vocabulary->id(),
+        $vocabulary->id() => $vocabulary->id(),
       ],
       'auto_create' => TRUE,
     ];
