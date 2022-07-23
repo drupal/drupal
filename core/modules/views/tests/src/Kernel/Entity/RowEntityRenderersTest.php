@@ -70,6 +70,16 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
   protected $testIds;
 
   /**
+   * @var array
+   */
+  protected $values;
+
+  /**
+   * @var array
+   */
+  protected $ids;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp($import_test_views = TRUE): void {

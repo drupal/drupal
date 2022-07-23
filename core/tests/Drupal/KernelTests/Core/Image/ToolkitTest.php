@@ -32,6 +32,13 @@ class ToolkitTest extends KernelTestBase {
   protected $image;
 
   /**
+   * The image effect plugin manager service.
+   *
+   * @var \Drupal\image\ImageEffectManager
+   */
+  protected $imageEffectPluginManager;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {

@@ -25,6 +25,13 @@ class CKEditor5ToolbarTest extends CKEditor5TestBase {
   ];
 
   /**
+   * The admin user.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected $user;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {

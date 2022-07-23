@@ -30,6 +30,20 @@ class AddedStylesheetsTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * The editor user.
+   *
+   * @var \Drupal\editor\Entity\Editor
+   */
+  protected $editor;
+
+  /**
+   * The admin user.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected $adminUser;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {

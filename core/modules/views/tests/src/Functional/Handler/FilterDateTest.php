@@ -43,6 +43,16 @@ class FilterDateTest extends ViewTestBase {
    */
   public $dateFormatter;
 
+  /**
+   * @var array
+   */
+  protected $nodes;
+
+  /**
+   * @var array
+   */
+  protected $map;
+
   protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
     parent::setUp($import_test_views, $modules);
     $this->dateFormatter = $this->container->get('date.formatter');

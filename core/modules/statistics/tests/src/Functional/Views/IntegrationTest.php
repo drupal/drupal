@@ -33,6 +33,13 @@ class IntegrationTest extends ViewTestBase {
   protected $webUser;
 
   /**
+   * A test user with node viewing access only.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected $deniedUser;
+
+  /**
    * Stores the node object which is used by the test.
    *
    * @var \Drupal\node\Entity\Node

@@ -18,6 +18,11 @@ use Symfony\Component\Routing\Route;
 class AccessAwareRouterTest extends UnitTestCase {
 
   /**
+   * @var \Drupal\Core\Routing\Router
+   */
+  protected $router;
+
+  /**
    * @var \Symfony\Component\Routing\Route
    */
   protected $route;

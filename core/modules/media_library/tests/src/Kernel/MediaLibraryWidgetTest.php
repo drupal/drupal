@@ -44,6 +44,13 @@ class MediaLibraryWidgetTest extends KernelTestBase {
   protected $adminUser;
 
   /**
+   * The base field definition.
+   *
+   * @var \Drupal\Core\Field\BaseFieldDefinition
+   */
+  protected $baseField;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {

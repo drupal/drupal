@@ -41,6 +41,16 @@ class ManageDisplayTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * @var string
+   */
+  private $type;
+
+  /**
+   * @var string
+   */
+  private $vocabulary;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {

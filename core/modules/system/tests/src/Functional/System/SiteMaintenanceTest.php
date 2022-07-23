@@ -31,6 +31,13 @@ class SiteMaintenanceTest extends BrowserTestBase {
 
   protected $adminUser;
 
+  /**
+   * User allowed to access site in maintenance mode.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected $user;
+
   protected function setUp(): void {
     parent::setUp();
 

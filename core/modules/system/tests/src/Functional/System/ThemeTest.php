@@ -38,6 +38,13 @@ class ThemeTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'classy';
 
+  /**
+   * A test node.
+   *
+   * @var \Drupal\node\Entity\Node
+   */
+  protected $node;
+
   protected function setUp(): void {
     parent::setUp();
 

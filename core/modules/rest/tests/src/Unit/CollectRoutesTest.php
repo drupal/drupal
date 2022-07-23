@@ -39,7 +39,7 @@ class CollectRoutesTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $this->view = $this->getMockBuilder('\Drupal\views\Entity\View')
+    $view = $this->getMockBuilder('\Drupal\views\Entity\View')
       ->addMethods(['initHandlers'])
       ->setConstructorArgs([['id' => 'test_view'], 'view'])
       ->getMock();
@@ -52,7 +52,7 @@ class CollectRoutesTest extends UnitTestCase {
       ->method('getTitle')
       ->willReturn('View title');
 
-    $view_executable->storage = $this->view;
+    $view_executable->storage = $view;
     $view_executable->argument = [];
 
     $display_manager = $this->getMockBuilder('\Drupal\views\Plugin\ViewsPluginManager')
@@ -137,7 +137,7 @@ class CollectRoutesTest extends UnitTestCase {
     $this->routes->add('test_1', new Route('/test/1'));
     $this->routes->add('view.test_view.page_1', new Route('/test/2'));
 
-    $this->view->addDisplay('page', NULL, 'page_1');
+    $view->addDisplay('page', NULL, 'page_1');
   }
 
   /**
