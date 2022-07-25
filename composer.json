@@ -21,7 +21,7 @@
         "composer/composer": "^2.3.5",
         "drupal/coder": "^8.3.10",
         "instaclick/php-webdriver": "^1.4.1",
-        "mglaman/phpstan-drupal": "^1.1.21",
+        "mglaman/phpstan-drupal": "^1.1.25",
         "mikey179/vfsstream": "^1.6.8",
         "phpunit/phpunit": "^9.5",
         "phpspec/prophecy-phpunit": "^2",

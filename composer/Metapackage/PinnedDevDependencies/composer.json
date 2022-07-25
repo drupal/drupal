@@ -23,7 +23,7 @@
         "easyrdf/easyrdf": "1.1.1",
         "instaclick/php-webdriver": "1.4.14",
         "justinrainbow/json-schema": "5.2.12",
-        "mglaman/phpstan-drupal": "1.1.21",
+        "mglaman/phpstan-drupal": "1.1.25",
         "mikey179/vfsstream": "v1.6.10",
         "myclabs/deep-copy": "1.11.0",
         "nikic/php-parser": "v4.13.2",

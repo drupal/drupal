@@ -15,7 +15,7 @@
         "easyrdf/easyrdf": "^1.0",
         "instaclick/php-webdriver": "^1.4.1",
         "justinrainbow/json-schema": "^5.2",
-        "mglaman/phpstan-drupal": "^1.1.21",
+        "mglaman/phpstan-drupal": "^1.1.25",
         "mikey179/vfsstream": "^1.6.8",
         "phpspec/prophecy-phpunit": "^2",
         "phpstan/extension-installer": "^1.1",
