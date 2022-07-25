@@ -147,7 +147,6 @@ class EntityViewController implements ContainerInjectionInterface, TrustedCallba
           'rel' => 'canonical',
           'href' => $url->toString(),
         ],
-        TRUE,
       ];
 
       // Set the non-aliased canonical path as a default shortlink.
@@ -156,7 +155,6 @@ class EntityViewController implements ContainerInjectionInterface, TrustedCallba
           'rel' => 'shortlink',
           'href' => $url->setOption('alias', TRUE)->toString(),
         ],
-        TRUE,
       ];
 
       // Since this generates absolute URLs, it can only be cached "per site".
