@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "52ee090aa2c068a39b76ecc45ed1a0f2",
+    "content-hash": "55d89b3964e0ccd0b6243419d50fecc5",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -5061,16 +5061,16 @@
         },
         {
             "name": "mglaman/phpstan-drupal",
-            "version": "1.1.21",
+            "version": "1.1.25",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mglaman/phpstan-drupal.git",
-                "reference": "8acaa1e4a15b266cfbd404c6fcb4e1be398f05f8"
+                "reference": "480245d5d0bd1858e01c43d738718dab85be0ad2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mglaman/phpstan-drupal/zipball/8acaa1e4a15b266cfbd404c6fcb4e1be398f05f8",
-                "reference": "8acaa1e4a15b266cfbd404c6fcb4e1be398f05f8",
+                "url": "https://api.github.com/repos/mglaman/phpstan-drupal/zipball/480245d5d0bd1858e01c43d738718dab85be0ad2",
+                "reference": "480245d5d0bd1858e01c43d738718dab85be0ad2",
                 "shasum": ""
             },
             "require": {
@@ -5145,7 +5145,7 @@
             "description": "Drupal extension and rules for PHPStan",
             "support": {
                 "issues": "https://github.com/mglaman/phpstan-drupal/issues",
-                "source": "https://github.com/mglaman/phpstan-drupal/tree/1.1.21"
+                "source": "https://github.com/mglaman/phpstan-drupal/tree/1.1.25"
             },
             "funding": [
                 {
@@ -5161,7 +5161,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-07-07T19:39:04+00:00"
+            "time": "2022-07-18T17:17:55+00:00"
         },
         {
             "name": "mikey179/vfsstream",
