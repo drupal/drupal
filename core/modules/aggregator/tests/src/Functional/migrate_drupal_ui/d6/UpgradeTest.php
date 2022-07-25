@@ -82,7 +82,6 @@ class UpgradeTest extends MigrateUpgradeExecuteTestBase {
       // The 'book' module provides the 'book' node type, and the migration
       // creates 12 node types.
       'node_type' => 14,
-      'rdf_mapping' => 7,
       'search_page' => 2,
       'shortcut' => 2,
       'shortcut_set' => 1,

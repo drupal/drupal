@@ -83,7 +83,6 @@ class UpgradeTest extends MigrateUpgradeExecuteTestBase {
       'language_content_settings' => 24,
       'node' => 7,
       'node_type' => 8,
-      'rdf_mapping' => 8,
       'search_page' => 2,
       'shortcut' => 6,
       'shortcut_set' => 2,
@@ -151,7 +150,6 @@ class UpgradeTest extends MigrateUpgradeExecuteTestBase {
       'Options',
       'Path',
       'Phone',
-      'RDF',
       'Search',
       'Shortcut',
       'Statistics',
@@ -187,6 +185,7 @@ class UpgradeTest extends MigrateUpgradeExecuteTestBase {
   protected function getMissingPaths() {
     return [
       'Color',
+      'RDF',
       'References',
       'Translation sets',
       'Variable realm',

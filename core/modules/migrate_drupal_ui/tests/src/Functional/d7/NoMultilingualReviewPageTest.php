@@ -27,6 +27,7 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
     'forum',
     'language',
     'migrate_drupal_ui',
+    'rdf',
     'statistics',
     'telephone',
   ];

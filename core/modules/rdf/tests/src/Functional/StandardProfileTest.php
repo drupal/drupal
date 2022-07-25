@@ -13,7 +13,7 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\Tests\rdf\Traits\RdfParsingTrait;
 
 /**
- * Tests the RDF mappings and RDFa markup of the standard profile.
+ * Tests the RDF mappings and RDFa markup on top of the standard profile.
  *
  * @group rdf
  */
@@ -36,80 +36,118 @@ class StandardProfileTest extends BrowserTestBase {
   public $profile = 'standard';
 
   /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['rdf'];
+
+  /**
+   * The base URI.
+   *
    * @var string
    */
   protected $baseUri;
 
   /**
+   * The admin user.
+   *
    * @var \Drupal\user\UserInterface
    */
   protected $adminUser;
 
   /**
+   * The web user.
+   *
    * @var \Drupal\user\UserInterface
    */
   protected $webUser;
 
   /**
+   * The term to test.
+   *
    * @var \Drupal\taxonomy\TermInterface
    */
   protected $term;
 
   /**
+   * The image to test.
+   *
    * @var \Drupal\file\FileInterface
    */
   protected $image;
 
   /**
+   * The article to test.
+   *
    * @var \Drupal\node\NodeInterface
    */
   protected $article;
 
   /**
+   * The comment on the article to test.
+   *
    * @var \Drupal\comment\CommentInterface
    */
   protected $articleComment;
 
   /**
+   * The page to test.
+   *
    * @var \Drupal\node\NodeInterface
    */
   protected $page;
 
   /**
+   * The URI of the image to test.
+   *
    * @var string
    */
   protected $imageUri;
 
   /**
+   * The URI of the term to test.
+   *
    * @var string
    */
   protected $termUri;
 
   /**
+   * The URI of the article to test.
+   *
    * @var string
    */
   protected $articleUri;
 
   /**
+   * The URI of the page to test.
+   *
    * @var string
    */
   protected $pageUri;
 
   /**
+   * The URI of the author of the article to test.
+   *
    * @var string
    */
   protected $authorUri;
 
   /**
+   * The URI of the comment on the article to test.
+   *
    * @var string
    */
   protected $articleCommentUri;
 
   /**
+   * The URI of the author of the comment to test.
+   *
    * @var string
    */
   protected $commenterUri;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -161,7 +199,10 @@ class StandardProfileTest extends BrowserTestBase {
     ];
     $this->article = $this->drupalCreateNode($article_settings);
     // Create second article to test teaser list.
-    $this->drupalCreateNode(['type' => 'article', 'promote' => NodeInterface::PROMOTED]);
+    $this->drupalCreateNode([
+      'type' => 'article',
+      'promote' => NodeInterface::PROMOTED,
+    ]);
 
     // Create article comment.
     $this->articleComment = $this->saveComment($this->article->id(), $this->webUser->id(), NULL, 0);
@@ -212,7 +253,6 @@ class StandardProfileTest extends BrowserTestBase {
     $this->drupalGet(Url::fromRoute('<front>'));
 
     // Ensure that both articles are listed.
-    // $this->assertCount(2, $this->getRdfGraph(Url::fromRoute('<front>'), $this->baseUri)->allOfType('http://schema.org/Article'), 'Two articles found on front page.');
     $this->assertEquals(2, $this->getElementByRdfTypeCount(Url::fromRoute('<front>'), $this->baseUri, 'http://schema.org/Article'), 'Two articles found on front page.');
 
     // Test interaction count.
@@ -455,7 +495,7 @@ class StandardProfileTest extends BrowserTestBase {
     $text = $this->articleComment->get('comment_body')->value;
     $expected_value = [
       'type' => 'literal',
-      // There is an extra carriage return in the when parsing comments as
+      // There is an extra carriage return in the value when parsing comments as
       // output by Bartik, so it must be added to the expected value.
       'value' => "$text
 ",
