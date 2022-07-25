@@ -71,7 +71,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     // test can continue.
     $this->assertArrayHasKey('system', $directories, 'System module is being scanned');
     $this->assertArrayHasKey('help', $directories, 'Help module is being scanned');
-    $this->assertArrayHasKey('seven', $directories, 'Seven theme is being scanned');
+    $this->assertArrayHasKey('claro', $directories, 'Claro theme is being scanned');
     $this->assertArrayHasKey('standard', $directories, 'Standard profile is being scanned');
 
     $definitions = (new HelpTopicDiscovery($directories))->getDefinitions();
