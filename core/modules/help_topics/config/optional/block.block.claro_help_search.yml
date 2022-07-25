@@ -1,0 +1,29 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - search
+    - system
+  theme:
+    - claro
+  enforced:
+    config:
+      - search.page.help_search
+id: claro_help_search
+theme: claro
+region: help
+weight: -4
+provider: null
+plugin: search_form_block
+settings:
+  id: search_form_block
+  label: 'Search help'
+  label_display: visible
+  provider: search
+  page_id: help_search
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    context_mapping: {  }
+    pages: /admin/help
