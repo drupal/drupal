@@ -20,7 +20,7 @@ class HtmlFormController extends FormController {
   protected $classResolver;
 
   /**
-   * Constructs a new \Drupal\Core\Routing\Enhancer\FormEnhancer object.
+   * Constructs a new \Drupal\Core\Controller\HtmlFormController object.
    *
    * @param \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface $argument_resolver
    *   The argument resolver.
