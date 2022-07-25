@@ -315,7 +315,7 @@ abstract class Schema implements PlaceholderInterface {
    *   created field will be set to the value of the key in all rows.
    *   This is most useful for creating NOT NULL columns with no default
    *   value in existing tables.
-   *   Alternatively, the 'initial_form_field' key may be used, which will
+   *   Alternatively, the 'initial_from_field' key may be used, which will
    *   auto-populate the new field with values from the specified field.
    * @param $keys_new
    *   (optional) Keys and indexes specification to be created on the
