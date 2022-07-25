@@ -194,8 +194,8 @@ function hook_ajax_render_alter(array &$data) {
  *   \Drupal::formBuilder()->getForm() was originally called with are available
  *   in the array $form_state->getBuildInfo()['args'].
  * @param $form_id
- *   String representing the name of the form itself. Typically this is the
- *   name of the function that generated the form.
+ *   A string that is the unique ID of the form, set by
+ *   Drupal\Core\Form\FormInterface::getFormId().
  *
  * @see hook_form_BASE_FORM_ID_alter()
  * @see hook_form_FORM_ID_alter()
