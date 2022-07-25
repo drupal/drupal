@@ -2,14 +2,17 @@ langcode: en
 status: true
 dependencies:
   config:
-    - node.type.page
+    - node.type.article
   module:
     - node
-id: node.page
+  enforced:
+    module:
+      - standard
+id: node.article
 targetEntityType: node
-bundle: page
+bundle: article
 types:
-  - 'schema:WebPage'
+  - 'schema:Article'
 fieldMappings:
   title:
     properties:
@@ -30,6 +33,9 @@ fieldMappings:
   uid:
     properties:
       - 'schema:author'
+  comment:
+    properties:
+      - 'schema:comment'
     mapping_type: rel
   comment_count:
     properties:
@@ -38,3 +44,9 @@ fieldMappings:
       callable: 'Drupal\rdf\SchemaOrgDataConverter::interactionCount'
       arguments:
         interaction_type: UserComments
+  field_image:
+    properties:
+      - 'schema:image'
+  field_tags:
+    properties:
+      - 'schema:about'

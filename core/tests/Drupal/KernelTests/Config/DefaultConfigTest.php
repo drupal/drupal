@@ -124,8 +124,8 @@ class DefaultConfigTest extends KernelTestBase {
       $modules_to_install = array_merge($modules_to_install, $dependency->getDependencies('module'));
       $themes_to_install = array_merge($themes_to_install, $dependency->getDependencies('theme'));
     }
-    // Remove core because that cannot be installed.
-    $modules_to_install = array_diff(array_unique($modules_to_install), ['core']);
+    // Remove core and standard because they cannot be installed.
+    $modules_to_install = array_diff(array_unique($modules_to_install), ['core', 'standard']);
     $this->container->get('module_installer')->install($modules_to_install);
     $this->container->get('theme_installer')->install(array_unique($themes_to_install));
 
@@ -224,6 +224,14 @@ class DefaultConfigTest extends KernelTestBase {
         $this->assertNull($this->assertConfigDiff($result, $config_name, static::$skippedConfig));
       }
       else {
+        $data = $default_config_storage->read($config_name);
+        $dependency = new ConfigEntityDependency($config_name, $data);
+        if ($dependency->hasDependency('module', 'standard')) {
+          // Skip configuration with a dependency on the standard profile. Such
+          // configuration has probably been removed from the standard profile
+          // and needs its own test.
+          continue;
+        }
         $info = $this->container->get('extension.list.module')->getExtensionInfo($module);
         if (!isset($info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER]) || $info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] !== ExtensionLifecycle::EXPERIMENTAL) {
           $this->fail("$config_name provided by $module does not exist after installing all dependencies");

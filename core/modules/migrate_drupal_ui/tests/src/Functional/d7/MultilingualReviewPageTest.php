@@ -26,6 +26,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
     'telephone',
     'book',
     'forum',
+    'rdf',
     'statistics',
     'syslog',
     'update',
