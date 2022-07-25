@@ -105,8 +105,8 @@ class UncaughtExceptionTest extends BrowserTestBase {
     $this->assertSession()->responseContains((string) $message);
     $this->assertSession()->responseContains('<pre class="backtrace">');
     // Ensure we are escaping but not double escaping.
-    $this->assertSession()->responseContains('&#039;');
-    $this->assertSession()->responseNotContains('&amp;#039;');
+    $this->assertSession()->responseContains('&gt;');
+    $this->assertSession()->responseNotContains('&amp;gt;');
   }
 
   /**
