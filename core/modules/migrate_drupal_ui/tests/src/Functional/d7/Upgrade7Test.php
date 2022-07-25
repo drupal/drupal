@@ -28,6 +28,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
     'forum',
     'language',
     'migrate_drupal_ui',
+    'rdf',
     'statistics',
     'telephone',
   ];

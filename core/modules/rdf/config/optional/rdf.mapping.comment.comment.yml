@@ -2,16 +2,19 @@ langcode: en
 status: true
 dependencies:
   config:
-    - node.type.article
+    - comment.type.comment
   module:
-    - node
-id: node.article
-targetEntityType: node
-bundle: article
+    - comment
+  enforced:
+    module:
+      - standard
+id: comment.comment
+targetEntityType: comment
+bundle: comment
 types:
-  - 'schema:Article'
+  - 'schema:Comment'
 fieldMappings:
-  title:
+  subject:
     properties:
       - 'schema:name'
   created:
@@ -24,26 +27,10 @@ fieldMappings:
       - 'schema:dateModified'
     datatype_callback:
       callable: 'Drupal\rdf\CommonDataConverter::dateIso8601Value'
-  body:
+  comment_body:
     properties:
       - 'schema:text'
   uid:
     properties:
       - 'schema:author'
-  comment:
-    properties:
-      - 'schema:comment'
     mapping_type: rel
-  comment_count:
-    properties:
-      - 'schema:interactionCount'
-    datatype_callback:
-      callable: 'Drupal\rdf\SchemaOrgDataConverter::interactionCount'
-      arguments:
-        interaction_type: UserComments
-  field_image:
-    properties:
-      - 'schema:image'
-  field_tags:
-    properties:
-      - 'schema:about'
