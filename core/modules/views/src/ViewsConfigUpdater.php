@@ -122,9 +122,6 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
   public function updateAll(ViewEntityInterface $view) {
     return $this->processDisplayHandlers($view, FALSE, function (&$handler, $handler_type, $key, $display_id) use ($view) {
       $changed = FALSE;
-      if ($this->processSortFieldIdentifierUpdateHandler($handler, $handler_type)) {
-        $changed = TRUE;
-      }
       if ($this->processImageLazyLoadFieldHandler($handler, $handler_type, $view)) {
         $changed = TRUE;
       }
@@ -174,21 +171,6 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
   }
 
   /**
-   * Updates the sort handlers by adding default sort field identifiers.
-   *
-   * @param \Drupal\views\ViewEntityInterface $view
-   *   The View to update.
-   *
-   * @return bool
-   *   Whether the view was updated.
-   */
-  public function needsSortFieldIdentifierUpdate(ViewEntityInterface $view): bool {
-    return $this->processDisplayHandlers($view, TRUE, function (array &$handler, string $handler_type): bool {
-      return $this->processSortFieldIdentifierUpdateHandler($handler, $handler_type);
-    });
-  }
-
-  /**
    * Add lazy load options to all image type field configurations.
    *
    * @param \Drupal\views\ViewEntityInterface $view
@@ -230,25 +212,6 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
     }
 
     return $changed;
-  }
-
-  /**
-   * Processes sort handlers by adding the sort identifier.
-   *
-   * @param array $handler
-   *   A display handler.
-   * @param string $handler_type
-   *   The handler type.
-   *
-   * @return bool
-   *   Whether the handler was updated.
-   */
-  protected function processSortFieldIdentifierUpdateHandler(array &$handler, string $handler_type): bool {
-    if ($handler_type === 'sort' && !isset($handler['expose']['field_identifier'])) {
-      $handler['expose']['field_identifier'] = $handler['id'];
-      return TRUE;
-    }
-    return FALSE;
   }
 
 }
