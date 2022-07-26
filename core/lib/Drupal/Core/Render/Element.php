@@ -37,7 +37,7 @@ class Element {
    *   An array of property keys for the element.
    */
   public static function properties(array $element) {
-    return array_filter(array_keys($element), 'static::property');
+    return array_filter(array_keys($element), [static::class, 'property']);
   }
 
   /**

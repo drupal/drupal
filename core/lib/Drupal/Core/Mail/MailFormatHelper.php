@@ -125,7 +125,7 @@ class MailFormatHelper {
     // 'See the Drupal site [1]' with the URL included as a footnote.
     static::htmlToMailUrls(NULL, TRUE);
     $pattern = '@(<a[^>]+?href="([^"]*)"[^>]*?>(.+?)</a>)@i';
-    $string = preg_replace_callback($pattern, 'static::htmlToMailUrls', $string);
+    $string = preg_replace_callback($pattern, [static::class, 'htmlToMailUrls'], $string);
     $urls = static::htmlToMailUrls();
     $footnotes = '';
     if (count($urls)) {
