@@ -704,7 +704,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
         // types). Ensure at least the minimum number of values is present for
         // this entry to be considered valid.
         $min_values = $operators[$group['operator']]['values'];
-        $actual_values = count(array_filter($group['value'], 'static::arrayFilterZero'));
+        $actual_values = count(array_filter($group['value'], [static::class, 'arrayFilterZero']));
         return $actual_values >= $min_values;
       }
     }

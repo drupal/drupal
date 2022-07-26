@@ -155,7 +155,7 @@ class AssetResolver implements AssetResolverInterface {
     $this->themeManager->alter('css', $css, $assets);
 
     // Sort CSS items, so that they appear in the correct order.
-    uasort($css, 'static::sort');
+    uasort($css, [static::class, 'sort']);
 
     if ($optimize) {
       $css = \Drupal::service('asset.css.collection_optimizer')->optimize($css);
@@ -262,7 +262,7 @@ class AssetResolver implements AssetResolverInterface {
       $this->themeManager->alter('js', $javascript, $assets);
 
       // Sort JavaScript assets, so that they appear in the correct order.
-      uasort($javascript, 'static::sort');
+      uasort($javascript, [static::class, 'sort']);
 
       // Prepare the return value: filter JavaScript assets per scope.
       $js_assets_header = [];
