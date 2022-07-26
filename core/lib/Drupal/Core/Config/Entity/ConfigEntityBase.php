@@ -18,6 +18,7 @@ use Drupal\Core\Plugin\PluginDependencyTrait;
  *
  * @ingroup entity_api
  */
+#[\AllowDynamicProperties]
 abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterface {
 
   use PluginDependencyTrait {
