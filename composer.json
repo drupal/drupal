@@ -22,7 +22,7 @@
         "drupal/coder": "^8.3.10",
         "instaclick/php-webdriver": "^1.4.1",
         "mglaman/phpstan-drupal": "^1.1.25",
-        "mikey179/vfsstream": "^1.6.8",
+        "mikey179/vfsstream": "^1.6.11",
         "phpunit/phpunit": "^9.5",
         "phpspec/prophecy-phpunit": "^2",
         "phpstan/extension-installer": "^1.1",
