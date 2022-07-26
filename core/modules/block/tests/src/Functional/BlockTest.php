@@ -270,9 +270,8 @@ class BlockTest extends BlockTestBase {
   public function testBlockThemeSelector() {
     // Install all themes.
     $themes = [
-      'bartik',
       'olivero',
-      'seven',
+      'claro',
       'stark',
     ];
     \Drupal::service('theme_installer')->install($themes);
@@ -530,14 +529,14 @@ class BlockTest extends BlockTestBase {
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
     $theme_installer = \Drupal::service('theme_installer');
 
-    $theme_installer->install(['seven']);
-    $this->config('system.theme')->set('default', 'seven')->save();
-    $block = $this->drupalPlaceBlock('system_powered_by_block', ['theme' => 'seven', 'region' => 'help']);
+    $theme_installer->install(['claro']);
+    $this->config('system.theme')->set('default', 'claro')->save();
+    $block = $this->drupalPlaceBlock('system_powered_by_block', ['theme' => 'claro', 'region' => 'help']);
     $this->drupalGet('<front>');
     $this->assertSession()->pageTextContains('Powered by Drupal');
 
     $this->config('system.theme')->set('default', 'stark')->save();
-    $theme_installer->uninstall(['seven']);
+    $theme_installer->uninstall(['claro']);
 
     // Ensure that the block configuration does not exist anymore.
     $this->assertNull(Block::load($block->id()));
