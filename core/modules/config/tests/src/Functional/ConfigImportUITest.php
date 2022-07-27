@@ -3,6 +3,7 @@
 namespace Drupal\Tests\config\Functional;
 
 use Drupal\Core\Config\InstallStorage;
+use Drupal\Core\Serialization\Yaml;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -88,18 +89,18 @@ class ConfigImportUITest extends BrowserTestBase {
     $core_extension['module']['automated_cron'] = 0;
     $core_extension['module']['ban'] = 0;
     $core_extension['module'] = module_config_sort($core_extension['module']);
-    // Bartik is a subtheme of Stable so Stable must be enabled.
-    $core_extension['theme']['stable'] = 0;
-    $core_extension['theme']['bartik'] = 0;
+    $core_extension['theme']['olivero'] = 0;
     $sync->write('core.extension', $core_extension);
+    // Olivero ships with configuration.
+    $sync->write('olivero.settings', Yaml::decode(file_get_contents('core/themes/olivero/config/install/olivero.settings.yml')));
 
     // Use the install storage so that we can read configuration from modules
     // and themes that are not installed.
     $install_storage = new InstallStorage();
 
-    // Set the Bartik theme as default.
+    // Set the Olivero theme as default.
     $system_theme = $this->config('system.theme')->get();
-    $system_theme['default'] = 'bartik';
+    $system_theme['default'] = 'olivero';
     $sync->write('system.theme', $system_theme);
 
     // Read the automated_cron config from module default config folder.
@@ -155,7 +156,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('automated_cron'), 'Automated Cron module installed during import.');
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('options'), 'Options module installed during import.');
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('text'), 'Text module installed during import.');
-    $this->assertTrue(\Drupal::service('theme_handler')->themeExists('bartik'), 'Bartik theme installed during import.');
+    $this->assertTrue(\Drupal::service('theme_handler')->themeExists('olivero'), 'Olivero theme installed during import.');
 
     // Ensure installations and uninstallation occur as expected.
     $installed = \Drupal::state()->get('ConfigImportUITest.core.extension.modules_installed', []);
@@ -177,10 +178,11 @@ class ConfigImportUITest extends BrowserTestBase {
     unset($core_extension['module']['ban']);
     unset($core_extension['module']['options']);
     unset($core_extension['module']['text']);
-    unset($core_extension['theme']['bartik']);
+    unset($core_extension['theme']['olivero']);
     $sync->write('core.extension', $core_extension);
     $sync->delete('automated_cron.settings');
     $sync->delete('text.settings');
+    $sync->delete('olivero.settings');
 
     $system_theme = $this->config('system.theme')->get();
     $system_theme = [
@@ -221,7 +223,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertEmpty($installed, 'No modules installed during import');
 
     $theme_info = \Drupal::service('theme_handler')->listInfo();
-    $this->assertFalse(isset($theme_info['bartik']), 'Bartik theme uninstalled during import.');
+    $this->assertFalse(isset($theme_info['olivero']), 'Olivero theme uninstalled during import.');
 
     // Verify that the automated_cron.settings configuration object was only
     // deleted once during the import process.
@@ -511,7 +513,6 @@ class ConfigImportUITest extends BrowserTestBase {
     unset($core['module']['text']);
     $module_data = $this->container->get('extension.list.module')->getList();
     $this->assertTrue(isset($module_data['node']->requires['text']), 'The Node module depends on the Text module.');
-    // Bartik depends on Stable.
     unset($core['theme']['test_basetheme']);
     $theme_data = \Drupal::service('theme_handler')->rebuildThemeData();
     $this->assertTrue(isset($theme_data['test_subtheme']->requires['test_basetheme']), 'The Test Subtheme theme depends on the Test Basetheme theme.');
