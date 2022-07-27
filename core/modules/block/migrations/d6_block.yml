@@ -71,12 +71,12 @@ process:
       - region
     map:
       garland:
-        olivero:
-          # Garland 6.x --> Olivero
+        bartik:
+          # Garland 6.x --> Bartik 8.x
           header: header
-          footer: footer_top
-          left: sidebar
-          right: sidebar
+          footer: footer_fifth
+          left: sidebar_first
+          right: sidebar_second
     # If mapping fails, put the block in the content region.
     default_value: content
   weight: weight
