@@ -15,7 +15,7 @@
         "friends-of-behat/mink-browserkit-driver": "^1.4",
         "instaclick/php-webdriver": "^1.4.1",
         "justinrainbow/json-schema": "^5.2",
-        "mikey179/vfsstream": "^1.6.8",
+        "mikey179/vfsstream": "^1.6.11",
         "phpspec/prophecy": "^1.12",
         "phpunit/phpunit": "^8.5.14 || ^9",
         "symfony/browser-kit": "^4.4",
