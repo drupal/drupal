@@ -67,6 +67,7 @@ class ThemeSettings extends DestinationBase implements ContainerFactoryPluginInt
     // Remove keys not in theme settings.
     unset($theme_settings['configuration_name']);
     unset($theme_settings['theme_name']);
+    unset($theme_settings['legacy_theme_name']);
     if (isset($theme_settings)) {
       theme_settings_convert_to_config($theme_settings, $config);
       $config->save();
