@@ -1,17 +1,10 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\block\Unit\BlockRepositoryTest.
- */
-
 namespace Drupal\Tests\block\Unit;
 
 use Drupal\block\BlockRepository;
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -190,7 +183,4 @@ class BlockRepositoryTest extends UnitTestCase {
     $this->assertEquals(['config:block.block.block_id'], $cacheable_metadata['top']->getCacheTags());
   }
 
-}
-
-interface TestContextAwareBlockInterface extends BlockPluginInterface, ContextAwarePluginInterface {
 }
