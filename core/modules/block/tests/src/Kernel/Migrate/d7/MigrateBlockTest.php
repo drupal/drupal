@@ -36,15 +36,15 @@ class MigrateBlockTest extends MigrateDrupal7TestBase {
     parent::setUp();
 
     // Install the themes used for this test.
-    $this->container->get('theme_installer')->install(['bartik', 'seven']);
-
     $this->installEntitySchema('block_content');
+    $this->container->get('theme_installer')->install(['olivero', 'claro']);
+
     $this->installConfig(static::$modules);
 
-    // Set Bartik and Seven as the default public and admin theme.
+    // Set Olivero and Claro as the default public and admin theme.
     $config = $this->config('system.theme');
-    $config->set('default', 'bartik');
-    $config->set('admin', 'seven');
+    $config->set('default', 'olivero');
+    $config->set('admin', 'claro');
     $config->save();
 
     $this->executeMigrations([
@@ -113,18 +113,18 @@ class MigrateBlockTest extends MigrateDrupal7TestBase {
    * Tests the block migration.
    */
   public function testBlockMigration() {
-    $this->assertEntity('bartik_system_main', 'system_main_block', [], '', 'content', 'bartik', 0, '', '0');
-    $this->assertEntity('bartik_search_form', 'search_form_block', [], '', 'sidebar_first', 'bartik', -1, '', '0');
-    $this->assertEntity('bartik_user_login', 'user_login_block', [], '', 'sidebar_first', 'bartik', 0, 'User login title', 'visible');
-    $this->assertEntity('bartik_system_powered_by', 'system_powered_by_block', [], '', 'footer_fifth', 'bartik', 10, '', '0');
-    $this->assertEntity('seven_system_main', 'system_main_block', [], '', 'content', 'seven', 0, '', '0');
-    $this->assertEntity('seven_user_login', 'user_login_block', [], '', 'content', 'seven', 10, 'User login title', 'visible');
+    $this->assertEntity('bartik_system_main', 'system_main_block', [], '', 'content', 'olivero', 0, '', '0');
+    $this->assertEntity('bartik_search_form', 'search_form_block', [], '', 'content', 'olivero', -1, '', '0');
+    $this->assertEntity('bartik_user_login', 'user_login_block', [], '', 'content', 'olivero', 0, 'User login title', 'visible');
+    $this->assertEntity('bartik_system_powered_by', 'system_powered_by_block', [], '', 'footer_bottom', 'olivero', 10, '', '0');
+    $this->assertEntity('seven_system_main', 'system_main_block', [], '', 'content', 'claro', 0, '', '0');
+    $this->assertEntity('seven_user_login', 'user_login_block', [], '', 'content', 'claro', 10, 'User login title', 'visible');
 
     // The d7_custom_block migration should have migrated a block containing a
     // mildly amusing limerick. We'll need its UUID to determine
     // bartik_block_1's plugin ID.
     $uuid = BlockContent::load(1)->uuid();
-    $this->assertEntity('bartik_block_1', 'block_content:' . $uuid, ['authenticated'], '', 'highlighted', 'bartik', 0, 'Mildly amusing limerick of the day', 'visible');
+    $this->assertEntity('bartik_block_1', 'block_content:' . $uuid, ['authenticated'], '', 'content', 'olivero', 0, 'Mildly amusing limerick of the day', 'visible');
 
     // Assert that disabled blocks (or enabled blocks whose plugin IDs could
     // be resolved) did not migrate.

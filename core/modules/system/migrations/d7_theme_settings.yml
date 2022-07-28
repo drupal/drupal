@@ -10,7 +10,7 @@ source:
 process:
   # Build the configuration name from the variable name, i.e.
   # theme_bartik_settings becomes bartik.settings.
-  theme_name:
+  legacy_theme_name:
     -
       plugin: explode
       source: name
@@ -19,6 +19,13 @@ process:
       plugin: extract
       index:
         - 1
+  theme_name:
+    plugin: static_map
+    source: '@legacy_theme_name'
+    bypass: true
+    map:
+      bartik: olivero
+      seven: claro
   configuration_name:
     plugin: concat
     source:
