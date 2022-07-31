@@ -7,6 +7,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\NodeType;
 use Drupal\comment\Entity\Comment;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -157,6 +158,25 @@ class ForumUninstallTest extends BrowserTestBase {
     // Ensure that uninstallation succeeds even if the field has already been
     // deleted manually beforehand.
     $this->container->get('module_installer')->uninstall(['forum']);
+  }
+
+  /**
+   * Tests uninstallation of forum module when vocabulary is deleted.
+   */
+  public function testForumUninstallWithoutForumVocabulary() {
+    $this->drupalLogin($this->rootUser);
+    Vocabulary::load('forums')->delete();
+
+    // Now attempt to uninstall forum.
+    $this->drupalGet('admin/modules/uninstall');
+    $this->assertSession()->responseNotContains('The website encountered an unexpected error. Please try again later');
+    $this->assertSession()->statusCodeEquals(200);
+
+    // Assert forum is no longer required.
+    $this->assertSession()->fieldExists('uninstall[forum]');
+
+    $this->drupalGet('admin/modules/uninstall');
+    $this->submitForm(['uninstall[forum]' => 1], 'Uninstall');
   }
 
 }
