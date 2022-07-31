@@ -35,7 +35,7 @@
         "symfony/error-handler": "~v6.1.0",
         "symfony/event-dispatcher": "~v6.1.0",
         "symfony/event-dispatcher-contracts": "~v3.1.0",
-        "symfony/http-foundation": "~v6.1.2",
+        "symfony/http-foundation": "~v6.1.3",
         "symfony/http-kernel": "~v6.1.2",
         "symfony/mime": "~v6.1.1",
         "symfony/polyfill-ctype": "~v1.26.0",
