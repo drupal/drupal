@@ -148,7 +148,7 @@ class ViewsDataHelper {
           $strings += $this->fields[$base_table][$type];
         }
       }
-      uasort($strings, [self::class, 'fetchedFieldSort']);
+      uasort($strings, [$this, 'fetchedFieldSort']);
       return $strings;
     }
 
