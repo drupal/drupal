@@ -58,7 +58,7 @@ class ForumUninstallValidator implements ModuleUninstallValidatorInterface {
       }
 
       $vocabulary = $this->getForumVocabulary();
-      if ($this->hasTermsForVocabulary($vocabulary)) {
+      if (!empty($vocabulary) && $this->hasTermsForVocabulary($vocabulary)) {
         if ($vocabulary->access('view')) {
           $reasons[] = $this->t('To uninstall Forum, first delete all <a href=":url">%vocabulary</a> terms', [
             '%vocabulary' => $vocabulary->label(),
@@ -117,7 +117,12 @@ class ForumUninstallValidator implements ModuleUninstallValidatorInterface {
    */
   protected function getForumVocabulary() {
     $vid = $this->configFactory->get('forum.settings')->get('vocabulary');
-    return $this->entityTypeManager->getStorage('taxonomy_vocabulary')->load($vid);
+    if (!empty($vid)) {
+      return $this->entityTypeManager->getStorage('taxonomy_vocabulary')->load($vid);
+    }
+    else {
+      return NULL;
+    }
   }
 
 }
