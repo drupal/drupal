@@ -441,7 +441,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "24e68923f64073d860bf08e6c0e412614ed40703"
+                "reference": "c3581356272302fa1757a8881289fd8e05c8ca07"
             },
             "require": {
                 "asm89/stack-cors": "^2.0.2",
@@ -470,7 +470,7 @@
                 "symfony/console": "^6.1",
                 "symfony/dependency-injection": "^6.1",
                 "symfony/event-dispatcher": "^6.1",
-                "symfony/http-foundation": "^6.1.1",
+                "symfony/http-foundation": "^6.1.3",
                 "symfony/http-kernel": "^6.1",
                 "symfony/mime": "^6.1",
                 "symfony/polyfill-iconv": "^1.25",
@@ -2216,16 +2216,16 @@
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v6.1.2",
+            "version": "v6.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "86119d294e51afe4d8e07da96b63332bd1f3f52c"
+                "reference": "b03712c93759a81fc243ecc18ec4637958afebdb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/86119d294e51afe4d8e07da96b63332bd1f3f52c",
-                "reference": "86119d294e51afe4d8e07da96b63332bd1f3f52c",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/b03712c93759a81fc243ecc18ec4637958afebdb",
+                "reference": "b03712c93759a81fc243ecc18ec4637958afebdb",
                 "shasum": ""
             },
             "require": {
@@ -2268,7 +2268,7 @@
             "description": "Defines an object-oriented layer for the HTTP specification",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/http-foundation/tree/v6.1.2"
+                "source": "https://github.com/symfony/http-foundation/tree/v6.1.3"
             },
             "funding": [
                 {
@@ -2284,7 +2284,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-06-19T13:21:48+00:00"
+            "time": "2022-07-27T15:50:51+00:00"
         },
         {
             "name": "symfony/http-kernel",
