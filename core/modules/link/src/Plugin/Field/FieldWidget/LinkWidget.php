@@ -286,7 +286,7 @@ class LinkWidget extends WidgetBase {
 
     // Exposing the attributes array in the widget is left for alternate and more
     // advanced field widgets.
-    $element['options']['attributes'] = [
+    $element['attributes'] = [
       '#type' => 'value',
       '#tree' => TRUE,
       '#value' => !empty($items[$delta]->options['attributes']) ? $items[$delta]->options['attributes'] : [],
