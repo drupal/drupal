@@ -63,15 +63,19 @@ class TermForm extends ContentEntityForm {
           $options[$item->tid] = str_repeat('-', $item->depth) . $item->name;
         }
       }
-
-      $form['relations']['parent'] = [
-        '#type' => 'select',
-        '#title' => $this->t('Parent terms'),
-        '#options' => $options,
-        '#default_value' => $parent,
-        '#multiple' => TRUE,
-      ];
     }
+    else {
+      $options = ['<' . $this->t('root') . '>'];
+      $parent = [0];
+    }
+
+    $form['relations']['parent'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Parent terms'),
+      '#options' => $options,
+      '#default_value' => $parent,
+      '#multiple' => TRUE,
+    ];
 
     $form['relations']['weight'] = [
       '#type' => 'textfield',
