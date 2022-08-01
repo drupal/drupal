@@ -433,6 +433,31 @@ class TermTest extends TaxonomyTestBase {
   }
 
   /**
+   * Test UI with override_selector TRUE.
+   */
+  public function testTermSaveOverrideSelector() {
+    $this->config('taxonomy.settings')->set('override_selector', TRUE)->save();
+
+    // Create a Term.
+    $edit = [
+      'name[0][value]' => $this->randomMachineName(12),
+      'description[0][value]' => $this->randomMachineName(100),
+    ];
+    // Create the term to edit.
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
+    $this->submitForm($edit, 'Save');
+    $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties([
+      'name' => $edit['name[0][value]'],
+    ]);
+    $term = reset($terms);
+    $this->assertNotNull($term, 'Term found in database.');
+
+    // The term appears on the vocab list page.
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
+    $this->assertSession()->pageTextContains($term->getName());
+  }
+
+  /**
    * Save, edit and delete a term using the user interface.
    */
   public function testTermReorder() {
