@@ -441,7 +441,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "c3581356272302fa1757a8881289fd8e05c8ca07"
+                "reference": "aa03b1c4869c7a1f5907d9e4f1297c97781ba1da"
             },
             "require": {
                 "asm89/stack-cors": "^2.0.2",
@@ -485,6 +485,32 @@
             },
             "conflict": {
                 "drush/drush": "<8.1.10"
+            },
+            "replace": {
+                "drupal/core-annotation": "self.version",
+                "drupal/core-assertion": "self.version",
+                "drupal/core-class-finder": "self.version",
+                "drupal/core-datetime": "self.version",
+                "drupal/core-dependency-injection": "self.version",
+                "drupal/core-diff": "self.version",
+                "drupal/core-discovery": "self.version",
+                "drupal/core-event-dispatcher": "self.version",
+                "drupal/core-file-cache": "self.version",
+                "drupal/core-file-security": "self.version",
+                "drupal/core-filesystem": "self.version",
+                "drupal/core-front-matter": "self.version",
+                "drupal/core-gettext": "self.version",
+                "drupal/core-graph": "self.version",
+                "drupal/core-http-foundation": "self.version",
+                "drupal/core-php-storage": "self.version",
+                "drupal/core-plugin": "self.version",
+                "drupal/core-proxy-builder": "self.version",
+                "drupal/core-render": "self.version",
+                "drupal/core-serialization": "self.version",
+                "drupal/core-transliteration": "self.version",
+                "drupal/core-utility": "self.version",
+                "drupal/core-uuid": "self.version",
+                "drupal/core-version": "self.version"
             },
             "type": "drupal-core",
             "extra": {
