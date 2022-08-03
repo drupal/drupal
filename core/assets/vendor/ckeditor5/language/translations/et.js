@@ -1,0 +1,1 @@
+!function(e){const a=e.et=e.et||{};a.dictionary=Object.assign(a.dictionary||{},{"Choose language":"Vali keel",Language:"Keel","Remove language":"Eemalda keel"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

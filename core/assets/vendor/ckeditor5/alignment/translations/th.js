@@ -1,0 +1,1 @@
+!function(n){const t=n.th=n.th||{};t.dictionary=Object.assign(t.dictionary||{},{"Align center":"จัดกึ่งกลาง","Align left":"จัดชิดซ้าย","Align right":"จัดชิดขวา",Justify:"จัด(ขอบ)","Text alignment":"จัดตำแหน่งข้อความ","Text alignment toolbar":"แถบเครื่องมือจัดตำแหน่งข้อความ"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
