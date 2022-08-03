@@ -4,10 +4,9 @@ namespace Drupal\Tests\system\Functional\Ajax;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Ajax\AddCssCommand;
+use Drupal\Core\Ajax\AddJsCommand;
 use Drupal\Core\Ajax\AlertCommand;
-use Drupal\Core\Ajax\AppendCommand;
 use Drupal\Core\Ajax\HtmlCommand;
-use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\SettingsCommand;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
@@ -61,8 +60,8 @@ class FrameworkTest extends BrowserTestBase {
     [$js_assets_header, $js_assets_footer] = $asset_resolver->getJsAssets($assets, FALSE);
     $js_header_render_array = $js_collection_renderer->render($js_assets_header);
     $js_footer_render_array = $js_collection_renderer->render($js_assets_footer);
-    $expected_commands[2] = new PrependCommand('head', $js_header_render_array);
-    $expected_commands[3] = new AppendCommand('body', $js_footer_render_array);
+    $expected_commands[2] = new AddJsCommand(array_column($js_header_render_array, '#attributes'), 'head');
+    $expected_commands[3] = new AddJsCommand(array_column($js_footer_render_array, '#attributes'));
     $expected_commands[4] = new HtmlCommand('body', 'Hello, world!');
 
     // Verify AJAX command order — this should always be the order:

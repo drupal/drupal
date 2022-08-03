@@ -370,6 +370,7 @@ drupal.ajax:
     - core/drupal.progress
     - core/once
     - core/tabbable
+    - core/loadjs
 
 drupal.announce:
   version: VERSION

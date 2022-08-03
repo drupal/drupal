@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function ($, window, Drupal, drupalSettings, _ref) {
+(function ($, window, Drupal, drupalSettings, loadjs, _ref) {
   let {
     isFocusable,
     tabbable
@@ -229,12 +229,16 @@
           }
         }
 
-        return ajax.success(response, status);
+        return Promise.resolve(ajax.success(response, status)).then(() => {
+          ajax.ajaxing = false;
+        });
+      },
+
+      error(xmlhttprequest, status, error) {
+        ajax.ajaxing = false;
       },
 
       complete(xmlhttprequest, status) {
-        ajax.ajaxing = false;
-
         if (status === 'error' || status === 'parsererror') {
           return ajax.error(xmlhttprequest, ajax.url);
         }
@@ -414,6 +418,19 @@
     $('body').append(this.progress.element);
   };
 
+  Drupal.Ajax.prototype.commandExecutionQueue = function (response, status) {
+    const ajaxCommands = this.commands;
+    return Object.keys(response || {}).reduce((executionQueue, key) => executionQueue.then(() => {
+      const {
+        command
+      } = response[key];
+
+      if (command && ajaxCommands[command]) {
+        return ajaxCommands[command](this, response[key], status);
+      }
+    }), Promise.resolve());
+  };
+
   Drupal.Ajax.prototype.success = function (response, status) {
     if (this.progress.element) {
       $(this.progress.element).remove();
@@ -425,35 +442,35 @@
 
     $(this.element).prop('disabled', false);
     const elementParents = $(this.element).parents('[data-drupal-selector]').addBack().toArray();
-    let focusChanged = false;
-    Object.keys(response || {}).forEach(i => {
-      if (response[i].command && this.commands[response[i].command]) {
-        this.commands[response[i].command](this, response[i], status);
+    const focusChanged = Object.keys(response || {}).some(key => {
+      const {
+        command,
+        method
+      } = response[key];
+      return command === 'focusFirst' || command === 'invoke' && method === 'focus';
+    });
+    return this.commandExecutionQueue(response, status).then(() => {
+      if (!focusChanged && this.element && !$(this.element).data('disable-refocus')) {
+        let target = false;
 
-        if (response[i].command === 'invoke' && response[i].method === 'focus' || response[i].command === 'focusFirst') {
-          focusChanged = true;
+        for (let n = elementParents.length - 1; !target && n >= 0; n--) {
+          target = document.querySelector(`[data-drupal-selector="${elementParents[n].getAttribute('data-drupal-selector')}"]`);
+        }
+
+        if (target) {
+          $(target).trigger('focus');
         }
       }
-    });
 
-    if (!focusChanged && this.element && !$(this.element).data('disable-refocus')) {
-      let target = false;
-
-      for (let n = elementParents.length - 1; !target && n >= 0; n--) {
-        target = document.querySelector(`[data-drupal-selector="${elementParents[n].getAttribute('data-drupal-selector')}"]`);
+      if (this.$form && document.body.contains(this.$form.get(0))) {
+        const settings = this.settings || drupalSettings;
+        Drupal.attachBehaviors(this.$form.get(0), settings);
       }
 
-      if (target) {
-        $(target).trigger('focus');
-      }
-    }
-
-    if (this.$form && document.body.contains(this.$form.get(0))) {
-      const settings = this.settings || drupalSettings;
-      Drupal.attachBehaviors(this.$form.get(0), settings);
-    }
-
-    this.settings = null;
+      this.settings = null;
+    }).catch(error => console.error(Drupal.t('An error occurred during the execution of the Ajax response: !error', {
+      '!error': error
+    })));
   };
 
   Drupal.Ajax.prototype.getEffect = function (response) {
@@ -664,7 +681,44 @@
       }
 
       messages.add(response.message, response.messageOptions);
+    },
+
+    add_js(ajax, response, status) {
+      const parentEl = document.querySelector(response.selector || 'body');
+      const settings = ajax.settings || drupalSettings;
+      const allUniqueBundleIds = response.data.map(script => {
+        const uniqueBundleId = script.src + ajax.instanceIndex;
+        loadjs(script.src, uniqueBundleId, {
+          async: false,
+
+          before(path, scriptEl) {
+            Object.keys(script).forEach(attributeKey => {
+              scriptEl.setAttribute(attributeKey, script[attributeKey]);
+            });
+            parentEl.appendChild(scriptEl);
+            return false;
+          }
+
+        });
+        return uniqueBundleId;
+      });
+      return new Promise((resolve, reject) => {
+        loadjs.ready(allUniqueBundleIds, {
+          success() {
+            Drupal.attachBehaviors(parentEl, settings);
+            resolve();
+          },
+
+          error(depsNotFound) {
+            const message = Drupal.t(`The following files could not be loaded: @dependencies`, {
+              '@dependencies': depsNotFound.join(', ')
+            });
+            reject(message);
+          }
+
+        });
+      });
     }
 
   };
-})(jQuery, window, Drupal, drupalSettings, window.tabbable);
+})(jQuery, window, Drupal, drupalSettings, loadjs, window.tabbable);
