@@ -588,4 +588,32 @@ class BlockTest extends BlockTestBase {
     $this->assertEquals([$role2->id() => $role2->id()], $block->getVisibility()['user_role']['roles']);
   }
 
+  /**
+   * Tests block title.
+   */
+  public function testBlockTitle() {
+    // Create a custom title for the block.
+    $title = "This block's <b>great!</b>";
+    // Enable a standard block.
+    $default_theme = $this->config('system.theme')->get('default');
+    $edit = [
+      'id' => 'test',
+      'region' => 'sidebar_first',
+      'settings[label]' => $title,
+      'settings[label_display]' => TRUE,
+    ];
+    // Set the block to be shown only to authenticated users.
+    $edit['visibility[user_role][roles][' . RoleInterface::AUTHENTICATED_ID . ']'] = TRUE;
+    $this->drupalGet('admin/structure/block/add/foo/' . $default_theme);
+    $this->submitForm($edit, 'Save block');
+
+    // Ensure that the title is displayed as plain text.
+    $elements = $this->xpath('//table/tbody/tr//td[contains(@class, "block")]');
+    $this->assertEquals($title, $elements[0]->getText());
+
+    $this->clickLink('Disable');
+    $elements = $this->xpath('//table/tbody/tr//td[contains(@class, "block")]');
+    $this->assertEquals("$title (disabled)", $elements[0]->getText());
+  }
+
 }
