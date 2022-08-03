@@ -127,6 +127,13 @@ class ExtensionDiscoveryTest extends UnitTestCase {
       'core/profiles/minimal/minimal.info.yml' => [
         'type' => 'profile',
       ],
+      'core/themes/test_theme/test_theme.info.yml' => [
+        'type' => 'theme',
+      ],
+      // Override the core instance of the 'test_theme' theme.
+      'sites/default/themes/test_theme/test_theme.info.yml' => [
+        'type' => 'theme',
+      ],
       // Override the core instance of the 'minimal' profile.
       'sites/default/profiles/minimal/minimal.info.yml' => [
         'type' => 'profile',
