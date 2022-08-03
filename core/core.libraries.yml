@@ -24,10 +24,10 @@ ckeditor:
 
 ckeditor5:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.1.0"
+  version: "35.0.1"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v35.0.1/LICENSE.md
     gpl-compatible: true
   js:
     # This file is not aggregated to force the creation of a new aggregate file
@@ -41,10 +41,10 @@ ckeditor5:
 
 ckeditor5.editorClassic:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.1.0"
+  version: "35.0.1"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v35.0.1/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/editor-classic/editor-classic.js: { minified: true }
@@ -53,10 +53,10 @@ ckeditor5.editorClassic:
 
 ckeditor5.editorDecoupled:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.1.0"
+  version: "35.0.1"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v35.0.1/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/editor-decoupled/editor-decoupled.js: { minified: true }
@@ -66,10 +66,10 @@ ckeditor5.editorDecoupled:
 
 ckeditor5.internal:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.1.0"
+  version: "35.0.1"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v35.0.1/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/essentials/essentials.js: { minified: true }
@@ -79,10 +79,10 @@ ckeditor5.internal:
 
 ckeditor5.heading:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.1.0"
+  version: "35.0.1"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v35.0.1/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/heading/heading.js: { minified: true }
@@ -92,10 +92,10 @@ ckeditor5.heading:
 
 ckeditor5.basic:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.1.0"
+  version: "35.0.1"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v35.0.1/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/basic-styles/basic-styles.js: { minified: true }
@@ -105,10 +105,10 @@ ckeditor5.basic:
 
 ckeditor5.specialCharacters:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.1.0"
+  version: "35.0.1"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v35.0.1/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/special-characters/special-characters.js: { minified: true }
@@ -118,10 +118,10 @@ ckeditor5.specialCharacters:
 
 ckeditor5.blockquote:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.1.0"
+  version: "35.0.1"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v35.0.1/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/block-quote/block-quote.js: { minified: true }
@@ -131,10 +131,10 @@ ckeditor5.blockquote:
 
 ckeditor5.image:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.1.0"
+  version: "35.0.1"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v35.0.1/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/image/image.js: { minified: true }
@@ -144,10 +144,10 @@ ckeditor5.image:
 
 ckeditor5.link:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.1.0"
+  version: "35.0.1"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v35.0.1/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/link/link.js: { minified: true }
@@ -157,10 +157,10 @@ ckeditor5.link:
 
 ckeditor5.list:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.1.0"
+  version: "35.0.1"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v35.0.1/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/list/list.js: { minified: true }
@@ -170,10 +170,10 @@ ckeditor5.list:
 
 ckeditor5.horizontalLine:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.1.0"
+  version: "35.0.1"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v35.0.1/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/horizontal-line/horizontal-line.js: { minified: true }
@@ -183,10 +183,10 @@ ckeditor5.horizontalLine:
 
 ckeditor5.htmlSupport:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.1.0"
+  version: "35.0.1"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v35.0.1/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/html-support/html-support.js: { minified: true }
@@ -196,10 +196,10 @@ ckeditor5.htmlSupport:
 
 ckeditor5.alignment:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.1.0"
+  version: "35.0.1"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v35.0.1/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/alignment/alignment.js: { minified: true }
@@ -209,10 +209,10 @@ ckeditor5.alignment:
 
 ckeditor5.removeFormat:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.1.0"
+  version: "35.0.1"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v35.0.1/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/remove-format/remove-format.js: { minified: true }
@@ -222,10 +222,10 @@ ckeditor5.removeFormat:
 
 ckeditor5.pasteFromOffice:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.1.0"
+  version: "35.0.1"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v35.0.1/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/paste-from-office/paste-from-office.js: { minified: true }
@@ -234,10 +234,10 @@ ckeditor5.pasteFromOffice:
 
 ckeditor5.indent:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.1.0"
+  version: "35.0.1"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v35.0.1/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/indent/indent.js: { minified: true }
@@ -247,10 +247,10 @@ ckeditor5.indent:
 
 ckeditor5.sourceEditing:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.1.0"
+  version: "35.0.1"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v35.0.1/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/source-editing/source-editing.js: { minified: true }
@@ -260,10 +260,10 @@ ckeditor5.sourceEditing:
 
 ckeditor5.table:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.1.0"
+  version: "35.0.1"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v35.0.1/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/table/table.js: { minified: true }
@@ -273,10 +273,10 @@ ckeditor5.table:
 
 ckeditor5.language:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.1.0"
+  version: "35.0.1"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v35.0.1/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/language/language.js: { minified: true }
@@ -286,10 +286,10 @@ ckeditor5.language:
 
 ckeditor5.codeBlock:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "34.1.0"
+  version: "35.0.1"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v34.1.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v35.0.1/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/code-block/code-block.js: { minified: true }

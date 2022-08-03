@@ -1,0 +1,1 @@
+!function(n){const i=n.hi=n.hi||{};i.dictionary=Object.assign(i.dictionary||{},{"Choose language":"भाषा चुनें",Language:"भाषा","Remove language":"भाषा हटाएं"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

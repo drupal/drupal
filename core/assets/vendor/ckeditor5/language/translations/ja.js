@@ -1,0 +1,1 @@
+!function(a){const n=a.ja=a.ja||{};n.dictionary=Object.assign(n.dictionary||{},{"Choose language":"言語を選択",Language:"言語","Remove language":"言語を削除"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
