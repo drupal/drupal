@@ -25,7 +25,7 @@ class FieldLayoutTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -57,9 +57,9 @@ class FieldLayoutTest extends WebDriverTestBase {
   public function testEntityViewModes() {
     // By default, the field is not visible.
     $this->drupalGet('entity_test/1/test');
-    $this->assertSession()->elementNotExists('css', '.layout__region--content .field--name-field-test-text');
+    $this->assertSession()->elementNotExists('css', '.layout__region--content ');
     $this->drupalGet('entity_test/1');
-    $this->assertSession()->elementNotExists('css', '.layout__region--content .field--name-field-test-text');
+    $this->assertSession()->elementNotExists('css', '.layout__region--content');
 
     // Change the layout for the "test" view mode. See
     // core.entity_view_mode.entity_test.test.yml.
@@ -75,9 +75,9 @@ class FieldLayoutTest extends WebDriverTestBase {
 
     // Each view mode has a different layout.
     $this->drupalGet('entity_test/1/test');
-    $this->assertSession()->elementExists('css', '.layout__region--content .field--name-field-test-text');
+    $this->assertSession()->elementTextContains('css', '.layout__region--content', 'The field test text value');
     $this->drupalGet('entity_test/1');
-    $this->assertSession()->elementNotExists('css', '.layout__region--content .field--name-field-test-text');
+    $this->assertSession()->elementNotExists('css', '.layout__region--content');
   }
 
   /**
@@ -166,7 +166,7 @@ class FieldLayoutTest extends WebDriverTestBase {
     // No fields are visible, and the regions don't display when empty.
     $this->assertSession()->elementNotExists('css', '.layout--twocol');
     $this->assertSession()->elementNotExists('css', '.layout__region');
-    $this->assertSession()->elementNotExists('css', '.field--name-field-test-text');
+    $this->assertSession()->pageTextNotContains('The field test text value');
 
     // After a refresh the new regions are still there.
     $this->drupalGet('entity_test/structure/entity_test/display');
@@ -188,7 +188,7 @@ class FieldLayoutTest extends WebDriverTestBase {
     // The new layout is used.
     $this->drupalGet('entity_test/1');
     $this->assertSession()->elementExists('css', '.layout--twocol');
-    $this->assertSession()->elementExists('css', '.layout__region--first .field--name-field-test-text');
+    $this->assertSession()->elementTextContains('css', '.layout__region--first', 'The field test text value');
 
     // Move the field to the second region without tabledrag.
     $this->drupalGet('entity_test/structure/entity_test/display');
@@ -200,13 +200,13 @@ class FieldLayoutTest extends WebDriverTestBase {
 
     // The updated region is used.
     $this->drupalGet('entity_test/1');
-    $this->assertSession()->elementExists('css', '.layout__region--second .field--name-field-test-text');
+    $this->assertSession()->elementTextContains('css', '.layout__region--second', 'The field test text value');
 
     // The layout is still in use without Field UI.
     $this->container->get('module_installer')->uninstall(['field_ui']);
     $this->drupalGet('entity_test/1');
     $this->assertSession()->elementExists('css', '.layout--twocol');
-    $this->assertSession()->elementExists('css', '.layout__region--second .field--name-field-test-text');
+    $this->assertSession()->elementTextContains('css', '.layout__region--second', 'The field test text value');
   }
 
   /**
