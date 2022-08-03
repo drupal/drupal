@@ -33,3 +33,12 @@ focus.first:
   dependencies:
     - core/drupal
     - core/once
+
+command_promise:
+  version: VERSION
+  js:
+    js/command_promise-ajax.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.ajax

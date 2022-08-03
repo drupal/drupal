@@ -42,31 +42,17 @@
         });
 
         ajaxObject.success = function (response, status) {
-          if (this.progress.element) {
-            $(this.progress.element).remove();
-          }
+          return Promise.resolve(Drupal.Ajax.prototype.success.call(ajaxObject, response, status)).then(() => {
+            const mediaLibraryContent = document.getElementById('media-library-content');
 
-          if (this.progress.object) {
-            this.progress.object.stopMonitoring();
-          }
+            if (mediaLibraryContent) {
+              const tabbableContent = tabbable(mediaLibraryContent);
 
-          $(this.element).prop('disabled', false);
-          Object.keys(response || {}).forEach(i => {
-            if (response[i].command && this.commands[response[i].command]) {
-              this.commands[response[i].command](this, response[i], status);
+              if (tabbableContent.length) {
+                tabbableContent[0].focus();
+              }
             }
           });
-          const mediaLibraryContent = document.getElementById('media-library-content');
-
-          if (mediaLibraryContent) {
-            const tabbableContent = tabbable(mediaLibraryContent);
-
-            if (tabbableContent.length) {
-              tabbableContent[0].focus();
-            }
-          }
-
-          this.settings = null;
         };
 
         ajaxObject.execute();
