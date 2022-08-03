@@ -45,7 +45,7 @@ class DistributionProfileTranslationTest extends InstallerTestBase {
         'name' => 'My Distribution',
         'langcode' => $this->langcode,
         'install' => [
-          'theme' => 'bartik',
+          'theme' => 'claro',
         ],
       ],
     ];
