@@ -38,3 +38,4 @@ ui:
     - core/jquery
     - media_library/view
     - core/tabbable
+    - core/es6-promise

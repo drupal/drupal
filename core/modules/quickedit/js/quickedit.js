@@ -82,15 +82,7 @@
         'editors[]': missingEditors
       }
     });
-    var realInsert = Drupal.AjaxCommands.prototype.insert;
-
-    loadEditorsAjax.commands.insert = function (ajax, response, status) {
-      _.defer(callback);
-
-      realInsert(ajax, response, status);
-    };
-
-    loadEditorsAjax.execute();
+    loadEditorsAjax.execute().then(callback);
   }
 
   function initializeEntityContextualLink(contextualLink) {

@@ -17,7 +17,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-(function ($, window, Drupal, drupalSettings, _ref) {
+(function ($, window, Drupal, drupalSettings, loadjs, _ref) {
   var isFocusable = _ref.isFocusable,
       tabbable = _ref.tabbable;
   Drupal.behaviors.AJAX = {
@@ -238,11 +238,14 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           }
         }
 
-        return ajax.success(response, status);
+        return Promise.resolve(ajax.success(response, status)).then(function () {
+          ajax.ajaxing = false;
+        });
+      },
+      error: function error(xmlhttprequest, status, _error) {
+        ajax.ajaxing = false;
       },
       complete: function complete(xmlhttprequest, status) {
-        ajax.ajaxing = false;
-
         if (status === 'error' || status === 'parsererror') {
           return ajax.error(xmlhttprequest, ajax.url);
         }
@@ -427,8 +430,23 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     $('body').append(this.progress.element);
   };
 
-  Drupal.Ajax.prototype.success = function (response, status) {
+  Drupal.Ajax.prototype.commandExecutionQueue = function (response, status) {
     var _this = this;
+
+    var ajaxCommands = this.commands;
+    return Object.keys(response || {}).reduce(function (executionQueue, key) {
+      return executionQueue.then(function () {
+        var command = response[key].command;
+
+        if (command && ajaxCommands[command]) {
+          return ajaxCommands[command](_this, response[key], status);
+        }
+      });
+    }, Promise.resolve());
+  };
+
+  Drupal.Ajax.prototype.success = function (response, status) {
+    var _this2 = this;
 
     if (this.progress.element) {
       $(this.progress.element).remove();
@@ -440,35 +458,36 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     $(this.element).prop('disabled', false);
     var elementParents = $(this.element).parents('[data-drupal-selector]').addBack().toArray();
-    var focusChanged = false;
-    Object.keys(response || {}).forEach(function (i) {
-      if (response[i].command && _this.commands[response[i].command]) {
-        _this.commands[response[i].command](_this, response[i], status);
+    var focusChanged = Object.keys(response || {}).some(function (key) {
+      var _response$key = response[key],
+          command = _response$key.command,
+          method = _response$key.method;
+      return command === 'focusFirst' || command === 'invoke' && method === 'focus';
+    });
+    return this.commandExecutionQueue(response, status).then(function () {
+      if (!focusChanged && _this2.element && !$(_this2.element).data('disable-refocus')) {
+        var target = false;
 
-        if (response[i].command === 'invoke' && response[i].method === 'focus' || response[i].command === 'focusFirst') {
-          focusChanged = true;
+        for (var n = elementParents.length - 1; !target && n >= 0; n--) {
+          target = document.querySelector("[data-drupal-selector=\"".concat(elementParents[n].getAttribute('data-drupal-selector'), "\"]"));
+        }
+
+        if (target) {
+          $(target).trigger('focus');
         }
       }
+
+      if (_this2.$form && document.body.contains(_this2.$form.get(0))) {
+        var settings = _this2.settings || drupalSettings;
+        Drupal.attachBehaviors(_this2.$form.get(0), settings);
+      }
+
+      _this2.settings = null;
+    }).catch(function (error) {
+      return console.error(Drupal.t('An error occurred during the execution of the Ajax response: !error', {
+        '!error': error
+      }));
     });
-
-    if (!focusChanged && this.element && !$(this.element).data('disable-refocus')) {
-      var target = false;
-
-      for (var n = elementParents.length - 1; !target && n >= 0; n--) {
-        target = document.querySelector("[data-drupal-selector=\"".concat(elementParents[n].getAttribute('data-drupal-selector'), "\"]"));
-      }
-
-      if (target) {
-        $(target).trigger('focus');
-      }
-    }
-
-    if (this.$form && document.body.contains(this.$form.get(0))) {
-      var settings = this.settings || drupalSettings;
-      Drupal.attachBehaviors(this.$form.get(0), settings);
-    }
-
-    this.settings = null;
   };
 
   Drupal.Ajax.prototype.getEffect = function (response) {
@@ -671,6 +690,38 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }
 
       messages.add(response.message, response.messageOptions);
+    },
+    add_js: function add_js(ajax, response, status) {
+      var parentEl = document.querySelector(response.selector || 'body');
+      var settings = ajax.settings || drupalSettings;
+      var allUniqueBundleIds = response.data.map(function (script) {
+        var uniqueBundleId = script.src + ajax.instanceIndex;
+        loadjs(script.src, uniqueBundleId, {
+          async: false,
+          before: function before(path, scriptEl) {
+            Object.keys(script).forEach(function (attributeKey) {
+              scriptEl.setAttribute(attributeKey, script[attributeKey]);
+            });
+            parentEl.appendChild(scriptEl);
+            return false;
+          }
+        });
+        return uniqueBundleId;
+      });
+      return new Promise(function (resolve, reject) {
+        loadjs.ready(allUniqueBundleIds, {
+          success: function success() {
+            Drupal.attachBehaviors(parentEl, settings);
+            resolve();
+          },
+          error: function error(depsNotFound) {
+            var message = Drupal.t("The following files could not be loaded: @dependencies", {
+              '@dependencies': depsNotFound.join(', ')
+            });
+            reject(message);
+          }
+        });
+      });
     }
   };
-})(jQuery, window, Drupal, drupalSettings, window.tabbable);
+})(jQuery, window, Drupal, drupalSettings, loadjs, window.tabbable);

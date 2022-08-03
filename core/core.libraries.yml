@@ -390,6 +390,8 @@ drupal.ajax:
     - core/once
     - core/jquery.once.bc
     - core/tabbable
+    - core/loadjs
+    - core/es6-promise
 
 drupal.announce:
   version: VERSION

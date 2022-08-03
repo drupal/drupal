@@ -40,33 +40,17 @@
         });
 
         ajaxObject.success = function (response, status) {
-          var _this = this;
+          return Promise.resolve(Drupal.Ajax.prototype.success.call(ajaxObject, response, status)).then(function () {
+            var mediaLibraryContent = document.getElementById('media-library-content');
 
-          if (this.progress.element) {
-            $(this.progress.element).remove();
-          }
+            if (mediaLibraryContent) {
+              var tabbableContent = tabbable(mediaLibraryContent);
 
-          if (this.progress.object) {
-            this.progress.object.stopMonitoring();
-          }
-
-          $(this.element).prop('disabled', false);
-          Object.keys(response || {}).forEach(function (i) {
-            if (response[i].command && _this.commands[response[i].command]) {
-              _this.commands[response[i].command](_this, response[i], status);
+              if (tabbableContent.length) {
+                tabbableContent[0].focus();
+              }
             }
           });
-          var mediaLibraryContent = document.getElementById('media-library-content');
-
-          if (mediaLibraryContent) {
-            var tabbableContent = tabbable(mediaLibraryContent);
-
-            if (tabbableContent.length) {
-              tabbableContent[0].focus();
-            }
-          }
-
-          this.settings = null;
         };
 
         ajaxObject.execute();
