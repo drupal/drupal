@@ -73,13 +73,13 @@ class SearchNodePunctuationTest extends BrowserTestBase {
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'Search');
     $this->assertSession()->responseNotContains('<strong>&</strong>amp;');
-    $this->assertSession()->pageTextContains('You must include at least one keyword');
+    $this->assertSession()->statusMessageContains('You must include at least one keyword', 'warning');
 
     $edit = ['keys' => '&amp;'];
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'Search');
     $this->assertSession()->responseNotContains('<strong>&</strong>amp;');
-    $this->assertSession()->pageTextContains('You must include at least one keyword');
+    $this->assertSession()->statusMessageContains('You must include at least one keyword', 'warning');
   }
 
 }
