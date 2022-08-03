@@ -38,7 +38,7 @@ class DistributionProfileExistingSettingsTest extends InstallerTestBase {
       'distribution' => [
         'name' => 'My Distribution',
         'install' => [
-          'theme' => 'bartik',
+          'theme' => 'olivero',
         ],
       ],
     ];

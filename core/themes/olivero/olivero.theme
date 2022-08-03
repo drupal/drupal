@@ -23,7 +23,7 @@ function olivero_preprocess_html(&$variables) {
   }
 
   // Convert custom hex to hsl so we can use the hue value
-  $brand_color_hex = theme_get_setting('base_primary_color');
+  $brand_color_hex = theme_get_setting('base_primary_color') ?? '#1b9ae4';
   [$h, $s, $l] = _olivero_hex_to_hsl($brand_color_hex);
 
   $variables['html_attributes']->setAttribute('style', "--color--primary-hue:$h;--color--primary-saturation:$s%;--color--primary-lightness:$l");
@@ -633,7 +633,7 @@ function olivero_form_views_exposed_form_alter(&$form) {
  *
  * @internal
  */
-function _olivero_hex_to_hsl($hex_string) {
+function _olivero_hex_to_hsl(string $hex_string) {
   // Convert hexcode pairs to rgb values (0-255).
   $hex_val = trim($hex_string, '#');
   $r0 = hexdec($hex_val[0] . $hex_val[1]);
