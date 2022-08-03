@@ -20,7 +20,7 @@ class SearchBlockTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * The administrative user.
@@ -53,7 +53,7 @@ class SearchBlockTest extends BrowserTestBase {
     // Test availability of the search block in the admin "Place blocks" list.
     $this->drupalGet('admin/structure/block');
     $this->getSession()->getPage()->findLink('Place block')->click();
-    $this->assertSession()->linkByHrefExists('/admin/structure/block/add/search_form_block/classy', 0,
+    $this->assertSession()->linkByHrefExists('/admin/structure/block/add/search_form_block/stark', 0,
       'Did not find the search block in block candidate list.');
 
     $block = $this->drupalPlaceBlock('search_form_block');
@@ -104,7 +104,7 @@ class SearchBlockTest extends BrowserTestBase {
     $this->drupalGet('');
     $this->submitForm($terms, 'Search');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextContains('Please enter some keywords');
+    $this->assertSession()->statusMessageContains('Please enter some keywords', 'error');
 
     // Confirm that the user is redirected to the search page, when form is
     // submitted empty.
@@ -118,17 +118,17 @@ class SearchBlockTest extends BrowserTestBase {
     // search again with a longer keyword. First test using the block form.
     $this->drupalGet('node');
     $this->submitForm(['keys' => $this->randomMachineName(1)], 'Search');
-    $this->assertSession()->pageTextContains('You must include at least one keyword to match in the content');
-    $this->assertSession()->pageTextNotContains('Please enter some keywords');
+    $this->assertSession()->statusMessageContains('You must include at least one keyword to match in the content', 'warning');
+    $this->assertSession()->statusMessageNotContains('Please enter some keywords');
     $this->submitForm(['keys' => $this->randomMachineName()], 'Search', 'search-block-form');
-    $this->assertSession()->pageTextNotContains('You must include at least one keyword to match in the content');
+    $this->assertSession()->statusMessageNotContains('You must include at least one keyword to match in the content');
 
     // Same test again, using the search page form for the second search this
     // time.
     $this->drupalGet('node');
     $this->submitForm(['keys' => $this->randomMachineName(1)], 'Search');
     $this->submitForm(['keys' => $this->randomMachineName()], 'Search', 'search-form');
-    $this->assertSession()->pageTextNotContains('You must include at least one keyword to match in the content');
+    $this->assertSession()->statusMessageNotContains('You must include at least one keyword to match in the content');
 
     // Edit the block configuration so that it searches users instead of nodes,
     // and test.
