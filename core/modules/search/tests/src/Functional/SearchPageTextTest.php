@@ -135,16 +135,16 @@ class SearchPageTextTest extends BrowserTestBase {
     $edit['keys'] = implode(' ', $keys);
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'Search');
-    $this->assertSession()->pageTextContains("Your search used too many AND/OR expressions. Only the first {$limit} terms were included in this search.");
+    $this->assertSession()->statusMessageContains("Your search used too many AND/OR expressions. Only the first {$limit} terms were included in this search.", 'warning');
 
     // Test that a search on Node or User with no keywords entered generates
     // the "Please enter some keywords" message.
     $this->drupalGet('search/node');
     $this->submitForm([], 'Search');
-    $this->assertSession()->pageTextContains('Please enter some keywords');
+    $this->assertSession()->statusMessageContains('Please enter some keywords', 'error');
     $this->drupalGet('search/user');
     $this->submitForm([], 'Search');
-    $this->assertSession()->pageTextContains('Please enter some keywords');
+    $this->assertSession()->statusMessageContains('Please enter some keywords', 'error');
 
     // Make sure the "Please enter some keywords" message is NOT displayed if
     // you use "or" words or phrases in Advanced Search.
@@ -152,22 +152,22 @@ class SearchPageTextTest extends BrowserTestBase {
     $this->submitForm([
       'or' => $this->randomMachineName() . ' ' . $this->randomMachineName(),
     ], 'edit-submit--2');
-    $this->assertSession()->pageTextNotContains('Please enter some keywords');
+    $this->assertSession()->statusMessageNotContains('Please enter some keywords');
     $this->drupalGet('search/node');
     $this->submitForm([
       'phrase' => '"' . $this->randomMachineName() . '" "' . $this->randomMachineName() . '"',
     ], 'edit-submit--2');
-    $this->assertSession()->pageTextNotContains('Please enter some keywords');
+    $this->assertSession()->statusMessageNotContains('Please enter some keywords');
 
     // Verify that if you search for a too-short keyword, you get the right
     // message, and that if after that you search for a longer keyword, you
     // do not still see the message.
     $this->drupalGet('search/node');
     $this->submitForm(['keys' => $this->randomMachineName(1)], 'Search');
-    $this->assertSession()->pageTextContains('You must include at least one keyword');
-    $this->assertSession()->pageTextNotContains('Please enter some keywords');
+    $this->assertSession()->statusMessageContains('You must include at least one keyword', 'warning');
+    $this->assertSession()->statusMessageNotContains('Please enter some keywords');
     $this->submitForm(['keys' => $this->randomMachineName()], 'Search');
-    $this->assertSession()->pageTextNotContains('You must include at least one keyword');
+    $this->assertSession()->statusMessageNotContains('You must include at least one keyword');
 
     // Test that if you search for a URL with .. in it, you still end up at
     // the search page. See issue https://www.drupal.org/node/890058.
