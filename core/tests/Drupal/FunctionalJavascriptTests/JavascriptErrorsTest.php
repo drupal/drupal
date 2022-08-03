@@ -2,11 +2,12 @@
 
 namespace Drupal\FunctionalJavascriptTests;
 
+use PHPUnit\Framework\AssertionFailedError;
+
 /**
- * Tests that Drupal.throwError will cause a deprecation warning.
+ * Tests that Drupal.throwError will cause a test failure.
  *
  * @group javascript
- * @group legacy
  */
 class JavascriptErrorsTest extends WebDriverTestBase {
 
@@ -21,15 +22,30 @@ class JavascriptErrorsTest extends WebDriverTestBase {
   protected static $modules = ['js_errors_test'];
 
   /**
-   * Tests that JavaScript console errors will result in a deprecation warning.
+   * Tests that JavaScript console errors will result in a test failure.
    */
   public function testJavascriptErrors(): void {
-    $this->expectDeprecation('Not failing JavaScript test for JavaScript errors is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. This test had the following JavaScript errors: Error: A manually thrown error.');
     // Visit page that will throw a JavaScript console error.
     $this->drupalGet('js_errors_test');
     // Ensure that errors from previous page loads will be
     // detected.
     $this->drupalGet('user');
+
+    $this->expectException(AssertionFailedError::class);
+    $this->expectExceptionMessageMatches('/^Error: A manually thrown error/');
+
+    // Manually call the method under test, as it cannot be caught by PHPUnit
+    // when triggered from assertPostConditions().
+    $this->failOnJavaScriptErrors();
+  }
+
+  /**
+   * Clear the JavaScript error log to prevent this test failing for real.
+   *
+   * @postCondition
+   */
+  public function clearErrorLog() {
+    $this->getSession()->executeScript("sessionStorage.removeItem('js_testing_log_test.errors')");
   }
 
 }
