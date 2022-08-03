@@ -362,7 +362,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
   public function testNormalizeRelated() {
     $this->markTestIncomplete('This fails and should be fixed by https://www.drupal.org/project/drupal/issues/3213752');
 
-    [$request, $resource_type] = $this->generateProphecies('node', 'article', 'uid');
+    [$request, $resource_type] = $this->generateProphecies('node', 'article');
     $request->query = new ParameterBag([
       'fields' => [
         'user--user' => 'name,roles',
@@ -397,7 +397,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
    * @covers ::normalize
    */
   public function testNormalizeUuid() {
-    [$request, $resource_type] = $this->generateProphecies('node', 'article', 'uuid');
+    [$request, $resource_type] = $this->generateProphecies('node', 'article');
     $resource_object = ResourceObject::createFromEntity($resource_type, $this->node);
     $include_param = 'uid,field_tags';
     $includes = $this->includeResolver->resolve($resource_object, $include_param);
@@ -534,7 +534,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
    * @covers ::normalize
    */
   public function testNormalizeConfig() {
-    [$request, $resource_type] = $this->generateProphecies('node_type', 'node_type', 'id');
+    [$request, $resource_type] = $this->generateProphecies('node_type', 'node_type');
     $resource_object = ResourceObject::createFromEntity($resource_type, $this->nodeType);
     $document_wrapper = new JsonApiDocumentTopLevel(new ResourceObjectData([$resource_object], 1), new NullIncludedData(), new LinkCollection([]));
 
@@ -567,7 +567,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
   public function testDenormalize() {
     $payload = '{"data":{"type":"article","attributes":{"title":"Testing article"}}}';
 
-    [$request, $resource_type] = $this->generateProphecies('node', 'article', 'id');
+    [$request, $resource_type] = $this->generateProphecies('node', 'article');
     $node = $this
       ->getNormalizer()
       ->denormalize(Json::decode($payload), NULL, 'api_json', [
