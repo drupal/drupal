@@ -265,22 +265,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         editor.updateSourceElement();
       } else {
         element.removeAttribute('contentEditable');
-        var textElement = null;
-        var originalValue = null;
-        var usingQuickEdit = (((Drupal || {}).quickedit || {}).editors || {}).editor;
-
-        if (usingQuickEdit) {
-          Drupal.quickedit.editors.editor.prototype.revert = function revertQuickeditChanges() {
-            textElement = this.$textElement[0];
-            originalValue = this.model.get('originalValue');
-          };
-        }
-
-        editor.destroy().then(function () {
-          if (textElement && originalValue) {
-            textElement.innerHTML = originalValue;
-          }
-
+        return editor.destroy().then(function () {
           Drupal.CKEditor5Instances.delete(id);
           callbacks.delete(id);
 

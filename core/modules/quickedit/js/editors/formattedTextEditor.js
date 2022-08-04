@@ -26,6 +26,30 @@
       }
 
       this.model.set('originalValue', this.$textElement.html());
+
+      if (Drupal.editors && Drupal.editors.ckeditor5 && once('quickedit-ckeditor5-destroy', 'body').length) {
+        var ckeditor5Detach = Drupal.editors.ckeditor5.detach;
+
+        Drupal.editors.ckeditor5.detach = function quickeditDetach(element, format, trigger) {
+          var destroyPromise = ckeditor5Detach.call(this, element, format, trigger);
+
+          if (destroyPromise && destroyPromise.then) {
+            var textElement = null;
+            var originalValue = null;
+
+            Drupal.quickedit.editors.editor.prototype.revert = function revertQuickeditChanges() {
+              textElement = this.$textElement[0];
+              originalValue = this.model.get('originalValue');
+            };
+
+            destroyPromise.then(function () {
+              if (textElement && originalValue) {
+                textElement.innerHTML = originalValue;
+              }
+            });
+          }
+        };
+      }
     },
     getEditedElement: function getEditedElement() {
       return this.$textElement;
