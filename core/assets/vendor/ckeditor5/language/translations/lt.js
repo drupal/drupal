@@ -1,0 +1,1 @@
+!function(a){const i=a.lt=a.lt||{};i.dictionary=Object.assign(i.dictionary||{},{"Choose language":"Pasirinkti kalbą",Language:"Kalba","Remove language":"Pašalinti kalbą"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

@@ -1,0 +1,1 @@
+!function(n){const c=n["zh-cn"]=n["zh-cn"]||{};c.dictionary=Object.assign(c.dictionary||{},{"HTML object":"HTML对象"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

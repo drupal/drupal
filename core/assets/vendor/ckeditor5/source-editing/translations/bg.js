@@ -1,0 +1,1 @@
+!function(i){const n=i.bg=i.bg||{};n.dictionary=Object.assign(n.dictionary||{},{Source:"Източник"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
