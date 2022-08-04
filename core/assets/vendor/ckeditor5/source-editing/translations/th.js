@@ -1,0 +1,1 @@
+!function(i){const n=i.th=i.th||{};n.dictionary=Object.assign(n.dictionary||{},{Source:"ซอร์ส"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

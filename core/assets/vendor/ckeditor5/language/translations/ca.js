@@ -1,0 +1,1 @@
+!function(a){const i=a.ca=a.ca||{};i.dictionary=Object.assign(i.dictionary||{},{"Choose language":"Triar l'idioma",Language:"Idioma","Remove language":"Eliminar l'idioma"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
