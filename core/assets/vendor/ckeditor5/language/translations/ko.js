@@ -1,0 +1,1 @@
+!function(n){const o=n.ko=n.ko||{};o.dictionary=Object.assign(o.dictionary||{},{"Choose language":"언어 선택",Language:"언어","Remove language":"언어 제거"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

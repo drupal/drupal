@@ -1,0 +1,1 @@
+!function(i){const n=i.lt=i.lt||{};n.dictionary=Object.assign(n.dictionary||{},{"Horizontal line":"Horizontali linija"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

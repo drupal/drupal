@@ -1145,6 +1145,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-html-support/src/integrations/customelement.js
+ *
+ * @typedef {module:html-support/integrations/customelement} module:html-support/integrations/customelement~CustomElementSupport
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-html-support/src/integrations/documentlist.js
  *
  * @typedef {module:html-support/integrations/documentlist} module:html-support/integrations/documentlist~DocumentListElementSupport
@@ -1304,6 +1310,12 @@
  * Declared in file @ckeditor/ckeditor5-image/src/imageinsert/ui/imageinsertpanelview.js
  *
  * @typedef {module:image/imageinsert/ui/imageinsertpanelview} module:image/imageinsert/ui/imageinsertpanelview~ImageInsertPanelView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-image/src/imageinsertviaurl.js
+ *
+ * @typedef {module:image/imageinsertviaurl} module:image/imageinsertviaurl~ImageInsertViaUrl
  */
 
 /**
@@ -2927,12 +2939,6 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-utils/src/dom/position.js
- *
- * @typedef {module:utils/dom/position} module:utils/dom/position~Options
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-utils/src/dom/rect.js
  *
  * @typedef {module:utils/dom/rect} module:utils/dom/rect~Rect
@@ -2987,12 +2993,6 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-utils/src/fastdiff.js
- *
- * @typedef {module:utils/fastdiff} module:utils/fastdiff~fastDiff
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-utils/src/first.js
  *
  * @typedef {module:utils/first} module:utils/first~first
@@ -3005,21 +3005,9 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-utils/src/inserttopriorityarray.js
- *
- * @typedef {module:utils/inserttopriorityarray} module:utils/inserttopriorityarray~insertToPriorityArray
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-utils/src/isiterable.js
  *
  * @typedef {module:utils/isiterable} module:utils/isiterable~isIterable
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-utils/src/keyboard.js
- *
- * @typedef {module:utils/keyboard} module:utils/keyboard~KeystrokeInfo
  */
 
 /**
@@ -3065,33 +3053,15 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-utils/src/priorities.js
- *
- * @typedef {module:utils/priorities} module:utils/priorities~priorities
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-utils/src/spy.js
  *
  * @typedef {module:utils/spy} module:utils/spy~spy
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-utils/src/toarray.js
- *
- * @typedef {module:utils/toarray} module:utils/toarray~toArray
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-utils/src/tomap.js
  *
  * @typedef {module:utils/tomap} module:utils/tomap~toMap
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-utils/src/translation-service.js
- *
- * @typedef {module:utils/translation-service} module:utils/translation-service~Message
  */
 
 /**

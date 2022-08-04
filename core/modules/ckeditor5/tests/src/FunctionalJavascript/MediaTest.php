@@ -587,6 +587,7 @@ class MediaTest extends WebDriverTestBase {
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
 
     // Type into the widget's caption element.
+    $this->selectTextInsideElement('.drupal-media figcaption');
     $figcaption->setValue('Llamas are the most awesome ever');
     $editor_dom = $this->getEditorDataAsDom();
     $this->assertEquals('Llamas are the most awesome ever', $editor_dom->getElementsByTagName('drupal-media')->item(0)->getAttribute('data-caption'));
