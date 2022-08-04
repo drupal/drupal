@@ -42,7 +42,9 @@ class StableLibraryOverrideTest extends StableLibraryOverrideTestBase {
    *
    * @var string[]
    */
-  protected $librariesToSkip = [];
+  protected $librariesToSkip = [
+    'views/views.responsive-grid',
+  ];
 
   /**
    * {@inheritdoc}

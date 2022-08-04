@@ -1,0 +1,55 @@
+{#
+/**
+ * @file
+ * Default theme implementation for views to display rows in a responsive grid.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the wrapping element.
+ * - title: The title of this group of rows.
+ * - view: The view object.
+ * - rows: The rows contained in this view.
+ * - options: The view plugin style options.
+ *   - alignment: a string set to either 'horizontal' or 'vertical'.
+ *   - columns: A number representing the max number of columns.
+ *   - cell_min_width: A number representing the minimum width of the grid cell.
+ *   - grid_gutter: A number representing the space between the grid cells.
+ * - items: A list of grid items.
+ *   - attributes: HTML attributes for each row or column.
+ *   - content: A list of columns or rows. Each row or column contains:
+ *     - attributes: HTML attributes for each row or column.
+ *     - content: The row or column contents.
+ *
+ * @see template_preprocess_views_view_grid_responsive()
+ *
+ * @ingroup themeable
+ */
+#}
+
+{{ attach_library('views/views.responsive-grid') }}
+
+{%
+  set classes = [
+    'views-view-responsive-grid',
+    'views-view-responsive-grid--' ~ options.alignment,
+  ]
+%}
+
+{% set responsive_grid_styles = [
+    '--views-responsive-grid--column-count:'  ~ options.columns ~ ';',
+    '--views-responsive-grid--cell-min-width:'  ~ options.cell_min_width ~ 'px;',
+    '--views-responsive-grid--layout-gap:'  ~ options.grid_gutter ~ 'px;',
+  ]
+%}
+
+{% if title %}
+  <h3>{{ title }}</h3>
+{% endif %}
+<div{{ attributes.addClass(classes).setAttribute('style', responsive_grid_styles|join()) }}>
+  {% for item in items %}
+    <div class="views-view-responsive-grid__item">
+      <div class="views-view-responsive-grid__item-inner">
+        {{- item.content -}}
+      </div>
+    </div>
+  {% endfor %}
+</div>

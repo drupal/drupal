@@ -48,6 +48,23 @@ views.style.grid:
       type: boolean
       label: 'Default views column classes'
 
+views.style.grid_responsive:
+  type: views_style
+  label: 'Grid - Responsive'
+  mapping:
+    columns:
+      type:  integer
+      label: 'Maximum number of columns'
+    cell_min_width:
+      type:  integer
+      label: 'Minimum cell width'
+    grid_gutter:
+      type:  integer
+      label: 'Grid gutter'
+    alignment:
+      type: string
+      label: 'Alignment'
+
 views.style.table:
   type: views_style
   label: 'Table'

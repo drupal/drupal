@@ -10,6 +10,15 @@ namespace Drupal\KernelTests\Core\Theme;
 class Stable9LibraryOverrideTest extends StableLibraryOverrideTestBase {
 
   /**
+   * A list of libraries to skip checking, in the format extension/library_name.
+   *
+   * @var string[]
+   */
+  protected $librariesToSkip = [
+    'views/views.responsive-grid',
+  ];
+
+  /**
    * {@inheritdoc}
    */
   protected static $modules = ['system', 'user', 'path_alias'];
