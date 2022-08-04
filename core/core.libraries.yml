@@ -912,10 +912,10 @@ jquery.once.bc:
     - core/drupal.object.assign
 
 jquery.ui:
-  version: &jquery_ui_version "1.13.1"
+  version: &jquery_ui_version "1.13.2"
   license: &jquery_ui_license
     name: Public Domain
-    url: https://raw.githubusercontent.com/jquery/jquery-ui/1.13.1/LICENSE.txt
+    url: https://raw.githubusercontent.com/jquery/jquery-ui/1.13.2/LICENSE.txt
     gpl-compatible: true
   js:
     assets/vendor/jquery.ui/ui/labels-min.js: { weight: -11.7, minified: true }
