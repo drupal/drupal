@@ -5,6 +5,7 @@ namespace Drupal\Tests\user\Functional;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Tests\CommentTestTrait;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
@@ -653,6 +654,83 @@ class UserCancelTest extends BrowserTestBase {
     $account->delete();
     $load2 = \Drupal::entityTypeManager()->getStorage('node')->load($node->id());
     $this->assertEmpty($load2);
+  }
+
+  /**
+   * Delete account and anonymize all content and it's translations.
+   */
+  public function testUserAnonymizeTranslations() {
+    $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
+    // Create comment field on page.
+    $this->addDefaultCommentField('node', 'page');
+    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
+
+    \Drupal::service('module_installer')->install([
+      'language',
+      'locale',
+    ]);
+    \Drupal::service('router.builder')->rebuildIfNeeded();
+    ConfigurableLanguage::createFromLangcode('ur')->save();
+    // Rebuild the container to update the default language container variable.
+    $this->rebuildContainer();
+
+    $account = $this->drupalCreateUser(['cancel account']);
+    $this->drupalLogin($account);
+    $user_storage->resetCache([$account->id()]);
+    $account = $user_storage->load($account->id());
+
+    $node = $this->drupalCreateNode(['uid' => $account->id()]);
+
+    // Add a comment to the page.
+    $comment_subject = $this->randomMachineName(8);
+    $comment_body = $this->randomMachineName(8);
+    $comment = Comment::create([
+      'subject' => $comment_subject,
+      'comment_body' => $comment_body,
+      'entity_id' => $node->id(),
+      'entity_type' => 'node',
+      'field_name' => 'comment',
+      'status' => CommentInterface::PUBLISHED,
+      'uid' => $account->id(),
+    ]);
+    $comment->save();
+    $comment->addTranslation('ur', [
+      'subject' => 'ur ' . $comment->label(),
+      'status' => CommentInterface::PUBLISHED,
+    ])->save();
+
+    // Attempt to cancel account.
+    $this->drupalGet('user/' . $account->id() . '/cancel');
+    $this->assertSession()->pageTextContains('Are you sure you want to cancel your account?');
+    $this->assertSession()->pageTextContains('Your account will be removed and all account information deleted. All of your content will be assigned to the ' . $this->config('user.settings')->get('anonymous') . ' user.');
+
+    // Confirm account cancellation.
+    $timestamp = time();
+    $this->submitForm([], 'Confirm');
+    $this->assertSession()->pageTextContains('A confirmation request to cancel your account has been sent to your email address.');
+
+    // Confirm account cancellation request.
+    $this->drupalGet('user/' . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account, $timestamp));
+    $user_storage->resetCache([$account->id()]);
+    $this->assertNull($user_storage->load($account->id()), 'User is not found in the database.');
+
+    // Confirm that user's content has been attributed to anonymous user.
+    $anonymous_user = User::getAnonymousUser();
+
+    $storage = \Drupal::entityTypeManager()->getStorage('comment');
+    $storage->resetCache([$comment->id()]);
+    $test_comment = $storage->load($comment->id());
+    $this->assertEquals(0, $test_comment->getOwnerId());
+    $this->assertTrue($test_comment->isPublished(), 'Comment of the user has been attributed to anonymous user.');
+    $this->assertEquals($anonymous_user->getDisplayName(), $test_comment->getAuthorName());
+
+    $comment_translation = $test_comment->getTranslation('ur');
+    $this->assertEquals(0, $comment_translation->getOwnerId());
+    $this->assertTrue($comment_translation->isPublished(), 'Comment translation of the user has been attributed to anonymous user.');
+    $this->assertEquals($anonymous_user->getDisplayName(), $comment_translation->getAuthorName());
+
+    // Confirm that the confirmation message made it through to the end user.
+    $this->assertSession()->responseContains(t('%name has been deleted.', ['%name' => $account->getAccountName()]));
   }
 
 }
