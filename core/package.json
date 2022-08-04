@@ -104,8 +104,8 @@
     "stylelint-config-standard": "^23.0.0",
     "stylelint-order": "^5.0.0",
     "tabbable": "5.3.x",
-    "terser": "^5.3.4",
-    "terser-webpack-plugin": "^5.2.0",
+    "terser": "^5.14.2",
+    "terser-webpack-plugin": "^5.3.3",
     "underscore": "1.13.x",
     "webpack": "^5.51.1",
     "webpack-cli": "^4.4.0"
