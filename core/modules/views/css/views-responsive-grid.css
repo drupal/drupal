@@ -1,0 +1,35 @@
+/**
+ * CSS for Views responsive grid style.
+ */
+
+.views-view-responsive-grid {
+  --views-responsive-grid--layout-gap: 10px; /* Will be overridden by an inline style. */
+  --views-responsive-grid--column-count: 4; /* Will be overridden by an inline style. */
+  --views-responsive-grid--cell-min-width: 100px; /* Will be overridden by an inline style. */
+}
+
+.views-view-responsive-grid--horizontal {
+  /**
+   * Calculated values.
+   */
+  --views-responsive-grid--gap-count: calc(var(--views-responsive-grid--column-count) - 1);
+  --views-responsive-grid--total-gap-width: calc(var(--views-responsive-grid--gap-count) * var(--views-responsive-grid--layout-gap));
+  --views-responsive-grid-item--max-width: calc((100% - var(--views-responsive-grid--total-gap-width)) / var(--views-responsive-grid--column-count));
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(max(var(--views-responsive-grid--cell-min-width), var(--views-responsive-grid-item--max-width)), 1fr));
+  gap: var(--views-responsive-grid--layout-gap);
+}
+
+.views-view-responsive-grid--vertical {
+  margin-bottom: calc(var(--views-responsive-grid--layout-gap) * -1); /* Offset the bottom row's padding. */
+  column-width: var(--views-responsive-grid--cell-min-width);
+  column-count: var(--views-responsive-grid--column-count);
+  column-gap: var(--views-responsive-grid--layout-gap);
+}
+
+.views-view-responsive-grid--vertical .views-view-responsive-grid__item > * {
+  padding-bottom: var(--views-responsive-grid--layout-gap);
+  page-break-inside: avoid;
+  break-inside: avoid;
+}

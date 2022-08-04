@@ -25,6 +25,7 @@ class StableTemplateOverrideTest extends KernelTestBase {
    */
   protected $templatesToSkip = [
     'views-form-views-form',
+    'views-view-grid-responsive',
   ];
 
   /**

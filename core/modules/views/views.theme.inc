@@ -795,6 +795,37 @@ function template_preprocess_views_view_grid(&$variables) {
 }
 
 /**
+ * Prepares variables for views grid - responsive style templates.
+ *
+ * Default template: views-view-grid-responsive.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - view: The view object.
+ *   - rows: An array of row items. Each row is an array of content.
+ */
+function template_preprocess_views_view_grid_responsive(&$variables) {
+  $variables['options'] = $variables['view']->style_plugin->options;
+  $view = $variables['view'];
+
+  $items = [];
+
+  foreach ($variables['rows'] as $id => $item) {
+
+    $attribute = new Attribute();
+    if ($row_class = $view->style_plugin->getRowClass($id)) {
+      $attribute->addClass($row_class);
+    }
+    $items[$id] = [
+      'content' => $item,
+      'attributes' => $attribute,
+    ];
+  }
+
+  $variables['items'] = $items;
+}
+
+/**
  * Prepares variables for views unformatted rows templates.
  *
  * Default template: views-view-unformatted.html.twig.
