@@ -237,22 +237,7 @@
         editor.updateSourceElement();
       } else {
         element.removeAttribute('contentEditable');
-        let textElement = null;
-        let originalValue = null;
-        const usingQuickEdit = (((Drupal || {}).quickedit || {}).editors || {}).editor;
-
-        if (usingQuickEdit) {
-          Drupal.quickedit.editors.editor.prototype.revert = function revertQuickeditChanges() {
-            textElement = this.$textElement[0];
-            originalValue = this.model.get('originalValue');
-          };
-        }
-
-        editor.destroy().then(() => {
-          if (textElement && originalValue) {
-            textElement.innerHTML = originalValue;
-          }
-
+        return editor.destroy().then(() => {
           Drupal.CKEditor5Instances.delete(id);
           callbacks.delete(id);
 

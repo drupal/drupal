@@ -70,6 +70,55 @@
           this.$textElement = this.$el;
         }
         this.model.set('originalValue', this.$textElement.html());
+
+        if (
+          Drupal.editors &&
+          Drupal.editors.ckeditor5 &&
+          once('quickedit-ckeditor5-destroy', 'body').length
+        ) {
+          /**
+           * CKEditor 5 destroy lifecycle is different because is uses Promises.
+           */
+          const ckeditor5Detach = Drupal.editors.ckeditor5.detach;
+          Drupal.editors.ckeditor5.detach = function quickeditDetach(
+            element,
+            format,
+            trigger,
+          ) {
+            const destroyPromise = ckeditor5Detach.call(
+              this,
+              element,
+              format,
+              trigger,
+            );
+            if (destroyPromise && destroyPromise.then) {
+              let textElement = null;
+              let originalValue = null;
+              // The revert() function in QuickEdit's text editor does not work with
+              // CKEditor 5, as it is triggered before CKEditor 5 is fully
+              // destroyed. This function is overridden so the functionality it
+              // provides can happen after the CKEditor destroy() promise is
+              // fulfilled.
+              // This pulls the necessary values from the QuickEdit Backbone Model
+              // before it is destroyed, so they can be used by
+              // `editor.destroy().then()` to perform the expected revert.
+              Drupal.quickedit.editors.editor.prototype.revert =
+                function revertQuickeditChanges() {
+                  textElement = this.$textElement[0];
+                  originalValue = this.model.get('originalValue');
+                };
+
+              destroyPromise.then(() => {
+                // If textElement and originalValue are not null, a QuickEdit
+                // revert has been requested. Perform the revert here as it
+                // can't happen until the CKEditor instance is destroyed.
+                if (textElement && originalValue) {
+                  textElement.innerHTML = originalValue;
+                }
+              });
+            }
+          };
+        }
       },
 
       /**

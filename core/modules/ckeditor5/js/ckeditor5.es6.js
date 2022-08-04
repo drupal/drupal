@@ -497,38 +497,11 @@
         editor.updateSourceElement();
       } else {
         element.removeAttribute('contentEditable');
-
-        // Prepare variables that will be used when discarding Quickedit changes.
-        let textElement = null;
-        let originalValue = null;
-        const usingQuickEdit = (((Drupal || {}).quickedit || {}).editors || {})
-          .editor;
-        if (usingQuickEdit) {
-          // The revert() function in QuickEdit's text editor does not work with
-          // CKEditor 5, as it is triggered before CKEditor 5 is fully
-          // destroyed. This function is overridden so the functionality it
-          // provides can happen after the CKEditor destroy() promise is
-          // fulfilled.
-          // This pulls the necessary values from the QuickEdit Backbone Model
-          // before it is destroyed, so they can be used by
-          // `editor.destroy().then()` to perform the expected revert.
-          Drupal.quickedit.editors.editor.prototype.revert =
-            function revertQuickeditChanges() {
-              textElement = this.$textElement[0];
-              originalValue = this.model.get('originalValue');
-            };
-        }
-
-        editor
+        // Return the promise to allow external code to queue code to
+        // execute after the destroy is complete.
+        return editor
           .destroy()
           .then(() => {
-            // If textElement and originalValue are not null, a QuickEdit
-            // revert has been requested. Perform the revert here as it
-            // can't happen until the CKEditor instance is destroyed.
-            if (textElement && originalValue) {
-              textElement.innerHTML = originalValue;
-            }
-
             // Clean up stored references.
             Drupal.CKEditor5Instances.delete(id);
             callbacks.delete(id);
