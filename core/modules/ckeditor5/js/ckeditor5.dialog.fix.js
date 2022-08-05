@@ -6,14 +6,9 @@
 **/
 
 ($ => {
-  const oldFocusTabbable = $.ui.dialog._proto._focusTabbable;
   $.widget('ui.dialog', $.ui.dialog, {
-    _focusTabbable() {
-      const hasFocus = this._focusedElement ? this._focusedElement.get(0) : null;
-
-      if (!(hasFocus && hasFocus.ckeditorInstance)) {
-        oldFocusTabbable.call(this);
-      }
+    _allowInteraction(event) {
+      return event.target.classList.contains('ck') || this._super(event);
     }
 
   });
