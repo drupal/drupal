@@ -1,0 +1,165 @@
+<?php
+
+declare(strict_types = 1);
+
+namespace Drupal\ckeditor5\Plugin\Validation\Constraint;
+
+// cspell:ignore enableable
+
+use Drupal\ckeditor5\HTMLRestrictions;
+use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style;
+use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
+
+/**
+ * Styles can only be specified for HTML5 tags and extra classes.
+ *
+ * @internal
+ */
+class StyleSensibleElementConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
+
+  use PrecedingConstraintAwareValidatorTrait;
+  use PluginManagerDependentValidatorTrait;
+  use TextEditorObjectDependentValidatorTrait;
+
+  /**
+   * {@inheritdoc}
+   *
+   * @throws \Symfony\Component\Validator\Exception\UnexpectedTypeException
+   *   Thrown when the given constraint is not supported by this validator.
+   */
+  public function validate($element, Constraint $constraint) {
+    if (!$constraint instanceof StyleSensibleElementConstraint) {
+      throw new UnexpectedTypeException($constraint, StyleSensibleElementConstraint::class);
+    }
+    // The preceding constraints (in this case: CKEditor5Element) must be valid.
+    if ($this->hasViolationsForPrecedingConstraints($constraint)) {
+      return;
+    }
+
+    $text_editor = $this->createTextEditorObjectFromContext();
+
+    // The single tag for which a style is specified, which we are checking now.
+    $style_element = HTMLRestrictions::fromString($element);
+    assert(count($style_element->getAllowedElements()) === 1);
+    [$tag, $classes] = Style::getTagAndClasses($style_element);
+
+    // Ensure the tag is in the range supported by the Style plugin.
+    $superset = HTMLRestrictions::fromString('<$any-html5-element class>');
+    $supported_range = $superset->merge($style_element->extractPlainTagsSubset());
+    if (!$style_element->diff($supported_range)->allowsNothing()) {
+      $this->context->buildViolation($constraint->nonHtml5TagMessage)
+        ->setParameter('@tag', sprintf("<%s>", $tag))
+        ->addViolation();
+      return;
+    }
+
+    // Get the list of tags enabled by every plugin other than Style.
+    $other_enabled_plugins = $this->getOtherEnabledPlugins($text_editor, 'ckeditor5_style');
+    $enableable_disabled_plugins = $this->getEnableableDisabledPlugins($text_editor);
+
+    $other_enabled_plugin_elements = new HTMLRestrictions($this->pluginManager->getProvidedElements(array_keys($other_enabled_plugins), $text_editor, FALSE));
+    $disabled_plugin_elements = new HTMLRestrictions($this->pluginManager->getProvidedElements(array_keys($enableable_disabled_plugins), $text_editor, FALSE));
+
+    // Next, validate that the classes specified for this style are not
+    // supported by an enabled plugin.
+    if (self::intersectionWithClasses($style_element, $other_enabled_plugin_elements)) {
+      $this->context->buildViolation($constraint->conflictingEnabledPluginMessage)
+        ->setParameter('@tag', sprintf("<%s>", $tag))
+        ->setParameter('@classes', implode(", ", $classes))
+        ->setParameter('%plugin', $this->findStyleConflictingPluginLabel($style_element))
+        ->addViolation();
+    }
+    // Next, validate that the classes specified for this style are not
+    // supported by a disabled plugin.
+    elseif (self::intersectionWithClasses($style_element, $disabled_plugin_elements)) {
+      $this->context->buildViolation($constraint->conflictingDisabledPluginMessage)
+        ->setParameter('@tag', sprintf("<%s>", $tag))
+        ->setParameter('@classes', implode(", ", $classes))
+        ->setParameter('%plugin', $this->findStyleConflictingPluginLabel($style_element))
+        ->addViolation();
+    }
+  }
+
+  /**
+   * Checks if there is an intersection on allowed 'class' attribute values.
+   *
+   * @param \Drupal\ckeditor5\HTMLRestrictions $a
+   *   One set of HTML restrictions.
+   * @param \Drupal\ckeditor5\HTMLRestrictions $b
+   *   Another set of HTML restrictions.
+   *
+   * @return bool
+   *   Whether there is an intersection.
+   */
+  private static function intersectionWithClasses(HTMLRestrictions $a, HTMLRestrictions $b): bool {
+    // Compute the intersection, but first resolve wildcards, by merging
+    // tags of the other operand. Because only tags are merged, this cannot
+    // introduce a 'class' attribute intersection.
+    // For example: a plugin may support `<$text-container class="foo">`. On its
+    // own that would not trigger an intersection, but when resolved into
+    // concrete tags it could.
+    $tags_from_a = array_diff(array_keys($a->getConcreteSubset()->getAllowedElements()), ['*']);
+    $tags_from_b = array_diff(array_keys($b->getConcreteSubset()->getAllowedElements()), ['*']);
+    $a = $a->merge(new HTMLRestrictions(array_fill_keys($tags_from_b, FALSE)));
+    $b = $b->merge(new HTMLRestrictions(array_fill_keys($tags_from_a, FALSE)));
+    $intersection = $a->intersect($b);
+
+    // Leverage the "GHS configuration" representation to easily find whether
+    // there is an intersection for classes. Other implementations are possible.
+    $intersection_as_ghs_config = $intersection->toGeneralHtmlSupportConfig();
+    $ghs_config_classes = array_column($intersection_as_ghs_config, 'classes');
+    return !empty($ghs_config_classes);
+  }
+
+  /**
+   * Finds the plugin with elements that conflict with the style element.
+   *
+   * @param \Drupal\ckeditor5\HTMLRestrictions $needle
+   *   A style definition element: a single tag, plus the 'class' attribute,
+   *   plus >=1 allowed 'class' attribute values.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *   The label of the plugin that is conflicting with this style.
+   *
+   * @throws \OutOfBoundsException
+   *   When a $needle is provided which does not exist among the other plugins.
+   */
+  private function findStyleConflictingPluginLabel(HTMLRestrictions $needle): TranslatableMarkup {
+    foreach ($this->pluginManager->getDefinitions() as $id => $definition) {
+      // We're looking to find the other plugin, not this one.
+      if ($id === 'ckeditor5_style') {
+        continue;
+      }
+
+      assert($definition instanceof CKEditor5PluginDefinition);
+      if (!$definition->hasElements()) {
+        continue;
+      }
+
+      $haystack = HTMLRestrictions::fromString(implode($definition->getElements()));
+      if ($id === 'ckeditor5_sourceEditing') {
+        // The Source Editing plugin's allowed elements are based on stored
+        // config. This differs from all other plugins, which establish allowed
+        // elements as part of their definition. Because of this, the $haystack
+        // is calculated differently for Source Editing.
+        $text_editor = $this->createTextEditorObjectFromContext();
+        $editor_plugins = $text_editor->getSettings()['plugins'];
+        if (!empty($editor_plugins['ckeditor5_sourceEditing'])) {
+          $source_tags = $editor_plugins['ckeditor5_sourceEditing']['allowed_tags'];
+          $haystack = HTMLRestrictions::fromString(implode($source_tags));
+        }
+      }
+      if (self::intersectionWithClasses($needle, $haystack)) {
+        return $definition->label();
+      }
+    }
+
+    throw new \OutOfBoundsException();
+  }
+
+}

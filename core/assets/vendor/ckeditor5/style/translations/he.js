@@ -1,0 +1,1 @@
+!function(t){const s=t.he=t.he||{};s.dictionary=Object.assign(s.dictionary||{},{"Block styles":"סגנונות בלוקים","Multiple styles":"סגנונות מרובים",Styles:"סגנונות","Text styles":"עיצוב טקסט"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

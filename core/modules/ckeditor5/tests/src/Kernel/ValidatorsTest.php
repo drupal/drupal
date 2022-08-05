@@ -62,6 +62,9 @@ class ValidatorsTest extends KernelTestBase {
    * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemConstraintValidator
    * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemDependencyConstraintValidator
    * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\EnabledConfigurablePluginsConstraintValidator
+   * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\CKEditor5ElementConstraintValidator
+   * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\StyleSensibleElementConstraintValidator
+   * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\UniqueLabelInListConstraintValidator
    * @dataProvider provider
    *
    * @param array $ckeditor5_settings
@@ -321,6 +324,232 @@ class ValidatorsTest extends KernelTestBase {
           'ckeditor5_heading' => [
             'enabled_headings' => [
               'heading2',
+            ],
+          ],
+        ],
+      ],
+      'violations' => [],
+    ];
+    $data['INVALID: Style plugin with no styles'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'style',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_style' => [
+            'styles' => [],
+          ],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_style.styles' => 'Enable at least one style, otherwise disable the Style plugin.',
+      ],
+    ];
+    $data['INVALID: Style plugin configured to add class to GHS-supported non-HTML5 tag'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'style',
+            'sourceEditing',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => [
+              '<foo>',
+            ],
+          ],
+          'ckeditor5_style' => [
+            'styles' => [
+              [
+                'label' => 'Barry foo',
+                'element' => '<foo class="bar">',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_style.styles.0.element' => 'A style can only be specified for an HTML 5 tag. <code>&lt;foo&gt;</code> is not an HTML5 tag.',
+      ],
+    ];
+    $data['INVALID: Style plugin configured to add class to plugin-supported non-HTML5 tag'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'style',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_style' => [
+            'styles' => [
+              [
+                'label' => 'Sensational media',
+                'element' => '<drupal-media class="sensational">',
+              ],
+            ],
+          ],
+          'media_media' => [
+            'allow_view_mode_override' => FALSE,
+          ],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_style.styles.0.element' => 'A style can only be specified for an HTML 5 tag. <code>&lt;drupal-media&gt;</code> is not an HTML5 tag.',
+      ],
+    ];
+    $data['INVALID: Style plugin configured to add class that is supported by a disabled plugin'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'style',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_style' => [
+            'styles' => [
+              [
+                'label' => 'Justified paragraph',
+                'element' => '<p class="text-align-justify">',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_style.styles.0.element' => 'A style must only specify classes not supported by other plugins. The <code>text-align-justify</code> classes on <code>&lt;p&gt;</code> are supported by the <em class="placeholder">Alignment</em> plugin. Remove this style and enable that plugin instead.',
+      ],
+    ];
+    $data['INVALID: Style plugin configured to add class that is supported by an enabled plugin if its configuration were different'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'style',
+            'alignment',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_alignment' => [
+            'enabled_alignments' => ['center'],
+          ],
+          'ckeditor5_style' => [
+            'styles' => [
+              [
+                'label' => 'Justified paragraph',
+                'element' => '<p class="text-align-justify">',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'violations' => [],
+    ];
+    $data['INVALID: Style plugin configured to add class that is supported by an enabled plugin'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'style',
+            'alignment',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_alignment' => [
+            'enabled_alignments' => ['justify'],
+          ],
+          'ckeditor5_style' => [
+            'styles' => [
+              [
+                'label' => 'Justified paragraph',
+                'element' => '<p class="text-align-justify">',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_style.styles.0.element' => 'A style must only specify classes not supported by other plugins. The <code>text-align-justify</code> classes on <code>&lt;p&gt;</code> are already supported by the enabled <em class="placeholder">Alignment</em> plugin.',
+      ],
+    ];
+    $data['INVALID: Style plugin has multiple styles with same label'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'blockQuote',
+            'style',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_style' => [
+            'styles' => [
+              0 => [
+                'label' => 'Highlighted',
+                'element' => '<p class="highlighted">',
+              ],
+              1 => [
+                'label' => 'Highlighted',
+                'element' => '<blockquote class="highlighted">',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_style.styles' => 'The label <em class="placeholder">Highlighted</em> is not unique.',
+      ],
+    ];
+    $data['INVALID: Style plugin has styles with invalid elements'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'blockQuote',
+            'style',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_style' => [
+            'styles' => [
+              0 => [
+                'label' => 'missing class attribute',
+                'element' => '<p>',
+              ],
+              1 => [
+                'label' => 'class attribute present but no allowed values listed',
+                'element' => '<blockquote class="">',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_style.styles.0.element' => 'The following tag is missing the required attribute <code>class</code>: <code>&lt;p&gt;</code>.',
+        'settings.plugins.ckeditor5_style.styles.1.element' => 'The following tag does not have the minimum of 1 allowed values for the required attribute <code>class</code>: <code>&lt;blockquote class=&quot;&quot;&gt;</code>.',
+      ],
+    ];
+    $data['VALID: Style plugin has multiple styles with different labels'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'blockQuote',
+            'style',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_style' => [
+            'styles' => [
+              [
+                'label' => 'Callout',
+                'element' => '<p class="callout">',
+              ],
+              [
+                'label' => 'Interesting & highlighted quote',
+                'element' => '<blockquote class="interesting highlighted">',
+              ],
+              [
+                'label' => 'Famous',
+                'element' => '<blockquote class="famous">',
+              ],
             ],
           ],
         ],
@@ -748,7 +977,8 @@ class ValidatorsTest extends KernelTestBase {
         'settings.plugins.ckeditor5_sourceEditing.allowed_tags.1' => 'The following tag(s) are already supported by available plugins and should not be added to the Source Editing "Manually editable HTML tags" field. Instead, enable the following plugins to support these tags: <em class="placeholder">Table (&lt;table&gt;)</em>.',
         'settings.plugins.ckeditor5_sourceEditing.allowed_tags.3' => 'The following attribute(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: <em class="placeholder">Language (&lt;span lang&gt;)</em>.',
         'settings.plugins.ckeditor5_sourceEditing.allowed_tags.5' => 'The following attribute(s) are already supported by available plugins and should not be added to the Source Editing "Manually editable HTML tags" field. Instead, enable the following plugins to support these attributes: <em class="placeholder">Code Block (&lt;code class=&quot;language-*&quot;&gt;)</em>.',
-        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.6' => 'The following attribute(s) are already supported by available plugins and should not be added to the Source Editing "Manually editable HTML tags" field. Instead, enable the following plugins to support these attributes: <em class="placeholder">Alignment (&lt;h2 class=&quot;text-align-center&quot;&gt;)</em>.',
+        // @todo "Style" should be removed from the suggestions in https://www.drupal.org/project/drupal/issues/3271179
+        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.6' => 'The following attribute(s) are already supported by available plugins and should not be added to the Source Editing "Manually editable HTML tags" field. Instead, enable the following plugins to support these attributes: <em class="placeholder">Style (&lt;h2 class=&quot;text-align-center&quot;&gt;), Alignment (&lt;h2 class=&quot;text-align-center&quot;&gt;)</em>.',
       ],
     ];
     $data['INVALID some invalid Source Editable tags provided by plugin and another available in a not enabled plugin'] = [
@@ -984,7 +1214,44 @@ class ValidatorsTest extends KernelTestBase {
       'filters' => [],
       'violations' => [],
     ];
-
+    $data['INVALID: Style plugin configured to add class to unsupported tag'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'style',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_style' => [
+            'styles' => [
+              [
+                'label' => 'Highlighted',
+                'element' => '<blockquote class="highlighted">',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
+      'filters' => [
+        'filter_html' => [
+          'id' => 'filter_html',
+          'provider' => 'filter',
+          'status' => TRUE,
+          'weight' => 0,
+          'settings' => [
+            'allowed_html' => '<p> <br> <blockquote class="highlighted">',
+            'filter_html_help' => TRUE,
+            'filter_html_nofollow' => TRUE,
+          ],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_style' => 'The <em class="placeholder">Style</em> plugin needs another plugin to create <code>&lt;blockquote&gt;</code>, for it to be able to create the following attributes: <code>&lt;blockquote class=&quot;highlighted&quot;&gt;</code>. Enable a plugin that supports creating this tag. If none exists, you can configure the Source Editing plugin to support it.',
+      ],
+    ];
     return $data;
   }
 

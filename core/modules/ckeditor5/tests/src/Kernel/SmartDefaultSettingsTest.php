@@ -283,6 +283,9 @@ class SmartDefaultSettingsTest extends KernelTestBase {
                 'items' => [
                   'Language',
                   'Styles',
+                  // Blockquote does not have settings. It's present only to
+                  // support an additional tag, to test realistic styles.
+                  'Blockquote',
                 ],
               ],
               [
@@ -299,11 +302,47 @@ class SmartDefaultSettingsTest extends KernelTestBase {
             'language_list' => 'all',
           ],
           'stylescombo' => [
-            'styles' => "p.callout|Callout\r\nblockquote.interesting|Interesting quote",
+            'styles' => "p.callout|Callout\r\nblockquote.interesting.highlighted|Interesting & highlighted quote\n\nblockquote.famous |    Famous\n",
           ],
           // Plugin setting without upgrade path.
           'llama_contextual_and_button' => [
             'ultra_llama_mode' => TRUE,
+          ],
+        ],
+      ],
+    ])->save();
+
+    FilterFormat::create([
+      'format' => 'cke4_stylescombo_span',
+      'name' => 'A CKEditor 4 configured to have span styles',
+      'filters' => [
+        'filter_html' => [
+          'status' => 1,
+          'settings' => [
+            'allowed_html' => '<p> <br> <span class="llama">',
+          ] + $filter_plugin_manager->getDefinition('filter_html')['settings'],
+        ],
+      ],
+    ])->save();
+    Editor::create([
+      'format' => 'cke4_stylescombo_span',
+      'editor' => 'ckeditor',
+      'settings' => [
+        'toolbar' => [
+          'rows' => [
+            0 => [
+              [
+                'name' => 'Whatever',
+                'items' => [
+                  'Styles',
+                ],
+              ],
+            ],
+          ],
+        ],
+        'plugins' => [
+          'stylescombo' => [
+            'styles' => "span.llama|Llama span",
           ],
         ],
       ],
@@ -527,6 +566,22 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           ],
         ],
         'plugins' => [
+          'ckeditor5_heading' => [
+            'enabled_headings' => [
+              'heading2',
+              'heading3',
+              'heading4',
+              'heading5',
+              'heading6',
+            ],
+          ],
+          'ckeditor5_imageResize' => [
+            'allow_resize' => TRUE,
+          ],
+          'ckeditor5_list' => [
+            'reversed' => FALSE,
+            'startIndex' => TRUE,
+          ],
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => [
               '<cite>',
@@ -544,22 +599,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
               '<h5 id>',
               '<h6 id>',
             ],
-          ],
-          'ckeditor5_heading' => [
-            'enabled_headings' => [
-              'heading2',
-              'heading3',
-              'heading4',
-              'heading5',
-              'heading6',
-            ],
-          ],
-          'ckeditor5_imageResize' => [
-            'allow_resize' => TRUE,
-          ],
-          'ckeditor5_list' => [
-            'reversed' => FALSE,
-            'startIndex' => TRUE,
           ],
         ],
       ],
@@ -650,12 +689,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_ckeditor5_settings' => [
         'toolbar' => $basic_html_test_case['expected_ckeditor5_settings']['toolbar'],
         'plugins' => [
-          'ckeditor5_sourceEditing' => [
-            'allowed_tags' => array_values(array_diff(
-              $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_sourceEditing']['allowed_tags'],
-              ['<h4 id>', '<h6 id>'],
-            )),
-          ],
           'ckeditor5_heading' => [
             'enabled_headings' => [
               'heading2',
@@ -665,6 +698,12 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           ],
           'ckeditor5_imageResize' => ['allow_resize' => TRUE],
           'ckeditor5_list' => ['reversed' => FALSE, 'startIndex' => TRUE],
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => array_values(array_diff(
+              $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_sourceEditing']['allowed_tags'],
+              ['<h4 id>', '<h6 id>'],
+            )),
+          ],
         ],
       ],
       'expected_superset' => $basic_html_test_case['expected_superset'],
@@ -689,9 +728,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_ckeditor5_settings' => [
         'toolbar' => $basic_html_test_case['expected_ckeditor5_settings']['toolbar'],
         'plugins' => [
-          'ckeditor5_sourceEditing' => [
-            'allowed_tags' => $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_sourceEditing']['allowed_tags'],
-          ],
           'ckeditor5_heading' => [
             'enabled_headings' => [
               'heading1',
@@ -704,6 +740,9 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           ],
           'ckeditor5_imageResize' => ['allow_resize' => TRUE],
           'ckeditor5_list' => ['reversed' => FALSE, 'startIndex' => TRUE],
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_sourceEditing']['allowed_tags'],
+          ],
         ],
       ],
       'expected_superset' => $basic_html_test_case['expected_superset'],
@@ -733,14 +772,14 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           ),
         ],
         'plugins' => [
+          'ckeditor5_imageResize' => ['allow_resize' => TRUE],
+          'ckeditor5_list' => ['reversed' => FALSE, 'startIndex' => TRUE],
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => array_values(array_diff(
               $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_sourceEditing']['allowed_tags'],
               ['<h2 id>', '<h3 id>', '<h4 id>', '<h5 id>', '<h6 id>'],
             )),
           ],
-          'ckeditor5_imageResize' => ['allow_resize' => TRUE],
-          'ckeditor5_list' => ['reversed' => FALSE, 'startIndex' => TRUE],
         ],
       ],
       'expected_superset' => $basic_html_test_case['expected_superset'],
@@ -801,13 +840,12 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           ),
         ],
         'plugins' => array_merge(
-          array_slice($basic_html_test_case['expected_ckeditor5_settings']['plugins'], 0, 1),
+          $basic_html_test_case['expected_ckeditor5_settings']['plugins'],
           [
             'ckeditor5_alignment' => [
               'enabled_alignments' => ['center', 'justify'],
             ],
           ],
-          array_slice($basic_html_test_case['expected_ckeditor5_settings']['plugins'], 1),
         ),
       ],
       'expected_superset' => implode(' ', [
@@ -941,6 +979,9 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_ckeditor5_settings' => [
         'toolbar' => $basic_html_test_case['expected_ckeditor5_settings']['toolbar'],
         'plugins' => [
+          'ckeditor5_heading' => $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_heading'],
+          'ckeditor5_imageResize' => $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_imageResize'],
+          'ckeditor5_list' => $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_list'],
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => array_merge(
               $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_sourceEditing']['allowed_tags'],
@@ -1190,11 +1231,29 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         'toolbar' => [
           'items' => [
             'textPartLanguage',
+            'style',
+            'blockQuote',
           ],
         ],
         'plugins' => [
           'ckeditor5_language' => [
             'language_list' => 'all',
+          ],
+          'ckeditor5_style' => [
+            'styles' => [
+              [
+                'label' => 'Callout',
+                'element' => '<p class="callout">',
+              ],
+              [
+                'label' => 'Interesting & highlighted quote',
+                'element' => '<blockquote class="interesting highlighted">',
+              ],
+              [
+                'label' => 'Famous',
+                'element' => '<blockquote class="famous">',
+              ],
+            ],
           ],
         ],
       ],
@@ -1210,6 +1269,46 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         'warning' => [
           'The CKEditor 4 button <em class="placeholder">Llama</em> does not have a known upgrade path. If it allowed editing markup, then you can do so now through the Source Editing functionality.',
           'The <em class="placeholder">llama_contextual_and_button</em> plugin settings do not have a known upgrade path.',
+        ],
+      ],
+    ];
+
+    yield "cke4_stylescombo_span can be switched to CKEditor 5 without problems, only <span> in Source Editing" => [
+      'format_id' => 'cke4_stylescombo_span',
+      'filters_to_drop' => [],
+      'expected_ckeditor5_settings' => [
+        'toolbar' => [
+          'items' => [
+            'style',
+            'sourceEditing',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_style' => [
+            'styles' => [
+              [
+                'label' => 'Llama span',
+                'element' => '<span class="llama">',
+              ],
+            ],
+          ],
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => [
+              '<span>',
+            ],
+          ],
+        ],
+      ],
+      'expected_superset' => '',
+      'expected_fundamental_compatibility_violations' => [],
+      'expected_db_logs' => [
+        'status' => [
+          "The following tags were permitted by the <em class=\"placeholder\">A CKEditor 4 configured to have span styles</em> text format's filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: &lt;span&gt;. The text format must be saved to make these changes active.",
+        ],
+      ],
+      'expected_messages' => [
+        'status' => [
+          'To maintain the capabilities of this text format, <a target="_blank" href="/admin/help/ckeditor5#migration-settings">the CKEditor 5 migration</a> did the following:  Added these tags/attributes to the Source Editing Plugin\'s <a target="_blank" href="/admin/help/ckeditor5#source-editing">Manually editable HTML tags</a> setting: &lt;span&gt;. Additional details are available in your logs.',
         ],
       ],
     ];

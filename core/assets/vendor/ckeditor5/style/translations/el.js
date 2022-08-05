@@ -1,0 +1,1 @@
+!function(t){const s=t.el=t.el||{};s.dictionary=Object.assign(s.dictionary||{},{"Block styles":"Στυλ για μπλοκ","Multiple styles":"Πολλαπλά στυλ",Styles:"Στυλ","Text styles":"Στυλ για κείμενο"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

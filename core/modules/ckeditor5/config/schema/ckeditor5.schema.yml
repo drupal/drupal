@@ -73,6 +73,7 @@ ckeditor5.plugin.ckeditor5_imageResize:
       constraints:
         NotNull: []
 
+# Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing
 ckeditor5.plugin.ckeditor5_sourceEditing:
   type: mapping
   label: Source Editing
@@ -134,3 +135,35 @@ ckeditor5.plugin.media_media:
       label: 'Allow view mode override'
       constraints:
         NotNull: []
+
+# Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style
+ckeditor5.plugin.ckeditor5_style:
+  type: mapping
+  label: Style
+  mapping:
+    styles:
+      type: sequence
+      label: 'Styles'
+      constraints:
+        NotBlank:
+          message: "Enable at least one style, otherwise disable the Style plugin."
+        UniqueLabelInList:
+          labelKey: label
+      sequence:
+        type: mapping
+        label: 'Style'
+        mapping:
+          label:
+            type: label
+            label: 'Style label'
+          element:
+            type: ckeditor5.element
+            constraints:
+              # Validate that this contains exactly 1 attribute (class) and >=1 class attr value.
+              CKEditor5Element:
+                requiredAttributes:
+                  -
+                    attributeName: class
+                    minAttributeValueCount: 1
+              StyleSensibleElement: []
+            label: 'Style tag + classes'

@@ -623,6 +623,7 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     $submitted_editor->setSettings($settings);
     $eventual_editor_and_format_for_plugin_settings_visibility = $this->getEventualEditorWithPrimedFilterFormat($form_state, $submitted_editor);
     $settings['plugins'] = [];
+    $default_configurations = [];
     foreach ($this->ckeditor5PluginManager->getDefinitions() as $plugin_id => $definition) {
       if (!$definition->isConfigurable()) {
         continue;
@@ -636,6 +637,12 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
       // @see editor_image_upload_settings_form()
       $default_configuration = $plugin->defaultConfiguration();
       $configuration_stored_out_of_band = empty($default_configuration);
+      // If this plugin is configurable but has not yet had user interaction,
+      // the default configuration will still be active and may trigger
+      // validation errors. Do not trigger those validation errors until the
+      // form is actually saved, to allow the user to first configure other
+      // CKEditor 5 functionality.
+      $default_configurations[$plugin_id] = $default_configuration;
 
       if ($form_state->hasValue(['plugins', $plugin_id])) {
         $subform = $form['plugins'][$plugin_id];
@@ -672,6 +679,31 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     $eventual_editor_and_format = $this->getEventualEditorWithPrimedFilterFormat($form_state, $submitted_editor);
     $violations = CKEditor5::validatePair($eventual_editor_and_format, $eventual_editor_and_format->getFilterFormat());
     foreach ($violations as $violation) {
+      $property_path_parts = explode('.', $violation->getPropertyPath());
+
+      // Special case: AJAX updates that do not submit the form (that cannot
+      // result in configuration being saved).
+      if ($form_state->getSubmitHandlers() === ['editor_form_filter_admin_format_editor_configure']) {
+        // Ensure that plugins' validation constraints do not immediately
+        // trigger a validation error: the user may choose to configure other
+        // CKEditor 5 aspects first.
+        if ($property_path_parts[0] === 'settings' && $property_path_parts[1] === 'plugins') {
+          $plugin_id = $property_path_parts[2];
+          // This CKEditor 5 plugin settings form was just added: the user has
+          // not yet had a chance to configure it.
+          if (!$form_state->hasValue(['plugins', $plugin_id])) {
+            continue;
+          }
+          // This CKEditor 5 plugin settings form was added recently, the user
+          // is triggering AJAX rebuilds of the configuration UI because they're
+          // configuring other functionality first. Only require these to be
+          // valid at form submission time.
+          if ($form_state->getValue(['plugins', $plugin_id]) === $default_configurations[$plugin_id]) {
+            continue;
+          }
+        }
+      }
+
       $form_item_name = static::mapPairViolationPropertyPathsToFormNames($violation->getPropertyPath(), $form);
       // When adding a toolbar item, it is possible that not all conditions for
       // using it have been met yet. FormBuilder refuses to rebuild forms when a
@@ -816,6 +848,11 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
    */
   protected static function createEphemeralPairedEditor(EditorInterface $editor, FilterFormatInterface $filter_format): EditorInterface {
     $paired_editor = clone $editor;
+    // If the editor is still being configured, the configuration may not yet be
+    // valid. Explicitly mark the ephemeral paired editor as new to allow other
+    // code to treat this accordingly.
+    // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getProvidedElements()
+    $paired_editor->enforceIsNew(TRUE);
     $reflector = new \ReflectionObject($paired_editor);
     $property = $reflector->getProperty('filterFormat');
     $property->setAccessible(TRUE);

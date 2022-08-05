@@ -48,7 +48,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
    *
    * @var string
    */
-  protected $defaultElementsAfterUpdatingToCkeditor5 = '<br> <p> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <cite> <dl> <dt> <dd> <a hreflang href> <blockquote cite> <ul type> <ol type start> <img src alt data-entity-type data-entity-uuid> <strong> <em> <code> <li>';
+  protected $defaultElementsAfterUpdatingToCkeditor5 = '<br> <p> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <cite> <dl> <dt> <dd> <img src alt data-entity-type data-entity-uuid> <a hreflang href> <blockquote cite> <ul type> <ol type start> <strong> <em> <code> <li>';
 
   /**
    * Test enabling CKEditor 5 in a way that triggers validation.

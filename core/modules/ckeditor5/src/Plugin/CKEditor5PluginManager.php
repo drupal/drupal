@@ -331,10 +331,26 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
           $subset = $this->getPlugin($id, $editor)->getElementsSubset();
           $subset_restrictions = HTMLRestrictions::fromString(implode($subset));
           $defined_restrictions = HTMLRestrictions::fromString(implode($defined_elements));
-          $subset_violations = $subset_restrictions->diff($defined_restrictions)->toCKEditor5ElementsArray();
-          if (!empty($subset_violations)) {
-            throw new \LogicException(sprintf('The "%s" CKEditor 5 plugin implements ::getElementsSubset() and did not return a subset, the following tags are absent from the plugin definition: "%s".', $id, implode(' ', $subset_violations)));
+          // Determine max supported elements by resolving wildcards in the
+          // restrictions defined by the plugin.
+          $max_supported = $defined_restrictions;
+          if (!$defined_restrictions->getWildcardSubset()->allowsNothing()) {
+            $concrete_tags_to_use_to_resolve_wildcards = $subset_restrictions->extractPlainTagsSubset();
+            $max_supported = $max_supported->merge($concrete_tags_to_use_to_resolve_wildcards)
+              ->diff($concrete_tags_to_use_to_resolve_wildcards);
           }
+          $not_in_max_supported = $subset_restrictions->diff($max_supported);
+          if (!$not_in_max_supported->allowsNothing()) {
+            // If the editor is still being configured, the configuration may
+            // not yet be valid.
+            if ($editor->isNew()) {
+              $subset = [];
+            }
+            else {
+              throw new \LogicException(sprintf('The "%s" CKEditor 5 plugin implements ::getElementsSubset() and did not return a subset, the following tags are absent from the plugin definition: "%s".', $id, implode(' ', $not_in_max_supported->toCKEditor5ElementsArray())));
+            }
+          }
+
           // Also detect what is technically a valid subset, but has lost the
           // ability to create tags that are still in the subset. This points to
           // a bug in the plugin's ::getElementsSubset() logic.
@@ -346,6 +362,7 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
           if (!$missing_creatable_for_subset->allowsNothing()) {
             throw new \LogicException(sprintf('The "%s" CKEditor 5 plugin implements ::getElementsSubset() and did return a subset ("%s") but the following tags can no longer be created: "%s".', $id, implode($subset_restrictions->toCKEditor5ElementsArray()), implode($missing_creatable_for_subset->toCKEditor5ElementsArray())));
           }
+
           $defined_elements = $subset;
         }
       }
