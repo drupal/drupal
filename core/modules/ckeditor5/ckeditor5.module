@@ -133,19 +133,6 @@ function ckeditor5_form_filter_format_form_alter(array &$form, FormStateInterfac
     if (isset($form['filters']['settings']['filter_html']['allowed_html'])) {
       $filter_allowed_html = &$form['filters']['settings']['filter_html']['allowed_html'];
 
-      if (isset($form['editor']['settings']['subform']['plugins']['ckeditor5_sourceEditing']['allowed_tags'])) {
-        $source_allowed_tags = &$form['editor']['settings']['subform']['plugins']['ckeditor5_sourceEditing']['allowed_tags'];
-        // @todo if this triggers the callback via keyboard navigation such as
-        //   tab, focus should move to the next element, not to the rebuilt
-        //   "allowed tags" field
-        //   https://www.drupal.org/project/ckeditor5/issues/3231321.
-        $source_allowed_tags['#ajax'] = [
-          'callback' => '_update_ckeditor5_html_filter',
-          'trigger_as' => ['name' => 'editor_configure'],
-          'event' => 'change',
-        ];
-      }
-
       $filter_allowed_html['#value_callback'] = [CKEditor5::class, 'getGeneratedAllowedHtmlValue'];
       // Set readonly and add the form-disabled wrapper class as using #disabled
       // or the disabled attribute will prevent the new values from being
@@ -214,6 +201,7 @@ function ckeditor5_form_filter_format_form_alter(array &$form, FormStateInterfac
         'checkbox',
         'select',
         'radios',
+        'textarea',
       ];
       if (isset($plugins_config_form['#type']) && in_array($plugins_config_form['#type'], $field_types) && !isset($plugins_config_form['#ajax'])) {
         $plugins_config_form['#ajax'] = [
@@ -267,17 +255,22 @@ function ckeditor5_form_filter_format_form_alter(array &$form, FormStateInterfac
 function ckeditor5_filter_format_edit_form_submit(array $form, FormStateInterface $form_state) {
   $limit_allowed_html_tags = isset($form['filters']['settings']['filter_html']['allowed_html']);
   $manually_editable_tags = $form_state->getValue(['editor', 'settings', 'plugins', 'ckeditor5_sourceEditing', 'allowed_tags']);
-  if ($limit_allowed_html_tags && is_array($manually_editable_tags)) {
-    // When "Manually editable tags" and "limit allowed HTML tags" are both
-    // configured, the former informs the value of the latter. This dependent
+  $styles = $form_state->getValue(['editor', 'settings', 'plugins', 'ckeditor5_style', 'styles']);
+  if ($limit_allowed_html_tags && is_array($manually_editable_tags) || is_array($styles)) {
+    // When "Manually editable tags", "Style" and "limit allowed HTML tags" are
+    // all configured, the latter is dependent on the others. This dependent
     // value is typically updated via AJAX, but it's possible for "Manually
     // editable tags" to update without triggering the AJAX rebuild. That value
     // is recalculated here on save to ensure it happens even if the AJAX
     // rebuild doesn't happen.
-    $manually_editable_tags_restrictions = HTMLRestrictions::fromString(implode($manually_editable_tags));
+    $manually_editable_tags_restrictions = HTMLRestrictions::fromString(implode($manually_editable_tags ?? []));
+    $styles_restrictions = HTMLRestrictions::fromString(implode($styles ? array_column($styles, 'element') : []));
     $format = $form_state->get('ckeditor5_validated_pair')->getFilterFormat();
     $allowed_html = HTMLRestrictions::fromTextFormat($format);
-    $combined_tags_string = $manually_editable_tags_restrictions->merge($allowed_html)->toFilterHtmlAllowedTagsString();
+    $combined_tags_string = $allowed_html
+      ->merge($manually_editable_tags_restrictions)
+      ->merge($styles_restrictions)
+      ->toFilterHtmlAllowedTagsString();
     $form_state->setValue(['filters', 'filter_html', 'settings', 'allowed_html'], $combined_tags_string);
   }
 }

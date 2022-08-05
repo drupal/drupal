@@ -1,0 +1,1 @@
+!function(i){const t=i.vi=i.vi||{};t.dictionary=Object.assign(t.dictionary||{},{"Block styles":"Kiểu của khối","Multiple styles":"Nhiều kiểu",Styles:"Kiểu","Text styles":"Kiểu văn bản"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

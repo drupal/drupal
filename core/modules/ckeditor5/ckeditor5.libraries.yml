@@ -206,6 +206,17 @@ admin.sourceEditing:
     theme:
       css/source-editing.admin.css: { }
 
+admin.style:
+  js:
+    js/ckeditor5.style.admin.js: { }
+  css:
+    theme:
+      css/style.admin.css: { }
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.vertical-tabs
+
 admin.table:
   css:
     theme:

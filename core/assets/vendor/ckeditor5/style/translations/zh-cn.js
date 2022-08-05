@@ -1,0 +1,1 @@
+!function(t){const n=t["zh-cn"]=t["zh-cn"]||{};n.dictionary=Object.assign(n.dictionary||{},{"Block styles":"块级样式","Multiple styles":"多样式",Styles:"样式","Text styles":"文本样式"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

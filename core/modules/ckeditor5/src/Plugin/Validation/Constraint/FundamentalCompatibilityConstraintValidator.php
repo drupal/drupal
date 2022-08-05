@@ -6,6 +6,7 @@ namespace Drupal\ckeditor5\Plugin\Validation\Constraint;
 
 use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
+use Drupal\ckeditor5\Plugin\CKEditor5PluginElementsSubsetInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\editor\EditorInterface;
 use Drupal\filter\FilterFormatInterface;
@@ -214,32 +215,36 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
       foreach ($non_creatable_tags->toCKEditor5ElementsArray() as $non_creatable_tag) {
         // Find the plugin which has a non-creatable tag.
         $needle = HTMLRestrictions::fromString($non_creatable_tag);
-        $matching_plugins = array_filter($enabled_definitions, function (CKEditor5PluginDefinition $d) use ($needle) {
+        $matching_plugins = array_filter($enabled_definitions, function (CKEditor5PluginDefinition $d) use ($needle, $text_editor) {
           if (!$d->hasElements()) {
             return FALSE;
           }
-          $haystack = HTMLRestrictions::fromString(implode($d->getElements()));
-          return !$haystack->intersect($needle)->allowsNothing();
+          $haystack = new HTMLRestrictions($this->pluginManager->getProvidedElements([$d->id()], $text_editor, FALSE, FALSE));
+          return !$haystack->extractPlainTagsSubset()->intersect($needle)->allowsNothing();
         });
         assert(count($matching_plugins) === 1);
         $plugin_definition = reset($matching_plugins);
         assert($plugin_definition instanceof CKEditor5PluginDefinition);
 
         // Compute which attributes it would be able to create on this tag.
-        $matching_elements = array_filter($plugin_definition->getElements(), function (string $element) use ($needle) {
-          $haystack = HTMLRestrictions::fromString($element);
-          return !$haystack->intersect($needle)->allowsNothing();
-        });
-        $attributes_on_tag = HTMLRestrictions::fromString(implode($matching_elements));
+        $provided_elements = new HTMLRestrictions($this->pluginManager->getProvidedElements([$plugin_definition->id()], $text_editor, FALSE, FALSE));
+        $attributes_on_tag = $provided_elements->intersect(
+          new HTMLRestrictions(array_fill_keys(array_keys($needle->getAllowedElements()), TRUE))
+        );
 
         $violation = $this->context->buildViolation($constraint->nonCreatableTagMessage)
           ->setParameter('@non_creatable_tag', $non_creatable_tag)
           ->setParameter('%plugin', $plugin_definition->label())
           ->setParameter('@attributes_on_tag', implode(', ', $attributes_on_tag->toCKEditor5ElementsArray()));
 
+        // If this plugin has a configurable subset, associate the violation
+        // with the property path pointing to this plugin's settings form.
+        if (is_a($plugin_definition->getClass(), CKEditor5PluginElementsSubsetInterface::class, TRUE)) {
+          $violation->atPath(sprintf('settings.plugins.%s', $plugin_definition->id()));
+        }
         // If this plugin is associated with a toolbar item, associate the
         // violation with the property path pointing to the active toolbar item.
-        if ($plugin_definition->hasToolbarItems()) {
+        elseif ($plugin_definition->hasToolbarItems()) {
           $toolbar_items = $plugin_definition->getToolbarItems();
           $active_toolbar_items = array_intersect(
             $text_editor->getSettings()['toolbar']['items'],

@@ -1,0 +1,1 @@
+!function(t){const s=t.ko=t.ko||{};s.dictionary=Object.assign(s.dictionary||{},{"Block styles":"블록 스타일","Multiple styles":"다중 스타일",Styles:"스타일","Text styles":"텍스트 스타일"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

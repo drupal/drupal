@@ -975,25 +975,29 @@ PHP,
   }
 
   /**
-   * Tests detection of invalid CKEditor5PluginElementsSubsetInterface class.
+   * Tests detection of invalid CKEditor5PluginElementsSubsetInterface classes.
+   *
+   * @dataProvider providerProvidedElementsInvalidElementSubset
    */
-  public function testProvidedElementsInvalidElementSubset(): void {
+  public function testProvidedElementsInvalidElementSubset(array $configured_subset, string $expected_exception_message): void {
     $this->enableModules(['ckeditor5_plugin_elements_subset']);
 
-    // Configure the sneaky superset plugin to have a random tag as the subset.
+    // Configure the sneaky superset plugin.
     $sneaky_plugin_id = 'ckeditor5_plugin_elements_subset_sneakySuperset';
-    $random_tag_name = strtolower($this->randomMachineName());
-    $random_tag = "<$random_tag_name>";
     $text_editor = Editor::create([
       'format' => 'dummy',
       'editor' => 'ckeditor5',
       'settings' => [
         'plugins' => [
-          $sneaky_plugin_id => ['configured_subset' => [$random_tag]],
+          $sneaky_plugin_id => ['configured_subset' => $configured_subset],
         ],
       ],
       'image_upload' => [],
     ]);
+
+    // Invalid subsets are allowed on unsaved Text Editor config entities,
+    // because they may have invalid configuration.
+    $text_editor->enforceIsNew(FALSE);
 
     // No exception when getting all provided elements.
     $this->assertGreaterThan(0, count($this->manager->getProvidedElements()));
@@ -1005,8 +1009,33 @@ PHP,
     // editor config entity is passed: only then can a subset be generated based
     // on configuration.
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage("The \"ckeditor5_plugin_elements_subset_sneakySuperset\" CKEditor 5 plugin implements ::getElementsSubset() and did not return a subset, the following tags are absent from the plugin definition: \"$random_tag\".");
+    $this->expectExceptionMessage($expected_exception_message);
     $this->manager->getProvidedElements([$sneaky_plugin_id], $text_editor);
+  }
+
+  /**
+   * Data provider.
+   *
+   * @return array
+   *   Test scenarios.
+   */
+  public function providerProvidedElementsInvalidElementSubset(): array {
+    $random_tag_name = strtolower($this->randomMachineName());
+    $random_tag = "<$random_tag_name>";
+    return [
+      'superset: random tag not listed in the plugin definition' => [
+        [$random_tag],
+        "The \"ckeditor5_plugin_elements_subset_sneakySuperset\" CKEditor 5 plugin implements ::getElementsSubset() and did not return a subset, the following tags are absent from the plugin definition: \"$random_tag\".",
+      ],
+      'subset that omits the essential creatable tag' => [
+        ['<bar baz>'],
+        'The "ckeditor5_plugin_elements_subset_sneakySuperset" CKEditor 5 plugin implements ::getElementsSubset() and did return a subset ("<bar baz>") but the following tags can no longer be created: "<bar>".',
+      ],
+      'subset that tries to leverage the `<$any-html5-element>` wildcard tag but picks a concrete tag that the wildcard tag does not resolve into' => [
+        ['<drupal-media class="sensational">'],
+        'The "ckeditor5_plugin_elements_subset_sneakySuperset" CKEditor 5 plugin implements ::getElementsSubset() and did not return a subset, the following tags are absent from the plugin definition: "<drupal-media class="sensational">".',
+      ],
+    ];
   }
 
   /**

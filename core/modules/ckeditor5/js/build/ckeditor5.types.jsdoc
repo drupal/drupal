@@ -1943,6 +1943,54 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-style/src/style.js
+ *
+ * @typedef {module:style/style} module:style/style~Style
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-style/src/stylecommand.js
+ *
+ * @typedef {module:style/stylecommand} module:style/stylecommand~StyleCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-style/src/styleediting.js
+ *
+ * @typedef {module:style/styleediting} module:style/styleediting~StyleEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-style/src/styleui.js
+ *
+ * @typedef {module:style/styleui} module:style/styleui~StyleUI
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-style/src/ui/stylegridbuttonview.js
+ *
+ * @typedef {module:style/ui/stylegridbuttonview} module:style/ui/stylegridbuttonview~StyleGridButtonView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-style/src/ui/stylegridview.js
+ *
+ * @typedef {module:style/ui/stylegridview} module:style/ui/stylegridview~StyleGridView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-style/src/ui/stylegroupview.js
+ *
+ * @typedef {module:style/ui/stylegroupview} module:style/ui/stylegroupview~StyleGroupView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-style/src/ui/stylepanelview.js
+ *
+ * @typedef {module:style/ui/stylepanelview} module:style/ui/stylepanelview~StylePanelView
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-table/src/commands/insertcolumncommand.js
  *
  * @typedef {module:table/commands/insertcolumncommand} module:table/commands/insertcolumncommand~InsertColumnCommand
