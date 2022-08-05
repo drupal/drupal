@@ -62,6 +62,27 @@ ckeditor5_heading:
       - <h5>
       - <h6>
 
+ckeditor5_style:
+  ckeditor5:
+    plugins: [style.Style]
+  drupal:
+    label: Style
+    library: core/ckeditor5.style
+    admin_library: ckeditor5/admin.style
+    class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style
+    toolbar_items:
+      style:
+        label: Style
+    # This plugin is able to add any configured class on any tag that can be
+    # created by some other CKEditor 5 plugin. Hence it indicates it allows all
+    # classes on all tags. Its subset then restricts this to a concrete set of
+    # tags, and a concrete set of classes.
+    # @todo Update in https://www.drupal.org/project/drupal/issues/3280124
+    # @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style::getElementsSubset()
+    # @see \Drupal\ckeditor5\Plugin\Validation\Constraint\StyleSensibleElementConstraintValidator
+    elements:
+      - <$any-html5-element class>
+
 ckeditor5_arbitraryHtmlSupport:
   ckeditor5:
     plugins: [htmlSupport.GeneralHtmlSupport]

@@ -137,4 +137,14 @@ JS;
     $assert_session->assert((bool) preg_match($regex, $actual), $message);
   }
 
+  /**
+   * Checks that no real-time validation errors are present.
+   *
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   */
+  protected function assertNoRealtimeValidationErrors(): void {
+    $assert_session = $this->assertSession();
+    $this->assertSame('', $assert_session->elementExists('css', '[data-drupal-selector="ckeditor5-realtime-validation-messages-container"]')->getHtml());
+  }
+
 }

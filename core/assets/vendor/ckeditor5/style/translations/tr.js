@@ -1,0 +1,1 @@
+!function(t){const i=t.tr=t.tr||{};i.dictionary=Object.assign(i.dictionary||{},{"Block styles":"Blok stilleri","Multiple styles":"Birden fazla stil",Styles:"Stiller","Text styles":"Metin stilleri"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
