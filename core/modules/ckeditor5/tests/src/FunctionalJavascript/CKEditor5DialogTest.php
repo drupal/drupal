@@ -71,10 +71,6 @@ class CKEditor5DialogTest extends CKEditor5TestBase {
     // Then press the button to add a link.
     $this->pressEditorButton('Link');
 
-    // @todo Un-skip this test when
-    //   https://www.drupal.org/project/drupal/issues/3301631 is resolved.
-    $this->markTestSkipped('Test skipped due to regression in CKEditor 35.0.0.');
-
     $link_url = '/ckeditor5_test/dialog';
     $input = $assert_session->waitForElementVisible('css', '.ck-balloon-panel input.ck-input-text');
     // Make sure the input field can have focus and we can type into it.
