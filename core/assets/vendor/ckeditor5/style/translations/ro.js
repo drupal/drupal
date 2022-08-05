@@ -1,0 +1,1 @@
+!function(t){const i=t.ro=t.ro||{};i.dictionary=Object.assign(i.dictionary||{},{"Block styles":"Stiluri pentru blocuri","Multiple styles":"Stiluri multiple",Styles:"Stiluri","Text styles":"Stiluri pentru text"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

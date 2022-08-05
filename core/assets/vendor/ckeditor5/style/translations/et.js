@@ -1,0 +1,1 @@
+!function(i){const t=i.et=i.et||{};t.dictionary=Object.assign(t.dictionary||{},{"Block styles":"Ploki stiilid","Multiple styles":"Mitu stiili",Styles:"Stiilid","Text styles":"Teksti stiilid"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

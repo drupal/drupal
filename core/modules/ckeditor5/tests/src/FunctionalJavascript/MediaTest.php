@@ -1624,24 +1624,4 @@ JS;
     return $this->getSession()->evaluateScript($javascript);
   }
 
-  /**
-   * Selects text inside an element.
-   *
-   * @param string $selector
-   *   A CSS selector for the element which contents should be selected.
-   */
-  protected function selectTextInsideElement(string $selector): void {
-    $javascript = <<<JS
-(function() {
-  const el = document.querySelector("$selector");
-  const range = document.createRange();
-  range.selectNodeContents(el);
-  const sel = window.getSelection();
-  sel.removeAllRanges();
-  sel.addRange(range);
-})();
-JS;
-    $this->getSession()->evaluateScript($javascript);
-  }
-
 }

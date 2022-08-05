@@ -302,6 +302,19 @@ ckeditor5.codeBlock:
     - core/ckeditor5
     - core/ckeditor5.translations
 
+ckeditor5.style:
+  remote: https://github.com/ckeditor/ckeditor5
+  version: "35.0.1"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/ckeditor/ckeditor5/blob/v35.0.1/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/ckeditor5/style/style.js: { minified: true }
+  dependencies:
+    - core/ckeditor5
+    - core/ckeditor5.translations
+
 ckeditor5.translations:
   # No sensible version can be specified, since the translations may change at
   # any time.

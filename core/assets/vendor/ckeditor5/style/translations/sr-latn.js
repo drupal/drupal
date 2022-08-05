@@ -1,0 +1,1 @@
+!function(t){const i=t["sr-latn"]=t["sr-latn"]||{};i.dictionary=Object.assign(i.dictionary||{},{"Block styles":"Blok stilovi","Multiple styles":"Više stilova",Styles:"Stilovi","Text styles":"Stilovi teksta"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
