@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Asset\AttachedAssetsInterface;
+use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Applies #printed to an element to help test #pre_render.
@@ -250,7 +251,7 @@ function common_test_page_attachments_alter(array &$page) {
  *
  * @see \Drupal\KernelTests\Core\Asset\AttachedAssetsTest::testAlter()
  */
-function common_test_js_alter(&$javascript, AttachedAssetsInterface $assets) {
+function common_test_js_alter(&$javascript, AttachedAssetsInterface $assets, LanguageInterface $language) {
   // Attach alter.js above tableselect.js.
   $alterjs = \Drupal::service('extension.list.module')->getPath('common_test') . '/alter.js';
   if (array_key_exists($alterjs, $javascript) && array_key_exists('core/misc/tableselect.js', $javascript)) {

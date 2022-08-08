@@ -9,7 +9,7 @@ use Drupal\Core\File\FileSystemInterface;
 /**
  * Dumps a CSS or JavaScript asset.
  */
-class AssetDumper implements AssetDumperInterface {
+class AssetDumper implements AssetDumperUriInterface {
 
   /**
    * The file system service.
@@ -36,12 +36,19 @@ class AssetDumper implements AssetDumperInterface {
    * browsers to download new CSS when the CSS changes.
    */
   public function dump($data, $file_extension) {
+    $path = 'public://' . $file_extension;
     // Prefix filename to prevent blocking by firewalls which reject files
     // starting with "ad*".
     $filename = $file_extension . '_' . Crypt::hashBase64($data) . '.' . $file_extension;
-    // Create the css/ or js/ path within the files folder.
-    $path = 'public://' . $file_extension;
     $uri = $path . '/' . $filename;
+    return $this->dumpToUri($data, $file_extension, $uri);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function dumpToUri(string $data, string $file_extension, string $uri): string {
+    $path = 'public://' . $file_extension;
     // Create the CSS or JS file.
     $this->fileSystem->prepareDirectory($path, FileSystemInterface::CREATE_DIRECTORY);
     try {

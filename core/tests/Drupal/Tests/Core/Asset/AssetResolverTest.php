@@ -11,6 +11,7 @@ use Drupal\Core\Asset\AssetResolver;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Cache\MemoryBackend;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -69,6 +70,16 @@ class AssetResolverTest extends UnitTestCase {
   protected $cache;
 
   /**
+   * A mocked English language object.
+   */
+  protected LanguageInterface $english;
+
+  /**
+   * A mocked Japanese language object.
+   */
+  protected LanguageInterface $japanese;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -95,10 +106,12 @@ class AssetResolverTest extends UnitTestCase {
     $english->expects($this->any())
       ->method('getId')
       ->willReturn('en');
+    $this->english = $english;
     $japanese = $this->createMock('\Drupal\Core\Language\LanguageInterface');
     $japanese->expects($this->any())
       ->method('getId')
       ->willReturn('jp');
+    $this->japanese = $japanese;
     $this->languageManager = $this->createMock('\Drupal\Core\Language\LanguageManagerInterface');
     $this->languageManager->expects($this->any())
       ->method('getCurrentLanguage')
@@ -113,8 +126,8 @@ class AssetResolverTest extends UnitTestCase {
    * @dataProvider providerAttachedAssets
    */
   public function testGetCssAssets(AttachedAssetsInterface $assets_a, AttachedAssetsInterface $assets_b, $expected_cache_item_count) {
-    $this->assetResolver->getCssAssets($assets_a, FALSE);
-    $this->assetResolver->getCssAssets($assets_b, FALSE);
+    $this->assetResolver->getCssAssets($assets_a, FALSE, $this->english);
+    $this->assetResolver->getCssAssets($assets_b, FALSE, $this->english);
     $this->assertCount($expected_cache_item_count, $this->cache->getAllCids());
   }
 
@@ -123,12 +136,12 @@ class AssetResolverTest extends UnitTestCase {
    * @dataProvider providerAttachedAssets
    */
   public function testGetJsAssets(AttachedAssetsInterface $assets_a, AttachedAssetsInterface $assets_b, $expected_cache_item_count) {
-    $this->assetResolver->getJsAssets($assets_a, FALSE);
-    $this->assetResolver->getJsAssets($assets_b, FALSE);
+    $this->assetResolver->getJsAssets($assets_a, FALSE, $this->english);
+    $this->assetResolver->getJsAssets($assets_b, FALSE, $this->english);
     $this->assertCount($expected_cache_item_count, $this->cache->getAllCids());
 
-    $this->assetResolver->getJsAssets($assets_a, FALSE);
-    $this->assetResolver->getJsAssets($assets_b, FALSE);
+    $this->assetResolver->getJsAssets($assets_a, FALSE, $this->japanese);
+    $this->assetResolver->getJsAssets($assets_b, FALSE, $this->japanese);
     $this->assertCount($expected_cache_item_count * 2, $this->cache->getAllCids());
   }
 

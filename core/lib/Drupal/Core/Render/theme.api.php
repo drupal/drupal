@@ -824,10 +824,12 @@ function hook_element_plugin_alter(array &$definitions) {
  *   An array of all JavaScript being presented on the page.
  * @param \Drupal\Core\Asset\AttachedAssetsInterface $assets
  *   The assets attached to the current response.
+ * @param \Drupal\Core\Language\LanguageInterface $language
+ *   The language for the page request that the assets will be rendered for.
  *
  * @see \Drupal\Core\Asset\AssetResolver
  */
-function hook_js_alter(&$javascript, \Drupal\Core\Asset\AttachedAssetsInterface $assets) {
+function hook_js_alter(&$javascript, \Drupal\Core\Asset\AttachedAssetsInterface $assets, \Drupal\Core\Language\LanguageInterface $language) {
   // Swap out jQuery to use an updated version of the library.
   $javascript['core/assets/vendor/jquery/jquery.min.js']['data'] = \Drupal::service('extension.list.module')->getPath('jquery_update') . '/jquery.js';
 }
@@ -1000,10 +1002,12 @@ function hook_library_info_alter(&$libraries, $extension) {
  *   An array of all CSS items (files and inline CSS) being requested on the page.
  * @param \Drupal\Core\Asset\AttachedAssetsInterface $assets
  *   The assets attached to the current response.
+ * @param \Drupal\Core\Language\LanguageInterface $language
+ *   The language of the request that the assets will be rendered for.
  *
  * @see Drupal\Core\Asset\LibraryResolverInterface::getCssAssets()
  */
-function hook_css_alter(&$css, \Drupal\Core\Asset\AttachedAssetsInterface $assets) {
+function hook_css_alter(&$css, \Drupal\Core\Asset\AttachedAssetsInterface $assets, \Drupal\Core\Language\LanguageInterface $language) {
   // Remove defaults.css file.
   $file_path = \Drupal::service('extension.list.module')->getPath('system') . '/defaults.css';
   unset($css[$file_path]);

@@ -7,6 +7,7 @@ use Drupal\Core\Asset\AssetResolverInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\EnforcedResponseException;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\AttachmentsInterface;
 use Drupal\Core\Render\AttachmentsResponseProcessorInterface;
 use Drupal\Core\Render\HtmlResponse;
@@ -48,10 +49,12 @@ class BigPipeResponseAttachmentsProcessor extends HtmlResponseAttachmentsProcess
    *   The renderer.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
    */
-  public function __construct(AttachmentsResponseProcessorInterface $html_response_attachments_processor, AssetResolverInterface $asset_resolver, ConfigFactoryInterface $config_factory, AssetCollectionRendererInterface $css_collection_renderer, AssetCollectionRendererInterface $js_collection_renderer, RequestStack $request_stack, RendererInterface $renderer, ModuleHandlerInterface $module_handler) {
+  public function __construct(AttachmentsResponseProcessorInterface $html_response_attachments_processor, AssetResolverInterface $asset_resolver, ConfigFactoryInterface $config_factory, AssetCollectionRendererInterface $css_collection_renderer, AssetCollectionRendererInterface $js_collection_renderer, RequestStack $request_stack, RendererInterface $renderer, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager) {
     $this->htmlResponseAttachmentsProcessor = $html_response_attachments_processor;
-    parent::__construct($asset_resolver, $config_factory, $css_collection_renderer, $js_collection_renderer, $request_stack, $renderer, $module_handler);
+    parent::__construct($asset_resolver, $config_factory, $css_collection_renderer, $js_collection_renderer, $request_stack, $renderer, $module_handler, $language_manager);
   }
 
   /**

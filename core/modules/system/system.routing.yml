@@ -520,3 +520,6 @@ system.csrftoken:
     _controller: '\Drupal\system\Controller\CsrfTokenController::csrfToken'
   requirements:
     _access: 'TRUE'
+
+route_callbacks:
+  - '\Drupal\system\Routing\AssetRoutes::routes'

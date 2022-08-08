@@ -2,11 +2,18 @@
 
 namespace Drupal\Core\Asset;
 
+@trigger_error('The ' . __NAMESPACE__ . '\JsCollectionOptimizer is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Instead, use ' . __NAMESPACE__ . '\JsCollectionOptimizerLazy. See https://www.drupal.org/node/2888767', E_USER_DEPRECATED);
+
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\State\StateInterface;
 
 /**
  * Optimizes JavaScript assets.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead use
+ *   \Drupal\Core\Asset\JsCollectionOptimizerLazy.
+ *
+ * @see https://www.drupal.org/node/2888767
  */
 class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
 
@@ -81,7 +88,7 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
    * configurable period (@code system.performance.stale_file_threshold @endcode)
    * to ensure that files referenced by a cached page will still be available.
    */
-  public function optimize(array $js_assets) {
+  public function optimize(array $js_assets, array $libraries) {
     // Group the assets.
     $js_groups = $this->grouper->group($js_assets);
 

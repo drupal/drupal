@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\Asset;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Asset\AssetCollectionGrouperInterface;
 use Drupal\Core\Asset\AssetDumperInterface;
 use Drupal\Core\Asset\AssetOptimizerInterface;
@@ -31,8 +32,12 @@ class CssCollectionOptimizerUnitTest extends UnitTestCase {
    */
   protected $optimizer;
 
-  protected function setUp(): void {
-    parent::setUp();
+  /**
+   * Tests that CSS imports with strange letters do not destroy the CSS output.
+   *
+   * @group legacy
+   */
+  public function testCssImport() {
     $mock_grouper = $this->createMock(AssetCollectionGrouperInterface::class);
     $mock_grouper->method('group')
       ->willReturnCallback(function ($assets) {
@@ -57,13 +62,8 @@ class CssCollectionOptimizerUnitTest extends UnitTestCase {
       });
     $mock_state = $this->createMock(StateInterface::class);
     $mock_file_system = $this->createMock(FileSystemInterface::class);
-    $this->optimizer = new CssCollectionOptimizer($mock_grouper, $mock_optimizer, $mock_dumper, $mock_state, $mock_file_system);
-  }
-
-  /**
-   * Test that css imports with strange letters do not destroy the css output.
-   */
-  public function testCssImport() {
+    $mock_time = $this->createMock(TimeInterface::class);
+    $this->optimizer = new CssCollectionOptimizer($mock_grouper, $mock_optimizer, $mock_dumper, $mock_state, $mock_file_system, $mock_time);
     $this->optimizer->optimize([
       'core/modules/system/tests/modules/common_test/common_test_css_import.css' => [
         'type' => 'file',
@@ -75,7 +75,8 @@ class CssCollectionOptimizerUnitTest extends UnitTestCase {
         'data' => 'core/modules/system/tests/modules/common_test/common_test_css_import.css',
         'preprocess' => TRUE,
       ],
-    ]);
+    ],
+    []);
     self::assertEquals(file_get_contents(__DIR__ . '/css_test_files/css_input_with_import.css.optimized.aggregated.css'), $this->dumperData);
   }
 

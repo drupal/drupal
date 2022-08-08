@@ -490,7 +490,7 @@ function locale_cache_flush() {
 /**
  * Implements hook_js_alter().
  */
-function locale_js_alter(&$javascript, AttachedAssetsInterface $assets) {
+function locale_js_alter(&$javascript, AttachedAssetsInterface $assets, LanguageInterface $language) {
   // @todo Remove this in https://www.drupal.org/node/2421323.
   $files = [];
   foreach ($javascript as $item) {
@@ -506,7 +506,7 @@ function locale_js_alter(&$javascript, AttachedAssetsInterface $assets) {
   // Replace the placeholder file with the actual JS translation file.
   $placeholder_file = 'core/modules/locale/locale.translation.js';
   if (isset($javascript[$placeholder_file])) {
-    if ($translation_file = locale_js_translate($files)) {
+    if ($translation_file = locale_js_translate($files, $language)) {
       $js_translation_asset = &$javascript[$placeholder_file];
       $js_translation_asset['data'] = $translation_file;
       // @todo Remove this when https://www.drupal.org/node/1945262 lands.
@@ -530,13 +530,17 @@ function locale_js_alter(&$javascript, AttachedAssetsInterface $assets) {
  *
  * @param array $files
  *   An array of local file paths.
+ * @param \Drupal\Core\Language\LanguageInterface $language_interface
+ *   The interface language the files should be translated into.
  *
  * @return string|null
  *   The filepath to the translation file or NULL if no translation is
  *   applicable.
  */
-function locale_js_translate(array $files = []) {
-  $language_interface = \Drupal::languageManager()->getCurrentLanguage();
+function locale_js_translate(array $files = [], $language_interface = NULL) {
+  if (!isset($language_interface)) {
+    $language_interface = \Drupal::languageManager()->getCurrentLanguage();
+  }
 
   $dir = 'public://' . \Drupal::config('locale.settings')->get('javascript.directory');
   $parsed = \Drupal::state()->get('system.javascript_parsed', []);

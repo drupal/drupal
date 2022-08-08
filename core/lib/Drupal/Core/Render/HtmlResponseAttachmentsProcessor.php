@@ -9,6 +9,7 @@ use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\EnforcedResponseException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Component\Utility\Html;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -97,8 +98,10 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    *   The renderer.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
+   *   The language manager.
    */
-  public function __construct(AssetResolverInterface $asset_resolver, ConfigFactoryInterface $config_factory, AssetCollectionRendererInterface $css_collection_renderer, AssetCollectionRendererInterface $js_collection_renderer, RequestStack $request_stack, RendererInterface $renderer, ModuleHandlerInterface $module_handler) {
+  public function __construct(AssetResolverInterface $asset_resolver, ConfigFactoryInterface $config_factory, AssetCollectionRendererInterface $css_collection_renderer, AssetCollectionRendererInterface $js_collection_renderer, RequestStack $request_stack, RendererInterface $renderer, ModuleHandlerInterface $module_handler, protected LanguageManagerInterface $languageManager) {
     $this->assetResolver = $asset_resolver;
     $this->config = $config_factory->get('system.performance');
     $this->cssCollectionRenderer = $css_collection_renderer;
@@ -106,6 +109,10 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
     $this->requestStack = $request_stack;
     $this->renderer = $renderer;
     $this->moduleHandler = $module_handler;
+    if (!isset($languageManager)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $languageManager argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      $this->languageManager = \Drupal::languageManager();
+    }
   }
 
   /**
@@ -309,14 +316,14 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
     if (isset($placeholders['styles'])) {
       // Optimize CSS if necessary, but only during normal site operation.
       $optimize_css = !defined('MAINTENANCE_MODE') && $this->config->get('css.preprocess');
-      $variables['styles'] = $this->cssCollectionRenderer->render($this->assetResolver->getCssAssets($assets, $optimize_css));
+      $variables['styles'] = $this->cssCollectionRenderer->render($this->assetResolver->getCssAssets($assets, $optimize_css, $this->languageManager->getCurrentLanguage()));
     }
 
     // Print scripts - if any are present.
     if (isset($placeholders['scripts']) || isset($placeholders['scripts_bottom'])) {
       // Optimize JS if necessary, but only during normal site operation.
       $optimize_js = !defined('MAINTENANCE_MODE') && !\Drupal::state()->get('system.maintenance_mode') && $this->config->get('js.preprocess');
-      [$js_assets_header, $js_assets_footer] = $this->assetResolver->getJsAssets($assets, $optimize_js);
+      [$js_assets_header, $js_assets_footer] = $this->assetResolver->getJsAssets($assets, $optimize_js, $this->languageManager->getCurrentLanguage());
       $variables['scripts'] = $this->jsCollectionRenderer->render($js_assets_header);
       $variables['scripts_bottom'] = $this->jsCollectionRenderer->render($js_assets_footer);
     }

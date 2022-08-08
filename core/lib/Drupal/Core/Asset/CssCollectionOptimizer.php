@@ -2,11 +2,18 @@
 
 namespace Drupal\Core\Asset;
 
+@trigger_error('The ' . __NAMESPACE__ . '\CssCollectionOptimizer is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead, use ' . __NAMESPACE__ . '\CssCollectionOptimizerLazy. See https://www.drupal.org/node/2888767', E_USER_DEPRECATED);
+
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\State\StateInterface;
 
 /**
  * Optimizes CSS assets.
+ *
+ *  @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead, use
+ *    \Drupal\Core\Asset\CssCollectionOptimizerLazy.
+ *
+ * @see https://www.drupal.org/node/2888767
  */
 class CssCollectionOptimizer implements AssetCollectionOptimizerInterface {
 
@@ -81,7 +88,7 @@ class CssCollectionOptimizer implements AssetCollectionOptimizerInterface {
    * configurable period (@code system.performance.stale_file_threshold @endcode)
    * to ensure that files referenced by a cached page will still be available.
    */
-  public function optimize(array $css_assets) {
+  public function optimize(array $css_assets, array $libraries) {
     // Group the assets.
     $css_groups = $this->grouper->group($css_assets);
 

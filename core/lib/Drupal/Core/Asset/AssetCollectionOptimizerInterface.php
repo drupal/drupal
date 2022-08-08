@@ -12,11 +12,13 @@ interface AssetCollectionOptimizerInterface {
    *
    * @param array $assets
    *   An asset collection.
+   * @param array $libraries
+   *   An array of library names.
    *
    * @return array
    *   An optimized asset collection.
    */
-  public function optimize(array $assets);
+  public function optimize(array $assets, array $libraries);
 
   /**
    * Returns all optimized asset collections assets.
