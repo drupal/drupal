@@ -1180,8 +1180,8 @@ function hook_page_bottom(array &$page_bottom) {
  *     variables are set.
  *   - type: (automatically derived) Where the theme hook is defined:
  *     'module', 'theme_engine', or 'theme'.
- *   - theme path: (automatically derived) The directory path of the theme or
- *     module, so that it doesn't need to be looked up.
+ *   - theme path: The directory path of the theme or module. If not defined,
+ *     it is determined during the registry process.
  *
  * @see themeable
  * @see hook_theme_registry_alter()
