@@ -14,7 +14,7 @@ use Drupal\Core\Site\Settings;
  * Used for site installs, updates and when the site is in maintenance mode.
  * It also applies when the database is unavailable or bootstrap was not
  * complete. Seven is always used for the initial install and update
- * operations. In other cases, Bartik is used, but this can be overridden by
+ * operations. In other cases, Claro is used, but this can be overridden by
  * setting a "maintenance_theme" key in the $settings variable in settings.php.
  */
 function _drupal_maintenance_theme() {
@@ -53,8 +53,8 @@ function _drupal_maintenance_theme() {
     }
     if (!$custom_theme) {
       // We have been unable to identify the configured theme, so fall back to
-      // a safe default. Bartik is reasonably user friendly and fairly generic.
-      $custom_theme = 'bartik';
+      // a safe default. Claro is reasonably user friendly and fairly generic.
+      $custom_theme = 'claro';
     }
   }
 
