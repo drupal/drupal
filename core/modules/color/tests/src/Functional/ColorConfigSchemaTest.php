@@ -3,7 +3,6 @@
 namespace Drupal\Tests\color\Functional;
 
 use Drupal\Tests\BrowserTestBase;
-use Drupal\user\UserInterface;
 
 /**
  * Ensures the color config schema is correct.
@@ -30,7 +29,7 @@ class ColorConfigSchemaTest extends BrowserTestBase {
    *
    * @var \Drupal\user\UserInterface
    */
-  protected UserInterface $adminUser;
+  protected $adminUser;
 
   /**
    * {@inheritdoc}

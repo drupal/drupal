@@ -3,7 +3,6 @@
 namespace Drupal\Tests\color\Functional;
 
 use Drupal\Tests\BrowserTestBase;
-use Drupal\user\UserInterface;
 
 /**
  * Modify theme colors and make sure the changes are reflected on the frontend.
@@ -30,7 +29,7 @@ class ColorTest extends BrowserTestBase {
    *
    * @var \Drupal\user\UserInterface
    */
-  protected UserInterface $bigUser;
+  protected $bigUser;
 
   /**
    * {@inheritdoc}
