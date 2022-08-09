@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\layout_builder\Functional;
 
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -35,6 +36,10 @@ class LayoutBuilderThemeSuggestionsTest extends BrowserTestBase {
       'type' => 'bundle_with_section_field',
       'name' => 'Bundle with section field',
     ]);
+    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
     $this->createNode([
       'type' => 'bundle_with_section_field',
       'title' => 'A node title',
@@ -47,11 +52,7 @@ class LayoutBuilderThemeSuggestionsTest extends BrowserTestBase {
 
     $this->drupalLogin($this->drupalCreateUser([
       'configure any layout',
-      'administer node display',
     ]));
-
-    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
-    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
   }
 
   /**
@@ -61,7 +62,7 @@ class LayoutBuilderThemeSuggestionsTest extends BrowserTestBase {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
-    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default/layout');
+    $this->drupalGet('node/1/layout');
     $page->clickLink('Add section');
     $assert_session->pageTextContains('layout_builder_theme_suggestions_test_preprocess_item_list__layouts');
   }
