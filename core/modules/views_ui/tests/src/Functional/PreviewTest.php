@@ -39,7 +39,15 @@ class PreviewTest extends UITestBase {
     ]);
     $this->assertSession()->elementsCount('xpath', $selector, 1);
 
-    $this->submitForm($edit = ['view_args' => '100'], 'Update preview');
+    $this->submitForm(['view_args' => '100'], 'Update preview');
+
+    // Test that area text and exposed filters are present and rendered.
+    $this->assertSession()->fieldExists('id');
+    $this->assertSession()->pageTextContains('Test header text');
+    $this->assertSession()->pageTextContains('Test footer text');
+    $this->assertSession()->pageTextContains('Test empty text');
+
+    $this->submitForm(['view_args' => '0'], 'Update preview');
 
     // Test that area text and exposed filters are present and rendered.
     $this->assertSession()->fieldExists('id');
