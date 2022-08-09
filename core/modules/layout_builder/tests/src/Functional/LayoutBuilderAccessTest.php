@@ -18,6 +18,7 @@ class LayoutBuilderAccessTest extends BrowserTestBase {
   protected static $modules = [
     'layout_builder',
     'block_test',
+    'field_ui',
     'node',
     'user',
   ];

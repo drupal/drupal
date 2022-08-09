@@ -27,6 +27,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
   protected static $modules = [
     'block',
     'block_content',
+    'field_ui',
     'filter',
     'filter_test',
     'layout_builder',

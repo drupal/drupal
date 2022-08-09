@@ -3,6 +3,7 @@
 namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 
 /**
@@ -37,11 +38,13 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
     parent::setUp();
 
     $this->createContentType(['type' => 'bundle_for_this_particular_test']);
+    LayoutBuilderEntityViewDisplay::load('node.bundle_for_this_particular_test.default')
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
 
     $this->drupalLogin($this->drupalCreateUser([
       'configure any layout',
-      'administer node display',
-      'administer node fields',
       'access contextual links',
     ]));
   }
@@ -56,12 +59,6 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
     $links_field_placeholder_label = '"Links" field';
     $body_field_placeholder_label = '"Body" field';
     $content_preview_body_text = 'I should only be visible if content preview is enabled.';
-
-    $this->drupalGet('admin/structure/types/manage/bundle_for_this_particular_test/display/default');
-    $this->submitForm([
-      'layout[enabled]' => TRUE,
-      'layout[allow_custom]' => TRUE,
-    ], 'Save');
 
     $this->createNode([
       'type' => 'bundle_for_this_particular_test',
