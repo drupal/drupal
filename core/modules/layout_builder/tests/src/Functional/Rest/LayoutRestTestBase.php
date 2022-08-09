@@ -5,6 +5,7 @@ namespace Drupal\Tests\layout_builder\Functional\Rest;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Url;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use Drupal\Tests\rest\Functional\ResourceTestBase;
 use GuzzleHttp\RequestOptions;
@@ -49,24 +50,18 @@ abstract class LayoutRestTestBase extends ResourceTestBase {
     $assert_session = $this->assertSession();
 
     $this->createContentType(['type' => 'bundle_with_section_field']);
+    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
 
     $this->drupalLogin($this->drupalCreateUser([
       'configure any layout',
-      'administer node display',
-      'administer display modes',
       'bypass node access',
       'create bundle_with_section_field content',
       'edit any bundle_with_section_field content',
     ]));
     $page = $this->getSession()->getPage();
-    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field/display';
-
-    // Enable Layout Builder for the default view modes, and overrides.
-    $this->drupalGet("$field_ui_prefix/default");
-    $page->checkField('layout[enabled]');
-    $page->pressButton('Save');
-    $page->checkField('layout[allow_custom]');
-    $page->pressButton('Save');
 
     // Create a node.
     $this->node = $this->createNode([

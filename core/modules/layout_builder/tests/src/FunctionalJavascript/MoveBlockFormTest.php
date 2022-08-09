@@ -3,6 +3,7 @@
 namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 
 /**
@@ -13,13 +14,6 @@ use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 class MoveBlockFormTest extends WebDriverTestBase {
 
   use ContextualLinkClickTrait;
-
-  /**
-   * Path prefix for the field UI for the test bundle.
-   *
-   * @var string
-   */
-  const FIELD_UI_PREFIX = 'admin/structure/types/manage/bundle_with_section_field';
 
   /**
    * {@inheritdoc}
@@ -44,21 +38,25 @@ class MoveBlockFormTest extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
+    // @todo The Layout Builder UI relies on local tasks; fix in
+    //   https://www.drupal.org/project/drupal/issues/2917777.
+    $this->drupalPlaceBlock('local_tasks_block');
+
     $this->createContentType(['type' => 'bundle_with_section_field']);
+    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
+    $this->createNode([
+      'type' => 'bundle_with_section_field',
+    ]);
 
     $this->drupalLogin($this->drupalCreateUser([
       'configure any layout',
-      'administer node display',
-      'administer node fields',
       'access contextual links',
     ]));
 
-    // Enable layout builder.
-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
-    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
-    $page->clickLink('Manage layout');
-    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
-
+    $this->drupalGet('node/1/layout');
     $expected_block_order = [
       '.block-extra-field-blocknodebundle-with-section-fieldlinks',
       '.block-field-blocknodebundle-with-section-fieldbody',
@@ -109,7 +107,7 @@ class MoveBlockFormTest extends WebDriverTestBase {
     ];
     $this->assertRegionBlocksOrder(1, 'content', $expected_block_order);
     $page->pressButton('Save layout');
-    $page->clickLink('Manage layout');
+    $page->clickLink('Layout');
     $this->assertRegionBlocksOrder(1, 'content', $expected_block_order);
 
     // Move the body block into the first region above existing block.
@@ -128,7 +126,7 @@ class MoveBlockFormTest extends WebDriverTestBase {
     // Ensure the body block is no longer in the content region.
     $this->assertRegionBlocksOrder(1, 'content', ['.block-extra-field-blocknodebundle-with-section-fieldlinks']);
     $page->pressButton('Save layout');
-    $page->clickLink('Manage layout');
+    $page->clickLink('Layout');
     $this->assertRegionBlocksOrder(0, 'first', $expected_block_order);
 
     // Move into the second region that has no existing blocks.

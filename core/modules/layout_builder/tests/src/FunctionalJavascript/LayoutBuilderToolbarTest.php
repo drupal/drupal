@@ -17,6 +17,7 @@ class LayoutBuilderToolbarTest extends WebDriverTestBase {
   protected static $modules = [
     'block',
     'node',
+    'field_ui',
     'layout_builder',
     'node',
     'toolbar',

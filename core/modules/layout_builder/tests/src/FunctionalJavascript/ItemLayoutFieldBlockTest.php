@@ -3,6 +3,7 @@
 namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 
 /**
  * Field blocks tests for the override layout.
@@ -32,12 +33,14 @@ class ItemLayoutFieldBlockTest extends WebDriverTestBase {
 
     $this->drupalLogin($this->drupalCreateUser([
       'configure any layout',
-      'administer node display',
-      'administer node fields',
     ]));
 
     // We need more then one content type for this test.
     $this->createContentType(['type' => 'bundle_with_layout_overrides']);
+    LayoutBuilderEntityViewDisplay::load('node.bundle_with_layout_overrides.default')
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
     $this->createContentType(['type' => 'filler_bundle']);
   }
 
@@ -47,12 +50,6 @@ class ItemLayoutFieldBlockTest extends WebDriverTestBase {
   public function testAddAjaxBlock() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
-
-    // Allow overrides for the layout.
-    $this->drupalGet('admin/structure/types/manage/bundle_with_layout_overrides/display/default');
-    $page->checkField('layout[enabled]');
-    $page->checkField('layout[allow_custom]');
-    $page->pressButton('Save');
 
     // Start by creating a node of type with layout overrides.
     $node = $this->createNode([

@@ -19,6 +19,7 @@ class LayoutBuilderTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'field_ui',
     'views',
     'layout_builder',
     'layout_builder_views_test',
@@ -109,6 +110,30 @@ class LayoutBuilderTest extends BrowserTestBase {
     $page = $this->getSession()->getPage();
 
     $this->drupalLogin($this->drupalCreateUser(['configure any layout']));
+
+    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
+
+    $this->drupalGet('node/1');
+    $page->clickLink('Layout');
+    $assert_session->elementTextContains('css', '.layout-builder__message.layout-builder__message--overrides', 'You are editing the layout for this Bundle with section field content item.');
+    $assert_session->linkNotExists('Edit the template for all Bundle with section field content items instead.');
+  }
+
+  /**
+   * Tests Layout Builder overrides without Field UI installed.
+   */
+  public function testOverridesWithoutFieldUi() {
+    $this->container->get('module_installer')->uninstall(['field_ui']);
+
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    // @todo In https://www.drupal.org/node/540008 switch this to logging in as
+    //   a user with the 'configure any layout' permission.
+    $this->drupalLogin($this->rootUser);
 
     LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
       ->enableLayoutBuilder()

@@ -24,6 +24,7 @@ class SevenLayoutBuilderTest extends BrowserTestBase {
     'layout_builder',
     'layout_builder_views_test',
     'layout_test',
+    'field_ui',
     'block',
     'block_test',
     'node',

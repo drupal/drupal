@@ -3,6 +3,7 @@
 namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 
 /**
  * Ajax blocks tests.
@@ -33,14 +34,19 @@ class AjaxBlockTest extends WebDriverTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $user = $this->drupalCreateUser([
+
+    // @todo The Layout Builder UI relies on local tasks; fix in
+    //   https://www.drupal.org/project/drupal/issues/2917777.
+    $this->drupalPlaceBlock('local_tasks_block');
+
+    $this->drupalLogin($this->drupalCreateUser([
       'configure any layout',
-      'administer node display',
-      'administer node fields',
-    ]);
-    $user->save();
-    $this->drupalLogin($user);
+    ]));
     $this->createContentType(['type' => 'bundle_with_section_field']);
+    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
   }
 
   /**
@@ -49,8 +55,9 @@ class AjaxBlockTest extends WebDriverTestBase {
   public function testAddAjaxBlock() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
+
     // Start by creating a node.
-    $node = $this->createNode([
+    $this->createNode([
       'type' => 'bundle_with_section_field',
       'body' => [
         [
@@ -58,18 +65,13 @@ class AjaxBlockTest extends WebDriverTestBase {
         ],
       ],
     ]);
-    $node->save();
+
     $this->drupalGet('node/1');
     $assert_session->pageTextContains('The node body');
     $assert_session->pageTextNotContains('Every word is like an unnecessary stain on silence and nothingness.');
-    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
 
     // From the manage display page, go to manage the layout.
-    $this->drupalGet("{$field_ui_prefix}/display/default");
-    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
-    $assert_session->linkExists('Manage layout');
-    $this->clickLink('Manage layout');
-    $assert_session->addressEquals("$field_ui_prefix/display/default/layout");
+    $this->clickLink('Layout');
     // The body field is present.
     $assert_session->elementExists('css', '.field--name-body');
 
