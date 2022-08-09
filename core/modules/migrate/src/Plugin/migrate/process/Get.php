@@ -88,7 +88,8 @@ use Drupal\migrate\Row;
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
  *
  * @MigrateProcessPlugin(
- *   id = "get"
+ *   id = "get",
+ *   handle_multiples = TRUE
  * )
  */
 class Get extends ProcessPluginBase {
