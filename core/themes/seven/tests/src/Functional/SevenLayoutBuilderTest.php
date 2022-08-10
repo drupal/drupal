@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\FunctionalTests\Theme;
+namespace Drupal\Tests\seven\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 
