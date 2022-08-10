@@ -156,10 +156,10 @@ class SettingsTrayTestBase extends OffCanvasTestBase {
    * {@inheritdoc}
    */
   protected function getTestThemes() {
-    // Remove 'seven' theme. Settings Tray "Edit Mode" will not work with
-    // 'seven' because it removes all contextual links.
+    // Remove 'claro' theme. Settings Tray "Edit Mode" will not work with this
+    // theme because it removes all contextual links.
     return array_filter(parent::getTestThemes(), function ($theme) {
-      return $theme !== 'seven';
+      return ($theme !== 'claro');
     });
   }
 

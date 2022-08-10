@@ -46,7 +46,7 @@ class ThemeSettingsTest extends MigrateSqlSourceTestBase {
 
     $tests[0]['source_data']['variable'] = [
       [
-        'name' => 'theme_bartik_settings',
+        'name' => 'theme_olivero_settings',
         'value' => serialize($value),
       ],
     ];
@@ -54,7 +54,7 @@ class ThemeSettingsTest extends MigrateSqlSourceTestBase {
     // The expected results are nearly identical to the source data.
     $tests[0]['expected_data'] = [
       [
-        'name' => 'theme_bartik_settings',
+        'name' => 'theme_olivero_settings',
         'value' => $value,
       ],
     ];

@@ -286,11 +286,11 @@ class ThemeTest extends BrowserTestBase {
    * Tests the administration theme functionality.
    */
   public function testAdministrationTheme() {
-    $this->container->get('theme_installer')->install(['seven']);
+    $this->container->get('theme_installer')->install(['claro']);
 
     // Install an administration theme and show it on the node admin pages.
     $edit = [
-      'admin_theme' => 'seven',
+      'admin_theme' => 'claro',
       'use_admin_theme' => TRUE,
     ];
     $this->drupalGet('admin/appearance');
@@ -307,7 +307,7 @@ class ThemeTest extends BrowserTestBase {
 
     // Check that the administration theme is used on an administration page.
     $this->drupalGet('admin/config');
-    $this->assertSession()->responseContains('core/themes/seven');
+    $this->assertSession()->responseContains('core/themes/claro');
 
     // Check that the site default theme used on node page.
     $this->drupalGet('node/' . $this->node->id());
@@ -315,11 +315,11 @@ class ThemeTest extends BrowserTestBase {
 
     // Check that the administration theme is used on the add content page.
     $this->drupalGet('node/add');
-    $this->assertSession()->responseContains('core/themes/seven');
+    $this->assertSession()->responseContains('core/themes/claro');
 
     // Check that the administration theme is used on the edit content page.
     $this->drupalGet('node/' . $this->node->id() . '/edit');
-    $this->assertSession()->responseContains('core/themes/seven');
+    $this->assertSession()->responseContains('core/themes/claro');
 
     // Disable the admin theme on the node admin pages.
     $edit = [
@@ -334,7 +334,7 @@ class ThemeTest extends BrowserTestBase {
 
     // Check that the administration theme is used on an administration page.
     $this->drupalGet('admin/config');
-    $this->assertSession()->responseContains('core/themes/seven');
+    $this->assertSession()->responseContains('core/themes/claro');
 
     // Ensure that the admin theme is also visible on the 403 page.
     $normal_user = $this->drupalCreateUser(['view the administration theme']);
@@ -342,7 +342,7 @@ class ThemeTest extends BrowserTestBase {
     // Check that the administration theme is used on an administration page.
     $this->drupalGet('admin/config');
     $this->assertSession()->statusCodeEquals(403);
-    $this->assertSession()->responseContains('core/themes/seven');
+    $this->assertSession()->responseContains('core/themes/claro');
     $this->drupalLogin($this->adminUser);
 
     // Check that the site default theme used on the add content page.
@@ -421,25 +421,24 @@ class ThemeTest extends BrowserTestBase {
    * Tests uninstalling of themes works.
    */
   public function testUninstallingThemes() {
-    // Install Olivero and set it as the default theme.
+    // Install olivero.
     \Drupal::service('theme_installer')->install(['olivero']);
-    // Set up seven as the admin theme.
-    \Drupal::service('theme_installer')->install(['seven']);
+    // Set up claro as the admin theme.
+    \Drupal::service('theme_installer')->install(['claro']);
     $edit = [
-      'admin_theme' => 'seven',
+      'admin_theme' => 'claro',
       'use_admin_theme' => TRUE,
     ];
     $this->drupalGet('admin/appearance');
     $this->submitForm($edit, 'Save configuration');
-    $this->drupalGet('admin/appearance');
-    $this->clickLink('Set as default');
-
-    // Check that seven cannot be uninstalled as it is the admin theme.
-    $this->assertSession()->responseNotContains('Uninstall Seven theme');
+    // Set olivero as the default theme.
+    $this->cssSelect('a[title="Set Olivero as default theme"]')[0]->click();
+    // Check that claro cannot be uninstalled as it is the admin theme.
+    $this->assertSession()->responseNotContains('Uninstall claro theme');
     // Check that olivero cannot be uninstalled as it is the default theme.
     $this->assertSession()->responseNotContains('Uninstall Olivero theme');
     // Check that the classy theme cannot be uninstalled as it is a base theme
-    // of seven and olivero.
+    // of claro and olivero.
     $this->assertSession()->responseNotContains('Uninstall Classy theme');
 
     // Install Stark and set it as the default theme.
@@ -452,8 +451,8 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalGet('admin/appearance');
     $this->submitForm($edit, 'Save configuration');
 
-    // Check that seven can be uninstalled now.
-    $this->assertSession()->responseContains('Uninstall Seven theme');
+    // Check that claro can be uninstalled now.
+    $this->assertSession()->responseContains('Uninstall claro theme');
     // Check that the classy theme still cannot be uninstalled as it is a
     // base theme of olivero.
     $this->assertSession()->responseNotContains('Uninstall Classy theme');
@@ -468,12 +467,11 @@ class ThemeTest extends BrowserTestBase {
     // base themes have been.
     $this->assertSession()->responseNotContains('Uninstall Classy theme');
 
-    // Uninstall each of the three themes starting with Olivero.
-    $this->clickLink('Uninstall');
+    // Uninstall each of the two themes starting with Olivero.
+    $this->cssSelect('a[title="Uninstall Olivero theme"]')[0]->click();
     $this->assertSession()->responseContains('The <em class="placeholder">Olivero</em> theme has been uninstalled');
-    // Seven is the second in the list.
-    $this->clickLink('Uninstall');
-    $this->assertSession()->responseContains('The <em class="placeholder">Seven</em> theme has been uninstalled');
+    $this->cssSelect('a[title="Uninstall Claro theme"]')[0]->click();
+    $this->assertSession()->responseContains('The <em class="placeholder">Claro</em> theme has been uninstalled');
 
     // Check that the classy theme still can't be uninstalled as it is hidden.
     $this->assertSession()->responseNotContains('Uninstall Classy theme');

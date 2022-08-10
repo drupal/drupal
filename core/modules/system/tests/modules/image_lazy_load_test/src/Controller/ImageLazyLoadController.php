@@ -18,7 +18,7 @@ class ImageLazyLoadController extends ControllerBase {
   public function renderImage() {
     $images['with-dimensions'] = [
       '#theme' => 'image',
-      '#uri' => '/core/themes/bartik/logo.svg',
+      '#uri' => '/core/themes/olivero/logo.svg',
       '#alt' => 'Image lazy load testing image',
       '#prefix' => '<div id="with-dimensions">',
       '#suffix' => '</div>',
@@ -28,7 +28,7 @@ class ImageLazyLoadController extends ControllerBase {
 
     $images['without-dimensions'] = [
       '#theme' => 'image',
-      '#uri' => '/core/themes/bartik/logo.svg',
+      '#uri' => '/core/themes/olivero/logo.svg',
       '#alt' => 'Image lazy load testing image without dimensions',
       '#prefix' => '<div id="without-dimensions">',
       '#suffix' => '</div>',
@@ -36,7 +36,7 @@ class ImageLazyLoadController extends ControllerBase {
 
     $images['override-loading-attribute'] = [
       '#theme' => 'image',
-      '#uri' => '/core/themes/bartik/logo.svg',
+      '#uri' => '/core/themes/olivero/logo.svg',
       '#alt' => 'Image lazy load test loading attribute can be overridden',
       '#prefix' => '<div id="override-loading-attribute">',
       '#suffix' => '</div>',
