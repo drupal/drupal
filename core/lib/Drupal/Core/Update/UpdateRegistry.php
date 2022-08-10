@@ -96,7 +96,7 @@ class UpdateRegistry implements EventSubscriberInterface {
    *   A list of post-update functions that have been removed.
    */
   public function getRemovedPostUpdates($extension) {
-    $this->scanExtensionsAndLoadUpdateFiles();
+    $this->scanExtensionsAndLoadUpdateFiles($extension);
     $function = "{$extension}_removed_post_updates";
     if (function_exists($function)) {
       return $function();
@@ -246,7 +246,7 @@ class UpdateRegistry implements EventSubscriberInterface {
    *   A list of update functions.
    */
   public function getUpdateFunctions($extension_name) {
-    $this->scanExtensionsAndLoadUpdateFiles();
+    $this->scanExtensionsAndLoadUpdateFiles($extension_name);
     $all_functions = $this->getAvailableUpdateFunctions();
 
     return array_filter($all_functions, function ($function_name) use ($extension_name) {
@@ -276,14 +276,23 @@ class UpdateRegistry implements EventSubscriberInterface {
 
   /**
    * Scans all module, theme, and profile extensions and load the update files.
+   *
+   * @param string|null $extension
+   *   (optional) Limits the extension update files loaded to the provided
+   *   extension.
    */
-  protected function scanExtensionsAndLoadUpdateFiles() {
+  protected function scanExtensionsAndLoadUpdateFiles(string $extension = NULL) {
     // Scan for extensions.
-    $extension_discovery = new ExtensionDiscovery($this->root, FALSE, [], $this->sitePath);
+    $extension_discovery = new ExtensionDiscovery($this->root, TRUE, [], $this->sitePath);
     $module_extensions = $extension_discovery->scan('module');
     $theme_extensions = $this->includeThemes() ? $extension_discovery->scan('theme') : [];
     $profile_extensions = $extension_discovery->scan('profile');
     $extensions = array_merge($module_extensions, $theme_extensions, $profile_extensions);
+
+    // Limit to a single extension.
+    if ($extension) {
+      $extensions = array_intersect_key($extensions, [$extension => TRUE]);
+    }
 
     $this->loadUpdateFiles($extensions);
   }
