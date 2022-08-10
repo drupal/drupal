@@ -84,9 +84,6 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
       }
     }
 
-    // Make sure the translated slogan appears.
-    $this->assertSession()->pageTextContains('drupal Spanish');
-
     // Make sure the custom block appears.
     $this->drupalGet('<front>');
     // Block title.
@@ -404,8 +401,8 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
 
     // Make sure our themes are still enabled.
     $expected_enabled_themes = [
-      'bartik',
-      'seven',
+      'olivero',
+      'claro',
       'stark',
     ];
     foreach ($expected_enabled_themes as $theme) {
