@@ -8,7 +8,7 @@
     "node": ">= 16.0"
   },
   "scripts": {
-    "build": "yarn build:css & yarn build:js & yarn build:ckeditor5",
+    "build": "yarn build:css & yarn build:js & yarn build:ckeditor5 & yarn vendor-update",
     "watch": "yarn watch:css & yarn watch:js & yarn watch:ckeditor5",
     "build:css": "node ./scripts/css/postcss-build.js",
     "watch:css": "node ./scripts/css/postcss-watch.js",
