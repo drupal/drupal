@@ -210,6 +210,9 @@
 .ckeditor-buttons li a:active,
 .ckeditor-multiple-buttons li a:focus {
   z-index: 11; /* Ensure focused buttons show their outline on all sides. */
+  outline: 1px dotted #212121;
+  outline: 5px auto Highlight;
+  outline: 5px auto -webkit-focus-ring-color;
 }
 .ckeditor-buttons li:first-child a {
   border-top-left-radius: 2px; /* LTR */
