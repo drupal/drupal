@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\FunctionalTests\Theme;
+namespace Drupal\Tests\bartik\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 
