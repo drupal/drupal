@@ -57,15 +57,13 @@ class ClaroTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that the Claro theme can be uninstalled, despite being experimental.
-   *
-   * @todo Remove in https://www.drupal.org/project/drupal/issues/3066007
+   * Tests that the Claro theme can be uninstalled.
    */
   public function testIsUninstallable() {
     $this->drupalLogin($this->drupalCreateUser(['access administration pages', 'administer themes']));
 
     $this->drupalGet('admin/appearance');
-    $this->cssSelect('a[title="Install Seven as default theme"]')[0]->click();
+    $this->cssSelect('a[title="Install <strong>Test theme</strong> as default theme"]')[0]->click();
     $this->cssSelect('a[title="Uninstall Claro theme"]')[0]->click();
     $this->assertSession()->pageTextContains('The Claro theme has been uninstalled.');
   }
