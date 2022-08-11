@@ -82,7 +82,7 @@ class Y2038TimestampUpdateTest extends UpdatePathTestBase {
     $this->databaseDumpFiles = [
       // Start with a standard install of Drupal 9.3.0 with the following
       // enabled modules: forum, language, locale, statistics and tracker.
-      DRUPAL_ROOT . '/core/modules/system/tests/fixtures/update/drupal-9.3.0.filled.standard.php.gz',
+      DRUPAL_ROOT . '/core/modules/system/tests/fixtures/update/drupal-9.4.0.filled.standard.php.gz',
       DRUPAL_ROOT . '/core/modules/system/tests/fixtures/update/Y2038-timestamp.php',
     ];
   }

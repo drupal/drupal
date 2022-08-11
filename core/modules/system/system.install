@@ -1377,7 +1377,7 @@ function system_requirements($phase) {
         'title' => t('The version of Drupal you are trying to update from is too old'),
         'description' => t('Updating to Drupal @current_major is only supported from Drupal version @required_min_version or higher. If you are trying to update from an older version, first update to the latest version of Drupal @previous_major. (<a href=":url">Drupal upgrade guide</a>)', [
           '@current_major' => 10,
-          '@required_min_version' => '9.3.0',
+          '@required_min_version' => '9.4.0',
           '@previous_major' => 9,
           ':url' => 'https://www.drupal.org/docs/upgrading-drupal/drupal-8-and-higher',
         ]),
