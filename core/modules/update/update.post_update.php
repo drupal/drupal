@@ -6,11 +6,10 @@
  */
 
 /**
- * Add 'view update notifications' to roles with 'administer site configuration'.
+ * Implements hook_removed_post_updates().
  */
-function update_post_update_add_view_update_notifications_permission(&$sandbox) {
-  $roles = user_roles(FALSE, 'administer site configuration');
-  foreach ($roles as $role) {
-    $role->grantPermission('view update notifications')->save();
-  }
+function update_remove_post_updates() {
+  return [
+    'update_post_update_add_view_update_notifications_permission' => '10.0.0',
+  ];
 }

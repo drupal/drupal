@@ -68,7 +68,7 @@ class UpdatePathLastRemovedTest extends BrowserTestBase {
     $assert_session = $this->assertSession();
     $assert_session->pageTextContains('Requirements problem');
     $assert_session->pageTextContains('The version of Drupal you are trying to update from is too old');
-    $assert_session->pageTextContains('Updating to Drupal 10 is only supported from Drupal version 9.3.0 or higher. If you are trying to update from an older version, first update to the latest version of Drupal 9');
+    $assert_session->pageTextContains('Updating to Drupal 10 is only supported from Drupal version 9.4.0 or higher. If you are trying to update from an older version, first update to the latest version of Drupal 9');
     $assert_session->pageTextNotContains('Unsupported schema version: Update test with hook_update_last_removed() implementation');
 
     $assert_session->linkNotExists('Continue');

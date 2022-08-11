@@ -5,10 +5,6 @@
  * Post update functions for Views.
  */
 
-use Drupal\Core\Config\Entity\ConfigEntityUpdater;
-use Drupal\views\ViewEntityInterface;
-use Drupal\views\ViewsConfigUpdater;
-
 /**
  * Implements hook_removed_post_updates().
  */
@@ -37,23 +33,7 @@ function views_removed_post_updates() {
     'views_post_update_remove_sorting_global_text_field' => '10.0.0',
     'views_post_update_title_translations' => '10.0.0',
     'views_post_update_sort_identifier' => '10.0.0',
+    'views_post_update_provide_revision_table_relationship' => '10.0.0',
+    'views_post_update_image_lazy_load' => '10.0.0',
   ];
-}
-
-/**
- * Clear caches due to adding a relationship from revision table to base table.
- */
-function views_post_update_provide_revision_table_relationship() {
-  // Empty post-update hook.
-}
-
-/**
- * Add lazy load options to all image type field configurations.
- */
-function views_post_update_image_lazy_load(?array &$sandbox = NULL): void {
-  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
-  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
-  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater): bool {
-    return $view_config_updater->needsImageLazyLoadFieldUpdate($view);
-  });
 }

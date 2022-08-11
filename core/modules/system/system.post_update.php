@@ -5,8 +5,6 @@
  * Post update functions for System.
  */
 
-use Drupal\Core\Database\Database;
-
 /**
  * Implements hook_removed_post_updates().
  */
@@ -42,31 +40,6 @@ function system_removed_post_updates() {
     'system_post_update_service_advisory_settings' => '10.0.0',
     'system_post_update_delete_authorize_settings' => '10.0.0',
     'system_post_update_sort_all_config' => '10.0.0',
+    'system_post_update_enable_provider_database_driver' => '10.0.0',
   ];
-}
-
-/**
- * Enable the modules that are providing the listed database drivers.
- */
-function system_post_update_enable_provider_database_driver() {
-  $modules_to_install = [];
-  foreach (Database::getAllConnectionInfo() as $targets) {
-    foreach ($targets as $target) {
-      // Provider determination taken from Connection::getProvider().
-      [$first, $second] = explode('\\', $target['namespace'] ?? '', 3);
-      $provider = ($first === 'Drupal' && strtolower($second) === $second) ? $second : 'core';
-      if ($provider !== 'core' && !\Drupal::moduleHandler()->moduleExists($provider)) {
-        $autoload = $target['autoload'] ?? '';
-        // We are only enabling the module for database drivers that are
-        // provided by a module.
-        if (str_contains($autoload, 'src/Driver/Database/')) {
-          $modules_to_install[$provider] = TRUE;
-        }
-      }
-    }
-  }
-
-  if ($modules_to_install !== []) {
-    \Drupal::service('module_installer')->install(array_keys($modules_to_install));
-  }
 }
