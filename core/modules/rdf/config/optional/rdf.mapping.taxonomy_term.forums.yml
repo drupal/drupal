@@ -5,6 +5,9 @@ dependencies:
     - taxonomy.vocabulary.forums
   module:
     - taxonomy
+  enforced:
+    module:
+      - forum
 id: taxonomy_term.forums
 targetEntityType: taxonomy_term
 bundle: forums
