@@ -18,7 +18,7 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
    *
    * @var array
    */
-  protected static $modules = ['rdf', 'block'];
+  protected static $modules = ['block'];
 
   /**
    * {@inheritdoc}
@@ -90,15 +90,12 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
 
     $this->assertNodeHtml($node, $user, FALSE, $metadata_region, $field_classes, FALSE);
 
-    $assert->elementExists('css', 'div[rel="schema:author"]');
-
     // Remove from display.
     $display->removeComponent('uid')
       ->removeComponent('created')
       ->save();
 
     $this->drupalGet($node->toUrl());
-    $assert->elementNotExists('css', 'div[rel="schema:author"]');
     $assert->elementTextNotContains('css', 'article', $user->getAccountName());
   }
 
@@ -148,12 +145,14 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
     if (!$is_inline) {
       $field_classes_selector = $field_classes ? "[contains(concat(' ', normalize-space(@class), ' '), ' field--name-uid ')]" : '';
       $assert->elementExists('xpath', sprintf('//article//%s//*%s//%s[text()="Authored by"]', $html_element, $field_classes_selector, $html_element));
-      $assert->elementTextContains('css', "$uid_selector $html_element" . '[rel="schema:author"]', $user->getAccountName());
+      $assert->elementTextContains('css', $uid_selector, $user->getAccountName());
       $assert->elementNotExists('css', "$uid_selector a");
-      $assert->elementExists('css', 'span[property="schema:dateCreated"]');
+      if ($field_classes) {
+        $assert->elementExists('css', $created_selector);
+      }
     }
     else {
-      $assert->elementTextContains('css', $uid_selector . ' a[property="schema:name"]', $user->getAccountName());
+      $assert->elementTextContains('css', $uid_selector . ' a', $user->getAccountName());
       $assert->elementTextContains('css', 'article ' . $metadata_region, 'Submitted by');
     }
   }
