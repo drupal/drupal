@@ -5,6 +5,9 @@ dependencies:
     - node.type.forum
   module:
     - node
+  enforced:
+    module:
+      - forum
 id: node.forum
 targetEntityType: node
 bundle: forum

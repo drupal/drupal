@@ -3,6 +3,9 @@ status: true
 dependencies:
   module:
     - user
+  enforced:
+    module:
+      - user
 id: user.user
 targetEntityType: user
 bundle: user
