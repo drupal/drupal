@@ -56,7 +56,6 @@ class NoJavaScriptAnonymousTest extends BrowserTestBase {
     'toolbar',
     'field_ui',
     'file',
-    'rdf',
     'views',
     'views_ui',
     'tour',
