@@ -17,6 +17,11 @@ class ViewsUiIntegrationTest extends MediaLibraryTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -51,8 +56,8 @@ class ViewsUiIntegrationTest extends MediaLibraryTestBase {
     $this->waitForElementsCount('css', '.js-media-library-item', 8);
 
     // Assert that filtering works in live preview.
-    $page->find('css', '.js-media-library-view .view-filters')->fillField('name', 'snake');
-    $page->find('css', '.js-media-library-view .view-filters')->pressButton('Apply filters');
+    $page->find('css', '.js-media-library-view')->fillField('name', 'snake');
+    $page->find('css', '.js-media-library-view')->pressButton('Apply filters');
     $this->waitForElementsCount('css', '.js-media-library-item', 1);
 
     // Test the same routine but in the view for the table widget.
@@ -60,8 +65,8 @@ class ViewsUiIntegrationTest extends MediaLibraryTestBase {
     $this->waitForElementsCount('css', '.js-media-library-item', 8);
 
     // Assert that filtering works in live preview.
-    $page->find('css', '.js-media-library-view .view-filters')->fillField('name', 'snake');
-    $page->find('css', '.js-media-library-view .view-filters')->pressButton('Apply filters');
+    $page->find('css', '.js-media-library-view')->fillField('name', 'snake');
+    $page->find('css', '.js-media-library-view')->pressButton('Apply filters');
     $this->waitForElementsCount('css', '.js-media-library-item', 1);
 
     // We cannot test clicking the 'Insert selected' button in either view

@@ -17,6 +17,11 @@ class MediaOverviewTest extends MediaLibraryTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -64,7 +69,7 @@ class MediaOverviewTest extends MediaLibraryTestBase {
     $assert_session->linkExists('Table');
 
     // We should see the table view and a link to add media.
-    $assert_session->elementExists('css', '.view-media .views-table');
+    $assert_session->elementExists('css', '[data-drupal-selector="views-form-media-media-page-list"] table');
     $assert_session->linkExists('Add media');
 
     // Go to the grid display for the rest of the test.
@@ -78,8 +83,12 @@ class MediaOverviewTest extends MediaLibraryTestBase {
     $assert_session->pageTextContains('Dog');
     $assert_session->pageTextContains('Turtle');
 
-    // Verify that the media name does not contain a link.
-    $assert_session->elementNotExists('css', '.media-library-item__name a');
+    // Verify that the media name does not contain a link. The selector is
+    // tricky, so start by asserting ".js-media-library-item-preview + div"
+    // can select a div containing a media name.
+    $assert_session->elementExists('css', '.js-media-library-item-preview + div:contains("Dog")');
+    $assert_session->elementExists('css', '.js-media-library-item-preview + div:contains("Turtle")');
+    $assert_session->elementNotExists('css', '.js-media-library-item-preview + div a');
     // Verify that there are links to edit and delete media items.
     $assert_session->linkExists('Edit Dog');
     $assert_session->linkExists('Delete Turtle');

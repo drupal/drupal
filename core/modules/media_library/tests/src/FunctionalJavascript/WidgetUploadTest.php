@@ -18,6 +18,11 @@ class WidgetUploadTest extends MediaLibraryTestBase {
   use TestFileCreationTrait;
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that uploads in the Media library's widget works as expected.
    */
   public function testWidgetUpload() {
