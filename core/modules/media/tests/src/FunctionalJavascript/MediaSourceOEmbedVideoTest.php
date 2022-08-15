@@ -25,7 +25,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   use OEmbedTestTrait;
 
@@ -150,7 +150,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     // The oEmbed content iFrame should be visible.
     $assert_session->elementExists('css', 'iframe.media-oembed-content');
     // The thumbnail should not be displayed.
-    $assert_session->elementNotExists('css', '.image-style-thumbnail');
+    $assert_session->elementNotExists('css', 'img');
 
     // Load the media and check that all fields are properly populated.
     $media = Media::load(1);
@@ -201,16 +201,6 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     // 'view media' permission.
     $this->drupalGet('media/oembed', ['query' => $query]);
     $assert_session->pageTextContains('By the power of Grayskull, Vimeo works!');
-    $this->assertSession()->responseContains('core/themes/stable/templates/content/media-oembed-iframe.html.twig');
-    $this->assertSession()->responseNotContains('core/modules/media/templates/media-oembed-iframe.html.twig');
-
-    // Test themes not inheriting from stable.
-    \Drupal::service('theme_installer')->install(['stark']);
-    $this->config('system.theme')->set('default', 'stark')->save();
-    $this->drupalGet('media/oembed', ['query' => $query]);
-    $assert_session->pageTextContains('By the power of Grayskull, Vimeo works!');
-    $this->assertSession()->responseNotContains('core/themes/stable/templates/content/media-oembed-iframe.html.twig');
-    $this->assertSession()->responseContains('core/modules/media/templates/media-oembed-iframe.html.twig');
 
     // Remove the 'view media' permission to test that this restricts access.
     $role = Role::load(AccountInterface::ANONYMOUS_ROLE);
