@@ -18,6 +18,11 @@ class WidgetWithoutTypesTest extends MediaLibraryTestBase {
   protected static $modules = ['field_ui'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests that the widget works as expected when media types are deleted.
    */
   public function testWidgetWithoutMediaTypes() {
