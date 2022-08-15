@@ -20,7 +20,7 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -62,8 +62,10 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     $media->save();
 
     $this->drupalGet('media/' . $media->id());
-    // Verify the "name" field is really not present.
-    $assert_session->elementNotExists('css', '.field--name-name');
+    // Verify the "name" field is really not present. The name should be in the
+    // h1 with no additional markup in the h1.
+    $assert_session->elementTextContains('css', 'h1', $media->getName());
+    $assert_session->elementNotExists('css', 'h1 div');
 
     // Enable the field on the display and verify it becomes visible on the UI.
     $this->drupalGet("/admin/structure/media/manage/{$media_type->id()}/display");
@@ -73,10 +75,10 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     $assert_session->waitForElementVisible('css', '#edit-fields-name-settings-edit');
     $page->pressButton('Save');
     $this->drupalGet('media/' . $media->id());
-    // Verify the name is present, and its text matches what is expected.
-    $assert_session->elementExists('css', '.field--name-name');
-    $name_field = $page->find('css', '.field--name-name .field__item');
-    $this->assertSame($media->label(), $name_field->getText());
+    // Verify the name is present, and its text matches what is expected. Now
+    // there should be markup in the h1.
+    $assert_session->elementTextContains('xpath', '//h1/div/div[1]', 'Name');
+    $assert_session->elementTextContains('xpath', '//h1/div/div[2]', $media->getName());
 
     // In the standard profile, there are some pre-cooked types. Make sure the
     // elements configured on their displays are the expected ones.
@@ -100,23 +102,22 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     $this->drupalGet('/media/' . $image_media_id);
 
     // Check if the default media name is generated as expected.
-    $assert_session->elementTextContains('css', 'h1', $image_media_name);
+    $assert_session->elementTextContains('xpath', '//h1', $image_media_name);
     // Here we expect to see only the image, nothing else.
     // Assert only one element in the content region.
-    $this->assertCount(1, $page->findAll('css', '.media--type-image > div'));
+    $media_item = $assert_session->elementExists('xpath', '//div[@class="layout-content"]/div/div[2]');
+    $assert_session->elementsCount('xpath', '/div', 1, $media_item);
     // Assert the image is present inside the media element.
-    $media_item = $assert_session->elementExists('css', '.media--type-image > div');
-    $assert_session->elementExists('css', 'img', $media_item);
+    $media_image = $assert_session->elementExists('xpath', '//img', $media_item);
     // Assert that the image src uses the large image style, the label is
     // visually hidden, and there is no link to the image file.
-    $media_image = $assert_session->elementExists('css', '.media--type-image img');
     /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
     $file_url_generator = \Drupal::service('file_url_generator');
     $expected_image_src = $file_url_generator->generateString(\Drupal::token()->replace('public://styles/large/public/[date:custom:Y]-[date:custom:m]/example_1.jpeg'));
     $this->assertStringContainsString($expected_image_src, $media_image->getAttribute('src'));
-    $field = $assert_session->elementExists('css', '.field--name-field-media-image');
-    $assert_session->elementExists('css', '.field__label.visually-hidden', $field);
-    $assert_session->elementNotExists('css', 'a', $field);
+    $field = $assert_session->elementExists('xpath', '/div[1]', $media_item);
+    $assert_session->elementExists('xpath', '/div[@class="visually-hidden"]', $field);
+    $assert_session->elementNotExists('xpath', '//a', $field);
 
     $test_filename = $this->randomMachineName() . '.txt';
     $test_filepath = 'public://' . $test_filename;
@@ -134,10 +135,10 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     $assert_session->elementTextContains('css', 'h1', $test_filename);
     // Here we expect to see only the linked filename.
     // Assert only one element in the content region.
-    $this->assertCount(1, $page->findAll('css', 'article.media--type-document > div'));
+    $media_item = $assert_session->elementExists('xpath', '//div[@class="layout-content"]/div/div[2]');
+    $assert_session->elementsCount('xpath', '/div', 1, $media_item);
     // Assert the file link is present, and its text matches the filename.
-    $assert_session->elementExists('css', 'article.media--type-document .field--name-field-media-document a');
-    $link = $page->find('css', 'article.media--type-document .field--name-field-media-document a');
+    $link = $assert_session->elementExists('xpath', '//a', $media_item);
     $this->assertSame($test_filename, $link->getText());
 
     // Create a node type "page" to use as host entity.
@@ -176,7 +177,7 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     \Drupal::service('entity_display.repository')->getViewDisplay('node', $node_type->id())
       ->setComponent('field_related_media', [
         'type' => 'entity_reference_entity_view',
-        'label' => 'hidden',
+        'label' => 'above',
         'settings' => [
           'view_mode' => 'full',
         ],
@@ -192,15 +193,14 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     $node->save();
 
     $this->drupalGet('/node/' . $node->id());
-    // Media field is there.
-    $assert_session->elementExists('css', '.field--name-field-related-media');
+    // Media field (field_related_media) is there.
+    $assert_session->pageTextContains('Related media');
     // Media name element is not there.
-    $assert_session->elementNotExists('css', '.field--name-name');
     $assert_session->pageTextNotContains($image_media_name);
-    // Only one element is present inside the media container.
-    $this->assertCount(1, $page->findAll('css', '.field--name-field-related-media article.media--type-image > div'));
-    // Assert the image is present.
-    $assert_session->elementExists('css', '.field--name-field-related-media article.media--type-image img');
+    // Only one image is present.
+    $assert_session->elementsCount('xpath', '//img', 1);
+    // The image has the correct image style.
+    $assert_session->elementAttributeContains('xpath', '//img', 'src', '/styles/large/');
   }
 
 }
