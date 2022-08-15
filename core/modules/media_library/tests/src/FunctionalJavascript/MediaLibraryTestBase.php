@@ -18,7 +18,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * Create media items.
@@ -333,7 +333,6 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
     $assert_session->elementNotExists('css', '[data-drupal-selector$="preview"]', $fields);
     $assert_session->buttonNotExists('Remove', $fields);
     $assert_session->elementNotExists('css', '[data-drupal-selector$="filename"]', $fields);
-    $assert_session->elementNotExists('css', '.file-size', $fields);
   }
 
   /**

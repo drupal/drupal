@@ -12,6 +12,11 @@ class WidgetViewsTest extends MediaLibraryTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -79,13 +84,18 @@ class WidgetViewsTest extends MediaLibraryTestBase {
     $assert_session->buttonNotExists('Apply filters', $button_pane);
 
     // Assert the pager works as expected.
-    $assert_session->elementTextContains('css', '.js-media-library-view .pager__item.is-active', 'Page 1');
+    // An active pager item is not linked and contains "Page #" as text.
+    $assert_session->elementTextContains('css', '.js-media-library-view .js-pager__items > li:nth-of-type(1)', 'Page 1');
+    $assert_session->elementNotExists('css', '.js-media-library-view .js-pager__items > li:nth-of-type(1) a');
+    $assert_session->elementExists('css', '.js-media-library-view .js-pager__items > li:nth-of-type(2) a');
     $this->assertCount(24, $this->getCheckboxes());
     $page->clickLink('Next page');
-    $this->waitForElementTextContains('.js-media-library-view .pager__item.is-active', 'Page 2');
+    $this->waitForElementTextContains('.js-media-library-view .js-pager__items > li:nth-of-type(2)', 'Page 2');
+    $assert_session->elementExists('css', '.js-media-library-view .js-pager__items > li:nth-of-type(1) a');
+    $assert_session->elementNotExists('css', '.js-media-library-view .js-pager__items > li:nth-of-type(2) a');
     $this->assertCount(1, $this->getCheckboxes());
     $page->clickLink('Previous page');
-    $this->waitForElementTextContains('.js-media-library-view .pager__item.is-active', 'Page 1');
+    $this->waitForElementTextContains('.js-media-library-view .js-pager__items > li:nth-of-type(1)', 'Page 1');
     $this->assertCount(24, $this->getCheckboxes());
 
     $this->switchToMediaLibraryTable();

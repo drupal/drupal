@@ -38,7 +38,7 @@ class ContentModerationTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * User with the 'administer media' permission.
