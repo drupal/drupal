@@ -42,14 +42,14 @@ class ContentModerationRouteSubscriberTest extends UnitTestCase {
     $definition = $this->createMock(EntityTypeInterface::class);
     $definition->expects($this->any())
       ->method('getClass')
-      ->will($this->returnValue(SimpleTestEntity::class));
+      ->will($this->returnValue(TestEntity::class));
     $definition->expects($this->any())
       ->method('isRevisionable')
       ->willReturn(FALSE);
     $revisionable_definition = $this->createMock(EntityTypeInterface::class);
     $revisionable_definition->expects($this->any())
       ->method('getClass')
-      ->will($this->returnValue(SimpleTestEntity::class));
+      ->will($this->returnValue(TestEntity::class));
     $revisionable_definition->expects($this->any())
       ->method('isRevisionable')
       ->willReturn(TRUE);
@@ -245,5 +245,5 @@ class ContentModerationRouteSubscriberTest extends UnitTestCase {
 /**
  * A concrete entity.
  */
-class SimpleTestEntity extends EntityBase {
+class TestEntity extends EntityBase {
 }

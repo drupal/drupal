@@ -21,7 +21,7 @@ class RouteProvider implements PreloadableRouteProviderInterface {
   protected function lazyLoadItself() {
     if (!isset($this->service)) {
       $container = \Drupal::getContainer();
-      $this->service = $container->get('simpletest.router.route_provider');
+      $this->service = $container->get('test.router.route_provider');
       $container->get('router.builder')->rebuild();
     }
 

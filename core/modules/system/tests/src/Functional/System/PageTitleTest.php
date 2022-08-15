@@ -56,8 +56,8 @@ class PageTitleTest extends BrowserTestBase {
     $title = "string with <em>HTML</em>";
     // Generate node content.
     $edit = [
-      'title[0][value]' => '!SimpleTest! ' . $title . $this->randomMachineName(20),
-      'body[0][value]' => '!SimpleTest! test body' . $this->randomMachineName(200),
+      'title[0][value]' => '!Test! ' . $title . $this->randomMachineName(20),
+      'body[0][value]' => '!Test! test body' . $this->randomMachineName(200),
     ];
     // Create the node with HTML in the title.
     $this->drupalGet('node/add/page');

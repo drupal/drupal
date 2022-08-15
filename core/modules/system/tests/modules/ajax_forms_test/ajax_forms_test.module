@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Simpletest mock module for Ajax forms testing.
+ * Mock module for Ajax forms testing.
  */
 
 use Drupal\Core\Ajax\AddCssCommand;

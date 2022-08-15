@@ -277,9 +277,9 @@ trait FunctionalTestSetupTrait {
     $this->container->get('request_stack')->push($request);
 
     // The request context is normally set by the router_listener from within
-    // its KernelEvents::REQUEST listener. In the simpletest parent site this
-    // event is not fired, therefore it is necessary to updated the request
-    // context manually here.
+    // its KernelEvents::REQUEST listener. In the parent site this event is not
+    // fired, therefore it is necessary to update the request context manually
+    // here.
     $this->container->get('router.request_context')->fromRequest($request);
 
     return $request;
@@ -503,7 +503,7 @@ trait FunctionalTestSetupTrait {
   }
 
   /**
-   * Returns the parameters that will be used when Simpletest installs Drupal.
+   * Returns the parameters that will be used when the test installs Drupal.
    *
    * @see install_drupal()
    * @see install_state_defaults()

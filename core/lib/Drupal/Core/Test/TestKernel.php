@@ -5,7 +5,7 @@ namespace Drupal\Core\Test;
 use Drupal\Core\DrupalKernel;
 
 /**
- * Kernel to mock requests to test simpletest.
+ * Kernel that is only used by mock front controllers.
  */
 class TestKernel extends DrupalKernel {
 

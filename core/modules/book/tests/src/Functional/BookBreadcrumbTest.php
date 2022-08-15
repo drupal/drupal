@@ -117,8 +117,8 @@ class BookBreadcrumbTest extends BrowserTestBase {
     static $number = 0;
 
     $edit = [];
-    $edit['title[0][value]'] = str_pad($number, 2, '0', STR_PAD_LEFT) . ' - SimpleTest test node ' . $this->randomMachineName(10);
-    $edit['body[0][value]'] = 'SimpleTest test body ' . $this->randomMachineName(32) . ' ' . $this->randomMachineName(32);
+    $edit['title[0][value]'] = str_pad($number, 2, '0', STR_PAD_LEFT) . ' - test node ' . $this->randomMachineName(10);
+    $edit['body[0][value]'] = 'test body ' . $this->randomMachineName(32) . ' ' . $this->randomMachineName(32);
     $edit['book[bid]'] = $book_nid;
 
     if ($parent !== NULL) {

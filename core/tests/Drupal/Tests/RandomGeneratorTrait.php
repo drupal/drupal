@@ -21,10 +21,10 @@ trait RandomGeneratorTrait {
    *
    * Do not use this method when special characters are not possible (e.g., in
    * machine or file names that have already been validated); instead, use
-   * \Drupal\simpletest\TestBase::randomMachineName(). If $length is greater
-   * than 3 the random string will include at least one ampersand ('&') and
-   * at least one greater than ('>') character to ensure coverage for special
-   * characters and avoid the introduction of random test failures.
+   * \Drupal\Tests\RandomGeneratorTrait::randomMachineName(). If $length is
+   * greater than 3 the random string will include at least one ampersand ('&')
+   * and at least one greater than ('>') character to ensure coverage for
+   * special characters and avoid the introduction of random test failures.
    *
    * @param int $length
    *   Length of random string to generate.
@@ -79,7 +79,7 @@ trait RandomGeneratorTrait {
    * Generates a unique random string containing letters and numbers.
    *
    * Do not use this method when testing unvalidated user input. Instead, use
-   * \Drupal\simpletest\TestBase::randomString().
+   * \Drupal\Tests\RandomGeneratorTrait::randomString().
    *
    * @param int $length
    *   Length of random string to generate.

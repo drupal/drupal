@@ -585,7 +585,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     }
     $definition = $container->getDefinition($id);
     $definition->clearTag('needs_destruction');
-    $container->setDefinition("simpletest.$route_provider_service_name", $definition);
+    $container->setDefinition("test.$route_provider_service_name", $definition);
 
     $route_provider_definition = new Definition(RouteProvider::class);
     $route_provider_definition->setPublic(TRUE);

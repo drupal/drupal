@@ -169,8 +169,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
     $old_cwd = getcwd();
     chdir($this->appRoot . "/core");
 
-    // exec in a subshell so that the environment is isolated when running tests
-    // via the simpletest UI.
+    // exec in a subshell so that the environment is isolated.
     $ret = exec(implode(" ", $command), $output, $status);
 
     chdir($old_cwd);

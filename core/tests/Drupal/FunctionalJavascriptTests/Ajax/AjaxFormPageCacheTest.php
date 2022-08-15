@@ -93,7 +93,7 @@ class AjaxFormPageCacheTest extends WebDriverTestBase {
     $this->assertNotNull($green_span2, 'DOM update: After reload - the selected color SPAN is green.');
 
     $build_id_from_cache_first_ajax = $this->getFormBuildId();
-    $this->assertNotEquals($build_id_from_cache_initial, $build_id_from_cache_first_ajax, 'Build id is changed in the simpletest-DOM on first AJAX submission');
+    $this->assertNotEquals($build_id_from_cache_initial, $build_id_from_cache_first_ajax, 'Build id is changed in the DOM on first AJAX submission');
     $this->assertNotEquals($build_id_first_ajax, $build_id_from_cache_first_ajax, 'Build id from first user is not reused');
 
     // Changing the value of a select input element, triggers an AJAX

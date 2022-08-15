@@ -30,9 +30,6 @@ class Toolbar extends RenderElement {
       ],
       // Metadata for the toolbar wrapping element.
       '#attributes' => [
-        // The id cannot be simply "toolbar" or it will clash with the
-        // simpletest tests listing which produces a checkbox with attribute
-        // id="toolbar".
         'id' => 'toolbar-administration',
         'role' => 'group',
         'aria-label' => $this->t('Site administration toolbar'),

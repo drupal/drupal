@@ -98,26 +98,6 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
   }
 
   /**
-   * Generates standardized entity cache tags test info.
-   *
-   * @param string $entity_type_label
-   *   The label of the entity type whose cache tags to test.
-   * @param string $group
-   *   The test group.
-   *
-   * @return array
-   *
-   * @see \Drupal\simpletest\TestBase::getInfo()
-   */
-  protected static function generateStandardizedInfo($entity_type_label, $group) {
-    return [
-      'name' => "$entity_type_label entity cache tags",
-      'description' => "Test the $entity_type_label entity's cache tags.",
-      'group' => $group,
-    ];
-  }
-
-  /**
    * Creates the entity to be tested.
    *
    * @return \Drupal\Core\Entity\EntityInterface

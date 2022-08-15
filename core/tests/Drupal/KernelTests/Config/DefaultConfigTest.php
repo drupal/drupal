@@ -36,14 +36,11 @@ class DefaultConfigTest extends KernelTestBase {
    *
    * Comparing them does not make sense.
    *
-   * @todo Figure out why simpletest.settings is not installed.
-   *
    * @var array
    */
   public static $skippedConfig = [
     'locale.settings' => ['path: '],
     'syslog.settings' => ['facility: '],
-    'simpletest.settings' => TRUE,
   ];
 
   /**

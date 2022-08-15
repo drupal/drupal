@@ -417,7 +417,7 @@ abstract class BrowserTestBase extends TestCase {
   }
 
   /**
-   * Clean up the Simpletest environment.
+   * Clean up the test environment.
    */
   protected function cleanupEnvironment() {
     // Remove all prefixed tables.
@@ -544,7 +544,7 @@ abstract class BrowserTestBase extends TestCase {
   }
 
   /**
-   * Installs Drupal into the Simpletest site.
+   * Installs Drupal into the test site.
    */
   public function installDrupal() {
     $this->initUserSession();

@@ -572,8 +572,8 @@ function simpletest_script_init() {
  * parameters were passed).
  *
  * Otherwise, there are three database connections of concern:
- * - --sqlite: The test runner connection, providing access to Simpletest
- *   database tables for recording test IDs and assertion results.
+ * - --sqlite: The test runner connection, providing access to database tables
+ *   for recording test IDs and assertion results.
  * - --dburl: A database connection that is used as base connection info for all
  *   tests; i.e., every test will spawn from this connection. In case this
  *   connection uses e.g. SQLite, then all tests will run against SQLite. This
@@ -654,7 +654,7 @@ function simpletest_script_setup_database($new = FALSE) {
   // Add the test runner database connection.
   Database::addConnectionInfo('test-runner', 'default', $databases['test-runner']['default']);
 
-  // Create the Simpletest schema.
+  // Create the test result schema.
   try {
     $connection = Database::getConnection('default', 'test-runner');
     $schema = $connection->schema();
@@ -770,7 +770,7 @@ function simpletest_script_execute_batch($test_classes) {
             $db_prefix = TestDatabase::lastTestGet($child['test_id'])['last_prefix'];
             $test_db = new TestDatabase($db_prefix);
             $test_directory = $test_db->getTestSitePath();
-            echo 'Simpletest database and files kept and test exited immediately on fail so should be reproducible if you change settings.php to use the database prefix ' . $db_prefix . ' and config directories in ' . $test_directory . "\n";
+            echo 'Test database and files kept and test exited immediately on fail so should be reproducible if you change settings.php to use the database prefix ' . $db_prefix . ' and config directories in ' . $test_directory . "\n";
             $args['keep-results'] = TRUE;
             // Exit repeat loop immediately.
             $args['repeat'] = -1;
@@ -1316,7 +1316,7 @@ function simpletest_script_print_alternatives($string, $array, $degree = 4) {
 }
 
 /**
- * Loads the simpletest messages from the database.
+ * Loads test result messages from the database.
  *
  * Messages are ordered by test class and message id.
  *
@@ -1324,7 +1324,7 @@ function simpletest_script_print_alternatives($string, $array, $degree = 4) {
  *   Array of test IDs of the messages to be loaded.
  *
  * @return array
- *   Array of simpletest messages from the database.
+ *   Array of test result messages from the database.
  */
 function simpletest_script_load_messages_by_test_id($test_ids) {
   global $args;

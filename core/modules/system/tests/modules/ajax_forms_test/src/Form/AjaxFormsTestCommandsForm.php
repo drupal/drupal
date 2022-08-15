@@ -206,8 +206,7 @@ class AjaxFormsTestCommandsForm extends FormBase {
     ];
 
     // Demonstrates the Ajax 'settings' command. The 'settings' command has
-    // nothing visual to "show", but it can be tested via SimpleTest and via
-    // Firebug.
+    // nothing visual to "show", but it can be tested.
     $form['settings_command_example'] = [
       '#type' => 'submit',
       '#value' => $this->t("AJAX 'settings' command"),

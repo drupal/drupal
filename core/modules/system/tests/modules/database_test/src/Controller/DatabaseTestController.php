@@ -44,7 +44,7 @@ class DatabaseTestController extends ControllerBase {
    * Runs a pager query and returns the results.
    *
    * This function does care about the page GET parameter, as set by the
-   * simpletest HTTP call.
+   * test HTTP call.
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    */
@@ -70,7 +70,7 @@ class DatabaseTestController extends ControllerBase {
    * Runs a pager query and returns the results.
    *
    * This function does care about the page GET parameter, as set by the
-   * simpletest HTTP call.
+   * test HTTP call.
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    */
@@ -96,7 +96,7 @@ class DatabaseTestController extends ControllerBase {
    * Runs a tablesort query and returns the results.
    *
    * This function does care about the page GET parameter, as set by the
-   * simpletest HTTP call.
+   * test HTTP call.
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    */
@@ -128,7 +128,7 @@ class DatabaseTestController extends ControllerBase {
    * Runs a tablesort query with a second order_by after and returns the results.
    *
    * This function does care about the page GET parameter, as set by the
-   * simpletest HTTP call.
+   * test HTTP call.
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    */

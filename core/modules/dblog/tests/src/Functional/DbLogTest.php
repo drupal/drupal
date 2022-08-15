@@ -824,7 +824,7 @@ class DbLogTest extends BrowserTestBase {
    * @param string $log_message
    *   The database log message to check.
    * @param string $message
-   *   The message to pass to simpletest.
+   *   A message to display if the assertion fails.
    *
    * @internal
    */

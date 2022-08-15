@@ -45,7 +45,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $this->submitForm([], 'Remove');
     $this->submitForm([], 'Save');
 
-    // Get invalid image test files from simpletest.
+    // Get invalid image test files.
     $dir = 'core/tests/fixtures/files';
     $files = [];
     if (is_dir($dir)) {

@@ -22,7 +22,7 @@ class DummyStreamWrapper extends LocalStream {
    * {@inheritdoc}
    */
   public function getDescription() {
-    return t('Dummy wrapper for simpletest.');
+    return t('Dummy wrapper for testing.');
   }
 
   public function getDirectoryPath() {

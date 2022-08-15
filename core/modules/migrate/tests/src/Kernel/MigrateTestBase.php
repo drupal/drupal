@@ -94,8 +94,7 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
     $connection_info = Database::getConnectionInfo('default');
     foreach ($connection_info as $target => $value) {
       $prefix = $value['prefix'];
-      // Simpletest uses 7 character prefixes at most so this can't cause
-      // collisions.
+      // Tests use 7 character prefixes at most so this can't cause collisions.
       $connection_info[$target]['prefix'] = $prefix . '0';
     }
     Database::addConnectionInfo('migrate', 'default', $connection_info['default']);
