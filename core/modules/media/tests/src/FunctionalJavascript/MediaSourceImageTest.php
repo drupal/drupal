@@ -21,7 +21,7 @@ class MediaSourceImageTest extends MediaSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * Tests the image media source.
@@ -71,13 +71,14 @@ class MediaSourceImageTest extends MediaSourceTestBase {
     // Assert the image element is present inside the media element and that its
     // src attribute uses the large image style, the label is visually hidden,
     // and there is no link to the image file.
-    $image_element = $assert_session->elementExists('css', '.field--name-field-media-image img');
+    $label = $assert_session->elementExists('xpath', '//div[contains(@class, "visually-hidden") and text()="Image"]');
+    // The field is the parent div of the label.
+    $field = $label->getParent();
+    $image_element = $field->find('css', 'img');
     /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
     $file_url_generator = \Drupal::service('file_url_generator');
     $expected_image_src = $file_url_generator->generateString(\Drupal::token()->replace('public://styles/large/public/[date:custom:Y]-[date:custom:m]/example_1.jpeg'));
     $this->assertStringContainsString($expected_image_src, $image_element->getAttribute('src'));
-    $field = $assert_session->elementExists('css', '.field--name-field-media-image');
-    $assert_session->elementExists('css', '.field__label.visually-hidden', $field);
     $assert_session->elementNotExists('css', 'a', $field);
 
     // Ensure the image has the correct alt attribute.

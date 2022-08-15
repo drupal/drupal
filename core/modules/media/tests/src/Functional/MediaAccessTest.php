@@ -29,7 +29,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -185,11 +185,13 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $this->clickLink('Media');
     $this->assertCacheContext('user');
     $assert_session->statusCodeEquals(200);
-    $assert_session->elementExists('css', '.view-media');
-    $assert_session->pageTextContains($this->loggedInUser->getDisplayName());
-    $assert_session->pageTextContains($this->nonAdminUser->getDisplayName());
-    $assert_session->linkByHrefExists('/media/' . $media->id());
-    $assert_session->linkByHrefExists('/media/' . $user_media->id());
+    $assert_session->elementExists('css', '.views-element-container');
+    // First row of the View contains media created by admin user.
+    $assert_session->elementTextEquals('xpath', '//div[@class="views-element-container"]//tbody/tr[1]/td[contains(@class, "views-field-uid")]/a', $this->adminUser->getDisplayName());
+    $assert_session->elementTextEquals('xpath', "//div[@class='views-element-container']//tbody/tr[1]/td[contains(@class, 'views-field-name')]/a[contains(@href, '/media/{$media->id()}')]", 'Unnamed');
+    // Second row of the View contains media created by non-admin user.
+    $assert_session->elementTextEquals('xpath', '//div[@class="views-element-container"]//tbody/tr[2]/td[contains(@class, "views-field-uid")]/a', $this->nonAdminUser->getDisplayName());
+    $assert_session->elementTextEquals('xpath', "//div[@class='views-element-container']//tbody/tr[2]/td[contains(@class, 'views-field-name')]/a[contains(@href, '/media/{$user_media->id()}')]", 'Unnamed');
   }
 
   /**
