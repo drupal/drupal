@@ -2074,11 +2074,6 @@ parameters:
 			path: tests/Drupal/Tests/Component/Annotation/Doctrine/DocParserTest.php
 
 		-
-			message: "#^Function container_test_file_service_test_service_function not found\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/DependencyInjection/ContainerTest.php
-
-		-
 			message: "#^Cannot unset offset int on array\\<string, mixed\\>\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Component/PhpStorage/FileStorageReadOnlyTest.php

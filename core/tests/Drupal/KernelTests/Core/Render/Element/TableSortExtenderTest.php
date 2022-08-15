@@ -21,8 +21,8 @@ class TableSortExtenderTest extends KernelTestBase {
     // Test simple table headers.
 
     $headers = ['foo', 'bar', 'baz'];
-    // Reset $request->query to prevent parameters from Simpletest and Batch API
-    // ending up in $ts['query'].
+    // Reset $request->query to prevent parameters from Batch API ending up in
+    // $ts['query'].
     $expected_ts = [
       'name' => 'foo',
       'sql' => '',

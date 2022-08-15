@@ -1,5 +1,5 @@
 # Tests
-conneg.simpletest:
+conneg.test:
   path: conneg/simple.json
   defaults:
     _controller: '\Drupal\conneg_test\Controller\TestController::simple'

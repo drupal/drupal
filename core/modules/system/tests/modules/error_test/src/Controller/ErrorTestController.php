@@ -41,7 +41,7 @@ class ErrorTestController extends ControllerBase {
    * Generate warnings to test the error handler.
    */
   public function generateWarnings($collect_errors = FALSE) {
-    // Tell Drupal error reporter to send errors to Simpletest or not.
+    // Tell Drupal error reporter to collect test errors or not.
     define('SIMPLETEST_COLLECT_ERRORS', $collect_errors);
     // This will generate a notice.
     $notice = new \stdClass();

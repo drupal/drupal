@@ -1,5 +1,5 @@
 name: PHPUnit Test
 type: module
-description: 'Provides dummy classes for use by SimpleTest tests.'
+description: 'Provides dummy classes for use by tests.'
 package: Testing
 version: VERSION

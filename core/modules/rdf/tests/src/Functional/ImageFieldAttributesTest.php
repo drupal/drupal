@@ -80,7 +80,7 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
       ->setBundleMapping(['types' => []])
       ->save();
 
-    // Get the test image that simpletest provides.
+    // Get the test image.
     $image = current($this->drupalGetTestFiles('image'));
 
     // Save a node with the image.

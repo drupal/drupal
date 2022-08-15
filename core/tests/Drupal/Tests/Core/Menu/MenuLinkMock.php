@@ -24,7 +24,7 @@ class MenuLinkMock extends MenuLinkBase {
     'options' => [],
     'expanded' => '0',
     'enabled' => '1',
-    'provider' => 'simpletest',
+    'provider' => 'test',
     'metadata' => [
       'cache_contexts' => [],
       'cache_tags' => [],

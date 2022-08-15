@@ -522,7 +522,7 @@ trait AssertContentTrait {
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
    *
-   * @see \Drupal\simpletest\AssertContentTrait::assertRaw()
+   * @see \Drupal\KernelTests\AssertContentTrait::assertRaw()
    */
   protected function assertText($text, $message = '', $group = 'Other'): void {
     $this->assertTextHelper($text, $message, $group, FALSE);
@@ -547,7 +547,7 @@ trait AssertContentTrait {
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
    *
-   * @see \Drupal\simpletest\AssertContentTrait::assertNoRaw()
+   * @see \Drupal\KernelTests\AssertContentTrait::assertNoRaw()
    */
   protected function assertNoText($text, $message = '', $group = 'Other'): void {
     $this->assertTextHelper($text, $message, $group, TRUE);

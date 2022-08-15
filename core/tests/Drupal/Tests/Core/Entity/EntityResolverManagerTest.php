@@ -444,14 +444,14 @@ class EntityResolverManagerTest extends UnitTestCase {
     $definition = $this->createMock('Drupal\Core\Entity\EntityTypeInterface');
     $definition->expects($this->any())
       ->method('getClass')
-      ->will($this->returnValue('Drupal\Tests\Core\Entity\SimpleTestEntity'));
+      ->will($this->returnValue('Drupal\Tests\Core\Entity\TestEntity'));
     $definition->expects($this->any())
       ->method('isRevisionable')
       ->willReturn(FALSE);
     $revisionable_definition = $this->createMock('Drupal\Core\Entity\EntityTypeInterface');
     $revisionable_definition->expects($this->any())
       ->method('getClass')
-      ->will($this->returnValue('Drupal\Tests\Core\Entity\SimpleTestEntity'));
+      ->will($this->returnValue('Drupal\Tests\Core\Entity\TestEntity'));
     $revisionable_definition->expects($this->any())
       ->method('isRevisionable')
       ->willReturn(TRUE);
@@ -500,7 +500,7 @@ class BasicControllerClass {
 /**
  * A concrete entity.
  */
-class SimpleTestEntity extends EntityBase {
+class TestEntity extends EntityBase {
 
 }
 

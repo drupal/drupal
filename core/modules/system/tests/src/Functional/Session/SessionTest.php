@@ -369,7 +369,7 @@ class SessionTest extends BrowserTestBase {
   }
 
   /**
-   * Assert whether the SimpleTest browser sent a session cookie.
+   * Assert whether the test browser sent a session cookie.
    *
    * @internal
    */

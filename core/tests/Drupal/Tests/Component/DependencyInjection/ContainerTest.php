@@ -868,12 +868,9 @@ class ContainerTest extends TestCase {
     $services['synthetic'] = [
       'synthetic' => TRUE,
     ];
-    // The file could have been named as a .php file. The reason it is a .data
-    // file is that SimpleTest tries to load it. SimpleTest does not like such
-    // fixtures and hence we use a neutral name like .data.
     $services['container_test_file_service_test'] = [
       'class' => '\stdClass',
-      'file' => __DIR__ . '/Fixture/container_test_file_service_test_service_function.data',
+      'file' => __DIR__ . '/Fixture/container_test_file_service_test_service_function.php',
     ];
 
     // Test multiple arguments.

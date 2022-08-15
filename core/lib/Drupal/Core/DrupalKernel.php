@@ -370,7 +370,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $app_root = static::guessApplicationRoot();
     }
 
-    // Check for a simpletest override.
+    // Check for a test override.
     if ($test_prefix = drupal_valid_test_ua()) {
       $test_db = new TestDatabase($test_prefix);
       return $test_db->getTestSitePath();
@@ -982,7 +982,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         // Only code that interfaces directly with tests should rely on this
         // constant; e.g., the error/exception handler conditionally adds further
         // error information into HTTP response headers that are consumed by
-        // Simpletest's internal browser.
+        // the internal browser.
         define('DRUPAL_TEST_IN_CHILD_SITE', TRUE);
 
         // Web tests are to be conducted with runtime assertions active.

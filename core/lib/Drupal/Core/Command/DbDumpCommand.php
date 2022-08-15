@@ -29,7 +29,7 @@ class DbDumpCommand extends DbCommandBase {
   /**
    * An array of table patterns to exclude completely.
    *
-   * This excludes any lingering simpletest tables generated during test runs.
+   * This excludes any lingering tables generated during test runs.
    *
    * @var array
    */

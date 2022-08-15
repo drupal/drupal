@@ -168,8 +168,8 @@ class ExtensionDiscovery {
     // expected extension type specific directory names only.
     $searchdirs[static::ORIGIN_ROOT] = '';
 
-    // Simpletest uses the regular built-in multi-site functionality of Drupal
-    // for running web tests. As a consequence, extensions of the parent site
+    // Tests use the regular built-in multi-site functionality of Drupal for
+    // running web tests. As a consequence, extensions of the parent site
     // located in a different site-specific directory are not discovered in a
     // test site environment, because the site directories are not the same.
     // Therefore, add the site directory of the parent site to the search paths,
