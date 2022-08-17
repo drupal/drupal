@@ -126,11 +126,11 @@ class DefaultConfigTest extends KernelTestBase {
     $this->container->get('module_installer')->install($modules_to_install);
     $this->container->get('theme_installer')->install(array_unique($themes_to_install));
 
-    // Test configuration in the module's config/install directory.
-    $this->doTestsOnConfigStorage($extension_config_storage, $name);
+    // Test configuration in the extension's config/install directory.
+    $this->doTestsOnConfigStorage($extension_config_storage, $name, $type);
 
-    // Test configuration in the module's config/optional directory.
-    $this->doTestsOnConfigStorage($optional_config_storage, $name);
+    // Test configuration in the extension's config/optional directory.
+    $this->doTestsOnConfigStorage($optional_config_storage, $name, $type);
   }
 
   /**
@@ -184,10 +184,12 @@ class DefaultConfigTest extends KernelTestBase {
    *
    * @param \Drupal\Core\Config\StorageInterface $default_config_storage
    *   The default config storage to test.
-   * @param string $module
-   *   The module that is being tested.
+   * @param string $extension
+   *   The extension that is being tested.
+   * @param string $type
+   *   The extension type to test.
    */
-  protected function doTestsOnConfigStorage(StorageInterface $default_config_storage, $module) {
+  protected function doTestsOnConfigStorage(StorageInterface $default_config_storage, $extension, string $type = 'module') {
     /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
     $config_manager = $this->container->get('config.manager');
 
@@ -229,9 +231,9 @@ class DefaultConfigTest extends KernelTestBase {
           // and needs its own test.
           continue;
         }
-        $info = $this->container->get('extension.list.module')->getExtensionInfo($module);
+        $info = $this->container->get("extension.list.$type")->getExtensionInfo($extension);
         if (!isset($info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER]) || $info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] !== ExtensionLifecycle::EXPERIMENTAL) {
-          $this->fail("$config_name provided by $module does not exist after installing all dependencies");
+          $this->fail("$config_name provided by $extension does not exist after installing all dependencies");
         }
       }
     }
