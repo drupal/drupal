@@ -31,7 +31,7 @@ class BookTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * A user with permission to view a book and access printer-friendly version.
