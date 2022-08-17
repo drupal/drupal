@@ -9,6 +9,8 @@ dependencies:
   enforced:
     config:
       - search.page.help_search
+    module:
+      - help_topics
 id: seven_help_search
 theme: seven
 region: help
