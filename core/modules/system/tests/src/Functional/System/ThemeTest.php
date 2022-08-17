@@ -423,7 +423,7 @@ class ThemeTest extends BrowserTestBase {
   public function testUninstallingThemes() {
     // Install olivero.
     \Drupal::service('theme_installer')->install(['olivero']);
-    // Set up claro as the admin theme.
+    // Set up Claro as the admin theme.
     \Drupal::service('theme_installer')->install(['claro']);
     $edit = [
       'admin_theme' => 'claro',
@@ -431,6 +431,7 @@ class ThemeTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/appearance');
     $this->submitForm($edit, 'Save configuration');
+
     // Set olivero as the default theme.
     $this->cssSelect('a[title="Set Olivero as default theme"]')[0]->click();
     // Check that claro cannot be uninstalled as it is the admin theme.
