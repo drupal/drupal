@@ -14,7 +14,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\SchemaCheckTestTrait;
 use Symfony\Component\Yaml\Yaml;
 
-// cspell:ignore onhover
+// cspell:ignore onhover baguette
 
 /**
  * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemConstraintValidator
@@ -1252,6 +1252,209 @@ class ValidatorsTest extends KernelTestBase {
       'violations' => [
         'settings.plugins.ckeditor5_style' => 'The <em class="placeholder">Style</em> plugin needs another plugin to create <code>&lt;blockquote&gt;</code>, for it to be able to create the following attributes: <code>&lt;blockquote class=&quot;highlighted&quot;&gt;</code>. Enable a plugin that supports creating this tag. If none exists, you can configure the Source Editing plugin to support it.',
       ],
+    ];
+    $data['INVALID: Style plugin configured to add class already added by an other plugin'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'alignment',
+            'style',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_alignment' => [
+            'enabled_alignments' => ['justify'],
+          ],
+          'ckeditor5_style' => [
+            'styles' => [
+              [
+                'label' => 'Text align',
+                'element' => '<p class="text-align-justify">',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
+      'filters' => [
+        'filter_html' => [
+          'id' => 'filter_html',
+          'provider' => 'filter',
+          'status' => TRUE,
+          'weight' => 0,
+          'settings' => [
+            'allowed_html' => '<p class="text-align-justify"> <br>',
+            'filter_html_help' => TRUE,
+            'filter_html_nofollow' => TRUE,
+          ],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_style.styles.0.element' => 'A style must only specify classes not supported by other plugins. The <code>text-align-justify</code> classes on <code>&lt;p&gt;</code> are already supported by the enabled <em class="placeholder">Alignment</em> plugin.',
+      ],
+    ];
+    $data['VALID: Style plugin configured to add new class to an already restricted tag'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'alignment',
+            'style',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_alignment' => [
+            'enabled_alignments' => ['justify'],
+          ],
+          'ckeditor5_style' => [
+            'styles' => [
+              [
+                'label' => 'Add baguette class',
+                'element' => '<p class="baguette">',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
+      'filters' => [
+        'filter_html' => [
+          'id' => 'filter_html',
+          'provider' => 'filter',
+          'status' => TRUE,
+          'weight' => 0,
+          'settings' => [
+            'allowed_html' => '<p class="text-align-justify baguette"> <br>',
+            'filter_html_help' => TRUE,
+            'filter_html_nofollow' => TRUE,
+          ],
+        ],
+      ],
+      'violations' => [],
+    ];
+    $data['VALID: Style plugin configured to add class to an element provided by an explicit plugin that already allows all classes'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'kbdAllClasses',
+            'style',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_style' => [
+            'styles' => [
+              [
+                'label' => 'Add baguette class',
+                'element' => '<kbd class="baguette">',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
+      'filters' => [
+        'filter_html' => [
+          'id' => 'filter_html',
+          'provider' => 'filter',
+          'status' => TRUE,
+          'weight' => 0,
+          'settings' => [
+            'allowed_html' => '<p> <br> <kbd class>',
+            'filter_html_help' => TRUE,
+            'filter_html_nofollow' => TRUE,
+          ],
+        ],
+      ],
+      'violations' => [],
+    ];
+    $data['VALID: Style plugin configured to add class to GHS-supported HTML5 tag'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'style',
+            'sourceEditing',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => [
+              '<kbd>',
+            ],
+          ],
+          'ckeditor5_style' => [
+            'styles' => [
+              [
+                'label' => 'Add baguette class',
+                'element' => '<kbd class="baguette">',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
+      'filters' => [
+        'filter_html' => [
+          'id' => 'filter_html',
+          'provider' => 'filter',
+          'status' => TRUE,
+          'weight' => 0,
+          'settings' => [
+            'allowed_html' => '<p> <br> <kbd class="baguette">',
+            'filter_html_help' => TRUE,
+            'filter_html_nofollow' => TRUE,
+          ],
+        ],
+      ],
+      'violations' => [],
+    ];
+    $data['VALID: Style plugin configured to add class to GHS-supported HTML5 tag that already allows all classes'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'style',
+            'sourceEditing',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => [
+              '<bdi class>',
+            ],
+          ],
+          'ckeditor5_style' => [
+            'styles' => [
+              [
+                'label' => 'Bidirectional name',
+                'element' => '<bdi class="name">',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
+      'filters' => [
+        'filter_html' => [
+          'id' => 'filter_html',
+          'provider' => 'filter',
+          'status' => TRUE,
+          'weight' => 0,
+          'settings' => [
+            'allowed_html' => '<p> <br> <bdi class>',
+            'filter_html_help' => TRUE,
+            'filter_html_nofollow' => TRUE,
+          ],
+        ],
+      ],
+      'violations' => [],
     ];
     return $data;
   }

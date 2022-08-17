@@ -107,7 +107,24 @@ class StyleSensibleElementConstraintValidator extends ConstraintValidator implem
     $tags_from_b = array_diff(array_keys($b->getConcreteSubset()->getAllowedElements()), ['*']);
     $a = $a->merge(new HTMLRestrictions(array_fill_keys($tags_from_b, FALSE)));
     $b = $b->merge(new HTMLRestrictions(array_fill_keys($tags_from_a, FALSE)));
-    $intersection = $a->intersect($b);
+    // When a plugin allows all classes on a tag, we assume there is no
+    // problem with having the style plugin adding classes to that element.
+    // When allowing all classes we don't expect a specific user experience
+    // so adding a class through a plugin or the style plugin is the same.
+    $b_without_class_wildcard = $b->getAllowedElements();
+    foreach ($b_without_class_wildcard as $allowedElement => $config) {
+      // When all classes are allowed, remove the configuration so that
+      // the intersect below does not include classes.
+      if (!empty($config['class']) && $config['class'] === TRUE) {
+        unset($b_without_class_wildcard[$allowedElement]['class']);
+      }
+      // HTMLRestrictions does not accept a tag with an empty array, make sure
+      // to remove them here.
+      if (empty($b_without_class_wildcard[$allowedElement])) {
+        unset($b_without_class_wildcard[$allowedElement]);
+      }
+    }
+    $intersection = $a->intersect(new HTMLRestrictions($b_without_class_wildcard));
 
     // Leverage the "GHS configuration" representation to easily find whether
     // there is an intersection for classes. Other implementations are possible.
