@@ -92,7 +92,6 @@ trait BookTestTrait {
     // since it uniquely identifies each call to checkBookNode().
     static $number = 0;
     $this->drupalGet('node/' . $node->id());
-
     // Check outline structure.
     if ($nodes !== NULL) {
       $this->assertSession()->responseMatches($this->generateOutlinePattern($nodes));
@@ -130,7 +129,7 @@ trait BookTestTrait {
     }
 
     // Fetch links in the current breadcrumb.
-    $links = $this->xpath('//nav[@class="breadcrumb"]/ol/li/a');
+    $links = $this->xpath('//nav[@aria-labelledby="system-breadcrumb"]/ol/li/a');
     $got_breadcrumb = [];
     foreach ($links as $link) {
       $got_breadcrumb[] = $link->getAttribute('href');
@@ -161,8 +160,7 @@ trait BookTestTrait {
     foreach ($nodes as $node) {
       $outline .= '(node\/' . $node->id() . ')(.*?)(' . $node->label() . ')(.*?)';
     }
-
-    return '/<nav id="book-navigation-' . $this->book->id() . '"(.*?)<ul(.*?)' . $outline . '<\/ul>/s';
+    return '/<nav role="navigation" aria-labelledby="book-label-' . $this->book->id() . '"(.*?)<ul(.*?)' . $outline . '<\/ul>/s';
   }
 
   /**
