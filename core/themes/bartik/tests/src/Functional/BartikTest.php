@@ -8,6 +8,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests the Bartik theme.
  *
  * @group bartik
+ * @group legacy
  */
 class BartikTest extends BrowserTestBase {
 
