@@ -252,14 +252,33 @@ class GenerateTheme extends Command {
       }
     }
 
-    if (!rename($tmp_dir, $destination)) {
-      $io->getErrorStyle()->error("The theme could not be moved to the destination: $destination.");
-      return 1;
+    if (!@rename($tmp_dir, $destination)) {
+      // If rename fails, copy the files to the destination directory. This is
+      // expected to happen when the tmp directory is on a different file
+      // system.
+      $this->copyRecursive($tmp_dir, $destination);
+
+      // Renaming would not have left anything behind. Ensure that is still the
+      // case.
+      $this->rmRecursive($tmp_dir);
     }
 
     $output->writeln(sprintf('Theme generated successfully to %s', $destination));
 
     return 0;
+  }
+
+  /**
+   * Removes a directory recursively.
+   *
+   * @param string $dir
+   *   A directory to be removed.
+   */
+  private function rmRecursive(string $dir): void {
+    $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);
+    foreach ($files as $file) {
+      is_dir($file) ? rmdir($file) : unlink($file);
+    }
   }
 
   /**
