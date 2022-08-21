@@ -669,4 +669,43 @@ class InlineBlockTest extends InlineBlockTestBase {
     $assert($permissions, TRUE);
   }
 
+  /**
+   * Test editing inline blocks when the parent has been reverted.
+   */
+  public function testInlineBlockParentRevert() {
+    $this->drupalLogin($this->drupalCreateUser([
+      'access contextual links',
+      'configure any layout',
+      'administer node display',
+      'administer node fields',
+      'administer nodes',
+      'bypass node access',
+      'create and edit custom blocks',
+    ]));
+    $display = \Drupal::service('entity_display.repository')->getViewDisplay('node', 'bundle_with_section_field');
+    $display->enableLayoutBuilder()->setOverridable()->save();
+    $test_node = $this->createNode([
+      'title' => 'test node',
+      'type' => 'bundle_with_section_field',
+    ]);
+
+    $this->drupalGet("node/{$test_node->id()}/layout");
+    $this->addInlineBlockToLayout('Example block', 'original content');
+    $this->assertSaveLayout();
+    $original_content_revision_id = Node::load($test_node->id())->getLoadedRevisionId();
+
+    $this->drupalGet("node/{$test_node->id()}/layout");
+    $this->configureInlineBlock('original content', 'updated content');
+    $this->assertSaveLayout();
+
+    $this->drupalGet("node/{$test_node->id()}/revisions/$original_content_revision_id/revert");
+    $this->submitForm([], 'Revert');
+    $this->drupalGet("node/{$test_node->id()}/layout");
+    $this->configureInlineBlock('original content', 'second updated content');
+    $this->assertSaveLayout();
+
+    $this->drupalGet($test_node->toUrl());
+    $this->assertSession()->pageTextContains('second updated content');
+  }
+
 }
