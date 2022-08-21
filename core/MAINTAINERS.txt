@@ -129,9 +129,6 @@ Claro
 Classy
 - David Hernandez 'davidhernandez' https://www.drupal.org/u/davidhernandez
 
-Color
-- ?
-
 Comment
 - Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
 - Andrey Postnikov 'andypost' https://www.drupal.org/u/andypost

@@ -205,7 +205,6 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
   protected function getMissingPaths() {
     return [
       'Aggregator',
-      // @todo Remove Color in https://www.drupal.org/project/drupal/issues/3270899
       'Color',
       // @todo Remove RDF in https://www.drupal.org/node/3267515
       'RDF',
