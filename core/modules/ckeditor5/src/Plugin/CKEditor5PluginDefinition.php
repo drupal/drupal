@@ -444,13 +444,18 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
   /**
    * Gets the list of elements and attributes this plugin allows to create/edit.
    *
-   * @return string[]|false
-   *   FALSE if this plugin does not create/edit any elements or attributes.
-   *   Otherwise a list.
+   * @return string[]
+   *   A list of elements and attributes.
    *
    * @see \Drupal\ckeditor5\Annotation\DrupalAspectsOfCKEditor5Plugin::$elements
+   *
+   * @throws \LogicException
+   *   When called on a plugin definition that has no elements.
    */
-  public function getElements() {
+  public function getElements(): array {
+    if (!$this->hasElements()) {
+      throw new \LogicException('::getElements() should only be called if ::hasElements() returns TRUE.');
+    }
     return $this->drupal['elements'];
   }
 
@@ -498,7 +503,7 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
    * @see \Drupal\ckeditor5\Annotation\DrupalAspectsOfCKEditor5Plugin::$elements
    */
   public function hasElements(): bool {
-    return $this->getElements() !== FALSE;
+    return $this->drupal['elements'] !== FALSE;
   }
 
   /**
