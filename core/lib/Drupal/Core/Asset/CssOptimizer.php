@@ -80,7 +80,9 @@ class CssOptimizer implements AssetOptimizerInterface {
    */
   protected function processFile($css_asset) {
     $contents = $this->loadFile($css_asset['data'], TRUE);
-
+    if ($css_asset['media'] !== 'print' && $css_asset['media'] !== 'all') {
+      $contents = '@media ' . $css_asset['media'] . '{' . $contents . '}' . "\n";
+    }
     $contents = $this->clean($contents);
 
     // Get the parent directory of this file, relative to the Drupal root.
