@@ -8,6 +8,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests the Seven theme.
  *
  * @group seven
+ * @group legacy
  */
 class SevenLayoutBuilderTest extends BrowserTestBase {
 
