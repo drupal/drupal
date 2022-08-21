@@ -66,6 +66,13 @@ function block_content_entity_type_alter(array &$entity_types) {
     $translation['block_content'] = TRUE;
     $entity_types['block_content']->set('translation', $translation);
   }
+
+  // Swap out the default EntityChanged constraint with a custom one with
+  // different logic for inline blocks.
+  $constraints = $entity_types['block_content']->getConstraints();
+  unset($constraints['EntityChanged']);
+  $constraints['BlockContentEntityChanged'] = NULL;
+  $entity_types['block_content']->setConstraints($constraints);
 }
 
 /**
