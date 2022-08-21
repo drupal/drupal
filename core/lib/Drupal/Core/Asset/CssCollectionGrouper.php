@@ -10,10 +10,13 @@ class CssCollectionGrouper implements AssetCollectionGrouperInterface {
   /**
    * {@inheritdoc}
    *
-   * Puts multiple items into the same group if they are groupable and if they
-   * are for the same 'media'. Items of the 'file' type are groupable if their
-   * 'preprocess' flag is TRUE, and items of the 'external' type are never
-   * groupable.
+   * Puts multiple items into the same group if they are groupable. Items of the
+   * 'file' type are groupable if their 'preprocess' flag is TRUE, and items of
+   * the 'external' type are never groupable. Items with a media type of 'print'
+   * will be put into their own group so that they are not loaded on regular
+   * page requests. Items with a media type of 'all' or 'screen' will be grouped
+   * together (with media queries where necessary), to minimize the number of
+   * separate aggregates.
    *
    * Also ensures that the process of grouping items does not change their
    * relative order. This requirement may result in multiple groups for the same
@@ -46,8 +49,10 @@ class CssCollectionGrouper implements AssetCollectionGrouperInterface {
         case 'file':
           // Group file items if their 'preprocess' flag is TRUE.
           // Help ensure maximum reuse of aggregate files by only grouping
-          // together items that share the same 'group' value.
-          $group_keys = $item['preprocess'] ? [$item['type'], $item['group'], $item['media']] : FALSE;
+          // together items that share the same 'group' value. The CSS optimizer
+          // adds inline 'media' statements for everything except 'print', so
+          // only vary groups based on that.
+          $group_keys = $item['preprocess'] ? [$item['type'], $item['group'], $item['media'] === 'print'] : FALSE;
           break;
 
         case 'external':
@@ -65,6 +70,9 @@ class CssCollectionGrouper implements AssetCollectionGrouperInterface {
         // properties are unique to the item and should not be carried over to
         // the group.
         $groups[$i] = $item;
+        if ($item['media'] !== 'print') {
+          $groups[$i]['media'] = 'all';
+        }
         unset($groups[$i]['data'], $groups[$i]['weight'], $groups[$i]['basename']);
         $groups[$i]['items'] = [];
         $current_group_keys = $group_keys ? $group_keys : NULL;
