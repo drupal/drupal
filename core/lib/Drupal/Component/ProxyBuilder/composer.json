@@ -1,15 +1,23 @@
 {
-  "name": "drupal/core-proxy-builder",
-  "description": "Provides a lightweight mechanism to provide lazy loaded proxies.",
-  "keywords": ["drupal", "proxy"],
-  "homepage": "https://www.drupal.org/project/drupal",
-  "license": "GPL-2.0-or-later",
-  "require": {
-    "php": ">=7.3.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "Drupal\\Component\\ProxyBuilder\\": ""
+    "name": "drupal/core-proxy-builder",
+    "description": "Provides a lightweight mechanism to provide lazy loaded proxies.",
+    "keywords": [
+        "drupal",
+        "proxy"
+    ],
+    "homepage": "https://www.drupal.org/project/drupal",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=7.3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Drupal\\Component\\ProxyBuilder\\": ""
+        }
+    },
+    "extra": {
+        "_readme": [
+            "This file was partially generated automatically. See: https://www.drupal.org/node/3293830"
+        ]
     }
-  }
 }

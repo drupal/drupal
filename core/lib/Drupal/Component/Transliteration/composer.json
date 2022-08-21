@@ -1,16 +1,23 @@
 {
-  "name": "drupal/core-transliteration",
-  "description": "Transliteration.",
-  "type": "library",
-  "license": "GPL-2.0-or-later",
-  "support": {
-    "issues": "https://www.drupal.org/project/issues/drupal",
-    "irc": "irc://irc.freenode.net/drupal-contribute",
-    "source": "https://www.drupal.org/project/drupal/git-instructions"
-  },
-  "autoload": {
-    "psr-4": {
-      "Drupal\\Component\\Transliteration\\": ""
+    "name": "drupal/core-transliteration",
+    "description": "Transliteration.",
+    "type": "library",
+    "license": "GPL-2.0-or-later",
+    "support": {
+        "issues": "https://www.drupal.org/project/issues/drupal",
+        "source": "https://www.drupal.org/project/drupal/git-instructions"
+    },
+    "autoload": {
+        "psr-4": {
+            "Drupal\\Component\\Transliteration\\": ""
+        }
+    },
+    "extra": {
+        "_readme": [
+            "This file was partially generated automatically. See: https://www.drupal.org/node/3293830"
+        ]
+    },
+    "require": {
+        "php": ">=7.3.0"
     }
-  }
 }

@@ -1,16 +1,24 @@
 {
-  "name": "drupal/core-render",
-  "description": "Renders placeholder variables for HTML and plain-text display.",
-  "keywords": ["drupal"],
-  "homepage": "https://www.drupal.org/project/drupal",
-  "license": "GPL-2.0-or-later",
-  "require": {
-    "php": ">=7.3.0",
-    "drupal/core-utility": "^8.8"
-  },
-  "autoload": {
-    "psr-4": {
-      "Drupal\\Component\\Render\\": ""
-    }
-  }
+    "name": "drupal/core-render",
+    "description": "Renders placeholder variables for HTML and plain-text display.",
+    "keywords": [
+        "drupal"
+    ],
+    "homepage": "https://www.drupal.org/project/drupal",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=7.3.0",
+        "drupal/core-utility": "9.5.x-dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Drupal\\Component\\Render\\": ""
+        }
+    },
+    "extra": {
+        "_readme": [
+            "This file was partially generated automatically. See: https://www.drupal.org/node/3293830"
+        ]
+    },
+    "minimum-stability": "dev"
 }

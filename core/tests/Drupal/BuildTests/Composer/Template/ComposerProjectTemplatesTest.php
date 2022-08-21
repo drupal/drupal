@@ -4,7 +4,7 @@ namespace Drupal\BuildTests\Composer\Template;
 
 use Composer\Json\JsonFile;
 use Composer\Semver\VersionParser;
-use Drupal\BuildTests\Framework\BuildTestBase;
+use Drupal\BuildTests\Composer\ComposerBuildTestBase;
 use Drupal\Composer\Composer;
 
 /**
@@ -25,7 +25,7 @@ use Drupal\Composer\Composer;
  *
  * @requires externalCommand composer
  */
-class ComposerProjectTemplatesTest extends BuildTestBase {
+class ComposerProjectTemplatesTest extends ComposerBuildTestBase {
 
   /**
    * The minimum stability requirement for dependencies.
@@ -295,26 +295,6 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
         }
       }
     }
-  }
-
-  /**
-   * Assert that the VERSION constant in Drupal.php is the expected value.
-   *
-   * @param string $expectedVersion
-   *   The expected version.
-   * @param string $dir
-   *   The path to the site root.
-   *
-   * @internal
-   */
-  protected function assertDrupalVersion(string $expectedVersion, string $dir): void {
-    $drupal_php_path = $dir . '/core/lib/Drupal.php';
-    $this->assertFileExists($drupal_php_path);
-
-    // Read back the Drupal version that was set and assert it matches expectations.
-    $this->executeCommand("php -r 'include \"$drupal_php_path\"; print \Drupal::VERSION;'");
-    $this->assertCommandSuccessful();
-    $this->assertCommandOutputContains($expectedVersion);
   }
 
   /**

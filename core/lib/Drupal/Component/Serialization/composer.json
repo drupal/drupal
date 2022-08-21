@@ -1,16 +1,23 @@
 {
-  "name": "drupal/core-serialization",
-  "description": "Serialization.",
-  "keywords": ["drupal"],
-  "homepage": "https://www.drupal.org/project/drupal",
-  "license": "GPL-2.0-or-later",
-  "require": {
-    "php": ">=7.3.0",
-    "symfony/yaml": "^4.4"
-  },
-  "autoload": {
-    "psr-4": {
-      "Drupal\\Component\\Serialization\\": ""
+    "name": "drupal/core-serialization",
+    "description": "Serialization.",
+    "keywords": [
+        "drupal"
+    ],
+    "homepage": "https://www.drupal.org/project/drupal",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=7.3.0",
+        "symfony/yaml": "^4.4.19"
+    },
+    "autoload": {
+        "psr-4": {
+            "Drupal\\Component\\Serialization\\": ""
+        }
+    },
+    "extra": {
+        "_readme": [
+            "This file was partially generated automatically. See: https://www.drupal.org/node/3293830"
+        ]
     }
-  }
 }

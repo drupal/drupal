@@ -107,7 +107,8 @@
             "@composer require phpspec/prophecy-phpunit:^2 --no-progress"
         ],
         "post-update-cmd": [
-            "Drupal\\Composer\\Composer::generateMetapackages"
+            "Drupal\\Composer\\Composer::generateMetapackages",
+            "Drupal\\Composer\\Composer::generateComponentPackages"
         ],
         "phpcs": "phpcs --standard=core/phpcs.xml.dist --",
         "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --"

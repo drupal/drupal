@@ -1,18 +1,25 @@
 {
-  "name": "drupal/core-event-dispatcher",
-  "description": "EventDispatcher.",
-  "keywords": ["drupal"],
-  "homepage": "https://www.drupal.org/project/drupal",
-  "license": "GPL-2.0-or-later",
-  "require": {
-    "php": ">=7.3.0",
-    "symfony/dependency-injection": "^4.4",
-    "symfony/event-dispatcher": "^4.4",
-    "symfony/event-dispatcher-contracts": "^1.1"
-  },
-  "autoload": {
-    "psr-4": {
-      "Drupal\\Component\\EventDispatcher\\": ""
+    "name": "drupal/core-event-dispatcher",
+    "description": "EventDispatcher.",
+    "keywords": [
+        "drupal"
+    ],
+    "homepage": "https://www.drupal.org/project/drupal",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=7.3.0",
+        "symfony/dependency-injection": "^4.4",
+        "symfony/event-dispatcher": "^4.4",
+        "symfony/event-dispatcher-contracts": "v1.1.13"
+    },
+    "autoload": {
+        "psr-4": {
+            "Drupal\\Component\\EventDispatcher\\": ""
+        }
+    },
+    "extra": {
+        "_readme": [
+            "This file was partially generated automatically. See: https://www.drupal.org/node/3293830"
+        ]
     }
-  }
 }

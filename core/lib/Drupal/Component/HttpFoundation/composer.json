@@ -1,16 +1,23 @@
 {
-  "name": "drupal/core-http-foundation",
-  "description": "HttpFoundation.",
-  "keywords": ["drupal"],
-  "homepage": "https://www.drupal.org/project/drupal",
-  "license": "GPL-2.0-or-later",
-  "require": {
-    "php": ">=7.3.0",
-    "symfony/http-foundation": "^4.4"
-  },
-  "autoload": {
-    "psr-4": {
-      "Drupal\\Component\\HttpFoundation\\": ""
+    "name": "drupal/core-http-foundation",
+    "description": "HttpFoundation.",
+    "keywords": [
+        "drupal"
+    ],
+    "homepage": "https://www.drupal.org/project/drupal",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=7.3.0",
+        "symfony/http-foundation": "^4.4.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Drupal\\Component\\HttpFoundation\\": ""
+        }
+    },
+    "extra": {
+        "_readme": [
+            "This file was partially generated automatically. See: https://www.drupal.org/node/3293830"
+        ]
     }
-  }
 }

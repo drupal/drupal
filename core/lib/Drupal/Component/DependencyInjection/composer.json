@@ -1,26 +1,33 @@
 {
-  "name": "drupal/core-dependency-injection",
-  "description": "Dependency Injection container optimized for Drupal's needs.",
-  "keywords": ["drupal", "dependency injection"],
-  "type": "library",
-  "homepage": "https://www.drupal.org/project/drupal",
-  "license": "GPL-2.0-or-later",
-  "support": {
-    "issues": "https://www.drupal.org/project/issues/drupal",
-    "irc": "irc://irc.freenode.net/drupal-contribute",
-    "source": "https://www.drupal.org/project/drupal/git-instructions"
-  },
-  "require": {
-    "php": ">=7.3.0",
-    "symfony/dependency-injection": "^4.4",
-    "symfony/service-contracts": "^1.1|^2"
-  },
-  "suggest": {
-    "symfony/expression-language": "For using expressions in service container configuration"
-  },
-  "autoload": {
-    "psr-4": {
-      "Drupal\\Component\\DependencyInjection\\": ""
+    "name": "drupal/core-dependency-injection",
+    "description": "Dependency Injection container optimized for Drupal's needs.",
+    "keywords": [
+        "drupal",
+        "dependency injection"
+    ],
+    "type": "library",
+    "homepage": "https://www.drupal.org/project/drupal",
+    "license": "GPL-2.0-or-later",
+    "support": {
+        "issues": "https://www.drupal.org/project/issues/drupal",
+        "source": "https://www.drupal.org/project/drupal/git-instructions"
+    },
+    "require": {
+        "php": ">=7.3.0",
+        "symfony/dependency-injection": "^4.4",
+        "symfony/service-contracts": "v2.5.2"
+    },
+    "suggest": {
+        "symfony/expression-language": "For using expressions in service container configuration"
+    },
+    "autoload": {
+        "psr-4": {
+            "Drupal\\Component\\DependencyInjection\\": ""
+        }
+    },
+    "extra": {
+        "_readme": [
+            "This file was partially generated automatically. See: https://www.drupal.org/node/3293830"
+        ]
     }
-  }
 }

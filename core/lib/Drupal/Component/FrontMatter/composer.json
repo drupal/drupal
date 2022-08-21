@@ -1,16 +1,24 @@
 {
-  "name": "drupal/core-front-matter",
-  "description": "Component for parsing front matter from a source.",
-  "keywords": ["drupal"],
-  "homepage": "https://www.drupal.org/project/drupal",
-  "license": "GPL-2.0-or-later",
-  "require": {
-    "php": ">=7.3.0",
-    "drupal/core-serialization": "^8.8"
-  },
-  "autoload": {
-    "psr-4": {
-      "Drupal\\Component\\FrontMatter\\": ""
-    }
-  }
+    "name": "drupal/core-front-matter",
+    "description": "Component for parsing front matter from a source.",
+    "keywords": [
+        "drupal"
+    ],
+    "homepage": "https://www.drupal.org/project/drupal",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=7.3.0",
+        "drupal/core-serialization": "9.5.x-dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Drupal\\Component\\FrontMatter\\": ""
+        }
+    },
+    "extra": {
+        "_readme": [
+            "This file was partially generated automatically. See: https://www.drupal.org/node/3293830"
+        ]
+    },
+    "minimum-stability": "dev"
 }

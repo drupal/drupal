@@ -1,19 +1,28 @@
 {
-  "name": "drupal/core-plugin",
-  "description": "Base building block for a scalable and extensible plug-in system for PHP components and application framework extensions.",
-  "keywords": ["drupal", "plugin", "plugins"],
-  "homepage": "https://www.drupal.org/project/drupal",
-  "license": "GPL-2.0-or-later",
-  "require": {
-    "php": ">=7.3.0",
-    "symfony/validator": "^4.4"
-  },
-  "autoload": {
-    "psr-4": {
-      "Drupal\\Component\\Plugin\\": ""
+    "name": "drupal/core-plugin",
+    "description": "Base building block for a scalable and extensible plug-in system for PHP components and application framework extensions.",
+    "keywords": [
+        "drupal",
+        "plugin",
+        "plugins"
+    ],
+    "homepage": "https://www.drupal.org/project/drupal",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=7.3.0",
+        "symfony/validator": "^4.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Drupal\\Component\\Plugin\\": ""
+        }
+    },
+    "suggest": {
+        "symfony/validator": "Leveraged in the use of context aware plugins."
+    },
+    "extra": {
+        "_readme": [
+            "This file was partially generated automatically. See: https://www.drupal.org/node/3293830"
+        ]
     }
-  },
-  "suggest": {
-    "symfony/validator": "Leveraged in the use of context aware plugins."
-  }
 }

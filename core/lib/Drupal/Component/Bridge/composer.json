@@ -1,20 +1,24 @@
 {
-  "name": "drupal/core-bridge",
-  "abandoned": true,
-  "extra": [
-        "This component package has been deprecated. See the change record here: https://www.drupal.org/node/3258656"
-  ],
-  "description": "Bridge.",
-  "keywords": ["drupal"],
-  "homepage": "https://www.drupal.org/project/drupal",
-  "license": "GPL-2.0-or-later",
-  "require": {
-    "php": ">=7.3.0",
-    "laminas/laminas-feed": "^2.12"
-  },
-  "autoload": {
-    "psr-4": {
-      "Drupal\\Component\\Bridge\\": ""
+    "name": "drupal/core-bridge",
+    "abandoned": true,
+    "extra": {
+        "_readme": [
+            "This file was partially generated automatically. See: https://www.drupal.org/node/3293830"
+        ]
+    },
+    "description": "Bridge.",
+    "keywords": [
+        "drupal"
+    ],
+    "homepage": "https://www.drupal.org/project/drupal",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=7.3.0",
+        "laminas/laminas-feed": "^2.17"
+    },
+    "autoload": {
+        "psr-4": {
+            "Drupal\\Component\\Bridge\\": ""
+        }
     }
-  }
 }
