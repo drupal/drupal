@@ -1,7 +1,0 @@
-name: Color
-type: module
-description: 'Allows users to change the color scheme of compatible themes.'
-lifecycle: deprecated
-lifecycle_link: https://www.drupal.org/node/3223395#s-color
-package: Core
-version: VERSION

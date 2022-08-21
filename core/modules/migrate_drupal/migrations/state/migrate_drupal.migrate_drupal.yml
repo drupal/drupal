@@ -9,7 +9,6 @@ finished:
     # The following do not have an upgrade path.
     blogapi: core
     calendarsignup: core
-    color: core
     content_copy: core
     content_multigroup: core
     content_permissions: core

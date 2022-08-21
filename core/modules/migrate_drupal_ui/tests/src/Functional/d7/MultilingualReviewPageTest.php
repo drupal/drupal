@@ -153,7 +153,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       // Block is set not_finished in migrate_state_not_finished_test.
       'Block',
       'Breakpoints',
-      // @todo Remove Color in https://www.drupal.org/project/drupal/issues/3270899
       'Color',
       'Contact translation',
       'Entity Translation Menu',

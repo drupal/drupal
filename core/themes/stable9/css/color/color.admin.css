@@ -39,12 +39,12 @@
 .color-palette__hook.is-down,
 .color-palette__hook.is-up,
 .color-palette__hook.is-both {
-  background: url(../../../../modules/color/images/hook.png) no-repeat 100% 0; /* LTR */
+  background: url(../../images/color/hook.png) no-repeat 100% 0; /* LTR */
 }
 [dir="rtl"] .color-palette__hook.is-down,
 [dir="rtl"] .color-palette__hook.is-up,
 [dir="rtl"] .color-palette__hook.is-both {
-  background: url(../../../../modules/color/images/hook-rtl.png) no-repeat 0 0;
+  background: url(../../images/color/hook-rtl.png) no-repeat 0 0;
 }
 .color-palette__hook.is-up {
   background-position: 100% -27px; /* LTR */
@@ -75,7 +75,7 @@ button.color-palette__lock,
   direction: ltr;
   border: 0;
   outline: 0;
-  background: url(../../../../modules/color/images/lock.png) no-repeat 50% 0;
+  background: url(../../images/color/lock.png) no-repeat 50% 0;
 }
 [dir="rtl"] button.color-palette__lock,
 [dir="rtl"] .color-palette__lock {
