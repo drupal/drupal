@@ -104,22 +104,6 @@ class EntityViewControllerTest extends BrowserTestBase {
     // Browse to the entity and verify that the attribute is rendered in the
     // field item HTML markup.
     $this->drupalGet('entity_test/' . $entity->id());
-    $this->assertSession()->elementTextEquals('xpath', '//div[@data-field-item-attr="foobar"]/p', $test_value);
-
-    // Enable the RDF module to ensure that two modules can add attributes to
-    // the same field item.
-    \Drupal::service('module_installer')->install(['rdf']);
-    $this->resetAll();
-
-    // Set an RDF mapping for the field_test_text field. This RDF mapping will
-    // be turned into RDFa attributes in the field item output.
-    $mapping = rdf_get_mapping('entity_test', 'entity_test');
-    $mapping->setFieldMapping('field_test_text', [
-      'properties' => ['schema:text'],
-    ])->save();
-    // Browse to the entity and verify that the attributes from both modules
-    // are rendered in the field item HTML markup.
-    $this->drupalGet('entity_test/' . $entity->id());
     $this->assertSession()->elementTextEquals('xpath', '//div[@data-field-item-attr="foobar" and @property="schema:text"]/p', $test_value);
   }
 
