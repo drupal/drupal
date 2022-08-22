@@ -1,17 +1,15 @@
 <?php
 
-namespace Drupal\Tests\rdf\Functional\Node;
+namespace Drupal\Tests\node\Functional;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\node\NodeInterface;
-use Drupal\Tests\node\Functional\NodeTestBase;
 use Drupal\user\UserInterface;
 
 /**
  * Tests making node base fields' displays configurable.
  *
  * @group node
- * @group rdf
  */
 class NodeDisplayConfigurableTest extends NodeTestBase {
 
@@ -56,7 +54,7 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
    *
    * @dataProvider provideThemes
    */
-  public function testDisplayConfigurable(string $theme, string $metadata_region, bool $field_classes): void {
+  public function testDisplayConfigurable(string $theme, string $metadata_region, bool $field_classes) {
     // Change the node type setting to show submitted by information.
     $node_type = \Drupal::entityTypeManager()->getStorage('node_type')->load('page');
     $node_type->setDisplaySubmitted(TRUE);

@@ -693,18 +693,14 @@ function entity_test_entity_prepare_view($entity_type, array $entities, array $d
     foreach ($entities as $entity) {
       /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
 
-      // Add field item attributes on field_test_text if it exists.
-      // See \Drupal\Tests\system\Functional\Entity\EntityViewControllerTest::testFieldItemAttributes().
+      // Add a dummy field item attribute on field_test_text if it exists.
       if ($entity->hasField('field_test_text') && $displays[$entity->bundle()]->getComponent('field_test_text')) {
         foreach ($entity->get('field_test_text') as $item) {
-          $item->_attributes += [
-            'data-field-item-attr' => 'foobar',
-            'property' => 'schema:text',
-          ];
+          $item->_attributes += ['data-field-item-attr' => 'foobar'];
         }
       }
 
-      // Add an item attribute on daterange fields if they exist.
+      // Add a dummy field item attribute on daterange fields if they exist.
       $fields = $entity->getFieldDefinitions();
       foreach ($fields as $field) {
         if ($field->getType() === 'daterange') {
