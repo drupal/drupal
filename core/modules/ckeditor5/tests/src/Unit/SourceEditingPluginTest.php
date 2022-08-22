@@ -136,6 +136,18 @@ class SourceEditingPluginTest extends UnitTestCase {
                 'name' => 'foo2',
                 'attributes' => [
                   [
+                    'key' => [
+                      'regexp' => [
+                        'pattern' => '/^bar-.*$/',
+                      ],
+                    ],
+                    'value' => [
+                      'regexp' => [
+                        'pattern' => '/^(baz)$/',
+                      ],
+                    ],
+                  ],
+                  [
                     'key' => 'bar',
                     'value' => [
                       'regexp' => [
@@ -148,6 +160,18 @@ class SourceEditingPluginTest extends UnitTestCase {
               [
                 'name' => 'foo3',
                 'attributes' => [
+                  [
+                    'key' => [
+                      'regexp' => [
+                        'pattern' => '/^bar-.*$/',
+                      ],
+                    ],
+                    'value' => [
+                      'regexp' => [
+                        'pattern' => '/^(baz|qux-.*)$/',
+                      ],
+                    ],
+                  ],
                   [
                     'key' => 'bar',
                     'value' => [
