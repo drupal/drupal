@@ -266,12 +266,29 @@ class FilterHtml extends FilterBase {
         continue;
       }
       $tag = $node->tagName;
+
+      // All attributes are already allowed on this tag, this is the most
+      // permissive configuration, no additional processing is required.
+      if (isset($restrictions['allowed'][$tag]) && $restrictions['allowed'][$tag] === TRUE) {
+        continue;
+      }
+
       if ($node->hasAttributes()) {
-        // Mark the tag as allowed, assigning TRUE for each attribute name if
-        // all values are allowed, or an array of specific allowed values.
-        $restrictions['allowed'][$tag] = [];
+        // If the tag is not yet present, prepare to add attribute restrictions.
+        // Otherwise, check if a more restrictive configuration (FALSE, meaning
+        // no attributes were allowed) is present: then override the existing
+        // value to prepare to add attribute restrictions.
+        if (!isset($restrictions['allowed'][$tag]) || $restrictions['allowed'][$tag] === FALSE) {
+          $restrictions['allowed'][$tag] = [];
+        }
+
         // Iterate over any attributes, and mark them as allowed.
         foreach ($node->attributes as $name => $attribute) {
+          // Only add specific attribute values if all values are not already
+          // allowed.
+          if (isset($restrictions['allowed'][$tag][$name]) && $restrictions['allowed'][$tag][$name] === TRUE) {
+            continue;
+          }
           // Put back any trailing * on wildcard attribute name.
           $name = str_replace($star_protector, '*', $name);
 
@@ -302,7 +319,8 @@ class FilterHtml extends FilterBase {
           }
         }
       }
-      else {
+
+      if (empty($restrictions['allowed'][$tag])) {
         // Mark the tag as allowed, but with no attributes allowed.
         $restrictions['allowed'][$tag] = FALSE;
       }
