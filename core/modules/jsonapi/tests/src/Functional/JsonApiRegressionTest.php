@@ -1028,43 +1028,6 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   }
 
   /**
-   * Ensure that child comments can be retrieved via JSON:API.
-   */
-  public function testLeakedCacheMetadataViaRdfFromIssue3053827() {
-    $this->assertTrue($this->container->get('module_installer')->install(['comment', 'rdf'], TRUE), 'Installed modules.');
-    $this->addDefaultCommentField('node', 'article', 'comment', CommentItemInterface::OPEN, 'comment');
-    $this->rebuildAll();
-
-    // Create data.
-    Node::create([
-      'title' => 'Commented Node',
-      'type' => 'article',
-    ])->save();
-    $default_values = [
-      'entity_id' => 1,
-      'entity_type' => 'node',
-      'field_name' => 'comment',
-      'status' => 1,
-    ];
-    $parent = Comment::create(['subject' => 'Marlin'] + $default_values);
-    $parent->save();
-    $child = Comment::create(['subject' => 'Nemo', 'pid' => $parent->id()] + $default_values);
-    $child->save();
-
-    // Test.
-    $user = $this->drupalCreateUser(['access comments']);
-    $request_options = [
-      RequestOptions::AUTH => [
-        $user->getAccountName(),
-        $user->pass_raw,
-      ],
-    ];
-    // Requesting the comment collection should succeed.
-    $response = $this->request('GET', Url::fromUri('internal:/jsonapi/comment/comment'), $request_options);
-    $this->assertSame(200, $response->getStatusCode());
-  }
-
-  /**
    * Ensure non-translatable entities can be PATCHed with an alternate language.
    *
    * @see https://www.drupal.org/project/drupal/issues/3043168
