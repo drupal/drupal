@@ -51,7 +51,7 @@ interface InfoParserInterface {
    * - stylesheets: Theme stylesheets.
    * - scripts: Theme scripts.
    *
-   * See bartik.info.yml for an example of a theme .info.yml file.
+   * See olivero.info.yml for an example of a theme .info.yml file.
    *
    * For information stored in a profile .info.yml file see
    * install_profile_info().

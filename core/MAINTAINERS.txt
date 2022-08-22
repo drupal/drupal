@@ -74,9 +74,6 @@ Automated Cron
 Ban
 - ?
 
-Bartik
-- Emma Maria Karayiannis 'emma.maria' https://www.drupal.org/u/emma.maria
-
 Base system
 - ?
 

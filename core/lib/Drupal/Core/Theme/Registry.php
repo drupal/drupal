@@ -427,7 +427,7 @@ class Registry implements DestructableInterface {
    *   The actual name of theme, module, etc. that is being processed.
    * @param string $path
    *   The directory where $name is. For example, modules/system or
-   *   themes/bartik.
+   *   themes/olivero.
    *
    * @see \Drupal\Core\Theme\ThemeManagerInterface::render()
    * @see hook_theme()

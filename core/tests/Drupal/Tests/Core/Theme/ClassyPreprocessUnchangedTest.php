@@ -22,7 +22,7 @@ class ClassyPreprocessUnchangedTest extends UnitTestCase {
   public function testNoNewPreprocess() {
     $classy_theme_contents = file_get_contents($this->root . '/core/themes/classy/classy.theme');
     $hash = md5($classy_theme_contents);
-    $this->assertSame($hash, 'c42ff3a1291a258b42f0c44010cd28c7', "The file hash for classy.theme has changed. Any additions or changes to preprocess functions should be added to the themes that inherit Classy. \nIf the changes to classy.theme are not changes to preprocess functions, update the hash in this test to: '$hash' so it will pass.");
+    $this->assertSame('2521ed76fe744a9049c4aa482ac6d9c3', $hash, "The file hash for classy.theme has changed. Any additions or changes to preprocess functions should be added to the themes that inherit Classy. \nIf the changes to classy.theme are not changes to preprocess functions, update the hash in this test to: '$hash' so it will pass.");
   }
 
 }

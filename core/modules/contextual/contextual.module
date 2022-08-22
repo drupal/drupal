@@ -157,7 +157,7 @@ function contextual_contextual_links_view_alter(&$element, $items) {
  * Examples:
  *  - node:node=1:langcode=en
  *  - views_ui_edit:view=frontpage:location=page&view_name=frontpage&view_display_id=page_1&langcode=en
- *  - menu:menu=tools:langcode=en|block:block=bartik.tools:langcode=en
+ *  - menu:menu=tools:langcode=en|block:block=olivero.tools:langcode=en
  *
  * So, expressed in a pattern:
  *  <group>:<route parameters>:<metadata>
