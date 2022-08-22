@@ -1,15 +1,17 @@
 <?php
 
-namespace Drupal\Tests\jsonapi\Functional;
+namespace Drupal\Tests\rdf\Functional\Jsonapi;
 
 use Drupal\Core\Url;
 use Drupal\node\Entity\NodeType;
 use Drupal\rdf\Entity\RdfMapping;
+use Drupal\Tests\jsonapi\Functional\ConfigEntityResourceTestBase;
 
 /**
  * JSON:API integration test for the "RdfMapping" config entity type.
  *
  * @group jsonapi
+ * @group rdf
  */
 class RdfMappingTest extends ConfigEntityResourceTestBase {
 

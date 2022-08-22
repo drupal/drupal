@@ -53,9 +53,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     $this->nodeStorage->delete($this->nodeStorage->loadMultiple());
 
     $this->loadFixture($this->getModulePath('migrate_drupal') . '/tests/fixtures/drupal6.php');
-
-    // @todo Remove this in https://www.drupal.org/node/3267515
-    \Drupal::service('module_installer')->uninstall(['rdf']);
   }
 
   /**
