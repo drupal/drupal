@@ -496,7 +496,7 @@ class StandardProfileTest extends BrowserTestBase {
     $expected_value = [
       'type' => 'literal',
       // There is an extra carriage return in the value when parsing comments as
-      // output by Bartik, so it must be added to the expected value.
+      // output by Classy, so it must be added to the expected value.
       'value' => "$text
 ",
       'lang' => 'en',

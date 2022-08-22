@@ -32,7 +32,7 @@ interface AssetResolverInterface {
    * module styles through CSS selectors.
    *
    * Themes may replace module-defined CSS files by adding a stylesheet with the
-   * same filename. For example, themes/bartik/system-menus.css would replace
+   * same filename. For example, themes/olivero/system-menus.css would replace
    * modules/system/system-menus.css. This allows themes to override complete
    * CSS files, rather than specific selectors, when necessary.
    *

@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * theme as the base page, because most themes are built with the assumption
  * that they control the entire page, so if the CSS for two themes are both
  * loaded for a given page, they may conflict with each other. For example,
- * Bartik is Drupal's default theme, and Seven is Drupal's default
+ * Olivero is Drupal's default theme, and Seven is Drupal's default
  * administration theme. Depending on whether the "Use the administration theme
  * when editing or creating content" checkbox is checked, the node edit form may
  * be displayed in either theme, but the Ajax response to the Field module's
