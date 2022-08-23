@@ -1,15 +1,11 @@
 <?php
 
-// phpcs:ignoreFile Portions of this file are a direct copy of
-// \Symfony\Component\DependencyInjection\Container.
-
 namespace Drupal\Core\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ContainerBuilder as SymfonyContainerBuilder;
 use Symfony\Component\DependencyInjection\Container as SymfonyContainer;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\LazyProxy\Instantiator\RealServiceInstantiator;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 /**
@@ -22,43 +18,11 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 class ContainerBuilder extends SymfonyContainerBuilder {
 
   /**
-   * @var \Doctrine\Instantiator\InstantiatorInterface|null
-   */
-  private $proxyInstantiator;
-
-  /**
    * {@inheritdoc}
    */
   public function __construct(ParameterBagInterface $parameterBag = NULL) {
     parent::__construct($parameterBag);
     $this->setResourceTracking(FALSE);
-  }
-
-  /**
-   * Retrieves the currently set proxy instantiator or instantiates one.
-   *
-   * @return InstantiatorInterface
-   */
-  private function getProxyInstantiator()
-  {
-    if (!$this->proxyInstantiator) {
-      $this->proxyInstantiator = new RealServiceInstantiator();
-    }
-
-    return $this->proxyInstantiator;
-  }
-
-  /**
-   * A 1to1 copy of parent::shareService.
-   *
-   * @todo https://www.drupal.org/project/drupal/issues/2937010 Since Symfony
-   *   3.4 this is not a 1to1 copy.
-   */
-  protected function shareService(Definition $definition, $service, $id, array &$inlineServices)
-  {
-    if ($definition->isShared()) {
-      $this->services[$lowerId = strtolower($id)] = $service;
-    }
   }
 
   /**
@@ -87,7 +51,7 @@ class ContainerBuilder extends SymfonyContainerBuilder {
   /**
    * {@inheritdoc}
    */
-  public function register($id, $class = null): Definition {
+  public function register($id, $class = NULL): Definition {
     if (strtolower($id) !== $id) {
       throw new \InvalidArgumentException("Service ID names must be lowercase: $id");
     }
@@ -116,24 +80,6 @@ class ContainerBuilder extends SymfonyContainerBuilder {
       throw new \InvalidArgumentException("Parameter names must be lowercase: $name");
     }
     parent::setParameter($name, $value);
-  }
-
-  /**
-   * A 1to1 copy of parent::callMethod.
-   *
-   * @todo https://www.drupal.org/project/drupal/issues/2937010 Since Symfony
-   *   3.4 this is not a 1to1 copy.
-   */
-  protected function callMethod($service, $call, array &$inlineServices = array()) {
-    $services = self::getServiceConditionals($call[1]);
-
-    foreach ($services as $s) {
-      if (!$this->has($s)) {
-        return;
-      }
-    }
-
-    call_user_func_array(array($service, $call[0]), $this->resolveServices($this->getParameterBag()->resolveValue($call[1])));
   }
 
   /**
