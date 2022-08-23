@@ -8,7 +8,7 @@ install:
   - big_pipe
   - block
   - breakpoint
-  - ckeditor
+  - ckeditor5
   - config
   - contextual
   - contact
