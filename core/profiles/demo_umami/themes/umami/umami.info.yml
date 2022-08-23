@@ -64,6 +64,3 @@ regions:
   bottom: Bottom
   page_top: 'Page top' # Needed by Drupal Core
   page_bottom: 'Page bottom' # Needed by Drupal Core
-
-ckeditor_stylesheets:
-  - css/classy/components/media-embed-error.css
