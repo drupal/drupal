@@ -132,7 +132,7 @@ demo-umami-tour:
    theme:
       css/components/tour/tour.theme.css: {}
   dependencies:
-    - seven/tour-styling
+    - claro/tour-styling
 
 oneplusfourgrid_section:
   css:
