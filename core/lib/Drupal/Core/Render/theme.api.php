@@ -1227,9 +1227,9 @@ function hook_theme($existing, $type, $theme, $path) {
  * @code
  * $theme_registry['block_content_add_list'] = array (
  *   'template' => 'block-content-add-list',
- *   'path' => 'core/themes/seven/templates',
+ *   'path' => 'core/themes/claro/templates',
  *   'type' => 'theme_engine',
- *   'theme path' => 'core/themes/seven',
+ *   'theme path' => 'core/themes/claro',
  *   'includes' => array (
  *     0 => 'core/modules/block_content/block_content.pages.inc',
  *   ),
@@ -1240,7 +1240,7 @@ function hook_theme($existing, $type, $theme, $path) {
  *     0 => 'template_preprocess',
  *     1 => 'template_preprocess_block_content_add_list',
  *     2 => 'contextual_preprocess',
- *     3 => 'seven_preprocess_block_content_add_list',
+ *     3 => 'claro_preprocess_block_content_add_list',
  *   ),
  * );
  * @endcode

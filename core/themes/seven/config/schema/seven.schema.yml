@@ -1,5 +1,0 @@
-# Schema for the configuration files of the Seven theme.
-
-seven.settings:
-  type: theme_settings
-  label: 'Seven settings'

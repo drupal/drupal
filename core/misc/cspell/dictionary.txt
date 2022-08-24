@@ -1263,7 +1263,6 @@ subrequests
 subresults
 subselect
 subsequentially
-subseven
 subshell
 substrategies
 subsubtheme
