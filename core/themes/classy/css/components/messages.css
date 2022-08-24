@@ -30,7 +30,6 @@
 .messages__item + .messages__item {
   margin-top: 0.769em;
 }
-/* See .color-success in Seven's colors.css */
 .messages--status {
   color: #325e1c;
   border-color: #c9e1bd #c9e1bd #c9e1bd transparent;  /* LTR */
@@ -43,7 +42,6 @@
   border-color: #c9e1bd transparent #c9e1bd #c9e1bd;
   box-shadow: 8px 0 0 #77b259;
 }
-/* See .color-warning in Seven's colors.css */
 .messages--warning {
   color: #734c00;
   border-color: #f4daa6 #f4daa6 #f4daa6 transparent;  /* LTR */
@@ -55,7 +53,6 @@
   border-color: #f4daa6 transparent #f4daa6 #f4daa6;
   box-shadow: 8px 0 0 #e09600;
 }
-/* See .color-error in Seven's colors.css */
 .messages--error {
   color: #a51b00;
   border-color: #f9c9bf #f9c9bf #f9c9bf transparent;  /* LTR */

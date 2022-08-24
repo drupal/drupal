@@ -8,8 +8,6 @@
  * subtheme of Classy is encouraged to use it, by attaching the
  * classy/image-widget asset library in their image-widget.html.twig file.
  *
- * @see core/themes/seven/templates/content-edit/image-widget.html.twig.
- *
  * @todo In Drupal 9, let core/themes/classy/templates/content-edit/image-widget.html.twig
  * attach the classy/image-widget asset library.
  */

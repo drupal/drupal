@@ -7,7 +7,7 @@ routes:
     route_name: system.admin
 tips:
   overview:
-    id: block-seven-content
+    id: test
     plugin: text
     label: Test
     weight: 1

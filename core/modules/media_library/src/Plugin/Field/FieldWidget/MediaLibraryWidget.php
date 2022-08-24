@@ -361,9 +361,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
       ];
     }
     else {
-      // @todo Use a <button> link here, and delete
-      // seven_preprocess_fieldset__media_library_widget(), when
-      // https://www.drupal.org/project/drupal/issues/2999549 lands.
+      // @todo Use a <button> link here.
       $multiple_items = count($referenced_entities) > 1;
       $element['#field_prefix']['weight_toggle'] = [
         '#type' => 'html_tag',

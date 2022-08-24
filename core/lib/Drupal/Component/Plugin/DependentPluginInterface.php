@@ -25,7 +25,7 @@ interface DependentPluginInterface {
    *     'config' => array('user.role.anonymous', 'user.role.authenticated'),
    *     'content' => array('node:article:f0a189e6-55fb-47fb-8005-5bef81c44d6d'),
    *     'module' => array('node', 'user'),
-   *     'theme' => array('seven'),
+   *     'theme' => array('claro'),
    *   );
    *   @endcode
    *
