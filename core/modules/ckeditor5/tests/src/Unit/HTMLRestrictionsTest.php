@@ -997,6 +997,13 @@ class HTMLRestrictionsTest extends UnitTestCase {
       'intersection' => 'a',
       'union' => 'b',
     ];
+    yield 'attribute restrictions are the same: <ol type="1"> vs <ol type="1">' => [
+      'a' => new HTMLRestrictions(['ol' => ['type' => ['1' => TRUE]]]),
+      'b' => new HTMLRestrictions(['ol' => ['type' => ['1' => TRUE]]]),
+      'diff' => HTMLRestrictions::emptySet(),
+      'intersection' => 'a',
+      'union' => 'a',
+    ];
 
     // Complex cases.
     yield 'attribute restrictions are different: <a hreflang="en"> vs <strong>' => [
