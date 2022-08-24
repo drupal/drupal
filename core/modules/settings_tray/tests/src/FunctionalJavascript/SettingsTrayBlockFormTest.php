@@ -21,6 +21,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
     'node',
     'search',
     'settings_tray_test',
+    'off_canvas_test',
   ];
 
   /**
@@ -241,7 +242,6 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
           case 'contextual_link':
             $this->clickContextualLink($this->getBlockSelector($block), "Quick edit");
             $this->waitForOffCanvasToOpen();
-            $this->markTestSkipped("Skipped temporarily for random fails.");
             $this->assertEditModeEnabled();
             break;
 
