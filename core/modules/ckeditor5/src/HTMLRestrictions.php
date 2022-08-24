@@ -759,8 +759,11 @@ final class HTMLRestrictions {
     }
     // Make sure the order of the union array matches the order of the keys in
     // the arrays provided.
-    $keys_order = array_merge($array1_keys, $array2_keys);
-    return array_merge(array_flip($keys_order), $union);
+    $ordered = [];
+    foreach (array_merge($array1_keys, $array2_keys) as $key) {
+      $ordered[$key] = $union[$key];
+    }
+    return $ordered;
   }
 
   /**
