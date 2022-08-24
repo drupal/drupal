@@ -3,11 +3,14 @@
 namespace Drupal\Tests\system\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\system\Traits\OffCanvasTestTrait;
 
 /**
  * Base class contains common test functionality for the Off-canvas dialog.
  */
 abstract class OffCanvasTestBase extends WebDriverTestBase {
+
+  use OffCanvasTestTrait;
 
   /**
    * {@inheritdoc}
@@ -15,6 +18,7 @@ abstract class OffCanvasTestBase extends WebDriverTestBase {
   protected static $modules = [
     // @todo Remove this in https://www.drupal.org/node/3219959
     'block',
+    'off_canvas_test',
   ];
 
   /**
@@ -75,14 +79,9 @@ abstract class OffCanvasTestBase extends WebDriverTestBase {
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    */
   protected function waitForOffCanvasToOpen($position = 'side') {
-    $web_assert = $this->assertSession();
-    // Wait just slightly longer than the off-canvas dialog CSS animation.
-    // @see core/misc/dialog/off-canvas.motion.css
-    $this->getSession()->wait(800);
-    $web_assert->assertWaitOnAjaxRequest();
-    $this->assertElementVisibleAfterWait('css', '#drupal-off-canvas');
+    $this->waitForOffCanvasArea();
     // Check that the canvas is positioned on the side.
-    $web_assert->elementExists('css', '.ui-dialog-position-' . $position);
+    $this->assertSession()->elementExists('css', '.ui-dialog-position-' . $position);
   }
 
   /**
