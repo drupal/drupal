@@ -4,6 +4,7 @@ namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+use Drupal\Tests\system\Traits\OffCanvasTestTrait;
 
 /**
  * Ajax blocks tests.
@@ -11,6 +12,8 @@ use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
  * @group layout_builder
  */
 class AjaxBlockTest extends WebDriverTestBase {
+
+  use OffCanvasTestTrait;
 
   /**
    * {@inheritdoc}
@@ -22,6 +25,7 @@ class AjaxBlockTest extends WebDriverTestBase {
     'layout_builder',
     'user',
     'layout_builder_test',
+    'off_canvas_test',
   ];
 
   /**
@@ -78,14 +82,15 @@ class AjaxBlockTest extends WebDriverTestBase {
     // Add a new block.
     $assert_session->linkExists('Add block');
     $this->clickLink('Add block');
+    $this->waitForOffCanvasArea();
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->linkExists('TestAjax');
     $this->clickLink('TestAjax');
+    $this->waitForOffCanvasArea();
     $assert_session->assertWaitOnAjaxRequest();
     // Find the radio buttons.
     $name = 'settings[ajax_test]';
     /** @var \Behat\Mink\Element\NodeElement[] $radios */
-    $this->markTestSkipped('Temporarily skipped due to random failures.');
     $radios = $this->assertSession()->fieldExists($name);
     // Click them both a couple of times.
     foreach ([1, 2] as $rounds) {
@@ -97,6 +102,7 @@ class AjaxBlockTest extends WebDriverTestBase {
     // Then add the block.
     $assert_session->waitForElementVisible('named', ['button', 'Add block'])->press();
     $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForElementVisible('css', '.block-layout-builder-test-testajax');
     $block_elements = $this->cssSelect('.block-layout-builder-test-testajax');
     // Should be exactly one of these in there.
     $this->assertCount(1, $block_elements);
