@@ -99,6 +99,10 @@ class GenerateThemeTest extends QuickStartTestBase {
     self::assertArrayHasKey('generator', $info);
     self::assertEquals('starterkit_theme:9.4.0', $info['generator']);
 
+    // Confirm readme is rewritten.
+    $readme_file = $this->getWorkspaceDirectory() . "/$theme_path_relative/README.md";
+    $this->assertSame('test_custom_theme theme, generated from starterkit_theme. Additional information on generating themes can be found in the [Starterkit documentation](https://www.drupal.org/docs/core-modules-and-themes/core-themes/starterkit-theme).', file_get_contents($readme_file));
+
     // Ensure that the generated theme can be installed.
     $this->installQuickStart('minimal');
     $this->formLogin($this->adminUsername, $this->adminPassword);
@@ -119,6 +123,40 @@ class GenerateThemeTest extends QuickStartTestBase {
     $this->assertStringContainsString($theme_path_relative, $process->getErrorOutput());
     $this->assertSame(1, $result);
     $this->assertFileDoesNotExist($theme_path_absolute . '/test_custom_theme.theme');
+  }
+
+  /**
+   * Tests generating a theme from another Starterkit enabled theme.
+   */
+  public function testGeneratingFromAnotherTheme() {
+    // Do not rely on \Drupal::VERSION: change the version to a concrete version
+    // number, to simulate using a tagged core release.
+    $starterkit_info_yml = $this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/starterkit_theme.info.yml';
+    $info = Yaml::decode(file_get_contents($starterkit_info_yml));
+    $info['version'] = '9.4.0';
+    file_put_contents($starterkit_info_yml, Yaml::encode($info));
+
+    $process = $this->generateThemeFromStarterkit();
+    $exit_code = $process->run();
+    $this->assertSame('Theme generated successfully to themes/test_custom_theme', trim($process->getOutput()), $process->getErrorOutput());
+    $this->assertSame(0, $exit_code);
+    $install_command = [
+      $this->php,
+      'core/scripts/drupal',
+      'generate-theme',
+      'generated_from_another_theme',
+      '--name="Generated from another theme"',
+      '--description="Custom theme generated from a theme other than starterkit_theme"',
+      '--starterkit=test_custom_theme',
+    ];
+    $process = new Process($install_command);
+    $exit_code = $process->run();
+    $this->assertSame('Theme generated successfully to themes/generated_from_another_theme', trim($process->getOutput()), $process->getErrorOutput());
+    $this->assertSame(0, $exit_code);
+
+    // Confirm readme is rewritten.
+    $readme_file = $this->getWorkspaceDirectory() . '/themes/generated_from_another_theme/README.md';
+    $this->assertSame('generated_from_another_theme theme, generated from test_custom_theme. Additional information on generating themes can be found in the [Starterkit documentation](https://www.drupal.org/docs/core-modules-and-themes/core-themes/starterkit-theme).', file_get_contents($readme_file));
   }
 
   /**
