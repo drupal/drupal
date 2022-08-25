@@ -42,7 +42,7 @@
       const that = this;
       once('filter-filter_html-updating', '[name="filters[filter_html][settings][allowed_html]"]', context).forEach(formItem => {
         that.$allowedHTMLFormItem = $(formItem);
-        that.$allowedHTMLDescription = that.$allowedHTMLFormItem.closest('.js-form-item').find('.description');
+        that.$allowedHTMLDescription = that.$allowedHTMLFormItem.closest('.js-form-item').find('#edit-filters-filter-html-settings-allowed-html--description');
         that.userTags = that._parseSetting(formItem.value);
         $(document).on('drupalEditorFeatureAdded', (e, feature) => {
           that.newFeatures[feature.name] = feature.rules;
