@@ -90,7 +90,7 @@
         that.$allowedHTMLFormItem = $(formItem);
         that.$allowedHTMLDescription = that.$allowedHTMLFormItem
           .closest('.js-form-item')
-          .find('.description');
+          .find('#edit-filters-filter-html-settings-allowed-html--description');
         that.userTags = that._parseSetting(formItem.value);
 
         // Update the new allowed tags based on added text editor features.
