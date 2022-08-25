@@ -11,6 +11,7 @@ use Drupal\user\Entity\Role;
  * Test Settings Tray and Quick Edit modules integration.
  *
  * @group quickedit
+ * @group legacy
  */
 class SettingsTrayIntegrationTest extends SettingsTrayTestBase {
 

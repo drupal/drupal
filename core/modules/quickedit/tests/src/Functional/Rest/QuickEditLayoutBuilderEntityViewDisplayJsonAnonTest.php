@@ -8,6 +8,7 @@ use Drupal\Tests\layout_builder\Functional\Rest\LayoutBuilderEntityViewDisplayJs
  * @group quickedit
  * @group layout_builder
  * @group rest
+ * @group legacy
  */
 class QuickEditLayoutBuilderEntityViewDisplayJsonAnonTest extends LayoutBuilderEntityViewDisplayJsonAnonTest {
 

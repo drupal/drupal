@@ -13,6 +13,7 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
  * in-place editors.
  *
  * @group quickedit
+ * @group legacy
  */
 class QuickEditLoadingTest extends KernelTestBase {
 

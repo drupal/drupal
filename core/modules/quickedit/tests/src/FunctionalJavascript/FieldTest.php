@@ -13,6 +13,7 @@ use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
  * Tests quickedit.
  *
  * @group quickedit
+ * @group legacy
  */
 class FieldTest extends WebDriverTestBase {
 

@@ -9,6 +9,7 @@ use Drupal\node\Entity\NodeType;
  * Tests Inline Form Errors compatibility with Quick Edit.
  *
  * @group quickedit
+ * @group legacy
  */
 class InlineFormErrorsIntegrationTest extends WebDriverTestBase {
 

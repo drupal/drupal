@@ -11,6 +11,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests Quick Edit module integration endpoints.
  *
  * @group quickedit
+ * @group legacy
  */
 class EditorIntegrationLoadingTest extends BrowserTestBase {
 

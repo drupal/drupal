@@ -12,6 +12,7 @@ use Symfony\Component\Validator\ConstraintViolation;
  * Tests that Quick Edit can load CKEditor 5.
  *
  * @group quickedit
+ * @group legacy
  * @internal
  */
 class CKEditor5IntegrationTest extends QuickEditJavascriptTestBase {
