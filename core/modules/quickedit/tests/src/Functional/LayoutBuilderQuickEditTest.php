@@ -9,6 +9,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests Layout Builder integration with Quick Edit.
  *
  * @group quickedit
+ * @group legacy
  */
 class LayoutBuilderQuickEditTest extends BrowserTestBase {
 

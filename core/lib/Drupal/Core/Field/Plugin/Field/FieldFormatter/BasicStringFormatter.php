@@ -14,9 +14,6 @@ use Drupal\Core\Field\FieldItemListInterface;
  *   field_types = {
  *     "string_long",
  *     "email"
- *   },
- *   quickedit = {
- *     "editor" = "plain_text"
  *   }
  * )
  */

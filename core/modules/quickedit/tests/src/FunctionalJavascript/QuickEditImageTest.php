@@ -9,6 +9,7 @@ use Drupal\Tests\TestFileCreationTrait;
 /**
  * @coversDefaultClass \Drupal\quickedit\Plugin\InPlaceEditor\Image
  * @group quickedit
+ * @group legacy
  */
 class QuickEditImageTest extends QuickEditJavascriptTestBase {
 

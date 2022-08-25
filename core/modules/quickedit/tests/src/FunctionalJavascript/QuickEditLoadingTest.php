@@ -19,6 +19,7 @@ use Drupal\Tests\TestFileCreationTrait;
  * in-place editors.
  *
  * @group quickedit
+ * @group legacy
  */
 class QuickEditLoadingTest extends WebDriverTestBase {
 

@@ -10,6 +10,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests using a custom pipeline with Quick Edit.
  *
  * @group quickedit
+ * @group legacy
  */
 class QuickEditCustomPipelineTest extends BrowserTestBase {
 

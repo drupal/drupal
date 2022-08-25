@@ -13,6 +13,7 @@ use Drupal\Core\Language\LanguageInterface;
  * @coversDefaultClass \Drupal\quickedit\Access\QuickEditEntityFieldAccessCheck
  * @group Access
  * @group quickedit
+ * @group legacy
  */
 class QuickEditEntityFieldAccessCheckTest extends UnitTestCase {
 
