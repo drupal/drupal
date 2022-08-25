@@ -13,6 +13,7 @@ use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 
 /**
  * @group quickedit
+ * @group legacy
  */
 class LayoutBuilderIntegrationTest extends QuickEditJavascriptTestBase {
 

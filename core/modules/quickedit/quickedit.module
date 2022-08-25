@@ -125,6 +125,9 @@ function quickedit_field_formatter_info_alter(&$info) {
     }
   }
 
+  $info['basic_string']['quickedit'] = ['editor' => 'plain_text'];
+  $info['string']['quickedit'] = ['editor' => 'plain_text'];
+
   // Update \Drupal\text\Plugin\Field\FieldFormatter\TextDefaultFormatter's
   // annotation to indicate that it supports the 'editor' in-place editor
   // provided by this module, if enabled.

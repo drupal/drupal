@@ -10,6 +10,7 @@ use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * @group quickedit
+ * @group legacy
  */
 class QuickEditFileTest extends QuickEditJavascriptTestBase {
 

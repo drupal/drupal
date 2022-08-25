@@ -12,6 +12,7 @@ use Drupal\filter\Entity\FilterFormat;
  * Tests in-place field editing metadata.
  *
  * @group quickedit
+ * @group legacy
  */
 class MetadataGeneratorTest extends QuickEditTestBase {
 

@@ -10,6 +10,7 @@ use Drupal\Tests\layout_builder\Functional\Jsonapi\LayoutBuilderEntityViewDispla
  * @group jsonapi
  * @group layout_builder
  * @group quickedit
+ * @group legacy
  */
 class QuickEditLayoutBuilderEntityViewDisplayTest extends LayoutBuilderEntityViewDisplayTest {
 

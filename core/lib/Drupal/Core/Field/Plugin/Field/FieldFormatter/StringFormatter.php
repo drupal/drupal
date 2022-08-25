@@ -20,9 +20,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   field_types = {
  *     "string",
  *     "uri",
- *   },
- *   quickedit = {
- *     "editor" = "plain_text"
  *   }
  * )
  */
