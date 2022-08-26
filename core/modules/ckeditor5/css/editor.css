@@ -1,0 +1,10 @@
+/**
+ * @file
+ * Styles for the CKEditor 5 editor.
+ */
+
+/* Convert low opacity icons to full opacity. */
+.ck-button:not(.ck-disabled) .ck-icon * {
+  opacity: 1 !important;
+  fill-opacity: 1 !important;
+}
