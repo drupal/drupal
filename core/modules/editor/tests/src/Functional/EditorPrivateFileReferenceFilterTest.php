@@ -21,14 +21,12 @@ class EditorPrivateFileReferenceFilterTest extends BrowserTestBase {
    * @var array
    */
   protected static $modules = [
-    // Needed for the config: this is the only module in core that utilizes the
-    // functionality in editor.module to be tested, and depends on that.
-    'ckeditor',
+    'editor_test',
     // Depends on filter.module (indirectly).
     'node',
     // Pulls in the config we're using during testing which create a text format
     // - with the filter_html_image_secure filter DISABLED,
-    // - with the editor set to CKEditor,
+    // - with the editor set to Unicorn editor,
     // - with drupalimage.image_upload.scheme set to 'private',
     // - with drupalimage.image_upload.directory set to ''.
     'editor_private_test',
