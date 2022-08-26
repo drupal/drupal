@@ -17,7 +17,7 @@ class AdminUiTest extends CKEditor5TestBase {
    */
   protected static $modules = [
     'media_library',
-    'ckeditor',
+    'editor_test',
     'ckeditor5_incompatible_filter_test',
   ];
 
@@ -28,7 +28,7 @@ class AdminUiTest extends CKEditor5TestBase {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
     $this->addNewTextFormat($page, $assert_session);
-    $this->addNewTextFormat($page, $assert_session, 'ckeditor');
+    $this->addNewTextFormat($page, $assert_session, 'unicorn');
 
     $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
     $number_ajax_instances_before = $this->getSession()->evaluateScript('Drupal.ajax.instances.length');
@@ -47,7 +47,7 @@ class AdminUiTest extends CKEditor5TestBase {
 
     // Perform the same steps as above with CKEditor, and confirm AJAX callbacks
     // are not triggered on settings changes.
-    $this->drupalGet('admin/config/content/formats/manage/ckeditor');
+    $this->drupalGet('admin/config/content/formats/manage/unicorn');
     $number_ajax_instances_before = $this->getSession()->evaluateScript('Drupal.ajax.instances.length');
 
     // Enable media embed to confirm a format not using CKEditor 5 will not
@@ -105,7 +105,7 @@ class AdminUiTest extends CKEditor5TestBase {
   public function testUnavailableFiltersHiddenWhenSwitching() {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
-    $this->createNewTextFormat($page, $assert_session, 'ckeditor');
+    $this->createNewTextFormat($page, $assert_session, 'unicorn');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('Filter settings');
 

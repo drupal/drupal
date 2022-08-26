@@ -20,7 +20,7 @@ class EditorAdminTest extends WebDriverTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'ckeditor',
+    'editor_test',
     'ckeditor5',
   ];
 
@@ -53,18 +53,17 @@ class EditorAdminTest extends WebDriverTestBase {
     $page->fillField('name', 'Sulaco');
     // Wait for machine name to be filled in.
     $this->assertNotEmpty($assert_session->waitForText('sulaco'));
-    $page->selectFieldOption('editor[editor]', 'ckeditor');
-    $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', 'ul.ckeditor-toolbar-group-buttons'));
-    $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', '#ckeditor-plugin-settings'));
+    $page->selectFieldOption('editor[editor]', 'unicorn');
+    $this->assertNotEmpty($this->assertSession()->waitForField('editor[settings][ponies_too]'));
     $page->pressButton('Save configuration');
 
     // Test that toggling the editor selection off and back on works.
     $this->drupalGet('/admin/config/content/formats/manage/sulaco');
     // Deselect and reselect an editor.
     $page->selectFieldOption('editor[editor]', '');
-    $this->assertNotEmpty($this->assertSession()->waitForElementRemoved('css', 'ul.ckeditor-toolbar-group-buttons'));
-    $page->selectFieldOption('editor[editor]', 'ckeditor');
-    $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', 'ul.ckeditor-toolbar-group-buttons'));
+    $this->assertNotEmpty($this->assertSession()->waitForElementRemoved('named', ['field', 'editor[settings][ponies_too]']));
+    $page->selectFieldOption('editor[editor]', 'unicorn');
+    $this->assertNotEmpty($this->assertSession()->waitForField('editor[settings][ponies_too]'));
   }
 
   /**
@@ -84,10 +83,11 @@ class EditorAdminTest extends WebDriverTestBase {
     $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', 'ul.ckeditor5-toolbar-available__buttons'));
 
     $page->selectFieldOption('editor[editor]', '');
-    $assert_session->elementNotExists('css', 'ul.ckeditor-toolbar-group-buttons');
+    $this->assertNotEmpty($this->assertSession()->waitForElementRemoved('css', 'ul.ckeditor5-toolbar-available__buttons'));
+    $this->assertEmpty($this->assertSession()->waitForField('editor[settings][ponies_too]'));
 
-    $page->selectFieldOption('editor[editor]', 'ckeditor');
-    $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', 'ul.ckeditor-toolbar-group-buttons'));
+    $page->selectFieldOption('editor[editor]', 'unicorn');
+    $this->assertNotEmpty($this->assertSession()->waitForField('editor[settings][ponies_too]'));
   }
 
 }

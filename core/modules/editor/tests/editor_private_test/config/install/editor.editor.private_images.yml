@@ -4,26 +4,9 @@ dependencies:
   config:
     - filter.format.private_images
   module:
-    - ckeditor
+    - editor_test
 format: private_images
-editor: ckeditor
-settings:
-  toolbar:
-    rows:
-      -
-        -
-          name: Media
-          items:
-            - DrupalImage
-        -
-          name: Tools
-          items:
-            - Source
-  plugins:
-    language:
-      language_list: un
-    stylescombo:
-      styles: ''
+editor: unicorn
 image_upload:
   status: true
   scheme: private

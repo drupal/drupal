@@ -149,10 +149,13 @@ final class SmartDefaultSettings {
     // if it exists.
     $old_editor = $editor->id() ? Editor::load($editor->id()) : NULL;
     $old_editor_restrictions = $old_editor ? HTMLRestrictions::fromTextFormat($old_editor->getFilterFormat()) : HTMLRestrictions::emptySet();
+    // @todo Remove in https://www.drupal.org/project/drupal/issues/3245351
+    if ($old_editor) {
+      $editor->setImageUploadSettings($old_editor->getImageUploadSettings());
+    }
     if ($old_editor && $old_editor->getEditor() === 'ckeditor') {
       [$upgraded_settings, $messages] = $this->createSettingsFromCKEditor4($old_editor->getSettings(), HTMLRestrictions::fromTextFormat($old_editor->getFilterFormat()));
       $editor->setSettings($upgraded_settings);
-      $editor->setImageUploadSettings($old_editor->getImageUploadSettings());
       // *Before* determining which elements are still needed for this text
       // format, ensure that all already enabled plugins that are configurable
       // have valid settings.
