@@ -24,6 +24,17 @@ class SmartDefaultSettingsTest extends KernelTestBase {
   use CKEditor5ValidationTestTrait;
 
   /**
+   * Exempt from strict schema checking, because using CKEditor 4.
+   *
+   * The updated Text Format & Text Editors are explicitly checked.
+   *
+   * @see \Drupal\Core\Config\Development\ConfigSchemaChecker
+   *
+   * @var bool
+   */
+  protected $strictConfigSchema = FALSE;
+
+  /**
    * The manager for "CKEditor 5 plugin" plugins.
    *
    * @var \Drupal\Component\Plugin\PluginManagerInterface
@@ -55,8 +66,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'ckeditor',
-    'ckeditor_test',
     'ckeditor5',
     'editor',
     'filter',
@@ -90,17 +99,17 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       ->save();
     Editor::create(
       Yaml::parseFile('core/modules/ckeditor5/tests/fixtures/ckeditor4_config/editor.editor.full_html.yml')
-    )->save();
+    )->setSyncing(TRUE)->save();
 
     $basic_html_format = Yaml::parseFile('core/modules/ckeditor5/tests/fixtures/ckeditor4_config/filter.format.basic_html.yml');
-    FilterFormat::create($basic_html_format)->save();
+    FilterFormat::create($basic_html_format)->setSyncing(TRUE)->save();
     Editor::create(
       Yaml::parseFile('core/modules/ckeditor5/tests/fixtures/ckeditor4_config/editor.editor.basic_html.yml')
-    )->save();
+    )->setSyncing(TRUE)->save();
 
     FilterFormat::create(
       Yaml::parseFile('core/modules/ckeditor5/tests/fixtures/ckeditor4_config/filter.format.restricted_html.yml')
-    )->save();
+    )->setSyncing(TRUE)->save();
 
     $allowed_html_parents = ['filters', 'filter_html', 'settings', 'allowed_html'];
     $current_value = NestedArray::getValue($basic_html_format, $allowed_html_parents);
@@ -109,58 +118,58 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     $basic_html_format_without_h4_h6['name'] .= ' (without H4 and H6)';
     $basic_html_format_without_h4_h6['format'] = 'basic_html_without_h4_h6';
     NestedArray::setValue($basic_html_format_without_h4_h6, $allowed_html_parents, $new_value);
-    FilterFormat::create($basic_html_format_without_h4_h6)->save();
+    FilterFormat::create($basic_html_format_without_h4_h6)->setSyncing(TRUE)->save();
     Editor::create(
       ['format' => 'basic_html_without_h4_h6']
       +
       Yaml::parseFile('core/modules/ckeditor5/tests/fixtures/ckeditor4_config/editor.editor.basic_html.yml')
-    )->save();
+    )->setSyncing(TRUE)->save();
 
     $new_value = str_replace(['<h2 id> ', '<h3 id> ', '<h4 id> ', '<h5 id> ', '<h6 id> '], '', $current_value);
     $basic_html_format_without_headings = $basic_html_format;
     $basic_html_format_without_headings['name'] .= ' (without H*)';
     $basic_html_format_without_headings['format'] = 'basic_html_without_headings';
     NestedArray::setValue($basic_html_format_without_headings, $allowed_html_parents, $new_value);
-    FilterFormat::create($basic_html_format_without_headings)->save();
+    FilterFormat::create($basic_html_format_without_headings)->setSyncing(TRUE)->save();
     Editor::create(
       ['format' => 'basic_html_without_headings']
       +
       Yaml::parseFile('core/modules/ckeditor5/tests/fixtures/ckeditor4_config/editor.editor.basic_html.yml')
-    )->save();
+    )->setSyncing(TRUE)->save();
 
     $basic_html_format_with_pre = $basic_html_format;
     $basic_html_format_with_pre['name'] .= ' (with <pre>)';
     $basic_html_format_with_pre['format'] = 'basic_html_with_pre';
     NestedArray::setValue($basic_html_format_with_pre, $allowed_html_parents, $current_value . ' <pre>');
-    FilterFormat::create($basic_html_format_with_pre)->save();
+    FilterFormat::create($basic_html_format_with_pre)->setSyncing(TRUE)->save();
     Editor::create(
       ['format' => 'basic_html_with_pre']
       +
       Yaml::parseFile('core/modules/ckeditor5/tests/fixtures/ckeditor4_config/editor.editor.basic_html.yml')
-    )->save();
+    )->setSyncing(TRUE)->save();
 
     $basic_html_format_with_h1 = $basic_html_format;
     $basic_html_format_with_h1['name'] .= ' (with <h1>)';
     $basic_html_format_with_h1['format'] = 'basic_html_with_h1';
     NestedArray::setValue($basic_html_format_with_h1, $allowed_html_parents, $current_value . ' <h1>');
-    FilterFormat::create($basic_html_format_with_h1)->save();
+    FilterFormat::create($basic_html_format_with_h1)->setSyncing(TRUE)->save();
     Editor::create(
       ['format' => 'basic_html_with_h1']
       +
       Yaml::parseFile('core/modules/ckeditor5/tests/fixtures/ckeditor4_config/editor.editor.basic_html.yml')
-    )->save();
+    )->setSyncing(TRUE)->save();
 
     $new_value = str_replace('<p>', '<p class="text-align-center text-align-justify">', $current_value);
     $basic_html_format_with_alignable_p = $basic_html_format;
     $basic_html_format_with_alignable_p['name'] .= ' (with alignable paragraph support)';
     $basic_html_format_with_alignable_p['format'] = 'basic_html_with_alignable_p';
     NestedArray::setValue($basic_html_format_with_alignable_p, $allowed_html_parents, $new_value);
-    FilterFormat::create($basic_html_format_with_alignable_p)->save();
+    FilterFormat::create($basic_html_format_with_alignable_p)->setSyncing(TRUE)->save();
     Editor::create(
       ['format' => 'basic_html_with_alignable_p']
       +
       Yaml::parseFile('core/modules/ckeditor5/tests/fixtures/ckeditor4_config/editor.editor.basic_html.yml')
-    )->save();
+    )->setSyncing(TRUE)->save();
 
     $basic_html_format_with_media_embed = $basic_html_format;
     $basic_html_format_with_media_embed['name'] .= ' (with Media Embed support)';
@@ -169,7 +178,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     $basic_html_format_with_media_embed['filters']['media_embed'] = ['status' => TRUE];
     $new_value = $current_value . ' <drupal-media data-entity-type data-entity-uuid data-align data-caption alt>';
     NestedArray::setValue($basic_html_format_with_media_embed, $allowed_html_parents, $new_value);
-    FilterFormat::create($basic_html_format_with_media_embed)->save();
+    FilterFormat::create($basic_html_format_with_media_embed)->setSyncing(TRUE)->save();
     $basic_html_editor_with_media_embed = Editor::create(
       ['format' => 'basic_html_with_media_embed']
       +
@@ -180,7 +189,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     // pre-existing toolbar item group labeled "Media".
     $settings['toolbar']['rows'][0][3]['items'][] = 'DrupalMediaLibrary';
     $basic_html_editor_with_media_embed->setSettings($settings);
-    $basic_html_editor_with_media_embed->save();
+    $basic_html_editor_with_media_embed->setSyncing(TRUE)->save();
 
     $basic_html_format_with_media_embed_view_mode_invalid = $basic_html_format_with_media_embed;
     $basic_html_format_with_media_embed_view_mode_invalid['name'] = ' (with Media Embed support, view mode enabled but no view modes configured)';
@@ -188,7 +197,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     $current_value_media_embed = NestedArray::getValue($basic_html_format_with_media_embed, $allowed_html_parents);
     $new_value = str_replace('<drupal-media data-entity-type data-entity-uuid data-align data-caption alt>', '<drupal-media data-entity-type data-entity-uuid data-align data-caption alt data-view-mode>', $current_value_media_embed);
     NestedArray::setValue($basic_html_format_with_media_embed_view_mode_invalid, $allowed_html_parents, $new_value);
-    FilterFormat::create($basic_html_format_with_media_embed_view_mode_invalid)->save();
+    FilterFormat::create($basic_html_format_with_media_embed_view_mode_invalid)->setSyncing(TRUE)->save();
     $basic_html_editor_with_media_embed_view_mode_enabled_no_view_modes_configured = Editor::create(
       ['format' => 'basic_html_with_media_embed_view_mode_enabled_no_view_modes_configured']
       +
@@ -199,24 +208,24 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     // pre-existing toolbar item group labeled "Media".
     $settings['toolbar']['rows'][0][3]['items'][] = 'DrupalMediaLibrary';
     $basic_html_editor_with_media_embed_view_mode_enabled_no_view_modes_configured->setSettings($settings);
-    $basic_html_editor_with_media_embed_view_mode_enabled_no_view_modes_configured->save();
+    $basic_html_editor_with_media_embed_view_mode_enabled_no_view_modes_configured->setSyncing(TRUE)->save();
 
     $new_value = str_replace('<img src alt height width data-entity-type data-entity-uuid data-align data-caption>', '<img src alt height width data-*>', $current_value);
     $basic_html_format_with_any_data_attr = $basic_html_format;
     $basic_html_format_with_any_data_attr['name'] .= ' (with any data-* attribute on images)';
     $basic_html_format_with_any_data_attr['format'] = 'basic_html_with_any_data_attr';
     NestedArray::setValue($basic_html_format_with_any_data_attr, $allowed_html_parents, $new_value);
-    FilterFormat::create($basic_html_format_with_any_data_attr)->save();
+    FilterFormat::create($basic_html_format_with_any_data_attr)->setSyncing(TRUE)->save();
     Editor::create(
       ['format' => 'basic_html_with_any_data_attr']
       +
       Yaml::parseFile('core/modules/ckeditor5/tests/fixtures/ckeditor4_config/editor.editor.basic_html.yml')
-    )->save();
+    )->setSyncing(TRUE)->save();
 
     $basic_html_format_with_media_embed_view_mode_enabled_two_view_modes_configured = $basic_html_format_with_media_embed_view_mode_invalid;
     $basic_html_format_with_media_embed_view_mode_enabled_two_view_modes_configured['name'] = ' (with Media Embed support, view mode enabled and two view modes configured )';
     $basic_html_format_with_media_embed_view_mode_enabled_two_view_modes_configured['format'] = 'basic_html_with_media_embed_view_mode_enabled_two_view_modes_configured';
-    FilterFormat::create($basic_html_format_with_media_embed_view_mode_enabled_two_view_modes_configured)->save();
+    FilterFormat::create($basic_html_format_with_media_embed_view_mode_enabled_two_view_modes_configured)->setSyncing(TRUE)->save();
     $basic_html_editor_with_media_embed_view_mode_enabled_two_view_modes_configured = Editor::create(
       ['format' => 'basic_html_with_media_embed_view_mode_enabled_two_view_modes_configured']
       +
@@ -227,21 +236,21 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     // pre-existing toolbar item group labeled "Media".
     $settings['toolbar']['rows'][0][3]['items'][] = 'DrupalMediaLibrary';
     $basic_html_editor_with_media_embed_view_mode_enabled_two_view_modes_configured->setSettings($settings);
-    $basic_html_editor_with_media_embed_view_mode_enabled_two_view_modes_configured->save();
+    $basic_html_editor_with_media_embed_view_mode_enabled_two_view_modes_configured->setSyncing(TRUE)->save();
     EntityViewMode::create([
       'id' => 'media.view_mode_1',
       'targetEntityType' => 'media',
       'status' => TRUE,
       'enabled' => TRUE,
       'label' => 'View Mode 1',
-    ])->save();
+    ])->setSyncing(TRUE)->save();
     EntityViewMode::create([
       'id' => 'media.view_mode_2',
       'targetEntityType' => 'media',
       'status' => TRUE,
       'enabled' => TRUE,
       'label' => 'View Mode 2',
-    ])->save();
+    ])->setSyncing(TRUE)->save();
     $filter_format = FilterFormat::load('basic_html_with_media_embed_view_mode_enabled_two_view_modes_configured');
     $filter_format->setFilterConfig('media_embed', [
       'status' => TRUE,
@@ -253,7 +262,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           'view_mode_2' => 'view_mode_2',
         ],
       ],
-    ])->save();
+    ])->setSyncing(TRUE)->save();
 
     $filter_plugin_manager = $this->container->get('plugin.manager.filter');
     FilterFormat::create([
@@ -265,12 +274,12 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           'settings' => $filter_plugin_manager->getDefinition('filter_html')['settings'],
         ],
       ],
-    ])->save();
+    ])->setSyncing(TRUE)->save();
 
     FilterFormat::create([
       'format' => 'cke4_plugins_with_settings',
       'name' => 'All CKEditor 4 core plugins with settings',
-    ])->save();
+    ])->setSyncing(TRUE)->save();
     Editor::create([
       'format' => 'cke4_plugins_with_settings',
       'editor' => 'ckeditor',
@@ -310,7 +319,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           ],
         ],
       ],
-    ])->save();
+    ])->setSyncing(TRUE)->save();
 
     FilterFormat::create([
       'format' => 'cke4_stylescombo_span',
@@ -323,7 +332,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           ] + $filter_plugin_manager->getDefinition('filter_html')['settings'],
         ],
       ],
-    ])->save();
+    ])->setSyncing(TRUE)->save();
     Editor::create([
       'format' => 'cke4_stylescombo_span',
       'editor' => 'ckeditor',
@@ -346,12 +355,12 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           ],
         ],
       ],
-    ])->save();
+    ])->setSyncing(TRUE)->save();
 
     FilterFormat::create([
       'format' => 'cke4_contrib_plugins_now_in_core',
       'name' => 'All CKEditor 4 contrib plugins now in core',
-    ])->save();
+    ])->setSyncing(TRUE)->save();
     Editor::create([
       'format' => 'cke4_contrib_plugins_now_in_core',
       'editor' => 'ckeditor',
@@ -371,7 +380,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         ],
         'plugins' => [],
       ],
-    ])->save();
+    ])->setSyncing(TRUE)->save();
   }
 
   /**

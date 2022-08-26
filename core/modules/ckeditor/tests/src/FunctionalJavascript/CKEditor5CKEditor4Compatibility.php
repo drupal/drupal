@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
+namespace Drupal\Tests\ckeditor\FunctionalJavascript;
 
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
@@ -8,29 +8,45 @@ use Drupal\editor\Entity\Editor;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * Ensures that CKEditor 5 can be used on the same page with CKEditor 4.
  *
- * @group ckeditor5
+ * @group ckeditor
  * @internal
  */
-class CKEditor5CKEditor4Compatibility extends CKEditor5TestBase {
+class CKEditor5CKEditor4Compatibility extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}
    */
   protected static $modules = [
     'ckeditor',
+    'node',
+    'ckeditor5',
     'ckeditor5_test',
   ];
 
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
+
+    $this->drupalCreateContentType(['type' => 'page']);
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer filters',
+      'create page content',
+      'edit own page content',
+    ]));
 
     $current_user_roles = $this->loggedInUser->getRoles(TRUE);
 
