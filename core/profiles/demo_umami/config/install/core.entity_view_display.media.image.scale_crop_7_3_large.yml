@@ -20,7 +20,7 @@ mode: scale_crop_7_3_large
 content:
   field_media_image:
     type: image
-    label: visually_hidden
+    label: hidden
     settings:
       image_style: scale_crop_7_3_large
       image_link: ''
