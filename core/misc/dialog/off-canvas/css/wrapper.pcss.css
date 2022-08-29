@@ -1,0 +1,42 @@
+/**
+ * @file
+ * CSS for off-canvas dialog wrapper.
+ *
+ * @internal
+ */
+#drupal-off-canvas-wrapper {
+  --off-canvas-wrapper-box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.3);
+  --off-canvas-wrapper-border-color: #2d2d2d;
+  --off-canvas-wrapper-border-width: 1px;
+
+  z-index: 501; /* Layer the dialog just under the toolbar. */
+  overflow: auto;
+  box-sizing: border-box;
+  height: 100%;
+  border-inline-start: solid var(--off-canvas-wrapper-border-width) var(--off-canvas-wrapper-border-color);
+  box-shadow: var(--off-canvas-wrapper-box-shadow);
+
+  /*
+   * Force the off-canvas dialog to be 100% width at the same breakpoint the
+   * dialog system uses to expand dialog widths.
+   */
+  @media (max-width: 768px) {
+    width: 100% !important;
+  }
+}
+
+/* When off-canvas dialog is at 100% width stop the body from scrolling */
+body.js-off-canvas-dialog-open {
+  @media (max-width: 768px) {
+    position: fixed;
+  }
+}
+
+/* This is a page level content wrapper that shrinks when off-canvas is open. */
+.dialog-off-canvas-main-canvas {
+  transition: padding-right 0.7s ease, padding-left 0.7s ease, padding-top 0.3s ease;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}

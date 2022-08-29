@@ -37,11 +37,6 @@ libraries-override:
       theme:
         css/system.admin.css: false
 
-  core/drupal.dialog.off_canvas:
-    css:
-      base:
-        misc/dialog/off-canvas.theme.css: css/base/off-canvas.theme.css
-
   core/drupal.dropbutton:
     css:
       component:

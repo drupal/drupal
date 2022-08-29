@@ -913,24 +913,24 @@ internal.underscore:
 drupal.dialog.off_canvas:
   version: VERSION
   js:
-    misc/dialog/off-canvas.js: {}
+    misc/dialog/off-canvas/js/off-canvas.js: {}
   css:
     base:
-      misc/dialog/off-canvas.reset.css: {}
-      misc/dialog/off-canvas.base.css: {}
-      misc/dialog/off-canvas.css: {}
-      # Add group setting to make sure this CSS load before any jQuery UI Dialog
-      # CSS.
-      misc/dialog/off-canvas.theme.css: { group: 200 }
+      misc/dialog/off-canvas/css/reset.css: {}
+      misc/dialog/off-canvas/css/base.css: {}
+      misc/dialog/off-canvas/css/utility.css: {}
     component:
-      misc/dialog/off-canvas.motion.css: {}
-      misc/dialog/off-canvas.button.css: {}
-      misc/dialog/off-canvas.form.css: {}
-      misc/dialog/off-canvas.table.css: {}
-      misc/dialog/off-canvas.details.css: {}
-      misc/dialog/off-canvas.tabledrag.css: {}
-      misc/dialog/off-canvas.dropbutton.css: {}
-      misc/dialog/off-canvas.layout.css: {}
+      misc/dialog/off-canvas/css/button.css: {}
+      misc/dialog/off-canvas/css/drupal.css: {}
+      misc/dialog/off-canvas/css/form.css: {}
+      misc/dialog/off-canvas/css/table.css: {}
+      misc/dialog/off-canvas/css/details.css: {}
+      misc/dialog/off-canvas/css/messages.css: {}
+      misc/dialog/off-canvas/css/tabledrag.css: {}
+      misc/dialog/off-canvas/css/throbber.css: {}
+      misc/dialog/off-canvas/css/dropbutton.css: {}
+      misc/dialog/off-canvas/css/titlebar.css: {}
+      misc/dialog/off-canvas/css/wrapper.css: {}
   dependencies:
     - core/jquery
     - core/once

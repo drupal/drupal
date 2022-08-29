@@ -1,0 +1,179 @@
+/**
+ * @file
+ * Styles for dropbuttons in the off-canvas dialog.
+ *
+ * @internal
+ */
+#drupal-off-canvas-wrapper {
+  --off-canvas-dropbutton-height: 24px;
+  --off-canvas-dropbutton-primary-background-color: var(--off-canvas-button-background-color);
+  --off-canvas-dropbutton-secondary-background-color: var(--off-canvas-button-hover-background-color);
+  --off-canvas-dropbutton-border-color: transparent;
+  --off-canvas-dropbutton-border-width: 1px;
+  --off-canvas-dropbutton-border-radius: 2px;
+  --off-canvas-dropbutton-focus-outline-color: var(--off-canvas-focus-outline-color);
+  --off-canvas-dropbutton-font-size: 12px;
+  --off-canvas-dropbutton-text-color: var(--off-canvas-button-text-color); /* Minimum 4.5:1 contrast ratio against --off-canvas-dropbutton-primary-background-color and --off-canvas-dropbutton-secondary-background-color. */
+  --off-canvas-dropbutton-text-color-hover: var(--off-canvas-button-text-color-hover); /* Minimum 4.5:1 contrast ratio against --off-canvas-dropbutton-primary-background-color and --off-canvas-dropbutton-secondary-background-color. */
+
+  & .dropbutton-wrapper {
+    margin-block: var(--off-canvas-vertical-spacing-unit);
+
+    /*
+     * Styles for when the dropbutton is expanded.
+     */
+    &.open {
+      position: relative;
+      z-index: 100;
+
+      & .secondary-action {
+        visibility: visible;
+      }
+
+      & .dropbutton-widget {
+        border-radius: var(--off-canvas-dropbutton-border-radius) var(--off-canvas-dropbutton-border-radius) 0 0;
+      }
+
+      & .dropbutton-toggle button:before {
+        transform: translateY(25%) rotate(225deg);
+      }
+    }
+
+    /*
+    * Styles for single link variant of dropbutton.
+    */
+    &.dropbutton-single {
+      & .dropbutton-widget {
+        padding-inline-end: 0;
+      }
+
+      & .dropbutton-action {
+        &:first-child {
+          border-right: solid 1px var(--off-canvas-dropbutton-border-color); /* LTR */
+          border-radius: var(--off-canvas-dropbutton-border-radius);
+
+          &:dir(rtl) {
+            border: solid 1px var(--off-canvas-dropbutton-border-color);
+          }
+        }
+
+        & a {
+          justify-content: center;
+        }
+      }
+    }
+  }
+
+  & .dropbutton-widget {
+    position: relative;
+    width: max-content;
+    max-width: 100%;
+    height: var(--off-canvas-dropbutton-height);
+    padding-inline-end: var(--off-canvas-dropbutton-height);
+    border-radius: var(--off-canvas-dropbutton-border-radius);
+  }
+
+  & .dropbutton {
+    height: var(--off-canvas-dropbutton-height);
+    margin-block: 0;
+    margin-inline-start: 0;
+    padding-inline-start: 0;
+    list-style: none;
+    font-size: var(--off-canvas-dropbutton-font-size);
+  }
+
+  /* This is the button that expands/collapses the secondary options. */
+  & .dropbutton-toggle {
+    padding: 0;
+    border: 0;
+
+    & button {
+      position: absolute;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--off-canvas-dropbutton-height);
+      height: var(--off-canvas-dropbutton-height);
+      padding: 0;
+      cursor: pointer;
+      border-color: var(--off-canvas-dropbutton-border-color);
+      border-radius: 0 var(--border-radius) var(--border-radius) 0; /* LTR */
+      background: var(--off-canvas-dropbutton-primary-background-color);
+      inset-inline-end: 0;
+
+      &:focus {
+        outline: solid 2px var(--off-canvas-dropbutton-focus-outline-color);
+        outline-offset: -2px;
+      }
+
+      &:before {
+        display: block;
+        width: 6px;
+        height: 6px;
+        content: "";
+        transform: translateY(-25%) rotate(45deg);
+        border-right: solid 2px var(--off-canvas-dropbutton-text-color);
+        border-bottom: solid 2px var(--off-canvas-dropbutton-text-color);
+      }
+
+      &:dir(rtl) {
+        border-radius: var(--off-canvas-dropbutton-border-radius) 0 0 var(--off-canvas-dropbutton-border-radius);
+      }
+    }
+  }
+
+  /* This is the first <li> element in the list of actions. */
+  & .dropbutton-action {
+    &:first-child {
+      margin-inline-end: 2px;
+      border: solid var(--off-canvas-dropbutton-border-width) var(--off-canvas-dropbutton-border-color);
+      border-radius: var(--off-canvas-dropbutton-border-radius) 0 0 var(--off-canvas-dropbutton-border-radius); /* LTR */
+      background: var(--off-canvas-dropbutton-primary-background-color);
+
+      &:dir(rtl) {
+        border: solid var(--off-canvas-dropbutton-border-width) var(--off-canvas-dropbutton-border-color);
+        border-radius: 0 var(--off-canvas-dropbutton-border-radius) var(--off-canvas-dropbutton-border-radius) 0;
+      }
+    }
+
+    & a {
+      display: flex;
+      align-items: center;
+      min-height: var(--off-canvas-dropbutton-height);
+      margin-bottom: -2px;
+      padding: 0 9px;
+      text-decoration: none;
+      color: var(--off-canvas-dropbutton-text-color);
+      font-weight: 600;
+
+      &:hover {
+        color: var(--off-canvas-dropbutton-text-color);
+      }
+
+      &:focus {
+        outline: solid 2px var(--off-canvas-dropbutton-focus-outline-color);
+        outline-offset: -1px; /* Overlap parent container by 1px. */
+      }
+    }
+  }
+
+  /* These are the <li> elements other than the first. */
+  & .secondary-action {
+    visibility: hidden;
+    width: calc(100% + var(--off-canvas-dropbutton-height));
+    margin-top: var(--off-canvas-dropbutton-border-width);
+    border-right: var(--off-canvas-dropbutton-border-width) solid var(--off-canvas-dropbutton-border-color);
+    border-left: var(--off-canvas-dropbutton-border-width) solid var(--off-canvas-dropbutton-border-color);
+    background-color: var(--off-canvas-dropbutton-primary-background-color);
+
+    &:last-child {
+      border-bottom: var(--off-canvas-dropbutton-border-width) solid var(--off-canvas-dropbutton-border-color);
+    }
+
+    & a:hover {
+      color: var(--off-canvas-dropbutton-text-color-hover);
+      background-color: var(--off-canvas-dropbutton-secondary-background-color);
+    }
+  }
+}

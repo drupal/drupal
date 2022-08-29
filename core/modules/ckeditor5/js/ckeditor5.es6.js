@@ -321,7 +321,7 @@
       // rules containing the #drupal-off-canvas selector.
       [...document.styleSheets].forEach(processRules);
 
-      const prefix = `#drupal-off-canvas [${fenceName}]`;
+      const prefix = `#drupal-off-canvas-wrapper [${fenceName}]`;
       // Additional styles that need to be explicity added in addition to the
       // prefixed versions of existing css in `existingCss`.
       const addedCss = [
@@ -331,51 +331,8 @@
         `${prefix} .ck.ck-content ol li {list-style-type: decimal}`,
         `${prefix} .ck[contenteditable], ${prefix} .ck[contenteditable] * {-webkit-user-modify: read-write;-moz-user-modify: read-write;}`,
       ];
-      // Styles to ensure block elements are displayed as such inside
-      // off-canvas dialogs. These are all element types that are styled with
-      // ` all: initial;` in the off-canvas reset that should default to being
-      // displayed as blocks within CKEditor.
-      // @see core/misc/dialog/off-canvas.reset.pcss.css
-      const blockSelectors = [
-        'h1',
-        'h2',
-        'h3',
-        'h4',
-        'h5',
-        'h6',
-        'p',
-        'ol',
-        'ul',
-        'address',
-        'article',
-        'aside',
-        'blockquote',
-        'body',
-        'dd',
-        'div',
-        'dl',
-        'dt',
-        'fieldset',
-        'figcaption',
-        'figure',
-        'footer',
-        'form',
-        'header',
-        'hgroup',
-        'hr',
-        'html',
-        'legend',
-        'main',
-        'menu',
-        'pre',
-        'section',
-        'xmp',
-      ]
-        .map((blockElement) => `${prefix} .ck.ck-content ${blockElement}`)
-        .join(', \n');
-      const blockCss = `${blockSelectors} { display: block; }`;
 
-      const prefixedCss = [...addedCss, blockCss].join('\n');
+      const prefixedCss = [...addedCss].join('\n');
 
       // Create a new style tag with the prefixed styles added above.
       const offCanvasCssStyle = document.createElement('style');

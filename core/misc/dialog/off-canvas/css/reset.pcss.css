@@ -1,0 +1,20 @@
+/**
+ * @file
+ * Reset HTML elements styles for the off-canvas dialog.
+ *
+ * @internal
+ */
+
+#drupal-off-canvas-wrapper *:where(:not(svg, svg *, .ck-reset *, [data-drupal-ck-style-fence] *, .ui-resizable-handle)) {
+  all: revert;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.4;
+
+  &:after,
+  &:before {
+    all: revert;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+  }
+}

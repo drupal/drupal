@@ -1,0 +1,30 @@
+/**
+ * @file
+ * Recreate Drupal admin styling that was removed with reset.
+ * @see system.admin.css
+ *
+ * @internal
+ */
+
+#drupal-off-canvas-wrapper {
+  & .panel {
+    padding: 5px 5px 15px;
+  }
+
+  & .panel__description {
+    margin: 0 0 3px;
+    padding: 2px 0 3px 0;
+  }
+
+  & .compact-link {
+    margin: 0 0 10px 0;
+  }
+
+  & small .admin-link:before {
+    content: " [";
+  }
+
+  & small .admin-link:after {
+    content: "]";
+  }
+}

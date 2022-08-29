@@ -63,8 +63,6 @@ libraries-extend:
     - olivero/details
   core/drupal.dialog:
     - olivero/drupal.dialog
-  core/drupal.dialog.off_canvas:
-    - olivero/dialog.off_canvas
   core/drupal.progress:
     - olivero/progress
   layout_discovery/onecol:

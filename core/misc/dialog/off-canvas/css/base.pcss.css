@@ -1,0 +1,93 @@
+/**
+ * @file
+ * Set base styles for the off-canvas dialog.
+ *
+ * @internal
+ */
+
+#drupal-off-canvas-wrapper {
+  --off-canvas-background-color-light: #666;
+  --off-canvas-background-color-medium: #444;
+  --off-canvas-background-color-dark: #333;
+  --off-canvas-background-color: var(--off-canvas-background-color-medium);
+  --off-canvas-padding: 20px;
+  --off-canvas-text-color: #e5e5e5;
+  --off-canvas-link-color: #85bef4;
+  --off-canvas-border-color: #666;
+  --off-canvas-font-family: "Lucida Grande", "Lucida Sans Unicode", "liberation sans", sans-serif;
+  --off-canvas-vertical-spacing-unit: 8px;
+  --off-canvas-focus-outline-width: 2px;
+  --off-canvas-focus-outline-color: #fff;
+
+  padding: 0 var(--off-canvas-padding) var(--off-canvas-padding);
+  color: var(--off-canvas-text-color);
+  background-color: var(--off-canvas-background-color);
+  font-family: var(--off-canvas-font-family);
+
+  & *:focus {
+    outline: solid var(--off-canvas-focus-outline-width) var(--off-canvas-focus-outline-color);
+    outline-offset: 2px;
+  }
+
+  & a,
+  & .link {
+    text-decoration: none;
+    color: var(--off-canvas-link-color);
+  }
+
+  & hr {
+    height: 1px;
+    background: var(--off-canvas-border-color);
+  }
+
+  & h1,
+  & .heading-a {
+    font-size: 23px;
+    line-height: 1.2;
+  }
+
+  & h2,
+  & .heading-b {
+    margin: var(--off-canvas-vertical-spacing-unit) 0;
+    font-size: 19px;
+  }
+
+  & h3,
+  & .heading-c {
+    margin: var(--off-canvas-vertical-spacing-unit) 0;
+    font-size: 17px;
+  }
+
+  & h4,
+  & .heading-d {
+    margin: var(--off-canvas-vertical-spacing-unit) 0;
+    font-size: 16px;
+  }
+
+  & h5,
+  & .heading-e,
+  & h6,
+  & .heading-f {
+    margin: var(--off-canvas-vertical-spacing-unit) 0;
+    font-size: 15px;
+  }
+
+  & p {
+    margin: var(--off-canvas-vertical-spacing-unit) 0;
+  }
+
+  & img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  & .links {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    & li {
+      margin: calc(var(--off-canvas-vertical-spacing-unit) /2) 0;
+    }
+  }
+}

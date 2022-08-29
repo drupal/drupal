@@ -2,8 +2,12 @@ themes/claro/**/*.css
 !themes/claro/**/*.pcss.css
 themes/olivero/**/*.css
 !themes/olivero/**/*.pcss.css
-misc/dialog/off-canvas.reset.css
-misc/dialog/off-canvas.base.css
+misc/dialog/off-canvas/css/**/*.css
+!misc/dialog/off-canvas/css/**/*.pcss.css
+modules/layout_builder/css/**/*.css
+!modules/layout_builder/css/**/*.pcss.css
+modules/workspaces/css/**/*.css
+!modules/workspaces/css/**/*.pcss.css
 themes/stable/css/core/dialog/off-canvas.reset.css
 themes/stable/css/core/dialog/off-canvas.base.css
 themes/stable9/css/core/dialog/off-canvas.reset.css

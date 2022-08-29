@@ -1,0 +1,91 @@
+/**
+ * @file
+ * Styling for the titlebar within the off-canvas dialog.
+ *
+ * @internal
+ */
+
+#drupal-off-canvas-wrapper {
+  --off-canvas-title-padding: calc(3 * var(--off-canvas-vertical-spacing-unit));
+  --off-canvas-title-background-color: #2d2d2d;
+  --off-canvas-title-text-color: #fff;
+  --off-canvas-title-font-size: 16px;
+
+  & .ui-dialog-titlebar {
+    position: relative;
+    margin: 0 calc(-1 * var(--off-canvas-padding));
+    padding: var(--off-canvas-title-padding) 50px;
+    color: var(--off-canvas-title-text-color);
+    background-color: var(--off-canvas-title-background-color);
+    font-family: var(--off-canvas-title-font-family);
+    font-size: var(--off-canvas-title-font-size);
+    font-weight: bold;
+
+    /* The pencil icon. */
+    &:before {
+      position: absolute;
+      top: 0;
+      inset-inline-start: 1em;
+      display: block;
+      width: 20px;
+      height: 100%;
+      content: "";
+      background-color: currentColor;
+      mask-image: url(../../../icons/ffffff/pencil.svg);
+      mask-repeat: no-repeat;
+      mask-size: contain;
+      mask-position: center;
+
+      @media (forced-colors: active) {
+        background-color: canvastext;
+      }
+    }
+  }
+
+  /* Close button. */
+  & .ui-dialog-titlebar-close {
+    position: absolute;
+    top: 50%;
+    inset-inline: auto 10px;
+    overflow: hidden;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    transform: translateY(-50%);
+    text-indent: -9999px;
+    color: inherit;
+    border: 1px solid transparent;
+    background-color: transparent;
+    appearance: none;
+
+    &:focus {
+      outline: solid 2px currentColor;
+      outline-offset: 2px;
+    }
+
+    /* The plus icon. */
+    &:before,
+    &:after {
+      position: absolute;
+      top: calc(50% - 1px);
+      left: 50%;
+      width: 50%;
+      height: 0;
+      content: "";
+      border-top: solid 2px currentColor;
+    }
+
+    &:before {
+      transform: translate(-50%, 50%) rotate(-45deg);
+    }
+
+    &:after {
+      transform: translate(-50%, 50%) rotate(45deg);
+    }
+
+    /* Hide the default jQuery UI dialog close button. */
+    & .ui-icon {
+      display: none;
+    }
+  }
+}

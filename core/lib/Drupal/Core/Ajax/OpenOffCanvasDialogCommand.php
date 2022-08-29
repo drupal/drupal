@@ -51,6 +51,10 @@ class OpenOffCanvasDialogCommand extends OpenDialogCommand {
     if (empty($dialog_options['dialogClass'])) {
       $this->dialogOptions['dialogClass'] = "ui-dialog-off-canvas ui-dialog-position-$position";
     }
+    // Add CSS class to #drupal-off-canvas element. This enables developers to
+    // select previous versions of off-canvas styles by using custom selector:
+    // #drupal-off-canvas:not(.drupal-off-canvas-reset).
+    $this->dialogOptions['classes']['ui-dialog-content'] = 'drupal-off-canvas-reset';
     // If no width option is provided then use the default width to avoid the
     // dialog staying at the width of the previous instance when opened
     // more than once, with different widths, on a single page.

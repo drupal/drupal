@@ -1,0 +1,102 @@
+/**
+ * @file
+ * Table drag styling for off-canvas dialog.
+ *
+ * @see tabledrag.js
+ *
+ * @internal
+ */
+
+#drupal-off-canvas-wrapper {
+  /* The draggable <tr> element. */
+  & .draggable {
+    &:hover,
+    &:focus-within {
+      background-color: var(--off-canvas-background-color-light);
+    }
+
+    /* Appears when the row is being dragged. */
+    &.drag {
+      cursor: move;
+      background-color: var(--off-canvas-background-color-dark);
+    }
+  }
+
+  & td {
+    transition: background-color 0.3s ease;
+
+    /* We have to horizontally align all descendent nodes including text nodes
+     * that do not have wrapper elements. Since we use flex to do this, we need
+     * try to keep it vertically centered, so we have to give it a minimum height
+     * to match the rest of the table cells. */
+    &:first-child {
+      display: flex;
+      align-items: center;
+      min-height: 50px;
+      gap: var(--off-canvas-table-cell-padding);
+    }
+
+    & abbr {
+      margin-inline: 0 5px;
+      text-decoration: none;
+    }
+  }
+
+  & .tabledrag-handle {
+    flex-shrink: 0;
+
+    &:after {
+      display: block;
+      width: 20px;
+      height: 20px;
+      margin: 0;
+      padding: 0;
+      content: "";
+      cursor: move;
+      background-color: transparent;
+      background-image: url(../../../icons/bebebe/move.svg);
+      background-repeat: no-repeat;
+      background-position: center;
+
+      @media (forced-colors: active) {
+        background: linktext;
+        mask-image: url(../../../icons/bebebe/move.svg);
+        mask-repeat: no-repeat;
+        mask-position: center;
+      }
+    }
+  }
+
+  /* Make the "row weight" <select> as small as possible. */
+  & .tabledrag-hide select {
+    all: revert;
+  }
+
+  & .tabledrag-changed-warning {
+    margin-bottom: var(--off-canvas-vertical-spacing-unit);
+    font-size: 14px;
+  }
+
+  & .tabledrag-toggle-weight-wrapper {
+    padding-top: 10px;
+    text-align: end;
+  }
+
+  & .indentation {
+    width: 5px;
+  }
+
+  @nest .touchevents & .draggable td {
+    padding: 0 10px;
+  }
+
+  @nest .touchevents & .draggable .menu-item__link {
+    display: inline-block;
+    padding: 10px 0;
+  }
+
+  @nest .touchevents & a.tabledrag-handle {
+    width: 40px;
+    height: 44px;
+  }
+}

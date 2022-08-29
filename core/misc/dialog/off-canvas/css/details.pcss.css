@@ -1,0 +1,62 @@
+/**
+ * @file
+ * Visual styling for summary and details in the off-canvas dialog.
+ *
+ * @internal
+ */
+
+#drupal-off-canvas-wrapper {
+  --off-canvas-details-border-width: 0;
+  --off-canvas-details-border-color: none;
+  --off-canvas-details-background-color: #474747;
+  --off-canvas-details-text-color: #ddd;
+  --off-canvas-details-summary-border: none;
+  --off-canvas-details-summary-padding: 10px 20px;
+  --off-canvas-details-summary-font-size: 14px;
+  --off-canvas-details-summary-background-color: #333;
+  --off-canvas-details-summary-background-color-hover: #222;
+  --off-canvas-details-summary-text-color: #eee;
+  --off-canvas-details-summary-text-color-hover: #fff;
+
+  & details {
+    margin: var(--off-canvas-vertical-spacing-unit) calc(-1 * var(--off-canvas-padding)); /* Cancel out the padding of the parent. */
+    padding: 0 var(--off-canvas-padding);
+    color: var(--off-canvas-details-text-color);
+    border: solid var(--off-canvas-details-border-color) var(--off-canvas-details-border-width);
+    background: var(--off-canvas-details-background-color);
+
+    & + details {
+      margin-top: calc(-1 * var(--off-canvas-details-border-width));
+    }
+  }
+
+  & summary {
+    margin: 0 calc(-1 * var(--off-canvas-padding));
+    padding: var(--off-canvas-details-summary-padding);
+    color: var(--off-canvas-details-summary-text-color);
+    border: var(--off-canvas-details-summary-border);
+    background-color: var(--off-canvas-details-summary-background-color);
+    font-size: var(--off-canvas-details-summary-font-size);
+
+    &:hover {
+      color: var(--off-canvas-details-summary-text-color-hover);
+      background-color: var(--off-canvas-details-summary-background-color-hover);
+    }
+
+    &:focus {
+      outline-offset: -4px; /* Ensure focus doesn't get cut off. */
+    }
+
+    a {
+      color: var(--off-canvas-details-text-color);
+
+      &:hover {
+        color: var(--off-canvas-details-summary-text-color-hover);
+      }
+    }
+  }
+
+  & .details-wrapper {
+    padding: var(--off-canvas-vertical-spacing-unit) 0;
+  }
+}

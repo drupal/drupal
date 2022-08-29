@@ -1,0 +1,60 @@
+/**
+ * @file
+ * Styling for Workspaces module's toolbar tab.
+ */
+
+/* Toolbar tab */
+.toolbar .toolbar-bar .workspaces-toolbar-tab {
+  color: #000;
+  background-color: #e09600;
+}
+.toolbar .toolbar-bar .workspaces-toolbar-tab--is-default {
+  background-color: #81c071;
+}
+.toolbar-oriented .toolbar-bar .workspaces-toolbar-tab {
+  float: inline-end;
+}
+
+@media (min-width: 264px) {
+  .toolbar:not(.toolbar-oriented) .toolbar-bar .workspaces-toolbar-tab {
+    float: inline-end;
+  }
+}
+
+/* Link within the toolbar tab. */
+.toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-item {
+  width: 100%;
+  margin: 0;
+  text-align: start;
+  color: inherit;
+
+  @nest .toolbar-oriented & {
+    width: auto;
+    text-align: initial;
+  }
+}
+
+.toolbar .toolbar-icon-workspace:before {
+  background-image: url("../icons/000000/workspaces.svg");
+}
+
+@media all and (max-width: 766px) {
+  .toolbar-oriented .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace {
+    width: auto;
+    max-width: 8em;
+  }
+
+  .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace {
+    overflow: hidden;
+    padding-inline: 2.75em 1.3333em;
+    white-space: nowrap;
+    text-indent: 0;
+    text-overflow: ellipsis;
+  }
+
+  .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace:before {
+    inset-inline-start: 0.6667em;
+    width: 20px;
+    background-size: 100% auto;
+  }
+}

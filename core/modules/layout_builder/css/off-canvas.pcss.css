@@ -1,0 +1,121 @@
+/**
+ * @file
+ * Layout Builder styling for off-canvas UI.
+ */
+
+#drupal-off-canvas-wrapper {
+  & .layout-selection {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    & li {
+      position: relative; /* Anchor throbber. */
+      padding: calc(0.25 * var(--off-canvas-vertical-spacing-unit));
+      border-bottom: 1px solid var(--off-canvas-border-color);
+
+      &:last-child {
+        padding-bottom: 0;
+        border-bottom: none;
+      }
+    }
+
+    /* Horizontally align icon and text. */
+    & a {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+    }
+  }
+
+  /*
+   * This is the styling of the SVG within the layout selection list.
+   */
+  & .layout-icon__region {
+    fill: var(--off-canvas-text-color);
+    stroke: transparent;
+
+    @media (forced-colors: active) {
+      fill: canvastext;
+    }
+  }
+
+  & .inline-block-create-button {
+    --icon-size: 16px;
+
+    position: relative; /* Anchor pseudo-element. */
+    display: block;
+    padding: 24px;
+    padding-inline-start: calc(2 * var(--off-canvas-padding) + var(--icon-size) / 2); /* Room for icon */
+    border-bottom: 1px solid #333;
+    font-size: 16px;
+
+    /* Plus icon. */
+    &:before {
+      position: absolute;
+      top: 50%;
+      left: var(--off-canvas-padding);
+      width: var(--icon-size);
+      height: var(--icon-size);
+      content: "";
+      transform: translateY(-50%);
+      background-image: url(../../../misc/icons/bebebe/plus.svg);
+      background-repeat: no-repeat;
+      background-size: contain;
+
+      @media (forced-colors: active) {
+        background: linktext;
+        mask-image: url(../../../misc/icons/bebebe/plus.svg);
+        mask-repeat: no-repeat;
+        mask-size: contain;
+      }
+    }
+  }
+
+  & .inline-block-create-button,
+  & .inline-block-list__item {
+    margin: 0 calc(-1 * var(--off-canvas-padding));
+    color: var(--off-canvas-text-color);
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    &:focus {
+      outline-offset: -4px; /* Prevent outline from being cut off. */
+    }
+  }
+
+  & .inline-block-list {
+    margin: 0 0 calc(2 * var(--off-canvas-vertical-spacing-unit));
+    padding: 0;
+    list-style: none;
+
+    & li {
+      position: relative; /* Anchor throbber. */
+      margin: 0;
+      padding: calc(0.25 * var(--off-canvas-vertical-spacing-unit)) 0;
+
+      &:last-child {
+        padding-bottom: 0;
+        border-bottom: none;
+      }
+    }
+  }
+
+  /* This is the <a> tag. */
+  & .inline-block-list__item {
+    display: block;
+    flex-grow: 1;
+    padding: calc(2 * var(--off-canvas-vertical-spacing-unit)) var(--off-canvas-padding);
+    border-bottom: 1px solid var(--off-canvas-border-color);
+  }
+
+  /* Highlight the active block in the Move Block dialog. */
+  & .layout-builder-components-table__block-label--current {
+    padding-left: 17px;
+    border-left: solid 5px;
+  }
+}
