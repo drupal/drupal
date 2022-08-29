@@ -81,7 +81,6 @@ class SettingsTrayTestBase extends OffCanvasTestBase {
     $edit_button = $this->getSession()
       ->getPage()
       ->find('css', static::TOOLBAR_EDIT_LINK_SELECTOR);
-    $this->getSession()->executeScript("jQuery('[data-quickedit-entity-id]').trigger('mouseleave')");
     $edit_button->mouseOver();
     $edit_button->press();
   }
@@ -92,7 +91,6 @@ class SettingsTrayTestBase extends OffCanvasTestBase {
   protected function assertEditModeDisabled() {
     $web_assert = $this->assertSession();
     $page = $this->getSession()->getPage();
-    $this->getSession()->executeScript("jQuery('[data-quickedit-entity-id]').trigger('mouseleave')");
     $page->find('css', static::TOOLBAR_EDIT_LINK_SELECTOR)->mouseOver();
     $this->assertTrue($page->waitFor(10, function ($page) {
       return !$page->find('css', '.contextual .trigger:not(.visually-hidden)');

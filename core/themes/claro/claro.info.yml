@@ -160,8 +160,6 @@ libraries-extend:
   media_library/widget:
     - claro/media_library.theme
 
-quickedit_stylesheets:
-  - css/components/quickedit.css
 ckeditor_stylesheets:
   - css/base/elements.css
   - css/base/typography.css

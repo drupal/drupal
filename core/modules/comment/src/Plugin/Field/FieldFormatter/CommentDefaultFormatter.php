@@ -24,9 +24,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   label = @Translation("Comment list"),
  *   field_types = {
  *     "comment"
- *   },
- *   quickedit = {
- *     "editor" = "disabled"
  *   }
  * )
  */

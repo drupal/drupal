@@ -10,7 +10,6 @@
   const toggleEditSelector = '[data-drupal-settingstray="toggle"]';
   const itemsToToggleSelector = '[data-off-canvas-main-canvas], #toolbar-bar, [data-drupal-settingstray="editable"] a, [data-drupal-settingstray="editable"] button';
   const contextualItemsSelector = '[data-contextual-id] a, [data-contextual-id] button';
-  const quickEditItemSelector = '[data-quickedit-entity-id]';
 
   function preventClick(event) {
     if ($(event.target).closest('.contextual-links').length) {
@@ -22,10 +21,6 @@
 
   function closeToolbarTrays() {
     $(Drupal.toolbar.models.toolbarModel.get('activeTab')).trigger('click');
-  }
-
-  function disableQuickEdit() {
-    $('.quickedit-toolbar button.action-cancel').trigger('click');
   }
 
   function closeOffCanvas() {
@@ -61,18 +56,6 @@
           }
 
           $(e.currentTarget).find(blockConfigureSelector).trigger('click');
-          disableQuickEdit();
-        });
-        $(quickEditItemSelector).not(contextualItemsSelector).on('click.settingstray', e => {
-          if (!$(e.target).parent().hasClass('contextual') || $(e.target).parent().hasClass('quickedit')) {
-            closeOffCanvas();
-          }
-
-          if ($(e.target).parent().hasClass('contextual') || $(e.target).parent().hasClass('quickedit')) {
-            return;
-          }
-
-          $(e.currentTarget).find('li.quickedit a').trigger('click');
         });
       }
     } else {
@@ -81,7 +64,6 @@
       if ($editables.length) {
         document.querySelector('[data-off-canvas-main-canvas]').removeEventListener('click', preventClick, true);
         $editables.off('.settingstray');
-        $(quickEditItemSelector).off('.settingstray');
       }
 
       if (editButton) {
@@ -89,7 +71,6 @@
       }
 
       closeOffCanvas();
-      disableQuickEdit();
     }
 
     getItemsToToggle().toggleClass('js-settings-tray-edit-mode', editMode);
@@ -130,8 +111,6 @@
       if (!isInEditMode()) {
         $(toggleEditSelector).trigger('click').trigger('click.settings_tray');
       }
-
-      disableQuickEdit();
     });
   });
   $(document).on('keyup.settingstray', e => {

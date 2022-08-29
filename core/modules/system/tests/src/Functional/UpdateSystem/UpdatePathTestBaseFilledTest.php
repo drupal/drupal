@@ -370,7 +370,6 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
       'options',
       'page_cache',
       'path',
-      'quickedit',
       'rdf',
       'responsive_image',
       'rest',

@@ -10,9 +10,6 @@ namespace Drupal\text\Plugin\Field\FieldFormatter;
  *   label = @Translation("Summary or trimmed"),
  *   field_types = {
  *     "text_with_summary"
- *   },
- *   quickedit = {
- *     "editor" = "form"
  *   }
  * )
  */

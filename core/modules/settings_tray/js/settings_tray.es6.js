@@ -12,7 +12,6 @@
     '[data-off-canvas-main-canvas], #toolbar-bar, [data-drupal-settingstray="editable"] a, [data-drupal-settingstray="editable"] button';
   const contextualItemsSelector =
     '[data-contextual-id] a, [data-contextual-id] button';
-  const quickEditItemSelector = '[data-quickedit-entity-id]';
 
   /**
    * Prevent default click events except contextual links.
@@ -35,13 +34,6 @@
    */
   function closeToolbarTrays() {
     $(Drupal.toolbar.models.toolbarModel.get('activeTab')).trigger('click');
-  }
-
-  /**
-   * Disables the QuickEdit module editor if open.
-   */
-  function disableQuickEdit() {
-    $('.quickedit-toolbar button.action-cancel').trigger('click');
   }
 
   /**
@@ -106,29 +98,6 @@
               return;
             }
             $(e.currentTarget).find(blockConfigureSelector).trigger('click');
-            disableQuickEdit();
-          });
-        $(quickEditItemSelector)
-          .not(contextualItemsSelector)
-          .on('click.settingstray', (e) => {
-            /**
-             * For all non-contextual links or the contextual QuickEdit link
-             * close the off-canvas dialog.
-             */
-            if (
-              !$(e.target).parent().hasClass('contextual') ||
-              $(e.target).parent().hasClass('quickedit')
-            ) {
-              closeOffCanvas();
-            }
-            // Do not trigger if target is quick edit link to avoid loop.
-            if (
-              $(e.target).parent().hasClass('contextual') ||
-              $(e.target).parent().hasClass('quickedit')
-            ) {
-              return;
-            }
-            $(e.currentTarget).find('li.quickedit a').trigger('click');
           });
       }
     }
@@ -142,13 +111,11 @@
           .querySelector('[data-off-canvas-main-canvas]')
           .removeEventListener('click', preventClick, true);
         $editables.off('.settingstray');
-        $(quickEditItemSelector).off('.settingstray');
       }
       if (editButton) {
         editButton.textContent = Drupal.t('Edit');
       }
       closeOffCanvas();
-      disableQuickEdit();
     }
     getItemsToToggle().toggleClass('js-settings-tray-edit-mode', editMode);
     $('.edit-mode-inactive').toggleClass('visually-hidden', editMode);
@@ -241,11 +208,6 @@
       if (!isInEditMode()) {
         $(toggleEditSelector).trigger('click').trigger('click.settings_tray');
       }
-      /**
-       * Always disable QuickEdit regardless of whether "EditMode" was just
-       * enabled.
-       */
-      disableQuickEdit();
     });
   });
 

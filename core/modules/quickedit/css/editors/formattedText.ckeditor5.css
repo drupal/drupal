@@ -1,9 +1,0 @@
-/**
- * @file
- * Functional styles for the CKEditor 5-based formatted text in-place editor.
- */
-
-.quickedit-toolgroup.wysiwyg-main .ck.ck-toolbar {
-  border: none;
-  background: none;
-}
