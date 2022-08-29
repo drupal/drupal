@@ -1,0 +1,107 @@
+/**
+ * @file
+ * Styling for messages in the off-canvas dialog.
+ *
+ * @internal
+ */
+
+#drupal-off-canvas-wrapper {
+  --off-canvas-messages-icon-size: 20px;
+  --off-canvas-messages-background-color: #f3faef;
+  --off-canvas-messages-text-color-status: #325e1c;
+  --off-canvas-messages-text-color-warning: #734c00;
+  --off-canvas-messages-text-color-error: #a51b00;
+  --off-canvas-messages-icon-status: url(../../../icons/73b355/check.svg);
+  --off-canvas-messages-icon-warning: url(../../../icons/e29700/warning.svg);
+  --off-canvas-messages-icon-error: url(../../../icons/e32700/error.svg);
+
+  & .messages {
+    position: relative; /* Anchor :before pseudo-element. */
+    margin-top: calc(2 * var(--off-canvas-vertical-spacing-unit));
+    padding: calc(2 * var(--off-canvas-vertical-spacing-unit));
+    padding-inline-start: calc(2 * var(--off-canvas-messages-icon-size)); /* Room for icon. */
+    border: solid 1px transparent;
+    background-color: var(--off-canvas-messages-background-color);
+
+    /* Icon. */
+    &:before {
+      position: absolute;
+      top: 50%;
+      display: block;
+      width: var(--off-canvas-messages-icon-size);
+      height: var(--off-canvas-messages-icon-size);
+      content: "";
+      transform: translateY(-50%);
+      background-repeat: no-repeat;
+      background-size: contain;
+      inset-inline-start: 10px;
+
+      @media (forced-colors: active) {
+        background: canvastext;
+        mask-repeat: no-repeat;
+        mask-size: contain;
+      }
+    }
+  }
+
+  & h2 {
+    margin-top: 0;
+  }
+
+  /*
+   * Some themes (Olivero) insert SVG icon. We use a background icon, so we
+   * need to remove this.
+   */
+  & .messages__icon,
+  & .messages__close {
+    display: none;
+  }
+
+  & .messages__list {
+    margin: 0;
+    padding-inline-start: 20px;
+  }
+
+  & .messages abbr {
+    text-decoration: none;
+  }
+
+  & .messages--status {
+    color: var(--off-canvas-messages-text-color-status);
+
+    &:before {
+      background-image: var(--off-canvas-messages-icon-status);
+
+      @media (forced-colors: active) {
+        background: canvastext;
+        mask-image: var(--off-canvas-messages-icon-status);
+      }
+    }
+  }
+
+  & .messages--warning {
+    color: var(--off-canvas-messages-text-color-warning);
+
+    &:before {
+      background-image: var(--off-canvas-messages-icon-warning);
+
+      @media (forced-colors: active) {
+        background: canvastext;
+        mask-image: var(--off-canvas-messages-icon-warning);
+      }
+    }
+  }
+
+  & .messages--error {
+    color: var(--off-canvas-messages-text-color-error);
+
+    &:before {
+      background-image: var(--off-canvas-messages-icon-error);
+
+      @media (forced-colors: active) {
+        background: canvastext;
+        mask-image: var(--off-canvas-messages-icon-error);
+      }
+    }
+  }
+}

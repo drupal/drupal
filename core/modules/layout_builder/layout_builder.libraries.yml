@@ -3,6 +3,7 @@ drupal.layout_builder:
   css:
     theme:
       css/layout-builder.css: {}
+      css/off-canvas.css: {}
   js:
     js/layout-builder.js: {}
   dependencies:

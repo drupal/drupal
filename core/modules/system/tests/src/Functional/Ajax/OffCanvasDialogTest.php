@@ -54,6 +54,7 @@ class OffCanvasDialogTest extends BrowserTestBase {
           'drupalOffCanvasPosition' => $position ?: 'side',
           'buttons' => [],
           'dialogClass' => 'ui-dialog-off-canvas ui-dialog-position-' . ($position ?: 'side'),
+          'classes' => ['ui-dialog-content' => 'drupal-off-canvas-reset'],
           'width' => 300,
         ],
       'effect' => 'fade',

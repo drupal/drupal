@@ -1,0 +1,181 @@
+/**
+ * @file
+ * Styling for the Workspaces off-canvas user interface.
+ */
+
+@custom-media --workspace-layout-small (max-width: 767px);
+@custom-media --workspace-layout-large (min-width: 767px);
+
+#drupal-off-canvas-wrapper.workspaces-dialog {
+  padding-bottom: calc(var(--off-canvas-padding) / 2);
+
+  & .ui-dialog-content > div {
+    @media (--workspace-layout-large) {
+      display: flex;
+      align-items: flex-end;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  /**
+   * The Workspace UI hides the titlebar, but we need to show and correctly
+   * position the close button that is nested within it.
+   */
+  & .ui-dialog-titlebar {
+    all: revert;
+
+    &:before {
+      content: none;
+    }
+
+    & .ui-dialog-title {
+      display: none;
+    }
+
+    & .ui-dialog-titlebar-close {
+      inset-block-start: 1em;
+      inset-inline-end: 1em;
+      z-index: 1;
+      transform: none;
+    }
+  }
+
+  & .active-workspace {
+    padding: 0 var(--off-canvas-padding);
+
+    @media (--workspace-layout-large) {
+      display: flex;
+      flex-direction: column;
+      flex-basis: 200px;
+      flex-grow: 2;
+      align-self: stretch;
+      order: 1;
+      padding: var(--off-canvas-padding) var(--off-canvas-padding) 0;
+    }
+  }
+
+  & .active-workspace__title {
+    font-size: 13px;
+    font-weight: bold;
+  }
+
+  & .active-workspace__label {
+    position: relative; /* Anchor icon pseudo-element. */
+    padding: 18px 50px 0;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 1.2;
+
+    &:before {
+      position: absolute;
+      inset-inline-start: 0;
+      display: block;
+      width: 20px;
+      height: 20px;
+      content: "";
+      background: url("../icons/f0a100/ws_icon.svg") center center no-repeat;
+      background-size: contain;
+
+      @media (--workspace-layout-large) {
+        width: 40px;
+        height: 40px;
+      }
+    }
+  }
+
+  /* This is the "Manage workspace" link that appears when you're on a non-default workspace. */
+  & .active-workspace__manage {
+    display: block;
+    font-size: 13px;
+  }
+
+  /* This is the link to "View all workspaces". */
+  & .all-workspaces {
+    display: inline-block;
+    padding: var(--off-canvas-padding);
+    font-size: 14px;
+
+    @media (--workspace-layout-large) {
+      grid-row: 1;
+      grid-column: 2;
+      justify-self: end;
+      padding: 0;
+    }
+  }
+
+  & .workspaces {
+    & > h3 {
+      margin-top: 0;
+    }
+
+    & ul {
+      display: flex;
+      flex-direction: column;
+      grid-row: 2;
+      grid-column: 1 / -1;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      gap: 2px;
+
+      @media (--workspace-layout-large) {
+        flex-direction: row;
+      }
+    }
+
+    & li {
+      flex: 1;
+    }
+
+    @media (--workspace-layout-large) {
+      display: grid;
+      flex-grow: 8;
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  /* This is the link to the workspace. */
+  & .workspaces__item {
+    position: relative;
+    display: block;
+    min-height: 75px;
+    padding-block-start: var(--off-canvas-padding);
+    padding-inline-start: 50px;
+    color: var(--off-canvas-text-color);
+    outline-offset: -2px; /* Ensure focus outline doesn't overflow. */
+    background-color: var(--off-canvas-background-color-light);
+    font-size: 14px;
+    font-weight: bold;
+
+    &:hover,
+    &:focus {
+      background-color: #666;
+    }
+
+    &:before {
+      position: absolute;
+      inset-inline-start: var(--off-canvas-padding);
+      display: block;
+      width: 20px;
+      height: 20px;
+      content: "";
+      background: url("../icons/f0a100/ws_icon.svg") center center no-repeat;
+      background-size: 100% auto;
+    }
+  }
+
+  & .active-workspace--default .active-workspace__label:before,
+  & .workspaces__item--default:before {
+    background-image: url("../icons/81c071/ws_icon.svg"); /* Green icon. */
+  }
+
+  & .active-workspace__actions .button {
+    margin: 10px 0 0;
+  }
+
+  @media (--workspace-layout-small) {
+    height: 100% !important;
+  }
+}

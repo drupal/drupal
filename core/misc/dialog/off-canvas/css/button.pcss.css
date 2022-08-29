@@ -1,0 +1,112 @@
+/**
+ * @file
+ * Visual styling for buttons in the off-canvas dialog.
+ *
+ * @internal
+ */
+#drupal-off-canvas-wrapper {
+  --off-canvas-button-background-color: #777;
+  --off-canvas-button-background-color-hover: #999;
+  --off-canvas-button-text-color: #f5f5f5;
+  --off-canvas-button-text-color-hover: #fff;
+  --off-canvas-button-font-size: 14px;
+  --off-canvas-button-padding: calc(var(--off-canvas-vertical-spacing-unit) / 2) 20px;
+  --off-canvas-button-border-color: transparent;
+  --off-canvas-button-border-radius: 20em;
+  --off-canvas-button-font-weight: 600;
+  --off-canvas-primary-button-background-color: #277abd;
+  --off-canvas-primary-button-background-color-hover: #236aaf;
+  --off-canvas-primary-button-text-color: #fff;
+  --off-canvas-primary-button-text-color-hover: #fff;
+
+  & .button {
+    display: inline-block;
+    width: 100%;
+    height: auto;
+    margin: 0 0 10px;
+    padding: var(--off-canvas-button-padding);
+    cursor: pointer;
+    transition: background 0.5s ease;
+    text-align: center;
+    color: var(--off-canvas-button-text-color);
+    border: solid 1px var(--off-canvas-button-border-color);
+    border-radius: var(--off-canvas-button-border-radius);
+    background: var(--off-canvas-button-background-color);
+    font-family: inherit;
+    font-size: var(--off-canvas-button-font-size);
+    font-weight: var(--off-canvas-button-font-weight);
+    line-height: normal;
+    appearance: none;
+
+    &:hover,
+    &:active {
+      z-index: 10;
+      text-decoration: none;
+      color: var(--off-canvas-button-text-color-hover);
+      background-color: var(--off-canvas-button-background-color-hover);
+    }
+
+    &:disabled,
+    &:disabled:active,
+    &.is-disabled,
+    &.is-disabled:active {
+      cursor: default;
+      color: #5c5c5c;
+      background: #555;
+      font-weight: normal;
+    }
+  }
+
+  & .button--primary {
+    margin-top: 15px;
+    color: var(--off-canvas-primary-button-text-color);
+    background: var(--off-canvas-primary-button-background-color);
+
+    &:hover,
+    &:active {
+      color: var(--off-canvas-primary-button-text-color-hover);
+      background: var(--off-canvas-primary-button-background-color-hover);
+    }
+  }
+
+  & button.link {
+    display: inline;
+    transition: color 0.5s ease;
+    color: var(--off-canvas-link-color);
+    border: 0;
+    background: transparent;
+    font-size: var(--off-canvas-button-font-size);
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+      color: var(--off-canvas-link-color);
+    }
+  }
+
+  & .button--danger {
+    text-decoration: none;
+    color: #c72100;
+    border-radius: 0;
+    font-weight: 400;
+
+    &:hover,
+    &:focus,
+    &:active {
+      text-decoration: none;
+      color: #ff2a00;
+      text-shadow: none;
+    }
+
+    &:disabled,
+    &.is-disabled {
+      cursor: default;
+      color: #737373;
+    }
+  }
+
+  @nest .no-touchevents & .button--small {
+    padding: 2px 1em;
+    font-size: 13px;
+  }
+}

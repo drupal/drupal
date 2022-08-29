@@ -1,0 +1,44 @@
+/**
+ * @file
+ * Styling of AJAX actions throbber in off-canvas dialog.
+ *
+ * @internal
+ */
+
+#drupal-off-canvas-wrapper {
+  & .ajax-progress, /* This is the CSS class used in Claro. */
+  & .ajax-progress-throbber {
+    display: inline-block;
+    overflow: hidden;
+    width: 15px;
+    height: 15px;
+    margin: 0 10px;
+    animation: off-canvas-throbber-spin 1s linear infinite;
+    vertical-align: middle;
+    border: 2px solid var(--off-canvas-text-color);
+    border-top-color: transparent;
+    border-radius: 50%;
+
+    @media (forced-colors: active) {
+      border-top-color: transparent;
+    }
+  }
+
+  & .layout-selection,
+  & .inline-block-list {
+    & .ajax-progress,
+    & .ajax-progress-throbber {
+      position: absolute;
+      inset-block-start: 0;
+      inset-block-end: 0;
+      inset-inline-end: 0;
+      margin-block: auto;
+    }
+  }
+}
+
+@keyframes off-canvas-throbber-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

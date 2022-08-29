@@ -1,0 +1,35 @@
+/**
+ * @file
+ * Styling for tables in the off-canvas dialog.
+ *
+ * @internal
+ */
+
+#drupal-off-canvas-wrapper {
+  --off-canvas-table-cell-padding: 2px;
+  --off-canvas-first-cell-padding-start: calc(var(--off-canvas-padding) / 2);
+
+  & table {
+    width: calc(100% + 2 * var(--off-canvas-padding));
+    margin: var(--off-canvas-vertical-spacing-unit) calc(-1 * var(--off-canvas-padding));
+  }
+
+  & tr {
+    border-bottom: 1px solid var(--off-canvas-border-color);
+  }
+
+  & td,
+  & th {
+    padding: var(--off-canvas-table-cell-padding);
+    text-align: start;
+    vertical-align: middle;
+
+    &:first-child {
+      padding-inline-start: var(--off-canvas-first-cell-padding-start);
+    }
+
+    &:not(:last-child) td {
+      border-bottom: solid 1px var(--off-canvas-border-color);
+    }
+  }
+}

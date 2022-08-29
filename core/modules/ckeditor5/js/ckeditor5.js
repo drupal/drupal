@@ -151,11 +151,9 @@
 
     if (once('ckeditor5-off-canvas-reset', 'body').length) {
       [...document.styleSheets].forEach(processRules);
-      const prefix = `#drupal-off-canvas [${fenceName}]`;
+      const prefix = `#drupal-off-canvas-wrapper [${fenceName}]`;
       const addedCss = [`${prefix} .ck.ck-content {display:block;min-height:5rem;}`, `${prefix} .ck.ck-content * {display:initial;background:initial;color:initial;padding:initial;}`, `${prefix} .ck.ck-content li {display:list-item}`, `${prefix} .ck.ck-content ol li {list-style-type: decimal}`, `${prefix} .ck[contenteditable], ${prefix} .ck[contenteditable] * {-webkit-user-modify: read-write;-moz-user-modify: read-write;}`];
-      const blockSelectors = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'ol', 'ul', 'address', 'article', 'aside', 'blockquote', 'body', 'dd', 'div', 'dl', 'dt', 'fieldset', 'figcaption', 'figure', 'footer', 'form', 'header', 'hgroup', 'hr', 'html', 'legend', 'main', 'menu', 'pre', 'section', 'xmp'].map(blockElement => `${prefix} .ck.ck-content ${blockElement}`).join(', \n');
-      const blockCss = `${blockSelectors} { display: block; }`;
-      const prefixedCss = [...addedCss, blockCss].join('\n');
+      const prefixedCss = [...addedCss].join('\n');
       const offCanvasCssStyle = document.createElement('style');
       offCanvasCssStyle.textContent = prefixedCss;
       offCanvasCssStyle.setAttribute('id', 'ckeditor5-off-canvas-reset');

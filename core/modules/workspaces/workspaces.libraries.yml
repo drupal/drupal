@@ -2,6 +2,7 @@ drupal.workspaces.toolbar:
   version: VERSION
   css:
     theme:
+      css/workspaces.off-canvas.css: {}
       css/workspaces.toolbar.css: {}
 drupal.workspaces.overview:
   version: VERSION

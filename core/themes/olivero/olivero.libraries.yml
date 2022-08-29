@@ -110,12 +110,6 @@ details:
     theme:
       css/components/details.css: {}
 
-dialog.off_canvas:
-  version: VERSION
-  css:
-    component:
-      css/components/off-canvas.css: {}
-
 dropbutton:
   version: VERSION
   css:

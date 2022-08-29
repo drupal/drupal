@@ -1,0 +1,33 @@
+/**
+ * @file
+ * Re-create utility styles for off-canvas dialog that are removed in the reset.
+ *
+ * @internal
+ */
+
+#drupal-off-canvas-wrapper {
+  & .hidden {
+    display: none;
+  }
+
+  & .visually-hidden {
+    position: absolute !important;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+    width: 1px !important;
+    height: 1px !important;
+    word-wrap: normal;
+
+    &.focusable:is(:active, :focus) {
+      position: static !important;
+      overflow: visible;
+      clip: auto;
+      width: auto !important;
+      height: auto !important;
+    }
+  }
+
+  & .invisible {
+    visibility: hidden;
+  }
+}
