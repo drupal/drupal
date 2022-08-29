@@ -1,5 +1,0 @@
-name: 'Quick Edit test'
-type: module
-description: 'Support module for the Quick Edit module tests.'
-package: Testing
-version: VERSION

@@ -235,7 +235,6 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       ->view($media, $view_mode, $langcode);
 
     // Allows other modules to treat embedded media items differently.
-    // @see quickedit_entity_view_alter()
     $build['#embed'] = TRUE;
 
     // There are a few concerns when rendering an embedded media entity:

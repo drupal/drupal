@@ -181,30 +181,6 @@ libraries-override:
       theme:
         css/node.admin.css: css/node/node.admin.css
 
-  quickedit/quickedit:
-    css:
-      component:
-        css/quickedit.module.css: css/quickedit/quickedit.module.css
-      theme:
-        css/quickedit.theme.css: css/quickedit/quickedit.theme.css
-        css/quickedit.icons.theme.css: css/quickedit/quickedit.icons.theme.css
-  quickedit/quickedit.inPlaceEditor.formattedText:
-    css:
-      component:
-        css/editors/formattedText.ckeditor.css: css/quickedit/editors/formattedText.ckeditor.css
-        css/editors/formattedText.ckeditor5.css: css/quickedit/editors/formattedText.ckeditor5.css
-  quickedit/quickedit.inPlaceEditor.image:
-    css:
-      component:
-        css/editors/image.css: css/quickedit/editors/image.css
-      theme:
-        css/editors/image.theme.css: css/quickedit/editors/image.theme.css
-  quickedit/quickedit.ckeditor5-temporary-work-around:
-    # "Temporary work-around until https://www.drupal.org/project/drupal/issues/3196689 lands."
-    css:
-      theme:
-        css/editors/formattedText/ckeditor5.workaround.css: css/quickedit/editors/formattedText/ckeditor5.workaround.css
-
   settings_tray/drupal.settings_tray:
     css:
       component:

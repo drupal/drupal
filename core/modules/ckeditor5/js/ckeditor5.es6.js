@@ -495,8 +495,6 @@
      *   The text format used in the editor.
      * @param {string} [mainToolbarId]
      *   The id attribute for the main editor toolbar, if any.
-     *
-     * @see Drupal.quickedit.editors.editor
      */
     attachInlineEditor(element, format, mainToolbarId) {
       const { editorDecoupled } = CKEditor5;
@@ -524,8 +522,7 @@
           editor.model.document.on('change:data', () => {
             const callback = callbacks.get(id);
             if (callback) {
-              // Quick Edit requires the current data to update EditorModel.
-              // @see Drupal.quickedit.editors.editor
+              // Allow modules to update EditorModel by providing the current data.
               debounce(callback, 400)(editor.getData());
             }
           });
