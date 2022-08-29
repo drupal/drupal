@@ -7,9 +7,7 @@
 
 @font-face {
   font-family: metropolis;
-  src:
-    url("../../fonts/metropolis/Metropolis-Regular.woff2") format("woff2"),
-    url("../../fonts/metropolis/Metropolis-Regular.woff") format("woff");
+  src: url("../../fonts/metropolis/Metropolis-Regular.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -17,9 +15,7 @@
 
 @font-face {
   font-family: metropolis;
-  src:
-    url("../../fonts/metropolis/Metropolis-Bold.woff2") format("woff2"),
-    url("../../fonts/metropolis/Metropolis-Bold.woff") format("woff");
+  src: url("../../fonts/metropolis/Metropolis-Bold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -27,9 +23,7 @@
 
 @font-face {
   font-family: metropolis;
-  src:
-    url("../../fonts/metropolis/Metropolis-SemiBold.woff2") format("woff2"),
-    url("../../fonts/metropolis/Metropolis-SemiBold.woff") format("woff");
+  src: url("../../fonts/metropolis/Metropolis-SemiBold.woff2") format("woff2");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -41,8 +35,7 @@
   src:
     local("Lora Regular"),
     local("Lora-Regular"),
-    url("../../fonts/lora/lora-v14-latin-regular.woff2") format("woff2"),
-    url("../../fonts/lora/lora-v14-latin-regular.woff") format("woff");
+    url("../../fonts/lora/lora-v14-latin-regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -53,8 +46,7 @@
   src:
     local("Lora Italic"),
     local("Lora-Italic"),
-    url("../../fonts/lora/lora-v14-latin-italic.woff2") format("woff2"),
-    url("../../fonts/lora/lora-v14-latin-italic.woff") format("woff");
+    url("../../fonts/lora/lora-v14-latin-italic.woff2") format("woff2");
   font-weight: 400;
   font-style: italic;
   font-display: swap;
@@ -65,8 +57,7 @@
   src:
     local("Lora Bold"),
     local("Lora-Bold"),
-    url("../../fonts/lora/lora-v14-latin-700.woff2") format("woff2"),
-    url("../../fonts/lora/lora-v14-latin-700.woff") format("woff");
+    url("../../fonts/lora/lora-v14-latin-700.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
