@@ -20,7 +20,7 @@ mode: responsive_3x2
 content:
   field_media_image:
     type: responsive_image
-    label: visually_hidden
+    label: hidden
     settings:
       responsive_image_style: 3_2_image
       image_link: ''
