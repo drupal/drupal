@@ -23,7 +23,7 @@ use Drupal\Core\Url;
  * @see \Drupal\Core\Access\RouteProcessorCsrf::processOutbound()
  * @see \Drupal\Core\Render\BubbleableMetadata
  * @see \Drupal\editor\Plugin\EditorPluginInterface::getJSSettings()
- * @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\ImageUpload::getDynamicPluginConfig()
+ * @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Image::getDynamicPluginConfig()
  * @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media::getDynamicPluginConfig()
  * @see https://www.drupal.org/project/drupal/issues/2512132
  *

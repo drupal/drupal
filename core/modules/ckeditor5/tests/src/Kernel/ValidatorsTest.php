@@ -253,19 +253,6 @@ class ValidatorsTest extends KernelTestBase {
       ],
     ];
 
-    $data['uploadImage toolbar item condition not met: image uploads must be enabled'] = [
-      'settings' => [
-        'toolbar' => [
-          'items' => [
-            'uploadImage',
-          ],
-        ],
-        'plugins' => [],
-      ],
-      'violations' => [
-        'settings.toolbar.items.0' => 'The <em class="placeholder">Image upload</em> toolbar item requires image uploads to be enabled.',
-      ],
-    ];
     $data['drupalMedia toolbar item condition not met: media filter enabled'] = [
       'settings' => [
         'toolbar' => [
@@ -1028,11 +1015,11 @@ class ValidatorsTest extends KernelTestBase {
       ],
     ];
 
-    $data['INVALID: uploadImage toolbar item condition NOT met: image uploads must be enabled'] = [
+    $data['INVALID: drupalInsertImage without required dependent plugin configuration'] = [
       'settings' => [
         'toolbar' => [
           'items' => [
-            'uploadImage',
+            'drupalInsertImage',
           ],
         ],
         'plugins' => [],
@@ -1042,14 +1029,14 @@ class ValidatorsTest extends KernelTestBase {
       ],
       'filters' => [],
       'violations' => [
-        'settings.toolbar.items.0' => 'The <em class="placeholder">Image upload</em> toolbar item requires image uploads to be enabled.',
+        'settings.plugins.ckeditor5_imageResize' => 'Configuration for the enabled plugin "<em class="placeholder">Image resize</em>" (<em class="placeholder">ckeditor5_imageResize</em>) is missing.',
       ],
     ];
-    $data['VALID: uploadImage toolbar item condition met: image uploads must be enabled'] = [
+    $data['VALID: drupalInsertImage toolbar item without image upload'] = [
       'settings' => [
         'toolbar' => [
           'items' => [
-            'uploadImage',
+            'drupalInsertImage',
           ],
         ],
         'plugins' => [
@@ -1059,6 +1046,25 @@ class ValidatorsTest extends KernelTestBase {
         ],
       ],
       'image_upload' => [
+        'status' => FALSE,
+      ],
+      'filters' => [],
+      'violations' => [],
+    ];
+    $data['VALID: drupalInsertImage image upload enabled'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'drupalInsertImage',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_imageResize' => [
+            'allow_resize' => FALSE,
+          ],
+        ],
+      ],
+      'image' => [
         'status' => TRUE,
       ],
       'filters' => [],

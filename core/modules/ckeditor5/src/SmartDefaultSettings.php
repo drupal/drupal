@@ -928,14 +928,15 @@ final class SmartDefaultSettings {
     });
 
     foreach ($configurable_definitions as $plugin_name => $definition) {
-      // Skip image upload as its configuration is stored in a discrete
-      // property of the $editor object, not its settings. Also skip any plugin
+      $default_plugin_configuration = $this->pluginManager->getPlugin($plugin_name, NULL)->defaultConfiguration();
+      // Skip plugins with an empty default configuration, the plugin
+      // configuration is most likely stored elsewhere. Also skip any plugin
       // that already has configuration data as default values are not needed.
-      if ($plugin_name === 'ckeditor5_imageUpload' || isset($settings['plugins'][$plugin_name])) {
+      if ($default_plugin_configuration === [] || isset($settings['plugins'][$plugin_name])) {
         continue;
       }
       $update_settings = TRUE;
-      $settings['plugins'][$plugin_name] = $this->pluginManager->getPlugin($plugin_name, NULL)->defaultConfiguration();
+      $settings['plugins'][$plugin_name] = $default_plugin_configuration;
     }
 
     if ($update_settings) {

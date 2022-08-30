@@ -80,7 +80,7 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
     switch ($cke4_button) {
       // @see \Drupal\ckeditor\Plugin\CKEditorPlugin\DrupalImage
       case 'DrupalImage':
-        return ['uploadImage'];
+        return ['drupalInsertImage'];
 
       // @see \Drupal\ckeditor\Plugin\CKEditorPlugin\DrupalLink
       case 'DrupalLink':
