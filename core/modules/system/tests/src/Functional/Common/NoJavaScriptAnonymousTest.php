@@ -21,47 +21,9 @@ class NoJavaScriptAnonymousTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Modules to enable.
-   *
-   * This is a list of modules that are enabled in the 'standard' profile.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  protected static $modules = [
-    'node',
-    'history',
-    'block',
-    'breakpoint',
-    'ckeditor',
-    'config',
-    'comment',
-    'contextual',
-    'contact',
-    'menu_link_content',
-    'datetime',
-    'block_content',
-    'editor',
-    'help',
-    'image',
-    'menu_ui',
-    'options',
-    'path',
-    'page_cache',
-    'dynamic_page_cache',
-    'big_pipe',
-    'taxonomy',
-    'dblog',
-    'search',
-    'shortcut',
-    'toolbar',
-    'field_ui',
-    'file',
-    'rdf',
-    'views',
-    'views_ui',
-    'tour',
-    'automated_cron',
-  ];
+  protected $profile = 'standard';
 
   /**
    * {@inheritdoc}
@@ -78,7 +40,6 @@ class NoJavaScriptAnonymousTest extends BrowserTestBase {
    */
   public function testNoJavaScript() {
     // Create a node of content type 'article' that is listed on the frontpage.
-    $this->drupalCreateContentType(['type' => 'article']);
     $this->drupalCreateNode([
       'type' => 'article',
       'promote' => NodeInterface::PROMOTED,
