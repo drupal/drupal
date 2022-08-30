@@ -1,15 +1,15 @@
 /**
  * @file
- * Customization of search.
+ * Wide viewport search bar interactions.
  */
 
 ((Drupal) => {
-  const searchWideButton = document.querySelector(
-    '[data-drupal-selector="block-search-wide-button"]',
-  );
-  const searchWideWrapper = document.querySelector(
-    '[data-drupal-selector="block-search-wide-wrapper"]',
-  );
+  const searchWideButtonSelector =
+    '[data-drupal-selector="block-search-wide-button"]';
+  const searchWideButton = document.querySelector(searchWideButtonSelector);
+  const searchWideWrapperSelector =
+    '[data-drupal-selector="block-search-wide-wrapper"]';
+  const searchWideWrapper = document.querySelector(searchWideWrapperSelector);
 
   /**
    * Determine if search is visible.
@@ -21,6 +21,63 @@
     return searchWideWrapper.classList.contains('is-active');
   }
   Drupal.olivero.searchIsVisible = searchIsVisible;
+
+  /**
+   * Closes search bar when a click event does not happen at an (x,y) coordinate
+   * that does not overlap with either the search wrapper or button.
+   *
+   * @see https://bugs.webkit.org/show_bug.cgi?id=229895
+   *
+   * @param {Event} e click event
+   */
+  function watchForClickOut(e) {
+    const clickInSearchArea = e.target.matches(`
+      ${searchWideWrapperSelector},
+      ${searchWideWrapperSelector} *,
+      ${searchWideButtonSelector},
+      ${searchWideButtonSelector} *
+    `);
+    if (!clickInSearchArea && searchIsVisible()) {
+      // eslint-disable-next-line no-use-before-define
+      toggleSearchVisibility(false);
+    }
+  }
+
+  /**
+   * Closes search bar when focus moves to another target.
+   * Avoids closing search bar if event does not have related target - required for Safari.
+   *
+   * @see https://bugs.webkit.org/show_bug.cgi?id=229895
+   *
+   * @param {Event} e focusout event
+   */
+  function watchForFocusOut(e) {
+    if (e.relatedTarget) {
+      const inSearchBar = e.relatedTarget.matches(
+        `${searchWideWrapperSelector}, ${searchWideWrapperSelector} *`,
+      );
+      const inSearchButton = e.relatedTarget.matches(
+        `${searchWideButtonSelector}, ${searchWideButtonSelector} *`,
+      );
+
+      if (!inSearchBar && !inSearchButton) {
+        // eslint-disable-next-line no-use-before-define
+        toggleSearchVisibility(false);
+      }
+    }
+  }
+
+  /**
+   * Closes search bar on escape keyup, if open.
+   *
+   * @param {Event} e keyup event
+   */
+  function watchForEscapeOut(e) {
+    if (e.key === 'Escape' || e.key === 'Esc') {
+      // eslint-disable-next-line no-use-before-define
+      toggleSearchVisibility(false);
+    }
+  }
 
   /**
    * Set focus for the search input element.
@@ -49,22 +106,28 @@
     if (visibility === true) {
       Drupal.olivero.closeAllSubNav();
       searchWideWrapper.classList.add('is-active');
+
+      document.addEventListener('click', watchForClickOut, { capture: true });
+      document.addEventListener('focusout', watchForFocusOut, {
+        capture: true,
+      });
+      document.addEventListener('keyup', watchForEscapeOut, { capture: true });
     } else {
       searchWideWrapper.classList.remove('is-active');
+
+      document.removeEventListener('click', watchForClickOut, {
+        capture: true,
+      });
+      document.removeEventListener('focusout', watchForFocusOut, {
+        capture: true,
+      });
+      document.removeEventListener('keyup', watchForEscapeOut, {
+        capture: true,
+      });
     }
   }
 
   Drupal.olivero.toggleSearchVisibility = toggleSearchVisibility;
-
-  document.addEventListener('keyup', (e) => {
-    if (e.key === 'Escape' || e.key === 'Esc') {
-      toggleSearchVisibility(false);
-    }
-  });
-
-  searchWideButton.addEventListener('click', () => {
-    toggleSearchVisibility(!searchIsVisible());
-  });
 
   /**
    * Initializes the search wide button.
@@ -76,26 +139,17 @@
    */
   Drupal.behaviors.searchWide = {
     attach(context) {
-      const searchWideButton = once(
+      const searchWideButtonEl = once(
         'search-wide',
-        '[data-drupal-selector="block-search-wide-button"]',
+        searchWideButtonSelector,
         context,
       ).shift();
-      if (searchWideButton) {
-        searchWideButton.setAttribute('aria-expanded', 'false');
+      if (searchWideButtonEl) {
+        searchWideButtonEl.setAttribute('aria-expanded', searchIsVisible());
+        searchWideButtonEl.addEventListener('click', () => {
+          toggleSearchVisibility(!searchIsVisible());
+        });
       }
     },
   };
-
-  /**
-   * Close the wide search container if focus moves from either the container
-   * or its toggle button.
-   */
-  document
-    .querySelector('[data-drupal-selector="search-block-form-2"]')
-    .addEventListener('focusout', (e) => {
-      if (!e.currentTarget.contains(e.relatedTarget)) {
-        toggleSearchVisibility(false);
-      }
-    });
 })(Drupal);
