@@ -6,14 +6,46 @@
 **/
 
 (Drupal => {
-  const searchWideButton = document.querySelector('[data-drupal-selector="block-search-wide-button"]');
-  const searchWideWrapper = document.querySelector('[data-drupal-selector="block-search-wide-wrapper"]');
+  const searchWideButtonSelector = '[data-drupal-selector="block-search-wide-button"]';
+  const searchWideButton = document.querySelector(searchWideButtonSelector);
+  const searchWideWrapperSelector = '[data-drupal-selector="block-search-wide-wrapper"]';
+  const searchWideWrapper = document.querySelector(searchWideWrapperSelector);
 
   function searchIsVisible() {
     return searchWideWrapper.classList.contains('is-active');
   }
 
   Drupal.olivero.searchIsVisible = searchIsVisible;
+
+  function watchForClickOut(e) {
+    const clickInSearchArea = e.target.matches(`
+      ${searchWideWrapperSelector},
+      ${searchWideWrapperSelector} *,
+      ${searchWideButtonSelector},
+      ${searchWideButtonSelector} *
+    `);
+
+    if (!clickInSearchArea && searchIsVisible()) {
+      toggleSearchVisibility(false);
+    }
+  }
+
+  function watchForFocusOut(e) {
+    if (e.relatedTarget) {
+      const inSearchBar = e.relatedTarget.matches(`${searchWideWrapperSelector}, ${searchWideWrapperSelector} *`);
+      const inSearchButton = e.relatedTarget.matches(`${searchWideButtonSelector}, ${searchWideButtonSelector} *`);
+
+      if (!inSearchBar && !inSearchButton) {
+        toggleSearchVisibility(false);
+      }
+    }
+  }
+
+  function watchForEscapeOut(e) {
+    if (e.key === 'Escape') {
+      toggleSearchVisibility(false);
+    }
+  }
 
   function handleFocus() {
     if (searchIsVisible()) {
@@ -32,33 +64,41 @@
     if (visibility === true) {
       Drupal.olivero.closeAllSubNav();
       searchWideWrapper.classList.add('is-active');
+      document.addEventListener('click', watchForClickOut, {
+        capture: true
+      });
+      document.addEventListener('focusout', watchForFocusOut, {
+        capture: true
+      });
+      document.addEventListener('keyup', watchForEscapeOut, {
+        capture: true
+      });
     } else {
       searchWideWrapper.classList.remove('is-active');
+      document.removeEventListener('click', watchForClickOut, {
+        capture: true
+      });
+      document.removeEventListener('focusout', watchForFocusOut, {
+        capture: true
+      });
+      document.removeEventListener('keyup', watchForEscapeOut, {
+        capture: true
+      });
     }
   }
 
   Drupal.olivero.toggleSearchVisibility = toggleSearchVisibility;
-  document.addEventListener('keyup', e => {
-    if (e.key === 'Escape') {
-      toggleSearchVisibility(false);
-    }
-  });
-  searchWideButton.addEventListener('click', () => {
-    toggleSearchVisibility(!searchIsVisible());
-  });
   Drupal.behaviors.searchWide = {
     attach(context) {
-      const searchWideButton = once('search-wide', '[data-drupal-selector="block-search-wide-button"]', context).shift();
+      const searchWideButtonEl = once('search-wide', searchWideButtonSelector, context).shift();
 
-      if (searchWideButton) {
-        searchWideButton.setAttribute('aria-expanded', 'false');
+      if (searchWideButtonEl) {
+        searchWideButtonEl.setAttribute('aria-expanded', searchIsVisible());
+        searchWideButtonEl.addEventListener('click', () => {
+          toggleSearchVisibility(!searchIsVisible());
+        });
       }
     }
 
   };
-  document.querySelector('[data-drupal-selector="search-block-form-2"]').addEventListener('focusout', e => {
-    if (!e.currentTarget.contains(e.relatedTarget)) {
-      toggleSearchVisibility(false);
-    }
-  });
 })(Drupal);
