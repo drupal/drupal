@@ -23,7 +23,7 @@ settings:
       - numberedList
       - '|'
       - blockQuote
-      - uploadImage
+      - drupalInsertImage
       - insertTable
       - horizontalLine
       - '|'

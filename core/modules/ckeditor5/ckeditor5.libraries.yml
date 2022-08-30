@@ -1,5 +1,3 @@
-# cspell:ignore imageupload
-
 ckeditor5.language:
   css:
     component:
@@ -155,11 +153,6 @@ admin.alignment:
     theme:
       css/alignment.admin.css: { }
 
-admin.imageupload:
-  css:
-    theme:
-      css/imageupload.admin.css: { }
-
 admin.indent:
   css:
     theme:
@@ -200,3 +193,8 @@ admin.codeBlock:
   css:
     theme:
       css/code-block.admin.css: { }
+
+admin.image:
+  css:
+    theme:
+      css/image.admin.css: { }

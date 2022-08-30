@@ -296,7 +296,7 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
       // Ensure that CKEditor 5 plugins that need to interact with the Editor
       // config entity are able to access the computed Editor, which was cloned
       // from $form_state->get('editor').
-      // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\ImageUpload::buildConfigurationForm
+      // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Image::buildConfigurationForm
       $form_state->set('editor', $editor);
     }
 
@@ -374,7 +374,7 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
 
     $editor_settings = $editor->getSettings();
     // This form field requires a JSON-style array of valid toolbar items.
-    // e.g. ["bold","italic","|","uploadImage"].
+    // e.g. ["bold","italic","|","drupalInsertImage"].
     // CKEditor 5 config for toolbar items takes an array of strings which
     // correspond to the keys under toolbar_items in a plugin yml or annotation.
     // @see https://ckeditor.com/docs/ckeditor5/latest/features/toolbar/toolbar.html
@@ -633,7 +633,7 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
       $plugin = $this->ckeditor5PluginManager->getPlugin($plugin_id, NULL);
       // If this plugin is configurable but it has empty default configuration,
       // that means the configuration must be stored out of band.
-      // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\ImageUpload
+      // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Image
       // @see editor_image_upload_settings_form()
       $default_configuration = $plugin->defaultConfiguration();
       $configuration_stored_out_of_band = empty($default_configuration);

@@ -1,0 +1,31 @@
+uuid: f962b8c7-4c74-4100-b6de-08e6a65ff43c
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.test_format_image
+  module:
+    - ckeditor5
+format: test_format_image
+editor: ckeditor5
+settings:
+  toolbar:
+    items:
+      - bold
+      - italic
+      - uploadImage
+      - sourceEditing
+  plugins:
+    ckeditor5_imageResize:
+      allow_resize: false
+    ckeditor5_sourceEditing:
+      allowed_tags:
+        - <img data-foo>
+image_upload:
+  status: true
+  scheme: public
+  directory: inline-images
+  max_size: ''
+  max_dimensions:
+    width: 0
+    height: 0
