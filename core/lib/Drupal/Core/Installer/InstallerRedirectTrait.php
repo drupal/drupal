@@ -26,7 +26,7 @@ trait InstallerRedirectTrait {
   /**
    * Determines if an exception handler should redirect to the installer.
    *
-   * @param \Exception $exception
+   * @param \Throwable $exception
    *   The exception to check.
    * @param \Drupal\Core\Database\Connection|null $connection
    *   (optional) The default database connection. If not provided, a less
@@ -38,7 +38,7 @@ trait InstallerRedirectTrait {
    *   TRUE if the exception handler should redirect to the installer because
    *   Drupal is not installed yet, or FALSE otherwise.
    */
-  protected function shouldRedirectToInstaller(\Exception $exception, Connection $connection = NULL) {
+  protected function shouldRedirectToInstaller(\Throwable $exception, Connection $connection = NULL) {
     // Never redirect on the command line.
     if ($this->isCli()) {
       return FALSE;
