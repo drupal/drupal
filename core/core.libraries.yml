@@ -876,10 +876,10 @@ sortable:
 
 tabbable:
   remote: https://github.com/focus-trap/tabbable
-  version: "5.3.2"
+  version: "6.0.0"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/focus-trap/tabbable/v5.3.2/LICENSE
+    url: https://raw.githubusercontent.com/focus-trap/tabbable/v6.0.0/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/tabbable/index.umd.min.js: { weight: -1, minified: true }
