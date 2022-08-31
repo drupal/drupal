@@ -1536,12 +1536,18 @@ services:
     arguments: ['@renderer', '@url_generator', '@theme.manager', '@date.formatter', '@file_url_generator']
     tags:
       - { name: twig.extension, priority: 100 }
-  # @todo Figure out what to do about debugging functions.
-  # @see https://www.drupal.org/node/1804998
   twig.extension.debug:
     class: Twig\Extension\DebugExtension
     tags:
-      - { name: twig.extension }
+      - { name: twig.extension, priority: 50 }
+  twig.extension.varDumper:
+    class: Drupal\Core\Template\DebugExtension
+    tags:
+      # This extension is loaded after the Twig Debug Extension because for Twig
+      # Extensions, last extension loaded takes precedent. This allows this
+      # extension to override the default Twig Debug Extension conditionally
+      # when Symfony VarDumper is available.
+      - { name: twig.extension, priority: 25 }
   twig.loader:
     class: Twig\Loader\ChainLoader
     public: false
