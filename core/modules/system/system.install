@@ -311,12 +311,34 @@ function system_requirements($phase) {
     // during installation or update.
     $requirements['php']['severity'] = ($phase === 'runtime') ? REQUIREMENT_ERROR : REQUIREMENT_WARNING;
   }
+  // @todo Remove this when \Drupal::MINIMUM_PHP is at least 8.1.6 in
+  //   https://www.drupal.org/i/3305726.
+  elseif ($phase === 'runtime' && version_compare($phpversion, '8.1.0', '>=') && version_compare($phpversion, '8.1.6', '<')) {
+    $requirements['php']['description'] = t('PHP %version has <a href=":bug_url">an OPcache bug that can cause fatal errors with class autoloading</a>. This can be fixed by upgrading to PHP 8.1.6 or later. See <a href="http://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal PHP requirements</a> page for more information.', [
+      '%version' => $phpversion,
+      ':bug_url' => 'https://github.com/php/php-src/issues/8164',
+      ':php_requirements' => 'https://www.drupal.org/docs/system-requirements/php-requirements',
+    ]);
+    $requirements['php']['severity'] = REQUIREMENT_WARNING;
+  }
   // For PHP versions that are still supported but no longer recommended,
   // inform users of what's recommended, allowing them to take action before it
   // becomes urgent.
   elseif ($phase === 'runtime' && version_compare($phpversion, \Drupal::RECOMMENDED_PHP) < 0) {
     $requirements['php']['description'] = t('It is recommended to upgrade to PHP version %recommended or higher for the best ongoing support.  See <a href="http://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal PHP requirements</a> page for more information.', ['%recommended' => \Drupal::RECOMMENDED_PHP, ':php_requirements' => 'https://www.drupal.org/docs/system-requirements/php-requirements']);
-    $requirements['php']['severity'] = REQUIREMENT_INFO;
+  }
+  // If we're not on PHP 8.1 yet, warn about an OPcache bug in PHP 8.1.0 through
+  // 8.1.5, so that users know to avoid to those versions.
+  // @todo Remove this when \Drupal::MINIMUM_PHP is at least 8.1.6 in
+  //   https://www.drupal.org/i/3305726.
+  if ($phase === 'runtime' && version_compare($phpversion, '8.1.0', 'lt')) {
+    // Append the notice about the broken PHP versions to the existing
+    // description (if there is one), so that the existing translatable string
+    // is preserved untouched.
+    $requirements['php']['description'] = t('<p>@requirement</p><p>PHP versions 8.1.0 to 8.1.5 have <a href=":bug_url">an OPcache bug that can cause fatal errors with class autoloading</a>. It can be avoided by using PHP 8.1.6 or later.</p>', [
+      '@requirement' => $requirements['php']['description'] ?? '',
+      ':bug_url' => 'https://github.com/php/php-src/issues/8164',
+    ]);
   }
 
   // Test for PHP extensions.
