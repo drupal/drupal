@@ -27,7 +27,7 @@ class MediaLibraryTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * The user to use during testing.
@@ -246,21 +246,20 @@ class MediaLibraryTest extends WebDriverTestBase {
       $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-modal #media-library-wrapper'));
 
       if (empty($allowed_media_types) || count($allowed_media_types) === 2) {
-        $assert_session->elementExists('css', 'li.media-library-menu-image');
-        $assert_session->elementExists('css', 'li.media-library-menu-arrakis');
-        $assert_session->elementTextContains('css', '.media-library-item__name', 'Fear is the mind-killer');
+        $menu = $assert_session->elementExists('css', '.js-media-library-menu');
+        $assert_session->elementExists('named', ['link', 'Image'], $menu);
+        $assert_session->elementExists('named', ['link', 'Arrakis'], $menu);
+        $assert_session->elementTextContains('css', '.js-media-library-item', 'Fear is the mind-killer');
       }
       elseif (count($allowed_media_types) === 1 && !empty($allowed_media_types['image'])) {
         // No tabs should appear if there's only one media type available.
-        $assert_session->elementNotExists('css', 'li.media-library-menu-image');
-        $assert_session->elementNotExists('css', 'li.media-library-menu-arrakis');
-        $assert_session->elementTextContains('css', '.media-library-item__name', 'Fear is the mind-killer');
+        $assert_session->elementNotExists('css', '.js-media-library-menu');
+        $assert_session->elementTextContains('css', '.js-media-library-item', 'Fear is the mind-killer');
       }
       elseif (count($allowed_media_types) === 1 && !empty($allowed_media_types['arrakis'])) {
         // No tabs should appear if there's only one media type available.
-        $assert_session->elementNotExists('css', 'li.media-library-menu-image');
-        $assert_session->elementNotExists('css', 'li.media-library-menu-arrakis');
-        $assert_session->elementTextContains('css', '.media-library-item__name', 'Le baron Vladimir Harkonnen');
+        $assert_session->elementNotExists('css', '.js-media-library-menu');
+        $assert_session->elementTextContains('css', '.js-media-library-item', 'Le baron Vladimir Harkonnen');
       }
     }
   }

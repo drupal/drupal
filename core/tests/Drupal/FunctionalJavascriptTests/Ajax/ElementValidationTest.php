@@ -19,7 +19,7 @@ class ElementValidationTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * Tries to post an Ajax change to a form that has a validated element.

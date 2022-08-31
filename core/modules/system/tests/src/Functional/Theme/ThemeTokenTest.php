@@ -51,7 +51,7 @@ class ThemeTokenTest extends BrowserTestBase {
     $this->config('system.theme')->set('admin', 'claro')->save();
 
     // Revisit the page. This time the page is displayed using the 'claro' theme
-    // and that is different from the default theme ('classy').
+    // and that is different from the default theme ('stark').
     $this->drupalGet('admin/structure/block');
     $settings = $this->getDrupalSettings();
     $this->assertNotNull($settings['ajaxPageState']['theme_token']);

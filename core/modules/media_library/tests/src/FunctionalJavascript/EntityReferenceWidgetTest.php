@@ -23,14 +23,8 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
    * The theme to install as the default for testing.
    *
    * @var string
-   *
-   * @todo This test's reliance on classes in order to assert the order of
-   *   field items makes Stark a bad fit as a base theme. Change the default
-   *   theme to Starterkit once it is stable.
-   *
-   *  @see https://www.drupal.org/project/drupal/issues/3281695
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * Test media items.

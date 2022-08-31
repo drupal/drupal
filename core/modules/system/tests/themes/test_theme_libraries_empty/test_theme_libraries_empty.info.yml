@@ -2,5 +2,5 @@ name: 'Test theme libraries empty'
 type: theme
 description: 'Test theme with empty libraries in theme.info.yml'
 version: VERSION
-base theme: classy
+base theme: starterkit_theme
 libraries:

@@ -30,8 +30,8 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
    * Tests the integer formatter with settings.
    */
   public function testIntegerFormatterWithSettings() {
-    \Drupal::service('theme_installer')->install(['classy']);
-    $this->config('system.theme')->set('default', 'classy')->save();
+    \Drupal::service('theme_installer')->install(['starterkit_theme']);
+    $this->config('system.theme')->set('default', 'starterkit_theme')->save();
     $this->fieldType = 'integer';
     $formatter = [
       'type' => 'number_integer',
@@ -73,8 +73,8 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
    * Tests the float formatter with settings.
    */
   public function testFloatFormatterWithSettings() {
-    \Drupal::service('theme_installer')->install(['classy']);
-    $this->config('system.theme')->set('default', 'classy')->save();
+    \Drupal::service('theme_installer')->install(['starterkit_theme']);
+    $this->config('system.theme')->set('default', 'starterkit_theme')->save();
     $this->fieldType = 'float';
     $formatter = [
       'type' => 'number_decimal',
@@ -123,8 +123,8 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
    * Tests the float formatter with a scale. Scale is exercised.
    */
   public function testFloatFormatterWithScaleExercised() {
-    \Drupal::service('theme_installer')->install(['classy']);
-    $this->config('system.theme')->set('default', 'classy')->save();
+    \Drupal::service('theme_installer')->install(['starterkit_theme']);
+    $this->config('system.theme')->set('default', 'starterkit_theme')->save();
     $this->fieldType = 'float';
     $formatter = [
       'type' => 'number_decimal',
@@ -161,8 +161,8 @@ class NumberFieldRdfaTest extends FieldRdfaTestBase {
    * Tests the decimal formatter with settings.
    */
   public function testDecimalFormatterWithSettings() {
-    \Drupal::service('theme_installer')->install(['classy']);
-    $this->config('system.theme')->set('default', 'classy')->save();
+    \Drupal::service('theme_installer')->install(['starterkit_theme']);
+    $this->config('system.theme')->set('default', 'starterkit_theme')->save();
     $this->fieldType = 'decimal';
     $formatter = [
       'type' => 'number_decimal',

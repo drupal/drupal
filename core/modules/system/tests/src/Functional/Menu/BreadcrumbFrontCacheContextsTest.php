@@ -28,7 +28,7 @@ class BreadcrumbFrontCacheContextsTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * A test node with path alias.
