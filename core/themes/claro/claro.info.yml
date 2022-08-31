@@ -166,6 +166,8 @@ ckeditor_stylesheets:
   - css/theme/ckeditor-frame.css
   - css/classy/components/media-embed-error.css
 
+ckeditor5-stylesheets: false
+
 regions:
   header: 'Header'
   pre_content: 'Pre-content'

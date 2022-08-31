@@ -637,7 +637,7 @@ function _ckeditor5_theme_css($theme = NULL): array {
   }
   if (isset($theme) && $theme_path = \Drupal::service('extension.list.theme')->getPath($theme)) {
     $info = \Drupal::service('extension.list.theme')->getExtensionInfo($theme);
-    if (isset($info['ckeditor5-stylesheets'])) {
+    if (isset($info['ckeditor5-stylesheets']) && $info['ckeditor5-stylesheets'] !== FALSE) {
       $css = $info['ckeditor5-stylesheets'];
       foreach ($css as $key => $url) {
         // CSS url is external or relative to Drupal root.
