@@ -76,13 +76,6 @@ abstract class BrowserTestBase extends TestCase {
   use ExtensionListTestTrait;
 
   /**
-   * The database prefix of this test run.
-   *
-   * @var string
-   */
-  protected $databasePrefix;
-
-  /**
    * Time limit in seconds for the test.
    *
    * @var int
@@ -202,13 +195,6 @@ abstract class BrowserTestBase extends TestCase {
    * @var array
    */
   protected $originalShutdownCallbacks = [];
-
-  /**
-   * The app root.
-   *
-   * @var string
-   */
-  protected $root;
 
   /**
    * The original container.
