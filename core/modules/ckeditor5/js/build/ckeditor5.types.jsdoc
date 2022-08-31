@@ -479,21 +479,9 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-engine/src/dataprocessor/dataprocessor.jsdoc
- *
- * @typedef {module:engine/dataprocessor/dataprocessor} module:engine/dataprocessor/dataprocessor~DataProcessor
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-engine/src/dataprocessor/htmldataprocessor.js
  *
  * @typedef {module:engine/dataprocessor/htmldataprocessor} module:engine/dataprocessor/htmldataprocessor~HtmlDataProcessor
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-engine/src/dataprocessor/htmlwriter.js
- *
- * @typedef {module:engine/dataprocessor/htmlwriter} module:engine/dataprocessor/htmlwriter~HtmlWriter
  */
 
 /**
@@ -548,12 +536,6 @@
  * Declared in file @ckeditor/ckeditor5-engine/src/model/history.js
  *
  * @typedef {module:engine/model/history} module:engine/model/history~History
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-engine/src/model/item.jsdoc
- *
- * @typedef {module:engine/model/item} module:engine/model/item~Item
  */
 
 /**
@@ -662,18 +644,6 @@
  * Declared in file @ckeditor/ckeditor5-engine/src/model/operation/splitoperation.js
  *
  * @typedef {module:engine/model/operation/splitoperation} module:engine/model/operation/splitoperation~SplitOperation
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-engine/src/model/operation/transform.js
- *
- * @typedef {module:engine/model/operation/transform} module:engine/model/operation/transform~TransformationContext
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-engine/src/model/operation/utils.js
- *
- * @typedef {module:engine/model/operation/utils} module:engine/model/operation/utils~TextProxy
  */
 
 /**
@@ -815,27 +785,9 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-engine/src/view/elementdefinition.jsdoc
- *
- * @typedef {module:engine/view/elementdefinition} module:engine/view/elementdefinition~ElementDefinition
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-engine/src/view/emptyelement.js
  *
  * @typedef {module:engine/view/emptyelement} module:engine/view/emptyelement~EmptyElement
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-engine/src/view/item.jsdoc
- *
- * @typedef {module:engine/view/item} module:engine/view/item~Item
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-engine/src/view/matcher.js
- *
- * @typedef {module:engine/view/matcher} module:engine/view/matcher~Matcher
  */
 
 /**
@@ -998,6 +950,12 @@
  * Declared in file @ckeditor/ckeditor5-engine/src/view/treewalker.js
  *
  * @typedef {module:engine/view/treewalker} module:engine/view/treewalker~TreeWalker
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-engine/src/view/typecheckable.js
+ *
+ * @typedef {module:engine/view/typecheckable} module:engine/view/typecheckable~TypeCheckable
  */
 
 /**
@@ -1943,6 +1901,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-special-characters/src/ui/specialcharactersview.js
+ *
+ * @typedef {module:special-characters/ui/specialcharactersview} module:special-characters/ui/specialcharactersview~SpecialCharactersView
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-style/src/style.js
  *
  * @typedef {module:style/style} module:style/style~Style
@@ -2237,6 +2201,18 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-table/src/tablecolumnresize/tablecolumnwidthscommand.js
+ *
+ * @typedef {module:table/tablecolumnresize/tablecolumnwidthscommand} module:table/tablecolumnresize/tablecolumnwidthscommand~TableColumnWidthsCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-table/src/tablecolumnresize/tablewidthresizecommand.js
+ *
+ * @typedef {module:table/tablecolumnresize/tablewidthresizecommand} module:table/tablecolumnresize/tablewidthresizecommand~TableWidthResizeCommand
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-table/src/tableediting.js
  *
  * @typedef {module:table/tableediting} module:table/tableediting~TableEditing
@@ -2468,6 +2444,12 @@
  * Declared in file @ckeditor/ckeditor5-typing/src/utils/inlinehighlight.js
  *
  * @typedef {module:typing/utils/inlinehighlight} module:typing/utils/inlinehighlight~inlineHighlight
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ui/src/bindings/addkeyboardhandlingforgrid.js
+ *
+ * @typedef {module:ui/bindings/addkeyboardhandlingforgrid} module:ui/bindings/addkeyboardhandlingforgrid~addKeyboardHandlingForGrid
  */
 
 /**
@@ -2735,12 +2717,6 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-ui/src/toolbar/enabletoolbarkeyboardfocus.js
- *
- * @typedef {module:ui/toolbar/enabletoolbarkeyboardfocus} module:ui/toolbar/enabletoolbarkeyboardfocus~enableToolbarKeyboardFocus
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-ui/src/toolbar/normalizetoolbarconfig.js
  *
  * @typedef {module:ui/toolbar/normalizetoolbarconfig} module:ui/toolbar/normalizetoolbarconfig~normalizeToolbarConfig
@@ -2765,9 +2741,9 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-ui/src/tooltip/tooltipview.js
+ * Declared in file @ckeditor/ckeditor5-ui/src/tooltipmanager.js
  *
- * @typedef {module:ui/tooltip/tooltipview} module:ui/tooltip/tooltipview~TooltipView
+ * @typedef {module:ui/tooltipmanager} module:ui/tooltipmanager~TooltipManager
  */
 
 /**
@@ -2936,6 +2912,12 @@
  * Declared in file @ckeditor/ckeditor5-utils/src/dom/getpositionedancestor.js
  *
  * @typedef {module:utils/dom/getpositionedancestor} module:utils/dom/getpositionedancestor~getPositionedAncestor
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-utils/src/dom/global.js
+ *
+ * @typedef {module:utils/dom/global} module:utils/dom/global~global
  */
 
 /**

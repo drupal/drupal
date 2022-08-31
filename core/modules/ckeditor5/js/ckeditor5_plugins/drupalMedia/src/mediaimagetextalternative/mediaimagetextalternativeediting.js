@@ -2,7 +2,7 @@
 /* cspell:words mediaimagetextalternativecommand drupalmediametadatarepository insertdrupalmediacommand */
 
 import { Plugin } from 'ckeditor5/src/core';
-import { TooltipView, Template } from 'ckeditor5/src/ui';
+import { Template } from 'ckeditor5/src/ui';
 import MediaImageTextAlternativeCommand from './mediaimagetextalternativecommand';
 import DrupalMediaMetadataRepository from '../drupalmediametadatarepository';
 import { METADATA_ERROR } from './utils';
@@ -74,10 +74,6 @@ export default class MediaImageTextAlternativeEditing extends Plugin {
             'Not all functionality may be available because some information could not be retrieved.',
           );
 
-          const tooltip = new TooltipView();
-          tooltip.text = message;
-          tooltip.position = 'sw';
-
           const html = new Template({
             tag: 'span',
             children: [
@@ -85,9 +81,9 @@ export default class MediaImageTextAlternativeEditing extends Plugin {
                 tag: 'span',
                 attributes: {
                   class: 'drupal-media__metadata-error-icon',
+                  'data-cke-tooltip-text': message,
                 },
               },
-              tooltip,
             ],
           }).render();
 
