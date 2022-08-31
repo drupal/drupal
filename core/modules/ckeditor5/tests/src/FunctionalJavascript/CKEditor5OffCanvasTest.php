@@ -42,7 +42,7 @@ class CKEditor5OffCanvasTest extends CKEditor5TestBase {
     $assert_session->elementExists('css', '.ck');
 
     $ckeditor_toolbar_bg_color = $this->getSession()->evaluateScript('window.getComputedStyle(document.querySelector(\'.ck.ck-toolbar\')).backgroundColor');
-    $this->assertEquals('rgb(250, 250, 250)', $ckeditor_toolbar_bg_color, 'Toolbar background-color should be unaffected by off-canvas');
+    $this->assertEquals('rgb(255, 255, 255)', $ckeditor_toolbar_bg_color, 'Toolbar background-color should be unaffected by off-canvas');
     // Editable area should be visible.
     $assert_session->elementExists('css', '.ck .ck-content');
     $ckeditor_editable_bg_color = $this->getSession()->evaluateScript('window.getComputedStyle(document.querySelector(\'.ck.ck-content\')).backgroundColor');
