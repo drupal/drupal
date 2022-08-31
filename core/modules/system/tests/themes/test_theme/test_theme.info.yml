@@ -57,10 +57,9 @@ libraries-override:
     js:
       misc/displace.js: //my-server/my_theme/js/overridden.js
   # Use an absolute URI.
-  core/jquery.farbtastic:
-    css:
-      component:
-        assets/vendor/farbtastic/farbtastic.css: http://example.com/my_theme/css/farbtastic.css
+  core/popperjs:
+    js:
+      assets/vendor/popperjs/popper.min.js: http://example.com/my_theme/js/popper.min.js
 
 regions:
   content: Content
