@@ -31,7 +31,7 @@ class FormTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   protected function setUp(): void {
     parent::setUp();

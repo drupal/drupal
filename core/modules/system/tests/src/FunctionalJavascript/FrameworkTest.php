@@ -20,7 +20,7 @@ class FrameworkTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * Tests that new JavaScript and CSS files are lazy-loaded on an AJAX request.

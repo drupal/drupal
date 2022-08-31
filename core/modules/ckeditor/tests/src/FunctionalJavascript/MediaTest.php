@@ -79,7 +79,7 @@ class MediaTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * {@inheritdoc}
@@ -242,18 +242,18 @@ class MediaTest extends WebDriverTestBase {
     $this->getSession()->switchToIFrame('ckeditor');
     $this->assertNotEmpty($assert_session->waitForElement('css', 'drupal-media figure.caption-drupal-media .this-error-message-is-themeable'));
 
-    // Test when using the classy theme, an additional class is added in
-    // classy/templates/content/media-embed-error.html.twig.
-    $this->assertTrue($this->container->get('theme_installer')->install(['classy']));
+    // Test when using the starterkit_theme theme, an additional class is added
+    // to the error, which is supported by
+    // stable9/templates/content/media-embed-error.html.twig.
+    $this->assertTrue($this->container->get('theme_installer')->install(['starterkit_theme']));
     $this->config('system.theme')
-      ->set('default', 'classy')
+      ->set('default', 'starterkit_theme')
       ->save();
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
     $this->assignNameToCkeditorIframe();
     $this->getSession()->switchToIFrame('ckeditor');
-    $this->assertNotEmpty($assert_session->waitForElement('css', 'drupal-media figure.caption-drupal-media .this-error-message-is-themeable.media-embed-error--missing-source'));
-    $assert_session->responseContains('classy/css/components/media-embed-error.css');
+    $this->assertNotEmpty($assert_session->waitForElement('css', 'drupal-media figure.caption-drupal-media .this-error-message-is-themeable'));
 
     // Test that restoring a valid UUID results in the media embed preview
     // displaying.
@@ -282,8 +282,8 @@ class MediaTest extends WebDriverTestBase {
 
     // Configure a different default and admin theme, like on most Drupal sites.
     $this->config('system.theme')
-      ->set('default', 'stable')
-      ->set('admin', 'classy')
+      ->set('default', 'stable9')
+      ->set('admin', 'starterkit_theme')
       ->save();
 
     // Assert that when looking at an embedded entity in the CKEditor Widget,
@@ -296,7 +296,7 @@ class MediaTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'img[src*="image-test.png"]'));
     $element = $assert_session->elementExists('css', '[data-media-embed-test-active-theme]');
-    $this->assertSame('stable', $element->getAttribute('data-media-embed-test-active-theme'));
+    $this->assertSame('stable9', $element->getAttribute('data-media-embed-test-active-theme'));
     // Assert that the first preview request transferred >500 B over the wire.
     // Then toggle source mode on and off. This causes the CKEditor widget to be
     // destroyed and then reconstructed. Assert that during this reconstruction,
@@ -1069,7 +1069,7 @@ class MediaTest extends WebDriverTestBase {
       $this->assignNameToCkeditorIframe();
       $this->getSession()->switchToIFrame('ckeditor');
       if ($media_embed_enabled) {
-        // The preview rendering, which in this test will use Classy's
+        // The preview rendering, which in this test will use Starterkit's
         // media.html.twig template, will fail without the CSRF token/header.
         // @see ::testEmbeddedMediaPreviewWithCsrfToken()
         $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'article.media'));

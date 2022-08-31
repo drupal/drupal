@@ -37,7 +37,7 @@ class ThemeTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * A test node.
@@ -81,7 +81,7 @@ class ThemeTest extends BrowserTestBase {
     // Specify a filesystem path to be used for the logo.
     $file = current($this->drupalGetTestFiles('image'));
     $file_relative = strtr($file->uri, ['public:/' => PublicStream::basePath()]);
-    $default_theme_path = 'core/themes/classy';
+    $default_theme_path = 'core/themes/starterkit_theme';
 
     /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
     $file_url_generator = \Drupal::service('file_url_generator');
@@ -208,7 +208,7 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalPlaceBlock('local_tasks_block', ['region' => 'header']);
     $this->drupalGet('admin/appearance/settings');
     $theme_handler = \Drupal::service('theme_handler');
-    $this->assertSession()->linkExists($theme_handler->getName('classy'));
+    $this->assertSession()->linkExists($theme_handler->getName('starterkit_theme'));
     $this->assertSession()->linkExists($theme_handler->getName('olivero'));
     $this->assertSession()->linkNotExists($theme_handler->getName('stable'));
 
@@ -311,7 +311,7 @@ class ThemeTest extends BrowserTestBase {
 
     // Check that the site default theme used on node page.
     $this->drupalGet('node/' . $this->node->id());
-    $this->assertSession()->responseContains('core/themes/classy');
+    $this->assertSession()->responseContains('core/themes/starterkit_theme');
 
     // Check that the administration theme is used on the add content page.
     $this->drupalGet('node/add');
@@ -347,7 +347,7 @@ class ThemeTest extends BrowserTestBase {
 
     // Check that the site default theme used on the add content page.
     $this->drupalGet('node/add');
-    $this->assertSession()->responseContains('core/themes/classy');
+    $this->assertSession()->responseContains('core/themes/starterkit_theme');
 
     // Reset to the default theme settings.
     $edit = [
@@ -359,11 +359,11 @@ class ThemeTest extends BrowserTestBase {
 
     // Check that the site default theme used on administration page.
     $this->drupalGet('admin');
-    $this->assertSession()->responseContains('core/themes/classy');
+    $this->assertSession()->responseContains('core/themes/starterkit_theme');
 
     // Check that the site default theme used on the add content page.
     $this->drupalGet('node/add');
-    $this->assertSession()->responseContains('core/themes/classy');
+    $this->assertSession()->responseContains('core/themes/starterkit_theme');
   }
 
   /**

@@ -30,9 +30,9 @@ class FunctionsTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    // Enable the Classy theme.
-    $this->container->get('theme_installer')->install(['classy']);
-    $this->config('system.theme')->set('default', 'classy')->save();
+    // Enable the Starterkit theme.
+    $this->container->get('theme_installer')->install(['starterkit_theme']);
+    $this->config('system.theme')->set('default', 'starterkit_theme')->save();
   }
 
   /**
@@ -227,13 +227,13 @@ class FunctionsTest extends KernelTestBase {
 
     $expected_links = '';
     $expected_links .= '<ul id="somelinks">';
-    $expected_links .= '<li class="a-link"><a href="' . Url::fromUri('base:a/link')->toString() . '">' . Html::escape('A <link>') . '</a></li>';
-    $expected_links .= '<li class="plain-text">' . Html::escape('Plain "text"') . '</li>';
-    $expected_links .= '<li class="html-text"><span class="unescaped">' . Html::escape('potentially unsafe text that <should> be escaped') . '</span></li>';
-    $expected_links .= '<li class="front-page"><a href="' . Url::fromRoute('<front>')->toString() . '">' . Html::escape('Front page') . '</a></li>';
-    $expected_links .= '<li class="router-test"><a href="' . \Drupal::urlGenerator()->generate('router_test.1') . '">' . Html::escape('Test route') . '</a></li>';
+    $expected_links .= '<li><a href="' . Url::fromUri('base:a/link')->toString() . '">' . Html::escape('A <link>') . '</a></li>';
+    $expected_links .= '<li>' . Html::escape('Plain "text"') . '</li>';
+    $expected_links .= '<li><span class="unescaped">' . Html::escape('potentially unsafe text that <should> be escaped') . '</span></li>';
+    $expected_links .= '<li><a href="' . Url::fromRoute('<front>')->toString() . '">' . Html::escape('Front page') . '</a></li>';
+    $expected_links .= '<li><a href="' . \Drupal::urlGenerator()->generate('router_test.1') . '">' . Html::escape('Test route') . '</a></li>';
     $query = ['key' => 'value'];
-    $expected_links .= '<li class="query-test"><a href="' . \Drupal::urlGenerator()->generate('router_test.1', $query) . '">' . Html::escape('Query test route') . '</a></li>';
+    $expected_links .= '<li><a href="' . \Drupal::urlGenerator()->generate('router_test.1', $query) . '">' . Html::escape('Query test route') . '</a></li>';
     $expected_links .= '</ul>';
 
     // Verify that passing a string as heading works.
@@ -267,13 +267,13 @@ class FunctionsTest extends KernelTestBase {
     ];
     $expected_links = '';
     $expected_links .= '<ul id="somelinks">';
-    $expected_links .= '<li class="a-link"><a href="' . Url::fromUri('base:a/link')->toString() . '">' . Html::escape('A <link>') . '</a></li>';
-    $expected_links .= '<li class="plain-text"><span class="a/class">' . Html::escape('Plain "text"') . '</span></li>';
-    $expected_links .= '<li class="html-text"><span class="unescaped">' . Html::escape('potentially unsafe text that <should> be escaped') . '</span></li>';
-    $expected_links .= '<li class="front-page"><a href="' . Url::fromRoute('<front>')->toString() . '">' . Html::escape('Front page') . '</a></li>';
-    $expected_links .= '<li class="router-test"><a href="' . \Drupal::urlGenerator()->generate('router_test.1') . '">' . Html::escape('Test route') . '</a></li>';
+    $expected_links .= '<li><a href="' . Url::fromUri('base:a/link')->toString() . '">' . Html::escape('A <link>') . '</a></li>';
+    $expected_links .= '<li><span class="a/class">' . Html::escape('Plain "text"') . '</span></li>';
+    $expected_links .= '<li><span class="unescaped">' . Html::escape('potentially unsafe text that <should> be escaped') . '</span></li>';
+    $expected_links .= '<li><a href="' . Url::fromRoute('<front>')->toString() . '">' . Html::escape('Front page') . '</a></li>';
+    $expected_links .= '<li><a href="' . \Drupal::urlGenerator()->generate('router_test.1') . '">' . Html::escape('Test route') . '</a></li>';
     $query = ['key' => 'value'];
-    $expected_links .= '<li class="query-test"><a href="' . \Drupal::urlGenerator()->generate('router_test.1', $query) . '">' . Html::escape('Query test route') . '</a></li>';
+    $expected_links .= '<li><a href="' . \Drupal::urlGenerator()->generate('router_test.1', $query) . '">' . Html::escape('Query test route') . '</a></li>';
     $expected_links .= '</ul>';
     $expected = $expected_heading . $expected_links;
     $this->assertThemeOutput('links', $variables, $expected);
@@ -283,14 +283,14 @@ class FunctionsTest extends KernelTestBase {
     $variables['set_active_class'] = TRUE;
     $expected_links = '';
     $expected_links .= '<ul id="somelinks">';
-    $expected_links .= '<li class="a-link"><a href="' . Url::fromUri('base:a/link')->toString() . '">' . Html::escape('A <link>') . '</a></li>';
-    $expected_links .= '<li class="plain-text"><span class="a/class">' . Html::escape('Plain "text"') . '</span></li>';
-    $expected_links .= '<li class="html-text"><span class="unescaped">' . Html::escape('potentially unsafe text that <should> be escaped') . '</span></li>';
-    $expected_links .= '<li data-drupal-link-system-path="&lt;front&gt;" class="front-page"><a href="' . Url::fromRoute('<front>')->toString() . '" data-drupal-link-system-path="&lt;front&gt;">' . Html::escape('Front page') . '</a></li>';
-    $expected_links .= '<li data-drupal-link-system-path="router_test/test1" class="router-test"><a href="' . \Drupal::urlGenerator()->generate('router_test.1') . '" data-drupal-link-system-path="router_test/test1">' . Html::escape('Test route') . '</a></li>';
+    $expected_links .= '<li><a href="' . Url::fromUri('base:a/link')->toString() . '">' . Html::escape('A <link>') . '</a></li>';
+    $expected_links .= '<li><span class="a/class">' . Html::escape('Plain "text"') . '</span></li>';
+    $expected_links .= '<li><span class="unescaped">' . Html::escape('potentially unsafe text that <should> be escaped') . '</span></li>';
+    $expected_links .= '<li data-drupal-link-system-path="&lt;front&gt;"><a href="' . Url::fromRoute('<front>')->toString() . '" data-drupal-link-system-path="&lt;front&gt;">' . Html::escape('Front page') . '</a></li>';
+    $expected_links .= '<li data-drupal-link-system-path="router_test/test1"><a href="' . \Drupal::urlGenerator()->generate('router_test.1') . '" data-drupal-link-system-path="router_test/test1">' . Html::escape('Test route') . '</a></li>';
     $query = ['key' => 'value'];
     $encoded_query = Html::escape(Json::encode($query));
-    $expected_links .= '<li data-drupal-link-query="' . $encoded_query . '" data-drupal-link-system-path="router_test/test1" class="query-test"><a href="' . \Drupal::urlGenerator()->generate('router_test.1', $query) . '" data-drupal-link-query="' . $encoded_query . '" data-drupal-link-system-path="router_test/test1">' . Html::escape('Query test route') . '</a></li>';
+    $expected_links .= '<li data-drupal-link-query="' . $encoded_query . '" data-drupal-link-system-path="router_test/test1"><a href="' . \Drupal::urlGenerator()->generate('router_test.1', $query) . '" data-drupal-link-query="' . $encoded_query . '" data-drupal-link-system-path="router_test/test1">' . Html::escape('Query test route') . '</a></li>';
     $expected_links .= '</ul>';
     $expected = $expected_heading . $expected_links;
     $this->assertThemeOutput('links', $variables, $expected);
