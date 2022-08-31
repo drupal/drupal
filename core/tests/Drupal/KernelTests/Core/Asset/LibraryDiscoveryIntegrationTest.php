@@ -153,7 +153,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
     $this->assertAssetInLibrary('//my-server/my_theme/js/overridden.js', 'core', 'drupal.displace', 'js');
 
     // Assert an absolute URI.
-    $this->assertAssetInLibrary('http://example.com/my_theme/css/farbtastic.css', 'core', 'jquery.farbtastic', 'css');
+    $this->assertAssetInLibrary('http://example.com/my_theme/js/popper.min.js', 'core', 'popperjs', 'js');
   }
 
   /**
@@ -166,7 +166,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
     // Assert that libraries-override specified in the base theme still applies
     // in the sub theme.
     $this->assertNoAssetInLibrary('core/misc/dialog/dialog.js', 'core', 'drupal.dialog', 'js');
-    $this->assertAssetInLibrary('core/modules/system/tests/themes/test_basetheme/css/farbtastic.css', 'core', 'jquery.farbtastic', 'css');
+    $this->assertAssetInLibrary('core/modules/system/tests/themes/test_basetheme/js/popper.min.js', 'core', 'popperjs', 'js');
   }
 
   /**

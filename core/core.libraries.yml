@@ -780,6 +780,7 @@ jquery.farbtastic:
       assets/vendor/farbtastic/farbtastic.css: {}
   dependencies:
     - core/jquery
+  deprecated: The %library_id% asset library is deprecated in Drupal 9.5.0 and will be removed in Drupal 10.0.0. There is no replacement. See https://www.drupal.org/node/3306232
 
 internal.jquery.form:
   # Internal library. Do not depend on it outside core nor add new core usage.

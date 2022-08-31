@@ -171,15 +171,15 @@ function common_test_library_info_build() {
  * Implements hook_library_info_alter().
  */
 function common_test_library_info_alter(&$libraries, $module) {
-  if ($module == 'core' && isset($libraries['jquery.farbtastic'])) {
-    // Change the version of Farbtastic to 0.0.
-    $libraries['jquery.farbtastic']['version'] = '0.0';
-    // Make Farbtastic depend on jQuery Form to test library dependencies.
-    $libraries['jquery.farbtastic']['dependencies'][] = 'core/internal.jquery.form';
+  if ($module === 'core' && isset($libraries['popperjs'])) {
+    // Change the version of Popper to 0.0.
+    $libraries['popperjs']['version'] = '0.0';
+    // Make Popper depend on jQuery Form to test library dependencies.
+    $libraries['popperjs']['dependencies'][] = 'core/internal.jquery.form';
   }
 
   // Alter the dynamically registered library definition.
-  if ($module == 'common_test' && isset($libraries['dynamic_library'])) {
+  if ($module === 'common_test' && isset($libraries['dynamic_library'])) {
     $libraries['dynamic_library']['dependencies'] = [
       'core/jquery',
     ];
