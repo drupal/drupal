@@ -70,6 +70,7 @@ export default class DrupalMediaCaptionUI extends Plugin {
             );
           });
         }
+        editor.editing.view.focus();
       });
 
       return button;
