@@ -30,7 +30,7 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * The file system service.

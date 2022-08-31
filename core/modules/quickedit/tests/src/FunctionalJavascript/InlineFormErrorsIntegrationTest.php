@@ -27,7 +27,7 @@ class InlineFormErrorsIntegrationTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * An editor user with permissions to access the in-place editor.

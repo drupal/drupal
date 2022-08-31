@@ -20,7 +20,7 @@ class StyleSummaryTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * {@inheritdoc}
@@ -60,7 +60,7 @@ class StyleSummaryTest extends ViewTestBase {
     $this->drupalGet('test-summary');
 
     // Ensure styles are properly added for summary views.
-    $this->assertSession()->responseContains('stable/css/views/views.module.css');
+    $this->assertSession()->responseContains('stable9/css/views/views.module.css');
 
     $summary_list = $this->cssSelect('ul.views-summary li');
     $this->assertCount(4, $summary_list);

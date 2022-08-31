@@ -8,4 +8,4 @@ dependencies:
 install:
   - ban
 themes:
-  - classy
+  - starterkit_theme

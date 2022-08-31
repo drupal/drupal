@@ -95,13 +95,13 @@ class ThemeInfoTest extends BrowserTestBase {
     $active_theme = $this->themeManager->getActiveTheme();
     // Make sure we are not testing the wrong theme.
     $this->assertEquals('test_theme', $active_theme->getName());
-    $this->assertEquals(['classy/base', 'classy/messages', 'core/normalize', 'test_theme/global-styling'], $active_theme->getLibraries());
+    $this->assertEquals(['starterkit_theme/base', 'starterkit_theme/messages', 'core/normalize', 'test_theme/global-styling'], $active_theme->getLibraries());
 
     // @see theme_test_system_info_alter()
     $this->state->set('theme_test.modify_info_files', TRUE);
     $this->resetAll();
     $active_theme = $this->themeManager->getActiveTheme();
-    $this->assertEquals(['classy/base', 'classy/messages', 'core/normalize', 'test_theme/global-styling', 'core/once'], $active_theme->getLibraries());
+    $this->assertEquals(['starterkit_theme/base', 'starterkit_theme/messages', 'core/normalize', 'test_theme/global-styling', 'core/once'], $active_theme->getLibraries());
   }
 
 }

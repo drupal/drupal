@@ -25,7 +25,7 @@ class EditorIntegrationLoadingTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * The basic permissions necessary to view content and use in-place editing.

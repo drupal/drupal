@@ -5,6 +5,7 @@
  * Test module.
  */
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\Extension;
 
 /**
@@ -171,4 +172,19 @@ function theme_test_theme_suggestions_node(array $variables) {
  * Implements template_preprocess_HOOK() for theme_test_registered_by_module.
  */
 function template_preprocess_theme_test_registered_by_module() {
+}
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function theme_test_library_info_alter(array &$libraries, string $extension): void {
+  // Allow test code to simulate library changes in a particular extension by
+  // setting a state key in the form `theme_test_library_info_alter $extension`,
+  // whose values is an array containing everything that should be recursively
+  // merged into the given extension's library definitions.
+  $info = \Drupal::state()->get(__FUNCTION__ . " $extension");
+
+  if (is_array($info)) {
+    $libraries = NestedArray::mergeDeep($libraries, $info);
+  }
 }

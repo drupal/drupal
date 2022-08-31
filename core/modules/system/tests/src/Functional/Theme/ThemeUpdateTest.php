@@ -16,7 +16,7 @@ class ThemeUpdateTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * Ensures preprocess functions run even for suggestion implementations.

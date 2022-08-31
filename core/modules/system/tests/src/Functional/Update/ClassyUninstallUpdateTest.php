@@ -76,7 +76,7 @@ class ClassyUninstallUpdateTest extends UpdatePathTestBase {
     $theme_handler = $this->container->get('theme_handler');
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
     $theme_installer = $this->container->get('theme_installer');
-    $theme_installer->install(['test_theme']);
+    $theme_installer->install(['test_legacy_stylesheets_remove']);
     $this->assertTrue($theme_handler->themeExists('classy'));
 
     $this->runUpdates();

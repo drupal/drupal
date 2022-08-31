@@ -12,7 +12,7 @@ name: '<strong>Test theme</strong>'
 type: theme
 description: 'Theme for testing the theme system'
 version: VERSION
-base theme: classy
+base theme: starterkit_theme
 logo: images/logo2.svg
 libraries:
   - test_theme/global-styling
@@ -22,7 +22,7 @@ libraries-override:
   # Remove an entire library.
   core/drupal.progress: false
   # Replace particular library assets.
-  classy/base:
+  starterkit_theme/base:
     css:
       component:
         css/components/button.css: css/my-button.css
@@ -30,14 +30,14 @@ libraries-override:
         css/components/container-inline.css: /themes/my_theme/css/my-container-inline.css
         css/components/details.css: /themes/my_theme/css/my-details.css
   # Remove particular library assets.
-  classy/dialog:
+  starterkit_theme/dialog:
     css:
       component:
         css/components/dialog.css: false
   system/base:
     css:
       component:
-        /core/themes/stable/css/system/components/js.module.css: false
+        /core/themes/stable9/css/system/components/js.module.css: false
   # It works for JS as well.
   core/jquery:
     js:
@@ -46,12 +46,12 @@ libraries-override:
   core/drupal.dropbutton:
     css:
       component:
-        /core/themes/stable/css/core/dropbutton/dropbutton.css: /themes/my_theme/css/dropbutton.css
+        /core/themes/stable9/css/core/dropbutton/dropbutton.css: /themes/my_theme/css/dropbutton.css
   # Use stream wrappers.
   core/drupal.vertical-tabs:
     css:
       component:
-        /core/themes/stable/css/core/vertical-tabs.css: public://my_css/vertical-tabs.css
+        /core/themes/stable9/css/core/vertical-tabs.css: public://my_css/vertical-tabs.css
   # Use a protocol-relative URI.
   core/drupal.displace:
     js:
