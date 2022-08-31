@@ -35,8 +35,10 @@ class TestSetupTraitTest extends UnitTestCase {
     // Create a mock for testing the trait and set a few properties that are
     // used to avoid unnecessary set up.
     $test_setup = $this->getMockForTrait(TestSetupTrait::class);
-    $test_setup->databasePrefix = 'testDbPrefix';
-    $test_setup->root = $root;
+
+    $reflection = new \ReflectionClass($test_setup);
+    $reflection->getProperty('databasePrefix')->setValue($test_setup, 'testDbPrefix');
+    $reflection->getProperty('root')->setValue($test_setup, $root);
 
     $method = new \ReflectionMethod(get_class($test_setup), 'changeDatabasePrefix');
     $method->setAccessible(TRUE);
