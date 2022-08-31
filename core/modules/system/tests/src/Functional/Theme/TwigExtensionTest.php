@@ -17,7 +17,7 @@ class TwigExtensionTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['theme_test', 'twig_extension_test'];
+  protected static $modules = ['theme_test', 'twig_extension_test', 'twig_theme_test'];
 
   /**
    * {@inheritdoc}
@@ -90,6 +90,37 @@ class TwigExtensionTest extends BrowserTestBase {
     $extension = \Drupal::service('twig.extension');
     $this->assertSame(0, $extension->renderVar(0), 'TwigExtension::renderVar() renders zero correctly when provided as an integer.');
     $this->assertSame(0, $extension->renderVar(0.0), 'TwigExtension::renderVar() renders zero correctly when provided as a double.');
+  }
+
+  /**
+   * Tests the dump function.
+   */
+  public function testDump() {
+    // Test Twig Debug disabled.
+    $this->drupalGet('/twig-theme-test/dump');
+    $this->assertSession()->elementsCount('css', '.sf-dump', 0);
+
+    // Test Twig Debug enabled.
+    $parameters = $this->container->getParameter('twig.config');
+    $parameters['debug'] = TRUE;
+    $this->setContainerParameter('twig.config', $parameters);
+    $this->resetAll();
+
+    $this->drupalGet('/twig-theme-test/dump');
+    $dumps = $this->getSession()->getPage()->findAll('css', '.sf-dump');
+    $this->assertEquals(4, count($dumps));
+
+    // Test dumping single variable.
+    $this->assertStringContainsString('💩', $dumps[0]->getText());
+    $this->assertStringNotContainsString('🐣', $dumps[0]->getText());
+
+    // Test dumping context.
+    $this->assertStringContainsString('"bar" => "🐣"', $dumps[1]->getText());
+
+    // Test dump as a variadic.
+    $this->assertStringContainsString('💩', $dumps[2]->getText());
+    $this->assertStringContainsString('☄️', $dumps[3]->getText());
+
   }
 
 }
