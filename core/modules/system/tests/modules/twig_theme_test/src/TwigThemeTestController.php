@@ -111,4 +111,11 @@ class TwigThemeTestController {
     return ['#theme' => 'twig_theme_test_embed_tag'];
   }
 
+  /**
+   * Renders for testing drupal_dump function.
+   */
+  public function dump() {
+    return ['#theme' => 'twig_theme_test_dump'];
+  }
+
 }
