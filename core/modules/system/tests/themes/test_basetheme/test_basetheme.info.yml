@@ -11,10 +11,9 @@ libraries-override:
   core/drupal.dialog:
     js:
       misc/dialog/dialog.js: false
-  core/jquery.farbtastic:
-    css:
-      component:
-        assets/vendor/farbtastic/farbtastic.css: css/farbtastic.css
+  core/popperjs:
+    js:
+      assets/vendor/popperjs/popper.min.js: js/popper.min.js
   theme_test/theme_stylesheets_override_and_remove_test:
     css:
       base:
