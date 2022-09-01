@@ -3,3 +3,5 @@ type: module
 description: 'Support module for the Text Editor module tests.'
 package: Testing
 version: VERSION
+dependencies:
+  - drupal:editor
