@@ -10,6 +10,7 @@ use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeTestBase;
  * The test method is provided by the MigrateUpgradeTestBase class.
  *
  * @group rdf
+ * @group legacy
  */
 class Upgrade7Test extends MigrateUpgradeTestBase {
 

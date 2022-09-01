@@ -11,6 +11,7 @@ use Drupal\Tests\taxonomy\Functional\TaxonomyTestBase;
  * Tests RDFa markup generation for taxonomy term fields.
  *
  * @group rdf
+ * @group legacy
  */
 class EntityReferenceFieldAttributesTest extends TaxonomyTestBase {
 

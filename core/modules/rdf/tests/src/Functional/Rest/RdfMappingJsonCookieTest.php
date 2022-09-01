@@ -6,6 +6,7 @@ use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 
 /**
  * @group rest
+ * @group legacy
  */
 class RdfMappingJsonCookieTest extends RdfMappingResourceTestBase {
 

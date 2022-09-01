@@ -8,6 +8,7 @@ use Drupal\entity_test\Entity\EntityTest;
  * Tests RDFa output by datetime field formatters.
  *
  * @group rdf
+ * @group legacy
  */
 class DateTimeFieldRdfaTest extends FieldRdfaTestBase {
 
