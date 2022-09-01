@@ -10,6 +10,7 @@ use Drupal\Tests\rdf\Traits\RdfParsingTrait;
  * Tests the RDFa markup of Nodes.
  *
  * @group rdf
+ * @group legacy
  */
 class NodeAttributesTest extends NodeTestBase {
 

@@ -10,6 +10,7 @@ use Drupal\Tests\rdf\Traits\RdfParsingTrait;
  * Tests the RDFa markup of Users.
  *
  * @group rdf
+ * @group legacy
  */
 class UserAttributesTest extends BrowserTestBase {
 

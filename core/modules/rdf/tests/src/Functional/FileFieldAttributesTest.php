@@ -11,6 +11,7 @@ use Drupal\Tests\rdf\Traits\RdfParsingTrait;
  * Tests the RDFa markup of filefields.
  *
  * @group rdf
+ * @group legacy
  */
 class FileFieldAttributesTest extends FileFieldTestBase {
 

@@ -12,6 +12,7 @@ use Drupal\Tests\jsonapi\Functional\ConfigEntityResourceTestBase;
  *
  * @group jsonapi
  * @group rdf
+ * @group legacy
  */
 class RdfMappingTest extends ConfigEntityResourceTestBase {
 

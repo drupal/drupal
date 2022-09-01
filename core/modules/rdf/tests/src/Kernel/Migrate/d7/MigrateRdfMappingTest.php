@@ -9,6 +9,7 @@ use Drupal\rdf\RdfMappingInterface;
  * Tests RDF mappings migration from Drupal 7 to 8.
  *
  * @group rdf
+ * @group legacy
  */
 class MigrateRdfMappingTest extends MigrateDrupalTestBase {
 

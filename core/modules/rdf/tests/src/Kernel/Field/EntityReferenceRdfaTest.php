@@ -10,6 +10,7 @@ use Drupal\user\RoleInterface;
  * Tests the RDFa output of the entity reference field formatter.
  *
  * @group rdf
+ * @group legacy
  */
 class EntityReferenceRdfaTest extends FieldRdfaTestBase {
 

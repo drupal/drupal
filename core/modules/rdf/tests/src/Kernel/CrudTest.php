@@ -8,6 +8,7 @@ use Drupal\KernelTests\KernelTestBase;
  * Tests the RDF mapping CRUD functions.
  *
  * @group rdf
+ * @group legacy
  */
 class CrudTest extends KernelTestBase {
 

@@ -14,6 +14,7 @@ use GuzzleHttp\RequestOptions;
  *
  * @group jsonapi
  * @group rdf
+ * @group legacy
  */
 class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
 
