@@ -6,10 +6,10 @@
  */
 
 /**
- * Implements hook_removed_post_updates().
+ * Sets the default `base_primary_color` value of Olivero's theme settings.
  */
-function olivero_removed_post_updates() {
-  return [
-    'olivero_post_update_add_olivero_primary_color' => '10.0.0',
-  ];
+function olivero_post_update_add_olivero_primary_color() {
+  \Drupal::configFactory()->getEditable('olivero.settings')
+    ->set('base_primary_color', '#1b9ae4')
+    ->save();
 }
