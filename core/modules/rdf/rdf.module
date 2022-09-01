@@ -8,6 +8,7 @@
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Template\Attribute;
+use Drupal\node\NodeInterface;
 use Drupal\rdf\Entity\RdfMapping;
 
 /**
@@ -225,6 +226,23 @@ function rdf_entity_prepare_view($entity_type, array $entities, array $displays)
         }
       }
     }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_build_defaults_alter().
+ */
+function rdf_node_build_defaults_alter(array &$build, NodeInterface $node) {
+  // Ensure that RSS views define the RDF namespaces.
+  // @see \Drupal\node\Plugin\views\row\Rss::render()
+  if (!isset($node->rss_namespaces)) {
+    $node->rss_namespaces = [];
+  }
+  foreach (rdf_get_namespaces() as $prefix => $uri) {
+    if ($prefix === 'dc') {
+      continue;
+    }
+    $node->rss_namespaces["xmlns:$prefix"] = $uri;
   }
 }
 
