@@ -8,6 +8,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests hook_rdf_namespaces().
  *
  * @group rdf
+ * @group legacy
  */
 class GetRdfNamespacesTest extends BrowserTestBase {
 

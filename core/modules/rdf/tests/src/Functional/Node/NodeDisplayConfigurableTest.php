@@ -12,6 +12,7 @@ use Drupal\user\UserInterface;
  *
  * @group node
  * @group rdf
+ * @group legacy
  */
 class NodeDisplayConfigurableTest extends NodeTestBase {
 

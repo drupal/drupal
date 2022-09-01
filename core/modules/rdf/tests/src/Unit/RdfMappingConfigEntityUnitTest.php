@@ -10,6 +10,7 @@ use Drupal\rdf\Entity\RdfMapping;
 /**
  * @coversDefaultClass \Drupal\rdf\Entity\RdfMapping
  * @group rdf
+ * @group legacy
  */
 class RdfMappingConfigEntityUnitTest extends UnitTestCase {
 
