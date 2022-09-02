@@ -1633,6 +1633,21 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
     $this->assertEqual($allowed_values[2]['vocabulary'], 'foo', 'Index 2: Machine name was left untouched.');
   }
 
+  /**
+   * Test empty taxonomy term reference field.
+   */
+  function testEmptyTaxonomyTermReferenceField() {
+    // Test if an empty value in the taxonomy reference field would trigger
+    // autocreate or if the value would be saved correctly.
+    $langcode = LANGUAGE_NONE;
+    $entity = field_test_create_stub_entity(NULL, NULL);
+    $entity->{$this->field_name}[$langcode][0]['tid'] = 0;
+    field_test_entity_save($entity);
+    $entity = field_test_entity_test_load($entity->ftid);
+    field_test_entity_save($entity);
+    $this->pass('Empty term ID does not trigger autocreate.');
+  }
+
 }
 
 /**
