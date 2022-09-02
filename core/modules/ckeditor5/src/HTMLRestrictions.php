@@ -38,9 +38,6 @@ use Masterminds\HTML5\Elements;
  *
  * @see ::WILDCARD_ELEMENT_METHODS
  *
- * NOTE: Currently only supports the 'allowed' portion.
- * @todo Add support for "forbidden" tags in https://www.drupal.org/project/drupal/issues/3231336
- *
  * @internal
  */
 final class HTMLRestrictions {
@@ -308,7 +305,6 @@ final class HTMLRestrictions {
    * @return \Drupal\ckeditor5\HTMLRestrictions
    */
   private static function unrestricted(): self {
-    // @todo Refine in https://www.drupal.org/project/drupal/issues/3231336, including adding support for all operations.
     $restrictions = HTMLRestrictions::emptySet();
     $restrictions->unrestricted = TRUE;
     return $restrictions;
@@ -337,27 +333,19 @@ final class HTMLRestrictions {
       throw new \InvalidArgumentException();
     }
 
-    if ($object->getHtmlRestrictions() === FALSE) {
-      // @todo Refine in https://www.drupal.org/project/drupal/issues/3231336
-      return self::unrestricted();
-    }
-
     $restrictions = $object->getHTMLRestrictions();
-    if (!isset($restrictions['allowed'])) {
-      // @todo Handle HTML restrictor filters that only set forbidden_tags
-      //   https://www.drupal.org/project/ckeditor5/issues/3231336.
-      throw new \DomainException('text formats with only filters that forbid tags rather than allowing tags are not yet supported.');
+    if ($restrictions === FALSE || $restrictions === []) {
+      return self::unrestricted();
     }
 
     // When allowing all tags on an attribute, transform FilterHtml output from
     // ['tag' => ['*'=> TRUE]] to ['tag' => TRUE]
-    foreach ($restrictions['allowed'] as $element => $attributes) {
+    $allowed = $restrictions['allowed'];
+    foreach ($allowed as $element => $attributes) {
       if (is_array($attributes) && isset($attributes['*']) && $attributes['*'] === TRUE) {
-        $restrictions['allowed'][$element] = TRUE;
+        $allowed[$element] = TRUE;
       }
     }
-
-    $allowed = $restrictions['allowed'];
 
     return new self($allowed);
   }
