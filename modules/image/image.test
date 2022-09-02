@@ -1191,6 +1191,36 @@ class ImageFieldDisplayTestCase extends ImageFieldTestCase {
     $this->drupalGet('node/' . $node->nid);
     $this->assertRaw($default_output, 'Default private image displayed when no user supplied image is present.');
   }
+
+  /**
+   * Tests the display of image field with the missing FID.
+   */
+  function testMissingImageFieldDisplay() {
+    $field_name = strtolower($this->randomName());
+    $type_name = 'article';
+    $field_settings = array(
+      'display_field' => '1',
+      'display_default' => '1',
+    );
+    $instance_settings = array(
+      'description_field' => '1',
+    );
+    $widget_settings = array();
+    $this->createImageField($field_name, $type_name, $field_settings, $instance_settings, $widget_settings);
+    $images = $this->drupalGetTestFiles('image');
+
+    // Create a new node with the uploaded file.
+    $nid = $this->uploadNodeImage($images[1], $field_name, 'article');
+    // Delete uploaded file from file_managed table.
+    $max_fid_after = db_query('SELECT MAX(fid) AS fid FROM {file_managed}')->fetchField();
+    $uploaded_file = file_load($max_fid_after);
+    file_delete($uploaded_file, TRUE);
+    // Clear field cache.
+    field_cache_clear();
+    // Check the node detail if the file is loaded.
+    $this->drupalGet('node/' . $nid);
+    $this->assertResponse(200);
+  }
 }
 
 /**
