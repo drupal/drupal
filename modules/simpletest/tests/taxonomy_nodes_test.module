@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * @file
+ * Dummy module implementing hook_query_TAG_alter.
+ */
+
+/**
+ * Implements hook_query_TAG_alter().
+ */
+function taxonomy_nodes_test_query_node_access_alter(QueryAlterableInterface $query) {
+  if (variable_get('taxonomy_nodes_test_query_node_access_alter', FALSE)) {
+    $taxonomy_index = FALSE;
+    foreach ($query->getTables() as $alias => $table) {
+      if ($table['table'] == 'taxonomy_index') {
+        $taxonomy_index = TRUE;
+      }
+    }
+
+    if ($taxonomy_index) {
+      // Verify that additional data can be added to the default
+      // taxonomy_select_nodes() query by altering it.
+      $query->leftJoin('taxonomy_term_data', 'ttd', 'ttd.tid = t.tid');
+    }
+  }
+}

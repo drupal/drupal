@@ -1,0 +1,6 @@
+name = "Taxonomy module node list tests"
+description = "Support module for taxonomy node list related testing."
+package = Testing
+version = VERSION
+core = 7.x
+hidden = TRUE

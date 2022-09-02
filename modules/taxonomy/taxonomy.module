@@ -207,7 +207,7 @@ function taxonomy_select_nodes($tid, $pager = TRUE, $limit = FALSE, $order = arr
   }
   $query = db_select('taxonomy_index', 't');
   $query->addTag('node_access');
-  $query->condition('tid', $tid);
+  $query->condition('t.tid', $tid);
   if ($pager) {
     $count_query = clone $query;
     $count_query->addExpression('COUNT(t.nid)');
