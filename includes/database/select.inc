@@ -1589,6 +1589,14 @@ class SelectQuery extends Query implements SelectQueryInterface {
       $query .= "\nHAVING " . $this->having;
     }
 
+    // UNION is a little odd, as the select queries to combine are passed into
+    // this query, but syntactically they all end up on the same level.
+    if ($this->union) {
+      foreach ($this->union as $union) {
+        $query .= ' ' . $union['type'] . ' ' . (string) $union['query'];
+      }
+    }
+
     // ORDER BY
     if ($this->order) {
       $query .= "\nORDER BY ";
@@ -1606,14 +1614,6 @@ class SelectQuery extends Query implements SelectQueryInterface {
     // do whatever alternate logic they need to.
     if (!empty($this->range)) {
       $query .= "\nLIMIT " . (int) $this->range['length'] . " OFFSET " . (int) $this->range['start'];
-    }
-
-    // UNION is a little odd, as the select queries to combine are passed into
-    // this query, but syntactically they all end up on the same level.
-    if ($this->union) {
-      foreach ($this->union as $union) {
-        $query .= ' ' . $union['type'] . ' ' . (string) $union['query'];
-      }
     }
 
     if ($this->forUpdate) {
