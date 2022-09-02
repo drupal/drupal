@@ -22,6 +22,7 @@ class DatabaseTestCase extends DrupalWebTestCase {
     parent::setUp('database_test');
 
     $schema['test'] = drupal_get_schema('test');
+    $schema['test_classtype'] = drupal_get_schema('test_classtype');
     $schema['test_people'] = drupal_get_schema('test_people');
     $schema['test_people_copy'] = drupal_get_schema('test_people_copy');
     $schema['test_one_blob'] = drupal_get_schema('test_one_blob');
@@ -115,6 +116,15 @@ class DatabaseTestCase extends DrupalWebTestCase {
         'name' => 'Paul',
         'age' => 26,
         'job' => 'Songwriter',
+      ))
+      ->execute();
+
+    db_insert('test_classtype')
+      ->fields(array(
+        'classname' => 'FakeRecord',
+        'name' => 'Kay',
+        'age' => 26,
+        'job' => 'Web Developer',
       ))
       ->execute();
 
@@ -403,6 +413,27 @@ class DatabaseFetchTestCase extends DatabaseTestCase {
       if ($this->assertTrue($record instanceof FakeRecord, 'Record is an object of class FakeRecord.')) {
         $this->assertIdentical($record->name, 'John', '25 year old is John.');
       }
+    }
+
+    $this->assertIdentical(count($records), 1, 'There is only one record.');
+  }
+
+  /**
+   * Confirms that we can fetch a record into a new instance of a custom class.
+   * The name of the class is determined from a value of the first column.
+   *
+   * @see FakeRecord
+   */
+  function testQueryFetchClasstype() {
+    $records = array();
+    $result = db_query('SELECT classname, name, job FROM {test_classtype} WHERE age = :age', array(':age' => 26), array('fetch' => PDO::FETCH_CLASS | PDO::FETCH_CLASSTYPE));
+    foreach ($result as $record) {
+      $records[] = $record;
+      if ($this->assertTrue($record instanceof FakeRecord, 'Record is an object of class FakeRecord.')) {
+        $this->assertIdentical($record->name, 'Kay', 'Kay is found.');
+        $this->assertIdentical($record->job, 'Web Developer', 'A 26 year old Web Developer.');
+      }
+      $this->assertFalse(isset($record->classname), 'Classname field not found, as intended.');
     }
 
     $this->assertIdentical(count($records), 1, 'There is only one record.');

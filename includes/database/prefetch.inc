@@ -286,7 +286,7 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
         case PDO::FETCH_OBJ:
           return (object) $this->currentRow;
         case PDO::FETCH_CLASS | PDO::FETCH_CLASSTYPE:
-          $class_name = array_unshift($this->currentRow);
+          $class_name = array_shift($this->currentRow);
           // Deliberate no break.
         case PDO::FETCH_CLASS:
           if (!isset($class_name)) {
