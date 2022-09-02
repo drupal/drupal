@@ -5,6 +5,7 @@ namespace Drupal\Tests\ckeditor5\Functional;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\editor\Entity\Editor;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\file\Entity\File;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -228,6 +229,16 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
     $this->drupalGet($path, ['query' => ['uuid' => $uuid, 'token' => $token]]);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSame(json_encode(['type' => 'image', 'imageSourceMetadata' => ['alt' => '']]), $this->getSession()->getPage()->getContent());
+
+    // Test that setting the media image field to not display alt field also
+    // omits it from the API (which will in turn instruct the CKE5 plugin to not
+    // show it).
+    FieldConfig::loadByName('media', 'image', 'field_media_image')
+      ->setSetting('alt_field', FALSE)
+      ->save();
+    $this->drupalGet($path, ['query' => ['uuid' => $uuid, 'token' => $token]]);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSame(json_encode(['type' => 'image']), $this->getSession()->getPage()->getContent());
 
     $this->drupalGet($path, ['query' => ['uuid' => $this->mediaFile->uuid(), 'token' => $token]]);
     $this->assertSession()->statusCodeEquals(200);
