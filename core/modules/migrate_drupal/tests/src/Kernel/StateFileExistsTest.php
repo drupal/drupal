@@ -62,8 +62,6 @@ class StateFileExistsTest extends MigrateDrupalTestBase {
     'node',
     'options',
     'path',
-    // @todo Remove RDF in https://www.drupal.org/node/3267515
-    'rdf',
     'responsive_image',
     'search',
     'shortcut',

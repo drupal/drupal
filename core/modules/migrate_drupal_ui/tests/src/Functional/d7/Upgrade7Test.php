@@ -202,7 +202,6 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
     return [
       'Aggregator',
       'Color',
-      // @todo Remove RDF in https://www.drupal.org/node/3267515
       'RDF',
       'References',
       'Translation sets',

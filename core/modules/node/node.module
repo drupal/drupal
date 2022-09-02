@@ -545,7 +545,6 @@ function template_preprocess_node(&$variables) {
     //   Eventually delete this code and matching template lines. Using a field
     //   formatter is more flexible and consistent.
     $node_type = $node->type->entity;
-    // Used by RDF to add attributes around the author and date submitted.
     $variables['author_attributes'] = new Attribute();
     $variables['display_submitted'] = $node_type->displaySubmitted();
     if ($variables['display_submitted']) {

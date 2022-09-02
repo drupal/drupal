@@ -1,7 +1,0 @@
-name: 'RDF module namespaces test'
-type: module
-description: 'Test namespace declaration.'
-package: Testing
-version: VERSION
-dependencies:
-  - drupal:rdf

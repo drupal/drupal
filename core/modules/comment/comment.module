@@ -716,7 +716,7 @@ function comment_preprocess_field(&$variables) {
     $variables['comment_display_mode'] = $element[0]['#comment_display_mode'];
     $variables['comment_type'] = $element[0]['#comment_type'];
 
-    // Append additional attributes (eg. RDFa) from the first field item.
+    // Append additional attributes from the first field item.
     $variables['attributes'] += $variables['items'][0]['attributes']->storage();
 
     // Create separate variables for the comments and comment form.

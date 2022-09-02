@@ -1568,7 +1568,7 @@ function template_preprocess_field(&$variables, $hook) {
   while (!empty($element[$delta])) {
     $variables['items'][$delta]['content'] = $element[$delta];
 
-    // Modules (e.g., rdf.module) can add field item attributes (to
+    // Modules can add field item attributes (to
     // $item->_attributes) within hook_entity_prepare_view(). Some field
     // formatters move those attributes into some nested formatter-specific
     // element in order have them rendered on the desired HTML element (e.g., on

@@ -300,7 +300,6 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
           ],
           'templates' => [
             'filter-caption.html.twig',
-            'rdf-metadata.html.twig',
             'help-section.html.twig',
             'progress-bar.html.twig',
             'item-list.html.twig',
@@ -449,7 +448,6 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
         'file-managed-file.html.twig' => 'ee735232c3d782f09178bc56df8f89b1',
         'text-format-wrapper.html.twig' => '9b9f43cee239648f0c6966c68fc4d72e',
         'filter-caption.html.twig' => '7cc9ce9634332604bd3a565af2ef0cd5',
-        'rdf-metadata.html.twig' => 'ebf2c20050b6a89b04168ce66d0a55dc',
         'help-section.html.twig' => '4f98fbb266cf9069a4604049c848a4c2',
         'progress-bar.html.twig' => 'ad07ee846d10bb46eb71d4c81d5bce75',
         'status-messages.html.twig' => '5c8403daec6d92b35407a893c04a6a36',
