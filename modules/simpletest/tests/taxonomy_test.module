@@ -139,3 +139,14 @@ function taxonomy_test_query_taxonomy_term_access_alter(QueryAlterableInterface 
     variable_set(__FUNCTION__, ++$value);
   }
 }
+
+/**
+ * Test controller class for taxonomy terms.
+ *
+ * The main purpose is to make cacheGet() method available for testing.
+ */
+class TestTaxonomyTermController extends TaxonomyTermController {
+  public function loadFromCache($ids, $conditions = array()) {
+    return parent::cacheGet($ids, $conditions);
+  }
+}

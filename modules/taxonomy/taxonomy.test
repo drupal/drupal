@@ -2131,3 +2131,42 @@ class TaxonomyQueryAlterTestCase extends TaxonomyWebTestCase {
   }
 
 }
+
+/**
+ * Tests for taxonomy terms cache usage.
+ */
+class TaxonomyTermCacheUsageTestCase extends TaxonomyWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Taxonomy term cache usage',
+      'description' => 'Tests for taxonomy term cache usage.',
+      'group' => 'Taxonomy',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('taxonomy', 'taxonomy_test');
+  }
+
+  /**
+   * Test taxonomy_get_term_by_name() cache usage.
+   */
+  function testTaxonomyGetTermByNameCacheUsage() {
+    // Create vocabulary and term.
+    $new_vocabulary = $this->createVocabulary();
+    $new_term = new stdClass();
+    $new_term->name = 'MixedCaseTerm';
+    $new_term->vid = $new_vocabulary->vid;
+    taxonomy_term_save($new_term);
+
+    // Try to load term with mixed case letters from the cache.
+    $taxonomy_controller = new TestTaxonomyTermController('taxonomy_term');
+    // First load to warm the cache.
+    $terms = $taxonomy_controller->load(array(), array('name' => $new_term->name));
+    $this->assertTrue(isset($terms[$new_term->tid]), 'Term loaded using exact name and vocabulary machine name.');
+    // Second load should load the $new_term from the cache.
+    $terms = $taxonomy_controller->loadFromCache(array(), array('name' => $new_term->name));
+    $this->assertTrue(isset($terms[$new_term->tid]), 'Term loaded using the cache.');
+  }
+
+}

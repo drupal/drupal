@@ -1274,7 +1274,7 @@ class TaxonomyTermController extends DrupalDefaultEntityController {
     // LOWER() and drupal_strtolower() may return different results.
     foreach ($terms as $term) {
       $term_values = (array) $term;
-      if (isset($conditions['name']) && drupal_strtolower($conditions['name'] != drupal_strtolower($term_values['name']))) {
+      if (isset($conditions['name']) && drupal_strtolower($conditions['name']) != drupal_strtolower($term_values['name'])) {
         unset($terms[$term->tid]);
       }
     }
