@@ -305,7 +305,6 @@ final class HTMLRestrictions {
    * @return \Drupal\ckeditor5\HTMLRestrictions
    */
   private static function unrestricted(): self {
-    // @todo Refine in https://www.drupal.org/project/drupal/issues/3231336, including adding support for all operations.
     $restrictions = HTMLRestrictions::emptySet();
     $restrictions->unrestricted = TRUE;
     return $restrictions;
@@ -334,16 +333,14 @@ final class HTMLRestrictions {
       throw new \InvalidArgumentException();
     }
 
-    if ($object->getHtmlRestrictions() === FALSE) {
-      // @todo Refine in https://www.drupal.org/project/drupal/issues/3231336
+    $restrictions = $object->getHTMLRestrictions();
+    if ($restrictions === FALSE || $restrictions === []) {
       return self::unrestricted();
     }
 
-    $restrictions = $object->getHTMLRestrictions();
-    $allowed = $restrictions['allowed'];
-
     // When allowing all tags on an attribute, transform FilterHtml output from
     // ['tag' => ['*'=> TRUE]] to ['tag' => TRUE]
+    $allowed = $restrictions['allowed'];
     foreach ($allowed as $element => $attributes) {
       if (is_array($attributes) && isset($attributes['*']) && $attributes['*'] === TRUE) {
         $allowed[$element] = TRUE;
