@@ -6,6 +6,7 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\Core\Database\Database;
 use Drupal\editor\Entity\Editor;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\file\Entity\File;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -627,11 +628,34 @@ class MediaTest extends WebDriverTestBase {
   }
 
   /**
-   * Tests the EditorMediaDialog's form elements' #access logic.
+   * Tests that the image media source's alt_field being disabled is respected.
+   *
+   * @see \Drupal\Tests\ckeditor5\Functional\MediaEntityMetadataApiTest::testApi()
    */
-  public function testDialogAccess() {
-    // @todo Port in https://www.drupal.org/project/ckeditor5/issues/3245720
-    $this->markTestSkipped('Blocked on https://www.drupal.org/project/ckeditor5/issues/3245720.');
+  public function testAltDisabled(): void {
+    // Disable the alt field for image media.
+    FieldConfig::loadByName('media', 'image', 'field_media_image')
+      ->setSetting('alt_field', FALSE)
+      ->save();
+
+    $assert_session = $this->assertSession();
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+    // Wait for the media preview to load.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media img'));
+    // Test that by default no alt attribute is present on the drupal-media
+    // element.
+    $this->assertSourceAttributeSame('alt', NULL);
+    // Test that the preview shows the alt value from the media field's
+    // alt text.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media img[alt*="default alt"]'));
+    // Test that clicking the media widget triggers a CKEditor balloon panel
+    // with a single button to override the alt text.
+    $this->click('.ck-widget.drupal-media');
+    $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
+    // Assert that no "Override media image alternative text" button is visible.
+    $override_alt_button = $this->getBalloonButton('Override media image alternative text');
+    $this->assertFalse($override_alt_button->isVisible());
   }
 
   /**
