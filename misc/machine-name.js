@@ -27,7 +27,7 @@ Drupal.behaviors.machineName = {
   attach: function (context, settings) {
     var self = this;
     $.each(settings.machineName, function (source_id, options) {
-      var $source = $(source_id, context).addClass('machine-name-source');
+      var $source = $(source_id, context).addClass('machine-name-source').once('machine-name');
       var $target = $(options.target, context).addClass('machine-name-target');
       var $suffix = $(options.suffix, context);
       var $wrapper = $target.closest('.form-item');
