@@ -555,6 +555,8 @@ function locale_language_types_info() {
       'fixed' => array(LOCALE_LANGUAGE_NEGOTIATION_INTERFACE),
     ),
     LANGUAGE_TYPE_URL => array(
+      'name' => t('URL'),
+      'description' => t('Order of language detection methods for URLs. The detected language will be used as the default when generating URLs for internal links on the site.'),
       'fixed' => array(LOCALE_LANGUAGE_NEGOTIATION_URL, LOCALE_LANGUAGE_NEGOTIATION_URL_FALLBACK),
     ),
   );
