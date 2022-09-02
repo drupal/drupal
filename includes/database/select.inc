@@ -1624,6 +1624,8 @@ class SelectQuery extends Query implements SelectQueryInterface {
   }
 
   public function __clone() {
+    parent::__clone();
+
     // On cloning, also clone the dependent objects. However, we do not
     // want to clone the database connection object as that would duplicate the
     // connection itself.
@@ -1632,6 +1634,11 @@ class SelectQuery extends Query implements SelectQueryInterface {
     $this->having = clone($this->having);
     foreach ($this->union as $key => $aggregate) {
       $this->union[$key]['query'] = clone($aggregate['query']);
+    }
+    foreach ($this->tables as $alias => $table) {
+      if ($table['table'] instanceof SelectQueryInterface) {
+        $this->tables[$alias]['table'] = clone $table['table'];
+      }
     }
   }
 }
