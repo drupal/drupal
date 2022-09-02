@@ -119,12 +119,13 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
    *   The constraint to validate.
    */
   private function checkHtmlRestrictionsAreCompatible(FilterFormatInterface $text_format, FundamentalCompatibilityConstraint $constraint): void {
-    $fundamental = new HTMLRestrictions($this->pluginManager->getProvidedElements(self::FUNDAMENTAL_CKEDITOR5_PLUGINS));
-    $html_restrictions = $text_format->getHtmlRestrictions();
-    if (!isset($html_restrictions['allowed'])) {
+    $html_restrictions = HTMLRestrictions::fromTextFormat($text_format);
+    if ($html_restrictions->isUnrestricted()) {
       return;
     }
-    if (!$fundamental->diff(HTMLRestrictions::fromTextFormat($text_format))->allowsNothing()) {
+
+    $fundamental = new HTMLRestrictions($this->pluginManager->getProvidedElements(self::FUNDAMENTAL_CKEDITOR5_PLUGINS));
+    if (!$fundamental->diff($html_restrictions)->allowsNothing()) {
       $offending_filter = static::findHtmlRestrictorFilterNotAllowingTags($text_format, $fundamental);
       $this->context->buildViolation($constraint->nonAllowedElementsMessage)
         ->setParameter('%filter_label', (string) $offending_filter->getLabel())
