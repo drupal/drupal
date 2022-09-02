@@ -344,8 +344,9 @@ Plugin
 Queue
 - James Gilliland 'neclimdul' https://www.drupal.org/u/neclimdul
 
-RDF
-- ?
+Quick Edit
+- Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
+- Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
 
 Render API
 - Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia

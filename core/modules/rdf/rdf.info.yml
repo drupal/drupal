@@ -1,7 +1,0 @@
-name: RDF
-type: module
-description: 'Enriches your content with metadata to let other applications (e.g. search engines, aggregators) better understand its relationships and attributes.'
-package: Core
-lifecycle: deprecated
-lifecycle_link: https://www.drupal.org/docs/core-modules-and-themes/deprecated-and-obsolete-modules-and-themes#s-rdf
-version: VERSION

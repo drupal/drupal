@@ -126,15 +126,6 @@ class RssFields extends RowPluginBase {
     if (!isset($row_index)) {
       $row_index = 0;
     }
-    if (function_exists('rdf_get_namespaces')) {
-      // Merge RDF namespaces in the XML namespaces in case they are used
-      // further in the RSS content.
-      $xml_rdf_namespaces = [];
-      foreach (rdf_get_namespaces() as $prefix => $uri) {
-        $xml_rdf_namespaces['xmlns:' . $prefix] = $uri;
-      }
-      $this->view->style_plugin->namespaces += $xml_rdf_namespaces;
-    }
 
     // Create the RSS item object.
     $item = new \stdClass();

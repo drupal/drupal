@@ -225,13 +225,6 @@ interface FilterInterface extends ConfigurableInterface, DependentPluginInterfac
    *           'src' => TRUE,
    *           'alt' => TRUE,
    *         ),
-   *         // Allow RDFa on <span> tags, using only the dc, foaf, xsd and sioc
-   *         // vocabularies/namespaces.
-   *         'span' => array(
-   *           'property' => array('dc:*' => TRUE, 'foaf:*' => TRUE),
-   *           'datatype' => array('xsd:*' => TRUE),
-   *           'rel' => array('sioc:*' => TRUE),
-   *         ),
    *         // Forbid the 'style' and 'on*' ('onClick' etc.) attributes on any
    *         // tag.
    *         '*' => array(

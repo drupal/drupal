@@ -1324,11 +1324,6 @@ parameters:
 			path: modules/pgsql/src/Driver/Database/pgsql/Upsert.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\rdf\\\\Kernel\\\\Field\\\\FieldRdfaTestBase\\:\\:drupalGet\\(\\)\\.$#"
-			count: 2
-			path: modules/rdf/tests/src/Kernel/Field/FieldRdfaTestBase.php
-
-		-
 			message: "#^Method Drupal\\\\responsive_image\\\\ResponsiveImageStyleForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/responsive_image/src/ResponsiveImageStyleForm.php

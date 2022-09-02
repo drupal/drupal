@@ -1,7 +1,0 @@
-name: 'RDF module conflicting namespaces test'
-type: module
-description: 'Test conflicting namespace declaration.'
-package: Testing
-version: VERSION
-dependencies:
-  - drupal:rdf

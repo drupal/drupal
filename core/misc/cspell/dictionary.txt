@@ -131,7 +131,6 @@ blockrecipe
 blocktest
 bloggy
 blub
-bnode
 bodyformat
 bodyless
 bodyvalue
@@ -389,7 +388,6 @@ drush
 drépal
 défaut
 détruire
-easyrdf
 editables
 editdrupalimage
 editunblock
@@ -463,7 +461,6 @@ fieldlinks
 fieldnames
 fieldsets
 filecount
-filefields
 filelist
 filemime
 filesort
@@ -592,7 +589,6 @@ iframeupload
 ignoretag
 imagecache
 imagecreatefrom
-imagefields
 imagetest
 imagetextalternative
 inator
@@ -842,7 +838,6 @@ ndocs
 nearbykeyword
 necolas
 negotiatiors
-nemo
 newcol
 newdata
 newfieldinitial
@@ -1062,8 +1057,6 @@ rasterize
 rasterized
 rasterizes
 rawurlencoded
-rdfa
-rdfs
 readmore
 readonlydir
 realelement
@@ -1163,15 +1156,12 @@ silverlight
 silvie
 simpletest
 singlebyte
-sioc
-sioct
 sirbrillig
 sisko
 sitename
 sitewide
 sivun
 skiptags
-skos
 skynet
 slatkin
 slevomat
@@ -1208,6 +1198,7 @@ ssid
 stardivision
 starrrrr
 starterkit
+starterkit's
 starzzzz
 statuscode
 stdclass

@@ -29,7 +29,6 @@ class Config {
       'coder_sniffer/DrupalPractice/Test',
     ],
     'doctrine/instantiator' => ['tests'],
-    'easyrdf/easyrdf' => ['scripts'],
     'egulias/email-validator' => ['documentation', 'tests'],
     'guzzlehttp/promises' => ['tests'],
     'guzzlehttp/psr7' => ['tests'],

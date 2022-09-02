@@ -75,7 +75,7 @@ class LinkSeparateFormatter extends LinkFormatter {
       ];
 
       if (!empty($item->_attributes)) {
-        // Set our RDFa attributes on the <a> element that is being built.
+        // Set our attributes on the <a> element that is being built.
         $url->setOption('attributes', $item->_attributes);
 
         // Unset field item attributes since they have been included in the

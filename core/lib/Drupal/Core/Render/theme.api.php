@@ -585,9 +585,13 @@ function hook_preprocess(&$variables, $hook) {
  *   The variables array (modify in place).
  */
 function hook_preprocess_HOOK(&$variables) {
-  // This example is from rdf_preprocess_image(). It adds an RDF attribute
-  // to the image hook's variables.
-  $variables['attributes']['typeof'] = ['foaf:Image'];
+  // This example is from node_preprocess_html(). It adds the node type to
+  // the body classes, when on an individual node page or node preview page.
+  if (($node = \Drupal::routeMatch()->getParameter('node')) || ($node = \Drupal::routeMatch()->getParameter('node_preview'))) {
+    if ($node instanceof NodeInterface) {
+      $variables['node_type'] = $node->getType();
+    }
+  }
 }
 
 /**
