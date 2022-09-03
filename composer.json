@@ -38,6 +38,9 @@
         "symfony/browser-kit": "^6.1",
         "symfony/dom-crawler": "^6.1"
     },
+    "conflict": {
+        "phpstan/phpstan": "1.8.3"
+    },
     "replace": {
         "symfony/polyfill-php72": "*",
         "symfony/polyfill-php73": "*"
