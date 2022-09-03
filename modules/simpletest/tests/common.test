@@ -1990,6 +1990,11 @@ class DrupalRenderTestCase extends DrupalWebTestCase {
         'expected' => '',
       ),
       array(
+        'name' => 'not a render array',
+        'value' => 'this is not an array',
+        'expected' => '',
+      ),
+      array(
         'name' => 'no access',
         'value' => array(
           '#markup' => 'foo',

@@ -6088,7 +6088,7 @@ function drupal_render_page($page) {
  */
 function drupal_render(&$elements) {
   // Early-return nothing if user does not have access.
-  if (empty($elements) || (isset($elements['#access']) && !$elements['#access'])) {
+  if (empty($elements) || !is_array($elements) || (isset($elements['#access']) && !$elements['#access'])) {
     return '';
   }
 
