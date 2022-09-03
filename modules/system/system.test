@@ -1117,6 +1117,16 @@ class AccessDeniedTestCase extends DrupalWebTestCase {
 
     // Check that we're still on the same page.
     $this->assertText(t('Site information'));
+
+    // Check batch page response.
+    $query_parameters = array(
+      ':type' => 'php',
+      ':severity' => WATCHDOG_WARNING,
+    );
+    $this->assertEqual(db_query('SELECT COUNT(*) FROM {watchdog} WHERE type = :type AND severity = :severity', $query_parameters)->fetchField(), 0, 'No warning message appears in the logs before accessing the batch page.');
+    $this->drupalGet('batch');
+    $this->assertResponse(403);
+    $this->assertEqual(db_query('SELECT COUNT(*) FROM {watchdog} WHERE type = :type AND severity = :severity', $query_parameters)->fetchField(), 0, 'No warning message appears in the logs after accessing the batch page.');
   }
 }
 
