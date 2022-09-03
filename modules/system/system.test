@@ -3217,3 +3217,97 @@ class SystemArchiverTest extends DrupalWebTestCase
     $this->assertTrue($caught_exception, $message);
   }
 }
+
+/**
+ * Tests .htaccess is working correctly.
+ */
+class HtaccessTest extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => '.htaccess tests',
+      'description' => 'Tests .htaccess is working correctly.',
+      'group' => 'System',
+    );
+  }
+
+  /**
+   * Get an array of file paths for access testing.
+   */
+  protected function getProtectedFiles() {
+    $path = drupal_get_path('module', 'system') . '/tests/fixtures/HtaccessTest';
+
+    // Tests the FilesMatch directive which denies access to certain file
+    // extensions.
+    $file_exts_to_deny = array(
+      'engine',
+      'inc',
+      'info',
+      'install',
+      'make',
+      'module',
+      'module~',
+      'module.bak',
+      'module.orig',
+      'module.save',
+      'module.swo',
+      'module.swp',
+      'php~',
+      'php.bak',
+      'php.orig',
+      'php.save',
+      'php.swo',
+      'php.swp',
+      'profile',
+      'po',
+      'sh',
+      'sql',
+      'test',
+      'theme',
+      'tpl.php',
+      'xtmpl',
+    );
+
+    foreach ($file_exts_to_deny as $file_ext) {
+      $file_paths["$path/access_test.$file_ext"] = 403;
+    }
+
+    // Test extensions that should be permitted.
+    $file_exts_to_allow = array(
+      'php-info.txt',
+    );
+
+    foreach ($file_exts_to_allow as $file_ext) {
+      $file_paths["$path/access_test.$file_ext"] = 200;
+    }
+
+    // Ensure web server configuration files cannot be accessed.
+    $file_paths["$path/.htaccess"] = 403;
+    $file_paths["$path/web.config"] = 403;
+
+    return $file_paths;
+  }
+
+  /**
+   * Iterates over protected files and calls assertNoFileAccess().
+   */
+  function testFileAccess() {
+    foreach ($this->getProtectedFiles() as $file => $response_code) {
+      $this->assertFileAccess($file, $response_code);
+    }
+  }
+
+  /**
+   * Asserts that a file exists and requesting it returns a specific response.
+   *
+   * @param string $path
+   *   Path to file. Without leading slash.
+   * @param int $response_code
+   *   The expected response code. For example: 200, 403 or 404.
+   */
+  protected function assertFileAccess($path, $response_code) {
+    global $base_url;
+    $this->assertTrue(file_exists(DRUPAL_ROOT . '/' . $path), format_string('@filename exists.', array('@filename' => $path)));
+    $this->drupalGet($base_url . '/' . $path, array('external' => TRUE));
+    $this->assertResponse($response_code, "Response code to $path should be $response_code");
+  }
+}
