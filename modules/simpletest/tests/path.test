@@ -331,6 +331,17 @@ class PathLookupTest extends DrupalWebTestCase {
     );
     path_save($path);
     $this->assertEqual(drupal_lookup_path('source', $path['alias']), $path['source'], 'Newer alias record is returned when comparing two LANGUAGE_NONE paths with the same alias.');
+
+    // Test if the alias returned by drupal_lookup_path() is the same as the
+    // alias returned by path_load().
+    $path = array(
+      'source' => 'user/' . $account2->uid,
+      'alias' => 'bar2',
+    );
+    path_save($path);
+    $this->assertEqual(drupal_lookup_path('alias', $path['source']), 'bar2', 'Newer alias record is returned when using drupal_lookup_path() on paths with multiple aliases.');
+    $loaded_path = path_load(array('source' => $path['source']));
+    $this->assertEqual($loaded_path['alias'], 'bar2', 'Newer alias record is returned when using path_load() on paths with multiple aliases.');
   }
 }
 
