@@ -109,7 +109,7 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
       switch ($name) {
         // Simple key values on the node.
         case 'nid':
-          $replacements[$original] = $node->nid;
+          $replacements[$original] = isset($node->nid) ? $node->nid : '';
           break;
 
         case 'vid':
@@ -168,11 +168,11 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'url':
-          $replacements[$original] = url('node/' . $node->nid, $url_options);
+          $replacements[$original] = isset($node->nid) ? url('node/' . $node->nid, $url_options) : '';
           break;
 
         case 'edit-url':
-          $replacements[$original] = url('node/' . $node->nid . '/edit', $url_options);
+          $replacements[$original] = isset($node->nid) ? url('node/' . $node->nid . '/edit', $url_options) : '';
           break;
 
         // Default values for the chained tokens handled below.

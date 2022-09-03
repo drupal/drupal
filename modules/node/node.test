@@ -2554,6 +2554,26 @@ class NodeTokenReplaceTestCase extends DrupalWebTestCase {
       $this->assertEqual($output, $expected, format_string('Sanitized node token %token replaced.', array('%token' => $input)));
     }
 
+    // Test if the node without nid gets correct tokens (e.g. unsaved node).
+    $new_node_without_nid = clone $node;
+    unset($new_node_without_nid->nid);
+
+    // Update tokens values which should be empty
+    $tests['[node:nid]'] = '';
+    $tests['[node:url]'] = '';
+    $tests['[node:edit-url]'] = '';
+
+    // Generate and test sanitized tokens.
+    foreach ($tests as $input => $expected) {
+      $output = token_replace($input, array('node' => $new_node_without_nid), array('language' => $language));
+      $this->assertEqual($output, $expected, format_string('Sanitized node token %token replaced.', array('%token' => $input)));
+    }
+
+    // Revert tokens values
+    $tests['[node:nid]'] = $node->nid;
+    $tests['[node:url]'] = url('node/' . $node->nid, $url_options);
+    $tests['[node:edit-url]'] = url('node/' . $node->nid . '/edit', $url_options);
+
     // Generate and test unsanitized tokens.
     $tests['[node:title]'] = $node->title;
     $tests['[node:body]'] = $node->body[$langcode][0]['value'];
