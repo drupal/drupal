@@ -66,6 +66,12 @@ class ModuleUnitTest extends DrupalWebTestCase {
     // Reset the module list.
     module_list(TRUE);
     $this->assertModuleList($module_list, t('After reset'));
+
+    // Verify that the module_list() returns correct bootstrap modules.
+    $bootstrap_module_list = module_list(TRUE, TRUE);
+    $expected_bootstrap_modules = db_query("SELECT name, filename FROM {system} WHERE status = 1 AND bootstrap = 1 AND type = 'module' ORDER BY weight ASC, name ASC")->fetchAllAssoc('name');
+    $expected_bootstrap_module_list = array_combine(array_keys($expected_bootstrap_modules), array_keys($expected_bootstrap_modules));
+    $this->assertIdentical($expected_bootstrap_module_list, $bootstrap_module_list, 'module_list() returns correct bootstrap modules.');
   }
 
   /**

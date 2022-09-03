@@ -142,9 +142,10 @@ function system_list($type) {
     foreach ($bootstrap_list as $module) {
       drupal_get_filename('module', $module->name, $module->filename);
     }
-    // We only return the module names here since module_list() doesn't need
-    // the filename itself.
-    $lists['bootstrap'] = array_keys($bootstrap_list);
+    // Only return module names here since module_list() doesn't need the
+    // filename itself. Don't use drupal_map_assoc() as that requires common.inc.
+    $list = array_keys($bootstrap_list);
+    $lists['bootstrap'] = (!empty($list) ? array_combine($list, $list) : array());
   }
   // Otherwise build the list for enabled modules and themes.
   elseif (!isset($lists['module_enabled'])) {
