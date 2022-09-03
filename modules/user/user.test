@@ -2498,6 +2498,10 @@ class UserRoleAdminTestCase extends DrupalWebTestCase {
     $role = user_role_load($rid);
     $new_weight = $role->weight;
     $this->assertTrue(($old_weight + 1) == $new_weight, 'Role weight updated successfully.');
+
+    // Check if the updated weight is displayed on the roles settings page.
+    $this->drupalGet('admin/people/permissions/roles');
+    $this->assertFieldByXPath("//input[@name='roles[$rid][weight]']", $new_weight, 'The role weight is displayed correctly.');
   }
 }
 
