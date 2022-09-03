@@ -322,7 +322,7 @@ class UserController extends DrupalDefaultEntityController {
 
     // Add the full file objects for user pictures if enabled.
     if (!empty($picture_fids) && variable_get('user_pictures', 0)) {
-      $pictures = file_load_multiple($picture_fids);
+      $pictures = file_load_multiple(array_filter($picture_fids));
       foreach ($queried_users as $account) {
         if (!empty($account->picture) && isset($pictures[$account->picture])) {
           $account->picture = $pictures[$account->picture];
