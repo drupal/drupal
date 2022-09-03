@@ -615,7 +615,7 @@ function locale_add_language($langcode, $name = NULL, $native = NULL, $direction
       'direction' => $direction,
       'domain' => $domain,
       'prefix' => $prefix,
-      'enabled' => $enabled,
+      'enabled' => $enabled ? 1 : 0,
     ))
     ->execute();
 

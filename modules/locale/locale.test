@@ -1664,6 +1664,14 @@ class LocaleLanguageSwitchingFunctionalTest extends DrupalWebTestCase {
     $this->assertIdentical($links, array('active' => array('en'), 'inactive' => array('fr')), 'Only the current language list item is marked as active on the language switcher block.');
     $this->assertIdentical($anchors, array('active' => array('en'), 'inactive' => array('fr')), 'Only the current language anchor is marked as active on the language switcher block.');
   }
+
+  /**
+   * Tests that languages can be added as disabled.
+   */
+  function testNewDisabledLanguage() {
+    // Add new language which will be disabled.
+    locale_add_language('de', 'German', 'Deutsch', LANGUAGE_LTR, '', '', FALSE, FALSE);
+  }
 }
 
 /**
