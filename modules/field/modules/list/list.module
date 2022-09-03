@@ -388,7 +388,8 @@ function _list_values_in_use($field, $values) {
  * - 'list_illegal_value': The value is not part of the list of allowed values.
  */
 function list_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
-  $allowed_values = list_allowed_values($field, $instance, $entity_type, $entity);
+  // Flatten the array before validating to account for optgroups.
+  $allowed_values = options_array_flatten(list_allowed_values($field, $instance, $entity_type, $entity));
   foreach ($items as $delta => $item) {
     if (!empty($item['value'])) {
       if (!empty($allowed_values) && !isset($allowed_values[$item['value']])) {
