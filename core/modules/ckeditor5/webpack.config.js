@@ -1,7 +1,6 @@
 const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
-const { styles, builds } = require('@ckeditor/ckeditor5-dev-utils');
 const TerserPlugin = require('terser-webpack-plugin');
 
 function getDirectories(srcpath) {
