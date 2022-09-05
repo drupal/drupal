@@ -343,7 +343,7 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
       'block_content',
       'book',
       'breakpoint',
-      'ckeditor',
+      'ckeditor5',
       'comment',
       'config',
       'config_translation',
