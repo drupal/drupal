@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\Tests\system\Kernel\Render;
+namespace Drupal\Tests\classy\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests the Classy theme.
  *
- * @group Theme
+ * @group classy
  */
 class ClassyTest extends KernelTestBase {
 

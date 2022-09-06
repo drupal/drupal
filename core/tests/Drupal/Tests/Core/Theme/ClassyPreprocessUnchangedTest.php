@@ -8,6 +8,9 @@ use Drupal\Tests\UnitTestCase;
  * Confirms that classy.theme has not added new functionality.
  *
  * @group Theme
+ * @group legacy
+ *
+ * @todo Remove in https://www.drupal.org/project/drupal/issues/3110137
  */
 class ClassyPreprocessUnchangedTest extends UnitTestCase {
 

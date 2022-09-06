@@ -13,6 +13,7 @@ use Drupal\KernelTests\KernelTestBase;
  * location.
  *
  * @group Theme
+ * @group legacy
  */
 class ConfirmClassyCopiesTest extends KernelTestBase {
 
