@@ -5,7 +5,6 @@ global-styling:
       css/base/fonts.css: {}
       css/base/variables.css: {}
       css/base/base.css: {}
-      css/base/utility.css: {}
     layout:
       css/layout/layout.css: {}
       css/layout/grid.css: {}

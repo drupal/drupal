@@ -75,7 +75,6 @@ autop
 autoplace
 autoplay
 autoreply
-autorow
 autosave
 autosubmit
 autowire
