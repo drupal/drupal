@@ -91,6 +91,12 @@ class CommonURLUnitTest extends DrupalWebTestCase {
     $link = l($text, $path);
     $sanitized_path = check_url(url($path));
     $this->assertTrue(strpos($link, $sanitized_path) !== FALSE, format_string('XSS attack @path was filtered', array('@path' => $path)));
+
+    // Verify that a dangerous protocol is sanitized.
+    $text = $this->randomName();
+    $path = "javascript:alert('XSS')";
+    $link = l($text, $path, array('external' => TRUE));
+    $this->assertTrue(strpos($link, 'javascript:') === FALSE, 'Dangerous protocol javascript: was sanitized.');
   }
 
   /*

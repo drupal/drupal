@@ -2570,6 +2570,7 @@ function l($text, $path, array $options = array()) {
       $use_theme = FALSE;
     }
   }
+  $path = drupal_strip_dangerous_protocols((string) $path);
   if ($use_theme) {
     return theme('link', array('text' => $text, 'path' => $path, 'options' => $options));
   }
