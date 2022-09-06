@@ -160,7 +160,14 @@ class CssCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfa
   public function optimizeGroup(array $group): string {
     // Optimize each asset within the group.
     $data = '';
+    $current_license = FALSE;
     foreach ($group['items'] as $css_asset) {
+      // Ensure license information is available as a comment after
+      // optimization.
+      if ($css_asset['license'] !== $current_license) {
+        $data .= "/* @license " . $css_asset['license']['name'] . " " . $css_asset['license']['url'] . " */\n";
+      }
+      $current_license = $css_asset['license'];
       $data .= $this->optimizer->optimize($css_asset);
     }
     // Per the W3C specification at
@@ -174,7 +181,7 @@ class CssCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfa
 REGEXP;
     preg_match_all($regexp, $data, $matches);
     $data = preg_replace($regexp, '', $data);
-    return implode('', $matches[0]) . $data;
+    return implode('', $matches[0]) . (!empty($matches[0]) ? "\n" : '') . $data;
   }
 
 }

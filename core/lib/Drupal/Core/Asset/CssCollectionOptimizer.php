@@ -124,7 +124,14 @@ class CssCollectionOptimizer implements AssetCollectionOptimizerInterface {
             if (empty($uri) || !file_exists($uri)) {
               // Optimize each asset within the group.
               $data = '';
+              $current_license = FALSE;
               foreach ($css_group['items'] as $css_asset) {
+                // Ensure license information is available as a comment after
+                // optimization.
+                if ($css_asset['license'] !== $current_license) {
+                  $data .= "/* @license " . $css_asset['license']['name'] . " " . $css_asset['license']['url'] . " */\n";
+                }
+                $current_license = $css_asset['license'];
                 $data .= $this->optimizer->optimize($css_asset);
               }
               // Per the W3C specification at
@@ -138,7 +145,7 @@ class CssCollectionOptimizer implements AssetCollectionOptimizerInterface {
 REGEXP;
               preg_match_all($regexp, $data, $matches);
               $data = preg_replace($regexp, '', $data);
-              $data = implode('', $matches[0]) . $data;
+              $data = implode('', $matches[0]) . (!empty($matches[0]) ? "\n" : '') . $data;
               // Dump the optimized CSS for this group into an aggregate file.
               $uri = $this->dumper->dump($data, 'css');
               // Set the URI for this group's aggregate file.

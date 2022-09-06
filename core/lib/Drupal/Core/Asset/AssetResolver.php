@@ -138,6 +138,8 @@ class AssetResolver implements AssetResolverInterface {
       if (isset($definition['css'])) {
         foreach ($definition['css'] as $options) {
           $options += $default_options;
+          // Copy the asset library license information to each file.
+          $options['license'] = $definition['license'];
 
           // Files with a query string cannot be preprocessed.
           if ($options['type'] === 'file' && $options['preprocess'] && strpos($options['data'], '?') !== FALSE) {
@@ -244,6 +246,8 @@ class AssetResolver implements AssetResolverInterface {
         if (isset($definition['js'])) {
           foreach ($definition['js'] as $options) {
             $options += $default_options;
+            // Copy the asset library license information to each file.
+            $options['license'] = $definition['license'];
 
             // 'scope' is a calculated option, based on which libraries are
             // marked to be loaded from the header (see above).
