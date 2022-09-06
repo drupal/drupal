@@ -1070,11 +1070,9 @@ jquery.ui.mouse:
   deprecated: *jquery_ui_unused_deprecated
 
 drupal.jquery.position:
-  # For most positioning needs, the core/popperjs library should be used. This
-  # is a modified version of jQuery UI position for that does not require any
-  # jQuery UI assets, only jQuery. It is provided by core for use with
-  # pre-existing libraries that expect the jQuery UI position API. Popperjs is
-  # recommended for any new uses.
+  # This is a modified version of jQuery UI position for that does not require
+  # any jQuery UI assets, only jQuery. It is provided by core for use with
+  # pre-existing libraries that expect the jQuery UI position API.
   version: VERSION
   js:
     misc/position.js: {}
@@ -1170,6 +1168,8 @@ popperjs:
     - core/drupal.array.find
     - core/es6-promise
     - core/drupal.object.assign
+  deprecated: The "%library_id%" asset library is deprecated in Drupal 9.5.0 and will be removed in Drupal 10.0.0. There is no replacement. See https://www.drupal.org/node/3307518
+
 
 sortable:
   remote: https://github.com/SortableJS/Sortable

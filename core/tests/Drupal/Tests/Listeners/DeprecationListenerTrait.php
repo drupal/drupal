@@ -142,6 +142,7 @@ trait DeprecationListenerTrait {
       // Drupal date library deprecated.
       'The "core/drupal.date" asset library is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3258267',
       "Drupal\Core\Render\Element\Date::processDate() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3258267",
+      'The "core/popperjs" asset library is deprecated in Drupal 9.5.0 and will be removed in Drupal 10.0.0. There is no replacement. See https://www.drupal.org/node/3307518',
     ];
   }
 
