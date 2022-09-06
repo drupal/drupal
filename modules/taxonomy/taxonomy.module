@@ -2061,3 +2061,12 @@ function taxonomy_entity_query_alter($query) {
     unset($conditions['bundle']);
   }
 }
+
+/**
+ * Implements hook_file_download_access().
+ */
+function taxonomy_file_download_access($field, $entity_type, $entity) {
+  if ($entity_type == 'taxonomy_term') {
+    return user_access('access content');
+  }
+}
