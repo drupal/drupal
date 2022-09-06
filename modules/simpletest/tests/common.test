@@ -1197,6 +1197,10 @@ class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
     $redirect_301 = drupal_http_request(url('system-test/redirect/301', array('absolute' => TRUE)), array('max_redirects' => 0));
     $this->assertFalse(isset($redirect_301->redirect_code), 'drupal_http_request does not follow 301 redirect if max_redirects = 0.');
 
+    $redirect_invalid = drupal_http_request(url('system-test/redirect-protocol-relative', array('absolute' => TRUE)), array('max_redirects' => 1));
+    $this->assertEqual($redirect_invalid->code, -1002, format_string('301 redirect to protocol-relative URL returned with error code !error.', array('!error' => $redirect_invalid->error)));
+    $this->assertEqual($redirect_invalid->error, 'missing schema', format_string('301 redirect to protocol-relative URL returned with error message "!error".', array('!error' => $redirect_invalid->error)));
+
     $redirect_invalid = drupal_http_request(url('system-test/redirect-noscheme', array('absolute' => TRUE)), array('max_redirects' => 1));
     $this->assertEqual($redirect_invalid->code, -1002, format_string('301 redirect to invalid URL returned with error code !error.', array('!error' => $redirect_invalid->error)));
     $this->assertEqual($redirect_invalid->error, 'missing schema', format_string('301 redirect to invalid URL returned with error message "!error".', array('!error' => $redirect_invalid->error)));
@@ -1243,6 +1247,44 @@ class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
     // Request front page and check for matching Content-Language.
     $request = drupal_http_request(url('<front>', array('absolute' => TRUE)));
     $this->assertEqual($request->headers['content-language'], 'de', 'Content-Language HTTP header is German.');
+  }
+}
+
+/**
+ * Unit tests for processing of http redirects.
+ */
+class DrupalHTTPRedirectTest extends DrupalUnitTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Drupal HTTP redirect processing',
+      'description' => 'Perform unit tests on processing of http redirects.',
+      'group' => 'System',
+    );
+  }
+
+  public function testHttpsDowngrade() {
+    $url = 'https://example.com/foo';
+    $location = 'http://example.com/bar';
+    $this->assertTrue(_drupal_should_strip_sensitive_headers_on_http_redirect($url, $location), 'Sensitive headers are stripped on HTTPS downgrade.');
+  }
+
+  public function testNoHttpsDowngrade() {
+    $url = 'https://example.com/foo';
+    $location = 'https://example.com/bar';
+    $this->assertFalse(_drupal_should_strip_sensitive_headers_on_http_redirect($url, $location), 'Sensitive headers are not stripped without HTTPS downgrade.');
+  }
+
+  public function testHostChange() {
+    $url = 'https://example.com/foo';
+    $location = 'https://www.example.com/bar';
+    $this->assertTrue(_drupal_should_strip_sensitive_headers_on_http_redirect($url, $location), 'Sensitive headers are stripped on change of host.');
+  }
+
+  public function testNoHostChange() {
+    $url = 'http://example.com/foo';
+    $location = 'http://example.com/bar';
+    $this->assertFalse(_drupal_should_strip_sensitive_headers_on_http_redirect($url, $location), 'Sensitive headers are not stripped without change of host.');
   }
 }
 

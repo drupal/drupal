@@ -805,3 +805,19 @@ $conf['mail_display_name_site_name'] = TRUE;
  * access to all files within that scheme.
  */
 # $conf['file_additional_public_schemes'] = array('example');
+
+/**
+ * Sensitive request headers in drupal_http_request() when following a redirect.
+ *
+ * By default drupal_http_request() will strip sensitive request headers when
+ * following a redirect if the redirect location has a different http host to
+ * the original request, or if the scheme downgrades from https to http.
+ *
+ * These variables allow opting out of this behaviour. Careful consideration of
+ * the security implications of opting out is recommended.
+ *
+ * @see _drupal_should_strip_sensitive_headers_on_http_redirect()
+ * @see drupal_http_request()
+ */
+# $conf['drupal_http_request_strip_sensitive_headers_on_host_change'] = TRUE;
+# $conf['drupal_http_request_strip_sensitive_headers_on_https_downgrade'] = TRUE;

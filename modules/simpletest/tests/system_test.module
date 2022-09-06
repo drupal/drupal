@@ -45,6 +45,11 @@ function system_test_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
+  $items['system-test/redirect-protocol-relative'] = array(
+    'page callback' => 'system_test_redirect_protocol_relative',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
   $items['system-test/redirect-noparse'] = array(
     'page callback' => 'system_test_redirect_noparse',
     'access arguments' => array('access content'),
@@ -223,6 +228,11 @@ function system_test_set_header() {
 
 function system_test_redirect_noscheme() {
   header("Location: localhost/path", TRUE, 301);
+  exit;
+}
+
+function system_test_redirect_protocol_relative() {
+  header("Location: //example.com/path", TRUE, 301);
   exit;
 }
 
