@@ -11,9 +11,9 @@ libraries-override:
   core/drupal.dialog:
     js:
       misc/dialog/dialog.js: false
-  core/popperjs:
+  core/loadjs:
     js:
-      assets/vendor/popperjs/popper.min.js: js/popper.min.js
+      assets/vendor/loadjs/loadjs.min.js: js/loadjs.min.js
   theme_test/theme_stylesheets_override_and_remove_test:
     css:
       base:

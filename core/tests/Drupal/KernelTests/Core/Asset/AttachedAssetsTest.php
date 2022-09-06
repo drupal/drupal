@@ -396,14 +396,14 @@ class AttachedAssetsTest extends KernelTestBase {
    * @see common_test_library_info_alter()
    */
   public function testLibraryAlter() {
-    // Verify that common_test altered the title of popperjs.
+    // Verify that common_test altered the title of loadjs.
     /** @var \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery */
     $library_discovery = \Drupal::service('library.discovery');
-    $library = $library_discovery->getLibraryByName('core', 'popperjs');
+    $library = $library_discovery->getLibraryByName('core', 'loadjs');
     $this->assertEquals('0.0', $library['version'], 'Registered libraries were altered.');
 
     // common_test_library_info_alter() also added a dependency on jQuery Form.
-    $build['#attached']['library'][] = 'core/popperjs';
+    $build['#attached']['library'][] = 'core/loadjs';
     $assets = AttachedAssets::createFromRenderArray($build);
     $js = $this->assetResolver->getJsAssets($assets, FALSE, \Drupal::languageManager()->getCurrentLanguage())[1];
     $js_render_array = \Drupal::service('asset.js.collection_renderer')->render($js);
@@ -439,8 +439,8 @@ class AttachedAssetsTest extends KernelTestBase {
   public function testLibraryNameConflicts() {
     /** @var \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery */
     $library_discovery = \Drupal::service('library.discovery');
-    $popperjs = $library_discovery->getLibraryByName('common_test', 'popperjs');
-    $this->assertEquals('0.1', $popperjs['version'], 'Alternative libraries can be added to the page.');
+    $loadjs = $library_discovery->getLibraryByName('common_test', 'loadjs');
+    $this->assertEquals('0.1', $loadjs['version'], 'Alternative libraries can be added to the page.');
   }
 
   /**

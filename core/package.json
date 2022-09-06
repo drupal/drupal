@@ -61,7 +61,6 @@
     "@ckeditor/ckeditor5-style": "~35.1.0",
     "@ckeditor/ckeditor5-table": "~35.1.0",
     "@drupal/once": "1.0.x",
-    "@popperjs/core": "2.11.x",
     "babel-plugin-add-header-comment": "^1.0.3",
     "backbone": "1.4.x",
     "chokidar": "^3.3.1",
