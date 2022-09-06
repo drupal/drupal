@@ -806,11 +806,9 @@ shepherd:
     assets/vendor/shepherd/shepherd.min.js: { minified: true }
 
 drupal.jquery.position:
-  # For most positioning needs, the core/popperjs library should be used. This
-  # is a modified version of jQuery UI position for that does not require any
-  # jQuery UI assets, only jQuery. It is provided by core for use with
-  # pre-existing libraries that expect the jQuery UI position API. Popperjs is
-  # recommended for any new uses.
+  # This is a modified version of jQuery UI position for that does not require
+  # any jQuery UI assets, only jQuery. It is provided by core for use with
+  # pre-existing libraries that expect the jQuery UI position API.
   version: VERSION
   js:
     misc/position.js: {}
@@ -855,15 +853,6 @@ picturefill:
   version: VERSION
   drupalSettings: {}
   deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
-
-popperjs:
-  version: "2.11.5"
-  license:
-    name: MIT
-    url: https://raw.githubusercontent.com/popperjs/popper-core/v2.11.5/LICENSE.md
-    gpl-compatible: true
-  js:
-    assets/vendor/popperjs/popper.min.js: { minified: true }
 
 sortable:
   remote: https://github.com/SortableJS/Sortable

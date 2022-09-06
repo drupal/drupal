@@ -127,14 +127,6 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       ],
     },
     {
-      pack: '@popperjs/core',
-      folder: 'popperjs',
-      files: [
-        { from: 'dist/umd/popper.min.js', to: 'popper.min.js' },
-        { from: 'dist/umd/popper.min.js.map', to: 'popper.min.js.map' },
-      ],
-    },
-    {
       pack: 'shepherd.js',
       folder: 'shepherd',
       files: [

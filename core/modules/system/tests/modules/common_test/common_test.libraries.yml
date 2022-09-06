@@ -1,7 +1,7 @@
-popperjs:
+loadjs:
   version: 0.1
   js:
-    assets/vendor/popperjs/popper.min.js: { }
+    assets/vendor/loadjs/loadjs.min.js: { }
 
 # Library to test CSS and JS file assets.
 files:

@@ -57,9 +57,9 @@ libraries-override:
     js:
       misc/displace.js: //my-server/my_theme/js/overridden.js
   # Use an absolute URI.
-  core/popperjs:
+  core/loadjs:
     js:
-      assets/vendor/popperjs/popper.min.js: http://example.com/my_theme/js/popper.min.js
+      assets/vendor/loadjs/loadjs.min.js: http://example.com/my_theme/js/loadjs.min.js
 
 regions:
   content: Content

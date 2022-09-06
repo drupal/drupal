@@ -971,7 +971,6 @@ plusthick
 poink
 pommes
 ponedjeljak
-popperjs
 porterstemmer
 português
 postbar
