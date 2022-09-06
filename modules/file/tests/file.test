@@ -389,6 +389,9 @@ class FileManagedFileElementTestCase extends FileFieldTestCase {
     $this->drupalGet('file/test');
     $this->assertFieldByXpath('//input[@name="files[nested_file]" and @size="13"]', NULL, 'The custom #size attribute is passed to the child upload element.');
 
+    // Check that the file fields don't contain duplicate HTML IDs.
+    $this->assertNoDuplicateIds('There are no duplicate IDs');
+
     // Perform the tests with all permutations of $form['#tree'] and
     // $element['#extended'].
     foreach (array(0, 1) as $tree) {
