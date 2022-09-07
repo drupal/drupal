@@ -320,7 +320,7 @@ JS;
       ],
 
       // Edge case: `style`.
-      // @todo https://www.drupal.org/project/drupal/issues/3260857
+      // @todo https://www.drupal.org/project/drupal/issues/3304832
 
       // Edge case: `type` attribute on lists.
       // @todo Remove in https://www.drupal.org/project/drupal/issues/3274635.
