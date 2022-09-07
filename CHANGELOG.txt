@@ -1,5 +1,8 @@
-Drupal 7.xx, xxxx-xx-xx (development version)
+Drupal 7.92, 2022-09-07
 -----------------------
+- Improved support for PHP 8.1
+- Various security hardenings
+- Various bug fixes, optimizations and improvements
 
 Drupal 7.91, 2022-07-20
 -----------------------
