@@ -164,6 +164,21 @@ class PagerDefault extends SelectQueryExtender {
     }
     return $this;
   }
+
+  /**
+   * Gets the element ID for this pager query.
+   *
+   * The element is used to differentiate different pager queries on the same
+   * page so that they may be operated independently.
+   *
+   * @return
+   *   Element ID that is used to differentiate between different pager
+   *   queries.
+   */
+  public function getElement() {
+    $this->ensureElement();
+    return $this->element;
+  }
 }
 
 /**
