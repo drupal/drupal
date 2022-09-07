@@ -9,8 +9,8 @@ ckeditor5_essentials:
       - essentials.Essentials
   drupal:
     label: Essentials
-    library: ckeditor5/drupal.ckeditor5.internal
-    admin_library: ckeditor5/admin.internal
+    library: ckeditor5/internal.drupal.ckeditor5.htmlEngine
+    admin_library: ckeditor5/internal.admin.essentials
     toolbar_items:
       undo:
         label: Undo
@@ -25,8 +25,8 @@ ckeditor5_paragraph:
     plugins: [paragraph.Paragraph]
   drupal:
     label: Paragraph
-    library: core/ckeditor5.internal
-    admin_library: ckeditor5/admin.internal
+    library: core/ckeditor5.essentials
+    admin_library: ckeditor5/internal.admin.essentials
     elements:
       - <p>
 
@@ -48,8 +48,8 @@ ckeditor5_heading:
           - { model: 'heading6', view: 'h6', title: 'Heading 6', class: 'ck-heading_heading6' }
   drupal:
     label: Headings
-    library: core/ckeditor5.internal
-    admin_library: ckeditor5/admin.heading
+    library: core/ckeditor5.essentials
+    admin_library: ckeditor5/internal.admin.heading
     class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\Heading
     toolbar_items:
       heading:
@@ -68,7 +68,7 @@ ckeditor5_style:
   drupal:
     label: Style
     library: core/ckeditor5.style
-    admin_library: ckeditor5/admin.style
+    admin_library: ckeditor5/internal.admin.style
     class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style
     toolbar_items:
       style:
@@ -168,7 +168,7 @@ ckeditor5_specialCharacters:
   drupal:
     label: Special characters
     library: core/ckeditor5.specialCharacters
-    admin_library: ckeditor5/admin.specialCharacters
+    admin_library: ckeditor5/internal.admin.specialCharacters
     toolbar_items:
       specialCharacters:
         label: Special characters
@@ -188,7 +188,7 @@ ckeditor5_sourceEditing:
     # @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getProvidedElements()
     elements: []
     library: core/ckeditor5.sourceEditing
-    admin_library: ckeditor5/admin.sourceEditing
+    admin_library: ckeditor5/internal.admin.sourceEditing
     toolbar_items:
       sourceEditing:
         label: Source
@@ -199,7 +199,7 @@ ckeditor5_bold:
   drupal:
     label: Bold
     library: core/ckeditor5.basic
-    admin_library: ckeditor5/admin.basic
+    admin_library: ckeditor5/internal.admin.basic
     toolbar_items:
       bold:
         label: Bold
@@ -213,8 +213,8 @@ ckeditor5_emphasis:
       - drupalEmphasis.DrupalEmphasis
   drupal:
     label: Emphasis
-    library: ckeditor5/drupal.ckeditor5.emphasis
-    admin_library: ckeditor5/admin.basic
+    library: ckeditor5/internal.drupal.ckeditor5.emphasis
+    admin_library: ckeditor5/internal.admin.basic
     toolbar_items:
       italic:
         label: Italic
@@ -227,7 +227,7 @@ ckeditor5_underline:
   drupal:
     label: Underline
     library: core/ckeditor5.basic
-    admin_library: ckeditor5/admin.basic
+    admin_library: ckeditor5/internal.admin.basic
     toolbar_items:
       underline:
         label: Underline
@@ -240,7 +240,7 @@ ckeditor5_code:
   drupal:
     label: Code
     library: core/ckeditor5.basic
-    admin_library: ckeditor5/admin.basic
+    admin_library: ckeditor5/internal.admin.basic
     toolbar_items:
       code:
         label: Code
@@ -261,8 +261,8 @@ ckeditor5_codeBlock:
             name: pre
   drupal:
     label: Code Block
-    library: ckeditor5/drupal.ckeditor5.codeBlock
-    admin_library: ckeditor5/admin.codeBlock
+    library: ckeditor5/internal.drupal.ckeditor5.codeBlock
+    admin_library: ckeditor5/internal.admin.codeBlock
     toolbar_items:
       codeBlock:
         label: Code Block
@@ -277,7 +277,7 @@ ckeditor5_strikethrough:
   drupal:
     label: Strikethrough
     library: core/ckeditor5.basic
-    admin_library: ckeditor5/admin.basic
+    admin_library: ckeditor5/internal.admin.basic
     toolbar_items:
       strikethrough:
         label: Strikethrough
@@ -290,7 +290,7 @@ ckeditor5_subscript:
   drupal:
     label: Subscript
     library: core/ckeditor5.basic
-    admin_library: ckeditor5/admin.basic
+    admin_library: ckeditor5/internal.admin.basic
     toolbar_items:
       subscript:
         label: Subscript
@@ -303,7 +303,7 @@ ckeditor5_superscript:
   drupal:
     label: Superscript
     library: core/ckeditor5.basic
-    admin_library: ckeditor5/admin.basic
+    admin_library: ckeditor5/internal.admin.basic
     toolbar_items:
       superscript:
         label: Superscript
@@ -317,7 +317,7 @@ ckeditor5_blockquote:
   drupal:
     label: Block quote
     library: core/ckeditor5.blockquote
-    admin_library: ckeditor5/admin.blockquote
+    admin_library: ckeditor5/internal.admin.blockquote
     toolbar_items:
       blockQuote:
         label: Block quote
@@ -331,7 +331,7 @@ ckeditor5_link:
   drupal:
     label: Link
     library: core/ckeditor5.link
-    admin_library: ckeditor5/admin.link
+    admin_library: ckeditor5/internal.admin.link
     toolbar_items:
       link:
         label: Link
@@ -388,7 +388,7 @@ ckeditor5_list:
   drupal:
     label: List
     library: core/ckeditor5.list
-    admin_library: ckeditor5/admin.list
+    admin_library: ckeditor5/internal.admin.list
     class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\ListPlugin
     toolbar_items:
       bulletedList:
@@ -407,7 +407,7 @@ ckeditor5_horizontalLine:
   drupal:
     label: Horizontal line
     library: core/ckeditor5.horizontalLine
-    admin_library: ckeditor5/admin.horizontalLine
+    admin_library: ckeditor5/internal.admin.horizontalLine
     toolbar_items:
       horizontalLine:
         label: Horizontal line
@@ -432,7 +432,7 @@ ckeditor5_alignment:
   drupal:
     label: Alignment
     library: core/ckeditor5.alignment
-    admin_library: ckeditor5/admin.alignment
+    admin_library: ckeditor5/internal.admin.alignment
     class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\Alignment
     toolbar_items:
       alignment:
@@ -446,7 +446,7 @@ ckeditor5_removeFormat:
   drupal:
     label: Remove Format
     library: core/ckeditor5.removeFormat
-    admin_library: ckeditor5/admin.removeFormat
+    admin_library: ckeditor5/internal.admin.removeFormat
     toolbar_items:
       removeFormat:
         label: Remove Format
@@ -474,7 +474,7 @@ ckeditor5_table:
   drupal:
     label: Table
     library: core/ckeditor5.table
-    admin_library: ckeditor5/admin.table
+    admin_library: ckeditor5/internal.admin.table
     toolbar_items:
       insertTable:
         label: table
@@ -503,8 +503,8 @@ ckeditor5_image:
   drupal:
     label: Image
     class: \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Image
-    library: ckeditor5/drupal.ckeditor5.image
-    admin_library: ckeditor5/admin.image
+    library: ckeditor5/internal.drupal.ckeditor5.image
+    admin_library: ckeditor5/internal.admin.image
     elements:
       - <img>
       - <img src alt height width>
@@ -619,7 +619,7 @@ ckeditor5_indent:
     label: Indent
     elements: false
     library: core/ckeditor5.indent
-    admin_library: ckeditor5/admin.indent
+    admin_library: ckeditor5/internal.admin.indent
     toolbar_items:
       indent:
         label: Indent
@@ -631,8 +631,8 @@ ckeditor5_language:
     plugins: [language.TextPartLanguage]
   drupal:
     label: Language
-    library: ckeditor5/ckeditor5.language
-    admin_library: ckeditor5/admin.language
+    library: ckeditor5/internal.ckeditor5.language
+    admin_library: ckeditor5/internal.admin.language
     class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\Language
     toolbar_items:
       textPartLanguage:
@@ -656,7 +656,7 @@ media_media:
             invoke: true
   drupal:
     label: Media
-    library: ckeditor5/drupal.ckeditor5.media
+    library: ckeditor5/internal.drupal.ckeditor5.media
     class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media
     elements:
       - <drupal-media>
@@ -722,7 +722,7 @@ media_mediaAlign:
           - '|'
   drupal:
     label: Media align
-    library: ckeditor5/drupal.ckeditor5.mediaAlign
+    library: ckeditor5/internal.drupal.ckeditor5.mediaAlign
     elements:
       - <drupal-media data-align>
     conditions:
@@ -746,7 +746,7 @@ media_library_mediaLibrary:
   drupal:
     label: Media Library
     elements: false
-    admin_library: ckeditor5/admin.drupalmedia
+    admin_library: ckeditor5/internal.admin.drupalmedia
     class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\MediaLibrary
     library: editor/drupal.editor.dialog
     toolbar_items:

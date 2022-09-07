@@ -90,6 +90,10 @@ class StableLibraryOverrideTest extends StableLibraryOverrideTestBase {
         if (in_array("$extension/$library_name", $this->librariesToSkip)) {
           continue;
         }
+        // Skip internal libraries.
+        if (substr($library_name, 0, 9) === 'internal.') {
+          continue;
+        }
         $library_after = $libraries_after[$extension][$library_name];
 
         // Check that all the CSS assets are overridden.

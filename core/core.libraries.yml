@@ -69,7 +69,7 @@ ckeditor5.editorDecoupled:
     - core/ckeditor5
     - core/ckeditor5.htmlSupport
 
-ckeditor5.internal:
+ckeditor5.essentials:
   remote: https://github.com/ckeditor/ckeditor5
   version: "35.1.0"
   license:
