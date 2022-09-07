@@ -78,7 +78,7 @@
     "eslint-plugin-yml": "^0.14.0",
     "farbtastic": "https://github.com/mattfarina/farbtastic/archive/1.3u.tar.gz",
     "glob": "^7.1.2",
-    "jquery": "3.6.x",
+    "jquery": "~3.6.1",
     "jquery-form": "4.3.x",
     "jquery-ui": "1.13.x",
     "js-cookie": "3.0.x",
@@ -105,7 +105,7 @@
     "tabbable": "~6.0.0",
     "terser": "^5.14.2",
     "terser-webpack-plugin": "^5.3.3",
-    "underscore": "1.13.x",
+    "underscore": "~1.13.4",
     "webpack": "^5.51.1",
     "webpack-cli": "^4.4.0"
   },
