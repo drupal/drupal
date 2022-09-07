@@ -739,16 +739,14 @@ class MediaTest extends WebDriverTestBase {
 
     // Test that setting alt value to two double quotes will signal to the
     // MediaEmbed filter to unset the attribute on the media image field.
-    // We intentionally add a space space after the two double quotes to test
-    // the string is trimmed to two quotes.
+    // We intentionally add a space after the two double quotes to test that the
+    // string is trimmed to two quotes.
     $alt_override_input->setValue('"" ');
     $this->getBalloonButton('Save')->click();
     // Verify that the two double quote empty alt indicator ('""') set in
-    // the dialog has successfully resulted in a media image field with the
-    // alt attribute present but without a value.
-    // @todo Uncomment this in https://www.drupal.org/project/ckeditor5/issues/3206522.
-    // @codingStandardsIgnoreLine
-//    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media img[alt=""]'));
+    // the alt text form balloon has successfully resulted in a media image
+    // field with the alt attribute present but without a value.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '[data-media-embed-test-view-mode] img[alt=""]'));
 
     // Test that the downcast drupal-media element's alt attribute now has the
     // empty string indicator.

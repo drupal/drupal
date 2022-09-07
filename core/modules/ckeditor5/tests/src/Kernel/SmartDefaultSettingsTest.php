@@ -74,8 +74,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     'media',
     'media_library',
     'views',
-    // @todo Remove in https://www.drupal.org/project/drupal/issues/3263384
-    'ckeditor5_plugin_conditions_test',
     'dblog',
     'help',
   ];
