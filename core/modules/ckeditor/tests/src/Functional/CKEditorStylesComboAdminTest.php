@@ -10,6 +10,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests administration of the CKEditor StylesCombo plugin.
  *
  * @group ckeditor
+ * @group legacy
  */
 class CKEditorStylesComboAdminTest extends BrowserTestBase {
 

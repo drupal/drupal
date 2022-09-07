@@ -15,6 +15,7 @@ use Drupal\Tests\ckeditor\Traits\CKEditorTestTrait;
  * Tests the integration of CKEditor.
  *
  * @group ckeditor
+ * @group legacy
  */
 class CKEditorIntegrationTest extends WebDriverTestBase {
 

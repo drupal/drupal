@@ -10,6 +10,7 @@ use Drupal\KernelTests\KernelTestBase;
  * @coversDefaultClass \Drupal\ckeditor\Plugin\CKEditorPlugin\Internal
  *
  * @group ckeditor
+ * @group legacy
  */
 class InternalTest extends KernelTestBase {
 

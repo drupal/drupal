@@ -10,6 +10,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  * Tests delivery of CSS to CKEditor via AJAX.
  *
  * @group ckeditor
+ * @group legacy
  */
 class AjaxCssTest extends WebDriverTestBase {
 

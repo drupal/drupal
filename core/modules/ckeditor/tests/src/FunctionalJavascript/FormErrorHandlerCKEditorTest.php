@@ -14,6 +14,7 @@ use Drupal\node\Entity\NodeType;
  * Tests the inline errors fragment link to a CKEditor-enabled textarea.
  *
  * @group ckeditor
+ * @group legacy
  */
 class FormErrorHandlerCKEditorTest extends WebDriverTestBase {
 

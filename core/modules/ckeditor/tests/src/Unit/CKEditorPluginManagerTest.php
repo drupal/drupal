@@ -10,6 +10,7 @@ use Drupal\Tests\UnitTestCase;
  * @coversDefaultClass \Drupal\ckeditor\CKEditorPluginManager
  *
  * @group ckeditor
+ * @group legacy
  */
 class CKEditorPluginManagerTest extends UnitTestCase {
 

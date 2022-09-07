@@ -11,6 +11,7 @@ use Drupal\filter\Entity\FilterFormat;
  * Tests for the 'CKEditor' text editor plugin.
  *
  * @group ckeditor
+ * @group legacy
  */
 class CKEditorTest extends KernelTestBase {
 

@@ -10,6 +10,7 @@ use Drupal\filter\Entity\FilterFormat;
  * Tests different ways of enabling CKEditor plugins.
  *
  * @group ckeditor
+ * @group legacy
  */
 class CKEditorPluginManagerTest extends KernelTestBase {
 

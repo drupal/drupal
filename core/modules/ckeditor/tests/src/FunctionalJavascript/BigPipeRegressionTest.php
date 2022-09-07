@@ -16,6 +16,7 @@ use Drupal\Tests\node\Traits\NodeCreationTrait;
  * BigPipe regression test for CKEditor 4.
  *
  * @group legacy
+ * @group legacy
  */
 class BigPipeRegressionTest extends WebDriverTestBase {
 

@@ -12,6 +12,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests administration of CKEditor.
  *
  * @group ckeditor
+ * @group legacy
  */
 class CKEditorAdminTest extends BrowserTestBase {
 

@@ -10,6 +10,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests loading of CKEditor.
  *
  * @group ckeditor
+ * @group legacy
  */
 class CKEditorLoadingTest extends BrowserTestBase {
 

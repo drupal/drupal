@@ -15,6 +15,7 @@ use Symfony\Component\Validator\ConstraintViolation;
  * Ensures that CKEditor 5 can be used on the same page with CKEditor 4.
  *
  * @group ckeditor
+ * @group legacy
  * @internal
  */
 class CKEditor5CKEditor4Compatibility extends WebDriverTestBase {

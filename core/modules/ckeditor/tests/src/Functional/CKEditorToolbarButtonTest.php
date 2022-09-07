@@ -11,6 +11,7 @@ use Drupal\Component\Serialization\Json;
  * Tests CKEditor toolbar buttons when the language direction is RTL.
  *
  * @group ckeditor
+ * @group legacy
  */
 class CKEditorToolbarButtonTest extends BrowserTestBase {
 
