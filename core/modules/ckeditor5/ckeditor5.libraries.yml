@@ -1,18 +1,28 @@
-ckeditor5.language:
+# Internal libraries, do not depend on these.
+# CKEditor 5 has a much faster release cadence for major and minor releases
+# than Drupal. CKEditor 5 does not provide continued support for major or
+# minor releases; they almost never issue patch releases. Drupal therefore
+# has to keep its integration up-to-date with upstream. It is hence
+# impossible to provide "stable overrides", since the stability is not
+# controlled by Drupal, but by upstream.
+# Hence all CKEditor 5 asset libraries are considered internal.
+# @see https://ckeditor.com/docs/ckeditor5/latest/support/versioning-policy.html
+
+internal.ckeditor5.language:
   css:
     component:
       css/language.css: {}
   dependencies:
     - core/ckeditor5.language
 
-drupal.ckeditor5.internal:
+internal.drupal.ckeditor5.htmlEngine:
   js:
     js/build/drupalHtmlEngine.js: { minified: true }
   dependencies:
     - core/ckeditor5
-    - core/ckeditor5.internal
+    - core/ckeditor5.essentials
 
-drupal.ckeditor5:
+internal.drupal.ckeditor5:
   js:
     js/ckeditor5.js: {}
   css:
@@ -27,23 +37,23 @@ drupal.ckeditor5:
     - core/ckeditor5.editorDecoupled
     - core/ckeditor5
     - editor/drupal.editor
-    - ckeditor5/drupal.ckeditor5.stylesheets
+    - ckeditor5/internal.drupal.ckeditor5.stylesheets
     - core/drupalSettings
     - core/drupal.message
 
 # Library used for dynamically loading CKEditor 5 stylesheets from the default
 # front end theme.
 # @see ckeditor5_library_info_alter()
-drupal.ckeditor5.stylesheets:
+internal.drupal.ckeditor5.stylesheets:
   version: VERSION
   css: []
 
-drupal.ckeditor5.codeBlock:
+internal.drupal.ckeditor5.codeBlock:
   dependencies:
     - core/ckeditor5.codeBlock
     - core/ckeditor5.htmlSupport
 
-drupal.ckeditor5.image:
+internal.drupal.ckeditor5.image:
   js:
     js/build/drupalImage.js: { minified: true }
   css:
@@ -54,7 +64,7 @@ drupal.ckeditor5.image:
     - core/ckeditor5
     - core/ckeditor5.image
 
-drupal.ckeditor5.emphasis:
+internal.drupal.ckeditor5.emphasis:
   version: VERSION
   js:
     js/build/drupalEmphasis.js: { minified: true }
@@ -62,7 +72,7 @@ drupal.ckeditor5.emphasis:
     - core/ckeditor5
     - core/ckeditor5.basic
 
-drupal.ckeditor5.media:
+internal.drupal.ckeditor5.media:
   js:
     js/build/drupalMedia.js: { minified: true }
   css:
@@ -73,14 +83,14 @@ drupal.ckeditor5.media:
     - core/drupal
     - media/media_embed_ckeditor_theme
 
-drupal.ckeditor5.mediaAlign:
+internal.drupal.ckeditor5.mediaAlign:
   css:
     theme:
       css/media-alignment.css: { }
   dependencies:
-    - ckeditor5/drupal.ckeditor5.media
+    - ckeditor5/internal.drupal.ckeditor5.media
 
-drupal.ckeditor5.filter.admin:
+internal.drupal.ckeditor5.filter.admin:
   js:
     js/ckeditor5.filter.admin.js: {}
   dependencies:
@@ -89,7 +99,7 @@ drupal.ckeditor5.filter.admin:
     - core/drupal.ajax
     - core/drupalSettings
 
-admin:
+internal.admin:
   js:
     js/ckeditor5.admin.js: { }
   css:
@@ -101,79 +111,79 @@ admin:
     - core/jquery
     - core/once
 
-admin.specialCharacters:
+internal.admin.specialCharacters:
   css:
     theme:
       css/special-characters.css: { }
 
-admin.removeFormat:
+internal.admin.removeFormat:
   css:
     theme:
       css/remove-format.css: { }
 
-admin.internal:
+internal.admin.essentials:
   css:
     theme:
-      css/internal.admin.css: { }
+      css/essentials.admin.css: { }
 
-admin.basic:
+internal.admin.basic:
   css:
     theme:
       css/basic.admin.css: { }
 
-admin.blockquote:
+internal.admin.blockquote:
   css:
     theme:
       css/blockquote.admin.css: { }
 
-admin.link:
+internal.admin.link:
   css:
     theme:
       css/link.admin.css: { }
 
-admin.list:
+internal.admin.list:
   css:
     theme:
       css/list.admin.css: { }
 
-admin.heading:
+internal.admin.heading:
   css:
     theme:
       css/heading.admin.css: { }
   dependencies:
-    - core/ckeditor5.internal
+    - core/ckeditor5.essentials
 
-admin.horizontalLine:
+internal.admin.horizontalLine:
   css:
     theme:
       css/horizontal-line.admin.css: { }
 
-admin.alignment:
+internal.admin.alignment:
   css:
     theme:
       css/alignment.admin.css: { }
 
-admin.indent:
+internal.admin.indent:
   css:
     theme:
       css/indent.admin.css: { }
 
-admin.language:
+internal.admin.language:
   css:
     theme:
       css/language.admin.css: { }
 
-admin.drupalmedia:
+internal.admin.drupalmedia:
   css:
     theme:
       css/drupalmedia.admin.css: { }
 
-admin.sourceEditing:
+internal.admin.sourceEditing:
   css:
     theme:
       css/source-editing.admin.css: { }
 
-admin.style:
+internal.admin.style:
   js:
     js/ckeditor5.style.admin.js: { }
   css:
@@ -184,17 +194,17 @@ admin.style:
     - core/drupal
     - core/drupal.vertical-tabs
 
-admin.table:
+internal.admin.table:
   css:
     theme:
       css/table.admin.css: { }
 
-admin.codeBlock:
+internal.admin.codeBlock:
   css:
     theme:
       css/code-block.admin.css: { }
 
-admin.image:
+internal.admin.image:
   css:
     theme:
       css/image.admin.css: { }
