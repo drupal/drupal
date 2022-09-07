@@ -125,8 +125,6 @@ class HTMLRestrictionsTest extends UnitTestCase {
       ['*' => ['foo' => ['a' => TRUE, 'b' => TRUE]]],
       NULL,
     ];
-    // @todo Nothing in Drupal core uses this ability, and no custom/contrib
-    //   module is known to use this. Therefore this is left for the future.
     yield 'VALID BUT NOT YET SUPPORTED: global attribute tag with attribute allowed, specific attribute values forbidden' => [
       ['*' => ['foo' => ['a' => FALSE, 'b' => FALSE]]],
       'The "*" HTML tag has attribute restriction "foo", but it is not an array of key-value pairs, with HTML tag attribute values as keys and TRUE as values.',
