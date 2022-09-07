@@ -110,7 +110,7 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
   public function getAdminLibraries(): array {
     $list = $this->mergeDefinitionValues('getAdminLibrary', $this->getDefinitions());
     // Include main admin library.
-    array_unshift($list, 'ckeditor5/admin');
+    array_unshift($list, 'ckeditor5/internal.admin');
     return $list;
   }
 
@@ -121,7 +121,7 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
     $list = $this->mergeDefinitionValues('getLibrary', $this->getEnabledDefinitions($editor));
     $list = array_unique($list);
     // Include main library.
-    array_unshift($list, 'ckeditor5/drupal.ckeditor5');
+    array_unshift($list, 'ckeditor5/internal.drupal.ckeditor5');
     sort($list);
     return $list;
   }
