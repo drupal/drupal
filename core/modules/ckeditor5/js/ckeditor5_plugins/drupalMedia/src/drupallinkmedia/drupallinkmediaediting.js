@@ -160,7 +160,7 @@ function editingDowncastMediaLink() {
             // element which makes caused re-render of the media preview, making
             // the media preview flicker once when media is unlinked.
             // @todo ensure that this doesn't cause flickering after
-            //   https://www.drupal.org/i/3246380 has been addressed.
+            //   https://www.drupal.org/i/3304834 has been addressed.
             writer.move(
               writer.createRangeIn(linkInMedia),
               writer.createPositionAt(mediaContainer, 0),
