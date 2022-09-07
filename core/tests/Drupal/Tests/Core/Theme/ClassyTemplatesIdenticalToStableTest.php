@@ -8,6 +8,9 @@ use Drupal\Tests\UnitTestCase;
  * Confirms that certain Classy templates have identical equivalents in Stable.
  *
  * @group Theme
+ * @group legacy
+ *
+ * @todo Remove in https://www.drupal.org/project/drupal/issues/3110137
  */
 class ClassyTemplatesIdenticalToStableTest extends UnitTestCase {
 
