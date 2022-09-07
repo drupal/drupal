@@ -381,6 +381,20 @@ class FileManagedFileElementTestCase extends FileFieldTestCase {
     );
   }
 
+  public function setUp() {
+    parent::setUp();
+
+    // Disable the displaying of errors, so that the AJAX responses are not
+    // contaminated with error messages about exceeding the maximum POST size.
+    $this->originalDisplayErrorsValue = ini_set('display_errors', '0');
+  }
+
+  public function tearDown() {
+    ini_set('display_errors', $this->originalDisplayErrorsValue);
+
+    parent::tearDown();
+  }
+
   /**
    * Tests the managed_file element type.
    */
@@ -472,6 +486,43 @@ class FileManagedFileElementTestCase extends FileFieldTestCase {
         }
       }
     }
+  }
+
+  /**
+   * Tests uploading a file that exceeds the maximum file size.
+   */
+  function testManagedFileExceedMaximumFileSize() {
+    $path = 'file/test/0/0';
+    $this->drupalGet($path);
+
+    // Create a test file that exceeds the maximum POST size with 1 kilobyte.
+    $post_max_size = $this->_postMaxSizeToInteger(ini_get('post_max_size'));
+    $filename = 'text-exceeded';
+    simpletest_generate_file($filename, ceil(($post_max_size + 1024) / 1024), 1024, 'text');
+    $uri = 'public://' . $filename . '.txt';
+    $input_base_name = 'file';
+    $edit = array('files[' . $input_base_name . ']' => drupal_realpath($uri));
+    $this->drupalPostAJAX(NULL, $edit, $input_base_name . '_upload_button');
+    $this->assertFieldByXpath('//input[@type="submit"]', t('Upload'), 'After uploading a file that exceeds the maximum file size, the "Upload" button is displayed.');
+    $this->drupalPost($path, array(), t('Save'));
+    $this->assertRaw(t('The file id is %fid.', array('%fid' => 0)), 'Submitted without a file.');
+  }
+
+  /**
+   * Converts php.ini post_max_size value to integer.
+   *
+   * @param $string
+   *   The value from php.ini.
+   *
+   * @return int
+   *   Converted value.
+   */
+  protected function _postMaxSizeToInteger($string) {
+    sscanf($string, '%u%c', $number, $suffix);
+    if (isset($suffix)) {
+      $number = $number * pow(1024, strpos(' KMG', strtoupper($suffix)));
+    }
+    return $number;
   }
 }
 
