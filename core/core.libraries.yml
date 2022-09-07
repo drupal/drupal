@@ -757,10 +757,10 @@ es6-promise:
 
 jquery:
   remote: https://github.com/jquery/jquery
-  version: "3.6.0"
+  version: "3.6.1"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/jquery/jquery/3.6.0/LICENSE.txt
+    url: https://raw.githubusercontent.com/jquery/jquery/3.6.1/LICENSE.txt
     gpl-compatible: true
   js:
     assets/vendor/jquery/jquery.min.js: { minified: true, weight: -20 }
@@ -891,10 +891,10 @@ internal.underscore:
   #  - https://www.drupal.org/project/drupal/issues/3204011
   #  - https://www.drupal.org/project/drupal/issues/3204015
   remote: https://github.com/jashkenas/underscore
-  version: "1.13.3"
+  version: "1.13.4"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/jashkenas/underscore/1.13.3/LICENSE
+    url: https://raw.githubusercontent.com/jashkenas/underscore/1.13.4/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/underscore/underscore-min.js: { weight: -20, minified: true }
