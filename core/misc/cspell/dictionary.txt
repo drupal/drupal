@@ -52,7 +52,6 @@ atsign
 attrval
 attrvals
 authless
-authz
 autocompletefocus
 autocompleteresponses
 autocompletesearch
@@ -75,7 +74,6 @@ autop
 autoplace
 autoplay
 autoreply
-autosave
 autosubmit
 autowire
 autowired
@@ -83,7 +81,6 @@ autowiring
 backlink
 backlinks
 backreferences
-backtraces
 bakeware
 bangpow
 barbar
@@ -110,7 +107,6 @@ behaviour
 bergmann
 berne
 bgblue
-bgcolor
 bggya
 bgred
 bigpipe
@@ -172,8 +168,6 @@ callout
 camelcase
 camelid
 camelids
-camelize
-camelized
 canonicalized
 canonicalizing
 canvastext
@@ -185,7 +179,6 @@ ccyymm
 ccyymmdd
 cette
 cfield
-chainable
 chainedfast
 changelist
 checkboxified
@@ -270,8 +263,6 @@ customly
 customrequest
 cweagans
 cádiz
-dasharray
-dashoffset
 databasefilename
 databasename
 datas
@@ -290,12 +281,9 @@ ddev
 dealerdirect
 deckard
 deconstructor
-deduplicated
-deduplicates
 defaultable
 defgroup
 delayable
-deletable
 deletedline
 deletee
 deleter
@@ -476,7 +464,6 @@ flipfit
 floatingspace
 foaf
 foat
-focusring
 fodg
 fodp
 fods
@@ -537,8 +524,6 @@ groupwise
 guzzlehttp
 gzipped
 hande
-hardcodes
-hardcoding
 harkonnen
 hasdata
 hasher
@@ -564,7 +549,6 @@ hookname
 horizontalrule
 hosters
 hostnames
-hreflang
 hreflangs
 hrefs
 htkey
@@ -675,7 +659,6 @@ lified
 lightninggreen
 linebreak
 linebreaks
-linecap
 linefeeds
 linkability
 linkback
@@ -703,7 +686,6 @@ loreming
 loremingipsum
 loremipsum
 loremipsumloremipsum
-lowercased
 lowlevel
 lowline
 lrdd
@@ -734,7 +716,6 @@ maxage
 maxdepth
 maximumred
 maxlifetime
-maxsize
 maynot
 mbytes
 mdhash
@@ -744,7 +725,6 @@ mediaimagetextalternativeui
 mediumint
 mediumtext
 membersonly
-menulist
 merhaba
 messagekey
 metainformation
@@ -768,7 +748,6 @@ minky
 minusthick
 missingkey
 missingkeys
-miterlimit
 mlfr
 mlid
 mlids
@@ -926,7 +905,6 @@ pagecache
 pagetop
 pageviews
 pagina
-pangram
 paramconverter
 parens
 parentlist
@@ -984,25 +962,15 @@ poweredby
 powriter
 prebar
 precache
-precompiled
 preconfigure
 preconfigured
 precreated
 predelete
-prefetches
-prefill
-prefilled
-prefilling
-prefills
 prefixsqlite
 prefoo
 preinstall
-preload
 preloadable
-preloads
 preorder
-prepended
-prepending
 prepopulate
 prepopulated
 prepopulates
@@ -1051,7 +1019,6 @@ qzzz
 ragdoll
 ralouphie
 rasterizable
-rasterize
 rasterized
 rasterizes
 rawurlencoded
@@ -1089,7 +1056,6 @@ replyto
 resave
 resaved
 resaving
-resizer
 restplugin
 restrictor
 restripe
@@ -1136,7 +1102,6 @@ screenreaders
 scriptable
 scrollbars
 searchdirs
-searchfield
 sebe
 secondcolumn
 seld
@@ -1260,12 +1225,10 @@ svgz
 svibanj
 swcf
 sxto
-symlinking
 synchronizable
 syrop
 szwr
 tabarnak
-tabbable
 tabbingmanager
 tabledrag
 tableheader
@@ -1335,7 +1298,6 @@ testwithtrailingslash
 textareas
 textboxes
 texte
-textfield
 textfields
 textfile
 textformat
@@ -1389,7 +1351,6 @@ trid
 troopal
 truecolor
 tsid
-tspan
 turbolinks
 tuvan
 twistie
@@ -1402,7 +1363,6 @@ typehints
 typemanager
 tzid
 uberawesome
-ui's
 uicrud
 uids
 ulwa
@@ -1418,7 +1378,6 @@ unbundleable
 unbustable
 uncacheable
 uncategorized
-unchecking
 unclickable
 uncollapsible
 unconfigured
@@ -1510,7 +1469,6 @@ versionless
 verygreatdrupalmodule
 vfsstream
 vibber
-vids
 viewmode
 viewports
 viewsviewfiles
@@ -1524,7 +1482,6 @@ waitfor
 wcprops
 webassert
 webcal
-webdriver
 webflo
 webfonts
 webheads
