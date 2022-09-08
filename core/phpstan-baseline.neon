@@ -1,11 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Function format_size\\(\\) should return Drupal\\\\Core\\\\StringTranslation\\\\TranslatableMarkup but return statement is missing\\.$#"
-			count: 1
-			path: includes/common.inc
-
-		-
 			message: "#^Function install_config_download_translations\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: includes/install.core.inc
@@ -476,11 +471,6 @@ parameters:
 			path: lib/Drupal/Core/Menu/MenuLinkManager.php
 
 		-
-			message: "#^Cannot unset offset 'options' on array\\{url\\: string\\|null\\}\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Render/Element/RenderElement.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: lib/Drupal/Core/Session/SessionHandler.php
@@ -584,16 +574,6 @@ parameters:
 			message: "#^Call to an undefined method Drupal\\\\Core\\\\Updater\\\\Updater\\:\\:getInstallDirectory\\(\\)\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Updater/Updater.php
-
-		-
-			message: "#^Cannot unset offset 'href' on array\\{type\\: 'button'\\}\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Utility/LinkGenerator.php
-
-		-
-			message: "#^Cannot unset offset 'hreflang' on array\\{type\\: 'button'\\}\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Utility/LinkGenerator.php
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\Core\\\\Validation\\\\ConstraintValidatorFactory\\:\\:\\$classResolver\\.$#"
@@ -1156,15 +1136,7 @@ parameters:
 			path: modules/migrate/tests/src/Kernel/MigrateTestBase.php
 
 		-
-			message: """
-				#^Cannot unset offset 'menu_ui' on array\\{system\\: 'finished\\:
-				  6\\:
-				   …', menu_link_content\\: 'finished\\:
-				  6\\:
-				   …', menu\\: 'finished\\:
-				  6\\:
-				   …'\\}\\.$#
-			"""
+			message: "#^Cannot unset offset 'menu_ui' on array\\{system\\: \"finished\\:\\\\n  6\\:\\\\n   …\", menu_link_content\\: \"finished\\:\\\\n  6\\:\\\\n   …\", menu\\: \"finished\\:\\\\n  6\\:\\\\n   …\"\\}\\.$#"
 			count: 1
 			path: modules/migrate_drupal/tests/src/Unit/MigrationStateUnitTest.php
 
@@ -1847,6 +1819,16 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/views/tests/src/Kernel/RenderCacheIntegrationTest.php
+
+		-
+			message: "#^Cannot unset offset mixed on array\\.$#"
+			count: 1
+			path: modules/views/views.theme.inc
+
+		-
+			message: "#^Cannot unset offset '\\#title' on array\\{\\#theme_wrappers\\: array\\{'container'\\}, \\#attributes\\: array\\{class\\: array\\{'scroll'\\}, data\\-drupal\\-views\\-scroll\\: true\\}\\}\\.$#"
+			count: 1
+			path: modules/views_ui/src/Form/Ajax/Display.php
 
 		-
 			message: "#^Method Drupal\\\\views_ui\\\\ViewEditForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
