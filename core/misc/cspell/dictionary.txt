@@ -93,7 +93,6 @@ basepath
 basestrings
 basetheme
 basicpage
-basicstyles
 bazbaz
 bazinga
 bazqux
@@ -316,7 +315,6 @@ deutscher
 devel
 deviantart
 dflt
-dialogcreate
 dialogsave
 diffchange
 differring
@@ -330,7 +328,6 @@ docroot
 docroots
 dolore
 dotenv
-doubleclick
 downcasting
 doxygen
 dragtable
@@ -358,32 +355,25 @@ drupalelementstyleui
 drupalget
 drupalhtmlbuilder
 drupalimage
-drupalimage's
-drupalimagecaption
 drupalin
 drupalism
 drupalisms
 drupallink
 drupalmedia
 drupalmediaediting
-drupalmedialibrary
 drupalmediatoolbar
 drupaltest
-drupalunlink
 druplicon
 drush
 drépal
-défaut
 détruire
 editables
-editdrupalimage
 editunblock
 eerste
 egroe
 egulias
 eins
 elbonia
-elementspath
 elems
 encapsed
 endapply
@@ -461,8 +451,6 @@ firstcolumn
 fixnull
 flickr
 flipfit
-floatingspace
-foaf
 foat
 fodg
 fodp
@@ -519,7 +507,6 @@ gripsmall
 groupable
 groupby
 groupname
-groupnames
 groupwise
 guzzlehttp
 gzipped
@@ -529,7 +516,6 @@ hasdata
 hasher
 hashmarks
 hateoas
-hbox
 heke
 heroless
 herpderp
@@ -537,7 +523,6 @@ herro
 heure
 heures
 hexcode
-hidpi
 hilited
 hinode
 hippopotamidae
@@ -546,7 +531,6 @@ hisue
 hoglet
 hola
 hookname
-horizontalrule
 hosters
 hostnames
 hreflangs
@@ -613,10 +597,6 @@ jssdk
 jumplinks
 juni
 junidecode
-justifyblock
-justifycenter
-justifyleft
-justifyright
 justinrainbow
 kakec
 kangarookitten
@@ -762,7 +742,6 @@ modulenarrow
 mojito
 montag
 monthnames
-moono
 mooooh
 mosie
 mostrar
@@ -911,8 +890,6 @@ parentlist
 parseable
 parsererror
 pastafazoul
-pastefromword
-pastetext
 pathauto
 pathnames
 pcre
@@ -1024,7 +1001,6 @@ rasterizes
 rawurlencoded
 readmore
 readonlydir
-realelement
 realise
 realpaths
 realword
@@ -1045,7 +1021,6 @@ regexes
 reindex
 reindexing
 reinject
-removeformat
 renderable
 renderables
 renderered
@@ -1109,11 +1084,9 @@ selectbox
 serviceform
 sess
 settingstray
-sharedspace
 shatner
 shorterthan
 shortlink
-showblocks
 siema
 silverlight
 silvie
@@ -1134,18 +1107,12 @@ smalldatetime
 somecompany
 somelinks
 somemodule
-someplugin
 someschema
 somethinggeneric
 sortablejs
-sourcearea
-sourcearea's
-sourcedialog
-sourcedialog's
 sourcedir
 spacebar
 spagna
-specialchar
 specialchars
 spiffiness
 splitbuttons
@@ -1161,7 +1128,6 @@ ssid
 stardivision
 starrrrr
 starterkit
-starterkit's
 starzzzz
 statuscode
 stdclass
@@ -1373,9 +1339,7 @@ unassigning
 unassigns
 unban
 unbans
-unbold
 unbundleable
-unbustable
 uncacheable
 uncategorized
 unclickable
@@ -1399,7 +1363,6 @@ uninstallation
 uninstallations
 uninstantiatable
 uninstantiated
-unitalicize
 unixepoch
 unixtimestamp
 unkeyed
@@ -1478,7 +1441,6 @@ vorige
 vous
 vxezb
 vxfbk
-waitfor
 wcprops
 webassert
 webcal

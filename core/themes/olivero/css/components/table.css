@@ -148,36 +148,8 @@
     border-bottom: 2px solid var(--color--primary-50);
     font-family: var(--font-sans);
     font-size: 0.875rem;
-    line-height: var(--sp)
-
-    /**
-     * Fixes for styles injected by CKEditor
-     */
+    line-height: var(--sp);
   }
-
-[dir="ltr"] .forum table th.text-align-left,[dir="ltr"]  .text-content table th.text-align-left,[dir="ltr"]  .views-table th.text-align-left,[dir="ltr"]  .draggable-table th.text-align-left {
-      text-align: left
-}
-
-[dir="rtl"] .forum table th.text-align-left,[dir="rtl"]  .text-content table th.text-align-left,[dir="rtl"]  .views-table th.text-align-left,[dir="rtl"]  .draggable-table th.text-align-left {
-      text-align: right
-}
-
-[dir="ltr"] .forum table th.text-align-right,[dir="ltr"]  .text-content table th.text-align-right,[dir="ltr"]  .views-table th.text-align-right,[dir="ltr"]  .draggable-table th.text-align-right {
-      text-align: right
-}
-
-[dir="rtl"] .forum table th.text-align-right,[dir="rtl"]  .text-content table th.text-align-right,[dir="rtl"]  .views-table th.text-align-right,[dir="rtl"]  .draggable-table th.text-align-right {
-      text-align: left
-}
-
-.forum table th.text-align-center, .text-content table th.text-align-center, .views-table th.text-align-center, .draggable-table th.text-align-center {
-      text-align: center;
-    }
-
-.forum table th.text-align-justify, .text-content table th.text-align-justify, .views-table th.text-align-justify, .draggable-table th.text-align-justify {
-      text-align: justify;
-    }
 
 .forum table td, .text-content table td, .views-table td, .draggable-table td {
     white-space: normal;

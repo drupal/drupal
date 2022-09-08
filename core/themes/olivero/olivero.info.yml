@@ -77,16 +77,5 @@ libraries-extend:
     - olivero/layout_discovery_section
   node/drupal.node.preview:
     - olivero/drupal.node.preview
-  core/ckeditor:
-    - olivero/cke-dialog
   content_moderation/content_moderation:
     - olivero/content_moderation
-ckeditor_stylesheets:
-  - css/base/fonts.css
-  - css/base/base.css
-  - css/components/embedded-media.css
-  - css/components/table.css
-  - css/components/text-content.css
-  - css/theme/ckeditor-frame.css
-
-ckeditor5-stylesheets: false

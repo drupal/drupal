@@ -1,5 +1,0 @@
-name: CKEditor test
-type: module
-description: Support module for the CKEditor module tests.
-package: Testing
-version: VERSION

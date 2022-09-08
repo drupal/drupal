@@ -478,7 +478,7 @@
 
 /**
  * By default, the dialog is too narrow to be usable.
- * @see Drupal.ckeditor.openDialog()
+ * @see Drupal.ckeditor5.openDialog()
  */
 .ui-dialog--narrow.media-library-widget-modal {
   max-width: 75%;

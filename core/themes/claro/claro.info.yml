@@ -105,12 +105,6 @@ libraries-override:
         css/views_ui.admin.theme.css: css/theme/views_ui.admin.theme.css
 
 libraries-extend:
-  ckeditor/drupal.ckeditor:
-    - claro/ckeditor-editor
-  ckeditor/drupal.ckeditor.admin:
-    - claro/ckeditor-admin
-  core/ckeditor:
-    - claro/ckeditor-dialog
   core/drupal.collapse:
     - claro/details-focus
   core/drupal.dialog:
@@ -159,14 +153,6 @@ libraries-extend:
     - claro/media_library.theme
   media_library/widget:
     - claro/media_library.theme
-
-ckeditor_stylesheets:
-  - css/base/elements.css
-  - css/base/typography.css
-  - css/theme/ckeditor-frame.css
-  - css/classy/components/media-embed-error.css
-
-ckeditor5-stylesheets: false
 
 regions:
   header: 'Header'

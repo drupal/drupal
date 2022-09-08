@@ -1,5 +1,0 @@
-ajax_css:
-  js:
-    js/ajax-css.js: {}
-  dependencies:
-    - ckeditor/drupal.ckeditor
