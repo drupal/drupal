@@ -1,4 +1,0 @@
-services:
-  plugin.manager.ckeditor.plugin:
-    class: Drupal\ckeditor\CKEditorPluginManager
-    parent: default_plugin_manager

@@ -108,11 +108,6 @@ Breakpoint
 Cache
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
 
-CKEditor
-- Henrik Danielsson 'TwoD' https://www.drupal.org/u/TwoD
-- Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
-- Marek 'mlewand' Lewandowski https://www.drupal.org/u/mlewand
-
 CKEditor 5
 - Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers

@@ -28,6 +28,3 @@ libraries-extend:
     - classy/media_library
   media_library/widget:
     - classy/media_library
-
-ckeditor_stylesheets:
-  - css/components/media-embed-error.css

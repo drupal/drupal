@@ -64,8 +64,7 @@ function editor_image_upload_settings_form(Editor $editor) {
     ];
   }
   // Set data- attributes with human-readable names for all possible stream
-  // wrappers, so that it can be used by the summary rendering of
-  // drupal.ckeditor.drupalimage.admin.
+  // wrappers, so that it can be used by the summary rendering of other code.
   foreach (\Drupal::service('stream_wrapper_manager')->getNames(StreamWrapperInterface::WRITE_VISIBLE) as $scheme => $name) {
     $form['scheme'][$scheme]['#attributes']['data-label'] = t('Storage: @name', ['@name' => $name]);
   }

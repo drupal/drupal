@@ -12,23 +12,6 @@ libraries-override:
       theme:
         css/block.admin.css: css/block/block.admin.css
 
-  ckeditor/drupal.ckeditor:
-    css:
-      state:
-        css/ckeditor.css: css/ckeditor/ckeditor.css
-  ckeditor/drupal.ckeditor.plugins.drupalimagecaption:
-    css:
-      component:
-        css/plugins/drupalimagecaption/ckeditor.drupalimagecaption.css: css/ckeditor/plugins/drupalimagecaption/ckeditor.drupalimagecaption.css
-  ckeditor/drupal.ckeditor.plugins.language:
-    css:
-      component:
-        css/plugins/language/ckeditor.language.css: css/ckeditor/plugins/language/ckeditor.language.css
-  ckeditor/drupal.ckeditor.admin:
-    css:
-      theme:
-        css/ckeditor.admin.css: css/ckeditor/ckeditor.admin.css
-
   color/admin:
     css:
       theme:

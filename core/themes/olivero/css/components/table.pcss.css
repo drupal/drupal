@@ -56,25 +56,6 @@
     font-family: var(--font-sans);
     font-size: 14px;
     line-height: var(--sp);
-
-    /**
-     * Fixes for styles injected by CKEditor
-     */
-    &.text-align-left {
-      text-align: start;
-    }
-
-    &.text-align-right {
-      text-align: end;
-    }
-
-    &.text-align-center {
-      text-align: center;
-    }
-
-    &.text-align-justify {
-      text-align: justify;
-    }
   }
 
   & td {
