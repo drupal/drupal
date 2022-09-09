@@ -81,7 +81,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-yml": "^0.14.0",
     "farbtastic": "https://github.com/mattfarina/farbtastic/archive/1.3u.tar.gz",
-    "glob": "^7.1.2",
+    "glob": "^8.0.3",
     "joyride": "https://github.com/zurb/joyride/archive/refs/heads/v2.1.tar.gz",
     "jquery": "~3.6.1",
     "jquery-form": "4.3.x",
