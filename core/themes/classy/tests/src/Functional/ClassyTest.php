@@ -8,6 +8,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests the classy theme.
  *
  * @group classy
+ * @group legacy
  */
 class ClassyTest extends BrowserTestBase {
 

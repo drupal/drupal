@@ -8,6 +8,7 @@ use Drupal\KernelTests\KernelTestBase;
  * Tests the Classy theme.
  *
  * @group classy
+ * @group legacy
  */
 class ClassyTest extends KernelTestBase {
 
