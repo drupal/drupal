@@ -3,7 +3,8 @@ ABOUT STABLE
 ------------
 
 Stable is the default base theme; it provides minimal markup and very few
-CSS classes. If you prefer more structured markup see the Classy base theme.
+CSS classes. If you prefer more structured markup see the starterkit theme
+generator.
 
 Stable allows core markup and styling to evolve by functioning as a backwards
 compatibility layer for themes against changes to core markup and CSS. If you

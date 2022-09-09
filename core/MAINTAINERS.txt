@@ -119,9 +119,6 @@ Claro
 - Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
 - Ben Mullins 'bnjmnm' https://www.drupal.org/u/bnjmnm
 
-Classy
-- David Hernandez 'davidhernandez' https://www.drupal.org/u/davidhernandez
-
 Comment
 - Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
 - Andrey Postnikov 'andypost' https://www.drupal.org/u/andypost

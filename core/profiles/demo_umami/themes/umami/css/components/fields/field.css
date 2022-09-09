@@ -10,6 +10,6 @@
 
 .field--label-inline .field__label,
 .field--label-inline .field__items {
-  /* Undo use of floats by classy, switch to flexbox */
+  /* Undo use of floats by base styles, switch to flexbox */
   float: none;
 }
