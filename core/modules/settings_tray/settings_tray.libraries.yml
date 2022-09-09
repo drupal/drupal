@@ -9,8 +9,7 @@ drupal.settings_tray:
       css/settings_tray.toolbar.css: {}
     theme:
       # @todo Set the group higher than CSS_AGGREGATE_THEME so that it overrides
-      #   both jQuery UI and Classy's dialog.css, remove in
-      #   https://www.drupal.org/node/1945262.
+      # jQuery UI's dialog.css, remove in https://www.drupal.org/node/1945262.
       css/settings_tray.theme.css: { group: 200 }
   dependencies:
     - core/jquery

@@ -106,16 +106,7 @@ function umami_form_search_block_form_alter(&$form, FormStateInterface $form_sta
  */
 function umami_preprocess_links__media_library_menu(array &$variables) {
   foreach ($variables['links'] as &$link) {
-    // This conditional exists because the media-library-menu__link class is
-    // currently added by Classy, but Umami will eventually not use Classy as a
-    // base theme.
-    // @todo remove conditional, keep class addition in
-    //   https://drupal.org/node/3110137
-    // @see https://www.drupal.org/node/3109287
-    // @see classy_preprocess_links__media_library_menu()
-    if (!isset($link['link']['#options']['attributes']['class']) || !in_array('media-library-menu__link', $link['link']['#options']['attributes']['class'])) {
-      $link['link']['#options']['attributes']['class'][] = 'media-library-menu__link';
-    }
+    $link['link']['#options']['attributes']['class'][] = 'media-library-menu__link';
   }
 }
 
@@ -128,16 +119,7 @@ function umami_form_alter(array &$form, FormStateInterface $form_state, $form_id
   $form_object = $form_state->getFormObject();
 
   if ($form_object instanceof ViewsForm && strpos($form_object->getBaseFormId(), 'views_form_media_library') === 0) {
-    // The conditional below exists because the media-library-views-form class
-    // is currently added by Classy, but Umami will eventually not use Classy as
-    // a base theme.
-    // @todo remove conditional, keep class addition in
-    //   https://drupal.org/node/3110137
-    // @see https://www.drupal.org/node/3109287
-    // @see classy_form_alter()
-    if (!isset($form['#attributes']['class']) || !in_array('media-library-views-form', $form['#attributes']['class'])) {
-      $form['#attributes']['class'][] = 'media-library-views-form';
-    }
+    $form['#attributes']['class'][] = 'media-library-views-form';
   }
 }
 

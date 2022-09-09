@@ -47,7 +47,7 @@
 /**
  * When a table row or a container-inline has a single form item, prevent it
  * from adding unnecessary extra spacing.
- * If it has multiple form items, allow spacing between them, overriding Classy.
+ * If it has multiple form items, allow spacing between them, overriding core.
  */
 
 tr .form-item,

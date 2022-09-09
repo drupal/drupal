@@ -1,6 +1,7 @@
 /**
  * @file
- * Classy theme overrides for the Media Embed CKEditor plugin.
+ * Theme overrides for the Media Embed CKEditor plugin previously provided by
+ * the now-removed Classy theme.
  */
 
 ((Drupal) => {

@@ -437,7 +437,6 @@ fieldlayout
 fieldlinks
 fieldnames
 fieldsets
-filecount
 filelist
 filemime
 filesort
