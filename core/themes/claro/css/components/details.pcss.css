@@ -316,11 +316,11 @@
  * Active has to be here for Firefox.
  * Merges standard collapse-processed selectors.
  */
-[open] > .claro-details__summary--accordion:not(:focus):not(:active)::after,
-[open] > .claro-details__summary--accordion-item:not(:focus):not(:active)::after,
+[open] > .claro-details__summary--accordion:not(:focus, :active)::after,
+[open] > .claro-details__summary--accordion-item:not(:focus, :active)::after,
 .collapse-processed[open] > .claro-details__summary--accordion .details-title:not(:focus)::after,
 .collapse-processed[open] > .claro-details__summary--accordion-item .details-title:not(:focus)::after,
-[open] > .claro-details__summary--vertical-tabs-item:not(:focus):not(:active)::after,
+[open] > .claro-details__summary--vertical-tabs-item:not(:focus, :active)::after,
 .collapse-processed[open] > .claro-details__summary--vertical-tabs-item .details-title:not(:focus)::after {
   opacity: 1;
   border: var(--details-summary-focus-border-size) solid var(--color-absolutezero);

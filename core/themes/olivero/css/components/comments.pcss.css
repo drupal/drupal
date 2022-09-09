@@ -183,7 +183,7 @@
 .indented {
   margin-inline-start: var(--comment-indentation);
 
-  & > .comment:not(:last-of-type):not(.has-children):before {
+  & > .comment:not(:last-of-type, .has-children):before {
     position: absolute;
     inset-block-start: var(--sp2);
     inset-inline-start: calc(-1 * var(--comment-indentation) - var(--sp)); /* Comment's padding-top */

@@ -311,23 +311,23 @@
   margin-right: var(--comment-indentation);
 }
 
-[dir="ltr"] .indented > .comment:not(:last-of-type):not(.has-children):before {
+[dir="ltr"] .indented > .comment:not(:last-of-type, .has-children):before {
     left: calc(-1 * var(--comment-indentation) - var(--sp));
 }
 
-[dir="rtl"] .indented > .comment:not(:last-of-type):not(.has-children):before {
+[dir="rtl"] .indented > .comment:not(:last-of-type, .has-children):before {
     right: calc(-1 * var(--comment-indentation) - var(--sp));
 }
 
-[dir="ltr"] .indented > .comment:not(:last-of-type):not(.has-children):before {
+[dir="ltr"] .indented > .comment:not(:last-of-type, .has-children):before {
     border-left: solid 1px var(--color--gray-95);
 }
 
-[dir="rtl"] .indented > .comment:not(:last-of-type):not(.has-children):before {
+[dir="rtl"] .indented > .comment:not(:last-of-type, .has-children):before {
     border-right: solid 1px var(--color--gray-95);
 }
 
-.indented > .comment:not(:last-of-type):not(.has-children):before {
+.indented > .comment:not(:last-of-type, .has-children):before {
     position: absolute;
     top: var(--sp2); /* Comment's padding-top */
     width: 0;
@@ -337,11 +337,11 @@
 
 @media (min-width: 43.75rem) {
 
-[dir="ltr"] .indented > .comment:not(:last-of-type):not(.has-children):before {
+[dir="ltr"] .indented > .comment:not(:last-of-type, .has-children):before {
       left: calc(-1 * var(--comment-indentation--md) + var(--sp));
   }
 
-[dir="rtl"] .indented > .comment:not(:last-of-type):not(.has-children):before {
+[dir="rtl"] .indented > .comment:not(:last-of-type, .has-children):before {
       right: calc(-1 * var(--comment-indentation--md) + var(--sp));
   }
     }
