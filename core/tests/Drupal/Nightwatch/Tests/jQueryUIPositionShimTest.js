@@ -823,7 +823,7 @@ module.exports = {
            * @return {{horizontal: (*|string), verticalOffset: number, vertical: (*|string), horizontalOffset: number}}
            *   The horizontal and vertical alignment and offset values for the element.
            *
-           * @see core/misc/position.es6.js
+           * @see core/misc/position.js
            */
           const parseOffset = (offset, element) => {
             const regexHorizontal = /left|center|right/;

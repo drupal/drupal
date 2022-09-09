@@ -30,7 +30,7 @@
  * By default, the Settings Tray shows any block's built-in form in the
  * off-canvas dialog.
  *
- * @see core/misc/dialog/off-canvas.es6.js
+ * @see core/misc/dialog/off-canvas.js
  *
  * However, many blocks would benefit from a tailored form which either:
  * - limits the form items displayed in the Settings Tray to only items that

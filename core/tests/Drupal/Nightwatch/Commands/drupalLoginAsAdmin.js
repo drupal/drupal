@@ -1,6 +1,6 @@
-import { execSync } from 'child_process';
-import { URL } from 'url';
-import { commandAsWebserver } from '../globals';
+const { execSync } = require('child_process');
+const { URL } = require('url');
+const { commandAsWebserver } = require('../globals');
 
 /**
  * Logs in as the admin user.

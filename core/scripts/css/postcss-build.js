@@ -5,9 +5,9 @@
  *
  * Run build:css with --file to only parse a specific file. Using the --check
  * flag build:css can be run to check if files are compiled correctly.
- * @example <caption>Only process misc/drupal.es6.js and misc/drupal.init.es6.js</caption
+ * @example <caption>Only process misc/drupal.pcss.css and misc/drupal.init.pcss.css</caption>
  * yarn run build:css -- --file misc/drupal.pcss.css --file misc/drupal.init.pcss.css
- * @example <caption>Check if all files have been compiled correctly</caption
+ * @example <caption>Check if all files have been compiled correctly</caption>
  * yarn run build:css -- --check
  *
  * @internal This file is part of the core CSS build process and is only
