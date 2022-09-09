@@ -787,10 +787,10 @@ internal.jquery.form:
 
 shepherd:
   remote: https://github.com/shipshapecode/shepherd
-  version: "9.1.0"
+  version: "10.0.1"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/shipshapecode/shepherd/v9.1.0/LICENSE
+    url: https://raw.githubusercontent.com/shipshapecode/shepherd/v10.0.1/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/shepherd/shepherd.min.js: { minified: true }

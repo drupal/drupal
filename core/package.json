@@ -87,7 +87,7 @@
     "postcss-url": "^8.0.0",
     "prettier": "^2.1.2",
     "raw-loader": "^4.0.2",
-    "shepherd.js": "9.1.x",
+    "shepherd.js": "~10.0.1",
     "sortablejs": "1.15.x",
     "stylelint": "^14.0.1",
     "stylelint-checkstyle-formatter": "^0.1.2",
