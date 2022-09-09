@@ -1,5 +1,5 @@
-import path from 'path';
-import glob from 'glob';
+const path = require('path');
+const glob = require('glob');
 
 // Find directories which have Nightwatch tests in them.
 const regex = /(.*\/?tests\/?.*\/Nightwatch)\/.*/g;

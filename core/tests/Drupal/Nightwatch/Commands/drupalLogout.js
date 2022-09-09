@@ -1,5 +1,5 @@
-import { execSync } from 'child_process';
-import { URL } from 'url';
+const { execSync } = require('child_process');
+const { URL } = require('url');
 
 /**
  * Logs out from a Drupal site.

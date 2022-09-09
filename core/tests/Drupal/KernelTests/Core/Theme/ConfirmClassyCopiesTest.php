@@ -151,7 +151,6 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
             'ui-dialog.css',
           ],
           'js' => [
-            'media_embed_ckeditor.theme.es6.js',
             'media_embed_ckeditor.theme.js',
           ],
           'images' => [
@@ -279,7 +278,6 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
             'ui-dialog.css',
           ],
           'js' => [
-            'media_embed_ckeditor.theme.es6.js',
             'media_embed_ckeditor.theme.js',
           ],
           'images' => [
@@ -418,8 +416,7 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
         'user.css' => '0ec6acc22567a7c9c228f04b5a97c711',
       ],
       'js' => [
-        'media_embed_ckeditor.theme.es6.js' => 'd9fa9e008aff8d4fb0401083bab0a1ad',
-        'media_embed_ckeditor.theme.js' => 'b2e705b4503be407a35692b272c7ed6a',
+        'media_embed_ckeditor.theme.js' => 'd9fa9e008aff8d4fb0401083bab0a1ad',
       ],
       'images' => [
         'application-octet-stream.png' => 'fef73511632890590b5ae0a13c99e4bf',

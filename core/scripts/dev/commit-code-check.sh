@@ -13,7 +13,6 @@
 # - PHPCS checks PHP and YAML files.
 # - PHPStan checks PHP files.
 # - ESLint checks JavaScript and YAML files.
-# - Checks .es6.js and .js files are equivalent.
 # - Stylelint checks CSS files.
 # - Checks .pcss.css and .css files are equivalent.
 
@@ -384,67 +383,17 @@ for FILE in $FILES; do
   ############################################################################
   ### JAVASCRIPT FILES
   ############################################################################
-  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.js$ ]] && [[ ! $FILE =~ ^core/tests/Drupal/Nightwatch ]] && [[ ! $FILE =~ /tests/src/Nightwatch/ ]] && [[ ! $FILE =~ ^core/modules/ckeditor5/js/ckeditor5_plugins ]]; then
-    # Work out the root name of the JavaScript so we can ensure that the ES6
-    # version has been compiled correctly.
-    if [[ $FILE =~ \.es6\.js$ ]]; then
-      BASENAME=${FILE%.es6.js}
-      COMPILE_CHECK=1
-    else
-      BASENAME=${FILE%.js}
-      # We only need to compile check if the .es6.js file is not also
-      # changing. This is because the compile check will occur for the
-      # .es6.js file. This might occur if the compile scripts have changed.
-      contains_element "$BASENAME.es6.js" "${FILES[@]}"
-      HASES6=$?
-      if [ "$HASES6" -ne "0" ]; then
-        COMPILE_CHECK=1
-      else
-        COMPILE_CHECK=0
-      fi
-    fi
-    if [[ "$COMPILE_CHECK" == "1" ]] && [[ -f "$TOP_LEVEL/$BASENAME.es6.js" ]]; then
-      cd "$TOP_LEVEL/core"
-      yarn run build:js --check --file "$TOP_LEVEL/$BASENAME.es6.js"
+  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.js$ ]]; then
+    # Check the coding standards.
+    if [[ -f ".eslintrc.passing.json" ]]; then
+      node ./node_modules/eslint/bin/eslint.js --quiet --config=.eslintrc.passing.json "$TOP_LEVEL/$FILE"
       CORRECTJS=$?
       if [ "$CORRECTJS" -ne "0" ]; then
-        # No need to write any output the yarn run command will do this for
-        # us.
-        STATUS=1
-      fi
-      # Check the coding standards.
-      if [[ -f ".eslintrc.passing.json" ]]; then
-        node ./node_modules/eslint/bin/eslint.js --quiet --config=.eslintrc.passing.json "$TOP_LEVEL/$BASENAME.es6.js"
-        CORRECTJS=$?
-        if [ "$CORRECTJS" -ne "0" ]; then
-          # No need to write any output the node command will do this for us.
-          STATUS=1
-        fi
-      fi
-      cd $TOP_LEVEL
-    else
-      # If there is no .es6.js file then there should be unless the .js is
-      # not really Drupal's.
-      if ! [[ "$FILE" =~ ^core/assets/vendor ]] && ! [[ "$FILE" =~ ^core/modules/ckeditor5/js/build ]] && ! [[ "$FILE" =~ ^core/scripts/js ]] && ! [[ "$FILE" =~ ^core/scripts/css ]] && ! [[ "$FILE" =~ webpack.config.js$ ]] && ! [[ -f "$TOP_LEVEL/$BASENAME.es6.js" ]] && ! [[ "$FILE" =~ core/modules/ckeditor5/tests/modules/ckeditor5_test/js/build/layercake.js ]]; then
-        printf "${red}FAILURE${reset} $FILE does not have a corresponding $BASENAME.es6.js\n"
+        # No need to write any output the node command will do this for us.
         STATUS=1
       fi
     fi
-  else
-    # Check coding standards of Nightwatch files.
-    if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.js$ ]]; then
-      cd "$TOP_LEVEL/core"
-      # Check the coding standards.
-      if [[ -f ".eslintrc.passing.json" ]]; then
-        node ./node_modules/eslint/bin/eslint.js --quiet --config=.eslintrc.passing.json "$TOP_LEVEL/$FILE"
-        CORRECTJS=$?
-        if [ "$CORRECTJS" -ne "0" ]; then
-          # No need to write any output the node command will do this for us.
-          STATUS=1
-        fi
-      fi
-      cd $TOP_LEVEL
-    fi
+    cd $TOP_LEVEL
   fi
 
   ############################################################################

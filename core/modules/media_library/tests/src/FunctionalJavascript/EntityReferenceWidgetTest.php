@@ -563,7 +563,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
    * {@inheritdoc}
    */
   protected function sortableUpdate($item, $from, $to = NULL) {
-    // See core/modules/media_library/js/media_library.widget.es6.js.
+    // See core/modules/media_library/js/media_library.widget.js.
     $script = <<<JS
 (function ($) {
     var selection = document.querySelectorAll('.js-media-library-selection');

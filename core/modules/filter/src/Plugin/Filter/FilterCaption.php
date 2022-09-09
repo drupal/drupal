@@ -95,7 +95,7 @@ class FilterCaption extends FilterBase implements ContainerFactoryPluginInterfac
         // content editor from adding a new caption. To allow for this we treat
         // a raw caption value of ' ' as valid and adding the wrapping figure
         // element.
-        // @see core/modules/media/js/plugins/drupalmedia/plugin.es6.js
+        // @see core/modules/media/js/plugins/drupalmedia/plugin.js
         if (mb_strlen($caption) === 0 && $raw_caption !== ' ') {
           continue;
         }

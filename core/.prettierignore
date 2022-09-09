@@ -1,2 +1,10 @@
-modules/locale/tests/locale_test.es6.js
+assets/vendor/**/*
+node_modules/**/*
+**/build/**/*
+**/js_test_files/**/*
+modules/locale/tests/locale_test.js
 *.yml
+
+# Temporary until they are brought up to standards
+scripts/**/*
+modules/ckeditor5/webpack.config.js
