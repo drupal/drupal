@@ -9,7 +9,7 @@ tour:
     - core/drupal
     # @todo Remove this in https://www.drupal.org/project/drupal/issues/3204011
     - core/internal.backbone
-    - core/shepherd
+    - core/internal.shepherd
     - tour/tour-styling
 
 tour-styling:
