@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\user\Kernel\Migrate\d6;
 
+use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
@@ -19,7 +20,43 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->executeMigrations(['d6_filter_format', 'd6_user_role']);
+    $this->startCollectingMessages();
+  }
+
+  /**
+   * Assert the logged migrate messages.
+   *
+   * @param string[][] $role_data
+   *   An array of role data keyed by the destination role id. The role data
+   *   contains the source role id, an array of valid permissions and an array
+   *   of invalid permissions.
+   * @param \Drupal\migrate\Plugin\MigrateIdMapInterface $id_map
+   *   The migration ID map plugin.
+   */
+  public function assertMessages(array $role_data, MigrateIdMapInterface $id_map) {
+    foreach ($id_map->getMessages() as $message) {
+      $permissions = implode("', '", $role_data[$message->dest_id]['invalid']);
+      $expected_message = "Permission(s) '" . $permissions . "' not found.";
+      $this->assertSame($expected_message, $message->message);
+      $this->assertSame(MigrationInterface::MESSAGE_WARNING, (int) $message->level);
+    }
+
+  }
+
+  /**
+   * Asserts there are no duplicate roles.
+   */
+  public function assertNoDuplicateRoles() {
+    $roles = [
+      'anonymous1',
+      'authenticated1',
+      'administrator1',
+      'migrate_test_role_11',
+      'migrate_test_role_21',
+      'migrate_test_role_3_that_is_longer_than_thirty_two_characters1',
+      'migrate_test_role_41',
+    ];
+    $this->assertEmpty(Role::loadMultiple($roles));
   }
 
   /**
@@ -40,7 +77,6 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
     /** @var \Drupal\user\RoleInterface $role */
     $role = Role::load($id);
     $this->assertInstanceOf(RoleInterface::class, $role);
-    sort($permissions);
     $this->assertSame($permissions, $role->getPermissions());
     $this->assertSame([[$id]], $id_map->lookupDestinationIds(['rid' => $lookupId]));
   }
@@ -49,81 +85,217 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
    * Helper function to test the migration of the user roles. The user roles
    * will be re-imported and the tests here will be repeated.
    *
+   * @param array $permissions
+   *   Contains the valid and invalid permissions.
    * @param \Drupal\migrate\Plugin\MigrateIdMapInterface $id_map
    *   The map table plugin.
    *
    * @internal
    */
-  protected function assertRoles(MigrateIdMapInterface $id_map): void {
+  protected function assertRoles(array $permissions, MigrateIdMapInterface $id_map): void {
+    foreach ($permissions as $rid => $datum) {
+      $this->assertRole($rid, $datum['valid'], $datum['rid'], $id_map);
+    }
+  }
 
-    // The permissions for each role are found in the two tables in the Drupal 6
-    // source database. One is the permission table and the other is the
-    // filter_format table.
-    $permissions = [
-      // From permission table.
-      'access content',
-      'migrate test anonymous permission',
-      // From filter_format tables.
-      'use text format filtered_html',
+  /**
+   * Data provider for user role migration tests.
+   */
+  public function providerTestUserRole() {
+    return [
+      'filter only' => [
+        'modules' => [],
+        'migrations' => [
+          'd6_filter_format',
+          'd6_user_role',
+        ],
+        'role_data' => [
+          'anonymous' => [
+            'rid' => '1',
+            'valid' => [
+              'access content',
+              'use text format filtered_html',
+            ],
+            'invalid' => [
+              'migrate test anonymous permission',
+            ],
+          ],
+          'authenticated' => [
+            'rid' => '2',
+            'valid' => [
+              'access content',
+              'use text format filtered_html',
+            ],
+            'invalid' => [
+              'access comments',
+              'migrate test authenticated permission',
+              'post comments',
+              'skip comment approval',
+            ],
+          ],
+          'migrate_test_role_1' => [
+            'rid' => '3',
+            'valid' => [
+              'use text format full_html',
+              'use text format php_code',
+            ],
+            'invalid' => [
+              'migrate test role 1 test permission',
+            ],
+          ],
+          'migrate_test_role_2' => [
+            'rid' => '4',
+            'valid' => [
+              'access content overview',
+              'administer nodes',
+              'use text format php_code',
+            ],
+            'invalid' => [
+              'administer contact forms',
+              'create forum content',
+              'delete any blog content',
+              'delete any forum content',
+              'delete own blog content',
+              'delete own forum content',
+              'edit any blog content',
+              'edit any forum content',
+              'edit own blog content',
+              'edit own forum content',
+              'migrate test role 2 test permission',
+              'skip comment approval',
+              'use PHP for settings',
+            ],
+          ],
+          'migrate_test_role_3_that_is_longer_than_thirty_two_characters' => [
+            'rid' => '5',
+            'valid' => [
+              'use text format php_code',
+            ],
+            'invalid' => [],
+          ],
+        ],
+      ],
+      'all dependent migrations' => [
+        'modules' => [
+          'block',
+          'block_content',
+          'comment',
+          'contact',
+          'config_translation',
+          'language',
+          'link',
+          'menu_ui',
+          'node',
+          'taxonomy',
+          'text',
+        ],
+        'migrations' => [
+          'language',
+          'd6_comment_type',
+          'block_content_type',
+          'contact_category',
+          'd6_filter_format',
+          'd6_taxonomy_vocabulary',
+          'd6_taxonomy_vocabulary_translation',
+          'd6_user_role',
+        ],
+        'role_data' => [
+          'anonymous' => [
+            'rid' => '1',
+            'valid' => [
+              'access content',
+              'use text format filtered_html',
+            ],
+            'invalid' => [
+              'migrate test anonymous permission',
+            ],
+          ],
+          'authenticated' => [
+            'rid' => '2',
+            'valid' => [
+              'access comments',
+              'access content',
+              'post comments',
+              'skip comment approval',
+              'use text format filtered_html',
+            ],
+            'invalid' => [
+              'migrate test authenticated permission',
+            ],
+          ],
+          'migrate_test_role_1' => [
+            'rid' => '3',
+            'valid' => [
+              'use text format full_html',
+              'use text format php_code',
+            ],
+            'invalid' => [
+              'migrate test role 1 test permission',
+            ],
+          ],
+          'migrate_test_role_2' => [
+            'rid' => '4',
+            'valid' => [
+              'access content overview',
+              'administer contact forms',
+              'administer nodes',
+              'create forum content',
+              'delete any forum content',
+              'delete own forum content',
+              'edit any forum content',
+              'edit own forum content',
+              'skip comment approval',
+              'use text format php_code',
+            ],
+            'invalid' => [
+              'delete any blog content',
+              'delete own blog content',
+              'edit any blog content',
+              'edit own blog content',
+              'migrate test role 2 test permission',
+              'use PHP for settings',
+            ],
+          ],
+          'migrate_test_role_3_that_is_longer_than_thirty_two_characters' => [
+            'rid' => '5',
+            'valid' => [
+              'use text format php_code',
+            ],
+            'invalid' => [],
+          ],
+        ],
+      ],
     ];
-    $this->assertRole('anonymous', $permissions, 1, $id_map);
-
-    $permissions = [
-      // From permission table.
-      'access comments',
-      'access content',
-      'migrate test authenticated permission',
-      'post comments',
-      'skip comment approval',
-      // From filter_format.
-      'use text format filtered_html',
-    ];
-    $this->assertRole('authenticated', $permissions, 2, $id_map);
-
-    $permissions = [
-      // From permission table.
-      'migrate test role 1 test permission',
-      // From filter format.
-      'use text format full_html',
-      'use text format php_code',
-    ];
-    $this->assertRole('migrate_test_role_1', $permissions, 3, $id_map);
-
-    $permissions = [
-      // From permission table.
-      'migrate test role 2 test permission',
-      'use PHP for settings',
-      'administer contact forms',
-      'skip comment approval',
-      'edit own blog content',
-      'edit any blog content',
-      'delete own blog content',
-      'delete any blog content',
-      'create forum content',
-      'delete any forum content',
-      'delete own forum content',
-      'edit any forum content',
-      'edit own forum content',
-      'administer nodes',
-      'access content overview',
-      // From filter format.
-      'use text format php_code',
-    ];
-    $this->assertRole('migrate_test_role_2', $permissions, 4, $id_map);
-
-    // The only permission for this role is a filter format.
-    $permissions = ['use text format php_code'];
-    $this->assertRole('migrate_test_role_3_that_is_longer_than_thirty_two_characters', $permissions, 5, $id_map);
   }
 
   /**
    * Tests user role migration.
+   *
+   * @param string[] $modules
+   *   A list of modules to install.
+   * @param string[] $migrations
+   *   A list of migrations to execute.
+   * @param string[][] $role_data
+   *   An array of role data keyed by the destination role id. The role data
+   *   contains the source role id, an array of valid permissions and an array
+   *   of invalid permissions.
+   *
+   * @dataProvider providerTestUserRole()
    */
-  public function testUserRole() {
+  public function testUserRole(array $modules, array $migrations, array $role_data) {
+    if ($modules) {
+      // Install modules that have migrations that may provide permissions.
+      \Drupal::service('module_installer')->install($modules);
+      $this->installEntitySchema('block_content');
+      $this->installConfig(['block_content', 'comment']);
+      $this->migrateContentTypes();
+    }
+    $this->executeMigrations($migrations);
     $id_map = $this->getMigration('d6_user_role')->getIdMap();
-    $this->assertRoles($id_map);
 
-    // Test there are no duplicated roles.
+    // After all the migrations are run, there are changes to the permissions.
+    $this->assertRoles($role_data, $id_map);
+
     $roles = [
       'anonymous1',
       'authenticated1',
@@ -133,6 +305,9 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
       'migrate_test_role_3_that_is_longer_than_thirty_two_characters1',
     ];
     $this->assertEmpty(Role::loadMultiple($roles));
+
+    $this->assertMessages($role_data, $id_map);
+    $this->assertSame(4, $id_map->messageCount());
 
     // Remove the map row for the migrate_test_role_1 role and rerun the
     // migration. This will re-import the migrate_test_role_1 role migration
@@ -157,11 +332,10 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
     $this->executeMigration('d6_user_role');
 
     // Test there are no duplicated roles.
-    $roles[] = 'migrate_test_role_41';
-    $this->assertEmpty(Role::loadMultiple($roles));
+    $this->assertNoDuplicateRoles();
 
     // Test that the existing roles have not changed.
-    $this->assertRoles($id_map);
+    $this->assertRoles($role_data, $id_map);
 
     // Test the migration of the new role, migrate_test_role_4.
     $permissions = ['access content'];
