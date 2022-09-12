@@ -28,7 +28,7 @@ class EmailConstraint extends Email {
    * {@inheritdoc}
    */
   public function validatedBy() {
-    return '\Symfony\Component\Validator\Constraints\EmailValidator';
+    return EmailValidator::class;
   }
 
 }
