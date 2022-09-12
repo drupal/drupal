@@ -132,8 +132,9 @@ class BreakpointManager extends DefaultPluginManager implements BreakpointManage
     if (!in_array('1x', $definition['multipliers'])) {
       $definition['multipliers'][] = '1x';
     }
-    // Ensure that multipliers are sorted correctly.
-    sort($definition['multipliers']);
+    // Ensure that multipliers are sorted numerically so 1x, 1.5x and 2x
+    // come out in that order instead of 1.5x, 1x, 2x.
+    sort($definition['multipliers'], SORT_NUMERIC);
   }
 
   /**

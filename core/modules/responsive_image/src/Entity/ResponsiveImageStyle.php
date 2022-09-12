@@ -3,7 +3,9 @@
 namespace Drupal\responsive_image\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\responsive_image\ResponsiveImageConfigUpdater;
 use Drupal\responsive_image\ResponsiveImageStyleInterface;
 
 /**
@@ -113,24 +115,51 @@ class ResponsiveImageStyle extends ConfigEntityBase implements ResponsiveImageSt
   /**
    * {@inheritdoc}
    */
+  public function preSave(EntityStorageInterface $storage) {
+    parent::preSave($storage);
+    $config_updater = \Drupal::classResolver(ResponsiveImageConfigUpdater::class);
+    $config_updater->orderMultipliersNumerically($this);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function addImageStyleMapping($breakpoint_id, $multiplier, array $image_style_mapping) {
     // If there is an existing mapping, overwrite it.
     foreach ($this->image_style_mappings as &$mapping) {
       if ($mapping['breakpoint_id'] === $breakpoint_id && $mapping['multiplier'] === $multiplier) {
-        $mapping = [
+        $mapping = $image_style_mapping + [
           'breakpoint_id' => $breakpoint_id,
           'multiplier' => $multiplier,
-        ] + $image_style_mapping;
-        $this->keyedImageStyleMappings = NULL;
+        ];
+        $this->sortMappings();
         return $this;
       }
     }
-    $this->image_style_mappings[] = [
+    $this->image_style_mappings[] = $image_style_mapping + [
       'breakpoint_id' => $breakpoint_id,
       'multiplier' => $multiplier,
-    ] + $image_style_mapping;
-    $this->keyedImageStyleMappings = NULL;
+    ];
+    $this->sortMappings();
     return $this;
+  }
+
+  /**
+   * Sort mappings by breakpoint ID and multiplier.
+   */
+  protected function sortMappings(): void {
+    $this->keyedImageStyleMappings = NULL;
+    $breakpoints = \Drupal::service('breakpoint.manager')->getBreakpointsByGroup($this->getBreakpointGroup());
+    if (empty($breakpoints)) {
+      return;
+    }
+    usort($this->image_style_mappings, static function (array $a, array $b) use ($breakpoints): int {
+      $breakpoint_a = $breakpoints[$a['breakpoint_id']] ?? NULL;
+      $breakpoint_b = $breakpoints[$b['breakpoint_id']] ?? NULL;
+      $first = ((float) mb_substr($a['multiplier'], 0, -1)) * 100;
+      $second = ((float) mb_substr($b['multiplier'], 0, -1)) * 100;
+      return [$breakpoint_b ? $breakpoint_b->getWeight() : 0, $first] <=> [$breakpoint_a ? $breakpoint_a->getWeight() : 0, $second];
+    });
   }
 
   /**
