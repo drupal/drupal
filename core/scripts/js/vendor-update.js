@@ -129,6 +129,7 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
     {
       pack: 'shepherd.js',
       folder: 'shepherd',
+      library: 'internal.shepherd',
       files: [
         { from: 'dist/js/shepherd.min.js', to: 'shepherd.min.js' },
         { from: 'dist/js/shepherd.min.js.map', to: 'shepherd.min.js.map' },
