@@ -35,13 +35,15 @@ process:
     - plugin: node_update_7008
     - plugin: flatten
     - plugin: filter_format_permission
-  # A special flag so we can migrate permissions that do not exist yet.
-  # @todo Remove in https://www.drupal.org/project/drupal/issues/2953111.
-  skip_missing_permission_deprecation:
-    plugin: default_value
-    default_value: true
 destination:
   plugin: entity:user_role
 migration_dependencies:
   required:
     - d6_filter_format
+  optional:
+    - block_content_type
+    - contact_category
+    - d6_comment_type
+    - d6_node_type
+    - d6_taxonomy_vocabulary
+    - d6_taxonomy_vocabulary_translation
