@@ -1,6 +1,6 @@
 /**
  * @file
- * Stable theme overrides for user password forms.
+ * Stable 9 theme overrides for user password forms.
  */
 
 ((Drupal) => {

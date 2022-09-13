@@ -2,9 +2,9 @@
 ABOUT STABLE 9
 --------------
 
-Stable allows core markup and styling to evolve by functioning as a backwards
+Stable 9 allows core markup and styling to evolve by functioning as a backwards
 compatibility layer for themes against changes to core markup and CSS. If you
-browse Stable's contents, you will find copies of all the Twig templates and
+browse Stable 9's contents, you will find copies of all the Twig templates and
 CSS files provided by core.
 
 Warning: Themes that decide to not use Stable 9 as a base theme will need

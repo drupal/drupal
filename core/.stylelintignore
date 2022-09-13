@@ -8,7 +8,5 @@ modules/layout_builder/css/**/*.css
 !modules/layout_builder/css/**/*.pcss.css
 modules/workspaces/css/**/*.css
 !modules/workspaces/css/**/*.pcss.css
-themes/stable/css/core/dialog/off-canvas.reset.css
-themes/stable/css/core/dialog/off-canvas.base.css
 themes/stable9/css/core/dialog/off-canvas.reset.css
 themes/stable9/css/core/dialog/off-canvas.base.css

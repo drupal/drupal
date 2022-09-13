@@ -225,7 +225,7 @@
                   // place, the 'next' button is focused here.
                   nextButton.focus();
 
-                  // When Stable or Stable 9 are part of the active theme, the
+                  // When Stable 9 is part of the active theme, the
                   // Drupal.tour.convertToJoyrideMarkup() function is available.
                   // This function converts Shepherd markup to Joyride markup,
                   // facilitating the use of the Shepherd library that is
