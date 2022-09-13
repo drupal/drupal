@@ -1,5 +1,5 @@
 name: Views test checkboxes theme
 type: theme
-base theme: stable
+base theme: stable9
 description: Theme for testing Views rendering of checkboxes.
 version: VERSION

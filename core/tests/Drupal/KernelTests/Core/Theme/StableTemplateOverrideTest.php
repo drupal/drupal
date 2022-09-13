@@ -10,6 +10,7 @@ use Drupal\KernelTests\KernelTestBase;
  * Tests Stable's template overrides.
  *
  * @group Theme
+ * @group legacy
  */
 class StableTemplateOverrideTest extends KernelTestBase {
 
