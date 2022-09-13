@@ -1,7 +1,0 @@
-<ul class="entity-moderation-form">
-  <li class="entity-moderation-form__item">{{ form.current }}</li>
-  <li class="entity-moderation-form__item">{{ form.new_state }}</li>
-  <li class="entity-moderation-form__item">{{ form.revision_log }}</li>
-  <li class="entity-moderation-form__item">{{ form.submit }}</li>
-</ul>
-{{ form|without('current', 'new_state', 'revision_log', 'submit') }}
