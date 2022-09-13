@@ -1,5 +1,5 @@
 name: Test Wild West
 type: theme
-description: A theme that doesn't use Stable as its base. It tests the wild west instead.
+description: A theme that doesn't use Stable 9 as its base. It tests the wild west instead.
 version: VERSION
 base theme: false

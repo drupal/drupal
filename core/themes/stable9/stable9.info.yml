@@ -73,7 +73,7 @@ libraries-override:
         misc/vertical-tabs.css: css/core/vertical-tabs.css
 
   # Load version 3.0.3 of normalize.css for backwards compatibility.
-  core/normalize: stable/normalize
+  core/normalize: stable9/normalize
 
   dblog/drupal.dblog:
     css:

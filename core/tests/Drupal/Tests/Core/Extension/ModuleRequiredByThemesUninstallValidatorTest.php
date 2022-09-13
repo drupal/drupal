@@ -49,8 +49,8 @@ class ModuleRequiredByThemesUninstallValidatorTest extends UnitTestCase {
    */
   public function testValidateNoThemeDependency() {
     $this->themeExtensionList->getAllInstalledInfo()->willReturn([
-      'stable' => [
-        'name' => 'Stable',
+      'stable9' => [
+        'name' => 'Stable 9',
         'dependencies' => [],
       ],
       'claro' => [
@@ -74,8 +74,8 @@ class ModuleRequiredByThemesUninstallValidatorTest extends UnitTestCase {
     $theme = 'one_theme';
     $theme_name = 'One Theme';
     $this->themeExtensionList->getAllInstalledInfo()->willReturn([
-      'stable' => [
-        'name' => 'Stable',
+      'stable9' => [
+        'name' => 'Stable 9',
         'dependencies' => [],
       ],
       'claro' => [
@@ -115,8 +115,8 @@ class ModuleRequiredByThemesUninstallValidatorTest extends UnitTestCase {
     $theme_name_1 = 'First Theme';
     $theme_name_2 = 'Second Theme';
     $this->themeExtensionList->getAllInstalledInfo()->willReturn([
-      'stable' => [
-        'name' => 'Stable',
+      'stable9' => [
+        'name' => 'Stable 9',
         'dependencies' => [],
       ],
       'claro' => [
