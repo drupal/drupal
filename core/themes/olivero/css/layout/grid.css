@@ -17,7 +17,7 @@
   grid-template-rows: 1fr;
   -ms-grid-columns: (minmax(0, 1fr))[6];
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  grid-column-gap: 1.125rem
+  grid-column-gap: 1.125rem;
 
   /* .grid-full classes nested 3 or more deep go full width. */
 }
@@ -31,7 +31,7 @@
 .grid-full {
     -ms-grid-columns: (minmax(0, 1fr))[14];
     grid-template-columns: repeat(14, minmax(0, 1fr));
-    grid-column-gap: 2.25rem
+    grid-column-gap: 2.25rem;
 }
   }
 
@@ -46,7 +46,7 @@
 .layout--content-narrow .grid-full,
 .layout--pass--content-narrow > * .grid-full {
     -ms-grid-columns: (minmax(0, 1fr))[ 12 ];
-    grid-template-columns: repeat(12, minmax(0, 1fr))
+    grid-template-columns: repeat(12, minmax(0, 1fr));
 }
   }
 
@@ -55,7 +55,7 @@
 .layout--content-narrow .grid-full,
 .layout--pass--content-narrow > * .grid-full {
     -ms-grid-columns: (minmax(0, 1fr))[ 8 ];
-    grid-template-columns: repeat(8, minmax(0, 1fr))
+    grid-template-columns: repeat(8, minmax(0, 1fr));
 }
   }
 
@@ -70,7 +70,7 @@
 .layout--content-medium .grid-full,
 .layout--pass--content-medium > * .grid-full {
     -ms-grid-columns: (minmax(0, 1fr))[ 12 ];
-    grid-template-columns: repeat(12, minmax(0, 1fr))
+    grid-template-columns: repeat(12, minmax(0, 1fr));
 }
   }
 
@@ -79,6 +79,6 @@
 .layout--content-medium .grid-full,
 .layout--pass--content-medium > * .grid-full {
     -ms-grid-columns: (minmax(0, 1fr))[ 10 ];
-    grid-template-columns: repeat(10, minmax(0, 1fr))
+    grid-template-columns: repeat(10, minmax(0, 1fr));
 }
   }

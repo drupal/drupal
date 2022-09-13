@@ -29,7 +29,7 @@
   color: #6e7172;
   font-size: 0.875rem;
   font-weight: 600;
-  line-height: 1.6
+  line-height: 1.6;
 }
 
 .field--tags__label:after {
@@ -39,7 +39,7 @@
 @media (min-width: 43.75rem) {
 
 .field--tags__label {
-    line-height: 2
+    line-height: 2;
 }
   }
 

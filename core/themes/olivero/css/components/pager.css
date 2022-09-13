@@ -54,14 +54,14 @@
   height: 2.8125rem;
   cursor: default;
   color: #6e7172;
-  background-color: #fff
+  background-color: #fff;
 }
 
 @media (min-width: 31.25rem) {
 
 .pager__item {
     width: 3.375rem;
-    height: 3.375rem
+    height: 3.375rem;
 }
   }
 
@@ -74,21 +74,19 @@
   background-color: #0d77b5;
 }
 
-.pager__item--control path {
-    /* IE11 Specific. */
-  }
+/* IE11 Specific. */
 
 @media (-ms-high-contrast: active) {
 
 .pager__item--control path {
-      fill: currentColor
+      fill: currentColor;
   }
     }
 
 @media (forced-colors: active) {
 
 .pager__item--control path {
-      fill: linktext
+      fill: linktext;
   }
     }
 

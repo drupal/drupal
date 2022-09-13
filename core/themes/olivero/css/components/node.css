@@ -16,7 +16,7 @@
   margin-bottom: 1.125rem;
   color: #6e7172;
   font-size: 0.875rem;
-  line-height: 1.125rem
+  line-height: 1.125rem;
 }
 
 .node__meta a {
@@ -26,16 +26,16 @@
 @media (min-width: 31.25rem) {
 
 .node__meta {
-    margin-bottom: 2.25rem
+    margin-bottom: 2.25rem;
 }
   }
 
 [dir="ltr"] .node__author-image img {
-  margin-right: 0.5625rem
+  margin-right: 0.5625rem;
 }
 
 [dir="rtl"] .node__author-image img {
-  margin-left: 0.5625rem
+  margin-left: 0.5625rem;
 }
 
 .node__author-image img {
@@ -54,7 +54,7 @@
     background-image: linear-gradient(#2494db, #2494db); /* Two values are needed for IE11 support. */
     background-repeat: no-repeat;
     background-position: bottom left; /* LTR */
-    background-size: 0 0.1875rem
+    background-size: 0 0.1875rem;
   }
 
 .node__title a:hover,
@@ -67,13 +67,13 @@
 }
 
 .node__content {
-  padding-bottom: 1.6875rem
+  padding-bottom: 1.6875rem;
 }
 
 @media (min-width: 62.5rem) {
 
 .node__content {
-    padding-bottom: 3.375rem
+    padding-bottom: 3.375rem;
 }
   }
 

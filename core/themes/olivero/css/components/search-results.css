@@ -11,49 +11,49 @@
  */
 
 [dir="ltr"] .search-results {
-  padding-left: 0
+  padding-left: 0;
 }
 
 [dir="rtl"] .search-results {
-  padding-right: 0
+  padding-right: 0;
 }
 
 [dir="ltr"] .search-results {
-  padding-right: 0
+  padding-right: 0;
 }
 
 [dir="rtl"] .search-results {
-  padding-left: 0
+  padding-left: 0;
 }
 
 .search-results {
   margin-bottom: 2.25rem;
   padding-top: 0;
   padding-bottom: 0;
-  list-style: none
+  list-style: none;
 }
 
 @media (min-width: 43.75rem) {
 
 .search-results {
-    margin-bottom: 3.375rem
+    margin-bottom: 3.375rem;
 }
   }
 
 [dir="ltr"] .search-result__title {
-  margin-left: 0
+  margin-left: 0;
 }
 
 [dir="rtl"] .search-result__title {
-  margin-right: 0
+  margin-right: 0;
 }
 
 [dir="ltr"] .search-result__title {
-  margin-right: 0
+  margin-right: 0;
 }
 
 [dir="rtl"] .search-result__title {
-  margin-left: 0
+  margin-left: 0;
 }
 
 .search-result__title {
@@ -61,7 +61,7 @@
   margin-bottom: 0;
   color: #0d1214;
   font-size: 1.25rem;
-  line-height: 1.6875rem
+  line-height: 1.6875rem;
 }
 
 .search-result__title a {
@@ -72,7 +72,7 @@
     background-image: linear-gradient(#2494db, #2494db); /* Two values are needed for IE11 support. */
     background-repeat: no-repeat;
     background-position: bottom left; /* LTR */
-    background-size: 0 0.1875rem
+    background-size: 0 0.1875rem;
   }
 
 .search-result__title a:hover {
@@ -84,7 +84,7 @@
 .search-result__title {
     margin-bottom: 1.125rem;
     font-size: 1.875rem;
-    line-height: 3.375rem
+    line-height: 3.375rem;
 }
   }
 
@@ -93,13 +93,13 @@
 }
 
 .search-result__snippet {
-  padding-bottom: 1.5625rem
+  padding-bottom: calc(1.6875rem - 2px);
 }
 
 @media (min-width: 62.5rem) {
 
 .search-result__snippet {
-    padding-bottom: 3.375rem
+    padding-bottom: 3.375rem;
 }
   }
 
@@ -109,7 +109,7 @@
   margin-bottom: 1.125rem;
   color: #6e7172;
   font-size: 0.875rem;
-  line-height: 1.125rem
+  line-height: 1.125rem;
 }
 
 .search-result__meta a {
@@ -119,7 +119,7 @@
 
 .search-results__item {
   position: relative; /* Anchor after pseudo-element. */
-  margin-bottom: 1.6875rem
+  margin-bottom: 1.6875rem;
 }
 
 .search-results__item:after {
@@ -139,6 +139,6 @@
 @media (min-width: 62.5rem) {
 
 .search-results__item {
-    margin-bottom: 3.375rem
+    margin-bottom: 3.375rem;
 }
   }

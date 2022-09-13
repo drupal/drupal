@@ -61,7 +61,7 @@
     padding-right: calc(1rem - 1px);
     background-image: none;
     -webkit-appearance: listbox;
-    appearance: listbox /* Default <select> appearance value for modern browsers. */
+    appearance: listbox; /* Default <select> appearance value for modern browsers. */
 
     /* Lets browser set <select> appearance to whatever the browser's default is. */
   }
@@ -70,7 +70,7 @@
   .form-element--type-select:focus,
   .form-element--type-select[disabled] {
       -webkit-appearance: revert;
-      appearance: revert
+      appearance: revert;
   }
     }
 }
@@ -81,7 +81,7 @@
   .form-element--type-select,
   .form-element--type-select:focus,
   .form-element--type-select[disabled] {
-    padding-right: calc(1rem - 1px)
+    padding-right: calc(1rem - 1px);
 
     /* Re-enable default chevron for Internet Explorer. */
   }

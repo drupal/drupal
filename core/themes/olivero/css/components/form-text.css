@@ -36,12 +36,12 @@ textarea {
   font-family: inherit;
   font-size: inherit;
   -webkit-appearance: none;
-  appearance: none
+  appearance: none;
 }
 
 [type="color"]:focus, [type="date"]:focus, [type="datetime-local"]:focus, [type="email"]:focus, [type="file"]:focus, [type="month"]:focus, [type="number"]:focus, [type="password"]:focus, [type="search"]:focus, [type="tel"]:focus, [type="text"]:focus, [type="time"]:focus, [type="url"]:focus, [type="week"]:focus, textarea:focus {
     border: solid 2px #2494db;
-    outline: solid 2px #2494db
+    outline: solid 2px #2494db;
   }
 
 @supports (outline-style: double) {
@@ -50,7 +50,7 @@ textarea {
       border-width: 1px;
       outline-width: 6px;
       outline-style: double;
-      outline-offset: -1px
+      outline-offset: -1px;
   }
     }
 
@@ -63,20 +63,20 @@ textarea {
     background-color: #f1f4f7;
   }
 
-[type="color"].error, [type="date"].error, [type="datetime-local"].error, [type="email"].error, [type="file"].error, [type="month"].error, [type="number"].error, [type="password"].error, [type="search"].error, [type="tel"].error, [type="text"].error, [type="time"].error, [type="url"].error, [type="week"].error, textarea.error {
-    border: solid 2px #e33f1e
+.error[type="color"], .error[type="date"], .error[type="datetime-local"], .error[type="email"], .error[type="file"], .error[type="month"], .error[type="number"], .error[type="password"], .error[type="search"], .error[type="tel"], .error[type="text"], .error[type="time"], .error[type="url"], .error[type="week"], textarea.error {
+    border: solid 2px #e33f1e;
   }
 
-[type="color"].error:focus, [type="date"].error:focus, [type="datetime-local"].error:focus, [type="email"].error:focus, [type="file"].error:focus, [type="month"].error:focus, [type="number"].error:focus, [type="password"].error:focus, [type="search"].error:focus, [type="tel"].error:focus, [type="text"].error:focus, [type="time"].error:focus, [type="url"].error:focus, [type="week"].error:focus, textarea.error:focus {
+.error[type="color"]:focus, .error[type="date"]:focus, .error[type="datetime-local"]:focus, .error[type="email"]:focus, .error[type="file"]:focus, .error[type="month"]:focus, .error[type="number"]:focus, .error[type="password"]:focus, .error[type="search"]:focus, .error[type="tel"]:focus, .error[type="text"]:focus, .error[type="time"]:focus, .error[type="url"]:focus, .error[type="week"]:focus, textarea.error:focus {
       outline-color: #e33f1e;
       outline-offset: -2px;
     }
 
-[type="color"].error + .ck-editor > .ck-editor__main, [type="date"].error + .ck-editor > .ck-editor__main, [type="datetime-local"].error + .ck-editor > .ck-editor__main, [type="email"].error + .ck-editor > .ck-editor__main, [type="file"].error + .ck-editor > .ck-editor__main, [type="month"].error + .ck-editor > .ck-editor__main, [type="number"].error + .ck-editor > .ck-editor__main, [type="password"].error + .ck-editor > .ck-editor__main, [type="search"].error + .ck-editor > .ck-editor__main, [type="tel"].error + .ck-editor > .ck-editor__main, [type="text"].error + .ck-editor > .ck-editor__main, [type="time"].error + .ck-editor > .ck-editor__main, [type="url"].error + .ck-editor > .ck-editor__main, [type="week"].error + .ck-editor > .ck-editor__main, textarea.error + .ck-editor > .ck-editor__main {
+.error[type="color"] + .ck-editor > .ck-editor__main, .error[type="date"] + .ck-editor > .ck-editor__main, .error[type="datetime-local"] + .ck-editor > .ck-editor__main, .error[type="email"] + .ck-editor > .ck-editor__main, .error[type="file"] + .ck-editor > .ck-editor__main, .error[type="month"] + .ck-editor > .ck-editor__main, .error[type="number"] + .ck-editor > .ck-editor__main, .error[type="password"] + .ck-editor > .ck-editor__main, .error[type="search"] + .ck-editor > .ck-editor__main, .error[type="tel"] + .ck-editor > .ck-editor__main, .error[type="text"] + .ck-editor > .ck-editor__main, .error[type="time"] + .ck-editor > .ck-editor__main, .error[type="url"] + .ck-editor > .ck-editor__main, .error[type="week"] + .ck-editor > .ck-editor__main, textarea.error + .ck-editor > .ck-editor__main {
       border: solid 2px #e33f1e;
     }
 
-[type="color"].form-element--small, [type="date"].form-element--small, [type="datetime-local"].form-element--small, [type="email"].form-element--small, [type="file"].form-element--small, [type="month"].form-element--small, [type="number"].form-element--small, [type="password"].form-element--small, [type="search"].form-element--small, [type="tel"].form-element--small, [type="text"].form-element--small, [type="time"].form-element--small, [type="url"].form-element--small, [type="week"].form-element--small, textarea.form-element--small {
+.form-element--small[type="color"], .form-element--small[type="date"], .form-element--small[type="datetime-local"], .form-element--small[type="email"], .form-element--small[type="file"], .form-element--small[type="month"], .form-element--small[type="number"], .form-element--small[type="password"], .form-element--small[type="search"], .form-element--small[type="tel"], .form-element--small[type="text"], .form-element--small[type="time"], .form-element--small[type="url"], .form-element--small[type="week"], textarea.form-element--small {
     min-height: 2.8125rem;
   }
 
@@ -97,28 +97,26 @@ textarea {
 [type="url"],
 [type="week"],
 textarea {
-    width: auto
+    width: auto;
 }
   }
 
-[type="date"] {
-  /* Ensure that date field isn't larger than other fields. */
-}
+/* Ensure that date field isn't larger than other fields. */
 
 [dir="ltr"] [type="date"]::-webkit-datetime-edit-fields-wrapper {
-    padding-left: 0
+    padding-left: 0;
 }
 
 [dir="rtl"] [type="date"]::-webkit-datetime-edit-fields-wrapper {
-    padding-right: 0
+    padding-right: 0;
 }
 
 [dir="ltr"] [type="date"]::-webkit-datetime-edit-fields-wrapper {
-    padding-right: 0
+    padding-right: 0;
 }
 
 [dir="rtl"] [type="date"]::-webkit-datetime-edit-fields-wrapper {
-    padding-left: 0
+    padding-left: 0;
 }
 
 [type="date"]::-webkit-datetime-edit-fields-wrapper {

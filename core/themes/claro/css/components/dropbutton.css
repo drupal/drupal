@@ -114,14 +114,17 @@
  */
 
 .dropbutton__toggle {
+  border: 1px solid transparent !important;
+}
+
+.dropbutton__toggle {
   position: absolute;
   z-index: 3;
   top: 0;
   right: 0; /* LTR */
   bottom: 0;
   width: 3rem;
-  height: 3rem;
-  border: 1px solid transparent !important; /* 1 */
+  height: 3rem; /* 1 */
   border-radius: 0 2px 2px 0; /* LTR */
   background: #d3d4d9;
   font-size: 1px; /* iOS Safari sets a minimum button-width based on font-size. */
@@ -232,14 +235,17 @@
  */
 
 .dropbutton__item:first-of-type > * {
+  border: 1px solid transparent !important;
+}
+
+.dropbutton__item:first-of-type > * {
   display: inline-block;
   margin: 0;
   padding: calc(1rem - 1px) calc(1.5rem - 1px);
   cursor: pointer;
   text-align: center;
   text-decoration: none;
-  color: #232429;
-  border: 1px solid transparent !important; /* 1 */
+  color: #232429; /* 1 */
   border-radius: 2px;
   background-color: #d3d4d9;
   font-size: 1rem;
@@ -357,11 +363,15 @@
 
 .dropbutton__item:first-of-type ~ .dropbutton__item > a,
 .dropbutton__item:first-of-type ~ .dropbutton__item > .button {
+  border: 1px solid transparent !important;
+}
+
+.dropbutton__item:first-of-type ~ .dropbutton__item > a,
+.dropbutton__item:first-of-type ~ .dropbutton__item > .button {
   position: relative;
   padding: calc(1rem - 1px);
   text-decoration: none;
-  color: #55565b;
-  border: 1px solid transparent !important; /* 1 */
+  color: #55565b; /* 1 */
   border-radius: 2px;
   background: #fff;
   box-shadow: 0;
@@ -423,6 +433,9 @@
 }
 
 .dropbutton__item:first-of-type ~ .dropbutton__item > *:focus {
-  border-color: #26a769 !important; /* 1 */
+  border-color: #26a769 !important;
+}
+
+.dropbutton__item:first-of-type ~ .dropbutton__item > *:focus { /* 1 */
   box-shadow: inset 0 0 0 1px #26a769, 0 0 0 1px #26a769;
 }

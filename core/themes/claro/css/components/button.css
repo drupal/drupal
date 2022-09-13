@@ -36,14 +36,17 @@
  */
 
 .button {
+  border: 1px solid transparent !important;
+}
+
+.button {
   display: inline-block;
   margin: 1rem 0.75rem 1rem 0; /* LTR */
   padding: calc(1rem - 1px) calc(1.5rem - 1px); /* 1 */
   cursor: pointer;
   text-align: center;
   text-decoration: none;
-  color: #232429;
-  border: 1px solid transparent !important;  /* 2 */
+  color: #232429;  /* 2 */
   border-radius: 2px;
   background-color: #d3d4d9;
   font-size: 1rem;

@@ -15,7 +15,7 @@
 }
 
 .node--view-mode-teaser .field {
-  margin-bottom: 1.125rem
+  margin-bottom: 1.125rem;
 }
 
 .node--view-mode-teaser .field:last-child {
@@ -25,7 +25,7 @@
 @media (min-width: 62.5rem) {
 
 .node--view-mode-teaser .field {
-    margin-bottom: 2.25rem
+    margin-bottom: 2.25rem;
 }
   }
 

@@ -16,7 +16,7 @@
    * Ensure mobile site header is always above other elements including
    * contextual links, quick-edit, and Tour.
    */
-  z-index: 101
+  z-index: 101;
 }
 
 @media (min-width: 75rem) {
@@ -24,7 +24,7 @@
 .site-header {
     /* Necessary to keep the content from jumping up when header transitions to fixed. */
     min-height: 11.25rem;
-    border-bottom: solid 1px transparent /* Will show in Windows high contrast mode. */
+    border-bottom: solid 1px transparent; /* Will show in Windows high contrast mode. */
 }
   }
 
@@ -41,7 +41,7 @@
 .site-header__fixable {
   display: flex;
   align-items: flex-end;
-  transition: all 0.5s
+  transition: all 0.5s;
 }
 
 @media (min-width: 75rem) {
@@ -57,17 +57,13 @@
       top: -4.5rem;
       max-width: 98.125rem;
     }
-  body:not(.is-always-mobile-nav) {
 
     /* Toolbar is fixed, and tray is either vertical or closed and horizontal. */
-  }
-      body:not(.is-always-mobile-nav).toolbar-vertical.toolbar-fixed .site-header__fixable.is-fixed, body:not(.is-always-mobile-nav).toolbar-horizontal.toolbar-fixed .site-header__fixable.is-fixed {
+      body.toolbar-vertical.toolbar-fixed:not(.is-always-mobile-nav) .site-header__fixable.is-fixed, body.toolbar-horizontal.toolbar-fixed:not(.is-always-mobile-nav) .site-header__fixable.is-fixed {
         top: -2.0625rem;
       }
-  body:not(.is-always-mobile-nav) {
     /* Toolbar is fixed, and tray is open and horizontal. */
-  }
-    body:not(.is-always-mobile-nav).toolbar-horizontal.toolbar-fixed.toolbar-tray-open .site-header__fixable.is-fixed {
+    body.toolbar-horizontal.toolbar-fixed.toolbar-tray-open:not(.is-always-mobile-nav) .site-header__fixable.is-fixed {
       top: 0.4375rem;
     }
 }
@@ -87,21 +83,21 @@
 @media (min-width: 75rem) {
 
 html.js body:not(.is-always-mobile-nav) .site-header__inner {
-    transition: opacity 0.3s, transform 0.3s, box-shadow 0.3s
+    transition: opacity 0.3s, transform 0.3s, box-shadow 0.3s;
 }
   }
 
 @media (min-width: 75rem) {
 
 .site-header__fixable.is-expanded .site-header__inner {
-    box-shadow: -36px 1px 36px rgba(0, 0, 0, 0.08) /* LTR */
+    box-shadow: -36px 1px 36px rgba(0, 0, 0, 0.08); /* LTR */
 }
   }
 
 @media (min-width: 75rem) {
 
 [dir="rtl"] .site-header__fixable.is-expanded .site-header__inner {
-    box-shadow: 36px 1px 36px rgba(0, 0, 0, 0.08)
+    box-shadow: 36px 1px 36px rgba(0, 0, 0, 0.08);
 }
   }
 
@@ -111,14 +107,14 @@ html.js body:not(.is-always-mobile-nav) .site-header__inner {
 
 body:not(.is-always-mobile-nav) .site-header__fixable.is-fixed:not(.is-expanded) .site-header__inner {
     transform: translateX(-101%); /* LTR */
-    opacity: 0
+    opacity: 0;
 }
   }
 
 @media (min-width: 75rem) {
 
 [dir="rtl"] body:not(.is-always-mobile-nav) .site-header__fixable.is-fixed:not(.is-expanded) .site-header__inner {
-    transform: translateX(101%)
+    transform: translateX(101%);
 }
   }
 

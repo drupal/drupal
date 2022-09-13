@@ -67,9 +67,9 @@
 }
 
 .tabs__link:focus {
-  min-height: calc(3rem + 2px);
+  min-height: calc(3.1875rem - 1px);
   margin: -1px;
-  padding-left: calc(1.5rem - 2px); /* LTR */
+  padding-left: calc(1.3125rem + 1px); /* LTR */
   text-decoration: none;
   color: #55565b;
   border: 3px solid #26a769;
@@ -79,7 +79,7 @@
 }
 
 [dir="rtl"] .tabs__link:focus {
-  padding-right: calc(1.5rem - 2px);
+  padding-right: calc(1.3125rem + 1px);
   padding-left: 1.5rem;
 }
 

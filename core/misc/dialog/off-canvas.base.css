@@ -274,7 +274,7 @@
 #drupal-off-canvas ol li {
   display: block;
   padding: 0.3125rem 0;
-  border-bottom: 1px solid #333
+  border-bottom: 1px solid #333;
 }
 
 #drupal-off-canvas ul li:last-child, #drupal-off-canvas ol li:last-child {
@@ -312,6 +312,9 @@
 
 #drupal-off-canvas .visually-hidden {
   position: absolute !important;
+}
+
+#drupal-off-canvas .visually-hidden {
   overflow: hidden;
   clip: rect(1px, 1px, 1px, 1px);
   width: 1px;
@@ -322,6 +325,10 @@
 #drupal-off-canvas .visually-hidden.focusable:active,
 #drupal-off-canvas .visually-hidden.focusable:focus {
   position: static !important;
+}
+
+#drupal-off-canvas .visually-hidden.focusable:active,
+#drupal-off-canvas .visually-hidden.focusable:focus {
   overflow: visible;
   clip: auto;
   width: auto;

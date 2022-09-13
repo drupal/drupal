@@ -5,28 +5,28 @@
  * @preserve
  */
 [dir="ltr"] .tabs {
-  margin-left: 0
+  margin-left: 0;
 }
 [dir="rtl"] .tabs {
-  margin-right: 0
+  margin-right: 0;
 }
 [dir="ltr"] .tabs {
-  margin-right: 0
+  margin-right: 0;
 }
 [dir="rtl"] .tabs {
-  margin-left: 0
+  margin-left: 0;
 }
 [dir="ltr"] .tabs {
-  padding-left: 0
+  padding-left: 0;
 }
 [dir="rtl"] .tabs {
-  padding-right: 0
+  padding-right: 0;
 }
 [dir="ltr"] .tabs {
-  padding-right: 0
+  padding-right: 0;
 }
 [dir="rtl"] .tabs {
-  padding-left: 0
+  padding-left: 0;
 }
 .tabs {
   display: flex;
@@ -36,18 +36,18 @@
   margin-bottom: 0;
   padding-top: 0;
   padding-bottom: 0;
-  list-style: none
+  list-style: none;
 }
 @media (min-width: 43.75rem) {
 .tabs {
     flex-direction: row;
-    flex-wrap: wrap
+    flex-wrap: wrap;
 }
   }
 .tabs__tab {
   display: none;
   margin: 0;
-  margin-bottom: -1px
+  margin-bottom: -1px;
 }
 .tabs__tab.is-active {
     display: flex;
@@ -56,7 +56,7 @@
 .tabs__tab {
     display: flex;
     margin: 0;
-    margin-bottom: -1px
+    margin-bottom: -1px;
 }
   }
 html:not(.js) .tabs__tab,
@@ -64,24 +64,24 @@ html:not(.js) .tabs__tab,
   display: flex;
 }
 .tabs--secondary .tabs__tab {
-  display: block
+  display: block;
 }
 @media (min-width: 43.75rem) {
 .tabs--secondary .tabs__tab {
-    display: flex
+    display: flex;
 }
   }
 [dir="ltr"] .tabs__link {
-  padding-left: 1.6875rem
+  padding-left: 1.6875rem;
 }
 [dir="rtl"] .tabs__link {
-  padding-right: 1.6875rem
+  padding-right: 1.6875rem;
 }
 [dir="ltr"] .tabs__link {
-  padding-right: 1.6875rem
+  padding-right: 1.6875rem;
 }
 [dir="rtl"] .tabs__link {
-  padding-left: 1.6875rem
+  padding-left: 1.6875rem;
 }
 .tabs__link {
   display: flex;
@@ -99,14 +99,14 @@ html:not(.js) .tabs__tab,
   font-size: 0.875rem;
 }
 .tabs--secondary .tabs__link {
-  text-transform: none
+  text-transform: none;
 }
 @media (min-width: 43.75rem) {
 .tabs--secondary .tabs__link {
     border-top-color: transparent;
     border-right-color: transparent;
     border-left-color: transparent;
-    background-color: transparent
+    background-color: transparent;
 }
   }
 .tabs__link:focus {
@@ -120,19 +120,19 @@ html:not(.js) .tabs__tab,
 .tabs__link.is-active {
   position: relative;
   color: #0d1214;
-  font-weight: 600
+  font-weight: 600;
 }
 [dir="ltr"] .tabs__link.is-active:after {
-    left: -1px
+    left: -1px;
 }
 [dir="rtl"] .tabs__link.is-active:after {
-    right: -1px
+    right: -1px;
 }
 [dir="ltr"] .tabs__link.is-active:after {
-    border-left: 6px solid #2494db
+    border-left: 0.375rem solid #2494db;
 }
 [dir="rtl"] .tabs__link.is-active:after {
-    border-right: 6px solid #2494db
+    border-right: 0.375rem solid #2494db;
 }
 .tabs__link.is-active:after {
     position: absolute;
@@ -142,34 +142,34 @@ html:not(.js) .tabs__tab,
   }
 @media (min-width: 43.75rem) {
     [dir="ltr"] .tabs__link.is-active:after {
-      left: 0
+      left: 0;
   }
     [dir="rtl"] .tabs__link.is-active:after {
-      right: 0
+      right: 0;
   }
     [dir="ltr"] .tabs__link.is-active:after {
-      border-left: 0
+      border-left: 0;
   }
     [dir="rtl"] .tabs__link.is-active:after {
-      border-right: 0
+      border-right: 0;
   }
     .tabs__link.is-active:after {
       width: 100%;
       height: auto;
-      border-top: 6px solid #2494db;
+      border-top: 0.375rem solid #2494db;
     }
   }
 [dir="ltr"] .tabs__trigger {
-  margin-left: -1px
+  margin-left: -1px;
 }
 [dir="rtl"] .tabs__trigger {
-  margin-right: -1px
+  margin-right: -1px;
 }
 [dir="ltr"] .tabs__trigger {
-  margin-right: 0
+  margin-right: 0;
 }
 [dir="rtl"] .tabs__trigger {
-  margin-left: 0
+  margin-left: 0;
 }
 .tabs__trigger {
   display: flex;
@@ -180,7 +180,7 @@ html:not(.js) .tabs__tab,
   margin-bottom: 0;
   cursor: pointer;
   border: solid 1px #e7edf1;
-  background-color: #f7f9fa
+  background-color: #f7f9fa;
 }
 .tabs__trigger:hover {
     background-color: #e7edf1;
@@ -192,7 +192,7 @@ html:not(.js) .tabs__tab,
   }
 @media (min-width: 43.75rem) {
 .tabs__trigger {
-    display: none
+    display: none;
 }
   }
 html:not(.js) .tabs__trigger {
@@ -203,20 +203,20 @@ html:not(.js) .tabs__trigger {
   display: block;
   width: 1.125rem;
   height: 0.625rem;
-  margin-top: -2px
+  margin-top: -2px;
 }
 [dir="ltr"] .tabs__trigger-icon > span {
-    left: 0
+    left: 0;
 }
 [dir="rtl"] .tabs__trigger-icon > span {
-    right: 0
+    right: 0;
 }
 .tabs__trigger-icon > span {
     position: absolute;
     display: block;
     width: 100%;
     transition: transform 0.2s, opacity 0.2s, top 0.2s;
-    border-top: solid 2px #2494db
+    border-top: solid 2px #2494db;
   }
 .tabs__trigger-icon > span:nth-child(1) {
       top: 0;

@@ -14,7 +14,7 @@
 .cke_editable {
   color: #313637;
   font-family: "Lora", "georgia", serif;
-  line-height: 1.6875rem
+  line-height: 1.6875rem;
 
   /*
     @todo
@@ -31,7 +31,7 @@
     -webkit-text-decoration-color: #0d77b5;
     text-decoration-color: #0d77b5;
     text-decoration-thickness: 2px;
-    word-wrap: break-word
+    word-wrap: break-word;
   }
 
 @supports (box-shadow: none) {
@@ -39,7 +39,7 @@
 .text-content a:not(.button), .cke_editable a:not(.button) {
       transition: box-shadow 0.3s cubic-bezier(0.55, 0.085, 0, 0.99);
       text-decoration: none;
-      box-shadow: inset 0 -2px 0 0 #2494db
+      box-shadow: inset 0 -2px 0 0 #2494db;
   }
 
       .text-content a:not(.button):hover, .cke_editable a:not(.button):hover {
@@ -55,7 +55,7 @@
 
 .text-content p, .cke_editable p {
     margin-top: 1.125rem;
-    margin-bottom: 1.125rem
+    margin-bottom: 1.125rem;
   }
 
 .text-content p:first-child, .cke_editable p:first-child {
@@ -70,7 +70,7 @@
 
 .text-content p, .cke_editable p {
       margin-top: 2.25rem;
-      margin-bottom: 2.25rem
+      margin-bottom: 2.25rem;
   }
     }
 
@@ -79,19 +79,19 @@
   }
 
 [dir="ltr"] .text-content pre code,[dir="ltr"]  .cke_editable pre code {
-    padding-left: 1.125rem
+    padding-left: 1.125rem;
 }
 
 [dir="rtl"] .text-content pre code,[dir="rtl"]  .cke_editable pre code {
-    padding-right: 1.125rem
+    padding-right: 1.125rem;
 }
 
 [dir="ltr"] .text-content pre code,[dir="ltr"]  .cke_editable pre code {
-    padding-right: 1.125rem
+    padding-right: 1.125rem;
 }
 
 [dir="rtl"] .text-content pre code,[dir="rtl"]  .cke_editable pre code {
-    padding-left: 1.125rem
+    padding-left: 1.125rem;
 }
 
 .text-content pre code, .cke_editable pre code {
@@ -103,27 +103,27 @@
   }
 
 [dir="ltr"] .text-content blockquote,[dir="ltr"]  .cke_editable blockquote {
-    margin-left: 0
+    margin-left: 0;
 }
 
 [dir="rtl"] .text-content blockquote,[dir="rtl"]  .cke_editable blockquote {
-    margin-right: 0
+    margin-right: 0;
 }
 
 [dir="ltr"] .text-content blockquote,[dir="ltr"]  .cke_editable blockquote {
-    margin-right: 0
+    margin-right: 0;
 }
 
 [dir="rtl"] .text-content blockquote,[dir="rtl"]  .cke_editable blockquote {
-    margin-left: 0
+    margin-left: 0;
 }
 
 [dir="ltr"] .text-content blockquote,[dir="ltr"]  .cke_editable blockquote {
-    padding-left: 2.25rem
+    padding-left: 2.25rem;
 }
 
 [dir="rtl"] .text-content blockquote,[dir="rtl"]  .cke_editable blockquote {
-    padding-right: 2.25rem
+    padding-right: 2.25rem;
 }
 
 .text-content blockquote, .cke_editable blockquote {
@@ -133,15 +133,15 @@
     letter-spacing: -0.01em;
     font-family: "Lora", "georgia", serif;
     font-size: 1.3125rem;
-    line-height: 2.25rem
+    line-height: 2.25rem;
   }
 
 [dir="ltr"] .text-content blockquote:before,[dir="ltr"]  .cke_editable blockquote:before {
-      left: 0
+      left: 0;
 }
 
 [dir="rtl"] .text-content blockquote:before,[dir="rtl"]  .cke_editable blockquote:before {
-      right: 0
+      right: 0;
 }
 
 .text-content blockquote:before, .cke_editable blockquote:before {
@@ -153,19 +153,19 @@
     }
 
 [dir="ltr"] .text-content blockquote:after,[dir="ltr"]  .cke_editable blockquote:after {
-      left: 0
+      left: 0;
 }
 
 [dir="rtl"] .text-content blockquote:after,[dir="rtl"]  .cke_editable blockquote:after {
-      right: 0
+      right: 0;
 }
 
 [dir="ltr"] .text-content blockquote:after,[dir="ltr"]  .cke_editable blockquote:after {
-      margin-left: 0.25rem
+      margin-left: 0.25rem;
 }
 
 [dir="rtl"] .text-content blockquote:after,[dir="rtl"]  .cke_editable blockquote:after {
-      margin-right: 0.25rem
+      margin-right: 0.25rem;
 }
 
 .text-content blockquote:after, .cke_editable blockquote:after {
@@ -181,7 +181,7 @@
 
 .text-content blockquote, .cke_editable blockquote {
       font-size: 2rem;
-      line-height: 3.375rem
+      line-height: 3.375rem;
   }
     }
 
@@ -189,7 +189,7 @@
 
 .text-content blockquote, .cke_editable blockquote {
       font-size: 2.5rem;
-      line-height: 3.9375rem
+      line-height: 3.9375rem;
   }
     }
 
@@ -198,7 +198,7 @@
 .text-content,
 .cke_editable {
     font-size: 1.125rem;
-    line-height: 2.25rem
+    line-height: 2.25rem;
 }
   }
 
@@ -207,7 +207,7 @@
  */
 
 .site-footer .text-content {
-  color: inherit
+  color: inherit;
 }
 
 .site-footer .text-content * {
@@ -217,7 +217,7 @@
 .site-footer .text-content a {
     text-decoration: underline;
     color: #fff;
-    box-shadow: none
+    box-shadow: none;
   }
 
 .site-footer .text-content a:hover {
@@ -234,6 +234,6 @@
 
 .region--sidebar .text-content blockquote {
     font-size: 1.5rem;
-    line-height: 2.25rem
+    line-height: 2.25rem;
 }
   }

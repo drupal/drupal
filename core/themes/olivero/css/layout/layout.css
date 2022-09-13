@@ -14,14 +14,14 @@
   width: 100%;
   max-width: 84.375rem;
   padding-left: 1.125rem;
-  padding-right: 1.125rem
+  padding-right: 1.125rem;
 }
 
 @media (min-width: 75rem) {
 
 .container {
     padding-left: 2.25rem;
-    padding-right: 2.25rem
+    padding-right: 2.25rem;
 }
   }
 
@@ -47,32 +47,32 @@
 .layout-main {
     display: flex;
     flex-direction: row-reverse;
-    flex-wrap: wrap
+    flex-wrap: wrap;
 }
   }
 
 @media (min-width: 75rem) {
 
 [dir="ltr"] .main-content {
-    margin-right: auto
+    margin-right: auto;
   }
 
 [dir="rtl"] .main-content {
-    margin-left: auto
+    margin-left: auto;
   }
 
 .main-content {
-    width: calc(100% - 5.625rem)
+    width: calc(100% - 5.625rem);
 }
   }
 
 .main-content__container {
-  padding-top: 3.375rem
+  padding-top: 3.375rem;
 }
 
 @media (min-width: 43.75rem) {
 
 .main-content__container {
-    padding-top: 5.625rem
+    padding-top: 5.625rem;
 }
   }

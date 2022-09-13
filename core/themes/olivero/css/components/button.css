@@ -11,19 +11,19 @@
  */
 
 [dir="ltr"] .button {
-  margin-left: 0
+  margin-left: 0;
 }
 
 [dir="rtl"] .button {
-  margin-right: 0
+  margin-right: 0;
 }
 
 [dir="ltr"] .button {
-  margin-right: 1.125rem
+  margin-right: 1.125rem;
 }
 
 [dir="rtl"] .button {
-  margin-left: 1.125rem
+  margin-left: 1.125rem;
 }
 
 .button {
@@ -47,7 +47,7 @@
   font-weight: 700;
   -webkit-appearance: none;
   appearance: none;
-  -webkit-font-smoothing: antialiased
+  -webkit-font-smoothing: antialiased;
 }
 
 .button:hover,
@@ -76,13 +76,10 @@
     border-color: #d7e1e8;
   }
 
-.button {
-
-  /*
+/*
     IE11 doesn't work properly on button elements so we only do
     inline-flex on modern browsers.
   */
-}
 
 @supports (display: inline-flex) {
 
@@ -95,26 +92,26 @@
     padding-bottom: 0;
     padding-left: 1.6875rem;
     padding-right: 1.6875rem;
-    line-height: 1.125rem
+    line-height: 1.125rem;
 }
   }
 
 /* No margin if is part of a menu. */
 
 [dir="ltr"] .menu .button {
-  margin-left: 0
+  margin-left: 0;
 }
 
 [dir="rtl"] .menu .button {
-  margin-right: 0
+  margin-right: 0;
 }
 
 [dir="ltr"] .menu .button {
-  margin-right: 0
+  margin-right: 0;
 }
 
 [dir="rtl"] .menu .button {
-  margin-left: 0
+  margin-left: 0;
 }
 
 .menu .button {
@@ -134,7 +131,7 @@
 
 .button--primary {
   color: #fff;
-  background-color: #0d77b5
+  background-color: #0d77b5;
 }
 
 .button--primary:hover,
@@ -157,23 +154,23 @@
 
 .button--icon-back {
   display: inline-flex;
-  align-items: center
+  align-items: center;
 }
 
 [dir="ltr"] .button--icon-back:before {
-    margin-right: 0.5em
+    margin-right: 0.5em;
 }
 
 [dir="rtl"] .button--icon-back:before {
-    margin-left: 0.5em
+    margin-left: 0.5em;
 }
 
 [dir="ltr"] .button--icon-back:before {
-    border-left: solid 2px currentColor
+    border-left: solid 2px currentColor;
 }
 
 [dir="rtl"] .button--icon-back:before {
-    border-right: solid 2px currentColor
+    border-right: solid 2px currentColor;
 }
 
 .button--icon-back:before {

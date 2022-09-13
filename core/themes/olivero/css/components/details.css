@@ -158,7 +158,7 @@
 
 .collapse-processed > .olivero-details__summary {
   padding-top: 0;
-  padding-bottom: 0
+  padding-bottom: 0;
 }
 
 .collapse-processed > .olivero-details__summary:before {
@@ -217,7 +217,7 @@
 /* Details content wrapper */
 
 .olivero-details__wrapper {
-  margin: 1.125rem
+  margin: 1.125rem;
 }
 
 @media (min-width: 62.5rem) {
@@ -240,7 +240,7 @@
 
 .olivero-details__wrapper {
     margin-top: 1.6875rem;
-    margin-bottom: 1.6875rem
+    margin-bottom: 1.6875rem;
 }
   }
 

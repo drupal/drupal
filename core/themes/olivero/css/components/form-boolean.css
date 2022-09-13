@@ -24,12 +24,12 @@ input[type="radio"] {
   background-position: 50% 50%;
   background-size: 1.125rem 1.125rem;
   -webkit-appearance: none;
-  appearance: none
+  appearance: none;
 }
 
 input[type="checkbox"]:focus, input[type="radio"]:focus {
     border: solid 2px #2494db;
-    outline: solid 2px #2494db
+    outline: solid 2px #2494db;
   }
 
 @supports (outline-style: double) {
@@ -38,7 +38,7 @@ input[type="checkbox"]:focus, input[type="radio"]:focus {
       border-width: 1px;
       outline-width: 6px;
       outline-style: double;
-      outline-offset: -1px
+      outline-offset: -1px;
   }
     }
 
@@ -47,7 +47,7 @@ input[type="checkbox"]:hover, input[type="radio"]:hover {
   }
 
 input[type="checkbox"][disabled], input[type="radio"][disabled] {
-    background-color: #f1f4f7
+    background-color: #f1f4f7;
   }
 
 input[type="checkbox"][disabled]:hover, input[type="radio"][disabled]:hover {
@@ -62,31 +62,27 @@ input[type="checkbox"]:checked, input[type="radio"]:checked {
     border-width: 2px;
   }
 
-input[type="checkbox"].error, input[type="radio"].error {
-    border: solid 2px #e33f1e
+input.error[type="checkbox"], input.error[type="radio"] {
+    border: solid 2px #e33f1e;
   }
 
-input[type="checkbox"].error:focus, input[type="radio"].error:focus {
+input.error[type="checkbox"]:focus, input.error[type="radio"]:focus {
       outline-color: #e33f1e;
       outline-offset: -2px;
     }
 
-input[type="checkbox"],
-input[type="radio"] {
+/* Specific pseudo-element to apply red borders for IE11 bool elements in case of error */
 
-  /* Specific pseudo-element to apply red borders for IE11 bool elements in case of error */
-}
-
-input[type="checkbox"].error::-ms-check, input[type="radio"].error::-ms-check {
+input.error[type="checkbox"]::-ms-check, input.error[type="radio"]::-ms-check {
     border: 1px solid #e33f1e;
   }
 
 [dir="ltr"] input[type="checkbox"] + label,[dir="ltr"]  input[type="radio"] + label {
-    padding-left: 0.5625rem
+    padding-left: 0.5625rem;
 }
 
 [dir="rtl"] input[type="checkbox"] + label,[dir="rtl"]  input[type="radio"] + label {
-    padding-right: 0.5625rem
+    padding-right: 0.5625rem;
 }
 
 input[type="checkbox"] + label, input[type="radio"] + label {
@@ -98,7 +94,7 @@ input[type="checkbox"]:checked {
   }
 
 input[type="radio"] {
-  border-radius: 50%
+  border-radius: 50%;
 }
 
 input[type="radio"]:checked {
@@ -113,7 +109,7 @@ input[type="radio"]:focus {
     box-shadow: 0 0 0 2px white, 0 0 0 4px #2494db;
   }
 
-input[type="radio"].error:focus {
+input.error[type="radio"]:focus {
     outline-color: transparent;
     box-shadow: 0 0 0 2px white, 0 0 0 4px #e33f1e;
   }

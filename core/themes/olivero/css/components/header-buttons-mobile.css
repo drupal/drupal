@@ -11,35 +11,35 @@
  */
 
 [dir="ltr"] .mobile-buttons {
-  margin-left: auto
+  margin-left: auto;
 }
 
 [dir="rtl"] .mobile-buttons {
-  margin-right: auto
+  margin-right: auto;
 }
 
 .mobile-buttons {
-  margin-top: 0.5625rem
+  margin-top: 0.5625rem;
 }
 
 @media (min-width: 31.25rem) {
 
 .mobile-buttons {
-    margin-top: 2.25rem
+    margin-top: 2.25rem;
 }
   }
 
 @media (min-width: 43.75rem) {
 
 .mobile-buttons {
-    margin-top: 4.5rem
+    margin-top: 4.5rem;
 }
   }
 
 @media (min-width: 75rem) {
 
 .mobile-buttons {
-    margin-top: 6.75rem
+    margin-top: 6.75rem;
 }
   }
 

@@ -29,7 +29,7 @@
   box-sizing: border-box;
   margin-top: 1rem;
   margin-bottom: 1rem;
-  padding: 1.5rem 1.5rem 2rem calc(1.5rem - 0.3125rem); /* LTR */
+  padding: 1.5rem 1.5rem 2rem 1.1875rem; /* LTR */
   color: #fff;
   border-width: 0 0 0 5px; /* LTR */
   border-style: solid;
@@ -39,7 +39,7 @@
 }
 
 [dir="rtl"] .messages {
-  padding-right: calc(1.5rem - 0.3125rem);
+  padding-right: 1.1875rem;
   padding-left: 1.5rem;
   border-right-width: 5px;
   border-left-width: 0;

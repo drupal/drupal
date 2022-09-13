@@ -22,15 +22,15 @@
   border-collapse: collapse;
   font-family: "metropolis", sans-serif;
   font-size: 1rem;
-  line-height: 1.6875rem
+  line-height: 1.6875rem;
 }
 
 [dir="ltr"] .forum table caption,[dir="ltr"]  .text-content table caption,[dir="ltr"]  .views-table caption,[dir="ltr"]  .draggable-table caption {
-    text-align: left
+    text-align: left;
 }
 
 [dir="rtl"] .forum table caption,[dir="rtl"]  .text-content table caption,[dir="rtl"]  .views-table caption,[dir="rtl"]  .draggable-table caption {
-    text-align: right
+    text-align: right;
 }
 
 .forum table caption, .text-content table caption, .views-table caption, .draggable-table caption {
@@ -47,56 +47,56 @@
       }
 
 [dir="ltr"] .forum table td,[dir="ltr"] 
-  .forum table th,[dir="ltr"] 
   .text-content table td,[dir="ltr"] 
-  .text-content table th,[dir="ltr"] 
   .views-table td,[dir="ltr"] 
-  .views-table th,[dir="ltr"] 
   .draggable-table td,[dir="ltr"] 
+  .forum table th,[dir="ltr"] 
+  .text-content table th,[dir="ltr"] 
+  .views-table th,[dir="ltr"] 
   .draggable-table th {
-    padding-left: 0
+    padding-left: 0;
 }
 
 [dir="rtl"] .forum table td,[dir="rtl"] 
-  .forum table th,[dir="rtl"] 
   .text-content table td,[dir="rtl"] 
-  .text-content table th,[dir="rtl"] 
   .views-table td,[dir="rtl"] 
-  .views-table th,[dir="rtl"] 
   .draggable-table td,[dir="rtl"] 
+  .forum table th,[dir="rtl"] 
+  .text-content table th,[dir="rtl"] 
+  .views-table th,[dir="rtl"] 
   .draggable-table th {
-    padding-right: 0
+    padding-right: 0;
 }
 
 [dir="ltr"] .forum table td,[dir="ltr"] 
-  .forum table th,[dir="ltr"] 
   .text-content table td,[dir="ltr"] 
-  .text-content table th,[dir="ltr"] 
   .views-table td,[dir="ltr"] 
-  .views-table th,[dir="ltr"] 
   .draggable-table td,[dir="ltr"] 
+  .forum table th,[dir="ltr"] 
+  .text-content table th,[dir="ltr"] 
+  .views-table th,[dir="ltr"] 
   .draggable-table th {
-    padding-right: 1.125rem
+    padding-right: 1.125rem;
 }
 
 [dir="rtl"] .forum table td,[dir="rtl"] 
-  .forum table th,[dir="rtl"] 
   .text-content table td,[dir="rtl"] 
-  .text-content table th,[dir="rtl"] 
   .views-table td,[dir="rtl"] 
-  .views-table th,[dir="rtl"] 
   .draggable-table td,[dir="rtl"] 
+  .forum table th,[dir="rtl"] 
+  .text-content table th,[dir="rtl"] 
+  .views-table th,[dir="rtl"] 
   .draggable-table th {
-    padding-left: 1.125rem
+    padding-left: 1.125rem;
 }
 
 .forum table td,
-  .forum table th,
   .text-content table td,
-  .text-content table th,
   .views-table td,
-  .views-table th,
   .draggable-table td,
+  .forum table th,
+  .text-content table th,
+  .views-table th,
   .draggable-table th {
     padding-top: 1.125rem;
     padding-bottom: 1.125rem;
@@ -104,27 +104,27 @@
   }
 
 [dir="ltr"] .forum table th,[dir="ltr"]  .text-content table th,[dir="ltr"]  .views-table th,[dir="ltr"]  .draggable-table th {
-    margin-left: 0
+    margin-left: 0;
 }
 
 [dir="rtl"] .forum table th,[dir="rtl"]  .text-content table th,[dir="rtl"]  .views-table th,[dir="rtl"]  .draggable-table th {
-    margin-right: 0
+    margin-right: 0;
 }
 
 [dir="ltr"] .forum table th,[dir="ltr"]  .text-content table th,[dir="ltr"]  .views-table th,[dir="ltr"]  .draggable-table th {
-    margin-right: 0
+    margin-right: 0;
 }
 
 [dir="rtl"] .forum table th,[dir="rtl"]  .text-content table th,[dir="rtl"]  .views-table th,[dir="rtl"]  .draggable-table th {
-    margin-left: 0
+    margin-left: 0;
 }
 
 [dir="ltr"] .forum table th,[dir="ltr"]  .text-content table th,[dir="ltr"]  .views-table th,[dir="ltr"]  .draggable-table th {
-    text-align: left
+    text-align: left;
 }
 
 [dir="rtl"] .forum table th,[dir="rtl"]  .text-content table th,[dir="rtl"]  .views-table th,[dir="rtl"]  .draggable-table th {
-    text-align: right
+    text-align: right;
 }
 
 .forum table th, .text-content table th, .views-table th, .draggable-table th {
@@ -135,7 +135,7 @@
     border-bottom: 2px solid #2494db;
     font-family: "metropolis", sans-serif;
     font-size: 0.875rem;
-    line-height: 1.125rem
+    line-height: 1.125rem;
 
     /**
      * Fixes for styles injected by CKEditor
@@ -143,19 +143,19 @@
   }
 
 [dir="ltr"] .forum table th.text-align-left,[dir="ltr"]  .text-content table th.text-align-left,[dir="ltr"]  .views-table th.text-align-left,[dir="ltr"]  .draggable-table th.text-align-left {
-      text-align: left
+      text-align: left;
 }
 
 [dir="rtl"] .forum table th.text-align-left,[dir="rtl"]  .text-content table th.text-align-left,[dir="rtl"]  .views-table th.text-align-left,[dir="rtl"]  .draggable-table th.text-align-left {
-      text-align: right
+      text-align: right;
 }
 
 [dir="ltr"] .forum table th.text-align-right,[dir="ltr"]  .text-content table th.text-align-right,[dir="ltr"]  .views-table th.text-align-right,[dir="ltr"]  .draggable-table th.text-align-right {
-      text-align: right
+      text-align: right;
 }
 
 [dir="rtl"] .forum table th.text-align-right,[dir="rtl"]  .text-content table th.text-align-right,[dir="rtl"]  .views-table th.text-align-right,[dir="rtl"]  .draggable-table th.text-align-right {
-      text-align: left
+      text-align: left;
 }
 
 .forum table th.text-align-center, .text-content table th.text-align-center, .views-table th.text-align-center, .draggable-table th.text-align-center {
@@ -172,12 +172,12 @@
   }
 
 .forum table th.checkbox,
-  .forum table td.checkbox,
   .text-content table th.checkbox,
-  .text-content table td.checkbox,
   .views-table th.checkbox,
-  .views-table td.checkbox,
   .draggable-table th.checkbox,
+  .forum table td.checkbox,
+  .text-content table td.checkbox,
+  .views-table td.checkbox,
   .draggable-table td.checkbox {
     text-align: center;
   }
@@ -197,7 +197,7 @@
 .sticky-header {
   z-index: 0;
   margin: 0;
-  border-bottom: 4px solid #2494db;
+  border-bottom: 0.25rem solid #2494db;
 }
 
 /* Properly align VBO checkboxes. */

@@ -28,13 +28,13 @@
   position: relative;
   width: 12.5rem;
   height: 1.6875rem;
-  border-radius: 0.1875rem
+  border-radius: 0.1875rem;
 }
 
 @supports (width: max-content) {
 
 .dropbutton-widget {
-    width: max-content
+    width: max-content;
 }
   }
 
@@ -90,7 +90,7 @@
   cursor: pointer;
   border-color: transparent;
   border-radius: 0 0.1875rem 0.1875rem 0; /* LTR */
-  background: #e3e3e5
+  background: #e3e3e5;
 }
 
 .dropbutton-toggle button:focus {
@@ -133,12 +133,12 @@
     padding: 0 0.5625rem;
     text-decoration: none;
     color: #313637;
-    font-weight: 600
+    font-weight: 600;
   }
 
 .dropbutton-action a:focus {
       border: solid 2px #0d77b5;
-      outline: 0
+      outline: 0;
 
       /* Negate specific IE rules. */
     }
@@ -148,7 +148,7 @@
 .dropbutton-action a:focus {
         border: 0;
         outline: solid 2px #0d77b5;
-        outline-offset: -1px /* Overlap parent container by 1px. */
+        outline-offset: -1px; /* Overlap parent container by 1px. */
     }
       }
 
@@ -175,7 +175,7 @@
   width: calc(100% + 1.6875rem);
   border-right: 1px solid #e3e3e5;
   border-left: 1px solid #e3e3e5;
-  background: #fff
+  background: #fff;
 }
 
 .secondary-action:last-child {
