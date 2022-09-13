@@ -7,7 +7,6 @@ use Drupal\Core\Entity\Entity\EntityFormMode;
 use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Core\StringTranslation\TranslationManager;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -510,41 +509,6 @@ class EntityTypeTest extends UnitTestCase {
     $entity_type = $this->setUpEntityType(['class' => EntityFormMode::class]);
     $this->assertTrue($entity_type->isSubclassOf(ConfigEntityInterface::class));
     $this->assertFalse($entity_type->isSubclassOf(\DateTimeInterface::class));
-  }
-
-  /**
-   * Tests that the EntityType object can be serialized.
-   */
-  public function testIsSerializable() {
-    $entity_type = $this->setUpEntityType([]);
-
-    $translation_service = new UnserializableTranslationManager();
-    $translation_service->_serviceId = 'string_translation';
-
-    $entity_type->setStringTranslation($translation_service);
-    $entity_type = unserialize(serialize($entity_type));
-
-    $this->assertEquals('example_entity_type', $entity_type->id());
-  }
-
-}
-
-/**
- * Test class.
- */
-class UnserializableTranslationManager extends TranslationManager {
-
-  /**
-   * Constructs a UnserializableTranslationManager object.
-   */
-  public function __construct() {
-  }
-
-  /**
-   * @return array
-   */
-  public function __serialize(): array {
-    throw new \Exception();
   }
 
 }

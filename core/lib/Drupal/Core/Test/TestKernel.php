@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Test;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DrupalKernel;
 
 /**
@@ -20,6 +21,25 @@ class TestKernel extends DrupalKernel {
     }
 
     parent::__construct($environment, $class_loader, $allow_dumping);
+  }
+
+  /**
+   * Sets a container with a kernel service on the Drupal class.
+   *
+   * @return \Drupal\Component\DependencyInjection\ContainerInterface
+   *   A container with the kernel service set.
+   */
+  public static function setContainerWithKernel() {
+    $container = new ContainerBuilder();
+    $kernel = new DrupalKernel('test', NULL);
+    // Objects of the same type will have access to each others private and
+    // protected members even though they are not the same instances. This is
+    // because the implementation specific details are already known when
+    // inside those objects.
+    $kernel->container = $container;
+    $container->set('kernel', $kernel);
+    \Drupal::setContainer($container);
+    return $container;
   }
 
 }

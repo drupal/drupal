@@ -10,7 +10,6 @@ use Drupal\Core\DependencyInjection\Compiler\CorsCompilerPass;
 use Drupal\Core\DependencyInjection\Compiler\DeprecatedServicePass;
 use Drupal\Core\DependencyInjection\Compiler\ContextProvidersPass;
 use Drupal\Core\DependencyInjection\Compiler\ProxyServicesPass;
-use Drupal\Core\DependencyInjection\Compiler\DependencySerializationTraitPass;
 use Drupal\Core\DependencyInjection\Compiler\StackedKernelPass;
 use Drupal\Core\DependencyInjection\Compiler\StackedSessionHandlerPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterStreamWrappersPass;
@@ -95,7 +94,6 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     // Register plugin managers.
     $container->addCompilerPass(new PluginManagerPass());
 
-    $container->addCompilerPass(new DependencySerializationTraitPass());
     $container->addCompilerPass(new DeprecatedServicePass());
   }
 

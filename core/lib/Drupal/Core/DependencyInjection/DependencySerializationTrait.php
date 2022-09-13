@@ -3,7 +3,8 @@
 namespace Drupal\Core\DependencyInjection;
 
 use Drupal\Core\Entity\EntityStorageInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface as SymfonyContainerInterface;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 /**
  * Provides dependency injection friendly methods for serialization.
@@ -30,32 +31,49 @@ trait DependencySerializationTrait {
    * {@inheritdoc}
    */
   public function __sleep() {
-    $this->_serviceIds = [];
     $vars = get_object_vars($this);
-    foreach ($vars as $key => $value) {
-      if (is_object($value) && isset($value->_serviceId)) {
-        // If a class member was instantiated by the dependency injection
-        // container, only store its ID so it can be used to get a fresh object
-        // on unserialization.
-        $this->_serviceIds[$key] = $value->_serviceId;
-        unset($vars[$key]);
+    try {
+      $container = \Drupal::getContainer();
+      $mapping = \Drupal::service('kernel')->getServiceIdMapping();
+      foreach ($vars as $key => $value) {
+        if ($value instanceof EntityStorageInterface) {
+          // If a class member is an entity storage, only store the entity type
+          // ID the storage is for, so it can be used to get a fresh object on
+          // unserialization. By doing this we prevent possible memory leaks
+          // when the storage is serialized and it contains a static cache of
+          // entity objects. Additionally we ensure that we'll not have multiple
+          // storage objects for the same entity type and therefore prevent
+          // returning different references for the same entity.
+          $this->_entityStorages[$key] = $value->getEntityTypeId();
+          unset($vars[$key]);
+        }
+        elseif (is_object($value)) {
+          $service_id = FALSE;
+          // Special case the container.
+          if ($value instanceof SymfonyContainerInterface) {
+            $service_id = 'service_container';
+          }
+          else {
+            $id = $container->generateServiceIdHash($value);
+            if (isset($mapping[$id])) {
+              $service_id = $mapping[$id];
+            }
+          }
+          if ($service_id) {
+            // If a class member was instantiated by the dependency injection
+            // container, only store its ID so it can be used to get a fresh object
+            // on unserialization.
+            $this->_serviceIds[$key] = $service_id;
+            unset($vars[$key]);
+          }
+        }
       }
-      // Special case the container, which might not have a service ID.
-      elseif ($value instanceof ContainerInterface) {
-        $this->_serviceIds[$key] = 'service_container';
-        unset($vars[$key]);
-      }
-      elseif ($value instanceof EntityStorageInterface) {
-        // If a class member is an entity storage, only store the entity type ID
-        // the storage is for so it can be used to get a fresh object on
-        // unserialization. By doing this we prevent possible memory leaks when
-        // the storage is serialized when it contains a static cache of entity
-        // objects and additionally we ensure that we'll not have multiple
-        // storage objects for the same entity type and therefore prevent
-        // returning different references for the same entity.
-        $this->_entityStorages[$key] = $value->getEntityTypeId();
-        unset($vars[$key]);
-      }
+    }
+    catch (ContainerNotInitializedException $e) {
+      // No container, no problem.
+    }
+    catch (ServiceNotFoundException $e) {
+      // No kernel, very strange, but still no problem.
     }
 
     return array_keys($vars);

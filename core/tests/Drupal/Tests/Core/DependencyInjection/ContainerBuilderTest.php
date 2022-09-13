@@ -27,16 +27,6 @@ class ContainerBuilderTest extends UnitTestCase {
   /**
    * @covers ::set
    */
-  public function testSet() {
-    $container = new ContainerBuilder();
-    $class = new BarClass();
-    $container->set('bar', $class);
-    $this->assertEquals('bar', $class->_serviceId);
-  }
-
-  /**
-   * @covers ::set
-   */
   public function testSetException() {
     $container = new ContainerBuilder();
     $class = new BarClass();

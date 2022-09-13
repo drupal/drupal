@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\DependencyInjection;
 
+use Drupal\Component\DependencyInjection\ContainerInterface;
+use Drupal\Component\DependencyInjection\ServiceIdHashTrait;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ContainerBuilder as SymfonyContainerBuilder;
 use Symfony\Component\DependencyInjection\Container as SymfonyContainer;
@@ -15,7 +17,9 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
  *
  * @ingroup container
  */
-class ContainerBuilder extends SymfonyContainerBuilder {
+class ContainerBuilder extends SymfonyContainerBuilder implements ContainerInterface {
+
+  use ServiceIdHashTrait;
 
   /**
    * {@inheritdoc}
@@ -41,11 +45,6 @@ class ContainerBuilder extends SymfonyContainerBuilder {
       throw new \InvalidArgumentException("Service ID names must be lowercase: $id");
     }
     SymfonyContainer::set($id, $service);
-
-    // Ensure that the _serviceId property is set on synthetic services as well.
-    if (isset($this->services[$id]) && is_object($this->services[$id]) && !isset($this->services[$id]->_serviceId)) {
-      $this->services[$id]->_serviceId = $id;
-    }
   }
 
   /**

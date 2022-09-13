@@ -16,11 +16,11 @@ use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Component\Plugin\Exception\MissingValueContextException;
 use Drupal\Core\Cache\NullBackend;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\ContextHandler;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
+use Drupal\Core\Test\TestKernel;
 use Drupal\Core\TypedData\TypedDataManager;
 use Drupal\Core\Validation\ConstraintManager;
 use Drupal\Tests\UnitTestCase;
@@ -63,7 +63,7 @@ class ContextHandlerTest extends UnitTestCase {
       new ConstraintManager($namespaces, $cache_backend, $module_handler->reveal())
     );
 
-    $container = new ContainerBuilder();
+    $container = TestKernel::setContainerWithKernel();
     $container->set('typed_data_manager', $type_data_manager);
     \Drupal::setContainer($container);
   }

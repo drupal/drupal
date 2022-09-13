@@ -15,6 +15,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Plugin\DefaultLazyPluginCollection;
+use Drupal\Core\Test\TestKernel;
 use Drupal\Tests\Core\Config\Entity\Fixtures\ConfigEntityBaseWithPluginCollections;
 use Drupal\Tests\Core\Plugin\Fixtures\TestConfigurablePlugin;
 use Drupal\Tests\UnitTestCase;
@@ -357,9 +358,8 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
 
     // Also set up a container with the plugin manager so that we can assert
     // that the plugin manager itself is also not serialized.
-    $container = new ContainerBuilder();
-    $container->set('plugin.manager.foo', $plugin_manager);
-    \Drupal::setContainer($container);
+    $container = TestKernel::setContainerWithKernel();
+    $container->set('plugin.manager.foo', $plugin_manager->reveal());
 
     $entity_values = ['the_plugin_collection_config' => [$instance_id => ['foo' => 'original_value']]];
     $entity = new TestConfigEntityWithPluginCollections($entity_values, $this->entityTypeId);
