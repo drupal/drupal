@@ -30,7 +30,7 @@ class ContainerTest extends TestCase {
   /**
    * The tested container.
    *
-   * @var \Symfony\Component\DependencyInjection\ContainerInterface
+   * @var \Drupal\Component\DependencyInjection\ContainerInterface
    */
   protected $container;
 
@@ -683,6 +683,20 @@ class ContainerTest extends TestCase {
    */
   public function testResolveServicesAndParametersForRawArgument() {
     $this->assertEquals(['ccc'], $this->container->get('service_with_raw_argument')->getArguments());
+  }
+
+  /**
+   * @covers \Drupal\Component\DependencyInjection\ServiceIdHashTrait::getServiceIdMappings
+   * @covers \Drupal\Component\DependencyInjection\ServiceIdHashTrait::generateServiceIdHash
+   */
+  public function testGetServiceIdMappings() {
+    $this->assertEquals([], $this->container->getServiceIdMappings());
+    $s1 = $this->container->get('other.service');
+    $s2 = $this->container->get('late.service');
+    $this->assertEquals([
+      $this->container->generateServiceIdHash($s1) => 'other.service',
+      $this->container->generateServiceIdHash($s2) => 'late.service',
+    ], $this->container->getServiceIdMappings());
   }
 
   /**

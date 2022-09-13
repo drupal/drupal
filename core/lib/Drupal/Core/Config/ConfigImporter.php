@@ -1064,13 +1064,13 @@ class ConfigImporter {
    * keep the services used by the importer in sync.
    */
   protected function reInjectMe() {
-    $this->_serviceIds = [];
-    $vars = get_object_vars($this);
-    foreach ($vars as $key => $value) {
-      if (is_object($value) && isset($value->_serviceId)) {
-        $this->$key = \Drupal::service($value->_serviceId);
-      }
-    }
+    // When rebuilding the container,
+    // \Drupal\Core\DrupalKernel::initializeContainer() saves the hashes of the
+    // old container and passes them to the new one. So __sleep() will
+    // recognize the old services and then __wakeup() will restore them from
+    // the new container.
+    $this->__sleep();
+    $this->__wakeup();
   }
 
 }

@@ -137,4 +137,9 @@ interface DrupalKernelInterface extends HttpKernelInterface, ContainerAwareInter
    */
   public function loadLegacyIncludes();
 
+  /**
+   * Get a mapping from service hashes to service IDs.
+   */
+  public function getServiceIdMapping();
+
 }

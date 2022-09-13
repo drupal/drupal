@@ -10,6 +10,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
   use Drupal\Component\Utility\Crypt;
   use Drupal\Tests\PhpUnitCompatibilityTrait;
   use PHPUnit\Framework\TestCase;
+  use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
   use Symfony\Component\DependencyInjection\Definition;
   use Symfony\Component\DependencyInjection\Reference;
   use Symfony\Component\DependencyInjection\Parameter;
@@ -26,6 +27,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
   class OptimizedPhpArrayDumperTest extends TestCase {
 
     use PhpUnitCompatibilityTrait;
+    use ExpectDeprecationTrait;
 
     /**
      * The container builder instance.
@@ -335,16 +337,6 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
         'arguments_expected' => $this->getCollection([$this->getParameterCall('llama_parameter')]),
       ] + $base_service_definition;
 
-      // Test objects that have _serviceId property.
-      $drupal_service = new \stdClass();
-      $drupal_service->_serviceId = 'bar';
-
-      $service_definitions[] = [
-        'arguments' => [$drupal_service],
-        'arguments_count' => 1,
-        'arguments_expected' => $this->getCollection([$this->getServiceCall('bar')]),
-      ] + $base_service_definition;
-
       // Test getMethodCalls.
       $calls = [
         ['method', $this->getCollection([])],
@@ -576,6 +568,37 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $this->containerBuilder->getDefinitions()->willReturn($services);
       $this->expectException(RuntimeException::class);
       $this->dumper->getArray();
+    }
+
+    /**
+     * Tests that the correct RuntimeException is thrown for dumping an object.
+     *
+     * @covers ::dumpValue
+     * @group legacy
+     */
+    public function testGetServiceDefinitionForObjectServiceId() {
+      $service = new \stdClass();
+      $service->_serviceId = 'foo';
+
+      $services['foo'] = new Definition('\stdClass');
+      $services['bar'] = new Definition('\stdClass');
+      $services['bar']->addArgument($service);
+      foreach ($services as $s) {
+        $s->setPublic(TRUE);
+      }
+
+      $this->containerBuilder->getDefinitions()->willReturn($services);
+      $this->containerBuilder->getDefinition('foo')->willReturn($services['foo']);
+      $this->containerBuilder->getDefinition('bar')->willReturn($services['bar']);
+      $this->expectDeprecation('_serviceId is deprecated in drupal:9.5.0 and is removed from drupal:11.0.0. Use \Drupal\Core\DrupalKernelInterface::getServiceIdMapping() instead. See https://www.drupal.org/node/3292540');
+      $a = $this->dumper->getArray();
+      $this->assertEquals(
+        $this->serializeDefinition([
+          'class' => '\stdClass',
+          // Legacy code takes care of converting _serviceId into this.
+          'arguments' => $this->getCollection([$this->getServiceCall('foo')]),
+          'arguments_count' => 1,
+        ]), $a['services']['bar']);
     }
 
     /**

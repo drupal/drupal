@@ -4,10 +4,10 @@ namespace Drupal\Tests\Core\TempStore;
 
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\TempStore\Lock;
+use Drupal\Core\Test\TestKernel;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\TempStore\SharedTempStore;
 use Drupal\Core\TempStore\TempStoreException;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -357,12 +357,10 @@ class SharedTempStoreTest extends UnitTestCase {
     $unserializable_request = new UnserializableRequest();
 
     $this->requestStack->push($unserializable_request);
-    $this->requestStack->_serviceId = 'request_stack';
 
-    $container = $this->prophesize(ContainerInterface::class);
-    $container->get('request_stack')->willReturn($this->requestStack);
-    $container->has('request_stack')->willReturn(TRUE);
-    \Drupal::setContainer($container->reveal());
+    $container = TestKernel::setContainerWithKernel();
+    $container->set('request_stack', $this->requestStack);
+    \Drupal::setContainer($container);
 
     $store = unserialize(serialize($this->tempStore));
     $this->assertInstanceOf(SharedTempStore::class, $store);
