@@ -5,6 +5,8 @@ package: Core
 version: VERSION
 base theme: false
 hidden: true
+lifecycle: deprecated
+lifecycle_link: https://www.drupal.org/project/drupal/issues/3308890
 
 libraries-override:
   block/drupal.block.admin:
