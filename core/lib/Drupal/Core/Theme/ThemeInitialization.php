@@ -135,7 +135,7 @@ class ThemeInitialization implements ThemeInitializationInterface {
    */
   public function loadActiveTheme(ActiveTheme $active_theme) {
     // Initialize the theme.
-    if ($theme_engine = $active_theme->getEngine()) {
+    if ($active_theme->getEngine()) {
       // Include the engine.
       include_once $this->root . '/' . $active_theme->getOwner();
       foreach ($active_theme->getBaseThemeExtensions() as $base) {
