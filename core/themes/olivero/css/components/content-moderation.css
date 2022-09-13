@@ -24,25 +24,25 @@
 /* Width of the entire grid maxes out. */
 
 [dir="ltr"] .entity-moderation-form {
-  padding-left: var(--sp)
+  padding-left: var(--sp);
 }
 
 [dir="rtl"] .entity-moderation-form {
-  padding-right: var(--sp)
+  padding-right: var(--sp);
 }
 
 [dir="ltr"] .entity-moderation-form {
-  padding-right: var(--sp)
+  padding-right: var(--sp);
 }
 
 [dir="rtl"] .entity-moderation-form {
-  padding-left: var(--sp)
+  padding-left: var(--sp);
 }
 
 .entity-moderation-form {
   flex-direction: column;
   border: 1px solid var(--color--gray-95);
-  background-color: var(--color--gray-100)
+  background-color: var(--color--gray-100);
 }
 
 .entity-moderation-form select,
@@ -53,103 +53,103 @@
 @media (min-width: 43.75rem) {
 
 .entity-moderation-form {
-    flex-direction: row
+    flex-direction: row;
 }
   }
 
 [dir="ltr"] .entity-moderation-form__item {
-  margin-right: var(--sp)
+  margin-right: var(--sp);
 }
 
 [dir="rtl"] .entity-moderation-form__item {
-  margin-left: var(--sp)
+  margin-left: var(--sp);
 }
 
 .entity-moderation-form__item {
-  flex-basis: 0
+  flex-basis: 0;
 }
 
 [dir="ltr"] .entity-moderation-form__item:last-child {
-    margin-right: 0
+    margin-right: 0;
 }
 
 [dir="rtl"] .entity-moderation-form__item:last-child {
-    margin-left: 0
+    margin-left: 0;
 }
 
 .entity-moderation-form__item:last-child {
-    align-self: flex-start
+    align-self: flex-start;
   }
 
 @media (min-width: 43.75rem) {
 
 .entity-moderation-form__item:last-child {
-      align-self: flex-end
+      align-self: flex-end;
   }
     }
 
 [dir="ltr"] .layout--content-narrow .entity-moderation-form,[dir="ltr"]  .layout--pass--content-narrow > * .entity-moderation-form,[dir="ltr"]  .layout--content-medium .entity-moderation-form,[dir="ltr"]  .layout--pass--content-medium > * .entity-moderation-form {
-    margin-left: 0
+    margin-left: 0;
 }
 
 [dir="rtl"] .layout--content-narrow .entity-moderation-form,[dir="rtl"]  .layout--pass--content-narrow > * .entity-moderation-form,[dir="rtl"]  .layout--content-medium .entity-moderation-form,[dir="rtl"]  .layout--pass--content-medium > * .entity-moderation-form {
-    margin-right: 0
+    margin-right: 0;
 }
 
 .layout--content-narrow .entity-moderation-form, .layout--pass--content-narrow > * .entity-moderation-form, .layout--content-medium .entity-moderation-form, .layout--pass--content-medium > * .entity-moderation-form {
-    width: 100%
+    width: 100%;
   }
 
 @supports (width: max-content) {
 
 .layout--content-narrow .entity-moderation-form, .layout--pass--content-narrow > * .entity-moderation-form, .layout--content-medium .entity-moderation-form, .layout--pass--content-medium > * .entity-moderation-form {
-      width: max-content
+      width: max-content;
   }
     }
 
 @media (min-width: 43.75rem) {
 
 [dir="ltr"] .layout--content-narrow .entity-moderation-form,[dir="ltr"]  .layout--pass--content-narrow > * .entity-moderation-form,[dir="ltr"]  .layout--content-medium .entity-moderation-form,[dir="ltr"]  .layout--pass--content-medium > * .entity-moderation-form {
-      margin-left: calc(-2 * (var(--grid-col-width) + var(--grid-gap)))
+      margin-left: calc(-2 * (var(--grid-col-width) + var(--grid-gap)));
   }
 
 [dir="rtl"] .layout--content-narrow .entity-moderation-form,[dir="rtl"]  .layout--pass--content-narrow > * .entity-moderation-form,[dir="rtl"]  .layout--content-medium .entity-moderation-form,[dir="rtl"]  .layout--pass--content-medium > * .entity-moderation-form {
-      margin-right: calc(-2 * (var(--grid-col-width) + var(--grid-gap)))
+      margin-right: calc(-2 * (var(--grid-col-width) + var(--grid-gap)));
   }
 
 .layout--content-narrow .entity-moderation-form, .layout--pass--content-narrow > * .entity-moderation-form, .layout--content-medium .entity-moderation-form, .layout--pass--content-medium > * .entity-moderation-form {
       width: calc(var(--grid-col-count) * var(--grid-col-width) + var(--grid-gap-count) * var(--grid-gap));
       margin-top: var(--sp2);
-      margin-bottom: var(--sp4)
+      margin-bottom: var(--sp4);
   }
     }
 
 @media (min-width: 62.5rem) {
 
 [dir="ltr"] .layout--content-narrow .entity-moderation-form,[dir="ltr"]  .layout--pass--content-narrow > * .entity-moderation-form,[dir="ltr"]  .layout--content-medium .entity-moderation-form,[dir="ltr"]  .layout--pass--content-medium > * .entity-moderation-form {
-      margin-left: calc(-1 * (var(--grid-col-width) + var(--grid-gap)))
+      margin-left: calc(-1 * (var(--grid-col-width) + var(--grid-gap)));
   }
 
 [dir="rtl"] .layout--content-narrow .entity-moderation-form,[dir="rtl"]  .layout--pass--content-narrow > * .entity-moderation-form,[dir="rtl"]  .layout--content-medium .entity-moderation-form,[dir="rtl"]  .layout--pass--content-medium > * .entity-moderation-form {
-      margin-right: calc(-1 * (var(--grid-col-width) + var(--grid-gap)))
+      margin-right: calc(-1 * (var(--grid-col-width) + var(--grid-gap)));
   }
 
 .layout--content-narrow .entity-moderation-form, .layout--pass--content-narrow > * .entity-moderation-form, .layout--content-medium .entity-moderation-form, .layout--pass--content-medium > * .entity-moderation-form {
-      width: calc(12 * var(--grid-col-width) + 11 * var(--grid-gap))
+      width: calc(12 * var(--grid-col-width) + 11 * var(--grid-gap));
   }
     }
 
 @media (min-width: 90rem) {
 
 [dir="ltr"] .layout--content-narrow .entity-moderation-form,[dir="ltr"]  .layout--pass--content-narrow > * .entity-moderation-form,[dir="ltr"]  .layout--content-medium .entity-moderation-form,[dir="ltr"]  .layout--pass--content-medium > * .entity-moderation-form {
-      margin-left: 0
+      margin-left: 0;
   }
 
 [dir="rtl"] .layout--content-narrow .entity-moderation-form,[dir="rtl"]  .layout--pass--content-narrow > * .entity-moderation-form,[dir="rtl"]  .layout--content-medium .entity-moderation-form,[dir="rtl"]  .layout--pass--content-medium > * .entity-moderation-form {
-      margin-right: 0
+      margin-right: 0;
   }
 
 .layout--content-narrow .entity-moderation-form, .layout--pass--content-narrow > * .entity-moderation-form, .layout--content-medium .entity-moderation-form, .layout--pass--content-medium > * .entity-moderation-form {
-      width: calc(10 * var(--grid-col-width) + 11 * var(--grid-gap))
+      width: calc(10 * var(--grid-col-width) + 11 * var(--grid-gap));
   }
     }

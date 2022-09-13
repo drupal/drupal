@@ -35,18 +35,18 @@
   border-collapse: collapse;
   font-family: var(--font-sans);
   font-size: 1rem;
-  line-height: var(--sp1-5)
+  line-height: var(--sp1-5);
 }
 
-[dir="ltr"] .forum table caption,[dir="ltr"]  .text-content table caption,[dir="ltr"]  .views-table caption,[dir="ltr"]  .draggable-table caption {
-    text-align: left
+[dir="ltr"] :is(.forum table,.text-content table,.views-table,.draggable-table) caption {
+    text-align: left;
 }
 
-[dir="rtl"] .forum table caption,[dir="rtl"]  .text-content table caption,[dir="rtl"]  .views-table caption,[dir="rtl"]  .draggable-table caption {
-    text-align: right
+[dir="rtl"] :is(.forum table,.text-content table,.views-table,.draggable-table) caption {
+    text-align: right;
 }
 
-.forum table caption, .text-content table caption, .views-table caption, .draggable-table caption {
+:is(.forum table,.text-content table,.views-table,.draggable-table) caption {
     margin-bottom: var(--sp1);
     color: var(--color-text-neutral-medium);
     font-family: var(--font-serif);
@@ -55,92 +55,58 @@
     line-height: var(--sp);
   }
 
-.forum table tr:last-child td, .text-content table tr:last-child td, .views-table tr:last-child td, .draggable-table tr:last-child td {
+:is(.forum table,.text-content table,.views-table,.draggable-table) tr:last-child td {
         border-bottom: 0;
       }
 
-[dir="ltr"] .forum table td,[dir="ltr"] 
-  .forum table th,[dir="ltr"] 
-  .text-content table td,[dir="ltr"] 
-  .text-content table th,[dir="ltr"] 
-  .views-table td,[dir="ltr"] 
-  .views-table th,[dir="ltr"] 
-  .draggable-table td,[dir="ltr"] 
-  .draggable-table th {
-    padding-left: 0
+[dir="ltr"] :is(.forum table,.text-content table,.views-table,.draggable-table) td,[dir="ltr"] :is(.forum table,.text-content table,.views-table,.draggable-table) th {
+    padding-left: 0;
 }
 
-[dir="rtl"] .forum table td,[dir="rtl"] 
-  .forum table th,[dir="rtl"] 
-  .text-content table td,[dir="rtl"] 
-  .text-content table th,[dir="rtl"] 
-  .views-table td,[dir="rtl"] 
-  .views-table th,[dir="rtl"] 
-  .draggable-table td,[dir="rtl"] 
-  .draggable-table th {
-    padding-right: 0
+[dir="rtl"] :is(.forum table,.text-content table,.views-table,.draggable-table) td,[dir="rtl"] :is(.forum table,.text-content table,.views-table,.draggable-table) th {
+    padding-right: 0;
 }
 
-[dir="ltr"] .forum table td,[dir="ltr"] 
-  .forum table th,[dir="ltr"] 
-  .text-content table td,[dir="ltr"] 
-  .text-content table th,[dir="ltr"] 
-  .views-table td,[dir="ltr"] 
-  .views-table th,[dir="ltr"] 
-  .draggable-table td,[dir="ltr"] 
-  .draggable-table th {
-    padding-right: var(--sp1)
+[dir="ltr"] :is(.forum table,.text-content table,.views-table,.draggable-table) td,[dir="ltr"] :is(.forum table,.text-content table,.views-table,.draggable-table) th {
+    padding-right: var(--sp1);
 }
 
-[dir="rtl"] .forum table td,[dir="rtl"] 
-  .forum table th,[dir="rtl"] 
-  .text-content table td,[dir="rtl"] 
-  .text-content table th,[dir="rtl"] 
-  .views-table td,[dir="rtl"] 
-  .views-table th,[dir="rtl"] 
-  .draggable-table td,[dir="rtl"] 
-  .draggable-table th {
-    padding-left: var(--sp1)
+[dir="rtl"] :is(.forum table,.text-content table,.views-table,.draggable-table) td,[dir="rtl"] :is(.forum table,.text-content table,.views-table,.draggable-table) th {
+    padding-left: var(--sp1);
 }
 
-.forum table td,
-  .forum table th,
-  .text-content table td,
-  .text-content table th,
-  .views-table td,
-  .views-table th,
-  .draggable-table td,
-  .draggable-table th {
+:is(.forum table,.text-content table,.views-table,.draggable-table) td,
+  :is(.forum table,.text-content table,.views-table,.draggable-table) th {
     padding-top: var(--sp1);
     padding-bottom: var(--sp1);
     vertical-align: top;
   }
 
-[dir="ltr"] .forum table th,[dir="ltr"]  .text-content table th,[dir="ltr"]  .views-table th,[dir="ltr"]  .draggable-table th {
-    margin-left: 0
+[dir="ltr"] :is(.forum table,.text-content table,.views-table,.draggable-table) th {
+    margin-left: 0;
 }
 
-[dir="rtl"] .forum table th,[dir="rtl"]  .text-content table th,[dir="rtl"]  .views-table th,[dir="rtl"]  .draggable-table th {
-    margin-right: 0
+[dir="rtl"] :is(.forum table,.text-content table,.views-table,.draggable-table) th {
+    margin-right: 0;
 }
 
-[dir="ltr"] .forum table th,[dir="ltr"]  .text-content table th,[dir="ltr"]  .views-table th,[dir="ltr"]  .draggable-table th {
-    margin-right: 0
+[dir="ltr"] :is(.forum table,.text-content table,.views-table,.draggable-table) th {
+    margin-right: 0;
 }
 
-[dir="rtl"] .forum table th,[dir="rtl"]  .text-content table th,[dir="rtl"]  .views-table th,[dir="rtl"]  .draggable-table th {
-    margin-left: 0
+[dir="rtl"] :is(.forum table,.text-content table,.views-table,.draggable-table) th {
+    margin-left: 0;
 }
 
-[dir="ltr"] .forum table th,[dir="ltr"]  .text-content table th,[dir="ltr"]  .views-table th,[dir="ltr"]  .draggable-table th {
-    text-align: left
+[dir="ltr"] :is(.forum table,.text-content table,.views-table,.draggable-table) th {
+    text-align: left;
 }
 
-[dir="rtl"] .forum table th,[dir="rtl"]  .text-content table th,[dir="rtl"]  .views-table th,[dir="rtl"]  .draggable-table th {
-    text-align: right
+[dir="rtl"] :is(.forum table,.text-content table,.views-table,.draggable-table) th {
+    text-align: right;
 }
 
-.forum table th, .text-content table th, .views-table th, .draggable-table th {
+:is(.forum table,.text-content table,.views-table,.draggable-table) th {
     margin-top: 0;
     margin-bottom: 0;
     letter-spacing: 0.02em;
@@ -151,19 +117,13 @@
     line-height: var(--sp);
   }
 
-.forum table td, .text-content table td, .views-table td, .draggable-table td {
+:is(.forum table,.text-content table,.views-table,.draggable-table) td {
     white-space: normal;
     border-bottom: 2px solid var(--color--gray-65);
   }
 
-.forum table th.checkbox,
-  .forum table td.checkbox,
-  .text-content table th.checkbox,
-  .text-content table td.checkbox,
-  .views-table th.checkbox,
-  .views-table td.checkbox,
-  .draggable-table th.checkbox,
-  .draggable-table td.checkbox {
+:is(.forum table,.text-content table,.views-table,.draggable-table) th.checkbox,
+  :is(.forum table,.text-content table,.views-table,.draggable-table) td.checkbox {
     text-align: center;
   }
 
@@ -182,7 +142,7 @@
 .sticky-header {
   z-index: 0;
   margin: 0;
-  border-bottom: 4px solid var(--color--primary-50);
+  border-bottom: 0.25rem solid var(--color--primary-50);
 }
 
 /* Properly align VBO checkboxes. */

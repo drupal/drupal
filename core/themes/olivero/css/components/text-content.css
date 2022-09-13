@@ -27,7 +27,7 @@
 .cke_editable {
   color: var(--color-text-neutral-medium);
   font-family: var(--font-serif);
-  line-height: var(--sp1-5)
+  line-height: var(--sp1-5);
 
   /*
     @todo
@@ -44,7 +44,7 @@
     -webkit-text-decoration-color: currentColor;
     text-decoration-color: currentColor;
     text-decoration-thickness: 2px;
-    overflow-wrap: break-word
+    overflow-wrap: break-word;
   }
 
 @supports (box-shadow: none) {
@@ -52,7 +52,7 @@
 .text-content a:where(:not(.button)), .cke_editable a:where(:not(.button)) {
       transition: box-shadow 0.3s cubic-bezier(0.55, 0.085, 0, 0.99);
       text-decoration: none;
-      box-shadow: inset 0 -2px 0 0 var(--color--primary-50)
+      box-shadow: inset 0 -2px 0 0 var(--color--primary-50);
   }
 
       .text-content a:where(:not(.button)):hover, .cke_editable a:where(:not(.button)):hover {
@@ -68,7 +68,7 @@
 
 .text-content p, .cke_editable p {
     margin-top: var(--sp);
-    margin-bottom: var(--sp)
+    margin-bottom: var(--sp);
   }
 
 .text-content p:first-child, .cke_editable p:first-child {
@@ -83,7 +83,7 @@
 
 .text-content p, .cke_editable p {
       margin-top: var(--sp2);
-      margin-bottom: var(--sp2)
+      margin-bottom: var(--sp2);
   }
     }
 
@@ -92,19 +92,19 @@
   }
 
 [dir="ltr"] .text-content pre code,[dir="ltr"]  .cke_editable pre code {
-    padding-left: var(--sp)
+    padding-left: var(--sp);
 }
 
 [dir="rtl"] .text-content pre code,[dir="rtl"]  .cke_editable pre code {
-    padding-right: var(--sp)
+    padding-right: var(--sp);
 }
 
 [dir="ltr"] .text-content pre code,[dir="ltr"]  .cke_editable pre code {
-    padding-right: var(--sp)
+    padding-right: var(--sp);
 }
 
 [dir="rtl"] .text-content pre code,[dir="rtl"]  .cke_editable pre code {
-    padding-left: var(--sp)
+    padding-left: var(--sp);
 }
 
 .text-content pre code, .cke_editable pre code {
@@ -116,27 +116,27 @@
   }
 
 [dir="ltr"] .text-content blockquote,[dir="ltr"]  .cke_editable blockquote {
-    margin-left: 0
+    margin-left: 0;
 }
 
 [dir="rtl"] .text-content blockquote,[dir="rtl"]  .cke_editable blockquote {
-    margin-right: 0
+    margin-right: 0;
 }
 
 [dir="ltr"] .text-content blockquote,[dir="ltr"]  .cke_editable blockquote {
-    margin-right: 0
+    margin-right: 0;
 }
 
 [dir="rtl"] .text-content blockquote,[dir="rtl"]  .cke_editable blockquote {
-    margin-left: 0
+    margin-left: 0;
 }
 
 [dir="ltr"] .text-content blockquote,[dir="ltr"]  .cke_editable blockquote {
-    padding-left: var(--sp2)
+    padding-left: var(--sp2);
 }
 
 [dir="rtl"] .text-content blockquote,[dir="rtl"]  .cke_editable blockquote {
-    padding-right: var(--sp2)
+    padding-right: var(--sp2);
 }
 
 .text-content blockquote, .cke_editable blockquote {
@@ -146,15 +146,15 @@
     letter-spacing: -0.01em;
     font-family: var(--font-serif);
     font-size: 1.3125rem;
-    line-height: var(--sp2)
+    line-height: var(--sp2);
   }
 
 [dir="ltr"] .text-content blockquote:before,[dir="ltr"]  .cke_editable blockquote:before {
-      left: 0
+      left: 0;
 }
 
 [dir="rtl"] .text-content blockquote:before,[dir="rtl"]  .cke_editable blockquote:before {
-      right: 0
+      right: 0;
 }
 
 .text-content blockquote:before, .cke_editable blockquote:before {
@@ -166,19 +166,19 @@
     }
 
 [dir="ltr"] .text-content blockquote:after,[dir="ltr"]  .cke_editable blockquote:after {
-      left: 0
+      left: 0;
 }
 
 [dir="rtl"] .text-content blockquote:after,[dir="rtl"]  .cke_editable blockquote:after {
-      right: 0
+      right: 0;
 }
 
 [dir="ltr"] .text-content blockquote:after,[dir="ltr"]  .cke_editable blockquote:after {
-      margin-left: 0.25rem
+      margin-left: 0.25rem;
 }
 
 [dir="rtl"] .text-content blockquote:after,[dir="rtl"]  .cke_editable blockquote:after {
-      margin-right: 0.25rem
+      margin-right: 0.25rem;
 }
 
 .text-content blockquote:after, .cke_editable blockquote:after {
@@ -194,7 +194,7 @@
 
 .text-content blockquote, .cke_editable blockquote {
       font-size: 2rem;
-      line-height: var(--sp3)
+      line-height: var(--sp3);
   }
     }
 
@@ -202,7 +202,7 @@
 
 .text-content blockquote, .cke_editable blockquote {
       font-size: 2.5rem;
-      line-height: calc(3.5 * var(--sp))
+      line-height: calc(3.5 * var(--sp));
   }
     }
 
@@ -211,7 +211,7 @@
 .text-content,
 .cke_editable {
     font-size: 1.125rem;
-    line-height: var(--sp2)
+    line-height: var(--sp2);
 }
   }
 
@@ -220,7 +220,7 @@
  */
 
 .site-footer .text-content {
-  color: inherit
+  color: inherit;
 }
 
 .site-footer .text-content * {
@@ -230,7 +230,7 @@
 .site-footer .text-content a {
     text-decoration: underline;
     color: var(--color--white);
-    box-shadow: none
+    box-shadow: none;
   }
 
 .site-footer .text-content a:hover {
@@ -247,6 +247,6 @@
 
 .region--sidebar .text-content blockquote {
     font-size: 1.5rem;
-    line-height: var(--sp2)
+    line-height: var(--sp2);
 }
   }

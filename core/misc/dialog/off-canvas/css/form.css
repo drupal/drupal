@@ -21,12 +21,12 @@
   --drupal-off-canvas-input-text-color: #333;
   --drupal-off-canvas-fieldset-background-color: transparent;
   --drupal-off-canvas-fieldset-border-width: 1px;
-  --drupal-off-canvas-fieldset-border-color: var(--off-canvas-border-color)
+  --drupal-off-canvas-fieldset-border-color: var(--off-canvas-border-color);
 }
 
 #drupal-off-canvas-wrapper form {
     padding-top: var(--off-canvas-padding);
-    padding-bottom: var(--off-canvas-padding)
+    padding-bottom: var(--off-canvas-padding);
   }
 
 #drupal-off-canvas-wrapper form > *:first-child {
@@ -78,10 +78,7 @@
     font-weight: bold;
   }
 
-#drupal-off-canvas-wrapper {
-
-  /* Bartik uses the .field-multiple-table CSS class on its tabledrag tables. */
-}
+/* Bartik uses the .field-multiple-table CSS class on its tabledrag tables. */
 
 #drupal-off-canvas-wrapper :is(.fieldset, fieldset, .draggable-table, .field-multiple-table) input:where(:not([type="submit"], [type="checkbox"], [type="radio"])) {
     width: 100%; /* Prevent text fields from breaking out of tables and fieldsets at narrow widths. */
@@ -102,7 +99,7 @@
     font-size: var(--drupal-off-canvas-input-font-size);
   }
 
-#drupal-off-canvas-wrapper input[type="checkbox"] + label, #drupal-off-canvas-wrapper input[type="radio"] + label {
+:is(#drupal-off-canvas-wrapper input[type="checkbox"]) + label, :is(#drupal-off-canvas-wrapper input[type="radio"]) + label {
       display: inline;
     }
 
@@ -116,11 +113,11 @@
   }
 
 [dir="ltr"] #drupal-off-canvas-wrapper select {
-    padding-right: 1.25rem
+    padding-right: 1.25rem;
 }
 
 [dir="rtl"] #drupal-off-canvas-wrapper select {
-    padding-left: 1.25rem
+    padding-left: 1.25rem;
 }
 
 #drupal-off-canvas-wrapper select {
@@ -131,7 +128,7 @@
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 9'%3e%3cpath fill='none' stroke-width='1.5' d='M1 1l6 6 6-6' stroke='%23545560'/%3e%3c/svg%3e");
     background-repeat: no-repeat;
     background-position: center right 5px; /* LTR */
-    background-size: 0.75rem
+    background-size: 0.75rem;
   }
 
 [dir="rtl"] #drupal-off-canvas-wrapper select {
@@ -141,39 +138,36 @@
 @media (forced-colors: active) {
 
 [dir="ltr"] #drupal-off-canvas-wrapper select {
-      padding-right: 0
+      padding-right: 0;
   }
 
 [dir="rtl"] #drupal-off-canvas-wrapper select {
-      padding-left: 0
+      padding-left: 0;
   }
 
 #drupal-off-canvas-wrapper select {
       -webkit-appearance: revert;
       appearance: revert;
-      background: revert
+      background: revert;
   }
     }
 
-#drupal-off-canvas-wrapper {
-
-  /*
+/*
    * Autocomplete.
    */
-}
 
 [dir="ltr"] #drupal-off-canvas-wrapper .form-autocomplete {
-    padding-right: 2.5rem
+    padding-right: 2.5rem;
 }
 
 [dir="rtl"] #drupal-off-canvas-wrapper .form-autocomplete {
-    padding-left: 2.5rem
+    padding-left: 2.5rem;
 }
 
 #drupal-off-canvas-wrapper .form-autocomplete { /* Room for icon. */
     background-image: url("data:image/svg+xml,%3csvg width='40' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M8 1C3.46.827-.188 5.787 1.313 10.068c1.176 4.384 6.993 6.417 10.637 3.7.326-.39.565.276.846.442l3.74 3.739 1.413-1.414-4.35-4.35c2.811-3.468 1.15-9.247-3.062-10.71A7.003 7.003 0 008 1zm0 2c3.242-.123 5.849 3.42 4.777 6.477-.842 3.132-4.994 4.58-7.6 2.65-2.745-1.73-2.9-6.125-.285-8.044A5.006 5.006 0 018 3z' fill='%23868686'/%3e%3c/svg%3e");
     background-repeat: no-repeat;
-    background-position: center right 1px /* LTR */
+    background-position: center right 1px; /* LTR */
   }
 
 #drupal-off-canvas-wrapper .form-autocomplete.ui-autocomplete-loading {
@@ -184,10 +178,7 @@
       background-position: center left 1px;
     }
 
-#drupal-off-canvas-wrapper {
-
-  /* This is the background <ul> for the autocomplete dropdown. */
-}
+/* This is the background <ul> for the autocomplete dropdown. */
 
 #drupal-off-canvas-wrapper .ui-autocomplete {
     margin: 0;
@@ -195,7 +186,7 @@
     list-style: none;
     border: var(--drupal-off-canvas-input-border);
     background-color: var(--drupal-off-canvas-input-background-color);
-    box-shadow: 0 1px 1px 0 var(--off-canvas-background-color) /* Ensure edge is visible if appearing over another form element. */
+    box-shadow: 0 1px 1px 0 var(--off-canvas-background-color); /* Ensure edge is visible if appearing over another form element. */
   }
 
 #drupal-off-canvas-wrapper .ui-autocomplete a {
@@ -203,7 +194,7 @@
       padding: var(--drupal-off-canvas-input-padding);
       cursor: pointer;
       color: var(--drupal-off-canvas-input-text-color);
-      font-size: var(--drupal-off-canvas-input-font-size)
+      font-size: var(--drupal-off-canvas-input-font-size);
     }
 
 #drupal-off-canvas-wrapper .ui-autocomplete a:hover {
@@ -216,13 +207,10 @@
         outline-offset: -2px;
       }
 
-#drupal-off-canvas-wrapper {
-
-  /*
+/*
    * Claro injects a "Loading" autocomplete message that affects the positioning
    * of the ui-autocomplete dropdown. We remove this to normalize the markup.
    */
-}
 
 #drupal-off-canvas-wrapper .claro-autocomplete__message {
     display: none;

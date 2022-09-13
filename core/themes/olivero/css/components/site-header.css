@@ -29,7 +29,7 @@
    * Ensure mobile site header is always above other elements including
    * contextual links, and Tour.
    */
-  z-index: 101
+  z-index: 101;
 }
 
 @media (min-width: 75rem) {
@@ -37,7 +37,7 @@
 .site-header {
     /* Necessary to keep the content from jumping up when header transitions to fixed. */
     min-height: var(--site-header-height-wide);
-    border-bottom: solid 1px transparent /* Will show in Windows high contrast mode. */
+    border-bottom: solid 1px transparent; /* Will show in Windows high contrast mode. */
 }
   }
 
@@ -53,7 +53,7 @@
 .site-header__fixable {
   display: flex;
   align-items: flex-end;
-  transition: all 0.5s
+  transition: all 0.5s;
 }
 
 @media (min-width: 75rem) {
@@ -86,21 +86,21 @@
 @media (min-width: 75rem) {
 
 html.js body:not(.is-always-mobile-nav) .site-header__inner {
-    transition: opacity 0.3s, transform 0.3s, box-shadow 0.3s
+    transition: opacity 0.3s, transform 0.3s, box-shadow 0.3s;
 }
   }
 
 @media (min-width: 75rem) {
 
 .site-header__fixable.is-expanded .site-header__inner {
-    box-shadow: -36px 1px 36px rgba(0, 0, 0, 0.08) /* LTR */
+    box-shadow: -36px 1px 36px rgba(0, 0, 0, 0.08); /* LTR */
 }
   }
 
 @media (min-width: 75rem) {
 
 [dir="rtl"] .site-header__fixable.is-expanded .site-header__inner {
-    box-shadow: 36px 1px 36px rgba(0, 0, 0, 0.08)
+    box-shadow: 36px 1px 36px rgba(0, 0, 0, 0.08);
 }
   }
 
@@ -110,14 +110,14 @@ html.js body:not(.is-always-mobile-nav) .site-header__inner {
 
 body:not(.is-always-mobile-nav) .site-header__fixable.is-fixed:not(.is-expanded) .site-header__inner {
     transform: translateX(-101%); /* LTR */
-    opacity: 0
+    opacity: 0;
 }
   }
 
 @media (min-width: 75rem) {
 
 [dir="rtl"] body:not(.is-always-mobile-nav) .site-header__fixable.is-fixed:not(.is-expanded) .site-header__inner {
-    transform: translateX(101%)
+    transform: translateX(101%);
 }
   }
 

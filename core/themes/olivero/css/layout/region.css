@@ -24,19 +24,19 @@
 /* Width of the entire grid maxes out. */
 
 .region > * {
-  margin-bottom: var(--sp)
+  margin-bottom: var(--sp);
 }
 
 @media (min-width: 43.75rem) {
 
 .region > * {
-    margin-bottom: var(--sp2)
+    margin-bottom: var(--sp2);
 }
   }
 
 @media (min-width: 62.5rem) {
 
 .region > * {
-    margin-bottom: var(--sp3)
+    margin-bottom: var(--sp3);
 }
   }

@@ -150,7 +150,7 @@
 /* Details content wrapper */
 
 .olivero-details__wrapper {
-  margin: var(--sp1)
+  margin: var(--sp1);
 }
 
 @media (min-width: 62.5rem) {
@@ -173,7 +173,7 @@
 
 .olivero-details__wrapper {
     margin-top: var(--sp1-5);
-    margin-bottom: var(--sp1-5)
+    margin-bottom: var(--sp1-5);
 }
   }
 

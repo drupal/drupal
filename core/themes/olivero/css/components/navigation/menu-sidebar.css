@@ -24,7 +24,7 @@
 /* Width of the entire grid maxes out. */
 
 .menu--sidebar {
-  list-style: none
+  list-style: none;
 }
 
 .menu--sidebar .menu {
@@ -36,19 +36,19 @@
   }
 
 [dir="ltr"] .menu--sidebar .menu__link {
-    padding-left: 0
+    padding-left: 0;
 }
 
 [dir="rtl"] .menu--sidebar .menu__link {
-    padding-right: 0
+    padding-right: 0;
 }
 
 [dir="ltr"] .menu--sidebar .menu__link {
-    padding-right: 0
+    padding-right: 0;
 }
 
 [dir="rtl"] .menu--sidebar .menu__link {
-    padding-left: 0
+    padding-left: 0;
 }
 
 .menu--sidebar .menu__link {
@@ -57,17 +57,17 @@
     padding-top: var(--sp0-75);
     padding-bottom: var(--sp0-75);
     font-family: var(--font-serif);
-    font-size: 1.125rem
+    font-size: 1.125rem;
 
     /* Bottom divider line. */
   }
 
 [dir="ltr"] .menu--sidebar .menu__link:after {
-      left: 0
+      left: 0;
 }
 
 [dir="rtl"] .menu--sidebar .menu__link:after {
-      right: 0
+      right: 0;
 }
 
 .menu--sidebar .menu__link:after {
@@ -82,18 +82,15 @@
 .menu--sidebar .menu__link--link {
     text-decoration: none;
     color: var(--color-text-neutral-loud);
-    font-weight: 600
+    font-weight: 600;
   }
 
 .menu--sidebar .menu__link--link:hover {
       color: var(--color--primary-50);
     }
 
-.menu--sidebar {
+/* No bottom divider line for last menu item. */
 
-  /* No bottom divider line for last menu item. */
-}
-
-.menu--sidebar .menu__item--level-1:last-child > .menu__link:last-child:after, .menu--sidebar .menu__item--level-1:last-child > .menu__item--level-2:last-child > .menu__link:last-child:after {
+:is(.menu--sidebar .menu__item--level-1:last-child > .menu__link:last-child,.menu--sidebar .menu__item--level-1:last-child > .menu__item--level-2:last-child > .menu__link:last-child):after {
       content: none;
     }

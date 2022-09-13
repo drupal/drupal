@@ -24,49 +24,49 @@
 /* Width of the entire grid maxes out. */
 
 [dir="ltr"] .search-results {
-  padding-left: 0
+  padding-left: 0;
 }
 
 [dir="rtl"] .search-results {
-  padding-right: 0
+  padding-right: 0;
 }
 
 [dir="ltr"] .search-results {
-  padding-right: 0
+  padding-right: 0;
 }
 
 [dir="rtl"] .search-results {
-  padding-left: 0
+  padding-left: 0;
 }
 
 .search-results {
   margin-bottom: var(--sp2);
   padding-top: 0;
   padding-bottom: 0;
-  list-style: none
+  list-style: none;
 }
 
 @media (min-width: 43.75rem) {
 
 .search-results {
-    margin-bottom: var(--sp3)
+    margin-bottom: var(--sp3);
 }
   }
 
 [dir="ltr"] .search-result__title {
-  margin-left: 0
+  margin-left: 0;
 }
 
 [dir="rtl"] .search-result__title {
-  margin-right: 0
+  margin-right: 0;
 }
 
 [dir="ltr"] .search-result__title {
-  margin-right: 0
+  margin-right: 0;
 }
 
 [dir="rtl"] .search-result__title {
-  margin-left: 0
+  margin-left: 0;
 }
 
 .search-result__title {
@@ -74,7 +74,7 @@
   margin-bottom: 0;
   color: var(--color-text-neutral-loud);
   font-size: 1.25rem;
-  line-height: var(--line-height-base)
+  line-height: var(--line-height-base);
 }
 
 .search-result__title a {
@@ -85,7 +85,7 @@
     background-image: linear-gradient(var(--color--primary-50), var(--color--primary-50)); /* Two values are needed for IE11 support. */
     background-repeat: no-repeat;
     background-position: bottom left; /* LTR */
-    background-size: 0 0.1875rem
+    background-size: 0 0.1875rem;
   }
 
 .search-result__title a:hover {
@@ -97,7 +97,7 @@
 .search-result__title {
     margin-bottom: var(--sp1);
     font-size: 1.875rem;
-    line-height: var(--sp3)
+    line-height: var(--sp3);
 }
   }
 
@@ -106,13 +106,13 @@
 }
 
 .search-result__snippet {
-  padding-bottom: calc(var(--sp1-5) - 2px)
+  padding-bottom: calc(var(--sp1-5) - 2px);
 }
 
 @media (min-width: 62.5rem) {
 
 .search-result__snippet {
-    padding-bottom: var(--sp3)
+    padding-bottom: var(--sp3);
 }
   }
 
@@ -122,7 +122,7 @@
   margin-bottom: var(--sp1);
   color: var(--color-text-neutral-soft);
   font-size: 0.875rem;
-  line-height: var(--sp)
+  line-height: var(--sp);
 }
 
 .search-result__meta a {
@@ -132,7 +132,7 @@
 
 .search-results__item {
   position: relative; /* Anchor after pseudo-element. */
-  margin-bottom: var(--sp1-5)
+  margin-bottom: var(--sp1-5);
 }
 
 .search-results__item:after {
@@ -152,6 +152,6 @@
 @media (min-width: 62.5rem) {
 
 .search-results__item {
-    margin-bottom: var(--sp3)
+    margin-bottom: var(--sp3);
 }
   }

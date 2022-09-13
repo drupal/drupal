@@ -79,7 +79,7 @@
 
   /* @todo should this be scoped to desktop nav? */
   width: max-content;
-  max-width: 12.5rem
+  max-width: 12.5rem;
 }
 
 [dir="ltr"] .secondary-nav__menu-item:not(:last-child) {
@@ -96,7 +96,7 @@
   align-items: center;
   height: var(--sp2);
   text-decoration: none;
-  color: inherit
+  color: inherit;
 }
 
 .secondary-nav__menu-link:after {
@@ -133,7 +133,7 @@
   }
     body:not(.is-always-mobile-nav) .secondary-nav {
       position: relative;
-      display: flex
+      display: flex;
     }
 
       [dir="ltr"] body:not(.is-always-mobile-nav) .secondary-nav:before {
@@ -163,7 +163,7 @@
   }
       body:not(.is-always-mobile-nav) .secondary-nav__menu-link:focus {
         position: relative;
-        outline: 0
+        outline: 0;
       }
 
         body:not(.is-always-mobile-nav) .secondary-nav__menu-link:focus:before {

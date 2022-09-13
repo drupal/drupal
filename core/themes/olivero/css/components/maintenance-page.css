@@ -27,7 +27,7 @@
 
 .maintenance-page .site-header__initial {
       flex-shrink: 0;
-      width: var(--content-left)
+      width: var(--content-left);
   }
     }
 
@@ -38,7 +38,7 @@
 .maintenance-page-icon {
   display: block;
   margin-top: var(--sp3);
-  margin-bottom: var(--sp3)
+  margin-bottom: var(--sp3);
 }
 
 .maintenance-page-icon path {

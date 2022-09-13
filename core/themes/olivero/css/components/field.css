@@ -28,7 +28,7 @@
 }
 
 .node--view-mode-teaser .field {
-  margin-bottom: var(--sp)
+  margin-bottom: var(--sp);
 }
 
 .node--view-mode-teaser .field:last-child {
@@ -38,7 +38,7 @@
 @media (min-width: 62.5rem) {
 
 .node--view-mode-teaser .field {
-    margin-bottom: var(--sp2)
+    margin-bottom: var(--sp2);
 }
   }
 

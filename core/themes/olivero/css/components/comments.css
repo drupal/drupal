@@ -29,7 +29,7 @@
 }
 
 .comment--level-1 {
-  border-top: 2px solid var(--color--gray-95)
+  border-top: 2px solid var(--color--gray-95);
 }
 
 .comment--level-1 ~ .comment--level-1 {
@@ -87,7 +87,7 @@
   border-radius: 2px;
   background-color: var(--color--primary-40);
   font-size: 0.6875rem;
-  line-height: 1.3125rem
+  line-height: 1.3125rem;
 }
 
 [dir="ltr"] .comments__count:after {
@@ -99,11 +99,11 @@
 }
 
 [dir="ltr"] .comments__count:after {
-    border-right: 8px solid transparent;
+    border-right: 0.5rem solid transparent;
 }
 
 [dir="rtl"] .comments__count:after {
-    border-left: 8px solid transparent;
+    border-left: 0.5rem solid transparent;
 }
 
 .comments__count:after {
@@ -112,7 +112,7 @@
     width: 0;
     height: 0;
     content: "";
-    border-top: 7px solid var(--color--primary-40);
+    border-top: 0.4375rem solid var(--color--primary-40);
   }
 
 .comment-form {
@@ -137,7 +137,7 @@
 
 .comment {
   position: relative;
-  padding-top: var(--sp2)
+  padding-top: var(--sp2);
 }
 
 @media (min-width: 43.75rem) {
@@ -152,7 +152,7 @@
   }
 
 .comment__text-content {
-  font-size: 1rem
+  font-size: 1rem;
 }
 
 .comment__text-content blockquote {
@@ -160,10 +160,7 @@
     line-height: var(--sp2);
   }
 
-.comment__text-content {
-
-  /* Override for .field:not(:last-child) */
-}
+/* Override for .field:not(:last-child) */
 
 .comment__text-content:not(:last-child) {
     margin-bottom: 0;
@@ -178,7 +175,7 @@
   text-decoration: none;
   font-size: 0.875rem;
   font-weight: bold;
-  line-height: var(--sp)
+  line-height: var(--sp);
 }
 
 .comment__links-link:hover {
@@ -206,7 +203,7 @@
   width: var(--sp2);
   height: var(--sp2);
   border-radius: 50%;
-  background-color: var(--color--gray-95)
+  background-color: var(--color--gray-95);
 }
 
 .add-comment__picture *:not(img), .comment__picture *:not(img) {
@@ -218,7 +215,7 @@
 .add-comment__picture img, .comment__picture img {
     width: 100%;
     height: 100%;
-    object-fit: cover
+    object-fit: cover;
 
     /* @TODO: create image-style for profile's avatar to have image squared by default. */
   }
@@ -233,7 +230,7 @@
       /* stylelint-enable csstools/use-logical */
       width: 100%;
       height: auto;
-      transform: translate(-50%, -50%)
+      transform: translate(-50%, -50%);
   }
     }
 
@@ -252,7 +249,7 @@
 .add-comment__picture,
 .comment__picture {
     width: var(--sp3);
-    height: var(--sp3)
+    height: var(--sp3);
 }
   }
 
@@ -268,7 +265,7 @@
 
 .indented .comment__picture {
     width: var(--sp2);
-    height: var(--sp2)
+    height: var(--sp2);
 }
   }
 
@@ -288,7 +285,7 @@
   font-family: var(--font-sans);
   font-size: 1rem;
   font-weight: 700;
-  line-height: var(--sp)
+  line-height: var(--sp);
 }
 
 .comment__author a {
@@ -332,7 +329,7 @@
     top: var(--sp2); /* Comment's padding-top */
     width: 0;
     height: 100%;
-    content: ""
+    content: "";
   }
 
 @media (min-width: 43.75rem) {
@@ -402,7 +399,7 @@
   font-weight: 600;
   line-height: 1.125rem;
   -webkit-appearance: none;
-  appearance: none
+  appearance: none;
 }
 
 .show-hide-btn[aria-expanded="true"]:after {

@@ -25,7 +25,7 @@
 
 .node--view-mode-teaser {
   position: relative; /* Anchor after pseudo-element. */
-  margin-bottom: var(--sp1-5)
+  margin-bottom: var(--sp1-5);
 }
 
 .node--view-mode-teaser:after {
@@ -39,7 +39,7 @@
   }
 
 .node--view-mode-teaser .node__meta {
-    margin-bottom: var(--sp)
+    margin-bottom: var(--sp);
   }
 
 .node--view-mode-teaser .node__meta a {
@@ -51,40 +51,40 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    margin: 0
+    margin: 0;
   }
 
 @media (min-width: 62.5rem) {
 
 .node--view-mode-teaser .node__top-wrapper {
-      position: relative /* Anchor the image */
+      position: relative; /* Anchor the image */
   }
     }
 
 [dir="ltr"] .node--view-mode-teaser .primary-image {
-    margin-right: var(--sp1)
+    margin-right: var(--sp1);
 }
 
 [dir="rtl"] .node--view-mode-teaser .primary-image {
-    margin-left: var(--sp1)
+    margin-left: var(--sp1);
 }
 
 .node--view-mode-teaser .primary-image {
     flex-shrink: 0;
     margin: 0;
-    margin-bottom: var(--sp1)
+    margin-bottom: var(--sp1);
 
     /* Ensure title does not wrap under image until necessary. */
   }
 
-.node--view-mode-teaser .primary-image + .node__title {
-      flex-basis: calc(100% - calc(4.5 * var(--sp)))
+:is(.node--view-mode-teaser .primary-image) + .node__title {
+      flex-basis: calc(100% - calc(4.5 * var(--sp)));
     }
 
 @media (min-width: 62.5rem) {
 
-.node--view-mode-teaser .primary-image + .node__title {
-        flex-basis: auto
+:is(.node--view-mode-teaser .primary-image) + .node__title {
+        flex-basis: auto;
     }
       }
 
@@ -96,31 +96,31 @@
       width: calc(3.5 * var(--sp));
       height: calc(3.5 * var(--sp));
       object-fit: cover;
-      border-radius: 50%
+      border-radius: 50%;
     }
 
 @media (min-width: 62.5rem) {
 
 .node--view-mode-teaser .primary-image img {
         width: var(--grid-col-width);
-        height: var(--grid-col-width)
+        height: var(--grid-col-width);
     }
       }
 
 @media (min-width: 62.5rem) {
 
 [dir="ltr"] .node--view-mode-teaser .primary-image {
-      left: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))))
+      left: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))));
   }
 
 [dir="rtl"] .node--view-mode-teaser .primary-image {
-      right: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))))
+      right: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))));
   }
 
 .node--view-mode-teaser .primary-image {
       position: absolute;
       top: 0;
-      margin: 0
+      margin: 0;
   }
     }
 
@@ -129,47 +129,47 @@
     margin-bottom: var(--sp1);
     color: var(--color-text-neutral-loud);
     font-size: 1.5rem;
-    line-height: var(--line-height-base)
+    line-height: var(--line-height-base);
   }
 
 @media (min-width: 62.5rem) {
 
 .node--view-mode-teaser .node__title {
       font-size: var(--sp2);
-      line-height: var(--sp3)
+      line-height: var(--sp3);
   }
     }
 
 [dir="ltr"] .node--view-mode-teaser .field--tag-ref {
-    margin-left: 0
+    margin-left: 0;
 }
 
 [dir="rtl"] .node--view-mode-teaser .field--tag-ref {
-    margin-right: 0
+    margin-right: 0;
 }
 
 [dir="ltr"] .node--view-mode-teaser .field--tag-ref {
-    margin-right: 0
+    margin-right: 0;
 }
 
 [dir="rtl"] .node--view-mode-teaser .field--tag-ref {
-    margin-left: 0
+    margin-left: 0;
 }
 
 [dir="ltr"] .node--view-mode-teaser .field--tag-ref {
-    padding-left: 0
+    padding-left: 0;
 }
 
 [dir="rtl"] .node--view-mode-teaser .field--tag-ref {
-    padding-right: 0
+    padding-right: 0;
 }
 
 [dir="ltr"] .node--view-mode-teaser .field--tag-ref {
-    padding-right: 0
+    padding-right: 0;
 }
 
 [dir="rtl"] .node--view-mode-teaser .field--tag-ref {
-    padding-left: 0
+    padding-left: 0;
 }
 
 .node--view-mode-teaser .field--tag-ref {
@@ -177,20 +177,20 @@
     margin-bottom: 0;
     padding-top: 0;
     padding-bottom: 0;
-    background-color: transparent
+    background-color: transparent;
   }
 
 @media (min-width: 62.5rem) {
 
 .node--view-mode-teaser .field--tag-ref {
-      margin-top: var(--sp2)
+      margin-top: var(--sp2);
   }
     }
 
 @media (min-width: 62.5rem) {
 
 .node--view-mode-teaser {
-    margin-bottom: var(--sp3)
+    margin-bottom: var(--sp3);
 }
   }
 

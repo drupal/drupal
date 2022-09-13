@@ -15,7 +15,7 @@
 
 .install-page {
   min-height: 100%;
-  background-color: var(--color-gray-100)
+  background-color: var(--color-gray-100);
 }
 
 .install-page h1,

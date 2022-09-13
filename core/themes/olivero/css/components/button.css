@@ -24,19 +24,19 @@
 /* Width of the entire grid maxes out. */
 
 [dir="ltr"] .button {
-  margin-left: 0
+  margin-left: 0;
 }
 
 [dir="rtl"] .button {
-  margin-right: 0
+  margin-right: 0;
 }
 
 [dir="ltr"] .button {
-  margin-right: var(--sp1)
+  margin-right: var(--sp1);
 }
 
 [dir="rtl"] .button {
-  margin-left: var(--sp1)
+  margin-left: var(--sp1);
 }
 
 .button {
@@ -60,7 +60,7 @@
   font-weight: 700;
   -webkit-appearance: none;
   appearance: none;
-  -webkit-font-smoothing: antialiased
+  -webkit-font-smoothing: antialiased;
 }
 
 .button:hover,
@@ -89,13 +89,10 @@
     border-color: var(--color--gray-90);
   }
 
-.button {
-
-  /*
+/*
     IE11 doesn't work properly on button elements so we only do
     inline-flex on modern browsers.
   */
-}
 
 @supports (display: inline-flex) {
 
@@ -108,26 +105,26 @@
     padding-bottom: 0;
     padding-left: var(--sp1-5);
     padding-right: var(--sp1-5);
-    line-height: var(--line-height-s)
+    line-height: var(--line-height-s);
 }
   }
 
 /* No margin if is part of a menu. */
 
 [dir="ltr"] .menu .button {
-  margin-left: 0
+  margin-left: 0;
 }
 
 [dir="rtl"] .menu .button {
-  margin-right: 0
+  margin-right: 0;
 }
 
 [dir="ltr"] .menu .button {
-  margin-right: 0
+  margin-right: 0;
 }
 
 [dir="rtl"] .menu .button {
-  margin-left: 0
+  margin-left: 0;
 }
 
 .menu .button {
@@ -147,7 +144,7 @@
 
 .button--primary {
   color: var(--color--white);
-  background-color: var(--color--primary-40)
+  background-color: var(--color--primary-40);
 }
 
 .button--primary:hover,
@@ -170,23 +167,23 @@
 
 .button--icon-back {
   display: inline-flex;
-  align-items: center
+  align-items: center;
 }
 
 [dir="ltr"] .button--icon-back:before {
-    margin-right: 0.5em
+    margin-right: 0.5em;
 }
 
 [dir="rtl"] .button--icon-back:before {
-    margin-left: 0.5em
+    margin-left: 0.5em;
 }
 
 [dir="ltr"] .button--icon-back:before {
-    border-left: solid 2px currentColor
+    border-left: solid 2px currentColor;
 }
 
 [dir="rtl"] .button--icon-back:before {
-    border-right: solid 2px currentColor
+    border-right: solid 2px currentColor;
 }
 
 .button--icon-back:before {

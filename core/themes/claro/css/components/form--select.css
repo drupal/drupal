@@ -21,13 +21,13 @@
 [dir="rtl"] .form-element--type-select {
   padding-right: calc(1rem - var(--input-border-size));
   padding-left: calc(2rem - var(--input-border-size));
-  background-position: 0 50%
+  background-position: 0 50%;
 }
 
 @media (forced-colors: active) {
 
 [dir="rtl"] .form-element--type-select {
-    padding-left: var(--input-padding-horizontal)
+    padding-left: var(--input-padding-horizontal);
 }
   }
 

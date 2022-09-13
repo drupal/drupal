@@ -36,14 +36,17 @@
  */
 
 .button {
+  border: 1px solid transparent !important;
+}
+
+.button {
   display: inline-block;
   margin: var(--space-m) var(--space-s) var(--space-m) 0; /* LTR */
   padding: calc(var(--space-m) - 1px) calc(var(--space-l) - 1px); /* 1 */
   cursor: pointer;
   text-align: center;
   text-decoration: none;
-  color: var(--button-fg-color);
-  border: 1px solid transparent !important;  /* 2 */
+  color: var(--button-fg-color);  /* 2 */
   border-radius: var(--button-border-radius-size);
   background-color: var(--button-bg-color);
   font-size: var(--font-size-base);

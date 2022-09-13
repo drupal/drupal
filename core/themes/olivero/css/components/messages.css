@@ -73,17 +73,14 @@
   padding-bottom: var(--sp1);
   color: var(--color--white);
   outline: solid 1px transparent;
-  background-color: var(--color--gray-5)
+  background-color: var(--color--gray-5);
 }
 
 .messages * {
     color: inherit;
   }
 
-.messages {
-
-  /* Additional specificity to override contrib modules. */
-}
+/* Additional specificity to override contrib modules. */
 
 .messages.messages-list__item {
     background-image: none;
@@ -150,7 +147,7 @@
 }
 
 .messages__header {
-  flex-shrink: 0
+  flex-shrink: 0;
 }
 
 [dir="ltr"] .messages__header.no-icon {
@@ -207,7 +204,7 @@
   border: 0;
   background: none;
   -webkit-appearance: none;
-  appearance: none
+  appearance: none;
 }
 
 .messages__close:before,
@@ -269,11 +266,11 @@
 }
 
 [dir="ltr"] .js-form-managed-file .messages {
-  border-left: solid 6px var(--color--red);
+  border-left: solid 0.375rem var(--color--red);
 }
 
 [dir="rtl"] .js-form-managed-file .messages {
-  border-right: solid 6px var(--color--red);
+  border-right: solid 0.375rem var(--color--red);
 }
 
 .js-form-managed-file .messages {

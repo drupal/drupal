@@ -29,7 +29,7 @@
   margin-bottom: var(--sp1);
   color: var(--color-text-neutral-soft);
   font-size: 0.875rem;
-  line-height: var(--sp)
+  line-height: var(--sp);
 }
 
 .node__meta a {
@@ -39,16 +39,16 @@
 @media (min-width: 31.25rem) {
 
 .node__meta {
-    margin-bottom: var(--sp2)
+    margin-bottom: var(--sp2);
 }
   }
 
 [dir="ltr"] .node__author-image img {
-  margin-right: var(--sp0-5)
+  margin-right: var(--sp0-5);
 }
 
 [dir="rtl"] .node__author-image img {
-  margin-left: var(--sp0-5)
+  margin-left: var(--sp0-5);
 }
 
 .node__author-image img {
@@ -67,7 +67,7 @@
     background-image: linear-gradient(var(--color--primary-50), var(--color--primary-50)); /* Two values are needed for IE11 support. */
     background-repeat: no-repeat;
     background-position: bottom left; /* LTR */
-    background-size: 0 0.1875rem
+    background-size: 0 0.1875rem;
   }
 
 .node__title a:hover,
@@ -80,13 +80,13 @@
 }
 
 .node__content {
-  padding-bottom: var(--sp1-5)
+  padding-bottom: var(--sp1-5);
 }
 
 @media (min-width: 62.5rem) {
 
 .node__content {
-    padding-bottom: var(--sp3)
+    padding-bottom: var(--sp3);
 }
   }
 

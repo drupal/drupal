@@ -21,11 +21,11 @@
 /* Breakpoint where tabs switch between vertical and horizontal layouts. */
 
 [dir="ltr"] .tabs {
-  margin-left: 0
+  margin-left: 0;
 }
 
 [dir="rtl"] .tabs {
-  margin-right: 0
+  margin-right: 0;
 }
 
 .tabs {
@@ -48,21 +48,21 @@
   width: 100%;
   margin: 0; /* Override [dir] attribute in base <ul> in compiled CSS. */
   padding: 0;
-  list-style: none
+  list-style: none;
 }
 
 @media (min-width: 43.75rem) {
 
 .tabs {
     flex-direction: row;
-    flex-wrap: wrap
+    flex-wrap: wrap;
 }
   }
 
 .tabs__tab {
   display: none;
   margin: 0;
-  margin-bottom: calc(-1 * var(--tabs-border-width))
+  margin-bottom: calc(-1 * var(--tabs-border-width));
 }
 
 .tabs__tab.is-active {
@@ -72,50 +72,41 @@
 @media (min-width: 43.75rem) {
 
 [dir="ltr"] .tabs__tab {
-    margin-left: calc(-1 * var(--tabs-border-width))
+    margin-left: calc(-1 * var(--tabs-border-width));
   }
 
 [dir="rtl"] .tabs__tab {
-    margin-right: calc(-1 * var(--tabs-border-width))
+    margin-right: calc(-1 * var(--tabs-border-width));
   }
 
 .tabs__tab {
     display: flex;
-    margin-bottom: 0
+    margin-bottom: 0;
 }
   }
 
-.tabs__tab {
-
-  /* Show tabs when JavaScript disabled. */
-}
+/* Show tabs when JavaScript disabled. */
 
 html:not(.js) .tabs__tab {
-    display: flex
+    display: flex;
 }
 
-.tabs__tab {
-
-  /* Show tabs when tabs-expanded class is present. */
-}
+/* Show tabs when tabs-expanded class is present. */
 
 .tabs.is-expanded .tabs__tab {
-    display: flex
+    display: flex;
 }
 
-.tabs__tab {
-
-  /* Secondary tabs will always be expanded. */
-}
+/* Secondary tabs will always be expanded. */
 
 .tabs--secondary .tabs__tab {
-    display: block
+    display: block;
 }
 
 @media (min-width: 43.75rem) {
 
 .tabs--secondary .tabs__tab {
-      display: flex
+      display: flex;
 }
     }
 
@@ -134,7 +125,7 @@ html:not(.js) .tabs__tab {
   color: var(--tabs-text-color);
   border: var(--tabs-border-width) solid var(--tabs-border-color);
   background-color: var(--tabs-background-color);
-  font-size: var(--tabs-font-size)
+  font-size: var(--tabs-font-size);
 }
 
 .tabs__link:hover {
@@ -151,7 +142,7 @@ html:not(.js) .tabs__tab {
 .tabs__link.is-active {
     position: relative; /* Anchor :after pseudo-element. */
     color: var(--tabs-text-color-active);
-    font-weight: 600
+    font-weight: 600;
 
     /*
      * We use :after pseudo-element in place of border so edges do not appear
@@ -160,36 +151,36 @@ html:not(.js) .tabs__tab {
   }
 
 [dir="ltr"] .tabs__link.is-active:after {
-      left: calc(-1 * var(--tabs-border-width))
+      left: calc(-1 * var(--tabs-border-width));
 }
 
 [dir="rtl"] .tabs__link.is-active:after {
-      right: calc(-1 * var(--tabs-border-width))
+      right: calc(-1 * var(--tabs-border-width));
 }
 
 [dir="ltr"] .tabs__link.is-active:after {
-      border-left: var(--tabs-active-border-size) solid var(--tabs-highlight-color)
+      border-left: var(--tabs-active-border-size) solid var(--tabs-highlight-color);
 }
 
 [dir="rtl"] .tabs__link.is-active:after {
-      border-right: var(--tabs-active-border-size) solid var(--tabs-highlight-color)
+      border-right: var(--tabs-active-border-size) solid var(--tabs-highlight-color);
 }
 
 .tabs__link.is-active:after {
       position: absolute;
       top: calc(-1 * var(--tabs-border-width));
       height: calc(100% + var(--tabs-border-width) * 2);
-      content: ""
+      content: "";
     }
 
 @media (min-width: 43.75rem) {
 
 [dir="ltr"] .tabs__link.is-active:after {
-        border-left: 0
+        border-left: 0;
   }
 
 [dir="rtl"] .tabs__link.is-active:after {
-        border-right: 0
+        border-right: 0;
   }
 
 .tabs__link.is-active:after {
@@ -197,20 +188,17 @@ html:not(.js) .tabs__tab {
         bottom: calc(-1 * var(--tabs-border-width));
         width: calc(100% + 2 * var(--tabs-border-width));
         height: 0;
-        border-top: var(--tabs-active-border-size) solid var(--tabs-highlight-color)
+        border-top: var(--tabs-active-border-size) solid var(--tabs-highlight-color);
     }
       }
 
-.tabs__link {
-
-  /* No regular borders or background color for secondary tab links. */
-}
+/* No regular borders or background color for secondary tab links. */
 
 @media (min-width: 43.75rem) {
 
 .tabs--secondary .tabs__link {
       border-color: transparent;
-      background-color: transparent
+      background-color: transparent;
 }
     }
 
@@ -218,12 +206,12 @@ html:not(.js) .tabs__tab {
 
 [dir="ltr"] .tabs__trigger {
   margin-left: calc(-1 * var(--tabs-border-width));
-  margin-right: 0
+  margin-right: 0;
 }
 
 [dir="rtl"] .tabs__trigger {
   margin-right: calc(-1 * var(--tabs-border-width));
-  margin-left: 0
+  margin-left: 0;
 }
 
 .tabs__trigger {
@@ -235,7 +223,7 @@ html:not(.js) .tabs__tab {
   margin-bottom: 0;
   cursor: pointer;
   border: solid var(--tabs-border-width) var(--tabs-border-color);
-  background-color: var(--tabs-background-color)
+  background-color: var(--tabs-background-color);
 }
 
 .tabs__trigger:hover {
@@ -248,19 +236,16 @@ html:not(.js) .tabs__tab {
     outline: none;
   }
 
-.tabs__trigger {
-
-  /* Button will not work when JavaScript is disabled, so we hide it. */
-}
+/* Button will not work when JavaScript is disabled, so we hide it. */
 
 html:not(.js) .tabs__trigger {
-    display: none
+    display: none;
 }
 
 @media (min-width: 43.75rem) {
 
 .tabs__trigger {
-    display: none
+    display: none;
 }
   }
 
@@ -269,15 +254,15 @@ html:not(.js) .tabs__trigger {
   display: block;
   width: var(--sp);
   height: 0.625rem;
-  margin-top: calc(-2 * var(--tabs-border-width))
+  margin-top: calc(-2 * var(--tabs-border-width));
 }
 
 [dir="ltr"] .tabs__trigger-icon > span {
-    left: 0
+    left: 0;
 }
 
 [dir="rtl"] .tabs__trigger-icon > span {
-    right: 0
+    right: 0;
 }
 
 .tabs__trigger-icon > span {
@@ -285,31 +270,31 @@ html:not(.js) .tabs__trigger {
     display: block;
     width: 100%;
     transition: transform var(--tabs-transition-duration), opacity var(--tabs-transition-duration), top var(--tabs-transition-duration);
-    border-top: solid 2px var(--tabs-highlight-color)
+    border-top: solid 2px var(--tabs-highlight-color);
   }
 
 .tabs__trigger-icon > span:nth-child(1) {
-      top: 0
+      top: 0;
     }
 
-.tabs__trigger[aria-expanded="true"] .tabs__trigger-icon > span:nth-child(1) {
+.tabs__trigger[aria-expanded="true"] :is(.tabs__trigger-icon > span:nth-child(1)) {
         top: calc(50% + 1px);
-        transform: rotate(45deg)
+        transform: rotate(45deg);
     }
 
 .tabs__trigger-icon > span:nth-child(2) {
-      top: calc(50% + 1px)
+      top: calc(50% + 1px);
     }
 
-.tabs__trigger[aria-expanded="true"] .tabs__trigger-icon > span:nth-child(2) {
-        opacity: 0
+.tabs__trigger[aria-expanded="true"] :is(.tabs__trigger-icon > span:nth-child(2)) {
+        opacity: 0;
     }
 
 .tabs__trigger-icon > span:nth-child(3) {
-      top: calc(100% + 2px)
+      top: calc(100% + 2px);
     }
 
-.tabs__trigger[aria-expanded="true"] .tabs__trigger-icon > span:nth-child(3) {
+.tabs__trigger[aria-expanded="true"] :is(.tabs__trigger-icon > span:nth-child(3)) {
         top: calc(50% + 1px);
-        transform: rotate(-45deg)
+        transform: rotate(-45deg);
     }

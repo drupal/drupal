@@ -31,7 +31,7 @@
 @media (min-width: 62.5rem) {
 
 .vertical-tabs {
-    display: flex
+    display: flex;
 }
   }
 
@@ -58,33 +58,33 @@
   list-style: none;
   border-width: var(--vertical-tabs-menu-border-width);
   border-style: solid;
-  border-color: var(--color--gray-95)
+  border-color: var(--color--gray-95);
 }
 
 @media (min-width: 62.5rem) {
 
 .vertical-tabs__menu {
     width: var(--vertical-tabs-menu-width);
-    border-width: var(--vertical-tabs-menu-border-width) 0 var(--vertical-tabs-menu-border-width) var(--vertical-tabs-menu-border-width)
+    border-width: var(--vertical-tabs-menu-border-width) 0 var(--vertical-tabs-menu-border-width) var(--vertical-tabs-menu-border-width);
 }
   }
 
 .vertical-tabs__panes {
-  margin-top: calc(var(--vertical-tabs-menu-border-width) * -1)
+  margin-top: calc(var(--vertical-tabs-menu-border-width) * -1);
 }
 
 @media (min-width: 62.5rem) {
 
 .vertical-tabs__panes {
     width: calc(100% - var(--vertical-tabs-menu-width));
-    margin-top: 0
+    margin-top: 0;
 }
   }
 
 @media (min-width: 62.5rem) {
 
 .vertical-tabs__pane {
-    min-height: 100%
+    min-height: 100%;
 }
   }
 
@@ -124,7 +124,7 @@
   padding-bottom: var(--sp0-5);
   text-decoration: none;
   color: var(--color-text-primary-loud);
-  background-color: var(--color--gray-95)
+  background-color: var(--color--gray-95);
 }
 
 .vertical-tabs__menu-item a:focus,
@@ -134,7 +134,7 @@
   }
 
 .vertical-tabs__menu-item.is-selected {
-  background-color: var(--color--white)
+  background-color: var(--color--white);
 }
 
 @media (min-width: 62.5rem) {

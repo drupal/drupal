@@ -50,7 +50,7 @@
   margin-bottom: calc(-1 * var(--views-grid--layout-gap)); /* Offset the bottom row's padding. */
   column-width: var(--views-grid-item--min-width);
   column-count: var(--views-grid--column-count);
-  grid-column-gap: var(--views-grid--layout-gap)
+  column-gap: var(--views-grid--layout-gap);
 }
 
 .views-view-grid--vertical .views-view-grid__item > * {

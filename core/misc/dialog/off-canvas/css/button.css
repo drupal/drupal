@@ -23,7 +23,7 @@
   --off-canvas-primary-button-background-color: #277abd;
   --off-canvas-primary-button-background-color-hover: #236aaf;
   --off-canvas-primary-button-text-color: #fff;
-  --off-canvas-primary-button-text-color-hover: #fff
+  --off-canvas-primary-button-text-color-hover: #fff;
 }
 #drupal-off-canvas-wrapper .button {
     display: inline-block;
@@ -43,7 +43,7 @@
     font-weight: var(--off-canvas-button-font-weight);
     line-height: normal;
     -webkit-appearance: none;
-    appearance: none
+    appearance: none;
   }
 #drupal-off-canvas-wrapper .button:hover,
     #drupal-off-canvas-wrapper .button:active {
@@ -64,7 +64,7 @@
 #drupal-off-canvas-wrapper .button--primary {
     margin-top: 0.9375rem;
     color: var(--off-canvas-primary-button-text-color);
-    background: var(--off-canvas-primary-button-background-color)
+    background: var(--off-canvas-primary-button-background-color);
   }
 #drupal-off-canvas-wrapper .button--primary:hover,
     #drupal-off-canvas-wrapper .button--primary:active {
@@ -77,7 +77,7 @@
     color: var(--off-canvas-link-color);
     border: 0;
     background: transparent;
-    font-size: var(--off-canvas-button-font-size)
+    font-size: var(--off-canvas-button-font-size);
   }
 #drupal-off-canvas-wrapper button.link:hover,
     #drupal-off-canvas-wrapper button.link:focus {
@@ -88,7 +88,7 @@
     text-decoration: none;
     color: #c72100;
     border-radius: 0;
-    font-weight: 400
+    font-weight: 400;
   }
 #drupal-off-canvas-wrapper .button--danger:hover,
     #drupal-off-canvas-wrapper .button--danger:focus,
@@ -104,5 +104,5 @@
     }
 .no-touchevents #drupal-off-canvas-wrapper .button--small {
     padding: 2px 1em;
-    font-size: 0.8125rem
+    font-size: 0.8125rem;
 }
