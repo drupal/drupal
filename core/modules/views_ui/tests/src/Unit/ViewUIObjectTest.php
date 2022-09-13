@@ -114,10 +114,6 @@ class ViewUIObjectTest extends UnitTestCase {
    * Tests serialization of the ViewUI object.
    */
   public function testSerialization() {
-    // Set a container so the DependencySerializationTrait has it.
-    $container = new ContainerBuilder();
-    \Drupal::setContainer($container);
-
     $storage = new View([], 'view');
     $executable = $this->getMockBuilder('Drupal\views\ViewExecutable')
       ->disableOriginalConstructor()

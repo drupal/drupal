@@ -100,7 +100,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   /**
    * Holds the container instance.
    *
-   * @var \Symfony\Component\DependencyInjection\ContainerInterface
+   * @var \Drupal\Component\DependencyInjection\ContainerInterface
    */
   protected $container;
 
@@ -236,6 +236,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @var string
    */
   protected $root;
+
+  /**
+   * A mapping from service classes to service IDs.
+   */
+  protected $serviceIdMapping = [];
 
   /**
    * Create a DrupalKernel object from a request.
@@ -784,6 +789,32 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   }
 
   /**
+   * Generate a unique hash for a service object.
+   *
+   * @param object $object
+   *   A service object.
+   *
+   * @return string
+   *   A unique hash value.
+   */
+  public static function generateServiceIdHash($object) {
+    // Include class name as an additional namespace for the hash since
+    // spl_object_hash's return can be recycled. This still is not a 100%
+    // guarantee to be unique but makes collisions incredibly difficult and even
+    // then the interface would be preserved.
+    // @see https://php.net/spl_object_hash#refsect1-function.spl-object-hash-notes
+    return hash('sha256', get_class($object) . spl_object_hash($object));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getServiceIdMapping() {
+    $this->collectServiceIdMapping();
+    return $this->serviceIdMapping;
+  }
+
+  /**
    * Returns the container cache key based on the environment.
    *
    * The 'environment' consists of:
@@ -828,6 +859,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       if ($this->container->initialized('current_user')) {
         $current_user_id = $this->container->get('current_user')->id();
       }
+      // Save the current services.
+      $this->collectServiceIdMapping();
 
       // If there is a session, close and save it.
       if ($this->container->initialized('session')) {
@@ -1533,6 +1566,17 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   protected function addServiceFiles(array $service_yamls) {
     $this->serviceYamls['site'] = array_filter($service_yamls, 'file_exists');
+  }
+
+  /**
+   * Collect a mapping between service to ids.
+   */
+  protected function collectServiceIdMapping() {
+    if (isset($this->container)) {
+      foreach ($this->container->getServiceIdMappings() as $hash => $service_id) {
+        $this->serviceIdMapping[$hash] = $service_id;
+      }
+    }
   }
 
   /**
