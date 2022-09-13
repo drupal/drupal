@@ -38,8 +38,7 @@
 }
 
 /* Arrow icon */
-.olivero-details__summary:before,
-.collapse-processed > .olivero-details__summary .details-title:before {
+.olivero-details__summary:before {
   position: absolute;
   inset-block-start: 50%;
   inset-inline-start: var(--sp0-75);
@@ -52,16 +51,12 @@
   border-right: solid 2px currentColor;
 }
 
-[dir="rtl"] {
-  & .olivero-details__summary:before,
-  & .collapse-processed > .olivero-details__summary .details-title:before {
-    transform: translateY(-50%) rotate(-135deg);
-  }
+[dir="rtl"] .olivero-details__summary:before {
+  transform: translateY(-50%) rotate(-135deg);
 }
 
 /* Pseudo-selector to manage focus styles */
-.olivero-details__summary:after,
-.collapse-processed > .olivero-details__summary .details-title:after {
+.olivero-details__summary:after {
   position: absolute;
   inset: calc(var(--details-border-width) * -1);
   content: "";
@@ -89,59 +84,14 @@
 
 /* Details summary, focus and active states */
 .olivero-details__summary:focus:after,
-.olivero-details__summary:active:after,
-.collapse-processed > .olivero-details__summary .details-title:focus:after,
-.collapse-processed > .olivero-details__summary .details-title:active:after {
+.olivero-details__summary:active:after {
   opacity: 1;
 }
 
 /* Rotate arrow icon of the details summary, when details expanded */
-.olivero-details[open] > .olivero-details__summary::before,
-.collapse-processed[open] > .olivero-details__summary .details-title::before {
+.olivero-details[open] > .olivero-details__summary::before {
   margin-block-start: -2px;
   transform: translateY(-50%) rotate(135deg);
-}
-
-/* Collapse processed for non-supporting browsers like IE or Edge */
-.collapse-processed > .olivero-details__summary {
-  padding-block: 0;
-  padding-inline-start: 0;
-  padding-inline-end: 0;
-
-  &:before {
-    content: none;
-  }
-
-  &:after {
-    content: none;
-  }
-}
-
-.collapse-processed > .olivero-details__summary .details-title {
-  position: relative;
-  display: block;
-  padding-block: var(--sp1);
-  padding-inline-start: var(--sp2);
-  padding-inline-end: var(--sp1);
-  transition: var(--details-summary-transition);
-  text-decoration: none;
-  color: inherit;
-  background-color: var(--color--gray-100);
-}
-
-.collapse-processed > .olivero-details__summary .details-title:focus {
-  outline: solid 2px transparent;
-}
-
-.collapse-processed > .olivero-details__summary .details-title:hover {
-  background-color: var(--color--gray-95);
-}
-
-@media screen and (-ms-high-contrast: active) {
-  .collapse-processed > .olivero-details__summary .details-title::after {
-    inset: -5px;
-    border: 2px dotted;
-  }
 }
 
 /* Details content wrapper */

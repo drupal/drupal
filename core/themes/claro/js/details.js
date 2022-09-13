@@ -3,7 +3,7 @@
  * Claro's polyfill enhancements for HTML5 details.
  */
 
-(($, Modernizr, Drupal) => {
+(($, Drupal) => {
   /**
    * Workaround for Firefox.
    *
@@ -29,35 +29,6 @@
   };
 
   /**
-   * Workaround for non-supporting browsers.
-   *
-   * This shim extends HTML5 Shiv used by core.
-   *
-   * HTML5 Shiv toggles focused details for hitting enter. We copy that for
-   * space key as well to make the behavior consistent across browsers.
-   *
-   * @type {Drupal~behavior}
-   */
-  Drupal.behaviors.claroDetailsToggleShim = {
-    attach(context) {
-      if (Modernizr.details || !Drupal.CollapsibleDetails.instances.length) {
-        return;
-      }
-
-      $(once('claroDetailsToggleShim', 'details .details-title', context)).on(
-        'keypress',
-        (event) => {
-          const keyCode = event.keyCode || event.charCode;
-          if (keyCode === 32) {
-            $(event.target).closest('summary').trigger('click');
-            event.preventDefault();
-          }
-        },
-      );
-    },
-  };
-
-  /**
    * Theme override providing a wrapper for summarized details content.
    *
    * @return {string}
@@ -75,4 +46,4 @@
    *   The formatted summarized content text.
    */
   Drupal.theme.detailsSummarizedContentText = (text) => text || '';
-})(jQuery, Modernizr, Drupal);
+})(jQuery, Drupal);

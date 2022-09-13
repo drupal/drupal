@@ -469,10 +469,9 @@ drupal.collapse:
   js:
     misc/details-summarized-content.js: {}
     misc/details-aria.js: {}
-    misc/collapse.js: {}
+    misc/details.js: {}
   dependencies:
     - core/jquery
-    - core/modernizr
     - core/drupal
     - core/drupal.form
     - core/once
