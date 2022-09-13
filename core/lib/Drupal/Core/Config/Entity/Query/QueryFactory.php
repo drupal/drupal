@@ -40,6 +40,16 @@ class QueryFactory implements QueryFactoryInterface, EventSubscriberInterface {
   protected $namespaces;
 
   /**
+   * The key value factory.
+   */
+  protected KeyValueFactoryInterface $keyValueFactory;
+
+  /**
+   * The configuration manager.
+   */
+  protected ConfigManagerInterface $configManager;
+
+  /**
    * Constructs a QueryFactory object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
