@@ -314,14 +314,10 @@
 
 /**
  * Active has to be here for Firefox.
- * Merges standard collapse-processed selectors.
  */
 [open] > .claro-details__summary--accordion:not(:focus, :active)::after,
 [open] > .claro-details__summary--accordion-item:not(:focus, :active)::after,
-.collapse-processed[open] > .claro-details__summary--accordion .details-title:not(:focus)::after,
-.collapse-processed[open] > .claro-details__summary--accordion-item .details-title:not(:focus)::after,
-[open] > .claro-details__summary--vertical-tabs-item:not(:focus, :active)::after,
-.collapse-processed[open] > .claro-details__summary--vertical-tabs-item .details-title:not(:focus)::after {
+[open] > .claro-details__summary--vertical-tabs-item:not(:focus, :active)::after {
   opacity: 1;
   border: var(--details-summary-focus-border-size) solid var(--color-absolutezero);
   border-width: 0 0 0 var(--details-summary-focus-border-size); /* LTR */
@@ -329,16 +325,12 @@
 }
 [dir="rtl"] [open] > .claro-details__summary--accordion:not(:focus)::after,
 [dir="rtl"] [open] > .claro-details__summary--accordion-item:not(:focus)::after,
-[dir="rtl"] .collapse-processed[open] > .claro-details__summary--accordion .details-title:not(:focus)::after,
-[dir="rtl"] .collapse-processed[open] > .claro-details__summary--accordion-item .details-title:not(:focus)::after,
-[dir="rtl"] [open] > .claro-details__summary--vertical-tabs-item:not(:focus)::after,
-[dir="rtl"] .collapse-processed[open] > .claro-details__summary--vertical-tabs-item .details-title:not(:focus)::after {
+[dir="rtl"] [open] > .claro-details__summary--vertical-tabs-item:not(:focus)::after {
   border-width: 0 var(--details-summary-focus-border-size) 0 0;
 }
 
 .claro-details__summary:focus::after,
-.claro-details__summary:active::after,
-.collapse-processed > .claro-details__summary .details-title:focus::after {
+.claro-details__summary:active::after {
   opacity: 1;
 }
 
@@ -442,118 +434,11 @@
   color: var(--input--disabled-fg-color);
 }
 
-/**
- * Collapse processed for non-supporting browsers like IE or Edge.
- */
-.collapse-processed > .claro-details__summary {
-  padding: 0;
-}
-
-.collapse-processed > .claro-details__summary::after {
-  content: none;
-}
-
-.collapse-processed > .claro-details__summary .details-title {
-  position: relative;
-  display: block;
-  padding: var(--space-m) var(--space-m) var(--space-m) var(--details-desktop-wrapper-padding-start); /* LTR */
-  text-decoration: none;
-  color: inherit;
-  border-radius: var(--size-summary-border-radius);
-}
-[dir="rtl"] .collapse-processed > .claro-details__summary .details-title {
-  padding-right: var(--details-desktop-wrapper-padding-start);
-  padding-left: var(--space-m);
-}
-
-.collapse-processed > .claro-details__summary--accordion .details-title,
-.collapse-processed > .claro-details__summary--accordion-item .details-title,
-.collapse-processed > .claro-details__summary--vertical-tabs-item .details-title {
-  padding: var(--summary-accordion-padding-vertical) var(--space-l) var(--summary-accordion-padding-vertical) var(--details-desktop-wrapper-padding-start); /* LTR */
-}
-[dir="rtl"] .collapse-processed > .claro-details__summary--accordion .details-title,
-[dir="rtl"] .collapse-processed > .claro-details__summary--accordion-item .details-title,
-[dir="rtl"] .collapse-processed > .claro-details__summary--vertical-tabs-item .details-title {
-  padding-right: var(--details-desktop-wrapper-padding-start);
-  padding-left: var(--space-l);
-}
-
-/* Focus and hover states. */
-.collapse-processed > .claro-details__summary .details-title:focus,
-.collapse-processed > .claro-details__summary .details-title:hover {
-  z-index: 1;
-  text-decoration: none;
-  outline: none;
-  box-shadow: none;
-}
-
-.collapse-processed > .claro-details__summary .details-title::after {
-  position: absolute;
-  top: -1px;
-  right: -1px;
-  bottom: -1px;
-  left: -1px;
-  content: "";
-  transition: opacity var(--details-box-shadow-transition-duration) ease-in-out;
-  pointer-events: none;
-  opacity: 0;
-  border: var(--details-summary-focus-border-size) solid var(--color-focus);
-  border-radius: var(--details-border-size-radius);
-}
-
-.collapse-processed > .claro-details__summary .details-title:focus::after {
-  opacity: 1;
-}
-
-/* Accordion item modifiers for the focus box. */
-
-.collapse-processed > .claro-details__summary--accordion-item .details-title::after,
-.vertical-tabs__item > .claro-details__summary--vertical-tabs-item .details-title::after {
-  border-radius: 0;
-}
-
-.collapse-processed:first-child > .claro-details__summary--accordion-item .details-title::after,
-.vertical-tabs__item--first > .claro-details__summary--vertical-tabs-item .details-title::after {
-  border-top-left-radius: var(--details-border-size-radius);
-  border-top-right-radius: var(--details-border-size-radius);
-}
-
-.collapse-processed:last-child > .claro-details__summary--accordion-item .details-title::after,
-.vertical-tabs__item--last > .claro-details__summary--vertical-tabs-item .details-title::after {
-  border-bottom-right-radius: var(--details-border-size-radius);
-  border-bottom-left-radius: var(--details-border-size-radius);
-}
-
-.collapse-processed[open] > .claro-details__summary--accordion .details-title::after,
-.collapse-processed[open] > .claro-details__summary--accordion-item .details-title::after,
-.vertical-tabs__item[open] > .claro-details__summary--vertical-tabs-item .details-title::after {
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
 .claro-details__summary-summary {
   display: block;
   color: var(--color-gray-800);
   font-size: var(--font-size-s);
   font-weight: normal;
-}
-
-@media (forced-colors: active) {
-  .collapse-processed[open] > .claro-details__summary--accordion .details-title:not(:focus)::after,
-  .collapse-processed[open] > .claro-details__summary--accordion-item .details-title:not(:focus)::after,
-  .collapse-processed[open] > .claro-details__summary--vertical-tabs-item .details-title:not(:focus)::after {
-    top: -1px;
-    right: -1px;
-    bottom: -1px;
-    left: -1px;
-  }
-  .collapse-processed > .claro-details__summary .details-title::after {
-    top: -5px;
-    right: -5px;
-    bottom: -5px;
-    left: -5px;
-    border: 2px dotted;
-  }
 }
 
 .required-mark::after {
