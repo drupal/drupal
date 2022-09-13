@@ -1,6 +1,6 @@
 name: 'Block test theme'
 type: theme
-base theme: stable
+base theme: stable9
 description: 'Theme for testing the block system'
 version: VERSION
 regions:

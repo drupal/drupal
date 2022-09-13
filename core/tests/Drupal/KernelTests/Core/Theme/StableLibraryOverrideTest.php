@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\Theme;
  * Tests Stable's library overrides.
  *
  * @group Theme
+ * @group legacy
  */
 class StableLibraryOverrideTest extends StableLibraryOverrideTestBase {
 

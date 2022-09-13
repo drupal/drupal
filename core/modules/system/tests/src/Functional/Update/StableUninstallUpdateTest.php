@@ -8,6 +8,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Ensures that update hook uninstalls Stable when it's no longer needed.
  *
  * @group Update
+ * @group legacy
  * @see system_post_update_uninstall_stable()
  */
 class StableUninstallUpdateTest extends UpdatePathTestBase {
