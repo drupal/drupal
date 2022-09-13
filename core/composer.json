@@ -29,7 +29,6 @@
         "symfony/validator": "^6.1",
         "symfony/process": "^6.1",
         "symfony/polyfill-iconv": "^1.26",
-        "symfony/polyfill-php80": "^1.26",
         "symfony/yaml": "^6.1",
         "twig/twig": "^3.4",
         "doctrine/annotations": "^1.13",
