@@ -2,6 +2,7 @@
 
 namespace Drupal\TestSite\Commands;
 
+use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Test\FunctionalTestSetupTrait;
 use Drupal\Core\Test\TestDatabase;
@@ -29,6 +30,35 @@ class TestSiteInstallCommand extends Command {
   use TestSetupTrait {
     changeDatabasePrefix as protected changeDatabasePrefixTrait;
   }
+
+  /**
+   * The theme to install as the default for testing.
+   *
+   * Defaults to the install profile's default theme, if it specifies any.
+   */
+  protected string $defaultTheme;
+
+  /**
+   * The base URL.
+   */
+  protected string $baseUrl;
+
+  /**
+   * The original array of shutdown function callbacks.
+   */
+  protected array $originalShutdownCallbacks = [];
+
+  /**
+   * The translation file directory for the test environment.
+   *
+   * This is set in BrowserTestBase::prepareEnvironment().
+   */
+  protected string $translationFilesDirectory;
+
+  /**
+   * The config importer that can be used in a test.
+   */
+  protected ?ConfigImporter $configImporter;
 
   /**
    * The install profile to use.

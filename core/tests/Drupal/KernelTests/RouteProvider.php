@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests;
 
 use Drupal\Core\Routing\PreloadableRouteProviderInterface;
+use Drupal\Core\Routing\RouteProvider as RouteProviderBase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -11,6 +12,11 @@ use Symfony\Component\HttpFoundation\Request;
 class RouteProvider implements PreloadableRouteProviderInterface {
 
   use \Drupal\Core\DependencyInjection\DependencySerializationTrait;
+
+  /**
+   * The route provider service.
+   */
+  protected RouteProviderBase $service;
 
   /**
    * Loads the real route provider from the container and rebuilds the router.

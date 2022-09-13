@@ -53,6 +53,11 @@ class RecursiveContextualValidator implements ContextualValidatorInterface {
   protected $constraintValidatorFactory;
 
   /**
+   * The typed data manager.
+   */
+  protected TypedDataManagerInterface $typedDataManager;
+
+  /**
    * Creates a validator for the given context.
    *
    * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context

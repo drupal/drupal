@@ -94,13 +94,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EntityContentBase extends Entity implements HighestIdInterface, MigrateValidatableEntityInterface {
 
   /**
-   * Entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
    * Field type plugin manager.
    *
    * @var \Drupal\Core\Field\FieldTypePluginManagerInterface

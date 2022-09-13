@@ -21,7 +21,7 @@ class LocaleEvent extends Event {
    *
    * @var string[]
    */
-  protected $original;
+  protected array $lids;
 
   /**
    * Constructs a new LocaleEvent.

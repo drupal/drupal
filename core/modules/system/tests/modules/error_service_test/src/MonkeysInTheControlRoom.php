@@ -22,6 +22,11 @@ class MonkeysInTheControlRoom implements HttpKernelInterface {
   protected $app;
 
   /**
+   * The settings.
+   */
+  protected Settings $settings;
+
+  /**
    * MonkeysInTheControlRoom constructor.
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $app

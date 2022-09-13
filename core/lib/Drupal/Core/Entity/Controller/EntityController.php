@@ -63,6 +63,11 @@ class EntityController implements ContainerInjectionInterface {
   protected $renderer;
 
   /**
+   * The url generator.
+   */
+  protected UrlGeneratorInterface $urlGenerator;
+
+  /**
    * Constructs a new EntityController.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager

@@ -25,6 +25,16 @@ class Updater {
   protected $root;
 
   /**
+   * The name of the project directory (basename).
+   */
+  protected string $name;
+
+  /**
+   * The title of the project.
+   */
+  protected string $title;
+
+  /**
    * Constructs a new updater.
    *
    * @param string $source

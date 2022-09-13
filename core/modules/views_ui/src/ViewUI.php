@@ -136,6 +136,11 @@ class ViewUI implements ViewEntityInterface {
   private $isUninstalling = FALSE;
 
   /**
+   * The entity type.
+   */
+  protected string $entityType;
+
+  /**
    * Constructs a View UI object.
    *
    * @param \Drupal\views\ViewEntityInterface $storage
@@ -536,7 +541,6 @@ class ViewUI implements ViewEntityInterface {
     $errors = $executable->validate();
     $executable->destroy();
     if (empty($errors)) {
-      $this->ajax = TRUE;
       $executable->live_preview = TRUE;
 
       // AJAX happens via HTTP POST but everything expects exposed data to

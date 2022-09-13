@@ -31,6 +31,26 @@ abstract class OptionsWidgetBase extends WidgetBase {
   protected $column;
 
   /**
+   * Tracks whether the field is required.
+   */
+  protected bool $required;
+
+  /**
+   * Tracks whether the data is multi-valued.
+   */
+  protected bool $multiple;
+
+  /**
+   * Tracks whether the field has a value.
+   */
+  protected bool $has_value;
+
+  /**
+   * The array of options for the widget.
+   */
+  protected array $options;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings) {
