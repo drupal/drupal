@@ -29,63 +29,63 @@
 .social-bar {
     flex-shrink: 0;
     width: var(--content-left);
-    background-color: var(--color--gray-100)
+    background-color: var(--color--gray-100);
 }
   }
 
 [dir="ltr"] .social-bar__inner {
-  padding-left: var(--sp)
+  padding-left: var(--sp);
 }
 
 [dir="rtl"] .social-bar__inner {
-  padding-right: var(--sp)
+  padding-right: var(--sp);
 }
 
 [dir="ltr"] .social-bar__inner {
-  padding-right: var(--sp)
+  padding-right: var(--sp);
 }
 
 [dir="rtl"] .social-bar__inner {
-  padding-left: var(--sp)
+  padding-left: var(--sp);
 }
 
 .social-bar__inner {
   position: relative;
   padding-top: var(--sp0-5);
-  padding-bottom: var(--sp0-5)
+  padding-bottom: var(--sp0-5);
 }
 
 @media (min-width: 75rem) {
 
 [dir="ltr"] .social-bar__inner {
-    padding-left: 0
+    padding-left: 0;
 }
 
 [dir="rtl"] .social-bar__inner {
-    padding-right: 0
+    padding-right: 0;
 }
 
 [dir="ltr"] .social-bar__inner {
-    padding-right: 0
+    padding-right: 0;
 }
 
 [dir="rtl"] .social-bar__inner {
-    padding-left: 0
+    padding-left: 0;
 }
 
 .social-bar__inner {
     position: relative;
     width: var(--content-left);
     padding-top: calc(5 * var(--sp));
-    padding-bottom: calc(5 * var(--sp))
+    padding-bottom: calc(5 * var(--sp));
 }
 
     [dir="ltr"] .social-bar__inner.is-fixed {
-      left: 0
+      left: 0;
 }
 
     [dir="rtl"] .social-bar__inner.is-fixed {
-      right: 0
+      right: 0;
 }
 
     .social-bar__inner.is-fixed {
@@ -96,7 +96,7 @@
   }
 
 .rotate > * {
-    margin-bottom: var(--sp2)
+    margin-bottom: var(--sp2);
   }
 
 @media (min-width: 75rem) {
@@ -104,15 +104,15 @@
 .rotate > * {
       display: flex;
       align-items: center;
-      margin-bottom: 0
+      margin-bottom: 0;
   }
 
       [dir="ltr"] .rotate > *:not(:first-child) {
-        margin-right: var(--sp2)
+        margin-right: var(--sp2);
 }
 
       [dir="rtl"] .rotate > *:not(:first-child) {
-        margin-left: var(--sp2)
+        margin-left: var(--sp2);
 }
     }
 
@@ -120,36 +120,36 @@
 
 [dir="ltr"] .rotate .contextual {
       left: 100%;
-      right: auto
+      right: auto;
 }
 
 [dir="rtl"] .rotate .contextual {
       right: 100%;
-      left: auto
+      left: auto;
 }
 
 .rotate .contextual {
       transform: rotate(90deg); /* LTR */
-      transform-origin: top left /* LTR */
+      transform-origin: top left; /* LTR */
   }
 
       [dir="ltr"] .rotate .contextual .trigger {
-        float: left
+        float: left;
 }
 
       [dir="rtl"] .rotate .contextual .trigger {
-        float: right
+        float: right;
 }
     }
 
 @media (min-width: 75rem) {
 
 [dir="ltr"] .rotate {
-    left: 50%
+    left: 50%;
 }
 
 [dir="rtl"] .rotate {
-    right: 50%
+    right: 50%;
 }
 
 .rotate {
@@ -158,13 +158,13 @@
     flex-direction: row-reverse;
     width: 100vh;
     transform: rotate(-90deg) translateX(-100%); /* LTR */
-    transform-origin: left /* LTR */
+    transform-origin: left; /* LTR */
 }
 
     @supports (width: max-content) {
 
 .rotate {
-      width: max-content
+      width: max-content;
 }
     }
   }
@@ -172,7 +172,7 @@
 @media (min-width: 75rem) {
     [dir="rtl"] .rotate {
       transform: rotate(90deg) translateX(100%);
-      transform-origin: right
+      transform-origin: right;
     }
 
       [dir="rtl"] .rotate .contextual {

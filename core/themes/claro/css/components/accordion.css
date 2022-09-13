@@ -20,7 +20,7 @@
 
 .accordion__item {
   margin: 0 -1px;
-  border-radius: 0
+  border-radius: 0;
 }
 
 .accordion__item:first-child {

@@ -14,7 +14,7 @@
 
 #drupal-off-canvas-wrapper {
   --off-canvas-table-cell-padding: 2px;
-  --off-canvas-first-cell-padding-start: calc(var(--off-canvas-padding) / 2)
+  --off-canvas-first-cell-padding-start: calc(var(--off-canvas-padding) / 2);
 }
 
 #drupal-off-canvas-wrapper table {
@@ -28,26 +28,26 @@
 
 [dir="ltr"] #drupal-off-canvas-wrapper td,[dir="ltr"] 
   #drupal-off-canvas-wrapper th {
-    text-align: left
+    text-align: left;
 }
 
 [dir="rtl"] #drupal-off-canvas-wrapper td,[dir="rtl"] 
   #drupal-off-canvas-wrapper th {
-    text-align: right
+    text-align: right;
 }
 
 #drupal-off-canvas-wrapper td,
   #drupal-off-canvas-wrapper th {
     padding: var(--off-canvas-table-cell-padding);
-    vertical-align: middle
+    vertical-align: middle;
   }
 
 [dir="ltr"] #drupal-off-canvas-wrapper td:first-child,[dir="ltr"]  #drupal-off-canvas-wrapper th:first-child {
-      padding-left: var(--off-canvas-first-cell-padding-start)
+      padding-left: var(--off-canvas-first-cell-padding-start);
 }
 
 [dir="rtl"] #drupal-off-canvas-wrapper td:first-child,[dir="rtl"]  #drupal-off-canvas-wrapper th:first-child {
-      padding-right: var(--off-canvas-first-cell-padding-start)
+      padding-right: var(--off-canvas-first-cell-padding-start);
 }
 
 #drupal-off-canvas-wrapper td:not(:last-child) td, #drupal-off-canvas-wrapper th:not(:last-child) td {

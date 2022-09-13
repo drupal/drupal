@@ -24,7 +24,7 @@
 /* Width of the entire grid maxes out. */
 
 .view > * {
-    margin-bottom: var(--sp2)
+    margin-bottom: var(--sp2);
   }
 
 .view > *:last-child {
@@ -34,6 +34,6 @@
 @media (min-width: 43.75rem) {
 
 .view > * {
-      margin-bottom: var(--sp3)
+      margin-bottom: var(--sp3);
   }
     }

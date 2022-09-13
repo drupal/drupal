@@ -26,7 +26,7 @@
 .region--secondary-menu {
   display: flex;
   margin-top: var(--sp2);
-  margin-bottom: var(--sp2)
+  margin-bottom: var(--sp2);
 }
 
 .region--secondary-menu > * {
@@ -36,7 +36,7 @@
 @media (min-width: 75rem) {
     body:not(.is-always-mobile-nav) .region--secondary-menu {
       justify-content: flex-end;
-      margin: 0
+      margin: 0;
 
       /* If the secondary nav is the first item within the header, it does not need left separator. */
     }

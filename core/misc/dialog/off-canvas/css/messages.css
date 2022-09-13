@@ -20,15 +20,15 @@
   --off-canvas-messages-text-color-error: #a51b00;
   --off-canvas-messages-icon-status: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2373b355'%3e%3cpath d='M6.464 13.676c-.194.194-.513.194-.707 0l-4.96-4.955c-.194-.193-.194-.513 0-.707l1.405-1.407c.194-.195.512-.195.707 0l2.849 2.848c.194.193.513.193.707 0l6.629-6.626c.195-.194.514-.194.707 0l1.404 1.404c.193.194.193.513 0 .707l-8.741 8.736z'/%3e%3c/svg%3e");
   --off-canvas-messages-icon-warning: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23e29700'%3e%3cpath d='M14.66 12.316l-5.316-10.633c-.738-1.476-1.946-1.476-2.685 0l-5.317 10.633c-.738 1.477.008 2.684 1.658 2.684h10.002c1.65 0 2.396-1.207 1.658-2.684zm-7.66-8.316h2.002v5h-2.002v-5zm2.252 8.615c0 .344-.281.625-.625.625h-1.25c-.345 0-.626-.281-.626-.625v-1.239c0-.344.281-.625.626-.625h1.25c.344 0 .625.281.625.625v1.239z'/%3e%3c/svg%3e");
-  --off-canvas-messages-icon-error: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23e32700'%3e%3cpath d='M8.002 1c-3.868 0-7.002 3.134-7.002 7s3.134 7 7.002 7c3.865 0 7-3.134 7-7s-3.135-7-7-7zm4.025 9.284c.062.063.1.149.1.239 0 .091-.037.177-.1.24l-1.262 1.262c-.064.062-.15.1-.24.1s-.176-.036-.24-.1l-2.283-2.283-2.286 2.283c-.064.062-.15.1-.24.1s-.176-.036-.24-.1l-1.261-1.262c-.063-.062-.1-.148-.1-.24 0-.088.036-.176.1-.238l2.283-2.285-2.283-2.284c-.063-.064-.1-.15-.1-.24s.036-.176.1-.24l1.262-1.262c.063-.063.149-.1.24-.1.089 0 .176.036.24.1l2.285 2.284 2.283-2.284c.064-.063.15-.1.24-.1s.176.036.24.1l1.262 1.262c.062.063.1.149.1.24 0 .089-.037.176-.1.24l-2.283 2.284 2.283 2.284z'/%3e%3c/svg%3e")
+  --off-canvas-messages-icon-error: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23e32700'%3e%3cpath d='M8.002 1c-3.868 0-7.002 3.134-7.002 7s3.134 7 7.002 7c3.865 0 7-3.134 7-7s-3.135-7-7-7zm4.025 9.284c.062.063.1.149.1.239 0 .091-.037.177-.1.24l-1.262 1.262c-.064.062-.15.1-.24.1s-.176-.036-.24-.1l-2.283-2.283-2.286 2.283c-.064.062-.15.1-.24.1s-.176-.036-.24-.1l-1.261-1.262c-.063-.062-.1-.148-.1-.24 0-.088.036-.176.1-.238l2.283-2.285-2.283-2.284c-.063-.064-.1-.15-.1-.24s.036-.176.1-.24l1.262-1.262c.063-.063.149-.1.24-.1.089 0 .176.036.24.1l2.285 2.284 2.283-2.284c.064-.063.15-.1.24-.1s.176.036.24.1l1.262 1.262c.062.063.1.149.1.24 0 .089-.037.176-.1.24l-2.283 2.284 2.283 2.284z'/%3e%3c/svg%3e");
 }
 
 [dir="ltr"] #drupal-off-canvas-wrapper .messages {
-    padding-left: calc(2 * var(--off-canvas-messages-icon-size))
+    padding-left: calc(2 * var(--off-canvas-messages-icon-size));
 }
 
 [dir="rtl"] #drupal-off-canvas-wrapper .messages {
-    padding-right: calc(2 * var(--off-canvas-messages-icon-size))
+    padding-right: calc(2 * var(--off-canvas-messages-icon-size));
 }
 
 #drupal-off-canvas-wrapper .messages {
@@ -36,17 +36,17 @@
     margin-top: calc(2 * var(--off-canvas-vertical-spacing-unit));
     padding: calc(2 * var(--off-canvas-vertical-spacing-unit)); /* Room for icon. */
     border: solid 1px transparent;
-    background-color: var(--off-canvas-messages-background-color)
+    background-color: var(--off-canvas-messages-background-color);
 
     /* Icon. */
   }
 
 [dir="ltr"] #drupal-off-canvas-wrapper .messages:before {
-      left: 0.625rem
+      left: 0.625rem;
 }
 
 [dir="rtl"] #drupal-off-canvas-wrapper .messages:before {
-      right: 0.625rem
+      right: 0.625rem;
 }
 
 #drupal-off-canvas-wrapper .messages:before {
@@ -58,7 +58,7 @@
       content: "";
       transform: translateY(-50%);
       background-repeat: no-repeat;
-      background-size: contain
+      background-size: contain;
     }
 
 @media (forced-colors: active) {
@@ -68,7 +68,7 @@
         -webkit-mask-repeat: no-repeat;
         mask-repeat: no-repeat;
         -webkit-mask-size: contain;
-        mask-size: contain
+        mask-size: contain;
     }
       }
 
@@ -76,13 +76,10 @@
     margin-top: 0;
   }
 
-#drupal-off-canvas-wrapper {
-
-  /*
+/*
    * Some themes (Olivero) insert SVG icon. We use a background icon, so we
    * need to remove this.
    */
-}
 
 #drupal-off-canvas-wrapper .messages__icon,
   #drupal-off-canvas-wrapper .messages__close {
@@ -90,11 +87,11 @@
   }
 
 [dir="ltr"] #drupal-off-canvas-wrapper .messages__list {
-    padding-left: 1.25rem
+    padding-left: 1.25rem;
 }
 
 [dir="rtl"] #drupal-off-canvas-wrapper .messages__list {
-    padding-right: 1.25rem
+    padding-right: 1.25rem;
 }
 
 #drupal-off-canvas-wrapper .messages__list {
@@ -106,11 +103,11 @@
   }
 
 #drupal-off-canvas-wrapper .messages--status {
-    color: var(--off-canvas-messages-text-color-status)
+    color: var(--off-canvas-messages-text-color-status);
   }
 
 #drupal-off-canvas-wrapper .messages--status:before {
-      background-image: var(--off-canvas-messages-icon-status)
+      background-image: var(--off-canvas-messages-icon-status);
     }
 
 @media (forced-colors: active) {
@@ -118,16 +115,16 @@
 #drupal-off-canvas-wrapper .messages--status:before {
         background: canvastext;
         -webkit-mask-image: var(--off-canvas-messages-icon-status);
-        mask-image: var(--off-canvas-messages-icon-status)
+        mask-image: var(--off-canvas-messages-icon-status);
     }
       }
 
 #drupal-off-canvas-wrapper .messages--warning {
-    color: var(--off-canvas-messages-text-color-warning)
+    color: var(--off-canvas-messages-text-color-warning);
   }
 
 #drupal-off-canvas-wrapper .messages--warning:before {
-      background-image: var(--off-canvas-messages-icon-warning)
+      background-image: var(--off-canvas-messages-icon-warning);
     }
 
 @media (forced-colors: active) {
@@ -135,16 +132,16 @@
 #drupal-off-canvas-wrapper .messages--warning:before {
         background: canvastext;
         -webkit-mask-image: var(--off-canvas-messages-icon-warning);
-        mask-image: var(--off-canvas-messages-icon-warning)
+        mask-image: var(--off-canvas-messages-icon-warning);
     }
       }
 
 #drupal-off-canvas-wrapper .messages--error {
-    color: var(--off-canvas-messages-text-color-error)
+    color: var(--off-canvas-messages-text-color-error);
   }
 
 #drupal-off-canvas-wrapper .messages--error:before {
-      background-image: var(--off-canvas-messages-icon-error)
+      background-image: var(--off-canvas-messages-icon-error);
     }
 
 @media (forced-colors: active) {
@@ -152,6 +149,6 @@
 #drupal-off-canvas-wrapper .messages--error:before {
         background: canvastext;
         -webkit-mask-image: var(--off-canvas-messages-icon-error);
-        mask-image: var(--off-canvas-messages-icon-error)
+        mask-image: var(--off-canvas-messages-icon-error);
     }
       }

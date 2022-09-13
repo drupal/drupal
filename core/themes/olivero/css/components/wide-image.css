@@ -24,55 +24,55 @@
 /* Width of the entire grid maxes out. */
 
 [dir="ltr"] .wide-image {
-  margin-left: 0
+  margin-left: 0;
 }
 
 [dir="rtl"] .wide-image {
-  margin-right: 0
+  margin-right: 0;
 }
 
 [dir="ltr"] .wide-image {
-  margin-right: 0
+  margin-right: 0;
 }
 
 [dir="rtl"] .wide-image {
-  margin-left: 0
+  margin-left: 0;
 }
 
 .wide-image {
   margin-top: var(--sp0-5);
-  margin-bottom: var(--sp2)
+  margin-bottom: var(--sp2);
 }
 
 @media (min-width: 43.75rem) {
 
 [dir="ltr"] .wide-image {
-    margin-left: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))))
+    margin-left: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))));
   }
 
 [dir="rtl"] .wide-image {
-    margin-right: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))))
+    margin-right: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))));
   }
 
 .wide-image {
     width: calc(var(--grid-col-count) * var(--grid-col-width) + var(--grid-gap-count) * var(--grid-gap));
     margin-top: var(--sp2);
-    margin-bottom: var(--sp4)
+    margin-bottom: var(--sp4);
 }
   }
 
 @media (min-width: 62.5rem) {
 
 [dir="ltr"] .wide-image {
-    margin-left: calc(-1 * (var(--grid-col-width) + var(--grid-gap)))
+    margin-left: calc(-1 * (var(--grid-col-width) + var(--grid-gap)));
   }
 
 [dir="rtl"] .wide-image {
-    margin-right: calc(-1 * (var(--grid-col-width) + var(--grid-gap)))
+    margin-right: calc(-1 * (var(--grid-col-width) + var(--grid-gap)));
   }
 
 .wide-image {
-    width: calc(12 * var(--grid-col-width) + 11 * var(--grid-gap))
+    width: calc(12 * var(--grid-col-width) + 11 * var(--grid-gap));
 }
   }
 
@@ -81,33 +81,33 @@
 @media (min-width: 62.5rem) {
 
 .sidebar-grid .wide-image {
-    width: calc(9 * var(--grid-col-width) + 8 * var(--grid-gap))
+    width: calc(9 * var(--grid-col-width) + 8 * var(--grid-gap));
 }
   }
 
 @media (min-width: 81.25rem) {
 
 .sidebar-grid .wide-image {
-    width: calc(10 * var(--grid-col-width) + 9 * var(--grid-gap))
+    width: calc(10 * var(--grid-col-width) + 9 * var(--grid-gap));
 }
   }
 
 /* Ensure that image doesn't overlap layout builder sections when editing layouts. */
 
 [dir="ltr"] .layout-builder .wide-image {
-  margin-left: 0
+  margin-left: 0;
 }
 
 [dir="rtl"] .layout-builder .wide-image {
-  margin-right: 0
+  margin-right: 0;
 }
 
 [dir="ltr"] .layout-builder .wide-image {
-  margin-right: 0
+  margin-right: 0;
 }
 
 [dir="rtl"] .layout-builder .wide-image {
-  margin-left: 0
+  margin-left: 0;
 }
 
 .layout-builder .wide-image {

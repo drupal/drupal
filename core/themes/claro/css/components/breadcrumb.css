@@ -34,11 +34,11 @@
 .breadcrumb__item + .breadcrumb__item::before {
   display: inline-block;
   padding: 0 0.75rem;
-  content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' height='8' width='5'%3e%3cpath fill='currentColor' d='M1.207.647L.5 1.354 3.146 4 .5 6.647l.707.707L4.561 4z'/%3e%3c/svg%3e")
+  content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' height='8' width='5'%3e%3cpath fill='currentColor' d='M1.207.647L.5 1.354 3.146 4 .5 6.647l.707.707L4.561 4z'/%3e%3c/svg%3e");
 }
 
-[dir="rtl"] .breadcrumb__item + .breadcrumb__item::before {
-    transform: scaleX(-1)
+[dir="rtl"] :is(.breadcrumb__item + .breadcrumb__item::before) {
+    transform: scaleX(-1);
 }
 
 @media (forced-colors: active) {
@@ -55,7 +55,7 @@
     -webkit-mask-repeat: no-repeat;
     mask-repeat: no-repeat;
     -webkit-mask-position: center;
-    mask-position: center
+    mask-position: center;
 }
   }
 

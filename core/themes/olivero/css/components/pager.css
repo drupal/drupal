@@ -67,14 +67,14 @@
   height: var(--sp2-5);
   cursor: default;
   color: var(--color-text-neutral-soft);
-  background-color: var(--color--white)
+  background-color: var(--color--white);
 }
 
 @media (min-width: 31.25rem) {
 
 .pager__item {
     width: var(--sp3);
-    height: var(--sp3)
+    height: var(--sp3);
 }
   }
 

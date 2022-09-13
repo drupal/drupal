@@ -26,14 +26,14 @@
 .layout--content-medium,
 .layout--pass--content-medium > * {
   grid-column: 1 / 7;
-  width: 100%
+  width: 100%;
 }
 
 @media (min-width: 43.75rem) {
 
 .layout--content-medium,
 .layout--pass--content-medium > * {
-    grid-column: 2 / 14
+    grid-column: 2 / 14;
 }
   }
 
@@ -41,7 +41,7 @@
 
 .layout--content-medium,
 .layout--pass--content-medium > * {
-    grid-column: 3 / 13
+    grid-column: 3 / 13;
 }
   }
 
@@ -54,19 +54,19 @@
 @media (min-width: 43.75rem) {
 
 .layout--pass--content-medium > * .layout--content-medium,
-  .layout--pass--content-medium > * .layout--pass--content-medium > *,
   .layout--content-medium .layout--content-medium,
+  .layout--pass--content-medium > * .layout--pass--content-medium > *,
   .layout--content-medium .layout--pass--content-medium > * {
-      grid-column: 1 / 13
+      grid-column: 1 / 13;
   }
     }
 
 @media (min-width: 62.5rem) {
 
 .layout--pass--content-medium > * .layout--content-medium,
-  .layout--pass--content-medium > * .layout--pass--content-medium > *,
   .layout--content-medium .layout--content-medium,
+  .layout--pass--content-medium > * .layout--pass--content-medium > *,
   .layout--content-medium .layout--pass--content-medium > * {
-      grid-column: 1 / 11
+      grid-column: 1 / 11;
   }
     }

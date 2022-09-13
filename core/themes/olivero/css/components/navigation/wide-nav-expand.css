@@ -24,7 +24,7 @@
 /* Width of the entire grid maxes out. */
 
 .wide-nav-expand {
-  display: none
+  display: none;
 }
 
 @media (min-width: 75rem) {
@@ -41,7 +41,7 @@
     pointer-events: auto;
     color: var(--color--white);
     border: 0;
-    background-color: var(--color--primary-50)
+    background-color: var(--color--primary-50);
 }
 
     .wide-nav-expand:focus {
@@ -53,14 +53,14 @@
 @media (min-width: 75rem) {
 
 body:not(.is-always-mobile-nav) .is-fixed .wide-nav-expand {
-    visibility: visible
+    visibility: visible;
 }
   }
 
 @media (min-width: 75rem) {
 
 body.is-always-mobile-nav .wide-nav-expand {
-    visibility: hidden
+    visibility: hidden;
 }
   }
 
@@ -71,22 +71,22 @@ body.is-always-mobile-nav .wide-nav-expand {
   transition: opacity 0.2s;
   pointer-events: none;
   opacity: 0;
-  transform-style: preserve-3d
+  transform-style: preserve-3d;
 }
 
 .wide-nav-expand__icon > span {
     display: block;
     height: 0;
     /* Intentionally not using CSS logical properties. */
-    border-top: solid 3px currentColor
+    border-top: solid 3px currentColor;
   }
 
 [dir="ltr"] .wide-nav-expand__icon > span:nth-child(1) {
-      left: 0
+      left: 0;
 }
 
 [dir="rtl"] .wide-nav-expand__icon > span:nth-child(1) {
-      right: 0
+      right: 0;
 }
 
 .wide-nav-expand__icon > span:nth-child(1) {
@@ -99,11 +99,11 @@ body.is-always-mobile-nav .wide-nav-expand {
     }
 
 [dir="ltr"] .wide-nav-expand__icon > span:nth-child(2) {
-      left: 0
+      left: 0;
 }
 
 [dir="rtl"] .wide-nav-expand__icon > span:nth-child(2) {
-      right: 0
+      right: 0;
 }
 
 .wide-nav-expand__icon > span:nth-child(2) {
@@ -116,11 +116,11 @@ body.is-always-mobile-nav .wide-nav-expand {
     }
 
 [dir="ltr"] .wide-nav-expand__icon > span:nth-child(3) {
-      left: 0
+      left: 0;
 }
 
 [dir="rtl"] .wide-nav-expand__icon > span:nth-child(3) {
-      right: 0
+      right: 0;
 }
 
 .wide-nav-expand__icon > span:nth-child(3) {

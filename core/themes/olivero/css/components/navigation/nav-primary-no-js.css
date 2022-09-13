@@ -28,16 +28,14 @@
   --no-js-nav-column-gap: var(--sp2);
 }
 
-html:not(.js) {
-  /**
+/**
    * Mobile styles for primary navigation when JS is disabled.
    */
-}
 
 @media (max-width: 75rem) {
     html:not(.js) .primary-nav__menu--level-1 {
       column-width: var(--no-js-nav-column-width);
-      grid-column-gap: var(--no-js-nav-column-gap);
+      column-gap: var(--no-js-nav-column-gap);
     }
 
     html:not(.js) .primary-nav__menu-item {
@@ -86,6 +84,10 @@ html:not(.js) {
   }
 
     html:not(.js) .header-nav {
+      border: solid 1px var(--color--gray-95) !important;
+    }
+
+    html:not(.js) .header-nav {
       position: static;
       visibility: visible;
       flex-basis: 100%;
@@ -96,7 +98,6 @@ html:not(.js) {
       padding-top: var(--sp2);
       padding-bottom: 0;
       transform: none;
-      border: solid 1px var(--color--gray-95) !important;
       box-shadow: 0 0 36px var(--color--gray-90);
     }
 
@@ -118,15 +119,12 @@ html:not(.js) {
   }
 
 @media (min-width: 75rem) {
-
-html:not(.js) {
     /**
      * Styles for 'always on mobile navigation' when JS is disabled.
      */
-}
       html:not(.js) body.is-always-mobile-nav .primary-nav__menu--level-1 {
         column-width: var(--no-js-nav-column-width);
-        grid-column-gap: var(--no-js-nav-column-gap);
+        column-gap: var(--no-js-nav-column-gap);
       }
 
       html:not(.js) body.is-always-mobile-nav .primary-nav__menu-item {
@@ -175,6 +173,10 @@ html:not(.js) {
   }
 
       html:not(.js) body.is-always-mobile-nav .header-nav {
+        border: solid 1px var(--color--gray-95) !important;
+      }
+
+      html:not(.js) body.is-always-mobile-nav .header-nav {
         position: static;
         visibility: visible;
         flex-basis: 100%;
@@ -185,7 +187,6 @@ html:not(.js) {
         padding-top: var(--sp2);
         padding-bottom: 0;
         transform: none;
-        border: solid 1px var(--color--gray-95) !important;
         box-shadow: 0 0 36px var(--color--gray-90);
       }
 
@@ -205,25 +206,20 @@ html:not(.js) {
           content: none;
         }
 
-html:not(.js) {
-
     /**
      * Styles for traditional dropdown primary navigation when JS is disabled.
      */
-}
         html:not(.js) body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1:hover .primary-nav__menu--level-2,
         html:not(.js) body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1:hover .primary-nav__menu-🥕 {
           visibility: visible;
           transform: translate(-50%, 0);
           opacity: 1;
         }
-    html:not(.js) body:not(.is-always-mobile-nav) {
 
       /*
        * Cannot combine the focus-within pseudo selector with other selectors,
        * because it will break IE11 and earlier versions of MS Edge.
        */
-    }
         html:not(.js) body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1:focus-within .primary-nav__menu--level-2,
         html:not(.js) body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1:focus-within .primary-nav__menu-🥕 {
           visibility: visible;

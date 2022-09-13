@@ -24,35 +24,35 @@
 /* Width of the entire grid maxes out. */
 
 [dir="ltr"] .mobile-buttons {
-  margin-left: auto
+  margin-left: auto;
 }
 
 [dir="rtl"] .mobile-buttons {
-  margin-right: auto
+  margin-right: auto;
 }
 
 .mobile-buttons {
-  margin-top: var(--sp0-5)
+  margin-top: var(--sp0-5);
 }
 
 @media (min-width: 31.25rem) {
 
 .mobile-buttons {
-    margin-top: var(--sp2)
+    margin-top: var(--sp2);
 }
   }
 
 @media (min-width: 43.75rem) {
 
 .mobile-buttons {
-    margin-top: var(--sp4)
+    margin-top: var(--sp4);
 }
   }
 
 @media (min-width: 75rem) {
 
 .mobile-buttons {
-    margin-top: var(--sp6)
+    margin-top: var(--sp6);
 }
   }
 

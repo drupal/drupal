@@ -51,7 +51,7 @@ figcaption {
   font-family: var(--font-serif);
   font-size: 0.875rem;
   font-style: italic;
-  line-height: var(--sp)
+  line-height: var(--sp);
 }
 
 @media (min-width: 31.25rem) {
@@ -74,7 +74,7 @@ figcaption {
 
 figcaption {
     padding-top: var(--sp);
-    padding-bottom: var(--sp)
+    padding-bottom: var(--sp);
 }
   }
 
@@ -98,7 +98,7 @@ figcaption {
   float: none; /* Override core's align.module.css. */
   max-width: 100%;
   margin-top: var(--sp3);
-  margin-bottom: var(--sp3)
+  margin-bottom: var(--sp3);
 }
 
 @media (min-width: 43.75rem) {
@@ -130,16 +130,13 @@ figcaption {
 .align-right {
     max-width: 50%;
     margin-top: var(--sp);
-    margin-bottom: var(--sp)
+    margin-bottom: var(--sp);
 }
   }
 
 /* Pull out of grid if nested in content narrow layout. */
 
-.layout--content-narrow .align-right,
-.layout--pass--content-narrow > * .align-right {
-  /* @todo this can be simplified. */
-}
+/* @todo this can be simplified. */
 
 @media (min-width: 43.75rem) {
 
@@ -213,7 +210,7 @@ figcaption {
   float: none; /* Override core's align.module.css. */
   max-width: 100%;
   margin-top: var(--sp3);
-  margin-bottom: var(--sp3)
+  margin-bottom: var(--sp3);
 }
 
 @media (min-width: 43.75rem) {
@@ -245,7 +242,7 @@ figcaption {
 .align-left {
     max-width: 50%;
     margin-top: var(--sp);
-    margin-bottom: var(--sp) /* Extra right margins in case of aligning next to lists. */
+    margin-bottom: var(--sp); /* Extra right margins in case of aligning next to lists. */
 }
   }
 

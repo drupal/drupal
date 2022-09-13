@@ -66,20 +66,20 @@
 }
 
 .book-pager__item {
-  display: inline-block
+  display: inline-block;
 }
 
 @media (min-width: 31.25rem) {
 
 .book-pager__item {
-    flex: 0 0 33.33%
+    flex: 0 0 33.33%;
 }
   }
 
 @media (min-width: 31.25rem) {
 
 .book-pager__item--center {
-    text-align: center
+    text-align: center;
 }
   }
 
@@ -121,11 +121,11 @@
 }
 
 [dir="ltr"] .book-pager__link--previous:before {
-    border-left: solid 3px currentColor;
+    border-left: solid 0.1875rem currentColor;
 }
 
 [dir="rtl"] .book-pager__link--previous:before {
-    border-right: solid 3px currentColor;
+    border-right: solid 0.1875rem currentColor;
 }
 
 .book-pager__link--previous:before {
@@ -134,7 +134,7 @@
     height: var(--sp0-5);
     content: "";
     transform: rotate(-45deg);
-    border-top: solid 3px currentColor;
+    border-top: solid 0.1875rem currentColor;
   }
 
 [dir="ltr"] .book-pager__link--next:after {
@@ -146,11 +146,11 @@
 }
 
 [dir="ltr"] .book-pager__link--next:after {
-    border-left: solid 3px currentColor;
+    border-left: solid 0.1875rem currentColor;
 }
 
 [dir="rtl"] .book-pager__link--next:after {
-    border-right: solid 3px currentColor;
+    border-right: solid 0.1875rem currentColor;
 }
 
 .book-pager__link--next:after {
@@ -159,7 +159,7 @@
     height: var(--sp0-5);
     content: "";
     transform: rotate(135deg);
-    border-top: solid 3px currentColor;
+    border-top: solid 0.1875rem currentColor;
   }
 
 [dir="ltr"] .book-navigation__menu {

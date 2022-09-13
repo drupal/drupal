@@ -29,7 +29,7 @@
   padding: 0 var(--off-canvas-padding) var(--off-canvas-padding);
   color: var(--off-canvas-text-color);
   background-color: var(--off-canvas-background-color);
-  font-family: var(--off-canvas-font-family)
+  font-family: var(--off-canvas-font-family);
 }
 
 #drupal-off-canvas-wrapper *:focus {
@@ -92,7 +92,7 @@
 #drupal-off-canvas-wrapper .links {
     margin: 0;
     padding: 0;
-    list-style: none
+    list-style: none;
   }
 
 #drupal-off-canvas-wrapper .links li {

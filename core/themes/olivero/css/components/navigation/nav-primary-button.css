@@ -24,19 +24,19 @@
 /* Width of the entire grid maxes out. */
 
 [dir="ltr"] .primary-nav__button-toggle {
-  padding-left: 0
+  padding-left: 0;
 }
 
 [dir="rtl"] .primary-nav__button-toggle {
-  padding-right: 0
+  padding-right: 0;
 }
 
 [dir="ltr"] .primary-nav__button-toggle {
-  padding-right: 0
+  padding-right: 0;
 }
 
 [dir="rtl"] .primary-nav__button-toggle {
-  padding-left: 0
+  padding-left: 0;
 }
 
 .primary-nav__button-toggle {
@@ -51,7 +51,7 @@
   text-indent: -62.4375rem;
   border: 0;
   background: transparent;
-  -webkit-appearance: none
+  -webkit-appearance: none;
 }
 
 .primary-nav__button-toggle:focus {
@@ -69,7 +69,7 @@
     height: 1rem;
     transition: background-color 0.2s;
     transform: translate(-50%, -50%);
-    border-radius: 2px
+    border-radius: 2px;
   }
 
 .primary-nav__button-toggle .icon--menu-toggle:before,
@@ -96,12 +96,9 @@
     opacity: 0;
   }
 
-.primary-nav__button-toggle {
-
-  /* aria-hidden attribute is removed by JS. Button is non-functional
+/* aria-hidden attribute is removed by JS. Button is non-functional
      until JS is enabled.
   */
-}
 
 .primary-nav__button-toggle[aria-hidden="true"] {
     pointer-events: none;
@@ -109,22 +106,22 @@
 
 @media (min-width: 75rem) {
     [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__button-toggle {
-      margin-right: calc(-1 * var(--sp2))
+      margin-right: calc(-1 * var(--sp2));
   }
     [dir="rtl"] body:not(.is-always-mobile-nav) .primary-nav__button-toggle {
-      margin-left: calc(-1 * var(--sp2))
+      margin-left: calc(-1 * var(--sp2));
   }
     body:not(.is-always-mobile-nav) .primary-nav__button-toggle {
       flex-shrink: 0;
       align-self: stretch;
       width: calc(var(--sp2) + 0.5rem);
       height: auto;
-      margin-top: 0
+      margin-top: 0;
     }
 
       body:not(.is-always-mobile-nav) .primary-nav__button-toggle:focus {
         border: 0;
-        outline: 0
+        outline: 0;
       }
 
         body:not(.is-always-mobile-nav) .primary-nav__button-toggle:focus .icon--menu-toggle {
@@ -141,18 +138,18 @@
       }
 
       [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__button-toggle .icon--menu-toggle {
-        left: 0.1875rem
+        left: 0.1875rem;
   }
 
       [dir="rtl"] body:not(.is-always-mobile-nav) .primary-nav__button-toggle .icon--menu-toggle {
-        right: 0.1875rem
+        right: 0.1875rem;
   }
 
       body:not(.is-always-mobile-nav) .primary-nav__button-toggle .icon--menu-toggle {
         width: 1.125rem;
         transform: translateY(-50%);
         border-radius: 0.25rem;
-        background-color: var(--color--white)
+        background-color: var(--color--white);
       }
 
         body:not(.is-always-mobile-nav) .primary-nav__button-toggle .icon--menu-toggle:before {

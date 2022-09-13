@@ -27,7 +27,7 @@
   display: flex;
   align-items: center;
   text-decoration: none;
-  color: var(--color-text-neutral-soft)
+  color: var(--color-text-neutral-soft);
 }
 
 .feed-icon:hover {
@@ -42,11 +42,11 @@
 }
 
 [dir="ltr"] .feed-icon__icon {
-  margin-left: var(--sp0-5)
+  margin-left: var(--sp0-5);
 }
 
 [dir="rtl"] .feed-icon__icon {
-  margin-right: var(--sp0-5)
+  margin-right: var(--sp0-5);
 }
 
 .feed-icon__icon {
@@ -57,7 +57,7 @@
   width: var(--sp1-5);
   height: var(--sp1-5);
   color: var(--color--white);
-  background-color: var(--color--primary-50)
+  background-color: var(--color--primary-50);
 }
 
 .feed-icon__icon svg {

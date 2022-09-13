@@ -25,17 +25,14 @@
 
 @media (min-width: 75rem) {
     body:not(.is-always-mobile-nav) .primary-nav__menu-item {
-      flex-wrap: nowrap /* Ensure that sub navigation toggle button doesn't wrap underneath link. */
+      flex-wrap: nowrap; /* Ensure that sub navigation toggle button doesn't wrap underneath link. */
     }
         body:not(.is-always-mobile-nav) .primary-nav__menu-item.primary-nav__menu-item--has-children .primary-nav__menu-link--link,
         body:not(.is-always-mobile-nav) .primary-nav__menu-item.primary-nav__menu-item--has-children .primary-nav__menu-link--nolink {
           flex-basis: auto;
         }
 
-      body:not(.is-always-mobile-nav) .primary-nav__menu-item.primary-nav__menu-item--has-children {
-
         /* Remove hover state if submenu exists. */
-      }
         body:not(.is-always-mobile-nav) .primary-nav__menu-item.primary-nav__menu-item--has-children .primary-nav__menu-link--level-1 .primary-nav__menu-link-inner:after {
           content: none;
         }
@@ -43,12 +40,12 @@
     body:not(.is-always-mobile-nav) .primary-nav__menu-link {
       letter-spacing: 0.02em;
       font-size: 1rem;
-      line-height: var(--sp1-5)
+      line-height: var(--sp1-5);
     }
 
       body:not(.is-always-mobile-nav) .primary-nav__menu-link:focus {
         position: relative;
-        outline: 0
+        outline: 0;
       }
 
         body:not(.is-always-mobile-nav) .primary-nav__menu-link:focus:before {
@@ -69,7 +66,7 @@
         padding-left: 0.5625rem;
     }
       body:not(.is-always-mobile-nav) .primary-nav__menu-link--button.primary-nav__menu-link--has-children {
-        overflow: visible /* Necessary to view icon in IE11 */
+        overflow: visible; /* Necessary to view icon in IE11 */
       }
 
         body:not(.is-always-mobile-nav) .primary-nav__menu-link--button.primary-nav__menu-link--has-children:focus:before {
@@ -80,10 +77,8 @@
         body:not(.is-always-mobile-nav) .primary-nav__menu-link--button.primary-nav__menu-link--has-children:before {
           content: none;
         }
-      body:not(.is-always-mobile-nav) .primary-nav__menu-link--button.primary-nav__menu-link--has-children {
 
         /* Chevron icon for desktop navigation. */
-      }
         [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__menu-link--button.primary-nav__menu-link--has-children:after {
           left: calc(100% - 0.1875rem);
     }
@@ -125,7 +120,7 @@
 
     body:not(.is-always-mobile-nav) .primary-nav__menu-link-inner {
       padding-top: var(--sp2);
-      padding-bottom: var(--sp2)
+      padding-bottom: var(--sp2);
     }
 
       body:not(.is-always-mobile-nav) .primary-nav__menu-link-inner:after {
@@ -169,7 +164,7 @@
       width: max-content;
       max-width: 12.5rem;
       margin-top: 0;
-      margin-bottom: 0
+      margin-bottom: 0;
     }
 
       [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1:not(:last-child) {
@@ -228,7 +223,7 @@
       border-left: solid 1px transparent;
       border-radius: 0 0 2px 2px;
       background: var(--color--white);
-      box-shadow: 0 1px 36px rgba(0, 0, 0, 0.08)
+      box-shadow: 0 1px 36px rgba(0, 0, 0, 0.08);
     }
 
       body:not(.is-always-mobile-nav) .primary-nav__menu--level-2.is-active-menu-parent {
@@ -239,7 +234,7 @@
       }
 
     body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2 {
-      display: block
+      display: block;
     }
 
       body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2:focus:before {
@@ -267,25 +262,22 @@
 
       body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2 .primary-nav__menu-link-inner {
         padding-top: var(--sp0-5);
-        padding-bottom: var(--sp0-5)
+        padding-bottom: var(--sp0-5);
       }
 
         body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2 .primary-nav__menu-link-inner:after {
           transform-origin: left; /* LTR */
-          border-top-width: 3px
+          border-top-width: 3px;
         }
 
           [dir="rtl"] body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2 .primary-nav__menu-link-inner:after {
             transform-origin: right;
           }
 
-body:not(.is-always-mobile-nav) {
-
     /**
      * Arrow is placed outside of submenu because the submenu has the
      * `overflow: hidden` CSS rule applied.
      */
-}
     body:not(.is-always-mobile-nav) .primary-nav__menu-🥕 {
       position: absolute;
       z-index: 105; /* Match level 2 menus. */
@@ -299,7 +291,7 @@ body:not(.is-always-mobile-nav) {
       /* Intentionally not using CSS logical properties. */
       border-right: solid 10px transparent;
       border-bottom: solid 10px var(--color--primary-50);
-      border-left: solid 10px transparent
+      border-left: solid 10px transparent;
     }
 
       body:not(.is-always-mobile-nav) .primary-nav__menu-🥕.is-active-menu-parent {
@@ -308,13 +300,10 @@ body:not(.is-always-mobile-nav) {
         opacity: 1;
       }
 
-body:not(.is-always-mobile-nav) {
-
     /**
      * When ensuring that long menus don't overflow viewport, we can give a
      * little extra room when the toolbar is fixed (and is shorter).
      */
-}
     body:not(.is-always-mobile-nav) .is-fixed .primary-nav__menu--level-2 {
       max-height: calc(100vh - var(--site-header-height-wide) - var(--drupal-displace-offset-top, 0px) - var(--drupal-displace-offset-bottom, 0px) - var(--sp) + var(--sp4));
     }

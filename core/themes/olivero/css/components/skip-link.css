@@ -26,19 +26,19 @@
 /* Width of the entire grid maxes out. */
 
 [dir="ltr"] .skip-link {
-  padding-left: var(--sp)
+  padding-left: var(--sp);
 }
 
 [dir="rtl"] .skip-link {
-  padding-right: var(--sp)
+  padding-right: var(--sp);
 }
 
 [dir="ltr"] .skip-link {
-  padding-right: var(--sp)
+  padding-right: var(--sp);
 }
 
 [dir="rtl"] .skip-link {
-  padding-left: var(--sp)
+  padding-left: var(--sp);
 }
 
 .skip-link {
@@ -50,7 +50,7 @@
   text-decoration: none;
   color: var(--color--white);
   outline: 0;
-  background-color: var(--color--gray-5)
+  background-color: var(--color--gray-5);
 }
 
 .skip-link:hover {
@@ -63,7 +63,10 @@
   }
 
 .skip-link.focusable:focus {
-  position: absolute !important; /* Override position from module file. */
+  position: absolute !important;
+}
+
+.skip-link.focusable:focus { /* Override position from module file. */
   z-index: 503;
   width: 100%;
   height: 2.5rem;
