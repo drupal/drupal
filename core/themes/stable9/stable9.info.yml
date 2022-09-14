@@ -12,11 +12,6 @@ libraries-override:
       theme:
         css/block.admin.css: css/block/block.admin.css
 
-  color/admin:
-    css:
-      theme:
-        css/color.admin.css: css/color/color.admin.css
-
   config_translation/drupal.config_translation.admin:
     css:
       theme:
