@@ -31,6 +31,35 @@ class TestSiteInstallCommand extends Command {
   }
 
   /**
+   * The theme to install as the default for testing.
+   *
+   * Defaults to the install profile's default theme, if it specifies any.
+   */
+  protected $defaultTheme;
+
+  /**
+   * The base URL.
+   */
+  protected $baseUrl;
+
+  /**
+   * The original array of shutdown function callbacks.
+   */
+  protected $originalShutdownCallbacks = [];
+
+  /**
+   * The translation file directory for the test environment.
+   *
+   * This is set in BrowserTestBase::prepareEnvironment().
+   */
+  protected $translationFilesDirectory;
+
+  /**
+   * The config importer that can be used in a test.
+   */
+  protected $configImporter;
+
+  /**
    * The install profile to use.
    *
    * @var string

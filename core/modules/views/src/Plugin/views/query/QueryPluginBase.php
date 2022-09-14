@@ -48,6 +48,13 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
   protected $limit;
 
   /**
+   * Controls how the WHERE and HAVING groups are put together.
+   *
+   * @var string
+   */
+  protected $groupOperator;
+
+  /**
    * Generate a query and a countquery from all of the information supplied
    * to the object.
    *

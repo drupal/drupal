@@ -58,6 +58,11 @@ use Drupal\migrate\Row;
 class Route extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**
+   * The current migration.
+   */
+  protected $migration;
+
+  /**
    * The path validator service.
    *
    * @var \Drupal\Core\Path\PathValidatorInterface

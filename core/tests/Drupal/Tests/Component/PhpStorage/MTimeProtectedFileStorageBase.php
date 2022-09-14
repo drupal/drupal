@@ -35,6 +35,11 @@ abstract class MTimeProtectedFileStorageBase extends PhpStorageTestBase {
   protected $settings;
 
   /**
+   * The expected test results for the security test.
+   */
+  protected $expected;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {

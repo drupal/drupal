@@ -79,6 +79,11 @@ class UpdateProcessor implements UpdateProcessorInterface {
   protected $privateKey;
 
   /**
+   * The queue for fetching release history data.
+   */
+  protected $fetchTasks;
+
+  /**
    * Constructs an UpdateProcessor.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory

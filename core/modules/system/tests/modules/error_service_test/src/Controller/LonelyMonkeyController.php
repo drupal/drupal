@@ -12,6 +12,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class LonelyMonkeyController extends ControllerBase implements ContainerInjectionInterface {
 
+  /**
+   * The lonely monkey class.
+   */
+  protected $class;
+
   public function __construct(LonelyMonkeyClass $class) {
     $this->class = $class;
   }

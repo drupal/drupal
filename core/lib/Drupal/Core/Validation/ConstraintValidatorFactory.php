@@ -16,6 +16,11 @@ use Symfony\Component\Validator\ConstraintValidatorInterface;
 class ConstraintValidatorFactory extends BaseConstraintValidatorFactory {
 
   /**
+   * The class resolver.
+   */
+  protected $classResolver;
+
+  /**
    * Constructs a new ConstraintValidatorFactory.
    *
    * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver

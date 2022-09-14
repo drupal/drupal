@@ -54,7 +54,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    *
    * @var \Drupal\Core\Cache\Context\CacheContextsManager
    */
-  protected $cacheContexts;
+  protected $cacheContextsManager;
 
   /**
    * Whether to send cacheability headers for debugging purposes.

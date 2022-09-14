@@ -71,6 +71,11 @@ abstract class Entity extends DestinationBase implements ContainerFactoryPluginI
   protected $storage;
 
   /**
+   * The entity field manager.
+   */
+  protected $entityFieldManager;
+
+  /**
    * The list of the bundles of this entity type.
    *
    * @var array

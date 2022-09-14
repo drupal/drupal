@@ -65,10 +65,6 @@ class RestJsonApiUnsupported extends ResourceTestBase {
   public function setUp(): void {
     parent::setUp();
 
-    // Set up a HTTP client that accepts relative URLs.
-    $this->httpClient = $this->container->get('http_client_factory')
-      ->fromOptions(['base_uri' => $this->baseUrl]);
-
     // Create a "Camelids" node type.
     NodeType::create([
       'name' => 'Camelids',

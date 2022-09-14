@@ -13,6 +13,16 @@ use Drupal\views\Plugin\views\sort\Date;
  */
 class StatisticsLastUpdated extends Date {
 
+  /**
+   * The node table.
+   */
+  protected $node_table;
+
+  /**
+   * The field alias.
+   */
+  protected $field_alias;
+
   public function query() {
     $this->ensureMyTable();
     $this->node_table = $this->query->ensureTable('node', $this->relationship);

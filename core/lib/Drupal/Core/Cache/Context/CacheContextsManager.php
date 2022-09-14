@@ -37,6 +37,11 @@ class CacheContextsManager {
   protected $contexts;
 
   /**
+   * The set of valid context tokens.
+   */
+  protected $validContextTokens;
+
+  /**
    * Constructs a CacheContextsManager object.
    *
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container

@@ -14,6 +14,16 @@ use Drupal\views\Plugin\views\sort\SortPluginBase;
  */
 class StatisticsLastCommentName extends SortPluginBase {
 
+  /**
+   * The users table.
+   */
+  protected $user_table;
+
+  /**
+   * The user name field.
+   */
+  protected $user_field;
+
   public function query() {
     $this->ensureMyTable();
     $definition = [

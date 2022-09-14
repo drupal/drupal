@@ -13,6 +13,11 @@ class RouteProvider implements PreloadableRouteProviderInterface {
   use \Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
   /**
+   * The route provider service.
+   */
+  protected $service;
+
+  /**
    * Loads the real route provider from the container and rebuilds the router.
    *
    * @return \Drupal\Core\Routing\PreloadableRouteProviderInterface|\Symfony\Component\EventDispatcher\EventSubscriberInterface

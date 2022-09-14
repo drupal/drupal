@@ -18,6 +18,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class FieldFile extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**
+   * The current migration.
+   */
+  protected $migration;
+
+  /**
    * The migrate lookup service.
    *
    * @var \Drupal\migrate\MigrateLookupInterface

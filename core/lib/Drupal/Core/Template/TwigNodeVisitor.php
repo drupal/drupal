@@ -21,6 +21,11 @@ use Twig\NodeVisitor\AbstractNodeVisitor;
 class TwigNodeVisitor extends AbstractNodeVisitor {
 
   /**
+   * Tracks whether there is a render array aware filter active already.
+   */
+  protected $skipRenderVarFunction;
+
+  /**
    * {@inheritdoc}
    */
   protected function doEnterNode(Node $node, Environment $env) {

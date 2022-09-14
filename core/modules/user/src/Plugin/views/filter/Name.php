@@ -18,6 +18,11 @@ class Name extends InOperator {
 
   protected $alwaysMultiple = TRUE;
 
+  /**
+   * The validated exposed input.
+   */
+  protected $validated_exposed_input;
+
   protected function valueForm(&$form, FormStateInterface $form_state) {
     $users = $this->value ? User::loadMultiple($this->value) : [];
     $default_value = EntityAutocomplete::getEntityLabels($users);
