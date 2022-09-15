@@ -439,6 +439,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
 
         $violations_by_delta = $item_list_violations = [];
         foreach ($violations as $violation) {
+          $violation = new InternalViolation($violation);
           // Separate violations by delta.
           $property_path = explode('.', $violation->getPropertyPath());
           $delta = array_shift($property_path);
@@ -449,6 +450,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
           else {
             $item_list_violations[] = $violation;
           }
+          // @todo Remove BC layer https://www.drupal.org/i/3307859 on PHP 8.2.
           $violation->arrayPropertyPath = $property_path;
         }
 
@@ -465,7 +467,6 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
             $delta_element = $element[$original_delta];
           }
           foreach ($delta_violations as $violation) {
-            // @todo: Pass $violation->arrayPropertyPath as property path.
             $error_element = $this->errorElement($delta_element, $violation, $form, $form_state);
             if ($error_element !== FALSE) {
               $form_state->setError($error_element, $violation->getMessage());
