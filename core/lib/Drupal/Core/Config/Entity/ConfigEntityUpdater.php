@@ -4,6 +4,9 @@ namespace Drupal\Core\Config\Entity;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Url;
+use Drupal\Core\Utility\Error;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -85,10 +88,16 @@ class ConfigEntityUpdater implements ContainerInjectionInterface {
    *   validated against schema on save to avoid unexpected errors. If a
    *   callback is not provided, the default behavior is to update the
    *   dependencies if required.
+   * @param bool $continue_on_error
+   *   Set to TRUE to continue updating if an error has occurred.
    *
    * @see hook_post_update_NAME()
    *
    * @api
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
+   *   An error message if $continue_on_error is set to TRUE and an error has
+   *   occurred.
    *
    * @throws \InvalidArgumentException
    *   Thrown when the provided entity type ID is not a configuration entity
@@ -97,7 +106,7 @@ class ConfigEntityUpdater implements ContainerInjectionInterface {
    *   Thrown when used twice in the same update function for different entity
    *   types. This method should only be called once per update function.
    */
-  public function update(array &$sandbox, $entity_type_id, callable $callback = NULL) {
+  public function update(array &$sandbox, $entity_type_id, callable $callback = NULL, bool $continue_on_error = FALSE) {
     $storage = $this->entityTypeManager->getStorage($entity_type_id);
 
     if (isset($sandbox[self::SANDBOX_KEY]) && $sandbox[self::SANDBOX_KEY]['entity_type'] !== $entity_type_id) {
@@ -111,6 +120,7 @@ class ConfigEntityUpdater implements ContainerInjectionInterface {
       $sandbox[self::SANDBOX_KEY]['entity_type'] = $entity_type_id;
       $sandbox[self::SANDBOX_KEY]['entities'] = $storage->getQuery()->accessCheck(FALSE)->execute();
       $sandbox[self::SANDBOX_KEY]['count'] = count($sandbox[self::SANDBOX_KEY]['entities']);
+      $sandbox[self::SANDBOX_KEY]['failed_entity_ids'] = [];
     }
 
     // The default behavior is to fix dependencies.
@@ -125,13 +135,62 @@ class ConfigEntityUpdater implements ContainerInjectionInterface {
     /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $entity */
     $entities = $storage->loadMultiple(array_splice($sandbox[self::SANDBOX_KEY]['entities'], 0, $this->batchSize));
     foreach ($entities as $entity) {
-      if (call_user_func($callback, $entity)) {
-        $entity->trustData();
-        $entity->save();
+      try {
+        if ($continue_on_error) {
+          // If we're continuing on error silence errors from notices that
+          // missing indexes.
+          // @todo consider change this to an error handler that converts such
+          //   notices to exceptions in https://www.drupal.org/node/3309886
+          @$this->doOne($entity, $callback);
+        }
+        else {
+          $this->doOne($entity, $callback);
+        }
+      }
+      catch (\Throwable $throwable) {
+        if (!$continue_on_error) {
+          throw $throwable;
+        }
+        $context['%view'] = $entity->id();
+        $context['%entity_type'] = $entity_type_id;
+        $context += Error::decodeException($throwable);
+        \Drupal::logger('update')->error('Unable to update %entity_type %view due to error @message %function (line %line of %file). <pre>@backtrace_string</pre>', $context);
+        $sandbox[self::SANDBOX_KEY]['failed_entity_ids'][] = $entity->id();
       }
     }
 
     $sandbox['#finished'] = empty($sandbox[self::SANDBOX_KEY]['entities']) ? 1 : ($sandbox[self::SANDBOX_KEY]['count'] - count($sandbox[self::SANDBOX_KEY]['entities'])) / $sandbox[self::SANDBOX_KEY]['count'];
+    if (!empty($sandbox[self::SANDBOX_KEY]['failed_entity_ids'])) {
+      $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
+      if (\Drupal::moduleHandler()->moduleExists('dblog')) {
+        return new TranslatableMarkup("Updates failed for the entity type %entity_type, for %entity_ids. <a href=:url>Check the logs</a>.", [
+          '%entity_type' => $entity_type->getLabel(),
+          '%entity_ids' => implode(', ', $sandbox[self::SANDBOX_KEY]['failed_entity_ids']),
+          ':url' => Url::fromRoute('dblog.overview')->toString(),
+        ]);
+      }
+      else {
+        return new TranslatableMarkup("Updates failed for the entity type %entity_type, for %entity_ids. Check the logs.", [
+          '%entity_type' => $entity_type->getLabel(),
+          '%entity_ids' => implode(', ', $sandbox[self::SANDBOX_KEY]['failed_entity_ids']),
+        ]);
+      }
+    }
+  }
+
+  /**
+   * Apply the callback an entity and save it if the callback makes changes.
+   *
+   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $entity
+   *   The entity to potentially update.
+   * @param callable $callback
+   *   The callback to apply.
+   */
+  protected function doOne(ConfigEntityInterface $entity, callable $callback) {
+    if (call_user_func($callback, $entity)) {
+      $entity->trustData();
+      $entity->save();
+    }
   }
 
 }

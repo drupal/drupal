@@ -37,13 +37,13 @@ function views_removed_post_updates() {
 /**
  * Update field names for multi-value base fields.
  */
-function views_post_update_field_names_for_multivalue_fields(&$sandbox = NULL) {
+function views_post_update_field_names_for_multivalue_fields_followup(&$sandbox = NULL) {
   /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
   $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
   $view_config_updater->setDeprecationsEnabled(FALSE);
-  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function ($view) use ($view_config_updater) {
+  return \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function ($view) use ($view_config_updater) {
     return $view_config_updater->needsMultivalueBaseFieldUpdate($view);
-  });
+  }, TRUE);
 }
 
 /**
@@ -103,5 +103,5 @@ function views_post_update_image_lazy_load(?array &$sandbox = NULL): void {
   $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater): bool {
     return $view_config_updater->needsImageLazyLoadFieldUpdate($view);
-  });
+  }, TRUE);
 }
