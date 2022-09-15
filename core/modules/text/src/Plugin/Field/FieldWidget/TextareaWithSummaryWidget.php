@@ -100,7 +100,8 @@ class TextareaWithSummaryWidget extends TextareaWidget {
    */
   public function errorElement(array $element, ConstraintViolationInterface $violation, array $form, FormStateInterface $form_state) {
     $element = parent::errorElement($element, $violation, $form, $form_state);
-    return ($element === FALSE) ? FALSE : $element[$violation->arrayPropertyPath[0]];
+    $property_path_array = explode('.', $violation->getPropertyPath());
+    return ($element === FALSE) ? FALSE : $element[$property_path_array[1]];
   }
 
 }
