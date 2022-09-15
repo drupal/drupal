@@ -67,7 +67,6 @@
     "eslint-plugin-jquery": "^1.5.1",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-yml": "^1.2.0",
-    "farbtastic": "https://github.com/mattfarina/farbtastic/archive/1.3u.tar.gz",
     "glob": "^8.0.3",
     "jquery": "~3.6.1",
     "jquery-form": "4.3.x",

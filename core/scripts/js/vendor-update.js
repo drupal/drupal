@@ -80,17 +80,6 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       files: ['backbone.js', 'backbone-min.js', 'backbone-min.js.map'],
     },
     {
-      pack: 'farbtastic',
-      library: 'jquery.farbtastic',
-      files: [
-        'marker.png',
-        'mask.png',
-        'wheel.png',
-        'farbtastic.css',
-        { from: 'farbtastic.min.js', to: 'farbtastic.js' },
-      ],
-    },
-    {
       pack: 'jquery',
       files: [
         { from: 'dist/jquery.js', to: 'jquery.js' },
@@ -277,12 +266,6 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
         // There is no callback simply copy the file.
         console.log(`Copy ${sourceFolder}/${file.from} to ${destFolder}/${file.to}`);
         await copyFile(sourceFile, destFile);
-      }
-
-      // This file comes from a zip file that hasn't been updated in years
-      // hardcode the permission fix to pass the commit checks.
-      if (['marker.png'].includes(file.to)) {
-        await chmod(destFile, 0o644);
       }
     }
   }

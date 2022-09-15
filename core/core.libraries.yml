@@ -754,23 +754,6 @@ jquery:
   js:
     assets/vendor/jquery/jquery.min.js: { minified: true, weight: -20 }
 
-jquery.farbtastic:
-  remote: https://github.com/mattfarina/farbtastic
-  # @todo Ping @robloach or @mattfarina to retroactively create this release.
-  version: "1.2"
-  license:
-    name: GNU-GPL-2.0-or-later
-    url: https://raw.githubusercontent.com/mattfarina/farbtastic/master/LICENSE.txt
-    gpl-compatible: true
-  js:
-    assets/vendor/farbtastic/farbtastic.js: { minified: true }
-  css:
-    component:
-      assets/vendor/farbtastic/farbtastic.css: {}
-  dependencies:
-    - core/jquery
-  deprecated: The %library_id% asset library is deprecated in Drupal 9.5.0 and will be removed in Drupal 10.0.0. There is no replacement. See https://www.drupal.org/node/3306232
-
 internal.jquery.form:
   # Internal library. Do not depend on it outside core nor add new core usage.
   remote: https://github.com/jquery-form/form

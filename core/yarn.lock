@@ -2297,10 +2297,6 @@ extract-zip@^2.0.1:
   optionalDependencies:
     "@types/yauzl" "^2.9.1"
 
-"farbtastic@https://github.com/mattfarina/farbtastic/archive/1.3u.tar.gz":
-  version "0.0.0"
-  resolved "https://github.com/mattfarina/farbtastic/archive/1.3u.tar.gz#eeab27bc9c3d4034088bb3b685d80d338732cb9f"
-
 fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz#3a7d56b559d6cbc3eb512325244e619a65c6c525"
