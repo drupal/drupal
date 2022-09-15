@@ -11,7 +11,7 @@ form {
  * elements in normalize.css 7.0.0.
  */
 button:not(.button),
-input:not([type="file"],.form-text, .form-textarea) {
+input:not([type="file"]):not(.form-text):not(.form-textarea) {
   line-height: 1.25em;
 }
 textarea,
