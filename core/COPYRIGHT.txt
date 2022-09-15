@@ -22,8 +22,6 @@ license, including:
 
 JavaScript
 
-  Farbtastic - Copyright (c) 2010 Matt Farina
-
   HTML5 Shiv - Copyright (c) 2014  Alexander Farkas, Jonathan Neal, Paul Irish,
     and John-David Dalton
 
