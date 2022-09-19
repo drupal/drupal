@@ -14,7 +14,7 @@ class CommentEditTest extends CommentBrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $profile = 'standard';
+  protected $defaultTheme = 'stark';
 
   /**
    * Tests comment label in admin view.
