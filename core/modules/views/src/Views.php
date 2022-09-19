@@ -308,7 +308,7 @@ class Views {
       case 'disabled':
       case 'enabled':
         $filter = ucfirst($filter);
-        $views = call_user_func("static::get{$filter}Views");
+        $views = call_user_func(static::class . "::get{$filter}Views");
         break;
 
       default:
