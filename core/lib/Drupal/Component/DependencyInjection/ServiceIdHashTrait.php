@@ -16,7 +16,10 @@ trait ServiceIdHashTrait {
     $mapping = [];
     foreach ($this->getServiceIds() as $service_id) {
       if ($this->initialized($service_id) && $service_id !== 'service_container') {
-        $mapping[$this->generateServiceIdHash($this->get($service_id))] = $service_id;
+        $service = $this->get($service_id);
+        if (is_object($service)) {
+          $mapping[$this->generateServiceIdHash($service)] = $service_id;
+        }
       }
     }
     return $mapping;
