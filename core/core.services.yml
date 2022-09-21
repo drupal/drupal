@@ -21,6 +21,7 @@ parameters:
       max-age: 0
       contexts: ['session', 'user']
       tags: []
+    debug: false
   factory.keyvalue:
     default: keyvalue.database
   http.response.debug_cacheability_headers: false
