@@ -109,6 +109,7 @@ abstract class RendererTestBase extends UnitTestCase {
       'contexts' => ['session', 'user'],
       'tags' => ['current-temperature'],
     ],
+    'debug' => FALSE,
   ];
 
   /**
