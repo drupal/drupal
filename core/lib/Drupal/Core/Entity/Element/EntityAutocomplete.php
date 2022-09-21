@@ -202,7 +202,7 @@ class EntityAutocomplete extends Textfield {
         'target_type' => $element['#target_type'],
         'handler' => $element['#selection_handler'],
       ];
-      /** @var /Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface $handler */
+      /** @var \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface $handler */
       $handler = \Drupal::service('plugin.manager.entity_reference_selection')->getInstance($options);
       $autocreate = (bool) $element['#autocreate'] && $handler instanceof SelectionWithAutocreateInterface;
 
