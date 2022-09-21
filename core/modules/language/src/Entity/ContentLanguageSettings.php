@@ -13,8 +13,8 @@ use Drupal\language\ContentLanguageSettingsInterface;
  *
  * @ConfigEntityType(
  *   id = "language_content_settings",
- *   label = @Translation("Content Language Settings"),
- *   label_collection = @Translation("Content Language Settings"),
+ *   label = @Translation("Content language settings"),
+ *   label_collection = @Translation("Content language settings"),
  *   label_singular = @Translation("content language setting"),
  *   label_plural = @Translation("content languages settings"),
  *   label_count = @PluralTranslation(

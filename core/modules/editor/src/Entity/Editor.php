@@ -11,8 +11,8 @@ use Drupal\editor\EditorInterface;
  *
  * @ConfigEntityType(
  *   id = "editor",
- *   label = @Translation("Text Editor"),
- *   label_collection = @Translation("Text Editors"),
+ *   label = @Translation("Text editor"),
+ *   label_collection = @Translation("Text editors"),
  *   label_singular = @Translation("text editor"),
  *   label_plural = @Translation("text editors"),
  *   label_count = @PluralTranslation(
