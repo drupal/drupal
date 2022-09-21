@@ -132,6 +132,14 @@ parameters:
       #
       # @default []
       tags: []
+    # Renderer cache debug:
+    #
+    # Allows cache debugging output for each rendered element.
+    #
+    # Enabling render cache debugging is not recommended in production
+    # environments.
+    # @default false
+    debug: false
   # Cacheability debugging:
   #
   # Responses with cacheability metadata (CacheableResponseInterface instances)
