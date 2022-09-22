@@ -12,3 +12,15 @@ ckeditor5_plugin_conditions_test_plugins_condition:
         - ckeditor5_table
     elements:
       - <foo>
+
+ckeditor5_plugin_conditions_test_plugin_allow_all_classes_on_kbd:
+  ckeditor5:
+    plugins: {}
+  drupal:
+    label: TEST — Allow all classes on kbd
+    toolbar_items:
+      kbdAllClasses:
+        label: All classes on kbd (Test Plugins Condition)
+    elements:
+      - <kbd>
+      - <kbd class>
