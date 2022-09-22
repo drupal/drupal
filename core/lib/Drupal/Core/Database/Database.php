@@ -256,9 +256,41 @@ abstract class Database {
       $info['prefix'] = $prefix;
     }
 
-    // Fallback for Drupal 7 settings.php if namespace is not provided.
-    if (empty($info['namespace'])) {
-      $info['namespace'] = 'Drupal\\' . $info['driver'] . '\\Driver\\Database\\' . $info['driver'];
+    // Backwards compatibility layer for Drupal 8 style database connection
+    // arrays. Those have the wrong 'namespace' key set, or not set at all
+    // for core supported database drivers.
+    if (empty($info['namespace']) || (strpos($info['namespace'], 'Drupal\\Core\\Database\\Driver\\') === 0)) {
+      switch (strtolower($info['driver'])) {
+        case 'mysql':
+          $info['namespace'] = 'Drupal\\mysql\\Driver\\Database\\mysql';
+          break;
+
+        case 'pgsql':
+          $info['namespace'] = 'Drupal\\pgsql\\Driver\\Database\\pgsql';
+          break;
+
+        case 'sqlite':
+          $info['namespace'] = 'Drupal\\sqlite\\Driver\\Database\\sqlite';
+          break;
+      }
+    }
+    // Backwards compatibility layer for Drupal 8 style database connection
+    // arrays. Those do not have the 'autoload' key set for core database
+    // drivers.
+    if (empty($info['autoload'])) {
+      switch (trim($info['namespace'], '\\')) {
+        case "Drupal\\mysql\\Driver\\Database\\mysql":
+          $info['autoload'] = "core/modules/mysql/src/Driver/Database/mysql/";
+          break;
+
+        case "Drupal\\pgsql\\Driver\\Database\\pgsql":
+          $info['autoload'] = "core/modules/pgsql/src/Driver/Database/pgsql/";
+          break;
+
+        case "Drupal\\sqlite\\Driver\\Database\\sqlite":
+          $info['autoload'] = "core/modules/sqlite/src/Driver/Database/sqlite/";
+          break;
+      }
     }
 
     return $info;
@@ -286,12 +318,28 @@ abstract class Database {
    *   The database connection information, as defined in settings.php. The
    *   structure of this array depends on the database driver it is connecting
    *   to.
+   * @param \Composer\Autoload\ClassLoader $class_loader
+   *   The class loader. Used for adding the database driver to the autoloader
+   *   if $info['autoload'] is set.
+   * @param string $app_root
+   *   The app root.
    *
    * @see \Drupal\Core\Database\Database::setActiveConnection
    */
-  final public static function addConnectionInfo($key, $target, array $info) {
+  final public static function addConnectionInfo($key, $target, array $info, $class_loader = NULL, $app_root = NULL) {
     if (empty(self::$databaseInfo[$key][$target])) {
-      self::$databaseInfo[$key][$target] = self::parseConnectionInfo($info);
+      $info = self::parseConnectionInfo($info);
+      self::$databaseInfo[$key][$target] = $info;
+
+      // If the database driver is provided by a module, then its code may need
+      // to be instantiated prior to when the module's root namespace is added
+      // to the autoloader, because that happens during service container
+      // initialization but the container definition is likely in the database.
+      // Therefore, allow the connection info to specify an autoload directory
+      // for the driver.
+      if (isset($info['autoload']) && $class_loader && $app_root) {
+        $class_loader->addPsr4($info['namespace'] . '\\', $app_root . '/' . $info['autoload']);
+      }
     }
   }
 
@@ -324,11 +372,16 @@ abstract class Database {
    * @param array $databases
    *   A multi-dimensional array specifying database connection parameters, as
    *   defined in settings.php.
+   * @param \Composer\Autoload\ClassLoader $class_loader
+   *   The class loader. Used for adding the database driver(s) to the
+   *   autoloader if $databases[$key][$target]['autoload'] is set.
+   * @param string $app_root
+   *   The app root.
    */
-  final public static function setMultipleConnectionInfo(array $databases) {
+  final public static function setMultipleConnectionInfo(array $databases, $class_loader = NULL, $app_root = NULL) {
     foreach ($databases as $key => $targets) {
       foreach ($targets as $target => $info) {
-        self::addConnectionInfo($key, $target, $info);
+        self::addConnectionInfo($key, $target, $info, $class_loader, $app_root);
       }
     }
   }
