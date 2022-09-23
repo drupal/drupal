@@ -530,69 +530,71 @@
    */
   Drupal.behaviors.ckeditor5Admin = {
     attach(context) {
-      once('ckeditor5-admin-toolbar', '#ckeditor5-toolbar-app').forEach(
-        (container) => {
-          const selectedTextarea = context.querySelector(
-            '#ckeditor5-toolbar-buttons-selected',
-          );
-          const available = Object.entries(
-            JSON.parse(
-              context.querySelector('#ckeditor5-toolbar-buttons-available')
-                .innerHTML,
-            ),
-          ).map(([name, attrs]) => ({ name, id: name, ...attrs }));
-          const dividers = [
-            {
-              id: 'divider',
-              name: '|',
-              label: Drupal.t('Divider'),
-            },
-            {
-              id: 'wrapping',
-              name: '-',
-              label: Drupal.t('Wrapping'),
-            },
-          ];
+      once(
+        'ckeditor5-admin-toolbar',
+        '#ckeditor5-toolbar-app',
+        context,
+      ).forEach((container) => {
+        const selectedTextarea = context.querySelector(
+          '#ckeditor5-toolbar-buttons-selected',
+        );
+        const available = Object.entries(
+          JSON.parse(
+            context.querySelector('#ckeditor5-toolbar-buttons-available')
+              .innerHTML,
+          ),
+        ).map(([name, attrs]) => ({ name, id: name, ...attrs }));
+        const dividers = [
+          {
+            id: 'divider',
+            name: '|',
+            label: Drupal.t('Divider'),
+          },
+          {
+            id: 'wrapping',
+            name: '-',
+            label: Drupal.t('Wrapping'),
+          },
+        ];
 
-          // Selected is used for managing the state. Sortable is handling updates
-          // to the state when the system is operated by mouse. There are
-          // functions making direct modifications to the state when system is
-          // operated by keyboard.
-          const selected = new Observable(
-            JSON.parse(selectedTextarea.innerHTML).map((name) => {
-              return [...dividers, ...available].find((button) => {
-                return button.name === name;
-              }).id;
-            }),
-          );
+        // Selected is used for managing the state. Sortable is handling updates
+        // to the state when the system is operated by mouse. There are
+        // functions making direct modifications to the state when system is
+        // operated by keyboard.
+        const selected = new Observable(
+          JSON.parse(selectedTextarea.innerHTML).map((name) => {
+            return [...dividers, ...available].find((button) => {
+              return button.name === name;
+            }).id;
+          }),
+        );
 
-          const mapSelection = (selection) => {
-            return selection.map((id) => {
-              return [...dividers, ...available].find((button) => {
-                return button.id === id;
-              }).name;
-            });
-          };
-          // Whenever the state is changed, update the textarea with the changes.
-          // This will also trigger re-render of the admin UI to reinitialize the
-          // Sortable state.
-          selected.subscribe((selection) => {
-            updateSelectedButtons(mapSelection(selection), selectedTextarea);
-            render(container, selected, available, dividers);
+        const mapSelection = (selection) => {
+          return selection.map((id) => {
+            return [...dividers, ...available].find((button) => {
+              return button.id === id;
+            }).name;
+          });
+        };
+        // Whenever the state is changed, update the textarea with the changes.
+        // This will also trigger re-render of the admin UI to reinitialize the
+        // Sortable state.
+        selected.subscribe((selection) => {
+          updateSelectedButtons(mapSelection(selection), selectedTextarea);
+          render(container, selected, available, dividers);
+        });
+
+        [
+          context.querySelector('#ckeditor5-toolbar-buttons-available'),
+          context.querySelector('[class*="editor-settings-toolbar-items"]'),
+        ]
+          .filter((el) => el)
+          .forEach((el) => {
+            el.classList.add('visually-hidden');
           });
 
-          [
-            context.querySelector('#ckeditor5-toolbar-buttons-available'),
-            context.querySelector('[class*="editor-settings-toolbar-items"]'),
-          ]
-            .filter((el) => el)
-            .forEach((el) => {
-              el.classList.add('visually-hidden');
-            });
-
-          render(container, selected, available, dividers);
-        },
-      );
+        render(container, selected, available, dividers);
+      });
       // Safari's focus outlines take into account absolute positioned elements.
       // When a toolbar option is blurred, the portion of the focus outline
       // surrounding the absolutely positioned tooltip does not go away. To
