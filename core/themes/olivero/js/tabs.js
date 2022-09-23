@@ -32,13 +32,11 @@
      *   The event object.
      */
     function handleTriggerClick(e) {
-      if (!tabs.classList.contains(expandedClass)) {
-        e.currentTarget.setAttribute('aria-expanded', 'true');
-        tabs.classList.add(expandedClass);
-      } else {
-        e.currentTarget.setAttribute('aria-expanded', 'false');
-        tabs.classList.remove(expandedClass);
-      }
+      e.currentTarget.setAttribute(
+        'aria-expanded',
+        !tabs.classList.contains(expandedClass),
+      );
+      tabs.classList.toggle(expandedClass);
     }
 
     if (isTabsMobileLayout() && !activeTab.matches('.tabs__tab:first-child')) {

@@ -42,23 +42,17 @@
           ).classList.remove('is-active-menu-parent');
         });
       }
-      button.setAttribute('aria-expanded', 'true');
-      topLevelMenuItem
-        .querySelector('[data-drupal-selector="primary-nav-menu--level-2"]')
-        .classList.add('is-active-menu-parent');
-      topLevelMenuItem
-        .querySelector('[data-drupal-selector="primary-nav-menu-🥕"]')
-        .classList.add('is-active-menu-parent');
     } else {
-      button.setAttribute('aria-expanded', 'false');
       topLevelMenuItem.classList.remove('is-touch-event');
-      topLevelMenuItem
-        .querySelector('[data-drupal-selector="primary-nav-menu--level-2"]')
-        .classList.remove('is-active-menu-parent');
-      topLevelMenuItem
-        .querySelector('[data-drupal-selector="primary-nav-menu-🥕"]')
-        .classList.remove('is-active-menu-parent');
     }
+
+    button.setAttribute('aria-expanded', state);
+    topLevelMenuItem
+      .querySelector('[data-drupal-selector="primary-nav-menu--level-2"]')
+      .classList.toggle('is-active-menu-parent', state);
+    topLevelMenuItem
+      .querySelector('[data-drupal-selector="primary-nav-menu-🥕"]')
+      .classList.toggle('is-active-menu-parent', state);
   }
 
   Drupal.olivero.toggleSubNav = toggleSubNav;

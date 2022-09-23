@@ -99,13 +99,13 @@
    */
   function toggleSearchVisibility(visibility) {
     searchWideButton.setAttribute('aria-expanded', visibility === true);
+    searchWideWrapper.classList.toggle('is-active', visibility === true);
     searchWideWrapper.addEventListener('transitionend', handleFocus, {
       once: true,
     });
 
     if (visibility === true) {
       Drupal.olivero.closeAllSubNav();
-      searchWideWrapper.classList.add('is-active');
 
       document.addEventListener('click', watchForClickOut, { capture: true });
       document.addEventListener('focusout', watchForFocusOut, {
@@ -113,8 +113,6 @@
       });
       document.addEventListener('keyup', watchForEscapeOut, { capture: true });
     } else {
-      searchWideWrapper.classList.remove('is-active');
-
       document.removeEventListener('click', watchForClickOut, {
         capture: true,
       });
