@@ -24,6 +24,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
  * @see https://www.drupal.org/node/2849674
  * @see https://bugs.php.net/bug.php?id=66052
  */
+#[\AllowDynamicProperties]
 class ViewExecutable {
 
   /**
