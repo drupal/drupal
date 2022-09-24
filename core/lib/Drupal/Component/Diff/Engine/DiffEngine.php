@@ -25,6 +25,7 @@ namespace Drupal\Component\Diff\Engine;
  * @private
  * @subpackage DifferenceEngine
  */
+#[\AllowDynamicProperties]
 class DiffEngine {
 
   const USE_ASSERTS = FALSE;

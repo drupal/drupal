@@ -5,6 +5,7 @@ namespace Drupal\Component\Plugin\Definition;
 /**
  * Provides object-based plugin definitions.
  */
+#[\AllowDynamicProperties]
 class PluginDefinition implements PluginDefinitionInterface {
 
   /**
