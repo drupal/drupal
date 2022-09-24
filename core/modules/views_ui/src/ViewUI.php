@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Stores UI related temporary settings.
  */
+#[\AllowDynamicProperties]
 class ViewUI implements ViewEntityInterface {
 
   /**

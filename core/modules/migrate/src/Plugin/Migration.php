@@ -95,6 +95,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @link https://www.drupal.org/docs/8/api/migrate-api Migrate API handbook. @endlink
  */
+#[\AllowDynamicProperties]
 class Migration extends PluginBase implements MigrationInterface, RequirementsInterface, ContainerFactoryPluginInterface {
 
   /**
