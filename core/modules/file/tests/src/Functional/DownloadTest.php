@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\file\Functional;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\File\FileSystemInterface;
 
 /**
@@ -25,6 +26,15 @@ class DownloadTest extends FileManagedTestBase {
 
   protected function setUp(): void {
     parent::setUp();
+
+    // This test currently frequently causes the SQLite database to lock, so
+    // skip the test on SQLite until the issue can be resolved.
+    // @todo Fix root cause and re-enable in
+    //   https://www.drupal.org/project/drupal/issues/3311587
+    if (Database::getConnection()->driver() === 'sqlite') {
+      $this->markTestSkipped('Test frequently causes a locked database on SQLite');
+    }
+
     $this->fileUrlGenerator = $this->container->get('file_url_generator');
     // Clear out any hook calls.
     file_test_reset();
