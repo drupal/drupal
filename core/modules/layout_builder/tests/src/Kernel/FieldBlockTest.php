@@ -152,7 +152,7 @@ class FieldBlockTest extends EntityKernelTestBase {
    * @covers ::build
    * @dataProvider providerTestBlockAccessEntityAllowedFieldHasValue
    */
-  public function testBlockAccessEntityAllowedFieldHasValue($expected, $is_empty) {
+  public function testBlockAccessEntityAllowedFieldHasValue($expected, $is_empty, $default_value) {
     $entity = $this->prophesize(FieldableEntityInterface::class);
     $block = $this->getTestBlock($entity);
 
@@ -160,6 +160,10 @@ class FieldBlockTest extends EntityKernelTestBase {
     $entity->access('view', $account->reveal(), TRUE)->willReturn(AccessResult::allowed());
     $entity->hasField('the_field_name')->willReturn(TRUE);
     $field = $this->prophesize(FieldItemListInterface::class);
+    $field_definition = $this->prophesize(FieldDefinitionInterface::class);
+    $field->getFieldDefinition()->willReturn($field_definition->reveal());
+    $field_definition->getDefaultValue($entity->reveal())->willReturn($default_value);
+    $field_definition->getType()->willReturn('not_an_image');
     $entity->get('the_field_name')->willReturn($field->reveal());
 
     $field->access('view', $account->reveal(), TRUE)->willReturn(AccessResult::allowed());
@@ -177,10 +181,17 @@ class FieldBlockTest extends EntityKernelTestBase {
     $data['empty'] = [
       FALSE,
       TRUE,
+      FALSE,
     ];
     $data['populated'] = [
       TRUE,
       FALSE,
+      FALSE,
+    ];
+    $data['empty, with default'] = [
+      TRUE,
+      TRUE,
+      TRUE,
     ];
     return $data;
   }
