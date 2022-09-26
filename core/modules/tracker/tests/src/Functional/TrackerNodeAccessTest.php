@@ -11,6 +11,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests for private node access on /tracker.
  *
  * @group tracker
+ * @group legacy
  */
 class TrackerNodeAccessTest extends BrowserTestBase {
 

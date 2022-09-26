@@ -8,6 +8,7 @@ use Drupal\Tests\migrate_drupal_ui\Functional\NoMultilingualReviewPageTestBase;
  * Tests Review page.
  *
  * @group tracker
+ * @group legacy
  */
 class ReviewPageTest extends NoMultilingualReviewPageTestBase {
 

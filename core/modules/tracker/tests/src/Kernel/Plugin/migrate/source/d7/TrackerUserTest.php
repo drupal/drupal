@@ -10,6 +10,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  * @covers Drupal\tracker\Plugin\migrate\source\d7\TrackerUser
  *
  * @group tracker
+ * @group legacy
  */
 class TrackerUserTest extends MigrateSqlSourceTestBase {
 

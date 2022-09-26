@@ -6,6 +6,7 @@ namespace Drupal\Tests\tracker\Kernel\Migrate\d7;
  * Tests migration of Tracker settings to configuration.
  *
  * @group tracker
+ * @group legacy
  */
 class MigrateTrackerSettingsTest extends MigrateDrupalTestBase {
 

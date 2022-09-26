@@ -8,6 +8,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests recent content link.
  *
  * @group tracker
+ * @group legacy
  */
 class TrackerRecentContentLinkTest extends BrowserTestBase {
 

@@ -13,6 +13,7 @@ use Drupal\views\Views;
  * Tests the tracker user uid handlers.
  *
  * @group tracker
+ * @group legacy
  */
 class TrackerUserUidTest extends KernelTestBase {
 

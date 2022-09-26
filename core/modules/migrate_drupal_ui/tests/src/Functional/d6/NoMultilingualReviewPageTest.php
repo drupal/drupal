@@ -27,8 +27,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
     'forum',
     'statistics',
     'syslog',
-    // @todo Remove tracker in https://www.drupal.org/project/drupal/issues/3261452
-    'tracker',
     'update',
     // Test migrations states.
     'migrate_state_finished_test',
