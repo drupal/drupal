@@ -129,6 +129,20 @@ class BlockContent extends EditorialContentEntityBase implements BlockContentInt
   /**
    * {@inheritdoc}
    */
+  public static function preDelete(EntityStorageInterface $storage, array $entities) {
+    parent::preDelete($storage, $entities);
+
+    /** @var \Drupal\block_content\BlockContentInterface $block */
+    foreach ($entities as $block) {
+      foreach ($block->getInstances() as $instance) {
+        $instance->delete();
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function postDelete(EntityStorageInterface $storage, array $entities) {
     parent::postDelete($storage, $entities);
     /** @var \Drupal\block_content\BlockContentInterface $block */
@@ -160,16 +174,6 @@ class BlockContent extends EditorialContentEntityBase implements BlockContentInt
       // one.
       $record->revision_log = $this->original->getRevisionLogMessage();
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function delete() {
-    foreach ($this->getInstances() as $instance) {
-      $instance->delete();
-    }
-    parent::delete();
   }
 
   /**
