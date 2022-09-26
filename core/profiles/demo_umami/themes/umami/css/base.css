@@ -3,6 +3,52 @@
  * This is the base CSS file, for styling elements.
  */
 
+@font-face {
+  font-family: "Source Sans Pro";
+  src:
+    local("Source Sans Pro"),
+    url("../fonts/source-sans-pro-v21-latin-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Source Sans Pro";
+  src:
+    local("Source Sans Pro"),
+    url("../fonts/source-sans-pro-v21-latin-italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Source Sans Pro";
+  src:
+    local("Source Sans Pro"),
+    url("../fonts/source-sans-pro-v21-latin-700.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Source Sans Pro";
+  src:
+    local("Source Sans Pro"),
+    url("../fonts/source-sans-pro-v21-latin-700italic.woff2") format("woff2");
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Scope One";
+  src:
+    local("Scope One"),
+    local("ScopeOne-Regular"),
+    url("../fonts/scope-one-v14-latin-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
 html {
   box-sizing: border-box;
 }
@@ -34,7 +80,7 @@ body {
   margin: 0;
   color: #464646;
   background: #fbf5ee;
-  font-family: "Open Sans", Verdana, sans-serif;
+  font-family: "Source Sans Pro", Verdana, sans-serif;
   font-size: 1rem;
   line-height: 1.5rem;
 }

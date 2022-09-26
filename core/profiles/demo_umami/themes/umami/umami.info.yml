@@ -8,8 +8,6 @@ libraries:
   - core/normalize
   - umami/global
   - umami/messages
-  - umami/webfonts-open-sans
-  - umami/webfonts-scope-one
 
 libraries-override:
   layout_builder/twocol_section:
