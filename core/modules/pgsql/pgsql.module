@@ -15,7 +15,7 @@ function pgsql_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.pgsql':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The PostgreSQL module provides the connection between Drupal and a PostgreSQL database. For more information, see the <a href=":pgsql">online documentation for the PostgreSQL module</a>.', [':pgsql' => 'https://www.drupal.org/documentation/modules/pgsql']) . '</p>';
+      $output .= '<p>' . t('The PostgreSQL module provides the connection between Drupal and a PostgreSQL database. For more information, see the <a href=":pgsql">online documentation for the PostgreSQL module</a>.', [':pgsql' => 'https://www.drupal.org/docs/core-modules-and-themes/core-modules/postgresql-module']) . '</p>';
       return $output;
 
   }
