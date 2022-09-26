@@ -554,9 +554,6 @@ class PathPluginBaseTest extends UnitTestCase {
 
     $view->storage = $view_entity;
 
-    // Skip views options caching.
-    $view->editing = TRUE;
-
     $access_plugin = $this->getMockBuilder('Drupal\views\Plugin\views\access\AccessPluginBase')
       ->disableOriginalConstructor()
       ->getMockForAbstractClass();

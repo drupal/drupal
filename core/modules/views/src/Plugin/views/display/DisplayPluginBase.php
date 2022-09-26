@@ -192,7 +192,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
 
     $skip_cache = \Drupal::config('views.settings')->get('skip_cache');
 
-    if (empty($view->editing) || !$skip_cache) {
+    if (!$skip_cache) {
       $cid = 'views:unpack_options:' . hash('sha256', serialize([$this->options, $options])) . ':' . \Drupal::languageManager()->getCurrentLanguage()->getId();
       if (empty(static::$unpackOptions[$cid])) {
         $cache = \Drupal::cache('data')->get($cid);
