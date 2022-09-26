@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\TypedData\RecursiveContextualValidatorTest.
- */
-
 namespace Drupal\Tests\Core\TypedData;
 
 use Drupal\Core\Cache\NullBackend;
@@ -258,7 +253,7 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
   public function providerTestValidatePropertyWithInvalidObjects() {
     $data = [];
     $data[] = [new \stdClass()];
-    $data[] = [new TestClass()];
+    $data[] = [new class() {}];
 
     $data[] = [$this->createMock('Drupal\Core\TypedData\TypedDataInterface')];
 
@@ -341,9 +336,5 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
 
     return $this->setupTypedData($tree, 'test_name');
   }
-
-}
-
-class TestClass {
 
 }
