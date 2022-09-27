@@ -26,7 +26,7 @@ interface TitleResolverInterface {
    * @param \Symfony\Component\Routing\Route $route
    *   The route information of the route to fetch the title.
    *
-   * @return array|string|null
+   * @return array|string|\Stringable|null
    *   The title for the route.
    */
   public function getTitle(Request $request, Route $route);
