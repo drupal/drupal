@@ -32,12 +32,12 @@ class ViewsExposedFilterBlock extends ViewsBlockBase {
    *   context of current view and display ID.
    */
   public function build() {
-    $output = $this->view->display_handler->viewExposedFormBlocks();
+    $output = $this->view->display_handler->viewExposedFormBlocks() ?? [];
     // Provide the context for block build and block view alter hooks.
     // \Drupal\views\Plugin\Block\ViewsBlock::build() adds the same context in
     // \Drupal\views\ViewExecutable::buildRenderable() using
     // \Drupal\views\Plugin\views\display\DisplayPluginBase::buildRenderable().
-    if (is_array($output) && !empty($output)) {
+    if (!empty($output)) {
       $output += [
         '#view' => $this->view,
         '#display_id' => $this->displayID,
