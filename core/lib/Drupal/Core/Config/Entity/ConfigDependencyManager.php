@@ -186,7 +186,7 @@ class ConfigDependencyManager {
    * @param array $keys
    *   The keys whose values to extract.
    *
-   * @return
+   * @return array
    *   An array keyed by the $keys passed in. The values are arrays keyed by the
    *   row from the graph and the value is the corresponding value for the key
    *   from the graph.

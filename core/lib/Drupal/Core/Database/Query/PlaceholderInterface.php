@@ -15,7 +15,7 @@ interface PlaceholderInterface {
   /**
    * Returns the next placeholder ID for the query.
    *
-   * @return
+   * @return int
    *   The next available placeholder ID as an integer.
    */
   public function nextPlaceholder();

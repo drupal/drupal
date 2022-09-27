@@ -60,7 +60,7 @@ interface EntityViewBuilderInterface {
    *   (optional) For which language the entity should be rendered, defaults to
    *   the current content language.
    *
-   * @return
+   * @return array
    *   A render array for the entities, indexed by the same keys as the
    *   entities array passed in $entities.
    *

@@ -14,7 +14,7 @@ class MemoryBackendTest extends GenericCacheBackendUnitTestBase {
   /**
    * Creates a new instance of MemoryBackend.
    *
-   * @return
+   * @return \Drupal\Core\Cache\CacheBackendInterface
    *   A new MemoryBackend object.
    */
   protected function createCacheBackend($bin) {

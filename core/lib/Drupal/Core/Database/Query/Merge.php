@@ -356,7 +356,7 @@ class Merge extends Query implements ConditionInterface {
   /**
    * Executes the merge database query.
    *
-   * @return
+   * @return int|null
    *   One of the following values:
    *   - Merge::STATUS_INSERT: If the entry does not already exist,
    *     and an INSERT query is executed.
@@ -407,6 +407,7 @@ class Merge extends Query implements ConditionInterface {
       $update->execute();
       return self::STATUS_UPDATE;
     }
+    return NULL;
   }
 
 }

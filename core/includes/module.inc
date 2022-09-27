@@ -29,7 +29,7 @@
  *   (optional) The base file name (without the $type extension). If omitted,
  *   $module is used; i.e., resulting in "$module.$type" by default.
  *
- * @return string|false
+ * @return bool|string
  *   The name of the included file, if successful; FALSE otherwise.
  *
  * @deprecated in drupal:9.4.0 and is removed from drupal:11.0.0.

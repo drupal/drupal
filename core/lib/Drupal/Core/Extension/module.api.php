@@ -74,7 +74,7 @@ use Drupal\Core\Utility\UpdateException;
  *
  * See system_hook_info() for all hook groups defined by Drupal core.
  *
- * @return
+ * @return array
  *   An associative array whose keys are hook names and whose values are an
  *   associative array containing:
  *   - group: A string defining the group to which the hook belongs. The module
@@ -797,7 +797,7 @@ function hook_removed_post_updates() {
  * Implementations of this hook should be placed in a mymodule.install file in
  * the same directory as mymodule.module.
  *
- * @return
+ * @return array
  *   A multidimensional array containing information about the module update
  *   dependencies. The first two levels of keys represent the module and update
  *   number (respectively) for which information is being returned, and the
@@ -843,7 +843,7 @@ function hook_update_dependencies() {
  * Implementations of this hook should be placed in a mymodule.install file in
  * the same directory as mymodule.module.
  *
- * @return
+ * @return int
  *   An integer, corresponding to hook_update_N() which has been removed from
  *   mymodule.install.
  *
@@ -864,7 +864,7 @@ function hook_update_last_removed() {
  * of the Drupal file system, for example to update modules that have newer
  * releases, or to install a new theme.
  *
- * @return
+ * @return array
  *   An associative array of information about the updater(s) being provided.
  *   This array is keyed by a unique identifier for each updater, and the
  *   values are subarrays that can contain the following keys:
@@ -962,7 +962,7 @@ function hook_updater_info_alter(&$updaters) {
  *   - runtime: The runtime requirements are being checked and shown on the
  *     status report page.
  *
- * @return
+ * @return array
  *   An associative array where the keys are arbitrary but must be unique (it
  *   is suggested to use the module short name as a prefix) and the values are
  *   themselves associative arrays with the following elements:

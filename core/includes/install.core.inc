@@ -549,7 +549,7 @@ function install_begin_request($class_loader, &$install_state) {
  *   (optional) A callback to allow command line processes to update a progress
  *   bar. The callback is passed the $install_state variable.
  *
- * @return
+ * @return array|null
  *   HTML output from the last completed task.
  */
 function install_run_tasks(&$install_state, callable $callback = NULL) {
@@ -606,7 +606,7 @@ function install_run_tasks(&$install_state, callable $callback = NULL) {
  *   An array of information about the current installation state. This is
  *   passed in by reference so that it can be modified by the task.
  *
- * @return
+ * @return array|null
  *   The output of the task function, if there is any.
  */
 function install_run_task($task, &$install_state) {
@@ -709,7 +709,7 @@ function install_run_task($task, &$install_state) {
  * @param $install_state
  *   An array of information about the current installation state.
  *
- * @return
+ * @return array
  *   A list of tasks to be performed, with associated metadata.
  */
 function install_tasks_to_perform($install_state) {
@@ -745,7 +745,7 @@ function install_tasks_to_perform($install_state) {
  * @param $install_state
  *   An array of information about the current installation state.
  *
- * @return
+ * @return array
  *   A list of tasks, with associated metadata as returned by
  *   hook_install_tasks().
  */
@@ -906,7 +906,7 @@ function install_tasks($install_state) {
  * @param $install_state
  *   An array of information about the current installation state.
  *
- * @return
+ * @return array
  *   A list of tasks, with keys equal to the machine-readable task name and
  *   values equal to the name that should be displayed.
  *
@@ -979,7 +979,7 @@ function install_get_form($form_id, array &$install_state) {
  * @param $install_state
  *   An array of information about the current installation state.
  *
- * @return
+ * @return string
  *   The URL to redirect to.
  *
  * @see install_full_redirect_url()
@@ -994,7 +994,7 @@ function install_redirect_url($install_state) {
  * @param $install_state
  *   An array of information about the current installation state.
  *
- * @return
+ * @return string
  *   The complete URL to redirect to.
  *
  * @see install_redirect_url()
@@ -1072,7 +1072,7 @@ function install_display_output($output, $install_state) {
  * @param $install_state
  *   An array of information about the current installation state.
  *
- * @return
+ * @return array
  *   A themed status report, or an exception if there are requirement errors.
  */
 function install_verify_requirements(&$install_state) {
@@ -1118,7 +1118,7 @@ function install_base_system(&$install_state) {
 /**
  * Verifies and returns the last installation task that was completed.
  *
- * @return
+ * @return null|string
  *   The last completed task, if there is one. An exception is thrown if Drupal
  *   is already installed.
  */
@@ -1222,7 +1222,7 @@ function install_database_errors($database, $settings_file) {
  *   profile will be added here, if it was not already selected previously, as
  *   will a list of all available profiles.
  *
- * @return
+ * @return array|null
  *   For interactive installations, a form allowing the profile to be selected,
  *   if the user has a choice that needs to be made. Otherwise, an exception is
  *   thrown if a profile cannot be chosen automatically.
@@ -1310,7 +1310,7 @@ function _install_select_profile(&$install_state) {
 /**
  * Finds all .po files that are useful to the installer.
  *
- * @return
+ * @return array
  *   An associative array of file URIs keyed by language code. URIs as
  *   returned by FileSystemInterface::scanDirectory().
  *
@@ -1341,7 +1341,7 @@ function install_find_translations() {
  *   langcode will be added here, if it was not already selected previously, as
  *   will a list of all available languages.
  *
- * @return
+ * @return array|null
  *   For interactive installations, a form or other page output allowing the
  *   language to be selected or providing information about language selection,
  *   if a language has not been chosen. Otherwise, an exception is thrown if a
@@ -1558,7 +1558,7 @@ function install_bootstrap_full() {
  * @param $install_state
  *   An array of information about the current installation state.
  *
- * @return
+ * @return array
  *   The batch definition.
  */
 function install_profile_modules(&$install_state) {
@@ -1667,7 +1667,7 @@ function install_install_profile(&$install_state) {
  * @param $install_state
  *   An array of information about the current installation state.
  *
- * @return
+ * @return array
  *   The batch definition, if there are language files to download.
  */
 function install_download_additional_translations_operations(&$install_state) {
@@ -1718,7 +1718,7 @@ function install_download_additional_translations_operations(&$install_state) {
  * @param $install_state
  *   An array of information about the current installation state.
  *
- * @return
+ * @return array|null
  *   The batch definition, if there are language files to import.
  */
 function install_import_translations(&$install_state) {
@@ -1848,9 +1848,6 @@ function install_finish_translations(&$install_state) {
  *
  * @param $install_state
  *   An array of information about the current installation state.
- *
- * @return
- *   A message informing the user that the installation is complete.
  */
 function install_finished(&$install_state) {
   $profile = $install_state['parameters']['profile'];
@@ -2260,7 +2257,7 @@ function install_check_requirements($install_state) {
  *   An array of requirements, in the same format as is returned by
  *   hook_requirements().
  *
- * @return
+ * @return array|null
  *   A themed status report, or an exception if there are requirement errors.
  *   If there are only requirement warnings, a themed status report is shown
  *   initially, but the user is allowed to bypass it by providing 'continue=1'

@@ -79,7 +79,7 @@ class ThemeRegistry extends CacheCollector implements DestructableInterface {
   /**
    * Initializes the full theme registry.
    *
-   * @return
+   * @return array
    *   An array with the keys of the full theme registry, but the values
    *   initialized to NULL.
    */

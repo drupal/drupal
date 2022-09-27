@@ -487,7 +487,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
    * @param string $langcode
    *   The property value.
    *
-   * @return
+   * @return mixed
    *   The property value.
    */
   protected function getValue(EntityInterface $translation, $property, $langcode) {

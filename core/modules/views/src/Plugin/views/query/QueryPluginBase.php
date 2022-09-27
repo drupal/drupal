@@ -172,7 +172,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
    * @param $where
    *   'where' or 'having'.
    *
-   * @return
+   * @return int|string
    *   The group ID generated.
    */
   public function setWhereGroup($type = 'AND', $group = NULL, $where = 'where') {

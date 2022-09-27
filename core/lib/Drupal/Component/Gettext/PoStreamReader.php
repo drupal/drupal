@@ -237,7 +237,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
    * indicated by MSGSTR or MSGSTR_ARR followed immediately by an MSGID or
    * MSGCTXT (when items closely follow each other).
    *
-   * @return
+   * @return bool|null
    *   FALSE if an error was logged, NULL otherwise. The errors are considered
    *   non-blocking, so reading can continue, while the errors are collected
    *   for later presentation.
@@ -544,8 +544,9 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
    * @param $string
    *   A string specified with enclosing quotes.
    *
-   * @return
-   *   The string parsed from inside the quotes.
+   * @return bool|string
+   *   The string parsed from inside the quotes. False when the syntax is
+   *   invalid.
    */
   public function parseQuoted($string) {
     if (substr($string, 0, 1) != substr($string, -1, 1)) {
@@ -574,7 +575,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
    * @param $comment
    *   An array of strings containing a comment.
    *
-   * @return
+   * @return string
    *   Short one-string version of the comment.
    */
   private function shortenComments($comment) {

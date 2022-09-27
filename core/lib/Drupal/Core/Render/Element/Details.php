@@ -66,7 +66,7 @@ class Details extends RenderElement {
    *   An associative array containing the properties and children of the
    *   details.
    *
-   * @return
+   * @return array
    *   The modified element.
    */
   public static function preRenderDetails($element) {

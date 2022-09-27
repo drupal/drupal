@@ -103,7 +103,7 @@ interface ModuleHandlerInterface {
    *   information discovered during a Drupal\Core\Extension\ExtensionDiscovery
    *   scan.
    *
-   * @return
+   * @return array
    *   The same array with the new keys for each module:
    *   - requires: An array with the keys being the modules that this module
    *     requires.
