@@ -226,9 +226,9 @@ class DateRangeFieldTest extends DateTestBase {
         'type' => 'daterange_default',
         'label' => 'hidden',
         'settings' => [
-            'format_type' => 'long',
-            'separator' => 'THESEPARATOR',
-          ] + $this->defaultSettings,
+          'format_type' => 'long',
+          'separator' => 'THESEPARATOR',
+        ] + $this->defaultSettings,
       ];
 
       $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')

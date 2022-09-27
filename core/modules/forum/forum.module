@@ -576,7 +576,7 @@ function template_preprocess_forum_list(&$variables) {
   }
 
   $variables['pager'] = [
-   '#type' => 'pager',
+    '#type' => 'pager',
   ];
 
   // Give meaning to $tid for themers. $tid actually stands for term ID.

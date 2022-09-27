@@ -104,7 +104,7 @@ class SortDateTest extends ViewsKernelTestBase {
             ['name' => 'Meredith'],
             ['name' => 'Paul'],
             ['name' => 'John'],
-           ];
+          ];
           break;
 
         case 'hour':

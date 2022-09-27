@@ -108,10 +108,10 @@ class ViewsUITourTest extends TourTestBase {
    */
   public function createTranslation($source, $langcode) {
     return $this->localeStorage->createTranslation([
-        'lid' => $source->lid,
-        'language' => $langcode,
-        'translation' => $this->randomMachineName(100),
-      ])->save();
+      'lid' => $source->lid,
+      'language' => $langcode,
+      'translation' => $this->randomMachineName(100),
+    ])->save();
   }
 
 }

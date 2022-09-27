@@ -300,11 +300,11 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
             $set['user']->hasPermission('post comments') &&
             $set['comment']->getFieldName() == 'comment_other'
           ), new FormattableMarkup('User @user @state update field @field on comment @comment', [
-          '@user' => $set['user']->getAccountName(),
-          '@state' => $may_update ? 'can' : 'cannot',
-          '@comment' => $set['comment']->getSubject(),
-          '@field' => $field,
-        ]));
+            '@user' => $set['user']->getAccountName(),
+            '@state' => $may_update ? 'can' : 'cannot',
+            '@comment' => $set['comment']->getSubject(),
+            '@field' => $field,
+          ]));
       }
     }
     foreach ($permutations as $set) {

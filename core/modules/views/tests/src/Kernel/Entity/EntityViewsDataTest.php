@@ -418,7 +418,8 @@ class EntityViewsDataTest extends KernelTestBase {
     $this->assertEquals([
       'left_field' => 'id',
       'field' => 'entity_id',
-      'extra' => [[
+      'extra' => [
+        [
           'field' => 'deleted',
           'value' => 0,
           'numeric' => TRUE,
@@ -506,7 +507,8 @@ class EntityViewsDataTest extends KernelTestBase {
     $this->assertEquals([
       'left_field' => 'id',
       'field' => 'entity_id',
-      'extra' => [[
+      'extra' => [
+        [
           'field' => 'deleted',
           'value' => 0,
           'numeric' => TRUE,
@@ -636,7 +638,8 @@ class EntityViewsDataTest extends KernelTestBase {
     $this->assertEquals([
       'left_field' => 'id',
       'field' => 'entity_id',
-      'extra' => [[
+      'extra' => [
+        [
           'field' => 'deleted',
           'value' => 0,
           'numeric' => TRUE,
@@ -649,7 +652,8 @@ class EntityViewsDataTest extends KernelTestBase {
     $this->assertEquals([
       'left_field' => 'revision_id',
       'field' => 'entity_id',
-      'extra' => [[
+      'extra' => [
+        [
           'field' => 'deleted',
           'value' => 0,
           'numeric' => TRUE,

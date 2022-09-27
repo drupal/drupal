@@ -287,16 +287,16 @@ class MediaLibraryTest extends WebDriverTestBase {
       // Update the filter format to set the allowed media types.
       FilterFormat::load('test_format')
         ->setFilterConfig('media_embed', [
-        'status' => TRUE,
-        'settings' => [
-          'default_view_mode' => 'view_mode_1',
-          'allowed_media_types' => $allowed_media_types,
-          'allowed_view_modes' => [
-            'view_mode_1' => 'view_mode_1',
-            'view_mode_2' => 'view_mode_2',
+          'status' => TRUE,
+          'settings' => [
+            'default_view_mode' => 'view_mode_1',
+            'allowed_media_types' => $allowed_media_types,
+            'allowed_view_modes' => [
+              'view_mode_1' => 'view_mode_1',
+              'view_mode_2' => 'view_mode_2',
+            ],
           ],
-        ],
-      ])->save();
+        ])->save();
 
       // Now test opening the media library from the CKEditor plugin, and
       // verify the expected behavior.

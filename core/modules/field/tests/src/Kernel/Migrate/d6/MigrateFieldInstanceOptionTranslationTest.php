@@ -15,11 +15,11 @@ class MigrateFieldInstanceOptionTranslationTest extends MigrateDrupal6TestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-      'config_translation',
-      'language',
-      'locale',
-      'menu_ui',
-    ];
+    'config_translation',
+    'language',
+    'locale',
+    'menu_ui',
+  ];
 
   /**
    * {@inheritdoc}

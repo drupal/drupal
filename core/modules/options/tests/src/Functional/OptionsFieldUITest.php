@@ -344,9 +344,7 @@ class OptionsFieldUITest extends FieldTestBase {
     $on = $this->randomMachineName();
     $off = $this->randomMachineName();
     $edit = [
-      'settings[allowed_values]' =>
-        "1|$on
-        0|$off",
+      'settings[allowed_values]' => "1|$on" . PHP_EOL . "0|$off",
     ];
 
     $this->drupalGet($this->adminPath);

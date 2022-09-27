@@ -63,7 +63,7 @@ class AggregatorTitleTest extends KernelTestBase {
       'title' => 'test title',
       'fid' => $aggregator_feed->id(),
       'link' => 'http://www.example.com',
-      ]);
+    ]);
     $aggregator_item->save();
 
     // Verify aggregator feed title with and without links.

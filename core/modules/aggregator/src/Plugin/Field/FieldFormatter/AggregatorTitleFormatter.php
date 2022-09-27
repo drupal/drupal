@@ -63,9 +63,9 @@ class AggregatorTitleFormatter extends FormatterBase {
     foreach ($items as $delta => $item) {
       if ($this->getSetting('display_as_link') && $url_string) {
         $elements[$delta] = [
-            '#type' => 'link',
-            '#title' => $item->value,
-            '#url' => Url::fromUri($url_string),
+          '#type' => 'link',
+          '#title' => $item->value,
+          '#url' => Url::fromUri($url_string),
         ];
       }
       else {

@@ -54,7 +54,7 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
     ];
 
     $form['reset_button_label'] = [
-     '#type' => 'textfield',
+      '#type' => 'textfield',
       '#title' => $this->t('Reset button label'),
       '#description' => $this->t('Text to display in the reset button of the exposed form.'),
       '#default_value' => $this->options['reset_button_label'],

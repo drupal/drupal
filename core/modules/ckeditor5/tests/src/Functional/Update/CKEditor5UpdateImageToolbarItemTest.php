@@ -162,8 +162,8 @@ class CKEditor5UpdateImageToolbarItemTest extends UpdatePathTestBase {
             'image uploads' => $image_uploads_enabled,
             'sourceEditing already enabled' => $source_editing_already_enabled,
             'expected sourceEditing additions' => $image_uploads_enabled
-              ? []
-              : ['<img data-entity-uuid data-entity-type>'],
+            ? []
+            : ['<img data-entity-uuid data-entity-type>'],
           ];
         }
       }

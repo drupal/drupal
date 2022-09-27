@@ -152,7 +152,7 @@ class FileCacheFactoryTest extends TestCase {
       ],
       ['class' => '\stdClass'],
       $class,
-  ];
+    ];
 
     return $data;
   }

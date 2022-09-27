@@ -55,7 +55,7 @@ class ViewTest extends UnitTestCase {
       ->willReturnMap([
         ['this', $view_this],
         ['other', $view_other],
-    ]);
+      ]);
     $this->viewHandler->view->storage = $view_this;
 
     $this->viewHandler->options['view_to_insert'] = 'other:default';

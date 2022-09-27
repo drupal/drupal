@@ -22,14 +22,14 @@ function views_views_data() {
   $data['views']['table']['group'] = t('Global');
   $data['views']['table']['join'] = [
   // #global is a special flag which allows a table to appear all the time.
-  '#global' => [],
+    '#global' => [],
   ];
 
   $data['views']['random'] = [
-  'title' => t('Random'),
-  'help' => t('Randomize the display order.'),
-  'sort' => [
-    'id' => 'random',
+    'title' => t('Random'),
+    'help' => t('Randomize the display order.'),
+    'sort' => [
+      'id' => 'random',
     ],
   ];
 
@@ -116,7 +116,7 @@ function views_views_data() {
   ];
 
   $data['views']['combine'] = [
-   'title' => t('Combine fields filter'),
+    'title' => t('Combine fields filter'),
     'help' => t('Combine multiple fields together and search by them.'),
     'filter' => [
       'id' => 'combine',

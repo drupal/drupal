@@ -111,8 +111,8 @@ class TourViewBuilder extends EntityViewBuilder {
               '@total' => $total_tips,
             ]),
             'attachTo' => [
-               'element' => $selector,
-               'on' => $location ?? 'bottom-start',
+              'element' => $selector,
+              'on' => $location ?? 'bottom-start',
             ],
             // Shepherd expects classes to be provided as a string.
             'classes' => implode(' ', $classes),

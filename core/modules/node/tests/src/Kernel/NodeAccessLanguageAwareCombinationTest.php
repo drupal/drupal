@@ -175,7 +175,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeAccessTestBase {
     $this->nodes['public_no_language_private'] = $this->drupalCreateNode([
       'field_private' => [['value' => 1]],
       'private' => FALSE,
-        'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ]);
     $this->nodes['public_no_language_public'] = $this->drupalCreateNode([
       'field_private' => [['value' => 0]],

@@ -33,7 +33,7 @@ class NestedArrayTest extends TestCase {
 
     // Create a form structure with a nested element.
     $this->form['details']['element'] = [
-     '#value' => 'Nested element',
+      '#value' => 'Nested element',
     ];
 
     // Set up parent array.

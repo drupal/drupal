@@ -104,13 +104,13 @@ class FilterCombineTest extends ViewsKernelTestBase {
 
     $fields = $view->displayHandlers->get('default')->getOption('fields');
     $view->displayHandlers->get('default')->overrideOption('fields', $fields + [
-        'job' => [
-          'id' => 'job',
-          'table' => 'views_test_data',
-          'field' => 'job',
-          'relationship' => 'none',
-        ],
-      ]);
+      'job' => [
+        'id' => 'job',
+        'table' => 'views_test_data',
+        'field' => 'job',
+        'relationship' => 'none',
+      ],
+    ]);
 
     // Change the filtering.
     $view->displayHandlers->get('default')->overrideOption('filters', [
@@ -155,13 +155,13 @@ class FilterCombineTest extends ViewsKernelTestBase {
 
     $fields = $view->displayHandlers->get('default')->getOption('fields');
     $view->displayHandlers->get('default')->overrideOption('fields', $fields + [
-        'job' => [
-          'id' => 'job',
-          'table' => 'views_test_data',
-          'field' => 'job',
-          'relationship' => 'none',
-        ],
-      ]);
+      'job' => [
+        'id' => 'job',
+        'table' => 'views_test_data',
+        'field' => 'job',
+        'relationship' => 'none',
+      ],
+    ]);
 
     // Set the filtering to allwords and simulate searching for a phrase.
     $view->displayHandlers->get('default')->overrideOption('filters', [

@@ -105,8 +105,8 @@ class LanguageSwitchingTest extends BrowserTestBase {
 
       $link = $list_item->find('xpath', 'a');
       $anchors[] = [
-         'hreflang' => $link->getAttribute('hreflang'),
-         'data-drupal-link-system-path' => $link->getAttribute('data-drupal-link-system-path'),
+        'hreflang' => $link->getAttribute('hreflang'),
+        'data-drupal-link-system-path' => $link->getAttribute('data-drupal-link-system-path'),
       ];
       $labels[] = $link->getText();
     }

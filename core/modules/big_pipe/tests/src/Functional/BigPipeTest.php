@@ -414,9 +414,9 @@ class BigPipeTest extends BrowserTestBase {
     array_unshift($expected_stream_order, BigPipe::START_SIGNAL);
     array_push($expected_stream_order, BigPipe::STOP_SIGNAL);
     $actual_stream_order = $placeholder_replacement_positions + [
-        $start_signal_position => BigPipe::START_SIGNAL,
-        $stop_signal_position => BigPipe::STOP_SIGNAL,
-      ];
+      $start_signal_position => BigPipe::START_SIGNAL,
+      $stop_signal_position => BigPipe::STOP_SIGNAL,
+    ];
     ksort($actual_stream_order, SORT_NUMERIC);
     $this->assertEquals($expected_stream_order, array_values($actual_stream_order));
   }

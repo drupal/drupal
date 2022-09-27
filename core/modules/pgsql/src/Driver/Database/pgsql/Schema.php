@@ -461,7 +461,7 @@ EOD;
       'serial:medium' => 'serial',
       'serial:big' => 'bigserial',
       'serial:normal' => 'serial',
-      ];
+    ];
     return $map;
   }
 

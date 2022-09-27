@@ -60,8 +60,8 @@ class MimeTypeTest extends FileTestBase {
         1 => 'image/jpeg',
       ],
       'extensions' => [
-         'jar' => 0,
-         'jpg' => 1,
+        'jar' => 0,
+        'jpg' => 1,
       ],
     ];
 

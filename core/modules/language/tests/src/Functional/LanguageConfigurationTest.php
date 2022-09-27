@@ -165,7 +165,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
     $admin_user = $this->drupalCreateUser([
       'administer languages',
       'access administration pages',
-      ]);
+    ]);
     $this->drupalLogin($admin_user);
     $this->checkConfigurableLanguageWeight();
 

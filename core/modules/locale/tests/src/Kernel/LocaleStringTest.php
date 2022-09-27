@@ -19,7 +19,7 @@ class LocaleStringTest extends KernelTestBase {
   protected static $modules = [
     'language',
     'locale',
-   ];
+  ];
 
   /**
    * The locale storage.

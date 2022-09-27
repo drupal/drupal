@@ -49,7 +49,7 @@ function syslog_form_system_logging_settings_alter(&$form, FormStateInterface $f
       '#default_value' => $config->get('facility'),
       '#options'       => syslog_facility_list(),
       '#description'   => t('Depending on the system configuration, Syslog and other logging tools use this code to identify or filter messages from within the entire system log.') . $help,
-     ];
+    ];
   }
   $form['syslog_format'] = [
     '#type'          => 'textarea',

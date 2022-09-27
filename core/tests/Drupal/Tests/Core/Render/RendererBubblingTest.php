@@ -185,7 +185,7 @@ class RendererBubblingTest extends RendererTestBase {
     // set of contexts are present point to the same cache item. Regardless of
     // the contexts' order. A sad necessity because PHP doesn't have sets.)
     $test_element = [
-     '#cache' => [
+      '#cache' => [
         'keys' => ['set_test'],
         'contexts' => [],
       ],
@@ -622,7 +622,7 @@ class RendererBubblingTest extends RendererTestBase {
     $data = [
       '#cache' => [
         'keys' => ['llama', 'bar'],
-       ],
+      ],
       '#pre_render' => [__NAMESPACE__ . '\\BubblingTest::bubblingCacheOverwritePrerender'],
     ];
     $this->expectException(\LogicException::class);

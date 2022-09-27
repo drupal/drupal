@@ -136,7 +136,7 @@ class EntityAdapterUnitTest extends UnitTestCase {
       ->will($this->returnValue([
         'id' => 'id',
         'uuid' => 'uuid',
-    ]));
+      ]));
 
     $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
     $this->entityTypeManager->expects($this->any())

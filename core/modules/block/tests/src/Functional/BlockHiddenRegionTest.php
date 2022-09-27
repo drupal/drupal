@@ -37,8 +37,7 @@ class BlockHiddenRegionTest extends BrowserTestBase {
       'administer blocks',
       'administer themes',
       'search content',
-      ]
-    );
+    ]);
 
     $this->drupalLogin($this->adminUser);
     $this->drupalPlaceBlock('search_form_block');

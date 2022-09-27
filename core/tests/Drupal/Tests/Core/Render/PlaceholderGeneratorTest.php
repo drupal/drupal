@@ -50,10 +50,13 @@ class PlaceholderGeneratorTest extends RendererTestBase {
     $tags_1 = ['current-temperature', 'foo'];
     $tags_2 = ['foo', 'current-temperature'];
     $test_element = [
-        '#cache' => [
-          'max-age' => Cache::PERMANENT,
-        ],
-        '#lazy_builder' => ['Drupal\Tests\Core\Render\PlaceholdersTest::callback', ['foo' => TRUE]],
+      '#cache' => [
+        'max-age' => Cache::PERMANENT,
+      ],
+      '#lazy_builder' => [
+        'Drupal\Tests\Core\Render\PlaceholdersTest::callback',
+        ['foo' => TRUE],
+      ],
     ];
 
     $test_element['#cache']['contexts'] = $contexts_1;

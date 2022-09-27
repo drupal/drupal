@@ -49,17 +49,17 @@ abstract class DatabaseTestBase extends KernelTestBase {
     $this->connection->insert('test_null')
       ->fields(['name', 'age'])
       ->values([
-      'name' => 'Kermit',
-      'age' => 25,
-    ])
+        'name' => 'Kermit',
+        'age' => 25,
+      ])
       ->values([
-      'name' => 'Fozzie',
-      'age' => NULL,
-    ])
+        'name' => 'Fozzie',
+        'age' => NULL,
+      ])
       ->values([
-      'name' => 'Gonzo',
-      'age' => 27,
-    ])
+        'name' => 'Gonzo',
+        'age' => 27,
+      ])
       ->execute();
   }
 

@@ -288,12 +288,12 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
 
     // Try changing user 1's email.
     $user1 = [
-        'mail' => [['value' => 'another_email_address@example.com']],
-        'uid' => [['value' => 1]],
-        'name' => [['value' => 'another_user_name']],
-        'pass' => [['existing' => $this->account->passRaw]],
-        'uuid' => [['value' => '2e9403a4-d8af-4096-a116-624710140be0']],
-      ] + $original_normalization;
+      'mail' => [['value' => 'another_email_address@example.com']],
+      'uid' => [['value' => 1]],
+      'name' => [['value' => 'another_user_name']],
+      'pass' => [['existing' => $this->account->passRaw]],
+      'uuid' => [['value' => '2e9403a4-d8af-4096-a116-624710140be0']],
+    ] + $original_normalization;
     $request_options[RequestOptions::BODY] = $this->serializer->encode($user1, static::$format);
     $response = $this->request('PATCH', $url, $request_options);
     // Ensure the email address has not changed.

@@ -28,9 +28,7 @@
 
   <!-- Drupal sniffs -->
   <rule ref="Drupal.Arrays.Array">
-    <!-- Sniff for these errors: CommaLastItem -->
-    <exclude name="Drupal.Arrays.Array.ArrayClosingIndentation"/>
-    <exclude name="Drupal.Arrays.Array.ArrayIndentation"/>
+    <!-- Sniff for these errors: ArrayClosingIndentation, ArrayIndentation, CommaLastItem -->
     <exclude name="Drupal.Arrays.Array.LongLineDeclaration"/>
   </rule>
   <rule ref="Drupal.CSS.ClassDefinitionNameSpacing"/>

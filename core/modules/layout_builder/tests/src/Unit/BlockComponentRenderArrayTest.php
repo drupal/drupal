@@ -477,12 +477,12 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $expected_build = [];
 
     $expected_cache = $expected_build + [
-        '#cache' => [
-          'contexts' => [],
-          'tags' => ['empty_build_cache_test', 'test'],
-          'max-age' => -1,
-        ],
-      ];
+      '#cache' => [
+        'contexts' => [],
+        'tags' => ['empty_build_cache_test', 'test'],
+        'max-age' => -1,
+      ],
+    ];
 
     $subscriber->onBuildRender($event);
     $result = $event->getBuild();

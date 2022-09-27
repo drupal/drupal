@@ -221,8 +221,8 @@ class FormAjaxSubscriberTest extends UnitTestCase {
   public function testOnExceptionNestedException() {
     $form = ['#type' => 'form', '#build_id' => 'the_build_id'];
     $expected_form = $form + [
-        '#build_id_old' => 'the_build_id',
-      ];
+      '#build_id_old' => 'the_build_id',
+    ];
     $form_state = new FormState();
     $form_exception = new FormAjaxException($form, $form_state);
     $exception = new \Exception('', 0, $form_exception);

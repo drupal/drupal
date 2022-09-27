@@ -76,15 +76,15 @@ abstract class EntityTestResourceTestBase extends ConfigEntityResourceTestBase {
     $entity_test = \Drupal::entityTypeManager()
       ->getStorage(static::$entityTypeId)
       ->create([
-      'name' => 'Llama',
-      'type' => static::$entityTypeId,
-      // Set a value for the internal field to confirm that it will not be
-      // returned in normalization.
-      // @see entity_test_entity_base_field_info().
-      'internal_string_field' => [
-        'value' => 'This value shall not be internal!',
-      ],
-    ]);
+        'name' => 'Llama',
+        'type' => static::$entityTypeId,
+        // Set a value for the internal field to confirm that it will not be
+        // returned in normalization.
+        // @see entity_test_entity_base_field_info().
+        'internal_string_field' => [
+          'value' => 'This value shall not be internal!',
+        ],
+      ]);
     $entity_test->setOwnerId(0);
     $entity_test->save();
 
