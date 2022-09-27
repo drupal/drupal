@@ -220,7 +220,7 @@ abstract class LinkBase extends FieldPluginBase {
   protected function addLangcode(ResultRow $row) {
     $entity = $this->getEntity($row);
     if ($this->languageManager->isMultilingual()) {
-      $this->options['alter']['language'] = $this->getEntityTranslation($entity, $row)->language();
+      $this->options['alter']['language'] = $this->getEntityTranslationByRelationship($entity, $row)->language();
     }
   }
 

@@ -16,4 +16,12 @@ class DefaultLanguageRenderer extends EntityTranslationRendererBase {
     return $row->_entity->getUntranslated()->language()->getId();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getLangcodeByRelationship(ResultRow $row, string $relationship = 'none'): string {
+    $entity = $this->getEntity($row, $relationship);
+    return $entity->getUntranslated()->language()->getId();
+  }
+
 }

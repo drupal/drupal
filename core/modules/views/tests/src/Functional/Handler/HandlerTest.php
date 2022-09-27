@@ -255,6 +255,12 @@ class HandlerTest extends ViewTestBase {
     $expected_options = ['none', 'nid'];
     $this->assertEquals($expected_options, $options);
 
+    // Change the Row plugin to display "Content".
+    $this->drupalGet('admin/structure/views/nojs/display/test_handler_relationships/default/row');
+    $this->submitForm(['row[type]' => 'entity:node'], 'Apply');
+    $this->assertSession()->fieldExists('row_options[relationship]');
+    $this->submitForm(['row_options[view_mode]' => 'default'], 'Apply');
+
     // Remove the relationship and make sure no relationship option appears.
     $this->drupalGet('admin/structure/views/nojs/handler/test_handler_relationships/default/relationship/nid');
     $this->submitForm([], 'Remove');

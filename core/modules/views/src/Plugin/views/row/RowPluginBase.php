@@ -100,7 +100,7 @@ abstract class RowPluginBase extends PluginBase {
         $data = Views::viewsData()->get($relationship['table']);
         $base = $data[$relationship['field']]['relationship']['base'];
         if ($base == $this->base_table) {
-          $relationship_handler->init($executable, $relationship);
+          $relationship_handler->init($executable, $this->displayHandler, $relationship);
           $relationship_options[$relationship['id']] = $relationship_handler->adminLabel();
         }
       }

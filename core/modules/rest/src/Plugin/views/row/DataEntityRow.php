@@ -107,7 +107,7 @@ class DataEntityRow extends RowPluginBase {
    * {@inheritdoc}
    */
   public function render($row) {
-    return $this->getEntityTranslation($row->_entity, $row);
+    return $this->getEntityTranslationByRelationship($row->_entity, $row);
   }
 
   /**

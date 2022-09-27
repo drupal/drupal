@@ -6,8 +6,8 @@ label: ''
 module: views
 description: ''
 tag: ''
-base_table: taxonomy_term_field_data
-base_field: nid
+base_table: entity_test
+base_field: id
 display:
   default:
     display_options:
@@ -20,10 +20,17 @@ display:
           offset: 0
         type: none
       row:
-        type: 'entity:taxonomy_term'
+        type: 'entity:entity_test'
         options:
           relationship: none
           view_mode: full
+      relationships:
+        user_id:
+          table: entity_test
+          field: user_id
+          id: user_id
+          relationship: none
+          plugin_id: standard
     display_plugin: default
     display_title: Default
     id: default

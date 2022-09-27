@@ -93,7 +93,7 @@ abstract class RendererBase implements CacheableDependencyInterface {
   /**
    * Runs before each entity is rendered.
    *
-   * @param $result
+   * @param \Drupal\views\ResultRow[] $result
    *   The full array of results from the query.
    */
   public function preRender(array $result) {

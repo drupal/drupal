@@ -900,7 +900,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
    */
   protected function createEntityForGroupBy(EntityInterface $entity, ResultRow $row) {
     // Retrieve the correct translation object.
-    $processed_entity = clone $this->getEntityFieldRenderer()->getEntityTranslation($entity, $row);
+    $processed_entity = clone $this->getEntityFieldRenderer()->getEntityTranslationByRelationship($entity, $row);
 
     // Copy our group fields into the cloned entity. It is possible this will
     // cause some weirdness, but there is only so much we can hope to do.
@@ -1078,7 +1078,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     }
 
     // Retrieve the translated object.
-    $translated_entity = $this->getEntityFieldRenderer()->getEntityTranslation($entity, $values);
+    $translated_entity = $this->getEntityFieldRenderer()->getEntityTranslationByRelationship($entity, $values);
 
     // Some bundles might not have a specific field, in which case the entity
     // (potentially a fake one) doesn't have it either.

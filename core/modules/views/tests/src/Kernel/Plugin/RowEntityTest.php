@@ -3,10 +3,10 @@
 namespace Drupal\Tests\views\Kernel\Plugin;
 
 use Drupal\Core\Form\FormState;
+use Drupal\entity_test\Entity\EntityTest;
+use Drupal\user\Entity\User;
 use Drupal\views\Views;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
-use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\taxonomy\Entity\Term;
 
 /**
  * Tests the generic entity row plugin.
@@ -22,12 +22,9 @@ class RowEntityTest extends ViewsKernelTestBase {
    * @var array
    */
   protected static $modules = [
-    'taxonomy',
-    'text',
-    'filter',
+    'entity_test',
     'field',
     'system',
-    'node',
     'user',
   ];
 
@@ -42,26 +39,55 @@ class RowEntityTest extends ViewsKernelTestBase {
    * {@inheritdoc}
    */
   protected function setUp($import_test_views = TRUE): void {
-    parent::setUp();
+    parent::setUp($import_test_views);
 
-    $this->installEntitySchema('taxonomy_term');
-    $this->installConfig(['taxonomy']);
+    $this->installEntitySchema('entity_test');
+    $this->installEntitySchema('user');
   }
 
   /**
    * Tests the entity row handler.
    */
   public function testEntityRow() {
-    $vocab = Vocabulary::create(['name' => $this->randomMachineName(), 'vid' => strtolower($this->randomMachineName())]);
-    $vocab->save();
-    $term = Term::create(['name' => $this->randomMachineName(), 'vid' => $vocab->id()]);
-    $term->save();
+    $user = User::create([
+      'name' => 'test user',
+    ]);
+    $user->save();
+
+    $entity_test = EntityTest::create([
+      'user_id' => $user->id(),
+      'name' => 'test entity test',
+    ]);
+    $entity_test->save();
+
+    // Ensure entities have different ids.
+    if ($entity_test->id() == $user->id()) {
+      $entity_test->delete();
+      $entity_test = EntityTest::create([
+        'user_id' => $user->id(),
+        'name' => 'test entity test',
+      ]);
+      $entity_test->save();
+    }
 
     $view = Views::getView('test_entity_row');
     $build = $view->preview();
     $this->render($build);
 
-    $this->assertText($term->getName(), 'The rendered entity appears as row in the view.');
+    $this->assertText('test entity test');
+    $this->assertNoText('Member for');
+
+    // Change the view to use a relationship to render the row.
+    $view = Views::getView('test_entity_row');
+    $display = &$view->storage->getDisplay('default');
+    $display['display_options']['row']['type'] = 'entity:user';
+    $display['display_options']['row']['options']['relationship'] = 'user_id';
+    $view->setDisplay('default');
+    $build = $view->preview();
+    $this->render($build);
+
+    $this->assertNoText('test entity test');
+    $this->assertText('Member for');
 
     // Tests the available view mode options.
     $form = [];
