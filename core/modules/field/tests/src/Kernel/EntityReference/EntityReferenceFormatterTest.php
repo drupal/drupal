@@ -267,7 +267,7 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
     // the entity title because we're rendering the full entity, not just the
     // reference field.
     $expected_occurrences = EntityReferenceEntityFormatter::RECURSIVE_RENDER_LIMIT * 2 + 2;
-    $actual_occurrences = substr_count($output, $referencing_entity_1->name->value);
+    $actual_occurrences = substr_count($output, $referencing_entity_1->label());
     $this->assertEquals($expected_occurrences, $actual_occurrences);
 
     // Repeat the process with another entity in order to check that the
@@ -280,17 +280,17 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
     $build = $view_builder->view($referencing_entity_2, 'default');
     $output = $renderer->renderRoot($build);
 
-    $actual_occurrences = substr_count($output, $referencing_entity_2->name->value);
+    $actual_occurrences = substr_count($output, $referencing_entity_2->label());
     $this->assertEquals($expected_occurrences, $actual_occurrences);
 
     // Now render both entities at the same time and check again.
     $build = $view_builder->viewMultiple([$referencing_entity_1, $referencing_entity_2], 'default');
     $output = $renderer->renderRoot($build);
 
-    $actual_occurrences = substr_count($output, $referencing_entity_1->name->value);
+    $actual_occurrences = substr_count($output, $referencing_entity_1->label());
     $this->assertEquals($expected_occurrences, $actual_occurrences);
 
-    $actual_occurrences = substr_count($output, $referencing_entity_2->name->value);
+    $actual_occurrences = substr_count($output, $referencing_entity_2->label());
     $this->assertEquals($expected_occurrences, $actual_occurrences);
   }
 
