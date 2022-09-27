@@ -5,7 +5,7 @@ namespace Drupal\views\Plugin\views\cache;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\views\Plugin\views\PluginBase;
-use Drupal\Core\Database\Query\Select;
+use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\views\ResultRow;
 
 /**
@@ -201,7 +201,7 @@ abstract class CachePluginBase extends PluginBase {
       foreach (['query', 'count_query'] as $index) {
         // If the default query back-end is used generate SQL query strings from
         // the query objects.
-        if ($build_info[$index] instanceof Select) {
+        if ($build_info[$index] instanceof SelectInterface) {
           $query = clone $build_info[$index];
           $query->preExecute();
           $build_info[$index] = [
