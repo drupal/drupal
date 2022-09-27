@@ -282,13 +282,13 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
    */
   protected function setUpContentTypes() {
     $this->referrerType = $this->drupalCreateContentType([
-        'type' => 'referrer',
-        'name' => 'Referrer',
-      ]);
+      'type' => 'referrer',
+      'name' => 'Referrer',
+    ]);
     $this->referencedType = $this->drupalCreateContentType([
-        'type' => 'referenced_page',
-        'name' => 'Referenced Page',
-      ]);
+      'type' => 'referenced_page',
+      'name' => 'Referenced Page',
+    ]);
   }
 
   /**

@@ -34,7 +34,7 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
     'test_entity_reference_entity_test_mul_view',
     'test_entity_reference_reverse_entity_test_mul_view',
     'test_entity_reference_group_by_empty_relationships',
-    ];
+  ];
 
   /**
    * Modules to install.

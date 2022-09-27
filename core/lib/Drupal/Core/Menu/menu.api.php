@@ -317,16 +317,16 @@ function hook_menu_local_tasks_alter(&$data, $route_name, \Drupal\Core\Cache\Ref
 
   // Add a tab linking to node/add to all pages.
   $data['tabs'][0]['node.add_page'] = [
-      '#theme' => 'menu_local_task',
-      '#link' => [
-          'title' => t('Example tab'),
-          'url' => Url::fromRoute('node.add_page'),
-          'localized_options' => [
-              'attributes' => [
-                  'title' => t('Add content'),
-              ],
-          ],
+    '#theme' => 'menu_local_task',
+    '#link' => [
+      'title' => t('Example tab'),
+      'url' => Url::fromRoute('node.add_page'),
+      'localized_options' => [
+        'attributes' => [
+          'title' => t('Add content'),
+        ],
       ],
+    ],
   ];
   // The tab we're adding is dependent on a user's access to add content.
   $cacheability->addCacheContexts(['user.permissions']);

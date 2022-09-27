@@ -25,7 +25,7 @@ class ProfileFieldTest extends MigrateSqlSourceTestBase {
       [
         'source_data' => [],
         'expected_data' => [],
-       ],
+      ],
     ];
 
     $profile_fields = [

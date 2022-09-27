@@ -153,7 +153,7 @@ class TermLocalizedTranslationTest extends TermTest {
         'property' => 'description',
         'objectindex' => '5',
         'format' => 0,
-       ]);
+      ]);
     array_push($tests[1]['source_data']['locales_target'],
       [
         'lid' => 10,
@@ -170,7 +170,7 @@ class TermLocalizedTranslationTest extends TermTest {
         'plid' => 0,
         'plural' => 0,
         'i18n_status' => 0,
-    ]);
+      ]);
 
     // The expected results.
     array_push($tests[1]['expected_data'],
@@ -225,7 +225,7 @@ class TermLocalizedTranslationTest extends TermTest {
         'translation' => 'fr - description value 5',
         'name_translated' => 'fr - name value 5',
         'description_translated' => 'fr - description value 5',
-    ]);
+      ]);
 
     $tests[1]['expected_count'] = NULL;
     // Empty configuration will return terms for all vocabularies.

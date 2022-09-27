@@ -116,11 +116,11 @@ class StatisticsPopularBlock extends BlockBase implements ContainerFactoryPlugin
     $numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 40];
     $numbers = ['0' => $this->t('Disabled')] + array_combine($numbers, $numbers);
     $form['statistics_block_top_day_num'] = [
-     '#type' => 'select',
-     '#title' => $this->t("Number of day's top views to display"),
-     '#default_value' => $this->configuration['top_day_num'],
-     '#options' => $numbers,
-     '#description' => $this->t('How many content items to display in "day" list.'),
+      '#type' => 'select',
+      '#title' => $this->t("Number of day's top views to display"),
+      '#default_value' => $this->configuration['top_day_num'],
+      '#options' => $numbers,
+      '#description' => $this->t('How many content items to display in "day" list.'),
     ];
     $form['statistics_block_top_all_num'] = [
       '#type' => 'select',

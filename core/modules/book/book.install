@@ -18,7 +18,7 @@ function book_uninstall() {
  */
 function book_schema() {
   $schema['book'] = [
-  'description' => 'Stores book outline information. Uniquely defines the location of each node in the book outline',
+    'description' => 'Stores book outline information. Uniquely defines the location of each node in the book outline',
     'fields' => [
       'nid' => [
         'type' => 'int',

@@ -426,9 +426,9 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
         'image_mapping' => 'medium',
       ])
       ->addImageStyleMapping('responsive_image_test_module.empty', '2x', [
-          'image_mapping_type' => 'image_style',
-          'image_mapping' => 'large',
-        ])
+        'image_mapping_type' => 'image_style',
+        'image_mapping' => 'large',
+      ])
       ->save();
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $field_name = mb_strtolower($this->randomMachineName());

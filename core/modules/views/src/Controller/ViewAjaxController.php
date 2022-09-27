@@ -136,17 +136,17 @@ class ViewAjaxController implements ContainerInjectionInterface {
       // @todo Remove this parsing once these are removed from the request in
       //   https://www.drupal.org/node/2504709.
       foreach ([
-          'view_name',
-          'view_display_id',
-          'view_args',
-          'view_path',
-          'view_dom_id',
-          'pager_element',
-          'view_base_path',
-          AjaxResponseSubscriber::AJAX_REQUEST_PARAMETER,
-          FormBuilderInterface::AJAX_FORM_REQUEST,
-          MainContentViewSubscriber::WRAPPER_FORMAT,
-        ] as $key) {
+        'view_name',
+        'view_display_id',
+        'view_args',
+        'view_path',
+        'view_dom_id',
+        'pager_element',
+        'view_base_path',
+        AjaxResponseSubscriber::AJAX_REQUEST_PARAMETER,
+        FormBuilderInterface::AJAX_FORM_REQUEST,
+        MainContentViewSubscriber::WRAPPER_FORMAT,
+      ] as $key) {
         $request->query->remove($key);
         $request->request->remove($key);
       }

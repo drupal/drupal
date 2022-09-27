@@ -47,10 +47,10 @@ class LanguageSelectElementTest extends BrowserTestBase {
     $this->drupalGet('form-test/language_select');
     // Check that the language fields were rendered on the page.
     $ids = [
-        'edit-languages-all' => LanguageInterface::STATE_ALL,
-        'edit-languages-configurable' => LanguageInterface::STATE_CONFIGURABLE,
-        'edit-languages-locked' => LanguageInterface::STATE_LOCKED,
-        'edit-languages-config-and-locked' => LanguageInterface::STATE_CONFIGURABLE | LanguageInterface::STATE_LOCKED,
+      'edit-languages-all' => LanguageInterface::STATE_ALL,
+      'edit-languages-configurable' => LanguageInterface::STATE_CONFIGURABLE,
+      'edit-languages-locked' => LanguageInterface::STATE_LOCKED,
+      'edit-languages-config-and-locked' => LanguageInterface::STATE_CONFIGURABLE | LanguageInterface::STATE_LOCKED,
     ];
     foreach ($ids as $id => $flags) {
       $this->assertSession()->fieldExists($id);

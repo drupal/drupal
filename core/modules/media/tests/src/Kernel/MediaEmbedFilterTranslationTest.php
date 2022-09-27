@@ -33,10 +33,10 @@ class MediaEmbedFilterTranslationTest extends MediaEmbedFilterTestBase {
 
     $this->embeddedEntity->addTranslation('pt-br')
       ->set('field_media_image', [
-      'target_id' => $this->image->id(),
-      'alt' => 'pt-br alt',
-      'title' => 'pt-br title',
-    ])->save();
+        'target_id' => $this->image->id(),
+        'alt' => 'pt-br alt',
+        'title' => 'pt-br title',
+      ])->save();
   }
 
   /**

@@ -34,7 +34,7 @@ class CommentBlockTest extends CommentTestBase {
       'access comments',
       'access content',
       'administer blocks',
-     ]);
+    ]);
   }
 
   /**

@@ -88,9 +88,9 @@ abstract class FilterFormatFormBase extends EntityForm {
       '#title' => $this->t('Filter processing order'),
       '#tabledrag' => [
         [
-         'action' => 'order',
-         'relationship' => 'sibling',
-         'group' => 'filter-order-weight',
+          'action' => 'order',
+          'relationship' => 'sibling',
+          'group' => 'filter-order-weight',
         ],
       ],
       '#tree' => FALSE,

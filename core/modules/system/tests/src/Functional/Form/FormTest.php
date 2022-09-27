@@ -416,27 +416,27 @@ class FormTest extends BrowserTestBase {
     // Posting without any values should throw validation errors.
     $this->submitForm([], 'Submit');
     $no_errors = [
-        'select',
-        'select_required',
-        'select_optional',
-        'empty_value',
-        'empty_value_one',
-        'no_default_optional',
-        'no_default_empty_option_optional',
-        'no_default_empty_value_optional',
-        'multiple',
-        'multiple_no_default',
+      'select',
+      'select_required',
+      'select_optional',
+      'empty_value',
+      'empty_value_one',
+      'no_default_optional',
+      'no_default_empty_option_optional',
+      'no_default_empty_value_optional',
+      'multiple',
+      'multiple_no_default',
     ];
     foreach ($no_errors as $key) {
       $this->assertSession()->pageTextNotContains($form[$key]['#title'] . ' field is required.');
     }
 
     $expected_errors = [
-        'no_default',
-        'no_default_empty_option',
-        'no_default_empty_value',
-        'no_default_empty_value_one',
-        'multiple_no_default_required',
+      'no_default',
+      'no_default_empty_option',
+      'no_default_empty_value',
+      'no_default_empty_value_one',
+      'multiple_no_default_required',
     ];
     foreach ($expected_errors as $key) {
       $this->assertSession()->pageTextContains($form[$key]['#title'] . ' field is required.');

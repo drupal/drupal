@@ -103,9 +103,9 @@ class LanguageListBuilder extends DraggableListBuilder {
    */
   public function buildHeader() {
     $header = [
-        'label' => t('Name'),
-        'default' => t('Default'),
-      ] + parent::buildHeader();
+      'label' => t('Name'),
+      'default' => t('Default'),
+    ] + parent::buildHeader();
     return $header;
   }
 

@@ -120,11 +120,11 @@ function forum_schema() {
         'default' => '',
       ],
       'tid' => [
-         'description' => 'The term ID.',
-         'type' => 'int',
-         'unsigned' => TRUE,
-         'not null' => TRUE,
-         'default' => 0,
+        'description' => 'The term ID.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
       ],
       'sticky' => [
         'description' => 'Boolean indicating whether the node is sticky.',

@@ -170,7 +170,7 @@ function database_test_schema() {
       ],
     ],
     'primary key' => ['id'],
-    ];
+  ];
 
   $schema['test_two_blobs'] = [
     'description' => 'A simple test table with two BLOB fields.',
@@ -190,7 +190,7 @@ function database_test_schema() {
       ],
     ],
     'primary key' => ['id'],
-    ];
+  ];
 
   $schema['test_task'] = [
     'description' => 'A task list for people in the test table.',

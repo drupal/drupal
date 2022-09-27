@@ -207,14 +207,8 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
         'single_autocreate' => 'single - autocreated entity label',
         'single_autocreate_specific_uid' => 'single - autocreated entity label with specific uid',
         'tags' => $this->getAutocompleteInput($this->referencedEntities[0]) . ', ' . $this->getAutocompleteInput($this->referencedEntities[1]),
-        'tags_autocreate' =>
-          $this->getAutocompleteInput($this->referencedEntities[0])
-          . ', tags - autocreated entity label, '
-          . $this->getAutocompleteInput($this->referencedEntities[1]),
-        'tags_autocreate_specific_uid' =>
-          $this->getAutocompleteInput($this->referencedEntities[0])
-          . ', tags - autocreated entity label with specific uid, '
-          . $this->getAutocompleteInput($this->referencedEntities[1]),
+        'tags_autocreate' => $this->getAutocompleteInput($this->referencedEntities[0]) . ', tags - autocreated entity label, ' . $this->getAutocompleteInput($this->referencedEntities[1]),
+        'tags_autocreate_specific_uid' => $this->getAutocompleteInput($this->referencedEntities[0]) . ', tags - autocreated entity label with specific uid, ' . $this->getAutocompleteInput($this->referencedEntities[1]),
         'single_string_id' => $this->getAutocompleteInput($this->referencedEntities[2]),
         'tags_string_id' => $this->getAutocompleteInput($this->referencedEntities[2]) . ', ' . $this->getAutocompleteInput($this->referencedEntities[3]),
       ]);

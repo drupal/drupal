@@ -131,7 +131,7 @@ class ViewPageControllerTest extends UnitTestCase {
       '#cache' => [
         'keys' => ['view', 'test_page_view', 'display', 'page_1', 'args', 'test-argument'],
       ],
-      ] + $this->defaultRenderArray;
+    ] + $this->defaultRenderArray;
 
     $this->assertEquals($build, $result);
   }
@@ -170,7 +170,7 @@ class ViewPageControllerTest extends UnitTestCase {
       '#cache' => [
         'keys' => ['view', 'test_page_view', 'display', 'page_1', 'args', 'example_id'],
       ],
-      ] + $this->defaultRenderArray;
+    ] + $this->defaultRenderArray;
 
     $this->assertEquals($build, $result);
   }

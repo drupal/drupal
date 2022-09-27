@@ -142,7 +142,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
       '#description' => [
         '#markup' => $this->linkGenerator->generate($this->t('Configure Responsive Image Styles'), new Url('entity.responsive_image_style.collection')),
         '#access' => $this->currentUser->hasPermission('administer responsive image styles'),
-        ],
+      ],
     ];
 
     $link_types = [

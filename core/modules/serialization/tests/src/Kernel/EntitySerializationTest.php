@@ -324,7 +324,7 @@ class EntitySerializationTest extends NormalizerTestBase {
     $this->serializer->denormalize([
       'serialized_long' => [
         [
-         'value' => 'boo',
+          'value' => 'boo',
         ],
       ],
       'type' => 'entity_test_serialized_field',

@@ -187,17 +187,18 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
 
       // Find the number of the first comment of the first unread thread.
       $count = $this->database->query('SELECT COUNT(*) FROM {' . $data_table . '} WHERE [entity_id] = :entity_id
-                        AND [entity_type] = :entity_type
-                        AND [field_name] = :field_name
-                        AND [status] = :status
-                        AND SUBSTRING([thread], 1, (LENGTH([thread]) - 1)) < :thread
-                        AND [default_langcode] = 1', [
-        ':status' => CommentInterface::PUBLISHED,
-        ':entity_id' => $entity->id(),
-        ':field_name' => $field_name,
-        ':entity_type' => $entity->getEntityTypeId(),
-        ':thread' => $first_thread,
-      ])->fetchField();
+        AND [entity_type] = :entity_type
+        AND [field_name] = :field_name
+        AND [status] = :status
+        AND SUBSTRING([thread], 1, (LENGTH([thread]) - 1)) < :thread
+        AND [default_langcode] = 1', [
+          ':status' => CommentInterface::PUBLISHED,
+          ':entity_id' => $entity->id(),
+          ':field_name' => $field_name,
+          ':entity_type' => $entity->getEntityTypeId(),
+          ':thread' => $first_thread,
+        ]
+      )->fetchField();
     }
 
     return $comments_per_page > 0 ? (int) ($count / $comments_per_page) : 0;

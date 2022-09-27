@@ -307,12 +307,11 @@ class TwigExtensionTest extends UnitTestCase {
   public function testEscapeWithGeneratedLink() {
     $loader = new FilesystemLoader();
     $twig = new Environment($loader, [
-        'debug' => TRUE,
-        'cache' => FALSE,
-        'autoescape' => 'html',
-        'optimizations' => 0,
-      ]
-    );
+      'debug' => TRUE,
+      'cache' => FALSE,
+      'autoescape' => 'html',
+      'optimizations' => 0,
+    ]);
 
     $twig->addExtension($this->systemUnderTest);
     $link = new GeneratedLink();

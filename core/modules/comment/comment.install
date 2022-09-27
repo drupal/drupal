@@ -125,12 +125,12 @@ function comment_update_10100(&$sandbox = NULL) {
   $connection = \Drupal::database();
   if ($connection->schema()->tableExists('comment_entity_statistics') && $connection->databaseType() != 'sqlite') {
     $new = [
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The Unix timestamp of the last comment that was posted within this node, from {comment}.changed.',
-        'size' => 'big',
-      ];
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+      'description' => 'The Unix timestamp of the last comment that was posted within this node, from {comment}.changed.',
+      'size' => 'big',
+    ];
     $connection->schema()->changeField('comment_entity_statistics', 'last_comment_timestamp', 'last_comment_timestamp', $new);
   }
 }

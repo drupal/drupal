@@ -48,9 +48,9 @@ class CategorizingPluginManagerTraitTest extends UnitTestCase {
    */
   public function testGetCategories() {
     $this->assertSame([
-        'fruits',
-        'vegetables',
-      ], array_values($this->pluginManager->getCategories()));
+      'fruits',
+      'vegetables',
+    ], array_values($this->pluginManager->getCategories()));
   }
 
   /**

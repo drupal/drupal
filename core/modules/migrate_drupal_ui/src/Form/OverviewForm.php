@@ -35,9 +35,9 @@ class OverviewForm extends MigrateUpgradeFormBase {
 
     $form['info_header'] = [
       '#markup' => '<p>' . $this->t('Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal @version. See the <a href=":url">Drupal site upgrades handbook</a> for more information.', [
-          '@version' => $this->destinationSiteVersion,
-          ':url' => 'https://www.drupal.org/upgrade/migrate',
-        ]),
+        '@version' => $this->destinationSiteVersion,
+        ':url' => 'https://www.drupal.org/upgrade/migrate',
+      ]),
     ];
 
     $form['legend']['#markup'] = '';

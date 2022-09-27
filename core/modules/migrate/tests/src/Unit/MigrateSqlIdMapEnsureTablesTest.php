@@ -209,13 +209,13 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
     $plugin->expects($this->any())
       ->method('getIds')
       ->willReturn([
-      'source_id_property' => [
-        'type' => 'integer',
-      ],
-      'source_id_property_2' => [
-        'type' => 'integer',
-      ],
-    ]);
+        'source_id_property' => [
+          'type' => 'integer',
+        ],
+        'source_id_property_2' => [
+          'type' => 'integer',
+        ],
+      ]);
     $migration->expects($this->any())
       ->method('getSourcePlugin')
       ->willReturn($plugin);
@@ -223,10 +223,10 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
     $plugin->expects($this->any())
       ->method('getIds')
       ->willReturn([
-      'destination_id_property' => [
-        'type' => 'string',
-      ],
-    ]);
+        'destination_id_property' => [
+          'type' => 'string',
+        ],
+      ]);
     $migration->expects($this->any())
       ->method('getDestinationPlugin')
       ->willReturn($plugin);

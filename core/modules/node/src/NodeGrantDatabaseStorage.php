@@ -256,13 +256,13 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
   public function writeDefault() {
     $this->database->insert('node_access')
       ->fields([
-          'nid' => 0,
-          'realm' => 'all',
-          'gid' => 0,
-          'grant_view' => 1,
-          'grant_update' => 0,
-          'grant_delete' => 0,
-        ])
+        'nid' => 0,
+        'realm' => 'all',
+        'gid' => 0,
+        'grant_view' => 1,
+        'grant_update' => 0,
+        'grant_delete' => 0,
+      ])
       ->execute();
   }
 

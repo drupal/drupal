@@ -112,7 +112,7 @@ class EntityReferenceFileUploadTest extends BrowserTestBase {
         'type' => 'entity_reference_autocomplete',
       ])
       ->setComponent($file_field_name, [
-         'type' => 'file_generic',
+        'type' => 'file_generic',
       ])
       ->save();
   }

@@ -665,15 +665,15 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
     }
     catch (IniSizeFileException | FormSizeFileException $e) {
       \Drupal::messenger()->addError(t('The file %file could not be saved because it exceeds %maxsize, the maximum allowed size for uploads.', [
-          '%file' => $uploaded_file->getFilename(),
-          '%maxsize' => format_size(Environment::getUploadMaxSize()),
-        ]));
+        '%file' => $uploaded_file->getFilename(),
+        '%maxsize' => format_size(Environment::getUploadMaxSize()),
+      ]));
       $files[$i] = FALSE;
     }
     catch (PartialFileException | NoFileException $e) {
       \Drupal::messenger()->addError(t('The file %file could not be saved because the upload did not complete.', [
-          '%file' => $uploaded_file->getFilename(),
-        ]));
+        '%file' => $uploaded_file->getFilename(),
+      ]));
       $files[$i] = FALSE;
     }
     catch (SymfonyFileException $e) {

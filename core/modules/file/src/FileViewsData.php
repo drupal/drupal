@@ -50,7 +50,7 @@ class FileViewsData extends EntityViewsData {
         'default_formatter' => 'file_extension',
         'id' => 'field',
         'click sortable' => FALSE,
-       ],
+      ],
     ];
 
     $data['file_managed']['filesize']['field']['default_formatter'] = 'file_size';
@@ -252,7 +252,7 @@ class FileViewsData extends EntityViewsData {
       'help' => $this->t('The module managing this file relationship.'),
       'field' => [
         'id' => 'standard',
-       ],
+      ],
       'filter' => [
         'id' => 'string',
       ],
@@ -268,7 +268,7 @@ class FileViewsData extends EntityViewsData {
       'help' => $this->t('The type of entity that is related to the file.'),
       'field' => [
         'id' => 'standard',
-       ],
+      ],
       'filter' => [
         'id' => 'string',
       ],
@@ -300,7 +300,7 @@ class FileViewsData extends EntityViewsData {
       'help' => $this->t('The number of times the file is used by this entity.'),
       'field' => [
         'id' => 'numeric',
-       ],
+      ],
       'filter' => [
         'id' => 'numeric',
       ],

@@ -99,24 +99,34 @@ class EntityQueryTest extends EntityKernelTestBase {
       $bundles[] = $bundle;
     }
     // Each unit is a list of field name, langcode and a column-value array.
-    $units[] = [$figures, 'en', [
+    $units[] = [$figures, 'en',
+      [
         'color' => 'red',
         'shape' => 'triangle',
       ],
     ];
-    $units[] = [$figures, 'en', [
+    $units[] = [
+      $figures,
+      'en',
+      [
         'color' => 'blue',
         'shape' => 'circle',
       ],
     ];
     // To make it easier to test sorting, the greetings get formats according
     // to their langcode.
-    $units[] = [$greetings, 'tr', [
+    $units[] = [
+      $greetings,
+      'tr',
+      [
         'value' => 'merhaba',
         'format' => 'format-tr',
       ],
     ];
-    $units[] = [$greetings, 'pl', [
+    $units[] = [
+      $greetings,
+      'pl',
+      [
         'value' => 'siema',
         'format' => 'format-pl',
       ],

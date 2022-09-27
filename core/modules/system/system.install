@@ -1476,7 +1476,7 @@ function system_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
       ],
-     ],
+    ],
     'primary key' => ['value'],
   ];
 

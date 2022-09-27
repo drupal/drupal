@@ -107,19 +107,19 @@ class Node extends DrupalSqlBase {
     $this->handleTranslations($query);
 
     $query->fields('n', [
-        'nid',
-        'type',
-        'language',
-        'status',
-        'created',
-        'changed',
-        'comment',
-        'promote',
-        'moderate',
-        'sticky',
-        'tnid',
-        'translate',
-      ])
+      'nid',
+      'type',
+      'language',
+      'status',
+      'created',
+      'changed',
+      'comment',
+      'promote',
+      'moderate',
+      'sticky',
+      'tnid',
+      'translate',
+    ])
       ->fields('nr', [
         'title',
         'body',

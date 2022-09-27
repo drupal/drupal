@@ -129,7 +129,7 @@ class CacheableMetadataTest extends UnitTestCase {
       [300, FALSE],
       [[], TRUE],
       [8.0, TRUE],
-   ];
+    ];
   }
 
   /**
