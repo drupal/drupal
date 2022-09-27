@@ -117,12 +117,19 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
               filterRule = new Drupal.FilterHTMLRule();
               filterRule.restrictedTags.tags = [tag];
               filterRule.restrictedTags.allowed.attributes = featureRule.required.attributes.slice(0);
-              filterRule.restrictedTags.allowed.classes = featureRule.required.classes.slice(0);
+
+              if (userAllowedTags[tag] !== undefined && userAllowedTags[tag].restrictedTags.allowed.classes[0] !== '') {
+                filterRule.restrictedTags.allowed.classes = featureRule.required.classes.slice(0);
+              }
+
               editorRequiredTags[tag] = filterRule;
             } else {
               filterRule = editorRequiredTags[tag];
               filterRule.restrictedTags.allowed.attributes = [].concat(_toConsumableArray(filterRule.restrictedTags.allowed.attributes), _toConsumableArray(featureRule.required.attributes));
-              filterRule.restrictedTags.allowed.classes = [].concat(_toConsumableArray(filterRule.restrictedTags.allowed.classes), _toConsumableArray(featureRule.required.classes));
+
+              if (userAllowedTags[tag] !== undefined && userAllowedTags[tag].restrictedTags.allowed.classes[0] !== '') {
+                filterRule.restrictedTags.allowed.classes = [].concat(_toConsumableArray(filterRule.restrictedTags.allowed.classes), _toConsumableArray(featureRule.required.classes));
+              }
             }
           }
         }
@@ -189,6 +196,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     _generateSetting: function _generateSetting(tags) {
       return Object.keys(tags).reduce(function (setting, tag) {
         var rule = tags[tag];
+        var allowedClasses = rule.restrictedTags.allowed.classes;
 
         if (setting.length) {
           setting += ' ';
@@ -200,8 +208,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           setting += " ".concat(rule.restrictedTags.allowed.attributes.join(' '));
         }
 
-        if (rule.restrictedTags.allowed.classes.length) {
-          setting += " class=\"".concat(rule.restrictedTags.allowed.classes.join(' '), "\"");
+        if (allowedClasses.length === 1 && allowedClasses[0] === '') {
+          setting += ' class';
+        } else if (allowedClasses.length) {
+          setting += " class=\"".concat(allowedClasses.join(' '), "\"");
         }
 
         setting += '>';

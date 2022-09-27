@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\filter\FunctionalJavascript;
 
+use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
@@ -45,6 +46,47 @@ class FilterHtmlTest extends WebDriverTestBase {
     $js_condition = "Drupal.behaviors.filterFilterHtmlUpdating._parseSetting(
       jQuery('#edit-filters-filter-html-settings-allowed-html').val()
     )['td'].tags.length >= 0";
+
+    $this->assertJsCondition($js_condition);
+  }
+
+  /**
+   * Tests that CSS classes defined in the Styles Dropdown section don't
+   * restrict elements in the Allowed Tags configuration that allow all classes.
+   *
+   * @group legacy
+   */
+  public function testStylesToAllowedTagsSync() {
+    \Drupal::service('module_installer')->install(['ckeditor']);
+    FilterFormat::create([
+      'format' => 'some_html',
+      'name' => 'Some HTML',
+      'filters' => [
+        'filter_html' => [
+          'status' => 1,
+          'settings' => [
+            'allowed_html' => '<span class>',
+          ],
+        ],
+      ],
+    ])->save();
+
+    Editor::create([
+      'format' => 'some_html',
+      'editor' => 'ckeditor',
+      'settings' => [
+        'plugins' => [
+          'stylescombo' => [
+            'styles' => 'span.hello-world|Hello World',
+          ],
+        ],
+      ],
+    ])->save();
+
+    $this->drupalLogin($this->drupalCreateUser(['administer filters']));
+    $this->drupalGet('admin/config/content/formats/manage/some_html');
+
+    $js_condition = "jQuery('#edit-filters-filter-html-settings-allowed-html').val() === \"<span class> <strong> <em> <a href> <ul> <li> <ol> <blockquote> <img src alt data-entity-type data-entity-uuid>\"";
 
     $this->assertJsCondition($js_condition);
   }

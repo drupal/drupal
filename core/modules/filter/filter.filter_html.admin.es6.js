@@ -202,8 +202,13 @@
               //   https://www.drupal.org/node/2567801 lands.
               filterRule.restrictedTags.allowed.attributes =
                 featureRule.required.attributes.slice(0);
-              filterRule.restrictedTags.allowed.classes =
-                featureRule.required.classes.slice(0);
+              if (
+                userAllowedTags[tag] !== undefined &&
+                userAllowedTags[tag].restrictedTags.allowed.classes[0] !== ''
+              ) {
+                filterRule.restrictedTags.allowed.classes =
+                  featureRule.required.classes.slice(0);
+              }
               editorRequiredTags[tag] = filterRule;
             }
             // The tag is already allowed, add any additionally allowed
@@ -214,10 +219,15 @@
                 ...filterRule.restrictedTags.allowed.attributes,
                 ...featureRule.required.attributes,
               ];
-              filterRule.restrictedTags.allowed.classes = [
-                ...filterRule.restrictedTags.allowed.classes,
-                ...featureRule.required.classes,
-              ];
+              if (
+                userAllowedTags[tag] !== undefined &&
+                userAllowedTags[tag].restrictedTags.allowed.classes[0] !== ''
+              ) {
+                filterRule.restrictedTags.allowed.classes = [
+                  ...filterRule.restrictedTags.allowed.classes,
+                  ...featureRule.required.classes,
+                ];
+              }
             }
           }
         }
@@ -343,6 +353,7 @@
     _generateSetting(tags) {
       return Object.keys(tags).reduce((setting, tag) => {
         const rule = tags[tag];
+        const allowedClasses = rule.restrictedTags.allowed.classes;
 
         if (setting.length) {
           setting += ' ';
@@ -357,10 +368,10 @@
         //   values. The filter_html filter always disallows the "style"
         //   attribute, so we only need to support "class" attribute value
         //   restrictions. Fix once https://www.drupal.org/node/2567801 lands.
-        if (rule.restrictedTags.allowed.classes.length) {
-          setting += ` class="${rule.restrictedTags.allowed.classes.join(
-            ' ',
-          )}"`;
+        if (allowedClasses.length === 1 && allowedClasses[0] === '') {
+          setting += ' class';
+        } else if (allowedClasses.length) {
+          setting += ` class="${allowedClasses.join(' ')}"`;
         }
 
         setting += '>';
