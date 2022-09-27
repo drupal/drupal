@@ -225,7 +225,7 @@ class WebAssert extends MinkWebAssert {
       throw new ElementNotFoundException($this->session->getDriver(), 'select', 'id|name|label|value', $select);
     }
 
-    $option_field = $select_field->find('named', ['option', $option]);
+    $option_field = $select_field->find('named_exact', ['option', $option]);
 
     if ($option_field === NULL) {
       throw new ElementNotFoundException($this->session->getDriver(), 'select', 'id|name|label|value', $option);
@@ -259,7 +259,7 @@ class WebAssert extends MinkWebAssert {
       throw new ElementNotFoundException($this->session->getDriver(), 'select', 'id|name|label|value', $select);
     }
 
-    $option_field = $select_field->find('named', ['option', $option]);
+    $option_field = $select_field->find('named_exact', ['option', $option]);
 
     $this->assert($option_field === NULL, sprintf('An option "%s" exists in select "%s", but it should not.', $option, $select));
   }
