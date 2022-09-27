@@ -55,6 +55,9 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     'uid' => 'uid',
   ];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp($import_test_views = TRUE, $modules = ['user_test_views']): void {
     parent::setUp($import_test_views, $modules);
 

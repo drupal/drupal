@@ -68,6 +68,9 @@ class FilterFormatAccessTest extends BrowserTestBase {
    */
   protected $disallowedFormat;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

@@ -23,6 +23,9 @@ class StandardTest extends UnitTestCase {
    */
   protected $format;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
 
     // Mock text format configuration entity object.

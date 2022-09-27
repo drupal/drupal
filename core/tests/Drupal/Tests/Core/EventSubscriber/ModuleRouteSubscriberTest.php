@@ -21,6 +21,9 @@ class ModuleRouteSubscriberTest extends UnitTestCase {
    */
   protected $moduleHandler;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
 

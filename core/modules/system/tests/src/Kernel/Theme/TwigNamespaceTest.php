@@ -29,6 +29,9 @@ class TwigNamespaceTest extends KernelTestBase {
    */
   protected $twig;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     \Drupal::service('theme_installer')->install(['test_theme', 'olivero']);

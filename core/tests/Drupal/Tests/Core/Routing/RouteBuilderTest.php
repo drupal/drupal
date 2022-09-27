@@ -77,6 +77,9 @@ class RouteBuilderTest extends UnitTestCase {
    */
   protected $checkProvider;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     $this->dumper = $this->createMock('Drupal\Core\Routing\MatcherDumperInterface');
     $this->lock = $this->createMock('Drupal\Core\Lock\LockBackendInterface');

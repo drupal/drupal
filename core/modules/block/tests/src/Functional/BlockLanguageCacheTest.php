@@ -31,6 +31,9 @@ class BlockLanguageCacheTest extends BrowserTestBase {
    */
   protected $langcodes = [];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

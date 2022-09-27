@@ -35,6 +35,9 @@ class RouteCachingNonPathLanguageNegotiationTest extends BrowserTestBase {
    */
   protected $adminUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

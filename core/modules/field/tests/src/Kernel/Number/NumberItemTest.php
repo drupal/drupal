@@ -23,6 +23,9 @@ class NumberItemTest extends FieldKernelTestBase {
    */
   protected static $modules = [];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

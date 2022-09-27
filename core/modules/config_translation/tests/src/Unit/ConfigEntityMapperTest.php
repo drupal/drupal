@@ -56,6 +56,9 @@ class ConfigEntityMapperTest extends UnitTestCase {
    */
   protected $eventDispatcher;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     $this->entityTypeManager = $this->createMock('Drupal\Core\Entity\EntityTypeManagerInterface');
 

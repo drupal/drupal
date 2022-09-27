@@ -53,6 +53,9 @@ class TableTest extends CKEditor5TestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

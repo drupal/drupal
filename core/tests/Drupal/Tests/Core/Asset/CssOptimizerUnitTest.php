@@ -32,6 +32,9 @@ class CssOptimizerUnitTest extends UnitTestCase {
    */
   protected $fileUrlGenerator;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->fileUrlGenerator = $this->createMock(FileUrlGeneratorInterface::class);

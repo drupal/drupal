@@ -45,6 +45,9 @@ abstract class OptionsDynamicValuesTestBase extends FieldTestBase {
    */
   protected array $test;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

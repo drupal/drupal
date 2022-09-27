@@ -26,6 +26,9 @@ class MainContentFallbackTest extends BrowserTestBase {
   protected $adminUser;
   protected $webUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

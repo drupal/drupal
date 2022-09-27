@@ -32,6 +32,9 @@ class ResultTest extends UnitTestCase {
    */
   protected $resultHandler;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

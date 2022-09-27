@@ -45,6 +45,9 @@ class EntityReferenceFileUploadTest extends BrowserTestBase {
    */
   protected $nodeId;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

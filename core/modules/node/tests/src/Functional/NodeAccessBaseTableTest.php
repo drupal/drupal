@@ -67,6 +67,9 @@ class NodeAccessBaseTableTest extends NodeTestBase {
    */
   protected $nidsVisible;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

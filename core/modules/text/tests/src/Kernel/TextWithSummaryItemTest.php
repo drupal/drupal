@@ -37,6 +37,9 @@ class TextWithSummaryItemTest extends FieldKernelTestBase {
    */
   protected $field;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

@@ -29,6 +29,9 @@ class EntityTranslationFormTest extends BrowserTestBase {
 
   protected $langcodes;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     // Enable translations for the test entity type.

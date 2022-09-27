@@ -26,6 +26,9 @@ class DiffArrayTest extends UnitTestCase {
    */
   protected $array2;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

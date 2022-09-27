@@ -12,6 +12,9 @@ use Drupal\file\FileInterface;
  */
 class SpaceUsedTest extends FileManagedUnitTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

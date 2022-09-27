@@ -39,6 +39,9 @@ class RssTest extends TaxonomyTestBase {
    */
   protected $fieldName;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

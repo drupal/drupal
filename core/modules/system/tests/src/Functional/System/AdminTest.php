@@ -38,6 +38,9 @@ class AdminTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     // testAdminPages() requires Locale module.
     parent::setUp();

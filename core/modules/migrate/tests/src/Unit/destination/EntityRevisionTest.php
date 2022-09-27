@@ -51,6 +51,9 @@ class EntityRevisionTest extends UnitTestCase {
    */
   protected $accountSwitcher;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

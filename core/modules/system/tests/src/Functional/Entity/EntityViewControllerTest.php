@@ -31,6 +31,9 @@ class EntityViewControllerTest extends BrowserTestBase {
    */
   protected $entities = [];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     // Create some dummy entity_test entities.

@@ -19,6 +19,9 @@ class ImmutableConfigTest extends UnitTestCase {
    */
   protected $config;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $storage = $this->createMock('Drupal\Core\Config\StorageInterface');

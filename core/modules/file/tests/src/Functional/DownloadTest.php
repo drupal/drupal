@@ -24,6 +24,9 @@ class DownloadTest extends FileManagedTestBase {
    */
   protected $fileUrlGenerator;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
