@@ -93,7 +93,7 @@ function drupal_load_updates() {
 /**
  * Loads the installation profile, extracting its defined distribution name.
  *
- * @return
+ * @return string
  *   The distribution name defined in the profile's .info.yml file. Defaults to
  *   "Drupal" if none is explicitly provided by the installation profile.
  *
@@ -145,7 +145,7 @@ function drupal_install_profile_distribution_version() {
 /**
  * Detects all supported databases that are compiled into PHP.
  *
- * @return
+ * @return array
  *   An array of database types compiled into PHP.
  */
 function drupal_detect_database_types() {
@@ -529,7 +529,7 @@ function _drupal_rewrite_settings_dump_one(\stdClass $variable, $prefix = '', $s
  * @param $install_state
  *   An array of information about the current installation state.
  *
- * @return
+ * @return array
  *   The list of modules to install.
  */
 function drupal_verify_profile($install_state) {
@@ -663,7 +663,7 @@ function drupal_install_system($install_state) {
  *   (optional) Determines whether to attempt fixing the permissions according
  *   to the provided $mask. Defaults to TRUE.
  *
- * @return
+ * @return bool
  *   TRUE on success or FALSE on failure. A message is set for the latter.
  */
 function drupal_verify_install_file($file, $mask = NULL, $type = 'file', $autofix = TRUE) {
@@ -752,7 +752,7 @@ function drupal_verify_install_file($file, $mask = NULL, $type = 'file', $autofi
  * @param $message
  *   (optional) Whether to output messages. Defaults to TRUE.
  *
- * @return
+ * @return bool
  *   TRUE/FALSE whether or not the directory was successfully created.
  */
 function drupal_install_mkdir($file, $mask, $message = TRUE) {
@@ -803,7 +803,7 @@ function drupal_install_mkdir($file, $mask, $message = TRUE) {
  * @param $message
  *   (optional) Whether to output messages. Defaults to TRUE.
  *
- * @return
+ * @return bool
  *   TRUE/FALSE whether or not we were able to fix the file's permissions.
  */
 function drupal_install_fix_file($file, $mask, $message = TRUE) {
@@ -906,7 +906,7 @@ function install_goto($path) {
  * @param $query
  *   (optional) An array of query parameters to merge in to the existing ones.
  *
- * @return
+ * @return string
  *   The URL of the current script, with query parameters modified by the
  *   passed-in $query. The URL is not sanitized, so it still needs to be run
  *   through \Drupal\Component\Utility\UrlHelper::filterBadProtocol() if it will be
@@ -935,7 +935,7 @@ function drupal_current_script_url($query = []) {
  *   The severity of the requirements problem, as returned by
  *   drupal_requirements_severity().
  *
- * @return
+ * @return string
  *   A URL for attempting to proceed to the next step of the script. The URL is
  *   not sanitized, so it still needs to be run through
  *   \Drupal\Component\Utility\UrlHelper::filterBadProtocol() if it will be used
@@ -1010,7 +1010,7 @@ function drupal_check_profile($profile) {
  *   An array of requirements, in the same format as is returned by
  *   hook_requirements().
  *
- * @return
+ * @return int
  *   The highest severity in the array.
  */
 function drupal_requirements_severity(&$requirements) {
@@ -1029,7 +1029,7 @@ function drupal_requirements_severity(&$requirements) {
  * @param $module
  *   Machine name of module to check.
  *
- * @return
+ * @return bool
  *   TRUE or FALSE, depending on whether the requirements are met.
  */
 function drupal_check_module($module) {
@@ -1107,7 +1107,7 @@ function drupal_check_module($module) {
  * @param $langcode
  *   Language code (if any).
  *
- * @return
+ * @return array
  *   The info array.
  */
 function install_profile_info($profile, $langcode = 'en') {

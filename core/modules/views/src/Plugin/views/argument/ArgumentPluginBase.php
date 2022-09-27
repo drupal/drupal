@@ -701,7 +701,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
    *
    * Override this method only with extreme care.
    *
-   * @return
+   * @return bool
    *   A boolean value; if TRUE, continue building this view. If FALSE,
    *   building the view will be aborted here.
    */
@@ -854,9 +854,6 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
    * - addField: add a 'num_nodes' field for the count. Usually it will
    *   be a count on $view->base_field
    * - setCountField: Reset the count field so we get the right paging.
-   *
-   * @return
-   *   The alias used to get the number of records (count) for this entry.
    */
   protected function summaryQuery() {
     $this->ensureMyTable();
@@ -864,7 +861,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
     $this->base_alias = $this->query->addField($this->tableAlias, $this->realField);
 
     $this->summaryNameField();
-    return $this->summaryBasics();
+    $this->summaryBasics();
   }
 
   /**

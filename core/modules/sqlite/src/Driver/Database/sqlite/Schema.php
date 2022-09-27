@@ -51,7 +51,7 @@ class Schema extends DatabaseSchema {
    * @param $table
    *   A Schema API table definition array.
    *
-   * @return
+   * @return array
    *   An array of SQL statements to create the table.
    */
   public function createTableSql($name, $table) {
@@ -475,7 +475,7 @@ class Schema extends DatabaseSchema {
    * @param $table
    *   Name of the table.
    *
-   * @return
+   * @return array
    *   An array representing the schema.
    *
    * @throws \Exception

@@ -58,7 +58,7 @@ function text_help($route_name, RouteMatchInterface $route_match) {
  *   The desired character length of the summary. If omitted, the default value
  *   will be used. Ignored if the special delimiter is present in $text.
  *
- * @return
+ * @return string
  *   The generated summary.
  */
 function text_summary($text, $format = NULL, $size = NULL) {

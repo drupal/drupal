@@ -63,7 +63,7 @@ function file_test_get_calls($op) {
 /**
  * Get an array with the calls for all hooks.
  *
- * @return
+ * @return array
  *   An array keyed by hook name ('load', 'validate', 'download', 'insert',
  *   'update', 'copy', 'move', 'delete') with values being arrays of parameters
  *   passed to each call.

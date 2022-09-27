@@ -64,7 +64,7 @@ function hook_quickedit_editor_alter(&$editors) {
  * @param string $langcode
  *   (Optional) The language code the field values are to be shown in.
  *
- * @return
+ * @return array
  *   A renderable array for the field value.
  *
  * @see \Drupal\Core\Field\FieldItemListInterface::view()

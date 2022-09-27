@@ -25,7 +25,7 @@ class HtmlToTextTest extends BrowserTestBase {
    * @param $text
    *   The text string to convert.
    *
-   * @return
+   * @return string
    *   An HTML representation of the text string that, when displayed in a
    *   browser, represents the PHP source code equivalent of $text.
    */

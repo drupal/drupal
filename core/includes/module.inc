@@ -13,7 +13,7 @@ use Drupal\Core\Extension\ExtensionDiscovery;
  * @param $module
  *   The name of the module (without the .module extension).
  *
- * @return
+ * @return bool|string
  *   The name of the module's install file, if successful; FALSE otherwise.
  *
  * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use
@@ -63,7 +63,7 @@ function module_load_install($module) {
  *   (optional) The base file name (without the $type extension). If omitted,
  *   $module is used; i.e., resulting in "$module.$type" by default.
  *
- * @return string|false
+ * @return bool|string
  *   The name of the included file, if successful; FALSE otherwise.
  *
  * @deprecated in drupal:9.4.0 and is removed from drupal:11.0.0.

@@ -209,7 +209,7 @@ function taxonomy_vocabulary_get_names() {
  * @param $vocabulary
  *   (optional) Vocabulary machine name to limit the search. Defaults to NULL.
  *
- * @return
+ * @return \Drupal\taxonomy\TermInterface[]
  *   An array of matching term objects.
  *
  * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
@@ -259,7 +259,7 @@ function taxonomy_implode_tags($tags, $vid = NULL) {
  * @param \Drupal\taxonomy\Entity\Term $term
  *   A taxonomy term entity.
  *
- * @return
+ * @return string
  *   The term name to be used as the page title.
  *
  * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use

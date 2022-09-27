@@ -30,7 +30,7 @@ interface AlterableInterface {
    * @param $tag
    *   The tag to check.
    *
-   * @return
+   * @return bool
    *   TRUE if this query has been marked with this tag, FALSE otherwise.
    */
   public function hasTag($tag);
@@ -43,7 +43,7 @@ interface AlterableInterface {
    * @todo Restore PHPDoc of variadic argument in Drupal 8.8, see
    * https://www.drupal.org/project/drupal/issues/3029729
    *
-   * @return
+   * @return bool
    *   TRUE if this query has been marked with all specified tags, FALSE
    *   otherwise.
    */
@@ -57,7 +57,7 @@ interface AlterableInterface {
    * @todo Restore PHPDoc of variadic argument in Drupal 8.8, see
    * https://www.drupal.org/project/drupal/issues/3029729
    *
-   * @return
+   * @return bool
    *   TRUE if this query has been marked with at least one of the specified
    *   tags, FALSE otherwise.
    */
@@ -87,7 +87,7 @@ interface AlterableInterface {
    * @param $key
    *   The unique identifier for the piece of metadata to retrieve.
    *
-   * @return
+   * @return mixed
    *   The previously attached metadata object, or NULL if one doesn't exist.
    */
   public function getMetaData($key);

@@ -274,7 +274,7 @@ interface BookManagerInterface {
    * @param array $link
    *   A fully loaded book link.
    *
-   * @return
+   * @return array
    *   A subtree of book links in an array, in the order they should be rendered.
    */
   public function bookSubtreeData($link);

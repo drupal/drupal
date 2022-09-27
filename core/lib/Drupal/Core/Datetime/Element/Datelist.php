@@ -359,7 +359,7 @@ class Datelist extends DateElementBase {
    * @param $increment
    *   The value to round to.
    *
-   * @return
+   * @return \Drupal\Core\Datetime\DrupalDateTime
    */
   protected static function incrementRound(&$date, $increment) {
     // Round minutes and seconds, if necessary.

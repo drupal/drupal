@@ -275,9 +275,6 @@ class AliasManager implements AliasManagerInterface {
    *
    * @param string $path
    *   An optional path for which an alias is being inserted.
-   *
-   * @return
-   *   An array containing a white list of path aliases.
    */
   protected function pathAliasWhitelistRebuild($path = NULL) {
     // When paths are inserted, only rebuild the whitelist if the path has a top

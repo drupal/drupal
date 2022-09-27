@@ -182,7 +182,7 @@ function views_ui_add_ajax_wrapper($element, FormStateInterface $form_state) {
 /**
  * Updates a part of the add view form via AJAX.
  *
- * @return
+ * @return array
  *   The part of the form that has changed.
  */
 function views_ui_ajax_update_form($form, FormStateInterface $form_state) {

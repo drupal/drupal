@@ -23,7 +23,7 @@ interface PoStreamInterface {
   /**
    * Gets the URI of the PO stream that is being read or written.
    *
-   * @return
+   * @return string
    *   URI string for this stream.
    */
   public function getURI();

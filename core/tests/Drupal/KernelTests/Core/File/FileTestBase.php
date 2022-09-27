@@ -153,11 +153,11 @@ abstract class FileTestBase extends KernelTestBase {
   /**
    * Create a directory and assert it exists.
    *
-   * @param $path
+   * @param string $path
    *   Optional string with a directory path. If none is provided, a random
    *   name in the site's files directory will be used.
    *
-   * @return
+   * @return string
    *   The path to the directory.
    */
   public function createDirectory($path = NULL) {
@@ -183,7 +183,7 @@ abstract class FileTestBase extends KernelTestBase {
    *   Optional string indicating the stream scheme to use. Drupal core includes
    *   public, private, and temporary. The public wrapper is the default.
    *
-   * @return
+   * @return string
    *   File URI.
    */
   public function createUri($filepath = NULL, $contents = NULL, $scheme = NULL) {

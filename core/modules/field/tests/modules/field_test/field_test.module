@@ -58,7 +58,7 @@ require_once __DIR__ . '/field_test.field.inc';
  * @param $value
  *   A value to store for $key.
  *
- * @return
+ * @return array|null
  *   An array mapping each $key to an array of each $value passed in
  *   for that key.
  */
