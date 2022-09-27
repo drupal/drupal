@@ -40,6 +40,9 @@ class CKEditorLoadingTest extends BrowserTestBase {
    */
   protected $normalUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

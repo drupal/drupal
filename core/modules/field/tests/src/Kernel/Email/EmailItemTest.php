@@ -16,6 +16,9 @@ use Drupal\field\Entity\FieldStorageConfig;
  */
 class EmailItemTest extends FieldKernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

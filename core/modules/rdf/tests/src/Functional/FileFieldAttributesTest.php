@@ -57,6 +57,9 @@ class FileFieldAttributesTest extends FileFieldTestBase {
    */
   protected $node;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');

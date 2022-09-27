@@ -22,6 +22,9 @@ class FilterAPITest extends EntityKernelTestBase {
 
   protected static $modules = ['system', 'filter', 'filter_test', 'user'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

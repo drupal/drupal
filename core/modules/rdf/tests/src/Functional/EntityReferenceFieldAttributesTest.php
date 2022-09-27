@@ -50,6 +50,9 @@ class EntityReferenceFieldAttributesTest extends TaxonomyTestBase {
    */
   protected $vocabulary;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

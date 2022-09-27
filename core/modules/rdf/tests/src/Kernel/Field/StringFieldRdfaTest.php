@@ -31,6 +31,9 @@ class StringFieldRdfaTest extends FieldRdfaTestBase {
    */
   protected $testSummary = 'test_summary_value';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

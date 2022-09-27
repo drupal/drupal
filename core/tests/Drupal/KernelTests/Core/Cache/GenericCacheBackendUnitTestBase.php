@@ -101,6 +101,9 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     return $this->cachebackends[$bin];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     $this->cachebackends = [];
     $this->defaultValue = $this->randomMachineName(10);
@@ -110,6 +113,9 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $this->setUpCacheBackend();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function tearDown() {
     // Destruct the registered backend, each test will get a fresh instance,
     // properly emptying it here ensure that on persistent data backends they

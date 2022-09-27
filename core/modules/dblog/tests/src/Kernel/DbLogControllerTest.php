@@ -17,6 +17,9 @@ class DbLogControllerTest extends KernelTestBase {
    */
   protected static $modules = ['dblog', 'user'];
 
+  /**
+   * {@inheritdoc}
+   */
   public function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('user');

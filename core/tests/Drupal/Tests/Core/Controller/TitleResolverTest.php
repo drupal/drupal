@@ -48,6 +48,9 @@ class TitleResolverTest extends UnitTestCase {
    */
   protected $titleResolver;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     $this->controllerResolver = $this->createMock('\Drupal\Core\Controller\ControllerResolverInterface');
     $this->translationManager = $this->createMock('\Drupal\Core\StringTranslation\TranslationInterface');

@@ -45,6 +45,9 @@ class NodeEditFormTest extends NodeTestBase {
    */
   protected static $modules = ['block', 'node', 'datetime'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

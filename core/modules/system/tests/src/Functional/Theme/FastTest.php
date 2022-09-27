@@ -30,6 +30,9 @@ class FastTest extends BrowserTestBase {
    */
   protected $account;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->account = $this->drupalCreateUser(['access user profiles']);

@@ -50,6 +50,9 @@ class NameMungingTest extends FileTestBase {
    */
   protected $nameWithUcExt;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->badExtension = 'foo';

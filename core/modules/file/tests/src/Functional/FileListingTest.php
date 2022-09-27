@@ -32,6 +32,9 @@ class FileListingTest extends FileFieldTestBase {
    */
   protected $baseUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

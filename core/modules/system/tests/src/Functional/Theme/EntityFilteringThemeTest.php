@@ -82,6 +82,9 @@ class EntityFilteringThemeTest extends BrowserTestBase {
    */
   protected $xssLabel = "string with <em>HTML</em> and <script>alert('JS');</script>";
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

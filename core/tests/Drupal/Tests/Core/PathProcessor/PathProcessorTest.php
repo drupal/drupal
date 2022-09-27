@@ -35,6 +35,9 @@ class PathProcessorTest extends UnitTestCase {
    */
   protected $languageManager;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
 
     // Set up some languages to be used by the language-based path processor.

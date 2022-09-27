@@ -58,6 +58,9 @@ class DateTest extends UnitTestCase {
    */
   protected $dateFormatterStub;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

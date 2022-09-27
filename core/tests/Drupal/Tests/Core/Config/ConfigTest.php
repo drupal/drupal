@@ -54,6 +54,9 @@ class ConfigTest extends UnitTestCase {
    */
   protected $cacheTagsInvalidator;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     $this->storage = $this->createMock('Drupal\Core\Config\StorageInterface');
     $this->eventDispatcher = $this->createMock('Symfony\Contracts\EventDispatcher\EventDispatcherInterface');

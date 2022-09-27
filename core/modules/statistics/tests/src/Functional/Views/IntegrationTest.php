@@ -53,6 +53,9 @@ class IntegrationTest extends ViewTestBase {
    */
   public static $testViews = ['test_statistics_integration'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp($import_test_views = TRUE, $modules = ['statistics_test_views']): void {
     parent::setUp($import_test_views, $modules);
 

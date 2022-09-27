@@ -18,6 +18,9 @@ class ConfigOverrideTest extends KernelTestBase {
    */
   protected static $modules = ['system', 'config_test'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->installConfig(['system']);

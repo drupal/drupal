@@ -34,6 +34,9 @@ class ThemeInstallerTest extends KernelTestBase {
       ->register('router.dumper', 'Drupal\Core\Routing\NullMatcherDumper');
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->installConfig(['system']);

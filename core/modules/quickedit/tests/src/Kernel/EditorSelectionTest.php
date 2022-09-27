@@ -27,6 +27,9 @@ class EditorSelectionTest extends QuickEditTestBase {
    */
   protected $editorSelector;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

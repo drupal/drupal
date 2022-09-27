@@ -37,6 +37,9 @@ class CommentHalExportTest extends CommentTestBase {
     'hal',
   ];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp($import_test_views = TRUE, $modules = ['hal_test_views']): void {
     parent::setUp($import_test_views, $modules);
     // Add another anonymous comment.

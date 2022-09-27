@@ -31,6 +31,9 @@ class FilterKernelTest extends KernelTestBase {
    */
   protected $filters;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->installConfig(['system']);

@@ -35,6 +35,9 @@ class ViewPageControllerTest extends UnitTestCase {
     '#view_display_show_admin_links' => NULL,
   ];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     $this->pageController = new ViewPageController();
   }

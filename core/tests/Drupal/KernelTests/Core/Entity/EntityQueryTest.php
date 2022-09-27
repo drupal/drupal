@@ -62,6 +62,9 @@ class EntityQueryTest extends EntityKernelTestBase {
    */
   protected $storage;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

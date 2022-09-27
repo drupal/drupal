@@ -21,6 +21,9 @@ class EntityNonRevisionableTranslatableFieldTest extends EntityKernelTestBase {
     'content_translation',
   ];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

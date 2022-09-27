@@ -46,6 +46,9 @@ class TermIndexTest extends TaxonomyTestBase {
    */
   protected $fieldName2;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

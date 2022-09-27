@@ -34,6 +34,9 @@ class EditorIntegrationLoadingTest extends BrowserTestBase {
    */
   protected static $basicPermissions = ['access content', 'create article content', 'use text format filtered_html', 'access contextual links'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

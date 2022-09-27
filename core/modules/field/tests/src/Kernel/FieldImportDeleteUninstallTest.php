@@ -23,6 +23,9 @@ class FieldImportDeleteUninstallTest extends FieldKernelTestBase {
    */
   protected static $modules = ['telephone'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     // Module uninstall requires users_data tables.

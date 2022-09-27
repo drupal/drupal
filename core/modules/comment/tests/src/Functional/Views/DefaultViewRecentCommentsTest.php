@@ -65,6 +65,9 @@ class DefaultViewRecentCommentsTest extends ViewTestBase {
    */
   public $node;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp($import_test_views = TRUE, $modules = []): void {
     parent::setUp($import_test_views, $modules);
 

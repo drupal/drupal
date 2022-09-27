@@ -53,6 +53,9 @@ class CommentAttributesTest extends CommentTestBase {
    */
   protected $nodeUri;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

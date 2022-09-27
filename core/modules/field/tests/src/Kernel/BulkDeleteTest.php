@@ -88,6 +88,9 @@ class BulkDeleteTest extends FieldKernelTestBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

@@ -50,6 +50,9 @@ class NodeAccessLanguageAwareCombinationTest extends NodeAccessTestBase {
    */
   protected $adminUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

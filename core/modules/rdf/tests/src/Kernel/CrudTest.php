@@ -34,6 +34,9 @@ class CrudTest extends KernelTestBase {
    */
   protected $bundle;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->prefix = 'rdf.mapping';

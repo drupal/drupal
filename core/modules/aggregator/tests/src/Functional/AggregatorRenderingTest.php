@@ -24,6 +24,9 @@ class AggregatorRenderingTest extends AggregatorTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

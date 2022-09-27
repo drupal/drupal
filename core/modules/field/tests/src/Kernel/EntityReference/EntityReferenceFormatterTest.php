@@ -61,6 +61,9 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
    */
   protected $unsavedReferencedEntity;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

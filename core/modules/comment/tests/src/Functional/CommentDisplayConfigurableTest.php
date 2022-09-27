@@ -20,6 +20,9 @@ class CommentDisplayConfigurableTest extends CommentTestBase {
    */
   protected $defaultTheme = 'olivero';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

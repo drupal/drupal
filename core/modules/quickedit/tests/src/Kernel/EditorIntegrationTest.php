@@ -63,6 +63,9 @@ class EditorIntegrationTest extends QuickEditTestBase {
    */
   protected $fieldName;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

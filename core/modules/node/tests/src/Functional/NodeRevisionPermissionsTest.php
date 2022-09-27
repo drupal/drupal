@@ -55,6 +55,9 @@ class NodeRevisionPermissionsTest extends NodeTestBase {
     'delete' => 'delete page revisions',
   ];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

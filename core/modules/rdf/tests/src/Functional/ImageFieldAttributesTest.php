@@ -64,6 +64,9 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
    */
   protected $node;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

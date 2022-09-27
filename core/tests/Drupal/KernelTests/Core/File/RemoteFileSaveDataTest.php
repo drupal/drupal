@@ -30,6 +30,9 @@ class RemoteFileSaveDataTest extends FileSaveDataTest {
    */
   protected $classname = 'Drupal\file_test\StreamWrapper\DummyRemoteStreamWrapper';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->config('system.file')->set('default_scheme', 'dummy-remote')->save();

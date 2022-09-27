@@ -55,6 +55,9 @@ class TrackerTest extends BrowserTestBase {
    */
   protected $otherUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

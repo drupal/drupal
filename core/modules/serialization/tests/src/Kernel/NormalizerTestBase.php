@@ -26,6 +26,9 @@ abstract class NormalizerTestBase extends KernelTestBase {
     'user',
   ];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 

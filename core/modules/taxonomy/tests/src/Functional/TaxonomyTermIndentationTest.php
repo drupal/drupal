@@ -28,6 +28,9 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
    */
   protected $vocabulary;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->drupalLogin($this->drupalCreateUser([

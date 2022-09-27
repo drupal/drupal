@@ -22,6 +22,9 @@ abstract class DatabaseTestBase extends KernelTestBase {
    */
   protected $connection;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
     $this->connection = Database::getConnection();

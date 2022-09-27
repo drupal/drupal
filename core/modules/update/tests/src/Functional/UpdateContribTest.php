@@ -41,6 +41,9 @@ class UpdateContribTest extends UpdateTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $admin_user = $this->drupalCreateUser(['administer site configuration']);

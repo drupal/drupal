@@ -25,6 +25,9 @@ class ValidatorTest extends FileManagedUnitTestBase {
    */
   protected $nonImage;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

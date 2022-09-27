@@ -9,6 +9,9 @@ namespace Drupal\KernelTests\Core\Entity;
  */
 class EntityUUIDTest extends EntityKernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

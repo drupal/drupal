@@ -29,6 +29,9 @@ class WizardPluginBaseKernelTest extends ViewsKernelTestBase {
    */
   protected $wizard;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp($import_test_views = TRUE): void {
     parent::setUp();
 

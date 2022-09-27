@@ -49,6 +49,9 @@ class MetadataGeneratorTest extends QuickEditTestBase {
    */
   protected $accessChecker;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

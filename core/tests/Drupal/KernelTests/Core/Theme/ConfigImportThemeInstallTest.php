@@ -19,6 +19,9 @@ class ConfigImportThemeInstallTest extends KernelTestBase {
    */
   protected static $modules = ['system'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->installConfig(['system']);

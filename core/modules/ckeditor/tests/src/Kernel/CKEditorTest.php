@@ -50,6 +50,9 @@ class CKEditorTest extends KernelTestBase {
    */
   protected $manager;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->fileUrlGenerator = $this->container->get('file_url_generator');

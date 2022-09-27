@@ -22,6 +22,9 @@ class AjaxResponseTest extends UnitTestCase {
    */
   protected $ajaxResponse;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     $this->ajaxResponse = new AjaxResponse();
   }

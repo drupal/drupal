@@ -23,6 +23,9 @@ abstract class StatisticsTestBase extends BrowserTestBase {
    */
   protected $blockingUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 

@@ -29,6 +29,16 @@ abstract class ViewTestBase extends BrowserTestBase {
    */
   protected static $modules = ['views', 'views_test_config'];
 
+  /**
+   * Sets up the test.
+   *
+   * @param bool $import_test_views
+   *   Should the views specified on the test class be imported. If you need
+   *   to setup some additional stuff, like fields, you need to call false and
+   *   then call createTestViews for your own.
+   * @param array $modules
+   *   The module directories to look in for test views.
+   */
   protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']) {
     parent::setUp();
     if ($import_test_views) {

@@ -34,6 +34,9 @@ class CKEditorPluginManagerTest extends KernelTestBase {
    */
   protected $manager;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

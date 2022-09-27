@@ -36,6 +36,9 @@ class PagerTest extends BrowserTestBase {
 
   protected $profile = 'testing';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

@@ -40,6 +40,9 @@ class NodeQueryAlterTest extends NodeTestBase {
    */
   protected $noAccessUser2;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

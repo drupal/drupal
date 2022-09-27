@@ -54,6 +54,9 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
    */
   protected $localeStorage;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $permissions = [

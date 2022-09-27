@@ -26,6 +26,9 @@ class ConfigUninstallViaCliImportTest extends KernelTestBase {
    */
   protected static $modules = ['system', 'config'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     if (PHP_SAPI !== 'cli') {
