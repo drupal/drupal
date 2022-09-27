@@ -31,10 +31,6 @@
   padding-left: calc(1.5rem - var(--input-border-size));
 }
 
-.form-element--type-select::-ms-expand {
-  display: none;
-}
-
 /**
  * Select states.
  */

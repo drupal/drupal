@@ -110,13 +110,6 @@ body.drag {
   margin-left: 0;
 }
 
-@media screen and (-ms-high-contrast: active) {
-  .tabledrag-handle::after {
-    content: url(../../images/icons/currentColor/tabledrag-handle.svg);
-    background: none;
-  }
-}
-
 @media (forced-colors: active) {
   .tabledrag-handle::after {
     content: "";
@@ -248,7 +241,7 @@ body.drag {
 }
 
 .tabledrag-cell-content .tree {
-  min-height: 100%; /* Using simply 'height: 100%' would make IE11 rendering ugly. */
+  min-height: 100%;
 }
 
 /**

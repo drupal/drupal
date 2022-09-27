@@ -88,12 +88,6 @@
   border-radius: 0 var(--vertical-tabs-border-radius) var(--vertical-tabs-border-radius) 0;
 }
 
-@media screen and (-ms-high-contrast: active) {
-  .media-library-menu__link {
-    border-color: transparent;
-  }
-}
-
 /* Menu link states. */
 
 .media-library-menu__link:focus {
@@ -253,17 +247,6 @@
 
 .media-library-add-form .file-upload-help {
   margin: 0.5rem 0 0;
-}
-
-/* Align remove buttons with Save button and compensate for IE scrollbar and focus padding. */
-
-@media all and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-  .ui-dialog > .ui-dialog-content {
-    padding-right: calc(var(--space-s) - calc(var(--focus-border-size) + var(--focus-border-offset-size) + 2px));
-  }
-  [dir="rtl"] .ui-dialog > .ui-dialog-content {
-    padding-left: calc(var(--space-s) - calc(var(--focus-border-size) + var(--focus-border-offset-size) + 2px));
-  }
 }
 
 /* Style the media add oEmbed form. */

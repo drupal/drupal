@@ -109,18 +109,6 @@
   display: none;
 }
 
-@media screen and (-ms-high-contrast: active) {
-  /**
-   * Throbber animation is shaky on Edge RTL on high contrast for border width
-   * less than 4px.
-   */
-  @supports (-ms-ime-align:auto) {
-    [dir="rtl"] .ajax-progress__throbber {
-      border-width: 4px;
-    }
-  }
-}
-
 @keyframes claro-throbber {
   0% {
     transform: rotateZ(0);

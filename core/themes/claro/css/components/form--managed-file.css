@@ -95,21 +95,6 @@
 }
 
 /**
- * Internet Explorer 11 does not shrinks our meta elements if one of its parent
- * element is a table. Without this fix, the file widgets table cell would have
- * the same width that is needed for displaying the file name in a single line.
- *
- * @see https://github.com/philipwalton/flexbugs/issues/179
- */
-
-@media all and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-  *::-ms-backdrop,
-  td .form-managed-file__meta {
-    flex-basis: 100%;
-  }
-}
-
-/**
  * The 'image preview' element.
  *
  * This is used and display only by the image widget.
@@ -158,33 +143,6 @@ td .form-managed-file.no-meta .form-managed-file__image-preview {
 }
 
 /**
- * Internet Explorer 11 does not increase the width of those flex items that are
- * allowed to be wrapped. We just simply change the basis to the max-width.
- */
-
-@media all and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-  *::-ms-backdrop,
-  .form-managed-file__meta-items {
-    flex-basis: var(--file-widget-form-item-max-width);
-  }
-}
-
-/**
- * Meta items wrapper.
- * This markup element is needed only for working around the same IE 11 bug that
- * is described above, at the 'meta' element.
- *
- * @see https://github.com/philipwalton/flexbugs/issues/179
- */
-
-@media all and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-  *::-ms-backdrop,
-  td .form-managed-file__meta-wrapper {
-    display: flex;
-  }
-}
-
-/**
  * Modify component defaults for file/image widgets.
  */
 
@@ -213,26 +171,11 @@ td .form-managed-file.no-meta .form-managed-file__image-preview {
 }
 
 /**
- * Fix and override the table-related bug of Internet Explorer 11 (described at
- * the 'meta' element).
- *
- * @see https://github.com/philipwalton/flexbugs/issues/179
- */
-
-@media all and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-  *::-ms-backdrop,
-  td .form-managed-file__main .file {
-    flex: 0 1 100%;
-  }
-}
-
-/**
  * The file upload input.
  */
 
 .form-managed-file__main .form-element--api-file {
   flex: 1 1 auto;
-  min-width: 1px; /* This makes the element shrink on IE11 */
 }
 
 /**

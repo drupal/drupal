@@ -22,15 +22,6 @@
   box-shadow: none;
 }
 
-/* IE workaround. */
-/* stylelint-disable-next-line selector-type-no-unknown */
-_:-ms-fullscreen,
-.fieldset {
-  display: table;
-  box-sizing: border-box;
-  width: 100%;
-}
-
 /**
  * Fieldset legend.
  */
@@ -52,7 +43,7 @@ _:-ms-fullscreen,
 .fieldset__legend--composite {
   float: none;
   width: auto;
-  margin-top: 0; /* IE11 and Edge do not collapse this margin. Ideally this would be 4px */
+  margin-top: calc(var(--space-xs) / 2); /* 4px */
   margin-bottom: calc(var(--space-xs) / 2); /* 4px */
   color: inherit;
   font-size: var(--font-size-s); /* 14px */

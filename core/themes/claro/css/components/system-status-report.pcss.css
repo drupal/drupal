@@ -54,7 +54,7 @@
   background-position: top center;
   background-size: contain;
 }
-[dir="rtl"] .system-status-report__status-title:before {
+[dir="rtl"] .system-status-report__status-icon:before {
   right: 10px;
   left: auto;
   margin-right: 0;

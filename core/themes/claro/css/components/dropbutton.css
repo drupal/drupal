@@ -210,7 +210,7 @@
 
 /* High contrast. */
 
-@media (-ms-high-contrast: active), (forced-colors: active) {
+@media (forced-colors: active) {
   /* Default. */
   .dropbutton__toggle::before {
     width: 0.5625rem;
@@ -395,18 +395,6 @@
   font-weight: normal;
   line-height: var(--dropbutton-line-height);
   -webkit-font-smoothing: antialiased;
-}
-
-/**
- * Set the inherited button border color to transparent for high contrast
- * mode.
- */
-
-@media screen and (-ms-high-contrast: active) {
-  .dropbutton__item:first-of-type ~ .dropbutton__item > a,
-  .dropbutton__item:first-of-type ~ .dropbutton__item > .button {
-    border-color: transparent !important;
-  }
 }
 
 .dropbutton__item:first-of-type ~ .dropbutton__item > a:not(:focus),
