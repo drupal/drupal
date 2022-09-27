@@ -29,9 +29,6 @@
   background-repeat: no-repeat;
   background-position: 100% 50%;
 }
-.js .form-autocomplete::-ms-clear {
-  display: none;
-}
 .js[dir="rtl"] .form-autocomplete {
   background-image: url(../../images/icons/868686/magnifier-rtl.svg);
   background-position: 0 50%;
@@ -41,18 +38,6 @@
 }
 .js[dir="rtl"] .form-autocomplete.is-autocompleting {
   background-image: url(../../images/icons/003ecc/spinner-rtl.svg);
-}
-/* IE11 does not animate inline SVG. */
-/* stylelint-disable-next-line selector-type-no-unknown */
-_:-ms-fullscreen,
-.js .form-autocomplete.is-autocompleting {
-  background-image: url("../../images/spinner-ltr.gif");
-  background-size: 2.5rem 1.25rem;
-}
-/* stylelint-disable-next-line selector-type-no-unknown */
-_:-ms-fullscreen,
-.js[dir="rtl"] .form-autocomplete.is-autocompleting {
-  background-image: url("../../images/spinner-rtl.gif");
 }
 
 /**

@@ -21,15 +21,6 @@
     mask-position: 0 50%;
   }
 }
-
-/* stylelint-disable-next-line selector-type-no-unknown */
-_:-ms-fullscreen, /* Only IE 11 */
-.tablesort {
-  position: static;
-  float: right;
-  margin-top: 0.125rem; /* 2px */
-  margin-right: -1.5rem; /* -24px */
-}
 [dir="rtl"] .tablesort {
   right: auto;
   left: 1rem; /* 16px */
@@ -41,13 +32,6 @@ _:-ms-fullscreen, /* Only IE 11 */
     mask-repeat: no-repeat;
     mask-position: 0 50%;
   }
-}
-/* stylelint-disable-next-line selector-type-no-unknown */
-_:-ms-fullscreen, /* Only IE 11 */
-[dir="rtl"] .tablesort {
-  float: left;
-  margin-right: 0;
-  margin-left: -1.5rem; /* -24px */
 }
 .tablesort--asc,
 [dir="rtl"] .tablesort--asc {

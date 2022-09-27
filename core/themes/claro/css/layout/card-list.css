@@ -12,10 +12,9 @@
 
 :root {
   --card-list-spacing: var(--space-m);
-  /* Using 100% as base causes issues in IE11. */
-  --cards-two-cols-width: calc(((99.9% + var(--card-list-spacing)) / 2) - var(--card-list-spacing));
-  --cards-three-cols-width: calc(((99.9% + var(--card-list-spacing)) / 3) - var(--card-list-spacing));
-  --cards-four-cols-width: calc(((99.9% + var(--card-list-spacing)) / 4) - var(--card-list-spacing));
+  --cards-two-cols-width: calc(((100% + var(--card-list-spacing)) / 2) - var(--card-list-spacing));
+  --cards-three-cols-width: calc(((100% + var(--card-list-spacing)) / 3) - var(--card-list-spacing));
+  --cards-four-cols-width: calc(((100% + var(--card-list-spacing)) / 4) - var(--card-list-spacing));
 }
 
 .card-list {

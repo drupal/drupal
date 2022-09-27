@@ -67,35 +67,11 @@
 }
 
 /**
- * Reset value border and background of the file input on IE11 and Edge.
- */
-
-.form-element--type-file::-ms-value {
-  border: 0;
-  background: inherit;
-}
-
-/**
  * Better upload button alignment for Chrome.
  */
 
 .form-element--type-file::-webkit-file-upload-button {
   vertical-align: top;
-}
-
-/**
- * Target IE 11 and Edge.
- *
- * Reduce the vertical padding of the file input element to make the browse
- * button fit into the needed input height.
- */
-
-/* stylelint-disable-next-line selector-type-no-unknown */
-
-_:-ms-fullscreen,
-:root .form-element--type-file {
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
 }
 
 /**

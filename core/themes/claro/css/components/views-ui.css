@@ -653,39 +653,3 @@ details.fieldset-no-legend {
   padding-right: 0.4rem;
   padding-left: 0.3rem;
 }
-
-@media all and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-  /**
-   * Remove borders from IE11 filter config in IE11, as it does not fully support
-   * the CSS needed to size and position them properly. This results in a
-   * slightly different presentation for IE11, but one that users are accustomed
-   * to with the Seven theme.
-   */
-  .views-config-group-region .views-group-box--value > .form-item::before,
-  .views-config-group-region .views-group-box--value > .form-item::after {
-    content: "";
-    border: none;
-  }
-  .views-config-group-region,
-  .views-config-group-region .views-group-box {
-    border: none;
-  }
-
-  /**
-   * IE11 has trouble correctly using `justify-content: space-between` when a
-   * flex item has the `.visually-hidden` class. This addresses the issue and
-   * the end result is the extra action button remains in it's own column on
-   * wrap, which matches the experience when using the Seven theme.
-   */
-  .views-display-top {
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-  }
-  .views-display-top__extra-actions-wrapper {
-    margin-left: auto; /* LTR */
-  }
-  [dir="rtl"] .views-display-top__extra-actions-wrapper {
-    margin-right: auto;
-    margin-left: calc(var(--space-xs) / 2);
-  }
-}

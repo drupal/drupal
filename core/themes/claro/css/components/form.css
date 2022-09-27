@@ -15,12 +15,6 @@
   color: var(--input-fg-color--placeholder);
 }
 
-/* IE 10 and 11 needs this set as important. */
-
-:-ms-input-placeholder {
-  color: var(--input-fg-color--placeholder) !important;
-}
-
 /**
  * General form item.
  */

@@ -197,7 +197,7 @@
   margin-left: 0.5rem;
 }
 
-@media (-ms-high-contrast: active), (forced-colors: active) {
+@media (forced-colors: active) {
   .pager__item a:hover {
     text-decoration: underline;
   }

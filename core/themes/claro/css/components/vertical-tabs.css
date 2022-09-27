@@ -23,12 +23,6 @@
   border-top: 1px solid transparent; /* Need to hide the pane wrapper clearfix's height */
 }
 
-@media screen and (-ms-high-contrast: active) {
-  .vertical-tabs {
-    border-color: transparent;
-  }
-}
-
 /**
  * Vertical tabs menu.
  */
@@ -148,12 +142,6 @@
   border-radius: 0 var(--vertical-tabs-border-radius) var(--vertical-tabs-border-radius) 0;
 }
 
-@media screen and (-ms-high-contrast: active) {
-  .vertical-tabs__menu-link {
-    border-color: transparent;
-  }
-}
-
 /* Menu link states. */
 
 .vertical-tabs__menu-link:focus {
@@ -230,20 +218,6 @@
 
 .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link:hover::before {
   background: none;
-}
-
-@media screen and (-ms-high-contrast: active) {
-  .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link {
-    border-color: windowText transparent;
-  }
-
-  .vertical-tabs__menu-link:focus::after {
-    border-color: transparent;
-  }
-
-  .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link::before {
-    border-color: windowText;
-  }
 }
 
 .vertical-tabs__menu-link-content {

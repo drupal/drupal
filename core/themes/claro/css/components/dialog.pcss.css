@@ -125,33 +125,6 @@
   background: none;
 }
 
-@media screen and (-ms-high-contrast: active) {
-  .ui-dialog .ui-icon.ui-icon-closethick {
-    background: none;
-  }
-
-  .ui-dialog .ui-icon.ui-icon-closethick::before,
-  .ui-dialog .ui-icon.ui-icon-closethick::after {
-    position: relative;
-    display: block;
-    width: 50%;
-    height: 100%;
-    content: "";
-  }
-  .ui-dialog .ui-icon.ui-icon-closethick::before {
-    top: -40%;
-    left: 60%;
-    transform: rotate(45deg);
-    border-bottom: 2px white solid;
-  }
-  .ui-dialog .ui-icon.ui-icon-closethick::after {
-    top: -78%;
-    left: 60%;
-    transform: rotate(-45deg);
-    border-top: 2px white solid;
-  }
-}
-
 #drupal-off-canvas {
   & .form-type--boolean {
     margin-left: 0;

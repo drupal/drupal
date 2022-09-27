@@ -36,12 +36,6 @@
   background-size: calc(var(--size-pattern-square) * 2) calc(var(--size-pattern-square) * 2);
 }
 
-@media screen and (-ms-high-contrast: active) {
-  .image-preview img {
-    background: none;
-  }
-}
-
 /**
  * Don't display file icon in image widgets.
  */

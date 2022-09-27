@@ -57,12 +57,6 @@
   margin-left: 0;
 }
 
-@media screen and (-ms-high-contrast: active) {
-  .progress__bar {
-    background-color: windowText;
-  }
-}
-
 @media (forced-colors: active) {
   .progress__bar {
     background-color: canvastext;
