@@ -975,8 +975,8 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
           $field_name . '_color' => [[$field_name . '_color', 3]],
         ],
         'unique keys' => [
-           $field_name . '_area' => [$field_name . '_area'],
-           $field_name . '_shape' => [[$field_name . '_shape', 10]],
+          $field_name . '_area' => [$field_name . '_area'],
+          $field_name . '_shape' => [[$field_name . '_shape', 10]],
         ],
         'foreign keys' => [
           $field_name . '_color' => [

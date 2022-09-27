@@ -25,10 +25,10 @@ $connection->insert('contact')->fields([
   'selected',
 ])
   ->values([
-  'category' => 'Upgrade test',
-  'recipients' => 'test1@example.com,test2@example.com',
-  'reply' => 'Test reply',
-  'weight' => 1,
-  'selected' => 1,
-])
+    'category' => 'Upgrade test',
+    'recipients' => 'test1@example.com,test2@example.com',
+    'reply' => 'Test reply',
+    'weight' => 1,
+    'selected' => 1,
+  ])
   ->execute();

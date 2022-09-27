@@ -125,10 +125,10 @@ class UserAdminTest extends BrowserTestBase {
       ->set('notify.status_blocked', TRUE)
       ->save();
     $this->drupalGet('admin/people', [
-    // Sort the table by username so that we know reliably which user will be
-    // targeted with the blocking action.
-    'query' => ['order' => 'name', 'sort' => 'asc'],
-]);
+      // Sort the table by username so that we know reliably which user will be
+      // targeted with the blocking action.
+      'query' => ['order' => 'name', 'sort' => 'asc'],
+    ]);
     $this->submitForm($edit, 'Apply to selected items');
     $site_name = $this->config('system.site')->get('name');
     $this->assertMailString('body', 'Your account on ' . $site_name . ' has been blocked.', 1, 'Blocked message found in the mail sent to user C.');
@@ -147,10 +147,10 @@ class UserAdminTest extends BrowserTestBase {
     $editunblock['action'] = 'user_unblock_user_action';
     $editunblock['user_bulk_form[4]'] = TRUE;
     $this->drupalGet('admin/people', [
-    // Sort the table by username so that we know reliably which user will be
-    // targeted with the blocking action.
-    'query' => ['order' => 'name', 'sort' => 'asc'],
-]);
+      // Sort the table by username so that we know reliably which user will be
+      // targeted with the blocking action.
+      'query' => ['order' => 'name', 'sort' => 'asc'],
+    ]);
     $this->submitForm($editunblock, 'Apply to selected items');
     $user_storage->resetCache([$user_c->id()]);
     $account = $user_storage->load($user_c->id());

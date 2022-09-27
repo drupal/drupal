@@ -120,7 +120,7 @@ class LinkGeneratorTest extends UnitTestCase {
     $result = $this->linkGenerator->generate('Test', $url);
     $this->assertLink([
       'attributes' => ['href' => $expected_url],
-      ], $result);
+    ], $result);
   }
 
   /**

@@ -208,7 +208,7 @@ class SystemMenuBlockTest extends KernelTestBase {
       'test.example2' => [],
       'test.example5' => [
         'test.example7' => [],
-       ],
+      ],
       'test.example6' => [],
       'test.example8' => [],
     ];

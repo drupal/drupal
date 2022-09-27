@@ -51,10 +51,10 @@ class EditDetails extends ViewsFormBase {
       '#default_value' => $view->get('langcode'),
     ];
     $form['details']['description'] = [
-       '#type' => 'textfield',
-       '#title' => $this->t('Administrative description'),
-       '#default_value' => $view->get('description'),
-     ];
+      '#type' => 'textfield',
+      '#title' => $this->t('Administrative description'),
+      '#default_value' => $view->get('description'),
+    ];
     $form['details']['tag'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Administrative tags'),

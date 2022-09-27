@@ -24,7 +24,7 @@ function statistics_views_data() {
     'field' => [
       'id' => 'statistics_numeric',
       'click sortable' => TRUE,
-     ],
+    ],
     'filter' => [
       'id' => 'numeric',
     ],
@@ -42,7 +42,7 @@ function statistics_views_data() {
     'field' => [
       'id' => 'statistics_numeric',
       'click sortable' => TRUE,
-     ],
+    ],
     'filter' => [
       'id' => 'numeric',
     ],

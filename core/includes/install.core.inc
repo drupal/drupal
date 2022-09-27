@@ -2107,9 +2107,9 @@ function install_check_requirements($install_state) {
         'value' => $default_file_info['description_default'],
         'severity' => REQUIREMENT_ERROR,
         'description' => t('The @drupal installer requires that the %default-file file must not be deleted or modified from the original download.', [
-            '@drupal' => drupal_install_profile_distribution_name(),
-            '%default-file' => $default_file,
-          ]),
+          '@drupal' => drupal_install_profile_distribution_name(),
+          '%default-file' => $default_file,
+        ]),
       ];
     }
     // Otherwise, if $file does not exist yet, we can try to copy
@@ -2166,11 +2166,11 @@ function install_check_requirements($install_state) {
         'value' => t('The %file does not exist.', ['%file' => $default_file_info['title']]),
         'severity' => REQUIREMENT_ERROR,
         'description' => t('The @drupal installer requires that you create a %file as part of the installation process. Copy the %default_file file to %file. More details about installing Drupal are available in <a href=":install_txt">INSTALL.txt</a>.', [
-            '@drupal' => drupal_install_profile_distribution_name(),
-            '%file' => $file,
-            '%default_file' => $default_file,
-            ':install_txt' => base_path() . 'core/INSTALL.txt',
-          ]),
+          '@drupal' => drupal_install_profile_distribution_name(),
+          '%file' => $file,
+          '%default_file' => $default_file,
+          ':install_txt' => base_path() . 'core/INSTALL.txt',
+        ]),
       ];
     }
     else {
@@ -2185,10 +2185,10 @@ function install_check_requirements($install_state) {
           'value' => t('The %file is not readable.', ['%file' => $default_file_info['title']]),
           'severity' => REQUIREMENT_ERROR,
           'description' => t('@drupal requires read permissions to %file at all times. The <a href=":handbook_url">webhosting issues</a> documentation section offers help on this and other topics.', [
-              '@drupal' => drupal_install_profile_distribution_name(),
-              '%file' => $file,
-              ':handbook_url' => 'https://www.drupal.org/server-permissions',
-            ]),
+            '@drupal' => drupal_install_profile_distribution_name(),
+            '%file' => $file,
+            ':handbook_url' => 'https://www.drupal.org/server-permissions',
+          ]),
         ];
       }
       // If the $file is not writable, throw an error.
@@ -2198,10 +2198,10 @@ function install_check_requirements($install_state) {
           'value' => t('The %file is not writable.', ['%file' => $default_file_info['title']]),
           'severity' => REQUIREMENT_ERROR,
           'description' => t('The @drupal installer requires write permissions to %file during the installation process. The <a href=":handbook_url">webhosting issues</a> documentation section offers help on this and other topics.', [
-              '@drupal' => drupal_install_profile_distribution_name(),
-              '%file' => $file,
-              ':handbook_url' => 'https://www.drupal.org/server-permissions',
-            ]),
+            '@drupal' => drupal_install_profile_distribution_name(),
+            '%file' => $file,
+            ':handbook_url' => 'https://www.drupal.org/server-permissions',
+          ]),
         ];
       }
       else {
@@ -2216,12 +2216,12 @@ function install_check_requirements($install_state) {
           'value' => t('The @file is owned by the web server.', ['@file' => $default_file_info['title']]),
           'severity' => REQUIREMENT_ERROR,
           'description' => t('The @drupal installer failed to create a %file file with proper file ownership. Log on to your web server, remove the existing %file file, and create a new one by copying the %default_file file to %file. More details about installing Drupal are available in <a href=":install_txt">INSTALL.txt</a>. The <a href=":handbook_url">webhosting issues</a> documentation section offers help on this and other topics.', [
-              '@drupal' => drupal_install_profile_distribution_name(),
-              '%file' => $file,
-              '%default_file' => $default_file,
-              ':install_txt' => base_path() . 'core/INSTALL.txt',
-              ':handbook_url' => 'https://www.drupal.org/server-permissions',
-            ]),
+            '@drupal' => drupal_install_profile_distribution_name(),
+            '%file' => $file,
+            '%default_file' => $default_file,
+            ':install_txt' => base_path() . 'core/INSTALL.txt',
+            ':handbook_url' => 'https://www.drupal.org/server-permissions',
+          ]),
         ];
       }
     }

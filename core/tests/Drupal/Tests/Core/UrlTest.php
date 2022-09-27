@@ -129,15 +129,15 @@ class UrlTest extends UnitTestCase {
         [$this->getRequestConstraint('/node/2/edit')],
       )
       ->willReturnOnConsecutiveCalls([
-          RouteObjectInterface::ROUTE_NAME => 'view.frontpage.page_1',
-          '_raw_variables' => new InputBag(),
-        ], [
-          RouteObjectInterface::ROUTE_NAME => 'node_view',
-          '_raw_variables' => new InputBag(['node' => '1']),
-        ], [
-          RouteObjectInterface::ROUTE_NAME => 'node_edit',
-          '_raw_variables' => new InputBag(['node' => '2']),
-        ]);
+        RouteObjectInterface::ROUTE_NAME => 'view.frontpage.page_1',
+        '_raw_variables' => new InputBag(),
+      ], [
+        RouteObjectInterface::ROUTE_NAME => 'node_view',
+        '_raw_variables' => new InputBag(['node' => '1']),
+      ], [
+        RouteObjectInterface::ROUTE_NAME => 'node_edit',
+        '_raw_variables' => new InputBag(['node' => '2']),
+      ]);
 
     $urls = [];
     foreach ($this->map as $index => $values) {

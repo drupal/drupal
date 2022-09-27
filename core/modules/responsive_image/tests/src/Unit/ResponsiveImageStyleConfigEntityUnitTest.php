@@ -124,45 +124,45 @@ class ResponsiveImageStyleConfigEntityUnitTest extends UnitTestCase {
     $entity = new ResponsiveImageStyle([]);
     $this->assertFalse($entity->hasImageStyleMappings());
     $entity->addImageStyleMapping('test_breakpoint', '1x', [
-        'image_mapping_type' => 'image_style',
-        'image_mapping' => '',
+      'image_mapping_type' => 'image_style',
+      'image_mapping' => '',
     ]);
     $this->assertFalse($entity->hasImageStyleMappings());
     $entity->removeImageStyleMappings();
     $entity->addImageStyleMapping('test_breakpoint', '1x', [
-        'image_mapping_type' => 'sizes',
-        'image_mapping' => [
-          'sizes' => '(min-width:700px) 700px, 100vw',
-          'sizes_image_styles' => [],
+      'image_mapping_type' => 'sizes',
+      'image_mapping' => [
+        'sizes' => '(min-width:700px) 700px, 100vw',
+        'sizes_image_styles' => [],
+      ],
+    ]);
+    $this->assertFalse($entity->hasImageStyleMappings());
+    $entity->removeImageStyleMappings();
+    $entity->addImageStyleMapping('test_breakpoint', '1x', [
+      'image_mapping_type' => 'sizes',
+      'image_mapping' => [
+        'sizes' => '',
+        'sizes_image_styles' => [
+          'large' => 'large',
         ],
+      ],
     ]);
     $this->assertFalse($entity->hasImageStyleMappings());
     $entity->removeImageStyleMappings();
     $entity->addImageStyleMapping('test_breakpoint', '1x', [
-        'image_mapping_type' => 'sizes',
-        'image_mapping' => [
-          'sizes' => '',
-          'sizes_image_styles' => [
-            'large' => 'large',
-          ],
-        ],
-    ]);
-    $this->assertFalse($entity->hasImageStyleMappings());
-    $entity->removeImageStyleMappings();
-    $entity->addImageStyleMapping('test_breakpoint', '1x', [
-        'image_mapping_type' => 'image_style',
-        'image_mapping' => 'large',
+      'image_mapping_type' => 'image_style',
+      'image_mapping' => 'large',
     ]);
     $this->assertTrue($entity->hasImageStyleMappings());
     $entity->removeImageStyleMappings();
     $entity->addImageStyleMapping('test_breakpoint', '1x', [
-        'image_mapping_type' => 'sizes',
-        'image_mapping' => [
-          'sizes' => '(min-width:700px) 700px, 100vw',
-          'sizes_image_styles' => [
-            'large' => 'large',
-          ],
+      'image_mapping_type' => 'sizes',
+      'image_mapping' => [
+        'sizes' => '(min-width:700px) 700px, 100vw',
+        'sizes_image_styles' => [
+          'large' => 'large',
         ],
+      ],
     ]);
     $this->assertTrue($entity->hasImageStyleMappings());
   }

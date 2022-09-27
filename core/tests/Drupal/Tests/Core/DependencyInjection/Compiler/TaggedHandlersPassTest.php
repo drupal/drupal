@@ -324,9 +324,9 @@ class TaggedHandlersPassTest extends UnitTestCase {
     $container
       ->register('handler1', __NAMESPACE__ . '\ValidHandler')
       ->addTag('consumer_id', [
-          'extra1' => 'extra1',
-          'extra2' => 'extra2',
-        ]);
+        'extra1' => 'extra1',
+        'extra2' => 'extra2',
+      ]);
 
     $handler_pass = new TaggedHandlersPass();
     $handler_pass->process($container);

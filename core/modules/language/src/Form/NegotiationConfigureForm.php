@@ -308,8 +308,8 @@ class NegotiationConfigureForm extends ConfigFormBase {
           $table_form['#show_operations'] = TRUE;
         }
         $table_form['operation'][$method_id] = [
-         '#type' => 'operations',
-         '#links' => $config_op,
+          '#type' => 'operations',
+          '#links' => $config_op,
         ];
       }
     }

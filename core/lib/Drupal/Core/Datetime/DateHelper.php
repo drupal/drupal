@@ -436,9 +436,9 @@ class DateHelper {
   public static function ampm($required = FALSE) {
     $none = ['' => ''];
     $ampm = [
-             'am' => t('am', [], ['context' => 'ampm']),
-             'pm' => t('pm', [], ['context' => 'ampm']),
-            ];
+      'am' => t('am', [], ['context' => 'ampm']),
+      'pm' => t('pm', [], ['context' => 'ampm']),
+    ];
     return !$required ? $none + $ampm : $ampm;
   }
 

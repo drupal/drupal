@@ -49,7 +49,7 @@ class MenuActiveTrail403Test extends BrowserTestBase {
     $this->drupalPlaceBlock(
       'system_menu_block:' . $this->menu,
       [
-       'level' => 2,
+        'level' => 2,
       ]
     );
 

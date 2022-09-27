@@ -44,7 +44,7 @@ class PathWidget extends WidgetBase {
     $element['source'] = [
       '#type' => 'value',
       '#value' => !$entity->isNew() ? '/' . $entity->toUrl()->getInternalPath() : NULL,
-     ];
+    ];
     $element['langcode'] = [
       '#type' => 'value',
       '#value' => $items[$delta]->langcode,

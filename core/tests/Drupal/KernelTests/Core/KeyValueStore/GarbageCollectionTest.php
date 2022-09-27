@@ -39,12 +39,12 @@ class GarbageCollectionTest extends KernelTestBase {
     for ($i = 0; $i <= 3; $i++) {
       $connection->merge('key_value_expire')
         ->keys([
-            'name' => 'key_' . $i,
-            'collection' => $collection,
-          ])
+          'name' => 'key_' . $i,
+          'collection' => $collection,
+        ])
         ->fields([
-            'expire' => REQUEST_TIME - 1,
-          ])
+          'expire' => REQUEST_TIME - 1,
+        ])
         ->execute();
     }
 

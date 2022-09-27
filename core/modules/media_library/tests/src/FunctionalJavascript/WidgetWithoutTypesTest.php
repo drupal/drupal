@@ -100,8 +100,8 @@ class WidgetWithoutTypesTest extends MediaLibraryTestBase {
     $field_empty_types_message = 'There are no allowed media types configured for this field. <a href="' . $field_empty_types_url->toString() . '">Edit the field settings</a> to select the allowed media types.';
 
     $field_null_types_url = new Url('entity.field_config.node_field_edit_form', [
-        'field_config' => 'node.basic_page.field_null_types_media',
-      ] + $route_bundle_params);
+      'field_config' => 'node.basic_page.field_null_types_media',
+    ] + $route_bundle_params);
     $field_null_types_message = 'There are no allowed media types configured for this field. <a href="' . $field_null_types_url->toString() . '">Edit the field settings</a> to select the allowed media types.';
 
     // Visit a node create page.
