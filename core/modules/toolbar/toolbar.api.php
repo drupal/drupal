@@ -36,7 +36,7 @@ use Drupal\Core\Url;
  *
  * This hook is invoked in Toolbar::preRenderToolbar().
  *
- * @return
+ * @return array
  *   An array of toolbar items, keyed by unique identifiers such as 'home' or
  *   'administration', or the short name of the module implementing the hook.
  *   The corresponding value is a render element of type 'toolbar_item'.

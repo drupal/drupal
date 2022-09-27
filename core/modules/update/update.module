@@ -131,7 +131,7 @@ function update_page_top() {
  * It both enforces the 'administer software updates' permission and the global
  * kill switch for the authorize.php script.
  *
- * @return
+ * @return bool
  *   TRUE if the current user can access the updater menu items; FALSE
  *   otherwise.
  */
@@ -268,7 +268,7 @@ function _update_no_data() {
  *   (optional) Boolean to indicate if this method should refresh automatically
  *   if there's no data. Defaults to FALSE.
  *
- * @return
+ * @return array
  *   Array of data about available releases, keyed by project shortname.
  *
  * @see update_refresh()
@@ -429,7 +429,7 @@ function update_mail($key, &$message, $params) {
  * @param $langcode
  *   (optional) A language code to use. Defaults to NULL.
  *
- * @return
+ * @return \Drupal\Core\StringTranslation\TranslatableMarkup
  *   The properly translated error message for the given key.
  */
 function _update_message_text($msg_type, $msg_reason, $langcode = NULL) {
@@ -604,7 +604,7 @@ function update_storage_clear() {
 /**
  * Returns a short unique identifier for this Drupal installation.
  *
- * @return
+ * @return string
  *   An eight character string uniquely identifying this Drupal installation.
  */
 function _update_manager_unique_identifier() {
@@ -622,7 +622,7 @@ function _update_manager_unique_identifier() {
  *   (optional) Whether to attempt to create the directory if it does not
  *   already exist. Defaults to TRUE.
  *
- * @return
+ * @return string
  *   The full path to the temporary directory where update file archives should
  *   be extracted.
  */
@@ -644,7 +644,7 @@ function _update_manager_extract_directory($create = TRUE) {
  *   (optional) Whether to attempt to create the directory if it does not
  *   already exist. Defaults to TRUE.
  *
- * @return
+ * @return string
  *   The full path to the temporary directory where update file archives should
  *   be cached.
  */

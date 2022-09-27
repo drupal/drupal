@@ -1700,7 +1700,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * @param $parent_keys
    *   An array of parent keys. This will represent the array depth.
    *
-   * @return
+   * @return array
    *   An array of available tokens, with nested keys representative of the array structure.
    */
   protected function getTokenValuesRecursive(array $array, array $parent_keys = []) {

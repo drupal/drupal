@@ -271,7 +271,7 @@ class SessionHttpsTest extends BrowserTestBase {
    * @param $url
    *   A Drupal path such as 'user/login'.
    *
-   * @return
+   * @return string
    *   URL prepared for the https.php mock front controller.
    */
   protected function httpsUrl($url) {
@@ -284,7 +284,7 @@ class SessionHttpsTest extends BrowserTestBase {
    * @param $url
    *   A Drupal path such as 'user/login'.
    *
-   * @return
+   * @return string
    *   URL prepared for the http.php mock front controller.
    */
   protected function httpUrl($url) {

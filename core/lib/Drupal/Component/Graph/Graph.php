@@ -44,7 +44,7 @@ class Graph {
   /**
    * Performs a depth-first search and sort on the directed acyclic graph.
    *
-   * @return
+   * @return array
    *   The given $graph with more secondary keys filled in:
    *   - 'paths': Contains a list of vertices than can be reached on a path from
    *     this vertex.

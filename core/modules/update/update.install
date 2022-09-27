@@ -101,7 +101,7 @@ function update_uninstall() {
  * @param $type
  *   What kind of project this is ('core' or 'contrib').
  *
- * @return
+ * @return array
  *   An array to be included in the nested $requirements array.
  *
  * @see hook_requirements()

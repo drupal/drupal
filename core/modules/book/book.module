@@ -202,7 +202,7 @@ function book_pick_book_nojs_submit($form, FormStateInterface $form_state) {
  * This function is called via Ajax when the selected book is changed on a node
  * or book outline form.
  *
- * @return
+ * @return array
  *   The rendered parent page select element.
  */
 function book_form_update($form, FormStateInterface $form_state) {

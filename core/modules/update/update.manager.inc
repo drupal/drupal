@@ -79,7 +79,7 @@ function update_manager_download_batch_finished($success, $results) {
  *   The update manager operation we're in the middle of. Can be either 'update'
  *   or 'install'. Use to provide operation-specific interface text.
  *
- * @return
+ * @return bool
  *   TRUE if the update manager should continue to the next step in the
  *   workflow, or FALSE if we've hit a fatal configuration and must halt the
  *   workflow.
@@ -307,7 +307,7 @@ function update_manager_batch_project_get($project, $url, &$context) {
  * it. However, it is supported here because it is a common configuration on
  * shared hosting, and there is nothing Drupal can do to prevent it.
  *
- * @return
+ * @return bool
  *   TRUE if local file transfers are allowed on this server, or FALSE if not.
  *
  * @see install_check_requirements()

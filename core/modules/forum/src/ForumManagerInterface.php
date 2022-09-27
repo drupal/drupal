@@ -72,7 +72,7 @@ interface ForumManagerInterface {
    * @param int $uid
    *   The user ID.
    *
-   * @return
+   * @return int
    *   The number of new posts in the forum that have not been read by the user.
    */
   public function unreadTopics($term, $uid);

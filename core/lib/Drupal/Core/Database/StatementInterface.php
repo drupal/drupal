@@ -31,7 +31,7 @@ interface StatementInterface extends \Traversable {
    * @param $options
    *   An array of options for this query.
    *
-   * @return
+   * @return bool
    *   TRUE on success, or FALSE on failure.
    */
   public function execute($args = [], $options = []);
@@ -39,7 +39,7 @@ interface StatementInterface extends \Traversable {
   /**
    * Gets the query string of this statement.
    *
-   * @return
+   * @return string
    *   The query string, in its form with placeholders.
    */
   public function getQueryString();
@@ -55,7 +55,7 @@ interface StatementInterface extends \Traversable {
   /**
    * Returns the number of rows affected by the last SQL statement.
    *
-   * @return
+   * @return int
    *   The number of rows affected by the last DELETE, INSERT, or UPDATE
    *   statement executed or throws \Drupal\Core\Database\RowCountException
    *   if the last executed statement was SELECT.
@@ -97,7 +97,7 @@ interface StatementInterface extends \Traversable {
    * @param $cursor_offset
    *   Not implemented in all database drivers, don't use.
    *
-   * @return
+   * @return array|object
    *   A result, formatted according to $mode.
    */
   public function fetch($mode = NULL, $cursor_orientation = NULL, $cursor_offset = NULL);
@@ -108,7 +108,7 @@ interface StatementInterface extends \Traversable {
    * @param $index
    *   The numeric index of the field to return. Defaults to the first field.
    *
-   * @return
+   * @return mixed
    *   A single field from the next record, or FALSE if there is no next record.
    */
   public function fetchField($index = 0);
@@ -141,7 +141,7 @@ interface StatementInterface extends \Traversable {
    * associative arrays. For some reason \PDOStatement does not have a
    * corresponding array helper method, so one is added.
    *
-   * @return
+   * @return array|bool
    *   An associative array, or FALSE if there is no next row.
    */
   public function fetchAssoc();
@@ -156,7 +156,7 @@ interface StatementInterface extends \Traversable {
    * @param $constructor_arguments
    *   If $mode is \PDO::FETCH_CLASS, the arguments to pass to the constructor.
    *
-   * @return
+   * @return array
    *   An array of results.
    */
   public function fetchAll($mode = NULL, $column_index = NULL, $constructor_arguments = NULL);
@@ -169,7 +169,7 @@ interface StatementInterface extends \Traversable {
    * @param $index
    *   The index of the column number to fetch.
    *
-   * @return
+   * @return array
    *   An indexed array, or an empty array if there is no result set.
    */
   public function fetchCol($index = 0);
@@ -189,7 +189,7 @@ interface StatementInterface extends \Traversable {
    * @param $value_index
    *   The numeric index of the field to use as the array value.
    *
-   * @return
+   * @return array
    *   An associative array, or an empty array if there is no result set.
    */
   public function fetchAllKeyed($key_index = 0, $value_index = 1);
@@ -208,7 +208,7 @@ interface StatementInterface extends \Traversable {
    *   other value it will be an array of objects. By default, the fetch mode
    *   set for the query will be used.
    *
-   * @return
+   * @return array
    *   An associative array, or an empty array if there is no result set.
    */
   public function fetchAllAssoc($key, $fetch = NULL);

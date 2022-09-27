@@ -526,7 +526,7 @@ abstract class StylePluginBase extends PluginBase {
    *   $groupings is an old-style string or if the rendered option is missing
    *   for a grouping instruction.
    *
-   * @return
+   * @return array
    *   The grouped record set.
    *   A nested set structure is generated if multiple grouping fields are used.
    *

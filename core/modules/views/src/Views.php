@@ -137,7 +137,7 @@ class Views {
    * @param array $base
    *   An array of possible base tables.
    *
-   * @return
+   * @return array
    *   A keyed array of in the form of 'base_table' => 'Description'.
    */
   public static function fetchPluginNames($type, $key = NULL, array $base = []) {

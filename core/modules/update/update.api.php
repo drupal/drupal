@@ -114,7 +114,7 @@ function hook_update_status_alter(&$projects) {
  * @param string $directory
  *   The directory that the archive was extracted into.
  *
- * @return
+ * @return array
  *   If there are any problems, return an array of error messages. If there are
  *   no problems, return an empty array.
  *

@@ -54,7 +54,7 @@ interface FloodInterface {
    *   (optional) Unique identifier of the current user. Defaults to the current
    *   user's IP address).
    *
-   * @return
+   * @return bool
    *   TRUE if the user is allowed to proceed. FALSE if they have exceeded the
    *   threshold and should not be allowed to proceed.
    */

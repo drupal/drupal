@@ -73,7 +73,7 @@ class UrlHelper {
    * @param string $parent
    *   Internal use only. Used to build the $query array key for nested items.
    *
-   * @return
+   * @return array
    *   An array containing query parameters.
    */
   public static function filterQueryParameters(array $query, array $exclude = [], $parent = '') {

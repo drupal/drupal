@@ -123,7 +123,7 @@ function shortcut_set_switch_access($account = NULL) {
  *   (optional) The user account whose shortcuts will be returned. Defaults to
  *   the currently logged-in user.
  *
- * @return
+ * @return \Drupal\shortcut\ShortcutSetInterface
  *   An object representing the shortcut set that should be displayed to the
  *   current user. If the user does not have an explicit shortcut set defined,
  *   the default set is returned.
@@ -163,7 +163,7 @@ function shortcut_current_displayed_set($account = NULL) {
  *   If not provided, the function will return the currently logged-in user's
  *   default shortcut set.
  *
- * @return
+ * @return \Drupal\shortcut\ShortcutSetInterface|null
  *   An object representing the default shortcut set.
  */
 function shortcut_default_set($account = NULL) {

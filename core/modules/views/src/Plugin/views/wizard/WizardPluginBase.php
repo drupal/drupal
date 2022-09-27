@@ -514,7 +514,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   An array representing the current version of the #select element within
    *   the form.
    *
-   * @return
+   * @return array|string
    *   The current value of the #select element. A common use for this is to feed
    *   it back into $element['#default_value'] so that the form will be rendered
    *   with the correct value selected.

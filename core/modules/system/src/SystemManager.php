@@ -127,7 +127,7 @@ class SystemManager {
    *   An array of requirements, in the same format as is returned by
    *   hook_requirements().
    *
-   * @return
+   * @return int
    *   The highest severity in the array.
    */
   public function getMaxSeverity(&$requirements) {

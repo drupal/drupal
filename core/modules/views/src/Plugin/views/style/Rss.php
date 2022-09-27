@@ -84,7 +84,7 @@ class Rss extends StylePluginBase {
   /**
    * Return an array of additional XHTML elements to add to the channel.
    *
-   * @return
+   * @return array
    *   A render array.
    */
   protected function getChannelElements() {

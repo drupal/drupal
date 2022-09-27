@@ -18,7 +18,7 @@ abstract class FieldTestBase extends BrowserTestBase {
    * @param $cardinality
    *   Number of values to generate.
    *
-   * @return
+   * @return array
    *   An array of random values, in the format expected for field values.
    */
   public function _generateTestFieldValues($cardinality) {

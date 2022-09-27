@@ -113,7 +113,7 @@ function _drupal_error_handler_real($error_level, $message, $filename, $line) {
  * @param $error
  *   Optional error to examine for ERROR_REPORTING_DISPLAY_SOME.
  *
- * @return
+ * @return bool
  *   TRUE if an error should be displayed.
  */
 function error_displayable($error = NULL) {

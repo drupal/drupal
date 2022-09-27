@@ -574,7 +574,7 @@ function content_translation_enable_widget($entity_type, $bundle, array &$form, 
  * @param array $element
  *   Form API element.
  *
- * @return
+ * @return array
  *   Processed language configuration element.
  */
 function content_translation_language_configuration_element_process(array $element, FormStateInterface $form_state, array &$form) {

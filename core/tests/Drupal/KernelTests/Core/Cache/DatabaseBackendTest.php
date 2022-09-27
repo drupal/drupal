@@ -28,7 +28,7 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
   /**
    * Creates a new instance of DatabaseBackend.
    *
-   * @return
+   * @return \Drupal\Core\Cache\DatabaseBackend
    *   A new DatabaseBackend object.
    */
   protected function createCacheBackend($bin) {

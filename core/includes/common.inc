@@ -360,7 +360,7 @@ function drupal_attach_tabledrag(&$element, array $options) {
  * @param $element
  *   The element to be hidden.
  *
- * @return
+ * @return array
  *   The element.
  *
  * @see \Drupal\Core\Render\RendererInterface
@@ -390,7 +390,7 @@ function hide(&$element) {
  * @param $element
  *   The element to be shown.
  *
- * @return
+ * @return array
  *   The element.
  *
  * @see \Drupal\Core\Render\RendererInterface
@@ -564,7 +564,7 @@ function drupal_get_updaters() {
 /**
  * Assembles the Drupal FileTransfer registry.
  *
- * @return
+ * @return array
  *   The Drupal FileTransfer class registry.
  *
  * @see \Drupal\Core\FileTransfer\FileTransfer
