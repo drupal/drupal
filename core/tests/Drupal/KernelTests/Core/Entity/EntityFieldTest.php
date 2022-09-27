@@ -53,6 +53,9 @@ class EntityFieldTest extends EntityKernelTestBase {
    */
   protected $entityFieldText;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

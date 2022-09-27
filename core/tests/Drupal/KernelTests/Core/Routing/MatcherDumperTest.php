@@ -33,6 +33,9 @@ class MatcherDumperTest extends KernelTestBase {
    */
   protected $state;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

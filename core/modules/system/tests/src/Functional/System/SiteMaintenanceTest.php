@@ -39,6 +39,9 @@ class SiteMaintenanceTest extends BrowserTestBase {
    */
   protected User $user;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

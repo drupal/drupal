@@ -39,6 +39,9 @@ abstract class TourTestBasic extends TourTestBase {
    */
   protected $permissions = ['access tour'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

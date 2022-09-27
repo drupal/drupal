@@ -33,6 +33,9 @@ class ImageTest extends KernelTestBase {
    */
   protected $testImages;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

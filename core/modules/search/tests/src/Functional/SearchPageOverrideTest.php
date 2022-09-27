@@ -31,6 +31,9 @@ class SearchPageOverrideTest extends BrowserTestBase {
    */
   public $searchUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

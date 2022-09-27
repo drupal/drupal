@@ -65,6 +65,9 @@ class PagePreviewTest extends NodeTestBase {
    */
   protected Term $term;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->addDefaultCommentField('node', 'page');

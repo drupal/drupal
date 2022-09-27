@@ -19,6 +19,9 @@ class UserSaveStatusTest extends KernelTestBase {
    */
   protected static $modules = ['system', 'user', 'field'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('user');

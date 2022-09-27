@@ -27,6 +27,9 @@ class EditorManagerTest extends KernelTestBase {
    */
   protected $editorManager;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

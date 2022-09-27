@@ -52,6 +52,9 @@ class EntityCrudHookTest extends EntityKernelTestBase {
 
   protected $ids = [];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

@@ -45,6 +45,9 @@ class HelpTest extends BrowserTestBase {
    */
   protected $anyUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

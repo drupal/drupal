@@ -76,6 +76,9 @@ class EditorSecurityTest extends BrowserTestBase {
    */
   protected $privilegedUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

@@ -57,6 +57,9 @@ class LocalActionDefaultTest extends UnitTestCase {
    */
   protected $routeProvider;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

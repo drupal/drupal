@@ -37,6 +37,9 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
    */
   protected $projectTitle;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $admin_user = $this->drupalCreateUser([

@@ -28,6 +28,9 @@ class SearchNodeDiacriticsTest extends BrowserTestBase {
    */
   public $testUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

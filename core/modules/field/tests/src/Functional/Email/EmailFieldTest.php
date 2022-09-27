@@ -40,6 +40,9 @@ class EmailFieldTest extends BrowserTestBase {
    */
   protected $field;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

@@ -23,6 +23,9 @@ class EntityReferenceSelectionSortTest extends EntityKernelTestBase {
    */
   protected static $modules = ['node'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

@@ -20,6 +20,9 @@ class RenderElementTypesTest extends KernelTestBase {
    */
   protected static $modules = ['system', 'router_test'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->installConfig(['system']);

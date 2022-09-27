@@ -20,6 +20,9 @@ class YamlTest extends TestCase {
    */
   protected $mockParser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->mockParser = $this->getMockBuilder('\stdClass')
@@ -28,6 +31,9 @@ class YamlTest extends TestCase {
     YamlParserProxy::setMock($this->mockParser);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function tearDown(): void {
     YamlParserProxy::setMock(NULL);
     parent::tearDown();

@@ -21,6 +21,9 @@ class HandlerAliasTest extends ViewsKernelTestBase {
    */
   public static $testViews = ['test_filter', 'test_alias'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp($import_test_views = TRUE): void {
     parent::setUp();
 

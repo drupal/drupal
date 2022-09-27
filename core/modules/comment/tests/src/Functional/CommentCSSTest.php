@@ -24,6 +24,9 @@ class CommentCSSTest extends CommentTestBase {
    */
   protected $defaultTheme = 'starterkit_theme';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

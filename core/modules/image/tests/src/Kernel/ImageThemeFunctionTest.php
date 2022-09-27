@@ -51,6 +51,9 @@ class ImageThemeFunctionTest extends KernelTestBase {
    */
   protected $imageFactory;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

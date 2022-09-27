@@ -27,6 +27,9 @@ class ConfigImporterTest extends KernelTestBase {
    */
   protected static $modules = ['config_test', 'system', 'config_import_test'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

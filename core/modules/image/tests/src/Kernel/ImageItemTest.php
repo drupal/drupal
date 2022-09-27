@@ -40,6 +40,9 @@ class ImageItemTest extends FieldKernelTestBase {
    */
   protected $imageFactory;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

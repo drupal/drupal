@@ -54,6 +54,9 @@ abstract class CommentTestBase extends BrowserTestBase {
    */
   protected $node;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

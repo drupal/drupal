@@ -57,6 +57,9 @@ class ContextualDynamicContextTest extends BrowserTestBase {
     'menu_test',
   ];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

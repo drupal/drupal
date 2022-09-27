@@ -17,6 +17,9 @@ class LockBackendAbstractTest extends UnitTestCase {
    */
   protected $lock;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     $this->lock = $this->getMockForAbstractClass('Drupal\Core\Lock\LockBackendAbstract');
   }

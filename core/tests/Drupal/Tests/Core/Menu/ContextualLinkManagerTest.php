@@ -62,6 +62,9 @@ class ContextualLinkManagerTest extends UnitTestCase {
    */
   protected $account;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     $language_manager = $this->createMock(LanguageManagerInterface::class);
     $language_manager->expects($this->any())

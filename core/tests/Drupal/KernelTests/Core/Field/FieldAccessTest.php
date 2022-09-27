@@ -38,6 +38,9 @@ class FieldAccessTest extends KernelTestBase {
    */
   protected $activeUid;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     // Install field configuration.

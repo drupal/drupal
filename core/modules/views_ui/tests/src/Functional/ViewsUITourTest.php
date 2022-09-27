@@ -38,6 +38,9 @@ class ViewsUITourTest extends TourTestBase {
    */
   protected static $modules = ['views_ui', 'tour', 'language', 'locale'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->adminUser = $this->drupalCreateUser([

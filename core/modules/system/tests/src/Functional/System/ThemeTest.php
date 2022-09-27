@@ -46,6 +46,9 @@ class ThemeTest extends BrowserTestBase {
    */
   protected Node $node;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

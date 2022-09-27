@@ -59,6 +59,9 @@ class OptionsFieldUITest extends FieldTestBase {
    */
   protected $adminPath;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

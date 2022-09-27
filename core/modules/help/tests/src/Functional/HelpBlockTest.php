@@ -33,6 +33,9 @@ class HelpBlockTest extends BrowserTestBase {
    */
   protected $helpBlock;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->helpBlock = $this->placeBlock('help_block');

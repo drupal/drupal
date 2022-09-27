@@ -30,6 +30,9 @@ class FrontPageTest extends BrowserTestBase {
    */
   protected $nodePath;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
