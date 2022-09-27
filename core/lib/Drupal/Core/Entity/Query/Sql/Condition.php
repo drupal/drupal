@@ -26,6 +26,13 @@ class Condition extends ConditionBase {
   protected $query;
 
   /**
+   * The current SQL query, set by parent condition compile() method calls.
+   *
+   * @var \Drupal\Core\Database\Query\SelectInterface
+   */
+  protected $sqlQuery;
+
+  /**
    * {@inheritdoc}
    */
   public function compile($conditionContainer) {
@@ -35,13 +42,13 @@ class Condition extends ConditionBase {
     // SQL query object is only necessary to pass to Query::addField() so it
     // can join tables as necessary. On the other hand, conditions need to be
     // added to the $conditionContainer object to keep grouping.
-    $sql_query = $conditionContainer instanceof SelectInterface ? $conditionContainer : $conditionContainer->sqlQuery;
+    $sql_query = $conditionContainer instanceof SelectInterface ? $conditionContainer : $this->sqlQuery;
     $tables = $this->query->getTables($sql_query);
     foreach ($this->conditions as $condition) {
       if ($condition['field'] instanceof ConditionInterface) {
         $sql_condition = $sql_query->getConnection()->condition($condition['field']->getConjunction());
         // Add the SQL query to the object before calling this method again.
-        $sql_condition->sqlQuery = $sql_query;
+        $condition['field']->sqlQuery = $sql_query;
         $condition['field']->nestedInsideOrCondition = $this->nestedInsideOrCondition || strtoupper($this->conjunction) === 'OR';
         $condition['field']->compile($sql_condition);
         $conditionContainer->condition($sql_condition);

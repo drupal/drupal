@@ -13,6 +13,13 @@ use Drupal\Core\Entity\Query\QueryBase;
 class ConditionAggregate extends ConditionAggregateBase {
 
   /**
+   * The current SQL query, set by parent condition compile() method calls.
+   *
+   * @var \Drupal\Core\Database\Query\SelectInterface
+   */
+  protected $sqlQuery;
+
+  /**
    * {@inheritdoc}
    */
   public function compile($conditionContainer) {
@@ -21,13 +28,13 @@ class ConditionAggregate extends ConditionAggregateBase {
     // SQL query object is only necessary to pass to Query::addField() so it
     // can join tables as necessary. On the other hand, conditions need to be
     // added to the $conditionContainer object to keep grouping.
-    $sql_query = ($conditionContainer instanceof SelectInterface) ? $conditionContainer : $conditionContainer->sqlQuery;
+    $sql_query = ($conditionContainer instanceof SelectInterface) ? $conditionContainer : $this->sqlQuery;
     $tables = new Tables($sql_query);
     foreach ($this->conditions as $condition) {
       if ($condition['field'] instanceof ConditionAggregateInterface) {
         $sql_condition = $sql_query->getConnection()->condition($condition['field']->getConjunction());
         // Add the SQL query to the object before calling this method again.
-        $sql_condition->sqlQuery = $sql_query;
+        $condition['field']->sqlQuery = $sql_query;
         $condition['field']->compile($sql_condition);
         $sql_query->condition($sql_condition);
       }
