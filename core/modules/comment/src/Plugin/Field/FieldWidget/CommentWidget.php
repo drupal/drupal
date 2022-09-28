@@ -29,22 +29,22 @@ class CommentWidget extends WidgetBase {
 
     $element['status'] = [
       '#type' => 'radios',
-      '#title' => t('Comments'),
+      '#title' => $this->t('Comments'),
       '#title_display' => 'invisible',
       '#default_value' => $items->status,
       '#options' => [
-        CommentItemInterface::OPEN => t('Open'),
-        CommentItemInterface::CLOSED => t('Closed'),
-        CommentItemInterface::HIDDEN => t('Hidden'),
+        CommentItemInterface::OPEN => $this->t('Open'),
+        CommentItemInterface::CLOSED => $this->t('Closed'),
+        CommentItemInterface::HIDDEN => $this->t('Hidden'),
       ],
       CommentItemInterface::OPEN => [
-        '#description' => t('Users with the "Post comments" permission can post comments.'),
+        '#description' => $this->t('Users with the "Post comments" permission can post comments.'),
       ],
       CommentItemInterface::CLOSED => [
-        '#description' => t('Users cannot post comments, but existing comments will be displayed.'),
+        '#description' => $this->t('Users cannot post comments, but existing comments will be displayed.'),
       ],
       CommentItemInterface::HIDDEN => [
-        '#description' => t('Comments are hidden from view.'),
+        '#description' => $this->t('Comments are hidden from view.'),
       ],
     ];
     // If the entity doesn't have any comments, the "hidden" option makes no
@@ -53,7 +53,7 @@ class CommentWidget extends WidgetBase {
     if (!$this->isDefaultValueWidget($form_state) && !$items->comment_count) {
       $element['status'][CommentItemInterface::HIDDEN]['#access'] = FALSE;
       // Also adjust the description of the "closed" option.
-      $element['status'][CommentItemInterface::CLOSED]['#description'] = t('Users cannot post comments.');
+      $element['status'][CommentItemInterface::CLOSED]['#description'] = $this->t('Users cannot post comments.');
     }
     // If the advanced settings tabs-set is available (normally rendered in the
     // second column on wide-resolutions), place the field as a details element

@@ -312,7 +312,7 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
           'warning' => [$css_warning],
         ],
         '#status_headings' => [
-          'warning' => t('Warning message'),
+          'warning' => $this->t('Warning message'),
         ],
       ];
     }

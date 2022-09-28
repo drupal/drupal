@@ -34,7 +34,7 @@ class TRexEditor extends EditorBase {
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['stumpy_arms'] = [
-      '#title' => t('Stumpy arms'),
+      '#title' => $this->t('Stumpy arms'),
       '#type' => 'checkbox',
       '#default_value' => TRUE,
     ];

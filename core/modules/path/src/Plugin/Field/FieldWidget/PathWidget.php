@@ -56,7 +56,7 @@ class PathWidget extends WidgetBase {
     if (isset($form['advanced'])) {
       $element += [
         '#type' => 'details',
-        '#title' => t('URL path settings'),
+        '#title' => $this->t('URL path settings'),
         '#open' => !empty($items[$delta]->alias),
         '#group' => 'advanced',
         '#access' => $entity->get('path')->access('edit'),

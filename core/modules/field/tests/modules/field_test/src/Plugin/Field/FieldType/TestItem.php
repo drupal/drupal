@@ -3,6 +3,7 @@
 namespace Drupal\field_test\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\Field\FieldItemBase;
@@ -47,7 +48,7 @@ class TestItem extends FieldItemBase {
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['value'] = DataDefinition::create('integer')
-      ->setLabel(t('Test integer value'))
+      ->setLabel(new TranslatableMarkup('Test integer value'))
       ->setRequired(TRUE);
 
     return $properties;
@@ -76,10 +77,10 @@ class TestItem extends FieldItemBase {
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $form['test_field_storage_setting'] = [
       '#type' => 'textfield',
-      '#title' => t('Field test field storage setting'),
+      '#title' => $this->t('Field test field storage setting'),
       '#default_value' => $this->getSetting('test_field_storage_setting'),
       '#required' => FALSE,
-      '#description' => t('A dummy form element to simulate field storage setting.'),
+      '#description' => $this->t('A dummy form element to simulate field storage setting.'),
     ];
 
     return $form;
@@ -91,10 +92,10 @@ class TestItem extends FieldItemBase {
   public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
     $form['test_field_setting'] = [
       '#type' => 'textfield',
-      '#title' => t('Field test field setting'),
+      '#title' => $this->t('Field test field setting'),
       '#default_value' => $this->getSetting('test_field_setting'),
       '#required' => FALSE,
-      '#description' => t('A dummy form element to simulate field setting.'),
+      '#description' => $this->t('A dummy form element to simulate field setting.'),
     ];
 
     return $form;
@@ -119,7 +120,7 @@ class TestItem extends FieldItemBase {
       'value' => [
         'TestField' => [
           'value' => -1,
-          'message' => t('%name does not accept the value @value.', ['%name' => $this->getFieldDefinition()->getLabel(), '@value' => -1]),
+          'message' => $this->t('%name does not accept the value @value.', ['%name' => $this->getFieldDefinition()->getLabel(), '@value' => -1]),
         ],
       ],
     ]);

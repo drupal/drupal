@@ -72,7 +72,7 @@ class InOperator extends FilterPluginBase {
       }
     }
     else {
-      $this->valueOptions = [t('Yes'), $this->t('No')];
+      $this->valueOptions = [$this->t('Yes'), $this->t('No')];
     }
 
     return $this->valueOptions;

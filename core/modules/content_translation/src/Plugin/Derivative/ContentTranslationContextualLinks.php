@@ -5,6 +5,7 @@ namespace Drupal\content_translation\Plugin\Derivative;
 use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\content_translation\ContentTranslationManagerInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -13,6 +14,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see \Drupal\content_translation\Plugin\Menu\ContextualLink\ContentTranslationContextualLinks
  */
 class ContentTranslationContextualLinks extends DeriverBase implements ContainerDeriverInterface {
+
+  use StringTranslationTrait;
 
   /**
    * The content translation manager.
@@ -46,7 +49,7 @@ class ContentTranslationContextualLinks extends DeriverBase implements Container
   public function getDerivativeDefinitions($base_plugin_definition) {
     // Create contextual links for translatable entity types.
     foreach ($this->contentTranslationManager->getSupportedEntityTypes() as $entity_type_id => $entity_type) {
-      $this->derivatives[$entity_type_id]['title'] = t('Translate');
+      $this->derivatives[$entity_type_id]['title'] = $this->t('Translate');
       $this->derivatives[$entity_type_id]['route_name'] = "entity.$entity_type_id.content_translation_overview";
       $this->derivatives[$entity_type_id]['group'] = $entity_type_id;
     }

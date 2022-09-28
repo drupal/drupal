@@ -1741,7 +1741,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         ];
 
         $options = [];
-        $optgroup_arguments = (string) t('Arguments');
+        $optgroup_arguments = (string) $this->t('Arguments');
         foreach ($this->view->display_handler->getHandlers('argument') as $arg => $handler) {
           $options[$optgroup_arguments]["{{ arguments.$arg }}"] = $this->t('@argument title', ['@argument' => $handler->adminLabel()]);
           $options[$optgroup_arguments]["{{ raw_arguments.$arg }}"] = $this->t('@argument input', ['@argument' => $handler->adminLabel()]);

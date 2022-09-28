@@ -62,7 +62,7 @@ class OptionsSelectWidget extends OptionsWidgetBase {
     if ($this->multiple) {
       // Multiple select: add a 'none' option for non-required fields.
       if (!$this->required) {
-        return t('- None -');
+        return $this->t('- None -');
       }
     }
     else {
@@ -70,10 +70,10 @@ class OptionsSelectWidget extends OptionsWidgetBase {
       // and a 'select a value' option for required fields that do not come
       // with a value selected.
       if (!$this->required) {
-        return t('- None -');
+        return $this->t('- None -');
       }
       if (!$this->has_value) {
-        return t('- Select a value -');
+        return $this->t('- Select a value -');
       }
     }
   }

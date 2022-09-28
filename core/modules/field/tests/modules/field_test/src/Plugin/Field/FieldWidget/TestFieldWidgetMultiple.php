@@ -40,8 +40,8 @@ class TestFieldWidgetMultiple extends WidgetBase {
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $element['test_widget_setting_multiple'] = [
       '#type' => 'textfield',
-      '#title' => t('Field test field widget setting'),
-      '#description' => t('A dummy form element to simulate field widget setting.'),
+      '#title' => $this->t('Field test field widget setting'),
+      '#description' => $this->t('A dummy form element to simulate field widget setting.'),
       '#default_value' => $this->getSetting('test_widget_setting_multiple'),
       '#required' => FALSE,
     ];
@@ -53,7 +53,7 @@ class TestFieldWidgetMultiple extends WidgetBase {
    */
   public function settingsSummary() {
     $summary = [];
-    $summary[] = t('@setting: @value', ['@setting' => 'test_widget_setting_multiple', '@value' => $this->getSetting('test_widget_setting_multiple')]);
+    $summary[] = $this->t('@setting: @value', ['@setting' => 'test_widget_setting_multiple', '@value' => $this->getSetting('test_widget_setting_multiple')]);
     return $summary;
   }
 

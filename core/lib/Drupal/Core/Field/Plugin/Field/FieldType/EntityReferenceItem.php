@@ -362,7 +362,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $element['target_type'] = [
       '#type' => 'select',
-      '#title' => t('Type of item to reference'),
+      '#title' => $this->t('Type of item to reference'),
       '#default_value' => $this->getSetting('target_type'),
       '#required' => TRUE,
       '#disabled' => $has_data,
@@ -413,7 +413,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
     ];
     $form['handler'] = [
       '#type' => 'details',
-      '#title' => t('Reference type'),
+      '#title' => $this->t('Reference type'),
       '#open' => TRUE,
       '#tree' => TRUE,
       '#process' => [[static::class, 'formProcessMergeParent']],
@@ -421,7 +421,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
 
     $form['handler']['handler'] = [
       '#type' => 'select',
-      '#title' => t('Reference method'),
+      '#title' => $this->t('Reference method'),
       '#options' => $handlers_options,
       '#default_value' => $field->getSetting('handler'),
       '#required' => TRUE,
@@ -430,7 +430,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
     ];
     $form['handler']['handler_submit'] = [
       '#type' => 'submit',
-      '#value' => t('Change handler'),
+      '#value' => $this->t('Change handler'),
       '#limit_validation_errors' => [],
       '#attributes' => [
         'class' => ['js-hide'],

@@ -16,16 +16,16 @@ abstract class NumericFormatterBase extends FormatterBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $options = [
-      ''  => t('- None -'),
-      '.' => t('Decimal point'),
-      ',' => t('Comma'),
-      ' ' => t('Space'),
-      chr(8201) => t('Thin space'),
-      "'" => t('Apostrophe'),
+      ''  => $this->t('- None -'),
+      '.' => $this->t('Decimal point'),
+      ',' => $this->t('Comma'),
+      ' ' => $this->t('Space'),
+      chr(8201) => $this->t('Thin space'),
+      "'" => $this->t('Apostrophe'),
     ];
     $elements['thousand_separator'] = [
       '#type' => 'select',
-      '#title' => t('Thousand marker'),
+      '#title' => $this->t('Thousand marker'),
       '#options' => $options,
       '#default_value' => $this->getSetting('thousand_separator'),
       '#weight' => 0,
@@ -33,7 +33,7 @@ abstract class NumericFormatterBase extends FormatterBase {
 
     $elements['prefix_suffix'] = [
       '#type' => 'checkbox',
-      '#title' => t('Display prefix and suffix'),
+      '#title' => $this->t('Display prefix and suffix'),
       '#default_value' => $this->getSetting('prefix_suffix'),
       '#weight' => 10,
     ];
@@ -49,7 +49,7 @@ abstract class NumericFormatterBase extends FormatterBase {
 
     $summary[] = $this->numberFormat(1234.1234567890);
     if ($this->getSetting('prefix_suffix')) {
-      $summary[] = t('Display with prefix and suffix.');
+      $summary[] = $this->t('Display with prefix and suffix.');
     }
 
     return $summary;

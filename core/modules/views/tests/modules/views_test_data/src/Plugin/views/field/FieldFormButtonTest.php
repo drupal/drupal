@@ -46,7 +46,7 @@ class FieldFormButtonTest extends FieldPluginBase {
     foreach ($this->view->result as $row_index => $row) {
       $form[$this->options['id']][$row_index] = [
         '#type' => 'submit',
-        '#value' => t('Test Button'),
+        '#value' => $this->t('Test Button'),
         '#name' => 'test-button-' . $row_index,
         '#test_button' => TRUE,
         '#row_index' => $row_index,

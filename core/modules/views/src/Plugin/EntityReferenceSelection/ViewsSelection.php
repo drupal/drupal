@@ -10,6 +10,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Drupal\views\Views;
@@ -321,7 +322,7 @@ class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPlug
       [$view, $display] = explode(':', $element['view_and_display']['#value']);
     }
     else {
-      $form_state->setError($element, t('The views entity selection mode requires a view.'));
+      $form_state->setError($element, new TranslatableMarkup('The views entity selection mode requires a view.'));
       return;
     }
 

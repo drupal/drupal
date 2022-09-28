@@ -34,7 +34,7 @@ class EmptySource extends SourcePluginBase {
    */
   public function fields() {
     return [
-      'id' => t('ID'),
+      'id' => $this->t('ID'),
     ];
   }
 
