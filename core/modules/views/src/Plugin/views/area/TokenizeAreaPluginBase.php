@@ -48,8 +48,8 @@ abstract class TokenizeAreaPluginBase extends AreaPluginBase {
 
     // Get a list of the available fields and arguments for token replacement.
     $options = [];
-    $optgroup_arguments = (string) t('Arguments');
-    $optgroup_fields = (string) t('Fields');
+    $optgroup_arguments = (string) $this->t('Arguments');
+    $optgroup_fields = (string) $this->t('Fields');
     foreach ($this->view->display_handler->getHandlers('field') as $field => $handler) {
       $options[$optgroup_fields]["{{ $field }}"] = $handler->adminLabel();
     }

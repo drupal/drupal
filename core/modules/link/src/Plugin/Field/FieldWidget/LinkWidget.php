@@ -2,6 +2,7 @@
 
 namespace Drupal\link\Plugin\Field\FieldWidget;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\Core\Entity\Element\EntityAutocomplete;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -71,7 +72,7 @@ class LinkWidget extends WidgetBase {
       $displayable_string = $uri_reference;
     }
     elseif ($scheme === 'entity') {
-      [$entity_type, $entity_id] = explode('/', substr($uri, 7), 2);
+      list($entity_type, $entity_id) = explode('/', substr($uri, 7), 2);
       // Show the 'entity:' URI as the entity autocomplete would.
       // @todo Support entity types other than 'node'. Will be fixed in
       //   https://www.drupal.org/node/2423093.
@@ -147,7 +148,7 @@ class LinkWidget extends WidgetBase {
     // @todo '<front>' is valid input for BC reasons, may be removed by
     //   https://www.drupal.org/node/2421941
     if (parse_url($uri, PHP_URL_SCHEME) === 'internal' && !in_array($element['#value'][0], ['/', '?', '#'], TRUE) && substr($element['#value'], 0, 7) !== '<front>') {
-      $form_state->setError($element, t('Manually entered paths should start with one of the following characters: / ? #'));
+      $form_state->setError($element, new TranslatableMarkup('Manually entered paths should start with one of the following characters: / ? #'));
       return;
     }
   }
@@ -159,9 +160,9 @@ class LinkWidget extends WidgetBase {
    */
   public static function validateTitleElement(&$element, FormStateInterface $form_state, $form) {
     if ($element['uri']['#value'] !== '' && $element['title']['#value'] === '') {
-      // We expect the field name placeholder value to be wrapped in t() here,
+      // We expect the field name placeholder value to be wrapped in $this->t() here,
       // so it won't be escaped again as it's already marked safe.
-      $form_state->setError($element['title'], t('@title field is required if there is @uri input.', ['@title' => $element['title']['#title'], '@uri' => $element['uri']['#title']]));
+      $form_state->setError($element['title'], new TranslatableMarkup('@title field is required if there is @uri input.', ['@title' => $element['title']['#title'], '@uri' => $element['uri']['#title']]));
     }
   }
 
@@ -172,7 +173,7 @@ class LinkWidget extends WidgetBase {
    */
   public static function validateTitleNoLink(&$element, FormStateInterface $form_state, $form) {
     if ($element['uri']['#value'] === '' && $element['title']['#value'] !== '') {
-      $form_state->setError($element['uri'], t('The @uri field is required when the @title field is specified.', ['@title' => $element['title']['#title'], '@uri' => $element['uri']['#title']]));
+      $form_state->setError($element['uri'], new TranslatableMarkup('The @uri field is required when the @title field is specified.', ['@title' => $element['title']['#title'], '@uri' => $element['uri']['#title']]));
     }
   }
 

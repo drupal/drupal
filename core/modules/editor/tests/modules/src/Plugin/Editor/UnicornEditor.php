@@ -35,7 +35,7 @@ class UnicornEditor extends EditorBase {
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['ponies_too'] = [
-      '#title' => t('Pony mode'),
+      '#title' => $this->t('Pony mode'),
       '#type' => 'checkbox',
       '#default_value' => TRUE,
     ];

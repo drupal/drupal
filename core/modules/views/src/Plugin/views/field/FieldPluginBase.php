@@ -14,6 +14,7 @@ use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Twig\Environment;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * @defgroup views_field_handlers Views field handler plugins
@@ -891,8 +892,8 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
       // Setup the tokens for fields.
       $previous = $this->getPreviousFieldLabels();
-      $optgroup_arguments = (string) t('Arguments');
-      $optgroup_fields = (string) t('Fields');
+      $optgroup_arguments = (string) $this->t('Arguments');
+      $optgroup_fields = (string) $this->t('Fields');
       foreach ($previous as $id => $label) {
         $options[$optgroup_fields]["{{ $id }}"] = substr(strrchr($label, ":"), 2);
       }
@@ -1834,7 +1835,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $value = rtrim(preg_replace('/(?:<(?!.+>)|&(?!.+;)).*$/us', '', $value));
 
       if (!empty($alter['ellipsis'])) {
-        $value .= t('…');
+        $value .= new TranslatableMarkup('…');
       }
     }
     if (!empty($alter['html'])) {

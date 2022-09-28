@@ -37,7 +37,7 @@ class TestFieldMultipleFormatter extends FormatterBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $element['test_formatter_setting_multiple'] = [
-      '#title' => t('Setting'),
+      '#title' => $this->t('Setting'),
       '#type' => 'textfield',
       '#size' => 20,
       '#default_value' => $this->getSetting('test_formatter_setting_multiple'),
@@ -51,7 +51,7 @@ class TestFieldMultipleFormatter extends FormatterBase {
    */
   public function settingsSummary() {
     $summary = [];
-    $summary[] = t('@setting: @value', ['@setting' => 'test_formatter_setting_multiple', '@value' => $this->getSetting('test_formatter_setting_multiple')]);
+    $summary[] = $this->t('@setting: @value', ['@setting' => 'test_formatter_setting_multiple', '@value' => $this->getSetting('test_formatter_setting_multiple')]);
     return $summary;
   }
 

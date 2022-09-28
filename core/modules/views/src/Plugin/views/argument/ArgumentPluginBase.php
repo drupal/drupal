@@ -420,8 +420,8 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
 
     foreach ($this->view->display_handler->getHandlers('argument') as $arg => $handler) {
       /** @var \Drupal\views\Plugin\views\argument\ArgumentPluginBase $handler */
-      $options[(string) t('Arguments')]["{{ arguments.$arg }}"] = $this->t('@argument title', ['@argument' => $handler->adminLabel()]);
-      $options[(string) t('Arguments')]["{{ raw_arguments.$arg }}"] = $this->t('@argument input', ['@argument' => $handler->adminLabel()]);
+      $options[(string) $this->t('Arguments')]["{{ arguments.$arg }}"] = $this->t('@argument title', ['@argument' => $handler->adminLabel()]);
+      $options[(string) $this->t('Arguments')]["{{ raw_arguments.$arg }}"] = $this->t('@argument input', ['@argument' => $handler->adminLabel()]);
     }
 
     // We have some options, so make a list.

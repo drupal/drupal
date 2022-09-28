@@ -58,7 +58,7 @@ class StringItem extends StringItemBase {
         'value' => [
           'Length' => [
             'max' => $max_length,
-            'maxMessage' => t('%name: may not be longer than @max characters.', ['%name' => $this->getFieldDefinition()->getLabel(), '@max' => $max_length]),
+            'maxMessage' => $this->t('%name: may not be longer than @max characters.', ['%name' => $this->getFieldDefinition()->getLabel(), '@max' => $max_length]),
           ],
         ],
       ]);
@@ -84,10 +84,10 @@ class StringItem extends StringItemBase {
 
     $element['max_length'] = [
       '#type' => 'number',
-      '#title' => t('Maximum length'),
+      '#title' => $this->t('Maximum length'),
       '#default_value' => $this->getSetting('max_length'),
       '#required' => TRUE,
-      '#description' => t('The maximum length of the field in characters.'),
+      '#description' => $this->t('The maximum length of the field in characters.'),
       '#min' => 1,
       '#disabled' => $has_data,
     ];

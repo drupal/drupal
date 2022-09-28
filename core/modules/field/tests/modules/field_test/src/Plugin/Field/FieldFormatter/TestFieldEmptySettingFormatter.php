@@ -34,7 +34,7 @@ class TestFieldEmptySettingFormatter extends FormatterBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $element['field_empty_setting'] = [
-      '#title' => t('Setting'),
+      '#title' => $this->t('Setting'),
       '#type' => 'textfield',
       '#size' => 20,
       '#default_value' => $this->getSetting('field_empty_setting'),
@@ -50,7 +50,7 @@ class TestFieldEmptySettingFormatter extends FormatterBase {
     $summary = [];
     $setting = $this->getSetting('field_empty_setting');
     if (!empty($setting)) {
-      $summary[] = t('Default empty setting now has a value.');
+      $summary[] = $this->t('Default empty setting now has a value.');
     }
     return $summary;
   }

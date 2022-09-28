@@ -5,6 +5,7 @@ namespace Drupal\Core\Field\Plugin\Field\FieldType;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines the 'integer' field type.
@@ -49,7 +50,7 @@ class IntegerItem extends NumericItemBase {
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['value'] = DataDefinition::create('integer')
-      ->setLabel(t('Integer value'))
+      ->setLabel(new TranslatableMarkup('Integer value'))
       ->setRequired(TRUE);
 
     return $properties;
@@ -69,7 +70,7 @@ class IntegerItem extends NumericItemBase {
         'value' => [
           'Range' => [
             'min' => 0,
-            'minMessage' => t('%name: The integer must be larger or equal to %min.', [
+            'minMessage' => $this->t('%name: The integer must be larger or equal to %min.', [
               '%name' => $this->getFieldDefinition()->getLabel(),
               '%min' => 0,
             ]),

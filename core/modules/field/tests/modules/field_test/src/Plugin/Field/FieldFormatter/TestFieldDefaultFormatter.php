@@ -36,7 +36,7 @@ class TestFieldDefaultFormatter extends FormatterBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $element['test_formatter_setting'] = [
-      '#title' => t('Setting'),
+      '#title' => $this->t('Setting'),
       '#type' => 'textfield',
       '#size' => 20,
       '#default_value' => $this->getSetting('test_formatter_setting'),
@@ -50,7 +50,7 @@ class TestFieldDefaultFormatter extends FormatterBase {
    */
   public function settingsSummary() {
     $summary = [];
-    $summary[] = t('@setting: @value', ['@setting' => 'test_formatter_setting', '@value' => $this->getSetting('test_formatter_setting')]);
+    $summary[] = $this->t('@setting: @value', ['@setting' => 'test_formatter_setting', '@value' => $this->getSetting('test_formatter_setting')]);
     return $summary;
   }
 

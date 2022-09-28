@@ -678,7 +678,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
       $fields['destid' . ++$count] = $dest_id;
     }
     if ($count && $count != count($this->destinationIdFields())) {
-      $this->message->display(t('Could not save to map table due to missing destination id values'), 'error');
+      $this->message->display($this->t('Could not save to map table due to missing destination id values'), 'error');
       return;
     }
     if ($this->migration->getTrackLastImported()) {

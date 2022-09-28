@@ -164,6 +164,9 @@
   <rule ref="DrupalPractice.Commenting.ExpectedException"/>
   <rule ref="DrupalPractice.General.ExceptionT"/>
   <rule ref="DrupalPractice.InfoFiles.NamespacedDependency"/>
+  <rule ref="DrupalPractice.Objects.GlobalFunction">
+    <include-pattern>*/Plugin/*</include-pattern>
+  </rule>
 
   <!-- Generic sniffs -->
   <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>

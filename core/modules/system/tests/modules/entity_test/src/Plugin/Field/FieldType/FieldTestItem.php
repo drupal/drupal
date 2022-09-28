@@ -32,8 +32,6 @@ class FieldTestItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
-    // This is called very early by the user entity roles field. Prevent
-    // early t() calls by using the TranslatableMarkup.
     $properties['value'] = DataDefinition::create('string')
       ->setLabel(new TranslatableMarkup('Test value'))
       ->setRequired(TRUE);

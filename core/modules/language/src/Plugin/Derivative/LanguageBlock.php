@@ -3,12 +3,15 @@
 namespace Drupal\language\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 
 /**
  * Provides language switcher block plugin definitions for all languages.
  */
 class LanguageBlock extends DeriverBase {
+
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -21,12 +24,12 @@ class LanguageBlock extends DeriverBase {
       $configurable_types = $language_manager->getLanguageTypes();
       foreach ($configurable_types as $type) {
         $this->derivatives[$type] = $base_plugin_definition;
-        $this->derivatives[$type]['admin_label'] = t('Language switcher (@type)', ['@type' => $info[$type]['name']]);
+        $this->derivatives[$type]['admin_label'] = $this->t('Language switcher (@type)', ['@type' => $info[$type]['name']]);
       }
       // If there is just one configurable type then change the title of the
       // block.
       if (count($configurable_types) == 1) {
-        $this->derivatives[reset($configurable_types)]['admin_label'] = t('Language switcher');
+        $this->derivatives[reset($configurable_types)]['admin_label'] = $this->t('Language switcher');
       }
     }
 
