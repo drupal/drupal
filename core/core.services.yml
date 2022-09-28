@@ -15,6 +15,12 @@ parameters:
     debug: false
     auto_reload: null
     cache: true
+    allowed_file_extensions:
+      - css
+      - html
+      - js
+      - svg
+      - twig
   renderer.config:
     required_cache_contexts: ['languages:language_interface', 'theme', 'user.permissions']
     auto_placeholder_conditions:
@@ -1688,7 +1694,7 @@ services:
     # We use '.' instead of '%app.root%' as the path for non-namespaced template
     # files so that they match the relative paths of templates loaded via the
     # theme registry or via Twig namespaces.
-    arguments: ['.', '@module_handler', '@theme_handler']
+    arguments: ['.', '@module_handler', '@theme_handler', '%twig.config%']
     tags:
       - { name: twig.loader, priority: 100 }
   twig.loader.theme_registry:
