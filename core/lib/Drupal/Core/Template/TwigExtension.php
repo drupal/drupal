@@ -143,6 +143,8 @@ class TwigExtension extends AbstractExtension {
       // This filter will render a renderable array to use the string results.
       new TwigFilter('render', [$this, 'renderVar']),
       new TwigFilter('format_date', [$this->dateFormatter, 'format']),
+      // Add new theme hook suggestions directly from a Twig template.
+      new TwigFilter('add_suggestion', [$this, 'suggestThemeHook']),
     ];
   }
 
@@ -651,6 +653,63 @@ class TwigExtension extends AbstractExtension {
       unset($filtered_element[$key]);
     }
     return $filtered_element;
+  }
+
+  /**
+   * Adds a theme suggestion to the element.
+   *
+   * @param array|null $element
+   *   A theme element render array.
+   * @param string|\Stringable $suggestion
+   *   The theme suggestion part to append to the existing theme hook(s).
+   *
+   * @return array|null
+   *   The element with the full theme suggestion added as the highest priority.
+   */
+  public function suggestThemeHook(?array $element, string|\Stringable $suggestion): ?array {
+    // Make sure we have a valid theme element render array.
+    if (empty($element['#theme'])) {
+      // Throw assertion for render arrays that contain more than just metadata
+      // (e.g., don't assert on empty field content).
+      assert(array_diff_key($element ?? [], [
+        '#cache' => TRUE,
+        '#weight' => TRUE,
+        '#attached' => TRUE,
+      ]) === [], 'Invalid target for the "|add_suggestion" Twig filter; element does not have a "#theme" key.');
+      return $element;
+    }
+
+    // Replace dashes with underscores to support suggestions that match the
+    // target template name rather than the underlying theme hook.
+    $suggestion = str_replace('-', '_', $suggestion);
+
+    // Transform the theme hook to a format that supports multiple suggestions.
+    if (!is_iterable($element['#theme'])) {
+      $element['#theme'] = [$element['#theme']];
+    }
+
+    // Add _new_ suggestions for each existing theme hook. Simply modifying the
+    // existing items (appending to each theme hook instead of adding new ones)
+    // would cause the original hooks to be unavailable as fallbacks.
+    //
+    // Start with the lowest priority theme hook.
+    foreach (array_reverse($element['#theme']) as $theme_hook) {
+      // Add new suggestions to the front (highest priority).
+      array_unshift($element['#theme'], $theme_hook . '__' . $suggestion);
+    }
+
+    // Reset the "#printed" flag to make sure the content gets rendered with the
+    // new suggestion in place.
+    unset($element['#printed']);
+
+    // Add a cache key to prevent using render cache from before the suggestion
+    // was added. If there are no cache keys already set, don't add one, as that
+    // would enable caching on this element where there wasn't any before.
+    if (isset($element['#cache']['keys'])) {
+      $element['#cache']['keys'][] = $suggestion;
+    }
+
+    return $element;
   }
 
 }
