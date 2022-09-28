@@ -28,7 +28,7 @@ class ManyToOneHelper {
    *
    * @var bool
    */
-  public $formula = FALSE;
+  public bool $formula = FALSE;
 
   /**
    * The handler.
