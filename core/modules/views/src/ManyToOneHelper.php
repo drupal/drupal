@@ -22,6 +22,15 @@ use Drupal\views\Plugin\views\ViewsHandlerInterface;
 class ManyToOneHelper {
 
   /**
+   * Should the field use formula or alias.
+   *
+   * @see \Drupal\views\Plugin\views\argument\StringArgument::query()
+   *
+   * @var bool
+   */
+  public $formula = FALSE;
+
+  /**
    * The handler.
    */
   public ViewsHandlerInterface $handler;
