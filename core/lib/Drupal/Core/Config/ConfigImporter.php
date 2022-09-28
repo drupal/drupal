@@ -379,6 +379,9 @@ class ConfigImporter {
       return;
     }
 
+    // Reset the module list in case a stale cache item has been set by another
+    // process during deployment.
+    $this->moduleExtensionList->reset();
     // Get a list of modules with dependency weights as values.
     $module_data = $this->moduleExtensionList->getList();
     // Set the actual module weights.
