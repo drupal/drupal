@@ -4,6 +4,7 @@ namespace Drupal\options\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
@@ -25,7 +26,7 @@ class ListFloatItem extends ListItemBase {
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['value'] = DataDefinition::create('float')
-      ->setLabel(t('Float value'))
+      ->setLabel(new TranslatableMarkup('Float value'))
       ->setRequired(TRUE);
 
     return $properties;
@@ -51,12 +52,12 @@ class ListFloatItem extends ListItemBase {
    * {@inheritdoc}
    */
   protected function allowedValuesDescription() {
-    $description = '<p>' . t('The possible values this field can contain. Enter one value per line, in the format key|label.');
-    $description .= '<br/>' . t('The key is the stored value, and must be numeric. The label will be used in displayed values and edit forms.');
-    $description .= '<br/>' . t('The label is optional: if a line contains a single number, it will be used as key and label.');
-    $description .= '<br/>' . t('Lists of labels are also accepted (one label per line), only if the field does not hold any values yet. Numeric keys will be automatically generated from the positions in the list.');
+    $description = '<p>' . $this->t('The possible values this field can contain. Enter one value per line, in the format key|label.');
+    $description .= '<br/>' . $this->t('The key is the stored value, and must be numeric. The label will be used in displayed values and edit forms.');
+    $description .= '<br/>' . $this->t('The label is optional: if a line contains a single number, it will be used as key and label.');
+    $description .= '<br/>' . $this->t('Lists of labels are also accepted (one label per line), only if the field does not hold any values yet. Numeric keys will be automatically generated from the positions in the list.');
     $description .= '</p>';
-    $description .= '<p>' . t('Allowed HTML tags in labels: @tags', ['@tags' => FieldFilteredMarkup::displayAllowedTags()]) . '</p>';
+    $description .= '<p>' . $this->t('Allowed HTML tags in labels: @tags', ['@tags' => FieldFilteredMarkup::displayAllowedTags()]) . '</p>';
     return $description;
   }
 
@@ -83,7 +84,7 @@ class ListFloatItem extends ListItemBase {
    */
   protected static function validateAllowedValue($option) {
     if (!is_numeric($option)) {
-      return t('Allowed values list: each key must be a valid integer or decimal.');
+      return new TranslatableMarkup('Allowed values list: each key must be a valid integer or decimal.');
     }
   }
 

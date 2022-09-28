@@ -5,6 +5,7 @@ namespace Drupal\node\Plugin\migrate;
 use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\MigrationDeriverTrait;
 use Drupal\migrate_drupal\FieldDiscoveryInterface;
@@ -15,6 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class D6NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
   use MigrationDeriverTrait;
+  use StringTranslationTrait;
 
   /**
    * The base plugin ID this derivative is for.
@@ -89,7 +91,7 @@ class D6NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
         $node_type = $row->getSourceProperty('type');
         $values = $base_plugin_definition;
 
-        $values['label'] = t("@label (@type)", [
+        $values['label'] = $this->t("@label (@type)", [
           '@label' => $values['label'],
           '@type' => $node_type,
         ]);

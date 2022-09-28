@@ -66,17 +66,17 @@ class ResizeImageEffect extends ConfigurableImageEffectBase {
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['width'] = [
       '#type' => 'number',
-      '#title' => t('Width'),
+      '#title' => $this->t('Width'),
       '#default_value' => $this->configuration['width'],
-      '#field_suffix' => ' ' . t('pixels'),
+      '#field_suffix' => ' ' . $this->t('pixels'),
       '#required' => TRUE,
       '#min' => 1,
     ];
     $form['height'] = [
       '#type' => 'number',
-      '#title' => t('Height'),
+      '#title' => $this->t('Height'),
       '#default_value' => $this->configuration['height'],
-      '#field_suffix' => ' ' . t('pixels'),
+      '#field_suffix' => ' ' . $this->t('pixels'),
       '#required' => TRUE,
       '#min' => 1,
     ];

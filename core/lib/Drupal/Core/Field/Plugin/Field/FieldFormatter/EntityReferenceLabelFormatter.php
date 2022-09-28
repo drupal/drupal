@@ -35,7 +35,7 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $elements['link'] = [
-      '#title' => t('Link label to the referenced entity'),
+      '#title' => $this->t('Link label to the referenced entity'),
       '#type' => 'checkbox',
       '#default_value' => $this->getSetting('link'),
     ];
@@ -48,7 +48,7 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
    */
   public function settingsSummary() {
     $summary = [];
-    $summary[] = $this->getSetting('link') ? t('Link to the referenced entity') : t('No link');
+    $summary[] = $this->getSetting('link') ? $this->t('Link to the referenced entity') : $this->t('No link');
     return $summary;
   }
 

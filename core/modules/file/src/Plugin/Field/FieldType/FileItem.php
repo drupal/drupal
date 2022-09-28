@@ -12,6 +12,7 @@ use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
@@ -96,11 +97,11 @@ class FileItem extends EntityReferenceItem {
     $properties = parent::propertyDefinitions($field_definition);
 
     $properties['display'] = DataDefinition::create('boolean')
-      ->setLabel(t('Display'))
-      ->setDescription(t('Flag to control whether this file should be displayed when viewing content'));
+      ->setLabel(new TranslatableMarkup('Display'))
+      ->setDescription(new TranslatableMarkup('Flag to control whether this file should be displayed when viewing content'));
 
     $properties['description'] = DataDefinition::create('string')
-      ->setLabel(t('Description'));
+      ->setLabel(new TranslatableMarkup('Description'));
 
     return $properties;
   }
@@ -115,15 +116,15 @@ class FileItem extends EntityReferenceItem {
 
     $element['display_field'] = [
       '#type' => 'checkbox',
-      '#title' => t('Enable <em>Display</em> field'),
+      '#title' => $this->t('Enable <em>Display</em> field'),
       '#default_value' => $this->getSetting('display_field'),
-      '#description' => t('The display option allows users to choose if a file should be shown when viewing the content.'),
+      '#description' => $this->t('The display option allows users to choose if a file should be shown when viewing the content.'),
     ];
     $element['display_default'] = [
       '#type' => 'checkbox',
-      '#title' => t('Files displayed by default'),
+      '#title' => $this->t('Files displayed by default'),
       '#default_value' => $this->getSetting('display_default'),
-      '#description' => t('This setting only has an effect if the display option is enabled.'),
+      '#description' => $this->t('This setting only has an effect if the display option is enabled.'),
       '#states' => [
         'visible' => [
           ':input[name="settings[display_field]"]' => ['checked' => TRUE],
@@ -134,10 +135,10 @@ class FileItem extends EntityReferenceItem {
     $scheme_options = \Drupal::service('stream_wrapper_manager')->getNames(StreamWrapperInterface::WRITE_VISIBLE);
     $element['uri_scheme'] = [
       '#type' => 'radios',
-      '#title' => t('Upload destination'),
+      '#title' => $this->t('Upload destination'),
       '#options' => $scheme_options,
       '#default_value' => $this->getSetting('uri_scheme'),
-      '#description' => t('Select where the final files should be stored. Private file storage has significantly more overhead than public files, but allows restricted access to files within this field.'),
+      '#description' => $this->t('Select where the final files should be stored. Private file storage has significantly more overhead than public files, but allows restricted access to files within this field.'),
       '#disabled' => $has_data,
     ];
 
@@ -153,9 +154,9 @@ class FileItem extends EntityReferenceItem {
 
     $element['file_directory'] = [
       '#type' => 'textfield',
-      '#title' => t('File directory'),
+      '#title' => $this->t('File directory'),
       '#default_value' => $settings['file_directory'],
-      '#description' => t('Optional subdirectory within the upload destination where files will be stored. Do not include preceding or trailing slashes.'),
+      '#description' => $this->t('Optional subdirectory within the upload destination where files will be stored. Do not include preceding or trailing slashes.'),
       '#element_validate' => [[static::class, 'validateDirectory']],
       '#weight' => 3,
     ];
@@ -164,7 +165,7 @@ class FileItem extends EntityReferenceItem {
     $extensions = str_replace(' ', ', ', $settings['file_extensions']);
     $element['file_extensions'] = [
       '#type' => 'textfield',
-      '#title' => t('Allowed file extensions'),
+      '#title' => $this->t('Allowed file extensions'),
       '#default_value' => $extensions,
       '#description' => $this->t("Separate extensions with a comma or space. Each extension can contain alphanumeric characters, '.', and '_', and should start and end with an alphanumeric character."),
       '#element_validate' => [[static::class, 'validateExtensions']],
@@ -177,9 +178,9 @@ class FileItem extends EntityReferenceItem {
 
     $element['max_filesize'] = [
       '#type' => 'textfield',
-      '#title' => t('Maximum upload size'),
+      '#title' => $this->t('Maximum upload size'),
       '#default_value' => $settings['max_filesize'],
-      '#description' => t('Enter a value like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes) in order to restrict the allowed file size. If left empty the file sizes will be limited only by PHP\'s maximum post and file upload sizes (current limit <strong>%limit</strong>).', ['%limit' => format_size(Environment::getUploadMaxSize())]),
+      '#description' => $this->t('Enter a value like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes) in order to restrict the allowed file size. If left empty the file sizes will be limited only by PHP\'s maximum post and file upload sizes (current limit <strong>%limit</strong>).', ['%limit' => format_size(Environment::getUploadMaxSize())]),
       '#size' => 10,
       '#element_validate' => [[static::class, 'validateMaxFilesize']],
       '#weight' => 5,
@@ -187,9 +188,9 @@ class FileItem extends EntityReferenceItem {
 
     $element['description_field'] = [
       '#type' => 'checkbox',
-      '#title' => t('Enable <em>Description</em> field'),
+      '#title' => $this->t('Enable <em>Description</em> field'),
       '#default_value' => $settings['description_field'] ?? '',
-      '#description' => t('The description field allows users to enter a description about the uploaded file.'),
+      '#description' => $this->t('The description field allows users to enter a description about the uploaded file.'),
       '#weight' => 11,
     ];
 
@@ -228,7 +229,7 @@ class FileItem extends EntityReferenceItem {
       $extension_array = array_unique(array_filter(explode(' ', $extensions)));
       $extensions = implode(' ', $extension_array);
       if (!preg_match('/^([a-z0-9]+([._][a-z0-9])* ?)+$/', $extensions)) {
-        $form_state->setError($element, t("The list of allowed extensions is not valid. Allowed characters are a-z, 0-9, '.', and '_'. The first and last characters cannot be '.' or '_', and these two characters cannot appear next to each other. Separate extensions with a comma or space."));
+        $form_state->setError($element, new TranslatableMarkup("The list of allowed extensions is not valid. Allowed characters are a-z, 0-9, '.', and '_'. The first and last characters cannot be '.' or '_', and these two characters cannot appear next to each other. Separate extensions with a comma or space."));
       }
       else {
         $form_state->setValueForElement($element, $extensions);
@@ -239,7 +240,8 @@ class FileItem extends EntityReferenceItem {
       if (!in_array('txt', $extension_array, TRUE) && !\Drupal::config('system.file')->get('allow_insecure_uploads')) {
         foreach ($extension_array as $extension) {
           if (preg_match(FileSystemInterface::INSECURE_EXTENSION_REGEX, 'test.' . $extension)) {
-            $form_state->setError($element, t('Add %txt_extension to the list of allowed extensions to securely upload files with a %extension extension. The %txt_extension extension will then be added automatically.', ['%extension' => $extension, '%txt_extension' => 'txt']));
+            $form_state->setError($element, new TranslatableMarkup('Add %txt_extension to the list of allowed extensions to securely upload files with a %extension extension. The %txt_extension extension will then be added automatically.', ['%extension' => $extension, '%txt_extension' => 'txt']));
+
             break;
           }
         }
@@ -260,7 +262,7 @@ class FileItem extends EntityReferenceItem {
     $element['#value'] = trim($element['#value']);
     $form_state->setValue(['settings', 'max_filesize'], $element['#value']);
     if (!empty($element['#value']) && !Bytes::validate($element['#value'])) {
-      $form_state->setError($element, t('The "@name" option must contain a valid value. You may either leave the text field empty or enter a string like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes).', ['@name' => $element['#title']]));
+      $form_state->setError($element, new TranslatableMarkup('The "@name" option must contain a valid value. You may either leave the text field empty or enter a string like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes).', ['@name' => $element['#title']]));
     }
   }
 

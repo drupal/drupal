@@ -52,8 +52,8 @@ class DateTimeDefaultFormatter extends DateTimeFormatterBase {
 
     $form['format_type'] = [
       '#type' => 'select',
-      '#title' => t('Date format'),
-      '#description' => t("Choose a format for displaying the date. Be sure to set a format appropriate for the field, i.e. omitting time for a field that only has a date."),
+      '#title' => $this->t('Date format'),
+      '#description' => $this->t("Choose a format for displaying the date. Be sure to set a format appropriate for the field, i.e. omitting time for a field that only has a date."),
       '#options' => $options,
       '#default_value' => $this->getSetting('format_type'),
     ];
@@ -68,7 +68,7 @@ class DateTimeDefaultFormatter extends DateTimeFormatterBase {
     $summary = parent::settingsSummary();
 
     $date = new DrupalDateTime();
-    $summary[] = t('Format: @display', ['@display' => $this->formatDate($date)]);
+    $summary[] = $this->t('Format: @display', ['@display' => $this->formatDate($date)]);
 
     return $summary;
   }

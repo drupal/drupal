@@ -7,6 +7,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\Field\FieldItemBase;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'datetime' field type.
@@ -47,12 +48,12 @@ class DateTimeItem extends FieldItemBase implements DateTimeItemInterface {
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['value'] = DataDefinition::create('datetime_iso8601')
-      ->setLabel(t('Date value'))
+      ->setLabel(new TranslatableMarkup('Date value'))
       ->setRequired(TRUE);
 
     $properties['date'] = DataDefinition::create('any')
-      ->setLabel(t('Computed date'))
-      ->setDescription(t('The computed DateTime object.'))
+      ->setLabel(new TranslatableMarkup('Computed date'))
+      ->setDescription(new TranslatableMarkup('The computed DateTime object.'))
       ->setComputed(TRUE)
       ->setClass('\Drupal\datetime\DateTimeComputed')
       ->setSetting('date source', 'value');
@@ -86,12 +87,12 @@ class DateTimeItem extends FieldItemBase implements DateTimeItemInterface {
 
     $element['datetime_type'] = [
       '#type' => 'select',
-      '#title' => t('Date type'),
-      '#description' => t('Choose the type of date to create.'),
+      '#title' => $this->t('Date type'),
+      '#description' => $this->t('Choose the type of date to create.'),
       '#default_value' => $this->getSetting('datetime_type'),
       '#options' => [
-        static::DATETIME_TYPE_DATETIME => t('Date and time'),
-        static::DATETIME_TYPE_DATE => t('Date only'),
+        static::DATETIME_TYPE_DATETIME => $this->t('Date and time'),
+        static::DATETIME_TYPE_DATE => $this->t('Date only'),
       ],
       '#disabled' => $has_data,
     ];

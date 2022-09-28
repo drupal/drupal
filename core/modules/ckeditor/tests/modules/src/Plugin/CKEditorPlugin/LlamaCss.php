@@ -22,7 +22,7 @@ class LlamaCss extends Llama implements CKEditorPluginButtonsInterface, CKEditor
   public function getButtons() {
     return [
       'LlamaCSS' => [
-        'label' => t('Insert Llama CSS'),
+        'label' => $this->t('Insert Llama CSS'),
       ],
     ];
   }

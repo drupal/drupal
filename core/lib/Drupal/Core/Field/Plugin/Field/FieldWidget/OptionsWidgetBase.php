@@ -9,6 +9,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\OptGroup;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Base class for the 'options_*' widgets.
@@ -88,7 +89,7 @@ abstract class OptionsWidgetBase extends WidgetBase {
    */
   public static function validateElement(array $element, FormStateInterface $form_state) {
     if ($element['#required'] && $element['#value'] == '_none') {
-      $form_state->setError($element, t('@name field is required.', ['@name' => $element['#title']]));
+      $form_state->setError($element, new TranslatableMarkup('@name field is required.', ['@name' => $element['#title']]));
     }
 
     // Massage submitted form values.

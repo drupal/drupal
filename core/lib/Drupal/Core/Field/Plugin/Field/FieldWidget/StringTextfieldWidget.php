@@ -35,16 +35,16 @@ class StringTextfieldWidget extends WidgetBase {
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $element['size'] = [
       '#type' => 'number',
-      '#title' => t('Size of textfield'),
+      '#title' => $this->t('Size of textfield'),
       '#default_value' => $this->getSetting('size'),
       '#required' => TRUE,
       '#min' => 1,
     ];
     $element['placeholder'] = [
       '#type' => 'textfield',
-      '#title' => t('Placeholder'),
+      '#title' => $this->t('Placeholder'),
       '#default_value' => $this->getSetting('placeholder'),
-      '#description' => t('Text that will be shown inside the field until a value is entered. This hint is usually a sample value or a brief description of the expected format.'),
+      '#description' => $this->t('Text that will be shown inside the field until a value is entered. This hint is usually a sample value or a brief description of the expected format.'),
     ];
     return $element;
   }
@@ -55,10 +55,10 @@ class StringTextfieldWidget extends WidgetBase {
   public function settingsSummary() {
     $summary = [];
 
-    $summary[] = t('Textfield size: @size', ['@size' => $this->getSetting('size')]);
+    $summary[] = $this->t('Textfield size: @size', ['@size' => $this->getSetting('size')]);
     $placeholder = $this->getSetting('placeholder');
     if (!empty($placeholder)) {
-      $summary[] = t('Placeholder: @placeholder', ['@placeholder' => $placeholder]);
+      $summary[] = $this->t('Placeholder: @placeholder', ['@placeholder' => $placeholder]);
     }
 
     return $summary;

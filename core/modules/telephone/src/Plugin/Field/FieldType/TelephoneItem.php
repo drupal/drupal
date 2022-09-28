@@ -6,6 +6,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'telephone' field type.
@@ -40,7 +41,7 @@ class TelephoneItem extends FieldItemBase {
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['value'] = DataDefinition::create('string')
-      ->setLabel(t('Telephone number'))
+      ->setLabel(new TranslatableMarkup('Telephone number'))
       ->setRequired(TRUE);
 
     return $properties;
@@ -66,7 +67,7 @@ class TelephoneItem extends FieldItemBase {
       'value' => [
         'Length' => [
           'max' => $max_length,
-          'maxMessage' => t('%name: the telephone number may not be longer than @max characters.', ['%name' => $this->getFieldDefinition()->getLabel(), '@max' => $max_length]),
+          'maxMessage' => $this->t('%name: the telephone number may not be longer than @max characters.', ['%name' => $this->getFieldDefinition()->getLabel(), '@max' => $max_length]),
         ],
       ],
     ]);

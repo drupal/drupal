@@ -122,9 +122,9 @@ class Language extends ConditionPluginBase implements ContainerFactoryPluginInte
       $languages = array_pop($language_names);
     }
     if (!empty($this->configuration['negate'])) {
-      return t('The language is not @languages.', ['@languages' => $languages]);
+      return $this->t('The language is not @languages.', ['@languages' => $languages]);
     }
-    return t('The language is @languages.', ['@languages' => $languages]);
+    return $this->t('The language is @languages.', ['@languages' => $languages]);
   }
 
   /**

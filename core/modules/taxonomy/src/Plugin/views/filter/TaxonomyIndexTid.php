@@ -284,7 +284,7 @@ class TaxonomyIndexTid extends ManyToOne {
       $this->helper->buildOptionsForm($form, $form_state);
 
       // Show help text if not exposed to end users.
-      $form['value']['#description'] = t('Leave blank for all. Otherwise, the first selected term will be the default instead of "Any".');
+      $form['value']['#description'] = $this->t('Leave blank for all. Otherwise, the first selected term will be the default instead of "Any".');
     }
   }
 

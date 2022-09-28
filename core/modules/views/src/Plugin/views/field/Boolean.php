@@ -49,15 +49,15 @@ class Boolean extends FieldPluginBase {
     parent::init($view, $display, $options);
 
     $default_formats = [
-      'yes-no' => [t('Yes'), $this->t('No')],
-      'true-false' => [t('True'), $this->t('False')],
-      'on-off' => [t('On'), $this->t('Off')],
-      'enabled-disabled' => [t('Enabled'), $this->t('Disabled')],
+      'yes-no' => [$this->t('Yes'), $this->t('No')],
+      'true-false' => [$this->t('True'), $this->t('False')],
+      'on-off' => [$this->t('On'), $this->t('Off')],
+      'enabled-disabled' => [$this->t('Enabled'), $this->t('Disabled')],
       'boolean' => [1, 0],
       'unicode-yes-no' => ['✔', '✖'],
     ];
     $output_formats = $this->definition['output formats'] ?? [];
-    $custom_format = ['custom' => [t('Custom')]];
+    $custom_format = ['custom' => [$this->t('Custom')]];
     $this->formats = array_merge($default_formats, $output_formats, $custom_format);
   }
 

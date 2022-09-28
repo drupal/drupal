@@ -41,7 +41,7 @@ class LlamaContextualAndButton extends Llama implements CKEditorPluginContextual
   public function getButtons() {
     return [
       'Llama' => [
-        'label' => t('Insert Llama'),
+        'label' => $this->t('Insert Llama'),
       ],
     ];
   }
@@ -65,7 +65,7 @@ class LlamaContextualAndButton extends Llama implements CKEditorPluginContextual
     }
 
     $form['ultra_llama_mode'] = [
-      '#title' => t('Ultra llama mode'),
+      '#title' => $this->t('Ultra llama mode'),
       '#type' => 'checkbox',
       '#default_value' => $config['ultra_llama_mode'],
     ];

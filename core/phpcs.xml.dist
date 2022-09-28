@@ -160,6 +160,9 @@
     <!-- Setting severity to 0 to completely disable an error message in this sniff, without excluding the whole sniff -->
     <!-- See https://github.com/squizlabs/PHP_CodeSniffer/wiki/Configuration-Options#changing-the-default-severity-levels -->
     <severity>0</severity>
+    <rule ref="DrupalPractice.Objects.GlobalFunction">
+       <include-pattern>*/Plugin/*</include-pattern>
+    </rule>
   </rule>
   <rule ref="DrupalPractice.Commenting.ExpectedException"/>
   <rule ref="DrupalPractice.General.ExceptionT"/>

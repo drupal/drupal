@@ -124,14 +124,14 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
     }, array_combine($counts, $counts));
     $intervals = [3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200, 4838400, 9676800];
     $period = array_map([$this->dateFormatter, 'formatInterval'], array_combine($intervals, $intervals));
-    $period[FeedStorageInterface::CLEAR_NEVER] = t('Never');
+    $period[FeedStorageInterface::CLEAR_NEVER] = $this->t('Never');
 
     $form['processors'][$info['id']] = [];
     // Only wrap into details if there is a basic configuration.
     if (isset($form['basic_conf'])) {
       $form['processors'][$info['id']] = [
         '#type' => 'details',
-        '#title' => t('Default processor settings'),
+        '#title' => $this->t('Default processor settings'),
         '#description' => $info['description'],
         '#open' => in_array($info['id'], $processors),
       ];
@@ -139,7 +139,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
 
     $form['processors'][$info['id']]['aggregator_summary_items'] = [
       '#type' => 'select',
-      '#title' => t('Number of items shown in listing pages'),
+      '#title' => $this->t('Number of items shown in listing pages'),
       '#default_value' => $config->get('source.list_max'),
       '#empty_value' => 0,
       '#options' => $items,
@@ -147,23 +147,23 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
 
     $form['processors'][$info['id']]['aggregator_clear'] = [
       '#type' => 'select',
-      '#title' => t('Discard items older than'),
+      '#title' => $this->t('Discard items older than'),
       '#default_value' => $config->get('items.expire'),
       '#options' => $period,
-      '#description' => t('Requires a correctly configured <a href=":cron">cron maintenance task</a>.', [':cron' => Url::fromRoute('system.status')->toString()]),
+      '#description' => $this->t('Requires a correctly configured <a href=":cron">cron maintenance task</a>.', [':cron' => Url::fromRoute('system.status')->toString()]),
     ];
 
     $lengths = [0, 200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000];
     $options = array_map(function ($length) {
-      return ($length == 0) ? t('Unlimited') : $this->formatPlural($length, '1 character', '@count characters');
+      return ($length == 0) ? $this->t('Unlimited') : $this->formatPlural($length, '1 character', '@count characters');
     }, array_combine($lengths, $lengths));
 
     $form['processors'][$info['id']]['aggregator_teaser_length'] = [
       '#type' => 'select',
-      '#title' => t('Length of trimmed description'),
+      '#title' => $this->t('Length of trimmed description'),
       '#default_value' => $config->get('items.teaser_length'),
       '#options' => $options,
-      '#description' => t('The maximum number of characters used in the trimmed version of content.'),
+      '#description' => $this->t('The maximum number of characters used in the trimmed version of content.'),
     ];
     return $form;
   }
@@ -244,7 +244,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
       $this->itemStorage->delete($items);
     }
     // @todo This should be moved out to caller with a different message maybe.
-    $this->messenger->addStatus(t('The news items from %site have been deleted.', ['%site' => $feed->label()]));
+    $this->messenger->addStatus($this->t('The news items from %site have been deleted.', ['%site' => $feed->label()]));
   }
 
   /**

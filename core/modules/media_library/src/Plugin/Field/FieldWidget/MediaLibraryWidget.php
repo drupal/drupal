@@ -18,6 +18,7 @@ use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\field_ui\FieldUI;
 use Drupal\media\Entity\Media;
@@ -205,7 +206,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
         'label' => ['#markup' => $label],
         'weight' => [
           '#type' => 'weight',
-          '#title' => t('Weight for @title', ['@title' => $label]),
+          '#title' => $this->t('Weight for @title', ['@title' => $label]),
           '#title_display' => 'invisible',
           '#default_value' => $weight,
           '#attributes' => ['class' => ['weight']],
@@ -267,7 +268,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
       foreach ($media_types as $media_type) {
         $media_type_labels[] = $media_type->label();
       }
-      $summary[] = t('Tab order: @order', ['@order' => implode(', ', $media_type_labels)]);
+      $summary[] = $this->t('Tab order: @order', ['@order' => implode(', ', $media_type_labels)]);
     }
     return $summary;
   }
@@ -699,7 +700,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
 
     // Announce the updated content to screen readers.
     if ($is_remove_button) {
-      $announcement = t('@label has been removed.', [
+      $announcement = new TranslatableMarkup('@label has been removed.', [
         '@label' => Media::load($field_state['removed_item_id'])->label(),
       ]);
     }
@@ -851,7 +852,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     }, $element['#target_bundles']);
     foreach ($media as $media_item) {
       if ($element['#target_bundles'] && !in_array($media_item->bundle(), $element['#target_bundles'], TRUE)) {
-        $form_state->setError($element, t('The media item "@label" is not of an accepted type. Allowed types: @types', [
+        $form_state->setError($element, new TranslatableMarkup('The media item "@label" is not of an accepted type. Allowed types: @types', [
           '@label' => $media_item->label(),
           '@types' => implode(', ', $bundle_labels),
         ]));
@@ -1000,7 +1001,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     // the Form API's default validation would also catch this, the validation
     // error message is too vague, so a more precise one is provided here.
     if (count($field_state['items']) === 0) {
-      $form_state->setError($element, t('@name field is required.', ['@name' => $element['#title']]));
+      $form_state->setError($element, new TranslatableMarkup('@name field is required.', ['@name' => $element['#title']]));
     }
   }
 

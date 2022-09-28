@@ -50,8 +50,8 @@ use Symfony\Component\Mime\MimeTypes;
  * function example_media_source_info_alter(array &$sources) {
  *   $sources['artwork'] = [
  *     'id' => 'artwork',
- *     'label' => t('Artwork'),
- *     'description' => t('Use artwork from Flickr and DeviantArt.'),
+ *     'label' => $this->t('Artwork'),
+ *     'description' => $this->t('Use artwork from Flickr and DeviantArt.'),
  *     'allowed_field_types' => ['string'],
  *     'default_thumbnail_filename' => 'no-thumbnail.png',
  *     'providers' => ['Deviantart.com', 'Flickr'],

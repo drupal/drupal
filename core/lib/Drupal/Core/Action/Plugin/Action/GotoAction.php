@@ -114,8 +114,8 @@ class GotoAction extends ConfigurableActionBase implements ContainerFactoryPlugi
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['url'] = [
       '#type' => 'textfield',
-      '#title' => t('URL'),
-      '#description' => t('The URL to which the user should be redirected. This can be an internal URL like /node/1234 or an external URL like @url.', ['@url' => 'http://example.com']),
+      '#title' => $this->t('URL'),
+      '#description' => $this->t('The URL to which the user should be redirected. This can be an internal URL like /node/1234 or an external URL like @url.', ['@url' => 'http://example.com']),
       '#default_value' => $this->configuration['url'],
       '#required' => TRUE,
     ];

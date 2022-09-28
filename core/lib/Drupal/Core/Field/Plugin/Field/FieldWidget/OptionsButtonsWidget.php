@@ -64,7 +64,7 @@ class OptionsButtonsWidget extends OptionsWidgetBase {
    */
   protected function getEmptyLabel() {
     if (!$this->required && !$this->multiple) {
-      return t('N/A');
+      return $this->t('N/A');
     }
   }
 
