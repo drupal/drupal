@@ -93,6 +93,21 @@ parameters:
     # Disabling the Twig cache is not recommended in production environments.
     # @default true
     cache: true
+    # File extensions:
+    #
+    # List of file extensions the Twig system is allowed to load via the
+    # twig.loader.filesystem service. Files with other extensions will not be
+    # loaded unless they are added here. For example, to allow a file named
+    # 'example.partial' to be loaded, add 'partial' to this list. To load files
+    # with no extension, add an empty string '' to the list.
+    #
+    # @default ['css', 'html', 'js', 'svg', 'twig']
+    allowed_file_extensions:
+      - css
+      - html
+      - js
+      - svg
+      - twig
   renderer.config:
     # Renderer required cache contexts:
     #
