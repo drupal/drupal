@@ -11,13 +11,13 @@ use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
-use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManager;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -247,8 +247,54 @@ class EntityFieldManagerTest extends UnitTestCase {
   public function testGetFieldDefinitions() {
     $field_definition = $this->setUpEntityWithFieldDefinition();
 
+    $bundle_field_definition = $this->prophesize()
+      ->willImplement(FieldDefinitionInterface::class)
+      ->willImplement(FieldStorageDefinitionInterface::class);
+
+    // Define bundle fields to be stored on the default Entity class.
+    $bundle_fields = [
+      'the_entity_id' => [
+        'test_entity_bundle' => [
+          'id_bundle' => $bundle_field_definition->reveal(),
+        ],
+        'test_entity_bundle_class' => [
+          'some_extra_field' => $bundle_field_definition->reveal(),
+        ],
+      ],
+    ];
+
+    // Define bundle fields to be stored on the bundle class.
+    $bundle_class_fields = [
+      'the_entity_id' => [
+        'test_entity_bundle_class' => [
+          'id_bundle_class' => $bundle_field_definition->reveal(),
+        ],
+      ],
+    ];
+
+    EntityTypeManagerTestEntity::$bundleFieldDefinitions = $bundle_fields;
+    EntityTypeManagerTestEntityBundle::$bundleClassFieldDefinitions = $bundle_class_fields;
+
+    // Test that only base fields are retrieved.
     $expected = ['id' => $field_definition];
+    $this->assertSame($expected, $this->entityFieldManager->getFieldDefinitions('test_entity_type', 'some_other_bundle'));
+
+    // Test that base fields and bundle fields from the default entity class are
+    // retrieved.
+    $expected = [
+      'id' => $field_definition,
+      'id_bundle' => $bundle_fields['the_entity_id']['test_entity_bundle']['id_bundle'],
+    ];
     $this->assertSame($expected, $this->entityFieldManager->getFieldDefinitions('test_entity_type', 'test_entity_bundle'));
+
+    // Test that base fields and bundle fields from the bundle class and
+    // entity class are retrieved
+    $expected = [
+      'id' => $field_definition,
+      'some_extra_field' => $bundle_fields['the_entity_id']['test_entity_bundle_class']['some_extra_field'],
+      'id_bundle_class' => $bundle_class_fields['the_entity_id']['test_entity_bundle_class']['id_bundle_class'],
+    ];
+    $this->assertSame($expected, $this->entityFieldManager->getFieldDefinitions('test_entity_type', 'test_entity_bundle_class'));
   }
 
   /**
@@ -575,8 +621,18 @@ class EntityFieldManagerTest extends UnitTestCase {
     $this->entityType = $this->prophesize(EntityTypeInterface::class);
     $this->setUpEntityTypeDefinitions(['test_entity_type' => $this->entityType, 'base_field_override' => $override_entity_type]);
 
-    $storage = $this->prophesize(ConfigEntityStorageInterface::class);
+    $storage = $this->prophesize(EntityStorageInterface::class);
     $storage->loadMultiple(Argument::type('array'))->willReturn([]);
+
+    // By default, make the storage entity class lookup return the
+    // EntityTypeManagerTestEntity class
+    $storage->getEntityClass(NULL)->willReturn(EntityTypeManagerTestEntity::class);
+    $storage->getEntityClass(Argument::type('string'))->willReturn(EntityTypeManagerTestEntity::class);
+    // When using the "test_entity_bundle_class" bundle, return the
+    // EntityTypeManagerTestEntityBundle class
+    $storage->getEntityClass('test_entity_bundle_class')->willReturn(EntityTypeManagerTestEntityBundle::class);
+
+    $this->entityTypeManager->getStorage('test_entity_type')->willReturn($storage->reveal());
     $this->entityTypeManager->getStorage('base_field_override')->willReturn($storage->reveal());
 
     $this->entityType->getClass()->willReturn($entity_class);
@@ -861,6 +917,36 @@ abstract class EntityTypeManagerTestEntity implements \Iterator, ContentEntityIn
    */
   public static function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
     return isset(static::$bundleFieldDefinitions[$entity_type->id()][$bundle]) ? static::$bundleFieldDefinitions[$entity_type->id()][$bundle] : [];
+  }
+
+}
+
+/**
+ * Provides a bundle specific class with dummy static method implementations.
+ */
+abstract class EntityTypeManagerTestEntityBundle extends EntityTypeManagerTestEntity {
+
+  /**
+   * The bundle class field definitions.
+   *
+   * @var array[]
+   *   Keys are entity type IDs, values are arrays of which the keys are bundle
+   *   names and the values are field definitions.
+   */
+  public static $bundleClassFieldDefinitions = [];
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+    $definitions = parent::bundleFieldDefinitions($entity_type, $bundle, $base_field_definitions);
+
+    if (isset(static::$bundleClassFieldDefinitions[$entity_type->id()][$bundle])) {
+      $definitions += static::$bundleClassFieldDefinitions[$entity_type->id()][$bundle];
+    }
+
+    return $definitions;
+
   }
 
 }
