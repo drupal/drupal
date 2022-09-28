@@ -54,6 +54,6 @@
         "symfony/validator": "~v6.1.4",
         "symfony/var-dumper": "~v6.1.3",
         "symfony/yaml": "~v6.1.4",
-        "twig/twig": "~v3.4.2"
+        "twig/twig": "~v3.4.3"
     }
 }

@@ -95,4 +95,18 @@ class HelpTopicTwigLoader extends FilesystemLoader {
     return new Source($contents, $name, $path);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function findTemplate($name, $throw = TRUE) {
+    if (!str_ends_with($name, '.html.twig')) {
+      if (!$throw) {
+        return NULL;
+      }
+      $extension = pathinfo($name, PATHINFO_EXTENSION);
+      throw new LoaderError(sprintf("Help topic %s has an invalid file extension (%s). Only help topics ending .html.twig are allowed.", $name, $extension));
+    }
+    return parent::findTemplate($name, $throw);
+  }
+
 }
