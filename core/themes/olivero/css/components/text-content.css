@@ -158,7 +158,7 @@
 .text-content blockquote:before, .cke_editable blockquote:before {
       position: absolute;
       top: 0;
-      content: "“";
+      content: "\201C";
       color: var(--color--primary-60);
       font-size: 3.375rem;
     }
