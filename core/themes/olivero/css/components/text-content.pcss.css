@@ -88,7 +88,7 @@
       position: absolute;
       inset-block-start: 0;
       inset-inline-start: 0;
-      content: "“";
+      content: "\201C";
       color: var(--color--blue-70);
       font-size: 54px;
     }
