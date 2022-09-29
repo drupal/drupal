@@ -149,6 +149,7 @@
   --color--primary-40: hsl(var(--color--primary-hue), var(--color--primary-saturation), calc(1% * (var(--color--primary-lightness) - (0.24 * var(--color--primary-lightness))))); /* Blue dark */
   --color--primary-50: hsl(var(--color--primary-hue), var(--color--primary-saturation), calc(1% * var(--color--primary-lightness))); /* Blue medium */
   --color--primary-60: hsl(var(--color--primary-hue), var(--color--primary-saturation), calc(1% * (var(--color--primary-lightness) + (0.24 * (100 - var(--color--primary-lightness)))))); /* Blue bright */
+  --color--primary-80: hsl(var(--color--primary-hue), var(--color--primary-saturation), calc(1% * (var(--color--primary-lightness) + (0.85 * (100 - var(--color--primary-lightness)))))); /* Blue very bright */
 
   /**
    * Variables specific to text.
