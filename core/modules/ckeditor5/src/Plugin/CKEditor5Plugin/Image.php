@@ -11,41 +11,13 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\editor\EditorInterface;
 
-// cspell:ignore imageupload
-
 /**
  * CKEditor 5 Image plugin.
- *
- * @CKEditor5Plugin(
- *   id = "ckeditor5_imageUpload",
- *   ckeditor5 = @CKEditor5AspectsOfCKEditor5Plugin(
- *     plugins = {"image.ImageUpload", "drupalImage.DrupalImageUpload"},
- *     config = {
- *       "image" = {
- *         "upload" = {
- *           "types" = { "jpeg", "png", "gif" }
- *         }
- *       }
- *     },
- *   ),
- *   drupal = @DrupalAspectsOfCKEditor5Plugin(
- *     label = @Translation("Image Upload"),
- *     elements = false,
- *     admin_library = "ckeditor5/admin.imageupload",
- *     toolbar_items = {
- *       "uploadImage" = { "label" = "Image upload" }
- *     },
- *     conditions = {
- *       "toolbarItem" = "uploadImage",
- *       "imageUploadStatus" = true,
- *     }
- *   )
- * )
  *
  * @internal
  *   Plugin classes are internal.
  */
-class ImageUpload extends CKEditor5PluginDefault implements CKEditor5PluginConfigurableInterface {
+class Image extends CKEditor5PluginDefault implements CKEditor5PluginConfigurableInterface {
 
   use CKEditor5PluginConfigurableTrait;
   use DynamicPluginConfigWithCsrfTokenUrlTrait;
@@ -54,16 +26,20 @@ class ImageUpload extends CKEditor5PluginDefault implements CKEditor5PluginConfi
    * {@inheritdoc}
    */
   public function getDynamicPluginConfig(array $static_plugin_config, EditorInterface $editor): array {
-    return $static_plugin_config + [
-      'drupalImageUpload' => [
-        'uploadUrl' => self::getUrlWithReplacedCsrfTokenPlaceholder(
-          Url::fromRoute('ckeditor5.upload_image')
-            ->setRouteParameter('editor', $editor->getFilterFormat()->id())
-        ),
-        'withCredentials' => TRUE,
-        'headers' => ['Accept' => 'application/json', 'text/javascript'],
-      ],
-    ];
+    $config = $static_plugin_config;
+    if ($editor->getImageUploadSettings()['status'] === TRUE) {
+      $config += [
+        'drupalImageUpload' => [
+          'uploadUrl' => self::getUrlWithReplacedCsrfTokenPlaceholder(
+            Url::fromRoute('ckeditor5.upload_image')
+              ->setRouteParameter('editor', $editor->getFilterFormat()->id())
+          ),
+          'withCredentials' => TRUE,
+          'headers' => ['Accept' => 'application/json', 'text/javascript'],
+        ],
+      ];
+    }
+    return $config;
   }
 
   /**

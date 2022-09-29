@@ -85,7 +85,7 @@ class CKEditor5Test extends CKEditor5TestBase {
       'editor' => 'ckeditor5',
       'settings' => [
         'toolbar' => [
-          'items' => ['uploadImage'],
+          'items' => ['drupalInsertImage'],
         ],
         'plugins' => ['ckeditor5_imageResize' => ['allow_resize' => FALSE]],
       ],
@@ -323,17 +323,17 @@ JS;
     $assert_session->assertWaitOnAjaxRequest();
 
     // Enable upload image to add one plugin config form.
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-uploadImage'));
-    $this->triggerKeyUp('.ckeditor5-toolbar-item-uploadImage', 'ArrowDown');
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-drupalInsertImage'));
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-drupalInsertImage  ', 'ArrowDown');
     // cSpell:disable-next-line
-    $this->assertNotEmpty($assert_session->waitForElement('css', 'a[href^="#edit-editor-settings-plugins-ckeditor5-imageupload"]'));
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-active .ckeditor5-toolbar-item-uploadImage'));
+    $this->assertNotEmpty($assert_session->waitForElement('css', 'a[href^="#edit-editor-settings-plugins-ckeditor5-image"]'));
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-active .ckeditor5-toolbar-item-drupalInsertImage'));
     $assert_session->assertWaitOnAjaxRequest();
 
-    $page->clickLink('Image Upload');
+    $page->clickLink('Image');
     $assert_session->waitForText('Enable image uploads');
-    $this->assertTrue($page->hasUncheckedField('editor[settings][plugins][ckeditor5_imageUpload][status]'));
-    $page->checkField('editor[settings][plugins][ckeditor5_imageUpload][status]');
+    $this->assertTrue($page->hasUncheckedField('editor[settings][plugins][ckeditor5_image][status]'));
+    $page->checkField('editor[settings][plugins][ckeditor5_image][status]');
     $assert_session->assertWaitOnAjaxRequest();
 
     // Enable Heading to add a second plugin config form.
@@ -393,11 +393,11 @@ JS;
     $assert_session = $this->assertSession();
 
     $this->createNewTextFormat($page, $assert_session);
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-uploadImage'));
-    $this->triggerKeyUp('.ckeditor5-toolbar-item-uploadImage', 'ArrowDown');
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-drupalInsertImage'));
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-drupalInsertImage', 'ArrowDown');
     $assert_session->assertWaitOnAjaxRequest();
-    $page->clickLink('Image Upload');
-    $page->checkField('editor[settings][plugins][ckeditor5_imageUpload][status]');
+    $page->clickLink('Image');
+    $page->checkField('editor[settings][plugins][ckeditor5_image][status]');
     $assert_session->assertWaitOnAjaxRequest();
     $page->checkField('filters[editor_file_reference][status]');
     $assert_session->assertWaitOnAjaxRequest();
