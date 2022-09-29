@@ -21,6 +21,8 @@ class AlreadyInstalledException extends InstallerException {
     $title = $this->t('Drupal already installed');
     $replacements = [
       ':base-url' => $GLOBALS['base_url'],
+      // We cannot use the route system.db_update here because we are too early
+      // in the execution stack.
       ':update-url' => $GLOBALS['base_path'] . 'update.php',
     ];
     $message = $this->t('<ul>
