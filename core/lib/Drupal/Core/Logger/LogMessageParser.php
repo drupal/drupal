@@ -29,7 +29,7 @@ class LogMessageParser implements LogMessageParserInterface {
           $key = '@' . $key;
         }
       }
-      if (!empty($key) && ($key[0] === '@' || $key[0] === '%' || $key[0] === '!')) {
+      if (!empty($key) && ($key[0] === '@' || $key[0] === '%' || $key[0] === ':')) {
         // The key is now in \Drupal\Component\Render\FormattableMarkup style.
         $variables[$key] = $variable;
       }
