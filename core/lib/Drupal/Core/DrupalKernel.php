@@ -3,7 +3,6 @@
 namespace Drupal\Core;
 
 use Composer\Autoload\ClassLoader;
-use Drupal\Component\Assertion\Handle;
 use Drupal\Component\EventDispatcher\Event;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Utility\UrlHelper;
@@ -1020,7 +1019,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
         // Web tests are to be conducted with runtime assertions active.
         assert_options(ASSERT_ACTIVE, TRUE);
-        Handle::register();
+        // Force assertion failures to be thrown as exceptions.
+        assert_options(ASSERT_EXCEPTION, TRUE);
 
         // Log fatal errors to the test site directory.
         ini_set('log_errors', 1);

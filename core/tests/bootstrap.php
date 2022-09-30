@@ -7,7 +7,6 @@
  * @see phpunit.xml.dist
  */
 
-use Drupal\Component\Assertion\Handle;
 use Drupal\TestTools\PhpUnitCompatibility\ClassWriter;
 
 /**
@@ -176,9 +175,8 @@ date_default_timezone_set('Australia/Sydney');
 
 // Runtime assertions. PHPUnit follows the php.ini assert.active setting for
 // runtime assertions. By default this setting is on. Ensure exceptions are
-// thrown if an assert fails, but this call does not turn runtime assertions on
-// if they weren't on already.
-Handle::register();
+// thrown if an assert fails.
+assert_options(ASSERT_EXCEPTION, TRUE);
 
 // Ensure ignored deprecation patterns listed in .deprecation-ignore.txt are
 // considered in testing.
