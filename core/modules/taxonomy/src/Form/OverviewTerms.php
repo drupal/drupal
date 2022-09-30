@@ -231,7 +231,7 @@ class OverviewTerms extends FormBase {
     // error. Ensure the form is rebuilt in the same order as the user
     // submitted.
     $user_input = $form_state->getUserInput();
-    if (!empty($user_input)) {
+    if (!empty($user_input['terms'])) {
       // Get the POST order.
       $order = array_flip(array_keys($user_input['terms']));
       // Update our form with the new order.
