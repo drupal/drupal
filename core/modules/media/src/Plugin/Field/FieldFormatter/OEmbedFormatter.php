@@ -150,6 +150,9 @@ class OEmbedFormatter extends FormatterBase {
     return [
       'max_width' => 0,
       'max_height' => 0,
+      'loading' => [
+        'attribute' => 'lazy',
+      ],
     ] + parent::defaultSettings();
   }
 
@@ -191,6 +194,9 @@ class OEmbedFormatter extends FormatterBase {
           '#uri' => $resource->getUrl()->toString(),
           '#width' => $max_width ?: $resource->getWidth(),
           '#height' => $max_height ?: $resource->getHeight(),
+          '#attributes' => [
+            'loading' => $this->getSetting('loading')['attribute'],
+          ],
         ];
       }
       else {
@@ -221,6 +227,7 @@ class OEmbedFormatter extends FormatterBase {
             'width' => $max_width ?: $resource->getWidth(),
             'height' => $max_height ?: $resource->getHeight(),
             'class' => ['media-oembed-content'],
+            'loading' => $this->getSetting('loading')['attribute'],
           ],
           '#attached' => [
             'library' => [
@@ -248,7 +255,7 @@ class OEmbedFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
-    return parent::settingsForm($form, $form_state) + [
+    $form = parent::settingsForm($form, $form_state) + [
       'max_width' => [
         '#type' => 'number',
         '#title' => $this->t('Maximum width'),
@@ -267,7 +274,28 @@ class OEmbedFormatter extends FormatterBase {
         '#field_suffix' => $this->t('pixels'),
         '#min' => 0,
       ],
+      'loading' => [
+        '#type' => 'details',
+        '#title' => $this->t('oEmbed loading'),
+        '#description' => $this->t('Lazy render oEmbed with native loading attribute (<em>loading="lazy"</em>). This improves performance by allowing browsers to lazily load assets.'),
+        'attribute' => [
+          '#title' => $this->t('oEmbed loading attribute'),
+          '#type' => 'radios',
+          '#default_value' => $this->getSetting('loading')['attribute'],
+          '#options' => [
+            'lazy' => $this->t('Lazy (<em>loading="lazy"</em>)'),
+            'eager' => $this->t('Eager (<em>loading="eager"</em>)'),
+          ],
+          '#description' => $this->t('Select the loading attribute for oEmbed. <a href=":link">Learn more about the loading attribute for oEmbed.</a>', [
+            ':link' => 'https://html.spec.whatwg.org/multipage/urls-and-fetching.html#lazy-loading-attributes',
+          ]),
+        ],
+      ],
     ];
+    $form['loading']['attribute']['lazy']['#description'] = $this->t('Delays loading the resource until that section of the page is visible in the browser. When in doubt, lazy loading is recommended.');
+    $form['loading']['attribute']['eager']['#description'] = $this->t('Force browsers to download a resource as soon as possible. This is the browser default for legacy reasons. Only use this option when the resource is always expected to render.');
+
+    return $form;
   }
 
   /**
@@ -291,6 +319,10 @@ class OEmbedFormatter extends FormatterBase {
         '%max_height' => $this->getSetting('max_height'),
       ]);
     }
+    $summary[] = $this->t('Loading attribute: @attribute', [
+      '@attribute' => $this->getSetting('loading')['attribute'],
+    ]);
+
     return $summary;
   }
 

@@ -66,8 +66,10 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
             'width' => '480',
             'height' => '360',
             'title' => 'Drupal Rap Video - Schipulcon09',
+            'loading' => 'lazy',
           ],
         ],
+        'self_closing' => TRUE,
       ],
       'Vimeo video, resized' => [
         'https://vimeo.com/7073899',
@@ -79,8 +81,10 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
             'width' => '100',
             'height' => '100',
             'title' => 'Drupal Rap Video - Schipulcon09',
+            'loading' => 'lazy',
           ],
         ],
+        'self_closing' => TRUE,
       ],
       'Vimeo video, no title' => [
         'https://vimeo.com/7073899',
@@ -92,8 +96,10 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
             'width' => '480',
             'height' => '360',
             'title' => NULL,
+            'loading' => 'lazy',
           ],
         ],
+        'self_closing' => TRUE,
       ],
       'tweet' => [
         'https://twitter.com/drupaldevdays/status/935643039741202432',
@@ -102,14 +108,17 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
           // The tweet resource does not specify a height, so the formatter
           // should default to the configured maximum height.
           'max_height' => 360,
+          'loading' => ['attribute' => 'eager'],
         ],
         [
           'iframe' => [
             'src' => '/media/oembed?url=https%3A//twitter.com/drupaldevdays/status/935643039741202432',
             'width' => '550',
             'height' => '360',
+            'loading' => 'eager',
           ],
         ],
+        'self_closing' => TRUE,
       ],
       'Flickr photo' => [
         'https://www.flickr.com/photos/amazeelabs/26497866357',
@@ -120,8 +129,10 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
             'src' => '/core/misc/druplicon.png',
             'width' => '88',
             'height' => '100',
+            'loading' => 'lazy',
           ],
         ],
+        'self_closing' => FALSE,
       ],
       'Flickr photo (no dimensions)' => [
         'https://www.flickr.com/photos/amazeelabs/26497866357',
@@ -130,8 +141,10 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
         [
           'img' => [
             'src' => '/core/misc/druplicon.png',
+            'loading' => 'lazy',
           ],
         ],
+        'self_closing' => FALSE,
       ],
     ];
   }
@@ -166,10 +179,12 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
    *   An array of arrays. Each key is a CSS selector targeting an element in
    *   the rendered output, and each value is an array of attributes, keyed by
    *   name, that the element is expected to have.
+   * @param bool $self_closing
+   *   Indicator if the HTML element is self closing i.e. <p/> vs <p></p>.
    *
    * @dataProvider providerRender
    */
-  public function testRender($url, $resource_url, array $formatter_settings, array $selectors) {
+  public function testRender($url, $resource_url, array $formatter_settings, array $selectors, bool $self_closing) {
     $account = $this->drupalCreateUser(['view media']);
     $this->drupalLogin($account);
 
@@ -206,6 +221,9 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
     $assert->statusCodeEquals(200);
     foreach ($selectors as $selector => $attributes) {
       $element = $assert->elementExists('css', $selector);
+      if ($self_closing) {
+        self::assertStringContainsString("</$selector", $element->getParent()->getHtml());
+      }
       foreach ($attributes as $attribute => $value) {
         if (isset($value)) {
           $this->assertStringContainsString($value, $element->getAttribute($attribute));

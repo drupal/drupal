@@ -59,6 +59,13 @@ field.formatter.settings.oembed:
     max_height:
       type: integer
       label: 'Maximum height'
+    loading:
+      type: mapping
+      label: 'oEmbed loading settings'
+      mapping:
+        attribute:
+          type: string
+          label: 'Loading attribute'
 
 field.widget.settings.oembed_textfield:
   type: field.widget.settings.string_textfield

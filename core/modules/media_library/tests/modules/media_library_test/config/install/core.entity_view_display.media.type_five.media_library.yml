@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.media.type_five.field_media_test_oembed_video
+    - image.style.thumbnail
+    - media.type.type_five
+  module:
+    - media
+id: media.type_five.media_library
+targetEntityType: media
+bundle: type_five
+mode: media_library
+content:
+  thumbnail:
+    type: image
+    weight: 5
+    label: hidden
+    settings:
+      image_style: thumbnail
+      image_link: ''
+    region: content
+    third_party_settings: {  }
+hidden:
+  created: true
+  field_media_test_oembed_video: true
+  name: true
+  uid: true

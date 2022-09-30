@@ -151,4 +151,54 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
     return $changed;
   }
 
+  /**
+   * Add eager load option to all oembed type field configurations.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The View to update.
+   *
+   * @return bool
+   *   Whether the view was updated.
+   */
+  public function needsOembedEagerLoadFieldUpdate(ViewEntityInterface $view) {
+    return $this->processDisplayHandlers($view, TRUE, function (&$handler, $handler_type) use ($view) {
+      return $this->processOembedEagerLoadFieldHandler($handler, $handler_type, $view);
+    });
+  }
+
+  /**
+   * Processes oembed type fields.
+   *
+   * @param array $handler
+   *   A display handler.
+   * @param string $handler_type
+   *   The handler type.
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The View being updated.
+   *
+   * @return bool
+   *   Whether the handler was updated.
+   */
+  protected function processOembedEagerLoadFieldHandler(array &$handler, string $handler_type, ViewEntityInterface $view): bool {
+    $changed = FALSE;
+
+    // Add any missing settings for lazy loading.
+    if (($handler_type === 'field')
+      && isset($handler['plugin_id'], $handler['type'])
+      && $handler['plugin_id'] === 'field'
+      && $handler['type'] === 'oembed'
+      && !array_key_exists('loading', $handler['settings'])) {
+      $handler['settings']['loading'] = ['attribute' => 'eager'];
+      $changed = TRUE;
+    }
+
+    $deprecations_triggered = &$this->triggeredDeprecations['3212351'][$view->id()];
+    if ($this->deprecationsEnabled && $changed && !$deprecations_triggered) {
+      $deprecations_triggered = TRUE;
+      @trigger_error(sprintf('The oEmbed loading attribute update for view "%s" is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Profile, module and theme provided configuration should be updated to accommodate the changes described at https://www.drupal.org/node/3275103.', $view->id()), E_USER_DEPRECATED);
+    }
+
+    return $changed;
+  }
+
 }

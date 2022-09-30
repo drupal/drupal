@@ -27,6 +27,8 @@ content:
     settings:
       max_width: 0
       max_height: 0
+      loading:
+        attribute: lazy
     third_party_settings: {  }
     weight: 6
     region: content

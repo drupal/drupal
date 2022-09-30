@@ -7,6 +7,7 @@
 
 use Drupal\Component\Plugin\DerivativeInspectionInterface;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
@@ -16,6 +17,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\field\FieldConfigInterface;
+use Drupal\media\MediaConfigUpdater;
 use Drupal\media\Plugin\media\Source\OEmbedInterface;
 use Drupal\views\ViewExecutable;
 
@@ -367,6 +369,15 @@ function media_entity_type_alter(array &$entity_types) {
     $entity_type = $entity_types['media'];
     $entity_type->setLinkTemplate('canonical', '/media/{media}');
   }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for entity_view_display.
+ */
+function media_entity_view_display_presave(EntityViewDisplayInterface $view_display): void {
+  $config_updater = \Drupal::classResolver(MediaConfigUpdater::class);
+  assert($config_updater instanceof MediaConfigUpdater);
+  $config_updater->processOembedEagerLoadField($view_display);
 }
 
 /**
