@@ -8,6 +8,29 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 /**
  * Drupal 7 file source from database.
  *
+ * Available configuration keys:
+ * - scheme: (optional) The scheme of the files to get from the source, for
+ *   example, 'public' or 'private'. Can be a string or an array of schemes.
+ *   The 'temporary' scheme is not supported. If omitted, all files in
+ *   supported schemes are retrieved.
+ *
+ * Example:
+ *
+ * @code
+ * source:
+ *   plugin: d7_file
+ *   scheme: public
+ * @endcode
+ *
+ * In this example, public file values are retrieved from the source database.
+ * For complete example, refer to the d7_file.yml migration.
+ *
+ * For additional configuration keys, refer to the parent classes.
+ *
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ * @see d7_file.yml
+ *
  * @MigrateSource(
  *   id = "d7_file",
  *   source_module = "file"

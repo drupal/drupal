@@ -12,8 +12,28 @@ source:
   constants:
     # The tool configuring this migration must set source_base_path. It
     # represents the fully qualified path relative to which URIs in the files
-    # table are specified, and must end with a /. See source_full_path
-    # configuration in this migration's process pipeline as an example.
+    # table are specified. This can be a local file directory containing the
+    # source site, e.g. /var/www/docroot, or the site address,
+    # e.g. https://example.com. This value will be concatenated with the file
+    # path (typically sites/default/files) and used as the source location for
+    # the files.
+    #
+    # Suppose that the source files have been moved by other means to a location
+    # on the destination site.
+    # Source site:
+    #   Location of files: /var/www/html/legacy/sites/default/files
+    #   Public scheme: sites/default/files
+    # In this example, source_base_path should be '/var/www/html/legacy'.
+    #
+    # Suppose that the source site is a multisite installation at
+    # https://example.com, and you plan to copy the files from there.
+    # Source site:
+    #   Location of files: https://example.com/sites/example.com/files
+    #   Public scheme: sites/example.com/files
+    # In this example, source_base_path should be 'https://example.com'.
+    #
+    # See the configuration for the source_full_path property in the process
+    # section below.
     source_base_path: ''
 process:
   # If you are using this file to build a custom migration consider removing
