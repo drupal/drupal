@@ -20,14 +20,6 @@
 
 /* Breakpoint where tabs switch between vertical and horizontal layouts. */
 
-[dir="ltr"] .tabs {
-  margin-left: 0;
-}
-
-[dir="rtl"] .tabs {
-  margin-right: 0;
-}
-
 .tabs {
   --tabs-height: var(--sp3);
   --tabs-padding-inline: var(--sp1-5);
@@ -46,7 +38,8 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin: 0; /* Override [dir] attribute in base <ul> in compiled CSS. */
+  margin: 0;
+  margin-inline-start: 0; /* Override [dir] attribute in base <ul> in compiled CSS. */
   padding: 0;
   list-style: none;
 }
@@ -62,7 +55,7 @@
 .tabs__tab {
   display: none;
   margin: 0;
-  margin-bottom: calc(-1 * var(--tabs-border-width));
+  margin-block-end: calc(-1 * var(--tabs-border-width));
 }
 
 .tabs__tab.is-active {
@@ -71,17 +64,10 @@
 
 @media (min-width: 43.75rem) {
 
-[dir="ltr"] .tabs__tab {
-    margin-left: calc(-1 * var(--tabs-border-width));
-  }
-
-[dir="rtl"] .tabs__tab {
-    margin-right: calc(-1 * var(--tabs-border-width));
-  }
-
 .tabs__tab {
     display: flex;
-    margin-bottom: 0;
+    margin-block-end: 0;
+    margin-inline-start: calc(-1 * var(--tabs-border-width));
 }
   }
 
@@ -115,10 +101,8 @@ html:not(.js) .tabs__tab {
   flex-grow: 1;
   align-items: center;
   height: var(--tabs-height);
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: var(--tabs-padding-inline);
-  padding-right: var(--tabs-padding-inline);
+  padding-block: 0;
+  padding-inline: var(--tabs-padding-inline);
   transition: background-color var(--tabs-transition-duration);
   text-decoration: none;
   letter-spacing: var(--tabs-letter-spacing);
@@ -150,45 +134,23 @@ html:not(.js) .tabs__tab {
      */
   }
 
-[dir="ltr"] .tabs__link.is-active:after {
-      left: calc(-1 * var(--tabs-border-width));
-}
-
-[dir="rtl"] .tabs__link.is-active:after {
-      right: calc(-1 * var(--tabs-border-width));
-}
-
-[dir="ltr"] .tabs__link.is-active:after {
-      border-left: var(--tabs-active-border-size) solid var(--tabs-highlight-color);
-}
-
-[dir="rtl"] .tabs__link.is-active:after {
-      border-right: var(--tabs-active-border-size) solid var(--tabs-highlight-color);
-}
-
 .tabs__link.is-active:after {
       position: absolute;
-      top: calc(-1 * var(--tabs-border-width));
+      inset-block-start: calc(-1 * var(--tabs-border-width));
+      inset-inline-start: calc(-1 * var(--tabs-border-width));
       height: calc(100% + var(--tabs-border-width) * 2);
       content: "";
+      border-inline-start: var(--tabs-active-border-size) solid var(--tabs-highlight-color);
     }
 
 @media (min-width: 43.75rem) {
 
-[dir="ltr"] .tabs__link.is-active:after {
-        border-left: 0;
-  }
-
-[dir="rtl"] .tabs__link.is-active:after {
-        border-right: 0;
-  }
-
 .tabs__link.is-active:after {
-        top: auto;
-        bottom: calc(-1 * var(--tabs-border-width));
+        inset-block: auto calc(-1 * var(--tabs-border-width));
         width: calc(100% + 2 * var(--tabs-border-width));
         height: 0;
-        border-top: var(--tabs-active-border-size) solid var(--tabs-highlight-color);
+        border-block-start: var(--tabs-active-border-size) solid var(--tabs-highlight-color);
+        border-inline-start: 0;
     }
       }
 
@@ -204,23 +166,13 @@ html:not(.js) .tabs__tab {
 
 /* Button that opens and closes primary tabs at narrow viewports. */
 
-[dir="ltr"] .tabs__trigger {
-  margin-left: calc(-1 * var(--tabs-border-width));
-  margin-right: 0;
-}
-
-[dir="rtl"] .tabs__trigger {
-  margin-right: calc(-1 * var(--tabs-border-width));
-  margin-left: 0;
-}
-
 .tabs__trigger {
   display: flex;
   align-items: center;
   justify-content: center;
   width: var(--tabs-height);
-  margin-top: 0;
-  margin-bottom: 0;
+  margin-block: 0;
+  margin-inline: calc(-1 * var(--tabs-border-width)) 0;
   cursor: pointer;
   border: solid var(--tabs-border-width) var(--tabs-border-color);
   background-color: var(--tabs-background-color);
@@ -254,36 +206,29 @@ html:not(.js) .tabs__trigger {
   display: block;
   width: var(--sp);
   height: 0.625rem;
-  margin-top: calc(-2 * var(--tabs-border-width));
-}
-
-[dir="ltr"] .tabs__trigger-icon > span {
-    left: 0;
-}
-
-[dir="rtl"] .tabs__trigger-icon > span {
-    right: 0;
+  margin-block-start: calc(-2 * var(--tabs-border-width));
 }
 
 .tabs__trigger-icon > span {
     position: absolute;
+    inset-inline-start: 0;
     display: block;
     width: 100%;
     transition: transform var(--tabs-transition-duration), opacity var(--tabs-transition-duration), top var(--tabs-transition-duration);
-    border-top: solid 2px var(--tabs-highlight-color);
+    border-block-start: solid 2px var(--tabs-highlight-color);
   }
 
 .tabs__trigger-icon > span:nth-child(1) {
-      top: 0;
+      inset-block-start: 0;
     }
 
 .tabs__trigger[aria-expanded="true"] :is(.tabs__trigger-icon > span:nth-child(1)) {
-        top: calc(50% + 1px);
+        inset-block-start: calc(50% + 1px);
         transform: rotate(45deg);
     }
 
 .tabs__trigger-icon > span:nth-child(2) {
-      top: calc(50% + 1px);
+      inset-block-start: calc(50% + 1px);
     }
 
 .tabs__trigger[aria-expanded="true"] :is(.tabs__trigger-icon > span:nth-child(2)) {
@@ -291,10 +236,10 @@ html:not(.js) .tabs__trigger {
     }
 
 .tabs__trigger-icon > span:nth-child(3) {
-      top: calc(100% + 2px);
+      inset-block-start: calc(100% + 2px);
     }
 
 .tabs__trigger[aria-expanded="true"] :is(.tabs__trigger-icon > span:nth-child(3)) {
-        top: calc(50% + 1px);
+        inset-block-start: calc(50% + 1px);
         transform: rotate(-45deg);
     }

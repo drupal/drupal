@@ -23,62 +23,32 @@
 
 /* Width of the entire grid maxes out. */
 
-[dir="ltr"] .search-results {
-  padding-left: 0;
-}
-
-[dir="rtl"] .search-results {
-  padding-right: 0;
-}
-
-[dir="ltr"] .search-results {
-  padding-right: 0;
-}
-
-[dir="rtl"] .search-results {
-  padding-left: 0;
-}
-
 .search-results {
-  margin-bottom: var(--sp2);
-  padding-top: 0;
-  padding-bottom: 0;
+  margin-block-end: var(--sp2);
+  padding-block: 0;
+  padding-inline-start: 0;
+  padding-inline-end: 0;
   list-style: none;
 }
 
 @media (min-width: 43.75rem) {
 
 .search-results {
-    margin-bottom: var(--sp3);
+    margin-block-end: var(--sp3);
 }
   }
 
-[dir="ltr"] .search-result__title {
-  margin-left: 0;
-}
-
-[dir="rtl"] .search-result__title {
-  margin-right: 0;
-}
-
-[dir="ltr"] .search-result__title {
-  margin-right: 0;
-}
-
-[dir="rtl"] .search-result__title {
-  margin-left: 0;
-}
-
 .search-result__title {
-  margin-top: 0;
-  margin-bottom: 0;
+  margin-block: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
   color: var(--color-text-neutral-loud);
   font-size: 1.25rem;
   line-height: var(--line-height-base);
 }
 
 .search-result__title a {
-    padding-bottom: 0.1875rem;
+    padding-block-end: 0.1875rem;
     transition: background-size 0.2s, color 0.2s;
     text-decoration: none;
     background-color: transparent;
@@ -95,7 +65,7 @@
 @media (min-width: 62.5rem) {
 
 .search-result__title {
-    margin-bottom: var(--sp1);
+    margin-block-end: var(--sp1);
     font-size: 1.875rem;
     line-height: var(--sp3);
 }
@@ -106,20 +76,20 @@
 }
 
 .search-result__snippet {
-  padding-bottom: calc(var(--sp1-5) - 2px);
+  padding-block-end: calc(var(--sp1-5) - 2px);
 }
 
 @media (min-width: 62.5rem) {
 
 .search-result__snippet {
-    padding-bottom: var(--sp3);
+    padding-block-end: var(--sp3);
 }
   }
 
 .search-result__meta {
   display: flex;
   align-items: center;
-  margin-bottom: var(--sp1);
+  margin-block-end: var(--sp1);
   color: var(--color-text-neutral-soft);
   font-size: 0.875rem;
   line-height: var(--sp);
@@ -132,12 +102,12 @@
 
 .search-results__item {
   position: relative; /* Anchor after pseudo-element. */
-  margin-bottom: var(--sp1-5);
+  margin-block-end: var(--sp1-5);
 }
 
 .search-results__item:after {
     position: absolute;
-    bottom: 0;
+    inset-block-end: 0;
     width: var(--sp3);
     height: 0;
     content: "";
@@ -146,12 +116,12 @@
   }
 
 .search-results__item:last-child {
-    margin-bottom: 0;
+    margin-block-end: 0;
   }
 
 @media (min-width: 62.5rem) {
 
 .search-results__item {
-    margin-bottom: var(--sp3);
+    margin-block-end: var(--sp3);
 }
   }

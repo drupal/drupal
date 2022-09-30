@@ -33,70 +33,33 @@
 }
   }
 
-[dir="ltr"] .social-bar__inner {
-  padding-left: var(--sp);
-}
-
-[dir="rtl"] .social-bar__inner {
-  padding-right: var(--sp);
-}
-
-[dir="ltr"] .social-bar__inner {
-  padding-right: var(--sp);
-}
-
-[dir="rtl"] .social-bar__inner {
-  padding-left: var(--sp);
-}
-
 .social-bar__inner {
   position: relative;
-  padding-top: var(--sp0-5);
-  padding-bottom: var(--sp0-5);
+  padding-block: var(--sp0-5);
+  padding-inline-start: var(--sp);
+  padding-inline-end: var(--sp);
 }
 
 @media (min-width: 75rem) {
 
-[dir="ltr"] .social-bar__inner {
-    padding-left: 0;
-}
-
-[dir="rtl"] .social-bar__inner {
-    padding-right: 0;
-}
-
-[dir="ltr"] .social-bar__inner {
-    padding-right: 0;
-}
-
-[dir="rtl"] .social-bar__inner {
-    padding-left: 0;
-}
-
 .social-bar__inner {
     position: relative;
     width: var(--content-left);
-    padding-top: calc(5 * var(--sp));
-    padding-bottom: calc(5 * var(--sp));
-}
-
-    [dir="ltr"] .social-bar__inner.is-fixed {
-      left: 0;
-}
-
-    [dir="rtl"] .social-bar__inner.is-fixed {
-      right: 0;
+    padding-block: calc(5 * var(--sp));
+    padding-inline-start: 0;
+    padding-inline-end: 0;
 }
 
     .social-bar__inner.is-fixed {
       position: fixed;
-      top: var(--sp6);
+      inset-block-start: var(--sp6);
+      inset-inline-start: 0;
       height: calc(100vh - 6 * var(--sp));
     }
   }
 
 .rotate > * {
-    margin-bottom: var(--sp2);
+    margin-block-end: var(--sp2);
   }
 
 @media (min-width: 75rem) {
@@ -104,56 +67,32 @@
 .rotate > * {
       display: flex;
       align-items: center;
-      margin-bottom: 0;
+      margin-block-end: 0;
   }
 
-      [dir="ltr"] .rotate > *:not(:first-child) {
-        margin-right: var(--sp2);
-}
-
-      [dir="rtl"] .rotate > *:not(:first-child) {
-        margin-left: var(--sp2);
-}
+      .rotate > *:not(:first-child) {
+        margin-inline-end: var(--sp2);
+      }
     }
 
 @media (min-width: 75rem) {
 
-[dir="ltr"] .rotate .contextual {
-      left: 100%;
-      right: auto;
-}
-
-[dir="rtl"] .rotate .contextual {
-      right: 100%;
-      left: auto;
-}
-
 .rotate .contextual {
+      inset-inline: 100% auto;
       transform: rotate(90deg); /* LTR */
       transform-origin: top left; /* LTR */
   }
 
-      [dir="ltr"] .rotate .contextual .trigger {
-        float: left;
-}
-
-      [dir="rtl"] .rotate .contextual .trigger {
-        float: right;
-}
+      .rotate .contextual .trigger {
+        float: inline-start;
+      }
     }
 
 @media (min-width: 75rem) {
 
-[dir="ltr"] .rotate {
-    left: 50%;
-}
-
-[dir="rtl"] .rotate {
-    right: 50%;
-}
-
 .rotate {
     position: absolute;
+    inset-inline-start: 50%;
     display: flex;
     flex-direction: row-reverse;
     width: 100vh;

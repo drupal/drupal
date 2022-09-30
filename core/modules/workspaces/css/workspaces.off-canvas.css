@@ -41,16 +41,9 @@
       display: none;
     }
 
-[dir="ltr"] #drupal-off-canvas-wrapper.workspaces-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close {
-      right: 1em;
-}
-
-[dir="rtl"] #drupal-off-canvas-wrapper.workspaces-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close {
-      left: 1em;
-}
-
 #drupal-off-canvas-wrapper.workspaces-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close {
-      top: 1em;
+      inset-block-start: 1em;
+      inset-inline-end: 1em;
       z-index: 1;
       transform: none;
     }
@@ -86,16 +79,9 @@
     line-height: 1.2;
   }
 
-[dir="ltr"] #drupal-off-canvas-wrapper.workspaces-dialog .active-workspace__label:before {
-      left: 0;
-}
-
-[dir="rtl"] #drupal-off-canvas-wrapper.workspaces-dialog .active-workspace__label:before {
-      right: 0;
-}
-
 #drupal-off-canvas-wrapper.workspaces-dialog .active-workspace__label:before {
       position: absolute;
+      inset-inline-start: 0;
       display: block;
       width: 1.25rem;
       height: 1.25rem;
@@ -174,19 +160,12 @@
 
 /* This is the link to the workspace. */
 
-[dir="ltr"] #drupal-off-canvas-wrapper.workspaces-dialog .workspaces__item {
-    padding-left: 3.125rem;
-}
-
-[dir="rtl"] #drupal-off-canvas-wrapper.workspaces-dialog .workspaces__item {
-    padding-right: 3.125rem;
-}
-
 #drupal-off-canvas-wrapper.workspaces-dialog .workspaces__item {
     position: relative;
     display: block;
     min-height: 4.6875rem;
-    padding-top: var(--off-canvas-padding);
+    padding-block-start: var(--off-canvas-padding);
+    padding-inline-start: 3.125rem;
     color: var(--off-canvas-text-color);
     outline-offset: -2px; /* Ensure focus outline doesn't overflow. */
     background-color: var(--off-canvas-background-color-light);
@@ -199,16 +178,9 @@
       background-color: #666;
     }
 
-[dir="ltr"] #drupal-off-canvas-wrapper.workspaces-dialog .workspaces__item:before {
-      left: var(--off-canvas-padding);
-}
-
-[dir="rtl"] #drupal-off-canvas-wrapper.workspaces-dialog .workspaces__item:before {
-      right: var(--off-canvas-padding);
-}
-
 #drupal-off-canvas-wrapper.workspaces-dialog .workspaces__item:before {
       position: absolute;
+      inset-inline-start: var(--off-canvas-padding);
       display: block;
       width: 1.25rem;
       height: 1.25rem;

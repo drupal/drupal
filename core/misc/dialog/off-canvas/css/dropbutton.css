@@ -23,8 +23,7 @@
   --off-canvas-dropbutton-text-color-hover: var(--off-canvas-button-text-color-hover); /* Minimum 4.5:1 contrast ratio against --off-canvas-dropbutton-primary-background-color and --off-canvas-dropbutton-secondary-background-color. */
 }
 #drupal-off-canvas-wrapper .dropbutton-wrapper {
-    margin-top: var(--off-canvas-vertical-spacing-unit);
-    margin-bottom: var(--off-canvas-vertical-spacing-unit);
+    margin-block: var(--off-canvas-vertical-spacing-unit);
 
     /*
      * Styles for when the dropbutton is expanded.
@@ -46,12 +45,9 @@
 /*
     * Styles for single link variant of dropbutton.
     */
-[dir="ltr"] #drupal-off-canvas-wrapper .dropbutton-wrapper.dropbutton-single .dropbutton-widget {
-        padding-right: 0;
-}
-[dir="rtl"] #drupal-off-canvas-wrapper .dropbutton-wrapper.dropbutton-single .dropbutton-widget {
-        padding-left: 0;
-}
+#drupal-off-canvas-wrapper .dropbutton-wrapper.dropbutton-single .dropbutton-widget {
+        padding-inline-end: 0;
+      }
 #drupal-off-canvas-wrapper .dropbutton-wrapper.dropbutton-single .dropbutton-action:first-child {
           border-right: solid 1px var(--off-canvas-dropbutton-border-color); /* LTR */
           border-radius: var(--off-canvas-dropbutton-border-radius);
@@ -62,35 +58,19 @@
 #drupal-off-canvas-wrapper .dropbutton-wrapper.dropbutton-single .dropbutton-action a {
           justify-content: center;
         }
-[dir="ltr"] #drupal-off-canvas-wrapper .dropbutton-widget {
-    padding-right: var(--off-canvas-dropbutton-height);
-}
-[dir="rtl"] #drupal-off-canvas-wrapper .dropbutton-widget {
-    padding-left: var(--off-canvas-dropbutton-height);
-}
 #drupal-off-canvas-wrapper .dropbutton-widget {
     position: relative;
     width: max-content;
     max-width: 100%;
     height: var(--off-canvas-dropbutton-height);
+    padding-inline-end: var(--off-canvas-dropbutton-height);
     border-radius: var(--off-canvas-dropbutton-border-radius);
   }
-[dir="ltr"] #drupal-off-canvas-wrapper .dropbutton {
-    margin-left: 0;
-}
-[dir="rtl"] #drupal-off-canvas-wrapper .dropbutton {
-    margin-right: 0;
-}
-[dir="ltr"] #drupal-off-canvas-wrapper .dropbutton {
-    padding-left: 0;
-}
-[dir="rtl"] #drupal-off-canvas-wrapper .dropbutton {
-    padding-right: 0;
-}
 #drupal-off-canvas-wrapper .dropbutton {
     height: var(--off-canvas-dropbutton-height);
-    margin-top: 0;
-    margin-bottom: 0;
+    margin-block: 0;
+    margin-inline-start: 0;
+    padding-inline-start: 0;
     list-style: none;
     font-size: var(--off-canvas-dropbutton-font-size);
   }
@@ -99,12 +79,6 @@
     padding: 0;
     border: 0;
   }
-[dir="ltr"] #drupal-off-canvas-wrapper .dropbutton-toggle button {
-      right: 0;
-}
-[dir="rtl"] #drupal-off-canvas-wrapper .dropbutton-toggle button {
-      left: 0;
-}
 #drupal-off-canvas-wrapper .dropbutton-toggle button {
       position: absolute;
       top: 0;
@@ -118,6 +92,7 @@
       border-color: var(--off-canvas-dropbutton-border-color);
       border-radius: 0 var(--border-radius) var(--border-radius) 0; /* LTR */
       background: var(--off-canvas-dropbutton-primary-background-color);
+      inset-inline-end: 0;
     }
 #drupal-off-canvas-wrapper .dropbutton-toggle button:focus {
         outline: solid 2px var(--off-canvas-dropbutton-focus-outline-color);
@@ -136,13 +111,8 @@
         border-radius: var(--off-canvas-dropbutton-border-radius) 0 0 var(--off-canvas-dropbutton-border-radius);
       }
 /* This is the first <li> element in the list of actions. */
-[dir="ltr"] #drupal-off-canvas-wrapper .dropbutton-action:first-child {
-      margin-right: 2px;
-}
-[dir="rtl"] #drupal-off-canvas-wrapper .dropbutton-action:first-child {
-      margin-left: 2px;
-}
 #drupal-off-canvas-wrapper .dropbutton-action:first-child {
+      margin-inline-end: 2px;
       border: solid var(--off-canvas-dropbutton-border-width) var(--off-canvas-dropbutton-border-color);
       border-radius: var(--off-canvas-dropbutton-border-radius) 0 0 var(--off-canvas-dropbutton-border-radius); /* LTR */
       background: var(--off-canvas-dropbutton-primary-background-color);

@@ -28,7 +28,7 @@
  */
 
 .text-full > .form-item {
-  margin-bottom: 0;
+  margin-block-end: 0;
 }
 
 .form-element--editor-format {
@@ -36,25 +36,16 @@
 }
 
 .filter-wrapper {
-  margin-top: var(--sp1);
-  margin-bottom: var(--sp0-5);
+  margin-block: var(--sp1) var(--sp0-5);
 }
 
 .filter-wrapper .form-item {
   margin: 0;
 }
 
-[dir="ltr"] .filter-help {
-  float: right;
-}
-
-[dir="rtl"] .filter-help {
-  float: left;
-}
-
 .filter-help {
-  padding-top: var(--sp0-5);
-  padding-bottom: var(--sp0-5);
+  float: inline-end;
+  padding-block: var(--sp0-5);
   font-size: var(--font-size-xxs);
 }
 
@@ -65,8 +56,7 @@
  */
 
 .compose-tips__item {
-  margin-top: var(--sp1-5);
-  margin-bottom: var(--sp1-5);
+  margin-block: var(--sp1-5);
 }
 
 /**
@@ -74,14 +64,13 @@
  */
 
 .filter-guidelines__item {
-  margin-top: var(--sp1);
+  margin-block-start: var(--sp1);
   font-size: var(--font-size-s);
   line-height: var(--line-height-s);
 }
 
 .filter-guidelines p {
-  margin-top: var(--sp0-25);
-  margin-bottom: 0;
+  margin-block: var(--sp0-25) 0;
 }
 
 /**
@@ -92,16 +81,14 @@
  */
 
 .filter-tips--long {
-  margin-bottom: var(--sp1-5);
+  margin-block-end: var(--sp1-5);
 }
 
 .filter-tips__item,
 .filter-tips--long p {
-  margin-top: var(--sp0-75);
-  margin-bottom: var(--sp0-75);
+  margin-block: var(--sp0-75);
 }
 
 .filter-tips__item--short {
-  margin-top: var(--sp0-25);
-  margin-bottom: 0;
+  margin-block: var(--sp0-25) 0;
 }

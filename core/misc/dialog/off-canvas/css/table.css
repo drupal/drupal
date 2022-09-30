@@ -26,29 +26,16 @@
     border-bottom: 1px solid var(--off-canvas-border-color);
   }
 
-[dir="ltr"] #drupal-off-canvas-wrapper td,[dir="ltr"] 
-  #drupal-off-canvas-wrapper th {
-    text-align: left;
-}
-
-[dir="rtl"] #drupal-off-canvas-wrapper td,[dir="rtl"] 
-  #drupal-off-canvas-wrapper th {
-    text-align: right;
-}
-
 #drupal-off-canvas-wrapper td,
   #drupal-off-canvas-wrapper th {
     padding: var(--off-canvas-table-cell-padding);
+    text-align: start;
     vertical-align: middle;
   }
 
-[dir="ltr"] #drupal-off-canvas-wrapper td:first-child,[dir="ltr"]  #drupal-off-canvas-wrapper th:first-child {
-      padding-left: var(--off-canvas-first-cell-padding-start);
-}
-
-[dir="rtl"] #drupal-off-canvas-wrapper td:first-child,[dir="rtl"]  #drupal-off-canvas-wrapper th:first-child {
-      padding-right: var(--off-canvas-first-cell-padding-start);
-}
+#drupal-off-canvas-wrapper td:first-child, #drupal-off-canvas-wrapper th:first-child {
+      padding-inline-start: var(--off-canvas-first-cell-padding-start);
+    }
 
 #drupal-off-canvas-wrapper td:not(:last-child) td, #drupal-off-canvas-wrapper th:not(:last-child) td {
       border-bottom: solid 1px var(--off-canvas-border-color);

@@ -31,15 +31,8 @@
   --autocomplete-icon-right-offset: var(--sp1);
 }
 
-html[dir="ltr"].js .form-autocomplete {
-  padding-right: var(--sp3);
-}
-
-html[dir="rtl"].js .form-autocomplete {
-  padding-left: var(--sp3);
-}
-
 html.js .form-autocomplete {
+  padding-inline-end: var(--sp3);
   background-color: var(--color--white);
   background-image: var(--autocomplete-search-icon-url);
   background-repeat: no-repeat;

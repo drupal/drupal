@@ -23,36 +23,29 @@
 
 /* Width of the entire grid maxes out. */
 
-[dir="ltr"] .mobile-buttons {
-  margin-left: auto;
-}
-
-[dir="rtl"] .mobile-buttons {
-  margin-right: auto;
-}
-
 .mobile-buttons {
-  margin-top: var(--sp0-5);
+  margin-block-start: var(--sp0-5);
+  margin-inline-start: auto;
 }
 
 @media (min-width: 31.25rem) {
 
 .mobile-buttons {
-    margin-top: var(--sp2);
+    margin-block-start: var(--sp2);
 }
   }
 
 @media (min-width: 43.75rem) {
 
 .mobile-buttons {
-    margin-top: var(--sp4);
+    margin-block-start: var(--sp4);
 }
   }
 
 @media (min-width: 75rem) {
 
 .mobile-buttons {
-    margin-top: var(--sp6);
+    margin-block-start: var(--sp6);
 }
   }
 
