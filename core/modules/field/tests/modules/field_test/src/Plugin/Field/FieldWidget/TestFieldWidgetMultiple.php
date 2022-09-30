@@ -93,8 +93,16 @@ class TestFieldWidgetMultiple extends WidgetBase {
   }
 
   /**
-   * {@inheritdoc}
-   * Used in \Drupal\field\Tests\EntityReference\EntityReferenceAdminTest::testAvailableFormatters().
+   * Test is the widget is applicable to the field definition.
+   *
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The field definition that should be checked.
+   *
+   * @return bool
+   *   TRUE if the machine name of the field is not equals to
+   *   field_onewidgetfield, FALSE otherwise.
+   *
+   * @see \Drupal\Tests\field\Functional\EntityReference\EntityReferenceAdminTest::testAvailableFormatters
    */
   public static function isApplicable(FieldDefinitionInterface $field_definition) {
     // Returns FALSE if machine name of the field equals field_onewidgetfield.
