@@ -116,31 +116,15 @@ textarea {
 
 /* Ensure that date field isn't larger than other fields. */
 
-[dir="ltr"] [type="date"]::-webkit-datetime-edit-fields-wrapper {
-    padding-left: 0;
-}
-
-[dir="rtl"] [type="date"]::-webkit-datetime-edit-fields-wrapper {
-    padding-right: 0;
-}
-
-[dir="ltr"] [type="date"]::-webkit-datetime-edit-fields-wrapper {
-    padding-right: 0;
-}
-
-[dir="rtl"] [type="date"]::-webkit-datetime-edit-fields-wrapper {
-    padding-left: 0;
-}
-
 [type="date"]::-webkit-datetime-edit-fields-wrapper {
-    padding-top: 0;
-    padding-bottom: 0;
+    padding-block: 0;
+    padding-inline-start: 0;
+    padding-inline-end: 0;
   }
 
 [type="file"] {
   height: auto;
-  padding-top: var(--sp0-75);
-  padding-bottom: var(--sp0-75);
+  padding-block: var(--sp0-75);
 }
 
 [type="color"] {

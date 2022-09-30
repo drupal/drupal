@@ -23,46 +23,17 @@
 
 /* Width of the entire grid maxes out. */
 
-[dir="ltr"] .book-pager {
-  margin-left: 0;
-}
-
-[dir="rtl"] .book-pager {
-  margin-right: 0;
-}
-
-[dir="ltr"] .book-pager {
-  margin-right: 0;
-}
-
-[dir="rtl"] .book-pager {
-  margin-left: 0;
-}
-
-[dir="ltr"] .book-pager {
-  padding-left: 0;
-}
-
-[dir="rtl"] .book-pager {
-  padding-right: 0;
-}
-
-[dir="ltr"] .book-pager {
-  padding-right: 0;
-}
-
-[dir="rtl"] .book-pager {
-  padding-left: 0;
-}
-
 .book-pager {
   display: flex;
   flex-wrap: wrap;
-  margin-top: 0 var(--sp);
-  padding-top: 0;
-  padding-bottom: var(--sp);
+  margin-block-start: 0 var(--sp);
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  padding-block: 0 var(--sp);
+  padding-inline-start: 0;
+  padding-inline-end: 0;
   list-style: none;
-  border-bottom: solid 1px var(--color--primary-40);
+  border-block-end: solid 1px var(--color--primary-40);
 }
 
 .book-pager__item {
@@ -85,21 +56,10 @@
 
 @media (min-width: 31.25rem) {
 
-[dir="ltr"] .book-pager__item--next {
-    margin-left: auto;
-  }
-
-[dir="rtl"] .book-pager__item--next {
-    margin-right: auto;
-  }
-
-[dir="ltr"] .book-pager__item--next {
-    text-align: right;
-  }
-
-[dir="rtl"] .book-pager__item--next {
-    text-align: left;
-  }
+.book-pager__item--next {
+    margin-inline-start: auto;
+    text-align: end;
+}
   }
 
 .book-pager__link {
@@ -112,117 +72,43 @@
   font-weight: 600;
 }
 
-[dir="ltr"] .book-pager__link--previous:before {
-    margin-right: 0.25em;
-}
-
-[dir="rtl"] .book-pager__link--previous:before {
-    margin-left: 0.25em;
-}
-
-[dir="ltr"] .book-pager__link--previous:before {
-    border-left: solid 0.1875rem currentColor;
-}
-
-[dir="rtl"] .book-pager__link--previous:before {
-    border-right: solid 0.1875rem currentColor;
-}
-
 .book-pager__link--previous:before {
     display: block;
     width: var(--sp0-5);
     height: var(--sp0-5);
+    margin-inline-end: 0.25em;
     content: "";
     transform: rotate(-45deg);
-    border-top: solid 0.1875rem currentColor;
+    border-block-start: solid 0.1875rem currentColor;
+    border-inline-start: solid 0.1875rem currentColor;
   }
-
-[dir="ltr"] .book-pager__link--next:after {
-    margin-left: 0.25em;
-}
-
-[dir="rtl"] .book-pager__link--next:after {
-    margin-right: 0.25em;
-}
-
-[dir="ltr"] .book-pager__link--next:after {
-    border-left: solid 0.1875rem currentColor;
-}
-
-[dir="rtl"] .book-pager__link--next:after {
-    border-right: solid 0.1875rem currentColor;
-}
 
 .book-pager__link--next:after {
     display: block;
     width: var(--sp0-5);
     height: var(--sp0-5);
+    margin-inline-start: 0.25em;
     content: "";
     transform: rotate(135deg);
-    border-top: solid 0.1875rem currentColor;
+    border-block-start: solid 0.1875rem currentColor;
+    border-inline-start: solid 0.1875rem currentColor;
   }
 
-[dir="ltr"] .book-navigation__menu {
-  margin-left: 0;
-}
-
-[dir="rtl"] .book-navigation__menu {
-  margin-right: 0;
-}
-
-[dir="ltr"] .book-navigation__menu {
-  margin-right: 0;
-}
-
-[dir="rtl"] .book-navigation__menu {
-  margin-left: 0;
-}
-
-[dir="ltr"] .book-navigation__menu {
-  padding-left: 0;
-}
-
-[dir="rtl"] .book-navigation__menu {
-  padding-right: 0;
-}
-
-[dir="ltr"] .book-navigation__menu {
-  padding-right: 0;
-}
-
-[dir="rtl"] .book-navigation__menu {
-  padding-left: 0;
-}
-
 .book-navigation__menu {
-  margin-top: var(--sp2);
-  margin-bottom: var(--sp2);
-  padding-top: 0;
-  padding-bottom: 0;
+  margin-block: var(--sp2);
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  padding-block: 0;
+  padding-inline-start: 0;
+  padding-inline-end: 0;
   list-style: none;
 }
 
-[dir="ltr"] .book-navigation__item {
-  padding-left: 0;
-}
-
-[dir="rtl"] .book-navigation__item {
-  padding-right: 0;
-}
-
-[dir="ltr"] .book-navigation__item {
-  padding-right: 0;
-}
-
-[dir="rtl"] .book-navigation__item {
-  padding-left: 0;
-}
-
 .book-navigation__item {
-  margin-top: 0;
-  margin-bottom: 0;
-  padding-top: 0;
-  padding-bottom: 0;
+  margin-block: 0;
+  padding-block: 0;
+  padding-inline-start: 0;
+  padding-inline-end: 0;
   list-style: none;
 }
 

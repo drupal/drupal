@@ -59,14 +59,9 @@
           border: solid 2px var(--color--primary-50);
           border-radius: 0.25rem;
         }
-      [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__menu-link--button.primary-nav__menu-link--has-children {
-        padding-right: 0.5625rem;
-    }
-      [dir="rtl"] body:not(.is-always-mobile-nav) .primary-nav__menu-link--button.primary-nav__menu-link--has-children {
-        padding-left: 0.5625rem;
-    }
       body:not(.is-always-mobile-nav) .primary-nav__menu-link--button.primary-nav__menu-link--has-children {
         overflow: visible; /* Necessary to view icon in IE11 */
+        padding-inline-end: 0.5625rem;
       }
 
         body:not(.is-always-mobile-nav) .primary-nav__menu-link--button.primary-nav__menu-link--has-children:focus:before {
@@ -79,18 +74,13 @@
         }
 
         /* Chevron icon for desktop navigation. */
-        [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__menu-link--button.primary-nav__menu-link--has-children:after {
-          left: calc(100% - 0.1875rem);
-    }
-        [dir="rtl"] body:not(.is-always-mobile-nav) .primary-nav__menu-link--button.primary-nav__menu-link--has-children:after {
-          right: calc(100% - 0.1875rem);
-    }
         body:not(.is-always-mobile-nav) .primary-nav__menu-link--button.primary-nav__menu-link--has-children:after {
           position: absolute;
-          top: 50%;
+          inset-block-start: 50%;
+          inset-inline-start: calc(100% - 0.1875rem);
           width: 0.5rem;
           height: 0.5rem;
-          margin-top: -2px;
+          margin-block-start: -2px;
           transform: translateY(-50%) rotate(45deg);
           /* Intentionally not using CSS logical properties. */
           border-top: 0;
@@ -102,25 +92,10 @@
           opacity: 1;
         }
 
-    [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__menu-link-inner {
-      padding-left: 0;
-    }
-
-    [dir="rtl"] body:not(.is-always-mobile-nav) .primary-nav__menu-link-inner {
-      padding-right: 0;
-    }
-
-    [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__menu-link-inner {
-      padding-right: 0;
-    }
-
-    [dir="rtl"] body:not(.is-always-mobile-nav) .primary-nav__menu-link-inner {
-      padding-left: 0;
-    }
-
     body:not(.is-always-mobile-nav) .primary-nav__menu-link-inner {
-      padding-top: var(--sp2);
-      padding-bottom: var(--sp2);
+      padding-block: var(--sp2);
+      padding-inline-start: 0;
+      padding-inline-end: 0;
     }
 
       body:not(.is-always-mobile-nav) .primary-nav__menu-link-inner:after {
@@ -128,33 +103,10 @@
         border-top-width: var(--sp0-5);
       }
 
-    [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__menu--level-1 {
-      margin-right: var(--sp);
-    }
-
-    [dir="rtl"] body:not(.is-always-mobile-nav) .primary-nav__menu--level-1 {
-      margin-left: var(--sp);
-    }
-
     body:not(.is-always-mobile-nav) .primary-nav__menu--level-1 {
       display: flex;
       align-items: stretch;
-    }
-
-    [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1 {
-      margin-left: 0;
-    }
-
-    [dir="rtl"] body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1 {
-      margin-right: 0;
-    }
-
-    [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1 {
-      margin-right: 0;
-    }
-
-    [dir="rtl"] body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1 {
-      margin-left: 0;
+      margin-inline-end: var(--sp);
     }
 
     body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1 {
@@ -163,41 +115,14 @@
       align-items: center;
       width: max-content;
       max-width: 12.5rem;
-      margin-top: 0;
-      margin-bottom: 0;
+      margin-block: 0;
+      margin-inline-start: 0;
+      margin-inline-end: 0;
     }
 
-      [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1:not(:last-child) {
-        margin-right: var(--sp2);
-    }
-
-      [dir="rtl"] body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1:not(:last-child) {
-        margin-left: var(--sp2);
-    }
-
-    [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__menu--level-2 {
-      margin-left: 0;
-    }
-
-    [dir="rtl"] body:not(.is-always-mobile-nav) .primary-nav__menu--level-2 {
-      margin-right: 0;
-    }
-
-    [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__menu--level-2 {
-      padding-left: var(--sp2);
-    }
-
-    [dir="rtl"] body:not(.is-always-mobile-nav) .primary-nav__menu--level-2 {
-      padding-right: var(--sp2);
-    }
-
-    [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__menu--level-2 {
-      padding-right: var(--sp2);
-    }
-
-    [dir="rtl"] body:not(.is-always-mobile-nav) .primary-nav__menu--level-2 {
-      padding-left: var(--sp2);
-    }
+      body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1:not(:last-child) {
+        margin-inline-end: var(--sp2);
+      }
 
     body:not(.is-always-mobile-nav) .primary-nav__menu--level-2 {
       position: absolute;
@@ -210,9 +135,11 @@
       /* Ensure that long level-2 menus will never overflow viewport (focused
        * elements should always be in viewport per accessibility guidelines). */
       max-height: calc(100vh - var(--site-header-height-wide) - var(--drupal-displace-offset-top, 0px) - var(--drupal-displace-offset-bottom, 0px) - var(--sp));
-      margin-top: 0;
-      padding-top: calc(3 * var(--sp));
-      padding-bottom: calc(3 * var(--sp));
+      margin-block-start: 0;
+      margin-inline-start: 0;
+      padding-block: calc(3 * var(--sp));
+      padding-inline-start: var(--sp2);
+      padding-inline-end: var(--sp2);
       transition: none;
       transform: translate(-50%, -1.25rem);
       opacity: 0;
@@ -228,7 +155,7 @@
 
       body:not(.is-always-mobile-nav) .primary-nav__menu--level-2.is-active-menu-parent {
         visibility: visible;
-        margin-top: 0;
+        margin-block-start: 0;
         transform: translate(-50%, 0);
         opacity: 1;
       }
@@ -244,25 +171,10 @@
         transform: none;
       }
 
-      [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2 .primary-nav__menu-link-inner {
-        padding-left: 0;
-    }
-
-      [dir="rtl"] body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2 .primary-nav__menu-link-inner {
-        padding-right: 0;
-    }
-
-      [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2 .primary-nav__menu-link-inner {
-        padding-right: 0;
-    }
-
-      [dir="rtl"] body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2 .primary-nav__menu-link-inner {
-        padding-left: 0;
-    }
-
       body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2 .primary-nav__menu-link-inner {
-        padding-top: var(--sp0-5);
-        padding-bottom: var(--sp0-5);
+        padding-block: var(--sp0-5);
+        padding-inline-start: 0;
+        padding-inline-end: 0;
       }
 
         body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2 .primary-nav__menu-link-inner:after {

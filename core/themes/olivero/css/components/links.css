@@ -23,33 +23,11 @@
 
 /* Width of the entire grid maxes out. */
 
-[dir="ltr"] .links.inline {
-  margin-left: 0;
-}
-
-[dir="rtl"] .links.inline {
-  margin-right: 0;
-}
-
-[dir="ltr"] .links.inline {
-  padding-left: 0;
-}
-
-[dir="rtl"] .links.inline {
-  padding-right: 0;
-}
-
-[dir="ltr"] .links.inline {
-  padding-right: 0;
-}
-
-[dir="rtl"] .links.inline {
-  padding-left: 0;
-}
-
 .links.inline {
-  padding-top: 0;
-  padding-bottom: 0;
+  margin-inline-start: 0;
+  padding-block: 0;
+  padding-inline-start: 0;
+  padding-inline-end: 0;
   list-style: none;
 }
 
@@ -57,21 +35,13 @@
     display: inline;
   }
 
-[dir="ltr"] .links.inline > *:not(:last-child) {
-      padding-right: 1em;
-}
-
-[dir="rtl"] .links.inline > *:not(:last-child) {
-      padding-left: 1em;
-}
+.links.inline > *:not(:last-child) {
+      padding-inline-end: 1em;
+    }
 
 @media (min-width: 43.75rem) {
 
-[dir="ltr"] .node--type-book .links.inline {
-    text-align: right;
-  }
-
-[dir="rtl"] .node--type-book .links.inline {
-    text-align: left;
-  }
+.node--type-book .links.inline {
+    text-align: end;
+}
   }

@@ -23,31 +23,16 @@
   --off-canvas-messages-icon-error: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23e32700'%3e%3cpath d='M8.002 1c-3.868 0-7.002 3.134-7.002 7s3.134 7 7.002 7c3.865 0 7-3.134 7-7s-3.135-7-7-7zm4.025 9.284c.062.063.1.149.1.239 0 .091-.037.177-.1.24l-1.262 1.262c-.064.062-.15.1-.24.1s-.176-.036-.24-.1l-2.283-2.283-2.286 2.283c-.064.062-.15.1-.24.1s-.176-.036-.24-.1l-1.261-1.262c-.063-.062-.1-.148-.1-.24 0-.088.036-.176.1-.238l2.283-2.285-2.283-2.284c-.063-.064-.1-.15-.1-.24s.036-.176.1-.24l1.262-1.262c.063-.063.149-.1.24-.1.089 0 .176.036.24.1l2.285 2.284 2.283-2.284c.064-.063.15-.1.24-.1s.176.036.24.1l1.262 1.262c.062.063.1.149.1.24 0 .089-.037.176-.1.24l-2.283 2.284 2.283 2.284z'/%3e%3c/svg%3e");
 }
 
-[dir="ltr"] #drupal-off-canvas-wrapper .messages {
-    padding-left: calc(2 * var(--off-canvas-messages-icon-size));
-}
-
-[dir="rtl"] #drupal-off-canvas-wrapper .messages {
-    padding-right: calc(2 * var(--off-canvas-messages-icon-size));
-}
-
 #drupal-off-canvas-wrapper .messages {
     position: relative; /* Anchor :before pseudo-element. */
     margin-top: calc(2 * var(--off-canvas-vertical-spacing-unit));
-    padding: calc(2 * var(--off-canvas-vertical-spacing-unit)); /* Room for icon. */
+    padding: calc(2 * var(--off-canvas-vertical-spacing-unit));
+    padding-inline-start: calc(2 * var(--off-canvas-messages-icon-size)); /* Room for icon. */
     border: solid 1px transparent;
     background-color: var(--off-canvas-messages-background-color);
 
     /* Icon. */
   }
-
-[dir="ltr"] #drupal-off-canvas-wrapper .messages:before {
-      left: 0.625rem;
-}
-
-[dir="rtl"] #drupal-off-canvas-wrapper .messages:before {
-      right: 0.625rem;
-}
 
 #drupal-off-canvas-wrapper .messages:before {
       position: absolute;
@@ -59,6 +44,7 @@
       transform: translateY(-50%);
       background-repeat: no-repeat;
       background-size: contain;
+      inset-inline-start: 0.625rem;
     }
 
 @media (forced-colors: active) {
@@ -86,16 +72,9 @@
     display: none;
   }
 
-[dir="ltr"] #drupal-off-canvas-wrapper .messages__list {
-    padding-left: 1.25rem;
-}
-
-[dir="rtl"] #drupal-off-canvas-wrapper .messages__list {
-    padding-right: 1.25rem;
-}
-
 #drupal-off-canvas-wrapper .messages__list {
     margin: 0;
+    padding-inline-start: 1.25rem;
   }
 
 #drupal-off-canvas-wrapper .messages abbr {

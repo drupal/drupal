@@ -25,15 +25,8 @@
   background-color: #f7f7f7;
 }
 
-[dir="ltr"] .layout-builder__link--add {
-  padding-left: 1.3em;
-}
-
-[dir="rtl"] .layout-builder__link--add {
-  padding-right: 1.3em;
-}
-
 .layout-builder__link--add {
+  padding-inline-start: 1.3em;
   color: #686868;
   border-bottom: none;
   background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16px' height='16px'%3e%3cpath fill='%23787878' d='M0.656,9.023c0,0.274,0.224,0.5,0.499,0.5l4.853,0.001c0.274-0.001,0.501,0.226,0.5,0.5l0.001,4.853 c-0.001,0.273,0.227,0.5,0.501,0.5l1.995-0.009c0.273-0.003,0.497-0.229,0.5-0.503l0.002-4.806c0-0.272,0.228-0.5,0.499-0.502 l4.831-0.021c0.271-0.005,0.497-0.23,0.501-0.502l0.008-1.998c0-0.276-0.225-0.5-0.499-0.5l-4.852,0c-0.275,0-0.502-0.228-0.501-0.5 L9.493,1.184c0-0.275-0.225-0.499-0.5-0.499L6.997,0.693C6.722,0.694,6.496,0.92,6.495,1.195L6.476,6.026 c-0.001,0.274-0.227,0.5-0.501,0.5L1.167,6.525C0.892,6.526,0.665,6.752,0.665,7.026L0.656,9.023z'/%3e%3c/svg%3e") transparent center left / 1em no-repeat; /* LTR */
@@ -75,16 +68,6 @@
   background-color: #eff6fc;
 }
 
-[dir="ltr"] .layout-builder__link--remove {
-  margin-left: -0.625rem;
-  margin-right: 0.375rem;
-}
-
-[dir="rtl"] .layout-builder__link--remove {
-  margin-right: -0.625rem;
-  margin-left: 0.375rem;
-}
-
 .layout-builder__link--remove {
   position: relative;
   z-index: 2;
@@ -92,6 +75,7 @@
   box-sizing: border-box;
   width: 1.625rem;
   height: 1.625rem;
+  margin-inline: -0.625rem 0.375rem;
   padding: 0;
   white-space: nowrap;
   text-indent: -624.9375rem;

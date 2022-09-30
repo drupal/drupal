@@ -44,17 +44,8 @@
       gap: var(--off-canvas-table-cell-padding);
     }
 
-[dir="ltr"] #drupal-off-canvas-wrapper td abbr {
-      margin-left: 0;
-      margin-right: 0.3125rem;
-}
-
-[dir="rtl"] #drupal-off-canvas-wrapper td abbr {
-      margin-right: 0;
-      margin-left: 0.3125rem;
-}
-
 #drupal-off-canvas-wrapper td abbr {
+      margin-inline: 0 0.3125rem;
       text-decoration: none;
     }
 
@@ -100,16 +91,9 @@
     font-size: 0.875rem;
   }
 
-[dir="ltr"] #drupal-off-canvas-wrapper .tabledrag-toggle-weight-wrapper {
-    text-align: right;
-}
-
-[dir="rtl"] #drupal-off-canvas-wrapper .tabledrag-toggle-weight-wrapper {
-    text-align: left;
-}
-
 #drupal-off-canvas-wrapper .tabledrag-toggle-weight-wrapper {
     padding-top: 0.625rem;
+    text-align: end;
   }
 
 #drupal-off-canvas-wrapper .indentation {

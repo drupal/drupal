@@ -45,12 +45,8 @@ a.tabledrag-handle,
   height: 2.25rem;
 }
 
-[dir="ltr"] .draggable a.tabledrag-handle {
-  margin-left: 0;
-}
-
-[dir="rtl"] .draggable a.tabledrag-handle {
-  margin-right: 0;
+.draggable a.tabledrag-handle {
+  margin-inline-start: 0;
 }
 
 a.tabledrag-handle .handle {
@@ -65,25 +61,10 @@ a.tabledrag-handle .handle {
   background-position: 50% 5px;
 }
 
-[dir="ltr"] .touchevents .draggable td {
-  padding-left: 0;
-}
-
-[dir="rtl"] .touchevents .draggable td {
-  padding-right: 0;
-}
-
-[dir="ltr"] .touchevents .draggable td {
-  padding-right: var(--sp0-5);
-}
-
-[dir="rtl"] .touchevents .draggable td {
-  padding-left: var(--sp0-5);
-}
-
 .touchevents .draggable td {
-  padding-top: var(--sp0-5);
-  padding-bottom: var(--sp0-5);
+  padding-block: var(--sp0-5);
+  padding-inline-start: 0;
+  padding-inline-end: var(--sp0-5);
 }
 
 .touchevents .draggable .menu-item__link {

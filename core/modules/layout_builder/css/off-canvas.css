@@ -53,20 +53,13 @@
   }
     }
 
-[dir="ltr"] #drupal-off-canvas-wrapper .inline-block-create-button {
-    padding-left: calc(2 * var(--off-canvas-padding) + var(--icon-size) / 2);
-}
-
-[dir="rtl"] #drupal-off-canvas-wrapper .inline-block-create-button {
-    padding-right: calc(2 * var(--off-canvas-padding) + var(--icon-size) / 2);
-}
-
 #drupal-off-canvas-wrapper .inline-block-create-button {
     --icon-size: 1rem;
 
     position: relative; /* Anchor pseudo-element. */
     display: block;
-    padding: 1.5rem; /* Room for icon */
+    padding: 1.5rem;
+    padding-inline-start: calc(2 * var(--off-canvas-padding) + var(--icon-size) / 2); /* Room for icon */
     border-bottom: 1px solid #333;
     font-size: 1rem;
 

@@ -23,31 +23,14 @@
 
 /* Width of the entire grid maxes out. */
 
-[dir="ltr"] .button {
-  margin-left: 0;
-}
-
-[dir="rtl"] .button {
-  margin-right: 0;
-}
-
-[dir="ltr"] .button {
-  margin-right: var(--sp1);
-}
-
-[dir="rtl"] .button {
-  margin-left: var(--sp1);
-}
-
 .button {
   display: inline-block;
   height: var(--sp3);
-  margin-top: var(--sp1);
-  margin-bottom: var(--sp1);
-  padding-top: calc((var(--sp3) - var(--line-height-s)) / 2);
-  padding-bottom: calc((var(--sp3) - var(--line-height-s)) / 2);
-  padding-left: var(--sp1-5);
-  padding-right: var(--sp1-5);
+  margin-block: var(--sp1);
+  margin-inline-start: 0;
+  margin-inline-end: var(--sp1);
+  padding-block: calc((var(--sp3) - var(--line-height-s)) / 2);
+  padding-inline: var(--sp1-5);
   cursor: pointer;
   text-align: center;
   text-decoration: none;
@@ -101,43 +84,24 @@
     align-items: center;
 
     /* Top padding accounts for font not being vertically centered within line-height. */
-    padding-top: 1px;
-    padding-bottom: 0;
-    padding-left: var(--sp1-5);
-    padding-right: var(--sp1-5);
+    padding-block: 1px 0;
+    padding-inline: var(--sp1-5);
     line-height: var(--line-height-s);
 }
   }
 
 /* No margin if is part of a menu. */
 
-[dir="ltr"] .menu .button {
-  margin-left: 0;
-}
-
-[dir="rtl"] .menu .button {
-  margin-right: 0;
-}
-
-[dir="ltr"] .menu .button {
-  margin-right: 0;
-}
-
-[dir="rtl"] .menu .button {
-  margin-left: 0;
-}
-
 .menu .button {
-  margin-top: 0;
-  margin-bottom: 0;
+  margin-block: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
 }
 
 .button--small {
   height: var(--sp2-5);
-  padding-top: calc((var(--sp2-5) - var(--line-height-s)) / 2);
-  padding-bottom: calc((var(--sp2-5) - var(--line-height-s)) / 2);
-  padding-left: var(--sp);
-  padding-right: var(--sp);
+  padding-block: calc((var(--sp2-5) - var(--line-height-s)) / 2);
+  padding-inline: var(--sp);
   font-size: var(--font-size-base);
   line-height: normal;
 }
@@ -170,29 +134,15 @@
   align-items: center;
 }
 
-[dir="ltr"] .button--icon-back:before {
-    margin-right: 0.5em;
-}
-
-[dir="rtl"] .button--icon-back:before {
-    margin-left: 0.5em;
-}
-
-[dir="ltr"] .button--icon-back:before {
-    border-left: solid 2px currentColor;
-}
-
-[dir="rtl"] .button--icon-back:before {
-    border-right: solid 2px currentColor;
-}
-
 .button--icon-back:before {
     display: block;
     width: 0.5em;
     height: 0.5em;
+    margin-inline-end: 0.5em;
     content: "";
     transform: rotate(45deg); /* LTR */
-    border-bottom: solid 2px currentColor;
+    border-block-end: solid 2px currentColor;
+    border-inline-start: solid 2px currentColor;
   }
 
 [dir="rtl"] .button--icon-back:before {

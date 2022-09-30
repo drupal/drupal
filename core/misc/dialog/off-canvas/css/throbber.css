@@ -34,29 +34,15 @@
   }
     }
 
-[dir="ltr"] #drupal-off-canvas-wrapper .layout-selection .ajax-progress,[dir="ltr"] 
-    #drupal-off-canvas-wrapper .inline-block-list .ajax-progress,[dir="ltr"] 
-    #drupal-off-canvas-wrapper .layout-selection .ajax-progress-throbber,[dir="ltr"] 
-    #drupal-off-canvas-wrapper .inline-block-list .ajax-progress-throbber {
-      right: 0;
-}
-
-[dir="rtl"] #drupal-off-canvas-wrapper .layout-selection .ajax-progress,[dir="rtl"] 
-    #drupal-off-canvas-wrapper .inline-block-list .ajax-progress,[dir="rtl"] 
-    #drupal-off-canvas-wrapper .layout-selection .ajax-progress-throbber,[dir="rtl"] 
-    #drupal-off-canvas-wrapper .inline-block-list .ajax-progress-throbber {
-      left: 0;
-}
-
 #drupal-off-canvas-wrapper .layout-selection .ajax-progress,
     #drupal-off-canvas-wrapper .inline-block-list .ajax-progress,
     #drupal-off-canvas-wrapper .layout-selection .ajax-progress-throbber,
     #drupal-off-canvas-wrapper .inline-block-list .ajax-progress-throbber {
       position: absolute;
-      top: 0;
-      bottom: 0;
-      margin-top: auto;
-      margin-bottom: auto;
+      inset-block-start: 0;
+      inset-block-end: 0;
+      inset-inline-end: 0;
+      margin-block: auto;
     }
 
 @keyframes off-canvas-throbber-spin {

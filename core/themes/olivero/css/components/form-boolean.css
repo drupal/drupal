@@ -90,16 +90,9 @@ input.error[type="checkbox"]::-ms-check, input.error[type="radio"]::-ms-check {
     border: 1px solid var(--color--red);
   }
 
-[dir="ltr"] input[type="checkbox"] + label,[dir="ltr"]  input[type="radio"] + label {
-    padding-left: var(--sp0-5);
-}
-
-[dir="rtl"] input[type="checkbox"] + label,[dir="rtl"]  input[type="radio"] + label {
-    padding-right: var(--sp0-5);
-}
-
 input[type="checkbox"] + label, input[type="radio"] + label {
     display: inline-block;
+    padding-inline-start: var(--sp0-5);
   }
 
 input[type="checkbox"]:checked {
@@ -128,6 +121,5 @@ input.error[type="radio"]:focus {
   }
 
 .form-type-boolean {
-  margin-top: var(--sp1);
-  margin-bottom: var(--sp1);
+  margin-block: var(--sp1);
 }

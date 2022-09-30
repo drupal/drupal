@@ -25,8 +25,7 @@
 }
 
 #drupal-off-canvas-wrapper form {
-    padding-top: var(--off-canvas-padding);
-    padding-bottom: var(--off-canvas-padding);
+    padding-block: var(--off-canvas-padding);
   }
 
 #drupal-off-canvas-wrapper form > *:first-child {
@@ -112,17 +111,10 @@
     appearance: none; /* Necessary for Safari. */
   }
 
-[dir="ltr"] #drupal-off-canvas-wrapper select {
-    padding-right: 1.25rem;
-}
-
-[dir="rtl"] #drupal-off-canvas-wrapper select {
-    padding-left: 1.25rem;
-}
-
 #drupal-off-canvas-wrapper select {
     -webkit-appearance: none;
     appearance: none;
+    padding-inline-end: 1.25rem;
     border: var(--drupal-off-canvas-input-border);
     border-radius: var(--drupal-off-canvas-input-border-radius);
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 9'%3e%3cpath fill='none' stroke-width='1.5' d='M1 1l6 6 6-6' stroke='%23545560'/%3e%3c/svg%3e");
@@ -137,17 +129,10 @@
 
 @media (forced-colors: active) {
 
-[dir="ltr"] #drupal-off-canvas-wrapper select {
-      padding-right: 0;
-  }
-
-[dir="rtl"] #drupal-off-canvas-wrapper select {
-      padding-left: 0;
-  }
-
 #drupal-off-canvas-wrapper select {
       -webkit-appearance: revert;
       appearance: revert;
+      padding-inline-end: 0;
       background: revert;
   }
     }
@@ -156,15 +141,8 @@
    * Autocomplete.
    */
 
-[dir="ltr"] #drupal-off-canvas-wrapper .form-autocomplete {
-    padding-right: 2.5rem;
-}
-
-[dir="rtl"] #drupal-off-canvas-wrapper .form-autocomplete {
-    padding-left: 2.5rem;
-}
-
-#drupal-off-canvas-wrapper .form-autocomplete { /* Room for icon. */
+#drupal-off-canvas-wrapper .form-autocomplete {
+    padding-inline-end: 2.5rem; /* Room for icon. */
     background-image: url("data:image/svg+xml,%3csvg width='40' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M8 1C3.46.827-.188 5.787 1.313 10.068c1.176 4.384 6.993 6.417 10.637 3.7.326-.39.565.276.846.442l3.74 3.739 1.413-1.414-4.35-4.35c2.811-3.468 1.15-9.247-3.062-10.71A7.003 7.003 0 008 1zm0 2c3.242-.123 5.849 3.42 4.777 6.477-.842 3.132-4.994 4.58-7.6 2.65-2.745-1.73-2.9-6.125-.285-8.044A5.006 5.006 0 018 3z' fill='%23868686'/%3e%3c/svg%3e");
     background-repeat: no-repeat;
     background-position: center right 1px; /* LTR */

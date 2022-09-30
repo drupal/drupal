@@ -25,28 +25,13 @@
 
 /* Width of the entire grid maxes out. */
 
-[dir="ltr"] .skip-link {
-  padding-left: var(--sp);
-}
-
-[dir="rtl"] .skip-link {
-  padding-right: var(--sp);
-}
-
-[dir="ltr"] .skip-link {
-  padding-right: var(--sp);
-}
-
-[dir="rtl"] .skip-link {
-  padding-left: var(--sp);
-}
-
 .skip-link {
   display: block;
   width: 100%;
   max-width: var(--max-bg-color);
-  padding-top: var(--sp0-5);
-  padding-bottom: var(--sp0-5);
+  padding-block: var(--sp0-5);
+  padding-inline-start: var(--sp);
+  padding-inline-end: var(--sp);
   text-decoration: none;
   color: var(--color--white);
   outline: 0;

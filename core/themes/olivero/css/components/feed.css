@@ -41,14 +41,6 @@
   font-weight: 600;
 }
 
-[dir="ltr"] .feed-icon__icon {
-  margin-left: var(--sp0-5);
-}
-
-[dir="rtl"] .feed-icon__icon {
-  margin-right: var(--sp0-5);
-}
-
 .feed-icon__icon {
   display: flex;
   flex-shrink: 0;
@@ -56,6 +48,7 @@
   justify-content: center;
   width: var(--sp1-5);
   height: var(--sp1-5);
+  margin-inline-start: var(--sp0-5);
   color: var(--color--white);
   background-color: var(--color--primary-50);
 }

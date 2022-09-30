@@ -23,34 +23,11 @@
 
 /* Width of the entire grid maxes out. */
 
-[dir="ltr"] .header-nav {
-  left: 100%;
-}
-
-[dir="rtl"] .header-nav {
-  right: 100%;
-}
-
-[dir="ltr"] .header-nav {
-  padding-left: var(--sp);
-}
-
-[dir="rtl"] .header-nav {
-  padding-right: var(--sp);
-}
-
-[dir="ltr"] .header-nav {
-  padding-right: var(--sp);
-}
-
-[dir="rtl"] .header-nav {
-  padding-left: var(--sp);
-}
-
 .header-nav {
   position: fixed;
   z-index: 501; /* Appear above overlay and contextual links in header. */
-  top: 0;
+  inset-block-start: 0;
+  inset-inline-start: 100%;
   visibility: hidden;
   overflow: auto;
   /* Ensure that header nav not use additional space and force system branding
@@ -59,13 +36,14 @@
   width: 100%;
   max-width: var(--mobile-nav-width);
   height: 100%;
-  padding-top: 0;
-  padding-bottom: var(--sp);
+  padding-block: 0 var(--sp);
+  padding-inline-start: var(--sp);
+  padding-inline-end: var(--sp);
   /* Create room for the "close" button. We cannot use margin because the
    * mobile navigation needs to slide beneath the button, but we also cannot
    * use padding because that would enable the button to scroll out of the
    * viewport on short screens. */
-  border-top: solid var(--color--white) calc(var(--sp3) + var(--drupal-displace-offset-top, 0px));
+  border-block-start: solid var(--color--white) calc(var(--sp3) + var(--drupal-displace-offset-top, 0px));
   background-color: var(--color--white);
   box-shadow: 0 0 72px rgba(0, 0, 0, 0.1);
 }
@@ -88,16 +66,9 @@
 
 @media (min-width: 43.75rem) {
 
-[dir="ltr"] .header-nav {
-    padding-left: var(--sp3);
-  }
-
-[dir="rtl"] .header-nav {
-    padding-right: var(--sp3);
-  }
-
 .header-nav {
-    padding-bottom: var(--sp3);
+    padding-block-end: var(--sp3);
+    padding-inline-start: var(--sp3);
     border-top-width: calc(var(--sp7) + var(--drupal-displace-offset-top, 0px));
 }
   }
@@ -131,22 +102,6 @@ html.js .header-nav {
 
 @media (min-width: 75rem) {
 
-[dir="ltr"] body:not(.is-always-mobile-nav) .header-nav {
-    padding-left: 0;
-  }
-
-[dir="rtl"] body:not(.is-always-mobile-nav) .header-nav {
-    padding-right: 0;
-  }
-
-[dir="ltr"] body:not(.is-always-mobile-nav) .header-nav {
-    padding-right: 0;
-  }
-
-[dir="rtl"] body:not(.is-always-mobile-nav) .header-nav {
-    padding-left: 0;
-  }
-
 body:not(.is-always-mobile-nav) .header-nav {
     position: static;
     display: flex;
@@ -157,29 +112,23 @@ body:not(.is-always-mobile-nav) .header-nav {
     justify-content: flex-end;
     max-width: none;
     height: var(--header-height-wide-when-fixed);
-    margin-top: auto;
-    padding-top: 0;
-    padding-bottom: 0;
+    margin-block-start: auto;
+    padding-block: 0;
+    padding-inline-start: 0;
+    padding-inline-end: 0;
     transition: transform 0.2s;
     transform: none;
-    border-top: 0;
+    border-block-start: 0;
     box-shadow: none;
 }
   }
 
 @media (min-width: 75rem) {
 
-[dir="ltr"] body.is-always-mobile-nav .header-nav {
-      padding-right: var(--sp);
-  }
-
-[dir="rtl"] body.is-always-mobile-nav .header-nav {
-      padding-left: var(--sp);
-  }
-
 body.is-always-mobile-nav .header-nav {
       overflow: auto;
       max-width: calc((7 * (var(--grid-col-width) + var(--grid-gap))));
+      padding-inline-end: var(--sp);
       transition: transform 0.2s, visibility 0.2s;
       border-top-width: calc(var(--drupal-displace-offset-top, 0px) + var(--sp11));
   }
@@ -187,31 +136,17 @@ body.is-always-mobile-nav .header-nav {
 
 @media (min-width: 90rem) {
 
-[dir="ltr"] body.is-always-mobile-nav .header-nav {
-      padding-right: calc(100vw - (var(--max-width) + var(--content-left) - var(--sp)));
-  }
-
-[dir="rtl"] body.is-always-mobile-nav .header-nav {
-      padding-left: calc(100vw - (var(--max-width) + var(--content-left) - var(--sp)));
-  }
-
 body.is-always-mobile-nav .header-nav {
       max-width: calc(100vw - (var(--max-width) + var(--content-left)) + ((7 * (var(--grid-col-width) + var(--grid-gap)))));
+      padding-inline-end: calc(100vw - (var(--max-width) + var(--content-left) - var(--sp)));
   }
     }
-
-[dir="ltr"] .header-nav-overlay {
-  left: 0;
-}
-
-[dir="rtl"] .header-nav-overlay {
-  right: 0;
-}
 
 .header-nav-overlay {
   position: fixed;
   z-index: 101;
-  top: 0;
+  inset-block-start: 0;
+  inset-inline-start: 0;
   display: none;
   width: 100%;
   height: 100vh;

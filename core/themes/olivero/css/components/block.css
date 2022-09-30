@@ -24,8 +24,7 @@
 /* Width of the entire grid maxes out. */
 
 .block__title {
-  margin-top: 0;
-  margin-bottom: var(--sp);
+  margin-block: 0 var(--sp);
   letter-spacing: 0.02em;
   color: var(--color-text-neutral-soft);
   font-size: var(--font-size-s);

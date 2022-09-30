@@ -32,17 +32,10 @@
     /* The pencil icon. */
   }
 
-[dir="ltr"] #drupal-off-canvas-wrapper .ui-dialog-titlebar:before {
-      left: 1em;
-}
-
-[dir="rtl"] #drupal-off-canvas-wrapper .ui-dialog-titlebar:before {
-      right: 1em;
-}
-
 #drupal-off-canvas-wrapper .ui-dialog-titlebar:before {
       position: absolute;
       top: 0;
+      inset-inline-start: 1em;
       display: block;
       width: 1.25rem;
       height: 100%;
@@ -67,19 +60,10 @@
 
 /* Close button. */
 
-[dir="ltr"] #drupal-off-canvas-wrapper .ui-dialog-titlebar-close {
-    left: auto;
-    right: 0.625rem;
-}
-
-[dir="rtl"] #drupal-off-canvas-wrapper .ui-dialog-titlebar-close {
-    right: auto;
-    left: 0.625rem;
-}
-
 #drupal-off-canvas-wrapper .ui-dialog-titlebar-close {
     position: absolute;
     top: 50%;
+    inset-inline: auto 0.625rem;
     overflow: hidden;
     width: 1.875rem;
     height: 1.875rem;
