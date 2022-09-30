@@ -100,11 +100,11 @@ class KeyValueEntityStorageTest extends UnitTestCase {
   protected function setUpKeyValueEntityStorage($uuid_key = 'uuid') {
     $this->entityType->expects($this->atLeastOnce())
       ->method('getKey')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['id', 'id'],
         ['uuid', $uuid_key],
         ['langcode', 'langcode'],
-      ]));
+      ]);
     $this->entityType->expects($this->atLeastOnce())
       ->method('id')
       ->will($this->returnValue('test_entity_type'));

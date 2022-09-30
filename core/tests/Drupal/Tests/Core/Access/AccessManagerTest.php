@@ -543,9 +543,9 @@ class AccessManagerTest extends UnitTestCase {
         $resolver = $this->createMock('Drupal\Component\Utility\ArgumentsResolverInterface');
         $resolver->expects($this->any())
           ->method('getArguments')
-          ->will($this->returnCallback(function ($callable) use ($route_match) {
+          ->willReturnCallback(function ($callable) use ($route_match) {
             return [$route_match->getRouteObject()];
-          }));
+          });
 
         return $resolver;
       });
