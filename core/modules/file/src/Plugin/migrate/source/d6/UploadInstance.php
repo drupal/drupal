@@ -10,6 +10,11 @@ use Drupal\migrate\Plugin\migrate\source\DummyQueryTrait;
 /**
  * Drupal 6 upload instance source from database.
  *
+ * For available configuration keys, refer to the parent classes.
+ *
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
  * @MigrateSource(
  *   id = "d6_upload_instance",
  *   source_module = "upload"
