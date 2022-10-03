@@ -67,6 +67,7 @@ class TestDisplayVariant extends VariantBase implements PageVariantInterface, Co
    * {@inheritdoc}
    */
   public function setMainContent(array $main_content) {
+    assert(!empty($this->getConfiguration()['required_configuration']), 'Ensure that ::setMainContent() is called with the variant configuration');
     $this->mainContent = $main_content;
     return $this;
   }
@@ -75,6 +76,7 @@ class TestDisplayVariant extends VariantBase implements PageVariantInterface, Co
    * {@inheritdoc}
    */
   public function setTitle($title) {
+    assert(!empty($this->getConfiguration()['required_configuration']), 'Ensure that ::setTitle() is called with the variant configuration');
     $this->title = $title;
     return $this;
   }
