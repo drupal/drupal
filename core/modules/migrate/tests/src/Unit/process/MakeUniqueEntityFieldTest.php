@@ -162,10 +162,10 @@ class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
   protected function entityQueryExpects($count) {
     $this->entityQuery->expects($this->exactly($count + 1))
       ->method('condition')
-      ->will($this->returnValue($this->entityQuery));
+      ->willReturn($this->entityQuery);
     $this->entityQuery->expects($this->exactly($count + 1))
       ->method('count')
-      ->will($this->returnValue($this->entityQuery));
+      ->willReturn($this->entityQuery);
     $this->entityQuery->expects($this->exactly($count + 1))
       ->method('execute')
       ->willReturnCallback(function () use (&$count) {

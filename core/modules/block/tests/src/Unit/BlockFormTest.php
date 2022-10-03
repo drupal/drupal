@@ -79,7 +79,7 @@ class BlockFormTest extends UnitTestCase {
     $this->themeHandler = $this->createMock('Drupal\Core\Extension\ThemeHandlerInterface');
     $this->entityTypeManager->expects($this->any())
       ->method('getStorage')
-      ->will($this->returnValue($this->storage));
+      ->willReturn($this->storage);
 
     $this->pluginFormFactory = $this->prophesize(PluginFormFactoryInterface::class);
   }
@@ -99,14 +99,14 @@ class BlockFormTest extends UnitTestCase {
       ->getMock();
     $plugin->expects($this->any())
       ->method('getMachineNameSuggestion')
-      ->will($this->returnValue($machine_name));
+      ->willReturn($machine_name);
 
     $block = $this->getMockBuilder(Block::class)
       ->disableOriginalConstructor()
       ->getMock();
     $block->expects($this->any())
       ->method('getPlugin')
-      ->will($this->returnValue($plugin));
+      ->willReturn($plugin);
     return $block;
   }
 
@@ -126,15 +126,15 @@ class BlockFormTest extends UnitTestCase {
     $query = $this->createMock('Drupal\Core\Entity\Query\QueryInterface');
     $query->expects($this->exactly(5))
       ->method('condition')
-      ->will($this->returnValue($query));
+      ->willReturn($query);
 
     $query->expects($this->exactly(5))
       ->method('execute')
-      ->will($this->returnValue(['test', 'other_test', 'other_test_1', 'other_test_2']));
+      ->willReturn(['test', 'other_test', 'other_test_1', 'other_test_2']);
 
     $this->storage->expects($this->exactly(5))
       ->method('getQuery')
-      ->will($this->returnValue($query));
+      ->willReturn($query);
 
     $block_form_controller = new BlockForm($this->entityTypeManager, $this->conditionManager, $this->contextRepository, $this->language, $this->themeHandler, $this->pluginFormFactory->reveal());
 

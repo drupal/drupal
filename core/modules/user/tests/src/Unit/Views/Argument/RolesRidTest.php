@@ -46,19 +46,19 @@ class RolesRidTest extends UnitTestCase {
     $entity_type->expects($this->any())
       ->method('getKey')
       ->with('label')
-      ->will($this->returnValue('label'));
+      ->willReturn('label');
 
     $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
     $entity_type_manager->expects($this->any())
       ->method('getDefinition')
       ->with($this->equalTo('user_role'))
-      ->will($this->returnValue($entity_type));
+      ->willReturn($entity_type);
 
     $entity_type_manager
       ->expects($this->once())
       ->method('getStorage')
       ->with($this->equalTo('user_role'))
-      ->will($this->returnValue($role_storage));
+      ->willReturn($role_storage);
 
     // Set up a minimal container to satisfy Drupal\Core\Entity\EntityBase's
     // dependency on it.

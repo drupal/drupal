@@ -22,7 +22,7 @@ class UserTest extends UserSessionTest {
     $user->expects($this->any())
       ->method('id')
       // @todo Also test the uid = 1 handling.
-      ->will($this->returnValue($authenticated ? 2 : 0));
+      ->willReturn($authenticated ? 2 : 0);
     $roles = [];
     foreach ($rids as $rid) {
       $roles[] = (object) [
@@ -32,7 +32,7 @@ class UserTest extends UserSessionTest {
     $user->expects($this->any())
       ->method('get')
       ->with('roles')
-      ->will($this->returnValue($roles));
+      ->willReturn($roles);
     return $user;
   }
 

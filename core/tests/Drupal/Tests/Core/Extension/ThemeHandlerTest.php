@@ -64,7 +64,7 @@ class ThemeHandlerTest extends UnitTestCase {
     $container->expects($this->any())
       ->method('get')
       ->with('class_loader')
-      ->will($this->returnValue($this->createMock(ClassLoader::class)));
+      ->willReturn($this->createMock(ClassLoader::class));
     \Drupal::setContainer($container);
   }
 
@@ -79,9 +79,9 @@ class ThemeHandlerTest extends UnitTestCase {
       ->willReturnSelf();
     $this->themeList->expects($this->once())
       ->method('getList')
-      ->will($this->returnValue([
+      ->willReturn([
         'stark' => new Extension($this->root, 'theme', 'core/themes/stark/stark.info.yml', 'stark.theme'),
-      ]));
+      ]);
 
     $theme_data = $this->themeHandler->rebuildThemeData();
     $this->assertCount(1, $theme_data);

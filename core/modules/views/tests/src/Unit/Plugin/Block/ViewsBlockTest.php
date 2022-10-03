@@ -63,7 +63,7 @@ class ViewsBlockTest extends UnitTestCase {
     $condition_plugin_manager = $this->createMock('Drupal\Core\Executable\ExecutableManagerInterface');
     $condition_plugin_manager->expects($this->any())
       ->method('getDefinitions')
-      ->will($this->returnValue([]));
+      ->willReturn([]);
     $container = new ContainerBuilder();
     $container->set('plugin.manager.condition', $condition_plugin_manager);
     \Drupal::setContainer($container);
@@ -75,7 +75,7 @@ class ViewsBlockTest extends UnitTestCase {
     $this->executable->expects($this->any())
       ->method('setDisplay')
       ->with('block_1')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     $this->executable->expects($this->any())
       ->method('getShowAdminLinks')
       ->willReturn(FALSE);
@@ -99,7 +99,7 @@ class ViewsBlockTest extends UnitTestCase {
     $this->executableFactory->expects($this->any())
       ->method('get')
       ->with($this->view)
-      ->will($this->returnValue($this->executable));
+      ->willReturn($this->executable);
 
     $this->displayHandler = $this->getMockBuilder('Drupal\views\Plugin\views\display\Block')
       ->disableOriginalConstructor()
@@ -126,7 +126,7 @@ class ViewsBlockTest extends UnitTestCase {
     $this->storage->expects($this->any())
       ->method('load')
       ->with('test_view')
-      ->will($this->returnValue($this->view));
+      ->willReturn($this->view);
     $this->account = $this->createMock('Drupal\Core\Session\AccountInterface');
   }
 

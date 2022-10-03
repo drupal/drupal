@@ -628,7 +628,7 @@ class LinkGeneratorTest extends UnitTestCase {
   public function testGenerateTwice() {
     $this->urlGenerator->expects($this->any())
       ->method('generateFromRoute')
-      ->will($this->returnValue((new GeneratedUrl())->setGeneratedUrl('/')));
+      ->willReturn((new GeneratedUrl())->setGeneratedUrl('/'));
 
     $url = Url::fromRoute('<front>', [], ['attributes' => ['class' => ['foo', 'bar']]]);
     $url->setUrlGenerator($this->urlGenerator);

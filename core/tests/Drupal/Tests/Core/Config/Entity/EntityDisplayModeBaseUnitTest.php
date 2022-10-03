@@ -56,7 +56,7 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
     $this->entityInfo = $this->createMock('\Drupal\Core\Entity\EntityTypeInterface');
     $this->entityInfo->expects($this->any())
       ->method('getProvider')
-      ->will($this->returnValue('entity'));
+      ->willReturn('entity');
 
     $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
 
@@ -78,7 +78,7 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
     $target_entity_type = $this->createMock('\Drupal\Core\Entity\EntityTypeInterface');
     $target_entity_type->expects($this->any())
       ->method('getProvider')
-      ->will($this->returnValue('test_module'));
+      ->willReturn('test_module');
     $values = ['targetEntityType' => $target_entity_type_id];
 
     $this->entityTypeManager->expects($this->exactly(2))

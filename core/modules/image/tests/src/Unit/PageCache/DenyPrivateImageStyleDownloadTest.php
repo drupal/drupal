@@ -61,7 +61,7 @@ class DenyPrivateImageStyleDownloadTest extends UnitTestCase {
   public function testPrivateImageStyleDownloadPolicy($expected_result, $route_name) {
     $this->routeMatch->expects($this->once())
       ->method('getRouteName')
-      ->will($this->returnValue($route_name));
+      ->willReturn($route_name);
 
     $actual_result = $this->policy->check($this->response, $this->request);
     $this->assertSame($expected_result, $actual_result);
