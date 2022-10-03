@@ -77,8 +77,7 @@ EOD;
   const STATUS_SINGLEBYTE = 0;
 
   /**
-   * Indicates that full unicode support with the PHP mbstring extension is
-   * being used.
+   * Indicates that full unicode support with PHP mbstring extension is used.
    */
   const STATUS_MULTIBYTE = 1;
 

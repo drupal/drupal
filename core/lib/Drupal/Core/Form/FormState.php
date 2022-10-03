@@ -36,9 +36,10 @@ class FormState implements FormStateInterface {
   protected $complete_form;
 
   /**
-   * An associative array of information stored by Form API that is necessary to
-   * build and rebuild the form from cache when the original context may no
-   * longer be available:
+   * An associative array of information stored by Form API.
+   *
+   * This associative array is necessary to build and rebuild the form from
+   * cache when the original context may no longer be available:
    *   - callback: The actual callback to be used to retrieve the form array.
    *     Can be any callable. If none is provided $form_id is used as the name
    *     of a function to call instead.
@@ -70,8 +71,9 @@ class FormState implements FormStateInterface {
   ];
 
   /**
-   * Similar to self::$build_info, but pertaining to
-   * \Drupal\Core\Form\FormBuilderInterface::rebuildForm().
+   * Similar to self::$build_info.
+   *
+   * But pertaining to \Drupal\Core\Form\FormBuilderInterface::rebuildForm().
    *
    * This property is uncacheable.
    *
@@ -80,6 +82,8 @@ class FormState implements FormStateInterface {
   protected $rebuild_info = [];
 
   /**
+   * Determines whether the form is rebuilt.
+   *
    * Normally, after the entire form processing is completed and submit handlers
    * have run, a form is considered to be done and
    * \Drupal\Core\Form\FormSubmitterInterface::redirectForm() will redirect the
@@ -103,6 +107,8 @@ class FormState implements FormStateInterface {
   protected $rebuild = FALSE;
 
   /**
+   * Determines if only safe element value callbacks are called.
+   *
    * If set to TRUE the form will skip calling form element value callbacks,
    * except for a select list of callbacks provided by Drupal core that are
    * known to be safe.
@@ -116,6 +122,8 @@ class FormState implements FormStateInterface {
   protected $invalidToken = FALSE;
 
   /**
+   * The response object.
+   *
    * Used when a form needs to return some kind of a
    * \Symfony\Component\HttpFoundation\Response object, e.g., a
    * \Symfony\Component\HttpFoundation\BinaryFileResponse when triggering a
@@ -140,8 +148,9 @@ class FormState implements FormStateInterface {
   protected $redirect;
 
   /**
-   * If set to TRUE the form will NOT perform a redirect, even if
-   * self::$redirect is set.
+   * If set to TRUE the form will NOT perform a redirect.
+   *
+   * Redirect will not be performed, even if self::$redirect is set.
    *
    * This property is uncacheable.
    *
@@ -264,6 +273,8 @@ class FormState implements FormStateInterface {
   protected $always_process;
 
   /**
+   * Indicates if a validation will be forced.
+   *
    * Ordinarily, a form is only validated once, but there are times when a form
    * is resubmitted internally and should be validated again. Setting this to
    * TRUE will force that to happen. This is most likely to occur during Ajax
@@ -276,6 +287,8 @@ class FormState implements FormStateInterface {
   protected $must_validate;
 
   /**
+   * Indicates if the form was submitted programmatically.
+   *
    * If TRUE, the form was submitted programmatically, usually invoked via
    * \Drupal\Core\Form\FormBuilderInterface::submitForm(). Defaults to FALSE.
    *
@@ -284,6 +297,8 @@ class FormState implements FormStateInterface {
   protected $programmed = FALSE;
 
   /**
+   * Indicates if programmatic form submissions bypasses #access check.
+   *
    * If TRUE, programmatic form submissions are processed without taking #access
    * into account. Set this to FALSE when submitting a form programmatically
    * with values that may have been input by the user executing the current
@@ -295,6 +310,8 @@ class FormState implements FormStateInterface {
   protected $programmed_bypass_access_check = TRUE;
 
   /**
+   * Indicates correct form submission.
+   *
    * TRUE signifies correct form submission. This is always TRUE for programmed
    * forms coming from \Drupal\Core\Form\FormBuilderInterface::submitForm() (see
    * 'programmed' key), or if the form_id coming from the
@@ -323,10 +340,11 @@ class FormState implements FormStateInterface {
   protected $executed = FALSE;
 
   /**
-   * The form element that triggered submission, which may or may not be a
-   * button (in the case of Ajax forms). This key is often used to distinguish
-   * between various buttons in a submit handler, and is also used in Ajax
-   * handlers.
+   * The form element that triggered submission.
+   *
+   * This may or may not be a button (in the case of Ajax forms). This key is
+   * often used to distinguish between various buttons in a submit handler, and
+   * is also used in Ajax handlers.
    *
    * This property is uncacheable.
    *
@@ -335,6 +353,8 @@ class FormState implements FormStateInterface {
   protected $triggering_element;
 
   /**
+   * Indicates a file element is present.
+   *
    * If TRUE, there is a file element and Form API will set the appropriate
    * 'enctype' HTML attribute on the form.
    *
@@ -352,6 +372,8 @@ class FormState implements FormStateInterface {
   protected $groups = [];
 
   /**
+   * The storage.
+   *
    * This is not a special key, and no specific support is provided for it in
    * the Form API. By tradition it was the location where application-specific
    * data was stored for communication between the submit, validation, and form

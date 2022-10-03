@@ -71,9 +71,11 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   public string $name_table_alias;
 
   /**
-   * The field to use for the name to use in the summary, which is
-   * the displayed output. For example, for the node: nid argument,
-   * the argument itself is the nid, but node.title is displayed.
+   * The field to use for the name to display in the summary.
+   *
+   * For example, for the node: nid argument, the argument itself is the nid,
+   * but node.title is displayed.
+   *
    * @var string
    */
   public $name_field;
@@ -531,6 +533,8 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   }
 
   /**
+   * Default actions.
+   *
    * Provide a list of default behaviors for this argument if the argument
    * is not present.
    *
