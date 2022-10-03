@@ -5,8 +5,10 @@ namespace Drupal\migrate_drupal_ui\Form;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Database;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\State\StateInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\Exception\BadPluginDefinitionException;
@@ -99,12 +101,30 @@ class CredentialForm extends MigrateUpgradeFormBase {
       '#description' => $this->t('Provide the information to access the Drupal site you want to upgrade. Files can be imported into the upgraded site as well.  See the <a href=":url">Upgrade documentation for more detailed instructions</a>.', [':url' => 'https://www.drupal.org/upgrade/migrate']),
     ];
 
+    $migrate_source_version = Settings::get('migrate_source_version') == '6' ? '6' : '7';
     $form['version'] = [
       '#type' => 'radios',
-      '#default_value' => 7,
+      '#default_value' => $migrate_source_version,
       '#title' => $this->t('Drupal version of the source site'),
       '#options' => ['6' => $this->t('Drupal 6'), '7' => $this->t('Drupal 7')],
       '#required' => TRUE,
+    ];
+
+    $available_connections = array_diff(array_keys(Database::getAllConnectionInfo()), ['default']);
+    $options = array_combine($available_connections, $available_connections);
+    $migrate_source_connection = Settings::get('migrate_source_connection');
+    $preferred_connections = $migrate_source_connection
+      ? ['migrate', $migrate_source_connection]
+      : ['migrate'];
+    $default_options = array_intersect($preferred_connections, $available_connections);
+    $form['source_connection'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Source connection'),
+      '#options' => $options,
+      '#default_value' => array_pop($default_options),
+      '#empty_option' => $this->t('- User defined -'),
+      '#description' => $this->t('Choose one of the keys from the $databases array or else select "User defined" and enter database credentials.'),
+      '#access' => !empty($options),
     ];
 
     $form['database'] = [
@@ -112,6 +132,11 @@ class CredentialForm extends MigrateUpgradeFormBase {
       '#title' => $this->t('Source database'),
       '#description' => $this->t('Provide credentials for the database of the Drupal site you want to upgrade.'),
       '#open' => TRUE,
+      '#states' => [
+        'visible' => [
+          ':input[name=source_connection]' => ['value' => ''],
+        ],
+      ],
     ];
 
     $form['database']['driver'] = [
@@ -119,6 +144,11 @@ class CredentialForm extends MigrateUpgradeFormBase {
       '#title' => $this->t('Database type'),
       '#required' => TRUE,
       '#default_value' => $default_driver,
+      '#states' => [
+        'required' => [
+          ':input[name=source_connection]' => ['value' => ''],
+        ],
+      ],
     ];
     if (count($drivers) == 1) {
       $form['database']['driver']['#disabled'] = TRUE;
@@ -136,6 +166,27 @@ class CredentialForm extends MigrateUpgradeFormBase {
       // for mysql and pgsql must not be required.
       $form['database']['settings'][$key]['database']['#required'] = FALSE;
       $form['database']['settings'][$key]['username']['#required'] = FALSE;
+      $form['database']['settings'][$key]['database']['#states'] = [
+        'required' => [
+          ':input[name=source_connection]' => ['value' => ''],
+          ':input[name=driver]' => ['value' => $key],
+        ],
+      ];
+      if ($key != 'sqlite') {
+        $form['database']['settings'][$key]['username']['#states'] = [
+          'required' => [
+            ':input[name=source_connection]' => ['value' => ''],
+            ':input[name=driver]' => ['value' => $key],
+          ],
+        ];
+        $form['database']['settings'][$key]['password']['#states'] = [
+          'required' => [
+            ':input[name=source_connection]' => ['value' => ''],
+            ':input[name=driver]' => ['value' => $key],
+          ],
+        ];
+      }
+
       $form['database']['settings'][$key]['#prefix'] = '<h2 class="js-hide">' . $this->t('@driver_name settings', ['@driver_name' => $driver->name()]) . '</h2>';
       $form['database']['settings'][$key]['#type'] = 'container';
       $form['database']['settings'][$key]['#tree'] = TRUE;
@@ -164,6 +215,7 @@ class CredentialForm extends MigrateUpgradeFormBase {
     $form['source']['d6_source_base_path'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Document root for files'),
+      '#default_value' => Settings::get('migrate_file_public_path') ?? '',
       '#description' => $this->t('To import files from your current Drupal site, enter a local file directory containing your site (e.g. /var/www/docroot), or your site address (for example http://example.com).'),
       '#states' => [
         'visible' => [
@@ -176,6 +228,7 @@ class CredentialForm extends MigrateUpgradeFormBase {
     $form['source']['source_base_path'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Document root for public files'),
+      '#default_value' => Settings::get('migrate_file_public_path') ?? '',
       '#description' => $this->t('To import public files from your current Drupal site, enter a local file directory containing your site (e.g. /var/www/docroot), or your site address (for example http://example.com).'),
       '#states' => [
         'visible' => [
@@ -188,7 +241,7 @@ class CredentialForm extends MigrateUpgradeFormBase {
     $form['source']['source_private_file_path'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Document root for private files'),
-      '#default_value' => '',
+      '#default_value' => Settings::get('migrate_file_private_path') ?? '',
       '#description' => $this->t('To import private files from your current Drupal site, enter a local file directory containing your site (e.g. /var/www/docroot). Leave blank to use the same value as Public files directory.'),
       '#states' => [
         'visible' => [
@@ -205,29 +258,36 @@ class CredentialForm extends MigrateUpgradeFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    // Retrieve the database driver from the form, use reflection to get the
-    // namespace, and then construct a valid database array the same as in
-    // settings.php.
-    $driver = $form_state->getValue('driver');
-    $drivers = $this->getDatabaseTypes();
-    $reflection = new \ReflectionClass($drivers[$driver]);
-    $install_namespace = $reflection->getNamespaceName();
+    $source_connection = $form_state->getValue('source_connection');
+    if ($source_connection) {
+      $info = Database::getConnectionInfo($source_connection);
+      $database = reset($info);
+    }
+    else {
+      // Retrieve the database driver from the form, use reflection to get the
+      // namespace, and then construct a valid database array the same as in
+      // settings.php.
+      $driver = $form_state->getValue('driver');
+      $drivers = $this->getDatabaseTypes();
+      $reflection = new \ReflectionClass($drivers[$driver]);
+      $install_namespace = $reflection->getNamespaceName();
 
-    $database = $form_state->getValue($driver);
-    // Cut the trailing \Install from namespace.
-    $database['namespace'] = substr($install_namespace, 0, strrpos($install_namespace, '\\'));
-    $database['driver'] = $driver;
+      $database = $form_state->getValue($driver);
+      // Cut the trailing \Install from namespace.
+      $database['namespace'] = substr($install_namespace, 0, strrpos($install_namespace, '\\'));
+      $database['driver'] = $driver;
 
-    // Validate the driver settings and just end here if we have any issues.
-    $connection = NULL;
-    $error_key = $database['driver'] . '][database';
-    if ($errors = $drivers[$driver]->validateDatabaseSettings($database)) {
-      foreach ($errors as $name => $message) {
-        $this->errors[$name] = $message;
+      // Validate the driver settings and just end here if we have any issues.
+      $connection = NULL;
+      if ($errors = $drivers[$driver]->validateDatabaseSettings($database)) {
+        foreach ($errors as $name => $message) {
+          $this->errors[$name] = $message;
+        }
       }
     }
 
     // Get the Drupal version of the source database so it can be validated.
+    $error_key = $database['driver'] . '][database';
     if (!$this->errors) {
       try {
         $connection = $this->getConnection($database);
@@ -283,6 +343,17 @@ class CredentialForm extends MigrateUpgradeFormBase {
    * Ensures that entered path can be read.
    */
   public function validatePaths($element, FormStateInterface $form_state) {
+    $version = $form_state->getValue('version');
+    // Only validate the paths relevant to the legacy Drupal version.
+    if (($version !== '7')
+      && ($element['#name'] == 'source_base_path' || $element['#name'] == 'source_private_file_path')) {
+      return;
+    }
+
+    if ($version !== '6' && ($element['#name'] == 'd6_source_base_path')) {
+      return;
+    }
+
     if ($source = $element['#value']) {
       $msg = $this->t('Failed to read from @title.', ['@title' => $element['#title']]);
       if (UrlHelper::isExternal($source)) {
