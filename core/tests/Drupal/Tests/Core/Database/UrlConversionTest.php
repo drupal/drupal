@@ -3,7 +3,6 @@
 namespace Drupal\Tests\Core\Database;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Site\Settings;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -39,8 +38,6 @@ class UrlConversionTest extends UnitTestCase {
       ->with('site.path')
       ->willReturn('');
     \Drupal::setContainer($container);
-
-    new Settings(['extension_discovery_scan_tests' => TRUE]);
   }
 
   /**
@@ -48,8 +45,8 @@ class UrlConversionTest extends UnitTestCase {
    *
    * @dataProvider providerConvertDbUrlToConnectionInfo
    */
-  public function testDbUrlToConnectionConversion($url, $database_array) {
-    $result = Database::convertDbUrlToConnectionInfo($url, $this->root);
+  public function testDbUrlToConnectionConversion($url, $database_array, $include_test_drivers) {
+    $result = Database::convertDbUrlToConnectionInfo($url, $this->root, $include_test_drivers);
     $this->assertEquals($database_array, $result);
   }
 
@@ -76,6 +73,7 @@ class UrlConversionTest extends UnitTestCase {
           'namespace' => 'Drupal\mysql\Driver\Database\mysql',
           'autoload' => 'core/modules/mysql/src/Driver/Database/mysql/',
         ],
+        FALSE,
       ],
       'SQLite, relative to root, without prefix' => [
         'sqlite://localhost/test_database',
@@ -86,6 +84,7 @@ class UrlConversionTest extends UnitTestCase {
           'namespace' => 'Drupal\sqlite\Driver\Database\sqlite',
           'autoload' => 'core/modules/sqlite/src/Driver/Database/sqlite/',
         ],
+        FALSE,
       ],
       'MySql with prefix' => [
         'mysql://test_user:test_pass@test_host:3306/test_database#bar',
@@ -100,6 +99,7 @@ class UrlConversionTest extends UnitTestCase {
           'namespace' => 'Drupal\mysql\Driver\Database\mysql',
           'autoload' => 'core/modules/mysql/src/Driver/Database/mysql/',
         ],
+        FALSE,
       ],
       'SQLite, relative to root, with prefix' => [
         'sqlite://localhost/test_database#foo',
@@ -111,6 +111,7 @@ class UrlConversionTest extends UnitTestCase {
           'namespace' => 'Drupal\sqlite\Driver\Database\sqlite',
           'autoload' => 'core/modules/sqlite/src/Driver/Database/sqlite/',
         ],
+        FALSE,
       ],
       'SQLite, absolute path, without prefix' => [
         'sqlite://localhost//baz/test_database',
@@ -121,6 +122,7 @@ class UrlConversionTest extends UnitTestCase {
           'namespace' => 'Drupal\sqlite\Driver\Database\sqlite',
           'autoload' => 'core/modules/sqlite/src/Driver/Database/sqlite/',
         ],
+        FALSE,
       ],
       'MySQL contrib test driver without prefix' => [
         'DrivertestMysql://test_user:test_pass@test_host:3306/test_database?module=driver_test',
@@ -134,6 +136,7 @@ class UrlConversionTest extends UnitTestCase {
           'namespace' => 'Drupal\driver_test\Driver\Database\DrivertestMysql',
           'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DrivertestMysql/',
         ],
+        TRUE,
       ],
       'MySQL contrib test driver with prefix' => [
         'DrivertestMysql://test_user:test_pass@test_host:3306/test_database?module=driver_test#bar',
@@ -148,6 +151,7 @@ class UrlConversionTest extends UnitTestCase {
           'namespace' => 'Drupal\driver_test\Driver\Database\DrivertestMysql',
           'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DrivertestMysql/',
         ],
+        TRUE,
       ],
       'PostgreSQL contrib test driver without prefix' => [
         'DrivertestPgsql://test_user:test_pass@test_host:5432/test_database?module=driver_test',
@@ -161,6 +165,7 @@ class UrlConversionTest extends UnitTestCase {
           'namespace' => 'Drupal\driver_test\Driver\Database\DrivertestPgsql',
           'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DrivertestPgsql/',
         ],
+        TRUE,
       ],
       'PostgreSQL contrib test driver with prefix' => [
         'DrivertestPgsql://test_user:test_pass@test_host:5432/test_database?module=driver_test#bar',
@@ -175,6 +180,7 @@ class UrlConversionTest extends UnitTestCase {
           'namespace' => 'Drupal\driver_test\Driver\Database\DrivertestPgsql',
           'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DrivertestPgsql/',
         ],
+        TRUE,
       ],
       'MySql with a custom query parameter' => [
         'mysql://test_user:test_pass@test_host:3306/test_database?extra=value',
@@ -188,6 +194,7 @@ class UrlConversionTest extends UnitTestCase {
           'namespace' => 'Drupal\mysql\Driver\Database\mysql',
           'autoload' => 'core/modules/mysql/src/Driver/Database/mysql/',
         ],
+        FALSE,
       ],
       'MySql with the module name mysql' => [
         'mysql://test_user:test_pass@test_host:3306/test_database?module=mysql',
@@ -201,6 +208,7 @@ class UrlConversionTest extends UnitTestCase {
           'namespace' => 'Drupal\mysql\Driver\Database\mysql',
           'autoload' => 'core/modules/mysql/src/Driver/Database/mysql/',
         ],
+        FALSE,
       ],
       'PostgreSql without the module name set' => [
         'pgsql://test_user:test_pass@test_host/test_database',
@@ -213,6 +221,7 @@ class UrlConversionTest extends UnitTestCase {
           'namespace' => 'Drupal\pgsql\Driver\Database\pgsql',
           'autoload' => 'core/modules/pgsql/src/Driver/Database/pgsql/',
         ],
+        FALSE,
       ],
       'PostgreSql with the module name pgsql' => [
         'pgsql://test_user:test_pass@test_host/test_database?module=pgsql',
@@ -225,6 +234,7 @@ class UrlConversionTest extends UnitTestCase {
           'namespace' => 'Drupal\pgsql\Driver\Database\pgsql',
           'autoload' => 'core/modules/pgsql/src/Driver/Database/pgsql/',
         ],
+        FALSE,
       ],
       'SQLite, relative to root, without prefix and with the module name sqlite' => [
         'sqlite://localhost/test_database?module=sqlite',
@@ -235,6 +245,7 @@ class UrlConversionTest extends UnitTestCase {
           'namespace' => 'Drupal\sqlite\Driver\Database\sqlite',
           'autoload' => 'core/modules/sqlite/src/Driver/Database/sqlite/',
         ],
+        FALSE,
       ],
     ];
   }
@@ -439,7 +450,7 @@ class UrlConversionTest extends UnitTestCase {
     $url = 'mysql://test_user:test_pass@test_host:3306/test_database?module=does_not_exist';
     $this->expectException(\RuntimeException::class);
     $this->expectExceptionMessage("Cannot find the module 'does_not_exist' for the database driver namespace 'Drupal\does_not_exist\Driver\Database\mysql'");
-    Database::convertDbUrlToConnectionInfo($url, $this->root);
+    Database::convertDbUrlToConnectionInfo($url, $this->root, TRUE);
   }
 
   /**
@@ -449,7 +460,7 @@ class UrlConversionTest extends UnitTestCase {
     $url = 'mysql://test_user:test_pass@test_host:3306/test_database?module=driver_test';
     $this->expectException(\RuntimeException::class);
     $this->expectExceptionMessage("Cannot find the database driver namespace 'Drupal\driver_test\Driver\Database\mysql' in module 'driver_test'");
-    Database::convertDbUrlToConnectionInfo($url, $this->root);
+    Database::convertDbUrlToConnectionInfo($url, $this->root, TRUE);
   }
 
 }
