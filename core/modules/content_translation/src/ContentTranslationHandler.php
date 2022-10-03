@@ -78,8 +78,9 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
   protected $currentUser;
 
   /**
-   * The array of installed field storage definitions for the entity type, keyed
-   * by field name.
+   * Installed field storage definitions for the entity type.
+   *
+   * Keyed by field name.
    *
    * @var \Drupal\Core\Field\FieldStorageDefinitionInterface[]
    */

@@ -46,6 +46,8 @@ use Drupal\views\ViewExecutable;
 abstract class FilterPluginBase extends HandlerBase implements CacheableDependencyInterface {
 
   /**
+   * The value.
+   *
    * Contains the actual value of the field,either configured in the views ui
    * or entered in the exposed filters.
    */

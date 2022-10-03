@@ -41,21 +41,26 @@ class Sql extends QueryPluginBase {
   public $tables = [];
 
   /**
-   * Holds an array of relationships, which are aliases of the primary
-   * table that represent different ways to join the same table in.
+   * Holds an array of relationships.
+   *
+   * These are aliases of the primary table that represent different ways to
+   * join the same table in.
    */
   public $relationships = [];
 
   /**
-   * An array of sections of the WHERE query. Each section is in itself
-   * an array of pieces and a flag as to whether or not it should be AND
-   * or OR.
+   * An array of sections of the WHERE query.
+   *
+   * Each section is in itself an array of pieces and a flag as to whether or
+   * not it should be AND or OR.
    */
+
   public $where = [];
   /**
-   * An array of sections of the HAVING query. Each section is in itself
-   * an array of pieces and a flag as to whether or not it should be AND
-   * or OR.
+   * An array of sections of the HAVING query.
+   *
+   * Each section is in itself an array of pieces and a flag as to whether or
+   * not it should be AND or OR.
    */
   public $having = [];
 

@@ -54,8 +54,9 @@ class DefaultTableMapping implements TableMappingInterface {
   protected $dataTable;
 
   /**
-   * The table that stores revision field data if the entity supports revisions
-   * and has multilingual support.
+   * The table that stores revision field data.
+   *
+   * Only used if the entity supports revisions and has multilingual support.
    *
    * @var string
    */

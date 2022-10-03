@@ -45,6 +45,8 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
   public $tableAlias;
 
   /**
+   * The real field.
+   *
    * The actual field in the database table, maybe different
    * on other kind of query plugins/special handlers.
    *
