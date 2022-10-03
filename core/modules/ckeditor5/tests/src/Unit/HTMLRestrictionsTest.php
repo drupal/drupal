@@ -91,6 +91,10 @@ class HTMLRestrictionsTest extends UnitTestCase {
       ['foo' => ['baz' => TRUE], 'bar' => ['qux' => ['a', 'b']]],
       'The "bar" HTML tag has attribute restriction "qux", but it is not an array of key-value pairs, with HTML tag attribute values as keys and TRUE as values.',
     ];
+    yield 'INVALID: keys valid, values invalid attribute restrictions due to broad wildcard instead of prefix/infix/suffix wildcard allowed attribute value' => [
+      ['foo' => ['bar' => ['*' => TRUE]]],
+      'The "foo" HTML tag has an attribute restriction "bar" with a "*" allowed attribute value. This implies all attributes values are allowed. Remove the attribute value restriction instead, or use a prefix (`*-foo`), infix (`*-foo-*`) or suffix (`foo-*`) wildcard restriction instead.',
+    ];
 
     // Valid values.
     yield 'VALID: keys valid, boolean attribute restriction values: also valid' => [
@@ -274,6 +278,10 @@ class HTMLRestrictionsTest extends UnitTestCase {
     ];
     yield 'tag with single attribute allowing any value' => [
       '<a target>',
+      ['a' => ['target' => TRUE]],
+    ];
+    yield 'tag with single attribute allowing any value unnecessarily explicitly' => [
+      '<a target="*">',
       ['a' => ['target' => TRUE]],
     ];
     yield 'tag with single attribute allowing single specific value' => [
