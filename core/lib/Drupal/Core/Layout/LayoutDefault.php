@@ -51,6 +51,7 @@ class LayoutDefault extends PluginBase implements LayoutInterface, PluginFormInt
         $build[$region_name] = $regions[$region_name];
       }
     }
+    $build['#in_preview'] = $this->inPreview;
     $build['#settings'] = $this->getConfiguration();
     $build['#layout'] = $this->pluginDefinition;
     $build['#theme'] = $this->pluginDefinition->getThemeHook();
