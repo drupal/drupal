@@ -97,8 +97,8 @@ interface StatementInterface extends \Traversable {
    * @param $cursor_offset
    *   Not implemented in all database drivers, don't use.
    *
-   * @return array|object
-   *   A result, formatted according to $mode.
+   * @return array|object|false
+   *   A result, formatted according to $mode, or FALSE on failure.
    */
   public function fetch($mode = NULL, $cursor_orientation = NULL, $cursor_offset = NULL);
 
