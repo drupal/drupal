@@ -90,3 +90,5 @@ ckeditor_stylesheets:
   - css/components/table.css
   - css/components/text-content.css
   - css/theme/ckeditor-frame.css
+
+ckeditor5-stylesheets: false

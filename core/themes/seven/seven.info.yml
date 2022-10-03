@@ -100,3 +100,4 @@ regions_hidden:
 
 ckeditor_stylesheets:
   - css/classy/components/media-embed-error.css
+ckeditor5-stylesheets: false
