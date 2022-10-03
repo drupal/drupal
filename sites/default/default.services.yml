@@ -204,7 +204,8 @@ parameters:
     allowedHeaders: []
     # Specify allowed request methods, specify ['*'] to allow all possible ones.
     allowedMethods: []
-    # Configure requests allowed from specific origins.
+    # Configure requests allowed from specific origins. Do not include trailing
+    # slashes with URLs.
     allowedOrigins: ['*']
     # Sets the Access-Control-Expose-Headers header.
     exposedHeaders: false
