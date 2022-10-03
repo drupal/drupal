@@ -504,6 +504,10 @@ abstract class Database {
    *   The URL.
    * @param string $root
    *   The root directory of the Drupal installation.
+   * @param bool|null $include_test_drivers
+   *   (optional) Whether to include test extensions. If FALSE, all 'tests'
+   *   directories are excluded in the search. When NULL will be determined by
+   *   the extension_discovery_scan_tests setting.
    *
    * @return array
    *   The database connection info.
@@ -514,7 +518,7 @@ abstract class Database {
    * @throws \RuntimeException
    *   Exception thrown when a module provided database driver does not exist.
    */
-  public static function convertDbUrlToConnectionInfo($url, $root) {
+  public static function convertDbUrlToConnectionInfo($url, $root, ?bool $include_test_drivers = NULL) {
     // Check that the URL is well formed, starting with 'scheme://', where
     // 'scheme' is a database driver name.
     if (preg_match('/^(.*):\/\//', $url, $matches) !== 1) {
@@ -543,7 +547,7 @@ abstract class Database {
       // this method can be called before Drupal is installed and is never
       // called during regular runtime.
       $namespace = "Drupal\\$module\\Driver\\Database\\$driver";
-      $psr4_base_directory = Database::findDriverAutoloadDirectory($namespace, $root, TRUE);
+      $psr4_base_directory = Database::findDriverAutoloadDirectory($namespace, $root, $include_test_drivers);
       $additional_class_loader = new ClassLoader();
       $additional_class_loader->addPsr4($namespace . '\\', $psr4_base_directory);
       $additional_class_loader->register(TRUE);
@@ -615,6 +619,10 @@ abstract class Database {
    *   The database driver's namespace.
    * @param string $root
    *   The root directory of the Drupal installation.
+   * @param bool|null $include_test_drivers
+   *   (optional) Whether to include test extensions. If FALSE, all 'tests'
+   *   directories are excluded in the search. When NULL will be determined by
+   *   the extension_discovery_scan_tests setting.
    *
    * @return string|false
    *   The PSR-4 directory to add to the autoloader for the namespace if the
@@ -624,7 +632,7 @@ abstract class Database {
    * @throws \RuntimeException
    *   Exception thrown when a module provided database driver does not exist.
    */
-  public static function findDriverAutoloadDirectory($namespace, $root) {
+  public static function findDriverAutoloadDirectory($namespace, $root, ?bool $include_test_drivers = NULL) {
     // As explained by this method's documentation, return FALSE if the
     // namespace is not a sub-namespace of a Drupal module.
     if (!static::isWithinModuleNamespace($namespace)) {
@@ -637,7 +645,7 @@ abstract class Database {
     // The namespace is within a Drupal module. Find the directory where the
     // module is located.
     $extension_discovery = new ExtensionDiscovery($root, FALSE, []);
-    $modules = $extension_discovery->scan('module');
+    $modules = $extension_discovery->scan('module', $include_test_drivers);
     if (!isset($modules[$module])) {
       throw new \RuntimeException(sprintf("Cannot find the module '%s' for the database driver namespace '%s'", $module, $namespace));
     }
