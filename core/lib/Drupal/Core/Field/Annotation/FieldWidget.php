@@ -70,8 +70,10 @@ class FieldWidget extends Plugin {
   public $multiple_values = FALSE;
 
   /**
-   * An integer to determine the weight of this widget relative to other widgets
-   * in the Field UI when selecting a widget for a given field.
+   * An integer to determine weight of this widget relative to other widgets.
+   *
+   * Other widgets are in the Field UI when selecting a widget for a given
+   * field.
    *
    * This property is optional and it does not need to be declared.
    *

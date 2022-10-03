@@ -50,8 +50,9 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
   protected $alterHook;
 
   /**
-   * The subdirectory within a namespace to look for plugins, or FALSE if the
-   * plugins are in the top level of the namespace.
+   * The subdirectory within a namespace to look for plugins.
+   *
+   * Set to FALSE if the plugins are in the top level of the namespace.
    *
    * @var string|bool
    */
@@ -65,9 +66,10 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
   protected $moduleHandler;
 
   /**
-   * A set of defaults to be referenced by $this->processDefinition() if
-   * additional processing of plugins is necessary or helpful for development
-   * purposes.
+   * A set of defaults to be referenced by $this->processDefinition().
+   *
+   * Allows for additional processing of plugins when necessary or helpful for
+   * development purposes.
    *
    * @var array
    */
@@ -88,16 +90,20 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
   protected $pluginInterface;
 
   /**
-   * An object that implements \Traversable which contains the root paths
-   * keyed by the corresponding namespace to look for plugin implementations.
+   * An object of root paths that are traversable.
+   *
+   * The root paths are keyed by the corresponding namespace to look for plugin
+   * implementations.
    *
    * @var \Traversable
    */
   protected $namespaces;
 
   /**
-   * Additional namespaces the annotation discovery mechanism should scan for
-   * annotation definitions.
+   * Additional annotation namespaces.
+   *
+   * The annotation discovery mechanism should scan these for annotation
+   * definitions.
    *
    * @var string[]
    */

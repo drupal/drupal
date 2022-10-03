@@ -184,8 +184,10 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   protected $constraints = [];
 
   /**
-   * Array of property constraint options keyed by property ID. The values are
-   * associative array of constraint options keyed by constraint plugin ID.
+   * Array of property constraint options keyed by property ID.
+   *
+   * The values are associative array of constraint options keyed by constraint
+   * plugin ID.
    *
    * @var array[]
    */
