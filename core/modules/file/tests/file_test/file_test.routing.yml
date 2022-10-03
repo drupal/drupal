@@ -10,3 +10,9 @@ file.save_upload_from_form_test:
     _form: '\Drupal\file_test\Form\FileTestSaveUploadFromForm'
   requirements:
     _access: 'TRUE'
+file.required_test:
+  path: '/file-test/upload_required'
+  defaults:
+    _form: '\Drupal\file_test\Form\FileRequiredTestForm'
+  requirements:
+    _access: 'TRUE'
