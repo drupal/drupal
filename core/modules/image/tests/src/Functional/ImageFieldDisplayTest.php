@@ -216,6 +216,9 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       $this->drupalLogout();
       $this->drupalGet(ImageStyle::load('thumbnail')->buildUrl($image_uri));
       $this->assertSession()->statusCodeEquals(403);
+
+      // Log in again.
+      $this->drupalLogin($this->adminUser);
     }
 
     // Test the image URL formatter without an image style.
@@ -230,6 +233,18 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $display_options['settings']['image_style'] = 'thumbnail';
     $expected_url = \Drupal::service('file_url_generator')->transformRelative(ImageStyle::load('thumbnail')->buildUrl($image_uri));
     $this->assertEquals($expected_url, $node->{$field_name}->view($display_options)[0]['#markup']);
+
+    // Test the settings summary.
+    $display_options = [
+      'type' => 'image_url',
+      'settings' => [
+        'image_style' => 'thumbnail',
+      ],
+    ];
+    $display = \Drupal::service('entity_display.repository')->getViewDisplay('node', $node->getType(), 'default');
+    $display->setComponent($field_name, $display_options)->save();
+    $this->drupalGet("admin/structure/types/manage/" . $node->getType() . "/display");
+    $this->assertSession()->responseContains('Image style: Thumbnail (100×100)');
   }
 
   /**
