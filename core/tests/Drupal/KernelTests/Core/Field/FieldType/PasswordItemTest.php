@@ -155,7 +155,7 @@ class PasswordItemTest extends FieldKernelTestBase {
     $entity->test_field = '     ';
     $entity->save();
 
-    // @todo Fix this bug in https://www.drupal.org/project/i/3238399.
+    // @todo Fix this bug in https://www.drupal.org/project/drupal/issues/3238399.
     $this->assertSame('     ', $entity->test_field->value);
   }
 
