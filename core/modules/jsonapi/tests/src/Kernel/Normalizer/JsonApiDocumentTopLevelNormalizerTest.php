@@ -360,7 +360,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
    * @covers ::normalize
    */
   public function testNormalizeRelated() {
-    $this->markTestIncomplete('This fails and should be fixed by https://www.drupal.org/project/drupal/issues/2922121');
+    $this->markTestIncomplete('This fails and should be fixed by https://www.drupal.org/project/drupal/issues/3213752');
 
     [$request, $resource_type] = $this->generateProphecies('node', 'article', 'uid');
     $request->query = new ParameterBag([
