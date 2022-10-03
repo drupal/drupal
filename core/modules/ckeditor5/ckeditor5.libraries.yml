@@ -18,6 +18,7 @@ drupal.ckeditor5:
   css:
     theme:
       css/quickedit.css: { }
+      css/editor.css: { }
   dependencies:
     - core/jquery
     - core/once
