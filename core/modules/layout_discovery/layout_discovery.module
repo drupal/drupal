@@ -34,11 +34,12 @@ function layout_discovery_theme() {
  * @param array &$variables
  *   An associative array containing:
  *   - content: An associative array containing the properties of the element.
- *     Properties used: #settings, #layout.
+ *     Properties used: #settings, #layout, #in_preview.
  */
 function template_preprocess_layout(&$variables) {
   $variables['settings'] = $variables['content']['#settings'] ?? [];
   $variables['layout'] = $variables['content']['#layout'] ?? [];
+  $variables['in_preview'] = $variables['content']['#in_preview'] ?? FALSE;
 
   // Create an attributes variable for each region.
   foreach (Element::children($variables['content']) as $name) {

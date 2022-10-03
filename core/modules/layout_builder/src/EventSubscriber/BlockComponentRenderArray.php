@@ -124,6 +124,7 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
         '#plugin_id' => $block->getPluginId(),
         '#base_plugin_id' => $block->getBaseId(),
         '#derivative_plugin_id' => $block->getDerivativeId(),
+        '#in_preview' => $event->inPreview(),
         '#weight' => $event->getComponent()->getWeight(),
       ];
 

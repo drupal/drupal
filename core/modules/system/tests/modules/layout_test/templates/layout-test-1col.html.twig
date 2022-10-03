@@ -5,6 +5,9 @@
  */
 #}
 <div{{ attributes.addClass('layout-example-1col', 'clearfix') }}>
+  {% if in_preview %}
+    This is a preview, indeed
+  {% endif %}
   <div {{ region_attributes.top.addClass('region-top') }}>
     {{ content.top }}
   </div>
