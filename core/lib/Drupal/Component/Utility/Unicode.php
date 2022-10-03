@@ -131,9 +131,6 @@ EOD;
     }
 
     // Check mbstring configuration.
-    if (ini_get('mbstring.func_overload') != 0) {
-      return 'mbstring.func_overload';
-    }
     if (ini_get('mbstring.encoding_translation') != 0) {
       return 'mbstring.encoding_translation';
     }
