@@ -263,7 +263,7 @@ class ModulesListForm extends FormBase {
           Url::fromUri($module->info[ExtensionLifecycle::LIFECYCLE_LINK_IDENTIFIER], [
             'attributes' =>
               [
-                'class' => 'module-link--non-stable',
+                'class' => ['module-link--non-stable'],
                 'aria-label' => $this->t('View information on the @lifecycle status of the module @module', [
                   '@lifecycle' => ucfirst($lifecycle),
                   '@module' => $module->info['name'],
