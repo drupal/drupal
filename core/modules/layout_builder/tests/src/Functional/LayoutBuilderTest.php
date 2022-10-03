@@ -719,13 +719,45 @@ class LayoutBuilderTest extends BrowserTestBase {
     $page->pressButton('Add block');
 
     $assert_session->elementExists('css', '.go-birds-preview');
+    $assert_session->pageTextContains('The block template is being previewed.');
     $assert_session->pageTextContains('This block is being rendered in preview mode.');
 
     $page->pressButton('Save layout');
     $this->drupalGet('node/1');
 
     $assert_session->elementNotExists('css', '.go-birds-preview');
+    $assert_session->pageTextNotContains('The block template is being previewed.');
     $assert_session->pageTextContains('This block is being rendered normally.');
+  }
+
+  /**
+   * Tests preview-aware templates.
+   */
+  public function testPreviewAwareTemplates() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]));
+
+    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
+    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+    $page->clickLink('Manage layout');
+    $page->clickLink('Add section');
+    $page->clickLink('1 column layout');
+    $page->pressButton('Add section');
+    $page->clickLink('Add block');
+    $page->clickLink('Preview-aware block');
+    $page->pressButton('Add block');
+
+    $assert_session->pageTextContains('This is a preview, indeed');
+
+    $page->pressButton('Save layout');
+    $this->drupalGet('node/1');
+
+    $assert_session->pageTextNotContains('This is a preview, indeed');
   }
 
   /**

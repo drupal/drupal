@@ -246,6 +246,7 @@ function template_preprocess_block(&$variables) {
   $variables['plugin_id'] = $variables['elements']['#plugin_id'];
   $variables['base_plugin_id'] = $variables['elements']['#base_plugin_id'];
   $variables['derivative_plugin_id'] = $variables['elements']['#derivative_plugin_id'];
+  $variables['in_preview'] = $variables['elements']['#in_preview'] ?? FALSE;
   $variables['label'] = !empty($variables['configuration']['label_display']) ? $variables['configuration']['label'] : '';
   $variables['content'] = $variables['elements']['content'];
   // A block's label is configuration: it is static. Allow dynamic labels to be

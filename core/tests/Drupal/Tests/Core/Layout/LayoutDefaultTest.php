@@ -30,6 +30,7 @@ class LayoutDefaultTest extends UnitTestCase {
       ],
     ]);
     $expected += [
+      '#in_preview' => FALSE,
       '#settings' => [
         'label' => '',
       ],
