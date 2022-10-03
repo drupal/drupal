@@ -18,7 +18,7 @@ class GetTest extends MigrateProcessTestCase {
     $this->row->expects($this->once())
       ->method('get')
       ->with('test')
-      ->will($this->returnValue('source_value'));
+      ->willReturn('source_value');
     $this->plugin = new Get(['source' => 'test'], '', []);
     $value = $this->plugin->transform(NULL, $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame('source_value', $value);
@@ -49,7 +49,7 @@ class GetTest extends MigrateProcessTestCase {
     $this->row->expects($this->once())
       ->method('get')
       ->with('@@test')
-      ->will($this->returnValue('source_value'));
+      ->willReturn('source_value');
     $this->plugin = new Get(['source' => '@@test'], '', []);
     $value = $this->plugin->transform(NULL, $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame('source_value', $value);

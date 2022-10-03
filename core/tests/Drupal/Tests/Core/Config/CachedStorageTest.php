@@ -29,7 +29,7 @@ class CachedStorageTest extends UnitTestCase {
     $storage->expects($this->once())
       ->method('listAll')
       ->with($prefix)
-      ->will($this->returnValue($response));
+      ->willReturn($response);
 
     $cache = new NullBackend(__FUNCTION__);
 

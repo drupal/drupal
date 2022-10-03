@@ -462,7 +462,7 @@ class AccessResultTest extends UnitTestCase {
     $account->expects($this->any())
       ->method('hasPermission')
       ->with('may herd llamas')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
     $contexts = ['user.permissions'];
 
     // Verify the object when using the ::allowedIfHasPermission() convenience
@@ -514,7 +514,7 @@ class AccessResultTest extends UnitTestCase {
     $node = $this->createMock('\Drupal\node\NodeInterface');
     $node->expects($this->any())
       ->method('getCacheTags')
-      ->will($this->returnValue(['node:20011988']));
+      ->willReturn(['node:20011988']);
     $node->expects($this->any())
       ->method('getCacheMaxAge')
       ->willReturn(600);

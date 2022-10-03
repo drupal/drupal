@@ -70,7 +70,7 @@ class ConfigEntityMapperTest extends UnitTestCase {
       ->expects($this->any())
       ->method('getRouteByName')
       ->with('entity.configurable_language.edit_form')
-      ->will($this->returnValue(new Route('/admin/config/regional/language/edit/{configurable_language}')));
+      ->willReturn(new Route('/admin/config/regional/language/edit/{configurable_language}'));
 
     $definition = [
       'class' => '\Drupal\config_translation\ConfigEntityMapper',
@@ -114,18 +114,18 @@ class ConfigEntityMapperTest extends UnitTestCase {
       ->expects($this->once())
       ->method('id')
       ->with()
-      ->will($this->returnValue('entity_id'));
+      ->willReturn('entity_id');
 
     $entity_type = $this->createMock('Drupal\Core\Config\Entity\ConfigEntityTypeInterface');
     $entity_type
       ->expects($this->any())
       ->method('getConfigPrefix')
-      ->will($this->returnValue('config_prefix'));
+      ->willReturn('config_prefix');
     $this->entityTypeManager
       ->expects($this->once())
       ->method('getDefinition')
       ->with('configurable_language')
-      ->will($this->returnValue($entity_type));
+      ->willReturn($entity_type);
 
     // No entity is set.
     $this->assertNull($this->configEntityMapper->getEntity());
@@ -154,14 +154,14 @@ class ConfigEntityMapperTest extends UnitTestCase {
       ->expects($this->once())
       ->method('getDefinition')
       ->with('configurable_language')
-      ->will($this->returnValue($entity_type));
+      ->willReturn($entity_type);
     $this->configEntityMapper->setEntity($this->entity);
 
     $this->entity
       ->expects($this->once())
       ->method('id')
       ->with()
-      ->will($this->returnValue('entity_id'));
+      ->willReturn('entity_id');
 
     $result = $this->configEntityMapper->getOverviewRouteParameters();
 
@@ -183,12 +183,12 @@ class ConfigEntityMapperTest extends UnitTestCase {
     $entity_type = $this->createMock('Drupal\Core\Config\Entity\ConfigEntityTypeInterface');
     $entity_type->expects($this->once())
       ->method('getLabel')
-      ->will($this->returnValue('test'));
+      ->willReturn('test');
     $this->entityTypeManager
       ->expects($this->once())
       ->method('getDefinition')
       ->with('configurable_language')
-      ->will($this->returnValue($entity_type));
+      ->willReturn($entity_type);
 
     $result = $this->configEntityMapper->getTypeName();
     $this->assertSame('test', $result);
@@ -201,12 +201,12 @@ class ConfigEntityMapperTest extends UnitTestCase {
     $entity_type = $this->createMock('Drupal\Core\Config\Entity\ConfigEntityTypeInterface');
     $entity_type->expects($this->once())
       ->method('getLabel')
-      ->will($this->returnValue('test'));
+      ->willReturn('test');
     $this->entityTypeManager
       ->expects($this->once())
       ->method('getDefinition')
       ->with('configurable_language')
-      ->will($this->returnValue($entity_type));
+      ->willReturn($entity_type);
 
     $result = $this->configEntityMapper->getTypeLabel();
     $this->assertSame('test', $result);

@@ -86,7 +86,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
 
     $this->storage->expects($this->any())
       ->method('getBaseTable')
-      ->will($this->returnValue('entity_test'));
+      ->willReturn('entity_test');
 
     // Add an ID field. This also acts as a test for a simple, single-column
     // field.
@@ -388,7 +388,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
 
     $this->storageSchema->expects($this->any())
       ->method('getTableMapping')
-      ->will($this->returnValue($table_mapping));
+      ->willReturn($table_mapping);
 
     $this->assertNull(
       $this->storageSchema->onEntityTypeCreate($this->entityType)
@@ -422,11 +422,11 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
 
     $this->entityType->expects($this->any())
       ->method('getRevisionMetadataKeys')
-      ->will($this->returnValue([]));
+      ->willReturn([]);
 
     $this->storage->expects($this->exactly(9))
       ->method('getRevisionTable')
-      ->will($this->returnValue('entity_test_revision'));
+      ->willReturn('entity_test_revision');
 
     $this->setUpStorageDefinition('revision_id', [
       'columns' => [
@@ -495,7 +495,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
 
     $this->storageSchema->expects($this->any())
       ->method('getTableMapping')
-      ->will($this->returnValue($table_mapping));
+      ->willReturn($table_mapping);
 
     $this->storageSchema->onEntityTypeCreate($this->entityType);
   }
@@ -522,7 +522,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
 
     $this->storage->expects($this->any())
       ->method('getDataTable')
-      ->will($this->returnValue('entity_test_field_data'));
+      ->willReturn('entity_test_field_data');
 
     $this->setUpStorageDefinition('langcode', [
       'columns' => [
@@ -604,7 +604,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
 
     $this->storageSchema->expects($this->any())
       ->method('getTableMapping')
-      ->will($this->returnValue($table_mapping));
+      ->willReturn($table_mapping);
 
     $this->assertNull(
       $this->storageSchema->onEntityTypeCreate($this->entityType)
@@ -640,14 +640,14 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
 
     $this->entityType->expects($this->any())
       ->method('isRevisionable')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     $this->entityType->expects($this->any())
       ->method('isTranslatable')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
 
     $this->storage->expects($this->exactly(30))
       ->method('getRevisionTable')
-      ->will($this->returnValue('entity_test_revision'));
+      ->willReturn('entity_test_revision');
 
     $this->setUpStorageDefinition('revision_id', [
       'columns' => [
@@ -822,7 +822,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
 
     $this->storageSchema->expects($this->any())
       ->method('getTableMapping')
-      ->will($this->returnValue($table_mapping));
+      ->willReturn($table_mapping);
 
     $this->storageSchema->onEntityTypeCreate($this->entityType);
   }
@@ -888,20 +888,20 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     $field_storage
       ->expects($this->any())
       ->method('getType')
-      ->will($this->returnValue('shape'));
+      ->willReturn('shape');
     $field_storage
       ->expects($this->any())
       ->method('getTargetEntityTypeId')
-      ->will($this->returnValue($entity_type_id));
+      ->willReturn($entity_type_id);
     $field_storage
       ->expects($this->any())
       ->method('isMultiple')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
 
     $this->storageDefinitions['id']
       ->expects($this->any())
       ->method('getType')
-      ->will($this->returnValue('integer'));
+      ->willReturn('integer');
 
     $expected = [
       $entity_type_id . '__' . $field_name => [
@@ -997,7 +997,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
 
     $this->storageSchema->expects($this->any())
       ->method('getTableMapping')
-      ->will($this->returnValue($table_mapping));
+      ->willReturn($table_mapping);
 
     $this->assertNull(
       $this->storageSchema->onFieldStorageDefinitionCreate($field_storage)
@@ -1049,20 +1049,20 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     $field_storage
       ->expects($this->any())
       ->method('getType')
-      ->will($this->returnValue('shape'));
+      ->willReturn('shape');
     $field_storage
       ->expects($this->any())
       ->method('getTargetEntityTypeId')
-      ->will($this->returnValue($entity_type_id));
+      ->willReturn($entity_type_id);
     $field_storage
       ->expects($this->any())
       ->method('isMultiple')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
 
     $this->storageDefinitions['id']
       ->expects($this->any())
       ->method('getType')
-      ->will($this->returnValue('string'));
+      ->willReturn('string');
 
     $expected = [
       $entity_type_id . '__' . $field_name => [
@@ -1142,7 +1142,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
 
     $this->storageSchema->expects($this->any())
       ->method('getTableMapping')
-      ->will($this->returnValue($table_mapping));
+      ->willReturn($table_mapping);
 
     $this->assertNull(
       $this->storageSchema->onFieldStorageDefinitionCreate($field_storage)
@@ -1316,7 +1316,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     $table_mapping->setExtraColumns('entity_test', ['default_langcode']);
     $this->storageSchema->expects($this->any())
       ->method('getTableMapping')
-      ->will($this->returnValue($table_mapping));
+      ->willReturn($table_mapping);
 
     // Setup storage schema.
     if ($change_schema) {
@@ -1357,22 +1357,22 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')
       ->with($this->entityType->id())
-      ->will($this->returnValue($this->entityType));
+      ->willReturn($this->entityType);
 
     $this->entityTypeManager->expects($this->any())
       ->method('getActiveDefinition')
       ->with($this->entityType->id())
-      ->will($this->returnValue($this->entityType));
+      ->willReturn($this->entityType);
 
     $this->entityFieldManager->expects($this->any())
       ->method('getFieldStorageDefinitions')
       ->with($this->entityType->id())
-      ->will($this->returnValue($this->storageDefinitions));
+      ->willReturn($this->storageDefinitions);
 
     $this->entityFieldManager->expects($this->any())
       ->method('getActiveFieldStorageDefinitions')
       ->with($this->entityType->id())
-      ->will($this->returnValue($this->storageDefinitions));
+      ->willReturn($this->storageDefinitions);
 
     $this->dbSchemaHandler = $this->getMockBuilder('Drupal\Core\Database\Schema')
       ->disableOriginalConstructor()
@@ -1403,7 +1403,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ->getMock();
     $connection->expects($this->any())
       ->method('schema')
-      ->will($this->returnValue($this->dbSchemaHandler));
+      ->willReturn($this->dbSchemaHandler);
 
     $key_value = $this->createMock('Drupal\Core\KeyValueStore\KeyValueStoreInterface');
 
@@ -1423,7 +1423,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     $this->storageSchema
       ->expects($this->any())
       ->method('installedStorageSchema')
-      ->will($this->returnValue($key_value));
+      ->willReturn($key_value);
     $this->storageSchema
       ->expects($this->any())
       ->method('isTableEmpty')
@@ -1443,18 +1443,18 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     $this->storageDefinitions[$field_name] = $this->createMock('Drupal\Tests\Core\Field\TestBaseFieldDefinitionInterface');
     $this->storageDefinitions[$field_name]->expects($this->any())
       ->method('isBaseField')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     // getName() is called once for each table.
     $this->storageDefinitions[$field_name]->expects($this->any())
       ->method('getName')
-      ->will($this->returnValue($field_name));
+      ->willReturn($field_name);
     // getSchema() is called once for each table.
     $this->storageDefinitions[$field_name]->expects($this->any())
       ->method('getSchema')
-      ->will($this->returnValue($schema));
+      ->willReturn($schema);
     $this->storageDefinitions[$field_name]->expects($this->any())
       ->method('getColumns')
-      ->will($this->returnValue($schema['columns']));
+      ->willReturn($schema['columns']);
     // Add property definitions.
     if (!empty($schema['columns'])) {
       $property_definitions = [];
@@ -1462,11 +1462,11 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         $property_definitions[$column] = $this->createMock('Drupal\Core\TypedData\DataDefinitionInterface');
         $property_definitions[$column]->expects($this->any())
           ->method('isRequired')
-          ->will($this->returnValue(!empty($info['not null'])));
+          ->willReturn(!empty($info['not null']));
       }
       $this->storageDefinitions[$field_name]->expects($this->any())
         ->method('getPropertyDefinitions')
-        ->will($this->returnValue($property_definitions));
+        ->willReturn($property_definitions);
     }
   }
 
@@ -1520,7 +1520,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
 
     $this->storageSchema->expects($this->any())
       ->method('getTableMapping')
-      ->will($this->returnValue($table_mapping));
+      ->willReturn($table_mapping);
 
     $this->storageSchema->expects($this->any())
       ->method('loadEntitySchemaData')

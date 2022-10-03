@@ -77,11 +77,11 @@ class UserAccessControlHandlerTest extends UnitTestCase {
     $this->viewer
       ->expects($this->any())
       ->method('hasPermission')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
     $this->viewer
       ->expects($this->any())
       ->method('id')
-      ->will($this->returnValue(1));
+      ->willReturn(1);
 
     $this->owner = $this->createMock('\Drupal\Core\Session\AccountInterface');
     $this->owner
@@ -95,13 +95,13 @@ class UserAccessControlHandlerTest extends UnitTestCase {
     $this->owner
       ->expects($this->any())
       ->method('id')
-      ->will($this->returnValue(2));
+      ->willReturn(2);
 
     $this->admin = $this->createMock('\Drupal\Core\Session\AccountInterface');
     $this->admin
       ->expects($this->any())
       ->method('hasPermission')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
 
     $this->emailViewer = $this->createMock('\Drupal\Core\Session\AccountInterface');
     $this->emailViewer
@@ -113,7 +113,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
     $this->emailViewer
       ->expects($this->any())
       ->method('id')
-      ->will($this->returnValue(3));
+      ->willReturn(3);
 
     $entity_type = $this->createMock('Drupal\Core\Entity\EntityTypeInterface');
 
@@ -127,7 +127,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
     $this->items
       ->expects($this->any())
       ->method('defaultAccess')
-      ->will($this->returnValue(AccessResult::allowed()));
+      ->willReturn(AccessResult::allowed());
   }
 
   /**
@@ -139,12 +139,12 @@ class UserAccessControlHandlerTest extends UnitTestCase {
     $field_definition = $this->createMock('Drupal\Core\Field\FieldDefinitionInterface');
     $field_definition->expects($this->any())
       ->method('getName')
-      ->will($this->returnValue($field));
+      ->willReturn($field);
 
     $this->items
       ->expects($this->any())
       ->method('getEntity')
-      ->will($this->returnValue($this->{$target}));
+      ->willReturn($this->{$target});
 
     foreach (['view' => $view, 'edit' => $edit] as $operation => $result) {
       $result_text = !isset($result) ? 'null' : ($result ? 'true' : 'false');

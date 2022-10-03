@@ -69,7 +69,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
     $language_manager = $this->createMock(LanguageManagerInterface::class);
     $language_manager->expects($this->any())
       ->method('getCurrentLanguage')
-      ->will($this->returnValue(new Language(['id' => 'en'])));
+      ->willReturn(new Language(['id' => 'en']));
 
     $this->moduleHandler = $this->createMock(ModuleHandlerInterface::class);
     $this->moduleHandler->expects($this->any())
@@ -124,7 +124,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
     ];
     $this->pluginDiscovery->expects($this->once())
       ->method('getDefinitions')
-      ->will($this->returnValue($definitions));
+      ->willReturn($definitions);
 
     // Test with a non existing group.
     $result = $this->contextualLinkManager->getContextualLinkPluginsByGroup('group_non_existing');
@@ -159,7 +159,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
     $this->cacheBackend->expects($this->once())
       ->method('get')
       ->with('contextual_links_plugins:en:group1')
-      ->will($this->returnValue((object) ['data' => $definitions]));
+      ->willReturn((object) ['data' => $definitions]);
 
     $result = $this->contextualLinkManager->getContextualLinkPluginsByGroup('group1');
     $this->assertEquals($definitions, $result);
@@ -238,11 +238,11 @@ class ContextualLinkManagerTest extends UnitTestCase {
 
     $this->pluginDiscovery->expects($this->once())
       ->method('getDefinitions')
-      ->will($this->returnValue($definitions));
+      ->willReturn($definitions);
 
     $this->accessManager->expects($this->any())
       ->method('checkNamedRoute')
-      ->will($this->returnValue(AccessResult::allowed()));
+      ->willReturn(AccessResult::allowed());
 
     $this->moduleHandler->expects($this->exactly(2))
       ->method('alter')
@@ -291,7 +291,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
 
     $this->pluginDiscovery->expects($this->once())
       ->method('getDefinitions')
-      ->will($this->returnValue($definitions));
+      ->willReturn($definitions);
 
     $this->accessManager->expects($this->any())
       ->method('checkNamedRoute')
@@ -323,7 +323,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
 
     $this->pluginDiscovery->expects($this->once())
       ->method('getDefinitions')
-      ->will($this->returnValue($definitions));
+      ->willReturn($definitions);
 
     $this->moduleHandler->expects($this->once())
       ->method('alter')

@@ -58,13 +58,13 @@ class ViewsTest extends UnitTestCase {
     $view_storage->expects($this->once())
       ->method('load')
       ->with('test_view')
-      ->will($this->returnValue($view));
+      ->willReturn($view);
 
     $entity_type_manager = $this->createMock('Drupal\Core\Entity\EntityTypeManagerInterface');
     $entity_type_manager->expects($this->once())
       ->method('getStorage')
       ->with('view')
-      ->will($this->returnValue($view_storage));
+      ->willReturn($view_storage);
     $this->container->set('entity_type.manager', $entity_type_manager);
 
     $executable = Views::getView('test_view');
@@ -168,13 +168,17 @@ class ViewsTest extends UnitTestCase {
     $view_storage->expects($this->once())
       ->method('loadMultiple')
       ->with(['test_view_1', 'test_view_2', 'test_view_3'])
-      ->will($this->returnValue(['test_view_1' => $view_1, 'test_view_2' => $view_2, 'test_view_3' => $view_3]));
+      ->willReturn([
+        'test_view_1' => $view_1,
+        'test_view_2' => $view_2,
+        'test_view_3' => $view_3,
+      ]);
 
     $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
     $entity_type_manager->expects($this->exactly(2))
       ->method('getStorage')
       ->with('view')
-      ->will($this->returnValue($view_storage));
+      ->willReturn($view_storage);
     $this->container->set('entity_type.manager', $entity_type_manager);
 
     $definitions = [

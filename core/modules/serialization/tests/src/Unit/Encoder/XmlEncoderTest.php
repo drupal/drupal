@@ -65,7 +65,7 @@ class XmlEncoderTest extends UnitTestCase {
     $this->baseEncoder->expects($this->once())
       ->method('encode')
       ->with($this->testArray, 'test', [])
-      ->will($this->returnValue('test'));
+      ->willReturn('test');
 
     $this->assertEquals('test', $this->encoder->encode($this->testArray, 'test'));
   }
@@ -77,7 +77,7 @@ class XmlEncoderTest extends UnitTestCase {
     $this->baseEncoder->expects($this->once())
       ->method('decode')
       ->with('test', 'test', [])
-      ->will($this->returnValue($this->testArray));
+      ->willReturn($this->testArray);
 
     $this->assertEquals($this->testArray, $this->encoder->decode('test', 'test'));
   }

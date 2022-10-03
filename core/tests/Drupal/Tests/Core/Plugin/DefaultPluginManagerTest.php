@@ -100,7 +100,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $module_handler->expects($this->once())
       ->method('moduleExists')
       ->with('disabled_module')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
 
     $plugin_manager = new TestPluginManager($this->namespaces, $definitions, $module_handler, 'test_alter_hook', '\Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface');
 
@@ -125,7 +125,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $module_handler->expects($this->once())
       ->method('moduleExists')
       ->with('disabled_module')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
 
     $plugin_manager = new TestPluginManager($this->namespaces, $definitions, $module_handler, 'test_alter_hook', '\Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface');
 
@@ -184,7 +184,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
       ->expects($this->once())
       ->method('get')
       ->with($cid)
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
     $cache_backend
       ->expects($this->once())
       ->method('set')
@@ -209,7 +209,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
       ->expects($this->once())
       ->method('get')
       ->with($cid)
-      ->will($this->returnValue((object) ['data' => $this->expectedDefinitions]));
+      ->willReturn((object) ['data' => $this->expectedDefinitions]);
     $cache_backend
       ->expects($this->never())
       ->method('set');

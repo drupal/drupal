@@ -117,7 +117,7 @@ class UserSessionTest extends UnitTestCase {
     $entity_type_manager->expects($this->any())
       ->method('getStorage')
       ->with($this->equalTo('user_role'))
-      ->will($this->returnValue($role_storage));
+      ->willReturn($role_storage);
     $container = new ContainerBuilder();
     $container->set('entity_type.manager', $entity_type_manager);
     \Drupal::setContainer($container);

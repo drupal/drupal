@@ -90,10 +90,11 @@ class ViewListBuilderTest extends UnitTestCase {
       ->getMock();
     $page_display->expects($this->any())
       ->method('getPath')
-      ->will($this->onConsecutiveCalls(
-        $this->returnValue('test_page'),
-        $this->returnValue('<object>malformed_path</object>'),
-        $this->returnValue('<script>alert("placeholder_page/%")</script>')));
+      ->willReturnOnConsecutiveCalls(
+        'test_page',
+        '<object>malformed_path</object>',
+        '<script>alert("placeholder_page/%")</script>',
+      );
 
     $embed_display = $this->getMockBuilder('Drupal\views\Plugin\views\display\Embed')
       ->onlyMethods(['initDisplay'])
