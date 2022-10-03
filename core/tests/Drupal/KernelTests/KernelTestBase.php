@@ -981,27 +981,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   }
 
   /**
-   * {@inheritdoc}
-   */
-  protected function prepareTemplate(\Text_Template $template) {
-    $bootstrap_globals = '';
-
-    // Fix missing bootstrap.php when $preserveGlobalState is FALSE.
-    // @see https://github.com/sebastianbergmann/phpunit/pull/797
-    $bootstrap_globals .= '$__PHPUNIT_BOOTSTRAP = ' . var_export($GLOBALS['__PHPUNIT_BOOTSTRAP'], TRUE) . ";\n";
-
-    // Avoid repetitive test namespace discoveries to improve performance.
-    // @see /core/tests/bootstrap.php
-    $bootstrap_globals .= '$namespaces = ' . var_export($GLOBALS['namespaces'], TRUE) . ";\n";
-
-    $template->setVar([
-      'constants' => '',
-      'included_files' => '',
-      'globals' => $bootstrap_globals,
-    ]);
-  }
-
-  /**
    * Prevents serializing any properties.
    *
    * Kernel tests are run in a separate process. To do this PHPUnit creates a

@@ -1666,11 +1666,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/TypedData/TypedDataTest.php
 
 		-
-			message: "#^Parameter \\$template of method Drupal\\\\KernelTests\\\\KernelTestBase\\:\\:prepareTemplate\\(\\) has invalid type Text_Template\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/KernelTestBase.php
-
-		-
 			message: "#^Instantiated class Drupal\\\\KernelTests\\\\KernelMissingDependentModuleMethodTest not found\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/KernelTestBaseTest.php
