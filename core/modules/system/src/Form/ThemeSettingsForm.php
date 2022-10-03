@@ -235,7 +235,6 @@ class ThemeSettingsForm extends ConfigFormBase {
       $form['logo']['settings']['logo_upload'] = [
         '#type' => 'file',
         '#title' => $this->t('Upload logo image'),
-        '#maxlength' => 40,
         '#description' => $this->t("If you don't have direct file access to the server, use this field to upload your logo."),
         '#upload_validators' => [
           'file_validate_is_image' => [],
