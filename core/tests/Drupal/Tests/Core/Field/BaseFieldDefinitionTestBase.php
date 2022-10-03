@@ -36,7 +36,7 @@ abstract class BaseFieldDefinitionTestBase extends UnitTestCase {
     $module_handler->expects($this->once())
       ->method('moduleExists')
       ->with($module_name)
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     $typed_data_manager = $this->createMock(TypedDataManagerInterface::class);
     $plugin_manager = new FieldTypePluginManager(
       $namespaces,

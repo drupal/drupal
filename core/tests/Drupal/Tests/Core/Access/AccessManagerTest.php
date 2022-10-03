@@ -363,7 +363,7 @@ class AccessManagerTest extends UnitTestCase {
     $this->routeProvider->expects($this->any())
       ->method('getRouteByName')
       ->with('test_route_1')
-      ->will($this->returnValue($route));
+      ->willReturn($route);
 
     $map[] = ['test_route_1', ['value' => 'example'], '/test-route-1/example'];
 
@@ -371,7 +371,7 @@ class AccessManagerTest extends UnitTestCase {
     $this->paramConverter->expects($this->atLeastOnce())
       ->method('convert')
       ->with(['value' => 'example', RouteObjectInterface::ROUTE_NAME => 'test_route_1', RouteObjectInterface::ROUTE_OBJECT => $route])
-      ->will($this->returnValue(['value' => 'upcasted_value']));
+      ->willReturn(['value' => 'upcasted_value']);
 
     $this->setupAccessArgumentsResolverFactory($this->exactly(2))
       ->with($this->callback(function ($route_match) {
@@ -383,10 +383,10 @@ class AccessManagerTest extends UnitTestCase {
     $access_check = $this->createMock('Drupal\Tests\Core\Access\TestAccessCheckInterface');
     $access_check->expects($this->atLeastOnce())
       ->method('applies')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     $access_check->expects($this->atLeastOnce())
       ->method('access')
-      ->will($this->returnValue(AccessResult::forbidden()));
+      ->willReturn(AccessResult::forbidden());
 
     $this->container->set('test_access', $access_check);
     $this->container->setParameter('dynamic_access_check_services', ['test_access']);
@@ -412,7 +412,7 @@ class AccessManagerTest extends UnitTestCase {
     $this->routeProvider->expects($this->any())
       ->method('getRouteByName')
       ->with('test_route_1')
-      ->will($this->returnValue($route));
+      ->willReturn($route);
 
     $map[] = ['test_route_1', ['value' => 'example'], '/test-route-1/example'];
 
@@ -420,7 +420,7 @@ class AccessManagerTest extends UnitTestCase {
     $this->paramConverter->expects($this->atLeastOnce())
       ->method('convert')
       ->with(['value' => 'example', RouteObjectInterface::ROUTE_NAME => 'test_route_1', RouteObjectInterface::ROUTE_OBJECT => $route])
-      ->will($this->returnValue(['value' => 'upcasted_value']));
+      ->willReturn(['value' => 'upcasted_value']);
 
     $this->setupAccessArgumentsResolverFactory($this->exactly(2))
       ->with($this->callback(function ($route_match) {
@@ -432,10 +432,10 @@ class AccessManagerTest extends UnitTestCase {
     $access_check = $this->createMock('Drupal\Tests\Core\Access\TestAccessCheckInterface');
     $access_check->expects($this->atLeastOnce())
       ->method('applies')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     $access_check->expects($this->atLeastOnce())
       ->method('access')
-      ->will($this->returnValue(AccessResult::forbidden()));
+      ->willReturn(AccessResult::forbidden());
 
     $this->container->set('test_access', $access_check);
     $this->container->setParameter('dynamic_access_check_services', ['test_access']);
@@ -482,12 +482,12 @@ class AccessManagerTest extends UnitTestCase {
 
     $route_provider->expects($this->any())
       ->method('getRouteByName')
-      ->will($this->returnValue($route));
+      ->willReturn($route);
 
     $this->paramConverter = $this->createMock('Drupal\Core\ParamConverter\ParamConverterManagerInterface');
     $this->paramConverter->expects($this->any())
       ->method('convert')
-      ->will($this->returnValue([]));
+      ->willReturn([]);
 
     $this->setupAccessArgumentsResolverFactory();
 
@@ -497,7 +497,7 @@ class AccessManagerTest extends UnitTestCase {
     $access_check = $this->createMock('Drupal\Tests\Core\Access\TestAccessCheckInterface');
     $access_check->expects($this->any())
       ->method('access')
-      ->will($this->returnValue($return_value));
+      ->willReturn($return_value);
     $container->set('test_incorrect_value', $access_check);
 
     $access_manager = new AccessManager($route_provider, $this->paramConverter, $this->argumentsResolverFactory, $this->currentUser, $this->checkProvider);

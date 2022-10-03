@@ -109,7 +109,7 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
     $factory = $this->createMock('Drupal\Component\Plugin\Factory\FactoryInterface');
     $factory->expects($this->any())
       ->method('createInstance')
-      ->will($this->returnValue($plugin_stub));
+      ->willReturn($plugin_stub);
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'factory');
     $property->setAccessible(TRUE);
     $property->setValue($manager, $factory);

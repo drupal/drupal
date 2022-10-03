@@ -88,12 +88,12 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
     $target_entity_type = $this->createMock('\Drupal\Core\Entity\EntityTypeInterface');
     $target_entity_type->expects($this->any())
       ->method('getBundleConfigDependency')
-      ->will($this->returnValue(['type' => 'config', 'name' => 'test.test_entity_type.id']));
+      ->willReturn(['type' => 'config', 'name' => 'test.test_entity_type.id']);
 
     $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')
       ->with('test_entity_type')
-      ->will($this->returnValue($target_entity_type));
+      ->willReturn($target_entity_type);
 
     $config = new ContentLanguageSettings([
       'target_entity_type_id' => 'test_entity_type',
@@ -250,17 +250,17 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
       ->expects($this->any())
       ->method('load')
       ->with($config_id)
-      ->will($this->returnValue($existing_config));
+      ->willReturn($existing_config);
     $this->configEntityStorageInterface
       ->expects($this->any())
       ->method('create')
-      ->will($this->returnValue($nullConfig));
+      ->willReturn($nullConfig);
 
     $this->entityTypeManager
       ->expects($this->any())
       ->method('getStorage')
       ->with('language_content_settings')
-      ->will($this->returnValue($this->configEntityStorageInterface));
+      ->willReturn($this->configEntityStorageInterface);
 
     $entity_type_repository = $this->getMockForAbstractClass(EntityTypeRepositoryInterface::class);
     $entity_type_repository->expects($this->any())

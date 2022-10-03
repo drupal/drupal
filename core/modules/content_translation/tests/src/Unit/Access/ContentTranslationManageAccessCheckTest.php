@@ -53,13 +53,13 @@ class ContentTranslationManageAccessCheckTest extends UnitTestCase {
     $translation_handler = $this->createMock('\Drupal\content_translation\ContentTranslationHandlerInterface');
     $translation_handler->expects($this->once())
       ->method('getTranslationAccess')
-      ->will($this->returnValue(AccessResult::allowed()));
+      ->willReturn(AccessResult::allowed());
 
     $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
     $entity_type_manager->expects($this->once())
       ->method('getHandler')
       ->withAnyParameters()
-      ->will($this->returnValue($translation_handler));
+      ->willReturn($translation_handler);
 
     // Set our source and target languages.
     $source = 'en';
@@ -87,7 +87,7 @@ class ContentTranslationManageAccessCheckTest extends UnitTestCase {
     $entity->expects($this->once())
       ->method('getTranslationLanguages')
       ->with()
-      ->will($this->returnValue([]));
+      ->willReturn([]);
     $entity->expects($this->once())
       ->method('getCacheContexts')
       ->willReturn([]);
@@ -96,7 +96,7 @@ class ContentTranslationManageAccessCheckTest extends UnitTestCase {
       ->willReturn(Cache::PERMANENT);
     $entity->expects($this->once())
       ->method('getCacheTags')
-      ->will($this->returnValue(['node:1337']));
+      ->willReturn(['node:1337']);
     $entity->expects($this->once())
       ->method('getCacheContexts')
       ->willReturn([]);
@@ -110,7 +110,7 @@ class ContentTranslationManageAccessCheckTest extends UnitTestCase {
     $route_match->expects($this->once())
       ->method('getParameter')
       ->with('node')
-      ->will($this->returnValue($entity));
+      ->willReturn($entity);
 
     // Set the mock account.
     $account = $this->createMock('Drupal\Core\Session\AccountInterface');

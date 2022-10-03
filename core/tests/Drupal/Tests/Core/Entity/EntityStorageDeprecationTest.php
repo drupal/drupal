@@ -112,10 +112,10 @@ class EntityStorageDeprecationTest extends UnitTestCase {
     $this->entityType = $this->createMock('Drupal\Core\Entity\ContentEntityTypeInterface');
     $this->entityType->expects($this->any())
       ->method('id')
-      ->will($this->returnValue($this->entityTypeId));
+      ->willReturn($this->entityTypeId);
     $this->entityType->expects($this->any())
       ->method('getClass')
-      ->will($this->returnValue('bogus_class'));
+      ->willReturn('bogus_class');
 
     $this->container = new ContainerBuilder();
     \Drupal::setContainer($this->container);
@@ -128,7 +128,7 @@ class EntityStorageDeprecationTest extends UnitTestCase {
     $this->languageManager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
     $this->languageManager->expects($this->any())
       ->method('getDefaultLanguage')
-      ->will($this->returnValue(new Language(['langcode' => 'en'])));
+      ->willReturn(new Language(['langcode' => 'en']));
     $this->connection = $this->getMockBuilder('Drupal\Core\Database\Connection')
       ->disableOriginalConstructor()
       ->getMock();
@@ -147,19 +147,19 @@ class EntityStorageDeprecationTest extends UnitTestCase {
 
     $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')
-      ->will($this->returnValue($this->entityType));
+      ->willReturn($this->entityType);
 
     $this->entityTypeManager->expects($this->any())
       ->method('getActiveDefinition')
-      ->will($this->returnValue($this->entityType));
+      ->willReturn($this->entityType);
 
     $this->entityFieldManager->expects($this->any())
       ->method('getFieldStorageDefinitions')
-      ->will($this->returnValue($this->fieldDefinitions));
+      ->willReturn($this->fieldDefinitions);
 
     $this->entityFieldManager->expects($this->any())
       ->method('getActiveFieldStorageDefinitions')
-      ->will($this->returnValue($this->fieldDefinitions));
+      ->willReturn($this->fieldDefinitions);
 
     $this->entityStorage = new DeprecatedEntityStorage($this->entityType, $this->connection, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager);
     $this->entityStorage->setModuleHandler($this->moduleHandler);

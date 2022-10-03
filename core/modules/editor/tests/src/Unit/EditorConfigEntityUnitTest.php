@@ -65,13 +65,13 @@ class EditorConfigEntityUnitTest extends UnitTestCase {
     $this->entityType = $this->createMock('\Drupal\Core\Entity\EntityTypeInterface');
     $this->entityType->expects($this->any())
       ->method('getProvider')
-      ->will($this->returnValue('editor'));
+      ->willReturn('editor');
 
     $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
     $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')
       ->with($this->entityTypeId)
-      ->will($this->returnValue($this->entityType));
+      ->willReturn($this->entityType);
 
     $this->uuid = $this->createMock('\Drupal\Component\Uuid\UuidInterface');
 
@@ -98,33 +98,33 @@ class EditorConfigEntityUnitTest extends UnitTestCase {
       ->getMock();
     $plugin->expects($this->once())
       ->method('getPluginDefinition')
-      ->will($this->returnValue(['provider' => 'test_module']));
+      ->willReturn(['provider' => 'test_module']);
     $plugin->expects($this->once())
       ->method('getDefaultSettings')
-      ->will($this->returnValue([]));
+      ->willReturn([]);
 
     $this->editorPluginManager->expects($this->any())
       ->method('createInstance')
       ->with($this->editorId)
-      ->will($this->returnValue($plugin));
+      ->willReturn($plugin);
 
     $entity = new Editor($values, $this->entityTypeId);
 
     $filter_format = $this->createMock('Drupal\Core\Config\Entity\ConfigEntityInterface');
     $filter_format->expects($this->once())
       ->method('getConfigDependencyName')
-      ->will($this->returnValue('filter.format.test'));
+      ->willReturn('filter.format.test');
 
     $storage = $this->createMock('Drupal\Core\Entity\EntityStorageInterface');
     $storage->expects($this->once())
       ->method('load')
       ->with($format_id)
-      ->will($this->returnValue($filter_format));
+      ->willReturn($filter_format);
 
     $this->entityTypeManager->expects($this->once())
       ->method('getStorage')
       ->with('filter_format')
-      ->will($this->returnValue($storage));
+      ->willReturn($storage);
 
     $dependencies = $entity->calculateDependencies()->getDependencies();
     $this->assertContains('test_module', $dependencies['module']);

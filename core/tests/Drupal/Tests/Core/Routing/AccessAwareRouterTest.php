@@ -66,7 +66,7 @@ class AccessAwareRouterTest extends UnitTestCase {
       ->getMock();
     $this->router->expects($this->once())
       ->method('matchRequest')
-      ->will($this->returnValue([RouteObjectInterface::ROUTE_OBJECT => $this->route]));
+      ->willReturn([RouteObjectInterface::ROUTE_OBJECT => $this->route]);
     $this->accessAwareRouter = new AccessAwareRouter($this->router, $this->accessManager, $this->currentUser);
   }
 

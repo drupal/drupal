@@ -28,7 +28,7 @@ class EntityViewDisplayAccessControlHandlerTest extends EntityFormDisplayAccessC
     $this->member
       ->expects($this->any())
       ->method('id')
-      ->will($this->returnValue(2));
+      ->willReturn(2);
 
     $this->entity = new EntityViewDisplay([
       'targetEntityType' => 'foobar',

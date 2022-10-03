@@ -54,7 +54,12 @@ class AggregatorPluginSettingsBaseTest extends UnitTestCase {
         ->getMock();
       $this->managers[$type]->expects($this->once())
         ->method('getDefinitions')
-        ->will($this->returnValue(['aggregator_test' => ['title' => '', 'description' => '']]));
+        ->willReturn([
+          'aggregator_test' => [
+            'title' => '',
+            'description' => '',
+          ],
+        ]);
     }
 
     /** @var \Drupal\Core\Messenger\MessengerInterface|\PHPUnit\Framework\MockObject\MockBuilder $messenger */
@@ -102,7 +107,7 @@ class AggregatorPluginSettingsBaseTest extends UnitTestCase {
     $this->managers['processor']->expects($this->once())
       ->method('createInstance')
       ->with($this->equalTo('aggregator_test'))
-      ->will($this->returnValue($test_processor));
+      ->willReturn($test_processor);
 
     $form = $this->settingsForm->buildForm([], $form_state);
     $this->settingsForm->validateForm($form, $form_state);

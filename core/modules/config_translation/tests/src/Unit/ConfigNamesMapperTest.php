@@ -128,7 +128,7 @@ class ConfigNamesMapperTest extends UnitTestCase {
       ->expects($this->any())
       ->method('getRouteByName')
       ->with('system.site_information_settings')
-      ->will($this->returnValue($this->baseRoute));
+      ->willReturn($this->baseRoute);
 
     $this->languageManager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
 

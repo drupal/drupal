@@ -116,10 +116,10 @@ class FormBuilderTest extends FormTestBase {
     $form_arg = $this->createMock('Drupal\Core\Form\BaseFormIdInterface');
     $form_arg->expects($this->once())
       ->method('getFormId')
-      ->will($this->returnValue($expected_form_id));
+      ->willReturn($expected_form_id);
     $form_arg->expects($this->once())
       ->method('getBaseFormId')
-      ->will($this->returnValue($base_form_id));
+      ->willReturn($base_form_id);
 
     $form_state = new FormState();
     $form_id = $this->formBuilder->getFormId($form_arg, $form_state);
@@ -349,10 +349,10 @@ class FormBuilderTest extends FormTestBase {
     $form_arg = $this->createMock('Drupal\Core\Form\FormInterface');
     $form_arg->expects($this->exactly(2))
       ->method('getFormId')
-      ->will($this->returnValue($form_id));
+      ->willReturn($form_id);
     $form_arg->expects($this->exactly(4))
       ->method('buildForm')
-      ->will($this->returnValue($expected_form));
+      ->willReturn($expected_form);
 
     // Do an initial build of the form and track the build ID.
     $form_state = new FormState();
@@ -389,10 +389,10 @@ class FormBuilderTest extends FormTestBase {
     $form_arg = $this->createMock('Drupal\Core\Form\FormInterface');
     $form_arg->expects($this->exactly(2))
       ->method('getFormId')
-      ->will($this->returnValue($form_id));
+      ->willReturn($form_id);
     $form_arg->expects($this->exactly(4))
       ->method('buildForm')
-      ->will($this->returnValue($expected_form));
+      ->willReturn($expected_form);
 
     // Do an initial build of the form and track the build ID.
     $form_state = new FormState();
@@ -429,10 +429,10 @@ class FormBuilderTest extends FormTestBase {
     $form_arg = $this->createMock('Drupal\Core\Form\FormInterface');
     $form_arg->expects($this->exactly(2))
       ->method('getFormId')
-      ->will($this->returnValue($form_id));
+      ->willReturn($form_id);
     $form_arg->expects($this->once())
       ->method('buildForm')
-      ->will($this->returnValue($expected_form));
+      ->willReturn($expected_form);
 
     // Do an initial build of the form and track the build ID.
     $form_state = (new FormState())
@@ -471,10 +471,10 @@ class FormBuilderTest extends FormTestBase {
     $form_arg = $this->createMock('Drupal\Core\Form\FormInterface');
     $form_arg->expects($this->exactly(2))
       ->method('getFormId')
-      ->will($this->returnValue($form_id));
+      ->willReturn($form_id);
     $form_arg->expects($this->exactly(2))
       ->method('buildForm')
-      ->will($this->returnValue($expected_form));
+      ->willReturn($expected_form);
 
     $form_state = new FormState();
     $form = $this->simulateFormSubmission($form_id, $form_arg, $form_state);
@@ -497,17 +497,17 @@ class FormBuilderTest extends FormTestBase {
     $form_arg_1 = $this->createMock('Drupal\Core\Form\FormInterface');
     $form_arg_1->expects($this->exactly(1))
       ->method('getFormId')
-      ->will($this->returnValue($form_id_1));
+      ->willReturn($form_id_1);
     $form_arg_1->expects($this->exactly(1))
       ->method('buildForm')
-      ->will($this->returnValue($expected_form));
+      ->willReturn($expected_form);
     $form_arg_2 = $this->createMock('Drupal\Core\Form\FormInterface');
     $form_arg_2->expects($this->exactly(1))
       ->method('getFormId')
-      ->will($this->returnValue($form_id_2));
+      ->willReturn($form_id_2);
     $form_arg_2->expects($this->exactly(1))
       ->method('buildForm')
-      ->will($this->returnValue($expected_form));
+      ->willReturn($expected_form);
     $form_state = new FormState();
     $form_1 = $this->simulateFormSubmission($form_id_1, $form_arg_1, $form_state);
     $form_state = new FormState();
@@ -890,10 +890,10 @@ class FormBuilderTest extends FormTestBase {
     $form_arg = $this->createMock('Drupal\Core\Form\FormInterface');
     $form_arg->expects($this->once())
       ->method('getFormId')
-      ->will($this->returnValue($form_id));
+      ->willReturn($form_id);
     $form_arg->expects($this->once())
       ->method('buildForm')
-      ->will($this->returnValue($form));
+      ->willReturn($form);
 
     $form_state = new FormState();
     $built_form = $this->formBuilder->buildForm($form_arg, $form_state);

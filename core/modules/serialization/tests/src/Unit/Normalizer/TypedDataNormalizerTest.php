@@ -48,7 +48,7 @@ class TypedDataNormalizerTest extends UnitTestCase {
   public function testNormalize() {
     $this->typedData->expects($this->once())
       ->method('getValue')
-      ->will($this->returnValue('test'));
+      ->willReturn('test');
 
     $this->assertEquals('test', $this->normalizer->normalize($this->typedData));
   }

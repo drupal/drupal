@@ -90,7 +90,7 @@ class EntityLinkTest extends UnitTestCase {
       ->expects($this->any())
       ->method('getDefinition')
       ->with($entity_type_id)
-      ->will($this->returnValue($entity_type));
+      ->willReturn($entity_type);
 
     /** @var \Drupal\Core\Entity\Entity $entity */
     $entity = $this->getMockForAbstractClass('Drupal\Core\Entity\EntityBase', [

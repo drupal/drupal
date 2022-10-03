@@ -72,15 +72,15 @@ class CustomAccessCheckTest extends UnitTestCase {
     $resolver0 = $this->createMock('Drupal\Component\Utility\ArgumentsResolverInterface');
     $resolver0->expects($this->once())
       ->method('getArguments')
-      ->will($this->returnValue([]));
+      ->willReturn([]);
     $resolver1 = $this->createMock('Drupal\Component\Utility\ArgumentsResolverInterface');
     $resolver1->expects($this->once())
       ->method('getArguments')
-      ->will($this->returnValue([]));
+      ->willReturn([]);
     $resolver2 = $this->createMock('Drupal\Component\Utility\ArgumentsResolverInterface');
     $resolver2->expects($this->once())
       ->method('getArguments')
-      ->will($this->returnValue(['parameter' => 'TRUE']));
+      ->willReturn(['parameter' => 'TRUE']);
 
     $this->argumentsResolverFactory->expects($this->exactly(3))
       ->method('getArgumentsResolver')

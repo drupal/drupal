@@ -20,7 +20,7 @@ class RemoveRoleUserTest extends RoleUserTestBase {
     $this->account->expects($this->any())
       ->method('hasRole')
       ->with($this->equalTo('test_role_1'))
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
 
     $config = ['rid' => 'test_role_1'];
     $remove_role_plugin = new RemoveRoleUser($config, 'user_remove_role_action', ['type' => 'user'], $this->userRoleEntityType);
@@ -38,7 +38,7 @@ class RemoveRoleUserTest extends RoleUserTestBase {
     $this->account->expects($this->any())
       ->method('hasRole')
       ->with($this->equalTo('test_role_1'))
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
 
     $config = ['rid' => 'test_role_1'];
     $remove_role_plugin = new RemoveRoleUser($config, 'user_remove_role_action', ['type' => 'user'], $this->userRoleEntityType);

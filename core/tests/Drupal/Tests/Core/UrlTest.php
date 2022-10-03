@@ -265,7 +265,7 @@ class UrlTest extends UnitTestCase {
     $this->router->expects($this->once())
       ->method('matchRequest')
       ->with($request)
-      ->will($this->returnValue($attributes));
+      ->willReturn($attributes);
 
     $url = Url::createFromRequest($request);
     $expected = new Url('the_route_name', ['color' => 'chartreuse']);
@@ -357,14 +357,14 @@ class UrlTest extends UnitTestCase {
     $map[] = ['node_view', ['node' => '1'], '/node/1'];
     $map[] = ['node_edit', ['node' => '2'], '/node/2/edit'];
 
-    foreach ($urls as $index => $url) {
+    foreach ($urls as $url) {
       // Clone the url so that there is no leak of internal state into the
       // other ones.
       $url = clone $url;
       $url_generator = $this->createMock('Drupal\Core\Routing\UrlGeneratorInterface');
       $url_generator->expects($this->once())
         ->method('getPathFromRoute')
-        ->will($this->returnValueMap($map, $index));
+        ->willReturnMap($map);
       $url->setUrlGenerator($url_generator);
 
       $url->getInternalPath();

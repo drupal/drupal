@@ -42,7 +42,7 @@ class ControllerBaseTest extends UnitTestCase {
     $container->expects($this->once())
       ->method('get')
       ->with('config.factory')
-      ->will($this->returnValue($config_factory));
+      ->willReturn($config_factory);
     \Drupal::setContainer($container);
 
     $config_method = new \ReflectionMethod('Drupal\Core\Controller\ControllerBase', 'config');
