@@ -235,6 +235,9 @@ final class HTMLRestrictions {
         if ($html_tag_attribute_restrictions === []) {
           throw new \InvalidArgumentException(sprintf('The "%s" HTML tag has an attribute restriction "%s" which is set to the empty array. This is not permitted, specify either TRUE to allow all attribute values, or list the attribute value restrictions.', $html_tag_name, $html_tag_attribute_name));
         }
+        if (array_key_exists('*', $html_tag_attribute_restrictions)) {
+          throw new \InvalidArgumentException(sprintf('The "%s" HTML tag has an attribute restriction "%s" with a "*" allowed attribute value. This implies all attributes values are allowed. Remove the attribute value restriction instead, or use a prefix (`*-foo`), infix (`*-foo-*`) or suffix (`foo-*`) wildcard restriction instead.', $html_tag_name, $html_tag_attribute_name));
+        }
         // @codingStandardsIgnoreLine
         if (!Inspector::assertAll(function ($v) { return $v === TRUE; }, $html_tag_attribute_restrictions)) {
           throw new \InvalidArgumentException(sprintf('The "%s" HTML tag has attribute restriction "%s", but it is not an array of key-value pairs, with HTML tag attribute values as keys and TRUE as values.', $html_tag_name, $html_tag_attribute_name));
