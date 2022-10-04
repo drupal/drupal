@@ -2,7 +2,9 @@
 
 namespace Drupal\Tests\migrate\Unit;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\sqlite\Driver\Database\sqlite\Connection;
+use Drupal\migrate\Plugin\MigrationPluginManager;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
@@ -111,8 +113,9 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
       ->method('getDestinationPlugin')
       ->willReturn($plugin);
     $event_dispatcher = $this->createMock('Symfony\Contracts\EventDispatcher\EventDispatcherInterface');
+    $migration_manager = $this->createMock('Drupal\migrate\Plugin\MigrationPluginManagerInterface');
 
-    $id_map = new TestSqlIdMap($this->database, [], 'sql', [], $migration, $event_dispatcher);
+    $id_map = new TestSqlIdMap($this->database, [], 'sql', [], $migration, $event_dispatcher, $migration_manager);
     $migration
       ->method('getIdMap')
       ->willReturn($id_map);
@@ -1174,6 +1177,22 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
         ],
       ],
     ];
+  }
+
+  /**
+   * Tests deprecation message from Sql::getMigrationPluginManager().
+   *
+   * @group legacy
+   */
+  public function testGetMigrationPluginManagerDeprecation() {
+    $container = new ContainerBuilder();
+    $migration_plugin_manager = $this->createMock(MigrationPluginManager::class);
+    $container->set('plugin.manager.migration', $migration_plugin_manager);
+    \Drupal::setContainer($container);
+
+    $this->expectDeprecation('deprecated in drupal:9.5.0 and is removed from drupal:11.0.0. Use $this->migrationPluginManager instead. See https://www.drupal.org/node/3277306');
+    $id_map = $this->getIdMap();
+    $id_map->getMigrationPluginManager();
   }
 
 }
