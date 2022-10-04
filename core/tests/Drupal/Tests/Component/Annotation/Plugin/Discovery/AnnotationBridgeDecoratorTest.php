@@ -6,8 +6,8 @@ use Drupal\Component\Annotation\Plugin;
 use Drupal\Component\Annotation\Plugin\Discovery\AnnotationBridgeDecorator;
 use Drupal\Component\Plugin\Definition\PluginDefinition;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
-use Drupal\Tests\PhpUnitCompatibilityTrait;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
  * @coversDefaultClass \Drupal\Component\Annotation\Plugin\Discovery\AnnotationBridgeDecorator
@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
  */
 class AnnotationBridgeDecoratorTest extends TestCase {
 
-  use PhpUnitCompatibilityTrait;
+  use ProphecyTrait;
 
   /**
    * @covers ::getDefinitions
