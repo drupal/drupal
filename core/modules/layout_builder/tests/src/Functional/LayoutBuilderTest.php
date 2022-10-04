@@ -1167,6 +1167,14 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->pageTextContains('Layout Builder Storage: node.bundle_with_section_field.default');
     $assert_session->pageTextContains('Layout Builder Section: layout_onecol');
     $assert_session->pageTextContains('Layout Builder Component: system_powered_by_block');
+
+    $this->drupalGet("$field_ui_prefix/display/default");
+    $page->clickLink('Manage layout');
+    $page->clickLink('Add section');
+    $page->clickLink('One column');
+    $assert_session->pageTextContains('Layout Builder Storage: node.bundle_with_section_field.default');
+    $assert_session->pageTextContains('Layout Builder Section: layout_onecol');
+    $assert_session->pageTextContains('Layout Builder Layout: layout_onecol');
   }
 
   /**
