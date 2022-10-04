@@ -8,10 +8,10 @@ use Composer\Package\PackageInterface;
 use Composer\Package\RootPackageInterface;
 use Drupal\Composer\Plugin\VendorHardening\Config;
 use Drupal\Composer\Plugin\VendorHardening\VendorHardeningPlugin;
-use Drupal\Tests\PhpUnitCompatibilityTrait;
 use Drupal\Tests\Traits\PhpUnitWarnings;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
  * @coversDefaultClass \Drupal\Composer\Plugin\VendorHardening\VendorHardeningPlugin
@@ -20,7 +20,7 @@ use PHPUnit\Framework\TestCase;
 class VendorHardeningPluginTest extends TestCase {
 
   use PhpUnitWarnings;
-  use PhpUnitCompatibilityTrait;
+  use ProphecyTrait;
 
   /**
    * {@inheritdoc}

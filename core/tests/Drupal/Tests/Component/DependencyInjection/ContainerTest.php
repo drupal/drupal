@@ -8,8 +8,8 @@
 namespace Drupal\Tests\Component\DependencyInjection;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Tests\PhpUnitCompatibilityTrait;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
@@ -25,7 +25,7 @@ use Prophecy\Argument;
  */
 class ContainerTest extends TestCase {
 
-  use PhpUnitCompatibilityTrait;
+  use ProphecyTrait;
 
   /**
    * The tested container.
