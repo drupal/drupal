@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\migrate\Unit\process;
 
+use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateSkipProcessException;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\process\MigrationLookup;
@@ -60,6 +61,12 @@ class MigrationLookupTest extends MigrationLookupTestCase {
     $migration = MigrationLookup::create($this->prepareContainer(), $configuration, '', [], $migration_plugin->reveal());
     $result = $migration->transform(1, $this->migrateExecutable, $this->row, '');
     $this->assertEquals(2, $result);
+
+    $this->migrateStub->createStub('destination_migration', [1], [], FALSE)->willThrow(new \Exception('Oh noes!'));
+    $migration = MigrationLookup::create($this->prepareContainer(), $configuration, '', [], $migration_plugin->reveal());
+    $this->expectException(MigrateException::class);
+    $this->expectExceptionMessage('Exception was thrown while attempting to stub: Oh noes!');
+    $migration->transform(1, $this->migrateExecutable, $this->row, '');
   }
 
   /**

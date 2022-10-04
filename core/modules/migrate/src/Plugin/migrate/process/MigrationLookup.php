@@ -263,7 +263,7 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
         throw $e;
       }
       catch (\Exception $e) {
-        throw new MigrateException(sprintf('A(n) %s was thrown while attempting to stub.', gettype($e)), $e->getCode(), $e);
+        throw new MigrateException(sprintf('%s was thrown while attempting to stub: %s', get_class($e), $e->getMessage()), $e->getCode(), $e);
       }
     }
     if ($destination_ids) {
