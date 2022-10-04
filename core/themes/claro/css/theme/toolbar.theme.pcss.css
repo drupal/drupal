@@ -88,7 +88,8 @@
 .toolbar .toolbar-tray-horizontal .toolbar-tray {
   background-color: #f5f5f5;
 }
-.toolbar-tray a {
+.toolbar-tray a,
+.toolbar-tray a:visited {
   padding: 1em 1.3333em;
   cursor: pointer;
   text-decoration: none;
