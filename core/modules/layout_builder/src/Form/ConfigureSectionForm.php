@@ -48,6 +48,13 @@ class ConfigureSectionForm extends FormBase {
   protected $layout;
 
   /**
+   * The section being configured.
+   *
+   * @var \Drupal\layout_builder\Section
+   */
+  protected $section;
+
+  /**
    * The plugin form manager.
    *
    * @var \Drupal\Core\Plugin\PluginFormFactoryInterface
@@ -67,6 +74,13 @@ class ConfigureSectionForm extends FormBase {
    * @var int
    */
   protected $delta;
+
+  /**
+   * The plugin ID.
+   *
+   * @var string
+   */
+  protected $pluginId;
 
   /**
    * Indicates whether the section is being added or updated.
@@ -112,15 +126,14 @@ class ConfigureSectionForm extends FormBase {
     $this->sectionStorage = $section_storage;
     $this->delta = $delta;
     $this->isUpdate = is_null($plugin_id);
+    $this->pluginId = $plugin_id;
+
+    $section = $this->getCurrentSection();
 
     if ($this->isUpdate) {
-      $section = $this->sectionStorage->getSection($this->delta);
       if ($label = $section->getLayoutSettings()['label']) {
         $form['#title'] = $this->t('Configure @section', ['@section' => $label]);
       }
-    }
-    else {
-      $section = new Section($plugin_id);
     }
     // Passing available contexts to the layout plugin here could result in an
     // exception since the layout may not have a context mapping for a required
@@ -179,14 +192,12 @@ class ConfigureSectionForm extends FormBase {
       $this->layout->setContextMapping($subform_state->getValue('context_mapping', []));
     }
 
-    $plugin_id = $this->layout->getPluginId();
     $configuration = $this->layout->getConfiguration();
 
-    if ($this->isUpdate) {
-      $this->sectionStorage->getSection($this->delta)->setLayoutSettings($configuration);
-    }
-    else {
-      $this->sectionStorage->insertSection($this->delta, new Section($plugin_id, $configuration));
+    $section = $this->getCurrentSection();
+    $section->setLayoutSettings($configuration);
+    if (!$this->isUpdate) {
+      $this->sectionStorage->insertSection($this->delta, $section);
     }
 
     $this->layoutTempstoreRepository->set($this->sectionStorage);
@@ -208,6 +219,8 @@ class ConfigureSectionForm extends FormBase {
    *
    * @return \Drupal\Core\Plugin\PluginFormInterface
    *   The plugin form for the layout.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
   protected function getPluginForm(LayoutInterface $layout) {
     if ($layout instanceof PluginWithFormsInterface) {
@@ -222,13 +235,42 @@ class ConfigureSectionForm extends FormBase {
   }
 
   /**
-   * Retrieve the section storage property.
+   * Retrieves the section storage property.
    *
    * @return \Drupal\layout_builder\SectionStorageInterface
    *   The section storage for the current form.
    */
   public function getSectionStorage() {
     return $this->sectionStorage;
+  }
+
+  /**
+   * Retrieves the layout being modified by the form.
+   *
+   * @return \Drupal\Core\Layout\LayoutInterface|\Drupal\Core\Plugin\PluginFormInterface
+   *   The layout for the current form.
+   */
+  public function getCurrentLayout(): LayoutInterface {
+    return $this->layout;
+  }
+
+  /**
+   * Retrieves the section being modified by the form.
+   *
+   * @return \Drupal\layout_builder\Section
+   *   The section for the current form.
+   */
+  public function getCurrentSection(): Section {
+    if (!isset($this->section)) {
+      if ($this->isUpdate) {
+        $this->section = $this->sectionStorage->getSection($this->delta);
+      }
+      else {
+        $this->section = new Section($this->pluginId);
+      }
+    }
+
+    return $this->section;
   }
 
 }
