@@ -8,6 +8,9 @@
 namespace Drupal\Tests\migrate\Unit;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
+use Drupal\migrate\Plugin\MigrateDestinationPluginManager;
+use Drupal\migrate\Plugin\MigratePluginManagerInterface;
+use Drupal\migrate\Plugin\MigrateSourcePluginManager;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\Migration;
 use Drupal\migrate\Exception\RequirementsException;
@@ -193,6 +196,21 @@ class MigrationTest extends UnitTestCase {
         'expected_value' => ['required' => ['req_test_migration'], 'optional' => ['opt_test_migration']],
       ],
     ];
+  }
+
+  /**
+   * Test trackLastImported deprecation message in Migration constructor.
+   *
+   * @group legacy
+   */
+  public function testTrackLastImportedDeprecation() {
+    $this->expectDeprecation("The key 'trackLastImported' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3282894");
+    $migration_plugin_manager = $this->createMock(MigrationPluginManagerInterface::class);
+    $source_plugin_manager = $this->createMock(MigrateSourcePluginManager::class);
+    $process_Plugin_manager = $this->createMock(MigratePluginManagerInterface::class);
+    $destination_plugin_manager = $this->createMock(MigrateDestinationPluginManager::class);
+    $id_map_plugin_manager = $this->createMock(MigratePluginManagerInterface::class);
+    new Migration([], 'test', ['trackLastImported' => TRUE], $migration_plugin_manager, $source_plugin_manager, $process_Plugin_manager, $destination_plugin_manager, $id_map_plugin_manager);
   }
 
 }

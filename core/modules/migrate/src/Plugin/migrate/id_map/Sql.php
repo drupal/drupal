@@ -699,9 +699,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
       $this->message->display($this->t('Could not save to map table due to missing destination id values'), 'error');
       return;
     }
-    if ($this->migration->getTrackLastImported()) {
-      $fields['last_imported'] = time();
-    }
+    $fields['last_imported'] = time();
     $keys = [$this::SOURCE_IDS_HASH => $this->getSourceIdsHash($source_id_values)];
     // Notify anyone listening of the map row we're about to save.
     $this->eventDispatcher->dispatch(new MigrateMapSaveEvent($this, $fields), MigrateEvents::MAP_SAVE);

@@ -174,8 +174,13 @@ class MigrationTest extends KernelTestBase {
    *
    * @covers ::getTrackLastImported
    * @covers ::isTrackLastImported
+   *
+   * @group legacy
    */
   public function testGetTrackLastImported() {
+    $this->expectDeprecation('Drupal\migrate\Plugin\Migration::setTrackLastImported() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3282894');
+    $this->expectDeprecation('Drupal\migrate\Plugin\Migration::getTrackLastImported() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3282894');
+    $this->expectDeprecation('Drupal\migrate\Plugin\Migration::isTrackLastImported() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3282894');
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration([]);
     $migration->setTrackLastImported(TRUE);
     $this->assertEquals(TRUE, $migration->getTrackLastImported());

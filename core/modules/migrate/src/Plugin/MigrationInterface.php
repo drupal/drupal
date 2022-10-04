@@ -263,6 +263,11 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    *
    * @return bool
    *   TRUE if the migration is tracking last import time.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+   * replacement.
+   *
+   * @see https://www.drupal.org/node/3282894
    */
   public function isTrackLastImported();
 
@@ -273,6 +278,11 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    *   Boolean value to indicate if the migration should track last import time.
    *
    * @return $this
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+   * replacement.
+   *
+   * @see https://www.drupal.org/node/3282894
    */
   public function setTrackLastImported($track_last_imported);
 
@@ -305,6 +315,11 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    *
    * @return bool
    *   Flag to determine desire of tracking time of last import.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+   * replacement.
+   *
+   * @see https://www.drupal.org/node/3282894
    */
   public function getTrackLastImported();
 

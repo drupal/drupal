@@ -216,6 +216,11 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    * Track time of last import if TRUE.
    *
    * @var bool
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+   * replacement.
+   *
+   * @see https://www.drupal.org/node/3282894
    */
   protected $trackLastImported = FALSE;
 
@@ -359,6 +364,11 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
     foreach (NestedArray::mergeDeepArray([$plugin_definition, $configuration], TRUE) as $key => $value) {
       $this->$key = $value;
     }
+
+    if (isset($plugin_definition['trackLastImported'])) {
+      @trigger_error("The key 'trackLastImported' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3282894", E_USER_DEPRECATED);
+    }
+
   }
 
   /**
@@ -670,6 +680,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    * {@inheritdoc}
    */
   public function isTrackLastImported() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3282894', E_USER_DEPRECATED);
     return $this->trackLastImported;
   }
 
@@ -677,6 +688,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    * {@inheritdoc}
    */
   public function setTrackLastImported($track_last_imported) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3282894', E_USER_DEPRECATED);
     $this->trackLastImported = (bool) $track_last_imported;
     return $this;
   }
@@ -757,6 +769,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    * {@inheritdoc}
    */
   public function getTrackLastImported() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3282894', E_USER_DEPRECATED);
     return $this->trackLastImported;
   }
 
