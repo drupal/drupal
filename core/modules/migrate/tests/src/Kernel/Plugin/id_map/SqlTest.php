@@ -87,7 +87,7 @@ class SqlTest extends MigrateTestBase {
     $this->migrationDefinition['source']['ids'] = $ids;
     $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition);
 
-    $map = new TestSqlIdMap($this->database, [], 'test', [], $migration, $this->eventDispatcher);
+    $map = new TestSqlIdMap($this->database, [], 'test', [], $migration, $this->eventDispatcher, $this->migrationPluginManager);
     $map->ensureTables();
 
     // Checks that the map table was created.
@@ -149,7 +149,7 @@ class SqlTest extends MigrateTestBase {
       ->createStubMigration($this->migrationDefinition);
 
     // Use local id map plugin to force an error.
-    $map = new SqlIdMapTest($this->database, [], 'test', [], $migration, $this->eventDispatcher);
+    $map = new SqlIdMapTest($this->database, [], 'test', [], $migration, $this->eventDispatcher, $this->migrationPluginManager);
 
     $this->expectException(DatabaseExceptionWrapper::class);
     $this->expectExceptionMessage("Syntax error or access violation: 1074 Column length too big for column 'sourceid1' (max = 16383); use BLOB or TEXT instead:");
