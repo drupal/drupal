@@ -590,7 +590,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
     $form['element_class_enable'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Create a CSS class'),
+      '#title' => $this->t('Add HTML class'),
       '#states' => [
         'visible' => [
           ':input[name="options[element_type_enable]"]' => ['checked' => TRUE],
@@ -634,7 +634,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     ];
     $form['element_label_class_enable'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Create a CSS class'),
+      '#title' => $this->t('Add HTML class'),
       '#states' => [
         'visible' => [
           ':input[name="options[element_label_type_enable]"]' => ['checked' => TRUE],
@@ -679,7 +679,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
     $form['element_wrapper_class_enable'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Create a CSS class'),
+      '#title' => $this->t('Add HTML class'),
       '#states' => [
         'visible' => [
           ':input[name="options[element_wrapper_type_enable]"]' => ['checked' => TRUE],
