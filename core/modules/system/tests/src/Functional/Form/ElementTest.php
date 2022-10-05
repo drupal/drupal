@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\system\Functional\Form;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -114,9 +113,8 @@ class ElementTest extends BrowserTestBase {
     // Verify that wrapper id is different from element id.
     foreach (['checkboxes', 'radios'] as $type) {
       // A single element id is found.
-      $this->assertSession()->elementsCount('xpath', "//div[@id='edit-$type']", 1);
-      $wrapper_ids = $this->xpath('//fieldset[@id=:id]', [':id' => 'edit-' . $type . '--wrapper']);
-      $this->assertCount(1, $wrapper_ids, new FormattableMarkup('A single wrapper id found for type %type', ['%type' => $type]));
+      $this->assertSession()->elementsCount('xpath', "//div[@id='edit-{$type}']", 1);
+      $this->assertSession()->elementsCount('xpath', "//fieldset[@id='edit-{$type}--wrapper']", 1);
     }
   }
 
@@ -129,9 +127,9 @@ class ElementTest extends BrowserTestBase {
     // "button--foo" would contain "button". Instead, check
     // " button ". Make sure it matches in the beginning and the end too
     // by adding a space before and after.
-    $this->assertCount(2, $this->xpath('//*[contains(concat(" ", @class, " "), " button ")]'));
-    $this->assertCount(1, $this->xpath('//*[contains(concat(" ", @class, " "), " button--foo ")]'));
-    $this->assertCount(1, $this->xpath('//*[contains(concat(" ", @class, " "), " button--danger ")]'));
+    $this->assertSession()->elementsCount('xpath', '//*[contains(concat(" ", @class, " "), " button ")]', 2);
+    $this->assertSession()->elementsCount('xpath', '//*[contains(concat(" ", @class, " "), " button--foo ")]', 1);
+    $this->assertSession()->elementsCount('xpath', '//*[contains(concat(" ", @class, " "), " button--danger ")]', 1);
   }
 
   /**
