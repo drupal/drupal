@@ -133,8 +133,8 @@ class PreviewTest extends WebDriverTestBase {
     $this->getPreviewAJAX('test_pager_full_ajax', 'default', 5);
 
     // Test that the pager is present and rendered.
-    $elements = $this->xpath('//ul[contains(@class, :class)]/li', [':class' => 'pager__items']);
-    $this->assertNotEmpty($elements, 'Full pager found.');
+    $elements = $this->xpath('//ul[contains(@class, "pager__items")]/li');
+    $this->assertNotEmpty($elements);
 
     // Verify elements and links to pages.
     // We expect to find 5 elements: current page == 1, links to pages 2 and
@@ -159,8 +159,8 @@ class PreviewTest extends WebDriverTestBase {
     $this->clickPreviewLinkAJAX($element, 5);
 
     // Test that the pager is present and rendered.
-    $elements = $this->xpath('//ul[contains(@class, :class)]/li', [':class' => 'pager__items']);
-    $this->assertNotEmpty($elements, 'Full pager found.');
+    $elements = $this->xpath('//ul[contains(@class, "pager__items")]/li');
+    $this->assertNotEmpty($elements);
 
     // Verify elements and links to pages.
     // We expect to find 7 elements: links to '<< first' and '< previous'
@@ -191,8 +191,8 @@ class PreviewTest extends WebDriverTestBase {
     $this->getPreviewAJAX('test_mini_pager_ajax', 'default', 3);
 
     // Test that the pager is present and rendered.
-    $elements = $this->xpath('//ul[contains(@class, :class)]/li', [':class' => 'pager__items']);
-    $this->assertNotEmpty($elements, 'Mini pager found.');
+    $elements = $this->xpath('//ul[contains(@class, "pager__items")]/li');
+    $this->assertNotEmpty($elements);
 
     // Verify elements and links to pages.
     // We expect to find current pages element with no link, next page element
@@ -207,8 +207,8 @@ class PreviewTest extends WebDriverTestBase {
     $this->clickPreviewLinkAJAX($next_page_link, 3);
 
     // Test that the pager is present and rendered.
-    $elements = $this->xpath('//ul[contains(@class, :class)]/li', [':class' => 'pager__items']);
-    $this->assertNotEmpty($elements, 'Mini pager found.');
+    $elements = $this->xpath('//ul[contains(@class, "pager__items")]/li');
+    $this->assertNotEmpty($elements);
 
     // Verify elements and links to pages.
     // We expect to find 3 elements: previous page with a link, current

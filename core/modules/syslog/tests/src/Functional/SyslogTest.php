@@ -38,8 +38,8 @@ class SyslogTest extends BrowserTestBase {
 
       $this->drupalGet('admin/config/development/logging');
       // Should be one field.
-      $field = $this->xpath('//option[@value=:value]', [':value' => LOG_LOCAL6]);
-      $this->assertSame('selected', $field[0]->getAttribute('selected'), 'Facility value saved.');
+      $field = $this->assertSession()->elementExists('xpath', '//option[@value="' . LOG_LOCAL6 . '"]');
+      $this->assertSame('selected', $field->getAttribute('selected'), 'Facility value saved.');
     }
   }
 
