@@ -5,14 +5,15 @@ related:
   - search.configuring
 ---
 {% set cron_topic = render_var(help_topic_link('core.cron')) %}
-{% set search_settings = render_var(url('entity.search_page.collection')) %}
+{% set search_settings_link_text %}{% trans %}Search pages{% endtrans %}{% endset %}
+{% set search_settings_link = render_var(help_route_link(search_settings_link_text, 'entity.search_page.collection')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Manage the search index, and make sure that the site is fully indexed for searching.{% endtrans %}</p>
 <h2>{% trans %}What is the search index?{% endtrans %}</h2>
 <p>{% trans %}The <em>Content</em> and <em>Help</em> search types provided by the core software pre-index their content and store the results in several database tables that are collectively called the <em>search index</em>. The process of indexing renders the content and breaks it up into words, which can then be matched more efficiently with keyword queries when users perform searches. Search indexing happens during cron runs; see {{ cron_topic }} for more information about cron.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
-<li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Search and Metadata</em> &gt; <a href="{{ search_settings }}"><em>Search pages</em></a>.{% endtrans %}</li>
+<li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Search and Metadata</em> &gt; <em>{{ search_settings_link }}</em>.{% endtrans %}</li>
 <li>{% trans %}Under <em>Indexing throttle</em>, select the <em>Number of items to index per cron run</em>. A smaller number will make cron faster and reduce the possibility of timeout; a larger number will make sure more of your site is indexed in fewer cron runs.{% endtrans %}</li>
 <li>{% trans %}Under <em>Default indexing settings</em>, enter the desired <em>Minimum word length to index</em>. Words smaller than this length will be dropped from both keywords when searching and content when indexing.{% endtrans %}</li>
 <li>{% trans %}If your site uses Chinese, Japanese, or Korean languages, optionally check <em>Simple CJK handling</em> under <em>Default indexing settings</em> to provide some support for these languages.{% endtrans %}</li>

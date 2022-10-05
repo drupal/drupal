@@ -3,14 +3,14 @@ label: 'Migrating data for an upgrade using the user interface'
 related:
   - migrate.overview
 ---
-{% set migrate_drupal_upgrade = render_var(url('migrate_drupal_ui.upgrade')) %}
-{% set migrate_drupal_log = render_var(url('dblog.overview')) %}
+{% set migrate_drupal_upgrade_link_text %}{% trans %}Upgrade{% endtrans %}{% endset %}
+{% set migrate_drupal_upgrade_link = render_var(help_route_link(migrate_drupal_upgrade_link_text, 'migrate_drupal_ui.upgrade')) %}
 {% set migrate_overview_topic = render_var(help_topic_link('migrate.overview')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Migrate data into a new, empty site, as part of an upgrade from an older version of Drupal. See {{ migrate_overview_topic }} for an overview of migrating and upgrading.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
-<li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Development</em> &gt; <em><a href="{{ migrate_drupal_upgrade }}">Upgrade</a></em>.{% endtrans %}</li>
+<li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Development</em> &gt; <em>{{ migrate_drupal_upgrade_link }}</em>.{% endtrans %}</li>
 <li>{% trans %}Read the introduction and follow the <em>Preparation steps</em> on the page. Then click <em>Continue</em>.{% endtrans %}</li>
 <li>{% trans %}Select the Drupal version of the source site. Also enter the database credentials and public and private files directories (private file directory is not available when migrating from Drupal 6). Click <em>Review upgrade</em>.{% endtrans %}</li>
 <li>{% trans %}If the next page you see contains a message about conflicting content, that means that the site where you are running the upgrade is not empty. If you continue, you will lose the data in the site. If that is acceptable, click the button to continue; if not, start these steps over in a new, clean Drupal site.{% endtrans %}</li>

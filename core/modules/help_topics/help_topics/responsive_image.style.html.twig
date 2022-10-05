@@ -10,12 +10,13 @@ related:
 {% set media_topic = render_var(help_topic_link('core.media')) %}
 {% set image_style_topic = render_var(help_topic_link('image.style')) %}
 {% set breakpoint_overview_topic = render_var(help_topic_link('breakpoint.overview')) %}
-{% set styles = render_var(url('entity.responsive_image_style.collection')) %}
+{% set styles_link_text %}{% trans %}Responsive image styles{% endtrans %}{% endset %}
+{% set styles_link = render_var(help_route_link(styles_link_text, 'entity.responsive_image_style.collection')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Configure a responsive image style, which can be used to display images at different sizes on different devices. See {{ media_topic }} for an overview of responsive image styles, and {{ breakpoint_overview_topic }} for an overview of breakpoints.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
-  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Media</em> &gt; <a href="{{ styles }}"><em>Responsive image styles</em></a>.{% endtrans %}</li>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Media</em> &gt; <em>{{ styles_link }}</em>.{% endtrans %}</li>
   <li>{% trans %}Click <em>Add responsive image style</em>.{% endtrans %}</li>
   <li>{% trans %}Enter a descriptive <em>Label</em> for your style.{% endtrans %}</li>
   <li>{% trans %}Select a <em>Breakpoint group</em> from the groups defined by your installed themes and modules.{% endtrans %}</li>
