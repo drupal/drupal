@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\Core\Database\Driver\mysql\install;
+namespace Drupal\Tests\mysql\Unit;
 
 use Drupal\mysql\Driver\Database\mysql\Connection;
 use Drupal\mysql\Driver\Database\mysql\Install\Tasks;
@@ -12,7 +12,7 @@ use Drupal\Tests\UnitTestCase;
  * @coversDefaultClass \Drupal\mysql\Driver\Database\mysql\Install\Tasks
  * @group Database
  */
-class TasksTest extends UnitTestCase {
+class InstallTasksTest extends UnitTestCase {
 
   /**
    * A connection object prophecy.
