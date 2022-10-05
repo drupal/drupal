@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\Core\Database\Driver\pgsql;
+namespace Drupal\Tests\pgsql\Unit;
 
 use Drupal\pgsql\Driver\Database\pgsql\Schema;
 use Drupal\Tests\UnitTestCase;
@@ -11,7 +11,7 @@ use Drupal\Tests\UnitTestCase;
  * @coversDefaultClass \Drupal\pgsql\Driver\Database\pgsql\Schema
  * @group Database
  */
-class PostgresqlSchemaTest extends UnitTestCase {
+class SchemaTest extends UnitTestCase {
 
   /**
    * The PostgreSql DB connection.
