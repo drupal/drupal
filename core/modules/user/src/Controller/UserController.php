@@ -283,8 +283,7 @@ class UserController extends ControllerBase {
    * Redirects users to their profile edit page.
    *
    * This controller assumes that it is only invoked for authenticated users.
-   * This is enforced for the 'user.well-known.change_password' route with the
-   * '_user_is_logged_in' requirement.
+   * This is typically enforced with the '_user_is_logged_in' requirement.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   Returns a redirect to the profile edit form of the currently logged in
