@@ -34,11 +34,11 @@ class ElementsTableSelectTest extends BrowserTestBase {
     $this->assertSession()->responseNotContains('Empty text.');
 
     // Test for the presence of the Select all rows tableheader.
-    $this->assertNotEmpty($this->xpath('//th[@class="select-all"]'), 'Presence of the "Select all" checkbox.');
+    $this->assertSession()->elementExists('xpath', '//th[@class="select-all"]');
 
     $rows = ['row1', 'row2', 'row3'];
     foreach ($rows as $row) {
-      $this->assertNotEmpty($this->xpath('//input[@type="checkbox"]', [$row]), "Checkbox for the value $row.");
+      $this->assertSession()->elementExists('xpath', '//input[@type="checkbox"]');
     }
   }
 
@@ -55,7 +55,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
 
     $rows = ['row1', 'row2', 'row3'];
     foreach ($rows as $row) {
-      $this->assertNotEmpty($this->xpath('//input[@type="radio"]', [$row], "Radio button value: $row"));
+      $this->assertSession()->elementExists('xpath', '//input[@type="radio"]');
     }
   }
 
@@ -70,18 +70,17 @@ class ElementsTableSelectTest extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('Four');
 
     // There should be three labeled column headers and 1 for the input.
-    $table_head = $this->xpath('//thead/tr/th');
-    $this->assertCount(4, $table_head, 'There are four column headers');
+    $this->assertSession()->elementsCount('xpath', '//thead/tr/th', 4);
 
     // The first two body rows should each have 5 table cells: One for the
     // radio, one cell in the first column, one cell in the second column,
     // and two cells in the third column which has colspan 2.
     for ($i = 0; $i <= 1; $i++) {
-      $this->assertCount(5, $this->xpath('//tbody/tr[' . ($i + 1) . ']/td'), 'There are five cells in row ' . $i);
+      $this->assertSession()->elementsCount('xpath', '//tbody/tr[' . ($i + 1) . ']/td', 5);
     }
     // The third row should have 3 cells, one for the radio, one spanning the
     // first and second column, and a third in column 3 (which has colspan 3).
-    $this->assertCount(3, $this->xpath('//tbody/tr[3]/td'), 'There are three cells in row 3.');
+    $this->assertSession()->elementsCount('xpath', '//tbody/tr[3]/td', 3);
   }
 
   /**

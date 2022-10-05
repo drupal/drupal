@@ -74,7 +74,7 @@ class ViewsListTest extends UITestBase {
     $this->drupalGet('admin/structure/views');
 
     // Check that all the rows are listed.
-    $this->assertCount($limit, $this->xpath('//tbody/tr[contains(@class,"views-ui-list-enabled")]'));
+    $this->assertSession()->elementsCount('xpath', '//tbody/tr[contains(@class,"views-ui-list-enabled")]', $limit);
   }
 
 }
