@@ -4,12 +4,13 @@ related:
   - block.overview
   - core.ui_accessibility
 ---
-{% set layout_url = render_var(url('block.admin_display')) %}
+{% set layout_link_text %}{% trans %}Block layout{% endtrans %}{% endset %}
+{% set layout_link = render_var(help_route_link(layout_link_text, 'block.admin_display')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Configure the settings of a block that was previously placed in a region of a theme.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
-  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; <a href="{{ layout_url }}"><em>Block layout</em></a>.{% endtrans %}</li>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; <em>{{ layout_link }}</em>.{% endtrans %}</li>
   <li>{% trans %}Click the name of the theme that contains the block.{% endtrans %}</li>
   <li>{% trans %}Optionally, click <em>Demonstrate block regions</em> to see the regions of the theme.{% endtrans %}</li>
   <li>{% trans %}If you only want to change the region where a block is located, or the ordering of blocks within a region, drag blocks to their desired positions and click <em>Save blocks</em>.{% endtrans %}</li>

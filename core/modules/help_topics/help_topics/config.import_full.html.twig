@@ -6,14 +6,15 @@ related:
 - config.import_single
 - config.export_single
 ---
-{% set import_page = render_var(url('config.import_full')) %}
+{% set import_link_text %}{% trans %}Import{% endtrans %}{% endset %}
+{% set import_link = render_var(help_route_link(import_link_text, 'config.import_full')) %}
 {% set export_full_topic = render_var(help_topic_link('config.export_full')) %}
 {% set config_overview_topic = render_var(help_topic_link('core.config_overview')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Import the complete configuration of your site from an archive file, such as one that was previously exported (see {{ export_full_topic }}). See {{ config_overview_topic }} for more information about configuration.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
-  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Development</em> &gt; <em>Configuration synchronization</em> &gt; <em><a href="{{ import_page }}">Import</a></em>.{% endtrans %}</li>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Development</em> &gt; <em>Configuration synchronization</em> &gt; <em>{{ import_link }}</em>.{% endtrans %}</li>
   <li>{% trans %}Browse to find the <em>Configuration archive</em> that you want to import.{% endtrans %}</li>
   <li>{% trans %}Click <em>Upload</em>. Your configuration archive will be unpacked and placed in the configuration synchronization directory, and you will be redirected to the <em>Synchronize</em> page.{% endtrans %}</li>
   <li>{% trans %}Review the differences between your uploaded configuration and the active configuration, if any, and click <em>Import all</em> to import the changes.{% endtrans %}</li>
