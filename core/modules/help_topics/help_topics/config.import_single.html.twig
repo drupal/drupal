@@ -6,14 +6,15 @@ related:
 - config.import_full
 - config.export_single
 ---
-{% set single_import = render_var(url('config.import_single')) %}
+{% set single_import_link_text %}{% trans %}Single item{% endtrans %}{% endset %}
+{% set single_import_link = render_var(help_route_link(single_import_link_text, 'config.import_single')) %}
 {% set export_single_topic = render_var(help_topic_link('config.export_single')) %}
 {% set config_overview_topic = render_var(help_topic_link('core.config_overview')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Import a single configuration item in YAML format, such as one that was previously exported (see {{ export_single_topic }}). See {{ config_overview_topic }} for more information about configuration.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
-  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Development</em> &gt; <em>Configuration synchronization</em> &gt; <em>Import</em> &gt; <a href="{{ single_import }}"><em>Single item</em></a>.{% endtrans %}</li>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Development</em> &gt; <em>Configuration synchronization</em> &gt; <em>Import</em> &gt; <em>{{ single_import_link }}</em>.{% endtrans %}</li>
   <li>{% trans %}Select the <em>Configuration type</em> that you want to import.{% endtrans %}</li>
   <li>{% trans %}On your computer or other device, copy the YAML-format configuration that you want to import to the clipboard.{% endtrans %}</li>
   <li>{% trans %}Paste the clipboard text into the box labeled <em>Paste your configuration here</em>.{% endtrans %}</li>

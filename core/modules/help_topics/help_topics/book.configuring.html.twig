@@ -6,12 +6,13 @@ related:
   - book.creating
   - book.organizing
 ---
-{% set settings = render_var(url('book.settings')) %}
+{% set settings_link_text %}{% trans %}Settings{% endtrans %}{% endset %}
+{% set settings_link = render_var(help_route_link(settings_link_text, 'book.settings')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Configure settings related to books.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
-  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; <em>Books</em> &gt; <a href="{{ settings }}"><em>Settings</em></a>.{% endtrans %}</li>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; <em>Books</em> &gt; <em>{{ settings_link }}</em>.{% endtrans %}</li>
   <li>{% trans %}Check all of the content types that you would like to use as book pages in the <em>Content types allowed in book outlines</em> field.{% endtrans %}</li>
   <li>{% trans %}In the <em>Content type for the Add child page link</em> field, select the content type that will be created from the <em>Add child page</em> link on a book page.{% endtrans %}</li>
   <li>{% trans %}Click <em>Save configuration</em>.{% endtrans %}</li>
