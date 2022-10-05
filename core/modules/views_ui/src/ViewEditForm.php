@@ -605,8 +605,8 @@ class ViewEditForm extends ViewFormBase {
     $build['columns']['second']['header'] = $this->getFormBucket($view, 'header', $display);
     $build['columns']['second']['footer'] = $this->getFormBucket($view, 'footer', $display);
     $build['columns']['second']['empty'] = $this->getFormBucket($view, 'empty', $display);
-    $build['columns']['third']['arguments'] = $this->getFormBucket($view, 'argument', $display);
     $build['columns']['third']['relationships'] = $this->getFormBucket($view, 'relationship', $display);
+    $build['columns']['third']['arguments'] = $this->getFormBucket($view, 'argument', $display);
 
     return $build;
   }
