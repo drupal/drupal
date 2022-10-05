@@ -58,8 +58,7 @@ class FieldUITest extends UITestBase {
     $this->assertSession()->elementTextEquals('xpath', "{$xpath}[2]", '{{ id }} == ID');
     $this->assertSession()->elementTextEquals('xpath', "{$xpath}[3]", '{{ name }} == Name');
 
-    $result = $this->xpath('//details[@id="edit-options-more"]');
-    $this->assertEmpty($result, "Container 'more' is empty and should not be displayed.");
+    $this->assertSession()->elementNotExists('xpath', '//details[@id="edit-options-more"]');
 
     // Ensure that dialog titles are not escaped.
     $edit_groupby_url = 'admin/structure/views/nojs/handler/test_view/default/field/name';

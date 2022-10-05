@@ -169,32 +169,14 @@ class DefaultViewsTest extends UITestBase {
    * Tests that enabling views moves them to the correct table.
    */
   public function testSplitListing() {
-    // Build a re-usable xpath query.
-    $xpath = '//div[@id="views-entity-list"]/div[@class = :status]/table//td/text()[contains(., :title)]';
-
-    $arguments = [
-      ':status' => 'views-list-section enabled',
-      ':title' => 'test_view_status',
-    ];
-
     $this->drupalGet('admin/structure/views');
-
-    $elements = $this->xpath($xpath, $arguments);
-    $this->assertCount(0, $elements, 'A disabled view is not found in the enabled views table.');
-
-    $arguments[':status'] = 'views-list-section disabled';
-    $elements = $this->xpath($xpath, $arguments);
-    $this->assertCount(1, $elements, 'A disabled view is found in the disabled views table.');
+    $this->assertSession()->elementNotExists('xpath', '//div[@id="views-entity-list"]/div[@class = "views-list-section enabled"]/table//td/text()[contains(., "test_view_status")]');
+    $this->assertSession()->elementsCount('xpath', '//div[@id="views-entity-list"]/div[@class = "views-list-section disabled"]/table//td/text()[contains(., "test_view_status")]', 1);
 
     // Enable the view.
     $this->clickViewsOperationLink('Enable', '/test_view_status/');
-
-    $elements = $this->xpath($xpath, $arguments);
-    $this->assertCount(0, $elements, 'After enabling a view, it is not found in the disabled views table.');
-
-    $arguments[':status'] = 'views-list-section enabled';
-    $elements = $this->xpath($xpath, $arguments);
-    $this->assertCount(1, $elements, 'After enabling a view, it is found in the enabled views table.');
+    $this->assertSession()->elementNotExists('xpath', '//div[@id="views-entity-list"]/div[@class = "views-list-section disabled"]/table//td/text()[contains(., "test_view_status")]');
+    $this->assertSession()->elementsCount('xpath', '//div[@id="views-entity-list"]/div[@class = "views-list-section enabled"]/table//td/text()[contains(., "test_view_status")]', 1);
 
     // Attempt to disable the view by path directly, with no token.
     $this->drupalGet('admin/structure/views/view/test_view_status/disable');

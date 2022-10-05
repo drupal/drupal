@@ -135,8 +135,7 @@ class BlockLanguageTest extends BrowserTestBase {
     // Ensure that the block visibility for language is gone from the UI.
     $this->drupalGet('admin/structure/block');
     $this->clickLink('Configure');
-    $elements = $this->xpath('//details[@id="edit-visibility-language"]');
-    $this->assertEmpty($elements);
+    $this->assertSession()->elementNotExists('xpath', '//details[@id="edit-visibility-language"]');
   }
 
   /**

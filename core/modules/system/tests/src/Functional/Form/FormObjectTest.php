@@ -33,8 +33,7 @@ class FormObjectTest extends BrowserTestBase {
 
     $this->drupalGet('form-test/object-builder');
     $this->assertSession()->pageTextContains('The FormTestObject::buildForm() method was used for this form.');
-    $elements = $this->xpath('//form[@id="form-test-form-test-object"]');
-    $this->assertTrue(!empty($elements), 'The correct form ID was used.');
+    $this->assertSession()->elementExists('xpath', '//form[@id="form-test-form-test-object"]');
     $this->submitForm(['bananas' => 'green'], 'Save');
     $this->assertSession()->pageTextContains('The FormTestObject::validateForm() method was used for this form.');
     $this->assertSession()->pageTextContains('The FormTestObject::submitForm() method was used for this form.');
@@ -43,8 +42,7 @@ class FormObjectTest extends BrowserTestBase {
 
     $this->drupalGet('form-test/object-arguments-builder/yellow');
     $this->assertSession()->pageTextContains('The FormTestArgumentsObject::buildForm() method was used for this form.');
-    $elements = $this->xpath('//form[@id="form-test-form-test-arguments-object"]');
-    $this->assertTrue(!empty($elements), 'The correct form ID was used.');
+    $this->assertSession()->elementExists('xpath', '//form[@id="form-test-form-test-arguments-object"]');
     $this->submitForm([], 'Save');
     $this->assertSession()->pageTextContains('The FormTestArgumentsObject::validateForm() method was used for this form.');
     $this->assertSession()->pageTextContains('The FormTestArgumentsObject::submitForm() method was used for this form.');
@@ -53,8 +51,7 @@ class FormObjectTest extends BrowserTestBase {
 
     $this->drupalGet('form-test/object-service-builder');
     $this->assertSession()->pageTextContains('The FormTestServiceObject::buildForm() method was used for this form.');
-    $elements = $this->xpath('//form[@id="form-test-form-test-service-object"]');
-    $this->assertTrue(!empty($elements), 'The correct form ID was used.');
+    $this->assertSession()->elementExists('xpath', '//form[@id="form-test-form-test-service-object"]');
     $this->submitForm(['bananas' => 'brown'], 'Save');
     $this->assertSession()->pageTextContains('The FormTestServiceObject::validateForm() method was used for this form.');
     $this->assertSession()->pageTextContains('The FormTestServiceObject::submitForm() method was used for this form.');
@@ -64,8 +61,7 @@ class FormObjectTest extends BrowserTestBase {
     $this->drupalGet('form-test/object-controller-builder');
     $this->assertSession()->pageTextContains('The FormTestControllerObject::create() method was used for this form.');
     $this->assertSession()->pageTextContains('The FormTestControllerObject::buildForm() method was used for this form.');
-    $elements = $this->xpath('//form[@id="form-test-form-test-controller-object"]');
-    $this->assertTrue(!empty($elements), 'The correct form ID was used.');
+    $this->assertSession()->elementExists('xpath', '//form[@id="form-test-form-test-controller-object"]');
     // Ensure parameters are injected from request attributes.
     $this->assertSession()->pageTextContains('custom_value');
     // Ensure the request object is injected.

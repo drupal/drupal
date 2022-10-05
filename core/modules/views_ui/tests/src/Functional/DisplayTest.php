@@ -56,9 +56,9 @@ class DisplayTest extends UITestBase {
     $view = $this->randomView($view);
 
     $this->clickLink('Reorder displays');
-    $this->assertNotEmpty($this->xpath('//tr[@id="display-row-default"]'), 'Make sure the default display appears on the reorder listing');
-    $this->assertNotEmpty($this->xpath('//tr[@id="display-row-page_1"]'), 'Make sure the page display appears on the reorder listing');
-    $this->assertNotEmpty($this->xpath('//tr[@id="display-row-block_1"]'), 'Make sure the block display appears on the reorder listing');
+    $this->assertSession()->elementExists('xpath', '//tr[@id="display-row-default"]');
+    $this->assertSession()->elementExists('xpath', '//tr[@id="display-row-page_1"]');
+    $this->assertSession()->elementExists('xpath', '//tr[@id="display-row-block_1"]');
 
     // Ensure the view displays are in the expected order in configuration.
     $expected_display_order = ['default', 'block_1', 'page_1'];

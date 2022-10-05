@@ -175,17 +175,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
     // Verify that no image style cache tags are found.
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'image_style:');
-    $elements = $this->xpath(
-      '//a[@href=:path]/img[@src=:url and @alt=:alt and @width=:width and @height=:height]',
-      [
-        ':path' => $node->toUrl()->toString(),
-        ':url' => $file->createFileUrl(),
-        ':width' => $image['#width'],
-        ':height' => $image['#height'],
-        ':alt' => $alt,
-      ]
-    );
-    $this->assertCount(1, $elements, 'Image linked to content formatter displaying correctly on full node view.');
+    $this->assertSession()->elementsCount('xpath', '//a[@href="' . $node->toUrl()->toString() . '"]/img[@src="' . $file->createFileUrl() . '" and @alt="' . $alt . '" and @width="' . $image['#width'] . '" and @height="' . $image['#height'] . '"]', 1);
 
     // Test the image style 'thumbnail' formatter.
     $display_options['settings']['image_link'] = '';

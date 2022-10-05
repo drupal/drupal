@@ -68,8 +68,7 @@ class NodeTitleTest extends NodeTestBase {
 
     // Test <title> tag.
     $this->drupalGet('node/' . $node->id());
-    $xpath = '//title';
-    $this->assertEquals($this->xpath($xpath)[0]->getText(), $node->label() . ' | Drupal', 'Page title is equal to node title.');
+    $this->assertSession()->elementTextEquals('xpath', '//title', $node->label() . ' | Drupal');
 
     // Test breadcrumb in comment preview.
     $this->assertBreadcrumb('comment/reply/node/' . $node->id() . '/comment', [
@@ -93,8 +92,7 @@ class NodeTitleTest extends NodeTestBase {
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->titleEquals('0 | Drupal');
     // Test that 0 appears in the template <h1>.
-    $xpath = '//h1';
-    $this->assertSame('0', $this->xpath($xpath)[0]->getText(), 'Node title is displayed as 0.');
+    $this->assertSession()->elementTextEquals('xpath', '//h1', '0');
 
     // Test edge case where node title contains special characters.
     $edge_case_title = 'article\'s "title".';

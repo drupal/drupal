@@ -40,8 +40,7 @@ class InstallerTranslationTest extends InstallerTestBase {
     $this->translations['Save and continue'] = 'Save and continue de';
 
     // Check the language direction.
-    $direction = current($this->xpath('/@dir'))->getText();
-    $this->assertEquals('ltr', $direction);
+    $this->assertSession()->elementTextEquals('xpath', '/@dir', 'ltr');
   }
 
   /**

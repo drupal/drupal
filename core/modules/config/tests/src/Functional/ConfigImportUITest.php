@@ -320,8 +320,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertSession()->pageTextContains("404: '<em>herp</em>'");
 
     // Verify diff colors are displayed.
-    $result = $this->xpath('//table[contains(@class, :class)]', [':class' => 'diff']);
-    $this->assertCount(1, $result, "Diff UI is displaying colors.");
+    $this->assertSession()->elementsCount('xpath', '//table[contains(@class, "diff")]', 1);
 
     // Reset data back to original, and remove a key
     $sync_data = $original_data;

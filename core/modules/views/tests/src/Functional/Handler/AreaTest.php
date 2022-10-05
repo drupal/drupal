@@ -175,8 +175,7 @@ class AreaTest extends ViewTestBase {
     $this->drupalGet('admin/structure/views/nojs/handler/test_example_area/default/empty/test_example');
 
     // Test that the list is token present.
-    $element = $this->xpath('//ul[@class="global-tokens"]');
-    $this->assertNotEmpty($element, 'Token list found on the options form.');
+    $this->assertSession()->elementExists('xpath', '//ul[@class="global-tokens"]');
 
     $empty_handler = &$view->empty['test_example'];
 

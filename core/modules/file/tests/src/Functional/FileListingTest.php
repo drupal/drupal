@@ -137,8 +137,7 @@ class FileListingTest extends FileFieldTestBase {
     $usage = $this->sumUsages($file_usage->listUsage($file));
     $this->assertSession()->responseContains('admin/content/files/usage/' . $file->id() . '">' . $usage);
 
-    $result = $this->xpath("//td[contains(@class, 'views-field-status') and contains(text(), :value)]", [':value' => 'Temporary']);
-    $this->assertCount(1, $result, 'Unused file marked as temporary.');
+    $this->assertSession()->elementsCount('xpath', "//td[contains(@class, 'views-field-status') and contains(text(), 'Temporary')]", 1);
 
     // Test file usage page.
     foreach ($nodes as $node) {

@@ -483,8 +483,8 @@ class TrackerTest extends BrowserTestBase {
   public function assertHistoryMetadata(int $node_id, int $node_timestamp, int $node_last_comment_timestamp, bool $library_is_present = TRUE): void {
     $settings = $this->getDrupalSettings();
     $this->assertSame($library_is_present, isset($settings['ajaxPageState']) && in_array('tracker/history', explode(',', $settings['ajaxPageState']['libraries'])), 'drupal.tracker-history library is present.');
-    $this->assertCount(1, $this->xpath('//table/tbody/tr/td[@data-history-node-id="' . $node_id . '" and @data-history-node-timestamp="' . $node_timestamp . '"]'), 'Tracker table cell contains the data-history-node-id and data-history-node-timestamp attributes for the node.');
-    $this->assertCount(1, $this->xpath('//table/tbody/tr/td[@data-history-node-last-comment-timestamp="' . $node_last_comment_timestamp . '"]'), 'Tracker table cell contains the data-history-node-last-comment-timestamp attribute for the node.');
+    $this->assertSession()->elementsCount('xpath', '//table/tbody/tr/td[@data-history-node-id="' . $node_id . '" and @data-history-node-timestamp="' . $node_timestamp . '"]', 1);
+    $this->assertSession()->elementsCount('xpath', '//table/tbody/tr/td[@data-history-node-last-comment-timestamp="' . $node_last_comment_timestamp . '"]', 1);
   }
 
 }
