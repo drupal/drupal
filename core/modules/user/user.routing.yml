@@ -146,6 +146,14 @@ user.page:
   requirements:
     _user_is_logged_in: 'TRUE'
 
+user.edit:
+  path: '/user/edit'
+  defaults:
+    _controller: '\Drupal\user\Controller\UserController::userEditPage'
+    _title: 'Edit account'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+
 user.login:
   path: '/user/login'
   defaults:
