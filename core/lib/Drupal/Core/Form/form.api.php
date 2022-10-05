@@ -34,9 +34,8 @@
  *     $context['sandbox'] will be there the next time this function is called
  *     for the current operation. For example, an operation may wish to store a
  *     pointer in a file or an offset for a large query. The 'sandbox' array key
- *     is not initially set when this callback is first called, which makes it
- *     useful for determining whether it is the first call of the callback or
- *     not:
+ *     is empty when this callback is first called, which makes it useful for
+ *     determining whether it is the first call of the callback or not:
  *     @code
  *       if (empty($context['sandbox'])) {
  *         // Perform set-up steps here.
