@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\Core\Database\Driver\mysql;
+namespace Drupal\Tests\mysql\Unit;
 
 use Drupal\mysql\Driver\Database\mysql\Connection;
 use Drupal\Tests\UnitTestCase;

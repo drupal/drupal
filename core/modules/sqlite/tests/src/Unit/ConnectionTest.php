@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\Core\Database\Driver\sqlite;
+namespace Drupal\Tests\sqlite\Unit;
 
 use Drupal\sqlite\Driver\Database\sqlite\Connection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
