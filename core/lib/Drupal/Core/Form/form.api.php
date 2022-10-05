@@ -225,9 +225,15 @@ function hook_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_stat
  * rather than implementing hook_form_alter() and checking the form ID, or
  * using long switch statements to alter multiple forms.
  *
- * Form alter hooks are called in the following order: hook_form_alter(),
- * hook_form_BASE_FORM_ID_alter(), hook_form_FORM_ID_alter(). See
- * hook_form_alter() for more details.
+ * The call order is as follows: all existing form alter functions are called
+ * for module A, then all for module B, etc., followed by all for any base
+ * theme(s), and finally for the theme itself. The module order is determined
+ * by system weight, then by module name.
+ *
+ * Within each module, form alter hooks are called in the following order:
+ * first, hook_form_alter(); second, hook_form_BASE_FORM_ID_alter(); third,
+ * hook_form_FORM_ID_alter(). So, for each module, the more general hooks are
+ * called first followed by the more specific.
  *
  * @param $form
  *   Nested array of form elements that comprise the form.
@@ -277,9 +283,15 @@ function hook_form_FORM_ID_alter(&$form, \Drupal\Core\Form\FormStateInterface $f
  * one exists) check the $form_state. The base form ID is stored under
  * $form_state->getBuildInfo()['base_form_id'].
  *
- * Form alter hooks are called in the following order: hook_form_alter(),
- * hook_form_BASE_FORM_ID_alter(), hook_form_FORM_ID_alter(). See
- * hook_form_alter() for more details.
+ * The call order is as follows: all existing form alter functions are called
+ * for module A, then all for module B, etc., followed by all for any base
+ * theme(s), and finally for the theme itself. The module order is determined
+ * by system weight, then by module name.
+ *
+ * Within each module, form alter hooks are called in the following order:
+ * first, hook_form_alter(); second, hook_form_BASE_FORM_ID_alter(); third,
+ * hook_form_FORM_ID_alter(). So, for each module, the more general hooks are
+ * called first followed by the more specific.
  *
  * @param $form
  *   Nested array of form elements that comprise the form.
