@@ -44,7 +44,8 @@ interface ThemeInstallerInterface {
    *   Thrown when trying to uninstall a theme that was not installed.
    *
    * @throws \InvalidArgumentException
-   *   Thrown when trying to uninstall the default theme or the admin theme.
+   *   Thrown when trying to uninstall the admin theme, the default theme or
+   *   a theme that another theme depends on.
    *
    * @see hook_themes_uninstalled()
    */
