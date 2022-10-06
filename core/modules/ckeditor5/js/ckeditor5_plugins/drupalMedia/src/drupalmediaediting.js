@@ -27,15 +27,26 @@ export default class DrupalMediaEditing extends Plugin {
     return [Widget];
   }
 
-  /**
-   * @inheritdoc
-   */
-  init() {
+  constructor(editor) {
+    super(editor);
+
     this.attrs = {
       drupalMediaAlt: 'alt',
       drupalMediaEntityType: 'data-entity-type',
       drupalMediaEntityUuid: 'data-entity-uuid',
     };
+    this.converterAttributes = [
+      'drupalMediaEntityUuid',
+      'drupalElementStyleViewMode',
+      'drupalMediaEntityType',
+      'drupalMediaAlt',
+    ];
+  }
+
+  /**
+   * @inheritdoc
+   */
+  init() {
     const options = this.editor.config.get('drupalMedia');
     if (!options) {
       return;
@@ -360,13 +371,9 @@ export default class DrupalMediaEditing extends Plugin {
 
         // List all attributes that should trigger re-rendering of the
         // preview.
-        dispatcher.on('attribute:drupalMediaEntityUuid:drupalMedia', converter);
-        dispatcher.on(
-          'attribute:drupalElementStyleViewMode:drupalMedia',
-          converter,
-        );
-        dispatcher.on('attribute:drupalMediaEntityType:drupalMedia', converter);
-        dispatcher.on('attribute:drupalMediaAlt:drupalMedia', converter);
+        this.converterAttributes.forEach((attribute) => {
+          dispatcher.on(`attribute:${attribute}:drupalMedia`, converter);
+        });
 
         return dispatcher;
       });
