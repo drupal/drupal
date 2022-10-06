@@ -1,6 +1,11 @@
 # This is the DrupalCI testbot build file for Drupal core.
 # Learn to make one for your own drupal.org project:
 # https://www.drupal.org/drupalorg/docs/drupal-ci/customizing-drupalci-testing
+_phpunit_testgroups_to_execute: &testgroups
+  # Default: all of Drupal core's test suite runs.
+  testgroups: '--all'
+  # Alternative: run only the tests for one particular module.
+  # testgroups: '--module ckeditor5'
 build:
   assessment:
     testing:
@@ -15,32 +20,32 @@ build:
       # deprecated code.
       run_tests.phpunit:
         types: 'PHPUnit-Unit'
-        testgroups: '--all'
         suppress-deprecations: false
         halt-on-fail: false
+        <<: *testgroups
       run_tests.kernel:
         types: 'PHPUnit-Kernel'
-        testgroups: '--all'
         suppress-deprecations: false
         halt-on-fail: false
+        <<: *testgroups
       run_tests.build:
         # Limit concurrency due to disk space concerns.
         concurrency: 15
         types: 'PHPUnit-Build'
-        testgroups: '--all'
         suppress-deprecations: false
         halt-on-fail: false
+        <<: *testgroups
       run_tests.functional:
         types: 'PHPUnit-Functional'
-        testgroups: '--all'
         suppress-deprecations: false
         halt-on-fail: false
+        <<: *testgroups
       run_tests.javascript:
         concurrency: 15
         types: 'PHPUnit-FunctionalJavascript'
-        testgroups: '--all'
         suppress-deprecations: false
         halt-on-fail: false
+        <<: *testgroups
       # Run nightwatch testing.
       # @see https://www.drupal.org/project/drupal/issues/2869825
       nightwatchjs: {}
