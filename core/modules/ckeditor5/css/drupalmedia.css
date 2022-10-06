@@ -98,10 +98,6 @@
   border-radius: 0;
 }
 
-.ck.ck-media-alternative-text-form .ck-button:last-of-type {
-  border-right: 1px solid var(--ck-color-base-border);
-}
-
 .ck.ck .ck-media-alternative-text-form__default-alt-text-label {
   font-weight: bold;
 }
