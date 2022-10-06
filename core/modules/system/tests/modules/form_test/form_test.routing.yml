@@ -164,6 +164,14 @@ form_test.tableselect_js:
   requirements:
     _access: 'TRUE'
 
+form_test.tableselect_disabled_rows:
+  path: '/form_test/tableselect/disabled-rows/{test_action}'
+  defaults:
+    _form: '\Drupal\form_test\Form\FormTestTableSelectDisabledRowsForm'
+    _title: 'Tableselect disabled rows tests'
+  requirements:
+    _access: 'TRUE'
+
 form_test.vertical_tabs:
   path: '/form_test/vertical-tabs'
   defaults:
