@@ -198,6 +198,8 @@ class OverridesEntityForm extends ContentEntityForm {
       '#value' => $this->t('Discard changes'),
       '#submit' => ['::redirectOnSubmit'],
       '#redirect' => 'discard_changes',
+      // Discard is not dependent on form input.
+      '#limit_validation_errors' => [],
     ];
     // @todo This button should be conditionally displayed, see
     //   https://www.drupal.org/node/2917777.
