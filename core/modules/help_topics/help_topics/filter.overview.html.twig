@@ -7,7 +7,8 @@ related:
   - field_ui.manage_display
   - field_ui.add_field
 ---
-{% set content_url = render_var(url('filter.admin_overview')) %}
+{% set overview_link_text %}{% trans %}Text formats and editors{% endtrans %}{% endset %}
+{% set overview_link = render_var(help_route_link(overview_link_text, 'filter.admin_overview')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Configure text formats on the site.{% endtrans %}</p>
 <h2>{% trans %}What are text filters and text formats?{% endtrans %}</h2>
@@ -27,7 +28,7 @@ related:
 </dl>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
-  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Content Authoring</em> &gt; <a href="{{ content_url }}"><em>Text formats and editors</em></a>. If you do not have the core Text Editor module installed, the menu link and page title will instead be <em>Text formats</em>.{% endtrans %}</li>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Content Authoring</em> &gt; <em>{{ overview_link }}</em>. If you do not have the core Text Editor module installed, the menu link and page title will instead be <em>Text formats</em>.{% endtrans %}</li>
   <li>{% trans %}Click <em>Configure</em> to configure an existing text format, or <em>+ Add text format</em> to create a new text format.{% endtrans %}</li>
   <li>{% trans %}Enter the desired <em>Name</em> for the text format.{% endtrans %}</li>
   <li>{% trans %}Check the <em>Roles</em> that can use this text format. Some HTML tags allow users to embed malicious links or scripts in text. To ensure security, anonymous and untrusted users should only have access to text formats that restrict them to either plain text or a safe set of HTML tags. <strong>Improper text format configuration is a security risk.</strong>{% endtrans %}</li>

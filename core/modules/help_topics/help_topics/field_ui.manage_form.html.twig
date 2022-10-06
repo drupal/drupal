@@ -6,13 +6,14 @@ related:
   - field_ui.manage_display
   - core.ui_accessibility
 ---
-{% set content_types = render_var(url('entity.node_type.collection')) %}
+{% set content_types_link_text %}{% trans %}Content types{% endtrans %}{% endset %}
+{% set content_types_link = render_var(help_route_link(content_types_link_text, 'entity.node_type.collection')) %}
 {% set content_structure_topic = render_var(help_topic_link('core.content_structure')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Configure the <em>widgets</em> used to edit the fields of an entity sub-type, their order on the form, and the widget settings. See {{ content_structure_topic }} for background information.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
-  <li>{% trans %}Navigate to the page for managing the entity type you want to add the field to. For example, to add a field to a content type, in the <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; <a href="{{ content_types }}"><em>Content types</em></a>.{% endtrans %}</li>
+  <li>{% trans %}Navigate to the page for managing the entity type you want to add the field to. For example, to add a field to a content type, in the <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; <em>{{ content_types_link }}</em>.{% endtrans %}</li>
   <li>{% trans %}Find the particular sub-type that you want to configure the editing form for, and click <em>Manage form display</em> in the <em>Operations</em> list.{% endtrans %}</li>
   <li>{% trans %}Use the drag arrows to order the fields in your preferred order.{% endtrans %}</li>
   <li>{% trans %}Drag any fields that you do not wish to see on the editing form to the <em>Disabled</em> section.{% endtrans %}</li>

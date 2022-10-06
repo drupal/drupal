@@ -3,7 +3,8 @@ label: 'Running and configuring cron'
 related:
   - core.maintenance
 ---
-{% set cron = render_var(url('system.cron_settings')) %}
+{% set cron_link_text %}{% trans %}Cron{% endtrans %}{% endset %}
+{% set cron_link = render_var(help_route_link(cron_link_text, 'system.cron_settings')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Configure your system so that cron will run automatically.{% endtrans %}</p>
 <h2>{% trans %}What are cron tasks?{% endtrans %}</h2>
@@ -16,7 +17,7 @@ related:
 </ul>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
-  <li>{% trans %}In the <em>Manage</em> administration menu, navigate to <em>Configuration</em> &gt; <em>System</em> &gt; <a href="{{ cron }}"><em>Cron</em></a>. Note the <em>Last run</em> time on the page.{% endtrans %}</li>
+  <li>{% trans %}In the <em>Manage</em> administration menu, navigate to <em>Configuration</em> &gt; <em>System</em> &gt; <em>{{ cron_link }}</em>. Note the <em>Last run</em> time on the page.{% endtrans %}</li>
   <li>{% trans %}If you want to run cron right now, click <em>Run cron</em> and wait for cron to finish.{% endtrans %}</li>
   <li>{% trans %}If you have a way to configure tasks on your web server, copy the link where it says <em>To run cron from outside the site, go to</em>. Set up a task to visit that URL on your desired cron schedule, such as once an hour or once a week. (On Linux-like servers, you can use the <em>wget</em> command to visit a URL.) If you configure an outside task, you should uninstall the Automated Cron module.{% endtrans %}</li>
   <li>{% trans %}If you are not configuring an outside task, and you have the core Automated Cron module installed, select a schedule for automated cron runs in <em>Cron settings</em> &gt; <em>Run cron every</em>. Click <em>Save configuration</em>.{% endtrans %}</li>
