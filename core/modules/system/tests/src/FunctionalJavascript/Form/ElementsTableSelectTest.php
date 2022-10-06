@@ -60,4 +60,52 @@ class ElementsTableSelectTest extends WebDriverTestBase {
     }
   }
 
+  /**
+   * Tests table select with disabled rows.
+   */
+  public function testDisabledRows() {
+    // Asserts that a row number (1 based) is enabled.
+    $assert_row_enabled = function ($delta) {
+      $row = $this->assertSession()->elementExists('xpath', "//table/tbody/tr[$delta]");
+      $this->assertFalse($row->hasClass('disabled'));
+      $input = $row->find('css', 'input[value="row' . $delta . '"]');
+      $this->assertFalse($input->hasAttribute('disabled'));
+    };
+    // Asserts that a row number (1 based) is disabled.
+    $assert_row_disabled = function ($delta) {
+      $row = $this->assertSession()->elementExists('xpath', "//table/tbody/tr[$delta]");
+      $this->assertTrue($row->hasClass('disabled'));
+      $input = $row->find('css', 'input[value="row' . $delta . '"]');
+      $this->assertTrue($input->hasAttribute('disabled'));
+      $this->assertEquals('disabled', $input->getAttribute('disabled'));
+    };
+
+    // Test radios (#multiple == FALSE).
+    $this->drupalGet('form_test/tableselect/disabled-rows/multiple-false');
+
+    // Check that only 'row2' is disabled.
+    $assert_row_enabled(1);
+    $assert_row_disabled(2);
+    $assert_row_enabled(3);
+
+    // Test checkboxes (#multiple == TRUE).
+    $this->drupalGet('form_test/tableselect/disabled-rows/multiple-true');
+
+    // Check that only 'row2' is disabled.
+    $assert_row_enabled(1);
+    $assert_row_disabled(2);
+    $assert_row_enabled(3);
+
+    // Table select with checkboxes allow selection of all options.
+    $select_all_checkbox = $this->assertSession()->elementExists('xpath', '//table/thead/tr/th/input');
+    $select_all_checkbox->check();
+
+    // Check that the disabled option was not enabled or selected.
+    $page = $this->getSession()->getPage();
+    $page->hasCheckedField('row1');
+    $page->hasUncheckedField('row2');
+    $assert_row_disabled(2);
+    $page->hasCheckedField('row3');
+  }
+
 }
