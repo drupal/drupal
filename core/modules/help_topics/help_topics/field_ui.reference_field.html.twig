@@ -7,12 +7,13 @@ related:
   - field_ui.manage_form
 ---
 {% set content_structure_topic = render_var(help_topic_link('core.content_structure')) %}
-{% set content_types = render_var(url('entity.node_type.collection')) %}
+{% set content_types_link_text %}{% trans %}Content types{% endtrans %}{% endset %}
+{% set content_types_link = render_var(help_route_link(content_types_link_text, 'entity.node_type.collection')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Add an entity reference field to an entity sub-type; see {{ content_structure_topic }} for more information on entities and reference fields.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
-  <li>{% trans %}Navigate to the page for managing the entity sub-type you want to add the field to. For example, to add a field to a content type, in the <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; <a href="{{ content_types }}"><em>Content types</em></a>.{% endtrans %}</li>
+  <li>{% trans %}Navigate to the page for managing the entity sub-type you want to add the field to. For example, to add a field to a content type, in the <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; <em>{{ content_types_link }}</em>.{% endtrans %}</li>
   <li>{% trans %}Find the particular sub-type that you want to add the field to, and click <em>Manage fields</em>.{% endtrans %}</li>
   <li>{% trans %}Click <em>Add field</em>.{% endtrans %}</li>
   <li>{% trans %}In <em>Add a new field</em>, select the type of reference field you want to add. The <em>Reference</em> section of the select list shows the most common types of reference field; choose <em>Other...</em> if the entity type you want to reference is not listed.{% endtrans %}</li>
