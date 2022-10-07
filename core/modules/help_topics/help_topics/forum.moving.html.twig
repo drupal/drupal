@@ -3,12 +3,13 @@ label: 'Moving a topic to a new forum'
 related:
   - forum.concept
 ---
-{% set index = render_var(url('forum.index')) %}
+{% set index_link_text %}{% trans %}Forums{% endtrans %}{% endset %}
+{% set index_link = render_var(help_route_link(index_link_text, 'forum.index')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Move a forum topic and all of its comments to a new forum. {% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
-  <li>{% trans %}Starting from the <a href="{{ index }}">forums page</a>, navigate to the forum that currently contains the topic.{% endtrans %}</li>
+  <li>{% trans %}Starting from {{ index_link }} (path: <em>/forums</em>), navigate to the forum that currently contains the topic.{% endtrans %}</li>
   <li>{% trans %}Locate the topic within the forum, and click on the title to view the topic.{% endtrans %}</li>
   <li>{% trans %}Click <em>Edit</em>.{% endtrans %}</li>
   <li>{% trans %}In the <em>Forums</em> field, select the new forum that you want the topic to move to.{% endtrans %}</li>
