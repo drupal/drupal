@@ -54,13 +54,22 @@ class BlockContentAccessControlHandler extends EntityAccessControlHandler implem
    * {@inheritdoc}
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
+    // Allow view and update access to user with the 'edit any (type) block
+    // content' permission or the 'administer blocks' permission.
+    $edit_any_permission = 'edit any ' . $entity->bundle() . ' block content';
     if ($operation === 'view') {
       $access = AccessResult::allowedIf($entity->isPublished())
-        ->orIf(AccessResult::allowedIfHasPermission($account, 'administer blocks'));
+        ->orIf(AccessResult::allowedIfHasPermission($account, 'administer blocks'))
+        ->orIf(AccessResult::allowedIfHasPermission($account, $edit_any_permission));
+    }
+    elseif ($operation === 'update') {
+      $access = AccessResult::allowedIfHasPermission($account, 'administer blocks')
+        ->orIf(AccessResult::allowedIfHasPermission($account, $edit_any_permission));
     }
     else {
       $access = parent::checkAccess($entity, $operation, $account);
     }
+
     // Add the entity as a cacheable dependency because access will at least be
     // determined by whether the block is reusable.
     $access->addCacheableDependency($entity);

@@ -61,7 +61,15 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('block_content');
 
-    // Create a block content type.
+    // Create a basic block content type.
+    $block_content_type = BlockContentType::create([
+      'id' => 'basic',
+      'label' => 'A basic block type',
+      'description' => "Provides a block type that is basic.",
+    ]);
+    $block_content_type->save();
+
+    // Create a square block content type.
     $block_content_type = BlockContentType::create([
       'id' => 'square',
       'label' => 'A square block type',
@@ -184,11 +192,43 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
         NULL,
         'allowed',
       ],
+      'view:unpublished:reusable:per-block-editor:basic' => [
+        'view',
+        FALSE,
+        TRUE,
+        ['edit any basic block content'],
+        NULL,
+        'neutral',
+      ],
+      'view:unpublished:reusable:per-block-editor:square' => [
+        'view',
+        FALSE,
+        TRUE,
+        ['edit any square block content'],
+        NULL,
+        'allowed',
+      ],
       'view:published:reusable:admin' => [
         'view',
         TRUE,
         TRUE,
         ['administer blocks'],
+        NULL,
+        'allowed',
+      ],
+      'view:published:reusable:per-block-editor:basic' => [
+        'view',
+        TRUE,
+        TRUE,
+        ['edit any basic block content'],
+        NULL,
+        'allowed',
+      ],
+      'view:published:reusable:per-block-editor:square' => [
+        'view',
+        TRUE,
+        TRUE,
+        ['edit any square block content'],
         NULL,
         'allowed',
       ],
@@ -291,8 +331,62 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
           'forbidden',
           'forbidden',
         ],
+        $operation . ':unpublished:reusable:per-block-editor:basic' => [
+          $operation,
+          FALSE,
+          TRUE,
+          ['edit any basic block content'],
+          NULL,
+          'neutral',
+        ],
+        $operation . ':published:reusable:per-block-editor:basic' => [
+          $operation,
+          TRUE,
+          TRUE,
+          ['edit any basic block content'],
+          NULL,
+          'neutral',
+        ],
       ];
     }
+
+    $cases += [
+      'update:unpublished:reusable:per-block-editor:square' => [
+        'update',
+        FALSE,
+        TRUE,
+        ['edit any square block content'],
+        NULL,
+        'allowed',
+      ],
+      'update:published:reusable:per-block-editor:square' => [
+        'update',
+        TRUE,
+        TRUE,
+        ['edit any square block content'],
+        NULL,
+        'allowed',
+      ],
+    ];
+
+    $cases += [
+      'delete:unpublished:reusable:per-block-editor:square' => [
+        'delete',
+        FALSE,
+        TRUE,
+        ['edit any square block content'],
+        NULL,
+        'neutral',
+      ],
+      'delete:published:reusable:per-block-editor:square' => [
+        'delete',
+        TRUE,
+        TRUE,
+        ['edit any square block content'],
+        NULL,
+        'neutral',
+      ],
+    ];
     return $cases;
   }
 
