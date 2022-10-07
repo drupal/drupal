@@ -6,12 +6,13 @@ related:
   - layout_builder.overview
 ---
 {% set media_topic = render_var(help_topic_link('core.media')) %}
-{% set styles = render_var(url('entity.image_style.collection')) %}
+{% set styles_text %}{% trans %}Image styles{% endtrans %}{% endset %}
+{% set styles_link = render_var(help_route_link(styles_text, 'entity.image_style.collection')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Add a new image style, which can be used to process and display images. See {{ media_topic }} for an overview of image styles.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
-  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Media</em> &gt; <a href="{{ styles }}"><em>Image styles</em></a>.{% endtrans %}</li>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Media</em> &gt; {{ styles_link }}.{% endtrans %}</li>
   <li>{% trans %}Click <em>Add image style</em>.{% endtrans %}</li>
   <li>{% trans %}Enter a descriptive <em>Image style name</em>, and click <em>Create new style</em>.{% endtrans %}</li>
   <li>{% trans %}Under <em>Effect</em>, choose an effect to apply and click <em>Add</em>.{% endtrans %}</li>

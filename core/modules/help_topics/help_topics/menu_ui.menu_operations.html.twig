@@ -4,12 +4,13 @@ related:
   - menu_ui.content_type_configuration
   - core.menus
 ---
-{% set structure_menu = render_var(url('entity.menu.collection')) %}
+{% set structure_menu_text %}{% trans %}Menus{% endtrans %}{% endset %}
+{% set structure_menu_link = render_var(help_route_link(structure_menu_text, 'entity.menu.collection')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Create a new menu.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
-  <li>{% trans %}In the <em>Manage</em> administration menu, navigate <em>Structure</em> &gt; <a href="{{ structure_menu }}"> <em>Menus</em></a>.{% endtrans %}</li>
+  <li>{% trans %}In the <em>Manage</em> administration menu, navigate <em>Structure</em> &gt; {{ structure_menu_link }}.{% endtrans %}</li>
   <li>{% trans %}Click <em>Add menu</em>.{% endtrans %}</li>
   <li>{% trans %}Enter the title for the menu, which is used as the default block title if the menu is displayed as a block. If desired, also edit the machine name of the menu, which is by default derived from the title.{% endtrans %}</li>
   <li>{% trans %}Enter an administrative summary, which is displayed on the <em>Menus</em> page.{% endtrans %}</li>

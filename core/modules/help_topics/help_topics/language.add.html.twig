@@ -4,12 +4,13 @@ related:
   - core.translations
   - language.detect
 ---
-{% set languages_url = render_var(url('entity.configurable_language.collection')) %}
+{% set languages_text %}{% trans %}Languages{% endtrans %}{% endset %}
+{% set languages_link = render_var(help_route_link(languages_text, 'entity.configurable_language.collection')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Add a language to your site.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
-  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Regional and language</em> &gt; <a href="{{ languages_url }}"><em>Languages</em></a>.{% endtrans %}</li>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Regional and language</em> &gt; {{ languages_link }}.{% endtrans %}</li>
   <li>{% trans %}Click <em>Add language</em>.{% endtrans %}</li>
   <li>{% trans %}If your language is in the <em>Language name</em> list, select it and click <em>Add language</em>.{% endtrans %}</li>
   <li>{% trans %}If your language is not in the list, select <em>Custom language...</em> and enter the <em>Language code</em>, <em>Language name</em>, and <em>Direction</em> for the language. Click <em>Add custom language</em>.{% endtrans %}</li>
