@@ -4,7 +4,8 @@ related:
 - core.translations
 - language.add
 ---
-{% set detection = render_var(url('language.negotiation')) %}
+{% set detection_text %}{% trans %}Detection and selection{% endtrans %}{% endset %}
+{% set detection_link = render_var(help_route_link(detection_text, 'language.negotiation')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Configure the methods used to decide which language will be used to display text on your site.{% endtrans %}</p>
 <h2>{% trans %}What is a language detection method?{% endtrans %}</h2>
@@ -25,7 +26,7 @@ related:
 </dl>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
-    <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Regional and language</em> &gt; <em>Languages</em> &gt; <a href="{{ detection }}"><em>Detection and selection</em></a>.{% endtrans %}</li>
+    <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Regional and language</em> &gt; <em>Languages</em> &gt; {{ detection_link }}.{% endtrans %}</li>
     <li>{% trans %}Check the boxes to enable the desired language detection methods, and uncheck boxes for the methods you do not want to use.{% endtrans %}</li>
     <li>{% trans %}Drag the methods to change their order, if desired.{% endtrans %}</li>
     <li>{% trans %}Click <em>Save settings</em>.{% endtrans %}</li>
