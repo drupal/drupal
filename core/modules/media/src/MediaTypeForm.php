@@ -182,6 +182,8 @@ class MediaTypeForm extends EntityForm {
         }
       }
 
+      natcasesort($options);
+
       $field_map = $this->entity->getFieldMap();
       foreach ($source->getMetadataAttributes() as $metadata_attribute_name => $metadata_attribute_label) {
         $form['source_dependent']['field_map'][$metadata_attribute_name] = [
