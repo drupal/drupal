@@ -858,7 +858,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     }
     foreach ($this->options['group_info']['group_items'] as $id => $group) {
       if (!empty($group['title'])) {
-        $groups[$id] = $id != 'All' ? $this->t($group['title']) : $group['title'];
+        $groups[$id] = $group['title'];
       }
     }
 
