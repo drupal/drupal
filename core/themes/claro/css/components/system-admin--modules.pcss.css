@@ -182,3 +182,7 @@ td.module-list__description {
   color: var(--color-gray-800);
   font-weight: bold;
 }
+
+.claro-details .admin-missing {
+  color: var(--color-maximumred);
+}

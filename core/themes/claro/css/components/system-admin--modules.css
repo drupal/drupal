@@ -188,3 +188,7 @@ td.module-list__description {
   color: #55565b;
   font-weight: bold;
 }
+
+.claro-details .admin-missing {
+  color: #dc2323;
+}
