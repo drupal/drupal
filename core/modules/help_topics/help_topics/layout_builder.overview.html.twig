@@ -6,7 +6,8 @@ related:
   - field_ui.manage_display
   - block.overview
 ---
-{% set content_types = render_var(url('entity.node_type.collection')) %}
+{% set content_types_text %}{% trans %}Content types{% endtrans %}{% endset %}
+{% set content_types_link = render_var(help_route_link(content_types_text, 'entity.node_type.collection')) %}
 {% set content_structure_topic = render_var(help_topic_link('core.content_structure')) %}
 {% set block_overview_topic = render_var(help_topic_link('block.overview')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
@@ -15,7 +16,7 @@ related:
 <p>{% trans %}A layout consists of one or more <em>sections</em>. Each section can have from one to four <em>columns</em>. You can place blocks, including special blocks for the fields on the entity sub-type, in each column of each section (see {{ block_overview_topic }} for more on blocks).{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
-  <li>{% trans %}Navigate to the page for managing the entity type you want to add the field to. For example, to add a field to a content type, in the <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; <a href="{{ content_types }}"><em>Content types</em></a>.{% endtrans %}</li>
+  <li>{% trans %}Navigate to the page for managing the entity type you want to add the field to. For example, to add a field to a content type, in the <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; {{ content_types_link }}.{% endtrans %}</li>
   <li>{% trans %}Find the particular sub-type that you want to create a layout for, and click <em>Manage display</em> in the <em>Operations</em> list.{% endtrans %}</li>
   <li>{% trans %}Under <em>Layout options</em>, check <em>Use Layout Builder</em>. You can also check the box below to allow each entity item to have its layout individually customized (if it is left unchecked, the site will use the same layout for all items of this entity sub-type).{% endtrans %}</li>
   <li>{% trans %}Click <em>Save</em>. You will be returned to the <em>Manage display</em> page, but you will no longer see the table of fields of the classic display manager.{% endtrans %}</li>

@@ -5,12 +5,13 @@ related:
   - menu_ui.menu_operations
   - core.menus
 ---
-{% set structure_menu = render_var(url('entity.menu.collection')) %}
+{% set structure_menu_text %}{% trans %}Menus{% endtrans %}{% endset %}
+{% set structure_menu_link = render_var(help_route_link(structure_menu_text, 'entity.menu.collection')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Add a link to a menu. Note that you can also add a link to a menu from the content edit page if menu settings have been configured for the content type.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
-  <li>{% trans %}In the <em>Manage</em> administration menu, navigate to <em>Structure</em> &gt; <a href="{{ structure_menu }}"><em>Menus</em></a>.{% endtrans %}</li>
+  <li>{% trans %}In the <em>Manage</em> administration menu, navigate to <em>Structure</em> &gt; {{ structure_menu_link }}.{% endtrans %}</li>
   <li>{% trans %}Locate the desired menu and click <em>Add link</em> in the <em>Operations</em> list.{% endtrans %}</li>
   <li>{% trans %}Enter the <em>Menu link title</em> to be displayed.{% endtrans %}</li>
   <li>{% trans %}Enter the <em>Link</em>, one of the following:{% endtrans %}
@@ -27,7 +28,7 @@ related:
   <li>{% trans %}Optionally, check <em>Show as expanded</em> to automatically show the children of this link (if any) when this link is shown.{% endtrans %}</li>
   <li>{% trans %}Optionally, select the <em>Parent link</em>, if this menu link should be a child of another menu link.{% endtrans %}</li>
   <li>{% trans %}Click <em>Save</em>. You will be returned to the <em>Add link</em> page to add another link.{% endtrans %}</li>
-  <li>{% trans %}In the <em>Manage</em> administration menu, navigate to <em>Structure</em> &gt; <a href="{{ structure_menu }}"><em>Menus</em></a>.{% endtrans %}</li>
+  <li>{% trans %}In the <em>Manage</em> administration menu, navigate to <em>Structure</em> &gt; {{ structure_menu_link }}.{% endtrans %}</li>
   <li>{% trans %}Locate the menu you just added a link to and click <em>Edit</em> in the <em>Operations</em> list.{% endtrans %}</li>
   <li>{% trans %}Verify that the order of links is correct. If it is not, drag menu links until the order is correct, and click <em>Save</em>.{% endtrans %}</li>
 </ol>
