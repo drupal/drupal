@@ -60,12 +60,12 @@ process:
     plugin: target_bundle
   'settings/handler_settings/auto_create': 'constants/auto_create'
   required: required
-   # Get the i18n taxonomy translation setting for this vocabulary.
-   #  0 - No multilingual options
-   #  1 - Localizable terms. Run through the localization system.
-   #  2 - Predefined language for a vocabulary and its terms.
-   #  3 - Per-language terms, translatable (referencing terms with different
-   #  languages) but not localizable.
+  # Get the i18n taxonomy translation setting for this vocabulary.
+  #  0 - No multilingual options
+  #  1 - Localizable terms. Run through the localization system.
+  #  2 - Predefined language for a vocabulary and its terms.
+  #  3 - Per-language terms, translatable (referencing terms with different
+  #  languages) but not localizable.
   translatable:
     plugin: static_map
     source: i18ntaxonomy_vocabulary

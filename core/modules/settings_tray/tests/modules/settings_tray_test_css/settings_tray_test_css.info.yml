@@ -4,4 +4,4 @@ description: 'Provides CSS fixes for tests.'
 package: Testing
 version: VERSION
 dependencies:
-- drupal:settings_tray
+  - drupal:settings_tray

@@ -34,9 +34,9 @@ process:
       plugin: migration_lookup
       migration: d7_field_instance
       source:
-         - entity_type
-         - objectid
-         - type
+        - entity_type
+        - objectid
+        - type
     -
       plugin: skip_on_empty
       method: row

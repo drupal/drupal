@@ -131,13 +131,13 @@ config_test.new:
   type: config_object
   label: 'Configuration test'
   mapping:
-     key:
-       type: string
-       label: 'Test setting'
-     new_key:
-       type: string
-       label: 'Test setting'
-     uuid:
+    key:
+      type: string
+      label: 'Test setting'
+    new_key:
+      type: string
+      label: 'Test setting'
+    uuid:
       type: uuid
 
 config_test.old:
@@ -147,16 +147,16 @@ config_test.foo:
   type: config_object
   label: 'Configuration test'
   mapping:
-     value:
-       type: mapping
-       label: 'Value'
-       mapping:
-         key:
-           type: string
-           label: 'Key'
-     label:
-       type: label
-       label: 'Label'
+    value:
+      type: mapping
+      label: 'Value'
+      mapping:
+        key:
+          type: string
+          label: 'Key'
+    label:
+      type: label
+      label: 'Label'
 
 config_test.bar:
   type: config_test.foo

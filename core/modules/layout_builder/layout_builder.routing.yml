@@ -1,8 +1,8 @@
 layout_builder.choose_section:
   path: '/layout_builder/choose/section/{section_storage_type}/{section_storage}/{delta}'
   defaults:
-   _controller: '\Drupal\layout_builder\Controller\ChooseSectionController::build'
-   _title: 'Choose a layout for this section'
+    _controller: '\Drupal\layout_builder\Controller\ChooseSectionController::build'
+    _title: 'Choose a layout for this section'
   requirements:
     _layout_builder_access: 'view'
   options:

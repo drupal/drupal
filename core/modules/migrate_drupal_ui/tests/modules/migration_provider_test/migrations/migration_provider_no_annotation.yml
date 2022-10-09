@@ -4,7 +4,7 @@ migration_tags:
   - Drupal 6
   - Drupal 7
 source:
-# Test plugin without a source_module annotation
+  # Test plugin without a source_module annotation
   plugin: no_source_module
 process:
   message: site_offline_message

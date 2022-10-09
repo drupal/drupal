@@ -3,5 +3,5 @@ type: module
 package: Testing
 version: VERSION
 dependencies:
- - drupal:user
- - drupal:node
+  - drupal:user
+  - drupal:node
