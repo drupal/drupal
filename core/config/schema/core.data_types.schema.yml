@@ -735,12 +735,12 @@ field.field_settings.decimal:
       label: 'Suffix'
 
 field.value.decimal:
-   type: mapping
-   label: 'Default value'
-   mapping:
-     value:
-       type: float
-       label: 'Value'
+  type: mapping
+  label: 'Default value'
+  mapping:
+    value:
+      type: float
+      label: 'Value'
 
 # Schema for the configuration of the Float field type.
 

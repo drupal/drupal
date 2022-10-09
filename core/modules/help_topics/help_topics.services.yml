@@ -13,7 +13,7 @@ services:
     arguments: ['%app.root%', '@module_handler', '@theme_handler']
     # Lowest core priority because loading help topics is not the usual case.
     tags:
-    - { name: twig.loader, priority: -200 }
+      - { name: twig.loader, priority: -200 }
     public: false
   plugin.manager.help_section_topics:
     class: Drupal\help_topics\HelpSectionManager

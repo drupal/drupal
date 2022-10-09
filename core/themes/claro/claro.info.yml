@@ -105,7 +105,7 @@ libraries-override:
   views_ui/admin.styling:
     css:
       component:
-          css/views_ui.admin.css: css/components/views_ui.admin.css
+        css/views_ui.admin.css: css/components/views_ui.admin.css
       theme:
         css/views_ui.admin.theme.css: css/theme/views_ui.admin.theme.css
 

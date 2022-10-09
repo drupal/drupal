@@ -109,7 +109,7 @@ view-mode-card-common-alt:
 
 demo-umami-tour:
   css:
-   theme:
+    theme:
       css/components/tour/tour.theme.css: {}
   dependencies:
     - claro/tour-styling

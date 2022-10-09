@@ -16,8 +16,8 @@ node.type.*.third_party.menu_ui:
       type: sequence
       label: 'Available menus'
       sequence:
-       type: string
-       label: 'Menu machine name'
+        type: string
+        label: 'Menu machine name'
     parent:
       type: string
       label: 'Parent'

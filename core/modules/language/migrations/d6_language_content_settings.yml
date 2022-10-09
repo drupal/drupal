@@ -8,8 +8,8 @@ source:
   constants:
     target_type: 'node'
 process:
-# Ignore i18n_node_options_[node_type] options not available in Drupal 8,
-# i18n_required_node and i18n_newnode_current
+  # Ignore i18n_node_options_[node_type] options not available in Drupal 8,
+  # i18n_required_node and i18n_newnode_current
   target_bundle: type
   target_entity_type_id: 'constants/target_type'
   default_langcode:

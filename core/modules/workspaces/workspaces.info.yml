@@ -6,4 +6,4 @@ package: Core (Experimental)
 lifecycle: experimental
 configure: entity.workspace.collection
 dependencies:
- - drupal:user
+  - drupal:user

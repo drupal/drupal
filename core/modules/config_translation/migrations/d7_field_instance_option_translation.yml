@@ -19,9 +19,9 @@ process:
     method: getFieldType
   entity_type: entity_type
   field_name: field_name
-#  # The bundle needs to be statically mapped in order to support comment types
-#  # that might already exist before this migration is run. See
-#  # d7_comment_type.yml for more information.
+  # The bundle needs to be statically mapped in order to support comment types
+  # that might already exist before this migration is run. See
+  # d7_comment_type.yml for more information.
   bundle:
     plugin: static_map
     source: bundle

@@ -4,4 +4,4 @@ description: 'Support module for language-aware node access testing.'
 package: Testing
 version: VERSION
 dependencies:
-- drupal:options
+  - drupal:options

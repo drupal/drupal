@@ -18,10 +18,10 @@ services:
     tags:
       - { name: normalizer, priority: 20 }
   serializer.normalizer.timestamp_item.hal:
-   class: Drupal\hal\Normalizer\TimestampItemNormalizer
-   tags:
-     # Priority must be higher than serializer.normalizer.field_item.hal.
-     - { name: normalizer, priority: 20 }
+    class: Drupal\hal\Normalizer\TimestampItemNormalizer
+    tags:
+      # Priority must be higher than serializer.normalizer.field_item.hal.
+      - { name: normalizer, priority: 20 }
   serializer.normalizer.entity.hal:
     class: Drupal\hal\Normalizer\ContentEntityNormalizer
     arguments: ['@hal.link_manager', '@entity_type.manager', '@module_handler', '@entity_type.repository', '@entity_field.manager']

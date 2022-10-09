@@ -84,7 +84,7 @@ services:
     class: Drupal\views\Plugin\views\query\MysqlDateSql
     arguments: ['@database']
     tags:
-       - { name: backend_overridable }
+      - { name: backend_overridable }
   pgsql.views.date_sql:
     class: Drupal\views\Plugin\views\query\PostgresqlDateSql
     arguments: ['@database']

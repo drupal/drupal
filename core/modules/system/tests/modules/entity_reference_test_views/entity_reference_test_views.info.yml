@@ -4,4 +4,4 @@ description: 'Provides default views for views entity reference tests.'
 package: Testing
 version: VERSION
 dependencies:
- - drupal:views
+  - drupal:views

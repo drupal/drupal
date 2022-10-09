@@ -8,10 +8,10 @@ services:
     tags:
       - { name: authentication_provider, provider_id: 'rest_test_auth_global', global: TRUE }
   rest_test.page_cache_request_policy.deny_test_auth_requests:
-      class: Drupal\rest_test\PageCache\RequestPolicy\DenyTestAuthRequests
-      public: false
-      tags:
-        - { name: page_cache_request_policy }
+    class: Drupal\rest_test\PageCache\RequestPolicy\DenyTestAuthRequests
+    public: false
+    tags:
+      - { name: page_cache_request_policy }
   rest_test.encoder.foobar:
     class: Drupal\serialization\Encoder\JsonEncoder
     tags:

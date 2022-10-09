@@ -35,11 +35,11 @@ source:
     # section below.
     source_base_path: ''
 process:
-    # If you are using both this migration and d6_user_picture_file in a custom
-    # migration and executing migrations incrementally, it is strongly
-    # recommended that you remove the fid mapping to avoid potential ID
-    # conflicts. For that reason, this mapping is commented out by default.
-    # fid: fid
+  # If you are using both this migration and d6_user_picture_file in a custom
+  # migration and executing migrations incrementally, it is strongly
+  # recommended that you remove the fid mapping to avoid potential ID conflicts.
+  # For that reason, this mapping is commented out by default.
+  # fid: fid
   filename: filename
   source_full_path:
     -

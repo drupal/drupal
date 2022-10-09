@@ -1,6 +1,6 @@
 services:
-# Provide 2 main content renderer services that use the same class but
-# behave differently depending on the 2nd argument.
+  # Provide 2 main content renderer services that use the same class but behave
+  # differently depending on the 2nd argument.
   main_content_renderer.wide_modal:
     class: Drupal\dialog_renderer_test\Render\MainContent\WideModalRenderer
     arguments: ['@title_resolver', '@renderer', 'wide']

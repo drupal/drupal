@@ -71,14 +71,14 @@ services:
       # Priority must be higher than serializer.normalizer.primitive_data.
       - { name: normalizer, priority: 20 }
   serializer.normalizer.password_field_item:
-      class: Drupal\serialization\Normalizer\NullNormalizer
-      arguments: ['Drupal\Core\Field\Plugin\Field\FieldType\PasswordItem']
-      tags:
-        - { name: normalizer, priority: 20 }
+    class: Drupal\serialization\Normalizer\NullNormalizer
+    arguments: ['Drupal\Core\Field\Plugin\Field\FieldType\PasswordItem']
+    tags:
+      - { name: normalizer, priority: 20 }
   serializer.normalizer.safe_string:
-      class: Drupal\serialization\Normalizer\MarkupNormalizer
-      tags:
-        - { name: normalizer }
+    class: Drupal\serialization\Normalizer\MarkupNormalizer
+    tags:
+      - { name: normalizer }
   serializer.normalizer.typed_data:
     class: Drupal\serialization\Normalizer\TypedDataNormalizer
     tags:
