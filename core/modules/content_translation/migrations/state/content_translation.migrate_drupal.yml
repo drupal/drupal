@@ -15,7 +15,7 @@ finished:
     i18ntaxonomy: content_translation
     locale: content_translation
     menu: content_translation
-  # Node revision translations.
+    # Node revision translations.
     node: content_translation
     statistics: statistics
     taxonomy: content_translation

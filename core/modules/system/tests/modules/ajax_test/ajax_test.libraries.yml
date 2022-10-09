@@ -4,19 +4,19 @@ ajax_insert:
   dependencies:
     - core/drupal.ajax
 order:
- drupalSettings:
-   ajax: test
- dependencies:
-   - ajax_test/order-css-command
-   - ajax_test/order-footer-js-command
-   - ajax_test/order-header-js-command
+  drupalSettings:
+    ajax: test
+  dependencies:
+    - ajax_test/order-css-command
+    - ajax_test/order-footer-js-command
+    - ajax_test/order-header-js-command
 
 order-css-command:
   css:
-     theme:
-       # Two CSS files (order should remain the same).
-       a.css: {}
-       b.css: {}
+    theme:
+      # Two CSS files (order should remain the same).
+      a.css: {}
+      b.css: {}
 
 order-footer-js-command:
   js:

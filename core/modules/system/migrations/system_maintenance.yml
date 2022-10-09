@@ -12,15 +12,15 @@ source:
   source_module: system
 process:
   message:
-  -
-    plugin: callback
-    callable: array_filter
-    source:
-      - maintenance_mode_message
-      - site_offline_message
-  -
-    plugin: callback
-    callable: current
+    -
+      plugin: callback
+      callable: array_filter
+      source:
+        - maintenance_mode_message
+        - site_offline_message
+    -
+      plugin: callback
+      callable: current
 destination:
   plugin: config
   config_name: system.maintenance

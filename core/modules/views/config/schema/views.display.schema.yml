@@ -87,8 +87,8 @@ views.display.block:
       label: 'Allow'
       mapping:
         items_per_page:
-         type: boolean
-         label: 'Items per page'
+          type: boolean
+          label: 'Items per page'
 
 views.display.feed:
   type: views_display_path

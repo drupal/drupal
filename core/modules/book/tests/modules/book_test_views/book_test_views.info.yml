@@ -4,5 +4,5 @@ description: 'Provides default views for views book tests.'
 package: Testing
 version: VERSION
 dependencies:
- - drupal:book
- - drupal:views
+  - drupal:book
+  - drupal:views

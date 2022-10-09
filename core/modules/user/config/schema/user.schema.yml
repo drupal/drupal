@@ -52,36 +52,36 @@ user.settings:
       label: 'Enable password strength indicator'
 
 user.mail:
- type: config_object
- label: 'Email settings'
- mapping:
-  cancel_confirm:
-    type: mail
-    label: 'Account cancellation confirmation'
-  password_reset:
-    type: mail
-    label: 'Password recovery'
-  register_admin_created:
-    type: mail
-    label: 'Account created by administrator'
-  register_no_approval_required:
-    type: mail
-    label: 'Registration confirmation (No approval required)'
-  register_pending_approval:
-    type: mail
-    label: 'Registration confirmation (Pending approval)'
-  register_pending_approval_admin:
-    type: mail
-    label: 'Admin (user awaiting approval)'
-  status_activated:
-    type: mail
-    label: 'Account activation'
-  status_blocked:
-    type: mail
-    label: 'Account blocked'
-  status_canceled:
-    type: mail
-    label: 'Account cancelled'
+  type: config_object
+  label: 'Email settings'
+  mapping:
+    cancel_confirm:
+      type: mail
+      label: 'Account cancellation confirmation'
+    password_reset:
+      type: mail
+      label: 'Password recovery'
+    register_admin_created:
+      type: mail
+      label: 'Account created by administrator'
+    register_no_approval_required:
+      type: mail
+      label: 'Registration confirmation (No approval required)'
+    register_pending_approval:
+      type: mail
+      label: 'Registration confirmation (Pending approval)'
+    register_pending_approval_admin:
+      type: mail
+      label: 'Admin (user awaiting approval)'
+    status_activated:
+      type: mail
+      label: 'Account activation'
+    status_blocked:
+      type: mail
+      label: 'Account blocked'
+    status_canceled:
+      type: mail
+      label: 'Account cancelled'
 
 user.flood:
   type: config_object

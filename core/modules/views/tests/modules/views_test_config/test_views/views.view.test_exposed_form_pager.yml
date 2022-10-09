@@ -2,9 +2,9 @@ langcode: en
 status: true
 dependencies:
   config:
-  - core.entity_view_mode.node.teaser
+    - core.entity_view_mode.node.teaser
   module:
-  - node
+    - node
 id: test_exposed_form_pager
 label: ''
 module: views
@@ -149,10 +149,10 @@ display:
     cache_metadata:
       max-age: -1
       contexts:
-      - 'languages:language_interface'
-      - url
-      - url.query_args
-      - 'user.node_grants:view'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
       tags: {  }
   page_1:
     display_options:
@@ -165,8 +165,8 @@ display:
     cache_metadata:
       max-age: -1
       contexts:
-      - 'languages:language_interface'
-      - url
-      - url.query_args
-      - 'user.node_grants:view'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
       tags: {  }

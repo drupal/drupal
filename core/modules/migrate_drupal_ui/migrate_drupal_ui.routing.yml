@@ -47,7 +47,7 @@ migrate_drupal_ui.upgrade_review:
 migrate_drupal_ui.log:
   path: '/admin/reports/upgrade'
   defaults:
-      _controller: '\Drupal\migrate_drupal_ui\Controller\MigrateController::showLog'
+    _controller: '\Drupal\migrate_drupal_ui\Controller\MigrateController::showLog'
   requirements:
     _custom_access: '\Drupal\migrate_drupal_ui\MigrateAccessCheck::checkAccess'
   options:

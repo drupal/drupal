@@ -3,7 +3,7 @@ stark.mobile:
   mediaQuery: '(min-width: 0px)'
   weight: 0
   multipliers:
-   - 1x
+    - 1x
 stark.narrow:
   label: narrow
   mediaQuery: 'all and (min-width: 480px) and (max-width: 959px)'

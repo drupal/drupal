@@ -376,8 +376,8 @@ ckeditor5_linkMedia:
 ckeditor5_list:
   ckeditor5:
     plugins:
-     - list.DocumentList
-     - list.DocumentListProperties
+      - list.DocumentList
+      - list.DocumentListProperties
     config:
       list:
         properties:
@@ -750,8 +750,8 @@ media_library_mediaLibrary:
     class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\MediaLibrary
     library: editor/drupal.editor.dialog
     toolbar_items:
-        drupalMedia:
-          label: Drupal media
+      drupalMedia:
+        label: Drupal media
     conditions:
       filter: media_embed
       toolbarItem: drupalMedia

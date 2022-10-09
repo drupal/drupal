@@ -5,7 +5,7 @@ services:
     tags:
       - { name: authentication_provider, provider_id: 'basic_auth', priority: 100 }
   basic_auth.page_cache_request_policy.disallow_basic_auth_requests:
-      class: Drupal\basic_auth\PageCache\DisallowBasicAuthRequests
-      public: false
-      tags:
-        - { name: page_cache_request_policy }
+    class: Drupal\basic_auth\PageCache\DisallowBasicAuthRequests
+    public: false
+    tags:
+      - { name: page_cache_request_policy }

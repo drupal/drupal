@@ -14,7 +14,7 @@ services:
     class: Drupal\layout_builder\Routing\LayoutBuilderRoutes
     arguments: ['@plugin.manager.layout_builder.section_storage']
     tags:
-     - { name: event_subscriber }
+      - { name: event_subscriber }
   layout_builder.tempstore.route_enhancer:
     class: Drupal\layout_builder\Routing\LayoutTempstoreRouteEnhancer
     arguments: ['@layout_builder.tempstore_repository']

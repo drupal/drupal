@@ -59,122 +59,122 @@ process:
   "options/label": label
   "options/weight": weight
   "options/type":
-      -
-        plugin: static_map
-        bypass: true
-        source:
-          - type
-          - 'display_settings/format'
-        map:
-          number_integer:
-            default: number_integer
-            us_0: number_integer
-            be_0: number_integer
-            fr_0: number_integer
-            unformatted: number_unformatted
-          number_float:
-            default: number_decimal
-            us_0: number_decimal
-            us_1: number_decimal
-            us_2: number_decimal
-            be_0: number_decimal
-            be_1: number_decimal
-            be_2: number_decimal
-            fr_0: number_decimal
-            fr_1: number_decimal
-            fr_2: number_decimal
-            unformatted: number_unformatted
-          number_decimal:
-            default: number_decimal
-            us_0: number_decimal
-            us_1: number_decimal
-            us_2: number_decimal
-            be_0: number_decimal
-            be_1: number_decimal
-            be_2: number_decimal
-            fr_0: number_decimal
-            fr_1: number_decimal
-            fr_2: number_decimal
-            unformatted: number_unformatted
-          email:
-            default: email_mailto
-            spamspan: email_mailto
-            contact: email_mailto
-            plain: basic_string
-          fr_phone:
-            default: basic_string
-          be_phone:
-            default: basic_string
-          it_phone:
-            default: basic_string
-          el_phone:
-            default: basic_string
-          ch_phone:
-            default: basic_string
-          ca_phone:
-            default: basic_string
-          cr_phone:
-            default: basic_string
-          pa_phone:
-            default: basic_string
-          gb_phone:
-            default: basic_string
-          ru_phone:
-            default: basic_string
-          ua_phone:
-            default: basic_string
-          es_phone:
-            default: basic_string
-          au_phone:
-            default: basic_string
-          cs_phone:
-            default: basic_string
-          hu_phone:
-            default: basic_string
-          pl_phone:
-            default: basic_string
-          nl_phone:
-            default: basic_string
-          se_phone:
-            default: basic_string
-          za_phone:
-            default: basic_string
-          il_phone:
-            default: basic_string
-          nz_phone:
-            default: basic_string
-          br_phone:
-            default: basic_string
-          cl_phone:
-            default: basic_string
-          cn_phone:
-            default: basic_string
-          hk_phone:
-            default: basic_string
-          mo_phone:
-            default: basic_string
-          ph_phone:
-            default: basic_string
-          sg_phone:
-            default: basic_string
-          jo_phone:
-            default: basic_string
-          eg_phone:
-            default: basic_string
-          pk_phone:
-            default: basic_string
-          int_phone:
-            default: basic_string
-          nodereference:
-            default: entity_reference_label
-            plain: entity_reference_label
-            full: entity_reference_entity_view
-            teaser: entity_reference_entity_view
-          userreference:
-            default: entity_reference_label
-            plain: entity_reference_label
-      -
-        plugin: d6_field_type_defaults
+    -
+      plugin: static_map
+      bypass: true
+      source:
+        - type
+        - 'display_settings/format'
+      map:
+        number_integer:
+          default: number_integer
+          us_0: number_integer
+          be_0: number_integer
+          fr_0: number_integer
+          unformatted: number_unformatted
+        number_float:
+          default: number_decimal
+          us_0: number_decimal
+          us_1: number_decimal
+          us_2: number_decimal
+          be_0: number_decimal
+          be_1: number_decimal
+          be_2: number_decimal
+          fr_0: number_decimal
+          fr_1: number_decimal
+          fr_2: number_decimal
+          unformatted: number_unformatted
+        number_decimal:
+          default: number_decimal
+          us_0: number_decimal
+          us_1: number_decimal
+          us_2: number_decimal
+          be_0: number_decimal
+          be_1: number_decimal
+          be_2: number_decimal
+          fr_0: number_decimal
+          fr_1: number_decimal
+          fr_2: number_decimal
+          unformatted: number_unformatted
+        email:
+          default: email_mailto
+          spamspan: email_mailto
+          contact: email_mailto
+          plain: basic_string
+        fr_phone:
+          default: basic_string
+        be_phone:
+          default: basic_string
+        it_phone:
+          default: basic_string
+        el_phone:
+          default: basic_string
+        ch_phone:
+          default: basic_string
+        ca_phone:
+          default: basic_string
+        cr_phone:
+          default: basic_string
+        pa_phone:
+          default: basic_string
+        gb_phone:
+          default: basic_string
+        ru_phone:
+          default: basic_string
+        ua_phone:
+          default: basic_string
+        es_phone:
+          default: basic_string
+        au_phone:
+          default: basic_string
+        cs_phone:
+          default: basic_string
+        hu_phone:
+          default: basic_string
+        pl_phone:
+          default: basic_string
+        nl_phone:
+          default: basic_string
+        se_phone:
+          default: basic_string
+        za_phone:
+          default: basic_string
+        il_phone:
+          default: basic_string
+        nz_phone:
+          default: basic_string
+        br_phone:
+          default: basic_string
+        cl_phone:
+          default: basic_string
+        cn_phone:
+          default: basic_string
+        hk_phone:
+          default: basic_string
+        mo_phone:
+          default: basic_string
+        ph_phone:
+          default: basic_string
+        sg_phone:
+          default: basic_string
+        jo_phone:
+          default: basic_string
+        eg_phone:
+          default: basic_string
+        pk_phone:
+          default: basic_string
+        int_phone:
+          default: basic_string
+        nodereference:
+          default: entity_reference_label
+          plain: entity_reference_label
+          full: entity_reference_entity_view
+          teaser: entity_reference_entity_view
+        userreference:
+          default: entity_reference_label
+          plain: entity_reference_label
+    -
+      plugin: d6_field_type_defaults
   "options/settings":
     -
       plugin: static_map

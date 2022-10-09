@@ -11,8 +11,8 @@ process:
   image_style_mappings:
     plugin: image_style_mappings
     source:
-     - mapping
-     - breakpoint_group
+      - mapping
+      - breakpoint_group
   breakpoint_group: breakpoint_group
 destination:
   plugin: entity:responsive_image_style
