@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\KernelTests\Core\Database;
+namespace Drupal\Tests\pgsql\Kernel\pgsql;
 
 use Drupal\Core\Database\Driver\pgsql\Connection;
 use Drupal\Core\Database\Driver\pgsql\Delete;
@@ -11,6 +11,7 @@ use Drupal\Core\Database\Driver\pgsql\Select;
 use Drupal\Core\Database\Driver\pgsql\Truncate;
 use Drupal\Core\Database\Driver\pgsql\Update;
 use Drupal\Core\Database\Driver\pgsql\Upsert;
+use Drupal\KernelTests\Core\Database\DriverSpecificDatabaseTestBase;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 
 /**
@@ -19,17 +20,7 @@ use Drupal\Tests\Core\Database\Stub\StubPDO;
  * @group legacy
  * @group Database
  */
-class PgsqlDriverLegacyTest extends DatabaseTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-    if ($this->connection->driver() !== 'pgsql') {
-      $this->markTestSkipped('Only test the deprecation message for the PostgreSQL database driver classes in Core.');
-    }
-  }
+class PgsqlDriverLegacyTest extends DriverSpecificDatabaseTestBase {
 
   /**
    * @covers Drupal\Core\Database\Driver\pgsql\Install\Tasks

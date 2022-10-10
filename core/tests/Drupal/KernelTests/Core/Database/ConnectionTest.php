@@ -3,7 +3,6 @@
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Query\Condition;
 
 /**
@@ -144,21 +143,6 @@ class ConnectionTest extends DatabaseTestBase {
     Database::addConnectionInfo('default', 'foo', $new_connection_info);
     $this->expectError();
     $foo_connection = Database::getConnection('foo', 'default');
-  }
-
-  /**
-   * Ensure that you cannot execute multiple statements on MySQL.
-   */
-  public function testMultipleStatementsForNewPhp() {
-    // This just tests mysql, as other PDO integrations don't allow disabling
-    // multiple statements.
-    if (Database::getConnection()->databaseType() !== 'mysql') {
-      $this->markTestSkipped("This test only runs for MySQL");
-    }
-
-    // Disable the protection at the PHP level.
-    $this->expectException(DatabaseExceptionWrapper::class);
-    Database::getConnection('default', 'default')->query('SELECT * FROM {test}; SELECT * FROM {test_people}', [], ['allow_delimiter_in_query' => TRUE]);
   }
 
   /**

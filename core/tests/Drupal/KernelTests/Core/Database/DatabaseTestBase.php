@@ -13,6 +13,9 @@ use Drupal\KernelTests\KernelTestBase;
  */
 abstract class DatabaseTestBase extends KernelTestBase {
 
+  use DatabaseTestSchemaDataTrait;
+  use DatabaseTestSchemaInstallTrait;
+
   protected static $modules = ['database_test'];
 
   /**
@@ -28,21 +31,8 @@ abstract class DatabaseTestBase extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->connection = Database::getConnection();
-    $this->installSchema('database_test', [
-      'test',
-      'test_classtype',
-      'test_people',
-      'test_people_copy',
-      'test_one_blob',
-      'test_two_blobs',
-      'test_task',
-      'test_null',
-      'test_serialized',
-      'TEST_UPPERCASE',
-      'select',
-      'virtual',
-    ]);
-    self::addSampleData();
+    $this->installSampleSchema();
+    $this->addSampleData();
   }
 
   /**
@@ -62,116 +52,6 @@ abstract class DatabaseTestBase extends KernelTestBase {
       ->values([
         'name' => 'Gonzo',
         'age' => 27,
-      ])
-      ->execute();
-  }
-
-  /**
-   * Sets up our sample data.
-   */
-  public static function addSampleData() {
-    $connection = Database::getConnection();
-
-    // We need the IDs, so we can't use a multi-insert here.
-    $john = $connection->insert('test')
-      ->fields([
-        'name' => 'John',
-        'age' => 25,
-        'job' => 'Singer',
-      ])
-      ->execute();
-
-    $george = $connection->insert('test')
-      ->fields([
-        'name' => 'George',
-        'age' => 27,
-        'job' => 'Singer',
-      ])
-      ->execute();
-
-    $connection->insert('test')
-      ->fields([
-        'name' => 'Ringo',
-        'age' => 28,
-        'job' => 'Drummer',
-      ])
-      ->execute();
-
-    $paul = $connection->insert('test')
-      ->fields([
-        'name' => 'Paul',
-        'age' => 26,
-        'job' => 'Songwriter',
-      ])
-      ->execute();
-
-    $connection->insert('test_classtype')
-      ->fields([
-        'classname' => 'Drupal\Tests\system\Functional\Database\FakeRecord',
-        'name' => 'Kay',
-        'age' => 26,
-        'job' => 'Web Developer',
-      ])
-      ->execute();
-
-    $connection->insert('test_people')
-      ->fields([
-        'name' => 'Meredith',
-        'age' => 30,
-        'job' => 'Speaker',
-      ])
-      ->execute();
-
-    $connection->insert('test_task')
-      ->fields(['pid', 'task', 'priority'])
-      ->values([
-        'pid' => $john,
-        'task' => 'eat',
-        'priority' => 3,
-      ])
-      ->values([
-        'pid' => $john,
-        'task' => 'sleep',
-        'priority' => 4,
-      ])
-      ->values([
-        'pid' => $john,
-        'task' => 'code',
-        'priority' => 1,
-      ])
-      ->values([
-        'pid' => $george,
-        'task' => 'sing',
-        'priority' => 2,
-      ])
-      ->values([
-        'pid' => $george,
-        'task' => 'sleep',
-        'priority' => 2,
-      ])
-      ->values([
-        'pid' => $paul,
-        'task' => 'found new band',
-        'priority' => 1,
-      ])
-      ->values([
-        'pid' => $paul,
-        'task' => 'perform at superbowl',
-        'priority' => 3,
-      ])
-      ->execute();
-
-    $connection->insert('select')
-      ->fields([
-        'id' => 1,
-        'update' => 'Update value 1',
-      ])
-      ->execute();
-
-    $connection->insert('virtual')
-      ->fields([
-        'id' => 1,
-        'function' => 'Function value 1',
       ])
       ->execute();
   }

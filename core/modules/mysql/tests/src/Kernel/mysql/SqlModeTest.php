@@ -1,29 +1,20 @@
 <?php
 
-namespace Drupal\KernelTests\Core\Database;
+namespace Drupal\Tests\mysql\Kernel\mysql;
+
+use Drupal\KernelTests\Core\Database\DriverSpecificDatabaseTestBase;
 
 /**
  * Tests compatibility of the MySQL driver with various sql_mode options.
  *
  * @group Database
  */
-class SqlModeTest extends DatabaseTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-
-    if ($this->connection->databaseType() !== 'mysql') {
-      $this->markTestSkipped("Skipping test since sql_mode is a MySQL-only feature.");
-    }
-  }
+class SqlModeTest extends DriverSpecificDatabaseTestBase {
 
   /**
    * Tests quoting identifiers in queries.
    */
-  public function testQuotingIdentifiers() {
+  public function testQuotingIdentifiers(): void {
     // Use SQL-reserved words for both the table and column names.
     $query = $this->connection->query('SELECT [update] FROM {select}');
     $this->assertEquals('Update value 1', $query->fetchObject()->update);
