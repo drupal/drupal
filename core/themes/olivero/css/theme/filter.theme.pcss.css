@@ -24,9 +24,21 @@
 }
 
 .filter-help {
-  float: inline-end;
+  float: right; /* LTR */
   padding-block: var(--sp0-5);
   font-size: var(--font-size-xxs);
+
+  /**
+   * Chromium and Webkit do not yet support flow relative logical properties,
+   * such as float: inline-end. However, PostCSS Logical does not compile this
+   * value, so we accommodate by not using these.
+   *
+   * @see https://caniuse.com/mdn-css_properties_clear_flow_relative_values
+   * @see https://github.com/csstools/postcss-plugins/issues/632
+   */
+  &:dir(rtl) {
+    float: left;
+  }
 }
 
 /**

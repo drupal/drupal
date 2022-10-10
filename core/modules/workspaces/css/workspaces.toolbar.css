@@ -22,13 +22,38 @@
 }
 
 .toolbar-oriented .toolbar-bar .workspaces-toolbar-tab {
-  float: inline-end;
+  float: right; /* LTR */
+
+  /**
+   * Chromium and Webkit do not yet support flow relative logical properties,
+   * such as float: inline-end. However, PostCSS Logical does not compile this
+   * value, so we accommodate by not using these.
+   *
+   * @see https://caniuse.com/mdn-css_properties_clear_flow_relative_values
+   * @see https://github.com/csstools/postcss-plugins/issues/632
+   */
 }
+
+[dir="rtl"] .toolbar-oriented .toolbar-bar .workspaces-toolbar-tab {
+    float: left;
+  }
 
 @media (min-width: 16.5rem) {
   .toolbar:not(.toolbar-oriented) .toolbar-bar .workspaces-toolbar-tab {
-    float: inline-end;
+    float: right; /* LTR */
+
+    /**
+     * Chromium and Webkit do not yet support flow relative logical properties,
+     * such as float: inline-end. However, PostCSS Logical does not compile this
+     * value, so we accommodate by not using these.
+     *
+     * @see https://caniuse.com/mdn-css_properties_clear_flow_relative_values
+     * @see https://github.com/csstools/postcss-plugins/issues/632
+     */
   }
+    [dir="rtl"] .toolbar:not(.toolbar-oriented) .toolbar-bar .workspaces-toolbar-tab {
+      float: left;
+    }
 }
 
 /* Link within the toolbar tab. */

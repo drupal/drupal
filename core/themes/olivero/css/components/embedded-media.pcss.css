@@ -35,12 +35,24 @@ figcaption {
   margin-inline-end: 0;
 
   @media (--grid-md) {
-    float: inline-end;
+    float: right; /* LTR */
     max-width: 50%;
     margin-block-start: var(--sp);
     margin-block-end: var(--sp);
     margin-inline-start: var(--sp);
     margin-inline-end: 0;
+
+    /**
+     * Chromium and Webkit do not yet support flow relative logical properties,
+     * such as float: inline-end. However, PostCSS Logical does not compile this
+     * value, so we accommodate by not using these.
+     *
+     * @see https://caniuse.com/mdn-css_properties_clear_flow_relative_values
+     * @see https://github.com/csstools/postcss-plugins/issues/632
+     */
+    &:dir(rtl) {
+      float: left;
+    }
   }
 }
 
@@ -74,12 +86,24 @@ figcaption {
   margin-inline-end: 0;
 
   @media (--grid-md) {
-    float: inline-start;
+    float: left; /* LTR */
     max-width: 50%;
     margin-block-start: var(--sp);
     margin-block-end: var(--sp);
     margin-inline-start: 0;
     margin-inline-end: var(--sp2); /* Extra right margins in case of aligning next to lists. */
+
+    /**
+     * Chromium and Webkit do not yet support flow relative logical properties,
+     * such as float: inline-end. However, PostCSS Logical does not compile this
+     * value, so we accommodate by not using these.
+     *
+     * @see https://caniuse.com/mdn-css_properties_clear_flow_relative_values
+     * @see https://github.com/csstools/postcss-plugins/issues/632
+     */
+    &:dir(rtl) {
+      float: right;
+    }
   }
 }
 
