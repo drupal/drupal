@@ -84,8 +84,20 @@
   }
 
       .rotate .contextual .trigger {
-        float: inline-start;
+        float: left; /* LTR */
+
+        /**
+         * Chromium and Webkit do not yet support flow relative logical properties,
+         * such as float: inline-end. However, PostCSS Logical does not compile this
+         * value, so we accommodate by not using these.
+         *
+         * @see https://caniuse.com/mdn-css_properties_clear_flow_relative_values
+         * @see https://github.com/csstools/postcss-plugins/issues/632
+         */
       }
+        [dir="rtl"] .rotate .contextual .trigger {
+          float: right;
+        }
     }
 
 @media (min-width: 75rem) {
