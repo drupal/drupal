@@ -40,9 +40,11 @@
 }
 .js .form-autocomplete.is-autocompleting {
   background-image: url(../../images/icons/003ecc/spinner.svg);
+  background-position: center right -10px;
 }
 .js[dir="rtl"] .form-autocomplete.is-autocompleting {
   background-image: url(../../images/icons/003ecc/spinner-rtl.svg);
+  background-position: center left 10px;
 }
 /* IE11 does not animate inline SVG. */
 /* stylelint-disable-next-line selector-type-no-unknown */
