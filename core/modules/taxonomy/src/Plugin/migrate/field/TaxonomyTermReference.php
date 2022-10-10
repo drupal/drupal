@@ -29,6 +29,7 @@ class TaxonomyTermReference extends FieldPluginBase {
       'taxonomy_term_reference_plain' => 'entity_reference_label',
       'taxonomy_term_reference_rss_category' => 'entity_reference_label',
       'i18n_taxonomy_term_reference_link' => 'entity_reference_label',
+      'i18n_taxonomy_term_reference_plain' => 'entity_reference_label',
       'entityreference_entity_view' => 'entity_reference_entity_view',
     ];
   }
