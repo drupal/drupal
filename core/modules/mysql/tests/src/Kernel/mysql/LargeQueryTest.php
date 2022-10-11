@@ -1,27 +1,23 @@
 <?php
 
-namespace Drupal\KernelTests\Core\Database;
+namespace Drupal\Tests\mysql\Kernel\mysql;
 
 use Drupal\Component\Utility\Environment;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseException;
+use Drupal\KernelTests\Core\Database\DriverSpecificDatabaseTestBase;
 
 /**
  * Tests handling of large queries.
  *
  * @group Database
  */
-class LargeQueryTest extends DatabaseTestBase {
+class LargeQueryTest extends DriverSpecificDatabaseTestBase {
 
   /**
    * Tests truncation of messages when max_allowed_packet exception occurs.
    */
-  public function testMaxAllowedPacketQueryTruncating() {
-    // Only run this test for the 'mysql' driver.
-    $driver = $this->connection->driver();
-    if ($driver !== 'mysql') {
-      $this->markTestSkipped("MySql tests can not run for driver '$driver'.");
-    }
+  public function testMaxAllowedPacketQueryTruncating(): void {
     // The max_allowed_packet value is configured per database instance.
     // Retrieve the max_allowed_packet value from the current instance and
     // check if PHP is configured with sufficient allowed memory to be able

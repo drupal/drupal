@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\KernelTests\Core\Database;
+namespace Drupal\Tests\sqlite\Kernel\sqlite;
 
 use Drupal\Core\Database\Driver\sqlite\Connection;
 use Drupal\Core\Database\Driver\sqlite\Install\Tasks;
@@ -10,6 +10,7 @@ use Drupal\Core\Database\Driver\sqlite\Select;
 use Drupal\Core\Database\Driver\sqlite\Statement;
 use Drupal\Core\Database\Driver\sqlite\Truncate;
 use Drupal\Core\Database\Driver\sqlite\Upsert;
+use Drupal\KernelTests\Core\Database\DriverSpecificDatabaseTestBase;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 
 /**
@@ -18,17 +19,7 @@ use Drupal\Tests\Core\Database\Stub\StubPDO;
  * @group legacy
  * @group Database
  */
-class SqliteDriverLegacyTest extends DatabaseTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-    if ($this->connection->driver() !== 'sqlite') {
-      $this->markTestSkipped('Only test the deprecation message for the SQLite database driver classes in Core.');
-    }
-  }
+class SqliteDriverLegacyTest extends DriverSpecificDatabaseTestBase {
 
   /**
    * @covers Drupal\Core\Database\Driver\sqlite\Install\Tasks

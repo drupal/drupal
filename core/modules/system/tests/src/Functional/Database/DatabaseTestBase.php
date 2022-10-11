@@ -2,13 +2,21 @@
 
 namespace Drupal\Tests\system\Functional\Database;
 
-use Drupal\KernelTests\Core\Database\DatabaseTestBase as DatabaseKernelTestBase;
+use Drupal\Core\Database\Database;
+use Drupal\KernelTests\Core\Database\DatabaseTestSchemaDataTrait;
 use Drupal\Tests\BrowserTestBase;
 
 /**
  * Base class for databases database tests.
  */
 abstract class DatabaseTestBase extends BrowserTestBase {
+
+  use DatabaseTestSchemaDataTrait;
+
+  /**
+   * The database connection for testing.
+   */
+  protected $connection;
 
   /**
    * {@inheritdoc}
@@ -20,8 +28,8 @@ abstract class DatabaseTestBase extends BrowserTestBase {
    */
   protected function setUp() {
     parent::setUp();
-
-    DatabaseKernelTestBase::addSampleData();
+    $this->connection = Database::getConnection();
+    $this->addSampleData();
   }
 
 }
