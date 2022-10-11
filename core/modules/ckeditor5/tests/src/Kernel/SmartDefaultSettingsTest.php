@@ -90,6 +90,38 @@ class SmartDefaultSettingsTest extends KernelTestBase {
 
     $this->installSchema('dblog', ['watchdog']);
 
+    FilterFormat::create([
+      'format' => 'minimal_ckeditor_wrong_allowed_html',
+      'name' => 'Most basic HTML, but with allowed_html misconfigured',
+      'filters' => [
+        'filter_html' => [
+          'status' => 1,
+          'settings' => [
+            'allowed_html' => '<p> <br> <a>',
+          ],
+        ],
+      ],
+    ])->setSyncing(TRUE)->save();
+    Editor::create([
+      'format' => 'minimal_ckeditor_wrong_allowed_html',
+      'editor' => 'ckeditor',
+      'settings' => [
+        'toolbar' => [
+          'rows' => [
+            0 => [
+              [
+                'name' => 'Basic Formatting',
+                'items' => [
+                  'DrupalLink',
+                ],
+              ],
+            ],
+          ],
+        ],
+        'plugins' => [],
+      ],
+    ])->setSyncing(TRUE)->save();
+
     FilterFormat::create(
       Yaml::parseFile('core/modules/ckeditor5/tests/fixtures/ckeditor4_config/filter.format.full_html.yml')
     )
@@ -1378,6 +1410,27 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_fundamental_compatibility_violations' => [],
       'expected_db_logs' => [],
       'expected_messages' => [],
+    ];
+
+    yield "minimal_ckeditor_wrong_allowed_html does not have sufficient allowed HTML => necessary allowed HTML added (1 upgrade message)" => [
+      'format_id' => 'minimal_ckeditor_wrong_allowed_html',
+      'filters_to_drop' => [],
+      'expected_ckeditor5_settings' => [
+        'toolbar' => [
+          'items' => [
+            'link',
+          ],
+        ],
+        'plugins' => [],
+      ],
+      'expected_superset' => '<a href>',
+      'expected_fundamental_compatibility_violations' => [],
+      'expected_db_logs' => [],
+      'expected_messages' => [
+        'warning' => [
+          0 => 'Updating to CKEditor 5 added support for some previously unsupported tags/attributes. A plugin introduced support for the following:   This attribute: <em class="placeholder"> href (for &lt;a&gt;)</em>; Additional details are available in your logs.',
+        ],
+      ],
     ];
   }
 
