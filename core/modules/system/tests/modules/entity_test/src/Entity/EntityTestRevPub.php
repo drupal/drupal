@@ -20,7 +20,6 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *       "delete" = "Drupal\entity_test\EntityTestDeleteForm",
  *       "delete-multiple-confirm" = "Drupal\Core\Entity\Form\DeleteMultipleForm"
  *     },
- *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder",
  *   },
  *   base_table = "entity_test_revpub",
  *   revision_table = "entity_test_revpub_revision",

@@ -19,7 +19,6 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *       "delete" = "Drupal\entity_test\EntityTestDeleteForm",
  *       "delete-multiple-confirm" = "Drupal\Core\Entity\Form\DeleteMultipleForm"
  *     },
- *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder",
  *     "views_data" = "Drupal\views\EntityViewsData",
  *     "route_provider" = {
  *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
