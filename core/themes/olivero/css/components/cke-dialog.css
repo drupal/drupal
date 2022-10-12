@@ -16,5 +16,5 @@ select.cke_dialog_ui_input_select {
 }
 
 select.cke_dialog_ui_input_select::-ms-expand {
-    display: block;
-  }
+  display: block;
+}

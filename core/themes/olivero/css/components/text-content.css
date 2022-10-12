@@ -39,121 +39,135 @@
   */
 }
 
-.text-content a:where(:not(.button)), .cke_editable a:where(:not(.button)) {
-    color: var(--color-text-primary-medium);
-    -webkit-text-decoration-color: currentColor;
-    text-decoration-color: currentColor;
-    text-decoration-thickness: 2px;
-    overflow-wrap: break-word;
-  }
+.text-content a:where(:not(.button)),
+.cke_editable a:where(:not(.button)) {
+  color: var(--color-text-primary-medium);
+  -webkit-text-decoration-color: currentColor;
+  text-decoration-color: currentColor;
+  text-decoration-thickness: 2px;
+  overflow-wrap: break-word;
+}
 
 @supports (box-shadow: none) {
 
-.text-content a:where(:not(.button)), .cke_editable a:where(:not(.button)) {
-      transition: box-shadow 0.3s cubic-bezier(0.55, 0.085, 0, 0.99);
-      text-decoration: none;
-      box-shadow: inset 0 -2px 0 0 var(--color--primary-50);
+  .text-content a:where(:not(.button)),
+  .cke_editable a:where(:not(.button)) {
+    transition: box-shadow 0.3s cubic-bezier(0.55, 0.085, 0, 0.99);
+    text-decoration: none;
+    box-shadow: inset 0 -2px 0 0 var(--color--primary-50);
   }
 
-      .text-content a:where(:not(.button)):hover, .cke_editable a:where(:not(.button)):hover {
-        text-decoration: underline;
-        color: var(--color--black);
-        box-shadow: inset 0 -2em 0 0 var(--color--primary-80);
-        -webkit-text-decoration-color: var(--color--primary-80);
-        text-decoration-color: var(--color--primary-80);
-      }
-    }
-
-.text-content p, .cke_editable p {
-    margin-block-start: var(--sp);
-    margin-block-end: var(--sp);
+  .text-content a:where(:not(.button)):hover,
+  .cke_editable a:where(:not(.button)):hover {
+    text-decoration: underline;
+    color: var(--color--black);
+    box-shadow: inset 0 -2em 0 0 var(--color--primary-80);
+    -webkit-text-decoration-color: var(--color--primary-80);
+    text-decoration-color: var(--color--primary-80);
   }
+}
 
-.text-content p:first-child, .cke_editable p:first-child {
-      margin-block-start: 0;
-    }
+.text-content p,
+.cke_editable p {
+  margin-block-start: var(--sp);
+  margin-block-end: var(--sp);
+}
 
-.text-content p:last-child, .cke_editable p:last-child {
-      margin-block-end: 0;
-    }
+.text-content p:first-child,
+.cke_editable p:first-child {
+  margin-block-start: 0;
+}
+
+.text-content p:last-child,
+.cke_editable p:last-child {
+  margin-block-end: 0;
+}
 
 @media (min-width: 43.75rem) {
 
-.text-content p, .cke_editable p {
-      margin-block-start: var(--sp2);
-      margin-block-end: var(--sp2);
+  .text-content p,
+  .cke_editable p {
+    margin-block-start: var(--sp2);
+    margin-block-end: var(--sp2);
   }
-    }
+}
 
-.text-content code, .cke_editable code {
-    background-color: var(--color--gray-100);
-  }
+.text-content code,
+.cke_editable code {
+  background-color: var(--color--gray-100);
+}
 
-.text-content pre code, .cke_editable pre code {
-    display: block;
-    overflow: auto;
-    padding-block: var(--sp);
-    padding-inline-start: var(--sp);
-    padding-inline-end: var(--sp);
-    color: var(--color-text-neutral-soft);
-  }
+.text-content pre code,
+.cke_editable pre code {
+  display: block;
+  overflow: auto;
+  padding-block: var(--sp);
+  padding-inline-start: var(--sp);
+  padding-inline-end: var(--sp);
+  color: var(--color-text-neutral-soft);
+}
 
-.text-content blockquote, .cke_editable blockquote {
-    position: relative;
-    margin-block: var(--sp2);
-    margin-inline-start: 0;
-    margin-inline-end: 0;
-    padding-inline-start: var(--sp2);
-    letter-spacing: -0.01em;
-    font-family: var(--font-serif);
-    font-size: 1.3125rem;
-    line-height: var(--sp2);
-  }
+.text-content blockquote,
+.cke_editable blockquote {
+  position: relative;
+  margin-block: var(--sp2);
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  padding-inline-start: var(--sp2);
+  letter-spacing: -0.01em;
+  font-family: var(--font-serif);
+  font-size: 1.3125rem;
+  line-height: var(--sp2);
+}
 
-.text-content blockquote:before, .cke_editable blockquote:before {
-      position: absolute;
-      inset-block-start: 0;
-      inset-inline-start: 0;
-      content: "\201C";
-      color: var(--color--primary-60);
-      font-size: 3.375rem;
-    }
+.text-content blockquote:before,
+.cke_editable blockquote:before {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  content: "\201C";
+  color: var(--color--primary-60);
+  font-size: 3.375rem;
+}
 
-.text-content blockquote:after, .cke_editable blockquote:after {
-      position: absolute;
-      inset-block-end: 0;
-      inset-inline-start: 0;
-      width: var(--sp0-5);
-      height: calc(100% - 1.875rem);
-      margin-inline-start: 0.25rem;
-      content: "";
-      background: var(--color--gray-100);
-    }
+.text-content blockquote:after,
+.cke_editable blockquote:after {
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline-start: 0;
+  width: var(--sp0-5);
+  height: calc(100% - 1.875rem);
+  margin-inline-start: 0.25rem;
+  content: "";
+  background: var(--color--gray-100);
+}
 
 @media (min-width: 43.75rem) {
 
-.text-content blockquote, .cke_editable blockquote {
-      font-size: 2rem;
-      line-height: var(--sp3);
+  .text-content blockquote,
+  .cke_editable blockquote {
+    font-size: 2rem;
+    line-height: var(--sp3);
   }
-    }
+}
 
 @media (min-width: 62.5rem) {
 
-.text-content blockquote, .cke_editable blockquote {
-      font-size: 2.5rem;
-      line-height: calc(3.5 * var(--sp));
+  .text-content blockquote,
+  .cke_editable blockquote {
+    font-size: 2.5rem;
+    line-height: calc(3.5 * var(--sp));
   }
-    }
+}
 
 @media (min-width: 43.75rem) {
 
-.text-content,
-.cke_editable {
+  .text-content,
+  .cke_editable {
     font-size: 1.125rem;
     line-height: var(--sp2);
-}
   }
+}
 
 /**
  * Special colors for footer that has a dark background.
@@ -164,20 +178,20 @@
 }
 
 .site-footer .text-content * {
-    color: inherit;
-  }
+  color: inherit;
+}
 
 .site-footer .text-content a {
-    text-decoration: underline;
-    color: var(--color--white);
-    box-shadow: none;
-  }
+  text-decoration: underline;
+  color: var(--color--white);
+  box-shadow: none;
+}
 
 .site-footer .text-content a:hover {
-      text-decoration: none;
-      color: var(--color--white);
-      box-shadow: none;
-    }
+  text-decoration: none;
+  color: var(--color--white);
+  box-shadow: none;
+}
 
 /**
  * Decrease font-size for blockquote placed in sidebar region.
@@ -185,8 +199,8 @@
 
 @media (min-width: 62.5rem) {
 
-.region--sidebar .text-content blockquote {
+  .region--sidebar .text-content blockquote {
     font-size: 1.5rem;
     line-height: var(--sp2);
-}
   }
+}

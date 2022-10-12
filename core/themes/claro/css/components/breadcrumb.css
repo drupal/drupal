@@ -38,12 +38,12 @@
 }
 
 [dir="rtl"] :is(.breadcrumb__item + .breadcrumb__item::before) {
-    transform: scaleX(-1);
+  transform: scaleX(-1);
 }
 
 @media (forced-colors: active) {
 
-.breadcrumb__item + .breadcrumb__item::before {
+  .breadcrumb__item + .breadcrumb__item::before {
     width: 0.3125rem; /* Width and height of the SVG. */
     height: 0.5rem;
     content: "";
@@ -56,8 +56,8 @@
     mask-repeat: no-repeat;
     -webkit-mask-position: center;
     mask-position: center;
-}
   }
+}
 
 .breadcrumb__link:hover,
 .breadcrumb__link:focus {

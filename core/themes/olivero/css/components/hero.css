@@ -29,17 +29,17 @@
 
 @media (min-width: 43.75rem) {
 
-.hero__content { /* 700px */
+  .hero__content { /* 700px */
     grid-column: 3 / 13;
-}
   }
+}
 
 @media (min-width: 62.5rem) {
 
-.hero__content {
+  .hero__content {
     grid-column: 3 / 11;
-}
   }
+}
 
 .hero__img {
   grid-column: 1 / 7;
@@ -48,29 +48,29 @@
 }
 
 .hero__img img {
-    width: 100%;
-  }
+  width: 100%;
+}
 
 @media (min-width: 31.25rem) {
 
-.hero__img {
+  .hero__img {
     margin-block-start: var(--sp3);
     margin-block-end: var(--sp3);
-}
   }
+}
 
 @media (min-width: 43.75rem) {
 
-.hero__img {
+  .hero__img {
     grid-column: 1 / 15;
     margin-block-start: var(--sp4);
     margin-block-end: var(--sp4);
-}
   }
+}
 
 @media (min-width: 62.5rem) {
 
-.hero__img {
+  .hero__img {
     grid-column: 2 / 14;
-}
   }
+}

@@ -22,10 +22,10 @@
 }
 
 .dropbutton-wrapper.open {
-    position: relative;
-    z-index: 100; /* Ensure this appears above all other dropbuttons. */
-    filter: drop-shadow(0 2px 2px var(--dropbutton--active-bg-color));
-  }
+  position: relative;
+  z-index: 100; /* Ensure this appears above all other dropbuttons. */
+  filter: drop-shadow(0 2px 2px var(--dropbutton--active-bg-color));
+}
 
 .dropbutton-widget {
   position: relative;
@@ -36,11 +36,11 @@
 }
 
 .dropbutton-single .dropbutton-widget {
-    padding-inline-end: 0;
+  padding-inline-end: 0;
 }
 
 .dropbutton-wrapper.open .dropbutton-widget {
-    border-radius: var(--dropbutton--border-radius) var(--dropbutton--border-radius) 0 0;
+  border-radius: var(--dropbutton--border-radius) var(--dropbutton--border-radius) 0 0;
 }
 
 .dropbutton {
@@ -71,75 +71,75 @@
 }
 
 .dropbutton-toggle button:focus {
-    outline: solid 2px var(--dropbutton--outline-color);
-    outline-offset: -2px;
-  }
+  outline: solid 2px var(--dropbutton--outline-color);
+  outline-offset: -2px;
+}
 
 .dropbutton-toggle button:before {
-    display: block;
-    width: var(--sp0-5);
-    height: var(--sp0-5);
-    content: "";
-    transform: translateY(-25%) rotate(45deg);
-    border-right: solid 2px var(--dropbutton--outline-color);
-    border-bottom: solid 2px var(--dropbutton--outline-color);
-  }
+  display: block;
+  width: var(--sp0-5);
+  height: var(--sp0-5);
+  content: "";
+  transform: translateY(-25%) rotate(45deg);
+  border-right: solid 2px var(--dropbutton--outline-color);
+  border-bottom: solid 2px var(--dropbutton--outline-color);
+}
 
 .dropbutton-wrapper.open :is(.dropbutton-toggle button:before) {
-      transform: translateY(25%) rotate(225deg);
-  }
+  transform: translateY(25%) rotate(225deg);
+}
 
 [dir="rtl"] .dropbutton-toggle button {
-    border-radius: var(--dropbutton--border-radius) 0 0 var(--dropbutton--border-radius);
-  }
+  border-radius: var(--dropbutton--border-radius) 0 0 var(--dropbutton--border-radius);
+}
 
 /* This is the first <li> element in the list of actions. */
 
 .dropbutton-action:first-child {
-    margin-inline-end: 2px;
-    border: solid 1px transparent;
-    border-radius: var(--dropbutton--border-radius) 0 0 var(--dropbutton--border-radius); /* LTR */
-    background: var(--dropbutton--active-bg-color);
-  }
+  margin-inline-end: 2px;
+  border: solid 1px transparent;
+  border-radius: var(--dropbutton--border-radius) 0 0 var(--dropbutton--border-radius); /* LTR */
+  background: var(--dropbutton--active-bg-color);
+}
 
 [dir="rtl"] .dropbutton-action:first-child {
-      border: solid 1px transparent;
-      border-radius: 0 var(--dropbutton--border-radius) var(--dropbutton--border-radius) 0;
-    }
+  border: solid 1px transparent;
+  border-radius: 0 var(--dropbutton--border-radius) var(--dropbutton--border-radius) 0;
+}
 
 .dropbutton-action a {
-    display: flex;
-    align-items: center;
-    margin-bottom: -2px; /* Account for borders. */
-    padding: 0 0.5625rem;
-    text-decoration: none;
-    color: var(--dropbutton--text-color);
-    font-weight: 600;
-  }
+  display: flex;
+  align-items: center;
+  margin-bottom: -2px; /* Account for borders. */
+  padding: 0 0.5625rem;
+  text-decoration: none;
+  color: var(--dropbutton--text-color);
+  font-weight: 600;
+}
 
 .dropbutton-action a:hover {
-      color: inherit;
-    }
+  color: inherit;
+}
 
 .dropbutton-action a:focus {
-      outline: solid 2px var(--dropbutton--outline-color);
-      outline-offset: -1px; /* Overlap parent container by 1px. */
-    }
+  outline: solid 2px var(--dropbutton--outline-color);
+  outline-offset: -1px; /* Overlap parent container by 1px. */
+}
 
 /* Special rules if there is only one action. */
 
 .dropbutton-single .dropbutton-action:first-child {
-      border-right: solid 1px transparent; /* LTR */
-      border-radius: var(--dropbutton--border-radius);
-    }
+  border-right: solid 1px transparent; /* LTR */
+  border-radius: var(--dropbutton--border-radius);
+}
 
 [dir="rtl"] .dropbutton-single .dropbutton-action:first-child {
-        border: solid 1px transparent;
-      }
+  border: solid 1px transparent;
+}
 
 .dropbutton-single .dropbutton-action a {
-      justify-content: center;
-    }
+  justify-content: center;
+}
 
 /* These are the <li> elements other than the first. */
 
@@ -152,13 +152,13 @@
 }
 
 .secondary-action:last-child {
-    border-bottom: 1px solid var(--dropbutton--active-bg-color);
-  }
+  border-bottom: 1px solid var(--dropbutton--active-bg-color);
+}
 
 .secondary-action a:hover {
-    color: var(--dropbutton--text-hover-color);
-  }
+  color: var(--dropbutton--text-hover-color);
+}
 
 .dropbutton-wrapper.open .secondary-action {
-    visibility: visible;
+  visibility: visible;
 }

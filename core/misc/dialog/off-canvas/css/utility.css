@@ -13,32 +13,32 @@
  */
 
 #drupal-off-canvas-wrapper .hidden {
-    display: none;
-  }
+  display: none;
+}
 
 #drupal-off-canvas-wrapper .visually-hidden {
-    position: absolute !important;
-    width: 1px !important;
-    height: 1px !important;
-  }
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+}
 
 #drupal-off-canvas-wrapper .visually-hidden {
-    overflow: hidden;
-    clip: rect(1px, 1px, 1px, 1px);
-    word-wrap: normal;
-  }
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  word-wrap: normal;
+}
 
 #drupal-off-canvas-wrapper .visually-hidden.focusable:is(:active, :focus) {
-      position: static !important;
-      width: auto !important;
-      height: auto !important;
-    }
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+}
 
 #drupal-off-canvas-wrapper .visually-hidden.focusable:is(:active, :focus) {
-      overflow: visible;
-      clip: auto;
-    }
+  overflow: visible;
+  clip: auto;
+}
 
 #drupal-off-canvas-wrapper .invisible {
-    visibility: hidden;
-  }
+  visibility: hidden;
+}

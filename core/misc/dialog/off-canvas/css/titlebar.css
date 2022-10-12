@@ -20,91 +20,91 @@
 }
 
 #drupal-off-canvas-wrapper .ui-dialog-titlebar {
-    position: relative;
-    margin: 0 calc(-1 * var(--off-canvas-padding));
-    padding: var(--off-canvas-title-padding) 3.125rem;
-    color: var(--off-canvas-title-text-color);
-    background-color: var(--off-canvas-title-background-color);
-    font-family: var(--off-canvas-title-font-family);
-    font-size: var(--off-canvas-title-font-size);
-    font-weight: bold;
+  position: relative;
+  margin: 0 calc(-1 * var(--off-canvas-padding));
+  padding: var(--off-canvas-title-padding) 3.125rem;
+  color: var(--off-canvas-title-text-color);
+  background-color: var(--off-canvas-title-background-color);
+  font-family: var(--off-canvas-title-font-family);
+  font-size: var(--off-canvas-title-font-size);
+  font-weight: bold;
 
-    /* The pencil icon. */
-  }
+  /* The pencil icon. */
+}
 
 #drupal-off-canvas-wrapper .ui-dialog-titlebar:before {
-      position: absolute;
-      top: 0;
-      inset-inline-start: 1em;
-      display: block;
-      width: 1.25rem;
-      height: 100%;
-      content: "";
-      background-color: currentColor;
-      -webkit-mask-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3cg%3e%3cpath fill='%23ffffff' d='M14.545 3.042l-1.586-1.585c-.389-.389-1.025-.389-1.414 0l-1.293 1.293 3 3 1.293-1.293c.389-.389.389-1.026 0-1.415z'/%3e%3crect fill='%23ffffff' x='5.129' y='3.8' transform='matrix(-.707 -.707 .707 -.707 6.189 20.064)' width='4.243' height='9.899'/%3e%3cpath fill='%23ffffff' d='M.908 14.775c-.087.262.055.397.316.312l2.001-.667-1.65-1.646-.667 2.001z'/%3e%3c/g%3e%3c/svg%3e");
-      mask-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3cg%3e%3cpath fill='%23ffffff' d='M14.545 3.042l-1.586-1.585c-.389-.389-1.025-.389-1.414 0l-1.293 1.293 3 3 1.293-1.293c.389-.389.389-1.026 0-1.415z'/%3e%3crect fill='%23ffffff' x='5.129' y='3.8' transform='matrix(-.707 -.707 .707 -.707 6.189 20.064)' width='4.243' height='9.899'/%3e%3cpath fill='%23ffffff' d='M.908 14.775c-.087.262.055.397.316.312l2.001-.667-1.65-1.646-.667 2.001z'/%3e%3c/g%3e%3c/svg%3e");
-      -webkit-mask-repeat: no-repeat;
-      mask-repeat: no-repeat;
-      -webkit-mask-size: contain;
-      mask-size: contain;
-      -webkit-mask-position: center;
-      mask-position: center;
-    }
+  position: absolute;
+  top: 0;
+  inset-inline-start: 1em;
+  display: block;
+  width: 1.25rem;
+  height: 100%;
+  content: "";
+  background-color: currentColor;
+  -webkit-mask-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3cg%3e%3cpath fill='%23ffffff' d='M14.545 3.042l-1.586-1.585c-.389-.389-1.025-.389-1.414 0l-1.293 1.293 3 3 1.293-1.293c.389-.389.389-1.026 0-1.415z'/%3e%3crect fill='%23ffffff' x='5.129' y='3.8' transform='matrix(-.707 -.707 .707 -.707 6.189 20.064)' width='4.243' height='9.899'/%3e%3cpath fill='%23ffffff' d='M.908 14.775c-.087.262.055.397.316.312l2.001-.667-1.65-1.646-.667 2.001z'/%3e%3c/g%3e%3c/svg%3e");
+  mask-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3cg%3e%3cpath fill='%23ffffff' d='M14.545 3.042l-1.586-1.585c-.389-.389-1.025-.389-1.414 0l-1.293 1.293 3 3 1.293-1.293c.389-.389.389-1.026 0-1.415z'/%3e%3crect fill='%23ffffff' x='5.129' y='3.8' transform='matrix(-.707 -.707 .707 -.707 6.189 20.064)' width='4.243' height='9.899'/%3e%3cpath fill='%23ffffff' d='M.908 14.775c-.087.262.055.397.316.312l2.001-.667-1.65-1.646-.667 2.001z'/%3e%3c/g%3e%3c/svg%3e");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
 
 @media (forced-colors: active) {
 
-#drupal-off-canvas-wrapper .ui-dialog-titlebar:before {
-        background-color: canvastext;
-    }
-      }
+  #drupal-off-canvas-wrapper .ui-dialog-titlebar:before {
+    background-color: canvastext;
+  }
+}
 
 /* Close button. */
 
 #drupal-off-canvas-wrapper .ui-dialog-titlebar-close {
-    position: absolute;
-    top: 50%;
-    inset-inline: auto 0.625rem;
-    overflow: hidden;
-    width: 1.875rem;
-    height: 1.875rem;
-    cursor: pointer;
-    transform: translateY(-50%);
-    text-indent: -624.9375rem;
-    color: inherit;
-    border: 1px solid transparent;
-    background-color: transparent;
-    -webkit-appearance: none;
-    appearance: none;
-  }
+  position: absolute;
+  top: 50%;
+  inset-inline: auto 0.625rem;
+  overflow: hidden;
+  width: 1.875rem;
+  height: 1.875rem;
+  cursor: pointer;
+  transform: translateY(-50%);
+  text-indent: -624.9375rem;
+  color: inherit;
+  border: 1px solid transparent;
+  background-color: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+}
 
 #drupal-off-canvas-wrapper .ui-dialog-titlebar-close:focus {
-      outline: solid 2px currentColor;
-      outline-offset: 2px;
-    }
+  outline: solid 2px currentColor;
+  outline-offset: 2px;
+}
 
 /* The plus icon. */
 
 #drupal-off-canvas-wrapper .ui-dialog-titlebar-close:before,
-    #drupal-off-canvas-wrapper .ui-dialog-titlebar-close:after {
-      position: absolute;
-      top: calc(50% - 1px);
-      left: 50%;
-      width: 50%;
-      height: 0;
-      content: "";
-      border-top: solid 2px currentColor;
-    }
+#drupal-off-canvas-wrapper .ui-dialog-titlebar-close:after {
+  position: absolute;
+  top: calc(50% - 1px);
+  left: 50%;
+  width: 50%;
+  height: 0;
+  content: "";
+  border-top: solid 2px currentColor;
+}
 
 #drupal-off-canvas-wrapper .ui-dialog-titlebar-close:before {
-      transform: translate(-50%, 50%) rotate(-45deg);
-    }
+  transform: translate(-50%, 50%) rotate(-45deg);
+}
 
 #drupal-off-canvas-wrapper .ui-dialog-titlebar-close:after {
-      transform: translate(-50%, 50%) rotate(45deg);
-    }
+  transform: translate(-50%, 50%) rotate(45deg);
+}
 
 /* Hide the default jQuery UI dialog close button. */
 
 #drupal-off-canvas-wrapper .ui-dialog-titlebar-close .ui-icon {
-      display: none;
-    }
+  display: none;
+}

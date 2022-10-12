@@ -60,8 +60,8 @@
 }
 
 td .claro-details {
-    width: min-content;
-    min-width: 100%;
+  width: min-content;
+  min-width: 100%;
 }
 
 .claro-details--accordion-item,

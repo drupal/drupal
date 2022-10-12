@@ -40,12 +40,12 @@ html.js .form-autocomplete {
 }
 
 html.js .form-autocomplete:disabled {
-    background-color: var(--color--gray-100);
-  }
+  background-color: var(--color--gray-100);
+}
 
 html.js .form-autocomplete.ui-autocomplete-loading {
-    background: var(--autocomplete-throbber-icon-url) no-repeat right var(--autocomplete-icon-right-offset) center;
-  }
+  background: var(--autocomplete-throbber-icon-url) no-repeat right var(--autocomplete-icon-right-offset) center;
+}
 
 html.js[dir="rtl"] .form-autocomplete {
   background-color: var(--color--white);
@@ -55,12 +55,12 @@ html.js[dir="rtl"] .form-autocomplete {
 }
 
 html.js[dir="rtl"] .form-autocomplete:disabled {
-    background-color: var(--color--gray-100);
-  }
+  background-color: var(--color--gray-100);
+}
 
 html.js[dir="rtl"] .form-autocomplete.ui-autocomplete-loading {
-    background: var(--autocomplete-throbber-icon-url) no-repeat left var(--autocomplete-icon-right-offset) center;
-  }
+  background: var(--autocomplete-throbber-icon-url) no-repeat left var(--autocomplete-icon-right-offset) center;
+}
 
 /* IE11 does not animate inline SVG. */
 

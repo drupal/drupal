@@ -33,8 +33,8 @@
 }
 
 .grid-full .grid-full .grid-full {
-    display: block;
-  }
+  display: block;
+}
 
 /*
   If the .grid-full is nested within the following, apply the appropriate number of columns.
@@ -44,19 +44,19 @@
 
 @media (min-width: 43.75rem) {
 
-.layout--content-narrow .grid-full,
-.layout--pass--content-narrow > * .grid-full {
+  .layout--content-narrow .grid-full,
+  .layout--pass--content-narrow > * .grid-full {
     grid-template-columns: repeat(calc(var(--grid-col-count) - 2), minmax(0, 1fr));
-}
   }
+}
 
 @media (min-width: 62.5rem) {
 
-.layout--content-narrow .grid-full,
-.layout--pass--content-narrow > * .grid-full {
+  .layout--content-narrow .grid-full,
+  .layout--pass--content-narrow > * .grid-full {
     grid-template-columns: repeat(calc(var(--grid-col-count) - 6), minmax(0, 1fr));
-}
   }
+}
 
 /*
   If the .grid-full is nested within the following, apply the appropriate number of columns.
@@ -66,16 +66,16 @@
 
 @media (min-width: 43.75rem) {
 
-.layout--content-medium .grid-full,
-.layout--pass--content-medium > * .grid-full {
+  .layout--content-medium .grid-full,
+  .layout--pass--content-medium > * .grid-full {
     grid-template-columns: repeat(calc(var(--grid-col-count) - 2), minmax(0, 1fr));
-}
   }
+}
 
 @media (min-width: 62.5rem) {
 
-.layout--content-medium .grid-full,
-.layout--pass--content-medium > * .grid-full {
+  .layout--content-medium .grid-full,
+  .layout--pass--content-medium > * .grid-full {
     grid-template-columns: repeat(calc(var(--grid-col-count) - 4), minmax(0, 1fr));
-}
   }
+}

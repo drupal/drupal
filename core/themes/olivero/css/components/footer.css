@@ -30,25 +30,25 @@
 }
 
 .site-footer .menu {
-    margin-inline-start: 0;
-    list-style: none;
-  }
+  margin-inline-start: 0;
+  list-style: none;
+}
 
 .site-footer .menu ul {
-      margin-inline-start: var(--sp);
-    }
+  margin-inline-start: var(--sp);
+}
 
 .site-footer .menu li {
-      margin-block-end: var(--sp0-5);
-    }
+  margin-block-end: var(--sp0-5);
+}
 
 .site-footer a {
-    color: inherit;
-  }
+  color: inherit;
+}
 
 .site-footer a:hover {
-      text-decoration: none;
-    }
+  text-decoration: none;
+}
 
 @media (min-width: 75rem) {
   body:not(.is-always-mobile-nav) .site-footer {

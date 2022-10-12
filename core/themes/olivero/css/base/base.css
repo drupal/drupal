@@ -46,10 +46,10 @@ body {
 }
 
 body.is-fixed {
-    position: fixed;
-    overflow: hidden;
-    width: 100%;
-  }
+  position: fixed;
+  overflow: hidden;
+  width: 100%;
+}
 
 [dir="rtl"] body {
   background-position: top right;
@@ -60,13 +60,13 @@ a {
 }
 
 a:hover {
-    color: var(--color--primary-50);
-  }
+  color: var(--color--primary-50);
+}
 
 a:focus {
-    outline: solid 2px currentColor;
-    outline-offset: 2px;
-  }
+  outline: solid 2px currentColor;
+  outline-offset: 2px;
+}
 
 button {
   font-family: inherit;
@@ -92,11 +92,11 @@ h1 {
 
 @media (min-width: 43.75rem) {
 
-h1 {
+  h1 {
     font-size: 3.75rem;
     line-height: var(--sp4);
-}
   }
+}
 
 h2 {
   letter-spacing: -0.01em;
@@ -106,11 +106,11 @@ h2 {
 
 @media (min-width: 43.75rem) {
 
-h2 {
+  h2 {
     font-size: 2.25rem;
     line-height: var(--sp3);
-}
   }
+}
 
 h3 {
   font-size: 1.25rem;
@@ -119,11 +119,11 @@ h3 {
 
 @media (min-width: 43.75rem) {
 
-h3 {
+  h3 {
     font-size: 1.5rem;
     line-height: var(--sp2);
-}
   }
+}
 
 h4 {
   font-size: 1.125rem;
@@ -154,15 +154,15 @@ h6 {
 
 @media (min-width: 43.75rem) {
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     margin-block: var(--sp2);
-}
   }
+}
 
 ul {
   margin-block-start: 0.25em;

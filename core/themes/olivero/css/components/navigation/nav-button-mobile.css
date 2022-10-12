@@ -44,21 +44,21 @@
 }
 
 .mobile-nav-button:focus {
-    outline: solid 2px var(--color--primary-40);
-  }
+  outline: solid 2px var(--color--primary-40);
+}
 
 .mobile-nav-button:active {
-    color: inherit; /* Override Safari's default UA styles. */
-  }
+  color: inherit; /* Override Safari's default UA styles. */
+}
 
 @media (min-width: 31.25rem) {
 
-.mobile-nav-button {
+  .mobile-nav-button {
     display: inline-flex;
     width: auto;
     padding-inline-start: var(--sp);
-}
   }
+}
 
 /* Text that says "menu". */
 
@@ -74,7 +74,7 @@
 
 @media (min-width: 31.25rem) {
 
-.mobile-nav-button__label {
+  .mobile-nav-button__label {
     position: static;
     overflow: visible;
     clip: auto;
@@ -84,8 +84,8 @@
     letter-spacing: 0.05em;
     font-size: 0.875rem;
     font-weight: 600;
-}
   }
+}
 
 .mobile-nav-button__icon {
   position: relative;
@@ -96,37 +96,37 @@
 }
 
 .mobile-nav-button__icon:before {
-    position: absolute;
-    inset-block-start: -0.6875rem;
-    inset-inline-start: 0;
-    width: 100%;
-    height: 0;
-    content: "";
-    transition: all 0.2s;
-    border-top: solid 3px var(--color--primary-50);
-  }
+  position: absolute;
+  inset-block-start: -0.6875rem;
+  inset-inline-start: 0;
+  width: 100%;
+  height: 0;
+  content: "";
+  transition: all 0.2s;
+  border-top: solid 3px var(--color--primary-50);
+}
 
 .mobile-nav-button__icon:after {
-    position: absolute;
-    inset-block: auto -0.5rem;
-    inset-inline-start: 0;
-    width: 100%;
-    height: 0;
-    content: "";
-    transition: all 0.2s;
-    border-top: solid 3px var(--color--primary-50);
-  }
+  position: absolute;
+  inset-block: auto -0.5rem;
+  inset-inline-start: 0;
+  width: 100%;
+  height: 0;
+  content: "";
+  transition: all 0.2s;
+  border-top: solid 3px var(--color--primary-50);
+}
 
 .mobile-nav-button[aria-expanded="true"] .mobile-nav-button__icon {
   border-top: 0;
 }
 
 .mobile-nav-button[aria-expanded="true"] .mobile-nav-button__icon:before {
-    inset-block-start: 0;
-    transform: rotate(-45deg);
-  }
+  inset-block-start: 0;
+  transform: rotate(-45deg);
+}
 
 .mobile-nav-button[aria-expanded="true"] .mobile-nav-button__icon:after {
-    inset-block-start: 0;
-    transform: rotate(45deg);
-  }
+  inset-block-start: 0;
+  transform: rotate(45deg);
+}

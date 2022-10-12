@@ -33,129 +33,129 @@
    */
 
 @media (max-width: 75rem) {
-    html:not(.js) .primary-nav__menu--level-1 {
-      column-width: var(--no-js-nav-column-width);
-      column-gap: var(--no-js-nav-column-gap);
-    }
-
-    html:not(.js) .primary-nav__menu-item {
-      page-break-inside: avoid;
-      break-inside: avoid;
-    }
-
-    html:not(.js) .site-header__inner__container {
-      flex-wrap: wrap;
-    }
-
-    html:not(.js) .mobile-buttons {
-      display: none;
-    }
-
-    html:not(.js) .header-nav {
-      border: solid 1px var(--color--gray-95) !important;
-    }
-
-    html:not(.js) .header-nav {
-      position: static;
-      visibility: visible;
-      flex-basis: 100%;
-      width: 100%;
-      max-width: none;
-      margin-block: var(--sp2) 0;
-      margin-inline-start: var(--sp2);
-      margin-inline-end: var(--sp2);
-      padding-block: var(--sp2) 0;
-      padding-inline-start: var(--sp2);
-      padding-inline-end: var(--sp2);
-      transform: none;
-      box-shadow: 0 0 36px var(--color--gray-90);
-    }
-
-    html:not(.js) .primary-nav__menu--level-2 {
-      border-inline-start: 0;
-    }
-
-    html:not(.js) .primary-nav__button-toggle {
-      display: none;
-    }
-      html:not(.js) .primary-nav__menu-link--button.primary-nav__menu-link--has-children:before,
-      html:not(.js) .primary-nav__menu-link--button.primary-nav__menu-link--has-children:after {
-        content: none;
-      }
+  html:not(.js) .primary-nav__menu--level-1 {
+    column-width: var(--no-js-nav-column-width);
+    column-gap: var(--no-js-nav-column-gap);
   }
 
+  html:not(.js) .primary-nav__menu-item {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  html:not(.js) .site-header__inner__container {
+    flex-wrap: wrap;
+  }
+
+  html:not(.js) .mobile-buttons {
+    display: none;
+  }
+
+  html:not(.js) .header-nav {
+    border: solid 1px var(--color--gray-95) !important;
+  }
+
+  html:not(.js) .header-nav {
+    position: static;
+    visibility: visible;
+    flex-basis: 100%;
+    width: 100%;
+    max-width: none;
+    margin-block: var(--sp2) 0;
+    margin-inline-start: var(--sp2);
+    margin-inline-end: var(--sp2);
+    padding-block: var(--sp2) 0;
+    padding-inline-start: var(--sp2);
+    padding-inline-end: var(--sp2);
+    transform: none;
+    box-shadow: 0 0 36px var(--color--gray-90);
+  }
+
+  html:not(.js) .primary-nav__menu--level-2 {
+    border-inline-start: 0;
+  }
+
+  html:not(.js) .primary-nav__button-toggle {
+    display: none;
+  }
+  html:not(.js) .primary-nav__menu-link--button.primary-nav__menu-link--has-children:before,
+  html:not(.js) .primary-nav__menu-link--button.primary-nav__menu-link--has-children:after {
+    content: none;
+  }
+}
+
 @media (min-width: 75rem) {
-    /**
+  /**
      * Styles for 'always on mobile navigation' when JS is disabled.
      */
-      html:not(.js) body.is-always-mobile-nav .primary-nav__menu--level-1 {
-        column-width: var(--no-js-nav-column-width);
-        column-gap: var(--no-js-nav-column-gap);
-      }
+  html:not(.js) body.is-always-mobile-nav .primary-nav__menu--level-1 {
+    column-width: var(--no-js-nav-column-width);
+    column-gap: var(--no-js-nav-column-gap);
+  }
 
-      html:not(.js) body.is-always-mobile-nav .primary-nav__menu-item {
-        page-break-inside: avoid;
-        break-inside: avoid;
-      }
+  html:not(.js) body.is-always-mobile-nav .primary-nav__menu-item {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
 
-      html:not(.js) body.is-always-mobile-nav .site-header__inner__container {
-        flex-wrap: wrap;
-      }
+  html:not(.js) body.is-always-mobile-nav .site-header__inner__container {
+    flex-wrap: wrap;
+  }
 
-      html:not(.js) body.is-always-mobile-nav .mobile-buttons {
-        display: none;
-      }
+  html:not(.js) body.is-always-mobile-nav .mobile-buttons {
+    display: none;
+  }
 
-      html:not(.js) body.is-always-mobile-nav .header-nav {
-        border: solid 1px var(--color--gray-95) !important;
-      }
+  html:not(.js) body.is-always-mobile-nav .header-nav {
+    border: solid 1px var(--color--gray-95) !important;
+  }
 
-      html:not(.js) body.is-always-mobile-nav .header-nav {
-        position: static;
-        visibility: visible;
-        flex-basis: 100%;
-        width: 100%;
-        max-width: none;
-        margin-block: var(--sp2) 0;
-        margin-inline-start: var(--sp2);
-        margin-inline-end: var(--sp2);
-        padding-block: var(--sp2) 0;
-        padding-inline-start: var(--sp2);
-        padding-inline-end: var(--sp2);
-        transform: none;
-        box-shadow: 0 0 36px var(--color--gray-90);
-      }
+  html:not(.js) body.is-always-mobile-nav .header-nav {
+    position: static;
+    visibility: visible;
+    flex-basis: 100%;
+    width: 100%;
+    max-width: none;
+    margin-block: var(--sp2) 0;
+    margin-inline-start: var(--sp2);
+    margin-inline-end: var(--sp2);
+    padding-block: var(--sp2) 0;
+    padding-inline-start: var(--sp2);
+    padding-inline-end: var(--sp2);
+    transform: none;
+    box-shadow: 0 0 36px var(--color--gray-90);
+  }
 
-      html:not(.js) body.is-always-mobile-nav .primary-nav__menu--level-2 {
-        border-inline-start: 0;
-      }
+  html:not(.js) body.is-always-mobile-nav .primary-nav__menu--level-2 {
+    border-inline-start: 0;
+  }
 
-      html:not(.js) body.is-always-mobile-nav .primary-nav__button-toggle {
-        display: none;
-      }
-        html:not(.js) body.is-always-mobile-nav .primary-nav__menu-link--button.primary-nav__menu-link--has-children:before,
-        html:not(.js) body.is-always-mobile-nav .primary-nav__menu-link--button.primary-nav__menu-link--has-children:after {
-          content: none;
-        }
+  html:not(.js) body.is-always-mobile-nav .primary-nav__button-toggle {
+    display: none;
+  }
+  html:not(.js) body.is-always-mobile-nav .primary-nav__menu-link--button.primary-nav__menu-link--has-children:before,
+  html:not(.js) body.is-always-mobile-nav .primary-nav__menu-link--button.primary-nav__menu-link--has-children:after {
+    content: none;
+  }
 
-    /**
+  /**
      * Styles for traditional dropdown primary navigation when JS is disabled.
      */
-        html:not(.js) body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1:hover .primary-nav__menu--level-2,
-        html:not(.js) body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1:hover .primary-nav__menu-🥕 {
-          visibility: visible;
-          transform: translate(-50%, 0);
-          opacity: 1;
-        }
+  html:not(.js) body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1:hover .primary-nav__menu--level-2,
+  html:not(.js) body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1:hover .primary-nav__menu-🥕 {
+    visibility: visible;
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
 
-      /*
+  /*
        * Cannot combine the focus-within pseudo selector with other selectors,
        * because it will break IE11 and earlier versions of MS Edge.
        */
-        html:not(.js) body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1:focus-within .primary-nav__menu--level-2,
-        html:not(.js) body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1:focus-within .primary-nav__menu-🥕 {
-          visibility: visible;
-          transform: translate(-50%, 0);
-          opacity: 1;
-        }
+  html:not(.js) body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1:focus-within .primary-nav__menu--level-2,
+  html:not(.js) body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1:focus-within .primary-nav__menu-🥕 {
+    visibility: visible;
+    transform: translate(-50%, 0);
+    opacity: 1;
   }
+}

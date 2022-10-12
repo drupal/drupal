@@ -46,14 +46,14 @@
 }
 
 .messages * {
-    color: inherit;
-  }
+  color: inherit;
+}
 
 /* Additional specificity to override contrib modules. */
 
 .messages.messages-list__item {
-    background-image: none;
-  }
+  background-image: none;
+}
 
 .messages__list {
   margin-block: 0;
@@ -83,8 +83,8 @@
 }
 
 .messages__header.no-icon {
-    margin-inline-end: 0;
-  }
+  margin-inline-end: 0;
+}
 
 .messages__content {
   overflow: auto; /* Ensure large code blocks can be scrolled to. */
@@ -114,34 +114,34 @@
 }
 
 .messages__close:before,
-  .messages__close:after {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    display: block;
-    width: 2.0625rem;
-    height: 0;
-    content: "";
-    border-top: solid 2px var(--color--gray-60);
-  }
+.messages__close:after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  width: 2.0625rem;
+  height: 0;
+  content: "";
+  border-top: solid 2px var(--color--gray-60);
+}
 
 .messages__close:before {
-    transform: translate(-50%, -50%) rotate(45deg);
-  }
+  transform: translate(-50%, -50%) rotate(45deg);
+}
 
 .messages__close:after {
-    transform: translate(-50%, -50%) rotate(-45deg);
-  }
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
 
 .messages__close:hover::before,
-    .messages__close:hover::after {
-      border-color: var(--color--white);
-    }
+.messages__close:hover::after {
+  border-color: var(--color--white);
+}
 
 .messages__close:focus {
-    outline: 2px solid var(--color--primary-60);
-    outline-offset: 2px;
-  }
+  outline: 2px solid var(--color--primary-60);
+  outline-offset: 2px;
+}
 
 .messages__icon svg {
   vertical-align: top;

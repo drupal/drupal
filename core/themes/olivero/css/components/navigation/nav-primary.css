@@ -33,20 +33,20 @@
 }
 
 .primary-nav__menu-item:last-child {
-    margin-block-end: 0;
-  }
+  margin-block-end: 0;
+}
 
 .primary-nav__menu-item.primary-nav__menu-item--has-children {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-  }
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
 
 .primary-nav__menu-item.primary-nav__menu-item--has-children .primary-nav__menu-link--link,
-    .primary-nav__menu-item.primary-nav__menu-item--has-children .primary-nav__menu-link--nolink {
-      /* Ensure that long text doesn't make the mobile expand button wrap. */
-      flex-basis: calc(100% - var(--sp3));
-    }
+.primary-nav__menu-item.primary-nav__menu-item--has-children .primary-nav__menu-link--nolink {
+  /* Ensure that long text doesn't make the mobile expand button wrap. */
+  flex-basis: calc(100% - var(--sp3));
+}
 
 .primary-nav__menu-link {
   flex-grow: 1;
@@ -58,13 +58,13 @@
 }
 
 .primary-nav__menu-link:hover {
-    color: inherit;
-  }
+  color: inherit;
+}
 
 .primary-nav__menu-link:focus {
-    outline: auto 2px var(--color--primary-50);
-    outline-offset: 2px;
-  }
+  outline: auto 2px var(--color--primary-50);
+  outline-offset: 2px;
+}
 
 .primary-nav__menu-link--nolink {
   padding-block: var(--sp0-5);
@@ -88,29 +88,29 @@
 }
 
 .primary-nav__menu-link--button.primary-nav__menu-link--has-children {
-    padding-inline-end: var(--sp3); /* Ensure text does not overlap icon. */
-  }
+  padding-inline-end: var(--sp3); /* Ensure text does not overlap icon. */
+}
 
 .primary-nav__menu-link--button.primary-nav__menu-link--has-children:before,
-    .primary-nav__menu-link--button.primary-nav__menu-link--has-children:after {
-      position: absolute;
-      inset-inline-end: 0.5625rem;
-      inset-block-start: calc(var(--sp0-5) + 1.0625rem); /* Visually align button with menu link text. */
-      width: 1.125rem;
-      height: 0;
-      content: "";
-      /* Intentionally not using CSS logical properties. */
-      border-top: solid 3px var(--color--primary-50);
-    }
+.primary-nav__menu-link--button.primary-nav__menu-link--has-children:after {
+  position: absolute;
+  inset-inline-end: 0.5625rem;
+  inset-block-start: calc(var(--sp0-5) + 1.0625rem); /* Visually align button with menu link text. */
+  width: 1.125rem;
+  height: 0;
+  content: "";
+  /* Intentionally not using CSS logical properties. */
+  border-top: solid 3px var(--color--primary-50);
+}
 
 .primary-nav__menu-link--button.primary-nav__menu-link--has-children:after {
-      transition: opacity 0.2s;
-      transform: rotate(90deg);
-    }
+  transition: opacity 0.2s;
+  transform: rotate(90deg);
+}
 
 .primary-nav__menu-link--button.primary-nav__menu-link--has-children[aria-expanded="true"]:after {
-      opacity: 0;
-    }
+  opacity: 0;
+}
 
 .primary-nav__menu-link-inner {
   position: relative;
@@ -122,22 +122,22 @@
 }
 
 .primary-nav__menu-link-inner:after {
-    position: absolute;
-    inset-block-end: 0;
-    inset-inline-start: 0;
-    width: 100%;
-    height: 0;
-    content: "";
-    transition: transform 0.2s;
-    transform: scaleX(0);
-    transform-origin: left;
-    /* Intentionally not using CSS logical properties. */
-    border-top: solid 5px var(--color--primary-50);
-  }
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline-start: 0;
+  width: 100%;
+  height: 0;
+  content: "";
+  transition: transform 0.2s;
+  transform: scaleX(0);
+  transform-origin: left;
+  /* Intentionally not using CSS logical properties. */
+  border-top: solid 5px var(--color--primary-50);
+}
 
 .primary-nav__menu-link:hover .primary-nav__menu-link-inner:after {
-      transform: scaleX(1);
-  }
+  transform: scaleX(1);
+}
 
 /*
   Top level specific styles.
@@ -176,19 +176,19 @@
 }
 
 .primary-nav__menu--level-2.is-active-menu-parent {
-    visibility: visible;
-    max-height: none;
-    margin-block-start: var(--sp1-5);
-    opacity: 1;
-  }
+  visibility: visible;
+  max-height: none;
+  margin-block-start: var(--sp1-5);
+  opacity: 1;
+}
 
 @media (min-width: 43.75rem) {
 
-.primary-nav__menu--level-2 {
+  .primary-nav__menu--level-2 {
     margin-inline-start: calc(-1 * var(--sp3));
     padding-inline-start: var(--sp3);
-}
   }
+}
 
 /*
  * Olivero doesn't officially support nested tertiary submenus, but this
@@ -208,11 +208,11 @@
 }
 
 html:not(.js) .primary-nav__menu--level-2 {
-    visibility: visible;
-    max-height: none;
-    opacity: 1;
-  }
+  visibility: visible;
+  max-height: none;
+  opacity: 1;
+}
 
 [dir="rtl"] .primary-nav__menu-link-inner:after {
-      transform-origin: right;
-    }
+  transform-origin: right;
+}

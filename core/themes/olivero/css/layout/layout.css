@@ -34,7 +34,7 @@
 }
 
 body.is-fixed .container {
-    width: calc(100% - var(--drupal-displace-offset-left, 0px) - var(--drupal-displace-offset-right, 0px));
+  width: calc(100% - var(--drupal-displace-offset-left, 0px) - var(--drupal-displace-offset-right, 0px));
 }
 
 .page-wrapper {
@@ -56,20 +56,20 @@ body.is-fixed .container {
 
 @media (min-width: 75rem) {
 
-.layout-main {
+  .layout-main {
     display: flex;
     flex-direction: row-reverse;
     flex-wrap: wrap;
-}
   }
+}
 
 @media (min-width: 75rem) {
 
-.main-content {
+  .main-content {
     width: calc(100% - var(--content-left));
     margin-inline-end: auto;
-}
   }
+}
 
 .main-content__container {
   padding-block-start: var(--sp3);
@@ -77,7 +77,7 @@ body.is-fixed .container {
 
 @media (min-width: 43.75rem) {
 
-.main-content__container {
+  .main-content__container {
     padding-block-start: var(--sp5);
-}
   }
+}

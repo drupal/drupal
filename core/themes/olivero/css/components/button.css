@@ -47,30 +47,30 @@
 }
 
 .button:hover,
-  .button:focus {
-    text-decoration: none;
-    color: var(--color-text-primary-loud);
-    border: solid 2px currentColor;
-    background: none;
-    font-weight: 700;
-  }
+.button:focus {
+  text-decoration: none;
+  color: var(--color-text-primary-loud);
+  border: solid 2px currentColor;
+  background: none;
+  font-weight: 700;
+}
 
 .button:focus {
-    outline: 2px solid var(--color--primary-60);
-    outline-offset: 2px;
-  }
+  outline: 2px solid var(--color--primary-60);
+  outline-offset: 2px;
+}
 
 .button:active {
-    color: var(--color-text-primary-medium);
-    border-color: currentColor;
-  }
+  color: var(--color-text-primary-medium);
+  border-color: currentColor;
+}
 
 .button:disabled,
-  .button.is-disabled {
-    cursor: default;
-    color: var(--color--gray-90);
-    border-color: var(--color--gray-90);
-  }
+.button.is-disabled {
+  cursor: default;
+  color: var(--color--gray-90);
+  border-color: var(--color--gray-90);
+}
 
 /*
     IE11 doesn't work properly on button elements so we only do
@@ -79,7 +79,7 @@
 
 @supports (display: inline-flex) {
 
-.button {
+  .button {
     display: inline-flex;
     align-items: center;
 
@@ -87,8 +87,8 @@
     padding-block: 1px 0;
     padding-inline: var(--sp1-5);
     line-height: var(--line-height-s);
-}
   }
+}
 
 /* No margin if is part of a menu. */
 
@@ -112,22 +112,22 @@
 }
 
 .button--primary:hover,
-  .button--primary:focus {
-    color: var(--color--white);
-    border-color: var(--color--primary-30);
-    background-color: var(--color--primary-30);
-  }
+.button--primary:focus {
+  color: var(--color--white);
+  border-color: var(--color--primary-30);
+  background-color: var(--color--primary-30);
+}
 
 .button--primary:active {
-    color: var(--color--white);
-    background-color: var(--color--primary-40);
-  }
+  color: var(--color--white);
+  background-color: var(--color--primary-40);
+}
 
 .button--primary:disabled,
-  .button--primary.is-disabled {
-    color: var(--color--white);
-    background-color: var(--color--gray-90);
-  }
+.button--primary.is-disabled {
+  color: var(--color--white);
+  background-color: var(--color--gray-90);
+}
 
 .button--icon-back {
   display: inline-flex;
@@ -135,15 +135,15 @@
 }
 
 .button--icon-back:before {
-    display: block;
-    width: 0.5em;
-    height: 0.5em;
-    margin-inline-end: 0.5em;
-    content: "";
-    transform: rotate(45deg); /* LTR */
-    border-block-end: solid 2px currentColor;
-    border-inline-start: solid 2px currentColor;
-  }
+  display: block;
+  width: 0.5em;
+  height: 0.5em;
+  margin-inline-end: 0.5em;
+  content: "";
+  transform: rotate(45deg); /* LTR */
+  border-block-end: solid 2px currentColor;
+  border-inline-start: solid 2px currentColor;
+}
 
 [dir="rtl"] .button--icon-back:before {
   transform: rotate(-45deg);
