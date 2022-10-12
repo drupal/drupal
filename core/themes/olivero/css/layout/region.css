@@ -16,14 +16,14 @@
 
 @media (min-width: 43.75rem) {
 
-.region > * {
+  .region > * {
     margin-bottom: 2.25rem;
-}
   }
+}
 
 @media (min-width: 62.5rem) {
 
-.region > * {
+  .region > * {
     margin-bottom: 3.375rem;
-}
   }
+}

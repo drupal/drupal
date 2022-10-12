@@ -40,11 +40,11 @@
   list-style: none;
 }
 .action-links li {
-    display: inline-block;
-  }
+  display: inline-block;
+}
 .action-links li a {
-      color: #0d77b5;
-    }
+  color: #0d77b5;
+}
 .action-links-item {
   display: inline-block;
 }

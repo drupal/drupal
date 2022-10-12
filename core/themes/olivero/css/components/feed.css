@@ -18,8 +18,8 @@
 }
 
 .feed-icon:hover {
-    color: #2494db;
-  }
+  color: #2494db;
+}
 
 .feed-icon__label {
   flex-shrink: 0;
@@ -48,6 +48,6 @@
 }
 
 .feed-icon__icon svg {
-    vertical-align: top;
-    fill: currentColor;
-  }
+  vertical-align: top;
+  fill: currentColor;
+}

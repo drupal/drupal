@@ -12,15 +12,15 @@
 
 @media (min-width: 75rem) {
 
-.maintenance-page .site-header__initial {
-      flex-shrink: 0;
-      width: 5.625rem;
+  .maintenance-page .site-header__initial {
+    flex-shrink: 0;
+    width: 5.625rem;
   }
-    }
+}
 
 .maintenance-page .main-content {
-    min-height: 80vh;
-  }
+  min-height: 80vh;
+}
 
 .maintenance-page-icon {
   display: block;

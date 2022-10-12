@@ -9,6 +9,7 @@ const postcssUrl = require('postcss-url');
 const postcssPresetEnv = require('postcss-preset-env');
 // cspell:ignore pxtorem
 const postcssPixelsToRem = require('postcss-pxtorem');
+const stylelint = require('stylelint');
 
 module.exports = (filePath, callback) => {
   // Transform the file.
@@ -78,7 +79,13 @@ module.exports = (filePath, callback) => {
     ])
     .process(css, { from: filePath })
     .then(result => {
-      callback(result.css);
+      return stylelint.lint({
+        code: result.css,
+        fix: true
+      });
+    })
+    .then(result => {
+      callback(result.output);
     })
     .catch(error => {
       log(chalk.red(error));

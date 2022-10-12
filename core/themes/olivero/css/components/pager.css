@@ -59,11 +59,11 @@
 
 @media (min-width: 31.25rem) {
 
-.pager__item {
+  .pager__item {
     width: 3.375rem;
     height: 3.375rem;
-}
   }
+}
 
 [dir="rtl"] .pager__item--control {
   transform: scaleX(-1);
@@ -78,17 +78,17 @@
 
 @media (-ms-high-contrast: active) {
 
-.pager__item--control path {
-      fill: currentColor;
+  .pager__item--control path {
+    fill: currentColor;
   }
-    }
+}
 
 @media (forced-colors: active) {
 
-.pager__item--control path {
-      fill: linktext;
+  .pager__item--control path {
+    fill: linktext;
   }
-    }
+}
 
 .pager__link {
   display: flex;

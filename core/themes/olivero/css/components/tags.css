@@ -12,7 +12,7 @@
 
 .field--tags {
   display: flex;
-  font-family: "metropolis", sans-serif;
+  font-family: metropolis, sans-serif;
 }
 
 [dir="ltr"] .field--tags__label {
@@ -33,15 +33,15 @@
 }
 
 .field--tags__label:after {
-    content: ":";
-  }
+  content: ":";
+}
 
 @media (min-width: 43.75rem) {
 
-.field--tags__label {
+  .field--tags__label {
     line-height: 2;
-}
   }
+}
 
 [dir="ltr"] .field--label-inline .field--tags__label {
   padding-left: 0;
@@ -147,25 +147,25 @@
 }
 
 [dir="ltr"] .node--view-mode-full .field--tags {
-    padding-left: 2.25rem;
+  padding-left: 2.25rem;
 }
 
 [dir="rtl"] .node--view-mode-full .field--tags {
-    padding-right: 2.25rem;
+  padding-right: 2.25rem;
 }
 
 [dir="ltr"] .node--view-mode-full .field--tags {
-    padding-right: 2.25rem;
+  padding-right: 2.25rem;
 }
 
 [dir="rtl"] .node--view-mode-full .field--tags {
-    padding-left: 2.25rem;
+  padding-left: 2.25rem;
 }
 
 .node--view-mode-full .field--tags {
-    margin-top: 4.5rem;
-    margin-bottom: 4.5rem;
-    padding-top: 1.6875rem;
-    padding-bottom: 1.6875rem;
-    background-color: #f7f9fa;
-  }
+  margin-top: 4.5rem;
+  margin-bottom: 4.5rem;
+  padding-top: 1.6875rem;
+  padding-bottom: 1.6875rem;
+  background-color: #f7f9fa;
+}

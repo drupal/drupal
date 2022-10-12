@@ -19,41 +19,41 @@
 */
 
 .ie11-autorow > *:nth-child(1) {
-    -ms-grid-row: 1;
-  }
+  -ms-grid-row: 1;
+}
 
 .ie11-autorow > *:nth-child(2) {
-    -ms-grid-row: 2;
-  }
+  -ms-grid-row: 2;
+}
 
 .ie11-autorow > *:nth-child(3) {
-    -ms-grid-row: 3;
-  }
+  -ms-grid-row: 3;
+}
 
 .ie11-autorow > *:nth-child(4) {
-    -ms-grid-row: 4;
-  }
+  -ms-grid-row: 4;
+}
 
 .ie11-autorow > *:nth-child(5) {
-    -ms-grid-row: 5;
-  }
+  -ms-grid-row: 5;
+}
 
 .ie11-autorow > *:nth-child(6) {
-    -ms-grid-row: 6;
-  }
+  -ms-grid-row: 6;
+}
 
 .ie11-autorow > *:nth-child(7) {
-    -ms-grid-row: 7;
-  }
+  -ms-grid-row: 7;
+}
 
 .ie11-autorow > *:nth-child(8) {
-    -ms-grid-row: 8;
-  }
+  -ms-grid-row: 8;
+}
 
 .ie11-autorow > *:nth-child(9) {
-    -ms-grid-row: 9;
-  }
+  -ms-grid-row: 9;
+}
 
 .ie11-autorow > *:nth-child(10) {
-    -ms-grid-row: 10;
-  }
+  -ms-grid-row: 10;
+}

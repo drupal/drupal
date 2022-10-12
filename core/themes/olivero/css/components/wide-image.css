@@ -33,95 +33,95 @@
 
 @media (min-width: 43.75rem) {
 
-[dir="ltr"] .wide-image {
+  [dir="ltr"] .wide-image {
     margin-left: -7.14286vw;
   }
 
-[dir="rtl"] .wide-image {
+  [dir="rtl"] .wide-image {
     margin-right: -7.14286vw;
   }
 
-.wide-image {
+  .wide-image {
     width: calc(100vw - 2.25rem);
     margin-top: 2.25rem;
     margin-bottom: 4.5rem;
-}
   }
+}
 
 @media (min-width: 62.5rem) {
 
-[dir="ltr"] .wide-image {
+  [dir="ltr"] .wide-image {
     margin-left: calc(-7.14286vw - -0.06696rem);
   }
 
-[dir="rtl"] .wide-image {
+  [dir="rtl"] .wide-image {
     margin-right: calc(-7.14286vw - -0.06696rem);
   }
 
-.wide-image {
+  .wide-image {
     width: calc(85.71429vw - 3.05357rem);
-}
   }
+}
 
 @media (min-width: 75rem) {
 
-[dir="ltr"] .wide-image {
+  [dir="ltr"] .wide-image {
     margin-left: calc(-7.14286vw - -0.62946rem);
   }
 
-[dir="rtl"] .wide-image {
+  [dir="rtl"] .wide-image {
     margin-right: calc(-7.14286vw - -0.62946rem);
   }
 
-.wide-image {
+  .wide-image {
     width: calc(85.71429vw - 9.80357rem);
-}
   }
+}
 
 @media (min-width: 90rem) {
 
-[dir="ltr"] .wide-image {
+  [dir="ltr"] .wide-image {
     margin-left: -5.86607rem;
   }
 
-[dir="rtl"] .wide-image {
+  [dir="rtl"] .wide-image {
     margin-right: -5.86607rem;
   }
 
-.wide-image {
+  .wide-image {
     width: 68.14286rem;
-}
   }
+}
 
 /* Ensure that image doesn't overlap sidebar. */
 
 @media (min-width: 62.5rem) {
 
-.sidebar-grid .wide-image {
+  .sidebar-grid .wide-image {
     width: calc(64.28571vw - 2.85268rem);
-}
   }
+}
 
 @media (min-width: 75rem) {
 
-.sidebar-grid .wide-image {
+  .sidebar-grid .wide-image {
     width: calc(64.28571vw - 7.91518rem);
-}
   }
+}
 
 @media (min-width: 81.25rem) {
 
-.sidebar-grid .wide-image {
+  .sidebar-grid .wide-image {
     width: calc(71.42857vw - 8.54464rem);
-}
   }
+}
 
 @media (min-width: 90rem) {
 
-.sidebar-grid .wide-image {
+  .sidebar-grid .wide-image {
     width: 56.41071rem;
-}
   }
+}
 
 /* Ensure that image doesn't overlap layout builder sections when editing layouts. */
 

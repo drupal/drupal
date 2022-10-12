@@ -20,23 +20,23 @@
 
 @media (min-width: 43.75rem) {
 
-.layout--content-medium,
-.layout--pass--content-medium > * {
+  .layout--content-medium,
+  .layout--pass--content-medium > * {
     -ms-grid-column: 2;
     -ms-grid-column-span: 12;
     grid-column: 2 / 14;
-}
   }
+}
 
 @media (min-width: 62.5rem) {
 
-.layout--content-medium,
-.layout--pass--content-medium > * {
+  .layout--content-medium,
+  .layout--pass--content-medium > * {
     -ms-grid-column: 3;
     -ms-grid-column-span: 10;
     grid-column: 3 / 13;
-}
   }
+}
 
 /*
   If .layout--content-medium is nested within itself, or an element that's inheriting the
@@ -46,24 +46,24 @@
 
 @media (min-width: 43.75rem) {
 
-.layout--pass--content-medium > * .layout--content-medium,
+  .layout--pass--content-medium > * .layout--content-medium,
   .layout--content-medium .layout--content-medium,
   .layout--pass--content-medium > * .layout--pass--content-medium > *,
   .layout--content-medium .layout--pass--content-medium > * {
-      -ms-grid-column: 1;
-      -ms-grid-column-span: 12;
-      grid-column: 1 / 13;
+    -ms-grid-column: 1;
+    -ms-grid-column-span: 12;
+    grid-column: 1 / 13;
   }
-    }
+}
 
 @media (min-width: 62.5rem) {
 
-.layout--pass--content-medium > * .layout--content-medium,
+  .layout--pass--content-medium > * .layout--content-medium,
   .layout--content-medium .layout--content-medium,
   .layout--pass--content-medium > * .layout--pass--content-medium > *,
   .layout--content-medium .layout--pass--content-medium > * {
-      -ms-grid-column: 1;
-      -ms-grid-column-span: 10;
-      grid-column: 1 / 11;
+    -ms-grid-column: 1;
+    -ms-grid-column-span: 10;
+    grid-column: 1 / 11;
   }
-    }
+}

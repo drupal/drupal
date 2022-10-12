@@ -20,443 +20,443 @@
  */
 
 #drupal-off-canvas span,
-  #drupal-off-canvas applet,
-  #drupal-off-canvas object,
-  #drupal-off-canvas iframe,
-  #drupal-off-canvas h1,
-  #drupal-off-canvas h2,
-  #drupal-off-canvas h3,
-  #drupal-off-canvas h4,
-  #drupal-off-canvas h5,
-  #drupal-off-canvas h6,
-  #drupal-off-canvas p,
-  #drupal-off-canvas blockquote,
-  #drupal-off-canvas pre,
-  #drupal-off-canvas a,
-  #drupal-off-canvas abbr,
-  #drupal-off-canvas acronym,
-  #drupal-off-canvas address,
-  #drupal-off-canvas big,
-  #drupal-off-canvas button,
-  #drupal-off-canvas cite,
-  #drupal-off-canvas code,
-  #drupal-off-canvas del,
-  #drupal-off-canvas dfn,
-  #drupal-off-canvas em,
-  #drupal-off-canvas img,
-  #drupal-off-canvas ins,
-  #drupal-off-canvas kbd,
-  #drupal-off-canvas q,
-  #drupal-off-canvas s,
-  #drupal-off-canvas samp,
-  #drupal-off-canvas small,
-  #drupal-off-canvas strike,
-  #drupal-off-canvas strong,
-  #drupal-off-canvas sub,
-  #drupal-off-canvas sup,
-  #drupal-off-canvas tt,
-  #drupal-off-canvas var,
-  #drupal-off-canvas b,
-  #drupal-off-canvas u,
-  #drupal-off-canvas i,
-  #drupal-off-canvas center,
-  #drupal-off-canvas dl,
-  #drupal-off-canvas dt,
-  #drupal-off-canvas dd,
-  #drupal-off-canvas ol,
-  #drupal-off-canvas ul,
-  #drupal-off-canvas li,
-  #drupal-off-canvas fieldset,
-  #drupal-off-canvas form,
-  #drupal-off-canvas label,
-  #drupal-off-canvas legend,
-  #drupal-off-canvas table,
-  #drupal-off-canvas caption,
-  #drupal-off-canvas tbody,
-  #drupal-off-canvas tfoot,
-  #drupal-off-canvas thead,
-  #drupal-off-canvas tr,
-  #drupal-off-canvas th,
-  #drupal-off-canvas td,
-  #drupal-off-canvas article,
-  #drupal-off-canvas aside,
-  #drupal-off-canvas canvas,
-  #drupal-off-canvas details,
-  #drupal-off-canvas embed,
-  #drupal-off-canvas figure,
-  #drupal-off-canvas figcaption,
-  #drupal-off-canvas footer,
-  #drupal-off-canvas header,
-  #drupal-off-canvas hgroup,
-  #drupal-off-canvas main,
-  #drupal-off-canvas menu,
-  #drupal-off-canvas meter,
-  #drupal-off-canvas nav,
-  #drupal-off-canvas output,
-  #drupal-off-canvas progress,
-  #drupal-off-canvas ruby,
-  #drupal-off-canvas section,
-  #drupal-off-canvas summary,
-  #drupal-off-canvas time,
-  #drupal-off-canvas mark,
-  #drupal-off-canvas audio,
-  #drupal-off-canvas video,
-  #drupal-off-canvas input,
-  #drupal-off-canvas select,
-  #drupal-off-canvas textarea {
-    animation: none 0s ease 0s 1 normal none running;
-    -webkit-backface-visibility: visible;
-    backface-visibility: visible;
-    background: transparent none repeat 0 0 / auto auto padding-box border-box scroll;
-    border: medium none currentColor;
-    border-collapse: separate;
-    border-image: none;
-    border-radius: 0;
-    border-spacing: 0;
-    bottom: auto;
-    box-shadow: none;
-    box-sizing: content-box;
-    caption-side: top;
-    clear: none;
-    clip: auto;
-    color: #000;
-    columns: auto;
-    column-count: auto;
-    column-fill: balance;
-    column-gap: normal;
-    column-rule: medium none currentColor;
-    column-span: 1;
-    column-width: auto;
-    content: normal;
-    counter-increment: none;
-    counter-reset: none;
-    cursor: auto;
-    direction: ltr;
-    display: inline;
-    empty-cells: show;
-    float: none;
-    font-family: serif;
-    font-size: medium;
-    font-style: normal;
-    font-variant: normal;
-    font-weight: normal;
-    font-stretch: normal;
-    line-height: normal;
-    height: auto;
-    -webkit-hyphens: none;
-    -ms-hyphens: none;
-    hyphens: none;
-    left: auto;
-    letter-spacing: normal;
-    list-style: disc outside none;
-    margin: 0;
-    max-height: none;
-    max-width: none;
-    min-height: 0;
-    min-width: 0;
-    opacity: 1;
-    orphans: 2;
-    outline: medium none invert;
-    overflow: visible;
-    overflow-x: visible;
-    overflow-y: visible;
-    padding: 0;
-    page-break-after: auto;
-    page-break-before: auto;
-    page-break-inside: auto;
-    perspective: none;
-    perspective-origin: 50% 50%;
-    position: static;
-    right: auto;
-    tab-size: 8;
-    table-layout: auto;
-    text-align: left;
-    text-align-last: auto;
-    text-decoration: none;
-    text-indent: 0;
-    text-shadow: none;
-    text-transform: none;
-    top: auto;
-    transform: none;
-    transform-origin: 50% 50% 0;
-    transform-style: flat;
-    transition: none 0s ease 0s;
-    unicode-bidi: normal;
-    vertical-align: baseline;
-    visibility: visible;
-    white-space: normal;
-    widows: 2;
-    width: auto;
-    word-spacing: normal;
-    z-index: auto;
-    all: initial;
-    box-sizing: border-box;
-    text-shadow: none;
-    -webkit-font-smoothing: antialiased;
-    -webkit-tap-highlight-color: initial;
-  }
+#drupal-off-canvas applet,
+#drupal-off-canvas object,
+#drupal-off-canvas iframe,
+#drupal-off-canvas h1,
+#drupal-off-canvas h2,
+#drupal-off-canvas h3,
+#drupal-off-canvas h4,
+#drupal-off-canvas h5,
+#drupal-off-canvas h6,
+#drupal-off-canvas p,
+#drupal-off-canvas blockquote,
+#drupal-off-canvas pre,
+#drupal-off-canvas a,
+#drupal-off-canvas abbr,
+#drupal-off-canvas acronym,
+#drupal-off-canvas address,
+#drupal-off-canvas big,
+#drupal-off-canvas button,
+#drupal-off-canvas cite,
+#drupal-off-canvas code,
+#drupal-off-canvas del,
+#drupal-off-canvas dfn,
+#drupal-off-canvas em,
+#drupal-off-canvas img,
+#drupal-off-canvas ins,
+#drupal-off-canvas kbd,
+#drupal-off-canvas q,
+#drupal-off-canvas s,
+#drupal-off-canvas samp,
+#drupal-off-canvas small,
+#drupal-off-canvas strike,
+#drupal-off-canvas strong,
+#drupal-off-canvas sub,
+#drupal-off-canvas sup,
+#drupal-off-canvas tt,
+#drupal-off-canvas var,
+#drupal-off-canvas b,
+#drupal-off-canvas u,
+#drupal-off-canvas i,
+#drupal-off-canvas center,
+#drupal-off-canvas dl,
+#drupal-off-canvas dt,
+#drupal-off-canvas dd,
+#drupal-off-canvas ol,
+#drupal-off-canvas ul,
+#drupal-off-canvas li,
+#drupal-off-canvas fieldset,
+#drupal-off-canvas form,
+#drupal-off-canvas label,
+#drupal-off-canvas legend,
+#drupal-off-canvas table,
+#drupal-off-canvas caption,
+#drupal-off-canvas tbody,
+#drupal-off-canvas tfoot,
+#drupal-off-canvas thead,
+#drupal-off-canvas tr,
+#drupal-off-canvas th,
+#drupal-off-canvas td,
+#drupal-off-canvas article,
+#drupal-off-canvas aside,
+#drupal-off-canvas canvas,
+#drupal-off-canvas details,
+#drupal-off-canvas embed,
+#drupal-off-canvas figure,
+#drupal-off-canvas figcaption,
+#drupal-off-canvas footer,
+#drupal-off-canvas header,
+#drupal-off-canvas hgroup,
+#drupal-off-canvas main,
+#drupal-off-canvas menu,
+#drupal-off-canvas meter,
+#drupal-off-canvas nav,
+#drupal-off-canvas output,
+#drupal-off-canvas progress,
+#drupal-off-canvas ruby,
+#drupal-off-canvas section,
+#drupal-off-canvas summary,
+#drupal-off-canvas time,
+#drupal-off-canvas mark,
+#drupal-off-canvas audio,
+#drupal-off-canvas video,
+#drupal-off-canvas input,
+#drupal-off-canvas select,
+#drupal-off-canvas textarea {
+  position: static;
+  z-index: auto;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  display: inline;
+  visibility: visible;
+  float: none;
+  clear: none;
+  overflow: visible;
+  overflow-x: visible;
+  overflow-y: visible;
+  clip: auto;
+  box-sizing: content-box;
+  box-sizing: border-box;
+  width: auto;
+  min-width: 0;
+  max-width: none;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  table-layout: auto;
+  columns: auto;
+  column-span: 1;
+  column-width: auto;
+  column-count: auto;
+  column-fill: balance;
+  column-gap: normal;
+  column-rule: medium none currentColor;
+  empty-cells: show;
+  caption-side: top;
+  border-spacing: 0;
+  list-style: disc outside none;
+  content: normal;
+  counter-reset: none;
+  counter-increment: none;
+  cursor: auto;
+  transition: none 0s ease 0s;
+  transform: none;
+  transform-origin: 50% 50% 0;
+  animation: none 0s ease 0s 1 normal none running;
+  text-align: left;
+  text-align-last: auto;
+  vertical-align: baseline;
+  white-space: normal;
+  text-decoration: none;
+  text-indent: 0;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-transform: none;
+  tab-size: 8;
+  -webkit-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+  direction: ltr;
+  unicode-bidi: normal;
+  orphans: 2;
+  widows: 2;
+  opacity: 1;
+  color: #000;
+  border: medium none currentColor;
+  border-collapse: separate;
+  border-radius: 0;
+  border-image: none;
+  outline: medium none invert;
+  background: transparent none repeat 0 0 / auto auto padding-box border-box scroll;
+  box-shadow: none;
+  text-shadow: none;
+  text-shadow: none;
+  font-family: serif;
+  font-size: medium;
+  font-weight: normal;
+  font-style: normal;
+  font-variant: normal;
+  font-stretch: normal;
+  line-height: normal;
+  -webkit-backface-visibility: visible;
+  backface-visibility: visible;
+  page-break-after: auto;
+  page-break-before: auto;
+  page-break-inside: auto;
+  perspective: none;
+  perspective-origin: 50% 50%;
+  transform-style: flat;
+  all: initial;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: initial;
+}
 
 #drupal-off-canvas span:after,
-    #drupal-off-canvas applet:after,
-    #drupal-off-canvas object:after,
-    #drupal-off-canvas iframe:after,
-    #drupal-off-canvas h1:after,
-    #drupal-off-canvas h2:after,
-    #drupal-off-canvas h3:after,
-    #drupal-off-canvas h4:after,
-    #drupal-off-canvas h5:after,
-    #drupal-off-canvas h6:after,
-    #drupal-off-canvas p:after,
-    #drupal-off-canvas blockquote:after,
-    #drupal-off-canvas pre:after,
-    #drupal-off-canvas a:after,
-    #drupal-off-canvas abbr:after,
-    #drupal-off-canvas acronym:after,
-    #drupal-off-canvas address:after,
-    #drupal-off-canvas big:after,
-    #drupal-off-canvas button:after,
-    #drupal-off-canvas cite:after,
-    #drupal-off-canvas code:after,
-    #drupal-off-canvas del:after,
-    #drupal-off-canvas dfn:after,
-    #drupal-off-canvas em:after,
-    #drupal-off-canvas img:after,
-    #drupal-off-canvas ins:after,
-    #drupal-off-canvas kbd:after,
-    #drupal-off-canvas q:after,
-    #drupal-off-canvas s:after,
-    #drupal-off-canvas samp:after,
-    #drupal-off-canvas small:after,
-    #drupal-off-canvas strike:after,
-    #drupal-off-canvas strong:after,
-    #drupal-off-canvas sub:after,
-    #drupal-off-canvas sup:after,
-    #drupal-off-canvas tt:after,
-    #drupal-off-canvas var:after,
-    #drupal-off-canvas b:after,
-    #drupal-off-canvas u:after,
-    #drupal-off-canvas i:after,
-    #drupal-off-canvas center:after,
-    #drupal-off-canvas dl:after,
-    #drupal-off-canvas dt:after,
-    #drupal-off-canvas dd:after,
-    #drupal-off-canvas ol:after,
-    #drupal-off-canvas ul:after,
-    #drupal-off-canvas li:after,
-    #drupal-off-canvas fieldset:after,
-    #drupal-off-canvas form:after,
-    #drupal-off-canvas label:after,
-    #drupal-off-canvas legend:after,
-    #drupal-off-canvas table:after,
-    #drupal-off-canvas caption:after,
-    #drupal-off-canvas tbody:after,
-    #drupal-off-canvas tfoot:after,
-    #drupal-off-canvas thead:after,
-    #drupal-off-canvas tr:after,
-    #drupal-off-canvas th:after,
-    #drupal-off-canvas td:after,
-    #drupal-off-canvas article:after,
-    #drupal-off-canvas aside:after,
-    #drupal-off-canvas canvas:after,
-    #drupal-off-canvas details:after,
-    #drupal-off-canvas embed:after,
-    #drupal-off-canvas figure:after,
-    #drupal-off-canvas figcaption:after,
-    #drupal-off-canvas footer:after,
-    #drupal-off-canvas header:after,
-    #drupal-off-canvas hgroup:after,
-    #drupal-off-canvas main:after,
-    #drupal-off-canvas menu:after,
-    #drupal-off-canvas meter:after,
-    #drupal-off-canvas nav:after,
-    #drupal-off-canvas output:after,
-    #drupal-off-canvas progress:after,
-    #drupal-off-canvas ruby:after,
-    #drupal-off-canvas section:after,
-    #drupal-off-canvas summary:after,
-    #drupal-off-canvas time:after,
-    #drupal-off-canvas mark:after,
-    #drupal-off-canvas audio:after,
-    #drupal-off-canvas video:after,
-    #drupal-off-canvas input:after,
-    #drupal-off-canvas select:after,
-    #drupal-off-canvas textarea:after,
-    #drupal-off-canvas span:before,
-    #drupal-off-canvas applet:before,
-    #drupal-off-canvas object:before,
-    #drupal-off-canvas iframe:before,
-    #drupal-off-canvas h1:before,
-    #drupal-off-canvas h2:before,
-    #drupal-off-canvas h3:before,
-    #drupal-off-canvas h4:before,
-    #drupal-off-canvas h5:before,
-    #drupal-off-canvas h6:before,
-    #drupal-off-canvas p:before,
-    #drupal-off-canvas blockquote:before,
-    #drupal-off-canvas pre:before,
-    #drupal-off-canvas a:before,
-    #drupal-off-canvas abbr:before,
-    #drupal-off-canvas acronym:before,
-    #drupal-off-canvas address:before,
-    #drupal-off-canvas big:before,
-    #drupal-off-canvas button:before,
-    #drupal-off-canvas cite:before,
-    #drupal-off-canvas code:before,
-    #drupal-off-canvas del:before,
-    #drupal-off-canvas dfn:before,
-    #drupal-off-canvas em:before,
-    #drupal-off-canvas img:before,
-    #drupal-off-canvas ins:before,
-    #drupal-off-canvas kbd:before,
-    #drupal-off-canvas q:before,
-    #drupal-off-canvas s:before,
-    #drupal-off-canvas samp:before,
-    #drupal-off-canvas small:before,
-    #drupal-off-canvas strike:before,
-    #drupal-off-canvas strong:before,
-    #drupal-off-canvas sub:before,
-    #drupal-off-canvas sup:before,
-    #drupal-off-canvas tt:before,
-    #drupal-off-canvas var:before,
-    #drupal-off-canvas b:before,
-    #drupal-off-canvas u:before,
-    #drupal-off-canvas i:before,
-    #drupal-off-canvas center:before,
-    #drupal-off-canvas dl:before,
-    #drupal-off-canvas dt:before,
-    #drupal-off-canvas dd:before,
-    #drupal-off-canvas ol:before,
-    #drupal-off-canvas ul:before,
-    #drupal-off-canvas li:before,
-    #drupal-off-canvas fieldset:before,
-    #drupal-off-canvas form:before,
-    #drupal-off-canvas label:before,
-    #drupal-off-canvas legend:before,
-    #drupal-off-canvas table:before,
-    #drupal-off-canvas caption:before,
-    #drupal-off-canvas tbody:before,
-    #drupal-off-canvas tfoot:before,
-    #drupal-off-canvas thead:before,
-    #drupal-off-canvas tr:before,
-    #drupal-off-canvas th:before,
-    #drupal-off-canvas td:before,
-    #drupal-off-canvas article:before,
-    #drupal-off-canvas aside:before,
-    #drupal-off-canvas canvas:before,
-    #drupal-off-canvas details:before,
-    #drupal-off-canvas embed:before,
-    #drupal-off-canvas figure:before,
-    #drupal-off-canvas figcaption:before,
-    #drupal-off-canvas footer:before,
-    #drupal-off-canvas header:before,
-    #drupal-off-canvas hgroup:before,
-    #drupal-off-canvas main:before,
-    #drupal-off-canvas menu:before,
-    #drupal-off-canvas meter:before,
-    #drupal-off-canvas nav:before,
-    #drupal-off-canvas output:before,
-    #drupal-off-canvas progress:before,
-    #drupal-off-canvas ruby:before,
-    #drupal-off-canvas section:before,
-    #drupal-off-canvas summary:before,
-    #drupal-off-canvas time:before,
-    #drupal-off-canvas mark:before,
-    #drupal-off-canvas audio:before,
-    #drupal-off-canvas video:before,
-    #drupal-off-canvas input:before,
-    #drupal-off-canvas select:before,
-    #drupal-off-canvas textarea:before {
-      animation: none 0s ease 0s 1 normal none running;
-      -webkit-backface-visibility: visible;
-      backface-visibility: visible;
-      background: transparent none repeat 0 0 / auto auto padding-box border-box scroll;
-      border: medium none currentColor;
-      border-collapse: separate;
-      border-image: none;
-      border-radius: 0;
-      border-spacing: 0;
-      bottom: auto;
-      box-shadow: none;
-      box-sizing: content-box;
-      caption-side: top;
-      clear: none;
-      clip: auto;
-      color: #000;
-      columns: auto;
-      column-count: auto;
-      column-fill: balance;
-      column-gap: normal;
-      column-rule: medium none currentColor;
-      column-span: 1;
-      column-width: auto;
-      content: normal;
-      counter-increment: none;
-      counter-reset: none;
-      cursor: auto;
-      direction: ltr;
-      display: inline;
-      empty-cells: show;
-      float: none;
-      font-family: serif;
-      font-size: medium;
-      font-style: normal;
-      font-variant: normal;
-      font-weight: normal;
-      font-stretch: normal;
-      line-height: normal;
-      height: auto;
-      -webkit-hyphens: none;
-      -ms-hyphens: none;
-      hyphens: none;
-      left: auto;
-      letter-spacing: normal;
-      list-style: disc outside none;
-      margin: 0;
-      max-height: none;
-      max-width: none;
-      min-height: 0;
-      min-width: 0;
-      opacity: 1;
-      orphans: 2;
-      outline: medium none invert;
-      overflow: visible;
-      overflow-x: visible;
-      overflow-y: visible;
-      padding: 0;
-      page-break-after: auto;
-      page-break-before: auto;
-      page-break-inside: auto;
-      perspective: none;
-      perspective-origin: 50% 50%;
-      position: static;
-      right: auto;
-      tab-size: 8;
-      table-layout: auto;
-      text-align: left;
-      text-align-last: auto;
-      text-decoration: none;
-      text-indent: 0;
-      text-shadow: none;
-      text-transform: none;
-      top: auto;
-      transform: none;
-      transform-origin: 50% 50% 0;
-      transform-style: flat;
-      transition: none 0s ease 0s;
-      unicode-bidi: normal;
-      vertical-align: baseline;
-      visibility: visible;
-      white-space: normal;
-      widows: 2;
-      width: auto;
-      word-spacing: normal;
-      z-index: auto;
-      all: initial;
-      box-sizing: border-box;
-      text-shadow: none;
-      -webkit-font-smoothing: antialiased;
-      -webkit-tap-highlight-color: initial;
-    }
+#drupal-off-canvas applet:after,
+#drupal-off-canvas object:after,
+#drupal-off-canvas iframe:after,
+#drupal-off-canvas h1:after,
+#drupal-off-canvas h2:after,
+#drupal-off-canvas h3:after,
+#drupal-off-canvas h4:after,
+#drupal-off-canvas h5:after,
+#drupal-off-canvas h6:after,
+#drupal-off-canvas p:after,
+#drupal-off-canvas blockquote:after,
+#drupal-off-canvas pre:after,
+#drupal-off-canvas a:after,
+#drupal-off-canvas abbr:after,
+#drupal-off-canvas acronym:after,
+#drupal-off-canvas address:after,
+#drupal-off-canvas big:after,
+#drupal-off-canvas button:after,
+#drupal-off-canvas cite:after,
+#drupal-off-canvas code:after,
+#drupal-off-canvas del:after,
+#drupal-off-canvas dfn:after,
+#drupal-off-canvas em:after,
+#drupal-off-canvas img:after,
+#drupal-off-canvas ins:after,
+#drupal-off-canvas kbd:after,
+#drupal-off-canvas q:after,
+#drupal-off-canvas s:after,
+#drupal-off-canvas samp:after,
+#drupal-off-canvas small:after,
+#drupal-off-canvas strike:after,
+#drupal-off-canvas strong:after,
+#drupal-off-canvas sub:after,
+#drupal-off-canvas sup:after,
+#drupal-off-canvas tt:after,
+#drupal-off-canvas var:after,
+#drupal-off-canvas b:after,
+#drupal-off-canvas u:after,
+#drupal-off-canvas i:after,
+#drupal-off-canvas center:after,
+#drupal-off-canvas dl:after,
+#drupal-off-canvas dt:after,
+#drupal-off-canvas dd:after,
+#drupal-off-canvas ol:after,
+#drupal-off-canvas ul:after,
+#drupal-off-canvas li:after,
+#drupal-off-canvas fieldset:after,
+#drupal-off-canvas form:after,
+#drupal-off-canvas label:after,
+#drupal-off-canvas legend:after,
+#drupal-off-canvas table:after,
+#drupal-off-canvas caption:after,
+#drupal-off-canvas tbody:after,
+#drupal-off-canvas tfoot:after,
+#drupal-off-canvas thead:after,
+#drupal-off-canvas tr:after,
+#drupal-off-canvas th:after,
+#drupal-off-canvas td:after,
+#drupal-off-canvas article:after,
+#drupal-off-canvas aside:after,
+#drupal-off-canvas canvas:after,
+#drupal-off-canvas details:after,
+#drupal-off-canvas embed:after,
+#drupal-off-canvas figure:after,
+#drupal-off-canvas figcaption:after,
+#drupal-off-canvas footer:after,
+#drupal-off-canvas header:after,
+#drupal-off-canvas hgroup:after,
+#drupal-off-canvas main:after,
+#drupal-off-canvas menu:after,
+#drupal-off-canvas meter:after,
+#drupal-off-canvas nav:after,
+#drupal-off-canvas output:after,
+#drupal-off-canvas progress:after,
+#drupal-off-canvas ruby:after,
+#drupal-off-canvas section:after,
+#drupal-off-canvas summary:after,
+#drupal-off-canvas time:after,
+#drupal-off-canvas mark:after,
+#drupal-off-canvas audio:after,
+#drupal-off-canvas video:after,
+#drupal-off-canvas input:after,
+#drupal-off-canvas select:after,
+#drupal-off-canvas textarea:after,
+#drupal-off-canvas span:before,
+#drupal-off-canvas applet:before,
+#drupal-off-canvas object:before,
+#drupal-off-canvas iframe:before,
+#drupal-off-canvas h1:before,
+#drupal-off-canvas h2:before,
+#drupal-off-canvas h3:before,
+#drupal-off-canvas h4:before,
+#drupal-off-canvas h5:before,
+#drupal-off-canvas h6:before,
+#drupal-off-canvas p:before,
+#drupal-off-canvas blockquote:before,
+#drupal-off-canvas pre:before,
+#drupal-off-canvas a:before,
+#drupal-off-canvas abbr:before,
+#drupal-off-canvas acronym:before,
+#drupal-off-canvas address:before,
+#drupal-off-canvas big:before,
+#drupal-off-canvas button:before,
+#drupal-off-canvas cite:before,
+#drupal-off-canvas code:before,
+#drupal-off-canvas del:before,
+#drupal-off-canvas dfn:before,
+#drupal-off-canvas em:before,
+#drupal-off-canvas img:before,
+#drupal-off-canvas ins:before,
+#drupal-off-canvas kbd:before,
+#drupal-off-canvas q:before,
+#drupal-off-canvas s:before,
+#drupal-off-canvas samp:before,
+#drupal-off-canvas small:before,
+#drupal-off-canvas strike:before,
+#drupal-off-canvas strong:before,
+#drupal-off-canvas sub:before,
+#drupal-off-canvas sup:before,
+#drupal-off-canvas tt:before,
+#drupal-off-canvas var:before,
+#drupal-off-canvas b:before,
+#drupal-off-canvas u:before,
+#drupal-off-canvas i:before,
+#drupal-off-canvas center:before,
+#drupal-off-canvas dl:before,
+#drupal-off-canvas dt:before,
+#drupal-off-canvas dd:before,
+#drupal-off-canvas ol:before,
+#drupal-off-canvas ul:before,
+#drupal-off-canvas li:before,
+#drupal-off-canvas fieldset:before,
+#drupal-off-canvas form:before,
+#drupal-off-canvas label:before,
+#drupal-off-canvas legend:before,
+#drupal-off-canvas table:before,
+#drupal-off-canvas caption:before,
+#drupal-off-canvas tbody:before,
+#drupal-off-canvas tfoot:before,
+#drupal-off-canvas thead:before,
+#drupal-off-canvas tr:before,
+#drupal-off-canvas th:before,
+#drupal-off-canvas td:before,
+#drupal-off-canvas article:before,
+#drupal-off-canvas aside:before,
+#drupal-off-canvas canvas:before,
+#drupal-off-canvas details:before,
+#drupal-off-canvas embed:before,
+#drupal-off-canvas figure:before,
+#drupal-off-canvas figcaption:before,
+#drupal-off-canvas footer:before,
+#drupal-off-canvas header:before,
+#drupal-off-canvas hgroup:before,
+#drupal-off-canvas main:before,
+#drupal-off-canvas menu:before,
+#drupal-off-canvas meter:before,
+#drupal-off-canvas nav:before,
+#drupal-off-canvas output:before,
+#drupal-off-canvas progress:before,
+#drupal-off-canvas ruby:before,
+#drupal-off-canvas section:before,
+#drupal-off-canvas summary:before,
+#drupal-off-canvas time:before,
+#drupal-off-canvas mark:before,
+#drupal-off-canvas audio:before,
+#drupal-off-canvas video:before,
+#drupal-off-canvas input:before,
+#drupal-off-canvas select:before,
+#drupal-off-canvas textarea:before {
+  position: static;
+  z-index: auto;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  display: inline;
+  visibility: visible;
+  float: none;
+  clear: none;
+  overflow: visible;
+  overflow-x: visible;
+  overflow-y: visible;
+  clip: auto;
+  box-sizing: content-box;
+  box-sizing: border-box;
+  width: auto;
+  min-width: 0;
+  max-width: none;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  table-layout: auto;
+  columns: auto;
+  column-span: 1;
+  column-width: auto;
+  column-count: auto;
+  column-fill: balance;
+  column-gap: normal;
+  column-rule: medium none currentColor;
+  empty-cells: show;
+  caption-side: top;
+  border-spacing: 0;
+  list-style: disc outside none;
+  content: normal;
+  counter-reset: none;
+  counter-increment: none;
+  cursor: auto;
+  transition: none 0s ease 0s;
+  transform: none;
+  transform-origin: 50% 50% 0;
+  animation: none 0s ease 0s 1 normal none running;
+  text-align: left;
+  text-align-last: auto;
+  vertical-align: baseline;
+  white-space: normal;
+  text-decoration: none;
+  text-indent: 0;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-transform: none;
+  tab-size: 8;
+  -webkit-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+  direction: ltr;
+  unicode-bidi: normal;
+  orphans: 2;
+  widows: 2;
+  opacity: 1;
+  color: #000;
+  border: medium none currentColor;
+  border-collapse: separate;
+  border-radius: 0;
+  border-image: none;
+  outline: medium none invert;
+  background: transparent none repeat 0 0 / auto auto padding-box border-box scroll;
+  box-shadow: none;
+  text-shadow: none;
+  text-shadow: none;
+  font-family: serif;
+  font-size: medium;
+  font-weight: normal;
+  font-style: normal;
+  font-variant: normal;
+  font-stretch: normal;
+  line-height: normal;
+  -webkit-backface-visibility: visible;
+  backface-visibility: visible;
+  page-break-after: auto;
+  page-break-before: auto;
+  page-break-inside: auto;
+  perspective: none;
+  perspective-origin: 50% 50%;
+  transform-style: flat;
+  all: initial;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: initial;
+}
 
 /* Reset size and position on elements. */
 
@@ -795,7 +795,8 @@
   box-shadow: none;
 }
 
-#drupal-off-canvas input:-ms-input-placeholder, #drupal-off-canvas textarea:-ms-input-placeholder {
+#drupal-off-canvas input:-ms-input-placeholder,
+#drupal-off-canvas textarea:-ms-input-placeholder {
   color: gray;
 }
 

@@ -65,14 +65,15 @@
 
     /* Lets browser set <select> appearance to whatever the browser's default is. */
   }
-    @supports ((-webkit-appearance: revert) or (appearance: revert)) {
-  .form-element--type-select,
-  .form-element--type-select:focus,
-  .form-element--type-select[disabled] {
+
+  @supports ((-webkit-appearance: revert) or (appearance: revert)) {
+    .form-element--type-select,
+    .form-element--type-select:focus,
+    .form-element--type-select[disabled] {
       -webkit-appearance: revert;
       appearance: revert;
-  }
     }
+  }
 }
 
 /* Necessary for Internet Explorer to show chevron. */
@@ -85,7 +86,9 @@
 
     /* Re-enable default chevron for Internet Explorer. */
   }
-    .form-element--type-select::-ms-expand, .form-element--type-select:focus::-ms-expand, .form-element--type-select[disabled]::-ms-expand {
-      display: block;
-    }
+  .form-element--type-select::-ms-expand,
+  .form-element--type-select:focus::-ms-expand,
+  .form-element--type-select[disabled]::-ms-expand {
+    display: block;
+  }
 }

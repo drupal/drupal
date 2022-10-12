@@ -41,24 +41,24 @@
 }
 
 .links.inline > * {
-    display: inline;
-  }
+  display: inline;
+}
 
 [dir="ltr"] .links.inline > *:not(:last-child) {
-      padding-right: 1em;
+  padding-right: 1em;
 }
 
 [dir="rtl"] .links.inline > *:not(:last-child) {
-      padding-left: 1em;
+  padding-left: 1em;
 }
 
 @media (min-width: 43.75rem) {
 
-[dir="ltr"] .node--type-book .links.inline {
+  [dir="ltr"] .node--type-book .links.inline {
     text-align: right;
   }
 
-[dir="rtl"] .node--type-book .links.inline {
+  [dir="rtl"] .node--type-book .links.inline {
     text-align: left;
   }
-  }
+}

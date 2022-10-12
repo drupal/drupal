@@ -60,14 +60,14 @@
 }
 
 .messages * {
-    color: inherit;
-  }
+  color: inherit;
+}
 
 /* Additional specificity to override contrib modules. */
 
 .messages.messages-list__item {
-    background-image: none;
-  }
+  background-image: none;
+}
 
 [dir="ltr"] .messages__list {
   margin-left: 0;
@@ -134,11 +134,11 @@
 }
 
 [dir="ltr"] .messages__header.no-icon {
-    margin-right: 0;
+  margin-right: 0;
 }
 
 [dir="rtl"] .messages__header.no-icon {
-    margin-left: 0;
+  margin-left: 0;
 }
 
 .messages__content {
@@ -191,34 +191,34 @@
 }
 
 .messages__close:before,
-  .messages__close:after {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    display: block;
-    width: 2.0625rem;
-    height: 0;
-    content: "";
-    border-top: solid 2px #7e96a7;
-  }
+.messages__close:after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  width: 2.0625rem;
+  height: 0;
+  content: "";
+  border-top: solid 2px #7e96a7;
+}
 
 .messages__close:before {
-    transform: translate(-50%, -50%) rotate(45deg);
-  }
+  transform: translate(-50%, -50%) rotate(45deg);
+}
 
 .messages__close:after {
-    transform: translate(-50%, -50%) rotate(-45deg);
-  }
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
 
 .messages__close:hover::before,
-    .messages__close:hover::after {
-      border-color: #fff;
-    }
+.messages__close:hover::after {
+  border-color: #fff;
+}
 
 .messages__close:focus {
-    outline: 2px solid #53b0eb;
-    outline-offset: 2px;
-  }
+  outline: 2px solid #53b0eb;
+  outline-offset: 2px;
+}
 
 .messages__icon svg {
   vertical-align: top;

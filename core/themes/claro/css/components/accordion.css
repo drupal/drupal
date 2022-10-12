@@ -24,23 +24,23 @@
 }
 
 .accordion__item:first-child {
-    margin-top: -1px;
-    border-top-left-radius: 2px;
-    border-top-right-radius: 2px;
-  }
+  margin-top: -1px;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+}
 
 .accordion__item + .accordion__item {
-    margin-top: -1px;
-  }
+  margin-top: -1px;
+}
 
 .accordion__item:last-child {
-    margin-bottom: -1px;
-    border-bottom-right-radius: 2px;
-    border-bottom-left-radius: 2px;
-  }
+  margin-bottom: -1px;
+  border-bottom-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+}
 
 .accordion__item .claro-details__summary .summary {
-    display: block;
-    color: #55565b;
-    font-weight: normal;
-  }
+  display: block;
+  color: #55565b;
+  font-weight: normal;
+}

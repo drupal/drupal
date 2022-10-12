@@ -9,7 +9,8 @@
  * CKEditor appearance overrides.
  */
 :root { /* 1px */
-  /* Inner border size must be based on chrome border size. */ /* 1px */
+  /* Inner border size must be based on chrome border size. */
+  /* 1px */
   /* Inner border radius must be based on chrome border radius and size. */
 }
 .cke.cke_chrome {

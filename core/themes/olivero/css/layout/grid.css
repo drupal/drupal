@@ -23,17 +23,17 @@
 }
 
 .grid-full .grid-full .grid-full {
-    display: block;
-  }
+  display: block;
+}
 
 @media (min-width: 43.75rem) {
 
-.grid-full {
+  .grid-full {
     -ms-grid-columns: (minmax(0, 1fr))[14];
     grid-template-columns: repeat(14, minmax(0, 1fr));
     grid-column-gap: 2.25rem;
-}
   }
+}
 
 /*
   If the .grid-full is nested within the following, apply the appropriate number of columns.
@@ -43,21 +43,21 @@
 
 @media (min-width: 43.75rem) {
 
-.layout--content-narrow .grid-full,
-.layout--pass--content-narrow > * .grid-full {
+  .layout--content-narrow .grid-full,
+  .layout--pass--content-narrow > * .grid-full {
     -ms-grid-columns: (minmax(0, 1fr))[ 12 ];
     grid-template-columns: repeat(12, minmax(0, 1fr));
-}
   }
+}
 
 @media (min-width: 62.5rem) {
 
-.layout--content-narrow .grid-full,
-.layout--pass--content-narrow > * .grid-full {
+  .layout--content-narrow .grid-full,
+  .layout--pass--content-narrow > * .grid-full {
     -ms-grid-columns: (minmax(0, 1fr))[ 8 ];
     grid-template-columns: repeat(8, minmax(0, 1fr));
-}
   }
+}
 
 /*
   If the .grid-full is nested within the following, apply the appropriate number of columns.
@@ -67,18 +67,18 @@
 
 @media (min-width: 43.75rem) {
 
-.layout--content-medium .grid-full,
-.layout--pass--content-medium > * .grid-full {
+  .layout--content-medium .grid-full,
+  .layout--pass--content-medium > * .grid-full {
     -ms-grid-columns: (minmax(0, 1fr))[ 12 ];
     grid-template-columns: repeat(12, minmax(0, 1fr));
-}
   }
+}
 
 @media (min-width: 62.5rem) {
 
-.layout--content-medium .grid-full,
-.layout--pass--content-medium > * .grid-full {
+  .layout--content-medium .grid-full,
+  .layout--pass--content-medium > * .grid-full {
     -ms-grid-columns: (minmax(0, 1fr))[ 10 ];
     grid-template-columns: repeat(10, minmax(0, 1fr));
-}
   }
+}

@@ -42,7 +42,9 @@
     as they are processed by postcss/postcss-custom-properties (for IE11 compatibility),
     which does not support that functionality. Therefore, we need a separate custom
     property for each breakpoint. 😭
-  */ /* Approximate width of a scrollbar. Doesn't have to be perfect. */
+  */
+
+  /* Approximate width of a scrollbar. Doesn't have to be perfect. */
 
   /* Grid gap across various breakpoints. */
 
@@ -54,7 +56,51 @@
 
   /* Width of a grid column at various breakpoints */
 
-  /* Layout helpers */ /* Black */ /* Black 1 */ /* Black 2 */ /* Black 3 */ /* Gray Dark */ /* Gray Dark 2 */ /* Gray medium */ /* Gray medium 1 */ /* Gray medium 2 */ /* Black 4 */ /* Gray light */ /* Gray light 1 */ /* Gray light 2 */ /* Blue dark */ /* Blue dark 2 */ /* Blue medium */ /* Blue bright */ /* Blue bright 5 */ /* White */ /* Red */ /* Gold */ /* Green */
+  /* Layout helpers */
+
+  /* Black */
+
+  /* Black 1 */
+
+  /* Black 2 */
+
+  /* Black 3 */
+
+  /* Gray Dark */
+
+  /* Gray Dark 2 */
+
+  /* Gray medium */
+
+  /* Gray medium 1 */
+
+  /* Gray medium 2 */
+
+  /* Black 4 */
+
+  /* Gray light */
+
+  /* Gray light 1 */
+
+  /* Gray light 2 */
+
+  /* Blue dark */
+
+  /* Blue dark 2 */
+
+  /* Blue medium */
+
+  /* Blue bright */
+
+  /* Blue bright 5 */
+
+  /* White */
+
+  /* Red */
+
+  /* Gold */
+
+  /* Green */
 
   /* Header */
 

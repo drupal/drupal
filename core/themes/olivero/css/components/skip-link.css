@@ -41,13 +41,13 @@
 }
 
 .skip-link:hover {
-    text-decoration: underline;
-    color: #fff;
-  }
+  text-decoration: underline;
+  color: #fff;
+}
 
 .skip-link:after {
-    content: "\0020	➔";
-  }
+  content: "\0020	➔";
+}
 
 .skip-link.focusable:focus {
   position: absolute !important;

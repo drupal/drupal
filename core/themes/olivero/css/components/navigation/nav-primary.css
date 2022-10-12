@@ -20,20 +20,20 @@
 }
 
 .primary-nav__menu-item:last-child {
-    margin-bottom: 0;
-  }
+  margin-bottom: 0;
+}
 
 .primary-nav__menu-item.primary-nav__menu-item--has-children {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-  }
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
 
 .primary-nav__menu-item.primary-nav__menu-item--has-children .primary-nav__menu-link--link,
-    .primary-nav__menu-item.primary-nav__menu-item--has-children .primary-nav__menu-link--nolink {
-      /* Ensure that long text doesn't make the mobile expand button wrap. */
-      flex-basis: calc(100% - 3.375rem);
-    }
+.primary-nav__menu-item.primary-nav__menu-item--has-children .primary-nav__menu-link--nolink {
+  /* Ensure that long text doesn't make the mobile expand button wrap. */
+  flex-basis: calc(100% - 3.375rem);
+}
 
 .primary-nav__menu-link {
   flex-grow: 1;
@@ -45,13 +45,13 @@
 }
 
 .primary-nav__menu-link:hover {
-    color: inherit;
-  }
+  color: inherit;
+}
 
 .primary-nav__menu-link:focus {
-    outline: auto 2px #2494db;
-    outline-offset: 2px;
-  }
+  outline: auto 2px #2494db;
+  outline-offset: 2px;
+}
 
 [dir="ltr"] .primary-nav__menu-link--nolink {
   padding-left: 0;
@@ -112,45 +112,45 @@
 }
 
 [dir="ltr"] .primary-nav__menu-link--button.primary-nav__menu-link--has-children {
-    padding-right: 3.375rem;
+  padding-right: 3.375rem;
 }
 
 [dir="rtl"] .primary-nav__menu-link--button.primary-nav__menu-link--has-children {
-    padding-left: 3.375rem;
+  padding-left: 3.375rem;
 }
 
 .primary-nav__menu-link--button.primary-nav__menu-link--has-children { /* Ensure text does not overlap icon. */
-  }
-
-[dir="ltr"] .primary-nav__menu-link--button.primary-nav__menu-link--has-children:before,[dir="ltr"] 
-    .primary-nav__menu-link--button.primary-nav__menu-link--has-children:after {
-      right: 0.5625rem;
 }
 
-[dir="rtl"] .primary-nav__menu-link--button.primary-nav__menu-link--has-children:before,[dir="rtl"] 
-    .primary-nav__menu-link--button.primary-nav__menu-link--has-children:after {
-      left: 0.5625rem;
+[dir="ltr"] .primary-nav__menu-link--button.primary-nav__menu-link--has-children:before,
+[dir="ltr"] .primary-nav__menu-link--button.primary-nav__menu-link--has-children:after {
+  right: 0.5625rem;
+}
+
+[dir="rtl"] .primary-nav__menu-link--button.primary-nav__menu-link--has-children:before,
+[dir="rtl"] .primary-nav__menu-link--button.primary-nav__menu-link--has-children:after {
+  left: 0.5625rem;
 }
 
 .primary-nav__menu-link--button.primary-nav__menu-link--has-children:before,
-    .primary-nav__menu-link--button.primary-nav__menu-link--has-children:after {
-      position: absolute;
-      top: 1.625rem; /* Visually align button with menu link text. */
-      width: 1.125rem;
-      height: 0;
-      content: "";
-      /* Intentionally not using CSS logical properties. */
-      border-top: solid 3px #2494db;
-    }
+.primary-nav__menu-link--button.primary-nav__menu-link--has-children:after {
+  position: absolute;
+  top: 1.625rem; /* Visually align button with menu link text. */
+  width: 1.125rem;
+  height: 0;
+  content: "";
+  /* Intentionally not using CSS logical properties. */
+  border-top: solid 3px #2494db;
+}
 
 .primary-nav__menu-link--button.primary-nav__menu-link--has-children:after {
-      transition: opacity 0.2s;
-      transform: rotate(90deg);
-    }
+  transition: opacity 0.2s;
+  transform: rotate(90deg);
+}
 
 .primary-nav__menu-link--button.primary-nav__menu-link--has-children[aria-expanded="true"]:after {
-      opacity: 0;
-    }
+  opacity: 0;
+}
 
 [dir="ltr"] .primary-nav__menu-link-inner {
   padding-left: 0;
@@ -177,29 +177,29 @@
 }
 
 [dir="ltr"] .primary-nav__menu-link-inner:after {
-    left: 0;
+  left: 0;
 }
 
 [dir="rtl"] .primary-nav__menu-link-inner:after {
-    right: 0;
+  right: 0;
 }
 
 .primary-nav__menu-link-inner:after {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 0;
-    content: "";
-    transition: transform 0.2s;
-    transform: scaleX(0);
-    transform-origin: left;
-    /* Intentionally not using CSS logical properties. */
-    border-top: solid 5px #2494db;
-  }
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 0;
+  content: "";
+  transition: transform 0.2s;
+  transform: scaleX(0);
+  transform-origin: left;
+  /* Intentionally not using CSS logical properties. */
+  border-top: solid 5px #2494db;
+}
 
 .primary-nav__menu-link:hover .primary-nav__menu-link-inner:after {
-      transform: scaleX(1);
-  }
+  transform: scaleX(1);
+}
 
 /*
   Top level specific styles.
@@ -290,30 +290,30 @@
 }
 
 .primary-nav__menu--level-2.is-active-menu-parent {
-    visibility: visible;
-    max-height: none;
-    margin-top: 1.6875rem;
-    opacity: 1;
-  }
+  visibility: visible;
+  max-height: none;
+  margin-top: 1.6875rem;
+  opacity: 1;
+}
 
 @media (min-width: 43.75rem) {
 
-[dir="ltr"] .primary-nav__menu--level-2 {
+  [dir="ltr"] .primary-nav__menu--level-2 {
     margin-left: -3.375rem;
   }
 
-[dir="rtl"] .primary-nav__menu--level-2 {
+  [dir="rtl"] .primary-nav__menu--level-2 {
     margin-right: -3.375rem;
   }
 
-[dir="ltr"] .primary-nav__menu--level-2 {
+  [dir="ltr"] .primary-nav__menu--level-2 {
     padding-left: 3.375rem;
   }
 
-[dir="rtl"] .primary-nav__menu--level-2 {
+  [dir="rtl"] .primary-nav__menu--level-2 {
     padding-right: 3.375rem;
   }
-  }
+}
 
 /*
  * Olivero doesn't officially support nested tertiary submenus, but this
@@ -333,11 +333,11 @@
 }
 
 html:not(.js) .primary-nav__menu--level-2 {
-    visibility: visible;
-    max-height: none;
-    opacity: 1;
-  }
+  visibility: visible;
+  max-height: none;
+  opacity: 1;
+}
 
 [dir="rtl"] .primary-nav__menu-link-inner:after {
-      transform-origin: right;
-    }
+  transform-origin: right;
+}
