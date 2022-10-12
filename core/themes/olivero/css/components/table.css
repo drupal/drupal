@@ -39,49 +39,49 @@
 }
 
 :is(.forum table,.text-content table,.views-table,.draggable-table) caption {
-    margin-block-end: var(--sp1);
-    text-align: start;
-    color: var(--color-text-neutral-medium);
-    font-family: var(--font-serif);
-    font-size: 0.875rem;
-    font-style: italic;
-    line-height: var(--sp);
-  }
+  margin-block-end: var(--sp1);
+  text-align: start;
+  color: var(--color-text-neutral-medium);
+  font-family: var(--font-serif);
+  font-size: 0.875rem;
+  font-style: italic;
+  line-height: var(--sp);
+}
 
 :is(.forum table,.text-content table,.views-table,.draggable-table) tr:last-child td {
-        border-block-end: 0;
-      }
+  border-block-end: 0;
+}
 
 :is(.forum table,.text-content table,.views-table,.draggable-table) td,
-  :is(.forum table,.text-content table,.views-table,.draggable-table) th {
-    padding-block: var(--sp1);
-    padding-inline-start: 0;
-    padding-inline-end: var(--sp1);
-    vertical-align: top;
-  }
+:is(.forum table,.text-content table,.views-table,.draggable-table) th {
+  padding-block: var(--sp1);
+  padding-inline-start: 0;
+  padding-inline-end: var(--sp1);
+  vertical-align: top;
+}
 
 :is(.forum table,.text-content table,.views-table,.draggable-table) th {
-    margin-block: 0;
-    margin-inline-start: 0;
-    margin-inline-end: 0;
-    text-align: start;
-    letter-spacing: 0.02em;
-    color: var(--color-text-neutral-loud);
-    border-block-end: 2px solid var(--color--primary-50);
-    font-family: var(--font-sans);
-    font-size: 0.875rem;
-    line-height: var(--sp);
-  }
+  margin-block: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  text-align: start;
+  letter-spacing: 0.02em;
+  color: var(--color-text-neutral-loud);
+  border-block-end: 2px solid var(--color--primary-50);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  line-height: var(--sp);
+}
 
 :is(.forum table,.text-content table,.views-table,.draggable-table) td {
-    white-space: normal;
-    border-block-end: 2px solid var(--color--gray-65);
-  }
+  white-space: normal;
+  border-block-end: 2px solid var(--color--gray-65);
+}
 
 :is(.forum table,.text-content table,.views-table,.draggable-table) th.checkbox,
-  :is(.forum table,.text-content table,.views-table,.draggable-table) td.checkbox {
-    text-align: center;
-  }
+:is(.forum table,.text-content table,.views-table,.draggable-table) td.checkbox {
+  text-align: center;
+}
 
 .draggable-table {
   width: 100%;

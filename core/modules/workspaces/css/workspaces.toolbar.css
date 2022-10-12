@@ -35,8 +35,8 @@
 }
 
 [dir="rtl"] .toolbar-oriented .toolbar-bar .workspaces-toolbar-tab {
-    float: left;
-  }
+  float: left;
+}
 
 @media (min-width: 16.5rem) {
   .toolbar:not(.toolbar-oriented) .toolbar-bar .workspaces-toolbar-tab {
@@ -51,9 +51,9 @@
      * @see https://github.com/csstools/postcss-plugins/issues/632
      */
   }
-    [dir="rtl"] .toolbar:not(.toolbar-oriented) .toolbar-bar .workspaces-toolbar-tab {
-      float: left;
-    }
+  [dir="rtl"] .toolbar:not(.toolbar-oriented) .toolbar-bar .workspaces-toolbar-tab {
+    float: left;
+  }
 }
 
 /* Link within the toolbar tab. */
@@ -66,8 +66,8 @@
 }
 
 .toolbar-oriented :is(.toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-item) {
-    width: auto;
-    text-align: initial;
+  width: auto;
+  text-align: initial;
 }
 
 .toolbar .toolbar-icon-workspace:before {

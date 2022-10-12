@@ -78,15 +78,15 @@
 }
 
 .ajax-progress-fullscreen:before {
-    position: absolute;
-    inset-block-start: 50%;
-    inset-inline-start: 50%;
-    width: 1.75rem;
-    height: 1.75rem;
-    margin: -0.875rem;
-    content: "";
-    border-width: 3px;
-  }
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin: -0.875rem;
+  content: "";
+  border-width: 3px;
+}
 
 [dir="rtl"] .ajax-progress-fullscreen {
   box-shadow: 0 -0.25rem 0.625rem rgba(34, 35, 48, 0.1);

@@ -47,88 +47,89 @@ select {
 }
 
 select:focus {
-    border: solid 2px var(--color--primary-50);
-    outline: solid 2px var(--color--primary-50);
-  }
+  border: solid 2px var(--color--primary-50);
+  outline: solid 2px var(--color--primary-50);
+}
 
 @supports (outline-style: double) {
 
-select:focus {
-      border-width: 1px;
-      outline-width: 6px;
-      outline-style: double;
-      outline-offset: -1px;
+  select:focus {
+    border-width: 1px;
+    outline-width: 6px;
+    outline-style: double;
+    outline-offset: -1px;
   }
-    }
+}
 
 /* Hides default chevron within Internet Explorer. */
 
 select::-ms-expand {
-    display: none;
-  }
+  display: none;
+}
 
 select[disabled] {
-    color: var(--color--gray-60);
-    background-color: var(--color--gray-100);
-  }
+  color: var(--color--gray-60);
+  background-color: var(--color--gray-100);
+}
 
 select.error {
-    border: solid 2px var(--color--red);
-  }
+  border: solid 2px var(--color--red);
+}
 
 select.error:focus {
-      outline-color: var(--color--red);
-    }
+  outline-color: var(--color--red);
+}
 
 select[multiple] {
-    height: auto;
-    padding: var(--sp0-5);
-    background-image: none;
-    line-height: 1; /* Needed by non-Chromium based MS Edge browsers. */
-  }
+  height: auto;
+  padding: var(--sp0-5);
+  background-image: none;
+  line-height: 1; /* Needed by non-Chromium based MS Edge browsers. */
+}
 
 select[multiple] option {
-      padding: var(--sp0-5);
-    }
+  padding: var(--sp0-5);
+}
 
 select.form-element--small {
-    height: var(--sp2-5);
-  }
+  height: var(--sp2-5);
+}
 
 /* Necessary to show chevron in forced colors mode in modern browsers. */
 
 @media (forced-colors: active) {
 
-select {
+  select {
     padding-inline-end: var(--sp);
     background-image: none;
     -webkit-appearance: listbox;
     appearance: listbox; /* Default <select> appearance value for modern browsers. */
 
     /* Lets browser set <select> appearance to whatever the browser's default is. */
-}
-    @supports ((-webkit-appearance: revert) or (appearance: revert)) {
+  }
 
-select {
+  @supports ((-webkit-appearance: revert) or (appearance: revert)) {
+
+    select {
       -webkit-appearance: revert;
       appearance: revert;
-}
     }
   }
+}
 
 /* Necessary for Internet Explorer to show chevron. */
 
 @media screen and (-ms-high-contrast: active) {
 
-select {
+  select {
     padding-inline-end: 0;
 
     /* Re-enable default chevron for Internet Explorer. */
-}
-    select::-ms-expand {
-      display: block;
-    }
   }
+  select::-ms-expand {
+    display: block;
+  }
+}
 
 [dir="rtl"] select {
   background-position: left var(--sp) center;

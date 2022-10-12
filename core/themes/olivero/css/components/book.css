@@ -42,25 +42,25 @@
 
 @media (min-width: 31.25rem) {
 
-.book-pager__item {
+  .book-pager__item {
     flex: 0 0 33.33%;
-}
   }
+}
 
 @media (min-width: 31.25rem) {
 
-.book-pager__item--center {
+  .book-pager__item--center {
     text-align: center;
-}
   }
+}
 
 @media (min-width: 31.25rem) {
 
-.book-pager__item--next {
+  .book-pager__item--next {
     margin-inline-start: auto;
     text-align: end;
-}
   }
+}
 
 .book-pager__link {
   display: inline-flex;
@@ -73,26 +73,26 @@
 }
 
 .book-pager__link--previous:before {
-    display: block;
-    width: var(--sp0-5);
-    height: var(--sp0-5);
-    margin-inline-end: 0.25em;
-    content: "";
-    transform: rotate(-45deg);
-    border-block-start: solid 0.1875rem currentColor;
-    border-inline-start: solid 0.1875rem currentColor;
-  }
+  display: block;
+  width: var(--sp0-5);
+  height: var(--sp0-5);
+  margin-inline-end: 0.25em;
+  content: "";
+  transform: rotate(-45deg);
+  border-block-start: solid 0.1875rem currentColor;
+  border-inline-start: solid 0.1875rem currentColor;
+}
 
 .book-pager__link--next:after {
-    display: block;
-    width: var(--sp0-5);
-    height: var(--sp0-5);
-    margin-inline-start: 0.25em;
-    content: "";
-    transform: rotate(135deg);
-    border-block-start: solid 0.1875rem currentColor;
-    border-inline-start: solid 0.1875rem currentColor;
-  }
+  display: block;
+  width: var(--sp0-5);
+  height: var(--sp0-5);
+  margin-inline-start: 0.25em;
+  content: "";
+  transform: rotate(135deg);
+  border-block-start: solid 0.1875rem currentColor;
+  border-inline-start: solid 0.1875rem currentColor;
+}
 
 .book-navigation__menu {
   margin-block: var(--sp2);
@@ -113,9 +113,9 @@
 }
 
 [dir="rtl"] .book-pager__link--previous:before {
-    transform: rotate(45deg);
-  }
+  transform: rotate(45deg);
+}
 
 [dir="rtl"] .book-pager__link--next:after {
-    transform: rotate(-135deg);
-  }
+  transform: rotate(-135deg);
+}

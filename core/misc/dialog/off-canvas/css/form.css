@@ -25,165 +25,168 @@
 }
 
 #drupal-off-canvas-wrapper form {
-    padding-block: var(--off-canvas-padding);
-  }
+  padding-block: var(--off-canvas-padding);
+}
 
 #drupal-off-canvas-wrapper form > *:first-child {
-      margin-top: 0;
-      padding-top: 0;
-    }
+  margin-top: 0;
+  padding-top: 0;
+}
 
 #drupal-off-canvas-wrapper .ck-content {
-    color: var(--drupal-off-canvas-input-text-color);
-  }
+  color: var(--drupal-off-canvas-input-text-color);
+}
 
 #drupal-off-canvas-wrapper .form-item:where(:not(fieldset)) {
-    padding: var(--off-canvas-vertical-spacing-unit) 0;
-  }
+  padding: var(--off-canvas-vertical-spacing-unit) 0;
+}
 
 #drupal-off-canvas-wrapper .form-items-inline > * {
-    display: inline-block;
-  }
+  display: inline-block;
+}
 
 #drupal-off-canvas-wrapper label {
-    display: block;
-  }
+  display: block;
+}
 
 #drupal-off-canvas-wrapper .form-type-boolean {
-    padding: calc(0.5 * var(--off-canvas-vertical-spacing-unit)) 0;
-  }
+  padding: calc(0.5 * var(--off-canvas-vertical-spacing-unit)) 0;
+}
 
 #drupal-off-canvas-wrapper .description,
-  #drupal-off-canvas-wrapper .form-item__description {
-    margin: calc(0.5 * var(--off-canvas-vertical-spacing-unit)) 0;
-    font-size: 0.75rem;
-  }
+#drupal-off-canvas-wrapper .form-item__description {
+  margin: calc(0.5 * var(--off-canvas-vertical-spacing-unit)) 0;
+  font-size: 0.75rem;
+}
 
 #drupal-off-canvas-wrapper .form-required:after {
-    content: "*";
-  }
+  content: "*";
+}
 
 #drupal-off-canvas-wrapper .fieldset,
-  #drupal-off-canvas-wrapper fieldset {
-    margin: calc(2 * var(--off-canvas-vertical-spacing-unit)) 0;
-    padding: var(--off-canvas-vertical-spacing-unit);
-    border: solid var(--drupal-off-canvas-fieldset-border-width) var(--drupal-off-canvas-fieldset-border-color);
-    background-color: var(--drupal-off-canvas-fieldset-background-color);
-  }
+#drupal-off-canvas-wrapper fieldset {
+  margin: calc(2 * var(--off-canvas-vertical-spacing-unit)) 0;
+  padding: var(--off-canvas-vertical-spacing-unit);
+  border: solid var(--drupal-off-canvas-fieldset-border-width) var(--drupal-off-canvas-fieldset-border-color);
+  background-color: var(--drupal-off-canvas-fieldset-background-color);
+}
 
-#drupal-off-canvas-wrapper legend, 
-  #drupal-off-canvas-wrapper .fieldset__legend {
-    display: contents;
-    font-weight: bold;
-  }
+#drupal-off-canvas-wrapper legend,
+#drupal-off-canvas-wrapper .fieldset__legend {
+  display: contents;
+  font-weight: bold;
+}
 
 /* Bartik uses the .field-multiple-table CSS class on its tabledrag tables. */
 
 #drupal-off-canvas-wrapper :is(.fieldset, fieldset, .draggable-table, .field-multiple-table) input:where(:not([type="submit"], [type="checkbox"], [type="radio"])) {
-    width: 100%; /* Prevent text fields from breaking out of tables and fieldsets at narrow widths. */
-  }
+  width: 100%; /* Prevent text fields from breaking out of tables and fieldsets at narrow widths. */
+}
 
 #drupal-off-canvas-wrapper input,
-  #drupal-off-canvas-wrapper textarea {
-    font-family: inherit;
-  }
+#drupal-off-canvas-wrapper textarea {
+  font-family: inherit;
+}
 
-#drupal-off-canvas-wrapper input:where(:not([type="submit"], [type="checkbox"], [type="radio"], [type="file"])), #drupal-off-canvas-wrapper select, #drupal-off-canvas-wrapper textarea {
-    max-width: 100%;
-    padding: var(--drupal-off-canvas-input-padding);
-    color: var(--drupal-off-canvas-input-text-color);
-    border: var(--drupal-off-canvas-input-border);
-    border-radius: var(--drupal-off-canvas-input-border-radius);
-    background-color: var(--drupal-off-canvas-input-background-color);
-    font-size: var(--drupal-off-canvas-input-font-size);
-  }
+#drupal-off-canvas-wrapper input:where(:not([type="submit"], [type="checkbox"], [type="radio"], [type="file"])),
+#drupal-off-canvas-wrapper select,
+#drupal-off-canvas-wrapper textarea {
+  max-width: 100%;
+  padding: var(--drupal-off-canvas-input-padding);
+  color: var(--drupal-off-canvas-input-text-color);
+  border: var(--drupal-off-canvas-input-border);
+  border-radius: var(--drupal-off-canvas-input-border-radius);
+  background-color: var(--drupal-off-canvas-input-background-color);
+  font-size: var(--drupal-off-canvas-input-font-size);
+}
 
-:is(#drupal-off-canvas-wrapper input[type="checkbox"]) + label, :is(#drupal-off-canvas-wrapper input[type="radio"]) + label {
-      display: inline;
-    }
+:is(#drupal-off-canvas-wrapper input[type="checkbox"]) + label,
+:is(#drupal-off-canvas-wrapper input[type="radio"]) + label {
+  display: inline;
+}
 
 #drupal-off-canvas-wrapper input[type="file"] {
-    margin-bottom: var(--off-canvas-vertical-spacing-unit);
-  }
+  margin-bottom: var(--off-canvas-vertical-spacing-unit);
+}
 
 #drupal-off-canvas-wrapper input[type="search"] {
-    -webkit-appearance: none;
-    appearance: none; /* Necessary for Safari. */
-  }
+  -webkit-appearance: none;
+  appearance: none; /* Necessary for Safari. */
+}
 
 #drupal-off-canvas-wrapper select {
-    -webkit-appearance: none;
-    appearance: none;
-    padding-inline-end: 1.25rem;
-    border: var(--drupal-off-canvas-input-border);
-    border-radius: var(--drupal-off-canvas-input-border-radius);
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 9'%3e%3cpath fill='none' stroke-width='1.5' d='M1 1l6 6 6-6' stroke='%23545560'/%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: center right 5px; /* LTR */
-    background-size: 0.75rem;
-  }
+  -webkit-appearance: none;
+  appearance: none;
+  padding-inline-end: 1.25rem;
+  border: var(--drupal-off-canvas-input-border);
+  border-radius: var(--drupal-off-canvas-input-border-radius);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 9'%3e%3cpath fill='none' stroke-width='1.5' d='M1 1l6 6 6-6' stroke='%23545560'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: center right 5px; /* LTR */
+  background-size: 0.75rem;
+}
 
 [dir="rtl"] #drupal-off-canvas-wrapper select {
-      background-position: center left 5px;
-    }
+  background-position: center left 5px;
+}
 
 @media (forced-colors: active) {
 
-#drupal-off-canvas-wrapper select {
-      -webkit-appearance: revert;
-      appearance: revert;
-      padding-inline-end: 0;
-      background: revert;
+  #drupal-off-canvas-wrapper select {
+    -webkit-appearance: revert;
+    appearance: revert;
+    padding-inline-end: 0;
+    background: revert;
   }
-    }
+}
 
 /*
    * Autocomplete.
    */
 
 #drupal-off-canvas-wrapper .form-autocomplete {
-    padding-inline-end: 2.5rem; /* Room for icon. */
-    background-image: url("data:image/svg+xml,%3csvg width='40' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M8 1C3.46.827-.188 5.787 1.313 10.068c1.176 4.384 6.993 6.417 10.637 3.7.326-.39.565.276.846.442l3.74 3.739 1.413-1.414-4.35-4.35c2.811-3.468 1.15-9.247-3.062-10.71A7.003 7.003 0 008 1zm0 2c3.242-.123 5.849 3.42 4.777 6.477-.842 3.132-4.994 4.58-7.6 2.65-2.745-1.73-2.9-6.125-.285-8.044A5.006 5.006 0 018 3z' fill='%23868686'/%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: center right 1px; /* LTR */
-  }
+  padding-inline-end: 2.5rem; /* Room for icon. */
+  background-image: url("data:image/svg+xml,%3csvg width='40' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M8 1C3.46.827-.188 5.787 1.313 10.068c1.176 4.384 6.993 6.417 10.637 3.7.326-.39.565.276.846.442l3.74 3.739 1.413-1.414-4.35-4.35c2.811-3.468 1.15-9.247-3.062-10.71A7.003 7.003 0 008 1zm0 2c3.242-.123 5.849 3.42 4.777 6.477-.842 3.132-4.994 4.58-7.6 2.65-2.745-1.73-2.9-6.125-.285-8.044A5.006 5.006 0 018 3z' fill='%23868686'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: center right 1px; /* LTR */
+}
 
 #drupal-off-canvas-wrapper .form-autocomplete.ui-autocomplete-loading {
-      background-image: url(../../../icons/spinner.gif);
-    }
+  background-image: url(../../../icons/spinner.gif);
+}
 
 [dir="rtl"] #drupal-off-canvas-wrapper .form-autocomplete {
-      background-position: center left 1px;
-    }
+  background-position: center left 1px;
+}
 
 /* This is the background <ul> for the autocomplete dropdown. */
 
 #drupal-off-canvas-wrapper .ui-autocomplete {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    border: var(--drupal-off-canvas-input-border);
-    background-color: var(--drupal-off-canvas-input-background-color);
-    box-shadow: 0 1px 1px 0 var(--off-canvas-background-color); /* Ensure edge is visible if appearing over another form element. */
-  }
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: var(--drupal-off-canvas-input-border);
+  background-color: var(--drupal-off-canvas-input-background-color);
+  box-shadow: 0 1px 1px 0 var(--off-canvas-background-color); /* Ensure edge is visible if appearing over another form element. */
+}
 
 #drupal-off-canvas-wrapper .ui-autocomplete a {
-      display: block;
-      padding: var(--drupal-off-canvas-input-padding);
-      cursor: pointer;
-      color: var(--drupal-off-canvas-input-text-color);
-      font-size: var(--drupal-off-canvas-input-font-size);
-    }
+  display: block;
+  padding: var(--drupal-off-canvas-input-padding);
+  cursor: pointer;
+  color: var(--drupal-off-canvas-input-text-color);
+  font-size: var(--drupal-off-canvas-input-font-size);
+}
 
 #drupal-off-canvas-wrapper .ui-autocomplete a:hover {
-        background-color: #eee;
-      }
+  background-color: #eee;
+}
 
 #drupal-off-canvas-wrapper .ui-autocomplete a:focus,
-      #drupal-off-canvas-wrapper .ui-autocomplete a.ui-state-active {
-        outline: solid 2px currentColor;
-        outline-offset: -2px;
-      }
+#drupal-off-canvas-wrapper .ui-autocomplete a.ui-state-active {
+  outline: solid 2px currentColor;
+  outline-offset: -2px;
+}
 
 /*
    * Claro injects a "Loading" autocomplete message that affects the positioning
@@ -191,5 +194,5 @@
    */
 
 #drupal-off-canvas-wrapper .claro-autocomplete__message {
-    display: none;
-  }
+  display: none;
+}

@@ -30,17 +30,17 @@
 }
 
 .region--secondary-menu > * {
-    margin-block-end: 0;
-  }
+  margin-block-end: 0;
+}
 
 @media (min-width: 75rem) {
-    body:not(.is-always-mobile-nav) .region--secondary-menu {
-      justify-content: flex-end;
-      margin: 0;
+  body:not(.is-always-mobile-nav) .region--secondary-menu {
+    justify-content: flex-end;
+    margin: 0;
 
-      /* If the secondary nav is the first item within the header, it does not need left separator. */
-    }
-      body:not(.is-always-mobile-nav) .region--secondary-menu:first-child .secondary-nav:before {
-        content: none;
-      }
+    /* If the secondary nav is the first item within the header, it does not need left separator. */
   }
+  body:not(.is-always-mobile-nav) .region--secondary-menu:first-child .secondary-nav:before {
+    content: none;
+  }
+}

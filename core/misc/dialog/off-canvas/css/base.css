@@ -33,68 +33,68 @@
 }
 
 #drupal-off-canvas-wrapper *:focus {
-    outline: solid var(--off-canvas-focus-outline-width) var(--off-canvas-focus-outline-color);
-    outline-offset: 2px;
-  }
+  outline: solid var(--off-canvas-focus-outline-width) var(--off-canvas-focus-outline-color);
+  outline-offset: 2px;
+}
 
 #drupal-off-canvas-wrapper a,
-  #drupal-off-canvas-wrapper .link {
-    text-decoration: none;
-    color: var(--off-canvas-link-color);
-  }
+#drupal-off-canvas-wrapper .link {
+  text-decoration: none;
+  color: var(--off-canvas-link-color);
+}
 
 #drupal-off-canvas-wrapper hr {
-    height: 1px;
-    background: var(--off-canvas-border-color);
-  }
+  height: 1px;
+  background: var(--off-canvas-border-color);
+}
 
 #drupal-off-canvas-wrapper h1,
-  #drupal-off-canvas-wrapper .heading-a {
-    font-size: 1.4375rem;
-    line-height: 1.2;
-  }
+#drupal-off-canvas-wrapper .heading-a {
+  font-size: 1.4375rem;
+  line-height: 1.2;
+}
 
 #drupal-off-canvas-wrapper h2,
-  #drupal-off-canvas-wrapper .heading-b {
-    margin: var(--off-canvas-vertical-spacing-unit) 0;
-    font-size: 1.1875rem;
-  }
+#drupal-off-canvas-wrapper .heading-b {
+  margin: var(--off-canvas-vertical-spacing-unit) 0;
+  font-size: 1.1875rem;
+}
 
 #drupal-off-canvas-wrapper h3,
-  #drupal-off-canvas-wrapper .heading-c {
-    margin: var(--off-canvas-vertical-spacing-unit) 0;
-    font-size: 1.0625rem;
-  }
+#drupal-off-canvas-wrapper .heading-c {
+  margin: var(--off-canvas-vertical-spacing-unit) 0;
+  font-size: 1.0625rem;
+}
 
 #drupal-off-canvas-wrapper h4,
-  #drupal-off-canvas-wrapper .heading-d {
-    margin: var(--off-canvas-vertical-spacing-unit) 0;
-    font-size: 1rem;
-  }
+#drupal-off-canvas-wrapper .heading-d {
+  margin: var(--off-canvas-vertical-spacing-unit) 0;
+  font-size: 1rem;
+}
 
 #drupal-off-canvas-wrapper h5,
-  #drupal-off-canvas-wrapper .heading-e,
-  #drupal-off-canvas-wrapper h6,
-  #drupal-off-canvas-wrapper .heading-f {
-    margin: var(--off-canvas-vertical-spacing-unit) 0;
-    font-size: 0.9375rem;
-  }
+#drupal-off-canvas-wrapper .heading-e,
+#drupal-off-canvas-wrapper h6,
+#drupal-off-canvas-wrapper .heading-f {
+  margin: var(--off-canvas-vertical-spacing-unit) 0;
+  font-size: 0.9375rem;
+}
 
 #drupal-off-canvas-wrapper p {
-    margin: var(--off-canvas-vertical-spacing-unit) 0;
-  }
+  margin: var(--off-canvas-vertical-spacing-unit) 0;
+}
 
 #drupal-off-canvas-wrapper img {
-    max-width: 100%;
-    height: auto;
-  }
+  max-width: 100%;
+  height: auto;
+}
 
 #drupal-off-canvas-wrapper .links {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
 
 #drupal-off-canvas-wrapper .links li {
-      margin: calc(var(--off-canvas-vertical-spacing-unit) /2) 0;
-    }
+  margin: calc(var(--off-canvas-vertical-spacing-unit) /2) 0;
+}

@@ -464,7 +464,7 @@
     "selector-pseudo-element-colon-notation": null,
     "shorthand-property-no-redundant-values": null,
     "string-quotes": "double",
-    "unit-allowed-list": ["ch", "deg", "em", "ex", "fr", "ms", "rem", "%", "s", "px", "vw", "vh"],
+    "unit-allowed-list": ["ch", "deg", "dpcm", "em", "ex", "fr", "ms", "rem", "%", "s", "px", "vw", "vh"],
     "value-keyword-case": ["lower", {
       "camelCaseSvgKeywords": true,
       "ignoreProperties": [
