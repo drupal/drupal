@@ -214,4 +214,24 @@ class DrupalSelenium2Driver extends Selenium2Driver {
     return $result;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function dragTo($sourceXpath, $destinationXpath) {
+    // Ensure both the source and destination exist at this point.
+    $this->getWebDriverSession()->element('xpath', $sourceXpath);
+    $this->getWebDriverSession()->element('xpath', $destinationXpath);
+
+    try {
+      parent::dragTo($sourceXpath, $destinationXpath);
+    }
+    catch (Exception $e) {
+      // Do not care if this fails for any reason. It is a source of random
+      // fails. The calling code should be doing assertions on the results of
+      // dragging anyway. See upstream issues:
+      // - https://github.com/minkphp/MinkSelenium2Driver/issues/97
+      // - https://github.com/minkphp/MinkSelenium2Driver/issues/51
+    }
+  }
+
 }
