@@ -12,7 +12,6 @@ use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Constraint\IsNull;
 use PHPUnit\Framework\Constraint\LogicalNot;
 use WebDriver\Exception;
-use WebDriver\Exception\CurlExec;
 
 // cspell:ignore interactable
 
@@ -156,18 +155,7 @@ JS;
    *   The result of $callback.
    */
   private function waitForHelper(int $timeout, callable $callback) {
-    WebDriverCurlService::disableRetry();
-    $wrapper = function (Element $element) use ($callback) {
-      try {
-        return call_user_func($callback, $element);
-      }
-      catch (CurlExec $e) {
-        return NULL;
-      }
-    };
-    $result = $this->session->getPage()->waitFor($timeout / 1000, $wrapper);
-    WebDriverCurlService::enableRetry();
-    return $result;
+    return $this->session->getPage()->waitFor($timeout / 1000, $callback);
   }
 
   /**
