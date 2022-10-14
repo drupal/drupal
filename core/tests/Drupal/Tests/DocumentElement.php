@@ -7,7 +7,10 @@
 namespace Drupal\Tests;
 
 use Behat\Mink\Driver\BrowserKitDriver;
+use Behat\Mink\Element\Element;
 use Behat\Mink\Element\TraversableElement;
+use Drupal\FunctionalJavascriptTests\WebDriverCurlService;
+use WebDriver\Exception\CurlExec;
 
 /**
  * Document element.
@@ -83,6 +86,33 @@ class DocumentElement extends TraversableElement {
     // If using a real browser fallback to the \Behat\Mink\Element\Element
     // implementation.
     return parent::getText();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function waitFor($timeout, $callback) {
+    // Wraps waits in a function to catch curl exceptions to continue waiting.
+    WebDriverCurlService::disableRetry();
+    $count = 0;
+    $wrapper = function (Element $element) use ($callback, &$count) {
+      $count++;
+      try {
+        return call_user_func($callback, $element);
+      }
+      catch (CurlExec $e) {
+        return NULL;
+      }
+    };
+    $result = parent::waitFor($timeout, $wrapper);
+    if (!$result && $count < 2) {
+      // If the callback or the system is really slow, then it might have only
+      // fired once. In this case it is better to trigger it once more as the
+      // page state has probably changed while the callback is running.
+      return call_user_func($callback, $this);
+    }
+    WebDriverCurlService::enableRetry();
+    return $result;
   }
 
 }
