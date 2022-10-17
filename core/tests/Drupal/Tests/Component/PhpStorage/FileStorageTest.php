@@ -70,11 +70,11 @@ class FileStorageTest extends PhpStorageTestBase {
 
     // Find a global that doesn't exist.
     do {
-      $random = mt_rand(10000, 100000);
+      $random = 'test' . mt_rand(10000, 100000);
     } while (isset($GLOBALS[$random]));
 
     // Write out a PHP file and ensure it's successfully loaded.
-    $code = "<?php\n\$GLOBALS[$random] = TRUE;";
+    $code = "<?php\n\$GLOBALS['$random'] = TRUE;";
     $this->assertTrue($php->save($name, $code), 'Saved php file');
     $php->load($name);
     $this->assertTrue($GLOBALS[$random], 'File saved correctly with correct value');
