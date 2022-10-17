@@ -477,7 +477,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
     // - uncacheable
     $x = $base_element_b;
     $expected_placeholder_render_array = $x['#attached']['placeholders'][(string) $generate_placeholder_markup()];
-    unset($x['#attached']['placeholders'][(string) $generate_placeholder_markup()]['#cache']);
+    $this->assertArrayNotHasKey('#cache', $expected_placeholder_render_array);
     $cases[] = [
       $x,
       $args,
