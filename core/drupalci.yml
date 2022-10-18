@@ -41,7 +41,9 @@ build:
         halt-on-fail: false
         <<: *testgroups
       run_tests.javascript:
-        concurrency: 15
+        # Reduced from 15 due to potential DNS throttling issues on AWS.
+        # @see https://www.drupal.org/project/drupal/issues/3045612
+        concurrency: 10
         types: 'PHPUnit-FunctionalJavascript'
         suppress-deprecations: false
         halt-on-fail: false
