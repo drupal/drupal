@@ -303,6 +303,67 @@ JS;
   }
 
   /**
+   * Gets the titles of the vertical tabs in the given container.
+   *
+   * @param string $container_selector
+   *   The container in which to look for vertical tabs.
+   * @param bool $visible_only
+   *   (optional) Whether to restrict to only the visible vertical tabs. TRUE by
+   *   default.
+   *
+   * @return string[]
+   *   The titles of all vertical tabs menu items, restricted to only
+   *   visible ones by default.
+   *
+   * @throws \LogicException
+   */
+  private function getVerticalTabs(string $container_selector, bool $visible_only = TRUE): array {
+    $page = $this->getSession()->getPage();
+
+    // Ensure the container exists.
+    $container = $page->find('css', $container_selector);
+    if ($container === NULL) {
+      throw new \LogicException('The given container should exist.');
+    }
+
+    // Make sure that the container selector contains exactly one Vertical Tabs
+    // UI component.
+    $vertical_tabs = $container->findAll('css', '.vertical-tabs');
+    if (count($vertical_tabs) != 1) {
+      throw new \LogicException('The given container should contain exactly one Vertical Tabs component.');
+    }
+
+    $vertical_tabs = $container->findAll('css', '.vertical-tabs__menu-item');
+    $vertical_tabs_titles = [];
+    foreach ($vertical_tabs as $vertical_tab) {
+      if ($visible_only && !$vertical_tab->isVisible()) {
+        continue;
+      }
+      $title = $vertical_tab->find('css', '.vertical-tabs__menu-item-title')->getHtml();
+      // When retrieving visible vertical tabs, mark the selected one.
+      if ($visible_only && $vertical_tab->hasClass('is-selected')) {
+        $title = "➡️$title";
+      }
+      $vertical_tabs_titles[] = $title;
+    }
+    return $vertical_tabs_titles;
+  }
+
+  /**
+   * Enables a disabled CKEditor 5 toolbar item.
+   *
+   * @param string $toolbar_item_id
+   *   The toolbar item to enable.
+   */
+  protected function enableDisabledToolbarItem(string $toolbar_item_id): void {
+    $assert_session = $this->assertSession();
+    $assert_session->elementExists('css', ".ckeditor5-toolbar-disabled .ckeditor5-toolbar-item-$toolbar_item_id");
+    $this->triggerKeyUp(".ckeditor5-toolbar-item-$toolbar_item_id", 'ArrowDown');
+    $assert_session->elementNotExists('css', ".ckeditor5-toolbar-disabled .ckeditor5-toolbar-item-$toolbar_item_id");
+    $assert_session->elementExists('css', ".ckeditor5-toolbar-active .ckeditor5-toolbar-item-$toolbar_item_id");
+  }
+
+  /**
    * Confirms active tab status is intact after AJAX refresh.
    */
   public function testActiveTabsMaintained() {
@@ -312,77 +373,134 @@ JS;
     $this->createNewTextFormat($page, $assert_session);
     $assert_session->assertWaitOnAjaxRequest();
 
-    // Ensure the HTML filter tab is visible.
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'a[href^="#edit-filters-filter-html-settings"]'));
+    // Initial vertical tabs: 3 for filters, 1 for CKE5 plugins.
+    $this->assertSame([
+      'Limit allowed HTML tags and correct faulty HTML',
+      'Convert URLs into links',
+      'Embed media',
+    ], $this->getVerticalTabs('#filter-settings-wrapper', FALSE));
+    $this->assertSame([
+      'Headings',
+    ], $this->getVerticalTabs('#plugin-settings-wrapper', FALSE));
 
-    // Enable media embed to make a second filter config tab visible.
+    // Initial visible vertical tabs: 1 for filters, 1 for CKE5 plugins.
+    $this->assertSame([
+      '➡️Limit allowed HTML tags and correct faulty HTML',
+    ], $this->getVerticalTabs('#filter-settings-wrapper'));
+    $this->assertSame([
+      '➡️Headings',
+    ], $this->getVerticalTabs('#plugin-settings-wrapper'));
+
+    // Enable media embed to make a second filter config vertical tab visible.
     $this->assertTrue($page->hasUncheckedField('filters[media_embed][status]'));
+    $this->assertNull($assert_session->waitForElementVisible('css', '[data-drupal-selector=edit-filters-media-embed-settings]', 0));
     $page->checkField('filters[media_embed][status]');
+    $this->assertNotNull($assert_session->waitForElementVisible('css', '[data-drupal-selector=edit-filters-media-embed-settings]', 0));
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->responseContains('Media types selectable in the Media Library');
-    $assert_session->assertWaitOnAjaxRequest();
+    // Filter plugins vertical tabs behavior: the filter plugin settings
+    // vertical tab with the heaviest filter weight is active by default.
+    // Hence enabling the media_embed filter (weight 100) results in its
+    // vertical tab being activated (filter_html's weight is -10).
+    // @see core/modules/filter/filter.admin.js
+    $this->assertSame([
+      'Limit allowed HTML tags and correct faulty HTML',
+      '➡️Embed media',
+    ], $this->getVerticalTabs('#filter-settings-wrapper'));
+    $this->assertSame([
+      '➡️Headings',
+      'Media',
+    ], $this->getVerticalTabs('#plugin-settings-wrapper'));
 
-    // Enable upload image to add one plugin config form.
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-drupalInsertImage'));
-    $this->triggerKeyUp('.ckeditor5-toolbar-item-drupalInsertImage  ', 'ArrowDown');
-    // cSpell:disable-next-line
-    $this->assertNotEmpty($assert_session->waitForElement('css', 'a[href^="#edit-editor-settings-plugins-ckeditor5-image"]'));
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-active .ckeditor5-toolbar-item-drupalInsertImage'));
+    // Enable upload image to add a third (and fourth) CKE5 plugin vertical tab.
+    $this->enableDisabledToolbarItem('drupalInsertImage');
     $assert_session->assertWaitOnAjaxRequest();
+    // The active CKE5 plugin settings vertical tab is unchanged.
+    $this->assertSame([
+      '➡️Headings',
+      'Image',
+      'Image resize',
+      'Media',
+    ], $this->getVerticalTabs('#plugin-settings-wrapper'));
+    // The active filter plugin settings vertical tab is unchanged.
+    $this->assertSame([
+      'Limit allowed HTML tags and correct faulty HTML',
+      '➡️Embed media',
+    ], $this->getVerticalTabs('#filter-settings-wrapper'));
 
+    // Open the CKE5 "Image" plugin settings vertical tab, interact with the
+    // subform and observe that the AJAX requests those interactions trigger do
+    // not change the active vertical tabs.
     $page->clickLink('Image');
     $assert_session->waitForText('Enable image uploads');
+    $this->assertSame([
+      'Headings',
+      '➡️Image',
+      'Image resize',
+      'Media',
+    ], $this->getVerticalTabs('#plugin-settings-wrapper'));
     $this->assertTrue($page->hasUncheckedField('editor[settings][plugins][ckeditor5_image][status]'));
     $page->checkField('editor[settings][plugins][ckeditor5_image][status]');
     $assert_session->assertWaitOnAjaxRequest();
-
-    // Enable Heading to add a second plugin config form.
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-button-heading'));
-    $this->triggerKeyUp('.ckeditor5-toolbar-button-heading', 'ArrowDown');
-    $this->assertNotEmpty($assert_session->waitForElement('css', 'a[href^="#edit-editor-settings-plugins-ckeditor5-heading"]'));
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-active .ckeditor5-toolbar-button-heading'));
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertSame([
+      'Headings',
+      '➡️Image',
+      'Image resize',
+      'Media',
+    ], $this->getVerticalTabs('#plugin-settings-wrapper'));
+    $this->assertSame([
+      'Limit allowed HTML tags and correct faulty HTML',
+      '➡️Embed media',
+    ], $this->getVerticalTabs('#filter-settings-wrapper'));
 
     $page->pressButton('Save configuration');
     $assert_session->pageTextContains('Added text format ckeditor5');
 
-    // Leave and return to the config form, both sets of tabs should then have
-    // the first tab active by default.
+    // Leave and return to the config form, wait for initialized Vertical Tabs.
     $this->drupalGet('admin/config/content/formats/');
     $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
-
     $assert_session->waitForElement('css', '.vertical-tabs__menu-item.is-selected');
 
-    $plugin_settings_vertical_tabs = $page->findAll('css', '#plugin-settings-wrapper .vertical-tabs__menu-item');
-    $filter_settings = $page->find('xpath', '//*[contains(@class, "js-form-type-vertical-tabs")]/label[contains(text(), "Filter settings")]/..');
-    $filter_settings_vertical_tabs = $filter_settings->findAll('css', '.vertical-tabs__menu-item');
+    // The first CKE5 plugin settings vertical tab is active by default.
+    $this->assertSame([
+      '➡️Headings',
+      'Image',
+      'Image resize',
+      'Media',
+    ], $this->getVerticalTabs('#plugin-settings-wrapper'));
+    // Filter plugins vertical tabs behavior: the filter plugin settings
+    // vertical tab with the heaviest filter weight is active by default.
+    // Hence enabling the media_embed filter (weight 100) results in its
+    // vertical tab being activated (filter_html's weight is -10).
+    // @see core/modules/filter/filter.admin.js
+    $this->assertSame([
+      'Limit allowed HTML tags and correct faulty HTML',
+      '➡️Embed media',
+    ], $this->getVerticalTabs('#filter-settings-wrapper'));
 
-    $this->assertTrue($plugin_settings_vertical_tabs[0]->hasClass('is-selected'), "Expected plugin tab 1 selected on initial build");
-    $this->assertFalse($plugin_settings_vertical_tabs[1]->hasClass('is-selected'), "Expected plugin tab 2 not selected on initial build");
+    // Click the 3rd CKE5 plugin vertical tab.
+    $page->clickLink($this->getVerticalTabs('#plugin-settings-wrapper')[2]);
+    $this->assertSame([
+      'Headings',
+      'Image',
+      '➡️Image resize',
+      'Media',
+    ], $this->getVerticalTabs('#plugin-settings-wrapper'));
 
-    $this->assertFalse($filter_settings_vertical_tabs[0]->hasClass('is-selected'), "Expected filter tab 1 not selected on initial build");
-    $this->assertTrue($filter_settings_vertical_tabs[2]->hasClass('is-selected'), "Expected (visible) filter tab 2 selected on initial build");
-
-    $plugin_settings_vertical_tabs[1]->click();
-    $filter_settings_vertical_tabs[0]->click();
+    // Add another CKEditor 5 toolbar item just to trigger an AJAX refresh.
+    $this->enableDisabledToolbarItem('blockQuote');
     $assert_session->assertWaitOnAjaxRequest();
-
-    $this->assertFalse($plugin_settings_vertical_tabs[0]->hasClass('is-selected'), "Expected plugin tab 1 deselected after click");
-    $this->assertTrue($plugin_settings_vertical_tabs[1]->hasClass('is-selected'), "Expected plugin tab 2 selected after click");
-
-    $this->assertTrue($filter_settings_vertical_tabs[0]->hasClass('is-selected'), "Expected filter tab 1 selected after click");
-    $this->assertFalse($filter_settings_vertical_tabs[2]->hasClass('is-selected'), "Expected (visible) filter tab 2 deselected after click");
-
-    // Add a plugin just to trigger AJAX refresh.
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-blockQuote'));
-    $this->triggerKeyUp('.ckeditor5-toolbar-item-blockQuote', 'ArrowDown');
-    $assert_session->assertWaitOnAjaxRequest();
-
-    $this->assertFalse($plugin_settings_vertical_tabs[0]->hasClass('is-selected'), "Expected plugin tab 1 deselected after AJAX refresh");
-    $this->assertTrue($plugin_settings_vertical_tabs[1]->hasClass('is-selected'), "Expected plugin tab 2 selected after AJAX refresh");
-
-    $this->assertTrue($filter_settings_vertical_tabs[0]->hasClass('is-selected'), "Expected filter tab 1 selected after AJAX refresh");
-    $this->assertFalse($filter_settings_vertical_tabs[1]->hasClass('is-selected'), "Expected filter tab 2 deselected after AJAX refresh");
+    // The active CKE5 plugin settings vertical tab is unchanged.
+    $this->assertSame([
+      'Headings',
+      'Image',
+      '➡️Image resize',
+      'Media',
+    ], $this->getVerticalTabs('#plugin-settings-wrapper'));
+    // The active filter plugin settings vertical tab is unchanged.
+    $this->assertSame([
+      'Limit allowed HTML tags and correct faulty HTML',
+      '➡️Embed media',
+    ], $this->getVerticalTabs('#filter-settings-wrapper'));
   }
 
   /**
