@@ -31,36 +31,23 @@ class AdminUiTest extends CKEditor5TestBase {
     $this->addNewTextFormat($page, $assert_session, 'unicorn');
 
     $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
-    $number_ajax_instances_before = $this->getSession()->evaluateScript('Drupal.ajax.instances.length');
 
     // Enable media embed to trigger an AJAX rebuild.
     $this->assertTrue($page->hasUncheckedField('filters[media_embed][status]'));
+    $this->assertSame(0, $this->getAjaxResponseCount());
     $page->checkField('filters[media_embed][status]');
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.ajax-progress-throbber'));
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->responseContains('Media types selectable in the Media Library');
-    $assert_session->assertWaitOnAjaxRequest();
-    $number_ajax_instances_after = $this->getSession()->evaluateScript('Drupal.ajax.instances.length');
-
-    // After the rebuild, there should be more AJAX instances.
-    $this->assertGreaterThan($number_ajax_instances_before, $number_ajax_instances_after);
+    $this->assertSame(1, $this->getAjaxResponseCount());
 
     // Perform the same steps as above with CKEditor, and confirm AJAX callbacks
     // are not triggered on settings changes.
     $this->drupalGet('admin/config/content/formats/manage/unicorn');
-    $number_ajax_instances_before = $this->getSession()->evaluateScript('Drupal.ajax.instances.length');
 
     // Enable media embed to confirm a format not using CKEditor 5 will not
     // trigger an AJAX rebuild.
     $this->assertTrue($page->hasUncheckedField('filters[media_embed][status]'));
     $page->checkField('filters[media_embed][status]');
-    $this->assertEmpty($assert_session->waitForElement('css', '.ajax-progress-throbber'));
-    $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->responseContains('Media types selectable in the Media Library');
-    $assert_session->assertWaitOnAjaxRequest();
-
-    $number_ajax_instances_after = $this->getSession()->evaluateScript('Drupal.ajax.instances.length');
-    $this->assertSame($number_ajax_instances_before, $number_ajax_instances_after);
+    $this->assertSame(0, $this->getAjaxResponseCount());
 
     // Confirm that AJAX updates happen when attempting to switch to CKEditor 5,
     // even if prevented from doing so by validation.
@@ -72,16 +59,13 @@ class AdminUiTest extends CKEditor5TestBase {
     // Enable a filter that is incompatible with CKEditor 5, so validation is
     // triggered when attempting to switch.
     $incompatible_filter_name = 'filters[filter_incompatible][status]';
-    $number_ajax_instances_before = $this->getSession()->evaluateScript('Drupal.ajax.instances.length');
     $this->assertTrue($page->hasUncheckedField($incompatible_filter_name));
     $page->checkField($incompatible_filter_name);
-    $this->assertEmpty($assert_session->waitForElement('css', '.ajax-progress-throbber'));
-    $assert_session->assertWaitOnAjaxRequest();
-    $number_ajax_instances_after = $this->getSession()->evaluateScript('Drupal.ajax.instances.length');
-    $this->assertSame($number_ajax_instances_before, $number_ajax_instances_after);
+    $this->assertSame(0, $this->getAjaxResponseCount());
 
     $page->selectFieldOption('editor[editor]', 'ckeditor5');
     $assert_session->assertWaitOnAjaxRequest();
+    $this->assertSame(1, $this->getAjaxResponseCount());
 
     $filter_warning = 'CKEditor 5 only works with HTML-based text formats. The "A TYPE_MARKUP_LANGUAGE filter incompatible with CKEditor 5" (filter_incompatible) filter implies this text format is not HTML anymore.';
 
@@ -94,9 +78,38 @@ class AdminUiTest extends CKEditor5TestBase {
     // been corrected.
     $this->assertTrue($page->hasCheckedField($incompatible_filter_name));
     $page->uncheckField($incompatible_filter_name);
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.ajax-progress-throbber'));
     $assert_session->assertWaitOnAjaxRequest();
+    $this->assertSame(2, $this->getAjaxResponseCount());
     $assert_session->pageTextNotContains($filter_warning);
+  }
+
+  /**
+   * Gets the Drupal AJAX response count observed on this page.
+   *
+   * @return int
+   *   The number of completed XHR requests observed since the page was loaded.
+   */
+  protected function getAjaxResponseCount(): int {
+    // Half a second should suffice for any of the test's DOM interactions to
+    // have triggered an AJAX request, if any.
+    try {
+      $this->assertSession()->assertWaitOnAjaxRequest(500);
+    }
+    catch (\RuntimeException $e) {
+      throw new \LogicException('An AJAX request was still being processed, this suggests a assertWaitOnAjaxRequest() call is missing.');
+    }
+
+    // Now that there definitely is no more AJAX request in progress, count the
+    // number of AJAX responses.
+    $javascript = <<<JS
+(function(){
+  return window.performance
+    .getEntries()
+    .filter(entry => entry.initiatorType === 'xmlhttprequest' && entry.name.indexOf('_wrapper_format=drupal_ajax') !== -1)
+    .length
+})()
+JS;
+    return $this->getSession()->evaluateScript($javascript);
   }
 
   /**

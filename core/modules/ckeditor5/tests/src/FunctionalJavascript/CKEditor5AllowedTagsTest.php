@@ -376,9 +376,10 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
 
     // Enable media embed.
     $this->assertTrue($page->hasUncheckedField('filters[media_embed][status]'));
+    $this->assertNull($assert_session->waitForElementVisible('css', '[data-drupal-selector=edit-filters-media-embed-settings]', 0));
     $page->checkField('filters[media_embed][status]');
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->responseContains('Media types selectable in the Media Library');
+    $this->assertNotNull($assert_session->waitForElementVisible('css', '[data-drupal-selector=edit-filters-media-embed-settings]', 0));
 
     $page->clickLink('Embed media');
     $page->checkField('filters[media_embed][settings][allowed_view_modes][view_mode_1]');
@@ -387,7 +388,6 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
 
     $allowed_with_media = $this->allowedElements . ' <drupal-media data-entity-type data-entity-uuid alt data-view-mode>';
     $allowed_with_media_without_view_mode = $this->allowedElements . ' <drupal-media data-entity-type data-entity-uuid alt>';
-    $assert_session->responseContains('Media types selectable in the Media Library');
     $page->clickLink('Media');
     $assert_session->waitForText('Allow the user to override the default view mode');
     $this->assertTrue($page->hasUncheckedField('editor[settings][plugins][media_media][allow_view_mode_override]'));
