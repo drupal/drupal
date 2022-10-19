@@ -16,16 +16,22 @@ class NoSourceModule extends DrupalSqlBase {
   /**
    * {@inheritdoc}
    */
-  public function query() {}
+  public function query() {
+    throw new \BadMethodCallException('This method should never be called');
+  }
 
   /**
    * {@inheritdoc}
    */
-  public function fields() {}
+  public function fields() {
+    throw new \BadMethodCallException('This method should never be called');
+  }
 
   /**
    * {@inheritdoc}
    */
-  public function getIds() {}
+  public function getIds() {
+    throw new \BadMethodCallException('This method should never be called');
+  }
 
 }

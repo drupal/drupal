@@ -72,7 +72,7 @@ class EntityTestMulChanged extends EntityTestMul implements EntityChangedInterfa
   public function save() {
     // Ensure a new timestamp.
     sleep(1);
-    parent::save();
+    return parent::save();
   }
 
 }

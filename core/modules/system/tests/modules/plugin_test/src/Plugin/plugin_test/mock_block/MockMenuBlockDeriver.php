@@ -19,6 +19,7 @@ class MockMenuBlockDeriver implements DeriverInterface {
     if (isset($derivatives[$derivative_id])) {
       return $derivatives[$derivative_id];
     }
+    return NULL;
   }
 
   /**
