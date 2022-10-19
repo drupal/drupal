@@ -90,6 +90,8 @@ class TestRunnerKernel extends DrupalKernel {
     if (!is_dir('public://simpletest') && !@mkdir('public://simpletest', 0777, TRUE) && !is_dir('public://simpletest')) {
       throw new \RuntimeException('Unable to create directory: public://simpletest');
     }
+
+    return $this;
   }
 
   /**
@@ -100,6 +102,7 @@ class TestRunnerKernel extends DrupalKernel {
     // The test runner does not require an installed Drupal site to exist.
     // Therefore, its environment is identical to that of the early installer.
     $this->serviceProviderClasses['app']['Test'] = 'Drupal\Core\Installer\InstallerServiceProvider';
+    return $this->serviceProviderClasses;
   }
 
 }
