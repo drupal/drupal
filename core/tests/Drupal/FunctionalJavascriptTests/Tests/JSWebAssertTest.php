@@ -4,6 +4,7 @@ namespace Drupal\FunctionalJavascriptTests\Tests;
 
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\ElementHtmlException;
+use Drupal\Component\Utility\Timer;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
@@ -42,8 +43,15 @@ class JSWebAssertTest extends WebDriverTestBase {
     $assert_session->elementExists('css', '[data-drupal-selector="edit-test-assert-no-element-after-wait-fail"]');
     $page->findButton('Test assertNoElementAfterWait: fail')->press();
     try {
+      Timer::start('JSWebAssertTest');
       $assert_session->assertNoElementAfterWait('css', '[data-drupal-selector="edit-test-assert-no-element-after-wait-fail"]', 500, 'Element exists on page after too short wait.');
-      $this->fail('Element not exists on page after too short wait.');
+      // This test is fragile if webdriver responses are very slow for some
+      // reason. If they are, do not fail the test.
+      // @todo https://www.drupal.org/project/drupal/issues/3316317 remove this
+      //   workaround.
+      if (Timer::read('JSWebAssertTest') < 1000) {
+        $this->fail("Element not exists on page after too short wait.");
+      }
     }
     catch (ElementHtmlException $e) {
       $this->assertSame('Element exists on page after too short wait.', $e->getMessage());
