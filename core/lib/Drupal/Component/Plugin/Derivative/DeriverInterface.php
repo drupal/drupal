@@ -20,7 +20,7 @@ interface DeriverInterface {
    *   is derived. It is maybe an entire object or just some array, depending
    *   on the discovery mechanism.
    *
-   * @return array
+   * @return array|null
    *   The full definition array of the derivative plugin, typically a merge of
    *   $base_plugin_definition with extra derivative-specific information. NULL
    *   if the derivative doesn't exist.
