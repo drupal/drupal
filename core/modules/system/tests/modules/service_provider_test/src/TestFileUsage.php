@@ -23,6 +23,7 @@ class TestFileUsage extends FileUsageBase {
    * {@inheritdoc}
    */
   public function listUsage(FileInterface $file) {
+    return [];
   }
 
 }

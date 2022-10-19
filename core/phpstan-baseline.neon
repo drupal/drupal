@@ -226,11 +226,6 @@ parameters:
 			path: lib/Drupal/Core/Entity/KeyValueStore/KeyValueContentEntityStorage.php
 
 		-
-			message: "#^Method Drupal\\\\Core\\\\Entity\\\\Plugin\\\\DataType\\\\Deriver\\\\EntityDeriver\\:\\:getDerivativeDefinition\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Entity/Plugin/DataType/Deriver/EntityDeriver.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryBase\\:\\:getClass\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Entity/Query/QueryBase.php
@@ -279,11 +274,6 @@ parameters:
 			message: "#^Call to method getSortedDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Field/FieldTypePluginManager.php
-
-		-
-			message: "#^Method Drupal\\\\Core\\\\Field\\\\Plugin\\\\DataType\\\\Deriver\\\\FieldItemDeriver\\:\\:getDerivativeDefinition\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Field/Plugin/DataType/Deriver/FieldItemDeriver.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -384,16 +374,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: lib/Drupal/Core/Template/TwigPhpStorageCache.php
-
-		-
-			message: "#^Method Drupal\\\\Core\\\\Test\\\\TestRunnerKernel\\:\\:boot\\(\\) should return \\$this\\(Drupal\\\\Core\\\\Test\\\\TestRunnerKernel\\) but return statement is missing\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Test/TestRunnerKernel.php
-
-		-
-			message: "#^Method Drupal\\\\Core\\\\Test\\\\TestRunnerKernel\\:\\:discoverServiceProviders\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Test/TestRunnerKernel.php
 
 		-
 			message: "#^Method Drupal\\\\Core\\\\Theme\\\\ThemeInitialization\\:\\:resolveStyleSheetPlaceholders\\(\\) should return string but return statement is missing\\.$#"
@@ -549,11 +529,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/comment/tests/src/Functional/Views/DefaultViewRecentCommentsTest.php
-
-		-
-			message: "#^Method Drupal\\\\config_test\\\\ConfigTestForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
-			count: 1
-			path: modules/config/tests/config_test/src/ConfigTestForm.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -896,21 +871,6 @@ parameters:
 			path: modules/migrate_drupal_ui/src/Form/ReviewForm.php
 
 		-
-			message: "#^Method Drupal\\\\migration_provider_test\\\\Plugin\\\\migrate\\\\source\\\\NoSourceModule\\:\\:fields\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: modules/migrate_drupal_ui/tests/modules/migration_provider_test/src/Plugin/migrate/source/NoSourceModule.php
-
-		-
-			message: "#^Method Drupal\\\\migration_provider_test\\\\Plugin\\\\migrate\\\\source\\\\NoSourceModule\\:\\:getIds\\(\\) should return array\\<array\\> but return statement is missing\\.$#"
-			count: 1
-			path: modules/migrate_drupal_ui/tests/modules/migration_provider_test/src/Plugin/migrate/source/NoSourceModule.php
-
-		-
-			message: "#^Method Drupal\\\\migration_provider_test\\\\Plugin\\\\migrate\\\\source\\\\NoSourceModule\\:\\:query\\(\\) should return Drupal\\\\Core\\\\Database\\\\Query\\\\SelectInterface but return statement is missing\\.$#"
-			count: 1
-			path: modules/migrate_drupal_ui/tests/modules/migration_provider_test/src/Plugin/migrate/source/NoSourceModule.php
-
-		-
 			message: "#^Call to an undefined method Drupal\\\\Tests\\\\migrate_drupal_ui\\\\Functional\\\\CredentialFormTest\\:\\:installEntitySchema\\(\\)\\.$#"
 			count: 8
 			path: modules/migrate_drupal_ui/tests/src/Functional/CredentialFormTest.php
@@ -1046,11 +1006,6 @@ parameters:
 			path: modules/responsive_image/src/ResponsiveImageStyleForm.php
 
 		-
-			message: "#^Method Drupal\\\\rest\\\\Plugin\\\\Deriver\\\\EntityDeriver\\:\\:getDerivativeDefinition\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: modules/rest/src/Plugin/Deriver/EntityDeriver.php
-
-		-
 			message: "#^Method Drupal\\\\rest\\\\Routing\\\\ResourceRoutes\\:\\:onDynamicRouteEvent\\(\\) should return array but return statement is missing\\.$#"
 			count: 1
 			path: modules/rest/src/Routing/ResourceRoutes.php
@@ -1079,11 +1034,6 @@ parameters:
 			message: "#^Method Drupal\\\\search\\\\SearchPageRepository\\:\\:setDefaultSearchPage\\(\\) should return static\\(Drupal\\\\search\\\\SearchPageRepository\\) but return statement is missing\\.$#"
 			count: 1
 			path: modules/search/src/SearchPageRepository.php
-
-		-
-			message: "#^Method Drupal\\\\search_extra_type\\\\Plugin\\\\Search\\\\SearchExtraTypeSearch\\:\\:setSearch\\(\\) should return \\$this\\(Drupal\\\\search_extra_type\\\\Plugin\\\\Search\\\\SearchExtraTypeSearch\\) but return statement is missing\\.$#"
-			count: 1
-			path: modules/search/tests/modules/search_extra_type/src/Plugin/Search/SearchExtraTypeSearch.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1161,16 +1111,6 @@ parameters:
 			path: modules/system/tests/modules/entity_test/entity_test.install
 
 		-
-			message: "#^Method Drupal\\\\entity_test\\\\Entity\\\\EntityTestMulChanged\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
-			count: 1
-			path: modules/system/tests/modules/entity_test/src/Entity/EntityTestMulChanged.php
-
-		-
-			message: "#^Method Drupal\\\\entity_test\\\\EntityTestForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
-			count: 1
-			path: modules/system/tests/modules/entity_test/src/EntityTestForm.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/system/tests/modules/entity_test/src/Plugin/Field/FieldType/ChangedTestItem.php
@@ -1181,29 +1121,9 @@ parameters:
 			path: modules/system/tests/modules/hold_test/src/EventSubscriber/HoldTestSubscriber.php
 
 		-
-			message: "#^Method Drupal\\\\image_test\\\\Plugin\\\\ImageToolkit\\\\Operation\\\\test\\\\OperationBase\\:\\:execute\\(\\) should return bool but return statement is missing\\.$#"
-			count: 1
-			path: modules/system/tests/modules/image_test/src/Plugin/ImageToolkit/Operation/test/OperationBase.php
-
-		-
 			message: "#^Configuration entity must define a `config_export` key\\. See https\\://www\\.drupal\\.org/node/2481909$#"
 			count: 1
 			path: modules/system/tests/modules/module_installer_config_test/src/Entity/TestConfigType.php
-
-		-
-			message: "#^Method Drupal\\\\plugin_test\\\\Plugin\\\\plugin_test\\\\mock_block\\\\MockLayoutBlockDeriver\\:\\:getDerivativeDefinition\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/mock_block/MockLayoutBlockDeriver.php
-
-		-
-			message: "#^Method Drupal\\\\plugin_test\\\\Plugin\\\\plugin_test\\\\mock_block\\\\MockMenuBlockDeriver\\:\\:getDerivativeDefinition\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/mock_block/MockMenuBlockDeriver.php
-
-		-
-			message: "#^Method Drupal\\\\service_provider_test\\\\TestFileUsage\\:\\:listUsage\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: modules/system/tests/modules/service_provider_test/src/TestFileUsage.php
 
 		-
 			message: "#^Instantiated class Drupal\\\\Tests\\\\system\\\\Functional\\\\FileTransfer\\\\Exception not found\\.$#"
@@ -1449,11 +1369,6 @@ parameters:
 			message: "#^Configuration entity must define a `config_export` key\\. See https\\://www\\.drupal\\.org/node/2481909$#"
 			count: 1
 			path: modules/views/tests/modules/views_config_entity_test/src/Entity/ViewsConfigEntityTest.php
-
-		-
-			message: "#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\filter\\\\FilterTest\\:\\:buildOptionsForm\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: modules/views/tests/modules/views_test_data/src/Plugin/views/filter/FilterTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"

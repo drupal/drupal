@@ -21,6 +21,7 @@ abstract class OperationBase extends ImageToolkitOperationBase {
    */
   public function execute(array $arguments) {
     // Nothing to do.
+    return TRUE;
   }
 
 }
