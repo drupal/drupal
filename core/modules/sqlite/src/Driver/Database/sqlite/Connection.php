@@ -5,11 +5,12 @@ namespace Drupal\sqlite\Driver\Database\sqlite;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Core\Database\StatementInterface;
+use Drupal\Core\Database\SupportsTemporaryTablesInterface;
 
 /**
  * SQLite implementation of \Drupal\Core\Database\Connection.
  */
-class Connection extends DatabaseConnection {
+class Connection extends DatabaseConnection implements SupportsTemporaryTablesInterface {
 
   /**
    * Error code for "Unable to open database file" error.
@@ -350,6 +351,22 @@ class Connection extends DatabaseConnection {
 
   public function queryRange($query, $from, $count, array $args = [], array $options = []) {
     return $this->query($query . ' LIMIT ' . (int) $from . ', ' . (int) $count, $args, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function queryTemporary($query, array $args = [], array $options = []) {
+    $tablename = 'db_temporary_' . uniqid();
+
+    $this->query('CREATE TEMPORARY TABLE ' . $tablename . ' AS ' . $query, $args, $options);
+
+    // Temporary tables always live in the temp database, which means that
+    // they cannot be fully qualified table names since they do not live
+    // in the main SQLite database. We provide the fully-qualified name
+    // ourselves to prevent Drupal from applying prefixes.
+    // @see https://www.sqlite.org/lang_createtable.html
+    return 'temp.' . $tablename;
   }
 
   public function driver() {
