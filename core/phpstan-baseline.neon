@@ -1146,11 +1146,6 @@ parameters:
 			path: modules/taxonomy/src/Plugin/migrate/source/d7/TermTranslation.php
 
 		-
-			message: "#^Call to function unset\\(\\) contains undefined variable \\$handler\\.$#"
-			count: 1
-			path: modules/taxonomy/src/Plugin/views/argument/IndexTidDepthModifier.php
-
-		-
 			message: "#^Method Drupal\\\\taxonomy\\\\TermForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/taxonomy/src/TermForm.php
@@ -1306,11 +1301,6 @@ parameters:
 			path: modules/views/src/Plugin/views/argument/Date.php
 
 		-
-			message: "#^Undefined variable\\: \\$arg$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument_validator/None.php
-
-		-
 			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\cache\\\\CachePluginBase\\:\\:cacheGet\\(\\) should return bool but return statement is missing\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/cache/CachePluginBase.php
@@ -1354,11 +1344,6 @@ parameters:
 			message: "#^Call to an undefined method Drupal\\\\views\\\\Plugin\\\\views\\\\filter\\\\FilterPluginBase\\:\\:operators\\(\\)\\.$#"
 			count: 2
 			path: modules/views/src/Plugin/views/filter/FilterPluginBase.php
-
-		-
-			message: "#^Undefined variable\\: \\$def$#"
-			count: 2
-			path: modules/views/src/Plugin/views/relationship/EntityReverse.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"

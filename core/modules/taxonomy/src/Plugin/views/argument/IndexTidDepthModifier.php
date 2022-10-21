@@ -53,10 +53,6 @@ class IndexTidDepthModifier extends ArgumentPluginBase {
         continue;
       }
 
-      if (isset($handler)) {
-        unset($handler);
-      }
-
       $handler = &$this->view->argument[$key];
       if (empty($handler->definition['accept depth modifier'])) {
         continue;
