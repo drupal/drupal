@@ -1164,25 +1164,6 @@ class ConfigTranslationUiTest extends BrowserTestBase {
   }
 
   /**
-   * Get server-rendered contextual links for the given contextual link ids.
-   *
-   * @param array $ids
-   *   An array of contextual link ids.
-   * @param string $current_path
-   *   The Drupal path for the page for which the contextual links are rendered.
-   *
-   * @return string
-   *   The response body.
-   */
-  protected function renderContextualLinks($ids, $current_path) {
-    $post = [];
-    for ($i = 0; $i < count($ids); $i++) {
-      $post['ids[' . $i . ']'] = $ids[$i];
-    }
-    return $this->drupalPostWithFormat('contextual/render', 'json', $post, ['query' => ['destination' => $current_path]]);
-  }
-
-  /**
    * Asserts that a textarea with a given ID has been disabled from editing.
    *
    * @param string $id
