@@ -35,7 +35,7 @@ EOT;
 
 }
 
-class TestClass {
+class TestClass extends UnitTestCase {
   use AssertContentTrait;
 
   public function _setRawContent($content) {
