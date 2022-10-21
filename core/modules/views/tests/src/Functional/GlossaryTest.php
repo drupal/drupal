@@ -4,6 +4,7 @@ namespace Drupal\Tests\views\Functional;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
+use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\views\Tests\AssertViewsCacheTagsTrait;
 use Drupal\views\Views;
 
@@ -14,6 +15,7 @@ use Drupal\views\Views;
  */
 class GlossaryTest extends ViewTestBase {
 
+  use AssertPageCacheContextsAndTagsTrait;
   use AssertViewsCacheTagsTrait;
 
   /**

@@ -6,6 +6,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
+use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\AssertViewsCacheTagsTrait;
 use Drupal\views\ViewExecutable;
@@ -18,6 +19,7 @@ use Drupal\views\Views;
  */
 class FrontPageTest extends ViewTestBase {
 
+  use AssertPageCacheContextsAndTagsTrait;
   use AssertViewsCacheTagsTrait;
 
   /**
