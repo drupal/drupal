@@ -271,15 +271,7 @@ EOD;
   }
 
   /**
-   * Generate SQL to create a new table from a Drupal schema definition.
-   *
-   * @param string $name
-   *   The name of the table to create.
-   * @param array $table
-   *   A Schema API table definition array.
-   *
-   * @return array
-   *   An array of SQL statements to create the table.
+   * {@inheritdoc}
    */
   protected function createTableSql($name, $table) {
     $sql_fields = [];
