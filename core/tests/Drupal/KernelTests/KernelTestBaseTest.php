@@ -88,13 +88,6 @@ class KernelTestBaseTest extends KernelTestBase {
     ]);
     $this->assertTrue($database->schema()->tableExists('foo'));
 
-    // Ensure that the database tasks have been run during set up. Neither MySQL
-    // nor SQLite make changes that are testable.
-    if ($database->driver() == 'pgsql') {
-      $this->assertEquals('on', $database->query("SHOW standard_conforming_strings")->fetchField());
-      $this->assertEquals('escape', $database->query("SHOW bytea_output")->fetchField());
-    }
-
     $this->assertNotNull(FileCacheFactory::getPrefix());
   }
 
