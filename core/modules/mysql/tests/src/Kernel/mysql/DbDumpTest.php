@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\KernelTests\Core\Command;
+namespace Drupal\Tests\mysql\Kernel\mysql;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Command\DbDumpApplication;
 use Drupal\Core\Config\DatabaseStorage;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\KernelTests\KernelTestBase;
+use Drupal\KernelTests\Core\Database\DriverSpecificKernelTestBase;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 use Drupal\user\Entity\User;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\Reference;
  *
  * @group Update
  */
-class DbDumpTest extends KernelTestBase {
+class DbDumpTest extends DriverSpecificKernelTestBase {
 
   use PathAliasTestTrait;
 
@@ -83,10 +83,6 @@ class DbDumpTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-
-    if (Database::getConnection()->databaseType() !== 'mysql') {
-      $this->markTestSkipped("Skipping test since the DbDumpCommand is currently only compatible with MySql");
-    }
 
     // Create some schemas so our export contains tables.
     $this->installSchema('system', ['sessions']);

@@ -1,10 +1,9 @@
 <?php
 
-namespace Drupal\Tests\system\Kernel\Scripts;
+namespace Drupal\Tests\mysql\Kernel\mysql\Console;
 
 use Drupal\Core\Command\DbDumpCommand;
-use Drupal\Core\Database\Database;
-use Drupal\KernelTests\KernelTestBase;
+use Drupal\KernelTests\Core\Database\DriverSpecificKernelTestBase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
@@ -12,7 +11,7 @@ use Symfony\Component\Console\Tester\CommandTester;
  *
  * @group console
  */
-class DbDumpCommandTest extends KernelTestBase {
+class DbDumpCommandTest extends DriverSpecificKernelTestBase {
 
   /**
    * {@inheritdoc}
@@ -24,11 +23,6 @@ class DbDumpCommandTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-
-    // Determine what database backend is running, and set the skip flag.
-    if (Database::getConnection()->databaseType() !== 'mysql') {
-      $this->markTestSkipped("Skipping test since the DbDumpCommand is currently only compatible with MySQL");
-    }
 
     // Rebuild the router to ensure a routing table.
     \Drupal::service('router.builder')->rebuild();

@@ -2,10 +2,11 @@
 
 namespace Drupal\Tests\mysql\Kernel\mysql;
 
-use Drupal\KernelTests\Core\Database\DriverSpecificSchemaTestBase;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\SchemaException;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\SchemaObjectExistsException;
+use Drupal\KernelTests\Core\Database\DriverSpecificSchemaTestBase;
 
 /**
  * Tests schema API for the MySQL driver.
@@ -13,6 +14,34 @@ use Drupal\Core\Database\SchemaObjectExistsException;
  * @group Database
  */
 class SchemaTest extends DriverSpecificSchemaTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function checkSchemaComment(string $description, string $table, string $column = NULL): void {
+    $comment = $this->schema->getComment($table, $column);
+    $max_length = $column ? 255 : 60;
+    $description = Unicode::truncate($description, $max_length, TRUE, TRUE);
+    $this->assertSame($description, $comment, 'The comment matches the schema description.');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function assertCollation(): void {
+    // Make sure that varchar fields have the correct collations.
+    $columns = $this->connection->query('SHOW FULL COLUMNS FROM {test_table}');
+    foreach ($columns as $column) {
+      if ($column->Field == 'test_field_string') {
+        $string_check = $column->Collation;
+      }
+      if ($column->Field == 'test_field_string_ascii') {
+        $string_ascii_check = $column->Collation;
+      }
+    }
+    $this->assertMatchesRegularExpression('#^(utf8mb4_general_ci|utf8mb4_0900_ai_ci)$#', $string_check, 'test_field_string should have a utf8mb4_general_ci or a utf8mb4_0900_ai_ci collation, but it has not.');
+    $this->assertSame('ascii_general_ci', $string_ascii_check, 'test_field_string_ascii should have a ascii_general_ci collation, but it has not.');
+  }
 
   /**
    * Tests that indexes on string fields are limited to 191 characters on MySQL.
@@ -141,6 +170,62 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
       $test_count++;
     }
     $this->assertEquals($column_count, $test_count, 'Number of tests matches expected value.');
+  }
+
+  /**
+   * @covers \Drupal\mysql\Driver\Database\mysql\Schema::introspectIndexSchema
+   */
+  public function testIntrospectIndexSchema(): void {
+    $table_specification = [
+      'fields' => [
+        'id'  => [
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+        ],
+        'test_field_1'  => [
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+        ],
+        'test_field_2'  => [
+          'type' => 'int',
+          'default' => 0,
+        ],
+        'test_field_3'  => [
+          'type' => 'int',
+          'default' => 0,
+        ],
+        'test_field_4'  => [
+          'type' => 'int',
+          'default' => 0,
+        ],
+        'test_field_5'  => [
+          'type' => 'int',
+          'default' => 0,
+        ],
+      ],
+      'primary key' => ['id', 'test_field_1'],
+      'unique keys' => [
+        'test_field_2' => ['test_field_2'],
+        'test_field_3_test_field_4' => ['test_field_3', 'test_field_4'],
+      ],
+      'indexes' => [
+        'test_field_4' => ['test_field_4'],
+        'test_field_4_test_field_5' => ['test_field_4', 'test_field_5'],
+      ],
+    ];
+
+    $table_name = strtolower($this->getRandomGenerator()->name());
+    $this->schema->createTable($table_name, $table_specification);
+
+    unset($table_specification['fields']);
+
+    $introspect_index_schema = new \ReflectionMethod(get_class($this->schema), 'introspectIndexSchema');
+    $introspect_index_schema->setAccessible(TRUE);
+    $index_schema = $introspect_index_schema->invoke($this->schema, $table_name);
+
+    $this->assertEquals($table_specification, $index_schema);
   }
 
 }
