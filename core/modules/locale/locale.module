@@ -902,7 +902,7 @@ function locale_translation_get_status($projects = NULL, $langcodes = NULL) {
 function locale_translation_status_save($project, $langcode, $type, $data) {
   // Load the translation status or build it if not already available.
   \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.translation');
-  $status = locale_translation_get_status();
+  $status = locale_translation_get_status([$project]);
   if (empty($status)) {
     $projects = locale_translation_get_projects([$project]);
     if (isset($projects[$project])) {
