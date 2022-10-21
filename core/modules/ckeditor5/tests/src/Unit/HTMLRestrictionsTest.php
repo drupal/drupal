@@ -133,6 +133,24 @@ class HTMLRestrictionsTest extends UnitTestCase {
       ['*' => ['foo' => ['a' => FALSE, 'b' => FALSE]]],
       'The "*" HTML tag has attribute restriction "foo", but it is not an array of key-value pairs, with HTML tag attribute values as keys and TRUE as values.',
     ];
+
+    // Invalid overrides of globally disallowed attributes.
+    yield 'INVALID: <foo bar> when "bar" is globally disallowed' => [
+      ['foo' => ['bar' => TRUE], '*' => ['bar' => FALSE, 'baz' => TRUE]],
+      'The attribute restrictions in "<foo bar>" are allowing attributes "bar" that are disallowed by the special "*" global attribute restrictions',
+    ];
+    yield 'INVALID: <foo style> when "style" is globally disallowed' => [
+      ['foo' => ['style' => TRUE], '*' => ['bar' => FALSE, 'baz' => TRUE, 'style' => FALSE]],
+      'The attribute restrictions in "<foo style>" are allowing attributes "bar", "style" that are disallowed by the special "*" global attribute restrictions',
+    ];
+    yield 'INVALID: <foo on*> when "on*" is globally disallowed' => [
+      ['foo' => ['on*' => TRUE], '*' => ['bar' => FALSE, 'baz' => TRUE, 'style' => FALSE, 'on*' => FALSE]],
+      'The attribute restrictions in "<foo on*>" are allowing attributes "bar", "style", "on*" that are disallowed by the special "*" global attribute restrictions',
+    ];
+    yield 'INVALID: <foo ontouch> when "on" is globally disallowed' => [
+      ['foo' => ['ontouch' => TRUE], '*' => ['bar' => FALSE, 'baz' => TRUE, 'style' => FALSE, 'on*' => FALSE]],
+      'The attribute restrictions in "<foo ontouch>" are allowing attributes "bar", "style", "on*" that are disallowed by the special "*" global attribute restrictions',
+    ];
   }
 
   /**
@@ -506,6 +524,105 @@ class HTMLRestrictionsTest extends UnitTestCase {
     yield '<h2 id="jump-*">' => [
       '<h2 id="jump-*">',
       ['h2' => ['id' => ['jump-*' => TRUE]]],
+    ];
+
+    // Attribute restrictions that match the global attribute restrictions
+    // should be omitted from concrete tags.
+    yield '<p> <* foo>' => [
+      '<p> <* foo>',
+      ['p' => FALSE, '*' => ['foo' => TRUE]],
+    ];
+    yield '<p foo> <* foo> results in <p> getting simplified' => [
+      '<p foo> <* foo>',
+      ['p' => FALSE, '*' => ['foo' => TRUE]],
+    ];
+    yield '<* foo> <p foo> results in <p> getting simplified' => [
+      '<* foo> <p foo>',
+      ['p' => FALSE, '*' => ['foo' => TRUE]],
+    ];
+    yield '<p foo bar> <* foo> results in <p> getting simplified' => [
+      '<p foo bar> <* foo>',
+      ['p' => ['bar' => TRUE], '*' => ['foo' => TRUE]],
+    ];
+    yield '<* foo> <p foo bar> results in <p> getting simplified' => [
+      '<* foo> <p foo bar>',
+      ['p' => ['bar' => TRUE], '*' => ['foo' => TRUE]],
+    ];
+    yield '<p foo="a b"> + <* foo="b a"> results in <p> getting simplified' => [
+      '<p foo="a b"> <* foo="b a">',
+      ['p' => FALSE, '*' => ['foo' => ['b' => TRUE, 'a' => TRUE]]],
+    ];
+    yield '<* foo="b a"> <p foo="a b"> results in <p> getting simplified' => [
+      '<* foo="b a"> <p foo="a b">',
+      ['p' => FALSE, '*' => ['foo' => ['b' => TRUE, 'a' => TRUE]]],
+    ];
+    yield '<p foo="a b" bar> + <* foo="b a"> results in <p> getting simplified' => [
+      '<p foo="a b" bar> <* foo="b a">',
+      ['p' => ['bar' => TRUE], '*' => ['foo' => ['b' => TRUE, 'a' => TRUE]]],
+    ];
+    yield '<* foo="b a"> <p foo="a b" bar> results in <p> getting simplified' => [
+      '<* foo="b a"> <p foo="a b" bar>',
+      ['p' => ['bar' => TRUE], '*' => ['foo' => ['b' => TRUE, 'a' => TRUE]]],
+    ];
+    yield '<p foo="a b c"> + <* foo="b a"> results in <p> getting simplified' => [
+      '<p foo="a b c"> <* foo="b a">',
+      ['p' => ['foo' => ['c' => TRUE]], '*' => ['foo' => ['b' => TRUE, 'a' => TRUE]]],
+    ];
+    yield '<* foo="b a"> <p foo="a b c"> results in <p> getting simplified' => [
+      '<* foo="b a"> <p foo="a b c">',
+      ['p' => ['foo' => ['c' => TRUE]], '*' => ['foo' => ['b' => TRUE, 'a' => TRUE]]],
+    ];
+    // Attribute restrictions that match the global attribute restrictions
+    // should be omitted from wildcard tags.
+    yield '<p> <$text-container foo> <* foo> results in <$text-container> getting simplified' => [
+      '<p> <$text-container foo> <* foo>',
+      ['p' => FALSE, '*' => ['foo' => TRUE]],
+      ['p' => FALSE, '$text-container' => FALSE, '*' => ['foo' => TRUE]],
+    ];
+    yield '<* foo> <text-container foo> <p> results in <$text-container> getting stripped' => [
+      '<* foo> <p> <$text-container foo>',
+      ['p' => FALSE, '*' => ['foo' => TRUE]],
+      ['p' => FALSE, '*' => ['foo' => TRUE], '$text-container' => FALSE],
+    ];
+    yield '<p> <$text-container foo bar> <* foo> results in <$text-container> getting simplified' => [
+      '<p> <$text-container foo bar> <* foo>',
+      ['p' => ['bar' => TRUE], '*' => ['foo' => TRUE]],
+      ['p' => FALSE, '$text-container' => ['bar' => TRUE], '*' => ['foo' => TRUE]],
+    ];
+    yield '<* foo> <$text-container foo bar> <p> results in <$text-container> getting simplified' => [
+      '<* foo> <$text-container foo bar> <p>',
+      ['p' => ['bar' => TRUE], '*' => ['foo' => TRUE]],
+      ['p' => FALSE, '*' => ['foo' => TRUE], '$text-container' => ['bar' => TRUE]],
+    ];
+    yield '<p> <$text-container foo="a b"> + <* foo="b a"> results in <$text-container> getting simplified' => [
+      '<p> <$text-container foo="a b"> <* foo="b a">',
+      ['p' => FALSE, '*' => ['foo' => ['b' => TRUE, 'a' => TRUE]]],
+      ['p' => FALSE, '$text-container' => FALSE, '*' => ['foo' => ['b' => TRUE, 'a' => TRUE]]],
+    ];
+    yield '<* foo="b a"> <p> <$text-container foo="a b"> results in <$text-container> getting simplified' => [
+      '<* foo="b a"> <p> <$text-container foo="a b">',
+      ['p' => FALSE, '*' => ['foo' => ['b' => TRUE, 'a' => TRUE]]],
+      ['p' => FALSE, '*' => ['foo' => ['b' => TRUE, 'a' => TRUE]], '$text-container' => FALSE],
+    ];
+    yield '<p> <$text-container foo="a b" bar> + <* foo="b a"> results in <$text-container> getting simplified' => [
+      '<p> <$text-container foo="a b" bar> <* foo="b a">',
+      ['p' => ['bar' => TRUE], '*' => ['foo' => ['b' => TRUE, 'a' => TRUE]]],
+      ['p' => FALSE, '$text-container' => ['bar' => TRUE], '*' => ['foo' => ['b' => TRUE, 'a' => TRUE]]],
+    ];
+    yield '<* foo="b a"> <p> <$text-container foo="a b" bar> results in <$text-container> getting simplified' => [
+      '<* foo="b a"> <p> <$text-container foo="a b" bar>',
+      ['p' => ['bar' => TRUE], '*' => ['foo' => ['b' => TRUE, 'a' => TRUE]]],
+      ['p' => FALSE, '*' => ['foo' => ['b' => TRUE, 'a' => TRUE]], '$text-container' => ['bar' => TRUE]],
+    ];
+    yield '<p> <$text-container foo="a b c"> + <* foo="b a"> results in <$text-container> getting simplified' => [
+      '<p> <$text-container foo="a b c"> <* foo="b a">',
+      ['p' => ['foo' => ['c' => TRUE]], '*' => ['foo' => ['b' => TRUE, 'a' => TRUE]]],
+      ['p' => FALSE, '$text-container' => ['foo' => ['c' => TRUE]], '*' => ['foo' => ['b' => TRUE, 'a' => TRUE]]],
+    ];
+    yield '<* foo="b a"> <p> <$text-container foo="a b c"> results in <$text-container> getting simplified' => [
+      '<* foo="b a"> <p> <$text-container foo="a b c">',
+      ['p' => ['foo' => ['c' => TRUE]], '*' => ['foo' => ['b' => TRUE, 'a' => TRUE]]],
+      ['p' => FALSE, '*' => ['foo' => ['b' => TRUE, 'a' => TRUE]], '$text-container' => ['foo' => ['c' => TRUE]]],
     ];
   }
 

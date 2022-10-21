@@ -84,7 +84,54 @@ final class HTMLRestrictions {
     self::validateAllowedRestrictionsPhase2($elements);
     self::validateAllowedRestrictionsPhase3($elements);
     self::validateAllowedRestrictionsPhase4($elements);
+    self::validateAllowedRestrictionsPhase5($elements);
     $this->elements = $elements;
+
+    // Simplify based on the global attributes:
+    // - `<p dir> <* dir>` must become `<p> <* dir>`
+    // - `<p foo="b a"> <* foo="a b">` must become `<p> <* foo="a b">`
+    // - `<p foo="a b c"> <* foo="a b">` must become `<p foo="c"> <* foo="a b">`
+    // In other words: the restrictions on `<*>` remain untouched, but the
+    // attributes and attribute values allowed by `<*>` should be omitted from
+    // all other tags.
+    // Note: `<*>` also allows specifying disallowed attributes, but no other
+    // tags are allowed to do this. Consequently, simplification is only needed
+    // if >=1 allowed attribute is present on `<*>`.
+    if (count($elements) >= 2 && array_key_exists('*', $elements) && array_filter($elements['*'])) {
+      // @see \Drupal\ckeditor5\HTMLRestrictions::validateAllowedRestrictionsPhase4()
+      $globally_allowed_attribute_restrictions = array_filter($elements['*']);
+
+      // Prepare to compare the restrictions of all tags with those on the
+      // global attribute tag `<*>`.
+      $original = [];
+      $global = [];
+      foreach ($elements as $tag => $restrictions) {
+        // `<*>`'s attribute restrictions do not need to be compared.
+        if ($tag === '*') {
+          continue;
+        }
+        $original[$tag] = $restrictions;
+        $global[$tag] = $globally_allowed_attribute_restrictions;
+      }
+
+      // The subset of attribute restrictions after diffing with those on `<*>`.
+      $net_global_attribute_restrictions = (new self($original))
+        ->doDiff(new self($global))
+        ->getAllowedElements(FALSE);
+
+      // Update each tag's attribute restrictions to the subset.
+      foreach ($elements as $tag => $restrictions) {
+        // `<*>` remains untouched.
+        if ($tag === '*') {
+          continue;
+        }
+        $this->elements[$tag] = $net_global_attribute_restrictions[$tag]
+          // If the tag is absent from the subset, then its attribute
+          // restrictions were a strict subset of `<*>`: just allowing the tag
+          // without allowing attributes is then sufficient.
+          ?? FALSE;
+      }
+    }
   }
 
   /**
@@ -119,6 +166,7 @@ final class HTMLRestrictions {
       // @see https://html.spec.whatwg.org/multipage/dom.html#global-attributes
       // @see validateAllowedRestrictionsPhase2()
       // @see validateAllowedRestrictionsPhase4()
+      // @see validateAllowedRestrictionsPhase5()
       if ($html_tag_name === '*') {
         continue;
       }
@@ -148,6 +196,7 @@ final class HTMLRestrictions {
       // of a text format.
       // @see https://html.spec.whatwg.org/multipage/dom.html#global-attributes
       // @see validateAllowedRestrictionsPhase4()
+      // @see validateAllowedRestrictionsPhase5()
       if ($html_tag_name === '*' && !is_array($html_tag_restrictions)) {
         throw new \InvalidArgumentException(sprintf('The value for the special "*" global attribute HTML tag must be an array of attribute restrictions.'));
       }
@@ -226,6 +275,7 @@ final class HTMLRestrictions {
         // of a text format.
         // @see https://html.spec.whatwg.org/multipage/dom.html#global-attributes
         // @see validateAllowedRestrictionsPhase2()
+        // @see validateAllowedRestrictionsPhase5()
         if ($html_tag_name === '*' && $html_tag_attribute_restrictions === FALSE) {
           continue;
         }
@@ -244,6 +294,99 @@ final class HTMLRestrictions {
         }
       }
     }
+  }
+
+  /**
+   * Validates allowed elements — phase 5: disallowed attribute overrides.
+   *
+   * Explicit overrides of globally disallowed attributes are considered errors.
+   * For example: `<p style>`, `<a onclick>` are considered errors when the
+   * `style` and `on*` attributes are globally disallowed.
+   *
+   * Implicit overrides are not treated as errors: if all attributes are allowed
+   * on a tag, globally disallowed attributes still apply.
+   * For example: `<p *>` allows all attributes on `<p>`, but still won't allow
+   * globally disallowed attributes.
+   *
+   * @param array $elements
+   *   The allowed elements.
+   *
+   * @throws \InvalidArgumentException
+   */
+  private static function validateAllowedRestrictionsPhase5(array $elements): void {
+    $conflict = self::findElementsOverridingGloballyDisallowedAttributes($elements);
+    if ($conflict) {
+      [$globally_disallowed_attribute_restrictions, $elements_overriding_globally_disallowed_attributes] = $conflict;
+      throw new \InvalidArgumentException(sprintf(
+        'The attribute restrictions in "%s" are allowing attributes "%s" that are disallowed by the special "*" global attribute restrictions.',
+        implode(' ', (new self($elements_overriding_globally_disallowed_attributes))->toCKEditor5ElementsArray()),
+        implode('", "', array_keys($globally_disallowed_attribute_restrictions))
+      ));
+    }
+  }
+
+  /**
+   * Finds elements overriding globally disallowed attributes.
+   *
+   * @param array $elements
+   *   The allowed elements.
+   *
+   * @return null|array
+   *   NULL if no conflict is found, an array containing otherwise, containing:
+   *   - the globally disallowed attribute restrictions
+   *   - the elements overriding globally disallowed attributes
+   */
+  private static function findElementsOverridingGloballyDisallowedAttributes(array $elements): ?array {
+    // Find the globally disallowed attributes.
+    // For example: `['*' => ['style' => FALSE, 'foo' => TRUE, 'bar' => FALSE]`
+    // has two globally disallowed attributes, the code below will extract
+    // `['*' => ['style' => FALSE, 'bar' => FALSE']]`.
+    $globally_disallowed_attribute_restrictions = !array_key_exists('*', $elements)
+      ? []
+      : array_filter($elements['*'], function ($global_attribute_restrictions): bool {
+        return $global_attribute_restrictions === FALSE;
+      });
+    if (empty($globally_disallowed_attribute_restrictions)) {
+      // No conflict possible.
+      return NULL;
+    }
+
+    // The elements which could potentially have a conflicting override.
+    $elements_with_attribute_level_restrictions = array_filter($elements, function ($attribute_restrictions, string $attribute_name): bool {
+      return is_array($attribute_restrictions) && $attribute_name !== '*';
+    }, ARRAY_FILTER_USE_BOTH);
+    if (empty($elements_with_attribute_level_restrictions)) {
+      // No conflict possible.
+      return NULL;
+    }
+
+    // Construct a HTMLRestrictions object containing just the elements that are
+    // potentially overriding globally disallowed attributes.
+    // For example: `['p' => ['style' => TRUE]]`.
+    $potentially_overriding = new self($elements_with_attribute_level_restrictions);
+
+    // Construct a HTMLRestrictions object that contains the globally disallowed
+    // attribute restrictions, but pretends they are allowed. This allows using
+    // ::intersect() to detect a conflict.
+    $conflicting_restrictions = new self(array_fill_keys(
+      array_keys($elements_with_attribute_level_restrictions),
+      // The disallowed attributes converted to allowed, to allow using the
+      // ::intersect() method to detect a conflict.
+      // In the example: `['style' => TRUE', 'bar' => TRUE]`.
+      array_fill_keys(array_keys($globally_disallowed_attribute_restrictions), TRUE)
+    ));
+
+    // When there is a non-empty intersection at the attribute level, an
+    // override of a globally disallowed attribute was found.
+    $conflict = $potentially_overriding->intersect($conflicting_restrictions);
+    $elements_overriding_globally_disallowed_attributes = array_filter($conflict->getAllowedElements());
+
+    // No conflict found.
+    if (empty($elements_overriding_globally_disallowed_attributes)) {
+      return NULL;
+    }
+
+    return [$globally_disallowed_attribute_restrictions, $elements_overriding_globally_disallowed_attributes];
   }
 
   /**
@@ -350,6 +493,33 @@ final class HTMLRestrictions {
       }
     }
 
+    // FilterHtml accepts configuration for `allowed_html` that it will not
+    // actually apply. In other words: it allows for meaningless configuration.
+    // HTMLRestrictions strictly forbids tags overriding globally disallowed
+    // attributes; it considers these conflicting statements. Since FilterHtml
+    // will not apply these anyway, remove them from $allowed prior to
+    // constructing a HTMLRestrictions object:
+    // - `<tag style foo>` will become `<tag foo>` since the `style` attribute
+    //   is globally disallowed by FilterHtml
+    // - `<tag bar on*>` will become `<tag bar>` since the `on*` attribute is
+    //   globally disallowed by FilterHtml
+    // - `<tag ontouch baz>` will become `<tag baz>` since the `on*` attribute
+    //   is globally disallowed by FilterHtml
+    // @see ::validateAllowedRestrictionsPhase5()
+    // @see \Drupal\filter\Plugin\Filter\FilterHtml::process()
+    // @see \Drupal\filter\Plugin\Filter\FilterHtml::getHTMLRestrictions()
+    $conflict = self::findElementsOverridingGloballyDisallowedAttributes($allowed);
+    if ($conflict) {
+      [, $elements_overriding_globally_disallowed_attributes] = $conflict;
+      foreach ($elements_overriding_globally_disallowed_attributes as $element => $attributes) {
+        foreach (array_keys($attributes) as $attribute_name) {
+          unset($allowed[$element][$attribute_name]);
+        }
+        if ($allowed[$element] === []) {
+          $allowed[$element] = FALSE;
+        }
+      }
+    }
     return new self($allowed);
   }
 
