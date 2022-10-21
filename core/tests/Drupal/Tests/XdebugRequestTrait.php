@@ -31,7 +31,10 @@ trait XdebugRequestTrait {
     }
     // For CLI requests, the information is stored in $_SERVER.
     $server = $request->server;
-    if ($server->has('XDEBUG_CONFIG')) {
+    if ($server->has('XDEBUG_SESSION')) {
+      $cookies['XDEBUG_SESSION'][] = $server->get('XDEBUG_SESSION');
+    }
+    elseif ($server->has('XDEBUG_CONFIG')) {
       // $_SERVER['XDEBUG_CONFIG'] has the form "key1=value1 key2=value2 ...".
       $pairs = explode(' ', $server->get('XDEBUG_CONFIG'));
       foreach ($pairs as $pair) {
