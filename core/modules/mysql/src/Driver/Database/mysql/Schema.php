@@ -81,15 +81,7 @@ class Schema extends DatabaseSchema {
   }
 
   /**
-   * Generate SQL to create a new table from a Drupal schema definition.
-   *
-   * @param $name
-   *   The name of the table to create.
-   * @param $table
-   *   A Schema API table definition array.
-   *
-   * @return string[]
-   *   An array of SQL statements to create the table.
+   * {@inheritdoc}
    */
   protected function createTableSql($name, $table) {
     $info = $this->connection->getConnectionOptions();
