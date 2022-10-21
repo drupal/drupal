@@ -3,14 +3,11 @@
 namespace Drupal\views\Tests;
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 use Symfony\Component\HttpFoundation\Request;
 
 trait AssertViewsCacheTagsTrait {
-
-  use AssertPageCacheContextsAndTagsTrait;
 
   /**
    * Asserts a view's result & render cache items' cache tags.

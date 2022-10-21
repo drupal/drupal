@@ -1386,21 +1386,6 @@ parameters:
 			path: modules/views/tests/src/Kernel/Handler/FieldFieldTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\views\\\\Kernel\\\\RenderCacheIntegrationTest\\:\\:assertSession\\(\\)\\.$#"
-			count: 2
-			path: modules/views/tests/src/Kernel/RenderCacheIntegrationTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\views\\\\Kernel\\\\RenderCacheIntegrationTest\\:\\:drupalGet\\(\\)\\.$#"
-			count: 2
-			path: modules/views/tests/src/Kernel/RenderCacheIntegrationTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\views\\\\Kernel\\\\RenderCacheIntegrationTest\\:\\:getSession\\(\\)\\.$#"
-			count: 3
-			path: modules/views/tests/src/Kernel/RenderCacheIntegrationTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/views/tests/src/Kernel/RenderCacheIntegrationTest.php
