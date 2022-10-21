@@ -1023,5 +1023,28 @@ function hook_requirements($phase) {
 }
 
 /**
+ * Alters requirements data.
+ *
+ * Implementations are able to alter the title, value, description or the
+ * severity of certain requirements defined by hook_requirements()
+ * implementations or even remove such entries.
+ *
+ * @param array $requirements
+ *   The requirements data to be altered.
+ *
+ * @see hook_requirements()
+ */
+function hook_requirements_alter(array &$requirements): void {
+  // Change the title from 'PHP' to 'PHP version'.
+  $requirements['php']['title'] = t('PHP version');
+
+  // Decrease the 'update status' requirement severity from warning to warning.
+  $requirements['update status']['severity'] = REQUIREMENT_INFO;
+
+  // Remove a requirements entry.
+  unset($requirements['foo']);
+}
+
+/**
  * @} End of "addtogroup hooks".
  */
