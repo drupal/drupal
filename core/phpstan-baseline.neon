@@ -531,11 +531,6 @@ parameters:
 			path: modules/config_translation/src/FormElement/DateFormat.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\config_translation\\\\Functional\\\\ConfigTranslationUiTest\\:\\:drupalPostWithFormat\\(\\)\\.$#"
-			count: 1
-			path: modules/config_translation/tests/src/Functional/ConfigTranslationUiTest.php
-
-		-
 			message: "#^Method Drupal\\\\contact\\\\ContactFormEditForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/contact/src/ContactFormEditForm.php
@@ -919,11 +914,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/node/tests/src/Functional/NodeRevisionsAllTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeRevisionsTest\\:\\:drupalPost\\(\\)\\.$#"
-			count: 1
-			path: modules/node/tests/src/Functional/NodeRevisionsTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
