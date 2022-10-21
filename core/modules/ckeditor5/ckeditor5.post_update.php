@@ -65,3 +65,27 @@ function ckeditor5_post_update_image_toolbar_item(&$sandbox = []) {
 
   $config_entity_updater->update($sandbox, 'editor', $callback);
 }
+
+/**
+ * Updates Text Editors using CKEditor 5 to sort plugin settings by plugin key.
+ */
+function ckeditor5_post_update_plugins_settings_export_order(&$sandbox = []) {
+  $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
+  $config_entity_updater->update($sandbox, 'editor', function (Editor $editor): bool {
+    // Only try to update editors using CKEditor 5.
+    if ($editor->getEditor() !== 'ckeditor5') {
+      return FALSE;
+    }
+
+    $settings = $editor->getSettings();
+
+    // Nothing to do if there are fewer than two plugins with settings.
+    if (count($settings['plugins']) < 2) {
+      return FALSE;
+    }
+    ksort($settings['plugins']);
+    $editor->setSettings($settings);
+
+    return TRUE;
+  });
+}
