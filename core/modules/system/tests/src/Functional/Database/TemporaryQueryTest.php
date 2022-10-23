@@ -33,7 +33,6 @@ class TemporaryQueryTest extends DatabaseTestBase {
    * Confirms that temporary tables work and are limited to one request.
    */
   public function testTemporaryQuery() {
-    $this->expectDeprecation('Connection::queryTemporary() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3211781');
     $this->expectDeprecation('Connection::generateTemporaryTableName() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3211781');
 
     $connection = Database::getConnection();

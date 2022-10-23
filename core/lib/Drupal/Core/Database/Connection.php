@@ -1816,11 +1816,6 @@ abstract class Connection {
    *
    * @return string
    *   The name of the temporary table.
-   *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
-   *   replacement.
-   *
-   * @see https://www.drupal.org/node/3211781
    */
   abstract public function queryTemporary($query, array $args = [], array $options = []);
 
