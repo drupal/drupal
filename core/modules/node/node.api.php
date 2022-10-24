@@ -63,8 +63,6 @@ use Drupal\Component\Utility\Xss;
  * sure to restore your {node_access} record after node_access_rebuild() is
  * called.
  *
- * For a detailed example, see node_access_example.module.
- *
  * @param \Drupal\Core\Session\AccountInterface $account
  *   The account object whose grants are requested.
  * @param string $op
