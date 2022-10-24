@@ -1757,6 +1757,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-paste-from-office/src/filters/br.js
+ *
+ * @typedef {module:paste-from-office/filters/br} module:paste-from-office/filters/br~transformBlockBrsToParagraphs
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-paste-from-office/src/filters/removeboldwrapper.js
  *
  * @typedef {module:paste-from-office/filters/removeboldwrapper} module:paste-from-office/filters/removeboldwrapper~removeBoldWrapper
@@ -2159,12 +2165,6 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-table/src/tablecellproperties/commands/tablecellwidthcommand.js
- *
- * @typedef {module:table/tablecellproperties/commands/tablecellwidthcommand} module:table/tablecellproperties/commands/tablecellwidthcommand~TableCellWidthCommand
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-table/src/tablecellproperties/tablecellpropertiesediting.js
  *
  * @typedef {module:table/tablecellproperties/tablecellpropertiesediting} module:table/tablecellproperties/tablecellpropertiesediting~TableCellPropertiesEditing
@@ -2180,6 +2180,18 @@
  * Declared in file @ckeditor/ckeditor5-table/src/tablecellproperties/ui/tablecellpropertiesview.js
  *
  * @typedef {module:table/tablecellproperties/ui/tablecellpropertiesview} module:table/tablecellproperties/ui/tablecellpropertiesview~TableCellPropertiesView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-table/src/tablecellwidth/commands/tablecellwidthcommand.js
+ *
+ * @typedef {module:table/tablecellproperties/commands/tablecellwidthcommand} module:table/tablecellproperties/commands/tablecellwidthcommand~TableCellWidthCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-table/src/tablecellwidth/tablecellwidthediting.js
+ *
+ * @typedef {module:table/tablecellwidth/tablecellwidthediting} module:table/tablecellwidth/tablecellwidthediting~TableCellWidthEditing
  */
 
 /**
@@ -3080,6 +3092,12 @@
  * Declared in file @ckeditor/ckeditor5-utils/src/observablemixin.js
  *
  * @typedef {module:utils/observablemixin} module:utils/observablemixin~ObservableMixin
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-utils/src/splicearray.js
+ *
+ * @typedef {module:utils/splicearray} module:utils/splicearray~spliceArray
  */
 
 /**
