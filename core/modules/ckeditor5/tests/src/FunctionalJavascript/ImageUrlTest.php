@@ -104,14 +104,8 @@ class ImageUrlTest extends ImageTestBase {
 
     $this->pressEditorButton('Insert image');
     $panel = $page->find('css', '.ck-dropdown__panel.ck-image-insert__panel');
-    // Do not use setValue method as it triggers a blur event by default that
-    // closes the CKEditor 5 panel, making it impossible to click on the Insert
-    // button.
-    $this->getSession()->executeScript('
-      const input = document.querySelector(".ck-dropdown__panel.ck-image-insert__panel input[type=text]");
-      input.value = "' . $src . '";
-      input.dispatchEvent(new Event("input", {bubbles:true}));
-    ');
+    $src_input = $panel->find('css', 'input[type=text]');
+    $src_input->setValue($src);
     $panel->find('xpath', "//button[span[text()='Insert']]")->click();
 
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', $image_selector));
