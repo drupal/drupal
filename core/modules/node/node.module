@@ -813,9 +813,6 @@ function node_form_system_themes_admin_form_submit($form, FormStateInterface $fo
  * Note also that access to create nodes is handled by
  * hook_ENTITY_TYPE_create_access().
  *
- * To see how to write a node access module of your own, see
- * node_access_example.module.
- *
  * @see \Drupal\node\NodeAccessControlHandler
  */
 
