@@ -10,7 +10,6 @@ editor.settings.ckeditor5:
       mapping:
         items:
           type: sequence
-          orderby: ~
           label: 'Items'
           sequence:
             type: ckeditor5.toolbar_item
@@ -21,7 +20,6 @@ editor.settings.ckeditor5:
     plugins:
       type: sequence
       label: 'Plugins'
-      orderby: key
       sequence:
         type: ckeditor5.plugin.[%key]
   constraints:
@@ -53,7 +51,6 @@ ckeditor5.plugin.ckeditor5_heading:
   mapping:
     enabled_headings:
       type: sequence
-      orderby: value
       label: 'Enabled Headings'
       constraints:
         NotBlank:
@@ -83,7 +80,6 @@ ckeditor5.plugin.ckeditor5_sourceEditing:
   mapping:
     allowed_tags:
       type: sequence
-      orderby: ~
       label: 'Allowed Tags'
       sequence:
         type: ckeditor5.element
@@ -99,7 +95,6 @@ ckeditor5.plugin.ckeditor5_alignment:
   mapping:
     enabled_alignments:
       type: sequence
-      orderby: value
       label: 'Enabled Alignments'
       constraints:
         NotBlank:
@@ -148,7 +143,6 @@ ckeditor5.plugin.ckeditor5_style:
   mapping:
     styles:
       type: sequence
-      orderby: ~
       label: 'Styles'
       constraints:
         NotBlank:
