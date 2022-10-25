@@ -71,11 +71,6 @@ parameters:
 			path: lib/Drupal/Component/Gettext/PoMemoryWriter.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Component\\\\Plugin\\\\PluginManagerBase\\:\\:getFallbackPluginId\\(\\)\\.$#"
-			count: 1
-			path: lib/Drupal/Component/Plugin/PluginManagerBase.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\Access\\\\CsrfRequestHeaderAccessCheck\\:\\:applies\\(\\) should return bool but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Access/CsrfRequestHeaderAccessCheck.php
