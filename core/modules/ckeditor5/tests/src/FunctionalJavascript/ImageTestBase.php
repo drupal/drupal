@@ -89,6 +89,8 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $src_input = $panel->find('css', 'input[type=text]');
     $src_input->setValue($src);
     $panel->find('xpath', "//button[span[text()='Insert']]")->click();
+    // Wait for the image to be uploaded and rendered by CKEditor 5.
+    $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', '.ck-widget.image > img[src="' . $src . '"]'));
   }
 
   /**
@@ -435,8 +437,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
     $this->addImage();
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.image'));
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-balloon-panel'));
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-text-alternative-form'));
     $this->assertVisibleBalloon('.ck-text-alternative-form');
   }
 

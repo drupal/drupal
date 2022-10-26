@@ -124,6 +124,8 @@ class ImageTest extends ImageTestBase {
     $this->assertNotEmpty($image_upload_field = $page->find('css', '.ck-file-dialog-button input[type="file"]'));
     $image = $this->getTestFiles('image')[0];
     $image_upload_field->attachFile($this->container->get('file_system')->realpath($image->uri));
+    // Wait for the image to be uploaded and rendered by CKEditor 5.
+    $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', '.ck-widget.image > img[src*="' . $image->filename . '"]'));
   }
 
   /**
