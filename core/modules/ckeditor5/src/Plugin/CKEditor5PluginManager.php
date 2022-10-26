@@ -18,7 +18,7 @@ use Drupal\editor\EditorInterface;
 use Drupal\filter\FilterPluginCollection;
 
 /**
- * Provides a CKEditor5 plugin manager.
+ * Provides a CKEditor 5 plugin manager.
  *
  * @see \Drupal\ckeditor5\Plugin\CKEditor5PluginInterface
  * @see \Drupal\ckeditor5\Plugin\CKEditor5PluginBase

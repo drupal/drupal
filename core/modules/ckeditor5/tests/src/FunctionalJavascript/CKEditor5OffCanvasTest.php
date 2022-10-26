@@ -3,7 +3,7 @@
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 /**
- * Tests for CKEditor5 to ensure correct styling in off-canvas.
+ * Tests for CKEditor 5 to ensure correct styling in off-canvas.
  *
  * @group ckeditor5
  * @internal

@@ -116,7 +116,7 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
   protected $logger;
 
   /**
-   * Constructs a CKEditor5 editor plugin.
+   * Constructs a CKEditor 5 editor plugin.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
@@ -125,7 +125,7 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface $ckeditor5_plugin_manager
-   *   The CKEditor5 plugin manager.
+   *   The CKEditor 5 plugin manager.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -392,7 +392,7 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
 
     $form['plugin_settings'] = [
       '#type' => 'vertical_tabs',
-      '#title' => $this->t('CKEditor5 plugin settings'),
+      '#title' => $this->t('CKEditor 5 plugin settings'),
       '#id' => 'ckeditor5-plugin-settings',
     ];
 

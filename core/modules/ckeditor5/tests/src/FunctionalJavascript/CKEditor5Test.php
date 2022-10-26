@@ -16,7 +16,7 @@ use Symfony\Component\Validator\ConstraintViolation;
 // cspell:ignore esque splitbutton upcasted sourceediting
 
 /**
- * Tests for CKEditor5.
+ * Tests for CKEditor 5.
  *
  * @group ckeditor5
  * @internal
@@ -34,7 +34,7 @@ class CKEditor5Test extends CKEditor5TestBase {
   ];
 
   /**
-   * Tests configuring CKEditor5 for existing content.
+   * Tests configuring CKEditor 5 for existing content.
    */
   public function testExistingContent() {
     $page = $this->getSession()->getPage();
