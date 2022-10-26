@@ -48,7 +48,6 @@ settings:
         - '<h4 id>'
         - '<h5 id>'
         - '<h6 id>'
-        - '<span>'
     ckeditor5_list:
       reversed: false
       startIndex: true
