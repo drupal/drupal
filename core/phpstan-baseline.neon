@@ -236,11 +236,6 @@ parameters:
 			path: lib/Drupal/Core/EventSubscriber/FinishResponseSubscriber.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Core\\\\Extension\\\\Discovery\\\\RecursiveExtensionFilterIterator\\:\\:isDir\\(\\)\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Extension/Discovery/RecursiveExtensionFilterIterator.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\Field\\\\FieldItemBase\\:\\:generateSampleValue\\(\\) should return array but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Field/FieldItemBase.php
