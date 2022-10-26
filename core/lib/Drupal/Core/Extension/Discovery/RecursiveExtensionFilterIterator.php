@@ -136,7 +136,7 @@ class RecursiveExtensionFilterIterator extends \RecursiveFilterIterator {
     if ($name[0] == '.') {
       return FALSE;
     }
-    if ($this->isDir()) {
+    if ($this->current()->isDir()) {
       // If this is a subdirectory of a base search path, only recurse into the
       // fixed list of expected extension type directory names. Required for
       // scanning the top-level/root directory; without this condition, we would
