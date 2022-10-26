@@ -10,7 +10,7 @@ use Symfony\Component\Yaml\Yaml;
 // cspell:ignore esque imageUpload nofilter noeditor sourceediting Editing's
 
 /**
- * Tests for CKEditor5.
+ * Tests for CKEditor 5.
  *
  * @group ckeditor5
  * @internal

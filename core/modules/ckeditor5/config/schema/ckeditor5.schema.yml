@@ -1,4 +1,4 @@
-# Schema for the configuration files of the CKEditor5 module.
+# Schema for the configuration files of the CKEditor 5 module.
 
 editor.settings.ckeditor5:
   type: mapping

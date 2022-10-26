@@ -113,7 +113,7 @@ JS;
   }
 
   /**
-   * CKEditor5's filter UI modifications should not break it for other editors.
+   * CKEditor 5's filter UI modifications should not break it for other editors.
    */
   public function testUnavailableFiltersHiddenWhenSwitching() {
     $page = $this->getSession()->getPage();

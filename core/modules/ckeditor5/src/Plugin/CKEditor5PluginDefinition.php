@@ -530,7 +530,7 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
   }
 
   /**
-   * Gets keyed array of additional values for the CKEditor5 constructor config.
+   * Gets keyed array of additional values for the CKEditor 5 configuration.
    *
    * @return array
    *   The CKEditor 5 constructor config.
@@ -542,7 +542,7 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
   }
 
   /**
-   * Whether this plugin has additional values for the CKEditor5 constructor.
+   * Whether this plugin has additional values for the CKEditor 5 configuration.
    *
    * @return bool
    *

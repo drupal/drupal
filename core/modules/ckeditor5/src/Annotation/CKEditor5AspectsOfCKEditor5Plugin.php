@@ -23,7 +23,7 @@ use Drupal\Component\Annotation\Plugin;
 class CKEditor5AspectsOfCKEditor5Plugin extends Plugin {
 
   /**
-   * The CKEditor5 plugin classes provided.
+   * The CKEditor 5 plugin classes provided.
    *
    * Found in the CKEditor5 global js object as {package.Class}.
    *
@@ -32,7 +32,7 @@ class CKEditor5AspectsOfCKEditor5Plugin extends Plugin {
   public $plugins;
 
   /**
-   * A keyed array of additional values for the CKEditor5 constructor config.
+   * A keyed array of additional values for the CKEditor 5 configuration.
    *
    * This property is optional and it does not need to be declared.
    *

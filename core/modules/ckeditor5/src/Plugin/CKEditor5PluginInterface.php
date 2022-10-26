@@ -8,7 +8,7 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\editor\EditorInterface;
 
 /**
- * Defines an interface for CKEditor5 plugins.
+ * Defines an interface for CKEditor 5 plugins.
  *
  * @see \Drupal\ckeditor5\Plugin\CKEditor5PluginBase
  * @see \Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableInterface
