@@ -38,7 +38,7 @@ class EntityViewControllerTest extends BrowserTestBase {
     parent::setUp();
     // Create some dummy entity_test entities.
     for ($i = 0; $i < 2; $i++) {
-      $entity_test = $this->createTestEntity('entity_test');
+      $entity_test = $this->createTestEntity('entity_test', 'view revision');
       $entity_test->save();
       $this->entities[] = $entity_test;
     }
@@ -78,7 +78,7 @@ class EntityViewControllerTest extends BrowserTestBase {
     $entity_test_rev->setNewRevision(TRUE);
     $entity_test_rev->isDefaultRevision(TRUE);
     $entity_test_rev->save();
-    $this->drupalGet('entity_test_rev/' . $entity_test_rev->id() . '/revision/' . $entity_test_rev->revision_id->value . '/view');
+    $this->drupalGet($entity_test_rev->toUrl('revision'));
     $this->assertSession()->pageTextContains($entity_test_rev->label());
     $this->assertSession()->responseContains($get_label_markup($entity_test_rev->label()));
 
@@ -125,14 +125,16 @@ class EntityViewControllerTest extends BrowserTestBase {
    *
    * @param string $entity_type
    *   The entity type.
+   * @param string|null $name
+   *   The entity name, or NULL to generate random name.
    *
    * @return \Drupal\Core\Entity\EntityInterface
    *   The created entity.
    */
-  protected function createTestEntity($entity_type) {
+  protected function createTestEntity($entity_type, $name = NULL) {
     $data = [
       'bundle' => $entity_type,
-      'name' => $this->randomMachineName(),
+      'name' => $name ?? $this->randomMachineName(),
     ];
     return $this->container->get('entity_type.manager')->getStorage($entity_type)->create($data);
   }

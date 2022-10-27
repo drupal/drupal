@@ -86,12 +86,12 @@ class MigrateEntityContentValidationTest extends KernelTestBase {
           ],
           [
             'id' => '2',
-            'name' => $this->randomString(32),
+            'name' => $this->randomString(64),
             'user_id' => '1',
           ],
           [
             'id' => '3',
-            'name' => $this->randomString(32),
+            'name' => $this->randomString(64),
             'user_id' => '2',
           ],
         ],
@@ -110,7 +110,7 @@ class MigrateEntityContentValidationTest extends KernelTestBase {
       ],
     ]);
 
-    $this->assertSame('1: [entity_test: 1]: name.0.value=<em class="placeholder">Name</em>: may not be longer than 32 characters.||user_id.0.target_id=The referenced entity (<em class="placeholder">user</em>: <em class="placeholder">1</em>) does not exist.', $this->messages[0], 'First message should have 2 validation errors.');
+    $this->assertSame('1: [entity_test: 1]: name.0.value=<em class="placeholder">Name</em>: may not be longer than 64 characters.||user_id.0.target_id=The referenced entity (<em class="placeholder">user</em>: <em class="placeholder">1</em>) does not exist.', $this->messages[0], 'First message should have 2 validation errors.');
     $this->assertSame('2: [entity_test: 2]: user_id.0.target_id=The referenced entity (<em class="placeholder">user</em>: <em class="placeholder">1</em>) does not exist.', $this->messages[1], 'Second message should have 1 validation error.');
     $this->assertArrayNotHasKey(2, $this->messages, 'Third message should not exist.');
   }

@@ -73,7 +73,7 @@ class EntityTest extends ContentEntityBase implements EntityOwnerInterface {
       ->setLabel(t('Name'))
       ->setDescription(t('The name of the test entity.'))
       ->setTranslatable(TRUE)
-      ->setSetting('max_length', 32)
+      ->setSetting('max_length', 64)
       ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'string',

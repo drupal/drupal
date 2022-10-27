@@ -1,7 +1,7 @@
 entity.media.revision:
   path: '/media/{media}/revisions/{media_revision}/view'
   defaults:
-    _controller: '\Drupal\Core\Entity\Controller\EntityViewController::viewRevision'
+    _controller: '\Drupal\Core\Entity\Controller\EntityRevisionViewController'
     _title_callback: '\Drupal\Core\Entity\Controller\EntityController::title'
   options:
     parameters:

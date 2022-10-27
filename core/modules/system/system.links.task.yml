@@ -64,6 +64,11 @@ entity.date_format.edit_form:
   route_name: entity.date_format.edit_form
   base_route: entity.date_format.edit_form
 
+entity.version_history:
+  title: 'Revisions'
+  weight: 20
+  deriver: 'Drupal\Core\Entity\Plugin\Derivative\VersionHistoryLocalTasks'
+
 system.admin_content:
   title: Content
   route_name: system.admin_content
