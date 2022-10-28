@@ -2,6 +2,7 @@
 
 namespace Drupal\file\Plugin\Validation\Constraint;
 
+use Drupal\Component\Utility\Bytes;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -23,6 +24,17 @@ class FileValidationConstraintValidator extends ConstraintValidator {
     $file = $target->getValue();
     // Get the validators.
     $validators = $value->getUploadValidators();
+
+    // Always respect the configured maximum file size.
+    $field_settings = $value->getFieldDefinition()->getSettings();
+    if (array_key_exists('max_filesize', $field_settings)) {
+      $validators['file_validate_size'] = [Bytes::toNumber($field_settings['max_filesize'])];
+    }
+    else {
+      // Do not validate the file size if it is not set explicitly.
+      unset($validators['file_validate_size']);
+    }
+
     // Checks that a file meets the criteria specified by the validators.
     if ($errors = file_validate($file, $validators)) {
       foreach ($errors as $error) {
