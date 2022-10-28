@@ -69,7 +69,9 @@ function file_requirements($phase) {
   if ($phase == 'runtime') {
     $description = NULL;
     $implementation = file_progress_implementation();
-    $server_software = \Drupal::request()->server->get('SERVER_SOFTWARE');
+    // The environment variable might be missing. Fallback to an empty string to
+    // prevent passing NULL to preg_match(), a few lines later.
+    $server_software = \Drupal::request()->server->get('SERVER_SOFTWARE', '');
 
     // Test the web server identity.
     if (preg_match("/Nginx/i", $server_software)) {
