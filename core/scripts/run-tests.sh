@@ -170,8 +170,8 @@ simpletest_script_reporter_timer_stop();
 
 // Ensure all test locks are released once finished. If tests are run with a
 // concurrency of 1 the each test will clean up its own lock. Test locks are
-// not released if using a higher concurrency to ensure each test method has
-// unique fixtures.
+// not released if using a higher concurrency to ensure each test has unique
+// fixtures.
 TestDatabase::releaseAllTestLocks();
 
 // Display results before database is cleared.
@@ -273,9 +273,6 @@ All arguments are long options.
               (e.g., 'node')
 
   --class     Run tests identified by specific class names, instead of group names.
-              A specific test method can be added, for example,
-              'Drupal\book\Tests\BookTest::testBookExport'. This argument must
-              be last on the command line.
 
   --file      Run tests identified by specific file names, instead of group names.
               Specify the path and the extension
