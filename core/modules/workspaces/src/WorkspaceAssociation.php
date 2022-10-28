@@ -69,8 +69,8 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface {
       $tracked_revision_id = key($tracked[$entity->getEntityTypeId()]);
     }
 
-    $transaction = $this->database->startTransaction();
     try {
+      $transaction = $this->database->startTransaction();
       // Update all affected workspaces that were tracking the current revision.
       // This means they are inheriting content and should be updated.
       if ($tracked_revision_id) {
@@ -110,7 +110,9 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface {
       }
     }
     catch (\Exception $e) {
-      $transaction->rollBack();
+      if (isset($transaction)) {
+        $transaction->rollBack();
+      }
       watchdog_exception('workspaces', $e);
       throw $e;
     }

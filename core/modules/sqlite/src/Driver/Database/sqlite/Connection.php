@@ -2,6 +2,7 @@
 
 namespace Drupal\sqlite\Driver\Database\sqlite;
 
+use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Core\Database\StatementInterface;
@@ -116,7 +117,7 @@ class Connection extends DatabaseConnection {
     ];
 
     try {
-      $pdo = new \PDO('sqlite:' . $connection_options['database'], '', '', $connection_options['pdo']);
+      $pdo = new PDOConnection('sqlite:' . $connection_options['database'], '', '', $connection_options['pdo']);
     }
     catch (\PDOException $e) {
       if ($e->getCode() == static::DATABASE_NOT_FOUND) {
@@ -449,7 +450,15 @@ class Connection extends DatabaseConnection {
   }
 
   public function nextId($existing_id = 0) {
-    $this->startTransaction();
+    try {
+      $this->startTransaction();
+    }
+    catch (\PDOException $e) {
+      // $this->exceptionHandler()->handleExecutionException()
+      // requires a $statement argument, so we cannot use that.
+      throw new DatabaseExceptionWrapper($e->getMessage(), 0, $e);
+    }
+
     // We can safely use literal queries here instead of the slower query
     // builder because if a given database breaks here then it can simply
     // override nextId. However, this is unlikely as we deal with short strings
