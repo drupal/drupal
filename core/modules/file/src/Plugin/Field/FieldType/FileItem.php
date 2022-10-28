@@ -180,7 +180,7 @@ class FileItem extends EntityReferenceItem {
       '#type' => 'textfield',
       '#title' => $this->t('Maximum upload size'),
       '#default_value' => $settings['max_filesize'],
-      '#description' => $this->t('Enter a value like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes) in order to restrict the allowed file size. If left empty the file sizes will be limited only by PHP\'s maximum post and file upload sizes (current limit <strong>%limit</strong>).', ['%limit' => format_size(Environment::getUploadMaxSize())]),
+      '#description' => $this->t('Enter a value like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes) in order to restrict the allowed file size. If left empty the file sizes could be limited only by PHP\'s maximum post and file upload sizes (current limit <strong>%limit</strong>).', ['%limit' => format_size(Environment::getUploadMaxSize())]),
       '#size' => 10,
       '#element_validate' => [[static::class, 'validateMaxFilesize']],
       '#weight' => 5,
