@@ -1038,7 +1038,7 @@ function hook_requirements_alter(array &$requirements): void {
   // Change the title from 'PHP' to 'PHP version'.
   $requirements['php']['title'] = t('PHP version');
 
-  // Decrease the 'update status' requirement severity from warning to warning.
+  // Decrease the 'update status' requirement severity from warning to info.
   $requirements['update status']['severity'] = REQUIREMENT_INFO;
 
   // Remove a requirements entry.
