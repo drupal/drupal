@@ -193,11 +193,8 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       $form_arg = $this->classResolver->getInstanceFromDefinition($form_arg);
     }
 
-    if (!is_object($form_arg)) {
-      throw new \InvalidArgumentException(("The form class $form_arg could not be found or loaded."));
-    }
-    elseif (!($form_arg instanceof FormInterface)) {
-      throw new \InvalidArgumentException('The form argument ' . $form_arg::class . ' must be an instance of \Drupal\Core\Form\FormInterface.');
+    if (!is_object($form_arg) || !($form_arg instanceof FormInterface)) {
+      throw new \InvalidArgumentException("The form argument $form_arg is not a valid form.");
     }
 
     // Add the $form_arg as the callback object and determine the form ID.
