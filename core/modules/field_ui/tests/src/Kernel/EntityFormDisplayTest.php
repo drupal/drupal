@@ -103,20 +103,16 @@ class EntityFormDisplayTest extends KernelTestBase {
     $this->assertEquals($default_widget, $widget->getPluginId());
     $this->assertEquals($widget_settings, $widget->getSettings());
 
-    // Check that the widget is statically persisted, by assigning an
-    // arbitrary property and reading it back.
-    $random_value = $this->randomString();
-    $widget->randomValue = $random_value;
-    $widget = $form_display->getRenderer($field_name);
-    $this->assertEquals($random_value, $widget->randomValue);
+    // Check that the widget is statically persisted.
+    $this->assertSame($widget, $form_display->getRenderer($field_name));
 
     // Check that changing the definition creates a new widget.
     $form_display->setComponent($field_name, [
       'type' => 'field_test_multiple',
     ]);
-    $widget = $form_display->getRenderer($field_name);
-    $this->assertEquals('test_field_widget', $widget->getPluginId());
-    $this->assertFalse(isset($widget->randomValue));
+    $renderer = $form_display->getRenderer($field_name);
+    $this->assertEquals('test_field_widget', $renderer->getPluginId());
+    $this->assertNotSame($widget, $renderer);
 
     // Check that specifying an unknown widget (e.g. case of a disabled module)
     // gets stored as is in the display, but results in the default widget being

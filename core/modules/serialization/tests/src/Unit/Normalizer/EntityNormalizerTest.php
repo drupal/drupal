@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\serialization\Unit\Normalizer;
 
+use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeRepositoryInterface;
@@ -187,7 +188,7 @@ class EntityNormalizerTest extends UnitTestCase {
     $key_1 = $this->createMock(FieldItemListInterface::class);
     $key_2 = $this->createMock(FieldItemListInterface::class);
 
-    $entity = $this->createMock(FieldableEntityInterface::class);
+    $entity = $this->createMock(ContentEntityBase::class);
     $entity->expects($this->exactly(2))
       ->method('get')
       ->willReturnMap([
@@ -340,7 +341,7 @@ class EntityNormalizerTest extends UnitTestCase {
     $key_1 = $this->createMock(FieldItemListInterface::class);
     $key_2 = $this->createMock(FieldItemListInterface::class);
 
-    $entity = $this->createMock(FieldableEntityInterface::class);
+    $entity = $this->createMock(ContentEntityBase::class);
     $entity->expects($this->exactly(2))
       ->method('get')
       ->willReturnMap([
@@ -409,7 +410,7 @@ class EntityNormalizerTest extends UnitTestCase {
     $storage->expects($this->once())
       ->method('create')
       ->with($test_data)
-      ->willReturn($this->createMock('Drupal\Core\Entity\EntityInterface'));
+      ->willReturn($this->createMock(ContentEntityBase::class));
 
     $this->entityTypeManager->expects($this->once())
       ->method('getStorage')

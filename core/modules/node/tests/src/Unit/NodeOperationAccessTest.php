@@ -7,7 +7,6 @@ use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Entity\RevisionableEntityBundleInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -117,11 +116,6 @@ class NodeOperationAccessTest extends UnitTestCase {
       ->willReturn([]);
     $accessControl = new NodeAccessControlHandler($entityType, $grants, $entityTypeManager);
     $accessControl->setModuleHandler($moduleHandler);
-
-    $nodeType = $this->createMock(RevisionableEntityBundleInterface::class);
-    $typeProperty = new \stdClass();
-    $typeProperty->entity = $nodeType;
-    $node->type = $typeProperty;
 
     $access = $accessControl->access($node, $operation, $account, FALSE);
     $this->assertEquals($assertAccess, $access);

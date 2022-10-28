@@ -262,20 +262,16 @@ class EntityDisplayTest extends KernelTestBase {
     $this->assertEquals($default_formatter, $formatter->getPluginId());
     $this->assertEquals($formatter_settings, $formatter->getSettings());
 
-    // Check that the formatter is statically persisted, by assigning an
-    // arbitrary property and reading it back.
-    $random_value = $this->randomString();
-    $formatter->randomValue = $random_value;
-    $formatter = $display->getRenderer($field_name);
-    $this->assertEquals($random_value, $formatter->randomValue);
+    // Check that the formatter is statically persisted.
+    $this->assertSame($formatter, $display->getRenderer($field_name));
 
     // Check that changing the definition creates a new formatter.
     $display->setComponent($field_name, [
       'type' => 'field_test_multiple',
     ]);
-    $formatter = $display->getRenderer($field_name);
-    $this->assertEquals('field_test_multiple', $formatter->getPluginId());
-    $this->assertFalse(isset($formatter->randomValue));
+    $renderer = $display->getRenderer($field_name);
+    $this->assertEquals('field_test_multiple', $renderer->getPluginId());
+    $this->assertNotSame($formatter, $renderer);
 
     // Check that the display has dependencies on the field and the module that
     // provides the formatter.
