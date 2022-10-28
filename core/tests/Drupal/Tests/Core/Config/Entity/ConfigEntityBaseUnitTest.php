@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Core\Config\Entity;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -517,11 +518,11 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
         ],
       ]);
 
-    $entity_a = $this->createMock('\Drupal\Core\Config\Entity\ConfigEntityInterface');
+    $entity_a = $this->createMock(ConfigEntityBase::class);
     $entity_a->expects($this->atLeastOnce())
       ->method('label')
       ->willReturn('foo');
-    $entity_b = $this->createMock('\Drupal\Core\Config\Entity\ConfigEntityInterface');
+    $entity_b = $this->createMock(ConfigEntityBase::class);
     $entity_b->expects($this->atLeastOnce())
       ->method('label')
       ->willReturn('bar');
@@ -647,6 +648,8 @@ class TestConfigEntityWithPluginCollections extends ConfigEntityBaseWithPluginCo
   protected $pluginCollection;
 
   protected $pluginManager;
+
+  protected $the_plugin_collection_config;
 
   public function setPluginManager(PluginManagerInterface $plugin_manager) {
     $this->pluginManager = $plugin_manager;

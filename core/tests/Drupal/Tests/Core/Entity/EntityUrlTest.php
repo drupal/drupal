@@ -100,7 +100,7 @@ class EntityUrlTest extends UnitTestCase {
    * @covers ::toUrl
    */
   public function testToUrlNoId() {
-    $entity = $this->getEntity(EntityBase::class, []);
+    $entity = $this->getEntity(UrlTestEntity::class, []);
 
     $this->expectException(EntityMalformedException::class);
     $this->expectExceptionMessage('The "' . $this->entityTypeId . '" entity cannot have a URI as it does not have an ID');
@@ -123,7 +123,7 @@ class EntityUrlTest extends UnitTestCase {
    */
   public function testToUrlLinkTemplates($link_template, $expected_route_name) {
     $values = ['id' => $this->entityId, 'langcode' => $this->langcode];
-    $entity = $this->getEntity(EntityBase::class, $values);
+    $entity = $this->getEntity(UrlTestEntity::class, $values);
     $this->registerLinkTemplate($link_template);
 
     /** @var \Drupal\Core\Url $url */
@@ -220,7 +220,7 @@ class EntityUrlTest extends UnitTestCase {
    * @covers ::urlRouteParameters
    */
   public function testToUrlLinkTemplateNoId($link_template, $expected_route_name) {
-    $entity = $this->getEntity(EntityBase::class, ['id' => $this->entityId]);
+    $entity = $this->getEntity(UrlTestEntity::class, ['id' => $this->entityId]);
     $this->registerLinkTemplate($link_template);
 
     /** @var \Drupal\Core\Url $url */
@@ -265,7 +265,7 @@ class EntityUrlTest extends UnitTestCase {
    */
   public function testToUrlLinkTemplateAddForm($has_bundle_key, $bundle_entity_type, $bundle_key, $expected_route_parameters) {
     $values = ['id' => $this->entityId, 'langcode' => $this->langcode];
-    $entity = $this->getEntity(EntityBase::class, $values);
+    $entity = $this->getEntity(UrlTestEntity::class, $values);
     $this->entityType->hasKey('bundle')->willReturn($has_bundle_key);
     $this->entityType->getBundleEntityType()->willReturn($bundle_entity_type);
     $this->entityType->getKey('bundle')->willReturn($bundle_key);
@@ -310,7 +310,7 @@ class EntityUrlTest extends UnitTestCase {
    * @covers ::linkTemplates
    */
   public function testToUrlUriCallbackUndefined(array $bundle_info, $uri_callback) {
-    $entity = $this->getEntity(EntityBase::class, ['id' => $this->entityId]);
+    $entity = $this->getEntity(UrlTestEntity::class, ['id' => $this->entityId]);
 
     $this->registerBundleInfo($bundle_info);
     $this->entityType->getUriCallback()->willReturn($uri_callback);
@@ -351,7 +351,7 @@ class EntityUrlTest extends UnitTestCase {
    * @dataProvider providerTestToUrlUriCallback
    */
   public function testToUrlUriCallback(array $bundle_info, $uri_callback) {
-    $entity = $this->getEntity(EntityBase::class, ['id' => $this->entityId, 'langcode' => $this->langcode]);
+    $entity = $this->getEntity(UrlTestEntity::class, ['id' => $this->entityId, 'langcode' => $this->langcode]);
 
     $this->registerBundleInfo($bundle_info);
     $this->entityType->getUriCallback()->willReturn($uri_callback);
@@ -385,7 +385,7 @@ class EntityUrlTest extends UnitTestCase {
    * @covers ::uriRelationships
    */
   public function testUriRelationships() {
-    $entity = $this->getEntity(EntityBase::class, ['id' => $this->entityId]);
+    $entity = $this->getEntity(UrlTestEntity::class, ['id' => $this->entityId]);
 
     $container_builder = new ContainerBuilder();
     $url_generator = $this->createMock(UrlGeneratorInterface::class);
@@ -505,4 +505,12 @@ class EntityUrlTest extends UnitTestCase {
 
 }
 
-abstract class RevisionableEntity extends EntityBase implements RevisionableInterface {}
+class UrlTestEntity extends EntityBase {
+  public $id;
+  public $langcode;
+  public $uuid;
+  public $label;
+
+}
+
+abstract class RevisionableEntity extends UrlTestEntity implements RevisionableInterface {}
