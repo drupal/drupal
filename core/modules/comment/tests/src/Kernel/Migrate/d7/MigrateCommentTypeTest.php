@@ -125,7 +125,7 @@ class MigrateCommentTypeTest extends MigrateDrupal7TestBase {
         'Disabled source modules' => ['node'],
         'Expected messages' => [
           'error' => [
-            'Migration d7_comment_type did not meet the requirements. The node module is not enabled in the source site. source_module_additional: node.',
+            'Migration d7_comment_type did not meet the requirements. The node module is not enabled in the source site.',
           ],
         ],
       ],
@@ -133,7 +133,7 @@ class MigrateCommentTypeTest extends MigrateDrupal7TestBase {
         'Disabled source modules' => ['comment'],
         'Expected messages' => [
           'error' => [
-            'Migration d7_comment_type did not meet the requirements. The module comment is not enabled in the source site. source_module: comment.',
+            'Migration d7_comment_type did not meet the requirements. The module comment is not enabled in the source site.',
           ],
         ],
       ],
@@ -141,7 +141,7 @@ class MigrateCommentTypeTest extends MigrateDrupal7TestBase {
         'Disabled source modules' => ['comment', 'node'],
         'Expected messages' => [
           'error' => [
-            'Migration d7_comment_type did not meet the requirements. The module comment is not enabled in the source site. source_module: comment.',
+            'Migration d7_comment_type did not meet the requirements. The module comment is not enabled in the source site.',
           ],
         ],
       ],
