@@ -53,12 +53,25 @@ class FormBuilderTest extends FormTestBase {
 
   /**
    * Tests the getFormId() method with a string based form ID.
+   *
+   * @covers ::getFormId
    */
   public function testGetFormIdWithString() {
     $form_arg = 'foo';
     $form_state = new FormState();
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('The form argument foo is not a valid form.');
+    $this->expectExceptionMessage('The form class foo could not be found or loaded.');
+    $this->formBuilder->getFormId($form_arg, $form_state);
+  }
+
+  /**
+   * @covers ::getFormId
+   */
+  public function testGetFormIdWithNonFormClass() {
+    $form_arg = __CLASS__;
+    $form_state = new FormState();
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage("The form argument $form_arg must be an instance of \Drupal\Core\Form\FormInterface.");
     $this->formBuilder->getFormId($form_arg, $form_state);
   }
 
@@ -217,7 +230,7 @@ class FormBuilderTest extends FormTestBase {
   public function testGetFormWithString() {
     $form_id = 'test_form_id';
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('The form argument test_form_id is not a valid form.');
+    $this->expectExceptionMessage('The form class test_form_id could not be found or loaded.');
     $this->formBuilder->getForm($form_id);
   }
 
@@ -256,7 +269,7 @@ class FormBuilderTest extends FormTestBase {
   public function testBuildFormWithString() {
     $form_id = 'test_form_id';
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('The form argument test_form_id is not a valid form.');
+    $this->expectExceptionMessage('The form class test_form_id could not be found or loaded.');
     $this->formBuilder->getForm($form_id);
   }
 
