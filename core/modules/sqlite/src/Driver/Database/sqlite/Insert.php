@@ -2,6 +2,7 @@
 
 namespace Drupal\sqlite\Driver\Database\sqlite;
 
+use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Query\Insert as QueryInsert;
 
 /**
@@ -23,6 +24,9 @@ class Insert extends QueryInsert {
     unset($this->queryOptions['return']);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function execute() {
     if (!$this->preExecute()) {
       return NULL;
@@ -35,41 +39,64 @@ class Insert extends QueryInsert {
       return $this->connection->query((string) $this, $this->fromQuery->getArguments(), $this->queryOptions);
     }
 
-    // We wrap the insert in a transaction so that it is atomic where possible.
-    // In SQLite, this is also a notable performance boost.
-    $transaction = $this->connection->startTransaction();
-
+    // If there are any fields in the query, execute normal INSERT statements.
     if (count($this->insertFields)) {
-      // Each insert happens in its own query.
       $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions);
-      foreach ($this->insertValues as $insert_values) {
+
+      if (count($this->insertValues) === 1) {
+        // Inserting a single row does not require a transaction to be atomic,
+        // and executes faster without a transaction wrapper.
+        $insert_values = $this->insertValues[0];
         try {
           $stmt->execute($insert_values, $this->queryOptions);
         }
         catch (\Exception $e) {
-          // One of the INSERTs failed, rollback the whole batch.
-          $transaction->rollBack();
           $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, $insert_values, $this->queryOptions);
+        }
+      }
+      else {
+        // Inserting multiple rows requires a transaction to be atomic, and
+        // executes faster as a single transaction.
+        try {
+          $transaction = $this->connection->startTransaction();
+        }
+        catch (\PDOException $e) {
+          // $this->connection->exceptionHandler()->handleExecutionException()
+          // requires a $statement argument, so we cannot use that.
+          throw new DatabaseExceptionWrapper($e->getMessage(), 0, $e);
+        }
+        foreach ($this->insertValues as $insert_values) {
+          try {
+            $stmt->execute($insert_values, $this->queryOptions);
+          }
+          catch (\Exception $e) {
+            // One of the INSERTs failed, rollback the whole batch.
+            $transaction->rollBack();
+            $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, $insert_values, $this->queryOptions);
+          }
         }
       }
       // Re-initialize the values array so that we can re-use this query.
       $this->insertValues = [];
     }
+    // If there are no fields in the query, execute an INSERT statement that
+    // only populates default values.
     else {
       $stmt = $this->connection->prepareStatement("INSERT INTO {{$this->table}} DEFAULT VALUES", $this->queryOptions);
       try {
         $stmt->execute(NULL, $this->queryOptions);
       }
       catch (\Exception $e) {
-        $transaction->rollBack();
         $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, [], $this->queryOptions);
       }
     }
 
-    // Transaction commits here when $transaction looses scope.
     return $this->connection->lastInsertId();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function __toString() {
     // Create a sanitized comment string to prepend to the query.
     $comments = $this->connection->makeComment($this->comments);
