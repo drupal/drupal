@@ -164,10 +164,11 @@ class MigrateExecutable implements MigrateExecutableInterface {
     catch (RequirementsException $e) {
       $this->message->display(
         $this->t(
-          'Migration @id did not meet the requirements. @message',
+          'Migration @id did not meet the requirements. @message @requirements',
           [
             '@id' => $this->migration->id(),
             '@message' => $e->getMessage(),
+            '@requirements' => $e->getRequirementsString(),
           ]
         ),
         'error'
