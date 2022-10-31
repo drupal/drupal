@@ -18,8 +18,7 @@ exports.command = function drupalLogin({ name, password }) {
     this.drupalRelativeURL('/user/login')
       .setValue('input[name="name"]', name)
       .setValue('input[name="pass"]', password)
-      .submitForm('#user-login-form')
-      .waitForElementVisible('body');
+      .submitForm('#user-login-form');
     // Assert that a user is logged in.
     this.drupalUserIsLoggedIn((sessionExists) => {
       this.assert.equal(
