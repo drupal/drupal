@@ -40,6 +40,11 @@ class ViewsMultiValueFieldUpdateTest extends UpdatePathTestBase {
    * Tests views_post_update_field_names_for_multivalue_fields().
    */
   public function testViewsPostUpdateFieldNamesForMultiValueFields() {
+    $key_value_store = \Drupal::keyValue('post_update');
+    $existing_update_functions = $key_value_store->get('existing_updates', []);
+    $existing_update_functions = array_diff($existing_update_functions, ['views_post_update_field_names_for_multivalue_fields']);
+    $key_value_store->set('existing_updates', $existing_update_functions);
+
     $this->runUpdates();
 
     $this->assertSession()->pageTextContainsOnce('Updates failed for the entity type View, for test_another_broken_config_multi_value, test_broken_config_multi_value. Check the logs.');

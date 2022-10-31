@@ -37,7 +37,7 @@ function views_removed_post_updates() {
 /**
  * Update field names for multi-value base fields.
  */
-function views_post_update_field_names_for_multivalue_fields_followup(&$sandbox = NULL) {
+function views_post_update_field_names_for_multivalue_fields(&$sandbox = NULL) {
   /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
   $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
   $view_config_updater->setDeprecationsEnabled(FALSE);
