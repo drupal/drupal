@@ -24,6 +24,11 @@ class MigrateSyslogConfigsTest extends MigrateDrupal6TestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    // Enable syslog in the source database so that requirements are met.
+    $this->sourceDatabase->update('system')
+      ->condition('name', 'syslog')
+      ->fields(['status' => '1'])
+      ->execute();
     $this->executeMigration('d6_syslog_settings');
   }
 
