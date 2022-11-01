@@ -1371,11 +1371,6 @@ parameters:
 			path: modules/views/tests/src/Kernel/RenderCacheIntegrationTest.php
 
 		-
-			message: "#^Cannot unset offset mixed on array\\.$#"
-			count: 1
-			path: modules/views/views.theme.inc
-
-		-
 			message: "#^Cannot unset offset '\\#title' on array\\{\\#theme_wrappers\\: array\\{'container'\\}, \\#attributes\\: array\\{class\\: array\\{'scroll'\\}, data\\-drupal\\-views\\-scroll\\: true\\}\\}\\.$#"
 			count: 1
 			path: modules/views_ui/src/Form/Ajax/Display.php
