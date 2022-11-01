@@ -104,18 +104,18 @@ abstract class DrupalSqlBase extends SqlBase implements DependentPluginInterface
   public function checkRequirements() {
     parent::checkRequirements();
     if ($this->pluginDefinition['requirements_met'] === TRUE) {
-      if (isset($this->pluginDefinition['source_module'])) {
-        if ($this->moduleExists($this->pluginDefinition['source_module'])) {
+      if ($source_module = $this->getSourceModule()) {
+        if ($this->moduleExists($source_module)) {
           if (isset($this->pluginDefinition['minimum_version'])) {
-            $minimum_version = $this->pluginDefinition['minimum_version'];
-            $installed_version = $this->getModuleSchemaVersion($this->pluginDefinition['source_module']);
+            $minimum_version = (int) $this->pluginDefinition['minimum_version'];
+            $installed_version = (int) $this->getModuleSchemaVersion($source_module);
             if ($minimum_version > $installed_version) {
               throw new RequirementsException('Required minimum version ' . $this->pluginDefinition['minimum_version'], ['minimum_version' => $this->pluginDefinition['minimum_version']]);
             }
           }
         }
         else {
-          throw new RequirementsException('The module ' . $this->pluginDefinition['source_module'] . ' is not enabled in the source site.', ['source_module' => $this->pluginDefinition['source_module']]);
+          throw new RequirementsException('The module ' . $source_module . ' is not enabled in the source site.', ['source_module' => $source_module]);
         }
       }
     }
