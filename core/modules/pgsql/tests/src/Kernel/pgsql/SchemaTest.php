@@ -113,6 +113,108 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function testReservedKeywordsForNaming(): void {
+    $table_specification = [
+      'description' => 'A test table with an ANSI reserved keywords for naming.',
+      'fields' => [
+        'primary' => [
+          'description' => 'Simple unique ID.',
+          'type' => 'int',
+          'not null' => TRUE,
+        ],
+        'update' => [
+          'description' => 'A column with reserved name.',
+          'type' => 'varchar',
+          'length' => 255,
+        ],
+      ],
+      'primary key' => ['primary'],
+      'unique keys' => [
+        'having' => ['update'],
+      ],
+      'indexes' => [
+        'in' => ['primary', 'update'],
+      ],
+    ];
+
+    // Creating a table.
+    $table_name = 'select';
+    $this->schema->createTable($table_name, $table_specification);
+    $this->assertTrue($this->schema->tableExists($table_name));
+
+    // Finding all tables.
+    $tables = $this->schema->findTables('%');
+    sort($tables);
+    $this->assertEquals(['config', 'select'], $tables);
+
+    // Renaming a table.
+    $table_name_new = 'from';
+    $this->schema->renameTable($table_name, $table_name_new);
+    $this->assertFalse($this->schema->tableExists($table_name));
+    $this->assertTrue($this->schema->tableExists($table_name_new));
+
+    // Adding a field.
+    $field_name = 'delete';
+    $this->schema->addField($table_name_new, $field_name, ['type' => 'int', 'not null' => TRUE]);
+    $this->assertTrue($this->schema->fieldExists($table_name_new, $field_name));
+
+    // Dropping a primary key.
+    $this->schema->dropPrimaryKey($table_name_new);
+
+    // Adding a primary key.
+    $this->schema->addPrimaryKey($table_name_new, [$field_name]);
+
+    // Check the primary key columns.
+    $find_primary_key_columns = new \ReflectionMethod(get_class($this->schema), 'findPrimaryKeyColumns');
+    $this->assertEquals([$field_name], $find_primary_key_columns->invoke($this->schema, $table_name_new));
+
+    // Dropping a primary key.
+    $this->schema->dropPrimaryKey($table_name_new);
+
+    // Changing a field.
+    $field_name_new = 'where';
+    $this->schema->changeField($table_name_new, $field_name, $field_name_new, ['type' => 'int', 'not null' => FALSE]);
+    $this->assertFalse($this->schema->fieldExists($table_name_new, $field_name));
+    $this->assertTrue($this->schema->fieldExists($table_name_new, $field_name_new));
+
+    // Adding an unique key
+    $unique_key_name = $unique_key_introspect_name = 'unique';
+    $this->schema->addUniqueKey($table_name_new, $unique_key_name, [$field_name_new]);
+
+    // Check the unique key columns.
+    $introspect_index_schema = new \ReflectionMethod(get_class($this->schema), 'introspectIndexSchema');
+    $ensure_identifiers_length = new \ReflectionMethod(get_class($this->schema), 'ensureIdentifiersLength');
+    $unique_key_introspect_name = $ensure_identifiers_length->invoke($this->schema, $table_name_new, $unique_key_name, 'key');
+    $this->assertEquals([$field_name_new], $introspect_index_schema->invoke($this->schema, $table_name_new)['unique keys'][$unique_key_introspect_name]);
+
+    // Dropping an unique key
+    $this->schema->dropUniqueKey($table_name_new, $unique_key_name);
+
+    // Dropping a field.
+    $this->schema->dropField($table_name_new, $field_name_new);
+    $this->assertFalse($this->schema->fieldExists($table_name_new, $field_name_new));
+
+    // Adding an index.
+    $index_name = $index_introspect_name = 'index';
+    $this->schema->addIndex($table_name_new, $index_name, ['update'], $table_specification);
+    $this->assertTrue($this->schema->indexExists($table_name_new, $index_name));
+
+    // Check the index columns.
+    $index_introspect_name = $ensure_identifiers_length->invoke($this->schema, $table_name_new, $index_name, 'idx');
+    $this->assertEquals(['update'], $introspect_index_schema->invoke($this->schema, $table_name_new)['indexes'][$index_introspect_name]);
+
+    // Dropping an index.
+    $this->schema->dropIndex($table_name_new, $index_name);
+    $this->assertFalse($this->schema->indexExists($table_name_new, $index_name));
+
+    // Dropping a table.
+    $this->schema->dropTable($table_name_new);
+    $this->assertFalse($this->schema->tableExists($table_name_new));
+  }
+
+  /**
    * @covers \Drupal\Core\Database\Driver\pgsql\Schema::extensionExists
    */
   public function testPgsqlExtensionExists(): void {
