@@ -3,6 +3,7 @@
 namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigEvents;
@@ -91,6 +92,14 @@ class Fast404ExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
       if ($fast_paths && preg_match($fast_paths, $request->getPathInfo())) {
         $fast_404_html = strtr($config->get('fast_404.html'), ['@path' => Html::escape($request->getUri())]);
         $response = new HtmlResponse($fast_404_html, Response::HTTP_NOT_FOUND);
+        // Some routes such as system.files conditionally throw a
+        // NotFoundHttpException depending on URL parameters instead of just the
+        // route and route parameters, so add the URL cache context to account
+        // for this.
+        $cacheable_metadata = new CacheableMetadata();
+        $cacheable_metadata->setCacheContexts(['url']);
+        $cacheable_metadata->addCacheTags(['4xx-response']);
+        $response->addCacheableDependency($cacheable_metadata);
         $event->setResponse($response);
       }
     }
