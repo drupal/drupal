@@ -2,6 +2,7 @@
 
 namespace Drupal\FunctionalTests\EventSubscriber;
 
+use Drupal\file\Entity\File;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -17,6 +18,11 @@ class Fast404Test extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['file'];
 
   /**
    * Tests the fast 404 functionality.
@@ -67,6 +73,35 @@ class Fast404Test extends BrowserTestBase {
     // Fast 404s returned via the exception subscriber still have the
     // X-Generator header.
     $this->assertSession()->responseHeaderContains('X-Generator', 'Drupal');
+  }
+
+  /**
+   * Tests the fast 404 functionality.
+   */
+  public function testFast404PrivateFiles(): void {
+    $admin = $this->createUser([], NULL, TRUE);
+    $this->drupalLogin($admin);
+
+    $file_url = 'system/files/test/private-file-test.txt';
+    $this->drupalGet($file_url);
+    $this->assertSession()->statusCodeEquals(404);
+    $this->drupalGet($file_url);
+    $this->assertSession()->statusCodeEquals(404);
+
+    // Create a private file for testing accessible by the admin user.
+    \Drupal::service('file_system')->mkdir($this->privateFilesDirectory . '/test');
+    $filepath = 'private://test/private-file-test.txt';
+    $contents = "file_put_contents() doesn't seem to appreciate empty strings so let's put in some data.";
+    file_put_contents($filepath, $contents);
+    $file = File::create([
+      'uri' => $filepath,
+      'uid' => $admin->id(),
+    ]);
+    $file->save();
+
+    $this->drupalGet($file_url);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains($contents);
   }
 
 }
