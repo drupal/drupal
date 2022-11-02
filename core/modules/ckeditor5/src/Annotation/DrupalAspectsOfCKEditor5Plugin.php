@@ -43,6 +43,15 @@ class DrupalAspectsOfCKEditor5Plugin extends Plugin {
   public $class = CKEditor5PluginDefault::class;
 
   /**
+   * The CKEditor 5 plugin deriver class.
+   *
+   * This property is optional and it does not need to be declared.
+   *
+   * @var string|null
+   */
+  public $deriver = NULL;
+
+  /**
    * The library this plugin requires.
    *
    * This property is optional and it does not need to be declared.
