@@ -59,9 +59,9 @@ class HoldTestSubscriber implements EventSubscriberInterface {
    */
   protected function hold($type) {
     $path = "{$this->sitePath}/hold_test_$type.txt";
-    do {
-      $status = (bool) file_get_contents($path);
-    } while ($status && (NULL === usleep(static::WAIT)));
+    while ((bool) file_get_contents($path)) {
+      usleep(static::WAIT);
+    }
   }
 
   /**
