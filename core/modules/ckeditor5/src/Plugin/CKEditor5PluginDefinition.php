@@ -6,6 +6,7 @@ namespace Drupal\ckeditor5\Plugin;
 
 use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\Component\Assertion\Inspector;
+use Drupal\Component\Plugin\Definition\DerivablePluginDefinitionInterface;
 use Drupal\Component\Plugin\Definition\PluginDefinition;
 use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
@@ -16,7 +17,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Provides an implementation of a CKEditor 5 plugin definition.
  */
-final class CKEditor5PluginDefinition extends PluginDefinition implements PluginDefinitionInterface {
+final class CKEditor5PluginDefinition extends PluginDefinition implements PluginDefinitionInterface, DerivablePluginDefinitionInterface {
 
   use SchemaCheckTrait;
 
@@ -40,22 +41,17 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
    * @param array $definition
    *   An array of values from the annotation/YAML.
    *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \InvalidArgumentException
    */
   public function __construct(array $definition) {
-    $this->id = $id = $definition['id'];
-
-    $expected_prefix = sprintf("%s_", $definition['provider']);
-    if (strpos($id, $expected_prefix) !== 0) {
-      throw new InvalidPluginDefinitionException($id, sprintf('The "%s" CKEditor 5 plugin definition must have a plugin ID that starts with "%s".', $id, $expected_prefix));
+    foreach ($definition as $property => $value) {
+      if (property_exists($this, $property)) {
+        $this->{$property} = $value;
+      }
+      else {
+        throw new \InvalidArgumentException(sprintf('Property %s with value %s does not exist on %s.', $property, $value, __CLASS__));
+      }
     }
-    $this->provider = $definition['provider'];
-
-    static::validateCKEditor5Aspects($id, $definition);
-    $this->ckeditor5 = $definition['ckeditor5'];
-
-    $this->validateDrupalAspects($id, $definition);
-    $this->drupal = $definition['drupal'];
   }
 
   /**
@@ -81,8 +77,11 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
    *   The plugin definition to validate.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   *
+   * @internal
+   * @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::processDefinition()
    */
-  private static function validateCKEditor5Aspects(string $id, array $definition): void {
+  public static function validateCKEditor5Aspects(string $id, array $definition): void {
     if (!isset($definition['ckeditor5'])) {
       throw new InvalidPluginDefinitionException($id, sprintf('The "%s" CKEditor 5 plugin definition must contain a "ckeditor5" key.', $id));
     }
@@ -122,8 +121,11 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
    *   The plugin definition to validate.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   *
+   * @internal
+   * @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::processDefinition()
    */
-  private function validateDrupalAspects(string $id, array $definition): void {
+  public function validateDrupalAspects(string $id, array $definition): void {
     if (!isset($definition['drupal'])) {
       throw new InvalidPluginDefinitionException($id, sprintf('The "%s" CKEditor 5 plugin definition must contain a "drupal" key.', $id));
     }
@@ -301,6 +303,31 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
    */
   public function setClass($class) {
     $this->drupal['class'] = $class;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @see \Drupal\ckeditor5\Annotation\DrupalAspectsOfCKEditor5Plugin::$deriver
+   */
+  public function getDeriver() {
+    // TRICKY: this is the only key that is allowed to not be set, because it is
+    // possible that this plugin definition is a partial/incomplete one, and the
+    // default from the annotation is only applied automatically for class
+    // annotation CKEditor 5 plugin definitions (because they create an instance
+    // of the DrupalAspectsOfCKEditor5Plugin annotation level), not for CKEditor
+    // 5 plugin definitions in YAML.
+    // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::processDefinition()
+    // @see \Drupal\ckeditor5\Annotation\CKEditor5Plugin::__construct()
+    return $this->drupal['deriver'] ?? NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setDeriver($deriver) {
+    $this->drupal['deriver'] = $deriver;
     return $this;
   }
 
