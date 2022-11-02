@@ -27,11 +27,11 @@ abstract class DriverSpecificKernelTestBase extends KernelTestBase {
    * @inheritdoc
    */
   protected function setUp(): void {
-    parent::setUp();
-    $this->connection = Database::getConnection();
-
-    $running_provider = $this->connection->getProvider();
-    $running_driver = $this->connection->driver();
+    // Find the current SUT database driver from the connection info. If that
+    // is not the one the test requires, skip before test database
+    // initialization so to save cycles.
+    $this->root = static::getDrupalRoot();
+    $connectionInfo = $this->getDatabaseConnectionInfo();
     $test_class_parts = explode('\\', get_class($this));
     $expected_provider = $test_class_parts[2] ?? '';
     for ($i = 3; $i < count($test_class_parts); $i++) {
@@ -40,6 +40,17 @@ abstract class DriverSpecificKernelTestBase extends KernelTestBase {
         break;
       }
     }
+    if ($connectionInfo['default']['driver'] !== $expected_driver) {
+      $this->markTestSkipped("This test only runs for the database driver '$expected_driver'. Current database driver is '{$connectionInfo['default']['driver']}'.");
+    }
+
+    parent::setUp();
+    $this->connection = Database::getConnection();
+
+    // After database initialization, the database driver may be not provided
+    // by the expected module; skip test in that case.
+    $running_provider = $this->connection->getProvider();
+    $running_driver = $this->connection->driver();
     if ($running_provider !== $expected_provider || $running_driver !== $expected_driver) {
       $this->markTestSkipped("This test only runs for the database driver '$expected_driver' provided by the '$expected_provider' module. Connected database driver is '$running_driver' provided by '$running_provider'.");
     }

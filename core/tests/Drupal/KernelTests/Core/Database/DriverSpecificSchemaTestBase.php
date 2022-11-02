@@ -308,27 +308,12 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
 
     // Check that the ID sequence gets renamed when the table is renamed.
     $this->checkSequenceRenaming($new_table_name);
-
-    // Use database specific data type and ensure that table is created.
-    $table_specification = [
-      'description' => 'Schema table description.',
-      'fields' => [
-        'timestamp'  => [
-          'mysql_type' => 'timestamp',
-          'pgsql_type' => 'timestamp',
-          'sqlite_type' => 'datetime',
-          'not null' => FALSE,
-          'default' => NULL,
-        ],
-      ],
-    ];
-    try {
-      $this->schema->createTable('test_timestamp', $table_specification);
-    }
-    catch (\Exception $e) {
-    }
-    $this->assertTrue($this->schema->tableExists('test_timestamp'), 'Table with database specific datatype was created.');
   }
+
+  /**
+   * Tests creating a table with database specific data type.
+   */
+  abstract public function testTableWithSpecificDataType(): void;
 
   /**
    * Tests creating unsigned columns and data integrity thereof.

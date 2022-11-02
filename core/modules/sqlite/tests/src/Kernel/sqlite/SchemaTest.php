@@ -5,7 +5,7 @@ namespace Drupal\Tests\sqlite\Kernel\sqlite;
 use Drupal\KernelTests\Core\Database\DriverSpecificSchemaTestBase;
 
 /**
- * Tests schema API for the PostgreSQL driver.
+ * Tests schema API for the SQLite driver.
  *
  * @group Database
  */
@@ -24,6 +24,24 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
    */
   protected function tryInsertExpectsIntegrityConstraintViolationException(string $tableName): void {
     // Sqlite does not throw an IntegrityConstraintViolationException here.
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testTableWithSpecificDataType(): void {
+    $table_specification = [
+      'description' => 'Schema table description.',
+      'fields' => [
+        'timestamp'  => [
+          'sqlite_type' => 'datetime',
+          'not null' => FALSE,
+          'default' => NULL,
+        ],
+      ],
+    ];
+    $this->schema->createTable('test_timestamp', $table_specification);
+    $this->assertTrue($this->schema->tableExists('test_timestamp'));
   }
 
   /**

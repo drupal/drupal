@@ -26,9 +26,13 @@ use PHPUnit\Framework\Error\Warning;
  *     Do more stuff
  *     Should still be in transaction A
  *
- * @group Database
+ * These method can be overridden by non-core database driver if their
+ * transaction behavior is different from core. For example, both oci8 (Oracle)
+ * and mysqli (MySql) clients do not have a solution to check if a transaction
+ * is active, and mysqli does not fail when rolling back and no transaction
+ * active.
  */
-class TransactionTest extends DatabaseTestBase {
+class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
 
   /**
    * Encapsulates a transaction's "inner layer" with an "outer layer".
