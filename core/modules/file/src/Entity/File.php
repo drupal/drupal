@@ -2,6 +2,7 @@
 
 namespace Drupal\file\Entity;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -274,6 +275,22 @@ class File extends ContentEntityBase implements FileInterface {
    */
   public static function getDefaultEntityOwner() {
     return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function invalidateTagsOnSave($update) {
+    $tags = $this->getListCacheTagsToInvalidate();
+    // Always invalidate the 404 or 403 response cache because while files do
+    // not have a canonical URL as such, they may be served via routes such as
+    // private files.
+    // Creating or updating an entity may change a cached 403 or 404 response.
+    $tags = Cache::mergeTags($tags, ['4xx-response']);
+    if ($update) {
+      $tags = Cache::mergeTags($tags, $this->getCacheTagsToInvalidate());
+    }
+    Cache::invalidateTags($tags);
   }
 
 }
