@@ -1086,11 +1086,6 @@ parameters:
 			path: modules/system/tests/modules/entity_test/src/Plugin/Field/FieldType/ChangedTestItem.php
 
 		-
-			message: "#^Result of function usleep \\(void\\) is used\\.$#"
-			count: 1
-			path: modules/system/tests/modules/hold_test/src/EventSubscriber/HoldTestSubscriber.php
-
-		-
 			message: "#^Configuration entity must define a `config_export` key\\. See https\\://www\\.drupal\\.org/node/2481909$#"
 			count: 1
 			path: modules/system/tests/modules/module_installer_config_test/src/Entity/TestConfigType.php
