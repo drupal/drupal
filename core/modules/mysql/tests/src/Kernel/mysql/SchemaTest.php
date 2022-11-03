@@ -44,6 +44,24 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function testTableWithSpecificDataType(): void {
+    $table_specification = [
+      'description' => 'Schema table description.',
+      'fields' => [
+        'timestamp'  => [
+          'mysql_type' => 'timestamp',
+          'not null' => FALSE,
+          'default' => NULL,
+        ],
+      ],
+    ];
+    $this->schema->createTable('test_timestamp', $table_specification);
+    $this->assertTrue($this->schema->tableExists('test_timestamp'));
+  }
+
+  /**
    * Tests that indexes on string fields are limited to 191 characters on MySQL.
    *
    * @see \Drupal\mysql\Driver\Database\mysql\Schema::getNormalizedIndexes()

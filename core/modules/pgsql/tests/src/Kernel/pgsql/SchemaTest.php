@@ -40,6 +40,24 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function testTableWithSpecificDataType(): void {
+    $table_specification = [
+      'description' => 'Schema table description.',
+      'fields' => [
+        'timestamp'  => [
+          'pgsql_type' => 'timestamp',
+          'not null' => FALSE,
+          'default' => NULL,
+        ],
+      ],
+    ];
+    $this->schema->createTable('test_timestamp', $table_specification);
+    $this->assertTrue($this->schema->tableExists('test_timestamp'));
+  }
+
+  /**
    * @covers \Drupal\pgsql\Driver\Database\pgsql\Schema::introspectIndexSchema
    */
   public function testIntrospectIndexSchema(): void {
