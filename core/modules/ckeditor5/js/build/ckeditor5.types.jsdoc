@@ -197,12 +197,6 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-clipboard/src/datatransfer.js
- *
- * @typedef {module:clipboard/datatransfer} module:clipboard/datatransfer~DataTransfer
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-clipboard/src/dragdrop.js
  *
  * @typedef {module:clipboard/dragdrop} module:clipboard/dragdrop~DragDrop
@@ -224,12 +218,6 @@
  * Declared in file @ckeditor/ckeditor5-clipboard/src/utils/plaintexttohtml.js
  *
  * @typedef {module:clipboard/utils/plaintexttohtml} module:clipboard/utils/plaintexttohtml~plainTextToHtml
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-clipboard/src/utils/viewtoplaintext.js
- *
- * @typedef {module:clipboard/utils/viewtoplaintext} module:clipboard/utils/viewtoplaintext~viewToPlainText
  */
 
 /**
@@ -269,12 +257,6 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-core/src/command.js
- *
- * @typedef {module:core/command} module:core/command~Command
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-core/src/commandcollection.js
  *
  * @typedef {module:core/commandcollection} module:core/commandcollection~CommandCollection
@@ -302,24 +284,6 @@
  * Declared in file @ckeditor/ckeditor5-core/src/editor/editor.js
  *
  * @typedef {module:core/editor/editor} module:core/editor/editor~Editor
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-core/src/editor/editorconfig.jsdoc
- *
- * @typedef {module:core/editor/editorconfig} module:core/editor/editorconfig~EditorConfig
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-core/src/editor/editorui.js
- *
- * @typedef {module:core/editor/editorui} module:core/editor/editorui~EditorUI
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-core/src/editor/editorwithui.jsdoc
- *
- * @typedef {module:core/editor/editorwithui} module:core/editor/editorwithui~EditorWithUI
  */
 
 /**
@@ -884,12 +848,6 @@
  * Declared in file @ckeditor/ckeditor5-engine/src/view/observer/selectionobserver.js
  *
  * @typedef {module:engine/view/observer/selectionobserver} module:engine/view/observer/selectionobserver~SelectionObserver
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-engine/src/view/observer/tabobserver.js
- *
- * @typedef {module:engine/view/observer/tabobserver} module:engine/view/observer/tabobserver~TabObserver
  */
 
 /**
@@ -2393,9 +2351,15 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-typing/src/inputcommand.js
+ * Declared in file @ckeditor/ckeditor5-typing/src/inserttextcommand.js
  *
- * @typedef {module:typing/inputcommand} module:typing/inputcommand~InputCommand
+ * @typedef {module:typing/inserttextcommand} module:typing/inserttextcommand~InsertTextCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-typing/src/inserttextobserver.js
+ *
+ * @typedef {module:typing/inserttextobserver} module:typing/inserttextobserver~InsertTextObserver
  */
 
 /**
@@ -2420,36 +2384,6 @@
  * Declared in file @ckeditor/ckeditor5-typing/src/typing.js
  *
  * @typedef {module:typing/typing} module:typing/typing~Typing
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-typing/src/utils/changebuffer.js
- *
- * @typedef {module:typing/utils/changebuffer} module:typing/utils/changebuffer~ChangeBuffer
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-typing/src/utils/findattributerange.js
- *
- * @typedef {module:typing/utils/findattributerange} module:typing/utils/findattributerange~findAttributeRange
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-typing/src/utils/getlasttextline.js
- *
- * @typedef {module:typing/utils/getlasttextline} module:typing/utils/getlasttextline~getLastTextLine
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-typing/src/utils/injecttypingmutationshandling.js
- *
- * @typedef {module:typing/utils/injecttypingmutationshandling} module:typing/utils/injecttypingmutationshandling~injectTypingMutationsHandling
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-typing/src/utils/injectunsafekeystrokeshandling.js
- *
- * @typedef {module:typing/utils/injectunsafekeystrokeshandling} module:typing/utils/injectunsafekeystrokeshandling~injectUnsafeKeystrokesHandling
  */
 
 /**
@@ -2489,12 +2423,6 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-ui/src/button/button.jsdoc
- *
- * @typedef {module:ui/button/button} module:ui/button/button~Button
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-ui/src/button/buttonview.js
  *
  * @typedef {module:ui/button/buttonview} module:ui/button/buttonview~ButtonView
@@ -2525,12 +2453,6 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-ui/src/dropdown/button/dropdownbutton.jsdoc
- *
- * @typedef {module:ui/dropdown/button/dropdownbutton} module:ui/dropdown/button/dropdownbutton~DropdownButton
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-ui/src/dropdown/button/dropdownbuttonview.js
  *
  * @typedef {module:ui/dropdown/button/dropdownbuttonview} module:ui/dropdown/button/dropdownbuttonview~DropdownButtonView
@@ -2543,12 +2465,6 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-ui/src/dropdown/dropdownpanelfocusable.jsdoc
- *
- * @typedef {module:ui/dropdown/dropdownpanelfocusable} module:ui/dropdown/dropdownpanelfocusable~DropdownPanelFocusable
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-ui/src/dropdown/dropdownpanelview.js
  *
  * @typedef {module:ui/dropdown/dropdownpanelview} module:ui/dropdown/dropdownpanelview~DropdownPanelView
@@ -2558,12 +2474,6 @@
  * Declared in file @ckeditor/ckeditor5-ui/src/dropdown/dropdownview.js
  *
  * @typedef {module:ui/dropdown/dropdownview} module:ui/dropdown/dropdownview~DropdownView
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-ui/src/dropdown/utils.js
- *
- * @typedef {module:ui/dropdown/utils} module:ui/dropdown/utils~ListDropdownItemDefinition
  */
 
 /**
