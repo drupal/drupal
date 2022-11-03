@@ -166,11 +166,11 @@ class TableTest extends CKEditor5TestBase {
     $caption_button->click();
     $caption = $assert_session->waitForElementVisible('css', 'figure.table > figcaption');
     $this->assertEmpty($caption->getText());
-    $this->getSession()->getDriver()->executeScript("document.querySelector('figure.table > figcaption').innerText = '$this->captionText'");
+    $caption->setValue($this->captionText);
     $this->assertEquals($this->captionText, $caption->getText());
 
     // Update table cell content.
-    $this->getSession()->getDriver()->executeScript("document.querySelector('.ck-editor__nested-editable .ck-table-bogus-paragraph').innerText = '$this->tableCellText'");
+    $assert_session->waitForElement('css', '.ck-editor__nested-editable .ck-table-bogus-paragraph')->setValue($this->tableCellText);
     $table_cell = $page->find('css', 'figure.table > table > tbody > tr > td');
     $this->assertEquals($this->tableCellText, $table_cell->getText());
 
