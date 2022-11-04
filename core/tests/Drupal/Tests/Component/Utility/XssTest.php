@@ -23,6 +23,8 @@ use PHPUnit\Framework\TestCase;
  * Relevant CVEs:
  * - CVE-2002-1806, ~CVE-2005-0682, ~CVE-2005-2106, CVE-2005-3973,
  *   CVE-2006-1226 (= rev. 1.112?), CVE-2008-0273, CVE-2008-3740.
+ *
+ * @runTestsInSeparateProcesses
  */
 class XssTest extends TestCase {
 
