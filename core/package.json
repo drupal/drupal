@@ -56,7 +56,6 @@
     "@drupal/once": "1.0.x",
     "backbone": "1.4.x",
     "chokidar": "^3.3.1",
-    "chromedriver": "^106",
     "ckeditor5": "~35.3.0",
     "cspell": "^6.0.0",
     "dotenv-safe": "^8.2.0",
