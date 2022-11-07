@@ -443,10 +443,11 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "e44b58cbd2865cefffd4ec4739a2aa9ef7fc3e71"
+                "reference": "938187e9cd9745789a97efca65f1515cd4aed57f"
             },
             "require": {
                 "asm89/stack-cors": "^2.1",
+                "composer-runtime-api": "^2.1",
                 "composer/semver": "^3.3",
                 "doctrine/annotations": "^1.13",
                 "egulias/email-validator": "^3.2.1",
