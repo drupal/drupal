@@ -8,8 +8,8 @@
     "license": "GPL-2.0-or-later",
     "require": {
         "php": ">=8.1.0",
-        "symfony/dependency-injection": "^6.1",
-        "symfony/event-dispatcher": "^6.1",
+        "symfony/dependency-injection": "^6.2@beta",
+        "symfony/event-dispatcher": "^6.2@beta",
         "symfony/event-dispatcher-contracts": "v3.1.1"
     },
     "autoload": {
@@ -21,5 +21,6 @@
         "_readme": [
             "This file was partially generated automatically. See: https://www.drupal.org/node/3293830"
         ]
-    }
+    },
+    "minimum-stability": "beta"
 }

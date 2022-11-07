@@ -21,4 +21,3 @@
 %"PHPUnit\\Framework\\TestListenerDefaultImplementation".*is deprecated%
 %"PHPUnit\\Framework\\TestSuite".*is considered internal%
 %"PHPUnit\\TextUI\\DefaultResultPrinter".*is considered internal%
-

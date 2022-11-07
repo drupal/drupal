@@ -14,7 +14,7 @@
     },
     "require": {
         "php": ">=8.1.0",
-        "symfony/dependency-injection": "^6.1",
+        "symfony/dependency-injection": "^6.2@beta",
         "symfony/service-contracts": "v3.1.1"
     },
     "suggest": {
@@ -29,5 +29,6 @@
         "_readme": [
             "This file was partially generated automatically. See: https://www.drupal.org/node/3293830"
         ]
-    }
+    },
+    "minimum-stability": "beta"
 }
