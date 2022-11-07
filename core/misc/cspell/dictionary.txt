@@ -1018,13 +1018,14 @@ regexes
 reindex
 reindexing
 reinject
+relname
+relpersistence
 renderable
 renderables
 renderered
 renormalize
 reparenting
 reparsed
-relpersistence
 replyto
 resave
 resaved
@@ -1043,7 +1044,6 @@ revisionid
 revisioning
 revlog
 revpub
-relname
 ribisi
 ritchie
 rolename
@@ -1443,7 +1443,6 @@ wcprops
 webassert
 webcal
 webflo
-webfonts
 webheads
 webhosting
 webmention
