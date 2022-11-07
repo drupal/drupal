@@ -100,7 +100,7 @@ class ResourceResponseSubscriber implements EventSubscriberInterface {
     $acceptable_formats = $request->isMethodCacheable() ? $acceptable_response_formats : $acceptable_request_formats;
 
     $requested_format = $request->getRequestFormat();
-    $content_type_format = $request->getContentType();
+    $content_type_format = $request->getContentTypeFormat();
 
     // If an acceptable response format is requested, then use that. Otherwise,
     // including and particularly when the client forgot to specify a response
