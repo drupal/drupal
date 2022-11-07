@@ -267,7 +267,7 @@ class Term extends EditorialContentEntityBase implements TermInterface {
    * {@inheritdoc}
    */
   public function getWeight() {
-    return $this->get('weight')->value;
+    return (int) $this->get('weight')->value;
   }
 
   /**

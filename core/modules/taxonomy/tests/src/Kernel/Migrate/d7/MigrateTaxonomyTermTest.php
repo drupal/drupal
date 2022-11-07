@@ -90,7 +90,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
     $this->assertEquals($expected_vid, $entity->bundle());
     $this->assertEquals($expected_description, $entity->getDescription());
     $this->assertEquals($expected_format, $entity->getFormat());
-    $this->assertEquals($expected_weight, (int) $entity->getWeight());
+    $this->assertEquals($expected_weight, $entity->getWeight());
     $this->assertEquals($expected_parents, $this->getParentIDs($id));
     $this->assertHierarchy($expected_vid, $id, $expected_parents);
     if (!is_null($expected_field_integer_value)) {
