@@ -84,7 +84,7 @@ class MigrateTermLocalizedTranslationTest extends MigrateDrupal6TestBase {
     $this->assertSame($expected_vid, $entity->bundle());
     $this->assertSame($expected_description, $entity->getDescription());
     $this->assertSame($expected_format, $entity->getFormat());
-    $this->assertSame($expected_weight, (int) $entity->getWeight());
+    $this->assertSame($expected_weight, $entity->getWeight());
     $this->assertHierarchy($expected_vid, $id, $expected_parents);
   }
 
