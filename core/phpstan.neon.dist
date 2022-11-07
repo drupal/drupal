@@ -5,7 +5,7 @@ includes:
 
 parameters:
 
-  level: 0
+  level: 1
 
   paths:
     - .
