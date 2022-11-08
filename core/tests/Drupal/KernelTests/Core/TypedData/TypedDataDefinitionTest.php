@@ -7,6 +7,7 @@ use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\DataReferenceDefinition;
 use Drupal\Core\TypedData\DataReferenceDefinitionInterface;
+use Drupal\Core\TypedData\DataReferenceInterface;
 use Drupal\Core\TypedData\ListDataDefinition;
 use Drupal\Core\TypedData\ListDataDefinitionInterface;
 use Drupal\Core\TypedData\MapDataDefinition;
@@ -97,6 +98,18 @@ class TypedDataDefinitionTest extends KernelTestBase {
     $language_reference_definition2 = $this->typedDataManager->createDataDefinition('language_reference');
     $this->assertInstanceOf(DataReferenceDefinitionInterface::class, $language_reference_definition2);
     $this->assertEquals(serialize($language_reference_definition2), serialize($language_reference_definition));
+  }
+
+  /**
+   * Tests getString() throws exception when getType() is not implemented.
+   */
+  public function testNotImplementedGetType() {
+    $language_reference_definition = DataReferenceDefinition::create('language');
+    $language_reference = $this->typedDataManager->create($language_reference_definition);
+    $this->assertInstanceOf(DataReferenceInterface::class, $language_reference);
+    $this->expectException(\BadMethodCallException::class);
+    $this->expectExceptionMessageMatches('/getType\(\) not implemented/');
+    $language_reference->getString();
   }
 
 }
