@@ -14,6 +14,7 @@
     "function-url-quotes": null,
     "function-whitespace-after": null,
     "hue-degree-notation": "number",
+    "import-notation": "string",
     "no-descending-specificity": null,
     "no-duplicate-selectors": null,
     "no-unknown-animations": true,
