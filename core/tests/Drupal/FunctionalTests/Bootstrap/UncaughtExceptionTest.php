@@ -144,27 +144,6 @@ class UncaughtExceptionTest extends BrowserTestBase {
   }
 
   /**
-   * Tests a missing dependency on a service with a custom error handler.
-   */
-  public function testMissingDependencyCustomErrorHandler() {
-    $settings_filename = $this->siteDirectory . '/settings.php';
-    chmod($settings_filename, 0777);
-    $settings_php = file_get_contents($settings_filename);
-    $settings_php .= "\n";
-    $settings_php .= "set_error_handler(function() {\n";
-    $settings_php .= "  header('HTTP/1.1 418 I\'m a teapot');\n";
-    $settings_php .= "  print('Oh oh, flying teapots');\n";
-    $settings_php .= "  exit();\n";
-    $settings_php .= "});\n";
-    $settings_php .= "\$settings['teapots'] = TRUE;\n";
-    file_put_contents($settings_filename, $settings_php);
-
-    $this->drupalGet('broken-service-class');
-    $this->assertSession()->statusCodeEquals(418);
-    $this->assertSession()->responseContains('Oh oh, flying teapots');
-  }
-
-  /**
    * Tests a container which has an error.
    */
   public function testErrorContainer() {
