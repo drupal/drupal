@@ -6,7 +6,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\user\Entity\Role;
 
 /**
- * Tests user_post_update_update_roles_followup() upgrade path.
+ * Tests user_update_10000() upgrade path.
  *
  * @group Update
  * @group legacy
