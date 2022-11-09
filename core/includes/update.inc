@@ -307,7 +307,7 @@ function update_invoke_post_update($function, &$context) {
       watchdog_exception('update', $e);
 
       $variables = Error::decodeException($e);
-      unset($variables['backtrace'], $variables['exception']);
+      unset($variables['backtrace'], $variables['exception'], $variables['severity_level']);
       $ret['#abort'] = [
         'success' => FALSE,
         'query' => t(Error::DEFAULT_ERROR_MESSAGE, $variables),
