@@ -56,7 +56,7 @@ getDirectories(path.resolve(__dirname, './js/ckeditor5_plugins')).forEach((dir) 
       }),
     ],
     module: {
-      rules: [{ test: /\.svg$/, use: 'raw-loader' }],
+      rules: [{ test: /\.svg$/, type: 'asset/source' }],
     },
   };
 
