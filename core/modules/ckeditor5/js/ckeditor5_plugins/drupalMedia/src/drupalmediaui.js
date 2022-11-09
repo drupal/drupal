@@ -29,7 +29,7 @@ export default class DrupalMediaUI extends Plugin {
       const buttonView = new ButtonView(locale);
 
       buttonView.set({
-        label: Drupal.t('Insert Drupal Media'),
+        label: Drupal.t('Insert Media'),
         icon: mediaIcon,
         tooltip: true,
       });
