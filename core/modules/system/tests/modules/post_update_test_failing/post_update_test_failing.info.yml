@@ -1,0 +1,5 @@
+name: 'Post Update test failing'
+type: module
+description: 'Support module for update testing when a post update is failing.'
+package: Testing
+version: VERSION
