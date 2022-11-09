@@ -140,7 +140,7 @@
         const navButton = context.querySelector(
           '[data-drupal-selector="mobile-nav-button"]',
         );
-        const body = context.querySelector('body');
+        const body = document.body;
         const overlay = context.querySelector(
           '[data-drupal-selector="header-nav-overlay"]',
         );
