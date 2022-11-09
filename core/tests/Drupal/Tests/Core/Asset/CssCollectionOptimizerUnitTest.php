@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\Core\Asset;
 
-use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Asset\AssetCollectionGrouperInterface;
 use Drupal\Core\Asset\AssetDumperInterface;
 use Drupal\Core\Asset\AssetOptimizerInterface;
@@ -62,8 +61,7 @@ class CssCollectionOptimizerUnitTest extends UnitTestCase {
       });
     $mock_state = $this->createMock(StateInterface::class);
     $mock_file_system = $this->createMock(FileSystemInterface::class);
-    $mock_time = $this->createMock(TimeInterface::class);
-    $this->optimizer = new CssCollectionOptimizer($mock_grouper, $mock_optimizer, $mock_dumper, $mock_state, $mock_file_system, $mock_time);
+    $this->optimizer = new CssCollectionOptimizer($mock_grouper, $mock_optimizer, $mock_dumper, $mock_state, $mock_file_system);
     $gpl_license = [
       'name' => 'GNU-GPL-2.0-or-later',
       'url' => 'https://www.drupal.org/licensing/faq',
@@ -121,8 +119,7 @@ class CssCollectionOptimizerUnitTest extends UnitTestCase {
       });
     $mock_state = $this->createMock(StateInterface::class);
     $mock_file_system = $this->createMock(FileSystemInterface::class);
-    $mock_time = $this->createMock(TimeInterface::class);
-    $this->optimizer = new CssCollectionOptimizer($mock_grouper, $mock_optimizer, $mock_dumper, $mock_state, $mock_file_system, $mock_time);
+    $this->optimizer = new CssCollectionOptimizer($mock_grouper, $mock_optimizer, $mock_dumper, $mock_state, $mock_file_system);
     $gpl_license = [
       'name' => 'GNU-GPL-2.0-or-later',
       'url' => 'https://www.drupal.org/licensing/faq',

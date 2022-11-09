@@ -246,11 +246,6 @@ parameters:
 			path: lib/Drupal/Core/Action/ActionManager.php
 
 		-
-			message: "#^Variable \\$languageManager in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Ajax/AjaxResponseAttachmentsProcessor.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\Archiver\\\\ArchiverManager\\:\\:getInstance\\(\\) should return object\\|false but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Archiver/ArchiverManager.php
@@ -454,11 +449,6 @@ parameters:
 			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\EntityDisplayBase\\:\\:\\$_serializedKeys\\.$#"
 			count: 2
 			path: lib/Drupal/Core/Entity/EntityDisplayBase.php
-
-		-
-			message: "#^Variable \\$originalRevisionTimestamp might not be defined\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Entity/Form/RevisionRevertForm.php
 
 		-
 			message: "#^Method Drupal\\\\Core\\\\Entity\\\\KeyValueStore\\\\KeyValueContentEntityStorage\\:\\:createTranslation\\(\\) should return Drupal\\\\Core\\\\Entity\\\\ContentEntityInterface but return statement is missing\\.$#"
@@ -724,11 +714,6 @@ parameters:
 			message: "#^Variable \\$sort in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Render/Element/RenderElement.php
-
-		-
-			message: "#^Variable \\$languageManager in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Render/HtmlResponseAttachmentsProcessor.php
 
 		-
 			message: "#^Variable \\$output in empty\\(\\) always exists and is not falsy\\.$#"
@@ -3569,11 +3554,6 @@ parameters:
 			message: "#^Method PHPUnit\\\\Framework\\\\TestCase\\:\\:expectError\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 52
 			path: tests/Drupal/Tests/Core/Assert/WebAssertArgumentsTest.php
-
-		-
-			message: "#^Class Drupal\\\\Core\\\\Asset\\\\CssCollectionOptimizer constructor invoked with 6 parameters, 5 required\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/Asset/CssCollectionOptimizerUnitTest.php
 
 		-
 			message: "#^Class Drupal\\\\Core\\\\Asset\\\\LibraryDiscovery constructor invoked with 2 parameters, 1 required\\.$#"

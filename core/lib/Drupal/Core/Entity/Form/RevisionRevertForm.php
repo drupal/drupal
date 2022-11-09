@@ -165,7 +165,7 @@ class RevisionRevertForm extends ConfirmFormBase implements EntityFormInterface 
 
     $this->revision = $this->prepareRevision($this->revision, $form_state);
 
-    if ($this->revision instanceof RevisionLogInterface) {
+    if (isset($originalRevisionTimestamp)) {
       $date = $this->dateFormatter->format($originalRevisionTimestamp);
       $this->messenger->addMessage($this->t('@type %title has been reverted to the revision from %revision-date.', [
         '@type' => $bundleLabel,
