@@ -961,21 +961,6 @@ parameters:
 			path: modules/block_content/tests/src/Kernel/Migrate/d6/MigrateCustomBlockContentTranslationTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/block_content/tests/src/Kernel/Views/RevisionUserTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/block_content/tests/src/Kernel/Views/RevisionUserTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/block_content/tests/src/Kernel/Views/RevisionUserTest.php
-
-		-
 			message: "#^Variable \\$book_links in empty\\(\\) is never defined\\.$#"
 			count: 1
 			path: modules/book/book.module
@@ -999,21 +984,6 @@ parameters:
 			message: "#^Method Drupal\\\\book\\\\Form\\\\BookOutlineForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/book/src/Form/BookOutlineForm.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/book/tests/src/Kernel/BookMultilingualTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/book/tests/src/Kernel/BookMultilingualTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/book/tests/src/Kernel/BookMultilingualTest.php
 
 		-
 			message: "#^Function _add_ajax_listeners_to_plugin_inputs not found\\.$#"
@@ -1121,51 +1091,6 @@ parameters:
 			path: modules/comment/tests/src/Functional/Views/DefaultViewRecentCommentsTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Kernel/CommentIntegrationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Kernel/CommentIntegrationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Kernel/CommentIntegrationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Kernel/Views/CommentFieldNameTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Kernel/Views/CommentFieldNameTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Kernel/Views/CommentFieldNameTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Kernel/Views/FilterAndArgumentUserUidTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Kernel/Views/FilterAndArgumentUserUidTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Kernel/Views/FilterAndArgumentUserUidTest.php
-
-		-
 			message: "#^Variable \\$data might not be defined\\.$#"
 			count: 2
 			path: modules/config/src/Form/ConfigSingleImportForm.php
@@ -1179,11 +1104,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/config_translation/src/FormElement/DateFormat.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: modules/config_translation/tests/src/Functional/ConfigTranslationUiTest.php
 
 		-
 			message: "#^Variable \\$settings_locations in empty\\(\\) always exists and is not falsy\\.$#"
@@ -1216,16 +1136,6 @@ parameters:
 			path: modules/contact/src/MessageForm.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: modules/contact/tests/src/Functional/ContactPersonalTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: modules/contact/tests/src/Functional/ContactSitewideTest.php
-
-		-
 			message: "#^Variable \\$state in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 3
 			path: modules/content_moderation/src/Form/ContentModerationStateForm.php
@@ -1239,96 +1149,6 @@ parameters:
 			message: "#^Method Drupal\\\\content_moderation\\\\ModerationInformation\\:\\:getDefaultRevisionId\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/content_moderation/src/ModerationInformation.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/ContentModerationAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/ContentModerationAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/ContentModerationAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/EntityStateChangeValidationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/EntityStateChangeValidationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/EntityStateChangeValidationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/ModerationStateFieldItemListTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/ModerationStateFieldItemListTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/ModerationStateFieldItemListTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/NodeAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/NodeAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/NodeAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/ViewsModerationStateFilterTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/ViewsModerationStateFilterTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/ViewsModerationStateFilterTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/WorkspacesContentModerationStateTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/WorkspacesContentModerationStateTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Kernel/WorkspacesContentModerationStateTest.php
 
 		-
 			message: "#^Variable \\$checkbox_id might not be defined\\.$#"
@@ -1616,21 +1436,6 @@ parameters:
 			path: modules/file/tests/src/Kernel/DeleteTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/file/tests/src/Kernel/FileManagedAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/file/tests/src/Kernel/FileManagedAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/file/tests/src/Kernel/FileManagedAccessTest.php
-
-		-
 			message: "#^Variable \\$unexpected in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/file/tests/src/Kernel/FileManagedUnitTestBase.php
@@ -1644,21 +1449,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/file/tests/src/Kernel/UsageTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/file/tests/src/Kernel/Views/RelationshipUserFileDataTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/file/tests/src/Kernel/Views/RelationshipUserFileDataTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/file/tests/src/Kernel/Views/RelationshipUserFileDataTest.php
 
 		-
 			message: "#^Variable \\$rows might not be defined\\.$#"
@@ -1766,21 +1556,6 @@ parameters:
 			path: modules/jsonapi/src/Revisions/VersionNegotiator.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Functional/EntryPointTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Functional/EntryPointTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Functional/EntryPointTest.php
-
-		-
 			message: "#^Static method Drupal\\\\Component\\\\Serialization\\\\Json\\:\\:encode\\(\\) invoked with 2 parameters, 1 required\\.$#"
 			count: 1
 			path: modules/jsonapi/tests/src/Functional/ResourceTestBase.php
@@ -1804,36 +1579,6 @@ parameters:
 			message: "#^Variable \\$reason in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 2
 			path: modules/jsonapi/tests/src/Functional/ResourceTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Kernel/Normalizer/LinkCollectionNormalizerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Kernel/Normalizer/LinkCollectionNormalizerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Kernel/Normalizer/LinkCollectionNormalizerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Kernel/Normalizer/RelationshipNormalizerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Kernel/Normalizer/RelationshipNormalizerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Kernel/Normalizer/RelationshipNormalizerTest.php
 
 		-
 			message: "#^Class Drupal\\\\jsonapi\\\\Normalizer\\\\JsonApiDocumentTopLevelNormalizer constructor invoked with 3 parameters, 2 required\\.$#"
@@ -1874,21 +1619,6 @@ parameters:
 			message: "#^Variable \\$goto in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: modules/language/tests/src/Functional/LanguageBreadcrumbTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/layout_builder/tests/src/Kernel/OverridesSectionStorageTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/layout_builder/tests/src/Kernel/OverridesSectionStorageTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/layout_builder/tests/src/Kernel/OverridesSectionStorageTest.php
 
 		-
 			message: "#^Call to an undefined method Drupal\\\\Tests\\\\layout_builder\\\\Unit\\\\DefaultsSectionStorageTest\\:\\:getThirdPartySetting\\(\\)\\.$#"
@@ -2001,51 +1731,6 @@ parameters:
 			path: modules/media/src/OEmbed/UrlResolver.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/media/tests/src/Kernel/MediaAccessControlHandlerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/media/tests/src/Kernel/MediaAccessControlHandlerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/media/tests/src/Kernel/MediaAccessControlHandlerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/media/tests/src/Kernel/MediaEmbedFilterTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/media/tests/src/Kernel/MediaEmbedFilterTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/media/tests/src/Kernel/MediaEmbedFilterTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/media/tests/src/Kernel/Views/RevisionUserTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/media/tests/src/Kernel/Views/RevisionUserTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/media/tests/src/Kernel/Views/RevisionUserTest.php
-
-		-
 			message: "#^Variable \\$jpg_image might not be defined\\.$#"
 			count: 1
 			path: modules/media_library/tests/src/FunctionalJavascript/EmbeddedFormWidgetTest.php
@@ -2054,51 +1739,6 @@ parameters:
 			message: "#^Method Drupal\\\\Tests\\\\media_library\\\\FunctionalJavascript\\\\MediaLibraryTestBase\\:\\:addMediaFileToField\\(\\) invoked with 3 parameters, 2 required\\.$#"
 			count: 2
 			path: modules/media_library/tests/src/FunctionalJavascript/WidgetUploadTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/media_library/tests/src/Kernel/MediaLibraryAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/media_library/tests/src/Kernel/MediaLibraryAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/media_library/tests/src/Kernel/MediaLibraryAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/media_library/tests/src/Kernel/MediaLibraryAddFormTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/media_library/tests/src/Kernel/MediaLibraryAddFormTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/media_library/tests/src/Kernel/MediaLibraryAddFormTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/media_library/tests/src/Kernel/MediaLibraryWidgetTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/media_library/tests/src/Kernel/MediaLibraryWidgetTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/media_library/tests/src/Kernel/MediaLibraryWidgetTest.php
 
 		-
 			message: "#^Constructor of class Drupal\\\\menu_link_content\\\\Form\\\\MenuLinkContentForm has an unused parameter \\$language_manager\\.$#"
@@ -2116,21 +1756,6 @@ parameters:
 			path: modules/menu_link_content/src/Plugin/Menu/MenuLinkContent.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/MenuLinkContentCacheabilityBubblingTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/MenuLinkContentCacheabilityBubblingTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/MenuLinkContentCacheabilityBubblingTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/menu_link_content/tests/src/Kernel/MenuLinksTest.php
@@ -2141,82 +1766,7 @@ parameters:
 			path: modules/menu_link_content/tests/src/Kernel/Migrate/d6/MigrateMenuLinkLocalizedTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Migrate/d6/MigrateMenuLinkLocalizedTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Migrate/d6/MigrateMenuLinkLocalizedTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Migrate/d6/MigrateMenuLinkLocalizedTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Migrate/d6/MigrateMenuLinkTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Migrate/d6/MigrateMenuLinkTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Migrate/d6/MigrateMenuLinkTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Migrate/d6/MigrateMenuLinkTranslationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Migrate/d6/MigrateMenuLinkTranslationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Migrate/d6/MigrateMenuLinkTranslationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Migrate/d7/MigrateMenuLinkTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Migrate/d7/MigrateMenuLinkTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Migrate/d7/MigrateMenuLinkTest.php
-
-		-
 			message: "#^Class Drupal\\\\menu_link_content\\\\Plugin\\\\migrate\\\\process\\\\LinkUri constructor invoked with 5 parameters, 4 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Plugin/migrate/process/LinkUriTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Plugin/migrate/process/LinkUriTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Plugin/migrate/process/LinkUriTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
 			count: 1
 			path: modules/menu_link_content/tests/src/Kernel/Plugin/migrate/process/LinkUriTest.php
 
@@ -2284,21 +1834,6 @@ parameters:
 			message: "#^Call to an undefined static method static\\(Drupal\\\\Tests\\\\migrate\\\\Kernel\\\\MigrateTestBase\\)\\:\\:migrateDumpAlter\\(\\)\\.$#"
 			count: 1
 			path: modules/migrate/tests/src/Kernel/MigrateTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/migrate/tests/src/Kernel/process/RouteTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/migrate/tests/src/Kernel/process/RouteTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/migrate/tests/src/Kernel/process/RouteTest.php
 
 		-
 			message: "#^Class Drupal\\\\migrate\\\\Event\\\\EventBase constructor invoked with 4 parameters, 2 required\\.$#"
@@ -2511,114 +2046,9 @@ parameters:
 			path: modules/node/tests/src/Functional/Views/Wizard/NodeRevisionWizardTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Migrate/d6/NodeTranslationRedirectTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Migrate/d6/NodeTranslationRedirectTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Migrate/d6/NodeTranslationRedirectTest.php
-
-		-
 			message: "#^Variable \\$changed in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: modules/node/tests/src/Kernel/Migrate/d7/MigrateNodeTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Migrate/d7/NodeTranslationRedirectTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Migrate/d7/NodeTranslationRedirectTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Migrate/d7/NodeTranslationRedirectTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/NodeAccessTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/NodeAccessTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/NodeAccessTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/SummaryLengthTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/SummaryLengthTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/SummaryLengthTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Views/ArgumentUidRevisionTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Views/ArgumentUidRevisionTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Views/ArgumentUidRevisionTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Views/FilterUidRevisionTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Views/FilterUidRevisionTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Views/FilterUidRevisionTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Views/RevisionUidTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Views/RevisionUidTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/node/tests/src/Kernel/Views/RevisionUidTest.php
 
 		-
 			message: "#^Method Drupal\\\\options\\\\Plugin\\\\Field\\\\FieldType\\\\ListFloatItem\\:\\:validateAllowedValue\\(\\) should return string but return statement is missing\\.$#"
@@ -2946,21 +2376,6 @@ parameters:
 			path: modules/system/tests/src/Functional/Entity/EntityCacheTagsTestBase.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/Entity/EntityReferenceSelection/EntityReferenceSelectionAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/Entity/EntityReferenceSelection/EntityReferenceSelectionAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/Entity/EntityReferenceSelection/EntityReferenceSelectionAccessTest.php
-
-		-
 			message: "#^Instantiated class Drupal\\\\Tests\\\\system\\\\Functional\\\\FileTransfer\\\\Exception not found\\.$#"
 			count: 1
 			path: modules/system/tests/src/Functional/FileTransfer/FileTransferTest.php
@@ -3016,11 +2431,6 @@ parameters:
 			path: modules/system/tests/src/Functional/Session/SessionTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: modules/system/tests/src/Functional/System/SiteMaintenanceTest.php
-
-		-
 			message: "#^Variable \\$expected_required_list_items might not be defined\\.$#"
 			count: 2
 			path: modules/system/tests/src/Functional/Theme/ThemeUiTest.php
@@ -3031,52 +2441,7 @@ parameters:
 			path: modules/system/tests/src/Kernel/Common/UrlTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Kernel/DateFormatAccessControlHandlerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Kernel/DateFormatAccessControlHandlerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Kernel/DateFormatAccessControlHandlerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Kernel/MenuAccessControlHandlerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Kernel/MenuAccessControlHandlerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Kernel/MenuAccessControlHandlerTest.php
-
-		-
 			message: "#^Class Symfony\\\\Component\\\\HttpKernel\\\\Event\\\\RequestEvent constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Kernel/TimezoneResolverTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Kernel/TimezoneResolverTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Kernel/TimezoneResolverTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
 			count: 1
 			path: modules/system/tests/src/Kernel/TimezoneResolverTest.php
 
@@ -3166,36 +2531,6 @@ parameters:
 			path: modules/taxonomy/tests/src/Kernel/TermKernelTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/taxonomy/tests/src/Kernel/Views/TaxonomyTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/taxonomy/tests/src/Kernel/Views/TaxonomyTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/taxonomy/tests/src/Kernel/Views/TaxonomyTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/text/tests/src/Kernel/TextSummaryTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/text/tests/src/Kernel/TextSummaryTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/text/tests/src/Kernel/TextSummaryTest.php
-
-		-
 			message: "#^Variable \\$filters might not be defined\\.$#"
 			count: 1
 			path: modules/text/text.module
@@ -3221,21 +2556,6 @@ parameters:
 			path: modules/tour/src/TipPluginBase.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/tracker/tests/src/Kernel/Views/TrackerUserUidTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/tracker/tests/src/Kernel/Views/TrackerUserUidTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/tracker/tests/src/Kernel/Views/TrackerUserUidTest.php
-
-		-
 			message: "#^Variable \\$violation_messages might not be defined\\.$#"
 			count: 1
 			path: modules/update/src/ProjectRelease.php
@@ -3244,21 +2564,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 4
 			path: modules/update/src/UpdateProcessor.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/update/tests/src/Kernel/UpdateReportTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/update/tests/src/Kernel/UpdateReportTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/update/tests/src/Kernel/UpdateReportTest.php
 
 		-
 			message: "#^Method Drupal\\\\Core\\\\Entity\\\\ContentEntityForm\\:\\:form\\(\\) invoked with 3 parameters, 2 required\\.$#"
@@ -3336,11 +2641,6 @@ parameters:
 			path: modules/user/src/RoleForm.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: modules/user/tests/src/Functional/UserAdminTest.php
-
-		-
 			message: "#^Method Drupal\\\\Tests\\\\BrowserTestBase\\:\\:drupalLogout\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 1
 			path: modules/user/tests/src/Functional/UserBlocksTest.php
@@ -3356,19 +2656,9 @@ parameters:
 			path: modules/user/tests/src/Functional/UserCreateTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: modules/user/tests/src/Functional/UserCreateTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/user/tests/src/Functional/UserEditTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: modules/user/tests/src/Functional/UserLoginHttpTest.php
 
 		-
 			message: "#^Variable \\$name in isset\\(\\) always exists and is not nullable\\.$#"
@@ -3386,11 +2676,6 @@ parameters:
 			path: modules/user/tests/src/Functional/UserPasswordResetTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: modules/user/tests/src/Functional/UserPasswordResetTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/user/tests/src/Functional/UserPictureTest.php
@@ -3398,11 +2683,6 @@ parameters:
 		-
 			message: "#^Call to an undefined method Drupal\\\\Tests\\\\user\\\\Functional\\\\UserRegistrationRestTest\\:\\:getExpectedUnauthorizedEntityAccessCacheability\\(\\)\\.$#"
 			count: 1
-			path: modules/user/tests/src/Functional/UserRegistrationRestTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
 			path: modules/user/tests/src/Functional/UserRegistrationRestTest.php
 
 		-
@@ -3419,136 +2699,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/user/tests/src/FunctionalJavascript/UserPasswordResetTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: modules/user/tests/src/FunctionalJavascript/UserPasswordResetTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Controller/UserControllerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Controller/UserControllerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Controller/UserControllerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/UserDeleteTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/UserDeleteTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/UserDeleteTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/UserEntityLabelTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/UserEntityLabelTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/UserEntityLabelTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: modules/user/tests/src/Kernel/UserMailNotifyTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/AccessPermissionTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/AccessPermissionTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/AccessPermissionTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/ArgumentDefaultTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/ArgumentDefaultTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/ArgumentDefaultTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/ArgumentValidateTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/ArgumentValidateTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/ArgumentValidateTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/HandlerArgumentUserUidTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/HandlerArgumentUserUidTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/HandlerArgumentUserUidTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/RelationshipRepresentativeNodeTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/RelationshipRepresentativeNodeTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/RelationshipRepresentativeNodeTest.php
 
 		-
 			message: "#^Variable \\$result in isset\\(\\) always exists and is not nullable\\.$#"
@@ -3986,99 +3136,9 @@ parameters:
 			path: modules/views/tests/src/Kernel/Handler/FieldDropbuttonTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Handler/FieldDropbuttonTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Handler/FieldDropbuttonTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Handler/FieldDropbuttonTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Handler/FieldEntityLinkTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Handler/FieldEntityLinkTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Handler/FieldEntityLinkTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/views/tests/src/Kernel/Handler/FieldFieldTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Plugin/RelationshipJoinInTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Plugin/RelationshipJoinInTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Plugin/RelationshipJoinInTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Plugin/RelationshipTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Plugin/RelationshipTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Plugin/RelationshipTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Plugin/RowRenderCacheTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Plugin/RowRenderCacheTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Plugin/RowRenderCacheTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Plugin/RssFieldsTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Plugin/RssFieldsTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Plugin/RssFieldsTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -4166,21 +3226,6 @@ parameters:
 			path: modules/workflows/src/Form/WorkflowTransitionEditForm.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/workflows/tests/src/Kernel/WorkflowAccessControlHandlerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/workflows/tests/src/Kernel/WorkflowAccessControlHandlerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/workflows/tests/src/Kernel/WorkflowAccessControlHandlerTest.php
-
-		-
 			message: "#^Method Drupal\\\\workspaces\\\\EntityTypeInfo\\:\\:entityBaseFieldInfo\\(\\) should return array\\<Drupal\\\\Core\\\\Field\\\\FieldDefinitionInterface\\> but return statement is missing\\.$#"
 			count: 1
 			path: modules/workspaces/src/EntityTypeInfo.php
@@ -4221,96 +3266,6 @@ parameters:
 			path: modules/workspaces/src/WorkspacePublisher.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Functional/UpdateSystem/ActiveWorkspaceUpdateTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Functional/UpdateSystem/ActiveWorkspaceUpdateTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Functional/UpdateSystem/ActiveWorkspaceUpdateTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/EntityReferenceSupportedNewEntitiesConstraintValidatorTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/EntityReferenceSupportedNewEntitiesConstraintValidatorTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/EntityReferenceSupportedNewEntitiesConstraintValidatorTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceAccessTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceCRUDTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceCRUDTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceCRUDTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceIntegrationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceIntegrationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceIntegrationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceMergerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceMergerTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceMergerTest.php
-
-		-
 			message: "#^Variable \\$keyed_content might not be defined\\.$#"
 			count: 1
 			path: profiles/demo_umami/modules/demo_umami_content/src/InstallHelper.php
@@ -4336,34 +3291,9 @@ parameters:
 			path: tests/Drupal/FunctionalJavascriptTests/WebDriverCurlService.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: tests/Drupal/FunctionalTests/MailCaptureTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: tests/Drupal/KernelTests/Core/Action/EmailActionTest.php
-
-		-
 			message: "#^Variable \\$found might not be defined\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Cache/ApcuBackendTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Cache/CacheContextOptimizationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Cache/CacheContextOptimizationTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Cache/CacheContextOptimizationTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -4411,31 +3341,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Entity/EntityKernelTestBase.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/EntityKernelTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/EntityKernelTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/EntityRepositoryTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/EntityRepositoryTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/EntityRepositoryTest.php
-
-		-
 			message: "#^Variable \\$field might not be defined\\.$#"
 			count: 9
 			path: tests/Drupal/KernelTests/Core/Entity/EntitySchemaTest.php
@@ -4471,36 +3376,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Entity/FieldableEntityDefinitionUpdateTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/RevisionRouteProviderTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/RevisionRouteProviderTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/RevisionRouteProviderTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/RouteProviderTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/RouteProviderTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/RouteProviderTest.php
-
-		-
 			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertFalse\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
 			count: 2
 			path: tests/Drupal/KernelTests/Core/File/DirectoryTest.php
@@ -4526,51 +3401,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/KeyValueStore/GarbageCollectionTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/ParamConverter/EntityConverterLatestRevisionTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/ParamConverter/EntityConverterLatestRevisionTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/ParamConverter/EntityConverterLatestRevisionTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/ParamConverter/EntityConverterTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/ParamConverter/EntityConverterTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/ParamConverter/EntityConverterTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Path/PathValidatorTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Path/PathValidatorTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Path/PathValidatorTest.php
-
-		-
 			message: "#^Class Drupal\\\\Core\\\\Extension\\\\ModuleHandler constructor invoked with 4 parameters, 3 required\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Plugin/PluginTestBase.php
@@ -4581,29 +3411,9 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Render/Element/WeightTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Render/RenderCacheTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Render/RenderCacheTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Render/RenderCacheTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/TempStore/TempStoreDatabaseTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: tests/Drupal/KernelTests/Core/Test/AssertMailTraitTest.php
 
 		-
 			message: "#^Instantiated class Drupal\\\\FunctionalTests\\\\BrowserMissingDependentModuleMethodTest not found\\.$#"
@@ -4677,21 +3487,6 @@ parameters:
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: tests/Drupal/Tests/BrowserTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/BrowserTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/BrowserTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/BrowserTestBase.php
 
