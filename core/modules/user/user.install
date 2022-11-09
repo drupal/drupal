@@ -142,3 +142,7 @@ function user_update_9301(&$sandbox) {
     $connection->query("ALTER SEQUENCE " . $seq . " RESTART WITH " . ($maximum_uid + 1) . " OWNED BY {users}.uid");
   }
 }
+
+// Do not add further hook_update_N() implementations to this file.
+// user_update_10000() has been added to 10.0.x which makes adding new updates
+// extremely complex.
