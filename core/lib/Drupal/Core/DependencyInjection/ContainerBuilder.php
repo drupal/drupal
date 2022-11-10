@@ -41,9 +41,6 @@ class ContainerBuilder extends SymfonyContainerBuilder implements ContainerInter
    *   services in a frozen builder.
    */
   public function set($id, $service) {
-    if (strtolower($id) !== $id) {
-      throw new \InvalidArgumentException("Service ID names must be lowercase: $id");
-    }
     SymfonyContainer::set($id, $service);
   }
 
@@ -51,9 +48,6 @@ class ContainerBuilder extends SymfonyContainerBuilder implements ContainerInter
    * {@inheritdoc}
    */
   public function register($id, $class = NULL): Definition {
-    if (strtolower($id) !== $id) {
-      throw new \InvalidArgumentException("Service ID names must be lowercase: $id");
-    }
     $definition = new Definition($class);
     // As of Symfony 5.2 all services are private by default, but in Drupal
     // services are still public by default.
