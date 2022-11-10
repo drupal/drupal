@@ -1266,7 +1266,7 @@ function system_requirements($phase) {
     $provider = $connection->getProvider();
     if ($provider !== 'core' && !\Drupal::moduleHandler()->moduleExists($provider)) {
       $autoload = $connection->getConnectionOptions()['autoload'] ?? '';
-      if (($pos = strpos($autoload, 'src/Driver/Database/')) !== FALSE) {
+      if (strpos($autoload, 'src/Driver/Database/') !== FALSE) {
         $post_update_registry = \Drupal::service('update.post_update_registry');
         $pending_updates = $post_update_registry->getPendingUpdateInformation();
         if (!in_array('enable_provider_database_driver', array_keys($pending_updates['system']['pending'] ?? []), TRUE)) {
