@@ -949,6 +949,46 @@ class DrupalWebTestCase extends DrupalTestCase {
   protected $redirect_count;
 
   /**
+   * The original language.
+   */
+  protected $originalLanguage;
+
+  /**
+   * The original language URL.
+   */
+  protected $originalLanguageUrl;
+
+  /**
+   * The original default language.
+   */
+  protected $originalLanguageDefault;
+
+  /**
+   * The original active installation profile.
+   */
+  protected $originalProfile;
+
+  /**
+   * The original clean_url variable value.
+   */
+  protected $originalCleanUrl;
+
+  /**
+   * The public files directory created for testing purposes.
+   */
+  protected $public_files_directory;
+
+  /**
+   * The private files directory created for testing purposes.
+   */
+  protected $private_files_directory;
+
+  /**
+   * The temporary files directory created for testing purposes.
+   */
+  protected $temp_files_directory;
+
+  /**
    * Constructor for DrupalWebTestCase.
    */
   function __construct($test_id = NULL) {
