@@ -2608,7 +2608,14 @@ function l($text, $path, array $options = array()) {
       $use_theme = FALSE;
     }
   }
-  $path = drupal_strip_dangerous_protocols((string) $path);
+  $path = (string) $path;
+  // For backwards compatibility, do not strip a couple of specific javascript
+  // paths that are harmless.
+  // @see https://www.drupal.org/project/drupal/issues/3310081
+  $skip_js_paths = array('javascript:void()', 'javascript:void();', 'javascript:void(0)', 'javascript:void(0);');
+  if (!in_array(strtolower($path), $skip_js_paths)) {
+    $path = drupal_strip_dangerous_protocols($path);
+  }
   if ($use_theme) {
     return theme('link', array('text' => $text, 'path' => $path, 'options' => $options));
   }
