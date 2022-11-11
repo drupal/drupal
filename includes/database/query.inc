@@ -1703,6 +1703,13 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
   protected $queryPlaceholderIdentifier;
 
   /**
+   * Contains the string version of the Condition.
+   *
+   * @var string
+   */
+  protected $stringVersion;
+
+  /**
    * Constructs a DataBaseCondition object.
    *
    * @param string $conjunction
