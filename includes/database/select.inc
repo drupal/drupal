@@ -945,6 +945,20 @@ class SelectQuery extends Query implements SelectQueryInterface {
   protected $range;
 
   /**
+   * The query metadata for alter purposes.
+   *
+   * @var array
+   */
+  protected $alterMetaData;
+
+  /**
+   * The query tags.
+   *
+   * @var array
+   */
+  protected $alterTags;
+
+  /**
    * An array whose elements specify a query to UNION, and the UNION type. The
    * 'type' key may be '', 'ALL', or 'DISTINCT' to represent a 'UNION',
    * 'UNION ALL', or 'UNION DISTINCT' statement, respectively.
