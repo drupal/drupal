@@ -30,7 +30,6 @@
 .cke_editable a:not(.button) {
   word-wrap: break-word;
   color: #0d77b5;
-  -webkit-text-decoration-color: #0d77b5;
   text-decoration-color: #0d77b5;
   text-decoration-thickness: 2px;
 }
@@ -51,7 +50,6 @@
 
     /* @todo - #d9ecfa isn't currently a variable. */
     box-shadow: inset 0 -2em 0 0 #d9ecfa;
-    -webkit-text-decoration-color: #d9ecfa;
     text-decoration-color: #d9ecfa;
   }
 }
