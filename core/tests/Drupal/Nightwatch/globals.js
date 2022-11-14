@@ -2,7 +2,6 @@ import { spawn } from 'child_process';
 import path from 'path';
 import fs from 'fs';
 import mkdirp from 'mkdirp';
-import chromedriver from 'chromedriver';
 import nightwatchSettings from './nightwatch.conf';
 
 export const commandAsWebserver = (command) => {
@@ -16,18 +15,6 @@ export const drupalDbPrefix = null;
 export const drupalSitePath = null;
 
 module.exports = {
-  before: (done) => {
-    if (JSON.parse(process.env.DRUPAL_TEST_CHROMEDRIVER_AUTOSTART)) {
-      chromedriver.start();
-    }
-    done();
-  },
-  after: (done) => {
-    if (JSON.parse(process.env.DRUPAL_TEST_CHROMEDRIVER_AUTOSTART)) {
-      chromedriver.stop();
-    }
-    done();
-  },
   afterEach: (browser, done) => {
     // Writes the console log - used by the "logAndEnd" command.
     if (
