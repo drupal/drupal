@@ -7,6 +7,7 @@
 
 (function ($, once) {
   var deprecatedMessageSuffix = "is deprecated in Drupal 9.3.0 and will be removed in Drupal 10.0.0. Use the core/once library instead. See https://www.drupal.org/node/3158256";
+
   var originalJQOnce = $.fn.once;
   var originalJQRemoveOnce = $.fn.removeOnce;
 
@@ -16,7 +17,6 @@
     });
     return originalJQOnce.apply(this, [id]);
   };
-
   $.fn.removeOnce = function jQueryRemoveOnce(id) {
     Drupal.deprecationError({
       message: "jQuery.removeOnce() ".concat(deprecatedMessageSuffix)

@@ -4,31 +4,23 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 (function ($, window, Drupal, drupalSettings, loadjs, _ref) {
   var isFocusable = _ref.isFocusable,
-      tabbable = _ref.tabbable;
+    tabbable = _ref.tabbable;
   Drupal.behaviors.AJAX = {
     attach: function attach(context, settings) {
       function loadAjaxBehavior(base) {
         var elementSettings = settings.ajax[base];
-
         if (typeof elementSettings.selector === 'undefined') {
           elementSettings.selector = "#".concat(base);
         }
-
         once('drupal-ajax', $(elementSettings.selector)).forEach(function (el) {
           elementSettings.element = el;
           elementSettings.base = base;
@@ -40,8 +32,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         return loadAjaxBehavior(base);
       });
       Drupal.ajax.bindAjaxLinks(document.body);
+
       once('ajax', '.use-ajax-submit').forEach(function (el) {
         var elementSettings = {};
+
         elementSettings.url = $(el.form).attr('action');
         elementSettings.setClick = true;
         elementSettings.event = 'click';
@@ -66,7 +60,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     var statusCode;
     var statusText;
     var responseText;
-
     if (xmlhttp.status) {
       statusCode = "\n".concat(Drupal.t('An AJAX HTTP error occurred.'), "\n").concat(Drupal.t('HTTP Result Code: !status', {
         '!status': xmlhttp.status
@@ -74,39 +67,40 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     } else {
       statusCode = "\n".concat(Drupal.t('An AJAX HTTP request terminated abnormally.'));
     }
-
     statusCode += "\n".concat(Drupal.t('Debugging information follows.'));
     var pathText = "\n".concat(Drupal.t('Path: !uri', {
       '!uri': uri
     }));
     statusText = '';
-
     try {
       statusText = "\n".concat(Drupal.t('StatusText: !statusText', {
         '!statusText': xmlhttp.statusText.trim()
       }));
-    } catch (e) {}
+    } catch (e) {
+    }
 
     responseText = '';
-
     try {
       responseText = "\n".concat(Drupal.t('ResponseText: !responseText', {
         '!responseText': xmlhttp.responseText.trim()
       }));
-    } catch (e) {}
+    } catch (e) {
+    }
 
     responseText = responseText.replace(/<("[^"]*"|'[^']*'|[^'">])*>/gi, '');
     responseText = responseText.replace(/[\n]+\s+/g, '\n');
+
     var readyStateText = xmlhttp.status === 0 ? "\n".concat(Drupal.t('ReadyState: !readyState', {
       '!readyState': xmlhttp.readyState
     })) : '';
     customMessage = customMessage ? "\n".concat(Drupal.t('CustomMessage: !customMessage', {
       '!customMessage': customMessage
     })) : '';
+
     this.message = statusCode + pathText + statusText + customMessage + responseText + readyStateText;
+
     this.name = 'AjaxError';
   };
-
   Drupal.AjaxError.prototype = new Error();
   Drupal.AjaxError.prototype.constructor = Drupal.AjaxError;
 
@@ -114,7 +108,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     if (arguments.length !== 1) {
       throw new Error('Drupal.ajax() function must be called with one configuration object only');
     }
-
     var base = settings.base || false;
     var element = settings.element || false;
     delete settings.base;
@@ -123,7 +116,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     if (!settings.progress && !element) {
       settings.progress = false;
     }
-
     var ajax = new Drupal.Ajax(base, element, settings);
     ajax.instanceIndex = Drupal.ajax.instances.length;
     Drupal.ajax.instances.push(ajax);
@@ -152,12 +144,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         element: ajaxLink
       };
       var href = $linkElement.attr('href');
-
       if (href) {
         elementSettings.url = href;
         elementSettings.event = 'click';
       }
-
       Drupal.ajax(elementSettings);
     });
   };
@@ -179,7 +169,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }
     };
     $.extend(this, defaults, elementSettings);
+
     this.commands = new Drupal.AjaxCommands();
+
     this.instanceIndex = false;
 
     if (this.wrapper) {
@@ -187,7 +179,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }
 
     this.element = element;
+
     this.element_settings = elementSettings;
+
     this.elementSettings = elementSettings;
 
     if (this.element && this.element.form) {
@@ -196,7 +190,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     if (!this.url) {
       var $element = $(this.element);
-
       if ($element.is('a')) {
         this.url = $element.attr('href');
       } else if (this.element && element.form) {
@@ -205,13 +198,14 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }
 
     var originalUrl = this.url;
-    this.url = this.url.replace(/\/nojs(\/|$|\?|#)/, '/ajax$1');
 
+    this.url = this.url.replace(/\/nojs(\/|$|\?|#)/, '/ajax$1');
     if (drupalSettings.ajaxTrustedUrl[originalUrl]) {
       drupalSettings.ajaxTrustedUrl[this.url] = true;
     }
 
     var ajax = this;
+
     ajax.options = {
       url: ajax.url,
       data: ajax.submit,
@@ -237,10 +231,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
             return ajax.error(xmlhttprequest, ajax.url, customMessage);
           }
         }
-
-        return Promise.resolve(ajax.success(response, status)).then(function () {
-          ajax.ajaxing = false;
-        });
+        return (
+          Promise.resolve(ajax.success(response, status))
+          .then(function () {
+            ajax.ajaxing = false;
+          })
+        );
       },
       error: function error(xmlhttprequest, status, _error) {
         ajax.ajaxing = false;
@@ -254,7 +250,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       jsonp: false,
       type: 'POST'
     };
-
     if (elementSettings.dialog) {
       ajax.options.data.dialogOptions = elementSettings.dialog;
     }
@@ -264,21 +259,18 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     } else {
       ajax.options.url += '&';
     }
-
     var wrapper = "drupal_".concat(elementSettings.dialogType || 'ajax');
-
     if (elementSettings.dialogRenderer) {
       wrapper += ".".concat(elementSettings.dialogRenderer);
     }
-
     ajax.options.url += "".concat(Drupal.ajax.WRAPPER_FORMAT, "=").concat(wrapper);
+
     $(ajax.element).on(elementSettings.event, function (event) {
       if (!drupalSettings.ajaxTrustedUrl[ajax.url] && !Drupal.url.isLocal(ajax.url)) {
         throw new Error(Drupal.t('The callback URL is not local and not trusted: !url', {
           '!url': ajax.url
         }));
       }
-
       return ajax.eventResponse(this, event);
     });
 
@@ -294,13 +286,13 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   };
 
   Drupal.ajax.WRAPPER_FORMAT = '_wrapper_format';
+
   Drupal.Ajax.AJAX_REQUEST_PARAMETER = '_drupal_ajax';
 
   Drupal.Ajax.prototype.execute = function () {
     if (this.ajaxing) {
       return;
     }
-
     try {
       this.beforeSerialize(this.element, this.options);
       return $.ajax(this.options);
@@ -324,18 +316,17 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   Drupal.Ajax.prototype.eventResponse = function (element, event) {
     event.preventDefault();
     event.stopPropagation();
+
     var ajax = this;
 
     if (ajax.ajaxing) {
       return;
     }
-
     try {
       if (ajax.$form) {
         if (ajax.setClick) {
           element.form.clk = element;
         }
-
         ajax.$form.ajaxSubmit(ajax.options);
       } else {
         ajax.beforeSerialize(ajax.element, ajax.options);
@@ -354,33 +345,35 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }
 
     options.data[Drupal.Ajax.AJAX_REQUEST_PARAMETER] = 1;
+
     var pageState = drupalSettings.ajaxPageState;
     options.data['ajax_page_state[theme]'] = pageState.theme;
     options.data['ajax_page_state[theme_token]'] = pageState.theme_token;
     options.data['ajax_page_state[libraries]'] = pageState.libraries;
   };
 
-  Drupal.Ajax.prototype.beforeSubmit = function (formValues, element, options) {};
+  Drupal.Ajax.prototype.beforeSubmit = function (formValues, element, options) {
+  }
+  ;
 
   Drupal.Ajax.prototype.beforeSend = function (xmlhttprequest, options) {
     if (this.$form) {
       options.extraData = options.extraData || {};
-      options.extraData.ajax_iframe_upload = '1';
-      var v = $.fieldValue(this.element);
 
+      options.extraData.ajax_iframe_upload = '1';
+
+      var v = $.fieldValue(this.element);
       if (v !== null) {
         options.extraData[this.element.name] = v;
       }
     }
 
     $(this.element).prop('disabled', true);
-
     if (!this.progress || !this.progress.type) {
       return;
     }
 
     var progressIndicatorMethod = "setProgressIndicator".concat(this.progress.type.slice(0, 1).toUpperCase()).concat(this.progress.type.slice(1).toLowerCase());
-
     if (progressIndicatorMethod in this && typeof this[progressIndicatorMethod] === 'function') {
       this[progressIndicatorMethod].call(this);
     }
@@ -406,15 +399,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
   Drupal.Ajax.prototype.setProgressIndicatorBar = function () {
     var progressBar = new Drupal.ProgressBar("ajax-progress-".concat(this.element.id), $.noop, this.progress.method, $.noop);
-
     if (this.progress.message) {
       progressBar.setProgress(-1, this.progress.message);
     }
-
     if (this.progress.url) {
       progressBar.startMonitoring(this.progress.url, this.progress.interval || 1500);
     }
-
     this.progress.element = $(Drupal.theme('ajaxProgressBar', progressBar.element));
     this.progress.object = progressBar;
     $(this.element).after(this.progress.element);
@@ -432,12 +422,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
   Drupal.Ajax.prototype.commandExecutionQueue = function (response, status) {
     var _this = this;
-
     var ajaxCommands = this.commands;
-    return Object.keys(response || {}).reduce(function (executionQueue, key) {
+    return Object.keys(response || {}).reduce(
+    function (executionQueue, key) {
       return executionQueue.then(function () {
         var command = response[key].command;
-
         if (command && ajaxCommands[command]) {
           return ajaxCommands[command](_this, response[key], status);
         }
@@ -447,46 +436,44 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
   Drupal.Ajax.prototype.success = function (response, status) {
     var _this2 = this;
-
     if (this.progress.element) {
       $(this.progress.element).remove();
     }
-
     if (this.progress.object) {
       this.progress.object.stopMonitoring();
     }
-
     $(this.element).prop('disabled', false);
+
     var elementParents = $(this.element).parents('[data-drupal-selector]').addBack().toArray();
+
     var focusChanged = Object.keys(response || {}).some(function (key) {
       var _response$key = response[key],
-          command = _response$key.command,
-          method = _response$key.method;
+        command = _response$key.command,
+        method = _response$key.method;
       return command === 'focusFirst' || command === 'invoke' && method === 'focus';
     });
-    return this.commandExecutionQueue(response, status).then(function () {
+    return this.commandExecutionQueue(response, status)
+    .then(function () {
       if (!focusChanged && _this2.element && !$(_this2.element).data('disable-refocus')) {
         var target = false;
-
         for (var n = elementParents.length - 1; !target && n >= 0; n--) {
           target = document.querySelector("[data-drupal-selector=\"".concat(elementParents[n].getAttribute('data-drupal-selector'), "\"]"));
         }
-
         if (target) {
           $(target).trigger('focus');
         }
       }
-
       if (_this2.$form && document.body.contains(_this2.$form.get(0))) {
         var settings = _this2.settings || drupalSettings;
         Drupal.attachBehaviors(_this2.$form.get(0), settings);
       }
-
       _this2.settings = null;
     }).catch(function (error) {
-      return console.error(Drupal.t('An error occurred during the execution of the Ajax response: !error', {
-        '!error': error
-      }));
+      return (
+        console.error(Drupal.t('An error occurred during the execution of the Ajax response: !error', {
+          '!error': error
+        }))
+      );
     });
   };
 
@@ -494,7 +481,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     var type = response.effect || this.effect;
     var speed = response.speed || this.speed;
     var effect = {};
-
     if (type === 'none') {
       effect.showEffect = 'show';
       effect.hideEffect = 'hide';
@@ -508,7 +494,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       effect.hideEffect = "".concat(type, "Toggle");
       effect.showSpeed = speed;
     }
-
     return effect;
   };
 
@@ -516,25 +501,23 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     if (this.progress.element) {
       $(this.progress.element).remove();
     }
-
     if (this.progress.object) {
       this.progress.object.stopMonitoring();
     }
-
     $(this.wrapper).show();
     $(this.element).prop('disabled', false);
-
     if (this.$form && document.body.contains(this.$form.get(0))) {
       var settings = this.settings || drupalSettings;
       Drupal.attachBehaviors(this.$form.get(0), settings);
     }
-
     throw new Drupal.AjaxError(xmlhttprequest, uri, customMessage);
   };
 
   Drupal.theme.ajaxWrapperNewContent = function ($newContent, ajax, response) {
     return (response.effect || ajax.effect) !== 'none' && $newContent.filter(function (i) {
-      return !($newContent[i].nodeName === '#comment' || $newContent[i].nodeName === '#text' && /^(\s|\n|\r)*$/.test($newContent[i].textContent));
+      return !(
+
+      $newContent[i].nodeName === '#comment' || $newContent[i].nodeName === '#text' && /^(\s|\n|\r)*$/.test($newContent[i].textContent));
     }).length > 1 ? Drupal.theme('ajaxWrapperMultipleRootElements', $newContent) : $newContent;
   };
 
@@ -543,13 +526,14 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   };
 
   Drupal.AjaxCommands = function () {};
-
   Drupal.AjaxCommands.prototype = {
     insert: function insert(ajax, response) {
       var $wrapper = response.selector ? $(response.selector) : $(ajax.wrapper);
       var method = response.method || ajax.method;
       var effect = ajax.getEffect(response);
+
       var settings = response.settings || ajax.settings || drupalSettings;
+
       var $newContent = $($.parseHTML(response.data, document, true));
       $newContent = Drupal.theme('ajaxWrapperNewContent', $newContent, ajax, response);
 
@@ -561,7 +545,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         case 'remove':
           Drupal.detachBehaviors($wrapper.get(0), settings);
           break;
-
         default:
           break;
       }
@@ -573,7 +556,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }
 
       var $ajaxNewContent = $newContent.find('.ajax-new-content');
-
       if ($ajaxNewContent.length) {
         $ajaxNewContent.hide();
         $newContent.show();
@@ -598,10 +580,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     },
     changed: function changed(ajax, response, status) {
       var $element = $(response.selector);
-
       if (!$element.hasClass('ajax-changed')) {
         $element.addClass('ajax-changed');
-
         if (response.asterisk) {
           $element.find(response.asterisk).append(" <abbr class=\"ajax-changed\" title=\"".concat(Drupal.t('Changed'), "\">*</abbr> "));
         }
@@ -628,16 +608,15 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
       if (ajaxSettings) {
         Drupal.ajax.expired().forEach(function (instance) {
+
           if (instance.selector) {
             var selector = instance.selector.replace('#', '');
-
             if (selector in ajaxSettings) {
               delete ajaxSettings[selector];
             }
           }
         });
       }
-
       if (response.merge) {
         $.extend(true, drupalSettings, response.settings);
       } else {
@@ -650,7 +629,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     focusFirst: function focusFirst(ajax, response, status) {
       var focusChanged = false;
       var container = document.querySelector(response.selector);
-
       if (container) {
         var tabbableElements = tabbable(container);
 
@@ -684,11 +662,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     },
     message: function message(ajax, response) {
       var messages = new Drupal.Message(document.querySelector(response.messageWrapperQuerySelector));
-
       if (response.clearPrevious) {
         messages.clear();
       }
-
       messages.add(response.message, response.messageOptions);
     },
     add_js: function add_js(ajax, response, status) {
@@ -702,6 +678,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
             Object.keys(script).forEach(function (attributeKey) {
               scriptEl.setAttribute(attributeKey, script[attributeKey]);
             });
+
             parentEl.appendChild(scriptEl);
             return false;
           }

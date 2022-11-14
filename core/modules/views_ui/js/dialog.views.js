@@ -12,7 +12,6 @@
     var $scroll = $modal.find('[data-drupal-views-scroll]');
     var offset = 0;
     var modalHeight;
-
     if ($scroll.length) {
       $modal.closest('.views-ui-dialog').addClass('views-ui-dialog-scroll');
       $scroll.css({
@@ -23,6 +22,7 @@
       $viewsOverride.each(function () {
         offset += $(this).outerHeight();
       });
+
       var scrollOffset = $scroll.outerHeight() - $scroll.height();
       $scroll.height(modalHeight - offset - scrollOffset);
       $modal.css('overflow', 'hidden');

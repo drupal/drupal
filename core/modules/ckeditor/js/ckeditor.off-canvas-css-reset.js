@@ -24,10 +24,11 @@
     if (document.getElementById('ckeditor-off-canvas-reset')) {
       return;
     }
-
     CKEDITOR.skinName = CKEDITOR.skin.name;
+
     var editorCssPath = CKEDITOR.skin.getPath('editor');
     var dialogCssPath = CKEDITOR.skin.getPath('dialog');
+
     var storedOffCanvasCss = window.localStorage.getItem("Drupal.off-canvas.css.".concat(editorCssPath).concat(dialogCssPath));
 
     if (storedOffCanvasCss) {
@@ -51,6 +52,5 @@
       }
     });
   };
-
   addCkeditorOffCanvasCss();
 })(jQuery, CKEDITOR);

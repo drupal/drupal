@@ -39,7 +39,6 @@
             $button.html(Drupal.t('Hide summary'));
             $link.appendTo($summaryLabel);
           }
-
           e.preventDefault();
           toggleClick = !toggleClick;
         }).appendTo($summaryLabel);

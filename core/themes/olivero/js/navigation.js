@@ -13,7 +13,6 @@
   function toggleNav(props, state) {
     var value = !!state;
     props.navButton.setAttribute('aria-expanded', value);
-
     if (value) {
       props.body.classList.add('is-overlay-active');
       props.body.classList.add('is-fixed');
@@ -31,6 +30,7 @@
     props.navButton.addEventListener('click', function () {
       toggleNav(props, !isNavOpen(props.navWrapper));
     });
+
     document.addEventListener('keyup', function (e) {
       if (e.key === 'Escape' || e.key === 'Esc') {
         if (props.olivero.areAnySubNavsOpen()) {
@@ -46,13 +46,13 @@
     props.overlay.addEventListener('touchstart', function () {
       toggleNav(props, false);
     });
+
     props.header.addEventListener('keydown', function (e) {
       if (e.key === 'Tab' && isNavOpen(props.navWrapper)) {
         var tabbableNavElements = tabbable.tabbable(props.navWrapper);
         tabbableNavElements.unshift(props.navButton);
         var firstTabbableEl = tabbableNavElements[0];
         var lastTabbableEl = tabbableNavElements[tabbableNavElements.length - 1];
-
         if (e.shiftKey) {
           if (document.activeElement === firstTabbableEl && !props.olivero.isDesktopNav()) {
             lastTabbableEl.focus();
@@ -64,6 +64,7 @@
         }
       }
     });
+
     window.addEventListener('resize', function () {
       if (props.olivero.isDesktopNav()) {
         toggleNav(props, false);
@@ -73,6 +74,7 @@
 
       Drupal.olivero.closeAllSubNav();
     });
+
     props.navWrapper.addEventListener('click', function (e) {
       if (e.target.matches("[href*=\"".concat(window.location.pathname, "#\"], [href*=\"").concat(window.location.pathname, "#\"] *, [href^=\"#\"], [href^=\"#\"] *"))) {
         toggleNav(props, false);
@@ -85,7 +87,6 @@
       var headerId = 'header';
       var header = once('navigation', "#".concat(headerId), context).shift();
       var navWrapperId = 'header-nav';
-
       if (header) {
         var navWrapper = header.querySelector("#".concat(navWrapperId));
         var olivero = Drupal.olivero;

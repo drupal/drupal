@@ -19,15 +19,12 @@
     },
     onActiveTrayChange: function onActiveTrayChange(model, tray) {
       var relevantTray = tray === null ? model.previous('activeTray') : tray;
-
       if (!relevantTray) {
         return;
       }
-
       var action = tray === null ? Drupal.t('closed') : Drupal.t('opened');
       var trayNameElement = relevantTray.querySelector('.toolbar-tray-name');
       var text;
-
       if (trayNameElement !== null) {
         text = Drupal.t('Tray "@tray" @action.', {
           '@tray': trayNameElement.textContent,
@@ -38,7 +35,6 @@
           '@action': action
         });
       }
-
       Drupal.announce(text);
     }
   });

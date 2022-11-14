@@ -15,15 +15,14 @@
       });
     }
   };
+
   Drupal.behaviors.claroDetailsToggleShim = {
     attach: function attach(context) {
       if (Modernizr.details || !Drupal.CollapsibleDetails.instances.length) {
         return;
       }
-
       $(once('claroDetailsToggleShim', 'details .details-title', context)).on('keypress', function (event) {
         var keyCode = event.keyCode || event.charCode;
-
         if (keyCode === 32) {
           $(event.target).closest('summary').trigger('click');
           event.preventDefault();

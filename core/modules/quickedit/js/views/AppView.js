@@ -13,8 +13,10 @@
       this.singleFieldStates = ['highlighted', 'activating', 'active'];
       this.changedFieldStates = ['changed', 'saving', 'saved', 'invalid'];
       this.readyFieldStates = ['candidate', 'highlighted'];
+
       this.listenTo(options.entitiesCollection, 'change:state', this.appStateChange);
       this.listenTo(options.entitiesCollection, 'change:isActive', this.enforceSingleActiveEntity);
+
       this.listenTo(options.fieldsCollection, 'change:state', this.editorStateChange);
       this.listenTo(options.fieldsCollection, 'change:html', this.renderUpdatedField);
       this.listenTo(options.fieldsCollection, 'change:html', this.propagateUpdatedField);
@@ -24,7 +26,6 @@
     appStateChange: function appStateChange(entityModel, state) {
       var app = this;
       var entityToolbarView;
-
       switch (state) {
         case 'launching':
           reload = false;
@@ -36,29 +37,23 @@
           entityModel.get('fields').each(function (fieldModel) {
             app.setupEditor(fieldModel);
           });
-
           _.defer(function () {
             entityModel.set('state', 'opening');
           });
-
           break;
-
         case 'closed':
           entityToolbarView = entityModel.toolbarView;
           entityModel.get('fields').each(function (fieldModel) {
             app.teardownEditor(fieldModel);
           });
-
           if (entityToolbarView) {
             entityToolbarView.remove();
             delete entityModel.toolbarView;
           }
-
           if (reload) {
             reload = false;
             window.location.reload();
           }
-
           break;
       }
     },
@@ -69,21 +64,26 @@
         if (from === 'candidate' && to === 'inactive') {
           accept = true;
         }
-      } else {
+      }
+      else {
         if (!Drupal.quickedit.FieldModel.followsStateSequence(from, to)) {
           accept = false;
-
           if (_.indexOf(this.activeFieldStates, from) !== -1 && to === 'candidate') {
             accept = true;
-          } else if ((from === 'changed' || from === 'invalid') && to === 'candidate') {
+          }
+          else if ((from === 'changed' || from === 'invalid') && to === 'candidate') {
             accept = true;
-          } else if (from === 'highlighted' && to === 'candidate') {
+          }
+          else if (from === 'highlighted' && to === 'candidate') {
             accept = true;
-          } else if (from === 'saved' && to === 'candidate') {
+          }
+          else if (from === 'saved' && to === 'candidate') {
             accept = true;
-          } else if (from === 'invalid' && to === 'saving') {
+          }
+          else if (from === 'invalid' && to === 'saving') {
             accept = true;
-          } else if (from === 'invalid' && to === 'activating') {
+          }
+          else if (from === 'invalid' && to === 'activating') {
             accept = true;
           }
         }
@@ -91,13 +91,10 @@
         if (accept) {
           var activeField;
           var activeFieldState;
-
           if ((this.readyFieldStates.indexOf(from) !== -1 || from === 'invalid') && this.activeFieldStates.indexOf(to) !== -1) {
             activeField = this.model.get('activeField');
-
             if (activeField && activeField !== fieldModel) {
               activeFieldState = activeField.get('state');
-
               if (this.activeFieldStates.indexOf(activeFieldState) !== -1) {
                 activeField.set('state', 'candidate');
               } else if (activeFieldState === 'changed' || activeFieldState === 'invalid') {
@@ -109,20 +106,22 @@
                 accept = false;
               }
             }
-          } else if (_.indexOf(this.activeFieldStates, from) !== -1 && to === 'candidate') {
+          }
+          else if (_.indexOf(this.activeFieldStates, from) !== -1 && to === 'candidate') {
             if (context && context.reason === 'mouseleave') {
               accept = false;
             }
-          } else if ((from === 'changed' || from === 'invalid') && to === 'candidate') {
+          }
+          else if ((from === 'changed' || from === 'invalid') && to === 'candidate') {
             if (context && context.reason === 'mouseleave') {
               accept = false;
-            } else if (context && context.confirmed) {
+            }
+            else if (context && context.confirmed) {
               accept = true;
             }
           }
         }
       }
-
       return accept;
     },
     setupEditor: function setupEditor(fieldModel) {
@@ -136,6 +135,7 @@
         model: editorModel,
         fieldModel: fieldModel
       });
+
       var toolbarView = new Drupal.quickedit.FieldToolbarView({
         el: fieldToolbarRoot,
         model: fieldModel,
@@ -143,11 +143,13 @@
         editorView: editorView,
         entityModel: entityModel
       });
+
       var decorationView = new Drupal.quickedit.FieldDecorationView({
         el: $(editorView.getEditedElement()),
         model: fieldModel,
         editorView: editorView
       });
+
       fieldModel.editorView = editorView;
       fieldModel.toolbarView = toolbarView;
       fieldModel.decorationView = decorationView;
@@ -159,15 +161,16 @@
 
       fieldModel.toolbarView.remove();
       delete fieldModel.toolbarView;
+
       fieldModel.decorationView.remove();
       delete fieldModel.decorationView;
+
       fieldModel.editorView.remove();
       delete fieldModel.editorView;
     },
     confirmEntityDeactivation: function confirmEntityDeactivation(entityModel) {
       var that = this;
       var discardDialog;
-
       function closeDiscardDialog(action) {
         discardDialog.close(action);
         that.model.set('activeModal', null);
@@ -180,7 +183,6 @@
           entityModel.set('state', 'deactivating', {
             confirmed: true
           });
-
           if (entityModel.get('reload')) {
             reload = true;
             entityModel.set('reload', false);
@@ -235,17 +237,17 @@
         if (from === 'changed' || from === 'invalid') {
           fieldModel.editorView.revert();
         }
-
         this.model.set('activeField', null);
       }
     },
     renderUpdatedField: function renderUpdatedField(fieldModel, html, options) {
       var $fieldWrapper = $(fieldModel.get('el'));
       var $context = $fieldWrapper.parent();
-
       var renderField = function renderField() {
         fieldModel.destroy();
+
         $fieldWrapper.replaceWith(html);
+
         Drupal.attachBehaviors($context.get(0));
       };
 
@@ -268,14 +270,17 @@
       if (options.propagation) {
         return;
       }
-
       var htmlForOtherViewModes = updatedField.get('htmlForOtherViewModes');
-      Drupal.quickedit.collections.fields.where({
+      Drupal.quickedit.collections.fields
+      .where({
         logicalFieldID: updatedField.get('logicalFieldID')
       }).forEach(function (field) {
-        if (field === updatedField) {} else if (field.getViewMode() === updatedField.getViewMode()) {
+        if (field === updatedField) {
+        }
+        else if (field.getViewMode() === updatedField.getViewMode()) {
           field.set('html', updatedField.get('html'));
-        } else if (field.getViewMode() in htmlForOtherViewModes) {
+        }
+        else if (field.getViewMode() in htmlForOtherViewModes) {
           field.set('html', htmlForOtherViewModes[field.getViewMode()], {
             propagation: true
           });

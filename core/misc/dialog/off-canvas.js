@@ -21,7 +21,7 @@
     },
     beforeCreate: function beforeCreate(_ref) {
       var settings = _ref.settings,
-          $element = _ref.$element;
+        $element = _ref.$element;
       Drupal.offCanvas.removeOffCanvasEvents($element);
       $('body').addClass('js-off-canvas-dialog-open');
       settings.position = {
@@ -29,6 +29,7 @@
         at: "".concat(Drupal.offCanvas.getEdge(), " top"),
         of: window
       };
+
       var position = settings.drupalOffCanvasPosition;
       var height = position === 'side' ? $(window).height() : settings.height;
       var width = position === 'side' ? settings.width : '100%';
@@ -43,7 +44,7 @@
     },
     afterCreate: function afterCreate(_ref3) {
       var $element = _ref3.$element,
-          settings = _ref3.settings;
+        settings = _ref3.settings;
       var eventData = {
         settings: settings,
         $element: $element,
@@ -62,6 +63,7 @@
       var $container = Drupal.offCanvas.getContainer($element);
       var $offsets = $container.find('> :not(#drupal-off-canvas, .ui-resizable-handle)');
       var offset = 0;
+
       $element.css({
         height: 'auto'
       });
@@ -69,6 +71,7 @@
       $offsets.each(function (i, e) {
         offset += $(e).outerHeight();
       });
+
       var scrollOffset = $element.outerHeight() - $element.height();
       $element.height(modalHeight - offset - scrollOffset);
     },
@@ -80,11 +83,9 @@
       if (Drupal.offCanvas.position && Drupal.offCanvas.position !== position) {
         container.removeAttr("data-offset-".concat(Drupal.offCanvas.position));
       }
-
       if (position === 'top') {
         $element.css('min-height', "".concat(Drupal.offCanvas.minimumHeight, "px"));
       }
-
       displace();
       var offsets = displace.offsets;
       var topPosition = position === 'side' && offsets.top !== 0 ? "+".concat(offsets.top) : '';
@@ -105,26 +106,21 @@
     },
     bodyPadding: function bodyPadding(event) {
       var position = event.data.settings.drupalOffCanvasPosition;
-
       if (position === 'side' && $('body').outerWidth() < Drupal.offCanvas.minDisplaceWidth) {
         return;
       }
-
       Drupal.offCanvas.resetPadding();
       var $element = event.data.$element;
       var $container = Drupal.offCanvas.getContainer($element);
       var $mainCanvasWrapper = Drupal.offCanvas.$mainCanvasWrapper;
       var width = $container.outerWidth();
       var mainCanvasPadding = $mainCanvasWrapper.css("padding-".concat(Drupal.offCanvas.getEdge()));
-
       if (position === 'side' && width !== mainCanvasPadding) {
         $mainCanvasWrapper.css("padding-".concat(Drupal.offCanvas.getEdge()), "".concat(width, "px"));
         $container.attr("data-offset-".concat(Drupal.offCanvas.getEdge()), width);
         displace();
       }
-
       var height = $container.outerHeight();
-
       if (position === 'top') {
         $mainCanvasWrapper.css('padding-top', "".concat(height, "px"));
         $container.attr('data-offset-top', height);
@@ -143,12 +139,12 @@
       displace();
     }
   };
+
   Drupal.behaviors.offCanvasEvents = {
     attach: function attach() {
       if (!once('off-canvas', 'html').length) {
         return;
       }
-
       $(window).on({
         'dialog:beforecreate': function dialogBeforecreate(event, dialog, $element, settings) {
           if (Drupal.offCanvas.isOffCanvas($element)) {

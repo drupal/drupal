@@ -4,19 +4,20 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (Drupal, once) {
   Drupal.behaviors.allowedTagsListener = {
     attach: function attach(context) {
       once('ajax-conflict-prevention', '[data-drupal-selector="filter-format-edit-form"], [data-drupal-selector="filter-format-add-form"]', context).forEach(function (form) {
         form.addEventListener('submit', function () {
-          once.filter('drupal-ajax', '[data-drupal-selector="filter-format-edit-form"] [disabled], [data-drupal-selector="filter-format-add-form"] [disabled]').forEach(function (disabledElement) {
+          once.filter('drupal-ajax', '[data-drupal-selector="filter-format-edit-form"] [disabled], [data-drupal-selector="filter-format-add-form"] [disabled]')
+          .forEach(function (disabledElement) {
             disabledElement.removeAttribute('disabled');
           });
         });
       });
     }
   };
+
   var originalAjaxEventResponse = Drupal.Ajax.prototype.eventResponse;
 
   Drupal.Ajax.prototype.eventResponse = function ckeditor5AjaxEventResponse() {
@@ -25,11 +26,9 @@
         return;
       }
     }
-
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
-
     originalAjaxEventResponse.apply(this, args);
   };
 })(Drupal, once);

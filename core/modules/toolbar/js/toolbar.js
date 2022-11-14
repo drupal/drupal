@@ -12,18 +12,19 @@
       'toolbar.standard': '',
       'toolbar.wide': ''
     }
-  }, drupalSettings.toolbar, {
+  }, drupalSettings.toolbar,
+  {
     strings: {
       horizontal: Drupal.t('Horizontal orientation'),
       vertical: Drupal.t('Vertical orientation')
     }
   });
+
   Drupal.behaviors.toolbar = {
     attach: function attach(context) {
       if (!window.matchMedia('only screen').matches) {
         return;
       }
-
       once('toolbar', '#toolbar-administration', context).forEach(function (toolbar) {
         var model = new Drupal.toolbar.ToolbarModel({
           locked: JSON.parse(localStorage.getItem('Drupal.toolbar.trayVerticalLocked')),
@@ -31,6 +32,7 @@
           height: $('#toolbar-administration').outerHeight()
         });
         Drupal.toolbar.models.toolbarModel = model;
+
         Object.keys(options.breakpoints).forEach(function (label) {
           var mq = options.breakpoints[label];
           var mql = window.matchMedia(mq);
@@ -52,8 +54,10 @@
           el: toolbar,
           model: model
         });
+
         model.trigger('change:isFixed', model, model.get('isFixed'));
         model.trigger('change:activeTray', model, model.get('activeTray'));
+
         var menuModel = new Drupal.toolbar.MenuModel();
         Drupal.toolbar.models.menuModel = menuModel;
         Drupal.toolbar.views.menuVisualView = new Drupal.toolbar.MenuVisualView({
@@ -61,16 +65,20 @@
           model: menuModel,
           strings: options.strings
         });
+
         Drupal.toolbar.setSubtrees.done(function (subtrees) {
           menuModel.set('subtrees', subtrees);
           var theme = drupalSettings.ajaxPageState.theme;
           localStorage.setItem("Drupal.toolbar.subtrees.".concat(theme), JSON.stringify(subtrees));
           model.set('areSubtreesLoaded', true);
         });
+
         Drupal.toolbar.views.toolbarVisualView.loadSubtrees();
-        $(document).on('drupalViewportOffsetChange.toolbar', function (event, offsets) {
+        $(document)
+        .on('drupalViewportOffsetChange.toolbar', function (event, offsets) {
           model.set('offsets', offsets);
         });
+
         model.on('change:orientation', function (model, orientation) {
           $(document).trigger('drupalToolbarOrientationChange', orientation);
         }).on('change:activeTab', function (model, tab) {
@@ -84,7 +92,6 @@
             activeTab: $('.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a').get(0)
           });
         }
-
         $(window).on({
           'dialog:aftercreate': function dialogAftercreate(event, dialog, $element, settings) {
             var $toolbar = $('#toolbar-bar');
@@ -106,6 +113,7 @@
       });
     }
   };
+
   Drupal.toolbar = {
     views: {},
     models: {},
@@ -118,7 +126,6 @@
             isOriented: mql.matches,
             isTrayToggleVisible: false
           });
-
           if (!mql.matches || !model.get('orientation')) {
             model.set({
               orientation: 'vertical'
@@ -126,15 +133,12 @@
               validate: true
             });
           }
-
           break;
-
         case 'toolbar.standard':
           model.set({
             isFixed: mql.matches
           });
           break;
-
         case 'toolbar.wide':
           model.set({
             orientation: mql.matches && !model.get('locked') ? 'horizontal' : 'vertical'
@@ -145,7 +149,6 @@
             isTrayToggleVisible: mql.matches
           });
           break;
-
         default:
           break;
       }

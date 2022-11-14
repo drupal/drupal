@@ -16,7 +16,8 @@
       $('body').toggleClass('toolbar-fixed', isViewportOverflowConstrained || this.model.get('isFixed'));
     },
     render: function render() {
-      $('body').toggleClass('toolbar-tray-open', !!this.model.get('activeTray'));
+      $('body')
+      .toggleClass('toolbar-tray-open', !!this.model.get('activeTray'));
     }
   });
 })(jQuery, Drupal, Backbone);

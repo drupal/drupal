@@ -12,6 +12,7 @@
   testMessages.types.forEach(function (type) {
     indexes[type] = [];
   });
+
   var messageObjects = {
     default: {
       zone: new Drupal.Message(),
@@ -26,6 +27,7 @@
       indexes: indexes
     };
   });
+
   behaviors.js_message_test = {
     attach: function attach() {
       $(once('messages-details', '[data-drupal-messages-area]')).on('click', '[data-action]', function (e) {
@@ -34,7 +36,6 @@
         var area = $target.closest('[data-drupal-messages-area]').attr('data-drupal-messages-area') || 'default';
         var message = messageObjects[area].zone;
         var action = $target.attr('data-action');
-
         if (action === 'add') {
           messageObjects[area].indexes[type].push(message.add("This is a message of the type, ".concat(type, ". You be the judge of its importance."), {
             type: type

@@ -14,10 +14,10 @@
         var $row = $context.find("#".concat($checkbox.attr('id').replace(/-status$/, '-weight'))).closest('tr');
         var $filterSettings = $context.find("[data-drupal-selector='".concat($checkbox.attr('id').replace(/-status$/, '-settings'), "']"));
         var filterSettingsTab = $filterSettings.data('verticalTab');
+
         $checkbox.on('click.filterUpdate', function () {
           if ($checkbox.is(':checked')) {
             $row.show();
-
             if (filterSettingsTab) {
               filterSettingsTab.tabShow().updateSummary();
             } else {
@@ -25,14 +25,12 @@
             }
           } else {
             $row.hide();
-
             if (filterSettingsTab) {
               filterSettingsTab.tabHide().updateSummary();
             } else {
               $filterSettings.hide();
             }
           }
-
           Drupal.tableDrag['filter-order'].restripeTable();
         });
 

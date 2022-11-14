@@ -12,7 +12,6 @@
         event.preventDefault();
         event.target.click();
       }
-
       return {
         'click a': function clickA(event) {
           event.preventDefault();
@@ -30,6 +29,7 @@
     },
     render: function render(entityModel, isActive) {
       this.$el.find('a').attr('aria-pressed', isActive);
+
       this.$el.closest('.contextual').toggle(!isActive);
       return this;
     }

@@ -12,12 +12,10 @@
     },
     render: function render() {
       var _this = this;
-
       var subtrees = this.model.get('subtrees');
       Object.keys(subtrees || {}).forEach(function (id) {
         $(once('toolbar-subtrees', _this.$el.find("#toolbar-link-".concat(id)))).after(subtrees[id]);
       });
-
       if ('drupalToolbarMenu' in $.fn) {
         this.$el.children('.toolbar-menu').drupalToolbarMenu();
       }

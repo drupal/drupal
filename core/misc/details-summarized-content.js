@@ -4,13 +4,11 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal) {
   function DetailsSummarizedContent(node) {
     this.$node = $(node);
     this.setupSummary();
   }
-
   $.extend(DetailsSummarizedContent, {
     instances: []
   });
@@ -24,6 +22,7 @@
       this.$detailsSummarizedContentWrapper.html(Drupal.theme('detailsSummarizedContentText', text));
     }
   });
+
   Drupal.behaviors.detailsSummary = {
     attach: function attach(context) {
       DetailsSummarizedContent.instances = DetailsSummarizedContent.instances.concat(once('details', 'details', context).map(function (details) {

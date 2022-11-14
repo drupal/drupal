@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (_ref, $) {
   var behaviors = _ref.behaviors;
   behaviors.jqueryCookie = {

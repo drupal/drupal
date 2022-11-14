@@ -12,6 +12,7 @@
         var $row = $(row);
         var $firstCell = $row.find('td:first-of-type').eq(0).wrapInner(Drupal.theme('tableDragCellContentWrapper')).wrapInner($(Drupal.theme('tableDragCellItemsWrapper')).addClass('js-tabledrag-cell-content'));
         var $targetElem = $firstCell.find('.js-tabledrag-cell-content');
+
         $targetElem.eq(0).find('> .tabledrag-cell-content__item > .js-tabledrag-handle, > .tabledrag-cell-content__item > .js-indentation').prependTo($targetElem);
       };
 
@@ -24,7 +25,6 @@
     markChanged: function markChanged() {
       var marker = $(Drupal.theme('tableDragChangedMarker')).addClass('js-tabledrag-changed-marker');
       var cell = $(this.element).find('td:first-of-type');
-
       if (cell.find('.js-tabledrag-changed-marker').length === 0) {
         cell.find('.js-tabledrag-handle').after(marker);
       }
@@ -53,7 +53,6 @@
     toggleButtonContent: function toggleButtonContent(show) {
       var classes = ['action-link', 'action-link--extrasmall', 'tabledrag-toggle-weight'];
       var text = '';
-
       if (show) {
         classes.push('action-link--icon-hide');
         text = Drupal.t('Hide row weights');
@@ -61,7 +60,6 @@
         classes.push('action-link--icon-show');
         text = Drupal.t('Show row weights');
       }
-
       return "<span class=\"".concat(classes.join(' '), "\">").concat(text, "</a>");
     },
     tableDragCellContentWrapper: function tableDragCellContentWrapper() {

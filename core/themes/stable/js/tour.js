@@ -4,17 +4,11 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 (function (Drupal) {
@@ -22,11 +16,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     var changeTag = function changeTag(element, tag) {
       if (element) {
         var newTagElement = document.createElement(tag);
-
         _toConsumableArray(element.attributes).forEach(function (attr) {
           newTagElement.setAttribute(attr.name, attr.value);
         });
-
         newTagElement.innerHTML = element.innerHTML;
         element.parentNode.replaceChild(newTagElement, element);
       }
@@ -39,6 +31,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     var shepherdText = shepherdElement.querySelector('.shepherd-text');
     var shepherdNext = shepherdElement.querySelector('footer .button');
     var tourProgress = shepherdElement.querySelector('.tour-progress');
+
     shepherdElement.classList.add('joyride-tip-guide');
     shepherdContent.classList.add('joyride-content-wrapper');
     shepherdNext.classList.add('joyride-next-tip');
@@ -54,13 +47,16 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     if (shepherdElement.classList.contains('tip-uses-get-output')) {
       shepherdText.appendChild(shepherdNext);
+
       shepherdText.appendChild(shepherdCancel);
       shepherdContent.querySelector('.shepherd-header').remove();
+
       Array.from(shepherdText.children).forEach(function (node) {
         if (node.tagName === 'P' && node.textContent === '' && node.classList.length === 0) {
           node.remove();
         }
       });
+
       shepherdContent.innerHTML = shepherdText.innerHTML;
     } else {
       shepherdContent.insertBefore(shepherdTitle, shepherdContent.firstChild);
@@ -70,17 +66,18 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       shepherdContent.insertBefore(shepherdNext, tourProgress.nextSibling);
       shepherdCancel.innerHTML = '<span aria-hidden="true">×</span>';
       shepherdTitle.classList.add('tour-tip-label');
+
       changeTag(shepherdTitle, 'h2');
+
       shepherdText.outerHTML = shepherdText.innerHTML;
     }
 
     changeTag(shepherdElement.querySelector('.joyride-close-tip'), 'a');
     changeTag(shepherdElement.querySelector('.joyride-next-tip'), 'a');
-    var shepherdArrow = shepherdElement.querySelector('.shepherd-arrow');
 
+    var shepherdArrow = shepherdElement.querySelector('.shepherd-arrow');
     if (shepherdArrow) {
       shepherdArrow.classList.add('joyride-nub');
-
       if (shepherdTour.currentStep.options.attachTo.on) {
         var stepToTipPosition = {
           bottom: 'top',
@@ -88,9 +85,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           left: 'right',
           right: 'left'
         };
-        shepherdArrow.classList.add(stepToTipPosition[shepherdTour.currentStep.options.attachTo.on.split('-')[0]]);
+        shepherdArrow.classList.add(
+        stepToTipPosition[
+        shepherdTour.currentStep.options.attachTo.on.split('-')[0]]);
       }
-
       changeTag(shepherdArrow, 'span');
     } else {
       var nub = document.createElement('span');

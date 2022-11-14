@@ -42,11 +42,9 @@
     classes.unshift('quickedit-toolgroup');
     var html = '';
     html += "<div class=\"".concat(classes.join(' '), "\"");
-
     if (settings.id) {
       html += " id=\"".concat(settings.id, "\"");
     }
-
     html += '>';
     html += Drupal.theme('quickeditButtons', {
       buttons: settings.buttons
@@ -57,14 +55,11 @@
 
   Drupal.theme.quickeditButtons = function (settings) {
     var html = '';
-
     var _loop = function _loop(i) {
       var button = settings.buttons[i];
-
       if (!button.hasOwnProperty('type')) {
         button.type = 'button';
       }
-
       var attributes = [];
       var attrMap = settings.buttons[i].attributes || {};
       Object.keys(attrMap).forEach(function (attr) {
@@ -72,11 +67,9 @@
       });
       html += "<button type=\"".concat(button.type, "\" class=\"").concat(button.classes, "\" ").concat(attributes.join(' '), ">").concat(button.label, "</button>");
     };
-
     for (var i = 0; i < settings.buttons.length; i++) {
       _loop(i);
     }
-
     return html;
   };
 
@@ -102,15 +95,12 @@
 
   Drupal.theme.quickeditImageToolbar = function (settings) {
     var html = '<form class="quickedit-image-field-info">';
-
     if (settings.alt_field) {
       html += "<div><label for=\"alt\" class=\"".concat(settings.alt_field_required ? 'required' : '', "\">").concat(Drupal.t('Alternative text'), "</label>") + "<input type=\"text\" placeholder=\"".concat(settings.alt, "\" value=\"").concat(settings.alt, "\" name=\"alt\" ").concat(settings.alt_field_required ? 'required' : '', "/>") + '  </div>';
     }
-
     if (settings.title_field) {
       html += "<div><label for=\"title\" class=\"".concat(settings.title_field_required ? 'form-required' : '', "\">").concat(Drupal.t('Title'), "</label>") + "<input type=\"text\" placeholder=\"".concat(settings.title, "\" value=\"").concat(settings.title, "\" name=\"title\" ").concat(settings.title_field_required ? 'required' : '', "/>") + '</div>';
     }
-
     html += '</form>';
     return html;
   };

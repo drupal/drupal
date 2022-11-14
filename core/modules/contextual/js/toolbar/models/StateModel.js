@@ -16,7 +16,9 @@
     initialize: function initialize(attrs, options) {
       this.listenTo(options.contextualCollection, 'reset remove add', this.countContextualLinks);
       this.listenTo(options.contextualCollection, 'add', this.lockNewContextualLinks);
+
       this.listenTo(this, 'change:contextualCount', this.updateVisibility);
+
       this.listenTo(this, 'change:isViewing', function (model, isViewing) {
         options.contextualCollection.each(function (contextualModel) {
           contextualModel.set('isLocked', !isViewing);

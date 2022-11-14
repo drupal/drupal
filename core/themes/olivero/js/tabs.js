@@ -24,14 +24,12 @@
         tabs.classList.remove(expandedClass);
       }
     }
-
     if (isTabsMobileLayout() && !activeTab.matches('.tabs__tab:first-child')) {
       var newActiveTab = activeTab.cloneNode(true);
       var firstTab = tabs.querySelector('.tabs__tab:first-child');
       tabs.insertBefore(newActiveTab, firstTab);
       tabs.removeChild(activeTab);
     }
-
     tabs.querySelector('.tabs__trigger').addEventListener('click', handleTriggerClick);
   }
 

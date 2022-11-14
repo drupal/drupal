@@ -12,7 +12,6 @@
         event.preventDefault();
         event.target.click();
       };
-
       return {
         click: function click() {
           this.model.set('isViewing', !this.model.get('isViewing'));

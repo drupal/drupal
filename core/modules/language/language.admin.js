@@ -10,7 +10,6 @@
     attach: function attach() {
       var $configForm = $('#language-negotiation-configure-form');
       var inputSelector = 'input[name$="[configurable]"]';
-
       function toggleTable(checkbox) {
         var $checkbox = $(checkbox);
         $checkbox.closest('.table-language-group').find('table, .tabledrag-toggle-weight').toggle($checkbox.prop('checked'));

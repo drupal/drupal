@@ -7,7 +7,6 @@
 
 (function ($, Drupal, drupalSettings) {
   Drupal.behaviors.ViewsAjaxView = {};
-
   Drupal.behaviors.ViewsAjaxView.attach = function (context, settings) {
     if (settings && settings.views && settings.views.ajaxViews) {
       var ajaxViews = settings.views.ajaxViews;
@@ -16,14 +15,12 @@
       });
     }
   };
-
   Drupal.behaviors.ViewsAjaxView.detach = function (context, settings, trigger) {
     if (trigger === 'unload') {
       if (settings && settings.views && settings.views.ajaxViews) {
         var ajaxViews = settings.views.ajaxViews;
         Object.keys(ajaxViews || {}).forEach(function (i) {
           var selector = ".js-view-dom-id-".concat(ajaxViews[i].view_dom_id);
-
           if ($(selector, context).length) {
             delete Drupal.views.instances[i];
             delete settings.views.ajaxViews[i];
@@ -34,11 +31,13 @@
   };
 
   Drupal.views = {};
+
   Drupal.views.instances = {};
 
   Drupal.views.ajaxView = function (settings) {
     var selector = ".js-view-dom-id-".concat(settings.view_dom_id);
     this.$view = $(selector);
+
     var ajaxPath = drupalSettings.views.ajax_path;
 
     if (ajaxPath.constructor.toString().indexOf('Array') !== -1) {
@@ -46,15 +45,12 @@
     }
 
     var queryString = window.location.search || '';
-
     if (queryString !== '') {
       queryString = queryString.slice(1).replace(/q=[^&]+&?|&?render=[^&]+/, '');
-
       if (queryString !== '') {
         queryString = (/\?/.test(ajaxPath) ? '&' : '?') + queryString;
       }
     }
-
     this.element_settings = {
       url: ajaxPath + queryString,
       submit: settings,
@@ -66,9 +62,13 @@
       }
     };
     this.settings = settings;
+
     this.$exposed_form = $("form#views-exposed-form-".concat(settings.view_name.replace(/_/g, '-'), "-").concat(settings.view_display_id.replace(/_/g, '-')));
     once('exposed-form', this.$exposed_form).forEach($.proxy(this.attachExposedFormAjax, this));
-    once('ajax-pager', this.$view.filter($.proxy(this.filterNestedViews, this))).forEach($.proxy(this.attachPagerAjax, this));
+
+    once('ajax-pager', this.$view
+    .filter($.proxy(this.filterNestedViews, this))).forEach($.proxy(this.attachPagerAjax, this));
+
     var selfSettings = $.extend({}, this.element_settings, {
       event: 'RefreshView',
       base: this.selector,
@@ -101,7 +101,8 @@
     var $link = $(link);
     var viewData = {};
     var href = $link.attr('href');
-    $.extend(viewData, this.settings, Drupal.Views.parseQueryString(href), Drupal.Views.parseViewArgs(href, this.settings.view_base_path));
+    $.extend(viewData, this.settings, Drupal.Views.parseQueryString(href),
+    Drupal.Views.parseViewArgs(href, this.settings.view_base_path));
     var selfSettings = $.extend({}, this.element_settings, {
       submit: viewData,
       base: false,
@@ -113,11 +114,9 @@
   Drupal.AjaxCommands.prototype.viewsScrollTop = function (ajax, response) {
     var offset = $(response.selector).offset();
     var scrollTarget = response.selector;
-
     while ($(scrollTarget).scrollTop() === 0 && $(scrollTarget).parent()) {
       scrollTarget = $(scrollTarget).parent();
     }
-
     if (offset.top - 10 < $(scrollTarget).scrollTop()) {
       $(scrollTarget).animate({
         scrollTop: offset.top - 10

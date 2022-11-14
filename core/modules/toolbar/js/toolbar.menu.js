@@ -7,7 +7,6 @@
 
 (function ($, Drupal, drupalSettings) {
   var activeItem = Drupal.url(drupalSettings.path.currentPath);
-
   $.fn.drupalToolbarMenu = function () {
     var ui = {
       handleOpen: Drupal.t('Extend'),
@@ -36,7 +35,6 @@
       if (!Drupal.toolbar.models.toolbarModel.get('isFixed')) {
         Drupal.toolbar.models.toolbarModel.set('activeTab', null);
       }
-
       event.stopPropagation();
     }
 
@@ -49,7 +47,6 @@
       $menu.find('li > a').wrap('<div class="toolbar-box">');
       $menu.find('li').each(function (index, element) {
         var $item = $(element);
-
         if ($item.children('ul.toolbar-menu').length) {
           var $box = $item.children('.toolbar-box');
           var $link = $box.find('a');
@@ -65,7 +62,6 @@
       level = !level ? 1 : level;
       var $lis = $lists.children('li').addClass("level-".concat(level));
       $lists = $lis.children('ul');
-
       if ($lists.length) {
         markListLevels($lists, level + 1);
       }
@@ -73,11 +69,9 @@
 
     function openActiveItem($menu) {
       var pathItem = $menu.find("a[href=\"".concat(window.location.pathname, "\"]"));
-
       if (pathItem.length && !activeItem) {
         activeItem = window.location.pathname;
       }
-
       if (activeItem) {
         var $activeItem = $menu.find("a[href=\"".concat(activeItem, "\"]")).addClass('menu-item--active');
         var $activeTrail = $activeItem.parentsUntil('.root', 'li').addClass('menu-item--active-trail');
@@ -87,7 +81,6 @@
 
     return this.each(function (selector) {
       var menu = once('toolbar-menu', this);
-
       if (menu.length) {
         var $menu = $(menu);
         $menu.on('click.toolbar', '.toolbar-box', toggleClickHandler).on('click.toolbar', '.toolbar-box a', linkClickHandler);

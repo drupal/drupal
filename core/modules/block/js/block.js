@@ -16,30 +16,25 @@
         var vals = [];
         var $checkboxes = $(context).find('input[type="checkbox"]:checked + label');
         var il = $checkboxes.length;
-
         for (var i = 0; i < il; i++) {
           vals.push($($checkboxes[i]).html());
         }
-
         if (!vals.length) {
           vals.push(Drupal.t('Not restricted'));
         }
-
         return vals.join(', ');
       }
-
       $('[data-drupal-selector="edit-visibility-node-type"], [data-drupal-selector="edit-visibility-entity-bundlenode"], [data-drupal-selector="edit-visibility-language"], [data-drupal-selector="edit-visibility-user-role"]').drupalSetSummary(checkboxesSummary);
       $('[data-drupal-selector="edit-visibility-request-path"]').drupalSetSummary(function (context) {
         var $pages = $(context).find('textarea[name="visibility[request_path][pages]"]');
-
         if (!$pages.length || !$pages[0].value) {
           return Drupal.t('Not restricted');
         }
-
         return Drupal.t('Restricted to certain pages');
       });
     }
   };
+
   Drupal.behaviors.blockDrag = {
     attach: function attach(context, settings) {
       if (typeof Drupal.tableDrag === 'undefined' || typeof Drupal.tableDrag.blocks === 'undefined') {
@@ -49,16 +44,15 @@
       function checkEmptyRegions(table, rowObject) {
         table.find('tr.region-message').each(function () {
           var $this = $(this);
-
           if ($this.prev('tr').get(0) === rowObject.element) {
             if (rowObject.method !== 'keyboard' || rowObject.direction === 'down') {
               rowObject.swap('after', this);
             }
           }
-
           if ($this.next('tr').is(':not(.draggable)') || $this.next('tr').length === 0) {
             $this.removeClass('region-populated').addClass('region-empty');
-          } else if ($this.is('.region-empty')) {
+          }
+          else if ($this.is('.region-empty')) {
             $this.removeClass('region-empty').addClass('region-populated');
           }
         });
@@ -67,7 +61,6 @@
       function updateLastPlaced(table, rowObject) {
         table.find('.color-success').removeClass('color-success');
         var $rowObject = $(rowObject);
-
         if (!$rowObject.is('.drag-previous')) {
           table.find('.drag-previous').removeClass('drag-previous');
           $rowObject.addClass('drag-previous');
@@ -80,10 +73,8 @@
           this.value = ++weight;
         });
       }
-
       var table = $('#blocks');
       var tableDrag = Drupal.tableDrag.blocks;
-
       tableDrag.row.prototype.onSwap = function (swappedRow) {
         checkEmptyRegions(table, this);
         updateLastPlaced(table, this);
@@ -95,7 +86,6 @@
         var regionRow = $rowElement.prevAll('tr.region-message').get(0);
         var regionName = regionRow.className.replace(/([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
         var regionField = $rowElement.find('select.block-region-select');
-
         if (regionField.find("option[value=".concat(regionName, "]")).length === 0) {
           window.alert(Drupal.t('The block cannot be placed in this region.'));
           regionField.trigger('change');
@@ -108,7 +98,6 @@
           weightField.removeClass("block-weight-".concat(oldRegionName)).addClass("block-weight-".concat(regionName));
           regionField[0].value = regionName;
         }
-
         updateBlockWeights(table, regionName);
       };
 
@@ -118,22 +107,19 @@
         tableDrag.rowObject = new tableDrag.row(row[0]);
         var regionMessage = table.find(".region-".concat(select[0].value, "-message"));
         var regionItems = regionMessage.nextUntil('.region-message, .region-title');
-
         if (regionItems.length) {
           regionItems.last().after(row);
-        } else {
+        }
+        else {
           regionMessage.after(row);
         }
-
         updateBlockWeights(table, select[0].value);
         checkEmptyRegions(table, tableDrag.rowObject);
         updateLastPlaced(table, row);
-
         if (!tableDrag.changed) {
           $(Drupal.theme('tableDragChangedWarning')).insertBefore(tableDrag.table).hide().fadeIn('slow');
           tableDrag.changed = true;
         }
-
         select.trigger('blur');
       });
     }

@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 (function (Drupal, Backbone) {
@@ -21,11 +20,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
           if (!options) {
             options = {};
           }
-
           options.validate = true;
         }
       }
-
       return Backbone.Model.prototype.set.call(this, key, val, options);
     }
   });

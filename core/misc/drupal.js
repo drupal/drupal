@@ -80,24 +80,22 @@ window.Drupal = {
 
     if (!Array.isArray(keys)) {
       keys = Object.keys(args || {});
+
       keys.sort(function (a, b) {
         return a.length - b.length;
       });
     }
-
     if (keys.length === 0) {
       return str;
     }
 
     var key = keys.pop();
     var fragments = str.split(key);
-
     if (keys.length) {
       for (var i = 0; i < fragments.length; i++) {
         fragments[i] = Drupal.stringReplace(fragments[i], args, keys.slice(0));
       }
     }
-
     return fragments.join(args[key]);
   };
 
@@ -108,11 +106,9 @@ window.Drupal = {
     if (typeof drupalTranslations !== 'undefined' && drupalTranslations.strings && drupalTranslations.strings[options.context] && drupalTranslations.strings[options.context][str]) {
       str = drupalTranslations.strings[options.context][str];
     }
-
     if (args) {
       str = Drupal.formatString(str, args);
     }
-
     return str;
   };
 
@@ -125,9 +121,11 @@ window.Drupal = {
 
     try {
       url = decodeURIComponent(url);
-    } catch (e) {}
+    } catch (e) {
+    }
 
     urlParsingNode.setAttribute('href', url);
+
     return urlParsingNode.cloneNode(false).href;
   };
 
@@ -138,16 +136,17 @@ window.Drupal = {
     if (protocol === 'http:' && absoluteUrl.indexOf('https:') === 0) {
       protocol = 'https:';
     }
-
     var baseUrl = "".concat(protocol, "//").concat(window.location.host).concat(drupalSettings.path.baseUrl.slice(0, -1));
 
     try {
       absoluteUrl = decodeURIComponent(absoluteUrl);
-    } catch (e) {}
+    } catch (e) {
+    }
 
     try {
       baseUrl = decodeURIComponent(baseUrl);
-    } catch (e) {}
+    } catch (e) {
+    }
 
     return absoluteUrl === baseUrl || absoluteUrl.indexOf("".concat(baseUrl, "/")) === 0;
   };
@@ -164,7 +163,6 @@ window.Drupal = {
     } else if (args['@count'] !== 1) {
       index = 1;
     }
-
     return translations[index];
   };
 
@@ -174,7 +172,6 @@ window.Drupal = {
 
   Drupal.deprecationError = function (_ref) {
     var message = _ref.message;
-
     if (drupalSettings.suppressDeprecationErrors === false && typeof console !== 'undefined' && console.warn) {
       console.warn("[Deprecation] ".concat(message));
     }
@@ -182,13 +179,11 @@ window.Drupal = {
 
   Drupal.deprecatedProperty = function (_ref2) {
     var target = _ref2.target,
-        deprecatedProperty = _ref2.deprecatedProperty,
-        message = _ref2.message;
-
+      deprecatedProperty = _ref2.deprecatedProperty,
+      message = _ref2.message;
     if (!Proxy || !Reflect) {
       return target;
     }
-
     return new Proxy(target, {
       get: function get(target, key) {
         if (key === deprecatedProperty) {
@@ -196,11 +191,9 @@ window.Drupal = {
             message: message
           });
         }
-
         for (var _len = arguments.length, rest = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
           rest[_key - 2] = arguments[_key];
         }
-
         return Reflect.get.apply(Reflect, [target, key].concat(rest));
       }
     });
@@ -209,11 +202,9 @@ window.Drupal = {
   Drupal.theme = function (func) {
     if (func in Drupal.theme) {
       var _Drupal$theme;
-
       for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
         args[_key2 - 1] = arguments[_key2];
       }
-
       return (_Drupal$theme = Drupal.theme)[func].apply(_Drupal$theme, args);
     }
   };

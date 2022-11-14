@@ -10,7 +10,6 @@
     if (content === '') {
       return false;
     }
-
     try {
       return JSON.parse(content);
     } catch (e) {
@@ -21,10 +20,8 @@
   function bigPipeProcessPlaceholderReplacement(placeholderReplacement) {
     var placeholderId = placeholderReplacement.getAttribute('data-big-pipe-replacement-for-placeholder-with-id');
     var content = placeholderReplacement.textContent.trim();
-
     if (typeof drupalSettings.bigPipePlaceholderIds[placeholderId] !== 'undefined') {
       var response = mapTextContentToAjaxResponse(content);
-
       if (response === false) {
         once.remove('big-pipe', placeholderReplacement);
       } else {
@@ -40,6 +37,7 @@
   }
 
   var interval = drupalSettings.bigPipeInterval || 50;
+
   var timeoutID;
 
   function bigPipeProcessDocument(context) {
@@ -56,13 +54,10 @@
       if (timeoutID) {
         clearTimeout(timeoutID);
       }
-
       return true;
     }
-
     return false;
   }
-
   function bigPipeProcess() {
     timeoutID = setTimeout(function () {
       if (!bigPipeProcessDocument(document)) {
@@ -70,13 +65,12 @@
       }
     }, interval);
   }
-
   bigPipeProcess();
+
   window.addEventListener('load', function () {
     if (timeoutID) {
       clearTimeout(timeoutID);
     }
-
     bigPipeProcessDocument(document);
   });
 })(Drupal, drupalSettings);

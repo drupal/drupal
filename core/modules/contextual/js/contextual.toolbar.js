@@ -16,7 +16,6 @@
     if (!Drupal.contextual || !Drupal.contextual.collection) {
       return;
     }
-
     var contextualToolbar = Drupal.contextualToolbar;
     contextualToolbar.model = new contextualToolbar.StateModel({
       isViewing: localStorage.getItem('Drupal.contextualToolbar.isViewing') !== 'false'
@@ -39,6 +38,7 @@
       }
     }
   };
+
   Drupal.contextualToolbar = {
     model: null
   };

@@ -8,11 +8,9 @@
 (function ($, Drupal, CKEDITOR) {
   function getFocusedWidget(editor) {
     var widget = editor.widgets.focused;
-
     if (widget && widget.name === 'image') {
       return widget;
     }
-
     return null;
   }
 
@@ -20,22 +18,22 @@
     if (!editor.plugins.drupallink) {
       return;
     }
-
     CKEDITOR.plugins.drupallink.registerLinkableWidget('image');
+
     editor.getCommand('drupalunlink').on('exec', function (evt) {
       var widget = getFocusedWidget(editor);
 
       if (!widget || !widget.parts.link) {
         return;
       }
-
       widget.setData('link', null);
+
       this.refresh(editor, editor.elementPath());
       evt.cancel();
     });
+
     editor.getCommand('drupalunlink').on('refresh', function (evt) {
       var widget = getFocusedWidget(editor);
-
       if (!widget) {
         return;
       }
@@ -44,7 +42,6 @@
       evt.cancel();
     });
   }
-
   CKEDITOR.plugins.add('drupalimage', {
     requires: 'image2',
     icons: 'drupalimage',
@@ -52,7 +49,6 @@
     beforeInit: function beforeInit(editor) {
       editor.on('widgetDefinition', function (event) {
         var widgetDefinition = event.data;
-
         if (widgetDefinition.name !== 'image') {
           return;
         }
@@ -75,6 +71,7 @@
             alt: ''
           }
         });
+
         var requiredContent = widgetDefinition.requiredContent.getDefinition();
         requiredContent.attributes['data-entity-type'] = '';
         requiredContent.attributes['data-entity-uuid'] = '';
@@ -91,7 +88,6 @@
           if (element.name !== 'img') {
             return;
           }
-
           if (element.attributes['data-cke-realelement']) {
             return;
           }
@@ -102,11 +98,9 @@
         };
 
         var originalGetClasses = widgetDefinition.getClasses;
-
         widgetDefinition.getClasses = function () {
           var classes = originalGetClasses.call(this);
           var captionedClasses = (this.editor.config.image2_captionedClass || '').split(/\s+/);
-
           if (captionedClasses.length && classes) {
             for (var i = 0; i < captionedClasses.length; i++) {
               if (captionedClasses[i] in classes) {
@@ -114,7 +108,6 @@
               }
             }
           }
-
           return classes;
         };
 
@@ -154,20 +147,19 @@
             if (!firstEdit) {
               widget.focus();
             }
-
             editor.fire('saveSnapshot');
+
             var container = widget.wrapper.getParent(true);
             var image = widget.parts.image;
 
             var data = widgetDefinition._dialogValuesToData(dialogReturnValues.attributes);
-
             widget.setData(data);
+
             widget = editor.widgets.getByElement(image);
 
             if (firstEdit) {
               editor.widgets.finalizeCreation(container);
             }
-
             setTimeout(function () {
               widget.focus();
               editor.fire('saveSnapshot');
@@ -175,9 +167,7 @@
             return widget;
           };
         };
-
         var originalInit = widgetDefinition.init;
-
         widgetDefinition.init = function () {
           originalInit.call(this);
 
@@ -186,15 +176,15 @@
           }
         };
       });
+
       editor.widgets.on('instanceCreated', function (event) {
         var widget = event.data;
-
         if (widget.name !== 'image') {
           return;
         }
-
         widget.on('edit', function (event) {
           event.cancel();
+
           editor.execCommand('editdrupalimage', {
             existingValues: widget.definition._dataToDialogValues(widget.data),
             saveCallback: widget.definition._createDialogSaveCallback(editor, widget),
@@ -202,6 +192,7 @@
           });
         });
       });
+
       editor.addCommand('editdrupalimage', {
         allowedContent: 'img[alt,!src,width,height,!data-entity-type,!data-entity-uuid]',
         requiredContent: 'img[alt,src,data-entity-type,data-entity-uuid]',
@@ -233,7 +224,6 @@
   CKEDITOR.plugins.image2.getLinkAttributesParser = function () {
     return CKEDITOR.plugins.drupallink.parseLinkAttributes;
   };
-
   CKEDITOR.plugins.image2.getLinkAttributesGetter = function () {
     return CKEDITOR.plugins.drupallink.getLinkAttributes;
   };

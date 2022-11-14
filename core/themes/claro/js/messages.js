@@ -9,7 +9,7 @@
   Drupal.theme.message = function (_ref, _ref2) {
     var text = _ref.text;
     var type = _ref2.type,
-        id = _ref2.id;
+      id = _ref2.id;
     var messagesTypes = Drupal.Message.getMessageTypeLabels();
     var messageWrapper = document.createElement('div');
     messageWrapper.setAttribute('class', "messages messages--".concat(type));

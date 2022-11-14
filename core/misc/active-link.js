@@ -18,17 +18,20 @@
         originalSelectors.push('[data-drupal-link-system-path="<front>"]');
       }
 
-      selectors = [].concat(originalSelectors.map(function (selector) {
+      selectors = [].concat(
+      originalSelectors.map(function (selector) {
         return "".concat(selector, ":not([hreflang])");
-      }), originalSelectors.map(function (selector) {
+      }),
+      originalSelectors.map(function (selector) {
         return "".concat(selector, "[hreflang=\"").concat(path.currentLanguage, "\"]");
       }));
+
       selectors = selectors.map(function (current) {
         return current + querySelector;
       });
+
       var activeLinks = context.querySelectorAll(selectors.join(','));
       var il = activeLinks.length;
-
       for (var i = 0; i < il; i++) {
         activeLinks[i].classList.add('is-active');
       }
@@ -37,7 +40,6 @@
       if (trigger === 'unload') {
         var activeLinks = context.querySelectorAll('[data-drupal-link-system-path].is-active');
         var il = activeLinks.length;
-
         for (var i = 0; i < il; i++) {
           activeLinks[i].classList.remove('is-active');
         }

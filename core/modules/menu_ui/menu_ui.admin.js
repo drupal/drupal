@@ -9,10 +9,10 @@
   Drupal.behaviors.menuUiChangeParentItems = {
     attach: function attach(context, settings) {
       var menu = once('menu-parent', '#edit-menu');
-
       if (menu.length) {
         var $menu = $(menu);
         Drupal.menuUiUpdateParentList();
+
         $menu.on('change', 'input', Drupal.menuUiUpdateParentList);
       }
     }
@@ -44,6 +44,7 @@
           $select.append(selectContents);
           totalOptions++;
         });
+
         $select.closest('div').toggle(totalOptions > 0).attr('hidden', totalOptions === 0);
       }
     });

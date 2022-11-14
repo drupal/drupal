@@ -8,11 +8,9 @@
 (function (jQuery, Drupal, CKEDITOR) {
   function getFocusedWidget(editor) {
     var widget = editor.widgets.focused;
-
     if (widget && widget.name === 'drupalmedia') {
       return widget;
     }
-
     return null;
   }
 
@@ -20,26 +18,21 @@
     if (!editor.plugins.drupallink) {
       return;
     }
-
     CKEDITOR.plugins.drupallink.registerLinkableWidget('drupalmedia');
     editor.getCommand('drupalunlink').on('exec', function (evt) {
       var widget = getFocusedWidget(editor);
-
       if (!widget) {
         return;
       }
-
       widget.setData('link', null);
       this.refresh(editor, editor.elementPath());
       evt.cancel();
     });
     editor.getCommand('drupalunlink').on('refresh', function (evt) {
       var widget = getFocusedWidget(editor);
-
       if (!widget) {
         return;
       }
-
       this.setState(widget.data.link ? CKEDITOR.TRISTATE_OFF : CKEDITOR.TRISTATE_DISABLED);
       evt.cancel();
     });
@@ -47,23 +40,19 @@
     if (editor.contextMenu) {
       editor.contextMenu.addListener(function () {
         var widget = getFocusedWidget(editor);
-
         if (!widget) {
           return;
         }
-
         if (widget.data.link) {
           return {
             link: CKEDITOR.TRISTATE_OFF,
             unlink: CKEDITOR.TRISTATE_OFF
           };
         }
-
         return {};
       });
     }
   }
-
   CKEDITOR.plugins.add('drupalmedia', {
     requires: 'widget',
     beforeInit: function beforeInit(editor) {
@@ -110,26 +99,20 @@
           if (this.data.label) {
             return this.data.label;
           }
-
           return Drupal.t('Embedded media');
         },
         upcast: function upcast(element, data) {
           var attributes = element.attributes;
-
           if (element.name !== 'drupal-media' || attributes['data-entity-type'] !== 'media' || attributes['data-entity-uuid'] === undefined) {
             return;
           }
-
           data.attributes = CKEDITOR.tools.copy(attributes);
           data.hasCaption = data.attributes.hasOwnProperty('data-caption');
-
           if (data.hasCaption && data.attributes['data-caption'] === '') {
             data.attributes['data-caption'] = ' ';
           }
-
           data.label = null;
           data.link = null;
-
           if (element.parent.name === 'a') {
             data.link = CKEDITOR.tools.copy(element.parent.attributes);
             Object.keys(element.parent.attributes).forEach(function (attrName) {
@@ -138,13 +121,10 @@
               }
             });
           }
-
           var hostEntityLangcode = document.getElementById(editor.name).getAttribute('data-media-embed-host-entity-langcode');
-
           if (hostEntityLangcode) {
             data.hostEntityLangcode = hostEntityLangcode;
           }
-
           return element;
         },
         destroy: function destroy() {
@@ -152,7 +132,6 @@
         },
         data: function data(event) {
           var _this = this;
-
           if (this.oldData) {
             if (!this.data.hasCaption && this.oldData.hasCaption) {
               delete this.data.attributes['data-caption'];
@@ -160,17 +139,12 @@
               this.data.attributes['data-caption'] = ' ';
             }
           }
-
           if (this._previewNeedsServerSideUpdate()) {
             editor.fire('lockSnapshot');
-
             this._tearDownDynamicEditables();
-
             this._loadPreview(function (widget) {
               widget._setUpDynamicEditables();
-
               widget._setUpEditButton();
-
               editor.fire('unlockSnapshot');
             });
           }
@@ -180,31 +154,27 @@
               _this.element.removeAttribute(attrName);
             });
           }
-
           this.element.setAttributes(this.data.attributes);
+
           this.oldData = CKEDITOR.tools.clone(this.data);
         },
         downcast: function downcast() {
           var downcastElement = new CKEDITOR.htmlParser.element('drupal-media', this.data.attributes);
-
           if (this.data.link) {
             var link = new CKEDITOR.htmlParser.element('a', this.data.link);
             link.add(downcastElement);
             return link;
           }
-
           return downcastElement;
         },
         _setUpDynamicEditables: function _setUpDynamicEditables() {
           var _this2 = this;
-
           if (this.initEditable('caption', this.definition.editables.caption)) {
             var captionEditable = this.editables.caption;
             captionEditable.setAttribute('data-placeholder', Drupal.t('Enter caption here'));
             this.captionObserver = new MutationObserver(function () {
               var mediaAttributes = CKEDITOR.tools.clone(_this2.data.attributes);
               mediaAttributes['data-caption'] = captionEditable.getData();
-
               _this2.setData('attributes', mediaAttributes);
             });
             this.captionObserver.observe(captionEditable.$, {
@@ -213,7 +183,6 @@
               childList: true,
               subtree: true
             });
-
             if (captionEditable.$.childNodes.length === 1 && captionEditable.$.childNodes.item(0).nodeName === 'BR') {
               captionEditable.$.removeChild(captionEditable.$.childNodes.item(0));
             }
@@ -230,20 +199,18 @@
 
           var embeddedMediaContainer = this.data.hasCaption ? this.element.findOne('figure') : this.element;
           var embeddedMedia = embeddedMediaContainer.getFirst(isElementNode);
-
           if (this.data.link) {
             embeddedMedia = embeddedMedia.getFirst(isElementNode);
           }
-
           embeddedMedia.setStyle('position', 'relative');
           var editButton = CKEDITOR.dom.element.createFromHtml(Drupal.theme('mediaEmbedEditButton'));
           embeddedMedia.getFirst().insertBeforeMe(editButton);
+
           var widget = this;
           this.element.findOne('.media-library-item__edit').on('click', function (event) {
             var saveCallback = function saveCallback(values) {
               event.cancel();
               editor.fire('saveSnapshot');
-
               if (values.hasOwnProperty('attributes')) {
                 CKEDITOR.tools.extend(values.attributes, widget.data.attributes);
                 Object.keys(values.attributes).forEach(function (prop) {
@@ -252,27 +219,23 @@
                   }
                 });
               }
-
               widget.setData({
                 attributes: values.attributes,
                 hasCaption: !!values.hasCaption
               });
               editor.fire('saveSnapshot');
             };
-
             Drupal.ckeditor.openDialog(editor, Drupal.url("editor/dialog/media/".concat(editor.config.drupal.format)), widget.data, saveCallback, {});
           });
+
           this.element.findOne('.media-library-item__edit').on('keydown', function (event) {
             var returnKey = 13;
             var spaceBar = 32;
-
             if (typeof event.data !== 'undefined') {
               var keypress = event.data.getKey();
-
               if (keypress === returnKey || keypress === spaceBar) {
                 event.sender.$.click();
               }
-
               event.data.$.stopPropagation();
               event.data.$.stopImmediatePropagation();
             }
@@ -287,23 +250,19 @@
           if (!this.ready) {
             return true;
           }
-
           return this._hashData(this.oldData) !== this._hashData(this.data);
         },
         _hashData: function _hashData(data) {
           var dataToHash = CKEDITOR.tools.clone(data);
           delete dataToHash.attributes['data-caption'];
           delete dataToHash.label;
-
           if (dataToHash.link) {
             delete dataToHash.link.href;
           }
-
           return JSON.stringify(dataToHash);
         },
         _loadPreview: function _loadPreview(callback) {
           var _this3 = this;
-
           jQuery.get({
             url: Drupal.url("media/".concat(editor.config.drupal.format, "/preview")),
             data: {
@@ -316,9 +275,7 @@
             },
             success: function success(previewHtml, textStatus, jqXhr) {
               _this3.element.setHtml(previewHtml);
-
               _this3.setData('label', jqXhr.getResponseHeader('Drupal-Media-Label'));
-
               callback(_this3);
             },
             error: function error() {

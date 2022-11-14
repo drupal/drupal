@@ -12,7 +12,6 @@
       var $context = $(context);
       var timeout = null;
       var xhr = null;
-
       function clickEditHandler(e) {
         var data = e.data;
         data.$wrapper.removeClass('visually-hidden');
@@ -20,7 +19,6 @@
         data.$suffix.hide();
         data.$source.off('.machineName');
       }
-
       function machineNameHandler(e) {
         var data = e.data;
         var options = data.options;
@@ -37,7 +35,6 @@
           clearTimeout(timeout);
           timeout = null;
         }
-
         if (baseValue.toLowerCase() !== expected) {
           timeout = setTimeout(function () {
             xhr = self.transliterate(baseValue, options).done(function (machine) {
@@ -48,38 +45,31 @@
           self.showMachineName(expected, data);
         }
       }
-
       Object.keys(settings.machineName).forEach(function (sourceId) {
         var options = settings.machineName[sourceId];
         var $source = $(once('machine-name', $context.find(sourceId).addClass('machine-name-source')));
         var $target = $context.find(options.target).addClass('machine-name-target');
         var $suffix = $context.find(options.suffix);
         var $wrapper = $target.closest('.js-form-item');
-
         if (!$source.length || !$target.length || !$suffix.length || !$wrapper.length) {
           return;
         }
-
         if ($target.hasClass('error')) {
           return;
         }
-
         options.maxlength = $target.attr('maxlength');
         $wrapper.addClass('visually-hidden');
         var machine = $target[0].value;
         var $preview = $("<span class=\"machine-name-value\">".concat(options.field_prefix).concat(Drupal.checkPlain(machine)).concat(options.field_suffix, "</span>"));
         $suffix.empty();
-
         if (options.label) {
           $suffix.append("<span class=\"machine-name-label\">".concat(options.label, ": </span>"));
         }
-
         $suffix.append($preview);
 
         if ($target.is(':disabled')) {
           return;
         }
-
         var eventData = {
           $source: $source,
           $target: $target,
@@ -99,7 +89,8 @@
         $suffix.append($link);
 
         if ($target[0].value === '') {
-          $source.on('formUpdated.machineName', eventData, machineNameHandler).trigger('formUpdated.machineName');
+          $source.on('formUpdated.machineName', eventData, machineNameHandler)
+          .trigger('formUpdated.machineName');
         }
 
         $target.on('invalid', eventData, clickEditHandler);
@@ -107,13 +98,11 @@
     },
     showMachineName: function showMachineName(machine, data) {
       var settings = data.options;
-
       if (machine !== '') {
         if (machine !== settings.replace) {
           data.$target[0].value = machine;
           data.$preview.html(settings.field_prefix + Drupal.checkPlain(machine) + settings.field_suffix);
         }
-
         data.$suffix.show();
       } else {
         data.$suffix.hide();

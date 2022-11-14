@@ -4,11 +4,8 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
 (function (Modernizr, Drupal, once) {
@@ -35,8 +32,10 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           var help = Drupal.theme.dateHelp({
             dateDesc: dateInput.dataset.help
           });
+
           var id = "".concat(date.id, "--description");
           dateInput.setAttribute('aria-describedby', id);
+
           dateInput.setAttribute('type', 'text');
           Drupal.DatepickerPolyfill.attachDescription(date, help, id);
         });
@@ -48,34 +47,32 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     function _class() {
       _classCallCheck(this, _class);
     }
-
     _createClass(_class, null, [{
       key: "attachDescription",
-      value: function attachDescription(element, help, id) {
+      value:
+      function attachDescription(element, help, id) {
         var description = element.nextElementSibling;
 
         if (!(description && description.getAttribute('data-drupal-field-elements') === 'description')) {
           description = Drupal.DatepickerPolyfill.descriptionWrapperElement(id);
           element.parentNode.insertBefore(description, element.nextSibling);
         }
-
         description.insertAdjacentHTML('beforeend', help);
       }
+
     }, {
       key: "descriptionWrapperElement",
-      value: function descriptionWrapperElement(id) {
+      value:
+      function descriptionWrapperElement(id) {
         var description = document.createElement('div');
         description.classList.add('description');
         description.setAttribute('data-drupal-field-elements', 'description');
-
         if (id) {
           description.setAttribute('id', id);
         }
-
         return description;
       }
     }]);
-
     return _class;
   }();
 
@@ -86,9 +83,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
   Drupal.theme.dateTimeHelp = function (_ref2) {
     var dateId = _ref2.dateId,
-        timeId = _ref2.timeId,
-        dateDesc = _ref2.dateDesc,
-        timeDesc = _ref2.timeDesc;
+      timeId = _ref2.timeId,
+      dateDesc = _ref2.dateDesc,
+      timeDesc = _ref2.timeDesc;
     return "<div class=\"no-native-datepicker-help\">\n       <span id=\"".concat(dateId, "\">").concat(dateDesc, "</span> <span id=\"").concat(timeId, "\">").concat(timeDesc, "</span>\n     </div>");
   };
 })(Modernizr, Drupal, once);

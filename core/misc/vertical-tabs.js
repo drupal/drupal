@@ -16,7 +16,6 @@
     attach: function attach(context) {
       var width = drupalSettings.widthBreakpoint || 640;
       var mq = "(max-width: ".concat(width, "px)");
-
       if (window.matchMedia(mq).matches) {
         return;
       }
@@ -26,14 +25,15 @@
         var $this = $(verticalTab).addClass('vertical-tabs__panes');
         var focusID = $this.find(':hidden.vertical-tabs__active-tab')[0].value;
         var tabFocus;
-        var $details = $this.find('> details');
 
+        var $details = $this.find('> details');
         if ($details.length === 0) {
           return;
         }
 
         var tabList = $('<ul class="vertical-tabs__menu"></ul>');
         $this.wrap('<div class="vertical-tabs clearfix"></div>').before(tabList);
+
         $details.each(function () {
           var $that = $(this);
           var $summary = $that.find('> summary');
@@ -43,24 +43,20 @@
           });
           tabList.append(verticalTab.item);
           $that.removeClass('collapsed').removeAttr('open').addClass('vertical-tabs__pane').data('verticalTab', verticalTab);
-
           if (this.id === focusID) {
             tabFocus = $that;
           }
         });
         $(tabList).find('> li').eq(0).addClass('first');
         $(tabList).find('> li').eq(-1).addClass('last');
-
         if (!tabFocus) {
           var $locationHash = $this.find(window.location.hash);
-
           if (window.location.hash && $locationHash.length) {
             tabFocus = $locationHash.closest('.vertical-tabs__pane');
           } else {
             tabFocus = $this.find('> .vertical-tabs__pane').eq(0);
           }
         }
-
         if (tabFocus.length) {
           tabFocus.data('verticalTab').focus();
         }
@@ -76,6 +72,7 @@
       e.preventDefault();
       self.focus();
     });
+
     this.link.on('keydown', function (event) {
       if (event.keyCode === 13) {
         event.preventDefault();
@@ -87,7 +84,6 @@
       self.updateSummary();
     }).trigger('summaryUpdated');
   };
-
   Drupal.verticalTab.prototype = {
     focus: function focus() {
       this.details.siblings('.vertical-tabs__pane').each(function () {
@@ -117,13 +113,12 @@
       this.item.parent().children('.vertical-tabs__menu-item').removeClass('first').filter(':visible').eq(0).addClass('first');
       this.details.addClass('vertical-tab--hidden').hide().removeAttr('open');
       var $firstTab = this.details.siblings('.vertical-tabs__pane:not(.vertical-tab--hidden)').eq(0);
-
       if ($firstTab.length) {
         $firstTab.data('verticalTab').focus();
-      } else {
+      }
+      else {
         this.item.closest('.js-form-type-vertical-tabs').hide();
       }
-
       return this;
     }
   };

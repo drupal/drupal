@@ -7,7 +7,9 @@
 
 (function ($, Drupal) {
   Drupal.quickedit.util = Drupal.quickedit.util || {};
+
   Drupal.quickedit.util.constants = {};
+
   Drupal.quickedit.util.constants.transitionEnd = 'transitionEnd.quickedit webkitTransitionEnd.quickedit transitionend.quickedit msTransitionEnd.quickedit oTransitionEnd.quickedit';
 
   Drupal.quickedit.util.buildUrl = function (id, urlFormat) {
@@ -46,6 +48,7 @@
   Drupal.quickedit.util.form = {
     load: function load(options, callback) {
       var fieldID = options.fieldID;
+
       var formLoaderAjax = Drupal.ajax({
         url: Drupal.quickedit.util.buildUrl(fieldID, Drupal.url('quickedit/form/!entity_type/!id/!field_name/!langcode/!view_mode')),
         submit: {
@@ -58,16 +61,15 @@
             '@field-label': fieldLabel
           });
           Drupal.quickedit.util.networkErrorModal(Drupal.t('Network problem!'), message);
+
           var fieldModel = Drupal.quickedit.app.model.get('activeField');
           fieldModel.set('state', 'candidate');
         }
       });
-
       formLoaderAjax.commands.quickeditFieldForm = function (ajax, response, status) {
         callback(response.data, ajax);
         Drupal.ajax.instances[this.instanceIndex] = null;
       };
-
       formLoaderAjax.execute();
     },
     ajaxifySaving: function ajaxifySaving(options, $submit) {
@@ -82,7 +84,6 @@
         },
         success: function success(response, status) {
           var _this = this;
-
           Object.keys(response || {}).forEach(function (i) {
             if (response[i].command && _this.commands[response[i].command]) {
               _this.commands[response[i].command](_this, response[i], status);

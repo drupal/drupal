@@ -4,15 +4,14 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 if (!Array.prototype.find) {
   Object.defineProperty(Array.prototype, 'find', {
     value: function value(predicate) {
       if (this == null) {
         throw TypeError('"this" is null or not defined');
       }
-
       var o = Object(this);
+
       var len = o.length >>> 0;
 
       if (typeof predicate !== 'function') {
@@ -20,15 +19,14 @@ if (!Array.prototype.find) {
       }
 
       var thisArg = arguments[1];
+
       var k = 0;
 
       while (k < len) {
         var kValue = o[k];
-
         if (predicate.call(thisArg, kValue, k, o)) {
           return kValue;
         }
-
         k++;
       }
 

@@ -27,7 +27,6 @@
       selectAll: Drupal.t('Select all rows in this table'),
       selectNone: Drupal.t('Deselect all rows in this table')
     };
-
     var updateSelectAll = function updateSelectAll(state) {
       $table.prev('table.sticky-header').addBack().find('th.select-all input[type="checkbox"]').each(function () {
         var $checkbox = $(this);
@@ -55,7 +54,9 @@
         updateSelectAll(event.target.checked);
       }
     });
+
     checkboxes = $table.find('td input[type="checkbox"]:enabled').on('click', function (e) {
+
       $(this).closest('tr').toggleClass('selected', this.checked);
 
       if (e.shiftKey && lastChecked && lastChecked !== e.target) {
@@ -63,8 +64,10 @@
       }
 
       updateSelectAll(checkboxes.length === checkboxes.filter(':checked').length);
+
       lastChecked = e.target;
     });
+
     updateSelectAll(checkboxes.length === checkboxes.filter(':checked').length);
   };
 
@@ -73,19 +76,17 @@
 
     for (var i = from[mode]; i; i = i[mode]) {
       var $i = $(i);
-
       if (i.nodeType !== 1) {
         continue;
       }
-
       $i.toggleClass('selected', state);
       $i.find('input[type="checkbox"]').prop('checked', state);
-
       if (to.nodeType) {
         if (i === to) {
           break;
         }
-      } else if ($.filter(to, [i]).r.length) {
+      }
+      else if ($.filter(to, [i]).r.length) {
         break;
       }
     }

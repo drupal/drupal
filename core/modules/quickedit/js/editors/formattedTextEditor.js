@@ -17,31 +17,25 @@
       this.textFormat = drupalSettings.editor.formats[metadata.format];
       this.textFormatHasTransformations = metadata.formatHasTransformations;
       this.textEditor = Drupal.editors[this.textFormat.editor];
-      var $fieldItems = this.$el.find('.quickedit-field');
 
+      var $fieldItems = this.$el.find('.quickedit-field');
       if ($fieldItems.length) {
         this.$textElement = $fieldItems.eq(0);
       } else {
         this.$textElement = this.$el;
       }
-
       this.model.set('originalValue', this.$textElement.html());
-
       if (Drupal.editors && Drupal.editors.ckeditor5 && once('quickedit-ckeditor5-destroy', 'body').length) {
         var ckeditor5Detach = Drupal.editors.ckeditor5.detach;
-
         Drupal.editors.ckeditor5.detach = function quickeditDetach(element, format, trigger) {
           var destroyPromise = ckeditor5Detach.call(this, element, format, trigger);
-
           if (destroyPromise && destroyPromise.then) {
             var textElement = null;
             var originalValue = null;
-
             Drupal.quickedit.editors.editor.prototype.revert = function revertQuickeditChanges() {
               textElement = this.$textElement[0];
               originalValue = this.model.get('originalValue');
             };
-
             destroyPromise.then(function () {
               if (textElement && originalValue) {
                 textElement.innerHTML = originalValue;
@@ -58,45 +52,36 @@
       var editorModel = this.model;
       var from = fieldModel.previous('state');
       var to = state;
-
       switch (to) {
         case 'inactive':
           break;
-
         case 'candidate':
           if (from !== 'inactive' && from !== 'highlighted') {
             this.textEditor.detach(this.$textElement.get(0), this.textFormat);
           }
-
           if (from === 'active' && this.textFormatHasTransformations) {
             this.revert();
           }
-
           if (from === 'invalid') {
             this.removeValidationErrors();
           }
-
           break;
-
         case 'highlighted':
           break;
-
         case 'activating':
           if (this.textFormatHasTransformations) {
             var $textElement = this.$textElement;
-
             this._getUntransformedText(function (untransformedText) {
               $textElement.html(untransformedText);
               fieldModel.set('state', 'active');
             });
-          } else {
+          }
+          else {
             _.defer(function () {
               fieldModel.set('state', 'active');
             });
           }
-
           break;
-
         case 'active':
           {
             var textElement = this.$textElement.get(0);
@@ -108,21 +93,16 @@
             });
             break;
           }
-
         case 'changed':
           break;
-
         case 'saving':
           if (from === 'invalid') {
             this.removeValidationErrors();
           }
-
           this.save();
           break;
-
         case 'saved':
           break;
-
         case 'invalid':
           this.showValidationErrors();
           break;
@@ -141,6 +121,7 @@
     },
     _getUntransformedText: function _getUntransformedText(callback) {
       var fieldID = this.fieldModel.get('fieldID');
+
       var textLoaderAjax = Drupal.ajax({
         url: Drupal.quickedit.util.buildUrl(fieldID, Drupal.url('quickedit/!entity_type/!id/!field_name/!langcode/!view_mode')),
         submit: {

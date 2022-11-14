@@ -20,10 +20,8 @@
     announceMove: function announceMove(model, isDirty) {
       if (!isDirty) {
         var item = document.activeElement || null;
-
         if (item) {
           var $item = $(item);
-
           if ($item.hasClass('ckeditor-toolbar-group')) {
             this.announceButtonGroupPosition($item);
           } else if ($item.parent().hasClass('ckeditor-button')) {
@@ -37,7 +35,6 @@
       var $originalTarget = $(event.target);
       var $currentTarget = $(event.currentTarget);
       var $parent = $currentTarget.parent();
-
       if ($parent.hasClass('ckeditor-button') || $parent.hasClass('ckeditor-button-separator')) {
         this.announceButtonPosition($currentTarget.parent());
       } else if ($originalTarget.attr('role') !== 'button' && $currentTarget.hasClass('ckeditor-toolbar-group')) {
@@ -59,12 +56,10 @@
         '@row': row,
         '@rowCount': rowCount
       });
-
       if (position === 1 && row === rowCount) {
         text += '\n';
         text += Drupal.t('Press the down arrow key to create a new row.');
       }
-
       Drupal.announce(text, 'assertive');
     },
     announceButtonPosition: function announceButtonPosition($button) {
@@ -81,7 +76,6 @@
       var rowCount = $rows.not('.placeholder').length;
       var type = $button.attr('data-drupal-ckeditor-type') === 'separator' ? '' : Drupal.t('button');
       var text;
-
       if ($button.closest('.ckeditor-toolbar-disabled').length > 0) {
         text = Drupal.t('@name @type.', {
           '@name': $button.children().attr('aria-label'),
@@ -89,7 +83,8 @@
         });
         text += "\n".concat(Drupal.t('Press the down arrow key to activate.'));
         Drupal.announce(text, 'assertive');
-      } else if ($group.not('.placeholder').length === 1) {
+      }
+      else if ($group.not('.placeholder').length === 1) {
         text = Drupal.t('@name @type in position @position of @positionCount in @groupName button group in row @row of @rowCount.', {
           '@name': $button.children().attr('aria-label'),
           '@type': type,
@@ -99,17 +94,14 @@
           '@row': row,
           '@rowCount': rowCount
         });
-
         if (groupPosition === 1 && position === 1 && row === rowCount) {
           text += '\n';
           text += Drupal.t('Press the down arrow key to create a new button group in a new row.');
         }
-
         if (groupPosition === groupPositionCount && position === positionCount) {
           text += '\n';
           text += Drupal.t('This is the last group. Move the button forward to create a new group.');
         }
-
         Drupal.announce(text, 'assertive');
       }
     },
@@ -118,7 +110,6 @@
       var $button = $link.parent();
       var enabled = $button.closest('.ckeditor-toolbar-active').length > 0;
       var message;
-
       if (enabled) {
         message = Drupal.t('The "@name" button is currently enabled.', {
           '@name': $link.attr('aria-label')
@@ -131,7 +122,6 @@
         });
         message += "\n".concat(Drupal.t('Use the down arrow key to move this button into the active toolbar.'));
       }
-
       Drupal.announce(message);
       event.preventDefault();
     },
@@ -140,7 +130,6 @@
       var $button = $link.parent();
       var enabled = $button.closest('.ckeditor-toolbar-active').length > 0;
       var message;
-
       if (enabled) {
         message = Drupal.t('This @name is currently enabled.', {
           '@name': $link.attr('aria-label')
@@ -154,7 +143,6 @@
         message += "\n".concat(Drupal.t('Use the down arrow key to move this separator into the active toolbar.'));
         message += "\n".concat(Drupal.t('You may add multiple separators to each button group.'));
       }
-
       Drupal.announce(message);
       event.preventDefault();
     }

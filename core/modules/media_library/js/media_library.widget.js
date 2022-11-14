@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal, Sortable) {
   Drupal.behaviors.MediaLibraryWidgetSortable = {
     attach: function attach(context) {
@@ -22,6 +21,7 @@
       });
     }
   };
+
   Drupal.behaviors.MediaLibraryWidgetToggleWeight = {
     attach: function attach(context) {
       var strings = {
@@ -41,10 +41,12 @@
       $(once('media-library-toggle', '.js-media-library-item-weight', context)).parent().hide();
     }
   };
+
   Drupal.behaviors.MediaLibraryWidgetDisableButton = {
     attach: function attach(context) {
       once('media-library-disable', '.js-media-library-open-button[data-disabled-focus="true"]', context).forEach(function (button) {
         $(button).focus();
+
         setTimeout(function () {
           $(button).attr('disabled', 'disabled');
         }, 50);

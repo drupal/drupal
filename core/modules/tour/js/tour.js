@@ -7,6 +7,7 @@
 
 (function ($, Backbone, Drupal, settings, document, Shepherd) {
   var queryString = decodeURI(window.location.search);
+
   Drupal.behaviors.tour = {
     attach: function attach(context) {
       once('tour', 'body').forEach(function () {
@@ -15,24 +16,25 @@
           el: $(context).find('#toolbar-tab-tour'),
           model: model
         });
-        model.on('change:isActive', function (tourModel, isActive) {
+        model
+        .on('change:isActive', function (tourModel, isActive) {
           $(document).trigger(isActive ? 'drupalTourStarted' : 'drupalTourStopped');
         });
-
         if (settings._tour_internal) {
           model.set('tour', settings._tour_internal);
         }
-
         if (/tour=?/i.test(queryString)) {
           model.set('isActive', true);
         }
       });
     }
   };
+
   Drupal.tour = Drupal.tour || {
     models: {},
     views: {}
   };
+
   Drupal.tour.models.StateModel = Backbone.Model.extend({
     defaults: {
       tour: [],
@@ -57,10 +59,8 @@
     toggleTour: function toggleTour() {
       if (this.model.get('isActive')) {
         this._removeIrrelevantTourItems(this._getTour());
-
         var tourItems = this.model.get('tour');
         var that = this;
-
         if (tourItems.length) {
           settings.tourShepherdConfig.defaultStepOptions.popperOptions.modifiers.push({
             name: 'moveArrowJoyridePosition',
@@ -70,7 +70,6 @@
               var state = _ref.state;
               var arrow = state.elements.arrow;
               var placement = state.placement;
-
               if (arrow && /^top|bottom/.test(placement) && /-start|-end$/.test(placement)) {
                 var horizontalPosition = placement.split('-')[1];
                 var offset = horizontalPosition === 'start' ? 28 : state.elements.popper.clientWidth - 56;
@@ -99,6 +98,7 @@
             tourItemOptions.when = {
               show: function show() {
                 var nextButton = shepherdTour.currentStep.el.querySelector('footer button');
+
                 nextButton.focus();
 
                 if (Drupal.tour.hasOwnProperty('convertToJoyrideMarkup')) {
@@ -146,7 +146,6 @@
             '!tour_item': filteredTourItemId + 1,
             '!total': filteredTour.length
           });
-
           if (filteredTourItemId === filteredTour.length - 1) {
             filteredTour[filteredTourItemId].cancelText = Drupal.t('End tour');
           }

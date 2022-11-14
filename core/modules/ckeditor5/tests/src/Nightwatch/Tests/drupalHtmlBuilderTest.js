@@ -4,20 +4,16 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 var assert = require('assert');
-
 var fs = require('fs');
-
 var path = require('path');
-
 var _require = require('jsdom'),
-    JSDOM = _require.JSDOM;
+  JSDOM = _require.JSDOM;
 
 var DrupalHtmlBuilder = eval("(".concat(fs.readFileSync(path.resolve(__dirname, '../../../../js/ckeditor5_plugins/drupalHtmlEngine/src/drupalhtmlbuilder.js')).toString(), ")").replace('export default', ''));
 var _JSDOM$window = new JSDOM("<!DOCTYPE html>").window,
-    document = _JSDOM$window.document,
-    Node = _JSDOM$window.Node;
+  document = _JSDOM$window.document,
+  Node = _JSDOM$window.Node;
 module.exports = {
   '@tags': ['ckeditor5'],
   '@unitTest': true,

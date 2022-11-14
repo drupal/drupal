@@ -14,10 +14,8 @@
     var current = '';
     var valueLength = value.length;
     var character;
-
     for (var i = 0; i < valueLength; i++) {
       character = value.charAt(i);
-
       if (character === '"') {
         current += character;
         quote = !quote;
@@ -28,11 +26,9 @@
         current += character;
       }
     }
-
     if (value.length > 0) {
       result.push(current.trim());
     }
-
     return result;
   }
 
@@ -42,23 +38,18 @@
 
   function searchHandler(event) {
     var options = autocomplete.options;
-
     if (options.isComposing) {
       return false;
     }
-
     var term = autocomplete.extractLastTerm(event.target.value);
-
     if (term.length > 0 && options.firstCharacterBlacklist.indexOf(term[0]) !== -1) {
       return false;
     }
-
     return term.length >= options.minLength;
   }
 
   function sourceData(request, response) {
     var elementId = this.element.attr('id');
-
     if (!(elementId in autocomplete.cache)) {
       autocomplete.cache[elementId] = {};
     }
@@ -66,15 +57,12 @@
     function showSuggestions(suggestions) {
       var tagged = autocomplete.splitValues(request.term);
       var il = tagged.length;
-
       for (var i = 0; i < il; i++) {
         var index = suggestions.indexOf(tagged[i]);
-
         if (index >= 0) {
           suggestions.splice(index, 1);
         }
       }
-
       response(suggestions);
     }
 
@@ -82,6 +70,7 @@
 
     function sourceCallbackHandler(data) {
       autocomplete.cache[elementId][term] = data;
+
       showSuggestions(data);
     }
 
@@ -117,7 +106,6 @@
   Drupal.behaviors.autocomplete = {
     attach: function attach(context) {
       var $autocomplete = $(once('autocomplete', 'input.form-autocomplete', context));
-
       if ($autocomplete.length) {
         var blacklist = $autocomplete.attr('data-autocomplete-first-character-blacklist');
         $.extend(autocomplete.options, {
@@ -126,6 +114,7 @@
         $autocomplete.autocomplete(autocomplete.options).each(function () {
           $(this).data('ui-autocomplete')._renderItem = autocomplete.options.renderItem;
         });
+
         $autocomplete.on('compositionstart.autocomplete', function () {
           autocomplete.options.isComposing = true;
         });
@@ -140,10 +129,12 @@
       }
     }
   };
+
   autocomplete = {
     cache: {},
     splitValues: autocompleteSplitValues,
     extractLastTerm: extractLastTerm,
+
     options: {
       source: sourceData,
       focus: focusHandler,

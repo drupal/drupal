@@ -19,18 +19,14 @@
       if (button && 1) {
         return 1;
       }
-
       if (button && 2) {
         return 3;
       }
-
       if (button && 4) {
         return 2;
       }
-
       return 0;
     }
-
     return event.which;
   });
 })(jQuery);

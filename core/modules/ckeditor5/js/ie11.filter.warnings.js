@@ -10,9 +10,9 @@
     attach: function attach() {
       var isIE11 = !!document.documentMode;
       var editorSelect = once('editor-ie11-warning', '[data-drupal-selector="filter-format-edit-form"] [data-drupal-selector="edit-editor-editor"], [data-drupal-selector="filter-format-add-form"] [data-drupal-selector="edit-editor-editor"]');
-
       if (typeof editorSelect[0] !== 'undefined') {
         var select = editorSelect[0];
+
         var selectMessageContainer = document.createElement('div');
         select.parentNode.after(selectMessageContainer, select);
         var selectMessages = new Drupal.Message(selectMessageContainer);
@@ -23,7 +23,6 @@
             type: 'warning',
             id: 'ie_11_warning'
           });
-
           if (isIE11) {
             selectMessages.add(Drupal.t('Text editor toolbar settings are not available in Internet Explorer. They will be available in other <a href="@supported-browsers">supported browsers</a>.', {
               '@supported-browsers': 'https://www.drupal.org/docs/system-requirements/browser-requirements'
@@ -42,19 +41,17 @@
             if (selectMessages.select('ie_11_warning')) {
               selectMessages.remove('ie_11_warning');
             }
-
             if (selectMessages.select('ie_11_error')) {
               selectMessages.remove('ie_11_error');
             }
           }
         };
-
         updateWarningStatus();
+
         var editorSelectObserver = new MutationObserver(function (mutations) {
           for (var i = 0; i < mutations.length; i++) {
             var switchToCKEditor5Complete = mutations[i].type === 'attributes' && mutations[i].attributeName === 'disabled' && !select.disabled;
             var fixedErrorsPreventingSwitchToCKEditor5 = mutations[i].type === 'attributes' && mutations[i].attributeName === 'data-error-switching-to-ckeditor5' && !select.hasAttribute('data-error-switching-to-ckeditor5');
-
             if (switchToCKEditor5Complete || fixedErrorsPreventingSwitchToCKEditor5) {
               updateWarningStatus();
             }

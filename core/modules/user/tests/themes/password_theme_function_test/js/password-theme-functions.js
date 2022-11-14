@@ -27,6 +27,7 @@
   Drupal.behaviors.passwordThemeFunctionTest = {
     attach: function attach(context, settings) {
       var strength = Drupal.evaluatePasswordStrength('password', settings.password);
+
       var message = strength.message;
     }
   };

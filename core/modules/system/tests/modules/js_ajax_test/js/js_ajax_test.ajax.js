@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal) {
   Drupal.AjaxCommands.prototype.jsAjaxTestCommand = function (ajax, response) {
     var $domElement = $(response.selector);

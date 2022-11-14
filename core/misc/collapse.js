@@ -10,22 +10,21 @@
     this.$node = $(node);
     this.$node.data('details', this);
     var anchor = window.location.hash && window.location.hash !== '#' ? ", ".concat(window.location.hash) : '';
-
     if (this.$node.find(".error".concat(anchor)).length) {
       this.$node.attr('open', true);
     }
-
     this.setupSummaryPolyfill();
   }
-
   $.extend(CollapsibleDetails, {
     instances: []
   });
   $.extend(CollapsibleDetails.prototype, {
     setupSummaryPolyfill: function setupSummaryPolyfill() {
       var $summary = this.$node.find('> summary');
+
       $summary.attr('tabindex', '-1');
       $('<span class="details-summary-prefix visually-hidden"></span>').append(this.$node.attr('open') ? Drupal.t('Hide') : Drupal.t('Show')).prependTo($summary).after(document.createTextNode(' '));
+
       $('<a class="details-title"></a>').attr('href', "#".concat(this.$node.attr('id'))).prepend($summary.contents()).appendTo($summary);
       $summary.append(this.$summary).on('click', $.proxy(this.onSummaryClick, this));
     },
@@ -35,27 +34,24 @@
     },
     toggle: function toggle() {
       var _this = this;
-
       var isOpen = !!this.$node.attr('open');
       var $summaryPrefix = this.$node.find('> summary span.details-summary-prefix');
-
       if (isOpen) {
         $summaryPrefix.html(Drupal.t('Show'));
       } else {
         $summaryPrefix.html(Drupal.t('Hide'));
       }
-
       setTimeout(function () {
         _this.$node.attr('open', !isOpen);
       }, 0);
     }
   });
+
   Drupal.behaviors.collapse = {
     attach: function attach(context) {
       if (Modernizr.details) {
         return;
       }
-
       once('collapse', 'details', context).forEach(function (detail) {
         detail.classList.add('collapse-processed');
         CollapsibleDetails.instances.push(new CollapsibleDetails(detail));
@@ -68,5 +64,6 @@
   };
 
   $('body').on('formFragmentLinkClickOrHashChange.details', handleFragmentLinkClickOrHashChange);
+
   Drupal.CollapsibleDetails = CollapsibleDetails;
 })(jQuery, Modernizr, Drupal);

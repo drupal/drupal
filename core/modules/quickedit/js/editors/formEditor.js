@@ -12,41 +12,30 @@
     stateChange: function stateChange(fieldModel, state) {
       var from = fieldModel.previous('state');
       var to = state;
-
       switch (to) {
         case 'inactive':
           break;
-
         case 'candidate':
           if (from !== 'inactive') {
             this.removeForm();
           }
-
           break;
-
         case 'highlighted':
           break;
-
         case 'activating':
           if (from !== 'invalid') {
             this.loadForm();
           }
-
           break;
-
         case 'active':
           break;
-
         case 'changed':
           break;
-
         case 'saving':
           this.save();
           break;
-
         case 'saved':
           break;
-
         case 'invalid':
           this.showValidationErrors();
           break;
@@ -62,7 +51,9 @@
     },
     loadForm: function loadForm() {
       var fieldModel = this.fieldModel;
+
       var id = "quickedit-form-for-".concat(fieldModel.id.replace(/[/[\]]/g, '_'));
+
       var $formContainer = $(Drupal.theme('quickeditFormContainer', {
         id: id,
         loadingMsg: Drupal.t('Loading…')
@@ -91,10 +82,10 @@
         });
         $formContainer.on('formUpdated.quickedit', ':input', function (event) {
           var state = fieldModel.get('state');
-
           if (state === 'invalid') {
             fieldModel.set('state', 'activating');
-          } else {
+          }
+          else {
             fieldModel.set('state', 'changed');
           }
         }).on('keypress.quickedit', 'input', function (event) {
@@ -102,6 +93,7 @@
             return false;
           }
         });
+
         fieldModel.set('state', 'active');
       });
     },
@@ -109,7 +101,6 @@
       if (this.$formContainer === null) {
         return;
       }
-
       delete this.formSaveAjax;
       Drupal.detachBehaviors(this.$formContainer.get(0), null, 'unload');
       this.$formContainer.off('change.quickedit', ':input').off('keypress.quickedit', 'input').remove();
@@ -120,11 +111,11 @@
       var $submit = $formContainer.find('.quickedit-form-submit');
       var editorModel = this.model;
       var fieldModel = this.fieldModel;
+
       var formSaveAjax = Drupal.quickedit.util.form.ajaxifySaving({
         nocssjs: false,
         other_view_modes: fieldModel.findOtherViewModes()
       }, $submit);
-
       function cleanUpAjax() {
         Drupal.quickedit.util.form.unajaxifySaving(formSaveAjax);
         formSaveAjax = null;
@@ -134,7 +125,6 @@
         cleanUpAjax();
         fieldModel.set('state', 'saved');
         fieldModel.set('htmlForOtherViewModes', response.other_view_modes);
-
         _.defer(function () {
           fieldModel.set('html', response.data);
         });

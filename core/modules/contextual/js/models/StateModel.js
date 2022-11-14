@@ -17,11 +17,9 @@
     toggleOpen: function toggleOpen() {
       var newIsOpen = !this.get('isOpen');
       this.set('isOpen', newIsOpen);
-
       if (newIsOpen) {
         this.focus();
       }
-
       return this;
     },
     close: function close() {
@@ -42,7 +40,6 @@
       if (!this.get('isOpen')) {
         this.set('hasFocus', false);
       }
-
       return this;
     }
   });

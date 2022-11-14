@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 if (window.jQuery) {
   jQuery.noConflict();
 }
@@ -17,7 +16,6 @@ document.documentElement.className += ' js';
       callback();
       document.removeEventListener('DOMContentLoaded', listener);
     };
-
     if (document.readyState !== 'loading') {
       setTimeout(callback, 0);
     } else {

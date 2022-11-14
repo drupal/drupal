@@ -14,12 +14,10 @@
   function searchIsVisible() {
     return searchWideWrapper.classList.contains('is-active');
   }
-
   Drupal.olivero.searchIsVisible = searchIsVisible;
 
   function watchForClickOut(e) {
     var clickInSearchArea = e.target.matches("\n      ".concat(searchWideWrapperSelector, ",\n      ").concat(searchWideWrapperSelector, " *,\n      ").concat(searchWideButtonSelector, ",\n      ").concat(searchWideButtonSelector, " *\n    "));
-
     if (!clickInSearchArea && searchIsVisible()) {
       toggleSearchVisibility(false);
     }
@@ -29,7 +27,6 @@
     if (e.relatedTarget) {
       var inSearchBar = e.relatedTarget.matches("".concat(searchWideWrapperSelector, ", ").concat(searchWideWrapperSelector, " *"));
       var inSearchButton = e.relatedTarget.matches("".concat(searchWideButtonSelector, ", ").concat(searchWideButtonSelector, " *"));
-
       if (!inSearchBar && !inSearchButton) {
         toggleSearchVisibility(false);
       }
@@ -55,7 +52,6 @@
     searchWideWrapper.addEventListener('transitionend', handleFocus, {
       once: true
     });
-
     if (visibility === true) {
       Drupal.olivero.closeAllSubNav();
       searchWideWrapper.classList.add('is-active');
@@ -81,12 +77,11 @@
       });
     }
   }
-
   Drupal.olivero.toggleSearchVisibility = toggleSearchVisibility;
+
   Drupal.behaviors.searchWide = {
     attach: function attach(context) {
       var searchWideButtonEl = once('search-wide', searchWideButtonSelector, context).shift();
-
       if (searchWideButtonEl) {
         searchWideButtonEl.setAttribute('aria-expanded', searchIsVisible());
         searchWideButtonEl.addEventListener('click', function () {

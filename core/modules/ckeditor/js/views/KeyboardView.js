@@ -13,8 +13,15 @@
     },
     render: function render() {},
     onPressButton: function onPressButton(event) {
-      var upDownKeys = [38, 63232, 40, 63233];
-      var leftRightKeys = [37, 63234, 39, 63235];
+      var upDownKeys = [38,
+      63232,
+      40,
+      63233];
+
+      var leftRightKeys = [37,
+      63234,
+      39,
+      63235];
 
       if (event.keyCode === 13) {
         event.stopPropagation();
@@ -41,55 +48,57 @@
           if (_.indexOf(leftRightKeys, event.keyCode) > -1) {
             var $siblings = $container.children();
             var index = $siblings.index($button);
-
             if (_.indexOf([37, 63234], event.keyCode) > -1) {
               if (index > 0) {
                 $button.insertBefore($container.children().eq(index - 1));
-              } else {
+              }
+              else {
                 $group = $container.parent().prev();
-
                 if ($group.length > 0) {
                   $group.find('.ckeditor-toolbar-group-buttons').append($button);
-                } else {
+                }
+                else {
                   $container.closest('.ckeditor-row').prev().find('.ckeditor-toolbar-group').not('.placeholder').find('.ckeditor-toolbar-group-buttons').eq(-1).append($button);
                 }
               }
-            } else if (_.indexOf([39, 63235], event.keyCode) > -1) {
+            }
+            else if (_.indexOf([39, 63235], event.keyCode) > -1) {
               if (index < $siblings.length - 1) {
                 $button.insertAfter($container.children().eq(index + 1));
-              } else {
+              }
+              else {
                 $container.parent().next().find('.ckeditor-toolbar-group-buttons').prepend($button);
               }
             }
-          } else if (_.indexOf(upDownKeys, event.keyCode) > -1) {
+          }
+          else if (_.indexOf(upDownKeys, event.keyCode) > -1) {
             dir = _.indexOf([38, 63232], event.keyCode) > -1 ? 'prev' : 'next';
             $row = $container.closest('.ckeditor-row')[dir]();
-
             if (dir === 'prev' && $row.length === 0) {
               if ($button.data('drupal-ckeditor-type') === 'separator') {
                 $button.off().remove();
                 $activeButtons.find('.ckeditor-toolbar-group-buttons').eq(0).children().eq(0).children().trigger('focus');
-              } else {
+              }
+              else {
                 $availableButtons.prepend($button);
               }
             } else {
               $row.find('.ckeditor-toolbar-group-buttons').eq(0).prepend($button);
             }
           }
-        } else if (containerType === 'dividers') {
+        }
+        else if (containerType === 'dividers') {
           if (_.indexOf([40, 63233], event.keyCode) > -1) {
             $button = $button.clone(true);
             $activeButtons.find('.ckeditor-toolbar-group-buttons').eq(0).prepend($button);
             $target = $button.children();
           }
         }
-
         view = this;
         Drupal.ckeditor.registerButtonMove(this, $button, function (result) {
           if (!result && $originalGroup) {
             $originalGroup.find('.ckeditor-buttons').append($button);
           }
-
           $target.trigger('focus');
         });
         event.preventDefault();
@@ -97,8 +106,15 @@
       }
     },
     onPressGroup: function onPressGroup(event) {
-      var upDownKeys = [38, 63232, 40, 63233];
-      var leftRightKeys = [37, 63234, 39, 63235];
+      var upDownKeys = [38,
+      63232,
+      40,
+      63233];
+
+      var leftRightKeys = [37,
+      63234,
+      39,
+      63235];
 
       if (event.keyCode === 13) {
         var view = this;
@@ -115,29 +131,30 @@
         var $siblings = $container.children();
         var index;
         var dir;
-
         if (_.indexOf(leftRightKeys, event.keyCode) > -1) {
           index = $siblings.index($group);
-
           if (_.indexOf([37, 63234], event.keyCode) > -1) {
             if (index > 0) {
               $group.insertBefore($siblings.eq(index - 1));
-            } else {
+            }
+            else {
               var $rowChildElement = $container.closest('.ckeditor-row').prev().find('.ckeditor-toolbar-groups').children().eq(-1);
               $group.insertBefore($rowChildElement);
             }
-          } else if (_.indexOf([39, 63235], event.keyCode) > -1) {
+          }
+          else if (_.indexOf([39, 63235], event.keyCode) > -1) {
             if (!$siblings.eq(index + 1).hasClass('placeholder')) {
               $group.insertAfter($container.children().eq(index + 1));
-            } else {
+            }
+            else {
               $container.closest('.ckeditor-row').next().find('.ckeditor-toolbar-groups').prepend($group);
             }
           }
-        } else if (_.indexOf(upDownKeys, event.keyCode) > -1) {
+        }
+        else if (_.indexOf(upDownKeys, event.keyCode) > -1) {
           dir = _.indexOf([38, 63232], event.keyCode) > -1 ? 'prev' : 'next';
           $group.closest('.ckeditor-row')[dir]().find('.ckeditor-toolbar-groups').eq(0).prepend($group);
         }
-
         Drupal.ckeditor.registerGroupMove(this, $group);
         $group.trigger('focus');
         event.preventDefault();

@@ -27,57 +27,42 @@
     stateChange: function stateChange(model, state) {
       var from = model.previous('state');
       var to = state;
-
       switch (to) {
         case 'inactive':
           this.undecorate();
           break;
-
         case 'candidate':
           this.decorate();
-
           if (from !== 'inactive') {
             this.stopHighlight();
-
             if (from !== 'highlighted') {
               this.model.set('isChanged', false);
               this.stopEdit();
             }
           }
-
           this._unpad();
-
           break;
-
         case 'highlighted':
           this.startHighlight();
           break;
-
         case 'activating':
           this.prepareEdit();
           break;
-
         case 'active':
           if (from !== 'activating') {
             this.prepareEdit();
           }
-
           if (this.editorView.getQuickEditUISettings().padding) {
             this._pad();
           }
-
           break;
-
         case 'changed':
           this.model.set('isChanged', true);
           break;
-
         case 'saving':
           break;
-
         case 'saved':
           break;
-
         case 'invalid':
           break;
       }
@@ -135,7 +120,6 @@
       if (this.$el.data('quickedit-padded')) {
         return;
       }
-
       var self = this;
 
       if (this.$el[0].style.width === '') {
@@ -144,9 +128,9 @@
       }
 
       var posProp = this._getPositionProperties(this.$el);
-
       setTimeout(function () {
         self.$el.removeClass('quickedit-animate-disable-width');
+
         self.$el.css({
           position: 'relative',
           top: "".concat(posProp.top - 5, "px"),
@@ -163,7 +147,6 @@
       if (!this.$el.data('quickedit-padded')) {
         return;
       }
-
       var self = this;
 
       if (this._widthAttributeIsEmpty) {
@@ -171,9 +154,9 @@
       }
 
       var posProp = this._getPositionProperties(this.$el);
-
       setTimeout(function () {
         self.$el.removeClass('quickedit-animate-disable-width');
+
         self.$el.css({
           position: 'relative',
           top: "".concat(posProp.top + 5, "px"),
@@ -192,19 +175,16 @@
       var r = {};
       var props = ['top', 'left', 'bottom', 'right', 'padding-top', 'padding-left', 'padding-right', 'padding-bottom', 'margin-bottom'];
       var propCount = props.length;
-
       for (var i = 0; i < propCount; i++) {
         p = props[i];
         r[p] = parseInt(this._replaceBlankPosition($e.css(p)), 10);
       }
-
       return r;
     },
     _replaceBlankPosition: function _replaceBlankPosition(pos) {
       if (pos === 'auto' || !pos) {
         pos = '0px';
       }
-
       return pos;
     }
   });

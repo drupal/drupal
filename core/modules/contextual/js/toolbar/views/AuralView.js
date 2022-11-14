@@ -21,15 +21,12 @@
     },
     manageTabbing: function manageTabbing() {
       var tabbingContext = this.model.get('tabbingContext');
-
       if (tabbingContext) {
         if (tabbingContext.active) {
           Drupal.announce(this.options.strings.tabbingReleased);
         }
-
         tabbingContext.release();
       }
-
       if (!this.model.get('isViewing')) {
         tabbingContext = Drupal.tabbingManager.constrain($('.contextual-toolbar-tab, .contextual'));
         this.model.set('tabbingContext', tabbingContext);
@@ -49,7 +46,6 @@
         this.announceTabbingConstraint();
         this.announcedOnce = true;
       }
-
       if (event.keyCode === 27) {
         this.model.set('isViewing', true);
       }

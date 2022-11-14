@@ -16,14 +16,16 @@
       $(once('media-library-click-to-select', '.js-click-to-select-checkbox input', context)).on('change', function (_ref) {
         var currentTarget = _ref.currentTarget;
         $(currentTarget).closest('.js-click-to-select').toggleClass('checked', $(currentTarget).prop('checked'));
-      }).on('focus blur', function (_ref2) {
+      })
+      .on('focus blur', function (_ref2) {
         var currentTarget = _ref2.currentTarget,
-            type = _ref2.type;
+          type = _ref2.type;
         $(currentTarget).closest('.js-click-to-select').toggleClass('is-focus', type === 'focus');
       });
+
       $(once('media-library-click-to-select-hover', '.js-click-to-select-trigger, .js-click-to-select-checkbox', context)).on('mouseover mouseout', function (_ref3) {
         var currentTarget = _ref3.currentTarget,
-            type = _ref3.type;
+          type = _ref3.type;
         $(currentTarget).closest('.js-click-to-select').toggleClass('is-hover', type === 'mouseover');
       });
     }

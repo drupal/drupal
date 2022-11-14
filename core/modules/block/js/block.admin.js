@@ -30,13 +30,13 @@
           });
         }
       }
-
       if ($table.length) {
         $filterRows = $table.find('div.block-filter-text-source');
         $input.on('keyup', debounce(filterBlockList, 200));
       }
     }
   };
+
   Drupal.behaviors.blockHighlightPlacement = {
     attach: function attach(context, settings) {
       if (settings.blockPlacement && $('.js-block-placed').length) {

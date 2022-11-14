@@ -7,6 +7,7 @@
 
 (function ($, Drupal, drupalSettings) {
   Drupal.viewsUi = {};
+
   Drupal.behaviors.viewsUiEditView = {
     attach: function attach() {
       $('[data-drupal-selector="edit-query-options-disable-sql-rewrite"]').on('click', function () {
@@ -14,14 +15,15 @@
       });
     }
   };
+
   Drupal.behaviors.viewsUiAddView = {
     attach: function attach(context) {
       var $context = $(context);
       var exclude = new RegExp('[^a-z0-9\\-]+', 'g');
       var replace = '-';
       var suffix;
-      var $fields = $context.find('[id^="edit-page-title"], [id^="edit-block-title"], [id^="edit-page-link-properties-title"]');
 
+      var $fields = $context.find('[id^="edit-page-title"], [id^="edit-block-title"], [id^="edit-page-link-properties-title"]');
       if ($fields.length) {
         if (!this.fieldsFiller) {
           this.fieldsFiller = new Drupal.viewsUi.FormFieldFiller($fields);
@@ -31,7 +33,6 @@
       }
 
       var $pathField = $context.find('[id^="edit-page-path"]');
-
       if ($pathField.length) {
         if (!this.pathFiller) {
           this.pathFiller = new Drupal.viewsUi.FormFieldFiller($pathField, exclude, replace);
@@ -41,7 +42,6 @@
       }
 
       var $feedField = $context.find('[id^="edit-page-feed-properties-path"]');
-
       if ($feedField.length) {
         if (!this.feedFiller) {
           suffix = '.xml';
@@ -55,10 +55,15 @@
 
   Drupal.viewsUi.FormFieldFiller = function ($target, exclude, replace, suffix) {
     this.source = $('#edit-label');
+
     this.target = $target;
+
     this.exclude = exclude || false;
+
     this.replace = replace || '';
+
     this.suffix = suffix || '';
+
     var self = this;
 
     this.populate = function () {
@@ -68,7 +73,6 @@
     this.unbind = function () {
       return self._unbind.call(self);
     };
-
     this.bind();
   };
 
@@ -80,11 +84,9 @@
     },
     getTransliterated: function getTransliterated() {
       var from = this.source.length ? this.source[0].value : '';
-
       if (this.exclude) {
         from = from.toLowerCase().replace(this.exclude, this.replace);
       }
-
       return from;
     },
     _populate: function _populate() {
@@ -104,15 +106,14 @@
       this.bind();
     }
   });
+
   Drupal.behaviors.addItemForm = {
     attach: function attach(context) {
       var $context = $(context);
       var $form = $context;
-
       if (!$context.is('form[id^="views-ui-add-handler-form"]')) {
         $form = $context.find('form[id^="views-ui-add-handler-form"]');
       }
-
       if (once('views-ui-add-handler-form', $form).length) {
         new Drupal.viewsUi.AddItemForm($form);
       }
@@ -122,21 +123,21 @@
   Drupal.viewsUi.AddItemForm = function ($form) {
     this.$form = $form;
     this.$form.find('.views-filterable-options :checkbox').on('click', $.proxy(this.handleCheck, this));
+
     this.$selected_div = this.$form.find('.views-selected-options').parent();
     this.$selected_div.hide();
+
     this.checkedItems = [];
   };
 
   Drupal.viewsUi.AddItemForm.prototype.handleCheck = function (event) {
     var $target = $(event.target);
     var label = $target.closest('td').next().html().trim();
-
     if ($target.is(':checked')) {
       this.$selected_div.show().css('display', 'block');
       this.checkedItems.push(label);
     } else {
       var position = $.inArray(label, this.checkedItems);
-
       for (var i = 0; i < this.checkedItems.length; i++) {
         if (i === position) {
           this.checkedItems.splice(i, 1);
@@ -144,12 +145,10 @@
           break;
         }
       }
-
       if (this.checkedItems.length === 0) {
         this.$selected_div.hide();
       }
     }
-
     this.refreshCheckedItems();
   };
 
@@ -160,11 +159,9 @@
   Drupal.behaviors.viewsUiRenderAddViewButton = {
     attach: function attach(context) {
       var menu = once('views-ui-render-add-view-button', '#views-display-menu-tabs', context);
-
       if (!menu.length) {
         return;
       }
-
       var $menu = $(menu);
       var $addDisplayDropdown = $("<li class=\"add\"><a href=\"#\"><span class=\"icon add\"></span>".concat(Drupal.t('Add'), "</a><ul class=\"action-list\" style=\"display:none;\"></ul></li>"));
       var $displayButtons = $menu.nextAll('input.add-display').detach();
@@ -174,6 +171,7 @@
         this.value = $this.attr('data-drupal-dropdown-label');
       });
       $addDisplayDropdown.appendTo($menu);
+
       $menu.find('li.add > a').on('click', function (event) {
         event.preventDefault();
         var $trigger = $(this);
@@ -182,7 +180,6 @@
       $('li.add', $menu).on('mouseleave', function (event) {
         var $this = $(this);
         var $trigger = $this.children('a[href="#"]');
-
         if ($this.children('.action-list').is(':visible')) {
           Drupal.behaviors.viewsUiRenderAddViewButton.toggleMenu($trigger);
         }
@@ -199,11 +196,9 @@
     attach: function attach(context) {
       var $context = $(context);
       var $form = $context;
-
       if (!$context.is('form[id^="views-ui-add-handler-form"]')) {
         $form = $context.find('form[id^="views-ui-add-handler-form"]');
       }
-
       if (once('views-ui-filter-options', $form).length) {
         new Drupal.viewsUi.OptionsSearch($form);
       }
@@ -212,6 +207,7 @@
 
   Drupal.viewsUi.OptionsSearch = function ($form) {
     this.$form = $form;
+
     this.$form.on('click', 'td.title', function (event) {
       var $target = $(event.currentTarget);
       $target.closest('tr').find('input').trigger('click');
@@ -221,14 +217,15 @@
     this.$form.on('formUpdated', "".concat(searchBoxSelector, ",").concat(controlGroupSelector), $.proxy(this.handleFilter, this));
     this.$searchBox = this.$form.find(searchBoxSelector);
     this.$controlGroup = this.$form.find(controlGroupSelector);
+
     this.options = this.getOptions(this.$form.find('.filterable-option'));
+
     this.$searchBox.on('keypress', function (event) {
       if (event.which === 13) {
         event.preventDefault();
       }
     });
   };
-
   $.extend(Drupal.viewsUi.OptionsSearch.prototype, {
     getOptions: function getOptions($allOptions) {
       var $title;
@@ -236,7 +233,6 @@
       var $option;
       var options = [];
       var length = $allOptions.length;
-
       for (var i = 0; i < length; i++) {
         $option = $($allOptions[i]);
         $title = $option.find('.title');
@@ -246,43 +242,39 @@
           $div: $option
         };
       }
-
       return options;
     },
     handleFilter: function handleFilter(event) {
       var search = this.$searchBox[0].value.toLowerCase();
       var words = search.split(' ');
       var group = this.$controlGroup[0].value;
+
       this.options.forEach(function (option) {
         function hasWord(word) {
           return option.searchText.indexOf(word) !== -1;
         }
-
         var found = true;
-
         if (search) {
           found = words.every(hasWord);
         }
-
         if (found && group !== 'all') {
           found = option.$div.hasClass(group);
         }
-
         option.$div.toggle(found);
       });
+
       $(event.target).trigger('dialogContentResize');
     }
   });
+
   Drupal.behaviors.viewsUiPreview = {
     attach: function attach(context) {
       var $contextualFiltersBucket = $(context).find('.views-display-column .views-ui-display-tab-bucket.argument');
-
       if ($contextualFiltersBucket.length === 0) {
         return;
       }
 
       var $contextualFilters = $contextualFiltersBucket.find('.views-display-setting a');
-
       if ($contextualFilters.length) {
         $('#preview-args').parent().show();
       } else {
@@ -297,11 +289,17 @@
 
   Drupal.viewsUi.RearrangeFilterHandler = function ($table, $operator) {
     this.table = $table;
+
     this.operator = $operator;
+
     this.hasGroupOperator = this.operator.length > 0;
+
     this.draggableRows = $table.find('.draggable');
+
     this.addGroupButton = $('#views-add-group');
+
     this.removeGroupButtons = $table.find('.views-remove-group');
+
     this.insertAddRemoveFilterGroupLinks();
 
     if (this.hasGroupOperator) {
@@ -310,21 +308,24 @@
     }
 
     this.modifyTableDrag();
+
     this.redrawOperatorLabels();
     $(once('views-rearrange-filter-handler', $table.find('.views-group-title select'))).on('change.views-rearrange-filter-handler', $.proxy(this, 'redrawOperatorLabels'));
+
     $(once('views-rearrange-filter-handler', $table.find('a.views-groups-remove-link'))).on('click.views-rearrange-filter-handler', $.proxy(this, 'updateRowspans')).on('click.views-rearrange-filter-handler', $.proxy(this, 'redrawOperatorLabels'));
   };
-
   $.extend(Drupal.viewsUi.RearrangeFilterHandler.prototype, {
     insertAddRemoveFilterGroupLinks: function insertAddRemoveFilterGroupLinks() {
-      $(once('views-rearrange-filter-handler', $("<ul class=\"action-links\"><li><a id=\"views-add-group-link\" href=\"#\">".concat(this.addGroupButton[0].value, "</a></li></ul>")).prependTo(this.table.parent()))).find('#views-add-group-link').on('click.views-rearrange-filter-handler', $.proxy(this, 'clickAddGroupButton'));
+      $(once('views-rearrange-filter-handler',
+      $("<ul class=\"action-links\"><li><a id=\"views-add-group-link\" href=\"#\">".concat(this.addGroupButton[0].value, "</a></li></ul>")).prependTo(this.table.parent()))).find('#views-add-group-link').on('click.views-rearrange-filter-handler', $.proxy(this, 'clickAddGroupButton'));
+
       var length = this.removeGroupButtons.length;
       var i;
-
       for (i = 0; i < length; i++) {
         var $removeGroupButton = $(this.removeGroupButtons[i]);
         var buttonId = $removeGroupButton.attr('id');
-        $(once('views-rearrange-filter-handler', $("<a href=\"#\" class=\"views-remove-group-link\">".concat(Drupal.t('Remove group'), "</a>")).insertBefore($removeGroupButton))).on('click.views-rearrange-filter-handler', {
+        $(once('views-rearrange-filter-handler',
+        $("<a href=\"#\" class=\"views-remove-group-link\">".concat(Drupal.t('Remove group'), "</a>")).insertBefore($removeGroupButton))).on('click.views-rearrange-filter-handler', {
           buttonId: buttonId
         }, $.proxy(this, 'clickRemoveGroupButton'));
       }
@@ -341,20 +342,20 @@
       var newRow;
       var titleRow;
       var titleRows = once('duplicateGroupsOperator', 'tr.views-group-title');
-
       if (!titleRows.length) {
         return this.operator;
       }
 
       this.operator.find('label').add('div.description').addClass('visually-hidden');
       this.operator.find('select').addClass('form-select');
+
       var dropdowns = this.operator;
+
       titleRow = $('tr#views-group-title-2');
       newRow = $('<tr class="filter-group-operator-row"><td colspan="5"></td></tr>');
       newRow.find('td').append(this.operator);
       newRow.insertBefore(titleRow);
       var length = titleRows.length;
-
       for (var i = 2; i < length; i++) {
         titleRow = $(titleRows[i]);
         var fakeOperator = this.operator.clone();
@@ -364,19 +365,18 @@
         newRow.insertBefore(titleRow);
         dropdowns.add(fakeOperator);
       }
-
       return dropdowns;
     },
     syncGroupsOperators: function syncGroupsOperators() {
       if (this.dropdowns.length < 2) {
         return;
       }
-
       this.dropdowns.on('change', $.proxy(this, 'operatorChangeHandler'));
     },
     operatorChangeHandler: function operatorChangeHandler(event) {
       var $target = $(event.target);
       var operators = this.dropdowns.find('select').not($target);
+
       operators.each(function (index, item) {
         item.value = $target[0].value;
       });
@@ -389,27 +389,21 @@
         if (filterHandler.hasGroupOperator) {
           var thisRow = $(this.group);
           var previousRow = thisRow.prev('tr');
-
           if (previousRow.length && !previousRow.hasClass('group-message') && !previousRow.hasClass('draggable')) {
             var next = thisRow.next();
-
             if (next.is('tr')) {
               this.swap('after', next);
             }
           }
-
           filterHandler.updateRowspans();
         }
-
         filterHandler.redrawOperatorLabels();
       };
 
       tableDrag.onDrop = function () {
         var changeMarker = $(this.oldRowElement).find('.tabledrag-changed');
-
         if (changeMarker.length) {
           var operatorLabel = changeMarker.prevAll('.views-operator-label');
-
           if (operatorLabel.length) {
             operatorLabel.insertAfter(changeMarker);
           }
@@ -418,7 +412,6 @@
         var groupRow = $(this.rowObject.element).prevAll('tr.group-message').get(0);
         var groupName = groupRow.className.replace(/([^ ]+[ ]+)*group-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
         var groupField = $('select.views-group-select', this.rowObject.element);
-
         if (!groupField.is(".views-group-select-".concat(groupName))) {
           var oldGroupName = groupField.attr('class').replace(/([^ ]+[ ]+)*views-group-select-([^ ]+)([ ]+[^ ]+)*/, '$2');
           groupField.removeClass("views-group-select-".concat(oldGroupName)).addClass("views-group-select-".concat(groupName));
@@ -430,20 +423,20 @@
       for (var i = 0; i < this.draggableRows.length; i++) {
         var $draggableRow = $(this.draggableRows[i]);
         var $firstCell = $draggableRow.find('td').eq(0);
-
         if ($firstCell.length) {
           var operatorValue = $draggableRow.prevAll('.views-group-title').find('option:selected').html();
           var operatorLabel = "<span class=\"views-operator-label\">".concat(operatorValue, "</span>");
           var $nextRow = $draggableRow.nextAll(':visible').eq(0);
           var $existingOperatorLabel = $firstCell.find('.views-operator-label');
-
           if ($nextRow.hasClass('draggable')) {
             if ($existingOperatorLabel.length) {
               $existingOperatorLabel.replaceWith(operatorLabel);
-            } else {
+            }
+            else {
               $firstCell.append(operatorLabel);
             }
-          } else {
+          }
+          else {
             $existingOperatorLabel.remove();
           }
         }
@@ -456,10 +449,8 @@
       var $operatorCell;
       var rows = $(this.table).find('tr');
       var length = rows.length;
-
       for (var i = 0; i < length; i++) {
         $row = $(rows[i]);
-
         if ($row.hasClass('views-group-title')) {
           $operatorCell = $row.find('td.group-operator');
           draggableCount = 0;
@@ -474,10 +465,10 @@
       }
     }
   });
+
   Drupal.behaviors.viewsFilterConfigSelectAll = {
     attach: function attach(context) {
       var selectAll = once('filterConfigSelectAll', '.js-form-item-options-value-all', context);
-
       if (selectAll.length) {
         var $selectAll = $(selectAll);
         var $selectAllCheckbox = $selectAll.find('input[type=checkbox]');
@@ -486,6 +477,7 @@
         $selectAllCheckbox.on('click', function () {
           $checkboxes.prop('checked', $(this).is(':checked'));
         });
+
         $checkboxes.on('click', function () {
           if ($(this).is('checked') === false) {
             $selectAllCheckbox.prop('checked', false);
@@ -494,11 +486,13 @@
       }
     }
   };
+
   Drupal.behaviors.viewsRemoveIconClass = {
     attach: function attach(context) {
       $(once('dropbutton-icon', '.dropbutton', context)).find('.icon').removeClass('icon');
     }
   };
+
   Drupal.behaviors.viewsUiCheckboxify = {
     attach: function attach(context, settings) {
       var buttons = once('views-ui-checkboxify', '[data-drupal-selector="edit-options-expose-button-button"], [data-drupal-selector="edit-options-group-button-button"]').forEach(function (button) {
@@ -506,10 +500,10 @@
       });
     }
   };
+
   Drupal.behaviors.viewsUiChangeDefaultWidget = {
     attach: function attach(context) {
       var $context = $(context);
-
       function changeDefaultWidget(event) {
         if ($(event.target).prop('checked')) {
           $context.find('input.default-radios').parent().hide();
@@ -522,7 +516,8 @@
         }
       }
 
-      $context.find('input[name="options[group_info][multiple]"]').on('change', changeDefaultWidget).trigger('change');
+      $context.find('input[name="options[group_info][multiple]"]').on('change', changeDefaultWidget)
+      .trigger('change');
     }
   };
 
@@ -553,7 +548,6 @@
           if (!submit) {
             return;
           }
-
           if (this.value === 'default') {
             submit.value = Drupal.t('Apply (all displays)');
           } else if (this.value === 'default_revert') {
@@ -561,13 +555,13 @@
           } else {
             submit.value = Drupal.t('Apply (this display)');
           }
-
           var $dialog = $context.closest('.ui-dialog-content');
           $dialog.trigger('dialogButtonsChange');
         }).trigger('change');
       });
     }
   };
+
   Drupal.behaviors.viewsUiHandlerRemoveLink = {
     attach: function attach(context) {
       var $context = $(context);
@@ -577,6 +571,7 @@
         $context.find("#views-removed-".concat(id)).prop('checked', true);
         event.preventDefault();
       });
+
       $(once('display', 'a.display-remove-link', context)).on('click', function (event) {
         var id = $(this).attr('id').replace('display-remove-link-', '');
         $context.find("#display-row-".concat(id)).hide();
@@ -585,15 +580,14 @@
       });
     }
   };
+
   Drupal.behaviors.viewsUiRearrangeFilter = {
     attach: function attach(context) {
       if (typeof Drupal.tableDrag === 'undefined' || typeof Drupal.tableDrag['views-rearrange-filters'] === 'undefined') {
         return;
       }
-
       var table = once('views-rearrange-filters', '#views-rearrange-filters', context);
       var operator = once('views-rearrange-filters', '.js-form-item-filter-groups-operator', context);
-
       if (table.length) {
         new Drupal.viewsUi.RearrangeFilterHandler($(table), $(operator));
       }

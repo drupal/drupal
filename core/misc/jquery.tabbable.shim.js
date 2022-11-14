@@ -15,12 +15,10 @@
 
       if (element.tagName === 'SUMMARY' || element.tagName === 'DETAILS') {
         var tabIndex = element.getAttribute('tabIndex');
-
         if (tabIndex === null || tabIndex < 0) {
           return false;
         }
       }
-
       return isTabbable(element);
     }
   });

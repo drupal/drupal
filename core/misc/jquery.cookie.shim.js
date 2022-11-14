@@ -4,11 +4,8 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 (function ($, Drupal, cookies) {
@@ -22,20 +19,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     if (value.indexOf('"') === 0) {
       value = value.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, '\\');
     }
-
     try {
       value = decodeURIComponent(value.replace(/\+/g, ' '));
       return parseJson ? JSON.parse(value) : value;
-    } catch (e) {}
+    } catch (e) {
+    }
   };
 
   var reader = function reader(cookieValue, cookieName, converter, readUnsanitized, parseJson) {
     var value = readUnsanitized ? cookieValue : parseCookieValue(cookieValue, parseJson);
-
     if (converter !== undefined && isFunction(converter)) {
       return converter(value, cookieName);
     }
-
     return value;
   };
 
@@ -45,14 +40,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     Drupal.deprecationError({
       message: "jQuery.cookie() ".concat(deprecatedMessageSuffix)
     });
-
     if (value !== undefined && !isFunction(value)) {
       var attributes = _objectSpread(_objectSpread({}, $.cookie.defaults), options);
-
       if (typeof attributes.expires === 'string' && attributes.expires !== '') {
         attributes.expires = new Date(attributes.expires);
       }
-
       var cookieSetter = cookies.withConverter({
         write: function write(cookieValue) {
           return encodeURIComponent(cookieValue);
@@ -68,11 +60,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         return reader(cookieValue, cookieName, userProvidedConverter, $.cookie.raw, $.cookie.json);
       }
     });
-
     if (key !== undefined) {
       return cookiesShim.get(key);
     }
-
     var results = cookiesShim.get();
     Object.keys(results).forEach(function (resultKey) {
       if (results[resultKey] === undefined) {
@@ -85,7 +75,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   $.cookie.defaults = _objectSpread({
     path: ''
   }, cookies.defaults);
+
   $.cookie.json = false;
+
   $.cookie.raw = false;
 
   $.removeCookie = function (key, options) {

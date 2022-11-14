@@ -7,7 +7,10 @@
 
 (function ($, Drupal, drupalSettings) {
   function hide($placeholder) {
-    return $placeholder.closest('.comment-new-comments').prev().addClass('last').end().hide();
+    return $placeholder
+    .closest('.comment-new-comments')
+    .prev().addClass('last')
+    .end().hide();
   }
 
   function remove($placeholder) {
@@ -15,7 +18,10 @@
   }
 
   function show($placeholder) {
-    return $placeholder.closest('.comment-new-comments').prev().removeClass('last').end().show();
+    return $placeholder
+    .closest('.comment-new-comments')
+    .prev().removeClass('last')
+    .end().show();
   }
 
   function processNodeNewCommentLinks(placeholders) {
@@ -31,12 +37,13 @@
 
       if (timestamp > lastViewTimestamp) {
         $placeholdersToUpdate[nodeID] = $placeholder;
-      } else {
+      }
+      else {
         remove($placeholder);
       }
     });
-    var nodeIDs = Object.keys($placeholdersToUpdate);
 
+    var nodeIDs = Object.keys($placeholdersToUpdate);
     if (nodeIDs.length === 0) {
       return;
     }
@@ -52,7 +59,6 @@
         }
       });
     }
-
     if (drupalSettings.comment && drupalSettings.comment.newCommentsLinks) {
       render(drupalSettings.comment.newCommentsLinks.node[fieldName]);
     } else {
@@ -76,7 +82,6 @@
         var $placeholder = $(placeholder);
         var lastCommentTimestamp = parseInt($placeholder.attr('data-history-node-last-comment-timestamp'), 10);
         var nodeID = $placeholder.closest('[data-history-node-id]').attr('data-history-node-id');
-
         if (Drupal.history.needsServerCheck(nodeID, lastCommentTimestamp)) {
           nodeIDs.push(nodeID);
           hide($placeholder);
@@ -86,7 +91,6 @@
         remove($placeholder);
         return false;
       });
-
       if (placeholders.length === 0) {
         return;
       }

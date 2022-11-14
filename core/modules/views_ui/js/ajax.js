@@ -32,7 +32,6 @@
 
   Drupal.AjaxCommands.prototype.viewsShowButtons = function (ajax, response, status) {
     $('div.views-edit-view div.form-actions').removeClass('js-hide');
-
     if (response.changed) {
       $('div.views-edit-view div.view-changed.messages').removeClass('js-hide');
     }
@@ -68,19 +67,20 @@
       });
     }
   };
+
   Drupal.behaviors.syncPreviewDisplay = {
     attach: function attach(context) {
       $(once('views-ajax', '#views-tabset a')).on('click', function () {
         var href = $(this).attr('href');
         var displayId = href.substr(11);
         var viewsPreviewId = document.querySelector('#views-live-preview #preview-display-id');
-
         if (viewsPreviewId) {
           viewsPreviewId.value = displayId;
         }
       });
     }
   };
+
   Drupal.behaviors.viewsAjax = {
     collapseReplaced: false,
     attach: function attach(context, settings) {
@@ -95,33 +95,28 @@
         var elementSettings = baseElementSettings;
         elementSettings.base = $link.attr('id');
         elementSettings.element = link;
-
         if ($link.attr('href')) {
           elementSettings.url = $link.attr('href');
         }
-
         Drupal.ajax(elementSettings);
       });
       once('views-ajax', 'div#views-live-preview a').forEach(function (link) {
         var $link = $(link);
-
         if (!$link.attr('href')) {
           return true;
         }
-
         var elementSettings = baseElementSettings;
         elementSettings.url = $link.attr('href');
-
         if (Drupal.Views.getPath(elementSettings.url).substring(0, 21) !== 'admin/structure/views') {
           return true;
         }
-
         elementSettings.wrapper = 'views-preview-wrapper';
         elementSettings.method = 'replaceWith';
         elementSettings.base = link.id;
         elementSettings.element = link;
         Drupal.ajax(elementSettings);
       });
+
       once('views-ajax', 'div#views-live-preview input[type=submit]').forEach(function (submit) {
         var $submit = $(submit);
         $submit.on('click', function () {
@@ -130,11 +125,9 @@
         });
         var elementSettings = baseElementSettings;
         elementSettings.url = $(submit.form).attr('action');
-
         if (Drupal.Views.getPath(elementSettings.url).substring(0, 21) !== 'admin/structure/views') {
           return true;
         }
-
         elementSettings.wrapper = 'views-preview-wrapper';
         elementSettings.method = 'replaceWith';
         elementSettings.event = 'click';
