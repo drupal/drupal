@@ -20,13 +20,16 @@ class CommentPreviewTest extends CommentTestBase {
   }
 
   /**
-   * The profile to install as a basis for testing.
+   * Modules to install.
    *
-   * Using the standard profile to test user picture display in comments.
-   *
-   * @var string
+   * @var array
    */
-  protected $profile = 'standard';
+  protected static $modules = ['olivero_test', 'test_user_config'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'olivero';
 
   /**
    * Tests comment preview.

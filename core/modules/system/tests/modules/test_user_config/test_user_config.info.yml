@@ -1,0 +1,7 @@
+name: 'Test User Config'
+type: module
+description: 'Provides a test user config.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:user
