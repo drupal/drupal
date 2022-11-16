@@ -439,7 +439,7 @@
         },
         {
             "name": "drupal/core",
-            "version": "10.0.0-rc1",
+            "version": "10.0.x-dev",
             "dist": {
                 "type": "path",
                 "url": "core",
@@ -591,7 +591,7 @@
         },
         {
             "name": "drupal/core-project-message",
-            "version": "10.0.0-rc1",
+            "version": "10.0.x-dev",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/ProjectMessage",
@@ -624,7 +624,7 @@
         },
         {
             "name": "drupal/core-vendor-hardening",
-            "version": "10.0.0-rc1",
+            "version": "10.0.x-dev",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/VendorHardening",
@@ -8376,6 +8376,9 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "drupal/core": 20,
+        "drupal/core-project-message": 20,
+        "drupal/core-vendor-hardening": 20,
         "symfony/css-selector": 10,
         "symfony/phpunit-bridge": 10,
         "symfony/var-dumper": 10,
