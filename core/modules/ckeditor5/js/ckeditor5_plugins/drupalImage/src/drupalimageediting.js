@@ -478,20 +478,13 @@ function viewImageToModelImage(editor) {
       const viewFragment = editor.data.processor.toView(
         viewItem.getAttribute('data-caption'),
       );
-      const modelFragment = writer.createDocumentFragment();
 
       // Consumable must know about those newly parsed view elements.
       conversionApi.consumable.constructor.createFrom(
         viewFragment,
         conversionApi.consumable,
       );
-      conversionApi.convertChildren(viewFragment, modelFragment);
-
-      // Insert caption model nodes into the caption.
-      // eslint-disable-next-line no-restricted-syntax
-      for (const child of Array.from(modelFragment.getChildren())) {
-        writer.append(child, caption);
-      }
+      conversionApi.convertChildren(viewFragment, caption);
 
       // Insert the caption element into image, as a last child.
       writer.append(caption, image);
