@@ -91,12 +91,16 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
   /**
    * {@inheritdoc}
    */
-  public function deleteTermHierarchy($tids) {}
+  public function deleteTermHierarchy($tids) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. It is a no-op since 8.6.0. Parent references are automatically cleared when deleting a taxonomy term. See https://www.drupal.org/node/2936675', E_USER_DEPRECATED);
+  }
 
   /**
    * {@inheritdoc}
    */
-  public function updateTermHierarchy(EntityInterface $term) {}
+  public function updateTermHierarchy(EntityInterface $term) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. It is a no-op since 8.6.0. Parent references are automatically updated when updating a taxonomy term. See https://www.drupal.org/node/2936675', E_USER_DEPRECATED);
+  }
 
   /**
    * {@inheritdoc}

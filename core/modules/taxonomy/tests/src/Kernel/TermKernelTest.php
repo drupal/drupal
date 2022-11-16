@@ -168,4 +168,32 @@ class TermKernelTest extends KernelTestBase {
     $this->assertNotEmpty(trim($rendered), 'Term is able to be rendered.');
   }
 
+  /**
+   * @covers \Drupal\taxonomy\TermStorage::deleteTermHierarchy
+   * @group legacy
+   */
+  public function testDeleteTermHierarchyDeprecation(): void {
+    $vocabulary = $this->createVocabulary();
+    $term = $this->createTerm($vocabulary);
+
+    /** @var \Drupal\taxonomy\TermStorageInterface $storage */
+    $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+    $this->expectDeprecation('Drupal\taxonomy\TermStorage::deleteTermHierarchy() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. It is a no-op since 8.6.0. Parent references are automatically cleared when deleting a taxonomy term. See https://www.drupal.org/node/2936675');
+    $storage->deleteTermHierarchy([$term->tid]);
+  }
+
+  /**
+   * @covers \Drupal\taxonomy\TermStorage::updateTermHierarchy
+   * @group legacy
+   */
+  public function testUpdateTermHierarchyDeprecation(): void {
+    $vocabulary = $this->createVocabulary();
+    $term = $this->createTerm($vocabulary);
+
+    /** @var \Drupal\taxonomy\TermStorageInterface $storage */
+    $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+    $this->expectDeprecation('Drupal\taxonomy\TermStorage::updateTermHierarchy() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. It is a no-op since 8.6.0. Parent references are automatically updated when updating a taxonomy term. See https://www.drupal.org/node/2936675');
+    $storage->updateTermHierarchy($term);
+  }
+
 }
