@@ -614,6 +614,25 @@ class MediaTest extends WebDriverTestBase {
     $editor_dom = $this->getEditorDataAsDom();
     $this->assertEquals('Llamas are the most awesome ever', $editor_dom->getElementsByTagName('drupal-media')->item(0)->getAttribute('data-caption'));
 
+    // Ensure that caption can contain elements such as <br>.
+    $this->pressEditorButton('Source');
+    $source_text_area = $assert_session->waitForElement('css', '.ck-source-editing-area textarea');
+    $source_text = $source_text_area->getValue();
+    $source_text_area->setValue(str_replace('data-caption="Llamas are the most awesome ever"', 'data-caption="Llamas are the most<br>awesome ever"', $source_text));
+    // Click source again to make source inactive.
+    $this->pressEditorButton('Source');
+    // Check that the source mode is toggled off.
+    $assert_session->elementNotExists('css', '.ck-source-editing-area textarea');
+    // Put back the caption as it was before.
+    $this->pressEditorButton('Source');
+    $source_text_area = $assert_session->waitForElement('css', '.ck-source-editing-area textarea');
+    $source_text = $source_text_area->getValue();
+    $source_text_area->setValue(str_replace('data-caption="Llamas are the most&lt;br&gt;awesome ever"', 'data-caption="Llamas are the most awesome ever"', $source_text));
+    // Click source again to make source inactive.
+    $this->pressEditorButton('Source');
+    // Check that the source mode is toggled off.
+    $assert_session->elementNotExists('css', '.ck-source-editing-area textarea');
+
     // Ensure that caption can be linked.
     $this->assertNotEmpty($figcaption = $assert_session->waitForElement('css', '.drupal-media figcaption'));
     $this->selectTextInsideElement('.drupal-media figcaption');
