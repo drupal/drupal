@@ -897,10 +897,8 @@ function image_style_deliver($style, $scheme = NULL) {
 
   if ($success) {
     $image = image_load($derivative_uri);
-    $headers += array(
-      'Content-Type' => $image->info['mime_type'],
-      'Content-Length' => $image->info['file_size']
-    );
+    $headers['Content-Type'] = $image->info['mime_type'];
+    $headers['Content-Length'] = $image->info['file_size'];
     file_transfer($image->source, $headers);
   }
   else {
