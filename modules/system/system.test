@@ -3234,7 +3234,7 @@ class HtaccessTest extends DrupalWebTestCase {
    * Get an array of file paths for access testing.
    */
   protected function getProtectedFiles() {
-    $path = drupal_get_path('module', 'system') . '/tests/fixtures/HtaccessTest';
+    drupal_mkdir($path = 'public://' . $this->randomName());
 
     // Tests the FilesMatch directive which denies access to certain file
     // extensions.
@@ -3292,6 +3292,7 @@ class HtaccessTest extends DrupalWebTestCase {
    */
   function testFileAccess() {
     foreach ($this->getProtectedFiles() as $file => $response_code) {
+      file_put_contents($file, '# test content');
       $this->assertFileAccess($file, $response_code);
     }
   }
@@ -3305,9 +3306,8 @@ class HtaccessTest extends DrupalWebTestCase {
    *   The expected response code. For example: 200, 403 or 404.
    */
   protected function assertFileAccess($path, $response_code) {
-    global $base_url;
-    $this->assertTrue(file_exists(DRUPAL_ROOT . '/' . $path), format_string('@filename exists.', array('@filename' => $path)));
-    $this->drupalGet($base_url . '/' . $path, array('external' => TRUE));
+    $this->assertTrue(file_exists(drupal_realpath($path)), format_string('@filename exists.', array('@filename' => $path)));
+    $this->drupalGet(file_create_url($path), array('external' => TRUE));
     $this->assertResponse($response_code, "Response code to $path should be $response_code");
   }
 }
