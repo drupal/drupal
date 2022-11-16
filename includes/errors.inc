@@ -103,8 +103,8 @@ function _drupal_decode_exception($exception) {
       // We remove that call.
       array_shift($backtrace);
     }
-    if (isset($exception->query_string, $exception->args)) {
-      $message .= ": " . $exception->query_string . "; " . print_r($exception->args, TRUE);
+    if (isset($exception->errorInfo['query_string'], $exception->errorInfo['args'])) {
+      $message .= ": " . $exception->errorInfo['query_string'] . "; " . print_r($exception->errorInfo['args'], TRUE);
     }
   }
   $caller = _drupal_get_last_caller($backtrace);
