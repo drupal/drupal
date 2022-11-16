@@ -569,7 +569,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
 
     // The foo attribute is added to be removed later by CKEditor 5 to make sure
     // CKEditor 5 was able to downcast data.
-    $img_tag = '<img ' . $this->imageAttributesAsString() . ' alt="drupalimage test image" data-caption="Alpacas &lt;em&gt;are&lt;/em&gt; cute" foo="bar">';
+    $img_tag = '<img ' . $this->imageAttributesAsString() . ' alt="drupalimage test image" data-caption="Alpacas &lt;em&gt;are&lt;/em&gt; cute&lt;br&gt;really!" foo="bar">';
     $this->host->body->value = $img_tag;
     $this->host->save();
 
@@ -578,18 +578,18 @@ abstract class ImageTestBase extends CKEditor5TestBase {
 
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-editor'));
     $this->assertNotEmpty($figcaption = $assert_session->waitForElement('css', '.image figcaption'));
-    $this->assertSame('Alpacas <em>are</em> cute', $figcaption->getHtml());
+    $this->assertSame('Alpacas <em>are</em> cute<br>really!', $figcaption->getHtml());
     $page->pressButton('Source');
     $editor_dom = $this->getEditorDataAsDom();
     $data_caption = $editor_dom->getElementsByTagName('img')->item(0)->getAttribute('data-caption');
-    $this->assertSame('Alpacas <em>are</em> cute', $data_caption);
+    $this->assertSame('Alpacas <em>are</em> cute<br>really!', $data_caption);
 
     $page->pressButton('Save');
 
     $src = $this->imageAttributes()['src'];
-    $this->assertEquals('<img ' . $this->imageAttributesAsString(TRUE) . ' alt="drupalimage test image" data-caption="Alpacas &lt;em&gt;are&lt;/em&gt; cute">', Node::load(1)->get('body')->value);
+    $this->assertEquals('<img ' . $this->imageAttributesAsString(TRUE) . ' alt="drupalimage test image" data-caption="Alpacas &lt;em&gt;are&lt;/em&gt; cute&lt;br&gt;really!">', Node::load(1)->get('body')->value);
     $assert_session->elementExists('xpath', '//figure/img[@src="' . $src . '" and not(@data-caption)]');
-    $assert_session->responseContains('<figcaption>Alpacas <em>are</em> cute</figcaption>');
+    $assert_session->responseContains('<figcaption>Alpacas <em>are</em> cute<br>really!</figcaption>');
   }
 
   /**
