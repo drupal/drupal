@@ -1,0 +1,33 @@
+{
+  "linkset": [
+    {
+      "anchor": "/bb/system/menu/main/linkset",
+      "item": [
+        {
+          "href": "/bb",
+          "title": "Home",
+          "hierarchy": ["0"],
+          "machine-name": ["main"]
+        },
+        {
+          "href": "/bb/node/1",
+          "title": "bb|A multi-lingual-node",
+          "hierarchy": ["1"],
+          "machine-name": ["main"]
+        },
+        {
+          "href": "/bb/node/2",
+          "title": "bb|Second multi-lingual-node",
+          "hierarchy": ["2"],
+          "machine-name": ["main"]
+        },
+        {
+          "href": "/bb/node/3",
+          "title": "bb|Third multi-lingual-node",
+          "hierarchy": ["3"],
+          "machine-name": ["main"]
+        }
+      ]
+    }
+  ]
+}

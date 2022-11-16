@@ -64,3 +64,8 @@ services:
     arguments: ['@system.sa_fetcher']
     tags:
       - { name: event_subscriber }
+  system.menus.route_subscriber:
+    class: Drupal\system\Routing\MenuLinksetRoutes
+    arguments: ['%authentication_providers%', '@config.factory', '@router.builder']
+    tags:
+      - { name: event_subscriber }

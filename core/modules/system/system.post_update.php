@@ -43,3 +43,11 @@ function system_removed_post_updates() {
     'system_post_update_enable_provider_database_driver' => '10.0.0',
   ];
 }
+
+/**
+ * Add new menu linkset endpoint setting.
+ */
+function system_post_update_linkset_settings() {
+  $config = \Drupal::configFactory()->getEditable('system.feature_flags');
+  $config->set('linkset_endpoint', FALSE)->save();
+}

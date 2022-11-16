@@ -1,0 +1,33 @@
+{
+  "linkset": [
+    {
+      "anchor": "/cc/system/menu/main/linkset",
+      "item": [
+        {
+          "href": "/cc",
+          "title": "Home",
+          "hierarchy": ["0"],
+          "machine-name": ["main"]
+        },
+        {
+          "href": "/cc/node/1",
+          "title": "cc|A multi-lingual-node",
+          "hierarchy": ["1"],
+          "machine-name": ["main"]
+        },
+        {
+          "href": "/cc/node/2",
+          "title": "aa|Second multi-lingual-node",
+          "hierarchy": ["2"],
+          "machine-name": ["main"]
+        },
+        {
+          "href": "/cc/node/3",
+          "title": "aa|Third multi-lingual-node",
+          "hierarchy": ["3"],
+          "machine-name": ["main"]
+        }
+      ]
+    }
+  ]
+}
