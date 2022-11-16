@@ -85,6 +85,13 @@ class Composer {
   protected static function setTemplateProjectStability(string $root, string $version): void {
     $stability = VersionParser::parseStability($version);
 
+    // Drupal 10.0.0-RC1 is being released before Symfony 6.2.0-RC1, so
+    // temporarily set the stability to beta instead of RC.
+    // @todo Remove this after Symfony 6.2.0-RC1 is released.
+    if (str_starts_with($version, '10.0.0-') && ($stability === 'RC')) {
+      $stability = 'beta';
+    }
+
     $templateProjectPaths = static::composerSubprojectPaths($root, 'Template');
     foreach ($templateProjectPaths as $path) {
       $dir = dirname($path);
