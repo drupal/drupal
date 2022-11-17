@@ -380,7 +380,6 @@ endapply
 endautoescape
 endcode
 endembed
-endfor
 endlink
 endmacro
 endofheader
