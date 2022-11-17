@@ -54,6 +54,10 @@ final class Settings {
       'replacement' => 'twig_sandbox_allowed_prefixes',
       'message' => 'The "twig_sandbox_whitelisted_prefixes" setting is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use "twig_sandbox_allowed_prefixes" instead. See https://www.drupal.org/node/3162897.',
     ],
+    'block_interest_cohort' => [
+      'replacement' => '',
+      'message' => 'The "block_interest_cohort" setting is deprecated in drupal:9.5.0. This setting should be removed from the settings file, since its usage has been removed. See https://www.drupal.org/node/3320787.',
+    ],
   ];
 
   /**
