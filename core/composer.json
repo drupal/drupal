@@ -109,6 +109,9 @@
     "config": {
         "preferred-install": "dist"
     },
+    "suggest": {
+        "ext-zip": "Needed to extend the plugin.manager.archiver service capability with the handling of files in the ZIP format."
+    },
     "extra": {
         "drupal-scaffold": {
             "file-mapping": {
