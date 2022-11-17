@@ -125,11 +125,6 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     $response->headers->set('X-Content-Type-Options', 'nosniff', FALSE);
     $response->headers->set('X-Frame-Options', 'SAMEORIGIN', FALSE);
 
-    // Add a Permissions-Policy header to block Federated Learning of Cohorts.
-    if (Settings::get('block_interest_cohort', TRUE) && !$response->headers->has('Permissions-Policy')) {
-      $response->headers->set('Permissions-Policy', 'interest-cohort=()');
-    }
-
     // If the current response isn't an implementation of the
     // CacheableResponseInterface, we assume that a Response is either
     // explicitly not cacheable or that caching headers are already set in
