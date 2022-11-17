@@ -1389,3 +1389,13 @@ function system_file_download($uri) {
     }
   }
 }
+
+/**
+ * Implements hook_archiver_info_alter().
+ */
+function system_archiver_info_alter(&$info) {
+  if (!class_exists(\ZipArchive::class)) {
+    // PHP Zip extension is missing.
+    unset($info['Zip']);
+  }
+}
