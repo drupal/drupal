@@ -92,6 +92,21 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
       ->loadUnchanged($media_id);
     $this->assertSame($media->getName(), $media_name2);
 
+    // Change the authored by field to an empty string, which should assign
+    // authorship to the anonymous user (uid 0).
+    $this->drupalGet('media/' . $media_id . '/edit');
+    $edit['uid[0][target_id]'] = '';
+    $this->submitForm($edit, 'Save');
+    /** @var \Drupal\media\MediaInterface $media */
+    $media = $this->container->get('entity_type.manager')
+      ->getStorage('media')
+      ->loadUnchanged($media_id);
+    $uid = $media->getOwnerId();
+    // Most SQL database drivers stringify fetches but entities are not
+    // necessarily stored in a SQL database. At the same time, NULL/FALSE/""
+    // won't do.
+    $this->assertTrue($uid === 0 || $uid === '0', 'Media authored by anonymous user.');
+
     // Test that there is no empty vertical tabs element, if the container is
     // empty (see #2750697).
     // Make the "Publisher ID" and "Created" fields hidden.
