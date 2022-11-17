@@ -68,9 +68,9 @@ class ConfigImportInstallProfileTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Unable to uninstall the Testing config import profile since it is the install profile.');
 
     // Uninstall dependencies of testing_config_import.
-    $core['module']['testing_config_import'] = 0;
     unset($core['module']['syslog']);
     unset($core['theme']['stark']);
+    $core['module']['testing_config_import'] = 0;
     $core['theme']['test_theme_theme'] = 0;
     $sync->write('core.extension', $core);
     $sync->deleteAll('syslog.');
