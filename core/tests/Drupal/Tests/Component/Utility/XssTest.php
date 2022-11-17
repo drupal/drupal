@@ -433,16 +433,6 @@ class XssTest extends TestCase {
         ['p'],
       ],
     ];
-    // @todo This dataset currently fails under 5.4 because of
-    //   https://www.drupal.org/node/1210798. Restore after its fixed.
-    if (version_compare(PHP_VERSION, '5.4.0', '<')) {
-      $cases[] = [
-        '<img src=" &#14;  javascript:alert(0)">',
-        'javascript',
-        'HTML scheme clearing evasion -- spaces and metacharacters before scheme.',
-        ['img'],
-      ];
-    }
     return $cases;
   }
 

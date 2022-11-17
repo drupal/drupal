@@ -145,14 +145,6 @@ class StandardTest extends UnitTestCase {
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Null_breaks_up_JavaScript_directive
     $data[] = ["<IMG SRC=java\0script:alert(\"XSS\")>", '<IMG>'];
 
-    // Spaces and meta chars before the JavaScript in images for XSS.
-    // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Spaces_and_meta_chars_before_the_JavaScript_in_images_for_XSS
-    // @todo This dataset currently fails under 5.4 because of
-    //   https://www.drupal.org/node/1210798. Restore after it's fixed.
-    if (version_compare(PHP_VERSION, '5.4.0', '<')) {
-      $data[] = ['<IMG SRC=" &#14;  javascript:alert(\'XSS\');">', '<IMG src="alert(&#039;XSS&#039;);">'];
-    }
-
     // Non-alpha-non-digit XSS.
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Non-alpha-non-digit_XSS
     $data[] = ['<SCRIPT/XSS SRC="http://ha.ckers.org/xss.js"></SCRIPT>', ''];
