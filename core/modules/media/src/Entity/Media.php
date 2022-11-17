@@ -297,6 +297,10 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
 
+    if (!$this->getOwner()) {
+      $this->setOwnerId(0);
+    }
+
     // If no thumbnail has been explicitly set, use the default thumbnail.
     if ($this->get('thumbnail')->isEmpty()) {
       $this->thumbnail->target_id = $this->loadThumbnail()->id();
