@@ -7,7 +7,6 @@
 
 namespace Drupal\Tests\Core\Entity\Sql;
 
-use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\MemoryCache\MemoryCache;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityFieldManager;
@@ -1296,8 +1295,13 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->with([$key])
       ->willReturn([]);
     $this->cache->expects($this->once())
-      ->method('set')
-      ->with($key, $entity, CacheBackendInterface::CACHE_PERMANENT, [$this->entityTypeId . '_values', 'entity_field_info']);
+      ->method('setMultiple')
+      ->with([
+        $key => [
+          'data' => $entity,
+          'tags' => [$this->entityTypeId . '_values', 'entity_field_info'],
+        ],
+      ]);
 
     $this->entityTypeManager->expects($this->any())
       ->method('getActiveDefinition')
