@@ -458,7 +458,6 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
 
     $fields['uid']
       ->setLabel(t('Authored by'))
-      ->setRequired(TRUE)
       ->setDescription(t('The user ID of the author.'))
       ->setRevisionable(TRUE)
       ->setDisplayOptions('form', [
