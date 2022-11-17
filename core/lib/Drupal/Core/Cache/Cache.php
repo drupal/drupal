@@ -136,6 +136,11 @@ class Cache {
    * call this function. Executing the query and formatting results should
    * happen in a #pre_render callback.
    *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. No
+   *   replacement provided.
+   *
+   * @see https://www.drupal.org/node/3308507
+   *
    * @param \Drupal\Core\Database\Query\SelectInterface $query
    *   A select query object.
    *
@@ -143,6 +148,7 @@ class Cache {
    *   A hash of the query arguments.
    */
   public static function keyFromQuery(SelectInterface $query) {
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. No replacement provided. https://www.drupal.org/node/3322044', E_USER_DEPRECATED);
     $query->preExecute();
     $keys = [(string) $query, $query->getArguments()];
     return hash('sha256', serialize($keys));
