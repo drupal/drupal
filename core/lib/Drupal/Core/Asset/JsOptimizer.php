@@ -3,6 +3,9 @@
 namespace Drupal\Core\Asset;
 
 use Drupal\Component\Utility\Unicode;
+use Peast\Formatter\Compact as CompactFormatter;
+use Peast\Peast;
+use Peast\Renderer;
 
 /**
  * Optimizes a JavaScript asset.
@@ -30,9 +33,11 @@ class JsOptimizer implements AssetOptimizerInterface {
     elseif (isset($js_asset['attributes']['charset'])) {
       $data = Unicode::convertToUtf8($data, $js_asset['attributes']['charset']);
     }
-
-    // No-op optimizer: no optimizations are applied to JavaScript assets.
-    return $data;
+    // Remove comments, whitespace, and optional braces.
+    $ast = Peast::latest($data)->parse();
+    $renderer = new Renderer();
+    $renderer->setFormatter(new CompactFormatter());
+    return $renderer->render($ast);
   }
 
   /**

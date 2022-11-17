@@ -1,1 +1,1 @@
-var latin9Char = '€';
+var latin9Char='€';

@@ -893,6 +893,7 @@ pathnames
 pcre
 pcss
 pdma
+peast
 percona
 permissionless
 persistable

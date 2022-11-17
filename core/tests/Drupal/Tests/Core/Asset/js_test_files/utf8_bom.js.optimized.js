@@ -1,1 +1,1 @@
-var utf8BOM = '☃';
+var utf8BOM='☃';
