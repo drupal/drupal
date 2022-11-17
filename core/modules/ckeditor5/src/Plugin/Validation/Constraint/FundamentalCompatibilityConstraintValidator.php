@@ -263,7 +263,7 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
     assert(in_array($filter_type, [
       FilterInterface::TYPE_MARKUP_LANGUAGE,
       FilterInterface::TYPE_HTML_RESTRICTOR,
-      FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE,
+      FilterInterface::TYPE_TRANSFORM_REVERSIBLE,
       FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE,
     ]));
     foreach ($text_format->filters() as $id => $filter) {
