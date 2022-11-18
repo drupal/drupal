@@ -6,6 +6,7 @@ class FileTranferTest extends DrupalWebTestCase {
   protected $username = 'drupal';
   protected $password = 'password';
   protected $port = '42';
+  protected $testConnection;
 
   public static function getInfo() {
     return array(

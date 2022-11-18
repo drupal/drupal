@@ -19,6 +19,11 @@ class HelpTestCase extends DrupalWebTestCase {
    */
   protected $any_user;
 
+  /**
+   * The list of modules.
+   */
+  protected $modules;
+
   public static function getInfo() {
     return array(
       'name' => 'Help functionality',

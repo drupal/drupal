@@ -1183,6 +1183,7 @@ class PageNotFoundTestCase extends DrupalWebTestCase {
  */
 class SiteMaintenanceTestCase extends DrupalWebTestCase {
   protected $admin_user;
+  protected $user;
 
   public static function getInfo() {
     return array(
@@ -1283,6 +1284,8 @@ class SiteMaintenanceTestCase extends DrupalWebTestCase {
  * Tests generic date and time handling capabilities of Drupal.
  */
 class DateTimeFunctionalTest extends DrupalWebTestCase {
+  protected $admin_user;
+
   public static function getInfo() {
     return array(
       'name' => 'Date and time',
@@ -1491,6 +1494,8 @@ class DateTimeFunctionalTest extends DrupalWebTestCase {
  * Tests date format configuration.
  */
 class DateFormatTestCase extends DrupalWebTestCase {
+  protected $admin_user;
+
   public static function getInfo() {
     return array(
       'name' => 'Date format',
@@ -1649,6 +1654,8 @@ class PageTitleFiltering extends DrupalWebTestCase {
  * Test front page functionality and administration.
  */
 class FrontPageTestCase extends DrupalWebTestCase {
+  protected $admin_user;
+  protected $node_path;
 
   public static function getInfo() {
     return array(
@@ -1854,6 +1861,9 @@ class SystemMainContentFallback extends DrupalWebTestCase {
  * Tests for the theme interface functionality.
  */
 class SystemThemeFunctionalTest extends DrupalWebTestCase {
+  protected $admin_user;
+  protected $node;
+
   public static function getInfo() {
     return array(
       'name' => 'Theme interface functionality',
@@ -2768,6 +2778,9 @@ class ShutdownFunctionsTest extends DrupalWebTestCase {
  * Tests administrative overview pages.
  */
 class SystemAdminTestCase extends DrupalWebTestCase {
+  protected $admin_user;
+  protected $web_user;
+
   public static function getInfo() {
     return array(
       'name' => 'Administrative pages',
@@ -2881,6 +2894,8 @@ class SystemAdminTestCase extends DrupalWebTestCase {
  * Tests authorize.php and related hooks.
  */
 class SystemAuthorizeCase extends DrupalWebTestCase {
+  protected $admin_user;
+
   public static function getInfo() {
     return array(
       'name' => 'Authorize API',

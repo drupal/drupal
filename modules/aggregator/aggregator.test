@@ -909,6 +909,8 @@ class AggregatorCronTestCase extends AggregatorTestCase {
  * Tests rendering functionality in the Aggregator module.
  */
 class AggregatorRenderingTestCase extends AggregatorTestCase {
+  protected $admin_user;
+
   public static function getInfo() {
     return array(
       'name' => 'Checks display of aggregator items',

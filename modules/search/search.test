@@ -753,6 +753,9 @@ class SearchExactTestCase extends DrupalWebTestCase {
  */
 class SearchCommentTestCase extends DrupalWebTestCase {
   protected $admin_user;
+  protected $comment_subject;
+  protected $admin_role;
+  protected $node;
 
   public static function getInfo() {
     return array(
@@ -1216,6 +1219,7 @@ class SearchSimplifyTestCase extends DrupalWebTestCase {
  * Tests keywords and conditions.
  */
 class SearchKeywordsConditions extends DrupalWebTestCase {
+  protected $searching_user;
 
   public static function getInfo() {
     return array(

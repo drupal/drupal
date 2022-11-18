@@ -2617,6 +2617,8 @@ class LocaleUILanguageNegotiationTest extends DrupalWebTestCase {
  * Test that URL rewriting works as expected.
  */
 class LocaleUrlRewritingTest extends DrupalWebTestCase {
+  protected $web_user;
+
   public static function getInfo() {
     return array(
       'name' => 'URL rewriting',

@@ -9,6 +9,8 @@
  * Provides common functionality for the Field UI test classes.
  */
 class FieldUITestCase extends DrupalWebTestCase {
+  protected $type;
+  protected $hyphen_type;
 
   function setUp() {
     // Since this is a base class for many test cases, support the same
@@ -134,6 +136,10 @@ class FieldUITestCase extends DrupalWebTestCase {
  * Tests the functionality of the 'Manage fields' screen.
  */
 class FieldUIManageFieldsTestCase extends FieldUITestCase {
+  protected $field_label;
+  protected $field_name_input;
+  protected $field_name;
+
   public static function getInfo() {
     return array(
       'name' => 'Manage fields',

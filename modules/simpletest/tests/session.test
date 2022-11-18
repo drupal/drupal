@@ -6,6 +6,8 @@
  */
 
 class SessionTestCase extends DrupalWebTestCase {
+  protected $_logged_in;
+
   public static function getInfo() {
     return array(
       'name' => 'Session tests',

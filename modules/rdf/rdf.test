@@ -415,6 +415,8 @@ class RdfMappingDefinitionTestCase extends TaxonomyWebTestCase {
 }
 
 class RdfCommentAttributesTestCase extends CommentHelperCase {
+  protected $node1;
+  protected $node2;
 
   public static function getInfo() {
     return array(

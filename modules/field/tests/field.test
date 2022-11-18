@@ -72,6 +72,15 @@ class FieldTestCase extends DrupalWebTestCase {
 }
 
 class FieldAttachTestCase extends FieldTestCase {
+  protected $field_name;
+  protected $field;
+  protected $field_id;
+  protected $instance;
+  protected $field_name_2;
+  protected $field_2;
+  protected $field_id_2;
+  protected $instance_2;
+
   function setUp() {
     // Since this is a base class for many test cases, support the same
     // flexibility that DrupalWebTestCase::setUp() has for the modules to be
@@ -705,6 +714,8 @@ class FieldAttachStorageTestCase extends FieldAttachTestCase {
  * Unit test class for non-storage related field_attach_* functions.
  */
 class FieldAttachOtherTestCase extends FieldAttachTestCase {
+  protected $instance2;
+
   public static function getInfo() {
     return array(
       'name' => 'Field attach tests (other)',
@@ -1605,6 +1616,13 @@ class FieldInfoTestCase extends FieldTestCase {
 }
 
 class FieldFormTestCase extends FieldTestCase {
+  protected $field_single;
+  protected $field_multiple;
+  protected $field_unlimited;
+  protected $field;
+  protected $field_name;
+  protected $instance;
+
   public static function getInfo() {
     return array(
       'name' => 'Field form tests',
@@ -2152,6 +2170,15 @@ class FieldFormTestCase extends FieldTestCase {
 }
 
 class FieldDisplayAPITestCase extends FieldTestCase {
+  protected $field;
+  protected $instance;
+  protected $field_name;
+  protected $label;
+  protected $cardinality;
+  protected $values;
+  protected $entity;
+  protected $is_new;
+
   public static function getInfo() {
     return array(
       'name' => 'Field Display API tests',
@@ -2347,6 +2374,11 @@ class FieldDisplayAPITestCase extends FieldTestCase {
 }
 
 class FieldCrudTestCase extends FieldTestCase {
+  protected $field;
+  protected $another_field;
+  protected $instance_definition;
+  protected $another_instance_definition;
+
   public static function getInfo() {
     return array(
       'name' => 'Field CRUD tests',
@@ -2844,6 +2876,8 @@ class FieldCrudTestCase extends FieldTestCase {
 
 class FieldInstanceCrudTestCase extends FieldTestCase {
   protected $field;
+  protected $instance_definition;
+  protected $another_instance_definition;
 
   public static function getInfo() {
     return array(
@@ -3073,6 +3107,11 @@ class FieldInstanceCrudTestCase extends FieldTestCase {
  * that only the correct values are returned by field_available_languages().
  */
 class FieldTranslationsTestCase extends FieldTestCase {
+  protected $field;
+  protected $instance;
+  protected $field_name;
+  protected $entity_type;
+
   public static function getInfo() {
     return array(
       'name' => 'Field translations tests',
@@ -3423,6 +3462,12 @@ class FieldTranslationsTestCase extends FieldTestCase {
  */
 class FieldBulkDeleteTestCase extends FieldTestCase {
   protected $field;
+  protected $fields;
+  protected $instances;
+  protected $entities;
+  protected $entities_by_bundles;
+  protected $bundles;
+  protected $entity_type;
 
   public static function getInfo() {
     return array(

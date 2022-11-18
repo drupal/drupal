@@ -373,6 +373,8 @@ class FileTaxonomyTermTestCase extends DrupalWebTestCase {
  *   that aren't related to fields into it.
  */
 class FileManagedFileElementTestCase extends FileFieldTestCase {
+  protected $originalDisplayErrorsValue;
+
   public static function getInfo() {
     return array(
       'name' => 'Managed file element test',

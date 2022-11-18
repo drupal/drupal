@@ -10,6 +10,9 @@
  * Tests EntityFieldQuery.
  */
 class EntityFieldQueryTestCase extends DrupalWebTestCase {
+  protected $fields;
+  protected $field_names;
+  protected $instances;
 
   public static function getInfo() {
     return array(

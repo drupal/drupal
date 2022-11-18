@@ -1,6 +1,13 @@
 <?php
 
 class BootstrapIPAddressTestCase extends DrupalWebTestCase {
+  protected $oldserver;
+  protected $remote_ip;
+  protected $proxy_ip;
+  protected $proxy2_ip;
+  protected $forwarded_ip;
+  protected $cluster_ip;
+  protected $untrusted_ip;
 
   public static function getInfo() {
     return array(

@@ -66,6 +66,16 @@ abstract class DrupalTestCase {
   public $useSetupModulesCache = FALSE;
 
   /**
+   * The original language.
+   */
+  protected $originalLanguage;
+
+  /**
+   * The original default language.
+   */
+  protected $originalLanguageDefault;
+
+  /**
    * Current results of this test case.
    *
    * @var Array
@@ -949,19 +959,9 @@ class DrupalWebTestCase extends DrupalTestCase {
   protected $redirect_count;
 
   /**
-   * The original language.
-   */
-  protected $originalLanguage;
-
-  /**
    * The original language URL.
    */
   protected $originalLanguageUrl;
-
-  /**
-   * The original default language.
-   */
-  protected $originalLanguageDefault;
 
   /**
    * The original active installation profile.

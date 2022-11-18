@@ -173,6 +173,9 @@ class FilterCRUDTestCase extends DrupalWebTestCase {
  * Tests the administrative functionality of the Filter module.
  */
 class FilterAdminTestCase extends DrupalWebTestCase {
+  protected $admin_user;
+  protected $web_user;
+
   public static function getInfo() {
     return array(
       'name' => 'Filter administration functionality',
@@ -831,6 +834,8 @@ class FilterNoFormatTestCase extends DrupalWebTestCase {
  * Security tests for missing/vanished text formats or filters.
  */
 class FilterSecurityTestCase extends DrupalWebTestCase {
+  protected $admin_user;
+
   public static function getInfo() {
     return array(
       'name' => 'Security',

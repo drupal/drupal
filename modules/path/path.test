@@ -338,6 +338,8 @@ class PathTaxonomyTermTestCase extends DrupalWebTestCase {
  * Tests URL aliases for translated nodes.
  */
 class PathLanguageTestCase extends DrupalWebTestCase {
+  protected $web_user;
+
   public static function getInfo() {
     return array(
       'name' => 'Path aliases with translated nodes',

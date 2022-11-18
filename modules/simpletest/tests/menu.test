@@ -1042,6 +1042,9 @@ class MenuTreeOutputTestCase extends DrupalWebTestCase {
  * Menu breadcrumbs related tests.
  */
 class MenuBreadcrumbTestCase extends MenuWebTestCase {
+  protected $admin_user;
+  protected $web_user;
+
   public static function getInfo() {
     return array(
       'name' => 'Breadcrumbs',
@@ -1537,6 +1540,8 @@ class MenuBreadcrumbTestCase extends MenuWebTestCase {
  * Tests active menu trails.
  */
 class MenuTrailTestCase extends MenuWebTestCase {
+  protected $admin_user;
+
   public static function getInfo() {
     return array(
       'name' => 'Active trail',

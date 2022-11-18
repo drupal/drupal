@@ -383,6 +383,8 @@ class AJAXCommandsTestCase extends AJAXTestCase {
  * Test that $form_state['values'] is properly delivered to $ajax['callback'].
  */
 class AJAXFormValuesTestCase extends AJAXTestCase {
+  protected $web_user;
+
   public static function getInfo() {
     return array(
       'name' => 'AJAX command form values',
@@ -434,6 +436,8 @@ class AJAXFormValuesTestCase extends AJAXTestCase {
  * Tests that Ajax-enabled forms work when multiple instances of the same form are on a page.
  */
 class AJAXMultiFormTestCase extends AJAXTestCase {
+  protected $web_user;
+
   public static function getInfo() {
     return array(
       'name' => 'AJAX multi form',

@@ -46,6 +46,8 @@ class TaxonomyWebTestCase extends DrupalWebTestCase {
  * Tests the taxonomy vocabulary interface.
  */
 class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
+  protected $vocabulary;
+  protected $admin_user;
 
   public static function getInfo() {
     return array(
@@ -195,6 +197,10 @@ class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
  * Tests for taxonomy vocabulary functions.
  */
 class TaxonomyVocabularyTestCase extends TaxonomyWebTestCase {
+  protected $vocabulary;
+  protected $field;
+  protected $field_name;
+  protected $instance;
 
   public static function getInfo() {
     return array(
@@ -484,6 +490,7 @@ class TaxonomyTermFunctionTestCase extends TaxonomyWebTestCase {
  * Test for legacy node bug.
  */
 class TaxonomyLegacyTestCase extends TaxonomyWebTestCase {
+  protected $admin_user;
 
   public static function getInfo() {
     return array(
@@ -522,6 +529,9 @@ class TaxonomyLegacyTestCase extends TaxonomyWebTestCase {
  * Tests for taxonomy term functions.
  */
 class TaxonomyTermTestCase extends TaxonomyWebTestCase {
+  protected $vocabulary;
+  protected $instance;
+  protected $admin_user;
 
   public static function getInfo() {
     return array(
@@ -1037,6 +1047,9 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
  * Tests the rendering of term reference fields in RSS feeds.
  */
 class TaxonomyRSSTestCase extends TaxonomyWebTestCase {
+  protected $vocabulary;
+  protected $instance;
+  protected $admin_user;
 
   public static function getInfo() {
     return array(
@@ -1131,6 +1144,14 @@ class TaxonomyRSSTestCase extends TaxonomyWebTestCase {
  * Tests the hook implementations that maintain the taxonomy index.
  */
 class TaxonomyTermIndexTestCase extends TaxonomyWebTestCase {
+  protected $vocabulary;
+  protected $instance_1;
+  protected $field_name_1;
+  protected $field_1;
+  protected $instance_2;
+  protected $field_name_2;
+  protected $field_2;
+  protected $admin_user;
 
   public static function getInfo() {
     return array(
@@ -1349,6 +1370,7 @@ class TaxonomyTermIndexTestCase extends TaxonomyWebTestCase {
  * Test the taxonomy_term_load_multiple() function.
  */
 class TaxonomyLoadMultipleTestCase extends TaxonomyWebTestCase {
+  protected $taxonomy_admin;
 
   public static function getInfo() {
     return array(
@@ -1482,6 +1504,8 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
 
   protected $instance;
   protected $vocabulary;
+  protected $field_name;
+  protected $field;
 
   public static function getInfo() {
     return array(
@@ -1658,6 +1682,8 @@ class TaxonomyTermFieldMultipleVocabularyTestCase extends TaxonomyWebTestCase {
   protected $instance;
   protected $vocabulary1;
   protected $vocabulary2;
+  protected $field_name;
+  protected $field;
 
   public static function getInfo() {
     return array(
@@ -1776,6 +1802,10 @@ class TaxonomyTermFieldMultipleVocabularyTestCase extends TaxonomyWebTestCase {
  * Test taxonomy token replacement in strings.
  */
 class TaxonomyTokenReplaceTestCase extends TaxonomyWebTestCase {
+  protected $vocabulary;
+  protected $instance;
+  protected $langcode;
+  protected $admin_user;
 
   public static function getInfo() {
     return array(
@@ -1972,6 +2002,9 @@ class TaxonomyThemeTestCase extends TaxonomyWebTestCase {
  * Tests the functionality of EntityFieldQuery for taxonomy entities.
  */
 class TaxonomyEFQTestCase extends TaxonomyWebTestCase {
+  protected $admin_user;
+  protected $vocabulary;
+
   public static function getInfo() {
     return array(
       'name' => 'Taxonomy EntityFieldQuery',
@@ -2175,6 +2208,8 @@ class TaxonomyTermCacheUsageTestCase extends TaxonomyWebTestCase {
  * Tests appropriate access control to private file fields on a term.
  */
 class TaxonomyPrivateFileTestCase extends TaxonomyWebTestCase {
+  protected $vocabulary;
+
   public static function getInfo() {
     return array(
       'name' => 'Taxonomy term private file access',

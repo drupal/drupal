@@ -1126,6 +1126,7 @@ class FormsElementsVerticalTabsFunctionalTest extends DrupalWebTestCase {
  * values aren't lost due to a wrong form rebuild.
  */
 class FormsFormStorageTestCase extends DrupalWebTestCase {
+  protected $web_user;
 
   public static function getInfo() {
     return array(
@@ -1620,6 +1621,8 @@ class FormStateValuesCleanAdvancedTestCase extends DrupalWebTestCase {
  * @todo Add tests for other aspects of form rebuilding.
  */
 class FormsRebuildTestCase extends DrupalWebTestCase {
+  protected $web_user;
+
   public static function getInfo() {
     return array(
       'name' => 'Form rebuilding',

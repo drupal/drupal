@@ -684,6 +684,8 @@ class MenuTestCase extends DrupalWebTestCase {
  * Test menu settings for nodes.
  */
 class MenuNodeTestCase extends DrupalWebTestCase {
+  protected $admin_user;
+
   public static function getInfo() {
     return array(
       'name' => 'Menu settings for nodes',

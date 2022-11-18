@@ -363,6 +363,9 @@ class FileSpaceUsedTest extends FileTestCase {
  *  This will run tests against the file validation functions (file_validate_*).
  */
 class FileValidatorTest extends DrupalWebTestCase {
+  protected $image;
+  protected $non_image;
+
   public static function getInfo() {
     return array(
       'name' => 'File validator tests',
@@ -565,6 +568,11 @@ class FileSaveUploadTest extends FileHookTestCase {
    * The largest file id when the test starts.
    */
   protected $maxFidBefore;
+
+  /**
+   * An image extension.
+   */
+  protected $image_extension;
 
   public static function getInfo() {
     return array(
@@ -1238,6 +1246,8 @@ class RemoteFileDirectoryTest extends FileDirectoryTest {
  * Tests the file_scan_directory() function.
  */
 class FileScanDirectoryTest extends FileTestCase {
+  protected $path;
+
   public static function getInfo() {
     return array(
       'name' => 'File scan directory',
@@ -2767,6 +2777,10 @@ class FileURLRewritingTest extends FileTestCase {
  * Tests for file_munge_filename() and file_unmunge_filename().
  */
 class FileNameMungingTest extends FileTestCase {
+  protected $bad_extension;
+  protected $name;
+  protected $name_with_uc_ext;
+
   public static function getInfo() {
     return array(
       'name' => 'File naming',

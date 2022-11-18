@@ -6,6 +6,11 @@
  */
 
 class OptionsWidgetsTestCase extends FieldTestCase {
+  protected $card_1;
+  protected $card_2;
+  protected $bool;
+  protected $web_user;
+
   public static function getInfo() {
     return array(
       'name'  => 'Options widgets',

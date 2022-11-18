@@ -10,6 +10,8 @@
  */
 class TranslationTestCase extends DrupalWebTestCase {
   protected $book;
+  protected $admin_user;
+  protected $translator;
 
   public static function getInfo() {
     return array(

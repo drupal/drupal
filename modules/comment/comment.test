@@ -263,6 +263,9 @@ class CommentHelperCase extends DrupalWebTestCase {
 }
 
 class CommentInterfaceTest extends CommentHelperCase {
+  protected $web_user2;
+  protected $comment;
+
   public static function getInfo() {
     return array(
       'name' => 'Comment interface',

@@ -9,6 +9,8 @@
  * Unit tests for the module API.
  */
 class ModuleUnitTest extends DrupalWebTestCase {
+  protected $user;
+
   public static function getInfo() {
     return array(
       'name' => 'Module API',

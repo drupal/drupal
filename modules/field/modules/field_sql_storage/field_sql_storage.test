@@ -12,6 +12,12 @@
  * Tests field storage.
  */
 class FieldSqlStorageTestCase extends DrupalWebTestCase {
+  protected $field;
+  protected $instance;
+  protected $field_name;
+  protected $table;
+  protected $revision_table;
+
   public static function getInfo() {
     return array(
       'name'  => 'Field SQL storage tests',

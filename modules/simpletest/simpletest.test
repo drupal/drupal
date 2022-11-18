@@ -17,6 +17,26 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
    */
   protected $test_ids = array();
 
+  /**
+   * The pass message.
+   */
+  protected $pass;
+
+  /**
+   * The fail message.
+   */
+  protected $fail;
+
+  /**
+   * The valid permission.
+   */
+  protected $valid_permission;
+
+  /**
+   * The invalid permission.
+   */
+  protected $invalid_permission;
+
   public static function getInfo() {
     return array(
       'name' => 'SimpleTest functionality',
@@ -638,6 +658,7 @@ class SimpleTestInstallationProfileModuleTestsTestCase extends DrupalWebTestCase
    * @see DrupalSystemListingCompatibleTestCase
    */
   protected $profile = 'testing';
+  protected $admin_user;
 
   public static function getInfo() {
     return array(
@@ -684,6 +705,7 @@ class SimpleTestOtherInstallationProfileModuleTestsTestCase extends DrupalWebTes
    * @see DrupalSystemListingCompatibleTestCase
    */
   protected $profile = 'minimal';
+  protected $admin_user;
 
   public static function getInfo() {
     return array(
@@ -728,6 +750,7 @@ class SimpleTestDiscoveryTestCase extends DrupalWebTestCase {
    * @see DrupalSystemListingCompatibleTestCase
    */
   protected $profile = 'testing';
+  protected $admin_user;
 
   public static function getInfo() {
     return array(

@@ -477,6 +477,11 @@ class PollJSAddChoice extends DrupalWebTestCase {
 }
 
 class PollVoteCheckHostname extends PollTestCase {
+  protected $admin_user;
+  protected $poll_nid;
+  protected $web_user1;
+  protected $web_user2;
+
   public static function getInfo() {
     return array(
       'name' => 'User poll vote capability.',

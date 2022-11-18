@@ -379,6 +379,12 @@ class ProfileTestAutocomplete extends ProfileTestCase {
 }
 
 class ProfileBlockTestCase extends ProfileTestCase {
+  protected $field1;
+  protected $field2;
+  protected $value1;
+  protected $value2;
+  protected $node;
+
   public static function getInfo() {
     return array(
       'name' => 'Block availability',

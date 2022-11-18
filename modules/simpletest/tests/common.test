@@ -2864,6 +2864,7 @@ class DrupalSystemListingTestCase extends DrupalWebTestCase {
  * Tests for the format_date() function.
  */
 class FormatDateUnitTest extends DrupalWebTestCase {
+  protected $admin_user;
 
   /**
    * Arbitrary langcode for a custom language.

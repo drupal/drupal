@@ -9,6 +9,10 @@
  * Tests for the 'List' field types.
  */
 class ListFieldTestCase extends FieldTestCase {
+  protected $field;
+  protected $instance;
+  protected $field_name;
+
   public static function getInfo() {
     return array(
       'name' => 'List field',
@@ -117,6 +121,12 @@ class ListFieldTestCase extends FieldTestCase {
  * Sets up a List field for testing allowed values functions.
  */
 class ListDynamicValuesTestCase extends FieldTestCase {
+  protected $field;
+  protected $field_name;
+  protected $instance;
+  protected $test;
+  protected $entity;
+
   function setUp() {
     parent::setUp(array('list', 'field_test', 'list_test'));
 
@@ -200,6 +210,11 @@ class ListDynamicValuesValidationTestCase extends ListDynamicValuesTestCase {
  * List module UI tests.
  */
 class ListFieldUITestCase extends FieldTestCase {
+  protected $type;
+  protected $hyphen_type;
+  protected $field_name;
+  protected $admin_path;
+
   public static function getInfo() {
     return array(
       'name' => 'List field UI',

@@ -9,6 +9,8 @@ class TextFieldTestCase extends DrupalWebTestCase {
   protected $instance;
   protected $admin_user;
   protected $web_user;
+  protected $field;
+  protected $field_name;
 
   public static function getInfo() {
     return array(
@@ -238,6 +240,8 @@ class TextFieldTestCase extends DrupalWebTestCase {
 }
 
 class TextSummaryTestCase extends DrupalWebTestCase {
+  protected $article_creator;
+
   public static function getInfo() {
     return array(
       'name' => 'Text summary',
@@ -414,6 +418,10 @@ class TextSummaryTestCase extends DrupalWebTestCase {
 }
 
 class TextTranslationTestCase extends DrupalWebTestCase {
+  protected $format;
+  protected $admin;
+  protected $translator;
+
   public static function getInfo() {
     return array(
       'name' => 'Text translation',
