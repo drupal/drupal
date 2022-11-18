@@ -97,10 +97,6 @@ class Rss extends StylePluginBase {
   }
 
   public function render() {
-    if (empty($this->view->rowPlugin)) {
-      trigger_error('Drupal\views\Plugin\views\style\Rss: Missing row plugin', E_WARNING);
-      return [];
-    }
     $rows = [];
 
     // This will be filled in by the row plugin and is used later on in the
