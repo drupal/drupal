@@ -2,7 +2,9 @@
 
 namespace Drupal\system_test\Controller;
 
+use Drupal\Core\Cache\CacheableAjaxResponse;
 use Drupal\Core\Cache\CacheableJsonResponse;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheableResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -20,12 +22,17 @@ class PageCacheAcceptHeaderController {
    * @return mixed
    */
   public function content(Request $request) {
-    if ($request->getRequestFormat() === 'json') {
-      return new CacheableJsonResponse(['content' => 'oh hai this is json']);
+    if ($request->getRequestFormat() === 'json' && $request->query->get('_wrapper_format') === 'drupal_ajax') {
+      $response = new CacheableAjaxResponse(['content' => 'oh hai this is ajax']);
+    }
+    elseif ($request->getRequestFormat() === 'json') {
+      $response = new CacheableJsonResponse(['content' => 'oh hai this is json']);
     }
     else {
-      return new CacheableResponse("<p>oh hai this is html.</p>");
+      $response = new CacheableResponse("<p>oh hai this is html.</p>");
     }
+    $response->addCacheableDependency((new CacheableMetadata())->addCacheContexts(['url.query_args:_wrapper_format']));
+    return $response;
   }
 
 }

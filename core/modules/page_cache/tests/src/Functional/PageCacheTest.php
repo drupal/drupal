@@ -127,6 +127,7 @@ class PageCacheTest extends BrowserTestBase {
 
     $accept_header_cache_url = Url::fromRoute('system_test.page_cache_accept_header');
     $accept_header_cache_url_with_json = Url::fromRoute('system_test.page_cache_accept_header', ['_format' => 'json']);
+    $accept_header_cache_url_with_ajax = Url::fromRoute('system_test.page_cache_accept_header', ['_format' => 'json'], ['query' => ['_wrapper_format' => 'drupal_ajax']]);
 
     $this->drupalGet($accept_header_cache_url);
     // Verify that HTML page was not yet cached.
@@ -145,6 +146,15 @@ class PageCacheTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
     // Verify that the correct JSON response was returned.
     $this->assertSession()->responseContains('{"content":"oh hai this is json"}');
+
+    $this->drupalGet($accept_header_cache_url_with_ajax);
+    // Verify that AJAX response was not yet cached.
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
+    $this->drupalGet($accept_header_cache_url_with_ajax);
+    // Verify that AJAX response was cached.
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
+    // Verify that the correct AJAX response was returned.
+    $this->assertSession()->responseContains('{"content":"oh hai this is ajax"}');
   }
 
   /**
