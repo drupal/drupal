@@ -70,7 +70,12 @@ function toolbar_menu() {
 function toolbar_toggle_page() {
   global $base_path;
   // Toggle the value in the cookie.
-  setcookie('Drupal.toolbar.collapsed', !_toolbar_is_collapsed(), NULL, $base_path);
+  drupal_setcookie('Drupal.toolbar.collapsed', !_toolbar_is_collapsed(),
+    array(
+      'samesite' => 'Lax',
+      'path' => $base_path,
+    )
+  );
   // Redirect the user from where he used the toggle element.
   drupal_goto();
 }

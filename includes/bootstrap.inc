@@ -3949,6 +3949,14 @@ function drupal_setcookie($name, $value, $options) {
     setcookie($name, $value, $options);
   }
   else {
+    $defaults = array(
+      'expires' => 0,
+      'path' => '',
+      'domain' => '',
+      'secure' => FALSE,
+      'httponly' => FALSE,
+    );
+    $options += $defaults;
     setcookie($name, $value, $options['expires'], $options['path'], $options['domain'], $options['secure'], $options['httponly']);
   }
 }
