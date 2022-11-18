@@ -28,14 +28,6 @@
   box-shadow: none;
 }
 
-/* stylelint-disable-next-line selector-type-no-unknown */
-_:-ms-fullscreen,
-.fieldset {
-  display: table;
-  box-sizing: border-box;
-  width: 100%;
-}
-
 .fieldset__legend {
   float: left; /* Prevent sticking out of top of fieldset. */
   width: 100%;
