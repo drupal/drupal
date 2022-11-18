@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\Template\TwigEnvironment;
 use Drupal\Core\Template\TwigPhpStorageCache;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\DependencyInjection\Definition;
@@ -227,6 +228,64 @@ TWIG;
 
     $output = $environment->load(basename($tempfile))->render();
     $this->assertEquals($template_after, $output);
+  }
+
+  /**
+   * Test twig file prefix change.
+   */
+  public function testTwigFilePrefixChange() {
+    /** @var \Drupal\Core\Template\TwigEnvironment $environment */
+    $environment = \Drupal::service('twig');
+    $cache_prefixes = [];
+    $cache_filenames = [];
+
+    // Assume this is the service container of webserver A.
+    $container_a = $this->container;
+
+    $template_name = 'core/modules/system/templates/container.html.twig';
+
+    // Request 1 handled by webserver A.
+    $cache_prefixes[] = \Drupal::state()->get(TwigEnvironment::CACHE_PREFIX_METADATA_KEY)['twig_cache_prefix'];
+    $cache_filenames[] = $environment->getCache()->generateKey($template_name, $environment->getTemplateClass($template_name));
+
+    // Assume this is the service container of webserver B.
+    // Assume that the files on the webserver B have a different mtime than
+    // webserver A.
+    touch('core/lib/Drupal/Core/Template/TwigExtension.php');
+    clearstatcache(TRUE, 'core/lib/Drupal/Core/Template/TwigExtension.php');
+    $container_b = \Drupal::service('kernel')->rebuildContainer();
+
+    // Request 2 handled by webserver B.
+    \Drupal::setContainer($container_b);
+    $environment = \Drupal::service('twig');
+    $cache_prefixes[] = \Drupal::state()->get(TwigEnvironment::CACHE_PREFIX_METADATA_KEY)['twig_cache_prefix'];
+    $cache_filenames[] = $environment->getCache()->generateKey($template_name, $environment->getTemplateClass($template_name));
+
+    // Request 3 handled by webserver A.
+    \Drupal::setContainer($container_a);
+    $container = \Drupal::getContainer();
+    // Emulate twig service reconstruct on new request.
+    $container->set('twig', NULL);
+    $environment = $container->get('twig');
+    $cache_prefixes[] = \Drupal::state()->get(TwigEnvironment::CACHE_PREFIX_METADATA_KEY)['twig_cache_prefix'];
+    $cache_filenames[] = $environment->getCache()->generateKey($template_name, $environment->getTemplateClass($template_name));
+
+    // Request 4 handled by webserver B.
+    \Drupal::setContainer($container_b);
+    $container = \Drupal::getContainer();
+    // Emulate twig service reconstruct on new request.
+    $container->set('twig', NULL);
+    $environment = $container->get('twig');
+    $cache_prefixes[] = \Drupal::state()->get(TwigEnvironment::CACHE_PREFIX_METADATA_KEY)['twig_cache_prefix'];
+    $cache_filenames[] = $environment->getCache()->generateKey($template_name, $environment->getTemplateClass($template_name));
+
+    // The cache prefix should not have been changed, as this is stored in
+    // state and thus shared between all (web)servers.
+    $this->assertEquals(count(array_unique($cache_prefixes)), 1);
+
+    // This also applies to twig's file cache resulting in an unlimited growth
+    // of the cache storage directory.
+    $this->assertEquals(count(array_unique($cache_filenames)), 1);
   }
 
 }
