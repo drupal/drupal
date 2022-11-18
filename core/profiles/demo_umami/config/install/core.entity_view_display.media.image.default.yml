@@ -18,6 +18,8 @@ content:
     settings:
       responsive_image_style: 3_2_image
       image_link: ''
+      image_loading:
+        attribute: lazy
     third_party_settings: {  }
     weight: 1
     region: content

@@ -67,3 +67,10 @@ field.formatter.settings.responsive_image:
     image_link:
       type: string
       label: 'Link image to'
+    image_loading:
+      type: mapping
+      label: 'Image loading settings'
+      mapping:
+        attribute:
+          type: string
+          label: 'Loading attribute'

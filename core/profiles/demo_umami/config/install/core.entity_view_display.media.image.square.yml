@@ -24,6 +24,8 @@ content:
     settings:
       responsive_image_style: square
       image_link: ''
+      image_loading:
+        attribute: lazy
     third_party_settings: {  }
     weight: 1
     region: content

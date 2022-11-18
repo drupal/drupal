@@ -12,9 +12,11 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\views\Plugin\Derivative\ViewsLocalTask;
+use Drupal\views\ViewEntityInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
+use Drupal\views\ViewsConfigUpdater;
 
 /**
  * Implements hook_help().
@@ -814,4 +816,13 @@ function views_view_delete(EntityInterface $entity) {
       break;
     }
   }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function views_view_presave(ViewEntityInterface $view) {
+  /** @var \Drupal\views\ViewsConfigUpdater $config_updater */
+  $config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
+  $config_updater->updateAll($view);
 }

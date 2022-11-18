@@ -111,6 +111,69 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
   }
 
   /**
+   * Performs all required updates.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The View to update.
+   *
+   * @return bool
+   *   Whether the view was updated.
+   */
+  public function updateAll(ViewEntityInterface $view) {
+    return $this->processDisplayHandlers($view, FALSE, function (&$handler, $handler_type, $key, $display_id) use ($view) {
+      $changed = FALSE;
+      if ($this->processResponsiveImageLazyLoadFieldHandler($handler, $handler_type, $view)) {
+        $changed = TRUE;
+      }
+      return $changed;
+    });
+  }
+
+  /**
+   * Add lazy load options to all responsive_image type field configurations.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The View to update.
+   *
+   * @return bool
+   *   Whether the view was updated.
+   */
+  public function needsResponsiveImageLazyLoadFieldUpdate(ViewEntityInterface $view): bool {
+    return $this->processDisplayHandlers($view, TRUE, function (&$handler, $handler_type) use ($view) {
+      return $this->processResponsiveImageLazyLoadFieldHandler($handler, $handler_type, $view);
+    });
+  }
+
+  /**
+   * Processes responsive_image type fields.
+   *
+   * @param array $handler
+   *   A display handler.
+   * @param string $handler_type
+   *   The handler type.
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The View being updated.
+   *
+   * @return bool
+   *   Whether the handler was updated.
+   */
+  protected function processResponsiveImageLazyLoadFieldHandler(array &$handler, string $handler_type, ViewEntityInterface $view): bool {
+    $changed = FALSE;
+
+    // Add any missing settings for lazy loading.
+    if (($handler_type === 'field')
+      && isset($handler['plugin_id'], $handler['type'])
+      && $handler['plugin_id'] === 'field'
+      && $handler['type'] === 'responsive_image'
+      && !isset($handler['settings']['image_loading'])) {
+      $handler['settings']['image_loading'] = ['attribute' => 'eager'];
+      $changed = TRUE;
+    }
+
+    return $changed;
+  }
+
+  /**
    * Processes all display handlers.
    *
    * @param \Drupal\views\ViewEntityInterface $view
