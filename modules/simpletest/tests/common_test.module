@@ -52,18 +52,6 @@ function common_test_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
-  $items['common-test/existing_interest_cohort_policy'] = array(
-    'title' => 'Test existing interest-cohort policy',
-    'page callback' => 'existing_interest_cohort_policy',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-  );
-  $items['common-test/existing_permissions_policy_header'] = array(
-    'title' => 'Test existing Permissions-Policy header',
-    'page callback' => 'existing_permissions_policy_header',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-  );
   $items['common-test/html_head_link'] = array(
     'title' => 'Test HTML head link',
     'page callback' => 'common_test_html_head_link',
@@ -303,22 +291,6 @@ function common_test_js_and_css_querystring() {
  */
 function common_test_cron() {
   throw new Exception(t('Uncaught exception'));
-}
-
-/**
- * Page callback.
- */
-function existing_interest_cohort_policy() {
-  drupal_add_http_header('Permissions-Policy', 'interest-cohort=*');
-  print __FUNCTION__;
-}
-
-/**
- * Page callback.
- */
-function existing_permissions_policy_header() {
-  drupal_add_http_header('Permissions-Policy', 'geolocation=()');
-  print __FUNCTION__;
 }
 
 /**

@@ -3354,6 +3354,13 @@ function system_update_7084() {
 }
 
 /**
+ * Remove FLoC-blocking variable.
+ */
+function system_update_7085() {
+  variable_del('block_interest_cohort');
+}
+
+/**
  * @} End of "defgroup updates-7.x-extra".
  * The next series of updates should start at 8000.
  */

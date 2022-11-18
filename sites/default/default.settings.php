@@ -747,21 +747,6 @@ $conf['mail_display_name_site_name'] = TRUE;
 # $conf['samesite_cookie_value'] = 'None';
 
 /**
- * Add Permissions-Policy header to disable Google FLoC.
- *
- * By default, Drupal sends the 'Permissions-Policy: interest-cohort=()' header
- * to disable Google's Federated Learning of Cohorts feature, introduced in
- * Chrome 89.
- *
- * See https://en.wikipedia.org/wiki/Federated_Learning_of_Cohorts for more
- * information about FLoC.
- *
- * If you don't wish to disable FLoC in Chrome, you can set this value
- * to FALSE.
- */
-# $conf['block_interest_cohort'] = TRUE;
-
-/**
  * Retain legacy has_js cookie.
  *
  * Older releases of Drupal set a has_js cookie with a boolean value which
