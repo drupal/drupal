@@ -621,7 +621,7 @@ class EntityFieldQuery {
    *
    * @see EntityFieldQuery::execute().
    */
-  public $orderedResults = array();
+  public $ordered_results = array();
 
   /**
    * The method executing the query, if it is overriding the default.
@@ -1179,7 +1179,7 @@ class EntityFieldQuery {
   /**
    * Executes the query.
    *
-   * After executing the query, $this->orderedResults will contain a list of
+   * After executing the query, $this->ordered_results will contain a list of
    * the same stub entities in the order returned by the query. This is only
    * relevant if there are multiple entity types in the returned value and
    * a field ordering was requested. In every other case, the returned value
