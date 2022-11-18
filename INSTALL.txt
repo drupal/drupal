@@ -15,19 +15,20 @@ REQUIREMENTS AND NOTES
 Drupal requires:
 
 - A web server. Apache (version 2.0 or greater) is recommended.
-- PHP 5.2.4 (or greater) (http://www.php.net/).
+- PHP 5.3.3 (at least, PHP 7.x or greater recommended) (https://www.php.net/).
 - One of the following databases:
-  - MySQL 5.0.15 (or greater) (http://www.mysql.com/).
-  - MariaDB 5.1.44 (or greater) (http://mariadb.org/). MariaDB is a fully
-    compatible drop-in replacement for MySQL.
-  - Percona Server 5.1.70 (or greater) (http://www.percona.com/). Percona
-    Server is a backwards-compatible replacement for MySQL.
-  - PostgreSQL 8.3 (or greater) (http://www.postgresql.org/).
-  - SQLite 3.3.7 (or greater) (http://www.sqlite.org/).
+  - MySQL 5.5 (or greater) (https://www.mysql.com/) or equivalent versions of a
+    compatible database such as MariaDB or Percona.
+  - PostgreSQL 9.5 (or greater) (https://www.postgresql.org/).
+  - SQLite 3.27 (or greater) (https://www.sqlite.org/).
 
-For more detailed information about Drupal requirements, including a list of
-PHP extensions and configurations that are required, see "System requirements"
-(http://drupal.org/requirements) in the Drupal.org online documentation.
+Note that version numbers above represent the minimum versions that Drupal 7 is
+routinely tested with. For more detailed information about compatibility with
+newer versions (that benefit from support from their maintainers), and
+requirements including a list of PHP extensions and configurations that are
+required, see "System requirements"
+(https://www.drupal.org/docs/7/system-requirements) in the Drupal.org online
+documentation.
 
 For detailed information on how to configure a test server environment using a
 variety of operating systems and web servers, see "Local server setup"
