@@ -58,6 +58,9 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
    *
    * @return bool
    *   Returns TRUE if the user has the role, otherwise FALSE.
+   *
+   * @todo in Drupal 11, move method to Drupal\Core\Session\AccountInterface.
+   * @see https://www.drupal.org/node/3228209
    */
   public function hasRole($rid);
 

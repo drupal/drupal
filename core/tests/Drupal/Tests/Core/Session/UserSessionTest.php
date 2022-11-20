@@ -162,4 +162,17 @@ class UserSessionTest extends UnitTestCase {
     $this->assertEquals(['role_two'], $this->users['user_three']->getRoles(TRUE));
   }
 
+  /**
+   * Tests the hasRole method.
+   *
+   * @covers ::hasRole
+   */
+  public function testHasRole() {
+    $this->assertTrue($this->users['user_one']->hasRole('role_one'));
+    $this->assertFalse($this->users['user_two']->hasRole('no role'));
+    $this->assertTrue($this->users['user_three']->hasRole(RoleInterface::AUTHENTICATED_ID));
+    $this->assertFalse($this->users['user_three']->hasRole(RoleInterface::ANONYMOUS_ID));
+    $this->assertTrue($this->users['user_last']->hasRole(RoleInterface::ANONYMOUS_ID));
+  }
+
 }
