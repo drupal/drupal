@@ -12,8 +12,8 @@ parameters:
     - ../composer
 
   excludePaths:
-    # Skip settings.
-    - ../*/settings*.php
+    # Skip sites directory.
+    - ../sites
     # Skip test fixtures.
     - ../*/node_modules/*
     - */tests/fixtures/*.php
