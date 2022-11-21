@@ -50,9 +50,6 @@ class Composer {
    * @param string $version
    *   Semver version to set Drupal's version to.
    *
-   * @return string
-   *   Stability level of the provided version (stable, RC, alpha, etc.)
-   *
    * @throws \UnexpectedValueException
    */
   public static function setDrupalVersion(string $root, string $version): void {
@@ -78,9 +75,6 @@ class Composer {
    *   Path to root of drupal/drupal repository.
    * @param string $version
    *   Semver version that Drupal was set to.
-   *
-   * @return string
-   *   Stability level of the provided version (stable, RC, alpha, etc.)
    */
   protected static function setTemplateProjectStability(string $root, string $version): void {
     $stability = VersionParser::parseStability($version);
