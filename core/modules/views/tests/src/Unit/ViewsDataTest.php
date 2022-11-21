@@ -128,8 +128,6 @@ class ViewsDataTest extends UnitTestCase {
 
   /**
    * Mocks the basic module handler used for the test.
-   *
-   * @return \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected function setupMockedModuleHandler(): void {
     $this->moduleHandler->expects($this->atLeastOnce())
