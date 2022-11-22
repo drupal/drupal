@@ -3416,26 +3416,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/TypedData/TypedDataTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertNotEquals\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/KernelTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/KernelTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: tests/Drupal/KernelTests/KernelTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/KernelTestBase.php
-
-		-
 			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/KernelTestBase.php
@@ -3694,26 +3674,6 @@ parameters:
 			message: "#^Class Drupal\\\\Core\\\\Cache\\\\Context\\\\ContextCacheKeys constructor invoked with 2 parameters, 1 required\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Render/RendererTestBase.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertNotEquals\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
 
 		-
 			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"
