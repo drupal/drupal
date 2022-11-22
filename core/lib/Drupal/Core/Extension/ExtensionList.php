@@ -555,7 +555,7 @@ abstract class ExtensionList {
 
     // Add the info file modification time, so it becomes available for
     // contributed extensions to use for ordering extension lists.
-    $info['mtime'] = $extension->getMTime();
+    $info['mtime'] = $extension->getFileInfo()->getMTime();
 
     // Merge extension type-specific defaults.
     $info += $this->defaults;

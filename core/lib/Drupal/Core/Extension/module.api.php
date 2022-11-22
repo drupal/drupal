@@ -152,7 +152,7 @@ function hook_module_implements_alter(&$implementations, $hook) {
 function hook_system_info_alter(array &$info, \Drupal\Core\Extension\Extension $file, $type) {
   // Only fill this in if the .info.yml file does not define a 'datestamp'.
   if (empty($info['datestamp'])) {
-    $info['datestamp'] = $file->getMTime();
+    $info['datestamp'] = $file->getFileInfo()->getMTime();
   }
 }
 

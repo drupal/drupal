@@ -81,7 +81,7 @@ class ProjectInfo {
       // which is left alone by tar and correctly set to the time the .info.yml
       // file was unpacked.
       if (!isset($file->info['_info_file_ctime'])) {
-        $file->info['_info_file_ctime'] = $file->getCTime();
+        $file->info['_info_file_ctime'] = $file->getFileInfo()->getCTime();
       }
 
       if (!isset($file->info['datestamp'])) {
