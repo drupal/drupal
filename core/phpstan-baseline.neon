@@ -3531,11 +3531,6 @@ parameters:
 			path: tests/Drupal/Tests/Composer/ComposerTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\TestCase\\:\\:expectError\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 52
-			path: tests/Drupal/Tests/Core/Assert/WebAssertArgumentsTest.php
-
-		-
 			message: "#^Class Drupal\\\\Core\\\\Asset\\\\LibraryDiscovery constructor invoked with 2 parameters, 1 required\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Asset/LibraryDiscoveryTest.php
