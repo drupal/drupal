@@ -99,7 +99,7 @@ window.Drupal = { behaviors: {}, locale: {} };
    *
    * @prop {Drupal~behaviorAttach} attach
    *   Function run on page load and after an Ajax call.
-   * @prop {Drupal~behaviorDetach} detach
+   * @prop {Drupal~behaviorDetach} [detach]
    *   Function run when content is serialized or removed from the page.
    */
 
