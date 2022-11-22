@@ -92,8 +92,8 @@ class WorkspaceMerger implements WorkspaceMergerInterface {
       throw new WorkspaceConflictException();
     }
 
-    $transaction = $this->database->startTransaction();
     try {
+      $transaction = $this->database->startTransaction();
       foreach ($this->getDifferringRevisionIdsOnSource() as $entity_type_id => $revision_difference) {
         $revisions_on_source = $this->entityTypeManager->getStorage($entity_type_id)
           ->loadMultipleRevisions(array_keys($revision_difference));
@@ -113,7 +113,9 @@ class WorkspaceMerger implements WorkspaceMergerInterface {
       }
     }
     catch (\Exception $e) {
-      $transaction->rollBack();
+      if (isset($transaction)) {
+        $transaction->rollBack();
+      }
       watchdog_exception('workspaces', $e);
       throw $e;
     }

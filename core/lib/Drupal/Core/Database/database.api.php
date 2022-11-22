@@ -169,10 +169,11 @@ use Drupal\Core\Database\Query\SelectInterface;
  * @code
  * function my_transaction_function() {
  *   $connection = \Drupal::database();
- *   // The transaction opens here.
- *   $transaction = $connection->startTransaction();
  *
  *   try {
+ *     // The transaction opens here.
+ *     $transaction = $connection->startTransaction();
+ *
  *     $id = $connection->insert('example')
  *       ->fields(array(
  *         'field1' => 'string',
@@ -185,13 +186,19 @@ use Drupal\Core\Database\Query\SelectInterface;
  *     return $id;
  *   }
  *   catch (Exception $e) {
- *     // Something went wrong somewhere, so roll back now.
- *     $transaction->rollBack();
+ *     // Something went wrong somewhere. If the exception was thrown during
+ *     // startTransaction(), then $transaction is NULL and there's nothing to
+ *     // roll back. If the exception was thrown after a transaction was
+ *     // successfully started, then it must be rolled back.
+ *     if (isset($transaction)) {
+ *       $transaction->rollBack();
+ *     }
+ *
  *     // Log the exception to watchdog.
  *     watchdog_exception('type', $e);
  *   }
  *
- *   // $transaction goes out of scope here.  Unless the transaction was rolled
+ *   // $transaction goes out of scope here. Unless the transaction was rolled
  *   // back, it gets automatically committed here.
  * }
  *
