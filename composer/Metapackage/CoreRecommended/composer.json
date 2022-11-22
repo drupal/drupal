@@ -18,7 +18,7 @@
         "guzzlehttp/promises": "~1.5.2",
         "guzzlehttp/psr7": "~1.9.0",
         "laminas/laminas-diactoros": "~2.14.0",
-        "laminas/laminas-escaper": "~2.9.0",
+        "laminas/laminas-escaper": "~2.10.0",
         "laminas/laminas-feed": "~2.17.0",
         "laminas/laminas-stdlib": "~3.11.0",
         "masterminds/html5": "~2.7.6",
