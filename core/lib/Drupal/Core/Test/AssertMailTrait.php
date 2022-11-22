@@ -50,16 +50,11 @@ trait AssertMailTrait {
    *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
-   * @param string $group
-   *   (optional) The group this message is in, which is displayed in a column
-   *   in test output. Use 'Debug' to indicate this is debugging output. Do not
-   *   translate this string. Defaults to 'Email'; most tests do not override
-   *   this default.
    *
    * @return bool
    *   TRUE on pass.
    */
-  protected function assertMail($name, $value = '', $message = '', $group = 'Email') {
+  protected function assertMail($name, $value = '', $message = '') {
     $captured_emails = $this->container->get('state')->get('system.test_mail_collector') ?: [];
     $email = end($captured_emails);
     $this->assertIsArray($email, $message);

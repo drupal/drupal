@@ -51,7 +51,7 @@ class MailCaptureTest extends BrowserTestBase {
     // Assert that the email was sent by iterating over the message properties
     // and ensuring that they are captured intact.
     foreach ($message as $field => $value) {
-      $this->assertMail($field, $value, new FormattableMarkup('The email was sent and the value for property @field is intact.', ['@field' => $field]), 'Email');
+      $this->assertMail($field, $value, new FormattableMarkup('The email was sent and the value for property @field is intact.', ['@field' => $field]));
     }
 
     // Send additional emails so more than one email is captured.
