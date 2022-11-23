@@ -2631,11 +2631,6 @@ parameters:
 			path: modules/user/tests/src/Functional/UserBlocksTest.php
 
 		-
-			message: "#^Function node_revision_load invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Functional/UserCancelTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/user/tests/src/Functional/UserCreateTest.php

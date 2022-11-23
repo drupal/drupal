@@ -161,7 +161,7 @@ class NodeRevisionsAllTest extends NodeTestBase {
     $this->assertNotSame($this->revisionUser->id(), $reverted_node->getRevisionUserId(), 'Node revision author is not original revision author.');
 
     // Confirm that this is not the current version.
-    $node = node_revision_load($node->getRevisionId());
+    $node = $node_storage->loadRevision($node->getRevisionId());
     $this->assertFalse($node->isDefaultRevision(), 'Third node revision is not the current one.');
 
     // Confirm that the node can still be updated.
