@@ -543,8 +543,10 @@ class KeyValueEntityStorageTest extends UnitTestCase {
 
   /**
    * @covers ::loadRevision
+   * @group legacy
    */
   public function testLoadRevision() {
+    $this->expectDeprecation('Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage::loadRevision() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\RevisionableStorageInterface::loadRevision instead. See https://www.drupal.org/node/3294237');
     $this->setUpKeyValueEntityStorage();
 
     $this->assertSame(NULL, $this->entityStorage->loadRevision(1));
@@ -552,8 +554,10 @@ class KeyValueEntityStorageTest extends UnitTestCase {
 
   /**
    * @covers ::deleteRevision
+   * @group legacy
    */
   public function testDeleteRevision() {
+    $this->expectDeprecation('Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage::deleteRevision() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\RevisionableStorageInterface::deleteRevision instead. See https://www.drupal.org/node/3294237');
     $this->setUpKeyValueEntityStorage();
 
     $this->assertSame(NULL, $this->entityStorage->deleteRevision(1));
