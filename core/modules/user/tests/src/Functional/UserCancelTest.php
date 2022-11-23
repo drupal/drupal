@@ -274,7 +274,7 @@ class UserCancelTest extends BrowserTestBase {
     $node_storage->resetCache([$node->id()]);
     $test_node = $node_storage->load($node->id());
     $this->assertFalse($test_node->isPublished(), 'Node of the user has been unpublished.');
-    $test_node = node_revision_load($node->getRevisionId());
+    $test_node = $node_storage->loadRevision($node->getRevisionId());
     $this->assertFalse($test_node->isPublished(), 'Node revision of the user has been unpublished.');
 
     $storage = \Drupal::entityTypeManager()->getStorage('comment');
@@ -390,7 +390,7 @@ class UserCancelTest extends BrowserTestBase {
     $test_node = $node_storage->load($node->id());
     $this->assertEquals(0, $test_node->getOwnerId(), 'Node of the user has been attributed to anonymous user.');
     $this->assertTrue($test_node->isPublished());
-    $test_node = node_revision_load($revision, TRUE);
+    $test_node = $node_storage->loadRevision($revision);
     $this->assertEquals(0, $test_node->getRevisionUser()->id(), 'Node revision of the user has been attributed to anonymous user.');
     $this->assertTrue($test_node->isPublished());
     $node_storage->resetCache([$revision_node->id()]);
@@ -527,7 +527,7 @@ class UserCancelTest extends BrowserTestBase {
     // Confirm that user's content has been deleted.
     $node_storage->resetCache([$node->id()]);
     $this->assertNull($node_storage->load($node->id()), 'Node of the user has been deleted.');
-    $this->assertNull(node_revision_load($revision), 'Node revision of the user has been deleted.');
+    $this->assertNull($node_storage->loadRevision($revision), 'Node revision of the user has been deleted.');
     $node_storage->resetCache([$revision_node->id()]);
     $this->assertInstanceOf(Node::class, $node_storage->load($revision_node->id()));
     \Drupal::entityTypeManager()->getStorage('comment')->resetCache([$comment->id()]);

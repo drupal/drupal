@@ -187,7 +187,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->assertNotSame($nodes[1]->getRevisionUserId(), $reverted_node->getRevisionUserId(), 'Node revision author is not original revision author.');
 
     // Confirm that this is not the default version.
-    $node = node_revision_load($node->getRevisionId());
+    $node = $node_storage->loadRevision($node->getRevisionId());
     $this->assertFalse($node->isDefaultRevision(), 'Third node revision is not the default one.');
 
     // Confirm revisions delete properly.
