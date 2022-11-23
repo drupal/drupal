@@ -2,6 +2,7 @@
 
 namespace Drupal\Component\EventDispatcher;
 
+use Psr\EventDispatcher\StoppableEventInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -95,6 +96,8 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
         unset($this->unsorted[$event_name]);
       }
 
+      $stoppable = $event instanceof StoppableEventInterface;
+
       // Invoke listeners and resolve callables if necessary.
       foreach ($this->listeners[$event_name] as &$definitions) {
         foreach ($definitions as &$definition) {
@@ -106,7 +109,7 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
           }
 
           call_user_func($definition['callable'], $event, $event_name, $this);
-          if ($event->isPropagationStopped()) {
+          if ($stoppable && $event->isPropagationStopped()) {
             return $event;
           }
         }
