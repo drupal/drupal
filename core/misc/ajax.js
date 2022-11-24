@@ -49,9 +49,7 @@
       }
 
       // Load all Ajax behaviors specified in the settings.
-      Object.keys(settings.ajax || {}).forEach((base) =>
-        loadAjaxBehavior(base),
-      );
+      Object.keys(settings.ajax || {}).forEach(loadAjaxBehavior);
 
       Drupal.ajax.bindAjaxLinks(document.body);
 
