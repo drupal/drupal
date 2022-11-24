@@ -28,6 +28,7 @@ use Drupal\workspaces\WorkspaceInterface;
  *     "list_builder" = "\Drupal\workspaces\WorkspaceListBuilder",
  *     "view_builder" = "Drupal\workspaces\WorkspaceViewBuilder",
  *     "access" = "Drupal\workspaces\WorkspaceAccessControlHandler",
+ *     "views_data" = "Drupal\views\EntityViewsData",
  *     "route_provider" = {
  *       "html" = "\Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
  *     },
