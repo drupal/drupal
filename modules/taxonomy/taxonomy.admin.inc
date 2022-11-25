@@ -902,7 +902,6 @@ function taxonomy_term_confirm_delete_submit($form, &$form_state) {
   watchdog('taxonomy', 'Deleted term %name.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE);
   $form_state['redirect'] = 'admin/structure/taxonomy';
   cache_clear_all();
-  return;
 }
 
 /**
@@ -942,7 +941,6 @@ function taxonomy_vocabulary_confirm_delete_submit($form, &$form_state) {
   watchdog('taxonomy', 'Deleted vocabulary %name.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE);
   $form_state['redirect'] = 'admin/structure/taxonomy';
   cache_clear_all();
-  return;
 }
 
 /**
