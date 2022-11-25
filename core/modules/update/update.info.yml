@@ -1,6 +1,6 @@
 name: 'Update Manager'
 type: module
-description: 'Checks for available updates, and can securely install or update modules and themes via a web interface.'
+description: 'Checks for updates and allows users to manage them through a user interface.'
 version: VERSION
 package: Core
 configure: update.settings

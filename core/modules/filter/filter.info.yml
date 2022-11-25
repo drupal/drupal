@@ -1,6 +1,6 @@
 name: Filter
 type: module
-description: 'Filters content in preparation for display.'
+description: 'Filters text content in preparation for display.'
 package: Core
 version: VERSION
 configure: filter.admin_overview

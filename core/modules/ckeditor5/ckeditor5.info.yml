@@ -1,6 +1,6 @@
 name: CKEditor 5
 type: module
-description: "WYSIWYG editing for rich text fields using CKEditor 5."
+description: "Provides the CKEditor 5 rich text editor."
 version: VERSION
 package: Core
 dependencies:

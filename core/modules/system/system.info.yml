@@ -1,6 +1,6 @@
 name: System
 type: module
-description: 'Handles general site configuration for administrators.'
+description: 'Provides user interfaces for core systems.'
 package: Core
 version: VERSION
 required: true

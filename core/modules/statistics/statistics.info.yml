@@ -1,6 +1,6 @@
 name: Statistics
 type: module
-description: 'Logs content statistics for your site.'
+description: 'Logs how many times content is viewed.'
 package: Core
 version: VERSION
 configure: statistics.settings

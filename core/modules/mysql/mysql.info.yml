@@ -1,5 +1,5 @@
 name: MySQL
 type: module
-description: 'Database driver for MySQL.'
+description: 'Provides the MySQL database driver.'
 package: Core
 version: VERSION

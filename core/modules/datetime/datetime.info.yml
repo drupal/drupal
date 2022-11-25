@@ -1,6 +1,6 @@
 name: Datetime
 type: module
-description: Defines datetime form elements and a datetime field type.
+description: 'Defines field types for storing dates and times.'
 package: Field types
 version: VERSION
 dependencies:

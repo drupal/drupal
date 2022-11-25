@@ -1,5 +1,5 @@
 name: Help
 type: module
-description: 'Manages the display of online help.'
+description: 'Generates help pages and provides a Help block with page-level help.'
 package: Core
 version: VERSION

@@ -162,7 +162,7 @@ class PrepareUninstallTest extends BrowserTestBase {
 
     // Check there is no more data to be deleted, Node is ready to be
     // uninstalled.
-    $this->assertSession()->pageTextContains('Allows content to be submitted to the site and displayed on pages.');
+    $this->assertSession()->pageTextContains('Manages the creation, configuration, and display of the main site content.');
     $this->assertSession()->linkByHrefNotExists('admin/modules/uninstall/entity/node');
 
     // Uninstall Node module.
@@ -170,7 +170,7 @@ class PrepareUninstallTest extends BrowserTestBase {
     $this->submitForm(['uninstall[node]' => TRUE], 'Uninstall');
     $this->submitForm([], 'Uninstall');
     $this->assertSession()->pageTextContains('The selected modules have been uninstalled.');
-    $this->assertSession()->pageTextNotContains('Allows content to be submitted to the site and displayed on pages.');
+    $this->assertSession()->pageTextNotContains('Manages the creation, configuration, and display of the main site content.');
 
     // Ensure a 404 is returned when accessing a non-existent entity type.
     $this->drupalGet('admin/modules/uninstall/entity/node');

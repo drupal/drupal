@@ -1,6 +1,6 @@
 name: Path
 type: module
-description: 'Allows users to rename URLs.'
+description: 'Allows users to create custom URLs for existing paths on the site.'
 package: Core
 version: VERSION
 configure: entity.path_alias.collection

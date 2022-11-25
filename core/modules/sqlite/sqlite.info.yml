@@ -1,5 +1,5 @@
 name: SQLite
 type: module
-description: 'Database driver for SQLite.'
+description: 'Provides the SQLite database driver.'
 package: Core
 version: VERSION

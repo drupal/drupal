@@ -1,6 +1,6 @@
 name: Shortcut
 type: module
-description: 'Allows users to manage customizable lists of shortcut links.'
+description: 'Allows users to create sets of shortcuts within the site.'
 package: Core
 version: VERSION
 configure: entity.shortcut_set.collection

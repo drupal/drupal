@@ -1,6 +1,6 @@
 name: Migrate Drupal
 type: module
-description: 'Contains migrations from older Drupal versions.'
+description: 'Provides a framework to migrate data from previous versions of Drupal into the site.'
 package: Migration
 version: VERSION
 dependencies:

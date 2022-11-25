@@ -1,6 +1,6 @@
 name: User
 type: module
-description: 'Manages the user registration and login system.'
+description: 'Allows users to register and log in, and manages user roles and permissions.'
 package: Core
 version: VERSION
 required: true

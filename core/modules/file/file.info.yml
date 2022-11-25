@@ -1,6 +1,6 @@
 name: File
 type: module
-description: 'Defines a field type for files.'
+description: 'Provides a field type for files and defines a "managed_file" Form API element.'
 package: Field types
 version: VERSION
 dependencies:

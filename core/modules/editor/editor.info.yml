@@ -1,6 +1,6 @@
 name: 'Text Editor'
 type: module
-description: 'Provides a means to associate text formats with text editor libraries such as WYSIWYGs or toolbars.'
+description: 'Provides a framework to associate text editors (like WYSIWYGs) and toolbars with text formats.'
 package: Core
 version: VERSION
 dependencies:

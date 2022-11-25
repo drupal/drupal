@@ -1,5 +1,5 @@
 name: PostgreSQL
 type: module
-description: 'Database driver for PostgreSQL.'
+description: 'Provides the PostgreSQL database driver.'
 package: Core
 version: VERSION

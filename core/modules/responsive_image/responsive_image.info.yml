@@ -1,6 +1,6 @@
 name: Responsive Image
 type: module
-description: 'Provides an image formatter and breakpoint mappings to output responsive images using the HTML5 picture tag.'
+description: 'Provides functionality to output responsive images using the HTML5 picture tag.'
 package: Core
 version: VERSION
 dependencies:

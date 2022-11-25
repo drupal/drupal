@@ -1,6 +1,6 @@
 name: Views
 type: module
-description: 'Create customized lists and queries from your database.'
+description: 'Provides a framework to fetch information from the database and to display it in different formats.'
 package: Core
 version: VERSION
 dependencies:
