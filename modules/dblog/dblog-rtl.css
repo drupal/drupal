@@ -3,8 +3,8 @@
  * Right-to-Left styling for the Database Logging module.
  */
 
-.form-item-type,
-.form-item-severity {
+#dblog-filter-form .form-item-type,
+#dblog-filter-form .form-item-severity {
   float: right;
   padding-right: 0;
   padding-left: .8em;

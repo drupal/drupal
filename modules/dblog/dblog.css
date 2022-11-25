@@ -3,8 +3,8 @@
  * Admin styles for the Database Logging module.
  */
 
-.form-item-type,
-.form-item-severity {
+#dblog-filter-form .form-item-type,
+#dblog-filter-form .form-item-severity {
   float: left; /* LTR */
   padding-right: .8em; /* LTR */
   margin: 0.1em;
