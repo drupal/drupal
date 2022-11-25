@@ -661,10 +661,13 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $instance['widget'] = array('type' => 'taxonomy_autocomplete');
     $instance['bundle'] = 'page';
     field_create_instance($instance);
+    // Prefix the terms with a letter to ensure there is no clash in the first
+    // three letters.
+    // @see https://www.drupal.org/node/2397691
     $terms = array(
-      'term1' => $this->randomName(),
-      'term2' => $this->randomName() . ', ' . $this->randomName(),
-      'term3' => $this->randomName(),
+      'term1' => 'a' . $this->randomName(),
+      'term2' => 'b' . $this->randomName() . ', ' . $this->randomName(),
+      'term3' => 'c' . $this->randomName(),
     );
 
     $edit = array();
