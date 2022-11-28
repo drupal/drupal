@@ -360,7 +360,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $empty_entity_listing_cache_tags = Cache::mergeTags($this->entity->getEntityType()->getListCacheTags(), $page_cache_tags);
 
     $nonempty_entity_listing_cache_tags = Cache::mergeTags($this->entity->getEntityType()->getListCacheTags(), $this->entity->getCacheTags());
-    $nonempty_entity_listing_cache_tags = Cache::mergeTags($nonempty_entity_listing_cache_tags, $this->getAdditionalCacheTagsForEntityListing($this->entity));
+    $nonempty_entity_listing_cache_tags = Cache::mergeTags($nonempty_entity_listing_cache_tags, $this->getAdditionalCacheTagsForEntityListing());
     $nonempty_entity_listing_cache_tags = Cache::mergeTags($nonempty_entity_listing_cache_tags, $page_cache_tags);
 
     $this->verifyPageCache($referencing_entity_url, 'MISS');

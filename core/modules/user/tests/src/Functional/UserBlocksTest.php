@@ -41,7 +41,7 @@ class UserBlocksTest extends BrowserTestBase {
     $this->adminUser = $this->drupalCreateUser(['administer blocks']);
     $this->drupalLogin($this->adminUser);
     $this->drupalPlaceBlock('user_login_block', ['id' => 'user_blocks_test_user_login_block']);
-    $this->drupalLogout($this->adminUser);
+    $this->drupalLogout();
   }
 
   /**

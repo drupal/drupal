@@ -53,7 +53,7 @@ class DirectoryTest extends FileTestBase {
 
     // Check creating a directory using an absolute path.
     $absolute_path = $file_system->realpath($directory) . DIRECTORY_SEPARATOR . $this->randomMachineName() . DIRECTORY_SEPARATOR . $this->randomMachineName();
-    $this->assertTrue($file_system->mkdir($absolute_path, 0775, TRUE), 'No error reported when creating new absolute directories.', 'File');
+    $this->assertTrue($file_system->mkdir($absolute_path, 0775, TRUE), 'No error reported when creating new absolute directories.');
     $this->assertDirectoryPermissions($absolute_path, 0775);
   }
 
@@ -69,10 +69,10 @@ class DirectoryTest extends FileTestBase {
     // Non-existent directory.
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
-    $this->assertFalse($file_system->prepareDirectory($directory, 0), 'Error reported for non-existing directory.', 'File');
+    $this->assertFalse($file_system->prepareDirectory($directory, 0), 'Error reported for non-existing directory.');
 
     // Make a directory.
-    $this->assertTrue($file_system->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY), 'No error reported when creating a new directory.', 'File');
+    $this->assertTrue($file_system->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY), 'No error reported when creating a new directory.');
 
     // Make sure directory actually exists.
     $this->assertDirectoryExists($directory);
@@ -85,11 +85,11 @@ class DirectoryTest extends FileTestBase {
 
       // Make directory read only.
       @$file_system->chmod($directory, 0444);
-      $this->assertFalse($file_system->prepareDirectory($directory, 0), 'Error reported for a non-writable directory.', 'File');
+      $this->assertFalse($file_system->prepareDirectory($directory, 0), 'Error reported for a non-writable directory.');
 
       // Test directory permission modification.
       $this->setSetting('file_chmod_directory', 0777);
-      $this->assertTrue($file_system->prepareDirectory($directory, FileSystemInterface::MODIFY_PERMISSIONS), 'No error reported when making directory writable.', 'File');
+      $this->assertTrue($file_system->prepareDirectory($directory, FileSystemInterface::MODIFY_PERMISSIONS), 'No error reported when making directory writable.');
     }
 
     // Test that the directory has the correct permissions.

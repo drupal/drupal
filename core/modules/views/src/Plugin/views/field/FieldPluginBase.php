@@ -636,7 +636,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     ];
     $form['element_label_type'] = [
       '#title' => $this->t('Label HTML element'),
-      '#options' => $this->getElements(FALSE),
+      '#options' => $this->getElements(),
       '#type' => 'select',
       '#default_value' => $this->options['element_label_type'],
       '#description' => $this->t('Choose the HTML element to wrap around this label, e.g. H1, H2, etc.'),
@@ -680,7 +680,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     ];
     $form['element_wrapper_type'] = [
       '#title' => $this->t('Wrapper HTML element'),
-      '#options' => $this->getElements(FALSE),
+      '#options' => $this->getElements(),
       '#type' => 'select',
       '#default_value' => $this->options['element_wrapper_type'],
       '#description' => $this->t('Choose the HTML element to wrap around this field and label, e.g. H1, H2, etc. This may not be used if the field and label are not rendered together, such as with a table.'),

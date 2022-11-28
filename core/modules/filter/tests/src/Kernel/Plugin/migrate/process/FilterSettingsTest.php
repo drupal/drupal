@@ -24,7 +24,7 @@ class FilterSettingsTest extends MigrateTestCase {
    */
   public function testTransform($value, $destination_id, $expected_value) {
     $migration = $this->createMock(MigrationInterface::class);
-    $plugin = new FilterSettings([], 'filter_settings', [], $migration);
+    $plugin = new FilterSettings([], 'filter_settings', []);
 
     $executable = $this->createMock(MigrateExecutableInterface::class);
     $row = $this->getMockBuilder(Row::class)

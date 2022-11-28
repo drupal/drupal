@@ -430,7 +430,7 @@ class FieldStorageAddForm extends FormBase {
     if ($destinations) {
       $destination = $this->getDestinationArray();
       $destinations[] = $destination['destination'];
-      $form_state->setRedirectUrl(FieldUI::getNextDestination($destinations, $form_state));
+      $form_state->setRedirectUrl(FieldUI::getNextDestination($destinations));
     }
     elseif (!$error) {
       $this->messenger()->addStatus($this->t('Your settings have been saved.'));

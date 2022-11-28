@@ -50,7 +50,7 @@ class RegisterForm extends AccountForm {
     }
 
     // Start with the default user account fields.
-    $form = parent::form($form, $form_state, $account);
+    $form = parent::form($form, $form_state);
 
     return $form;
   }

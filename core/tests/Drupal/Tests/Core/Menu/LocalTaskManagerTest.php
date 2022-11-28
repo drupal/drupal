@@ -207,7 +207,7 @@ class LocalTaskManagerTest extends UnitTestCase {
 
     $this->setupLocalTaskManager();
 
-    $result = $this->getLocalTasksCache($mock_plugin);
+    $result = $this->getLocalTasksCache();
 
     $this->cacheBackend->expects($this->once())
       ->method('get')

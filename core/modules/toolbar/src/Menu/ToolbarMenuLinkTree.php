@@ -17,7 +17,7 @@ class ToolbarMenuLinkTree extends MenuLinkTree {
       if (!$tree) {
         return [];
       }
-      $build = parent::build($tree, $level);
+      $build = parent::build($tree);
 
       /** @var \Drupal\Core\Menu\MenuLinkInterface $link */
       $first_link = reset($tree)->link;
@@ -30,7 +30,7 @@ class ToolbarMenuLinkTree extends MenuLinkTree {
       return $build;
     }
     else {
-      return parent::build($tree, $level);
+      return parent::build($tree);
     }
   }
 

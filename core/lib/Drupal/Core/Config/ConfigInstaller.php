@@ -256,7 +256,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
 
     // Create the optional configuration if there is any left after filtering.
     if (!empty($config_to_create)) {
-      $this->createConfiguration(StorageInterface::DEFAULT_COLLECTION, $config_to_create, TRUE);
+      $this->createConfiguration(StorageInterface::DEFAULT_COLLECTION, $config_to_create);
     }
   }
 

@@ -36,7 +36,7 @@ class FrameworkTest extends BrowserTestBase {
     // Verify that settings command is generated if JavaScript settings exist.
     $commands = $this->drupalGetAjax('ajax-test/render');
     $expected = new SettingsCommand(['ajax' => 'test'], TRUE);
-    $this->assertCommand($commands, $expected->render(), 'JavaScript settings command is present.');
+    $this->assertCommand($commands, $expected->render());
   }
 
   /**
@@ -86,7 +86,7 @@ class FrameworkTest extends BrowserTestBase {
     ];
     $commands = $this->drupalGetAjax('ajax-test/render-error', ['query' => $edit]);
     $expected = new AlertCommand($edit['message']);
-    $this->assertCommand($commands, $expected->render(), 'Custom error message is output.');
+    $this->assertCommand($commands, $expected->render());
   }
 
   /**

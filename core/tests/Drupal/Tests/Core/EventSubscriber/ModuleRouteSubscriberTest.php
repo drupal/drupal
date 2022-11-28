@@ -55,7 +55,7 @@ class ModuleRouteSubscriberTest extends UnitTestCase {
     $route = new Route('', [], $requirements);
     $collection->add($route_name, $route);
 
-    $event = new RouteBuildEvent($collection, 'test');
+    $event = new RouteBuildEvent($collection);
     $route_subscriber = new ModuleRouteSubscriber($this->moduleHandler);
     $route_subscriber->onAlterRoutes($event);
 
