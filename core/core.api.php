@@ -889,6 +889,10 @@
  *   Note that $container here is an instance of
  *   \Drupal\Core\DependencyInjection\ContainerBuilder.
  *
+ * @section lazy_services Lazy services
+ * Some services can be declared as lazy to improve performance. See @link
+ * lazy_services Lazy Services @endlink for details.
+ *
  * @see https://www.drupal.org/node/2133171
  * @see core.services.yml
  * @see \Drupal
@@ -2491,6 +2495,32 @@ function hook_validation_constraint_alter(array &$definitions) {
  * information on services and the dependency injection container.
  *
  * @}
+ */
+
+/**
+ * @defgroup lazy_services Lazy Services
+ * @{
+ * Lazy services overview
+ *
+ * A service can be declared as lazy in order to improve performance. Classes
+ * that inject a lazy service receive a proxy class instead, and when a method
+ * on the lazy service is called, the proxy class gets the service from the
+ * container and forwards the method call. This means that the lazy service is
+ * only instantiated when it is needed.
+ *
+ * This is useful because some classes may inject a service which is expensive
+ * to instantiate (because it has multiple dependencies of its own), but is only
+ * used in exceptional cases. This would make the class dependent on the
+ * expensive service and all of the expensive service's dependencies.
+ *
+ * Making the expensive service lazy means that the class is only dependent on
+ * the proxy service, and not on all the dependencies of the lazy service.
+ *
+ * To define a service as lazy, add @code lazy: true @endcode to the service
+ * definition, and use the @code core/scripts/generate-proxy.sh @endcode script
+ * to generate the proxy class.
+ *
+ * @see core/scripts/generate-proxy.sh
  */
 
 /**
