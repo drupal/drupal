@@ -97,7 +97,7 @@ class RouteSubscriberTest extends UnitTestCase {
     $route_2 = new Route('test_route/example', ['_controller' => 'Drupal\Tests\Core\Controller\TestController']);
     $collection->add('test_route_2', $route_2);
 
-    $route_event = new RouteBuildEvent($collection, 'views');
+    $route_event = new RouteBuildEvent($collection);
 
     [$display_1, $display_2] = $this->setupMocks();
 

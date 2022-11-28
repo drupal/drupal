@@ -36,12 +36,9 @@ class TestFileTransfer extends FileTransfer {
    */
   public $shouldIsDirectoryReturnTrue = FALSE;
 
-  public function __construct($jail, $username, $password, $hostname = 'localhost', $port = 9999) {
-    parent::__construct($jail, $username, $password, $hostname, $port);
-  }
-
   public static function factory($jail, $settings) {
-    return new TestFileTransfer($jail, $settings['username'], $settings['password'], $settings['hostname'], $settings['port']);
+    assert(is_array($settings));
+    return new TestFileTransfer($jail);
   }
 
   public function connect() {

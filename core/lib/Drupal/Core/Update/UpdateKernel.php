@@ -72,7 +72,7 @@ class UpdateKernel extends DrupalKernel {
       // Handle the actual request. We need the session both for authentication
       // as well as the DB update, like
       // \Drupal\system\Controller\DbUpdateController::batchFinished.
-      $this->bootSession($request, $type);
+      $this->bootSession($request);
       $result = $this->handleRaw($request);
       $this->shutdownSession($request);
 
@@ -99,7 +99,7 @@ class UpdateKernel extends DrupalKernel {
   protected function handleRaw(Request $request) {
     $container = $this->getContainer();
 
-    $this->handleAccess($request, $container);
+    $this->handleAccess($request);
 
     /** @var \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver */
     $controller_resolver = $container->get('controller_resolver');

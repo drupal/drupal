@@ -372,7 +372,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $this->drupalLogin($this->drupalCreateUser([
       'access toolbar', 'access shortcuts', 'administer site configuration',
     ]));
-    $this->clickLink('Shortcuts', 0, 'Shortcut link found on page.');
+    $this->clickLink('Shortcuts');
     $this->assertSession()->linkExists('Cron', 0, 'Cron shortcut link found on page.');
 
     $this->verifyAccessShortcutsPermissionForEditPages();

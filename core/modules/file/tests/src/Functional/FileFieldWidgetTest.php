@@ -230,7 +230,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->assertSameSize($upload_files_node_creation, $node->{$field_name}, 'Node was successfully saved with multiple files.');
 
     // Try to upload exactly the allowed number of files on revision.
-    $this->uploadNodeFile($test_file, $field_name, $node->id(), 1, [], TRUE);
+    $this->uploadNodeFile($test_file, $field_name, $node->id(), 1);
     $node = $node_storage->loadUnchanged($nid);
     $this->assertCount($cardinality, $node->{$field_name}, 'Node was successfully revised to maximum number of files.');
 

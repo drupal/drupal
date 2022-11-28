@@ -50,7 +50,7 @@ class SaveTest extends FileManagedUnitTestBase {
     $loaded_file = File::load($file->id());
     // Verify that the timestamp didn't go backwards.
     $this->assertGreaterThanOrEqual($file->getChangedTime(), $loaded_file->getChangedTime());
-    $this->assertNotNull($loaded_file, 'Record still exists in the database.', 'File');
+    $this->assertNotNull($loaded_file, 'Record still exists in the database.');
     $this->assertEquals($file->isPermanent(), $loaded_file->isPermanent(), 'Status was saved correctly.');
     $this->assertEquals('en', $loaded_file->langcode->value, 'Langcode was saved correctly.');
 

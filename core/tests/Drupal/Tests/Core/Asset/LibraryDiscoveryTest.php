@@ -69,7 +69,7 @@ class LibraryDiscoveryTest extends UnitTestCase {
     $this->libraryDiscoveryCollector = $this->getMockBuilder('Drupal\Core\Asset\LibraryDiscoveryCollector')
       ->disableOriginalConstructor()
       ->getMock();
-    $this->libraryDiscovery = new LibraryDiscovery($this->libraryDiscoveryCollector, $this->cacheTagsInvalidator);
+    $this->libraryDiscovery = new LibraryDiscovery($this->libraryDiscoveryCollector);
     $this->libraryDiscoveryCollector->expects($this->once())
       ->method('get')
       ->with('test')

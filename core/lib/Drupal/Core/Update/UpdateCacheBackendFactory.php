@@ -43,7 +43,7 @@ class UpdateCacheBackendFactory implements CacheFactoryInterface {
    */
   public function get($bin) {
     if (!isset($this->bins[$bin])) {
-      $this->bins[$bin] = new UpdateBackend($this->cacheFactory->get($bin), $bin);
+      $this->bins[$bin] = new UpdateBackend($this->cacheFactory->get($bin));
     }
     return $this->bins[$bin];
   }

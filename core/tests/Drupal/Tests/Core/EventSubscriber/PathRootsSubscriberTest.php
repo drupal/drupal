@@ -53,7 +53,7 @@ class PathRootsSubscriberTest extends UnitTestCase {
     $route_collection->add('test_route2', new Route('/test/baz'));
     $route_collection->add('test_route3', new Route('/test2/bar/baz'));
 
-    $event = new RouteBuildEvent($route_collection, 'provider');
+    $event = new RouteBuildEvent($route_collection);
     $this->pathRootsSubscriber->onRouteAlter($event);
 
     $route_collection = new RouteCollection();
@@ -61,7 +61,7 @@ class PathRootsSubscriberTest extends UnitTestCase {
     $route_collection->add('test_route5', new Route('/test2/baz'));
     $route_collection->add('test_route6', new Route('/test2/bar/baz'));
 
-    $event = new RouteBuildEvent($route_collection, 'provider');
+    $event = new RouteBuildEvent($route_collection);
     $this->pathRootsSubscriber->onRouteAlter($event);
 
     $this->state->expects($this->once())

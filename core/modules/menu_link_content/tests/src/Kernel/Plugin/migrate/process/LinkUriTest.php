@@ -182,11 +182,10 @@ class LinkUriTest extends KernelTestBase {
    */
   public function doTransform($value, $configuration = []) {
     $entityTypeManager = $this->container->get('entity_type.manager');
-    $routeBuilder = $this->container->get('router.builder');
     $row = new Row();
     $executable = $this->prophesize(MigrateExecutableInterface::class)->reveal();
 
-    $plugin = new LinkUri($configuration, 'link_uri', [], $entityTypeManager, $routeBuilder);
+    $plugin = new LinkUri($configuration, 'link_uri', [], $entityTypeManager);
     $actual = $plugin->transform($value, $executable, $row, 'destination_property');
 
     return $actual;

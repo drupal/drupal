@@ -16,11 +16,6 @@ parameters:
 			path: assets/scaffold/files/default.settings.php
 
 		-
-			message: "#^Function _batch_process invoked with 1 parameter, 0 required\\.$#"
-			count: 1
-			path: includes/batch.inc
-
-		-
 			message: "#^Variable \\$finished might not be defined\\.$#"
 			count: 1
 			path: includes/batch.inc
@@ -49,11 +44,6 @@ parameters:
 			message: "#^Function install_download_translation\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: includes/install.core.inc
-
-		-
-			message: "#^Function _drupal_rewrite_settings_is_array_index invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: includes/install.inc
 
 		-
 			message: "#^Variable \\$current might not be defined\\.$#"
@@ -201,11 +191,6 @@ parameters:
 			path: lib/Drupal/Component/Gettext/PoMemoryWriter.php
 
 		-
-			message: "#^Class Drupal\\\\Component\\\\Render\\\\FormattableMarkup constructor invoked with 3 parameters, 2 required\\.$#"
-			count: 1
-			path: lib/Drupal/Component/Gettext/PoStreamReader.php
-
-		-
 			message: "#^Variable \\$log_vars might not be defined\\.$#"
 			count: 1
 			path: lib/Drupal/Component/Gettext/PoStreamReader.php
@@ -214,11 +199,6 @@ parameters:
 			message: "#^Variable \\$rgb might not be defined\\.$#"
 			count: 1
 			path: lib/Drupal/Component/Utility/Color.php
-
-		-
-			message: "#^Static method Drupal\\\\Component\\\\Utility\\\\Variable\\:\\:export\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: lib/Drupal/Component/Utility/Variable.php
 
 		-
 			message: "#^Variable \\$permission might not be defined\\.$#"
@@ -316,11 +296,6 @@ parameters:
 			path: lib/Drupal/Core/Condition/ConditionManager.php
 
 		-
-			message: "#^Method Drupal\\\\Core\\\\Config\\\\ConfigInstaller\\:\\:createConfiguration\\(\\) invoked with 3 parameters, 2 required\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Config/ConfigInstaller.php
-
-		-
 			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 2
 			path: lib/Drupal/Core/Config/Entity/Query/Condition.php
@@ -369,11 +344,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: lib/Drupal/Core/Datetime/DateHelper.php
-
-		-
-			message: "#^Class Symfony\\\\Component\\\\DependencyInjection\\\\Reference constructor invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: lib/Drupal/Core/DependencyInjection/YamlFileLoader.php
 
 		-
 			message: "#^Method Drupal\\\\Core\\\\DrupalKernel\\:\\:discoverServiceProviders\\(\\) should return array but return statement is missing\\.$#"
@@ -821,22 +791,7 @@ parameters:
 			path: lib/Drupal/Core/TypedData/Validation/RecursiveContextualValidator.php
 
 		-
-			message: "#^Class Drupal\\\\Core\\\\Update\\\\UpdateBackend constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Update/UpdateCacheBackendFactory.php
-
-		-
-			message: "#^Method Drupal\\\\Core\\\\Update\\\\UpdateKernel\\:\\:bootSession\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Update/UpdateKernel.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\Update\\\\UpdateKernel\\:\\:discoverServiceProviders\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Update/UpdateKernel.php
-
-		-
-			message: "#^Method Drupal\\\\Core\\\\Update\\\\UpdateKernel\\:\\:handleAccess\\(\\) invoked with 2 parameters, 1 required\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Update/UpdateKernel.php
 
@@ -889,11 +844,6 @@ parameters:
 			message: "#^Variable \\$edit might not be defined\\.$#"
 			count: 1
 			path: modules/block/tests/src/Functional/BlockUiTest.php
-
-		-
-			message: "#^Class Drupal\\\\block\\\\Plugin\\\\migrate\\\\process\\\\BlockSettings constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/block/tests/src/Unit/Plugin/migrate/process/BlockSettingsTest.php
 
 		-
 			message: "#^Variable \\$row in empty\\(\\) is never defined\\.$#"
@@ -996,11 +946,6 @@ parameters:
 			path: modules/comment/src/CommentForm.php
 
 		-
-			message: "#^Method Drupal\\\\Core\\\\Entity\\\\ContentEntityForm\\:\\:form\\(\\) invoked with 3 parameters, 2 required\\.$#"
-			count: 1
-			path: modules/comment/src/CommentForm.php
-
-		-
 			message: "#^Method Drupal\\\\comment\\\\CommentForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/comment/src/CommentForm.php
@@ -1056,11 +1001,6 @@ parameters:
 			path: modules/comment/tests/src/Functional/CommentLanguageTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:fail\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Functional/CommentPagerTest.php
-
-		-
 			message: "#^Variable \\$mode_text might not be defined\\.$#"
 			count: 1
 			path: modules/comment/tests/src/Functional/CommentTestBase.php
@@ -1111,11 +1051,6 @@ parameters:
 			path: modules/contact/src/Entity/Message.php
 
 		-
-			message: "#^Method Drupal\\\\Core\\\\Entity\\\\ContentEntityForm\\:\\:form\\(\\) invoked with 3 parameters, 2 required\\.$#"
-			count: 1
-			path: modules/contact/src/MessageForm.php
-
-		-
 			message: "#^Method Drupal\\\\contact\\\\MessageForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/contact/src/MessageForm.php
@@ -1153,11 +1088,6 @@ parameters:
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 5
-			path: modules/content_translation/src/ContentTranslationHandler.php
-
-		-
-			message: "#^Method Drupal\\\\content_translation\\\\ContentTranslationHandler\\:\\:addTranslatabilityClue\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 1
 			path: modules/content_translation/src/ContentTranslationHandler.php
 
 		-
@@ -1261,11 +1191,6 @@ parameters:
 			path: modules/dblog/tests/src/Kernel/DbLogTest.php
 
 		-
-			message: "#^Method Drupal\\\\Tests\\\\BrowserTestBase\\:\\:drupalLogout\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 2
-			path: modules/editor/tests/src/Functional/EditorLoadingTest.php
-
-		-
 			message: "#^Variable \\$items in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/field/tests/modules/field_test/src/Plugin/Field/FieldFormatter/TestFieldEmptySettingFormatter.php
@@ -1289,26 +1214,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/field/tests/src/Kernel/Timestamp/TimestampFormatterTest.php
-
-		-
-			message: "#^Class Drupal\\\\field\\\\Plugin\\\\migrate\\\\process\\\\d6\\\\FieldInstanceSettings constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/field/tests/src/Unit/Plugin/migrate/process/d6/FieldInstanceSettingsTest.php
-
-		-
-			message: "#^Class Drupal\\\\field\\\\Plugin\\\\migrate\\\\process\\\\d6\\\\FieldSettings constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/field/tests/src/Unit/Plugin/migrate/process/d6/FieldSettingsTest.php
-
-		-
-			message: "#^Class Drupal\\\\field\\\\Plugin\\\\migrate\\\\process\\\\d7\\\\FieldInstanceSettings constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/field/tests/src/Unit/Plugin/migrate/process/d7/FieldInstanceSettingsTest.php
-
-		-
-			message: "#^Class Drupal\\\\field\\\\Plugin\\\\migrate\\\\process\\\\d7\\\\FieldSettings constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/field/tests/src/Unit/Plugin/migrate/process/d7/FieldSettingsTest.php
 
 		-
 			message: "#^Variable \\$entity_display might not be defined\\.$#"
@@ -1344,11 +1249,6 @@ parameters:
 			message: "#^Method Drupal\\\\field_ui\\\\Form\\\\FieldConfigEditForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/field_ui/src/Form/FieldConfigEditForm.php
-
-		-
-			message: "#^Static method Drupal\\\\field_ui\\\\FieldUI\\:\\:getNextDestination\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: modules/field_ui/src/Form/FieldStorageAddForm.php
 
 		-
 			message: "#^Method Drupal\\\\field_ui\\\\Form\\\\FieldStorageConfigEditForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
@@ -1396,11 +1296,6 @@ parameters:
 			path: modules/file/tests/src/Functional/FileFieldRevisionTest.php
 
 		-
-			message: "#^Method Drupal\\\\Tests\\\\file\\\\Functional\\\\FileFieldTestBase\\:\\:uploadNodeFile\\(\\) invoked with 6 parameters, 3\\-5 required\\.$#"
-			count: 1
-			path: modules/file/tests/src/Functional/FileFieldWidgetTest.php
-
-		-
 			message: "#^Variable \\$unexpected in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/file/tests/src/Functional/FileManagedTestBase.php
@@ -1426,11 +1321,6 @@ parameters:
 			path: modules/file/tests/src/Kernel/FileManagedUnitTestBase.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertNotNull\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/file/tests/src/Kernel/SaveTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/file/tests/src/Kernel/UsageTest.php
@@ -1439,11 +1329,6 @@ parameters:
 			message: "#^Variable \\$rows might not be defined\\.$#"
 			count: 1
 			path: modules/filter/src/Plugin/Filter/FilterHtml.php
-
-		-
-			message: "#^Class Drupal\\\\filter\\\\Plugin\\\\migrate\\\\process\\\\FilterSettings constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/filter/tests/src/Kernel/Plugin/migrate/process/FilterSettingsTest.php
 
 		-
 			message: "#^Method Drupal\\\\forum\\\\ForumManager\\:\\:getTopicOrder\\(\\) should return array but return statement is missing\\.$#"
@@ -1541,11 +1426,6 @@ parameters:
 			path: modules/jsonapi/src/Revisions/VersionNegotiator.php
 
 		-
-			message: "#^Static method Drupal\\\\Component\\\\Serialization\\\\Json\\:\\:encode\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Functional/ResourceTestBase.php
-
-		-
 			message: "#^Variable \\$created_entity might not be defined\\.$#"
 			count: 1
 			path: modules/jsonapi/tests/src/Functional/ResourceTestBase.php
@@ -1564,11 +1444,6 @@ parameters:
 			message: "#^Variable \\$reason in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 2
 			path: modules/jsonapi/tests/src/Functional/ResourceTestBase.php
-
-		-
-			message: "#^Class Drupal\\\\jsonapi\\\\Normalizer\\\\JsonApiDocumentTopLevelNormalizer constructor invoked with 3 parameters, 2 required\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Unit/Normalizer/JsonApiDocumentTopLevelNormalizerTest.php
 
 		-
 			message: "#^Variable \\$id in isset\\(\\) always exists and is not nullable\\.$#"
@@ -1691,11 +1566,6 @@ parameters:
 			path: modules/locale/tests/src/Functional/LocaleUpdateInterfaceTest.php
 
 		-
-			message: "#^Method Drupal\\\\Tests\\\\locale\\\\Kernel\\\\LocaleConfigSubscriberTest\\:\\:assertNoConfigOverride\\(\\) invoked with 4 parameters, 2 required\\.$#"
-			count: 3
-			path: modules/locale/tests/src/Kernel/LocaleConfigSubscriberTest.php
-
-		-
 			message: "#^Variable \\$error in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/media/media.install
@@ -1721,11 +1591,6 @@ parameters:
 			path: modules/media_library/tests/src/FunctionalJavascript/EmbeddedFormWidgetTest.php
 
 		-
-			message: "#^Method Drupal\\\\Tests\\\\media_library\\\\FunctionalJavascript\\\\MediaLibraryTestBase\\:\\:addMediaFileToField\\(\\) invoked with 3 parameters, 2 required\\.$#"
-			count: 2
-			path: modules/media_library/tests/src/FunctionalJavascript/WidgetUploadTest.php
-
-		-
 			message: "#^Constructor of class Drupal\\\\menu_link_content\\\\Form\\\\MenuLinkContentForm has an unused parameter \\$language_manager\\.$#"
 			count: 1
 			path: modules/menu_link_content/src/Form/MenuLinkContentForm.php
@@ -1744,16 +1609,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/menu_link_content/tests/src/Kernel/MenuLinksTest.php
-
-		-
-			message: "#^Method Drupal\\\\Tests\\\\menu_link_content\\\\Kernel\\\\Migrate\\\\d6\\\\MigrateMenuLinkLocalizedTest\\:\\:assertEntity\\(\\) invoked with 11 parameters, 10 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Migrate/d6/MigrateMenuLinkLocalizedTest.php
-
-		-
-			message: "#^Class Drupal\\\\menu_link_content\\\\Plugin\\\\migrate\\\\process\\\\LinkUri constructor invoked with 5 parameters, 4 required\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/Plugin/migrate/process/LinkUriTest.php
 
 		-
 			message: "#^Method Drupal\\\\menu_ui\\\\MenuForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
@@ -1819,11 +1674,6 @@ parameters:
 			message: "#^Call to an undefined static method static\\(Drupal\\\\Tests\\\\migrate\\\\Kernel\\\\MigrateTestBase\\)\\:\\:migrateDumpAlter\\(\\)\\.$#"
 			count: 1
 			path: modules/migrate/tests/src/Kernel/MigrateTestBase.php
-
-		-
-			message: "#^Class Drupal\\\\migrate\\\\Event\\\\EventBase constructor invoked with 4 parameters, 2 required\\.$#"
-			count: 1
-			path: modules/migrate/tests/src/Unit/Event/EventBaseTest.php
 
 		-
 			message: "#^Variable \\$sub_process_plugins might not be defined\\.$#"
@@ -2106,24 +1956,9 @@ parameters:
 			path: modules/responsive_image/src/Plugin/Field/FieldFormatter/ResponsiveImageFormatter.php
 
 		-
-			message: "#^Method Drupal\\\\Core\\\\Entity\\\\EntityForm\\:\\:form\\(\\) invoked with 3 parameters, 2 required\\.$#"
-			count: 1
-			path: modules/responsive_image/src/ResponsiveImageStyleForm.php
-
-		-
 			message: "#^Method Drupal\\\\responsive_image\\\\ResponsiveImageStyleForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/responsive_image/src/ResponsiveImageStyleForm.php
-
-		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\DefaultLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/rest/src/Plugin/views/row/DataEntityRow.php
-
-		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\TranslationLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/rest/src/Plugin/views/row/DataEntityRow.php
 
 		-
 			message: "#^Method Drupal\\\\rest\\\\Routing\\\\ResourceRoutes\\:\\:onDynamicRouteEvent\\(\\) should return array but return statement is missing\\.$#"
@@ -2201,11 +2036,6 @@ parameters:
 			path: modules/shortcut/src/Form/SetCustomize.php
 
 		-
-			message: "#^Function shortcut_set_edit_access invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 2
-			path: modules/shortcut/src/ShortcutAccessControlHandler.php
-
-		-
 			message: "#^Method Drupal\\\\shortcut\\\\ShortcutForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/shortcut/src/ShortcutForm.php
@@ -2214,11 +2044,6 @@ parameters:
 			message: "#^Method Drupal\\\\shortcut\\\\ShortcutSetForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/shortcut/src/ShortcutSetForm.php
-
-		-
-			message: "#^Method Drupal\\\\Tests\\\\BrowserTestBase\\:\\:clickLink\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/shortcut/tests/src/Functional/ShortcutLinksTest.php
 
 		-
 			message: "#^Variable \\$args might not be defined\\.$#"
@@ -2326,11 +2151,6 @@ parameters:
 			path: modules/system/tests/modules/form_test/src/Form/FormTestTableSelectJsSelectForm.php
 
 		-
-			message: "#^Method Drupal\\\\Core\\\\Form\\\\ConfigFormBase\\:\\:config\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: modules/system/tests/modules/form_test/src/FormTestServiceObject.php
-
-		-
 			message: "#^Constructor of class Drupal\\\\lazy_route_provider_install_test\\\\PluginManager has an unused parameter \\$cache_backend\\.$#"
 			count: 1
 			path: modules/system/tests/modules/lazy_route_provider_install_test/src/PluginManager.php
@@ -2346,21 +2166,6 @@ parameters:
 			path: modules/system/tests/modules/module_installer_config_test/src/Entity/TestConfigType.php
 
 		-
-			message: "#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Ajax\\\\FrameworkTest\\:\\:assertCommand\\(\\) invoked with 3 parameters, 2 required\\.$#"
-			count: 2
-			path: modules/system/tests/src/Functional/Ajax/FrameworkTest.php
-
-		-
-			message: "#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Batch\\\\ProcessingTest\\:\\:assertBatchMessages\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 14
-			path: modules/system/tests/src/Functional/Batch/ProcessingTest.php
-
-		-
-			message: "#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Entity\\\\EntityCacheTagsTestBase\\:\\:getAdditionalCacheTagsForEntityListing\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/Entity/EntityCacheTagsTestBase.php
-
-		-
 			message: "#^Instantiated class Drupal\\\\Tests\\\\system\\\\Functional\\\\FileTransfer\\\\Exception not found\\.$#"
 			count: 1
 			path: modules/system/tests/src/Functional/FileTransfer/FileTransferTest.php
@@ -2368,11 +2173,6 @@ parameters:
 		-
 			message: "#^Access to an undefined property Drupal\\\\Tests\\\\system\\\\Functional\\\\FileTransfer\\\\TestFileTransfer\\:\\:\\$connection\\.$#"
 			count: 5
-			path: modules/system/tests/src/Functional/FileTransfer/TestFileTransfer.php
-
-		-
-			message: "#^Method Drupal\\\\Core\\\\FileTransfer\\\\FileTransfer\\:\\:__construct\\(\\) invoked with 5 parameters, 1 required\\.$#"
-			count: 1
 			path: modules/system/tests/src/Functional/FileTransfer/TestFileTransfer.php
 
 		-
@@ -2384,16 +2184,6 @@ parameters:
 			message: "#^Variable \\$form_output in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 2
 			path: modules/system/tests/src/Functional/Form/FormTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertFalse\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/Lock/LockFunctionalTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 5
-			path: modules/system/tests/src/Functional/Lock/LockFunctionalTest.php
 
 		-
 			message: "#^Variable \\$goto in isset\\(\\) always exists and is not nullable\\.$#"
@@ -2411,11 +2201,6 @@ parameters:
 			path: modules/system/tests/src/Functional/Menu/BreadcrumbTest.php
 
 		-
-			message: "#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Session\\\\SessionTest\\:\\:sessionReset\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 3
-			path: modules/system/tests/src/Functional/Session/SessionTest.php
-
-		-
 			message: "#^Variable \\$expected_required_list_items might not be defined\\.$#"
 			count: 2
 			path: modules/system/tests/src/Functional/Theme/ThemeUiTest.php
@@ -2424,11 +2209,6 @@ parameters:
 			message: "#^Anonymous function has an unused use \\$renderer\\.$#"
 			count: 1
 			path: modules/system/tests/src/Kernel/Common/UrlTest.php
-
-		-
-			message: "#^Class Symfony\\\\Component\\\\HttpKernel\\\\Event\\\\RequestEvent constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/system/tests/src/Kernel/TimezoneResolverTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -2526,11 +2306,6 @@ parameters:
 			path: modules/toolbar/src/Controller/ToolbarController.php
 
 		-
-			message: "#^Method Drupal\\\\Core\\\\Menu\\\\MenuLinkTree\\:\\:build\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 2
-			path: modules/toolbar/src/Menu/ToolbarMenuLinkTree.php
-
-		-
 			message: "#^Method Drupal\\\\tour\\\\TipPluginBase\\:\\:get\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: modules/tour/src/TipPluginBase.php
@@ -2549,16 +2324,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 4
 			path: modules/update/src/UpdateProcessor.php
-
-		-
-			message: "#^Method Drupal\\\\Core\\\\Entity\\\\ContentEntityForm\\:\\:form\\(\\) invoked with 3 parameters, 2 required\\.$#"
-			count: 1
-			path: modules/user/src/AccountForm.php
-
-		-
-			message: "#^Method Drupal\\\\Core\\\\Entity\\\\EntityForm\\:\\:getEntity\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 1
-			path: modules/user/src/AccountForm.php
 
 		-
 			message: "#^Variable \\$users might not be defined\\.$#"
@@ -2606,29 +2371,14 @@ parameters:
 			path: modules/user/src/ProfileForm.php
 
 		-
-			message: "#^Method Drupal\\\\user\\\\AccountForm\\:\\:form\\(\\) invoked with 3 parameters, 2 required\\.$#"
-			count: 1
-			path: modules/user/src/RegisterForm.php
-
-		-
 			message: "#^Method Drupal\\\\user\\\\RegisterForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/user/src/RegisterForm.php
 
 		-
-			message: "#^Method Drupal\\\\Core\\\\Entity\\\\EntityForm\\:\\:form\\(\\) invoked with 3 parameters, 2 required\\.$#"
-			count: 1
-			path: modules/user/src/RoleForm.php
-
-		-
 			message: "#^Method Drupal\\\\user\\\\RoleForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/user/src/RoleForm.php
-
-		-
-			message: "#^Method Drupal\\\\Tests\\\\BrowserTestBase\\:\\:drupalLogout\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 1
-			path: modules/user/tests/src/Functional/UserBlocksTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -2684,16 +2434,6 @@ parameters:
 			message: "#^Variable \\$result in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: modules/user/tests/src/Unit/UserAccessControlHandlerTest.php
-
-		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\DefaultLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/views/src/Entity/Render/EntityFieldRenderer.php
-
-		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\TranslationLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/views/src/Entity/Render/EntityFieldRenderer.php
 
 		-
 			message: "#^Variable \\$batch in isset\\(\\) is never defined\\.$#"
@@ -2766,11 +2506,6 @@ parameters:
 			path: modules/views/src/Plugin/views/argument/Date.php
 
 		-
-			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\ArgumentPluginBase\\:\\:getDefaultArgument\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/argument/Date.php
-
-		-
 			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\cache\\\\CachePluginBase\\:\\:cacheGet\\(\\) should return bool but return statement is missing\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/cache/CachePluginBase.php
@@ -2782,11 +2517,6 @@ parameters:
 
 		-
 			message: "#^Constructor of class Drupal\\\\views\\\\Plugin\\\\views\\\\display\\\\DisplayPluginBase has an unused parameter \\$configuration\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/display/DisplayPluginBase.php
-
-		-
-			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\display\\\\DisplayPluginBase\\:\\:getPlugin\\(\\) invoked with 2 parameters, 1 required\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/display/DisplayPluginBase.php
 
@@ -2814,16 +2544,6 @@ parameters:
 			message: "#^Variable \\$items might not be defined\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/field/Broken.php
-
-		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\DefaultLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/BulkForm.php
-
-		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\TranslationLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/BulkForm.php
 
 		-
 			message: "#^Variable \\$entity in empty\\(\\) always exists and is not falsy\\.$#"
@@ -2861,21 +2581,6 @@ parameters:
 			path: modules/views/src/Plugin/views/field/EntityField.php
 
 		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\DefaultLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/EntityOperations.php
-
-		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\TranslationLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/EntityOperations.php
-
-		-
-			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\FieldPluginBase\\:\\:getElements\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 2
-			path: modules/views/src/Plugin/views/field/FieldPluginBase.php
-
-		-
 			message: "#^Variable \\$options in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/field/FieldPluginBase.php
@@ -2891,16 +2596,6 @@ parameters:
 			path: modules/views/src/Plugin/views/field/FieldPluginBase.php
 
 		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\DefaultLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/LinkBase.php
-
-		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\TranslationLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/LinkBase.php
-
-		-
 			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\Markup\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/field/Markup.php
@@ -2909,16 +2604,6 @@ parameters:
 			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\PrerenderList\\:\\:renderItems\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/field/PrerenderList.php
-
-		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\DefaultLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/RenderedEntity.php
-
-		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\TranslationLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/RenderedEntity.php
 
 		-
 			message: "#^Variable \\$entity in isset\\(\\) always exists and is not nullable\\.$#"
@@ -2991,16 +2676,6 @@ parameters:
 			path: modules/views/src/Plugin/views/relationship/GroupwiseMax.php
 
 		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\DefaultLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/row/EntityRow.php
-
-		-
-			message: "#^Class Drupal\\\\views\\\\Entity\\\\Render\\\\TranslationLanguageRenderer constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/row/EntityRow.php
-
-		-
 			message: "#^Variable \\$items might not be defined\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/sort/Broken.php
@@ -3039,11 +2714,6 @@ parameters:
 			message: "#^Function Drupal\\\\views\\\\Routing\\\\views_add_contextual_links invoked with 4 parameters, 0 required\\.$#"
 			count: 1
 			path: modules/views/src/Routing/ViewPageController.php
-
-		-
-			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\PluginBase\\:\\:setOptionDefaults\\(\\) invoked with 3 parameters, 2 required\\.$#"
-			count: 1
-			path: modules/views/src/Tests/TestHelperPlugin.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -3124,11 +2794,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/views/tests/src/Kernel/RenderCacheIntegrationTest.php
-
-		-
-			message: "#^Class Drupal\\\\Core\\\\Routing\\\\RouteBuildEvent constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: modules/views/tests/src/Unit/EventSubscriber/RouteSubscriberTest.php
 
 		-
 			message: "#^Variable \\$entity_revision_data_table might not be defined\\.$#"
@@ -3331,16 +2996,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Entity/EntityTypeConstraintsTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertFalse\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/FieldSqlStorageTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: tests/Drupal/KernelTests/Core/Entity/FieldSqlStorageTest.php
-
-		-
 			message: "#^Variable \\$e might not be defined\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Entity/FieldableEntityDefinitionUpdateTest.php
@@ -3356,16 +3011,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Entity/FieldableEntityDefinitionUpdateTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertFalse\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 2
-			path: tests/Drupal/KernelTests/Core/File/DirectoryTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 3
-			path: tests/Drupal/KernelTests/Core/File/DirectoryTest.php
-
-		-
 			message: "#^Variable \\$x might not be defined\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Image/ToolkitGdTest.php
@@ -3379,11 +3024,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/KeyValueStore/GarbageCollectionTest.php
-
-		-
-			message: "#^Class Drupal\\\\Core\\\\Extension\\\\ModuleHandler constructor invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Plugin/PluginTestBase.php
 
 		-
 			message: "#^\\#pre_render callback 'element_info_test…' at key '1' is not trusted\\.$#"
@@ -3461,11 +3101,6 @@ parameters:
 			path: tests/Drupal/Tests/Component/DependencyInjection/Dumper/OptimizedPhpArrayDumperTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\TestCase\\:\\:expectException\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 3
-			path: tests/Drupal/Tests/Component/Gettext/PoStreamWriterTest.php
-
-		-
 			message: "#^Constructor of class Drupal\\\\Tests\\\\Component\\\\Plugin\\\\Factory\\\\ArgumentsAllNull has an unused parameter \\$charismatic\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Component/Plugin/Factory/ReflectionFactoryTest.php
@@ -3526,21 +3161,6 @@ parameters:
 			path: tests/Drupal/Tests/Composer/ComposerTest.php
 
 		-
-			message: "#^Class Drupal\\\\Core\\\\Asset\\\\LibraryDiscovery constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Asset/LibraryDiscoveryTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Common/TagsTest.php
-
-		-
-			message: "#^Class Drupal\\\\Core\\\\Database\\\\Query\\\\Condition constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 3
-			path: tests/Drupal/Tests/Core/Database/ConditionTest.php
-
-		-
 			message: "#^Class Drupal\\\\Driver\\\\Database\\\\corefake\\\\Install\\\\Tasks not found\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Database/InstallerObjectTest.php
@@ -3559,46 +3179,6 @@ parameters:
 			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Entity\\\\EntityTypeBundleInfoTest\\:\\:get\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Entity/EntityTypeBundleInfoTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\Assert\\:\\:stringStartsWith\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/EventSubscriber/FinalExceptionSubscriberTest.php
-
-		-
-			message: "#^Class Drupal\\\\Core\\\\Routing\\\\RouteBuildEvent constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/EventSubscriber/ModuleRouteSubscriberTest.php
-
-		-
-			message: "#^Class Drupal\\\\Core\\\\Routing\\\\RouteBuildEvent constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/EventSubscriber/PathRootsSubscriberTest.php
-
-		-
-			message: "#^Class Drupal\\\\Core\\\\Routing\\\\RouteBuildEvent constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/EventSubscriber/SpecialAttributesRouteSubscriberTest.php
-
-		-
-			message: "#^Class Drupal\\\\Core\\\\State\\\\State constructor invoked with 3 parameters, 1 required\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/Extension/ThemeExtensionListTest.php
-
-		-
-			message: "#^Class Drupal\\\\Tests\\\\Core\\\\Extension\\\\TestThemeEngineExtensionList constructor invoked with 8 parameters, 7 required\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Extension/ThemeExtensionListTest.php
-
-		-
-			message: "#^Class Drupal\\\\Core\\\\Layout\\\\LayoutPluginManager constructor invoked with 5 parameters, 4 required\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Layout/LayoutPluginManagerTest.php
-
-		-
-			message: "#^Method Drupal\\\\Tests\\\\Core\\\\Menu\\\\LocalTaskManagerTest\\:\\:getLocalTasksCache\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Menu/LocalTaskManagerTest.php
 
 		-
 			message: "#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
@@ -3659,11 +3239,6 @@ parameters:
 			message: "#^Anonymous function has an unused use \\$renderer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Render/RendererRecursionTest.php
-
-		-
-			message: "#^Class Drupal\\\\Core\\\\Cache\\\\Context\\\\ContextCacheKeys constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Render/RendererTestBase.php
 
 		-
 			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"

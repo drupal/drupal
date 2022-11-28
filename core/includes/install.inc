@@ -314,7 +314,7 @@ function drupal_rewrite_settings($settings = [], $settings_file = NULL) {
             break;
 
           case 'array_index':
-            if (_drupal_rewrite_settings_is_array_index($type, $value)) {
+            if (_drupal_rewrite_settings_is_array_index($type)) {
               $index = trim($value, '\'"');
               $state = 'right_bracket';
             }
@@ -633,7 +633,7 @@ function drupal_install_system($install_state) {
   // its dependencies, and here the dependencies will be installed as well.
   if ($provider !== 'core') {
     $autoload = $connection->getConnectionOptions()['autoload'] ?? '';
-    if (($pos = strpos($autoload, 'src/Driver/Database/')) !== FALSE) {
+    if (strpos($autoload, 'src/Driver/Database/') !== FALSE) {
       $kernel->getContainer()->get('module_installer')->install([$provider], TRUE);
     }
   }

@@ -32,7 +32,7 @@ class BlockSettingsTest extends UnitTestCase {
       $row = $this->prophesize(Row::class)->reveal();
     }
 
-    $plugin = new BlockSettings([], 'block_settings', [], 'foo');
+    $plugin = new BlockSettings([], 'block_settings', []);
     $actual = $plugin->transform($value, $executable, $row, 'foo');
     $this->assertSame($expected, $actual);
   }

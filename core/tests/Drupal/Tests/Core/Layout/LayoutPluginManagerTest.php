@@ -89,7 +89,7 @@ class LayoutPluginManagerTest extends UnitTestCase {
     $this->cacheBackend = $this->prophesize(CacheBackendInterface::class);
 
     $namespaces = new \ArrayObject(['Drupal\Core' => vfsStream::url('root/core/lib/Drupal/Core')]);
-    $this->layoutPluginManager = new LayoutPluginManager($namespaces, $this->cacheBackend->reveal(), $this->moduleHandler->reveal(), $this->themeHandler->reveal(), $this->getStringTranslationStub());
+    $this->layoutPluginManager = new LayoutPluginManager($namespaces, $this->cacheBackend->reveal(), $this->moduleHandler->reveal(), $this->themeHandler->reveal());
   }
 
   /**

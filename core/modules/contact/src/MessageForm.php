@@ -101,7 +101,7 @@ class MessageForm extends ContentEntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     $user = $this->currentUser();
     $message = $this->entity;
-    $form = parent::form($form, $form_state, $message);
+    $form = parent::form($form, $form_state);
     $form['#attributes']['class'][] = 'contact-form';
 
     if (!empty($message->preview)) {

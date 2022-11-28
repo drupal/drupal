@@ -52,7 +52,7 @@ class ShortcutAccessControlHandler extends EntityAccessControlHandler implements
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     if ($shortcut_set = $this->shortcutSetStorage->load($entity->bundle())) {
-      return shortcut_set_edit_access($shortcut_set, $account);
+      return shortcut_set_edit_access($shortcut_set);
     }
     // @todo Fix this bizarre code: how can a shortcut exist without a shortcut
     // set? The above if-test is unnecessary. See https://www.drupal.org/node/2339903.
@@ -64,7 +64,7 @@ class ShortcutAccessControlHandler extends EntityAccessControlHandler implements
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
     if ($shortcut_set = $this->shortcutSetStorage->load($entity_bundle)) {
-      return shortcut_set_edit_access($shortcut_set, $account);
+      return shortcut_set_edit_access($shortcut_set);
     }
     // @todo Fix this bizarre code: how can a shortcut exist without a shortcut
     // set? The above if-test is unnecessary. See https://www.drupal.org/node/2339903.

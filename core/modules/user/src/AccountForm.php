@@ -306,7 +306,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
       $form['timezone']['timezone']['#attributes'] = ['class' => ['timezone-detect']];
     }
 
-    return parent::form($form, $form_state, $account);
+    return parent::form($form, $form_state);
   }
 
   /**
@@ -430,7 +430,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
-    $user = $this->getEntity($form_state);
+    $user = $this->getEntity();
     // If there's a session set to the users id, remove the password reset tag
     // since a new password was saved.
     $this->getRequest()->getSession()->remove('pass_reset_' . $user->id());

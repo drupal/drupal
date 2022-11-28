@@ -201,7 +201,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
    */
   protected function setUpNoTranslation($config_name, $key, $source, $langcode) {
     $this->localeConfigManager->updateConfigTranslations([$config_name], [$langcode]);
-    $this->assertNoConfigOverride($config_name, $key, $source, $langcode);
+    $this->assertNoConfigOverride($config_name, $key);
     $this->assertNoTranslation($config_name, $langcode);
   }
 
@@ -346,7 +346,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
       ->save();
     $this->configFactory->reset($config_name);
 
-    $this->assertNoConfigOverride($config_name, $key, $source_value, $langcode);
+    $this->assertNoConfigOverride($config_name, $key);
   }
 
   /**
@@ -376,7 +376,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
     $this->localeConfigManager->updateConfigTranslations([$config_name], [$langcode]);
     $this->configFactory->reset($config_name);
 
-    $this->assertNoConfigOverride($config_name, $key, $source_value, $langcode);
+    $this->assertNoConfigOverride($config_name, $key);
   }
 
   /**

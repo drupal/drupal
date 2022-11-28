@@ -2377,7 +2377,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $doc_multi_value_tests['data']['attributes']['field_rest_test_multivalue'] = $this->entity->get('field_rest_test_multivalue')->getValue();
     $doc_remove_item = $doc_multi_value_tests;
     unset($doc_remove_item['data']['attributes']['field_rest_test_multivalue'][0]);
-    $request_options[RequestOptions::BODY] = Json::encode($doc_remove_item, 'api_json');
+    $request_options[RequestOptions::BODY] = Json::encode($doc_remove_item);
     $response = $this->request('PATCH', $url, $request_options);
     $this->assertResourceResponse(200, FALSE, $response);
     $updated_entity = $this->entityLoadUnchanged($this->entity->id());
