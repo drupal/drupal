@@ -82,7 +82,7 @@ system.admin_config_regional:
   path: '/admin/config/regional'
   defaults:
     _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
-    _title: 'Regional and language'
+    _title: 'Region and language'
   requirements:
     _permission: 'access administration pages'
 

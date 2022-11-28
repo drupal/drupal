@@ -84,7 +84,7 @@ system.logging_settings:
   weight: -15
 system.admin_config_regional:
   route_name: system.admin_config_regional
-  title: 'Regional and language'
+  title: 'Region and language'
   parent: system.admin_config
   description: 'Configure regional settings, localization, and translation.'
   weight: -5
