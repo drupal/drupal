@@ -10,6 +10,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Provides a console command to generate proxy classes.
+ *
+ * @see lazy_services
+ * @see core/scripts/generate-proxy.sh
  */
 class GenerateProxyClassCommand extends Command {
 
