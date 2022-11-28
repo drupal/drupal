@@ -242,7 +242,7 @@ printf "\n"
 # When the file core/phpcs.xml.dist has been changed, then PHPCS must check all files.
 if [[ $PHPCS_XML_DIST_FILE_CHANGED == "1" ]]; then
   # Test all files with phpcs rules.
-  vendor/bin/phpcs -ps --standard="$TOP_LEVEL/core/phpcs.xml.dist"
+  vendor/bin/phpcs -ps --parallel=$(nproc) --standard="$TOP_LEVEL/core/phpcs.xml.dist"
   PHPCS=$?
   if [ "$PHPCS" -ne "0" ]; then
     # If there are failures set the status to a number other than 0.

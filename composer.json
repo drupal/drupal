@@ -113,8 +113,8 @@
             "Drupal\\Composer\\Composer::generateMetapackages",
             "Drupal\\Composer\\Composer::generateComponentPackages"
         ],
-        "phpcs": "phpcs --standard=core/phpcs.xml.dist --",
-        "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --"
+        "phpcs": "phpcs --standard=core/phpcs.xml.dist --parallel=$(nproc) --",
+        "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --parallel=$(nproc) --"
     },
     "repositories": [
         {
