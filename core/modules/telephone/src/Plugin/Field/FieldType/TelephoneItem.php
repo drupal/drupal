@@ -23,6 +23,11 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 class TelephoneItem extends FieldItemBase {
 
   /**
+   * The maximum length for a telephone value.
+   */
+  const MAX_LENGTH = 256;
+
+  /**
    * {@inheritdoc}
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
@@ -30,7 +35,7 @@ class TelephoneItem extends FieldItemBase {
       'columns' => [
         'value' => [
           'type' => 'varchar',
-          'length' => 256,
+          'length' => self::MAX_LENGTH,
         ],
       ],
     ];
@@ -62,12 +67,11 @@ class TelephoneItem extends FieldItemBase {
     $constraint_manager = \Drupal::typedDataManager()->getValidationConstraintManager();
     $constraints = parent::getConstraints();
 
-    $max_length = 256;
     $constraints[] = $constraint_manager->create('ComplexData', [
       'value' => [
         'Length' => [
-          'max' => $max_length,
-          'maxMessage' => $this->t('%name: the telephone number may not be longer than @max characters.', ['%name' => $this->getFieldDefinition()->getLabel(), '@max' => $max_length]),
+          'max' => self::MAX_LENGTH,
+          'maxMessage' => $this->t('%name: the telephone number may not be longer than @max characters.', ['%name' => $this->getFieldDefinition()->getLabel(), '@max' => self::MAX_LENGTH]),
         ],
       ],
     ]);
