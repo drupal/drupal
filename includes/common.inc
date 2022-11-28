@@ -5526,7 +5526,8 @@ function drupal_cron_run() {
   drupal_alter('cron_queue_info', $queues);
 
   // Try to acquire cron lock.
-  if (!lock_acquire('cron', 240.0)) {
+  $cron_lock_expiration_timeout = variable_get('cron_lock_expiration_timeout', 900.0);
+  if (!lock_acquire('cron', $cron_lock_expiration_timeout)) {
     // Cron is still running normally.
     watchdog('cron', 'Attempting to re-run cron while it is already running.', array(), WATCHDOG_WARNING);
   }

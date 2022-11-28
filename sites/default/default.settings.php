@@ -806,3 +806,15 @@ $conf['mail_display_name_site_name'] = TRUE;
  */
 # $conf['drupal_http_request_strip_sensitive_headers_on_host_change'] = TRUE;
 # $conf['drupal_http_request_strip_sensitive_headers_on_https_downgrade'] = TRUE;
+
+/**
+ * Cron lock expiration timeout:
+ *
+ * Each time Drupal's cron is executed, it acquires a cron lock. Older releases
+ * of Drupal set the default cron lock expiration timeout to 240 seconds. This
+ * duration was considered short, because it often caused concurrent cron runs
+ * especially on busy sites heavily utilizing cron.
+ *
+ * Use this variable to set a custom cron lock expiration timeout (float).
+ */
+# $conf['cron_lock_expiration_timeout'] = 900.0;
