@@ -76,6 +76,21 @@ abstract class DrupalTestCase {
   protected $originalLanguageDefault;
 
   /**
+   * The original theme.
+   */
+   protected $originalTheme;
+
+   /**
+    * The original theme key.
+    */
+   protected $originalThemeKey;
+
+   /**
+    * The original theme path.
+    */
+   protected $originalThemePath;
+
+  /**
    * Current results of this test case.
    *
    * @var Array
@@ -1451,7 +1466,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    * @see DrupalWebTestCase::tearDown()
    */
   protected function prepareEnvironment() {
-    global $user, $language, $language_url, $conf;
+    global $user, $language, $language_url, $conf, $theme, $theme_key, $theme_path;
 
     // Store necessary current values before switching to prefixed database.
     $this->originalLanguage = $language;
@@ -1467,6 +1482,12 @@ class DrupalWebTestCase extends DrupalTestCase {
     // during install if the current language is not 'en'.
     // The following array/object conversion is copied from language_default().
     $language_url = $language = (object) array('language' => 'en', 'name' => 'English', 'native' => 'English', 'direction' => 0, 'enabled' => 1, 'plurals' => 0, 'formula' => '', 'domain' => '', 'prefix' => '', 'weight' => 0, 'javascript' => '');
+
+    // Reset the theme globals.
+    $this->originalTheme = $theme;
+    $this->originalThemeKey = $theme_key;
+    $this->originalThemePath = $theme_path;
+    $theme = $theme_key = $theme_path = NULL;
 
     // Save and clean the shutdown callbacks array because it is static cached
     // and will be changed by the test run. Otherwise it will contain callbacks
@@ -1919,7 +1940,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    * and reset the database prefix.
    */
   protected function tearDown() {
-    global $user, $language, $language_url;
+    global $user, $language, $language_url, $theme, $theme_key, $theme_path;
 
     // In case a fatal error occurred that was not in the test process read the
     // log to pick up any fatal errors.
@@ -1991,6 +2012,11 @@ class DrupalWebTestCase extends DrupalTestCase {
     if ($this->originalLanguageDefault) {
       $GLOBALS['conf']['language_default'] = $this->originalLanguageDefault;
     }
+
+    // Reset theme.
+    $theme = $this->originalTheme;
+    $theme_key = $this->originalThemeKey;
+    $theme_path = $this->originalThemePath;
 
     // Close the CURL handler and reset the cookies array so test classes
     // containing multiple tests are not polluted.
