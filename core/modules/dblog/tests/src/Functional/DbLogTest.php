@@ -724,12 +724,14 @@ class DbLogTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/dblog', ['query' => ['order' => 'Type']]);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('Operations');
+    $this->assertSession()->fieldExists('edit-type');
 
     // Clear all logs and make sure the confirmation message is found.
     $this->clearLogsEntries();
     // Confirm that the logs should be cleared.
     $this->submitForm([], 'Confirm');
     $this->assertSession()->pageTextContains('Database log cleared.');
+    $this->assertSession()->fieldNotExists('edit-type');
   }
 
   /**
