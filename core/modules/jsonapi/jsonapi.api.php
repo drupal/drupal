@@ -124,7 +124,7 @@ use Drupal\Core\Access\AccessResult;
  * @section translations Resource translations
  *
  * Some multilingual features currently do not work well with JSON:API. See
- * JSON:API modules's multilingual support documentation online for more
+ * JSON:API modules' multilingual support documentation online for more
  * information on the current status of multilingual support.
  *
  * @see https://www.drupal.org/docs/8/modules/jsonapi/translations
