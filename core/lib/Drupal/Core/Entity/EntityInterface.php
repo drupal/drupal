@@ -136,9 +136,9 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
   /**
    * Generates the HTML for a link to this entity.
    *
-   * @param string|null $text
-   *   (optional) The link text for the anchor tag as a translated string.
-   *   If NULL, it will use the entity's label. Defaults to NULL.
+   * @param string|null|array|\Drupal\Component\Render\MarkupInterface $text
+   *   (optional) The link text for the anchor tag as a translated string or
+   *   render array. If NULL, it will use the entity's label. Defaults to NULL.
    * @param string $rel
    *   (optional) The link relationship type. Defaults to 'canonical'.
    * @param array $options
