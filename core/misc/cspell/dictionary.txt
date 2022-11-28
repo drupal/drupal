@@ -748,7 +748,6 @@ msgctxt
 msgid
 msgstr
 msword
-mtimes
 mucho
 mulrev
 mulrevpub
