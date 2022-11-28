@@ -15,7 +15,7 @@
         "composer/class-map-generator": "1.0.0",
         "composer/composer": "2.4.4",
         "composer/metadata-minifier": "1.0.0",
-        "composer/pcre": "3.0.0",
+        "composer/pcre": "3.1.0",
         "composer/spdx-licenses": "1.5.7",
         "composer/xdebug-handler": "3.0.3",
         "dealerdirect/phpcodesniffer-composer-installer": "v0.7.2",
