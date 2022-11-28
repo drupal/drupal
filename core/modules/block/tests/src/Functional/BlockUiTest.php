@@ -107,6 +107,18 @@ class BlockUiTest extends BrowserTestBase {
     \Drupal::service('theme_installer')->install(['stable9']);
     $this->drupalGet('admin/structure/block/demo/stable9');
     $this->assertSession()->statusCodeEquals(404);
+
+    // Delete all blocks and verify block layout can be saved.
+    $block_storage = \Drupal::service('entity_type.manager')->getStorage('block');
+    $blocks = $block_storage->loadMultiple();
+    foreach ($blocks as $block) {
+      $block->delete();
+    }
+    $this->drupalGet('admin/structure/block');
+    $blocks_table = $this->xpath("//tr[@class='block-enabled']");
+    $this->assertEmpty($blocks_table, 'The blocks table is now empty.');
+    $this->submitForm([], 'Save blocks');
+
   }
 
   /**
