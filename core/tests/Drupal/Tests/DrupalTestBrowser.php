@@ -239,28 +239,4 @@ class DrupalTestBrowser extends AbstractBrowser {
     return new Response((string) $response->getBody(), $response->getStatusCode(), $response->getHeaders());
   }
 
-  /**
-   * Reads response meta tags to guess content-type charset.
-   *
-   * @param \Symfony\Component\BrowserKit\Response $response
-   *   The origin response to filter.
-   *
-   * @return \Symfony\Component\BrowserKit\Response
-   *   A BrowserKit Response instance.
-   */
-  protected function filterResponse($response) {
-    $content_type = $response->getHeader('Content-Type');
-
-    if (!$content_type || strpos($content_type, 'charset=') === FALSE) {
-      if (preg_match('/\<meta[^\>]+charset *= *["\']?([a-zA-Z\-0-9]+)/i', $response->getContent(), $matches)) {
-        $headers = $response->getHeaders();
-        $headers['Content-Type'] = $content_type . ';charset=' . $matches[1];
-
-        $response = new Response($response->getContent(), $response->getStatus(), $headers);
-      }
-    }
-
-    return parent::filterResponse($response);
-  }
-
 }
