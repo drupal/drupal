@@ -435,7 +435,7 @@ window.Drupal = { behaviors: {}, locale: {} };
    * @param {string} url
    *   The URL string to be tested.
    *
-   * @return {bool}
+   * @return {boolean}
    *   `true` if local.
    *
    * @see https://github.com/jquery/jquery-ui/blob/1.11.4/ui/tabs.js#L58

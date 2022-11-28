@@ -28,10 +28,10 @@
    *
    * @param {*} a
    *   The value to maybe invert.
-   * @param {bool} invertState
+   * @param {boolean} invertState
    *   Whether to invert state or not.
    *
-   * @return {bool}
+   * @return {boolean}
    *   The result.
    */
   function invert(a, invertState) {
@@ -48,7 +48,7 @@
    * @param {*} b
    *   Value b.
    *
-   * @return {bool}
+   * @return {boolean}
    *   The comparison result.
    */
   function compare(a, b) {
@@ -69,7 +69,7 @@
    * @param {*} b
    *   Value b
    *
-   * @return {bool}
+   * @return {boolean}
    *   The result.
    */
   function ternary(a, b) {
@@ -222,7 +222,7 @@
      * @param {Drupal.states.State} state
      *   A State object describing the dependee's updated state.
      *
-     * @return {bool}
+     * @return {boolean}
      *   true or false.
      */
     compare(reference, selector, state) {
@@ -299,7 +299,7 @@
      *   selector that these constraints apply to. In that case, the keys of the
      *   object are interpreted as the selector if encountered.
      *
-     * @return {bool}
+     * @return {boolean}
      *   true or false, depending on whether these constraints are satisfied.
      */
     verifyConstraints(constraints, selector) {
@@ -366,7 +366,7 @@
      *   state is performed. This parameter is not a State object but a pristine
      *   state string.
      *
-     * @return {bool}
+     * @return {boolean}
      *   true or false, depending on whether this constraint is satisfied.
      */
     checkConstraints(value, selector, state) {

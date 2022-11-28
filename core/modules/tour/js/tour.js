@@ -91,7 +91,7 @@
         /**
          * Indicates whether the tour is currently running.
          *
-         * @type {bool}
+         * @type {boolean}
          */
         isActive: false,
 

@@ -111,7 +111,7 @@
    *
    * @param {jQuery} $target
    *   A jQuery object representing the form field or fields to prepopulate.
-   * @param {bool} [exclude=false]
+   * @param {boolean} [exclude=false]
    *   A regular expression representing characters to exclude from
    *   the target field.
    * @param {string} [replace='']
@@ -139,7 +139,7 @@
 
     /**
      *
-     * @type {bool}
+     * @type {boolean}
      */
     this.exclude = exclude || false;
 
@@ -651,7 +651,7 @@
 
     /**
      *
-     * @type {bool}
+     * @type {boolean}
      */
     this.hasGroupOperator = this.operator.length > 0;
 

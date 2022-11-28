@@ -73,7 +73,7 @@
    *   An Ajax object.
    * @param {object} response
    *   The Ajax response.
-   * @param {bool} response.changed
+   * @param {boolean} response.changed
    *   Whether the state changed for the buttons or not.
    * @param {number} [status]
    *   The HTTP status code.

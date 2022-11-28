@@ -98,7 +98,7 @@
    * @param {number} [status]
    *   The HTTP status code.
    *
-   * @return {bool|undefined}
+   * @return {boolean|undefined}
    *   Returns false if there was no selector property in the response object.
    */
   Drupal.AjaxCommands.prototype.openDialog = function (ajax, response, status) {
@@ -162,7 +162,7 @@
    *   Object holding the server response.
    * @param {string} response.selector
    *   The selector of the dialog.
-   * @param {bool} response.persist
+   * @param {boolean} response.persist
    *   Whether to persist the dialog element or not.
    * @param {number} [status]
    *   The HTTP status code.

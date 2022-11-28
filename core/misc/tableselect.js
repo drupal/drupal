@@ -142,7 +142,7 @@
    *   The HTML element representing the "from" part of the range.
    * @param {HTMLElement} to
    *   The HTML element representing the "to" part of the range.
-   * @param {bool} state
+   * @param {boolean} state
    *   The state to set on the range.
    */
   Drupal.tableSelectRange = function (from, to, state) {

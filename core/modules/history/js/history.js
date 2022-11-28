@@ -118,7 +118,7 @@
      * @param {number} contentTimestamp
      *   The time at which some content (e.g. a comment) was published.
      *
-     * @return {bool}
+     * @return {boolean}
      *   Whether a server check is necessary for the given node and its
      *   timestamp.
      */

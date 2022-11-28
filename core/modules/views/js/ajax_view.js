@@ -155,7 +155,7 @@
   };
 
   /**
-   * @return {bool}
+   * @return {boolean}
    *   If there is at least one parent with a view class return false.
    */
   Drupal.views.ajaxView.prototype.filterNestedViews = function () {

@@ -326,7 +326,7 @@
    *   Target of the Ajax request.
    * @prop {?string} [event]
    *   Event bound to settings.element which will trigger the Ajax request.
-   * @prop {bool} [keypress=true]
+   * @prop {boolean} [keypress=true]
    *   Triggers a request on keypress events.
    * @prop {?string} selector
    *   jQuery selector targeting the element to bind events to or used with
@@ -347,7 +347,7 @@
    *   Custom message to be used with the bar indicator.
    * @prop {object} [submit]
    *   Extra data to be sent with the Ajax request.
-   * @prop {bool} [submit.js=true]
+   * @prop {boolean} [submit.js=true]
    *   Allows the PHP side to know this comes from an Ajax request.
    * @prop {object} [dialog]
    *   Options for {@link Drupal.dialog}.
@@ -402,7 +402,7 @@
     this.commands = new Drupal.AjaxCommands();
 
     /**
-     * @type {bool|number}
+     * @type {boolean|number}
      */
     this.instanceIndex = false;
 
@@ -1217,7 +1217,7 @@
    * @prop {string} [selector]
    * @prop {string} [data]
    * @prop {object} [settings]
-   * @prop {bool} [asterisk]
+   * @prop {boolean} [asterisk]
    * @prop {string} [text]
    * @prop {string} [title]
    * @prop {string} [url]
@@ -1226,7 +1226,7 @@
    * @prop {string} [value]
    * @prop {string} [old]
    * @prop {string} [new]
-   * @prop {bool} [merge]
+   * @prop {boolean} [merge]
    * @prop {Array} [args]
    *
    * @see Drupal.AjaxCommands
@@ -1357,7 +1357,7 @@
      *   The JSON response object from the Ajax request.
      * @param {string} response.selector
      *   A jQuery selector string.
-     * @param {bool} [response.asterisk]
+     * @param {boolean} [response.asterisk]
      *   An optional CSS selector. If specified, an asterisk will be
      *   appended to the HTML inside the provided selector.
      * @param {number} [status]
@@ -1458,7 +1458,7 @@
      *   {@link Drupal.Ajax} object created by {@link Drupal.ajax}.
      * @param {object} response
      *   The response from the Ajax request.
-     * @param {bool} response.merge
+     * @param {boolean} response.merge
      *   Determines whether the additional settings should be merged to the
      *   global settings.
      * @param {object} response.settings
@@ -1655,7 +1655,7 @@
      *   The message text.
      * @param {string} response.messageOptions
      *   The options argument for Drupal.Message().add().
-     * @param {bool} response.clearPrevious
+     * @param {boolean} response.clearPrevious
      *   If true, clear previous messages.
      */
     message(ajax, response) {
