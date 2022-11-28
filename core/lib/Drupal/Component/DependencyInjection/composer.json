@@ -14,7 +14,7 @@
     },
     "require": {
         "php": ">=8.1.0",
-        "symfony/dependency-injection": "^6.2@beta",
+        "symfony/dependency-injection": "^6.2@RC",
         "symfony/service-contracts": "v3.1.1"
     },
     "suggest": {

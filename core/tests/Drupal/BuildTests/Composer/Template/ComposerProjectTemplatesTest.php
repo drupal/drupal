@@ -32,7 +32,7 @@ class ComposerProjectTemplatesTest extends ComposerBuildTestBase {
    *
    * @see https://getcomposer.org/doc/04-schema.md#minimum-stability
    */
-  protected const MINIMUM_STABILITY = 'beta';
+  protected const MINIMUM_STABILITY = 'RC';
 
   /**
    * The order of stability strings from least stable to most stable.
@@ -86,19 +86,10 @@ class ComposerProjectTemplatesTest extends ComposerBuildTestBase {
    * Make sure that static::MINIMUM_STABILITY is sufficiently strict.
    */
   public function testMinimumStabilityStrictness() {
-    $minimum_minimum_stability = $this->getCoreStability();
-
-    // Drupal 10.0.0-RC1 is being released before Symfony 6.2.0-RC1, so
-    // temporarily set minimum_minimum_stability to beta instead of RC.
-    // @todo Remove this after Symfony 6.2.0-RC1 is released.
-    if (str_starts_with(\Drupal::VERSION, '10.0.0-') && ($minimum_minimum_stability === 'RC')) {
-      $minimum_minimum_stability = 'beta';
-    }
-
     // Ensure that static::MINIMUM_STABILITY is not less stable than the
     // current core stability. For example, if we've already released a beta on
     // the branch, ensure that we no longer allow alpha dependencies.
-    $this->assertGreaterThanOrEqual(array_search($minimum_minimum_stability, static::STABILITY_ORDER), array_search(static::MINIMUM_STABILITY, static::STABILITY_ORDER));
+    $this->assertGreaterThanOrEqual(array_search($this->getCoreStability(), static::STABILITY_ORDER), array_search(static::MINIMUM_STABILITY, static::STABILITY_ORDER));
 
     // Ensure that static::MINIMUM_STABILITY is the same as the least stable
     // dependency.
