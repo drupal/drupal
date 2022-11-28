@@ -20,10 +20,10 @@
        * @type {object}
        *
        * @prop {string} title
-       * @prop {bool} regionIsHovered
-       * @prop {bool} hasFocus
-       * @prop {bool} isOpen
-       * @prop {bool} isLocked
+       * @prop {boolean} regionIsHovered
+       * @prop {boolean} hasFocus
+       * @prop {boolean} isOpen
+       * @prop {boolean} isLocked
        */
       defaults: /** @lends Drupal.contextual.StateModel# */ {
         /**
@@ -36,14 +36,14 @@
         /**
          * Represents if the contextual region is being hovered.
          *
-         * @type {bool}
+         * @type {boolean}
          */
         regionIsHovered: false,
 
         /**
          * Represents if the contextual trigger or options have focus.
          *
-         * @type {bool}
+         * @type {boolean}
          */
         hasFocus: false,
 
@@ -51,14 +51,14 @@
          * Represents if the contextual options for an entity are available to
          * be selected (i.e. whether the list of options is visible).
          *
-         * @type {bool}
+         * @type {boolean}
          */
         isOpen: false,
 
         /**
          * When the model is locked, the trigger remains active.
          *
-         * @type {bool}
+         * @type {boolean}
          */
         isLocked: false,
       },

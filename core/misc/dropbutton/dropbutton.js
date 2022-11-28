@@ -151,7 +151,7 @@
       /**
        * Toggle the dropbutton open and closed.
        *
-       * @param {bool} [show]
+       * @param {boolean} [show]
        *   Force the dropbutton to open by passing true or to close by
        *   passing false.
        */

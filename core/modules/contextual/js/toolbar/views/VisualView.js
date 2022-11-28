@@ -70,7 +70,7 @@
        *
        * @param {Drupal.contextualToolbar.StateModel} model
        *   A {@link Drupal.contextualToolbar.StateModel} model.
-       * @param {bool} isViewing
+       * @param {boolean} isViewing
        *   The value of the isViewing attribute in the model.
        */
       persist(model, isViewing) {

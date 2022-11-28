@@ -48,7 +48,7 @@
      * @param {jQuery} $element
      *   The dialog element.
      *
-     * @return {bool}
+     * @return {boolean}
      *   True this is currently an off-canvas dialog.
      */
     isOffCanvas($element) {

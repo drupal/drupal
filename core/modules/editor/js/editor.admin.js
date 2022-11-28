@@ -83,7 +83,7 @@
      * @param {Drupal.EditorFeature} feature
      *   A text editor feature object.
      *
-     * @return {bool}
+     * @return {boolean}
      *   Whether the given feature is allowed by the current filters.
      */
     featureIsAllowedByFilters(feature) {
@@ -94,7 +94,7 @@
        * @param {object} section
        *   The section to check.
        *
-       * @return {bool}
+       * @return {boolean}
        *   Returns true if the section has empty properties, false otherwise.
        */
       function emptyProperties(section) {
@@ -211,10 +211,10 @@
        *   The property to check.
        * @param {string} propertyValue
        *   The property value to check.
-       * @param {bool} allowing
+       * @param {boolean} allowing
        *   Whether to update the universe or not.
        *
-       * @return {bool}
+       * @return {boolean}
        *   Returns true if found, false otherwise.
        */
       function findPropertyValueOnTag(
@@ -276,10 +276,10 @@
        *   The property to check.
        * @param {Array} propertyValues
        *   Values of the property to check.
-       * @param {bool} allowing
+       * @param {boolean} allowing
        *   Whether to update the universe or not.
        *
-       * @return {bool}
+       * @return {boolean}
        *   Returns true if found, false otherwise.
        */
       function findPropertyValuesOnAllTags(
@@ -319,10 +319,10 @@
        *   The property to check.
        * @param {Array} propertyValues
        *   Values of the property to check.
-       * @param {bool} allowing
+       * @param {boolean} allowing
        *   Whether to update the universe or not.
        *
-       * @return {bool}
+       * @return {boolean}
        *   Returns true if found, false otherwise.
        */
       function findPropertyValuesOnTag(
@@ -365,7 +365,7 @@
        * @param {object} universe
        *   The universe to delete from.
        *
-       * @return {bool}
+       * @return {boolean}
        *   Whether something was deleted from the universe.
        */
       function deleteAllTagsFromUniverseIfAllowed(universe) {
@@ -388,7 +388,7 @@
        * @param {string} tag
        *   The tag to check.
        *
-       * @return {bool}
+       * @return {boolean}
        *   Whether something was deleted from the universe.
        */
       function deleteFromUniverseIfAllowed(universe, tag) {
@@ -417,7 +417,7 @@
        * @param {object} filterStatus
        *   Filter status to use for check.
        *
-       * @return {bool}
+       * @return {boolean}
        *   Whether any filter rule forbids something in the universe.
        */
       function anyForbiddenFilterRuleMatches(universe, filterStatus) {
@@ -568,7 +568,7 @@
        * @param {object} feature
        *   The feature requested.
        *
-       * @return {bool}
+       * @return {boolean}
        *   Whether the current status of the filter allows specified feature.
        *
        * @see generateUniverseFromFeatureRequirements()
@@ -814,7 +814,7 @@
 
     /**
      *
-     * @type {bool}
+     * @type {boolean}
      */
     this.active = false;
 

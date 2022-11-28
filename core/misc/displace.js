@@ -194,7 +194,7 @@
    *
    * @prop {Drupal~displaceOffset} offsets
    *
-   * @param {bool} [broadcast=true]
+   * @param {boolean} [broadcast=true]
    *   When true, causes the recalculated offsets values to be
    *   broadcast to listeners. If none is given, defaults to true.
    *

@@ -113,7 +113,7 @@
     /**
      * Whether anything in the entire table has changed.
      *
-     * @type {bool}
+     * @type {boolean}
      */
     this.changed = false;
 
@@ -133,7 +133,7 @@
 
     /**
      *
-     * @type {bool}
+     * @type {boolean}
      */
     this.striping = $(this.table).data('striping') === 1;
 
@@ -177,7 +177,7 @@
      * For efficiency, large sections of code can be skipped if we don't need to
      * track horizontal movement and indentations.
      *
-     * @type {bool}
+     * @type {boolean}
      */
     this.indentEnabled = false;
     Object.keys(tableSettings || {}).forEach((group) => {
@@ -352,7 +352,7 @@
    *
    * @fires event:columnschange
    *
-   * @param {bool} displayWeight
+   * @param {boolean} displayWeight
    *   'true' will show weight columns.
    */
   Drupal.tableDrag.prototype.displayColumns = function (displayWeight) {
@@ -369,7 +369,7 @@
     );
 
     // Trigger an event to allow other scripts to react to this display change.
-    // Force the extra parameter as a bool.
+    // Force the extra parameter as a boolean.
     $(once.filter('tabledrag', 'table')).trigger(
       'columnschange',
       !!displayWeight,
@@ -748,7 +748,7 @@
    * @param {Drupal.tableDrag} self
    *   The tableDrag instance.
    *
-   * @return {bool|undefined}
+   * @return {boolean|undefined}
    *   Undefined if no dragObject is defined, false otherwise.
    */
   Drupal.tableDrag.prototype.dragRow = function (event, self) {
@@ -1293,11 +1293,11 @@
    * @param {string} method
    *   The method in which this row is being moved. Either 'keyboard' or
    *   'mouse'.
-   * @param {bool} indentEnabled
+   * @param {boolean} indentEnabled
    *   Whether the containing table uses indentations. Used for optimizations.
    * @param {number} maxDepth
    *   The maximum amount of indentations this row may contain.
-   * @param {bool} addClasses
+   * @param {boolean} addClasses
    *   Whether we want to add classes to this row to indicate child
    *   relationships.
    */
@@ -1337,7 +1337,7 @@
   /**
    * Find all children of rowObject by indentation.
    *
-   * @param {bool} addClasses
+   * @param {boolean} addClasses
    *   Whether we want to add classes to this row to indicate child
    *   relationships.
    *
@@ -1391,7 +1391,7 @@
    * @param {HTMLElement} row
    *   DOM object for the row being considered for swapping.
    *
-   * @return {bool}
+   * @return {boolean}
    *   Whether the swap is a valid swap or not.
    */
   Drupal.tableDrag.prototype.row.prototype.isValidSwap = function (row) {

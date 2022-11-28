@@ -50,7 +50,7 @@
          * Indicates whether the toolbar is displayed in an oriented fashion,
          * either horizontal or vertical.
          *
-         * @type {bool}
+         * @type {boolean}
          */
         isOriented: false,
 
@@ -58,7 +58,7 @@
          * Indicates whether the toolbar is positioned absolute (false) or fixed
          * (true).
          *
-         * @type {bool}
+         * @type {boolean}
          */
         isFixed: false,
 
@@ -66,7 +66,7 @@
          * Menu subtrees are loaded through an AJAX request only when the Toolbar
          * is set to a vertical orientation.
          *
-         * @type {bool}
+         * @type {boolean}
          */
         areSubtreesLoaded: false,
 
@@ -75,7 +75,7 @@
          * that elements in the trays aren't lost off-screen and impossible to
          * get to.
          *
-         * @type {bool}
+         * @type {boolean}
          */
         isViewportOverflowConstrained: false,
 
@@ -92,14 +92,14 @@
          * configured breakpoints. The locked state will be maintained across page
          * loads.
          *
-         * @type {bool}
+         * @type {boolean}
          */
         locked: false,
 
         /**
          * Indicates whether the tray orientation toggle is visible.
          *
-         * @type {bool}
+         * @type {boolean}
          */
         isTrayToggleVisible: true,
 

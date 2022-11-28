@@ -11,7 +11,7 @@
    *
    * @type {object}
    *
-   * @prop {bool} [autoOpen=true]
+   * @prop {boolean} [autoOpen=true]
    * @prop {string} [dialogClass='']
    * @prop {string} [buttonClass='button']
    * @prop {string} [buttonPrimaryClass='button--primary']

@@ -106,7 +106,7 @@ export default class ToggleDrupalMediaCaptionCommand extends Command {
    *
    * @param {module:engine/model/writer~Writer} writer
    *   The model writer.
-   * @param {bool} focusCaptionOnShow
+   * @param {boolean} focusCaptionOnShow
    *   Flag indicating whether the caption should be focused.
    */
   _showDrupalMediaCaption(writer, focusCaptionOnShow) {

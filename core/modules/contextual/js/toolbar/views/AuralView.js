@@ -13,7 +13,7 @@
       /**
        * Tracks whether the tabbing constraint announcement has been read once.
        *
-       * @type {bool}
+       * @type {boolean}
        */
       announcedOnce: false,
 

@@ -20,7 +20,7 @@
  *   The time period within which the callback function should only be
  *   invoked once. For example if the wait period is 250ms, then the callback
  *   will only be called at most 4 times per second.
- * @param {bool} immediate
+ * @param {boolean} immediate
  *   Whether we wait at the beginning or end to execute the function.
  *
  * @return {function}

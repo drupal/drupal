@@ -13,8 +13,8 @@
       /**
        * @type {object}
        *
-       * @prop {bool} isViewing
-       * @prop {bool} isVisible
+       * @prop {boolean} isViewing
+       * @prop {boolean} isVisible
        * @prop {number} contextualCount
        * @prop {Drupal~TabbingContext} tabbingContext
        */
@@ -22,7 +22,7 @@
         /**
          * Indicates whether the toggle is currently in "view" or "edit" mode.
          *
-         * @type {bool}
+         * @type {boolean}
          */
         isViewing: true,
 
@@ -30,7 +30,7 @@
          * Indicates whether the toggle should be visible or hidden. Automatically
          * calculated, depends on contextualCount.
          *
-         * @type {bool}
+         * @type {boolean}
          */
         isVisible: false,
 

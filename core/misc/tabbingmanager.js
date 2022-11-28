@@ -63,14 +63,14 @@
    * @param {jQuery} options.$disabledElements
    *   The DOM elements that should not be reachable via the tab key when this
    *   tabbingContext is active.
-   * @param {bool} options.released
+   * @param {boolean} options.released
    *   A released tabbingContext can never be activated again. It will be
    *   cleaned up when the TabbingManager unwinds its stack.
-   * @param {bool} options.active
+   * @param {boolean} options.active
    *   When true, the tabbable elements of this tabbingContext will be reachable
    *   via the tab key and the disabled elements will not. Only one
    *   tabbingContext can be active at a time.
-   *  @param {bool} options.trapFocus
+   *  @param {boolean} options.trapFocus
    *   When true, focus is trapped within the tabbable elements, i.e. focus will
    *   remain within the browser.
    */
@@ -94,17 +94,17 @@
         $disabledElements: $(),
 
         /**
-         * @type {bool}
+         * @type {boolean}
          */
         released: false,
 
         /**
-         * @type {bool}
+         * @type {boolean}
          */
         active: false,
 
         /**
-         * @type {bool}
+         * @type {boolean}
          */
         trapFocus: false,
       },

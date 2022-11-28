@@ -38,7 +38,7 @@
     this.$originalHeaderCells = this.$originalHeader.find('> tr > th');
 
     /**
-     * @type {null|bool}
+     * @type {null|boolean}
      */
     this.displayWeight = null;
     this.$originalTable.addClass('sticky-table');
@@ -198,7 +198,7 @@
       /**
        * Boolean storing the sticky header visibility state.
        *
-       * @type {bool}
+       * @type {boolean}
        */
       stickyVisible: false,
 
@@ -256,7 +256,7 @@
       /**
        * Returns true if sticky is currently visible.
        *
-       * @return {bool}
+       * @return {boolean}
        *   The visibility status.
        */
       checkStickyVisible() {
