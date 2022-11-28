@@ -6,7 +6,6 @@ use Drupal\Component\Utility\Tags;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\taxonomy\Entity\Term;
-use Drupal\taxonomy\TermInterface;
 use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 
 /**
@@ -530,90 +529,32 @@ class TermTest extends TaxonomyTestBase {
    * Tests saving a term with multiple parents through the UI.
    */
   public function testTermMultipleParentsInterface() {
-    // Add two new terms to the vocabulary so that we can have multiple parents.
-    // These will be terms with tids of 1 and 2 respectively.
-    $this->createTerm($this->vocabulary);
-    $this->createTerm($this->vocabulary);
+    // Add a new term to the vocabulary so that we can have multiple parents.
+    $parent = $this->createTerm($this->vocabulary);
 
     // Add a new term with multiple parents.
     $edit = [
       'name[0][value]' => $this->randomMachineName(12),
       'description[0][value]' => $this->randomMachineName(100),
-      'parent[]' => [0, 1],
+      'parent[]' => [0, $parent->id()],
     ];
     // Save the new term.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
     $this->submitForm($edit, 'Save');
 
     // Check that the term was successfully created.
-    $term = $this->reloadTermByName($edit['name[0][value]']);
+    $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties([
+      'name' => $edit['name[0][value]'],
+    ]);
+    $term = reset($terms);
     $this->assertNotNull($term, 'Term found in database.');
     $this->assertEquals($edit['name[0][value]'], $term->getName(), 'Term name was successfully saved.');
     $this->assertEquals($edit['description[0][value]'], $term->getDescription(), 'Term description was successfully saved.');
-
-    // Check that we have the expected parents.
-    $this->assertEquals([0, 1], $this->getParentTids($term), 'Term parents (root plus one) were successfully saved.');
-
-    // Load the edit form and save again to ensure parent are preserved.
-    // Generate a new name, so we know that the term really is saved.
-    $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
-    $edit = [
-      'name[0][value]' => $this->randomMachineName(12),
-    ];
-    $this->submitForm($edit, 'Save');
-    $this->submitForm([], 'Save');
-
-    // Check that we still have the expected parents.
-    $term = $this->reloadTermByName($edit['name[0][value]']);
-    $this->assertEquals([0, 1], $this->getParentTids($term), 'Term parents (root plus one) were successfully saved again.');
-
-    // Save with two real parents. i.e., not including <root>.
-    $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
-    $edit = [
-      'name[0][value]' => $this->randomMachineName(12),
-      'parent[]' => [1, 2],
-    ];
-    $this->submitForm($edit, 'Save');
-    $this->submitForm([], 'Save');
-
-    // Check that we have the expected parents.
-    $term = $this->reloadTermByName($edit['name[0][value]']);
-    $this->assertEquals([1, 2], $this->getParentTids($term), 'Term parents (two real) were successfully saved.');
-  }
-
-  /**
-   * Reloads a term by name.
-   *
-   * @param string $name
-   *   The name of the term.
-   *
-   * @return \Drupal\taxonomy\TermInterface
-   *   The reloaded term.
-   */
-  private function reloadTermByName(string $name): TermInterface {
-    \Drupal::entityTypeManager()->getStorage('taxonomy_term')->resetCache();
-    /** @var \Drupal\taxonomy\TermInterface[] $terms */
-    $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties(['name' => $name]);
-    return reset($terms);
-  }
-
-  /**
-   * Get the parent tids for a term including root.
-   *
-   * @param \Drupal\taxonomy\TermInterface $term
-   *   The term.
-   *
-   * @return array
-   *   A sorted array of tids and 0 if the root is a parent.
-   */
-  private function getParentTids($term) {
-    $parent_tids = [];
-    foreach ($term->get('parent') as $item) {
-      $parent_tids[] = (int) $item->target_id;
-    }
-    sort($parent_tids);
-
-    return $parent_tids;
+    // Check that the parent tid is still there. The other parent (<root>) is
+    // not added by \Drupal\taxonomy\TermStorageInterface::loadParents().
+    $parents = $this->container->get('entity_type.manager')->getStorage('taxonomy_term')->loadParents($term->id());
+    $parent = reset($parents);
+    $this->assertEquals($edit['parent[]'][1], $parent->id(), 'Term parents were successfully saved.');
   }
 
   /**

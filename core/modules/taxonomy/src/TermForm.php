@@ -23,12 +23,7 @@ class TermForm extends ContentEntityForm {
     $taxonomy_storage = $this->entityTypeManager->getStorage('taxonomy_term');
     $vocabulary = $vocab_storage->load($term->bundle());
 
-    $parent = [];
-    // Get the parent directly from the term as
-    // \Drupal\taxonomy\TermStorageInterface::loadParents() excludes the root.
-    foreach ($term->get('parent') as $item) {
-      $parent[] = (int) $item->target_id;
-    }
+    $parent = array_keys($taxonomy_storage->loadParents($term->id()));
     $form_state->set(['taxonomy', 'parent'], $parent);
     $form_state->set(['taxonomy', 'vocabulary'], $vocabulary);
 
@@ -47,6 +42,7 @@ class TermForm extends ContentEntityForm {
     if (!$this->config('taxonomy.settings')->get('override_selector')) {
       $exclude = [];
       if (!$term->isNew()) {
+        $parent = array_keys($taxonomy_storage->loadParents($term->id()));
         $children = $taxonomy_storage->loadTree($vocabulary->id(), $term->id());
 
         // A term can't be the child of itself, nor of its children.
