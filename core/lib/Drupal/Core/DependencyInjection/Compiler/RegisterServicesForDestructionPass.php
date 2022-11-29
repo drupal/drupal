@@ -6,8 +6,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 
 /**
- * Adds services tagged "needs_destruction" to the "kernel_destruct_subscriber"
- * service.
+ * Adds services with specific tags to "kernel_destruct_subscriber" service.
+ *
+ * Only services tagged with "needs_destruction" are added.
  *
  * @see \Drupal\Core\DestructableInterface
  */

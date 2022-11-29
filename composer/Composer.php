@@ -11,10 +11,11 @@ use Drupal\Composer\Generator\PackageGenerator;
 use Symfony\Component\Finder\Finder;
 
 /**
- * Provides static functions for composer script events. See also
- * core/lib/Drupal/Composer/Composer.php, which contains similar
- * scripts needed by projects that include drupal/core. Scripts that
- * are only needed by drupal/drupal go here.
+ * Provides static functions for composer script events.
+ *
+ * See also core/lib/Drupal/Composer/Composer.php, which contains similar
+ * scripts needed by projects that include drupal/core. Scripts that are only
+ * needed by drupal/drupal go here.
  *
  * @see https://getcomposer.org/doc/articles/scripts.md
  */
