@@ -24,10 +24,12 @@
     <env name="SIMPLETEST_DB" value=""/>
     <!-- Example BROWSERTEST_OUTPUT_DIRECTORY value: /path/to/webroot/sites/simpletest/browser_output -->
     <env name="BROWSERTEST_OUTPUT_DIRECTORY" value=""/>
-    <!-- To have browsertest output use an alternative base URL. For example if
-     SIMPLETEST_BASE_URL is an internal DDEV URL, you can set this to the
-     external DDev URL so you can follow the links directly.
-    -->
+    <!-- By default, browser tests will output links that use the base URL set
+     in SIMPLETEST_BASE_URL. However, if your SIMPLETEST_BASE_URL is an internal
+     path (such as may be the case in a virtual or Docker-based environment),
+     you can set the base URL used in the browser test output links to something
+     reachable from your host machine here. This will allow you to follow them
+     directly and view the output. -->
     <env name="BROWSERTEST_OUTPUT_BASE_URL" value=""/>
     <!-- To disable deprecation testing completely uncomment the next line. -->
     <!-- <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/> -->
