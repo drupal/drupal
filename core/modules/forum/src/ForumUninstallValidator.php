@@ -10,8 +10,10 @@ use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\taxonomy\VocabularyInterface;
 
 /**
- * Prevents forum module from being uninstalled whilst any forum nodes exist
- * or there are any terms in the forum vocabulary.
+ * Prevents forum module from being uninstalled under certain conditions.
+ *
+ * These conditions are when any forum nodes exist or there are any terms in the
+ * forum vocabulary.
  */
 class ForumUninstallValidator implements ModuleUninstallValidatorInterface {
 
