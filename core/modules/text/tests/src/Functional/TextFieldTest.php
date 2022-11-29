@@ -174,14 +174,14 @@ class TextFieldTest extends StringFieldTest {
     $this->drupalLogin($this->adminUser);
     $format1 = FilterFormat::create([
       'format' => mb_strtolower($this->randomMachineName()),
-      'name' => $this->randomMachineName(),
+      'name' => '1_' . $this->randomMachineName(),
     ]);
     $format1->save();
 
     // Create a second text format.
     $format2 = FilterFormat::create([
       'format' => mb_strtolower($this->randomMachineName()),
-      'name' => $this->randomMachineName(),
+      'name' => '2_' . $this->randomMachineName(),
       'filters' => [
         'filter_html' => [
           'status' => 1,
@@ -196,7 +196,7 @@ class TextFieldTest extends StringFieldTest {
     // Create a third text format.
     $format3 = FilterFormat::create([
       'format' => mb_strtolower($this->randomMachineName()),
-      'name' => $this->randomMachineName(),
+      'name' => '3_' . $this->randomMachineName(),
     ]);
     $format3->save();
 
