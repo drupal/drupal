@@ -3,8 +3,7 @@
 namespace Drupal\Core\DependencyInjection;
 
 /**
- * Provides an interface to get an instance of a class with dependency
- * injection.
+ * Provides interface to get an instance of a class with dependency injection.
  */
 interface ClassResolverInterface {
 

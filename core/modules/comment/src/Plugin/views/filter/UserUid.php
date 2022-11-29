@@ -6,8 +6,7 @@ use Drupal\Core\Database\Database;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 
 /**
- * Filter handler to accept a user id to check for nodes that user posted or
- * commented on.
+ * Filter handler, accepts user ID to check for nodes user posted/commented on.
  *
  * @ingroup views_filter_handlers
  *

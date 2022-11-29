@@ -3,8 +3,7 @@
 namespace Drupal\Core\Password;
 
 /**
- * Secure password hashing functions based on the Portable PHP password
- * hashing framework.
+ * Secure hashing functions based on Portable PHP password hashing framework.
  *
  * @see http://www.openwall.com/phpass/
  */
