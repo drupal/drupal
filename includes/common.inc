@@ -1278,6 +1278,10 @@ function fix_gpc_magic() {
  *
  * This uses the
  * @link http://php.net/manual/filter.filters.validate.php PHP e-mail validation filter. @endlink
+ * However, a module may override this by implementing
+ * hook_valid_email_address_alter(&$valid, $mail).
+ *
+ * @see hook_valid_email_address_alter()
  *
  * @param $mail
  *   A string containing an e-mail address.
@@ -1286,7 +1290,9 @@ function fix_gpc_magic() {
  *   TRUE if the address is in a valid format.
  */
 function valid_email_address($mail) {
-  return (bool)filter_var($mail, FILTER_VALIDATE_EMAIL);
+  $valid = (bool) filter_var($mail, FILTER_VALIDATE_EMAIL);
+  drupal_alter('valid_email_address', $valid, $mail);
+  return $valid;
 }
 
 /**

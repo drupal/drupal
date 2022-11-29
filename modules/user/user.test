@@ -308,6 +308,17 @@ class UserValidationTestCase extends DrupalWebTestCase {
       $this->$test($result, $description . ' (' . $name . ')');
     }
   }
+
+  // Test altered e-mail validation.
+  function testAlteredMailValidation() {
+    // This e-mail is considered as valid.
+    $mail = 'foo@example.local';
+    $this->assertNull(user_validate_mail($mail), 'E-mail address is valid.');
+
+    // Invalidate all emails ending with .local in alter hook.
+    module_enable(array('user_email_validation_test'));
+    $this->assertNotNull(user_validate_mail($mail), 'E-mail address is invalid.');
+  }
 }
 
 /**

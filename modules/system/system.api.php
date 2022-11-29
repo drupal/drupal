@@ -4818,6 +4818,33 @@ function hook_filetransfer_info_alter(&$filetransfer_info) {
 }
 
 /**
+ * Alter core e-mail validation.
+ *
+ * This hook is called immediately after core e-mail validation takes place and
+ * gives other modules a chance to override it. This is useful in cases where
+ * you want to have stricter or looser validation standards than that provided
+ * by Drupal core.
+ *
+ * @param $valid
+ *   Boolean value referencing the validation result.
+ *
+ * @param $mail
+ *   E-mail address being validated.
+ *
+ * @see valid_email_address()
+ */
+function hook_valid_email_address_alter(&$valid, $mail) {
+  if (preg_match("/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/", $mail)) {
+    list($username, $domain) = explode('@', $mail);
+    // Check DNS records.
+    if (checkdnsrr($domain, 'MX')) {
+      $valid = TRUE;
+    }
+  }
+  $valid = FALSE;
+}
+
+/**
  * @} End of "addtogroup hooks".
  */
 

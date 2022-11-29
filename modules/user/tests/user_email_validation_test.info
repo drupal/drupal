@@ -1,0 +1,6 @@
+name = "User module e-mail validation tests"
+description = "Support module for user e-mail validation testing."
+package = Testing
+version = VERSION
+core = 7.x
+hidden = TRUE

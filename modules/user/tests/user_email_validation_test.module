@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Dummy module implementing hook_valid_email_address_alter.
+ */
+
+/**
+ * Implements hook_valid_email_address_alter().
+ */
+function user_email_validation_test_valid_email_address_alter(&$valid, $mail) {
+  $local = '.local';
+  // Invalidate all e-mails ending with .local.
+  if (substr_compare($mail, $local, -strlen($local)) === 0) {
+    $valid = FALSE;
+  }
+}
