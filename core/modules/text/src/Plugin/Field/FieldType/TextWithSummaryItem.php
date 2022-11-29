@@ -16,7 +16,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  *   description = @Translation("This field stores long text with a format and an optional summary."),
  *   category = @Translation("Text"),
  *   default_widget = "text_textarea_with_summary",
- *   default_formatter = "text_default"
+ *   default_formatter = "text_default",
+ *   list_class = "\Drupal\text\Plugin\Field\FieldType\TextFieldItemList"
  * )
  */
 class TextWithSummaryItem extends TextItemBase {
@@ -87,7 +88,7 @@ class TextWithSummaryItem extends TextItemBase {
    * {@inheritdoc}
    */
   public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
-    $element = [];
+    $element = parent::fieldSettingsForm($form, $form_state);
     $settings = $this->getSettings();
 
     $element['display_summary'] = [

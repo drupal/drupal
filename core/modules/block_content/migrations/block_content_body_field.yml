@@ -13,6 +13,7 @@ source:
       field_name: body
       label: Body
       display_summary: false
+      allowed_formats: {  }
   ids:
     entity_type:
       type: string

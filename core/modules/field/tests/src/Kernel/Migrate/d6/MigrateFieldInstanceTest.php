@@ -33,7 +33,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
     $field = FieldConfig::load('node.story.field_test');
     $this->assertSame('Text Field', $field->label());
     // field_test is a text_long field, which have no settings.
-    $this->assertSame([], $field->getSettings());
+    $this->assertSame(['allowed_formats' => []], $field->getSettings());
     $this->assertSame('text for default value', $entity->field_test->value);
 
     // Test a number field.

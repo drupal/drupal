@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Random;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
@@ -16,13 +17,70 @@ abstract class TextItemBase extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
+  public static function defaultFieldSettings() {
+    return ['allowed_formats' => []] + parent::defaultFieldSettings();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
+    $element = parent::fieldSettingsForm($form, $form_state);
+    $settings = $this->getSettings();
+
+    $element['allowed_formats'] = [
+      '#type' => 'checkboxes',
+      '#title' => $this->t('Allowed text formats'),
+      '#options' => $this->get('format')->getPossibleOptions(),
+      '#default_value' => !empty($settings['allowed_formats']) ? $settings['allowed_formats'] : [],
+      '#description' => $this->t('Select the allowed text formats. If no formats are selected, all available text formats will be displayed to the user.'),
+      '#element_validate' => [[static::class, 'validateAllowedFormats']],
+    ];
+
+    return $element;
+  }
+
+  /**
+   * Render API callback: Processes the allowed formats value.
+   *
+   * Ensure the element's value is an indexed array of selected format IDs.
+   * This function is assigned as an #element_validate callback.
+   *
+   * @see static::fieldSettingsForm()
+   */
+  public static function validateAllowedFormats(array &$element, FormStateInterface $form_state) {
+    $value = array_values(array_filter($form_state->getValue($element['#parents'])));
+    $form_state->setValueForElement($element, $value);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function calculateDependencies(FieldDefinitionInterface $field_definition) {
+    // Add explicitly allowed formats as config dependencies.
+    $format_dependencies = [];
+    $dependencies = parent::calculateDependencies($field_definition);
+    if (!is_null($field_definition->getSetting('allowed_formats'))) {
+      $format_dependencies = array_map(function (string $format_id) {
+        return 'filter.format.' . $format_id;
+      }, $field_definition->getSetting('allowed_formats'));
+    }
+    $config = $dependencies['config'] ?? [];
+    $dependencies['config'] = array_merge($config, $format_dependencies);
+    return $dependencies;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['value'] = DataDefinition::create('string')
       ->setLabel(t('Text'))
       ->setRequired(TRUE);
 
     $properties['format'] = DataDefinition::create('filter_format')
-      ->setLabel(t('Text format'));
+      ->setLabel(t('Text format'))
+      ->setSetting('allowed_formats', $field_definition->getSetting('allowed_formats'));
 
     $properties['processed'] = DataDefinition::create('string')
       ->setLabel(t('Processed text'))

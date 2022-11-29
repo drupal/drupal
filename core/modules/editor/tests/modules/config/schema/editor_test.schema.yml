@@ -15,3 +15,7 @@ editor.settings.trex:
     stumpy_arms:
       type: boolean
       label: 'Stumpy arms'
+
+field.field_settings.editor_test_text_long:
+  label: 'Filter test text (formatted, long) settings'
+  type: field.field_settings.text

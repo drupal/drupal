@@ -94,7 +94,10 @@ function block_content_add_body_field($block_type_id, $label = 'Body') {
       'field_storage' => FieldStorageConfig::loadByName('block_content', 'body'),
       'bundle' => $block_type_id,
       'label' => $label,
-      'settings' => ['display_summary' => FALSE],
+      'settings' => [
+        'display_summary' => FALSE,
+        'allowed_formats' => [],
+      ],
     ]);
     $field->save();
 

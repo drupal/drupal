@@ -82,7 +82,9 @@ abstract class FieldConfigResourceTestBase extends ConfigEntityResourceTestBase 
       'label' => 'field_llama',
       'langcode' => 'en',
       'required' => FALSE,
-      'settings' => [],
+      'settings' => [
+        'allowed_formats' => [],
+      ],
       'status' => TRUE,
       'translatable' => TRUE,
       'uuid' => $this->entity->uuid(),

@@ -17,4 +17,5 @@ default_value: {  }
 default_value_callback: ''
 settings:
   display_summary: true
+  allowed_formats: {  }
 field_type: text_with_summary

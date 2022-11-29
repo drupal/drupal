@@ -14,7 +14,8 @@ use Drupal\Core\Form\FormStateInterface;
  *   description = @Translation("This field stores a text with a text format."),
  *   category = @Translation("Text"),
  *   default_widget = "text_textfield",
- *   default_formatter = "text_default"
+ *   default_formatter = "text_default",
+ *   list_class = "\Drupal\text\Plugin\Field\FieldType\TextFieldItemList"
  * )
  */
 class TextItem extends TextItemBase {

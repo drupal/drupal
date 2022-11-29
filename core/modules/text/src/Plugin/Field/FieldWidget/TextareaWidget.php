@@ -34,11 +34,17 @@ class TextareaWidget extends StringTextareaWidget {
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $main_widget = parent::formElement($items, $delta, $element, $form, $form_state);
+    $allowed_formats = $this->getFieldSetting('allowed_formats');
 
     $element = $main_widget['value'];
     $element['#type'] = 'text_format';
     $element['#format'] = $items[$delta]->format;
     $element['#base_type'] = $main_widget['value']['#type'];
+
+    if ($allowed_formats && !$this->isDefaultValueWidget($form_state)) {
+      $element['#allowed_formats'] = $allowed_formats;
+    }
+
     return $element;
   }
 
