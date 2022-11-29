@@ -8,6 +8,8 @@ use Drupal\migrate\Plugin\migrate\destination\EntityConfigBase;
 use Drupal\migrate\Row;
 
 /**
+ * Entity image style destination.
+ *
  * Every migration that uses this destination must have an optional
  * dependency on the d6_file migration to ensure it runs first.
  *

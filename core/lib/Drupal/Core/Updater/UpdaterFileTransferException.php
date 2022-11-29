@@ -3,8 +3,9 @@
 namespace Drupal\Core\Updater;
 
 /**
- * Defines a child class of Drupal\Core\Updater\UpdaterException that indicates
- * a Drupal\Core\FileTransfer\FileTransfer exception.
+ * Defines a child class of Drupal\Core\Updater\UpdaterException.
+ *
+ * Indicates a Drupal\Core\FileTransfer\FileTransfer exception.
  *
  * We have to catch Drupal\Core\FileTransfer\FileTransfer exceptions
  * and wrap those in t(), since Drupal\Core\FileTransfer\FileTransfer

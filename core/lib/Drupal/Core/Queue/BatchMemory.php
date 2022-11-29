@@ -3,8 +3,9 @@
 namespace Drupal\Core\Queue;
 
 /**
- * Defines a batch queue handler used by the Batch API for non-progressive
- * batches.
+ * Defines a batch queue handler.
+ *
+ * Used by the Batch API for non-progressive batches.
  *
  * This implementation:
  * - Ensures FIFO ordering.
