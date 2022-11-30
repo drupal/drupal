@@ -53,16 +53,6 @@
 /**
  * Progress bar animations.
  */
-@-webkit-keyframes animate-stripes {
-  0% { background-position: 0 0, 0 0; }
-  100% { background-position: 0 0, -80px 0; }
-}
-
-@-ms-keyframes animate-stripes {
-  0% { background-position: 0 0, 0 0; }
-  100% { background-position: 0 0, -80px 0; }
-}
-
 @keyframes animate-stripes {
   0% { background-position: 0 0, 0 0; }
   100% { background-position: 0 0, -80px 0; }

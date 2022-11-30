@@ -5,7 +5,6 @@
   ],
   "rules": {
     "alpha-value-notation": "number",
-    "at-rule-no-vendor-prefix": null,
     "color-function-notation": "legacy",
     "comment-empty-line-before": null,
     "custom-property-pattern": "^[a-z][-_a-z0-9IE]*$",
