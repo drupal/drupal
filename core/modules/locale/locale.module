@@ -1060,7 +1060,7 @@ function _locale_refresh_translations($langcodes, $lids = []) {
   if (!empty($langcodes)) {
     // Update javascript translations if any of the strings has a javascript
     // location, or if no string ids were provided, update all languages.
-    if (empty($lids) || ($strings = \Drupal::service('locale.storage')->getStrings(['lid' => $lids, 'type' => 'javascript']))) {
+    if (empty($lids) || !empty(\Drupal::service('locale.storage')->getStrings(['lid' => $lids, 'type' => 'javascript']))) {
       array_map('_locale_invalidate_js', $langcodes);
     }
   }

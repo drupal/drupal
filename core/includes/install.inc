@@ -633,7 +633,7 @@ function drupal_install_system($install_state) {
   // its dependencies, and here the dependencies will be installed as well.
   if ($provider !== 'core') {
     $autoload = $connection->getConnectionOptions()['autoload'] ?? '';
-    if (strpos($autoload, 'src/Driver/Database/') !== FALSE) {
+    if (str_contains($autoload, 'src/Driver/Database/')) {
       $kernel->getContainer()->get('module_installer')->install([$provider], TRUE);
     }
   }
