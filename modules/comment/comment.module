@@ -1591,6 +1591,9 @@ function comment_save($comment) {
     if ($comment->status == COMMENT_PUBLISHED) {
       module_invoke_all('comment_publish', $comment);
     }
+    elseif ($comment->status == COMMENT_NOT_PUBLISHED) {
+      module_invoke_all('comment_unpublish', $comment);
+    }
     unset($comment->original);
   }
   catch (Exception $e) {

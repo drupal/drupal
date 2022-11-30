@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Test module for the comment hooks testing.
+ */
+
+/**
+ * Implements hook_comment_publish().
+ */
+function comment_hook_test_comment_publish($comment) {
+  $_SESSION['comment_hook_test'][] = (__FUNCTION__ . ' called');
+}
+
+/**
+ * Implements hook_comment_unpublish().
+ */
+function comment_hook_test_comment_unpublish($comment) {
+  $_SESSION['comment_hook_test'][] = (__FUNCTION__ . ' called');
+}

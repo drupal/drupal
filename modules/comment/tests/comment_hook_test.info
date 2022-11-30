@@ -1,0 +1,6 @@
+name = "Comment Hooks Test"
+description = "Support module for comment hook tests."
+core = 7.x
+package = Testing
+version = VERSION
+hidden = TRUE

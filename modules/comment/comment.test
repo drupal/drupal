@@ -2029,6 +2029,37 @@ class CommentActionsTestCase extends CommentHelperCase {
   }
 
   /**
+   * Test comment publish and unpublish hooks.
+   */
+  function testCommentPublishUnpublishHooks() {
+    $this->drupalLogin($this->web_user);
+    module_enable(array('comment_hook_test'));
+    $_SESSION['comment_hook_test'] = array();
+
+    // Publishing a comment should trigger hook_comment_publish().
+    $comment = (object) array(
+      'cid' => NULL,
+      'nid' => $this->node->nid,
+      'node_type' => $this->node->type,
+      'pid' => 0,
+      'uid' => $this->loggedInUser->uid,
+      'status' => COMMENT_PUBLISHED,
+      'subject' => $this->randomName(),
+      'hostname' => ip_address(),
+      'language' => LANGUAGE_NONE,
+      'comment_body' => array(LANGUAGE_NONE => array($this->randomName())),
+    );
+    comment_save($comment);
+    $this->assertHookMessage('comment_hook_test_comment_publish called');
+
+    // Unpublishing a comment should trigger hook_comment_unpublish().
+    $comment = comment_load($comment->cid);
+    $comment->status = COMMENT_NOT_PUBLISHED;
+    comment_save($comment);
+    $this->assertHookMessage('comment_hook_test_comment_unpublish called');
+  }
+
+  /**
    * Verify that a watchdog message has been entered.
    *
    * @param $watchdog_message
@@ -2048,6 +2079,27 @@ class CommentActionsTestCase extends CommentHelperCase {
    */
   function clearWatchdog() {
     db_truncate('watchdog')->execute();
+  }
+
+  /**
+   * Pass if the message $text was set by one of the comment hooks in
+   * comment_hook_test.module, i.e., if the $text is an element of
+   * $_SESSION['comment_hook_test'].
+   *
+   * @param $text
+   *   Plain text to look for.
+   * @param $message
+   *   Message to display.
+   * @param $group
+   *   The group this message belongs to, defaults to 'Other'.
+   * @return
+   *   TRUE on pass, FALSE on fail.
+   */
+  protected function assertHookMessage($text, $message = NULL, $group = 'Other') {
+    if (!isset($message)) {
+      $message = $text;
+    }
+    return $this->assertTrue(array_search($text, $_SESSION['comment_hook_test']) !== FALSE, $message, $group);
   }
 }
 
