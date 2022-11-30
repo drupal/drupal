@@ -130,7 +130,7 @@ class EditorFileReferenceFilterTest extends KernelTestBase {
     $this->assertSame($expected_output, $output->getProcessedText());
     $this->assertEquals($cache_tag, $output->getCacheTags());
 
-    // Add a valid image for test lazy loading feature.
+    // Add a valid image for image dimension testing.
     /** @var array stdClass */
     $files = $this->getTestFiles('image');
     $image = reset($files);
@@ -138,16 +138,16 @@ class EditorFileReferenceFilterTest extends KernelTestBase {
     [$width, $height] = getimagesize('public://llama.jpg');
     $dimensions = 'width="' . $width . '" height="' . $height . '"';
 
-    // Image dimensions and loading attributes are present.
+    // Image dimensions are present.
     $input = '<img src="llama.jpg" data-entity-type="file" data-entity-uuid="' . $uuid . '" />';
-    $expected_output = '<img src="/' . $this->siteDirectory . '/files/llama.jpg" data-entity-type="file" data-entity-uuid="' . $uuid . '" ' . $dimensions . ' loading="lazy" />';
+    $expected_output = '<img src="/' . $this->siteDirectory . '/files/llama.jpg" data-entity-type="file" data-entity-uuid="' . $uuid . '" ' . $dimensions . ' />';
     $output = $test($input);
     $this->assertSame($expected_output, $output->getProcessedText());
     $this->assertEquals($cache_tag, $output->getCacheTags());
 
-    // Image dimensions and loading attributes are set manually.
-    $input = '<img src="llama.jpg" data-entity-type="file" data-entity-uuid="' . $uuid . '"width="41" height="21" loading="eager" />';
-    $expected_output = '<img src="/' . $this->siteDirectory . '/files/llama.jpg" data-entity-type="file" data-entity-uuid="' . $uuid . '" width="41" height="21" loading="eager" />';
+    // Image dimensions are set manually.
+    $input = '<img src="llama.jpg" data-entity-type="file" data-entity-uuid="' . $uuid . '"width="41" height="21" />';
+    $expected_output = '<img src="/' . $this->siteDirectory . '/files/llama.jpg" data-entity-type="file" data-entity-uuid="' . $uuid . '" width="41" height="21" />';
     $output = $test($input);
     $this->assertSame($expected_output, $output->getProcessedText());
     $this->assertEquals($cache_tag, $output->getCacheTags());

@@ -27,6 +27,12 @@ filters:
     status: true
     weight: 10
     settings: {  }
+  filter_image_lazy_load:
+    id: filter_image_lazy_load
+    provider: filter
+    status: true
+    weight: 15
+    settings: { }
   editor_file_reference:
     id: editor_file_reference
     provider: editor

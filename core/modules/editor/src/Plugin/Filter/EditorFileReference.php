@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @Filter(
  *   id = "editor_file_reference",
  *   title = @Translation("Track images uploaded via a Text Editor"),
- *   description = @Translation("Ensures that the latest versions of images uploaded via a Text Editor are displayed."),
+ *   description = @Translation("Ensures that the latest versions of images uploaded via a Text Editor are displayed, along with their dimensions."),
  *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE
  * )
  */
@@ -92,22 +92,16 @@ class EditorFileReference extends FilterBase implements ContainerFactoryPluginIn
           if ($file instanceof FileInterface) {
             $node->setAttribute('src', $file->createFileUrl());
             if ($node->nodeName == 'img') {
-              // Without dimensions specified, layout shifts can occur,
-              // which are more noticeable on pages that take some time to load.
-              // As a result, only mark images as lazy load that have dimensions.
               $image = $this->imageFactory->get($file->getFileUri());
               $width = $image->getWidth();
               $height = $image->getHeight();
-              if ($width !== NULL && $height !== NULL) {
-                if (!$node->hasAttribute('width')) {
-                  $node->setAttribute('width', $width);
-                }
-                if (!$node->hasAttribute('height')) {
-                  $node->setAttribute('height', $height);
-                }
-                if (!$node->hasAttribute('loading')) {
-                  $node->setAttribute('loading', 'lazy');
-                }
+              // Set dimensions to avoid content layout shift (CLS).
+              // @see https://web.dev/cls/
+              if ($width !== NULL && !$node->hasAttribute('width')) {
+                $node->setAttribute('width', (string) $width);
+              }
+              if ($height !== NULL && !$node->hasAttribute('height')) {
+                $node->setAttribute('height', (string) $height);
               }
             }
           }
