@@ -20,14 +20,14 @@
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan": "^1.8.11",
         "phpunit/phpunit": "^9.5",
-        "symfony/browser-kit": "^6.2@RC",
-        "symfony/css-selector": "^6.2@RC",
-        "symfony/dom-crawler": "^6.2@RC",
-        "symfony/error-handler": "^6.2@RC",
-        "symfony/filesystem": "^6.2@RC",
-        "symfony/finder": "^6.2@RC",
-        "symfony/lock": "^6.2@RC",
-        "symfony/phpunit-bridge": "^6.2@RC",
-        "symfony/var-dumper": "^6.2@RC"
+        "symfony/browser-kit": "^6.2",
+        "symfony/css-selector": "^6.2",
+        "symfony/dom-crawler": "^6.2",
+        "symfony/error-handler": "^6.2",
+        "symfony/filesystem": "^6.2",
+        "symfony/finder": "^6.2",
+        "symfony/lock": "^6.2",
+        "symfony/phpunit-bridge": "^6.2",
+        "symfony/var-dumper": "^6.2"
     }
 }
