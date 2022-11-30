@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (Backbone, Drupal) {
   Drupal.toolbar.ToolbarAuralView = Backbone.View.extend({
     initialize: function initialize(options) {

@@ -4,14 +4,12 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, window, Drupal, once) {
   Drupal.behaviors.blockSettingsSummary = {
     attach: function attach() {
       if (typeof $.fn.drupalSetSummary === 'undefined') {
         return;
       }
-
       function checkboxesSummary(context) {
         var vals = [];
         var $checkboxes = $(context).find('input[type="checkbox"]:checked + label');
@@ -34,13 +32,11 @@
       });
     }
   };
-
   Drupal.behaviors.blockDrag = {
     attach: function attach(context, settings) {
       if (typeof Drupal.tableDrag === 'undefined' || typeof Drupal.tableDrag.blocks === 'undefined') {
         return;
       }
-
       function checkEmptyRegions(table, rowObject) {
         table.find('tr.region-message').each(function () {
           var $this = $(this);
@@ -51,13 +47,11 @@
           }
           if ($this.next('tr').is(':not(.draggable)') || $this.next('tr').length === 0) {
             $this.removeClass('region-populated').addClass('region-empty');
-          }
-          else if ($this.is('.region-empty')) {
+          } else if ($this.is('.region-empty')) {
             $this.removeClass('region-empty').addClass('region-populated');
           }
         });
       }
-
       function updateLastPlaced(table, rowObject) {
         table.find('.color-success').removeClass('color-success');
         var $rowObject = $(rowObject);
@@ -66,7 +60,6 @@
           $rowObject.addClass('drag-previous');
         }
       }
-
       function updateBlockWeights(table, region) {
         var weight = -Math.round(table.find('.draggable').length / 2);
         table.find(".region-".concat(region, "-message")).nextUntil('.region-title').find('select.block-weight').each(function () {
@@ -79,7 +72,6 @@
         checkEmptyRegions(table, this);
         updateLastPlaced(table, this);
       };
-
       tableDrag.onDrop = function () {
         var dragObject = this;
         var $rowElement = $(dragObject.rowObject.element);
@@ -90,7 +82,6 @@
           window.alert(Drupal.t('The block cannot be placed in this region.'));
           regionField.trigger('change');
         }
-
         if (!regionField.is(".block-region-".concat(regionName))) {
           var weightField = $rowElement.find('select.block-weight');
           var oldRegionName = weightField[0].className.replace(/([^ ]+[ ]+)*block-weight-([^ ]+)([ ]+[^ ]+)*/, '$2');
@@ -100,7 +91,6 @@
         }
         updateBlockWeights(table, regionName);
       };
-
       $(once('block-region-select', 'select.block-region-select', context)).on('change', function (event) {
         var row = $(this).closest('tr');
         var select = $(this);
@@ -109,8 +99,7 @@
         var regionItems = regionMessage.nextUntil('.region-message, .region-title');
         if (regionItems.length) {
           regionItems.last().after(row);
-        }
-        else {
+        } else {
           regionMessage.after(row);
         }
         updateBlockWeights(table, select[0].value);

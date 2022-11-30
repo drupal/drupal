@@ -4,20 +4,15 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal) {
   function DropButton(dropbutton, settings) {
     var options = $.extend({
       title: Drupal.t('List additional actions')
     }, settings);
     var $dropbutton = $(dropbutton);
-
     this.$dropbutton = $dropbutton;
-
     this.$list = $dropbutton.find('.dropbutton');
-
     this.$actions = this.$list.find('li').addClass('dropbutton-action');
-
     if (this.$actions.length > 1) {
       var $primary = this.$actions.slice(0, 1);
       var $secondary = this.$actions.slice(1);
@@ -33,12 +28,10 @@
       this.$dropbutton.addClass('dropbutton-single');
     }
   }
-
   function dropbuttonClickHandler(e) {
     e.preventDefault();
     $(e.target).closest('.dropbutton-wrapper').toggleClass('open');
   }
-
   Drupal.behaviors.dropButton = {
     attach: function attach(context, settings) {
       var dropbuttons = once('dropbutton', '.dropbutton-wrapper', context);
@@ -53,11 +46,9 @@
       }
     }
   };
-
   $.extend(DropButton, {
     dropbuttons: []
   });
-
   $.extend(DropButton.prototype, {
     toggle: function toggle(show) {
       var isBool = typeof show === 'boolean';
@@ -90,6 +81,5 @@
       return "<li class=\"dropbutton-toggle\"><button type=\"button\"><span class=\"dropbutton-arrow\"><span class=\"visually-hidden\">".concat(options.title, "</span></span></button></li>");
     }
   });
-
   Drupal.DropButton = DropButton;
 })(jQuery, Drupal);

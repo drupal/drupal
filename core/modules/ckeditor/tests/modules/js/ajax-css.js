@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (Drupal, ckeditor, editorSettings, $) {
   Drupal.behaviors.ajaxCssForm = {
     attach: function attach(context) {

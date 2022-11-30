@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal, drupalSettings, CKEDITOR) {
   function parseAttributes(editor, element) {
     var parsedAttributes = {};
@@ -19,7 +18,6 @@
       }
       parsedAttributes[attributeName] = element.data("cke-saved-".concat(attributeName)) || attribute.nodeValue;
     }
-
     if (parsedAttributes.class) {
       parsedAttributes.class = CKEDITOR.tools.trim(parsedAttributes.class.replace(/cke_\S+/, ''));
     }
@@ -30,9 +28,7 @@
     Object.keys(data || {}).forEach(function (attributeName) {
       set[attributeName] = data[attributeName];
     });
-
     set['data-cke-saved-href'] = set.href;
-
     var removed = {};
     Object.keys(set).forEach(function (s) {
       delete removed[s];
@@ -43,11 +39,9 @@
     };
   }
   var registeredLinkableWidgets = [];
-
   function registerLinkableWidget(widgetName) {
     registeredLinkableWidgets.push(widgetName);
   }
-
   function getFocusedLinkableWidget(editor) {
     var widget = editor.widgets.focused;
     if (widget && registeredLinkableWidgets.indexOf(widget.name) !== -1) {
@@ -55,7 +49,6 @@
     }
     return null;
   }
-
   function getSelectedLink(editor) {
     var selection = editor.getSelection();
     var selectedElement = selection.getSelectedElement();
@@ -95,15 +88,12 @@
         exec: function exec(editor) {
           var focusedLinkableWidget = getFocusedLinkableWidget(editor);
           var linkElement = getSelectedLink(editor);
-
           var existingValues = {};
           if (linkElement && linkElement.$) {
             existingValues = parseAttributes(editor, linkElement);
-          }
-          else if (focusedLinkableWidget && focusedLinkableWidget.data.link) {
+          } else if (focusedLinkableWidget && focusedLinkableWidget.data.link) {
             existingValues = CKEDITOR.tools.clone(focusedLinkableWidget.data.link);
           }
-
           var saveCallback = function saveCallback(returnValues) {
             if (focusedLinkableWidget) {
               focusedLinkableWidget.setData('link', CKEDITOR.tools.extend(returnValues.attributes, focusedLinkableWidget.data.link));
@@ -111,17 +101,14 @@
               return;
             }
             editor.fire('saveSnapshot');
-
             if (!linkElement && returnValues.attributes.href) {
               var selection = editor.getSelection();
               var range = selection.getRanges(1)[0];
-
               if (range.collapsed) {
                 var text = new CKEDITOR.dom.text(returnValues.attributes.href.replace(/^mailto:/, ''), editor.document);
                 range.insertNode(text);
                 range.selectNodeContents(text);
               }
-
               var style = new CKEDITOR.style({
                 element: 'a',
                 attributes: returnValues.attributes
@@ -129,29 +116,24 @@
               style.type = CKEDITOR.STYLE_INLINE;
               style.applyToRange(range);
               range.select();
-
               linkElement = getSelectedLink(editor);
-            }
-            else if (linkElement) {
+            } else if (linkElement) {
               Object.keys(returnValues.attributes || {}).forEach(function (attrName) {
                 if (returnValues.attributes[attrName].length > 0) {
                   var value = returnValues.attributes[attrName];
                   linkElement.data("cke-saved-".concat(attrName), value);
                   linkElement.setAttribute(attrName, value);
-                }
-                else {
+                } else {
                   linkElement.removeAttribute(attrName);
                 }
               });
             }
-
             editor.fire('saveSnapshot');
           };
           var dialogSettings = {
             title: linkElement ? editor.config.drupalLink_dialogTitleEdit : editor.config.drupalLink_dialogTitleAdd,
             dialogClass: 'editor-link-dialog'
           };
-
           Drupal.ckeditor.openDialog(editor, Drupal.url("editor/dialog/link/".concat(editor.config.drupal.format)), existingValues, saveCallback, dialogSettings);
         }
       });
@@ -181,9 +163,7 @@
           }
         }
       });
-
       editor.setKeystroke(CKEDITOR.CTRL + 75, 'drupallink');
-
       if (editor.ui.addButton) {
         editor.ui.addButton('DrupalLink', {
           label: Drupal.t('Link'),
@@ -203,7 +183,6 @@
           }
         }
       });
-
       if (editor.addMenuItems) {
         editor.addMenuItems({
           link: {
@@ -220,7 +199,6 @@
           }
         });
       }
-
       if (editor.contextMenu) {
         editor.contextMenu.addListener(function (element, selection) {
           if (!element || element.isReadOnly()) {
@@ -242,7 +220,6 @@
       }
     }
   });
-
   CKEDITOR.plugins.drupallink = {
     parseLinkAttributes: parseAttributes,
     getLinkAttributes: getAttributes,

@@ -27,8 +27,7 @@ if (!Array.prototype.includes) {
     var currentElement;
     while (k < len) {
       currentElement = O[k];
-      if (searchElement === currentElement ||
-      searchElement !== searchElement && currentElement !== currentElement) {
+      if (searchElement === currentElement || searchElement !== searchElement && currentElement !== currentElement) {
         return true;
       }
       k += 1;

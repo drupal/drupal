@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (Drupal) {
   Drupal.theme.message = function (_ref, _ref2) {
     var text = _ref.text;

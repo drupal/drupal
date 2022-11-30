@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal, drupalSettings) {
   drupalSettings.dialog = {
     autoOpen: true,
@@ -16,7 +15,6 @@
       Drupal.detachBehaviors(event.target, null, 'unload');
     }
   };
-
   Drupal.dialog = function (element, options) {
     var undef;
     var $element = $(element);

@@ -10,14 +10,12 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
 (function ($, Drupal, _ref) {
   var tabbable = _ref.tabbable,
     isTabbable = _ref.isTabbable;
   function TabbingManager() {
     this.stack = [];
   }
-
   function TabbingContext(options) {
     $.extend(this, {
       level: null,
@@ -28,7 +26,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       trapFocus: false
     }, options);
   }
-
   $.extend(TabbingManager.prototype, {
     constrain: function constrain(elements) {
       var _ref2 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
@@ -38,7 +35,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       for (var i = 0; i < il; i++) {
         this.stack[i].deactivate();
       }
-
       var tabbableElements = [];
       $(elements).each(function (index, rootElement) {
         tabbableElements = [].concat(_toConsumableArray(tabbableElements), _toConsumableArray(tabbable(rootElement)));
@@ -52,9 +48,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         trapFocus: trapFocus
       });
       this.stack.push(tabbingContext);
-
       tabbingContext.activate();
-
       $(document).trigger('drupalTabbingConstrained', tabbingContext);
       return tabbingContext;
     },
@@ -63,9 +57,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       while (toActivate >= 0 && this.stack[toActivate].released) {
         toActivate--;
       }
-
       this.stack.splice(toActivate + 1);
-
       if (toActivate >= 0) {
         this.stack[toActivate].activate();
       }
@@ -73,21 +65,18 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     activate: function activate(tabbingContext) {
       var $set = tabbingContext.$tabbableElements;
       var level = tabbingContext.level;
-      var $disabledSet = $(tabbable(document.body))
-      .not($set);
+      var $disabledSet = $(tabbable(document.body)).not($set);
       tabbingContext.$disabledElements = $disabledSet;
       var il = $disabledSet.length;
       for (var i = 0; i < il; i++) {
         this.recordTabindex($disabledSet.eq(i), level);
       }
       $disabledSet.prop('tabindex', -1).prop('autofocus', false);
-
       var $hasFocus = $set.filter('[autofocus]').eq(-1);
       if ($hasFocus.length === 0) {
         $hasFocus = $set.eq(0);
       }
       $hasFocus.trigger('focus');
-
       if ($set.length && tabbingContext.trapFocus) {
         $set.last().on('keydown.focus-trap', function (event) {
           if (event.key === 'Tab' && !event.shiftKey) {
@@ -127,14 +116,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         var data = tabInfo[level];
         if (data.tabindex) {
           $el[0].setAttribute('tabindex', data.tabindex);
-        }
-        else {
+        } else {
           $el[0].removeAttribute('tabindex');
         }
         if (data.autofocus) {
           $el[0].setAttribute('autofocus', 'autofocus');
         }
-
         if (level === 0) {
           $el.removeData('drupalOriginalTabIndices');
         } else {
@@ -148,7 +135,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }
     }
   });
-
   $.extend(TabbingContext.prototype, {
     release: function release() {
       if (!this.released) {
@@ -173,10 +159,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }
     }
   });
-
   if (Drupal.tabbingManager) {
     return;
   }
-
   Drupal.tabbingManager = new TabbingManager();
 })(jQuery, Drupal, window.tabbable);

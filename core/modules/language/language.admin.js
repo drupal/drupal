@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal) {
   Drupal.behaviors.negotiationLanguage = {
     attach: function attach() {
@@ -14,7 +13,6 @@
         var $checkbox = $(checkbox);
         $checkbox.closest('.table-language-group').find('table, .tabledrag-toggle-weight').toggle($checkbox.prop('checked'));
       }
-
       $(once('negotiation-language-admin-bind', $configForm)).on('change', inputSelector, function (event) {
         toggleTable(event.target);
       });

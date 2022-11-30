@@ -24,12 +24,10 @@
       var timestamp = parseInt(placeholder.getAttribute('data-history-node-last-comment-timestamp'), 10);
       var nodeID = placeholder.previousSibling.previousSibling.getAttribute('data-history-node-id');
       var lastViewTimestamp = Drupal.history.getLastRead(nodeID);
-
       if (timestamp > lastViewTimestamp) {
         placeholdersToUpdate[nodeID] = placeholder;
       }
     });
-
     var nodeIDs = Object.keys(placeholdersToUpdate);
     if (nodeIDs.length === 0) {
       return;
@@ -52,7 +50,6 @@
       }
     });
   }
-
   Drupal.behaviors.trackerHistory = {
     attach: function attach(context) {
       var nodeIDs = [];
@@ -65,7 +62,6 @@
         }
         return false;
       });
-
       var newRepliesPlaceholders = once('history', '[data-history-node-last-comment-timestamp]', context).filter(function (placeholder) {
         var lastCommentTimestamp = parseInt(placeholder.getAttribute('data-history-node-last-comment-timestamp'), 10);
         var nodeTimestamp = parseInt(placeholder.previousSibling.previousSibling.getAttribute('data-history-node-timestamp'), 10);
@@ -84,7 +80,6 @@
       if (nodeNewPlaceholders.length === 0 && newRepliesPlaceholders.length === 0) {
         return;
       }
-
       Drupal.history.fetchTimestamps(nodeIDs, function () {
         processNodeNewIndicators(nodeNewPlaceholders);
         processNewRepliesIndicators(newRepliesPlaceholders);

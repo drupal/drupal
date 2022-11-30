@@ -4,16 +4,13 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal, drupalSettings, _, Backbone, JSON, storage) {
-  var options = $.extend(drupalSettings.contextual,
-  {
+  var options = $.extend(drupalSettings.contextual, {
     strings: {
       open: Drupal.t('Open'),
       close: Drupal.t('Close')
     }
   });
-
   var cachedPermissionsHash = storage.getItem('Drupal.contextual.permissionsHash');
   var permissionsHash = drupalSettings.user.permissionsHash;
   if (cachedPermissionsHash !== permissionsHash) {
@@ -26,40 +23,29 @@
     }
     storage.setItem('Drupal.contextual.permissionsHash', permissionsHash);
   }
-
   function adjustIfNestedAndOverlapping($contextual) {
-    var $contextuals = $contextual
-    .parents('.contextual-region').eq(-1).find('.contextual');
-
+    var $contextuals = $contextual.parents('.contextual-region').eq(-1).find('.contextual');
     if ($contextuals.length <= 1) {
       return;
     }
-
     var firstTop = $contextuals.eq(0).offset().top;
     var secondTop = $contextuals.eq(1).offset().top;
     if (firstTop === secondTop) {
       var $nestedContextual = $contextuals.eq(1);
-
       var height = 0;
       var $trigger = $nestedContextual.find('.trigger');
       $trigger.removeClass('visually-hidden');
       height = $nestedContextual.height();
       $trigger.addClass('visually-hidden');
-
       $nestedContextual.css({
         top: $nestedContextual.position().top + height
       });
     }
   }
-
   function initContextual($contextual, html) {
     var $region = $contextual.closest('.contextual-region');
     var contextual = Drupal.contextual;
-    $contextual
-    .html(html)
-    .addClass('contextual')
-    .prepend(Drupal.theme('contextualTrigger'));
-
+    $contextual.html(html).addClass('contextual').prepend(Drupal.theme('contextualTrigger'));
     var destination = "destination=".concat(Drupal.encodePath(Drupal.url(drupalSettings.path.currentPath)));
     $contextual.find('.contextual-links a').each(function () {
       var url = this.getAttribute('href');
@@ -87,9 +73,7 @@
       el: $region,
       model: model
     }, options)));
-
     contextual.collection.add(model);
-
     $(document).trigger('drupalContextualLinkAdded', Drupal.deprecatedProperty({
       target: {
         $el: $contextual,
@@ -99,19 +83,15 @@
       deprecatedProperty: 'model',
       message: 'The model property is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. There is no replacement.'
     }));
-
     adjustIfNestedAndOverlapping($contextual);
   }
-
   Drupal.behaviors.contextual = {
     attach: function attach(context) {
       var $context = $(context);
-
       var $placeholders = $(once('contextual-render', '[data-contextual-id]', context));
       if ($placeholders.length === 0) {
         return;
       }
-
       var ids = [];
       $placeholders.each(function () {
         ids.push({
@@ -132,7 +112,6 @@
         uncachedIDs.push(contextualID.id);
         uncachedTokens.push(contextualID.token);
       });
-
       if (uncachedIDs.length > 0) {
         $.ajax({
           url: Drupal.url('contextual/render'),
@@ -147,7 +126,6 @@
               storage.setItem("Drupal.contextual.".concat(contextualID), html);
               if (html.length > 0) {
                 $placeholders = $context.find("[data-contextual-id=\"".concat(contextualID, "\"]"));
-
                 for (var i = 0; i < $placeholders.length; i++) {
                   initContextual($placeholders.eq(i), html);
                 }
@@ -158,20 +136,16 @@
       }
     }
   };
-
   Drupal.contextual = {
     views: [],
     regionViews: []
   };
-
   Drupal.contextual.collection = new Backbone.Collection([], {
     model: Drupal.contextual.StateModel
   });
-
   Drupal.theme.contextualTrigger = function () {
     return '<button class="trigger visually-hidden focusable" type="button"></button>';
   };
-
   $(document).on('drupalContextualLinkAdded', function (event, data) {
     Drupal.ajax.bindAjaxLinks(data.$el[0]);
   });

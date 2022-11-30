@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (Drupal) {
   Drupal.theme.checkbox = function () {
     return "<input type=\"checkbox\" class=\"form-checkbox\"/>";

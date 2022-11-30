@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal, Backbone) {
   Drupal.toolbar.BodyVisualView = Backbone.View.extend({
     initialize: function initialize() {
@@ -16,8 +15,7 @@
       $('body').toggleClass('toolbar-fixed', isViewportOverflowConstrained || this.model.get('isFixed'));
     },
     render: function render() {
-      $('body')
-      .toggleClass('toolbar-tray-open', !!this.model.get('activeTray'));
+      $('body').toggleClass('toolbar-tray-open', !!this.model.get('activeTray'));
     }
   });
 })(jQuery, Drupal, Backbone);

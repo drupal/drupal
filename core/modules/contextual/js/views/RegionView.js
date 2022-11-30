@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (Drupal, Backbone) {
   Drupal.contextual.RegionView = Backbone.View.extend({
     events: function events() {

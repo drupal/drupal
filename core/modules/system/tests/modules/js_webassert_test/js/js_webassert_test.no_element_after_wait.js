@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal) {
   Drupal.behaviors.js_webassert_test_wait_for_ajax_request = {
     attach: function attach() {

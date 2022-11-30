@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal) {
   Drupal.behaviors.permissions = {
     attach: function attach(context) {
@@ -21,13 +20,9 @@
           method = 'append';
         }
         $table.detach();
-
         var $dummy = $(Drupal.theme('checkbox')).removeClass('form-checkbox').addClass('dummy-checkbox js-dummy-checkbox').attr('disabled', 'disabled').attr('checked', 'checked').attr('title', Drupal.t('This permission is inherited from the authenticated user role.')).hide();
         $table.find('input[type="checkbox"]').not('.js-rid-anonymous, .js-rid-authenticated').addClass('real-checkbox js-real-checkbox').after($dummy);
-
-        $table.find('input[type=checkbox].js-rid-authenticated').on('click.permissions', _this.toggle)
-        .each(_this.toggle);
-
+        $table.find('input[type=checkbox].js-rid-authenticated').on('click.permissions', _this.toggle).each(_this.toggle);
         $ancestor[method]($table);
       });
     },

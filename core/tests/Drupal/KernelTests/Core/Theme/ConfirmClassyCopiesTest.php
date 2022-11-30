@@ -714,7 +714,7 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
       ],
       'js' => [
         'media_embed_ckeditor.theme.es6.js' => 'd9fa9e008aff8d4fb0401083bab0a1ad',
-        'media_embed_ckeditor.theme.js' => 'f8e192b79f25d2b61a6ff43b9733ec72',
+        'media_embed_ckeditor.theme.js' => '8abd200fde0284ff70026eb7cc8e412c',
       ],
       'images' => [
         'application-octet-stream.png' => 'fef73511632890590b5ae0a13c99e4bf',

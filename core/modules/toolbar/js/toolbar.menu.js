@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal, drupalSettings) {
   var activeItem = Drupal.url(drupalSettings.path.currentPath);
   $.fn.drupalToolbarMenu = function () {
@@ -12,7 +11,6 @@
       handleOpen: Drupal.t('Extend'),
       handleClose: Drupal.t('Collapse')
     };
-
     function toggleList($item, switcher) {
       var $toggle = $item.children('.toolbar-box').children('.toolbar-handle');
       switcher = typeof switcher !== 'undefined' ? switcher : !$item.hasClass('open');
@@ -22,7 +20,6 @@
         element.textContent = switcher ? ui.handleClose : ui.handleOpen;
       });
     }
-
     function toggleClickHandler(event) {
       var $toggle = $(event.target);
       var $item = $toggle.closest('li');
@@ -30,14 +27,12 @@
       var $openItems = $item.siblings().filter('.open');
       toggleList($openItems, false);
     }
-
     function linkClickHandler(event) {
       if (!Drupal.toolbar.models.toolbarModel.get('isFixed')) {
         Drupal.toolbar.models.toolbarModel.set('activeTab', null);
       }
       event.stopPropagation();
     }
-
     function initItems($menu) {
       var options = {
         class: 'toolbar-icon toolbar-handle',
@@ -57,7 +52,6 @@
         }
       });
     }
-
     function markListLevels($lists, level) {
       level = !level ? 1 : level;
       var $lis = $lists.children('li').addClass("level-".concat(level));
@@ -66,7 +60,6 @@
         markListLevels($lists, level + 1);
       }
     }
-
     function openActiveItem($menu) {
       var pathItem = $menu.find("a[href=\"".concat(window.location.pathname, "\"]"));
       if (pathItem.length && !activeItem) {
@@ -78,7 +71,6 @@
         toggleList($activeTrail, true);
       }
     }
-
     return this.each(function (selector) {
       var menu = once('toolbar-menu', this);
       if (menu.length) {
@@ -91,7 +83,6 @@
       }
     });
   };
-
   Drupal.theme.toolbarMenuItemToggle = function (options) {
     return "<button class=\"".concat(options.class, "\"><span class=\"action\">").concat(options.action, "</span> <span class=\"label\">").concat(options.text, "</span></button>");
   };

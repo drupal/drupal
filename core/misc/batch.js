@@ -4,14 +4,12 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal) {
   Drupal.behaviors.batch = {
     attach: function attach(context, settings) {
       var batch = settings.batch;
       var $progress = $(once('batch', '[data-drupal-progress]'));
       var progressBar;
-
       function updateCallback(progress, status, pb) {
         if (progress === '100') {
           pb.stopMonitoring();

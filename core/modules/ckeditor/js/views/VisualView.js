@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (Drupal, Backbone, $, Sortable) {
   Drupal.ckeditor.VisualView = Backbone.View.extend({
     events: {
@@ -14,14 +13,12 @@
     },
     initialize: function initialize() {
       this.listenTo(this.model, 'change:isDirty change:groupNamesVisible', this.render);
-
       $(Drupal.theme('ckeditorButtonGroupNamesToggle')).prependTo(this.$el.find('#ckeditor-active-toolbar').parent());
       this.render();
     },
     render: function render(model, value, changedAttributes) {
       this.insertPlaceholders();
       this.applySorting();
-
       var groupNamesVisible = this.model.get('groupNamesVisible');
       if (changedAttributes && changedAttributes.changes && changedAttributes.changes.isDirty) {
         this.model.set({
@@ -55,7 +52,6 @@
           $group.trigger('focus');
         }
       }
-
       Drupal.ckeditor.openGroupNameDialog(this, $(Drupal.theme('ckeditorToolbarGroup')), insertNewGroup);
       event.preventDefault();
     },
@@ -65,7 +61,6 @@
     },
     startButtonDrag: function startButtonDrag(event) {
       this.$el.find('a:focus').trigger('blur');
-
       this.model.set('groupNamesVisible', true);
     },
     endButtonDrag: function endButtonDrag(event) {
@@ -119,8 +114,7 @@
           return false;
         }
         return $(row).find('.ckeditor-toolbar-group').not('.placeholder').length === 0;
-      })
-      .remove();
+      }).remove();
     },
     insertNewGroupButtons: function insertNewGroupButtons() {
       this.$el.find('.ckeditor-row').each(function () {
@@ -129,8 +123,7 @@
         var $button = $row.find('.ckeditor-add-new-group');
         if ($button.length === 0) {
           $row.children('.ckeditor-toolbar-groups').append(Drupal.theme('ckeditorNewButtonGroup'));
-        }
-        else if (!$groups.eq(-1).hasClass('ckeditor-add-new-group')) {
+        } else if (!$groups.eq(-1).hasClass('ckeditor-add-new-group')) {
           $button.appendTo($row.children('.ckeditor-toolbar-groups'));
         }
       });

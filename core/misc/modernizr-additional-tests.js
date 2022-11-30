@@ -11,7 +11,6 @@
       console.warn("[Deprecation] ".concat(message));
     }
   };
-
   var _deprecatedPropertyModernizrCopy = function _deprecatedPropertyModernizrCopy(_ref2) {
     var target = _ref2.target,
       deprecatedProperty = _ref2.deprecatedProperty,
@@ -41,7 +40,6 @@
   if (document.documentElement.classList.contains('touchevents') || document.documentElement.classList.contains('no-touchevents')) {
     return;
   }
-
   Modernizr.addTest('touchevents', function () {
     _deprecationErrorModernizrCopy({
       message: 'The Modernizr touch events test is deprecated in Drupal 9.4.0 and will be removed in Drupal 10.0.0. See https://www.drupal.org/node/3277381 for information on its replacement and how it should be used.'

@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, _, Backbone, Drupal) {
   var reload = false;
   Drupal.quickedit.AppView = Backbone.View.extend({
@@ -13,10 +12,8 @@
       this.singleFieldStates = ['highlighted', 'activating', 'active'];
       this.changedFieldStates = ['changed', 'saving', 'saved', 'invalid'];
       this.readyFieldStates = ['candidate', 'highlighted'];
-
       this.listenTo(options.entitiesCollection, 'change:state', this.appStateChange);
       this.listenTo(options.entitiesCollection, 'change:isActive', this.enforceSingleActiveEntity);
-
       this.listenTo(options.fieldsCollection, 'change:state', this.editorStateChange);
       this.listenTo(options.fieldsCollection, 'change:html', this.renderUpdatedField);
       this.listenTo(options.fieldsCollection, 'change:html', this.propagateUpdatedField);
@@ -59,35 +56,27 @@
     },
     acceptEditorStateChange: function acceptEditorStateChange(from, to, context, fieldModel) {
       var accept = true;
-
       if (context && (context.reason === 'stop' || context.reason === 'rerender')) {
         if (from === 'candidate' && to === 'inactive') {
           accept = true;
         }
-      }
-      else {
+      } else {
         if (!Drupal.quickedit.FieldModel.followsStateSequence(from, to)) {
           accept = false;
           if (_.indexOf(this.activeFieldStates, from) !== -1 && to === 'candidate') {
             accept = true;
-          }
-          else if ((from === 'changed' || from === 'invalid') && to === 'candidate') {
+          } else if ((from === 'changed' || from === 'invalid') && to === 'candidate') {
             accept = true;
-          }
-          else if (from === 'highlighted' && to === 'candidate') {
+          } else if (from === 'highlighted' && to === 'candidate') {
             accept = true;
-          }
-          else if (from === 'saved' && to === 'candidate') {
+          } else if (from === 'saved' && to === 'candidate') {
             accept = true;
-          }
-          else if (from === 'invalid' && to === 'saving') {
+          } else if (from === 'invalid' && to === 'saving') {
             accept = true;
-          }
-          else if (from === 'invalid' && to === 'activating') {
+          } else if (from === 'invalid' && to === 'activating') {
             accept = true;
           }
         }
-
         if (accept) {
           var activeField;
           var activeFieldState;
@@ -100,23 +89,19 @@
               } else if (activeFieldState === 'changed' || activeFieldState === 'invalid') {
                 activeField.set('state', 'saving');
               }
-
               if (from === 'invalid') {
                 this.model.set('activeField', fieldModel);
                 accept = false;
               }
             }
-          }
-          else if (_.indexOf(this.activeFieldStates, from) !== -1 && to === 'candidate') {
+          } else if (_.indexOf(this.activeFieldStates, from) !== -1 && to === 'candidate') {
             if (context && context.reason === 'mouseleave') {
               accept = false;
             }
-          }
-          else if ((from === 'changed' || from === 'invalid') && to === 'candidate') {
+          } else if ((from === 'changed' || from === 'invalid') && to === 'candidate') {
             if (context && context.reason === 'mouseleave') {
               accept = false;
-            }
-            else if (context && context.confirmed) {
+            } else if (context && context.confirmed) {
               accept = true;
             }
           }
@@ -135,7 +120,6 @@
         model: editorModel,
         fieldModel: fieldModel
       });
-
       var toolbarView = new Drupal.quickedit.FieldToolbarView({
         el: fieldToolbarRoot,
         model: fieldModel,
@@ -143,13 +127,11 @@
         editorView: editorView,
         entityModel: entityModel
       });
-
       var decorationView = new Drupal.quickedit.FieldDecorationView({
         el: $(editorView.getEditedElement()),
         model: fieldModel,
         editorView: editorView
       });
-
       fieldModel.editorView = editorView;
       fieldModel.toolbarView = toolbarView;
       fieldModel.decorationView = decorationView;
@@ -158,13 +140,10 @@
       if (typeof fieldModel.editorView === 'undefined') {
         return;
       }
-
       fieldModel.toolbarView.remove();
       delete fieldModel.toolbarView;
-
       fieldModel.decorationView.remove();
       delete fieldModel.decorationView;
-
       fieldModel.editorView.remove();
       delete fieldModel.editorView;
     },
@@ -174,7 +153,6 @@
       function closeDiscardDialog(action) {
         discardDialog.close(action);
         that.model.set('activeModal', null);
-
         if (action === 'save') {
           entityModel.set('state', 'committing', {
             confirmed: true
@@ -189,7 +167,6 @@
           }
         }
       }
-
       if (!this.model.get('activeModal')) {
         var $unsavedChanges = $("<div>".concat(Drupal.t('You have unsaved changes'), "</div>"));
         discardDialog = Drupal.dialog($unsavedChanges.get(0), {
@@ -224,13 +201,11 @@
     editorStateChange: function editorStateChange(fieldModel, state) {
       var from = fieldModel.previous('state');
       var to = state;
-
       if (_.indexOf(this.singleFieldStates, to) !== -1 && this.model.get('highlightedField') !== fieldModel) {
         this.model.set('highlightedField', fieldModel);
       } else if (this.model.get('highlightedField') === fieldModel && to === 'candidate') {
         this.model.set('highlightedField', null);
       }
-
       if (_.indexOf(this.activeFieldStates, to) !== -1 && this.model.get('activeField') !== fieldModel) {
         this.model.set('activeField', fieldModel);
       } else if (this.model.get('activeField') === fieldModel && to === 'candidate') {
@@ -245,16 +220,12 @@
       var $context = $fieldWrapper.parent();
       var renderField = function renderField() {
         fieldModel.destroy();
-
         $fieldWrapper.replaceWith(html);
-
         Drupal.attachBehaviors($context.get(0));
       };
-
       if (!options.propagation) {
         _.defer(function () {
           fieldModel.set('state', 'candidate');
-
           _.defer(function () {
             fieldModel.set('state', 'inactive', {
               reason: 'rerender'
@@ -271,16 +242,12 @@
         return;
       }
       var htmlForOtherViewModes = updatedField.get('htmlForOtherViewModes');
-      Drupal.quickedit.collections.fields
-      .where({
+      Drupal.quickedit.collections.fields.where({
         logicalFieldID: updatedField.get('logicalFieldID')
       }).forEach(function (field) {
-        if (field === updatedField) {
-        }
-        else if (field.getViewMode() === updatedField.getViewMode()) {
+        if (field === updatedField) {} else if (field.getViewMode() === updatedField.getViewMode()) {
           field.set('html', updatedField.get('html'));
-        }
-        else if (field.getViewMode() in htmlForOtherViewModes) {
+        } else if (field.getViewMode() in htmlForOtherViewModes) {
           field.set('html', htmlForOtherViewModes[field.getViewMode()], {
             propagation: true
           });
@@ -291,11 +258,9 @@
       var activeEntity = Drupal.quickedit.collections.entities.findWhere({
         isActive: true
       });
-
       if (!activeEntity) {
         return;
       }
-
       if (fieldModel.get('entity') === activeEntity) {
         this.setupEditor(fieldModel);
         fieldModel.set('state', 'candidate');
@@ -305,7 +270,6 @@
       if (changedEntityModel.get('isActive') === false) {
         return;
       }
-
       changedEntityModel.collection.chain().filter(function (entityModel) {
         return entityModel.get('isActive') === true && entityModel !== changedEntityModel;
       }).each(function (entityModel) {

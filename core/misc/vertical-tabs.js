@@ -4,14 +4,12 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal, drupalSettings) {
   var handleFragmentLinkClickOrHashChange = function handleFragmentLinkClickOrHashChange(e, $target) {
     $target.parents('.vertical-tabs__pane').each(function (index, pane) {
       $(pane).data('verticalTab').focus();
     });
   };
-
   Drupal.behaviors.verticalTabs = {
     attach: function attach(context) {
       var width = drupalSettings.widthBreakpoint || 640;
@@ -19,21 +17,17 @@
       if (window.matchMedia(mq).matches) {
         return;
       }
-
       $(once('vertical-tabs-fragments', 'body')).on('formFragmentLinkClickOrHashChange.verticalTabs', handleFragmentLinkClickOrHashChange);
       once('vertical-tabs', '[data-vertical-tabs-panes]', context).forEach(function (verticalTab) {
         var $this = $(verticalTab).addClass('vertical-tabs__panes');
         var focusID = $this.find(':hidden.vertical-tabs__active-tab')[0].value;
         var tabFocus;
-
         var $details = $this.find('> details');
         if ($details.length === 0) {
           return;
         }
-
         var tabList = $('<ul class="vertical-tabs__menu"></ul>');
         $this.wrap('<div class="vertical-tabs clearfix"></div>').before(tabList);
-
         $details.each(function () {
           var $that = $(this);
           var $summary = $that.find('> summary');
@@ -63,7 +57,6 @@
       });
     }
   };
-
   Drupal.verticalTab = function (settings) {
     var self = this;
     $.extend(this, settings, Drupal.theme('verticalTab', settings));
@@ -72,7 +65,6 @@
       e.preventDefault();
       self.focus();
     });
-
     this.link.on('keydown', function (event) {
       if (event.keyCode === 13) {
         event.preventDefault();
@@ -115,14 +107,12 @@
       var $firstTab = this.details.siblings('.vertical-tabs__pane:not(.vertical-tab--hidden)').eq(0);
       if ($firstTab.length) {
         $firstTab.data('verticalTab').focus();
-      }
-      else {
+      } else {
         this.item.closest('.js-form-type-vertical-tabs').hide();
       }
       return this;
     }
   };
-
   Drupal.theme.verticalTab = function (settings) {
     var tab = {};
     tab.title = $('<strong class="vertical-tabs__menu-item-title"></strong>');

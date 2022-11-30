@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal) {
   Drupal.behaviors.localeTranslateDirty = {
     attach: function attach() {
@@ -36,14 +35,12 @@
       }
     }
   };
-
   Drupal.behaviors.hideUpdateInformation = {
     attach: function attach(context, settings) {
       var table = once('expand-updates', '#locale-translation-status-form');
       if (table.length) {
         var $table = $(table);
         var $tbodies = $table.find('tbody');
-
         $tbodies.on('click keydown', '.description', function (e) {
           if (e.keyCode && e.keyCode !== 13 && e.keyCode !== 32) {
             return;

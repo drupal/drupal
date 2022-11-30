@@ -4,24 +4,20 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal) {
   var states = {
     postponed: []
   };
   Drupal.states = states;
-
   function invert(a, invertState) {
     return invertState && typeof a !== 'undefined' ? !a : a;
   }
-
   function _compare2(a, b) {
     if (a === b) {
       return typeof a === 'undefined' ? a : true;
     }
     return typeof a === 'undefined' || typeof b === 'undefined';
   }
-
   function ternary(a, b) {
     if (typeof a === 'undefined') {
       return b;
@@ -31,7 +27,6 @@
     }
     return a && b;
   }
-
   Drupal.behaviors.states = {
     attach: function attach(context, settings) {
       var $states = $(context).find('[data-drupal-states]');
@@ -49,13 +44,11 @@
       for (var i = 0; i < il; i++) {
         _loop(i);
       }
-
       while (states.postponed.length) {
         states.postponed.shift()();
       }
     }
   };
-
   states.Dependent = function (args) {
     var _this = this;
     $.extend(this, {
@@ -67,7 +60,6 @@
       _this.initializeDependee(selector, _this.dependees[selector]);
     });
   };
-
   states.Dependent.comparisons = {
     RegExp: function RegExp(reference, value) {
       return reference.test(value);
@@ -89,16 +81,13 @@
           return;
         }
         state = states.State.sanitize(state);
-
         _this2.values[selector][state.name] = null;
-
         $(selector).on("state:".concat(state), {
           selector: selector,
           state: state
         }, function (e) {
           _this2.update(e.data.selector, e.data.state, e.value);
         });
-
         new states.Trigger({
           selector: selector,
           state: state
@@ -110,7 +99,6 @@
       if (reference.constructor.name in states.Dependent.comparisons) {
         return states.Dependent.comparisons[reference.constructor.name](reference, value);
       }
-
       return _compare2(reference, value);
     },
     update: function update(selector, state, value) {
@@ -121,12 +109,9 @@
     },
     reevaluate: function reevaluate() {
       var value = this.verifyConstraints(this.constraints);
-
       if (value !== this.oldValue) {
         this.oldValue = value;
-
         value = invert(value, this.state.invert);
-
         this.element.trigger({
           type: "state:".concat(this.state),
           value: value,
@@ -148,8 +133,7 @@
             result = result || constraint;
           }
         }
-      }
-      else if ($.isPlainObject(constraints)) {
+      } else if ($.isPlainObject(constraints)) {
         for (var n in constraints) {
           if (constraints.hasOwnProperty(n)) {
             result = ternary(result, this.checkConstraints(constraints[n], selector, n));
@@ -172,7 +156,6 @@
         state = states.State.sanitize(state);
         return invert(this.compare(value, selector, state), state.invert);
       }
-
       return this.verifyConstraints(value, selector);
     },
     getDependees: function getDependees() {
@@ -181,18 +164,15 @@
       this.compare = function (reference, selector, state) {
         (cache[selector] || (cache[selector] = [])).push(state.name);
       };
-
       this.verifyConstraints(this.constraints);
       this.compare = _compare;
       return cache;
     }
   };
-
   states.Trigger = function (args) {
     $.extend(this, args);
     if (this.state in states.Trigger.states) {
       this.element = $(this.selector);
-
       if (!this.element.data("trigger:".concat(this.state))) {
         this.initialize();
       }
@@ -209,12 +189,10 @@
           _this3.defaultTrigger(event, trigger[event]);
         });
       }
-
       this.element.data("trigger:".concat(this.state), true);
     },
     defaultTrigger: function defaultTrigger(event, valueFn) {
       var oldValue = valueFn.call(this.element);
-
       this.element.on(event, $.proxy(function (e) {
         var value = valueFn.call(this.element, e);
         if (oldValue !== value) {
@@ -235,7 +213,6 @@
       }, this));
     }
   };
-
   states.Trigger.states = {
     empty: {
       keyup: function keyup() {
@@ -272,18 +249,15 @@
       }
     }
   };
-
   states.State = function (state) {
     this.pristine = state;
     this.name = state;
-
     var process = true;
     do {
       while (this.name.charAt(0) === '!') {
         this.name = this.name.substring(1);
         this.invert = !this.invert;
       }
-
       if (this.name in states.State.aliases) {
         this.name = states.State.aliases[this.name];
       } else {
@@ -291,14 +265,12 @@
       }
     } while (process);
   };
-
   states.State.sanitize = function (state) {
     if (state instanceof states.State) {
       return state;
     }
     return new states.State(state);
   };
-
   states.State.aliases = {
     enabled: '!disabled',
     invisible: '!visible',
@@ -319,15 +291,12 @@
       return this.name;
     }
   };
-
   var $document = $(document);
   $document.on('state:disabled', function (e) {
     if (e.trigger) {
       $(e.target).prop('disabled', e.value).closest('.js-form-item, .js-form-submit, .js-form-wrapper').toggleClass('form-disabled', e.value).find('select, input, textarea').prop('disabled', e.value);
-
     }
   });
-
   $document.on('state:required', function (e) {
     if (e.trigger) {
       if (e.value) {

@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($) {
   $.widget('ui.dialog', $.ui.dialog, {
     _allowInteraction: function _allowInteraction(event) {

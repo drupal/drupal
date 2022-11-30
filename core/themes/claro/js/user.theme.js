@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (Drupal) {
   Object.assign(Drupal.user.password.css, {
     passwordWeak: 'is-weak',
@@ -14,20 +13,17 @@
     confirmEmpty: 'is-confirm-empty',
     confirmFilled: 'is-confirm-filled'
   });
-
   Drupal.theme.passwordConfirmMessage = function (_ref) {
     var confirmTitle = _ref.confirmTitle;
     var confirmTextWrapper = '<span class="password-match-message__text" data-drupal-selector="password-match-status-text"></span>';
     return "<div aria-live=\"polite\" aria-atomic=\"true\" class=\"password-match-message\" data-drupal-selector=\"password-confirm-message\">".concat(confirmTitle, " ").concat(confirmTextWrapper, "</div>");
   };
-
   Drupal.theme.passwordStrength = function (_ref2) {
     var strengthTitle = _ref2.strengthTitle;
     var strengthBar = '<div class="password-strength__bar" data-drupal-selector="password-strength-indicator"></div>';
     var strengthText = '<span class="password-strength__text" data-drupal-selector="password-strength-text"></span>';
     return "\n      <div class=\"password-strength\">\n        <div class=\"password-strength__track\" data-drupal-selector=\"password-strength-meter\">".concat(strengthBar, "</div>\n        <div aria-live=\"polite\" aria-atomic=\"true\" class=\"password-strength__title\">").concat(strengthTitle, " ").concat(strengthText, "</div>\n      </div>\n    ");
   };
-
   Drupal.theme.passwordSuggestions = function (_ref3, tips) {
     var hasWeaknesses = _ref3.hasWeaknesses;
     return "<div class=\"password-suggestions\">".concat(tips.length ? "".concat(hasWeaknesses, "<ul class=\"password-suggestions__tips\"><li class=\"password-suggestions__tip\">").concat(tips.join('</li><li class="password-suggestions__tip">'), "</li></ul>") : '', "</div>");

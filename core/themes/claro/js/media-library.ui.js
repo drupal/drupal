@@ -20,7 +20,6 @@
           return;
         }
         var $selectedCount = $buttonPane.find('.js-media-library-selected-count');
-
         if ($selectedCount.length) {
           moveCounter($selectedCount, $buttonPane);
         } else {

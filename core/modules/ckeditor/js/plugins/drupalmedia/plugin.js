@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (jQuery, Drupal, CKEDITOR) {
   function getFocusedWidget(editor) {
     var widget = editor.widgets.focused;
@@ -13,7 +12,6 @@
     }
     return null;
   }
-
   function linkCommandIntegrator(editor) {
     if (!editor.plugins.drupallink) {
       return;
@@ -36,7 +34,6 @@
       this.setState(widget.data.link ? CKEDITOR.TRISTATE_OFF : CKEDITOR.TRISTATE_DISABLED);
       evt.cancel();
     });
-
     if (editor.contextMenu) {
       editor.contextMenu.addListener(function () {
         var widget = getFocusedWidget(editor);
@@ -148,14 +145,12 @@
               editor.fire('unlockSnapshot');
             });
           }
-
           if (this.oldData) {
             Object.keys(this.oldData.attributes).forEach(function (attrName) {
               _this.element.removeAttribute(attrName);
             });
           }
           this.element.setAttributes(this.data.attributes);
-
           this.oldData = CKEDITOR.tools.clone(this.data);
         },
         downcast: function downcast() {
@@ -192,11 +187,9 @@
           if (this.element.findOne('.media-embed-error')) {
             return;
           }
-
           var isElementNode = function isElementNode(n) {
             return n.type === CKEDITOR.NODE_ELEMENT;
           };
-
           var embeddedMediaContainer = this.data.hasCaption ? this.element.findOne('figure') : this.element;
           var embeddedMedia = embeddedMediaContainer.getFirst(isElementNode);
           if (this.data.link) {
@@ -205,7 +198,6 @@
           embeddedMedia.setStyle('position', 'relative');
           var editButton = CKEDITOR.dom.element.createFromHtml(Drupal.theme('mediaEmbedEditButton'));
           embeddedMedia.getFirst().insertBeforeMe(editButton);
-
           var widget = this;
           this.element.findOne('.media-library-item__edit').on('click', function (event) {
             var saveCallback = function saveCallback(values) {
@@ -227,7 +219,6 @@
             };
             Drupal.ckeditor.openDialog(editor, Drupal.url("editor/dialog/media/".concat(editor.config.drupal.format)), widget.data, saveCallback, {});
           });
-
           this.element.findOne('.media-library-item__edit').on('keydown', function (event) {
             var returnKey = 13;
             var spaceBar = 32;

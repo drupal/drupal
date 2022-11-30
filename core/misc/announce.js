@@ -4,11 +4,9 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (Drupal, debounce) {
   var liveElement;
   var announcements = [];
-
   Drupal.behaviors.drupalAnnounce = {
     attach: function attach(context) {
       if (!liveElement) {
@@ -21,12 +19,10 @@
       }
     }
   };
-
   function announce() {
     var text = [];
     var priority = 'polite';
     var announcement;
-
     var il = announcements.length;
     for (var i = 0; i < il; i++) {
       announcement = announcements.pop();
@@ -43,7 +39,6 @@
       liveElement.setAttribute('aria-busy', 'false');
     }
   }
-
   Drupal.announce = function (text, priority) {
     announcements.push({
       text: text,

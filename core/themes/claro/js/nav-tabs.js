@@ -15,7 +15,6 @@
     var toggleOrder = function toggleOrder(reset) {
       var current = $active.index();
       var original = $active.data('original-order');
-
       if (original === 0 || reset === (current === original)) {
         return;
       }
@@ -40,7 +39,6 @@
           });
           $tab.attr('data-width', width);
         }
-
         var isHorizontal = $tab.attr('data-width') <= $tab.outerWidth();
         $tab.toggleClass('is-horizontal', isHorizontal);
         toggleOrder(isHorizontal);
@@ -54,8 +52,7 @@
       $item.attr('data-original-order', $item.index());
     });
     $tab.on('click.tabs', '[data-drupal-nav-tabs-trigger]', openMenu);
-    $(window)
-    .on('resize.tabs', Drupal.debounce(toggleCollapsed, 150)).trigger('resize.tabs');
+    $(window).on('resize.tabs', Drupal.debounce(toggleCollapsed, 150)).trigger('resize.tabs');
   }
   Drupal.behaviors.navTabs = {
     attach: function attach(context) {

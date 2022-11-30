@@ -4,18 +4,14 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal, drupalSettings, storage) {
   var currentUserID = parseInt(drupalSettings.user.uid, 10);
-
   var secondsIn30Days = 2592000;
   var thirtyDaysAgo = Math.round(new Date().getTime() / 1000) - secondsIn30Days;
-
   var embeddedLastReadTimestamps = false;
   if (drupalSettings.history && drupalSettings.history.lastReadTimestamps) {
     embeddedLastReadTimestamps = drupalSettings.history.lastReadTimestamps;
   }
-
   Drupal.history = {
     fetchTimestamps: function fetchTimestamps(nodeIDs, callback) {
       if (embeddedLastReadTimestamps) {
@@ -60,7 +56,6 @@
       if (contentTimestamp < thirtyDaysAgo) {
         return false;
       }
-
       if (embeddedLastReadTimestamps && embeddedLastReadTimestamps[nodeID]) {
         return contentTimestamp > parseInt(embeddedLastReadTimestamps[nodeID], 10);
       }

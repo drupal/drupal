@@ -4,23 +4,19 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal, debounce, once) {
   Drupal.behaviors.blockFilterByText = {
     attach: function attach(context, settings) {
       var $input = $(once('block-filter-text', 'input.block-filter-text'));
       var $table = $($input.attr('data-element'));
       var $filterRows;
-
       function filterBlockList(e) {
         var query = e.target.value.toLowerCase();
-
         function toggleBlockEntry(index, label) {
           var $row = $(label).parent().parent();
           var textMatch = label.textContent.toLowerCase().includes(query);
           $row.toggle(textMatch);
         }
-
         if (query.length >= 2) {
           $filterRows.each(toggleBlockEntry);
           Drupal.announce(Drupal.formatPlural($table.find('tr:visible').length - 1, '1 block is available in the modified list.', '@count blocks are available in the modified list.'));
@@ -36,7 +32,6 @@
       }
     }
   };
-
   Drupal.behaviors.blockHighlightPlacement = {
     attach: function attach(context, settings) {
       if (settings.blockPlacement && $('.js-block-placed').length) {

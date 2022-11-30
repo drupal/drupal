@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, CKEDITOR) {
   var convertToOffCanvasCss = function convertToOffCanvasCss(originalCss) {
     var selectorPrefix = '#drupal-off-canvas ';
@@ -12,36 +11,29 @@
     var css = originalCss.substring(originalCss.indexOf('*/') + 2).trim().replace(/}/g, "}".concat(selectorPrefix)).replace(/,/g, ",".concat(selectorPrefix)).replace(/url\(/g, skinPath);
     return "".concat(selectorPrefix).concat(css);
   };
-
   var insertCss = function insertCss(cssToInsert) {
     var offCanvasCss = document.createElement('style');
     offCanvasCss.innerHTML = cssToInsert;
     offCanvasCss.setAttribute('id', 'ckeditor-off-canvas-reset');
     document.body.appendChild(offCanvasCss);
   };
-
   var addCkeditorOffCanvasCss = function addCkeditorOffCanvasCss() {
     if (document.getElementById('ckeditor-off-canvas-reset')) {
       return;
     }
     CKEDITOR.skinName = CKEDITOR.skin.name;
-
     var editorCssPath = CKEDITOR.skin.getPath('editor');
     var dialogCssPath = CKEDITOR.skin.getPath('dialog');
-
     var storedOffCanvasCss = window.localStorage.getItem("Drupal.off-canvas.css.".concat(editorCssPath).concat(dialogCssPath));
-
     if (storedOffCanvasCss) {
       insertCss(storedOffCanvasCss);
       return;
     }
-
     $.when($.get(editorCssPath), $.get(dialogCssPath)).done(function (editorCss, dialogCss) {
       var offCanvasEditorCss = convertToOffCanvasCss(editorCss[0]);
       var offCanvasDialogCss = convertToOffCanvasCss(dialogCss[0]);
       var cssToInsert = "#drupal-off-canvas .cke_inner * {background: transparent;}\n          ".concat(offCanvasEditorCss, "\n          ").concat(offCanvasDialogCss);
       insertCss(cssToInsert);
-
       if (CKEDITOR.timestamp && editorCssPath.indexOf(CKEDITOR.timestamp) !== -1 && dialogCssPath.indexOf(CKEDITOR.timestamp) !== -1) {
         Object.keys(window.localStorage).forEach(function (key) {
           if (key.indexOf('Drupal.off-canvas.css.') === 0) {

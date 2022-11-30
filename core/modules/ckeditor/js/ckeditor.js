@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (Drupal, debounce, CKEDITOR, $, displace, AjaxCommands) {
   Drupal.editors.ckeditor = {
     attach: function attach(element, format) {
@@ -12,7 +11,6 @@
       format.editorSettings.drupal = {
         format: format.format
       };
-
       var label = $("label[for=".concat(element.getAttribute('id'), "]")).html();
       format.editorSettings.title = Drupal.t('Rich Text Editor, !label field', {
         '!label': label
@@ -37,7 +35,6 @@
         editor.on('change', debounce(function () {
           callback(editor.getData());
         }, 400));
-
         editor.on('mode', function () {
           var editable = editor.editable();
           if (!editable.isInline()) {
@@ -61,7 +58,6 @@
         format: format.format
       };
       var settings = $.extend(true, {}, format.editorSettings);
-
       if (mainToolbarId) {
         var settingsOverride = {
           extraPlugins: 'sharedspace',
@@ -70,7 +66,6 @@
             top: mainToolbarId
           }
         };
-
         var sourceButtonFound = false;
         for (var i = 0; !sourceButtonFound && i < settings.toolbar.length; i++) {
           if (settings.toolbar[i] !== '/') {
@@ -88,7 +83,6 @@
         settings.removePlugins += ",".concat(settingsOverride.removePlugins);
         settings.sharedSpaces = settingsOverride.sharedSpaces;
       }
-
       element.setAttribute('contentEditable', 'true');
       return !!CKEDITOR.inline(element, settings);
     },
@@ -109,15 +103,12 @@
       if (editor.elementMode === CKEDITOR.ELEMENT_MODE_REPLACE) {
         $target = $target.find('.cke_contents');
       }
-
       $target.css('position', 'relative').find('.ckeditor-dialog-loading').remove();
-
       var classes = dialogSettings.dialogClass ? dialogSettings.dialogClass.split(' ') : [];
       classes.push('ui-dialog--narrow');
       dialogSettings.dialogClass = classes.join(' ');
       dialogSettings.autoResize = window.matchMedia('(min-width: 600px)').matches;
       dialogSettings.width = 'auto';
-
       var $content = $("<div class=\"ckeditor-dialog-loading\"><span style=\"top: -40px;\" class=\"ckeditor-dialog-loading-link\">".concat(Drupal.t('Loading...'), "</span></div>"));
       $content.appendTo($target);
       var ckeditorAjaxDialog = Drupal.ajax({
@@ -133,21 +124,17 @@
         }
       });
       ckeditorAjaxDialog.execute();
-
       window.setTimeout(function () {
         $content.find('span').animate({
           top: '0px'
         });
       }, 1000);
-
       Drupal.ckeditor.saveCallback = saveCallback;
     }
   };
-
   $(window).on('dialogcreate', function (e, dialog, $element, settings) {
     $('.ui-dialog--narrow').css('zIndex', CKEDITOR.config.baseFloatZIndex + 1);
   });
-
   $(window).on('dialog:beforecreate', function (e, dialog, $element, settings) {
     $('.ckeditor-dialog-loading').animate({
       top: '-40px'
@@ -155,23 +142,19 @@
       $(this).remove();
     });
   });
-
   $(window).on('editor:dialogsave', function (e, values) {
     if (Drupal.ckeditor.saveCallback) {
       Drupal.ckeditor.saveCallback(values);
     }
   });
-
   $(window).on('dialog:afterclose', function (e, dialog, $element) {
     if (Drupal.ckeditor.saveCallback) {
       Drupal.ckeditor.saveCallback = null;
     }
   });
-
   $(document).on('drupalViewportOffsetChange', function () {
     CKEDITOR.config.autoGrow_maxHeight = 0.7 * (window.innerHeight - displace.offsets.top - displace.offsets.bottom);
   });
-
   function redirectTextareaFragmentToCKEditorInstance() {
     var hash = window.location.hash.substr(1);
     var element = document.getElementById(hash);
@@ -184,11 +167,8 @@
     }
   }
   $(window).on('hashchange.ckeditor', redirectTextareaFragmentToCKEditorInstance);
-
   CKEDITOR.config.autoGrow_onStartup = true;
-
   CKEDITOR.config.autoGrow_maxHeight = 0.7 * window.innerHeight;
-
   CKEDITOR.timestamp = drupalSettings.ckeditor.timestamp;
   if (AjaxCommands) {
     AjaxCommands.prototype.ckeditor_add_stylesheet = function (ajax, response, status) {

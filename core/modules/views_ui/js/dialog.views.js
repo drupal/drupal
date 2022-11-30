@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal, drupalSettings) {
   function handleDialogResize(e) {
     var $modal = $(e.currentTarget);
@@ -22,14 +21,12 @@
       $viewsOverride.each(function () {
         offset += $(this).outerHeight();
       });
-
       var scrollOffset = $scroll.outerHeight() - $scroll.height();
       $scroll.height(modalHeight - offset - scrollOffset);
       $modal.css('overflow', 'hidden');
       $scroll.css('overflow', 'auto');
     }
   }
-
   Drupal.behaviors.viewsModalContent = {
     attach: function attach(context) {
       $(once('viewsDialog', 'body')).on('dialogContentResize.viewsDialog', '.ui-dialog-content', handleDialogResize);

@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal) {
   Drupal.behaviors.menuUiChangeParentItems = {
     attach: function attach(context, settings) {
@@ -12,12 +11,10 @@
       if (menu.length) {
         var $menu = $(menu);
         Drupal.menuUiUpdateParentList();
-
         $menu.on('change', 'input', Drupal.menuUiUpdateParentList);
       }
     }
   };
-
   Drupal.menuUiUpdateParentList = function () {
     var $menu = $('#edit-menu');
     var values = [];
@@ -44,7 +41,6 @@
           $select.append(selectContents);
           totalOptions++;
         });
-
         $select.closest('div').toggle(totalOptions > 0).attr('hidden', totalOptions === 0);
       }
     });

@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (window, Drupal, drupalSettings) {
   window.addEventListener('load', function () {
     if (drupalSettings.history && drupalSettings.history.nodesToMarkAsRead) {

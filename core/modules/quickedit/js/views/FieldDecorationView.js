@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Backbone, Drupal) {
   Drupal.quickedit.FieldDecorationView = Backbone.View.extend({
     _widthAttributeIsEmpty: null,
@@ -102,18 +101,15 @@
     },
     prepareEdit: function prepareEdit() {
       this.$el.addClass('quickedit-editing');
-
       if (this.editorView.getQuickEditUISettings().popup) {
         this.$el.addClass('quickedit-editor-is-popup');
       }
     },
     stopEdit: function stopEdit() {
       this.$el.removeClass('quickedit-highlighted quickedit-editing');
-
       if (this.editorView.getQuickEditUISettings().popup) {
         this.$el.removeClass('quickedit-editor-is-popup');
       }
-
       $('.quickedit-candidate').addClass('quickedit-editable');
     },
     _pad: function _pad() {
@@ -121,16 +117,13 @@
         return;
       }
       var self = this;
-
       if (this.$el[0].style.width === '') {
         this._widthAttributeIsEmpty = true;
         this.$el.addClass('quickedit-animate-disable-width').css('width', this.$el.width());
       }
-
       var posProp = this._getPositionProperties(this.$el);
       setTimeout(function () {
         self.$el.removeClass('quickedit-animate-disable-width');
-
         self.$el.css({
           position: 'relative',
           top: "".concat(posProp.top - 5, "px"),
@@ -148,15 +141,12 @@
         return;
       }
       var self = this;
-
       if (this._widthAttributeIsEmpty) {
         this.$el.addClass('quickedit-animate-disable-width').css('width', '');
       }
-
       var posProp = this._getPositionProperties(this.$el);
       setTimeout(function () {
         self.$el.removeClass('quickedit-animate-disable-width');
-
         self.$el.css({
           position: 'relative',
           top: "".concat(posProp.top + 5, "px"),

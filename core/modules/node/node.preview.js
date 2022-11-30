@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal) {
   Drupal.behaviors.nodePreviewDestroyLinks = {
     attach: function attach(context) {
@@ -43,7 +42,6 @@
       }
     }
   };
-
   Drupal.behaviors.nodePreviewSwitchViewMode = {
     attach: function attach(context) {
       var autosubmit = once('autosubmit', '[data-drupal-autosubmit]', context);
@@ -54,7 +52,6 @@
       }
     }
   };
-
   Drupal.theme.nodePreviewModal = function () {
     return "<p>".concat(Drupal.t('Leaving the preview will cause unsaved changes to be lost. Are you sure you want to leave the preview?'), "</p><small class=\"description\">").concat(Drupal.t('CTRL+Left click will prevent this dialog from showing and proceed to the clicked link.'), "</small>");
   };

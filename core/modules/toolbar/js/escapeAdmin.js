@@ -4,16 +4,13 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal, drupalSettings) {
   var pathInfo = drupalSettings.path;
   var escapeAdminPath = sessionStorage.getItem('escapeAdminPath');
   var windowLocation = window.location;
-
   if (!pathInfo.currentPathIsAdmin && !/destination=/.test(windowLocation.search)) {
     sessionStorage.setItem('escapeAdminPath', windowLocation);
   }
-
   Drupal.behaviors.escapeAdmin = {
     attach: function attach() {
       var toolbarEscape = once('escapeAdmin', '[data-toolbar-escape-admin]');

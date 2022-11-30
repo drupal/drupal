@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal, drupalSettings) {
   Drupal.behaviors.machineName = {
     attach: function attach(context, settings) {
@@ -25,12 +24,10 @@
         var baseValue = e.target.value;
         var rx = new RegExp(options.replace_pattern, 'g');
         var expected = baseValue.toLowerCase().replace(rx, options.replace).substr(0, options.maxlength);
-
         if (xhr && xhr.readystate !== 4) {
           xhr.abort();
           xhr = null;
         }
-
         if (timeout) {
           clearTimeout(timeout);
           timeout = null;
@@ -66,7 +63,6 @@
           $suffix.append("<span class=\"machine-name-label\">".concat(options.label, ": </span>"));
         }
         $suffix.append($preview);
-
         if ($target.is(':disabled')) {
           return;
         }
@@ -78,21 +74,16 @@
           $preview: $preview,
           options: options
         };
-
         if (machine === '' && $source[0].value !== '') {
           self.transliterate($source[0].value, options).done(function (machineName) {
             self.showMachineName(machineName.substr(0, options.maxlength), eventData);
           });
         }
-
         var $link = $("<span class=\"admin-link\"><button type=\"button\" class=\"link\">".concat(Drupal.t('Edit'), "</button></span>")).on('click', eventData, clickEditHandler);
         $suffix.append($link);
-
         if ($target[0].value === '') {
-          $source.on('formUpdated.machineName', eventData, machineNameHandler)
-          .trigger('formUpdated.machineName');
+          $source.on('formUpdated.machineName', eventData, machineNameHandler).trigger('formUpdated.machineName');
         }
-
         $target.on('invalid', eventData, clickEditHandler);
       });
     },

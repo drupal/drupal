@@ -4,12 +4,10 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (Drupal, once, tabbable) {
   function isNavOpen(navWrapper) {
     return navWrapper.classList.contains('is-active');
   }
-
   function toggleNav(props, state) {
     var value = !!state;
     props.navButton.setAttribute('aria-expanded', value);
@@ -23,14 +21,12 @@
       props.navWrapper.classList.remove('is-active');
     }
   }
-
   function init(props) {
     props.navButton.setAttribute('aria-controls', props.navWrapperId);
     props.navButton.setAttribute('aria-expanded', 'false');
     props.navButton.addEventListener('click', function () {
       toggleNav(props, !isNavOpen(props.navWrapper));
     });
-
     document.addEventListener('keyup', function (e) {
       if (e.key === 'Escape' || e.key === 'Esc') {
         if (props.olivero.areAnySubNavsOpen()) {
@@ -46,7 +42,6 @@
     props.overlay.addEventListener('touchstart', function () {
       toggleNav(props, false);
     });
-
     props.header.addEventListener('keydown', function (e) {
       if (e.key === 'Tab' && isNavOpen(props.navWrapper)) {
         var tabbableNavElements = tabbable.tabbable(props.navWrapper);
@@ -64,24 +59,20 @@
         }
       }
     });
-
     window.addEventListener('resize', function () {
       if (props.olivero.isDesktopNav()) {
         toggleNav(props, false);
         props.body.classList.remove('is-overlay-active');
         props.body.classList.remove('is-fixed');
       }
-
       Drupal.olivero.closeAllSubNav();
     });
-
     props.navWrapper.addEventListener('click', function (e) {
       if (e.target.matches("[href*=\"".concat(window.location.pathname, "#\"], [href*=\"").concat(window.location.pathname, "#\"] *, [href^=\"#\"], [href^=\"#\"] *"))) {
         toggleNav(props, false);
       }
     });
   }
-
   Drupal.behaviors.oliveroNavigation = {
     attach: function attach(context) {
       var headerId = 'header';

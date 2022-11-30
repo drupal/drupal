@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 Drupal.t("Standard Call t");
 Drupal.t("Whitespace Call t");
 Drupal.t('Single Quote t');

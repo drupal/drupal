@@ -4,14 +4,12 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (Drupal) {
   Drupal.theme.passwordConfirmMessage = function (_ref) {
     var confirmTitle = _ref.confirmTitle;
     var confirmTextWrapper = '<span data-drupal-selector="password-match-status-text"></span>';
     return "<div aria-live=\"polite\" aria-atomic=\"true\" class=\"password-confirm-message js-password-confirm-message\" data-drupal-selector=\"password-confirm-message\">".concat(confirmTitle, " ").concat(confirmTextWrapper, "</div>");
   };
-
   Drupal.theme.passwordStrength = function (_ref2) {
     var strengthTitle = _ref2.strengthTitle;
     var strengthIndicator = '<div class="password-strength__indicator js-password-strength__indicator" data-drupal-selector="password-strength-indicator"></div>';

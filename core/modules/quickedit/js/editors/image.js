@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, _, Drupal) {
   Drupal.quickedit.editors.image = Drupal.quickedit.EditorView.extend({
     initialize: function initialize(options) {
@@ -46,9 +45,7 @@
         case 'active':
           {
             var self = this;
-
             this.$el.addClass('quickedit-image-element');
-
             var $dropzone = this.renderDropzone('upload', Drupal.t('Drop file here or click to upload'));
             $dropzone.on('dragenter', function (e) {
               $(this).addClass('hover');
@@ -69,7 +66,6 @@
                 }
               });
             });
-
             $dropzone.on('dragover dragenter dragleave drop click', function (e) {
               e.preventDefault();
               e.stopPropagation();
@@ -96,13 +92,10 @@
       this.renderDropzone('upload loading', Drupal.t('Uploading <i>@file</i>…', {
         '@file': file.name
       }));
-
       var fieldID = this.fieldModel.get('fieldID');
       var url = Drupal.quickedit.util.buildUrl(fieldID, Drupal.url('quickedit/image/upload/!entity_type/!id/!field_name/!langcode/!view_mode'));
-
       var data = new FormData();
       data.append('files[image]', file);
-
       var self = this;
       this.ajax({
         type: 'POST',
@@ -113,7 +106,6 @@
           self.fieldModel.set('state', 'changed');
           self.fieldModel.get('entity').set('inTempStore', true);
           self.removeValidationErrors();
-
           var $content = $(response.html).closest('[data-quickedit-field-id]').children();
           $el.empty().append($content);
         }
@@ -132,7 +124,6 @@
       };
       var ajaxOptions = $.extend(defaultOptions, options);
       var successCallback = ajaxOptions.success;
-
       ajaxOptions.success = function (response) {
         if (response.main_error) {
           this.renderDropzone('error', response.main_error);

@@ -4,13 +4,11 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal, drupalSettings, debounce, displace) {
   drupalSettings.dialog = $.extend({
     autoResize: true,
     maxHeight: '95%'
   }, drupalSettings.dialog);
-
   function resetPosition(options) {
     var offsets = displace.offsets;
     var left = offsets.left - offsets.right;
@@ -23,7 +21,6 @@
     };
     return options;
   }
-
   function resetSize(event) {
     var positionOptions = ['width', 'height', 'minWidth', 'minHeight', 'maxHeight', 'maxWidth', 'position'];
     var adjustedOptions = {};

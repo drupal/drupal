@@ -4,14 +4,12 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal) {
   Drupal.behaviors.ckeditor5StyleSettingsSummary = {
     attach: function attach() {
       $('[data-ckeditor5-plugin-id="ckeditor5_style"]').drupalSetSummary(function (context) {
         var stylesElement = document.querySelector('[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-style-styles"]');
-        var styleCount = stylesElement.value.split('\n')
-        .filter(function (line) {
+        var styleCount = stylesElement.value.split('\n').filter(function (line) {
           return line.trim().length >= 5;
         }).length;
         if (styleCount === 0) {

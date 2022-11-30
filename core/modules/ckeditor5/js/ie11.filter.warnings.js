@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (Drupal, once) {
   Drupal.behaviors.ckEditor5warn = {
     attach: function attach() {
@@ -12,12 +11,10 @@
       var editorSelect = once('editor-ie11-warning', '[data-drupal-selector="filter-format-edit-form"] [data-drupal-selector="edit-editor-editor"], [data-drupal-selector="filter-format-add-form"] [data-drupal-selector="edit-editor-editor"]');
       if (typeof editorSelect[0] !== 'undefined') {
         var select = editorSelect[0];
-
         var selectMessageContainer = document.createElement('div');
         select.parentNode.after(selectMessageContainer, select);
         var selectMessages = new Drupal.Message(selectMessageContainer);
         var editorSettings = document.querySelector('#editor-settings-wrapper');
-
         var addIE11Warning = function addIE11Warning() {
           selectMessages.add(Drupal.t('CKEditor 5 is not compatible with Internet Explorer. Text fields using CKEditor 5 will fall back to plain HTML editing without CKEditor for users of Internet Explorer.'), {
             type: 'warning',
@@ -33,7 +30,6 @@
             editorSettings.hidden = true;
           }
         };
-
         var updateWarningStatus = function updateWarningStatus() {
           if (select.value === 'ckeditor5' && !select.hasAttribute('data-error-switching-to-ckeditor5')) {
             addIE11Warning();
@@ -47,7 +43,6 @@
           }
         };
         updateWarningStatus();
-
         var editorSelectObserver = new MutationObserver(function (mutations) {
           for (var i = 0; i < mutations.length; i++) {
             var switchToCKEditor5Complete = mutations[i].type === 'attributes' && mutations[i].attributeName === 'disabled' && !select.disabled;

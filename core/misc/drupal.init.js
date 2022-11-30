@@ -7,9 +7,7 @@
 if (window.jQuery) {
   jQuery.noConflict();
 }
-
 document.documentElement.className += ' js';
-
 (function (Drupal, drupalSettings) {
   var domReady = function domReady(callback) {
     var listener = function listener() {
@@ -22,7 +20,6 @@ document.documentElement.className += ' js';
       document.addEventListener('DOMContentLoaded', listener);
     }
   };
-
   domReady(function () {
     Drupal.attachBehaviors(document, drupalSettings);
   });

@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, _, Backbone, Drupal) {
   Drupal.quickedit.FieldToolbarView = Backbone.View.extend({
     $editedElement: null,
@@ -13,9 +12,7 @@
     initialize: function initialize(options) {
       this.$editedElement = options.$editedElement;
       this.editorView = options.editorView;
-
       this.$root = this.$el;
-
       this._id = "quickedit-toolbar-for-".concat(this.model.id.replace(/[/[\]]/g, '_'));
       this.listenTo(this.model, 'change:state', this.stateChange);
     },
@@ -23,7 +20,6 @@
       this.setElement($(Drupal.theme('quickeditFieldToolbar', {
         id: this._id
       })));
-
       this.$el.prependTo(this.$root);
       return this;
     },
@@ -72,7 +68,6 @@
         classes: ['wysiwyg-main', 'quickedit-animate-slow', 'quickedit-animate-invisible', 'quickedit-animate-delay-veryfast'],
         buttons: []
       }));
-
       this.show('wysiwyg-floated');
       this.show('wysiwyg-main');
     },

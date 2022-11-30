@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (Drupal) {
   Drupal.theme.mediaEmbedEditButton = function () {
     return "<button class=\"media-library-item__edit\">".concat(Drupal.t('Edit media'), "</button>");

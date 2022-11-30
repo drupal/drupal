@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, _ref, _ref2) {
   var behaviors = _ref.behaviors;
   var testMessages = _ref2.testMessages;
@@ -12,7 +11,6 @@
   testMessages.types.forEach(function (type) {
     indexes[type] = [];
   });
-
   var messageObjects = {
     default: {
       zone: new Drupal.Message(),
@@ -27,7 +25,6 @@
       indexes: indexes
     };
   });
-
   behaviors.js_message_test = {
     attach: function attach() {
       $(once('messages-details', '[data-drupal-messages-area]')).on('click', '[data-action]', function (e) {

@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, _, Backbone, Drupal, debounce, Popper) {
   Drupal.quickedit.EntityToolbarView = Backbone.View.extend({
     _fieldToolbarRoot: null,
@@ -20,23 +19,18 @@
       var that = this;
       this.appModel = options.appModel;
       this.$entity = $(this.model.get('el'));
-
       this.listenTo(this.model, 'change:isActive change:isDirty change:state', this.render);
       this.listenTo(this.appModel, 'change:highlightedField change:activeField', this.render);
       this.listenTo(this.model.get('fields'), 'change:state', this.fieldStateChange);
-
       $(window).on('resize.quickedit scroll.quickedit drupalViewportOffsetChange.quickedit', debounce($.proxy(this.windowChangeHandler, this), 150));
-
       $(document).on('drupalViewportOffsetChange.quickedit', function (event, offsets) {
         if (that.$fence) {
           that.$fence.css(offsets);
         }
       });
-
       var $toolbar = this.buildToolbarEl();
       this.setElement($toolbar);
       this._fieldToolbarRoot = $toolbar.find('.quickedit-toolbar-field').get(0);
-
       this.render();
     },
     render: function render() {
@@ -49,11 +43,9 @@
           this.$fence = $(Drupal.theme('quickeditEntityToolbarFence')).css(Drupal.displace()).appendTo($body);
         }
         this.label();
-
         this.show('ops');
         this.position();
       }
-
       var $button = this.$el.find('.quickedit-button.action-save');
       var isDirty = this.model.get('isDirty');
       switch (this.model.get('state')) {
@@ -61,7 +53,6 @@
           $button[0].textContent = Drupal.t('Save');
           $button.removeClass('action-saving icon-throbber icon-end').removeAttr('disabled').attr('aria-hidden', !isDirty);
           break;
-
         case 'committing':
           $button[0].textContent = Drupal.t('Saving');
           $button.addClass('action-saving icon-throbber icon-end').attr('disabled', 'disabled');
@@ -74,7 +65,6 @@
     },
     remove: function remove() {
       this.$fence.remove();
-
       $(window).off('resize.quickedit scroll.quickedit drupalViewportOffsetChange.quickedit');
       $(document).off('drupalViewportOffsetChange.quickedit');
       Backbone.View.prototype.remove.call(this);
@@ -141,7 +131,6 @@
         }
         check++;
       } while (!of);
-
       function refinePopper(_ref) {
         var state = _ref.state;
         var isBelow = state.placement.split('-')[0] === 'bottom';
@@ -191,14 +180,12 @@
             that.popper.forceUpdate();
           }
         }
-        that.$el
-        .css({
+        that.$el.css({
           'max-width': document.documentElement.clientWidth < 450 ? document.documentElement.clientWidth : 450,
           'min-width': document.documentElement.clientWidth < 240 ? document.documentElement.clientWidth : 240,
           width: '100%'
         });
       }
-
       this.timer = setTimeout(function () {
         _.defer(positionToolbar);
       }, delay);
@@ -219,8 +206,7 @@
       var $toolbar = $(Drupal.theme('quickeditEntityToolbar', {
         id: 'quickedit-entity-toolbar'
       }));
-      $toolbar.find('.quickedit-toolbar-entity')
-      .prepend(Drupal.theme('quickeditToolgroup', {
+      $toolbar.find('.quickedit-toolbar-entity').prepend(Drupal.theme('quickeditToolgroup', {
         classes: ['ops'],
         buttons: [{
           label: Drupal.t('Save'),
@@ -234,7 +220,6 @@
           classes: 'action-cancel quickedit-button icon icon-close icon-only'
         }]
       }));
-
       $toolbar.css({
         left: this.$entity.offset().left,
         top: this.$entity.offset().top
@@ -247,7 +232,6 @@
     label: function label() {
       var label = '';
       var entityLabel = this.model.get('label');
-
       var activeField = Drupal.quickedit.app.model.get('activeField');
       var activeFieldLabel = activeField && activeField.get('metadata').label;
       var highlightedField = Drupal.quickedit.app.model.get('highlightedField');

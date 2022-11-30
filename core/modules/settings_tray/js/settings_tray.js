@@ -4,37 +4,30 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal) {
   var blockConfigureSelector = '[data-settings-tray-edit]';
   var toggleEditSelector = '[data-drupal-settingstray="toggle"]';
   var itemsToToggleSelector = '[data-off-canvas-main-canvas], #toolbar-bar, [data-drupal-settingstray="editable"] a, [data-drupal-settingstray="editable"] button';
   var contextualItemsSelector = '[data-contextual-id] a, [data-contextual-id] button';
   var quickEditItemSelector = '[data-quickedit-entity-id]';
-
   function preventClick(event) {
     if ($(event.target).closest('.contextual-links').length) {
       return;
     }
     event.preventDefault();
   }
-
   function closeToolbarTrays() {
     $(Drupal.toolbar.models.toolbarModel.get('activeTab')).trigger('click');
   }
-
   function disableQuickEdit() {
     $('.quickedit-toolbar button.action-cancel').trigger('click');
   }
-
   function closeOffCanvas() {
     $('.ui-dialog-off-canvas .ui-dialog-titlebar-close').trigger('click');
   }
-
   function getItemsToToggle() {
     return $(itemsToToggleSelector).not(contextualItemsSelector);
   }
-
   function setEditModeState(editMode) {
     if (!document.querySelector('[data-off-canvas-main-canvas]')) {
       throw new Error('data-off-canvas-main-canvas is missing from settings-tray-page-wrapper.html.twig');
@@ -67,8 +60,7 @@
           $(e.currentTarget).find('li.quickedit a').trigger('click');
         });
       }
-    }
-    else {
+    } else {
       $editables = $(once.remove('settingstray', '[data-drupal-settingstray="editable"]'));
       if ($editables.length) {
         document.querySelector('[data-off-canvas-main-canvas]').removeEventListener('click', preventClick, true);
@@ -84,21 +76,16 @@
     getItemsToToggle().toggleClass('js-settings-tray-edit-mode', editMode);
     $('.edit-mode-inactive').toggleClass('visually-hidden', editMode);
   }
-
   function isInEditMode() {
     return $('#toolbar-bar').hasClass('js-settings-tray-edit-mode');
   }
-
   function toggleEditMode() {
     setEditModeState(!isInEditMode());
   }
-
   function prepareAjaxLinks() {
-    Drupal.ajax.instances
-    .filter(function (instance) {
+    Drupal.ajax.instances.filter(function (instance) {
       return instance && $(instance.element).attr('data-dialog-renderer') === 'off_canvas';
-    })
-    .forEach(function (instance) {
+    }).forEach(function (instance) {
       if (!instance.options.data.hasOwnProperty('dialogOptions')) {
         instance.options.data.dialogOptions = {};
       }
@@ -108,17 +95,14 @@
       };
     });
   }
-
   $(document).on('drupalContextualLinkAdded', function (event, data) {
     prepareAjaxLinks();
-
     once('settings_tray.edit_mode_init', 'body').forEach(function () {
       var editMode = localStorage.getItem('Drupal.contextualToolbar.isViewing') === 'false';
       if (editMode) {
         setEditModeState(true);
       }
     });
-
     data.$el.find(blockConfigureSelector).on('click.settingstray', function () {
       if (!isInEditMode()) {
         $(toggleEditSelector).trigger('click').trigger('click.settings_tray');
@@ -132,13 +116,11 @@
       toggleEditMode();
     }
   });
-
   Drupal.behaviors.toggleEditMode = {
     attach: function attach() {
       $(once('settingstray', toggleEditSelector)).on('click.settingstray', toggleEditMode);
     }
   };
-
   $(window).on({
     'dialog:beforecreate': function dialogBeforecreate(event, dialog, $element, settings) {
       if ($element.is('#drupal-off-canvas')) {

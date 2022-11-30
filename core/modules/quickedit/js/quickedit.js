@@ -4,27 +4,19 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, _, Backbone, Drupal, drupalSettings, JSON, storage) {
-  var options = $.extend(drupalSettings.quickedit,
-  {
+  var options = $.extend(drupalSettings.quickedit, {
     strings: {
       quickEdit: Drupal.t('Quick edit')
     }
   });
-
   var fieldsMetadataQueue = [];
-
   var fieldsAvailableQueue = [];
-
   var contextualLinksQueue = [];
-
   var entityInstancesTracker = {};
-
   function initQuickEdit(bodyElement) {
     Drupal.quickedit.collections.entities = new Drupal.quickedit.EntityCollection();
     Drupal.quickedit.collections.fields = new Drupal.quickedit.FieldCollection();
-
     Drupal.quickedit.app = new Drupal.quickedit.AppView({
       el: bodyElement,
       model: new Drupal.quickedit.AppModel(),
@@ -32,7 +24,6 @@
       fieldsCollection: Drupal.quickedit.collections.fields
     });
   }
-
   function processEntity(entityElement) {
     var entityID = entityElement.getAttribute('data-quickedit-entity-id');
     if (!entityInstancesTracker.hasOwnProperty(entityID)) {
@@ -40,18 +31,15 @@
     } else {
       entityInstancesTracker[entityID]++;
     }
-
     var entityInstanceID = entityInstancesTracker[entityID];
     entityElement.setAttribute('data-quickedit-entity-instance-id', entityInstanceID);
   }
-
   function initializeField(fieldElement, fieldID, entityID, entityInstanceID) {
     var entity = Drupal.quickedit.collections.entities.findWhere({
       entityID: entityID,
       entityInstanceID: entityInstanceID
     });
     $(fieldElement).addClass('quickedit-field');
-
     var field = new Drupal.quickedit.FieldModel({
       el: fieldElement,
       fieldID: fieldID,
@@ -60,10 +48,8 @@
       metadata: Drupal.quickedit.metadata.get(fieldID),
       acceptStateChange: _.bind(Drupal.quickedit.app.acceptEditorStateChange, Drupal.quickedit.app)
     });
-
     Drupal.quickedit.collections.fields.add(field);
   }
-
   function loadMissingEditors(callback) {
     var loadedEditors = _.keys(Drupal.quickedit.editors);
     var missingEditors = [];
@@ -79,7 +65,6 @@
       callback();
       return;
     }
-
     var loadEditorsAjax = Drupal.ajax({
       url: Drupal.url('quickedit/attachments'),
       submit: {
@@ -88,7 +73,6 @@
     });
     loadEditorsAjax.execute().then(callback);
   }
-
   function initializeEntityContextualLink(contextualLink) {
     var metadata = Drupal.quickedit.metadata;
     function hasFieldWithPermission(fieldIDs) {
@@ -100,17 +84,14 @@
       }
       return false;
     }
-
     function allMetadataExists(fieldIDs) {
       return fieldIDs.length === metadata.intersection(fieldIDs).length;
     }
-
     var fields = _.where(fieldsAvailableQueue, {
       entityID: contextualLink.entityID,
       entityInstanceID: contextualLink.entityInstanceID
     });
     var fieldIDs = _.pluck(fields, 'fieldID');
-
     if (fieldIDs.length === 0) {
       return false;
     }
@@ -128,12 +109,10 @@
         model: entityModel
       });
       entityModel.set('entityDecorationView', entityDecorationView);
-
       _.each(fields, function (field) {
         initializeField(field.el, field.fieldID, contextualLink.entityID, contextualLink.entityInstanceID);
       });
       fieldsAvailableQueue = _.difference(fieldsAvailableQueue, fields);
-
       var initContextualLink = _.once(function () {
         var $links = $(contextualLink.el).find('.contextual-links');
         var contextualLinkView = new Drupal.quickedit.ContextualLinkView($.extend({
@@ -143,7 +122,6 @@
         }, options));
         entityModel.set('contextualLinkView', contextualLinkView);
       });
-
       loadMissingEditors(initContextualLink);
       return true;
     }
@@ -152,29 +130,24 @@
     }
     return false;
   }
-
   function extractEntityID(fieldID) {
     return fieldID.split('/').slice(0, 2).join('/');
   }
-
   function processField(fieldElement) {
     var metadata = Drupal.quickedit.metadata;
     var fieldID = fieldElement.getAttribute('data-quickedit-field-id');
     var entityID = extractEntityID(fieldID);
     var entityElementSelector = "[data-quickedit-entity-id=\"".concat(entityID, "\"]");
     var $entityElement = $(entityElementSelector);
-
     if (!$entityElement.length) {
       throw new Error("Quick Edit could not associate the rendered entity field markup (with [data-quickedit-field-id=\"".concat(fieldID, "\"]) with the corresponding rendered entity markup: no parent DOM node found with [data-quickedit-entity-id=\"").concat(entityID, "\"]. This is typically caused by the theme's template for this entity type forgetting to print the attributes."));
     }
     var entityElement = $(fieldElement).closest($entityElement);
-
     if (entityElement.length === 0) {
       var $lowestCommonParent = $entityElement.parents().has(fieldElement).first();
       entityElement = $lowestCommonParent.find($entityElement);
     }
     var entityInstanceID = entityElement.get(0).getAttribute('data-quickedit-entity-instance-id');
-
     if (!metadata.has(fieldID)) {
       fieldsMetadataQueue.push({
         el: fieldElement,
@@ -187,14 +160,12 @@
     if (metadata.get(fieldID, 'access') !== true) {
       return;
     }
-
     if (Drupal.quickedit.collections.entities.findWhere({
       entityID: entityID,
       entityInstanceID: entityInstanceID
     })) {
       initializeField(fieldElement, fieldID, entityID, entityInstanceID);
-    }
-    else {
+    } else {
       fieldsAvailableQueue.push({
         el: fieldElement,
         fieldID: fieldID,
@@ -203,7 +174,6 @@
       });
     }
   }
-
   function deleteContainedModelsAndQueues($context) {
     $context.find('[data-quickedit-entity-id]').addBack('[data-quickedit-entity-id]').each(function (index, entityElement) {
       var entityModel = Drupal.quickedit.collections.entities.findWhere({
@@ -216,7 +186,6 @@
         entityModel.get('entityDecorationView').remove();
         entityModel.destroy();
       }
-
       function hasOtherRegion(contextualLink) {
         return contextualLink.region !== entityElement;
       }
@@ -226,7 +195,6 @@
       Drupal.quickedit.collections.fields.chain().filter(function (fieldModel) {
         return fieldModel.get('el') === fieldElement;
       }).invoke('destroy');
-
       function hasOtherFieldElement(field) {
         return field.el !== fieldElement;
       }
@@ -234,7 +202,6 @@
       fieldsAvailableQueue = _.filter(fieldsAvailableQueue, hasOtherFieldElement);
     });
   }
-
   function fetchMissingMetadata(callback) {
     if (fieldsMetadataQueue.length) {
       var fieldIDs = _.pluck(fieldsMetadataQueue, 'fieldID');
@@ -259,27 +226,20 @@
       });
     }
   }
-
   Drupal.behaviors.quickedit = {
     attach: function attach(context) {
       once('quickedit-init', 'body').forEach(initQuickEdit);
-
       var fields = once('quickedit', '[data-quickedit-field-id]', context);
       if (fields.length === 0) {
         return;
       }
-
       once('quickedit', '[data-quickedit-entity-id]', context).forEach(processEntity);
-
       fields.forEach(processField);
-
       contextualLinksQueue = _.filter(contextualLinksQueue, function (contextualLink) {
         return !initializeEntityContextualLink(contextualLink);
       });
-
       fetchMissingMetadata(function (fieldElementsWithFreshMetadata) {
         _.each(fieldElementsWithFreshMetadata, processField);
-
         contextualLinksQueue = _.filter(contextualLinksQueue, function (contextualLink) {
           return !initializeEntityContextualLink(contextualLink);
         });
@@ -291,7 +251,6 @@
       }
     }
   };
-
   Drupal.quickedit = {
     app: null,
     collections: {
@@ -323,7 +282,6 @@
       }
     }
   };
-
   var permissionsHashKey = Drupal.quickedit.metadata._prefixFieldID('permissionsHash');
   var permissionsHashValue = storage.getItem(permissionsHashKey);
   var permissionsHash = drupalSettings.user.permissionsHash;
@@ -337,7 +295,6 @@
     }
     storage.setItem(permissionsHashKey, permissionsHash);
   }
-
   $(document).on('drupalContextualLinkAdded', function (event, data) {
     if (data.$region.is('[data-quickedit-entity-id]')) {
       if (!data.$region.is('[data-quickedit-entity-instance-id]')) {

@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, _, Drupal) {
   Drupal.quickedit.editors.plain_text = Drupal.quickedit.EditorView.extend({
     $textElement: null,
@@ -12,12 +11,10 @@
       Drupal.quickedit.EditorView.prototype.initialize.call(this, options);
       var editorModel = this.model;
       var fieldModel = this.fieldModel;
-
       var $fieldItems = this.$el.find('.quickedit-field');
       var $textElement = $fieldItems.length ? $fieldItems.eq(0) : this.$el;
       this.$textElement = $textElement;
       editorModel.set('originalValue', this.$textElement[0].textContent.trim());
-
       var previousText = editorModel.get('originalValue');
       $textElement.on('keyup paste', function (event) {
         var currentText = $textElement[0].textContent.trim();

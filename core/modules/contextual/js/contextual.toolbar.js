@@ -4,14 +4,12 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal, Backbone) {
   var strings = {
     tabbingReleased: Drupal.t('Tabbing is no longer constrained by the Contextual module.'),
     tabbingConstrained: Drupal.t('Tabbing is constrained to a set of @contextualsCount and the edit mode toggle.'),
     pressEsc: Drupal.t('Press the esc key to exit.')
   };
-
   function initContextualToolbar(context) {
     if (!Drupal.contextual || !Drupal.contextual.collection) {
       return;
@@ -30,7 +28,6 @@
     new contextualToolbar.VisualView(viewOptions);
     new contextualToolbar.AuralView(viewOptions);
   }
-
   Drupal.behaviors.contextualToolbar = {
     attach: function attach(context) {
       if (once('contextualToolbar-init', 'body').length) {
@@ -38,7 +35,6 @@
       }
     }
   };
-
   Drupal.contextualToolbar = {
     model: null
   };

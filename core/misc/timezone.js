@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal) {
   Drupal.behaviors.setTimezone = {
     attach: function attach(context, settings) {
@@ -20,10 +19,8 @@
         var dateString = Date();
         var matches = dateString.match(/\(([A-Z]{3,5})\)/);
         var abbreviation = matches ? matches[1] : 0;
-
         var dateNow = new Date();
         var offsetNow = dateNow.getTimezoneOffset() * -60;
-
         var dateJan = new Date(dateNow.getFullYear(), 0, 1, 12, 0, 0, 0);
         var dateJul = new Date(dateNow.getFullYear(), 6, 1, 12, 0, 0, 0);
         var offsetJan = dateJan.getTimezoneOffset() * -60;
@@ -31,14 +28,11 @@
         var isDaylightSavingTime;
         if (offsetJan === offsetJul) {
           isDaylightSavingTime = '';
-        }
-        else if (Math.max(offsetJan, offsetJul) === offsetNow) {
+        } else if (Math.max(offsetJan, offsetJul) === offsetNow) {
           isDaylightSavingTime = 1;
-        }
-        else {
+        } else {
           isDaylightSavingTime = 0;
         }
-
         var path = "system/timezone/".concat(abbreviation, "/").concat(offsetNow, "/").concat(isDaylightSavingTime);
         $.ajax({
           async: false,

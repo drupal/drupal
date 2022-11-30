@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal) {
   Drupal.behaviors.textSummary = {
     attach: function attach(context, settings) {
@@ -14,18 +13,15 @@
         var $summaryLabel = $summary.find('label').eq(0);
         var $full = $widget.children('.js-form-type-textarea');
         var $fullLabel = $full.find('label').eq(0);
-
         if ($fullLabel.length === 0) {
           $fullLabel = $('<label></label>').prependTo($full);
         }
-
         if ($fullLabel.hasClass('visually-hidden')) {
           $fullLabel.html(function (index, oldHtml) {
             return "<span class=\"visually-hidden\">".concat(oldHtml, "</span>");
           });
           $fullLabel.removeClass('visually-hidden');
         }
-
         var $link = $("<span class=\"field-edit-link\"> (<button type=\"button\" class=\"link link-edit-summary\">".concat(Drupal.t('Hide summary'), "</button>)</span>"));
         var $button = $link.find('button');
         var toggleClick = true;
@@ -42,7 +38,6 @@
           e.preventDefault();
           toggleClick = !toggleClick;
         }).appendTo($summaryLabel);
-
         if (summary.value === '') {
           $link.trigger('click');
         }

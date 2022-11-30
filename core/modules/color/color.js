@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal) {
   Drupal.behaviors.color = {
     attach: function attach(context, settings) {
@@ -19,34 +18,26 @@
       var hooks = [];
       var locks = [];
       var focused = null;
-
       $(once('color', $('<div class="color-placeholder"></div>'))).prependTo(form);
       var farb = $.farbtastic('.color-placeholder');
-
       var reference = settings.color.reference;
       Object.keys(reference || {}).forEach(function (color) {
         reference[color] = farb.RGBToHSL(farb.unpack(reference[color]));
       });
-
       var height = [];
       var width = [];
-
       function preview() {
         Drupal.color.callback(context, settings, form, farb, height, width);
       }
-
       function resetScheme() {
         form.find('#edit-scheme').each(function () {
           this.selectedIndex = this.options.length - 1;
         });
       }
-
       function shiftColor(given, ref1, ref2) {
         var d;
         given = farb.RGBToHSL(farb.unpack(given));
-
         given[0] += ref2[0] - ref1[0];
-
         if (ref1[1] === 0 || ref2[1] === 0) {
           given[1] = ref2[1];
         } else {
@@ -57,7 +48,6 @@
             given[1] = 1 - (1 - given[1]) * d;
           }
         }
-
         if (ref1[2] === 0 || ref2[2] === 0) {
           given[2] = ref2[2];
         } else {
@@ -70,17 +60,14 @@
         }
         return farb.pack(farb.HSLToRGB(given));
       }
-
       function callback(input, color, propagate, colorScheme) {
         var matched;
         $(input).css({
           backgroundColor: color,
           color: farb.RGBToHSL(farb.unpack(color))[2] > 0.5 ? '#000' : '#fff'
         });
-
         if (input.value && input.value !== color) {
           input.value = color;
-
           if (propagate) {
             i = input.i;
             for (j = i + 1;; ++j) {
@@ -97,16 +84,13 @@
               matched = shiftColor(color, reference[input.key], reference[inputs[j].key]);
               callback(inputs[j], matched, false);
             }
-
             preview();
           }
-
           if (!colorScheme) {
             resetScheme();
           }
         }
       }
-
       Object.keys(settings.gradients || {}).forEach(function (i) {
         $(once('color', '.color-preview')).append("<div id=\"gradient-".concat(i, "\"></div>"));
         var gradient = $(".color-preview #gradient-".concat(i));
@@ -116,7 +100,6 @@
           gradient.append('<div class="gradient-line"></div>');
         }
       });
-
       form.find('#edit-scheme').on('change', function () {
         var schemes = settings.color.schemes;
         var colorScheme = this.options[this.selectedIndex].value;
@@ -128,13 +111,11 @@
           preview();
         }
       });
-
       function focus(e) {
         var input = e.target;
         if (focused) {
           $(focused).off('keyup', farb.updateValue).off('keyup', preview).off('keyup', resetScheme).parent().removeClass('item-selected');
         }
-
         focused = input;
         farb.linkTo(function (color) {
           callback(input, color, true, false);
@@ -142,12 +123,9 @@
         farb.setColor(input.value);
         $(focused).on('keyup', farb.updateValue).on('keyup', preview).on('keyup', resetScheme).parent().addClass('item-selected');
       }
-
       form.find('.js-color-palette input.form-text').each(function () {
         this.key = this.id.substring(13);
-
         farb.linkTo(function () {}).setColor('#000').linkTo(this);
-
         var i = inputs.length;
         if (inputs.length) {
           var toggleClick = true;
@@ -167,7 +145,6 @@
           $(this).after(lock);
           locks.push(lock);
         }
-
         var hook = $('<div class="color-palette__hook"></div>');
         $(this).after(hook);
         hooks.push(hook);
@@ -176,9 +153,7 @@
         inputs.push(this);
       }).on('focus', focus);
       form.find('.js-color-palette label');
-
       inputs[0].focus();
-
       preview();
     }
   };

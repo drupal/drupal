@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($) {
   var cachedScrollbarWidth = null;
   var max = Math.max,
@@ -69,27 +68,21 @@
         var overLeft = withinOffset - collisionPosLeft;
         var overRight = collisionPosLeft + data.collisionWidth - outerWidth - withinOffset;
         var newOverRight;
-
         if (data.collisionWidth > outerWidth) {
           if (overLeft > 0 && overRight <= 0) {
             newOverRight = position.left + overLeft + data.collisionWidth - outerWidth - withinOffset;
             position.left += overLeft - newOverRight;
-
           } else if (overRight > 0 && overLeft <= 0) {
             position.left = withinOffset;
-
           } else if (overLeft > overRight) {
             position.left = withinOffset + outerWidth - data.collisionWidth;
           } else {
             position.left = withinOffset;
           }
-
         } else if (overLeft > 0) {
           position.left += overLeft;
-
         } else if (overRight > 0) {
           position.left -= overRight;
-
         } else {
           position.left = max(position.left - collisionPosLeft, position.left);
         }
@@ -102,27 +95,21 @@
         var overTop = withinOffset - collisionPosTop;
         var overBottom = collisionPosTop + data.collisionHeight - outerHeight - withinOffset;
         var newOverBottom;
-
         if (data.collisionHeight > outerHeight) {
           if (overTop > 0 && overBottom <= 0) {
             newOverBottom = position.top + overTop + data.collisionHeight - outerHeight - withinOffset;
             position.top += overTop - newOverBottom;
-
           } else if (overBottom > 0 && overTop <= 0) {
             position.top = withinOffset;
-
           } else if (overTop > overBottom) {
             position.top = withinOffset + outerHeight - data.collisionHeight;
           } else {
             position.top = withinOffset;
           }
-
         } else if (overTop > 0) {
           position.top += overTop;
-
         } else if (overBottom > 0) {
           position.top -= overBottom;
-
         } else {
           position.top = max(position.top - collisionPosTop, position.top);
         }
@@ -137,10 +124,8 @@
         var collisionPosLeft = position.left - data.collisionPosition.marginLeft;
         var overLeft = collisionPosLeft - offsetLeft;
         var overRight = collisionPosLeft + data.collisionWidth - outerWidth - offsetLeft;
-        var myOffset =
-        data.my[0] === 'left' ? -data.elemWidth : data.my[0] === 'right' ? data.elemWidth : 0;
-        var atOffset =
-        data.at[0] === 'left' ? data.targetWidth : data.at[0] === 'right' ? -data.targetWidth : 0;
+        var myOffset = data.my[0] === 'left' ? -data.elemWidth : data.my[0] === 'right' ? data.elemWidth : 0;
+        var atOffset = data.at[0] === 'left' ? data.targetWidth : data.at[0] === 'right' ? -data.targetWidth : 0;
         var offset = -2 * data.offset[0];
         var newOverRight;
         var newOverLeft;
@@ -166,8 +151,7 @@
         var overBottom = collisionPosTop + data.collisionHeight - outerHeight - offsetTop;
         var top = data.my[1] === 'top';
         var myOffset = top ? -data.elemHeight : data.my[1] === 'bottom' ? data.elemHeight : 0;
-        var atOffset =
-        data.at[1] === 'top' ? data.targetHeight : data.at[1] === 'bottom' ? -data.targetHeight : 0;
+        var atOffset = data.at[1] === 'top' ? data.targetHeight : data.at[1] === 'bottom' ? -data.targetHeight : 0;
         var offset = -2 * data.offset[1];
         var newOverTop;
         var newOverBottom;
@@ -249,18 +233,15 @@
       };
     }
   };
-
   $.fn.position = function (options) {
     if (!options || !options.of) {
       return _position.apply(this, arguments);
     }
-
     options = $.extend({}, options);
     var within = $.position.getWithinInfo(options.within);
     var scrollInfo = $.position.getScrollInfo(within);
     var collision = (options.collision || 'flip').split(' ');
     var offsets = {};
-
     var target = typeof options.of === 'string' ? $(document).find(options.of) : $(options.of);
     var dimensions = getDimensions(target);
     var targetWidth = dimensions.width;
@@ -269,9 +250,7 @@
     if (target[0].preventDefault) {
       options.at = 'left top';
     }
-
     var basePosition = $.extend({}, targetOffset);
-
     $.each(['my', 'at'], function () {
       var pos = (options[this] || '').split(' ');
       if (pos.length === 1) {
@@ -279,14 +258,11 @@
       }
       pos[0] = regexHorizontal.test(pos[0]) ? pos[0] : 'center';
       pos[1] = regexVertical.test(pos[1]) ? pos[1] : 'center';
-
       var horizontalOffset = regexOffset.exec(pos[0]);
       var verticalOffset = regexOffset.exec(pos[1]);
       offsets[this] = [horizontalOffset ? horizontalOffset[0] : 0, verticalOffset ? verticalOffset[0] : 0];
-
       options[this] = [regexPosition.exec(pos[0])[0], regexPosition.exec(pos[1])[0]];
     });
-
     if (collision.length === 1) {
       collision[1] = collision[0];
     }
@@ -303,7 +279,6 @@
     var atOffset = getOffsets(offsets.at, targetWidth, targetHeight);
     basePosition.left += atOffset[0];
     basePosition.top += atOffset[1];
-
     return this.each(function () {
       var using;
       var elem = $(this);
@@ -331,7 +306,6 @@
         marginLeft: marginLeft,
         marginTop: marginTop
       };
-
       $.each(['left', 'top'], function (i, dir) {
         if (collisions[collision[i]]) {
           collisions[collision[i]][dir](position, {
@@ -393,7 +367,6 @@
       }));
     });
   };
-
   if (!$.hasOwnProperty('ui')) {
     $.ui = {};
   }

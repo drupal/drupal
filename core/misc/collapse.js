@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Modernizr, Drupal) {
   function CollapsibleDetails(node) {
     this.$node = $(node);
@@ -21,10 +20,8 @@
   $.extend(CollapsibleDetails.prototype, {
     setupSummaryPolyfill: function setupSummaryPolyfill() {
       var $summary = this.$node.find('> summary');
-
       $summary.attr('tabindex', '-1');
       $('<span class="details-summary-prefix visually-hidden"></span>').append(this.$node.attr('open') ? Drupal.t('Hide') : Drupal.t('Show')).prependTo($summary).after(document.createTextNode(' '));
-
       $('<a class="details-title"></a>').attr('href', "#".concat(this.$node.attr('id'))).prepend($summary.contents()).appendTo($summary);
       $summary.append(this.$summary).on('click', $.proxy(this.onSummaryClick, this));
     },
@@ -46,7 +43,6 @@
       }, 0);
     }
   });
-
   Drupal.behaviors.collapse = {
     attach: function attach(context) {
       if (Modernizr.details) {
@@ -58,12 +54,9 @@
       });
     }
   };
-
   var handleFragmentLinkClickOrHashChange = function handleFragmentLinkClickOrHashChange(e, $target) {
     $target.parents('details').not('[open]').find('> summary').trigger('click');
   };
-
   $('body').on('formFragmentLinkClickOrHashChange.details', handleFragmentLinkClickOrHashChange);
-
   Drupal.CollapsibleDetails = CollapsibleDetails;
 })(jQuery, Modernizr, Drupal);

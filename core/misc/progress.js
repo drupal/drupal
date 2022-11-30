@@ -4,18 +4,15 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal) {
   Drupal.theme.progressBar = function (id) {
     return "<div id=\"".concat(id, "\" class=\"progress\" aria-live=\"polite\">") + '<div class="progress__label">&nbsp;</div>' + '<div class="progress__track"><div class="progress__bar"></div></div>' + '<div class="progress__percentage"></div>' + '<div class="progress__description">&nbsp;</div>' + '</div>';
   };
-
   Drupal.ProgressBar = function (id, updateCallback, method, errorCallback) {
     this.id = id;
     this.method = method || 'GET';
     this.updateCallback = updateCallback;
     this.errorCallback = errorCallback;
-
     this.element = $(Drupal.theme('progressBar', id));
   };
   $.extend(Drupal.ProgressBar.prototype, {

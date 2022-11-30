@@ -7,7 +7,6 @@
 (function (_ref) {
   var offCanvas = _ref.offCanvas;
   var originalResetSize = offCanvas.resetSize;
-
   offCanvas.resetSize = function (event) {
     originalResetSize(event);
     event.data.$element.attr('data-resize-done', 'true');

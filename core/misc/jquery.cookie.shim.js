@@ -4,17 +4,17 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 (function ($, Drupal, cookies) {
   var deprecatedMessageSuffix = "is deprecated in Drupal 9.0.0 and will be removed in Drupal 10.0.0. Use the core/js-cookie library instead. See https://www.drupal.org/node/3104677";
-
   var isFunction = function isFunction(obj) {
     return Object.prototype.toString.call(obj) === '[object Function]';
   };
-
   var parseCookieValue = function parseCookieValue(value, parseJson) {
     if (value.indexOf('"') === 0) {
       value = value.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, '\\');
@@ -22,10 +22,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     try {
       value = decodeURIComponent(value.replace(/\+/g, ' '));
       return parseJson ? JSON.parse(value) : value;
-    } catch (e) {
-    }
+    } catch (e) {}
   };
-
   var reader = function reader(cookieValue, cookieName, converter, readUnsanitized, parseJson) {
     var value = readUnsanitized ? cookieValue : parseCookieValue(cookieValue, parseJson);
     if (converter !== undefined && isFunction(converter)) {
@@ -33,7 +31,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
     return value;
   };
-
   $.cookie = function (key) {
     var value = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
     var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
@@ -53,7 +50,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       value = $.cookie.json && !$.cookie.raw ? JSON.stringify(value) : String(value);
       return cookieSetter.set(key, value, attributes);
     }
-
     var userProvidedConverter = value;
     var cookiesShim = cookies.withConverter({
       read: function read(cookieValue, cookieName) {
@@ -71,15 +67,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     });
     return results;
   };
-
   $.cookie.defaults = _objectSpread({
     path: ''
   }, cookies.defaults);
-
   $.cookie.json = false;
-
   $.cookie.raw = false;
-
   $.removeCookie = function (key, options) {
     Drupal.deprecationError({
       message: "jQuery.removeCookie() ".concat(deprecatedMessageSuffix)

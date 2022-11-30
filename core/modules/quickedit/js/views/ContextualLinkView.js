@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Backbone, Drupal) {
   Drupal.quickedit.ContextualLinkView = Backbone.View.extend({
     events: function events() {
@@ -29,7 +28,6 @@
     },
     render: function render(entityModel, isActive) {
       this.$el.find('a').attr('aria-pressed', isActive);
-
       this.$el.closest('.contextual').toggle(!isActive);
       return this;
     }

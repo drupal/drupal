@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (Drupal, $, Backbone) {
   Drupal.quickedit.EntityDecorationView = Backbone.View.extend({
     initialize: function initialize() {

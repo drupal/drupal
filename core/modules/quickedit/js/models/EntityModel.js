@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (_, $, Backbone, Drupal) {
   Drupal.quickedit.EntityModel = Drupal.quickedit.BaseModel.extend({
     defaults: {
@@ -14,7 +13,6 @@
       id: null,
       label: null,
       fields: null,
-
       isActive: false,
       inTempStore: false,
       isDirty: false,
@@ -25,11 +23,8 @@
     },
     initialize: function initialize() {
       this.set('fields', new Drupal.quickedit.FieldCollection());
-
       this.listenTo(this, 'change:state', this.stateChange);
-
       this.listenTo(this.get('fields'), 'change:state', this.fieldStateChange);
-
       Drupal.quickedit.BaseModel.prototype.initialize.call(this);
     },
     stateChange: function stateChange(entityModel, state, options) {
@@ -115,8 +110,7 @@
         fieldsInTempStore.push(fieldModel.get('fieldID'));
         fieldsInTempStore = _.uniq(fieldsInTempStore);
         entityModel.set('fieldsInTempStore', fieldsInTempStore);
-      }
-      else if (current === 'candidate' && previous === 'inactive') {
+      } else if (current === 'candidate' && previous === 'inactive') {
         fieldModel.set('inTempStore', _.intersection([fieldModel.get('fieldID')], fieldsInTempStore).length > 0);
       }
     },
@@ -152,7 +146,6 @@
             } else {
               this._updateInTempStoreAttributes(entityModel, fieldModel);
             }
-
             var options = {
               'accept-field-states': Drupal.quickedit.app.readyFieldStates
             };
@@ -198,7 +191,6 @@
     },
     save: function save(options) {
       var entityModel = this;
-
       var entitySaverAjax = Drupal.ajax({
         url: Drupal.url("quickedit/entity/".concat(entityModel.get('entityID'))),
         error: function error() {
@@ -211,7 +203,6 @@
         });
         entityModel.set('inTempStore', false);
         entityModel.set('fieldsInTempStore', []);
-
         if (options.success) {
           options.success.call(entityModel);
         }
@@ -222,14 +213,12 @@
     },
     validate: function validate(attrs, options) {
       var acceptedFieldStates = options['accept-field-states'] || [];
-
       var currentState = this.get('state');
       var nextState = attrs.state;
       if (currentState !== nextState) {
         if (_.indexOf(this.constructor.states, nextState) === -1) {
           return "\"".concat(nextState, "\" is an invalid state");
         }
-
         if (!this._acceptStateChange(currentState, nextState, options)) {
           return 'state change not accepted';
         }
@@ -237,7 +226,6 @@
           return 'state change not accepted because fields are not in acceptable state';
         }
       }
-
       var currentIsCommitting = this.get('isCommitting');
       var nextIsCommitting = attrs.isCommitting;
       if (currentIsCommitting === false && nextIsCommitting === true) {
@@ -250,20 +238,15 @@
     },
     _acceptStateChange: function _acceptStateChange(from, to, context) {
       var accept = true;
-
       if (!this.constructor.followsStateSequence(from, to)) {
         accept = false;
-
         if (from === 'closing' && to === 'closed') {
           accept = true;
-        }
-        else if (from === 'committing' && to === 'opened' && context.reason && (context.reason === 'invalid' || context.reason === 'networkerror')) {
+        } else if (from === 'committing' && to === 'opened' && context.reason && (context.reason === 'invalid' || context.reason === 'networkerror')) {
           accept = true;
-        }
-        else if (from === 'deactivating' && to === 'opened' && context.confirming) {
+        } else if (from === 'deactivating' && to === 'opened' && context.confirming) {
           accept = true;
-        }
-        else if (from === 'opened' && to === 'deactivating' && context.confirmed) {
+        } else if (from === 'opened' && to === 'deactivating' && context.confirmed) {
           accept = true;
         }
       }
@@ -271,7 +254,6 @@
     },
     _fieldsHaveAcceptableStates: function _fieldsHaveAcceptableStates(acceptedFieldStates) {
       var accept = true;
-
       if (acceptedFieldStates.length > 0) {
         var fieldStates = this.get('fields').pluck('state') || [];
         if (_.difference(fieldStates, acceptedFieldStates).length) {
@@ -283,25 +265,15 @@
     destroy: function destroy(options) {
       Drupal.quickedit.BaseModel.prototype.destroy.call(this, options);
       this.stopListening();
-
       this.get('fields').reset();
     },
-    sync: function sync() {
-    }
+    sync: function sync() {}
   }, {
-    states: [
-    'closed',
-    'launching',
-    'opening',
-    'opened',
-    'committing',
-    'deactivating',
-    'closing'],
+    states: ['closed', 'launching', 'opening', 'opened', 'committing', 'deactivating', 'closing'],
     followsStateSequence: function followsStateSequence(from, to) {
       return _.indexOf(this.states, from) < _.indexOf(this.states, to);
     }
   });
-
   Drupal.quickedit.EntityCollection = Backbone.Collection.extend({
     model: Drupal.quickedit.EntityModel
   });

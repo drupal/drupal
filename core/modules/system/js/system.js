@@ -4,10 +4,8 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal, drupalSettings) {
   var ids = [];
-
   Drupal.behaviors.copyFieldValue = {
     attach: function attach(context) {
       Object.keys(drupalSettings.copyFieldValue || {}).forEach(function (element) {

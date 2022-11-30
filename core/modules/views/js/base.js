@@ -4,10 +4,8 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal, drupalSettings) {
   Drupal.Views = {};
-
   Drupal.Views.parseQueryString = function (query) {
     var args = {};
     var pos = query.indexOf('?');
@@ -24,7 +22,6 @@
     }
     return args;
   };
-
   Drupal.Views.parseViewArgs = function (href, viewPath) {
     var returnObj = {};
     var path = Drupal.Views.getPath(href);
@@ -35,7 +32,6 @@
     }
     return returnObj;
   };
-
   Drupal.Views.pathPortion = function (href) {
     var protocol = window.location.protocol;
     if (href.substring(0, protocol.length) === protocol) {
@@ -43,7 +39,6 @@
     }
     return href;
   };
-
   Drupal.Views.getPath = function (href) {
     href = Drupal.Views.pathPortion(href);
     href = href.substring(drupalSettings.path.baseUrl.length, href.length);

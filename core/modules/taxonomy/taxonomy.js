@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal) {
   Drupal.behaviors.termDrag = {
     attach: function attach(context, settings) {
@@ -13,7 +12,6 @@
       var tableDrag = Drupal.tableDrag.taxonomy;
       var $table = $('#taxonomy');
       var rows = $table.find('tr').length;
-
       tableDrag.row.prototype.onSwap = function (swappedRow) {
         $table.find('tr.taxonomy-term-preview').removeClass('taxonomy-term-preview');
         $table.find('tr.taxonomy-term-divider-top').removeClass('taxonomy-term-divider-top');

@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal) {
   Drupal.behaviors.menuUiDetailsSummaries = {
     attach: function attach(context) {
@@ -17,7 +16,6 @@
       });
     }
   };
-
   Drupal.behaviors.menuUiLinkAutomaticTitle = {
     attach: function attach(context) {
       var $context = $(context);

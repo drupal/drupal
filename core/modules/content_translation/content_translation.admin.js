@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal, drupalSettings) {
   Drupal.behaviors.contentTranslationDependentOptions = {
     attach: function attach(context) {
@@ -16,7 +15,6 @@
           Drupal.behaviors.contentTranslationDependentOptions.check($fields, dependentColumns, $(e.target));
         };
       }
-
       if (options && options.dependent_selectors) {
         Object.keys(options.dependent_selectors).forEach(function (field) {
           $fields = $context.find("input[name^=\"".concat(field, "\"]"));
@@ -32,7 +30,6 @@
       function filterFieldsList(index, field) {
         return field.value === column;
       }
-
       Object.keys(dependentColumns || {}).forEach(function (index) {
         column = dependentColumns[index];
         if (!$changed) {
@@ -46,11 +43,9 @@
       });
     }
   };
-
   Drupal.behaviors.contentTranslation = {
     attach: function attach(context) {
-      once('translation-entity-admin-hide',
-      $(context).find('table .bundle-settings .translatable :input')).forEach(function (input) {
+      once('translation-entity-admin-hide', $(context).find('table .bundle-settings .translatable :input')).forEach(function (input) {
         var $input = $(input);
         var $bundleSettings = $input.closest('.bundle-settings');
         if (!$input.is(':checked')) {
@@ -59,7 +54,6 @@
           $bundleSettings.nextUntil('.bundle-settings', '.field-settings').find('.translatable :input:not(:checked)').closest('.field-settings').nextUntil(':not(.column-settings)').hide();
         }
       });
-
       $(once('translation-entity-admin-bind', 'body')).on('click', 'table .bundle-settings .translatable :input', function (e) {
         var $target = $(e.target);
         var $bundleSettings = $target.closest('.bundle-settings');

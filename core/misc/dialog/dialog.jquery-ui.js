@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, _ref) {
   var tabbable = _ref.tabbable,
     isTabbable = _ref.isTabbable;
@@ -32,13 +31,10 @@
       }
     },
     _focusTabbable: function _focusTabbable() {
-
       var hasFocus = this._focusedElement ? this._focusedElement.get(0) : null;
-
       if (!hasFocus) {
         hasFocus = this.element.find('[autofocus]').get(0);
       }
-
       if (!hasFocus) {
         var $elements = [this.element, this.uiDialogButtonPane];
         for (var i = 0; i < $elements.length; i++) {
@@ -52,12 +48,10 @@
           }
         }
       }
-
       if (!hasFocus) {
         var closeBtn = this.uiDialogTitlebarClose.get(0);
         hasFocus = closeBtn && isTabbable(closeBtn) ? closeBtn : null;
       }
-
       if (!hasFocus) {
         hasFocus = this.uiDialog.get(0);
       }

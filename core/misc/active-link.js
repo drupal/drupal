@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (Drupal, drupalSettings) {
   Drupal.behaviors.activeLinks = {
     attach: function attach(context) {
@@ -13,23 +12,17 @@
       var querySelector = path.currentQuery ? "[data-drupal-link-query='".concat(queryString, "']") : ':not([data-drupal-link-query])';
       var originalSelectors = ["[data-drupal-link-system-path=\"".concat(path.currentPath, "\"]")];
       var selectors;
-
       if (path.isFront) {
         originalSelectors.push('[data-drupal-link-system-path="<front>"]');
       }
-
-      selectors = [].concat(
-      originalSelectors.map(function (selector) {
+      selectors = [].concat(originalSelectors.map(function (selector) {
         return "".concat(selector, ":not([hreflang])");
-      }),
-      originalSelectors.map(function (selector) {
+      }), originalSelectors.map(function (selector) {
         return "".concat(selector, "[hreflang=\"").concat(path.currentLanguage, "\"]");
       }));
-
       selectors = selectors.map(function (current) {
         return current + querySelector;
       });
-
       var activeLinks = context.querySelectorAll(selectors.join(','));
       var il = activeLinks.length;
       for (var i = 0; i < il; i++) {

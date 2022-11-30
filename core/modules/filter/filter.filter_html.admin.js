@@ -10,14 +10,12 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
 (function ($, Drupal, document) {
   if (Drupal.filterConfiguration) {
     Drupal.filterConfiguration.liveSettingParsers.filter_html = {
       getRules: function getRules() {
         var currentValue = document.querySelector('#edit-filters-filter-html-settings-allowed-html').value;
         var rules = Drupal.behaviors.filterFilterHtmlUpdating._parseSetting(currentValue);
-
         var rule = new Drupal.FilterHTMLRule();
         rule.restrictedTags.tags = ['*'];
         rule.restrictedTags.forbidden.attributes = ['style', 'on*'];
@@ -26,7 +24,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }
     };
   }
-
   function difference() {
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
@@ -37,7 +34,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       });
     });
   }
-
   Drupal.behaviors.filterFilterHtmlUpdating = {
     $allowedHTMLFormItem: null,
     $allowedHTMLDescription: null,
@@ -50,7 +46,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         that.$allowedHTMLFormItem = $(formItem);
         that.$allowedHTMLDescription = that.$allowedHTMLFormItem.closest('.js-form-item').find('#edit-filters-filter-html-settings-allowed-html--description');
         that.userTags = that._parseSetting(formItem.value);
-
         $(document).on('drupalEditorFeatureAdded', function (e, feature) {
           that.newFeatures[feature.name] = feature.rules;
           that._updateAllowedTags();
@@ -65,7 +60,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
             that._updateAllowedTags();
           }
         });
-
         that.$allowedHTMLFormItem.on('change.updateUserTags', function () {
           that.userTags = difference(Object.values(that._parseSetting(this.value)), Object.values(that.autoTags));
         });
@@ -74,9 +68,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     _updateAllowedTags: function _updateAllowedTags() {
       var _this = this;
       this.autoTags = this._calculateAutoAllowedTags(this.userTags, this.newFeatures);
-
       this.$allowedHTMLDescription.find('.editor-update-message').remove();
-
       if (Object.keys(this.autoTags).length > 0) {
         this.$allowedHTMLDescription.append(Drupal.theme('filterFilterHTMLUpdateMessage', this.autoTags));
         var userTagsWithoutOverrides = {};
@@ -86,14 +78,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           userTagsWithoutOverrides[tag] = _this.userTags[tag];
         });
         this.$allowedHTMLFormItem.val("".concat(this._generateSetting(userTagsWithoutOverrides), " ").concat(this._generateSetting(this.autoTags)));
-      }
-      else {
+      } else {
         this.$allowedHTMLFormItem.val(this._generateSetting(this.userTags));
       }
     },
     _calculateAutoAllowedTags: function _calculateAutoAllowedTags(userAllowedTags, newFeatures) {
       var editorRequiredTags = {};
-
       Object.keys(newFeatures || {}).forEach(function (featureName) {
         var feature = newFeatures[featureName];
         var featureRule;
@@ -111,8 +101,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
                 filterRule.restrictedTags.allowed.classes = featureRule.required.classes.slice(0);
               }
               editorRequiredTags[tag] = filterRule;
-            }
-            else {
+            } else {
               filterRule = editorRequiredTags[tag];
               filterRule.restrictedTags.allowed.attributes = [].concat(_toConsumableArray(filterRule.restrictedTags.allowed.attributes), _toConsumableArray(featureRule.required.attributes));
               if (userAllowedTags[tag] !== undefined && userAllowedTags[tag].restrictedTags.allowed.classes[0] !== '') {
@@ -122,13 +111,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           }
         }
       });
-
       var autoAllowedTags = {};
       Object.keys(editorRequiredTags).forEach(function (tag) {
         if (!userAllowedTags.hasOwnProperty(tag)) {
           autoAllowedTags[tag] = editorRequiredTags[tag];
-        }
-        else {
+        } else {
           var requiredAttributes = editorRequiredTags[tag].restrictedTags.allowed.attributes;
           var allowedAttributes = userAllowedTags[tag].restrictedTags.allowed.attributes;
           var needsAdditionalAttributes = requiredAttributes.length && difference(requiredAttributes, allowedAttributes).length;
@@ -157,12 +144,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var rules = {};
       for (var t = 0; t < allowedTags.length; t++) {
         var $tagObject = $(allowedTags[t]);
-
         tag = $tagObject.prop('tagName').toLowerCase();
-
         rule = new Drupal.FilterHTMLRule();
         rule.restrictedTags.tags = [tag];
-
         attributes = $tagObject.prop('attributes');
         for (var i = 0; i < attributes.length; i++) {
           attribute = attributes.item(i);
@@ -199,7 +183,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }, '');
     }
   };
-
   Drupal.theme.filterFilterHTMLUpdateMessage = function (tags) {
     var html = '';
     var tagList = Drupal.behaviors.filterFilterHtmlUpdating._generateSetting(tags);

@@ -4,21 +4,17 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (Drupal, Backbone) {
   Drupal.contextual.AuralView = Backbone.View.extend({
     initialize: function initialize(options) {
       this.options = options;
       this.listenTo(this.model, 'change', this.render);
-
       this.render();
     },
     render: function render() {
       var _this = this;
       var isOpen = this.model.get('isOpen');
-
       this.$el.find('.contextual-links').prop('hidden', !isOpen);
-
       var $trigger = this.$el.find('.trigger');
       $trigger.each(function (index, element) {
         element.textContent = Drupal.t('@action @title configuration options', {

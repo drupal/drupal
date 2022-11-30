@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function () {
   var toggler = document.querySelector('[data-drupal-selector="menu-main-toggle"]');
   var menu = document.querySelector('[data-drupal-selector="menu-main"]');

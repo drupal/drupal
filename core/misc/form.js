@@ -4,29 +4,23 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal, debounce) {
   $.fn.drupalGetSummary = function () {
     var callback = this.data('summaryCallback');
     return this[0] && callback ? callback(this[0]).trim() : '';
   };
-
   $.fn.drupalSetSummary = function (callback) {
     var self = this;
-
     if (typeof callback !== 'function') {
       var val = callback;
       callback = function callback() {
         return val;
       };
     }
-    return this.data('summaryCallback', callback)
-    .off('formUpdated.summary').on('formUpdated.summary', function () {
+    return this.data('summaryCallback', callback).off('formUpdated.summary').on('formUpdated.summary', function () {
       self.trigger('summaryUpdated');
-    })
-    .trigger('summaryUpdated');
+    }).trigger('summaryUpdated');
   };
-
   Drupal.behaviors.formSingleSubmit = {
     attach: function attach() {
       function onFormSubmit(e) {
@@ -42,17 +36,14 @@
       $(once('form-single-submit', 'body')).on('submit.singleSubmit', 'form:not([method~="GET"])', onFormSubmit);
     }
   };
-
   function triggerFormUpdated(element) {
     $(element).trigger('formUpdated');
   }
-
   function fieldsList(form) {
     return [].map.call(form.querySelectorAll('[name][id]'), function (el) {
       return el.id;
     });
   }
-
   Drupal.behaviors.formUpdated = {
     attach: function attach(context) {
       var $context = $(context);
@@ -89,7 +80,6 @@
       }
     }
   };
-
   Drupal.behaviors.fillUserInfoFromBrowser = {
     attach: function attach(context, settings) {
       var userInfo = ['name', 'mail', 'homepage'];
@@ -120,7 +110,6 @@
       });
     }
   };
-
   var handleFragmentLinkClickOrHashChange = function handleFragmentLinkClickOrHashChange(e) {
     var url;
     if (e.type === 'click') {
@@ -132,15 +121,12 @@
     if (hash) {
       var $target = $("#".concat(hash));
       $('body').trigger('formFragmentLinkClickOrHashChange', [$target]);
-
       setTimeout(function () {
         return $target.trigger('focus');
       }, 300);
     }
   };
   var debouncedHandleFragmentLinkClickOrHashChange = debounce(handleFragmentLinkClickOrHashChange, 300, true);
-
   $(window).on('hashchange.form-fragment', debouncedHandleFragmentLinkClickOrHashChange);
-
   $(document).on('click.form-fragment', 'a[href*="#"]', debouncedHandleFragmentLinkClickOrHashChange);
 })(jQuery, Drupal, Drupal.debounce);

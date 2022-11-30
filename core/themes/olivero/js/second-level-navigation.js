@@ -4,11 +4,9 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (Drupal) {
   var isDesktopNav = Drupal.olivero.isDesktopNav;
   var secondLevelNavMenus = document.querySelectorAll('[data-drupal-selector="primary-nav-menu-item-has-children"]');
-
   function toggleSubNav(topLevelMenuItem, toState) {
     var buttonSelector = '[data-drupal-selector="primary-nav-submenu-toggle-button"]';
     var button = topLevelMenuItem.querySelector(buttonSelector);
@@ -32,7 +30,6 @@
     }
   }
   Drupal.olivero.toggleSubNav = toggleSubNav;
-
   function handleBlur(e) {
     if (!Drupal.olivero.isDesktopNav()) return;
     setTimeout(function () {
@@ -42,12 +39,10 @@
       }
     }, 200);
   }
-
   secondLevelNavMenus.forEach(function (el) {
     var button = el.querySelector('[data-drupal-selector="primary-nav-submenu-toggle-button"]');
     button.removeAttribute('aria-hidden');
     button.removeAttribute('tabindex');
-
     el.addEventListener('touchstart', function () {
       el.classList.add('is-touch-event');
     }, {
@@ -57,7 +52,6 @@
       if (isDesktopNav() && !el.classList.contains('is-touch-event')) {
         el.classList.add('is-active-mouseover-event');
         toggleSubNav(el, true);
-
         setTimeout(function () {
           el.classList.remove('is-active-mouseover-event');
         }, 500);
@@ -75,7 +69,6 @@
     });
     el.addEventListener('blur', handleBlur, true);
   });
-
   function closeAllSubNav() {
     secondLevelNavMenus.forEach(function (el) {
       if (el.contains(document.activeElement)) {
@@ -85,7 +78,6 @@
     });
   }
   Drupal.olivero.closeAllSubNav = closeAllSubNav;
-
   function areAnySubNavsOpen() {
     var subNavsAreOpen = false;
     secondLevelNavMenus.forEach(function (el) {
@@ -98,13 +90,11 @@
     return subNavsAreOpen;
   }
   Drupal.olivero.areAnySubNavsOpen = areAnySubNavsOpen;
-
   document.addEventListener('keyup', function (e) {
     if (e.key === 'Escape' || e.key === 'Esc') {
       if (isDesktopNav()) closeAllSubNav();
     }
   });
-
   document.addEventListener('touchstart', function (e) {
     if (areAnySubNavsOpen() && !e.target.matches('[data-drupal-selector="header-nav"], [data-drupal-selector="header-nav"] *')) {
       closeAllSubNav();

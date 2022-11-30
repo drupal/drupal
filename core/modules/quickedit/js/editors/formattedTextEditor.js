@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal, drupalSettings, _) {
   Drupal.quickedit.editors.editor = Drupal.quickedit.EditorView.extend({
     textFormat: null,
@@ -17,7 +16,6 @@
       this.textFormat = drupalSettings.editor.formats[metadata.format];
       this.textFormatHasTransformations = metadata.formatHasTransformations;
       this.textEditor = Drupal.editors[this.textFormat.editor];
-
       var $fieldItems = this.$el.find('.quickedit-field');
       if ($fieldItems.length) {
         this.$textElement = $fieldItems.eq(0);
@@ -75,8 +73,7 @@
               $textElement.html(untransformedText);
               fieldModel.set('state', 'active');
             });
-          }
-          else {
+          } else {
             _.defer(function () {
               fieldModel.set('state', 'active');
             });
@@ -121,18 +118,15 @@
     },
     _getUntransformedText: function _getUntransformedText(callback) {
       var fieldID = this.fieldModel.get('fieldID');
-
       var textLoaderAjax = Drupal.ajax({
         url: Drupal.quickedit.util.buildUrl(fieldID, Drupal.url('quickedit/!entity_type/!id/!field_name/!langcode/!view_mode')),
         submit: {
           nocssjs: true
         }
       });
-
       textLoaderAjax.commands.editorGetUntransformedText = function (ajax, response, status) {
         callback(response.data);
       };
-
       textLoaderAjax.execute();
     }
   });

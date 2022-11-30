@@ -4,14 +4,12 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal) {
   Drupal.theme.quickeditBackstage = function (settings) {
     var html = '';
     html += "<div id=\"".concat(settings.id, "\"></div>");
     return html;
   };
-
   Drupal.theme.quickeditEntityToolbar = function (settings) {
     var html = '';
     html += "<div id=\"".concat(settings.id, "\" class=\"quickedit quickedit-toolbar-container clearfix\">");
@@ -24,19 +22,15 @@
     html += '</div><div class="quickedit-toolbar-lining"></div></div>';
     return html;
   };
-
   Drupal.theme.quickeditEntityToolbarLabel = function (settings) {
     return "<span class=\"field\">".concat(Drupal.checkPlain(settings.fieldLabel), "</span>").concat(Drupal.checkPlain(settings.entityLabel));
   };
-
   Drupal.theme.quickeditEntityToolbarFence = function () {
     return '<div id="quickedit-toolbar-fence"></div>';
   };
-
   Drupal.theme.quickeditFieldToolbar = function (settings) {
     return "<div id=\"".concat(settings.id, "\"></div>");
   };
-
   Drupal.theme.quickeditToolgroup = function (settings) {
     var classes = settings.classes || [];
     classes.unshift('quickedit-toolgroup');
@@ -52,7 +46,6 @@
     html += '</div>';
     return html;
   };
-
   Drupal.theme.quickeditButtons = function (settings) {
     var html = '';
     var _loop = function _loop(i) {
@@ -72,7 +65,6 @@
     }
     return html;
   };
-
   Drupal.theme.quickeditFormContainer = function (settings) {
     var html = '';
     html += "<div id=\"".concat(settings.id, "\" class=\"quickedit-form-container\">");
@@ -84,15 +76,12 @@
     html += '</div>';
     return html;
   };
-
   Drupal.theme.quickeditImageErrors = function (settings) {
     return "<div class=\"quickedit-image-errors\">".concat(settings.errors, "</div>");
   };
-
   Drupal.theme.quickeditImageDropzone = function (settings) {
     return "<div class=\"quickedit-image-dropzone ".concat(settings.state, "\">") + '  <i class="quickedit-image-icon"></i>' + "  <span class=\"quickedit-image-text\">".concat(settings.text, "</span>") + '</div>';
   };
-
   Drupal.theme.quickeditImageToolbar = function (settings) {
     var html = '<form class="quickedit-image-field-info">';
     if (settings.alt_field) {

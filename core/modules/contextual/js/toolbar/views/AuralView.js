@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal, Backbone, _) {
   Drupal.contextualToolbar.AuralView = Backbone.View.extend({
     announcedOnce: false,

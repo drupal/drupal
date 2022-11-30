@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (CKEDITOR) {
   function findElementByName(element, name) {
     if (element.name === name) {
@@ -23,18 +22,14 @@
     requires: 'drupalimage',
     beforeInit: function beforeInit(editor) {
       editor.lang.image2.captionPlaceholder = '';
-
       var placeholderText = editor.config.drupalImageCaption_captionPlaceholderText;
-
       editor.on('widgetDefinition', function (event) {
         var widgetDefinition = event.data;
         if (widgetDefinition.name !== 'image') {
           return;
         }
-
         var captionFilterEnabled = editor.config.drupalImageCaption_captionFilterEnabled;
         var alignFilterEnabled = editor.config.drupalImageCaption_alignFilterEnabled;
-
         CKEDITOR.tools.extend(widgetDefinition.features, {
           caption: {
             requiredContent: 'img[data-caption]'
@@ -43,16 +38,13 @@
             requiredContent: 'img[data-align]'
           }
         }, true);
-
         var requiredContent = widgetDefinition.requiredContent.getDefinition();
         requiredContent.attributes['data-align'] = '';
         requiredContent.attributes['data-caption'] = '';
         widgetDefinition.requiredContent = new CKEDITOR.style(requiredContent);
         widgetDefinition.allowedContent.img.attributes['!data-align'] = true;
         widgetDefinition.allowedContent.img.attributes['!data-caption'] = true;
-
         widgetDefinition.editables.caption.allowedContent = 'a[!href]; em strong cite code br';
-
         var originalDowncast = widgetDefinition.downcast;
         widgetDefinition.downcast = function (element) {
           var img = findElementByName(element, 'img');
@@ -70,13 +62,11 @@
               attrs['data-align'] = this.data.align;
             }
           }
-
           if (img.parent.name === 'a') {
             return img.parent;
           }
           return img;
         };
-
         var originalUpcast = widgetDefinition.upcast;
         widgetDefinition.upcast = function (element, data) {
           if (element.name !== 'img' || !element.attributes['data-entity-type'] || !element.attributes['data-entity-uuid']) {
@@ -92,7 +82,6 @@
           }
           var retElement = element;
           var caption;
-
           if (captionFilterEnabled) {
             caption = attrs['data-caption'];
             delete attrs['data-caption'];
@@ -120,13 +109,11 @@
               element.parent.replaceWith(element);
               retElement = element;
             }
-
             if (caption) {
               var figure = new CKEDITOR.htmlParser.element('figure');
               caption = new CKEDITOR.htmlParser.fragment.fromHtml(caption, 'figcaption');
               var captionFilter = new CKEDITOR.filter(widgetDefinition.editables.caption.allowedContent);
               captionFilter.applyTo(caption);
-
               caption.attributes['data-placeholder'] = placeholderText;
               element.replaceWith(figure);
               figure.add(element);
@@ -144,26 +131,21 @@
               retElement = p;
             }
           }
-
           return retElement;
         };
-
         CKEDITOR.tools.extend(widgetDefinition._mapDataToDialog, {
           align: 'data-align',
           'data-caption': 'data-caption',
           hasCaption: 'hasCaption'
         });
-
         var originalCreateDialogSaveCallback = widgetDefinition._createDialogSaveCallback;
         widgetDefinition._createDialogSaveCallback = function (editor, widget) {
           var saveCallback = originalCreateDialogSaveCallback.call(this, editor, widget);
           return function (dialogReturnValues) {
             dialogReturnValues.attributes.hasCaption = !!dialogReturnValues.attributes.hasCaption;
             var actualWidget = saveCallback(dialogReturnValues);
-
             if (dialogReturnValues.attributes.hasCaption) {
               actualWidget.editables.caption.setAttribute('data-placeholder', placeholderText);
-
               var captionElement = actualWidget.editables.caption.$;
               if (captionElement.childNodes.length === 1 && captionElement.childNodes.item(0).nodeName === 'BR') {
                 captionElement.removeChild(captionElement.childNodes.item(0));
@@ -181,7 +163,6 @@
           evt.cancel();
         }
       };
-
       if (editor.plugins.justify && !editor.config.drupalImageCaption_alignFilterEnabled) {
         var cmd;
         var commands = ['justifyleft', 'justifycenter', 'justifyright', 'justifyblock'];

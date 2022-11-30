@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal, debounce) {
   var offsets = {
     top: 0,
@@ -12,7 +11,6 @@
     bottom: 0,
     left: 0
   };
-
   function getRawOffset(el, edge) {
     var $el = $(el);
     var documentElement = document.documentElement;
@@ -27,7 +25,6 @@
       case 'left':
         displacement = placement + $el.outerWidth();
         break;
-
       case 'bottom':
         displacement = documentElement.clientHeight - placement;
         break;
@@ -39,7 +36,6 @@
     }
     return displacement;
   }
-
   function calculateOffset(edge) {
     var edgeOffset = 0;
     var displacingElements = document.querySelectorAll("[data-offset-".concat(edge, "]"));
@@ -57,7 +53,6 @@
     }
     return edgeOffset;
   }
-
   function calculateOffsets() {
     return {
       top: calculateOffset('top'),
@@ -66,7 +61,6 @@
       left: calculateOffset('left')
     };
   }
-
   function displace(broadcast) {
     offsets = calculateOffsets();
     Drupal.displace.offsets = offsets;
@@ -75,7 +69,6 @@
     }
     return offsets;
   }
-
   Drupal.behaviors.drupalDisplace = {
     attach: function attach() {
       if (this.displaceProcessed) {
@@ -85,7 +78,6 @@
       $(window).on('resize.drupalDisplace', debounce(displace, 200));
     }
   };
-
   Drupal.displace = displace;
   $.extend(Drupal.displace, {
     offsets: offsets,

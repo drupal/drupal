@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal) {
   Drupal.AjaxCommands.prototype.editorDialogSave = function (ajax, response, status) {
     $(window).trigger('editor:dialogsave', [response.values]);

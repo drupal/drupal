@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (Drupal, Backbone, $) {
   Drupal.ckeditor.AuralView = Backbone.View.extend({
     events: {
@@ -83,8 +82,7 @@
         });
         text += "\n".concat(Drupal.t('Press the down arrow key to activate.'));
         Drupal.announce(text, 'assertive');
-      }
-      else if ($group.not('.placeholder').length === 1) {
+      } else if ($group.not('.placeholder').length === 1) {
         text = Drupal.t('@name @type in position @position of @positionCount in @groupName button group in row @row of @rowCount.', {
           '@name': $button.children().attr('aria-label'),
           '@type': type,

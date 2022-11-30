@@ -4,14 +4,10 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal) {
   Drupal.quickedit.util = Drupal.quickedit.util || {};
-
   Drupal.quickedit.util.constants = {};
-
   Drupal.quickedit.util.constants.transitionEnd = 'transitionEnd.quickedit webkitTransitionEnd.quickedit transitionend.quickedit msTransitionEnd.quickedit oTransitionEnd.quickedit';
-
   Drupal.quickedit.util.buildUrl = function (id, urlFormat) {
     var parts = id.split('/');
     return Drupal.formatString(decodeURIComponent(urlFormat), {
@@ -22,7 +18,6 @@
       '!view_mode': parts[4]
     });
   };
-
   Drupal.quickedit.util.networkErrorModal = function (title, message) {
     var $message = $("<div>".concat(message, "</div>"));
     var networkErrorModal = Drupal.dialog($message.get(0), {
@@ -44,11 +39,9 @@
     });
     networkErrorModal.showModal();
   };
-
   Drupal.quickedit.util.form = {
     load: function load(options, callback) {
       var fieldID = options.fieldID;
-
       var formLoaderAjax = Drupal.ajax({
         url: Drupal.quickedit.util.buildUrl(fieldID, Drupal.url('quickedit/form/!entity_type/!id/!field_name/!langcode/!view_mode')),
         submit: {
@@ -61,7 +54,6 @@
             '@field-label': fieldLabel
           });
           Drupal.quickedit.util.networkErrorModal(Drupal.t('Network problem!'), message);
-
           var fieldModel = Drupal.quickedit.app.model.get('activeField');
           fieldModel.set('state', 'candidate');
         }

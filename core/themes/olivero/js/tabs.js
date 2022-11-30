@@ -4,17 +4,14 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (Drupal, once) {
   function init(el) {
     var tabs = el.querySelector('.tabs');
     var expandedClass = 'is-expanded';
     var activeTab = tabs.querySelector('.is-active');
-
     function isTabsMobileLayout() {
       return tabs.querySelector('.tabs__trigger').clientHeight > 0;
     }
-
     function handleTriggerClick(e) {
       if (!tabs.classList.contains(expandedClass)) {
         e.currentTarget.setAttribute('aria-expanded', 'true');
@@ -32,7 +29,6 @@
     }
     tabs.querySelector('.tabs__trigger').addEventListener('click', handleTriggerClick);
   }
-
   Drupal.behaviors.primaryTabs = {
     attach: function attach(context) {
       once('olivero-tabs', '[data-drupal-nav-primary-tabs]', context).forEach(init);

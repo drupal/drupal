@@ -4,22 +4,16 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal, displace) {
   function TableHeader(table) {
     var $table = $(table);
-
     this.$originalTable = $table;
-
     this.$originalHeader = $table.children('thead');
-
     this.$originalHeaderCells = this.$originalHeader.find('> tr > th');
-
     this.displayWeight = null;
     this.$originalTable.addClass('sticky-table');
     this.tableHeight = $table[0].clientHeight;
     this.tableOffset = this.$originalTable.offset();
-
     this.$originalTable.on('columnschange', {
       tableHeader: this
     }, function (e, display) {
@@ -29,10 +23,8 @@
       }
       tableHeader.displayWeight = display;
     });
-
     this.createSticky();
   }
-
   function forTables(method, arg) {
     var tables = TableHeader.tables;
     var il = tables.length;
@@ -40,14 +32,12 @@
       tables[i][method](arg);
     }
   }
-
   function tableHeaderInitHandler(e) {
     once('tableheader', $(e.data.context).find('table.sticky-enabled')).forEach(function (table) {
       TableHeader.tables.push(new TableHeader(table));
     });
     forTables('onScroll');
   }
-
   Drupal.behaviors.tableHeader = {
     attach: function attach(context) {
       $(window).one('scroll.TableHeaderInit', {
@@ -67,7 +57,6 @@
   function tableHeaderOffsetChangeHandler(e, offsets) {
     forTables('stickyPosition', offsets.top);
   }
-
   $(window).on({
     'resize.TableHeader': tableHeaderResizeHandler,
     'scroll.TableHeader': tableHeaderOnScrollHandler
@@ -76,11 +65,9 @@
     'columnschange.TableHeader drupalToolbarTrayChange': tableHeaderResizeHandler,
     'drupalViewportOffsetChange.TableHeader': tableHeaderOffsetChangeHandler
   });
-
   $.extend(TableHeader, {
     tables: []
   });
-
   $.extend(TableHeader.prototype, {
     minHeight: 100,
     tableOffset: null,
@@ -95,7 +82,6 @@
         top: '0px'
       }).append($stickyHeader).insertBefore(this.$originalTable);
       this.$stickyHeaderCells = $stickyHeader.find('> tr > th');
-
       this.recalculateSticky();
     },
     stickyPosition: function stickyPosition(offsetTop, offsetLeft) {
@@ -127,11 +113,9 @@
     },
     recalculateSticky: function recalculateSticky(event) {
       this.tableHeight = this.$originalTable[0].clientHeight;
-
       displace.offsets.top = displace.calculateOffset('top');
       this.tableOffset = this.$originalTable.offset();
       this.stickyPosition(displace.offsets.top, scrollValue('scrollLeft'));
-
       var $that = null;
       var $stickyCell = null;
       var display = null;
@@ -152,6 +136,5 @@
       this.$stickyTable.css('width', this.$originalTable.outerWidth());
     }
   });
-
   Drupal.TableHeader = TableHeader;
 })(jQuery, Drupal, window.Drupal.displace);

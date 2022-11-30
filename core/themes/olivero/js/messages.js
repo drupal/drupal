@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (Drupal, once) {
   var closeMessage = function closeMessage(message) {
     var messageContainer = message.querySelector('[data-drupal-selector="messages-container"]');
@@ -23,7 +22,6 @@
       message.classList.add('hidden');
     });
   };
-
   Drupal.behaviors.messages = {
     attach: function attach(context) {
       once('messages', '[data-drupal-selector="messages"]', context).forEach(closeMessage);

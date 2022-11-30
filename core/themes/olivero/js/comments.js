@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (Drupal, once) {
   function init(comments) {
     comments.querySelectorAll('[data-drupal-selector="comment"]').forEach(function (comment) {
@@ -28,7 +27,6 @@
       });
     });
   }
-
   Drupal.behaviors.comments = {
     attach: function attach(context) {
       once('comments', '[data-drupal-selector="comments"]', context).forEach(init);

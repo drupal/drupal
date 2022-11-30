@@ -4,15 +4,11 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (Drupal) {
   var isIE11 = !!document.documentMode;
-
   if (isIE11) {
     window.CKEditor5 = null;
-
     var quickEditLabelObserver = null;
-
     Drupal.editors.ckeditor5 = {
       attach: function attach(element) {
         var editorMessageContainer = document.createElement('div');
@@ -29,21 +25,16 @@
         if (quickEditToolbar) {
           quickEditToolbar.classList.remove('ck5-ie11');
           quickEditToolbar.classList.add('icon-pencil');
-
           quickEditLabelObserver.disconnect();
         }
       },
-      onChange: function onChange() {
-      },
-
+      onChange: function onChange() {},
       attachInlineEditor: function attachInlineEditor(element) {
         var quickEditToolbar = document.querySelector('#quickedit-entity-toolbar .quickedit-toolbar');
         var notEditableAlert = Drupal.t('Field Not Editable');
         var notEditableMessage = Drupal.t('CKEditor 5 is not compatible with IE11.');
-
         function quickEditLabelWarnIE11(toolbarLabel) {
           quickEditLabelObserver.disconnect();
-
           toolbarLabel.innerHTML = "<div><b>".concat(notEditableAlert, "</b><div>").concat(notEditableMessage, "</div></div>");
           quickEditLabelObserver.observe(toolbarLabel, {
             childList: true
@@ -53,9 +44,7 @@
           quickEditToolbar.classList.add('ck5-ie11');
           quickEditToolbar.classList.remove('icon-pencil');
           element.classList.add('ck5-ie11');
-
           var toolbarLabel = quickEditToolbar.querySelector('.quickedit-toolbar-label');
-
           quickEditLabelObserver = new MutationObserver(function (mutations) {
             for (var i = 0; i < mutations.length; i++) {
               if (mutations[i].type === 'childList') {

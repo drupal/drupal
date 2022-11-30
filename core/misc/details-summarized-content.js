@@ -22,7 +22,6 @@
       this.$detailsSummarizedContentWrapper.html(Drupal.theme('detailsSummarizedContentText', text));
     }
   });
-
   Drupal.behaviors.detailsSummary = {
     attach: function attach(context) {
       DetailsSummarizedContent.instances = DetailsSummarizedContent.instances.concat(once('details', 'details', context).map(function (details) {
@@ -31,11 +30,9 @@
     }
   };
   Drupal.DetailsSummarizedContent = DetailsSummarizedContent;
-
   Drupal.theme.detailsSummarizedContentWrapper = function () {
     return "<span class=\"summary\"></span>";
   };
-
   Drupal.theme.detailsSummarizedContentText = function (text) {
     return text ? " (".concat(text, ")") : '';
   };

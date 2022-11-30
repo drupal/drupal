@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal) {
   Drupal.behaviors.entityContentDetailsSummaries = {
     attach: function attach(context) {
@@ -12,7 +11,6 @@
       $context.find('.entity-content-form-revision-information').drupalSetSummary(function (context) {
         var $revisionContext = $(context);
         var revisionCheckbox = $revisionContext.find('.js-form-item-revision input');
-
         if (revisionCheckbox.is(':checked') || !revisionCheckbox.length && $revisionContext.find('.js-form-item-revision-log textarea').length) {
           return Drupal.t('New revision');
         }

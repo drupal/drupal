@@ -4,9 +4,10 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0) { ; } } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -16,11 +17,12 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 (function (Drupal, drupalSettings, $, JSON, once, Sortable, _ref) {
   var tabbable = _ref.tabbable;
   var toolbarHelp = [{
@@ -36,41 +38,31 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     button: 'wrapping',
     condition: true
   }];
-
   var Observable = function () {
     function Observable(value) {
       _classCallCheck(this, Observable);
       this._listeners = [];
       this._value = value;
     }
-
     _createClass(Observable, [{
       key: "notify",
-      value:
-      function notify() {
+      value: function notify() {
         var _this = this;
         this._listeners.forEach(function (listener) {
           return listener(_this._value);
         });
       }
-
     }, {
       key: "subscribe",
-      value:
-      function subscribe(listener) {
+      value: function subscribe(listener) {
         this._listeners.push(listener);
       }
-
     }, {
       key: "value",
-      get:
-      function get() {
+      get: function get() {
         return this._value;
-      }
-
-      ,
-      set:
-      function set(val) {
+      },
+      set: function set(val) {
         if (val !== this._value) {
           this._value = val;
           this.notify();
@@ -79,7 +71,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     }]);
     return Observable;
   }();
-
   var getSelectedButtons = function getSelectedButtons(selected, dividers, available) {
     return selected.map(function (id) {
       return _objectSpread({}, [].concat(_toConsumableArray(dividers), _toConsumableArray(available)).find(function (button) {
@@ -87,20 +78,17 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       }));
     });
   };
-
   var updateSelectedButtons = function updateSelectedButtons(selection, textarea) {
     var newValue = JSON.stringify(selection);
     var priorValue = textarea.innerHTML;
     textarea.value = newValue;
     textarea.innerHTML = newValue;
-
     textarea.dispatchEvent(new CustomEvent('change', {
       detail: {
         priorValue: priorValue
       }
     }));
   };
-
   var addToSelectedButtons = function addToSelectedButtons(selection, element, announceChange) {
     var list = _toConsumableArray(selection.value);
     list.push(element.dataset.id);
@@ -111,7 +99,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       });
     }
   };
-
   var removeFromSelectedButtons = function removeFromSelectedButtons(selection, element, announceChange) {
     var list = _toConsumableArray(selection.value);
     var index = Array.from(element.parentElement.children).findIndex(function (child) {
@@ -125,7 +112,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       });
     }
   };
-
   var moveWithinSelectedButtons = function moveWithinSelectedButtons(selection, element, dir) {
     var list = _toConsumableArray(selection.value);
     var index = Array.from(element.parentElement.children).findIndex(function (child) {
@@ -137,7 +123,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       selection.value = list;
     }
   };
-
   var copyToActiveButtons = function copyToActiveButtons(selection, element, announceChange) {
     var list = _toConsumableArray(selection.value);
     list.push(element.dataset.id);
@@ -148,16 +133,13 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       }
     });
   };
-
   var render = function render(root, selectedButtons, availableButtons, dividerButtons) {
     var toolbarHelpText = toolbarHelp.filter(function (helpItem) {
       return selectedButtons.value.includes(helpItem.button) === helpItem.condition;
     }).map(function (helpItem) {
       return helpItem.message;
     });
-
     var existingToolbarHelpText = document.querySelector('[data-drupal-selector="ckeditor5-admin-help-message"]');
-
     if (existingToolbarHelpText && toolbarHelpText.join('').trim() !== existingToolbarHelpText.textContent.trim()) {
       Drupal.announce(toolbarHelpText.join(' '));
     }
@@ -175,7 +157,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       }),
       helpMessage: toolbarHelpText
     });
-
     new Sortable(root.querySelector('[data-button-list="ckeditor5-toolbar-active-buttons"]'), {
       group: {
         name: 'toolbar',
@@ -300,7 +281,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       });
     });
   };
-
   Drupal.behaviors.ckeditor5Admin = {
     attach: function attach(context) {
       once('ckeditor5-admin-toolbar', '#ckeditor5-toolbar-app').forEach(function (container) {
@@ -323,7 +303,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           name: '-',
           label: Drupal.t('Wrapping')
         }];
-
         var selected = new Observable(JSON.parse(selectedTextarea.innerHTML).map(function (name) {
           return [].concat(dividers, _toConsumableArray(available)).find(function (button) {
             return button.name === name;
@@ -372,37 +351,28 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           }
         });
       });
-
       var updateUiStateStorage = function updateUiStateStorage(states) {
         var form = document.querySelector('#filter-format-edit-form, #filter-format-add-form');
-
         var currentStates = form.hasAttribute('data-drupal-ui-state') ? JSON.parse(form.getAttribute('data-drupal-ui-state')) : {};
-
         form.setAttribute('data-drupal-ui-state', JSON.stringify(_objectSpread(_objectSpread({}, currentStates), states)));
       };
-
       var getUiStateStorage = function getUiStateStorage(property) {
         var form = document.querySelector('#filter-format-edit-form, #filter-format-add-form');
         if (form === null) {
           return;
         }
-
         return form.hasAttribute('data-drupal-ui-state') ? JSON.parse(form.getAttribute('data-drupal-ui-state'))[property] : null;
       };
-
       once('ui-state-storage', '#filter-format-edit-form, #filter-format-add-form').forEach(function (form) {
         form.setAttribute('data-drupal-ui-state', JSON.stringify({}));
       });
-
       var maintainActiveVerticalTab = function maintainActiveVerticalTab(verticalTabs) {
         var id = verticalTabs.id;
-
         var activeTab = getUiStateStorage("".concat(id, "-active-tab"));
         if (activeTab) {
           setTimeout(function () {
             var activeTabLink = document.querySelector(activeTab);
             activeTabLink.click();
-
             if (id !== 'plugin-settings-wrapper') {
               return;
             }
@@ -418,7 +388,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
             }
           });
         }
-
         verticalTabs.querySelectorAll('.vertical-tabs__menu').forEach(function (tab) {
           tab.addEventListener('click', function (e) {
             var state = {};
@@ -429,7 +398,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         });
       };
       once('maintainActiveVerticalTab', '#plugin-settings-wrapper, #filter-settings-wrapper').forEach(maintainActiveVerticalTab);
-
       var selectedButtons = document.querySelector('#ckeditor5-toolbar-buttons-selected');
       once('textarea-listener', selectedButtons).forEach(function (textarea) {
         textarea.addEventListener('change', function (e) {
@@ -438,11 +406,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
             return;
           }
           var focusSelector = '';
-
           if (['divider', 'wrapping'].includes(buttonName)) {
             var oldConfig = JSON.parse(e.detail.priorValue);
             var newConfig = JSON.parse(e.target.innerHTML);
-
             if (oldConfig.length > newConfig.length) {
               for (var item = 0; item < newConfig.length; item++) {
                 if (newConfig[item] !== oldConfig[item]) {
@@ -462,7 +428,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           } else {
             focusSelector = "[data-id='".concat(buttonName, "']");
           }
-
           updateUiStateStorage({
             focusSelector: focusSelector
           });
@@ -491,7 +456,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       });
     }
   };
-
   Drupal.theme.ckeditor5SelectedButtons = function (_ref4) {
     var buttons = _ref4.buttons;
     return "\n      <ul class=\"ckeditor5-toolbar-tray ckeditor5-toolbar-active__buttons\" data-button-list=\"ckeditor5-toolbar-active-buttons\" role=\"listbox\" aria-orientation=\"horizontal\" aria-labelledby=\"ckeditor5-toolbar-active-buttons-label\">\n        ".concat(buttons.map(function (button) {
@@ -501,7 +465,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       });
     }).join(''), "\n      </ul>\n    ");
   };
-
   Drupal.theme.ckeditor5DividerButtons = function (_ref5) {
     var buttons = _ref5.buttons;
     return "\n      <ul class=\"ckeditor5-toolbar-tray ckeditor5-toolbar-divider__buttons\" data-button-list=\"ckeditor5-toolbar-divider-buttons\" role=\"listbox\" aria-orientation=\"horizontal\" aria-labelledby=\"ckeditor5-toolbar-divider-buttons-label\">\n        ".concat(buttons.map(function (button) {
@@ -511,7 +474,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       });
     }).join(''), "\n      </ul>\n    ");
   };
-
   Drupal.theme.ckeditor5AvailableButtons = function (_ref6) {
     var buttons = _ref6.buttons;
     return "\n      <ul class=\"ckeditor5-toolbar-tray ckeditor5-toolbar-available__buttons\" data-button-list=\"ckeditor5-toolbar-available-buttons\" role=\"listbox\" aria-orientation=\"horizontal\" aria-labelledby=\"ckeditor5-toolbar-available-buttons-label\">\n        ".concat(buttons.map(function (button) {
@@ -521,7 +483,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       });
     }).join(''), "\n      </ul>\n    ");
   };
-
   Drupal.theme.ckeditor5Button = function (_ref7) {
     var _ref7$button = _ref7.button,
       label = _ref7$button.label,
@@ -538,7 +499,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     });
     return "\n      <li class=\"ckeditor5-toolbar-item ckeditor5-toolbar-item-".concat(id, "\" role=\"option\" tabindex=\"0\" data-drupal-selector=\"ckeditor5-toolbar-button\" data-id=\"").concat(id, "\" data-label=\"").concat(label, "\" data-divider=\"").concat(listType === 'divider', "\">\n        <span class=\"ckeditor5-toolbar-button ckeditor5-toolbar-button-").concat(id, "\">\n          <span class=\"visually-hidden\">").concat(visuallyHiddenLabel, ". ").concat(buttonInstructions[listType], "</span>\n        </span>\n        <span class=\"ckeditor5-toolbar-tooltip\" aria-hidden=\"true\">").concat(label, " </span>\n      </li>\n    ");
   };
-
   Drupal.theme.ckeditor5Admin = function (_ref8) {
     var availableButtons = _ref8.availableButtons,
       dividerButtons = _ref8.dividerButtons,
@@ -546,19 +506,13 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       helpMessage = _ref8.helpMessage;
     return "\n    <div data-drupal-selector=\"ckeditor5-admin-help-message\">\n      <p>".concat(helpMessage.join('</p><p>'), "</p>\n    </div>\n    <div class=\"ckeditor5-toolbar-disabled\">\n      <div class=\"ckeditor5-toolbar-available\">\n        <label id=\"ckeditor5-toolbar-available-buttons-label\">").concat(Drupal.t('Available buttons'), "</label>\n        ").concat(availableButtons, "\n      </div>\n      <div class=\"ckeditor5-toolbar-divider\">\n        <label id=\"ckeditor5-toolbar-divider-buttons-label\">").concat(Drupal.t('Button divider'), "</label>\n        ").concat(dividerButtons, "\n      </div>\n    </div>\n    <div class=\"ckeditor5-toolbar-active\">\n      <label id=\"ckeditor5-toolbar-active-buttons-label\">").concat(Drupal.t('Active toolbar'), "</label>\n      ").concat(activeToolbar, "\n    </div>\n    ");
   };
-
   var originalFilterStatusAttach = Drupal.behaviors.filterStatus.attach;
-
   Drupal.behaviors.filterStatus.attach = function (context, settings) {
     var filterStatusCheckboxes = document.querySelectorAll('#filters-status-wrapper input.form-checkbox');
-
     once.remove('filter-status', filterStatusCheckboxes);
-
     $(filterStatusCheckboxes).off('click.filterUpdate');
-
     originalFilterStatusAttach(context, settings);
   };
-
   Drupal.behaviors.tabErrorsVisible = {
     attach: function attach(context) {
       context.querySelectorAll('details .form-item .error').forEach(function (item) {

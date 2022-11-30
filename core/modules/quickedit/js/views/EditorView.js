@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Backbone, Drupal) {
   Drupal.quickedit.EditorView = Backbone.View.extend({
     initialize: function initialize(options) {
@@ -66,17 +65,14 @@
           break;
       }
     },
-    revert: function revert() {
-    }
-    ,
+    revert: function revert() {},
     save: function save() {
       var fieldModel = this.fieldModel;
       var editorModel = this.model;
       var backstageId = "quickedit_backstage-".concat(this.fieldModel.id.replace(/[/[\]_\s]/g, '-'));
       function fillAndSubmitForm(value) {
         var $form = $("#".concat(backstageId)).find('form');
-        $form.find(':input[type!="hidden"][type!="submit"]:not(select)')
-        .not('[name$="\\[summary\\]"]').val(value);
+        $form.find(':input[type!="hidden"][type!="submit"]:not(select)').not('[name$="\\[summary\\]"]').val(value);
         $form.find('.quickedit-form-submit').trigger('click.quickedit');
       }
       var formOptions = {
@@ -100,20 +96,17 @@
           delete self.formSaveAjax;
           $backstage.remove();
         }
-
         self.formSaveAjax.commands.quickeditFieldFormSaved = function (ajax, response, status) {
           removeHiddenForm();
           fieldModel.set('state', 'saved');
           fieldModel.set('htmlForOtherViewModes', response.other_view_modes);
           fieldModel.set('html', response.data);
         };
-
         self.formSaveAjax.commands.quickeditFieldFormValidationErrors = function (ajax, response, status) {
           removeHiddenForm();
           editorModel.set('validationErrors', response.data);
           fieldModel.set('state', 'invalid');
         };
-
         self.formSaveAjax.commands.quickeditFieldForm = function () {};
         fillAndSubmitForm(editorModel.get('currentValue'));
       });

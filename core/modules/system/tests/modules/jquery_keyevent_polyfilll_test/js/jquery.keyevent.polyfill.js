@@ -4,17 +4,14 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($) {
   jQuery.event.addProp('which', function (event) {
     var keyEventRegex = /^key/;
     var mouseEventRegex = /^(?:mouse|pointer|contextmenu|drag|drop)|click/;
     var button = event.button;
-
     if (event.which == null && keyEventRegex.test(event.type)) {
       return event.charCode != null ? event.charCode : event.keyCode;
     }
-
     if (!event.which && button !== undefined && mouseEventRegex.test(event.type)) {
       if (button && 1) {
         return 1;

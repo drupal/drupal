@@ -4,20 +4,17 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal, Backbone, CKEDITOR, _) {
   Drupal.ckeditor.ControllerView = Backbone.View.extend({
     events: {},
     initialize: function initialize() {
       this.getCKEditorFeatures(this.model.get('hiddenEditorConfig'), this.disableFeaturesDisallowedByFilters.bind(this));
-
       this.model.listenTo(this.model, 'change:activeEditorConfig', this.model.sync);
       this.listenTo(this.model, 'change:isDirty', this.parseEditorDOM);
     },
     parseEditorDOM: function parseEditorDOM(model, isDirty, options) {
       if (isDirty) {
         var currentConfig = this.model.get('activeEditorConfig');
-
         var rows = [];
         this.$el.find('.ckeditor-active-toolbar-configuration').children('.ckeditor-row').each(function () {
           var groups = [];
@@ -41,7 +38,6 @@
         });
         this.model.set('activeEditorConfig', rows);
         this.model.set('isDirty', false);
-
         if (options.broadcast !== false) {
           var prev = this.getButtonList(currentConfig);
           var next = this.getButtonList(rows);
@@ -59,7 +55,6 @@
         for (var i = 0; i < CKEFeatureRules.length; i++) {
           var CKERule = CKEFeatureRules[i];
           var rule = new Drupal.EditorFeatureHTMLRule();
-
           var tags = getProperties(CKERule.elements);
           rule.required.tags = CKERule.propertiesOnly ? [] : tags;
           rule.allowed.tags = tags;
@@ -73,7 +68,6 @@
           feature.addHTMLRule(rule);
         }
       };
-
       var hiddenCKEditorID = 'ckeditor-hidden';
       if (CKEDITOR.instances[hiddenCKEditorID]) {
         CKEDITOR.instances[hiddenCKEditorID].destroy(true);
@@ -86,7 +80,6 @@
         });
       }
       CKEDITOR.inline($("#".concat(hiddenCKEditorID)).get(0), CKEditorConfig);
-
       CKEDITOR.once('instanceReady', function (e) {
         if (e.editor.name === hiddenCKEditorID) {
           var CKEFeatureRulesMap = {};
@@ -101,7 +94,6 @@
             }
             CKEFeatureRulesMap[name].push(rule);
           }
-
           var features = {};
           var buttonsToFeatures = {};
           Object.keys(CKEFeatureRulesMap).forEach(function (featureName) {
@@ -121,7 +113,6 @@
       if (button === '-') {
         return false;
       }
-
       var featureName = this.model.get('buttonsToFeatures')[button.toLowerCase()];
       if (!featureName) {
         featureName = button.toLowerCase();
@@ -136,9 +127,7 @@
     disableFeaturesDisallowedByFilters: function disableFeaturesDisallowedByFilters(features, buttonsToFeatures) {
       this.model.set('featuresMetadata', features);
       this.model.set('buttonsToFeatures', buttonsToFeatures);
-
       this.broadcastConfigurationChanges(this.$el);
-
       var existingButtons = [];
       var buttonGroups = _.flatten(this.model.get('activeEditorConfig'));
       for (var i = 0; i < buttonGroups.length; i++) {
@@ -171,22 +160,17 @@
       var hiddenEditorConfig = this.model.get('hiddenEditorConfig');
       var getFeatureForButton = this.getFeatureForButton.bind(this);
       var getCKEditorFeatures = this.getCKEditorFeatures.bind(this);
-      $ckeditorToolbar.find('.ckeditor-toolbar-active')
-      .on('CKEditorToolbarChanged.ckeditorAdmin', function (event, action, button) {
+      $ckeditorToolbar.find('.ckeditor-toolbar-active').on('CKEditorToolbarChanged.ckeditorAdmin', function (event, action, button) {
         var feature = getFeatureForButton(button);
-
         if (feature === false) {
           return;
         }
-
         var configEvent = action === 'added' ? 'addedFeature' : 'removedFeature';
         Drupal.editorConfiguration[configEvent](feature);
-      })
-      .on('CKEditorPluginSettingsChanged.ckeditorAdmin', function (event, settingsChanges) {
+      }).on('CKEditorPluginSettingsChanged.ckeditorAdmin', function (event, settingsChanges) {
         Object.keys(settingsChanges || {}).forEach(function (key) {
           hiddenEditorConfig[key] = settingsChanges[key];
         });
-
         getCKEditorFeatures(hiddenEditorConfig, function (features) {
           var featuresMetadata = view.model.get('featuresMetadata');
           Object.keys(features || {}).forEach(function (name) {
@@ -202,13 +186,11 @@
     getButtonList: function getButtonList(config) {
       var buttons = [];
       config = _.flatten(config);
-
       config.forEach(function (group) {
         group.items.forEach(function (button) {
           buttons.push(button);
         });
       });
-
       return _.without(buttons, '-');
     }
   });

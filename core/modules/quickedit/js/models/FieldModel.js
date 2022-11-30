@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function (_, Backbone, Drupal) {
   Drupal.quickedit.FieldModel = Drupal.quickedit.BaseModel.extend({
     defaults: {
@@ -15,7 +14,6 @@
       metadata: null,
       acceptStateChange: null,
       logicalFieldID: null,
-
       state: 'inactive',
       isChanged: false,
       inTempStore: false,
@@ -24,11 +22,8 @@
     },
     initialize: function initialize(options) {
       this.set('html', options.el.outerHTML);
-
       this.get('entity').get('fields').add(this);
-
       this.set('logicalFieldID', this.get('fieldID').split('/').slice(0, 4).join('/'));
-
       Drupal.quickedit.BaseModel.prototype.initialize.call(this, options);
     },
     destroy: function destroy(options) {
@@ -37,8 +32,7 @@
       }
       Drupal.quickedit.BaseModel.prototype.destroy.call(this, options);
     },
-    sync: function sync() {
-    },
+    sync: function sync() {},
     validate: function validate(attrs, options) {
       var current = this.get('state');
       var next = attrs.state;
@@ -60,8 +54,7 @@
     findOtherViewModes: function findOtherViewModes() {
       var currentField = this;
       var otherViewModes = [];
-      Drupal.quickedit.collections.fields
-      .where({
+      Drupal.quickedit.collections.fields.where({
         logicalFieldID: currentField.get('logicalFieldID')
       }).forEach(function (field) {
         if (field !== currentField && field.get('fieldID') !== currentField.get('fieldID')) {
@@ -71,21 +64,11 @@
       return otherViewModes;
     }
   }, {
-    states: [
-    'inactive',
-    'candidate',
-    'highlighted',
-    'activating',
-    'active',
-    'changed',
-    'saving',
-    'saved',
-    'invalid'],
+    states: ['inactive', 'candidate', 'highlighted', 'activating', 'active', 'changed', 'saving', 'saved', 'invalid'],
     followsStateSequence: function followsStateSequence(from, to) {
       return _.indexOf(this.states, from) < _.indexOf(this.states, to);
     }
   });
-
   Drupal.quickedit.FieldCollection = Backbone.Collection.extend({
     model: Drupal.quickedit.FieldModel
   });

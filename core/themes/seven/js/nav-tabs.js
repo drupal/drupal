@@ -28,7 +28,6 @@
     $tab.on('click.tabs', '[data-drupal-nav-tabs-trigger]', openMenu);
     $(window).on('resize.tabs', Drupal.debounce(handleResize, 150)).trigger('resize.tabs');
   }
-
   Drupal.behaviors.navTabs = {
     attach: function attach(context, settings) {
       var notSmartPhone = window.matchMedia('(min-width: 300px)');

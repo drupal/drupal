@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal, debounce, displace) {
   Drupal.offCanvas = {
     position: null,
@@ -29,7 +28,6 @@
         at: "".concat(Drupal.offCanvas.getEdge(), " top"),
         of: window
       };
-
       var position = settings.drupalOffCanvasPosition;
       var height = position === 'side' ? $(window).height() : settings.height;
       var width = position === 'side' ? settings.width : '100%';
@@ -63,7 +61,6 @@
       var $container = Drupal.offCanvas.getContainer($element);
       var $offsets = $container.find('> :not(#drupal-off-canvas, .ui-resizable-handle)');
       var offset = 0;
-
       $element.css({
         height: 'auto'
       });
@@ -71,7 +68,6 @@
       $offsets.each(function (i, e) {
         offset += $(e).outerHeight();
       });
-
       var scrollOffset = $element.outerHeight() - $element.height();
       $element.height(modalHeight - offset - scrollOffset);
     },
@@ -79,7 +75,6 @@
       var $element = event.data.$element;
       var container = Drupal.offCanvas.getContainer($element);
       var position = event.data.settings.drupalOffCanvasPosition;
-
       if (Drupal.offCanvas.position && Drupal.offCanvas.position !== position) {
         container.removeAttr("data-offset-".concat(Drupal.offCanvas.position));
       }
@@ -139,7 +134,6 @@
       displace();
     }
   };
-
   Drupal.behaviors.offCanvasEvents = {
     attach: function attach() {
       if (!once('off-canvas', 'html').length) {

@@ -4,10 +4,8 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Backbone, Drupal, settings, document, Shepherd) {
   var queryString = decodeURI(window.location.search);
-
   Drupal.behaviors.tour = {
     attach: function attach(context) {
       once('tour', 'body').forEach(function () {
@@ -16,8 +14,7 @@
           el: $(context).find('#toolbar-tab-tour'),
           model: model
         });
-        model
-        .on('change:isActive', function (tourModel, isActive) {
+        model.on('change:isActive', function (tourModel, isActive) {
           $(document).trigger(isActive ? 'drupalTourStarted' : 'drupalTourStopped');
         });
         if (settings._tour_internal) {
@@ -29,12 +26,10 @@
       });
     }
   };
-
   Drupal.tour = Drupal.tour || {
     models: {},
     views: {}
   };
-
   Drupal.tour.models.StateModel = Backbone.Model.extend({
     defaults: {
       tour: [],
@@ -98,9 +93,7 @@
             tourItemOptions.when = {
               show: function show() {
                 var nextButton = shepherdTour.currentStep.el.querySelector('footer button');
-
                 nextButton.focus();
-
                 if (Drupal.tour.hasOwnProperty('convertToJoyrideMarkup')) {
                   Drupal.tour.convertToJoyrideMarkup(shepherdTour);
                 }
@@ -136,10 +129,8 @@
         if (tips && tourItem.hasOwnProperty('classes') && tourItem.classes.indexOf(tips[1]) === -1) {
           return false;
         }
-
         return !(tourItem.selector && !document.querySelector(tourItem.selector));
       });
-
       if (tourItems.length !== filteredTour.length) {
         filteredTour.forEach(function (filteredTourItem, filteredTourItemId) {
           filteredTour[filteredTourItemId].counter = Drupal.t('!tour_item of !total', {
@@ -154,7 +145,6 @@
       }
     }
   });
-
   Drupal.tour.nextButton = function (shepherdTour, tourStepConfig) {
     return {
       classes: 'button button--primary',
@@ -162,7 +152,6 @@
       action: tourStepConfig.cancelText ? shepherdTour.cancel : shepherdTour.next
     };
   };
-
   Drupal.theme.tourItemContent = function (tourStepConfig) {
     return "".concat(tourStepConfig.body, "<div class=\"tour-progress\">").concat(tourStepConfig.counter, "</div>");
   };

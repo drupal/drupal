@@ -4,7 +4,6 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
-
 (function ($, Drupal, window) {
   function TableResponsive(table) {
     this.table = table;
@@ -14,10 +13,8 @@
     this.$headers = this.$table.find('th');
     this.$link = $('<button type="button" class="link tableresponsive-toggle"></button>').attr('title', Drupal.t('Show table cells that were hidden to make the table fit within a small screen.')).on('click', $.proxy(this, 'eventhandlerToggleColumns'));
     this.$table.before($('<div class="tableresponsive-toggle-columns"></div>').append(this.$link));
-
     $(window).on('resize.tableresponsive', $.proxy(this, 'eventhandlerEvaluateColumnVisibility')).trigger('resize.tableresponsive');
   }
-
   Drupal.behaviors.tableResponsive = {
     attach: function attach(context, settings) {
       once('tableresponsive', 'table.responsive-enabled', context).forEach(function (table) {
@@ -25,11 +22,9 @@
       });
     }
   };
-
   $.extend(TableResponsive, {
     tables: []
   });
-
   $.extend(TableResponsive.prototype, {
     eventhandlerEvaluateColumnVisibility: function eventhandlerEvaluateColumnVisibility(e) {
       var pegged = parseInt(this.$link.data('pegged'), 10);
@@ -62,8 +57,7 @@
         });
         this.$link[0].textContent = this.hideText;
         this.$link.data('pegged', 1);
-      }
-      else {
+      } else {
         this.$revealedCells.hide();
         this.$revealedCells.each(function (index, element) {
           var $cell = $(this);
@@ -87,6 +81,5 @@
       }
     }
   });
-
   Drupal.TableResponsive = TableResponsive;
 })(jQuery, Drupal, window);
