@@ -373,7 +373,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if (empty($form_state->getValue('blocks'))) {
-      $form_state->setErrorByName('blocks', 'No blocks settings to update.');
+      $form_state->setErrorByName('blocks', $this->t('No blocks settings to update.'));
     }
 
   }
@@ -383,16 +383,13 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $blocks = $form_state->getValue('blocks');
-    // Passing empty value to load Multiple would load all items from storage.
-    if (!empty($blocks)) {
-      $entities = $this->storage->loadMultiple(array_keys($blocks));
-      /** @var \Drupal\block\BlockInterface[] $entities */
-      foreach ($entities as $entity_id => $entity) {
-        $entity_values = $form_state->getValue(['blocks', $entity_id]);
-        $entity->setWeight($entity_values['weight']);
-        $entity->setRegion($entity_values['region']);
-        $entity->save();
-      }
+    $entities = $this->storage->loadMultiple(array_keys($blocks));
+    /** @var \Drupal\block\BlockInterface[] $entities */
+    foreach ($entities as $entity_id => $entity) {
+      $entity_values = $form_state->getValue(['blocks', $entity_id]);
+      $entity->setWeight($entity_values['weight']);
+      $entity->setRegion($entity_values['region']);
+      $entity->save();
     }
     $this->messenger->addStatus($this->t('The block settings have been updated.'));
   }
