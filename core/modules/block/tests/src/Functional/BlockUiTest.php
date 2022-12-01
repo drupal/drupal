@@ -108,7 +108,8 @@ class BlockUiTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/block/demo/stable9');
     $this->assertSession()->statusCodeEquals(404);
 
-    // Delete all blocks and verify block layout can be saved.
+    // Delete all blocks and verify saving the block layout results in a
+    // validation error.
     $block_storage = \Drupal::service('entity_type.manager')->getStorage('block');
     $blocks = $block_storage->loadMultiple();
     foreach ($blocks as $block) {
@@ -118,6 +119,7 @@ class BlockUiTest extends BrowserTestBase {
     $blocks_table = $this->xpath("//tr[@class='block-enabled']");
     $this->assertEmpty($blocks_table, 'The blocks table is now empty.');
     $this->submitForm([], 'Save blocks');
+    $this->assertSession()->pageTextContains('No blocks settings to update');
 
   }
 
