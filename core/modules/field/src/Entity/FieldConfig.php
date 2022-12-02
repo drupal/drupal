@@ -44,6 +44,11 @@ use Drupal\field\FieldConfigInterface;
  *     "default_value_callback",
  *     "settings",
  *     "field_type",
+ *   },
+ *   constraints = {
+ *     "RequiredConfigDependencies" = {
+ *       "field_storage_config"
+ *     }
  *   }
  * )
  */

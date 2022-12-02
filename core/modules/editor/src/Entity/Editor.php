@@ -30,6 +30,11 @@ use Drupal\editor\EditorInterface;
  *     "editor",
  *     "settings",
  *     "image_upload",
+ *   },
+ *   constraints = {
+ *     "RequiredConfigDependencies" = {
+ *       "filter_format"
+ *     }
  *   }
  * )
  */
