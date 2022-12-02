@@ -28,6 +28,30 @@ use Drupal\Core\Url;
 use GuzzleHttp\Exception\TransferException;
 use Symfony\Component\HttpFoundation\Request;
 
+// cspell:ignore quickedit
+
+/**
+ * An array of machine names of modules that were removed from Drupal core.
+ */
+const DRUPAL_CORE_REMOVED_MODULE_LIST = [
+  'aggregator' => 'Aggregator',
+  'ckeditor' => 'CKEditor',
+  'color' => 'Color',
+  'hal' => 'HAL',
+  'quickedit' => 'Quick Edit',
+  'rdf' => 'RDF',
+];
+
+/**
+ * An array of machine names of themes that were removed from Drupal core.
+ */
+const DRUPAL_CORE_REMOVED_THEME_LIST = [
+  'bartik' => 'Bartik',
+  'classy' => 'Classy',
+  'seven' => 'Seven',
+  'stable' => 'Stable',
+];
+
 /**
  * Implements hook_requirements().
  */
@@ -989,13 +1013,16 @@ function system_requirements($phase) {
 
   // Display an error if a newly introduced dependency in a module is not resolved.
   if ($phase === 'update' || $phase === 'runtime') {
-    $create_extension_incompatibility_list = function ($extension_names, $description, $title) {
+    $create_extension_incompatibility_list = function (array $extension_names, PluralTranslatableMarkup $description, PluralTranslatableMarkup $title, TranslatableMarkup|string $message = '', TranslatableMarkup|string $additional_description = '') {
+      if ($message === '') {
+        $message = new TranslatableMarkup('Review the <a href=":url"> suggestions for resolving this incompatibility</a> to repair your installation, and then re-run update.php.', [':url' => 'https://www.drupal.org/docs/updating-drupal/troubleshooting-database-updates']);
+      }
       // Use an inline twig template to:
-      // - Concatenate two MarkupInterface objects and preserve safeness.
+      // - Concatenate MarkupInterface objects and preserve safeness.
       // - Use the item_list theme for the extension list.
       $template = [
         '#type' => 'inline_template',
-        '#template' => '{{ description }}{{ extensions }}',
+        '#template' => '{{ description }}{{ extensions }}{{ additional_description }}<br>',
         '#context' => [
           'extensions' => [
             '#theme' => 'item_list',
@@ -1004,15 +1031,13 @@ function system_requirements($phase) {
       ];
       $template['#context']['extensions']['#items'] = $extension_names;
       $template['#context']['description'] = $description;
+      $template['#context']['additional_description'] = $additional_description;
       return [
         'title' => $title,
         'value' => [
           'list' => $template,
           'handbook_link' => [
-            '#markup' => t(
-              'Review the <a href=":url"> suggestions for resolving this incompatibility</a> to repair your installation, and then re-run update.php.',
-              [':url' => 'https://www.drupal.org/docs/8/update/troubleshooting-database-updates']
-            ),
+            '#markup' => $message,
           ],
         ],
         'severity' => REQUIREMENT_ERROR,
@@ -1134,13 +1159,89 @@ function system_requirements($phase) {
       );
     }
 
-    // Look for invalid modules.
     $extension_config = \Drupal::configFactory()->get('core.extension');
-    $is_missing_extension = function ($extension_name) use (&$module_extension_list) {
-      return !$module_extension_list->exists($extension_name);
-    };
 
-    $invalid_modules = array_filter(array_keys($extension_config->get('module')), $is_missing_extension);
+    // Look for removed core modules.
+    $is_removed_module = function ($extension_name) use ($module_extension_list) {
+      return !$module_extension_list->exists($extension_name)
+        && array_key_exists($extension_name, DRUPAL_CORE_REMOVED_MODULE_LIST);
+    };
+    $removed_modules = array_filter(array_keys($extension_config->get('module')), $is_removed_module);
+    if (!empty($removed_modules)) {
+      $list = [];
+      foreach ($removed_modules as $removed_module) {
+        $list[] = t('<a href=":url">@module</a>', [
+          ':url' => "https://www.drupal.org/project/$removed_module",
+          '@module' => DRUPAL_CORE_REMOVED_MODULE_LIST[$removed_module],
+        ]);
+      }
+      $requirements['removed_module'] = $create_extension_incompatibility_list(
+        $list,
+        new PluralTranslatableMarkup(
+          count($removed_modules),
+          'You must add the following contributed module and reload this page.',
+          'You must add the following contributed modules and reload this page.'
+        ),
+        new PluralTranslatableMarkup(
+          count($removed_modules),
+          'Removed core module',
+          'Removed core modules'
+        ),
+        new TranslatableMarkup(
+          'For more information read the <a href=":url">documentation on deprecated modules.</a>',
+          [':url' => 'https://www.drupal.org/node/3223395#s-recommendations-for-deprecated-modules']
+        ),
+        new PluralTranslatableMarkup(
+          count($removed_modules),
+          'This module is installed on your site but is no longer provided by Core.',
+          'These modules are installed on your site but are no longer provided by Core.'
+        ),
+      );
+    }
+
+    // Look for removed core themes.
+    $is_removed_theme = function ($extension_name) use ($theme_extension_list) {
+      return !$theme_extension_list->exists($extension_name)
+        && array_key_exists($extension_name, DRUPAL_CORE_REMOVED_THEME_LIST);
+    };
+    $removed_themes = array_filter(array_keys($extension_config->get('theme')), $is_removed_theme);
+    if (!empty($removed_themes)) {
+      $list = [];
+      foreach ($removed_themes as $removed_theme) {
+        $list[] = t('<a href=":url">@theme</a>', [
+          ':url' => "https://www.drupal.org/project/$removed_theme",
+          '@theme' => DRUPAL_CORE_REMOVED_THEME_LIST[$removed_theme],
+        ]);
+      }
+      $requirements['removed_theme'] = $create_extension_incompatibility_list(
+        $list,
+        new PluralTranslatableMarkup(
+          count($removed_themes),
+          'You must add the following contributed theme and reload this page.',
+          'You must add the following contributed themes and reload this page.'
+        ),
+        new PluralTranslatableMarkup(
+          count($removed_themes),
+          'Removed core theme',
+          'Removed core themes'
+        ),
+        new TranslatableMarkup(
+          'For more information read the <a href=":url">documentation on deprecated themes.</a>',
+          [':url' => 'https://www.drupal.org/node/3223395#s-recommendations-for-deprecated-themes']
+        ),
+        new PluralTranslatableMarkup(
+          count($removed_themes),
+          'This theme is installed on your site but is no longer provided by Core.',
+          'These themes are installed on your site but are no longer provided by Core.'
+        ),
+      );
+    }
+
+    // Look for missing modules.
+    $is_missing_module = function ($extension_name) use ($module_extension_list) {
+      return !$module_extension_list->exists($extension_name) && !in_array($extension_name, array_keys(DRUPAL_CORE_REMOVED_MODULE_LIST), TRUE);
+    };
+    $invalid_modules = array_filter(array_keys($extension_config->get('module')), $is_missing_module);
 
     if (!empty($invalid_modules)) {
       $requirements['invalid_module'] = $create_extension_incompatibility_list(
@@ -1160,7 +1261,7 @@ function system_requirements($phase) {
 
     // Look for invalid themes.
     $is_missing_theme = function ($extension_name) use (&$theme_extension_list) {
-      return !$theme_extension_list->exists($extension_name);
+      return !$theme_extension_list->exists($extension_name) && !in_array($extension_name, array_keys(DRUPAL_CORE_REMOVED_THEME_LIST), TRUE);
     };
     $invalid_themes = array_filter(array_keys($extension_config->get('theme')), $is_missing_theme);
     if (!empty($invalid_themes)) {
