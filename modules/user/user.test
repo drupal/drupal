@@ -1313,9 +1313,10 @@ class UserPictureTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->user);
 
     // Try to upload a file that is not an image for the user picture.
-    $not_an_image = current($this->drupalGetTestFiles('html'));
-    $this->saveUserPicture($not_an_image);
+    $not_an_image = $this->drupalGetTestFiles('html');
+    $this->saveUserPicture($not_an_image[1]);
     $this->assertRaw(t('Only JPEG, PNG and GIF images are allowed.'), 'Non-image files are not accepted.');
+    $this->assertNoRaw(t('Only files with the following extensions are allowed:'), 'Additional error message not displayed.');
   }
 
   /**

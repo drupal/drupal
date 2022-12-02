@@ -694,6 +694,11 @@ function user_validate_picture(&$form, &$form_state) {
     'file_validate_is_image' => array(),
     'file_validate_image_resolution' => array(variable_get('user_picture_dimensions', '85x85')),
     'file_validate_size' => array((int) variable_get('user_picture_file_size', '30') * 1024),
+    // file_validate_is_image() uses the image toolkit to validate whether the
+    // file is a valid image type, so set file_validate_extensions to an empty
+    // array in order to signal to file_save_upload() that there is no need to
+    // validate the upload against a default list of file extensions.
+    'file_validate_extensions' => array(),
   );
 
   // Save the file as a temporary file.
