@@ -470,6 +470,10 @@
         })
         .catch((error) => {
           // eslint-disable-next-line no-console
+          console.info(
+            'Debugging can be done with an unminified version of CKEditor by installing from the source file. Consult documentation at https://www.drupal.org/node/3258901',
+          );
+          // eslint-disable-next-line no-console
           console.error(error);
         });
     },

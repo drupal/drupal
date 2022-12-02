@@ -197,6 +197,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           offCanvasCss(element);
         }
       }).catch(function (error) {
+        console.info('Debugging can be done with an unminified version of CKEditor by installing from the source file. Consult documentation at https://www.drupal.org/node/3258901');
         console.error(error);
       });
     },
