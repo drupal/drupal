@@ -176,6 +176,10 @@ function _image_field_resolution_validate($element, &$form_state) {
         form_error($element[$dimension], t('Height and width values must be numeric.'));
         return;
       }
+      if (intval($value) < 0) {
+        form_error($element[$dimension], t('Height and width values must be positive numbers.'));
+        return;
+      }
       if (intval($value) == 0) {
         form_error($element[$dimension], t('Both a height and width value must be specified in the !name field.', array('!name' => $element['#title'])));
         return;

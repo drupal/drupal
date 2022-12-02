@@ -1268,6 +1268,21 @@ class ImageFieldValidateTestCase extends ImageFieldTestCase {
     $this->assertText(t('The specified file ' . $image_that_is_too_small->filename . ' could not be uploaded. The image is too small; the minimum dimensions are 50x50 pixels.'), 'Node save failed when minimum image resolution was not met.');
     $nid = $this->uploadNodeImage($image_that_is_too_big, $field_name, 'article');
     $this->assertText(t('The image was resized to fit within the maximum allowed dimensions of 100x100 pixels.'), 'Image exceeding max resolution was properly resized.');
+
+    // Verify that image resolution can contain only positive numbers.
+    $edit = array(
+      'instance[settings][max_resolution][x]' => -10,
+      'instance[settings][max_resolution][y]' => -10,
+    );
+    $this->drupalPost('admin/structure/types/manage/article/fields/' . $field_name, $edit, t('Save settings'));
+    $this->assertRaw(t('Height and width values must be positive numbers.'));
+
+    $edit = array(
+      'instance[settings][max_resolution][x]' => 'x',
+      'instance[settings][max_resolution][y]' => 'x',
+    );
+    $this->drupalPost('admin/structure/types/manage/article/fields/' . $field_name, $edit, t('Save settings'));
+    $this->assertRaw(t('Height and width values must be numeric.'));
   }
 }
 
