@@ -70,6 +70,29 @@ Drupal.tableHeader = function (table) {
 };
 
 /**
+ * Call the header offset function to prevent use of eval().
+ *
+ * @param accessor
+ *   The callback function name.
+ * @return
+ *   The callback result.
+ */
+Drupal.tableHeader.callHeaderOffsetFunction = function(accessor) {
+  accessor = accessor.split('.');
+  var callback = window;
+  for (var i = 0, len = accessor.length - 1; i < len; i++) {
+    if (typeof callback[accessor[i]] !== 'function' && typeof callback[accessor[i]] != 'object') {
+      return 0;
+    }
+    callback = callback[accessor[i]];
+  }
+  if (typeof callback[accessor[accessor.length - 1]] === 'function') {
+    return callback[accessor[accessor.length - 1]]();
+  }
+  return 0;
+};
+
+/**
  * Event handler: recalculates position of the sticky table header.
  *
  * @param event
@@ -80,7 +103,7 @@ Drupal.tableHeader.prototype.eventhandlerRecalculateStickyHeader = function (eve
   var calculateWidth = event.data && event.data.calculateWidth;
 
   // Reset top position of sticky table headers to the current top offset.
-  this.stickyOffsetTop = Drupal.settings.tableHeaderOffset ? eval(Drupal.settings.tableHeaderOffset + '()') : 0;
+  this.stickyOffsetTop = Drupal.settings.tableHeaderOffset ? Drupal.tableHeader.callHeaderOffsetFunction(Drupal.settings.tableHeaderOffset) : 0;
   this.stickyTable.css('top', this.stickyOffsetTop + 'px');
 
   // Save positioning data.

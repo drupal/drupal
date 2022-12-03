@@ -188,7 +188,7 @@ Drupal.overlayChild.behaviors.alterTableHeaderOffset = function (context, settin
  * Callback for Drupal.settings.tableHeaderOffset.
  */
 Drupal.overlayChild.tableHeaderOffset = function () {
-  var topOffset = Drupal.overlayChild.prevTableHeaderOffset ? eval(Drupal.overlayChild.prevTableHeaderOffset + '()') : 0;
+  var topOffset = Drupal.overlayChild.prevTableHeaderOffset ? Drupal.tableHeader.callHeaderOffsetFunction(Drupal.overlayChild.prevTableHeaderOffset) : 0;
 
   return topOffset + parseInt($(document.body).css('marginTop'));
 };
