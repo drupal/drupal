@@ -2398,7 +2398,7 @@ function user_external_login_register($name, $module) {
  */
 function user_pass_reset_url($account) {
   $timestamp = REQUEST_TIME;
-  return url("user/reset/$account->uid/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login, $account->uid), array('absolute' => TRUE));
+  return url("user/reset/$account->uid/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login, $account->uid, $account->mail), array('absolute' => TRUE));
 }
 
 /**
@@ -2420,7 +2420,7 @@ function user_pass_reset_url($account) {
  */
 function user_cancel_url($account) {
   $timestamp = REQUEST_TIME;
-  return url("user/$account->uid/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login, $account->uid), array('absolute' => TRUE));
+  return url("user/$account->uid/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login, $account->uid, $account->mail), array('absolute' => TRUE));
 }
 
 /**
@@ -2442,11 +2442,13 @@ function user_cancel_url($account) {
  *   The UNIX timestamp of the user's last login.
  * @param int $uid
  *   The user ID of the user account.
+ * @param string $mail
+ *   The e-mail address of the user.
  *
  * @return
  *   A string that is safe for use in URLs and SQL statements.
  */
-function user_pass_rehash($password, $timestamp, $login, $uid) {
+function user_pass_rehash($password, $timestamp, $login, $uid, $mail = '') {
   // Backwards compatibility: Try to determine a $uid if one was not passed.
   // (Since $uid is a required parameter to this function, a PHP warning will
   // be generated if it's not provided, which is an indication that the calling
@@ -2466,7 +2468,14 @@ function user_pass_rehash($password, $timestamp, $login, $uid) {
     }
   }
 
-  return drupal_hmac_base64($timestamp . $login . $uid, drupal_get_hash_salt() . $password);
+  // Backwards compatibility: If the $mail parameter is not provided, load it
+  // from the user object.
+  if (empty($mail)) {
+    $account = user_load($uid);
+    $mail = $account->mail;
+  }
+
+  return drupal_hmac_base64($timestamp . $login . $uid . $mail, drupal_get_hash_salt() . $password);
 }
 
 /**

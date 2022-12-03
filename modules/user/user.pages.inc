@@ -208,7 +208,7 @@ function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $a
         // redirect to the same URL but with the hash replaced by an invalid
         // one ("confirm"). This prevents disclosing the hash via referrer
         // headers or web browser history.
-        if ($hashed_pass == user_pass_rehash($account->pass, $timestamp, $account->login, $account->uid)) {
+        if ($hashed_pass == user_pass_rehash($account->pass, $timestamp, $account->login, $account->uid, $account->mail)) {
           if ($action === 'login') {
             // The 'login' action redirects directly to the user edit form.
             $is_valid = TRUE;
@@ -226,7 +226,7 @@ function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $a
           }
         }
         // If the reset hash from the session is valid, use that.
-        elseif ($session_reset_hash && $session_reset_hash == user_pass_rehash($account->pass, $timestamp, $account->login, $account->uid)) {
+        elseif ($session_reset_hash && $session_reset_hash == user_pass_rehash($account->pass, $timestamp, $account->login, $account->uid, $account->mail)) {
           $is_valid = TRUE;
         }
       }
@@ -642,7 +642,7 @@ function user_cancel_confirm($account, $timestamp = 0, $hashed_pass = '') {
   // Basic validation of arguments.
   if (isset($account->data['user_cancel_method']) && !empty($timestamp) && !empty($hashed_pass)) {
     // Validate expiration and hashed password/login.
-    if ($timestamp <= $current && $current - $timestamp < $timeout && $account->uid && $timestamp >= $account->login && $hashed_pass == user_pass_rehash($account->pass, $timestamp, $account->login, $account->uid)) {
+    if ($timestamp <= $current && $current - $timestamp < $timeout && $account->uid && $timestamp >= $account->login && $hashed_pass == user_pass_rehash($account->pass, $timestamp, $account->login, $account->uid, $account->mail)) {
       $edit = array(
         'user_cancel_notify' => isset($account->data['user_cancel_notify']) ? $account->data['user_cancel_notify'] : variable_get('user_mail_status_canceled_notify', FALSE),
       );
