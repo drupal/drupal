@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Dummy module implementing hook_user_load().
+ */
+
+/**
+ * Implements hook_user_load().
+ */
+function anonymous_user_unblock_test_user_load($users) {
+  foreach ($users as $user) {
+    if ($user->uid == 0) {
+      // Try to fool user_save() into unblocking the anonymous user.
+      // See https://www.drupal.org/comment/14722637.
+      $user->is_new = FALSE;
+      $user->original = clone $user;
+    }
+  }
+}

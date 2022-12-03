@@ -2881,3 +2881,67 @@ class UserValidateCurrentPassCustomForm extends DrupalWebTestCase {
     $this->assertText(t('The password has been validated and the form submitted successfully.'));
   }
 }
+
+/**
+ * Tests actions provided by the User module.
+ */
+class UserActionsTest extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'User actions',
+      'description' => 'Test actions provided by the user module.',
+      'group' => 'User',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('dblog', 'anonymous_user_unblock_test');
+  }
+
+  /**
+   * Tests user block and unblock actions.
+   */
+  function testUserBlockUnBlockActions() {
+    $unblocked_user = $this->drupalCreateUser();
+
+    db_truncate('watchdog')->execute();
+
+    // Block a user.
+    user_block_user_action($unblocked_user);
+
+    $blocked_user = user_load($unblocked_user->uid, TRUE);
+    $this->assertEqual($blocked_user->status, 0, 'User is blocked');
+
+    // Assert that a watchdog message was logged.
+    $status = (bool) db_query_range('SELECT 1 FROM {watchdog} WHERE message = :message AND variables = :variables', 0, 1, array(':message' => 'Blocked user %name.', ':variables' => serialize(array('%name' => $blocked_user->name))))->fetchField();
+    $this->assert($status, 'A watchdog message was logged by user block action.');
+
+    // Unblock a user.
+    user_unblock_user_action($blocked_user);
+
+    $unblocked_user = user_load($unblocked_user->uid, TRUE);
+    $this->assertEqual($unblocked_user->status, 1, 'User is unblocked');
+
+    // Assert that a watchdog message was logged.
+    $status = (bool) db_query_range('SELECT 1 FROM {watchdog} WHERE message = :message AND variables = :variables', 0, 1, array(':message' => 'Unblocked user %name.', ':variables' => serialize(array('%name' => $unblocked_user->name))))->fetchField();
+    $this->assert($status, 'A watchdog message was logged by user unblock action.');
+
+    // Try to unblock the anonymous user.
+    db_truncate('watchdog')->execute();
+    $anonymous_user = user_load(0);
+
+    // Assert anonymous user is blocked.
+    $this->assertEqual($anonymous_user->status, 0, 'Anonymous user is blocked');
+
+    user_unblock_user_action($anonymous_user);
+
+    // Assert anonymous user remains blocked.
+    $anonymous_user = user_load(0, TRUE);
+    $this->assertEqual($anonymous_user->status, 0, 'Anonymous user remains blocked');
+
+    // Assert that a watchdog message was logged.
+    $status = (bool) db_query_range('SELECT 1 FROM {watchdog} WHERE message = :message', 0, 1, array(':message' => 'Anonymous user should not be unblocked.'))->fetchField();
+    $this->assert($status, 'A watchdog message was logged by user unblock action.');
+  }
+}

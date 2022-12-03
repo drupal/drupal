@@ -1,0 +1,6 @@
+name = Anonymous user unblock action tests
+description = Support module for anonymous user unblock action testing.
+package = Testing
+version = VERSION
+core = 7.x
+hidden = TRUE
