@@ -1,0 +1,13 @@
+# This setting is only used to check if configuration schema exists for these
+# condition plugins.
+visibility:
+  current_theme:
+    id: current_theme
+    theme: stable
+    negate: false
+    context_mapping: {  }
+  request_path:
+    id: request_path
+    pages: /user
+    negate: false
+    context_mapping: {  }
