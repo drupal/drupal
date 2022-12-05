@@ -140,7 +140,7 @@ class Insert extends QueryInsert {
       $table_information = $this->connection->schema()->queryTableInformation($this->table);
       if (isset($table_information->serial_fields[0])) {
         // Use RETURNING syntax to get the last insert ID in the same INSERT
-        // query, see https://www.postgresql.org/docs/10/dml-returning.html.
+        // query, see https://www.postgresql.org/docs/12/dml-returning.html.
         $query .= ' RETURNING ' . $table_information->serial_fields[0];
       }
     }

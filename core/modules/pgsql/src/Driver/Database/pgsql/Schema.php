@@ -706,7 +706,7 @@ EOD;
    * {@inheritdoc}
    */
   public function indexExists($table, $name) {
-    // Details https://www.postgresql.org/docs/10/view-pg-indexes.html
+    // Details https://www.postgresql.org/docs/12/view-pg-indexes.html
     $index_name = $this->ensureIdentifiersLength($table, $name, 'idx');
     // Remove leading and trailing quotes because the index name is in a WHERE
     // clause and not used as an identifier.
