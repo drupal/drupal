@@ -127,7 +127,14 @@ class EntityOperations extends FieldPluginBase {
    * {@inheritdoc}
    */
   public function render(ResultRow $values) {
-    $entity = $this->getEntityTranslationByRelationship($this->getEntity($values), $values);
+    $entity = $this->getEntity($values);
+    // Allow for the case where there is no entity, if we are on a non-required
+    // relationship.
+    if (empty($entity)) {
+      return '';
+    }
+
+    $entity = $this->getEntityTranslationByRelationship($entity, $values);
     $operations = $this->entityTypeManager->getListBuilder($entity->getEntityTypeId())->getOperations($entity);
     if ($this->options['destination']) {
       foreach ($operations as &$operation) {
