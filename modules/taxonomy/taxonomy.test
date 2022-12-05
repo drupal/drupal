@@ -1948,6 +1948,24 @@ class TaxonomyTokenReplaceTestCase extends TaxonomyWebTestCase {
       $output = token_replace($input, array('vocabulary' => $this->vocabulary), array('language' => $language, 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, format_string('Unsanitized taxonomy vocabulary token %token replaced.', array('%token' => $input)));
     }
+
+    // Verify that tokens are generated for terms with empty description.
+    $term1->description = '';
+    taxonomy_term_save($term1);
+    $term2->description = NULL;
+    taxonomy_term_save($term2);
+
+    // Generate and test sanitized tokens.
+    $tests = array();
+    $tests['[term:description]'] = '';
+
+    foreach ($tests as $input => $expected) {
+      $output = token_replace($input, array('term' => $term1), array('language' => $language));
+      $this->assertEqual($output, $expected, format_string('Sanitized taxonomy term token %token replaced.', array('%token' => $input)));
+
+      $output = token_replace($input, array('term' => $term2), array('language' => $language));
+      $this->assertEqual($output, $expected, format_string('Sanitized taxonomy term token %token replaced.', array('%token' => $input)));
+    }
   }
 
 }

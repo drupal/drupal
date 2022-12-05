@@ -773,6 +773,8 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE) 
     return '';
   }
 
+  $text = (string) $text;
+
   // Check for a cached version of this piece of text.
   $cache = $cache && !empty($format->cache);
   $cache_id = '';
@@ -785,7 +787,7 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE) 
 
   // Convert all Windows and Mac newlines to a single newline, so filters only
   // need to deal with one possibility.
-  $text = str_replace(array("\r\n", "\r"), "\n", (string) $text);
+  $text = str_replace(array("\r\n", "\r"), "\n", $text);
 
   // Get a complete list of filters, ordered properly.
   $filters = filter_list_format($format->format);
