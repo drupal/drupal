@@ -20,7 +20,7 @@ mode: default
 content:
   body:
     type: text_textarea_with_summary
-    weight: 1
+    weight: 2
     region: content
     settings:
       rows: 9
@@ -42,7 +42,7 @@ content:
     third_party_settings: {  }
   field_image:
     type: image_image
-    weight: 4
+    weight: 1
     region: content
     settings:
       progress_indicator: throbber
