@@ -382,7 +382,11 @@ EOD;
    * @see html_entity_decode()
    * @see \Drupal\Component\Utility\Html::escape()
    */
-  public static function decodeEntities($text) {
+  public static function decodeEntities($text): string {
+    if (is_null($text)) {
+      @trigger_error('Passing NULL to ' . __METHOD__ . ' is deprecated in drupal:9.5.0 and will trigger a PHP error from drupal:11.0.0. Pass a string instead. See https://www.drupal.org/node/3318826', E_USER_DEPRECATED);
+      return '';
+    }
     return html_entity_decode($text, ENT_QUOTES, 'UTF-8');
   }
 
@@ -420,7 +424,11 @@ EOD;
    *
    * @ingroup sanitization
    */
-  public static function escape($text) {
+  public static function escape($text): string {
+    if (is_null($text)) {
+      @trigger_error('Passing NULL to ' . __METHOD__ . ' is deprecated in drupal:9.5.0 and will trigger a PHP error from drupal:11.0.0. Pass a string instead. See https://www.drupal.org/node/3318826', E_USER_DEPRECATED);
+      return '';
+    }
     return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
   }
 
