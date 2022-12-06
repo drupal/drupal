@@ -53,6 +53,29 @@ class FormattableMarkupTest extends TestCase {
   }
 
   /**
+   * @covers ::__toString
+   * @dataProvider providerTestNullPlaceholder
+   * @group legacy
+   */
+  public function testNullPlaceholder(string $expected, string $string, array $arguments, string $expected_deprecation): void {
+    $this->expectDeprecation($expected_deprecation);
+    $this->assertEquals($expected, (string) new FormattableMarkup($string, $arguments));
+  }
+
+  /**
+   * Data provider for FormattableMarkupTest::testNullPlaceholder().
+   *
+   * @return array
+   */
+  public function providerTestNullPlaceholder() {
+    return [
+      ['', '@empty', ['@empty' => NULL], 'Deprecated NULL placeholder value for key (@empty) in: "@empty". This will throw a PHP error in drupal:11.0.0. See https://www.drupal.org/node/3318826'],
+      ['', ':empty', [':empty' => NULL], 'Deprecated NULL placeholder value for key (:empty) in: ":empty". This will throw a PHP error in drupal:11.0.0. See https://www.drupal.org/node/3318826'],
+      ['<em class="placeholder"></em>', '%empty', ['%empty' => NULL], 'Deprecated NULL placeholder value for key (%%empty) in: "%%empty". This will throw a PHP error in drupal:11.0.0. See https://www.drupal.org/node/3318826'],
+    ];
+  }
+
+  /**
    * Custom error handler that saves the last error.
    *
    * We need this custom error handler because we cannot rely on the error to
