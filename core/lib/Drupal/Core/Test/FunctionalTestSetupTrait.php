@@ -42,7 +42,7 @@ trait FunctionalTestSetupTrait {
   /**
    * The class loader to use for installation and initialization of setup.
    *
-   * @var \Symfony\Component\Classloader\Classloader
+   * @var \Composer\Autoload\ClassLoader
    */
   protected $classLoader;
 

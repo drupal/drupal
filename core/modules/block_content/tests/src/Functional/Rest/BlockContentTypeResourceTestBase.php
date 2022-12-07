@@ -18,7 +18,7 @@ abstract class BlockContentTypeResourceTestBase extends ConfigEntityResourceTest
   protected static $entityTypeId = 'block_content_type';
 
   /**
-   * @var \Drupal\block_content\Entity\BlockContentTypeInterface
+   * @var \Drupal\block_content\BlockContentTypeInterface
    */
   protected $entity;
 

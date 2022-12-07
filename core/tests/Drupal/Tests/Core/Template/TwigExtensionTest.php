@@ -64,7 +64,7 @@ class TwigExtensionTest extends UnitTestCase {
   /**
    * The file URL generator mock.
    *
-   * @var \Drupal\Core\File\FileUrlGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $fileUrlGenerator;
 

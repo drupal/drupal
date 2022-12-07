@@ -9,7 +9,7 @@ class LazyRouteCollection extends RouteCollection {
   /**
    * The route provider for this generator.
    *
-   * @var \Symfony\Component\Routing\RouteProviderInterface
+   * @var \Drupal\Core\Routing\RouteProviderInterface
    */
   protected $provider;
 

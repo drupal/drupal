@@ -31,7 +31,7 @@ class CsrfAccessCheckTest extends UnitTestCase {
   /**
    * The mock route match.
    *
-   * @var \Drupal\Core\RouteMatch\RouteMatchInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\Routing\RouteMatchInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $routeMatch;
 

@@ -27,7 +27,7 @@ class Language extends TypedData {
   protected $id;
 
   /**
-   * @var \Drupal\Core\Language
+   * @var \Drupal\Core\Language\Language
    */
   protected $language;
 

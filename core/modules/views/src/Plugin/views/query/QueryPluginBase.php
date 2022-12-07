@@ -36,7 +36,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
   /**
    * A pager plugin that should be provided by the display.
    *
-   * @var views_plugin_pager
+   * @var \Drupal\views\Plugin\views\pager\PagerPluginBase|null
    */
   public $pager = NULL;
 

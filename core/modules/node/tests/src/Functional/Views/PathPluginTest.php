@@ -33,7 +33,7 @@ class PathPluginTest extends NodeTestBase {
   /**
    * Contains all nodes used by this test.
    *
-   * @var Node[]
+   * @var \Drupal\node\Entity\Node[]
    */
   protected $nodes;
 

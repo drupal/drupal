@@ -25,7 +25,7 @@ class MimeTypeGuesser implements LegacyMimeTypeGuesserInterface, MimeTypeGuesser
    *
    * If this is NULL a rebuild will be triggered.
    *
-   * @var \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface[]
+   * @var \Symfony\Component\Mime\MimeTypeGuesserInterface[]
    *
    * @see \Drupal\Core\File\MimeType\MimeTypeGuesser::addGuesser()
    * @see \Drupal\Core\File\MimeType\MimeTypeGuesser::sortGuessers()
