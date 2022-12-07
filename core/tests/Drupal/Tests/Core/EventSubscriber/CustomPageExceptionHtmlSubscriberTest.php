@@ -54,7 +54,7 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
   /**
    * The tested custom page exception subscriber.
    *
-   * @var \Drupal\Core\EventSubscriber\CustomPageExceptionHtmlSubscriber|\Drupal\Tests\Core\EventSubscriber\TestCustomPageExceptionHtmlSubscriber
+   * @var \Drupal\Core\EventSubscriber\CustomPageExceptionHtmlSubscriber|\Drupal\Tests\Core\EventSubscriber\CustomPageExceptionHtmlSubscriberTest
    */
   protected $customPageSubscriber;
 

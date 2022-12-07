@@ -31,7 +31,7 @@ class UserPasswordResetTest extends BrowserTestBase {
   /**
    * Language manager object.
    *
-   * @var \Drupal\language\LanguageManagerInterface
+   * @var \Drupal\Core\Language\LanguageManagerInterface
    */
   protected $languageManager;
 

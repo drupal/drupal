@@ -16,7 +16,7 @@ class RegistryTest extends UnitTestCase {
   /**
    * The mocked theme registry.
    *
-   * @var \Drupal\Core\Theme\Registry|PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\Theme\Registry|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $registry;
 

@@ -21,7 +21,7 @@ class WhosOnlineBlockTest extends KernelTestBase {
   /**
    * The block being tested.
    *
-   * @var \Drupal\block\Entity\BlockInterface
+   * @var \Drupal\block\BlockInterface
    */
   protected $block;
 

@@ -110,7 +110,7 @@ class SearchQuery extends SelectExtender {
    * This is always used for the second step in the query, but is not part of
    * the preparation step unless $this->simple is FALSE.
    *
-   * @var Drupal\Core\Database\Query\ConditionInterface[]
+   * @var \Drupal\Core\Database\Query\ConditionInterface[]
    */
   protected $conditions;
 

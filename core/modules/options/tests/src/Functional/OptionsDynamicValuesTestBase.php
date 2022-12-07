@@ -22,7 +22,7 @@ abstract class OptionsDynamicValuesTestBase extends FieldTestBase {
   /**
    * The created entity.
    *
-   * @var \Drupal\Core\Entity\Entity
+   * @var \Drupal\Core\Entity\EntityInterface
    */
   protected $entity;
 

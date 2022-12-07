@@ -52,7 +52,7 @@ class CommentController extends ControllerBase {
   /**
    * The entity repository.
    *
-   * @var Drupal\Core\Entity\EntityRepositoryInterface
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
    */
   protected $entityRepository;
 
