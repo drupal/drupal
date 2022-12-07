@@ -14,7 +14,7 @@ use Drupal\Core\Form\FormStateInterface;
 class Combine extends StringFilter {
 
   /**
-   * @var views_plugin_query_default
+   * @var \Drupal\views\Plugin\views\query\QueryPluginBase
    */
   public $query;
 

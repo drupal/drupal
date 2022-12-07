@@ -17,7 +17,7 @@ class StaticDiscoveryDecorator extends StaticDiscovery {
   /**
    * A callback or closure used for registering additional definitions.
    *
-   * @var \Callable
+   * @var callable
    */
   protected $registerDefinitions;
 

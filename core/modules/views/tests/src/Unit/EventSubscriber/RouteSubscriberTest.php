@@ -30,7 +30,7 @@ class RouteSubscriberTest extends UnitTestCase {
   /**
    * The mocked view storage.
    *
-   * @var \Drupal\views\ViewStorage|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Tests\views\Kernel\ViewStorageTest|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $viewStorage;
 

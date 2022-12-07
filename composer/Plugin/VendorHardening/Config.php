@@ -85,7 +85,7 @@ class Config {
   /**
    * The root package.
    *
-   * @var Composer\Package\RootPackageInterface
+   * @var \Composer\Package\RootPackageInterface
    */
   protected $rootPackage;
 

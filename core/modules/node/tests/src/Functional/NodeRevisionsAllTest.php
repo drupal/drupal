@@ -21,7 +21,7 @@ class NodeRevisionsAllTest extends NodeTestBase {
   /**
    * A list of nodes created to be used as starting point of different tests.
    *
-   * @var Drupal\node\NodeInterface[]
+   * @var \Drupal\node\NodeInterface[]
    */
   protected $nodes;
 

@@ -47,7 +47,7 @@ class EntityFilteringThemeTest extends BrowserTestBase {
   /**
    * A test user.
    *
-   * @var \Drupal\user\User
+   * @var \Drupal\user\Entity\User
    */
   protected $user;
 
@@ -55,7 +55,7 @@ class EntityFilteringThemeTest extends BrowserTestBase {
   /**
    * A test node.
    *
-   * @var \Drupal\node\Node
+   * @var \Drupal\node\Entity\Node
    */
   protected $node;
 
@@ -63,7 +63,7 @@ class EntityFilteringThemeTest extends BrowserTestBase {
   /**
    * A test taxonomy term.
    *
-   * @var \Drupal\taxonomy\Term
+   * @var \Drupal\taxonomy\Entity\Term
    */
   protected $term;
 
@@ -71,7 +71,7 @@ class EntityFilteringThemeTest extends BrowserTestBase {
   /**
    * A test comment.
    *
-   * @var \Drupal\comment\Comment
+   * @var \Drupal\comment\Entity\Comment
    */
   protected $comment;
 

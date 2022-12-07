@@ -61,7 +61,7 @@ class DefaultViewRecentCommentsTest extends ViewTestBase {
   /**
    * Contains the node object used for comments of this test.
    *
-   * @var \Drupal\node\Node
+   * @var \Drupal\node\NodeInterface
    */
   public $node;
 

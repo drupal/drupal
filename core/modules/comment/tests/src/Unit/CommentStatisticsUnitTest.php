@@ -15,7 +15,7 @@ class CommentStatisticsUnitTest extends UnitTestCase {
   /**
    * Mock statement.
    *
-   * @var \Drupal\Core\Database\Statement
+   * @var \Drupal\Core\Database\StatementInterface
    */
   protected $statement;
 

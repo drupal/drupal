@@ -13,7 +13,7 @@ class BarClass {
   /**
    * Storage for a protected BazClass object.
    *
-   * @var Drupal\Tests\Core\DependencyInjection\Fixture\BazClass
+   * @var \Drupal\Tests\Core\DependencyInjection\Fixture\BazClass
    */
   protected $baz;
 
