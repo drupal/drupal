@@ -1250,10 +1250,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $container->register('kernel', 'Symfony\Component\HttpKernel\KernelInterface')->setSynthetic(TRUE);
     $container->register('service_container', 'Symfony\Component\DependencyInjection\ContainerInterface')->setSynthetic(TRUE);
 
-    // Register aliases of synthetic services for autowiring.
-    $container->setAlias(DrupalKernelInterface::class, 'kernel');
-    $container->setAlias(ContainerInterface::class, 'service_container');
-
     // Register application services.
     $yaml_loader = new YamlFileLoader($container);
     foreach ($this->serviceYamls['app'] as $filename) {

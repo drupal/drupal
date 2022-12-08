@@ -8,7 +8,6 @@ use Drupal\Core\Logger\RfcLoggerTrait;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\KernelTests\KernelTestBase;
 use GuzzleHttp\Client;
-use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -724,7 +723,6 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
     $this->container = $this->container->get('kernel')->getContainer();
     $this->container->get('logger.factory')->addLogger($this);
     $this->container->set('http_client', new Client(['handler' => $handler_stack]));
-    $this->container->setAlias(ClientInterface::class, 'http_client');
   }
 
   /**
