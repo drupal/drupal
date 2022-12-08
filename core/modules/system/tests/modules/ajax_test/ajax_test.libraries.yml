@@ -42,3 +42,9 @@ command_promise:
     - core/jquery
     - core/drupal
     - core/drupal.ajax
+
+global_events:
+  js:
+    js/global_events.js: {}
+  dependencies:
+    - core/drupal.ajax

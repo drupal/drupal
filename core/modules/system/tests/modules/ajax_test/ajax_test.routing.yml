@@ -101,3 +101,17 @@ ajax_test.promise:
     _form: '\Drupal\ajax_test\Form\AjaxTestFormPromise'
   requirements:
     _access: 'TRUE'
+
+ajax_test.global_events:
+  path: '/ajax-test/global-events'
+  defaults:
+    _controller: '\Drupal\ajax_test\Controller\AjaxTestController::globalEvents'
+  requirements:
+    _access: 'TRUE'
+
+ajax_test.global_events_clear_log:
+  path: '/ajax-test/global-events/clear-log'
+  defaults:
+    _controller: '\Drupal\ajax_test\Controller\AjaxTestController::globalEventsClearLog'
+  requirements:
+    _access: 'TRUE'
