@@ -1,4 +1,4 @@
-All Drupal code is Copyright 2001 - 2020 by the original authors.
+All Drupal code is Copyright 2001 - 2022 by the original authors.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,32 +22,34 @@ license, including:
 
 JavaScript
 
-  HTML5 Shiv - Copyright (c) 2014  Alexander Farkas, Jonathan Neal, Paul Irish,
-    and John-David Dalton
+  Backbone - Copyright (c) 2010 Jeremy Ashkenas and DocumentCloud
 
-  jQuery - Copyright (c) 2011 John Resig
+  CKEditor5 - Copyright (c) 2003 CKSource Holding sp. z o.o.
 
-  jQuery Bgiframe - Copyright (c) 2013 Brandon Aaron (http://brandonaaron.net)
+  JavaScript Cookie - Copyright (c) 2006 Klaus Hartl & Fagner Brack
 
-  jQuery BBQ - Copyright (c) 2010 "Cowboy" Ben Alman
-
-  jQuery Cookie - Copyright (c) 2014 Klaus Hartl
+  jQuery - Copyright (c) OpenJS Foundation and other contributors
 
   jQuery Form - Copyright (c) 2017 Kevin Morris
 
-  jQuery Globalize - Copyright (c) 2012 Software Freedom Conservancy, Inc.
+  jQuery UI - Copyright (c) OpenJS Foundation and other contributors
 
-  jQuery Mousewheel - Copyright OpenJS Foundation and other contributors
-    (https://openjsf.org/)
+  LoadJS - Copyright (c) 2015 Andres Morey
 
-  jQuery Metadata - Copyright (c) 2006 John Resig, Yehuda Katz, Jörn Zaefferer,
-    Paul McLanahan
+  Modernizr - Copyright (c) 2021 The Modernizr Team
 
-  jQuery UI - Copyright (c) 2015 by the authors and other contributors
-    (http://jqueryui.com/about)
+  Shepherd - Copyright (c) 2021
 
-  Sizzle.js - Copyright (c) 2016 JS Foundation and other contributors
-    (https://js.foundation)
+  Sortable - Copyright (c) 2019 All contributors to Sortable
+
+  Tabbable - Copyright (c) 2015 David Clark
+
+  Underscore.js - Copyright (c) 2009 Jeremy Ashkenas, Julian Gonggrijp, and
+   DocumentCloud and Investigative Reporters & Editors
+
+CSS
+
+  Normalize.css - Copyright (c) Nicolas Gallagher and Jonathan Neal
 
 PHP
 
