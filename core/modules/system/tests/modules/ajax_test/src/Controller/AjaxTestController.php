@@ -354,4 +354,37 @@ class AjaxTestController {
     return $render_info;
   }
 
+  /**
+   * Returns a page from which to test Ajax global events.
+   *
+   * @return array
+   *   The render array.
+   */
+  public function globalEvents() {
+    return [
+      '#attached' => [
+        'library' => [
+          'ajax_test/global_events',
+        ],
+      ],
+      '#markup' => implode('', [
+        '<div id="test_global_events_log"></div>',
+        '<a id="test_global_events_drupal_ajax_link" class="use-ajax" href="' . Url::fromRoute('ajax_test.global_events_clear_log')->toString() . '">Drupal Ajax</a>',
+        '<div id="test_global_events_log2"></div>',
+      ]),
+    ];
+  }
+
+  /**
+   * Returns an AjaxResponse with command to clear the 'test_global_events_log'.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   The JSON response object.
+   */
+  public function globalEventsClearLog() {
+    $response = new AjaxResponse();
+    $response->addCommand(new HtmlCommand('#test_global_events_log', ''));
+    return $response;
+  }
+
 }

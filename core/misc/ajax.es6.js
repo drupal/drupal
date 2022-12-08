@@ -517,6 +517,9 @@
     ajax.options = {
       url: ajax.url,
       data: ajax.submit,
+      isInProgress() {
+        return ajax.ajaxing;
+      },
       beforeSerialize(elementSettings, options) {
         return ajax.beforeSerialize(elementSettings, options);
       },
@@ -564,6 +567,17 @@
             // finished executing.
             .then(() => {
               ajax.ajaxing = false;
+              // jQuery normally triggers the ajaxSuccess, ajaxComplete, and
+              // ajaxStop events after the "success" function passed to $.ajax()
+              // returns, but we prevented that via
+              // $.event.special[EVENT_NAME].trigger in order to wait for the
+              // commands to finish executing. Now that they have, re-trigger
+              // those events.
+              $(document).trigger('ajaxSuccess', [xmlhttprequest, this]);
+              $(document).trigger('ajaxComplete', [xmlhttprequest, this]);
+              if (--$.active === 0) {
+                $(document).trigger('ajaxStop');
+              }
             })
         );
       },
@@ -1747,4 +1761,50 @@
       });
     },
   };
+
+  /**
+   * Delay jQuery's global completion events until after commands have executed.
+   *
+   * jQuery triggers the ajaxSuccess, ajaxComplete, and ajaxStop events after
+   * a successful response is returned and local success and complete events
+   * are triggered. However, Drupal Ajax responses contain commands that run
+   * asynchronously in a queue, so the following stops these events from getting
+   * triggered until after the Promise that executes the command queue is
+   * resolved.
+   */
+  const stopEvent = (xhr, settings) => {
+    return (
+      // Only interfere with Drupal's Ajax responses.
+      xhr.getResponseHeader('X-Drupal-Ajax-Token') === '1' &&
+      // The isInProgress() function might not be defined if the Ajax request
+      // was initiated without Drupal.ajax() or new Drupal.Ajax().
+      settings.isInProgress &&
+      // Until this is false, the Ajax request isn't completely done (the
+      // response's commands might still be running).
+      settings.isInProgress()
+    );
+  };
+  $.extend(true, $.event.special, {
+    ajaxSuccess: {
+      trigger(event, xhr, settings) {
+        if (stopEvent(xhr, settings)) {
+          return false;
+        }
+      },
+    },
+    ajaxComplete: {
+      trigger(event, xhr, settings) {
+        if (stopEvent(xhr, settings)) {
+          // jQuery decrements its internal active ajax counter even when we
+          // stop the ajaxComplete event, but we don't want that counter
+          // decremented, because for our purposes this request is still active
+          // while commands are executing. By incrementing it here, the net
+          // effect is that it remains unchanged. By remaining above 0, the
+          // ajaxStop event is also prevented.
+          $.active++;
+          return false;
+        }
+      },
+    },
+  });
 })(jQuery, window, Drupal, drupalSettings, loadjs, window.tabbable);

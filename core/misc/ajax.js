@@ -179,6 +179,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     ajax.options = {
       url: ajax.url,
       data: ajax.submit,
+      isInProgress: function isInProgress() {
+        return ajax.ajaxing;
+      },
       beforeSerialize: function beforeSerialize(elementSettings, options) {
         return ajax.beforeSerialize(elementSettings, options);
       },
@@ -191,6 +194,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         return ajax.beforeSend(xmlhttprequest, options);
       },
       success: function success(response, status, xmlhttprequest) {
+        var _this = this;
         if (typeof response === 'string') {
           response = $.parseJSON(response);
         }
@@ -202,6 +206,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         }
         return Promise.resolve(ajax.success(response, status)).then(function () {
           ajax.ajaxing = false;
+          $(document).trigger('ajaxSuccess', [xmlhttprequest, _this]);
+          $(document).trigger('ajaxComplete', [xmlhttprequest, _this]);
+          if (--$.active === 0) {
+            $(document).trigger('ajaxStop');
+          }
         });
       },
       error: function error(xmlhttprequest, status, _error) {
@@ -356,19 +365,19 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     $('body').append(this.progress.element);
   };
   Drupal.Ajax.prototype.commandExecutionQueue = function (response, status) {
-    var _this = this;
+    var _this2 = this;
     var ajaxCommands = this.commands;
     return Object.keys(response || {}).reduce(function (executionQueue, key) {
       return executionQueue.then(function () {
         var command = response[key].command;
         if (command && ajaxCommands[command]) {
-          return ajaxCommands[command](_this, response[key], status);
+          return ajaxCommands[command](_this2, response[key], status);
         }
       });
     }, Promise.resolve());
   };
   Drupal.Ajax.prototype.success = function (response, status) {
-    var _this2 = this;
+    var _this3 = this;
     if (this.progress.element) {
       $(this.progress.element).remove();
     }
@@ -384,7 +393,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       return command === 'focusFirst' || command === 'invoke' && method === 'focus';
     });
     return this.commandExecutionQueue(response, status).then(function () {
-      if (!focusChanged && _this2.element && !$(_this2.element).data('disable-refocus')) {
+      if (!focusChanged && _this3.element && !$(_this3.element).data('disable-refocus')) {
         var target = false;
         for (var n = elementParents.length - 1; !target && n >= 0; n--) {
           target = document.querySelector("[data-drupal-selector=\"".concat(elementParents[n].getAttribute('data-drupal-selector'), "\"]"));
@@ -393,11 +402,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           $(target).trigger('focus');
         }
       }
-      if (_this2.$form && document.body.contains(_this2.$form.get(0))) {
-        var settings = _this2.settings || drupalSettings;
-        Drupal.attachBehaviors(_this2.$form.get(0), settings);
+      if (_this3.$form && document.body.contains(_this3.$form.get(0))) {
+        var settings = _this3.settings || drupalSettings;
+        Drupal.attachBehaviors(_this3.$form.get(0), settings);
       }
-      _this2.settings = null;
+      _this3.settings = null;
     }).catch(function (error) {
       return console.error(Drupal.t('An error occurred during the execution of the Ajax response: !error', {
         '!error': error
@@ -610,4 +619,24 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       });
     }
   };
+  var stopEvent = function stopEvent(xhr, settings) {
+    return xhr.getResponseHeader('X-Drupal-Ajax-Token') === '1' && settings.isInProgress && settings.isInProgress();
+  };
+  $.extend(true, $.event.special, {
+    ajaxSuccess: {
+      trigger: function trigger(event, xhr, settings) {
+        if (stopEvent(xhr, settings)) {
+          return false;
+        }
+      }
+    },
+    ajaxComplete: {
+      trigger: function trigger(event, xhr, settings) {
+        if (stopEvent(xhr, settings)) {
+          $.active++;
+          return false;
+        }
+      }
+    }
+  });
 })(jQuery, window, Drupal, drupalSettings, loadjs, window.tabbable);
