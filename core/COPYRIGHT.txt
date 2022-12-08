@@ -22,36 +22,49 @@ license, including:
 
 JavaScript
 
+  Backbone - Copyright (c) 2010 Jeremy Ashkenas and DocumentCloud
+
+  CKEditor - Copyright (c) 2003 CKSource Holding sp. z o.o.
+
+  CKEditor5 - Copyright (c) 2003 CKSource Holding sp. z o.o.
+
+  CSS.escape polyfill - Copyright (c) Mathias Bynens
+
+  ES6-Promise - Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors
+
   Farbtastic - Copyright (c) 2010 Matt Farina
 
-  HTML5 Shiv - Copyright (c) 2014  Alexander Farkas, Jonathan Neal, Paul Irish,
-    and John-David Dalton
+  JavaScript Cookie - Copyright (c) 2006 Klaus Hartl & Fagner Brack
 
-  jQuery - Copyright (c) 2011 John Resig
-
-  jQuery Bgiframe - Copyright (c) 2013 Brandon Aaron (http://brandonaaron.net)
-
-  jQuery BBQ - Copyright (c) 2010 "Cowboy" Ben Alman
-
-  jQuery Cookie - Copyright (c) 2014 Klaus Hartl
+  jQuery - Copyright (c) OpenJS Foundation and other contributors
 
   jQuery Form - Copyright (c) 2017 Kevin Morris
 
-  jQuery Globalize - Copyright (c) 2012 Software Freedom Conservancy, Inc.
+  jQuery Joyride - Copyright (c) 2013 ZURB
 
-  jQuery Mousewheel - Copyright OpenJS Foundation and other contributors
-    (https://openjsf.org/)
+  jQuery Once - Copyright (c) 2016 Rob Loach
 
-  jQuery Metadata - Copyright (c) 2006 John Resig, Yehuda Katz, Jörn Zaefferer,
-    Paul McLanahan
+  jQuery UI - Copyright (c) OpenJS Foundation and other contributors
 
-  jQuery Once - Copyright (c) 2009 Konstantin Käfer
+  LoadJS - Copyright (c) 2015 Andres Morey
 
-  jQuery UI - Copyright (c) 2015 by the authors and other contributors
-    (http://jqueryui.com/about)
+  Modernizr - Copyright (c) 2021 The Modernizr Team
 
-  Sizzle.js - Copyright (c) 2016 JS Foundation and other contributors
-    (https://js.foundation)
+  Picturefill -  Copyright (c) 2014 Filament Group
+
+  Popperjs - Copyright (c) 2019 Federico Zivolo
+
+  Shepherd - Copyright (c) 2021
+
+  Sortable - Copyright (c) 2019 All contributors to Sortable
+
+  Tabbable - Copyright (c) 2015 David Clark
+
+  Underscore - Copyright (c) 2009 Jeremy Ashkenas, Julian Gonggrijp, and DocumentCloud and Investigative Reporters & Editors
+
+CSS
+
+  Normalize.css - Copyright (c) Nicolas Gallagher and Jonathan Neal
 
 PHP
 
