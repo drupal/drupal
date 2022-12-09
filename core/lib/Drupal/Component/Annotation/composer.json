@@ -9,9 +9,9 @@
     "require": {
         "php": ">=7.3.0",
         "doctrine/annotations": "^1.13",
-        "drupal/core-file-cache": "9.5.x-dev",
-        "drupal/core-plugin": "9.5.x-dev",
-        "drupal/core-utility": "9.5.x-dev"
+        "drupal/core-file-cache": "9.5.0-rc2",
+        "drupal/core-plugin": "9.5.0-rc2",
+        "drupal/core-utility": "9.5.0-rc2"
     },
     "autoload": {
         "psr-4": {
@@ -23,5 +23,5 @@
             "This file was partially generated automatically. See: https://www.drupal.org/node/3293830"
         ]
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "RC"
 }
