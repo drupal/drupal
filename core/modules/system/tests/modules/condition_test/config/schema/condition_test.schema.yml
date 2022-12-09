@@ -1,0 +1,10 @@
+condition_test.settings:
+  type: config_object
+  label: 'Settings'
+  mapping:
+    visibility:
+      type: sequence
+      label: Visibility conditions
+      sequence:
+        type: condition.plugin.[id]
+        label: Visibility condition
