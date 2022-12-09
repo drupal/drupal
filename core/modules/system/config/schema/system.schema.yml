@@ -350,3 +350,10 @@ condition.plugin.request_path:
   mapping:
     pages:
       type: string
+
+condition.plugin.current_theme:
+  type: condition.plugin
+  mapping:
+    theme:
+      type: string
+      label: Theme
