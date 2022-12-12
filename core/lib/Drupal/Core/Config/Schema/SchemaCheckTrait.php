@@ -17,17 +17,13 @@ trait SchemaCheckTrait {
 
   /**
    * The config schema wrapper object for the configuration object under test.
-   *
-   * @var \Drupal\Core\Config\Schema\Element
    */
-  protected $schema;
+  protected TraversableTypedDataInterface $schema;
 
   /**
    * The configuration object name under test.
-   *
-   * @var string
    */
-  protected $configName;
+  protected string $configName;
 
   /**
    * Checks the TypedConfigManager has a valid schema for the configuration.
