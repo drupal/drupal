@@ -3,39 +3,16 @@
 namespace Drupal\block_content;
 
 use Drupal\block_content\Entity\BlockContentType;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\BundlePermissionHandlerTrait;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provide dynamic permissions for blocks of different types.
  */
-class BlockContentPermissions implements ContainerInjectionInterface {
+class BlockContentPermissions {
 
   use StringTranslationTrait;
   use BundlePermissionHandlerTrait;
-
-  /**
-   * Constructs a BlockContentPermissions instance.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
-   *   Entity type manager.
-   */
-  public function __construct(
-    protected EntityTypeManagerInterface $entityTypeManager,
-  ) {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('entity_type.manager'),
-    );
-  }
 
   /**
    * Build permissions for each block type.
@@ -44,7 +21,7 @@ class BlockContentPermissions implements ContainerInjectionInterface {
    *   The block type permissions.
    */
   public function blockTypePermissions() {
-    return $this->generatePermissions($this->entityTypeManager->getStorage('block_content_type')->loadMultiple(), [$this, 'buildPermissions']);
+    return $this->generatePermissions(BlockContentType::loadMultiple(), [$this, 'buildPermissions']);
   }
 
   /**
@@ -62,15 +39,6 @@ class BlockContentPermissions implements ContainerInjectionInterface {
     return [
       "edit any $type_id block content" => [
         'title' => $this->t('%type_name: Edit any block content', $type_params),
-      ],
-      "view any $type_id block content history" => [
-        'title' => $this->t('%type_name: View any block content history pages', $type_params),
-      ],
-      "revert any $type_id block content revisions" => [
-        'title' => $this->t('%type_name: Revert any block content revisions', $type_params),
-      ],
-      "delete any $type_id block content revisions" => [
-        'title' => $this->t('%type_name: Delete any block content revisions', $type_params),
       ],
     ];
   }

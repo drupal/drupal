@@ -54,34 +54,21 @@ class BlockContentAccessControlHandler extends EntityAccessControlHandler implem
    * {@inheritdoc}
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
-    assert($entity instanceof BlockContentInterface);
-    $bundle = $entity->bundle();
-    $forbidIfNotDefaultAndLatest = fn () => AccessResult::forbiddenIf($entity->isDefaultRevision() && $entity->isLatestRevision());
-    $access = match ($operation) {
-      // Allow view and update access to user with the 'edit any (type) block
-      // content' permission or the 'administer blocks' permission.
-      'view' => AccessResult::allowedIf($entity->isPublished())
+    // Allow view and update access to user with the 'edit any (type) block
+    // content' permission or the 'administer blocks' permission.
+    $edit_any_permission = 'edit any ' . $entity->bundle() . ' block content';
+    if ($operation === 'view') {
+      $access = AccessResult::allowedIf($entity->isPublished())
         ->orIf(AccessResult::allowedIfHasPermission($account, 'administer blocks'))
-        ->orIf(AccessResult::allowedIfHasPermission($account, 'edit any ' . $bundle . ' block content')),
-      'update' => AccessResult::allowedIfHasPermission($account, 'administer blocks')
-        ->orIf(AccessResult::allowedIfHasPermission($account, 'edit any ' . $bundle . ' block content')),
-
-      // Revisions.
-      'view all revisions' => AccessResult::allowedIfHasPermissions($account, [
-        'administer blocks',
-        'view any ' . $bundle . ' block content history',
-      ], 'OR'),
-      'revert' => AccessResult::allowedIfHasPermissions($account, [
-        'administer blocks',
-        'revert any ' . $bundle . ' block content revisions',
-      ], 'OR')->orIf($forbidIfNotDefaultAndLatest()),
-      'delete revision' => AccessResult::allowedIfHasPermissions($account, [
-        'administer blocks',
-        'delete any ' . $bundle . ' block content revisions',
-      ], 'OR')->orIf($forbidIfNotDefaultAndLatest()),
-
-      default => parent::checkAccess($entity, $operation, $account),
-    };
+        ->orIf(AccessResult::allowedIfHasPermission($account, $edit_any_permission));
+    }
+    elseif ($operation === 'update') {
+      $access = AccessResult::allowedIfHasPermission($account, 'administer blocks')
+        ->orIf(AccessResult::allowedIfHasPermission($account, $edit_any_permission));
+    }
+    else {
+      $access = parent::checkAccess($entity, $operation, $account);
+    }
 
     // Add the entity as a cacheable dependency because access will at least be
     // determined by whether the block is reusable.

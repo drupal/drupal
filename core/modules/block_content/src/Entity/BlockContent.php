@@ -34,12 +34,7 @@ use Drupal\user\UserInterface;
  *       "add" = "Drupal\block_content\BlockContentForm",
  *       "edit" = "Drupal\block_content\BlockContentForm",
  *       "delete" = "Drupal\block_content\Form\BlockContentDeleteForm",
- *       "default" = "Drupal\block_content\BlockContentForm",
- *       "revision-delete" = \Drupal\Core\Entity\Form\RevisionDeleteForm::class,
- *       "revision-revert" = \Drupal\Core\Entity\Form\RevisionRevertForm::class,
- *     },
- *     "route_provider" = {
- *       "revision" = \Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider::class,
+ *       "default" = "Drupal\block_content\BlockContentForm"
  *     },
  *     "translation" = "Drupal\block_content\BlockContentTranslationHandler"
  *   },
@@ -55,9 +50,6 @@ use Drupal\user\UserInterface;
  *     "edit-form" = "/block/{block_content}",
  *     "collection" = "/admin/structure/block/block-content",
  *     "create" = "/block",
- *     "revision-delete-form" = "/block/{block_content}/revision/{block_content_revision}/delete",
- *     "revision-revert-form" = "/block/{block_content}/revision/{block_content_revision}/revert",
- *     "version-history" = "/block/{block_content}/revisions",
  *   },
  *   translatable = TRUE,
  *   entity_keys = {
