@@ -18,7 +18,7 @@ trait SchemaCheckTrait {
   /**
    * The config schema wrapper object for the configuration object under test.
    *
-   * @var \Drupal\Core\Config\Schema\Element
+   * @var \Drupal\Core\TypedData\TraversableTypedDataInterface
    */
   protected $schema;
 
