@@ -71,7 +71,7 @@ class Combine extends StringFilter {
       $field = $this->view->field[$id];
       // Always add the table of the selected fields to be sure a table alias exists.
       $field->ensureMyTable();
-      if (!empty($field->field_alias) && !empty($field->field_alias)) {
+      if (!empty($field->tableAlias) && !empty($field->realField)) {
         $fields[] = "$field->tableAlias.$field->realField";
       }
     }
