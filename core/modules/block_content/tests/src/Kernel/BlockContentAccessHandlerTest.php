@@ -97,11 +97,45 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
   }
 
   /**
+   * Test block content entity access.
+   *
+   * @param string $operation
+   *   The entity operation to test.
+   * @param bool $published
+   *   Whether the latest revision should be published.
+   * @param bool $reusable
+   *   Whether the block content should be reusable. Non-reusable blocks are
+   *   typically used in Layout Builder.
+   * @param array $permissions
+   *   Permissions to grant to the test user.
+   * @param string|null $parent_access
+   *   Whether the test user has access to the parent entity, valid values are
+   *   'allowed', 'forbidden', or 'neutral'. Set to NULL to assert parent will
+   *   not be called.
+   * @param string $expected_access
+   *   The expected access for the user and block content. Valid values are
+   *   'allowed', 'forbidden', or 'neutral'.
+   * @param bool $isLatest
+   *   Whether the block content should be the latest revision when checking
+   *   access. If FALSE, multiple revisions will be created, and an older
+   *   revision will be loaded before checking access.
+   *
    * @covers ::checkAccess
    *
    * @dataProvider providerTestAccess
    */
-  public function testAccess($operation, $published, $reusable, $permissions, $parent_access, $expected_access) {
+  public function testAccess(string $operation, bool $published, bool $reusable, array $permissions, ?string $parent_access, string $expected_access, bool $isLatest = TRUE) {
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $entityStorage */
+    $entityStorage = \Drupal::entityTypeManager()->getStorage('block_content');
+
+    $loadRevisionId = NULL;
+    if (!$isLatest) {
+      // Save a historical revision, then setup for a new revision to be saved.
+      $this->blockEntity->save();
+      $loadRevisionId = $this->blockEntity->getRevisionId();
+      $this->blockEntity = $entityStorage->createRevision($this->blockEntity);
+    }
+
     $published ? $this->blockEntity->setPublished() : $this->blockEntity->setUnpublished();
     $reusable ? $this->blockEntity->setReusable() : $this->blockEntity->setNonReusable();
 
@@ -143,6 +177,11 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
 
     }
     $this->blockEntity->save();
+
+    // Reload a previous revision.
+    if ($loadRevisionId !== NULL) {
+      $this->blockEntity = $entityStorage->loadRevision($loadRevisionId);
+    }
 
     $result = $this->accessControlHandler->access($this->blockEntity, $operation, $user, TRUE);
     switch ($expected_access) {
@@ -387,6 +426,145 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
         'neutral',
       ],
     ];
+
+    // View all revisions:
+    $cases['view all revisions:none'] = [
+      'view all revisions',
+      TRUE,
+      TRUE,
+      [],
+      NULL,
+      'neutral',
+    ];
+    $cases['view all revisions:administer blocks'] = [
+      'view all revisions',
+      TRUE,
+      TRUE,
+      ['administer blocks'],
+      NULL,
+      'allowed',
+    ];
+    $cases['view all revisions:view bundle'] = [
+      'view all revisions',
+      TRUE,
+      TRUE,
+      ['view any square block content history'],
+      NULL,
+      'allowed',
+    ];
+
+    // Revert revisions:
+    $cases['revert:none:latest'] = [
+      'revert',
+      TRUE,
+      TRUE,
+      [],
+      NULL,
+      'forbidden',
+      TRUE,
+    ];
+    $cases['revert:none:historical'] = [
+      'revert',
+      TRUE,
+      TRUE,
+      [],
+      NULL,
+      'neutral',
+      FALSE,
+    ];
+    $cases['revert:administer blocks:latest'] = [
+      'revert',
+      TRUE,
+      TRUE,
+      ['administer blocks'],
+      NULL,
+      'forbidden',
+      TRUE,
+    ];
+    $cases['revert:administer blocks:historical'] = [
+      'revert',
+      TRUE,
+      TRUE,
+      ['administer blocks'],
+      NULL,
+      'allowed',
+      FALSE,
+    ];
+    $cases['revert:revert bundle:latest'] = [
+      'revert',
+      TRUE,
+      TRUE,
+      ['administer blocks'],
+      NULL,
+      'forbidden',
+      TRUE,
+    ];
+    $cases['revert:revert bundle:historical'] = [
+      'revert',
+      TRUE,
+      TRUE,
+      ['revert any square block content revisions'],
+      NULL,
+      'allowed',
+      FALSE,
+    ];
+
+    // Delete revisions:
+    $cases['delete revision:none:latest'] = [
+      'delete revision',
+      TRUE,
+      TRUE,
+      [],
+      NULL,
+      'forbidden',
+      TRUE,
+    ];
+    $cases['delete revision:none:historical'] = [
+      'delete revision',
+      TRUE,
+      TRUE,
+      [],
+      NULL,
+      'neutral',
+      FALSE,
+    ];
+    $cases['delete revision:administer blocks:latest'] = [
+      'delete revision',
+      TRUE,
+      TRUE,
+      ['administer blocks'],
+      NULL,
+      'forbidden',
+      TRUE,
+    ];
+    $cases['delete revision:administer blocks:historical'] = [
+      'delete revision',
+      TRUE,
+      TRUE,
+      ['administer blocks'],
+      NULL,
+      'allowed',
+      FALSE,
+    ];
+    $cases['delete revision:delete bundle:latest'] = [
+      'delete revision',
+      TRUE,
+      TRUE,
+      ['administer blocks'],
+      NULL,
+      'forbidden',
+      TRUE,
+    ];
+    $cases['delete revision:delete bundle:historical'] = [
+      'delete revision',
+      TRUE,
+      TRUE,
+      ['delete any square block content revisions'],
+      NULL,
+      'allowed',
+      FALSE,
+    ];
+
     return $cases;
   }
 
