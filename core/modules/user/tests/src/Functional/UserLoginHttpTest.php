@@ -106,6 +106,8 @@ class UserLoginHttpTest extends BrowserTestBase {
 
     // Enable serialization so we have access to additional formats.
     $this->container->get('module_installer')->install(['serialization']);
+    $this->rebuildAll();
+
     $this->doTestLogin('json');
     $this->doTestLogin('xml');
   }
@@ -243,6 +245,7 @@ class UserLoginHttpTest extends BrowserTestBase {
 
     // Enable serialization so we have access to additional formats.
     $this->container->get('module_installer')->install(['serialization']);
+    $this->rebuildAll();
 
     $this->doTestPasswordReset('json', $account);
     $this->doTestPasswordReset('xml', $account);
@@ -572,6 +575,7 @@ class UserLoginHttpTest extends BrowserTestBase {
     $resetURL = $urls[0];
     $this->drupalGet($resetURL);
     $this->submitForm([], 'Log in');
+    $this->assertSession()->pageTextContains('You have just used your one-time login link. It is no longer necessary to use this link to log in. Please set your password.');
   }
 
 }
