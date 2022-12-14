@@ -949,14 +949,14 @@ class SelectQuery extends Query implements SelectQueryInterface {
    *
    * @var array
    */
-  protected $alterMetaData;
+  public $alterMetaData;
 
   /**
    * The query tags.
    *
    * @var array
    */
-  protected $alterTags;
+  public $alterTags;
 
   /**
    * An array whose elements specify a query to UNION, and the UNION type. The
