@@ -257,6 +257,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-core/src/command.js
+ *
+ * @typedef {module:core/command} module:core/command~Command
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-core/src/commandcollection.js
  *
  * @typedef {module:core/commandcollection} module:core/commandcollection~CommandCollection
@@ -1547,6 +1553,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-list/src/documentlist/documentlistutils.js
+ *
+ * @typedef {module:list/documentlist/documentlistutils} module:list/documentlist/documentlistutils~DocumentListUtils
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-list/src/documentlist/utils/listwalker.js
  *
  * @typedef {module:list/documentlist/utils/listwalker} module:list/documentlist/utils/listwalker~ListWalker
@@ -1562,6 +1574,12 @@
  * Declared in file @ckeditor/ckeditor5-list/src/documentlistproperties/documentlistpropertiesediting.js
  *
  * @typedef {module:list/documentlistproperties/documentlistpropertiesediting} module:list/documentlistproperties/documentlistpropertiesediting~DocumentListPropertiesEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/documentlistproperties/documentlistpropertiesutils.js
+ *
+ * @typedef {module:list/documentlist/documentlistpropertiesutils} module:list/documentlist/documentlistpropertiesutils~DocumentListPropertiesUtils
  */
 
 /**
@@ -1610,6 +1628,12 @@
  * Declared in file @ckeditor/ckeditor5-list/src/list/listui.js
  *
  * @typedef {module:list/list/listui} module:list/list/listui~ListUI
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/list/listutils.js
+ *
+ * @typedef {module:list/list/listutils} module:list/list/listutils~ListUtils
  */
 
 /**
@@ -2837,12 +2861,6 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-utils/src/dom/global.js
- *
- * @typedef {module:utils/dom/global} module:utils/dom/global~global
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-utils/src/dom/indexof.js
  *
  * @typedef {module:utils/dom/indexof} module:utils/dom/indexof~indexOf
@@ -2942,6 +2960,12 @@
  * Declared in file @ckeditor/ckeditor5-utils/src/eventinfo.js
  *
  * @typedef {module:utils/eventinfo} module:utils/eventinfo~EventInfo
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-utils/src/fastdiff.js
+ *
+ * @typedef {module:utils/fastdiff} module:utils/fastdiff~fastDiff
  */
 
 /**
