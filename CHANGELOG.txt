@@ -1,5 +1,6 @@
-Drupal 7.xx, xxxx-xx-xx (development version)
+Drupal 7.94, 2022-12-14
 -----------------------
+- Hotfix for book.module and Select query properties
 
 Drupal 7.93, 2022-12-07
 -----------------------
