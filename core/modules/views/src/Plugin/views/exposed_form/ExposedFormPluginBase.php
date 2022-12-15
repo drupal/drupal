@@ -246,32 +246,6 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
       }
     }
 
-    // Get an array of exposed filters and exposed required filters,
-    // keyed by identifier option.
-    $exposed_filters = [];
-    $exposed_required_filters = [];
-    foreach ($this->view->filter as $id => $handler) {
-      if ($handler->canExpose() && $handler->isExposed() && !empty($handler->options['expose']['identifier'])) {
-        if ($handler->options['expose']['required'] && $handler->options['plugin_id'] !== 'boolean') {
-          $exposed_required_filters[$handler->options['expose']['identifier']] = $id;
-        }
-        $exposed_filters[$handler->options['expose']['identifier']] = $id;
-      }
-    }
-
-    // If any required exposed filters loop through them to see if they have any
-    // input. If not don't auto process the form.
-    if (!empty($exposed_required_filters)) {
-      // Prevent form validation if exposed filter is not set.
-      $exposed_input = $this->view->getExposedInput();
-      foreach ($exposed_required_filters as $key => $required_filter) {
-        if (!$exposed_input || empty($exposed_input[$key])) {
-          $form_state->setAlwaysProcess(FALSE);
-          break;
-        }
-      }
-    }
-
     if (!empty($this->options['reset_button'])) {
       $form['actions']['reset'] = [
         '#value' => $this->options['reset_button_label'],
@@ -279,6 +253,13 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
         '#weight' => 10,
       ];
 
+      // Get an array of exposed filters, keyed by identifier option.
+      $exposed_filters = [];
+      foreach ($this->view->filter as $id => $handler) {
+        if ($handler->canExpose() && $handler->isExposed() && !empty($handler->options['expose']['identifier'])) {
+          $exposed_filters[$handler->options['expose']['identifier']] = $id;
+        }
+      }
       $all_exposed = array_merge($exposed_sorts, $exposed_filters);
 
       // Set the access to FALSE if there is no exposed input.
