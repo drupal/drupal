@@ -65,6 +65,7 @@ class CronForm extends FormBase {
    *   The module handler service.
    */
   public function __construct(ConfigFactoryInterface $config_factory, StateInterface $state, CronInterface $cron, DateFormatterInterface $date_formatter, ModuleHandlerInterface $module_handler) {
+    $this->configFactory = $config_factory;
     $this->state = $state;
     $this->cron = $cron;
     $this->dateFormatter = $date_formatter;
