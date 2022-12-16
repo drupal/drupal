@@ -10,7 +10,7 @@ use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\Mink\Element\Element;
 use Behat\Mink\Element\TraversableElement;
 use Drupal\FunctionalJavascriptTests\WebDriverCurlService;
-use WebDriver\Exception\CurlExec;
+use WebDriver\Exception;
 
 /**
  * Document element.
@@ -100,7 +100,7 @@ class DocumentElement extends TraversableElement {
       try {
         return call_user_func($callback, $element);
       }
-      catch (CurlExec $e) {
+      catch (Exception $e) {
         return NULL;
       }
     };
