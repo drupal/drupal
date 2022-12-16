@@ -145,20 +145,23 @@ class DrupalSelenium2Driver extends Selenium2Driver {
         // \Behat\Mink\Driver\Selenium2Driver::setValue() will call .blur() on
         // the element, modify that to trigger the "input" and "change" events
         // instead. They indicate the value has changed, rather than implying
-        // user focus changes.
+        // user focus changes. This script only runs when Drupal javascript has
+        // been loaded.
         $this->executeJsOnXpath($xpath, <<<JS
-var node = {{ELEMENT}};
-var original = node.blur;
-node.blur = function() {
-  node.dispatchEvent(new Event("input", {bubbles:true}));
-  node.dispatchEvent(new Event("change", {bubbles:true}));
-  // Do not wait for the debounce, which only triggers the 'formUpdated` event
-  // up to once every 0.3 seconds. In tests, no humans are typing, hence there
-  // is no need to debounce.
-  // @see Drupal.behaviors.formUpdated
-  node.dispatchEvent(new Event("formUpdated", {bubbles:true}));
-  node.blur = original;
-};
+if (typeof Drupal !== 'undefined') {
+  var node = {{ELEMENT}};
+  var original = node.blur;
+  node.blur = function() {
+    node.dispatchEvent(new Event("input", {bubbles:true}));
+    node.dispatchEvent(new Event("change", {bubbles:true}));
+    // Do not wait for the debounce, which only triggers the 'formUpdated` event
+    // up to once every 0.3 seconds. In tests, no humans are typing, hence there
+    // is no need to debounce.
+    // @see Drupal.behaviors.formUpdated
+    node.dispatchEvent(new Event("formUpdated", {bubbles:true}));
+    node.blur = original;
+  };
+}
 JS);
         parent::setValue($xpath, $value);
         return TRUE;
