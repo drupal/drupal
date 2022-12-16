@@ -420,7 +420,7 @@ Taxonomy
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
 
 Telephone
-- ?
+- Stephen Mustgrave 'smustgrave' https://www.drupal.org/u/smustgrave
 
 Testing framework
 - Alex Pott 'alexpott' https://www.drupal.org/u/alexpott
@@ -429,7 +429,7 @@ Testing framework
 - Alberto M. 'mondrake' https://www.drupal.org/u/mondrake
 
 Text Field
-- ?
+- Stephen Mustgrave 'smustgrave' https://www.drupal.org/u/smustgrave
 
 Theme API
 - Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
