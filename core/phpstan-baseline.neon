@@ -2066,11 +2066,6 @@ parameters:
 			path: modules/system/src/DateFormatListBuilder.php
 
 		-
-			message: "#^Constructor of class Drupal\\\\system\\\\Form\\\\CronForm has an unused parameter \\$config_factory\\.$#"
-			count: 1
-			path: modules/system/src/Form/CronForm.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/system/src/Form/DateFormatDeleteForm.php
