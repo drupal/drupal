@@ -4,3 +4,4 @@ description: 'Legacy experimental test theme.'
 version: VERSION
 base theme: false
 experimental: true
+hidden: true

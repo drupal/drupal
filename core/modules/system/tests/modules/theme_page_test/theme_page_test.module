@@ -11,8 +11,11 @@ use Drupal\Core\Extension\Extension;
  * Implements hook_system_info_alter().
  */
 function theme_page_test_system_info_alter(&$info, Extension $file, $type) {
-  // Make sure that all themes are visible on the Appearance form.
-  if ($type == 'theme') {
+  // Make sure that all themes are visible on the Appearance form, except for
+  // the legacy_experimental_theme_test theme.
+  // @todo Remove the exception for this theme in
+  //   https://www.drupal.org/node/3321634
+  if ($type === 'theme' && $info['name'] !== 'Legacy experimental test') {
     unset($info['hidden']);
   }
 }
