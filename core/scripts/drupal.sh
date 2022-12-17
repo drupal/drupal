@@ -13,6 +13,7 @@
  * @param URI   A URI to execute, including HTTP protocol prefix.
  */
 
+trigger_error('drupal.sh is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3241346', E_USER_DEPRECATED);
 $script = basename(array_shift($_SERVER['argv']));
 
 if (in_array('--help', $_SERVER['argv']) || empty($_SERVER['argv'])) {
