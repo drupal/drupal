@@ -46,7 +46,7 @@ class LinkCollectionNormalizerTest extends KernelTestBase {
   protected $testUsers;
 
   /**
-   * {@inheritdoc}
+   * {@inheritDoc}
    */
   protected static $modules = [
     'jsonapi',
@@ -56,7 +56,7 @@ class LinkCollectionNormalizerTest extends KernelTestBase {
   ];
 
   /**
-   * {@inheritdoc}
+   * {@inheritDoc}
    */
   protected function setUp(): void {
     parent::setUp();

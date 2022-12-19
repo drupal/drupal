@@ -364,7 +364,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   }
 
   /**
-   * {@inheritdoc}
+   * {@inheritDoc}
    */
   public function hasJson(): bool {
     try {
