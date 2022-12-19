@@ -18,7 +18,7 @@ class ViewsConfigEntityTestViewsData implements EntityViewsDataInterface {
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function getViewsTableForEntityType(EntityTypeInterface $entity_type) {
     return 'views_config_entity_test';

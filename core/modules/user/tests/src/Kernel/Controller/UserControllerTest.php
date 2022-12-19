@@ -40,7 +40,7 @@ class UserControllerTest extends KernelTestBase {
   ];
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   protected function setUp(): void {
 
