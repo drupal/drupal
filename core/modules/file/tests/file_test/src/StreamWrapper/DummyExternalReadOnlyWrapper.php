@@ -13,28 +13,28 @@ use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 class DummyExternalReadOnlyWrapper extends ReadOnlyStream {
 
   /**
-   * {@inheritdoc}
+   * @inheritDoc
    */
   public static function getType() {
     return StreamWrapperInterface::READ_VISIBLE;
   }
 
   /**
-   * {@inheritdoc}
+   * @inheritDoc
    */
   public function getName() {
     return t('Dummy external stream wrapper (readonly)');
   }
 
   /**
-   * {@inheritdoc}
+   * @inheritDoc
    */
   public function getDescription() {
     return t('Dummy external read-only stream wrapper for testing.');
   }
 
   /**
-   * {@inheritdoc}
+   * @inheritDoc
    */
   public function getExternalUrl() {
     [, $target] = explode('://', $this->uri, 2);
@@ -42,105 +42,105 @@ class DummyExternalReadOnlyWrapper extends ReadOnlyStream {
   }
 
   /**
-   * {@inheritdoc}
+   * @inheritDoc
    */
   public function realpath() {
     return FALSE;
   }
 
   /**
-   * {@inheritdoc}
+   * @inheritDoc
    */
   public function dirname($uri = NULL) {
     return FALSE;
   }
 
   /**
-   * {@inheritdoc}
+   * @inheritDoc
    */
   public function dir_closedir() {
     return FALSE;
   }
 
   /**
-   * {@inheritdoc}
+   * @inheritDoc
    */
   public function dir_opendir($path, $options) {
     return FALSE;
   }
 
   /**
-   * {@inheritdoc}
+   * @inheritDoc
    */
   public function dir_readdir() {
     return FALSE;
   }
 
   /**
-   * {@inheritdoc}
+   * @inheritDoc
    */
   public function dir_rewinddir() {
     return FALSE;
   }
 
   /**
-   * {@inheritdoc}
+   * @inheritDoc
    */
   public function stream_cast($cast_as) {
     return FALSE;
   }
 
   /**
-   * {@inheritdoc}
+   * @inheritDoc
    */
   public function stream_close() {
     return FALSE;
   }
 
   /**
-   * {@inheritdoc}
+   * @inheritDoc
    */
   public function stream_eof() {
     return FALSE;
   }
 
   /**
-   * {@inheritdoc}
+   * @inheritDoc
    */
   public function stream_read($count) {
     return FALSE;
   }
 
   /**
-   * {@inheritdoc}
+   * @inheritDoc
    */
   public function stream_seek($offset, $whence = SEEK_SET) {
     return FALSE;
   }
 
   /**
-   * {@inheritdoc}
+   * @inheritDoc
    */
   public function stream_set_option($option, $arg1, $arg2) {
     return FALSE;
   }
 
   /**
-   * {@inheritdoc}
+   * @inheritDoc
    */
   public function stream_stat() {
     return FALSE;
   }
 
   /**
-   * {@inheritdoc}
+   * @inheritDoc
    */
   public function stream_tell() {
     return FALSE;
   }
 
   /**
-   * {@inheritdoc}
+   * @inheritDoc
    */
   public function url_stat($path, $flags) {
     return FALSE;
