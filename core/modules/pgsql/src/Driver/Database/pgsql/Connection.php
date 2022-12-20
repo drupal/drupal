@@ -368,7 +368,7 @@ class Connection extends DatabaseConnection {
   }
 
   /**
-   * {@inheritdoc}
+   * {@inheritDoc}
    */
   public function hasJson(): bool {
     try {

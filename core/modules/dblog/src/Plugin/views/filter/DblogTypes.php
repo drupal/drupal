@@ -23,7 +23,7 @@ class DblogTypes extends InOperator {
   }
 
   /**
-   * {@inheritdoc}
+   * {@inheritDoc}
    */
   protected function valueForm(&$form, FormStateInterface $form_state) {
     parent::valueForm($form, $form_state);
