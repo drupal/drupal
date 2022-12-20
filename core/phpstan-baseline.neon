@@ -331,16 +331,6 @@ parameters:
 			path: lib/Drupal/Core/Database/Query/Upsert.php
 
 		-
-			message: "#^Variable \\$query_start might not be defined\\.$#"
-			count: 2
-			path: lib/Drupal/Core/Database/StatementPrefetch.php
-
-		-
-			message: "#^Variable \\$query_start might not be defined\\.$#"
-			count: 2
-			path: lib/Drupal/Core/Database/StatementWrapper.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: lib/Drupal/Core/Datetime/DateHelper.php
@@ -432,7 +422,7 @@ parameters:
 
 		-
 			message: "#^Variable \\$selected_bundles might not be defined\\.$#"
-			count: 3
+			count: 2
 			path: lib/Drupal/Core/Entity/Plugin/EntityReferenceSelection/DefaultSelection.php
 
 		-
@@ -661,16 +651,6 @@ parameters:
 			path: lib/Drupal/Core/Menu/MenuLinkManager.php
 
 		-
-			message: "#^Variable \\$fields might not be defined\\.$#"
-			count: 3
-			path: lib/Drupal/Core/Menu/MenuTreeStorage.php
-
-		-
-			message: "#^Variable \\$root might not be defined\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Menu/MenuTreeStorage.php
-
-		-
 			message: "#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Menu/MenuTreeStorage.php
@@ -711,11 +691,6 @@ parameters:
 			path: lib/Drupal/Core/Render/Renderer.php
 
 		-
-			message: "#^Variable \\$render_start might not be defined\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Render/Renderer.php
-
-		-
 			message: "#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Routing/MatcherDumper.php
@@ -727,11 +702,6 @@ parameters:
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: lib/Drupal/Core/Session/SessionManager.php
-
-		-
-			message: "#^Variable \\$session_data might not be defined\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Session/SessionManager.php
 
@@ -1661,11 +1631,6 @@ parameters:
 			path: modules/migrate/src/Plugin/migrate/destination/EntityConfigBase.php
 
 		-
-			message: "#^Variable \\$id_keys might not be defined\\.$#"
-			count: 1
-			path: modules/migrate/src/Plugin/migrate/destination/EntityConfigBase.php
-
-		-
 			message: "#^Method Drupal\\\\migrate\\\\Plugin\\\\migrate\\\\destination\\\\NullDestination\\:\\:import\\(\\) should return array\\|bool but return statement is missing\\.$#"
 			count: 1
 			path: modules/migrate/src/Plugin/migrate/destination/NullDestination.php
@@ -1981,11 +1946,6 @@ parameters:
 			path: modules/search/search.module
 
 		-
-			message: "#^Variable \\$keys might not be defined\\.$#"
-			count: 1
-			path: modules/search/src/Controller/SearchController.php
-
-		-
 			message: "#^Method Drupal\\\\search\\\\Form\\\\SearchPageAddForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/search/src/Form/SearchPageAddForm.php
@@ -2088,11 +2048,6 @@ parameters:
 		-
 			message: "#^Variable \\$default_theme in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
-			path: modules/system/src/Form/ThemeSettingsForm.php
-
-		-
-			message: "#^Variable \\$features might not be defined\\.$#"
-			count: 3
 			path: modules/system/src/Form/ThemeSettingsForm.php
 
 		-
@@ -2289,11 +2244,6 @@ parameters:
 			message: "#^Variable \\$depth_count might not be defined\\.$#"
 			count: 4
 			path: modules/taxonomy/tests/src/Kernel/TermKernelTest.php
-
-		-
-			message: "#^Variable \\$filters might not be defined\\.$#"
-			count: 1
-			path: modules/text/text.module
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -2626,11 +2576,6 @@ parameters:
 			path: modules/views/src/Plugin/views/filter/InOperator.php
 
 		-
-			message: "#^Variable \\$identifier might not be defined\\.$#"
-			count: 4
-			path: modules/views/src/Plugin/views/filter/NumericFilter.php
-
-		-
 			message: "#^Variable \\$source might not be defined\\.$#"
 			count: 2
 			path: modules/views/src/Plugin/views/filter/NumericFilter.php
@@ -2786,14 +2731,24 @@ parameters:
 			path: modules/views/tests/src/Kernel/Handler/FieldFieldTest.php
 
 		-
+			message: "#^Variable \\$rand1 might not be defined\\.$#"
+			count: 2
+			path: modules/views/tests/src/Kernel/Plugin/StyleTest.php
+
+		-
+			message: "#^Variable \\$rand2 might not be defined\\.$#"
+			count: 2
+			path: modules/views/tests/src/Kernel/Plugin/StyleTest.php
+
+		-
+			message: "#^Variable \\$rand3 might not be defined\\.$#"
+			count: 2
+			path: modules/views/tests/src/Kernel/Plugin/StyleTest.php
+
+		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/views/tests/src/Kernel/RenderCacheIntegrationTest.php
-
-		-
-			message: "#^Variable \\$entity_revision_data_table might not be defined\\.$#"
-			count: 1
-			path: modules/views/views.views.inc
 
 		-
 			message: "#^Variable \\$relationship_handler in empty\\(\\) always exists and is not falsy\\.$#"
