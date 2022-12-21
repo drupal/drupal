@@ -293,25 +293,16 @@ function system_requirements($phase) {
   // with an error or warning if the site is running older PHP versions for
   // which Drupal has already or will soon drop support.
   $phpversion = $phpversion_label = phpversion();
-  if (function_exists('phpinfo')) {
-    if ($phase === 'runtime') {
-      $phpversion_label = t('@phpversion (<a href=":url">more information</a>)', ['@phpversion' => $phpversion, ':url' => (new Url('system.php'))->toString()]);
-    }
-    $requirements['php'] = [
-      'title' => t('PHP'),
-      'value' => $phpversion_label,
-    ];
+  if ($phase === 'runtime') {
+    $phpversion_label = t('@phpversion (<a href=":url">more information</a>)', [
+      '@phpversion' => $phpversion,
+      ':url' => (new Url('system.php'))->toString(),
+    ]);
   }
-  else {
-    // @todo Revisit whether this description makes sense in
-    //   https://www.drupal.org/project/drupal/issues/2927318.
-    $requirements['php'] = [
-      'title' => t('PHP'),
-      'value' => $phpversion_label,
-      'description' => t('The phpinfo() function has been disabled for security reasons. To see your server\'s phpinfo() information, change your PHP settings or contact your server administrator. For more information, <a href=":phpinfo">Enabling and disabling phpinfo()</a> handbook page.', [':phpinfo' => 'https://www.drupal.org/node/243993']),
-      'severity' => REQUIREMENT_INFO,
-    ];
-  }
+  $requirements['php'] = [
+    'title' => t('PHP'),
+    'value' => $phpversion_label,
+  ];
 
   // Check if the PHP version is below what Drupal supports.
   if (version_compare($phpversion, $minimum_supported_php) < 0) {
