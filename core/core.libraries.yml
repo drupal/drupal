@@ -812,10 +812,10 @@ es6-promise:
 
 jquery:
   remote: https://github.com/jquery/jquery
-  version: "3.6.2"
+  version: "3.6.3"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/jquery/jquery/3.6.2/LICENSE.txt
+    url: https://raw.githubusercontent.com/jquery/jquery/3.6.3/LICENSE.txt
     gpl-compatible: true
   js:
     assets/vendor/jquery/jquery.min.js: { minified: true, weight: -20 }

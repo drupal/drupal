@@ -82,7 +82,7 @@
     "farbtastic": "https://github.com/mattfarina/farbtastic/archive/1.3u.tar.gz",
     "glob": "^8.0.3",
     "joyride": "https://github.com/zurb/joyride/archive/refs/heads/v2.1.tar.gz",
-    "jquery": "~3.6.1",
+    "jquery": "~3.6.3",
     "jquery-form": "4.3.x",
     "jquery-once": "2.2.x",
     "jquery-ui": "1.13.x",
