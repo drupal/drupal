@@ -68,7 +68,6 @@ class MediaLibraryEditorOpener implements MediaLibraryOpenerInterface {
       'attributes' => [
         'data-entity-type' => 'media',
         'data-entity-uuid' => $selected_media->uuid(),
-        'data-align' => 'center',
       ],
     ];
     $response->addCommand(new EditorDialogSave($values));
