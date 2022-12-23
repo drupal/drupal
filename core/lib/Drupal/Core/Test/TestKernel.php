@@ -3,6 +3,7 @@
 namespace Drupal\Core\Test;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Component\DependencyInjection\ReverseContainer;
 use Drupal\Core\DrupalKernel;
 
 /**
@@ -38,6 +39,7 @@ class TestKernel extends DrupalKernel {
     // inside those objects.
     $kernel->container = $container;
     $container->set('kernel', $kernel);
+    $container->set(ReverseContainer::class, new ReverseContainer($container));
     \Drupal::setContainer($container);
     return $container;
   }

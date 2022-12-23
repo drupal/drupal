@@ -140,8 +140,11 @@ EOD;
 
   /**
    * @covers ::getServiceIdMapping
+   * @group legacy
    */
   public function testGetServiceIdMapping() {
+    $this->expectDeprecation("Drupal\Core\DrupalKernel::getServiceIdMapping() is deprecated in drupal:9.5.1 and is removed from drupal:11.0.0. Use the 'Drupal\Component\DependencyInjection\ReverseContainer' service instead. See https://www.drupal.org/node/3327942");
+    $this->expectDeprecation("Drupal\Core\DrupalKernel::collectServiceIdMapping() is deprecated in drupal:9.5.1 and is removed from drupal:11.0.0. Use the 'Drupal\Component\DependencyInjection\ReverseContainer' service instead. See https://www.drupal.org/node/3327942");
     $service = new BarClass();
     $container = TestKernel::setContainerWithKernel();
     $container->set('bar', $service);
