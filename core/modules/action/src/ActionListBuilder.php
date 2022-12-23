@@ -64,7 +64,7 @@ class ActionListBuilder extends ConfigEntityListBuilder {
     foreach ($entities as $entity) {
       if ($entity->isConfigurable()) {
         $this->hasConfigurableActions = TRUE;
-        continue;
+        break;
       }
     }
     return $entities;
