@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\DependencyInjection;
 
+use Drupal\Component\DependencyInjection\ReverseContainer;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Test\TestKernel;
 use Drupal\Tests\UnitTestCase;
@@ -37,6 +38,7 @@ class DependencySerializationTest extends UnitTestCase {
     /** @var \Drupal\Tests\Core\DependencyInjection\DependencySerializationTestDummy $dependencySerialization */
     $dependencySerialization = unserialize($string);
 
+    $this->assertTrue($container->has(ReverseContainer::class));
     $this->assertSame($service, $dependencySerialization->service);
     $this->assertSame($container, $dependencySerialization->container);
     $this->assertEmpty($dependencySerialization->getServiceIds());
