@@ -275,6 +275,23 @@ class DisplayEntityReferenceTest extends ViewTestBase {
     $view->setDisplay('entity_reference_1');
     $render = $view->display_handler->render();
     $this->assertSame([], $render, 'Render returned empty array');
+
+    // Execute the View without setting the 'entity_reference_options'.
+    // This is equivalent to using the following as entity_reference_options.
+    // @code
+    // $options = [
+    //   'match' => NULL,
+    //   'match_operator' => 'CONTAINS',
+    //   'limit' => 0,
+    //   'ids' => NULL,
+    // ];
+    // @endcode
+    // Assert that this view returns a row for each test entity.
+    $view->destroy();
+    $view = Views::getView('test_display_entity_reference');
+    $view->setDisplay('entity_reference_1');
+    $this->executeView($view);
+    $this->assertCount(13, $view->result, 'Search returned thirteen rows');
   }
 
 }
