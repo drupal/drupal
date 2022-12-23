@@ -25,6 +25,11 @@ interface ContainerInterface extends BaseContainerInterface {
    *
    * @return array
    *   Service ids keyed by a unique hash.
+   *
+   * @deprecated in drupal:9.5.1 and is removed from drupal:11.0.0. Use the
+   *   'Drupal\Component\DependencyInjection\ReverseContainer' service instead.
+   *
+   * @see https://www.drupal.org/node/3327942
    */
   public function getServiceIdMappings(): array;
 
@@ -36,6 +41,11 @@ interface ContainerInterface extends BaseContainerInterface {
    *
    * @return string
    *   A unique hash identifying the object.
+   *
+   * @deprecated in drupal:9.5.1 and is removed from drupal:11.0.0. Use the
+   *   'Drupal\Component\DependencyInjection\ReverseContainer' service instead.
+   *
+   * @see https://www.drupal.org/node/3327942
    */
   public function generateServiceIdHash(object $object): string;
 
