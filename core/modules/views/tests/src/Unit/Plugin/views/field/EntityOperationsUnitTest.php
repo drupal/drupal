@@ -174,4 +174,18 @@ class EntityOperationsUnitTest extends UnitTestCase {
     $this->assertSame($expected_build, $build);
   }
 
+  /**
+   * @covers ::render
+   */
+  public function testRenderWithoutEntity() {
+    $entity = NULL;
+
+    $result = new ResultRow();
+    $result->_entity = $entity;
+
+    $expected_build = '';
+    $build = $this->plugin->render($result);
+    $this->assertSame($expected_build, $build);
+  }
+
 }
