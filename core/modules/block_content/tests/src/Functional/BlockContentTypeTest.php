@@ -133,15 +133,14 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $edit = [
       'label' => 'Bar',
     ];
-    $this->drupalGet('admin/structure/block/block-content/manage/basic');
+    $this->drupalGet('admin/structure/block-content/manage/basic');
     $this->assertSession()->titleEquals('Edit basic custom block type | Drupal');
     $this->submitForm($edit, 'Save');
     $front_page_path = Url::fromRoute('<front>')->toString();
-    $this->assertBreadcrumb('admin/structure/block/block-content/manage/basic/fields', [
+    $this->assertBreadcrumb('admin/structure/block-content/manage/basic/fields', [
       $front_page_path => 'Home',
-      'admin/structure/block' => 'Block layout',
-      'admin/structure/block/block-content' => 'Custom block library',
-      'admin/structure/block/block-content/manage/basic' => 'Edit Bar',
+      'admin/structure/block-content' => 'Custom block types',
+      'admin/structure/block-content/manage/basic' => 'Edit Bar',
     ]);
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
@@ -152,10 +151,10 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->assertSession()->addressEquals(Url::fromRoute('block_content.add_form', ['block_content_type' => 'basic']));
 
     // Remove the body field.
-    $this->drupalGet('admin/structure/block/block-content/manage/basic/fields/block_content.basic.body/delete');
+    $this->drupalGet('admin/structure/block-content/manage/basic/fields/block_content.basic.body/delete');
     $this->submitForm([], 'Delete');
     // Resave the settings for this type.
-    $this->drupalGet('admin/structure/block/block-content/manage/basic');
+    $this->drupalGet('admin/structure/block-content/manage/basic');
     $this->submitForm([], 'Save');
     // Check that the body field doesn't exist.
     $this->drupalGet('block/add/basic');
@@ -177,14 +176,14 @@ class BlockContentTypeTest extends BlockContentTestBase {
     // Add a new block of this type.
     $block = $this->createBlockContent(FALSE, 'foo');
     // Attempt to delete the block type, which should not be allowed.
-    $this->drupalGet('admin/structure/block/block-content/manage/' . $type->id() . '/delete');
+    $this->drupalGet('admin/structure/block-content/manage/' . $type->id() . '/delete');
     $this->assertSession()->pageTextContains($type->label() . ' is used by 1 custom block on your site. You can not remove this block type until you have removed all of the ' . $type->label() . ' blocks.');
     $this->assertSession()->pageTextNotContains('This action cannot be undone.');
 
     // Delete the block.
     $block->delete();
     // Attempt to delete the block type, which should now be allowed.
-    $this->drupalGet('admin/structure/block/block-content/manage/' . $type->id() . '/delete');
+    $this->drupalGet('admin/structure/block-content/manage/' . $type->id() . '/delete');
     $this->assertSession()->pageTextContains('Are you sure you want to delete the custom block type ' . $type->id() . '?');
     $this->assertSession()->pageTextContains('This action cannot be undone.');
   }

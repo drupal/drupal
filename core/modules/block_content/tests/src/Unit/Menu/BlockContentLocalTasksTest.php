@@ -64,10 +64,6 @@ class BlockContentLocalTasksTest extends LocalTaskIntegrationTestBase {
         'block.admin_display',
         'entity.block_content.collection',
       ],
-      1 => [
-        'block_content.list_sub',
-        'entity.block_content_type.collection',
-      ],
     ]);
   }
 
@@ -76,7 +72,7 @@ class BlockContentLocalTasksTest extends LocalTaskIntegrationTestBase {
    */
   public function getBlockContentListingRoutes() {
     return [
-      ['entity.block_content.collection', 'entity.block_content_type.collection'],
+      ['entity.block_content.collection'],
     ];
   }
 

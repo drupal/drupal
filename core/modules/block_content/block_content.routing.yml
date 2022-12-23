@@ -50,7 +50,7 @@ entity.block_content.delete_form:
     block_content: \d+
 
 block_content.type_add:
-  path: '/admin/structure/block/block-content/types/add'
+  path: '/admin/structure/block-content/add'
   defaults:
     _entity_form: 'block_content_type.add'
     _title: 'Add'

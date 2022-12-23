@@ -2,15 +2,6 @@ entity.block_content.collection:
   title: 'Custom block library'
   route_name: entity.block_content.collection
   base_route: block.admin_display
-block_content.list_sub:
-  title: Blocks
-  route_name: entity.block_content.collection
-  parent_id: entity.block_content.collection
-entity.block_content_type.collection:
-  title: Block types
-  route_name: entity.block_content_type.collection
-  parent_id: entity.block_content.collection
-  weight: 1
 
 entity.block_content.canonical:
   title: Edit

@@ -11,7 +11,7 @@ use Drupal\block_content\BlockContentTypeInterface;
  * @ConfigEntityType(
  *   id = "block_content_type",
  *   label = @Translation("Custom block type"),
- *   label_collection = @Translation("Custom block library"),
+ *   label_collection = @Translation("Custom block types"),
  *   label_singular = @Translation("custom block type"),
  *   label_plural = @Translation("custom block types"),
  *   label_count = @PluralTranslation(
@@ -39,10 +39,10 @@ use Drupal\block_content\BlockContentTypeInterface;
  *     "label" = "label"
  *   },
  *   links = {
- *     "delete-form" = "/admin/structure/block/block-content/manage/{block_content_type}/delete",
- *     "edit-form" = "/admin/structure/block/block-content/manage/{block_content_type}",
- *     "entity-permissions-form" = "/admin/structure/block/block-content/manage/{block_content_type}/permissions",
- *     "collection" = "/admin/structure/block/block-content/types",
+ *     "delete-form" = "/admin/structure/block-content/manage/{block_content_type}/delete",
+ *     "edit-form" = "/admin/structure/block-content/manage/{block_content_type}",
+ *     "entity-permissions-form" = "/admin/structure/block-content/manage/{block_content_type}/permissions",
+ *     "collection" = "/admin/structure/block-content",
  *   },
  *   config_export = {
  *     "id",

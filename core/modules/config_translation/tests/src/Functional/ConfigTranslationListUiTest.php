@@ -203,9 +203,9 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     $block_content_type->save();
 
     // Get the custom block type listing.
-    $this->drupalGet('admin/structure/block/block-content/types');
+    $this->drupalGet('admin/structure/block-content');
 
-    $translate_link = 'admin/structure/block/block-content/manage/' . $block_content_type->id() . '/translate';
+    $translate_link = 'admin/structure/block-content/manage/' . $block_content_type->id() . '/translate';
     // Test if the link to translate the custom block type is on the page.
     $this->assertSession()->linkByHrefExists($translate_link);
 
@@ -428,7 +428,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
         'field' => 'node.' . $content_type->id() . '.body',
       ],
       [
-        'list' => 'admin/structure/block/block-content/manage/basic/fields',
+        'list' => 'admin/structure/block-content/manage/basic/fields',
         'field' => 'block_content.basic.body',
       ],
     ];

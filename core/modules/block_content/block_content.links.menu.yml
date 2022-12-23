@@ -1,0 +1,5 @@
+entity.block_content_type.collection:
+  title: 'Custom block types'
+  parent: system.admin_structure
+  description: 'Create and manage fields, forms, and display settings for your custom blocks.'
+  route_name: entity.block_content_type.collection
