@@ -702,15 +702,16 @@ class ViewExecutable {
       }
 
       // If we have no input at all, check for remembered input via session.
-
-      // If filters are not overridden, store the 'remember' settings on the
-      // default display. If they are, store them on this display. This way,
-      // multiple displays in the same view can share the same filters and
-      // remember settings.
-      $display_id = ($this->display_handler->isDefaulted('filters')) ? 'default' : $this->current_display;
-
-      if (empty($this->exposed_input) && !empty($_SESSION['views'][$this->storage->id()][$display_id])) {
-        $this->exposed_input = $_SESSION['views'][$this->storage->id()][$display_id];
+      if (empty($this->exposed_input) && $this->request->hasSession()) {
+        $session = \Drupal::request()->getSession();
+        // If filters are not overridden, store the 'remember' settings on the
+        // default display. If they are, store them on this display. This way,
+        // multiple displays in the same view can share the same filters and
+        // remember settings.
+        $display_id = ($this->display_handler->isDefaulted('filters')) ? 'default' : $this->current_display;
+        if (!empty($session->get('views')[$this->storage->id()][$display_id])) {
+          $this->exposed_input = $session->get('views')[$this->storage->id()][$display_id];
+        }
       }
     }
 
