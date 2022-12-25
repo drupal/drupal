@@ -29,7 +29,7 @@ interface TranslatorInterface {
    * @return string
    *   The translated string.
    *
-   * @throws InvalidArgumentException
+   * @throws \InvalidArgumentException
    *   If the locale contains invalid characters.
    */
   public function trans($id, array $parameters = [], $domain = NULL, $locale = NULL);

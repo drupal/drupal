@@ -166,7 +166,7 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
   /**
    * {@inheritdoc}
    *
-   * @throws \DeleteDefaultLanguageException
+   * @throws \Drupal\language\Exception\DeleteDefaultLanguageException
    *   Exception thrown if we're trying to delete the default language entity.
    *   This is not allowed as a site must have a default language.
    */
