@@ -332,7 +332,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   /**
    * Create the map and message tables if they don't already exist.
    *
-   * @throws \Drupal\Core\Database\DatabaseException
+   * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
    */
   protected function ensureTables() {
     if (!$this->getDatabase()->schema()->tableExists($this->mapTableName)) {

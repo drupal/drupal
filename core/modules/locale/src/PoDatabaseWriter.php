@@ -154,7 +154,7 @@ class PoDatabaseWriter implements PoWriterInterface {
    * @param \Drupal\Component\Gettext\PoHeader $header
    *   Header metadata.
    *
-   * @throws Exception
+   * @throws \Exception
    */
   public function setHeader(PoHeader $header) {
     $this->header = $header;
