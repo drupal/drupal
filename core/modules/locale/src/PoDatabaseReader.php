@@ -91,7 +91,7 @@ class PoDatabaseReader implements PoReaderInterface {
   /**
    * Implements Drupal\Component\Gettext\PoMetadataInterface::setHeader().
    *
-   * @throws Exception
+   * @throws \Exception
    *   Always, because you cannot set the PO header of a reader.
    */
   public function setHeader(PoHeader $header) {
