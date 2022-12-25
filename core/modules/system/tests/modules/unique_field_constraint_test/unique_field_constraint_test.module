@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Database\Query\AlterableInterface;
 
 /**
  * Implements hook_entity_base_field_info_alter().
@@ -15,4 +16,17 @@ function unique_field_constraint_test_entity_base_field_info_alter(&$fields, Ent
     /** @var \Drupal\Core\Field\BaseFieldDefinition[] $fields */
     $fields['name']->addConstraint('UniqueField');
   }
+  if ($entity_type->id() === 'entity_test') {
+    /** @var \Drupal\Core\Field\BaseFieldDefinition[] $fields */
+    $fields['name']->addConstraint('UniqueField');
+  }
+}
+
+/**
+ * Implements hook_query_entity_test_access_alter().
+ */
+function unique_field_constraint_test_query_entity_test_access_alter(AlterableInterface $query) {
+  // Set an impossible condition to filter out all entities.
+  /** @var \Drupal\Core\Database\Query\Select|\Drupal\Core\Database\Query\AlterableInterface $query */
+  $query->condition('entity_test.id', 0);
 }
