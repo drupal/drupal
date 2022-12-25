@@ -120,7 +120,8 @@ class UniqueFieldConstraintTest extends KernelTestBase {
    * forbids 'view' access to entity_test entities.
    *
    * @covers ::validate
-   */ public function testViolationDespiteNoAccess() {
+   */
+  public function testViolationDespiteNoAccess() {
     $this->installEntitySchema('entity_test');
 
     // Create and save an entity with a given field value in the field that has
@@ -137,7 +138,7 @@ class UniqueFieldConstraintTest extends KernelTestBase {
     $violations = $entity->get('name')->validate();
 
     $message = new FormattableMarkup('A @entity_type with @field_name %value already exists.', [
-      '%value' => 'A totally unique entity name',,
+      '%value' => 'A totally unique entity name',
       '@entity_type' => $entity->getEntityType()->getSingularLabel(),
       '@field_name' => 'Name',
     ]);
