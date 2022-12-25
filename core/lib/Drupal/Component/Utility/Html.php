@@ -279,6 +279,11 @@ class Html {
 <body>!html</body>
 </html>
 EOD;
+
+    // PHP's \DOMDocument::saveXML() encodes carriage returns as &#13; so
+    // normalize all newlines to line feeds.
+    $html = str_replace(["\r\n", "\r"], "\n", $html);
+
     // PHP's \DOMDocument serialization adds extra whitespace when the markup
     // of the wrapping document contains newlines, so ensure we remove all
     // newlines before injecting the actual HTML body to be processed.
