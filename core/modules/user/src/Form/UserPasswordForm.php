@@ -203,7 +203,7 @@ class UserPasswordForm extends FormBase {
       $mail = _user_mail_notify('password_reset', $account);
       if (!empty($mail)) {
         $this->logger('user')
-          ->notice('Password reset instructions mailed to %name at %email.', [
+          ->info('Password reset instructions mailed to %name at %email.', [
             '%name' => $account->getAccountName(),
             '%email' => $account->getEmail(),
           ]);
@@ -211,7 +211,7 @@ class UserPasswordForm extends FormBase {
     }
     else {
       $this->logger('user')
-        ->notice('Password reset form was submitted with an unknown or inactive account: %name.', [
+        ->info('Password reset form was submitted with an unknown or inactive account: %name.', [
           '%name' => $form_state->getValue('name'),
         ]);
     }

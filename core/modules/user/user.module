@@ -437,7 +437,7 @@ function template_preprocess_username(&$variables) {
  */
 function user_login_finalize(UserInterface $account) {
   \Drupal::currentUser()->setAccount($account);
-  \Drupal::logger('user')->notice('Session opened for %name.', ['%name' => $account->getAccountName()]);
+  \Drupal::logger('user')->info('Session opened for %name.', ['%name' => $account->getAccountName()]);
   // Update the user table timestamp noting user has logged in.
   // This is also used to invalidate one-time login links.
   $account->setLastLoginTime(\Drupal::time()->getRequestTime());
@@ -1197,7 +1197,7 @@ function user_toolbar() {
 function user_logout() {
   $user = \Drupal::currentUser();
 
-  \Drupal::logger('user')->notice('Session closed for %name.', ['%name' => $user->getAccountName()]);
+  \Drupal::logger('user')->info('Session closed for %name.', ['%name' => $user->getAccountName()]);
 
   \Drupal::moduleHandler()->invokeAll('user_logout', [$user]);
 
