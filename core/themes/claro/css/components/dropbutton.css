@@ -59,7 +59,7 @@
 }
 
 .js .dropbutton-wrapper.open .dropbutton-widget {
-  z-index: 100;
+  z-index: var(--dropbutton-widget-z-index);
 }
 
 /**

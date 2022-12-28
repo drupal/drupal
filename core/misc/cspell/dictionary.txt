@@ -1121,6 +1121,7 @@ starterkit
 starzzzz
 statuscode
 stdclass
+stickied
 stitle
 streamwrapper
 streamwrappers
@@ -1326,6 +1327,7 @@ unaliased
 unallowed
 unassigning
 unassigns
+unhides
 unban
 unbans
 unbundleable

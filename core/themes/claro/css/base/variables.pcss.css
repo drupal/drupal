@@ -192,6 +192,7 @@
   --button-bg-color--danger: var(--color-maximumred);
   --button--hover-bg-color--danger: var(--color-maximumred-hover);
   --button--active-bg-color--danger: var(--color-maximumred-active);
+  --dropbutton-widget-z-index: 100;
   /**
    * jQuery.UI dropdown.
    */
