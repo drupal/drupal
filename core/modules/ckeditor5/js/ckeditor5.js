@@ -370,8 +370,54 @@
 
       ClassicEditor.create(element, editorConfig)
         .then((editor) => {
+          /**
+           * Injects a temporary <p> into CKEditor and then calculates the entire
+           * height of the amount of the <p> tags from the passed in rows value.
+           *
+           * This takes into account collapsing margins, and line-height of the
+           * current theme.
+           *
+           * @param {number} - the number of rows.
+           *
+           * @returns {number} - the height of a div in pixels.
+           */
+          function calculateLineHeight(rows) {
+            const element = document.createElement('p');
+            element.setAttribute('style', 'visibility: hidden;');
+            element.innerHTML = '&nbsp;';
+            editor.ui.view.editable.element.append(element);
+
+            const styles = window.getComputedStyle(element);
+            const height = element.clientHeight;
+            const marginTop = parseInt(styles.marginTop, 10);
+            const marginBottom = parseInt(styles.marginBottom, 10);
+            const mostMargin =
+              marginTop >= marginBottom ? marginTop : marginBottom;
+
+            element.remove();
+            return (
+              (height + mostMargin) * (rows - 1) +
+              marginTop +
+              height +
+              marginBottom
+            );
+          }
+
           // Save a reference to the initialized instance.
           Drupal.CKEditor5Instances.set(id, editor);
+
+          // Set the minimum height of the editable area to correspond with the
+          // value of the number of rows. We attach this custom property to
+          // the `.ck-editor` element, as that doesn't get its inline styles
+          // cleared on focus. The editable element is then set to use this
+          // property within the stylesheet.
+          const rows = editor.sourceElement.getAttribute('rows');
+          editor.ui.view.editable.element
+            .closest('.ck-editor')
+            .style.setProperty(
+              '--ck-min-height',
+              `${calculateLineHeight(rows)}px`,
+            );
 
           // CKEditor 4 had a feature to remove the required attribute
           // see: https://www.drupal.org/project/drupal/issues/1954968

@@ -1101,6 +1101,7 @@ someschema
 somethinggeneric
 sortablejs
 sourcedir
+sourceediting
 spacebar
 spagna
 specialchars

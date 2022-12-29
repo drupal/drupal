@@ -8,3 +8,14 @@
   opacity: 1 !important;
   fill-opacity: 1 !important;
 }
+
+/**
+ * Set the min-height equal to configuration value for the number of rows.
+ *
+ * The `--ck-min-height` value is set on the parent `.ck-editor` element by
+ * JavaScript. We add that there because the `.ck-editor__editable` element's
+ * inline styles are cleared on focus.
+ */
+.ck-editor__main > :is(.ck-editor__editable, .ck-source-editing-area) {
+  min-height: var(--ck-min-height);
+}
