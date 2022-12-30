@@ -63,7 +63,7 @@ html {
   outline-width: 1px;
   outline-style: dotted;
   outline-color: #008068;
-  outline-offset: 2px; /* Not supported in IE11 but greatly improves outline visibility in newer browsers. */
+  outline-offset: 2px;
 }
 
 a {
