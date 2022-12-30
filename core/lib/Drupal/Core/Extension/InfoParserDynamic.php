@@ -26,8 +26,7 @@ class InfoParserDynamic implements InfoParserInterface {
    */
   public function __construct(string $app_root = NULL) {
     if ($app_root === NULL) {
-      // @todo https://www.drupal.org/project/drupal/issues/3087975 Require
-      //   $app_root argument.
+      @trigger_error('Calling InfoParserDynamic::__construct() without the $app_root argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3293709', E_USER_DEPRECATED);
       $app_root = \Drupal::hasService('kernel') ? \Drupal::root() : DRUPAL_ROOT;
     }
     $this->root = $app_root;
