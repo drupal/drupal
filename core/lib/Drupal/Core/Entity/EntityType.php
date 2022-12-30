@@ -219,6 +219,8 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    * The machine name of the entity type group.
    *
    * @var string
+   *
+   * @see self::getGroup()
    */
   protected $group;
 

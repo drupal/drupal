@@ -686,6 +686,14 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
   /**
    * Gets the machine name of the entity type group.
    *
+   * The entity type group is an annotation property of the entity type.
+   *
+   * Drupal core defines two entity type groups:
+   *  - content: Entities which form the information on a site. Content entities
+   *    are typically customized with fields.
+   *  - config: Entities which define structural elements of a site, which are
+   *    managed as part of the site's configuration.
+   *
    * @return string
    */
   public function getGroup();
@@ -695,6 +703,8 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *
    * @return string|\Drupal\Core\StringTranslation\TranslatableMarkup
    *   The group label.
+   *
+   * @see self::getGroup()
    */
   public function getGroupLabel();
 
