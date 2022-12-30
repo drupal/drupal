@@ -13,7 +13,7 @@
     "_": true,
     "matchMedia": true,
     "Backbone": true,
-    "Modernizr": true,
+    "Modernizr": true
   },
   "rules": {
     "array-bracket-spacing": ["error", "never"],
