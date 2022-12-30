@@ -453,6 +453,39 @@ class ToolkitGdTest extends KernelTestBase {
   }
 
   /**
+   * Tests creation of an image that will exceed the memory limit.
+   */
+  public function testInsufficientMemory(): void {
+    // ini_get() may return -1 or null for memory_limit to indicate there is no
+    // limit set. In that case, we need to skip this test.
+    $size = ini_get('memory_limit');
+    if (!$size || (int) $size === -1) {
+      $this->markTestSkipped("There is no memory limit set in the PHP environment.");
+    }
+
+    $image = $this->imageFactory->get('core/tests/fixtures/files/image-test.png');
+
+    $oldGdImage = $image->getToolkit()->getResource();
+    $this->assertFalse($image->createNew(2000000, 2000000));
+    $newGdImage = $image->getToolkit()->getResource();
+
+    // Check that a new resource has not been created, and the old one is still
+    // valid.
+    $this->assertEquals($oldGdImage, $newGdImage);
+  }
+
+  /**
+   * Tests resizing of an image that will exceed the memory available.
+   */
+  public function testInsufficientAvailableMemory(): void {
+    $image = $this->imageFactory->get('core/tests/fixtures/files/image-test.png');
+
+    $memory_in_use = memory_get_usage(TRUE);
+    ini_set('memory_limit', $memory_in_use + 2048);
+    $this->assertFalse($image->resize(200000, 200000));
+  }
+
+  /**
    * Tests for GIF images with transparency.
    */
   public function testGifTransparentImages(): void {
