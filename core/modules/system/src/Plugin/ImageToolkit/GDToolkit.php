@@ -180,54 +180,31 @@ class GDToolkit extends ImageToolkitBase {
       return FALSE;
     }
 
-    // Invalidate the image object and return if there's no function to load the
-    // image file.
     $function = 'imagecreatefrom' . image_type_to_extension($this->getType(), FALSE);
-    if (!function_exists($function)) {
-      $this->logger->error("The image toolkit '@toolkit' can not process image '@image'.", [
-        '@toolkit' => $this->getPluginId(),
-        '@image' => $this->getSource(),
-      ]);
-      $this->preLoadInfo = NULL;
-      return FALSE;
-    }
-
-    // Invalidate the image object and return if the load fails.
-    try {
-      $resource = $function($this->getSource());
-    }
-    catch (\Throwable $t) {
-      $this->logger->error("The image toolkit '@toolkit' failed loading image '@image'. Reported error: @class - @message", [
-        '@toolkit' => $this->getPluginId(),
-        '@image' => $this->getSource(),
-        '@class' => get_class($t),
-        '@message' => $t->getMessage(),
-      ]);
-      $this->preLoadInfo = NULL;
-      return FALSE;
-    }
-
-    $this->setResource($resource);
-    if (imageistruecolor($resource)) {
-      return TRUE;
-    }
-    else {
-      // Convert indexed images to truecolor, copying the image to a new
-      // truecolor resource, so that filters work correctly and don't result
-      // in unnecessary dither.
-      $data = [
-        'width' => imagesx($resource),
-        'height' => imagesy($resource),
-        'extension' => image_type_to_extension($this->getType(), FALSE),
-        'transparent_color' => $this->getTransparentColor(),
-        'is_temp' => TRUE,
-      ];
-      if ($this->apply('create_new', $data)) {
-        imagecopy($this->getResource(), $resource, 0, 0, 0, 0, imagesx($resource), imagesy($resource));
-        imagedestroy($resource);
+    if (function_exists($function) && $resource = $function($this->getSource())) {
+      $this->setResource($resource);
+      if (imageistruecolor($resource)) {
+        return TRUE;
       }
+      else {
+        // Convert indexed images to truecolor, copying the image to a new
+        // truecolor resource, so that filters work correctly and don't result
+        // in unnecessary dither.
+        $data = [
+          'width' => imagesx($resource),
+          'height' => imagesy($resource),
+          'extension' => image_type_to_extension($this->getType(), FALSE),
+          'transparent_color' => $this->getTransparentColor(),
+          'is_temp' => TRUE,
+        ];
+        if ($this->apply('create_new', $data)) {
+          imagecopy($this->getResource(), $resource, 0, 0, 0, 0, imagesx($resource), imagesy($resource));
+          imagedestroy($resource);
+        }
+      }
+      return (bool) $this->getResource();
     }
-    return (bool) $this->getResource();
+    return FALSE;
   }
 
   /**
@@ -259,18 +236,7 @@ class GDToolkit extends ImageToolkitBase {
       return FALSE;
     }
     if ($this->getType() == IMAGETYPE_JPEG) {
-      try {
-        $success = $function($this->getResource(), $destination, $this->configFactory->get('system.image.gd')->get('jpeg_quality'));
-      }
-      catch (\Throwable $t) {
-        $this->logger->error("The image toolkit '@toolkit' failed saving image '@image'. Reported error: @class - @message", [
-          '@toolkit' => $this->getPluginId(),
-          '@image' => $destination,
-          '@class' => get_class($t),
-          '@message' => $t->getMessage(),
-        ]);
-        $success = FALSE;
-      }
+      $success = $function($this->getResource(), $destination, $this->configFactory->get('system.image.gd')->get('jpeg_quality'));
     }
     else {
       // Image types that support alpha need to be saved accordingly.
@@ -278,18 +244,7 @@ class GDToolkit extends ImageToolkitBase {
         imagealphablending($this->getResource(), FALSE);
         imagesavealpha($this->getResource(), TRUE);
       }
-      try {
-        $success = $function($this->getResource(), $destination);
-      }
-      catch (\Throwable $t) {
-        $this->logger->error("The image toolkit '@toolkit' failed saving image '@image'. Reported error: @class - @message", [
-          '@toolkit' => $this->getPluginId(),
-          '@image' => $destination,
-          '@class' => get_class($t),
-          '@message' => $t->getMessage(),
-        ]);
-        $success = FALSE;
-      }
+      $success = $function($this->getResource(), $destination);
     }
     // Move temporary local file to remote destination.
     if (isset($permanent_destination) && $success) {
