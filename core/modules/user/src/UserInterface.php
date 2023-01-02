@@ -69,6 +69,8 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
    *
    * @param string $rid
    *   The role ID to add.
+   *
+   * @return $this
    */
   public function addRole($rid);
 
@@ -77,6 +79,8 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
    *
    * @param string $rid
    *   The role ID to remove.
+   *
+   * @return $this
    */
   public function removeRole($rid);
 

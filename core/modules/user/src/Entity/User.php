@@ -195,6 +195,8 @@ class User extends ContentEntityBase implements UserInterface {
     $roles = $this->getRoles(TRUE);
     $roles[] = $rid;
     $this->set('roles', array_unique($roles));
+
+    return $this;
   }
 
   /**
@@ -202,6 +204,8 @@ class User extends ContentEntityBase implements UserInterface {
    */
   public function removeRole($rid) {
     $this->set('roles', array_diff($this->getRoles(TRUE), [$rid]));
+
+    return $this;
   }
 
   /**
