@@ -1451,11 +1451,6 @@ parameters:
 			path: modules/language/tests/src/Functional/LanguageBreadcrumbTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\layout_builder\\\\Unit\\\\DefaultsSectionStorageTest\\:\\:getThirdPartySetting\\(\\)\\.$#"
-			count: 1
-			path: modules/layout_builder/tests/src/Unit/DefaultsSectionStorageTest.php
-
-		-
 			message: "#^Constructor of class Drupal\\\\link\\\\Plugin\\\\migrate\\\\process\\\\FieldLink has an unused parameter \\$migration\\.$#"
 			count: 1
 			path: modules/link/src/Plugin/migrate/process/FieldLink.php
@@ -2921,16 +2916,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Entity/EntityDecoupledTranslationRevisionsTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\EntityDisplayFormBaseTest\\:\\:getComponent\\(\\)\\.$#"
-			count: 3
-			path: tests/Drupal/KernelTests/Core/Entity/EntityDisplayFormBaseTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\EntityDisplayFormBaseTest\\:\\:setComponent\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/EntityDisplayFormBaseTest.php
-
-		-
 			message: "#^Method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\EntityKernelTestBase\\:\\:createUser\\(\\) invoked with 4 parameters, 0\\-2 required\\.$#"
 			count: 3
 			path: tests/Drupal/KernelTests/Core/Entity/EntityKernelTestBase.php
@@ -3119,16 +3104,6 @@ parameters:
 			message: "#^Class Drupal\\\\Driver\\\\Database\\\\fake\\\\Install\\\\Tasks not found\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Database/InstallerObjectTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Entity\\\\EntityFieldManagerTest\\:\\:get\\(\\)\\.$#"
-			count: 3
-			path: tests/Drupal/Tests/Core/Entity/EntityFieldManagerTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Entity\\\\EntityTypeBundleInfoTest\\:\\:get\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Entity/EntityTypeBundleInfoTest.php
 
 		-
 			message: "#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"

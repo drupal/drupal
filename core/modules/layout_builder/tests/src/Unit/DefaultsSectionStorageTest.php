@@ -96,8 +96,8 @@ class DefaultsSectionStorageTest extends UnitTestCase {
     $this->assertSame('value 1', $this->plugin->getThirdPartySetting('the_module', 'the_key'));
 
     // When the section list is updated, also update the result returned.
-    $section_list->setThirdPartySetting('the_module', 'the_key', 'value 2')->shouldBeCalled()->will(function ($args) {
-      $this->getThirdPartySetting('the_module', 'the_key', NULL)->willReturn($args[2]);
+    $section_list->setThirdPartySetting('the_module', 'the_key', 'value 2')->shouldBeCalled()->will(function (array $args) use ($section_list) {
+      $section_list->getThirdPartySetting('the_module', 'the_key', NULL)->willReturn($args[2]);
     });
 
     // Update the plugin value.
