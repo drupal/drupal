@@ -1,6 +1,0 @@
-name: 'Theme test subtheme'
-type: theme
-description: 'Test theme which uses test_basetheme as the base theme.'
-version: VERSION
-base theme: stark
-package: Testing

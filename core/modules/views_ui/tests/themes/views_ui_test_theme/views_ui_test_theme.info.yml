@@ -1,0 +1,6 @@
+name: 'Views UI Test Theme'
+type: theme
+description: 'Test theme for testing Views UI.'
+version: VERSION
+base theme: stark
+package: Testing
