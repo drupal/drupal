@@ -50,7 +50,6 @@ class EntityTypeRepositoryTest extends UnitTestCase {
    *   (optional) An array of entity type definitions.
    */
   protected function setUpEntityTypeDefinitions($definitions = []) {
-    $class = $this->getMockClass(EntityInterface::class);
     foreach ($definitions as $key => $entity_type) {
       // \Drupal\Core\Entity\EntityTypeInterface::getLinkTemplates() is called
       // by \Drupal\Core\Entity\EntityTypeManager::processDefinition() so it must
@@ -58,7 +57,7 @@ class EntityTypeRepositoryTest extends UnitTestCase {
       $entity_type->getLinkTemplates()->willReturn([]);
 
       // Give the entity type a legitimate class to return.
-      $entity_type->getClass()->willReturn($class);
+      $entity_type->getClass()->willReturn(EntityInterface::class);
 
       $definitions[$key] = $entity_type->reveal();
     }
