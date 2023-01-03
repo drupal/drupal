@@ -29,6 +29,17 @@ interface MigrationPluginManagerInterface extends PluginManagerInterface {
   public function createInstances($id, array $configuration = []);
 
   /**
+   * Expand derivative migration dependencies.
+   *
+   * @param string[] $migration_ids
+   *   A list of plugin IDs.
+   *
+   * @return array
+   *   An array of expanded plugin ids.
+   */
+  public function expandPluginIds(array $migration_ids);
+
+  /**
    * Creates a stub migration plugin from a definition array.
    *
    * @param array $definition

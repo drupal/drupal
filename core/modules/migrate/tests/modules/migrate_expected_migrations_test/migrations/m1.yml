@@ -1,0 +1,7 @@
+id: m1
+label: "Sample Migration 1"
+source:
+  plugin: empty
+process: {}
+destination:
+  plugin: 'null'

@@ -104,6 +104,13 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
 
     $factory = $this->getFactory();
     $migration_ids = (array) $migration_id;
+
+    // We need to expand any derivative migrations. Derivative migrations are
+    // calculated by migration derivers such as D6NodeDeriver. This allows
+    // migrations to depend on the base id and then have a dependency on all
+    // derivative migrations. For example, d6_comment depends on d6_node but
+    // after we've expanded the dependencies it will depend on d6_node:page,
+    // d6_node:story and so on, for other derivative migrations.
     $plugin_ids = $this->expandPluginIds($migration_ids);
 
     $instances = [];
@@ -111,8 +118,10 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
       $instances[$plugin_id] = $factory->createInstance($plugin_id, $configuration[$plugin_id] ?? []);
     }
 
+    // @todo Remove loop when the ability to call ::getMigrationDependencies()
+    //   without expanding plugins is removed.
     foreach ($instances as $migration) {
-      $migration->set('migration_dependencies', array_map([$this, 'expandPluginIds'], $migration->getMigrationDependencies()));
+      $migration->set('migration_dependencies', $migration->getMigrationDependencies(TRUE));
     }
 
     // Sort the migrations based on their dependencies.
@@ -130,22 +139,13 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
   }
 
   /**
-   * Expand derivative migration dependencies.
-   *
-   * We need to expand any derivative migrations. Derivative migrations are
-   * calculated by migration derivers such as D6NodeDeriver. This allows
-   * migrations to depend on the base id and then have a dependency on all
-   * derivative migrations. For example, d6_comment depends on d6_node but after
-   * we've expanded the dependencies it will depend on d6_node:page,
-   * d6_node:story and so on, for other derivative migrations.
-   *
-   * @return array
-   *   An array of expanded plugin ids.
+   * {@inheritdoc}
    */
-  protected function expandPluginIds(array $migration_ids) {
+  public function expandPluginIds(array $migration_ids) {
     $plugin_ids = [];
+    $all_ids = array_keys($this->getDefinitions());
     foreach ($migration_ids as $id) {
-      $plugin_ids += preg_grep('/^' . preg_quote($id, '/') . PluginBase::DERIVATIVE_SEPARATOR . '/', array_keys($this->getDefinitions()));
+      $plugin_ids += preg_grep('/^' . preg_quote($id, '/') . PluginBase::DERIVATIVE_SEPARATOR . '/', $all_ids);
       if ($this->hasDefinition($id)) {
         $plugin_ids[] = $id;
       }
@@ -169,7 +169,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
       $id = $migration->id();
       $requirements[$id] = [];
       $dependency_graph[$id]['edges'] = [];
-      $migration_dependencies = $migration->getMigrationDependencies();
+      $migration_dependencies = $migration->getMigrationDependencies(TRUE);
 
       if (isset($migration_dependencies['required'])) {
         foreach ($migration_dependencies['required'] as $dependency) {
