@@ -223,7 +223,12 @@ function system_post_update_sort_all_config(&$sandbox) {
   $start = $sandbox['progress'];
   $end = min($sandbox['max'], $start + $iteration_size);
   for ($i = $start; $i < $end; $i++) {
-    $factory->getEditable($sandbox['all_config_names'][$i])->save();
+    try {
+      $factory->getEditable($sandbox['all_config_names'][$i])->save();
+    }
+    catch (\Exception $e) {
+      watchdog_exception('system', $e);
+    }
   }
 
   if ($sandbox['max'] > 0 && $end < $sandbox['max']) {
