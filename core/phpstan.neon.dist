@@ -37,7 +37,3 @@ parameters:
     - "#^Missing cache backend declaration for performance.#"
     - "#cache tag might be unclear and does not contain the cache key in it.#"
     - "#^Class .* extends @internal class#"
-
-    # This check was ignored on purpose until the issues with it, which started in version 1.1.15, are solved.
-    # @see https://www.drupal.org/node/3280328
-    - "#^Missing explicit access check on entity query.#"
