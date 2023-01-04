@@ -9,7 +9,7 @@
     },
     "require": {
         "php": ">=7.3.0",
-        "drupal/core-render": "9.5.x-dev"
+        "drupal/core-render": "^9.5"
     },
     "autoload": {
         "psr-4": {
