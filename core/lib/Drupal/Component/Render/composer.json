@@ -8,7 +8,7 @@
     "license": "GPL-2.0-or-later",
     "require": {
         "php": ">=7.3.0",
-        "drupal/core-utility": "^9.5"
+        "drupal/core-utility": "9.5.x-dev"
     },
     "autoload": {
         "psr-4": {
