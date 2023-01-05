@@ -112,14 +112,34 @@ class DependencyTest extends ModuleTestBase {
     mkdir($path, 0777, TRUE);
     file_put_contents("$path/system_no_module_version_dependency_test.info.yml", Yaml::encode($info));
 
+    // Include a version in the dependency definition, to test the 'incompatible
+    // with version' message when no version is given in the required module.
+    $info = [
+      'type' => 'module',
+      'core_version_requirement' => '*',
+      'name' => 'System no module version test',
+      'dependencies' => ['system_no_module_version_dependency_test(>1.x)'],
+    ];
+    $path = $this->siteDirectory . '/modules/system_no_module_version_test';
+    mkdir($path, 0777, TRUE);
+    file_put_contents("$path/system_no_module_version_test.info.yml", Yaml::encode($info));
+
+    // Ensure that the module list page is displayed without errors.
+    $this->drupalGet('admin/modules');
+    $this->assertSession()->pageTextContains('System no module version test');
+    $this->assertSession()->pageTextContains('System no module version dependency test (>1.x) (incompatible with version');
+    $this->assertSession()->fieldEnabled('modules[system_no_module_version_dependency_test][enable]');
+    $this->assertSession()->fieldDisabled('modules[system_no_module_version_test][enable]');
+
+    // Remove the version requirement from the the dependency definition
     $info = [
       'type' => 'module',
       'core_version_requirement' => '*',
       'name' => 'System no module version test',
       'dependencies' => ['system_no_module_version_dependency_test'],
     ];
+
     $path = $this->siteDirectory . '/modules/system_no_module_version_test';
-    mkdir($path, 0777, TRUE);
     file_put_contents("$path/system_no_module_version_test.info.yml", Yaml::encode($info));
 
     $this->drupalGet('admin/modules');
