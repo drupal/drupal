@@ -103,7 +103,7 @@ class ConfigImportAllTest extends ModuleTestBase {
     $validation_modules = array_keys($validation_reasons);
     $this->assertEqualsCanonicalizing($expected_modules, $validation_modules);
 
-    $modules_to_uninstall = array_filter($all_modules, function ($module) use ($validation_reasons) {
+    $modules_to_uninstall = array_filter($all_modules, function ($module) {
       // Filter required and not enabled modules.
       if (!empty($module->info['required']) || $module->status == FALSE) {
         return FALSE;

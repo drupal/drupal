@@ -55,7 +55,7 @@ class MetadataBubblingUrlGeneratorTest extends UrlGeneratorTest {
 
     $this->renderer->expects($this->exactly($invocations))
       ->method('render')
-      ->willReturnCallback(function ($build) use ($self) {
+      ->willReturnCallback(function ($build) {
         $this->assertArrayHasKey('#cache', $build);
       });
 
