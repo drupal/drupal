@@ -87,7 +87,10 @@ class Language extends CKEditorPluginBase implements CKEditorPluginConfigurableI
         'label' => $label,
         'image_alternative' => [
           '#type' => 'inline_template',
-          '#template' => '<a href="#" class="cke-icon-only" role="button" title="' . $label . '" aria-label="' . $label . '"><span class="cke_button_icon cke_button__language_icon">' . $label . '</span></a>',
+          '#template' => '<a href="#" class="cke-icon-only" role="button" title="{{ label }}" aria-label="{{ label }}"><span class="cke_button_icon cke_button__language_icon">{{ label }}</span></a>',
+          '#context' => [
+            'label' => $label,
+          ],
         ],
       ],
     ];
