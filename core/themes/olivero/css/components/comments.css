@@ -10,19 +10,6 @@
  * Comment section and individual comments.
  */
 
-/*
- * Media query breakpoints.
- * Processed by postcss/postcss-custom-media.
- */
-
-/* Navigation related breakpoints */
-
-/* Grid related breakpoints */
-
-/* Grid shifts from 6 to 14 columns. */
-
-/* Width of the entire grid maxes out. */
-
 :root {
   --comment-indentation: var(--sp2);
   --comment-indentation--md: var(--sp4);

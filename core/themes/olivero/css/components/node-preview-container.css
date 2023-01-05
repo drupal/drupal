@@ -10,19 +10,6 @@
  * Node preview container styling.
  */
 
-/*
- * Media query breakpoints.
- * Processed by postcss/postcss-custom-media.
- */
-
-/* Navigation related breakpoints */
-
-/* Grid related breakpoints */
-
-/* Grid shifts from 6 to 14 columns. */
-
-/* Width of the entire grid maxes out. */
-
 .node-preview-container {
   padding-block: 0;
   padding-inline-start: var(--sp0-5);

@@ -107,6 +107,5 @@
     "last 1 ChromeAndroid version",
     "last 1 Samsung version",
     "Firefox ESR"
-  ],
-  "dependencies": {}
+  ]
 }

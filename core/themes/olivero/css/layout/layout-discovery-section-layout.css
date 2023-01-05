@@ -10,19 +10,6 @@
  * Provides default layout styles for all layout sections.
  */
 
-/*
- * Media query breakpoints.
- * Processed by postcss/postcss-custom-media.
- */
-
-/* Navigation related breakpoints */
-
-/* Grid related breakpoints */
-
-/* Grid shifts from 6 to 14 columns. */
-
-/* Width of the entire grid maxes out. */
-
 .layout {
   margin-block-end: var(--sp);
 }

@@ -8,28 +8,16 @@ const postcssPresetEnv = require('postcss-preset-env');
 // cspell:ignore pxtorem
 const postcssPixelsToRem = require('postcss-pxtorem');
 const stylelint = require('stylelint');
+const removeUnwantedComments = require('./remove-unwanted-comments');
 
 module.exports = (filePath, callback) => {
   // Transform the file.
   fs.readFile(filePath, (err, css) => {
     postcss([
       postcssImport({
-       plugins: [
-         // On import, remove the comments from variables.pcss.css so they don't
-         // appear as useless comments at the top files that import these
-         // variables.
-         postcss.plugin('remove-unwanted-comments-from-variables', (options) => {
-           return css => {
-             if (css.source.input.file.indexOf('variables.pcss.css') !== -1) {
-               css.walk(node => {
-                 if (node.type === 'comment') {
-                   node.remove();
-                 }
-               });
-             }
-           };
-         }),
-       ],
+        plugins: [
+          removeUnwantedComments,
+        ],
       }),
       postcssPresetEnv({
         stage: 1,

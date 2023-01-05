@@ -10,19 +10,6 @@
  * Powered by block specific styles.
  */
 
-/*
- * Media query breakpoints.
- * Processed by postcss/postcss-custom-media.
- */
-
-/* Navigation related breakpoints */
-
-/* Grid related breakpoints */
-
-/* Grid shifts from 6 to 14 columns. */
-
-/* Width of the entire grid maxes out. */
-
 .block-system-powered-by-block {
   letter-spacing: 0.02em;
   font-size: 0.875rem;

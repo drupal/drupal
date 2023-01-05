@@ -14,19 +14,6 @@
  * they reach the --views-grid-item--min-width value.
  */
 
-/*
- * Media query breakpoints.
- * Processed by postcss/postcss-custom-media.
- */
-
-/* Navigation related breakpoints */
-
-/* Grid related breakpoints */
-
-/* Grid shifts from 6 to 14 columns. */
-
-/* Width of the entire grid maxes out. */
-
 .views-view-grid {
   --views-grid--layout-gap: var(--sp);
   --views-grid--column-count: 4; /* Will be overridden by an inline style. */

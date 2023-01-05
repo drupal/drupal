@@ -10,19 +10,6 @@
  * Collapsible details.
  */
 
-/*
- * Media query breakpoints.
- * Processed by postcss/postcss-custom-media.
- */
-
-/* Navigation related breakpoints */
-
-/* Grid related breakpoints */
-
-/* Grid shifts from 6 to 14 columns. */
-
-/* Width of the entire grid maxes out. */
-
 :root {
   --details-border-width: 1px;
   --details-summary-transition: background-color 0.12s ease-in-out;

@@ -10,19 +10,6 @@
  * Nav Primary (wide widths).
  */
 
-/*
- * Media query breakpoints.
- * Processed by postcss/postcss-custom-media.
- */
-
-/* Navigation related breakpoints */
-
-/* Grid related breakpoints */
-
-/* Grid shifts from 6 to 14 columns. */
-
-/* Width of the entire grid maxes out. */
-
 @media (min-width: 75rem) {
   body:not(.is-always-mobile-nav) .primary-nav__menu-item {
     flex-wrap: nowrap; /* Ensure that sub navigation toggle button doesn't wrap underneath link. */
