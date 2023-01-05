@@ -93,13 +93,6 @@ input.error[type="radio"]:focus {
   outline-offset: -2px;
 }
 
-/* Specific pseudo-element to apply red borders for IE11 bool elements in case of error */
-
-input.error[type="checkbox"]::-ms-check,
-input.error[type="radio"]::-ms-check {
-  border: 1px solid var(--color--red);
-}
-
 input[type="checkbox"] + label,
 input[type="radio"] + label {
   display: inline-block;

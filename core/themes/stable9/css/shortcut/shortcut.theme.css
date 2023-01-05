@@ -37,7 +37,6 @@
   padding: 0 5px;
   -webkit-transition: all 200ms ease-out;
   transition: all 200ms ease-out;
-  -ms-transform: translateY(-12px);
   -webkit-transform: translateY(-12px);
   transform: translateY(-12px);
   opacity: 0;
@@ -45,7 +44,6 @@
   border-radius: 5px;
   background: #000;
   background: rgba(0, 0, 0, 0.5);
-  -ms-backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }
@@ -55,7 +53,6 @@
 }
 .shortcut-action:hover .shortcut-action__message,
 .shortcut-action:focus .shortcut-action__message {
-  -ms-transform: translateY(-2px);
   -webkit-transform: translateY(-2px);
   transform: translateY(-2px);
   opacity: 1;

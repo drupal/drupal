@@ -67,10 +67,6 @@ textarea {
   }
 }
 
-:is([type="color"],[type="date"],[type="datetime-local"],[type="email"],[type="file"],[type="month"],[type="number"],[type="password"],[type="search"],[type="tel"],[type="text"],[type="time"],[type="url"],[type="week"],textarea)::-ms-clear {
-  display: none;
-}
-
 [disabled]:is([type="color"],[type="date"],[type="datetime-local"],[type="email"],[type="file"],[type="month"],[type="number"],[type="password"],[type="search"],[type="tel"],[type="text"],[type="time"],[type="url"],[type="week"],textarea) {
   color: var(--color--gray-60);
   background-color: var(--color--gray-100);

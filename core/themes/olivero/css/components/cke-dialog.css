@@ -14,7 +14,3 @@ select.cke_dialog_ui_input_select {
   -webkit-appearance: menulist;
   appearance: menulist;
 }
-
-select.cke_dialog_ui_input_select::-ms-expand {
-  display: block;
-}

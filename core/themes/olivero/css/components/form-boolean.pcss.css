@@ -61,11 +61,6 @@ input[type="radio"] {
     }
   }
 
-  /* Specific pseudo-element to apply red borders for IE11 bool elements in case of error */
-  &.error::-ms-check {
-    border: 1px solid var(--color--red);
-  }
-
   & + label {
     display: inline-block;
     padding-inline-start: var(--sp0-5);

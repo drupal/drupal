@@ -38,11 +38,6 @@ select {
     }
   }
 
-  /* Hides default chevron within Internet Explorer. */
-  &::-ms-expand {
-    display: none;
-  }
-
   &[disabled] {
     color: var(--color--gray-60);
     background-color: var(--color--gray-100);
@@ -80,16 +75,6 @@ select {
     /* Lets browser set <select> appearance to whatever the browser's default is. */
     @supports (appearance: revert) {
       appearance: revert;
-    }
-  }
-
-  /* Necessary for Internet Explorer to show chevron. */
-  @media screen and (-ms-high-contrast: active) {
-    padding-inline-end: 0;
-
-    /* Re-enable default chevron for Internet Explorer. */
-    &::-ms-expand {
-      display: block;
     }
   }
 }

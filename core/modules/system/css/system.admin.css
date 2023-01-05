@@ -110,7 +110,6 @@ small .admin-link:after {
   text-transform: none;
   -webkit-hyphens: auto;
   -moz-hyphens: auto;
-  -ms-hyphens: auto;
   hyphens: auto;
 }
 .system-modules td details a {

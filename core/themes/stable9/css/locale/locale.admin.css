@@ -97,7 +97,6 @@
 .expanded .locale-translation-update__message {
   -webkit-hyphens: auto;
   -moz-hyphens: auto;
-  -ms-hyphens: auto;
   hyphens: auto;
 }
 .js .locale-translation-update__wrapper {

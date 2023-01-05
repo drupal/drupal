@@ -77,26 +77,9 @@
   -webkit-appearance: none;
 }
 
-.block-search-wide__wrapper input[type="search"]::-ms-clear {
-  width: 2.5rem;
-  opacity: 0.5;
-}
-
 .block-search-wide__wrapper input[type="search"]:focus {
   outline: solid 4px transparent;
   outline-offset: -4px;
-
-  /*
-        We normally indicate focus by animating background-image width. This isn't
-        available in IE11 when in Windows high contrast mode.
-      */
-}
-
-@media screen and (-ms-high-contrast: active) {
-
-  .block-search-wide__wrapper input[type="search"]:focus {
-    border-bottom-width: var(--sp0-5);
-  }
 }
 
 .block-search-wide__wrapper .form-item-keys {
@@ -180,16 +163,6 @@
 }
 
 @media screen and (-ms-high-contrast: active) {
-  /* IE11's high contrast show will not show the background image, so we show the text. */
-  .block-search-wide__wrapper .search-form__submit .visually-hidden {
-    position: static;
-    overflow: visible;
-    clip: auto;
-    width: auto;
-    height: auto;
-    text-align: center;
-  }
-
   /* Edge's high contrast does show the background image, so we hide it. */
   .block-search-wide__wrapper .search-form__submit .icon--search {
     display: none;

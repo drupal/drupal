@@ -61,12 +61,6 @@ select:focus {
   }
 }
 
-/* Hides default chevron within Internet Explorer. */
-
-select::-ms-expand {
-  display: none;
-}
-
 select[disabled] {
   color: var(--color--gray-60);
   background-color: var(--color--gray-100);
@@ -114,20 +108,6 @@ select.form-element--small {
       -webkit-appearance: revert;
       appearance: revert;
     }
-  }
-}
-
-/* Necessary for Internet Explorer to show chevron. */
-
-@media screen and (-ms-high-contrast: active) {
-
-  select {
-    padding-inline-end: 0;
-
-    /* Re-enable default chevron for Internet Explorer. */
-  }
-  select::-ms-expand {
-    display: block;
   }
 }
 

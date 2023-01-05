@@ -44,10 +44,6 @@ textarea {
     }
   }
 
-  &::-ms-clear {
-    display: none;
-  }
-
   &[disabled] {
     color: var(--color--gray-60);
     background-color: var(--color--gray-100);

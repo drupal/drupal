@@ -62,27 +62,10 @@
   -webkit-appearance: none;
 }
 
-.block-search-narrow input[type="search"]::-ms-clear {
-  width: 2.5rem;
-  opacity: 0.5;
-}
-
 .block-search-narrow input[type="search"]:focus {
   outline: solid 4px transparent;
   outline-offset: -4px;
   background-size: 100% 0.3125rem;
-
-  /*
-        We normally indicate focus by animating background-image width. This isn't
-        available in IE11 when in Windows high contrast mode.
-      */
-}
-
-@media screen and (-ms-high-contrast: active) {
-
-  .block-search-narrow input[type="search"]:focus {
-    border-bottom-width: 5px;
-  }
 }
 
 @media (min-width: 43.75rem) {

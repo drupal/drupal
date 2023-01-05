@@ -42,23 +42,10 @@
     font-size: 16px;
     -webkit-appearance: none;
 
-    &::-ms-clear {
-      width: 40px;
-      opacity: 0.5;
-    }
-
     &:focus {
       outline: solid 4px transparent;
       outline-offset: -4px;
       background-size: 100% 5px;
-
-      /*
-        We normally indicate focus by animating background-image width. This isn't
-        available in IE11 when in Windows high contrast mode.
-      */
-      @media screen and (-ms-high-contrast: active) {
-        border-bottom-width: 5px;
-      }
     }
 
     @media (--md) {

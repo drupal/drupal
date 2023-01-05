@@ -5,8 +5,4 @@
 
 select.cke_dialog_ui_input_select {
   appearance: menulist;
-
-  &::-ms-expand {
-    display: block;
-  }
 }

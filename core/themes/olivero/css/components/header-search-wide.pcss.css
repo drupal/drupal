@@ -56,22 +56,9 @@
     font-size: 32px;
     -webkit-appearance: none;
 
-    &::-ms-clear {
-      width: 40px;
-      opacity: 0.5;
-    }
-
     &:focus {
       outline: solid 4px transparent;
       outline-offset: -4px;
-
-      /*
-        We normally indicate focus by animating background-image width. This isn't
-        available in IE11 when in Windows high contrast mode.
-      */
-      @media screen and (-ms-high-contrast: active) {
-        border-bottom-width: var(--sp0-5);
-      }
     }
   }
 
@@ -151,16 +138,6 @@
     }
 
     @media screen and (-ms-high-contrast: active) {
-      /* IE11's high contrast show will not show the background image, so we show the text. */
-      & .visually-hidden {
-        position: static;
-        overflow: visible;
-        clip: auto;
-        width: auto;
-        height: auto;
-        text-align: center;
-      }
-
       /* Edge's high contrast does show the background image, so we hide it. */
       & .icon--search {
         display: none;
