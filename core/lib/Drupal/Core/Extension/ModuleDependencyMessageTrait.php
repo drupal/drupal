@@ -44,7 +44,7 @@ trait ModuleDependencyMessageTrait {
         $constraint_string = $dependency_object->getConstraintString();
         return $this->t('@module_name (<span class="admin-missing">incompatible with</span> version @version)', [
           '@module_name' => "$module_name ($constraint_string)",
-          '@version' => $modules[$dependency]->info['version'],
+          '@version' => $modules[$dependency]->info['version'] ?? '* ? *',
         ]);
       }
     }
