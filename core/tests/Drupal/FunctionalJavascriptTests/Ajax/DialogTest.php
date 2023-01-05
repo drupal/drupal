@@ -21,7 +21,7 @@ class DialogTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'starterkit_theme';
+  protected $defaultTheme = 'stark';
 
   /**
    * Tests sending non-JS and AJAX requests to open and manipulate modals.
