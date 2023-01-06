@@ -44,7 +44,7 @@ abstract class LayoutBuilderCompatibilityTestBase extends EntityKernelTestBase {
     $this->installConfig(['filter']);
 
     // Set up a non-admin user that is allowed to view test entities.
-    \Drupal::currentUser()->setAccount($this->createUser(['uid' => 2], ['view test entity']));
+    \Drupal::currentUser()->setAccount($this->createUser(['view test entity'], NULL, FALSE, ['uid' => 2]));
 
     \Drupal::service('theme_installer')->install(['starterkit_theme']);
     $this->config('system.theme')->set('default', 'starterkit_theme')->save();

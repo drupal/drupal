@@ -329,9 +329,12 @@ class FilterAPITest extends EntityKernelTestBase {
 
     $this->assertInstanceOf(OptionsProviderInterface::class, $data);
 
-    $filtered_html_user = $this->createUser(['uid' => 2], [
-      FilterFormat::load('filtered_html')->getPermissionName(),
-    ]);
+    $filtered_html_user = $this->createUser(
+      [FilterFormat::load('filtered_html')->getPermissionName()],
+      NULL,
+      FALSE,
+      ['uid' => 2]
+    );
 
     // Test with anonymous user.
     $user = new AnonymousUserSession();

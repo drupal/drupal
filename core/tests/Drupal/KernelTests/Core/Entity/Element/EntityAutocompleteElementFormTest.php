@@ -338,7 +338,7 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
     $this->assertEquals($expected, $form['tags_access']['#value']);
 
     // Set up a non-admin user that is *not* allowed to view test entities.
-    \Drupal::currentUser()->setAccount($this->createUser([], []));
+    \Drupal::currentUser()->setAccount($this->createUser());
 
     // Rebuild the form.
     $form = $form_builder->getForm($this);
