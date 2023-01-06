@@ -208,3 +208,8 @@ internal.admin.image:
   css:
     theme:
       css/image.admin.css: { }
+  js:
+    js/ckeditor5.image.admin.js: { }
+  dependencies:
+    - core/jquery
+    - core/drupal

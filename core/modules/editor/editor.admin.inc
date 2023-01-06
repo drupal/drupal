@@ -43,6 +43,7 @@ function editor_image_upload_settings_form(Editor $editor) {
     '#attributes' => [
       'data-editor-image-upload' => 'status',
     ],
+    '#description' => t('When enabled, images can only be uploaded. When disabled, images can only be added by URL.'),
   ];
   $show_if_image_uploads_enabled = [
     'visible' => [
