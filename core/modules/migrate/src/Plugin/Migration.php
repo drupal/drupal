@@ -496,7 +496,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function getRequirements(): array {
     return $this->requirements;

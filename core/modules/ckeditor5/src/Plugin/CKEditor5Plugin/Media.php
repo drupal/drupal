@@ -55,7 +55,7 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
