@@ -16,6 +16,7 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Session\UserSession;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\Site\SettingsEditor;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Tests\SessionTestTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -152,9 +153,9 @@ trait FunctionalTestSetupTrait {
    *
    * @param array $settings
    *   An array of settings to write out, in the format expected by
-   *   drupal_rewrite_settings().
+   *   SettingsEditor::rewrite().
    *
-   * @see drupal_rewrite_settings()
+   * @see \Drupal\Core\Site\SettingsEditor::rewrite()
    */
   protected function writeSettings(array $settings) {
     include_once DRUPAL_ROOT . '/core/includes/install.inc';
@@ -163,7 +164,7 @@ trait FunctionalTestSetupTrait {
     // whenever it is invoked.
     // Not using File API; a potential error must trigger a PHP warning.
     chmod($filename, 0666);
-    drupal_rewrite_settings($settings, $filename);
+    SettingsEditor::rewrite($filename, $settings);
   }
 
   /**

@@ -28,7 +28,9 @@ abstract class InstallerTestBase extends BrowserTestBase {
    *
    * @var array
    *   An array of settings to write out, in the format expected by
-   *   drupal_rewrite_settings().
+   *   SettingsEditor::rewrite().
+   *
+   * @see \Drupal\Core\Site\SettingsEditor::rewrite()
    */
   protected $settings = [];
 

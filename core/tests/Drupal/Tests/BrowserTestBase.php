@@ -126,9 +126,11 @@ abstract class BrowserTestBase extends TestCase {
   protected $defaultTheme;
 
   /**
-   * An array of custom translations suitable for drupal_rewrite_settings().
+   * An array of custom translations suitable for SettingsEditor::rewrite().
    *
    * @var array
+   *
+   * @see \Drupal\Core\Site\SettingsEditor::rewrite()
    */
   protected $customTranslations;
 

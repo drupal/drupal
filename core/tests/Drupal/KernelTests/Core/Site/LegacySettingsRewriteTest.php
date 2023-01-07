@@ -3,20 +3,19 @@
 namespace Drupal\KernelTests\Core\Site;
 
 use Drupal\Core\Site\Settings;
-use Drupal\Core\Site\SettingsEditor;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests the SettingsEditor::rewrite() function.
+ * Tests the drupal_rewrite_settings() function.
  *
  * @group system
- *
- * @covers \Drupal\Core\Site\SettingsEditor::rewrite()
+ * @group legacy
+ * @covers drupal_rewrite_settings()
  */
-class SettingsRewriteTest extends KernelTestBase {
+class LegacySettingsRewriteTest extends KernelTestBase {
 
   /**
-   * Tests the SettingsEditor::rewrite() function.
+   * Tests the drupal_rewrite_settings() function.
    */
   public function testDrupalRewriteSettings() {
     include_once $this->root . '/core/includes/install.inc';
@@ -101,7 +100,8 @@ EXPECTED
     foreach ($tests as $test) {
       $filename = Settings::get('file_public_path', $site_path . '/files') . '/mock_settings.php';
       file_put_contents($filename, "<?php\n" . $test['original'] . "\n");
-      SettingsEditor::rewrite($filename, $test['settings']);
+      $this->expectDeprecation('drupal_rewrite_settings() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use SettingsEditor::rewrite() instead. The order of the arguments has also changed: $settings_file is now required and is the first argument of the method. See https://www.drupal.org/node/3244583');
+      drupal_rewrite_settings($test['settings'], $filename);
       $this->assertEquals("<?php\n" . $test['expected'] . "\n", file_get_contents($filename));
     }
 
@@ -120,8 +120,9 @@ EXPECTED
     $filename = Settings::get('file_public_path', $site_path . '/files') . '/mock_settings.php';
     file_put_contents($filename, "");
 
+    $this->expectDeprecation('drupal_rewrite_settings() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use SettingsEditor::rewrite() instead. The order of the arguments has also changed: $settings_file is now required and is the first argument of the method. See https://www.drupal.org/node/3244583');
     // Write the setting to the file.
-    SettingsEditor::rewrite($filename, $test['settings']);
+    drupal_rewrite_settings($test['settings'], $filename);
 
     // Check that the result is just the php opening tag and the settings.
     $this->assertEquals("<?php\n" . $test['expected'] . "\n", file_get_contents($filename));

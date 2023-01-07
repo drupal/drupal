@@ -46,16 +46,6 @@ parameters:
 			path: includes/install.core.inc
 
 		-
-			message: "#^Variable \\$current might not be defined\\.$#"
-			count: 1
-			path: includes/install.inc
-
-		-
-			message: "#^Variable \\$index might not be defined\\.$#"
-			count: 3
-			path: includes/install.inc
-
-		-
 			message: "#^Variable \\$items might not be defined\\.$#"
 			count: 1
 			path: includes/theme.inc
@@ -724,6 +714,16 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: lib/Drupal/Core/Session/SessionManager.php
+
+		-
+			message: "#^Variable \\$current might not be defined\\.$#"
+			count: 1
+			path: lib/Drupal/Core/Site/SettingsEditor.php
+
+		-
+			message: "#^Variable \\$index might not be defined\\.$#"
+			count: 3
+			path: lib/Drupal/Core/Site/SettingsEditor.php
 
 		-
 			message: "#^Method Drupal\\\\Core\\\\Template\\\\AttributeValueBase\\:\\:render\\(\\) should return string but return statement is missing\\.$#"

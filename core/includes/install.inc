@@ -5,14 +5,13 @@
  * API functions for installing modules and themes.
  */
 
-use Drupal\Component\Utility\OpCodeCache;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\Dependency;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Installer\InstallerKernel;
-use Drupal\Core\Site\Settings;
+use Drupal\Core\Site\SettingsEditor;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -254,154 +253,20 @@ function drupal_get_database_types() {
  *   @code
  *   $settings['config_sync_directory'] = 'config_hash/sync'
  *   @endcode
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ *   SettingsEditor::rewrite() instead. Note $settings_file argument becomes
+ *   required and the first argument of the method.
+ *
+ * @see https://www.drupal.org/node/3244583
+ * @see \Drupal\Core\Site\SettingsEditor::rewrite()
  */
 function drupal_rewrite_settings($settings = [], $settings_file = NULL) {
-  if (!isset($settings_file)) {
-    $settings_file = \Drupal::getContainer()->getParameter('site.path') . '/settings.php';
-  }
-  // Build list of setting names and insert the values into the global namespace.
-  $variable_names = [];
-  $settings_settings = [];
-  foreach ($settings as $setting => $data) {
-    if ($setting != 'settings') {
-      _drupal_rewrite_settings_global($GLOBALS[$setting], $data);
-    }
-    else {
-      _drupal_rewrite_settings_global($settings_settings, $data);
-    }
-    $variable_names['$' . $setting] = $setting;
-  }
-  $contents = file_get_contents($settings_file);
-  if ($contents !== FALSE) {
-    // Initialize the contents for the settings.php file if it is empty.
-    if (trim($contents) === '') {
-      $contents = "<?php\n";
-    }
-    // Step through each token in settings.php and replace any variables that
-    // are in the passed-in array.
-    $buffer = '';
-    $state = 'default';
-    foreach (token_get_all($contents) as $token) {
-      if (is_array($token)) {
-        [$type, $value] = $token;
-      }
-      else {
-        $type = -1;
-        $value = $token;
-      }
-      // Do not operate on whitespace.
-      if (!in_array($type, [T_WHITESPACE, T_COMMENT, T_DOC_COMMENT])) {
-        switch ($state) {
-          case 'default':
-            if ($type === T_VARIABLE && isset($variable_names[$value])) {
-              // This will be necessary to unset the dumped variable.
-              $parent = &$settings;
-              // This is the current index in parent.
-              $index = $variable_names[$value];
-              // This will be necessary for descending into the array.
-              $current = &$parent[$index];
-              $state = 'candidate_left';
-            }
-            break;
-
-          case 'candidate_left':
-            if ($value == '[') {
-              $state = 'array_index';
-            }
-            if ($value == '=') {
-              $state = 'candidate_right';
-            }
-            break;
-
-          case 'array_index':
-            if (_drupal_rewrite_settings_is_array_index($type)) {
-              $index = trim($value, '\'"');
-              $state = 'right_bracket';
-            }
-            else {
-              // $a[foo()] or $a[$bar] or something like that.
-              throw new Exception('invalid array index');
-            }
-            break;
-
-          case 'right_bracket':
-            if ($value == ']') {
-              if (isset($current[$index])) {
-                // If the new settings has this index, descend into it.
-                $parent = &$current;
-                $current = &$parent[$index];
-                $state = 'candidate_left';
-              }
-              else {
-                // Otherwise, jump back to the default state.
-                $state = 'wait_for_semicolon';
-              }
-            }
-            else {
-              // $a[1 + 2].
-              throw new Exception('] expected');
-            }
-            break;
-
-          case 'candidate_right':
-            if (_drupal_rewrite_settings_is_simple($type, $value)) {
-              $value = _drupal_rewrite_settings_dump_one($current);
-              // Unsetting $current would not affect $settings at all.
-              unset($parent[$index]);
-              // Skip the semicolon because _drupal_rewrite_settings_dump_one() added one.
-              $state = 'semicolon_skip';
-            }
-            else {
-              $state = 'wait_for_semicolon';
-            }
-            break;
-
-          case 'wait_for_semicolon':
-            if ($value == ';') {
-              $state = 'default';
-            }
-            break;
-
-          case 'semicolon_skip':
-            if ($value == ';') {
-              $value = '';
-              $state = 'default';
-            }
-            else {
-              // If the expression was $a = 1 + 2; then we replaced 1 and
-              // the + is unexpected.
-              throw new Exception('Unexpected token after replacing value.');
-            }
-            break;
-        }
-      }
-      $buffer .= $value;
-    }
-    foreach ($settings as $name => $setting) {
-      $buffer .= _drupal_rewrite_settings_dump($setting, '$' . $name);
-    }
-
-    // Write the new settings file.
-    if (file_put_contents($settings_file, $buffer) === FALSE) {
-      throw new Exception("Failed to modify '$settings_file'. Verify the file permissions.");
-    }
-    else {
-      // In case any $settings variables were written, import them into the
-      // Settings singleton.
-      if (!empty($settings_settings)) {
-        $old_settings = Settings::getAll();
-        new Settings($settings_settings + $old_settings);
-      }
-      // The existing settings.php file might have been included already. In
-      // case an opcode cache is enabled, the rewritten contents of the file
-      // will not be reflected in this process. Ensure to invalidate the file
-      // in case an opcode cache is enabled.
-      OpCodeCache::invalidate(DRUPAL_ROOT . '/' . $settings_file);
-    }
-  }
-  else {
-    throw new Exception("Failed to open '$settings_file'. Verify the file permissions.");
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use SettingsEditor::rewrite() instead. The order of the arguments has also changed: $settings_file is now required and is the first argument of the method. See https://www.drupal.org/node/3244583', E_USER_DEPRECATED);
+  SettingsEditor::rewrite(
+    $settings_file ?? \Drupal::getContainer()->getParameter('site.path') . '/settings.php',
+    $settings
+  );
 }
 
 /**
@@ -417,9 +282,16 @@ function drupal_rewrite_settings($settings = [], $settings_file = NULL) {
  * @return bool
  *   TRUE if this token represents a scalar or NULL.
  *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ *   SettingsEditor::rewrite() instead. As internal API,
+ *   _drupal_rewrite_settings_is_simple() may also be removed in a minor
+ *   release.
+ *
+ * @see https://www.drupal.org/node/3244583
  * @see token_name()
  */
 function _drupal_rewrite_settings_is_simple($type, $value) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use SettingsEditor::rewrite() instead. As internal API, ' . __FUNCTION__ . '() may also be removed in a minor release. See https://www.drupal.org/node/3244583', E_USER_DEPRECATED);
   $is_integer = $type == T_LNUMBER;
   $is_float = $type == T_DNUMBER;
   $is_string = $type == T_CONSTANT_ENCAPSED_STRING;
@@ -439,9 +311,16 @@ function _drupal_rewrite_settings_is_simple($type, $value) {
  * @return bool
  *   TRUE if this token represents a number or a string.
  *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ *   SettingsEditor::rewrite() instead. As internal API,
+ *   _drupal_rewrite_settings_is_array_index() may also be removed in a minor
+ *   release.
+ *
+ * @see https://www.drupal.org/node/3244583
  * @see token_name()
  */
 function _drupal_rewrite_settings_is_array_index($type) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use SettingsEditor::rewrite() instead. As internal API, ' . __FUNCTION__ . '() may also be removed in a minor release. See https://www.drupal.org/node/3244583', E_USER_DEPRECATED);
   $is_integer = $type == T_LNUMBER;
   $is_float = $type == T_DNUMBER;
   $is_string = $type == T_CONSTANT_ENCAPSED_STRING;
@@ -457,8 +336,16 @@ function _drupal_rewrite_settings_is_array_index($type) {
  *   A reference to a nested index in $GLOBALS.
  * @param array|object $variable
  *   The nested value of the setting being copied.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ *   SettingsEditor::rewrite() instead. As internal API,
+ *   _drupal_rewrite_settings_global() may also be removed in a minor
+ *   release.
+ *
+ * @see https://www.drupal.org/node/3244583
  */
 function _drupal_rewrite_settings_global(&$ref, $variable) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use SettingsEditor::rewrite() instead. As internal API, ' . __FUNCTION__ . '() may also be removed in a minor release. See https://www.drupal.org/node/3244583', E_USER_DEPRECATED);
   if (is_object($variable)) {
     $ref = $variable->value;
   }
@@ -482,8 +369,16 @@ function _drupal_rewrite_settings_global(&$ref, $variable) {
  * @return string
  *   A string containing valid PHP code of the variable suitable for placing
  *   into settings.php.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ *   SettingsEditor::rewrite() instead. As internal API,
+ *   _drupal_rewrite_settings_dump() may also be removed in a minor
+ *   release.
+ *
+ * @see https://www.drupal.org/node/3244583
  */
 function _drupal_rewrite_settings_dump($variable, $variable_name) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use SettingsEditor::rewrite() instead. As internal API, ' . __FUNCTION__ . '() may also be removed in a minor release. See https://www.drupal.org/node/3244583', E_USER_DEPRECATED);
   $return = '';
   if (is_object($variable)) {
     if (!empty($variable->required)) {
@@ -513,8 +408,16 @@ function _drupal_rewrite_settings_dump($variable, $variable_name) {
  * @return string
  *   A string containing valid PHP code of the variable suitable for placing
  *   into settings.php.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ *   SettingsEditor::rewrite() instead. As internal API,
+ *   _drupal_rewrite_settings_dump_one() may also be removed in a minor
+ *   release.
+ *
+ * @see https://www.drupal.org/node/3244583
  */
 function _drupal_rewrite_settings_dump_one(\stdClass $variable, $prefix = '', $suffix = '') {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use SettingsEditor::rewrite() instead. As internal API, ' . __FUNCTION__ . '() may also be removed in a minor release. See https://www.drupal.org/node/3244583', E_USER_DEPRECATED);
   $return = $prefix . var_export($variable->value, TRUE) . ';';
   if (!empty($variable->comment)) {
     $return .= ' // ' . $variable->comment;

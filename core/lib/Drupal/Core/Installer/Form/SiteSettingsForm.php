@@ -9,6 +9,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\Site\SettingsEditor;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -264,7 +265,7 @@ class SiteSettingsForm extends FormBase {
       ];
     }
 
-    drupal_rewrite_settings($settings);
+    SettingsEditor::rewrite($this->sitePath . '/settings.php', $settings);
 
     // Indicate that the settings file has been verified, and check the database
     // for the last completed task, now that we have a valid connection. This
