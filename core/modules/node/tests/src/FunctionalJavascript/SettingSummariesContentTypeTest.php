@@ -9,7 +9,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  *
  * @group node
  */
-class TestSettingSummariesContentType extends WebDriverTestBase {
+class SettingSummariesContentTypeTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}
@@ -45,10 +45,10 @@ class TestSettingSummariesContentType extends WebDriverTestBase {
     $page->findField('options[promote]')->check();
     $page->findField('options[revision]')->check();
     $locator = '[href="#edit-workflow"] .vertical-tabs__menu-item-summary';
-    $page->waitFor(10, function () use ($page, $locator) {
+    $this->assertTrue($page->waitFor(10, function () use ($page, $locator) {
       $summary = $page->find('css', $locator)->getText();
-      return strpos('Not published', $summary) !== FALSE;
-    });
+      return str_contains($summary, 'Not published');
+    }));
     $summary = $page->find('css', $locator)->getText();
     $this->assertEquals('Not published, Promoted to front page, Sticky at top of lists, Create new revision', $summary);
   }
