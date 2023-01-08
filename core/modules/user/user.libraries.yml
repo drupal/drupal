@@ -29,6 +29,7 @@ drupal.user.permissions:
     - core/drupal
     - core/drupalSettings
     - user/drupal.user.admin
+    - core/drupal.checkbox
 
 drupal.user.icons:
   version: VERSION
