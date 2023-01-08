@@ -5,6 +5,7 @@ namespace Drupal\block_content;
 use Drupal\block_content\Access\DependentAccessInterface;
 use Drupal\block_content\Event\BlockContentGetDependencyEvent;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityAccessControlHandler;
@@ -54,27 +55,40 @@ class BlockContentAccessControlHandler extends EntityAccessControlHandler implem
    * {@inheritdoc}
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
-    // Allow view and update access to user with the 'edit any (type) block
-    // content' permission or the 'administer blocks' permission.
-    $edit_any_permission = 'edit any ' . $entity->bundle() . ' block content';
-    if ($operation === 'view') {
-      $access = AccessResult::allowedIf($entity->isPublished())
+    assert($entity instanceof BlockContentInterface);
+    $bundle = $entity->bundle();
+    $forbidIfNotDefaultAndLatest = fn (): AccessResultInterface => AccessResult::forbiddenIf($entity->isDefaultRevision() && $entity->isLatestRevision());
+    $forbidIfNotReusable = fn (): AccessResultInterface => AccessResult::forbiddenIf($entity->isReusable() === FALSE, sprintf('Block content must be reusable to use `%s` operation', $operation));
+    $access = match ($operation) {
+      // Allow view and update access to user with the 'edit any (type) block
+      // content' permission or the 'administer blocks' permission.
+      'view' => AccessResult::allowedIf($entity->isPublished())
         ->orIf(AccessResult::allowedIfHasPermission($account, 'administer blocks'))
-        ->orIf(AccessResult::allowedIfHasPermission($account, $edit_any_permission));
-    }
-    elseif ($operation === 'update') {
-      $access = AccessResult::allowedIfHasPermission($account, 'administer blocks')
-        ->orIf(AccessResult::allowedIfHasPermission($account, $edit_any_permission));
-    }
-    else {
-      $access = parent::checkAccess($entity, $operation, $account);
-    }
+        ->orIf(AccessResult::allowedIfHasPermission($account, 'edit any ' . $bundle . ' block content')),
+      'update' => AccessResult::allowedIfHasPermission($account, 'administer blocks')
+        ->orIf(AccessResult::allowedIfHasPermission($account, 'edit any ' . $bundle . ' block content')),
+
+      // Revisions.
+      'view all revisions' => AccessResult::allowedIfHasPermissions($account, [
+        'administer blocks',
+        'view any ' . $bundle . ' block content history',
+      ], 'OR'),
+      'revert' => AccessResult::allowedIfHasPermissions($account, [
+        'administer blocks',
+        'revert any ' . $bundle . ' block content revisions',
+      ], 'OR')->orIf($forbidIfNotDefaultAndLatest())->orIf($forbidIfNotReusable()),
+      'delete revision' => AccessResult::allowedIfHasPermissions($account, [
+        'administer blocks',
+        'delete any ' . $bundle . ' block content revisions',
+      ], 'OR')->orIf($forbidIfNotDefaultAndLatest())->orIf($forbidIfNotReusable()),
+
+      default => parent::checkAccess($entity, $operation, $account),
+    };
 
     // Add the entity as a cacheable dependency because access will at least be
     // determined by whether the block is reusable.
     $access->addCacheableDependency($entity);
-    /** @var \Drupal\block_content\BlockContentInterface $entity */
-    if ($entity->isReusable() === FALSE) {
+    if ($entity->isReusable() === FALSE && $access->isForbidden() !== TRUE) {
       if (!$entity instanceof DependentAccessInterface) {
         throw new \LogicException("Non-reusable block entities must implement \Drupal\block_content\Access\DependentAccessInterface for access control.");
       }

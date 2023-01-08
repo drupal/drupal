@@ -15,6 +15,12 @@ delete-multiple-form:
 revision:
   uri: https://drupal.org/link-relations/revision
   description: A particular version of this resource.
+revision-revert-form:
+  uri: https://drupal.org/link-relations/revision-revert-form
+  description: A form where a particular version of this resource can be reverted.
+revision-delete-form:
+  uri: https://drupal.org/link-relations/revision-delete-form
+  description: A form where a particular version of this resource can be deleted.
 create:
   uri: https://drupal.org/link-relations/create
   description: A REST resource URL where a resource of this type can be created.

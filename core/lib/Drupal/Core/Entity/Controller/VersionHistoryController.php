@@ -11,6 +11,7 @@ use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Entity\RevisionableStorageInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Entity\RevisionLogInterface;
@@ -155,10 +156,10 @@ class VersionHistoryController extends ControllerBase {
       $linkText = $revision->access('view label') ? $revision->label() : $this->t('- Restricted access -');
     }
 
-    $revisionViewLink = $revision->toLink($linkText, 'revision');
-    $context['revision'] = $revisionViewLink->getUrl()->access()
-      ? $revisionViewLink->toString()
-      : (string) $revisionViewLink->getText();
+    $url = $revision->hasLinkTemplate('revision') ? $revision->toUrl('revision') : NULL;
+    $context['revision'] = $url && $url->access()
+      ? Link::fromTextAndUrl($linkText, $url)->toString()
+      : (string) $linkText;
     $context['message'] = $revision instanceof RevisionLogInterface ? [
       '#markup' => $revision->getRevisionLogMessage(),
       '#allowed_tags' => Xss::getHtmlTagList(),
