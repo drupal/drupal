@@ -40,4 +40,12 @@ interface LinkItemInterface extends FieldItemInterface {
    */
   public function getUrl();
 
+  /**
+   * Gets the link title.
+   *
+   * @return string|null
+   *   Returns the link title.
+   */
+  public function getTitle(): ?string;
+
 }

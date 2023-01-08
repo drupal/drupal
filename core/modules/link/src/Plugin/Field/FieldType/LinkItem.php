@@ -178,6 +178,13 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
   /**
    * {@inheritdoc}
    */
+  public function getTitle(): ?string {
+    return $this->title ?: NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setValue($values, $notify = TRUE) {
     // Treat the values as property value of the main property, if no array is
     // given.

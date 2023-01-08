@@ -101,6 +101,7 @@ class LinkItemTest extends FieldKernelTestBase {
     $this->assertEquals($parsed_url['path'], $entity->field_test[0]->uri);
     $this->assertEquals($title, $entity->field_test->title);
     $this->assertEquals($title, $entity->field_test[0]->title);
+    $this->assertEquals($title, $entity->field_test[0]->getTitle());
     $this->assertEquals($class, $entity->field_test->options['attributes']['class']);
     $this->assertEquals($parsed_url['query'], $entity->field_test->options['query']);
 
