@@ -259,7 +259,14 @@ class AliasManagerTest extends UnitTestCase {
 
     $language = $this->setUpCurrentLanguage();
 
-    $cached_paths = [$language->getId() => [$path]];
+    // Use a set of cached paths where the tested path is in any position, not
+    // only in the first one.
+    $cached_paths = [
+      $language->getId() => [
+        '/another/path',
+        $path,
+      ],
+    ];
     $this->cache->expects($this->once())
       ->method('get')
       ->with($this->cacheKey)
