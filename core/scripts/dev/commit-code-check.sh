@@ -441,9 +441,13 @@ for FILE in $FILES; do
       yarn run build:css --check --file "$TOP_LEVEL/$BASENAME.pcss.css"
       CORRECTCSS=$?
       if [ "$CORRECTCSS" -ne "0" ]; then
-        # No need to write any output the yarn run command will do this for
-        # us.
+        # If the CSS does not match the PCSS, set the status to a number other
+        # than 0.
         STATUS=1
+        printf "\n${red}ERROR: The compiled CSS from"
+        printf "\n       ${BASENAME}.pcss.css"
+        printf "\n       does not match its CSS file. Recompile the CSS with:"
+        printf "\n       yarn run build:css${reset}\n\n"
       fi
       cd $TOP_LEVEL
     fi
