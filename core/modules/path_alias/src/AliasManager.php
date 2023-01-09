@@ -221,7 +221,7 @@ class AliasManager implements AliasManagerInterface {
       if (!empty($this->preloadedPathLookups[$langcode])) {
         $this->lookupMap[$langcode] = $this->pathAliasRepository->preloadPathAlias($this->preloadedPathLookups[$langcode], $langcode);
         // Keep a record of paths with no alias to avoid querying twice.
-        $this->noAlias[$langcode] = array_flip(array_diff_key($this->preloadedPathLookups[$langcode], array_keys($this->lookupMap[$langcode])));
+        $this->noAlias[$langcode] = array_flip(array_diff($this->preloadedPathLookups[$langcode], array_keys($this->lookupMap[$langcode])));
       }
     }
 
