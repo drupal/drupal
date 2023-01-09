@@ -4,16 +4,13 @@
 * {
   /* CSS transitions. */
   -o-transition: none !important;
-  -moz-transition: none !important;
   -webkit-transition: none !important;
   transition: none !important;
   -o-transition-property: none !important;
-  -moz-transition-property: none !important;
   -webkit-transition-property: none !important;
   transition-property: none !important;
   /* CSS animations. */
   -webkit-animation: none !important;
-  -moz-animation: none !important;
   -o-animation: none !important;
   animation: none !important;
 }
