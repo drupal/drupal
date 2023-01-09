@@ -22,6 +22,10 @@ block.block.*:
     plugin:
       type: string
       label: 'Plugin'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.block
+          interface: Drupal\Core\Block\BlockPluginInterface
     settings:
       type: block.settings.[%parent.plugin]
     visibility:

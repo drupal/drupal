@@ -62,4 +62,12 @@ class EditorValidationTest extends ConfigEntityValidationTestBase {
     ]);
   }
 
+  /**
+   * Tests validating an editor with an unknown plugin ID.
+   */
+  public function testInvalidPluginId(): void {
+    $this->entity->setEditor('non_existent');
+    $this->assertValidationErrors(["The 'non_existent' plugin does not exist."]);
+  }
+
 }
