@@ -613,7 +613,7 @@ function hook_field_views_data_alter(array &$data, \Drupal\field\FieldStorageCon
 function hook_field_views_data_views_data_alter(array &$data, \Drupal\field\FieldStorageConfigInterface $field) {
   $field_name = $field->getName();
   $data_key = 'field_data_' . $field_name;
-  $entity_type_id = $field->entity_type;
+  $entity_type_id = $field->getTargetEntityTypeId();
   $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
   $pseudo_field_name = 'reverse_' . $field_name . '_' . $entity_type_id;
   [$label] = views_entity_field_label($entity_type_id, $field_name);
