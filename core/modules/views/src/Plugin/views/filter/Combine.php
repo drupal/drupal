@@ -133,7 +133,7 @@ class Combine extends StringFilter {
    */
   public function opEqual($expression) {
     $placeholder = $this->placeholder();
-    $operator = $this->getConditionOperator('LIKE');
+    $operator = $this->getConditionOperator($this->operator());
     $this->query->addWhereExpression($this->options['group'], "$expression $operator $placeholder", [$placeholder => $this->value]);
   }
 

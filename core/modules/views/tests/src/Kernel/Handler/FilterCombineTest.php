@@ -9,6 +9,8 @@ use Drupal\views\Views;
  * Tests the combine filter handler.
  *
  * @group views
+ *
+ * @coversDefaultClass \Drupal\views\Plugin\views\filter\Combine
  */
 class FilterCombineTest extends ViewsKernelTestBase {
 
@@ -283,6 +285,8 @@ class FilterCombineTest extends ViewsKernelTestBase {
 
   /**
    * Tests the Combine field filter using the 'equal' operator.
+   *
+   * @covers::opEqual
    */
   public function testFilterCombineEqual() {
     $view = Views::getView('test_view');
@@ -325,6 +329,60 @@ class FilterCombineTest extends ViewsKernelTestBase {
       ],
     ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
+  }
+
+  /**
+   * Tests the Combine field filter using the 'not equal' operator.
+   *
+   * @covers::opEqual
+   */
+  public function testFilterCombineNotEqual(): void {
+    $view = Views::getView('test_view');
+    $view->setDisplay();
+
+    $fields = $view->displayHandlers->get('default')->getOption('fields');
+    $view->displayHandlers->get('default')->overrideOption('fields', $fields + [
+      'job' => [
+        'id' => 'job',
+        'table' => 'views_test_data',
+        'field' => 'job',
+        'relationship' => 'none',
+      ],
+    ]);
+
+    // Change the filtering.
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'age' => [
+        'id' => 'combine',
+        'table' => 'views',
+        'field' => 'combine',
+        'relationship' => 'none',
+        'operator' => '!=',
+        'fields' => [
+          'job',
+        ],
+        // The 'I' in 'sInger' is capitalized deliberately because we are
+        // testing that search filters are case-insensitive.
+        'value' => 'sInger',
+      ],
+    ]);
+
+    $this->executeView($view);
+    $result_set = [
+      [
+        'name' => 'Ringo',
+        'job' => 'Drummer',
+      ],
+      [
+        'name' => 'Paul',
+        'job' => 'Songwriter',
+      ],
+      [
+        'name' => 'Meredith',
+        'job' => 'Speaker',
+      ],
+    ];
+    $this->assertIdenticalResultset($view, $result_set, $this->columnMap);
   }
 
   /**
