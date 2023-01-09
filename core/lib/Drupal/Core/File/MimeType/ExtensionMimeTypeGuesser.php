@@ -133,7 +133,6 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       109 => 'application/x-dms',
       110 => 'application/x-doom',
       111 => 'application/x-dvi',
-      112 => 'application/x-flac',
       113 => 'application/x-font',
       114 => 'application/x-freemind',
       115 => 'application/x-futuresplash',
@@ -209,7 +208,9 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       183 => 'application/xhtml+xml',
       184 => 'application/xml',
       185 => 'application/zip',
+      360 => 'audio/aac',
       186 => 'audio/basic',
+      112 => 'audio/flac',
       187 => 'audio/midi',
       346 => 'audio/mp4',
       188 => 'audio/mpeg',
@@ -624,6 +625,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       'mp2' => 188,
       'ogg' => 189,
       'oga' => 189,
+      'opus' => 189,
       'spx' => 189,
       'sid' => 190,
       'aif' => 191,
@@ -858,6 +860,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       'webm' => 357,
       'vtt' => 358,
       'gz' => 359,
+      'aac' => 360,
     ],
   ];
 
