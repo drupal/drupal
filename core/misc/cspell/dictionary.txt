@@ -302,7 +302,6 @@ dependees
 depenencies
 deprioritize
 derivedfrom
-derp
 desaturate
 desaturated
 desaturates
@@ -369,7 +368,6 @@ détruire
 editables
 editunblock
 eerste
-egroe
 egulias
 eins
 elbonia
@@ -421,8 +419,6 @@ favstar
 fcgi
 fdiv
 februar
-fetchmode
-fffffg
 fichiers
 fieldable
 fieldapi
@@ -441,9 +437,7 @@ filestorage
 filesystems
 filetransfer
 filevalidationerror
-filterprovider
 findwith
-firstcolumn
 fixnull
 flickr
 flipfit
@@ -458,12 +452,10 @@ foobargorilla
 foobars
 foofoo
 foos
-formatless
 formattable
 formvalidation
 fouc
 fourcol
-fourthcolumn
 fozzie
 fqcn
 fraîche
@@ -481,18 +473,14 @@ funic
 furchtbar
 gabilondo
 gato
-getcode
-getfile
 gethttpclient
 getlist
-getmachine
 getview
 gids
 giggabyte
 gloop
 gnumeric
 goldfinger
-gonner
 googleapis
 gotit
 grandgrandchild
@@ -514,7 +502,6 @@ hashmarks
 hateoas
 heke
 heroless
-herpderp
 herro
 heure
 heures
@@ -529,11 +516,9 @@ hola
 hookname
 hosters
 hostnames
-hreflangs
 hrefs
 htkey
 htmlcorrector
-htmlto
 httpheader
 httpkernel
 httponly
@@ -554,13 +539,11 @@ imagecache
 imagecreatefrom
 imagetest
 imagetextalternative
-inator
 indexname
 ingoa
 inited
 inno
 insidekeyword
-inspectable
 instaclick
 instantiator
 interactable
@@ -1066,7 +1049,6 @@ scriptable
 scrollbars
 searchdirs
 sebe
-secondcolumn
 seld
 selectbox
 serviceform
@@ -1264,7 +1246,6 @@ themers
 themey
 theseer
 theseparator
-thirdcolumn
 threecol
 tids
 timecurrent

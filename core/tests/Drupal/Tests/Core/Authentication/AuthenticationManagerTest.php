@@ -49,7 +49,7 @@ class AuthenticationManagerTest extends UnitTestCase {
   /**
    * @covers ::applyFilter
    */
-  public function testApplyFilterWithFilterprovider() {
+  public function testApplyFilterWithFilterProvider() {
     $auth_provider = $this->createMock('Drupal\Tests\Core\Authentication\TestAuthenticationProviderInterface');
     $auth_provider->expects($this->once())
       ->method('appliesToRoutedRequest')
