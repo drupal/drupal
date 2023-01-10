@@ -211,7 +211,7 @@ class EntityApiTest extends EntityKernelTestBase {
       $this->fail('Entity presave EntityStorageException thrown but not caught.');
     }
     catch (EntityStorageException $e) {
-      $this->assertEquals(1, $e->getcode(), 'Entity presave EntityStorageException caught.');
+      $this->assertEquals(1, $e->getCode(), 'Entity presave EntityStorageException caught.');
     }
 
     $entity = EntityTest::create(['name' => 'test2']);

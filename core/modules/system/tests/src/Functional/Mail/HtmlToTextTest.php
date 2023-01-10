@@ -194,7 +194,7 @@ class HtmlToTextTest extends BrowserTestBase {
   /**
    * Tests that whitespace is collapsed.
    */
-  public function testDrupalHtmltoTextCollapsesWhitespace() {
+  public function testDrupalHtmlToTextCollapsesWhitespace() {
     $input = "<p>Drupal  Drupal\n\nDrupal<pre>Drupal  Drupal\n\nDrupal</pre>Drupal  Drupal\n\nDrupal</p>";
     // @todo The whitespace should be collapsed.
     $collapsed = "Drupal  Drupal\n\nDrupalDrupal  Drupal\n\nDrupalDrupal  Drupal\n\nDrupal\n\n";
@@ -352,7 +352,7 @@ EOT;
    * @see \Drupal\Core\Mail\MailFormatHelper::wrapMail()
    */
   public function testRemoveTrailingWhitespace() {
-    $text = "Hi there! \nHerp Derp";
+    $text = "Hi there! \nEarth";
     $mail_lines = explode("\n", MailFormatHelper::wrapMail($text));
     $this->assertNotEquals(" ", substr($mail_lines[0], -1), 'Trailing whitespace removed.');
   }
@@ -366,11 +366,11 @@ EOT;
    * @see \Drupal\Core\Mail\MailFormatHelper::wrapMail()
    */
   public function testUsenetSignature() {
-    $text = "Hi there!\n-- \nHerp Derp";
+    $text = "Hi there!\n-- \nEarth";
     $mail_lines = explode("\n", MailFormatHelper::wrapMail($text));
     $this->assertEquals("-- ", $mail_lines[1], 'Trailing whitespace not removed for dash-dash-space signatures.');
 
-    $text = "Hi there!\n--  \nHerp Derp";
+    $text = "Hi there!\n--  \nEarth";
     $mail_lines = explode("\n", MailFormatHelper::wrapMail($text));
     $this->assertEquals("--", $mail_lines[1], 'Trailing whitespace removed for incorrect dash-dash-space signatures.');
   }

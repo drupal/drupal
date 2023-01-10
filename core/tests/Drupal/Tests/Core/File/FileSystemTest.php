@@ -166,6 +166,7 @@ class FileSystemTest extends UnitTestCase {
    */
   public function testInvalidUTF8() {
     vfsStream::setup('dir');
+    // cspell:disable-next-line
     $filename = "a\xFFsdf\x80€" . '.txt';
     $this->expectException(FileException::class);
     $this->expectExceptionMessage("Invalid filename '$filename'");
