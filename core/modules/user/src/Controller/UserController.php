@@ -235,6 +235,17 @@ class UserController extends ControllerBase {
       return $redirect;
     }
 
+    $flood_config = $this->config('user.flood');
+    if ($flood_config->get('uid_only')) {
+      $identifier = $user->id();
+    }
+    else {
+      $identifier = $user->id() . '-' . $request->getClientIP();
+    }
+
+    $this->flood->clear('user.failed_login_user', $identifier);
+    $this->flood->clear('user.http_login', $identifier);
+
     user_login_finalize($user);
     $this->logger->notice('User %name used one-time login link at time %timestamp.', ['%name' => $user->getDisplayName(), '%timestamp' => $timestamp]);
     $this->messenger()->addStatus($this->t('You have just used your one-time login link. It is no longer necessary to use this link to log in. Please set your password.'));
