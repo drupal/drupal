@@ -226,15 +226,7 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
    */
   public function doMail($module, $key, $to, $langcode, $params = [], $reply = NULL, $send = TRUE) {
     $site_config = $this->configFactory->get('system.site');
-    // If a custom notification email address has been configured, use that
-    // address.
-    $site_mail = $site_config->get('mail_notification');
-    // Otherwise, use the default site email address.
-    if (empty($site_mail)) {
-      $site_mail = $site_config->get('mail');
-    }
-    // Finally, default to the server email address if no site email has been
-    // configured.
+    $site_mail = $site_config->get('mail');
     if (empty($site_mail)) {
       $site_mail = ini_get('sendmail_from');
     }

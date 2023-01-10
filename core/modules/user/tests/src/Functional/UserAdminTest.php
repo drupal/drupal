@@ -188,88 +188,45 @@ class UserAdminTest extends BrowserTestBase {
     $this->assertSession()->responseContains('id="edit-mail-notification-address"');
     $this->drupalLogout();
 
+    // Test custom user registration approval email address(es).
     $config = $this->config('user.settings');
-
     // Allow users to register with admin approval.
     $config
       ->set('verify_mail', TRUE)
       ->set('register', UserInterface::REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)
       ->save();
-
     // Set the site and notification email addresses.
     $system = $this->config('system.site');
-    $server_address = 'site.admin@example.com';
-    $notify_address = 'site.notify@example.com';
+    $server_address = $this->randomMachineName() . '@example.com';
+    $notify_address = $this->randomMachineName() . '@example.com';
     $system
       ->set('mail', $server_address)
       ->set('mail_notification', $notify_address)
       ->save();
-
     // Register a new user account.
     $edit = [];
-    $edit['name'] = 'drupalUser';
+    $edit['name'] = $this->randomMachineName();
     $edit['mail'] = $edit['name'] . '@example.com';
     $this->drupalGet('user/register');
     $this->submitForm($edit, 'Create new account');
     $subject = 'Account details for ' . $edit['name'] . ' at ' . $system->get('name') . ' (pending admin approval)';
-
     // Ensure that admin notification mail is sent to the configured
     // Notification Email address.
     $admin_mail = $this->drupalGetMails([
       'to' => $notify_address,
-      'from' => $notify_address,
+      'from' => $server_address,
       'subject' => $subject,
     ]);
-    $this->assertCount(1, $admin_mail);
-
+    $this->assertCount(1, $admin_mail, 'New user mail to admin is sent to configured Notification Email address');
     // Ensure that user notification mail is sent from the configured
     // Notification Email address.
     $user_mail = $this->drupalGetMails([
       'to' => $edit['mail'],
-      'from' => $notify_address,
+      'from' => $server_address,
       'reply-to' => $notify_address,
       'subject' => $subject,
     ]);
-    $this->assertCount(1, $user_mail);
-  }
-
-  /**
-   * Tests email notifications with no custom notification address configured.
-   */
-  public function testNotificationEmailAddressNotSet() {
-    $config = $this->config('user.settings');
-
-    // Allow users to register with admin approval.
-    $config
-      ->set('verify_mail', TRUE)
-      ->set('register', UserInterface::REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)
-      ->save();
-
-    // Set the site and notification email addresses.
-    $site_configuration = $this->config('system.site');
-    $server_address = 'site.admin@example.com';
-    $site_configuration
-      ->set('mail', $server_address)
-      ->save();
-
-    // Register a new user account.
-    $edit = [];
-    $edit['name'] = 'drupalUser';
-    $edit['mail'] = $edit['name'] . '@example.com';
-    $this->drupalGet('user/register');
-    $this->submitForm($edit, 'Create new account');
-    $subject = 'Account details for ' . $edit['name'] . ' at ' . $site_configuration->get('name') . ' (pending admin approval)';
-
-    // When no custom notification email address is set, the email will be
-    // sent from the site default email address.
-    $user_mail = $this->drupalGetMails([
-      'to' => $edit['mail'],
-      'from' => $server_address,
-      'reply-to' => $server_address,
-      'subject' => $subject,
-    ]);
-    $this->assertCount(1, $user_mail);
-
+    $this->assertCount(1, $user_mail, 'New user mail to user is sent from configured Notification Email address');
   }
 
 }
