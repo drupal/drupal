@@ -71,9 +71,11 @@
           $details.attr('open', true).each(hidePackageDetails);
 
           Drupal.announce(
-            Drupal.t('!modules modules are available in the modified list.', {
-              '!modules': $rowsAndDetails.find('tbody tr:visible').length,
-            }),
+            Drupal.formatPlural(
+              $rowsAndDetails.find('tbody tr:visible').length,
+              '1 module is available in the modified list.',
+              '@count modules are available in the modified list.',
+            ),
           );
         } else if (searching) {
           searching = false;
