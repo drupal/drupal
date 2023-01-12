@@ -83,8 +83,8 @@
     {{ label }}
   {% endif %}
   {% if errors %}
-    <div class="form-item--error-message">
-      <strong>{{ errors }}</strong>
+    <div class="form-item--error-message form-item-errors">
+      {{ errors }}
     </div>
   {% endif %}
   {% if description_display in ['after', 'invisible'] and description.content %}
