@@ -84,6 +84,9 @@ interface FieldItemInterface extends ComplexDataInterface {
    *     stored in SQL. Also, the possible usage is limited, as you cannot
    *     specify another field as related, only existing SQL tables,
    *     such as {taxonomy_term_data}.
+   *
+   * @throws \Drupal\Core\Field\FieldException
+   *   Throws an exception if the schema is invalid.
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition);
 

@@ -6,6 +6,7 @@ use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldException;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -366,6 +367,26 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
     $storage->resetCache();
     $role = Role::load($role_id);
     $this->assertEquals($entity->user_role->target_id, $role->id());
+  }
+
+  /**
+   * Tests exception thrown with a missing target entity type.
+   */
+  public function testTargetEntityTypeMissing() {
+    // Setup a test entity type with an entity reference field to an entity type
+    // that doesn't exist.
+    $definitions = [
+      'bad_reference' => BaseFieldDefinition::create('entity_reference')
+        ->setSetting('target_type', 'made_up_entity_type')
+        ->setSetting('handler', 'default'),
+    ];
+    $this->state->set('entity_test.additional_base_field_definitions', $definitions);
+    $this->entityTypeManager->clearCachedDefinitions();
+
+    $this->expectException(FieldException::class);
+    $this->expectExceptionMessage("Field 'bad_reference' on entity type 'entity_test' references a target entity type 'made_up_entity_type' which does not exist.");
+
+    $this->installEntitySchema('entity_test');
   }
 
   /**
