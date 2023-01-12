@@ -196,11 +196,6 @@ parameters:
 			path: lib/Drupal/Component/Gettext/PoStreamReader.php
 
 		-
-			message: "#^Variable \\$rgb might not be defined\\.$#"
-			count: 1
-			path: lib/Drupal/Component/Utility/Color.php
-
-		-
 			message: "#^Variable \\$permission might not be defined\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Access/AccessResult.php
@@ -2219,11 +2214,6 @@ parameters:
 			message: "#^Access to an undefined property Drupal\\\\Tests\\\\system\\\\Functional\\\\FileTransfer\\\\TestFileTransfer\\:\\:\\$connection\\.$#"
 			count: 5
 			path: modules/system/tests/src/Functional/FileTransfer/TestFileTransfer.php
-
-		-
-			message: "#^Variable \\$checked might not be defined\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/Form/CheckboxTest.php
 
 		-
 			message: "#^Variable \\$form_output in empty\\(\\) always exists and is not falsy\\.$#"

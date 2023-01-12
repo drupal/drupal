@@ -26,7 +26,7 @@
         "phpunit/phpunit": "^9.5",
         "phpspec/prophecy-phpunit": "^2",
         "phpstan/extension-installer": "^1.1",
-        "phpstan/phpstan": "^1.9.3",
+        "phpstan/phpstan": "^1.9.9",
         "symfony/css-selector": "^6.2",
         "symfony/phpunit-bridge": "^6.2",
         "symfony/var-dumper": "^6.2",
