@@ -762,7 +762,7 @@ function system_requirements($phase) {
           '#suffix' => ' ',
         ],
         [
-          '#markup' => t('For more information, see the online handbook entry for <a href=":cron-handbook">configuring cron jobs</a>.', [':cron-handbook' => 'https://www.drupal.org/cron']),
+          '#markup' => t('For more information, see the online handbook entry for <a href=":cron-handbook">configuring cron jobs</a>.', [':cron-handbook' => 'https://www.drupal.org/docs/administering-a-drupal-site/cron-automated-tasks/cron-automated-tasks-overview']),
           '#suffix' => ' ',
         ],
       ];

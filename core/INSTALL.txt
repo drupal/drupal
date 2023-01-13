@@ -341,9 +341,10 @@ INSTALLATION
    page.
 
    More information about cron maintenance tasks is available at
-   https://www.drupal.org/cron, and sample cron shell scripts can be found in
-   the core/scripts/ directory. (Note that these scripts must be customized like
-   the above example, to add your site-specific cron key and domain name.)
+   https://www.drupal.org/docs/administering-a-drupal-site/cron-automated-tasks,
+   and sample cron shell scripts can be found in the core/scripts/ directory.
+   (Note that these scripts must be customized like the above example, to add
+   your site-specific cron key and domain name.)
 
 REINSTALL
 ------------

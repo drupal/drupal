@@ -1008,7 +1008,7 @@ function hook_requirements($phase) {
     }
     else {
       $requirements['cron'] = [
-        'description' => t('Cron has not run. It appears cron jobs have not been setup on your system. Check the help pages for <a href=":url">configuring cron jobs</a>.', [':url' => 'https://www.drupal.org/cron']),
+        'description' => t('Cron has not run. It appears cron jobs have not been setup on your system. Check the help pages for <a href=":url">configuring cron jobs</a>.', [':url' => 'https://www.drupal.org/docs/administering-a-drupal-site/cron-automated-tasks/cron-automated-tasks-overview']),
         'severity' => REQUIREMENT_ERROR,
         'value' => t('Never run'),
       ];
