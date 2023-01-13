@@ -15,9 +15,10 @@
   --views-responsive-grid--gap-count: calc(var(--views-responsive-grid--column-count) - 1);
   --views-responsive-grid--total-gap-width: calc(var(--views-responsive-grid--gap-count) * var(--views-responsive-grid--layout-gap));
   --views-responsive-grid-item--max-width: calc((100% - var(--views-responsive-grid--total-gap-width)) / var(--views-responsive-grid--column-count));
+  --views-responsive-grid-item--calculated-min-width: min(100%, var(--views-responsive-grid--cell-min-width)); /* Ensure that cell minimum width does not overflow container. */
 
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(max(var(--views-responsive-grid--cell-min-width), var(--views-responsive-grid-item--max-width)), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(max(var(--views-responsive-grid-item--calculated-min-width), var(--views-responsive-grid-item--max-width)), 1fr));
   gap: var(--views-responsive-grid--layout-gap);
 }
 
