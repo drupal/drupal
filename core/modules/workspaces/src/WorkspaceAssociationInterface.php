@@ -97,16 +97,22 @@ interface WorkspaceAssociationInterface {
   /**
    * Deletes all the workspace association records for the given workspace.
    *
-   * @param string $workspace_id
-   *   A workspace entity ID.
+   * @param string|null $workspace_id
+   *   (optional) A workspace entity ID. Defaults to NULL.
    * @param string|null $entity_type_id
    *   (optional) The target entity type of the associations to delete. Defaults
    *   to NULL.
    * @param int[]|string[]|null $entity_ids
    *   (optional) The target entity IDs of the associations to delete. Defaults
    *   to NULL.
+   * @param int[]|string[]|null $revision_ids
+   *   (optional) The target entity revision IDs of the associations to delete.
+   *   Defaults to NULL.
+   *
+   * @throws \InvalidArgumentException
+   *   If neither $workspace_id nor $entity_type_id arguments were provided.
    */
-  public function deleteAssociations($workspace_id, $entity_type_id = NULL, $entity_ids = NULL);
+  public function deleteAssociations($workspace_id = NULL, $entity_type_id = NULL, $entity_ids = NULL, $revision_ids = NULL);
 
   /**
    * Initializes a workspace with all the associations of its parent.

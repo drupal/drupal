@@ -214,15 +214,30 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface {
   /**
    * {@inheritdoc}
    */
-  public function deleteAssociations($workspace_id, $entity_type_id = NULL, $entity_ids = NULL) {
-    $query = $this->database->delete(static::TABLE)
-      ->condition('workspace', $workspace_id);
+  public function deleteAssociations($workspace_id = NULL, $entity_type_id = NULL, $entity_ids = NULL, $revision_ids = NULL) {
+    if (!$workspace_id && !$entity_type_id) {
+      throw new \InvalidArgumentException('A workspace ID or an entity type ID must be provided.');
+    }
+
+    $query = $this->database->delete(static::TABLE);
+
+    if ($workspace_id) {
+      $query->condition('workspace', $workspace_id);
+    }
 
     if ($entity_type_id) {
+      if (!$entity_ids && !$revision_ids) {
+        throw new \InvalidArgumentException('A list of entity IDs or revision IDs must be provided for an entity type.');
+      }
+
       $query->condition('target_entity_type_id', $entity_type_id, '=');
 
       if ($entity_ids) {
         $query->condition('target_entity_id', $entity_ids, 'IN');
+      }
+
+      if ($revision_ids) {
+        $query->condition('target_entity_revision_id', $revision_ids, 'IN');
       }
     }
 

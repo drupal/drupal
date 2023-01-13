@@ -368,6 +368,55 @@ class WorkspaceIntegrationTest extends KernelTestBase {
   }
 
   /**
+   * Tests the workspace association data integrity for entity CRUD operations.
+   *
+   * @covers ::workspaces_entity_presave
+   * @covers ::workspaces_entity_insert
+   * @covers ::workspaces_entity_delete
+   * @covers ::workspaces_entity_revision_delete
+   */
+  public function testWorkspaceAssociationDataIntegrity() {
+    $this->initializeWorkspacesModule();
+
+    // Check the initial empty state.
+    $expected_workspace_association = ['stage' => []];
+    $this->assertWorkspaceAssociation($expected_workspace_association, 'node');
+
+    // Add a new unpublished node in 'stage' and check that new revision is
+    // tracked in the workspace association data.
+    $this->switchToWorkspace('stage');
+    $unpublished_node = $this->createNode(['title' => 'stage - 3 - r3 - unpublished', 'created' => $this->createdTimestamp++, 'status' => FALSE]);
+    $expected_workspace_association = ['stage' => [3]];
+    $this->assertWorkspaceAssociation($expected_workspace_association, 'node');
+
+    // Add a new revision for the unpublished node.
+    $unpublished_node->title = 'stage - 3 - r4 - unpublished';
+    $unpublished_node->save();
+    $expected_workspace_association = ['stage' => [4]];
+    $this->assertWorkspaceAssociation($expected_workspace_association, 'node');
+
+    // Delete the unpublished node and check that the association data has been
+    // updated.
+    $unpublished_node->delete();
+    $expected_workspace_association = ['stage' => []];
+    $this->assertWorkspaceAssociation($expected_workspace_association, 'node');
+
+    // Add a new published node in 'stage' and check that new workspace-specific
+    // revision is tracked in the workspace association data. Note that revision
+    // '5' has been created as an unpublished default revision in Live, so it is
+    // not tracked.
+    $this->createNode(['title' => 'stage - 4 - r6 - published', 'created' => $this->createdTimestamp++, 'status' => TRUE]);
+    $expected_workspace_association = ['stage' => [6]];
+    $this->assertWorkspaceAssociation($expected_workspace_association, 'node');
+
+    // Delete revision '6' and check that the workspace association does not
+    // track it anymore.
+    $this->entityTypeManager->getStorage('node')->deleteRevision(6);
+    $expected_workspace_association = ['stage' => []];
+    $this->assertWorkspaceAssociation($expected_workspace_association, 'node');
+  }
+
+  /**
    * Tests entity tracking in workspace descendants.
    */
   public function testWorkspaceHierarchy() {
