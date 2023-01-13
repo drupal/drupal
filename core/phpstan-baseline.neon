@@ -801,11 +801,6 @@ parameters:
 			path: modules/action/src/Form/ActionFormBase.php
 
 		-
-			message: "#^Method Drupal\\\\ban\\\\Plugin\\\\migrate\\\\destination\\\\BlockedIp\\:\\:import\\(\\) should return array\\|bool but return statement is missing\\.$#"
-			count: 1
-			path: modules/ban/src/Plugin/migrate/destination/BlockedIp.php
-
-		-
 			message: "#^\\#lazy_builder callback 'hello_or_yarhar' at key '0' is not callable\\.$#"
 			count: 1
 			path: modules/big_pipe/tests/modules/big_pipe_test/src/BigPipePlaceholderTestCases.php
