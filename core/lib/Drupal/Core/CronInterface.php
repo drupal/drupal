@@ -5,7 +5,7 @@ namespace Drupal\Core;
 /**
  * An interface for running cron tasks.
  *
- * @see https://www.drupal.org/cron
+ * @see https://www.drupal.org/docs/administering-a-drupal-site/cron-automated-tasks
  */
 interface CronInterface {
 
