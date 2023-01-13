@@ -300,6 +300,25 @@ class MediaSourceTest extends MediaKernelTestBase {
     $this->assertEmpty($media->thumbnail->title);
     $this->assertSame('', $media->thumbnail->alt);
 
+    // Set the width and height metadata attributes and make sure they're used
+    // for the thumbnail.
+    \Drupal::state()->set('media_source_test_definition', [
+      'thumbnail_width_metadata_attribute' => 'width',
+      'thumbnail_height_metadata_attribute' => 'height',
+    ]);
+    \Drupal::state()->set('media_source_test_attributes', [
+      'width' => ['value' => 1024],
+      'height' => ['value' => 768],
+    ]);
+    $media = Media::create([
+      'bundle' => $this->testMediaType->id(),
+      'name' => 'Are you looking at me?',
+      'field_media_test' => 'some_value',
+    ]);
+    $media->save();
+    $this->assertSame(1024, $media->thumbnail->width);
+    $this->assertSame(768, $media->thumbnail->height);
+
     // Enable queued thumbnails and make sure that the entity gets the default
     // thumbnail initially.
     \Drupal::state()->set('media_source_test_definition', []);
