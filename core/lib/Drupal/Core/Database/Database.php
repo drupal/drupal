@@ -38,7 +38,7 @@ abstract class Database {
   const RETURN_STATEMENT = 1;
 
   /**
-   * Flag to indicate a query call should return the number of affected rows.
+   * Flag to indicate a query call should return the number of matched rows.
    *
    * @deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. There is no
    *   replacement.
