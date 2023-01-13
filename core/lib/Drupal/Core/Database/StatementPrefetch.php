@@ -68,7 +68,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
   protected $columnNames = NULL;
 
   /**
-   * The number of rows affected by the last query.
+   * The number of rows matched by the last query.
    *
    * @var int
    */
@@ -139,7 +139,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
    * @param array $driver_options
    *   Driver-specific options.
    * @param bool $row_count_enabled
-   *   (optional) Enables counting the rows affected. Defaults to FALSE.
+   *   (optional) Enables counting the rows matched. Defaults to FALSE.
    */
   public function __construct(\PDO $pdo_connection, Connection $connection, $query, array $driver_options = [], bool $row_count_enabled = FALSE) {
     $this->pdoConnection = $pdo_connection;

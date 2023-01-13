@@ -53,10 +53,10 @@ interface StatementInterface extends \Traversable {
   public function getConnectionTarget(): string;
 
   /**
-   * Returns the number of rows affected by the last SQL statement.
+   * Returns the number of rows matched by the last SQL statement.
    *
    * @return int
-   *   The number of rows affected by the last DELETE, INSERT, or UPDATE
+   *   The number of rows matched by the last DELETE, INSERT, or UPDATE
    *   statement executed or throws \Drupal\Core\Database\RowCountException
    *   if the last executed statement was SELECT.
    *
