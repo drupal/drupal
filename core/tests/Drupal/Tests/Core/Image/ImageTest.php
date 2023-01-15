@@ -279,7 +279,7 @@ class ImageTest extends UnitTestCase {
    */
   public function testParseFileFails() {
     $toolkit = $this->getToolkitMock();
-    $image = new Image($toolkit, 'magic-foobars.png');
+    $image = new Image($toolkit, 'magic-foobar.png');
 
     $this->assertFalse($image->isValid());
     $this->assertFalse($image->save());

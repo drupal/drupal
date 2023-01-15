@@ -146,8 +146,8 @@ class BubbleableMetadata extends CacheableMetadata implements AttachmentsInterfa
    */
   public static function mergeAttachments(array $a, array $b) {
     // If both #attached arrays contain drupalSettings, then merge them
-    // correctly; adding the same settings multiple times needs to behave
-    // idempotently.
+    // correctly; adding the same settings multiple times needs to be
+    // idempotent.
     if (!empty($a['drupalSettings']) && !empty($b['drupalSettings'])) {
       $drupalSettings = NestedArray::mergeDeepArray([$a['drupalSettings'], $b['drupalSettings']], TRUE);
       // No need for re-merging them.

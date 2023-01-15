@@ -22,7 +22,7 @@ class EnvironmentCleanerTest extends KernelTestBase {
       'sites' => [
         'simpletest' => [
           'delete_dir' => [
-            'delete.me' => 'I am a gonner.',
+            'delete.me' => 'I am gone.',
           ],
           'delete_me.too' => 'delete this file.',
         ],

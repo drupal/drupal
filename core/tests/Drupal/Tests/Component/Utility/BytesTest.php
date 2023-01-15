@@ -79,6 +79,7 @@ class BytesTest extends TestCase {
       ['23476892 bytes', 23476892.0],
       // 76 MB.
       ['76MRandomStringThatShouldBeIgnoredByParseSize.', 79691776.0],
+      // cspell:ignore giggabyte
       // 76.24 GB (with typo).
       ['76.24 Giggabyte', 81862076662.0],
       ['1.5', 2.0],

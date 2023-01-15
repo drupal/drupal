@@ -366,7 +366,7 @@ class CacheTest extends ViewsKernelTestBase {
     // Update the entry in the DB to ensure that result caching works.
     \Drupal::database()->update('views_test_data')
       ->condition('name', 'George')
-      ->fields(['name' => 'egroeG'])
+      ->fields(['name' => 'notGeorge'])
       ->execute();
 
     $view = Views::getView('test_cache');
