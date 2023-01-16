@@ -80,4 +80,30 @@ class ReservedWordTest extends DatabaseTestBase {
     $this->assertSame('27', $record->age);
   }
 
+  /**
+   * Tests SELECT query with GROUP BY clauses on fields with reserved names.
+   */
+  public function testGroupBy() {
+    $this->connection->insert('select')
+      ->fields([
+        'id' => 2,
+        'update' => 'Update value 1',
+      ])
+      ->execute();
+
+    // Using aliases.
+    $query = $this->connection->select('select', 's');
+    $query->addExpression('COUNT([id])', 'num');
+    $query->addField('s', 'update');
+    $query->groupBy('s.update');
+    $this->assertSame('2', $query->execute()->fetchAssoc()['num']);
+
+    // Not using aliases.
+    $query = $this->connection->select('select');
+    $query->addExpression('COUNT([id])', 'num');
+    $query->addField('select', 'update');
+    $query->groupBy('update');
+    $this->assertSame('2', $query->execute()->fetchAssoc()['num']);
+  }
+
 }
