@@ -82,6 +82,10 @@ class SelectComplexTest extends DatabaseTestBase {
     $task_field = $query->addField('t', 'task');
     $query->orderBy($count_field);
     $query->groupBy($task_field);
+
+    $this->assertMatchesRegularExpression("/ORDER BY .*[^\w\s]num[^\w\s]/", (string) $query);
+    $this->assertMatchesRegularExpression("/GROUP BY .*[^\w\s]task[^\w\s]/", (string) $query);
+
     $result = $query->execute();
 
     $num_records = 0;
