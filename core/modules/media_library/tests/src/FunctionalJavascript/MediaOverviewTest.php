@@ -108,6 +108,10 @@ class MediaOverviewTest extends MediaLibraryTestBase {
     $assert_session->elementExists('css', '#views-exposed-form-media-library-page')->submit();
     $this->waitForText('Dog');
 
+    // Select the "Delete media" action.
+    $page->selectFieldOption('Action', 'Delete media');
+    $this->waitForText('Dog');
+
     // This tests that anchor tags clicked inside the preview are suppressed.
     $this->getSession()->executeScript('jQuery(".js-click-to-select-trigger a")[4].click()');
     $this->submitForm([], 'Apply to selected items');

@@ -94,7 +94,7 @@ class BulkFormTest extends NodeTestBase {
     ]));
     $this->drupalGet('test-node-bulk-form');
     $elements = $this->assertSession()->selectExists('edit-action')->findAll('css', 'option');
-    $this->assertCount(8, $elements, 'All node operations are found.');
+    $this->assertCount(9, $elements, 'All node operations are found.');
   }
 
   /**

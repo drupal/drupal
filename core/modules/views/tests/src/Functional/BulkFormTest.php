@@ -116,7 +116,7 @@ class BulkFormTest extends BrowserTestBase {
 
     $this->drupalGet('test_bulk_form');
     $options = $this->assertSession()->selectExists('edit-action')->findAll('css', 'option');
-    $this->assertCount(2, $options);
+    $this->assertCount(3, $options);
     $this->assertSession()->optionExists('edit-action', 'node_make_sticky_action');
     $this->assertSession()->optionExists('edit-action', 'node_make_unsticky_action');
 
@@ -134,6 +134,11 @@ class BulkFormTest extends BrowserTestBase {
     $this->drupalGet('test_bulk_form');
     $this->assertSession()->elementTextEquals('xpath', '//label[@for="edit-action"]', 'Action');
 
+    // There should be an error message if no action is selected.
+    $edit = ['node_bulk_form[0]' => TRUE, 'action' => ''];
+    $this->submitForm($edit, 'Apply to selected items');
+    $this->assertSession()->pageTextContains('No Action option selected.');
+
     // Setup up a different bulk form title.
     $view = Views::getView('test_bulk_form');
     $display = &$view->storage->getDisplay('default');
@@ -142,6 +147,11 @@ class BulkFormTest extends BrowserTestBase {
 
     $this->drupalGet('test_bulk_form');
     $this->assertSession()->elementTextEquals('xpath', '//label[@for="edit-action"]', 'Test title');
+
+    // The error message when no action is selected should reflect the new form
+    // title.
+    $this->submitForm($edit, 'Apply to selected items');
+    $this->assertSession()->pageTextContains('No Test title option selected.');
 
     $this->drupalGet('test_bulk_form');
     // Call the node delete action.

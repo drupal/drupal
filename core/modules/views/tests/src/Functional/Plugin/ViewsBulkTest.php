@@ -64,6 +64,11 @@ class ViewsBulkTest extends ViewTestBase {
       'changed' => \Drupal::time()->getRequestTime() - 120,
     ]);
 
+    // Select the node deletion action.
+    $action_select = $this->getSession()->getPage()->findField('edit-action');
+    $action_select_name = $action_select->getAttribute('name');
+    $this->getSession()->getPage()->selectFieldOption($action_select_name, 'node_delete_action');
+
     // Now click 'Apply to selected items' and assert the first node is selected
     // on the confirm form.
     $this->submitForm(['node_bulk_form[0]' => TRUE], 'Apply to selected items');
@@ -81,6 +86,9 @@ class ViewsBulkTest extends ViewTestBase {
       'type' => 'page',
       'title' => 'The third node',
     ]);
+
+    // Select the node deletion action.
+    $this->getSession()->getPage()->selectFieldOption($action_select_name, 'node_delete_action');
 
     // Now click 'Apply to selected items' and assert the second node is
     // selected on the confirm form.

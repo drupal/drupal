@@ -319,6 +319,7 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
         '#type' => 'select',
         '#title' => $this->options['action_title'],
         '#options' => $this->getBulkOptions(),
+        '#empty_option' => $this->t('- Select -'),
       ];
 
       // Duplicate the form actions into the action container in the header.
@@ -442,12 +443,27 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
   }
 
   /**
+   * Returns the message that is displayed when no action is selected.
+   *
+   * @return string
+   *   Message displayed when no action is selected.
+   */
+  protected function emptyActionMessage() {
+    return $this->t('No %title option selected.', ['%title' => $this->options['action_title']]);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function viewsFormValidate(&$form, FormStateInterface $form_state) {
     $ids = $form_state->getValue($this->options['id']);
     if (empty($ids) || empty(array_filter($ids))) {
       $form_state->setErrorByName('', $this->emptySelectedMessage());
+    }
+
+    $action = $form_state->getValue('action');
+    if (empty($action)) {
+      $form_state->setErrorByName('', $this->emptyActionMessage());
     }
   }
 
