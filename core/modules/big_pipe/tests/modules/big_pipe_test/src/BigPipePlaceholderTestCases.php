@@ -274,35 +274,37 @@ class BigPipePlaceholderTestCases {
     ];
     $exception->embeddedHtmlResponse = NULL;
 
+    // cSpell:disable-next-line.
+    $token = 'PxOHfS_QL-T01NjBgu7Z7I04tIwMp6La5vM-mVxezbU';
     // 7. Edge case: response filter throwing an exception for this placeholder.
     $embedded_response_exception = new BigPipePlaceholderTestCase(
       [
         '#lazy_builder' => ['\Drupal\big_pipe_test\BigPipeTestController::responseException', []],
         '#create_placeholder' => TRUE,
       ],
-      '<drupal-render-placeholder callback="\Drupal\big_pipe_test\BigPipeTestController::responseException" arguments="" token="PxOHfS_QL-T01NjBgu7Z7I04tIwMp6La5vM-mVxezbU"></drupal-render-placeholder>',
+      '<drupal-render-placeholder callback="\Drupal\big_pipe_test\BigPipeTestController::responseException" arguments="" token="' . $token . ' "></drupal-render-placeholder>',
       [
         '#lazy_builder' => ['\Drupal\big_pipe_test\BigPipeTestController::responseException', []],
       ]
     );
-    $embedded_response_exception->bigPipePlaceholderId = 'callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3AresponseException&amp;&amp;token=PxOHfS_QL-T01NjBgu7Z7I04tIwMp6La5vM-mVxezbU';
+    $embedded_response_exception->bigPipePlaceholderId = 'callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3AresponseException&amp;&amp;token=' . $token;
     $embedded_response_exception->bigPipePlaceholderRenderArray = [
-      '#markup' => '<span data-big-pipe-placeholder-id="callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3AresponseException&amp;&amp;token=PxOHfS_QL-T01NjBgu7Z7I04tIwMp6La5vM-mVxezbU"></span>',
+      '#markup' => '<span data-big-pipe-placeholder-id="callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3AresponseException&amp;&amp;token=' . $token . '"></span>',
       '#cache' => $cacheability_depends_on_session_and_nojs_cookie,
       '#attached' => [
         'library' => ['big_pipe/big_pipe'],
         'drupalSettings' => [
           'bigPipePlaceholderIds' => [
-            'callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3AresponseException&&token=PxOHfS_QL-T01NjBgu7Z7I04tIwMp6La5vM-mVxezbU' => TRUE,
+            'callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3AresponseException&&token=' . $token => TRUE,
           ],
         ],
         'big_pipe_placeholders' => [
-          'callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3AresponseException&amp;&amp;token=PxOHfS_QL-T01NjBgu7Z7I04tIwMp6La5vM-mVxezbU' => $embedded_response_exception->placeholderRenderArray,
+          'callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3AresponseException&amp;&amp;token=' . $token => $embedded_response_exception->placeholderRenderArray,
         ],
       ],
     ];
     $embedded_response_exception->embeddedAjaxResponseCommands = NULL;
-    $embedded_response_exception->bigPipeNoJsPlaceholder = '<span data-big-pipe-nojs-placeholder-id="callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3AresponseException&amp;&amp;token=PxOHfS_QL-T01NjBgu7Z7I04tIwMp6La5vM-mVxezbU"></span>';
+    $embedded_response_exception->bigPipeNoJsPlaceholder = '<span data-big-pipe-nojs-placeholder-id="callback=%5CDrupal%5Cbig_pipe_test%5CBigPipeTestController%3A%3AresponseException&amp;&amp;token=' . $token . '"></span>';
     $embedded_response_exception->bigPipeNoJsPlaceholderRenderArray = [
       '#markup' => $embedded_response_exception->bigPipeNoJsPlaceholder,
       '#cache' => $cacheability_depends_on_session_and_nojs_cookie,

@@ -559,6 +559,7 @@ final class HTMLRestrictions {
     unset($allowed_elements['*']);
     // @see \Drupal\filter\Plugin\Filter\FilterHtml::getHTMLRestrictions()
     // @todo remove this in https://www.drupal.org/project/drupal/issues/3226368
+    // cSpell:disable-next-line
     unset($allowed_elements['__zqh6vxfbk3cg__']);
 
     // Postprocess tag wildcards: convert

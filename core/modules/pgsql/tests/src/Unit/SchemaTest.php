@@ -74,7 +74,7 @@ class SchemaTest extends UnitTestCase {
     return [
       ['user_field_data', 'pkey', 'user_field_data____pkey'],
       ['user_field_data', 'name__key', 'user_field_data__name__key'],
-      ['user_field_data', 'a_veeeery_veery_very_super_long_field_name__key', 'drupal_BGGYAXgbqlAF1rMOyFTdZGj9zIMXZtSvEjMAKZ9wGIk_key'],
+      ['user_field_data', 'a_very_very_very_very_super_long_field_name__key', 'drupal_WW_a8TlbZ3UQi20UTtRlJFaIeSa6FEtQS5h4NRA3UeU_key'],
     ];
   }
 
