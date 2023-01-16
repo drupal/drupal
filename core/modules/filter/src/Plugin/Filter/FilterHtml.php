@@ -256,6 +256,7 @@ class FilterHtml extends FilterBase {
     $html = str_replace('>', ' />', $this->settings['allowed_html']);
     // Protect any trailing * characters in attribute names, since DomDocument
     // strips them as invalid.
+    // cSpell:disable-next-line
     $star_protector = '__zqh6vxfbk3cg__';
     $html = str_replace('*', $star_protector, $html);
     $body_child_nodes = Html::load($html)->getElementsByTagName('body')->item(0)->childNodes;
