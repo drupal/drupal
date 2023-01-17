@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Routing\RedirectDestinationTrait;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\views\Entity\Render\EntityTranslationRenderTrait;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -445,10 +446,10 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
   /**
    * Returns the message that is displayed when no action is selected.
    *
-   * @return string
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
    *   Message displayed when no action is selected.
    */
-  protected function emptyActionMessage() {
+  protected function emptyActionMessage(): TranslatableMarkup {
     return $this->t('No %title option selected.', ['%title' => $this->options['action_title']]);
   }
 
