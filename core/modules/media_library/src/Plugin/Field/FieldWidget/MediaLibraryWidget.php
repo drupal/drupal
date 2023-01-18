@@ -2,6 +2,7 @@
 
 namespace Drupal\media_library\Plugin\Field\FieldWidget;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Ajax\AjaxResponse;
@@ -393,6 +394,20 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     ];
 
     foreach ($referenced_entities as $delta => $media_item) {
+      if ($media_item->access('view')) {
+        // @todo Make the view mode configurable in https://www.drupal.org/project/drupal/issues/2971209
+        $preview = $view_builder->view($media_item, 'media_library');
+      }
+      else {
+        $item_label = $media_item->access('view label') ? $media_item->label() : new FormattableMarkup('@label @id', [
+          '@label' => $media_item->getEntityType()->getSingularLabel(),
+          '@id' => $media_item->id(),
+        ]);
+        $preview = [
+          '#theme' => 'media_embed_error',
+          '#message' => $this->t('You do not have permission to view @item_label.', ['@item_label' => $item_label]),
+        ];
+      }
       $element['selection'][$delta] = [
         '#theme' => 'media_library_item__widget',
         '#attributes' => [
@@ -416,22 +431,21 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
           '#value' => $this->t('Remove'),
           '#media_id' => $media_item->id(),
           '#attributes' => [
-            'aria-label' => $this->t('Remove @label', ['@label' => $media_item->label()]),
+            'aria-label' => $media_item->access('view label') ? $this->t('Remove @label', ['@label' => $media_item->label()]) : $this->t('Remove media'),
           ],
           '#ajax' => [
             'callback' => [static::class, 'updateWidget'],
             'wrapper' => $wrapper_id,
             'progress' => [
               'type' => 'throbber',
-              'message' => $this->t('Removing @label.', ['@label' => $media_item->label()]),
+              'message' => $media_item->access('view label') ? $this->t('Removing @label.', ['@label' => $media_item->label()]) : $this->t('Removing media.'),
             ],
           ],
           '#submit' => [[static::class, 'removeItem']],
           // Prevent errors in other widgets from preventing removal.
           '#limit_validation_errors' => $limit_validation_errors,
         ],
-        // @todo Make the view mode configurable in https://www.drupal.org/project/drupal/issues/2971209
-        'rendered_entity' => $view_builder->view($media_item, 'media_library'),
+        'rendered_entity' => $preview,
         'target_id' => [
           '#type' => 'hidden',
           '#value' => $media_item->id(),
@@ -700,9 +714,8 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
 
     // Announce the updated content to screen readers.
     if ($is_remove_button) {
-      $announcement = new TranslatableMarkup('@label has been removed.', [
-        '@label' => Media::load($field_state['removed_item_id'])->label(),
-      ]);
+      $media_item = Media::load($field_state['removed_item_id']);
+      $announcement = $media_item->access('view label') ? new TranslatableMarkup('@label has been removed.', ['@label' => $media_item->label()]) : new TranslatableMarkup('Media has been removed.');
     }
     else {
       $new_items = count(static::getNewMediaItems($element, $form_state));

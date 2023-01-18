@@ -4,6 +4,8 @@ namespace Drupal\Tests\media_library\FunctionalJavascript;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\FunctionalJavascriptTests\SortableTestTrait;
+use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests the Media library entity reference widget.
@@ -577,6 +579,60 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
 JS;
 
     $this->getSession()->executeScript($script);
+  }
+
+  /**
+   * Tests the preview displayed by the field widget.
+   */
+  public function testWidgetPreview() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $node = $this->drupalCreateNode([
+      'type' => 'basic_page',
+      'field_unlimited_media' => [
+        $this->mediaItems['Horse'],
+      ],
+    ]);
+    $media_id = $this->mediaItems['Horse']->id();
+
+    // Assert that preview is present for current user, who can view media.
+    $this->drupalGet($node->toUrl('edit-form'));
+    $assert_session->elementTextContains('css', '[data-drupal-selector="edit-field-unlimited-media-selection-0"]', 'Horse');
+    $remove_button = $page->find('css', '[data-drupal-selector="edit-field-unlimited-media-selection-0-remove-button"]');
+    $this->assertSame('Remove Horse', $remove_button->getAttribute('aria-label'));
+    $assert_session->pageTextNotContains('You do not have permission to view media item');
+    $remove_button->press();
+    $this->waitForText("Removing Horse.");
+    $this->waitForText("Horse has been removed.");
+    // Logout without saving.
+    $this->drupalLogout();
+
+    // Create a user who can edit content but not view media.
+    // Must remove permission from authenticated role first, otherwise the new
+    // user will inherit that permission.
+    $role = Role::load(RoleInterface::AUTHENTICATED_ID);
+    $role->revokePermission('view media');
+    $role->save();
+    $non_media_editor = $this->drupalCreateUser([
+      'access content',
+      'create basic_page content',
+      'edit any basic_page content',
+    ]);
+    $this->drupalLogin($non_media_editor);
+
+    // Assert that preview does not reveal media name.
+    $this->drupalGet($node->toUrl('edit-form'));
+    // There should be no preview name.
+    $assert_session->elementTextNotContains('css', '[data-drupal-selector="edit-field-unlimited-media-selection-0"]', 'Horse');
+    // The remove button should have a generic message.
+    $remove_button = $page->find('css', '[data-drupal-selector="edit-field-unlimited-media-selection-0-remove-button"]');
+    $this->assertSame('Remove media', $remove_button->getAttribute('aria-label'));
+    $assert_session->pageTextContains("You do not have permission to view media item $media_id.");
+    // Confirm ajax text does not reveal media name.
+    $remove_button->press();
+    $this->waitForText("Removing media.");
+    $this->waitForText("Media has been removed.");
   }
 
 }
