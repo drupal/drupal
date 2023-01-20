@@ -29,7 +29,7 @@ class EntityAutocompleteMatcher implements EntityAutocompleteMatcherInterface {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function getMatches($target_type, $selection_handler, $selection_settings, $string = '') {
     $matches = [];

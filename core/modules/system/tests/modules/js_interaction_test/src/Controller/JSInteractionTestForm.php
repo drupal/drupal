@@ -12,7 +12,7 @@ use Drupal\Core\Url;
 class JSInteractionTestForm extends FormBase {
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function getFormId() {
     return __CLASS__;

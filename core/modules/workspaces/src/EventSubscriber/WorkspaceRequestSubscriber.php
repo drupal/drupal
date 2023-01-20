@@ -93,7 +93,7 @@ class WorkspaceRequestSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
     // Use a priority of 190 in order to run after the generic core subscriber.
