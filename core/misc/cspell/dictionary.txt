@@ -712,7 +712,6 @@ mocktails
 mocky
 moderatable
 modernizr
-modernizr's
 modulenarrow
 mojito
 montag
