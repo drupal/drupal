@@ -76,8 +76,7 @@ class WorkflowAccessControlHandler extends EntityAccessControlHandler implements
     // Allow access if there is at least one workflow type. Since workflow types
     // are provided by modules this is cacheable until extensions change.
     return $admin_access
-      ->andIf(AccessResult::allowedIf($workflow_types_count > 0))
-      ->addCacheTags(['workflow_type_plugins']);
+      ->andIf(AccessResult::allowedIf($workflow_types_count > 0));
   }
 
 }
