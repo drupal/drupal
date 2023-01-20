@@ -188,13 +188,13 @@ class ElementTest extends UnitTestCase {
   public function providerTestIsEmpty() {
     return [
       [[], TRUE],
-      [['#attached' => []], TRUE],
+      [['#attached' => []], FALSE],
       [['#cache' => []], TRUE],
       [['#weight' => []], TRUE],
       // Variations.
-      [['#attached' => [], '#cache' => []], TRUE],
-      [['#attached' => [], '#weight' => []], TRUE],
-      [['#attached' => [], '#weight' => [], '#cache' => []], TRUE],
+      [['#attached' => [], '#cache' => []], FALSE],
+      [['#attached' => [], '#weight' => []], FALSE],
+      [['#attached' => [], '#weight' => [], '#cache' => []], FALSE],
       [['#cache' => [], '#weight' => []], TRUE],
       [['#cache' => [], '#weight' => [], '#any_other_property' => []], FALSE],
       [
@@ -207,9 +207,9 @@ class ElementTest extends UnitTestCase {
         FALSE,
       ],
       // Cover sorting.
-      [['#cache' => [], '#weight' => [], '#attached' => []], TRUE],
-      [['#attached' => [], '#cache' => [], '#weight' => []], TRUE],
-      [['#weight' => [], '#attached' => [], '#cache' => []], TRUE],
+      [['#cache' => [], '#weight' => [], '#attached' => []], FALSE],
+      [['#cache' => [], '#weight' => []], TRUE],
+      [['#weight' => [], '#cache' => []], TRUE],
 
       [['#cache' => []], TRUE],
       [['#cache' => ['tags' => ['foo']]], TRUE],
