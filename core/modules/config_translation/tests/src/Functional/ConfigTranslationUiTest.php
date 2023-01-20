@@ -13,6 +13,8 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
 
+// cspell:ignore viewsviewfiles
+
 /**
  * Translate settings and entities to various languages.
  *

@@ -9,38 +9,38 @@
     attach: function attach(context) {
       var $context = $(context);
       $context.find('#edit-submission').drupalSetSummary(function (context) {
-        var vals = [];
-        vals.push(Drupal.checkPlain($(context).find('#edit-title-label')[0].value) || Drupal.t('Requires a title'));
-        return vals.join(', ');
+        var values = [];
+        values.push(Drupal.checkPlain($(context).find('#edit-title-label')[0].value) || Drupal.t('Requires a title'));
+        return values.join(', ');
       });
       $context.find('#edit-workflow').drupalSetSummary(function (context) {
-        var vals = [];
+        var values = [];
         $(context).find('input[name^="options"]:checked').next('label').each(function () {
-          vals.push(Drupal.checkPlain(this.textContent));
+          values.push(Drupal.checkPlain(this.textContent));
         });
         if (!$(context).find('#edit-options-status').is(':checked')) {
-          vals.unshift(Drupal.t('Not published'));
+          values.unshift(Drupal.t('Not published'));
         }
-        return vals.join(', ');
+        return values.join(', ');
       });
       $('#edit-language', context).drupalSetSummary(function (context) {
-        var vals = [];
-        vals.push($('.js-form-item-language-configuration-langcode select option:selected', context)[0].textContent);
+        var values = [];
+        values.push($('.js-form-item-language-configuration-langcode select option:selected', context)[0].textContent);
         $('input:checked', context).next('label').each(function () {
-          vals.push(Drupal.checkPlain(this.textContent));
+          values.push(Drupal.checkPlain(this.textContent));
         });
-        return vals.join(', ');
+        return values.join(', ');
       });
       $context.find('#edit-display').drupalSetSummary(function (context) {
-        var vals = [];
+        var values = [];
         var $editContext = $(context);
         $editContext.find('input:checked').next('label').each(function () {
-          vals.push(Drupal.checkPlain(this.textContent));
+          values.push(Drupal.checkPlain(this.textContent));
         });
         if (!$editContext.find('#edit-display-submitted').is(':checked')) {
-          vals.unshift(Drupal.t("Don't display post information"));
+          values.unshift(Drupal.t("Don't display post information"));
         }
-        return vals.join(', ');
+        return values.join(', ');
       });
     }
   };

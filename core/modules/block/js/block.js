@@ -11,16 +11,16 @@
         return;
       }
       function checkboxesSummary(context) {
-        var vals = [];
+        var values = [];
         var $checkboxes = $(context).find('input[type="checkbox"]:checked + label');
         var il = $checkboxes.length;
         for (var i = 0; i < il; i++) {
-          vals.push($($checkboxes[i]).html());
+          values.push($($checkboxes[i]).html());
         }
-        if (!vals.length) {
-          vals.push(Drupal.t('Not restricted'));
+        if (!values.length) {
+          values.push(Drupal.t('Not restricted'));
         }
-        return vals.join(', ');
+        return values.join(', ');
       }
       $('[data-drupal-selector="edit-visibility-node-type"], [data-drupal-selector="edit-visibility-entity-bundlenode"], [data-drupal-selector="edit-visibility-language"], [data-drupal-selector="edit-visibility-user-role"]').drupalSetSummary(checkboxesSummary);
       $('[data-drupal-selector="edit-visibility-request-path"]').drupalSetSummary(function (context) {

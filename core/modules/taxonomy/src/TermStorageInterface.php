@@ -116,16 +116,16 @@ interface TermStorageInterface extends ContentEntityStorageInterface {
    *
    * @param array $nids
    *   Node IDs to retrieve terms for.
-   * @param array $vocabs
-   *   (optional) A vocabularies array to restrict the term search. Defaults to
-   *   empty array.
+   * @param array $vids
+   *   (optional) an array of vocabulary IDs to restrict the term search.
+   *   Defaults to empty array.
    * @param string $langcode
    *   (optional) A language code to restrict the term search. Defaults to NULL.
    *
    * @return array
    *   An array of nids and the term entities they were tagged with.
    */
-  public function getNodeTerms(array $nids, array $vocabs = [], $langcode = NULL);
+  public function getNodeTerms(array $nids, array $vids = [], $langcode = NULL);
 
   /**
    * Returns the hierarchy type for a specific vocabulary ID.
