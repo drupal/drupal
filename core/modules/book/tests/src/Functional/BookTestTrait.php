@@ -2,9 +2,7 @@
 
 namespace Drupal\Tests\book\Functional;
 
-use Drupal\Core\Link;
 use Drupal\Core\Url;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
@@ -88,37 +86,43 @@ trait BookTestTrait {
    *   The nodes that should be displayed in the breadcrumb.
    */
   public function checkBookNode(EntityInterface $node, $nodes, $previous, $up, $next, array $breadcrumb) {
-    // $number does not use drupal_static as it should not be reset
-    // since it uniquely identifies each call to checkBookNode().
-    static $number = 0;
     $this->drupalGet('node/' . $node->id());
     // Check outline structure.
     if ($nodes !== NULL) {
-      $this->assertSession()->responseMatches($this->generateOutlinePattern($nodes));
+      $book_navigation = $this->getSession()->getPage()->find('css', sprintf('nav[aria-labelledby="book-label-%s"] ul', $this->book->id()));
+      $this->assertNotNull($book_navigation);
+      $links = $book_navigation->findAll('css', 'a');
+      $this->assertCount(count($nodes), $links);
+      foreach ($nodes as $delta => $node) {
+        $link = $links[$delta];
+        $this->assertEquals($node->label(), $link->getText());
+        $this->assertEquals($node->toUrl()->toString(), $link->getAttribute('href'));
+      }
     }
 
     // Check previous, up, and next links.
     if ($previous) {
-      /** @var \Drupal\Core\Url $url */
-      $url = $previous->toUrl();
-      $url->setOptions(['attributes' => ['rel' => ['prev'], 'title' => t('Go to previous page')]]);
-      $text = new FormattableMarkup('<b>‹</b> @label', ['@label' => $previous->label()]);
-      $this->assertSession()->responseContains(Link::fromTextAndUrl($text, $url)->toString());
+      $previous_element = $this->assertSession()->elementExists('named_exact', [
+        'link',
+        'Go to previous page',
+      ]);
+      $this->assertEquals($previous->toUrl()->toString(), $previous_element->getAttribute('href'));
     }
 
     if ($up) {
-      /** @var \Drupal\Core\Url $url */
-      $url = $up->toUrl();
-      $url->setOptions(['attributes' => ['title' => t('Go to parent page')]]);
-      $this->assertSession()->responseContains(Link::fromTextAndUrl('Up', $url)->toString());
+      $parent_element = $this->assertSession()->elementExists('named_exact', [
+        'link',
+        'Go to parent page',
+      ]);
+      $this->assertEquals($up->toUrl()->toString(), $parent_element->getAttribute('href'));
     }
 
     if ($next) {
-      /** @var \Drupal\Core\Url $url */
-      $url = $next->toUrl();
-      $url->setOptions(['attributes' => ['rel' => ['next'], 'title' => t('Go to next page')]]);
-      $text = new FormattableMarkup('@label <b>›</b>', ['@label' => $next->label()]);
-      $this->assertSession()->responseContains(Link::fromTextAndUrl($text, $url)->toString());
+      $next_element = $this->assertSession()->elementExists('named_exact', [
+        'link',
+        'Go to next page',
+      ]);
+      $this->assertEquals($next->toUrl()->toString(), $next_element->getAttribute('href'));
     }
 
     // Compute the expected breadcrumb.
@@ -142,8 +146,6 @@ trait BookTestTrait {
     $this->drupalGet('book/export/html/' . $node->id());
     $this->assertSession()->pageTextContains($node->label());
     $this->assertSession()->responseContains($node->body->processed);
-
-    $number++;
   }
 
   /**
@@ -154,8 +156,14 @@ trait BookTestTrait {
    *
    * @return string
    *   A regular expression that locates sub-nodes of the outline.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   *   methods from \Drupal\Tests\WebAssert instead.
+   *
+   * @see https://www.drupal.org/node/3325904
    */
   public function generateOutlinePattern($nodes) {
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use methods from \Drupal\Tests\WebAssert instead. See https://www.drupal.org/node/3325904', E_USER_DEPRECATED);
     $outline = '';
     foreach ($nodes as $node) {
       $outline .= '(node\/' . $node->id() . ')(.*?)(' . $node->label() . ')(.*?)';
