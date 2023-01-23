@@ -493,7 +493,6 @@ function locale_cache_flush() {
  * Implements hook_js_alter().
  */
 function locale_js_alter(&$javascript, AttachedAssetsInterface $assets) {
-  // @todo Remove this in https://www.drupal.org/node/2421323.
   $files = [];
   foreach ($javascript as $item) {
     if (isset($item['type']) && $item['type'] == 'file') {
