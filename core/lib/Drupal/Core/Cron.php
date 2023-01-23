@@ -134,6 +134,10 @@ class Cron implements CronInterface {
     }
     else {
       $this->invokeCronHandlers();
+
+      // Process cron queues.
+      $this->processQueues();
+
       $this->setCronLastTime();
 
       // Release cron lock.
@@ -142,9 +146,6 @@ class Cron implements CronInterface {
       // Return TRUE so other functions can check if it did run successfully
       $return = TRUE;
     }
-
-    // Process cron queues.
-    $this->processQueues();
 
     // Restore the user.
     $this->accountSwitcher->switchBack();
