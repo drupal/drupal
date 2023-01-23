@@ -1104,14 +1104,6 @@ function install_base_system(&$install_state) {
   // system.module in order to work.
   \Drupal::service('file.htaccess_writer')->ensure();
 
-  // Prime the module list static cache with the user module's exact location.
-  // @todo Remove as part of https://www.drupal.org/node/2186491
-  \Drupal::service('extension.list.module')->setPathname('user', 'core/modules/user/user.info.yml');
-
-  // Install the User module so that installing from configuration works and to
-  // ensure the anonymous user is created with a langcode of 'en'.
-  \Drupal::service('module_installer')->install(['user'], FALSE);
-
   $install_state['base_system_verified'] = TRUE;
 }
 
@@ -1580,9 +1572,8 @@ function install_profile_modules(&$install_state) {
       $modules = array_merge($modules, array_keys($files[$module]->requires));
     }
   }
-  // The System and User modules have already been installed by
-  // install_base_system().
-  $modules = array_diff(array_unique($modules), ['system', 'user']);
+  // The System module has already been installed by install_base_system().
+  $modules = array_diff(array_unique($modules), ['system']);
   foreach ($modules as $module) {
     if (!empty($files[$module]->info['required'])) {
       $required[$module] = $files[$module]->sort;
