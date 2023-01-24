@@ -313,7 +313,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     ];
     $this->drupalGet($field_edit_path);
     $this->submitForm($edit, 'Save field settings');
-    $this->assertSession()->pageTextContains("There is 1 entity with 2 or more values in this field.");
+    $this->assertSession()->pageTextContains("There is 1 entity with 2 or more values in this field");
 
     // Create a second entity with three values.
     $edit = ['title[0][value]' => 'Cardinality 3', 'body[0][value]' => 'Body 1', 'body[1][value]' => 'Body 2', 'body[2][value]' => 'Body 3'];
@@ -339,7 +339,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     ];
     $this->drupalGet($field_edit_path);
     $this->submitForm($edit, 'Save field settings');
-    $this->assertSession()->pageTextContains("There are 2 entities with 2 or more values in this field.");
+    $this->assertSession()->pageTextContains("There are 2 entities with 2 or more values in this field");
 
     $edit = [
       'cardinality' => 'number',
@@ -347,7 +347,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     ];
     $this->drupalGet($field_edit_path);
     $this->submitForm($edit, 'Save field settings');
-    $this->assertSession()->pageTextContains("There is 1 entity with 3 or more values in this field.");
+    $this->assertSession()->pageTextContains("There is 1 entity with 3 or more values in this field");
 
     $edit = [
       'cardinality' => 'number',
@@ -385,14 +385,14 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     ];
     $this->drupalGet($field_edit_path);
     $this->submitForm($edit, 'Save field settings');
-    $this->assertSession()->pageTextContains("There are 2 entities with 3 or more values in this field.");
+    $this->assertSession()->pageTextContains("There are 2 entities with 3 or more values in this field");
     $edit = [
       'cardinality' => 'number',
       'cardinality_number' => 3,
     ];
     $this->drupalGet($field_edit_path);
     $this->submitForm($edit, 'Save field settings');
-    $this->assertSession()->pageTextContains("There is 1 entity with 4 or more values in this field.");
+    $this->assertSession()->pageTextContains("There is 1 entity with 4 or more values in this field");
     $edit = [
       'cardinality' => 'number',
       'cardinality_number' => 4,
