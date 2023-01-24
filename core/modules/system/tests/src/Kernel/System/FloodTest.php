@@ -115,4 +115,41 @@ class FloodTest extends KernelTestBase {
     $this->assertFalse($flood->isAllowed($name, $threshold));
   }
 
+  /**
+   * Provides an array of backends for testClearByPrefix.
+   */
+  public function floodBackendProvider() :array {
+    $request_stack = \Drupal::service('request_stack');
+    $connection = \Drupal::service('database');
+
+    return [
+      new MemoryBackend($request_stack),
+      new DatabaseBackend($connection, $request_stack),
+    ];
+  }
+
+  /**
+   * Tests clearByPrefix method on flood backends.
+   */
+  public function testClearByPrefix() {
+    $threshold = 1;
+    $window_expired = 3600;
+    $identifier = 'prefix-127.0.0.1';
+    $name = 'flood_test_cleanup';
+
+    // We can't use an PHPUnit data provider because we need access to the
+    // container.
+    $backends = $this->floodBackendProvider();
+
+    foreach ($backends as $backend) {
+      // Register unexpired event.
+      $backend->register($name, $window_expired, $identifier);
+      // Verify event is not allowed.
+      $this->assertFalse($backend->isAllowed($name, $threshold, $window_expired, $identifier));
+      // Clear by prefix and verify event is now allowed.
+      $backend->clearByPrefix($name, 'prefix');
+      $this->assertTrue($backend->isAllowed($name, $threshold));
+    }
+  }
+
 }

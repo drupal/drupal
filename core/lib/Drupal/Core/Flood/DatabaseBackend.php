@@ -9,7 +9,7 @@ use Drupal\Core\Database\Connection;
 /**
  * Defines the database flood backend. This is the default Drupal backend.
  */
-class DatabaseBackend implements FloodInterface {
+class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
 
   /**
    * The database table name.
@@ -100,6 +100,21 @@ class DatabaseBackend implements FloodInterface {
       $this->connection->delete(static::TABLE_NAME)
         ->condition('event', $name)
         ->condition('identifier', $identifier)
+        ->execute();
+    }
+    catch (\Exception $e) {
+      $this->catchException($e);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function clearByPrefix(string $name, string $prefix): void {
+    try {
+      $this->connection->delete(static::TABLE_NAME)
+        ->condition('event', $name)
+        ->condition('identifier', $prefix . '-%', 'LIKE')
         ->execute();
     }
     catch (\Exception $e) {

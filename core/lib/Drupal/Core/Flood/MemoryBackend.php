@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Defines the memory flood backend. This is used for testing.
  */
-class MemoryBackend implements FloodInterface {
+class MemoryBackend implements FloodInterface, PrefixFloodInterface {
 
   /**
    * The request stack.
@@ -52,6 +52,20 @@ class MemoryBackend implements FloodInterface {
       $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
     }
     unset($this->events[$name][$identifier]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function clearByPrefix(string $name, string $prefix): void {
+    foreach ($this->events as $event_name => $identifier) {
+      $identifier_key = key($identifier);
+      $identifier_parts = explode("-", $identifier_key);
+      $identifier_prefix = reset($identifier_parts);
+      if ($prefix == $identifier_prefix && $name == $event_name) {
+        unset($this->events[$event_name][$identifier_key]);
+      }
+    }
   }
 
   /**
