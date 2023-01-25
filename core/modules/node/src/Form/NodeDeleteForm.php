@@ -19,18 +19,18 @@ class NodeDeleteForm extends ContentEntityDeleteForm {
     $entity = $this->getEntity();
 
     $node_type_storage = $this->entityTypeManager->getStorage('node_type');
-    $node_type = $node_type_storage->load($entity->bundle())->label();
+    $node_type = $node_type_storage->load($entity->bundle());
 
     if (!$entity->isDefaultTranslation()) {
       return $this->t('@language translation of the @type %label has been deleted.', [
         '@language' => $entity->language()->getName(),
-        '@type' => $node_type,
+        '@type' => $node_type->label(),
         '%label' => $entity->label(),
       ]);
     }
 
     return $this->t('The @type %title has been deleted.', [
-      '@type' => $node_type,
+      '@type' => $node_type->label(),
       '%title' => $this->getEntity()->label(),
     ]);
   }
