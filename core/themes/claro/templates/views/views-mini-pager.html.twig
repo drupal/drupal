@@ -18,8 +18,7 @@
   ]
 %}
 {% if items.previous or items.next %}
-  <nav{{ attributes.addClass('pager').setAttribute('role', 'navigation').setAttribute('aria-labelledby', heading_id) }}>
-    <h4{{ title_attributes.addClass('visually-hidden').setAttribute('id', heading_id) }}>{{ 'Pagination'|t }}</h4>
+  <nav class="pager" role="navigation" aria-label="{{ 'Pagination'|t }}">
     <ul{{ content_attributes.addClass('pager__items', 'js-pager__items') }}>
       {% if items.previous %}
         {% apply spaceless %}
