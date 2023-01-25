@@ -31,6 +31,10 @@ views.field.comment_last_timestamp:
 views.field.comment_link_approve:
   type: views.field.comment_link
   label: 'Comment approve link'
+  mapping:
+    text:
+      type: label
+      label: 'Text to display'
 
 views.field.comment_link_reply:
   type: views.field.comment_link
