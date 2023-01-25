@@ -2176,6 +2176,11 @@ parameters:
 			path: modules/system/tests/modules/entity_test/entity_test.install
 
 		-
+			message: "#^Variable \\$goto in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: modules/system/tests/src/Functional/Menu/AssertBreadcrumbTrait.php
+
+		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/system/tests/modules/entity_test/src/Plugin/Field/FieldType/ChangedTestItem.php

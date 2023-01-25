@@ -22,6 +22,7 @@ entity.block_content.canonical:
   path: '/block/{block_content}'
   defaults:
     _entity_form: 'block_content.edit'
+    _title_callback: '\Drupal\Core\Entity\Controller\EntityController::title'
   options:
     _admin_route: TRUE
   requirements:
