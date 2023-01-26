@@ -558,7 +558,7 @@ details.fieldset-no-legend {
   position: absolute;
   z-index: 1;
   top: 3.8rem;
-  left: calc(0 - var(--space-m)); /* LTR */
+  left: calc(var(--space-m) * -1); /* LTR */
   padding: 0 0.3rem 0.3rem 0.4rem; /* LTR */
   content: ">";
   color: var(--color-gray-600);
@@ -570,7 +570,7 @@ details.fieldset-no-legend {
 }
 
 [dir="rtl"] .views-config-group-region .views-group-box--value > .form-item::after {
-  right: calc(0 - var(--space-m));
+  right: calc(var(--space-m) * -1);
   left: auto;
   padding-right: 0.4rem;
   padding-left: 0.3rem;
