@@ -63,6 +63,49 @@ class UrlHelper {
   }
 
   /**
+   * Compresses a string for use in a query parameter.
+   *
+   * While RFC 1738 doesn't specify a maximum length for query strings,
+   * browsers or server configurations may restrict URLs and/or query strings to
+   * a certain length, often 1000 or 2000 characters. This method can be used to
+   * compress a string into a URL-safe query parameter which will be shorter
+   * than if it was used directly.
+   *
+   * @see \Drupal\Component\Utility\UrlHelper::uncompressQueryParameter()
+   *
+   * @param string $data
+   *   The data to compress.
+   *
+   * @return string
+   *   The data compressed into a URL-safe string.
+   */
+  public static function compressQueryParameter(string $data): string {
+    // Use 'base64url' encoding. Note that the '=' sign is only used for padding
+    // on the right of the string, and is otherwise not part of the data.
+    // @see https://datatracker.ietf.org/doc/html/rfc4648#section-5
+    // @see https://www.php.net/manual/en/function.base64-encode.php#123098
+    return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode(gzcompress($data)));
+  }
+
+  /**
+   * Takes a compressed parameter and converts it back to the original.
+   *
+   * @see \Drupal\Component\Utility\UrlHelper::compressQueryParameter()
+   *
+   * @param string $compressed
+   *   A string as compressed by
+   *   \Drupal\Component\Utility\UrlHelper::compressQueryParameter().
+   *
+   * @return string|bool
+   *   The uncompressed data or FALSE on failure.
+   */
+  public static function uncompressQueryParameter(string $compressed): string|bool {
+    // Because this comes from user data, suppress the PHP warning that
+    // gzcompress() throws if the base64-encoded string is invalid.
+    return @gzuncompress(base64_decode(str_replace(['-', '_'], ['+', '/'], $compressed)));
+  }
+
+  /**
    * Filters a URL query parameter array to remove unwanted elements.
    *
    * @param array $query

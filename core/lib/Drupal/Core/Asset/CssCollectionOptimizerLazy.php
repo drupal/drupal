@@ -102,18 +102,22 @@ class CssCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfa
         $css_assets[$order]['data'] = $uri;
       }
     }
-    // Generate a URL for each group of assets, but do not process them inline,
-    // this is done using optimizeGroup() when the asset path is requested.
-    $ajax_page_state = $this->requestStack->getCurrentRequest()->get('ajax_page_state');
-    $already_loaded = isset($ajax_page_state) ? explode(',', $ajax_page_state['libraries']) : [];
+
+    // All asset group URLs will have exactly the same query arguments, except
+    // for the delta, so prepare them in advance.
     $query_args = [
       'language' => $this->languageManager->getCurrentLanguage()->getId(),
       'theme' => $this->themeManager->getActiveTheme()->getName(),
-      'include' => implode(',', $this->dependencyResolver->getMinimalRepresentativeSubset($libraries)),
+      'include' => UrlHelper::compressQueryParameter(implode(',', $this->dependencyResolver->getMinimalRepresentativeSubset($libraries))),
     ];
+    $ajax_page_state = $this->requestStack->getCurrentRequest()->get('ajax_page_state');
+    $already_loaded = isset($ajax_page_state) ? explode(',', $ajax_page_state['libraries']) : [];
     if ($already_loaded) {
-      $query_args['exclude'] = implode(',', $this->dependencyResolver->getMinimalRepresentativeSubset($already_loaded));
+      $query_args['exclude'] = UrlHelper::compressQueryParameter(implode(',', $this->dependencyResolver->getMinimalRepresentativeSubset($already_loaded)));
     }
+
+    // Generate a URL for each group of assets, but do not process them inline,
+    // this is done using optimizeGroup() when the asset path is requested.
     foreach ($css_assets as $order => $css_asset) {
       if (!empty($css_asset['preprocessed'])) {
         $query = ['delta' => "$order"] + $query_args;

@@ -2,6 +2,7 @@
 
 namespace Drupal\system\Controller;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Asset\AssetCollectionGrouperInterface;
 use Drupal\Core\Asset\AssetCollectionOptimizerInterface;
 use Drupal\Core\Asset\AssetDumperUriInterface;
@@ -131,6 +132,9 @@ abstract class AssetControllerBase extends FileDownloadController {
     if (!$request->query->has('language')) {
       throw new BadRequestHttpException('The language must be passed as a query argument');
     }
+    if (!$request->query->has('include')) {
+      throw new BadRequestHttpException('The libraries to include must be passed as a query argument');
+    }
     $file_parts = explode('_', basename($file_name, '.' . $this->fileExtension), 2);
 
     // The hash is the second segment of the filename.
@@ -147,9 +151,19 @@ abstract class AssetControllerBase extends FileDownloadController {
     $this->themeManager->setActiveTheme($active_theme);
 
     $attached_assets = new AttachedAssets();
-    $attached_assets->setLibraries(explode(',', $request->query->get('include')));
+    $include_string = UrlHelper::uncompressQueryParameter($request->query->get('include'));
+
+    if (!$include_string) {
+      throw new BadRequestHttpException('The libraries to include are encoded incorrectly.');
+    }
+    $attached_assets->setLibraries(explode(',', $include_string));
+
     if ($request->query->has('exclude')) {
-      $attached_assets->setAlreadyLoadedLibraries(explode(',', $request->query->get('exclude')));
+      $exclude_string = UrlHelper::uncompressQueryParameter($request->query->get('exclude'));
+      if (!$exclude_string) {
+        throw new BadRequestHttpException('The libraries to exclude are encoded incorrectly.');
+      }
+      $attached_assets->setAlreadyLoadedLibraries(explode(',', $exclude_string));
     }
     $groups = $this->getGroups($attached_assets, $request);
 

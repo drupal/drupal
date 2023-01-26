@@ -107,6 +107,30 @@ class UrlHelperTest extends TestCase {
   }
 
   /**
+   * Tests that we get the same thing out that we put in.
+   */
+  public function testCompressUncompress() {
+    $data = [];
+    while (count($data) < 30) {
+      $data[] = 'drupal/drupal' . count($data);
+    }
+    $data = implode(',', $data);
+    $compressed = UrlHelper::compressQueryParameter($data);
+    $uncompressed = UrlHelper::uncompressQueryParameter($compressed);
+    $this->assertEquals($data, $uncompressed);
+    $this->assertLessThan(strlen($uncompressed), strlen($compressed));
+  }
+
+  /**
+   * Tests passing an invalid string as a compressed query parameter.
+   */
+  public function testUncompressInvalidString() {
+    // Pass an invalid string to ::uncompressQueryParameter() and ensure it
+    // doesn't result in a PHP warning.
+    $this->assertFalse(UrlHelper::uncompressQueryParameter('llama'));
+  }
+
+  /**
    * Tests invalid absolute URLs.
    *
    * @dataProvider providerTestInvalidAbsolute

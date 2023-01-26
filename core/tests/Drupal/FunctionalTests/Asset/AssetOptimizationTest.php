@@ -116,6 +116,15 @@ class AssetOptimizationTest extends BrowserTestBase {
     $session->visit($this->omitTheme($url));
     $this->assertSession()->statusCodeEquals(400);
 
+    $session->visit($this->omitInclude($url));
+    $this->assertSession()->statusCodeEquals(400);
+
+    $session->visit($this->invalidInclude($url));
+    $this->assertSession()->statusCodeEquals(400);
+
+    $session->visit($this->invalidExclude($url));
+    $this->assertSession()->statusCodeEquals(400);
+
     $session->visit($this->setInvalidLibrary($url));
     $this->assertSession()->statusCodeEquals(200);
 
@@ -164,19 +173,21 @@ class AssetOptimizationTest extends BrowserTestBase {
   }
 
   /**
-   * Replaces the 'libraries' entry in the given URL with an invalid value.
+   * Replaces the 'include' entry in the given URL with an invalid value.
    *
    * @param string $url
    *   The source URL.
    *
    * @return string
-   *   The URL with the 'library' query set to an invalid value.
+   *   The URL with the 'include' query set to an invalid value.
    */
   protected function setInvalidLibrary(string $url): string {
     // First replace the hash, so we don't get served the actual file on disk.
     $url = $this->replaceGroupHash($url);
     $parts = UrlHelper::parse($url);
-    $parts['query']['libraries'] = ['system/llama'];
+    $include = explode(',', UrlHelper::uncompressQueryParameter($parts['query']['include']));
+    $include[] = 'system/llama';
+    $parts['query']['include'] = UrlHelper::compressQueryParameter(implode(',', $include));
 
     $query = UrlHelper::buildQuery($parts['query']);
     return $this->getAbsoluteUrl($parts['path'] . '?' . $query . '#' . $parts['fragment']);
@@ -196,6 +207,60 @@ class AssetOptimizationTest extends BrowserTestBase {
     $url = $this->replaceGroupHash($url);
     $parts = UrlHelper::parse($url);
     unset($parts['query']['theme']);
+    $query = UrlHelper::buildQuery($parts['query']);
+    return $this->getAbsoluteUrl($parts['path'] . '?' . $query . '#' . $parts['fragment']);
+  }
+
+  /**
+   * Removes the 'include' query parameter from the given URL.
+   *
+   * @param string $url
+   *   The source URL.
+   *
+   * @return string
+   *   The URL with the 'include' parameter omitted.
+   */
+  protected function omitInclude(string $url): string {
+    // First replace the hash, so we don't get served the actual file on disk.
+    $url = $this->replaceGroupHash($url);
+    $parts = UrlHelper::parse($url);
+    unset($parts['query']['include']);
+    $query = UrlHelper::buildQuery($parts['query']);
+    return $this->getAbsoluteUrl($parts['path'] . '?' . $query . '#' . $parts['fragment']);
+  }
+
+  /**
+   * Replaces the 'include' query parameter with an invalid value.
+   *
+   * @param string $url
+   *   The source URL.
+   *
+   * @return string
+   *   The URL with 'include' set to an arbitrary string.
+   */
+  protected function invalidInclude(string $url): string {
+    // First replace the hash, so we don't get served the actual file on disk.
+    $url = $this->replaceGroupHash($url);
+    $parts = UrlHelper::parse($url);
+    $parts['query']['include'] = 'abcdefghijklmnop';
+    $query = UrlHelper::buildQuery($parts['query']);
+    return $this->getAbsoluteUrl($parts['path'] . '?' . $query . '#' . $parts['fragment']);
+  }
+
+  /**
+   * Adds an invalid 'exclude' query parameter with an invalid value.
+   *
+   * @param string $url
+   *   The source URL.
+   *
+   * @return string
+   *   The URL with 'exclude' set to an arbitrary string.
+   */
+  protected function invalidExclude(string $url): string {
+    // First replace the hash, so we don't get served the actual file on disk.
+    $url = $this->replaceGroupHash($url);
+    $parts = UrlHelper::parse($url);
+    $parts['query']['exclude'] = 'abcdefghijklmnop';
     $query = UrlHelper::buildQuery($parts['query']);
     return $this->getAbsoluteUrl($parts['path'] . '?' . $query . '#' . $parts['fragment']);
   }
