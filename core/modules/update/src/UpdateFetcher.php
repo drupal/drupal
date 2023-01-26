@@ -21,7 +21,7 @@ class UpdateFetcher implements UpdateFetcherInterface {
   const UPDATE_DEFAULT_URL = 'https://updates.drupal.org/release-history';
 
   /**
-   * The fetch url configured in the update settings.
+   * The fetch URL configured in the update settings.
    *
    * @var string
    */

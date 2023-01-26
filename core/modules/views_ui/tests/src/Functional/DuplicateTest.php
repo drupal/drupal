@@ -42,7 +42,7 @@ class DuplicateTest extends UITestBase {
     $this->drupalGet('admin/structure/views/view/' . $random_view['id'] . '/duplicate');
     $this->submitForm($view, 'Duplicate');
 
-    // Assert that the page url is correct.
+    // Assert that the page URL is correct.
     $this->assertSession()->addressEquals('admin/structure/views/view/' . $view['id']);
 
     // Assert that the page title is correctly displayed.

@@ -42,7 +42,7 @@ class ContextualLinks extends RenderElement {
    *   render (based on the 'group' key in the *.links.contextual.yml files for
    *   all enabled modules). The value contains an associative array containing
    *   the following keys:
-   *   - route_parameters: The route parameters passed to the url generator.
+   *   - route_parameters: The route parameters passed to the URL generator.
    *   - metadata: Any additional data needed in order to alter the link.
    *   @code
    *     array('#contextual_links' => array(

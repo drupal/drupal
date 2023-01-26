@@ -47,7 +47,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
   protected $config;
 
   /**
-   * The url generator.
+   * The URL generator.
    *
    * @var \Drupal\Core\Routing\UrlGeneratorInterface
    */

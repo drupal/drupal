@@ -207,7 +207,7 @@ trait FunctionalTestSetupTrait {
     // Rebuild the kernel and bring it back to a fully bootstrapped state.
     $this->container = $this->kernel->rebuildContainer();
 
-    // Make sure the url generator has a request object, otherwise calls to
+    // Make sure the URL generator has a request object, otherwise calls to
     // $this->drupalGet() will fail.
     $this->prepareRequestForGenerator();
   }
@@ -236,12 +236,12 @@ trait FunctionalTestSetupTrait {
    *
    * This is used to manipulate how the generator generates paths during tests.
    * It also ensures that calls to $this->drupalGet() will work when running
-   * from run-tests.sh because the url generator no longer looks at the global
+   * from run-tests.sh because the URL generator no longer looks at the global
    * variables that are set there but relies on getting this information from a
    * request object.
    *
    * @param bool $clean_urls
-   *   Whether to mock the request using clean urls.
+   *   Whether to mock the request using clean URLs.
    * @param array $override_server_vars
    *   An array of server variables to override.
    *

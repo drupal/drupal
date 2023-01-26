@@ -555,10 +555,10 @@ class Drupal {
   }
 
   /**
-   * Returns the url generator service.
+   * Returns the URL generator service.
    *
    * @return \Drupal\Core\Routing\UrlGeneratorInterface
-   *   The url generator service.
+   *   The URL generator service.
    */
   public static function urlGenerator() {
     return static::getContainer()->get('url_generator');

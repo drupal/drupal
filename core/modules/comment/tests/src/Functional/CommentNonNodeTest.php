@@ -462,7 +462,7 @@ class CommentNonNodeTest extends BrowserTestBase {
     $this->assertSession()->checkboxChecked('edit-field-foobar-0-status-2');
     $this->assertSession()->fieldNotExists('edit-field-foobar-0-status-0');
 
-    // @todo Check proper url and form https://www.drupal.org/node/2458323
+    // @todo Check proper URL and form https://www.drupal.org/node/2458323
     $this->drupalGet('comment/reply/entity_test/comment/' . $new_entity->id());
     $this->assertSession()->fieldNotExists('subject[0][value]');
     $this->assertSession()->fieldNotExists('comment_body[0][value]');

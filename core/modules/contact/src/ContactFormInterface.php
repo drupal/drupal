@@ -34,12 +34,12 @@ interface ContactFormInterface extends ConfigEntityInterface {
   public function getRedirectPath();
 
   /**
-   * Returns the url object for redirect path.
+   * Returns the \Drupal\Core\Url object for redirect path.
    *
-   * Empty redirect property results a url object of front page.
+   * Empty redirect property results a \Drupal\Core\Url object of front page.
    *
    * @return \Drupal\Core\Url
-   *   The redirect url object.
+   *   The redirect \Drupal\Core\Url object.
    */
   public function getRedirectUrl();
 

@@ -36,7 +36,7 @@ class TwigExtensionTest extends UnitTestCase {
   protected $renderer;
 
   /**
-   * The url generator.
+   * The URL generator.
    *
    * @var \Drupal\Core\Routing\UrlGeneratorInterface|\PHPUnit\Framework\MockObject\MockObject
    */

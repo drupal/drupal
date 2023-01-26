@@ -118,7 +118,7 @@ class UrlTest extends UnitTestCase {
   }
 
   /**
-   * Tests creating a Url from a request.
+   * Tests creating a URL from a request.
    */
   public function testUrlFromRequest() {
     $this->router->expects($this->exactly(3))
@@ -358,7 +358,7 @@ class UrlTest extends UnitTestCase {
     $map[] = ['node_edit', ['node' => '2'], '/node/2/edit'];
 
     foreach ($urls as $url) {
-      // Clone the url so that there is no leak of internal state into the
+      // Clone the URL so that there is no leak of internal state into the
       // other ones.
       $url = clone $url;
       $url_generator = $this->createMock('Drupal\Core\Routing\UrlGeneratorInterface');

@@ -26,7 +26,7 @@ class PathProcessorLanguage implements InboundPathProcessorInterface, OutboundPa
   protected $config;
 
   /**
-   * Language manager for retrieving the url language type.
+   * Language manager for retrieving the URL language type.
    *
    * @var \Drupal\language\ConfigurableLanguageManagerInterface
    */

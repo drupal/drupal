@@ -67,7 +67,7 @@ class PathElement extends Textfield {
           return;
         }
         if ($element['#convert_path'] == self::CONVERT_NONE) {
-          // Url is valid, no conversion required.
+          // URL is valid, no conversion required.
           return;
         }
         // We do the value conversion here whilst the Url object is in scope

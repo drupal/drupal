@@ -93,7 +93,7 @@ class CommentTitleTest extends CommentTestBase {
     // Tests that the comment's title link is the permalink of the comment.
     $comment_permalink = $this->cssSelect('.permalink');
     $comment_permalink = $comment_permalink[0]->getAttribute('href');
-    // Tests that the comment's title link contains the url fragment.
+    // Tests that the comment's title link contains the URL fragment.
     $this->assertStringContainsString('#comment-' . $comment1->id(), $comment_permalink, "The comment's title link contains the url fragment.");
     $this->assertEquals($comment1->permalink()->toString(), $comment_permalink, "The comment's title has the correct link.");
   }
