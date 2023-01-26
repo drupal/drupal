@@ -636,7 +636,7 @@ class UrlHelperTest extends TestCase {
   }
 
   /**
-   * TTests invalid URL arguments.
+   * Tests invalid URL arguments.
    *
    * @param string $url
    *   The URL to test.
