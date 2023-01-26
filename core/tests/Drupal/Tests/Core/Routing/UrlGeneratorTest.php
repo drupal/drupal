@@ -34,7 +34,7 @@ class UrlGeneratorTest extends UnitTestCase {
   protected $provider;
 
   /**
-   * The url generator to test.
+   * The URL generator to test.
    *
    * @var \Drupal\Core\Routing\UrlGenerator
    */
@@ -452,7 +452,7 @@ class UrlGeneratorTest extends UnitTestCase {
   }
 
   /**
-   * Tests that the 'scheme' route requirement is respected during url
+   * Tests that the 'scheme' route requirement is respected during URL
    * generation.
    */
   public function testUrlGenerationWithHttpsRequirement() {

@@ -149,7 +149,7 @@ class TermAutocompleteTest extends TaxonomyTestBase {
    * @param string|\Drupal\Core\Url $path
    *   Drupal path or URL to load into Mink controlled browser.
    * @param array $options
-   *   (optional) Options to be forwarded to the url generator.
+   *   (optional) Options to be forwarded to the URL generator.
    * @param string[] $headers
    *   (optional) An array containing additional HTTP request headers.
    *

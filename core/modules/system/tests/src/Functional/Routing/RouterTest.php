@@ -230,7 +230,7 @@ class RouterTest extends BrowserTestBase {
   }
 
   /**
-   * Checks the generate method on the url generator using the front router.
+   * Checks the generate method on the URL generator using the front router.
    */
   public function testUrlGeneratorFront() {
     $front_url = Url::fromRoute('<front>', [], ['absolute' => TRUE]);

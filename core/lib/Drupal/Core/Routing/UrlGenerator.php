@@ -163,7 +163,7 @@ class UrlGenerator implements UrlGeneratorInterface {
    *   The route name or other identifying string from ::getRouteDebugMessage().
    *
    * @return string
-   *   The url path, without any base path, without the query string, not URL
+   *   The URL path, without any base path, without the query string, not URL
    *   encoded.
    *
    * @throws \Symfony\Component\Routing\Exception\MissingMandatoryParametersException

@@ -102,7 +102,7 @@ class TwigExtension extends AbstractExtension {
     return [
       // This function will receive a renderable array, if an array is detected.
       new TwigFunction('render_var', [$this, 'renderVar']),
-      // The url and path function are defined in close parallel to those found
+      // The URL and path function are defined in close parallel to those found
       // in \Symfony\Bridge\Twig\Extension\RoutingExtension
       new TwigFunction('url', [$this, 'getUrl'], ['is_safe_callback' => [$this, 'isUrlGenerationSafe']]),
       new TwigFunction('path', [$this, 'getPath'], ['is_safe_callback' => [$this, 'isUrlGenerationSafe']]),
@@ -230,7 +230,7 @@ class TwigExtension extends AbstractExtension {
   }
 
   /**
-   * Gets a rendered link from a url object.
+   * Gets a rendered link from a URL object.
    *
    * @param string $text
    *   The link text for the anchor tag as a translated string.

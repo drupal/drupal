@@ -495,7 +495,7 @@ class Url implements TrustedCallbackInterface {
   }
 
   /**
-   * Sets this Url to encapsulate an unrouted URI.
+   * Sets this URL to encapsulate an unrouted URI.
    *
    * @return $this
    */
@@ -537,7 +537,7 @@ class Url implements TrustedCallbackInterface {
   }
 
   /**
-   * Indicates if this Url is external.
+   * Indicates if this URL is external.
    *
    * @return bool
    */
@@ -546,7 +546,7 @@ class Url implements TrustedCallbackInterface {
   }
 
   /**
-   * Indicates if this Url has a Drupal route.
+   * Indicates if this URL has a Drupal route.
    *
    * @return bool
    */
@@ -727,7 +727,7 @@ class Url implements TrustedCallbackInterface {
    * Sets the value of the absolute option for this Url.
    *
    * @param bool $absolute
-   *   (optional) Whether to make this Url absolute or not. Defaults to TRUE.
+   *   (optional) Whether to make this URL absolute or not. Defaults to TRUE.
    *
    * @return $this
    */
@@ -829,13 +829,13 @@ class Url implements TrustedCallbackInterface {
   }
 
   /**
-   * Checks a Url render element against applicable access check services.
+   * Checks a URL render element against applicable access check services.
    *
    * @param array $element
    *   A render element as returned from \Drupal\Core\Url::toRenderArray().
    *
    * @return bool
-   *   Returns TRUE if the current user has access to the url, otherwise FALSE.
+   *   Returns TRUE if the current user has access to the URL, otherwise FALSE.
    */
   public static function renderAccess(array $element) {
     return $element['#url']->access();

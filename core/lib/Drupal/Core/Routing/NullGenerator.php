@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
 
 /**
- * No-op implementation of a Url Generator, needed for backward compatibility.
+ * No-op implementation of a URL Generator, needed for backward compatibility.
  */
 class NullGenerator extends UrlGenerator {
 

@@ -104,7 +104,7 @@ class UpdateFetcherTest extends UnitTestCase implements LoggerInterface {
    * @param string $site_key
    *   A string to mimic an anonymous site key hash.
    * @param string $expected
-   *   The expected url returned from UpdateFetcher::buildFetchUrl()
+   *   The expected URL returned from UpdateFetcher::buildFetchUrl()
    *
    * @dataProvider providerTestUpdateBuildFetchUrl
    *
@@ -123,7 +123,7 @@ class UpdateFetcherTest extends UnitTestCase implements LoggerInterface {
    *   An array of arrays, each containing:
    *   - 'project' - An array matching a project's .info file structure.
    *   - 'site_key' - An arbitrary site key.
-   *   - 'expected' - The expected url from UpdateFetcher::buildFetchUrl().
+   *   - 'expected' - The expected URL from UpdateFetcher::buildFetchUrl().
    */
   public function providerTestUpdateBuildFetchUrl() {
     $data = [];

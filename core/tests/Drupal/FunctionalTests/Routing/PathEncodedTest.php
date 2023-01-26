@@ -7,7 +7,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 
 /**
- * Tests url generation and routing for route paths with encoded characters.
+ * Tests URL generation and routing for route paths with encoded characters.
  *
  * @group path
  * @group routing

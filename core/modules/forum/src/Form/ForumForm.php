@@ -22,7 +22,7 @@ class ForumForm extends TermForm {
   protected $forumFormType;
 
   /**
-   * Reusable url stub to use in watchdog messages.
+   * Reusable URL stub to use in watchdog messages.
    *
    * @var string
    */

@@ -237,7 +237,7 @@ class ViewExecutable {
   public $row_index;
 
   /**
-   * Allow to override the url of the current view.
+   * Allow to override the \Drupal\Core\Url of the current view.
    *
    * @var \Drupal\Core\Url
    */

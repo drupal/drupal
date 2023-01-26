@@ -100,9 +100,9 @@ class LanguageNegotiationContentEntity extends LanguageNegotiationMethodBase imp
    * {@inheritdoc}
    */
   public function processOutbound($path, &$options = [], Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
-    // If appropriate, process outbound to add a query parameter to the url and
-    // remove the language option, so that url negotiator does not rewrite the
-    // url.
+    // If appropriate, process outbound to add a query parameter to the URL and
+    // remove the language option, so that URL negotiator does not rewrite the
+    // URL.
 
     // First, check if processing conditions are met.
     if (!($request && !empty($options['route']) && $this->hasLowerLanguageNegotiationWeight() && $this->meetsContentEntityRoutesCondition($options['route'], $request))) {
@@ -110,8 +110,8 @@ class LanguageNegotiationContentEntity extends LanguageNegotiationMethodBase imp
     }
 
     if (isset($options['language']) || $langcode = $this->getLangcode($request)) {
-      // If the language option is set, unset it, so that the url language
-      // negotiator does not rewrite the url.
+      // If the language option is set, unset it, so that the URL language
+      // negotiator does not rewrite the URL.
       if (isset($options['language'])) {
         $langcode = $options['language']->getId();
         unset($options['language']);
@@ -158,13 +158,13 @@ class LanguageNegotiationContentEntity extends LanguageNegotiationMethodBase imp
   /**
    * Determines if content entity language negotiator has higher priority.
    *
-   * The content entity language negotiator having higher priority than the url
+   * The content entity language negotiator having higher priority than the URL
    * language negotiator, is a criteria in
    * \Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationContentEntity::processOutbound().
    *
    * @return bool
    *   TRUE if the content entity language negotiator has higher priority than
-   *   the url language negotiator, FALSE otherwise.
+   *   the URL language negotiator, FALSE otherwise.
    */
   protected function hasLowerLanguageNegotiationWeight() {
     if (!isset($this->hasLowerLanguageNegotiationWeightResult)) {
@@ -173,7 +173,7 @@ class LanguageNegotiationContentEntity extends LanguageNegotiationMethodBase imp
       $content_method_weights = $this->config->get('language.types')->get('negotiation.language_content.enabled') ?: [];
 
       // Check if the content language is configured to be dependent on the
-      // url negotiator directly or indirectly over the interface negotiator.
+      // URL negotiator directly or indirectly over the interface negotiator.
       if (isset($content_method_weights[LanguageNegotiationUrl::METHOD_ID]) && ($content_method_weights[static::METHOD_ID] > $content_method_weights[LanguageNegotiationUrl::METHOD_ID])) {
         $this->hasLowerLanguageNegotiationWeightResult = FALSE;
       }
@@ -202,7 +202,7 @@ class LanguageNegotiationContentEntity extends LanguageNegotiationMethodBase imp
    * Determines if content entity route condition is met.
    *
    * Requirements: currently being on a content entity route and processing
-   * outbound url pointing to the same content entity.
+   * outbound URL pointing to the same content entity.
    *
    * @param \Symfony\Component\Routing\Route $outbound_route
    *   The route object for the current outbound url being processed.
