@@ -365,10 +365,14 @@
       // disabled previously. Pseudo-fields do not have default formatters,
       // we just return to 'visible' for those.
       if (this.region === 'hidden') {
+        const pluginSelect =
+          typeof this.$pluginSelect.find('option')[0] !== 'undefined'
+            ? this.$pluginSelect.find('option')[0].value
+            : undefined;
         const value =
           typeof this.defaultPlugin !== 'undefined'
             ? this.defaultPlugin
-            : this.$pluginSelect.find('option')[0].value;
+            : pluginSelect;
 
         if (typeof value !== 'undefined') {
           if (this.$pluginSelect.length) {

@@ -150,7 +150,8 @@
         this.$regionSelect[0].value = region;
       }
       if (this.region === 'hidden') {
-        var value = typeof this.defaultPlugin !== 'undefined' ? this.defaultPlugin : this.$pluginSelect.find('option')[0].value;
+        var pluginSelect = typeof this.$pluginSelect.find('option')[0] !== 'undefined' ? this.$pluginSelect.find('option')[0].value : undefined;
+        var value = typeof this.defaultPlugin !== 'undefined' ? this.defaultPlugin : pluginSelect;
         if (typeof value !== 'undefined') {
           if (this.$pluginSelect.length) {
             this.$pluginSelect[0].value = value;
