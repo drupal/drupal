@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Route;
 
 /**
- * Defines a route subscriber to register a url for serving image styles.
+ * Defines a route subscriber to register a URL for serving image styles.
  */
 class ImageStyleRoutes implements ContainerInjectionInterface {
 

@@ -82,7 +82,7 @@ class UrlHelperTest extends TestCase {
    * @covers ::isValid
    *
    * @param string $url
-   *   The url to test.
+   *   The URL to test.
    * @param string $scheme
    *   The scheme to test.
    */
@@ -137,7 +137,7 @@ class UrlHelperTest extends TestCase {
    * @covers ::isValid
    *
    * @param string $url
-   *   The url to test.
+   *   The URL to test.
    * @param string $scheme
    *   The scheme to test.
    */
@@ -171,7 +171,7 @@ class UrlHelperTest extends TestCase {
    * @covers ::isValid
    *
    * @param string $url
-   *   The url to test.
+   *   The URL to test.
    * @param string $prefix
    *   The prefix to test.
    */
@@ -202,7 +202,7 @@ class UrlHelperTest extends TestCase {
    * @covers ::isValid
    *
    * @param string $url
-   *   The url to test.
+   *   The URL to test.
    * @param string $prefix
    *   The prefix to test.
    */
@@ -254,7 +254,7 @@ class UrlHelperTest extends TestCase {
   }
 
   /**
-   * Tests url parsing.
+   * Tests URL parsing.
    *
    * @dataProvider providerTestParse
    * @covers ::parse
@@ -502,7 +502,7 @@ class UrlHelperTest extends TestCase {
   }
 
   /**
-   * Tests dangerous url protocol filtering.
+   * Tests dangerous URL protocol filtering.
    *
    * @dataProvider providerTestStripDangerousProtocols
    * @covers ::setAllowedProtocols
@@ -584,12 +584,12 @@ class UrlHelperTest extends TestCase {
    * Tests detecting external urls that point to local resources.
    *
    * @param string $url
-   *   The external url to test.
+   *   The external URL to test.
    * @param string $base_url
-   *   The base url.
+   *   The base URL.
    * @param bool $expected
    *   TRUE if an external URL points to this installation as determined by the
-   *   base url.
+   *   base URL.
    *
    * @covers ::externalIsLocal
    * @dataProvider providerTestExternalIsLocal
@@ -599,7 +599,7 @@ class UrlHelperTest extends TestCase {
   }
 
   /**
-   * Provider for local external url detection.
+   * Provider for local external URL detection.
    *
    * @see \Drupal\Tests\Component\Utility\UrlHelperTest::testExternalIsLocal()
    */
@@ -636,12 +636,12 @@ class UrlHelperTest extends TestCase {
   }
 
   /**
-   * Tests invalid url arguments.
+   * TTests invalid URL arguments.
    *
    * @param string $url
-   *   The url to test.
+   *   The URL to test.
    * @param string $base_url
-   *   The base url.
+   *   The base URL.
    *
    * @covers ::externalIsLocal
    * @dataProvider providerTestExternalIsLocalInvalid
@@ -652,7 +652,7 @@ class UrlHelperTest extends TestCase {
   }
 
   /**
-   * Provides invalid argument data for local external url detection.
+   * Provides invalid argument data for local external URL detection.
    *
    * @see \Drupal\Tests\Component\Utility\UrlHelperTest::testExternalIsLocalInvalid()
    */

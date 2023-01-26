@@ -6,7 +6,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
- * Tests upcasting of url arguments to entities.
+ * Tests upcasting of URL arguments to entities.
  *
  * @group ParamConverter
  */

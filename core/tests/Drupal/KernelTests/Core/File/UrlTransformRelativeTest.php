@@ -6,7 +6,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests url transform to relative.
+ * Tests URL transform to relative.
  *
  * @group Utility
  */

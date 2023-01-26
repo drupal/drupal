@@ -27,7 +27,7 @@ use Symfony\Component\Routing\Route;
  *         type: entity:node
  * @endcode
  *
- * If you want to have the entity type itself dynamic in the url you can
+ * If you want to have the entity type itself dynamic in the URL you can
  * specify it like the following:
  * @code
  * example.route:

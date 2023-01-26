@@ -7,7 +7,7 @@ use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
 /**
- * Process the file url into a D8 compatible URL.
+ * Process the file URL into a D8 compatible URL.
  *
  * @MigrateProcessPlugin(
  *   id = "file_uri"

@@ -115,7 +115,7 @@ class ContactSitewideTest extends BrowserTestBase {
     // Default form exists.
     $this->assertSession()->linkByHrefExists('admin/structure/contact/manage/feedback/delete');
     // User form could not be changed or deleted.
-    // Cannot use ::assertNoLinkByHref as it does partial url matching and with
+    // Cannot use ::assertNoLinkByHref as it does partial URL matching and with
     // field_ui enabled admin/structure/contact/manage/personal/fields exists.
     // @todo: See https://www.drupal.org/node/2031223 for the above.
     $url = Url::fromRoute('entity.contact_form.edit_form', ['contact_form' => 'personal'])->toString();
