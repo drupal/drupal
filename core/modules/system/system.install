@@ -416,15 +416,16 @@ function system_requirements($phase) {
 
   // Check to see if APCu is installed and configured correctly.
   if ($phase == 'runtime' && PHP_SAPI != 'cli') {
-    $requirements['php_apcu']['title'] = t('PHP APCu caching');
+    $requirements['php_apcu_enabled']['title'] = t('PHP APCu caching');
+    $requirements['php_apcu_available']['title'] = t('PHP APCu available caching');
     if (extension_loaded('apcu') && filter_var(ini_get('apc.enabled'), FILTER_VALIDATE_BOOLEAN)) {
       $memory_info = apcu_sma_info(TRUE);
       $apcu_actual_size = format_size($memory_info['seg_size']);
       $apcu_recommended_size = '32 MB';
-      $requirements['php_apcu']['value'] = t('Enabled (@size)', ['@size' => $apcu_actual_size]);
+      $requirements['php_apcu_enabled']['value'] = t('Enabled (@size)', ['@size' => $apcu_actual_size]);
       if (Bytes::toNumber($apcu_actual_size) < Bytes::toNumber($apcu_recommended_size)) {
-        $requirements['php_apcu']['severity'] = REQUIREMENT_WARNING;
-        $requirements['php_apcu']['description'] = t('Depending on your configuration, Drupal can run with a @apcu_size APCu limit. However, a @apcu_default_size APCu limit (the default) or above is recommended, especially if your site uses additional custom or contributed modules.', [
+        $requirements['php_apcu_enabled']['severity'] = REQUIREMENT_WARNING;
+        $requirements['php_apcu_enabled']['description'] = t('Depending on your configuration, Drupal can run with a @apcu_size APCu limit. However, a @apcu_default_size APCu limit (the default) or above is recommended, especially if your site uses additional custom or contributed modules.', [
           '@apcu_size' => $apcu_actual_size,
           '@apcu_default_size' => $apcu_recommended_size,
         ]);
@@ -432,21 +433,27 @@ function system_requirements($phase) {
       else {
         $memory_available = $memory_info['avail_mem'] / $memory_info['seg_size'];
         if ($memory_available < 0.1) {
-          $requirements['php_apcu']['severity'] = REQUIREMENT_ERROR;
+          $requirements['php_apcu_available']['severity'] = REQUIREMENT_ERROR;
+          $requirements['php_apcu_available']['description'] = t('APCu is using over 90% of its allotted memory (@apcu_actual_size). To improve APCu performance, consider increasing this limit.', [
+            '@apcu_actual_size' => $apcu_actual_size,
+          ]);
         }
         elseif ($memory_available < 0.25) {
-          $requirements['php_apcu']['severity'] = REQUIREMENT_WARNING;
+          $requirements['php_apcu_available']['severity'] = REQUIREMENT_WARNING;
+          $requirements['php_apcu_available']['description'] = t('APCu is using over 75% of its allotted memory (@apcu_actual_size). To improve APCu performance, consider increasing this limit.', [
+            '@apcu_actual_size' => $apcu_actual_size,
+          ]);
         }
         else {
-          $requirements['php_apcu']['severity'] = REQUIREMENT_OK;
+          $requirements['php_apcu_available']['severity'] = REQUIREMENT_OK;
         }
-        $requirements['php_apcu']['description'] = t('Memory available: @available.', [
+        $requirements['php_apcu_available']['value'] = t('Memory available: @available.', [
           '@available' => format_size($memory_info['avail_mem']),
         ]);
       }
     }
     else {
-      $requirements['php_apcu'] += [
+      $requirements['php_apcu_enabled'] += [
         'value' => t('Not enabled'),
         'severity' => REQUIREMENT_INFO,
         'description' => t('PHP APCu caching can improve your site\'s performance considerably. It is <strong>highly recommended</strong> to have <a href="https://www.php.net/manual/apcu.installation.php" target="_blank">APCu</a> installed on your server.'),
