@@ -89,3 +89,8 @@ menu_test.access_check:
   title: 'Test custom route access check'
   route_name: menu_test.router_test_session
   menu_name: account
+
+menu_test.admin_description:
+  title: 'Test custom admin block without description'
+  parent: system.admin_config_content
+  route_name: menu_test.menu_name_test

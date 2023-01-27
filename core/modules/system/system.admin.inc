@@ -29,7 +29,7 @@ function template_preprocess_admin_block_content(&$variables) {
     $variables['compact'] = system_admin_compact_mode();
     foreach ($variables['content'] as $key => $item) {
       $variables['content'][$key]['link'] = Link::fromTextAndUrl($item['title'], $item['url'])->toString();
-      if (!$variables['compact'] && isset($item['description'])) {
+      if (!$variables['compact'] && !empty($item['description'])) {
         $variables['content'][$key]['description'] = ['#markup' => $item['description']];
       }
       else {
