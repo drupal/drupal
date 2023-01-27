@@ -37,7 +37,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'starterkit_theme';
+  protected $defaultTheme = 'stark';
 
   /**
    * Tests basic page test.

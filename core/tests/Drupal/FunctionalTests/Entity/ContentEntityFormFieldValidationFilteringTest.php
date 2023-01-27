@@ -53,7 +53,7 @@ class ContentEntityFormFieldValidationFilteringTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'starterkit_theme';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -135,9 +135,9 @@ class ContentEntityFormFieldValidationFilteringTest extends BrowserTestBase {
     // The 'Test multiple' field is the only multi-valued field in the form, so
     // try to add a new item for it. This tests the '#limit_validation_errors'
     // property set by \Drupal\Core\Field\WidgetBase::formMultipleElements().
-    $assert_session->elementsCount('css', 'div#edit-test-multiple-wrapper div.form-type-textfield input', 1);
+    $assert_session->elementsCount('css', 'div#edit-test-multiple-wrapper div.js-form-type-textfield input', 1);
     $this->submitForm([], 'Add another item');
-    $assert_session->elementsCount('css', 'div#edit-test-multiple-wrapper div.form-type-textfield input', 2);
+    $assert_session->elementsCount('css', 'div#edit-test-multiple-wrapper div.js-form-type-textfield input', 2);
 
     // Now try to upload a file. This tests the '#limit_validation_errors'
     // property set by

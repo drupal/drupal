@@ -15,7 +15,7 @@ class InstallerTranslationTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'starterkit_theme';
+  protected $defaultTheme = 'test_theme';
 
   /**
    * Overrides the language code in which to install Drupal.
@@ -107,7 +107,7 @@ class InstallerTranslationTest extends InstallerTestBase {
     $this->drupalGet('admin/config/development/performance');
     $this->submitForm($edit, 'Save configuration');
     $this->drupalGet('<front>');
-    $this->assertSession()->responseContains('starterkit_theme/css/components/action-links.css');
+    $this->assertSession()->responseContains('my_theme/css/my-container-inline.css');
 
     // Verify the strings from the translation files were imported.
     $test_samples = ['Save and continue', 'Anonymous'];
