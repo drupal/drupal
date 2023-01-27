@@ -274,13 +274,13 @@ class ExtensionDiscovery {
     }
 
     $all_files = array_filter($all_files, function ($file) {
-      if (strpos($file->subpath, 'profiles') !== 0) {
+      if (!str_starts_with($file->subpath, 'profiles')) {
         // This extension doesn't belong to a profile, ignore it.
         return TRUE;
       }
 
       foreach ($this->profileDirectories as $profile_path) {
-        if (strpos($file->getPath(), $profile_path) === 0) {
+        if (str_starts_with($file->getPath(), $profile_path)) {
           // Parent profile found.
           return TRUE;
         }
@@ -309,7 +309,7 @@ class ExtensionDiscovery {
     foreach ($all_files as $key => $file) {
       // If the extension does not belong to a profile, just apply the weight
       // of the originating directory.
-      if (strpos($file->subpath, 'profiles') !== 0) {
+      if (!str_starts_with($file->subpath, 'profiles')) {
         $origins[$key] = $weights[$file->origin];
         $profiles[$key] = NULL;
       }
@@ -323,7 +323,7 @@ class ExtensionDiscovery {
       else {
         // Apply the weight of the originating profile directory.
         foreach ($this->profileDirectories as $weight => $profile_path) {
-          if (strpos($file->getPath(), $profile_path) === 0) {
+          if (str_starts_with($file->getPath(), $profile_path)) {
             $origins[$key] = static::ORIGIN_PROFILE;
             $profiles[$key] = $weight;
             continue 2;

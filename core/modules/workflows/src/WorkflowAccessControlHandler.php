@@ -54,7 +54,7 @@ class WorkflowAccessControlHandler extends EntityAccessControlHandler implements
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     /** @var \Drupal\workflows\Entity\Workflow $entity */
     $workflow_type = $entity->getTypePlugin();
-    if (strpos($operation, 'delete-state') === 0) {
+    if (str_starts_with($operation, 'delete-state')) {
       [, $state_id] = explode(':', $operation, 2);
       // Deleting a state is editing a workflow, but also we should forbid
       // access if there is only one state.

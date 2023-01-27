@@ -100,7 +100,7 @@ class RoutePreloader implements EventSubscriberInterface {
   public function onAlterRoutes(RouteBuildEvent $event) {
     $collection = $event->getRouteCollection();
     foreach ($collection->all() as $name => $route) {
-      if (strpos($route->getPath(), '/admin/') !== 0 && $route->getPath() != '/admin' && static::isGetAndHtmlRoute($route)) {
+      if (!str_starts_with($route->getPath(), '/admin/') && $route->getPath() != '/admin' && static::isGetAndHtmlRoute($route)) {
         $this->nonAdminRoutesOnRebuild[] = $name;
       }
     }

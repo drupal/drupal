@@ -92,7 +92,7 @@ abstract class FieldableEntity extends DrupalSqlBase {
     foreach ($query->execute() as $row) {
       foreach ($row as $key => $value) {
         $delta = $row['delta'];
-        if (strpos($key, $field) === 0) {
+        if (str_starts_with($key, $field)) {
           $column = substr($key, strlen($field) + 1);
           $values[$delta][$column] = $value;
         }

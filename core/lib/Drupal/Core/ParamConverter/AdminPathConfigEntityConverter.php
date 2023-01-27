@@ -68,7 +68,7 @@ class AdminPathConfigEntityConverter extends EntityConverter {
     }
     // If the entity type is dynamic, confirm it to be a config entity. Static
     // entity types will have performed this check in self::applies().
-    if (strpos($definition['type'], 'entity:{') === 0) {
+    if (str_starts_with($definition['type'], 'entity:{')) {
       $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
       if (!$entity_type->entityClassImplements(ConfigEntityInterface::class)) {
         return parent::convert($value, $definition, $name, $defaults);
@@ -92,7 +92,7 @@ class AdminPathConfigEntityConverter extends EntityConverter {
     if (parent::applies($definition, $name, $route)) {
       $entity_type_id = substr($definition['type'], strlen('entity:'));
       // If the entity type is dynamic, defer checking to self::convert().
-      if (strpos($entity_type_id, '{') === 0) {
+      if (str_starts_with($entity_type_id, '{')) {
         return TRUE;
       }
       // As we only want to override EntityConverter for ConfigEntities, find

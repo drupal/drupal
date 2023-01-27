@@ -125,7 +125,7 @@ abstract class LocalStream implements StreamWrapperInterface {
     // filesystem stream wrapper URI, in which case this local stream acts like
     // a proxy. realpath() is not supported by vfsStream, because a virtual
     // file system does not have a real filepath.
-    if (strpos($path, 'vfs://') === 0) {
+    if (str_starts_with($path, 'vfs://')) {
       return $path;
     }
 
@@ -135,7 +135,7 @@ abstract class LocalStream implements StreamWrapperInterface {
       $realpath = realpath(dirname($path)) . '/' . \Drupal::service('file_system')->basename($path);
     }
     $directory = realpath($this->getDirectoryPath());
-    if (!$realpath || !$directory || strpos($realpath, $directory) !== 0) {
+    if (!$realpath || !$directory || !str_starts_with($realpath, $directory)) {
       return FALSE;
     }
     return $realpath;

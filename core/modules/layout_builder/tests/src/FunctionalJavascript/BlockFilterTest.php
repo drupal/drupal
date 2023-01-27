@@ -116,7 +116,7 @@ class BlockFilterTest extends WebDriverTestBase {
     $this->assertCount(0, $visible_categories);
     $announce_element = $page->find('css', '#drupal-live-announce');
     $page->waitFor(2, function () use ($announce_element) {
-      return strpos($announce_element->getText(), '0 blocks are available') === 0;
+      return str_starts_with($announce_element->getText(), '0 blocks are available');
     });
 
     // Test Drupal.announce() message when all blocks are listed.

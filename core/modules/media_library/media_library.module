@@ -165,7 +165,7 @@ function media_library_views_pre_render(ViewExecutable $view) {
         $add_classes($view->field['media_bulk_form']->options['element_class'], ['js-click-to-select-checkbox']);
       }
     }
-    elseif (strpos($view->current_display, 'widget') === 0) {
+    elseif (str_starts_with($view->current_display, 'widget')) {
       if (array_key_exists('media_library_select_form', $view->field)) {
         $add_classes($view->field['media_library_select_form']->options['element_wrapper_class'], ['js-click-to-select-checkbox']);
       }
@@ -189,7 +189,7 @@ function media_library_views_pre_render(ViewExecutable $view) {
 function media_library_views_post_render(ViewExecutable $view, &$output, CachePluginBase $cache) {
   if ($view->id() === 'media_library') {
     $output['#attached']['library'][] = 'media_library/view';
-    if (strpos($view->current_display, 'widget') === 0) {
+    if (str_starts_with($view->current_display, 'widget')) {
       try {
         $query = MediaLibraryState::fromRequest($view->getRequest())->all();
       }
@@ -291,7 +291,7 @@ function media_library_form_views_form_media_library_page_alter(array &$form, Fo
 function media_library_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
   // Add a process callback to ensure that the media library view's exposed
   // filters submit button is not moved to the modal dialog's button area.
-  if ($form_id === 'views_exposed_form' && strpos($form['#id'], 'views-exposed-form-media-library-widget') === 0) {
+  if ($form_id === 'views_exposed_form' && str_starts_with($form['#id'], 'views-exposed-form-media-library-widget')) {
     $form['#after_build'][] = '_media_library_views_form_media_library_after_build';
   }
 

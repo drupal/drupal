@@ -678,7 +678,7 @@ function content_translation_page_attachments(&$page) {
 
   // Determine if the current route represents an entity.
   foreach ($parameters as $name => $options) {
-    if (!isset($options['type']) || strpos($options['type'], 'entity:') !== 0) {
+    if (!isset($options['type']) || !str_starts_with($options['type'], 'entity:')) {
       continue;
     }
 

@@ -206,7 +206,7 @@ class RssFields extends RowPluginBase {
   protected function getAbsoluteUrl($url_string) {
     // If the given URL already starts with a leading slash, it's been processed
     // and we need to simply make it an absolute path by prepending the host.
-    if (strpos($url_string, '/') === 0) {
+    if (str_starts_with($url_string, '/')) {
       $host = \Drupal::request()->getSchemeAndHttpHost();
       // @todo Views should expect and store a leading /.
       // @see https://www.drupal.org/node/2423913

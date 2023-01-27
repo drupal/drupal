@@ -163,7 +163,7 @@ EOD;
     ];
 
     foreach ($bomMap as $bom => $encoding) {
-      if (strpos($data, $bom) === 0) {
+      if (str_starts_with($data, $bom)) {
         return $encoding;
       }
     }

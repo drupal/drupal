@@ -541,7 +541,7 @@ class Schema extends DatabaseSchema {
     $indexes = [];
     $result = $this->connection->query('PRAGMA [' . $info['schema'] . '].index_list([' . $info['table'] . '])');
     foreach ($result as $row) {
-      if (strpos($row->name, 'sqlite_autoindex_') !== 0) {
+      if (!str_starts_with($row->name, 'sqlite_autoindex_')) {
         $indexes[] = [
           'schema_key' => $row->unique ? 'unique keys' : 'indexes',
           'name' => $row->name,

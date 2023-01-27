@@ -63,7 +63,7 @@ class ComposerIntegrationTest extends UnitTestCase {
       foreach ($content[$composer_key] as $dependency => $version) {
         // We allow tildes if the dependency is a Symfony component.
         // @see https://www.drupal.org/node/2887000
-        if (strpos($dependency, 'symfony/') === 0) {
+        if (str_starts_with($dependency, 'symfony/')) {
           continue;
         }
         $this->assertStringNotContainsString('~', $version, "Dependency $dependency in $path contains a tilde, use a caret.");

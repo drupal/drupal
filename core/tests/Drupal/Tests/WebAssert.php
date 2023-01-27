@@ -50,13 +50,13 @@ class WebAssert extends MinkWebAssert {
       $url = $url->setAbsolute()->toString();
     }
     // Strip the base URL from the beginning for absolute URLs.
-    if ($this->baseUrl !== '' && strpos($url, $this->baseUrl) === 0) {
+    if ($this->baseUrl !== '' && str_starts_with($url, $this->baseUrl)) {
       $url = substr($url, strlen($this->baseUrl));
     }
     $parts = parse_url($url);
     // Make sure there is a forward slash at the beginning of relative URLs for
     // consistency.
-    if (empty($parts['host']) && strpos($url, '/') !== 0) {
+    if (empty($parts['host']) && !str_starts_with($url, '/')) {
       $parts['path'] = '/' . $parts['path'];
     }
     $fragment = empty($parts['fragment']) ? '' : '#' . $parts['fragment'];

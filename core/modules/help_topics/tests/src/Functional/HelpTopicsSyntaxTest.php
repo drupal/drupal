@@ -60,7 +60,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     // Filter out directories outside of core. If you want to run this test
     // on a contrib/custom module, remove the next line.
     $directories = array_filter($directories, function ($directory) {
-      return strpos($directory, 'core') === 0;
+      return str_starts_with($directory, 'core');
     });
 
     // Verify that a few key modules, themes, and profiles are listed, so that
@@ -80,7 +80,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     // Test each topic for compliance with standards, or for failing in the
     // right way.
     foreach (array_keys($definitions) as $id) {
-      if (strpos($id, 'bad_help_topics.') === 0) {
+      if (str_starts_with($id, 'bad_help_topics.')) {
         $this->verifyBadTopic($id, $definitions);
       }
       else {

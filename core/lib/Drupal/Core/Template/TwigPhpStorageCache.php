@@ -74,7 +74,7 @@ class TwigPhpStorageCache implements CacheInterface {
    * {@inheritdoc}
    */
   public function generateKey(string $name, string $className): string {
-    if (strpos($name, '{# inline_template_start #}') === 0) {
+    if (str_starts_with($name, '{# inline_template_start #}')) {
       // $name is an inline template, and can have characters that are not valid
       // for a filename. $suffix is unique for each inline template so we just
       // use the generic name 'inline-template' here.

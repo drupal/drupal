@@ -435,7 +435,7 @@ class OverviewTerms extends FormBase {
 
       // Add an error class if this row contains a form error.
       foreach ($errors as $error_key => $error) {
-        if (strpos($error_key, $key) === 0) {
+        if (str_starts_with($error_key, $key)) {
           $form['terms'][$key]['#attributes']['class'][] = 'error';
         }
       }

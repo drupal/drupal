@@ -125,7 +125,7 @@ class ImageStyleDownloadController extends FileDownloadController {
     // starts with styles/.
     $token = $request->query->get(IMAGE_DERIVATIVE_TOKEN, '');
     $token_is_valid = hash_equals($image_style->getPathToken($image_uri), $token);
-    if (!$this->config('image.settings')->get('allow_insecure_derivatives') || strpos(ltrim($target, '\/'), 'styles/') === 0) {
+    if (!$this->config('image.settings')->get('allow_insecure_derivatives') || str_starts_with(ltrim($target, '\/'), 'styles/')) {
       $valid = $valid && $token_is_valid;
     }
 
@@ -249,7 +249,7 @@ class ImageStyleDownloadController extends FileDownloadController {
     $private_path = Settings::get('file_private_path');
     if ($private_path) {
       $private_path = realpath($private_path);
-      if ($private_path && strpos($image_path, $private_path) === 0) {
+      if ($private_path && str_starts_with($image_path, $private_path)) {
         return FALSE;
       }
     }

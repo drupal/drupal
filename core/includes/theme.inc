@@ -168,7 +168,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
   // implementation.
   foreach ($files as $template => $file) {
     // Ignore sub-theme templates for the current theme.
-    if (strpos($file->uri, str_replace($subtheme_paths, '', $file->uri)) !== 0) {
+    if (!str_starts_with($file->uri, str_replace($subtheme_paths, '', $file->uri))) {
       continue;
     }
     // Remove the extension from the filename.

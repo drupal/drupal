@@ -475,7 +475,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
       )->getNormalization();
     $this->assertNotEmpty($jsonapi_doc_object['meta']['omitted']);
     foreach ($jsonapi_doc_object['meta']['omitted']['links'] as $key => $link) {
-      if (strpos($key, 'item--') === 0) {
+      if (str_starts_with($key, 'item--')) {
         // Ensure that resource link contains url with the alias field.
         $resource_link = Url::fromUri('internal:/jsonapi/user/user/' . $user->uuid() . '/user_roles')->setAbsolute()->toString(TRUE);
         $this->assertEquals($resource_link->getGeneratedUrl(), $link['href']);

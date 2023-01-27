@@ -915,7 +915,7 @@ function file_managed_file_submit($form, FormStateInterface $form_state) {
     if ($element['#multiple']) {
       $remove_fids = [];
       foreach (Element::children($element) as $name) {
-        if (strpos($name, 'file_') === 0 && $element[$name]['selected']['#value']) {
+        if (str_starts_with($name, 'file_') && $element[$name]['selected']['#value']) {
           $remove_fids[] = (int) substr($name, 5);
         }
       }
@@ -1096,7 +1096,7 @@ function file_icon_class($mime_type) {
 
   // Use generic icons for each category that provides such icons.
   foreach (['audio', 'image', 'text', 'video'] as $category) {
-    if (strpos($mime_type, $category) === 0) {
+    if (str_starts_with($mime_type, $category)) {
       return $category;
     }
   }

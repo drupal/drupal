@@ -187,7 +187,7 @@ class Log {
       // If the call was made from a function, 'class' will be empty. We give
       // it a default empty string value in that case.
       $class = $backtrace[$n]['class'] ?? '';
-      if (strpos($class, __NAMESPACE__, 0) === 0 || strpos($class, $driver_namespace, 0) === 0) {
+      if (str_starts_with($class, __NAMESPACE__) || str_starts_with($class, $driver_namespace)) {
         break;
       }
     }

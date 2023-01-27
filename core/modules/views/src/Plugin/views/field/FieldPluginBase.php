@@ -1314,7 +1314,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
         // well.
         $base_path = base_path();
         // Checks whether the path starts with the base_path.
-        if (strpos($more_link_path, $base_path) === 0) {
+        if (str_starts_with($more_link_path, $base_path)) {
           $more_link_path = mb_substr($more_link_path, mb_strlen($base_path));
         }
 
@@ -1434,7 +1434,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       // Tokens might have resolved URL's, as is the case for tokens provided by
       // Link fields, so all internal paths will be prefixed by base_path(). For
       // proper further handling reset this to internal:/.
-      if (strpos($path, base_path()) === 0) {
+      if (str_starts_with($path, base_path())) {
         $path = 'internal:/' . substr($path, strlen(base_path()));
       }
 
@@ -1449,7 +1449,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       // 'http://www.example.com'.
       // Only do this when flag for external has been set, $path doesn't contain
       // a scheme and $path doesn't have a leading /.
-      if ($alter['external'] && !parse_url($path, PHP_URL_SCHEME) && strpos($path, '/') !== 0) {
+      if ($alter['external'] && !parse_url($path, PHP_URL_SCHEME) && !str_starts_with($path, '/')) {
         // There is no scheme, add the default 'http://' to the $path.
         $path = "http://" . $path;
       }

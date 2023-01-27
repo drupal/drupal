@@ -429,7 +429,7 @@ class EntityResource {
       // For example: getting users with a particular role, which is a config
       // entity type: https://www.drupal.org/project/drupal/issues/2959445.
       // @todo Remove the message parsing in https://www.drupal.org/project/drupal/issues/3028967.
-      if (strpos($e->getMessage(), 'Getting the base fields is not supported for entity type') === 0) {
+      if (str_starts_with($e->getMessage(), 'Getting the base fields is not supported for entity type')) {
         preg_match('/entity type (.*)\./', $e->getMessage(), $matches);
         $config_entity_type_id = $matches[1];
         $cacheability = (new CacheableMetadata())->addCacheContexts(['url.path', 'url.query_args:filter']);

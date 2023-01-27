@@ -97,7 +97,7 @@ class DialogTest extends WebDriverTestBase {
     $contents_no_target = $no_target_dialog->find('css', 'div.ui-dialog-content');
     $this->assertNotNull($contents_no_target, 'non-modal dialog opens ( no target ). ');
     $id = $contents_no_target->getAttribute('id');
-    $partial_match = strpos($id, 'drupal-dialog-ajax-testdialog-contents') === 0;
+    $partial_match = str_starts_with($id, 'drupal-dialog-ajax-testdialog-contents');
     $this->assertTrue($partial_match, 'The non-modal ID has the expected prefix.');
 
     $no_target_button = $no_target_dialog->findButton('Close');

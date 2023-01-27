@@ -599,7 +599,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $ignored_headers = ['Date', 'Content-Length', 'X-Drupal-Cache', 'X-Drupal-Dynamic-Cache', 'Transfer-Encoding', 'Vary'];
     $header_cleaner = function ($headers) use ($ignored_headers) {
       foreach ($headers as $header => $value) {
-        if (strpos($header, 'X-Drupal-Assertion-') === 0 || in_array($header, $ignored_headers)) {
+        if (str_starts_with($header, 'X-Drupal-Assertion-') || in_array($header, $ignored_headers)) {
           unset($headers[$header]);
         }
       }

@@ -120,7 +120,7 @@ function menu_link_content_entity_predelete(EntityInterface $entity) {
 
     if ($result) {
       foreach ($result as $id => $instance) {
-        if ($instance->isDeletable() && strpos($id, 'menu_link_content:') === 0) {
+        if ($instance->isDeletable() && str_starts_with($id, 'menu_link_content:')) {
           $instance->deleteLink();
         }
       }

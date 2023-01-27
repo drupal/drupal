@@ -291,7 +291,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
 
   $is_in_supported_branch = function ($version) use ($supported_branches) {
     foreach ($supported_branches as $supported_branch) {
-      if (strpos($version, $supported_branch) === 0) {
+      if (str_starts_with($version, $supported_branch)) {
         return TRUE;
       }
     }

@@ -212,7 +212,7 @@ class Url implements TrustedCallbackInterface {
     // passed is a relative URI reference rather than an absolute URI,
     // because these are URI reserved characters that a scheme name may not
     // start with.
-    if ((strpos($user_input, '/') !== 0) && (strpos($user_input, '#') !== 0) && (strpos($user_input, '?') !== 0)) {
+    if (!str_starts_with($user_input, '/') && !str_starts_with($user_input, '#') && !str_starts_with($user_input, '?')) {
       throw new \InvalidArgumentException("The user-entered string '$user_input' must begin with a '/', '?', or '#'.");
     }
 
@@ -286,7 +286,7 @@ class Url implements TrustedCallbackInterface {
       throw new \InvalidArgumentException("The URI '$uri' is malformed.");
     }
     // We support protocol-relative URLs.
-    if (strpos($uri, '//') === 0) {
+    if (str_starts_with($uri, '//')) {
       $uri_parts['scheme'] = '';
     }
     elseif (empty($uri_parts['scheme'])) {

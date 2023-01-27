@@ -1041,7 +1041,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     ];
     $header_cleaner = function ($headers) use ($ignored_headers) {
       foreach ($headers as $header => $value) {
-        if (strpos($header, 'X-Drupal-Assertion-') === 0 || in_array($header, $ignored_headers)) {
+        if (str_starts_with($header, 'X-Drupal-Assertion-') || in_array($header, $ignored_headers)) {
           unset($headers[$header]);
         }
       }
@@ -2658,7 +2658,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $expected_cacheability->setCacheTags($this->getExpectedCacheTags($field_set));
       $expected_cacheability->setCacheContexts($this->getExpectedCacheContexts($field_set));
       // This tests sparse field sets on included entities.
-      if (strpos($type, 'nested') === 0) {
+      if (str_starts_with($type, 'nested')) {
         $this->grantPermissionsToTestedRole(['access user profiles']);
         $query['fields[user--user]'] = implode(',', $field_set);
         $query['include'] = 'uid';

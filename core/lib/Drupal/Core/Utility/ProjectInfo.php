@@ -153,7 +153,7 @@ class ProjectInfo {
     if (isset($file->info['project'])) {
       $project_name = $file->info['project'];
     }
-    elseif (strpos($file->getPath(), 'core/modules') === 0) {
+    elseif (str_starts_with($file->getPath(), 'core/modules')) {
       $project_name = 'drupal';
     }
     return $project_name;

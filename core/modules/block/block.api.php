@@ -227,7 +227,7 @@ function hook_block_access(\Drupal\block\Entity\Block $block, $operation, \Drupa
  */
 function hook_block_alter(&$definitions) {
   foreach ($definitions as $id => $definition) {
-    if (strpos($id, 'system_menu_block:') === 0) {
+    if (str_starts_with($id, 'system_menu_block:')) {
       // Replace $definition properties: id, deriver, class, provider to ones
       // provided by this custom module.
     }

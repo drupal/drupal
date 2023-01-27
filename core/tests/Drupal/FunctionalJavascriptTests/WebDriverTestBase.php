@@ -111,7 +111,7 @@ abstract class WebDriverTestBase extends BrowserTestBase {
 
       $warnings = $this->getSession()->evaluateScript("JSON.parse(sessionStorage.getItem('js_testing_log_test.warnings') || JSON.stringify([]))");
       foreach ($warnings as $warning) {
-        if (strpos($warning, '[Deprecation]') === 0) {
+        if (str_starts_with($warning, '[Deprecation]')) {
           @trigger_error('Javascript Deprecation:' . substr($warning, 13), E_USER_DEPRECATED);
         }
       }

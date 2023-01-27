@@ -427,7 +427,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
       $element_path = implode('][', $element['#parents']);
       if ($reported_errors = $form_state->getErrors()) {
         foreach (array_keys($reported_errors) as $error_path) {
-          if (strpos($error_path, $element_path) === 0) {
+          if (str_starts_with($error_path, $element_path)) {
             return;
           }
         }

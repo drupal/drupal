@@ -29,7 +29,7 @@ class StringLoader implements LoaderInterface {
    * {@inheritdoc}
    */
   public function exists($name) {
-    if (strpos($name, '{# inline_template_start #}') === 0) {
+    if (str_starts_with($name, '{# inline_template_start #}')) {
       return TRUE;
     }
     else {

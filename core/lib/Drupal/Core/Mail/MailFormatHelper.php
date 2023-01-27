@@ -302,7 +302,7 @@ class MailFormatHelper {
 
     // Do not break MIME headers which could be longer than 77 characters.
     foreach ($mime_headers as $header) {
-      if (strpos($line, $header . ': ') === 0) {
+      if (str_starts_with($line, $header . ': ')) {
         $line_is_mime_header = TRUE;
         break;
       }

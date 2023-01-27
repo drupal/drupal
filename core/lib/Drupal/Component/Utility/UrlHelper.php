@@ -259,7 +259,7 @@ class UrlHelper {
     $path = str_replace('\\', '/', $path);
     // If the path starts with 2 slashes then it is always considered an
     // external URL without an explicit protocol part.
-    return (strpos($path, '//') === 0)
+    return (str_starts_with($path, '//'))
       // Leading control characters may be ignored or mishandled by browsers,
       // so assume such a path may lead to an external location. The \p{C}
       // character class matches all UTF-8 control, unassigned, and private

@@ -45,7 +45,7 @@ class TestViewsTest extends KernelTestBase {
     foreach ($default_config_storage->listAll() as $config_name) {
       // Skip files provided by the config_schema_test module since that module
       // is explicitly for testing schema.
-      if (strpos($config_name, 'config_schema_test') === 0) {
+      if (str_starts_with($config_name, 'config_schema_test')) {
         continue;
       }
 

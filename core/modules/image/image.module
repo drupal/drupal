@@ -139,7 +139,7 @@ function image_file_download($uri) {
   $path = StreamWrapperManager::getTarget($uri);
 
   // Private file access for image style derivatives.
-  if (strpos($path, 'styles/') === 0) {
+  if (str_starts_with($path, 'styles/')) {
     $args = explode('/', $path);
 
     // Discard "styles", style name, and scheme from the path

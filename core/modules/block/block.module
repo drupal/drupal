@@ -127,7 +127,7 @@ function block_theme_initialize($theme) {
     $regions = system_region_list($theme, REGIONS_VISIBLE);
     $default_theme_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties(['theme' => $default_theme]);
     foreach ($default_theme_blocks as $default_theme_block_id => $default_theme_block) {
-      if (strpos($default_theme_block_id, $default_theme . '_') === 0) {
+      if (str_starts_with($default_theme_block_id, $default_theme . '_')) {
         $id = str_replace($default_theme, $theme, $default_theme_block_id);
       }
       else {

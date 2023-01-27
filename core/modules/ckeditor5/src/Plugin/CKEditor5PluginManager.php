@@ -89,7 +89,7 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
 
     $expected_prefix = sprintf("%s_", $definition->getProvider());
     $id = $definition->id();
-    if (strpos($id, $expected_prefix) !== 0) {
+    if (!str_starts_with($id, $expected_prefix)) {
       throw new InvalidPluginDefinitionException($id, sprintf('The "%s" CKEditor 5 plugin definition must have a plugin ID that starts with "%s".', $id, $expected_prefix));
     }
 

@@ -293,7 +293,7 @@ abstract class FileTransfer {
     // Strip out windows drive letter if its there.
     $path = preg_replace('|^([a-z]{1}):|i', '', $path);
     if ($strip_chroot) {
-      if ($this->chrootPath && strpos($path, $this->chrootPath) === 0) {
+      if ($this->chrootPath && str_starts_with($path, $this->chrootPath)) {
         $path = ($path == $this->chrootPath) ? '' : substr($path, strlen($this->chrootPath));
       }
     }

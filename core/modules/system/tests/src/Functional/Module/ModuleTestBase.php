@@ -107,7 +107,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
       // All configuration in a module's config/install directory should depend
       // on the module as it must be removed on uninstall or the module will not
       // be re-installable.
-      $this->assertTrue(strpos($name, $module . '.') === 0 || isset($module_config_dependencies[$name]), "Configuration $name provided by $module in its config/install directory does not depend on it.");
+      $this->assertTrue(str_starts_with($name, $module . '.') || isset($module_config_dependencies[$name]), "Configuration $name provided by $module in its config/install directory does not depend on it.");
     }
     // Verify that all configuration has been installed (which means that $names
     // is empty).

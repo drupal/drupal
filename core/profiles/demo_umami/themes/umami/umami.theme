@@ -118,7 +118,7 @@ function umami_preprocess_links__media_library_menu(array &$variables) {
 function umami_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
   $form_object = $form_state->getFormObject();
 
-  if ($form_object instanceof ViewsForm && strpos($form_object->getBaseFormId(), 'views_form_media_library') === 0) {
+  if ($form_object instanceof ViewsForm && str_starts_with($form_object->getBaseFormId(), 'views_form_media_library')) {
     $form['#attributes']['class'][] = 'media-library-views-form';
   }
 }

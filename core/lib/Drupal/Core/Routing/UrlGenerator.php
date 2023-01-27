@@ -298,7 +298,7 @@ class UrlGenerator implements UrlGeneratorInterface {
     }
     // Ensure the resulting path has at most one leading slash, to prevent it
     // becoming an external URL without a protocol like //example.com.
-    if (strpos($path, '//') === 0) {
+    if (str_starts_with($path, '//')) {
       $path = '/' . ltrim($path, '/');
     }
     // The contexts base URL is already encoded

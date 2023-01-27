@@ -62,7 +62,7 @@ trait ExternalCommandRequirementsTrait {
     // Make a list of required commands.
     $required_commands = [];
     foreach ($annotations as $requirement) {
-      if (strpos($requirement, 'externalCommand ') === 0) {
+      if (str_starts_with($requirement, 'externalCommand ')) {
         $command = trim(str_replace('externalCommand ', '', $requirement));
         // Use named keys to avoid duplicates.
         $required_commands[$command] = $command;

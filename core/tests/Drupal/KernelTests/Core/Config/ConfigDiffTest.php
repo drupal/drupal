@@ -162,7 +162,7 @@ class ConfigDiffTest extends KernelTestBase {
       // Look through each line and try and find the key.
       if (is_array($haystack)) {
         foreach ($haystack as $item) {
-          if (strpos($item, $field . ':') === 0) {
+          if (str_starts_with($item, $field . ':')) {
             $match = TRUE;
             // Assert that the edit is of the type specified.
             $this->assertEquals($type, $edit->type, "The {$field} item in the diff is a {$type}");

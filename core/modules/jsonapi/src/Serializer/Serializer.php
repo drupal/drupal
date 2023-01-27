@@ -34,7 +34,7 @@ final class Serializer extends SymfonySerializer {
    */
   public function __construct(array $normalizers = [], array $encoders = []) {
     foreach ($normalizers as $normalizer) {
-      if (strpos(get_class($normalizer), 'Drupal\jsonapi\Normalizer') !== 0) {
+      if (!str_starts_with(get_class($normalizer), 'Drupal\jsonapi\Normalizer')) {
         throw new \LogicException('JSON:API does not allow adding more normalizers!');
       }
     }

@@ -265,7 +265,7 @@ class Routes implements ContainerInjectionInterface {
    */
   public static function isJsonApiRequest(array $defaults) {
     return isset($defaults[RouteObjectInterface::CONTROLLER_NAME])
-      && strpos($defaults[RouteObjectInterface::CONTROLLER_NAME], static::CONTROLLER_SERVICE_NAME) === 0;
+      && str_starts_with($defaults[RouteObjectInterface::CONTROLLER_NAME], static::CONTROLLER_SERVICE_NAME);
   }
 
   /**

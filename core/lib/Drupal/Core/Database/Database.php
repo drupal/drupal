@@ -240,7 +240,7 @@ abstract class Database {
     // Backwards compatibility layer for Drupal 8 style database connection
     // arrays. Those have the wrong 'namespace' key set, or not set at all
     // for core supported database drivers.
-    if (empty($info['namespace']) || (strpos($info['namespace'], 'Drupal\\Core\\Database\\Driver\\') === 0)) {
+    if (empty($info['namespace']) || str_starts_with($info['namespace'], 'Drupal\\Core\\Database\\Driver\\')) {
       switch (strtolower($info['driver'])) {
         case 'mysql':
           $info['namespace'] = 'Drupal\\mysql\\Driver\\Database\\mysql';

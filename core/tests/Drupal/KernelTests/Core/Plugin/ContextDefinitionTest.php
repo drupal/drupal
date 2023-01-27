@@ -51,7 +51,7 @@ class ContextDefinitionTest extends KernelTestBase {
    */
   public function testEntityContextDefinitionAssert() {
     $this->expectException(\AssertionError::class);
-    $this->expectExceptionMessage('assert(strpos($data_type, \'entity:\') !== 0 || $this instanceof EntityContextDefinition)');
+    $this->expectExceptionMessage('assert(!str_starts_with($data_type, \'entity:\') || $this instanceof EntityContextDefinition)');
     new ContextDefinition('entity:entity_test');
   }
 

@@ -271,7 +271,7 @@ abstract class EntityBase implements EntityInterface {
       $parameter_name = $this->getEntityType()->getBundleEntityType() ?: $this->getEntityType()->getKey('bundle');
       $uri_route_parameters[$parameter_name] = $this->bundle();
     }
-    if ($this instanceof RevisionableInterface && strpos($rel, 'revision') === 0) {
+    if ($this instanceof RevisionableInterface && str_starts_with($rel, 'revision')) {
       $uri_route_parameters[$this->getEntityTypeId() . '_revision'] = $this->getRevisionId();
     }
 

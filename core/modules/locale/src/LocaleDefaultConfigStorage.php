@@ -83,7 +83,7 @@ class LocaleDefaultConfigStorage {
     elseif ($this->optionalInstallStorage->exists($name)) {
       return $this->optionalInstallStorage->read($name);
     }
-    elseif (strpos($name, 'language.entity.') === 0) {
+    elseif (str_starts_with($name, 'language.entity.')) {
       // Simulate default languages as if they were shipped as default
       // configuration.
       $langcode = str_replace('language.entity.', '', $name);

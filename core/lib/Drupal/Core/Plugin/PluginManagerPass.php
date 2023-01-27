@@ -17,7 +17,7 @@ class PluginManagerPass implements CompilerPassInterface {
   public function process(ContainerBuilder $container) {
     $cache_clearer_definition = $container->getDefinition('plugin.cache_clearer');
     foreach ($container->getDefinitions() as $service_id => $definition) {
-      if (strpos($service_id, 'plugin.manager.') === 0 || $definition->hasTag('plugin_manager_cache_clear')) {
+      if (str_starts_with($service_id, 'plugin.manager.') || $definition->hasTag('plugin_manager_cache_clear')) {
         if (is_subclass_of($definition->getClass(), '\Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface')) {
           $cache_clearer_definition->addMethodCall('addCachedDiscovery', [new Reference($service_id)]);
         }

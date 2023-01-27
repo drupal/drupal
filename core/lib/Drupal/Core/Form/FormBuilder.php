@@ -853,7 +853,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
 
     // Prevent cross site requests via the Form API by using an absolute URL
     // when the request uri starts with multiple slashes..
-    if (strpos($request_uri, '//') === 0) {
+    if (str_starts_with($request_uri, '//')) {
       $request_uri = $request->getUri();
     }
 

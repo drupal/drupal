@@ -98,7 +98,7 @@ function hook_file_validate(\Drupal\file\FileInterface $file) {
  */
 function hook_file_copy(\Drupal\file\FileInterface $file, \Drupal\file\FileInterface $source) {
   // Make sure that the file name starts with the owner's user name.
-  if (strpos($file->getFilename(), $file->getOwner()->name) !== 0) {
+  if (!str_starts_with($file->getFilename(), $file->getOwner()->name)) {
     $file->setFilename($file->getOwner()->name . '_' . $file->getFilename());
     $file->save();
 
@@ -118,7 +118,7 @@ function hook_file_copy(\Drupal\file\FileInterface $file, \Drupal\file\FileInter
  */
 function hook_file_move(\Drupal\file\FileInterface $file, \Drupal\file\FileInterface $source) {
   // Make sure that the file name starts with the owner's user name.
-  if (strpos($file->getFilename(), $file->getOwner()->name) !== 0) {
+  if (!str_starts_with($file->getFilename(), $file->getOwner()->name)) {
     $file->setFilename($file->getOwner()->name . '_' . $file->getFilename());
     $file->save();
 

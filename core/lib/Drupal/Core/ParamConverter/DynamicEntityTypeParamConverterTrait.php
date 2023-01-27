@@ -31,7 +31,7 @@ trait DynamicEntityTypeParamConverterTrait {
     $entity_type_id = substr($type_part, 1);
 
     // If the entity type is dynamic, it will be pulled from the route defaults.
-    if (strpos($entity_type_id, '{') === 0) {
+    if (str_starts_with($entity_type_id, '{')) {
       $entity_type_slug = substr($entity_type_id, 1, -1);
       if (!isset($defaults[$entity_type_slug])) {
         throw new ParamNotConvertedException(sprintf('The "%s" parameter was not converted because the "%s" parameter is missing.', $name, $entity_type_slug));

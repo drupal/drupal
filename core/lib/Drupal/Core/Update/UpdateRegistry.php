@@ -288,7 +288,7 @@ class UpdateRegistry implements EventSubscriberInterface {
     $existing_update_functions = $this->keyValue->get('existing_updates', []);
 
     $remaining_update_functions = array_filter($existing_update_functions, function ($function_name) use ($extension) {
-      return strpos($function_name, "{$extension}_{$this->updateType}_") !== 0;
+      return !str_starts_with($function_name, "{$extension}_{$this->updateType}_");
     });
 
     $this->keyValue->set('existing_updates', array_values($remaining_update_functions));

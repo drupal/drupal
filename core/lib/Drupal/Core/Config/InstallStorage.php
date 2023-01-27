@@ -133,7 +133,7 @@ class InstallStorage extends FileStorage {
     else {
       $return = [];
       foreach ($names as $index => $name) {
-        if (strpos($name, $prefix) === 0) {
+        if (str_starts_with($name, $prefix)) {
           $return[$index] = $names[$index];
         }
       }
