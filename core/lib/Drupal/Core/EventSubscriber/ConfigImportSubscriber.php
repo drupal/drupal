@@ -199,17 +199,13 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
     // Get all themes including those that are not installed.
     $theme_data = $this->getThemeData();
     $module_data = $this->moduleExtensionList->getList();
-    $installs = $config_importer->getExtensionChangelist('theme', 'install');
-    foreach ($installs as $key => $theme) {
-      if (!isset($theme_data[$theme])) {
-        $config_importer->logError($this->t('Unable to install the %theme theme since it does not exist.', ['%theme' => $theme]));
-        // Remove non-existing installs from the list so we can validate theme
-        // dependencies later.
-        unset($installs[$key]);
-      }
+    $nonexistent_themes = array_keys(array_diff_key($core_extension['theme'], $theme_data));
+    foreach ($nonexistent_themes as $theme) {
+      $config_importer->logError($this->t('Unable to install the %theme theme since it does not exist.', ['%theme' => $theme]));
     }
 
     // Ensure that all themes being installed have their dependencies met.
+    $installs = $config_importer->getExtensionChangelist('theme', 'install');
     foreach ($installs as $theme) {
       $module_dependencies = $theme_data[$theme]->module_dependencies;
       // $theme_data[$theme]->requires contains both theme and module
