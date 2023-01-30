@@ -2351,7 +2351,8 @@ function install_config_import_batch() {
     \Drupal::service('module_installer'),
     \Drupal::service('theme_handler'),
     \Drupal::service('string_translation'),
-    \Drupal::service('extension.list.module')
+    \Drupal::service('extension.list.module'),
+    \Drupal::service('extension.list.theme')
   );
 
   try {
@@ -2423,7 +2424,8 @@ function install_config_revert_install_changes() {
       \Drupal::service('module_installer'),
       \Drupal::service('theme_handler'),
       \Drupal::service('string_translation'),
-      \Drupal::service('extension.list.module')
+      \Drupal::service('extension.list.module'),
+      \Drupal::service('extension.list.theme')
     );
     try {
       $config_importer->import();
