@@ -36,9 +36,11 @@ trait XdebugRequestTrait {
     }
     elseif ($server->has('XDEBUG_CONFIG')) {
       // $_SERVER['XDEBUG_CONFIG'] has the form "key1=value1 key2=value2 ...".
-      $pairs = explode(' ', $server->get('XDEBUG_CONFIG'));
+      $pairs = array_filter(explode(' ', $server->get('XDEBUG_CONFIG')), function ($value) {
+        return str_contains($value, '=');
+      });
       foreach ($pairs as $pair) {
-        [$key, $value] = explode('=', $pair);
+        [$key, $value] = explode('=', $pair, 2);
         // Account for key-value pairs being separated by multiple spaces.
         if (trim($key, ' ') == 'idekey') {
           $cookies['XDEBUG_SESSION'][] = trim($value, ' ');
