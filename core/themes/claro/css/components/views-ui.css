@@ -105,9 +105,16 @@ details.fieldset-no-legend {
   line-height: 1.3125rem;
 }
 
+[dir="ltr"] .views-ui-dialog .form-element--type-select {
+  padding-right: calc(2rem - 1px);
+}
+
+[dir="rtl"] .views-ui-dialog .form-element--type-select {
+  padding-left: calc(2rem - 1px);
+}
+
 .views-ui-dialog .form-element--type-select {
-  padding-right: calc(2rem + 2px);
-  background-position: 100% 56%;
+  background-position-y: 56%;
 }
 
 /**

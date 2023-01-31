@@ -92,8 +92,8 @@ details.fieldset-no-legend {
   line-height: var(--input-line-height--small);
 }
 .views-ui-dialog .form-element--type-select {
-  padding-right: calc((var(--space-m) * 2) + var(--input-border-size) * 2);
-  background-position: 100% 56%;
+  padding-inline-end: calc(2rem - var(--input-border-size));
+  background-position-y: 56%;
 }
 /**
  * Elements must communicate width to table rendering.
