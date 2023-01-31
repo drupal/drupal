@@ -29,10 +29,7 @@
     width: 0.875rem; /* 14 */
     height: 1.1875rem; /* 19 */
     vertical-align: top;
-
-    & path {
-      fill: currentColor;
-    }
+    fill: currentColor;
   }
 }
 
