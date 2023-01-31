@@ -424,6 +424,8 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
     foreach ($entities as $entity) {
       $tempstore->delete($entity->id());
     }
+
+    views_invalidate_cache();
   }
 
   /**

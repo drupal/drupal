@@ -804,21 +804,6 @@ function views_local_tasks_alter(&$local_tasks) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_delete().
- */
-function views_view_delete(EntityInterface $entity) {
-  // Rebuild the routes in case there is a routed display.
-  $executable = Views::executableFactory()->get($entity);
-  $executable->initDisplay();
-  foreach ($executable->displayHandlers as $display) {
-    if ($display->getRoutedDisplay()) {
-      \Drupal::service('router.builder')->setRebuildNeeded();
-      break;
-    }
-  }
-}
-
-/**
  * Implements hook_ENTITY_TYPE_presave().
  */
 function views_view_presave(ViewEntityInterface $view) {
