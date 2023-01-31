@@ -3,7 +3,6 @@
 namespace Drupal\Core\Config\Entity;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\Entity\EntityBase;
 use Drupal\Core\Config\ConfigDuplicateUUIDException;
@@ -480,8 +479,8 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
    * Override to never invalidate the entity's cache tag; the config system
    * already invalidates it.
    */
-  protected function invalidateTagsOnSave($update) {
-    Cache::invalidateTags($this->getListCacheTagsToInvalidate());
+  protected function getTagsToInvalidateOnSave($update) {
+    return $this->getEntityType()->getListCacheTags();
   }
 
   /**
@@ -490,12 +489,8 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
    * Override to never invalidate the individual entities' cache tags; the
    * config system already invalidates them.
    */
-  protected static function invalidateTagsOnDelete(EntityTypeInterface $entity_type, array $entities) {
-    $tags = $entity_type->getListCacheTags();
-    foreach ($entities as $entity) {
-      $tags = Cache::mergeTags($tags, $entity->getListCacheTagsToInvalidate());
-    }
-    Cache::invalidateTags($tags);
+  protected static function getTagsToInvalidateOnDelete(EntityTypeInterface $entity_type, array $entities) {
+    return $entity_type->getListCacheTags();
   }
 
   /**

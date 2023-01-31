@@ -509,12 +509,15 @@ abstract class EntityBase implements EntityInterface {
   }
 
   /**
-   * Invalidates an entity's cache tags upon save.
+   * Get an entity's cache tags upon save.
    *
    * @param bool $update
    *   TRUE if the entity has been updated, or FALSE if it has been inserted.
+   *
+   * @return string[]
+   *   A set of cache tags.
    */
-  protected function invalidateTagsOnSave($update) {
+  protected function getTagsToInvalidateOnSave($update) {
     // An entity was created or updated: invalidate its list cache tags. (An
     // updated entity may start to appear in a listing because it now meets that
     // listing's filtering requirements. A newly created entity may start to
@@ -528,7 +531,42 @@ abstract class EntityBase implements EntityInterface {
       // An existing entity was updated, also invalidate its unique cache tag.
       $tags = Cache::mergeTags($tags, $this->getCacheTagsToInvalidate());
     }
-    Cache::invalidateTags($tags);
+    return $tags;
+  }
+
+  /**
+   * Invalidates an entity's cache tags upon save.
+   *
+   * @param bool $update
+   *   TRUE if the entity has been updated, or FALSE if it has been inserted.
+   */
+  protected function invalidateTagsOnSave($update) {
+    Cache::invalidateTags($this->getTagsToInvalidateOnSave($update));
+  }
+
+  /**
+   * Get entity's cache tags upon delete.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type definition.
+   * @param \Drupal\Core\Entity\EntityInterface[] $entities
+   *   An array of entities.
+   *
+   * @return string[]
+   *   A set of cache tags.
+   */
+  protected static function getTagsToInvalidateOnDelete(EntityTypeInterface $entity_type, array $entities) {
+    $tags = $entity_type->getListCacheTags();
+    foreach ($entities as $entity) {
+      // An entity was deleted: invalidate its own cache tag, but also its list
+      // cache tags. (A deleted entity may cause changes in a paged list on
+      // other pages than the one it's on. The one it's on is handled by its own
+      // cache tag, but subsequent list pages would not be invalidated, hence we
+      // must invalidate its list cache tags as well.)
+      $tags = Cache::mergeTags($tags, $entity->getCacheTagsToInvalidate());
+      $tags = Cache::mergeTags($tags, $entity->getListCacheTagsToInvalidate());
+    }
+    return $tags;
   }
 
   /**
@@ -540,17 +578,7 @@ abstract class EntityBase implements EntityInterface {
    *   An array of entities.
    */
   protected static function invalidateTagsOnDelete(EntityTypeInterface $entity_type, array $entities) {
-    $tags = $entity_type->getListCacheTags();
-    foreach ($entities as $entity) {
-      // An entity was deleted: invalidate its own cache tag, but also its list
-      // cache tags. (A deleted entity may cause changes in a paged list on
-      // other pages than the one it's on. The one it's on is handled by its own
-      // cache tag, but subsequent list pages would not be invalidated, hence we
-      // must invalidate its list cache tags as well.)
-      $tags = Cache::mergeTags($tags, $entity->getCacheTagsToInvalidate());
-      $tags = Cache::mergeTags($tags, $entity->getListCacheTagsToInvalidate());
-    }
-    Cache::invalidateTags($tags);
+    Cache::invalidateTags(static::getTagsToInvalidateOnDelete($entity_type, $entities));
   }
 
   /**
