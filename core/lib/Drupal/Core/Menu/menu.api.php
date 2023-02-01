@@ -459,8 +459,6 @@ function hook_system_breadcrumb_alter(\Drupal\Core\Breadcrumb\Breadcrumb &$bread
  *     Using t() or \Drupal\Component\Render\FormattableMarkup with
  *     @placeholder is recommended as this will escape the original text if
  *     necessary. If the resulting text is not marked safe it will be escaped.
- *   - url_is_active: Whether or not the link points to the currently active
- *     URL.
  *   - url: The \Drupal\Core\Url object.
  *   - options: An associative array of additional options that will be passed
  *     to either \Drupal\Core\Utility\UnroutedUrlAssembler::assemble() or
