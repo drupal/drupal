@@ -113,7 +113,6 @@ behaviour
 bergmann
 berne
 bgblue
-bggya
 bgred
 bigpipe
 bikeshed
@@ -708,7 +707,6 @@ mainpage
 makealternatemessage
 makedefaultmessage
 makewarningmessage
-makz
 mame
 mank
 maryjane
@@ -1542,7 +1540,6 @@ xbap
 xbeg
 xbitmap
 xfbml
-xgbql
 xjkm
 xlen
 xlgp
