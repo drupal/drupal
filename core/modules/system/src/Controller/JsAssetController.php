@@ -18,7 +18,7 @@ class JsAssetController extends AssetControllerBase {
   /**
    * {@inheritdoc}
    */
-  protected string $contentType = 'application/javascript';
+  protected string $contentType = 'text/javascript';
 
   /**
    * {@inheritdoc}

@@ -1204,6 +1204,7 @@ function file_icon_map($mime_type) {
     case 'application/x-php':
     case 'application/x-ruby':
     case 'application/x-shellscript':
+    case 'text/javascript':
     case 'text/vnd.wap.wmlscript':
     case 'text/x-emacs-lisp':
     case 'text/x-haskell':

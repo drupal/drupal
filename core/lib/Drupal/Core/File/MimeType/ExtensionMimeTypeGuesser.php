@@ -152,7 +152,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       129 => 'application/x-iphone',
       130 => 'application/x-iso9660-image',
       131 => 'application/x-java-jnlp-file',
-      132 => 'application/javascript',
+      132 => 'text/javascript',
       133 => 'application/x-jmol',
       134 => 'application/x-kchart',
       135 => 'application/x-killustrator',
@@ -860,6 +860,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       'webm' => 357,
       'vtt' => 358,
       'gz' => 359,
+      'mjs' => 132,
       'aac' => 360,
     ],
   ];
