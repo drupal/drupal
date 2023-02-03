@@ -108,6 +108,25 @@ class RevisionVersionHistoryTest extends BrowserTestBase {
   }
 
   /**
+   * Test description with entity implementing revision log, with empty values.
+   *
+   * @covers ::getRevisionDescription
+   */
+  public function testDescriptionRevLogNullValues(): void {
+    $entity = EntityTestWithRevisionLog::create(['type' => 'entity_test_revlog']);
+    $entity->setName('view all revisions')->save();
+
+    // Check entity values are still null after saving; they did not receive
+    // values from currentUser or some other global context.
+    $this->assertNull($entity->getRevisionUser());
+    $this->assertNull($entity->getRevisionUserId());
+    $this->assertNull($entity->getRevisionLogMessage());
+
+    $this->drupalGet($entity->toUrl('version-history'));
+    $this->assertSession()->elementTextContains('css', 'table tbody tr:nth-child(1)', 'by Anonymous (not verified)');
+  }
+
+  /**
    * Test description with entity, without revision log, no label access.
    *
    * @covers ::getRevisionDescription

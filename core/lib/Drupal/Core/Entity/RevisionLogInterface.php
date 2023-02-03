@@ -30,8 +30,9 @@ interface RevisionLogInterface extends RevisionableInterface {
   /**
    * Gets the entity revision author.
    *
-   * @return \Drupal\user\UserInterface
-   *   The user entity for the revision author.
+   * @return \Drupal\user\UserInterface|null
+   *   The user entity for the revision author, or NULL if not set or user was
+   *   deleted.
    */
   public function getRevisionUser();
 
@@ -48,8 +49,8 @@ interface RevisionLogInterface extends RevisionableInterface {
   /**
    * Gets the entity revision author ID.
    *
-   * @return int
-   *   The user ID.
+   * @return int|null
+   *   The user ID, or NULL if not set or user was deleted.
    */
   public function getRevisionUserId();
 
@@ -66,8 +67,8 @@ interface RevisionLogInterface extends RevisionableInterface {
   /**
    * Returns the entity revision log message.
    *
-   * @return string
-   *   The revision log message.
+   * @return string|null
+   *   The revision log message, or NULL if not set.
    */
   public function getRevisionLogMessage();
 
