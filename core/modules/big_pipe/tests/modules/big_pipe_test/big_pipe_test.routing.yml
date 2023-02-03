@@ -23,3 +23,11 @@ big_pipe_test_multi_occurrence:
     _title: 'BigPipe test multiple occurrences of the same placeholder'
   requirements:
     _access: 'TRUE'
+
+big_pipe_test_preview:
+  path: '/big_pipe_test_preview'
+  defaults:
+    _controller: '\Drupal\big_pipe_test\BigPipeTestController::placeholderPreview'
+    _title: 'Test placeholder previews'
+  requirements:
+    _access: 'TRUE'

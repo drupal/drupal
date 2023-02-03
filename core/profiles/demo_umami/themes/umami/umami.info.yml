@@ -7,7 +7,6 @@ libraries:
   - umami/classy.base
   - core/normalize
   - umami/global
-  - umami/messages
 
 libraries-override:
   layout_builder/twocol_section:
@@ -24,6 +23,8 @@ libraries-override:
         layouts/fourcol_section/fourcol_section.css: layouts/fourcol_section/fourcol_section.css
 
 libraries-extend:
+  core/drupal.message:
+    - umami/messages
   tour/tour-styling:
     - umami/demo-umami-tour
   core/drupal.dialog:

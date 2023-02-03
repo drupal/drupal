@@ -325,6 +325,7 @@ class Renderer implements RendererInterface {
         '#lazy_builder',
         '#cache',
         '#create_placeholder',
+        '#lazy_builder_preview',
         // The keys below are not actually supported, but these are added
         // automatically by the Renderer. Adding them as though they are
         // supported allows us to avoid throwing an exception 100% of the time.

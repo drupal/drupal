@@ -77,6 +77,10 @@ class PlaceholderGenerator implements PlaceholderGeneratorInterface {
       '#cache' => TRUE,
     ]);
 
+    if (isset($element['#lazy_builder_preview'])) {
+      $placeholder_render_array['#preview'] = $element['#lazy_builder_preview'];
+    }
+
     // Be sure cache contexts and tags are sorted before serializing them and
     // making hash. Issue #3225328 removes sort from contexts and tags arrays
     // for performances reasons.

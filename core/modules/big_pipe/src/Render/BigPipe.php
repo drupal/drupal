@@ -711,14 +711,11 @@ EOF;
    *   only keep the first occurrence.
    */
   protected function getPlaceholderOrder($html, $placeholders) {
-    $fragments = explode('<span data-big-pipe-placeholder-id="', $html);
-    array_shift($fragments);
     $placeholder_ids = [];
-
-    foreach ($fragments as $fragment) {
-      $t = explode('"></span>', $fragment, 2);
-      $placeholder_id = $t[0];
-      $placeholder_ids[] = $placeholder_id;
+    $dom = Html::load($html);
+    $xpath = new \DOMXPath($dom);
+    foreach ($xpath->query('//span[@data-big-pipe-placeholder-id]') as $node) {
+      $placeholder_ids[] = Html::escape($node->getAttribute('data-big-pipe-placeholder-id'));
     }
     $placeholder_ids = array_unique($placeholder_ids);
 

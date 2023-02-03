@@ -83,6 +83,37 @@ class BigPipeTestController implements TrustedCallbackInterface {
   }
 
   /**
+   * A page with placeholder preview.
+   *
+   * @return array[]
+   */
+  public function placeholderPreview() {
+    return [
+      'user_container' => [
+        '#type' => 'container',
+        '#attributes' => ['id' => 'placeholder-preview-twig-container'],
+        'user' => [
+          '#lazy_builder' => ['user.toolbar_link_builder:renderDisplayName', []],
+          '#create_placeholder' => TRUE,
+        ],
+      ],
+      'user_links_container' => [
+        '#type' => 'container',
+        '#attributes' => ['id' => 'placeholder-render-array-container'],
+        'user_links' => [
+          '#lazy_builder' => [static::class . '::helloOrYarhar', []],
+          '#create_placeholder' => TRUE,
+          '#lazy_builder_preview' => [
+            '#attributes' => ['id' => 'render-array-preview'],
+            '#type' => 'container',
+            '#markup' => 'There is a lamb and there is a puppy',
+          ],
+        ],
+      ],
+    ];
+  }
+
+  /**
    * #lazy_builder callback; builds <time> markup with current time.
    *
    * Note: does not actually use current time, that would complicate testing.

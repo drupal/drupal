@@ -76,3 +76,57 @@ function big_pipe_page_attachments(array &$page) {
     }
   }
 }
+
+/**
+ * Implements hook_theme().
+ */
+function big_pipe_theme() {
+  return [
+    'big_pipe_interface_preview' => [
+      'variables' => [
+        'callback' => NULL,
+        'arguments' => NULL,
+        'preview' => NULL,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function big_pipe_theme_suggestions_big_pipe_interface_preview(array $variables) {
+  $common_callbacks_simplified_suggestions = [
+    'Drupal_block_BlockViewBuilder__lazyBuilder' => 'block',
+  ];
+
+  $suggestions = [];
+  $suggestion = 'big_pipe_interface_preview';
+  if ($variables['callback']) {
+    $callback = preg_replace('/[^a-zA-Z0-9]/', '_', $variables['callback']);
+    if (is_array($callback)) {
+      $callback = implode('__', $callback);
+    }
+
+    // Use simplified template suggestion, if any.
+    // For example, this simplifies
+    // big-pipe-interface-preview--Drupal-block-BlockViewBuilder--lazyBuilder--<BLOCK ID>.html.twig
+    // to
+    // big-pipe-interface-preview--block--<BLOCK ID>.html.twig
+    if (isset($common_callbacks_simplified_suggestions[$callback])) {
+      $callback = $common_callbacks_simplified_suggestions[$callback];
+    }
+
+    $suggestions[] = $suggestion .= '__' . $callback;
+    if (is_array($variables['arguments'])) {
+      $arguments = preg_replace('/[^a-zA-Z0-9]/', '_', $variables['arguments']);
+      foreach ($arguments as $argument) {
+        if (empty($argument)) {
+          continue;
+        }
+        $suggestions[] = $suggestion . '__' . $argument;
+      }
+    }
+  }
+  return $suggestions;
+}

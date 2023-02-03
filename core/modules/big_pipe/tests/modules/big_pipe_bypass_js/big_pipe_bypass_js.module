@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Provides a way to bypass Big Pipe JavaScript.
+ */
+
+/**
+ * Implements hook_library_info_alter().
+ *
+ * Disables Big Pipe JavaScript by removing the js file from the library.
+ */
+function big_pipe_bypass_js_library_info_alter(&$libraries, $extension) {
+  if ($extension === 'big_pipe') {
+    unset($libraries['big_pipe']['js']);
+  }
+}

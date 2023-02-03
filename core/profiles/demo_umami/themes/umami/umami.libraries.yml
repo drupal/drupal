@@ -56,7 +56,9 @@ global:
 messages:
   css:
     component:
-      css/components/messages/messages.css: { weight: -10 }
+      css/components/messages/messages.css: {}
+  js:
+    js/components/messages/messages.js: {}
 
 more-link:
   css:
