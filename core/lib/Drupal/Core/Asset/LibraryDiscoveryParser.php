@@ -107,6 +107,18 @@ class LibraryDiscoveryParser {
    *   Thrown when a library has no js/css/setting.
    * @throws \UnexpectedValueException
    *   Thrown when a js file defines a positive weight.
+   * @throws \UnknownExtensionTypeException
+   *   Thrown when the extension type is unknown.
+   * @throws \UnknownExtensionException
+   *   Thrown when the extension is unknown.
+   * @throws \InvalidLibraryFileException
+   *   Thrown when the library file is invalid.
+   * @throws \InvalidLibrariesOverrideSpecificationException
+   *   Thrown when a definition refers to a non-existent library.
+   * @throws \Drupal\Core\Asset\Exception\LibraryDefinitionMissingLicenseException
+   *   Thrown when a library definition has no license information.
+   * @throws \LogicException
+   *   Thrown when a header key in a library definition is invalid.
    */
   public function buildByExtension($extension) {
     if ($extension === 'core') {
