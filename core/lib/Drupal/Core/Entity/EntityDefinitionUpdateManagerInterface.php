@@ -184,8 +184,9 @@ interface EntityDefinitionUpdateManagerInterface {
    * @param string $entity_type_id
    *   The entity type identifier.
    *
-   * @return \Drupal\Core\Field\FieldStorageDefinitionInterface
-   *   The field storage definition.
+   * @return \Drupal\Core\Field\FieldStorageDefinitionInterface|null
+   *   The field storage definition or NULL if there is none for the given field
+   *   name and entity type.
    *
    * @todo Make this return a mutable storage definition interface when we have
    *   one. See https://www.drupal.org/node/2346329.
