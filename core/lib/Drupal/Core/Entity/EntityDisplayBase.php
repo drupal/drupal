@@ -118,6 +118,13 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   protected $renderer;
 
   /**
+   * A boolean indicating whether or not this display has been initialized.
+   *
+   * @var bool
+   */
+  protected $initialized = FALSE;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(array $values, $entity_type) {
@@ -156,7 +163,8 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    */
   protected function init() {
     // Only populate defaults for "official" view modes and form modes.
-    if ($this->mode !== static::CUSTOM_MODE) {
+    if (!$this->initialized && $this->mode !== static::CUSTOM_MODE) {
+      $this->initialized = TRUE;
       $default_region = $this->getDefaultRegion();
       // Fill in defaults for extra fields.
       $context = $this->displayContext == 'view' ? 'display' : $this->displayContext;
@@ -546,6 +554,8 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
     // __wakeup(). Because of the way __sleep() works, the data has to be
     // present in the object to be included in the serialized values.
     $keys[] = '_serializedKeys';
+    // Keep track of the initialization status.
+    $keys[] = 'initialized';
     $this->_serializedKeys = $keys;
     return $keys;
   }
