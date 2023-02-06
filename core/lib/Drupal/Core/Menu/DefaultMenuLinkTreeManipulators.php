@@ -5,6 +5,7 @@ namespace Drupal\Core\Menu;
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
 
@@ -41,6 +42,13 @@ class DefaultMenuLinkTreeManipulators {
   protected $entityTypeManager;
 
   /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * Constructs a \Drupal\Core\Menu\DefaultMenuLinkTreeManipulators object.
    *
    * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
@@ -49,11 +57,18 @@ class DefaultMenuLinkTreeManipulators {
    *   The current user.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface|null $module_handler
+   *   The module handler.
    */
-  public function __construct(AccessManagerInterface $access_manager, AccountInterface $account, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(AccessManagerInterface $access_manager, AccountInterface $account, EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler = NULL) {
     $this->accessManager = $access_manager;
     $this->account = $account;
     $this->entityTypeManager = $entity_type_manager;
+    if ($module_handler === NULL) {
+      @trigger_error('Calling DefaultMenuLinkTreeManipulators::__construct() without the $module_handler argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3336973', E_USER_DEPRECATED);
+      $module_handler = \Drupal::moduleHandler();
+    }
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -149,7 +164,9 @@ class DefaultMenuLinkTreeManipulators {
       }
       else {
         $access_result->addCacheContexts(['user.node_grants:view']);
-        $query->condition('status', NodeInterface::PUBLISHED);
+        if (!$this->moduleHandler->hasImplementations('node_grants') && !$this->account->hasPermission('view any unpublished content')) {
+          $query->condition('status', NodeInterface::PUBLISHED);
+        }
       }
 
       $nids = $query->execute();

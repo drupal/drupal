@@ -751,7 +751,7 @@ services:
   Drupal\Core\Menu\MenuLinkTreeInterface: '@menu.link_tree'
   menu.default_tree_manipulators:
     class: Drupal\Core\Menu\DefaultMenuLinkTreeManipulators
-    arguments: ['@access_manager', '@current_user', '@entity_type.manager']
+    arguments: ['@access_manager', '@current_user', '@entity_type.manager', '@module_handler']
   Drupal\Core\Menu\DefaultMenuLinkTreeManipulators: '@menu.default_tree_manipulators'
   menu.active_trail:
     class: Drupal\Core\Menu\MenuActiveTrail

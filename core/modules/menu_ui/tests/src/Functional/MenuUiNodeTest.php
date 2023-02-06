@@ -377,4 +377,56 @@ class MenuUiNodeTest extends BrowserTestBase {
     $this->assertSession()->fieldValueEquals('edit-menu-title', $translated_node_title);
   }
 
+  /**
+   * Tests creating menu links via node form widget for nodes with grants.
+   */
+  public function testMenuNodeWithGrantsFormWidget() {
+    \Drupal::service('module_installer')->install(['node_access_test']);
+    node_access_rebuild();
+    $this->assertTrue(\Drupal::moduleHandler()->hasImplementations('node_grants'));
+
+    $admin_user = $this->drupalCreateUser([
+      'access administration pages',
+      'administer content types',
+      'administer nodes',
+      'administer menu',
+      'create page content',
+      'edit any page content',
+    ]);
+    $this->drupalLogin($admin_user);
+
+    $node_title = $this->randomMachineName();
+    $edit = [
+      'title[0][value]' => $node_title,
+      'menu[enabled]' => 1,
+      'menu[title]' => $node_title,
+      'status[value]' => 0,
+    ];
+    $this->drupalGet('node/add/page');
+    $this->submitForm($edit, 'Save');
+
+    $node = $this->drupalGetNodeByTitle($node_title);
+    $this->assertTrue($node->access('view', $admin_user));
+    $this->drupalGet('node/add/page');
+    $link_id = menu_ui_get_menu_link_defaults($node)['entity_id'];
+    /** @var \Drupal\menu_link_content\Entity\MenuLinkContent $link */
+    $link = MenuLinkContent::load($link_id);
+    $this->assertSession()->optionExists('edit-menu-menu-parent', 'main:' . $link->getPluginId());
+
+    // Assert that the unpublished node cannot be selected as a parent menu link
+    // for users without access to the node.
+    $admin_user_without_content_access = $this->drupalCreateUser([
+      'access administration pages',
+      'administer content types',
+      'administer nodes',
+      'administer menu',
+      'create page content',
+      'edit any page content',
+    ]);
+    $this->drupalLogin($admin_user_without_content_access);
+    $this->assertFalse($node->access('view', $admin_user_without_content_access));
+    $this->drupalGet('node/add/page');
+    $this->assertSession()->optionNotExists('edit-menu-menu-parent', 'main:' . $link->getPluginId());
+  }
+
 }

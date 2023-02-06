@@ -7,6 +7,7 @@ use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\Container;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Menu\DefaultMenuLinkTreeManipulators;
 use Drupal\Core\Menu\MenuLinkTreeElement;
 use Drupal\Tests\UnitTestCase;
@@ -41,6 +42,13 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityTypeManager;
+
+  /**
+   * The mocked module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $moduleHandler;
 
   /**
    * The default menu link tree manipulators.
@@ -81,12 +89,14 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
     $this->currentUser->method('isAuthenticated')
       ->willReturn(TRUE);
     $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
+    $this->moduleHandler = $this->createMock(ModuleHandlerInterface::class);
 
-    $this->defaultMenuTreeManipulators = new DefaultMenuLinkTreeManipulators($this->accessManager, $this->currentUser, $this->entityTypeManager);
+    $this->defaultMenuTreeManipulators = new DefaultMenuLinkTreeManipulators($this->accessManager, $this->currentUser, $this->entityTypeManager, $this->moduleHandler);
 
     $this->cacheContextManager = $this->prophesize(CacheContextsManager::class);
     $container = new Container();
     $container->set('cache_contexts_manager', $this->cacheContextManager->reveal());
+    $container->set('module_handler', $this->moduleHandler);
     \Drupal::setContainer($container);
   }
 
@@ -363,6 +373,14 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
     $this->assertEquals(AccessResult::neutral(), $tree[2]->subtree[3]->access);
     $this->assertEquals(AccessResult::allowed()->cachePerPermissions(), $tree[5]->access);
     $this->assertEquals(AccessResult::neutral()->cachePerPermissions(), $tree[5]->subtree[6]->access);
+  }
+
+  /**
+   * @group legacy
+   */
+  public function testDeprecation(): void {
+    $this->expectDeprecation('Calling DefaultMenuLinkTreeManipulators::__construct() without the $module_handler argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3336973');
+    new DefaultMenuLinkTreeManipulators($this->accessManager, $this->currentUser, $this->entityTypeManager);
   }
 
 }
