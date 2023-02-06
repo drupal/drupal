@@ -27,6 +27,7 @@ class BrowserTestBaseTest extends KernelTestBase {
   public function testMethodRequiresModule() {
     require __DIR__ . '/../../../../fixtures/BrowserMissingDependentModuleMethodTest.php';
 
+    // @phpstan-ignore-next-line
     $stub_test = new BrowserMissingDependentModuleMethodTest();
     // We have to setName() to the method name we're concerned with.
     $stub_test->setName('testRequiresModule');
@@ -54,6 +55,7 @@ class BrowserTestBaseTest extends KernelTestBase {
   public function testRequiresModule() {
     require __DIR__ . '/../../../../fixtures/BrowserMissingDependentModuleTest.php';
 
+    // @phpstan-ignore-next-line
     $stub_test = new BrowserMissingDependentModuleTest();
     // We have to setName() to the method name we're concerned with.
     $stub_test->setName('testRequiresModule');

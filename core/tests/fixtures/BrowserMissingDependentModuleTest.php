@@ -10,7 +10,7 @@ use Drupal\Tests\BrowserTestBase;
  * This is a fixture class for
  * \Drupal\FunctionalTests\BrowserTestBaseTest::testRequiresModule().
  *
- * This test class should not be discovered by run-tests.sh or phpunit.
+ * This test class should not be discovered by run-tests.sh, phpstan or phpunit.
  *
  * @requires module module_does_not_exist
  * @group fixture
