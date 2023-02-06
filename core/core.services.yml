@@ -1019,9 +1019,9 @@ services:
     arguments: ['@router.route_provider', '@path.current', '@url_generator']
     tags:
       # @todo Try to combine those tags together, see https://www.drupal.org/node/2915772.
-      - { name: service_collector, tag: non_lazy_route_enhancer, call: addRouteEnhancer }
+      - { name: service_collector, tag: non_lazy_route_enhancer, call: addDeprecatedRouteEnhancer }
       - { name: service_collector, tag: route_enhancer, call: addRouteEnhancer  }
-      - { name: service_collector, tag: non_lazy_route_filter, call: addRouteFilter }
+      - { name: service_collector, tag: non_lazy_route_filter, call: addDeprecatedRouteFilter }
       - { name: service_collector, tag: route_filter, call: addRouteFilter }
     calls:
       - [setContext, ['@router.request_context']]
