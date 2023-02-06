@@ -127,7 +127,7 @@ class UrlGenerator implements UrlGeneratorInterface {
    */
   public function getPathFromRoute($name, $parameters = []) {
     $route = $this->getRoute($name);
-    $name = $this->getRouteDebugMessage($name);
+    $name = $this->getRouteStringIdentifier($name);
     $this->processRoute($name, $route, $parameters);
     $path = $this->getInternalPathFromRoute($name, $route, $parameters);
     // Router-based paths may have a querystring on them but Drupal paths may
@@ -287,7 +287,7 @@ class UrlGenerator implements UrlGeneratorInterface {
     $options += $route->getOption('default_url_options') ?: [];
     $options += ['prefix' => '', 'path_processing' => TRUE];
 
-    $name = $this->getRouteDebugMessage($name);
+    $name = $this->getRouteStringIdentifier($name);
     $this->processRoute($name, $route, $parameters, $generated_url);
     $path = $this->getInternalPathFromRoute($name, $route, $parameters, $options['query']);
     // Outbound path processors might need the route object for the path, e.g.
@@ -429,17 +429,68 @@ class UrlGenerator implements UrlGeneratorInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Gets either the route name or a string based on the route object.
+   *
+   * @param string|\Symfony\Component\Routing\Route $name
+   *   A string route name, or a serializable object.
+   *
+   * @return string
+   *   Either the route name, or a string that uniquely identifies the route.
+   *
+   * @todo Remove in https://www.drupal.org/i/3151019
+   *
+   * @internal
+   */
+  private function getRouteStringIdentifier(string|SymfonyRoute $name): string {
+    if (is_scalar($name)) {
+      return $name;
+    }
+
+    if ($name instanceof SymfonyRoute) {
+      return 'Route with pattern ' . $name->getPath();
+    }
+
+    return serialize($name);
+  }
+
+  /**
+   * Checks if route name is a string or route object.
+   *
+   * @param string|\Symfony\Component\Routing\Route $name
+   *   The route "name" which may also be an object or anything.
+   *
+   * @return bool
+   *   TRUE if the passed in value a valid route, FALSE otherwise.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Only string
+   *   route names are supported.
+   *
+   * @see https://www.drupal.org/node/3172303
    */
   public function supports($name) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Only string route names are supported. See https://www.drupal.org/node/3172303', E_USER_DEPRECATED);
     // Support a route object and any string as route name.
     return is_string($name) || $name instanceof SymfonyRoute;
   }
 
   /**
-   * {@inheritdoc}
+   * Gets either the route name or a string based on the route object.
+   *
+   * @param string|\Symfony\Component\Routing\Route $name
+   *   The route "name" which may also be an object or anything.
+   * @param array $parameters
+   *   Route parameters array.
+   *
+   * @return string
+   *   Either the route name, or a string that uniquely identifies the route.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   *   the route name instead.
+   *
+   * @see https://www.drupal.org/node/3172303
    */
   public function getRouteDebugMessage($name, array $parameters = []) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use the route name instead. See https://www.drupal.org/node/3172303', E_USER_DEPRECATED);
     if (is_scalar($name)) {
       return $name;
     }

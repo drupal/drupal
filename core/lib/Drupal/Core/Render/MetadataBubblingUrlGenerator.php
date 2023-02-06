@@ -110,16 +110,42 @@ class MetadataBubblingUrlGenerator implements UrlGeneratorInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Checks if route name is a string or route object.
+   *
+   * @param string|\Symfony\Component\Routing\Route $name
+   *   The route "name" which may also be an object or anything.
+   *
+   * @return bool
+   *   TRUE if the passed in value a valid route, FALSE otherwise.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Only string
+   *   route names are supported.
+   *
+   * @see https://www.drupal.org/node/3172303
    */
   public function supports($name) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Only string route names are supported. See https://www.drupal.org/node/3172303', E_USER_DEPRECATED);
     return $this->urlGenerator->supports($name);
   }
 
   /**
-   * {@inheritdoc}
+   * Gets either the route name or a string based on the route object.
+   *
+   * @param string|\Symfony\Component\Routing\Route $name
+   *   The route "name" which may also be an object or anything.
+   * @param array $parameters
+   *   Route parameters array.
+   *
+   * @return string
+   *   Either the route name, or a string that uniquely identifies the route.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   *   the route name instead.
+   *
+   * @see https://www.drupal.org/node/3172303
    */
   public function getRouteDebugMessage($name, array $parameters = []) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use the route name instead. See https://www.drupal.org/node/3172303', E_USER_DEPRECATED);
     return $this->urlGenerator->getRouteDebugMessage($name, $parameters);
   }
 

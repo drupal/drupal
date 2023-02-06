@@ -45,18 +45,4 @@ class SupernovaGenerator implements UrlGeneratorInterface {
     throw new \Exception();
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function supports($name) {
-    throw new \Exception();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getRouteDebugMessage($name, array $parameters = []) {
-    throw new \Exception();
-  }
-
 }
