@@ -6,6 +6,7 @@
 namespace Drupal\Core\DependencyInjection;
 
 use Drupal\Component\FileCache\FileCacheFactory;
+use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Core\Serialization\Yaml;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -414,7 +415,14 @@ class YamlFileLoader
             throw new InvalidArgumentException(sprintf('The service file "%s" is not valid.', $file));
         }
 
-        return $this->validate(Yaml::decode(file_get_contents($file)), $file);
+        try {
+          $valid_file = $this->validate(Yaml::decode(file_get_contents($file)), $file);
+        }
+        catch (InvalidDataTypeException $e) {
+          throw new InvalidArgumentException(sprintf('The file "%s" does not contain valid YAML: ', $file) . $e->getMessage());
+        }
+
+        return $valid_file;
     }
 
     /**
