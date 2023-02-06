@@ -2201,11 +2201,6 @@ parameters:
 			path: modules/system/tests/modules/module_installer_config_test/src/Entity/TestConfigType.php
 
 		-
-			message: "#^Instantiated class Drupal\\\\Tests\\\\system\\\\Functional\\\\FileTransfer\\\\Exception not found\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/FileTransfer/FileTransferTest.php
-
-		-
 			message: "#^Access to an undefined property Drupal\\\\Tests\\\\system\\\\Functional\\\\FileTransfer\\\\TestFileTransfer\\:\\:\\$connection\\.$#"
 			count: 5
 			path: modules/system/tests/src/Functional/FileTransfer/TestFileTransfer.php
@@ -3091,16 +3086,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/TempStore/TempStoreDatabaseTest.php
 
 		-
-			message: "#^Instantiated class Drupal\\\\FunctionalTests\\\\BrowserMissingDependentModuleMethodTest not found\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Test/BrowserTestBaseTest.php
-
-		-
-			message: "#^Instantiated class Drupal\\\\FunctionalTests\\\\BrowserMissingDependentModuleTest not found\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Test/BrowserTestBaseTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 5
 			path: tests/Drupal/KernelTests/Core/TypedData/TypedDataTest.php
@@ -3109,16 +3094,6 @@ parameters:
 			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/KernelTestBase.php
-
-		-
-			message: "#^Instantiated class Drupal\\\\KernelTests\\\\KernelMissingDependentModuleMethodTest not found\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/KernelTestBaseTest.php
-
-		-
-			message: "#^Instantiated class Drupal\\\\KernelTests\\\\KernelMissingDependentModuleTest not found\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/KernelTestBaseTest.php
 
 		-
 			message: "#^Call to an undefined method Drupal\\\\TestSite\\\\Commands\\\\TestSiteInstallCommand\\:\\:assertTrue\\(\\)\\.$#"

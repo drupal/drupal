@@ -254,6 +254,7 @@ class KernelTestBaseTest extends KernelTestBase {
   public function testMethodRequiresModule() {
     require __DIR__ . '/../../fixtures/KernelMissingDependentModuleMethodTest.php';
 
+    // @phpstan-ignore-next-line
     $stub_test = new KernelMissingDependentModuleMethodTest();
     // We have to setName() to the method name we're concerned with.
     $stub_test->setName('testRequiresModule');
@@ -281,6 +282,7 @@ class KernelTestBaseTest extends KernelTestBase {
   public function testRequiresModule() {
     require __DIR__ . '/../../fixtures/KernelMissingDependentModuleTest.php';
 
+    // @phpstan-ignore-next-line
     $stub_test = new KernelMissingDependentModuleTest();
     // We have to setName() to the method name we're concerned with.
     $stub_test->setName('testRequiresModule');

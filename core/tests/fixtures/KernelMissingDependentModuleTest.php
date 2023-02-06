@@ -8,7 +8,7 @@ namespace Drupal\KernelTests;
  * This is a fixture class for
  * \Drupal\KernelTests\KernelTestBaseTest::testRequiresModule().
  *
- * This test class should not be discovered by run-tests.sh or phpunit.
+ * This test class should not be discovered by run-tests.sh, phpstan or phpunit.
  *
  * @requires module module_does_not_exist
  * @group fixture
