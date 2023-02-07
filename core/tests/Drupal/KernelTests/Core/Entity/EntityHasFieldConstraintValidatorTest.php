@@ -47,7 +47,7 @@ class EntityHasFieldConstraintValidatorTest extends EntityKernelTestBase {
     // field has been created.
     $violations = $entity->validate();
     $this->assertCount(1, $violations);
-    $this->assertEquals('The entity must have the <em class="placeholder">body</em> field.', $violations[0]->getMessage());
+    $this->assertEquals('The entity must have the body field.', $violations[0]->getMessage());
     $storage->save($entity);
 
     // Create the field.

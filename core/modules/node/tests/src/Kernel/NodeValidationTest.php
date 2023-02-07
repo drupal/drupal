@@ -44,7 +44,7 @@ class NodeValidationTest extends EntityKernelTestBase {
     $violations = $node->validate();
     $this->assertCount(1, $violations, 'Violation found when title is too long.');
     $this->assertEquals('title.0.value', $violations[0]->getPropertyPath());
-    $this->assertEquals('<em class="placeholder">Title</em>: may not be longer than 255 characters.', $violations[0]->getMessage());
+    $this->assertEquals('Title: may not be longer than 255 characters.', $violations[0]->getMessage());
 
     $node->set('title', NULL);
     $violations = $node->validate();

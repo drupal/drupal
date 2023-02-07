@@ -46,7 +46,7 @@ class TwigEnvironmentTest extends KernelTestBase {
       '#template' => 'test-with-context <label>{{ unsafe_content }}</label>',
       '#context' => ['unsafe_content' => $unsafe_string],
     ];
-    $this->assertEquals('test-with-context <label>' . Html::escape($unsafe_string) . '</label>', $renderer->renderRoot($element));
+    $this->assertSame('test-with-context <label>' . Html::escape($unsafe_string) . '</label>', (string) $renderer->renderRoot($element));
 
     // Enable twig_auto_reload and twig_debug.
     $settings = Settings::getAll();

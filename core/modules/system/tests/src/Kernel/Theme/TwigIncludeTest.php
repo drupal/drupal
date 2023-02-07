@@ -39,7 +39,7 @@ class TwigIncludeTest extends KernelTestBase {
       '#type' => 'inline_template',
       '#template' => "{% include '@system/container.html.twig' %}",
     ];
-    $this->assertEquals("<div></div>\n", $renderer->renderRoot($element));
+    $this->assertSame("<div></div>\n", (string) $renderer->renderRoot($element));
 
     // Test that SQL files cannot be included in Twig templates by default.
     $element = [];

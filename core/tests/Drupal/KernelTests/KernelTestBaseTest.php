@@ -202,8 +202,8 @@ class KernelTestBaseTest extends KernelTestBase {
     $output = \Drupal::service('renderer')->renderRoot($build);
     $this->assertEquals('core', \Drupal::theme()->getActiveTheme()->getName());
 
-    $this->assertEquals($expected, $build['#markup']);
-    $this->assertEquals($expected, $output);
+    $this->assertSame($expected, (string) $build['#markup']);
+    $this->assertSame($expected, (string) $output);
   }
 
   /**

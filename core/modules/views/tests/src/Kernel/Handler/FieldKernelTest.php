@@ -333,7 +333,7 @@ class FieldKernelTest extends ViewsKernelTestBase {
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($job_field, $row) {
       return $job_field->advancedRender($row);
     });
-    $this->assertEquals('<h1>&lt;span&gt;' . $random_text . '&lt;/span&gt;</h1>', $output, 'Valid tags are allowed in rewrite templates and token replacements.');
+    $this->assertSame('<h1>&lt;span&gt;' . $random_text . '&lt;/span&gt;</h1>', (string) $output, 'Valid tags are allowed in rewrite templates and token replacements.');
 
     // Verify <script> tags are correctly removed from rewritten text.
     $rewrite_template = '<script>alert("malicious");</script>';

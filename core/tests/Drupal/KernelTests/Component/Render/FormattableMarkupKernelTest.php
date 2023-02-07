@@ -44,7 +44,7 @@ class FormattableMarkupKernelTest extends KernelTestBase {
    */
   public function testFormattableMarkupUri($string, $uri, $options, $expected) {
     $args = self::getFormattableMarkupUriArgs($uri, $options);
-    $this->assertEquals($expected, new FormattableMarkup($string, $args));
+    $this->assertSame($expected, (string) new FormattableMarkup($string, $args));
   }
 
   /**

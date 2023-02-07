@@ -405,7 +405,7 @@ class TermTest extends TaxonomyTestBase {
     $value = $this->randomMachineName();
     $term->setDescription($value);
     $term->save();
-    $this->assertEquals("<p>{$value}</p>\n", $term->description->processed);
+    $this->assertSame("<p>{$value}</p>\n", (string) $term->description->processed);
 
     // Check that the term feed page is working.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/feed');

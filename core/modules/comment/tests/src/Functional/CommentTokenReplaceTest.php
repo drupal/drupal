@@ -3,7 +3,6 @@
 namespace Drupal\Tests\comment\Functional;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\comment\Entity\Comment;
@@ -139,7 +138,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     foreach ($tests as $input => $expected) {
       $bubbleable_metadata = new BubbleableMetadata();
       $output = $token_service->replace($input, ['comment' => $comment], ['langcode' => $language_interface->getId()], $bubbleable_metadata);
-      $this->assertEquals($expected, $output, new FormattableMarkup('Comment token %token replaced.', ['%token' => $input]));
+      $this->assertSame((string) $expected, (string) $output, "Failed test case: {$input}");
       $this->assertEquals($metadata_tests[$input], $bubbleable_metadata);
     }
 
@@ -148,7 +147,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $comment->setOwnerId(0)->setAuthorName($author_name);
     $input = '[comment:author]';
     $output = $token_service->replace($input, ['comment' => $comment], ['langcode' => $language_interface->getId()]);
-    $this->assertEquals(Html::escape($author_name), $output, new FormattableMarkup('Comment author token %token replaced.', ['%token' => $input]));
+    $this->assertSame((string) Html::escape($author_name), (string) $output);
     // Add comment field to user and term entities.
     $this->addDefaultCommentField('user', 'user', 'comment', CommentItemInterface::OPEN, 'comment_user');
     $this->addDefaultCommentField('taxonomy_term', 'tags', 'comment', CommentItemInterface::OPEN, 'comment_term');
@@ -186,7 +185,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
 
     foreach ($tests as $input => $expected) {
       $output = $token_service->replace($input, ['entity' => $node, 'node' => $node, 'user' => $user, 'term' => $term], ['langcode' => $language_interface->getId()]);
-      $this->assertEquals($expected, $output, new FormattableMarkup('Comment token %token replaced.', ['%token' => $input]));
+      $this->assertSame((string) $expected, (string) $output, "Failed test case: {$input}");
     }
   }
 

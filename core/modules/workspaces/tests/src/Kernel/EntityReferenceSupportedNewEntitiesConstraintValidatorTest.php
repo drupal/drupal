@@ -84,7 +84,7 @@ class EntityReferenceSupportedNewEntitiesConstraintValidatorTest extends KernelT
     ]);
     $violations = $entity->validate();
     $this->assertCount(1, $violations);
-    $this->assertEquals('<em class="placeholder">Test entity entities</em> can only be created in the default workspace.', $violations[0]->getMessage());
+    $this->assertEquals('Test entity entities can only be created in the default workspace.', $violations[0]->getMessage());
   }
 
 }

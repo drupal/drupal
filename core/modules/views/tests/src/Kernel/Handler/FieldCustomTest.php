@@ -52,7 +52,7 @@ class FieldCustomTest extends ViewsKernelTestBase {
 
     $this->executeView($view);
 
-    $this->assertEquals($random, $view->style_plugin->getField(0, 'name'));
+    $this->assertSame($random, (string) $view->style_plugin->getField(0, 'name'));
   }
 
   /**

@@ -101,7 +101,7 @@ class CommentValidationTest extends EntityKernelTestBase {
     $violations = $comment->validate();
     $this->assertCount(1, $violations, "Violation found on author name collision");
     $this->assertEquals("name", $violations[0]->getPropertyPath());
-    $this->assertEquals(t('The name you used (%name) belongs to a registered user.', ['%name' => 'test']), $violations[0]->getMessage());
+    $this->assertEquals('The name you used (test) belongs to a registered user.', $violations[0]->getMessage());
 
     // Make the name valid.
     $comment->set('name', 'valid unused name');
@@ -197,7 +197,7 @@ class CommentValidationTest extends EntityKernelTestBase {
     $this->assertCount(1, $violations, "Violation found when $field_name is too long.");
     $this->assertEquals("{$field_name}.0.value", $violations[0]->getPropertyPath());
     $field_label = $comment->get($field_name)->getFieldDefinition()->getLabel();
-    $this->assertEquals(t('%name: may not be longer than @max characters.', ['%name' => $field_label, '@max' => $length]), $violations[0]->getMessage());
+    $this->assertEquals("{$field_label}: may not be longer than {$length} characters.", $violations[0]->getMessage());
   }
 
 }

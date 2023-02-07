@@ -139,7 +139,7 @@ class ContentTranslationHandlerTest extends KernelTestBase {
       $messages = $this->messenger->messagesByType('warning');
       $this->assertCount(1, $messages);
       $expected_message = sprintf('Fields that apply to all languages are hidden to avoid conflicting changes. <a href="%s">Edit them on the original language form</a>.', $entity->toUrl('edit-form')->toString());
-      $this->assertEquals($expected_message, reset($messages));
+      $this->assertSame($expected_message, (string) reset($messages));
     }
   }
 

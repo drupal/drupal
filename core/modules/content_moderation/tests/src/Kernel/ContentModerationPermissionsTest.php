@@ -108,8 +108,8 @@ class ContentModerationPermissionsTest extends KernelTestBase {
         ],
         [
           'use simple_workflow transition publish' => [
-            'title' => '<em class="placeholder">Simple Workflow</em> workflow: Use <em class="placeholder">Publish</em> transition.',
-            'description' => 'Move content from <em class="placeholder">Draft, Published</em> states to <em class="placeholder">Published</em> state.',
+            'title' => 'Simple Workflow workflow: Use Publish transition.',
+            'description' => 'Move content from Draft, Published states to Published state.',
             'dependencies' => [
               'config' => [
                 'workflows.workflow.simple_workflow',
@@ -117,8 +117,8 @@ class ContentModerationPermissionsTest extends KernelTestBase {
             ],
           ],
           'use simple_workflow transition create_new_draft' => [
-            'title' => '<em class="placeholder">Simple Workflow</em> workflow: Use <em class="placeholder">Create New Draft</em> transition.',
-            'description' => 'Move content from <em class="placeholder">Draft, Published</em> states to <em class="placeholder">Draft</em> state.',
+            'title' => 'Simple Workflow workflow: Use Create New Draft transition.',
+            'description' => 'Move content from Draft, Published states to Draft state.',
             'dependencies' => [
               'config' => [
                 'workflows.workflow.simple_workflow',
@@ -126,8 +126,8 @@ class ContentModerationPermissionsTest extends KernelTestBase {
             ],
           ],
           'use simple_workflow transition archive' => [
-            'title' => '<em class="placeholder">Simple Workflow</em> workflow: Use <em class="placeholder">Archive</em> transition.',
-            'description' => 'Move content from <em class="placeholder">Published</em> state to <em class="placeholder">Archived</em> state.',
+            'title' => 'Simple Workflow workflow: Use Archive transition.',
+            'description' => 'Move content from Published state to Archived state.',
             'dependencies' => [
               'config' => [
                 'workflows.workflow.simple_workflow',

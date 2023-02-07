@@ -663,7 +663,7 @@ class StyleSerializerTest extends ViewTestBase {
 
     $result = Json::decode($this->drupalGet('test/serialize/node-field', ['query' => ['_format' => 'json']]));
     $this->assertEquals($node->id(), $result[0]['nid']);
-    $this->assertEquals($node->body->processed, $result[0]['body']);
+    $this->assertEquals((string) $node->body->processed, (string) $result[0]['body']);
 
     // Make sure that serialized fields are not exposed to XSS.
     $node = $this->drupalCreateNode();
@@ -807,19 +807,19 @@ class StyleSerializerTest extends ViewTestBase {
     $expected = [
       0 => [
         'nid' => $node0->id(),
-        'body' => $node0->body->processed,
+        'body' => (string) $node0->body->processed,
       ],
       1 => [
         'nid' => $node1->id(),
-        'body' => $node1->body->processed,
+        'body' => (string) $node1->body->processed,
       ],
       2 => [
         'nid' => $node2->id(),
-        'body' => $node2->body->processed,
+        'body' => (string) $node2->body->processed,
       ],
     ];
 
-    $this->assertEquals($expected, $result, 'Querying a view with no exposed filter returns all nodes.');
+    $this->assertSame($expected, $result, 'Querying a view with no exposed filter returns all nodes.');
 
     // Test that title starts with 'Node 11' query finds 2 of the 3 nodes.
     $result = Json::decode($this->drupalGet('test/serialize/node-exposed-filter', ['query' => ['_format' => 'json', 'title' => 'Node 11']]));
@@ -827,11 +827,11 @@ class StyleSerializerTest extends ViewTestBase {
     $expected = [
       0 => [
         'nid' => $node1->id(),
-        'body' => $node1->body->processed,
+        'body' => (string) $node1->body->processed,
       ],
       1 => [
         'nid' => $node2->id(),
-        'body' => $node2->body->processed,
+        'body' => (string) $node2->body->processed,
       ],
     ];
 
@@ -844,7 +844,7 @@ class StyleSerializerTest extends ViewTestBase {
       'url',
     ];
 
-    $this->assertEquals($expected, $result, 'Querying a view with a starts with exposed filter on the title returns nodes whose title starts with value provided.');
+    $this->assertSame($expected, $result, 'Querying a view with a starts with exposed filter on the title returns nodes whose title starts with value provided.');
     $this->assertCacheContexts($cache_contexts);
   }
 

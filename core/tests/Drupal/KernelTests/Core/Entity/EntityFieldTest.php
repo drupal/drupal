@@ -915,14 +915,14 @@ class EntityFieldTest extends EntityKernelTestBase {
     $entity->field_test_text->format = filter_default_format();
 
     $target = "<p>The &lt;strong&gt;text&lt;/strong&gt; text to filter.</p>\n";
-    $this->assertEquals($target, $entity->field_test_text->processed, new FormattableMarkup('%entity_type: Text is processed with the default filter.', ['%entity_type' => $entity_type]));
+    $this->assertSame($target, (string) $entity->field_test_text->processed, new FormattableMarkup('%entity_type: Text is processed with the default filter.', ['%entity_type' => $entity_type]));
 
     // Save and load entity and make sure it still works.
     $entity->save();
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($entity_type)
       ->load($entity->id());
-    $this->assertEquals($target, $entity->field_test_text->processed, new FormattableMarkup('%entity_type: Text is processed with the default filter.', ['%entity_type' => $entity_type]));
+    $this->assertSame($target, (string) $entity->field_test_text->processed, new FormattableMarkup('%entity_type: Text is processed with the default filter.', ['%entity_type' => $entity_type]));
   }
 
   /**

@@ -93,7 +93,7 @@ class BlockViewBuilderTest extends KernelTestBase {
     $expected[] = '  </div>';
     $expected[] = '';
     $expected_output = implode("\n", $expected);
-    $this->assertEquals($expected_output, $this->renderer->renderRoot($output));
+    $this->assertSame($expected_output, (string) $this->renderer->renderRoot($output));
 
     // Reset the HTML IDs so that the next render is not affected.
     Html::resetSeenIds();
@@ -118,7 +118,7 @@ class BlockViewBuilderTest extends KernelTestBase {
     $expected[] = '  </div>';
     $expected[] = '';
     $expected_output = implode("\n", $expected);
-    $this->assertEquals($expected_output, $this->renderer->renderRoot($output));
+    $this->assertSame($expected_output, (string) $this->renderer->renderRoot($output));
   }
 
   /**

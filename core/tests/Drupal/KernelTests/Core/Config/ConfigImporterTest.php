@@ -683,7 +683,7 @@ class ConfigImporterTest extends KernelTestBase {
     catch (ConfigImporterException $e) {
       $this->assertStringContainsString('There were errors validating the config synchronization.', $e->getMessage());
       $error_log = $config_importer->getErrors();
-      $this->assertEquals('Unable to uninstall the <em class="placeholder">System</em> module because: The System module is required.', $error_log[0]);
+      $this->assertEquals('Unable to uninstall the System module because: The System module is required.', $error_log[0]);
     }
   }
 
@@ -741,7 +741,7 @@ class ConfigImporterTest extends KernelTestBase {
       $this->assertEquals($expected, $e->getMessage(), 'There were errors validating the config synchronization.');
       $error_log = $config_importer->getErrors();
       // Install profiles should not even be scanned at this point.
-      $this->assertEquals(['Unable to install the <em class="placeholder">standard</em> module since it does not exist.'], $error_log);
+      $this->assertEquals(['Unable to install the standard module since it does not exist.'], $error_log);
     }
   }
 
@@ -771,7 +771,7 @@ class ConfigImporterTest extends KernelTestBase {
       // does not use an install profile. This situation should be impossible
       // to get in but site's can removed the install profile setting from
       // settings.php so the test is valid.
-      $this->assertEquals(['Cannot change the install profile from <em class="placeholder"></em> to <em class="placeholder">this_will_not_work</em> once Drupal is installed.'], $error_log);
+      $this->assertEquals(['Cannot change the install profile from  to this_will_not_work once Drupal is installed.'], $error_log);
     }
   }
 

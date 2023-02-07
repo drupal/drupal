@@ -74,7 +74,7 @@ class WorkspaceConcurrentEditingTest extends BrowserTestBase {
     // Check that the node fails validation for API calls.
     $violations = $test_node->validate();
     $this->assertCount(1, $violations);
-    $this->assertEquals('The content is being edited in the <em class="placeholder">Vultures</em> workspace. As a result, your changes cannot be saved.', $violations->get(0)->getMessage());
+    $this->assertEquals('The content is being edited in the Vultures workspace. As a result, your changes cannot be saved.', $violations->get(0)->getMessage());
 
     // Switch to the Live version of the site and check that the user still can
     // not edit the node.
@@ -87,7 +87,7 @@ class WorkspaceConcurrentEditingTest extends BrowserTestBase {
     // Check that the node fails validation for API calls.
     $violations = $test_node->validate();
     $this->assertCount(1, $violations);
-    $this->assertEquals('The content is being edited in the <em class="placeholder">Vultures</em> workspace. As a result, your changes cannot be saved.', $violations->get(0)->getMessage());
+    $this->assertEquals('The content is being edited in the Vultures workspace. As a result, your changes cannot be saved.', $violations->get(0)->getMessage());
 
     // Publish the changes from the 'Vultures' workspace and check that the node
     // can be edited again in other workspaces.

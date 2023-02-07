@@ -78,7 +78,7 @@ class LocaleStringIsSafeTest extends KernelTestBase {
       $rendered_safe_string = \Drupal::theme()->render('locale_test_tokenized', ['content' => $safe_string]);
       // t() function always marks the string as safe so it won't be escaped,
       // and should be the same as the original.
-      $this->assertEquals($original_string . "\n", $rendered_safe_string, 'Security test ' . $i . ' after translation before token replacement');
+      $this->assertSame($original_string . "\n", (string) $rendered_safe_string, 'Security test ' . $i . ' after translation before token replacement');
 
       // Replace tokens in the safe string to inject it with dangerous content.
       // @see locale_test_tokens().

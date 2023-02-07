@@ -77,7 +77,7 @@ class TermHierarchyValidationTest extends EntityKernelTestBase {
     $this->assertEmpty($violations);
     $child1->save();
 
-    $validation_message = 'You can only change the hierarchy for the <em>published</em> version of this term.';
+    $validation_message = 'You can only change the hierarchy for the published version of this term.';
 
     // Add a pending revision without changing the term parent.
     $pending_name = $this->randomMachineName();
