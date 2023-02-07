@@ -84,7 +84,9 @@ class ToolkitTest extends KernelTestBase {
    */
   public function testApply() {
     $data = ['p1' => 1, 'p2' => TRUE, 'p3' => 'text'];
-    $this->assertTrue($this->image->apply('my_operation', $data));
+
+    // The operation plugin itself does not exist, so apply will return false.
+    $this->assertFalse($this->image->apply('my_operation', $data));
 
     // Check that apply was called and with the correct parameters.
     $this->assertToolkitOperationsCalled(['apply']);
@@ -99,7 +101,8 @@ class ToolkitTest extends KernelTestBase {
    * Tests the 'apply' method without parameters.
    */
   public function testApplyNoParameters() {
-    $this->assertTrue($this->image->apply('my_operation'));
+    // The operation plugin itself does not exist, so apply will return false.
+    $this->assertFalse($this->image->apply('my_operation'));
 
     // Check that apply was called and with the correct parameters.
     $this->assertToolkitOperationsCalled(['apply']);
@@ -126,6 +129,19 @@ class ToolkitTest extends KernelTestBase {
     $this->assertEquals('foo_derived', $blur->getPluginId());
     // "Invert" operation inherited from base plugin.
     $this->assertEquals('bar', $invert->getPluginId());
+  }
+
+  /**
+   * Tests calling a failing image operation plugin.
+   */
+  public function testFailingOperation(): void {
+    $this->assertFalse($this->image->apply('failing'));
+
+    // Check that apply was called and with the correct parameters.
+    $this->assertToolkitOperationsCalled(['apply']);
+    $calls = $this->imageTestGetAllCalls();
+    $this->assertEquals('failing', $calls['apply'][0][0]);
+    $this->assertSame([], $calls['apply'][0][1]);
   }
 
 }
