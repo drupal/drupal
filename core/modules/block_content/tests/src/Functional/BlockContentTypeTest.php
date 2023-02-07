@@ -255,4 +255,17 @@ class BlockContentTypeTest extends BlockContentTestBase {
     }
   }
 
+  /**
+   * Tests the deprecation message from the old block-type page.
+   *
+   * @group legacy
+   */
+  public function testBlockContentTypeRedirect() {
+    $this->drupalLogin($this->adminUser);
+    $this->expectDeprecation('The path /admin/structure/block/block-content/types is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/structure/block-content. See https://www.drupal.org/node/3320855.');
+    $this->drupalGet('/admin/structure/block/block-content/types');
+    $base_path = parse_url($this->baseUrl, PHP_URL_PATH) ?? '';
+    $this->assertSession()->pageTextContains("You have been redirected from $base_path/admin/structure/block/block-content/types. Update links, shortcuts, and bookmarks to use $base_path/admin/structure/block-content.");
+  }
+
 }
