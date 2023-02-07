@@ -36,6 +36,9 @@
         "symfony/dom-crawler": "^4.4 !=4.4.5",
         "easyrdf/easyrdf": "^0.9 || ^1.0"
     },
+    "conflict": {
+        "phpunit/phpunit": "^9.6"
+    },
     "replace": {
         "symfony/polyfill-php72": "*",
         "symfony/polyfill-php73": "*"
