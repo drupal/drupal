@@ -143,7 +143,6 @@ Comment
 
 Configuration API
 - Alex Pott 'alexpott' https://www.drupal.org/u/alexpott
-- Matthew Tift 'mtift' https://www.drupal.org/u/mtift
 
 Configuration Entity API
 - Alex Pott 'alexpott' https://www.drupal.org/u/alexpott
