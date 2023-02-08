@@ -11,8 +11,6 @@
   display: table;
   clear: both;
   min-width: 50px;
-  margin: 0.9em auto;
-  text-align: center;
 }
 
 .ck-content .drupal-media img {
