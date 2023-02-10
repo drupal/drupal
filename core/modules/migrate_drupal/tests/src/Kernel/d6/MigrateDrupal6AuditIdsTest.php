@@ -35,6 +35,7 @@ class MigrateDrupal6AuditIdsTest extends MigrateDrupal6TestBase {
     // Install required schemas.
     $this->installSchema('book', ['book']);
     $this->installSchema('dblog', ['watchdog']);
+    // @todo Remove forum in https://www.drupal.org/project/drupal/issues/3261653
     $this->installSchema('forum', ['forum_index']);
     $this->installSchema('node', ['node_access']);
     $this->installSchema('search', ['search_dataset']);

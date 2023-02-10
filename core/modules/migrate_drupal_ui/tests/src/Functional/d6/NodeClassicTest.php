@@ -28,7 +28,6 @@ class NodeClassicTest extends MigrateUpgradeExecuteTestBase {
     'migrate_drupal_ui',
     'telephone',
     'book',
-    'forum',
     'statistics',
   ];
 

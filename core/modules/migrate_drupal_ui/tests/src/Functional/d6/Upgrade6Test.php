@@ -22,7 +22,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     'config_translation',
     'content_translation',
     'datetime_range',
-    'forum',
     'language',
     'migrate_drupal_ui',
     'statistics',
@@ -78,8 +77,8 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'contact_message' => 0,
       'configurable_language' => 5,
       'editor' => 2,
-      'field_config' => 103,
-      'field_storage_config' => 71,
+      'field_config' => 102,
+      'field_storage_config' => 70,
       'file' => 7,
       'filter_format' => 7,
       'image_style' => 6,
@@ -102,11 +101,11 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'menu_link_content' => 10,
       'view' => 14,
       'date_format' => 12,
-      'entity_form_display' => 31,
+      'entity_form_display' => 30,
       'entity_form_mode' => 1,
-      'entity_view_display' => 58,
+      'entity_view_display' => 57,
       'entity_view_mode' => 12,
-      'base_field_override' => 41,
+      'base_field_override' => 40,
     ];
   }
 
@@ -143,7 +142,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'Email',
       'FileField',
       'Filter',
-      'Forum',
       'ImageCache',
       'ImageField',
       'Internationalization',
@@ -186,6 +184,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
   protected function getMissingPaths() {
     return [
       'Aggregator',
+      'Forum',
     ];
   }
 

@@ -38,6 +38,13 @@ class MigrateForumSettingsTest extends MigrateDrupal7TestBase {
   }
 
   /**
+   * Gets the path to the fixture file.
+   */
+  protected function getFixtureFilePath() {
+    return __DIR__ . '/../../../../fixtures/drupal7.php';
+  }
+
+  /**
    * Tests the migration of Forum's settings to configuration.
    */
   public function testForumSettingsMigration() {

@@ -37,6 +37,7 @@ class MigrationPluginListTest extends KernelTestBase {
     'field',
     'file',
     'filter',
+    // @todo Remove forum in https://www.drupal.org/project/drupal/issues/3261653
     'forum',
     'image',
     'language',
