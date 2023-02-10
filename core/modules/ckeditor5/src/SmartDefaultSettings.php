@@ -178,39 +178,40 @@ final class SmartDefaultSettings {
       $unsupported = $missing->diff($missing_attributes);
 
       if ($enabling_message_content) {
-        $this->logger->info(new FormattableMarkup('The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the %text_format text format: %enabling_message_content. The text format must be saved to make these changes active.',
+        $this->logger->info('The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the %text_format text format: %enabling_message_content. The text format must be saved to make these changes active.',
           [
             '%text_format' => $editor->getFilterFormat()->get('name'),
             '%enabling_message_content' => $enabling_message_content,
-          ],
-        ));
+          ]
+        );
       }
+
       // Warn user about unsupported tags.
       if (!$unsupported->allowsNothing()) {
         $this->addTagsToSourceEditing($editor, $unsupported);
         $source_editing_additions = $source_editing_additions->merge($unsupported);
-        $this->logger->info(new FormattableMarkup("The following tags were permitted by the %text_format text format's filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: @unsupported_string. The text format must be saved to make these changes active.", [
+        $this->logger->info("The following tags were permitted by the %text_format text format's filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: @unsupported_string. The text format must be saved to make these changes active.", [
           '%text_format' => $editor->getFilterFormat()->get('name'),
           '@unsupported_string' => $unsupported->toFilterHtmlAllowedTagsString(),
-        ]));
+        ]);
       }
 
       if ($enabled_for_attributes_message_content) {
-        $this->logger->info(new FormattableMarkup('The CKEditor 5 migration process enabled the following plugins to support specific attributes that are allowed by the %text_format text format: %enabled_for_attributes_message_content.',
+        $this->logger->info('The CKEditor 5 migration process enabled the following plugins to support specific attributes that are allowed by the %text_format text format: %enabled_for_attributes_message_content.',
           [
             '%text_format' => $editor->getFilterFormat()->get('name'),
             '%enabled_for_attributes_message_content' => $enabled_for_attributes_message_content,
           ],
-        ));
+        );
       }
       // Warn user about supported tags but missing attributes.
       if (!$missing_attributes->allowsNothing()) {
         $this->addTagsToSourceEditing($editor, $missing_attributes);
         $source_editing_additions = $source_editing_additions->merge($missing_attributes);
-        $this->logger->info(new FormattableMarkup("As part of migrating to CKEditor 5, it was found that the %text_format text format's HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: @missing_attributes. The text format must be saved to make these changes active.", [
+        $this->logger->info("As part of migrating to CKEditor 5, it was found that the %text_format text format's HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: @missing_attributes. The text format must be saved to make these changes active.", [
           '%text_format' => $editor->getFilterFormat()->get('name'),
           '@missing_attributes' => $missing_attributes->toFilterHtmlAllowedTagsString(),
-        ]));
+        ]);
       }
     }
 
@@ -225,10 +226,10 @@ final class SmartDefaultSettings {
       $missing_fundamental_tags = $fundamental->diff($filter_html_restrictions);
       if (!$missing_fundamental_tags->allowsNothing()) {
         $editor->getFilterFormat()->setFilterConfig('filter_html', $filter_html_restrictions->merge($fundamental)->getAllowedElements());
-        $this->logger->warning(new FormattableMarkup("As part of migrating the %text_format text format to CKEditor 5, the following tag(s) were added to <em>Limit allowed HTML tags and correct faulty HTML</em>, because they are needed to provide fundamental CKEditor 5 functionality : @missing_tags. The text format must be saved to make these changes active.", [
+        $this->logger->warning("As part of migrating the %text_format text format to CKEditor 5, the following tag(s) were added to <em>Limit allowed HTML tags and correct faulty HTML</em>, because they are needed to provide fundamental CKEditor 5 functionality : @missing_tags. The text format must be saved to make these changes active.", [
           '%text_format' => $editor->getFilterFormat()->get('name'),
           '@missing_tags' => $missing_fundamental_tags->toFilterHtmlAllowedTagsString(),
-        ]));
+        ]);
       }
     }
 
@@ -448,9 +449,9 @@ final class SmartDefaultSettings {
             $equivalent = $this->upgradePluginManager->mapCKEditor4ToolbarButtonToCKEditor5ToolbarItem($cke4_button, $text_format_html_restrictions);
           }
           catch (\OutOfBoundsException $e) {
-            $this->logger->warning(new FormattableMarkup('The CKEditor 4 button %button does not have a known upgrade path. If it allowed editing markup, then you can do so now through the Source Editing functionality.', [
+            $this->logger->warning('The CKEditor 4 button %button does not have a known upgrade path. If it allowed editing markup, then you can do so now through the Source Editing functionality.', [
               '%button' => $cke4_button,
-            ]));
+            ]);
             $messages[MessengerInterface::TYPE_WARNING][] = $this->t('The CKEditor 4 button %button does not have a known upgrade path. If it allowed editing markup, then you can do so now through the Source Editing functionality.', [
               '%button' => $cke4_button,
             ]);
@@ -489,9 +490,9 @@ final class SmartDefaultSettings {
         $settings['plugins'] += $cke5_plugin_settings;
       }
       catch (\OutOfBoundsException $e) {
-        $this->logger->warning(new FormattableMarkup('The %cke4_plugin_id plugin settings do not have a known upgrade path.', [
+        $this->logger->warning('The %cke4_plugin_id plugin settings do not have a known upgrade path.', [
           '%cke4_plugin_id' => $cke4_plugin_id,
-        ]));
+        ]);
         $messages[MessengerInterface::TYPE_WARNING][] = $this->t('The %cke4_plugin_id plugin settings do not have a known upgrade path.', [
           '%cke4_plugin_id' => $cke4_plugin_id,
         ]);
