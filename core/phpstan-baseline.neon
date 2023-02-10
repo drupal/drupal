@@ -281,6 +281,16 @@ parameters:
 			path: lib/Drupal/Core/Condition/ConditionManager.php
 
 		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: lib/Drupal/Core/Config/Entity/ConfigEntityBase.php
+
+		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: lib/Drupal/Core/Config/Entity/ConfigEntityBundleBase.php
+
+		-
 			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 2
 			path: lib/Drupal/Core/Config/Entity/Query/Condition.php
@@ -791,11 +801,6 @@ parameters:
 			path: lib/Drupal/Core/Utility/PhpRequirements.php
 
 		-
-			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Validation/Plugin/Validation/Constraint/UniqueFieldValueValidator.php
-
-		-
 			message: "#^Method Drupal\\\\action\\\\Form\\\\ActionFormBase\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/action/src/Form/ActionFormBase.php
@@ -809,6 +814,16 @@ parameters:
 			message: "#^\\#pre_render callback 'current_time' at key '0' is not callable\\.$#"
 			count: 1
 			path: modules/big_pipe/tests/modules/big_pipe_test/src/BigPipePlaceholderTestCases.php
+
+		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: modules/block/src/BlockForm.php
+
+		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: modules/block/src/BlockListBuilder.php
 
 		-
 			message: "#^Method Drupal\\\\Component\\\\Plugin\\\\PluginBase\\:\\:__construct\\(\\) invoked with 4 parameters, 3 required\\.$#"
@@ -869,6 +884,11 @@ parameters:
 			message: "#^Variable \\$goto in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: modules/block_content/tests/src/Functional/BlockContentTypeTest.php
+
+		-
+			message: "#^Variable \\$goto in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: modules/block_content/tests/src/Functional/PageEditTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1013,6 +1033,11 @@ parameters:
 		-
 			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
 			count: 1
+			path: modules/config/tests/config_test/src/ConfigTestForm.php
+
+		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
 			path: modules/config_translation/src/Controller/ConfigTranslationFieldListBuilder.php
 
 		-
@@ -1049,6 +1074,11 @@ parameters:
 			message: "#^Variable \\$state in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 3
 			path: modules/content_moderation/src/Form/ContentModerationStateForm.php
+
+		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: modules/content_moderation/src/ModeratedNodeListBuilder.php
 
 		-
 			message: "#^Method Drupal\\\\content_moderation\\\\ModerationInformation\\:\\:getAffectedRevisionTranslation\\(\\) should return Drupal\\\\Core\\\\Entity\\\\ContentEntityInterface but return statement is missing\\.$#"
@@ -1246,6 +1276,11 @@ parameters:
 			path: modules/field_ui/src/Form/EntityDisplayModeFormBase.php
 
 		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: modules/field_ui/src/Form/EntityDisplayModeFormBase.php
+
+		-
 			message: "#^Method Drupal\\\\field_ui\\\\Form\\\\FieldConfigEditForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/field_ui/src/Form/FieldConfigEditForm.php
@@ -1257,11 +1292,6 @@ parameters:
 
 		-
 			message: "#^Method Drupal\\\\field_ui\\\\Form\\\\FieldStorageConfigEditForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
-			count: 1
-			path: modules/field_ui/src/Form/FieldStorageConfigEditForm.php
-
-		-
-			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
 			count: 1
 			path: modules/field_ui/src/Form/FieldStorageConfigEditForm.php
 
@@ -1801,11 +1831,6 @@ parameters:
 			path: modules/migrate_drupal_ui/tests/src/Functional/MigrateUpgradeTestBase.php
 
 		-
-			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
-			count: 1
-			path: modules/migrate_drupal_ui/tests/src/Functional/MigrateUpgradeTestBase.php
-
-		-
 			message: "#^Variable \\$patterns might not be defined\\.$#"
 			count: 1
 			path: modules/migrate_drupal_ui/tests/src/Functional/MigrateUpgradeTestBase.php
@@ -2061,6 +2086,16 @@ parameters:
 			path: modules/serialization/src/Normalizer/EntityNormalizer.php
 
 		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: modules/serialization/src/Normalizer/EntityNormalizer.php
+
+		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: modules/serialization/src/Normalizer/FieldItemNormalizer.php
+
+		-
 			message: "#^Class Drupal\\\\block\\\\Entity\\\\Block referenced with incorrect case\\: Drupal\\\\block\\\\entity\\\\Block\\.$#"
 			count: 2
 			path: modules/settings_tray/settings_tray.module
@@ -2174,11 +2209,6 @@ parameters:
 			message: "#^File core/modules/system/tests/modules/entity_test/entity_test\\.inc could not be loaded from Drupal\\\\Core\\\\Extension\\\\ModuleHandlerInterface\\:\\:loadInclude$#"
 			count: 2
 			path: modules/system/tests/modules/entity_test/entity_test.install
-
-		-
-			message: "#^Variable \\$goto in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/Menu/AssertBreadcrumbTrait.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -2409,6 +2439,11 @@ parameters:
 			message: "#^Method Drupal\\\\user\\\\RoleForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/user/src/RoleForm.php
+
+		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: modules/user/src/UserListBuilder.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -2963,11 +2998,6 @@ parameters:
 		-
 			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
 			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceIntegrationTest.php
-
-		-
-			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
-			count: 1
 			path: modules/workspaces/workspaces.install
 
 		-
@@ -3012,7 +3042,7 @@ parameters:
 
 		-
 			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
-			count: 2
+			count: 75
 			path: tests/Drupal/KernelTests/Core/Entity/ConfigEntityQueryTest.php
 
 		-
@@ -3034,6 +3064,11 @@ parameters:
 			message: "#^Variable \\$previous_untranslatable_field_value in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 2
 			path: tests/Drupal/KernelTests/Core/Entity/EntityDecoupledTranslationRevisionsTest.php
+
+		-
+			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
+			count: 1
+			path: tests/Drupal/KernelTests/Core/Entity/EntityQueryTest.php
 
 		-
 			message: "#^Variable \\$field might not be defined\\.$#"
