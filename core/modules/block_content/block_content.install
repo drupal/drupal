@@ -35,3 +35,18 @@ function block_content_update_10100(&$sandbox = NULL): TranslatableMarkup {
   $entityDefinitionUpdateManager->updateEntityType($definition);
   return \t('Added revision routes to Custom block entity type.');
 }
+
+/**
+ * Remove the unique values constraint from block content info fields.
+ */
+function block_content_update_10200() {
+  $constraint = 'UniqueField';
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $field_storage_definition = $definition_update_manager->getFieldStorageDefinition('info', 'block_content');
+  $constraints = $field_storage_definition->getConstraints();
+  if (isset($constraints[$constraint])) {
+    unset($constraints[$constraint]);
+    $field_storage_definition->setConstraints($constraints);
+    $definition_update_manager->updateFieldStorageDefinition($field_storage_definition);
+  }
+}

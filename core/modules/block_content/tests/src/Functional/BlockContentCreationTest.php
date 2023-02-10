@@ -70,15 +70,6 @@ class BlockContentCreationTest extends BlockContentTestBase {
       ->loadByProperties(['info' => $edit['info[0][value]']]);
     $block = reset($blocks);
     $this->assertNotEmpty($block, 'Custom Block found in database.');
-
-    // Check that attempting to create another block with the same value for
-    // 'info' returns an error.
-    $this->drupalGet('block/add/basic');
-    $this->submitForm($edit, 'Save');
-
-    // Check that the Basic block has been created.
-    $this->assertSession()->pageTextContains('A custom block with block description ' . $edit['info[0][value]'] . ' already exists.');
-    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
@@ -148,15 +139,6 @@ class BlockContentCreationTest extends BlockContentTestBase {
       ->loadByProperties(['info' => $edit['info[0][value]']]);
     $block = reset($blocks);
     $this->assertNotEmpty($block, 'Custom Block found in database.');
-
-    // Check that attempting to create another block with the same value for
-    // 'info' returns an error.
-    $this->drupalGet('block/add/basic');
-    $this->submitForm($edit, 'Save');
-
-    // Check that the Basic block has been created.
-    $this->assertSession()->pageTextContains('A custom block with block description ' . $edit['info[0][value]'] . ' already exists.');
-    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
