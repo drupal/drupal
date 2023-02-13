@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Contains install functions for the Content moderation test re-save module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function content_moderation_test_resave_install() {
+  // Make sure that this module's hooks are run before Content Moderation's
+  // hooks.
+  module_set_weight('content_moderation_test_resave', -10);
+}
