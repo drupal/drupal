@@ -221,7 +221,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
   public function testInvalidLinkExistsExact() {
     $this->drupalGet('test-pipe-char');
     $this->expectException(ExpectationException::class);
-    $this->expectExceptionMessage('Link with label foo|bar found');
+    $this->expectExceptionMessage('Link with label foo|bar not found');
     $this->assertSession()->linkExistsExact('foo|bar');
   }
 
@@ -253,7 +253,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
   public function testInvalidLinkNotExistsExact() {
     $this->drupalGet('test-pipe-char');
     $this->expectException(ExpectationException::class);
-    $this->expectExceptionMessage('Link with label foo|bar|baz not found');
+    $this->expectExceptionMessage('Link with label foo|bar|baz found');
     $this->assertSession()->linkNotExistsExact('foo|bar|baz');
   }
 
