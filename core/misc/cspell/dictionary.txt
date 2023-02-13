@@ -1043,6 +1043,7 @@ screenreaders
 scriptable
 scrollbars
 searchdirs
+sebastianbergmann
 sebe
 seld
 selectbox

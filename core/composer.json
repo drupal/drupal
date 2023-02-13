@@ -42,7 +42,8 @@
         "asm89/stack-cors": "^2.1",
         "pear/archive_tar": "^1.4.14",
         "psr/log": "^3.0",
-        "mck89/peast": "^1.14"
+        "mck89/peast": "^1.14",
+        "sebastian/diff": "^4"
     },
     "conflict": {
         "drush/drush": "<8.1.10"

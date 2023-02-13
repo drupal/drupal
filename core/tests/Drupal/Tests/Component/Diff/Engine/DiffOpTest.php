@@ -4,6 +4,7 @@ namespace Drupal\Tests\Component\Diff\Engine;
 
 use Drupal\Component\Diff\Engine\DiffOp;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * Test DiffOp base class.
@@ -15,8 +16,11 @@ use PHPUnit\Framework\TestCase;
  * @coversDefaultClass \Drupal\Component\Diff\Engine\DiffOp
  *
  * @group Diff
+ * @group legacy
  */
 class DiffOpTest extends TestCase {
+
+  use ExpectDeprecationTrait;
 
   /**
    * DiffOp::reverse() always throws an error.
@@ -24,6 +28,7 @@ class DiffOpTest extends TestCase {
    * @covers ::reverse
    */
   public function testReverse() {
+    $this->expectDeprecation('Drupal\Component\Diff\Engine\DiffOp::reverse() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3337942');
     $this->expectError();
     $op = new DiffOp();
     $result = $op->reverse();

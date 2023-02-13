@@ -2,17 +2,15 @@
 
 namespace Drupal\Component\Diff;
 
-use Drupal\Component\Diff\Engine\DiffEngine;
+use SebastianBergmann\Diff\Differ;
 
 /**
  * Class representing a 'diff' between two sequences of strings.
- * @todo document
- * @subpackage DifferenceEngine
  *
- * Copied from https://www.drupal.org/project/diff which was based PHP diff
- * engine for phpwiki. (Taken from phpwiki-1.3.3) The original code in phpwiki
- * was copyright (C) 2000, 2001 Geoffrey T. Dairiki <dairiki@dairiki.org> and
- * licensed under GPL.
+ * Component code originally taken from https://www.drupal.org/project/diff
+ * which was itself based on the PHP diff engine for phpwiki. The original code
+ * in phpwiki was copyright (C) 2000, 2001 Geoffrey T. Dairiki
+ * <dairiki@dairiki.org> and licensed under GPL.
  */
 class Diff {
 
@@ -34,9 +32,9 @@ class Diff {
    *   An array of strings.
    */
   public function __construct($from_lines, $to_lines) {
-    $eng = new DiffEngine();
-    $this->edits = $eng->diff($from_lines, $to_lines);
-    //$this->_check($from_lines, $to_lines);
+    $diffOpBuilder = new DiffOpOutputBuilder();
+    $differ = new Differ($diffOpBuilder);
+    $this->edits = $diffOpBuilder->toOpsArray($differ->diffToArray($from_lines, $to_lines));
   }
 
   /**
@@ -48,8 +46,14 @@ class Diff {
    *  $rev = $diff->reverse();
    * @return object
    *   A Diff object representing the inverse of the original diff.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3337942
    */
   public function reverse() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3337942', E_USER_DEPRECATED);
     $rev = $this;
     $rev->edits = [];
     foreach ($this->edits as $edit) {
@@ -62,8 +66,14 @@ class Diff {
    * Check for empty diff.
    *
    * @return bool True iff two sequences were identical.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3337942
    */
   public function isEmpty() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3337942', E_USER_DEPRECATED);
     foreach ($this->edits as $edit) {
       if ($edit->type != 'copy') {
         return FALSE;
@@ -78,8 +88,14 @@ class Diff {
    * This is mostly for diagnostic purposed.
    *
    * @return int The length of the LCS.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3337942
    */
   public function lcs() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3337942', E_USER_DEPRECATED);
     $lcs = 0;
     foreach ($this->edits as $edit) {
       if ($edit->type == 'copy') {
@@ -96,8 +112,14 @@ class Diff {
    * constructor.
    *
    * @return array The original sequence of strings.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3337942
    */
   public function orig() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3337942', E_USER_DEPRECATED);
     $lines = [];
 
     foreach ($this->edits as $edit) {
@@ -115,8 +137,14 @@ class Diff {
    * constructor.
    *
    * @return array The sequence of strings.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3337942
    */
   public function closing() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3337942', E_USER_DEPRECATED);
     $lines = [];
 
     foreach ($this->edits as $edit) {
@@ -131,8 +159,14 @@ class Diff {
    * Check a Diff for validity.
    *
    * This is here only for debugging purposes.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3337942
    */
   public function check($from_lines, $to_lines) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3337942', E_USER_DEPRECATED);
     if (serialize($from_lines) != serialize($this->orig())) {
       trigger_error("Reconstructed original doesn't match", E_USER_ERROR);
     }

@@ -30,6 +30,7 @@
         "psr/http-message": "~1.0.1",
         "psr/log": "~3.0.0",
         "ralouphie/getallheaders": "~3.0.3",
+        "sebastian/diff": "~4.0.4",
         "symfony/console": "~v6.2.5",
         "symfony/dependency-injection": "~v6.2.6",
         "symfony/deprecation-contracts": "~v3.2.0",
