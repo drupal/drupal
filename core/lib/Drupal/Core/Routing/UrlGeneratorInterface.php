@@ -53,6 +53,8 @@ interface UrlGeneratorInterface extends SymfonyUrlGeneratorInterface {
    *   - 'https': Whether this URL should point to a secure location. If not
    *     defined, the current scheme is used, so the user stays on HTTP or HTTPS
    *     respectively. TRUE enforces HTTPS and FALSE enforces HTTP.
+   *   - 'path_processing': Defaults to TRUE. Whether to pass the path to a
+   *     processor manager to allow alterations.
    *   - 'base_url': Only used internally by a path processor, for example, to
    *     modify the base URL when a language dependent URL requires so.
    *   - 'prefix': Only used internally, to modify the path when a language
