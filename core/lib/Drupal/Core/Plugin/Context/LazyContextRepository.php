@@ -58,18 +58,10 @@ class LazyContextRepository implements ContextRepositoryInterface {
         $contexts[$id] = $this->contexts[$id];
         continue;
       }
-      // The IDs have been passed in @{service_id}:{unqualified_context_id}
-      // format.
-      // @todo Convert to an assert once https://www.drupal.org/node/2408013 is
-      //   in.
-      if ($id[0] === '@' && strpos($id, ':') !== FALSE) {
-        [$service_id, $unqualified_context_id] = explode(':', $id, 2);
-        // Remove the leading '@'.
-        $service_id = substr($service_id, 1);
-      }
-      else {
-        throw new \InvalidArgumentException('You must provide the context IDs in the @{service_id}:{unqualified_context_id} format.');
-      }
+      assert($id[0] === '@' && strpos($id, ':'), 'You must provide the context IDs in the @{service_id}:{unqualified_context_id} format.');
+      list($service_id, $unqualified_context_id) = explode(':', $id, 2);
+      // Remove the leading '@'.
+      $service_id = substr($service_id, 1);
       $context_ids_by_service[$service_id][] = $unqualified_context_id;
     }
 

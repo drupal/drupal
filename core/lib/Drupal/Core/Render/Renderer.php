@@ -580,10 +580,7 @@ class Renderer implements RendererInterface {
     // Set the provided context and call the callable, it will use that context.
     $this->setCurrentRenderContext($context);
     $result = $callable();
-    // @todo Convert to an assertion in https://www.drupal.org/node/2408013
-    if ($context->count() > 1) {
-      throw new \LogicException('Bubbling failed.');
-    }
+    assert($context->count() <= 1, 'Bubbling failed.');
 
     // Restore the original render context.
     $this->setCurrentRenderContext($previous_context);

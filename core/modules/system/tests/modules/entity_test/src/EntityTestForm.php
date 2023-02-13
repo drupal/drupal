@@ -80,7 +80,7 @@ class EntityTestForm extends ContentEntityForm {
         $form_state->setRebuild();
       }
     }
-    catch (\Exception $e) {
+    catch (\AssertionError $e) {
       \Drupal::state()->set('entity_test.form.save.exception', get_class($e) . ': ' . $e->getMessage());
     }
     return $status ?? FALSE;

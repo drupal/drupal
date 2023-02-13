@@ -109,10 +109,7 @@ class AjaxResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    * {@inheritdoc}
    */
   public function processAttachments(AttachmentsInterface $response) {
-    // @todo Convert to assertion once https://www.drupal.org/node/2408013 lands
-    if (!$response instanceof AjaxResponse) {
-      throw new \InvalidArgumentException('\Drupal\Core\Ajax\AjaxResponse instance expected.');
-    }
+    assert($response instanceof AjaxResponse, '\Drupal\Core\Ajax\AjaxResponse instance expected.');
 
     $request = $this->requestStack->getCurrentRequest();
 
