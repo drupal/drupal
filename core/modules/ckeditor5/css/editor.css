@@ -9,13 +9,13 @@
   fill-opacity: 1 !important;
 }
 
-/**
- * Set the min-height equal to configuration value for the number of rows.
- *
- * The `--ck-min-height` value is set on the parent `.ck-editor` element by
- * JavaScript. We add that there because the `.ck-editor__editable` element's
- * inline styles are cleared on focus.
- */
 .ck-editor__main > :is(.ck-editor__editable, .ck-source-editing-area) {
+  /* Set the min-height equal to configuration value for the number of rows.
+   * The `--ck-min-height` value is set on the parent `.ck-editor` element by
+   * JavaScript. We add that there because the `.ck-editor__editable` element's
+   * inline styles are cleared on focus. */
   min-height: var(--ck-min-height);
+  /* Set the max-height to not grow beyond the height of the viewport (minus
+   * any toolbars. */
+  max-height: calc(100vh - var(--drupal-displace-offset-top, 0px) - var(--drupal-displace-offset-bottom, 0px) - 20px);
 }

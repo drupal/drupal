@@ -2,6 +2,8 @@ module.exports = {
   '@tags': ['core', 'ckeditor5'],
   before(browser) {
     browser.drupalInstall({ installProfile: 'minimal' });
+    // Set fixed (desktop-ish) size to ensure a maximum viewport.
+    browser.resizeWindow(1920, 1080);
   },
   after(browser) {
     browser.drupalUninstall();
@@ -96,6 +98,30 @@ module.exports = {
             browser.assert.ok(
               result.value,
               'Source editing height is set to 9 rows (default).',
+            );
+          },
+        )
+
+        // Navigate to the create content page and measure max-height of the editor.
+        .drupalRelativeURL('/node/add/test')
+        .execute(
+          // eslint-disable-next-line func-names, prefer-arrow-callback, no-shadow
+          function () {
+            window.Drupal.CKEditor5Instances.forEach((instance) => {
+              instance.setData('<p>Llamas are cute.</p>'.repeat(100));
+            });
+
+            const height = document.querySelector(
+              '.ck-editor__editable',
+            ).clientHeight;
+
+            return height < window.innerHeight;
+          },
+          [],
+          (result) => {
+            browser.assert.ok(
+              result.value,
+              'Editor area should never exceed full viewport.',
             );
           },
         )
