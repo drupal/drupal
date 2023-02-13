@@ -497,8 +497,8 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The saved entity.
    *
-   * @return int|string
-   *   The processed entity identifier.
+   * @return int|string|null
+   *   The processed entity identifier, or null for new entities.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    *   If the entity identifier is invalid.
