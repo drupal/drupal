@@ -166,9 +166,6 @@ abstract class ConfigureBlockFormBase extends FormBase implements BaseFormIdInte
 
     $form_state->setTemporaryValue('gathered_contexts', $this->getPopulatedContexts($section_storage));
 
-    // @todo Remove once https://www.drupal.org/node/2268787 is resolved.
-    $form_state->set('block_theme', $this->config('system.theme')->get('default'));
-
     $form['#tree'] = TRUE;
     $form['settings'] = [];
     $subform_state = SubformState::createForSubform($form['settings'], $form, $form_state);
