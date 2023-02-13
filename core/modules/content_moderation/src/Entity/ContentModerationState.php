@@ -134,12 +134,17 @@ class ContentModerationState extends ContentEntityBase implements ContentModerat
       /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
       $storage = \Drupal::entityTypeManager()->getStorage('content_moderation_state');
 
+      // New entities may not have a loaded revision ID at this point, but the
+      // creation of a content moderation state entity may have already been
+      // triggered elsewhere. In this case we have to match on the revision ID
+      // (instead of the loaded revision ID).
+      $revision_id = $entity->getLoadedRevisionId() ?: $entity->getRevisionId();
       $ids = $storage->getQuery()
         ->accessCheck(FALSE)
         ->condition('content_entity_type_id', $entity->getEntityTypeId())
         ->condition('content_entity_id', $entity->id())
         ->condition('workflow', $moderation_info->getWorkflowForEntity($entity)->id())
-        ->condition('content_entity_revision_id', $entity->getLoadedRevisionId())
+        ->condition('content_entity_revision_id', $revision_id)
         ->allRevisions()
         ->execute();
 
