@@ -2,7 +2,12 @@
 
 /**
  * @file
- * This script runs Drupal tests from command line.
+ * Script for running tests on DrupalCI.
+ *
+ * This script is intended for use only by drupal.org's testing. In general,
+ * tests should be run directly with phpunit.
+ *
+ * @internal
  */
 
 use Drupal\Component\FileSystem\FileSystem;
