@@ -10,4 +10,4 @@ namespace Drupal\Core\Database;
  * throw exceptions that implement this interface to allow database
  * abstraction in Drupal.
  */
-interface DatabaseException { }
+interface DatabaseException extends \Throwable { }
