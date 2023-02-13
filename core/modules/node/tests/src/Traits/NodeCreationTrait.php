@@ -20,8 +20,8 @@ trait NodeCreationTrait {
    * @param $reset
    *   (optional) Whether to reset the entity cache.
    *
-   * @return \Drupal\node\NodeInterface
-   *   A node entity matching $title.
+   * @return \Drupal\node\NodeInterface|false
+   *   A node entity matching $title, FALSE when node with $title is not found.
    */
   public function getNodeByTitle($title, $reset = FALSE) {
     if ($reset) {
