@@ -1,0 +1,7 @@
+name: 'Content moderation test re-save'
+type: module
+description: 'Re-saves moderated entities for testing purposes.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:content_moderation
