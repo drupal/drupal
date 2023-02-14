@@ -21,22 +21,22 @@
         "composer/composer": "^2.4",
         "drupal/coder": "^8.3.10",
         "instaclick/php-webdriver": "^1.4.1",
+        "justinrainbow/json-schema": "^5.2",
         "mglaman/phpstan-drupal": "^1.1.27",
         "mikey179/vfsstream": "^1.6.11",
-        "phpunit/phpunit": "^9.5",
         "phpspec/prophecy-phpunit": "^2",
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan": "^1.9.9",
+        "phpunit/phpunit": "^9.5",
+        "symfony/browser-kit": "^6.2",
         "symfony/css-selector": "^6.2",
-        "symfony/phpunit-bridge": "^6.2",
-        "symfony/var-dumper": "^6.2",
+        "symfony/dom-crawler": "^6.2",
         "symfony/error-handler": "^6.2",
-        "justinrainbow/json-schema": "^5.2",
         "symfony/filesystem": "^6.2",
         "symfony/finder": "^6.2",
         "symfony/lock": "^6.2",
-        "symfony/browser-kit": "^6.2",
-        "symfony/dom-crawler": "^6.2"
+        "symfony/phpunit-bridge": "^6.2",
+        "symfony/var-dumper": "^6.2"
     },
     "replace": {
         "symfony/polyfill-php72": "*",
@@ -49,6 +49,7 @@
     "prefer-stable": true,
     "config": {
         "preferred-install": "dist",
+        "sort-packages": true,
         "platform": {
             "php": "8.1.0"
         },
