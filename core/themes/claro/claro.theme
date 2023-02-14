@@ -1533,7 +1533,9 @@ function claro_form_views_ui_config_item_form_alter(array &$form, FormStateInter
     // needed or require refactoring in https://drupal.org/node/3164890
     unset($form['options']['clear_markup_start']);
     unset($form['options']['clear_markup_end']);
-    $form['options']['expose_button']['#prefix'] = str_replace('clearfix', '', $form['options']['expose_button']['#prefix']);
+    if (isset($form['options']['expose_button']['#prefix'])) {
+      $form['options']['expose_button']['#prefix'] = str_replace('clearfix', '', $form['options']['expose_button']['#prefix']);
+    }
     if (isset($form['options']['group_button']['#prefix'])) {
       $form['options']['group_button']['#prefix'] = str_replace('clearfix', '', $form['options']['group_button']['#prefix']);
     }
