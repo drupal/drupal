@@ -65,5 +65,8 @@ filters:
       allowed_view_modes:
         responsive_3x2: responsive_3x2
       allowed_media_types:
+        audio: audio
+        document: document
         image: image
         remote_video: remote_video
+        video: video
