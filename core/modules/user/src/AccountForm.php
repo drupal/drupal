@@ -99,6 +99,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
       '#description' => $this->t('The email address is not made public. It will only be used if you need to be contacted about your account or for opted-in notifications.'),
       '#required' => !(!$account->getEmail() && $user->hasPermission('administer users')),
       '#default_value' => (!$register ? $account->getEmail() : ''),
+      '#access' => $account->mail->access('edit'),
     ];
 
     // Only show name field on registration form or user can change own username.

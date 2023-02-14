@@ -56,5 +56,11 @@ function user_access_test_entity_field_access($operation, FieldDefinitionInterfa
     }
   }
 
+  if (\Drupal::state()->get('user_access_test_forbid_mail_edit', FALSE)) {
+    if ($operation === 'edit' && $items && $items->getEntity()->getEntityTypeId() === 'user' && $field_definition->getName() === 'mail') {
+      return AccessResult::forbidden();
+    }
+  }
+
   return AccessResult::neutral();
 }
