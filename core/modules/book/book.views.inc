@@ -84,7 +84,7 @@ function book_views_data() {
 
   $data['book']['depth'] = [
     'title' => t('Depth'),
-    'help' => t('The depth of the book page in the hierarchy; top level books have a depth of 1.'),
+    'help' => t('The depth of the book page in the hierarchy; top level book pages have a depth of 1.'),
     'field' => [
       'id' => 'numeric',
     ],
