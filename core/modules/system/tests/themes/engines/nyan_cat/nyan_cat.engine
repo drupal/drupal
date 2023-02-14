@@ -5,6 +5,7 @@
  * Handles integration of Nyan cat templates because we love kittens.
  */
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Extension\Extension;
 
 /**
@@ -36,7 +37,7 @@ function nyan_cat_render_template($template_file, $variables) {
   $output = str_replace('div', 'nyancat', file_get_contents(\Drupal::root() . '/' . $template_file));
   foreach ($variables as $key => $variable) {
     if (strpos($output, '9' . $key) !== FALSE) {
-      $output = str_replace('9' . $key, theme_render_and_autoescape($variable), $output);
+      $output = str_replace('9' . $key, Html::escape($variable), $output);
     }
   }
   return $output;

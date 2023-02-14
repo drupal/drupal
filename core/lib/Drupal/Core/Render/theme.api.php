@@ -760,8 +760,7 @@ function hook_extension() {
  * It is the theme engine's responsibility to escape variables. The only
  * exception is if a variable implements
  * \Drupal\Component\Render\MarkupInterface. Drupal is inherently unsafe if
- * other variables are not escaped. The helper function
- * theme_render_and_autoescape() may be used for this.
+ * other variables are not escaped.
  *
  * @param string $template_file
  *   The path (relative to the Drupal root directory) to the template to be

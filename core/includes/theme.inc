@@ -344,13 +344,14 @@ function theme_get_setting($setting_name, $theme = NULL) {
  * @throws \Exception
  *   Thrown when an object is passed in which cannot be printed.
  *
- * @see \Drupal\Core\Template\TwigExtension::escapeFilter()
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+ *   replacement. Theme engines must handle escaping by themselves.
  *
- * @todo Discuss deprecating this in https://www.drupal.org/node/2575081.
- * @todo Refactor this to keep it in sync with Twig filtering in
- *   https://www.drupal.org/node/2575065
+ * @see https://www.drupal.org/node/3336253
  */
 function theme_render_and_autoescape($arg) {
+  @trigger_error('theme_render_and_autoescape() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. Theme engines must handle escaping by themselves. See https://www.drupal.org/node/3336253', E_USER_DEPRECATED);
+
   // If it's a renderable, then it'll be up to the generated render array it
   // returns to contain the necessary cacheability & attachment metadata. If
   // it doesn't implement CacheableDependencyInterface or AttachmentsInterface

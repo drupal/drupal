@@ -387,9 +387,6 @@ class TwigExtension extends AbstractExtension {
    *
    * Replacement function for Twig's escape filter.
    *
-   * Note: This function should be kept in sync with
-   * theme_render_and_autoescape().
-   *
    * @param \Twig\Environment $env
    *   A Twig Environment instance.
    * @param mixed $arg
@@ -408,9 +405,6 @@ class TwigExtension extends AbstractExtension {
    * @throws \Exception
    *   When $arg is passed as an object which does not implement __toString(),
    *   RenderableInterface or toString().
-   *
-   * @todo Refactor this to keep it in sync with theme_render_and_autoescape()
-   *   in https://www.drupal.org/node/2575065
    */
   public function escapeFilter(Environment $env, $arg, $strategy = 'html', $charset = NULL, $autoescape = FALSE) {
     // Check for a numeric zero int or float.
