@@ -158,7 +158,7 @@ class TourTest extends TourTestBasic {
         'tour-test-1' => [
           'id' => 'tour-code-test-1',
           'plugin' => 'text',
-          'label' => 'The rain in spain',
+          'label' => 'The rain in spain is <strong>strong</strong>',
           'body' => 'Falls mostly on the plain.',
           'weight' => '100',
           'selector' => '#tour-code-test-1',
@@ -194,7 +194,7 @@ class TourTest extends TourTestBasic {
 
     $elements = $this->findTip([
       'id' => 'tour-code-test-1',
-      'title' => 'The rain in spain',
+      'title' => 'The rain in spain is <strong>strong</strong>',
     ]);
     $this->assertCount(1, $elements, 'Found the required tip markup for tip 4');
 
