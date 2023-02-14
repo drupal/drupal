@@ -86,11 +86,11 @@ class TipPluginTextLegacy extends TipPluginBase implements ContainerFactoryPlugi
   /**
    * Returns body of the text tip.
    *
-   * @return string
+   * @return array
    *   The tip body.
    */
-  public function getBody() {
-    return $this->get('body');
+  public function getBody(): array {
+    return [$this->get('body')];
   }
 
 }
