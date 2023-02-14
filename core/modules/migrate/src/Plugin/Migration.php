@@ -273,19 +273,6 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   protected $migration_dependencies = [];
 
   /**
-   * The migration's configuration dependencies.
-   *
-   * These store any dependencies on modules or other configuration (including
-   * other migrations) that must be available before the migration can be
-   * created.
-   *
-   * @see \Drupal\Core\Config\Entity\ConfigDependencyManager
-   *
-   * @var array
-   */
-  protected $dependencies = [];
-
-  /**
    * The migration plugin manager for loading other migration plugins.
    *
    * @var \Drupal\migrate\Plugin\MigrationPluginManagerInterface
