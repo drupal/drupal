@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\user\Functional;
 
+use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
@@ -20,16 +21,16 @@ class UserPictureTest extends BrowserTestBase {
   use TestFileCreationTrait {
     getTestFiles as drupalGetTestFiles;
   }
+  use CommentTestTrait;
 
   /**
-   * The profile to install as a basis for testing.
-   *
-   * Using the standard profile to test user picture config provided by the
-   * standard profile.
-   *
-   * @var string
+   * {@inheritdoc}
    */
-  protected $profile = 'standard';
+  protected static $modules = [
+    'test_user_config',
+    'node',
+    'comment',
+  ];
 
   /**
    * {@inheritdoc}
@@ -107,6 +108,9 @@ class UserPictureTest extends BrowserTestBase {
    */
   public function testPictureOnNodeComment() {
     $this->drupalLogin($this->webUser);
+
+    $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
+    $this->addDefaultCommentField('node', 'article');
 
     // Save a new picture.
     $image = current($this->drupalGetTestFiles('image'));
