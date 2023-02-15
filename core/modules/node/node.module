@@ -32,6 +32,7 @@ use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
 use Drupal\user\UserInterface;
+use Drupal\node\Form\NodePreviewForm;
 
 /**
  * Implements hook_help().
@@ -752,19 +753,21 @@ function node_get_recent($number = 10) {
 /**
  * Implements hook_page_top().
  */
-function node_page_top(array &$page) {
+function node_page_top(array &$page_top) {
   // Add 'Back to content editing' link on preview page.
   $route_match = \Drupal::routeMatch();
   if ($route_match->getRouteName() == 'entity.node.preview') {
-    $page['page_top']['node_preview'] = [
+    $page_top['node_preview'] = [
       '#type' => 'container',
       '#attributes' => [
         'class' => ['node-preview-container', 'container-inline'],
       ],
+      'view_mode' => \Drupal::formBuilder()->getForm(
+        NodePreviewForm::class,
+        $route_match->getParameter('node_preview')
+      ),
     ];
 
-    $form = \Drupal::formBuilder()->getForm('\Drupal\node\Form\NodePreviewForm', $route_match->getParameter('node_preview'));
-    $page['page_top']['node_preview']['view_mode'] = $form;
   }
 }
 
