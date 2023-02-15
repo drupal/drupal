@@ -519,9 +519,8 @@ details.fieldset-no-legend {
 /* @group Query info table */
 
 .views-query-info table {
+  border-spacing: 1px;
   border-radius: 0.4375rem;
-  -webkit-border-horizontal-spacing: 1px;
-  -webkit-border-vertical-spacing: 1px;
 }
 
 .views-query-info table tr td:last-child {
