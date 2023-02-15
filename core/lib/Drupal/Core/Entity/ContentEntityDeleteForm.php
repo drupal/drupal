@@ -111,7 +111,7 @@ class ContentEntityDeleteForm extends ContentEntityConfirmFormBase {
     $entity = $this->getEntity();
 
     if (!$entity->isDefaultTranslation()) {
-      $this->logger($entity->getEntityType()->getProvider())->notice('The @entity-type %label @language translation has been deleted.', [
+      $this->logger($entity->getEntityType()->getProvider())->info('The @entity-type %label @language translation has been deleted.', [
         '@entity-type' => $entity->getEntityType()->getSingularLabel(),
         '%label'       => $entity->label(),
         '@language'    => $entity->language()->getName(),

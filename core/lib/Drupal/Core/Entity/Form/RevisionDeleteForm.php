@@ -156,7 +156,7 @@ class RevisionDeleteForm extends ConfirmFormBase implements EntityFormInterface 
       $this->messenger->addStatus($this->t('Revision of @type %title has been deleted.', $messengerArgs));
     }
 
-    $this->logger($this->revision->getEntityType()->getProvider())->notice('@type: deleted %title revision %revision.', [
+    $this->logger($this->revision->getEntityType()->getProvider())->info('@type: deleted %title revision %revision.', [
       '@type' => $this->revision->bundle(),
       '%title' => $this->revision->label(),
       '%revision' => $this->revision->getRevisionId(),

@@ -180,7 +180,7 @@ class RevisionRevertForm extends ConfirmFormBase implements EntityFormInterface 
       ]));
     }
 
-    $this->logger($this->revision->getEntityType()->getProvider())->notice('@type: reverted %title revision %revision.', [
+    $this->logger($this->revision->getEntityType()->getProvider())->info('@type: reverted %title revision %revision.', [
       '@type' => $this->revision->bundle(),
       '%title' => $revisionLabel,
       '%revision' => $revisionId,

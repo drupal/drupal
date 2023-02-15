@@ -53,11 +53,11 @@ class BlockContentForm extends ContentEntityForm {
     $t_args = ['@type' => $block_type->label(), '%info' => $block->label()];
 
     if ($insert) {
-      $logger->notice('@type: added %info.', $context);
+      $logger->info('@type: added %info.', $context);
       $this->messenger()->addStatus($this->t('@type %info has been created.', $t_args));
     }
     else {
-      $logger->notice('@type: updated %info.', $context);
+      $logger->info('@type: updated %info.', $context);
       $this->messenger()->addStatus($this->t('@type %info has been updated.', $t_args));
     }
 

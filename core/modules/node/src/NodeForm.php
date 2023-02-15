@@ -273,11 +273,11 @@ class NodeForm extends ContentEntityForm {
     $t_args = ['@type' => node_get_type_label($node), '%title' => $node->toLink()->toString()];
 
     if ($insert) {
-      $this->logger('content')->notice('@type: added %title.', $context);
+      $this->logger('content')->info('@type: added %title.', $context);
       $this->messenger()->addStatus($this->t('@type %title has been created.', $t_args));
     }
     else {
-      $this->logger('content')->notice('@type: updated %title.', $context);
+      $this->logger('content')->info('@type: updated %title.', $context);
       $this->messenger()->addStatus($this->t('@type %title has been updated.', $t_args));
     }
 

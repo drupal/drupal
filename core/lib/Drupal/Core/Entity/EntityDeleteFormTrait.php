@@ -109,7 +109,7 @@ trait EntityDeleteFormTrait {
    */
   protected function logDeletionMessage() {
     $entity = $this->getEntity();
-    $this->logger($entity->getEntityType()->getProvider())->notice('The @entity-type %label has been deleted.', [
+    $this->logger($entity->getEntityType()->getProvider())->info('The @entity-type %label has been deleted.', [
       '@entity-type' => $entity->getEntityType()->getSingularLabel(),
       '%label' => $entity->label(),
     ]);

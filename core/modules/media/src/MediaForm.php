@@ -64,11 +64,11 @@ class MediaForm extends ContentEntityForm {
     $t_args = ['@type' => $this->entity->bundle->entity->label(), '%label' => $this->entity->toLink($this->entity->label())->toString()];
 
     if ($saved === SAVED_NEW) {
-      $logger->notice('@type: added %label.', $context);
+      $logger->info('@type: added %label.', $context);
       $this->messenger()->addStatus($this->t('@type %label has been created.', $t_args));
     }
     else {
-      $logger->notice('@type: updated %label.', $context);
+      $logger->info('@type: updated %label.', $context);
       $this->messenger()->addStatus($this->t('@type %label has been updated.', $t_args));
     }
 
