@@ -981,16 +981,18 @@ abstract class ResourceTestBase extends BrowserTestBase {
     // @see \Drupal\jsonapi\EventSubscriber\ResourceResponseSubscriber::flattenResponse()
     $cache_items = $this->container->get('database')
       ->select('cache_dynamic_page_cache', 'cdp')
-      ->fields('cdp', ['cid', 'data'])
+      ->fields('cdp', ['data'])
       ->condition('cid', '%[route]=jsonapi.%', 'LIKE')
       ->execute()
-      ->fetchAllAssoc('cid');
-    $this->assertGreaterThanOrEqual(2, count($cache_items));
-    $found_cache_redirect = FALSE;
+      ->fetchAll();
+    $this->assertLessThanOrEqual(4, count($cache_items));
     $found_cached_200_response = FALSE;
     $other_cached_responses_are_4xx = TRUE;
-    foreach ($cache_items as $cid => $cache_item) {
+    foreach ($cache_items as $cache_item) {
       $cached_data = unserialize($cache_item->data);
+
+      // We might be finding cache redirects when querying like this, so ensure
+      // we only inspect the actual cached response to see if it got flattened.
       if (!isset($cached_data['#cache_redirect'])) {
         $cached_response = $cached_data['#response'];
         if ($cached_response->getStatusCode() === 200) {
@@ -1002,11 +1004,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
         $this->assertNotInstanceOf(ResourceResponse::class, $cached_response);
         $this->assertInstanceOf(CacheableResponseInterface::class, $cached_response);
       }
-      else {
-        $found_cache_redirect = TRUE;
-      }
     }
-    $this->assertTrue($found_cache_redirect);
     $this->assertSame($dynamic_cache !== 'UNCACHEABLE' || isset($dynamic_cache_label_only) && $dynamic_cache_label_only !== 'UNCACHEABLE', $found_cached_200_response);
     $this->assertTrue($other_cached_responses_are_4xx);
 
