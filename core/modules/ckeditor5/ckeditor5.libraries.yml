@@ -110,6 +110,7 @@ internal.admin:
     - filter/drupal.filter.admin
     - core/jquery
     - core/once
+    - core/drupal.announce
 
 internal.admin.specialCharacters:
   css:

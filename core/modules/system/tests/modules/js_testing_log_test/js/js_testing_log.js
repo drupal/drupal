@@ -2,7 +2,7 @@
  * @file
  *  Support code for testing JavaScript error handling in functional tests.
  */
-(function (Drupal) {
+(function () {
   if (typeof console !== 'undefined' && console.warn) {
     const originalWarnFunction = console.warn;
     console.warn = (warning) => {
@@ -17,19 +17,17 @@
       );
       originalWarnFunction(warning);
     };
-
-    const originalThrowFunction = Drupal.throwError;
-    Drupal.throwError = (error) => {
-      const errors = JSON.parse(
-        sessionStorage.getItem('js_testing_log_test.errors') ||
-          JSON.stringify([]),
-      );
-      errors.push(error.stack);
-      sessionStorage.setItem(
-        'js_testing_log_test.errors',
-        JSON.stringify(errors),
-      );
-      originalThrowFunction(error);
-    };
   }
-})(Drupal);
+
+  window.addEventListener('error', (evt) => {
+    const errors = JSON.parse(
+      sessionStorage.getItem('js_testing_log_test.errors') ||
+        JSON.stringify([]),
+    );
+    errors.push(evt.error.stack);
+    sessionStorage.setItem(
+      'js_testing_log_test.errors',
+      JSON.stringify(errors),
+    );
+  });
+})();

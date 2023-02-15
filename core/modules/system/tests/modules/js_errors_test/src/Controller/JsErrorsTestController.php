@@ -19,4 +19,16 @@ class JsErrorsTestController {
     ];
   }
 
+  /**
+   * Renders page that has js_errors_test/errors_async_test library attached.
+   *
+   * @return string[][]
+   *   Render array.
+   */
+  public function jsErrorsAsyncTest(): array {
+    return [
+      '#attached' => ['library' => ['js_errors_test/errors_async_test']],
+    ];
+  }
+
 }

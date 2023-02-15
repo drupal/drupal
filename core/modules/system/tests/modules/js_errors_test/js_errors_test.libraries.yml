@@ -4,3 +4,9 @@ errors_test:
     js/js_errors_test.js: {}
   dependencies:
     - core/drupal
+errors_async_test:
+  version: VERSION
+  js:
+    js/js_errors_async_test.js: {}
+  dependencies:
+    - core/drupal

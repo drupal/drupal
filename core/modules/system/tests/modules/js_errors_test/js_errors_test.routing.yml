@@ -5,3 +5,10 @@ js_errors_test.errors:
     _title: 'JsErrorsTest'
   requirements:
     _access: 'TRUE'
+js_errors_async_test.errors:
+  path: '/js_errors_async_test'
+  defaults:
+    _controller: '\Drupal\js_errors_test\Controller\JsErrorsTestController::jsErrorsAsyncTest'
+    _title: 'JsErrorsAsyncTest'
+  requirements:
+    _access: 'TRUE'

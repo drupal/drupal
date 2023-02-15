@@ -40,6 +40,24 @@ class JavascriptErrorsTest extends WebDriverTestBase {
   }
 
   /**
+   * Tests that JavaScript console errors will result in a test failure
+   * during asynchronous calls.
+   */
+  public function testJavascriptErrorsAsync(): void {
+    // Visit page that will throw a JavaScript console error in async context.
+    $this->drupalGet('js_errors_async_test');
+    // Ensure that errors from previous page loads will be detected.
+    $this->drupalGet('user');
+
+    $this->expectException(AssertionFailedError::class);
+    $this->expectExceptionMessageMatches('/^Error: An error thrown in async context./');
+
+    // Manually call the method under test, as it cannot be caught by PHPUnit
+    // when triggered from assertPostConditions().
+    $this->failOnJavaScriptErrors();
+  }
+
+  /**
    * Clear the JavaScript error log to prevent this test failing for real.
    *
    * @postCondition

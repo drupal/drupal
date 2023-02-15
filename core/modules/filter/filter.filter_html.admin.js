@@ -114,12 +114,14 @@
           });
 
         // When the allowed tags list is manually changed, update userTags.
-        that.$allowedHTMLFormItem.on('change.updateUserTags', function () {
-          that.userTags = difference(
-            Object.values(that._parseSetting(this.value)),
-            Object.values(that.autoTags),
-          );
-        });
+        if (that.autoTags) {
+          that.$allowedHTMLFormItem.on('change.updateUserTags', function () {
+            that.userTags = difference(
+              Object.values(that._parseSetting(this.value)),
+              Object.values(that.autoTags),
+            );
+          });
+        }
       });
     },
 

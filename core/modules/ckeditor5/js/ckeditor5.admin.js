@@ -652,6 +652,10 @@
           '#filter-format-edit-form, #filter-format-add-form',
         );
 
+        if (!form) {
+          return;
+        }
+
         // Get the current stored UI state as an object.
         const currentStates = form.hasAttribute('data-drupal-ui-state')
           ? JSON.parse(form.getAttribute('data-drupal-ui-state'))
@@ -714,7 +718,9 @@
         if (activeTab) {
           setTimeout(() => {
             const activeTabLink = document.querySelector(activeTab);
-            activeTabLink.click();
+            if (activeTabLink) {
+              activeTabLink.click();
+            }
 
             // Only change focus on the plugin-settings-wrapper element.
             if (id !== 'plugin-settings-wrapper') {
