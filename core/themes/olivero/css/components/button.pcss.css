@@ -84,6 +84,7 @@
 
 .button--primary {
   color: var(--color--white);
+  border-color: var(--color--primary-40);
   background-color: var(--color--primary-40);
 
   &:hover,
