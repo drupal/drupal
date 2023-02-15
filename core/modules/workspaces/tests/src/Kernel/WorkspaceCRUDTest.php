@@ -323,4 +323,12 @@ class WorkspaceCRUDTest extends KernelTestBase {
     $this->assertNull(Workspace::load('stage'));
   }
 
+  /**
+   * Tests loading the workspace tree when there are no workspaces available.
+   */
+  public function testEmptyWorkspaceTree() {
+    $tree = \Drupal::service('workspaces.repository')->loadTree();
+    $this->assertSame([], $tree);
+  }
+
 }
