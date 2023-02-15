@@ -163,7 +163,7 @@ class ConfigEntityUpdater implements ContainerInjectionInterface {
     if (!empty($sandbox[self::SANDBOX_KEY]['failed_entity_ids'])) {
       $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
       if (\Drupal::moduleHandler()->moduleExists('dblog')) {
-        return new TranslatableMarkup("Updates failed for the entity type %entity_type, for %entity_ids. <a href=:url>Check the logs</a>.", [
+        return new TranslatableMarkup('Updates failed for the entity type %entity_type, for %entity_ids. <a href=":url">Check the logs</a>.', [
           '%entity_type' => $entity_type->getLabel(),
           '%entity_ids' => implode(', ', $sandbox[self::SANDBOX_KEY]['failed_entity_ids']),
           ':url' => Url::fromRoute('dblog.overview')->toString(),
