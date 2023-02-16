@@ -75,6 +75,7 @@ class DeprecatedArray extends \ArrayObject {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function unserialize($serialized) {
     @trigger_error($this->message, E_USER_DEPRECATED);
     parent::unserialize($serialized);
@@ -83,6 +84,7 @@ class DeprecatedArray extends \ArrayObject {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function serialize() {
     @trigger_error($this->message, E_USER_DEPRECATED);
     return parent::serialize();
