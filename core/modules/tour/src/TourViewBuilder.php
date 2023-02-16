@@ -60,7 +60,7 @@ class TourViewBuilder extends EntityViewBuilder {
           $body = (string) \Drupal::service('renderer')->renderPlain($body_render_array);
           $output = [
             'body' => $body,
-            'title' => Html::escape($tip->getLabel()),
+            'title' => $tip->getLabel(),
           ];
 
           $selector = $tip->getSelector();
