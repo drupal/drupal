@@ -92,20 +92,21 @@ class MultiFormTest extends WebDriverTestBase {
     // page update, ensure the same as above.
 
     for ($i = 0; $i < 2; $i++) {
-      $forms = $page->find('xpath', $form_xpath);
+      $forms = $page->findAll('xpath', $form_xpath);
       foreach ($forms as $offset => $form) {
         $button = $form->findButton('Add another item');
         $this->assertNotNull($button, 'Add Another Item button exists');
         $button->press();
 
-        // Wait for page update.
-        $this->assertSession()->assertWaitOnAjaxRequest();
+        // Wait for field to be added with ajax.
+        $this->assertNotEmpty($page->waitFor(10, function () use ($form, $i) {
+          return $form->findField('field_ajax_test[' . ($i + 1) . '][value]');
+        }));
 
-        // After AJAX request and response page will update.
-        $page_updated = $session->getPage();
-        $field = $page_updated->findAll('xpath', '.' . $field_xpath);
-        $this->assertCount($i + 2, $field[0]->find('xpath', '.' . $field_items_xpath_suffix), 'Found the correct number of field items after an AJAX submission.');
-        $this->assertNotNull($field[0]->find('xpath', '.' . $button_xpath_suffix), 'Found the "add more" button after an AJAX submission.');
+        // After AJAX request and response verify the correct number of text
+        // fields (including title), as well as the "Add another item" button.
+        $this->assertCount($i + 3, $form->findAll('css', 'input[type="text"]'), 'Found the correct number of field items after an AJAX submission.');
+        $this->assertNotEmpty($form->findButton('Add another item'), 'Found the "add more" button after an AJAX submission.');
         $this->assertSession()->pageContainsNoDuplicateId();
       }
     }
