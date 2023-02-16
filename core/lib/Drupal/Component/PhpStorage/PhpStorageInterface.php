@@ -55,20 +55,6 @@ interface PhpStorageInterface {
    * Whether this is a writable storage.
    *
    * @return bool
-   *   TRUE if writable, otherwise FALSE.
-   */
-  public function writable();
-
-  /**
-   * Whether this is a writable storage.
-   *
-   * @return bool
-   *   TRUE if writable, otherwise FALSE.
-   *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
-   *   \Drupal\Component\PhpStorage\PhpStorageInterface::writable() instead.
-   *
-   * @see https://www.drupal.org/node/3155413
    */
   public function writeable();
 
