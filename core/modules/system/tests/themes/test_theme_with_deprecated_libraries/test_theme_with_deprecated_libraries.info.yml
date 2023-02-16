@@ -1,6 +1,6 @@
-name: 'Test legacy theme'
+name: 'Test theme with deprecated libraries'
 type: theme
-description: 'Test theme to test deprecated functionality.'
+description: 'Test theme to test themes with deprecated libraries.'
 version: VERSION
 package: Testing
 base theme: test_theme
@@ -13,4 +13,4 @@ libraries-override:
 
 libraries-extend:
   theme_test/another_deprecated_library:
-    - test_legacy_theme/library
+    - test_theme_with_deprecated_libraries/library
