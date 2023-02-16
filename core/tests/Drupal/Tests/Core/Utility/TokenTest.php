@@ -305,6 +305,39 @@ class TokenTest extends UnitTestCase {
   }
 
   /**
+   * Scans dummy text, then tests the output.
+   */
+  public function testScan() {
+    // Define text with valid and not valid, fake and existing token-like
+    // strings.
+    $text = 'First a [valid:simple], but dummy token, and a dummy [valid:token with: spaces].';
+    $text .= 'Then a [not valid:token].';
+    $text .= 'Then an [:empty token type].';
+    $text .= 'Then an [empty token:].';
+    $text .= 'Then a totally empty token: [:].';
+    $text .= 'Last an existing token: [node:author:name].';
+    $token_wannabes = $this->token->scan($text);
+
+    $this->assertTrue(isset($token_wannabes['valid']['simple']), 'A simple valid token has been matched.');
+    $this->assertTrue(isset($token_wannabes['valid']['token with: spaces']), 'A valid token with space characters in the token name has been matched.');
+    $this->assertFalse(isset($token_wannabes['not valid']), 'An invalid token with spaces in the token type has not been matched.');
+    $this->assertFalse(isset($token_wannabes['empty token']), 'An empty token has not been matched.');
+    $this->assertFalse(isset($token_wannabes['']['empty token type']), 'An empty token type has not been matched.');
+    $this->assertFalse(isset($token_wannabes['']['']), 'An empty token and type has not been matched.');
+    $this->assertTrue(isset($token_wannabes['node']), 'An existing valid token has been matched.');
+  }
+
+  /**
+   * Tests passing a non-string value to Token::scan().
+   *
+   * @group legacy
+   */
+  public function testScanDeprecation() {
+    $this->expectDeprecation('Calling Drupal\Core\Utility\Token::scan() with a $text parameter of type other than string is deprecated in drupal:10.1.0, a typehint will be added in drupal:11.0.0. See https://www.drupal.org/node/3334317');
+    $this->assertSame([], $this->token->scan(NULL));
+  }
+
+  /**
    * Sets up the token library to return site tokens.
    */
   protected function setupSiteTokens() {
