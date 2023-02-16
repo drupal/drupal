@@ -327,7 +327,11 @@ function menu_ui_form_node_form_submit($form, FormStateInterface $form_state) {
         $entity->delete();
       }
     }
-    elseif (trim($values['title'])) {
+    else {
+      // In case the menu title was left empty, fall back to the node title.
+      if (empty(trim($values['title']))) {
+        $values['title'] = $node->label();
+      }
       // Decompose the selected menu parent option into 'menu_name' and 'parent',
       // if the form used the default parent selection widget.
       if (!empty($values['menu_parent'])) {

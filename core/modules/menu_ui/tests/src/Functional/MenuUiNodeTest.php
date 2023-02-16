@@ -157,9 +157,9 @@ class MenuUiNodeTest extends BrowserTestBase {
     ];
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->submitForm($edit, 'Save');
-    // Assert that there is no link for the node.
+    // Assert that there is a link for the node.
     $this->drupalGet('test-page');
-    $this->assertSession()->linkNotExists($node_title);
+    $this->assertSession()->linkExists($node_title);
 
     // Make sure the menu links only appear when the node is published.
     // These buttons just appear for 'administer nodes' users.
