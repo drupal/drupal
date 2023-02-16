@@ -10,7 +10,7 @@ class SSH extends FileTransfer implements ChmodInterface {
   /**
    * {@inheritdoc}
    */
-  public function __construct($jail, $username, $password, $hostname = "localhost", $port = 22) {
+  public function __construct($jail, $username, #[\SensitiveParameter] $password, $hostname = "localhost", $port = 22) {
     $this->username = $username;
     $this->password = $password;
     $this->hostname = $hostname;

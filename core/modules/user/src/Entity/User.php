@@ -230,7 +230,7 @@ class User extends ContentEntityBase implements UserInterface {
   /**
    * {@inheritdoc}
    */
-  public function setPassword($password) {
+  public function setPassword(#[\SensitiveParameter] $password) {
     $this->get('pass')->value = $password;
     return $this;
   }
@@ -400,7 +400,7 @@ class User extends ContentEntityBase implements UserInterface {
   /**
    * {@inheritdoc}
    */
-  public function setExistingPassword($password) {
+  public function setExistingPassword(#[\SensitiveParameter] $password) {
     $this->get('pass')->existing = $password;
     return $this;
   }

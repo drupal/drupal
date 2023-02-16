@@ -21,7 +21,7 @@ interface PasswordInterface {
    * @return string
    *   A string containing the hashed password, or FALSE on failure.
    */
-  public function hash($password);
+  public function hash(#[\SensitiveParameter] $password);
 
   /**
    * Check whether a plain text password matches a hashed password.
@@ -34,7 +34,7 @@ interface PasswordInterface {
    * @return bool
    *   TRUE if the password is valid, FALSE if not.
    */
-  public function check($password, $hash);
+  public function check(#[\SensitiveParameter] $password, #[\SensitiveParameter] $hash);
 
   /**
    * Check whether a hashed password needs to be replaced with a new hash.

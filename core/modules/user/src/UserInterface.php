@@ -112,7 +112,7 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
    * @return $this
    *   The called user entity.
    */
-  public function setPassword($password);
+  public function setPassword(#[\SensitiveParameter] $password);
 
   /**
    * Sets the email address of the user.
@@ -213,7 +213,7 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
    *
    * @return $this
    */
-  public function setExistingPassword($password);
+  public function setExistingPassword(#[\SensitiveParameter] $password);
 
   /**
    * Checks the existing password if set.

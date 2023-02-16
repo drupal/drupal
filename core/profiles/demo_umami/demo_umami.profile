@@ -32,7 +32,7 @@ function demo_umami_form_install_configure_submit($form, FormStateInterface $for
 /**
  * Sets the password of admin to be the password for all users.
  */
-function demo_umami_set_users_passwords($admin_password) {
+function demo_umami_set_users_passwords(#[\SensitiveParameter] $admin_password) {
   // Collect the IDs of all users with roles editor or author.
   $ids = \Drupal::entityQuery('user')
     ->accessCheck(FALSE)

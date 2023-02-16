@@ -40,7 +40,7 @@ class UserAuth implements UserAuthInterface {
   /**
    * {@inheritdoc}
    */
-  public function authenticate($username, $password) {
+  public function authenticate($username, #[\SensitiveParameter] $password) {
     $uid = FALSE;
 
     if (!empty($username) && strlen($password) > 0) {

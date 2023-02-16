@@ -48,7 +48,7 @@ class PrivateKey {
    * @param string $key
    *   The private key to set.
    */
-  public function set($key) {
+  public function set(#[\SensitiveParameter] $key) {
     return $this->state->set('system.private_key', $key);
   }
 
