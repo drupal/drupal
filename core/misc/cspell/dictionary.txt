@@ -645,6 +645,7 @@ lstitle
 ltitle
 ltlanguage
 lundi
+lzma
 lzop
 maailma
 macbinary
