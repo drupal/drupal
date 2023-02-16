@@ -563,21 +563,13 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    *
    * @see \Drupal\content_translation\ContentTranslationHandler::entityFormAlter()
    */
-  public function entityFormSharedElements(array $element, FormStateInterface $form_state, $form) {
+  public function entityFormSharedElements($element, FormStateInterface $form_state, $form) {
     static $ignored_types;
 
     // @todo Find a more reliable way to determine if a form element concerns a
     //   multilingual value.
     if (!isset($ignored_types)) {
-      $ignored_types = array_flip([
-        'actions',
-        'value',
-        'hidden',
-        'vertical_tabs',
-        'token',
-        'details',
-        'link',
-      ]);
+      $ignored_types = array_flip(['actions', 'value', 'hidden', 'vertical_tabs', 'token', 'details', 'link']);
     }
 
     /** @var \Drupal\Core\Entity\ContentEntityForm $form_object */
@@ -598,29 +590,30 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
       if (!isset($element[$key]['#type'])) {
         $this->entityFormSharedElements($element[$key], $form_state, $form);
       }
-      // Ignore non-widget form elements.
-      if (isset($ignored_types[$element[$key]['#type']])) {
-        continue;
-      }
-      // Elements are considered to be non-multilingual by default.
-      if (!empty($element[$key]['#multilingual'])) {
-        continue;
-      }
-      // If we are displaying a multilingual entity form we need to provide
-      // translatability clues, otherwise the non-multilingual form elements
-      // should be hidden.
-      if (!$translation_form) {
-        if ($display_translatability_clue) {
-          $this->addTranslatabilityClue($element[$key]);
-        }
-        // Hide widgets for untranslatable fields.
-        if ($hide_untranslatable_fields && isset($field_definitions[$key])) {
-          $element[$key]['#access'] = FALSE;
-          $display_warning = TRUE;
-        }
-      }
       else {
-        $element[$key]['#access'] = FALSE;
+        // Ignore non-widget form elements.
+        if (isset($ignored_types[$element[$key]['#type']])) {
+          continue;
+        }
+        // Elements are considered to be non multilingual by default.
+        if (empty($element[$key]['#multilingual'])) {
+          // If we are displaying a multilingual entity form we need to provide
+          // translatability clues, otherwise the non-multilingual form elements
+          // should be hidden.
+          if (!$translation_form) {
+            if ($display_translatability_clue) {
+              $this->addTranslatabilityClue($element[$key]);
+            }
+            // Hide widgets for untranslatable fields.
+            if ($hide_untranslatable_fields && isset($field_definitions[$key])) {
+              $element[$key]['#access'] = FALSE;
+              $display_warning = TRUE;
+            }
+          }
+          else {
+            $element[$key]['#access'] = FALSE;
+          }
+        }
       }
     }
 
