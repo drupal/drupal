@@ -308,7 +308,7 @@ function locale_translate_batch_refresh(&$context) {
       foreach ($context['results']['stats'] as $report) {
         $strings[] = $report['strings'];
       }
-      $strings = array_merge([], ...$strings);
+      $strings = array_merge(...$strings);
     }
     if ($strings) {
       // Initialize multi-step string refresh.

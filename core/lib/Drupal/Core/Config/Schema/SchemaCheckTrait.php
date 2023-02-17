@@ -56,7 +56,7 @@ trait SchemaCheckTrait {
     foreach ($config_data as $key => $value) {
       $errors[] = $this->checkValue($key, $value);
     }
-    $errors = array_merge([], ...$errors);
+    $errors = array_merge(...$errors);
     if (empty($errors)) {
       return TRUE;
     }

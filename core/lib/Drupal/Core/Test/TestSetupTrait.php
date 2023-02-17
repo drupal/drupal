@@ -195,12 +195,12 @@ trait TestSetupTrait {
     $exceptions = [];
     while ($class) {
       if (property_exists($class, 'configSchemaCheckerExclusions')) {
-        $exceptions = array_merge($exceptions, $class::$configSchemaCheckerExclusions);
+        $exceptions[] = $class::$configSchemaCheckerExclusions;
       }
       $class = get_parent_class($class);
     }
     // Filter out any duplicates.
-    return array_unique($exceptions);
+    return array_unique(array_merge(...$exceptions));
   }
 
 }

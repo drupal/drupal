@@ -36,14 +36,14 @@ class MethodFilter implements FilterInterface {
       }
 
       if (!in_array($method, $supported_methods, TRUE)) {
-        $all_supported_methods = array_merge($supported_methods, $all_supported_methods);
+        $all_supported_methods[] = $supported_methods;
         $collection->remove($name);
       }
     }
     if (count($collection)) {
       return $collection;
     }
-    throw new MethodNotAllowedException(array_unique($all_supported_methods));
+    throw new MethodNotAllowedException(array_unique(array_merge(...$all_supported_methods)));
   }
 
 }

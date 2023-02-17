@@ -108,7 +108,7 @@ class MimeTypeGuesser implements MimeTypeGuesserInterface {
    */
   protected function sortGuessers() {
     krsort($this->guessers);
-    return array_merge([], ...$this->guessers);
+    return array_merge(...$this->guessers);
   }
 
 }

@@ -183,8 +183,9 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
         // Merge the values passed in from the classes array.
         // The argument is cast to an array to support comma separated single
         // values or one or more array arguments.
-        $classes = array_merge($classes, (array) $arg);
+        $classes[] = (array) $arg;
       }
+      $classes = array_merge(...$classes);
 
       // Merge if there are values, just add them otherwise.
       if (isset($this->storage['class']) && $this->storage['class'] instanceof AttributeArray) {
@@ -271,8 +272,9 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
         // Merge the values passed in from the classes array.
         // The argument is cast to an array to support comma separated single
         // values or one or more array arguments.
-        $classes = array_merge($classes, (array) $arg);
+        $classes[] = (array) $arg;
       }
+      $classes = array_merge(...$classes);
 
       // Remove the values passed in from the value array. Use array_values() to
       // ensure that the array index remains sequential.

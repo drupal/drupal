@@ -72,7 +72,7 @@ class RouteProcessorManager implements OutboundRouteProcessorInterface {
    */
   protected function sortProcessors() {
     krsort($this->outboundProcessors);
-    return array_merge([], ...$this->outboundProcessors);
+    return array_merge(...$this->outboundProcessors);
   }
 
 }

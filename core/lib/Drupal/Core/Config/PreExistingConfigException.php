@@ -88,9 +88,9 @@ class PreExistingConfigException extends ConfigException {
         }
         return $config_name;
       }, $config_names);
-      $flat_config_objects = array_merge($flat_config_objects, $config_names);
+      $flat_config_objects[] = $config_names;
     }
-    return $flat_config_objects;
+    return array_merge(...$flat_config_objects);
   }
 
 }

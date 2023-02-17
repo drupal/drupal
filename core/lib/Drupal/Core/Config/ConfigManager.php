@@ -264,7 +264,7 @@ class ConfigManager implements ConfigManagerInterface {
     foreach ($names as $name) {
       $dependencies[] = $dependency_manager->getDependentEntities($type, $name);
     }
-    return array_merge([], ...$dependencies);
+    return array_merge(...$dependencies);
   }
 
   /**
@@ -292,9 +292,9 @@ class ConfigManager implements ConfigManagerInterface {
       $storage = $this->entityTypeManager->getStorage($entity_type_id);
       // Remove the keys since there are potential ID clashes from different
       // configuration entity types.
-      $entities_to_return = array_merge($entities_to_return, array_values($storage->loadMultiple($entities_to_load)));
+      $entities_to_return[] = array_values($storage->loadMultiple($entities_to_load));
     }
-    return $entities_to_return;
+    return array_merge(...$entities_to_return);
   }
 
   /**
@@ -487,13 +487,14 @@ class ConfigManager implements ConfigManagerInterface {
     $missing_dependencies = [];
     foreach ($this->activeStorage->readMultiple($this->activeStorage->listAll()) as $config_data) {
       if (isset($config_data['dependencies']['content'])) {
-        $content_dependencies = array_merge($content_dependencies, $config_data['dependencies']['content']);
+        $content_dependencies[] = $config_data['dependencies']['content'];
       }
       if (isset($config_data['dependencies']['enforced']['content'])) {
-        $content_dependencies = array_merge($content_dependencies, $config_data['dependencies']['enforced']['content']);
+        $content_dependencies[] = $config_data['dependencies']['enforced']['content'];
       }
     }
-    foreach (array_unique($content_dependencies) as $content_dependency) {
+    $unique_content_dependencies = array_unique(array_merge(...$content_dependencies));
+    foreach ($unique_content_dependencies as $content_dependency) {
       // Format of the dependency is entity_type:bundle:uuid.
       [$entity_type, $bundle, $uuid] = explode(':', $content_dependency, 3);
       if (!$this->entityRepository->loadEntityByUuid($entity_type, $uuid)) {
