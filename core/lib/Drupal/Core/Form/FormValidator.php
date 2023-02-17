@@ -335,9 +335,6 @@ class FormValidator implements FormValidatorInterface {
     }
 
     if (isset($elements['#options']) && isset($elements['#value'])) {
-      $error_message = 'The submitted value %choice in the %name element is not allowed.';
-      $name = empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'];
-      $message_arguments = ['%name' => $name];
       if ($elements['#type'] == 'select') {
         $options = OptGroup::flattenOptions($elements['#options']);
       }
@@ -348,9 +345,8 @@ class FormValidator implements FormValidatorInterface {
         $value = in_array($elements['#type'], ['checkboxes', 'tableselect']) ? array_keys($elements['#value']) : $elements['#value'];
         foreach ($value as $v) {
           if (!isset($options[$v])) {
-            $message_arguments = $message_arguments + ['%choice' => $v];
-            $form_state->setError($elements, $this->t($error_message, $message_arguments));
-            $this->logger->error($error_message, $message_arguments);
+            $form_state->setError($elements, $this->t('An illegal choice has been detected. Please contact the site administrator.'));
+            $this->logger->error('Illegal choice %choice in %name element.', ['%choice' => $v, '%name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title']]);
           }
         }
       }
@@ -368,9 +364,8 @@ class FormValidator implements FormValidatorInterface {
         $form_state->setValueForElement($elements, NULL);
       }
       elseif (!isset($options[$elements['#value']])) {
-        $message_arguments = $message_arguments + ['%choice' => $elements['#value']];
-        $form_state->setError($elements, $this->t($error_message, $message_arguments));
-        $this->logger->error($error_message, $message_arguments);
+        $form_state->setError($elements, $this->t('An illegal choice has been detected. Please contact the site administrator.'));
+        $this->logger->error('Illegal choice %choice in %name element.', ['%choice' => $elements['#value'], '%name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title']]);
       }
     }
   }

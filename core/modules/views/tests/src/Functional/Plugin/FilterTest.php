@@ -173,7 +173,7 @@ class FilterTest extends ViewTestBase {
     $this->drupalGet('admin/structure/views/view/test_filter_in_operator_ui/edit/default');
     $this->submitForm([], 'Save');
     $this->submitForm([], 'Update preview');
-    $this->assertSession()->pageTextNotContains('The submitted value "page" in the Type element is not allowed.');
+    $this->assertSession()->pageTextNotContains('An illegal choice has been detected.');
   }
 
   /**

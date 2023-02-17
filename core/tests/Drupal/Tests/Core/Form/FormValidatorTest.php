@@ -424,7 +424,7 @@ class FormValidatorTest extends UnitTestCase {
           '#value' => 'baz',
           '#multiple' => FALSE,
         ],
-        'The submitted value <em class="placeholder">baz</em> in the <em class="placeholder">Test</em> element is not allowed.',
+        'An illegal choice has been detected. Please contact the site administrator.',
         TRUE,
       ],
       [
@@ -437,7 +437,7 @@ class FormValidatorTest extends UnitTestCase {
           '#value' => ['baz'],
           '#multiple' => TRUE,
         ],
-        'The submitted value <em class="placeholder">0</em> in the <em class="placeholder">Test</em> element is not allowed.',
+        'An illegal choice has been detected. Please contact the site administrator.',
         TRUE,
       ],
       [
@@ -450,7 +450,7 @@ class FormValidatorTest extends UnitTestCase {
           '#value' => ['baz'],
           '#multiple' => TRUE,
         ],
-        'The submitted value <em class="placeholder">baz</em> in the <em class="placeholder">Test</em> element is not allowed.',
+        'An illegal choice has been detected. Please contact the site administrator.',
         TRUE,
       ],
       [
