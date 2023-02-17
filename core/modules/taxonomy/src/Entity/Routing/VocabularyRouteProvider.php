@@ -49,7 +49,7 @@ class VocabularyRouteProvider extends AdminHtmlRouteProvider {
     $route = new Route('/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/reset');
     $route->setDefault('_entity_form', 'taxonomy_vocabulary.reset');
     $route->setDefault('_title', 'Reset');
-    $route->setRequirement('_permission', $entity_type->getAdminPermission());
+    $route->setRequirement('_entity_access', 'taxonomy_vocabulary.reset all weights');
     $route->setOption('_admin_route', TRUE);
     $route->setOption('parameters', [
       'taxonomy_vocabulary' => [

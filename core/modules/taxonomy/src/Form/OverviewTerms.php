@@ -3,7 +3,6 @@
 namespace Drupal\taxonomy\Form;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
@@ -300,13 +299,14 @@ class OverviewTerms extends FormBase {
 
     // Only allow access to change parents and reorder the tree if there are no
     // pending revisions and there are no terms with multiple parents.
-    $update_tree_access = AccessResult::allowedIf(empty($pending_term_ids) && $vocabulary_hierarchy !== VocabularyInterface::HIERARCHY_MULTIPLE);
-
+    $update_tree_access = $taxonomy_vocabulary->access('reset all weights', NULL, TRUE);
     $form['help'] = [
       '#type' => 'container',
       'message' => ['#markup' => $help_message],
     ];
-    if (!$update_tree_access->isAllowed()) {
+
+    $operations_access = !empty($pending_term_ids) || $vocabulary_hierarchy === VocabularyInterface::HIERARCHY_MULTIPLE;
+    if ($operations_access) {
       $form['help']['#attributes']['class'] = ['messages', 'messages--warning'];
     }
 
@@ -327,7 +327,7 @@ class OverviewTerms extends FormBase {
       '#header' => [
         'term' => $this->t('Name'),
         'operations' => $this->t('Operations'),
-        'weight' => $update_tree_access->isAllowed() ? $this->t('Weight') : NULL,
+        'weight' => !$operations_access ? $this->t('Weight') : NULL,
       ],
       '#attributes' => [
         'id' => 'taxonomy',
@@ -394,8 +394,6 @@ class OverviewTerms extends FormBase {
           ],
         ];
       }
-      $update_access = $term->access('update', NULL, TRUE);
-      $update_tree_access = $update_tree_access->andIf($update_access);
 
       if ($update_tree_access->isAllowed()) {
         $form['terms'][$key]['weight'] = [
