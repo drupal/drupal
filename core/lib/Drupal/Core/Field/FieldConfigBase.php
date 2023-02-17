@@ -284,6 +284,21 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   /**
    * {@inheritdoc}
    */
+  public static function postDelete(EntityStorageInterface $storage, array $fields) {
+    // Clear the cache upfront, to refresh the results of getBundles().
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
+
+    // Notify the entity storage.
+    foreach ($fields as $field) {
+      if (!$field->deleted) {
+        \Drupal::service('field_definition.listener')->onFieldDefinitionDelete($field);
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     // Clear the cache.
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();

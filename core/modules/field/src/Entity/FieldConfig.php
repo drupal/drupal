@@ -232,16 +232,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
    * {@inheritdoc}
    */
   public static function postDelete(EntityStorageInterface $storage, array $fields) {
-    // Clear the cache upfront, to refresh the results of getBundles().
-    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
-
-    // Notify the entity storage.
-    foreach ($fields as $field) {
-      if (!$field->deleted) {
-        \Drupal::service('field_definition.listener')->onFieldDefinitionDelete($field);
-      }
-    }
-
+    parent::postDelete($storage, $fields);
     // If this is part of a configuration synchronization then the following
     // configuration updates are not necessary.
     $entity = reset($fields);
