@@ -97,6 +97,9 @@
       <directory>../modules/*/tests</directory>
       <directory>../modules/*/*/src/Tests</directory>
       <directory>../modules/*/*/tests</directory>
+      <directory suffix=".api.php">./lib/**</directory>
+      <directory suffix=".api.php">./modules/**</directory>
+      <directory suffix=".api.php">../modules/**</directory>
     </exclude>
   </coverage>
 </phpunit>
