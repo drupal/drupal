@@ -127,7 +127,10 @@ class UrlGenerator implements UrlGeneratorInterface {
    */
   public function getPathFromRoute($name, $parameters = []) {
     $route = $this->getRoute($name);
-    $name = $this->getRouteStringIdentifier($name);
+    if (!is_string($name)) {
+      @trigger_error('Passing a route object to ' . __METHOD__ . '() is deprecated in drupal:10.1.0 and will not be supported in drupal:11.0.0. Pass the route name instead. See https://www.drupal.org/node/3172280', E_USER_DEPRECATED);
+      $name = $this->getRouteStringIdentifier($name);
+    }
     $this->processRoute($name, $route, $parameters);
     $path = $this->getInternalPathFromRoute($name, $route, $parameters);
     // Router-based paths may have a querystring on them but Drupal paths may
@@ -160,7 +163,7 @@ class UrlGenerator implements UrlGeneratorInterface {
    *   Query parameters passed to the generator as $options['query']. This may
    *   be modified if there are extra parameters not used as route variables.
    * @param string $name
-   *   The route name or other identifying string from ::getRouteDebugMessage().
+   *   The route name.
    *
    * @return string
    *   The URL path, without any base path, without the query string, not URL
@@ -287,7 +290,10 @@ class UrlGenerator implements UrlGeneratorInterface {
     $options += $route->getOption('default_url_options') ?: [];
     $options += ['prefix' => '', 'path_processing' => TRUE];
 
-    $name = $this->getRouteStringIdentifier($name);
+    if (!is_string($name)) {
+      @trigger_error('Passing a route object to ' . __METHOD__ . '() is deprecated in drupal:10.1.0 and will not be supported in drupal:11.0.0. Pass the route name instead. See https://www.drupal.org/node/3172280', E_USER_DEPRECATED);
+      $name = $this->getRouteStringIdentifier($name);
+    }
     $this->processRoute($name, $route, $parameters, $generated_url);
     $path = $this->getInternalPathFromRoute($name, $route, $parameters, $options['query']);
     // Outbound path processors might need the route object for the path, e.g.
@@ -415,6 +421,8 @@ class UrlGenerator implements UrlGeneratorInterface {
    *
    * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
    *   Thrown if there is no route with that name in this repository.
+   *
+   * @internal
    *
    * @see \Drupal\Core\Routing\RouteProviderInterface
    */
