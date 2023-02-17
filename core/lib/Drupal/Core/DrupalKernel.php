@@ -230,7 +230,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * Site path is relative to the app root directory.
    * Usually defined as "sites/default".
    *
-   * By default, drupal uses sites/default.
+   * By default, Drupal uses sites/default.
    *
    * @var string
    */
