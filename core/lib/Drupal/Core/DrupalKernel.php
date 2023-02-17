@@ -224,7 +224,12 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected static $isEnvironmentInitialized = FALSE;
 
   /**
-   * The site directory.
+   * The site path directory.
+   *
+   * Site path is relative to the app root directory.
+   * Usually defined as "sites/default".
+   *
+   * By default, drupal uses sites/default.
    *
    * @var string
    */
