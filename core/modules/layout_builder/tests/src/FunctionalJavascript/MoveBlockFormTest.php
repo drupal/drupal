@@ -96,6 +96,7 @@ class MoveBlockFormTest extends WebDriverTestBase {
    */
   public function testMoveBlock() {
     $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
 
     // Reorder body field in current region.
     $this->openBodyMoveForm(1, 'content', ['Links', 'Body (current)']);
@@ -135,6 +136,47 @@ class MoveBlockFormTest extends WebDriverTestBase {
     $this->assertBlockTable(['Body (current)']);
     $page->pressButton('Move');
     $this->assertRegionBlocksOrder(0, 'second', ['.block-field-blocknodebundle-with-section-fieldbody']);
+
+    // The weight element uses -10 to 10 by default, which can cause bugs.
+    // Add 25 'Powered by Drupal' blocks to a new section.
+    $page->clickLink('Add section');
+    $assert_session->waitForElementVisible('css', '#drupal-off-canvas');
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->clickLink('One column');
+    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'input[value="Add section"]'));
+    $page->pressButton('Add section');
+    $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
+    $large_block_number = 25;
+    for ($i = 0; $i < $large_block_number; $i++) {
+      $assert_session->elementExists('css', '[data-layout-delta="0"].layout--onecol [data-region="content"] .layout-builder__add-block')->click();
+      $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas a:contains("Powered by Drupal")'));
+      $assert_session->assertWaitOnAjaxRequest();
+      $page->clickLink('Powered by Drupal');
+      $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'input[value="Add block"]'));
+      $assert_session->assertWaitOnAjaxRequest();
+      $page->pressButton('Add block');
+      $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
+    }
+    $first_region_block_locator = '[data-layout-delta="0"].layout--onecol [data-region="content"] [data-layout-block-uuid]';
+    $assert_session->elementsCount('css', $first_region_block_locator, $large_block_number);
+
+    // Move the Body block to the end of the new section.
+    $this->openBodyMoveForm(1, 'second', ['Body (current)']);
+    $page->selectFieldOption('Region', '0:content');
+    $expected_block_table = array_fill(0, $large_block_number, 'Powered by Drupal');
+    $expected_block_table[] = 'Body (current)';
+    $this->assertBlockTable($expected_block_table);
+    $expected_block_table = array_fill(0, $large_block_number - 1, 'Powered by Drupal');
+    $expected_block_table[] = 'Body (current)*';
+    $expected_block_table[] = 'Powered by Drupal';
+    $this->moveBlockWithKeyboard('up', 'Body', $expected_block_table);
+    $page->pressButton('Move');
+    $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
+    // Get all blocks currently in the region.
+    $blocks = $page->findAll('css', $first_region_block_locator);
+    // The second to last $block should be the body.
+    $this->assertTrue($blocks[count($blocks) - 2]->hasClass('block-field-blocknodebundle-with-section-fieldbody'));
   }
 
   /**
