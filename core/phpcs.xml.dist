@@ -256,6 +256,7 @@
     <properties>
       <property name="forbiddenAnnotations" type="array">
         <element value="@inheritDoc"/>
+        <element value="@inheritdoc"/>
       </property>
     </properties>
   </rule>

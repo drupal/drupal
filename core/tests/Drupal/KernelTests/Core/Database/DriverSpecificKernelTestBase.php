@@ -24,7 +24,7 @@ abstract class DriverSpecificKernelTestBase extends KernelTestBase {
   protected Connection $connection;
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   protected function setUp(): void {
     // Find the current SUT database driver from the connection info. If that

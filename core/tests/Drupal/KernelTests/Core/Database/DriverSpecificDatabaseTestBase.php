@@ -11,12 +11,12 @@ abstract class DriverSpecificDatabaseTestBase extends DriverSpecificKernelTestBa
   use DatabaseTestSchemaInstallTrait;
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   protected static $modules = ['database_test'];
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
