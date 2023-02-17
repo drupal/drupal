@@ -74,7 +74,9 @@ interface DrupalKernelInterface extends HttpKernelInterface, ContainerAwareInter
   public function getCachedContainerDefinition();
 
   /**
-   * Set the current site path.
+   * Set the current site path directory.
+   *
+   * Format: "folder-name/child-folder" usually uses "sites/default".
    *
    * @param string $path
    *   The current site path.
@@ -85,10 +87,10 @@ interface DrupalKernelInterface extends HttpKernelInterface, ContainerAwareInter
   public function setSitePath($path);
 
   /**
-   * Get the site path.
+   * Gets the site path directory.
    *
    * @return string
-   *   The current site path.
+   *   The current site path directory.
    */
   public function getSitePath();
 
