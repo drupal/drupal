@@ -109,7 +109,7 @@ class ExposedFormCheckboxesTest extends ViewTestBase {
     // checked.
     $this->clickLink('Page 2');
     $this->assertSession()->elementsCount('xpath', "//div[contains(@class, 'views-row')]", 1);
-    $this->assertSession()->pageTextNotContains('An illegal choice has been detected. Please contact the site administrator.');
+    $this->assertSession()->pageTextNotContains('The submitted value in the Type element is not allowed.');
   }
 
   /**
@@ -134,7 +134,7 @@ class ExposedFormCheckboxesTest extends ViewTestBase {
       ],
       'auto_create' => FALSE,
     ];
-    $this->createEntityReferenceField('node', 'article', $field_name, NULL, 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+    $this->createEntityReferenceField('node', 'article', $field_name, 'Reference Field', 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     // Add some test nodes.
     $this->createNode([
@@ -158,14 +158,14 @@ class ExposedFormCheckboxesTest extends ViewTestBase {
     // All rows are displayed by default on the first page when no options are
     // checked.
     $this->assertSession()->elementsCount('xpath', "//div[contains(@class, 'views-row')]", 8);
-    $this->assertSession()->pageTextNotContains('An illegal choice has been detected. Please contact the site administrator.');
+    $this->assertSession()->pageTextNotContains('The submitted value in the Reference Field element is not allowed.');
 
     // Select one option and ensure we still have results.
     $tid = $this->terms[0]->id();
     $this->submitForm(["tid[$tid]" => $tid], 'Apply');
     // Ensure only nodes tagged with $tid are displayed.
     $this->assertSession()->elementsCount('xpath', "//div[contains(@class, 'views-row')]", 2);
-    $this->assertSession()->pageTextNotContains('An illegal choice has been detected. Please contact the site administrator.');
+    $this->assertSession()->pageTextNotContains('The submitted value in the Reference Field element is not allowed.');
   }
 
 }

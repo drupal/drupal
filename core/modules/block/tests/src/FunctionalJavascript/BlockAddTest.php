@@ -44,7 +44,7 @@ class BlockAddTest extends WebDriverTestBase {
     // Switch to a theme that doesn't contain the region selected above.
     $assert_session->selectExists('Theme')->selectOption('stark');
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->pageTextNotContains('An illegal choice has been detected. Please contact the site administrator.');
+    $assert_session->pageTextNotContains('The submitted value Pre-content in the Region element is not allowed.');
     $assert_session->optionExists('Region', '- Select -');
   }
 
