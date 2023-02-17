@@ -1264,7 +1264,7 @@ class LayoutBuilderTest extends BrowserTestBase {
   /**
    * Tests the usage of placeholders for empty blocks.
    *
-   * @see \Drupal\Core\Block\BlockPluginInterface::getPlaceholderString()
+   * @see \Drupal\Core\Render\PreviewFallbackInterface::getPreviewFallbackString()
    * @see \Drupal\layout_builder\EventSubscriber\BlockComponentRenderArray::onBuildRender()
    */
   public function testBlockPlaceholder() {
