@@ -68,39 +68,35 @@
   height: 0;
   border-top: solid 3px var(--color--primary-50);
 
-  &:before {
+  &::before,
+  &::after {
     position: absolute;
-    inset-block-start: -11px;
+    inset-block-start: 0;
     inset-inline-start: 0;
     width: 100%;
     height: 0;
     content: "";
-    transition: all 0.2s;
+    transition: transform 0.2s;
     border-top: solid 3px var(--color--primary-50);
   }
 
-  &:after {
-    position: absolute;
-    inset-block: auto -8px;
-    inset-inline-start: 0;
-    width: 100%;
-    height: 0;
-    content: "";
-    transition: all 0.2s;
-    border-top: solid 3px var(--color--primary-50);
+  &::before {
+    transform: translateY(-11px);
+  }
+
+  &::after {
+    transform: translateY(5px);
   }
 }
 
 .mobile-nav-button[aria-expanded="true"] .mobile-nav-button__icon {
-  border-top: 0;
+  border-top-color: transparent;
 
-  &:before {
-    inset-block-start: 0;
-    transform: rotate(-45deg);
+  &::before {
+    transform: translateY(-3px) rotate(-45deg);
   }
 
-  &:after {
-    inset-block-start: 0;
-    transform: rotate(45deg);
+  &::after {
+    transform: translateY(-3px) rotate(45deg);
   }
 }
