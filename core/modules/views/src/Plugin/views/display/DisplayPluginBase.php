@@ -63,8 +63,10 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   /**
    * Stores the rendered output of the display.
    *
-   * @see View::render
-   * @var string
+   * @var array|null
+   *   Render output array, or NULL if no output.
+   *
+   * @see \Drupal\views\ViewExecutable::render()
    */
   public $output = NULL;
 
