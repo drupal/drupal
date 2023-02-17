@@ -69,6 +69,7 @@ class FileReadOnlyStorage implements PhpStorageInterface {
    * {@inheritdoc}
    */
   public function writeable() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and will be removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3155413', E_USER_DEPRECATED);
     return FALSE;
   }
 
