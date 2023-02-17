@@ -117,10 +117,10 @@ class DateRangeDatelistWidget extends DateRangeWidgetBase {
         '#default_value' => $this->getSetting('increment'),
         '#options' => [
           1 => $this->t('1 minute'),
-          5 => $this->t('5 minute'),
-          10 => $this->t('10 minute'),
-          15 => $this->t('15 minute'),
-          30 => $this->t('30 minute'),
+          5 => $this->t('5 minutes'),
+          10 => $this->t('10 minutes'),
+          15 => $this->t('15 minutes'),
+          30 => $this->t('30 minutes'),
         ],
       ];
     }
