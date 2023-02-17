@@ -65,14 +65,10 @@ trait AssertBreadcrumbTrait {
   protected function assertBreadcrumbParts($trail) {
     // Compare paths with actual breadcrumb.
     $parts = $this->getBreadcrumbParts();
+    $found = $parts;
     $pass = TRUE;
-    // Fail if there is no breadcrumb and we have a trail.
-    if (!empty($trail) && empty($parts)) {
-      $pass = FALSE;
-    }
-    // There may be more than one breadcrumb on the page. If $trail is empty
-    // this test would go into an infinite loop, so we need to check that too.
-    while ($trail && !empty($parts)) {
+
+    if (!empty($trail) && !empty($parts)) {
       foreach ($trail as $path => $title) {
         // If the path is empty, generate the path from the <front> route.  If
         // the path does not start with a leading slash, then run it through
@@ -91,11 +87,20 @@ trait AssertBreadcrumbTrait {
         $pass = ($pass && $part['href'] === $url && $part['text'] === Html::escape($title));
       }
     }
+    elseif (!empty($trail) && empty($parts) || empty($trail) && !empty($parts)) {
+      // Fail if there is no breadcrumb and we have a trail or breadcrumb
+      // exists but trail is empty.
+      $pass = FALSE;
+    }
+
     // No parts must be left, or an expected "Home" will always pass.
     $pass = ($pass && empty($parts));
 
-    $this->assertTrue($pass, new FormattableMarkup('Breadcrumb %parts found on @path.', [
+    $this->assertTrue($pass, new FormattableMarkup('Expected breadcrumb %parts on @path but found %found.', [
       '%parts' => implode(' » ', $trail),
+      '%found' => implode(' » ', array_map(function (array $item) {
+        return $item['text'];
+      }, $found)),
       '@path' => $this->getUrl(),
     ]));
   }
