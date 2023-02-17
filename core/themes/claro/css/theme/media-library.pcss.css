@@ -810,7 +810,6 @@
   background-image: url("../../../../misc/icons/8e929c/ex.svg");
 }
 
-/* @todo Remove in https://www.drupal.org/project/drupal/issues/3064914 */
 .views-live-preview .media-library-view div.views-row + div.views-row {
   margin-top: 0;
 }
