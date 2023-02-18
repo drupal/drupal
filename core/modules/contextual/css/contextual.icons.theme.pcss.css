@@ -1,0 +1,39 @@
+/**
+ * @file
+ * Styling for contextual module icons.
+ */
+
+/**
+ * Toolbar tab icon.
+ */
+.toolbar-bar .toolbar-icon-edit:before {
+  background-image: url(../../../misc/icons/bebebe/pencil.svg);
+}
+.toolbar-bar .toolbar-icon-edit:active:before,
+.toolbar-bar .toolbar-icon-edit.is-active:before {
+  background-image: url(../../../misc/icons/ffffff/pencil.svg);
+}
+
+/**
+ * Contextual trigger.
+ */
+.contextual .trigger {
+  /* Override the .focusable height: auto */
+  width: 26px !important;
+  /* Override the .focusable height: auto */
+  height: 26px !important;
+  text-indent: -9999px;
+  background-image: url(../../../misc/icons/bebebe/pencil.svg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 16px 16px;
+}
+
+.contextual .trigger:hover {
+  background-image: url(../../../misc/icons/787878/pencil.svg);
+}
+
+.contextual .trigger:focus {
+  outline: none;
+  background-image: url(../../../misc/icons/5181c6/pencil.svg);
+}
