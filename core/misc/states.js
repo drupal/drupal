@@ -320,7 +320,7 @@
   });
   $document.on('state:checked', function (e) {
     if (e.trigger) {
-      $(e.target).prop('checked', e.value);
+      $(e.target).prop('checked', e.value).trigger('change');
     }
   });
   $document.on('state:collapsed', function (e) {

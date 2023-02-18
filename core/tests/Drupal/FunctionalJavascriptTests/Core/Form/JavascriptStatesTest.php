@@ -63,6 +63,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->doRadiosTriggerTests();
     $this->doSelectTriggerTests();
     $this->doMultipleTriggerTests();
+    $this->doNestedTriggerTests();
   }
 
   /**
@@ -320,6 +321,32 @@ class JavascriptStatesTest extends WebDriverTestBase {
     // Change state: fill the textfield.
     $textfield_trigger->setValue('filled');
     $this->assertTrue($item_visible_value2_and_textfield->isVisible());
+  }
+
+  /**
+   * Tests states of radios element triggered by other radios element.
+   */
+  protected function doNestedTriggerTests() {
+    $this->drupalGet('form-test/javascript-states-form');
+    $page = $this->getSession()->getPage();
+
+    // Find trigger and target elements.
+    $radios_opposite1 = $page->findField('radios_opposite1');
+    $this->assertNotEmpty($radios_opposite1);
+    $radios_opposite2 = $page->findField('radios_opposite2');
+    $this->assertNotEmpty($radios_opposite2);
+
+    // Verify initial state.
+    $this->assertEquals('0', $radios_opposite1->getValue());
+    $this->assertEquals('1', $radios_opposite2->getValue());
+
+    // Set $radios_opposite2 value to 0, $radios_opposite1 value should be 1.
+    $radios_opposite2->setValue('0');
+    $this->assertEquals('1', $radios_opposite1->getValue());
+
+    // Set $radios_opposite1 value to 1, $radios_opposite2 value should be 0.
+    $radios_opposite1->setValue('0');
+    $this->assertEquals('1', $radios_opposite2->getValue());
   }
 
 }
