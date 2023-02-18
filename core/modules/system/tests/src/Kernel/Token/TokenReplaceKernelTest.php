@@ -7,6 +7,7 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\BubbleableMetadata;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Generates text using placeholders for dummy content to check token
@@ -104,6 +105,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
     $tests['[site:mail]'] = $config->get('mail');
     $tests['[site:url]'] = Url::fromRoute('<front>', [], $url_options)->toString();
     $tests['[site:url-brief]'] = preg_replace(['!^https?://!', '!/$!'], '', Url::fromRoute('<front>', [], $url_options)->toString());
+    $tests['[site:base-url]'] = 'http://localhost';
     $tests['[site:login-url]'] = Url::fromRoute('user.page', [], $url_options)->toString();
 
     $base_bubbleable_metadata = new BubbleableMetadata();
@@ -113,6 +115,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
     $metadata_tests['[site:slogan]'] = BubbleableMetadata::createFromObject(\Drupal::config('system.site'));
     $metadata_tests['[site:mail]'] = BubbleableMetadata::createFromObject(\Drupal::config('system.site'));
     $bubbleable_metadata = clone $base_bubbleable_metadata;
+    $metadata_tests['[site:base-url]'] = $bubbleable_metadata->addCacheContexts(['url.site']);
     $metadata_tests['[site:url]'] = $bubbleable_metadata->addCacheContexts(['url.site']);
     $metadata_tests['[site:url-brief]'] = $bubbleable_metadata;
     $metadata_tests['[site:login-url]'] = $bubbleable_metadata;
@@ -126,6 +129,25 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
       $this->assertEquals($expected, $output, new FormattableMarkup('System site information token %token replaced.', ['%token' => $input]));
       $this->assertEquals($metadata_tests[$input], $bubbleable_metadata);
     }
+
+    // Test [site:base-url] and [site:base-path] token with a subdirectory.
+    $request_stack = \Drupal::requestStack();
+    // Test request with subdirectory on homepage.
+    $server = [
+      'SCRIPT_NAME' => '/subdir/index.php',
+      'SCRIPT_FILENAME' => $this->root . '/subdir/index.php',
+      'SERVER_NAME' => 'http://localhost',
+    ];
+    $request = Request::create('/subdir/', 'GET', [], [], [], $server);
+    $request->server->add($server);
+    $request_stack->push($request);
+    $bubbleable_metadata = new BubbleableMetadata();
+    $this->container->get('router.request_context')->setCompleteBaseUrl('http://localhost/subdir');
+    $this->assertEquals('http://localhost/subdir', $this->tokenService->replace('[site:base-url]', [], ['langcode' => $this->interfaceLanguage->getId()], $bubbleable_metadata));
+    $this->assertEquals((new BubbleableMetadata())->addCacheContexts(['url.site']), $bubbleable_metadata);
+    $bubbleable_metadata = new BubbleableMetadata();
+    $this->assertEquals('/subdir', $this->tokenService->replace('[site:base-path]', [], ['langcode' => $this->interfaceLanguage->getId()], $bubbleable_metadata));
+    $this->assertEquals((new BubbleableMetadata())->addCacheContexts(['url.site']), $bubbleable_metadata);
   }
 
   /**

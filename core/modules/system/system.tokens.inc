@@ -37,9 +37,20 @@ function system_token_info() {
     'name' => t("Email"),
     'description' => t("The administrative email address for the site."),
   ];
+  $site['base-url'] = [
+    'name' => t("Base URL"),
+    'description' => t("The base URL of the site, currently: @base_url",
+      [
+        '@base_url' => \Drupal::service('router.request_context')->getCompleteBaseUrl(),
+      ]),
+  ];
+  $site['base-path'] = [
+    'name' => t("Base path"),
+    'description' => t("The base path of the site, currently: @base_path", ['@base_path' => \Drupal::request()->getBasePath()]),
+  ];
   $site['url'] = [
     'name' => t("URL"),
-    'description' => t("The URL of the site's front page."),
+    'description' => t("The URL of the site's front page with the language prefix, if it exists."),
   ];
   $site['url-brief'] = [
     'name' => t("URL (brief)"),
@@ -130,6 +141,16 @@ function system_tokens($type, $tokens, array $data, array $options, BubbleableMe
           $config = \Drupal::config('system.site');
           $bubbleable_metadata->addCacheableDependency($config);
           $replacements[$original] = $config->get('mail');
+          break;
+
+        case 'base-url':
+          $bubbleable_metadata->addCacheContexts(['url.site']);
+          $replacements[$original] = \Drupal::service('router.request_context')->getCompleteBaseUrl();
+          break;
+
+        case 'base-path':
+          $bubbleable_metadata->addCacheContexts(['url.site']);
+          $replacements[$original] = \Drupal::request()->getBasePath();
           break;
 
         case 'url':
