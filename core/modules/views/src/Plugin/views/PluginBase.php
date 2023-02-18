@@ -87,7 +87,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
   public $displayHandler;
 
   /**
-   * Plugins's definition.
+   * Plugins' definition.
    *
    * @var array
    */
