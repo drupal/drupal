@@ -170,7 +170,7 @@
   Drupal.views.ajaxView.prototype.attachPagerAjax = function () {
     this.$view
       .find(
-        'ul.js-pager__items > li > a, th.views-field a, .attachment .views-summary a',
+        '.js-pager__items a, th.views-field a, .attachment .views-summary a',
       )
       .each($.proxy(this.attachPagerLinkAjax, this));
   };
