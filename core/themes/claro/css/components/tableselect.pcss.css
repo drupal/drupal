@@ -9,11 +9,6 @@ td.checkbox,
 th.checkbox {
   text-align: center;
 }
-[dir="rtl"] td.checkbox,
-[dir="rtl"] th.checkbox {
-  /* This is required to win over specificity of [dir="rtl"] td */
-  text-align: center;
-}
 
 tr.selected td {
   background-color: var(--color-bgblue-active);
@@ -29,15 +24,19 @@ tr.selected td {
   border: var(--details-border-size) solid var(--details-border-color);
   border-radius: 4px;
   background-color: var(--color-text);
-}
 
-.views-bulk-actions[data-drupal-sticky-vbo="true"] {
-  position: sticky;
-  z-index: calc(var(--dropbutton-widget-z-index) + 1);
-  bottom: var(--drupal-displace-offset-bottom, 0);
-  animation: fade-in-bottom 320ms 1 forwards;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
+  &[data-drupal-sticky-vbo="true"] {
+    position: sticky;
+    z-index: calc(var(--dropbutton-widget-z-index) + 1);
+    bottom: var(--drupal-displace-offset-bottom, 0);
+    animation: fade-in-bottom 320ms 1 forwards;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  &.views-form__header--bypass-animation {
+    animation: none;
+  }
 }
 
 @supports (position: sticky) {
@@ -54,50 +53,49 @@ tr.selected td {
     transform: translateY(0);
   }
 }
-.views-bulk-actions.views-form__header--bypass-animation {
-  animation: none;
-}
 
 .views-bulk-actions__item {
   align-self: center;
   margin-block: 0 var(--space-s);
   margin-inline: 0 var(--space-l);
-}
-.views-bulk-actions__item:last-of-type {
-  margin-inline-end: 0;
+  &:last-of-type {
+    margin-inline-end: 0;
+  }
+  & .form-element {
+    &:hover {
+      border: var(--input-border-size) solid var(--input-border-color);
+      box-shadow: none;
+    }
+  }
+  & .button--primary {
+    background: var(--color-blue-400);
+    &:hover {
+      background: var(--color-blue-500);
+    }
+  }
+  & .form-item__label {
+    display: inline;
+    padding-inline-end: var(--space-xs);
+    &:after {
+      content: ":";
+    }
+  }
+  & .form-element--type-select {
+    min-height: 2rem;
+    padding: calc(0.5rem - 1px) calc(2.25rem - 1px) calc(0.5rem - 1px) calc(1rem - 1px);
+    font-size: var(--font-size-xs);
+    line-height: 1rem;
+  }
+  & input,
+  & .button {
+    margin-block: 0;
+  }
 }
 .views-bulk-actions__item--status {
   width: 100%;
   white-space: nowrap;
   font-size: var(--font-size-xs);
   font-weight: bold;
-}
-.views-bulk-actions__item input,
-.views-bulk-actions__item .button {
-  margin-block: 0;
-}
-.views-bulk-actions__item .form-element:hover {
-  border: var(--input-border-size) solid var(--input-border-color);
-  box-shadow: none;
-}
-.views-bulk-actions__item .button--primary {
-  background: var(--color-blue-400);
-  &:hover {
-    background: var(--color-blue-500);
-  }
-}
-.views-bulk-actions__item .form-item__label {
-  display: inline;
-  padding-inline-end: var(--space-xs);
-}
-.views-bulk-actions__item .form-item__label:after {
-  content: ":";
-}
-.views-bulk-actions__item .form-element--type-select {
-  min-height: 2rem;
-  padding: calc(0.5rem - 1px) calc(2.25rem - 1px) calc(0.5rem - 1px) calc(1rem - 1px);
-  font-size: var(--font-size-xs);
-  line-height: 1rem;
 }
 
 .views-field__skip-to-bulk-actions {
