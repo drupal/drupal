@@ -348,8 +348,8 @@ function template_preprocess_responsive_image(&$variables) {
  * @param array $multipliers
  *   An array with multipliers as keys and image style mappings as values.
  *
- * @return \Drupal\Core\Template\Attribute[]
- *   An array of attributes for the source tag.
+ * @return \Drupal\Core\Template\Attribute
+ *   An object of attributes for the source tag.
  */
 function _responsive_image_build_source_attributes(array $variables, BreakpointInterface $breakpoint, array $multipliers) {
   if ((empty($variables['width']) || empty($variables['height']))) {
