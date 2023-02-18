@@ -31,6 +31,52 @@ class JavascriptStatesForm extends FormBase {
       '#type' => 'textfield',
       '#title' => 'Textfield trigger',
     ];
+    $form['radios_opposite1'] = [
+      '#type' => 'radios',
+      '#title' => 'Radios opposite 1',
+      '#options' => [
+        0 => 'zero',
+        1 => 'one',
+      ],
+      '#default_value' => 0,
+      0 => [
+        '#states' => [
+          'checked' => [
+            ':input[name="radios_opposite2"]' => ['value' => 1],
+          ],
+        ],
+      ],
+      1 => [
+        '#states' => [
+          'checked' => [
+            ':input[name="radios_opposite2"]' => ['value' => 0],
+          ],
+        ],
+      ],
+    ];
+    $form['radios_opposite2'] = [
+      '#type' => 'radios',
+      '#title' => 'Radios opposite 2',
+      '#options' => [
+        0 => 'zero',
+        1 => 'one',
+      ],
+      '#default_value' => 1,
+      0 => [
+        '#states' => [
+          'checked' => [
+            ':input[name="radios_opposite1"]' => ['value' => 1],
+          ],
+        ],
+      ],
+      1 => [
+        '#states' => [
+          'checked' => [
+            ':input[name="radios_opposite1"]' => ['value' => 0],
+          ],
+        ],
+      ],
+    ];
     $form['radios_trigger'] = [
       '#type' => 'radios',
       '#title' => 'Radios trigger',

@@ -722,7 +722,7 @@
 
   $document.on('state:checked', (e) => {
     if (e.trigger) {
-      $(e.target).prop('checked', e.value);
+      $(e.target).prop('checked', e.value).trigger('change');
     }
   });
 
