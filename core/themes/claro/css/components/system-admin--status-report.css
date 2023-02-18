@@ -17,6 +17,10 @@
  *  - system-status-report-counters.css
  */
 
+:root {
+  --system-admin-status-report-border-color: var(--color-gray-200);
+}
+
 .system-status-report {
   position: relative;
   padding-top: var(--space-m);
@@ -32,30 +36,22 @@
   position: relative;
   box-sizing: border-box;
   width: 100%;
-  padding: 0.625rem 0.375rem 0.625rem 2.5rem; /* LTR */
+  padding-block: 0.625em;
+  padding-inline: 2.5em 0.375em;
   vertical-align: top;
   background-color: transparent;
   font-weight: normal;
 }
 
-[dir="rtl"] .system-status-report__status-title {
-  padding: 0.625rem 2.5rem 0.625rem 0.375rem;
-}
-
 .system-status-report__status-icon:before {
   position: absolute;
   top: 0.75rem;
-  left: 0.75rem; /* LTR */
+  inset-inline-start: 0.75rem;
   display: block;
   width: 1rem;
   height: 1rem;
   content: "";
   background-repeat: no-repeat;
-}
-
-[dir="rtl"] .system-status-report__status-icon:before {
-  right: 0.75rem;
-  left: auto;
 }
 
 .system-status-report__status-icon--error:before {
@@ -80,7 +76,7 @@
 
 .system-status-report__row {
   display: flex;
-  border-bottom: 1px solid #d3d4d9;
+  border-bottom: 1px solid var(--system-admin-status-report-border-color);
 }
 
 .system-status-report__row:last-of-type {
