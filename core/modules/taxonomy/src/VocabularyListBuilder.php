@@ -109,6 +109,9 @@ class VocabularyListBuilder extends DraggableListBuilder {
     if (isset($operations['edit'])) {
       $operations['edit']['title'] = t('Edit vocabulary');
     }
+    if (isset($operations['delete'])) {
+      $operations['delete']['title'] = $this->t('Delete vocabulary');
+    }
 
     if ($entity->access('access taxonomy overview')) {
       $operations['list'] = [
@@ -126,8 +129,6 @@ class VocabularyListBuilder extends DraggableListBuilder {
         'url' => Url::fromRoute('entity.taxonomy_term.add_form', ['taxonomy_vocabulary' => $entity->id()]),
       ];
     }
-
-    unset($operations['delete']);
 
     return $operations;
   }

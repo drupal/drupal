@@ -88,6 +88,19 @@ class VocabularyUiTest extends TaxonomyTestBase {
 
     $site_name = $this->config('system.site')->get('name');
     $this->assertSession()->titleEquals("Don't Panic | $site_name");
+
+    // Delete the vocabulary.
+    $this->drupalGet('admin/structure/taxonomy');
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('entity.taxonomy_vocabulary.delete_form', ['taxonomy_vocabulary' => $edit['vid']])->toString());
+    $this->clickLink(t('Delete vocabulary'));
+    $this->assertSession()->responseContains(t('Are you sure you want to delete the vocabulary %name?', ['%name' => $edit['name']]));
+    $this->assertSession()->pageTextContains(t('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.'));
+
+    // Confirm deletion.
+    $this->submitForm([], 'Delete');
+    $this->assertSession()->responseContains(t('Deleted vocabulary %name.', ['%name' => $edit['name']]));
+    $this->container->get('entity_type.manager')->getStorage('taxonomy_vocabulary')->resetCache();
+    $this->assertNull(Vocabulary::load($edit['vid']), 'Vocabulary not found.');
   }
 
   /**
