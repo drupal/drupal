@@ -170,6 +170,7 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
    */
   public function testInvalidStreamWrapper() {
     $this->expectException(InvalidStreamWrapperException::class);
+    $this->expectExceptionMessage('Invalid stream wrapper: foo://');
     $this->fileRepository->writeData('asdf', 'foo://');
   }
 
