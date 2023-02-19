@@ -32,6 +32,13 @@ use Drupal\user\EntityOwnerTrait;
  *     "storage_schema" = "Drupal\file\FileStorageSchema",
  *     "access" = "Drupal\file\FileAccessControlHandler",
  *     "views_data" = "Drupal\file\FileViewsData",
+ *     "list_builder" = "Drupal\Core\Entity\EntityListBuilder",
+ *     "form" = {
+ *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm",
+ *     },
+ *     "route_provider" = {
+ *       "html" = "Drupal\file\Entity\FileRouteProvider",
+ *     },
  *   },
  *   base_table = "file_managed",
  *   entity_keys = {
@@ -40,6 +47,9 @@ use Drupal\user\EntityOwnerTrait;
  *     "langcode" = "langcode",
  *     "uuid" = "uuid",
  *     "owner" = "uid",
+ *   },
+ *   links = {
+ *     "delete-form" = "/file/{file}/delete",
  *   }
  * )
  */
