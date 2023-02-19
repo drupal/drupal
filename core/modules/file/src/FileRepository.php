@@ -88,7 +88,7 @@ class FileRepository implements FileRepositoryInterface {
    */
   public function writeData(string $data, string $destination, int $replace = FileSystemInterface::EXISTS_RENAME): FileInterface {
     if (!$this->streamWrapperManager->isValidUri($destination)) {
-      throw new InvalidStreamWrapperException(sprintf('Invalid stream wrapper: %destination', ['%destination' => $destination]));
+      throw new InvalidStreamWrapperException("Invalid stream wrapper: {$destination}");
     }
     $uri = $this->fileSystem->saveData($data, $destination, $replace);
     return $this->createOrUpdate($uri, $destination, $replace === FileSystemInterface::EXISTS_RENAME);
@@ -132,7 +132,7 @@ class FileRepository implements FileRepositoryInterface {
    */
   public function copy(FileInterface $source, string $destination, int $replace = FileSystemInterface::EXISTS_RENAME): FileInterface {
     if (!$this->streamWrapperManager->isValidUri($destination)) {
-      throw new InvalidStreamWrapperException(sprintf('Invalid stream wrapper: %destination', ['%destination' => $destination]));
+      throw new InvalidStreamWrapperException("Invalid stream wrapper: {$destination}");
     }
     $uri = $this->fileSystem->copy($source->getFileUri(), $destination, $replace);
 
@@ -166,7 +166,7 @@ class FileRepository implements FileRepositoryInterface {
    */
   public function move(FileInterface $source, string $destination, int $replace = FileSystemInterface::EXISTS_RENAME): FileInterface {
     if (!$this->streamWrapperManager->isValidUri($destination)) {
-      throw new InvalidStreamWrapperException(sprintf('Invalid stream wrapper: %destination', ['%destination' => $destination]));
+      throw new InvalidStreamWrapperException("Invalid stream wrapper: {$destination}");
     }
     $uri = $this->fileSystem->move($source->getFileUri(), $destination, $replace);
     $delete_source = FALSE;
