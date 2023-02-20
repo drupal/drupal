@@ -55,6 +55,9 @@ class EntityTestAccessControlHandler extends EntityAccessControlHandler {
           return AccessResult::allowedIfHasPermission($account, 'view test entity translations');
         }
       }
+      if ($entity instanceof EntityPublishedInterface && !$entity->isPublished()) {
+        return AccessResult::neutral('Unpublished entity');
+      }
       return AccessResult::allowedIfHasPermission($account, 'view test entity');
     }
     elseif (in_array($operation, ['update', 'delete'])) {
