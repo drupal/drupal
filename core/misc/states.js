@@ -526,6 +526,10 @@
         // the state.
         return this.val() === '';
       },
+      // Listen to 'change' for number native "spinner" widgets.
+      change() {
+        return this.val() === '';
+      },
     },
 
     checked: {
