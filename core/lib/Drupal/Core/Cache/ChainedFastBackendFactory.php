@@ -76,9 +76,14 @@ class ChainedFastBackendFactory implements CacheFactoryInterface {
    *   The cache backend object associated with the specified bin.
    */
   public function get($bin) {
-    // Use the chained backend only if there is a fast backend available;
-    // otherwise, just return the consistent backend directly.
-    if (isset($this->fastServiceName)) {
+    // Use the chained backend only if there is a fast backend available and it
+    // is not the same as the consistent backend; otherwise, just return the
+    // consistent backend directly.
+    if (
+      isset($this->fastServiceName)
+      &&
+      $this->fastServiceName !== $this->consistentServiceName
+    ) {
       return new ChainedFastBackend(
         $this->container->get($this->consistentServiceName)->get($bin),
         $this->container->get($this->fastServiceName)->get($bin),
