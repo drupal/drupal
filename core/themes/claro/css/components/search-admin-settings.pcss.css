@@ -6,9 +6,12 @@
 /**
  * Add search page select/submit.
  */
-.search-admin-settings .container-inline {
-  margin-bottom: 1em;
-}
-.search-admin-settings label[for="edit-search-type"] {
-  display: block;
+.search-admin-settings {
+  & .container-inline {
+    margin-block-end: 1em;
+  }
+
+  & label[for="edit-search-type"] {
+    display: block;
+  }
 }
