@@ -146,8 +146,22 @@ class ModulesUninstallForm extends FormBase {
       return $form;
     }
 
-    // Sort all modules by their name.
-    uasort($uninstallable, [ModuleExtensionList::class, 'sortByName']);
+    // Deprecated and obsolete modules should appear at the top of the
+    // uninstallation list.
+    $unstable_lifecycle = array_flip([
+      ExtensionLifecycle::DEPRECATED,
+      ExtensionLifecycle::OBSOLETE,
+    ]);
+
+    // Sort all modules by their lifecycle identifier and name.
+    uasort($uninstallable, function ($a, $b) use ($unstable_lifecycle) {
+      $lifecycle_a = isset($unstable_lifecycle[$a->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER]]) ? -1 : 1;
+      $lifecycle_b = isset($unstable_lifecycle[$b->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER]]) ? -1 : 1;
+      if ($lifecycle_a === $lifecycle_b) {
+        return ModuleExtensionList::sortByName($a, $b);
+      }
+      return $lifecycle_a <=> $lifecycle_b;
+    });
     $validation_reasons = $this->moduleInstaller->validateUninstall(array_keys($uninstallable));
 
     $form['uninstall'] = ['#tree' => TRUE];
