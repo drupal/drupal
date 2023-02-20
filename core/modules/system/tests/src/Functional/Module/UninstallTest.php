@@ -82,6 +82,20 @@ class UninstallTest extends BrowserTestBase {
     $this->assertSession()->elementExists('xpath', "//a[contains(@aria-label, 'View information on the Obsolete status of the module System obsolete status test')]");
     $this->assertSession()->elementExists('xpath', "//a[contains(@href, 'https://example.com/obsolete')]");
 
+    $form = $this->assertSession()->elementExists('xpath', "//form[@id='system-modules-uninstall']");
+    $form_html = $form->getOuterHtml();
+
+    // Select the first stable module on the uninstall list.
+    $module_stable = $this->assertSession()->elementExists('xpath', "//label[contains(@class, 'module-name') and not(./a[contains(@class, 'module-link--non-stable')])]")->getOuterHtml();
+
+    // Select the unstable modules (deprecated, and obsolete).
+    $module_unstable_1 = $this->assertSession()->elementExists('xpath', "//label[./a[contains(@aria-label, 'View information on the Deprecated status of the module Deprecated module')]]")->getOuterHtml();
+    $module_unstable_2 = $this->assertSession()->elementExists('xpath', "//label[./a[contains(@aria-label, 'View information on the Obsolete status of the module System obsolete status test')]]")->getOuterHtml();
+
+    // Check that all unstable modules appear before the first stable module.
+    $this->assertGreaterThan(strpos($form_html, $module_unstable_1), strpos($form_html, $module_stable));
+    $this->assertGreaterThan(strpos($form_html, $module_unstable_2), strpos($form_html, $module_stable));
+
     foreach (\Drupal::service('extension.list.module')->getAllInstalledInfo() as $module => $info) {
       $field_name = "uninstall[$module]";
       if (!empty($info['required'])) {
