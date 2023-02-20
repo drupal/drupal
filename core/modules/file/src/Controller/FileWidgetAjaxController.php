@@ -2,12 +2,14 @@
 
 namespace Drupal\file\Controller;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Defines a controller to respond to file widget AJAX requests.
  */
 class FileWidgetAjaxController {
+  use StringTranslationTrait;
 
   /**
    * Returns the progress status for a file upload process.
@@ -20,7 +22,7 @@ class FileWidgetAjaxController {
    */
   public function progress($key) {
     $progress = [
-      'message' => t('Starting upload...'),
+      'message' => $this->t('Starting upload...'),
       'percentage' => -1,
     ];
 
@@ -28,7 +30,10 @@ class FileWidgetAjaxController {
     if ($implementation == 'uploadprogress') {
       $status = uploadprogress_get_info($key);
       if (isset($status['bytes_uploaded']) && !empty($status['bytes_total'])) {
-        $progress['message'] = t('Uploading... (@current of @total)', ['@current' => format_size($status['bytes_uploaded']), '@total' => format_size($status['bytes_total'])]);
+        $progress['message'] = $this->t('Uploading... (@current of @total)', [
+          '@current' => format_size($status['bytes_uploaded']),
+          '@total' => format_size($status['bytes_total']),
+        ]);
         $progress['percentage'] = round(100 * $status['bytes_uploaded'] / $status['bytes_total']);
       }
     }

@@ -6,11 +6,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\system\SystemManager;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Returns responses for System Info routes.
  */
 class SystemInfoController implements ContainerInjectionInterface {
+
+  use StringTranslationTrait;
 
   /**
    * System Manager Service.
@@ -63,7 +66,7 @@ class SystemInfoController implements ContainerInjectionInterface {
       $output = ob_get_clean();
     }
     else {
-      $output = t('The phpinfo() function is disabled. For more information, visit the <a href=":phpinfo">Enabling and disabling phpinfo()</a> handbook page.', [':phpinfo' => 'https://www.drupal.org/node/243993']);
+      $output = $this->t('The phpinfo() function is disabled. For more information, visit the <a href=":phpinfo">Enabling and disabling phpinfo()</a> handbook page.', [':phpinfo' => 'https://www.drupal.org/node/243993']);
     }
     return new Response($output);
   }
