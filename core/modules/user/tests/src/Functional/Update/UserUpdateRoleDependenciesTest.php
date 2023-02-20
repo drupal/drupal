@@ -47,7 +47,7 @@ class UserUpdateRoleDependenciesTest extends UpdatePathTestBase {
     $this->drupalLogin($this->createUser(['access site reports']));
     $this->drupalGet('admin/reports/dblog', ['query' => ['type[]' => 'update']]);
     $this->clickLink('The role Authenticated user has had the following non-…');
-    $this->assertSession()->pageTextContains('The role Authenticated user has had the following non-existent permission(s) removed: use text format plain_text, does_not_exist.');
+    $this->assertSession()->pageTextContains('The role Authenticated user has had the following non-existent permission(s) removed: does_not_exist, use text format plain_text.');
     $this->getSession()->back();
     $this->clickLink('The role Anonymous user has had the following non-…');
     $this->assertSession()->pageTextContains('The role Anonymous user has had the following non-existent permission(s) removed: use text format plain_text.');

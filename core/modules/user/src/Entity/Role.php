@@ -185,12 +185,6 @@ class Role extends ConfigEntityBase implements RoleInterface {
       });
       $this->weight = $max + 1;
     }
-
-    if (!$this->isSyncing()) {
-      // Permissions are always ordered alphabetically to avoid conflicts in the
-      // exported configuration.
-      sort($this->permissions);
-    }
   }
 
   /**
