@@ -217,6 +217,9 @@
     empty: {
       keyup: function keyup() {
         return this.val() === '';
+      },
+      change: function change() {
+        return this.val() === '';
       }
     },
     checked: {

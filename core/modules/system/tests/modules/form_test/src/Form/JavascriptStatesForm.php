@@ -106,6 +106,10 @@ class JavascriptStatesForm extends FormBase {
       '#empty_value' => '_none',
       '#empty_option' => '- None -',
     ];
+    $form['number_trigger'] = [
+      '#type' => 'number',
+      '#title' => 'Number trigger',
+    ];
 
     // Tested fields.
     // Checkbox trigger.
@@ -370,6 +374,17 @@ class JavascriptStatesForm extends FormBase {
         'visible' => [
           ':input[name="select_trigger"]' => ['value' => 'value2'],
           ':input[name="textfield_trigger"]' => ['filled' => TRUE],
+        ],
+      ],
+    ];
+
+    // Number triggers.
+    $form['item_visible_when_number_trigger_filled_by_spinner'] = [
+      '#type' => 'item',
+      '#title' => 'Item visible when number trigger filled by spinner widget',
+      '#states' => [
+        'visible' => [
+          ':input[name="number_trigger"]' => ['filled' => TRUE],
         ],
       ],
     ];
