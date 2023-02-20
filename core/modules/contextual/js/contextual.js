@@ -46,7 +46,7 @@
     var $region = $contextual.closest('.contextual-region');
     var contextual = Drupal.contextual;
     $contextual.html(html).addClass('contextual').prepend(Drupal.theme('contextualTrigger'));
-    var destination = "destination=".concat(Drupal.encodePath(Drupal.url(drupalSettings.path.currentPath)));
+    var destination = "destination=".concat(Drupal.encodePath(Drupal.url(drupalSettings.path.currentPath + window.location.search)));
     $contextual.find('.contextual-links a').each(function () {
       var url = this.getAttribute('href');
       var glue = url.indexOf('?') === -1 ? '?' : '&';

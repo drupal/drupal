@@ -99,7 +99,7 @@
 
     // Set the destination parameter on each of the contextual links.
     const destination = `destination=${Drupal.encodePath(
-      Drupal.url(drupalSettings.path.currentPath),
+      Drupal.url(drupalSettings.path.currentPath + window.location.search),
     )}`;
     $contextual.find('.contextual-links a').each(function () {
       const url = this.getAttribute('href');

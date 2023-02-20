@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\contextual\FunctionalJavascript;
 
+use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\user\Entity\Role;
 
@@ -112,6 +113,22 @@ class ContextualLinksTest extends WebDriverTestBase {
     $expected_destination_value = (string) $this->loggedInUser->toUrl()->toString();
     $contextual_link_url_parsed = parse_url($this->getSession()->getPage()->findLink('Configure block')->getAttribute('href'));
     $this->assertEquals("destination=$expected_destination_value", $contextual_link_url_parsed['query']);
+  }
+
+  /**
+   * Tests the contextual links destination with query.
+   */
+  public function testContextualLinksDestinationWithQuery() {
+    $this->grantPermissions(Role::load(Role::AUTHENTICATED_ID), [
+      'access contextual links',
+      'administer blocks',
+    ]);
+
+    $this->drupalGet('admin/structure/block', ['query' => ['foo' => 'bar']]);
+    $this->assertSession()->waitForElement('css', '.contextual button');
+    $expected_destination_value = Url::fromRoute('block.admin_display')->toString();
+    $contextual_link_url_parsed = parse_url($this->getSession()->getPage()->findLink('Configure block')->getAttribute('href'));
+    $this->assertEquals("destination=$expected_destination_value%3Ffoo%3Dbar", $contextual_link_url_parsed['query']);
   }
 
 }
