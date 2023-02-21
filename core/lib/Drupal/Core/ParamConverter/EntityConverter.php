@@ -120,7 +120,16 @@ class EntityConverter implements ParamConverterInterface {
     // If the entity type is revisionable and the parameter has the
     // "load_latest_revision" flag, load the active variant.
     if (!empty($definition['load_latest_revision'])) {
-      return $this->entityRepository->getActive($entity_type_id, $value);
+      $entity = $this->entityRepository->getActive($entity_type_id, $value);
+
+      if (
+        !empty($definition['bundle']) &&
+        $entity instanceof EntityInterface &&
+        !in_array($entity->bundle(), $definition['bundle'], TRUE)
+      ) {
+        return NULL;
+      }
+      return $entity;
     }
 
     // Do not inject the context repository as it is not an actual dependency:
