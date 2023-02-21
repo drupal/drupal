@@ -85,7 +85,7 @@ class Roles extends PrerenderList {
         $sorted_keys = array_intersect_key($ordered_roles, $user_roles);
         // Merge with the unsorted array of role information which has the
         // effect of sorting it.
-        $user_roles = array_merge($sorted_keys, $user_roles);
+        $user_roles = array_replace($sorted_keys, $user_roles);
       }
     }
   }
