@@ -72,9 +72,20 @@ block_content.type_add:
     _permission: 'administer blocks'
 
 entity.block_content.collection:
+  path: '/admin/content/block-content'
+  defaults:
+    _title: 'Custom blocks'
+    _entity_list: 'block_content'
+  requirements:
+    _permission: 'administer blocks'
+
+# @todo Deprecate this route once
+#   https://www.drupal.org/project/drupal/issues/3159210 is fixed, or remove
+#   it in Drupal 11.
+# @see https://www.drupal.org/node/3320855
+entity.block_content.collection.bc:
   path: '/admin/structure/block/block-content'
   defaults:
-    _title: 'Custom block library'
-    _entity_list: 'block_content'
+    _controller: '\Drupal\block_content\Controller\BlockContentController::blockLibraryRedirect'
   requirements:
     _permission: 'administer blocks'

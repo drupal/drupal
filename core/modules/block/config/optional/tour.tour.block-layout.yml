@@ -37,9 +37,3 @@ tips:
     weight: 4
     selector: .dropbutton-widget
     body: 'By Clicking on "Configure" you can go ahead and edit the contents of the block, deal with the visibility settings and even change the placement of where it is on your theme.'
-  custom-block-library:
-    id: custom-block-library
-    plugin: text
-    label: 'Custom Block Library'
-    weight: 5
-    body: 'The block management screen also has an another tab on the top which is used to add Custom blocks. The name of the tab is "Custom block library". This tab ultimately provides a link to add custom blocks.'

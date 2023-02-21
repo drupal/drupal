@@ -155,4 +155,31 @@ class BlockContentController extends ControllerBase {
     return $this->redirect($route, [], [], 301);
   }
 
+  /**
+   * Provides a redirect to the custom block library.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   *   /admin/content/block-content directly instead of
+   *   /admin/structure/block/block-content.
+   *
+   * @see https://www.drupal.org/node/3320855
+   */
+  public function blockLibraryRedirect() {
+    @trigger_error('The path /admin/structure/block/block-content is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/content/block-content. See https://www.drupal.org/node/3320855.', E_USER_DEPRECATED);
+    $route = 'entity.block_content.collection';
+    $params = [
+      '%old_path' => Url::fromRoute("$route.bc")->toString(),
+      '%new_path' => Url::fromRoute($route)->toString(),
+      '%change_record' => 'https://www.drupal.org/node/3320855',
+    ];
+    $warning_message = $this->t('You have been redirected from %old_path. Update links, shortcuts, and bookmarks to use %new_path.', $params);
+    $this->messenger()->addWarning($warning_message);
+    $this->getLogger('block_content')
+      ->warning('A user was redirected from %old_path to %new_path. This redirect will be removed in a future version of Drupal. Update links, shortcuts, and bookmarks to use %new_path. See %change_record for more information.', $params);
+
+    return $this->redirect($route, [], [], 301);
+  }
+
 }

@@ -1,7 +1,7 @@
 entity.block_content.collection:
-  title: 'Custom block library'
+  title: Custom blocks
   route_name: entity.block_content.collection
-  base_route: block.admin_display
+  base_route: system.admin_content
 
 entity.block_content.canonical:
   title: Edit

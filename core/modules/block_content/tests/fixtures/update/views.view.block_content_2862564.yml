@@ -7,7 +7,7 @@ dependencies:
 id: block_content
 label: 'Custom blocks'
 module: views
-description: 'Find and manage custom blocks.'
+description: 'Create and edit custom block content.'
 tag: default
 base_table: block_content_field_data
 base_field: id

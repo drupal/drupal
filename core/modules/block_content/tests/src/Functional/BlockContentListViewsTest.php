@@ -38,10 +38,10 @@ class BlockContentListViewsTest extends BlockContentTestBase {
       'administer blocks',
       'translate configuration',
     ]));
-    $this->drupalGet('admin/structure/block/block-content');
+    $this->drupalGet('admin/content/block-content');
 
     // Test for the page title.
-    $this->assertSession()->titleEquals('Custom block library | Drupal');
+    $this->assertSession()->titleEquals('Custom blocks | Drupal');
 
     // Test for the exposed filters.
     $this->assertSession()->fieldExists('info');
@@ -124,7 +124,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     ]);
     $block_content->save();
 
-    $this->drupalGet('admin/structure/block/block-content');
+    $this->drupalGet('admin/content/block-content');
     // Confirm that the empty text is displayed.
     $this->assertSession()->pageTextContains('There are no custom blocks available.');
     // Confirm the non-reusable block is not on the page.

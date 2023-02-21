@@ -53,7 +53,7 @@ use Drupal\user\UserInterface;
  *     "canonical" = "/block/{block_content}",
  *     "delete-form" = "/block/{block_content}/delete",
  *     "edit-form" = "/block/{block_content}",
- *     "collection" = "/admin/structure/block/block-content",
+ *     "collection" = "/admin/content/block-content",
  *     "create" = "/block",
  *     "revision-delete-form" = "/block/{block_content}/revision/{block_content_revision}/delete",
  *     "revision-revert-form" = "/block/{block_content}/revision/{block_content_revision}/revert",

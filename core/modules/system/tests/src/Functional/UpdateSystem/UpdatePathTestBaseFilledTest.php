@@ -169,7 +169,7 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     $this->drupalGet('admin/structure/block');
     $this->assertSession()->pageTextContains('Another block');
     $this->assertSession()->pageTextContains('Test block');
-    $this->drupalGet('admin/structure/block/block-content');
+    $this->drupalGet('admin/content/block-content');
     $this->assertSession()->pageTextContains('Another block');
     $this->assertSession()->pageTextContains('Test block');
 
