@@ -189,4 +189,66 @@ class EntityConverterLatestRevisionTest extends KernelTestBase {
     $this->assertEquals($entity->id(), $converted->id());
   }
 
+  /**
+   * Tests an entity route parameter having 'bundle' definition property.
+   *
+   * @covers ::convert
+   */
+  public function testRouteParamWithBundleDefinition(): void {
+    $entity1 = EntityTestMulRev::create([
+      'name' => $this->randomString(),
+      'type' => 'foo',
+    ]);
+    $entity1->save();
+    $entity2 = EntityTestMulRev::create([
+      'name' => $this->randomString(),
+      'type' => 'bar',
+    ]);
+    $entity2->save();
+    $entity3 = EntityTestMulRev::create([
+      'name' => $this->randomString(),
+      'type' => 'baz',
+    ]);
+    $entity3->save();
+
+    $definition = [
+      'type' => 'entity:entity_test_mulrev',
+      'bundle' => [
+        'foo',
+        'bar',
+      ],
+      'load_latest_revision' => TRUE,
+    ];
+
+    // An entity whose bundle is in the definition list is converted.
+    $converted = $this->converter->convert($entity1->id(), $definition, 'qux', []);
+    $this->assertSame($entity1->id(), $converted->id());
+
+    // An entity whose bundle is in the definition list is converted.
+    $converted = $this->converter->convert($entity2->id(), $definition, 'qux', []);
+    $this->assertSame($entity2->id(), $converted->id());
+
+    // An entity whose bundle is missed from definition is not converted.
+    $converted = $this->converter->convert($entity3->id(), $definition, 'qux', []);
+    $this->assertNull($converted);
+
+    // A non-existing entity returns NULL.
+    $converted = $this->converter->convert('some-non-existing-entity-id', $definition, 'qux', []);
+    $this->assertNull($converted);
+
+    $definition = [
+      'type' => 'entity:entity_test_mulrev',
+    ];
+
+    // Check that all entities are returned when 'bundle' is not defined.
+    $converted = $this->converter->convert($entity1->id(), $definition, 'qux', []);
+    $this->assertSame($entity1->id(), $converted->id());
+    $converted = $this->converter->convert($entity2->id(), $definition, 'qux', []);
+    $this->assertSame($entity2->id(), $converted->id());
+    $converted = $this->converter->convert($entity3->id(), $definition, 'qux', []);
+    $this->assertSame($entity3->id(), $converted->id());
+    $converted = $this->converter->convert('some-non-existing-entity-id', $definition, 'qux', []);
+    $this->assertNull($converted);
+  }
+
 }
