@@ -52,6 +52,8 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     $action_id = $edit['id'];
+    $action_configure = sprintf('/admin/config/system/actions/configure/%s', $action_id);
+    $action_delete = sprintf('/admin/config/system/actions/configure/%s/delete', $action_id);
 
     // Make sure that the new action was saved properly.
     $this->assertSession()->pageTextContains('The action has been successfully saved.');
@@ -60,7 +62,8 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains($action_label);
 
     // Make another POST request to the action edit page.
-    $this->clickLink('Configure');
+    $this->assertSession()->linkByHrefExists($action_configure);
+    $this->drupalGet($action_configure);
     $edit = [];
     $new_action_label = $this->randomMachineName();
     $edit['label'] = $new_action_label;
@@ -79,7 +82,8 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
 
     // Make sure that deletions work properly.
     $this->drupalGet('admin/config/system/actions');
-    $this->clickLink('Delete');
+    $this->assertSession()->linkByHrefExists($action_delete);
+    $this->drupalGet($action_delete);
     $this->assertSession()->statusCodeEquals(200);
     $edit = [];
     $this->submitForm($edit, 'Delete');
