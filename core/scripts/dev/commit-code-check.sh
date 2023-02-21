@@ -72,29 +72,31 @@ if [[ "$DRUPALCI" == "1" ]]; then
   green=""
   reset=""
   DRUPAL_VERSION=$(php -r "include 'vendor/autoload.php'; print preg_replace('#\.[0-9]+-dev#', '.x', \Drupal::VERSION);")
+  GIT="sudo -u www-data git"
 else
   red=$(tput setaf 1 && tput bold)
   green=$(tput setaf 2)
   reset=$(tput sgr0)
+  GIT="git"
 fi
 
 # Gets list of files to check.
 if [[ "$BRANCH" != "" ]]; then
-  FILES=$(git diff --name-only $BRANCH HEAD);
+  FILES=$($GIT diff --name-only $BRANCH HEAD);
 elif [[ "$CACHED" == "0" ]]; then
   # For DrupalCI patch testing or when running without --cached or --branch,
   # list of all changes in the working directory.
-  FILES=$(git ls-files --other --modified --exclude-standard --exclude=vendor)
+  FILES=$($GIT ls-files --other --modified --exclude-standard --exclude=vendor)
 else
   # Check staged files only.
-  if git rev-parse --verify HEAD >/dev/null 2>&1
+  if $GIT rev-parse --verify HEAD >/dev/null 2>&1
   then
     AGAINST=HEAD
   else
     # Initial commit: diff against an empty tree object
     AGAINST=4b825dc642cb6eb9a060e54bf8d69288fbee4904
   fi
-  FILES=$(git diff --cached --name-only $AGAINST);
+  FILES=$($GIT diff --cached --name-only $AGAINST);
 fi
 
 if [[ "$FILES" == "" ]] && [[ "$DRUPALCI" == "1" ]]; then
@@ -102,10 +104,10 @@ if [[ "$FILES" == "" ]] && [[ "$DRUPALCI" == "1" ]]; then
   # need to diff against the Drupal branch or tag related to the Drupal version.
   printf "Creating list of files to check by comparing branch to %s\n" "$DRUPAL_VERSION"
   # On DrupalCI there's a merge commit so we can compare to HEAD~1.
-  FILES=$(git diff --name-only HEAD~1 HEAD);
+  FILES=$($GIT diff --name-only HEAD~1 HEAD);
 fi
 
-TOP_LEVEL=$(git rev-parse --show-toplevel)
+TOP_LEVEL=$($GIT rev-parse --show-toplevel)
 
 # This variable will be set to one when the file core/phpcs.xml.dist is changed.
 PHPCS_XML_DIST_FILE_CHANGED=0
