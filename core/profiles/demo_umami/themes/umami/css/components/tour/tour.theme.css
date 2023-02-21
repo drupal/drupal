@@ -7,6 +7,7 @@
 }
 
 .shepherd-cancel-icon {
+  border: solid 2px transparent;
   line-height: 1;
 }
 
