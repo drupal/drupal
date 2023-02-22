@@ -146,6 +146,7 @@ abstract class OptionsWidgetBase extends WidgetBase {
       $context = [
         'fieldDefinition' => $this->fieldDefinition,
         'entity' => $entity,
+        'widget' => $this,
       ];
       $module_handler->alter('options_list', $options, $context);
 

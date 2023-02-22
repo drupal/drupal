@@ -596,4 +596,72 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertSame('- None -', $option->getText());
   }
 
+  /**
+   * Tests hook_options_list_alter().
+   *
+   * @see options_test_options_list_alter()
+   */
+  public function testOptionsListAlter() {
+    $field1 = FieldConfig::create([
+      'field_storage' => $this->card1,
+      'bundle' => 'entity_test',
+    ]);
+    $field1->save();
+
+    // Create a new field that will be altered.
+    $card4 = FieldStorageConfig::create([
+      'field_name' => 'card_4',
+      'entity_type' => 'entity_test',
+      'type' => 'list_integer',
+      'cardinality' => 1,
+      'settings' => [
+        'allowed_values' => [
+          0 => 'Zero',
+          1 => 'One',
+        ],
+      ],
+    ]);
+    $card4->save();
+
+    $field2 = FieldConfig::create([
+      'field_storage' => $card4,
+      'bundle' => 'entity_test',
+    ]);
+    $field2->save();
+
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+
+    // Change it to the check boxes/radio buttons widget.
+    $display_repository->getFormDisplay('entity_test', 'entity_test')
+      ->setComponent($this->card1->getName(), [
+        'type' => 'options_select',
+      ])
+      ->setComponent($card4->getName(), [
+        'type' => 'options_select',
+      ])
+      ->save();
+
+    // Create an entity.
+    $entity = EntityTest::create([
+      'user_id' => 1,
+      'name' => $this->randomMachineName(),
+    ]);
+    $entity->save();
+
+    // Display form: check that _none options are present.
+    $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
+    $xpath = '//select[@id=:id]//option[@value="_none" and text()=:label]';
+    $xpath_args = [':id' => 'edit-card-1', ':label' => '- None -'];
+    $this->assertSession()->elementExists('xpath', $this->assertSession()->buildXPathQuery($xpath, $xpath_args));
+    $xpath_args = [':id' => 'edit-card-4', ':label' => '- Please select something -'];
+    $this->assertSession()->elementExists('xpath', $this->assertSession()->buildXPathQuery($xpath, $xpath_args));
+
+    // Display form: check that options are displayed correctly.
+    $this->assertSession()->optionExists('card_1', 0);
+    $this->assertSession()->optionExists('card_1', 1);
+    $this->assertSession()->optionNotExists('card_4', 0);
+    $this->assertSession()->optionExists('card_4', 1);
+  }
+
 }

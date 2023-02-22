@@ -24,6 +24,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
  *     (\Drupal\Core\Field\FieldDefinitionInterface).
  *   - entity: The entity object the field is attached to
  *     (\Drupal\Core\Entity\EntityInterface).
+ *   - widget: The widget object (\Drupal\Core\Field\WidgetInterface).
  *
  * @ingroup hooks
  * @see hook_options_list()
