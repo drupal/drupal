@@ -108,7 +108,9 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    * {@inheritdoc}
    */
   public function getName() {
-    return $this->definition['field_name'];
+    // @todo figure out how to get rid of this. This is just to avoid notices
+    // from field_name not existing when trying to initialize default value.
+    return isset($this->definition['field_name']) ? $this->definition['field_name'] : null;
   }
 
   /**
