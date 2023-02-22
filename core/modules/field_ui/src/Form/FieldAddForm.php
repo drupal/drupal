@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\Field\FieldFilteredMarkup;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
 use Drupal\Core\Form\FormBase;
@@ -149,7 +150,7 @@ class FieldAddForm extends FormBase {
     $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
-      '#size' => 15,
+      '#size' => 25,
     ];
     $field_prefix = $this->config('field_ui.settings')->get('field_prefix');
     $form['field_name'] = [
@@ -171,6 +172,35 @@ class FieldAddForm extends FormBase {
       [, $field_type, $option_key] = explode(':', $this->fieldType, 3);
       // @todo Add support for pre-configured options.
     }
+
+    $form['cardinality'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Allow multiple values'),
+    ];
+    $form['cardinality_unlimited'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Allow unlimited values'),
+      '#states' => [
+        'visible' => [
+          ':input[name="cardinality"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
+    $form['cardinality_number'] = [
+      '#type' => 'number',
+      '#min' => 2,
+      '#title' => $this->t('Limit'),
+      '#default_value' => '2',
+      '#size' => 2,
+      '#states' => [
+        'visible' => [
+          ':input[name="cardinality"]' => ['checked' => TRUE],
+        ],
+        'disabled' => [
+          ':input[name="cardinality_unlimited"]' => ['checked' => TRUE],
+        ]
+      ],
+    ];
 
     // Create a run-time plugin instance for the field item to render the
     // storage settings form.
@@ -199,6 +229,11 @@ class FieldAddForm extends FormBase {
     $form['required'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Required field'),
+    ];
+
+    $form['translatable'] = [
+      '#type' => 'value',
+      '#value' => TRUE,
     ];
 
     $form['description'] = [
@@ -293,6 +328,7 @@ class FieldAddForm extends FormBase {
       'type' => $this->fieldType,
       'translatable' => $values['translatable'],
       'settings' => $values['field_storage_settings'],
+      'cardinality' => !$values['cardinality'] ? 1 : ($values['cardinality_unlimited'] ? FieldStorageConfigInterface::CARDINALITY_UNLIMITED : $values['cardinality_number']),
     ];
     $field_values = [
       'field_name' => $values['field_name'],
