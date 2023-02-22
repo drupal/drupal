@@ -6,12 +6,17 @@ use Drupal\Core\Queue\QueueWorkerBase;
 
 /**
  * @QueueWorker(
- *   id = "cron_queue_test_exception",
+ *   id = \Drupal\cron_queue_test\Plugin\QueueWorker\CronQueueTestException::PLUGIN_ID,
  *   title = @Translation("Exception test"),
  *   cron = {"time" = 1}
  * )
  */
 class CronQueueTestException extends QueueWorkerBase {
+
+  /**
+   * The plugin ID.
+   */
+  public const PLUGIN_ID = 'cron_queue_test_exception';
 
   /**
    * {@inheritdoc}

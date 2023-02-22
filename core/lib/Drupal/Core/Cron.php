@@ -200,11 +200,13 @@ class Cron implements CronInterface {
             $queue->releaseItem($item);
           }
           catch (SuspendQueueException $e) {
-            // If the worker indicates there is a problem with the whole queue,
-            // release the item and skip to the next queue.
+            // If the worker indicates the whole queue should be skipped,
+            // release the item and go to the next queue.
             $queue->releaseItem($item);
 
-            watchdog_exception('cron', $e);
+            $this->logger->debug('A worker for @queue queue suspended further processing of the queue.', [
+              '@queue' => $queue_name,
+            ]);
 
             // Skip to the next queue.
             continue 2;
