@@ -112,7 +112,7 @@ class FieldConfigListController extends EntityListController {
       '#attached' => ['library' =>
         [
           'field_ui/drupal.field_ui.manage_fields',
-          'core/drupal.ajax',
+          'core/drupal.dialog.ajax',
         ],
       ],
     ];
@@ -128,6 +128,8 @@ class FieldConfigListController extends EntityListController {
         '#tag' => 'h3',
         '#value' => $key,
       ]];
+      // Sort by shortest description to longest. Not exactly what we
+      // want but surprisingly close.
       usort($field_type_options[$key], fn($a, $b) => $a['#description_length'] > $b['#description_length']);
       $sorted_options += [ $key => $field_type_options[$key] ];
     }

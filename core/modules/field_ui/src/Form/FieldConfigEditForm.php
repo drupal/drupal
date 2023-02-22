@@ -2,6 +2,7 @@
 
 namespace Drupal\field_ui\Form;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Field\FieldFilteredMarkup;
@@ -163,7 +164,11 @@ class FieldConfigEditForm extends EntityForm {
         '#url' => $url,
         '#access' => $this->entity->access('delete'),
         '#attributes' => [
-          'class' => ['button', 'button--danger'],
+          'class' => ['button', 'button--danger', 'use-ajax'],
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => Json::encode([
+            'width' => '85vw',
+          ]),
         ],
       ];
     }
