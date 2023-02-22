@@ -114,7 +114,6 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
     $this->state->set('entity_test_update.additional_base_field_definitions', $fields);
 
     $this->installEntitySchema($this->entityTypeId);
-    $this->installEntitySchema('configurable_language');
 
     // Enable an additional language.
     ConfigurableLanguage::createFromLangcode('ro')->save();

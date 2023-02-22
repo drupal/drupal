@@ -32,7 +32,6 @@ class ContextPluginTest extends KernelTestBase {
   public function testContext() {
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
-    $this->installEntitySchema('node_type');
     $type = NodeType::create(['type' => 'page', 'name' => 'Page']);
     $type->save();
 

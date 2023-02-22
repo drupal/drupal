@@ -5,6 +5,7 @@ namespace Drupal\KernelTests\Core\Entity;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
@@ -338,7 +339,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
     $entity_type_ids = [];
     $entities = \Drupal::entityTypeManager()->getDefinitions();
     foreach ($entities as $entity_type_id => $definition) {
-      if ($definition->getProvider() == 'entity_test') {
+      if ($definition instanceof ContentEntityTypeInterface && $definition->getProvider() == 'entity_test') {
         $this->installEntitySchema($entity_type_id);
         $entity_type_ids[] = $entity_type_id;
       }

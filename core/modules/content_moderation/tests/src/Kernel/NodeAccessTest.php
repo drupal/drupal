@@ -48,7 +48,6 @@ class NodeAccessTest extends KernelTestBase {
     $this->installEntitySchema('content_moderation_state');
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
-    $this->installEntitySchema('workflow');
     $this->installConfig(['content_moderation', 'filter']);
     $this->installSchema('system', ['sequences']);
     $this->installSchema('node', ['node_access']);

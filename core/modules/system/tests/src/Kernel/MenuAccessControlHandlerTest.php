@@ -41,7 +41,6 @@ class MenuAccessControlHandlerTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->installEntitySchema('menu');
     $this->installEntitySchema('user');
     $this->installSchema('system', 'sequences');
     $this->accessControlHandler = $this->container->get('entity_type.manager')->getAccessControlHandler('menu');

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views\Kernel;
 
+use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\image\Entity\ImageStyle;
@@ -153,7 +154,7 @@ class ViewsConfigDependenciesIntegrationTest extends ViewsKernelTestBase {
     // the schema for them so we can uninstall them.
     $entities = \Drupal::entityTypeManager()->getDefinitions();
     foreach ($entities as $entity_type_id => $definition) {
-      if ($definition->getProvider() == 'entity_test') {
+      if ($definition instanceof ContentEntityTypeInterface && $definition->getProvider() == 'entity_test') {
         $this->installEntitySchema($entity_type_id);
       }
     }

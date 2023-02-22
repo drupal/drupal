@@ -55,7 +55,6 @@ class SummaryLengthTest extends KernelTestBase {
     $this->installSchema('node', 'node_access');
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
-    $this->installEntitySchema('date_format');
     $this->installConfig('filter');
     $this->installConfig('node');
 
