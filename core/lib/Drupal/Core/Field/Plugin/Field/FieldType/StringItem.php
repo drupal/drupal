@@ -72,7 +72,50 @@ class StringItem extends StringItemBase {
    */
   public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
     $random = new Random();
-    $values['value'] = $random->word(mt_rand(1, $field_definition->getSetting('max_length')));
+    $max_length = $field_definition->getSetting('max_length');
+
+    // When the maximum length is less than 15, generate a random word instead
+    // of sentences.
+    if ($max_length <= 15) {
+      $values['value'] = ucfirst($random->word($max_length));
+
+      return $values;
+    }
+
+    // The minimum length is either 10% of the maximum length, or 15 characters
+    // long, whichever is greater.
+    $min_length = max(ceil($max_length * 0.10), 15);
+
+    // The random value is generated multiple times to create a slight
+    // preference towards values that are closer to the minimum length of the
+    // string. For values larger than 255 (which is the default maximum value),
+    // the bias towards minimum length is increased. This is because the default
+    // maximum length of 255 is often used for fields that include shorter
+    // values (i.e. title).
+    $length = mt_rand($min_length, mt_rand($min_length, $max_length >= 255 ? mt_rand($min_length, $max_length) : $max_length));
+
+    $string = $random->sentences(1);
+    while (mb_strlen($string) < $length) {
+      $string .= " {$random->sentences(1)}";
+    }
+
+    // If the length of the generated string is longer than the maximum length,
+    // re-create the string word by word to reduce the chances of the string
+    // ending middle of a word.
+    if (mb_strlen($string) > $max_length) {
+      $words = explode(' ', $string);
+      $string = array_reduce($words, function ($current, $item) use ($length) {
+        return mb_strlen($current) > $length ? $current : "$current$item ";
+      }, '');
+    }
+
+    // Normalize the string to be shorter than the maximum length.
+    $normalized_value = rtrim(mb_substr($string, 0, $max_length - 1), ' .');
+
+    // Ensure that the string ends with a full stop if there are multiple
+    // sentences.
+    $values['value'] = $normalized_value . (str_contains($normalized_value, '.') ? '.' : '');
+
     return $values;
   }
 
