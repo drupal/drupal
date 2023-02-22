@@ -80,7 +80,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    * Language code identifying the entity active language.
    *
    * This is the language field accessors will use to determine which field
-   * values manipulate.
+   * values to manipulate.
    *
    * @var string
    */
@@ -97,8 +97,8 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    * An array of entity translation metadata.
    *
    * An associative array keyed by translation language code. Every value is an
-   * array containing the translation status and the translation object, if it has
-   * already been instantiated.
+   * array containing the translation status and the translation object, if it
+   * has already been instantiated.
    *
    * @var array
    */
@@ -502,7 +502,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   }
 
   /**
-   * Clear entity translation object cache to remove stale references.
+   * Clears entity translation object cache to remove stale references.
    */
   protected function clearTranslationCache() {
     foreach ($this->translations as &$translation) {
