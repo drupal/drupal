@@ -3,6 +3,7 @@
 namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Datetime\DateFormatterInterface;
+use Drupal\Core\Datetime\TimeZoneFormHelper;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -131,7 +132,7 @@ class TimestampFormatter extends FormatterBase {
     $elements['timezone'] = [
       '#type' => 'select',
       '#title' => $this->t('Time zone'),
-      '#options' => ['' => $this->t('- Default site/user time zone -')] + system_time_zones(FALSE, TRUE),
+      '#options' => ['' => $this->t('- Default site/user time zone -')] + TimeZoneFormHelper::getOptionsList(FALSE, TRUE),
       '#default_value' => $this->getSetting('timezone'),
     ];
 

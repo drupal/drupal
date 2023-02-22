@@ -13,6 +13,7 @@ use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Datetime\TimeZoneFormHelper;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\File\Exception\FileException;
@@ -1102,42 +1103,17 @@ function system_mail($key, &$message, $params) {
  *
  * @return array
  *   An array or nested array containing time zones, keyed by the system name.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. This function
+ *   is no longer used in Drupal core. Use
+ *   \Drupal\Core\Datetime\TimeZoneFormHelper::getOptionsList() or
+ *   \DateTimeZone::listIdentifiers() instead.
+ *
+ * @see https://www.drupal.org/node/3023528
  */
 function system_time_zones($blank = NULL, $grouped = FALSE) {
-  $zonelist = timezone_identifiers_list();
-  $zones = $blank ? ['' => t('- None selected -')] : [];
-  foreach ($zonelist as $zone) {
-    // Because many time zones exist in PHP only for backward compatibility
-    // reasons and should not be used, the list is filtered by a regular
-    // expression.
-    if (preg_match('!^((Africa|America|Antarctica|Arctic|Asia|Atlantic|Australia|Europe|Indian|Pacific)/|UTC$)!', $zone)) {
-      $zones[$zone] = t('@zone', ['@zone' => t(str_replace('_', ' ', $zone))]);
-    }
-  }
-  // Sort the translated time zones alphabetically.
-  asort($zones);
-  if ($grouped) {
-    $grouped_zones = [];
-    foreach ($zones as $key => $value) {
-      $split = explode('/', $value);
-      $city = array_pop($split);
-      $region = array_shift($split);
-      if (!empty($region)) {
-        $grouped_zones[$region][$key] = empty($split) ? $city : $city . ' (' . implode('/', $split) . ')';
-      }
-      else {
-        $grouped_zones[$key] = $value;
-      }
-    }
-    foreach ($grouped_zones as $key => $value) {
-      if (is_array($grouped_zones[$key])) {
-        asort($grouped_zones[$key]);
-      }
-    }
-    $zones = $grouped_zones;
-  }
-
-  return $zones;
+  @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. This function is no longer used in Drupal core. Use \Drupal\Core\Datetime\TimeZoneFormHelper::getOptionsList() or \DateTimeZone::listIdentifiers() instead. See https://www.drupal.org/node/3023528', E_USER_DEPRECATED);
+  return TimeZoneFormHelper::getOptionsList((bool) $blank, $grouped);
 }
 
 /**

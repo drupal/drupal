@@ -2,6 +2,7 @@
 
 namespace Drupal\user\Plugin\migrate\process\d6;
 
+use Drupal\Core\Datetime\TimeZoneFormHelper;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
@@ -39,7 +40,7 @@ class UserUpdate7002 extends ProcessPluginBase implements ContainerFactoryPlugin
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->dateConfig = $date_config;
     if (!isset(static::$timezones)) {
-      static::$timezones = system_time_zones();
+      static::$timezones = TimeZoneFormHelper::getOptionsList();
     }
   }
 

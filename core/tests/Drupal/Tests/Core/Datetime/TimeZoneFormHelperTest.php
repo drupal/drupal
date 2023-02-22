@@ -1,30 +1,40 @@
 <?php
 
-namespace Drupal\Tests\system\Kernel\Timezone;
+namespace Drupal\Tests\Core\Datetime;
 
-use Drupal\KernelTests\KernelTestBase;
+use Drupal\Core\Datetime\TimeZoneFormHelper;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Tests\UnitTestCase;
 
 /**
- * Test coverage for time zone handling.
- *
- * @group system
+ * @coversDefaultClass \Drupal\Core\Datetime\TimeZoneFormHelper
+ * @group Datetime
  */
-class TimezoneTest extends KernelTestBase {
-
-  protected static $modules = ['system'];
+class TimeZoneFormHelperTest extends UnitTestCase {
 
   /**
-   * Tests system_time_zones().
+   * {@inheritdoc}
    */
-  public function testSystemTimeZones() {
-    // Test the default parameters for system_time_zones().
-    $result = system_time_zones();
+  protected function setUp(): void {
+    parent::setUp();
+
+    $container = new ContainerBuilder();
+    $container->set('string_translation', $this->getStringTranslationStub());
+    \Drupal::setContainer($container);
+  }
+
+  /**
+   * @covers ::getOptionsList
+   */
+  public function testGetList(): void {
+    // Test the default parameters for getOptionsList().
+    $result = TimeZoneFormHelper::getOptionsList();
     $this->assertIsArray($result);
     $this->assertArrayHasKey('Africa/Dar_es_Salaam', $result);
     $this->assertEquals('Africa/Dar es Salaam', $result['Africa/Dar_es_Salaam']);
 
     // Tests time zone grouping.
-    $result = system_time_zones(NULL, TRUE);
+    $result = TimeZoneFormHelper::getOptionsList(FALSE, TRUE);
 
     // Check a two-level time zone.
     $this->assertIsArray($result);
@@ -51,8 +61,8 @@ class TimezoneTest extends KernelTestBase {
 
     // Test that the ungrouped and grouped results have the same number of
     // items.
-    $ungrouped_count = count(system_time_zones());
-    $grouped_result = system_time_zones(NULL, TRUE);
+    $ungrouped_count = count(TimeZoneFormHelper::getOptionsList());
+    $grouped_result = TimeZoneFormHelper::getOptionsList(FALSE, TRUE);
     $grouped_count = 0;
     array_walk_recursive($grouped_result, function () use (&$grouped_count) {
       $grouped_count++;

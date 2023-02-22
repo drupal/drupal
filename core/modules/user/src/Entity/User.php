@@ -572,7 +572,7 @@ class User extends ContentEntityBase implements UserInterface {
    *   The allowed values.
    */
   public static function getAllowedTimezones() {
-    return array_keys(system_time_zones());
+    return \DateTimeZone::listIdentifiers();
   }
 
   /**

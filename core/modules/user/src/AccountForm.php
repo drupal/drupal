@@ -3,6 +3,7 @@
 namespace Drupal\user;
 
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Datetime\TimeZoneFormHelper;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityConstraintViolationListInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
@@ -296,7 +297,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
       '#type' => 'select',
       '#title' => $this->t('Time zone'),
       '#default_value' => $account->getTimezone() ?: $system_date_config->get('timezone.default'),
-      '#options' => system_time_zones($account->id() != $user->id(), TRUE),
+      '#options' => TimeZoneFormHelper::getOptionsList($account->id() != $user->id(), TRUE),
       '#description' => $this->t('Select the desired local time and time zone. Dates and times throughout this site will be displayed using this time zone.'),
     ];
 

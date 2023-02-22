@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Installer\Form;
 
+use Drupal\Core\Datetime\TimeZoneFormHelper;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -207,7 +208,7 @@ class SiteConfigureForm extends ConfigFormBase {
       '#type' => 'select',
       '#title' => $this->t('Default time zone'),
       '#default_value' => $default_timezone,
-      '#options' => system_time_zones(NULL, TRUE),
+      '#options' => TimeZoneFormHelper::getOptionsList(FALSE, TRUE),
       '#weight' => 5,
       '#attributes' => ['class' => ['timezone-detect']],
       '#access' => empty($install_state['config_install_path']),
