@@ -73,8 +73,8 @@ class AggregatorController extends ControllerBase {
     if ($items) {
       $build['items'] = $this->entityTypeManager()->getViewBuilder('aggregator_item')
         ->viewMultiple($items, 'default');
-      $build['pager'] = ['#type' => 'pager'];
     }
+    $build['pager'] = ['#type' => 'pager'];
     return $build;
   }
 
