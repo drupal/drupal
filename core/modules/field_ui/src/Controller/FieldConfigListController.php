@@ -41,9 +41,11 @@ class FieldConfigListController extends EntityListController {
             'data-dialog-type' => 'modal',
             'data-dialog-options' => Json::encode([
               'width' => '85vw',
+              'title' => $this->t('Add @type Field', ['@type' => $field_type['label']]),
             ]),
-            'href' => URL::fromRoute("field_ui.field_storage_config_add_$entity_type_id", ['node_type' => $bundle])->toString(),
+            'href' => URL::fromRoute("field_ui.field_add_$entity_type_id", ['field_type' => $field_type['id'],'node_type' => $bundle])->toString(),
           ],
+          '#description_length' => strlen($field_type['description']),
           'thumb' => [
             '#type' => 'container',
             '#attributes' => [
@@ -75,7 +77,14 @@ class FieldConfigListController extends EntityListController {
         ];
       }
     }
-    sort($field_type_options);
+
+//    $order = ['Text', 'Number', 'General', 'Reference', 'Reference revisions', 'Other'];
+//    $sorted_options = [];
+//    foreach ($order as $key) {
+//      $sorted_options += [ $key => $field_type_options[$key] ];
+//    }
+    $sorted_options = $this->optionsForSidebar($field_type_options);
+
     $build = [
       '#type' => 'container',
       '#attributes' => [
@@ -98,7 +107,7 @@ class FieldConfigListController extends EntityListController {
           '#tag' => 'h2',
           '#value' => $this->t('Add a new field'),
         ],
-        'options' => $field_type_options,
+        'options' => $sorted_options,
       ],
       '#attached' => ['library' =>
         [
@@ -108,6 +117,21 @@ class FieldConfigListController extends EntityListController {
       ],
     ];
     return $build;
+  }
+
+  private function optionsForSidebar($field_type_options) {
+    $order = ['Text', 'Number', 'General', 'Reference', 'Reference revisions', 'Other'];
+    $sorted_options = [];
+    foreach ($order as $key) {
+      $sorted_options += ["header_$key" => [
+        '#type' => 'html_tag',
+        '#tag' => 'h3',
+        '#value' => $key,
+      ]];
+      usort($field_type_options[$key], fn($a, $b) => $a['#description_length'] > $b['#description_length']);
+      $sorted_options += [ $key => $field_type_options[$key] ];
+    }
+    return $sorted_options;
   }
 
 }
