@@ -21,6 +21,7 @@ use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestComputedField;
+use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 
@@ -96,6 +97,38 @@ class EntityFieldTest extends EntityKernelTestBase {
     $entity->field_test_text->value = $this->entityFieldText;
 
     return $entity;
+  }
+
+  /**
+   * Test setting field values on revisionable entities.
+   */
+  public function testFieldEntityRevisionWrite() {
+    $storage = \Drupal::entityTypeManager()->getStorage('entity_test_rev');
+
+    // Create a new entity, with a field value 'foo'.
+    $entity = EntityTestRev::create();
+    $entity->field_test_text->value = 'foo';
+    $entity->save();
+
+    // Create a new non-default revision and set the field value to 'bar'.
+    $entity->setNewRevision(TRUE);
+    $entity->isDefaultRevision(FALSE);
+    $entity->field_test_text->value = 'bar';
+    $entity->save();
+
+    $forward_revision_id = $entity->getRevisionId();
+
+    // Load the forward revision and set the field value to equal the value of
+    // the default revision.
+    $forward_revision = $storage->loadRevision($forward_revision_id);
+    $forward_revision->field_test_text->value = 'foo';
+    $forward_revision->save();
+
+    $storage->resetCache();
+
+    // The updated field value should have correctly saved as 'foo'.
+    $forward_revision = $storage->loadRevision($forward_revision_id);
+    $this->assertEquals('foo', $forward_revision->field_test_text->value);
   }
 
   /**
