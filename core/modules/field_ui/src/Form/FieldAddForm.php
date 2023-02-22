@@ -2,7 +2,6 @@
 
 namespace Drupal\field_ui\Form;
 
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -13,13 +12,10 @@ use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\TypedData\DataDefinition;
-use Drupal\Core\TypedData\MapDataDefinition;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides a form for the "field storage" add page.
@@ -212,8 +208,12 @@ class FieldAddForm extends FormBase {
       '#description' => $this->t('Instructions to present to the user below this field on the editing form.<br />Allowed HTML tags: @tags', ['@tags' => FieldFilteredMarkup::displayAllowedTags()]) . '<br />' . $this->t('This field supports tokens.'),
     ];
 
-//    // Add handling for default value.
-//    if ($element = $plugin_instance->defaultValuesForm($form, $form_state)) {
+    // @todo configuring the default value depends on the field having
+    // initialized.
+//    $item_list_class = $this->fieldTypePluginManager->getDefinition($field_type)['list_class'];
+//    $item_list_instance = new $item_list_class($plugin_instance->getFieldDefinition());
+//    $item_list_instance->setContext(NULL, $entity_adapter);
+//    if ($element = $item_list_instance->defaultValuesForm($form, $form_state)) {
 //      $element = array_merge($element, [
 //        '#type' => 'details',
 //        '#title' => $this->t('Default value'),
@@ -225,6 +225,11 @@ class FieldAddForm extends FormBase {
 //
 //      $form['default_value'] = $element;
 //    }
+    $form['default_value'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Set initial value'),
+      '#description' => $this->t('Provide a pre-filled value for the editing form.'),
+    ];
 
     $form['actions'] = ['#type' => 'actions'];
     $form['actions']['submit'] = [
