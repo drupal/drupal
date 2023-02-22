@@ -3,13 +3,13 @@
 namespace Drupal\field_ui;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
-use Drupal\Core\Url;
 use Drupal\field\FieldConfigInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -95,6 +95,7 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
     $build = parent::render();
     $build['table']['#attributes']['id'] = 'field-overview';
     $build['table']['#empty'] = $this->t('No fields are present yet.');
+    $build['#attached']['library'][] = 'field_ui/drupal.field_ui';
 
     return $build;
   }
@@ -123,7 +124,7 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
         'data' => $this->t('Machine name'),
         'class' => [RESPONSIVE_PRIORITY_MEDIUM],
       ],
-      'field_type' => $this->t('Field type'),
+      'settings_summary' => $this->t('Field type'),
     ];
     return $header + parent::buildHeader();
   }
@@ -134,23 +135,26 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
   public function buildRow(EntityInterface $field_config) {
     /** @var \Drupal\field\FieldConfigInterface $field_config */
     $field_storage = $field_config->getFieldStorageDefinition();
-    $route_parameters = [
-      'field_config' => $field_config->id(),
-    ] + FieldUI::getRouteBundleParameter($this->entityTypeManager->getDefinition($this->targetEntityTypeId), $this->targetBundle);
+
+    $storage_summary = $this->fieldTypeManager->getStorageSettingsSummary($field_storage);
+    $instance_summary = $this->fieldTypeManager->getFieldSettingsSummary($field_config);
+    $summary_list = [...$storage_summary, ...$instance_summary];
+    uasort($summary_list, [SortArray::class, 'sortByWeightProperty']);
+
+    $settings_summary = empty($summary_list) ? '' : [
+      'data' => [
+        '#theme' => 'item_list',
+        '#items' => $summary_list,
+      ],
+      'class' => ['field-settings-summary-cell'],
+    ];
 
     $row = [
       'id' => Html::getClass($field_config->getName()),
       'data' => [
         'label' => $field_config->getLabel(),
         'field_name' => $field_config->getName(),
-        'field_type' => [
-          'data' => [
-            '#type' => 'link',
-            '#title' => $this->fieldTypeManager->getDefinitions()[$field_storage->getType()]['label'],
-            '#url' => Url::fromRoute("entity.field_config.{$this->targetEntityTypeId}_storage_edit_form", $route_parameters),
-            '#options' => ['attributes' => ['title' => $this->t('Edit field settings.')]],
-          ],
-        ],
+        'settings_summary' => $settings_summary,
       ],
     ];
 

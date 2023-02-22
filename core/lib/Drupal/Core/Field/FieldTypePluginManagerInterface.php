@@ -77,6 +77,32 @@ interface FieldTypePluginManagerInterface extends PluginManagerInterface, Catego
   public function getDefaultStorageSettings($type);
 
   /**
+   * Returns the summary of storage-level settings for a field type.
+   *
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $field_storage
+   *   The field storage definition.
+   *
+   * @return array
+   *   A renderable array for the field's storage-level settings summary, as
+   *   provided by the plugin definition, or an empty array if type or summary
+   *   is undefined.
+   */
+  public function getStorageSettingsSummary(FieldStorageDefinitionInterface $field_storage);
+
+  /**
+   * Returns the summary of field-level settings for a field type.
+   *
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The field entity.
+   *
+   * @return array
+   *   A renderable array for The field's field-level settings summary, as
+   *   provided by the plugin definition, or an empty array if type or summary
+   *   is undefined.
+   */
+  public function getFieldSettingsSummary(FieldDefinitionInterface $field_definition);
+
+  /**
    * Gets the definition of all field types that can be added via UI.
    *
    * @return array
