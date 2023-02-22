@@ -62,6 +62,8 @@ class FieldUiLocalAction extends DeriverBase implements ContainerDeriverInterfac
         $this->derivatives["field_storage_config_add_$entity_type_id"] = [
           'route_name' => "field_ui.field_storage_config_add_$entity_type_id",
           'title' => $this->t('Add field'),
+          // Hacky way to get rid of this appearing. This button is replaced by
+          // field type specific ones.
           'appears_on' => ["entity.$entity_type_id.noop.field_ui_fields"],
         ];
       }
