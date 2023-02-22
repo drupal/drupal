@@ -78,11 +78,6 @@ class FieldConfigListController extends EntityListController {
       }
     }
 
-//    $order = ['Text', 'Number', 'General', 'Reference', 'Reference revisions', 'Other'];
-//    $sorted_options = [];
-//    foreach ($order as $key) {
-//      $sorted_options += [ $key => $field_type_options[$key] ];
-//    }
     $sorted_options = $this->optionsForSidebar($field_type_options);
 
     $build = [
