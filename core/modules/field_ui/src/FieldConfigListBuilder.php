@@ -118,11 +118,7 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
    */
   public function buildHeader() {
     $header = [
-      'label' => $this->t('Label'),
-      'field_name' => [
-        'data' => $this->t('Machine name'),
-        'class' => [RESPONSIVE_PRIORITY_MEDIUM],
-      ],
+      'label' => $this->t('Field'),
       'field_type' => $this->t('Field type'),
     ];
     return $header + parent::buildHeader();
@@ -141,8 +137,7 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
     $row = [
       'id' => Html::getClass($field_config->getName()),
       'data' => [
-        'label' => $field_config->getLabel(),
-        'field_name' => $field_config->getName(),
+        'label' => $field_config->getLabel() . ' (' . $field_config->getName() . ')',
         'field_type' => [
           'data' => [
             '#type' => 'link',

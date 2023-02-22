@@ -2,8 +2,10 @@
 
 namespace Drupal\field_ui\Controller;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\Controller\EntityListController;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 
 /**
  * Defines a controller to list field instances.
@@ -25,7 +27,87 @@ class FieldConfigListController extends EntityListController {
    *   \Drupal\Core\Render\RendererInterface::render().
    */
   public function listing($entity_type_id = NULL, $bundle = NULL, RouteMatchInterface $route_match = NULL) {
-    return $this->entityTypeManager()->getListBuilder('field_config')->render($entity_type_id, $bundle);
+    $field_type_plugin_manager = \Drupal::service('plugin.manager.field.field_type');
+
+    foreach ($field_type_plugin_manager->getGroupedDefinitions($field_type_plugin_manager->getUiDefinitions()) as $category => $field_types) {
+      foreach ($field_types as $name => $field_type) {
+        $field_type_options[$category][$name] = [
+          '#type' => 'html_tag',
+          '#tag' => 'a',
+          '#attributes' => [
+            'class' => ['field-option', 'use-ajax'],
+            'role' => 'button',
+            'tabindex' => '0',
+            'data-dialog-type' => 'modal',
+            'data-dialog-options' => Json::encode([
+              'width' => '85vw',
+            ]),
+            'href' => URL::fromRoute("field_ui.field_storage_config_add_$entity_type_id", ['node_type' => $bundle])->toString(),
+          ],
+          'thumb' => [
+            '#type' => 'container',
+            '#attributes' => [
+              'class' => ['field-option__thumb']
+            ],
+            '#markup' => '&nbsp;',
+          ],
+          'words' => [
+            '#type' => 'container',
+            '#attributes' => [
+              'class' => ['field-option__words']
+            ],
+            'label' => [
+              '#attributes' => [
+                'class' => ['field-option__label']
+              ],
+              '#type' => 'html_tag',
+              '#tag' => 'strong',
+              '#value' => $field_type['label'],
+            ],
+            'description' => [
+              '#type' => 'container',
+              '#attributes' => [
+                'class' => ['field-option__description']
+              ],
+              '#markup'=> $field_type['description']
+            ],
+          ],
+        ];
+      }
+    }
+    sort($field_type_options);
+    $build = [
+      '#type' => 'container',
+      '#attributes' => [
+        'id' => 'manage-fields-container'
+      ],
+      'table' => [
+        '#type' => 'container',
+        '#attributes' => [
+          'id' => 'manage-fields-table'
+        ],
+        'table_contents' =>  $this->entityTypeManager()->getListBuilder('field_config')->render($entity_type_id, $bundle),
+      ],
+      'sidebar' => [
+        '#type' => 'container',
+        '#attributes' => [
+          'id' => 'manage-fields-add-field'
+        ],
+        'add' => [
+          '#type' => 'html_tag',
+          '#tag' => 'h2',
+          '#value' => $this->t('Add a new field'),
+        ],
+        'options' => $field_type_options,
+      ],
+      '#attached' => ['library' =>
+        [
+          'field_ui/drupal.field_ui.manage_fields',
+          'core/drupal.ajax',
+        ],
+      ],
+    ];
+    return $build;
   }
 
 }
