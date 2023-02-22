@@ -10,3 +10,9 @@ drupal.field_ui:
     - core/drupal
     - core/drupalSettings
     - core/once
+
+drupal.field_ui.manage_fields:
+  version: VERSION
+  css:
+    theme:
+      css/field_ui_manage_fields.css: {}

@@ -1,0 +1,56 @@
+#manage-fields-container {
+  display: flex;
+}
+
+#manage-fields-table {
+  width: 70%;
+}
+
+#manage-fields-add-field {
+  width: 28%;
+  margin-inline-start: 2%;
+  padding: 1rem;
+  border: 1px solid #d3d4d9;
+}
+
+#manage-fields-add-field .field-option {
+  display: flex;
+  color: unset;
+  /*width: 100%;*/
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid #c5c5c5;
+  text-align: start;
+  background: #fff;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+#manage-fields-add-field .field-option:not(:focus) {
+  box-shadow: 0 1px 2px rgb(0 0 0 / 25%);
+}
+
+#manage-fields-add-field .field-option:hover {
+  outline: 2px solid black;
+  background: #f5f4f4;
+}
+
+#manage-fields-add-field button:hover .field-option__thumb {
+  border-color: #000;
+}
+
+
+.field-option__thumb {
+  width: 3.1rem;
+  min-width: 3.1rem;
+  height: 3.1rem;
+  border: 1px solid #c5c5c5;
+}
+
+.field-option__words {
+  padding-inline-start: 0.5rem;
+}
+
+#manage-fields-table > table {
+  margin-top: 0;
+}

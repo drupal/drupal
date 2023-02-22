@@ -2,6 +2,7 @@
 
 namespace Drupal\field_ui;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -118,11 +119,7 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
    */
   public function buildHeader() {
     $header = [
-      'label' => $this->t('Label'),
-      'field_name' => [
-        'data' => $this->t('Machine name'),
-        'class' => [RESPONSIVE_PRIORITY_MEDIUM],
-      ],
+      'label' => $this->t('Field'),
       'field_type' => $this->t('Field type'),
     ];
     return $header + parent::buildHeader();
@@ -141,14 +138,10 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
     $row = [
       'id' => Html::getClass($field_config->getName()),
       'data' => [
-        'label' => $field_config->getLabel(),
-        'field_name' => $field_config->getName(),
+        'label' => $field_config->getLabel() . ' (' . $field_config->getName() . ')',
         'field_type' => [
           'data' => [
-            '#type' => 'link',
-            '#title' => $this->fieldTypeManager->getDefinitions()[$field_storage->getType()]['label'],
-            '#url' => Url::fromRoute("entity.field_config.{$this->targetEntityTypeId}_storage_edit_form", $route_parameters),
-            '#options' => ['attributes' => ['title' => $this->t('Edit field settings.')]],
+            '#markup' => $this->fieldTypeManager->getDefinitions()[$field_storage->getType()]['label'],
           ],
         ],
       ],
@@ -179,6 +172,12 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
         'url' => $entity->toUrl("{$entity->getTargetEntityTypeId()}-field-edit-form"),
         'attributes' => [
           'title' => $this->t('Edit field settings.'),
+          'class' => ['use-ajax'],
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => Json::encode([
+            'width' => '85vw',
+          ]),
+          'role' => 'button',
         ],
       ];
     }
@@ -189,6 +188,12 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
         'url' => $entity->toUrl("{$entity->getTargetEntityTypeId()}-field-delete-form"),
         'attributes' => [
           'title' => $this->t('Delete field.'),
+          'class' => ['use-ajax'],
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => Json::encode([
+            'width' => '85vw',
+          ]),
+          'role' => 'button',
         ],
       ];
     }
@@ -196,7 +201,15 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
     $operations['storage-settings'] = [
       'title' => $this->t('Storage settings'),
       'weight' => 20,
-      'attributes' => ['title' => $this->t('Edit storage settings.')],
+      'attributes' => [
+        'title' => $this->t('Edit storage settings.'),
+        'class' => ['use-ajax'],
+        'data-dialog-type' => 'modal',
+        'data-dialog-options' => Json::encode([
+          'width' => '85vw',
+        ]),
+        'role' => 'button',
+      ],
       'url' => $entity->toUrl("{$entity->getTargetEntityTypeId()}-storage-edit-form"),
     ];
 

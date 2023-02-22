@@ -5,6 +5,7 @@
  * Configuration Translation module.
  */
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -169,6 +170,14 @@ function config_translation_entity_operation(EntityInterface $entity) {
       'title' => t('Translate'),
       'weight' => 50,
       'url' => $entity->toUrl($link_template),
+      'attributes' => [
+        'class' => ['use-ajax'],
+        'data-dialog-type' => 'modal',
+        'data-dialog-options' => Json::encode([
+          'width' => '85vw',
+        ]),
+        'role' => 'button',
+      ]
     ];
   }
 
