@@ -2,11 +2,11 @@
 
 namespace Drupal\block\Plugin\migrate\process;
 
-use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\Core\Config\Config;
 use Drupal\migrate\MigrateExecutableInterface;
+use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
-use Drupal\Core\Config\Config;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -18,21 +18,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class BlockTheme extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**
-   * Contains the configuration object factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * Contains the system.theme configuration object.
-   *
-   * @var \Drupal\Core\Config\Config
    */
-  protected $themeConfig;
+  protected Config $themeConfig;
 
   /**
    * List of themes available on the destination.
+   *
+   * @var string[]
    */
   protected array $themes;
 
@@ -45,15 +38,18 @@ class BlockTheme extends ProcessPluginBase implements ContainerFactoryPluginInte
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\migrate\Plugin\MigrationInterface $migration
-   *   The migration entity.
-   * @param \Drupal\Core\Config\Config $theme_config
+   * @param \Drupal\Core\Config\Config|\Drupal\migrate\Plugin\MigrationInterface $theme_config
    *   The system.theme configuration factory object.
-   * @param array $themes
+   * @param string[]|\Drupal\Core\Config\Config $themes
    *   The list of themes available on the destination.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, Config $theme_config, array $themes) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Config|MigrationInterface $theme_config, array|Config $themes) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    if ($theme_config instanceof MigrationInterface) {
+      @trigger_error('Calling ' . __CLASS__ . '::__construct() with the $migration argument is deprecated in drupal:10.1.0 and is removed in drupal:11.0.0. See https://www.drupal.org/node/3323212', E_USER_DEPRECATED);
+      $theme_config = func_get_arg(4);
+      $themes = func_get_arg(5);
+    }
     $this->themeConfig = $theme_config;
     $this->themes = $themes;
   }
@@ -61,12 +57,11 @@ class BlockTheme extends ProcessPluginBase implements ContainerFactoryPluginInte
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $migration,
       $container->get('config.factory')->get('system.theme'),
       $container->get('theme_handler')->listInfo()
     );

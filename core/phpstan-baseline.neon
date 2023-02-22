@@ -826,11 +826,6 @@ parameters:
 			path: modules/block/src/BlockListBuilder.php
 
 		-
-			message: "#^Method Drupal\\\\Component\\\\Plugin\\\\PluginBase\\:\\:__construct\\(\\) invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: modules/block/src/Plugin/migrate/process/BlockTheme.php
-
-		-
 			message: "#^Variable \\$position might not be defined\\.$#"
 			count: 4
 			path: modules/block/tests/src/Functional/BlockRenderOrderTest.php
