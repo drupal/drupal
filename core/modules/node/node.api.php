@@ -22,11 +22,8 @@ use Drupal\Component\Utility\Xss;
  * "realms". In hook_node_access_records(), the realms and grant IDs are
  * associated with permission to view, edit, and delete individual nodes.
  *
- * The realms and grant IDs can be arbitrarily defined by your node access
- * module; it is common to use role IDs as grant IDs, but that is not required.
- * Your module could instead maintain its own list of users, where each list has
- * an ID. In that case, the return value of this hook would be an array of the
- * list IDs that this user is a member of.
+ * Grant IDs can be arbitrarily defined by a node access module using a list of
+ * integer IDs associated with users.
  *
  * A node access module may implement as many realms as necessary to properly
  * define the access privileges for the nodes. Note that the system makes no
