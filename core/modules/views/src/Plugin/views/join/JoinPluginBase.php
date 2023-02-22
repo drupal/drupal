@@ -150,7 +150,6 @@ use Drupal\Core\Plugin\PluginBase;
  *
  * Extensions of this class can be used to create more interesting joins.
  */
-#[\AllowDynamicProperties]
 class JoinPluginBase extends PluginBase implements JoinPluginInterface {
 
   /**
