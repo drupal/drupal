@@ -225,10 +225,19 @@ class FieldAddForm extends FormBase {
 //
 //      $form['default_value'] = $element;
 //    }
-    $form['default_value'] = [
+    $form['default_value_container']['default_value_checkbox'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Set initial value'),
       '#description' => $this->t('Provide a pre-filled value for the editing form.'),
+    ];
+    $form['default_value']['default_value'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Default value'),
+      '#states' => [
+        'invisible' => [
+          ':input[name="default_value_checkbox"]' => ['checked' => FALSE],
+        ]
+      ]
     ];
 
     $form['actions'] = ['#type' => 'actions'];
@@ -276,8 +285,6 @@ class FieldAddForm extends FormBase {
     $values = $form_state->getValues();
     $destinations = [];
     $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
-
-    xdebug_break();
 
     // Create new field.
     $field_storage_values = [

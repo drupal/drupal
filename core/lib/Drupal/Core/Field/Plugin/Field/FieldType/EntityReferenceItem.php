@@ -397,6 +397,11 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
    * {@inheritdoc}
    */
   public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
+    // @todo this should become visible with AJAX.
+    if (!method_exists($form_state->getFormObject(), 'getEntity')) {
+      return [];
+    }
+
     $field = $form_state->getFormObject()->getEntity();
 
     // Get all selection plugins for this entity type.
