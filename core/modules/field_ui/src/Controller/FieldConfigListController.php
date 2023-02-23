@@ -29,6 +29,7 @@ class FieldConfigListController extends EntityListController {
   public function listing($entity_type_id = NULL, $bundle = NULL, RouteMatchInterface $route_match = NULL) {
     $field_type_plugin_manager = \Drupal::service('plugin.manager.field.field_type');
 
+    $field_type_options = [];
     foreach ($field_type_plugin_manager->getGroupedDefinitions($field_type_plugin_manager->getUiDefinitions()) as $category => $field_types) {
       foreach ($field_types as $name => $field_type) {
         $field_type_options[$category][$name] = [
@@ -118,6 +119,10 @@ class FieldConfigListController extends EntityListController {
     $order = ['Text', 'Number', 'General', 'Reference', 'Reference revisions', 'Other'];
     $sorted_options = [];
     foreach ($order as $key) {
+      if (!isset($field_type_options[$key])) {
+        continue;
+      }
+
       $sorted_options += ["header_$key" => [
         '#type' => 'html_tag',
         '#tag' => 'h3',
@@ -125,7 +130,7 @@ class FieldConfigListController extends EntityListController {
       ]];
       // Sort by shortest description to longest. Not exactly what we
       // want but surprisingly close.
-      usort($field_type_options[$key], fn($a, $b) => $a['#description_length'] > $b['#description_length']);
+      usort($field_type_options[$key], fn($a, $b) => ($a['#description_length'] > $b['#description_length']) ? -1 : 1);
       $sorted_options += [ $key => $field_type_options[$key] ];
     }
     return $sorted_options;
