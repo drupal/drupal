@@ -63,6 +63,11 @@ function field_ui_theme() {
         'empty' => '',
       ],
     ],
+    'field_ui_tabs' => [
+      'variables' => [
+        'items' => [],
+      ],
+    ],
   ];
 }
 
@@ -247,4 +252,13 @@ function field_ui_form_field_ui_field_storage_add_form_alter(array &$form) {
   // "Other".
   unset($form['add']['new_storage_type']['#options'][$optgroup]['entity_reference']);
   $form['add']['new_storage_type']['#options'][$optgroup]['entity_reference'] = t('Other…');
+}
+
+function field_ui_preprocess_field_ui_tabs(&$variables) {
+  $variables['wrapper_attributes'] = new \Drupal\Core\Template\Attribute();
+  foreach ($variables['items'] as &$item) {
+    if (!isset($item['attributes'])) {
+      $item['attributes'] = new \Drupal\Core\Template\Attribute();
+    }
+  }
 }

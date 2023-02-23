@@ -75,3 +75,12 @@
 .field-settings-summary-cell > .item-list > ul > li:first-child {
   font-size: 1em;
 }
+
+
+#field-ui-tabs {
+  display: none;
+}
+
+.js #field-ui-tabs {
+  display: block;
+}

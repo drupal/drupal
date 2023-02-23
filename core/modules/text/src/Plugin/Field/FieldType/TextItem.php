@@ -85,6 +85,7 @@ class TextItem extends TextItemBase {
       '#description' => $this->t('The maximum length of the field in characters.'),
       '#min' => 1,
       '#disabled' => $has_data,
+      '#group' => 'advanced',
     ];
     $element += parent::storageSettingsForm($form, $form_state, $has_data);
 

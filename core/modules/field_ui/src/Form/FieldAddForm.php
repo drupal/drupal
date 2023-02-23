@@ -13,6 +13,9 @@ use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Url;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\field_ui\FieldUI;
@@ -147,13 +150,60 @@ class FieldAddForm extends FormBase {
 //    }
 
 
-    $form['label'] = [
+    $form['tabs'] = [
+      '#theme' => 'field_ui_tabs',
+      '#items' => [
+        [
+          'value' => [
+            '#type' => 'link',
+            '#title' => $this->t('Basic settings'),
+            '#url' =>  Url::fromUri('internal://<none>#basic'),
+            '#attributes' => [
+              'class' => [
+                'tabs__link',
+                'js-tabs-link',
+                'is-active',
+              ],
+            ],
+          ],
+        ],
+        [
+          'value' => [
+            '#type' => 'link',
+            '#title' => $this->t('Advanced settings'),
+            '#url' =>  Url::fromUri('internal://<none>#advanced'),
+            '#attributes' => [
+              'class' => [
+                'tabs__link',
+                'js-tabs-link',
+              ],
+            ],
+          ],
+        ],
+      ],
+    ];
+    $form['basic'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'id' => ['basic']
+      ],
+      '#title' => $this->t('Basic settings'),
+    ];
+    $form['advanced'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'id' => ['advanced']
+      ],
+      '#title' => $this->t('Advanced settings'),
+    ];
+
+    $form['basic']['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
       '#size' => 25,
     ];
     $field_prefix = $this->config('field_ui.settings')->get('field_prefix');
-    $form['field_name'] = [
+    $form['basic']['field_name'] = [
       '#type' => 'machine_name',
       '#field_prefix' => $field_prefix,
       '#size' => 15,
@@ -173,11 +223,11 @@ class FieldAddForm extends FormBase {
       // @todo Add support for pre-configured options.
     }
 
-    $form['cardinality'] = [
+    $form['basic']['cardinality'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Allow multiple values'),
     ];
-    $form['cardinality_unlimited'] = [
+    $form['basic']['cardinality_unlimited'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Allow unlimited values'),
       '#states' => [
@@ -186,7 +236,7 @@ class FieldAddForm extends FormBase {
         ],
       ],
     ];
-    $form['cardinality_number'] = [
+    $form['basic']['cardinality_number'] = [
       '#type' => 'number',
       '#min' => 2,
       '#title' => $this->t('Limit'),
@@ -216,17 +266,24 @@ class FieldAddForm extends FormBase {
     $plugin_instance = new $plugin_class($data_definition);
     $plugin_instance->setContext(NULL, $entity_adapter);
 
-    $form['field_storage_settings'] = [
+    $form['basic']['field_storage_settings'] = [
       '#tree' => TRUE,
     ];
-    $form['field_storage_settings'] += $plugin_instance->storageSettingsForm($form, $form_state, FALSE);
+    $form['basic']['field_storage_settings'] += $plugin_instance->storageSettingsForm($form, $form_state, FALSE);
+    foreach (Element::children($form['basic']['field_storage_settings']) as $child) {
+      if (isset($form['basic']['field_storage_settings'][$child]['#group'])) {
+        $form['basic']['field_storage_settings'][$child]['#parents'] = ['field_storage_settings', $child];
+        $form['advanced'][$child] = $form['basic']['field_storage_settings'][$child];
+        unset($form['basic']['field_storage_settings'][$child]);
+      }
+    }
 
-    $form['field_settings'] = [
+    $form['basic']['field_settings'] = [
       '#tree' => TRUE,
     ];
-    $form['field_settings'] += $plugin_instance->fieldSettingsForm($form, $form_state);
+    $form['basic']['field_settings'] += $plugin_instance->fieldSettingsForm($form, $form_state);
 
-    $form['required'] = [
+    $form['basic']['required'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Required field'),
     ];
@@ -236,7 +293,7 @@ class FieldAddForm extends FormBase {
       '#value' => TRUE,
     ];
 
-    $form['description'] = [
+    $form['advanced']['description'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Help text'),
       '#rows' => 5,
@@ -260,26 +317,31 @@ class FieldAddForm extends FormBase {
 //
 //      $form['default_value'] = $element;
 //    }
-    $form['default_value_container']['default_value_checkbox'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Set initial value'),
-      '#description' => $this->t('Provide a pre-filled value for the editing form.'),
-    ];
-    $form['default_value']['default_value'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Default value'),
-      '#states' => [
-        'invisible' => [
-          ':input[name="default_value_checkbox"]' => ['checked' => FALSE],
-        ]
-      ]
-    ];
+
 
     $form['actions'] = ['#type' => 'actions'];
     $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Save'),
       '#button_type' => 'primary',
+    ];
+
+    $form['advanced']['default_value_container'] = [
+      '#type' => 'container',
+    ];
+    $form['advanced']['default_value_container']['default_value_checkbox'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Set initial value'),
+      '#description' => $this->t('Provide a pre-filled value for the editing form.'),
+    ];
+    $form['advanced']['default_value_container']['default_value'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Default value'),
+      '#states' => [
+        'invisible' => [
+          ':input[name="default_value_checkbox"]' => ['checked' => FALSE],
+        ],
+      ],
     ];
 
     $form['#attached']['library'][] = 'field_ui/drupal.field_ui';
@@ -321,6 +383,7 @@ class FieldAddForm extends FormBase {
     $destinations = [];
     $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
 
+    xdebug_break();
     // Create new field.
     $field_storage_values = [
       'field_name' => $values['field_name'],
