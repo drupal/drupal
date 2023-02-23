@@ -212,7 +212,7 @@ class FieldAddForm extends FormBase {
       // setting. Maximum length is 32.
       '#maxlength' => FieldStorageConfig::NAME_MAX_LENGTH - strlen($field_prefix),
       '#machine_name' => [
-        'source' => ['label'],
+        'source' => ['basic', 'label'],
         'exists' => [$this, 'fieldNameExists'],
       ],
       '#required' => FALSE,
