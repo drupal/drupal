@@ -1557,7 +1557,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @see \Drupal\Core\Http\TrustedHostsRequestFactory
    */
   protected static function setupTrustedHosts(Request $request, $host_patterns) {
-    $request->setTrustedHosts($host_patterns);
+    Request::setTrustedHosts($host_patterns);
 
     // Get the host, which will validate the current request.
     try {
