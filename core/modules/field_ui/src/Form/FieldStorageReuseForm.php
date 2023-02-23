@@ -14,7 +14,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Ajax\OpenModalDialogCommand;
+use Drupal\Core\Url;
+use Drupal\Component\Serialization\Json;
 
 /**
  * Provides a form for the "field storage" add page.
@@ -182,20 +183,32 @@ class FieldStorageReuseForm extends FormBase {
           'settings' => $settings_summary,
           'content_type' => ['#markup' => $bundle_label],
           'operations' => [
-            'data' => [
               '#type' => 'button',
               '#name' => $field['field_name'],
               '#existing_storage_label' => $field['field_type'],
               '#button_type' => 'small',
               '#value' => $this->t('Re-use'),
-              '#attributes' => [
+              '#url' => Url::fromRoute('entity.node.canonical', ['node' => 1]),
+//             TODO: Fix the parameters on this route.
+//              '#url' => Url::fromRoute("entity.field_config.{$entity_type_id}_field_edit_form", [
+//                'node_config' => 'node',
+//                'field_type' => 'body',
+//                FieldUI::getRouteBundleParameter($entity_type, $this->bundle)
+//              ]),
+              '#wrapper_attributes' => [
+                'colspan' => 5,
+              ],
+            '#attributes' => [
                 'class' => ['button', 'button--action', 'button-primary', 'use-ajax'],
+                'data-dialog-type' => 'modal',
+                'data-dialog-options' => Json::encode([
+                  'width' => '85vw'
+                ]),
               ],
               '#ajax' => [
-                'callback' => [$this, 'myAjaxCallback'],
+                'callback' => [$this, 'reuseField'],
               ],
               '#submit' => [],
-            ],
           ],
         ];
         $rows[] = $row;
@@ -260,12 +273,12 @@ class FieldStorageReuseForm extends FormBase {
     return $options;
   }
 
-  public function myAjaxCallback(array &$form, FormStateInterface $form_state) {
+  public function reuseField(array &$form, FormStateInterface $form_state): AjaxResponse
+  {
     $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
     $reuse_button =  $form_state->getTriggeringElement();
     $field_name = $reuse_button['#name'];
     $existing_storage_label = $reuse_button['#existing_storage_label'];
-
     try {
       $field = $this->entityTypeManager->getStorage('field_config')->create([
         'field_name' => $field_name,
@@ -292,9 +305,6 @@ class FieldStorageReuseForm extends FormBase {
       $this->messenger()->addError($this->t('There was a problem reusing field %label: @message', ['%label' => $existing_storage_label, '@message' => $e->getMessage()]));
     }
     $response = new AjaxResponse();
-    $dialog['#attached']['library'][] = 'core/drupal.dialog.ajax';
-    $dialog['#markup'] = 'Hello';
-    $response->addCommand(new OpenModalDialogCommand('My title', $dialog, ['width' => '300', 'url' => Url::fromRoute('mymodule.some_modal_route_name')]));
     return $response;
   }
 
