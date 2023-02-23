@@ -1,3 +1,8 @@
+:root {
+  --shadow-z1: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-z2: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
 #manage-fields-container {
   display: flex;
 }
@@ -9,8 +14,10 @@
 #manage-fields-add-field {
   width: 28%;
   margin-inline-start: 2%;
-  padding: 1rem;
-  border: 1px solid #d3d4d9;
+  padding-inline: 1rem;
+  padding-block-end: 1rem;
+  border: 1px solid var(--color-gray-200);
+  box-shadow: var(--shadow-z1);
 }
 
 #manage-fields-add-field .field-option {
@@ -19,11 +26,12 @@
   /*width: 100%;*/
   margin-top: 0.75rem;
   padding: 0.75rem;
-  border: 1px solid #c5c5c5;
+  border: 1px solid var(--color-gray-200);
   text-align: start;
   background: #fff;
   cursor: pointer;
   text-decoration: none;
+  box-shadow: var(--shadow-z3);
 }
 
 #manage-fields-add-field .field-option:not(:focus) {
@@ -31,12 +39,15 @@
 }
 
 #manage-fields-add-field .field-option:hover {
-  outline: 2px solid black;
   background: #f5f4f4;
 }
 
 #manage-fields-add-field button:hover .field-option__thumb {
   border-color: #000;
+}
+
+#manage-fields-add-field .field-option__description {
+  font-size: var(--font-size-xs);
 }
 
 

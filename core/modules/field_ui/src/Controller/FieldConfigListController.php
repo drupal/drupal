@@ -116,7 +116,7 @@ class FieldConfigListController extends EntityListController {
         ],
         'add' => [
           '#type' => 'html_tag',
-          '#tag' => 'h2',
+          '#tag' => 'h3',
           '#value' => $this->t('Add a new field'),
         ],
         'options' => $sorted_options,
@@ -141,7 +141,7 @@ class FieldConfigListController extends EntityListController {
 
       $sorted_options += ["header_$key" => [
         '#type' => 'html_tag',
-        '#tag' => 'h3',
+        '#tag' => 'h4',
         '#value' => $key,
       ]];
       // Sort by shortest description to longest. Not exactly what we
