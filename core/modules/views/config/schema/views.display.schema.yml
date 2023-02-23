@@ -68,6 +68,10 @@ views.display.page:
         menu_name:
           type: string
           label: 'Menu name'
+    use_admin_theme:
+      type: boolean
+      nullable: true
+      label: 'Use the administration theme when rendering the view page'
 
 views.display.block:
   type: views_display
