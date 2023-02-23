@@ -35,6 +35,7 @@ abstract class TextItemBase extends FieldItemBase {
       '#default_value' => !empty($settings['allowed_formats']) ? $settings['allowed_formats'] : [],
       '#description' => $this->t('Select the allowed text formats. If no formats are selected, all available text formats will be displayed to the user.'),
       '#element_validate' => [[static::class, 'validateAllowedFormats']],
+      '#group' => 'advanced',
     ];
 
     return $element;

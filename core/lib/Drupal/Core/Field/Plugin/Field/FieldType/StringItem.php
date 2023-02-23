@@ -90,6 +90,7 @@ class StringItem extends StringItemBase {
       '#description' => $this->t('The maximum length of the field in characters.'),
       '#min' => 1,
       '#disabled' => $has_data,
+      '#group' => 'advanced',
     ];
 
     return $element;

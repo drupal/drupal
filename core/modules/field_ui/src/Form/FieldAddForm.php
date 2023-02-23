@@ -282,6 +282,14 @@ class FieldAddForm extends FormBase {
       '#tree' => TRUE,
     ];
     $form['basic']['field_settings'] += $plugin_instance->fieldSettingsForm($form, $form_state);
+    foreach (Element::children($form['basic']['field_settings']) as $child) {
+      if (isset($form['basic']['field_settings'][$child]['#group'])) {
+        $form['basic']['field_settings'][$child]['#parents'] = ['field_settings', $child];
+        $form['advanced'][$child] = $form['basic']['field_settings'][$child];
+        unset($form['basic']['field_settings'][$child]);
+      }
+    }
+
 
     $form['basic']['required'] = [
       '#type' => 'checkbox',
@@ -296,7 +304,10 @@ class FieldAddForm extends FormBase {
     $form['advanced']['description'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Help text'),
-      '#rows' => 5,
+      '#rows' => 3,
+      '#attributes' => [
+        'style' => ['max-width: 50%']
+      ],
       '#description' => $this->t('Instructions to present to the user below this field on the editing form.<br />Allowed HTML tags: @tags', ['@tags' => FieldFilteredMarkup::displayAllowedTags()]) . '<br />' . $this->t('This field supports tokens.'),
     ];
 
