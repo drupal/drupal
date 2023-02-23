@@ -3,11 +3,8 @@
  * Component styles for the content_moderation module.
  */
 .entity-moderation-form {
-  display: -webkit-flex; /* Safari */
   display: flex;
-  -webkit-flex-wrap: wrap; /* Safari */
   flex-wrap: wrap;
-  -webkit-align-items: flex-start; /* Safari */
   align-items: flex-start;
   list-style: none;
 }
@@ -18,7 +15,6 @@
 }
 
 .entity-moderation-form__item:last-child {
-  -webkit-align-self: flex-end; /* Safari */
   align-self: flex-end;
   margin-right: 0;
 }
