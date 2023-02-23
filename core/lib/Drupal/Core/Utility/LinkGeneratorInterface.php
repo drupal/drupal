@@ -86,6 +86,11 @@ interface LinkGeneratorInterface {
    * @internal
    *   Should not be used in user code.
    *   Use \Drupal\Core\Link instead.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   *   \Drupal\Core\Utility\LinkGeneratorInterface::generate() instead.
+   *
+   * @see https://www.drupal.org/node/3342992
    */
   public function generateFromLink(Link $link);
 

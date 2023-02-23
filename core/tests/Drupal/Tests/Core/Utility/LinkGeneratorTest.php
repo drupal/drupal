@@ -548,6 +548,8 @@ class LinkGeneratorTest extends UnitTestCase {
    *
    * @see \Drupal\Core\Utility\LinkGenerator::generate()
    * @see \Drupal\Core\Utility\LinkGenerator::generateFromLink()
+   *
+   * @group legacy
    */
   public function testGenerateBubbleableMetadata() {
     $options = ['query' => [], 'language' => NULL, 'set_active_class' => FALSE, 'absolute' => FALSE];
@@ -574,6 +576,7 @@ class LinkGeneratorTest extends UnitTestCase {
     $this->assertInstanceOf('\Drupal\Core\Render\BubbleableMetadata', $generated_link);
 
     // Test ::generateFromLink().
+    $this->expectDeprecation('\Drupal\Core\Utility\LinkGeneratorInterface::generateFromLink() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Utility\LinkGeneratorInterface::generate() instead. See https://www.drupal.org/node/3342992');
     $link = new Link('Test', $url);
     $this->assertSame($expected_link_markup, (string) $this->linkGenerator->generateFromLink($link));
     $generated_link = $this->linkGenerator->generateFromLink($link);

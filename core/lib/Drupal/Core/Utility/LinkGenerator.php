@@ -61,6 +61,7 @@ class LinkGenerator implements LinkGeneratorInterface {
    * {@inheritdoc}
    */
   public function generateFromLink(Link $link) {
+    @trigger_error('\Drupal\Core\Utility\LinkGeneratorInterface::generateFromLink() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Utility\LinkGeneratorInterface::generate() instead. See https://www.drupal.org/node/3342992', E_USER_DEPRECATED);
     return $this->generate($link->getText(), $link->getUrl());
   }
 
