@@ -1,28 +1,39 @@
 <?php
 
-namespace Drupal\Tests\taxonomy\Functional;
+namespace Drupal\Tests\taxonomy\Kernel;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 
 /**
  * Tests the loading of multiple taxonomy terms at once.
  *
  * @group taxonomy
  */
-class LoadMultipleTest extends TaxonomyTestBase {
+class LoadMultipleTest extends KernelTestBase {
+
+  use TaxonomyTestTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected static $modules = [
+    'system',
+    'taxonomy',
+    'user',
+    'text',
+    'filter',
+  ];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->drupalLogin($this->drupalCreateUser(['administer taxonomy']));
+
+    $this->installEntitySchema('taxonomy_term');
   }
 
   /**
