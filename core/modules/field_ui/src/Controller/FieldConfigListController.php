@@ -98,6 +98,22 @@ class FieldConfigListController extends EntityListController {
         '#attributes' => [
           'id' => 'manage-fields-add-field'
         ],
+        'existing' => [
+          '#type' => 'html_tag',
+          '#tag' => 'a',
+          '#value' => $this->t('Re-use existing field'),
+          '#attributes' => [
+            'class' => ['button', 'use-ajax'],
+            'role' => 'button',
+            'tabindex' => '0',
+            'data-dialog-type' => 'modal',
+            'data-dialog-options' => Json::encode([
+              'width' => '85vw',
+              'title' => $this->t('Re-use existing field'),
+            ]),
+            'href' => URL::fromRoute("field_ui.field_storage_config_add_$entity_type_id.reuse", ['node_type' => $bundle])->toString(),
+          ],
+        ],
         'add' => [
           '#type' => 'html_tag',
           '#tag' => 'h2',

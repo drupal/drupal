@@ -189,7 +189,7 @@ class FieldStorageReuseForm extends FormBase {
           'operations' => [
             'data' => [
               '#type' => 'button',
-              '#button_type' => 'primary',
+              '#button_type' => 'small',
               '#value' => $this->t('Re-use'),
               '#attributes' => [
                 'class' => ['button', 'button--action', 'button-primary'],
