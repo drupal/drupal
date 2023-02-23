@@ -580,7 +580,7 @@ $settings['update_free_access'] = FALSE;
  * any added language. (eg locale_custom_strings_de for german).
  */
 # $settings['locale_custom_strings_en'][''] = [
-#   'forum'      => 'Discussion board',
+#   'Home' => 'Front page',
 #   '@count min' => '@count minutes',
 # ];
 
