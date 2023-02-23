@@ -9,6 +9,8 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Queue\DelayableQueueInterface;
+use Drupal\Core\Queue\QueueInterface;
+use Drupal\Core\Queue\QueueWorkerInterface;
 use Drupal\Core\Queue\QueueWorkerManagerInterface;
 use Drupal\Core\Queue\DelayedRequeueException;
 use Drupal\Core\Queue\RequeueException;
@@ -81,6 +83,13 @@ class Cron implements CronInterface {
   protected $time;
 
   /**
+   * The queue config.
+   *
+   * @var array
+   */
+  protected array $queueConfig;
+
+  /**
    * Constructs a cron object.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -97,10 +106,12 @@ class Cron implements CronInterface {
    *   A logger instance.
    * @param \Drupal\Core\Queue\QueueWorkerManagerInterface $queue_manager
    *   The queue plugin manager.
-   * @param \Drupal\Component\Datetime\TimeInterface $time
+   * @param \Drupal\Component\Datetime\TimeInterface|null $time
    *   The time service.
+   * @param mixed[]|null $queue_config
+   *   Queue configuration from the service container.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, LockBackendInterface $lock, QueueFactory $queue_factory, StateInterface $state, AccountSwitcherInterface $account_switcher, LoggerInterface $logger, QueueWorkerManagerInterface $queue_manager, TimeInterface $time = NULL) {
+  public function __construct(ModuleHandlerInterface $module_handler, LockBackendInterface $lock, QueueFactory $queue_factory, StateInterface $state, AccountSwitcherInterface $account_switcher, LoggerInterface $logger, QueueWorkerManagerInterface $queue_manager, TimeInterface $time = NULL, ?array $queue_config = NULL) {
     $this->moduleHandler = $module_handler;
     $this->lock = $lock;
     $this->queueFactory = $queue_factory;
@@ -108,7 +119,18 @@ class Cron implements CronInterface {
     $this->accountSwitcher = $account_switcher;
     $this->logger = $logger;
     $this->queueManager = $queue_manager;
-    $this->time = $time ?: \Drupal::service('datetime.time');
+    if (!isset($time)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3343743', E_USER_DEPRECATED);
+      $time = \Drupal::service('datetime.time');
+    }
+    $this->time = $time;
+    if (!isset($queue_config)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $queue_config argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3343743', E_USER_DEPRECATED);
+      $queue_config = \Drupal::getContainer()->getParameter('queue.config');
+    }
+    $this->queueConfig = $queue_config + [
+      'suspendMaximumWait' => 30.0,
+    ];
   }
 
   /**
@@ -167,56 +189,120 @@ class Cron implements CronInterface {
    * Processes cron queues.
    */
   protected function processQueues() {
-    // Grab the defined cron queues.
-    foreach ($this->queueManager->getDefinitions() as $queue_name => $info) {
-      if (isset($info['cron'])) {
-        // Make sure every queue exists. There is no harm in trying to recreate
-        // an existing queue.
-        $this->queueFactory->get($queue_name)->createQueue();
+    $max_wait = (float) $this->queueConfig['suspendMaximumWait'];
 
-        $queue_worker = $this->queueManager->createInstance($queue_name);
-        $end = $this->time->getCurrentTime() + $info['cron']['time'];
-        $queue = $this->queueFactory->get($queue_name);
-        $lease_time = $info['cron']['time'];
-        while ($this->time->getCurrentTime() < $end && ($item = $queue->claimItem($lease_time))) {
-          try {
-            $queue_worker->processItem($item->data);
-            $queue->deleteItem($item);
-          }
-          catch (DelayedRequeueException $e) {
-            // The worker requested the task not be immediately re-queued.
-            // - If the queue doesn't support ::delayItem(), we should leave the
-            // item's current expiry time alone.
-            // - If the queue does support ::delayItem(), we should allow the
-            // queue to update the item's expiry using the requested delay.
-            if ($queue instanceof DelayableQueueInterface) {
-              // This queue can handle a custom delay; use the duration provided
-              // by the exception.
-              $queue->delayItem($item, $e->getDelay());
-            }
-          }
-          catch (RequeueException $e) {
-            // The worker requested the task be immediately requeued.
-            $queue->releaseItem($item);
-          }
-          catch (SuspendQueueException $e) {
-            // If the worker indicates the whole queue should be skipped,
-            // release the item and go to the next queue.
-            $queue->releaseItem($item);
+    $queues = array_filter(
+      array_values($this->queueManager->getDefinitions()),
+      function (array $queueInfo) {
+        return isset($queueInfo['cron']);
+      }
+    );
 
-            $this->logger->debug('A worker for @queue queue suspended further processing of the queue.', [
-              '@queue' => $queue_name,
-            ]);
+    // Build a stack of queues to work on.
+    /** @var array<array{process_from: int<0, max>, queue: \Drupal\Core\Queue\QueueInterface, worker: \Drupal\Core\Queue\QueueWorkerInterface}> $queues */
+    $queues = array_map(function (array $queue_info) {
+      $queue_name = $queue_info['id'];
+      $queue = $this->queueFactory->get($queue_name);
+      // Make sure every queue exists. There is no harm in trying to recreate
+      // an existing queue.
+      $queue->createQueue();
+      $worker = $this->queueManager->createInstance($queue_name);
+      return [
+        // Set process_from to zero so each queue is always processed
+        // immediately for the first time. This process_from timestamp will
+        // change if a queue throws a delayable SuspendQueueException.
+        'process_from' => 0,
+        'queue' => $queue,
+        'worker' => $worker,
+      ];
+    }, $queues);
 
-            // Skip to the next queue.
-            continue 2;
-          }
-          catch (\Exception $e) {
-            // In case of any other kind of exception, log it and leave the item
-            // in the queue to be processed again later.
-            watchdog_exception('cron', $e);
-          }
+    // Work through stack of queues, re-adding to the stack when a delay is
+    // necessary.
+    while ($item = array_shift($queues)) {
+      [
+        'queue' => $queue,
+        'worker' => $worker,
+        'process_from' => $process_from,
+      ] = $item;
+
+      // Each queue will be processed immediately when it is reached for the
+      // first time, as zero > currentTime will never be true.
+      if ($process_from > $this->time->getCurrentMicroTime()) {
+        $this->usleep(round($process_from - $this->time->getCurrentMicroTime(), 3) * 1000000);
+      }
+
+      try {
+        $this->processQueue($queue, $worker);
+      }
+      catch (SuspendQueueException $e) {
+        // Return to this queue after processing other queues if the delay is
+        // within the threshold.
+        if ($e->isDelayable() && ($e->getDelay() < $max_wait)) {
+          $item['process_from'] = $this->time->getCurrentMicroTime() + $e->getDelay();
+          // Place this queue back in the stack for processing later.
+          array_push($queues, $item);
         }
+      }
+
+      // Reorder the queue by next 'process_from' timestamp.
+      usort($queues, function (array $queueA, array $queueB) {
+        return $queueA['process_from'] <=> $queueB['process_from'];
+      });
+    }
+  }
+
+  /**
+   * Processes a cron queue.
+   *
+   * @param \Drupal\Core\Queue\QueueInterface $queue
+   *   The queue.
+   * @param \Drupal\Core\Queue\QueueWorkerInterface $worker
+   *   The queue worker.
+   *
+   * @throws \Drupal\Core\Queue\SuspendQueueException
+   *   If the queue was suspended.
+   */
+  protected function processQueue(QueueInterface $queue, QueueWorkerInterface $worker) {
+    $lease_time = $worker->getPluginDefinition()['cron']['time'];
+    $end = $this->time->getCurrentTime() + $lease_time;
+    while ($this->time->getCurrentTime() < $end && ($item = $queue->claimItem($lease_time))) {
+      try {
+        $worker->processItem($item->data);
+        $queue->deleteItem($item);
+      }
+      catch (DelayedRequeueException $e) {
+        // The worker requested the task not be immediately re-queued.
+        // - If the queue doesn't support ::delayItem(), we should leave the
+        // item's current expiry time alone.
+        // - If the queue does support ::delayItem(), we should allow the
+        // queue to update the item's expiry using the requested delay.
+        if ($queue instanceof DelayableQueueInterface) {
+          // This queue can handle a custom delay; use the duration provided
+          // by the exception.
+          $queue->delayItem($item, $e->getDelay());
+        }
+      }
+      catch (RequeueException) {
+        // The worker requested the task be immediately requeued.
+        $queue->releaseItem($item);
+      }
+      catch (SuspendQueueException $e) {
+        // If the worker indicates the whole queue should be skipped, release
+        // the item and go to the next queue.
+        $queue->releaseItem($item);
+
+        $this->logger->debug('A worker for @queue queue suspended further processing of the queue.', [
+          '@queue' => $worker->getPluginId(),
+        ]);
+
+        // Skip to the next queue.
+        throw $e;
+      }
+      catch (\Exception $e) {
+        // In case of any other kind of exception, log it and leave the item
+        // in the queue to be processed again later.
+        watchdog_exception('cron', $e);
       }
     }
   }
@@ -264,6 +350,16 @@ class Cron implements CronInterface {
         '@time' => Timer::read('cron_' . $module_previous) . 'ms',
       ]);
     }
+  }
+
+  /**
+   * Delay execution in microseconds.
+   *
+   * @param int $microseconds
+   *   Halt time in microseconds.
+   */
+  protected function usleep(int $microseconds): void {
+    usleep($microseconds);
   }
 
 }

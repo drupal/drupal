@@ -56,6 +56,8 @@ parameters:
     maxAge: false
     supportsCredentials: false
   tempstore.expire: 604800
+  queue.config:
+    suspendMaximumWait: 30.0
 services:
   # Simple cache contexts, directly derived from the request context.
   cache_context.ip:
@@ -390,7 +392,7 @@ services:
     arguments: [ '@service_container' ]
   cron:
     class: Drupal\Core\Cron
-    arguments: ['@module_handler', '@lock', '@queue', '@state', '@account_switcher', '@logger.channel.cron', '@plugin.manager.queue_worker', '@datetime.time']
+    arguments: ['@module_handler', '@lock', '@queue', '@state', '@account_switcher', '@logger.channel.cron', '@plugin.manager.queue_worker', '@datetime.time', '%queue.config%']
     lazy: true
   Drupal\Core\CronInterface: '@cron'
   diff.formatter:

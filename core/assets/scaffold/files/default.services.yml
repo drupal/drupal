@@ -213,3 +213,9 @@ parameters:
     maxAge: false
     # Sets the Access-Control-Allow-Credentials header.
     supportsCredentials: false
+
+  queue.config:
+    # The maximum number of seconds to wait if a queue is temporarily suspended.
+    # This is not applicable when a queue is suspended but does not specify
+    # how long to wait before attempting to resume.
+    suspendMaximumWait: 30
