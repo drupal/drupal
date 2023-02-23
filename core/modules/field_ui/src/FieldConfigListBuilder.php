@@ -4,13 +4,13 @@ namespace Drupal\field_ui;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
-use Drupal\Core\Url;
 use Drupal\field\FieldConfigInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -96,6 +96,7 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
     $build = parent::render();
     $build['table']['#attributes']['id'] = 'field-overview';
     $build['table']['#empty'] = $this->t('No fields are present yet.');
+    $build['#attached']['library'][] = 'field_ui/drupal.field_ui';
 
     return $build;
   }
@@ -119,8 +120,8 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
    */
   public function buildHeader() {
     $header = [
-      'label' => $this->t('Field'),
-      'field_type' => $this->t('Field type'),
+      'label' => $this->t('Name'),
+      'settings_summary' => $this->t('Field type'),
     ];
     return $header + parent::buildHeader();
   }
@@ -131,19 +132,25 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
   public function buildRow(EntityInterface $field_config) {
     /** @var \Drupal\field\FieldConfigInterface $field_config */
     $field_storage = $field_config->getFieldStorageDefinition();
-    $route_parameters = [
-      'field_config' => $field_config->id(),
-    ] + FieldUI::getRouteBundleParameter($this->entityTypeManager->getDefinition($this->targetEntityTypeId), $this->targetBundle);
+
+    $storage_summary = $this->fieldTypeManager->getStorageSettingsSummary($field_storage);
+    $instance_summary = $this->fieldTypeManager->getFieldSettingsSummary($field_config);
+    $summary_list = [...$storage_summary, ...$instance_summary];
+    uasort($summary_list, [SortArray::class, 'sortByWeightProperty']);
+
+    $settings_summary = empty($summary_list) ? '' : [
+      'data' => [
+        '#theme' => 'item_list',
+        '#items' => $summary_list,
+      ],
+      'class' => ['field-settings-summary-cell'],
+    ];
 
     $row = [
       'id' => Html::getClass($field_config->getName()),
       'data' => [
-        'label' => $field_config->getLabel() . ' (' . $field_config->getName() . ')',
-        'field_type' => [
-          'data' => [
-            '#markup' => $this->fieldTypeManager->getDefinitions()[$field_storage->getType()]['label'],
-          ],
-        ],
+        'label' => $field_config->getLabel() . " ({$field_config->getName()})",
+        'settings_summary' => $settings_summary,
       ],
     ];
 

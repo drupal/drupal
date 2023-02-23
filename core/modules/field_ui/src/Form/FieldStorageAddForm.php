@@ -9,10 +9,12 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Component\Serialization\Json;
 
 /**
  * Provides a form for the "field storage" add page.
@@ -152,12 +154,18 @@ class FieldStorageAddForm extends FormBase {
         '#type' => 'item',
         '#markup' => $this->t('or'),
       ];
+
+      $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
+
       $form['add']['existing_storage_name'] = [
-        '#type' => 'select',
-        '#title' => $this->t('Re-use an existing field'),
-        '#options' => $existing_field_storage_options,
-        '#empty_option' => $this->t('- Select an existing field -'),
-      ];
+          '#type' => 'link',
+          '#title' => 'Re-use an existing field',
+          '#value' => $this->t('Re-use an existing field'),
+          '#url' => Url::fromRoute("field_ui.field_storage_config_add_{$this->entityTypeId}.reuse", FieldUI::getRouteBundleParameter($entity_type, $this->bundle)),
+          '#attributes' => [
+            'class' => ['button', 'button--action', 'button-primary'],
+            ]
+        ];
 
       $form['#attached']['drupalSettings']['existingFieldLabels'] = $this->getExistingFieldLabels(array_keys($existing_field_storage_options));
     }

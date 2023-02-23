@@ -36,6 +36,22 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
   /**
    * {@inheritdoc}
    */
+  public static function storageSettingsSummary(FieldStorageDefinitionInterface $field_definition): array {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function fieldSettingsSummary(FieldDefinitionInterface $field_definition): array {
+    $definition = \Drupal::service('plugin.manager.field.field_type')
+      ->getDefinition($field_definition->getType())['label'];
+    return [['#markup' => $definition, '#weight' => -10]];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function mainPropertyName() {
     return 'value';
   }

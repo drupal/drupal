@@ -263,6 +263,28 @@ interface FieldItemInterface extends ComplexDataInterface {
   public static function defaultFieldSettings();
 
   /**
+   * Returns a short summary of the field's storage-level settings.
+   *
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $field_definition
+   *   The field storage definition.
+   *
+   * @return array
+   *   A renderable array summarizing storage-level settings.
+   */
+  public static function storageSettingsSummary(FieldStorageDefinitionInterface $field_definition): array;
+
+  /**
+   * Returns a short summary of the field's field-level settings.
+   *
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The field entity.
+   *
+   * @return array
+   *   A renderable array summarizing the field-level settings.
+   */
+  public static function fieldSettingsSummary(FieldDefinitionInterface $field_definition): array;
+
+  /**
    * Returns a settings array that can be stored as a configuration value.
    *
    * For all use cases where field settings are stored and managed as
