@@ -34,7 +34,6 @@ final class ReverseContainer {
    */
   public function __construct(private readonly Container|SymfonyContainer $serviceContainer) {
     $this->getServiceId = \Closure::bind(function ($service): ?string {
-      /** @phpstan-ignore-next-line */
       return array_search($service, $this->services, TRUE) ?: NULL;
     }, $serviceContainer, $serviceContainer);
   }
@@ -71,7 +70,6 @@ final class ReverseContainer {
    */
   public function recordContainer(): void {
     $service_recorder = \Closure::bind(function () : array {
-      /** @phpstan-ignore-next-line */
       return $this->services;
     }, $this->serviceContainer, $this->serviceContainer);
     self::$recordedServices = array_merge(self::$recordedServices, array_flip(array_map([$this, 'generateServiceIdHash'], $service_recorder())));

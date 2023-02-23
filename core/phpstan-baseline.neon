@@ -646,11 +646,6 @@ parameters:
 			path: lib/Drupal/Core/Lock/NullLockBackend.php
 
 		-
-			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Menu/DefaultMenuLinkTreeManipulators.php
-
-		-
 			message: "#^Variable \\$parent in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Menu/Form/MenuLinkDefaultForm.php
@@ -1827,7 +1822,7 @@ parameters:
 
 		-
 			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
-			count: 3
+			count: 2
 			path: modules/node/node.module
 
 		-
@@ -2379,11 +2374,6 @@ parameters:
 			message: "#^Method Drupal\\\\user\\\\RoleForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/user/src/RoleForm.php
-
-		-
-			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
-			count: 1
-			path: modules/user/src/UserListBuilder.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
