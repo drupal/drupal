@@ -2476,6 +2476,11 @@ parameters:
 			path: modules/user/tests/src/Functional/Views/UserChangedTest.php
 
 		-
+			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
+			count: 1
+			path: modules/user/tests/src/FunctionalJavascript/UserPasswordResetTest.php
+
+		-
 			message: "#^Variable \\$result in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: modules/user/tests/src/Unit/UserAccessControlHandlerTest.php

@@ -25,6 +25,17 @@ class UserPasswordResetTest extends WebDriverTestBase {
   }
 
   /**
+   * The profile to install as a basis for testing.
+   *
+   * This test uses the standard profile to test the password reset in
+   * combination with an ajax request provided by the user picture configuration
+   * in the standard profile.
+   *
+   * @var string
+   */
+  protected $profile = 'standard';
+
+  /**
    * The user object to test password resetting.
    *
    * @var \Drupal\user\UserInterface
@@ -34,12 +45,7 @@ class UserPasswordResetTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block', 'test_user_config'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
+  protected static $modules = ['block'];
 
   /**
    * {@inheritdoc}
@@ -48,7 +54,7 @@ class UserPasswordResetTest extends WebDriverTestBase {
     parent::setUp();
 
     // Create a user.
-    $account = $this->drupalCreateUser(['access content']);
+    $account = $this->drupalCreateUser();
 
     // Activate user by logging in.
     $this->drupalLogin($account);
@@ -59,7 +65,7 @@ class UserPasswordResetTest extends WebDriverTestBase {
 
     // Set the last login time that is used to generate the one-time link so
     // that it is definitely over a second ago.
-    $account->login = \Drupal::time()->getRequestTime() - mt_rand(10, 100000);
+    $account->login = REQUEST_TIME - mt_rand(10, 100000);
     Database::getConnection()->update('users_field_data')
       ->fields(['login' => $account->getLastLoginTime()])
       ->condition('uid', $account->id())
