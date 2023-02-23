@@ -3,6 +3,7 @@
 
 namespace Drupal\field_ui\Form;
 
+use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -11,7 +12,9 @@ use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\field\FieldStorageConfigInterface;
+use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Ajax\OpenModalDialogCommand;
 
 /**
  * Provides a form for the "field storage" add page.
@@ -166,34 +169,32 @@ class FieldStorageReuseForm extends FormBase {
 
       // Remove empty values.
       $list = array_filter([...$summary, $readable_cardinality, $max_length]);
-      $settings_summary = empty($list) ? '' : [
-        'data' => [
+      $settings_summary = empty($list) ? [] : [
           '#theme' => 'item_list',
           '#items' => $list,
-        ],
-        'class' => ['field-settings-summary-cell'],
+          'class' => ['field-settings-summary-cell'],
       ];
       foreach ($field_bundles as $field_bundle) {
         $bundle_label = $bundles[$this->entityTypeId][$field_bundle]['label'];
         $row = [
-          'field' => [
-            'data' => $field['field_name']
-          ],
-          'field_type' => [
-            'data' => $field['field_type']
-          ],
+          'field' => ['#markup' => $field['field_name']],
+          'field_type' => ['#markup' => $field['field_type']],
           'settings' => $settings_summary,
-          'content_type' => [
-            'data' => $bundle_label,
-          ],
+          'content_type' => ['#markup' => $bundle_label],
           'operations' => [
             'data' => [
               '#type' => 'button',
+              '#name' => $field['field_name'],
+              '#existing_storage_label' => $field['field_type'],
               '#button_type' => 'small',
               '#value' => $this->t('Re-use'),
               '#attributes' => [
-                'class' => ['button', 'button--action', 'button-primary'],
-              ]
+                'class' => ['button', 'button--action', 'button-primary', 'use-ajax'],
+              ],
+              '#ajax' => [
+                'callback' => [$this, 'myAjaxCallback'],
+              ],
+              '#submit' => [],
             ],
           ],
         ];
@@ -205,9 +206,9 @@ class FieldStorageReuseForm extends FormBase {
     ksort($rows);
     $form['add']['table'] = [
       '#type' => 'table',
-      '#rows' => $rows,
       '#header' => array($this->t('Field'), $this->t('Field Type'), $this->t('Settings'), $this->t('Content Type'), $this->t('Operations')),
     ];
+    $form['add']['table'] += $rows;
 
     // Place the 'translatable' property as an explicit value so that contrib
     // modules can form_alter() the value for newly created fields. By default
@@ -257,6 +258,96 @@ class FieldStorageReuseForm extends FormBase {
     asort($options);
 
     return $options;
+  }
+
+  public function myAjaxCallback(array &$form, FormStateInterface $form_state) {
+    $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
+    $reuse_button =  $form_state->getTriggeringElement();
+    $field_name = $reuse_button['#name'];
+    $existing_storage_label = $reuse_button['#existing_storage_label'];
+
+    try {
+      $field = $this->entityTypeManager->getStorage('field_config')->create([
+        'field_name' => $field_name,
+        'entity_type' => $this->entityTypeId,
+        'bundle' => $this->bundle,
+        'label' => $existing_storage_label,
+      ]);
+      $field->save();
+
+      $this->configureEntityFormDisplay($field_name);
+      $this->configureEntityViewDisplay($field_name);
+
+      $route_parameters = [
+          'field_config' => $field->id(),
+        ] + FieldUI::getRouteBundleParameter($entity_type, $this->bundle);
+      $destinations[] = ['route_name' => "entity.field_config.{$this->entityTypeId}_field_edit_form", 'route_parameters' => $route_parameters];
+      $destinations[] = ['route_name' => "entity.{$this->entityTypeId}.field_ui_fields", 'route_parameters' => $route_parameters];
+
+      // Store new field information for any additional submit handlers.
+      $form_state->set(['fields_added', '_add_existing_field'], $field_name);
+    }
+    catch (\Exception $e) {
+      $error = TRUE;
+      $this->messenger()->addError($this->t('There was a problem reusing field %label: @message', ['%label' => $existing_storage_label, '@message' => $e->getMessage()]));
+    }
+    $response = new AjaxResponse();
+    $dialog['#attached']['library'][] = 'core/drupal.dialog.ajax';
+    $dialog['#markup'] = 'Hello';
+    $response->addCommand(new OpenModalDialogCommand('My title', $dialog, ['width' => '300', 'url' => Url::fromRoute('mymodule.some_modal_route_name')]));
+    return $response;
+  }
+
+  /**
+   * Configures the field for the default form mode.
+   *
+   * @param string $field_name
+   *   The field name.
+   * @param string|null $widget_id
+   *   (optional) The plugin ID of the widget. Defaults to NULL.
+   * @param array $widget_settings
+   *   (optional) An array of widget settings. Defaults to an empty array.
+   */
+  protected function configureEntityFormDisplay($field_name, $widget_id = NULL, array $widget_settings = []) {
+    $options = [];
+    if ($widget_id) {
+      $options['type'] = $widget_id;
+      if (!empty($widget_settings)) {
+        $options['settings'] = $widget_settings;
+      }
+    }
+    // Make sure the field is displayed in the 'default' form mode (using
+    // default widget and settings). It stays hidden for other form modes
+    // until it is explicitly configured.
+    $this->entityDisplayRepository->getFormDisplay($this->entityTypeId, $this->bundle, 'default')
+      ->setComponent($field_name, $options)
+      ->save();
+  }
+
+  /**
+   * Configures the field for the default view mode.
+   *
+   * @param string $field_name
+   *   The field name.
+   * @param string|null $formatter_id
+   *   (optional) The plugin ID of the formatter. Defaults to NULL.
+   * @param array $formatter_settings
+   *   (optional) An array of formatter settings. Defaults to an empty array.
+   */
+  protected function configureEntityViewDisplay($field_name, $formatter_id = NULL, array $formatter_settings = []) {
+    $options = [];
+    if ($formatter_id) {
+      $options['type'] = $formatter_id;
+      if (!empty($formatter_settings)) {
+        $options['settings'] = $formatter_settings;
+      }
+    }
+    // Make sure the field is displayed in the 'default' view mode (using
+    // default formatter and settings). It stays hidden for other view
+    // modes until it is explicitly configured.
+    $this->entityDisplayRepository->getViewDisplay($this->entityTypeId, $this->bundle)
+      ->setComponent($field_name, $options)
+      ->save();
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state)
