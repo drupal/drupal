@@ -156,7 +156,7 @@ class FieldStorageReuseForm extends FormBase {
     $bundles = $bundle_info_service->getAllBundleInfo();
     $existing_field_storage_options = $this->getExistingFieldStorageOptions();
 
-
+    $rows = [];
     foreach ($existing_field_storage_options as $field) {
       $field_bundles = $field['field_storage']->getBundles();
       $summary = \Drupal::service('plugin.manager.field.field_type')->getStorageSettingsSummary($field['field_storage']);
