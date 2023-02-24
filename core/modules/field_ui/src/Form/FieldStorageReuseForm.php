@@ -4,12 +4,14 @@
 namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\field_ui\FieldUI;
@@ -166,7 +168,7 @@ class FieldStorageReuseForm extends FormBase {
       $field_bundles = $field['field_storage']->getBundles();
       $summary = \Drupal::service('plugin.manager.field.field_type')->getStorageSettingsSummary($field['field_storage']);
       $cardinality =  $field['field_storage']->getCardinality();
-      $readable_cardinality = $cardinality === -1 ? 'Unlimited' : ($cardinality === 1 ? '' : "Multiple values: $cardinality");
+      $readable_cardinality = $cardinality === -1 ? 'Unlimited' : ($cardinality === 1 ? 'Single value' : "Multiple values: $cardinality");
       $max_length = is_integer($field['field_storage']->getSetting('max_length')) ? "Max length: {$field['field_storage']->getSetting('max_length')}" : '';
 
       // Remove empty values.
@@ -191,20 +193,12 @@ class FieldStorageReuseForm extends FormBase {
               '#existing_storage_label' => $field['field_type'],
               '#button_type' => 'small',
               '#value' => $this->t('Re-use'),
-              '#url' => Url::fromRoute('entity.node.canonical', ['node' => 1]),
-//             TODO: Fix the parameters on this route.
-//              '#url' => Url::fromRoute("entity.field_config.{$entity_type_id}_field_edit_form", [
-//                'field_config' => $field['field_name'],
-//              ] + FieldUI::getRouteBundleParameter($entity_type, $this->bundle)),
               '#wrapper_attributes' => [
                 'colspan' => 5,
               ],
-            '#attributes' => [
+              '#attributes' => [
                 'class' => ['button', 'button--action', 'button-primary', 'use-ajax'],
                 'data-dialog-type' => 'modal',
-                'data-dialog-options' => Json::encode([
-                  'width' => '85vw'
-                ]),
               ],
               '#ajax' => [
                 'callback' => [$this, 'reuseField'],
@@ -274,7 +268,7 @@ class FieldStorageReuseForm extends FormBase {
     return $options;
   }
 
-  public function reuseField(array &$form, FormStateInterface $form_state): AjaxResponse
+  public function reuseField(array &$form, FormStateInterface $form_state)
   {
     $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
     $reuse_button =  $form_state->getTriggeringElement();
@@ -300,13 +294,19 @@ class FieldStorageReuseForm extends FormBase {
 
       // Store new field information for any additional submit handlers.
       $form_state->set(['fields_added', '_add_existing_field'], $field_name);
+      /** @var \Drupal\Core\Entity\EntityFormBuilderInterface $entity_form_builder */
+      $entity_form_builder = \Drupal::service('entity.form_builder');
+      $next_form = $entity_form_builder->getForm($field, 'edit');
+      $dialog_options = [
+        'width' => '85vw',
+      ];
+      $response = new AjaxResponse();
+      $response->addCommand(new OpenModalDialogCommand($this->t('Configure field'), $next_form, $dialog_options));
+      return $response;
     }
     catch (\Exception $e) {
-      $error = TRUE;
       $this->messenger()->addError($this->t('There was a problem reusing field %label: @message', ['%label' => $existing_storage_label, '@message' => $e->getMessage()]));
     }
-    $response = new AjaxResponse();
-    return $response;
   }
 
   /**
