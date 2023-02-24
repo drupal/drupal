@@ -4,12 +4,13 @@ related:
   - user.overview
   - user.permissions
 ---
-{% set roles_url = render_var(url('entity.user_role.collection')) %}
+{% set roles_link_text %}{% trans %}Roles{% endtrans %}{% endset %}
+{% set roles_link = render_var(help_route_link(roles_link_text, 'entity.user_role.collection')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Create a new role.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
-  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>People</em> &gt; <a href="{{ roles_url}}"><em>Roles</em></a>.{% endtrans %}</li>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>People</em> &gt; <em>{{ roles_link }}</em>.{% endtrans %}</li>
   <li>{% trans %}Click <em>Add role</em>.{% endtrans %}</li>
   <li>{% trans %}Enter the desired <em>Role name</em>. If desired, click <em>Edit</em> to change the <em>Machine name</em> for the role.{% endtrans %}</li>
   <li>{% trans %}Click <em>Save</em>. You should be returned to the <em>Roles</em> page and your new role should be in the role list.{% endtrans %}</li>

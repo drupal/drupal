@@ -4,7 +4,8 @@ related:
   - core.security
   - user.overview
 ---
-{% set account_settings_url = render_var(url('entity.user.admin_form')) %}
+{% set account_settings_link_text %}{% trans %}Account settings{% endtrans %}{% endset %}
+{% set account_settings_link = render_var(help_route_link(account_settings_link_text, 'entity.user.admin_form')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Configure settings related to how user accounts are created and deleted.{% endtrans %}</p>
 <h2>{% trans %}What are the settings related to user account creation and deletion?{% endtrans %}</h2>
@@ -26,7 +27,7 @@ related:
 </ul>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
-  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>People</em> &gt; <a href="{{ account_settings_url}}"><em>Account settings</em></a>.{% endtrans %}</li>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>People</em> &gt; <em>{{ account_settings_link }}</em>.{% endtrans %}</li>
   <li>{% trans %}Select the method you want to use for creating user accounts, and check or uncheck the box that requires email verification, to match the settings you want for your site.{% endtrans %}</li>
   <li>{% trans %}Select the desired option for what happens to content that a user created if their account is canceled.{% endtrans %}</li>
   <li>{% trans %}Optionally, edit the text of email messages related to user accounts.{% endtrans %}</li>
