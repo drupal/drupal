@@ -32,6 +32,7 @@ class FieldConfigListController extends EntityListController {
     $field_type_options = [];
     foreach ($field_type_plugin_manager->getGroupedDefinitions($field_type_plugin_manager->getUiDefinitions()) as $category => $field_types) {
       foreach ($field_types as $name => $field_type) {
+        $icon = $this->getIcon($field_type['id']);
         $field_type_options[$category][$name] = [
           '#type' => 'html_tag',
           '#tag' => 'a',
@@ -54,8 +55,8 @@ class FieldConfigListController extends EntityListController {
             ],
             'icon' => [
               '#theme' => 'image',
-              '#uri' =>  $this->getIconData($field_type['id'])['uri'],
-              '#alt' => $this->getIconData($field_type['id'])['alt'],
+              '#uri' =>  $icon['uri'],
+              '#alt' => $icon['alt'],
               '#width' => 40,
             ],
           ],
@@ -157,8 +158,8 @@ class FieldConfigListController extends EntityListController {
     return $sorted_options;
   }
 
-  private function getIconData($field_name) {
-    // For fields that share the same icon.
+  private function getIcon($field_name) {
+    // Switch is used for fields that share the same icon.
     switch($field_name) {
       case 'list_float':
         $icon_name = 'list_integer';
