@@ -173,7 +173,9 @@ class FieldStorageReuseForm extends FormBase {
       $settings_summary = empty($list) ? [] : [
           '#theme' => 'item_list',
           '#items' => $list,
+        '#attributes' => [
           'class' => ['field-settings-summary-cell'],
+        ],
       ];
       foreach ($field_bundles as $field_bundle) {
         $bundle_label = $bundles[$this->entityTypeId][$field_bundle]['label'];
