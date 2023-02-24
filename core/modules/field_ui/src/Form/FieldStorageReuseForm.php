@@ -11,13 +11,10 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormBase;
-use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Url;
-use Drupal\Component\Serialization\Json;
 
 /**
  * Provides a form for the "field storage" add page.
@@ -180,13 +177,17 @@ class FieldStorageReuseForm extends FormBase {
           'class' => ['field-settings-summary-cell'],
         ],
       ];
-      foreach ($field_bundles as $field_bundle) {
-        $bundle_label = $bundles[$this->entityTypeId][$field_bundle]['label'];
+      $bundle_label_arr = [];
+      foreach ($field_bundles as $bundle) {
+        $bundle_label_arr[] = $bundles[$this->entityTypeId][$bundle]['label'];
+      }
+      // Combine bundles to be a single string separated by a comma.
+      $bundle_labels = implode(", ", $bundle_label_arr);
         $row = [
           'field' => ['#markup' => $field['field_name']],
           'field_type' => ['#markup' => $field['field_type']],
           'settings' => $settings_summary,
-          'content_type' => ['#markup' => $bundle_label],
+          'content_type' => ['#markup' => $bundle_labels],
           'operations' => [
               '#type' => 'button',
               '#name' => $field['field_name'],
@@ -207,7 +208,6 @@ class FieldStorageReuseForm extends FormBase {
           ],
         ];
         $rows[] = $row;
-      }
     }
 
     // Sort rows by field name.
