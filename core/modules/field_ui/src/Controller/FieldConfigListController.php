@@ -50,9 +50,14 @@ class FieldConfigListController extends EntityListController {
           'thumb' => [
             '#type' => 'container',
             '#attributes' => [
-              'class' => ['field-option__thumb']
+              'class' => ['field-option__thumb'],
             ],
-            '#markup' => '&nbsp;',
+            'icon' => [
+              '#theme' => 'image',
+              '#uri' =>  $this->getIconData($field_type['id'])['uri'],
+              '#alt' => $this->getIconData($field_type['id'])['alt'],
+              '#width' => 40,
+            ],
           ],
           'words' => [
             '#type' => 'container',
@@ -70,7 +75,7 @@ class FieldConfigListController extends EntityListController {
             'description' => [
               '#type' => 'container',
               '#attributes' => [
-                'class' => ['field-option__description']
+                'class' => ['field-option__description'],
               ],
               '#markup'=> $field_type['description']
             ],
@@ -151,5 +156,33 @@ class FieldConfigListController extends EntityListController {
     }
     return $sorted_options;
   }
+
+  private function getIconData($field_name) {
+    // For fields that share the same icon.
+    switch($field_name) {
+      case 'list_float':
+        $icon_name = 'list_integer';
+        break;
+      case 'decimal':
+      case 'float':
+      $icon_name = 'integer';
+        break;
+      case 'text_long':
+      case 'text_with_summary':
+      case 'string':
+      case 'string_long':
+        $icon_name = 'text';
+        break;
+      default:
+        $icon_name = $field_name;
+        break;
+    }
+
+    $icon['uri'] = "core/modules/field_ui/icons/$icon_name.svg";
+    $icon['alt'] = "Icon for $field_name in add new field options.";
+    return $icon;
+  }
+
+
 
 }
