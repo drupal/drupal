@@ -2,10 +2,10 @@
 
 namespace Drupal\Tests\system\Functional\SecurityAdvisories;
 
+use Drupal\advisory_feed_test\AdvisoryTestClientMiddleware;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
-use Drupal\advisory_feed_test\AdvisoriesTestHttpClient;
 
 /**
  * Tests of security advisories functionality.
@@ -116,7 +116,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
   public function testPsa(): void {
     $assert = $this->assertSession();
     // Setup test PSA endpoint.
-    AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpointMixed);
+    AdvisoryTestClientMiddleware::setTestEndpoint($this->workingEndpointMixed);
     $mixed_advisory_links = [
       'Critical Release - SA-2019-02-19',
       'Critical Release - PSA-Really Old',
@@ -153,7 +153,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     // Log back in with user with permission to see the advisories.
     $this->drupalLogin($this->user);
     // Test cache.
-    AdvisoriesTestHttpClient::setTestEndpoint($this->nonWorkingEndpoint);
+    AdvisoryTestClientMiddleware::setTestEndpoint($this->nonWorkingEndpoint);
     $this->assertAdminPageLinks($mixed_advisory_links, REQUIREMENT_ERROR);
     $this->assertStatusReportLinks($mixed_advisory_links, REQUIREMENT_ERROR);
 
@@ -166,7 +166,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     $assert->pageTextContains('Failed to fetch security advisory data:');
 
     // Test a PSA endpoint that returns invalid JSON.
-    AdvisoriesTestHttpClient::setTestEndpoint($this->invalidJsonEndpoint, TRUE);
+    AdvisoryTestClientMiddleware::setTestEndpoint($this->invalidJsonEndpoint, TRUE);
     // Assert that are no logged error messages before attempting to fetch the
     // invalid endpoint.
     $this->assertServiceAdvisoryLoggedErrors([]);
@@ -180,7 +180,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     // Assert the error was logged again.
     $this->assertServiceAdvisoryLoggedErrors(['The security advisory JSON feed from Drupal.org could not be decoded.']);
 
-    AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpointPsaOnly, TRUE);
+    AdvisoryTestClientMiddleware::setTestEndpoint($this->workingEndpointPsaOnly, TRUE);
     $psa_advisory_links = [
       'Critical Release - PSA-Really Old',
       'Generic Module2 project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
@@ -193,7 +193,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     $this->assertStatusReportLinks($psa_advisory_links, REQUIREMENT_WARNING);
     $this->assertAdminPageLinks($psa_advisory_links, REQUIREMENT_WARNING);
 
-    AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpointNonPsaOnly, TRUE);
+    AdvisoryTestClientMiddleware::setTestEndpoint($this->workingEndpointNonPsaOnly, TRUE);
     $non_psa_advisory_links = [
       'Critical Release - SA-2019-02-19',
       'Generic Module1 Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
