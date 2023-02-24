@@ -25,17 +25,12 @@ class EntityFilteringThemeTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected static $modules = ['block', 'taxonomy', 'comment', 'node', 'views'];
 
   /**
-   * Use the standard profile.
-   *
-   * We test entity theming with the default node, user, comment, and taxonomy
-   * configurations at several paths in the standard profile.
-   *
-   * @var string
+   * {@inheritdoc}
    */
-  protected $profile = 'standard';
+  protected $defaultTheme = 'stark';
 
   /**
    * A list of all available themes.
@@ -118,6 +113,7 @@ class EntityFilteringThemeTest extends BrowserTestBase {
     ]);
     $this->term->save();
 
+    $this->createContentType(['type' => 'article']);
     // Add a comment field.
     $this->addDefaultCommentField('node', 'article', 'comment', CommentItemInterface::OPEN);
     // Create a test node tagged with the test term.
