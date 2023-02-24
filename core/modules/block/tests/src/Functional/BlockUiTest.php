@@ -252,7 +252,7 @@ class BlockUiTest extends BrowserTestBase {
     $this->assertSession()->fieldNotExists('edit-settings-context-mapping-email');
 
     // Test context mapping allows empty selection for optional contexts.
-    $this->drupalGet('admin/structure/block/manage/testcontextawareblock');
+    $this->drupalGet('admin/structure/block/manage/stark_testcontextawareblock');
     $edit = [
       'settings[context_mapping][user]' => '',
     ];
@@ -262,7 +262,7 @@ class BlockUiTest extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('User context found.');
 
     // Tests that conditions with missing context are not displayed.
-    $this->drupalGet('admin/structure/block/manage/testcontextawareblock');
+    $this->drupalGet('admin/structure/block/manage/stark_testcontextawareblock');
     $this->assertSession()->responseNotContains('No existing type');
     $this->assertSession()->elementNotExists('xpath', '//*[@name="visibility[condition_test_no_existing_type][negate]"]');
   }
@@ -275,7 +275,7 @@ class BlockUiTest extends BrowserTestBase {
     // already exists.
     $url = 'admin/structure/block/add/test_block_instantiation/stark';
     $this->drupalGet($url);
-    $this->assertSession()->fieldValueEquals('id', 'displaymessage');
+    $this->assertSession()->fieldValueEquals('id', 'stark_displaymessage');
     $edit = ['region' => 'content'];
     $this->drupalGet($url);
     $this->submitForm($edit, 'Save block');
@@ -283,14 +283,14 @@ class BlockUiTest extends BrowserTestBase {
 
     // Now, check to make sure the form starts by auto-incrementing correctly.
     $this->drupalGet($url);
-    $this->assertSession()->fieldValueEquals('id', 'displaymessage_2');
+    $this->assertSession()->fieldValueEquals('id', 'stark_displaymessage_2');
     $this->drupalGet($url);
     $this->submitForm($edit, 'Save block');
     $this->assertSession()->pageTextContains('The block configuration has been saved.');
 
     // And verify that it continues working beyond just the first two.
     $this->drupalGet($url);
-    $this->assertSession()->fieldValueEquals('id', 'displaymessage_3');
+    $this->assertSession()->fieldValueEquals('id', 'stark_displaymessage_3');
   }
 
   /**
@@ -339,7 +339,7 @@ class BlockUiTest extends BrowserTestBase {
     // for the 'block-placement' querystring parameter.
     $this->clickLink('Place block');
     $this->submitForm([], 'Save block');
-    $this->assertSession()->addressEquals('admin/structure/block/list/stark?block-placement=scriptalertxsssubjectscript');
+    $this->assertSession()->addressEquals('admin/structure/block/list/stark?block-placement=stark-scriptalertxsssubjectscript');
 
     // Removing a block will remove the block placement indicator.
     $this->clickLink('Remove');

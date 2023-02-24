@@ -231,7 +231,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
           $block = reset($blocks);
           $this->assertSession()->addressEquals(Url::fromRoute('block.admin_add', ['plugin_id' => 'block_content:' . $block->uuid(), 'theme' => $theme]));
           $this->submitForm(['region' => 'content'], 'Save block');
-          $this->assertSession()->addressEquals(Url::fromRoute('block.admin_display_theme', ['theme' => $theme], ['query' => ['block-placement' => Html::getClass($edit['info[0][value]'])]]));
+          $this->assertSession()->addressEquals(Url::fromRoute('block.admin_display_theme', ['theme' => $theme], ['query' => ['block-placement' => $theme . '-' . Html::getClass($edit['info[0][value]'])]]));
         }
         else {
           $this->fail('Could not load created block.');

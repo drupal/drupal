@@ -209,7 +209,7 @@ class DisplayBlockTest extends ViewTestBase {
     $edit = ['region' => 'content'];
     $this->submitForm($edit, 'Save block');
     $storage = $this->container->get('entity_type.manager')->getStorage('block');
-    $block = $storage->load('views_block__test_view_block_block_1');
+    $block = $storage->load($default_theme . '_views_block__test_view_block_block_1');
     // This will only return a result if our new block has been created with the
     // expected machine name.
     $this->assertNotEmpty($block, 'The expected block was loaded.');
@@ -218,7 +218,7 @@ class DisplayBlockTest extends ViewTestBase {
       // Place the same block again and make sure we have a new ID.
       $this->drupalGet('admin/structure/block/add/views_block:test_view_block-block_1/' . $default_theme);
       $this->submitForm($edit, 'Save block');
-      $block = $storage->load('views_block__test_view_block_block_1_' . $i);
+      $block = $storage->load($default_theme . '_views_block__test_view_block_block_1_' . $i);
       // This will only return a result if our new block has been created with the
       // expected machine name.
       $this->assertNotEmpty($block, 'The expected block was loaded.');
@@ -232,15 +232,15 @@ class DisplayBlockTest extends ViewTestBase {
     $this->drupalGet('admin/structure/block/add/views_block:test_view_block-block_1/' . $default_theme);
     $this->submitForm($edit, 'Save block');
 
-    $block = $storage->load('views_block__test_view_block_block_1_4');
+    $block = $storage->load($default_theme . '_views_block__test_view_block_block_1_4');
     $config = $block->getPlugin()->getConfiguration();
     $this->assertEquals(10, $config['items_per_page'], "'Items per page' is properly saved.");
 
     $edit['settings[override][items_per_page]'] = 5;
-    $this->drupalGet('admin/structure/block/manage/views_block__test_view_block_block_1_4');
+    $this->drupalGet('admin/structure/block/manage/' . $default_theme . '_views_block__test_view_block_block_1_4');
     $this->submitForm($edit, 'Save block');
 
-    $block = $storage->load('views_block__test_view_block_block_1_4');
+    $block = $storage->load($default_theme . '_views_block__test_view_block_block_1_4');
 
     $config = $block->getPlugin()->getConfiguration();
     $this->assertEquals(5, $config['items_per_page'], "'Items per page' is properly saved.");
@@ -252,7 +252,7 @@ class DisplayBlockTest extends ViewTestBase {
     $this->drupalGet('admin/structure/block/add/views_block:test_view_block-block_1/' . $default_theme);
     $this->submitForm($edit, 'Save block');
 
-    $block = $storage->load('views_block__test_view_block_block_1_5');
+    $block = $storage->load($default_theme . '_views_block__test_view_block_block_1_5');
     $config = $block->getPlugin()->getConfiguration();
     $this->assertEquals('Custom title', $config['views_label'], "'Label' is properly saved.");
   }

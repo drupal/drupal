@@ -31,7 +31,7 @@ class ContextualFiltersBlockContextTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'starterkit_theme';
+  protected $defaultTheme = 'stark';
 
   /**
    * Views used by this test.
@@ -103,7 +103,7 @@ class ContextualFiltersBlockContextTest extends ViewTestBase {
 
     // Place test block via block UI to check if contexts are correctly exposed.
     $this->drupalGet(
-      'admin/structure/block/add/views_block:test_view_block_with_context-block_1/starterkit_theme',
+      'admin/structure/block/add/views_block:test_view_block_with_context-block_1/stark',
       ['query' => ['region' => 'content']]
     );
     $edit = [
@@ -115,7 +115,7 @@ class ContextualFiltersBlockContextTest extends ViewTestBase {
     /** @var \Drupal\block\BlockInterface $block */
     $block = $this->container->get('entity_type.manager')
       ->getStorage('block')
-      ->load('views_block__test_view_block_with_context_block_1');
+      ->load('stark_views_block__test_view_block_with_context_block_1');
     $expected_settings = [
       'id' => 'views_block:test_view_block_with_context-block_1',
       'label' => '',

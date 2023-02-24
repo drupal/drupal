@@ -387,6 +387,9 @@ class BlockForm extends EntityForm {
    */
   public function getUniqueMachineName(BlockInterface $block) {
     $suggestion = $block->getPlugin()->getMachineNameSuggestion();
+    if ($block->getTheme()) {
+      $suggestion = $block->getTheme() . '_' . $suggestion;
+    }
 
     // Get all the blocks which starts with the suggested machine name.
     $query = $this->storage->getQuery();
