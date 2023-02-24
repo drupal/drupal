@@ -198,4 +198,55 @@ class FilterDateTest extends ViewTestBase {
     $this->assertEquals($expected_ids, $actual_ids);
   }
 
+  /**
+   * Tests exposed date filters with a pager.
+   */
+  public function testExposedFilterWithPager() {
+    // Expose the empty and not empty operators in a grouped filter.
+    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_datetime/default/filter/' . $this->fieldName . '_value');
+    $this->submitForm([], t('Expose filter'));
+
+    $edit = [];
+    $edit['options[operator]'] = '>';
+
+    $this->submitForm($edit, 'Apply');
+
+    // Expose the view and set the pager to 2 items.
+    $path = 'test_filter_datetime-path';
+    $this->drupalGet('admin/structure/views/view/test_filter_datetime/edit');
+    $this->submitForm([], 'Add Page');
+    $this->drupalGet('admin/structure/views/nojs/display/test_filter_datetime/page_1/path');
+    $this->submitForm(['path' => $path], 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_filter_datetime/default/pager_options');
+    $this->submitForm(['pager_options[items_per_page]' => 2], 'Apply');
+    $this->submitForm([], t('Save'));
+
+    // Assert the page without filters.
+    $this->drupalGet($path);
+    $results = $this->cssSelect('.views-row');
+    $this->assertCount(2, $results);
+    $this->assertSession()->pageTextContains('Next');
+
+    // Assert the page with filter in the future, one results without pager.
+    $page = $this->getSession()->getPage();
+    $now = \Drupal::time()->getRequestTime();
+    $page->fillField($this->fieldName . '_value', DrupalDateTime::createFromTimestamp($now + 1)->format('Y-m-d H:i:s'));
+    $page->pressButton('Apply');
+
+    $results = $this->cssSelect('.views-row');
+    $this->assertCount(1, $results);
+    $this->assertSession()->pageTextNotContains('Next');
+
+    // Assert the page with filter in the past, 3 results with pager.
+    $page->fillField($this->fieldName . '_value', DrupalDateTime::createFromTimestamp($now - 1000000)->format('Y-m-d H:i:s'));
+    $this->getSession()->getPage()->pressButton('Apply');
+    $results = $this->cssSelect('.views-row');
+    $this->assertCount(2, $results);
+    $this->assertSession()->pageTextContains('Next');
+    $page->clickLink('2');
+    $results = $this->cssSelect('.views-row');
+    $this->assertCount(1, $results);
+
+  }
+
 }
