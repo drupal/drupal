@@ -1,9 +1,8 @@
 services:
   http_client.advisory_feed_test:
-    public: false
-    class: Drupal\advisory_feed_test\AdvisoriesTestHttpClient
-    decorates: http_client
-    arguments: ['@http_client.advisory_feed_test.inner']
+    class: Drupal\advisory_feed_test\AdvisoryTestClientMiddleware
+    tags:
+      - { name: http_client_middleware }
   logger.advisory_feed_test:
     public: false
     class: Drupal\advisory_feed_test\TestSystemLoggerChannel

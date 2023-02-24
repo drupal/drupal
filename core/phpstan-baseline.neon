@@ -2151,11 +2151,6 @@ parameters:
 			path: modules/system/system.install
 
 		-
-			message: "#^Class Drupal\\\\advisory_feed_test\\\\AdvisoriesTestHttpClient extends @final class GuzzleHttp\\\\Client\\.$#"
-			count: 1
-			path: modules/system/tests/modules/advisory_feed_test/src/AdvisoriesTestHttpClient.php
-
-		-
 			message: "#^Variable \\$messages might not be defined\\.$#"
 			count: 1
 			path: modules/system/tests/modules/batch_test/batch_test.callbacks.inc
