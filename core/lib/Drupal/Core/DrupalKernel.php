@@ -391,12 +391,14 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       return $test_db->getTestSitePath();
     }
 
-    // Determine whether multi-site functionality is enabled.
+    // Determine whether multi-site functionality is enabled. If not, return
+    // the default directory.
     if (!file_exists($app_root . '/sites/sites.php')) {
       return 'sites/default';
     }
 
-    // Otherwise, use find the site path using the request.
+    // Pre-populate host and script variables, then include sites.php which may
+    // populate $sites with a site-directory mapping.
     $script_name = $request->server->get('SCRIPT_NAME');
     if (!$script_name) {
       $script_name = $request->server->get('SCRIPT_FILENAME');
@@ -406,16 +408,27 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $sites = [];
     include $app_root . '/sites/sites.php';
 
-    $uri = explode('/', $script_name);
-    $server = explode('.', implode('.', array_reverse(explode(':', rtrim($http_host, '.')))));
-    for ($i = count($uri) - 1; $i > 0; $i--) {
-      for ($j = count($server); $j > 0; $j--) {
-        $dir = implode('.', array_slice($server, -$j)) . implode('.', array_slice($uri, 0, $i));
-        if (isset($sites[$dir]) && file_exists($app_root . '/sites/' . $sites[$dir])) {
-          $dir = $sites[$dir];
+    // Construct an identifier from pieces of the (port plus) host plus script
+    // path (excluding the filename). Loop over all possibilities starting from
+    // most specific, then dropping pieces from the start of the port/hostname
+    // while keeping the full path, then gradually dropping pieces from the end
+    // of the path... until we find a directory corresponding to the identifier.
+    $path_parts = explode('/', $script_name);
+    $host_parts = explode('.', implode('.', array_reverse(explode(':', rtrim($http_host, '.')))));
+    for ($i = count($path_parts) - 1; $i > 0; $i--) {
+      for ($j = count($host_parts); $j > 0; $j--) {
+        // Assume the path has a leading slash, so the imploded path parts are
+        // either a path identifier with leading dot, or an empty string.
+        $site_id = implode('.', array_slice($host_parts, -$j)) . implode('.', array_slice($path_parts, 0, $i));
+
+        // If the identifier is a key in $sites, check for a directory matching
+        // the corresponding value. Otherwise, check for a directory matching
+        // the identifier.
+        if (isset($sites[$site_id]) && file_exists($app_root . '/sites/' . $sites[$site_id])) {
+          $site_id = $sites[$site_id];
         }
-        if (file_exists($app_root . '/sites/' . $dir . '/settings.php') || (!$require_settings && file_exists($app_root . '/sites/' . $dir))) {
-          return "sites/$dir";
+        if (file_exists($app_root . '/sites/' . $site_id . '/settings.php') || (!$require_settings && file_exists($app_root . '/sites/' . $site_id))) {
+          return "sites/$site_id";
         }
       }
     }
