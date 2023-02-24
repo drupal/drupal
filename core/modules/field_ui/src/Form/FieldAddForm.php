@@ -2,22 +2,19 @@
 
 namespace Drupal\field_ui\Form;
 
+use Drupal\Core\Ajax\AjaxFormHelperTrait;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\OpenModalDialogCommand;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
-use Drupal\Core\Field\FieldFilteredMarkup;
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
-use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Link;
-use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\field\FieldStorageConfigInterface;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -48,6 +45,11 @@ class FieldAddForm extends FormBase {
    * @var string
    */
   protected $fieldType;
+
+  /**
+   * @var \Drupal\field\FieldConfigInterface
+   */
+  protected $field;
 
   /**
    * The entity type manager.
@@ -137,9 +139,38 @@ class FieldAddForm extends FormBase {
       $form_state->set('bundle', $bundle);
     }
 
+    $form['#prefix'] = '<div id="field-ui-add-form">';
+    $form['#suffix'] = '</div>';
+
+    $form['status_messages'] = [
+      '#type' => 'status_messages',
+      '#weight' => -100,
+    ];
+
     $this->entityTypeId = $form_state->get('entity_type_id');
     $this->bundle = $form_state->get('bundle');
     $this->fieldType = $field_type;
+
+    $form['label'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Label'),
+      '#size' => 25,
+    ];
+    $field_prefix = $this->config('field_ui.settings')->get('field_prefix');
+    $form['field_name'] = [
+      '#type' => 'machine_name',
+      '#field_prefix' => $field_prefix,
+      '#size' => 15,
+      '#description' => $this->t('A unique machine-readable name containing letters, numbers, and underscores.'),
+      // Calculate characters depending on the length of the field prefix
+      // setting. Maximum length is 32.
+      '#maxlength' => FieldStorageConfig::NAME_MAX_LENGTH - strlen($field_prefix),
+      '#machine_name' => [
+        'source' => ['label'],
+        'exists' => [$this, 'fieldNameExists'],
+      ],
+      '#required' => FALSE,
+    ];
 
 //    // Gather valid field types.
 //    $field_type_options = [];
@@ -149,167 +180,167 @@ class FieldAddForm extends FormBase {
 //      }
 //    }
 
-
-    $form['tabs'] = [
-      '#theme' => 'field_ui_tabs',
-      '#items' => [
-        [
-          'value' => [
-            '#type' => 'link',
-            '#title' => $this->t('Basic settings'),
-            '#url' =>  Url::fromUri('internal://<none>#basic'),
-            '#attributes' => [
-              'class' => [
-                'tabs__link',
-                'js-tabs-link',
-                'is-active',
-              ],
-            ],
-          ],
-        ],
-        [
-          'value' => [
-            '#type' => 'link',
-            '#title' => $this->t('Advanced settings'),
-            '#url' =>  Url::fromUri('internal://<none>#advanced'),
-            '#attributes' => [
-              'class' => [
-                'tabs__link',
-                'js-tabs-link',
-              ],
-            ],
-          ],
-        ],
-      ],
-    ];
-    $form['basic'] = [
-      '#type' => 'container',
-      '#attributes' => [
-        'id' => ['basic']
-      ],
-      '#title' => $this->t('Basic settings'),
-    ];
-    $form['advanced'] = [
-      '#type' => 'container',
-      '#attributes' => [
-        'id' => ['advanced']
-      ],
-      '#title' => $this->t('Advanced settings'),
-    ];
-
-    $form['basic']['label'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Label'),
-      '#size' => 25,
-    ];
-    $field_prefix = $this->config('field_ui.settings')->get('field_prefix');
-    $form['basic']['field_name'] = [
-      '#type' => 'machine_name',
-      '#field_prefix' => $field_prefix,
-      '#size' => 15,
-      '#description' => $this->t('A unique machine-readable name containing letters, numbers, and underscores.'),
-      // Calculate characters depending on the length of the field prefix
-      // setting. Maximum length is 32.
-      '#maxlength' => FieldStorageConfig::NAME_MAX_LENGTH - strlen($field_prefix),
-      '#machine_name' => [
-        'source' => ['basic', 'label'],
-        'exists' => [$this, 'fieldNameExists'],
-      ],
-      '#required' => FALSE,
-    ];
-
-    if (str_contains($this->fieldType, 'field_ui:')) {
-      [, $field_type, $option_key] = explode(':', $this->fieldType, 3);
-      // @todo Add support for pre-configured options.
-    }
-
-    $form['basic']['cardinality'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Allow multiple values'),
-    ];
-    $form['basic']['cardinality_unlimited'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Allow unlimited values'),
-      '#states' => [
-        'visible' => [
-          ':input[name="cardinality"]' => ['checked' => TRUE],
-        ],
-      ],
-    ];
-    $form['basic']['cardinality_number'] = [
-      '#type' => 'number',
-      '#min' => 2,
-      '#title' => $this->t('Limit'),
-      '#default_value' => '2',
-      '#size' => 2,
-      '#states' => [
-        'visible' => [
-          ':input[name="cardinality"]' => ['checked' => TRUE],
-        ],
-        'disabled' => [
-          ':input[name="cardinality_unlimited"]' => ['checked' => TRUE],
-        ]
-      ],
-    ];
-
-    // Create a run-time plugin instance for the field item to render the
-    // storage settings form.
-    $data_definition = FieldItemDataDefinition::createFromDataType('field_item:' . $field_type);
-    $ids = (object) [
-      'entity_type' => $this->entityTypeId,
-      'bundle' => $this->bundle,
-      'entity_id' => NULL,
-    ];
-    $entity_adapter = EntityAdapter::createFromEntity(_field_create_entity_from_ids($ids));
-    $plugin_class = $this->fieldTypePluginManager->getPluginClass($field_type);
-    /** @var \Drupal\Core\Field\FieldItemInterface $plugin_instance */
-    $plugin_instance = new $plugin_class($data_definition);
-    $plugin_instance->setContext(NULL, $entity_adapter);
-
-    $form['basic']['field_storage_settings'] = [
-      '#tree' => TRUE,
-    ];
-    $form['basic']['field_storage_settings'] += $plugin_instance->storageSettingsForm($form, $form_state, FALSE);
-    foreach (Element::children($form['basic']['field_storage_settings']) as $child) {
-      if (isset($form['basic']['field_storage_settings'][$child]['#group'])) {
-        $form['basic']['field_storage_settings'][$child]['#parents'] = ['field_storage_settings', $child];
-        $form['advanced'][$child] = $form['basic']['field_storage_settings'][$child];
-        unset($form['basic']['field_storage_settings'][$child]);
-      }
-    }
-
-    $form['basic']['field_settings'] = [
-      '#tree' => TRUE,
-    ];
-    $form['basic']['field_settings'] += $plugin_instance->fieldSettingsForm($form, $form_state);
-    foreach (Element::children($form['basic']['field_settings']) as $child) {
-      if (isset($form['basic']['field_settings'][$child]['#group'])) {
-        $form['basic']['field_settings'][$child]['#parents'] = ['field_settings', $child];
-        $form['advanced'][$child] = $form['basic']['field_settings'][$child];
-        unset($form['basic']['field_settings'][$child]);
-      }
-    }
-
-
-    $form['basic']['required'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Required field'),
-    ];
-
+//
+//    $form['tabs'] = [
+//      '#theme' => 'field_ui_tabs',
+//      '#items' => [
+//        [
+//          'value' => [
+//            '#type' => 'link',
+//            '#title' => $this->t('Basic settings'),
+//            '#url' =>  Url::fromUri('internal://<none>#basic'),
+//            '#attributes' => [
+//              'class' => [
+//                'tabs__link',
+//                'js-tabs-link',
+//                'is-active',
+//              ],
+//            ],
+//          ],
+//        ],
+//        [
+//          'value' => [
+//            '#type' => 'link',
+//            '#title' => $this->t('Advanced settings'),
+//            '#url' =>  Url::fromUri('internal://<none>#advanced'),
+//            '#attributes' => [
+//              'class' => [
+//                'tabs__link',
+//                'js-tabs-link',
+//              ],
+//            ],
+//          ],
+//        ],
+//      ],
+//    ];
+//    $form['basic'] = [
+//      '#type' => 'container',
+//      '#attributes' => [
+//        'id' => ['basic']
+//      ],
+//      '#title' => $this->t('Basic settings'),
+//    ];
+//    $form['advanced'] = [
+//      '#type' => 'container',
+//      '#attributes' => [
+//        'id' => ['advanced']
+//      ],
+//      '#title' => $this->t('Advanced settings'),
+//    ];
+//
+//    $form['basic']['label'] = [
+//      '#type' => 'textfield',
+//      '#title' => $this->t('Label'),
+//      '#size' => 25,
+//    ];
+//    $field_prefix = $this->config('field_ui.settings')->get('field_prefix');
+//    $form['basic']['field_name'] = [
+//      '#type' => 'machine_name',
+//      '#field_prefix' => $field_prefix,
+//      '#size' => 15,
+//      '#description' => $this->t('A unique machine-readable name containing letters, numbers, and underscores.'),
+//      // Calculate characters depending on the length of the field prefix
+//      // setting. Maximum length is 32.
+//      '#maxlength' => FieldStorageConfig::NAME_MAX_LENGTH - strlen($field_prefix),
+//      '#machine_name' => [
+//        'source' => ['basic', 'label'],
+//        'exists' => [$this, 'fieldNameExists'],
+//      ],
+//      '#required' => FALSE,
+//    ];
+//
+//    if (str_contains($this->fieldType, 'field_ui:')) {
+//      [, $field_type, $option_key] = explode(':', $this->fieldType, 3);
+//      // @todo Add support for pre-configured options.
+//    }
+//
+//    $form['basic']['cardinality'] = [
+//      '#type' => 'checkbox',
+//      '#title' => $this->t('Allow multiple values'),
+//    ];
+//    $form['basic']['cardinality_unlimited'] = [
+//      '#type' => 'checkbox',
+//      '#title' => $this->t('Allow unlimited values'),
+//      '#states' => [
+//        'visible' => [
+//          ':input[name="cardinality"]' => ['checked' => TRUE],
+//        ],
+//      ],
+//    ];
+//    $form['basic']['cardinality_number'] = [
+//      '#type' => 'number',
+//      '#min' => 2,
+//      '#title' => $this->t('Limit'),
+//      '#default_value' => '2',
+//      '#size' => 2,
+//      '#states' => [
+//        'visible' => [
+//          ':input[name="cardinality"]' => ['checked' => TRUE],
+//        ],
+//        'disabled' => [
+//          ':input[name="cardinality_unlimited"]' => ['checked' => TRUE],
+//        ]
+//      ],
+//    ];
+//
+//    // Create a run-time plugin instance for the field item to render the
+//    // storage settings form.
+//    $data_definition = FieldItemDataDefinition::createFromDataType('field_item:' . $field_type);
+//    $ids = (object) [
+//      'entity_type' => $this->entityTypeId,
+//      'bundle' => $this->bundle,
+//      'entity_id' => NULL,
+//    ];
+//    $entity_adapter = EntityAdapter::createFromEntity(_field_create_entity_from_ids($ids));
+//    $plugin_class = $this->fieldTypePluginManager->getPluginClass($field_type);
+//    /** @var \Drupal\Core\Field\FieldItemInterface $plugin_instance */
+//    $plugin_instance = new $plugin_class($data_definition);
+//    $plugin_instance->setContext(NULL, $entity_adapter);
+//
+//    $form['basic']['field_storage_settings'] = [
+//      '#tree' => TRUE,
+//    ];
+//    $form['basic']['field_storage_settings'] += $plugin_instance->storageSettingsForm($form, $form_state, FALSE);
+//    foreach (Element::children($form['basic']['field_storage_settings']) as $child) {
+//      if (isset($form['basic']['field_storage_settings'][$child]['#group'])) {
+//        $form['basic']['field_storage_settings'][$child]['#parents'] = ['field_storage_settings', $child];
+//        $form['advanced'][$child] = $form['basic']['field_storage_settings'][$child];
+//        unset($form['basic']['field_storage_settings'][$child]);
+//      }
+//    }
+//
+//    $form['basic']['field_settings'] = [
+//      '#tree' => TRUE,
+//    ];
+//    $form['basic']['field_settings'] += $plugin_instance->fieldSettingsForm($form, $form_state);
+//    foreach (Element::children($form['basic']['field_settings']) as $child) {
+//      if (isset($form['basic']['field_settings'][$child]['#group'])) {
+//        $form['basic']['field_settings'][$child]['#parents'] = ['field_settings', $child];
+//        $form['advanced'][$child] = $form['basic']['field_settings'][$child];
+//        unset($form['basic']['field_settings'][$child]);
+//      }
+//    }
+//
+//
+//    $form['basic']['required'] = [
+//      '#type' => 'checkbox',
+//      '#title' => $this->t('Required field'),
+//    ];
+//
     $form['translatable'] = [
       '#type' => 'value',
       '#value' => TRUE,
     ];
 
-    $form['advanced']['description'] = [
-      '#type' => 'textarea',
-      '#title' => $this->t('Help text'),
-      '#rows' => 3,
-      '#attributes' => [
-        'style' => ['max-width: 50%']
-      ],
-      '#description' => $this->t('Instructions to present to the user below this field on the editing form.<br />Allowed HTML tags: @tags', ['@tags' => FieldFilteredMarkup::displayAllowedTags()]) . '<br />' . $this->t('This field supports tokens.'),
-    ];
+//    $form['advanced']['description'] = [
+//      '#type' => 'textarea',
+//      '#title' => $this->t('Help text'),
+//      '#rows' => 3,
+//      '#attributes' => [
+//        'style' => ['max-width: 50%']
+//      ],
+//      '#description' => $this->t('Instructions to present to the user below this field on the editing form.<br />Allowed HTML tags: @tags', ['@tags' => FieldFilteredMarkup::displayAllowedTags()]) . '<br />' . $this->t('This field supports tokens.'),
+//    ];
 
     // @todo configuring the default value depends on the field having
     // initialized.
@@ -333,31 +364,35 @@ class FieldAddForm extends FormBase {
     $form['actions'] = ['#type' => 'actions'];
     $form['actions']['submit'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Save'),
+      '#value' => $this->t('Save and configure'),
       '#button_type' => 'primary',
-    ];
-
-    $form['advanced']['default_value_container'] = [
-      '#type' => 'container',
-    ];
-    $form['advanced']['default_value_container']['default_value_checkbox'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Set initial value'),
-      '#description' => $this->t('Provide a pre-filled value for the editing form.'),
-    ];
-    $form['advanced']['default_value_container']['default_value'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Default value'),
-      '#states' => [
-        'invisible' => [
-          ':input[name="default_value_checkbox"]' => ['checked' => FALSE],
-        ],
-      ],
+      '#ajax' => [
+        'callback' => [$this, 'ajaxSubmitForm'],
+      ]
     ];
 
     $form['#attached']['library'][] = 'field_ui/drupal.field_ui';
 
     return $form;
+  }
+
+  public function ajaxSubmitForm(array &$form, FormStateInterface $form_state) {
+    $response = new AjaxResponse();
+    if ($form_state::hasAnyErrors() || !$this->field) {
+      $response->addCommand(new ReplaceCommand('#field-ui-add-form', $form));
+      return $response;
+    }
+
+    /** @var \Drupal\Core\Entity\EntityFormBuilderInterface $entity_form_builder */
+    $entity_form_builder = \Drupal::service('entity.form_builder');
+    $next_form = $entity_form_builder->getForm($this->field, 'edit');
+
+    $dialog_options = [
+      'width' => '85vw',
+    ];
+    $response->addCommand(new OpenModalDialogCommand($this->t('Configure field'), $next_form, $dialog_options));
+
+    return $response;
   }
 
   /**
@@ -394,25 +429,24 @@ class FieldAddForm extends FormBase {
     $destinations = [];
     $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
 
-    xdebug_break();
     // Create new field.
     $field_storage_values = [
       'field_name' => $values['field_name'],
       'entity_type' => $this->entityTypeId,
       'type' => $this->fieldType,
       'translatable' => $values['translatable'],
-      'settings' => $values['field_storage_settings'],
-      'cardinality' => !$values['cardinality'] ? 1 : ($values['cardinality_unlimited'] ? FieldStorageConfigInterface::CARDINALITY_UNLIMITED : $values['cardinality_number']),
+//      'settings' => $values['field_storage_settings'],
+//      'cardinality' => !$values['cardinality'] ? 1 : ($values['cardinality_unlimited'] ? FieldStorageConfigInterface::CARDINALITY_UNLIMITED : $values['cardinality_number']),
     ];
     $field_values = [
       'field_name' => $values['field_name'],
       'entity_type' => $this->entityTypeId,
       'bundle' => $this->bundle,
-      'required' => $values['required'],
+//      'required' => $values['required'],
       'label' => $values['label'],
       // Field translatability should be explicitly enabled by the users.
       'translatable' => FALSE,
-      'settings' => $values['field_settings']
+//      'settings' => $values['field_settings']
     ];
     $widget_id = $formatter_id = NULL;
     $widget_settings = $formatter_settings = [];
@@ -455,6 +489,7 @@ class FieldAddForm extends FormBase {
       $this->entityTypeManager->getStorage('field_storage_config')->create($field_storage_values)->save();
       $field = $this->entityTypeManager->getStorage('field_config')->create($field_values);
       $field->save();
+      $this->field = $field;
 
       $this->configureEntityFormDisplay($values['field_name'], $widget_id, $widget_settings);
       $this->configureEntityViewDisplay($values['field_name'], $formatter_id, $formatter_settings);
@@ -536,75 +571,6 @@ class FieldAddForm extends FormBase {
     $this->entityDisplayRepository->getViewDisplay($this->entityTypeId, $this->bundle)
       ->setComponent($field_name, $options)
       ->save();
-  }
-
-  /**
-   * Returns an array of existing field storages that can be added to a bundle.
-   *
-   * @return array
-   *   An array of existing field storages keyed by name.
-   */
-  protected function getExistingFieldStorageOptions() {
-    $options = [];
-    // Load the field_storages and build the list of options.
-    $field_types = $this->fieldTypePluginManager->getDefinitions();
-    foreach ($this->entityFieldManager->getFieldStorageDefinitions($this->entityTypeId) as $field_name => $field_storage) {
-      // Do not show:
-      // - non-configurable field storages,
-      // - locked field storages,
-      // - field storages that should not be added via user interface,
-      // - field storages that already have a field in the bundle.
-      $field_type = $field_storage->getType();
-      if ($field_storage instanceof FieldStorageConfigInterface
-        && !$field_storage->isLocked()
-        && empty($field_types[$field_type]['no_ui'])
-        && !in_array($this->bundle, $field_storage->getBundles(), TRUE)) {
-        $options[$field_name] = $this->t('@type: @field', [
-          '@type' => $field_types[$field_type]['label'],
-          '@field' => $field_name,
-        ]);
-      }
-    }
-    asort($options);
-
-    return $options;
-  }
-
-  /**
-   * Gets the human-readable labels for the given field storage names.
-   *
-   * Since not all field storages are required to have a field, we can only
-   * provide the field labels on a best-effort basis (e.g. the label of a field
-   * storage without any field attached to a bundle will be the field name).
-   *
-   * @param array $field_names
-   *   An array of field names.
-   *
-   * @return array
-   *   An array of field labels keyed by field name.
-   */
-  protected function getExistingFieldLabels(array $field_names) {
-    // Get all the fields corresponding to the given field storage names and
-    // this entity type.
-    $field_ids = $this->entityTypeManager->getStorage('field_config')->getQuery()
-      ->condition('entity_type', $this->entityTypeId)
-      ->condition('field_name', $field_names)
-      ->execute();
-    $fields = $this->entityTypeManager->getStorage('field_config')->loadMultiple($field_ids);
-
-    // Go through all the fields and use the label of the first encounter.
-    $labels = [];
-    foreach ($fields as $field) {
-      if (!isset($labels[$field->getName()])) {
-        $labels[$field->getName()] = $field->label();
-      }
-    }
-
-    // For field storages without any fields attached to a bundle, the default
-    // label is the field name.
-    $labels += array_combine($field_names, $field_names);
-
-    return $labels;
   }
 
   /**

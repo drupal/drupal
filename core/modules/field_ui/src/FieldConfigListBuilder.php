@@ -205,20 +205,20 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
       ];
     }
 
-    $operations['storage-settings'] = [
-      'title' => $this->t('Storage settings'),
-      'weight' => 20,
-      'attributes' => [
-        'title' => $this->t('Edit storage settings.'),
-        'class' => ['use-ajax'],
-        'data-dialog-type' => 'modal',
-        'data-dialog-options' => Json::encode([
-          'width' => '85vw',
-        ]),
-        'role' => 'button',
-      ],
-      'url' => $entity->toUrl("{$entity->getTargetEntityTypeId()}-storage-edit-form"),
-    ];
+//    $operations['storage-settings'] = [
+//      'title' => $this->t('Storage settings'),
+//      'weight' => 20,
+//      'attributes' => [
+//        'title' => $this->t('Edit storage settings.'),
+//        'class' => ['use-ajax'],
+//        'data-dialog-type' => 'modal',
+//        'data-dialog-options' => Json::encode([
+//          'width' => '85vw',
+//        ]),
+//        'role' => 'button',
+//      ],
+//      'url' => $entity->toUrl("{$entity->getTargetEntityTypeId()}-storage-edit-form"),
+//    ];
 
     return $operations;
   }

@@ -395,6 +395,7 @@
         form.querySelector('#advanced').setAttribute('style', 'display: none');
         tabs.querySelectorAll('a').forEach((tab) => {
           tab.addEventListener('click', (e) => {
+            e.preventDefault();
             const url = new URL(e.target.href);
             tabs.querySelectorAll('a').forEach(element => element.classList.remove('is-active'));
             form.querySelector('#basic').setAttribute('style', 'display: none');

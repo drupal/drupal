@@ -494,6 +494,7 @@ function content_translation_form_field_config_edit_form_alter(array &$form, For
     '#weight' => -1,
     '#disabled' => !$bundle_is_translatable,
     '#access' => $field->getFieldStorageDefinition()->isTranslatable(),
+    '#group' => 'basic',
   ];
 
   // Provide helpful pointers for administrators.

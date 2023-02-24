@@ -468,7 +468,6 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
       '#type' => 'container',
       '#process' => [[static::class, 'fieldSettingsAjaxProcess']],
       '#element_validate' => [[static::class, 'fieldSettingsFormValidate']],
-
     ];
     $form['handler'] = [
       '#type' => 'details',
