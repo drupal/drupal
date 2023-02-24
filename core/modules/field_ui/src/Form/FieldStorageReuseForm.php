@@ -133,6 +133,7 @@ class FieldStorageReuseForm extends FormBase {
 
     $this->entityTypeId = $form_state->get('entity_type_id');
     $this->bundle = $form_state->get('bundle');
+    $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
 
     // Gather valid field types.
     $field_type_options = [];
@@ -193,10 +194,8 @@ class FieldStorageReuseForm extends FormBase {
               '#url' => Url::fromRoute('entity.node.canonical', ['node' => 1]),
 //             TODO: Fix the parameters on this route.
 //              '#url' => Url::fromRoute("entity.field_config.{$entity_type_id}_field_edit_form", [
-//                'node_config' => 'node',
-//                'field_type' => 'body',
-//                FieldUI::getRouteBundleParameter($entity_type, $this->bundle)
-//              ]),
+//                'field_config' => $field['field_name'],
+//              ] + FieldUI::getRouteBundleParameter($entity_type, $this->bundle)),
               '#wrapper_attributes' => [
                 'colspan' => 5,
               ],
