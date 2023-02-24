@@ -43,6 +43,13 @@ function views_removed_post_updates() {
 }
 
 /**
+ * Update Views config schema to make boolean custom titles translatable.
+ */
+function views_post_update_boolean_custom_titles(?array &$sandbox = NULL): void {
+  // Empty update to rebuild Views config schema.
+}
+
+/**
  * Add eager load option to all oembed type field configurations.
  */
 function views_post_update_oembed_eager_load(?array &$sandbox = NULL): void {
