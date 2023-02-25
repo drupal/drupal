@@ -10,14 +10,15 @@
         "drupal/core": "10.1.x-dev",
         "asm89/stack-cors": "~v2.1.1",
         "composer/semver": "~3.3.2",
-        "doctrine/annotations": "~1.14.2",
-        "doctrine/lexer": "~1.2.3",
-        "egulias/email-validator": "~3.2.1",
+        "doctrine/annotations": "~1.14.3",
+        "doctrine/deprecations": "~v1.0.0",
+        "doctrine/lexer": "~2.1.0",
+        "egulias/email-validator": "~3.2.5",
         "guzzlehttp/guzzle": "~7.5.0",
         "guzzlehttp/promises": "~1.5.2",
         "guzzlehttp/psr7": "~2.4.3",
         "masterminds/html5": "~2.7.6",
-        "mck89/peast": "~v1.15.0",
+        "mck89/peast": "~v1.15.1",
         "pear/archive_tar": "~1.4.14",
         "pear/console_getopt": "~v1.4.3",
         "pear/pear-core-minimal": "~v1.10.11",
@@ -57,6 +58,6 @@
         "symfony/var-dumper": "~v6.2.5",
         "symfony/var-exporter": "~v6.2.5",
         "symfony/yaml": "~v6.2.5",
-        "twig/twig": "~v3.5.0"
+        "twig/twig": "~v3.5.1"
     }
 }
