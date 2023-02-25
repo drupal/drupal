@@ -38,7 +38,6 @@ class HandlerAllTest extends ViewTestBase {
     'locale',
     'node',
     'search',
-    'statistics',
     'taxonomy',
     'user',
   ];

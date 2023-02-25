@@ -375,7 +375,6 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
       'search',
       'serialization',
       'shortcut',
-      'statistics',
       'syslog',
       'system',
       'taxonomy',
