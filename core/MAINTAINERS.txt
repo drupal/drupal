@@ -56,7 +56,7 @@ subsystems. See https://www.drupal.org/contribute/core-maintainers for more
 information on their responsibilities, and to find out how to become a subsystem
 maintainer. Current subsystem maintainers:
 
-Actions
+Actions UI
 - ?
 
 Ajax

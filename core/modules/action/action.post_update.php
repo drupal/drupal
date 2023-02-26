@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Post update functions for Action module.
+ * Post update functions for Actions UI module.
  */
 
 /**

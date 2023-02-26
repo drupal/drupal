@@ -5,7 +5,7 @@ namespace Drupal\Tests\action\Functional;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests that uninstalling Actions does not remove other modules' actions.
+ * Tests that uninstalling Actions UI does not remove other modules' actions.
  *
  * @group action
  * @see \Drupal\views\Plugin\views\field\BulkForm
@@ -26,7 +26,7 @@ class ActionUninstallTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Tests Action uninstall.
+   * Tests Actions UI uninstall.
    */
   public function testActionUninstall() {
     \Drupal::service('module_installer')->uninstall(['action']);

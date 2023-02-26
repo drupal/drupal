@@ -1,4 +1,4 @@
-name: Actions
+name: Actions UI
 type: module
 description: 'Allows configuration of tasks to be executed in response to events.'
 package: Core

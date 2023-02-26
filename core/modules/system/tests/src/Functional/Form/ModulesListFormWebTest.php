@@ -77,7 +77,7 @@ class ModulesListFormWebTest extends BrowserTestBase {
     // Enable a module that defines permissions.
     $edit = ['modules[action][enable]' => 'action'];
     $this->submitForm($edit, 'Install');
-    $this->assertSession()->elementTextContains('xpath', "//div[@role='contentinfo' and h2[text()='Status message']]", 'Module Actions has been enabled.');
+    $this->assertSession()->elementTextContains('xpath', "//div[@role='contentinfo' and h2[text()='Status message']]", 'Module Actions UI has been enabled.');
     $this->assertSession()->elementExists('xpath', "//div[@role='contentinfo' and h2[text()='Status message']]//a[contains(@href, '/admin/people/permissions/module/action')]");
 
     // Enable a module that has dependencies and both define permissions.
