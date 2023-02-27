@@ -192,7 +192,6 @@ class FieldConfigListController extends EntityListController {
       case 'link':
       case 'list_integer':
       case 'list_string':
-      case 'serialized_item':
       case 'shape':
       case 'telephone':
       case 'text':
