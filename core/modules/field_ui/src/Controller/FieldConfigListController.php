@@ -47,7 +47,9 @@ class FieldConfigListController extends EntityListController {
             ]),
             'href' => URL::fromRoute("field_ui.field_add_$entity_type_id", ['field_type' => $field_type['id'],'node_type' => $bundle])->toString(),
           ],
+          '#title_length' => strlen($field_type['label']),
           '#description_length' => strlen($field_type['description']),
+          '#total_length' => strlen($field_type['description']) + strlen($field_type['label']),
           'thumb' => [
             '#type' => 'container',
             '#attributes' => [
@@ -150,9 +152,9 @@ class FieldConfigListController extends EntityListController {
         '#tag' => 'h4',
         '#value' => $key,
       ]];
-      // Sort by shortest description to longest. Not exactly what we
+      // Sort by shortest description + title to longest. Not exactly what we
       // want but surprisingly close.
-      usort($field_type_options[$key], fn($a, $b) => ($a['#description_length'] > $b['#description_length']) ? -1 : 1);
+      usort($field_type_options[$key], fn($a, $b) => $a['#total_length'] - $b['#total_length']);
       $sorted_options += [ $key => $field_type_options[$key] ];
     }
     return $sorted_options;
