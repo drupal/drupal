@@ -103,10 +103,10 @@ foreach ($countries as $code => $name) {
   // For .po translation file's sake, use double-quotes instead of escaped
   // single-quotes.
   $name = (strpos($name, '\'') !== FALSE ? '"' . $name . '"' : "'" . $name . "'");
-  $out .= '      ' . var_export($code, TRUE) . ' => t(' . $name . ', [], $translation_options),' . "\n";
+  $out .= '      ' . var_export($code, TRUE) . ' => t(' . $name . '),' . "\n";
 }
 
-// Replace the actual PHP code in CountryManager.php.
+// Replace the actual PHP code in standard.inc.
 $file = DRUPAL_ROOT . '/core/lib/Drupal/Core/Locale/CountryManager.php';
 $content = file_get_contents($file);
 $content = preg_replace('/(\$countries = \[\n)(.+?)(^\s+\];)/ms', '$1' . $out . '$3', $content, -1, $count);

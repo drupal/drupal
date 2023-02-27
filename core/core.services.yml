@@ -1552,7 +1552,7 @@ services:
   Drupal\Core\Batch\BatchStorageInterface: '@batch.storage'
   country_manager:
     class: Drupal\Core\Locale\CountryManager
-    arguments: ['@module_handler', '@transliteration', '@language_manager']
+    arguments: ['@module_handler']
   Drupal\Core\Locale\CountryManagerInterface: '@country_manager'
   date.formatter:
     class: Drupal\Core\Datetime\DateFormatter
