@@ -111,9 +111,16 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   public string $operator;
 
   /**
-   * The argument position.
+   * The title set by argument validation.
    */
-  public int $position;
+  public ?string $validated_title;
+
+  /**
+   * Keyed array by alias of table relations.
+   *
+   * @var string[]
+   */
+  public ?array $tableAliases;
 
   /**
    * Overrides Drupal\views\Plugin\views\HandlerBase:init().

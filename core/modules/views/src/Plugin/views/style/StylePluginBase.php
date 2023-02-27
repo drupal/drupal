@@ -110,6 +110,13 @@ abstract class StylePluginBase extends PluginBase {
   protected $defaultFieldLabels = FALSE;
 
   /**
+   * Keyed array by placeholder a cached per row tokens to render.
+   *
+   * @var string[]
+   */
+  public array $render_tokens = [];
+
+  /**
    * Overrides \Drupal\views\Plugin\views\PluginBase::init().
    *
    * The style options might come externally as the style can be sourced from at

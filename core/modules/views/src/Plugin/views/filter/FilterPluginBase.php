@@ -84,6 +84,13 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   public $always_required = FALSE;
 
   /**
+   * Keyed array by alias of table relations.
+   *
+   * @var string[]
+   */
+  public ?array $tableAliases;
+
+  /**
    * Overrides \Drupal\views\Plugin\views\HandlerBase::init().
    *
    * Provide some extra help to get the operator/value easier to use.
