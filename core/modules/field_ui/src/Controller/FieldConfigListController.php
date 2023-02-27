@@ -161,21 +161,47 @@ class FieldConfigListController extends EntityListController {
   private function getIcon($field_name) {
     // Switch is used for fields that share the same icon.
     switch($field_name) {
-      case 'list_float':
-        $icon_name = 'list_integer';
-        break;
       case 'decimal':
       case 'float':
-      $icon_name = 'integer';
+        $icon_name = 'integer';
         break;
-      case 'text_long':
-      case 'text_with_summary':
+      case 'entity_reference_subclass':
+        $icon_name = 'entity_reference';
+        break;
+      case 'list_float':
+      $icon_name = 'list_integer';
+        break;
+      case 'shape_required':
+        $icon_name = 'shape';
+        break;
       case 'string':
       case 'string_long':
-        $icon_name = 'text';
+      case 'text_long':
+      case 'text_with_summary':
+      $icon_name = 'text';
+        break;
+      case 'boolean':
+      case 'comment':
+      case 'daterange':
+      case 'datetime':
+      case 'email':
+      case 'entity_reference':
+      case 'file':
+      case 'image':
+      case 'integer':
+      case 'link':
+      case 'list_integer':
+      case 'list_string':
+      case 'serialized_item':
+      case 'shape':
+      case 'telephone':
+      case 'text':
+      case 'timestamp':
+        $icon_name = $field_name;
         break;
       default:
-        $icon_name = $field_name;
+        // Fallback icon for fields without one.
+        $icon_name = 'fallback';
         break;
     }
 
