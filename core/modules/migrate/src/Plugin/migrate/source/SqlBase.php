@@ -377,6 +377,16 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function rewind(): void {
+    $this->batch = 0;
+    // Database queries have to be run again as they cannot be rewound.
+    unset($this->iterator);
+    parent::rewind();
+  }
+
+  /**
    * @return \Drupal\Core\Database\Query\SelectInterface
    */
   abstract public function query();
