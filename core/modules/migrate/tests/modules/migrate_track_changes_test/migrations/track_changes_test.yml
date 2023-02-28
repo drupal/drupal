@@ -3,6 +3,7 @@ label: Track changes test.
 source:
   plugin: track_changes_test
   track_changes: true
+  batch_size: 1
 destination:
   plugin: entity:taxonomy_term
 migration_tags:
