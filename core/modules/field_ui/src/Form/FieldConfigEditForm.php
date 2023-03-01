@@ -147,11 +147,11 @@ class FieldConfigEditForm extends EntityForm {
       '#weight' => -20,
     ];
 
-    if ($other_bundles = array_diff($this->fieldStorage->getBundles(), [$this->entity->getTargetBundle()])) {
+    if (array_diff($this->fieldStorage->getBundles(), [$this->entity->getTargetBundle()])) {
       $bundle_info = $this->entityTypeBundleInfo->getAllBundleInfo();
       $bundle_labels = array_map(function($bundle) use ($bundle_info) {
         return $bundle_info[$this->fieldStorage->getTargetEntityTypeId()][$bundle]['label'];
-      }, $other_bundles);
+      }, $this->fieldStorage->getBundles());
       $form['basic']['storage'] = [
         '#type' => 'fieldset',
         '#title' => $this->t('Field Storage'),
