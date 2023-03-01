@@ -128,6 +128,12 @@ class DemoUmamiProfileTest extends BrowserTestBase {
     $node = reset($nodes);
     $this->drupalGet($node->toUrl('edit-form'));
     $webassert->statusCodeEquals('200');
+
+    $this->submitForm([], 'Preview');
+    $webassert->statusCodeEquals('200');
+    $this->assertSession()->elementsCount('css', 'h1', 1);
+    $this->clickLink('Back to content editing');
+
     $this->submitForm([], "Save");
     $webassert->pageTextContains('Recipe Deep mediterranean quiche has been updated.');
   }
