@@ -147,12 +147,33 @@ class FieldConfigEditForm extends EntityForm {
       '#weight' => -20,
     ];
 
-    $form['basic']['cardinality'] = [
+    if ($other_bundles = array_diff($this->fieldStorage->getBundles(), [$this->entity->getTargetBundle()])) {
+      $bundle_info = $this->entityTypeBundleInfo->getAllBundleInfo();
+      $bundle_labels = array_map(function($bundle) use ($bundle_info) {
+        return $bundle_info[$this->fieldStorage->getTargetEntityTypeId()][$bundle]['label'];
+      }, $other_bundles);
+      $form['basic']['storage'] = [
+        '#type' => 'fieldset',
+        '#title' => $this->t('Field Storage'),
+        '#description_display' => 'before',
+        '#weight' => -15,
+        '#description' => $this->t('These settings apply to the %field field everywhere it is used (%other_types). Some also impact the way that data is stored and cannot be changed once data has been created.', ['%field' => $this->entity->getLabel(), '%other_types' => implode(', ', $bundle_labels)]),
+      ];
+      $form['advanced']['storage'] = [
+        '#type' => 'fieldset',
+        '#title' => $this->t('Field Storage'),
+        '#description_display' => 'before',
+        '#weight' => -15,
+        '#description' => $this->t('These settings apply to the %field field everywhere it is used (%other_types). Some also impact the way that data is stored and cannot be changed once data has been created.', ['%field' => $this->entity->getLabel(), '%other_types' => implode(', ', $bundle_labels)]),
+      ];
+    }
+
+    $form['basic']['storage']['cardinality'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Allow multiple values'),
       '#default_value' => $this->fieldStorage->getCardinality() > 1 || $this->fieldStorage->getCardinality() === FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ];
-    $form['basic']['cardinality_unlimited'] = [
+    $form['basic']['storage']['cardinality_unlimited'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Allow unlimited values'),
       '#default_value' => $this->fieldStorage->getCardinality() === FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
@@ -162,7 +183,7 @@ class FieldConfigEditForm extends EntityForm {
         ],
       ],
     ];
-    $form['basic']['cardinality_number'] = [
+    $form['basic']['storage']['cardinality_number'] = [
       '#type' => 'number',
       '#min' => 2,
       '#title' => $this->t('Limit'),
@@ -202,16 +223,24 @@ class FieldConfigEditForm extends EntityForm {
     $items = $form['#entity']->get($this->entity->getName());
     $item = $items->first() ?: $items->appendItem();
 
-    $form['basic']['field_storage_settings'] = [
+    $form['basic']['storage']['field_storage_settings'] = [
       '#tree' => TRUE,
     ];
-    $form['basic']['field_storage_settings'] += $item->storageSettingsForm($form, $form_state, $this->fieldStorage->hasData());
-    foreach (Element::children($form['basic']['field_storage_settings']) as $child) {
-      if (isset($form['basic']['field_storage_settings'][$child]['#group'])) {
-        $form['basic']['field_storage_settings'][$child]['#parents'] = ['field_storage_settings', $child];
-        $form['advanced'][$child] = $form['basic']['field_storage_settings'][$child];
-        unset($form['basic']['field_storage_settings'][$child]);
+    $form['basic']['storage']['field_storage_settings'] += $item->storageSettingsForm($form, $form_state, $this->fieldStorage->hasData());
+    foreach (Element::children($form['basic']['storage']['field_storage_settings']) as $child) {
+      if (isset($form['basic']['storage']['field_storage_settings'][$child]['#group'])) {
+        $form['basic']['storage']['field_storage_settings'][$child]['#parents'] = ['field_storage_settings', $child];
+        $form['advanced']['storage']['field_storage_settings'][$child] = $form['basic']['storage']['field_storage_settings'][$child];
+        unset($form['basic']['storage']['field_storage_settings'][$child]);
       }
+    }
+
+    // Avoid empty fieldsets.
+    if (!Element::children($form['basic']['storage'])) {
+      unset($form['basic']['storage']);
+    }
+    if (!Element::children($form['advanced']['storage'])) {
+      unset($form['advanced']['storage']);
     }
 
     $form['basic']['settings'] = [
@@ -219,10 +248,10 @@ class FieldConfigEditForm extends EntityForm {
     ];
     $form['basic']['settings'] += $item->fieldSettingsForm($form, $form_state);
     foreach (Element::children($form['basic']['settings']) as $child) {
-      if (isset($form['basic']['field_settings'][$child]['#group'])) {
-        $form['basic']['field_settings'][$child]['#parents'] = ['field_settings', $child];
-        $form['advanced'][$child] = $form['basic']['field_settings'][$child];
-        unset($form['basic']['field_settings'][$child]);
+      if (isset($form['basic']['settings'][$child]['#group'])) {
+        $form['basic']['settings'][$child]['#parents'] = ['settings', $child];
+        $form['advanced']['settings'][$child] = $form['basic']['settings'][$child];
+        unset($form['basic']['settings'][$child]);
       }
     }
 
