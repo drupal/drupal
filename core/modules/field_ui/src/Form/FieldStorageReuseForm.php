@@ -165,7 +165,7 @@ class FieldStorageReuseForm extends FormBase {
       $field_bundles = $field['field_storage']->getBundles();
       $summary = \Drupal::service('plugin.manager.field.field_type')->getStorageSettingsSummary($field['field_storage']);
       $cardinality =  $field['field_storage']->getCardinality();
-      $readable_cardinality = $cardinality === -1 ? 'Unlimited' : ($cardinality === 1 ? 'Single value' : "Multiple values: $cardinality");
+      $readable_cardinality = ($cardinality === -1 ? 'Unlimited' : ($cardinality === 1 ? 'Single value' : "Multiple values: $cardinality")) . ' (cardinality)';
       $max_length = is_integer($field['field_storage']->getSetting('max_length')) ? "Max length: {$field['field_storage']->getSetting('max_length')}" : '';
 
       // Remove empty values.
