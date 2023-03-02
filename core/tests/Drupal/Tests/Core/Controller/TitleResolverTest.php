@@ -71,6 +71,17 @@ class TitleResolverTest extends UnitTestCase {
   }
 
   /**
+   * Tests a static title of '0'.
+   *
+   * @see \Drupal\Core\Controller\TitleResolver::getTitle()
+   */
+  public function testStaticTitleZero() {
+    $request = new Request();
+    $route = new Route('/test-route', ['_title' => '0', '_title_context' => '0']);
+    $this->assertEquals(new TranslatableMarkup('0', [], ['context' => '0'], $this->translationManager), $this->titleResolver->getTitle($request, $route));
+  }
+
+  /**
    * Tests a static title with a context.
    *
    * @see \Drupal\Core\Controller\TitleResolver::getTitle()
