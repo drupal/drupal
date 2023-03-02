@@ -13,17 +13,6 @@ use Drupal\Core\Routing\RouteMatchInterface;
  */
 class AddViewModeLocalAction extends LocalActionDefault {
 
-  /**
-   * {@inheritdoc}
-   */
-//  public function getTitle() {
-//    $title = new TranslatableMarkup("My @arg action", array(
-//      '@arg' => 'dynamic-title',
-//    ));
-//    $title = 'LOCALLLLL';
-//    return $title;
-//  }
-
   public function getOptions(RouteMatchInterface $route_match) {
     $options = parent::getOptions($route_match);
     $options += [
