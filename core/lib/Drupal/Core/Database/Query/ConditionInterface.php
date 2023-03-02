@@ -44,7 +44,7 @@ interface ConditionInterface {
    *   The name of the field to check. This can also be QueryConditionInterface
    *   in itself. Use where(), if you would like to add a more complex condition
    *   involving operators or functions, or an already compiled condition.
-   * @param string|array|\Drupal\Core\Database\Query\SelectInterface|null $value
+   * @param string|int|array|\Drupal\Core\Database\Query\SelectInterface|null $value
    *   The value to test the field against. In most cases, and depending on the
    *   operator, this will be a scalar or an array. As SQL accepts select
    *   queries on any place where a scalar value or set is expected, $value may
