@@ -25,10 +25,29 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
   public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL) {
     $this->targetEntityTypeId = $entity_type_id;
     $form = parent::buildForm($form, $form_state);
+
+    $bundle_info_service = \Drupal::service('entity_type.bundle.info');
+    $bundles = $bundle_info_service->getAllBundleInfo();
+
     // Change replace_pattern to avoid undesired dots.
     $form['id']['#machine_name']['replace_pattern'] = '[^a-z0-9_]+';
     $definition = $this->entityTypeManager->getDefinition($this->targetEntityTypeId);
-    $form['#title'] = $this->t('Add new @entity-type %label', ['@entity-type' => $definition->getLabel(), '%label' => $this->entityType->getSingularLabel()]);
+    $form['#title'] = $this->t('Add new %label for @entity-type', ['@entity-type' => $definition->getLabel(), '%label' => $this->entityType->getSingularLabel()]);
+    $form['data']['template'] = [
+      '#type' => 'inline_template',
+      '#template' => 'Enable view mode for the following bundles:'
+    ];
+
+    $form['data']['bundles'] = [];
+    $bundles_by_entity = $bundles[$definition->id()];
+    foreach ($bundles_by_entity as $bundle) {
+      $form['data']['bundles'][] = [
+        '#type' => 'checkbox',
+        '#title' => $bundle['label'],
+      ];
+    }
+
+
     return $form;
   }
 

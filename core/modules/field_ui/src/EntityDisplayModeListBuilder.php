@@ -2,6 +2,7 @@
 
 namespace Drupal\field_ui;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -116,8 +117,20 @@ class EntityDisplayModeListBuilder extends ConfigEntityListBuilder {
       $table['#rows']['_add_new'][] = [
         'data' => [
           '#type' => 'link',
+          '#title' => $this->t('Add %label for @entity-type', ['@entity-type' => $this->entityTypes[$entity_type]->getLabel(), '%label' => $this->entityType->getSingularLabel()]),
           '#url' => Url::fromRoute($short_type == 'view' ? 'entity.entity_view_mode.add_form' : 'entity.entity_form_mode.add_form', ['entity_type_id' => $entity_type]),
-          '#title' => $this->t('Add new @entity-type %label', ['@entity-type' => $this->entityTypes[$entity_type]->getLabel(), '%label' => $this->entityType->getSingularLabel()]),
+          '#button_type' => 'small',
+          '#attributes' => [
+            'class' => ['button', 'use-ajax'],
+            'role' => 'button',
+            'tabindex' => '0',
+            'data-dialog-type' => 'modal',
+            'data-dialog-options' => Json::encode([
+              'width' => '85vw',
+//              'title' => $this->t('Add new %label for @entity-type', ['@entity-type' => $this->entityTypes[$entity_type]->getLabel(), '%label' => $this->entityType->getSingularLabel()]),
+            ]),
+//            'href' => Url::fromRoute($short_type == 'view' ? 'entity.entity_view_mode.add_form' : 'entity.entity_form_mode.add_form', ['entity_type_id' => $entity_type]),
+          ],
         ],
         'colspan' => count($table['#header']),
       ];
