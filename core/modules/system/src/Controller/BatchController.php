@@ -76,7 +76,7 @@ class BatchController implements ContainerInjectionInterface {
   }
 
   /**
-   * The _title_callback for the system.batch_page.normal route.
+   * The _title_callback for the system.batch_page.html route.
    *
    * @return string
    *   The page title.
