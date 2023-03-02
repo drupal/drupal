@@ -113,13 +113,13 @@ class PhpMail implements MailInterface {
       // We validate the return path, unless it is equal to the site mail, which
       // we assume to be safe.
       $site_mail = $this->configFactory->get('system.site')->get('mail');
-      $additional_headers = isset($message['Return-Path']) && ($site_mail === $message['Return-Path'] || static::_isShellSafe($message['Return-Path'])) ? '-f' . $message['Return-Path'] : '';
+      $additional_params = isset($message['Return-Path']) && ($site_mail === $message['Return-Path'] || static::_isShellSafe($message['Return-Path'])) ? '-f' . $message['Return-Path'] : '';
       $mail_result = $this->doMail(
         $message['to'],
         $mail_subject,
         $mail_body,
         $mail_headers,
-        $additional_headers
+        $additional_params
       );
     }
     else {
