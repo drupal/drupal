@@ -4,12 +4,13 @@ related:
   - core.extending
   - system.module_uninstall
 ---
-{% set extend_url = render_var(url('system.modules_list')) %}
+{% set extend_link_text %}{% trans %}Extend{% endtrans %}{% endset %}
+{% set extend_link = render_var(help_route_link(extend_link_text, 'system.modules_list')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Install a core module, or a contributed module that has already been downloaded.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
-  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <a href="{{ extend_url }}"><em>Extend</em></a>.{% endtrans %}</li>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>{{ extend_link }}</em>.{% endtrans %}</li>
   <li>{% trans %}Enter a word from the module name or description into the filter box, to make the list of modules smaller. Locate the module you want to install.{% endtrans %}</li>
   <li>{% trans %}Check the box next to the name of the module you want to install; you can also check more than one box to install multiple modules at the same time. If the checkbox is disabled for the module you are trying to install, expand the information to see why -- you may need to download an additional module that your module requires.{% endtrans %}</li>
   <li>{% trans %}Click <em>Install</em> at the bottom of the page. If you chose to install a module with dependencies that were not already installed, or if you chose an Experimental module, confirm your choice on the next page.{% endtrans %}</li>

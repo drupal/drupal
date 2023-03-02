@@ -5,12 +5,13 @@ related:
   - core.security
   - system.config_error
 ---
-{% set status_url = render_var(url('system.status')) %}
+{% set status_link_text %}{% trans %}Status report{% endtrans %}{% endset %}
+{% set status_link = render_var(help_route_link(status_link_text, 'system.status')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Run reports to learn about the status and health of your site.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
-  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Reports</em> &gt; <a href="{{ status_url }}"><em>Status report</em></a> to see a report that summarizes the health and status of your site. If there are any warnings or errors, you will need to fix them. Take note of any upcoming highly critical security releases that may impact your site.{% endtrans %}</li>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Reports</em> &gt; <em>{{ status_link }}</em> to see a report that summarizes the health and status of your site. If there are any warnings or errors, you will need to fix them. Take note of any upcoming highly critical security releases that may impact your site.{% endtrans %}</li>
   <li>{% trans %}If you have the core Database Logging module installed, in the <em>Manage</em> administrative menu, navigate to <em>Reports</em> &gt; <em>Recent log messages</em> to see a report of the error and informational messages your site has generated. You can filter the report by <em>Severity</em> to see only the most critical messages, if desired.{% endtrans %}</li>
   <li>{% trans %}If you have the core Update Manager module installed, in the <em>Manage</em> administrative menu, navigate to <em>Reports</em> &gt; <em>Available updates</em> to see a report of the updates that are available for your site software. If <em>Last checked</em> is far in the past, click <em>Check manually</em> to update the report. Scan the report; if Drupal core or any modules or themes have security updates available, you should update them as soon as possible.{% endtrans %}</li>
 </ol>

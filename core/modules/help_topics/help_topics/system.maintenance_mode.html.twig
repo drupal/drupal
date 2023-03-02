@@ -4,18 +4,19 @@ related:
   - core.maintenance
   - system.cache
 ---
-{% set maintenance_url = render_var(url('system.site_maintenance_mode')) %}
 {% set cache_topic = render_var(help_topic_link('system.cache')) %}
+{% set maintenance_link_text %}{% trans %}Maintenance mode{% endtrans %}{% endset %}
+{% set maintenance_link = render_var(help_route_link(maintenance_link_text, 'system.site_maintenance_mode')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Put your site in maintenance mode to perform maintenance operations, and then return to normal mode when finished.{% endtrans %}</p>
 <h2>{% trans %}What is maintenance mode?{% endtrans %}</h2>
 <p>{% trans %}When your site is in maintenance mode, most site visitors will see a simple maintenance mode message page, rather than being able to use the full functionality of the site. Users with <em>Use the site in maintenance mode</em> permission who are already logged in will be able to use the full site, and the log in page at <em>/user</em> will also be accessible to anyone.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
-  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Development</em> &gt; <a href="{{ maintenance_url }}"><em>Maintenance mode</em></a>.{% endtrans %}</li>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Development</em> &gt; <em>{{ maintenance_link }}</em>.{% endtrans %}</li>
   <li>{% trans %}Check <em>Put site into maintenance mode</em>, optionally change the <em>Message to display when in maintenance mode</em>, and click <em>Save configuration</em>. Your site will be in maintenance mode.{% endtrans %}</li>
   <li>{% trans %}Perform your maintenance operations.{% endtrans %}</li>
-  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Development</em> &gt; <em><a href="{{ maintenance_url }}">Maintenance mode</a></em>.{% endtrans %}</li>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Development</em> &gt; <em>{{ maintenance_link }}</em>.{% endtrans %}</li>
   <li>{% trans %}Uncheck <em>Put site into maintenance mode</em> and click <em>Save configuration</em>. Your site will be back in normal operation mode.{% endtrans %}</li>
   <li>{% trans %}Clear the site cache. See {{ cache_topic }} for instructions.{% endtrans %}</li>
 </ol>

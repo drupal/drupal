@@ -5,13 +5,14 @@ related:
   - system.module_install
   - system.maintenance_mode
 ---
-{% set uninstall_url = render_var(url('system.modules_uninstall')) %}
+{% set uninstall_link_text %}{% trans %}Uninstall{% endtrans %}{% endset %}
+{% set uninstall_link = render_var(help_route_link(uninstall_link_text, 'system.modules_uninstall')) %}
 {% set maintenance_topic = render_var(help_topic_link('system.maintenance_mode')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Uninstall a module. Your site should be in <em>maintenance mode</em> when you uninstall modules. See {{ maintenance_topic }} for details.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
-  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Extend</em> &gt; <a href="{{ uninstall_url }}"><em>Uninstall</em></a>.{% endtrans %}</li>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Extend</em> &gt; <em>{{ uninstall_link }}</em>.{% endtrans %}</li>
   <li>{% trans %}Enter a word from the module name or description into the filter box, to make the list of modules smaller. Locate the module you want to uninstall.{% endtrans %}</li>
   <li>{% trans %}In the <em>Description</em> column, see if there are reasons that this module cannot be uninstalled. For example, you may have created content using this module (which you would need to delete first), or there may be another module installed that requires this module to be installed (you would need to uninstall the other module first).{% endtrans %}</li>
   <li>{% trans %}If there are no reasons listed, the module can be uninstalled. Check the box in the <em>Uninstall</em> column, next to the module's name.{% endtrans %}</li>
