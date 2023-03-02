@@ -181,6 +181,7 @@ class FieldStorageReuseForm extends FormBase {
       foreach ($field_bundles as $bundle) {
         $bundle_label_arr[] = $bundles[$this->entityTypeId][$bundle]['label'];
       }
+
       // Combine bundles to be a single string separated by a comma.
       $bundle_labels = implode(", ", $bundle_label_arr);
         $row = [
@@ -191,7 +192,6 @@ class FieldStorageReuseForm extends FormBase {
           'operations' => [
               '#type' => 'button',
               '#name' => $field['field_name'],
-              '#existing_storage_label' => $field['field_type'],
               '#button_type' => 'small',
               '#value' => $this->t('Re-use'),
               '#wrapper_attributes' => [
@@ -273,7 +273,12 @@ class FieldStorageReuseForm extends FormBase {
     $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
     $reuse_button =  $form_state->getTriggeringElement();
     $field_name = $reuse_button['#name'];
-    $existing_storage_label = $reuse_button['#existing_storage_label'];
+    $fields = $this->entityTypeManager->getStorage('field_config')->getQuery()
+      ->condition('entity_type', $this->entityTypeId)
+      ->condition('field_name', $field_name)
+      ->execute();
+    $field = $this->entityTypeManager->getStorage('field_config')->load(reset($fields));
+    $existing_storage_label = $field->label();
     try {
       $field = $this->entityTypeManager->getStorage('field_config')->create([
         'field_name' => $field_name,
