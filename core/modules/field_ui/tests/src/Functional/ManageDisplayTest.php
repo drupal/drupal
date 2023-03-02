@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\field_ui\Functional;
 
+use Behat\Mink\Exception\ExpectationException;
+use Drupal\Core\Entity\Entity\EntityFormMode;
 use Drupal\Core\Url;
 use Behat\Mink\Element\NodeElement;
 use Drupal\Core\Entity\EntityInterface;
@@ -62,6 +64,7 @@ class ManageDisplayTest extends BrowserTestBase {
     $admin_user = $this->drupalCreateUser([
       'access content',
       'administer content types',
+      'administer display modes',
       'administer node fields',
       'administer node form display',
       'administer node display',
@@ -226,6 +229,57 @@ class ManageDisplayTest extends BrowserTestBase {
   }
 
   /**
+   * Tests if display mode local tasks appear in alphabetical order by label.
+   */
+  public function testViewModeLocalTasksOrder() {
+    $manage_display = 'admin/structure/types/manage/' . $this->type . '/display';
+
+    // Specify the 'rss' mode, check that the field is displayed the same.
+    $edit = [
+      'display_modes_custom[rss]' => TRUE,
+      'display_modes_custom[teaser]' => TRUE,
+    ];
+    $this->drupalGet($manage_display);
+    $this->submitForm($edit, 'Save');
+
+    $this->assertOrderInPage(['RSS', 'Teaser']);
+
+    $edit = [
+      'label' => 'Breezer',
+    ];
+    $this->drupalGet('admin/structure/display-modes/view/manage/node.teaser');
+    $this->submitForm($edit, 'Save');
+
+    $this->assertOrderInPage(['Breezer', 'RSS']);
+  }
+
+  /**
+   * Tests if form mode local tasks appear in alphabetical order by label.
+   */
+  public function testFormModeLocalTasksOrder() {
+    EntityFormMode::create([
+      'id' => 'node.big',
+      'label' => 'Big Form',
+      'targetEntityType' => 'node',
+    ])->save();
+    EntityFormMode::create([
+      'id' => 'node.little',
+      'label' => 'Little Form',
+      'targetEntityType' => 'node',
+    ])->save();
+    $manage_form = 'admin/structure/types/manage/' . $this->type . '/form-display';
+    $this->drupalGet($manage_form);
+    $this->assertOrderInPage(['Big Form', 'Little Form']);
+    $edit = [
+      'label' => 'Ultimate Form',
+    ];
+    $this->drupalGet('admin/structure/display-modes/form/manage/node.big');
+    $this->submitForm($edit, 'Save');
+    $this->drupalGet($manage_form);
+    $this->assertOrderInPage(['Little Form', 'Ultimate Form']);
+  }
+
+  /**
    * Asserts that a string is found in the rendered node in a view mode.
    *
    * @param \Drupal\Core\Entity\EntityInterface $node
@@ -349,6 +403,36 @@ class ManageDisplayTest extends BrowserTestBase {
     }
 
     return $options;
+  }
+
+  /**
+   * Asserts that several pieces of markup are in a given order in the page.
+   *
+   * @param string[] $items
+   *   An ordered list of strings.
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
+   *   When any of the given string is not found.
+   *
+   * @internal
+   *
+   * @todo Remove this once https://www.drupal.org/node/2817657 is committed.
+   */
+  protected function assertOrderInPage(array $items): void {
+    $session = $this->getSession();
+    $text = $session->getPage()->getHtml();
+    $strings = [];
+    foreach ($items as $item) {
+      if (($pos = strpos($text, $item)) === FALSE) {
+        throw new ExpectationException("Cannot find '$item' in the page", $session->getDriver());
+      }
+      $strings[$pos] = $item;
+    }
+    ksort($strings);
+    $ordered = implode(', ', array_map(function ($item) {
+      return "'$item'";
+    }, $items));
+    $this->assertSame($items, array_values($strings), "Found strings, ordered as: $ordered.");
   }
 
 }

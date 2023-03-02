@@ -135,8 +135,11 @@ class FieldUiLocalTask extends DeriverBase implements ContainerDeriverInterface 
         ];
 
         // One local task for each form mode.
-        $weight = 0;
-        foreach ($this->entityDisplayRepository->getFormModes($entity_type_id) as $form_mode => $form_mode_info) {
+        $form_modes = $this->entityDisplayRepository->getFormModes($entity_type_id);
+        // Sort all form modes by title.
+        $form_modes_titles = array_values(array_map(fn($item) => (string) $item['label'], $form_modes));
+        sort($form_modes_titles, SORT_NATURAL);
+        foreach ($form_modes as $form_mode => $form_mode_info) {
           $this->derivatives['field_form_display_' . $form_mode . '_' . $entity_type_id] = [
             'title' => $form_mode_info['label'],
             'route_name' => "entity.entity_form_display.$entity_type_id.form_mode",
@@ -144,14 +147,17 @@ class FieldUiLocalTask extends DeriverBase implements ContainerDeriverInterface 
               'form_mode_name' => $form_mode,
             ],
             'parent_id' => "field_ui.fields:form_display_overview_$entity_type_id",
-            'weight' => $weight++,
+            'weight' => array_flip($form_modes_titles)[(string) $form_mode_info['label']],
             'cache_tags' => $this->entityTypeManager->getDefinition('entity_form_display')->getListCacheTags(),
           ];
         }
 
         // One local task for each view mode.
-        $weight = 0;
-        foreach ($this->entityDisplayRepository->getViewModes($entity_type_id) as $view_mode => $form_mode_info) {
+        $view_modes = $this->entityDisplayRepository->getViewModes($entity_type_id);
+        // Sort all view modes by title.
+        $view_modes_titles = array_values(array_map(fn($item) => (string) $item['label'], $view_modes));
+        sort($view_modes_titles, SORT_NATURAL);
+        foreach ($view_modes as $view_mode => $form_mode_info) {
           $this->derivatives['field_display_' . $view_mode . '_' . $entity_type_id] = [
             'title' => $form_mode_info['label'],
             'route_name' => "entity.entity_view_display.$entity_type_id.view_mode",
@@ -159,7 +165,7 @@ class FieldUiLocalTask extends DeriverBase implements ContainerDeriverInterface 
               'view_mode_name' => $view_mode,
             ],
             'parent_id' => "field_ui.fields:display_overview_$entity_type_id",
-            'weight' => $weight++,
+            'weight' => array_flip($view_modes_titles)[(string) $form_mode_info['label']],
             'cache_tags' => $this->entityTypeManager->getDefinition('entity_view_display')->getListCacheTags(),
           ];
         }
