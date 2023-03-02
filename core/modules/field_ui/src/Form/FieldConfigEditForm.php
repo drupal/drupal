@@ -170,12 +170,12 @@ class FieldConfigEditForm extends EntityForm {
 
     $form['basic']['storage']['cardinality'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Allow multiple values'),
+      '#title' => $this->t('Allow multiple values (cardinality)'),
       '#default_value' => $this->fieldStorage->getCardinality() > 1 || $this->fieldStorage->getCardinality() === FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ];
     $form['basic']['storage']['cardinality_unlimited'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Allow unlimited values'),
+      '#title' => $this->t('Allow unlimited values (cardinality)'),
       '#default_value' => $this->fieldStorage->getCardinality() === FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
       '#states' => [
         'invisible' => [
