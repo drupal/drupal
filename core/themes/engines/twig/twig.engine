@@ -93,12 +93,27 @@ function twig_render_template($template_file, array $variables) {
       if (strpos($variables['theme_hook_original'], '__') === FALSE) {
         $suggestions[] = $variables['theme_hook_original'];
       }
-      foreach ($suggestions as &$suggestion) {
+      $invalid_suggestions = [];
+      $base_hook = $base_hook ?? $variables['theme_hook_original'];
+      foreach ($suggestions as $key => &$suggestion) {
+        // Valid suggestions are $base_hook, $base_hook__*, and contain no hyphens.
+        if (($suggestion !== $base_hook && !str_starts_with($suggestion, $base_hook . '__')) || str_contains($suggestion, '-')) {
+          $invalid_suggestions[] = $suggestion;
+          unset($suggestions[$key]);
+          continue;
+        }
         $template = strtr($suggestion, '_', '-') . $extension;
         $prefix = ($template == $current_template) ? 'x' : '*';
         $suggestion = $prefix . ' ' . $template;
       }
       $output['debug_info'] .= "\n<!-- FILE NAME SUGGESTIONS:\n   " . Html::escape(implode("\n   ", $suggestions)) . "\n-->";
+
+      if (!empty($invalid_suggestions)) {
+        $output['debug_info'] .= "\n<!-- INVALID FILE NAME SUGGESTIONS:";
+        $output['debug_info'] .= "\n   See https://api.drupal.org/api/drupal/core!lib!Drupal!Core!Render!theme.api.php/function/hook_theme_suggestions_alter";
+        $output['debug_info'] .= "\n   " . Html::escape(implode("\n   ", $invalid_suggestions));
+        $output['debug_info'] .= "\n-->";
+      }
     }
     $output['debug_info']   .= "\n<!-- BEGIN OUTPUT from '" . Html::escape($template_file) . "' -->\n";
     $output['debug_suffix'] .= "\n<!-- END OUTPUT from '" . Html::escape($template_file) . "' -->\n\n";

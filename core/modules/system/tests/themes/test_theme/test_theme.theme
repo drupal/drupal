@@ -69,6 +69,15 @@ function test_theme_theme_suggestions_theme_test_suggestions_alter(array &$sugge
 }
 
 /**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function test_theme_theme_suggestions_node_alter(array &$suggestions, array $variables) {
+  // Add an invalid suggestion to be tested.
+  $suggestions[] = 'invalid_theme_suggestions';
+  \Drupal::messenger()->addStatus(__FUNCTION__ . '() executed.');
+}
+
+/**
  * Implements hook_theme_registry_alter().
  */
 function test_theme_theme_registry_alter(&$registry) {
