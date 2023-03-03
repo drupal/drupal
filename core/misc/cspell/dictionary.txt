@@ -1031,7 +1031,6 @@ safa
 sameline
 samename
 sameorigin
-samesite
 sata
 savepoints
 sayre

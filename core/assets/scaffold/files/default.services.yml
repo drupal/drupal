@@ -37,13 +37,6 @@ parameters:
     # @default none
     # cookie_domain: '.example.com'
     #
-    # Set the SameSite cookie attribute: 'None', 'Lax', or 'Strict'. If set,
-    # this value will override the server value. See
-    # https://www.php.net/manual/en/session.security.ini.php for more
-    # information.
-    # @default no value
-    cookie_samesite: Lax
-    #
     # Set the session ID string length. The length can be between 22 to 256. The
     # PHP recommended value is 48. See
     # https://www.php.net/manual/session.security.ini.php for more information.
