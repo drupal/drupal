@@ -273,14 +273,14 @@ class FieldConfigEditForm extends EntityForm {
       }
       $form['advanced']['default_value_checkbox'] = [
         '#type' => 'checkbox',
-        '#title' => $this->t('Set initial value'),
+        '#title' => $this->t('Set initial value (default value)'),
         '#default_value' => $has_default_value,
         '#description' => $this->t('Provide a pre-filled value for the editing form.'),
       ];
 
       $element = array_merge($element, [
         '#type' => 'details',
-        '#title' => $this->t('Initial value'),
+        '#title' => $this->t('Initial value (default value)'),
         '#open' => TRUE,
         '#tree' => TRUE,
         '#description' => $this->t('The default value for this field to pre-fill the form when creating new content.'),
