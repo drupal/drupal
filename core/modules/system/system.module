@@ -15,7 +15,9 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Datetime\TimeZoneFormHelper;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Extension\Extension;
+use Drupal\Core\Field\Plugin\Field\FieldFormatter\TimestampFormatter;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\File\FileSystemInterface;
@@ -1373,5 +1375,38 @@ function system_archiver_info_alter(&$info) {
   if (!class_exists(\ZipArchive::class)) {
     // PHP Zip extension is missing.
     unset($info['Zip']);
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for entity_view_display entities.
+ *
+ * Provides a BC layer for modules providing old configurations.
+ *
+ * @see https://www.drupal.org/node/2993639
+ *
+ * @todo Remove this BC layer in drupal:11.0.0.
+ */
+function system_entity_view_display_presave(EntityViewDisplayInterface $entity_view_display): void {
+  /** @var \Drupal\Core\Field\FormatterPluginManager $field_formatter_manager */
+  $field_formatter_manager = \Drupal::service('plugin.manager.field.formatter');
+
+  foreach ($entity_view_display->getComponents() as $name => $component) {
+    if (empty($component['type'])) {
+      continue;
+    }
+    if (!$plugin_definition = $field_formatter_manager->getDefinition($component['type'], FALSE)) {
+      continue;
+    }
+
+    // Check also potential plugins that extends TimestampFormatter.
+    if (!is_a($plugin_definition['class'], TimestampFormatter::class, TRUE)) {
+      continue;
+    }
+
+    if (!isset($component['settings']['tooltip']) || !isset($component['settings']['time_diff'])) {
+      @trigger_error("The 'timestamp' formatter plugin 'tooltip' and 'time_diff' settings were added in drupal:10.1.0 and will be mandatory in Drupal 11.0.0. See https://www.drupal.org/node/2993639", E_USER_DEPRECATED);
+      $entity_view_display->setComponent($name, $component);
+    }
   }
 }

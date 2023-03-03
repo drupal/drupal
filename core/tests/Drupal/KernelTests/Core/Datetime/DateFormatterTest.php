@@ -110,4 +110,26 @@ class DateFormatterTest extends KernelTestBase {
     $this->assertSame('<em>2007</em>', $formatter->format($timestamp, 'custom', '\<\e\m\>Y\<\/\e\m\>'), 'Em tags are not removed from dates.');
   }
 
+  /**
+   * Tests that an RFC2822 formatted date always returns an English string.
+   *
+   * @see http://www.faqs.org/rfcs/rfc2822.html
+   *
+   * @covers ::format
+   */
+  public function testRfc2822DateFormat() {
+    $days_of_week_abbr = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    foreach ($days_of_week_abbr as $day_of_week_abbr) {
+      $this->setSetting('locale_custom_strings_' . self::LANGCODE, [
+        'Abbreviated weekday' => [$day_of_week_abbr => $this->randomString(3)],
+      ]);
+    }
+    /** @var \Drupal\Core\Datetime\DateFormatterInterface $formatter */
+    $formatter = $this->container->get('date.formatter');
+
+    // Check that RFC2822 format date is returned regardless of langcode.
+    $this->assertEquals('Sat, 02 Feb 2019 13:30:00 +0100', $formatter->format(1549110600, 'custom', 'r', 'Europe/Berlin', static::LANGCODE));
+    $this->assertEquals('Sat, 02 Feb 2019 13:30:00 +0100', $formatter->format(1549110600, 'custom', 'r', 'Europe/Berlin'));
+  }
+
 }

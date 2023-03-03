@@ -2,10 +2,12 @@
 
 namespace Drupal\views;
 
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Field\Plugin\Field\FieldFormatter\TimestampFormatter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -44,6 +46,13 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
   protected $viewsData;
 
   /**
+   * The formatter plugin manager service.
+   *
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
+   */
+  protected $formatterPluginManager;
+
+  /**
    * An array of helper data for the multivalue base field update.
    *
    * @var array
@@ -75,17 +84,21 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
    *   The typed config manager.
    * @param \Drupal\views\ViewsData $views_data
    *   The views data service.
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $formatter_plugin_manager
+   *   The formatter plugin manager service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
     EntityFieldManagerInterface $entity_field_manager,
     TypedConfigManagerInterface $typed_config_manager,
-    ViewsData $views_data
+    ViewsData $views_data,
+    PluginManagerInterface $formatter_plugin_manager
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;
     $this->typedConfigManager = $typed_config_manager;
     $this->viewsData = $views_data;
+    $this->formatterPluginManager = $formatter_plugin_manager;
   }
 
   /**
@@ -96,7 +109,8 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       $container->get('entity_type.manager'),
       $container->get('entity_field.manager'),
       $container->get('config.typed'),
-      $container->get('views.views_data')
+      $container->get('views.views_data'),
+      $container->get('plugin.manager.field.formatter')
     );
   }
 
@@ -123,6 +137,9 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
     return $this->processDisplayHandlers($view, FALSE, function (&$handler, $handler_type, $key, $display_id) use ($view) {
       $changed = FALSE;
       if ($this->processResponsiveImageLazyLoadFieldHandler($handler, $handler_type, $view)) {
+        $changed = TRUE;
+      }
+      if ($this->processTimestampFormatterTimeDiffUpdateHandler($handler, $handler_type)) {
         $changed = TRUE;
       }
       return $changed;
@@ -262,6 +279,53 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
     }
 
     return $changed;
+  }
+
+  /**
+   * Updates the timestamp fields settings by adding time diff and tooltip.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The View to update.
+   *
+   * @return bool
+   *   Whether the view was updated.
+   */
+  public function needsTimestampFormatterTimeDiffUpdate(ViewEntityInterface $view): bool {
+    return $this->processDisplayHandlers($view, TRUE, function (array &$handler, string $handler_type): bool {
+      return $this->processTimestampFormatterTimeDiffUpdateHandler($handler, $handler_type);
+    });
+  }
+
+  /**
+   * Processes timestamp fields settings by adding time diff and tooltip.
+   *
+   * @param array $handler
+   *   A display handler.
+   * @param string $handler_type
+   *   The handler type.
+   *
+   * @return bool
+   *   Whether the handler was updated.
+   */
+  protected function processTimestampFormatterTimeDiffUpdateHandler(array &$handler, string $handler_type): bool {
+    if ($handler_type === 'field' && isset($handler['type'])) {
+      $plugin_definition = $this->formatterPluginManager->getDefinition($handler['type'], FALSE);
+      // Check also potential plugins extending TimestampFormatter.
+      if (!$plugin_definition || !is_a($plugin_definition['class'], TimestampFormatter::class, TRUE)) {
+        return FALSE;
+      }
+
+      if (!isset($handler['settings']['tooltip']) || !isset($handler['settings']['time_diff'])) {
+        $handler['settings'] += $plugin_definition['class']::defaultSettings();
+        // Existing timestamp formatters don't have tooltip.
+        $handler['settings']['tooltip'] = [
+          'date_format' => '',
+          'custom_date_format' => '',
+        ];
+        return TRUE;
+      }
+    }
+    return FALSE;
   }
 
 }

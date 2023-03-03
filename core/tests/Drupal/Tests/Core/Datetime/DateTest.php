@@ -6,6 +6,8 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Datetime\FormattedDateDiff;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageManager;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -70,6 +72,9 @@ class DateTest extends UnitTestCase {
     $this->entityTypeManager->expects($this->any())->method('getStorage')->with('date_format')->willReturn($entity_storage);
 
     $this->languageManager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
+    $this->languageManager->expects($this->any())
+      ->method('getCurrentLanguage')
+      ->willReturn(new Language(['id' => $this->randomMachineName(2)]));
     $this->stringTranslation = $this->createMock('Drupal\Core\StringTranslation\TranslationInterface');
     $this->requestStack = $this->createMock('Symfony\Component\HttpFoundation\RequestStack');
 
@@ -77,6 +82,7 @@ class DateTest extends UnitTestCase {
     $container = new ContainerBuilder();
     $container->set('config.factory', $config_factory);
     $container->set('string_translation', $this->getStringTranslationStub());
+    $container->set('language_manager', $this->languageManager);
     \Drupal::setContainer($container);
 
     $this->dateFormatter = new DateFormatter($this->entityTypeManager, $this->languageManager, $this->stringTranslation, $this->getConfigFactoryStub(), $this->requestStack);
@@ -416,6 +422,24 @@ class DateTest extends UnitTestCase {
     $build = [];
     CacheableMetadata::createFromObject($object)->applyTo($build);
     $this->assertEquals($max_age, $build['#cache']['max-age']);
+  }
+
+  /**
+   * Tests that an RFC2822 formatted date always returns an English string.
+   *
+   * @see http://www.faqs.org/rfcs/rfc2822.html
+   *
+   * @covers ::format
+   */
+  public function testRfc2822DateFormat(): void {
+    $timestamp = 1549110600;
+    $langcodes = array_keys(LanguageManager::getStandardLanguageList());
+    $langcodes[] = NULL;
+    foreach ($langcodes as $langcode) {
+      $formatted_date = $this->dateFormatter->format($timestamp, 'custom', 'r', 'Europe/Berlin', $langcode);
+      // Check that RFC2822 format date is returned regardless of langcode.
+      $this->assertSame('Sat, 02 Feb 2019 13:30:00 +0100', $formatted_date);
+    }
   }
 
   /**

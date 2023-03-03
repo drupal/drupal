@@ -707,6 +707,14 @@ drupal.tableselect:
     - core/jquery
     - core/once
 
+drupal.time-diff:
+  version: VERSION
+  js:
+    misc/time-diff.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+
 drupal.timezone:
   version: VERSION
   js:

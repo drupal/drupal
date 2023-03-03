@@ -5,6 +5,10 @@
  * Post update functions for System.
  */
 
+use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Field\Plugin\Field\FieldFormatter\TimestampFormatter;
+
 /**
  * Implements hook_removed_post_updates().
  */
@@ -50,4 +54,42 @@ function system_removed_post_updates() {
 function system_post_update_linkset_settings() {
   $config = \Drupal::configFactory()->getEditable('system.feature_flags');
   $config->set('linkset_endpoint', FALSE)->save();
+}
+
+/**
+ * Update timestamp formatter settings for entity view displays.
+ */
+function system_post_update_timestamp_formatter(array &$sandbox = NULL): void {
+  /** @var \Drupal\Core\Field\FormatterPluginManager $field_formatter_manager */
+  $field_formatter_manager = \Drupal::service('plugin.manager.field.formatter');
+
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'entity_view_display', function (EntityViewDisplayInterface $entity_view_display) use ($field_formatter_manager): bool {
+    $update = FALSE;
+    foreach ($entity_view_display->getComponents() as $name => $component) {
+      if (empty($component['type'])) {
+        continue;
+      }
+
+      $plugin_definition = $field_formatter_manager->getDefinition($component['type'], FALSE);
+      // Check also potential plugins extending TimestampFormatter.
+      if (!is_a($plugin_definition['class'], TimestampFormatter::class, TRUE)) {
+        continue;
+      }
+
+      // The 'tooltip' and 'time_diff' settings might have been set, with their
+      // default values, if this entity has been already saved in a previous
+      // (post)update, such as layout_builder_post_update_timestamp_formatter().
+      // Ensure that existing timestamp formatters doesn't show any tooltip.
+      if (!isset($component['settings']['tooltip']) || !isset($component['settings']['time_diff']) || $component['settings']['tooltip']['date_format'] !== '') {
+        // Existing timestamp formatters don't have tooltip.
+        $component['settings']['tooltip'] = [
+          'date_format' => '',
+          'custom_date_format' => '',
+        ];
+        $entity_view_display->setComponent($name, $component);
+        $update = TRUE;
+      }
+    }
+    return $update;
+  });
 }

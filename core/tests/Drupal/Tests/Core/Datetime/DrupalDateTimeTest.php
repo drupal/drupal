@@ -3,7 +3,10 @@
 namespace Drupal\Tests\Core\Datetime;
 
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageManager;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * @coversDefaultClass \Drupal\Core\Datetime\DrupalDateTime
@@ -237,6 +240,33 @@ class DrupalDateTimeTest extends UnitTestCase {
     $this->assertEquals('Europe/Berlin', $datetime->getTimezone()->getName());
     $this->assertEquals(1500000000, $drupaldatetime->getTimestamp());
     $this->assertEquals('America/New_York', $drupaldatetime->getTimezone()->getName());
+  }
+
+  /**
+   * Tests that an RFC2822 formatted date always returns an English string.
+   *
+   * @see http://www.faqs.org/rfcs/rfc2822.html
+   *
+   * @covers ::format
+   */
+  public function testRfc2822DateFormat() {
+    $language_manager = $this->createMock(LanguageManager::class);
+    $language_manager->expects($this->any())
+      ->method('getCurrentLanguage')
+      ->willReturn(new Language(['id' => $this->randomMachineName(2)]));
+    $container = new ContainerBuilder();
+    $container->set('language_manager', $language_manager);
+    \Drupal::setContainer($container);
+
+    $time = '2019-02-02T13:30';
+    $timezone = new \DateTimeZone('Europe/Berlin');
+    $langcodes = array_keys(LanguageManager::getStandardLanguageList());
+    $langcodes[] = NULL;
+    foreach ($langcodes as $langcode) {
+      $datetime = new DrupalDateTime($time, $timezone, ['langcode' => $langcode]);
+      // Check that RFC2822 format date is returned regardless of langcode.
+      $this->assertEquals('Sat, 02 Feb 2019 13:30:00 +0100', $datetime->format('r'));
+    }
   }
 
 }

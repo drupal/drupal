@@ -1,0 +1,59 @@
+status: true
+dependencies:
+  module:
+    - entity_test
+id: formatter_timestamp_as_time_diff
+label: "Timestamp as time difference formatter"
+module: views
+base_table: entity_test
+base_field: id
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    display_options:
+      row:
+        type: fields
+      fields:
+        name_alias:
+          id: name_alias
+          table: entity_test
+          field: name_alias
+          type: string
+          settings:
+            link_to_entity: false
+          entity_type: entity_test
+          entity_field: name
+          plugin_id: field
+        created:
+          id: created
+          table: entity_test
+          field: created
+          type: timestamp
+          settings:
+            date_format: short
+            custom_date_format: ''
+            timezone: ''
+            tooltip:
+              date_format: long
+              custom_date_format: ''
+            time_diff:
+              enabled: true
+              future_format: '@interval hence'
+              past_format: '@interval ago'
+              granularity: 2
+              refresh: 1
+          # Using this class to identify the row/cell in page.
+          element_class: '{{ name_alias }}'
+          entity_type: entity_test
+          entity_field: created
+          plugin_id: field
+      pager:
+        type: none
+  page:
+    display_plugin: page
+    id: page
+    display_title: Page
+    display_options:
+      path: formatter_timestamp_as_time_diff
