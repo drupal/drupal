@@ -18,9 +18,11 @@ class ClaroTest extends BrowserTestBase {
    * There's currently no way for Claro to provide a default and have valid
    * configuration as themes cannot react to a module install.
    *
+   * Install dblog and pager_test for testing of pager attributes.
+   *
    * @var string[]
    */
-  protected static $modules = ['shortcut'];
+  protected static $modules = ['dblog', 'shortcut', 'pager_test'];
 
   /**
    * {@inheritdoc}
@@ -66,6 +68,32 @@ class ClaroTest extends BrowserTestBase {
     $this->cssSelect('a[title="Install <strong>Test theme</strong> as default theme"]')[0]->click();
     $this->cssSelect('a[title="Uninstall Claro theme"]')[0]->click();
     $this->assertSession()->pageTextContains('The Claro theme has been uninstalled.');
+  }
+
+  /**
+   * Tests pager attribute is present using pager_test.
+   */
+  public function testPagerAttribute(): void {
+    // Insert 300 log messages.
+    $logger = $this->container->get('logger.factory')->get('pager_test');
+    for ($i = 0; $i < 300; $i++) {
+      $logger->debug($this->randomString());
+    }
+
+    $this->drupalLogin($this->drupalCreateUser(['access site reports']));
+
+    $this->drupalGet('admin/reports/dblog', ['query' => ['page' => 1]]);
+    $this->assertSession()->statusCodeEquals(200);
+    $elements = $this->xpath('//ul[contains(@class, :class)]/li', [':class' => 'pager__items']);
+    $this->assertNotEmpty($elements, 'Pager found.');
+
+    // Check all links for pager-test attribute.
+    foreach ($elements as $page => $element) {
+      $link = $element->find('css', 'a');
+      $this->assertNotEmpty($link, "Link to page $page found.");
+      $this->assertTrue($link->hasAttribute('pager-test'), 'Pager item has attribute pager-test');
+      $this->assertTrue($link->hasClass('lizards'));
+    }
   }
 
 }

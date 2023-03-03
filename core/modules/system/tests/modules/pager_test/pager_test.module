@@ -27,11 +27,13 @@ function pager_test_preprocess_pager(&$variables) {
 
   foreach ($variables['items']['pages'] as $index => &$pager_item) {
     $pager_item['attributes']['pager-test'] = 'yes';
+    $pager_item['attributes']->addClass('lizards');
   }
   unset($pager_item);
 
   foreach (['first', 'previous', 'next', 'last'] as $special_pager_item) {
     if (isset($variables['items'][$special_pager_item])) {
+      $variables['items'][$special_pager_item]['attributes']->addClass('lizards');
       $variables['items'][$special_pager_item]['attributes']['pager-test'] = $special_pager_item;
     }
   }
