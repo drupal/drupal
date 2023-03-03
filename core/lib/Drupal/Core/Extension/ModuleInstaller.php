@@ -310,7 +310,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
                   $update_manager->installFieldStorageDefinition($storage_definition->getName(), $entity_type->id(), $module, $storage_definition);
                 }
                 catch (EntityStorageException $e) {
-                  watchdog_exception('system', $e, 'An error occurred while notifying the creation of the @name field storage definition: "@message" in %function (line %line of %file).', ['@name' => $storage_definition->getName()]);
+                  watchdog_exception('system', $e, 'An error occurred while notifying the creation of the @name field storage definition: "@message" in %function (line %line of %file).', ['@name' => $storage_definition->getName(), '@message' => $e->getMessage()]);
                 }
               }
             }
