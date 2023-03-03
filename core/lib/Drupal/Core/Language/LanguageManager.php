@@ -270,6 +270,7 @@ class LanguageManager implements LanguageManagerInterface {
       'gl' => ['Galician', 'Galego'],
       'gsw-berne' => ['Swiss German', 'Schwyzerdütsch'],
       'gu' => ['Gujarati', 'ગુજરાતી'],
+      'haw' => ['Hawaiian', 'ʻŌlelo Hawaiʻi'],
       'he' => ['Hebrew', /* Left-to-right marker "‭" */ 'עברית', LanguageInterface::DIRECTION_RTL],
       'hi' => ['Hindi', 'हिन्दी'],
       'hr' => ['Croatian', 'Hrvatski'],
