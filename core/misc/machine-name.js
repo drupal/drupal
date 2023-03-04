@@ -46,7 +46,7 @@
 
       function clickEditHandler(e) {
         const data = e.data;
-        data.$wrapper.removeClass('visually-hidden');
+        data.$wrapper.removeClass('hidden');
         data.$target.trigger('focus');
         data.$suffix.hide();
         data.$source.off('.machineName');
@@ -117,7 +117,7 @@
         // Figure out the maximum length for the machine name.
         options.maxlength = $target.attr('maxlength');
         // Hide the form item container of the machine name form element.
-        $wrapper.addClass('visually-hidden');
+        $wrapper.addClass('hidden');
         // Initial machine name from the target field default value.
         const machine = $target[0].value;
         // Append the machine name preview to the source field.
@@ -161,9 +161,9 @@
 
         // If it is editable, append an edit link.
         const $link = $(
-          `<span class="admin-link"><button type="button" class="link">${Drupal.t(
-            'Edit',
-          )}</button></span>`,
+          '<span class="admin-link"><button type="button" class="link" aria-label="'
+            .concat(Drupal.t('Edit machine name'), '">')
+            .concat(Drupal.t('Edit'), '</button></span>'),
         ).on('click', eventData, clickEditHandler);
         $suffix.append($link);
 

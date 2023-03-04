@@ -104,19 +104,18 @@ class MachineNameTest extends WebDriverTestBase {
       $this->assertEmpty($machine_name_2_value->getHtml(), 'The second machine name field should still be empty');
     }
 
-    // Validate the machine name field is hidden. Elements are visually hidden
-    // using positioning, isVisible() will therefore not work.
-    $this->assertEquals(TRUE, $machine_name_1_wrapper->hasClass('visually-hidden'), 'The ID field must not be visible');
-    $this->assertEquals(TRUE, $machine_name_2_wrapper->hasClass('visually-hidden'), 'The ID field must not be visible');
+    // Validate the machine name field is hidden.
+    $this->assertFalse($machine_name_1_wrapper->isVisible(), 'The ID field must not be visible');
+    $this->assertFalse($machine_name_2_wrapper->isVisible(), 'The ID field must not be visible');
 
     // Test switching back to the manual editing mode by clicking the edit link.
     $button_1->click();
 
     // Validate the visibility of the machine name field.
-    $this->assertEquals(FALSE, $machine_name_1_wrapper->hasClass('visually-hidden'), 'The ID field must now be visible');
+    $this->assertTrue($machine_name_1_wrapper->isVisible(), 'The ID field must now be visible');
 
     // Validate the visibility of the second machine name field.
-    $this->assertEquals(TRUE, $machine_name_2_wrapper->hasClass('visually-hidden'), 'The ID field must not be visible');
+    $this->assertFalse($machine_name_2_wrapper->isVisible(), 'The ID field must not be visible');
 
     // Validate if the element contains the correct value.
     $this->assertEquals($test_values[1]['expected'], $machine_name_1_field->getValue(), 'The ID field value must be equal to the php generated machine name');

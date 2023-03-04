@@ -256,10 +256,10 @@ class MediaEmbedFilterConfigurationUiTest extends MediaJavascriptTestBase {
    */
   protected function showHiddenFields() {
     $script = <<<JS
-      var hidden_fields = document.querySelectorAll(".visually-hidden");
+      var hidden_fields = document.querySelectorAll(".hidden");
 
       [].forEach.call(hidden_fields, function(el) {
-        el.classList.remove("visually-hidden");
+        el.classList.remove("hidden");
       });
 JS;
 
