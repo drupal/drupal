@@ -11,22 +11,31 @@
  */
 
 .accordion {
-  color: var(--color-text);
-  border: var(--details-border-size) solid var(--details-border-color);
-  border-radius: var(--details-accordion-border-size-radius);
-  background-color: var(--color-white);
-  box-shadow: var(--details-box-shadow);
+  --accordion-color: var(--color-text);
+  --accordion-border-size: var(--details-border-size);
+  --accordion-border-color: var(--details-border-color);
+  --accordion-border-radius: var(--details-accordion-border-size-radius);
+  --accordion-bg-color: var(--color-white);
+  --accordion-box-shadow: var(--details-box-shadow);
+
+  color: var(--accordion-color);
+  border: var(--accordion-border-size) solid var(--accordion-border-color);
+  border-radius: var(--accordion-border-radius);
+  background-color: var(--accordion-bg-color);
+  box-shadow: var(--accordion-box-shadow);
 }
 
 .accordion__item {
+  --accordion-item-border-radius: var(--details-accordion-border-size-radius);
+
   margin: 0 -1px;
   border-radius: 0;
 }
 
 .accordion__item:first-child {
   margin-top: -1px;
-  border-top-left-radius: var(--details-accordion-border-size-radius);
-  border-top-right-radius: var(--details-accordion-border-size-radius);
+  border-top-left-radius: var(--accordion-item-border-radius);
+  border-top-right-radius: var(--accordion-item-border-radius);
 }
 
 .accordion__item + .accordion__item {
@@ -35,12 +44,14 @@
 
 .accordion__item:last-child {
   margin-bottom: -1px;
-  border-bottom-right-radius: var(--details-accordion-border-size-radius);
-  border-bottom-left-radius: var(--details-accordion-border-size-radius);
+  border-bottom-right-radius: var(--accordion-item-border-radius);
+  border-bottom-left-radius: var(--accordion-item-border-radius);
 }
 
 .accordion__item .claro-details__summary .summary {
+  --accordion-summary-color: var(--color-gray-800);
+
   display: block;
-  color: var(--color-gray-800);
+  color: var(--accordion-summary-color);
   font-weight: normal;
 }
