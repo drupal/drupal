@@ -4,78 +4,33 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
-
 /**
  * Layout overrides for node add/edit form.
  */
-
-:root {
-  --node-meta-width: 22.5rem;
-  --node-meta-xl-width: 25vw;
-}
-
 .layout-region {
   box-sizing: border-box;
 }
-
 .layout-region--node-footer .layout-region__content {
   margin-top: var(--space-l);
 }
-
 /**
- * Wide screens
+ * Move to two column layout at wider widths.
  */
+@media (min-width: 61rem) {
+  .layout-node-form {
+    display: grid;
+    grid-template-columns: 3fr minmax(22.5rem, 1fr);
+    gap: var(--space-l);
+  }
 
-@media screen and (min-width: 61rem) {
   .layout-region--node-main,
   .layout-region--node-footer {
-    float: left; /* LTR */
-    width: calc(100% - var(--node-meta-width));
-    padding-right: var(--space-l); /* LTR */
-  }
-  [dir="rtl"] .layout-region--node-main,
-  [dir="rtl"] .layout-region--node-footer {
-    float: right;
-    padding-right: 0;
-    padding-left: var(--space-l);
+    margin-inline: auto;
+    width: min(52rem, 100%);
   }
 
-  .layout-region--node-main .layout-region__content,
-  .layout-region--node-footer .layout-region__content {
-    max-width: 52rem;
-    margin-right: auto;
-    margin-left: auto;
-  }
-
-  .layout-region--node-footer .layout-region__content {
-    margin-top: var(--space-xs);
-  }
-
+  /* Push sidebar down to horizontal align with form section. */
   .layout-region--node-secondary {
-    float: right; /* LTR */
-    width: var(--node-meta-width);
-  }
-  [dir="rtl"] .layout-region--node-secondary {
-    float: left;
-  }
-
-  /* Push sidebar down to horizontal align with form section */
-  .layout-region--node-secondary {
-    margin-top: var(--space-l);
-  }
-}
-
-/**
- * Extra Wide screens
- */
-
-@media screen and (min-width: 112rem) {
-  .layout-region--node-main,
-  .layout-region--node-footer {
-    width: calc(100% - var(--node-meta-xl-width));
-  }
-
-  .layout-region--node-secondary {
-    width: var(--node-meta-xl-width);
+    margin-block-start: var(--space-l);
   }
 }
