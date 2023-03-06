@@ -9,6 +9,7 @@ parameters:
     gc_divisor: 100
     gc_maxlifetime: 200000
     cookie_lifetime: 2000000
+    cookie_samesite: Lax
     sid_length: 48
     sid_bits_per_character: 6
   twig.config:

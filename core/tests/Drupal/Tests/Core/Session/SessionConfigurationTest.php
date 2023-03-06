@@ -117,6 +117,17 @@ class SessionConfigurationTest extends UnitTestCase {
   }
 
   /**
+   * Test that session.cookie_samesite is configured correctly.
+   */
+  public function testSameSiteCookie() {
+    $request = Request::create('https://example.com');
+
+    $config = $this->createSessionConfiguration(['cookie_samesite' => 'Strict']);
+    $options = $config->getOptions($request);
+    $this->assertEquals('Strict', $options['cookie_samesite']);
+  }
+
+  /**
    * Tests that session.cookie_secure ini settings cannot be overridden.
    *
    * @covers ::__construct
