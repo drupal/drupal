@@ -5,6 +5,7 @@
  * Provide structure for the administrative interface to Views.
  */
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\views\ViewExecutable;
@@ -135,6 +136,7 @@ function views_ui_preprocess_views_view(&$variables) {
   if (!empty($view->live_preview)) {
     $variables['title'] = [
       '#markup' => $view->getTitle(),
+      '#allowed_tags' => Xss::getHtmlTagList(),
     ];
   }
 
