@@ -3,6 +3,8 @@
 namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+use Drupal\field_ui\FieldUI;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -10,7 +12,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *
  * @internal
  */
-class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
+class EntityDisplayModeAddForm extends EntityDisplayModeFormBase
+{
 
   /**
    * The entity type for which the display mode is being created.
@@ -22,7 +25,8 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL)
+  {
     $this->targetEntityTypeId = $entity_type_id;
     $form = parent::buildForm($form, $form_state);
 
@@ -33,20 +37,16 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
     $form['id']['#machine_name']['replace_pattern'] = '[^a-z0-9_]+';
     $definition = $this->entityTypeManager->getDefinition($this->targetEntityTypeId);
     $form['#title'] = $this->t('Add new %label for @entity-type', ['@entity-type' => $definition->getLabel(), '%label' => $this->entityType->getSingularLabel()]);
-    $form['data']['template'] = [
-      '#type' => 'inline_template',
-      '#template' => 'Enable view mode for the following bundles:'
-    ];
 
-    $form['data']['bundles'] = [];
-    $bundles_by_entity = $bundles[$definition->id()];
-    foreach ($bundles_by_entity as $bundle) {
-      $form['data']['bundles'][] = [
-        '#type' => 'checkbox',
-        '#title' => $bundle['label'],
-      ];
+    $bundles_by_entity = [];
+    foreach (array_keys($bundles[$definition->id()]) as $bundle) {
+      $bundles_by_entity[$bundle] = $bundles[$definition->id()][$bundle]['label'];
     }
-
+    $form['data']['bundles_by_entity'] = [
+      '#type' => 'checkboxes',
+      '#title' => 'Enable view mode for the following bundles:',
+      '#options' => $bundles_by_entity,
+    ];
 
     return $form;
   }
@@ -54,7 +54,8 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state)
+  {
     parent::validateForm($form, $form_state);
 
     $form_state->setValueForElement($form['id'], $this->targetEntityTypeId . '.' . $form_state->getValue('id'));
@@ -63,7 +64,8 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareEntity() {
+  protected function prepareEntity()
+  {
     $definition = $this->entityTypeManager->getDefinition($this->targetEntityTypeId);
     if (!$definition->get('field_ui_base_route') || !$definition->hasViewBuilderClass()) {
       throw new NotFoundHttpException();
@@ -75,43 +77,50 @@ class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, FormStateInterface $form_state) {
-    $this->messenger()->addStatus($this->t('Saved the %label @entity-type.', ['%label' => $this->entity->label(), '@entity-type' => $this->entityType->getSingularLabel()]));
-//    $this->entity->save();
-    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
-//    $form_state->setRedirectUrl($this->entity->toUrl('collection'));
+  protected function getEntityDisplay($entity_type_id, $bundle, $mode)
+  {
+    $entity_display_repository = \Drupal::service('entity_display.repository');
+    return $entity_display_repository->getViewDisplay($entity_type_id, $bundle, $mode);
+  }
 
-    $form_values = $form_state->getValues();
-    xdebug_break();
+  /**
+   * {@inheritdoc}
+   */
+  protected function getOverviewUrl($mode, $bundle)
+  {
+    $entity_type = $this->entityTypeManager->getDefinition($this->targetEntityTypeId);
+    return Url::fromRoute('entity.entity_view_display.' . $this->targetEntityTypeId . '.view_mode', [
+        'view_mode_name' => $mode,
+      ] + FieldUI::getRouteBundleParameter($entity_type, $bundle));
+  }
 
-    // Handle the 'display modes' checkboxes if present.
-//    if ($this->entity->getMode() == 'default' && !empty($form_values['display_modes_custom'])) {
-//      $display_modes = $this->getDisplayModes();
-//      $current_statuses = $this->getDisplayStatuses();
-//
-//      $statuses = [];
-//      foreach ($form_values['display_modes_custom'] as $mode => $value) {
-//        if (!empty($value) && empty($current_statuses[$mode])) {
-//          // If no display exists for the newly enabled view mode, initialize
-//          // it with those from the 'default' view mode, which were used so
-//          // far.
-//          if (!$this->entityTypeManager->getStorage($this->entity->getEntityTypeId())->load($this->entity->getTargetEntityTypeId() . '.' . $this->entity->getTargetBundle() . '.' . $mode)) {
-//            $display = $this->getEntityDisplay($this->entity->getTargetEntityTypeId(), $this->entity->getTargetBundle(), 'default')->createCopy($mode);
-//            $display->save();
-//          }
-//
-//          $display_mode_label = $display_modes[$mode]['label'];
-//          $url = $this->getOverviewUrl($mode);
-//          $this->messenger()->addStatus($this->t('The %display_mode mode now uses custom display settings. You might want to <a href=":url">configure them</a>.', ['%display_mode' => $display_mode_label, ':url' => $url->toString()]));
-//        }
-//        $statuses[$mode] = !empty($value);
-//      }
 
-//      $this->saveDisplayStatuses($statuses);
+  /**
+   * {@inheritdoc}
+   */
+  public function save(array $form, FormStateInterface $form_state)
+  {
+    parent::save($form, $form_state);
+    [, $view_mode_name] = explode('.', $form_state->getValue('id'));
+    $target_entity_id = $this->targetEntityTypeId;
+
+    foreach ($form_state->getValue('bundles_by_entity') as $bundle => $value) {
+      if (!empty($value)) {
+        if (!$this->entityTypeManager->getStorage($this->entity->getEntityTypeId())->load($target_entity_id . '.' . $value . '.' . $view_mode_name)) {
+          $display = $this->getEntityDisplay($target_entity_id, $bundle, 'default')->createCopy($view_mode_name);
+          $display->save();
+        }
+        $url = $this->getOverviewUrl($view_mode_name, $value);
+
+        $bundle_info_service = \Drupal::service('entity_type.bundle.info');
+        $bundles = $bundle_info_service->getAllBundleInfo();
+        $bundle_label = $bundles[$target_entity_id][$bundle]['label'];
+        $view_mode_label = $form_state->getValue('label');
+
+        $this->messenger()->addStatus($this->t('<a href=":url">Configure the %display_mode view mode for %bundle_label</a>.', ['%display_mode' => $view_mode_label, '%bundle_label' => $bundle_label, ':url' => $url->toString()]));
+
+      }
+
     }
-
-//    $this->messenger()->addStatus($this->t('Foo Your settings have been saved.'));
-
-
-
+  }
 }
