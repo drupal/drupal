@@ -127,9 +127,7 @@ class EntityDisplayModeListBuilder extends ConfigEntityListBuilder {
             'data-dialog-type' => 'modal',
             'data-dialog-options' => Json::encode([
               'width' => '85vw',
-//              'title' => $this->t('Add new %label for @entity-type', ['@entity-type' => $this->entityTypes[$entity_type]->getLabel(), '%label' => $this->entityType->getSingularLabel()]),
             ]),
-//            'href' => Url::fromRoute($short_type == 'view' ? 'entity.entity_view_mode.add_form' : 'entity.entity_form_mode.add_form', ['entity_type_id' => $entity_type]),
           ],
         ],
         'colspan' => count($table['#header']),
