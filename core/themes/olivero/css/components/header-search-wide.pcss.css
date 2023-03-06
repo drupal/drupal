@@ -14,11 +14,11 @@
   position: absolute;
   z-index: 1; /* Ensure left border shows above social region in IE11. */
   inset-block-start: 100%;
-  inset-inline-start: 0;
+  inset-inline-start: calc(-1 * var(--content-left));
   display: none;
   visibility: hidden;
   overflow: hidden;
-  width: 100vw;
+  width: calc(100% + var(--content-left));
   max-width: var(--max-bg-color);
   height: var(--sp8);
   max-height: 0;
