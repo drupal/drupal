@@ -40,7 +40,7 @@ class MigrateUserPictureD6FileTest extends MigrateDrupal6TestBase {
     $this->assertSame('image-test.jpg', $file->getFilename());
     $this->assertSame('public://image-test.jpg', $file->getFileUri());
     $this->assertSame('2', $file->getOwnerId());
-    $this->assertSame('1901', $file->getSize());
+    $this->assertSame(1901, $file->getSize());
     $this->assertSame('image/jpeg', $file->getMimeType());
 
     $file = array_shift($files);

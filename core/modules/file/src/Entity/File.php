@@ -113,7 +113,8 @@ class File extends ContentEntityBase implements FileInterface {
    * {@inheritdoc}
    */
   public function getSize() {
-    return $this->get('filesize')->value;
+    $filesize = $this->get('filesize')->value;
+    return isset($filesize) ? (int) $filesize : NULL;
   }
 
   /**
@@ -127,7 +128,8 @@ class File extends ContentEntityBase implements FileInterface {
    * {@inheritdoc}
    */
   public function getCreatedTime() {
-    return $this->get('created')->value;
+    $created = $this->get('created')->value;
+    return isset($created) ? (int) $created : NULL;
   }
 
   /**
