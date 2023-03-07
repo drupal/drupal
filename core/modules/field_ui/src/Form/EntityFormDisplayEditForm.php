@@ -158,10 +158,10 @@ class EntityFormDisplayEditForm extends EntityDisplayFormBase {
     $bundle_label = $bundles[$entity][$bundle]['label'];
     $form['data']['add_content'] = [
       '#type' => 'link',
-      '#title' => $this->t("+ Create new $bundle_label"),
+      '#title' => $this->t("Create new $bundle_label"),
       '#url' => Url::fromRoute("node.add", ['node_type' => $bundle]),
       '#attributes' => [
-        'class' => ['button'],
+        'class' => ['button', 'button--action', 'button-primary'],
         'role' => 'button',
         'tabindex' => '1',
       ],

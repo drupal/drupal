@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -81,6 +82,23 @@ class NodeForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
+    /** @var \Drupal\node\NodeInterface $node */
+    $node = $this->entity;
+    $type_label = node_get_type_label($node);
+    $form = [
+      'manage_form_display' => [
+        '#type' => 'container',
+        '#weight' => -100,
+        'link' => [
+          '#type' => 'link',
+          '#title' => $this->t("Manage form display for $type_label"),
+          '#url' => Url::fromRoute("entity.entity_form_display.node.default", [
+            'node_type' => $node->bundle(),
+          ]),
+        ],
+      ],
+    ];
+
     // Try to restore from temp store, this must be done before calling
     // parent::form().
     $store = $this->tempStoreFactory->get('node_preview');
@@ -107,9 +125,6 @@ class NodeForm extends ContentEntityForm {
 
       $form_state->set('has_been_previewed', TRUE);
     }
-
-    /** @var \Drupal\node\NodeInterface $node */
-    $node = $this->entity;
 
     if ($this->operation == 'edit') {
       $form['#title'] = $this->t('<em>Edit @type</em> @title', [
