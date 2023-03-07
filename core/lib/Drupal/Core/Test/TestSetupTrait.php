@@ -119,9 +119,15 @@ trait TestSetupTrait {
    *
    * @return \Drupal\Core\Database\Connection
    *   The database connection to use for inserting assertions.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3176816
    */
   public static function getDatabaseConnection() {
-    return TestDatabase::getConnection();
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3176816', E_USER_DEPRECATED);
+    return SimpletestTestRunResultsStorage::getConnection();
   }
 
   /**

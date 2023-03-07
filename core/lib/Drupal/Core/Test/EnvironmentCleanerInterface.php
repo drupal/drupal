@@ -8,11 +8,9 @@ namespace Drupal\Core\Test;
  * This interface is marked internal. It does not imply an API.
  *
  * @todo Formalize this interface in
- *   https://www.drupal.org/project/drupal/issues/3075490 and
- *   https://www.drupal.org/project/drupal/issues/3075608
+ *   https://www.drupal.org/project/drupal/issues/3075490
  *
  * @see https://www.drupal.org/project/drupal/issues/3075490
- * @see https://www.drupal.org/project/drupal/issues/3075608
  *
  * @internal
  */
@@ -25,33 +23,34 @@ interface EnvironmentCleanerInterface {
    * under test.
    *
    * @param bool $clear_results
-   *   (optional) Whether to clear the test results database. Defaults to TRUE.
+   *   (optional) Whether to clear the test results storage. Defaults to TRUE.
    * @param bool $clear_temp_directories
    *   (optional) Whether to clear the test site directories. Defaults to TRUE.
    * @param bool $clear_database
    *   (optional) Whether to clean up the fixture database. Defaults to TRUE.
    */
-  public function cleanEnvironment($clear_results = TRUE, $clear_temp_directories = TRUE, $clear_database = TRUE);
+  public function cleanEnvironment(bool $clear_results = TRUE, bool $clear_temp_directories = TRUE, bool $clear_database = TRUE): void;
 
   /**
    * Remove database entries left over in the fixture database.
    */
-  public function cleanDatabase();
+  public function cleanDatabase(): void;
 
   /**
    * Finds all leftover fixture site directories and removes them.
    */
-  public function cleanTemporaryDirectories();
+  public function cleanTemporaryDirectories(): void;
 
   /**
-   * Clears test result tables from the results database.
+   * Clears test results from the results storage.
    *
-   * @param $test_id
-   *   Test ID to remove results for, or NULL to remove all results.
+   * @param \Drupal\Core\Test\TestRun $test_run
+   *   The test run object to remove results for, or NULL to remove all
+   *   results.
    *
    * @return int
    *   The number of results that were removed.
    */
-  public function cleanResultsTable($test_id = NULL);
+  public function cleanResults(TestRun $test_run = NULL): int;
 
 }
