@@ -240,8 +240,8 @@ class WorkspaceManager implements WorkspaceManagerInterface {
    */
   protected function doSwitchWorkspace($workspace) {
     // If the current user doesn't have access to view the workspace, they
-    // shouldn't be allowed to switch to it.
-    if ($workspace && !$workspace->access('view')) {
+    // shouldn't be allowed to switch to it, except in CLI processes.
+    if ($workspace && PHP_SAPI !== 'cli' && !$workspace->access('view')) {
       $this->logger->error('Denied access to view workspace %workspace_label for user %uid', [
         '%workspace_label' => $workspace->label(),
         '%uid' => $this->currentUser->id(),
