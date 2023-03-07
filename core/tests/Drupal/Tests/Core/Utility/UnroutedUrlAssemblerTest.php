@@ -156,13 +156,36 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
         if ($bubbleable_metadata) {
           $bubbleable_metadata->setCacheContexts(['some-cache-context']);
         }
-        return 'test-other-uri';
+        return '/test-other-uri';
       });
 
     $result = $this->unroutedUrlAssembler->assemble('base:test-uri', ['path_processing' => TRUE]);
     $this->assertEquals('/test-other-uri', $result);
 
     $result = $this->unroutedUrlAssembler->assemble('base:test-uri', ['path_processing' => TRUE], TRUE);
+    $expected_generated_url = new GeneratedUrl();
+    $expected_generated_url->setGeneratedUrl('/test-other-uri')
+      ->setCacheContexts(['some-cache-context']);
+    $this->assertEquals($expected_generated_url, $result);
+  }
+
+  /**
+   * @covers ::assemble
+   */
+  public function testAssembleWithStartingSlashEnabledProcessing() {
+    $this->setupRequestStack(FALSE);
+    $this->pathProcessor->expects($this->exactly(2))
+      ->method('processOutbound')
+      ->with('/test-uri', $this->anything(), $this->anything(), $this->anything())
+      ->willReturnCallback(function ($path, &$options = [], Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
+        $bubbleable_metadata?->setCacheContexts(['some-cache-context']);
+        return '/test-other-uri';
+      });
+
+    $result = $this->unroutedUrlAssembler->assemble('base:/test-uri', ['path_processing' => TRUE]);
+    $this->assertEquals('/test-other-uri', $result);
+
+    $result = $this->unroutedUrlAssembler->assemble('base:/test-uri', ['path_processing' => TRUE], TRUE);
     $expected_generated_url = new GeneratedUrl();
     $expected_generated_url->setGeneratedUrl('/test-other-uri')
       ->setCacheContexts(['some-cache-context']);
