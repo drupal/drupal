@@ -147,4 +147,26 @@ class EntityFormDisplayEditForm extends EntityDisplayFormBase {
     $this->moduleHandler->alter('field_widget_settings_summary', $summary, $context);
   }
 
+
+  /**
+   * {@inheritdoc}
+   */
+  public function form(array $form, FormStateInterface $form_state) {
+    $bundle = $this->entity->getTargetBundle();
+    $bundles = \Drupal::service('entity_type.bundle.info')->getAllBundleInfo();
+    $entity = $this->entity->getTargetEntityTypeId();
+    $bundle_label = $bundles[$entity][$bundle]['label'];
+    $form['data']['add_content'] = [
+      '#type' => 'link',
+      '#title' => $this->t("+ Create new $bundle_label"),
+      '#url' => Url::fromRoute("node.add", ['node_type' => $bundle]),
+      '#attributes' => [
+        'class' => ['button'],
+        'role' => 'button',
+        'tabindex' => '1',
+      ],
+    ];
+    return parent::form($form, $form_state);
+  }
+
 }
