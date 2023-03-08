@@ -92,4 +92,20 @@ class CommonTestController {
     return new Response($output);
   }
 
+  /**
+   * Returns a sample response with some early rendering in
+   * common_test_page_attachments.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   A new Response object.
+   */
+  public function attachments() {
+    \Drupal::state()->set('common_test.hook_page_attachments.early_rendering', TRUE);
+    $build = [
+      '#title' => 'A title',
+      'content' => ['#markup' => 'Some content'],
+    ];
+    return \Drupal::service('main_content_renderer.html')->renderResponse($build, \Drupal::requestStack()->getCurrentRequest(), \Drupal::routeMatch());
+  }
+
 }
