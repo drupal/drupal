@@ -107,7 +107,7 @@ class StandardTest extends UnitTestCase {
 
     // Default SRC tag by leaving it empty.
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Default_SRC_tag_by_leaving_it_empty
-    $data[] = ['<IMG SRC= onmouseover="alert(\'xxs\')">', '<IMG nmouseover="alert(&#039;xxs&#039;)">'];
+    $data[] = ['<IMG SRC= onmouseover="alert(\'xxs\')">', '<IMG>'];
 
     // Default SRC tag by leaving it out entirely.
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Default_SRC_tag_by_leaving_it_out_entirely
