@@ -5,16 +5,10 @@
  * Install, update and uninstall functions for the Settings Tray module.
  */
 
-use Drupal\Core\Cache\Cache;
-
 /**
  * Implements hook_install().
  */
 function settings_tray_install() {
-  // This module affects the rendering of blocks and of the page.
-  // @todo Remove in https://www.drupal.org/node/2783791.
-  Cache::invalidateTags(['rendered']);
-
   // \Drupal\Core\Menu\ContextualLinkManager caches per-group definitions
   // without associating the cache tag that would allow them to be cleared
   // by its clearCachedDefinitions() implementation that is automatically
