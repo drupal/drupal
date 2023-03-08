@@ -148,11 +148,18 @@ class ManageDisplayTest extends WebDriverTestBase {
     $this->assertEquals('hidden', $field_region->getValue());
     $field_region->setValue('content');
     $assert_session->assertWaitOnAjaxRequest();
+
+    // Confirm the region element retains focus after the AJAX update completes.
+    $this->assertJsCondition('document.activeElement === document.querySelector("[name=\'fields[field_test][region]\']")');
     $button_save->click();
 
     // Change the format for the test field.
     $field_test_format_type->setValue('field_test_multiple');
     $assert_session->assertWaitOnAjaxRequest();
+
+    // Confirm the format element retains focus after the AJAX update completes.
+    $this->assertJsCondition('document.activeElement === document.querySelector("[name=\'fields[field_test][type]\']")');
+
     $plugin_summary = $page->find('css', '#field-test .field-plugin-summary');
     $this->assertStringContainsString("test_formatter_setting_multiple: dummy test string", $plugin_summary->getText(), 'The expected summary is displayed.');
 
