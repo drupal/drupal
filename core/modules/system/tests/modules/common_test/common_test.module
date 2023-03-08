@@ -217,6 +217,12 @@ function common_test_page_attachments(array &$page) {
       '#markup' => 'test',
     ];
   }
+
+  if (\Drupal::state()->get('common_test.hook_page_attachments.early_rendering', FALSE)) {
+    // Do some early rendering.
+    $element = ['#markup' => '123'];
+    \Drupal::service('renderer')->render($element);
+  }
 }
 
 /**

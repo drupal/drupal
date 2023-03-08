@@ -20,3 +20,11 @@ common_test.js_and_css_querystring:
     _controller: '\Drupal\common_test\Controller\CommonTestController::jsAndCssQuerystring'
   requirements:
     _access: 'TRUE'
+
+common_test.page_attachments:
+  path: '/common/attachments-test'
+  defaults:
+    _title: 'Attachments test'
+    _controller: '\Drupal\common_test\Controller\CommonTestController::attachments'
+  requirements:
+    _access: 'TRUE'
