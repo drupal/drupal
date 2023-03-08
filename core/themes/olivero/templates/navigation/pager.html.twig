@@ -38,7 +38,7 @@
       {% if items.first %}
         {% apply spaceless %}
           <li class="pager__item pager__item--control pager__item--first">
-            <a href="{{ items.first.href }}" class="pager__link" title="{{ 'Go to first page'|t }}"{{ items.first.attributes|without('href', 'title', 'class') }}>
+            <a href="{{ items.first.href }}" title="{{ 'Go to first page'|t }}"{{ items.first.attributes|without('href', 'title').addClass('pager__link') }}>
               <span class="visually-hidden">{{ 'First page'|t }}</span>
               {% include "@olivero/../images/pager-first.svg" %}
             </a>
@@ -50,7 +50,7 @@
       {% if items.previous %}
         {% apply spaceless %}
           <li class="pager__item pager__item--control pager__item--previous">
-            <a href="{{ items.previous.href }}" class="pager__link" title="{{ 'Go to previous page'|t }}" rel="prev"{{ items.previous.attributes|without('href', 'title', 'rel', 'class') }}>
+            <a href="{{ items.previous.href }}" title="{{ 'Go to previous page'|t }}" rel="prev"{{ items.previous.attributes|without('href', 'title', 'rel').addClass('pager__link') }}>
               <span class="visually-hidden">{{ 'Previous page'|t }}</span>
               {% include "@olivero/../images/pager-previous.svg" %}
             </a>
@@ -73,7 +73,7 @@
               {% set title = 'Go to page @key'|t({'@key': key}) %}
             {% endif %}
             {% if current != key %}
-              <a href="{{ item.href }}" class="pager__link{{ current == key ? ' is-active' }}" title="{{ title }}"{{ item.attributes|without('href', 'title', 'class') }}>
+              <a href="{{ item.href }}" title="{{ title }}"{{ item.attributes|without('href', 'title').addClass('pager__link', current == key ? ' is-active') }}>
             {% endif %}
             <span class="visually-hidden">
               {{ current == key ? 'Current page'|t : 'Page'|t }}
@@ -95,7 +95,7 @@
       {% if items.next %}
         {% apply spaceless %}
           <li class="pager__item pager__item--control pager__item--next">
-            <a href="{{ items.next.href }}" class="pager__link" title="{{ 'Go to next page'|t }}" rel="next"{{ items.next.attributes|without('href', 'title', 'rel', 'class') }}>
+            <a href="{{ items.next.href }}" title="{{ 'Go to next page'|t }}" rel="next"{{ items.next.attributes|without('href', 'title', 'rel').addClass('pager__link') }}>
               <span class="visually-hidden">{{ 'Next page'|t }}</span>
               {% include "@olivero/../images/pager-previous.svg" %}
             </a>
@@ -107,7 +107,7 @@
       {% if items.last %}
         {% apply spaceless %}
           <li class="pager__item pager__item--control pager__item--last">
-            <a href="{{ items.last.href }}" class="pager__link" title="{{ 'Go to last page'|t }}"{{ items.last.attributes|without('href', 'title', 'class') }}>
+            <a href="{{ items.last.href }}" title="{{ 'Go to last page'|t }}"{{ items.last.attributes|without('href', 'title').addClass('pager__link') }}>
               <span class="visually-hidden">{{ 'Last page'|t }}</span>
               {% include "@olivero/../images/pager-first.svg" %}
             </a>
