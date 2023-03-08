@@ -2,6 +2,7 @@
     "version": "0.1",
     "language": "en-US",
     "allowCompoundWords": false,
+    "globRoot": ".",
     "ignorePaths": [
       "**/.*.json",
       ".*ignore",
