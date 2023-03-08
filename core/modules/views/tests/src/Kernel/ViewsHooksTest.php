@@ -11,8 +11,8 @@ use Drupal\views\Views;
  * Tests that views hooks are registered when defined in $module.views.inc.
  *
  * @group views
- * @see views_hook_info().
- * @see field_hook_info().
+ *
+ * @see views_hook_info()
  */
 class ViewsHooksTest extends ViewsKernelTestBase {
 
