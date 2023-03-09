@@ -49,9 +49,14 @@ tr .form-item,
   line-height: var(--line-height-form-label);
 }
 
-.form-item__label--multiple-value-form {
+/* Multiple selectors used to ensure styling even if modules override markup. */
+
+.form-item__label--multiple-value-form,
+.field-multiple-table .field-label h4.label {
+  display: inline-block;
   margin-top: 0;
   margin-bottom: 0;
+  vertical-align: middle;
   font-size: inherit;
   font-weight: inherit;
   line-height: inherit;

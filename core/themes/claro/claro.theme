@@ -993,27 +993,13 @@ function claro_preprocess_field_multiple_value_form(&$variables) {
   $variables['disabled'] = !empty($variables['element']['#disabled']);
 
   if ($variables['multiple']) {
-    // Add an additional CSS class for the field label table cell.
-    // This repeats the logic of template_preprocess_field_multiple_value_form()
-    // without using '#prefix' and '#suffix' for the wrapper element.
-    //
-    // If the field is multiple, we don't have to check the existence of the
-    // table header cell.
-    //
+    // Add an additional CSS class to the field label table cell. The table
+    // header cell should always exist unless removed by contrib.
     // @see template_preprocess_field_multiple_value_form().
-    $header_attributes = ['class' => ['form-item__label', 'form-item__label--multiple-value-form']];
-    if (!empty($variables['element']['#required'])) {
-      $header_attributes['class'][] = 'js-form-required';
-      $header_attributes['class'][] = 'form-required';
+    if (isset($variables['table']['#header'][0]['data']['#attributes'])) {
+      $variables['table']['#header'][0]['data']['#attributes']->removeClass('label');
+      $variables['table']['#header'][0]['data']['#attributes']->addClass('form-item__label', 'form-item__label--multiple-value-form');
     }
-    // Using array_key_first() for addressing the first header cell would be
-    // more elegant here, but we can rely on the related theme.inc preprocess.
-    $variables['table']['#header'][0]['data'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'h4',
-      '#value' => $variables['element']['#title'],
-      '#attributes' => $header_attributes,
-    ];
 
     if ($variables['disabled']) {
       $variables['table']['#attributes']['class'][] = 'tabledrag-disabled';
