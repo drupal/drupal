@@ -271,6 +271,45 @@
           // Fire the Ajax update.
           $refreshRows[0].value = rowNames.join(' ');
         }
+        once(
+          'edit-refresh',
+          'input[data-drupal-selector="edit-refresh"]',
+        ).forEach((input) => {
+          // Keep track of the element that was focused prior to triggering the
+          // mousedown event on the hidden submit button.
+          let returnFocus = {
+            drupalSelector: null,
+            scrollY: null,
+          };
+          // Use jQuery on to listen as the mousedown event is propagated by
+          // jQuery trigger().
+          $(input).on('mousedown', () => {
+            returnFocus = {
+              drupalSelector: document.activeElement.getAttribute(
+                'data-drupal-selector',
+              ),
+              scrollY: window.scrollY,
+            };
+          });
+          input.addEventListener('focus', () => {
+            if (returnFocus.drupalSelector) {
+              // Refocus the element that lost focus due to this hidden submit
+              // button being triggered by a mousedown event.
+              document
+                .querySelector(
+                  `[data-drupal-selector="${returnFocus.drupalSelector}"]`,
+                )
+                .focus();
+
+              // Ensure the scroll position is the same as when the input was
+              // initially changed.
+              window.scrollTo({
+                top: returnFocus.scrollY,
+              });
+              returnFocus = {};
+            }
+          });
+        });
         $('input[data-drupal-selector="edit-refresh"]').trigger('mousedown');
 
         // Disabled elements do not appear in POST ajax data, so we mark the

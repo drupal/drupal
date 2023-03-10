@@ -120,6 +120,27 @@
         if ($refreshRows.length) {
           $refreshRows[0].value = rowNames.join(' ');
         }
+        once('edit-refresh', 'input[data-drupal-selector="edit-refresh"]').forEach(function (input) {
+          var returnFocus = {
+            drupalSelector: null,
+            scrollY: null
+          };
+          $(input).on('mousedown', function () {
+            returnFocus = {
+              drupalSelector: document.activeElement.getAttribute('data-drupal-selector'),
+              scrollY: window.scrollY
+            };
+          });
+          input.addEventListener('focus', function () {
+            if (returnFocus.drupalSelector) {
+              document.querySelector("[data-drupal-selector=\"".concat(returnFocus.drupalSelector, "\"]")).focus();
+              window.scrollTo({
+                top: returnFocus.scrollY
+              });
+              returnFocus = {};
+            }
+          });
+        });
         $('input[data-drupal-selector="edit-refresh"]').trigger('mousedown');
         $(ajaxElements).prop('disabled', true);
       }
