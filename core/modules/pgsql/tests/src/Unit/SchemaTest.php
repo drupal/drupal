@@ -55,7 +55,7 @@ class SchemaTest extends UnitTestCase {
 
     $this->connection->expects($this->exactly(2))
       ->method('query')
-      ->withConsecutive(
+      ->willReturnOnConsecutiveCalls(
         [$this->anything()],
         ["SELECT 1 FROM pg_constraint WHERE conname = '$expected'"],
       )
