@@ -45,7 +45,7 @@ class CommentStatisticsUnitTest extends UnitTestCase {
    *
    * @var int
    */
-  protected $calls_to_fetch;
+  protected $callsToFetch;
 
   /**
    * Sets up required mocks and the CommentStatistics service under test.
@@ -95,7 +95,7 @@ class CommentStatisticsUnitTest extends UnitTestCase {
    * @group Comment
    */
   public function testRead() {
-    $this->calls_to_fetch = 0;
+    $this->callsToFetch = 0;
     $results = $this->commentStatistics->read(['1' => 'boo', '2' => 'foo'], 'snafus');
     $this->assertEquals(['something', 'something-else'], $results);
   }
@@ -108,8 +108,8 @@ class CommentStatisticsUnitTest extends UnitTestCase {
    *   other calls to function.
    */
   public function fetchObjectCallback() {
-    $this->calls_to_fetch++;
-    switch ($this->calls_to_fetch) {
+    $this->callsToFetch++;
+    switch ($this->callsToFetch) {
       case 1:
         return 'something';
 

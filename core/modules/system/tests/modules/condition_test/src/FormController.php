@@ -27,7 +27,7 @@ class FormController implements FormInterface {
    *
    * @var \Drupal\Core\Condition\ConditionInterface
    */
-  protected $condition_current_theme;
+  protected $conditionCurrentTheme;
 
   /**
    * {@inheritdoc}
@@ -42,7 +42,7 @@ class FormController implements FormInterface {
   public function __construct() {
     $manager = new ConditionManager(\Drupal::service('container.namespaces'), \Drupal::cache('discovery'), \Drupal::moduleHandler());
     $this->condition = $manager->createInstance('entity_bundle:node');
-    $this->condition_current_theme = $manager->createInstance('current_theme');
+    $this->conditionCurrentTheme = $manager->createInstance('current_theme');
   }
 
   /**
@@ -56,7 +56,7 @@ class FormController implements FormInterface {
 
     $form['current_theme'] = [];
     $subformState = SubformState::createForSubform($form['current_theme'], $form, $form_state);
-    $form['current_theme'] = $this->condition_current_theme->buildConfigurationForm($form['current_theme'], $subformState);
+    $form['current_theme'] = $this->conditionCurrentTheme->buildConfigurationForm($form['current_theme'], $subformState);
 
     $form['actions']['submit'] = [
       '#type' => 'submit',
@@ -81,7 +81,7 @@ class FormController implements FormInterface {
     $this->condition->submitConfigurationForm($form['entity_bundle'], $subformState);
     $subformState = SubformState::createForSubform($form['current_theme'], $form, $form_state);
 
-    $this->condition_current_theme->submitConfigurationForm($form['current_theme'], $subformState);
+    $this->conditionCurrentTheme->submitConfigurationForm($form['current_theme'], $subformState);
     $config = $this->condition->getConfig();
     foreach ($config['bundles'] as $bundle) {
       \Drupal::messenger()->addStatus('Bundle: ' . $bundle);
@@ -92,8 +92,8 @@ class FormController implements FormInterface {
     if ($this->condition->execute()) {
       \Drupal::messenger()->addStatus($this->t('Executed successfully.'));
     }
-    if ($this->condition_current_theme->execute()) {
-      \Drupal::messenger()->addStatus($this->condition_current_theme->summary());
+    if ($this->conditionCurrentTheme->execute()) {
+      \Drupal::messenger()->addStatus($this->conditionCurrentTheme->summary());
     }
   }
 

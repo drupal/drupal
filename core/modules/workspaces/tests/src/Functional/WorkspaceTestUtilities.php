@@ -15,7 +15,7 @@ trait WorkspaceTestUtilities {
 
   use BlockCreationTrait;
 
-  protected $switcher_block_configured = FALSE;
+  protected $switcherBlockConfigured = FALSE;
 
   /**
    * Loads a single entity by its label.
@@ -88,7 +88,7 @@ trait WorkspaceTestUtilities {
     $page = $this->getSession()->getPage();
 
     $this->assertTrue($page->hasContent('Workspace switcher'));
-    $this->switcher_block_configured = TRUE;
+    $this->switcherBlockConfigured = TRUE;
   }
 
   /**
@@ -101,7 +101,7 @@ trait WorkspaceTestUtilities {
    *   The workspace to set active.
    */
   protected function switchToWorkspace(WorkspaceInterface $workspace) {
-    $this->assertTrue($this->switcher_block_configured, 'This test was not written correctly: you must call setupWorkspaceSwitcherBlock() before switchToWorkspace()');
+    $this->assertTrue($this->switcherBlockConfigured, 'This test was not written correctly: you must call setupWorkspaceSwitcherBlock() before switchToWorkspace()');
     /** @var \Drupal\Tests\WebAssert $session */
     $session = $this->assertSession();
     $session->buttonExists('Activate');

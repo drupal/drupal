@@ -35,14 +35,14 @@ class ManageDisplayTest extends WebDriverTestBase {
   protected $type;
 
   /**
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   * @var \Drupal\Core\Entity\entityTypeManagerInterface
    */
-  protected $entity_type_manager;
+  protected $entityTypeManager;
 
   /**
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $display_storage;
+  protected $displayStorage;
 
   /**
    * {@inheritdoc}
@@ -70,7 +70,7 @@ class ManageDisplayTest extends WebDriverTestBase {
     $type = $this->drupalCreateContentType(['name' => $type_name, 'type' => $type_name]);
     $this->type = $type->id();
 
-    $this->entity_type_manager = $this->container->get('entity_type.manager');
+    $this->entityTypeManager = $this->container->get('entity_type.manager');
   }
 
   /**
@@ -84,12 +84,12 @@ class ManageDisplayTest extends WebDriverTestBase {
     $this->fieldUIAddNewField($manage_fields, 'test', 'Test field');
 
     $display_id = 'node.' . $this->type . '.default';
-    $display_storage = $this->entity_type_manager->getStorage('entity_view_display');
+    $displayStorage = $this->entityTypeManager->getStorage('entity_view_display');
 
     // Get the display options (formatter and settings) that were automatically
     // assigned for the 'default' display.
     /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display */
-    $display = $display_storage->loadUnchanged($display_id);
+    $display = $displayStorage->loadUnchanged($display_id);
     $display_options = $display->getComponent('field_test');
     $format = $display_options['type'];
     $default_settings = \Drupal::service('plugin.manager.field.formatter')->getDefaultSettings($format);
@@ -137,7 +137,7 @@ class ManageDisplayTest extends WebDriverTestBase {
 
     // Validate the changed display settings on the server.
     /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display */
-    $display = $display_storage->loadUnchanged($display_id);
+    $display = $displayStorage->loadUnchanged($display_id);
     $this->assertNull($display->getComponent('field_test'));
 
     // Switch to manual mode.
@@ -189,7 +189,7 @@ class ManageDisplayTest extends WebDriverTestBase {
 
     $id = 'node.' . $this->type . '.default';
     /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display */
-    $display = $display_storage->loadUnchanged($id);
+    $display = $displayStorage->loadUnchanged($id);
     $this->assertEquals('foo', $display->getRenderer('field_test')->getThirdPartySetting('field_third_party_test', 'field_test_field_formatter_third_party_settings_form'));
     $this->assertContains('field_third_party_test', $display->calculateDependencies()->getDependencies()['module'], 'The display has a dependency on field_third_party_test module.');
 
@@ -242,7 +242,7 @@ class ManageDisplayTest extends WebDriverTestBase {
 
     // Ensure that third-party settings were removed from the formatter.
     /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display */
-    $display = $display_storage->loadUnchanged($display_id);
+    $display = $displayStorage->loadUnchanged($display_id);
     $component = $display->getComponent('field_test');
     $this->assertArrayNotHasKey('field_third_party_test', $component['third_party_settings']);
   }
@@ -256,7 +256,7 @@ class ManageDisplayTest extends WebDriverTestBase {
     // Admin Manage Display page.
     $manage_display = $manage_fields . '/form-display';
 
-    $form_storage = $this->entity_type_manager->getStorage('entity_form_display');
+    $form_storage = $this->entityTypeManager->getStorage('entity_form_display');
 
     // Creates a new field that can be used with multiple formatters.
     // Reference: Drupal\field_test\Plugin\Field\FieldWidget\TestFieldWidgetMultiple::isApplicable().

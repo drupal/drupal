@@ -16,7 +16,7 @@ class ViewsBulkTest extends ViewTestBase {
    *
    * @var \Drupal\user\UserInterface
    */
-  protected $admin_user;
+  protected $adminUser;
 
   /**
    * Modules to enable.
@@ -37,7 +37,7 @@ class ViewsBulkTest extends ViewTestBase {
     parent::setUp($import_test_views, $modules);
 
     $this->drupalCreateContentType(['type' => 'page']);
-    $this->admin_user = $this->createUser(['bypass node access', 'administer nodes', 'access content overview']);
+    $this->adminUser = $this->createUser(['bypass node access', 'administer nodes', 'access content overview']);
   }
 
   /**
@@ -53,7 +53,7 @@ class ViewsBulkTest extends ViewTestBase {
     ]);
 
     // Login as administrator and go to admin/content.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/content');
     $this->assertSession()->pageTextContains($node_1->getTitle());
 

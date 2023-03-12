@@ -82,7 +82,7 @@ class FilterDateTimeTest extends DateTimeHandlerTestBase {
    */
   protected function _testOffset() {
     $view = Views::getView('test_filter_datetime');
-    $field = static::$field_name . '_value';
+    $field = static::$fieldName . '_value';
 
     // Test simple operations.
     $view->initHandlers();
@@ -117,7 +117,7 @@ class FilterDateTimeTest extends DateTimeHandlerTestBase {
    */
   protected function _testBetween() {
     $view = Views::getView('test_filter_datetime');
-    $field = static::$field_name . '_value';
+    $field = static::$fieldName . '_value';
 
     // Test between with min and max.
     $view->initHandlers();
@@ -180,7 +180,7 @@ class FilterDateTimeTest extends DateTimeHandlerTestBase {
    */
   protected function _testExact() {
     $view = Views::getView('test_filter_datetime');
-    $field = static::$field_name . '_value';
+    $field = static::$fieldName . '_value';
 
     // Test between with min and max.
     $view->initHandlers();

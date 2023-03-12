@@ -53,7 +53,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
    *
    * @var string
    */
-  protected $target_type;
+  protected $targetType;
 
   /**
    * {@inheritdoc}
@@ -70,7 +70,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     // Create a second content type, to be a target for entity reference fields.
     $type_name = strtolower($this->randomMachineName(8)) . '_test';
     $type = $this->drupalCreateContentType(['name' => $type_name, 'type' => $type_name]);
-    $this->target_type = $type->id();
+    $this->targetType = $type->id();
 
     // Change the title field label.
     $fields = \Drupal::service('entity_field.manager')
@@ -89,7 +89,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
       'label' => 'Text Field',
       'field_name' => 'field_text',
       'entity_type' => 'node',
-      'bundle' => $this->target_type,
+      'bundle' => $this->targetType,
       'settings' => [],
       'required' => FALSE,
     ])->save();
@@ -175,7 +175,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $this->assertEquals('Title', $title_options[0]->getText());
 
     // Also select the target bundle so that field_text is also available.
-    $page->findField('settings[handler_settings][target_bundles][' . $this->target_type . ']')->setValue($this->target_type);
+    $page->findField('settings[handler_settings][target_bundles][' . $this->targetType . ']')->setValue($this->targetType);
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->optionExists('settings[handler_settings][sort][field]', 'nid');
     $assert_session->optionExists('settings[handler_settings][sort][field]', 'title');
@@ -192,7 +192,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     // Exception: the title option has a different label.
     $title_options = $sort_by->findAll('xpath', 'option[@value="title"]');
     $this->assertEquals(1, count($title_options));
-    $this->assertEquals($this->target_type . ' title', $title_options[0]->getText());
+    $this->assertEquals($this->targetType . ' title', $title_options[0]->getText());
 
     // Test the sort settings.
     // Option 0: no sort.
@@ -235,19 +235,19 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $this->assertFalse($sort_direction->isVisible());
 
     // Select a bundle and check the same two fields.
-    $page->findField('settings[handler_settings][target_bundles][' . $this->target_type . ']')->setValue($this->target_type);
+    $page->findField('settings[handler_settings][target_bundles][' . $this->targetType . ']')->setValue($this->targetType);
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertTrue($sort_by->isVisible(), 'The "sort by" options are visible.');
     $assert_session->optionExists('settings[handler_settings][sort][field]', 'field_text.value');
 
     // Un-select the bundle and check the same two fields.
-    $page->findField('settings[handler_settings][target_bundles][' . $this->target_type . ']')->uncheck();
+    $page->findField('settings[handler_settings][target_bundles][' . $this->targetType . ']')->uncheck();
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertFalse($sort_by->isVisible(), 'The "sort by" options are hidden yet again.');
     $this->assertFieldSelectOptions('settings[handler_settings][sort][field]', ['_none']);
 
     // Third step: confirm.
-    $page->findField('settings[handler_settings][target_bundles][' . $this->target_type . ']')->setValue($this->target_type);
+    $page->findField('settings[handler_settings][target_bundles][' . $this->targetType . ']')->setValue($this->targetType);
     $assert_session->assertWaitOnAjaxRequest();
     $this->submitForm(['required' => '1'], 'Save settings');
 

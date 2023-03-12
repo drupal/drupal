@@ -74,7 +74,7 @@ class CommentTest extends ResourceTestBase {
   /**
    * @var \Drupal\entity_test\Entity\EntityTest
    */
-  private $commented_entity;
+  private $commentedEntity;
 
   /**
    * {@inheritdoc}
@@ -111,11 +111,11 @@ class CommentTest extends ResourceTestBase {
     $this->addDefaultCommentField('entity_test', 'bar', 'comment');
 
     // Create a "Camelids" test entity that the comment will be assigned to.
-    $this->commented_entity = EntityTest::create([
+    $this->commentedEntity = EntityTest::create([
       'name' => 'Camelids',
       'type' => 'bar',
     ]);
-    $this->commented_entity->save();
+    $this->commentedEntity->save();
 
     // Create a "Llama" comment.
     $comment = Comment::create([
@@ -123,7 +123,7 @@ class CommentTest extends ResourceTestBase {
         'value' => 'The name "llama" was adopted by European settlers from native Peruvians.',
         'format' => 'plain_text',
       ],
-      'entity_id' => $this->commented_entity->id(),
+      'entity_id' => $this->commentedEntity->id(),
       'entity_type' => 'entity_test',
       'field_name' => 'comment',
     ]);
@@ -209,9 +209,9 @@ class CommentTest extends ResourceTestBase {
           ],
           'entity_id' => [
             'data' => [
-              'id' => $this->commented_entity->uuid(),
+              'id' => $this->commentedEntity->uuid(),
               'meta' => [
-                'drupal_internal__target_id' => (int) $this->commented_entity->id(),
+                'drupal_internal__target_id' => (int) $this->commentedEntity->id(),
               ],
               'type' => 'entity_test--bar',
             ],
