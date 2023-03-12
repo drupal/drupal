@@ -118,8 +118,8 @@ class SessionConfiguration implements SessionConfigurationInterface {
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request.
    *
-   * @returns string
-   *   The session cookie domain.
+   * @returns string|null
+   *   The session cookie domain, or NULL if the calculated value is invalid.
    */
   protected function getCookieDomain(Request $request) {
     if (isset($this->options['cookie_domain'])) {
@@ -135,7 +135,8 @@ class SessionConfiguration implements SessionConfigurationInterface {
     // Cookies for domains without an embedded dot will be rejected by user
     // agents in order to defeat malicious websites attempting to set cookies
     // for top-level domains. Also IP addresses may not be used in the domain
-    // attribute of a Set-Cookie header.
+    // attribute of a Set-Cookie header. IPv6 addresses will not pass the first
+    // test, so it's acceptable to bias the second test to IPv4.
     if (count(explode('.', $cookie_domain)) > 2 && !is_numeric(str_replace('.', '', $cookie_domain))) {
       return $cookie_domain;
     }
