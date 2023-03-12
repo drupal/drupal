@@ -256,7 +256,8 @@ $databases = [];
  * variable has the same value on each server.
  *
  * For enhanced security, you may set this variable to the contents of a file
- * outside your document root; you should also ensure that this file is not
+ * outside your document root, and vary the value across environments (like
+ * production and development); you should also ensure that this file is not
  * stored with backups of your database.
  *
  * Example:
