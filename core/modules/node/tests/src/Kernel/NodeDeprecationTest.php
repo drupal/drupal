@@ -3,6 +3,10 @@
 namespace Drupal\Tests\node\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Core\Database\Connection;
+use Drupal\Core\Datetime\DateFormatterInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\node\Form\NodeRevisionDeleteForm;
 
 /**
  * Tests the deprecations in the node.module file.
@@ -48,6 +52,19 @@ class NodeDeprecationTest extends KernelTestBase {
     $this->installEntitySchema('node');
     $this->expectDeprecation('node_type_update_nodes is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\EntityStorageInterface::updateType instead. See https://www.drupal.org/node/3323340');
     node_type_update_nodes(1, 2);
+  }
+
+  /**
+   * Tests the deprecation of NodeRevisionDeleteForm constructor.
+   */
+  public function testNodeRevisionDeleteFormConstructorDeprecation(): void {
+    $this->expectDeprecation('Calling Drupal\node\Form\NodeRevisionDeleteForm::_construct() with the $connection argument is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3343754');
+    new NodeRevisionDeleteForm(
+      $this->createMock(EntityStorageInterface::class),
+      $this->createMock(EntityStorageInterface::class),
+      $this->createMock(Connection::class),
+      $this->createMock(DateFormatterInterface::class),
+    );
   }
 
 }

@@ -216,6 +216,29 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->submitForm([], 'Revert');
     $this->assertSession()->pageTextContains("Basic page {$nodes[2]->label()} has been reverted to the revision from {$this->container->get('date.formatter')->format($old_revision_date)}.");
 
+    // Confirm user is redirected depending on the remaining revisions,
+    // when a revision is deleted.
+    $existing_revision_ids = $node_storage->revisionIds($node);
+    // Delete all revision except last 3.
+    $remaining_revision_ids = array_slice($existing_revision_ids, -3, 3);
+    foreach ($existing_revision_ids as $revision_id) {
+      if (!in_array($revision_id, $remaining_revision_ids)) {
+        $node_storage->deleteRevision($revision_id);
+      }
+    }
+
+    // Confirm user was redirected to revisions history page.
+    $this->drupalGet("node/" . $node->id() . "/revisions/" . $remaining_revision_ids[0] . "/delete");
+    $this->submitForm([], 'Delete');
+    $this->assertSession()->pageTextContains("Revisions for {$nodes[2]->label()}");
+    $this->assertSession()->pageTextNotContains($nodes[2]->body->value);
+
+    // Confirm user was redirected to the node page.
+    $this->drupalGet("node/" . $node->id() . "/revisions/" . $remaining_revision_ids[1] . "/delete");
+    $this->submitForm([], 'Delete');
+    $this->assertSession()->pageTextNotContains("Revisions for {$nodes[2]->label()}");
+    $this->assertSession()->pageTextContains($nodes[2]->body->value);
+
     // Make a new revision and set it to not be default.
     // This will create a new revision that is not "front facing".
     $new_node_revision = clone $node;
