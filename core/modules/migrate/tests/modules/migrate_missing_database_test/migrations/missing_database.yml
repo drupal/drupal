@@ -1,0 +1,8 @@
+id: missing_database
+label: Migration using a SQL source
+source:
+  plugin: migrate_missing_database_test
+process: {}
+destination:
+  plugin: 'null'
+migration_dependencies: {}
