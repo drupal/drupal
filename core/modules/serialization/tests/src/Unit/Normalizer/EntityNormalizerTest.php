@@ -95,7 +95,7 @@ class EntityNormalizerTest extends UnitTestCase {
       ->getMock();
     $serializer->expects($this->exactly(2))
       ->method('normalize')
-      ->withConsecutive(
+      ->willReturnOnConsecutiveCalls(
         [$list_item_1, 'test_format'],
         [$list_item_2, 'test_format'],
       );
@@ -221,7 +221,7 @@ class EntityNormalizerTest extends UnitTestCase {
       ->getMock();
     $serializer->expects($this->exactly(2))
       ->method('denormalize')
-      ->withConsecutive(
+      ->willReturnOnConsecutiveCalls(
         ['value_1', get_class($key_1), NULL, ['target_instance' => $key_1, 'entity_type' => 'test']],
         ['value_2', get_class($key_2), NULL, ['target_instance' => $key_2, 'entity_type' => 'test']],
       );
@@ -370,7 +370,7 @@ class EntityNormalizerTest extends UnitTestCase {
       ->getMock();
     $serializer->expects($this->exactly(2))
       ->method('denormalize')
-      ->withConsecutive(
+      ->willReturnOnConsecutiveCalls(
         ['value_1', get_class($key_1), NULL, ['target_instance' => $key_1, 'entity_type' => 'test']],
         ['value_2', get_class($key_2), NULL, ['target_instance' => $key_2, 'entity_type' => 'test']],
       );

@@ -186,7 +186,7 @@ class LocalTaskManagerTest extends UnitTestCase {
       );
     $this->cacheBackend->expects($this->exactly(2))
       ->method('set')
-      ->withConsecutive(
+      ->willReturnOnConsecutiveCalls(
         ['local_task_plugins:en', $definitions, Cache::PERMANENT],
         ['local_task_plugins:en:menu_local_task_test_tasks_view', $this->getLocalTasksCache(), Cache::PERMANENT, ['local_task']],
       );

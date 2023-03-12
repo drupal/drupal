@@ -1538,7 +1538,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     // The original indexes should be dropped before the new one is added.
     $this->dbSchemaHandler->expects($this->exactly(3))
       ->method('dropIndex')
-      ->withConsecutive(
+      ->willReturnOnConsecutiveCalls(
         ['entity_test', 'entity_test__b588603cb9'],
         ['entity_test', 'entity_test__removed_field'],
       );
