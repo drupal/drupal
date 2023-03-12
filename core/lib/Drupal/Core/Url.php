@@ -770,8 +770,14 @@ class Url implements TrustedCallbackInterface {
    *
    * @return array
    *   An associative array suitable for a render array.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3342977
    */
   public function toRenderArray() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3342977', E_USER_DEPRECATED);
     $render_array = [
       '#url' => $this,
       '#options' => $this->getOptions(),
@@ -836,8 +842,14 @@ class Url implements TrustedCallbackInterface {
    *
    * @return bool
    *   Returns TRUE if the current user has access to the URL, otherwise FALSE.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3342977
    */
   public static function renderAccess(array $element) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3342977', E_USER_DEPRECATED);
     return $element['#url']->access();
   }
 
@@ -908,6 +920,7 @@ class Url implements TrustedCallbackInterface {
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
+    // @todo Clean-up in https://www.drupal.org/i/3343153
     return ['renderAccess'];
   }
 
