@@ -80,7 +80,7 @@ JS;
   /**
    * Data provider for ensuring CKEditor 5 UI translations are loaded.
    *
-   * @return \string[][]
+   * @return string[][]
    */
   public function provider(): array {
     return [

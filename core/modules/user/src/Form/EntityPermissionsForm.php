@@ -54,7 +54,7 @@ class EntityPermissionsForm extends UserPermissionsForm {
    *   The role storage.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param Drupal\Core\Config\ConfigManagerInterface $config_manager
+   * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
    *   The configuration entity manager.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
@@ -116,7 +116,7 @@ class EntityPermissionsForm extends UserPermissionsForm {
    *   The current state of the form.
    * @param string $bundle_entity_type
    *   (optional) The entity type ID.
-   * @param string|Drupal\Core\Entity\EntityInterface $bundle
+   * @param string|\Drupal\Core\Entity\EntityInterface $bundle
    *   (optional) Either the bundle name or the bundle object.
    */
   public function buildForm(array $form, FormStateInterface $form_state, string $bundle_entity_type = NULL, $bundle = NULL): array {

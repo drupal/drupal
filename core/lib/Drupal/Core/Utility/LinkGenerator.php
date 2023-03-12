@@ -191,14 +191,14 @@ class LinkGenerator implements LinkGeneratorInterface {
   /**
    * Generates the link.
    *
-   * @param Drupal\Core\GeneratedLink $generated_link
+   * @param \Drupal\Core\GeneratedLink $generated_link
    *   The generated link, along with its associated cacheability metadata.
    * @param array $attributes
    *   The attributes of the generated link.
    * @param array $variables
    *   The link text, url, and other options.
    *
-   * @return Drupal\Core\GeneratedLink
+   * @return \Drupal\Core\GeneratedLink
    *   The generated link, along with its associated cacheability metadata.
    */
   protected function doGenerate($generated_link, $attributes, $variables) {

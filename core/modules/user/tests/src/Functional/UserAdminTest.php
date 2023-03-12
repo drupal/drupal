@@ -33,7 +33,7 @@ class UserAdminTest extends BrowserTestBase {
   /**
    * Gets the xpath selector for a user account.
    *
-   * @param \Drupal\user\Entity\UserInterface $user
+   * @param \Drupal\user\UserInterface $user
    *   The user to get the link for.
    *
    * @return string

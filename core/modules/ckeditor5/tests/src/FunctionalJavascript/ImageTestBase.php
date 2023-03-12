@@ -595,7 +595,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
   /**
    * Data provider for ::testWidth().
    *
-   * @return \string[][]
+   * @return string[][]
    */
   public function providerWidth(): array {
     return [

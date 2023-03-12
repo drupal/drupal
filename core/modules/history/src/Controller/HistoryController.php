@@ -20,7 +20,7 @@ class HistoryController extends ControllerBase {
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request of the page.
    *
-   * @return Symfony\Component\HttpFoundation\JsonResponse
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   The JSON response.
    */
   public function getNodeReadTimestamps(Request $request) {

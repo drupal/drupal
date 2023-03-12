@@ -37,11 +37,11 @@ class MenuTestController extends ControllerBase {
   /**
    * Constructs the MenuTestController object.
    *
-   * @param \Drupal\menu_test\Controller\ThemeManagerInterface $theme_manager
+   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
    *   The theme manager.
-   * @param \Drupal\menu_test\Controller\ThemeNegotiatorInterface $theme_negotiator
+   * @param \Drupal\Core\Theme\ThemeNegotiatorInterface $theme_negotiator
    *   The theme negotiator.
-   * @param \Drupal\menu_test\Controller\RouteMatchInterface $route_match
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match.
    */
   public function __construct(ThemeManagerInterface $theme_manager, ThemeNegotiatorInterface $theme_negotiator, RouteMatchInterface $route_match) {

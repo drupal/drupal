@@ -55,7 +55,7 @@ class ProviderFilterDecorator implements DiscoveryInterface {
    *   A callable, gets passed a provider name, should return TRUE if the
    *   provider exists and FALSE if not.
    *
-   * @return array|\mixed[]
+   * @return array
    *   An array of plugin definitions. If a definition is an array and has a
    *   provider key that provider is guaranteed to exist.
    */

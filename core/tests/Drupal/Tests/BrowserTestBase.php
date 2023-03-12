@@ -283,7 +283,7 @@ abstract class BrowserTestBase extends TestCase {
   /**
    * Gets an instance of the default Mink driver.
    *
-   * @return Behat\Mink\Driver\DriverInterface
+   * @return \Behat\Mink\Driver\DriverInterface
    *   Instance of default Mink driver.
    *
    * @throws \InvalidArgumentException

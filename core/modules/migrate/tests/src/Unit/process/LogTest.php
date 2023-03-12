@@ -32,7 +32,7 @@ class LogTest extends MigrateProcessTestCase {
   /**
    * Provides data for testLog.
    *
-   * @return \string[][]
+   * @return string[][]
    *   An array of test data arrays.
    */
   public function providerTestLog() {

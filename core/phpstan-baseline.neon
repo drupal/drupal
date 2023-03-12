@@ -202,7 +202,7 @@ parameters:
 
 		-
 			message: "#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
-			count: 3
+			count: 1
 			path: lib/Drupal/Core/Action/ActionManager.php
 
 		-
@@ -237,7 +237,7 @@ parameters:
 
 		-
 			message: "#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
-			count: 2
+			count: 1
 			path: lib/Drupal/Core/Block/BlockManager.php
 
 		-
@@ -272,7 +272,7 @@ parameters:
 
 		-
 			message: "#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
-			count: 3
+			count: 1
 			path: lib/Drupal/Core/Condition/ConditionManager.php
 
 		-
@@ -527,7 +527,7 @@ parameters:
 
 		-
 			message: "#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
-			count: 3
+			count: 1
 			path: lib/Drupal/Core/Field/FieldTypePluginManager.php
 
 		-
@@ -3157,7 +3157,7 @@ parameters:
 
 		-
 			message: "#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
-			count: 3
+			count: 1
 			path: tests/Drupal/Tests/Core/Plugin/CategorizingPluginManagerTraitTest.php
 
 		-

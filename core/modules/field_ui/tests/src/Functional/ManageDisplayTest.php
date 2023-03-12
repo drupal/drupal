@@ -384,7 +384,7 @@ class ManageDisplayTest extends BrowserTestBase {
   /**
    * Extracts all options from a select element.
    *
-   * @param Behat\Mink\Element\NodeElement $element
+   * @param \Behat\Mink\Element\NodeElement $element
    *   The select element field information.
    *
    * @return array

@@ -63,7 +63,7 @@ trait ModulesEnabledTrait {
    *
    * @param string[] $modules
    *   Enabled module names, keyed by machine names.
-   * @param Drupal\Core\Config\PreExistingConfigException $exception
+   * @param \Drupal\Core\Config\PreExistingConfigException $exception
    *   Exception thrown if configuration with the same name already exists.
    *
    * @return \Drupal\Core\StringTranslation\PluralTranslatableMarkup

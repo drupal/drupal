@@ -85,11 +85,11 @@ class Tar implements ArchiverInterface {
    * Retrieves the tar engine itself.
    *
    * In some cases it may be necessary to directly access the underlying
-   * Archive_Tar object for implementation-specific logic. This is for advanced
+   * ArchiveTar object for implementation-specific logic. This is for advanced
    * use only as it is not shared by other implementations of ArchiveInterface.
    *
-   * @return Archive_Tar
-   *   The Archive_Tar object used by this object.
+   * @return ArchiveTar
+   *   The ArchiveTar object used by this object.
    */
   public function getArchive() {
     return $this->tar;

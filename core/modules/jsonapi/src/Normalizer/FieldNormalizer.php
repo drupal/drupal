@@ -83,7 +83,7 @@ class FieldNormalizer extends NormalizerBase implements DenormalizerInterface {
    * @param array $context
    *   The context array.
    *
-   * @return \Drupal\jsonapi\Normalizer\Value\FieldItemNormalizerValue[]
+   * @return \Drupal\jsonapi\Normalizer\FieldItemNormalizer[]
    *   The array of normalized field items.
    */
   protected function normalizeFieldItems(FieldItemListInterface $field, $format, array $context) {
