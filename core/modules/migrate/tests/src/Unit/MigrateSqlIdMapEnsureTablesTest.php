@@ -125,7 +125,7 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
       ]);
     $schema->expects($this->exactly(2))
       ->method('createTable')
-      ->withConsecutive(
+      ->willReturnOnConsecutiveCalls(
         ['migrate_map_sql_idmap_test', $map_table_schema],
         ['migrate_message_sql_idmap_test', $table_schema],
       );
@@ -153,7 +153,7 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
       ]);
     $schema->expects($this->exactly(3))
       ->method('addField')
-      ->withConsecutive(
+      ->willReturnOnConsecutiveCalls(
         [
           'migrate_map_sql_idmap_test', 'rollback_action', [
             'type' => 'int',

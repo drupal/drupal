@@ -399,7 +399,7 @@ class EntityUnitTest extends UnitTestCase {
   public function testPostSave() {
     $this->cacheTagsInvalidator->expects($this->exactly(2))
       ->method('invalidateTags')
-      ->withConsecutive([
+      ->willReturnOnConsecutiveCalls([
         [
           // List cache tag.
           $this->entityTypeId . '_list',
@@ -430,7 +430,7 @@ class EntityUnitTest extends UnitTestCase {
   public function testPostSaveBundle() {
     $this->cacheTagsInvalidator->expects($this->exactly(2))
       ->method('invalidateTags')
-      ->withConsecutive([
+      ->willReturnOnConsecutiveCalls([
         [
           // List cache tag.
           $this->entityTypeId . '_list',
