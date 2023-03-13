@@ -1,13 +1,6 @@
 views.filter.moderation_state_filter:
   type: views.filter.in_operator
   label: 'Moderation state filter'
-  mapping:
-    limit_workflows:
-      type: sequence
-      label: 'Workflow'
-      sequence:
-        type: string
-        label: 'Workflow'
 
 views.sort.moderation_state_sort:
   type: views_sort
