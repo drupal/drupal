@@ -688,9 +688,6 @@
         .toggleClass('form-disabled', e.value)
         .find('select, input, textarea')
         .prop('disabled', e.value);
-
-      // Note: WebKit nightlies don't reflect that change correctly.
-      // See https://bugs.webkit.org/show_bug.cgi?id=23789
     }
   });
 
