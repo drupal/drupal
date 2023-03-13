@@ -91,8 +91,8 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
   /**
    * Returns the hashed password.
    *
-   * @return string
-   *   The hashed password.
+   * @return string|null
+   *   The hashed password, or NULL if a password is not set.
    */
   public function getPassword();
 
