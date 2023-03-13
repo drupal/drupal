@@ -447,6 +447,9 @@ function template_preprocess_filter_tips(&$variables) {
  * expression that could possibly match all of the cases in one pass.
  */
 function _filter_url($text, $filter) {
+  // Store the current text in case any of the preg_* functions fail.
+  $saved_text = $text;
+
   // Tags to skip and not recurse into.
   $ignore_tags = 'a|script|style|code|pre';
 
@@ -523,56 +526,61 @@ function _filter_url($text, $filter) {
     // markup, especially a '>'. Therefore, remove all comment contents and add
     // them back later.
     _filter_url_escape_comments('', TRUE);
-    $text = preg_replace_callback('`<!--(.*?)-->`s', '_filter_url_escape_comments', $text);
+    $text = is_null($text) ? '' : preg_replace_callback('`<!--(.*?)-->`s', '_filter_url_escape_comments', $text);
 
     // Split at all tags; ensures that no tags or attributes are processed.
-    $chunks = preg_split('/(<.+?>)/is', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
-    // PHP ensures that the array consists of alternating delimiters and
-    // literals, and begins and ends with a literal (inserting NULL as
-    // required). Therefore, the first chunk is always text:
-    $chunk_type = 'text';
-    // If a tag of $ignore_tags is found, it is stored in $open_tag and only
-    // removed when the closing tag is found. Until the closing tag is found,
-    // no replacements are made.
-    $open_tag = '';
+    $chunks = is_null($text) ? [''] : preg_split('/(<.+?>)/is', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
 
-    for ($i = 0; $i < count($chunks); $i++) {
-      if ($chunk_type == 'text') {
-        // Only process this text if there are no unclosed $ignore_tags.
-        if ($open_tag == '') {
-          // If there is a match, inject a link into this chunk via the callback
-          // function contained in $task.
-          $chunks[$i] = preg_replace_callback($pattern, $task, $chunks[$i]);
-        }
-        // Text chunk is done, so next chunk must be a tag.
-        $chunk_type = 'tag';
-      }
-      else {
-        // Only process this tag if there are no unclosed $ignore_tags.
-        if ($open_tag == '') {
-          // Check whether this tag is contained in $ignore_tags.
-          if (preg_match("`<($ignore_tags)(?:\s|>)`i", $chunks[$i], $matches)) {
-            $open_tag = $matches[1];
+    // Do not attempt to convert links into URLs if preg_split() fails.
+    if ($chunks !== FALSE) {
+      // PHP ensures that the array consists of alternating delimiters and
+      // literals, and begins and ends with a literal (inserting NULL as
+      // required). Therefore, the first chunk is always text:
+      $chunk_type = 'text';
+      // If a tag of $ignore_tags is found, it is stored in $open_tag and only
+      // removed when the closing tag is found. Until the closing tag is found,
+      // no replacements are made.
+      $open_tag = '';
+      for ($i = 0; $i < count($chunks); $i++) {
+        if ($chunk_type == 'text') {
+          // Only process this text if there are no unclosed $ignore_tags.
+          if ($open_tag == '') {
+            // If there is a match, inject a link into this chunk via the callback
+            // function contained in $task.
+            $chunks[$i] = preg_replace_callback($pattern, $task, $chunks[$i]);
           }
+          // Text chunk is done, so next chunk must be a tag.
+          $chunk_type = 'tag';
         }
-        // Otherwise, check whether this is the closing tag for $open_tag.
         else {
-          if (preg_match("`<\/$open_tag>`i", $chunks[$i], $matches)) {
-            $open_tag = '';
+          // Only process this tag if there are no unclosed $ignore_tags.
+          if ($open_tag == '') {
+            // Check whether this tag is contained in $ignore_tags.
+            if (preg_match("`<($ignore_tags)(?:\s|>)`i", $chunks[$i], $matches)) {
+              $open_tag = $matches[1];
+            }
           }
+          // Otherwise, check whether this is the closing tag for $open_tag.
+          else {
+            if (preg_match("`<\/$open_tag>`i", $chunks[$i], $matches)) {
+              $open_tag = '';
+            }
+          }
+          // Tag chunk is done, so next chunk must be text.
+          $chunk_type = 'text';
         }
-        // Tag chunk is done, so next chunk must be text.
-        $chunk_type = 'text';
       }
+
+      $text = implode($chunks);
     }
 
-    $text = implode($chunks);
     // Revert to the original comment contents
     _filter_url_escape_comments('', FALSE);
-    $text = preg_replace_callback('`<!--(.*?)-->`', '_filter_url_escape_comments', $text);
+    $text = $text ? preg_replace_callback('`<!--(.*?)-->`', '_filter_url_escape_comments', $text) : $text;
   }
 
-  return $text;
+  // If there is no text at this point revert to the previous text.
+  return strlen((string) $text) > 0 ? $text : $saved_text;
 }
 
 /**
