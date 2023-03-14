@@ -297,7 +297,7 @@
   var $document = $(document);
   $document.on('state:disabled', function (e) {
     if (e.trigger) {
-      $(e.target).prop('disabled', e.value).closest('.js-form-item, .js-form-submit, .js-form-wrapper').toggleClass('form-disabled', e.value).find('select, input, textarea').prop('disabled', e.value);
+      $(e.target).closest('.js-form-item, .js-form-submit, .js-form-wrapper').toggleClass('form-disabled', e.value).find('select, input, textarea').prop('disabled', e.value);
     }
   });
   $document.on('state:required', function (e) {
@@ -323,7 +323,7 @@
   });
   $document.on('state:checked', function (e) {
     if (e.trigger) {
-      $(e.target).prop('checked', e.value).trigger('change');
+      $(e.target).closest('.js-form-item, .js-form-wrapper').find('input').prop('checked', e.value).trigger('change');
     }
   });
   $document.on('state:collapsed', function (e) {
