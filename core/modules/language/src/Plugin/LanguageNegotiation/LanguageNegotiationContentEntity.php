@@ -139,7 +139,7 @@ class LanguageNegotiationContentEntity extends LanguageNegotiationMethodBase imp
   public function getLanguageSwitchLinks(Request $request, $type, Url $url) {
     $links = [];
     $query = [];
-    parse_str($request->getQueryString(), $query);
+    parse_str($request->getQueryString() ?? '', $query);
 
     foreach ($this->languageManager->getNativeLanguages() as $language) {
       $langcode = $language->getId();
