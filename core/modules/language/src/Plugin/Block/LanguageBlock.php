@@ -83,9 +83,8 @@ class LanguageBlock extends BlockBase implements ContainerFactoryPluginInterface
    */
   public function build() {
     $build = [];
-    $route_name = $this->pathMatcher->isFrontPage() ? '<front>' : '<current>';
     $type = $this->getDerivativeId();
-    $links = $this->languageManager->getLanguageSwitchLinks($type, Url::fromRoute($route_name));
+    $links = $this->languageManager->getLanguageSwitchLinks($type, Url::fromRouteMatch(\Drupal::routeMatch()));
 
     if (isset($links->links)) {
       $build = [
