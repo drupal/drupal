@@ -172,6 +172,14 @@ class MediaThumbnailFormatter extends ImageFormatter {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function checkAccess(EntityInterface $entity) {
+    return $entity->access('view', NULL, TRUE)
+      ->andIf(parent::checkAccess($entity));
+  }
+
+  /**
    * Get the URL for the media thumbnail.
    *
    * @param \Drupal\media\MediaInterface $media
