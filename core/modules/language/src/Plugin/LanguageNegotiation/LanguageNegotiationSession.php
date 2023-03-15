@@ -125,10 +125,11 @@ class LanguageNegotiationSession extends LanguageNegotiationMethodBase implement
    */
   public function getLanguageSwitchLinks(Request $request, $type, Url $url) {
     $links = [];
+    $query = [];
+    parse_str($request->getQueryString() ?? '', $query);
     $config = $this->config->get('language.negotiation')->get('session');
     $param = $config['parameter'];
     $language_query = $_SESSION[$param] ?? $this->languageManager->getCurrentLanguage($type)->getId();
-    $query = $request->query->all();
 
     foreach ($this->languageManager->getNativeLanguages() as $language) {
       $langcode = $language->getId();
