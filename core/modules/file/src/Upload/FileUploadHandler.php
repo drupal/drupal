@@ -12,6 +12,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
+use Drupal\file\FileRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\File\Exception\CannotWriteFileException;
 use Symfony\Component\HttpFoundation\File\Exception\ExtensionFileException;
@@ -84,6 +85,13 @@ class FileUploadHandler {
   protected $requestStack;
 
   /**
+   * The file Repository.
+   *
+   * @var \Drupal\file\FileRepositoryInterface
+   */
+  protected $fileRepository;
+
+  /**
    * Constructs a FileUploadHandler object.
    *
    * @param \Drupal\Core\File\FileSystemInterface $fileSystem
@@ -100,8 +108,10 @@ class FileUploadHandler {
    *   The current user.
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
+   * @param \Drupal\file\FileRepositoryInterface $fileRepository
+   *   The file repository.
    */
-  public function __construct(FileSystemInterface $fileSystem, EntityTypeManagerInterface $entityTypeManager, StreamWrapperManagerInterface $streamWrapperManager, EventDispatcherInterface $eventDispatcher, MimeTypeGuesserInterface $mimeTypeGuesser, AccountInterface $currentUser, RequestStack $requestStack) {
+  public function __construct(FileSystemInterface $fileSystem, EntityTypeManagerInterface $entityTypeManager, StreamWrapperManagerInterface $streamWrapperManager, EventDispatcherInterface $eventDispatcher, MimeTypeGuesserInterface $mimeTypeGuesser, AccountInterface $currentUser, RequestStack $requestStack, FileRepositoryInterface $fileRepository = NULL) {
     $this->fileSystem = $fileSystem;
     $this->entityTypeManager = $entityTypeManager;
     $this->streamWrapperManager = $streamWrapperManager;
@@ -109,6 +119,11 @@ class FileUploadHandler {
     $this->mimeTypeGuesser = $mimeTypeGuesser;
     $this->currentUser = $currentUser;
     $this->requestStack = $requestStack;
+    if ($fileRepository === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $fileRepository argument is deprecated in drupal:10.1.5 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3346839', E_USER_DEPRECATED);
+      $fileRepository = \Drupal::service('file.repository');
+    }
+    $this->fileRepository = $fileRepository;
   }
 
   /**
@@ -333,24 +348,9 @@ class FileUploadHandler {
    *
    * @return \Drupal\file\FileInterface|null
    *   The first file with the matched URI if found, NULL otherwise.
-   *
-   * @todo replace with https://www.drupal.org/project/drupal/issues/3223209
    */
   protected function loadByUri(string $uri): ?FileInterface {
-    $fileStorage = $this->entityTypeManager->getStorage('file');
-    /** @var \Drupal\file\FileInterface[] $files */
-    $files = $fileStorage->loadByProperties(['uri' => $uri]);
-    if (count($files)) {
-      foreach ($files as $item) {
-        // Since some database servers sometimes use a case-insensitive
-        // comparison by default, double check that the filename is an exact
-        // match.
-        if ($item->getFileUri() === $uri) {
-          return $item;
-        }
-      }
-    }
-    return NULL;
+    return $this->fileRepository->loadByUri($uri);
   }
 
 }

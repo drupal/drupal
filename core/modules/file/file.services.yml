@@ -6,7 +6,7 @@ services:
       - { name: backend_overridable }
   file.upload_handler:
     class: Drupal\file\Upload\FileUploadHandler
-    arguments: [ '@file_system', '@entity_type.manager', '@stream_wrapper_manager', '@event_dispatcher', '@file.mime_type.guesser', '@current_user', '@request_stack' ]
+    arguments: [ '@file_system', '@entity_type.manager', '@stream_wrapper_manager', '@event_dispatcher', '@file.mime_type.guesser', '@current_user', '@request_stack', '@file.repository' ]
   file.repository:
     class: Drupal\file\FileRepository
     arguments: [ '@file_system', '@stream_wrapper_manager', '@entity_type.manager', '@module_handler', '@file.usage', '@current_user' ]
