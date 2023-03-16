@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Database;
 
+use Drupal\Core\Database\Event\StatementExecutionEndEvent;
+
 /**
  * Database query logger.
  *
@@ -101,6 +103,25 @@ class Log {
   }
 
   /**
+   * Log a query to all active logging keys, from a statement execution event.
+   *
+   * @param \Drupal\Core\Database\Event\StatementExecutionEndEvent $event
+   *   The statement execution event.
+   */
+  public function logFromEvent(StatementExecutionEndEvent $event): void {
+    foreach (array_keys($this->queryLog) as $key) {
+      $this->queryLog[$key][] = [
+        'query' => $event->queryString,
+        'args' => $event->args,
+        'target' => $event->target,
+        'caller' => $event->caller,
+        'time' => $event->getElapsedTime(),
+        'start' => $event->startTime,
+      ];
+    }
+  }
+
+  /**
    * Log a query to all active logging keys.
    *
    * @param \Drupal\Core\Database\StatementInterface $statement
@@ -113,8 +134,14 @@ class Log {
    * @param float $start
    *   The time the query started as a float (in seconds since the Unix epoch
    *   with microsecond precision).
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   *   ::logFromEvent().
+   *
+   * @see https://www.drupal.org/node/3328053
    */
   public function log(StatementInterface $statement, $args, $time, float $start = NULL) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use ::logFromEvent(). See https://www.drupal.org/node/3328053', E_USER_DEPRECATED);
     foreach (array_keys($this->queryLog) as $key) {
       $this->queryLog[$key][] = [
         'query' => $statement->getQueryString(),
@@ -147,8 +174,14 @@ class Log {
    *   entry before it so that we get the function and args of the function that
    *   called into the database system, not the function and args of the
    *   database call itself.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   *   Connection::findCallerFromDebugBacktrace().
+   *
+   * @see https://www.drupal.org/node/3328053
    */
   public function findCaller() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use Connection::findCallerFromDebugBacktrace(). See https://www.drupal.org/node/3328053', E_USER_DEPRECATED);
     $driver_namespace = Database::getConnectionInfo($this->connectionKey)['default']['namespace'];
     $stack = static::removeDatabaseEntries($this->getDebugBacktrace(), $driver_namespace);
 
@@ -178,21 +211,15 @@ class Log {
    *
    * @return array
    *   The cleaned backtrace array.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   *   Connection::removeDatabaseEntriesFromDebugBacktrace().
+   *
+   * @see https://www.drupal.org/node/3328053
    */
   public static function removeDatabaseEntries(array $backtrace, string $driver_namespace): array {
-    // Starting from the very first entry processed during the request, find
-    // the first function call that can be identified as a call to a
-    // method/function in the database layer.
-    for ($n = count($backtrace) - 1; $n >= 0; $n--) {
-      // If the call was made from a function, 'class' will be empty. We give
-      // it a default empty string value in that case.
-      $class = $backtrace[$n]['class'] ?? '';
-      if (str_starts_with($class, __NAMESPACE__) || str_starts_with($class, $driver_namespace)) {
-        break;
-      }
-    }
-
-    return array_values(array_slice($backtrace, $n));
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use Connection::removeDatabaseEntriesFromDebugBacktrace(). See https://www.drupal.org/node/3328053', E_USER_DEPRECATED);
+    return Connection::removeDatabaseEntriesFromDebugBacktrace($backtrace, $driver_namespace);
   }
 
   /**
@@ -203,8 +230,14 @@ class Log {
    *
    * @return array[]
    *   The debug backtrace.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is
+   *   no replacement.
+   *
+   * @see https://www.drupal.org/node/3328053
    */
   protected function getDebugBacktrace() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3328053', E_USER_DEPRECATED);
     return debug_backtrace();
   }
 

@@ -3,6 +3,8 @@
 namespace Drupal\Core\Database;
 
 use Composer\Autoload\ClassLoader;
+use Drupal\Core\Database\Event\StatementExecutionEndEvent;
+use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use Drupal\Core\Extension\ExtensionDiscovery;
 
 /**
@@ -122,6 +124,10 @@ abstract class Database {
       // logging object associated with it.
       if (!empty(self::$connections[$key])) {
         foreach (self::$connections[$key] as $connection) {
+          $connection->enableEvents([
+            StatementExecutionStartEvent::class,
+            StatementExecutionEndEvent::class,
+          ]);
           $connection->setLogger(self::$logs[$key]);
         }
       }
@@ -450,6 +456,10 @@ abstract class Database {
     // If we have any active logging objects for this connection key, we need
     // to associate them with the connection we just opened.
     if (!empty(self::$logs[$key])) {
+      $new_connection->enableEvents([
+        StatementExecutionStartEvent::class,
+        StatementExecutionEndEvent::class,
+      ]);
       $new_connection->setLogger(self::$logs[$key]);
     }
 

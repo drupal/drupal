@@ -154,8 +154,13 @@ class LoggingTest extends DatabaseTestBase {
    * @covers ::findCaller
    *
    * @dataProvider providerContribDriverLog
+   *
+   * @group legacy
    */
   public function testContribDriverLog($driver_namespace, $stack, array $expected_entry) {
+    $this->expectDeprecation('Drupal\Core\Database\Log::findCaller() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use Connection::findCallerFromDebugBacktrace(). See https://www.drupal.org/node/3328053');
+    $this->expectDeprecation('Drupal\Core\Database\Log::removeDatabaseEntries() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use Connection::removeDatabaseEntriesFromDebugBacktrace(). See https://www.drupal.org/node/3328053');
+
     $mock_builder = $this->getMockBuilder(Log::class);
     $log = $mock_builder
       ->onlyMethods(['getDebugBacktrace'])

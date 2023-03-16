@@ -415,6 +415,9 @@ services:
     tags:
       - { name: event_subscriber }
   Drupal\Core\Database\ReplicaKillSwitch: '@database.replica_kill_switch'
+  Drupal\Core\Database\EventSubscriber\StatementExecutionSubscriber:
+    tags:
+      - { name: event_subscriber }
   datetime.time:
     class: Drupal\Component\Datetime\Time
     arguments: ['@request_stack']

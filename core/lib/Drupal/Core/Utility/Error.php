@@ -4,9 +4,9 @@ namespace Drupal\Core\Utility;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
-use Drupal\Core\Database\Log;
 
 /**
  * Drupal error utility class.
@@ -52,7 +52,7 @@ class Error {
     // skipping internal functions of the database layer.
     if ($exception instanceof \PDOException || $exception instanceof DatabaseExceptionWrapper) {
       $driver_namespace = Database::getConnectionInfo()['default']['namespace'];
-      $backtrace = Log::removeDatabaseEntries($backtrace, $driver_namespace);
+      $backtrace = Connection::removeDatabaseEntriesFromDebugBacktrace($backtrace, $driver_namespace);
       if (isset($exception->query_string, $exception->args)) {
         $message .= ": " . $exception->query_string . "; " . print_r($exception->args, TRUE);
       }

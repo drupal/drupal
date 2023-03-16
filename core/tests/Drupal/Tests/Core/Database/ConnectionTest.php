@@ -3,6 +3,7 @@
 namespace Drupal\Tests\Core\Database;
 
 use Composer\Autoload\ClassLoader;
+use Drupal\Core\Database\Database;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
@@ -641,6 +642,226 @@ class ConnectionTest extends UnitTestCase {
         'SELECT * FROM test;',
         'SELECT * FROM test; ',
         ['allow_delimiter_in_query' => TRUE],
+      ],
+    ];
+  }
+
+  /**
+   * Tests that the proper caller is retrieved from the backtrace.
+   *
+   * @covers ::findCallerFromDebugBacktrace
+   * @covers ::removeDatabaseEntriesFromDebugBacktrace
+   * @covers ::getDebugBacktrace
+   */
+  public function testFindCallerFromDebugBacktrace() {
+    Database::addConnectionInfo('default', 'default', [
+      'driver' => 'test',
+      'namespace' => 'Drupal\Tests\Core\Database\Stub',
+    ]);
+    $connection = new StubConnection($this->createMock(StubPDO::class), []);
+    $result = $connection->findCallerFromDebugBacktrace();
+    $this->assertSame([
+      'file' => __FILE__,
+      'line' => 662,
+      'function' => 'testFindCallerFromDebugBacktrace',
+      'class' => 'Drupal\Tests\Core\Database\ConnectionTest',
+      'type' => '->',
+      'args' => [],
+    ], $result);
+  }
+
+  /**
+   * Tests that a log called by a custom database driver returns proper caller.
+   *
+   * @param string $driver_namespace
+   *   The driver namespace to be tested.
+   * @param array $stack
+   *   A test debug_backtrace stack.
+   * @param array $expected_entry
+   *   The expected stack entry.
+   *
+   * @covers ::findCallerFromDebugBacktrace
+   * @covers ::removeDatabaseEntriesFromDebugBacktrace
+   *
+   * @dataProvider providerMockedBacktrace
+   *
+   * @group legacy
+   */
+  public function testFindCallerFromDebugBacktraceWithMockedBacktrace(string $driver_namespace, array $stack, array $expected_entry): void {
+    $mock_builder = $this->getMockBuilder(StubConnection::class);
+    $connection = $mock_builder
+      ->onlyMethods(['getDebugBacktrace', 'getConnectionOptions'])
+      ->setConstructorArgs([$this->createMock(StubPDO::class), []])
+      ->getMock();
+    $connection->expects($this->once())
+      ->method('getConnectionOptions')
+      ->willReturn([
+        'driver' => 'test',
+        'namespace' => $driver_namespace,
+      ]);
+    $connection->expects($this->once())
+      ->method('getDebugBacktrace')
+      ->willReturn($stack);
+
+    $result = $connection->findCallerFromDebugBacktrace();
+    $this->assertEquals($expected_entry, $result);
+  }
+
+  /**
+   * Provides data for testFindCallerFromDebugBacktraceWithMockedBacktrace.
+   *
+   * @return array[]
+   *   A associative array of simple arrays, each having the following elements:
+   *   - the contrib driver PHP namespace
+   *   - a test debug_backtrace stack
+   *   - the stack entry expected to be returned.
+   *
+   * @see ::testFindCallerFromDebugBacktraceWithMockedBacktrace()
+   */
+  public function providerMockedBacktrace(): array {
+    $stack = [
+      [
+        'file' => '/var/www/core/lib/Drupal/Core/Database/Log.php',
+        'line' => 125,
+        'function' => 'findCaller',
+        'class' => 'Drupal\\Core\\Database\\Log',
+        'object' => 'test',
+        'type' => '->',
+        'args' => [
+          0 => 'test',
+        ],
+      ],
+      [
+        'file' => '/var/www/libraries/drudbal/lib/Statement.php',
+        'line' => 264,
+        'function' => 'log',
+        'class' => 'Drupal\\Core\\Database\\Log',
+        'object' => 'test',
+        'type' => '->',
+        'args' => [
+          0 => 'test',
+        ],
+      ],
+      [
+        'file' => '/var/www/libraries/drudbal/lib/Connection.php',
+        'line' => 213,
+        'function' => 'execute',
+        'class' => 'Drupal\\Driver\\Database\\dbal\\Statement',
+        'object' => 'test',
+        'type' => '->',
+        'args' => [
+          0 => 'test',
+        ],
+      ],
+      [
+        'file' => '/var/www/core/tests/Drupal/KernelTests/Core/Database/LoggingTest.php',
+        'line' => 23,
+        'function' => 'query',
+        'class' => 'Drupal\\Driver\\Database\\dbal\\Connection',
+        'object' => 'test',
+        'type' => '->',
+        'args' => [
+          0 => 'test',
+        ],
+      ],
+      [
+        'file' => '/var/www/vendor/phpunit/phpunit/src/Framework/TestCase.php',
+        'line' => 1154,
+        'function' => 'testEnableLogging',
+        'class' => 'Drupal\\KernelTests\\Core\\Database\\LoggingTest',
+        'object' => 'test',
+        'type' => '->',
+        'args' => [
+          0 => 'test',
+        ],
+      ],
+      [
+        'file' => '/var/www/vendor/phpunit/phpunit/src/Framework/TestCase.php',
+        'line' => 842,
+        'function' => 'runTest',
+        'class' => 'PHPUnit\\Framework\\TestCase',
+        'object' => 'test',
+        'type' => '->',
+        'args' => [
+          0 => 'test',
+        ],
+      ],
+      [
+        'file' => '/var/www/vendor/phpunit/phpunit/src/Framework/TestResult.php',
+        'line' => 693,
+        'function' => 'runBare',
+        'class' => 'PHPUnit\\Framework\\TestCase',
+        'object' => 'test',
+        'type' => '->',
+        'args' => [
+          0 => 'test',
+        ],
+      ],
+      [
+        'file' => '/var/www/vendor/phpunit/phpunit/src/Framework/TestCase.php',
+        'line' => 796,
+        'function' => 'run',
+        'class' => 'PHPUnit\\Framework\\TestResult',
+        'object' => 'test',
+        'type' => '->',
+        'args' => [
+          0 => 'test',
+        ],
+      ],
+      [
+        'file' => 'Standard input code',
+        'line' => 57,
+        'function' => 'run',
+        'class' => 'PHPUnit\\Framework\\TestCase',
+        'object' => 'test',
+        'type' => '->',
+        'args' => [
+          0 => 'test',
+        ],
+      ],
+      [
+        'file' => 'Standard input code',
+        'line' => 111,
+        'function' => '__phpunit_run_isolated_test',
+        'args' => [
+          0 => 'test',
+        ],
+      ],
+    ];
+
+    return [
+      // Test that if the driver namespace is in the stack trace, the first
+      // non-database entry is returned.
+      'contrib driver namespace' => [
+        'Drupal\\Driver\\Database\\dbal',
+        $stack,
+        [
+          'class' => 'Drupal\\KernelTests\\Core\\Database\\LoggingTest',
+          'function' => 'testEnableLogging',
+          'file' => '/var/www/core/tests/Drupal/KernelTests/Core/Database/LoggingTest.php',
+          'line' => 23,
+          'type' => '->',
+          'args' => [
+            0 => 'test',
+          ],
+        ],
+      ],
+      // Extreme case, should not happen at normal runtime - if the driver
+      // namespace is not in the stack trace, the first entry to a method
+      // in core database namespace is returned.
+      'missing driver namespace' => [
+        'Drupal\\Driver\\Database\\fake',
+        $stack,
+        [
+          'class' => 'Drupal\\Driver\\Database\\dbal\\Statement',
+          'function' => 'execute',
+          'file' => '/var/www/libraries/drudbal/lib/Statement.php',
+          'line' => 264,
+          'type' => '->',
+          'args' => [
+            0 => 'test',
+          ],
+        ],
       ],
     ];
   }
