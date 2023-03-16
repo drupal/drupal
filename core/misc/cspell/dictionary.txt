@@ -213,6 +213,7 @@ cnfi
 cochez
 codesniffer
 colgroups
+colinodell
 collegehumor
 colonpos
 colour
@@ -1220,6 +1221,7 @@ testk
 testkey
 testlist
 testload
+testlogger
 testname
 testproject
 testservice
