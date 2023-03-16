@@ -120,7 +120,7 @@ class FileUploadHandler {
     $this->currentUser = $currentUser;
     $this->requestStack = $requestStack;
     if ($fileRepository === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $fileRepository argument is deprecated in drupal:10.1.5 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3346839', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . ' without the $fileRepository argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3346839', E_USER_DEPRECATED);
       $fileRepository = \Drupal::service('file.repository');
     }
     $this->fileRepository = $fileRepository;
