@@ -393,7 +393,11 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     $form['plugin_settings'] = [
       '#type' => 'vertical_tabs',
       '#title' => $this->t('CKEditor 5 plugin settings'),
-      '#id' => 'ckeditor5-plugin-settings',
+      // Add an ID to the editor settings vertical tabs wrapper so it can be
+      // easily targeted by JavaScript.
+      '#wrapper_attributes' => [
+        'id' => 'plugin-settings-wrapper',
+      ],
     ];
 
     $this->injectPluginSettingsForm($form, $form_state, $editor);

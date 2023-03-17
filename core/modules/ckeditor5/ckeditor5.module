@@ -227,22 +227,6 @@ function ckeditor5_form_filter_format_form_alter(array &$form, FormStateInterfac
   // Add an ID to the filter settings vertical tabs wrapper to facilitate AJAX
   // updates.
   $form['filter_settings']['#wrapper_attributes']['id'] = 'filter-settings-wrapper';
-
-  // Add an ID to the editor settings vertical tabs wrapper so it can be easily
-  // targeted by JavaScript. If there are no configurable plugins, render an
-  // empty container with the same ID instead.
-  // @todo consider moving this to editor.module when this module is moved to
-  //   Drupal core https://www.drupal.org/project/ckeditor5/issues/3231322.
-  if (!empty($form['editor']['settings']['subform']['plugins'])) {
-    $form['editor']['settings']['subform']['plugin_settings']['#wrapper_attributes']['id'] = 'plugin-settings-wrapper';
-  }
-  else {
-    $form['editor']['settings']['subform']['plugin_settings'] = [
-      '#type' => 'container',
-      '#attributes' => ['id' => 'plugin-settings-wrapper'],
-    ];
-  }
-
   $form['#after_build'][] = [CKEditor5::class, 'assessActiveTextEditorAfterBuild'];
   $form['#validate'][] = [CKEditor5::class, 'validateSwitchingToCKEditor5'];
   array_unshift($form['actions']['submit']['#submit'], 'ckeditor5_filter_format_edit_form_submit');
@@ -290,7 +274,17 @@ function _update_ckeditor5_html_filter(array $form, FormStateInterface $form_sta
   // latency.
   $renderedField = $renderer->render($form['editor']['settings']);
   if ($form_state->get('ckeditor5_is_active') && $form_state->get('ckeditor5_is_selected')) {
-    $response->addCommand(new ReplaceCommand('#plugin-settings-wrapper', $form['editor']['settings']['subform']['plugin_settings']['#markup']));
+    $plugin_settings_markup = $form['editor']['settings']['subform']['plugin_settings']['#markup'];
+    // If no configurable plugins are enabled, render an empty container with
+    // the same ID instead. Otherwise it'll be impossible to render plugin
+    // settings vertical tabs in the correct location when such a plugin is
+    // enabled.
+    // @see \Drupal\Core\Render\Element\VerticalTabs::preRenderVerticalTabs
+    $markup = $plugin_settings_markup ?? [
+      '#type' => 'container',
+      '#attributes' => ['id' => 'plugin-settings-wrapper'],
+    ];
+    $response->addCommand(new ReplaceCommand('#plugin-settings-wrapper', $markup));
   }
   else {
     $response->addCommand(new ReplaceCommand('#editor-settings-wrapper', $renderedField));
