@@ -115,6 +115,19 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
   /**
    * {@inheritdoc}
    */
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+    $paths = array_map('trim', explode("\n", $form_state->getValue('pages')));
+    foreach ($paths as $path) {
+      if (empty($path) || $path === '<front>' || str_starts_with($path, '/')) {
+        continue;
+      }
+      $form_state->setErrorByName('pages', $this->t("The path %path requires a leading forward slash when used with the Pages setting.", ['%path' => $path]));
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $this->configuration['pages'] = $form_state->getValue('pages');
     parent::submitConfigurationForm($form, $form_state);
