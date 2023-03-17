@@ -196,8 +196,9 @@ function system_requirements($phase) {
       }
       $requirements['obsolete_extensions'] = [
         'title' => t('Obsolete extensions enabled'),
-        'value' => t('Obsolete extensions found: %extensions. Obsolete extensions are provided only so that they can be uninstalled cleanly. You should immediately uninstall these extensions since they may be removed in a future release.', [
+        'value' => t('Obsolete extensions found: %extensions. Obsolete extensions are provided only so that they can be uninstalled cleanly. You should immediately <a href=":uninstall_url">uninstall these extensions</a> since they may be removed in a future release.', [
           '%extensions' => Markup::create(implode(', ', $obsolete_extensions_link_list)),
+          ':uninstall_url' => Url::fromRoute('system.modules_uninstall')->toString(),
         ]),
         'severity' => REQUIREMENT_WARNING,
       ];

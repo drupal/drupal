@@ -141,12 +141,15 @@ class StatusTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/status');
     $session->pageTextContains('Obsolete extensions enabled');
     $session->pageTextContains('Obsolete extensions found: System obsolete status test.');
+    $session->pageTextContains('Obsolete extensions are provided only so that they can be uninstalled cleanly. You should immediately uninstall these extensions since they may be removed in a future release.');
+    $this->assertSession()->elementExists('xpath', "//a[contains(@href, '/admin/modules/uninstall')]");
 
     // Make sure the warning is gone after uninstalling the module.
     $module_installer->uninstall(['system_status_obsolete_test']);
     $this->drupalGet('admin/reports/status');
     $session->pageTextNotContains('Obsolete extensions enabled');
     $session->pageTextNotContains('Obsolete extensions found: System obsolete status test.');
+    $session->pageTextNotContains('Obsolete extensions are provided only so that they can be uninstalled cleanly. You should immediately uninstall these extensions since they may be removed in a future release.');
 
     // Install deprecated theme and confirm warning message is displayed.
     $theme_installer = \Drupal::service('theme_installer');
