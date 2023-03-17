@@ -1841,7 +1841,7 @@ function install_finish_translations(&$install_state) {
   }
 
   // Creates configuration translations.
-  $batches[] = locale_config_batch_update_components([], array_keys($languages));
+  $batches[] = locale_config_batch_update_components([], array_keys($languages), [], TRUE);
   return $batches;
 }
 

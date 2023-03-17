@@ -8,3 +8,5 @@ locale_test_translate.settings:
       type: label
     translatable_default_with_no_translation:
       type: label
+    key_set_during_install:
+      type: boolean

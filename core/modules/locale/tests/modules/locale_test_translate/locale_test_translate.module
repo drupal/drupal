@@ -20,3 +20,15 @@ function locale_test_translate_system_info_alter(&$info, Extension $file, $type)
     $info['hidden'] = FALSE;
   }
 }
+
+/**
+ * Implements hook_modules_installed().
+ *
+ * @see \Drupal\Tests\locale\Functional\LocaleConfigTranslationImportTest::testConfigTranslationWithForeignLanguageDefault
+ */
+function locale_test_translate_modules_installed($modules, $is_syncing) {
+  // Ensure that writing to configuration during install does not cause
+  // \Drupal\locale\LocaleConfigSubscriber to create incorrect translations due
+  // the configuration langcode and data being out-of-sync.
+  \Drupal::configFactory()->getEditable('locale_test_translate.settings')->set('key_set_during_install', TRUE)->save();
+}
