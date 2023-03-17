@@ -322,7 +322,6 @@
         `${prefix} .ck.ck-content * {display:initial;background:initial;color:initial;padding:initial;}`,
         `${prefix} .ck.ck-content li {display:list-item}`,
         `${prefix} .ck.ck-content ol li {list-style-type: decimal}`,
-        `${prefix} .ck[contenteditable], ${prefix} .ck[contenteditable] * {-webkit-user-modify: read-write;-moz-user-modify: read-write;}`,
       ];
 
       const prefixedCss = [...addedCss].join('\n');
