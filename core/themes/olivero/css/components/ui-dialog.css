@@ -4,13 +4,32 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
+
 /**
  * @file
  * Styles for jQuery UI dialog.
  */
+
+.ui-dialog .ui-dialog-buttonpane {
+  padding-inline-start: 0.2em;
+  padding-inline-end: 0.2em;
+}
+
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+  display: flex;
+  float: none;
+  flex-wrap: wrap;
+  gap: 0.3125rem;
+}
+
+.ui-dialog .ui-dialog-buttonpane button {
+  margin: 0;
+}
+
 .ui-widget-overlay {
   z-index: 1259;
 }
+
 .ui-dialog {
   z-index: 1260;
 }
