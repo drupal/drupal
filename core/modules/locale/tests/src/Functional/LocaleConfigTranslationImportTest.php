@@ -305,4 +305,66 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     $this->assertEquals($expected, $override->get());
   }
 
+  /**
+   * Tests setting a non-English language as default and importing configuration.
+   */
+  public function testConfigTranslationWithNonEnglishLanguageDefault() {
+    /** @var \Drupal\Core\Extension\ModuleInstallerInterface $module_installer */
+    $module_installer = $this->container->get('module_installer');
+    ConfigurableLanguage::createFromLangcode('af')->save();
+
+    $module_installer->install(['locale']);
+    $this->resetAll();
+    /** @var \Drupal\locale\StringStorageInterface $local_storage */
+    $local_storage = $this->container->get('locale.storage');
+
+    $source_string = 'Locale can translate';
+    $translation_string = 'Locale can translate Afrikaans';
+
+    // Create a translation for the "Locale can translate" string, this string
+    // can be found in the "locale_test_translate" module's install config.
+    $source = $local_storage->createString([
+      'source' => $source_string,
+    ])->save();
+    $local_storage->createTranslation([
+      'lid' => $source->getId(),
+      'language' => 'af',
+      'translation' => $translation_string,
+    ])->save();
+
+    // Verify that we can find the newly added string translation, it is not a
+    // customized translation.
+    $translation = $local_storage->findTranslation([
+      'source' => $source_string,
+      'language' => 'af',
+    ]);
+    $this->assertEquals($translation_string, $translation->getString());
+    $this->assertFalse((bool) $translation->customized);
+
+    // Uninstall the "locale_test_translate" module, verify that we can still
+    // find the string translation.
+    $module_installer->uninstall(['locale_test_translate']);
+    $this->resetAll();
+    $translation = $local_storage->findTranslation([
+      'source' => $source_string,
+      'language' => 'af',
+    ]);
+    $this->assertEquals($translation_string, $translation->getString());
+
+    // Set the default language to "Afrikaans" and re-enable the
+    // "locale_test_translate" module.
+    $this->config('system.site')->set('default_langcode', 'af')->save();
+    $module_installer->install(['locale_test_translate']);
+    $this->resetAll();
+
+    // Verify that enabling the "locale_test_translate" module didn't cause
+    // the string translation to be overwritten.
+    $translation = $local_storage->findTranslation([
+      'source' => $source_string,
+      'language' => 'af',
+    ]);
+    $this->assertEquals($translation_string, $translation->getString());
+    $this->assertFalse((bool) $translation->customized);
+  }
+
 }

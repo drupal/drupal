@@ -649,4 +649,34 @@ class LocaleConfigManager {
     return $filtered_data;
   }
 
+  /**
+   * Updates default configuration when new modules or themes are installed.
+   */
+  public function updateDefaultConfigLangcodes() {
+    $this->isUpdatingFromLocale = TRUE;
+    // Need to rewrite some default configuration language codes if the default
+    // site language is not English.
+    $default_langcode = $this->languageManager->getDefaultLanguage()->getId();
+    if ($default_langcode != 'en') {
+      // Update active configuration copies of all prior shipped configuration if
+      // they are still English. It is not enough to change configuration shipped
+      // with the components just installed, because installing a component such
+      // as views or tour module may bring in default configuration from prior
+      // components.
+      $names = $this->getComponentNames();
+      foreach ($names as $name) {
+        $config = $this->configFactory->reset($name)->getEditable($name);
+        // Should only update if still exists in active configuration. If locale
+        // module is enabled later, then some configuration may not exist anymore.
+        if (!$config->isNew()) {
+          $langcode = $config->get('langcode');
+          if (empty($langcode) || $langcode == 'en') {
+            $config->set('langcode', $default_langcode)->save();
+          }
+        }
+      }
+    }
+    $this->isUpdatingFromLocale = FALSE;
+  }
+
 }
