@@ -577,4 +577,26 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $this->assertSession()->responseContains($markup);
   }
 
+  /**
+   * Test that when content is language neutral, it uses interface language.
+   *
+   * When language neutral content is displayed on interface language, it should
+   * consider the interface language for creating the content link.
+   */
+  public function testUrlPrefixOnLanguageNeutralContent() {
+    $this->drupalLogin($this->administrator);
+    $neutral_langcodes = [
+      LanguageInterface::LANGCODE_NOT_APPLICABLE,
+      LanguageInterface::LANGCODE_NOT_SPECIFIED,
+    ];
+    foreach ($neutral_langcodes as $langcode) {
+      $article = $this->drupalCreateNode(['type' => 'article', 'langcode' => $langcode]);
+      $this->drupalGet("{$this->langcodes[1]}/admin/content");
+      $this->assertSession()->linkByHrefExists("{$this->langcodes[1]}/node/{$article->id()}");
+
+      $this->drupalGet("{$this->langcodes[2]}/admin/content");
+      $this->assertSession()->linkByHrefExists("{$this->langcodes[2]}/node/{$article->id()}");
+    }
+  }
+
 }
