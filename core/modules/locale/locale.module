@@ -319,8 +319,6 @@ function locale_get_plural($count, $langcode = NULL) {
  * Implements hook_modules_installed().
  */
 function locale_modules_installed($modules) {
-  locale_system_set_config_langcodes();
-
   $components['module'] = $modules;
   locale_system_update($components);
 }
@@ -337,8 +335,6 @@ function locale_module_preuninstall($module) {
  * Implements hook_themes_installed().
  */
 function locale_themes_installed($themes) {
-  locale_system_set_config_langcodes();
-
   $components['theme'] = $themes;
   locale_system_update($components);
 }
@@ -370,28 +366,7 @@ function locale_cron() {
  * Updates default configuration when new modules or themes are installed.
  */
 function locale_system_set_config_langcodes() {
-  // Need to rewrite some default configuration language codes if the default
-  // site language is not English.
-  $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
-  if ($default_langcode != 'en') {
-    // Update active configuration copies of all prior shipped configuration if
-    // they are still English. It is not enough to change configuration shipped
-    // with the components just installed, because installing a component such
-    // as views or tour module may bring in default configuration from prior
-    // components.
-    $names = Locale::config()->getComponentNames();
-    foreach ($names as $name) {
-      $config = \Drupal::configFactory()->reset($name)->getEditable($name);
-      // Should only update if still exists in active configuration. If locale
-      // module is enabled later, then some configuration may not exist anymore.
-      if (!$config->isNew()) {
-        $langcode = $config->get('langcode');
-        if (empty($langcode) || $langcode == 'en') {
-          $config->set('langcode', $default_langcode)->save();
-        }
-      }
-    }
-  }
+  Locale::config()->updateDefaultConfigLangcodes();
 }
 
 /**
@@ -435,7 +410,7 @@ function locale_system_update(array $components) {
     // components. Do this even if import is not enabled because parsing new
     // configuration may expose new source strings.
     $module_handler->loadInclude('locale', 'inc', 'locale.bulk');
-    if ($batch = locale_config_batch_update_components([])) {
+    if ($batch = locale_config_batch_update_components([], [], [], TRUE)) {
       batch_set($batch);
     }
   }
