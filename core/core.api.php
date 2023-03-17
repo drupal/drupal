@@ -789,11 +789,6 @@
  * be passed in; see the section at https://www.drupal.org/node/2133171 for more
  * detailed information.
  *
- * Services using factories can be defined as shown in the above example, if the
- * factory is itself a service. The factory can also be a class; details of how
- * to use service factories can be found in the section at
- * https://www.drupal.org/node/2133171.
- *
  * @section sec_container Accessing a service through the container
  * As noted above, if you need to use a service in your code, you should always
  * instantiate the service class via a call to the container, using the machine
