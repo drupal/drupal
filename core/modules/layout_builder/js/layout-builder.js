@@ -18,8 +18,12 @@
       var filterBlockList = function filterBlockList(e) {
         var query = e.target.value.toLowerCase();
         var toggleBlockEntry = function toggleBlockEntry(index, link) {
+          var $link = $(link);
           var textMatch = link.textContent.toLowerCase().indexOf(query) !== -1;
-          $(link).toggle(textMatch);
+          if ($link.closest('.js-layout-builder-category').is(':hidden')) {
+            $link.closest('.js-layout-builder-category').show();
+          }
+          $link.parent().toggle(textMatch);
         };
         if (query.length >= 2) {
           $categories.find('.js-layout-builder-category:not([open])').attr('remember-closed', '');
@@ -32,11 +36,11 @@
           layoutBuilderBlocksFiltered = false;
           $categories.find('.js-layout-builder-category[remember-closed]').removeAttr('open').removeAttr('remember-closed');
           $categories.find('.js-layout-builder-category').show();
-          $filterLinks.show();
+          $filterLinks.parent().show();
           announce(Drupal.t('All available blocks are listed.'));
         }
       };
-      $(once('block-filter-text', 'input.js-layout-builder-filter', context)).on('keyup', debounce(filterBlockList, 200));
+      $(once('block-filter-text', 'input.js-layout-builder-filter', context)).on('input', debounce(filterBlockList, 200));
     }
   };
   Drupal.layoutBuilderBlockUpdate = function (item, from, to) {

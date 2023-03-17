@@ -62,7 +62,7 @@ class BlockFilterTest extends WebDriverTestBase {
 
     // Get all blocks, for assertions later.
     $blocks = $page->findAll('css', '.js-layout-builder-block-link');
-    $categories = $page->findAll('css', '.js-layout-builder-category');
+    $categories = $page->findAll('css', '.js-layout-builder-categories li');
 
     $filter = $assert_session->elementExists('css', '.js-layout-builder-filter');
 
@@ -89,15 +89,31 @@ class BlockFilterTest extends WebDriverTestBase {
     $fewer_blocks_message = ' blocks are available in the modified list';
     $this->assertAnnounceContains($fewer_blocks_message);
     $visible_rows = $this->filterVisibleElements($blocks);
-    $this->assertGreaterThan(0, count($blocks));
-    $this->assertLessThan(count($blocks), count($visible_rows));
+    $this->assertCount(4, $visible_rows);
     $visible_categories = $this->filterVisibleElements($categories);
-    $this->assertGreaterThan(0, count($visible_categories));
-    $this->assertLessThan(count($categories), count($visible_categories));
+    $this->assertCount(4, $visible_categories);
 
     // Test Drupal.announce() message when multiple matches are present.
     $expected_message = count($visible_rows) . $fewer_blocks_message;
     $this->assertAnnounceContains($expected_message);
+
+    // Test 3 letter search.
+    $filter->setValue('adm');
+    $visible_rows = $this->filterVisibleElements($blocks);
+    $this->assertCount(3, $visible_rows);
+    $visible_categories = $this->filterVisibleElements($categories);
+    $this->assertCount(3, $visible_categories);
+
+    // Retest that blocks appear when reducing letters.
+    $filter->setValue('ad');
+    $visible_rows = $this->filterVisibleElements($blocks);
+    $this->assertCount(4, $visible_rows);
+    $visible_categories = $this->filterVisibleElements($categories);
+    $this->assertCount(4, $visible_categories);
+
+    // Test blocks reappear after being filtered by repeating search for "a".
+    $filter->setValue('a');
+    $this->assertAnnounceContains('All available blocks are listed.');
 
     // Test Drupal.announce() message when only one match is present.
     $filter->setValue('Powered by');
