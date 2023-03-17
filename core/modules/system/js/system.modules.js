@@ -44,9 +44,10 @@
             '.table-filter-text-source, .module-name, .module-description',
           );
           let sourcesConcat = '';
-          // Concatenate the textContent of the elements in the row.
+          // Concatenate the textContent of the elements in the row, with a
+          // space in between.
           sources.forEach((item) => {
-            sourcesConcat += item.textContent;
+            sourcesConcat += ` ${item.textContent}`;
           });
           const textMatch = sourcesConcat.search(re) !== -1;
           $(row).closest('tr').toggle(textMatch);
