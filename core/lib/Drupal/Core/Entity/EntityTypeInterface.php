@@ -402,11 +402,9 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * should be used for them. Where possible, link relationships should use
    * established IANA relationships rather than custom relationships.
    *
-   * Every entity type should, at minimum, define "canonical", which is the
-   * pattern for URIs to that entity. Even if the entity will have no HTML page
-   * exposed to users it should still have a canonical URI in order to be
-   * compatible with web services. Entities that will be user-editable via an
-   * HTML page must also define an "edit-form" relationship.
+   * Entities which can be viewed should define "canonical", which is the
+   * pattern for URIs to that entity including REST. Entities that will be
+   * user-editable via an HTML page should define an "edit-form" relationship.
    *
    * By default, the following placeholders are supported:
    * - [entityType]: The entity type itself will also be a valid token for the
