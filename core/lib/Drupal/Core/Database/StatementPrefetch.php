@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Database;
 
+@trigger_error('\Drupal\Core\Database\StatementPrefetch is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Database\StatementPrefetchIterator instead. See https://www.drupal.org/node/3265938', E_USER_DEPRECATED);
+
 use Drupal\Core\Database\Event\StatementExecutionEndEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 
@@ -11,6 +13,11 @@ use Drupal\Core\Database\Event\StatementExecutionStartEvent;
  * This class behaves very similar to a StatementWrapper of a \PDOStatement
  * but as it always fetches every row it is possible to manipulate those
  * results.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\Core\Database\StatementPrefetchIterator instead.
+ *
+ * @see https://www.drupal.org/node/3265938
  */
 class StatementPrefetch implements \Iterator, StatementInterface {
 

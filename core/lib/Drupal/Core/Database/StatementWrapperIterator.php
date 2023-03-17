@@ -7,59 +7,57 @@ use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 
 // cSpell:ignore maxlen driverdata INOUT
 
-@trigger_error('\Drupal\Core\Database\StatementWrapper is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Database\StatementWrapperIterator instead. See https://www.drupal.org/node/3265938', E_USER_DEPRECATED);
-
 /**
- * Implementation of StatementInterface encapsulating PDOStatement.
+ * StatementInterface iterator implementation.
  *
- * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
- *   \Drupal\Core\Database\StatementWrapperIterator instead.
- *
- * @see https://www.drupal.org/node/3265938
+ * This class is meant to be generic enough for any type of database clients,
+ * even if all Drupal core database drivers currently use PDO clients. We
+ * implement \Iterator instead of \IteratorAggregate to allow iteration to be
+ * kept in sync with the underlying database resultset cursor. PDO is not able
+ * to execute a database operation while a cursor is open on the result of an
+ * earlier select query, so Drupal by default uses buffered queries setting
+ * \PDO::MYSQL_ATTR_USE_BUFFERED_QUERY to TRUE on the connection. This forces
+ * the query to return all the results in a buffer local to the client library,
+ * potentially leading to memory issues in case of large datasets being
+ * returned by a query. Other database clients, however, could allow
+ * multithread queries, or developers could disable buffered queries in PDO:
+ * in that case, this class prevents the resultset to be entirely fetched in
+ * PHP memory (that an \IteratorAggregate implementation would force) and
+ * therefore optimize memory usage while iterating the resultset.
  */
-class StatementWrapper implements \IteratorAggregate, StatementInterface {
+class StatementWrapperIterator implements \Iterator, StatementInterface {
 
-  /**
-   * The Drupal database connection object.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
+  use StatementIteratorTrait;
 
   /**
    * The client database Statement object.
    *
    * For a \PDO client connection, this will be a \PDOStatement object.
-   *
-   * @var object
    */
-  protected $clientStatement;
+  protected object $clientStatement;
 
   /**
-   * Is rowCount() execution allowed.
-   *
-   * @var bool
-   */
-  protected $rowCountEnabled = FALSE;
-
-  /**
-   * Constructs a StatementWrapper object.
+   * Constructs a StatementWrapperIterator object.
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   Drupal database connection object.
-   * @param object $client_connection
+   * @param object $clientConnection
    *   Client database connection object, for example \PDO.
    * @param string $query
    *   The SQL query string.
    * @param array $options
    *   Array of query options.
-   * @param bool $row_count_enabled
+   * @param bool $rowCountEnabled
    *   (optional) Enables counting the rows matched. Defaults to FALSE.
    */
-  public function __construct(Connection $connection, $client_connection, string $query, array $options, bool $row_count_enabled = FALSE) {
-    $this->connection = $connection;
-    $this->clientStatement = $client_connection->prepare($query, $options);
-    $this->rowCountEnabled = $row_count_enabled;
+  public function __construct(
+    protected readonly Connection $connection,
+    object $clientConnection,
+    string $query,
+    array $options,
+    protected readonly bool $rowCountEnabled = FALSE,
+  ) {
+    $this->clientStatement = $clientConnection->prepare($query, $options);
     $this->setFetchMode(\PDO::FETCH_OBJ);
   }
 
@@ -71,7 +69,7 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
    * @return object
    *   The client-level database statement, for example \PDOStatement.
    */
-  public function getClientStatement() {
+  public function getClientStatement(): object {
     return $this->clientStatement;
   }
 
@@ -110,6 +108,7 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
     }
 
     $return = $this->clientStatement->execute($args);
+    $this->markResultsetIterable($return);
 
     if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionEndEvent::class)) {
       $this->connection->dispatchEvent(new StatementExecutionEndEvent(
@@ -144,7 +143,6 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchAllAssoc($key, $fetch = NULL) {
-    $return = [];
     if (isset($fetch)) {
       if (is_string($fetch)) {
         $this->setFetchMode(\PDO::FETCH_CLASS, $fetch);
@@ -154,9 +152,17 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
       }
     }
 
+    // Return early if the statement was already fully traversed.
+    if (!$this->isResultsetIterable) {
+      return [];
+    }
+
+    // Once the foreach loop is completed, the resultset is marked so not to
+    // allow more fetching.
+    $return = [];
     foreach ($this as $record) {
-      $record_key = is_object($record) ? $record->$key : $record[$key];
-      $return[$record_key] = $record;
+      $recordKey = is_object($record) ? $record->$key : $record[$key];
+      $return[$recordKey] = $record;
     }
 
     return $return;
@@ -166,8 +172,16 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchAllKeyed($key_index = 0, $value_index = 1) {
-    $return = [];
     $this->setFetchMode(\PDO::FETCH_NUM);
+
+    // Return early if the statement was already fully traversed.
+    if (!$this->isResultsetIterable) {
+      return [];
+    }
+
+    // Once the foreach loop is completed, the resultset is marked so not to
+    // allow more fetching.
+    $return = [];
     foreach ($this as $record) {
       $return[$record[$key_index]] = $record[$value_index];
     }
@@ -179,14 +193,21 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
    */
   public function fetchField($index = 0) {
     // Call \PDOStatement::fetchColumn to fetch the field.
-    return $this->clientStatement->fetchColumn($index);
+    $column = $this->clientStatement->fetchColumn($index);
+
+    if ($column === FALSE) {
+      $this->markResultsetFetchingComplete();
+      return FALSE;
+    }
+
+    $this->setResultsetCurrentRow($column);
+    return $column;
   }
 
   /**
    * {@inheritdoc}
    */
   public function fetchAssoc() {
-    // Call \PDOStatement::fetch to fetch the row.
     return $this->fetch(\PDO::FETCH_ASSOC);
   }
 
@@ -195,9 +216,19 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
    */
   public function fetchObject(string $class_name = NULL, array $constructor_arguments = NULL) {
     if ($class_name) {
-      return $this->clientStatement->fetchObject($class_name, $constructor_arguments);
+      $row = $this->clientStatement->fetchObject($class_name, $constructor_arguments);
     }
-    return $this->clientStatement->fetchObject();
+    else {
+      $row = $this->clientStatement->fetchObject();
+    }
+
+    if ($row === FALSE) {
+      $this->markResultsetFetchingComplete();
+      return FALSE;
+    }
+
+    $this->setResultsetCurrentRow($row);
+    return $row;
   }
 
   /**
@@ -220,17 +251,11 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
     // Call \PDOStatement::setFetchMode to set fetch mode.
     // \PDOStatement is picky about the number of arguments in some cases so we
     // need to be pass the exact number of arguments we where given.
-    switch (func_num_args()) {
-      case 1:
-        return $this->clientStatement->setFetchMode($mode);
-
-      case 2:
-        return $this->clientStatement->setFetchMode($mode, $a1);
-
-      case 3:
-      default:
-        return $this->clientStatement->setFetchMode($mode, $a1, $a2);
-    }
+    return match(func_num_args()) {
+      1 => $this->clientStatement->setFetchMode($mode),
+      2 => $this->clientStatement->setFetchMode($mode, $a1),
+      default => $this->clientStatement->setFetchMode($mode, $a1, $a2),
+    };
   }
 
   /**
@@ -239,21 +264,21 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
   public function fetch($mode = NULL, $cursor_orientation = NULL, $cursor_offset = NULL) {
     // Call \PDOStatement::fetchAll to fetch all rows.
     // \PDOStatement is picky about the number of arguments in some cases so we
-    // need to be pass the exact number of arguments we where given.
-    switch (func_num_args()) {
-      case 0:
-        return $this->clientStatement->fetch();
+    // need to pass the exact number of arguments we were given.
+    $row = match(func_num_args()) {
+      0 => $this->clientStatement->fetch(),
+      1 => $this->clientStatement->fetch($mode),
+      2 => $this->clientStatement->fetch($mode, $cursor_orientation),
+      default => $this->clientStatement->fetch($mode, $cursor_orientation, $cursor_offset),
+    };
 
-      case 1:
-        return $this->clientStatement->fetch($mode);
-
-      case 2:
-        return $this->clientStatement->fetch($mode, $cursor_orientation);
-
-      case 3:
-      default:
-        return $this->clientStatement->fetch($mode, $cursor_orientation, $cursor_offset);
+    if ($row === FALSE) {
+      $this->markResultsetFetchingComplete();
+      return FALSE;
     }
+
+    $this->setResultsetCurrentRow($row);
+    return $row;
   }
 
   /**
@@ -263,28 +288,16 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
     // Call \PDOStatement::fetchAll to fetch all rows.
     // \PDOStatement is picky about the number of arguments in some cases so we
     // need to be pass the exact number of arguments we where given.
-    switch (func_num_args()) {
-      case 0:
-        return $this->clientStatement->fetchAll();
+    $return = match(func_num_args()) {
+      0 => $this->clientStatement->fetchAll(),
+      1 => $this->clientStatement->fetchAll($mode),
+      2 => $this->clientStatement->fetchAll($mode, $column_index),
+      default => $this->clientStatement->fetchAll($mode, $column_index, $constructor_arguments),
+    };
 
-      case 1:
-        return $this->clientStatement->fetchAll($mode);
+    $this->markResultsetFetchingComplete();
 
-      case 2:
-        return $this->clientStatement->fetchAll($mode, $column_index);
-
-      case 3:
-      default:
-        return $this->clientStatement->fetchAll($mode, $column_index, $constructor_arguments);
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  #[\ReturnTypeWillChange]
-  public function getIterator() {
-    return new \ArrayIterator($this->fetchAll());
+    return $return;
   }
 
 }

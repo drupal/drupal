@@ -4,6 +4,7 @@ namespace Drupal\Tests\Core\Database;
 
 use Composer\Autoload\ClassLoader;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\StatementPrefetch;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
@@ -662,7 +663,7 @@ class ConnectionTest extends UnitTestCase {
     $result = $connection->findCallerFromDebugBacktrace();
     $this->assertSame([
       'file' => __FILE__,
-      'line' => 662,
+      'line' => 663,
       'function' => 'testFindCallerFromDebugBacktrace',
       'class' => 'Drupal\Tests\Core\Database\ConnectionTest',
       'type' => '->',
@@ -864,6 +865,32 @@ class ConnectionTest extends UnitTestCase {
         ],
       ],
     ];
+  }
+
+  /**
+   * Tests deprecation of the StatementWrapper class.
+   *
+   * @group legacy
+   */
+  public function testStatementWrapperDeprecation() {
+    $this->expectDeprecation('\\Drupal\\Core\\Database\\StatementWrapper is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \\Drupal\\Core\\Database\\StatementWrapperIterator instead. See https://www.drupal.org/node/3265938');
+    $mock_pdo = $this->createMock(StubPDO::class);
+    $connection = new StubConnection($mock_pdo, []);
+    $this->expectError();
+    $connection->prepareStatement('boing', []);
+  }
+
+  /**
+   * Tests deprecation of the StatementPrefetch class.
+   *
+   * @group legacy
+   */
+  public function testStatementPrefetchDeprecation() {
+    $this->expectDeprecation('\\Drupal\\Core\\Database\\StatementPrefetch is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Database\StatementPrefetchIterator instead. See https://www.drupal.org/node/3265938');
+    $mockPdo = $this->createMock(StubPDO::class);
+    $mockConnection = new StubConnection($mockPdo, []);
+    $statement = new StatementPrefetch($mockPdo, $mockConnection, '');
+    $this->assertInstanceOf(StatementPrefetch::class, $statement);
   }
 
 }

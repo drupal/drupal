@@ -7,7 +7,7 @@ use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Core\Database\DatabaseAccessDeniedException;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\StatementInterface;
-use Drupal\Core\Database\StatementWrapper;
+use Drupal\Core\Database\StatementWrapperIterator;
 use Drupal\Core\Database\SupportsTemporaryTablesInterface;
 
 // cSpell:ignore ilike nextval
@@ -43,7 +43,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   /**
    * {@inheritdoc}
    */
-  protected $statementWrapperClass = StatementWrapper::class;
+  protected $statementWrapperClass = StatementWrapperIterator::class;
 
   /**
    * A map of condition operators to PostgreSQL operators.

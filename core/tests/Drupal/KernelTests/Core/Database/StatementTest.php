@@ -43,4 +43,117 @@ class StatementTest extends DatabaseTestBase {
     $this->assertSame('31', $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Curly'])->fetchField());
   }
 
+  /**
+   * Tests statement fetching after a full traversal.
+   */
+  public function testIteratedStatementFetch(): void {
+    $statement = $this->connection->query('SELECT * FROM {test}');
+
+    foreach ($statement as $row) {
+      $this->assertNotNull($row);
+    }
+
+    $this->assertSame([], $statement->fetchAll());
+    $this->assertSame([], $statement->fetchAllKeyed());
+    $this->assertSame([], $statement->fetchAllAssoc('age'));
+    $this->assertSame([], $statement->fetchCol());
+
+    $this->assertFalse($statement->fetch());
+    $this->assertFalse($statement->fetchObject());
+    $this->assertFalse($statement->fetchAssoc());
+    $this->assertFalse($statement->fetchField());
+  }
+
+  /**
+   * Tests statement rewinding.
+   */
+  public function testStatementRewind(): void {
+    $statement = $this->connection->query('SELECT * FROM {test}');
+
+    foreach ($statement as $row) {
+      $this->assertNotNull($row);
+    }
+
+    // Trying to iterate through the same statement again should fail.
+    $this->expectError();
+    $this->expectErrorMessage('Attempted rewinding a StatementInterface object when fetching has already started. Refactor your code to avoid rewinding statement objects.');
+    foreach ($statement as $row) {
+      $this->assertNotNull($row);
+    }
+  }
+
+  /**
+   * Tests empty statement rewinding.
+   */
+  public function testEmptyStatementRewind(): void {
+    $statement = $this->connection->query('SELECT * FROM {test} WHERE 1 = 0');
+
+    $count = 0;
+
+    foreach ($statement as $row) {
+      $count++;
+    }
+    foreach ($statement as $row) {
+      $count++;
+    }
+
+    $this->assertEquals(0, $count);
+  }
+
+  /**
+   * Tests counting a statement twice.
+   *
+   * We need to use iterator_count() and not assertCount() since the latter
+   * would rewind the statement twice anyway.
+   */
+  public function testStatementCountTwice(): void {
+    $statement = $this->connection->query('SELECT * FROM {test}');
+    $rowCount = iterator_count($statement);
+    $this->assertSame(4, $rowCount);
+
+    $this->expectError();
+    $this->expectErrorMessage('Attempted rewinding a StatementInterface object when fetching has already started. Refactor your code to avoid rewinding statement objects.');
+    $rowCount = iterator_count($statement);
+  }
+
+  /**
+   * Tests statement with no results counting twice.
+   *
+   * We need to use iterator_count() and not assertCount() since the latter
+   * would rewind the statement twice anyway.
+   */
+  public function testEmptyStatementCountTwice(): void {
+    $statement = $this->connection->query('SELECT * FROM {test} WHERE 1 = 0');
+    $rowCount = iterator_count($statement);
+    $this->assertSame(0, $rowCount);
+    $rowCount = iterator_count($statement);
+    $this->assertSame(0, $rowCount);
+  }
+
+  /**
+   * Tests a follow-on iteration on a statement using foreach.
+   */
+  public function testStatementForeachTwice(): void {
+    $statement = $this->connection->query('SELECT * FROM {test}');
+
+    $count = 0;
+    foreach ($statement as $row) {
+      $count++;
+      $this->assertNotNull($row);
+      if ($count > 2) {
+        break;
+      }
+    }
+    $this->assertSame(3, $count);
+
+    // Restart iterating through the same statement. The foreach loop will try
+    // rewinding the statement which should fail, and the counter should not be
+    // increased.
+    $this->expectError();
+    $this->expectErrorMessage('Attempted rewinding a StatementInterface object when fetching has already started. Refactor your code to avoid rewinding statement objects.');
+    foreach ($statement as $row) {
+      // No-op.
+    }
+  }
+
 }

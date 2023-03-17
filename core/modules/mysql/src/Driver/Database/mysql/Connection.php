@@ -4,7 +4,7 @@ namespace Drupal\mysql\Driver\Database\mysql;
 
 use Drupal\Core\Database\DatabaseAccessDeniedException;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
-use Drupal\Core\Database\StatementWrapper;
+use Drupal\Core\Database\StatementWrapperIterator;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\DatabaseException;
@@ -50,7 +50,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   /**
    * {@inheritdoc}
    */
-  protected $statementWrapperClass = StatementWrapper::class;
+  protected $statementWrapperClass = StatementWrapperIterator::class;
 
   /**
    * Flag to indicate if the cleanup function in __destruct() should run.

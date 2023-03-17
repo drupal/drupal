@@ -181,6 +181,75 @@ class FetchTest extends DatabaseTestBase {
   }
 
   /**
+   * Tests ::fetchAllAssoc().
+   */
+  public function testQueryFetchAllAssoc(): void {
+    $expected_result = [
+      "Singer" => [
+        "id" => "2",
+        "name" => "George",
+        "age" => "27",
+        "job" => "Singer",
+      ],
+      "Drummer" => [
+        "id" => "3",
+        "name" => "Ringo",
+        "age" => "28",
+        "job" => "Drummer",
+      ],
+    ];
+
+    $statement = $this->connection->query('SELECT * FROM {test} WHERE [age] > :age', [':age' => 26]);
+    $result = $statement->fetchAllAssoc('job', \PDO::FETCH_ASSOC);
+    $this->assertSame($expected_result, $result);
+
+    $statement = $this->connection->query('SELECT * FROM {test} WHERE [age] > :age', [':age' => 26]);
+    $result = $statement->fetchAllAssoc('job', \PDO::FETCH_OBJ);
+    $this->assertEquals((object) $expected_result['Singer'], $result['Singer']);
+    $this->assertEquals((object) $expected_result['Drummer'], $result['Drummer']);
+  }
+
+  /**
+   * Tests ::fetchField().
+   */
+  public function testQueryFetchField(): void {
+    $this->connection->insert('test')
+      ->fields([
+        'name' => 'Foo',
+        'age' => 0,
+        'job' => 'Dummy',
+      ])
+      ->execute();
+
+    $this->connection->insert('test')
+      ->fields([
+        'name' => 'Kurt',
+        'age' => 27,
+        'job' => 'Singer',
+      ])
+      ->execute();
+
+    $expectedResults = ['25', '27', '28', '26', '0', '27'];
+
+    $statement = $this->connection->select('test')
+      ->fields('test', ['age'])
+      ->orderBy('id')
+      ->execute();
+
+    $actualResults = [];
+    while (TRUE) {
+      $result = $statement->fetchField();
+      if ($result === FALSE) {
+        break;
+      }
+      $this->assertIsNumeric($result);
+      $actualResults[] = $result;
+    }
+
+    $this->assertSame($expectedResults, $actualResults);
+  }
+
+  /**
    * Tests that rowCount() throws exception on SELECT query.
    */
   public function testRowCount() {
