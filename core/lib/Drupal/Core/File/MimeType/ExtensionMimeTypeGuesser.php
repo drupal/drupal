@@ -379,6 +379,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       343 => 'x-conference/x-cooltalk',
       344 => 'x-epoc/x-sisx-app',
       345 => 'x-world/x-vrml',
+      361 => 'application/json',
     ],
 
     // Extensions added to this list MUST be lower-case.
@@ -862,6 +863,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       'gz' => 359,
       'mjs' => 132,
       'aac' => 360,
+      'json' => 361,
     ],
   ];
 
