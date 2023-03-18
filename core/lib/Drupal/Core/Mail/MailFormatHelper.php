@@ -54,9 +54,9 @@ class MailFormatHelper {
     $text = str_replace("\r", '', $text);
     // See if soft-wrapping is allowed.
     $clean_indent = static::htmlToTextClean($indent);
-    $soft = strpos($clean_indent, ' ') === FALSE;
+    $soft = !str_contains($clean_indent, ' ');
     // Check if the string has line breaks.
-    if (strpos($text, "\n") !== FALSE) {
+    if (str_contains($text, "\n")) {
       // Remove trailing spaces to make existing breaks hard, but leave
       // signature marker untouched (RFC 3676, Section 4.3).
       $text = preg_replace('/(?(?<!^--) +\n|  +\n)/m', "\n", $text);

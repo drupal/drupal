@@ -194,7 +194,7 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
    * @see \Drupal\Core\ParamConverter\ParamConverterInterface::convert()
    */
   private function extractEntityFromRoute($value, array $defaults) {
-    if (strpos($value, '.') !== FALSE) {
+    if (str_contains($value, '.')) {
       [$entity_type_id, $entity_id] = explode('.', $value, 2);
     }
     elseif (isset($defaults['entity_type_id']) && !empty($defaults[$defaults['entity_type_id']])) {

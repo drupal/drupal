@@ -450,7 +450,7 @@ class ViewEditForm extends ViewFormBase {
         elseif ($view->status() && $view->getExecutable()->displayHandlers->get($display['id'])->hasPath()) {
           $path = $view->getExecutable()->displayHandlers->get($display['id'])->getPath();
 
-          if ($path && (strpos($path, '%') === FALSE)) {
+          if ($path && (!str_contains($path, '%'))) {
             // Wrap this in a try/catch as trying to generate links to some
             // routes may throw a NotAcceptableHttpException if they do not
             // respond to HTML, such as RESTExports.

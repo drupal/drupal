@@ -291,7 +291,7 @@ class InstallCommand extends Command {
       $alternatives = [];
       foreach (array_keys($profiles) as $profile_name) {
         $lev = levenshtein($install_profile, $profile_name);
-        if ($lev <= strlen($profile_name) / 4 || FALSE !== strpos($profile_name, $install_profile)) {
+        if ($lev <= strlen($profile_name) / 4 || str_contains($profile_name, $install_profile)) {
           $alternatives[] = $profile_name;
         }
       }

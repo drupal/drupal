@@ -189,7 +189,7 @@ class UrlHelper {
     $query_delimiter_position = strpos($url, '?');
     if ($scheme_delimiter_position !== FALSE && ($query_delimiter_position === FALSE || $scheme_delimiter_position < $query_delimiter_position)) {
       // Split off the fragment, if any.
-      if (strpos($url, '#') !== FALSE) {
+      if (str_contains($url, '#')) {
         [$url, $options['fragment']] = explode('#', $url, 2);
       }
 

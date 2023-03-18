@@ -215,7 +215,7 @@ function system_requirements($phase) {
   ];
 
   // Tests clean URL support.
-  if ($phase == 'install' && $install_state['interactive'] && !$request_object->query->has('rewrite') && strpos($software, 'Apache') !== FALSE) {
+  if ($phase == 'install' && $install_state['interactive'] && !$request_object->query->has('rewrite') && str_contains($software, 'Apache')) {
     // If the Apache rewrite module is not enabled, Apache version must be >=
     // 2.2.16 because of the FallbackResource directive in the root .htaccess
     // file. Since the Apache version reported by the server is dependent on the
@@ -705,7 +705,7 @@ function system_requirements($phase) {
       $htaccess_file = $protected_dir->getPath() . '/.htaccess';
       // Check for the string which was added to the recommended .htaccess file
       // in the latest security update.
-      if (!file_exists($htaccess_file) || !($contents = @file_get_contents($htaccess_file)) || strpos($contents, 'Drupal_Security_Do_Not_Remove_See_SA_2013_003') === FALSE) {
+      if (!file_exists($htaccess_file) || !($contents = @file_get_contents($htaccess_file)) || !str_contains($contents, 'Drupal_Security_Do_Not_Remove_See_SA_2013_003')) {
         $url = 'https://www.drupal.org/SA-CORE-2013-003';
         $requirements[$htaccess_file] = [
           'title' => new TranslatableMarkup($protected_dir->getTitle()),
@@ -1360,7 +1360,7 @@ function system_requirements($phase) {
     $provider = $connection->getProvider();
     if ($provider !== 'core' && !\Drupal::moduleHandler()->moduleExists($provider)) {
       $autoload = $connection->getConnectionOptions()['autoload'] ?? '';
-      if (strpos($autoload, 'src/Driver/Database/') !== FALSE) {
+      if (str_contains($autoload, 'src/Driver/Database/')) {
         $post_update_registry = \Drupal::service('update.post_update_registry');
         $pending_updates = $post_update_registry->getPendingUpdateInformation();
         if (!in_array('enable_provider_database_driver', array_keys($pending_updates['system']['pending'] ?? []), TRUE)) {

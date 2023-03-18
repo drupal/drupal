@@ -407,7 +407,7 @@ class OptimizedPhpArrayDumper extends Dumper {
     elseif ($value instanceof Parameter) {
       return $this->getParameterCall((string) $value);
     }
-    elseif (is_string($value) && FALSE !== strpos($value, '%')) {
+    elseif (is_string($value) && str_contains($value, '%')) {
       if (preg_match('/^%([^%]+)%$/', $value, $matches)) {
         return $this->getParameterCall($matches[1]);
       }

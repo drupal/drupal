@@ -195,7 +195,7 @@ final class LinkCollection implements \IteratorAggregate {
    *   TRUE if the key is valid, FALSE otherwise.
    */
   protected static function validKey($key) {
-    return is_string($key) && !is_numeric($key) && strpos($key, ':') === FALSE;
+    return is_string($key) && !is_numeric($key) && !str_contains($key, ':');
   }
 
 }

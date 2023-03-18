@@ -571,7 +571,7 @@ final class SmartDefaultSettings {
 
       foreach ($attributes_config as $attribute_name => $attribute_config) {
         // 10^4 per surplus wildcard attribute.
-        if (strpos($attribute_name, '*') !== FALSE) {
+        if (str_contains($attribute_name, '*')) {
           $surplus_score += pow(10, 4);
         }
         // 10^3 per surplus attribute.
@@ -590,7 +590,7 @@ final class SmartDefaultSettings {
 
         foreach ($attribute_config as $allowed_attribute_value => $allowed_attribute_value_config) {
           // 10^1 per surplus wildcard attribute value.
-          if (strpos($allowed_attribute_value, '*') !== FALSE) {
+          if (str_contains($allowed_attribute_value, '*')) {
             $surplus_score += pow(10, 1);
           }
           // 10^0 per surplus attribute value.

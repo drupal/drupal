@@ -66,7 +66,7 @@ class Variable {
       $output = $var ? 'TRUE' : 'FALSE';
     }
     elseif (is_string($var)) {
-      if (strpos($var, "\n") !== FALSE || strpos($var, "'") !== FALSE) {
+      if (str_contains($var, "\n") || str_contains($var, "'")) {
         // If the string contains a line break or a single quote, use the
         // double quote export mode. Encode backslash, dollar symbols, and
         // double quotes and transform some common control characters.

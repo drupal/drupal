@@ -72,7 +72,7 @@ function twig_render_template($template_file, array $variables) {
     }
     // Add debug output for directly called suggestions like
     // '#theme' => 'comment__node__article'.
-    if (strpos($variables['theme_hook_original'], '__') !== FALSE) {
+    if (str_contains($variables['theme_hook_original'], '__')) {
       $derived_suggestions[] = $hook = $variables['theme_hook_original'];
       while ($pos = strrpos($hook, '__')) {
         $hook = substr($hook, 0, $pos);
@@ -90,7 +90,7 @@ function twig_render_template($template_file, array $variables) {
       $suggestions = $variables['theme_hook_suggestions'];
       // Only add the original theme hook if it wasn't a directly called
       // suggestion.
-      if (strpos($variables['theme_hook_original'], '__') === FALSE) {
+      if (!str_contains($variables['theme_hook_original'], '__')) {
         $suggestions[] = $variables['theme_hook_original'];
       }
       $invalid_suggestions = [];

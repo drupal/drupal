@@ -203,7 +203,7 @@ class Condition extends ConditionBase {
           return strpos($value, $condition['value']) === 0;
 
         case 'CONTAINS':
-          return strpos($value, $condition['value']) !== FALSE;
+          return str_contains($value, $condition['value']);
 
         case 'ENDS_WITH':
           return substr($value, -strlen($condition['value'])) === (string) $condition['value'];

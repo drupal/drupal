@@ -25,7 +25,7 @@ class UpdateSettings extends Variable {
    */
   protected function values() {
     $values = parent::values();
-    if (empty($values['update_fetch_url']) || strpos($values['update_fetch_url'], 'http://updates.drupal.org/release-history') !== FALSE) {
+    if (empty($values['update_fetch_url']) || str_contains($values['update_fetch_url'], 'http://updates.drupal.org/release-history')) {
       $values['update_fetch_url'] = 'https://updates.drupal.org/release-history';
     }
     return $values;

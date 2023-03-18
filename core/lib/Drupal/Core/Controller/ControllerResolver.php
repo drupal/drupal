@@ -58,7 +58,7 @@ class ControllerResolver implements ControllerResolverInterface {
       return $controller;
     }
 
-    if (strpos($controller, ':') === FALSE) {
+    if (!str_contains($controller, ':')) {
       if (function_exists($controller)) {
         return $controller;
       }
@@ -106,7 +106,7 @@ class ControllerResolver implements ControllerResolverInterface {
       [$class_or_service, $method] = explode(':', $controller, 2);
     }
     // Controller in the class::method notation.
-    elseif (strpos($controller, '::') !== FALSE) {
+    elseif (str_contains($controller, '::')) {
       [$class_or_service, $method] = explode('::', $controller, 2);
     }
     else {

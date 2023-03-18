@@ -93,7 +93,7 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
    */
   public static function validateName($name) {
     // The name must be namespaced by owner.
-    if (strpos($name, '.') === FALSE) {
+    if (!str_contains($name, '.')) {
       throw new ConfigNameException("Missing namespace in Config object name $name.");
     }
     // The name must be shorter than Config::MAX_NAME_LENGTH characters.
@@ -207,7 +207,7 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
    */
   protected function validateKeys(array $data) {
     foreach ($data as $key => $value) {
-      if (strpos($key, '.') !== FALSE) {
+      if (str_contains($key, '.')) {
         throw new ConfigValueException("$key key contains a dot which is not supported.");
       }
       if (is_array($value)) {

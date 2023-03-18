@@ -250,7 +250,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
       $this->assertSession()->statusCodeEquals(403);
       // Verify that images are not appended to the response.
       // Currently this test only uses PNG images.
-      if (strpos($generate_url, '.png') === FALSE) {
+      if (!str_contains($generate_url, '.png')) {
         $this->fail('Confirming that private image styles are not appended require PNG file.');
       }
       else {

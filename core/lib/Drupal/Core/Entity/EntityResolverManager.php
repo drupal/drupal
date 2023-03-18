@@ -86,7 +86,7 @@ class EntityResolverManager {
       return NULL;
     }
 
-    if (strpos($controller, ':') === FALSE) {
+    if (!str_contains($controller, ':')) {
       if (method_exists($controller, '__invoke')) {
         return [$controller, '__invoke'];
       }
@@ -105,7 +105,7 @@ class EntityResolverManager {
       [$class_or_service, $method] = explode(':', $controller, 2);
       return [$this->classResolver->getInstanceFromDefinition($class_or_service), $method];
     }
-    elseif (strpos($controller, '::') !== FALSE) {
+    elseif (str_contains($controller, '::')) {
       // Controller in the class::method notation.
       return explode('::', $controller, 2);
     }
@@ -182,7 +182,7 @@ class EntityResolverManager {
     // Do not add parameter information if the route does not declare a
     // parameter in the first place. This is the case for add forms, for
     // example.
-    if (isset($entity_type) && isset($this->getEntityTypes()[$entity_type]) && (strpos($route->getPath(), '{' . $entity_type . '}') !== FALSE)) {
+    if (isset($entity_type) && isset($this->getEntityTypes()[$entity_type]) && str_contains($route->getPath(), '{' . $entity_type . '}')) {
       $parameter_definitions = $route->getOption('parameters') ?: [];
 
       // First try to figure out whether there is already a parameter upcasting

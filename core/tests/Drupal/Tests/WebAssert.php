@@ -705,7 +705,7 @@ class WebAssert extends MinkWebAssert {
    */
   public function addressEquals($page) {
     $expected = $this->cleanUrl($page, TRUE);
-    $actual = $this->cleanUrl($this->session->getCurrentUrl(), strpos($expected, '?') !== FALSE);
+    $actual = $this->cleanUrl($this->session->getCurrentUrl(), str_contains($expected, '?'));
 
     $this->assert($actual === $expected, sprintf('Current page is "%s", but "%s" expected.', $actual, $expected));
   }
@@ -715,7 +715,7 @@ class WebAssert extends MinkWebAssert {
    */
   public function addressNotEquals($page) {
     $expected = $this->cleanUrl($page, TRUE);
-    $actual = $this->cleanUrl($this->session->getCurrentUrl(), strpos($expected, '?') !== FALSE);
+    $actual = $this->cleanUrl($this->session->getCurrentUrl(), str_contains($expected, '?'));
 
     $this->assert($actual !== $expected, sprintf('Current page is "%s", but should not be.', $actual));
   }

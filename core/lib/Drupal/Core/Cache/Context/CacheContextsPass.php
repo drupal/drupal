@@ -28,7 +28,7 @@ class CacheContextsPass implements CompilerPassInterface {
     sort($cache_contexts);
     foreach ($cache_contexts as $id) {
       // Validate the hierarchy of non-root-level cache contexts.
-      if (strpos($id, '.') !== FALSE) {
+      if (str_contains($id, '.')) {
         $parent = substr($id, 0, strrpos($id, '.'));
         if (!in_array($parent, $cache_contexts)) {
           throw new \InvalidArgumentException(sprintf('The service "%s" has an invalid service ID: the period indicates the hierarchy of cache contexts, therefore "%s" is considered the parent cache context, but no cache context service with that name was found.', $id, $parent));

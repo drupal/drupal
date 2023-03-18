@@ -360,7 +360,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * {@inheritdoc}
    */
   public function tokenizeValue($value, $row_index = NULL) {
-    if (strpos($value, '{{') !== FALSE) {
+    if (str_contains($value, '{{')) {
       $fake_item = [
         'alter_text' => TRUE,
         'text' => $value,

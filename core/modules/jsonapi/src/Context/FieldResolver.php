@@ -736,7 +736,7 @@ class FieldResolver {
    *   The property name from a path part.
    */
   protected static function getPathPartPropertyName($part) {
-    return strpos($part, ':') !== FALSE ? explode(':', $part)[0] : $part;
+    return str_contains($part, ':') ? explode(':', $part)[0] : $part;
   }
 
   /**

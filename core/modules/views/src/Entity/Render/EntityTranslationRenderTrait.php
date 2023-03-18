@@ -41,7 +41,7 @@ trait EntityTranslationRenderTrait {
         $this->entityTranslationRenderer = new $class($view, $this->getLanguageManager(), $entity_type);
       }
       else {
-        if (strpos($rendering_language, '***LANGUAGE_') !== FALSE) {
+        if (str_contains($rendering_language, '***LANGUAGE_')) {
           $langcode = PluginBase::queryLanguageSubstitutions()[$rendering_language];
         }
         else {

@@ -98,7 +98,7 @@ class UpdateFetcher implements UpdateFetcherInterface {
     }
     catch (TransferException $exception) {
       watchdog_exception('update', $exception);
-      if ($with_http_fallback && strpos($url, "http://") === FALSE) {
+      if ($with_http_fallback && !str_contains($url, "http://")) {
         $url = str_replace('https://', 'http://', $url);
         return $this->doRequest($url, $options, FALSE);
       }
@@ -116,9 +116,9 @@ class UpdateFetcher implements UpdateFetcherInterface {
 
     // Only append usage information if we have a site key and the project is
     // enabled. We do not want to record usage statistics for disabled projects.
-    if (!empty($site_key) && (strpos($project['project_type'], 'disabled') === FALSE)) {
+    if (!empty($site_key) && !str_contains($project['project_type'], 'disabled')) {
       // Append the site key.
-      $url .= (strpos($url, '?') !== FALSE) ? '&' : '?';
+      $url .= str_contains($url, '?') ? '&' : '?';
       $url .= 'site_key=';
       $url .= rawurlencode($site_key);
 

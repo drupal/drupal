@@ -231,7 +231,7 @@ final class LinksetController extends ControllerBase {
         continue;
       }
       // Skip the attribute key if it has an asterisk (*).
-      if (strpos($key, '*') !== FALSE) {
+      if (str_contains($key, '*')) {
         continue;
       }
       // Skip the value if it is an object.

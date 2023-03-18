@@ -27,7 +27,7 @@ class UnpublishByKeywordNode extends ConfigurableActionBase {
       ->view(clone $node);
     $render = \Drupal::service('renderer')->render($elements);
     foreach ($this->configuration['keywords'] as $keyword) {
-      if (strpos($render, $keyword) !== FALSE || strpos($node->label(), $keyword) !== FALSE) {
+      if (str_contains($render, $keyword) || str_contains($node->label(), $keyword)) {
         $node->setUnpublished();
         $node->save();
         break;

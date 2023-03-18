@@ -69,7 +69,7 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
           // Only add the cache-busting query string if this isn't an aggregate
           // file.
           if (!isset($css_asset['preprocessed'])) {
-            $query_string_separator = (strpos($css_asset['data'], '?') !== FALSE) ? '&' : '?';
+            $query_string_separator = str_contains($css_asset['data'], '?') ? '&' : '?';
             $element['#attributes']['href'] .= $query_string_separator . $query_string;
           }
           break;

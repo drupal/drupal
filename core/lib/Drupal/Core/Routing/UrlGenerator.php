@@ -311,7 +311,7 @@ class UrlGenerator implements UrlGeneratorInterface {
     $path = str_replace($this->decodedChars[0], $this->decodedChars[1], rawurlencode($path));
 
     // Drupal paths rarely include dots, so skip this processing if possible.
-    if (strpos($path, '/.') !== FALSE) {
+    if (str_contains($path, '/.')) {
       // the path segments "." and ".." are interpreted as relative reference when
       // resolving a URI; see http://tools.ietf.org/html/rfc3986#section-3.3
       // so we need to encode them as they are not used for this purpose here

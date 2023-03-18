@@ -23,7 +23,7 @@ function drupal_phpunit_find_extension_directories($scan_directory) {
   $extensions = [];
   $dirs = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($scan_directory, \RecursiveDirectoryIterator::FOLLOW_SYMLINKS));
   foreach ($dirs as $dir) {
-    if (strpos($dir->getPathname(), '.info.yml') !== FALSE) {
+    if (str_contains($dir->getPathname(), '.info.yml')) {
       // Cut off ".info.yml" from the filename for use as the extension name. We
       // use getRealPath() so that we can scan extensions represented by
       // directory aliases.

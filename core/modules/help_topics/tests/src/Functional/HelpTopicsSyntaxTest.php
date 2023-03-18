@@ -311,8 +311,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
       // You can tell test modules because they are in package 'Testing', but
       // test themes are only known by being found in test directories. So...
       // exclude things in test directories.
-      if ((strpos($path, '/tests') === FALSE) &&
-        (strpos($path, '/testing') === FALSE)) {
+      if (!str_contains($path, '/tests') && !str_contains($path, '/testing')) {
         $directories[$name] = $path . '/help_topics';
       }
     }

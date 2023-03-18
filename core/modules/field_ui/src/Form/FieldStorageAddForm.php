@@ -337,7 +337,7 @@ class FieldStorageAddForm extends FormBase {
       $widget_settings = $formatter_settings = [];
 
       // Check if we're dealing with a preconfigured field.
-      if (strpos($field_storage_values['type'], 'field_ui:') !== FALSE) {
+      if (str_contains($field_storage_values['type'], 'field_ui:')) {
         [, $field_type, $option_key] = explode(':', $field_storage_values['type'], 3);
         $field_storage_values['type'] = $field_type;
 

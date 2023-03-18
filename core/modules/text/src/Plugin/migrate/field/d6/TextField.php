@@ -59,7 +59,7 @@ class TextField extends FieldPluginBase {
       ];
 
       $checked_value = explode("\n", $field_info['global_settings']['allowed_values'])[1];
-      if (strpos($checked_value, '|') !== FALSE) {
+      if (str_contains($checked_value, '|')) {
         $checked_value = substr($checked_value, 0, strpos($checked_value, '|'));
       }
       $process['value']['map'][$checked_value] = 1;

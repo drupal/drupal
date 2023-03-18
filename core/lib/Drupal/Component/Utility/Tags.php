@@ -49,7 +49,7 @@ class Tags {
    *   The encoded string.
    */
   public static function encode($tag) {
-    if (strpos($tag, ',') !== FALSE || strpos($tag, '"') !== FALSE) {
+    if (str_contains($tag, ',') || str_contains($tag, '"')) {
       return '"' . str_replace('"', '""', $tag) . '"';
     }
     return $tag;

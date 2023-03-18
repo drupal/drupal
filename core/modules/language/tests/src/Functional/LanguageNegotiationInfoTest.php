@@ -138,7 +138,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
     $last = $this->container->get('state')->get('language_test.language_negotiation_last');
     foreach ($this->languageManager()->getDefinedLanguageTypes() as $type) {
       $langcode = $last[$type];
-      $value = $type == LanguageInterface::TYPE_CONTENT || strpos($type, 'test') !== FALSE ? 'it' : 'en';
+      $value = $type == LanguageInterface::TYPE_CONTENT || str_contains($type, 'test') ? 'it' : 'en';
       $this->assertEquals($langcode, $value, new FormattableMarkup('The negotiated language for %type is %language', ['%type' => $type, '%language' => $value]));
     }
 

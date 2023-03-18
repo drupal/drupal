@@ -36,7 +36,7 @@ function nyan_cat_extension() {
 function nyan_cat_render_template($template_file, $variables) {
   $output = str_replace('div', 'nyancat', file_get_contents(\Drupal::root() . '/' . $template_file));
   foreach ($variables as $key => $variable) {
-    if (strpos($output, '9' . $key) !== FALSE) {
+    if (str_contains($output, '9' . $key)) {
       $output = str_replace('9' . $key, Html::escape($variable), $output);
     }
   }

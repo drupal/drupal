@@ -121,7 +121,7 @@ class Schema extends DatabaseSchema {
     // Take into account that temporary tables are stored in a different schema.
     // \Drupal\Core\Database\Connection::generateTemporaryTableName() sets the
     // 'db_temporary_' prefix to all temporary tables.
-    if (strpos($key, '.') === FALSE && strpos($table, 'db_temporary_') === FALSE) {
+    if (!str_contains($key, '.') && !str_contains($table, 'db_temporary_')) {
       $key = 'public.' . $key;
     }
     else {
@@ -207,7 +207,7 @@ EOD;
    */
   protected function resetTableInformation($table) {
     $key = $this->connection->prefixTables('{' . $table . '}');
-    if (strpos($key, '.') === FALSE) {
+    if (!str_contains($key, '.')) {
       $key = 'public.' . $key;
     }
     unset($this->tableInformation[$key]);
@@ -564,7 +564,7 @@ EOD;
       // exceed the 63 chars limit of PostgreSQL, we need to take care of that.
       // cSpell:disable-next-line
       // Example (drupal_Gk7Su_T1jcBHVuvSPeP22_I3Ni4GrVEgTYlIYnBJkro_idx).
-      if (strpos($index->indexname, 'drupal_') !== FALSE) {
+      if (str_contains($index->indexname, 'drupal_')) {
         preg_match('/^drupal_(.*)_' . preg_quote($index_type) . '/', $index->indexname, $matches);
         $index_name = $matches[1];
       }

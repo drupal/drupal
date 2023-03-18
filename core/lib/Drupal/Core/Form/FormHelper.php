@@ -60,7 +60,7 @@ class FormHelper {
     $keys = array_keys($conditions);
     $update_keys = FALSE;
     foreach ($conditions as $id => $values) {
-      if (strpos($id, $search) !== FALSE) {
+      if (str_contains($id, $search)) {
         $update_keys = TRUE;
         $new_id = str_replace($search, $replace, $id);
         // Replace the key and keep the array in the same order.

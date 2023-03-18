@@ -368,7 +368,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
       // Twig wants a token replacement array stripped of curly-brackets.
       // Some Views tokens come with curly-braces, others do not.
       // @todo: https://www.drupal.org/node/2544392
-      if (strpos($token, '{{') !== FALSE) {
+      if (str_contains($token, '{{')) {
         // Twig wants a token replacement array stripped of curly-brackets.
         $token = trim(str_replace(['{{', '}}'], '', $token));
       }
@@ -376,7 +376,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
       // Check for arrays in Twig tokens. Internally these are passed as
       // dot-delimited strings, but need to be turned into associative arrays
       // for parsing.
-      if (strpos($token, '.') === FALSE) {
+      if (!str_contains($token, '.')) {
         // We need to validate tokens are valid Twig variables. Twig uses the
         // same variable naming rules as PHP.
         // @see http://php.net/manual/language.variables.basics.php

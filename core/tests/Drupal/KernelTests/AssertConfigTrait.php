@@ -56,7 +56,7 @@ trait AssertConfigTrait {
             $found = FALSE;
             if (!empty($skipped_config[$config_name])) {
               foreach ($skipped_config[$config_name] as $line) {
-                if (strpos($closing, $line) !== FALSE) {
+                if (str_contains($closing, $line)) {
                   $found = TRUE;
                   break;
                 }

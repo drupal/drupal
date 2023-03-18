@@ -103,7 +103,7 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
     $select->fields('watchdog', ['message']);
 
     $container_cannot_be_saved_messages = array_filter(iterator_to_array($select->execute()), function ($row) {
-      return strpos($row->message, 'Container cannot be saved to cache.') !== FALSE;
+      return str_contains($row->message, 'Container cannot be saved to cache.');
     });
     $this->assertEquals([], $container_cannot_be_saved_messages);
 

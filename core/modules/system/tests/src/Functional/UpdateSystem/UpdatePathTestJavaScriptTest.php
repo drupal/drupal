@@ -51,7 +51,7 @@ class UpdatePathTestJavaScriptTest extends BrowserTestBase {
       $src = preg_replace('#^' . $GLOBALS['base_path'] . '(.*)#i', $GLOBALS['base_url'] . '/' . '${1}', $script->getAttribute('src'));
       $file_content = file_get_contents($src);
 
-      if (strpos($file_content, 'window.drupalSettings =') !== FALSE) {
+      if (str_contains($file_content, 'window.drupalSettings =')) {
         $found = TRUE;
         break;
       }

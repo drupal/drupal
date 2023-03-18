@@ -495,7 +495,7 @@ class Page extends PathPluginBase {
     if ($form_state->get('section') == 'menu') {
       $path = $this->getOption('path');
       $menu_type = $form_state->getValue(['menu', 'type']);
-      if ($menu_type == 'normal' && strpos($path, '%') !== FALSE) {
+      if ($menu_type == 'normal' && str_contains($path, '%')) {
         $form_state->setError($form['menu']['type'], $this->t('Views cannot create normal menu links for paths with a % in them.'));
       }
 

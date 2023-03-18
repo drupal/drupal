@@ -856,7 +856,7 @@ class Select extends Query implements SelectInterface {
       else {
         $table_string = $this->connection->escapeTable($table['table']);
         // Do not attempt prefixing cross database / schema queries.
-        if (strpos($table_string, '.') === FALSE) {
+        if (!str_contains($table_string, '.')) {
           $table_string = '{' . $table_string . '}';
         }
       }

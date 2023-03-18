@@ -55,7 +55,7 @@ trait DoTrustedCallbackTrait {
     if (is_array($callback)) {
       [$object_or_classname, $method_name] = $callback;
     }
-    elseif (is_string($callback) && strpos($callback, '::') !== FALSE) {
+    elseif (is_string($callback) && str_contains($callback, '::')) {
       [$object_or_classname, $method_name] = explode('::', $callback, 2);
     }
 

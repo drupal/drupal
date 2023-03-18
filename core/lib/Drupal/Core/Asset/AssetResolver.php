@@ -142,7 +142,7 @@ class AssetResolver implements AssetResolverInterface {
           $options['license'] = $definition['license'];
 
           // Files with a query string cannot be preprocessed.
-          if ($options['type'] === 'file' && $options['preprocess'] && strpos($options['data'], '?') !== FALSE) {
+          if ($options['type'] === 'file' && $options['preprocess'] && str_contains($options['data'], '?')) {
             $options['preprocess'] = FALSE;
           }
 

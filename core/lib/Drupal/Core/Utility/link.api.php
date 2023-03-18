@@ -53,7 +53,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  */
 function hook_link_alter(&$variables) {
   // Add a warning to the end of route links to the admin section.
-  if (isset($variables['route_name']) && strpos($variables['route_name'], 'admin') !== FALSE) {
+  if (isset($variables['route_name']) && str_contains($variables['route_name'], 'admin')) {
     $variables['text'] = new TranslatableMarkup('@text (Warning!)', ['@text' => $variables['text']]);
   }
 }

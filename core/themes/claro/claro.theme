@@ -416,7 +416,7 @@ function claro_form_alter(array &$form, FormStateInterface $form_state, $form_id
     // Determine if the Views form includes a bulk operations form. If it does,
     // move it to the bottom and remove the second bulk operations submit.
     foreach (Element::children($form['header']) as $key) {
-      if (strpos($key, '_bulk_form') !== FALSE) {
+      if (str_contains($key, '_bulk_form')) {
         // Move the bulk actions form from the header to its own container.
         $form['bulk_actions_container'] = $form['header'][$key];
         unset($form['header'][$key]);
@@ -1616,7 +1616,7 @@ function claro_form_views_ui_config_item_form_alter(array &$form, FormStateInter
     // wrapper.
     if (isset($form['options']['operator']['#prefix'])) {
       foreach (['views-left-30', 'views-left-40'] as $left_class) {
-        if (strpos($form['options']['operator']['#prefix'], $left_class) !== FALSE) {
+        if (str_contains($form['options']['operator']['#prefix'], $left_class)) {
           $form['options']['operator']['#prefix'] = '<div class="views-config-group-region">' . str_replace($left_class, 'views-group-box--operator', $form['options']['operator']['#prefix']);
           $form['options']['value']['#suffix'] = $form['options']['value']['#suffix'] . '</div>';
         }
@@ -1627,14 +1627,14 @@ function claro_form_views_ui_config_item_form_alter(array &$form, FormStateInter
     // removed in order to style these forms consistently.
     // @see \Drupal\views\Plugin\views\filter\InOperator::valueForm
     $wrapper_div_to_remove = '<div id="edit-options-value-wrapper">';
-    if (isset($form['options']['value']['#prefix']) && strpos($form['options']['value']['#prefix'], $wrapper_div_to_remove) !== FALSE) {
+    if (isset($form['options']['value']['#prefix']) && str_contains($form['options']['value']['#prefix'], $wrapper_div_to_remove)) {
       $form['options']['value']['#prefix'] = str_replace($wrapper_div_to_remove, '', $form['options']['value']['#prefix']);
       $form['options']['value']['#suffix'] = preg_replace('/<\/div>/', '', $form['options']['value']['#suffix'], 1);
     }
 
     if (isset($form['options']['value']['#prefix'])) {
       foreach (['views-right-70', 'views-right-60'] as $right_class) {
-        if (strpos($form['options']['value']['#prefix'], $right_class) !== FALSE) {
+        if (str_contains($form['options']['value']['#prefix'], $right_class)) {
           $form['options']['value']['#prefix'] = str_replace($right_class, 'views-group-box--value', $form['options']['value']['#prefix']);
         }
       }
@@ -1643,7 +1643,7 @@ function claro_form_views_ui_config_item_form_alter(array &$form, FormStateInter
     // If the form includes a `value` field, the `.views-group-box--value` and
     // `.views-group-box` classes must be present in a wrapper div. Add them
     // here if it they are not yet present.
-    if (!isset($form['options']['value']['#prefix']) || strpos($form['options']['value']['#prefix'], 'views-group-box--value') === FALSE) {
+    if (!isset($form['options']['value']['#prefix']) || !str_contains($form['options']['value']['#prefix'], 'views-group-box--value')) {
       $prefix = $form['options']['value']['#prefix'] ?? '';
       $suffix = $form['options']['value']['#suffix'] ?? '';
       $form['options']['value']['#prefix'] = '<div class="views-group-box views-group-box--value">' . $prefix;

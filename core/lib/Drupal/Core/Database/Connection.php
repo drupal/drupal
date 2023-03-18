@@ -566,7 +566,7 @@ abstract class Connection {
       $trim_chars .= ';';
     }
     $query = rtrim($query, $trim_chars);
-    if (strpos($query, ';') !== FALSE && empty($options['allow_delimiter_in_query'])) {
+    if (str_contains($query, ';') && empty($options['allow_delimiter_in_query'])) {
       throw new \InvalidArgumentException('; is not supported in SQL strings. Use only one statement at a time.');
     }
 

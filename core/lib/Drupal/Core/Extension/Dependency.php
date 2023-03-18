@@ -123,7 +123,7 @@ class Dependency {
    * @return static
    */
   public static function createFromString($dependency) {
-    if (strpos($dependency, ':') !== FALSE) {
+    if (str_contains($dependency, ':')) {
       [$project, $dependency] = explode(':', $dependency);
     }
     else {

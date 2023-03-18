@@ -207,7 +207,7 @@ class Query extends QueryBase implements QueryInterface {
         case 'CONTAINS':
           $filter = static function ($name) use ($value, $prefix_length) {
             $id = substr($name, $prefix_length);
-            return strpos($id, $value) !== FALSE;
+            return str_contains($id, $value);
           };
           break;
 

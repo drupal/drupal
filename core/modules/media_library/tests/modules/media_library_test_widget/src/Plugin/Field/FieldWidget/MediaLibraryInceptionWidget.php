@@ -44,7 +44,7 @@ class MediaLibraryInceptionWidget extends MediaLibraryWidget {
     $field_name = $element['#field_name'];
     $entity = $form_state->getFormObject()->getEntity();
     $input = $form_state->getUserInput();
-    if (!empty($input['_triggering_element_name']) && strpos($input['_triggering_element_name'], 'media-library-update') !== FALSE) {
+    if (!empty($input['_triggering_element_name']) && str_contains($input['_triggering_element_name'], 'media-library-update')) {
       // This will validate a required field before an upload is completed.
       $display = EntityFormDisplay::collectRenderDisplay($entity, 'edit');
       $display->extractFormValues($entity, $form, $form_state);

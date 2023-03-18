@@ -169,7 +169,7 @@ class EntityConverter implements ParamConverterInterface {
   public function applies($definition, $name, Route $route) {
     if (!empty($definition['type']) && strpos($definition['type'], 'entity:') === 0) {
       $entity_type_id = substr($definition['type'], strlen('entity:'));
-      if (strpos($definition['type'], '{') !== FALSE) {
+      if (str_contains($definition['type'], '{')) {
         $entity_type_slug = substr($entity_type_id, 1, -1);
         return $name != $entity_type_slug && in_array($entity_type_slug, $route->compile()->getVariables(), TRUE);
       }

@@ -165,7 +165,7 @@ class HtmlTest extends TestCase {
 
     // Note, we truncate two hyphens at the end.
     // @see \Drupal\Component\Utility\Html::getId()
-    if (strpos($source, '--') !== FALSE) {
+    if (str_contains($source, '--')) {
       $random_suffix = substr($id, strlen($source) + 1);
     }
     else {

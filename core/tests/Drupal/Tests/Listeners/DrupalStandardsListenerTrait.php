@@ -94,13 +94,13 @@ trait DrupalStandardsListenerTrait {
           return;
         }
         // Ensure we don't have ().
-        if (strpos($covers, '()') !== FALSE) {
+        if (str_contains($covers, '()')) {
           $this->fail($test, "@covers invalid syntax: Do not use '()'");
         }
         // Glean the class and method from @covers.
         $class = $covers;
         $method = '';
-        if (strpos($covers, '::') !== FALSE) {
+        if (str_contains($covers, '::')) {
           [$class, $method] = explode('::', $covers);
         }
         // Check for the existence of the class if it's specified by @covers.

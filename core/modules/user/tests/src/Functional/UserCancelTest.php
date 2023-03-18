@@ -626,7 +626,7 @@ class UserCancelTest extends BrowserTestBase {
     $this->submitForm([], 'Confirm');
     $status = TRUE;
     foreach ($users as $account) {
-      $status = $status && (strpos($this->getTextContent(), "Account {$account->getAccountName()} has been deleted.") !== FALSE);
+      $status = $status && (str_contains($this->getTextContent(), "Account {$account->getAccountName()} has been deleted."));
       $user_storage->resetCache([$account->id()]);
       $status = $status && !$user_storage->load($account->id());
     }

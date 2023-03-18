@@ -119,7 +119,7 @@ class ListElement implements ElementInterface {
     }
     else {
       foreach (array_keys($group_build) as $title_key) {
-        if (isset($group_build[$title_key]['source']) && (strpos($title_key, 'title') !== FALSE || strpos($title_key, 'label') !== FALSE)) {
+        if (isset($group_build[$title_key]['source']) && (str_contains($title_key, 'title') || str_contains($title_key, 'label'))) {
           $title = $group_build[$title_key]['source']['#markup'];
           break;
         }

@@ -271,7 +271,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
     // afterwards.
     $found = FALSE;
     foreach ($rows as $row_index => $row) {
-      if (strpos($content, $error_message) !== FALSE) {
+      if (str_contains($content, $error_message)) {
         $found = TRUE;
         unset($rows[$row_index]);
       }

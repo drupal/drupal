@@ -333,7 +333,7 @@ function _search_find_match_with_simplify($key, $text, $boundary, $langcode = NU
   $text_processor = \Drupal::service('search.text_processor');
   $simplified_key = trim($text_processor->analyze($key, $langcode));
   $simplified_text = trim($text_processor->analyze($text, $langcode));
-  if ($simplified_key == '' || $simplified_text == '' || strpos($simplified_text, $simplified_key) === FALSE) {
+  if ($simplified_key == '' || $simplified_text == '' || !str_contains($simplified_text, $simplified_key)) {
     // The simplified keyword and text do not match at all, or are empty.
     return NULL;
   }
@@ -358,7 +358,7 @@ function _search_find_match_with_simplify($key, $text, $boundary, $langcode = NU
     // Since the split was done with preg_split(), the positions are byte counts
     // not character counts, so use substr() not mb_substr() here.
     $trial_text = trim($text_processor->analyze(substr($text, $start_pos, $proposed_end_pos - $start_pos), $langcode));
-    if (strpos($trial_text, $simplified_key) !== FALSE) {
+    if (str_contains($trial_text, $simplified_key)) {
       // The proposed endpoint is fine, text still matches.
       $max_end_index = $proposed_end_index;
     }
@@ -385,7 +385,7 @@ function _search_find_match_with_simplify($key, $text, $boundary, $langcode = NU
     // Since the split was done with preg_split(), the positions are byte counts
     // not character counts, so use substr() not mb_substr() here.
     $trial_text = trim($text_processor->analyze(substr($text, $proposed_start_pos, $end_pos - $proposed_start_pos), $langcode));
-    if (strpos($trial_text, $simplified_key) !== FALSE) {
+    if (str_contains($trial_text, $simplified_key)) {
       // The proposed start point is fine, text still matches.
       $min_start_index = $proposed_start_index;
     }

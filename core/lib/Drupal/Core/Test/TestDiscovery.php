@@ -174,7 +174,7 @@ class TestDiscovery {
       }
       catch (MissingGroupException $e) {
         // If the class name ends in Test and is not a migrate table dump.
-        if (preg_match('/Test$/', $classname) && strpos($classname, 'migrate_drupal\Tests\Table') === FALSE) {
+        if (preg_match('/Test$/', $classname) && !str_contains($classname, 'migrate_drupal\Tests\Table')) {
           throw $e;
         }
         // If the class is @group annotation just skip it. Most likely it is an

@@ -259,7 +259,7 @@ class ViewListBuilder extends ConfigEntityListBuilder {
       if (!empty($definition['admin'])) {
         if ($display->hasPath()) {
           $path = $display->getPath();
-          if ($view->status() && strpos($path, '%') === FALSE) {
+          if ($view->status() && !str_contains($path, '%')) {
             // Wrap this in a try/catch as trying to generate links to some
             // routes may throw a NotAcceptableHttpException if they do not
             // respond to HTML, such as RESTExports.

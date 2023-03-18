@@ -82,7 +82,7 @@ function file_requirements($phase) {
     elseif (preg_match("/Apache/i", $server_software)) {
       $is_nginx = FALSE;
       $is_apache = TRUE;
-      $fastcgi = strpos($server_software, 'mod_fastcgi') !== FALSE || strpos($server_software, 'mod_fcgi') !== FALSE;
+      $fastcgi = str_contains($server_software, 'mod_fastcgi') || str_contains($server_software, 'mod_fcgi');
     }
     else {
       $is_nginx = FALSE;

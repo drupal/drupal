@@ -80,7 +80,7 @@ class FieldOrLanguageJoin extends JoinPluginBase {
       // Remove and store the langcode OR bundle join condition extra.
       $language_bundle_conditions = [];
       foreach ($extras as $key => $extra) {
-        if (strpos($extra, '.langcode') !== FALSE || strpos($extra, '.bundle') !== FALSE) {
+        if (str_contains($extra, '.langcode') || str_contains($extra, '.bundle')) {
           $language_bundle_conditions[] = $extra;
           unset($extras[$key]);
         }

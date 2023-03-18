@@ -153,7 +153,7 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
     // Filter will only return value if block contains expected text.
     $blocks_with_expected_text = array_filter($blocks, function ($block, $key) use ($items) {
       $block_text = $block->getText();
-      return strpos($block_text, $items[$key]) !== FALSE;
+      return str_contains($block_text, $items[$key]);
     }, ARRAY_FILTER_USE_BOTH);
 
     $this->assertSameSize($items, $blocks_with_expected_text);

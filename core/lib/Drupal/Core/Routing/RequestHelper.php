@@ -27,7 +27,7 @@ class RequestHelper {
    */
   public static function isCleanUrl(Request $request) {
     $base_url = $request->getBaseUrl();
-    return (empty($base_url) || strpos($base_url, $request->getScriptName()) === FALSE);
+    return (empty($base_url) || !str_contains($base_url, $request->getScriptName()));
   }
 
 }

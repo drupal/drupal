@@ -196,7 +196,7 @@ class Tasks extends InstallTasks {
 
     // Ensure that the MySQL driver supports utf8mb4 encoding.
     $version = Database::getConnection()->clientVersion();
-    if (FALSE !== strpos($version, 'mysqlnd')) {
+    if (str_contains($version, 'mysqlnd')) {
       // The mysqlnd driver supports utf8mb4 starting at version 5.0.9.
       $version = preg_replace('/^\D+([\d.]+).*/', '$1', $version);
       if (version_compare($version, self::MYSQLND_MINIMUM_VERSION, '<')) {

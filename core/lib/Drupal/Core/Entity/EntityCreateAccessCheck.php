@@ -56,12 +56,12 @@ class EntityCreateAccessCheck implements AccessInterface {
     // The bundle argument can contain request argument placeholders like
     // {name}, loop over the raw variables and attempt to replace them in the
     // bundle name. If a placeholder does not exist, it won't get replaced.
-    if ($bundle && strpos($bundle, '{') !== FALSE) {
+    if ($bundle && str_contains($bundle, '{')) {
       foreach ($route_match->getRawParameters()->all() as $name => $value) {
         $bundle = str_replace('{' . $name . '}', $value, $bundle);
       }
       // If we were unable to replace all placeholders, deny access.
-      if (strpos($bundle, '{') !== FALSE) {
+      if (str_contains($bundle, '{')) {
         return AccessResult::neutral(sprintf("Could not find '%s' request argument, therefore cannot check create access.", $bundle));
       }
     }

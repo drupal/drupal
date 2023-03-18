@@ -201,7 +201,7 @@ class AppendOp extends AbstractOperation {
     }
     $data = file_get_contents($data_path->fullPath());
 
-    return strpos($contents, $data) !== FALSE;
+    return str_contains($contents, $data);
   }
 
 }

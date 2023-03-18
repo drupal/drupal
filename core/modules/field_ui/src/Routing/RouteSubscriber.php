@@ -56,7 +56,7 @@ class RouteSubscriber extends RouteSubscriberBase {
         ];
         // If the entity type has no bundles and it doesn't use {bundle} in its
         // admin path, use the entity type.
-        if (strpos($path, '{bundle}') === FALSE) {
+        if (!str_contains($path, '{bundle}')) {
           $defaults['bundle'] = !$entity_type->hasKey('bundle') ? $entity_type_id : '';
         }
 

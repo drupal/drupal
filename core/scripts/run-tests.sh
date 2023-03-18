@@ -1131,7 +1131,7 @@ function simpletest_script_reporter_write_xml_results(TestRunResultsStorageInter
       // Create the XML element for this test case:
       $case = $dom_document->createElement('testcase');
       $case->setAttribute('classname', $test_class);
-      if (strpos($result->function, '->') !== FALSE) {
+      if (str_contains($result->function, '->')) {
         [$class, $name] = explode('->', $result->function, 2);
       }
       else {
@@ -1322,7 +1322,7 @@ function simpletest_script_print_alternatives($string, $array, $degree = 4) {
   $alternatives = [];
   foreach ($array as $item) {
     $lev = levenshtein($string, $item);
-    if ($lev <= strlen($item) / $degree || FALSE !== strpos($string, $item)) {
+    if ($lev <= strlen($item) / $degree || str_contains($string, $item)) {
       $alternatives[] = $item;
     }
   }

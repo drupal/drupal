@@ -89,7 +89,7 @@ trait AssertMailTrait {
       // done. Any run of whitespace becomes a single space.
       $normalized_mail = preg_replace('/\s+/', ' ', $mail[$field_name]);
       $normalized_string = preg_replace('/\s+/', ' ', $string);
-      $string_found = (FALSE !== strpos($normalized_mail, $normalized_string));
+      $string_found = str_contains($normalized_mail, $normalized_string);
       if ($string_found) {
         break;
       }

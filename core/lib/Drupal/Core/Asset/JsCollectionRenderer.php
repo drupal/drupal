@@ -82,7 +82,7 @@ class JsCollectionRenderer implements AssetCollectionRendererInterface {
 
         case 'file':
           $query_string = $js_asset['version'] == -1 ? $default_query_string : 'v=' . $js_asset['version'];
-          $query_string_separator = (strpos($js_asset['data'], '?') !== FALSE) ? '&' : '?';
+          $query_string_separator = str_contains($js_asset['data'], '?') ? '&' : '?';
           $element['#attributes']['src'] = $this->fileUrlGenerator->generateString($js_asset['data']);
           // Only add the cache-busting query string if this isn't an aggregate
           // file.

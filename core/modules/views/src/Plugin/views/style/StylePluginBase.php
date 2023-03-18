@@ -198,7 +198,7 @@ abstract class StylePluginBase extends PluginBase {
   public function usesTokens() {
     if ($this->usesRowClass()) {
       $class = $this->options['row_class'];
-      if (strpos($class, '{{') !== FALSE) {
+      if (str_contains($class, '{{')) {
         return TRUE;
       }
     }
@@ -235,7 +235,7 @@ abstract class StylePluginBase extends PluginBase {
    * Take a value and apply token replacement logic to it.
    */
   public function tokenizeValue($value, $row_index) {
-    if (strpos($value, '{{') !== FALSE) {
+    if (str_contains($value, '{{')) {
       // Row tokens might be empty, for example for node row style.
       $tokens = $this->rowTokens[$row_index] ?? [];
       if (!empty($this->view->build_info['substitutions'])) {

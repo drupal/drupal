@@ -98,7 +98,7 @@ class RouteCompiler extends SymfonyRouteCompiler implements RouteCompilerInterfa
     // patterns we need to check in the RouteProvider.
     $fit = 0;
     foreach ($parts as $k => $part) {
-      if (strpos($part, '{') === FALSE) {
+      if (!str_contains($part, '{')) {
         $fit |= 1 << ($slashes - $k);
       }
     }
