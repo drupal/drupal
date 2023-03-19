@@ -95,11 +95,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Drupal\\Core\\Composer\\": "core/lib/Drupal/Core/Composer"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
+            "Drupal\\Core\\Composer\\": "core/lib/Drupal/Core/Composer",
             "Drupal\\Composer\\": "composer"
         }
     },
