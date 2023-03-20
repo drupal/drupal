@@ -10,7 +10,6 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\EnforcedResponseException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Component\Utility\Html;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -420,7 +419,10 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    * @param array $html_head_link
    *   The 'html_head_link' value of a render array. Each head link is specified
    *   by a two-element array:
-   *   - An array specifying the attributes of the link.
+   *   - An array specifying the attributes of the link. The 'href' and 'rel'
+   *     attributes are required, and the 'href' attribute is expected to be a
+   *     percent-encoded URI for proper serialization in the Link: HTTP header,
+   *     as specified by RFC 8288.
    *   - A boolean specifying whether the link should also be a Link: HTTP
    *     header.
    *
@@ -455,7 +457,7 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
 
       if ($should_add_header) {
         // Also add a HTTP header "Link:".
-        $href = '<' . Html::escape($attributes['href']) . '>';
+        $href = '<' . $attributes['href'] . '>';
         unset($attributes['href']);
         if ($param = static::formatHttpHeaderAttributes($attributes)) {
           $href .= ';' . $param;
