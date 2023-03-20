@@ -55,7 +55,7 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
     $edit = [
       'label' => 'Style One',
       'id' => 'style_one',
-      'breakpoint_group' => 'responsive_image_test_module',
+      'breakpoint_group' => 'responsive_image',
       'fallback_image_style' => 'thumbnail',
     ];
     $this->drupalGet('admin/config/media/responsive-image-style/add');
@@ -66,6 +66,15 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
     $this->drupalGet('admin/config/media/responsive-image-style');
     $this->assertSession()->pageTextNotContains('There are no responsive image styles yet.');
     $this->assertSession()->pageTextContains('Style One');
+
+    // Edit the breakpoint_group.
+    $this->drupalGet('admin/config/media/responsive-image-style/style_one');
+    $this->assertSession()->fieldValueEquals('label', 'Style One');
+    $this->assertSession()->fieldValueEquals('breakpoint_group', 'responsive_image');
+    $edit = [
+      'breakpoint_group' => 'responsive_image_test_module',
+    ];
+    $this->submitForm($edit, 'Save');
 
     // Edit the group.
     $this->drupalGet('admin/config/media/responsive-image-style/style_one');
