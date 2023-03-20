@@ -63,7 +63,7 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
     // Test ['#attached']['html_head_link'] when outputted as HTTP header.
     $this->drupalGet('/render_attached_test/html_header_link');
     $expected_link_headers = [
-      '</foo?bar=&lt;baz&gt;&amp;baz=false>; rel="alternate"',
+      '</foo?bar=<baz>&baz=false>; rel="alternate"',
       '</foo/bar>; hreflang="nl"; rel="alternate"',
       '</foo/bar>; hreflang="de"; rel="alternate"',
     ];
