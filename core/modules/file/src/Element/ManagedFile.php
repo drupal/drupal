@@ -411,7 +411,8 @@ class ManagedFile extends FormElement {
    * Render API callback: Validates the managed_file element.
    */
   public static function validateManagedFile(&$element, FormStateInterface $form_state, &$complete_form) {
-    $clicked_button = end($form_state->getTriggeringElement()['#parents']);
+    $triggering_element = $form_state->getTriggeringElement();
+    $clicked_button = isset($triggering_element['#parents']) ? end($triggering_element['#parents']) : '';
     if ($clicked_button != 'remove_button' && !empty($element['fids']['#value'])) {
       $fids = $element['fids']['#value'];
       foreach ($fids as $fid) {
