@@ -225,6 +225,7 @@ class ResponsiveImageStyleForm extends EntityForm {
       if ($form_state->getValue('breakpoint_group') != $form_state->getCompleteForm()['breakpoint_group']['#default_value']) {
         // Remove the image style mappings since the breakpoint ID has changed.
         $form_state->unsetValue('keyed_styles');
+        return;
       }
 
       // Check that at least 1 image style has been selected when using sizes.
