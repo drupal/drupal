@@ -4,6 +4,8 @@ namespace Drupal\Core\Entity;
 
 /**
  * Provides an interface for access to an entity's published state.
+ *
+ * @ingroup entity_type_characteristics
  */
 interface EntityPublishedInterface extends EntityInterface {
 

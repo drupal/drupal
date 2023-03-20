@@ -9,6 +9,8 @@ namespace Drupal\user;
  * owners in Unix file system access. This may or may not be the entity's
  * original author. The owner may also have less permissions than other users,
  * such as administrators.
+ *
+ * @ingroup entity_type_characteristics
  */
 interface EntityOwnerInterface {
 
