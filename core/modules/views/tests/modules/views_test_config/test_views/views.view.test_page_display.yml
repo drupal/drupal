@@ -23,6 +23,9 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
+      use_more: true
+      use_more_always: true
+      use_more_text: more
     display_plugin: default
     display_title: Default
     id: default
