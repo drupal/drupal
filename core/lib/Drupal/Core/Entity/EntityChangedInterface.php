@@ -13,6 +13,8 @@ namespace Drupal\Core\Entity;
  * editing.
  *
  * @see \Drupal\Core\Entity\Plugin\Validation\Constraint\EntityChangedConstraint
+ *
+ * @ingroup entity_type_characteristics
  */
 interface EntityChangedInterface extends EntityInterface {
 
