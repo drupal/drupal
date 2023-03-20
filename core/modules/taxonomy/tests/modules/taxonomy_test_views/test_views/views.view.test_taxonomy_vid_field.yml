@@ -1,3 +1,4 @@
+uuid: 67bc4e15-f415-4747-8908-d3d56088fbbe
 langcode: en
 status: true
 dependencies:
@@ -85,7 +86,7 @@ display:
           field: vid
           relationship: none
           group_type: group
-          admin_label: ''
+          admin_label: 'Vocabulary name'
           label: ''
           exclude: false
           alter:
@@ -145,7 +146,21 @@ display:
           entity_field: vid
           plugin_id: field
       filters: {  }
-      sorts: {  }
+      sorts:
+        vid:
+          id: vid
+          table: taxonomy_term_field_data
+          field: vid
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: ASC
+          exposed: false
+          expose:
+            label: ''
+          entity_type: taxonomy_term
+          entity_field: vid
+          plugin_id: standard
       header: {  }
       footer: {  }
       empty: {  }

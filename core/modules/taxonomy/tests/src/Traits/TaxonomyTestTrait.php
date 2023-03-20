@@ -15,17 +15,22 @@ trait TaxonomyTestTrait {
   /**
    * Returns a new vocabulary with random properties.
    *
+   * @param array $values
+   *   (optional) Default values for the Vocabulary::create() method.
+   *
    * @return \Drupal\taxonomy\VocabularyInterface
    *   A vocabulary used for testing.
    */
-  public function createVocabulary() {
-    $vocabulary = Vocabulary::create([
+  public function createVocabulary(array $values = []) {
+    $values += [
       'name' => $this->randomMachineName(),
       'description' => $this->randomMachineName(),
       'vid' => mb_strtolower($this->randomMachineName()),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'weight' => mt_rand(0, 10),
-    ]);
+    ];
+
+    $vocabulary = Vocabulary::create($values);
     $vocabulary->save();
     return $vocabulary;
   }
