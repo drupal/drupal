@@ -6,6 +6,8 @@ use Drupal\user\UserInterface;
 
 /**
  * Defines methods for an entity that supports revision logging and ownership.
+ *
+ * @ingroup entity_type_characteristics
  */
 interface RevisionLogInterface extends RevisionableInterface {
 

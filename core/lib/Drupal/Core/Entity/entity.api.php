@@ -119,6 +119,12 @@ use Drupal\node\Entity\NodeType;
  * @see \Drupal\Core\Entity\TranslatableRevisionableInterface
  * @see \Drupal\Core\Entity\TranslatableRevisionableStorageInterface
  *
+ * @section characteristics Entity characteristics
+ *
+ * In addition to entity interfaces for revisionable and translatable
+ * interfaces, there are interfaces for other kinds of entity functionality.
+ * @see entity_characteristics
+ *
  * @section create Create operations
  * To create an entity:
  * @code
@@ -354,7 +360,10 @@ use Drupal\node\Entity\NodeType;
  *   as short as possible, and may not exceed 32 characters.
  * - Define an interface for your entity's get/set methods, usually extending
  *   either \Drupal\Core\Config\Entity\ConfigEntityInterface or
- *   \Drupal\Core\Entity\ContentEntityInterface.
+ *   \Drupal\Core\Entity\ContentEntityInterface. Other interfaces that add
+ *   functionality are also available: see the
+ *   @link entity_characteristics Entity characteristics topic @endlink
+ *   for more information.
  * - Define a class for your entity, implementing your interface and extending
  *   either \Drupal\Core\Config\Entity\ConfigEntityBase or
  *   \Drupal\Core\Entity\ContentEntityBase, with annotation for
@@ -634,6 +643,31 @@ use Drupal\node\Entity\NodeType;
  * @see i18n
  * @see entity_crud
  * @see \Drupal\Core\Entity\EntityRepositoryInterface::getTranslationFromContext()
+ * @}
+ */
+
+/**
+ * @defgroup entity_type_characteristics Entity type characteristics
+ * @{
+ * Describes how to enhance entity types with additional functionality.
+ *
+ * When @link entity_api defining an entity type @endlink, the functionality of
+ * the entities can be enhanced with additional characteristics. Examples
+ * include entities that have a published/unpublished status, or a timestamp
+ * that gives the time they were last modified.
+ *
+ * These characteristics are provided by an interface, which the entity's own
+ * interface should inherit from, in addition to
+ * \Drupal\Core\Config\Entity\ConfigEntityInterface or
+ * \Drupal\Core\Entity\ContentEntityInterface.
+ *
+ * Some characteristics also provide a trait for the entity class. This has
+ * implementations of the interface's methods, and may also have a helper method
+ * for \Drupal\Core\Entity\EntityInterface::baseFieldsDefinition() which defines
+ * base fields that the trait expects to store data. Furthermore, trait methods
+ * may expect certain entity keys to be set: see the documentation for each
+ * trait for details.
+ *
  * @}
  */
 
