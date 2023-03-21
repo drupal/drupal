@@ -32,8 +32,10 @@ Framework managers
 
   Frontend
   - Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
+  - (provisional) Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
   - (provisional) Cristina Chumillas 'ckrina' https://www.drupal.org/u/ckrina
   - (provisional) Ben Mullins 'bnjmnm' https://www.drupal.org/u/bnjmnm
+  - (provisional) Sally Young 'justafish' https://www.drupal.org/u/justafish
 
 Release managers
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
@@ -42,8 +44,8 @@ Release managers
 - (provisional) Victoria Spagnolo 'quietone' https://www.drupal.org/u/quietone
 
 Core JavaScript packages
- - (provisional) Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
- - (provisional) Sally Young 'justafish' https://www.drupal.org/u/justafish
+ - Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
+ - Sally Young 'justafish' https://www.drupal.org/u/justafish
 
 Committer team facilitators
 - Pamela Barone 'pameeela' https://www.drupal.org/u/pameeela
