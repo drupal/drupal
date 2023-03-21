@@ -190,7 +190,7 @@ class ThemeManager implements ThemeManagerInterface {
       $variables = [];
       if (isset($info['variables'])) {
         foreach (array_keys($info['variables']) as $name) {
-          if (isset($element["#$name"]) || array_key_exists("#$name", $element)) {
+          if (\array_key_exists("#$name", $element)) {
             $variables[$name] = $element["#$name"];
           }
         }

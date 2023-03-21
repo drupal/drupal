@@ -287,10 +287,10 @@ function template_preprocess_image_style(&$variables) {
     ]);
   }
 
-  if (isset($variables['alt']) || array_key_exists('alt', $variables)) {
+  if (\array_key_exists('alt', $variables)) {
     $variables['image']['#alt'] = $variables['alt'];
   }
-  if (isset($variables['title']) || array_key_exists('title', $variables)) {
+  if (\array_key_exists('title', $variables)) {
     $variables['image']['#title'] = $variables['title'];
   }
 

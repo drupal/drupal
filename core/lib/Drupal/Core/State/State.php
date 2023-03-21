@@ -63,7 +63,7 @@ class State implements StateInterface {
       foreach ($load as $key) {
         // If we find a value, even one that is NULL, add it to the cache and
         // return it.
-        if (isset($loaded_values[$key]) || array_key_exists($key, $loaded_values)) {
+        if (\array_key_exists($key, $loaded_values)) {
           $values[$key] = $loaded_values[$key];
           $this->cache[$key] = $loaded_values[$key];
         }

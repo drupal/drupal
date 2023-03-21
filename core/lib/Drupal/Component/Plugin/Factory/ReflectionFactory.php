@@ -64,7 +64,7 @@ class ReflectionFactory extends DefaultFactory {
       elseif ($param_name == 'configuration') {
         $arguments[] = $configuration;
       }
-      elseif (isset($configuration[$param_name]) || array_key_exists($param_name, $configuration)) {
+      elseif (\array_key_exists($param_name, $configuration)) {
         $arguments[] = $configuration[$param_name];
       }
       elseif ($param->isDefaultValueAvailable()) {

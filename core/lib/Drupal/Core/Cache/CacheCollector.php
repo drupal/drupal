@@ -134,7 +134,7 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
   public function has($key) {
     // Make sure the value is loaded.
     $this->get($key);
-    return isset($this->storage[$key]) || array_key_exists($key, $this->storage);
+    return \array_key_exists($key, $this->storage);
   }
 
   /**
@@ -142,7 +142,7 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
    */
   public function get($key) {
     $this->lazyLoadCache();
-    if (isset($this->storage[$key]) || array_key_exists($key, $this->storage)) {
+    if (\array_key_exists($key, $this->storage)) {
       return $this->storage[$key];
     }
     else {

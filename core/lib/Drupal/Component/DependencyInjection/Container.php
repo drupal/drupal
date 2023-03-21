@@ -320,7 +320,7 @@ class Container implements ContainerInterface, ResetInterface {
    * {@inheritdoc}
    */
   public function getParameter($name): array|bool|string|int|float|NULL {
-    if (!(isset($this->parameters[$name]) || array_key_exists($name, $this->parameters))) {
+    if (!\array_key_exists($name, $this->parameters)) {
       if (!$name) {
         throw new ParameterNotFoundException('');
       }
@@ -335,7 +335,7 @@ class Container implements ContainerInterface, ResetInterface {
    * {@inheritdoc}
    */
   public function hasParameter($name): bool {
-    return isset($this->parameters[$name]) || array_key_exists($name, $this->parameters);
+    return \array_key_exists($name, $this->parameters);
   }
 
   /**
@@ -357,7 +357,7 @@ class Container implements ContainerInterface, ResetInterface {
       $id = $this->aliases[$id];
     }
 
-    return isset($this->services[$id]) || array_key_exists($id, $this->services);
+    return \array_key_exists($id, $this->services);
   }
 
   /**

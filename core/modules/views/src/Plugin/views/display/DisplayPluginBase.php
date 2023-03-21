@@ -790,7 +790,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       return $this->default_display->getOption($option);
     }
 
-    if (isset($this->options[$option]) || array_key_exists($option, $this->options)) {
+    if (\array_key_exists($option, $this->options)) {
       return $this->options[$option];
     }
   }

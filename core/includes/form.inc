@@ -87,7 +87,7 @@ function form_select_options($element, $choices = NULL) {
 
   // array_key_exists() accommodates the rare event where $element['#value'] is NULL.
   // isset() fails in this situation.
-  $value_valid = isset($element['#value']) || array_key_exists('#value', $element);
+  $value_valid = \array_key_exists('#value', $element);
   $value_is_array = $value_valid && is_array($element['#value']);
   // Check if the element is multiple select and no value has been selected.
   $empty_value = (empty($element['#value']) && !empty($element['#multiple']));
