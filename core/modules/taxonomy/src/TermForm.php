@@ -109,6 +109,7 @@ class TermForm extends ContentEntityForm {
         '#value' => $this->t('Save and go to list'),
         '#weight' => 20,
         '#submit' => array_merge($element['submit']['#submit'], ['::overview']),
+        '#access' => $this->currentUser()->hasPermission('access taxonomy overview'),
       ];
     }
 
