@@ -9,6 +9,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\search\SearchPageInterface;
 use Drupal\views\Form\ViewsForm;
+use Drupal\Core\Render\Element;
 
 /**
  * Implements hook_preprocess_HOOK() for HTML document templates.
@@ -64,6 +65,17 @@ function umami_theme_suggestions_block_alter(array &$suggestions, array $variabl
 }
 
 /**
+ * Implements hook_umami_preprocess_block__bundle__footer_promo_block().
+ */
+function umami_preprocess_block__bundle__footer_promo_block(&$variables) {
+  if (isset($variables['content']['field_content_link'])) {
+    foreach (Element::children($variables['content']['field_content_link']) as $key) {
+      $variables['content']['field_content_link'][$key]['#attributes']['class'][] = 'footer-promo-block__link';
+    }
+  }
+}
+
+/**
  * Implements hook_preprocess_breadcrumb().
  */
 function umami_preprocess_breadcrumb(&$variables) {
@@ -86,6 +98,13 @@ function umami_preprocess_breadcrumb(&$variables) {
   // If we don't, then we might end up with something like
   // "Home > Articles" on the Recipes page, which should read "Home > Recipes".
   $variables['#cache']['contexts'][] = 'url';
+}
+
+/**
+ * Implements hook_preprocess_menu_local_task().
+ */
+function umami_preprocess_menu_local_task(&$variables) {
+  $variables['link']['#options']['attributes']['class'][] = 'tabs__link';
 }
 
 /**

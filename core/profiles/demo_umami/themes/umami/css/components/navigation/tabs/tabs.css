@@ -10,28 +10,25 @@
   padding: 0;
   list-style: none;
 }
-.tabs .tab {
+.tabs__tab {
   margin: 0; /* LTR */
   background-color: #e6eee0;
 }
-[dir=rtl] .tabs .tab {
-  margin: 0;
-}
-.tabs .tab.is-active {
+.tabs__tab.is-active {
   background-color: #fff;
 }
-.tabs a {
+.tabs__link {
   display: block;
   padding: 0.75rem 1rem;
   text-decoration: none;
   color: inherit;
   background-color: inherit;
 }
-.tabs a.is-active {
+.tabs__link.is-active {
   background-color: inherit;
 }
-.tabs a:focus,
-.tabs a:hover {
+.tabs__link:focus,
+.tabs__link:hover {
   outline-offset: -5px;
   background-color: #fff;
 }

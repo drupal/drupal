@@ -3,6 +3,42 @@
  * This file is used to style form buttons generically, with overrides per form
  */
 
+.button {
+  display: inline-block;
+  min-width: inherit;
+  max-width: inherit;
+  margin: 0;
+  padding: 0.7rem 1.3rem;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  border: 2px solid #008068;
+  border-radius: 3px;
+  background-color: #008068;
+  font-family: "Scope One", Georgia, serif;
+  font-size: 1.2rem;
+}
+
+.button:hover,
+.button:active,
+.button:focus {
+  transition: background-color 0.5s ease;
+  text-decoration: none;
+  color: #000;
+  background-color: #e6eee0;
+}
+
+.button[disabled]:hover,
+.button[disabled]:active,
+.button[disabled]:focus,
+.button[disabled] {
+  cursor: default;
+  color: #464646;
+  background: #767775;
+}
+
 .form-actions {
   display: flex;
   flex-wrap: wrap;

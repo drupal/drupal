@@ -55,6 +55,19 @@
 }
 
 .search-form .form-search {
+  min-width: 100%;
+  max-width: 100%;
+  margin: 0.25rem 0;
+  padding: 0.8rem 0.4rem;
+  color: #000;
+  border: 2px solid #767775;
+  font-size: 1rem;
+}
+.search-form .form-search:focus {
+  border: 2px solid #008068;
+}
+
+.search-form .form-search {
   margin: 0;
 }
 
