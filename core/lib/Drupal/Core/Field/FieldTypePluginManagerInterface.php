@@ -79,6 +79,11 @@ interface FieldTypePluginManagerInterface extends PluginManagerInterface, Catego
   /**
    * Gets the definition of all field types that can be added via UI.
    *
+   * If the field type extends
+   * \Drupal\Core\Field\PreconfiguredFieldUiOptionsInterface, then include the
+   * preconfigured definitions. The key is 'field_ui', the base field name, and
+   * the key from getPreconfiguredOptions(), joined with ':'.
+   *
    * @return array
    *   An array of field type definitions.
    */

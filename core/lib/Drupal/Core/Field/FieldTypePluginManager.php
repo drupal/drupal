@@ -136,13 +136,10 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
     foreach ($definitions as $id => $definition) {
       if (is_subclass_of($definition['class'], '\Drupal\Core\Field\PreconfiguredFieldUiOptionsInterface')) {
         foreach ($this->getPreconfiguredOptions($definition['id']) as $key => $option) {
-          $definitions['field_ui:' . $id . ':' . $key] = [
-            'label' => $option['label'],
-          ] + $definition;
-
-          if (isset($option['category'])) {
-            $definitions['field_ui:' . $id . ':' . $key]['category'] = $option['category'];
-          }
+          $definitions["field_ui:$id:$key"] = array_intersect_key(
+            $option,
+            ['label' => 0, 'category' => 1]
+          ) + $definition;
         }
       }
     }
