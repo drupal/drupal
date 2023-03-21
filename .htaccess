@@ -35,8 +35,8 @@ AddEncoding gzip svgz
   # Enable expirations.
   ExpiresActive On
 
-  # Cache all files and redirects for 2 weeks after access (A).
-  ExpiresDefault A1209600
+  # Cache all files for 1 year after access.
+  ExpiresDefault "access plus 1 year"
 
   <FilesMatch \.php$>
     # Do not allow PHP scripts to be cached unless they explicitly send cache
