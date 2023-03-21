@@ -666,10 +666,10 @@ use Drupal\node\Entity\NodeType;
  *
  * Some characteristics also provide a trait for the entity class. This has
  * implementations of the interface's methods, and may also have a helper method
- * for \Drupal\Core\Entity\EntityInterface::baseFieldsDefinition() which defines
- * base fields that the trait expects to store data. Furthermore, trait methods
- * may expect certain entity keys to be set: see the documentation for each
- * trait for details.
+ * for \Drupal\Core\Entity\FieldableEntityInterface::baseFieldDefinitions()
+ * which defines base fields that the trait expects to store data. Furthermore,
+ * trait methods may expect certain entity keys to be set: see the documentation
+ * for each trait for details.
  *
  * @}
  */
