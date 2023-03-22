@@ -33,10 +33,10 @@ internal.backbone:
 ckeditor:
   deprecated: The "%library_id%" asset library is deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3304481
   remote: https://github.com/ckeditor/ckeditor4
-  version: "4.18.0"
+  version: "4.21.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://raw.githubusercontent.com/ckeditor/ckeditor4/4.18.0/LICENSE.md
+    url: https://raw.githubusercontent.com/ckeditor/ckeditor4/4.21.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor/ckeditor.js: { preprocess: false, minified: true }
