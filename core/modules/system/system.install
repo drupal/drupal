@@ -1780,22 +1780,3 @@ function system_update_10100(&$sandbox = NULL) {
   }
 
 }
-
-/**
- * Change the {batch} table [bid] field to serial.
- */
-function system_update_10101(&$sandbox = NULL) {
-  $connection = \Drupal::database();
-  $schema = $connection->schema();
-
-  // Update batch table.
-  if ($schema->tableExists('batch')) {
-    $schema->changeField('batch', 'bid', 'bid', [
-      'description' => 'Primary Key: Unique batch ID.',
-      'type' => 'serial',
-      'unsigned' => TRUE,
-      'not null' => TRUE,
-    ]);
-  }
-
-}

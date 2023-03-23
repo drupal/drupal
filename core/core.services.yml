@@ -1548,7 +1548,7 @@ services:
   Drupal\Core\Utility\Token: '@token'
   batch.storage:
     class: Drupal\Core\Batch\BatchStorage
-    arguments: ['@database', '@session', '@csrf_token', '@datetime.time']
+    arguments: ['@database', '@session', '@csrf_token']
     tags:
       - { name: backend_overridable }
     lazy: true

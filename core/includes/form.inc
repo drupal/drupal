@@ -6,8 +6,6 @@
  */
 
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Batch\BatchStorageInterface;
-use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\RenderElement;
 use Drupal\Core\Template\Attribute;
@@ -899,26 +897,9 @@ function batch_process($redirect = NULL, Url $url = NULL, $redirect_callback = N
     // environments.
     \Drupal::moduleHandler()->alter('batch', $batch);
 
-    // Assign an id to progressive batches. Non-progressive batches skip
-    // database storage completely.
-    try {
-      $batch['id'] = $batch['progressive'] ? \Drupal::service(BatchStorageInterface::class)->getId() : 'non-progressive';
-    }
-    catch (IntegrityConstraintViolationException $e) {
-      // @todo this is here to support the update path to deprecate
-      // Connection::nextId(). Remove in Drupal 11.
-      $connection = \Drupal::database();
-      $max_bid = (int) $connection->query('SELECT MAX([bid]) FROM {batch}')->fetchField();
-      $batch['id'] = $max_bid + 1;
-      $connection->insert('batch')
-        ->fields([
-          'bid' => $batch['id'],
-          'timestamp' => \Drupal::time()->getRequestTime(),
-          'token' => '',
-          'batch' => NULL,
-        ])
-        ->execute();
-    }
+    // Assign an arbitrary id: don't rely on a serial column in the 'batch'
+    // table, since non-progressive batches skip database storage completely.
+    $batch['id'] = \Drupal::database()->nextId();
 
     // Move operations to a job queue. Non-progressive batches will use a
     // memory-based queue.
@@ -950,7 +931,7 @@ function batch_process($redirect = NULL, Url $url = NULL, $redirect_callback = N
       }
 
       // Store the batch.
-      \Drupal::service(BatchStorageInterface::class)->create($batch);
+      \Drupal::service('batch.storage')->create($batch);
 
       // Set the batch number in the session to guarantee that it will stay alive.
       $_SESSION['batches'][$batch['id']] = TRUE;
