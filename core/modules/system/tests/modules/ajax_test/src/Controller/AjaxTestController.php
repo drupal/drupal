@@ -387,4 +387,36 @@ class AjaxTestController {
     return $response;
   }
 
+  /**
+   * Callback to provide an exception via Ajax.
+   *
+   * @throws \Exception
+   *   The expected exception.
+   */
+  public function throwException() {
+    throw new \Exception('This is an exception.');
+  }
+
+  /**
+   * Provides an Ajax link for the exception.
+   *
+   * @return array
+   *   The Ajax link.
+   */
+  public function exceptionLink() {
+    return [
+      '#type' => 'link',
+      '#url' => Url::fromRoute('ajax_test.throw_exception'),
+      '#title' => 'Ajax Exception',
+      '#attributes' => [
+        'class' => ['use-ajax'],
+      ],
+      '#attached' => [
+        'library' => [
+          'core/drupal.ajax',
+        ],
+      ],
+    ];
+  }
+
 }

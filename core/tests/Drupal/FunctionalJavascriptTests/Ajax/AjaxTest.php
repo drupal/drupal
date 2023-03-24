@@ -251,4 +251,44 @@ JS;
     }), "Page contains expected value: $expected");
   }
 
+  /**
+   * Tests that Ajax errors are visible in the UI.
+   */
+  public function testUiAjaxException() {
+    $themes = [
+      'olivero',
+      'claro',
+      'stark',
+    ];
+    \Drupal::service('theme_installer')->install($themes);
+
+    foreach ($themes as $theme) {
+      $theme_config = \Drupal::configFactory()->getEditable('system.theme');
+      $theme_config->set('default', $theme);
+      $theme_config->save();
+      \Drupal::service('router.builder')->rebuildIfNeeded();
+
+      $this->drupalGet('ajax-test/exception-link');
+      $page = $this->getSession()->getPage();
+      // We don't want the test to error out because of an expected Javascript
+      // console error.
+      $this->failOnJavascriptConsoleErrors = FALSE;
+      // Click on the AJAX link.
+      $this->clickLink('Ajax Exception');
+      $this->assertSession()
+        ->statusMessageContainsAfterWait("Oops, something went wrong. Check your browser's developer console for more details.", 'error');
+
+      if ($theme === 'olivero') {
+        // Check that the message can be closed.
+        $this->click('.messages__close');
+        $this->assertTrue($page->find('css', '.messages--error')
+          ->hasClass('hidden'));
+      }
+    }
+
+    // This is needed to avoid an unfinished AJAX request error from tearDown()
+    // because this test intentionally does not complete all AJAX requests.
+    $this->getSession()->executeScript("delete window.jQuery");
+  }
+
 }

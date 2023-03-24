@@ -115,3 +115,17 @@ ajax_test.global_events_clear_log:
     _controller: '\Drupal\ajax_test\Controller\AjaxTestController::globalEventsClearLog'
   requirements:
     _access: 'TRUE'
+
+ajax_test.exception_link:
+  path: '/ajax-test/exception-link'
+  defaults:
+    _controller: '\Drupal\ajax_test\Controller\AjaxTestController::exceptionLink'
+  requirements:
+    _access: 'TRUE'
+
+ajax_test.throw_exception:
+  path: '/ajax-test/throw-exception'
+  defaults:
+    _controller: '\Drupal\ajax_test\Controller\AjaxTestController::throwException'
+  requirements:
+    _access: 'TRUE'

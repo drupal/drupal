@@ -210,6 +210,8 @@ messages:
   version: VERSION
   js:
     js/messages.js: {}
+  dependencies:
+    - olivero/global-styling
 
 navigation-primary:
   version: VERSION

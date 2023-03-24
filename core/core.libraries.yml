@@ -374,6 +374,7 @@ drupal.ajax:
     - core/once
     - core/tabbable
     - core/loadjs
+    - core/drupal.message
 
 drupal.announce:
   version: VERSION

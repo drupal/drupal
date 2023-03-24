@@ -179,6 +179,18 @@
      * @type {string}
      */
     this.name = 'AjaxError';
+
+    if (!Drupal.AjaxError.messages) {
+      Drupal.AjaxError.messages = new Drupal.Message();
+    }
+    Drupal.AjaxError.messages.add(
+      Drupal.t(
+        "Oops, something went wrong. Check your browser's developer console for more details.",
+      ),
+      {
+        type: 'error',
+      },
+    );
   };
 
   Drupal.AjaxError.prototype = new Error();
