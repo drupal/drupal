@@ -1599,10 +1599,7 @@ class MediaTest extends WebDriverTestBase {
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media img'));
     $this->click('.ck-widget.drupal-media');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
-
-    $this->assertNotEmpty($dropdown = $this->getBalloonButton('View Mode 1'));
-    $dropdown->click();
-
+    $this->click('.ck-widget.drupal-media');
     // Check that all three view modes exist including the default view mode
     // that was not originally included in the allowed_view_modes.
     $this->assertNotEmpty($this->getBalloonButton('View Mode 1'));
