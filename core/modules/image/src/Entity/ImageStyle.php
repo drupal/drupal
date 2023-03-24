@@ -299,7 +299,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
     $module_handler->invokeAll('image_style_flush', [$this]);
 
     // Clear caches so that formatters may be added for this style.
-    drupal_theme_rebuild();
+    \Drupal::service('theme.registry')->reset();
 
     Cache::invalidateTags($this->getCacheTagsToInvalidate());
 

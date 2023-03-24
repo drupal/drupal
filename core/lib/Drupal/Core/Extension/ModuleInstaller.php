@@ -337,7 +337,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         \Drupal::service('stream_wrapper_manager')->register();
 
         // Update the theme registry to include it.
-        drupal_theme_rebuild();
+        \Drupal::service('theme.registry')->reset();
 
         // Modules can alter theme info, so refresh theme data.
         // @todo ThemeHandler cannot be injected into ModuleHandler, since that
@@ -517,7 +517,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       \Drupal::getContainer()->get('plugin.cache_clearer')->clearCachedDefinitions();
 
       // Update the theme registry to remove the newly uninstalled module.
-      drupal_theme_rebuild();
+      \Drupal::service('theme.registry')->reset();
 
       // Modules can alter theme info, so refresh theme data.
       // @todo ThemeHandler cannot be injected into ModuleHandler, since that

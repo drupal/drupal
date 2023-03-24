@@ -307,14 +307,7 @@ class ThemeInstaller implements ThemeInstallerInterface {
     // @todo It feels wrong to have the requirement to clear the local tasks
     //   cache here.
     Cache::invalidateTags(['local_task']);
-    $this->themeRegistryRebuild();
-  }
-
-  /**
-   * Wraps drupal_theme_rebuild().
-   */
-  protected function themeRegistryRebuild() {
-    drupal_theme_rebuild();
+    \Drupal::service('theme.registry')->reset();
   }
 
 }

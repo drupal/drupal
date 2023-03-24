@@ -256,4 +256,20 @@ class RegistryTest extends KernelTestBase {
     $this->assertEquals($expected, array_values($registry['theme_test_registered_by_module']['preprocess functions']));
   }
 
+  /**
+   * Tests deprecated drupal_theme_rebuild() function.
+   *
+   * @see drupal_theme_rebuild()
+   * @group legacy
+   */
+  public function testLegacyThemeRegistryRebuild() {
+    $registry = \Drupal::service('theme.registry');
+    $runtime = $registry->getRuntime();
+    $hooks = $registry->get();
+    $this->expectDeprecation('drupal_theme_rebuild() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use theme.registry service reset() method instead. See https://www.drupal.org/node/3348853');
+    drupal_theme_rebuild();
+    $this->assertNotSame($runtime, $registry->getRuntime());
+    $this->assertSame($hooks, $registry->get());
+  }
+
 }
