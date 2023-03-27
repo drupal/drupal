@@ -13,26 +13,26 @@
 name: Olivero
 type: theme
 base theme: false
-description: 'A clean, accessible, and flexible Drupal front-end theme.'
-alt text: 'Screenshot of Olivero, Drupal front-end theme.'
+description: A clean, accessible, and flexible Drupal front-end theme.
+alt text: Screenshot of Olivero, Drupal front-end theme.
 package: Core
 version: VERSION
 libraries:
   - olivero/global-styling
 regions:
   header: Header
-  primary_menu: 'Primary menu'
-  secondary_menu: 'Secondary menu'
-  hero: 'Hero (full width)'
+  primary_menu: Primary menu
+  secondary_menu: Secondary menu
+  hero: Hero (full width)
   highlighted: Highlighted
   breadcrumb: Breadcrumb
   social: Social Bar
   content_above: Content Above
   content: Content
-  sidebar: 'Sidebar'
-  content_below: 'Content Below'
-  footer_top: 'Footer Top'
-  footer_bottom: 'Footer Bottom'
+  sidebar: Sidebar
+  content_below: Content Below
+  footer_top: Footer Top
+  footer_bottom: Footer Bottom
 libraries-override:
   system/admin:
     css:
