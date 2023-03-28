@@ -17,7 +17,6 @@ class DrupalListener implements TestListener {
 
   use TestListenerDefaultImplementation;
   use DrupalComponentTestListenerTrait;
-  use DrupalStandardsListenerTrait;
 
   /**
    * The wrapped Symfony test listener.
@@ -65,7 +64,6 @@ class DrupalListener implements TestListener {
   public function endTest(Test $test, float $time): void {
     $this->symfonyListener->endTest($test, $time);
     $this->componentEndTest($test, $time);
-    $this->standardsEndTest($test, $time);
   }
 
 }
