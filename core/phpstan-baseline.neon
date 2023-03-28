@@ -16,21 +16,6 @@ parameters:
 			path: assets/scaffold/files/default.settings.php
 
 		-
-			message: "#^Variable \\$finished might not be defined\\.$#"
-			count: 1
-			path: includes/batch.inc
-
-		-
-			message: "#^Variable \\$old_set might not be defined\\.$#"
-			count: 3
-			path: includes/batch.inc
-
-		-
-			message: "#^Variable \\$response might not be defined\\.$#"
-			count: 1
-			path: includes/batch.inc
-
-		-
 			message: "#^Variable \\$new_set_index might not be defined\\.$#"
 			count: 1
 			path: includes/form.inc

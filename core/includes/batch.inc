@@ -75,6 +75,7 @@ function _batch_page(Request $request) {
     }
   }
 
+  $response = FALSE;
   $op = $request->query->get('op', '');
   switch ($op) {
     case 'start':
@@ -345,14 +346,14 @@ function _batch_process() {
     }
     else {
       // Processing will continue with the current batch set.
-      $remaining        = $old_set['count'];
-      $total            = $old_set['total'];
-      $progress_message = $old_set['progress_message'];
+      $remaining        = $old_set['count'] ?? 0;
+      $total            = $old_set['total'] ?? 0;
+      $progress_message = $old_set['progress_message'] ?? '';
     }
 
     // Total progress is the number of operations that have fully run plus the
     // completion level of the current operation.
-    $current    = $total - $remaining + $finished;
+    $current    = $total - $remaining + ($finished ?? 0);
     $percentage = _batch_api_percentage($total, $current);
     $elapsed    = $current_set['elapsed'] ?? 0;
     $values     = [
