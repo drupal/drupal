@@ -112,10 +112,6 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
       return TRUE;
     });
 
-    // Install the System module configuration as Olivero's block configuration
-    // depends on the system menus.
-    // @todo Remove this in https://www.drupal.org/node/3219959
-    $this->installConfig('system');
     // Install the 'user' entity schema because the workspaces module's install
     // hook creates a workspace with default uid of 1. Then the layout_builder
     // module's implementation of hook_entity_presave will cause

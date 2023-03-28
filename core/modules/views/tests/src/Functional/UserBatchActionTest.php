@@ -18,8 +18,6 @@ class UserBatchActionTest extends BrowserTestBase {
    * @var array
    */
   protected static $modules = [
-    // @todo Remove this in https://www.drupal.org/node/3219959
-    'block',
     'user',
     'user_batch_action_test',
     'views',

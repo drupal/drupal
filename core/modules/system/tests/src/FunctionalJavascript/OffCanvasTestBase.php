@@ -16,8 +16,6 @@ abstract class OffCanvasTestBase extends WebDriverTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    // @todo Remove this in https://www.drupal.org/node/3219959
-    'block',
     'off_canvas_test',
   ];
 
