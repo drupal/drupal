@@ -1308,4 +1308,46 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     $this->assertFalse($this->schema->tableExists($table_name_new));
   }
 
+  /**
+   * Tests changing a field length.
+   */
+  public function testChangeSerialFieldLength(): void {
+    $specification = [
+      'fields' => [
+        'id' => [
+          'type' => 'serial',
+          'not null' => TRUE,
+          'description' => 'Primary Key: Unique ID.',
+        ],
+        'text' => [
+          'type' => 'text',
+          'description' => 'A text field',
+        ],
+      ],
+      'primary key' => ['id'],
+    ];
+    $this->schema->createTable('change_serial_to_big', $specification);
+
+    // Increase the size of the field.
+    $new_specification = [
+      'size' => 'big',
+      'type' => 'serial',
+      'not null' => TRUE,
+      'description' => 'Primary Key: Unique ID.',
+    ];
+    $this->schema->changeField('change_serial_to_big', 'id', 'id', $new_specification);
+    $this->assertTrue($this->schema->fieldExists('change_serial_to_big', 'id'));
+
+    // Test if we can actually add a big int.
+    $id = $this->connection->insert('change_serial_to_big')->fields([
+      'id' => 21474836470,
+    ])->execute();
+
+    $id_two = $this->connection->insert('change_serial_to_big')->fields([
+      'text' => 'Testing for ID generation',
+    ])->execute();
+
+    $this->assertEquals($id + 1, $id_two);
+  }
+
 }

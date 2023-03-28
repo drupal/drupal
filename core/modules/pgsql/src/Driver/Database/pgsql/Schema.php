@@ -893,12 +893,11 @@ EOD;
     // Type 'serial' is known to PostgreSQL, but only during table creation,
     // not when altering. Because of that, we create it here as an 'int'. After
     // we create it we manually re-apply the sequence.
-    if (in_array($spec['pgsql_type'], ['serial', 'bigserial'])) {
-      $field_def = 'int';
-    }
-    else {
-      $field_def = $spec['pgsql_type'];
-    }
+    $field_def = match($spec['pgsql_type']) {
+      'serial' => 'int',
+      'bigserial' => 'bigint',
+      default => $spec['pgsql_type'],
+    };
 
     if (in_array($spec['pgsql_type'], ['varchar', 'character', 'text']) && isset($spec['length'])) {
       $field_def .= '(' . $spec['length'] . ')';
@@ -909,6 +908,14 @@ EOD;
 
     // Remove old check constraints.
     $field_info = $this->queryFieldInformation($table, $field);
+
+    // Remove old sequence.
+    $seq_name = $this->getSequenceName($table, $field);
+    if (!empty($seq_name)) {
+      // We need to add CASCADE otherwise we cannot alter the sequence because
+      // the table depends on it.
+      $this->connection->query('DROP SEQUENCE IF EXISTS ' . $seq_name . ' CASCADE');
+    }
 
     foreach ($field_info as $check) {
       $this->connection->query('ALTER TABLE {' . $table . '} DROP CONSTRAINT [' . $check . ']');
@@ -1060,6 +1067,26 @@ EOD;
     return (bool) $this->connection->query('SELECT installed_version FROM pg_available_extensions WHERE name = :name', [
       ':name' => $name,
     ])->fetchField();
+  }
+
+  /**
+   * Retrieves a sequence name that is owned by the table and column..
+   *
+   * @param string $table
+   *   A table name that is not prefixed or quoted.
+   * @param string $column
+   *   The column name.
+   *
+   * @return string|null
+   *   The name of the sequence or NULL if it does not exist.
+   */
+  protected function getSequenceName(string $table, string $column): ?string {
+    return $this->connection
+      ->query("SELECT pg_get_serial_sequence(:table, :column)", [
+        ':table' => $this->connection->getPrefix() . $table,
+        ':column' => $column,
+      ])
+      ->fetchField();
   }
 
 }
