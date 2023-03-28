@@ -128,7 +128,7 @@
  *   - The request method must be set to the REST method you are using (POST,
  *     GET, PATCH, etc.).
  *   - The content type for the data you send, or the accept type for the
- *     data you are receiving, must be set to 'application/hal+json'.
+ *     data you are receiving, must be set to 'application/json'.
  *   - If you are sending data, it must be JSON-encoded.
  *   - You'll also need to make sure the authentication information is sent
  *     with the request, unless you have allowed access to anonymous users.

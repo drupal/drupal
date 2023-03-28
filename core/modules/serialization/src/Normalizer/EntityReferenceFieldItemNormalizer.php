@@ -59,7 +59,6 @@ class EntityReferenceFieldItemNormalizer extends FieldItemNormalizer {
         $values['url'] = $url->getGeneratedUrl();
       }
       // @todo Remove in https://www.drupal.org/project/drupal/issues/2925520
-      // @see \Drupal\hal\Normalizer\FileEntityNormalizer
       elseif ($entity instanceof FileInterface) {
         $values['url'] = $entity->createFileUrl(FALSE);
       }
