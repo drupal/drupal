@@ -630,6 +630,12 @@ class ConfigImporter {
           $this->totalConfigurationToProcess += count($this->getUnprocessedConfiguration($op, $collection));
         }
       }
+
+      // Adjust the totals for system.theme.
+      // @see \Drupal\Core\Config\ConfigImporter::processExtension
+      if ($this->processedSystemTheme) {
+        $this->totalConfigurationToProcess++;
+      }
     }
     $operation = $this->getNextConfigurationOperation();
     if (!empty($operation)) {
