@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Session;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\PrivateKey;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -42,11 +43,17 @@ class PermissionsHashGenerator implements PermissionsHashGeneratorInterface {
    *   The cache backend interface to use for the persistent cache.
    * @param \Drupal\Core\Cache\CacheBackendInterface $static
    *   The cache backend interface to use for the static cache.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface|null $entityTypeManager
+   *   The entity type manager.
    */
-  public function __construct(PrivateKey $private_key, CacheBackendInterface $cache, CacheBackendInterface $static) {
+  public function __construct(PrivateKey $private_key, CacheBackendInterface $cache, CacheBackendInterface $static, protected ?EntityTypeManagerInterface $entityTypeManager = NULL) {
     $this->privateKey = $private_key;
     $this->cache = $cache;
     $this->static = $static;
+    if ($this->entityTypeManager === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $entityTypeManager argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3348138', E_USER_DEPRECATED);
+      $this->entityTypeManager = \Drupal::entityTypeManager();
+    }
   }
 
   /**
@@ -93,18 +100,17 @@ class PermissionsHashGenerator implements PermissionsHashGeneratorInterface {
    *   The permissions hash.
    */
   protected function doGenerate(array $roles) {
-    // @todo Once Drupal gets rid of user_role_permissions(), we should be able
-    // to inject the user role controller and call a method on that instead.
-    $permissions_by_role = user_role_permissions($roles);
-    foreach ($permissions_by_role as $role => $permissions) {
-      sort($permissions);
+    $permissions_by_role = [];
+    /** @var \Drupal\user\RoleInterface[] $entities */
+    $entities = $this->entityTypeManager->getStorage('user_role')->loadMultiple($roles);
+    foreach ($roles as $role) {
       // Note that for admin roles (\Drupal\user\RoleInterface::isAdmin()), the
       // permissions returned will be empty ($permissions = []). Therefore the
       // presence of the role ID as a key in $permissions_by_role is essential
       // to ensure that the hash correctly recognizes admin roles. (If the hash
       // was based solely on the union of $permissions, the admin roles would
       // effectively be no-ops, allowing for hash collisions.)
-      $permissions_by_role[$role] = $permissions;
+      $permissions_by_role[$role] = isset($entities[$role]) ? $entities[$role]->getPermissions() : [];
     }
     return $this->hash(serialize($permissions_by_role));
   }

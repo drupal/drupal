@@ -227,8 +227,15 @@ function user_validate_name($name) {
  * @return array
  *   An array indexed by role ID. Each value is an array of permission strings
  *   for the given role.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+ *   replacement beyond loading the roles and calling
+ *   \Drupal\user\Entity\Role::getPermissions().
+ *
+ * @see https://www.drupal.org/node/3348138
  */
 function user_role_permissions(array $roles) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement beyond loading the roles and calling \Drupal\user\Entity\Role::getPermissions(). See https://www.drupal.org/node/3348138', E_USER_DEPRECATED);
   if (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update') {
     return _user_role_permissions_update($roles);
   }
@@ -253,8 +260,14 @@ function user_role_permissions(array $roles) {
  * @return array
  *   An array indexed by role ID. Each value is an array of permission strings
  *   for the given role.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3348138
  */
 function _user_role_permissions_update($roles) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3348138', E_USER_DEPRECATED);
   $role_permissions = [];
   foreach ($roles as $rid) {
     $role_permissions[$rid] = \Drupal::config("user.role.$rid")->get('permissions') ?: [];

@@ -1599,7 +1599,7 @@ services:
   Drupal\Core\Session\AccountSwitcherInterface: '@account_switcher'
   user_permissions_hash_generator:
     class: Drupal\Core\Session\PermissionsHashGenerator
-    arguments: ['@private_key', '@cache.bootstrap', '@cache.static']
+    arguments: ['@private_key', '@cache.bootstrap', '@cache.static', '@entity_type.manager']
   Drupal\Core\Session\PermissionsHashGeneratorInterface: '@user_permissions_hash_generator'
   current_user:
     class: Drupal\Core\Session\AccountProxy
