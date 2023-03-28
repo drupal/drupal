@@ -20,7 +20,6 @@ use Drupal\Core\Render\Element;
  */
 function template_preprocess_file_widget_multiple(&$variables) {
   $element = $variables['element'];
-
   // Special ID and classes for draggable tables.
   $weight_class = $element['#id'] . '-weight';
   $table_id = $element['#id'] . '-table';
@@ -46,7 +45,7 @@ function template_preprocess_file_widget_multiple(&$variables) {
   usort($widgets, '_field_multiple_value_form_sort_helper');
 
   $rows = [];
-  foreach ($widgets as $key => &$widget) {
+  foreach ($widgets as &$widget) {
     // Save the uploading row for last.
     if (empty($widget['#files'])) {
       $widget['#title'] = $element['#file_upload_title'];
@@ -57,10 +56,10 @@ function template_preprocess_file_widget_multiple(&$variables) {
     // Delay rendering of the buttons, so that they can be rendered later in the
     // "operations" column.
     $operations_elements = [];
-    foreach (Element::children($widget) as $sub_key) {
-      if (isset($widget[$sub_key]['#type']) && $widget[$sub_key]['#type'] == 'submit') {
-        hide($widget[$sub_key]);
-        $operations_elements[] = &$widget[$sub_key];
+    foreach (Element::children($widget) as $key) {
+      if (isset($widget[$key]['#type']) && $widget[$key]['#type'] == 'submit') {
+        hide($widget[$key]);
+        $operations_elements[] = &$widget[$key];
       }
     }
 
