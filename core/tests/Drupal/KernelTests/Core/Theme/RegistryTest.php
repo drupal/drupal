@@ -272,4 +272,18 @@ class RegistryTest extends KernelTestBase {
     $this->assertSame($hooks, $registry->get());
   }
 
+  /**
+   * Tests deprecated theme_get_registry function.
+   *
+   * @see theme_get_registry()
+   * @group legacy
+   */
+  public function testLegacyThemeGetRegistry() {
+    $registry = \Drupal::service('theme.registry');
+    $this->expectDeprecation('theme_get_registry() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use theme.registry service method get() instead. See https://www.drupal.org/node/3348850');
+    $this->assertEquals($registry->get(), theme_get_registry());
+    $this->expectDeprecation('theme_get_registry() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use theme.registry service method getRuntime() instead. See https://www.drupal.org/node/3348850');
+    $this->assertEquals($registry->getRuntime(), theme_get_registry(FALSE));
+  }
+
 }

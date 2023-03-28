@@ -547,7 +547,7 @@ function hook_preprocess(&$variables, $hook) {
   }
 
   if (!isset($hooks)) {
-    $hooks = theme_get_registry();
+    $hooks = \Drupal::service('theme.registry')->get();
   }
 
   // Determine the primary theme function argument.

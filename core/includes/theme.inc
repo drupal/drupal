@@ -87,13 +87,20 @@ const RESPONSIVE_PRIORITY_LOW = 'priority-low';
  * @return array|\Drupal\Core\Utility\ThemeRegistry
  *   The complete theme registry array, or an instance of the
  *   Drupal\Core\Utility\ThemeRegistry class.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ *   theme.registry service methods get() or getRuntime() instead.
+ *
+ * @see https://www.drupal.org/node/3348850
  */
 function theme_get_registry($complete = TRUE) {
   $theme_registry = \Drupal::service('theme.registry');
   if ($complete) {
+    @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use theme.registry service method get() instead. See https://www.drupal.org/node/3348850', E_USER_DEPRECATED);
     return $theme_registry->get();
   }
   else {
+    @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use theme.registry service method getRuntime() instead. See https://www.drupal.org/node/3348850', E_USER_DEPRECATED);
     return $theme_registry->getRuntime();
   }
 }
