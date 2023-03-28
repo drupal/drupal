@@ -105,5 +105,6 @@ function language_test_module_preinstall() {
  * Implements hook_language_switch_links_alter().
  */
 function language_test_language_switch_links_alter(array &$links, $type, Url $url) {
-  // I'll just sit here and wait to be called with the right arguments.
+  // Record which languages had links passed in.
+  \Drupal::state()->set('language_test.language_switch_link_ids', array_keys($links));
 }

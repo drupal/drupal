@@ -612,6 +612,12 @@ class LanguageSwitchingTest extends BrowserTestBase {
     else {
       $this->assertSession()->responseNotContains($restricted);
     }
+
+    // Assert that all languages had a link passed to
+    // hook_language_switch_links_alter() to allow alternatives to be provided.
+    $languages = \Drupal::languageManager()->getNativeLanguages();
+    $links_for_alter = \Drupal::state()->get('language_test.language_switch_link_ids');
+    $this->assertSame(array_keys($languages), $links_for_alter);
   }
 
   /**
