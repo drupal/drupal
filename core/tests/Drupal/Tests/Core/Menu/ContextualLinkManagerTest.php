@@ -246,7 +246,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
 
     $this->moduleHandler->expects($this->exactly(2))
       ->method('alter')
-      ->willReturnOnConsecutiveCalls(
+      ->withConsecutive(
         ['contextual_links_plugins'],
         ['contextual_links', new Count(2), 'group1', ['key' => 'value']],
       );

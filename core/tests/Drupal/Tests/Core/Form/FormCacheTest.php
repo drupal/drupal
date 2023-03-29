@@ -313,7 +313,7 @@ class FormCacheTest extends UnitTestCase {
     ];
     $this->moduleHandler->expects($this->exactly(2))
       ->method('loadInclude')
-      ->willReturnOnConsecutiveCalls(
+      ->withConsecutive(
         ['a_module', 'the_type', 'some_name'],
         ['another_module', 'inc', 'another_module'],
       );
