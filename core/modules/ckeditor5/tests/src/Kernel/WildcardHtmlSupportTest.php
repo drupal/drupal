@@ -41,7 +41,6 @@ class WildcardHtmlSupportTest extends KernelTestBase {
 
   /**
    * @covers \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing::getDynamicPluginConfig()
-   * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getCKEditor5PluginConfig()
    * @dataProvider providerGhsConfiguration
    */
   public function testGhsConfiguration(string $filter_html_allowed, array $source_editing_tags, array $expected_ghs_configuration, ?array $additional_toolbar_items = []): void {

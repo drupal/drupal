@@ -60,9 +60,6 @@ class ValidatorsTest extends KernelTestBase {
   }
 
   /**
-   * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemConstraintValidator
-   * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemDependencyConstraintValidator
-   * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\EnabledConfigurablePluginsConstraintValidator
    * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\CKEditor5ElementConstraintValidator
    * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\StyleSensibleElementConstraintValidator
    * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\UniqueLabelInListConstraintValidator
@@ -549,11 +546,6 @@ class ValidatorsTest extends KernelTestBase {
   }
 
   /**
-   * @covers \Drupal\ckeditor5\Plugin\Editor\CKEditor5::validatePair()
-   * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\FundamentalCompatibilityConstraintValidator
-   * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemConstraintValidator
-   * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemDependencyConstraintValidator
-   * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\EnabledConfigurablePluginsConstraintValidator
    * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\SourceEditingPreventSelfXssConstraintValidator
    * @dataProvider providerPair
    *
