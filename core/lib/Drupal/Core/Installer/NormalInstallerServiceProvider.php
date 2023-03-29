@@ -57,7 +57,7 @@ class NormalInstallerServiceProvider implements ServiceProviderInterface {
     $container->getDefinition('extension.list.theme_engine')->setClass(InstallerThemeEngineExtensionList::class);
 
     // Don't register the lazy route provider in the super early installer.
-    if (get_called_class() === NormalInstallerServiceProvider::class) {
+    if (static::class === NormalInstallerServiceProvider::class) {
       $lazy_route_provider = $container->register('router.route_provider.installer');
       $lazy_route_provider
         ->setClass(InstallerRouteProviderLazyBuilder::class)
