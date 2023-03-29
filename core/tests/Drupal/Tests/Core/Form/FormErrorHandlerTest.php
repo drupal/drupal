@@ -50,7 +50,7 @@ class FormErrorHandlerTest extends UnitTestCase {
   public function testDisplayErrorMessages() {
     $this->messenger->expects($this->exactly(6))
       ->method('addMessage')
-      ->willReturnOnConsecutiveCalls(
+      ->withConsecutive(
         ['invalid', 'error'],
         ['invalid', 'error'],
         ['invalid', 'error'],

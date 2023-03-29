@@ -120,7 +120,7 @@ class FormErrorHandlerTest extends UnitTestCase {
   public function testErrorMessagesInline() {
     $this->messenger->expects($this->exactly(4))
       ->method('addError')
-      ->willReturnOnConsecutiveCalls(
+      ->withConsecutive(
         ['no title given', FALSE],
         ['element is invisible', FALSE],
         ['this missing element is invalid', FALSE],
@@ -164,7 +164,7 @@ class FormErrorHandlerTest extends UnitTestCase {
     // Asserts all messages are summarized.
     $this->messenger->expects($this->exactly(7))
       ->method('addMessage')
-      ->willReturnOnConsecutiveCalls(
+      ->withConsecutive(
         ['invalid', 'error', FALSE],
         ['invalid', 'error', FALSE],
         ['invalid', 'error', FALSE],
