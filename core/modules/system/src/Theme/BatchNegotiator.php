@@ -43,7 +43,7 @@ class BatchNegotiator implements ThemeNegotiatorInterface {
    * {@inheritdoc}
    */
   public function applies(RouteMatchInterface $route_match) {
-    return $route_match->getRouteName() == 'system.batch_page';
+    return $route_match->getRouteName() == 'system.batch_page.html';
   }
 
   /**
