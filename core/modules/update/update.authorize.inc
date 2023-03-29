@@ -56,7 +56,7 @@ function update_authorize_run_update($filetransfer, $projects) {
   // Since authorize.php has its own method for setting the page title, set it
   // manually here rather than passing it in to batch_set() as would normally
   // be done.
-  \Drupal::request()->getSession()->set('authorize_page_title', t('Installing updates'));
+  \Drupal::request()->getSession()->set('authorize_page_title', t('Downloading updates'));
 
   // Invoke the batch via authorize.php.
   return system_authorized_batch_process();

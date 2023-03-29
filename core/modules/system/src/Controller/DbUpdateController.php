@@ -213,7 +213,7 @@ class DbUpdateController extends ControllerBase {
     $this->keyValueExpirableFactory->get('update_available_release')->deleteAll();
 
     $build['info_header'] = [
-      '#markup' => '<p>' . $this->t('Use this utility to update your database whenever a new release of Drupal or a module is installed.') . '</p><p>' . $this->t('For more detailed information, see the <a href="https://www.drupal.org/docs/updating-drupal">Updating Drupal guide</a>. If you are unsure what these terms mean you should probably contact your hosting provider.') . '</p>',
+      '#markup' => '<p>' . $this->t('Use this utility to update your database whenever a module, theme, or the core software is updated.') . '</p><p>' . $this->t('For more detailed information, see the <a href="https://www.drupal.org/upgrade">upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.') . '</p>',
     ];
 
     $info[] = $this->t("<strong>Back up your code</strong>. Hint: when backing up module code, do not leave that backup in the 'modules' or 'sites/*/modules' directories as this may confuse Drupal's auto-discovery mechanism.");
@@ -223,7 +223,7 @@ class DbUpdateController extends ControllerBase {
       ':url' => Url::fromRoute('system.site_maintenance_mode')->setOption('base_url', $base_url)->toString(TRUE)->getGeneratedUrl(),
     ]);
     $info[] = $this->t('<strong>Back up your database</strong>. This process will change your database values and in case of emergency you may need to revert to a backup.');
-    $info[] = $this->t('Install your new files in the appropriate location, as described in the handbook.');
+    $info[] = $this->t('Update your files (as described in the handbook page linked above).');
     $build['info'] = [
       '#theme' => 'item_list',
       '#list_type' => 'ol',

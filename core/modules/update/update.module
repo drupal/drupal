@@ -50,13 +50,8 @@ function update_help($route_name, RouteMatchInterface $route_match) {
       return '<p>' . t('Here you can find information about available updates for your installed modules and themes. Note that each module or theme is part of a "project", which may or may not have the same name, and might include multiple modules or themes within it.') . '</p>';
 
     case 'system.modules_list':
-      if (_update_manager_access()) {
-        $output = '<p>' . t('Regularly review and install <a href=":updates">available updates</a> to maintain a secure and current site. Always run the <a href=":update-php">update script</a> each time a module is updated.', [':update-php' => Url::fromRoute('system.db_update')->toString(), ':updates' => Url::fromRoute('update.status')->toString()]) . '</p>';
-      }
-      else {
-        $output = '<p>' . t('Regularly review <a href=":updates">available updates</a> to maintain a secure and current site. Always run the <a href=":update-php">update script</a> each time a module is updated.', [':update-php' => Url::fromRoute('system.db_update')->toString(), ':updates' => Url::fromRoute('update.status')->toString()]) . '</p>';
-      }
-      return $output;
+      return '<p>' . t('Regularly review <a href=":updates">available updates</a> and update as required to maintain a secure and current site. Always run the <a href=":update-php">update script</a> each time you update software.', [':update-php' => Url::fromRoute('system.db_update')->toString(), ':updates' => Url::fromRoute('update.status')->toString()]) . '</p>';
+
   }
 }
 
@@ -403,7 +398,7 @@ function update_mail($key, &$message, $params) {
   }
   $message['body'][] = t('See the available updates page for more information:', [], ['langcode' => $langcode]) . "\n" . Url::fromRoute('update.status', [], ['absolute' => TRUE, 'language' => $language])->toString();
   if (_update_manager_access()) {
-    $message['body'][] = t('You can automatically install your missing updates using the Update manager:', [], ['langcode' => $langcode]) . "\n" . Url::fromRoute('update.report_update', [], ['absolute' => TRUE, 'language' => $language])->toString();
+    $message['body'][] = t('You can automatically download your missing updates using the Update manager:', [], ['langcode' => $langcode]) . "\n" . Url::fromRoute('update.report_update', [], ['absolute' => TRUE, 'language' => $language])->toString();
   }
   $settings_url = Url::fromRoute('update.settings', [], ['absolute' => TRUE])->toString();
   if (\Drupal::config('update.settings')->get('notification.threshold') == 'all') {
