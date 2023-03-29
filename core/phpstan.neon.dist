@@ -37,3 +37,8 @@ parameters:
     - "#^Missing cache backend declaration for performance.#"
     - "#cache tag might be unclear and does not contain the cache key in it.#"
     - "#^Class .* extends @internal class#"
+
+    # phpstan/phpstan-phpunit does not support methods added to mocks if they
+    # are not defined in an interface, which is a rather opinionated approach.
+    # @see https://github.com/phpstan/phpstan-phpunit/issues/87
+    - "#^Trying to mock an undefined method .* on class #"
