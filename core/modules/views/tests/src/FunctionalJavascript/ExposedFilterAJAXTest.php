@@ -5,6 +5,7 @@ namespace Drupal\Tests\views\FunctionalJavascript;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
+use Drupal\views\Tests\ViewTestData;
 
 /**
  * Tests the basic AJAX functionality of Views exposed forms.
@@ -19,12 +20,24 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'views', 'views_test_modal'];
+  protected static $modules = [
+    'node',
+    'views',
+    'views_test_modal',
+    'user_test_views',
+  ];
 
   /**
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
+
+  /**
+   * Views used by this test.
+   *
+   * @var array
+   */
+  public static $testViews = ['test_user_name'];
 
   /**
    * {@inheritdoc}
@@ -34,6 +47,12 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
 
     // Enable AJAX on the /admin/content View.
     \Drupal::configFactory()->getEditable('views.view.content')
+      ->set('display.default.display_options.use_ajax', TRUE)
+      ->save();
+
+    // Import user_test_views and set it to use ajax.
+    ViewTestData::createTestViews(get_class($this), ['user_test_views']);
+    \Drupal::configFactory()->getEditable('views.view.test_user_name')
       ->set('display.default.display_options.use_ajax', TRUE)
       ->save();
 
@@ -192,6 +211,27 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
     // Make sure that the views_dom_id didn't change, which would indicate that
     // the page reloaded instead of doing an AJAX update.
     $this->assertSame($ajax_views_before, $ajax_views_after);
+  }
+
+  /**
+   * Tests that errors messages are displayed for exposed filters via ajax.
+   */
+  public function testExposedFilterErrorMessages(): void {
+    $this->drupalGet('test_user_name');
+    // Submit an invalid name, triggering validation errors.
+    $name = $this->randomMachineName();
+    $this->submitForm(['uid' => $name], 'Apply');
+    $this->assertSession()->waitForElement('css', 'div[aria-label="Error message"]');
+    $this->assertSession()->pageTextContainsOnce(sprintf('There are no users matching "%s"', $name));
+
+    \Drupal::service('module_installer')->install(['inline_form_errors']);
+
+    $this->drupalGet('test_user_name');
+    // Submit an invalid name, triggering validation errors.
+    $name = $this->randomMachineName();
+    $this->submitForm(['uid' => $name], 'Apply');
+    $this->assertSession()->waitForElement('css', 'div[aria-label="Error message"]');
+    $this->assertSession()->pageTextContainsOnce(sprintf('There are no users matching "%s"', $name));
   }
 
 }
