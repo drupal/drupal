@@ -7,7 +7,7 @@ namespace Drupal\Core\Ajax;
  *
  * The 'insert/html' command instructs the client to use jQuery's html() method
  * to set the HTML content of each element matched by the given selector while
- * leaving the outer tags intact.
+ * leaving the outer tags intact using a given render array or HTML markup.
  *
  * This command is implemented by Drupal.AjaxCommands.prototype.insert()
  * defined in misc/ajax.js.
