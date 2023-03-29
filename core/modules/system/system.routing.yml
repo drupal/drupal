@@ -455,6 +455,9 @@ system.timezone:
     is_daylight_saving_time: NULL
   requirements:
     _access: 'TRUE'
+    abbreviation: '0|([A-Z]{3,5})'
+    offset: '\-?\d+'
+    is_daylight_saving_time: '\-1|0|1'
 
 system.admin_config:
   path: '/admin/config'
