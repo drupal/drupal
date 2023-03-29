@@ -81,7 +81,7 @@ class TextareaWithSummaryWidget extends TextareaWidget {
       '#title' => $this->t('Summary'),
       '#rows' => $this->getSetting('summary_rows'),
       '#description' => !$required ? $this->t('Leave blank to use trimmed value of full text as the summary.') : '',
-      '#attributes' => ['class' => ['js-text-summary', 'text-summary']],
+      '#attributes' => ['class' => ['text-summary']],
       '#prefix' => '<div class="js-text-summary-wrapper text-summary-wrapper">',
       '#suffix' => '</div>',
       '#weight' => -10,
@@ -89,6 +89,7 @@ class TextareaWithSummaryWidget extends TextareaWidget {
     ];
 
     if (!$this->getSetting('show_summary') && !$required) {
+      $element['summary']['#attributes']['class'][] = 'js-text-summary';
       $element['summary']['#attached']['library'][] = 'text/drupal.text';
     }
 
