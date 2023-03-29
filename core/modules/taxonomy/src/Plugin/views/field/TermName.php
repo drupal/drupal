@@ -23,9 +23,10 @@ class TermName extends EntityField {
     if ($this->options['convert_spaces']) {
       foreach ($items as &$item) {
         // Replace spaces with hyphens.
-        $name = $item['raw']->get('value')->getValue();
-        // @todo Add link support https://www.drupal.org/node/2567745
-        $item['rendered']['#context']['value'] = str_replace(' ', '-', $name);
+        $name = str_replace(' ', '-', $item['raw']->get('value')->getValue());
+        empty($this->options['settings']['link_to_entity']) ?
+          $item['rendered']['#context']['value'] = $name :
+          $item['rendered']['#title']['#context']['value'] = $name;
       }
     }
     return $items;
