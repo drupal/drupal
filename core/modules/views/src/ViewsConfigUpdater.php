@@ -142,6 +142,9 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       if ($this->processTimestampFormatterTimeDiffUpdateHandler($handler, $handler_type)) {
         $changed = TRUE;
       }
+      if ($this->processRevisionFieldHyphenFix($view)) {
+        $changed = TRUE;
+      }
       return $changed;
     });
   }
@@ -326,6 +329,87 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       }
     }
     return FALSE;
+  }
+
+  /**
+   * Replaces hyphen on historical data (revision) fields.
+   *
+   * This replaces hyphens with double underscores in twig assertions.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The view entity.
+   *
+   * @return bool
+   *   Whether the handler was updated.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/2831233
+   */
+  public function processRevisionFieldHyphenFix(ViewEntityInterface $view): bool {
+    // Regex to search only for token with machine name '-revision_id'.
+    $old_part = '/{{([^}]+)(-revision_id)/';
+    $new_part = '{{$1__revision_id';
+    $old_field = '-revision_id';
+    $new_field = '__revision_id';
+    /** @var \Drupal\views\ViewEntityInterface $view */
+    $is_update = FALSE;
+    $displays = $view->get('display');
+    foreach ($displays as &$display) {
+      if (isset($display['display_options']['fields'])) {
+        foreach ($display['display_options']['fields'] as $field_name => $field) {
+          if (!empty($field['alter']['text'])) {
+            // Fixes replacement token references in rewritten fields.
+            $alter_text = $field['alter']['text'];
+            if (preg_match($old_part, $alter_text) === 1) {
+              $is_update = TRUE;
+              $field['alter']['text'] = preg_replace($old_part, $new_part, $alter_text);
+            }
+          }
+
+          if (!empty($field['alter']['path'])) {
+            // Fixes replacement token references in link paths.
+            $alter_path = $field['alter']['path'];
+            if (preg_match($old_part, $alter_path) === 1) {
+              $is_update = TRUE;
+              $field['alter']['path'] = preg_replace($old_part, $new_part, $alter_path);
+            }
+          }
+
+          if (str_contains($field_name, $old_field)) {
+            // Replaces the field name and the view id.
+            $is_update = TRUE;
+            $field['id'] = str_replace($old_field, $new_field, $field['id']);
+            $field['field'] = str_replace($old_field, $new_field, $field['field']);
+
+            // Replace key with save order.
+            $field_name_update = str_replace($old_field, $new_field, $field_name);
+            $fields = $display['display_options']['fields'];
+            $keys = array_keys($fields);
+            $keys[array_search($field_name, $keys)] = $field_name_update;
+            $display['display_options']['fields'] = array_combine($keys, $fields);
+            $display['display_options']['fields'][$field_name_update] = $field;
+          }
+        }
+      }
+    }
+    if ($is_update) {
+      $view->set('display', $displays);
+    }
+    return $is_update;
+  }
+
+  /**
+   * Checks each display in a view to see if it needs the hyphen fix.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The view entity.
+   *
+   * @return bool
+   *   TRUE if the view has any displays that needed to be updated.
+   */
+  public function needsRevisionFieldHyphenFix(ViewEntityInterface $view): bool {
+    return $this->processDisplayHandlers($view, TRUE, function (&$handler, $handler_type) use ($view) {
+      return $this->processRevisionFieldHyphenFix($view);
+    });
   }
 
 }

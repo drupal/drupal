@@ -1,12 +1,14 @@
+uuid: 9382cd5c-3853-436c-9c35-3b6203b6cc24
 langcode: und
 status: true
 dependencies: {  }
-id: test_field_field_revision_test
+id: test_fix_revision_id_update
 module: views
 description: ''
 tag: ''
 base_table: entity_test_rev_revision
 base_field: revision_id
+core: '8'
 display:
   default:
     display_options:
@@ -36,10 +38,10 @@ display:
           plugin_id: field
           entity_type: entity_test_rev
           entity_field: field_test
-        field_test__revision_id_1:
-          id: field_test__revision_id_1
+        field_test-revision_id_1:
+          id: field_test-revision_id_1
           table: entity_test_rev_revision__field_test
-          field: field_test__revision_id
+          field: field_test-revision_id
           relationship: none
           group_type: group
           admin_label: ''
@@ -47,7 +49,71 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: 'Replace: {{ field_test__revision_id_1 }}'
+            text: 'Replace: {{ field_test-revision_id_1 }}'
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: number_integer
+          settings:
+            thousand_separator: ''
+            prefix_suffix: true
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          plugin_id: field
+        field_test-revision_id_2:
+          id: field_test-revision_id_2
+          table: entity_test_rev_revision__field_test
+          field: field_test-revision_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: false
+          alter:
+            alter_text: true
+            text: 'field_test-revision_id_2: {{ field_test-revision_id_2 }}'
             make_link: false
             path: ''
             absolute: false
@@ -118,6 +184,6 @@ display:
       style:
         type: html_list
     display_plugin: default
-    display_title: Default
+    display_title: Master
     id: default
     position: 0

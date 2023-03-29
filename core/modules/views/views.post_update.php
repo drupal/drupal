@@ -81,3 +81,16 @@ function views_post_update_timestamp_formatter(array &$sandbox = NULL): void {
     return $view_config_updater->needsTimestampFormatterTimeDiffUpdate($view);
   });
 }
+
+/**
+ * Fix '-revision_id' replacement token syntax.
+ */
+function views_post_update_fix_revision_id_part(&$sandbox = NULL): void {
+  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
+  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
+  $view_config_updater->setDeprecationsEnabled(FALSE);
+  \Drupal::classResolver(ConfigEntityUpdater::class)
+    ->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater) {
+      return $view_config_updater->needsRevisionFieldHyphenFix($view);
+    });
+}
