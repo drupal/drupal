@@ -115,7 +115,7 @@ class ModuleHandlerTest extends UnitTestCase {
       ->getMock();
     $module_handler->expects($this->exactly(3))
       ->method('load')
-      ->willReturnOnConsecutiveCalls(
+      ->withConsecutive(
         // First reload.
         ['module_handler_test'],
         // Second reload.
