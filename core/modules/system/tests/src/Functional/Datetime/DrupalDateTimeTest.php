@@ -32,20 +32,6 @@ class DrupalDateTimeTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that the AJAX Timezone Callback can deal with various formats.
-   */
-  public function testSystemTimezone() {
-    $options = [
-      'query' => [
-        'date' => 'Tue+Sep+17+2013+21%3A35%3A31+GMT%2B0100+(BST)#',
-      ],
-    ];
-    // Query the AJAX Timezone Callback with a long-format date.
-    $response = $this->drupalGet('system/timezone/BST/3600/1', $options);
-    $this->assertEquals('"Europe\\/London"', $response, 'Timezone AJAX callback successfully identifies and responds to a long-format date.');
-  }
-
-  /**
    * Tests that DrupalDateTime can detect the right timezone to use.
    *
    * Test with a variety of less commonly used timezone names to
