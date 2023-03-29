@@ -24,7 +24,7 @@ class InsertTest extends DatabaseTestBase {
     ]);
 
     // Check how many records are queued for insertion.
-    $this->assertSame(1, $query->count(), 'One record is queued for insertion.');
+    $this->assertCount(1, $query, 'One record is queued for insertion.');
     $query->execute();
 
     $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {test}')->fetchField();
@@ -52,14 +52,14 @@ class InsertTest extends DatabaseTestBase {
     ]);
 
     // Check how many records are queued for insertion.
-    $this->assertSame(2, $query->count(), 'Two records are queued for insertion.');
+    $this->assertCount(2, $query, 'Two records are queued for insertion.');
 
     // We should be able to say "use the field order".
     // This is not the recommended mechanism for most cases, but it should work.
     $query->values(['Moe', '32']);
 
     // Check how many records are queued for insertion.
-    $this->assertSame(3, $query->count(), 'Three records are queued for insertion.');
+    $this->assertCount(3, $query, 'Three records are queued for insertion.');
     $query->execute();
 
     $num_records_after = (int) $this->connection->query('SELECT COUNT(*) FROM {test}')->fetchField();
@@ -85,7 +85,7 @@ class InsertTest extends DatabaseTestBase {
       'age' => '30',
     ]);
     // Check how many records are queued for insertion.
-    $this->assertSame(1, $query->count(), 'One record is queued for insertion.');
+    $this->assertCount(1, $query, 'One record is queued for insertion.');
     // This should run the insert, but leave the fields intact.
     $query->execute();
 
@@ -95,14 +95,14 @@ class InsertTest extends DatabaseTestBase {
       'name' => 'Curly',
     ]);
     // Check how many records are queued for insertion.
-    $this->assertSame(1, $query->count(), 'One record is queued for insertion.');
+    $this->assertCount(1, $query, 'One record is queued for insertion.');
     $query->execute();
 
     // We should be able to say "use the field order".
     $query->values(['Moe', '32']);
 
     // Check how many records are queued for insertion.
-    $this->assertSame(1, $query->count(), 'One record is queued for insertion.');
+    $this->assertCount(1, $query, 'One record is queued for insertion.');
     $query->execute();
 
     $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {test}')->fetchField();

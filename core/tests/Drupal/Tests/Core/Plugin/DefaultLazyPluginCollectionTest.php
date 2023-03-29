@@ -171,7 +171,7 @@ class DefaultLazyPluginCollectionTest extends LazyPluginCollectionTestBase {
    */
   public function testCount() {
     $this->setupPluginCollection();
-    $this->assertSame(3, $this->defaultPluginCollection->count());
+    $this->assertCount(3, $this->defaultPluginCollection);
   }
 
   /**

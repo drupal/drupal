@@ -1716,11 +1716,6 @@ parameters:
 			path: modules/language/src/Plugin/LanguageNegotiation/LanguageNegotiationContentEntity.php
 
 		-
-			message: "#^You should use assertTrue\\(\\) instead of assertSame\\(\\) when expecting \"true\"$#"
-			count: 1
-			path: modules/language/tests/src/Kernel/Migrate/d7/MigrateLanguageContentMenuSettingsTest.php
-
-		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
 			count: 1
 			path: modules/language/tests/src/Unit/Config/LanguageConfigOverrideTest.php
@@ -1986,11 +1981,6 @@ parameters:
 			path: modules/migrate/src/Plugin/migrate/destination/NullDestination.php
 
 		-
-			message: "#^You should use assertCount\\(\\$expectedCount, \\$variable\\) instead of assertSame\\(\\$expectedCount, \\$variable\\-\\>count\\(\\)\\)\\.$#"
-			count: 1
-			path: modules/migrate/tests/src/Kernel/MigrateEmbeddedDataTest.php
-
-		-
 			message: "#^Call to an undefined static method static\\(Drupal\\\\Tests\\\\migrate\\\\Kernel\\\\MigrateTestBase\\)\\:\\:migrateDumpAlter\\(\\)\\.$#"
 			count: 1
 			path: modules/migrate/tests/src/Kernel/MigrateTestBase.php
@@ -1999,11 +1989,6 @@ parameters:
 			message: "#^@covers value \\:\\:__construct references an invalid method\\.$#"
 			count: 1
 			path: modules/migrate/tests/src/Kernel/Plugin/id_map/SqlDeprecationTest.php
-
-		-
-			message: "#^You should use assertCount\\(\\$expectedCount, \\$variable\\) instead of assertSame\\(\\$expectedCount, \\$variable\\-\\>count\\(\\)\\)\\.$#"
-			count: 4
-			path: modules/migrate/tests/src/Kernel/Plugin/source/MigrationSourceCacheTest.php
 
 		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
@@ -2351,11 +2336,6 @@ parameters:
 			path: modules/rest/tests/src/Functional/EntityResource/EntityResourceTestBase.php
 
 		-
-			message: "#^You should use assertCount\\(\\$expectedCount, \\$variable\\) instead of assertSame\\(\\$expectedCount, count\\(\\$variable\\)\\)\\.$#"
-			count: 1
-			path: modules/rest/tests/src/Functional/Views/StyleSerializerTest.php
-
-		-
 			message: "#^Variable \\$working_to might not be defined\\.$#"
 			count: 1
 			path: modules/search/search.module
@@ -2649,11 +2629,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/system/tests/src/Kernel/Token/TokenReplaceKernelTest.php
-
-		-
-			message: "#^You should use assertFalse\\(\\) instead of assertSame\\(\\) when expecting \"false\"$#"
-			count: 2
-			path: modules/system/tests/src/Unit/Event/SecurityFileUploadEventSubscriberTest.php
 
 		-
 			message: "#^Variable \\$help_message might not be defined\\.$#"
@@ -3291,11 +3266,6 @@ parameters:
 			path: modules/views/tests/src/Kernel/Handler/FilterCombineTest.php
 
 		-
-			message: "#^You should use assertCount\\(\\$expectedCount, \\$variable\\) instead of assertSame\\(\\$expectedCount, count\\(\\$variable\\)\\)\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Plugin/StyleGridResponsiveTest.php
-
-		-
 			message: "#^Variable \\$rand1 might not be defined\\.$#"
 			count: 2
 			path: modules/views/tests/src/Kernel/Plugin/StyleTest.php
@@ -3569,11 +3539,6 @@ parameters:
 			message: "#^@covers value \\:\\:findPrimaryKeyColumns references an invalid method\\.$#"
 			count: 2
 			path: tests/Drupal/KernelTests/Core/Database/DriverSpecificSchemaTestBase.php
-
-		-
-			message: "#^You should use assertCount\\(\\$expectedCount, \\$variable\\) instead of assertSame\\(\\$expectedCount, \\$variable\\-\\>count\\(\\)\\)\\.$#"
-			count: 6
-			path: tests/Drupal/KernelTests/Core/Database/InsertTest.php
 
 		-
 			message: "#^@covers value \\:\\:prepareStatement references an invalid method\\.$#"
@@ -4174,11 +4139,6 @@ parameters:
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Plugin/CategorizingPluginManagerTraitTest.php
-
-		-
-			message: "#^You should use assertCount\\(\\$expectedCount, \\$variable\\) instead of assertSame\\(\\$expectedCount, \\$variable\\-\\>count\\(\\)\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Plugin/DefaultLazyPluginCollectionTest.php
 
 		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"

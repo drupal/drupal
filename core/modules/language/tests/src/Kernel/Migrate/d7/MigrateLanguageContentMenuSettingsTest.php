@@ -45,7 +45,7 @@ class MigrateLanguageContentMenuSettingsTest extends MigrateDrupal7TestBase {
     $this->assertSame('menu_link_content', $config->getTargetEntityTypeId());
     $this->assertSame('menu_link_content', $config->getTargetBundle());
     $this->assertSame(LanguageInterface::LANGCODE_SITE_DEFAULT, $config->getDefaultLangcode());
-    $this->assertSame(TRUE, $config->isLanguageAlterable());
+    $this->assertTrue($config->isLanguageAlterable());
     $settings = [
       'enabled' => TRUE,
       'bundle_settings' => [
