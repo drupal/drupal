@@ -591,4 +591,40 @@ class SelectTest extends DatabaseTestBase {
     }
   }
 
+  /**
+   * Data provider for testNonArrayOperatorWithArrayValueCondition().
+   *
+   * @return array[]
+   *   Array of non array compatible operators and its value in the expected
+   *   exception message.
+   */
+  public function providerNonArrayOperatorWithArrayValueCondition() {
+    return [
+      '=' => ['=', '='],
+      '>' => ['>', '>'],
+      '<' => ['<', '<'],
+      '>=' => ['>=', '>='],
+      '<=' => ['<=', '<='],
+      'IS NULL' => ['IS NULL', 'IS NULL'],
+      'IS NOT NULL' => ['IS NOT NULL', 'IS NOT NULL'],
+      'Empty string' => ['', '='],
+      'Not set' => [NULL, '='],
+    ];
+  }
+
+  /**
+   * Tests thrown exception for non array operator conditions with array value.
+   *
+   * @dataProvider providerNonArrayOperatorWithArrayValueCondition
+   */
+  public function testNonArrayOperatorWithArrayValueCondition($operator, $operator_in_exception_message) {
+    $this->expectException(InvalidQueryException::class);
+    $this->expectExceptionMessage("Query condition 'age " . $operator_in_exception_message . " 26, 27' must have an array compatible operator.");
+
+    $this->connection->select('test', 't')
+      ->fields('t')
+      ->condition('age', [26, 27], $operator)
+      ->execute();
+  }
+
 }

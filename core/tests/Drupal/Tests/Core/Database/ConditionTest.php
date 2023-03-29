@@ -54,7 +54,7 @@ class ConditionTest extends UnitTestCase {
     $query_placeholder = $query_placeholder->reveal();
 
     $condition = $connection->condition('AND');
-    $condition->condition($field_name, ['value']);
+    $condition->condition($field_name, 'value');
     $condition->compile($connection, $query_placeholder);
 
     $this->assertEquals($expected, $condition->__toString());

@@ -105,6 +105,10 @@ class Condition implements ConditionInterface, \Countable {
     if (empty($value) && is_array($value)) {
       throw new InvalidQueryException(sprintf("Query condition '%s %s ()' cannot be empty.", $field, $operator));
     }
+    if (is_array($value) && in_array($operator, ['=', '<', '>', '<=', '>=', 'IS NULL', 'IS NOT NULL'], TRUE)) {
+      $value = implode(', ', $value);
+      throw new InvalidQueryException(sprintf("Query condition '%s %s %s' must have an array compatible operator.", $field, $operator, $value));
+    }
 
     $this->conditions[] = [
       'field' => $field,
