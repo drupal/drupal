@@ -777,7 +777,7 @@ class Url implements TrustedCallbackInterface {
       '#options' => $this->getOptions(),
     ];
     if (!$this->unrouted) {
-      $render_array['#access_callback'] = [get_class(), 'renderAccess'];
+      $render_array['#access_callback'] = [self::class, 'renderAccess'];
     }
     return $render_array;
   }
