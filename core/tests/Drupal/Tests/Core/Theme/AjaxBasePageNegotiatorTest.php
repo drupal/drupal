@@ -106,7 +106,7 @@ class AjaxBasePageNegotiatorTest extends UnitTestCase {
     $this->tokenGenerator->validate($theme_token, $theme)->willReturn(FALSE);
 
     $result = $this->negotiator->determineActiveTheme($route_match);
-    $this->assertSame(NULL, $result);
+    $this->assertNull($result);
   }
 
   /**

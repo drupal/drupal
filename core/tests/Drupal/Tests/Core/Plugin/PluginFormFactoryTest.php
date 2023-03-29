@@ -133,7 +133,7 @@ class PluginFormFactoryTest extends UnitTestCase {
     $plugin->hasFormClass('anything')->willReturn(FALSE);
 
     $form_object = $this->manager->createInstance($plugin->reveal(), 'anything');
-    $this->assertSame(NULL, $form_object);
+    $this->assertNull($form_object);
   }
 
   /**
@@ -152,7 +152,7 @@ class PluginFormFactoryTest extends UnitTestCase {
     $plugin->getFormClass('invalid')->willReturn(get_class($expected));
 
     $form_object = $this->manager->createInstance($plugin->reveal(), 'invalid');
-    $this->assertSame(NULL, $form_object);
+    $this->assertNull($form_object);
   }
 
 }

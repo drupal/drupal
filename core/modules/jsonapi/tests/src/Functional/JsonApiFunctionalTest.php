@@ -115,7 +115,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
     // 8b. Single related item, empty.
     $single_output = Json::decode($this->drupalGet('/jsonapi/node/article/' . $uuid . '/field_heroless'));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSame(NULL, $single_output['data']);
+    $this->assertNull($single_output['data']);
     // 9. Related tags with includes.
     $single_output = Json::decode($this->drupalGet('/jsonapi/node/article/' . $uuid . '/field_tags', [
       'query' => ['include' => 'vid'],

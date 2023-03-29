@@ -633,7 +633,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
    */
   public function testLoadRevision() {
     $this->expectDeprecation('Drupal\Core\Config\Entity\ConfigEntityStorage::loadRevision() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\RevisionableStorageInterface::loadRevision instead. See https://www.drupal.org/node/3294237');
-    $this->assertSame(NULL, $this->entityStorage->loadRevision(1));
+    $this->assertNull($this->entityStorage->loadRevision(1));
   }
 
   /**
@@ -646,7 +646,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $this->cacheTagsInvalidator->invalidateTags(Argument::cetera())
       ->shouldNotBeCalled();
 
-    $this->assertSame(NULL, $this->entityStorage->deleteRevision(1));
+    $this->assertNull($this->entityStorage->deleteRevision(1));
   }
 
   /**

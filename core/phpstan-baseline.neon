@@ -1121,11 +1121,6 @@ parameters:
 			path: modules/comment/tests/src/Functional/Views/DefaultViewRecentCommentsTest.php
 
 		-
-			message: "#^You should use assertNull\\(\\) instead of assertSame\\(null, \\$actual\\)\\.$#"
-			count: 2
-			path: modules/comment/tests/src/Kernel/Migrate/d6/MigrateCommentTest.php
-
-		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
 			count: 1
 			path: modules/comment/tests/src/Unit/CommentLinkBuilderTest.php
@@ -1171,11 +1166,6 @@ parameters:
 			path: modules/config_translation/tests/src/Functional/ConfigTranslationUiTest.php
 
 		-
-			message: "#^You should use assertNull\\(\\) instead of assertSame\\(null, \\$actual\\)\\.$#"
-			count: 7
-			path: modules/config_translation/tests/src/Kernel/Migrate/d7/MigrateSystemSiteTranslationTest.php
-
-		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
 			count: 1
 			path: modules/config_translation/tests/src/Unit/ConfigEntityMapperTest.php
@@ -1193,11 +1183,6 @@ parameters:
 		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
 			count: 1
-			path: modules/config_translation/tests/src/Unit/ConfigNamesMapperTest.php
-
-		-
-			message: "#^You should use assertNull\\(\\) instead of assertSame\\(null, \\$actual\\)\\.$#"
-			count: 3
 			path: modules/config_translation/tests/src/Unit/ConfigNamesMapperTest.php
 
 		-
@@ -1666,11 +1651,6 @@ parameters:
 			path: modules/jsonapi/src/Revisions/VersionNegotiator.php
 
 		-
-			message: "#^You should use assertNull\\(\\) instead of assertSame\\(null, \\$actual\\)\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Functional/JsonApiFunctionalTest.php
-
-		-
 			message: "#^Variable \\$created_entity might not be defined\\.$#"
 			count: 1
 			path: modules/jsonapi/tests/src/Functional/ResourceTestBase.php
@@ -1758,11 +1738,6 @@ parameters:
 		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
 			count: 1
-			path: modules/language/tests/src/Unit/Plugin/LanguageNegotiation/LanguageNegotiationContentEntityTest.php
-
-		-
-			message: "#^You should use assertNull\\(\\) instead of assertSame\\(null, \\$actual\\)\\.$#"
-			count: 3
 			path: modules/language/tests/src/Unit/Plugin/LanguageNegotiation/LanguageNegotiationContentEntityTest.php
 
 		-
@@ -3651,11 +3626,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Entity/EntityQueryTest.php
 
 		-
-			message: "#^You should use assertNull\\(\\) instead of assertSame\\(null, \\$actual\\)\\.$#"
-			count: 3
-			path: tests/Drupal/KernelTests/Core/Entity/EntityRevisionsTest.php
-
-		-
 			message: "#^Variable \\$field might not be defined\\.$#"
 			count: 9
 			path: tests/Drupal/KernelTests/Core/Entity/EntitySchemaTest.php
@@ -3951,11 +3921,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/Config/Entity/ConfigEntityBaseUnitTest.php
 
 		-
-			message: "#^You should use assertNull\\(\\) instead of assertSame\\(null, \\$actual\\)\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/Config/Entity/ConfigEntityStorageTest.php
-
-		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Config/Entity/ConfigEntityTypeTest.php
@@ -4081,16 +4046,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/Entity/FieldDefinitionTest.php
 
 		-
-			message: "#^You should use assertNull\\(\\) instead of assertSame\\(null, \\$actual\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Entity/FieldDefinitionTest.php
-
-		-
-			message: "#^You should use assertNull\\(\\) instead of assertSame\\(null, \\$actual\\)\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/Entity/KeyValueStore/KeyValueEntityStorageTest.php
-
-		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Entity/Sql/SqlContentEntityStorageSchemaTest.php
@@ -4131,11 +4086,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/EventSubscriber/PsrResponseSubscriberTest.php
 
 		-
-			message: "#^You should use assertNull\\(\\) instead of assertSame\\(null, \\$actual\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Extension/ExtensionVersionTest.php
-
-		-
 			message: "#^@covers value \\: \\:\\:displayAllowedTags references an invalid method\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Field/FieldFilteredMarkupTest.php
@@ -4159,11 +4109,6 @@ parameters:
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Image/ImageTest.php
-
-		-
-			message: "#^You should use assertNull\\(\\) instead of assertSame\\(null, \\$actual\\)\\.$#"
-			count: 3
-			path: tests/Drupal/Tests/Core/Layout/LayoutPluginManagerTest.php
 
 		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
@@ -4191,18 +4136,8 @@ parameters:
 			path: tests/Drupal/Tests/Core/PageCache/ChainRequestPolicyTest.php
 
 		-
-			message: "#^You should use assertNull\\(\\) instead of assertSame\\(null, \\$actual\\)\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/PageCache/ChainRequestPolicyTest.php
-
-		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
 			count: 1
-			path: tests/Drupal/Tests/Core/PageCache/ChainResponsePolicyTest.php
-
-		-
-			message: "#^You should use assertNull\\(\\) instead of assertSame\\(null, \\$actual\\)\\.$#"
-			count: 2
 			path: tests/Drupal/Tests/Core/PageCache/ChainResponsePolicyTest.php
 
 		-
@@ -4212,11 +4147,6 @@ parameters:
 
 		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/PageCache/NoSessionOpenTest.php
-
-		-
-			message: "#^You should use assertNull\\(\\) instead of assertSame\\(null, \\$actual\\)\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/PageCache/NoSessionOpenTest.php
 
@@ -4274,11 +4204,6 @@ parameters:
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Plugin/LazyPluginCollectionTestBase.php
-
-		-
-			message: "#^You should use assertNull\\(\\) instead of assertSame\\(null, \\$actual\\)\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/Plugin/PluginFormFactoryTest.php
 
 		-
 			message: "#^Constructor of class Drupal\\\\Tests\\\\Core\\\\Plugin\\\\TestPluginManager has an unused parameter \\$namespaces\\.$#"
@@ -4374,11 +4299,6 @@ parameters:
 			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
-
-		-
-			message: "#^You should use assertNull\\(\\) instead of assertSame\\(null, \\$actual\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Theme/AjaxBasePageNegotiatorTest.php
 
 		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"

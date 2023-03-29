@@ -51,7 +51,7 @@ class ChainResponsePolicyTest extends UnitTestCase {
    */
   public function testEmptyChain() {
     $result = $this->policy->check($this->response, $this->request);
-    $this->assertSame(NULL, $result);
+    $this->assertNull($result);
   }
 
   /**
@@ -69,7 +69,7 @@ class ChainResponsePolicyTest extends UnitTestCase {
     $this->policy->addPolicy($rule);
 
     $result = $this->policy->check($this->response, $this->request);
-    $this->assertSame(NULL, $result);
+    $this->assertNull($result);
   }
 
   /**
