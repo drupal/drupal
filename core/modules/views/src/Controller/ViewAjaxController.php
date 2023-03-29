@@ -4,6 +4,7 @@ namespace Drupal\views\Controller;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -200,6 +201,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
             ->applyTo($preview);
         }
         $response->addCommand(new ReplaceCommand(".js-view-dom-id-$dom_id", $preview));
+        $response->addCommand(new PrependCommand(".js-view-dom-id-$dom_id", ['#type' => 'status_messages']));
 
         return $response;
       }
