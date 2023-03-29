@@ -7,7 +7,7 @@ namespace Drupal\Core\Ajax;
  *
  * The 'insert/replaceWith' command instructs the client to use jQuery's
  * replaceWith() method to replace each element matched by the given selector
- * with the given HTML.
+ * with the given render array or HTML.
  *
  * This command is implemented by Drupal.AjaxCommands.prototype.insert()
  * defined in misc/ajax.js.
