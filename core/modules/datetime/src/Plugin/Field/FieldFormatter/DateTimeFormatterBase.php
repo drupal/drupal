@@ -98,7 +98,7 @@ abstract class DateTimeFormatterBase extends FormatterBase {
       '#type' => 'select',
       '#title' => $this->t('Time zone override'),
       '#description' => $this->t('The time zone selected here will always be used'),
-      '#options' => TimeZoneFormHelper::getOptionsList(TRUE, TRUE),
+      '#options' => TimeZoneFormHelper::getOptionsListByRegion(TRUE),
       '#default_value' => $this->getSetting('timezone_override'),
     ];
 

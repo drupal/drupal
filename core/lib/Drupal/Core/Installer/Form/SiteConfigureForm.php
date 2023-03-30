@@ -208,7 +208,7 @@ class SiteConfigureForm extends ConfigFormBase {
       '#type' => 'select',
       '#title' => $this->t('Default time zone'),
       '#default_value' => $default_timezone,
-      '#options' => TimeZoneFormHelper::getOptionsList(FALSE, TRUE),
+      '#options' => TimeZoneFormHelper::getOptionsListByRegion(),
       '#weight' => 5,
       '#attributes' => ['class' => ['timezone-detect']],
       '#access' => empty($install_state['config_install_path']),

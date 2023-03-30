@@ -201,7 +201,7 @@ class TimestampFormatter extends FormatterBase {
     $form['timezone'] = [
       '#type' => 'select',
       '#title' => $this->t('Time zone'),
-      '#options' => ['' => $this->t('- Default site/user time zone -')] + TimeZoneFormHelper::getOptionsList(FALSE, TRUE),
+      '#options' => ['' => $this->t('- Default site/user time zone -')] + TimeZoneFormHelper::getOptionsListByRegion(),
       '#default_value' => $this->getSetting('timezone'),
     ];
 

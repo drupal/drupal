@@ -25,6 +25,7 @@ class TimeZoneFormHelperTest extends UnitTestCase {
 
   /**
    * @covers ::getOptionsList
+   * @covers ::getOptionsListByRegion
    */
   public function testGetList(): void {
     // Test the default parameters for getOptionsList().
@@ -33,8 +34,23 @@ class TimeZoneFormHelperTest extends UnitTestCase {
     $this->assertArrayHasKey('Africa/Dar_es_Salaam', $result);
     $this->assertEquals('Africa/Dar es Salaam', $result['Africa/Dar_es_Salaam']);
 
+    // Test that the ungrouped and grouped results have the same number of
+    // items.
+    $ungrouped_count = count(TimeZoneFormHelper::getOptionsList());
+    $grouped_result = TimeZoneFormHelper::getOptionsListByRegion();
+    $grouped_count = 0;
+    array_walk_recursive($grouped_result, function () use (&$grouped_count) {
+      $grouped_count++;
+    });
+    $this->assertEquals($ungrouped_count, $grouped_count);
+  }
+
+  /**
+   * @covers ::getOptionsListByRegion
+   */
+  public function testGetGroupedList(): void {
     // Tests time zone grouping.
-    $result = TimeZoneFormHelper::getOptionsList(FALSE, TRUE);
+    $result = TimeZoneFormHelper::getOptionsListByRegion();
 
     // Check a two-level time zone.
     $this->assertIsArray($result);
@@ -59,15 +75,6 @@ class TimeZoneFormHelperTest extends UnitTestCase {
     // results array.
     $this->assertArrayNotHasKey('America/Indiana/Indianapolis', $result);
 
-    // Test that the ungrouped and grouped results have the same number of
-    // items.
-    $ungrouped_count = count(TimeZoneFormHelper::getOptionsList());
-    $grouped_result = TimeZoneFormHelper::getOptionsList(FALSE, TRUE);
-    $grouped_count = 0;
-    array_walk_recursive($grouped_result, function () use (&$grouped_count) {
-      $grouped_count++;
-    });
-    $this->assertEquals($ungrouped_count, $grouped_count);
   }
 
 }

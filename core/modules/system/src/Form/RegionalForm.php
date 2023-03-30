@@ -68,7 +68,7 @@ class RegionalForm extends ConfigFormBase {
     $system_date = $this->config('system.date');
 
     // Date settings:
-    $zones = TimeZoneFormHelper::getOptionsList(FALSE, TRUE);
+    $zones = TimeZoneFormHelper::getOptionsListByRegion();
 
     $form['locale'] = [
       '#type' => 'details',
