@@ -16,7 +16,8 @@ use Drupal\Core\Form\FormStateInterface;
  *   description = @Translation("A field containing a plain string value."),
  *   category = @Translation("Text"),
  *   default_widget = "string_textfield",
- *   default_formatter = "string"
+ *   default_formatter = "string",
+ *   group_display = TRUE
  * )
  */
 class StringItem extends StringItemBase {

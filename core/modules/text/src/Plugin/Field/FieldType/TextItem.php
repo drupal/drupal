@@ -15,7 +15,8 @@ use Drupal\Core\Form\FormStateInterface;
  *   category = @Translation("Text"),
  *   default_widget = "text_textfield",
  *   default_formatter = "text_default",
- *   list_class = "\Drupal\text\Plugin\Field\FieldType\TextFieldItemList"
+ *   list_class = "\Drupal\text\Plugin\Field\FieldType\TextFieldItemList",
+ *   group_display = TRUE
  * )
  */
 class TextItem extends TextItemBase {

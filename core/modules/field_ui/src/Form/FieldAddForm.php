@@ -141,8 +141,11 @@ class FieldAddForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL, $bundle = NULL, $field_type = '') {
     $field_type_plugin_manager = \Drupal::service('plugin.manager.field.field_type');
     $options = [];
+    // Field type is either the actual field type or category
     foreach ($field_type_plugin_manager->getGroupedDefinitions($field_type_plugin_manager->getUiDefinitions())[$field_type] as $option) {
-      $options[$option['id']] = $option['label'];
+      if ($option['group_display']) {
+        $options[$option['id']] = $option['label'];
+      }
     }
     if (!$form_state->get('entity_type_id')) {
       $form_state->set('entity_type_id', $entity_type_id);
@@ -168,12 +171,14 @@ class FieldAddForm extends FormBase {
       '#title' => $this->t('Label'),
       '#size' => 25,
     ];
-    $form['options'] = [
-      '#type' => 'radios',
-      '#title' => $this->t('Select type'),
-      '#size' => 25,
-      '#options' => $options,
-    ];
+    if ($options) {
+      $form['options'] = [
+        '#type' => 'radios',
+        '#title' => $this->t('Select field type'),
+        '#size' => 25,
+        '#options' => $options,
+      ];
+    }
     $field_prefix = $this->config('field_ui.settings')->get('field_prefix');
     $form['field_name'] = [
       '#type' => 'machine_name',
@@ -446,13 +451,14 @@ class FieldAddForm extends FormBase {
     $values = $form_state->getValues();
     $destinations = [];
     $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
-
+    // @todo: Remove hardcode
+    $group_names = ['Text', 'Number', 'General', 'Reference'];
+    $field_type = in_array($this->fieldType, $group_names) ? $values['options'] : $this->fieldType;
     // Create new field.
     $field_storage_values = [
       'field_name' => $values['field_name'],
       'entity_type' => $this->entityTypeId,
-//      'type' => $this->fieldType,
-      'type' => $values['options'],
+      'type' => $field_type,
       'translatable' => $values['translatable'],
 //      'settings' => $values['field_storage_settings'],
 //      'cardinality' => !$values['cardinality'] ? 1 : ($values['cardinality_unlimited'] ? FieldStorageConfigInterface::CARDINALITY_UNLIMITED : $values['cardinality_number']),

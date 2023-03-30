@@ -14,7 +14,8 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
  *   category = @Translation("Text"),
  *   default_widget = "text_textarea",
  *   default_formatter = "text_default",
- *   list_class = "\Drupal\text\Plugin\Field\FieldType\TextFieldItemList"
+ *   list_class = "\Drupal\text\Plugin\Field\FieldType\TextFieldItemList",
+ *   group_display = TRUE
  * )
  */
 class TextLongItem extends TextItemBase {

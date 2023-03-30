@@ -16,7 +16,8 @@ use Drupal\Core\TypedData\DataDefinition;
  *   description = @Translation("This field stores a number in the database in a floating point format."),
  *   category = @Translation("Number"),
  *   default_widget = "number",
- *   default_formatter = "number_decimal"
+ *   default_formatter = "number_decimal",
+ *   group_display = TRUE
  * )
  */
 class FloatItem extends NumericItemBase {

@@ -100,4 +100,6 @@ class FieldType extends DataType {
    */
   public $cardinality;
 
+  public $group_display = FALSE;
+
 }

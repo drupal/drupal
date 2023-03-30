@@ -16,7 +16,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  *   description = @Translation("This field stores a number in the database as an integer."),
  *   category = @Translation("Number"),
  *   default_widget = "number",
- *   default_formatter = "number_integer"
+ *   default_formatter = "number_integer",
+ *   group_display = TRUE
  * )
  */
 class IntegerItem extends NumericItemBase {

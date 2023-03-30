@@ -16,6 +16,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
  *   category = @Translation("Text"),
  *   default_widget = "string_textarea",
  *   default_formatter = "basic_string",
+ *   group_display = TRUE
  * )
  */
 class StringLongItem extends StringItemBase {

@@ -17,7 +17,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  *   category = @Translation("Text"),
  *   default_widget = "text_textarea_with_summary",
  *   default_formatter = "text_default",
- *   list_class = "\Drupal\text\Plugin\Field\FieldType\TextFieldItemList"
+ *   list_class = "\Drupal\text\Plugin\Field\FieldType\TextFieldItemList",
+ *   group_display = TRUE
  * )
  */
 class TextWithSummaryItem extends TextItemBase {
