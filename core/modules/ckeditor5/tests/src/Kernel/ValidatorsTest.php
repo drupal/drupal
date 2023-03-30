@@ -20,7 +20,7 @@ use Symfony\Component\Yaml\Yaml;
  * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemConstraintValidator
  * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemDependencyConstraintValidator
  * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\EnabledConfigurablePluginsConstraintValidator
- * @covers \Drupal\ckeditor5\Plugin\Editor\CKEditor5::validatePair()
+ * @covers \Drupal\ckeditor5\Plugin\Editor\CKEditor5::validatePair
  * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\FundamentalCompatibilityConstraintValidator
  * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\CKEditor5MediaAndFilterSettingsInSyncConstraintValidator
  * @group ckeditor5
@@ -1461,7 +1461,7 @@ class ValidatorsTest extends KernelTestBase {
   /**
    * Tests that validation works with >1 enabled HTML restrictor filters.
    *
-   * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\FundamentalCompatibilityConstraintValidator::checkHtmlRestrictionsMatch()
+   * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\FundamentalCompatibilityConstraintValidator::checkHtmlRestrictionsMatch
    */
   public function testMultipleHtmlRestrictingFilters(): void {
     $this->container->get('module_installer')->install(['filter_test']);

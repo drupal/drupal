@@ -19,7 +19,7 @@ class SqlDeprecationTest extends KernelTestBase {
   protected static $modules = ['migrate'];
 
   /**
-   * @covers ::__construct
+   * @covers \Drupal\migrate\Plugin\migrate\id_map\Sql::__construct
    */
   public function testOptionalParametersDeprecation(): void {
     $migration = $this->prophesize('\Drupal\migrate\Plugin\MigrationInterface')->reveal();

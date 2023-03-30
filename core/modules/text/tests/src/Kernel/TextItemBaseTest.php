@@ -12,6 +12,7 @@ use Drupal\text\Plugin\Field\FieldType\TextItemBase;
 /**
  * Tests TextItemBase.
  *
+ * @coversDefaultClass \Drupal\text\Plugin\Field\FieldType\TextItemBase
  * @group text
  */
 class TextItemBaseTest extends KernelTestBase {

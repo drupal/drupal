@@ -47,7 +47,7 @@ class FieldFilteredMarkupTest extends UnitTestCase {
   }
 
   /**
-   * @covers: ::displayAllowedTags
+   * @covers ::displayAllowedTags
    */
   public function testdisplayAllowedTags() {
     $expected = '<a> <b> <big> <code> <del> <em> <i> <ins> <pre> <q> <small> <span> <strong> <sub> <sup> <tt> <ol> <ul> <li> <p> <br> <img>';

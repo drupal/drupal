@@ -102,7 +102,7 @@ class PhpMailTest extends UnitTestCase {
   /**
    * Tests sending a mail using a From address with a comma in it.
    *
-   * @covers ::testMail
+   * @covers ::mail
    */
   public function testMail() {
     // Setup a mail message.

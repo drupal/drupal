@@ -12,6 +12,8 @@ use Drupal\Tests\Core\Database\SchemaIntrospectionTestTrait;
 
 /**
  * Tests table creation and modification via the schema API.
+ *
+ * @coversDefaultClass \Drupal\Core\Database\Schema
  */
 abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase {
 

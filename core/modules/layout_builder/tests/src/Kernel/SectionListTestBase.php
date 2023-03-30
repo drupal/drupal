@@ -8,6 +8,8 @@ use Drupal\layout_builder\SectionComponent;
 
 /**
  * Provides a base class for testing implementations of a section list.
+ *
+ * @coversDefaultClass \Drupal\layout_builder\Plugin\SectionStorage\SectionStorageBase
  */
 abstract class SectionListTestBase extends EntityKernelTestBase {
 

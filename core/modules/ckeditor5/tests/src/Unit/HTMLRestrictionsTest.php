@@ -154,8 +154,8 @@ class HTMLRestrictionsTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::allowsNothing()
-   * @covers ::getAllowedElements()
+   * @covers ::allowsNothing
+   * @covers ::getAllowedElements
    * @dataProvider providerCounting
    */
   public function testCounting(array $elements, bool $expected_is_empty, int $expected_concrete_only_count, int $expected_concrete_plus_wildcard_count): void {
@@ -218,9 +218,9 @@ class HTMLRestrictionsTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::fromString()
-   * @covers ::fromTextFormat()
-   * @covers ::fromFilterPluginInstance()
+   * @covers ::fromString
+   * @covers ::fromTextFormat
+   * @covers ::fromFilterPluginInstance
    * @dataProvider providerConvenienceConstructors
    */
   public function testConvenienceConstructors($input, array $expected, ?array $expected_raw = NULL): void {
@@ -627,9 +627,9 @@ class HTMLRestrictionsTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::toCKEditor5ElementsArray()
-   * @covers ::toFilterHtmlAllowedTagsString()
-   * @covers ::toGeneralHtmlSupportConfig()
+   * @covers ::toCKEditor5ElementsArray
+   * @covers ::toFilterHtmlAllowedTagsString
+   * @covers ::toGeneralHtmlSupportConfig
    * @dataProvider providerRepresentations
    */
   public function testRepresentations(HTMLRestrictions $restrictions, array $expected_elements_array, string $expected_allowed_html_string, array $expected_ghs_config): void {
@@ -871,9 +871,9 @@ class HTMLRestrictionsTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::diff()
-   * @covers ::intersect()
-   * @covers ::merge()
+   * @covers ::diff
+   * @covers ::intersect
+   * @covers ::merge
    * @dataProvider providerOperands
    */
   public function testOperations(HTMLRestrictions $a, HTMLRestrictions $b, $expected_diff, $expected_intersection, $expected_union): void {
@@ -1493,8 +1493,8 @@ class HTMLRestrictionsTest extends UnitTestCase {
   /**
    * @covers ::getWildcardSubset
    * @covers ::getConcreteSubset
-   * @covers ::getPlainTagsSubset()
-   * @covers ::extractPlainTagsSubset()
+   * @covers ::getPlainTagsSubset
+   * @covers ::extractPlainTagsSubset
    * @dataProvider providerSubsets
    */
   public function testSubsets(HTMLRestrictions $input, HTMLRestrictions $expected_wildcard_subset, HTMLRestrictions $expected_concrete_subset, HTMLRestrictions $expected_plain_tags_subset, HTMLRestrictions $expected_extracted_plain_tags_subset): void {

@@ -15,7 +15,7 @@ use Drupal\Tests\SchemaCheckTestTrait;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * @covers \Drupal\ckeditor5\SmartDefaultSettings::computeSmartDefaultSettings()
+ * @covers \Drupal\ckeditor5\SmartDefaultSettings::computeSmartDefaultSettings
  * @group ckeditor5
  * @internal
  */

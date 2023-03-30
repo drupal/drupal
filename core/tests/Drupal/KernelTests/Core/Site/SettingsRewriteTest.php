@@ -10,13 +10,11 @@ use Drupal\KernelTests\KernelTestBase;
  * Tests the SettingsEditor::rewrite() function.
  *
  * @group system
- *
- * @covers \Drupal\Core\Site\SettingsEditor::rewrite()
  */
 class SettingsRewriteTest extends KernelTestBase {
 
   /**
-   * Tests the SettingsEditor::rewrite() function.
+   * @covers \Drupal\Core\Site\SettingsEditor::rewrite
    */
   public function testDrupalRewriteSettings() {
     include_once $this->root . '/core/includes/install.inc';

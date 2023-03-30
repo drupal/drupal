@@ -172,7 +172,7 @@ YAML,
   }
 
   /**
-   * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::processDefinition()
+   * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::processDefinition
    * @dataProvider providerTestInvalidPluginDefinitions
    */
   public function testInvalidPluginDefinitions(string $yaml, ?string $expected_message, array $additional_files = []): void {
@@ -1523,7 +1523,7 @@ PHP,
   }
 
   /**
-   * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition::validateCKEditor5Aspects()
+   * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition::validateCKEditor5Aspects
    */
   public function testAutomaticLinkDecoratorsDisallowed(): void {
     $this->expectException(InvalidPluginDefinitionException::class);
@@ -1535,7 +1535,7 @@ PHP,
   }
 
   /**
-   * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition::validateCKEditor5Aspects()
+   * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition::validateCKEditor5Aspects
    */
   public function testExternalLinkAutomaticLinkDecoratorDisallowed(): void {
     $this->expectException(InvalidPluginDefinitionException::class);
@@ -1547,7 +1547,7 @@ PHP,
   }
 
   /**
-   * @covers ::getDiscovery
+   * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getDiscovery
    * @dataProvider providerTestDerivedPluginDefinitions
    */
   public function testDerivedPluginDefinitions(string $yaml, ?string $expected_message, array $additional_files = [], ?array $expected_derived_plugin_definitions = NULL): void {

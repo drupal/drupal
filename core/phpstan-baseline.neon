@@ -936,116 +936,6 @@ parameters:
 			path: modules/ckeditor5/tests/src/Functional/Update/CKEditor5UpdatePluginSettingsSortTest.php
 
 		-
-			message: "#^@covers value \\\\Drupal\\\\ckeditor5\\\\Plugin\\\\CKEditor5PluginManager\\:\\:getCKEditor5PluginConfig\\(\\) references an invalid method\\.$#"
-			count: 1
-			path: modules/ckeditor5/tests/src/FunctionalJavascript/SourceEditingTest.php
-
-		-
-			message: "#^@covers value \\:\\:getDiscovery references an invalid method\\.$#"
-			count: 1
-			path: modules/ckeditor5/tests/src/Kernel/CKEditor5PluginManagerTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\ckeditor5\\\\Plugin\\\\CKEditor5PluginDefinition\\:\\:validateCKEditor5Aspects\\(\\) references an invalid method\\.$#"
-			count: 2
-			path: modules/ckeditor5/tests/src/Kernel/CKEditor5PluginManagerTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\ckeditor5\\\\Plugin\\\\CKEditor5PluginManager\\:\\:processDefinition\\(\\) references an invalid method\\.$#"
-			count: 1
-			path: modules/ckeditor5/tests/src/Kernel/CKEditor5PluginManagerTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\ckeditor5\\\\SmartDefaultSettings\\:\\:computeSmartDefaultSettings\\(\\) references an invalid method\\.$#"
-			count: 1
-			path: modules/ckeditor5/tests/src/Kernel/SmartDefaultSettingsTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\ckeditor5\\\\Plugin\\\\Editor\\\\CKEditor5\\:\\:validatePair\\(\\) references an invalid method\\.$#"
-			count: 1
-			path: modules/ckeditor5/tests/src/Kernel/ValidatorsTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\ckeditor5\\\\Plugin\\\\Validation\\\\Constraint\\\\FundamentalCompatibilityConstraintValidator\\:\\:checkHtmlRestrictionsMatch\\(\\) references an invalid method\\.$#"
-			count: 1
-			path: modules/ckeditor5/tests/src/Kernel/ValidatorsTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\ckeditor5\\\\Plugin\\\\CKEditor5PluginManager\\:\\:getCKEditor5PluginConfig\\(\\) references an invalid method\\.$#"
-			count: 1
-			path: modules/ckeditor5/tests/src/Kernel/WildcardHtmlSupportTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\ckeditor5\\\\Plugin\\\\CKEditor5Plugin\\\\SourceEditing\\:\\:getDynamicPluginConfig\\(\\) references an invalid method\\.$#"
-			count: 1
-			path: modules/ckeditor5/tests/src/Kernel/WildcardHtmlSupportTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\ckeditor5\\\\HTMLRestrictions\\:\\:allowsNothing\\(\\) references an invalid method\\.$#"
-			count: 1
-			path: modules/ckeditor5/tests/src/Unit/HTMLRestrictionsTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\ckeditor5\\\\HTMLRestrictions\\:\\:diff\\(\\) references an invalid method\\.$#"
-			count: 1
-			path: modules/ckeditor5/tests/src/Unit/HTMLRestrictionsTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\ckeditor5\\\\HTMLRestrictions\\:\\:extractPlainTagsSubset\\(\\) references an invalid method\\.$#"
-			count: 1
-			path: modules/ckeditor5/tests/src/Unit/HTMLRestrictionsTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\ckeditor5\\\\HTMLRestrictions\\:\\:fromFilterPluginInstance\\(\\) references an invalid method\\.$#"
-			count: 1
-			path: modules/ckeditor5/tests/src/Unit/HTMLRestrictionsTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\ckeditor5\\\\HTMLRestrictions\\:\\:fromString\\(\\) references an invalid method\\.$#"
-			count: 1
-			path: modules/ckeditor5/tests/src/Unit/HTMLRestrictionsTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\ckeditor5\\\\HTMLRestrictions\\:\\:fromTextFormat\\(\\) references an invalid method\\.$#"
-			count: 1
-			path: modules/ckeditor5/tests/src/Unit/HTMLRestrictionsTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\ckeditor5\\\\HTMLRestrictions\\:\\:getAllowedElements\\(\\) references an invalid method\\.$#"
-			count: 1
-			path: modules/ckeditor5/tests/src/Unit/HTMLRestrictionsTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\ckeditor5\\\\HTMLRestrictions\\:\\:getPlainTagsSubset\\(\\) references an invalid method\\.$#"
-			count: 1
-			path: modules/ckeditor5/tests/src/Unit/HTMLRestrictionsTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\ckeditor5\\\\HTMLRestrictions\\:\\:intersect\\(\\) references an invalid method\\.$#"
-			count: 1
-			path: modules/ckeditor5/tests/src/Unit/HTMLRestrictionsTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\ckeditor5\\\\HTMLRestrictions\\:\\:merge\\(\\) references an invalid method\\.$#"
-			count: 1
-			path: modules/ckeditor5/tests/src/Unit/HTMLRestrictionsTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\ckeditor5\\\\HTMLRestrictions\\:\\:toCKEditor5ElementsArray\\(\\) references an invalid method\\.$#"
-			count: 1
-			path: modules/ckeditor5/tests/src/Unit/HTMLRestrictionsTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\ckeditor5\\\\HTMLRestrictions\\:\\:toFilterHtmlAllowedTagsString\\(\\) references an invalid method\\.$#"
-			count: 1
-			path: modules/ckeditor5/tests/src/Unit/HTMLRestrictionsTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\ckeditor5\\\\HTMLRestrictions\\:\\:toGeneralHtmlSupportConfig\\(\\) references an invalid method\\.$#"
-			count: 1
-			path: modules/ckeditor5/tests/src/Unit/HTMLRestrictionsTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/comment/src/CommentForm.php
@@ -1396,11 +1286,6 @@ parameters:
 			path: modules/field/tests/src/Unit/FieldStorageConfigEntityUnitTest.php
 
 		-
-			message: "#^@covers value \\\\Drupal\\\\field\\\\Plugin\\\\migrate\\\\process\\\\d6\\\\FieldInstanceSettings\\:\\:getSettings references an invalid method\\.$#"
-			count: 1
-			path: modules/field/tests/src/Unit/Plugin/migrate/process/d6/FieldInstanceSettingsTest.php
-
-		-
 			message: "#^Variable \\$entity_display might not be defined\\.$#"
 			count: 1
 			path: modules/field_ui/src/Access/FormModeAccessCheck.php
@@ -1746,31 +1631,6 @@ parameters:
 			path: modules/layout_builder/src/Form/LayoutBuilderEntityViewDisplayForm.php
 
 		-
-			message: "#^@covers value \\:\\:appendSection references an invalid method\\.$#"
-			count: 1
-			path: modules/layout_builder/tests/src/Kernel/SectionListTestBase.php
-
-		-
-			message: "#^@covers value \\:\\:getSection references an invalid method\\.$#"
-			count: 2
-			path: modules/layout_builder/tests/src/Kernel/SectionListTestBase.php
-
-		-
-			message: "#^@covers value \\:\\:insertSection references an invalid method\\.$#"
-			count: 1
-			path: modules/layout_builder/tests/src/Kernel/SectionListTestBase.php
-
-		-
-			message: "#^@covers value \\:\\:removeAllSections references an invalid method\\.$#"
-			count: 1
-			path: modules/layout_builder/tests/src/Kernel/SectionListTestBase.php
-
-		-
-			message: "#^@covers value \\:\\:removeSection references an invalid method\\.$#"
-			count: 2
-			path: modules/layout_builder/tests/src/Kernel/SectionListTestBase.php
-
-		-
 			message: "#^Constructor of class Drupal\\\\link\\\\Plugin\\\\migrate\\\\process\\\\FieldLink has an unused parameter \\$migration\\.$#"
 			count: 1
 			path: modules/link/src/Plugin/migrate/process/FieldLink.php
@@ -1984,11 +1844,6 @@ parameters:
 			message: "#^Call to an undefined static method static\\(Drupal\\\\Tests\\\\migrate\\\\Kernel\\\\MigrateTestBase\\)\\:\\:migrateDumpAlter\\(\\)\\.$#"
 			count: 1
 			path: modules/migrate/tests/src/Kernel/MigrateTestBase.php
-
-		-
-			message: "#^@covers value \\:\\:__construct references an invalid method\\.$#"
-			count: 1
-			path: modules/migrate/tests/src/Kernel/Plugin/id_map/SqlDeprecationTest.php
 
 		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
@@ -2706,16 +2561,6 @@ parameters:
 			path: modules/taxonomy/tests/src/Unit/Plugin/migrate/field/TaxonomyTermReferenceFieldTest.php
 
 		-
-			message: "#^@covers value \\:\\:calculateDependencies references an invalid method\\.$#"
-			count: 1
-			path: modules/text/tests/src/Kernel/TextItemBaseTest.php
-
-		-
-			message: "#^@covers value \\:\\:generateSampleValue references an invalid method\\.$#"
-			count: 1
-			path: modules/text/tests/src/Kernel/TextItemBaseTest.php
-
-		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
 			count: 1
 			path: modules/text/tests/src/Unit/Plugin/migrate/field/d6/TextFieldTest.php
@@ -2874,21 +2719,6 @@ parameters:
 			message: "#^@dataProvider providerTestUserRole\\(\\) related method not found\\.$#"
 			count: 1
 			path: modules/user/tests/src/Kernel/Migrate/d6/MigrateUserRoleTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\user\\\\Form\\\\EntityPermissionsForm\\:\\:access\\(\\) references an invalid method\\.$#"
-			count: 1
-			path: modules/user/tests/src/Unit/Form/EntityPermissionsFormTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\user\\\\Form\\\\EntityPermissionsForm\\:\\:permissionsByProvider\\(\\) references an invalid method\\.$#"
-			count: 1
-			path: modules/user/tests/src/Unit/Form/EntityPermissionsFormTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\user\\\\Plugin\\\\Derivative\\\\UserLocalTask\\:\\:getDerivativeDefinitions\\(\\) references an invalid method\\.$#"
-			count: 1
-			path: modules/user/tests/src/Unit/Plugin/Derivative/UserLocalTaskTest.php
 
 		-
 			message: "#^Variable \\$result in isset\\(\\) always exists and is not nullable\\.$#"
@@ -3481,21 +3311,6 @@ parameters:
 			path: tests/Drupal/FunctionalJavascriptTests/WebDriverCurlService.php
 
 		-
-			message: "#^@covers value \\\\Drupal\\\\Core\\\\Entity\\\\EntityRevisionAccessCheck\\:\\:checkAccess references an invalid method\\.$#"
-			count: 3
-			path: tests/Drupal/FunctionalTests/Entity/RevisionDeleteFormTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\Core\\\\Entity\\\\EntityRevisionAccessCheck\\:\\:checkAccess references an invalid method\\.$#"
-			count: 2
-			path: tests/Drupal/FunctionalTests/Entity/RevisionRevertFormTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\Core\\\\Entity\\\\Controller\\\\RevisionControllerTrait\\:\\:revisionOverview references an invalid method\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalTests/Entity/RevisionVersionHistoryTest.php
-
-		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
 			count: 1
 			path: tests/Drupal/FunctionalTests/Installer/InstallerTestBase.php
@@ -3521,36 +3336,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Database/DriverSpecificKernelTestBase.php
 
 		-
-			message: "#^@covers value \\:\\:addField references an invalid method\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Database/DriverSpecificSchemaTestBase.php
-
-		-
-			message: "#^@covers value \\:\\:changeField references an invalid method\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Database/DriverSpecificSchemaTestBase.php
-
-		-
-			message: "#^@covers value \\:\\:dropField references an invalid method\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Database/DriverSpecificSchemaTestBase.php
-
-		-
-			message: "#^@covers value \\:\\:findPrimaryKeyColumns references an invalid method\\.$#"
-			count: 2
-			path: tests/Drupal/KernelTests/Core/Database/DriverSpecificSchemaTestBase.php
-
-		-
-			message: "#^@covers value \\:\\:prepareStatement references an invalid method\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Database/QueryTest.php
-
-		-
-			message: "#^@covers value \\:\\:query references an invalid method\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Database/QueryTest.php
-
-		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/DrupalKernel/DrupalKernelTest.php
@@ -3569,11 +3354,6 @@ parameters:
 			message: "#^Variable \\$title might not be defined\\.$#"
 			count: 2
 			path: tests/Drupal/KernelTests/Core/Entity/CreateSampleEntityTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\Core\\\\Entity\\\\EntityBase\\:\\:getClass references an invalid method\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/EntityBaseTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -3641,11 +3421,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Site/LegacySettingsRewriteTest.php
 
 		-
-			message: "#^@covers value \\\\Drupal\\\\Core\\\\Site\\\\SettingsEditor\\:\\:rewrite\\(\\) references an invalid method\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Site/SettingsRewriteTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/TempStore/TempStoreDatabaseTest.php
@@ -3659,11 +3434,6 @@ parameters:
 			message: "#^@covers value \\\\Drupal\\\\Core\\\\Template\\\\Loader\\\\FrontMatterLoaderDecorator references an invalid class or function\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Theme/FrontMatterTest.php
-
-		-
-			message: "#^@covers value \\:\\:install references an invalid method\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Theme/ThemeInstallerTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -3714,26 +3484,6 @@ parameters:
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Component/DependencyInjection/PhpArrayContainerTest.php
-
-		-
-			message: "#^@covers value \\:\\:delete references an invalid method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/PhpStorage/MTimeProtectedFileStorageBase.php
-
-		-
-			message: "#^@covers value \\:\\:exists references an invalid method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/PhpStorage/MTimeProtectedFileStorageBase.php
-
-		-
-			message: "#^@covers value \\:\\:load references an invalid method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/PhpStorage/MTimeProtectedFileStorageBase.php
-
-		-
-			message: "#^@covers value \\:\\:save references an invalid method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/PhpStorage/MTimeProtectedFileStorageBase.php
 
 		-
 			message: "#^Constructor of class Drupal\\\\Tests\\\\Component\\\\Plugin\\\\Factory\\\\ArgumentsAllNull has an unused parameter \\$charismatic\\.$#"
@@ -3931,16 +3681,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/Database/ConditionTest.php
 
 		-
-			message: "#^@covers value \\\\Drupal\\\\Core\\\\Database\\\\Connection\\:\\:disableEvent references an invalid method\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/Database/DatabaseEventsTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\Core\\\\Database\\\\Connection\\:\\:enableEvent references an invalid method\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/Database/DatabaseEventsTest.php
-
-		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Database/DatabaseEventsTest.php
@@ -4051,16 +3791,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/EventSubscriber/PsrResponseSubscriberTest.php
 
 		-
-			message: "#^@covers value \\: \\:\\:displayAllowedTags references an invalid method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Field/FieldFilteredMarkupTest.php
-
-		-
-			message: "#^Annotation \"@covers\\: \\:\\:displayAllowedTags\" is invalid, \"@covers\" should be followed by a space and a value\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Field/FieldFilteredMarkupTest.php
-
-		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Flood/MemoryBackendTest.php
@@ -4079,11 +3809,6 @@ parameters:
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Lock/LockBackendAbstractTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\Core\\\\Mail\\\\Plugin\\\\Mail\\\\PhpMail\\:\\:testMail references an invalid method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Mail/Plugin/Mail/PhpMailTest.php
 
 		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
@@ -4189,36 +3914,6 @@ parameters:
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Routing/RouteBuilderTest.php
-
-		-
-			message: "#^@covers value \\:\\:getParameter references an invalid method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Routing/RouteMatchTestBase.php
-
-		-
-			message: "#^@covers value \\:\\:getParameters references an invalid method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Routing/RouteMatchTestBase.php
-
-		-
-			message: "#^@covers value \\:\\:getRawParameter references an invalid method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Routing/RouteMatchTestBase.php
-
-		-
-			message: "#^@covers value \\:\\:getRawParameters references an invalid method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Routing/RouteMatchTestBase.php
-
-		-
-			message: "#^@covers value \\:\\:getRouteName references an invalid method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Routing/RouteMatchTestBase.php
-
-		-
-			message: "#^@covers value \\:\\:getRouteObject references an invalid method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Routing/RouteMatchTestBase.php
 
 		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"

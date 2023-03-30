@@ -93,7 +93,7 @@ class RevisionDeleteFormTest extends BrowserTestBase {
   /**
    * Test cannot delete latest revision.
    *
-   * @covers \Drupal\Core\Entity\EntityRevisionAccessCheck::checkAccess
+   * @covers \Drupal\Core\Entity\EntityAccessControlHandler::checkAccess
    */
   public function testAccessDeleteLatest(): void {
     /** @var \Drupal\entity_test\Entity\EntityTestRev $entity */
@@ -111,7 +111,7 @@ class RevisionDeleteFormTest extends BrowserTestBase {
   /**
    * Test cannot delete default revision.
    *
-   * @covers \Drupal\Core\Entity\EntityRevisionAccessCheck::checkAccess
+   * @covers \Drupal\Core\Entity\EntityAccessControlHandler::checkAccess
    */
   public function testAccessDeleteDefault(): void {
     /** @var \Drupal\entity_test\Entity\EntityTestRevPub $entity */
@@ -144,7 +144,7 @@ class RevisionDeleteFormTest extends BrowserTestBase {
   /**
    * Test can delete non-latest revision.
    *
-   * @covers \Drupal\Core\Entity\EntityRevisionAccessCheck::checkAccess
+   * @covers \Drupal\Core\Entity\EntityAccessControlHandler::checkAccess
    */
   public function testAccessDeleteNonLatest(): void {
     /** @var \Drupal\entity_test\Entity\EntityTestRev $entity */

@@ -62,7 +62,7 @@ class RevisionVersionHistoryTest extends BrowserTestBase {
   /**
    * Test current revision is indicated.
    *
-   * @covers \Drupal\Core\Entity\Controller\RevisionControllerTrait::revisionOverview
+   * @covers \Drupal\Core\Entity\Controller\VersionHistoryController::revisionOverview
    */
   public function testCurrentRevision(): void {
     /** @var \Drupal\entity_test\Entity\EntityTestRev $entity */

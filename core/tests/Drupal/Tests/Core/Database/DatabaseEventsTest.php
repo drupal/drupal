@@ -32,8 +32,8 @@ class DatabaseEventsTest extends UnitTestCase {
 
   /**
    * @covers ::isEventEnabled
-   * @covers ::enableEvent
-   * @covers ::disableEvent
+   * @covers ::enableEvents
+   * @covers ::disableEvents
    */
   public function testEventEnablingAndDisabling(): void {
     $this->connection->enableEvents([
@@ -50,7 +50,7 @@ class DatabaseEventsTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::enableEvent
+   * @covers ::enableEvents
    */
   public function testEnableInvalidEvent(): void {
     $this->expectException(\AssertionError::class);
@@ -59,7 +59,7 @@ class DatabaseEventsTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::disableEvent
+   * @covers ::disableEvents
    */
   public function testDisableInvalidEvent(): void {
     $this->expectException(\AssertionError::class);
