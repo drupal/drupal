@@ -530,13 +530,13 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $this->assertSession()->fieldValueEquals($element_id, '');
 
     // Check that invalid default values are rejected.
-    $edit = [$element_name => '-1'];
+    $edit = [$element_name => '-1', 'set_default_value' => '1'];
     $this->drupalGet($admin_path);
     $this->submitForm($edit, 'Save settings');
     $this->assertSession()->pageTextContains("$field_name does not accept the value -1");
 
     // Check that the default value is saved.
-    $edit = [$element_name => '1'];
+    $edit = [$element_name => '1', 'set_default_value' => '1'];
     $this->drupalGet($admin_path);
     $this->submitForm($edit, 'Save settings');
     $this->assertSession()->pageTextContains("Saved $field_name configuration");
@@ -547,7 +547,17 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $this->drupalGet($admin_path);
     $this->assertSession()->fieldValueEquals($element_id, '1');
 
+    // Check that the default value is left empty when "Set default value"
+    // checkbox is not checked.
+    $edit = [$element_name => '1', 'set_default_value' => '0'];
+    $this->drupalGet($admin_path);
+    $this->submitForm($edit, 'Save settings');
+    $this->assertSession()->pageTextContains("Saved $field_name configuration");
+    $field = FieldConfig::loadByName('node', $this->contentType, $field_name);
+    $this->assertEquals([], $field->getDefaultValueLiteral(), 'The default value was removed.');
+
     // Check that the default value can be emptied.
+    $this->drupalGet($admin_path);
     $edit = [$element_name => ''];
     $this->submitForm($edit, 'Save settings');
     $this->assertSession()->pageTextContains("Saved $field_name configuration");

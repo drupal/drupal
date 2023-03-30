@@ -161,6 +161,7 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
 
       // Set first entity as the default_value.
       $field_edit = [
+        'set_default_value' => '1',
         'default_value_input[' . $this->fieldName . '][0][target_id]' => $referenced_entities[0]->label() . ' (' . $referenced_entities[0]->id() . ')',
       ];
       if ($key == 'content') {

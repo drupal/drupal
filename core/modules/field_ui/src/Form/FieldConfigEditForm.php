@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
 use Drupal\field\FieldConfigInterface;
 use Drupal\field_ui\FieldUI;
@@ -123,6 +124,8 @@ class FieldConfigEditForm extends EntityForm {
 
     // Add handling for default value.
     if ($element = $items->defaultValuesForm($form, $form_state)) {
+      $has_required = $this->hasAnyRequired($element);
+
       $element = array_merge($element, [
         '#type' => 'details',
         '#title' => $this->t('Default value'),
@@ -132,10 +135,72 @@ class FieldConfigEditForm extends EntityForm {
         '#weight' => 12,
       ]);
 
+      if (!$has_required) {
+        $has_default_value = $this->hasAnyElementDefaultValue($element);
+        $element['#states'] = [
+          'invisible' => [
+            ':input[name="set_default_value"]' => ['checked' => FALSE],
+          ],
+        ];
+        $form['set_default_value'] = [
+          '#type' => 'checkbox',
+          '#title' => $this->t('Set default value'),
+          '#default_value' => $has_default_value,
+          '#description' => $this->t('Provide a pre-filled value for the editing form.'),
+          '#weight' => $element['#weight'],
+        ];
+      }
+
       $form['default_value'] = $element;
     }
 
     return $form;
+  }
+
+  /**
+   * A function to check if element contains any required elements.
+   *
+   * @param array $element
+   *   An element to check.
+   *
+   * @return bool
+   */
+  private function hasAnyRequired(array $element) {
+    $has_required = FALSE;
+    foreach (Element::children($element) as $child) {
+      if (isset($element[$child]['#required']) && $element[$child]['#required']) {
+        $has_required = TRUE;
+        break;
+      }
+      if (Element::children($element[$child])) {
+        return $this->hasAnyRequired($element[$child]);
+      }
+    }
+
+    return $has_required;
+  }
+
+  /**
+   * A function to check if element contains elements with #default_value.
+   *
+   * @param array $element
+   *   An element to check.
+   *
+   * @return bool
+   */
+  private function hasAnyElementDefaultValue(array $element) {
+    $has_default_value = FALSE;
+    foreach (Element::children($element) as $child) {
+      if (isset($element[$child]['#default_value']) && $element[$child]['#default_value']) {
+        $has_default_value = TRUE;
+        break;
+      }
+      if (Element::children($element[$child])) {
+        return $this->hasAnyElementDefaultValue($element[$child]);
+      }
+    }
+
+    return $has_default_value;
   }
 
   /**
@@ -177,7 +242,7 @@ class FieldConfigEditForm extends EntityForm {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 
-    if (isset($form['default_value'])) {
+    if (isset($form['default_value']) && (!isset($form['set_default_value']) || $form_state->getValue('set_default_value'))) {
       $item = $form['#entity']->get($this->entity->getName());
       $item->defaultValuesFormValidate($form['default_value'], $form, $form_state);
     }
@@ -191,7 +256,7 @@ class FieldConfigEditForm extends EntityForm {
 
     // Handle the default value.
     $default_value = [];
-    if (isset($form['default_value'])) {
+    if (isset($form['default_value']) && (!isset($form['set_default_value']) || $form_state->getValue('set_default_value'))) {
       $items = $form['#entity']->get($this->entity->getName());
       $default_value = $items->defaultValuesFormSubmit($form['default_value'], $form, $form_state);
     }

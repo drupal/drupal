@@ -1017,6 +1017,7 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Set now as default_value.
     $field_edit = [
+      'set_default_value' => '1',
       'default_value_input[default_date_type]' => 'now',
       'default_value_input[default_end_date_type]' => 'now',
     ];
@@ -1047,6 +1048,7 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Set an invalid relative default_value to test validation.
     $field_edit = [
+      'set_default_value' => '1',
       'default_value_input[default_date_type]' => 'relative',
       'default_value_input[default_date]' => 'invalid date',
       'default_value_input[default_end_date_type]' => 'relative',
@@ -1057,6 +1059,7 @@ class DateRangeFieldTest extends DateTestBase {
     $this->assertSession()->pageTextContains('The relative start date value entered is invalid.');
 
     $field_edit = [
+      'set_default_value' => '1',
       'default_value_input[default_date_type]' => 'relative',
       'default_value_input[default_date]' => '+1 day',
       'default_value_input[default_end_date_type]' => 'relative',
@@ -1068,6 +1071,7 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Set a relative default_value.
     $field_edit = [
+      'set_default_value' => '1',
       'default_value_input[default_date_type]' => 'relative',
       'default_value_input[default_date]' => '+45 days',
       'default_value_input[default_end_date_type]' => 'relative',
@@ -1101,6 +1105,7 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Remove default value.
     $field_edit = [
+      'set_default_value' => '',
       'default_value_input[default_date_type]' => '',
       'default_value_input[default_end_date_type]' => '',
     ];
@@ -1138,6 +1143,7 @@ class DateRangeFieldTest extends DateTestBase {
     $expected_date = new DrupalDateTime('now', DateTimeItemInterface::STORAGE_TIMEZONE);
 
     $field_edit = [
+      'set_default_value' => '1',
       'default_value_input[default_date_type]' => 'now',
       'default_value_input[default_end_date_type]' => '',
     ];
@@ -1151,6 +1157,7 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Set now as default_value for end date only.
     $field_edit = [
+      'set_default_value' => '1',
       'default_value_input[default_date_type]' => '',
       'default_value_input[default_end_date_type]' => 'now',
     ];

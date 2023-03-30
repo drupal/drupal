@@ -32,6 +32,7 @@ class CommentWidget extends WidgetBase {
       '#title' => $this->t('Comments'),
       '#title_display' => 'invisible',
       '#default_value' => $items->status,
+      '#required' => TRUE,
       '#options' => [
         CommentItemInterface::OPEN => $this->t('Open'),
         CommentItemInterface::CLOSED => $this->t('Closed'),

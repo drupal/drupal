@@ -106,7 +106,9 @@ class NodeAccessFieldTest extends NodeTestBase {
     $this->assertSession()->pageTextContains('Access denied');
 
     // Modify the field default as the content admin.
-    $edit = [];
+    $edit = [
+      'set_default_value' => '1',
+    ];
     $default = 'Sometimes words have two meanings';
     $edit["default_value_input[{$this->fieldName}][0][value]"] = $default;
     $this->drupalGet("admin/structure/types/manage/page/fields/node.page.{$this->fieldName}");

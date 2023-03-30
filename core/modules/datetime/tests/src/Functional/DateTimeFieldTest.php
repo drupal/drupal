@@ -698,6 +698,7 @@ class DateTimeFieldTest extends DateTestBase {
 
       // Set now as default_value.
       $field_edit = [
+        'set_default_value' => '1',
         'default_value_input[default_date_type]' => 'now',
       ];
       $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
@@ -724,6 +725,7 @@ class DateTimeFieldTest extends DateTestBase {
 
       // Set an invalid relative default_value to test validation.
       $field_edit = [
+        'set_default_value' => '1',
         'default_value_input[default_date_type]' => 'relative',
         'default_value_input[default_date]' => 'invalid date',
       ];
@@ -734,6 +736,7 @@ class DateTimeFieldTest extends DateTestBase {
 
       // Set a relative default_value.
       $field_edit = [
+        'set_default_value' => '1',
         'default_value_input[default_date_type]' => 'relative',
         'default_value_input[default_date]' => '+90 days',
       ];
@@ -762,6 +765,7 @@ class DateTimeFieldTest extends DateTestBase {
 
       // Remove default value.
       $field_edit = [
+        'set_default_value' => '1',
         'default_value_input[default_date_type]' => '',
       ];
       $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);

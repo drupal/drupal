@@ -160,6 +160,7 @@ class LinkFieldUITest extends BrowserTestBase {
       'settings[link_type]' => (int) $link_type,
     ];
     if (!empty($default_uri)) {
+      $field_edit['set_default_value'] = '1';
       $field_edit['default_value_input[field_' . $field_name . '][0][uri]'] = $default_uri;
       $field_edit['default_value_input[field_' . $field_name . '][0][title]'] = 'Default title';
     }

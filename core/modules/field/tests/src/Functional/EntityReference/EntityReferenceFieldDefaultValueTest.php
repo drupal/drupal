@@ -87,6 +87,7 @@ class EntityReferenceFieldDefaultValueTest extends BrowserTestBase {
 
     // Set created node as default_value.
     $field_edit = [
+      'set_default_value' => '1',
       'default_value_input[' . $field_name . '][0][target_id]' => $referenced_node->getTitle() . ' (' . $referenced_node->id() . ')',
     ];
     $this->drupalGet('admin/structure/types/manage/reference_content/fields/node.reference_content.' . $field_name);
@@ -151,6 +152,7 @@ class EntityReferenceFieldDefaultValueTest extends BrowserTestBase {
 
     // Set created node as default_value.
     $field_edit = [
+      'set_default_value' => '1',
       'default_value_input[' . $field_name . '][0][target_id]' => $referenced_node_type->label() . ' (' . $referenced_node_type->id() . ')',
       'default_value_input[' . $field_name . '][1][target_id]' => $referenced_node_type2->label() . ' (' . $referenced_node_type2->id() . ')',
     ];

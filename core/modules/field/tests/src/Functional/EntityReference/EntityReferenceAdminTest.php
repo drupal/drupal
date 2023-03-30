@@ -227,6 +227,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save settings');
     $this->drupalGet($bundle_path . '/fields/' . $field_path);
     $edit = [
+      'set_default_value' => '1',
       // A term that doesn't yet exist.
       'default_value_input[field_' . $taxonomy_term_field_name . '][0][target_id]' => $term_name,
     ];
