@@ -33,7 +33,7 @@ class FieldConfigListController extends EntityListController {
     foreach ($field_type_plugin_manager->getGroupedDefinitions($field_type_plugin_manager->getUiDefinitions()) as $category => $field_types) {
       foreach ($field_types as $name => $field_type) {
         $icon = $this->getIcon($field_type['id']);
-        $field_type_options[$category][$name] = [
+        $field_type_options[$category] = [
           '#type' => 'html_tag',
           '#tag' => 'a',
           '#attributes' => [
@@ -45,9 +45,10 @@ class FieldConfigListController extends EntityListController {
               'width' => '85vw',
               'title' => $this->t('Add @type Field', ['@type' => $field_type['label']]),
             ]),
-            'href' => URL::fromRoute("field_ui.field_add_$entity_type_id", ['field_type' => $field_type['id'],'node_type' => $bundle])->toString(),
+//            'href' => URL::fromRoute("node.1"),
+            'href' => URL::fromRoute("field_ui.field_add_$entity_type_id", ['field_type' => $category,'node_type' => $bundle])->toString(),
           ],
-          '#total_length' => strlen($field_type['description']) + strlen($field_type['label']),
+//          '#total_length' => strlen($field_type['description']) + strlen($field_type['label']),
           'thumb' => [
             '#type' => 'container',
             '#attributes' => [
@@ -55,8 +56,8 @@ class FieldConfigListController extends EntityListController {
             ],
             'icon' => [
               '#theme' => 'image',
-              '#uri' =>  $icon['uri'],
-              '#alt' => $icon['alt'],
+//              '#uri' =>  $icon['uri'],
+//              '#alt' => $icon['alt'],
               '#width' => 40,
             ],
           ],
@@ -71,14 +72,14 @@ class FieldConfigListController extends EntityListController {
               ],
               '#type' => 'html_tag',
               '#tag' => 'strong',
-              '#value' => $field_type['label'],
+//              '#value' => $field_type['label'],
             ],
             'description' => [
               '#type' => 'container',
               '#attributes' => [
                 'class' => ['field-option__description'],
               ],
-              '#markup'=> $field_type['description']
+//              '#markup'=> $field_type['description']
             ],
           ],
         ];
@@ -152,7 +153,7 @@ class FieldConfigListController extends EntityListController {
       ]];
       // Sort by shortest description + title to longest. Not exactly what we
       // want but surprisingly close.
-      usort($field_type_options[$key], fn($a, $b) => $a['#total_length'] <=> $b['#total_length']);
+//      usort($field_type_options[$key], fn($a, $b) => $a['#total_length'] <=> $b['#total_length']);
       $sorted_options += [ $key => $field_type_options[$key] ];
     }
     return $sorted_options;
