@@ -235,7 +235,13 @@ class LinkFormatter extends FormatterBase {
    *   A Url object.
    */
   protected function buildUrl(LinkItemInterface $item) {
-    $url = $item->getUrl() ?: Url::fromRoute('<none>');
+    try {
+      $url = $item->getUrl();
+    }
+    catch (\InvalidArgumentException $e) {
+      // @todo Add logging here in https://www.drupal.org/project/drupal/issues/3348020
+      $url = Url::fromRoute('<none>');
+    }
 
     $settings = $this->getSettings();
     $options = $item->options;
