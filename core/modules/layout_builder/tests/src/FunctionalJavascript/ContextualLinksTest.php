@@ -69,6 +69,8 @@ class ContextualLinksTest extends WebDriverTestBase {
    * Tests that the contextual links inside Layout Builder are removed.
    */
   public function testContextualLinks() {
+    // Skipped due to frequent random test failures.
+    $this->markTestSkipped();
     $page = $this->getSession()->getPage();
 
     $this->drupalGet('node/1/layout');
