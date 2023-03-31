@@ -14,7 +14,7 @@ class ComposerTest extends UnitTestCase {
   /**
    * Verify that Composer::ensureComposerVersion() doesn't break.
    *
-   * @covers::ensureComposerVersion
+   * @covers ::ensureComposerVersion
    */
   public function testEnsureComposerVersion() {
     try {

@@ -1851,11 +1851,6 @@ parameters:
 			path: modules/migrate/tests/src/Unit/MigrateSqlIdMapTest.php
 
 		-
-			message: "#^Annotation \"@covers\\:\\:getMultiple\" is invalid, \"@covers\" should be followed by a space and a value\\.$#"
-			count: 1
-			path: modules/migrate/tests/src/Unit/RowTest.php
-
-		-
 			message: "#^@dataProvider providerTestLog\\(\\) related method not found\\.$#"
 			count: 1
 			path: modules/migrate/tests/src/Unit/process/LogTest.php
@@ -3091,11 +3086,6 @@ parameters:
 			path: modules/views/tests/src/Kernel/Handler/FieldFieldTest.php
 
 		-
-			message: "#^Annotation \"@covers\\:\\:opEqual\" is invalid, \"@covers\" should be followed by a space and a value\\.$#"
-			count: 2
-			path: modules/views/tests/src/Kernel/Handler/FilterCombineTest.php
-
-		-
 			message: "#^Variable \\$rand1 might not be defined\\.$#"
 			count: 2
 			path: modules/views/tests/src/Kernel/Plugin/StyleTest.php
@@ -3551,11 +3541,6 @@ parameters:
 			path: tests/Drupal/Tests/Component/Utility/HtmlTest.php
 
 		-
-			message: "#^Annotation \"@covers\\:\\:ensureComposerVersion\" is invalid, \"@covers\" should be followed by a space and a value\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Composer/ComposerTest.php
-
-		-
 			message: "#^Result of static method Drupal\\\\Composer\\\\Composer\\:\\:ensureComposerVersion\\(\\) \\(void\\) is used\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Composer/ComposerTest.php
@@ -3964,8 +3949,3 @@ parameters:
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Utility/TokenTest.php
-
-		-
-			message: "#^Annotation \"@covers\\:\\:buildLocalUrl\" is invalid, \"@covers\" should be followed by a space and a value\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Utility/UnroutedUrlAssemblerTest.php
