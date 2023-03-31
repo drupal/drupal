@@ -174,7 +174,7 @@ class AjaxResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
     $resource_commands = [];
     if ($css_assets) {
       $css_render_array = $this->cssCollectionRenderer->render($css_assets);
-      $resource_commands[] = new AddCssCommand($this->renderer->renderPlain($css_render_array));
+      $resource_commands[] = new AddCssCommand(array_column($css_render_array, '#attributes'));
     }
     if ($js_assets_header) {
       $js_header_render_array = $this->jsCollectionRenderer->render($js_assets_header);

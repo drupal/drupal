@@ -53,7 +53,7 @@ class FrameworkTest extends BrowserTestBase {
     $build['#attached']['library'][] = 'ajax_test/order-css-command';
     $assets = AttachedAssets::createFromRenderArray($build);
     $css_render_array = $css_collection_renderer->render($asset_resolver->getCssAssets($assets, FALSE, \Drupal::languageManager()->getCurrentLanguage()));
-    $expected_commands[1] = new AddCssCommand($renderer->renderRoot($css_render_array));
+    $expected_commands[1] = new AddCssCommand(array_column($css_render_array, '#attributes'));
     $build['#attached']['library'][] = 'ajax_test/order-header-js-command';
     $build['#attached']['library'][] = 'ajax_test/order-footer-js-command';
     $assets = AttachedAssets::createFromRenderArray($build);

@@ -202,7 +202,23 @@ function ajax_forms_test_advanced_commands_settings_callback($form, FormStateInt
  */
 function ajax_forms_test_advanced_commands_add_css_callback($form, FormStateInterface $form_state) {
   $response = new AjaxResponse();
-  $response->addCommand(new AddCssCommand('my/file.css'));
+  $response->addCommand(new AddCssCommand([
+    [
+      'href' => 'my/file.css',
+      'media' => 'all',
+    ],
+  ]));
+  return $response;
+}
+
+/**
+ * Ajax callback for 'add_css' that uses legacy string parameter.
+ *
+ * @todo Remove in Drupal 11.0.0 https://www.drupal.org/i/3339374
+ */
+function ajax_forms_test_advanced_commands_add_css_legacy_callback($form, FormStateInterface $form_state) {
+  $response = new AjaxResponse();
+  $response->addCommand(new AddCssCommand("<link rel='stylesheet' href='my/file.css' media='all' />"));
   return $response;
 }
 

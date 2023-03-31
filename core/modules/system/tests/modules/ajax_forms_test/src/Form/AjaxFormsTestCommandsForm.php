@@ -224,6 +224,16 @@ class AjaxFormsTestCommandsForm extends FormBase {
       ],
     ];
 
+    // Shows the Ajax 'add_css' command with legacy string parameter.
+    // @todo Remove in Drupal 11.0.0 https://www.drupal.org/i/3339374
+    $form['add_css_legacy_command_example'] = [
+      '#type' => 'submit',
+      '#value' => $this->t("AJAX 'add_css' legacy command"),
+      '#ajax' => [
+        'callback' => 'ajax_forms_test_advanced_commands_add_css_legacy_callback',
+      ],
+    ];
+
     $form['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Submit'),
