@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Module for testing the dependency version comparisons.
+ */
+
+use Drupal\Core\Extension\Extension;
+
+/**
+ * Implements hook_system_info_alter().
+ */
+function dependency_version_test_system_info_alter(&$info, Extension $file, $type) {
+  // Simulate that the core version for Views module contains the string '8.x'.
+  if ($file->getName() == 'views') {
+    $info['version'] = '9.8.x-dev';
+  }
+
+  // Make the test_module require Views 9.2, which should be compatible with
+  // core version 9.8.x-dev from above.
+  if ($file->getName() == 'test_module') {
+    $info['dependencies'] = ['drupal:views (>=9.2)'];
+  }
+
+}
