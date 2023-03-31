@@ -192,6 +192,21 @@ class DependencyTest extends ModuleTestBase {
   }
 
   /**
+   * Tests the dependency checks when core version contains '8.x' within it.
+   */
+  public function testCoreVersionContains8X() {
+    // Enable the helper module that alters the version and dependencies.
+    \Drupal::service('module_installer')->install(['dependency_version_test']);
+
+    // Check that the above module installed OK.
+    $this->drupalGet('admin/modules');
+    $this->assertModules(['dependency_version_test'], TRUE);
+
+    // Check that test_module dependencies are met and the box is not greyed.
+    $this->assertSession()->fieldEnabled('modules[test_module][enable]');
+  }
+
+  /**
    * Tests enabling a module that depends on a module which fails hook_requirements().
    */
   public function testEnableRequirementsFailureDependency() {

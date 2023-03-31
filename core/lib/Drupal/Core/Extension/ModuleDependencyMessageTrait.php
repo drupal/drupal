@@ -39,7 +39,8 @@ trait ModuleDependencyMessageTrait {
       }
 
       // Check if the module is incompatible with the dependency constraints.
-      $version = str_replace(\Drupal::CORE_COMPATIBILITY . '-', '', $modules[$dependency]->info['version'] ?? '');
+      // Remove CORE_COMPATIBILITY- only from the start of the string.
+      $version = preg_replace('/^(' . \Drupal::CORE_COMPATIBILITY . '\-)/', '', $modules[$dependency]->info['version'] ?? '');
       if (!$dependency_object->isCompatible($version)) {
         $constraint_string = $dependency_object->getConstraintString();
         return $this->t('@module_name (<span class="admin-missing">incompatible with</span> version @version)', [
