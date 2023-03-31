@@ -286,7 +286,11 @@ EOD;
     }
     if (isset($table['unique keys']) && is_array($table['unique keys'])) {
       foreach ($table['unique keys'] as $key_name => $key) {
-        $sql_keys[] = 'CONSTRAINT ' . $this->ensureIdentifiersLength($name, $key_name, 'key') . ' UNIQUE (' . implode(', ', $key) . ')';
+        // Use the createPrimaryKeySql(), which already discards any prefix
+        // lengths passed as part of the key column specifiers. (Postgres
+        // doesn't support setting a prefix length for PRIMARY or UNIQUE
+        // indices.)
+        $sql_keys[] = 'CONSTRAINT ' . $this->ensureIdentifiersLength($name, $key_name, 'key') . ' UNIQUE (' . $this->createPrimaryKeySql($key) . ')';
       }
     }
 
@@ -471,7 +475,7 @@ EOD;
   }
 
   /**
-   * Create the SQL expression for primary keys.
+   * Create the SQL expression for primary and unique keys.
    *
    * Postgresql does not support key length. It does support fillfactor, but
    * that requires a separate database lookup for each column in the key. The
@@ -794,8 +798,10 @@ EOD;
       throw new SchemaObjectExistsException("Cannot add unique key '$name' to table '$table': unique key already exists.");
     }
 
-    $fields = array_map([$this->connection, 'escapeField'], $fields);
-    $this->connection->query('ALTER TABLE {' . $table . '} ADD CONSTRAINT ' . $this->ensureIdentifiersLength($table, $name, 'key') . ' UNIQUE (' . implode(',', $fields) . ')');
+    // Use the createPrimaryKeySql(), which already discards any prefix lengths
+    // passed as part of the key column specifiers. (Postgres doesn't support
+    // setting a prefix length for PRIMARY or UNIQUE indices.)
+    $this->connection->query('ALTER TABLE {' . $table . '} ADD CONSTRAINT ' . $this->ensureIdentifiersLength($table, $name, 'key') . ' UNIQUE (' . $this->createPrimaryKeySql($fields) . ')');
     $this->resetTableInformation($table);
   }
 
