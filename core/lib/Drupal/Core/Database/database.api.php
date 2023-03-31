@@ -340,9 +340,6 @@ use Drupal\Core\Database\Query\SelectInterface;
  *
  * A key column specifier is either a string naming a column or an array of two
  * elements, column name and length, specifying a prefix of the named column.
- * Note that some DBMS drivers may opt to ignore the prefix length configuration
- * and still use the whole field value for the key. Code should therefore not
- * rely on this functionality.
  *
  * As an example, this is the schema definition for the 'users_data' table. It
  * shows five fields ('uid', 'module', 'name', 'value', and 'serialized'), the
