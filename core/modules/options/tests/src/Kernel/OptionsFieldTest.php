@@ -98,4 +98,14 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
     $this->entityValidateAndSave($entity);
   }
 
+  /**
+   * Tests that ::generateSampleItems does not fail with empty allowed values.
+   */
+  public function testGenerateSampleItemsWithNoAllowedValues() {
+    $this->fieldStorage->setSetting('allowed_values', [])->save();
+    $entity = EntityTest::create();
+    $value = $entity->{$this->fieldName}->generateSampleItems();
+    $this->assertNull($value);
+  }
+
 }
