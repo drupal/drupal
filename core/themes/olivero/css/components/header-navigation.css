@@ -37,11 +37,11 @@
 
 .header-nav.is-active {
   visibility: visible;
-  transform: translateX(-100%); /* LTR */
+  transform: translateX(calc(-100% - var(--drupal-displace-offset-right, 0px))); /* LTR */
 }
 
 [dir="rtl"] .header-nav.is-active {
-  transform: translateX(100%);
+  transform: translateX(calc(100% + var(--drupal-displace-offset-left, 0px)));
 }
 
 @media (min-width: 31.25rem) {
