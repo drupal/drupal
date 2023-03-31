@@ -1803,6 +1803,7 @@
  * The queue system allows placing items in a queue and processing them later.
  * The system tries to ensure that only one consumer can process an item.
  *
+ * @section create_queues Creating queues
  * Before a queue can be used it needs to be created by
  * Drupal\Core\Queue\QueueInterface::createQueue().
  *
@@ -1827,6 +1828,7 @@
  * needs to be passed to Drupal\Core\Queue\QueueInterface::deleteItem() once
  * processing is completed.
  *
+ * @section queue_backends Queue backends
  * There are two kinds of queue backends available: reliable, which preserves
  * the order of messages and guarantees that every item will be executed at
  * least once. The non-reliable kind only does a best effort to preserve order
@@ -1919,6 +1921,8 @@
  * instead of executing the tasks directly. To do this, first define one or
  * more queues via a \Drupal\Core\Annotation\QueueWorker plugin. Then, add items
  * that need to be processed to the defined queues.
+ *
+ * @see queue
  */
 function hook_cron() {
   // Short-running operation example, not using a queue:
@@ -1978,6 +1982,8 @@ function hook_data_type_info_alter(&$data_types) {
  * @see \Drupal\Core\Queue\QueueWorkerInterface
  * @see \Drupal\Core\Annotation\QueueWorker
  * @see \Drupal\Core\Cron
+ *
+ * @ingroup queue
  */
 function hook_queue_info_alter(&$queues) {
   // This site has many feeds so let's spend 90 seconds on each cron run
