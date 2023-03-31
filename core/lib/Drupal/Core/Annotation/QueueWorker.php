@@ -31,6 +31,8 @@ use Drupal\Component\Annotation\Plugin;
  * @see \Drupal\Core\Queue\QueueWorkerManager
  * @see plugin_api
  *
+ * @ingroup queue
+ *
  * @Annotation
  */
 class QueueWorker extends Plugin {
@@ -45,9 +47,9 @@ class QueueWorker extends Plugin {
   /**
    * The human-readable title of the plugin.
    *
-   * @ingroup plugin_translatable
-   *
    * @var \Drupal\Core\Annotation\Translation
+   *
+   * @ingroup plugin_translatable
    */
   public $title;
 

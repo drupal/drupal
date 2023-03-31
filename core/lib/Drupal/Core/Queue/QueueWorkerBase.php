@@ -11,6 +11,8 @@ use Drupal\Component\Plugin\PluginBase;
  * @see \Drupal\Core\Queue\QueueWorkerManager
  * @see \Drupal\Core\Annotation\QueueWorker
  * @see plugin_api
+ *
+ * @ingroup queue
  */
 abstract class QueueWorkerBase extends PluginBase implements QueueWorkerInterface {
 
