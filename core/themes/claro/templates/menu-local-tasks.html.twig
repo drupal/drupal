@@ -21,7 +21,7 @@
 {% endif %}
 {% if secondary %}
   <h2 id="secondary-tabs-title" class="visually-hidden">{{ 'Secondary tabs'|t }}</h2>
-  <nav role="navigation" class="tabs-wrapper tabs-wrapper--secondary is-horizontal" aria-labelledby="secondary-tabs-title">
-    <ul class="tabs tabs--secondary clearfix">{{ secondary }}</ul>
+  <nav role="navigation" class="tabs-wrapper tabs-wrapper--secondary is-horizontal is-collapsible" aria-labelledby="secondary-tabs-title" data-drupal-nav-tabs>
+    <ul class="tabs tabs--secondary clearfix" data-drupal-nav-tabs-target>{{ secondary }}</ul>
   </nav>
 {% endif %}
