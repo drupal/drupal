@@ -19,6 +19,7 @@ use Drupal\block_content\BlockContentTypeInterface;
  *     plural = "@count custom block types",
  *   ),
  *   handlers = {
+ *     "access" = "Drupal\block_content\BlockTypeAccessControlHandler",
  *     "form" = {
  *       "default" = "Drupal\block_content\BlockContentTypeForm",
  *       "add" = "Drupal\block_content\BlockContentTypeForm",
@@ -31,7 +32,7 @@ use Drupal\block_content\BlockContentTypeInterface;
  *     },
  *     "list_builder" = "Drupal\block_content\BlockContentTypeListBuilder"
  *   },
- *   admin_permission = "administer blocks",
+ *   admin_permission = "administer block types",
  *   config_prefix = "type",
  *   bundle_of = "block_content",
  *   entity_keys = {

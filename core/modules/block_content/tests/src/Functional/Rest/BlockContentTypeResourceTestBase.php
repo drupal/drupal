@@ -26,7 +26,7 @@ abstract class BlockContentTypeResourceTestBase extends ConfigEntityResourceTest
    * {@inheritdoc}
    */
   protected function setUpAuthorization($method) {
-    $this->grantPermissionsToTestedRole(['administer blocks']);
+    $this->grantPermissionsToTestedRole(['administer block types']);
   }
 
   /**

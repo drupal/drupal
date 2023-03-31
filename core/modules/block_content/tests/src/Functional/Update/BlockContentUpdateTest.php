@@ -3,6 +3,7 @@
 namespace Drupal\Tests\block_content\Functional\Update;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
+use Drupal\user\Entity\User;
 use Drupal\views\Entity\View;
 
 /**
@@ -46,7 +47,7 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
     $this->assertEquals('system.admin_content', $data['display']['page_1']['display_options']['menu']['parent']);
 
     // Check the new path is accessible.
-    $user = $this->drupalCreateUser(['administer blocks']);
+    $user = $this->drupalCreateUser(['access block library']);
     $this->drupalLogin($user);
     $this->drupalGet('admin/content/block-content');
     $this->assertSession()->statusCodeEquals(200);
@@ -68,6 +69,27 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
     $view = View::load('block_content');
     $data = $view->toArray();
     $this->assertEquals('some/custom/path', $data['display']['page_1']['display_options']['path']);
+  }
+
+  /**
+   * Tests the permissions are updated for users with "administer blocks".
+   *
+   * @see block_content_post_update_sort_permissions()
+   */
+  public function testBlockLibraryPermissionsUpdate(): void {
+    $user = $this->drupalCreateUser(['administer blocks']);
+    $this->assertTrue($user->hasPermission('administer blocks'));
+    $this->assertFalse($user->hasPermission('administer block content'));
+    $this->assertFalse($user->hasPermission('administer block types'));
+    $this->assertFalse($user->hasPermission('access block library'));
+
+    $this->runUpdates();
+
+    $user = User::load($user->id());
+    $this->assertTrue($user->hasPermission('administer blocks'));
+    $this->assertTrue($user->hasPermission('administer block content'));
+    $this->assertTrue($user->hasPermission('administer block types'));
+    $this->assertTrue($user->hasPermission('access block library'));
   }
 
 }

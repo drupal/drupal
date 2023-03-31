@@ -99,7 +99,7 @@ class EntityQueryAccessTest extends ViewTestBase {
     $accessible_block->save();
 
     $account = $this->drupalCreateUser([
-      'administer blocks',
+      'access block library',
     ]);
     $this->drupalLogin($account);
 

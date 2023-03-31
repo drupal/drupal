@@ -32,6 +32,9 @@ abstract class BlockContentTestBase extends BrowserTestBase {
    */
   protected $permissions = [
     'administer blocks',
+    'access block library',
+    'administer block types',
+    'administer block content',
   ];
 
   /**

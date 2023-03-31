@@ -46,6 +46,7 @@ class StandardTest extends BrowserTestBase {
     // Test anonymous user can access 'Main navigation' block.
     $this->adminUser = $this->drupalCreateUser([
       'administer blocks',
+      'administer block content',
       'post comments',
       'skip comment approval',
       'create article content',

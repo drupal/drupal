@@ -5,6 +5,8 @@
  * Post update functions for Custom Block.
  */
 
+use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+use Drupal\user\Entity\Role;
 use Drupal\views\Entity\View;
 
 /**
@@ -47,4 +49,32 @@ function block_content_post_update_move_custom_block_library() {
   $menu['parent'] = 'system.admin_content';
 
   $view->save();
+}
+
+/**
+ * Update block_content 'block library' view permission.
+ */
+function block_content_post_update_block_library_view_permission() {
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('views.view.block_content');
+  $current_perm = $config->get('display.default.display_options.access.options.perm');
+  if ($current_perm === 'administer blocks') {
+    $config->set('display.default.display_options.access.options.perm', 'access block library')
+      ->save(TRUE);
+  }
+}
+
+/**
+ * Update permissions for users with "administer blocks" permission.
+ */
+function block_content_post_update_sort_permissions(&$sandbox = NULL) {
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'user_role', function (Role $role) {
+    if ($role->hasPermission('administer blocks')) {
+      $role->grantPermission('administer block content');
+      $role->grantPermission('access block library');
+      $role->grantPermission('administer block types');
+      return TRUE;
+    }
+    return FALSE;
+  });
 }

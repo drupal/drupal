@@ -65,7 +65,24 @@ class BlockContentTest extends ResourceTestBase {
    * {@inheritdoc}
    */
   protected function setUpAuthorization($method) {
-    $this->grantPermissionsToTestedRole(['administer blocks']);
+    switch ($method) {
+      case 'GET':
+      case 'PATCH':
+        $this->grantPermissionsToTestedRole([
+          'access block library',
+          'administer block types',
+          'administer block content',
+        ]);
+        break;
+
+      case 'POST':
+        $this->grantPermissionsToTestedRole(['access block library', 'create basic block content']);
+        break;
+
+      case 'DELETE':
+        $this->grantPermissionsToTestedRole(['access block library', 'delete any basic block content']);
+        break;
+    }
   }
 
   /**
@@ -185,6 +202,19 @@ class BlockContentTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected function getExpectedUnauthorizedAccessMessage($method) {
+    return match ($method) {
+      'GET' => "The 'access block library' permission is required.",
+      'PATCH' => "The following permissions are required: 'access block library' AND 'edit any basic block content'.",
+      'POST' => "The following permissions are required: 'create basic block content' AND 'access block library'.",
+      'DELETE' => "The following permissions are required: 'access block library' AND 'delete any basic block content'.",
+      default => parent::getExpectedUnauthorizedAccessMessage($method),
+    };
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getExpectedUnauthorizedAccessCacheability() {
     // @see \Drupal\block_content\BlockContentAccessControlHandler()
     return parent::getExpectedUnauthorizedAccessCacheability()
@@ -218,7 +248,7 @@ class BlockContentTest extends ResourceTestBase {
    */
   public function testCollectionFilterAccess() {
     $this->entity->setPublished()->save();
-    $this->doTestCollectionFilterAccessForPublishableEntities('info', NULL, 'administer blocks');
+    $this->doTestCollectionFilterAccessForPublishableEntities('info', NULL, 'administer block content');
   }
 
 }

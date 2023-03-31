@@ -43,7 +43,7 @@ class BlockContentTypeTest extends ConfigEntityResourceTestBase {
    * {@inheritdoc}
    */
   protected function setUpAuthorization($method) {
-    $this->grantPermissionsToTestedRole(['administer blocks']);
+    $this->grantPermissionsToTestedRole(['administer block types']);
   }
 
   /**

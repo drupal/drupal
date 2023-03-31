@@ -21,6 +21,7 @@ class BlockContentRevisionDeleteTest extends BlockContentTestBase {
    * {@inheritdoc}
    */
   protected $permissions = [
+    'access block library',
     'view any basic block content history',
     'delete any basic block content revisions',
   ];

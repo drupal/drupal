@@ -74,7 +74,15 @@ class BlockContentController extends ControllerBase {
    *   returns the custom block add page for that custom block type.
    */
   public function add(Request $request) {
-    $types = $this->blockContentTypeStorage->loadMultiple();
+    // @todo deprecate see https://www.drupal.org/project/drupal/issues/3346394.
+    $types = [];
+    // Only use block types the user has access to.
+    foreach ($this->blockContentTypeStorage->loadMultiple() as $type) {
+      $access = $this->entityTypeManager()->getAccessControlHandler('block_content')->createAccess($type->id(), NULL, [], TRUE);
+      if ($access->isAllowed()) {
+        $types[$type->id()] = $type;
+      }
+    }
     uasort($types, [$this->blockContentTypeStorage->getEntityType()->getClass(), 'sort']);
     if ($types && count($types) == 1) {
       $type = reset($types);

@@ -16,6 +16,34 @@ use Drupal\block_content\Entity\BlockContent;
 class BlockContentListTest extends BlockContentTestBase {
 
   /**
+   * A user with 'access block library' permission.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $baseUser1;
+
+  /**
+   * A user with access to create and edit custom basic blocks.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $baseUser2;
+
+  /**
+   * Permissions to grant admin user.
+   *
+   * @var array
+   */
+  protected $permissions = [
+    'administer blocks',
+    'access block library',
+    'create basic block content',
+    'edit any basic block content',
+    'delete any basic block content',
+    'translate configuration',
+  ];
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -28,13 +56,25 @@ class BlockContentListTest extends BlockContentTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Tests the custom block listing page.
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    $this->baseUser1 = $this->drupalCreateUser(['access block library']);
+    $this->baseUser2 = $this->drupalCreateUser([
+      'access block library',
+      'create basic block content',
+      'edit any basic block content',
+      'delete any basic block content',
+    ]);
+  }
+
+  /**
+   * Tests the custom block listing page with different permissions.
    */
   public function testListing() {
-    $this->drupalLogin($this->drupalCreateUser([
-      'administer blocks',
-      'translate configuration',
-    ]));
+    // Test with the admin user.
+    $this->drupalLogin($this->drupalCreateUser(['access block library', 'administer block content']));
     $this->drupalGet('admin/content/block-content');
 
     // Test for the page title.
@@ -118,6 +158,30 @@ class BlockContentListTest extends BlockContentTestBase {
     $this->assertSession()->pageTextContains('There are no custom blocks yet.');
     // Confirm the non-reusable block is not on the page.
     $this->assertSession()->pageTextNotContains('Non-reusable block');
+
+    $this->drupalLogout();
+
+    // Create test block for other user tests.
+    $test_block = $this->createBlockContent($label);
+
+    $link_text = t('Add custom block');
+    // Test as a user with view only permissions.
+    $this->drupalLogin($this->baseUser1);
+    $this->drupalGet('admin/content/block-content');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->linkNotExists($link_text);
+    $this->assertSession()->linkByHrefNotExists('block/' . $test_block->id());
+    $this->assertSession()->linkByHrefNotExists('block/' . $test_block->id() . '/delete');
+
+    $this->drupalLogout();
+
+    // Test as a user with permission to create/edit/delete basic blocks.
+    $this->drupalLogin($this->baseUser2);
+    $this->drupalGet('admin/content/block-content');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->linkExists($link_text);
+    $this->assertSession()->linkByHrefExists('block/' . $test_block->id());
+    $this->assertSession()->linkByHrefExists('block/' . $test_block->id() . '/delete');
   }
 
 }
