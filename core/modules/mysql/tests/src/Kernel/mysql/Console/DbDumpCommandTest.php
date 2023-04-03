@@ -84,4 +84,19 @@ class DbDumpCommandTest extends DriverSpecificKernelTestBase {
     $this->assertStringNotContainsString("'pattern_outline' => 'test", $output, 'Insert pattern_outline field not found');
   }
 
+  /**
+   * Tests insert count option.
+   */
+  public function testInsertCount() {
+    $command = new DbDumpCommand();
+    $command_tester = new CommandTester($command);
+    $command_tester->execute(['--insert-count' => '1']);
+
+    $router_row_count = (int) $this->container->get('database')->select('router')->countQuery()->execute()->fetchField();
+
+    $output = $command_tester->getDisplay();
+    $this->assertSame($router_row_count, substr_count($output, "insert('router"));
+    $this->assertGreaterThan(1, $router_row_count);
+  }
+
 }

@@ -41,7 +41,8 @@ class DbDumpCommand extends DbCommandBase {
   protected function configure() {
     $this->setName('dump-database-d8-mysql')
       ->setDescription('Dump the current database to a generation script')
-      ->addOption('schema-only', NULL, InputOption::VALUE_OPTIONAL, 'A comma separated list of tables to only export the schema without data.', 'cache.*,sessions,watchdog');
+      ->addOption('schema-only', NULL, InputOption::VALUE_OPTIONAL, 'A comma separated list of tables to only export the schema without data.', 'cache.*,sessions,watchdog')
+      ->addOption('insert-count', NULL, InputOption::VALUE_OPTIONAL, ' The number of rows to insert in a single SQL statement.', 1000);
     parent::configure();
   }
 
@@ -58,8 +59,9 @@ class DbDumpCommand extends DbCommandBase {
 
     $schema_tables = $input->getOption('schema-only');
     $schema_tables = explode(',', $schema_tables);
+    $insert_count = (int) $input->getOption('insert-count');
 
-    $output->writeln($this->generateScript($connection, $schema_tables), OutputInterface::OUTPUT_RAW);
+    $output->writeln($this->generateScript($connection, $schema_tables, $insert_count), OutputInterface::OUTPUT_RAW);
     return 0;
   }
 
@@ -70,11 +72,13 @@ class DbDumpCommand extends DbCommandBase {
    *   The database connection to use.
    * @param array $schema_only
    *   Table patterns for which to only dump the schema, no data.
+   * @param int $insert_count
+   *   The number of rows to insert in a single statement.
    *
    * @return string
    *   The PHP script.
    */
-  protected function generateScript(Connection $connection, array $schema_only = []) {
+  protected function generateScript(Connection $connection, array $schema_only = [], int $insert_count = 1000) {
     $tables = '';
 
     $schema_only_patterns = [];
@@ -91,7 +95,7 @@ class DbDumpCommand extends DbCommandBase {
       else {
         $data = [];
       }
-      $tables .= $this->getTableScript($table, $schema, $data);
+      $tables .= $this->getTableScript($table, $schema, $data, $insert_count);
     }
     $script = $this->getTemplate();
     // Substitute in the version.
@@ -439,25 +443,30 @@ ENDOFSCRIPT;
    *   Drupal schema definition.
    * @param array $data
    *   Data for the table.
+   * @param int $insert_count
+   *   The number of rows to insert in a single statement.
    *
    * @return string
    *   The table create statement, and if there is data, the insert command.
    */
-  protected function getTableScript($table, array $schema, array $data) {
+  protected function getTableScript($table, array $schema, array $data, int $insert_count = 1000) {
     $output = '';
     $output .= "\$connection->schema()->createTable('" . $table . "', " . Variable::export($schema) . ");\n\n";
     if (!empty($data)) {
-      $insert = '';
-      foreach ($data as $record) {
-        $insert .= "->values(" . Variable::export($record) . ")\n";
-      }
-      $fields = Variable::export(array_keys($schema['fields']));
-      $output .= <<<EOT
+      $data_chunks = array_chunk($data, $insert_count);
+      foreach ($data_chunks as $data_chunk) {
+        $insert = '';
+        foreach ($data_chunk as $record) {
+          $insert .= "->values(" . Variable::export($record) . ")\n";
+        }
+        $fields = Variable::export(array_keys($schema['fields']));
+        $output .= <<<EOT
 \$connection->insert('$table')
 ->fields($fields)
 {$insert}->execute();
 
 EOT;
+      }
     }
     return $output;
   }
