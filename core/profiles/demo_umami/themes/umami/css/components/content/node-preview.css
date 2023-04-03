@@ -1,0 +1,20 @@
+/**
+ * @file
+ * This file is used for node preview styling.
+ */
+
+.node-preview-container {
+  position: initial;
+}
+.node-preview-form-select {
+  display: flex;
+}
+.node-preview-backlink {
+  display: inline-flex;
+  align-items: center;
+  margin-inline: 0 auto;
+}
+.node-preview-container .form-item,
+.node-preview-container .form-actions {
+  margin-block: 0;
+}
