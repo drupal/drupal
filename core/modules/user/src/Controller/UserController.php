@@ -336,7 +336,7 @@ class UserController extends ControllerBase {
    *   user.
    */
   public function userEditPage() {
-    return $this->redirect('entity.user.edit_form', ['user' => $this->currentUser()->id()], [], 301);
+    return $this->redirect('entity.user.edit_form', ['user' => $this->currentUser()->id()], [], 302);
   }
 
   /**
