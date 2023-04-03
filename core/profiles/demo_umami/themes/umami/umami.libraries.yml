@@ -223,3 +223,9 @@ classy.search-results:
   css:
     component:
       css/classy/components/search-results.css: {}
+
+drupal.node.preview:
+  version: VERSION
+  css:
+    theme:
+      css/components/content/node-preview.css: {}
