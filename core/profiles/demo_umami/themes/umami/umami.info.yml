@@ -46,6 +46,8 @@ libraries-extend:
     - umami/classy.media_library
   user/drupal.user:
     - umami/user
+  node/drupal.node.preview:
+    - umami/drupal.node.preview
 
 regions:
   pre_header: Pre-header
