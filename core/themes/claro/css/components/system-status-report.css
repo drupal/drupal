@@ -31,7 +31,7 @@
   background-color: transparent;
 }
 
-.system-status-report__entry h3 {
+.system-status-report__entry__value h3 {
   margin-top: 0.625rem;
   margin-bottom: 0.625rem;
   font-size: 1.231em;
