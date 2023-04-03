@@ -191,23 +191,19 @@ class Cron implements CronInterface {
   protected function processQueues() {
     $max_wait = (float) $this->queueConfig['suspendMaximumWait'];
 
-    $queues = array_filter(
-      array_values($this->queueManager->getDefinitions()),
-      function (array $queueInfo) {
-        return isset($queueInfo['cron']);
-      }
-    );
-
     // Build a stack of queues to work on.
     /** @var array<array{process_from: int<0, max>, queue: \Drupal\Core\Queue\QueueInterface, worker: \Drupal\Core\Queue\QueueWorkerInterface}> $queues */
-    $queues = array_map(function (array $queue_info) {
-      $queue_name = $queue_info['id'];
+    $queues = [];
+    foreach ($this->queueManager->getDefinitions() as $queue_name => $queue_info) {
+      if (!isset($queue_info['cron'])) {
+        continue;
+      }
       $queue = $this->queueFactory->get($queue_name);
       // Make sure every queue exists. There is no harm in trying to recreate
       // an existing queue.
       $queue->createQueue();
       $worker = $this->queueManager->createInstance($queue_name);
-      return [
+      $queues[] = [
         // Set process_from to zero so each queue is always processed
         // immediately for the first time. This process_from timestamp will
         // change if a queue throws a delayable SuspendQueueException.
@@ -215,7 +211,7 @@ class Cron implements CronInterface {
         'queue' => $queue,
         'worker' => $worker,
       ];
-    }, $queues);
+    }
 
     // Work through stack of queues, re-adding to the stack when a delay is
     // necessary.
