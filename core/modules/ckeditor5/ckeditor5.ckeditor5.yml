@@ -742,7 +742,6 @@ media_library_mediaLibrary:
         dialogSettings:
           height: 75%
           dialogClass: media-library-widget-modal
-          title: Add or select media
   drupal:
     label: Media Library
     elements: false
