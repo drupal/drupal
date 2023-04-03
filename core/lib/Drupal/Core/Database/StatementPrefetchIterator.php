@@ -11,9 +11,6 @@ use Drupal\Core\Database\Event\StatementExecutionStartEvent;
  * This class behaves very similar to a StatementWrapperIterator of a
  * \PDOStatement but as it always fetches every row it is possible to
  * manipulate those results.
- *
- * @todo use fully StatementIteratorTrait and remove \Iterator methods
- *   implementations.
  */
 class StatementPrefetchIterator implements \Iterator, StatementInterface {
 
