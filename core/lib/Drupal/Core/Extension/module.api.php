@@ -516,30 +516,61 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
 /**
  * Perform a single update between minor versions.
  *
- * Hook hook_update_N() can only be used to update between minor versions of a
- * module. To upgrade between major versions of Drupal (for example, between
- * Drupal 7 and 8), use the @link migrate Migrate API @endlink instead.
+ * Modules should use hook hook_update_N() to update between minor or major
+ * versions of the module. Sites upgrading from Drupal 6 or 7 to any higher
+ * version should use the @link migrate Migrate API @endlink instead.
  *
  * @section sec_naming Naming and documenting your function
  * For each change in a module that requires one or more actions to be performed
  * when updating a site, add a new implementation of hook_update_N() to your
  * mymodule.install file (assuming mymodule is the machine name of your module).
  * Implementations of hook_update_N() are named (module name)_update_(number).
+ *
+ * The number (N) must be higher than hook_update_last_removed().
+ *
+ * @see hook_update_last_removed()
+ *
  * The numbers are normally composed of three parts:
  * - 1 or 2 digits for Drupal core compatibility (Drupal 8, 9, 10, etc.). This
- *   convention must be followed.
- * - 1 digit for your module's major release version; for example, for 8.x-1.*
- *   use 1, for 8.x-2.* use 2, for Core 8.0.x use 0, and for Core 8.1.x use 1.
- *   This convention is optional but suggested for clarity.
+ *   convention must be followed. If your module is compatible with multiple
+ *   major versions (e.g., it has a core_version_requirement of '^8.8 || ^9'),
+ *   use the lowest major core branch it is compatible with (8 in this example).
+ * - 1 or 2 digits for your module's major release version. Examples:
+ *   - For 8.x-1.* or 1.y.x (semantic versioning), use 1 or 01.
+ *   - For 8.x-2.* or 2.y.x, use 2 or 02.
+ *   - For 8.x-10.* or 10.y.x, use 10.
+ *   - For core 8.0.x, use 0 or 00.
+ *   - For core 8.1.x, use 1 or 01.
+ *   - For core 8.10.x, use 10.
+ *   This convention is optional but suggested for clarity. Note: While four-
+ *   digit update hooks are standard, if you follow the above convention, you
+ *   may run into the need to start using five digits if you get to a major (or,
+ *   for core, a minor) version 10. This will work fine; what matters is that
+ *   you must ALWAYS increase the number when a new update hook is added. For
+ *   example, if you add hook_update_81001(), you cannot later
+ *   add hook_update_9101(). Instead, you would need to use hook_update_90101().
  * - 2 digits for sequential counting, starting with 01. Note that the x000
  *   number can never be used: the lowest update number that will be recognized
- *   and run for major version x is x001.
+ *   and run is 8001.
+ *
+ * @todo Remove reference to CORE_MINIMUM_SCHEMA_VERSION (e.g., x001) once
+ *   https://www.drupal.org/project/drupal/issues/3106712 is resolved.
+ *
  * Examples:
  * - node_update_8001(): The first update for the Drupal 8.0.x version of the
+ *   Drupal Core node module.
+ * - node_update_81001(): The first update for the Drupal 8.10.x version of the
  *   Drupal Core node module.
  * - mymodule_update_8101(): The first update for your custom or contributed
  *   module's 8.x-1.x versions.
  * - mymodule_update_8201(): The first update for the 8.x-2.x versions.
+ * - mymodule_update_80201(): Alternate five-digit format for the first update
+ *   for the 8.x-2.x versions. Subsequent update hooks must always be five
+ *   digits and higher than 80201.
+ * - mymodule_update_8201(): The first update for the custom or contributed
+ *   module's 2.0.x versions, which are compatible with Drupal 8 and 9.
+ * - mymodule_update_91001(): The first update for the custom or contributed
+ *   module's 10.0.x versions, which are compatible with Drupal 9.
  *
  * Never renumber update functions. The numeric part of the hook implementation
  * function is stored in the database to keep track of which updates have run,
