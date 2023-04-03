@@ -134,8 +134,8 @@ class Cookie implements AuthenticationProviderInterface, EventSubscriberInterfac
         $options = UrlHelper::parse($url);
         $options['query']['check_logged_in'] = '1';
         $url = $options['path'] . '?' . UrlHelper::buildQuery($options['query']);
-        if (!empty($options['#fragment'])) {
-          $url .= '#' . $options['#fragment'];
+        if (!empty($options['fragment'])) {
+          $url .= '#' . $options['fragment'];
         }
         // In the case of trusted redirect, we have to update the list of
         // trusted URLs because here we've just modified its target URL
