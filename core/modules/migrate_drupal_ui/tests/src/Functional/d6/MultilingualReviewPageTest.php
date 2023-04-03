@@ -101,6 +101,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Menu translation',
       'Node',
       'Node Reference',
+      'Node Reference URL Widget',
       'Nodeaccess',
       'Number',
       'OpenID',

@@ -28,6 +28,7 @@ process:
         userreference_autocomplete: entity_reference
       nodereference:
         nodereference_select: entity_reference
+        nodereference_url: entity_reference
       number_integer:
         number: integer
         optionwidgets_select: list_integer
