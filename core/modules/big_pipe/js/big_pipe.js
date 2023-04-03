@@ -115,7 +115,7 @@
   const observer = new MutationObserver(processMutations);
 
   // Attach behaviors early, if possible.
-  Drupal.attachBehaviors(document.body);
+  Drupal.attachBehaviors(document);
 
   // If loaded asynchronously there might already be replacement elements
   // in the DOM before the mutation observer is started.
