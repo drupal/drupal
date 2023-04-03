@@ -131,6 +131,24 @@ class JavascriptStatesForm extends FormBase {
         ],
       ],
     ];
+    $form['textfield_readonly_when_checkbox_trigger_checked'] = [
+      '#type' => 'textfield',
+      '#title' => 'Textfield readonly when checkbox trigger checked',
+      '#states' => [
+        'readonly' => [
+          ':input[name="checkbox_trigger"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
+    $form['textarea_readonly_when_checkbox_trigger_checked'] = [
+      '#type' => 'textarea',
+      '#title' => 'Textarea readonly when checkbox trigger checked',
+      '#states' => [
+        'readonly' => [
+          ':input[name="checkbox_trigger"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
     $form['details_expanded_when_checkbox_trigger_checked'] = [
       '#type' => 'details',
       '#title' => 'Details expanded when checkbox trigger checked',

@@ -693,6 +693,16 @@
     }
   });
 
+  $document.on('state:readonly', (e) => {
+    if (e.trigger) {
+      $(e.target)
+        .closest('.js-form-item, .js-form-submit, .js-form-wrapper')
+        .toggleClass('form-readonly', e.value)
+        .find('input, textarea')
+        .prop('readonly', e.value);
+    }
+  });
+
   $document.on('state:required', (e) => {
     if (e.trigger) {
       if (e.value) {

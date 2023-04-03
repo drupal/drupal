@@ -85,6 +85,10 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->assertNotEmpty($textfield_invisible_element);
     $textfield_required_element = $page->findField('textfield_required_when_checkbox_trigger_checked');
     $this->assertNotEmpty($textfield_required_element);
+    $textfield_readonly_element = $page->findField('textfield_readonly_when_checkbox_trigger_checked');
+    $this->assertNotEmpty($textfield_readonly_element);
+    $textarea_readonly_element = $page->findField('textarea_readonly_when_checkbox_trigger_checked');
+    $this->assertNotEmpty($textarea_readonly_element);
     $details = $this->assertSession()->elementExists('css', '#edit-details-expanded-when-checkbox-trigger-checked');
     $textfield_in_details = $details->findField('textfield_in_details');
     $this->assertNotEmpty($textfield_in_details);
@@ -151,6 +155,8 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->assertFalse($details->hasAttribute('open'));
     $this->assertFalse($textfield_in_details->isVisible());
     $this->assertFalse($textfield_required_element->hasAttribute('required'));
+    $this->assertFalse($textfield_readonly_element->hasAttribute('readonly'));
+    $this->assertFalse($textarea_readonly_element->hasAttribute('readonly'));
     $this->assertFalse($checkbox_checked_element->isChecked());
     $this->assertTrue($checkbox_unchecked_element->isChecked());
     $this->assertFalse($checkbox_visible_element->isVisible());
@@ -180,6 +186,8 @@ class JavascriptStatesTest extends WebDriverTestBase {
     // Verify triggered state.
     $this->assertFalse($textfield_invisible_element->isVisible());
     $this->assertEquals('required', $textfield_required_element->getAttribute('required'));
+    $this->assertTrue($textfield_readonly_element->hasAttribute('readonly'));
+    $this->assertTrue($textarea_readonly_element->hasAttribute('readonly'));
     $this->assertTrue($details->hasAttribute('open'));
     $this->assertTrue($textfield_in_details->isVisible());
     $this->assertTrue($checkbox_checked_element->isChecked());
@@ -219,6 +227,8 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->assertFalse($details->hasAttribute('open'));
     $this->assertFalse($textfield_in_details->isVisible());
     $this->assertFalse($textfield_required_element->hasAttribute('required'));
+    $this->assertFalse($textfield_readonly_element->hasAttribute('readonly'));
+    $this->assertFalse($textarea_readonly_element->hasAttribute('readonly'));
     $this->assertFalse($checkbox_checked_element->isChecked());
     $this->assertTrue($checkbox_unchecked_element->isChecked());
     $this->assertFalse($checkbox_visible_element->isVisible());
