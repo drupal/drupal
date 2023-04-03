@@ -124,6 +124,30 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
   /**
    * {@inheritdoc}
    */
+  public function getStorageSettingsSummary(FieldStorageDefinitionInterface $storage_definition): array {
+    $plugin_definition = $this->getDefinition($storage_definition->getType(), FALSE);
+    if (!empty($plugin_definition['class'])) {
+      $plugin_class = DefaultFactory::getPluginClass($storage_definition->getType(), $plugin_definition);
+      return $plugin_class::storageSettingsSummary($storage_definition);
+    }
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldSettingsSummary(FieldDefinitionInterface $field_definition): array {
+    $plugin_definition = $this->getDefinition($field_definition->getType(), FALSE);
+    if (!empty($plugin_definition['class'])) {
+      $plugin_class = DefaultFactory::getPluginClass($field_definition->getType(), $plugin_definition);
+      return $plugin_class::fieldSettingsSummary($field_definition);
+    }
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getUiDefinitions() {
     $definitions = $this->getDefinitions();
 

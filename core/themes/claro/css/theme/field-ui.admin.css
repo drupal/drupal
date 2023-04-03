@@ -80,3 +80,17 @@
 .field-plugin-settings-edit-form .plugin-name {
   font-weight: bold;
 }
+
+.field-settings-summary-cell.field-settings-summary-cell li,
+.storage-settings-summary-cell.storage-settings-summary-cell li {
+  margin: 0;
+  list-style-type: none;
+}
+
+.field-settings-summary-cell li {
+  font-size: 0.9em;
+}
+
+.field-settings-summary-cell li:first-child {
+  font-size: 1em;
+}

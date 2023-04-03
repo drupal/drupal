@@ -84,6 +84,15 @@ class FieldStorageConfigListBuilder extends ConfigEntityListBuilder {
   /**
    * {@inheritdoc}
    */
+  public function render() {
+    $build = parent::render();
+    $build['#attached']['library'][] = 'field_ui/drupal.field_ui';
+    return $build;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildHeader() {
     $header['id'] = $this->t('Field name');
     $header['entity_type'] = $this->t('Entity type');
@@ -92,6 +101,7 @@ class FieldStorageConfigListBuilder extends ConfigEntityListBuilder {
       'class' => [RESPONSIVE_PRIORITY_MEDIUM],
     ];
     $header['usage'] = $this->t('Used in');
+    $header['settings_summary'] = $this->t('Summary');
     return $header;
   }
 
@@ -127,6 +137,14 @@ class FieldStorageConfigListBuilder extends ConfigEntityListBuilder {
       '#theme' => 'item_list',
       '#items' => $usage,
       '#context' => ['list_style' => 'comma-list'],
+    ];
+    $summary = $this->fieldTypeManager->getStorageSettingsSummary($field_storage);
+    $row['data']['settings_summary'] = empty($summary) ? '' : [
+      'data' => [
+        '#theme' => 'item_list',
+        '#items' => $summary,
+      ],
+      'class' => ['storage-settings-summary-cell'],
     ];
     return $row;
   }

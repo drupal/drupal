@@ -32,6 +32,8 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
    * Tests that the content and configuration were properly updated.
    */
   public function testUpdatedSite() {
+    $assert_session = $this->assertSession();
+
     $this->runUpdates();
 
     $spanish = \Drupal::languageManager()->getLanguage('es');
@@ -222,24 +224,24 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     $this->drupalGet('admin/structure/types/manage/test_content_type/fields');
 
     // Make sure fields are the right type.
-    $this->assertSession()->linkExists('Text (formatted, long, with summary)');
-    $this->assertSession()->linkExists('Boolean');
-    $this->assertSession()->linkExists('Comments');
-    $this->assertSession()->linkExists('Date');
-    $this->assertSession()->linkExists('Email');
-    $this->assertSession()->linkExists('Link');
-    $this->assertSession()->linkExists('List (float)');
-    $this->assertSession()->linkExists('Telephone number');
-    $this->assertSession()->linkExists('Entity reference');
-    $this->assertSession()->linkExists('File');
-    $this->assertSession()->linkExists('Image');
-    $this->assertSession()->linkExists('Text (plain, long)');
-    $this->assertSession()->linkExists('List (text)');
-    $this->assertSession()->linkExists('Text (formatted, long)');
-    $this->assertSession()->linkExists('Text (plain)');
-    $this->assertSession()->linkExists('List (integer)');
-    $this->assertSession()->linkExists('Number (integer)');
-    $this->assertSession()->linkExists('Number (float)');
+    $assert_session->elementContains('css', '#body', 'Text (formatted, long, with summary)');
+    $assert_session->elementContains('css', '#field-test-1', 'Boolean');
+    $assert_session->elementContains('css', '#field-test-2', 'Comments');
+    $assert_session->elementContains('css', '#field-test-3', 'Date');
+    $assert_session->elementContains('css', '#field-test-4', 'Email');
+    $assert_session->elementContains('css', '#field-test-5', 'Link');
+    $assert_session->elementContains('css', '#field-test-6', 'List (float)');
+    $assert_session->elementContains('css', '#field-test-7', 'Telephone number');
+    $assert_session->elementContains('css', '#field-test-8', 'Entity reference');
+    $assert_session->elementContains('css', '#field-test-9', 'File');
+    $assert_session->elementContains('css', '#field-test-10', 'Image');
+    $assert_session->elementContains('css', '#field-test-15', 'Text (plain, long)');
+    $assert_session->elementContains('css', '#field-test-16', 'List (text)');
+    $assert_session->elementContains('css', '#field-test-17', 'Text (formatted)');
+    $assert_session->elementContains('css', '#field-test-18', 'Text (formatted, long)');
+    $assert_session->elementContains('css', '#field-test-20', 'List (integer)');
+    $assert_session->elementContains('css', '#field-test-22', 'Number (float)');
+    $assert_session->elementContains('css', '#field-test-23', 'Number (integer)');
 
     // Make sure our form mode exists.
     $this->drupalGet('admin/structure/display-modes/form');

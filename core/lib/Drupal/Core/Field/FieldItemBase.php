@@ -36,6 +36,20 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
   /**
    * {@inheritdoc}
    */
+  public static function storageSettingsSummary(FieldStorageDefinitionInterface $storage_definition): array {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function fieldSettingsSummary(FieldDefinitionInterface $field_definition): array {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function mainPropertyName() {
     return 'value';
   }

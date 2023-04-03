@@ -109,6 +109,14 @@ class FileItem extends EntityReferenceItem {
   /**
    * {@inheritdoc}
    */
+  public static function storageSettingsSummary(FieldStorageDefinitionInterface $storage_definition): array {
+    // Bypass the parent setting summary as it produces redundant information.
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $element = [];
 
