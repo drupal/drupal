@@ -126,7 +126,7 @@ class DateTimePlus {
   /**
    * Creates a date object from an input date object.
    *
-   * @param \DateTime $datetime
+   * @param \DateTimeInterface $datetime
    *   A DateTime object.
    * @param array $settings
    *   (optional) A keyed array for settings, suitable for passing on to
@@ -135,7 +135,7 @@ class DateTimePlus {
    * @return static
    *   A new DateTimePlus object.
    */
-  public static function createFromDateTime(\DateTime $datetime, $settings = []) {
+  public static function createFromDateTime(\DateTimeInterface $datetime, $settings = []) {
     return new static($datetime->format(static::FORMAT), $datetime->getTimezone(), $settings);
   }
 
