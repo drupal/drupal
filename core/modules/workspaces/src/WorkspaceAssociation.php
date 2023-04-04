@@ -6,11 +6,14 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
+use Drupal\workspaces\Event\WorkspacePostPublishEvent;
+use Drupal\workspaces\Event\WorkspacePublishEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Provides a class for CRUD operations on workspace associations.
  */
-class WorkspaceAssociation implements WorkspaceAssociationInterface {
+class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscriberInterface {
 
   /**
    * The table for the workspace association storage.
@@ -208,6 +211,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface {
    * {@inheritdoc}
    */
   public function postPublish(WorkspaceInterface $workspace) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use the \Drupal\workspaces\Event\WorkspacePostPublishEvent event instead. See https://www.drupal.org/node/3242573', E_USER_DEPRECATED);
     $this->deleteAssociations($workspace->id());
   }
 
@@ -261,6 +265,25 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface {
       $indexed_rows->condition('workspace', $parent_id);
       $this->database->insert(static::TABLE)->from($indexed_rows)->execute();
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getSubscribedEvents(): array {
+    // Workspace association records cleanup should happen as late as possible.
+    $events[WorkspacePostPublishEvent::class][] = ['onPostPublish', -500];
+    return $events;
+  }
+
+  /**
+   * Triggers clean-up operations after a workspace is published.
+   *
+   * @param \Drupal\workspaces\Event\WorkspacePublishEvent $event
+   *   The workspace publish event.
+   */
+  public function onPostPublish(WorkspacePublishEvent $event): void {
+    $this->deleteAssociations($event->getWorkspace()->id());
   }
 
 }

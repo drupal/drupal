@@ -91,6 +91,11 @@ interface WorkspaceAssociationInterface {
    *
    * @param \Drupal\workspaces\WorkspaceInterface $workspace
    *   A workspace entity.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use the
+   *   \Drupal\workspaces\Event\WorkspacePostPublishEvent event instead.
+   *
+   * @see https://www.drupal.org/node/3242573
    */
   public function postPublish(WorkspaceInterface $workspace);
 
