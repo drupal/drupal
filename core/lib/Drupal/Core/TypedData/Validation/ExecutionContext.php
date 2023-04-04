@@ -157,14 +157,7 @@ class ExecutionContext implements ExecutionContextInterface {
   /**
    * {@inheritdoc}
    */
-  public function addViolation($message, array $parameters = [], $invalidValue = NULL, $plural = NULL, $code = NULL) {
-    // The parameters $invalidValue and following are ignored by the new
-    // API, as they are not present in the new interface anymore.
-    // You should use buildViolation() instead.
-    if (func_num_args() > 2) {
-      throw new \LogicException('Legacy validator API is unsupported.');
-    }
-
+  public function addViolation($message, array $parameters = []) {
     $this->violations->add(new ConstraintViolation($this->translator->trans($message, $parameters, $this->translationDomain), $message, $parameters, $this->root, $this->propertyPath, $this->value, NULL, NULL, $this->constraint));
   }
 
@@ -248,20 +241,6 @@ class ExecutionContext implements ExecutionContextInterface {
   /**
    * {@inheritdoc}
    */
-  public function addViolationAt($subPath, $message, array $parameters = [], $invalidValue = NULL, $plural = NULL, $code = NULL) {
-    throw new \LogicException('Legacy validator API is unsupported.');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validate($value, $subPath = '', $groups = NULL, $traverse = FALSE, $deep = FALSE) {
-    throw new \LogicException('Legacy validator API is unsupported.');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function markConstraintAsValidated($cache_key, $constraint_hash) {
     $this->validatedConstraints[$cache_key . ':' . $constraint_hash] = TRUE;
   }
@@ -271,13 +250,6 @@ class ExecutionContext implements ExecutionContextInterface {
    */
   public function isConstraintValidated($cache_key, $constraint_hash): bool {
     return isset($this->validatedConstraints[$cache_key . ':' . $constraint_hash]);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateValue($value, $constraints, $subPath = '', $groups = NULL) {
-    throw new \LogicException('Legacy validator API is unsupported.');
   }
 
   /**
@@ -306,13 +278,6 @@ class ExecutionContext implements ExecutionContextInterface {
    */
   public function isObjectInitialized($cache_key): bool {
     throw new \LogicException('\Symfony\Component\Validator\Context\ExecutionContextInterface::isObjectInitialized is unsupported.');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getMetadataFactory() {
-    throw new \LogicException('Legacy validator API is unsupported.');
   }
 
 }
