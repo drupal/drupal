@@ -76,7 +76,10 @@ class EntityLink extends FieldPluginBase {
     $entity = $this->getEntity($values);
 
     // Only render the links, if they are defined.
-    return !empty($this->build[$entity->id()]['links']['comment__comment']) ? \Drupal::service('renderer')->render($this->build[$entity->id()]['links']['comment__comment']) : '';
+    if (!$entity || empty($this->build[$entity->id()]['links']['comment__comment'])) {
+      return '';
+    }
+    return \Drupal::service('renderer')->render($this->build[$entity->id()]['links']['comment__comment']);
   }
 
 }

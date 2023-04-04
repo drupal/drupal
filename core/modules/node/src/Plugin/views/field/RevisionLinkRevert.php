@@ -20,6 +20,9 @@ class RevisionLinkRevert extends RevisionLink {
   protected function getUrlInfo(ResultRow $row) {
     /** @var \Drupal\node\NodeInterface $node */
     $node = $this->getEntity($row);
+    if (!$node) {
+      return NULL;
+    }
     return Url::fromRoute('node.revision_revert_confirm', ['node' => $node->id(), 'node_revision' => $node->getRevisionId()]);
   }
 

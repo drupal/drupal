@@ -56,6 +56,10 @@ class MediaLibrarySelectForm extends FieldPluginBase {
     $form[$this->options['id']]['#tree'] = TRUE;
     foreach ($this->view->result as $row_index => $row) {
       $entity = $this->getEntity($row);
+      if (!$entity) {
+        $form[$this->options['id']][$row_index] = [];
+        continue;
+      }
       $form[$this->options['id']][$row_index] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Select @label', [
