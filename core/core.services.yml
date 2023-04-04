@@ -1080,16 +1080,8 @@ services:
     class: Drupal\Core\Path\PathValidator
     arguments: ['@router', '@router.no_access_checks', '@current_user', '@path_processor_manager']
   Drupal\Core\Path\PathValidatorInterface: '@path.validator'
-
-  # The argument to the hashing service defined in services.yml, to the
-  # constructor of PhpassHashedPassword is the log2 number of iterations for
-  # password stretching.
-  # @todo increase by 1 every Drupal version in order to counteract increases in
-  # the speed and power of computers available to crack the hashes. The current
-  # password hashing method was introduced in Drupal 7 with a log2 count of 15.
   password:
-    class: Drupal\Core\Password\PhpassHashedPassword
-    arguments: [16]
+    class: Drupal\Core\Password\PhpPassword
   Drupal\Core\Password\PasswordInterface: '@password'
   password_generator:
     class: Drupal\Core\Password\DefaultPasswordGenerator

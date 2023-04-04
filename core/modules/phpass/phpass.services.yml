@@ -1,0 +1,6 @@
+services:
+  phpass.password:
+    public: false
+    class: Drupal\phpass\Password\PhpassHashedPassword
+    decorates: password
+    arguments: ['@.inner']

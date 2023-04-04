@@ -91,7 +91,7 @@ class PasswordItemTest extends FieldKernelTestBase {
 
     // The string starts with the portable password string and is a hash of an
     // empty string.
-    $this->assertStringStartsWith('$S$', $entity->test_field->value);
+    $this->assertStringStartsWith('$2y$', $entity->test_field->value);
     $this->assertTrue($this->container->get('password')->check('', $entity->test_field->value));
   }
 
@@ -108,7 +108,7 @@ class PasswordItemTest extends FieldKernelTestBase {
 
     // The string starts with the portable password string and is a hash of an
     // empty string.
-    $this->assertStringStartsWith('$S$', $entity->test_field->value);
+    $this->assertStringStartsWith('$2y$', $entity->test_field->value);
     $this->assertTrue($this->container->get('password')->check('', $entity->test_field->value));
   }
 

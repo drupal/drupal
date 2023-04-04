@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * The password compatibility module provides the password checking algorithm
+ * for user entities created with Drupal prior to version 10.1.x.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function phpass_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.phpass':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Password Compatibility module provides the password checking algorithm for user entities created with Drupal prior to version 10.1.x. For more information, see the <a href=":phpass">online documentation for the Password Compatibility module</a>.', [':phpass' => 'https://www.drupal.org/docs/core-modules-and-themes/core-modules/password-compatibility-module']) . '</p>';
+      return $output;
+
+  }
+}

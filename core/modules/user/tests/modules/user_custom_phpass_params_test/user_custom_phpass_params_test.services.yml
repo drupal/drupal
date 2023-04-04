@@ -1,4 +1,0 @@
-services:
-  password:
-    class: Drupal\Core\Password\PhpassHashedPassword
-    arguments: [19]

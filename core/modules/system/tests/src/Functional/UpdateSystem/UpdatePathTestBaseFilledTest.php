@@ -367,6 +367,7 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
       'options',
       'page_cache',
       'path',
+      'phpass',
       'responsive_image',
       'rest',
       'search',

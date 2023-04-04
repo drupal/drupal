@@ -93,3 +93,10 @@ function system_post_update_timestamp_formatter(array &$sandbox = NULL): void {
     return $update;
   });
 }
+
+/**
+ * Enable the password compatibility module.
+ */
+function system_post_update_enable_password_compatibility() {
+  \Drupal::service('module_installer')->install(['phpass']);
+}

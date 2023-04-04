@@ -1,0 +1,5 @@
+name: 'User custom password hash params test'
+type: module
+description: 'Support module for testing custom hashing password algorithm parameters.'
+package: Testing
+version: VERSION

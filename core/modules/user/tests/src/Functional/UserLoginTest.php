@@ -140,9 +140,6 @@ class UserLoginTest extends BrowserTestBase {
    * Tests user password is re-hashed upon login after changing $count_log2.
    */
   public function testPasswordRehashOnLogin() {
-    // Determine default log2 for phpass hashing algorithm.
-    $default_count_log2 = 16;
-
     // Retrieve instance of password hashing algorithm.
     $password_hasher = $this->container->get('password');
 
@@ -151,24 +148,32 @@ class UserLoginTest extends BrowserTestBase {
     $password = $account->passRaw;
     $this->drupalLogin($account);
     $this->drupalLogout();
-    // Load the stored user. The password hash should reflect $default_count_log2.
+
+    // Load the stored user. The password hash shouldn't need a rehash.
     $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
     $account = User::load($account->id());
-    $this->assertSame($default_count_log2, $password_hasher->getCountLog2($account->getPassword()));
 
-    // Change the required number of iterations by loading a test-module
-    // containing the necessary container builder code and then verify that the
-    // users password gets rehashed during the login.
-    $overridden_count_log2 = 19;
-    \Drupal::service('module_installer')->install(['user_custom_phpass_params_test']);
+    // Check that the stored password doesn't need rehash.
+    $this->assertFalse($password_hasher->needsRehash($account->getPassword()));
+
+    // The current hashing cost is set to 10 in the container. Increase cost by
+    // one, by enabling a module containing the necessary container changes.
+    \Drupal::service('module_installer')->install(['user_custom_pass_hash_params_test']);
     $this->resetAll();
+    // Reload the hashing service after container changes.
+    $password_hasher = $this->container->get('password');
+
+    // Check that the stored password does need rehash.
+    $this->assertTrue($password_hasher->needsRehash($account->getPassword()));
 
     $account->passRaw = $password;
     $this->drupalLogin($account);
     // Load the stored user, which should have a different password hash now.
     $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
-    $this->assertSame($overridden_count_log2, $password_hasher->getCountLog2($account->getPassword()));
+
+    // Check that the stored password doesn't need rehash.
+    $this->assertFalse($password_hasher->needsRehash($account->getPassword()));
     $this->assertTrue($password_hasher->check($password, $account->getPassword()));
   }
 

@@ -1,30 +1,24 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Password\PasswordHashingTest.
- */
+namespace Drupal\Tests\phpass\Password;
 
-namespace Drupal\Tests\Core\Password;
-
-use Drupal\Core\Password\PhpassHashedPassword;
-use Drupal\Core\Password\PasswordInterface;
+use Drupal\phpass\Password\PhpassHashedPassword;
 use Drupal\Tests\UnitTestCase;
 
 /**
  * Unit tests for password hashing API.
  *
- * @coversDefaultClass \Drupal\Core\Password\PhpassHashedPassword
- * @group System
+ * Legacy tests, deprecated in drupal:10.1.0 and removed from drupal:11.0.0 as
+ * soon as PhpassHashedPassword::__construct() with $corePassword parameter is
+ * enforced to be an instance of Drupal\Core\Password\PhpPassword.
+ *
+ * @see https://www.drupal.org/node/3322420
+ *
+ * @coversDefaultClass \Drupal\phpass\Password\PhpassHashedPassword
+ * @group phpass
+ * @group legacy
  */
-class PasswordHashingTest extends UnitTestCase {
-
-  /**
-   * The user for testing.
-   *
-   * @var \PHPUnit\Framework\MockObject\MockObject|\Drupal\user\UserInterface
-   */
-  protected $user;
+class LegacyPasswordHashingTest extends UnitTestCase {
 
   /**
    * The raw password.
@@ -59,6 +53,7 @@ class PasswordHashingTest extends UnitTestCase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->expectDeprecation('Calling Drupal\Core\Password\PhpassHashedPasswordBase::__construct() with numeric $countLog2 as the first parameter is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use PhpassHashedPasswordInterface::__construct() with $corePassword parameter set to an instance of Drupal\Core\Password\PhpPassword instead. See https://www.drupal.org/node/3322420');
     $this->password = $this->randomMachineName();
     $this->passwordHasher = new PhpassHashedPassword(1);
     $this->hashedPassword = $this->passwordHasher->hash($this->password);
@@ -66,14 +61,11 @@ class PasswordHashingTest extends UnitTestCase {
   }
 
   /**
-   * Tests the hash count boundaries are enforced.
-   *
-   * @covers ::enforceLog2Boundaries
+   * Tests invalid constructor arguments.
    */
-  public function testWithinBounds() {
-    $hasher = new FakePhpassHashedPassword();
-    $this->assertEquals(PhpassHashedPassword::MIN_HASH_COUNT, $hasher->enforceLog2Boundaries(1), "Min hash count enforced");
-    $this->assertEquals(PhpassHashedPassword::MAX_HASH_COUNT, $hasher->enforceLog2Boundaries(100), "Max hash count enforced");
+  public function testInvalidArguments() {
+    $this->expectException(\InvalidArgumentException::class);
+    new PhpassHashedPassword('not a number');
   }
 
   /**
@@ -91,7 +83,9 @@ class PasswordHashingTest extends UnitTestCase {
    *
    * @covers ::hash
    * @covers ::getCountLog2
+   * @covers ::base64Encode
    * @covers ::check
+   * @covers ::generateSalt
    * @covers ::needsRehash
    */
   public function testPasswordHashing() {
@@ -107,6 +101,7 @@ class PasswordHashingTest extends UnitTestCase {
   /**
    * Tests password rehashing.
    *
+   * @covers ::__construct
    * @covers ::hash
    * @covers ::getCountLog2
    * @covers ::check
@@ -125,66 +120,6 @@ class PasswordHashingTest extends UnitTestCase {
     $this->assertFalse($password_hasher->needsRehash($rehashed_password), 'Re-hashed password does not need a new hash.');
     $this->assertTrue($password_hasher->check($this->password, $rehashed_password), 'Password check succeeds with re-hashed password.');
     $this->assertTrue($this->passwordHasher->check($this->password, $rehashed_password), 'Password check succeeds with re-hashed password with original hasher.');
-  }
-
-  /**
-   * Verifies that passwords longer than 512 bytes are not hashed.
-   *
-   * @covers ::crypt
-   *
-   * @dataProvider providerLongPasswords
-   */
-  public function testLongPassword($password, $allowed) {
-
-    $hashed_password = $this->passwordHasher->hash($password);
-
-    if ($allowed) {
-      $this->assertNotFalse($hashed_password);
-    }
-    else {
-      $this->assertFalse($hashed_password);
-    }
-  }
-
-  /**
-   * Provides the test matrix for testLongPassword().
-   */
-  public function providerLongPasswords() {
-    // '512 byte long password is allowed.'
-    $passwords['allowed'] = [str_repeat('x', PasswordInterface::PASSWORD_MAX_LENGTH), TRUE];
-    // 513 byte long password is not allowed.
-    $passwords['too_long'] = [str_repeat('x', PasswordInterface::PASSWORD_MAX_LENGTH + 1), FALSE];
-
-    // Check a string of 3-byte UTF-8 characters, 510 byte long password is
-    // allowed.
-    $len = floor(PasswordInterface::PASSWORD_MAX_LENGTH / 3);
-    $diff = PasswordInterface::PASSWORD_MAX_LENGTH % 3;
-    $passwords['utf8'] = [str_repeat('€', $len), TRUE];
-    // 512 byte long password is allowed.
-    $passwords['ut8_extended'] = [$passwords['utf8'][0] . str_repeat('x', $diff), TRUE];
-
-    // Check a string of 3-byte UTF-8 characters, 513 byte long password is
-    // allowed.
-    $passwords['utf8_too_long'] = [str_repeat('€', $len + 1), FALSE];
-    return $passwords;
-  }
-
-}
-
-/**
- * A fake class for tests.
- */
-class FakePhpassHashedPassword extends PhpassHashedPassword {
-
-  public function __construct() {
-    // Noop.
-  }
-
-  /**
-   * Exposes this method as public for tests.
-   */
-  public function enforceLog2Boundaries($count_log2) {
-    return parent::enforceLog2Boundaries($count_log2);
   }
 
 }

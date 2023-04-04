@@ -28,6 +28,7 @@ class MigrateUserTest extends MigrateDrupal7TestBase {
     'link',
     'menu_ui',
     'node',
+    'phpass',
     'taxonomy',
     'telephone',
     'text',

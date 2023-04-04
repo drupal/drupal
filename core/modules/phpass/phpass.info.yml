@@ -1,0 +1,5 @@
+name: Password Compatibility
+type: module
+description: 'Provides the password checking algorithm for user entities created with Drupal prior to version 10.1.x.'
+package: Core
+version: VERSION
