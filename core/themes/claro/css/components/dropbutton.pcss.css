@@ -74,6 +74,15 @@
   height: var(--dropbutton-toggle-size);
 }
 
+.js .dropbutton-widget {
+  border-radius: var(--button-border-radius-size);
+  background-color: var(--button-bg-color);
+}
+
+.js .dropbutton-action {
+  border-inline-end: var(--dropbutton-border-size) solid white;
+}
+
 /* Variants. */
 .js.no-touchevents .dropbutton--small {
   height: var(--dropbutton-small-toggle-size);

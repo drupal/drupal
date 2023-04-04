@@ -66,6 +66,19 @@
   height: 3rem;
 }
 
+.js .dropbutton-widget {
+  border-radius: 2px;
+  background-color: #d3d4d9;
+}
+
+[dir="ltr"] .js .dropbutton-action {
+  border-right: 1px solid white;
+}
+
+[dir="rtl"] .js .dropbutton-action {
+  border-left: 1px solid white;
+}
+
 /* Variants. */
 
 .js.no-touchevents .dropbutton--small {
