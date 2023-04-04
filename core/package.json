@@ -115,7 +115,7 @@
     "terser": "^5.14.2",
     "terser-webpack-plugin": "^5.3.3",
     "underscore": "1.13.x",
-    "webpack": "^5.51.1",
+    "webpack": "^5.77.0",
     "webpack-cli": "^4.4.0"
   },
   "//": "'development is the default environment, and legacy is for transpiling the old jQuery codebase",
