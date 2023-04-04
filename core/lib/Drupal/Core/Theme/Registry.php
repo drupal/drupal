@@ -764,7 +764,11 @@ class Registry implements DestructableInterface {
     $this->runtimeRegistry = [];
 
     $this->registry = [];
-    Cache::invalidateTags(['theme_registry']);
+    // Installing and uninstalling themes doesn't invalidate caches because
+    // rendered output varies by theme, however the tabs on the appearance page
+    // depend on the theme list, so invalidate those via the local tasks cache
+    // tag.
+    Cache::invalidateTags(['theme_registry', 'local_task']);
     return $this;
   }
 

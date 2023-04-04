@@ -4,7 +4,6 @@ namespace Drupal\Core\Extension;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Asset\AssetCollectionOptimizerInterface;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigInstallerInterface;
 use Drupal\Core\Config\ConfigManagerInterface;
@@ -311,9 +310,6 @@ class ThemeInstaller implements ThemeInstallerInterface {
       $this->routeBuilder->setRebuildNeeded();
     }
 
-    // @todo It feels wrong to have the requirement to clear the local tasks
-    //   cache here.
-    Cache::invalidateTags(['local_task']);
     $this->themeRegistry->reset();
   }
 
