@@ -56,7 +56,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'contact_form' => 2,
       'contact_message' => 0,
       'editor' => 2,
-      'field_config' => 34,
+      'field_config' => 38,
       'field_storage_config' => 22,
       'file' => 2,
       'filter_format' => 7,
@@ -125,6 +125,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'Search',
       'System',
       'Taxonomy',
+      'Upload',
       'User',
       'Variable admin',
     ];

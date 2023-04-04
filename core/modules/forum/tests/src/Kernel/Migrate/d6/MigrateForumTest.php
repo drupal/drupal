@@ -50,6 +50,13 @@ class MigrateForumTest extends MigrateNodeTestBase {
   }
 
   /**
+   * Gets the path to the fixture file.
+   */
+  protected function getFixtureFilePath() {
+    return __DIR__ . '/../../../../fixtures/drupal6.php';
+  }
+
+  /**
    * Tests forum migration.
    */
   public function testForumMigration() {
