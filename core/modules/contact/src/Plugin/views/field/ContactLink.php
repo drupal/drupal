@@ -30,11 +30,7 @@ class ContactLink extends LinkBase {
    * {@inheritdoc}
    */
   protected function getUrlInfo(ResultRow $row) {
-    $entity = $this->getEntity($row);
-    if (!$entity) {
-      return NULL;
-    }
-    return Url::fromRoute('entity.user.contact_form', ['user' => $entity->id()]);
+    return Url::fromRoute('entity.user.contact_form', ['user' => $this->getEntity($row)->id()]);
   }
 
   /**
@@ -42,9 +38,6 @@ class ContactLink extends LinkBase {
    */
   protected function renderLink(ResultRow $row) {
     $entity = $this->getEntity($row);
-    if (!$entity) {
-      return '';
-    }
 
     $this->options['alter']['make_link'] = TRUE;
     $this->options['alter']['url'] = $this->getUrlInfo($row);

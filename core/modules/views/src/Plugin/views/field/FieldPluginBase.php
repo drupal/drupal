@@ -420,27 +420,12 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    */
   public function getEntity(ResultRow $values) {
     $relationship_id = $this->options['relationship'];
-    $entity = NULL;
     if ($relationship_id == 'none') {
-      $entity = $values->_entity;
+      return $values->_entity;
     }
     elseif (isset($values->_relationship_entities[$relationship_id])) {
-      $entity = $values->_relationship_entities[$relationship_id];
+      return $values->_relationship_entities[$relationship_id];
     }
-
-    if ($entity === NULL) {
-      \Drupal::logger('views')->error(
-        'The view %id failed to load an entity of type %entity_type at row %index for field %field',
-        [
-          '%id' => $this->view->id(),
-          '%entity_type' => $this->configuration['entity_type'],
-          '%index' => $values->index,
-          '%field' => $this->configuration['entity field'],
-        ]
-      );
-      return NULL;
-    }
-    return $entity;
   }
 
   /**
