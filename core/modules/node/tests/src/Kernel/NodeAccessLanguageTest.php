@@ -9,8 +9,7 @@ use Drupal\node\Entity\NodeType;
 use Drupal\user\Entity\User;
 
 /**
- * Tests node_access and select queries with node_access tag functionality with
- * multiple languages with a test node access module that is not language-aware.
+ * Tests multilingual node access with a module that is not language-aware.
  *
  * @group node
  */

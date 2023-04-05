@@ -9,8 +9,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
- * Adds a new locale and translates its name. Checks the validation of
- * translation strings and search results.
+ * Tests the validation of translation strings and search results.
  *
  * @group locale
  */

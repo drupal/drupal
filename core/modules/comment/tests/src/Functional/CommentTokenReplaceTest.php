@@ -14,8 +14,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\user\Entity\User;
 
 /**
- * Generates text using placeholders for dummy content to check comment token
- * replacement.
+ * Tests comment token replacement.
  *
  * @group comment
  */
