@@ -6,11 +6,8 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests XSS filtering.
- *
- * @see \Drupal\Component\Utility\Xss::filter()
- * @see \Drupal\Component\Utility\UrlHelper::filterBadProtocol
- * @see \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols
+ * Confirm that \Drupal\Component\Utility\Xss::filter() and check_url() work
+ * correctly, including invalid multi-byte sequences.
  *
  * @group Common
  */

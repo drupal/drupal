@@ -7,9 +7,8 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests the proper removal of submitted form values.
- *
- * @see \Drupal\Core\Form\FormState::cleanValues()
+ * Tests proper removal of submitted form values using
+ * \Drupal\Core\Form\FormState::cleanValues().
  *
  * @group Form
  */

@@ -5,7 +5,8 @@ namespace Drupal\Tests\language\Functional;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests that the language list is not empty when language is installed.
+ * Tests enabling Language if a module exists that calls
+ * LanguageManager::getLanguages() during installation.
  *
  * @group language
  */

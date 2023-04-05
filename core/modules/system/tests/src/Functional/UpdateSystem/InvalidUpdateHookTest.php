@@ -7,7 +7,8 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;
 
 /**
- * Tests that hook_update_8000() is disallowed.
+ * Tests that a module implementing hook_update_8000() causes an error to be
+ * displayed on update.
  *
  * @group Update
  */
