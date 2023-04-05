@@ -12,7 +12,7 @@ use Drupal\Core\Session\AccountSwitcherInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\destination\EntityContentBase;
 use Drupal\migrate\Row;
-use Drupal\user\UserInterface;
+use Drupal\user\UserNameItem;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -158,23 +158,22 @@ class EntityUser extends EntityContentBase {
    */
   protected function processStubRow(Row $row) {
     parent::processStubRow($row);
-    // Email address is not defined as required in the base field definition but
-    // is effectively required by the UserMailRequired constraint. This means
-    // that Entity::processStubRow() did not populate it - we do it here.
+
     $field_definitions = $this->entityFieldManager
       ->getFieldDefinitions($this->storage->getEntityTypeId(),
         $this->getKey('bundle'));
+
+    // Name is generated using a dedicated sample value generator to ensure
+    // uniqueness and a valid length.
+    // @todo Remove this as part of https://www.drupal.org/node/3352288.
+    $name = UserNameItem::generateSampleValue($field_definitions['name']);
+    $row->setDestinationProperty('name', reset($name));
+
+    // Email address is not defined as required in the base field definition but
+    // is effectively required by the UserMailRequired constraint. This means
+    // that Entity::processStubRow() did not populate it - we do it here.
     $mail = EmailItem::generateSampleValue($field_definitions['mail']);
     $row->setDestinationProperty('mail', reset($mail));
-
-    // @todo Work-around for https://www.drupal.org/node/2602066.
-    $name = $row->getDestinationProperty('name');
-    if (is_array($name)) {
-      $name = reset($name);
-    }
-    if (mb_strlen($name) > UserInterface::USERNAME_MAX_LENGTH) {
-      $row->setDestinationProperty('name', mb_substr($name, 0, UserInterface::USERNAME_MAX_LENGTH));
-    }
   }
 
   /**
