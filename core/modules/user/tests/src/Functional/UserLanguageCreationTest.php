@@ -6,7 +6,8 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests preferred language configuration and language selector access.
+ * Tests whether proper language is stored for new users and access to language
+ * selector.
  *
  * @group user
  */

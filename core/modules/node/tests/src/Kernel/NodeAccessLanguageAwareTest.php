@@ -10,7 +10,8 @@ use Drupal\user\Entity\User;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
- * Tests multilingual node access with a language-aware module.
+ * Tests node_access and select queries with node_access tag functionality with
+ * multiple languages with node_access_test_language which is language-aware.
  *
  * @group node
  */

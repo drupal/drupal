@@ -8,7 +8,8 @@ use Drupal\file\FileInterface;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Provides a base class for testing files with the file_test module.
+ * Base class for file tests that use the file_test module to test uploads and
+ * hooks.
  */
 abstract class FileManagedTestBase extends BrowserTestBase {
 

@@ -15,10 +15,8 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\menu_ui\Traits\MenuUiTrait;
 
 /**
- * Tests the menu UI.
- *
- * This test adds a custom menu, adds menu links to the custom menu and the
- * Tools menu, checks their data, and deletes them using the UI.
+ * Add a custom menu, add menu links to the custom menu and Tools menu, check
+ * their data, and delete them using the UI.
  *
  * @group menu_ui
  */

@@ -6,7 +6,8 @@ use Drupal\Core\Config\ConfigDuplicateUUIDException;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests configuration entity storage.
+ * Tests sync and importing config entities with IDs and UUIDs that match
+ * existing config.
  *
  * @group config
  */

@@ -16,8 +16,6 @@ use Drupal\user\Entity\User;
 use Drupal\file\Entity\File;
 
 /**
- * Tests entity CRUD via hooks.
- *
  * Tests the invocation of hooks when creating, inserting, loading, updating or
  * deleting an entity.
  *

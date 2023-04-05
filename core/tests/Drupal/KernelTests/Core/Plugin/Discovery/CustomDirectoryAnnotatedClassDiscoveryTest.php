@@ -6,7 +6,8 @@ use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
- * Tests discovery of annotated plugins in a custom directory.
+ * Tests that plugins in a custom directory are correctly discovered using
+ * annotated classes.
  *
  * @group Plugin
  */

@@ -7,7 +7,8 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 
 /**
- * Tests taxonomy token replacement.
+ * Generates text using placeholders for dummy content to check taxonomy token
+ * replacement.
  *
  * @group taxonomy
  */

@@ -10,7 +10,8 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
- * Tests the count of field data records.
+ * Tests counting field data records and the hasData() method on
+ * FieldStorageConfig entity.
  *
  * @group field
  * @see \Drupal\Core\Entity\FieldableEntityStorageInterface::countFieldData()

@@ -5,7 +5,8 @@ namespace Drupal\Tests\user\Functional;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Verifies that sensitive information is hidden from unauthorized users.
+ * Tests the user search page and verifies that sensitive information is hidden
+ * from unauthorized users.
  *
  * @group user
  */

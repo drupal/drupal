@@ -10,7 +10,8 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests contextual link display on the front page based on permissions.
+ * Tests if contextual links are showing on the front page depending on
+ * permissions.
  *
  * @group contextual
  */

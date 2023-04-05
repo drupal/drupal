@@ -11,7 +11,8 @@ use Drupal\user\Entity\User;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
- * Tests node access with multiple languages and two node access modules.
+ * Tests node access functionality with multiple languages and two node access
+ * modules.
  *
  * @group node
  */

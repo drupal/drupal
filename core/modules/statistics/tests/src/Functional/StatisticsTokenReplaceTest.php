@@ -5,7 +5,8 @@ namespace Drupal\Tests\statistics\Functional;
 use Drupal\Component\Render\FormattableMarkup;
 
 /**
- * Tests statistics token replacement.
+ * Generates text using placeholders for dummy content to check statistics token
+ * replacement.
  *
  * @group statistics
  */
