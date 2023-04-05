@@ -3,8 +3,7 @@
 namespace Drupal\Tests\comment\Functional;
 
 /**
- * Tests to ensure that appropriate and accessible markup is created for comment
- * titles.
+ * Tests that appropriate and accessible markup is created for comment titles.
  *
  * @group comment
  */

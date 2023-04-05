@@ -6,8 +6,7 @@ use Drupal\Component\Utility\Bytes;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Parse a predefined amount of bytes and compare the output with the expected
- * value.
+ * Tests format_size().
  *
  * @group Common
  */

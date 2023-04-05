@@ -9,8 +9,10 @@ use Drupal\Core\Site\Settings;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests \Drupal::formBuilder()->setCache() and
- * \Drupal::formBuilder()->getCache().
+ * Tests FormBuilder caching.
+ *
+ * @covers \Drupal\Core\Form\FormBuilder::getCache
+ * @covers \Drupal\Core\Form\FormBuilder::setCache
  *
  * @group Form
  */

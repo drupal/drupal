@@ -5,8 +5,7 @@ namespace Drupal\Tests\update\Functional;
 use Drupal\Core\Url;
 
 /**
- * Tests the Update Manager module through a series of functional tests using
- * mock XML data.
+ * Tests the semantic version handling in the Update Manager.
  *
  * @group update
  */

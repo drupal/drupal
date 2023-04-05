@@ -14,8 +14,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 
 /**
- * Generate events and verify dblog entries; verify user access to log reports
- * based on permissions.
+ * Verifies log entries and user access based on permissions.
  *
  * @group dblog
  */

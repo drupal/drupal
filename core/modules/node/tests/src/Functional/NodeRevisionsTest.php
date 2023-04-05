@@ -11,8 +11,7 @@ use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 
 /**
- * Create a node with revisions and test viewing, saving, reverting, and
- * deleting revisions for users with access for this content type.
+ * Tests per-content-type node CRUD operation permissions.
  *
  * @group node
  */

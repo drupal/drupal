@@ -5,8 +5,7 @@ namespace Drupal\Tests\node\Functional;
 use Drupal\node\Entity\NodeType;
 
 /**
- * Ensures that node access rebuild functions work correctly even
- * when other modules implements hook_node_grants().
+ * Tests node access rebuild functions with multiple node access modules.
  *
  * @group node
  */

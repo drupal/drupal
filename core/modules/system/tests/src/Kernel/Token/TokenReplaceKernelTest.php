@@ -9,8 +9,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\BubbleableMetadata;
 
 /**
- * Generates text using placeholders for dummy content to check token
- * replacement.
+ * Tests token replacement.
  *
  * @group system
  */
