@@ -8,9 +8,7 @@ use Drupal\filter\Plugin\FilterInterface;
 use Drupal\user\RoleInterface;
 
 /**
- * Tests the behavior of check_markup() when a filter or text format vanishes,
- * or when check_markup() is called in such a way that it is instructed to skip
- * all filters of the "FilterInterface::TYPE_HTML_RESTRICTOR" type.
+ * Tests HTML filtering with missing or skipped filters or text formats.
  *
  * @group filter
  */

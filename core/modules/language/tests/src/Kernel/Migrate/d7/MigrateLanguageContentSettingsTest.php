@@ -6,7 +6,9 @@ use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 
 /**
- * Tests migration of language content setting variables,
+ * Tests the migration of language-related settings.
+ *
+ * Settings tested include the language content setting variables,
  * language_content_type_$type, i18n_node_options_* and i18n_lock_node_*.
  *
  * @group migrate_drupal_7

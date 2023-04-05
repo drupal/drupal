@@ -8,8 +8,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests that the language select form element prints and submits the right
- * options.
+ * Tests the language selection form element.
  *
  * @group Form
  */

@@ -13,8 +13,7 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests themed output for each entity type in all available themes to ensure
- * entity labels are filtered for XSS.
+ * Tests XSS filtering for themed output for each entity type in all themes.
  *
  * @group Theme
  */

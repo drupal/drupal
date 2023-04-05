@@ -10,8 +10,7 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Generates text using placeholders for dummy content to check token
- * replacement.
+ * Tests token replacement.
  *
  * @group system
  */
