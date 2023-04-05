@@ -8,7 +8,8 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
- * Tests the theme administration user interface.
+ * Tests the theme interface functionality by enabling and switching themes, and
+ * using an administration theme.
  *
  * @group system
  */

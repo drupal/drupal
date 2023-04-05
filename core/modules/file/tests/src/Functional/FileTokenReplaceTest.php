@@ -8,7 +8,8 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\file\Entity\File;
 
 /**
- * Tests file token replacement.
+ * Generates text using placeholders for dummy content to check file token
+ * replacement.
  *
  * @group file
  */

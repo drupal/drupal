@@ -12,7 +12,8 @@ use Drupal\node\NodeInterface;
 use Drupal\Component\Serialization\Json;
 
 /**
- * Tests per-content-type node CRUD operation permissions.
+ * Create a node with revisions and test viewing, saving, reverting, and
+ * deleting revisions for users with access for this content type.
  *
  * @group node
  */

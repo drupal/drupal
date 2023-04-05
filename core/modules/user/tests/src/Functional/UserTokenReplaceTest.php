@@ -10,7 +10,8 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
 
 /**
- * Tests the replacement of user tokens.
+ * Generates text using placeholders for dummy content to check user token
+ * replacement.
  *
  * @group user
  */

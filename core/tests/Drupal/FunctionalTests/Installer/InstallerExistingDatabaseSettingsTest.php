@@ -5,7 +5,8 @@ namespace Drupal\FunctionalTests\Installer;
 use Drupal\Core\Database\Database;
 
 /**
- * Tests installation with database information in an existing settings file.
+ * Tests the installer with an existing settings file with database connection
+ * info.
  *
  * @group Installer
  */

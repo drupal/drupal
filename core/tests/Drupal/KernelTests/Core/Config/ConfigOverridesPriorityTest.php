@@ -6,13 +6,8 @@ use Drupal\Core\Language\Language;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests that config overrides are applied in the correct order.
- *
- * Overrides should be applied in the following order, from lowest priority
- * to highest:
- * - Language overrides.
- * - Module overrides.
- * - settings.php overrides.
+ * Tests that language, module and settings.php are applied in the correct
+ * order.
  *
  * @group config
  */

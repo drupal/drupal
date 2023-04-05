@@ -9,7 +9,8 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
 
 /**
- * Provides a base class for testing file uploads and hook invocations.
+ * Base class for file unit tests that use the file_test module to test uploads and
+ * hooks.
  */
 abstract class FileManagedUnitTestBase extends KernelTestBase {
 
