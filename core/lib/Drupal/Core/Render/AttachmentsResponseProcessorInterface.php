@@ -38,6 +38,10 @@ interface AttachmentsResponseProcessorInterface {
    * - 'html_head_link' (<link> tags in HTML <head>)
    * - 'http_header' (HTTP headers and status code)
    *
+   * Placeholders need to be rendered first in order to have all attachments
+   * available for processing. For an example, see
+   * \Drupal\Core\Render\HtmlResponseAttachmentsProcessor::renderPlaceholders()
+   *
    * @param \Drupal\Core\Render\AttachmentsInterface $response
    *   The response to process.
    *
