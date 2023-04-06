@@ -21,3 +21,6 @@
 %"PHPUnit\\Framework\\TestListenerDefaultImplementation".*is deprecated%
 %"PHPUnit\\Framework\\TestSuite".*is considered internal%
 %"PHPUnit\\TextUI\\DefaultResultPrinter".*is considered internal%
+
+# Symfony 7.
+%Method "Symfony\\Contracts\\Service\\ResetInterface::reset\(\)" might add "void" as a native return type declaration in the future. Do the same in implementation "Drupal\\Component\\DependencyInjection\\Container" now to avoid errors or add an explicit @return annotation to suppress this message.%
