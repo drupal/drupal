@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -283,10 +284,10 @@ class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPlug
     }
 
     $stripped_results = [];
-    foreach ($results as $id => $row) {
-      $entity = $row['#row']->_entity;
+    foreach (Element::children($results) as $id) {
+      $entity = $results[$id]['#row']->_entity;
       $stripped_results[$entity->bundle()][$id] = ViewsRenderPipelineMarkup::create(
-        Xss::filter($this->renderer->renderPlain($row), $allowed_tags)
+        Xss::filter($this->renderer->renderPlain($results[$id]), $allowed_tags)
       );
     }
 
