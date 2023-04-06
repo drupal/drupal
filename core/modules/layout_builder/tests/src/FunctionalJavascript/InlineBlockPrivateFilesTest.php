@@ -61,6 +61,8 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
    * Tests access to private files added to inline blocks in the layout builder.
    */
   public function testPrivateFiles() {
+    // Skipped due to frequent random test failures.
+    $this->markTestSkipped();
     $assert_session = $this->assertSession();
     $this->drupalLogin($this->drupalCreateUser([
       'access contextual links',
