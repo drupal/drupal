@@ -66,6 +66,13 @@ class ParamConversionEnhancer implements EnhancerInterface, EventSubscriberInter
     foreach (array_intersect_key($defaults, $variables) as $key => $value) {
       $raw_variables[$key] = $value;
     }
+    // Route defaults that do not start with a leading "_" are also
+    // parameters, even if they are not included in path or host patterns.
+    foreach ($route->getDefaults() as $name => $value) {
+      if (!isset($raw_variables[$name]) && substr($name, 0, 1) !== '_') {
+        $raw_variables[$name] = $value;
+      }
+    }
     return new ParameterBag($raw_variables);
   }
 
