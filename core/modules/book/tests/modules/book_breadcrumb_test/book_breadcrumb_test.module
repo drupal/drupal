@@ -11,7 +11,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
 
 /**
- * Implements hook_node_access().
+ * Implements hook_ENTITY_TYPE_access().
  */
 function book_breadcrumb_test_node_access(NodeInterface $node, $operation, AccountInterface $account) {
   $config = \Drupal::config('book_breadcrumb_test.settings');

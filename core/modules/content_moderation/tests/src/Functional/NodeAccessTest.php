@@ -165,7 +165,7 @@ class NodeAccessTest extends ModerationStateTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Now create a private node that the user is not granted access to by the
-    // node grants, but is granted access via hook_node_access().
+    // node grants, but is granted access via hook_ENTITY_TYPE_access().
     // @see node_access_test_node_access
     $node = $this->createNode([
       'type' => 'moderated_content',

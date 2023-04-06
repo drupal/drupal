@@ -144,7 +144,7 @@ function node_access_test_add_field(NodeTypeInterface $type) {
 }
 
 /**
- * Implements hook_node_access().
+ * Implements hook_ENTITY_TYPE_access().
  */
 function node_access_test_node_access(NodeInterface $node, $op, AccountInterface $account) {
   $secret_catalan = \Drupal::state()
