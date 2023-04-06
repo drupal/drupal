@@ -116,7 +116,7 @@ abstract class Connection {
    *
    * @var string
    */
-  private string $prefix;
+  protected string $prefix;
 
   /**
    * Replacements to fully qualify {table} placeholders in SQL strings.
@@ -126,7 +126,7 @@ abstract class Connection {
    *
    * @var string[]
    */
-  private array $tablePlaceholderReplacements;
+  protected array $tablePlaceholderReplacements;
 
   /**
    * The prefixes used by this database connection.
