@@ -120,6 +120,51 @@ class MachineNameTest extends WebDriverTestBase {
     // Validate if the element contains the correct value.
     $this->assertEquals($test_values[1]['expected'], $machine_name_1_field->getValue(), 'The ID field value must be equal to the php generated machine name');
 
+    // Test that machine name generation still occurs after an HTML 5
+    // validation failure.
+    $this->drupalGet('form-test/machine-name');
+    $this->assertSession()->buttonExists('Submit')->press();
+
+    // Assert all fields are initialized correctly.
+    $this->assertNotEmpty($machine_name_1_value, 'Machine name field 1 must be initialized');
+    $this->assertNotEmpty($machine_name_2_value, 'Machine name field 2 must be initialized');
+    $this->assertNotEmpty($machine_name_3_value, 'Machine name field 3 must be initialized');
+
+    // Assert that a machine name based on a default value is initialized.
+    $this->assertJsCondition('jQuery("#edit-machine-name-3-label-machine-name-suffix .machine-name-value").html() == "yet_another_machine_name"');
+
+    // Test each value for conversion to a machine name.
+    foreach ($test_values as $test_info) {
+      // Set the value for the field, triggering the machine name update.
+      $title_1->setValue($test_info['input']);
+
+      // Wait the set timeout for fetching the machine name.
+      $this->assertJsCondition('jQuery("#edit-machine-name-1-label-machine-name-suffix .machine-name-value").html() == "' . $test_info['expected'] . '"');
+
+      // Validate the generated machine name.
+      $this->assertEquals($test_info['expected'], $machine_name_1_value->getHtml(), $test_info['message']);
+
+      // Validate the second machine name field is empty.
+      $this->assertEmpty($machine_name_2_value->getHtml(), 'The second machine name field should still be empty');
+    }
+
+    // Validate the machine name field is hidden. Elements are visually hidden
+    // using positioning, isVisible() will therefore not work.
+    $this->assertTrue($machine_name_1_wrapper->hasClass('hidden'), 'The ID field must not be visible');
+    $this->assertTrue($machine_name_2_wrapper->hasClass('hidden'), 'The ID field must not be visible');
+
+    // Test switching back to the manual editing mode by clicking the edit link.
+    $button_1->click();
+
+    // Validate the visibility of the machine name field.
+    $this->assertFalse($machine_name_1_wrapper->hasClass('hidden'), 'The ID field must now be visible');
+
+    // Validate the visibility of the second machine name field.
+    $this->assertTrue($machine_name_2_wrapper->hasClass('hidden'), 'The ID field must not be visible');
+
+    // Validate if the element contains the correct value.
+    $this->assertEquals($test_values[1]['expected'], $machine_name_1_field->getValue(), 'The ID field value must be equal to the php generated machine name');
+
     $assert = $this->assertSession();
     $this->drupalGet('/form-test/form-test-machine-name-validation');
 
@@ -132,7 +177,16 @@ class MachineNameTest extends WebDriverTestBase {
 
     // Test a successful submit after using AJAX.
     $assert->fieldExists('Name')->setValue('test 1');
-    $assert->fieldExists('id')->setValue('test_1');
+    $machine_name_value = $page->find('css', '#edit-name-machine-name-suffix .machine-name-value');
+    $this->assertNotEmpty($machine_name_value, 'Machine name field must be initialized');
+    $this->assertJsCondition('jQuery("#edit-name-machine-name-suffix .machine-name-value").html() == "' . 'test_1' . '"');
+
+    // Ensure that machine name generation still occurs after a non-HTML 5
+    // validation failure.
+    $this->assertEquals('test_1', $machine_name_value->getHtml(), $test_values[1]['message']);
+    $machine_name_wrapper = $page->find('css', '#edit-id')->getParent();
+    // Machine name field should not expand after failing validation.
+    $this->assertTrue($machine_name_wrapper->hasClass('hidden'), 'The ID field must not be visible');
     $assert->selectExists('snack')->selectOption('apple');
     $assert->assertWaitOnAjaxRequest();
     $assert->buttonExists('Save')->press();

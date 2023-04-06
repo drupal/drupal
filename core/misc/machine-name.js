@@ -47,6 +47,11 @@
       function clickEditHandler(e) {
         const data = e.data;
         data.$wrapper.removeClass('hidden');
+        if (data.$target.attr('data-machine-name-require-when-visible')) {
+          data.$target
+            .attr('required', true)
+            .removeAttr('data-machine-name-require-when-visible');
+        }
         data.$target.trigger('focus');
         data.$suffix.hide();
         data.$source.off('.machineName');
@@ -110,14 +115,25 @@
         ) {
           return;
         }
-        // Skip processing upon a form validation error on the machine name.
-        if ($target.hasClass('error')) {
+        // Skip processing upon a form validation error on a non-empty
+        // machine name.
+        if (
+          $target.hasClass('error') &&
+          $target[0].value &&
+          $target[0].value.trim().length
+        ) {
           return;
         }
         // Figure out the maximum length for the machine name.
         options.maxlength = $target.attr('maxlength');
         // Hide the form item container of the machine name form element.
         $wrapper.addClass('hidden');
+        if ($target.attr('required')) {
+          $target
+            .removeAttr('required')
+            .attr('data-machine-name-require-when-visible');
+        }
+
         // Initial machine name from the target field default value.
         const machine = $target[0].value;
         // Append the machine name preview to the source field.
@@ -176,10 +192,6 @@
             // Initialize machine name preview.
             .trigger('formUpdated.machineName');
         }
-
-        // Add a listener for an invalid event on the machine name input
-        // to show its container and focus it.
-        $target.on('invalid', eventData, clickEditHandler);
       });
     },
 
