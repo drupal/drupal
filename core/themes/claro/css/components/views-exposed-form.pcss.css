@@ -17,48 +17,45 @@
  * has been resolved.
  */
 
-.views-exposed-form.views-exposed-form {
-  display: flex;
-  flex-wrap: wrap;
-  margin-top: var(--space-l);
-  margin-bottom: var(--space-l);
-  padding: var(--space-xs) var(--space-l) var(--space-l) var(--space-l);
-  border: var(--details-border-size) solid var(--details-border-color);
-  border-radius: var(--details-border-size-radius);
-  background-color: var(--color-white);
-  box-shadow: var(--details-box-shadow);
+.views-exposed-form {
+  &.views-exposed-form {
+    display: flex;
+    flex-wrap: wrap;
+    margin-block: var(--space-l);
+    padding: var(--space-xs) var(--space-l) var(--space-l) var(--space-l);
+    border: var(--details-border-size) solid var(--details-border-color);
+    border-radius: var(--details-border-size-radius);
+    background-color: var(--color-white);
+    box-shadow: var(--details-box-shadow);
+  }
 }
-.views-exposed-form--preview.views-exposed-form--preview {
-  margin-top: 0;
-}
-
-.views-exposed-form__item.views-exposed-form__item {
-  max-width: 100%;
-  margin: var(--space-s) var(--space-xs) 0 0; /* LTR */
-}
-[dir="rtl"] .views-exposed-form__item.views-exposed-form__item {
-  margin-right: 0;
-  margin-left: var(--space-xs);
+.views-exposed-form--preview {
+  &.views-exposed-form--preview {
+    margin-top: 0;
+  }
 }
 
-.views-exposed-form__item--preceding-actions.views-exposed-form__item--preceding-actions {
-  margin-right: var(--space-m); /* LTR */
-}
-[dir="rtl"] .views-exposed-form__item--preceding-actions.views-exposed-form__item--preceding-actions {
-  margin-right: 0;
-  margin-left: var(--space-m);
-}
-
-.views-exposed-form__item--actions.views-exposed-form__item--actions .button {
-  margin-top: 0;
-  margin-bottom: 0;
+.views-exposed-form__item {
+  &.views-exposed-form__item {
+    max-width: 100%;
+    margin-block: var(--space-s) 0;
+    margin-inline: 0 var(--space-xs);
+  }
 }
 
-.views-exposed-form__item--actions.views-exposed-form__item--actions .button:last-child {
-  margin-right: 0;
+.views-exposed-form__item--preceding-actions {
+  &.views-exposed-form__item--preceding-actions {
+    margin-inline-end: var(--space-m);
+  }
 }
-[dir="rtl"] .views-exposed-form__item--actions.views-exposed-form__item--actions:last-child {
-  margin-left: 0;
+
+.views-exposed-form__item--actions {
+  &.views-exposed-form__item--actions .button {
+    margin-block: 0;
+    &:last-child {
+      margin-inline-end: 0;
+    }
+  }
 }
 
 .views-exposed-form .form-item--no-label,
