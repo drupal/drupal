@@ -44,12 +44,7 @@
  */
 
 .js .button:not(.js-hide) + .ajax-progress--throbber {
-  margin-left: 0; /* LTR */
-}
-
-[dir="rtl"].js .button:not(.js-hide) + .ajax-progress--throbber {
-  margin-right: 0;
-  margin-left: var(--ajax-progress-margin-horizontal);
+  margin-inline-start: 0;
 }
 
 /**
@@ -58,13 +53,7 @@
 
 .js .form-type--managed-file .button:not(.js-hide) + .ajax-progress--throbber,
 .js .file-operations-cell .button:not(.js-hide) + .ajax-progress--throbber {
-  margin-left: var(--ajax-progress-margin-horizontal); /* LTR */
-}
-
-[dir="rtl"].js .form-type--managed-file .button:not(.js-hide) + .ajax-progress--throbber,
-[dir="rtl"].js .file-operations-cell .button:not(.js-hide) + .ajax-progress--throbber {
-  margin-right: var(--ajax-progress-margin-horizontal);
-  margin-left: var(--ajax-progress-margin-horizontal);
+  margin-inline-start: var(--ajax-progress-margin-horizontal); /* LTR */
 }
 
 .ajax-progress__throbber {
@@ -79,13 +68,8 @@
 
 .ajax-progress__message {
   display: inline-block;
-  padding-left: var(--ajax-progress-margin-horizontal);
+  padding-inline-start: var(--ajax-progress-margin-horizontal);
   font-size: var(--font-size-label);
-}
-
-[dir="rtl"] .ajax-progress__message {
-  padding-right: var(--ajax-progress-margin-horizontal);
-  padding-left: 0;
 }
 
 /**
@@ -96,8 +80,8 @@
 .ui-dialog .ajax-progress--throbber {
   position: fixed;
   z-index: 1000;
-  top: 50%;
-  left: 50%;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
   box-sizing: border-box;
   width: 3.5rem; /* 56px */
   height: 3.5rem;
@@ -111,8 +95,8 @@
 .ajax-progress__throbber--fullscreen,
 .ui-dialog .ajax-progress__throbber {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
   width: 1.75rem; /* 28px */
   height: 1.75rem; /* 28px */
   margin: -0.875rem;
