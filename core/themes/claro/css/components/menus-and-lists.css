@@ -4,44 +4,49 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
+
 /**
  * Menus and lists.
+ *
+ * These classes are used in claro-toolbar-menu and any list items.
  */
+
+.item-list,
+.menu-item {
+  --item-list-spacing-l: var(--space-l);
+  --item-list-spacing-m: var(--space-m);
+}
+
 .item-list ul {
-  margin: 0.25em 0 0.25em 1.5em; /* LTR */
-  list-style-type: disc;
-  list-style-image: none;
+  margin-block: 0.25rem;
+  margin-inline: var(--item-list-spacing-l) 0;
+  list-style: disc;
 }
-[dir="rtl"] .item-list ul {
-  margin: 0.25em 1.5em 0.25em 0;
-}
+
 .item-list ul li,
 .menu-item {
-  list-style-type: disc;
-  list-style-image: none;
+  list-style: disc;
 }
+
 .menu-item {
   margin: 0;
 }
+
 .item-list ul li.collapsed,
 .menu-item--collapsed {
-  list-style-type: disc;
-  list-style-image: url(../../images/menu-collapsed.png);
+  list-style: disc;
 }
+
 .item-list ul li.expanded,
 .menu-item--expanded {
-  list-style-type: circle;
-  list-style-image: url(../../images/menu-expanded.png);
+  list-style: circle;
 }
+
 ul.links li,
 ul.inline li {
-  padding-right: 1em; /* LTR */
+  padding-inline-end: var(--item-list-spacing-m);
 }
-[dir="rtl"] ul.links li,
-[dir="rtl"] ul.inline li {
-  padding-right: 0;
-  padding-left: 1em;
-}
+
 ul.inline li {
   display: inline;
 }
