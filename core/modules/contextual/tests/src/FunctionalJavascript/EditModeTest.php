@@ -35,15 +35,29 @@ class EditModeTest extends WebDriverTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * The administration theme name.
+   *
+   * @var string
+   */
+  protected $adminTheme = 'claro';
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
 
+    \Drupal::service('theme_installer')->install([$this->adminTheme]);
+    \Drupal::configFactory()
+      ->getEditable('system.theme')
+      ->set('admin', $this->adminTheme)
+      ->save();
+
     $this->drupalLogin($this->createUser([
       'administer blocks',
       'access contextual links',
       'access toolbar',
+      'view the administration theme',
     ]));
     $this->placeBlock('system_powered_by_block', ['id' => 'powered']);
   }
@@ -86,6 +100,13 @@ class EditModeTest extends WebDriverTestBase {
       // correct after toggling the edit mode at least once.
       $this->assertAnnounceEditMode();
       $this->assertSame($expected_restricted_tab_count, $this->getTabbableElementsCount());
+
+      // Test while Edit Mode is enabled it doesn't interfere with pages with
+      // no contextual links.
+      $this->drupalGet('admin/structure/block');
+      $web_assert->elementContains('css', 'h1.page-title', 'Block layout');
+      $this->assertEquals(0, count($page->findAll('css', '[data-contextual-id]')));
+      $this->assertGreaterThan(0, $this->getTabbableElementsCount());
     }
 
   }
