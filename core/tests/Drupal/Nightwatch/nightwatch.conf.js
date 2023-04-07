@@ -56,6 +56,10 @@ module.exports = {
   },
   test_settings: {
     default: {
+      globals: {
+        defaultTheme: 'olivero',
+        adminTheme: 'claro',
+      },
       selenium_port: process.env.DRUPAL_TEST_WEBDRIVER_PORT,
       selenium_host: process.env.DRUPAL_TEST_WEBDRIVER_HOSTNAME,
       default_path_prefix: process.env.DRUPAL_TEST_WEBDRIVER_PATH_PREFIX || '',

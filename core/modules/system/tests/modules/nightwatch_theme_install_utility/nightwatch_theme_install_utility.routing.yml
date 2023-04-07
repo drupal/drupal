@@ -1,0 +1,13 @@
+nightwatch_utility.theme_install_default:
+  path: '/admin/theme/install_default/{theme}'
+  defaults:
+    _controller: '\Drupal\nightwatch_theme_install_utility\Controller\ThemeInstallController::installDefault'
+  requirements:
+    _permission: 'administer themes'
+
+nightwatch_utility.theme_install_admin:
+  path: '/admin/theme/install_admin/{theme}'
+  defaults:
+    _controller: '\Drupal\nightwatch_theme_install_utility\Controller\ThemeInstallController::installAdmin'
+  requirements:
+    _permission: 'administer themes'

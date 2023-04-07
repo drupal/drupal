@@ -1,0 +1,5 @@
+name: 'Nightwatch theme install utility'
+type: module
+description: 'Helper module facilitate theme installation in Nightwatch tests'
+package: Testing
+version: VERSION
