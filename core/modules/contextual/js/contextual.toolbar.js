@@ -32,8 +32,9 @@
         // rather than view mode.
         // @see Drupal.contextualToolbar.VisualView.persist
         isViewing:
+          document.querySelector('body .contextual-region') === null ||
           localStorage.getItem('Drupal.contextualToolbar.isViewing') !==
-          'false',
+            'false',
       },
       {
         contextualCollection: Drupal.contextual.collection,
