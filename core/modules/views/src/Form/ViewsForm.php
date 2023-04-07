@@ -157,7 +157,7 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
     $form = [];
 
     $query = $this->requestStack->getCurrentRequest()->query->all();
-    $query = UrlHelper::filterQueryParameters($query, [], '');
+    $query = UrlHelper::filterQueryParameters($query, ['_wrapper_format'], '');
 
     $options = ['query' => $query];
     $form['#action'] = $view->hasUrl() ? $view->getUrl()->setOptions($options)->toString() : Url::fromRoute('<current>')->setOptions($options)->toString();

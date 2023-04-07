@@ -65,7 +65,7 @@ class AjaxBasePageNegotiator implements ThemeNegotiatorInterface {
    * {@inheritdoc}
    */
   public function applies(RouteMatchInterface $route_match) {
-    $ajax_page_state = $this->requestStack->getCurrentRequest()->request->all('ajax_page_state');
+    $ajax_page_state = $this->requestStack->getCurrentRequest()->get('ajax_page_state');
     return !empty($ajax_page_state['theme']) && isset($ajax_page_state['theme_token']);
   }
 
@@ -73,7 +73,7 @@ class AjaxBasePageNegotiator implements ThemeNegotiatorInterface {
    * {@inheritdoc}
    */
   public function determineActiveTheme(RouteMatchInterface $route_match) {
-    $ajax_page_state = $this->requestStack->getCurrentRequest()->request->all('ajax_page_state');
+    $ajax_page_state = $this->requestStack->getCurrentRequest()->get('ajax_page_state');
     $theme = $ajax_page_state['theme'];
     $token = $ajax_page_state['theme_token'];
 

@@ -325,6 +325,13 @@
         elementSettings.url = href;
         elementSettings.event = 'click';
       }
+      const type = $linkElement.data('ajax-type');
+      /**
+       * In case of setting custom ajax type for link we rewrite ajax.type.
+       */
+      if (type) {
+        elementSettings.type = type;
+      }
       Drupal.ajax(elementSettings);
     });
   };
@@ -391,6 +398,7 @@
    */
   Drupal.Ajax = function (base, element, elementSettings) {
     const defaults = {
+      type: 'POST',
       event: element ? 'mousedown' : null,
       keypress: true,
       selector: base ? `#${base}` : null,
@@ -591,7 +599,7 @@
       },
       dataType: 'json',
       jsonp: false,
-      type: 'POST',
+      type: ajax.type,
     };
 
     if (elementSettings.dialog) {

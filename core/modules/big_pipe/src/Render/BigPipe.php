@@ -465,7 +465,7 @@ class BigPipe {
       // - the HTML to load the CSS can be rendered.
       // - the HTML to load the JS (at the top) can be rendered.
       $fake_request = $this->requestStack->getMainRequest()->duplicate();
-      $fake_request->request->set('ajax_page_state', ['libraries' => implode(',', $cumulative_assets->getAlreadyLoadedLibraries())]);
+      $fake_request->query->set('ajax_page_state', ['libraries' => implode(',', $cumulative_assets->getAlreadyLoadedLibraries())]);
       try {
         $html_response = $this->filterEmbeddedResponse($fake_request, $html_response);
       }
@@ -575,7 +575,7 @@ class BigPipe {
       // - the attachments associated with the response are finalized, which
       //   allows us to track the total set of asset libraries sent in the
       //   initial HTML response plus all embedded AJAX responses sent so far.
-      $fake_request->request->set('ajax_page_state', ['libraries' => implode(',', $cumulative_assets->getAlreadyLoadedLibraries())] + $cumulative_assets->getSettings()['ajaxPageState']);
+      $fake_request->query->set('ajax_page_state', ['libraries' => implode(',', $cumulative_assets->getAlreadyLoadedLibraries())] + $cumulative_assets->getSettings()['ajaxPageState']);
       try {
         $ajax_response = $this->filterEmbeddedResponse($fake_request, $ajax_response);
       }

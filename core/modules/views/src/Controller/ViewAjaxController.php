@@ -12,8 +12,6 @@ use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Path\CurrentPathStack;
-use Drupal\Core\Render\BubbleableMetadata;
-use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RedirectDestinationInterface;
 use Drupal\Core\Ajax\ScrollTopCommand;
@@ -112,10 +110,10 @@ class ViewAjaxController implements ContainerInjectionInterface {
    *   Thrown when the view was not found.
    */
   public function ajaxView(Request $request) {
-    $name = $request->request->get('view_name');
-    $display_id = $request->request->get('view_display_id');
+    $name = $request->get('view_name');
+    $display_id = $request->get('view_display_id');
     if (isset($name) && isset($display_id)) {
-      $args = $request->request->get('view_args', '');
+      $args = $request->get('view_args', '');
       $args = $args !== '' ? explode('/', Html::decodeEntities($args)) : [];
 
       // Arguments can be empty, make sure they are passed on as NULL so that
@@ -124,10 +122,10 @@ class ViewAjaxController implements ContainerInjectionInterface {
         return ($arg == '' ? NULL : $arg);
       }, $args);
 
-      $path = $request->request->get('view_path');
-      $dom_id = $request->request->get('view_dom_id');
+      $path = $request->get('view_path');
+      $dom_id = $request->get('view_dom_id');
       $dom_id = isset($dom_id) ? preg_replace('/[^a-zA-Z0-9_-]+/', '-', $dom_id) : NULL;
-      $pager_element = $request->request->get('pager_element');
+      $pager_element = $request->get('pager_element');
       $pager_element = isset($pager_element) ? intval($pager_element) : NULL;
 
       $response = new ViewAjaxResponse();
@@ -164,10 +162,9 @@ class ViewAjaxController implements ContainerInjectionInterface {
           $this->currentPath->setPath('/' . ltrim($path, '/'), $request);
         }
 
-        // Add all POST data, because AJAX is always a post and many things,
+        // Add all POST data, because AJAX is sometimes a POST and many things,
         // such as tablesorts, exposed filters and paging assume GET.
         $request_all = $request->request->all();
-        unset($request_all['ajax_page_state']);
         $query_all = $request->query->all();
         $request->query->replace($request_all + $query_all);
 
@@ -190,16 +187,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
         // Reuse the same DOM id so it matches that in drupalSettings.
         $view->dom_id = $dom_id;
 
-        $context = new RenderContext();
-        $preview = $this->renderer->executeInRenderContext($context, function () use ($view, $display_id, $args) {
-          return $view->preview($display_id, $args);
-        });
-        if (!$context->isEmpty()) {
-          $bubbleable_metadata = $context->pop();
-          BubbleableMetadata::createFromRenderArray($preview)
-            ->merge($bubbleable_metadata)
-            ->applyTo($preview);
-        }
+        $preview = $view->preview($display_id, $args);
         $response->addCommand(new ReplaceCommand(".js-view-dom-id-$dom_id", $preview));
         $response->addCommand(new PrependCommand(".js-view-dom-id-$dom_id", ['#type' => 'status_messages']));
 
