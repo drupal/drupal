@@ -125,6 +125,12 @@ ESLINT_CONFIG_PASSING_FILE_CHANGED=0
 #  - core/.stylelintrc.json
 STYLELINT_CONFIG_FILE_CHANGED=0
 
+# This variable will be set to one when JavaScript packages files are changed.
+# changed:
+#  - core/package.json
+#  - core/yarn.lock
+JAVASCRIPT_PACKAGES_CHANGED=0
+
 # This variable will be set when a Drupal-specific CKEditor 5 plugin has changed
 # it is used to make sure the compiled JS is valid.
 CKEDITOR5_PLUGINS_CHANGED=0
@@ -150,6 +156,7 @@ for FILE in $FILES; do
   if [[ $FILE == "core/package.json" || $FILE == "core/yarn.lock" ]]; then
     ESLINT_CONFIG_PASSING_FILE_CHANGED=1;
     STYLELINT_CONFIG_FILE_CHANGED=1;
+    JAVASCRIPT_PACKAGES_CHANGED=1;
   fi;
 
   if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.js$ ]] && [[ $FILE =~ ^core/modules/ckeditor5/js/build || $FILE =~ ^core/modules/ckeditor5/js/ckeditor5_plugins ]]; then
@@ -275,6 +282,25 @@ if [[ "$DRUPALCI" == "1" ]] && [[ $CKEDITOR5_PLUGINS_CHANGED == "1" ]]; then
     printf "\nDrupal-specific CKEditor 5 plugins: ${red}failed${reset}\n"
   else
     printf "\nDrupal-specific CKEditor 5 plugins: ${green}passed${reset}\n"
+  fi
+  cd $TOP_LEVEL
+  # Add a separator line to make the output easier to read.
+  printf "\n"
+  printf -- '-%.0s' {1..100}
+  printf "\n"
+fi
+
+# When JavaScript packages change, then rerun all JavaScript style checks.
+if [[ "$JAVASCRIPT_PACKAGES_CHANGED" == "1" ]]; then
+  cd "$TOP_LEVEL/core"
+  yarn run build:css --check
+  CORRECTCSS=$?
+  if [ "$CORRECTCSS" -ne "0" ]; then
+    FINAL_STATUS=1
+    printf "\n${red}ERROR: The compiled CSS from the PCSS files"
+    printf "\n       does not match the current CSS files. Some added"
+    printf "\n       or updated JavaScript package made changes."
+    printf "\n       Recompile the CSS with: yarn run build:css${reset}\n\n"
   fi
   cd $TOP_LEVEL
   # Add a separator line to make the output easier to read.
