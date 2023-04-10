@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityReferenceSelection\SelectionWithAutocreateInterface
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\Exception\UnsupportedEntityTypeDefinitionException;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
@@ -451,8 +452,17 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
         $query->condition($entity_type->getKey('id'), NULL, '=');
         return $query;
       }
-      else {
+      elseif ($entity_type->hasKey('bundle')) {
         $query->condition($entity_type->getKey('bundle'), $configuration['target_bundles'], 'IN');
+      }
+      else {
+        // If 'target_bundle' is set and entity type doesn't support bundles
+        // something is wrong.
+        $message = \sprintf(
+          "Trying to use non-empty 'target_bundle' configuration on entity type '%s' without bundle support.",
+          $entity_type->id(),
+        );
+        throw new UnsupportedEntityTypeDefinitionException($message);
       }
     }
 

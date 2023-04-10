@@ -11,6 +11,10 @@ use Drupal\Core\Plugin\PluginFormInterface;
  * @see \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManager
  * @see \Drupal\Core\Entity\Annotation\EntityReferenceSelection
  * @see plugin_api
+ *
+ * @throws \Drupal\Core\Entity\Exception\UnsupportedEntityTypeDefinitionException
+ *   Thrown when selection received unexpected parameters and bypasses usual
+ *   data validation conditions.
  */
 interface SelectionInterface extends PluginFormInterface {
 
