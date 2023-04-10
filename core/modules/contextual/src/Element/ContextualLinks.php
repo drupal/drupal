@@ -3,6 +3,7 @@
 namespace Drupal\contextual\Element;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Render\Element\RenderElement;
 use Drupal\Core\Url;
 
@@ -71,6 +72,8 @@ class ContextualLinks extends RenderElement {
       ];
       $items += $contextual_links_manager->getContextualLinksArrayByGroup($group, $args['route_parameters'], $args['metadata']);
     }
+
+    uasort($items, [SortArray::class, 'sortByWeightElement']);
 
     // Transform contextual links into parameters suitable for links.html.twig.
     $links = [];

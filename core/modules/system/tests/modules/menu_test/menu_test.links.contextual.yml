@@ -3,6 +3,7 @@ menu_test.contextual_hidden_manage:
   group: menu_test_menu
   route_name: menu_test.contextual_hidden_manage
   class: '\Drupal\menu_test\Plugin\Menu\ContextualLink\TestContextualLink'
+  weight: 2
 
 menu_test.contextual_hidden_manage_edit:
   title: 'Edit menu - contextual'
@@ -13,8 +14,10 @@ menu_test.contextual_hidden_manage_edit:
       class: ['use-ajax']
       data-dialog-type: 'modal'
       data-is-something: TRUE
+  weight: 1
 
 menu_test.hidden_block_configure:
   title: 'Configure block'
   group: menu_test_block
   route_name: menu_test.hidden_block_configure
+  weight: 0
