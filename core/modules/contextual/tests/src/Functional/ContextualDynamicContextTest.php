@@ -161,6 +161,11 @@ class ContextualDynamicContextTest extends BrowserTestBase {
     $this->drupalGet(Url::fromRoute('menu_test.contextual_test'));
     $this->assertSession()->assertEscaped("<script>alert('Welcome to the jungle!')</script>");
     $this->assertSession()->responseContains('<li><a href="' . base_path() . 'menu-test-contextual/1/edit" class="use-ajax" data-dialog-type="modal" data-is-something>Edit menu - contextual</a></li>');
+    // Test contextual links respects the weight set in *.links.contextual.yml.
+    $firstLink = $this->assertSession()->elementExists('css', 'ul.contextual-links li:nth-of-type(1) a');
+    $secondLink = $this->assertSession()->elementExists('css', 'ul.contextual-links li:nth-of-type(2) a');
+    $this->assertEquals(base_path() . 'menu-test-contextual/1/edit', $firstLink->getAttribute('href'));
+    $this->assertEquals(base_path() . 'menu-test-contextual/1', $secondLink->getAttribute('href'));
   }
 
   /**
