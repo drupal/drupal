@@ -44,8 +44,10 @@ use Drupal\Core\Render\RendererInterface;
  * $user = User::load(1);
  *
  * // [date:...] tokens use the current date automatically.
+ * $token_service = \Drupal::token();
  * $data = array('node' => $node, 'user' => $user);
- * return Token::replace($text, $data);
+ * $result = $token_service->replace($text, $data);
+ * return $result
  * @endcode
  *
  * Some tokens may be chained in the form of [$type:$pointer:$name], where $type
