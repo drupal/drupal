@@ -20,7 +20,7 @@ class ColorTest extends TestCase {
    * @param string $value
    *   The hex color value.
    *
-   * @dataProvider providerTestValidateHex()
+   * @dataProvider providerTestValidateHex
    */
   public function testValidateHex($expected, $value) {
     $this->assertSame($expected, Color::validateHex($value));

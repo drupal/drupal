@@ -280,7 +280,7 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
    *   contains the source role id, an array of valid permissions and an array
    *   of invalid permissions.
    *
-   * @dataProvider providerTestUserRole()
+   * @dataProvider providerTestUserRole
    */
   public function testUserRole(array $modules, array $migrations, array $role_data) {
     if ($modules) {

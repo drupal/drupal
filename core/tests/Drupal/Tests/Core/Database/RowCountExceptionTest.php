@@ -31,7 +31,7 @@ class RowCountExceptionTest extends UnitTestCase {
 
   /**
    * @covers ::__construct
-   * @dataProvider providerTestExceptionMessage()
+   * @dataProvider providerTestExceptionMessage
    */
   public function testExceptionMessage($expected, $message) {
     $e = new RowCountException($message);

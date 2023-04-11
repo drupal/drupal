@@ -1851,11 +1851,6 @@ parameters:
 			path: modules/migrate/tests/src/Unit/MigrateSqlIdMapTest.php
 
 		-
-			message: "#^@dataProvider providerTestLog\\(\\) related method not found\\.$#"
-			count: 1
-			path: modules/migrate/tests/src/Unit/process/LogTest.php
-
-		-
 			message: "#^Variable \\$sub_process_plugins might not be defined\\.$#"
 			count: 2
 			path: modules/migrate/tests/src/Unit/process/SubProcessTest.php
@@ -2706,11 +2701,6 @@ parameters:
 			path: modules/user/tests/src/Functional/Views/UserChangedTest.php
 
 		-
-			message: "#^@dataProvider providerTestUserRole\\(\\) related method not found\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Migrate/d6/MigrateUserRoleTest.php
-
-		-
 			message: "#^Variable \\$result in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: modules/user/tests/src/Unit/UserAccessControlHandlerTest.php
@@ -3521,11 +3511,6 @@ parameters:
 			path: tests/Drupal/Tests/Component/Plugin/Factory/ReflectionFactoryTest.php
 
 		-
-			message: "#^@dataProvider providerTestValidateHex\\(\\) related method not found\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/Utility/ColorTest.php
-
-		-
 			message: "#^@coversDefaultClass defined on class method testHtmlClass\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Component/Utility/HtmlTest.php
@@ -3574,11 +3559,6 @@ parameters:
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Asset/LibraryDiscoveryCollectorTest.php
-
-		-
-			message: "#^@dataProvider providerTestGetMachineNameSuggestion\\(\\) related method not found\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Block/BlockBaseTest.php
 
 		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
@@ -3646,16 +3626,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/Controller/TitleResolverTest.php
 
 		-
-			message: "#^@dataProvider dataProviderTestCompileWithKnownOperators\\(\\) related method not found\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Database/ConditionTest.php
-
-		-
-			message: "#^@dataProvider providerSimpleCondition\\(\\) related method not found\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Database/ConditionTest.php
-
-		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Database/DatabaseEventsTest.php
@@ -3679,11 +3649,6 @@ parameters:
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Database/OrderByTest.php
-
-		-
-			message: "#^@dataProvider providerTestExceptionMessage\\(\\) related method not found\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Database/RowCountExceptionTest.php
 
 		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
@@ -3729,11 +3694,6 @@ parameters:
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Entity/Sql/SqlContentEntityStorageSchemaTest.php
-
-		-
-			message: "#^@dataProvider providerTestGetTableMappingSimple\\(\\) related method not found\\.$#"
-			count: 8
-			path: tests/Drupal/Tests/Core/Entity/Sql/SqlContentEntityStorageTest.php
 
 		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"

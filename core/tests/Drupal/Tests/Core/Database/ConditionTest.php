@@ -33,7 +33,7 @@ class ConditionTest extends UnitTestCase {
 
   /**
    * @covers ::compile
-   * @dataProvider providerSimpleCondition()
+   * @dataProvider providerSimpleCondition
    */
   public function testSimpleCondition($expected, $field_name) {
     $connection = $this->prophesize(Connection::class);
@@ -64,7 +64,7 @@ class ConditionTest extends UnitTestCase {
   /**
    * @covers ::compile
    *
-   * @dataProvider dataProviderTestCompileWithKnownOperators()
+   * @dataProvider dataProviderTestCompileWithKnownOperators
    *
    * @param string $expected
    *   The expected generated SQL condition.
