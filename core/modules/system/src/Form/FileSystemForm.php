@@ -6,6 +6,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StreamWrapper\AssetsStream;
 use Drupal\Core\StreamWrapper\PrivateStream;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Form\ConfigFormBase;
@@ -103,6 +104,13 @@ class FileSystemForm extends ConfigFormBase {
       '#title' => $this->t('Public file base URL'),
       '#markup' => PublicStream::baseUrl(),
       '#description' => $this->t('The base URL that will be used for public file URLs. This can be changed in settings.php'),
+    ];
+
+    $form['file_assets_path'] = [
+      '#type' => 'item',
+      '#title' => $this->t('Optimized assets file system path'),
+      '#markup' => AssetsStream::basePath(),
+      '#description' => $this->t('A local file system path where optimized assets files will be stored. This directory must exist and be writable by Drupal. This directory must be relative to the Drupal installation directory and be accessible over the web. This must be changed in settings.php'),
     ];
 
     $form['file_private_path'] = [

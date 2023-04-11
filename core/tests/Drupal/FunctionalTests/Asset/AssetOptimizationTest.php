@@ -20,6 +20,11 @@ class AssetOptimizationTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * The file assets path settings value.
+   */
+  protected $fileAssetsPath;
+
+  /**
    * {@inheritdoc}
    */
   protected static $modules = ['system'];
@@ -28,6 +33,13 @@ class AssetOptimizationTest extends BrowserTestBase {
    * Tests that asset aggregates are rendered and created on disk.
    */
   public function testAssetAggregation(): void {
+    $this->fileAssetsPath = $this->publicFilesDirectory . '/test-assets';
+    $settings['settings']['file_assets_path'] = (object) [
+      'value' => $this->fileAssetsPath,
+      'required' => TRUE,
+    ];
+    $this->writeSettings($settings);
+    $this->rebuildAll();
     $this->config('system.performance')->set('css', [
       'preprocess' => TRUE,
       'gzip' => TRUE,
@@ -88,6 +100,7 @@ class AssetOptimizationTest extends BrowserTestBase {
    */
   protected function assertAggregate(string $url, bool $from_php = TRUE): void {
     $url = $this->getAbsoluteUrl($url);
+    $this->assertStringContainsString($this->fileAssetsPath, $url);
     $session = $this->getSession();
     $session->visit($url);
     $this->assertSession()->statusCodeEquals(200);

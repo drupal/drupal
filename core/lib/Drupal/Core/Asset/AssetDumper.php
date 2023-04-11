@@ -36,7 +36,7 @@ class AssetDumper implements AssetDumperUriInterface {
    * browsers to download new CSS when the CSS changes.
    */
   public function dump($data, $file_extension) {
-    $path = 'public://' . $file_extension;
+    $path = 'assets://' . $file_extension;
     // Prefix filename to prevent blocking by firewalls which reject files
     // starting with "ad*".
     $filename = $file_extension . '_' . Crypt::hashBase64($data) . '.' . $file_extension;
@@ -48,7 +48,7 @@ class AssetDumper implements AssetDumperUriInterface {
    * {@inheritdoc}
    */
   public function dumpToUri(string $data, string $file_extension, string $uri): string {
-    $path = 'public://' . $file_extension;
+    $path = 'assets://' . $file_extension;
     // Create the CSS or JS file.
     $this->fileSystem->prepareDirectory($path, FileSystemInterface::CREATE_DIRECTORY);
     try {

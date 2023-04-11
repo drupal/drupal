@@ -210,8 +210,8 @@ REGEXP;
         $this->fileSystem->delete($uri);
       }
     };
-    if (is_dir('public://css')) {
-      $this->fileSystem->scanDirectory('public://css', '/.*/', ['callback' => $delete_stale]);
+    if (is_dir('assets://css')) {
+      $this->fileSystem->scanDirectory('assets://css', '/.*/', ['callback' => $delete_stale]);
     }
   }
 

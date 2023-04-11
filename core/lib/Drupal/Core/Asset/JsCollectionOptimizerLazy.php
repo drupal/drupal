@@ -134,7 +134,7 @@ class JsCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfac
             'delta' => "$order",
           ] + $query_args;
           $filename = 'js_' . $this->generateHash($js_asset) . '.js';
-          $uri = 'public://js/' . $filename;
+          $uri = 'assets://js/' . $filename;
           $js_assets[$order]['data'] = $this->fileUrlGenerator->generateAbsoluteString($uri) . '?' . UrlHelper::buildQuery($query);
         }
         unset($js_assets[$order]['items']);
@@ -165,8 +165,8 @@ class JsCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfac
         $this->fileSystem->delete($uri);
       }
     };
-    if (is_dir('public://js')) {
-      $this->fileSystem->scanDirectory('public://js', '/.*/', ['callback' => $delete_stale]);
+    if (is_dir('assets://js')) {
+      $this->fileSystem->scanDirectory('assets://js', '/.*/', ['callback' => $delete_stale]);
     }
   }
 

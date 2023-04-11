@@ -208,8 +208,8 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
         $this->fileSystem->delete($uri);
       }
     };
-    if (is_dir('public://js')) {
-      $this->fileSystem->scanDirectory('public://js', '/.*/', ['callback' => $delete_stale]);
+    if (is_dir('assets://js')) {
+      $this->fileSystem->scanDirectory('assets://js', '/.*/', ['callback' => $delete_stale]);
     }
   }
 

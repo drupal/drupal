@@ -112,7 +112,7 @@ abstract class AssetControllerBase extends FileDownloadController {
    *   supplied.
    */
   public function deliver(Request $request, string $file_name) {
-    $uri = 'public://' . $this->assetType . '/' . $file_name;
+    $uri = 'assets://' . $this->assetType . '/' . $file_name;
 
     // Check to see whether a file matching the $uri already exists, this can
     // happen if it was created while this request was in progress.

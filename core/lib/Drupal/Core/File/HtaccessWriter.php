@@ -107,6 +107,14 @@ class HtaccessWriter implements HtaccessWriterInterface {
       $protected_dirs[] = new ProtectedDirectory('Private files directory', 'private://', TRUE);
     }
     $protected_dirs[] = new ProtectedDirectory('Temporary files directory', 'temporary://');
+
+    // The assets path may be the same as the public file path, if so don't try
+    // to write the same .htaccess twice.
+    $public_path = Settings::get('file_public_path', 'sites/default/files');
+    $assets_path = Settings::get('file_assets_path', $public_path);
+    if ($assets_path !== $public_path) {
+      $protected_dirs[] = new ProtectedDirectory('Optimized assets directory', $assets_path);
+    }
     return $protected_dirs;
   }
 

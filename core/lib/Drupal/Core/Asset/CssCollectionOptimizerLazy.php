@@ -122,7 +122,7 @@ class CssCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfa
       if (!empty($css_asset['preprocessed'])) {
         $query = ['delta' => "$order"] + $query_args;
         $filename = 'css_' . $this->generateHash($css_asset) . '.css';
-        $uri = 'public://css/' . $filename;
+        $uri = 'assets://css/' . $filename;
         $css_assets[$order]['data'] = $this->fileUrlGenerator->generateAbsoluteString($uri) . '?' . UrlHelper::buildQuery($query);
       }
       unset($css_assets[$order]['items']);
@@ -153,8 +153,8 @@ class CssCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfa
         $this->fileSystem->delete($uri);
       }
     };
-    if (is_dir('public://css')) {
-      $this->fileSystem->scanDirectory('public://css', '/.*/', ['callback' => $delete_stale]);
+    if (is_dir('assets://css')) {
+      $this->fileSystem->scanDirectory('assets://css', '/.*/', ['callback' => $delete_stale]);
     }
   }
 
