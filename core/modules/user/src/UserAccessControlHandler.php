@@ -101,7 +101,7 @@ class UserAccessControlHandler extends EntityAccessControlHandler {
       case 'name':
         // Allow view access to anyone with access to the entity.
         // The username field is editable during the registration process.
-        if ($operation == 'view' || ($items && $items->getEntity()->isAnonymous())) {
+        if ($operation == 'view' || ($items && $items->getEntity()->isNew())) {
           return AccessResult::allowed()->cachePerPermissions();
         }
         // Allow edit access for the own user name if the permission is

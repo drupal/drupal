@@ -305,6 +305,9 @@ class User extends ContentEntityBase implements UserInterface {
    * {@inheritdoc}
    */
   public function activate() {
+    if ($this->isAnonymous()) {
+      throw new \LogicException('The anonymous user account should remain blocked at all times.');
+    }
     $this->get('status')->value = 1;
     return $this;
   }
@@ -370,7 +373,7 @@ class User extends ContentEntityBase implements UserInterface {
    * {@inheritdoc}
    */
   public function isAnonymous() {
-    return $this->id() == 0;
+    return $this->id() === 0 || $this->id() === '0';
   }
 
   /**

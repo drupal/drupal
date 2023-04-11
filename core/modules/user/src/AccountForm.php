@@ -72,7 +72,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
     // Check for new account.
-    $register = $account->isAnonymous();
+    $register = $account->isNew();
 
     // For a new account, there are 2 sub-cases:
     // $self_register: A user creates their own, new, account
