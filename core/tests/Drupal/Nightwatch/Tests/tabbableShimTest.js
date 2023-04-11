@@ -58,13 +58,13 @@ const tabbableTestScenarios = [
   },
   {
     element:
-      '<details><summary>I am not :tabbable because IE does not support it</summary>This is unfortunate</details>',
-    tabbable: 0,
+      '<details><summary>Summary is now tabbable because IE is not supported anymore</summary>Hooray</details>',
+    tabbable: 1,
   },
   {
     element:
-      '<details>A details without a summary should also not be :tabbable</details>',
-    tabbable: 0,
+      '<details>A details without a summary should be :tabbable</details>',
+    tabbable: 1,
   },
   {
     element: '<ul><li>List item</li></ul>',
