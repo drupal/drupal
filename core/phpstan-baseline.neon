@@ -2441,11 +2441,6 @@ parameters:
 			path: modules/system/tests/modules/lazy_route_provider_install_test/src/PluginManager.php
 
 		-
-			message: "#^Configuration entity must define a `config_export` key\\. See https\\://www\\.drupal\\.org/node/2481909$#"
-			count: 1
-			path: modules/system/tests/modules/module_installer_config_test/src/Entity/TestConfigType.php
-
-		-
 			message: "#^Access to an undefined property Drupal\\\\Tests\\\\system\\\\Functional\\\\FileTransfer\\\\TestFileTransfer\\:\\:\\$connection\\.$#"
 			count: 5
 			path: modules/system/tests/src/Functional/FileTransfer/TestFileTransfer.php
@@ -3014,11 +3009,6 @@ parameters:
 			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
 			count: 3
 			path: modules/views/src/Views.php
-
-		-
-			message: "#^Configuration entity must define a `config_export` key\\. See https\\://www\\.drupal\\.org/node/2481909$#"
-			count: 1
-			path: modules/views/tests/modules/views_config_entity_test/src/Entity/ViewsConfigEntityTest.php
 
 		-
 			message: "#^Variable \\$view in isset\\(\\) always exists and is not nullable\\.$#"
