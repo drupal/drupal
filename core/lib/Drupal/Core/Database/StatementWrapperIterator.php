@@ -157,10 +157,10 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
       return [];
     }
 
-    // Once the foreach loop is completed, the resultset is marked so not to
+    // Once the while loop is completed, the resultset is marked so not to
     // allow more fetching.
     $return = [];
-    foreach ($this as $record) {
+    while ($record = $this->fetch()) {
       $recordKey = is_object($record) ? $record->$key : $record[$key];
       $return[$recordKey] = $record;
     }
@@ -179,10 +179,10 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
       return [];
     }
 
-    // Once the foreach loop is completed, the resultset is marked so not to
+    // Once the while loop is completed, the resultset is marked so not to
     // allow more fetching.
     $return = [];
-    foreach ($this as $record) {
+    while ($record = $this->fetch()) {
       $return[$record[$key_index]] = $record[$value_index];
     }
     return $return;

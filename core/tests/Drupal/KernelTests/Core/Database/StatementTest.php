@@ -65,6 +65,99 @@ class StatementTest extends DatabaseTestBase {
   }
 
   /**
+   * Tests statement fetchAll after a partial traversal.
+   */
+  public function testPartiallyIteratedStatementFetchAll(): void {
+    $statement = $this->connection->query('SELECT * FROM {test}');
+
+    for ($i = 0; $i < 2; $i++) {
+      $statement->fetch();
+    }
+
+    $expected = [
+      0 => (object) [
+        "id" => "3",
+        "name" => "Ringo",
+        "age" => "28",
+        "job" => "Drummer",
+      ],
+      1 => (object) [
+        "id" => "4",
+        "name" => "Paul",
+        "age" => "26",
+        "job" => "Songwriter",
+      ],
+    ];
+
+    $this->assertEquals($expected, $statement->fetchAll());
+    $this->assertSame([], $statement->fetchAll());
+  }
+
+  /**
+   * Tests statement fetchAllKeyed after a partial traversal.
+   */
+  public function testPartiallyIteratedStatementFetchAllKeyed(): void {
+    $statement = $this->connection->query('SELECT * FROM {test}');
+
+    for ($i = 0; $i < 2; $i++) {
+      $statement->fetch();
+    }
+
+    $expected = [
+      "3" => "Ringo",
+      "4" => "Paul",
+    ];
+
+    $this->assertSame($expected, $statement->fetchAllKeyed());
+    $this->assertSame([], $statement->fetchAllKeyed());
+  }
+
+  /**
+   * Tests statement fetchAllAssoc after a partial traversal.
+   */
+  public function testPartiallyIteratedStatementFetchAllAssoc(): void {
+    $statement = $this->connection->query('SELECT * FROM {test}');
+
+    for ($i = 0; $i < 2; $i++) {
+      $statement->fetch();
+    }
+
+    $expected = [
+      "28" => (object) [
+        "id" => "3",
+        "name" => "Ringo",
+        "age" => "28",
+        "job" => "Drummer",
+      ],
+      "26" => (object) [
+        "id" => "4",
+        "name" => "Paul",
+        "age" => "26",
+        "job" => "Songwriter",
+      ],
+    ];
+
+    $this->assertEquals($expected, $statement->fetchAllAssoc('age'));
+    $this->assertSame([], $statement->fetchAllAssoc('age'));
+  }
+
+  /**
+   * Tests statement fetchCol after a partial traversal.
+   */
+  public function testPartiallyIteratedStatementFetchCol(): void {
+    $statement = $this->connection->query('SELECT * FROM {test}');
+
+    for ($i = 0; $i < 2; $i++) {
+      $statement->fetch();
+    }
+
+    $expected = ["3", "4"];
+
+    $this->assertSame($expected, $statement->fetchCol());
+    $this->assertSame([], $statement->fetchCol());
+  }
+
+  /**
    * Tests statement rewinding.
    */
   public function testStatementRewind(): void {
