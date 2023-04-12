@@ -142,7 +142,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
    * RouteObjectInterface to link to a content document.
    *
    * This method may not throw an exception based on implementation specific
-   * restrictions on the url. That case is considered a not found - returning
+   * restrictions on the URL. That case is considered a not found - returning
    * an empty array. Exceptions are only used to abort the whole request in
    * case something is seriously broken, like the storage backend being down.
    *
@@ -155,7 +155,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
    *   A request against which to match.
    *
    * @return \Symfony\Component\Routing\RouteCollection
-   *   RouteCollection with all urls that could potentially match $request.
+   *   RouteCollection with all URLs that could potentially match $request.
    *   Empty collection if nothing can match. The collection will be sorted from
    *   highest to lowest fit (match of path parts) and then in ascending order
    *   by route name for routes with the same fit.

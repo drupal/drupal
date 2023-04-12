@@ -45,7 +45,7 @@ class LinkGenerator implements LinkGeneratorInterface {
    * Constructs a LinkGenerator instance.
    *
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
-   *   The url generator.
+   *   The URL generator.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    * @param \Drupal\Core\Render\RendererInterface $renderer
@@ -196,7 +196,7 @@ class LinkGenerator implements LinkGeneratorInterface {
    * @param array $attributes
    *   The attributes of the generated link.
    * @param array $variables
-   *   The link text, url, and other options.
+   *   The link text, URL, and other options.
    *
    * @return \Drupal\Core\GeneratedLink
    *   The generated link, along with its associated cacheability metadata.

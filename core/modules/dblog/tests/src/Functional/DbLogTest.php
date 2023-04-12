@@ -199,7 +199,7 @@ class DbLogTest extends BrowserTestBase {
    * Tests individual log event page with missing log attributes.
    *
    * In some cases few log attributes are missing. For example:
-   * - Missing referer: When request is made to a specific url directly and
+   * - Missing referer: When request is made to a specific URL directly and
    *   error occurred. In this case there is no referer.
    * - Incorrect location: When location attribute is incorrect uri which can
    *   not be used to generate a valid link.

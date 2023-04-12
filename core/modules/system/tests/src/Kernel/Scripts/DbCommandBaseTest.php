@@ -55,7 +55,7 @@ class DbCommandBaseTest extends KernelTestBase {
   }
 
   /**
-   * Tests supplying database connection as a url.
+   * Tests supplying database connection as a URL.
    */
   public function testSpecifyDbUrl() {
     $command = new DbCommandBaseTester();

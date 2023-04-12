@@ -137,7 +137,7 @@ class TermAutocompleteTest extends TaxonomyTestBase {
     $this->adminUser = $this->drupalCreateUser(['create article content']);
     $this->drupalLogin($this->adminUser);
 
-    // Retrieve the autocomplete url.
+    // Retrieve the autocomplete URL.
     $this->drupalGet('node/add/article');
     $field = $this->assertSession()->fieldExists("{$this->fieldName}[0][target_id]");
     $this->autocompleteUrl = $this->getAbsoluteUrl($field->getAttribute('data-autocomplete-path'));

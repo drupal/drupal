@@ -71,7 +71,7 @@ class SelectLanguageForm extends FormBase {
     $form['help'] = [
       '#type' => 'item',
       // #markup is XSS admin filtered which ensures unsafe protocols will be
-      // removed from the url.
+      // removed from the URL.
       '#markup' => '<p>Translations will be downloaded from the <a href="https://localize.drupal.org/download">Drupal Translation website</a>. If you do not want this, select <a href="' . $link_to_english . '">English</a>.</p>',
       '#states' => [
         'invisible' => [

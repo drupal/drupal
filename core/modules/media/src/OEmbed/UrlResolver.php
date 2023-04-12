@@ -191,7 +191,7 @@ class UrlResolver implements UrlResolverInterface {
    *   The oEmbed provider for the asset.
    *
    * @return string
-   *   The resource url.
+   *   The resource URL.
    */
   protected function getEndpointMatchingUrl($url, Provider $provider) {
     $endpoints = $provider->getEndpoints();

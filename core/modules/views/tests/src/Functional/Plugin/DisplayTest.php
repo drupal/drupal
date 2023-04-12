@@ -229,7 +229,7 @@ class DisplayTest extends ViewTestBase {
     $output = $renderer->renderRoot($output);
     $this->assertStringContainsString('/node', $output, 'The read more link with href "/node" was found.');
 
-    // Test more link with absolute url.
+    // Test more link with absolute URL.
     $view->display_handler->setOption('link_display', 'custom_url');
     $view->display_handler->setOption('link_url', 'http://drupal.org');
     $this->executeView($view);
@@ -237,7 +237,7 @@ class DisplayTest extends ViewTestBase {
     $output = $renderer->renderRoot($output);
     $this->assertStringContainsString('http://drupal.org', $output, 'The read more link with href "http://drupal.org" was found.');
 
-    // Test more link with query parameters in the url.
+    // Test more link with query parameters in the URL.
     $view->display_handler->setOption('link_display', 'custom_url');
     $view->display_handler->setOption('link_url', 'node?page=1&foo=bar');
     $this->executeView($view);
@@ -245,7 +245,7 @@ class DisplayTest extends ViewTestBase {
     $output = $renderer->renderRoot($output);
     $this->assertStringContainsString('/node?page=1&amp;foo=bar', $output, 'The read more link with href "/node?page=1&foo=bar" was found.');
 
-    // Test more link with fragment in the url.
+    // Test more link with fragment in the URL.
     $view->display_handler->setOption('link_display', 'custom_url');
     $view->display_handler->setOption('link_url', 'node#target');
     $this->executeView($view);

@@ -84,7 +84,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translation
    *   The string translation.
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
-   *   The url generator.
+   *   The URL generator.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
    * @param \Drupal\Core\Render\BareHtmlPageRendererInterface $bare_html_page_renderer

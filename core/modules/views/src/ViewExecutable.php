@@ -254,7 +254,7 @@ class ViewExecutable {
   public $override_url;
 
   /**
-   * Allow to override the path used for generated urls.
+   * Allow to override the path used for generated URLs.
    *
    * @var string
    */

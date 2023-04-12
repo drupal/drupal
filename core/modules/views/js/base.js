@@ -51,7 +51,7 @@
   Drupal.Views.parseViewArgs = function (href, viewPath) {
     const returnObj = {};
     const path = Drupal.Views.getPath(href);
-    // Get viewPath url without baseUrl portion.
+    // Get viewPath URL without baseUrl portion.
     const viewHref = Drupal.url(viewPath).substring(
       drupalSettings.path.baseUrl.length,
     );
@@ -96,7 +96,7 @@
   Drupal.Views.getPath = function (href) {
     href = Drupal.Views.pathPortion(href);
     href = href.substring(drupalSettings.path.baseUrl.length, href.length);
-    // 3 is the length of the '?q=' added to the url without clean urls.
+    // 3 is the length of the '?q=' added to the URL without clean URLs.
     if (href.substring(0, 3) === '?q=') {
       href = href.substring(3, href.length);
     }

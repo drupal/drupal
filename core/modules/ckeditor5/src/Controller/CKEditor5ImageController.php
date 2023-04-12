@@ -113,7 +113,7 @@ class CKEditor5ImageController extends ControllerBase {
    *   The current request object.
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse
-   *   A JSON object including the file url.
+   *   A JSON object including the file URL.
    *
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException
    *   Thrown when file system errors occur.

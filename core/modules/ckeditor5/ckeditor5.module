@@ -632,11 +632,11 @@ function _ckeditor5_theme_css($theme = NULL): array {
     if (isset($info['ckeditor5-stylesheets']) && $info['ckeditor5-stylesheets'] !== FALSE) {
       $css = $info['ckeditor5-stylesheets'];
       foreach ($css as $key => $url) {
-        // CSS url is external or relative to Drupal root.
+        // CSS URL is external or relative to Drupal root.
         if (UrlHelper::isExternal($url) || $url[0] === '/') {
           $css[$key] = $url;
         }
-        // CSS url is relative to theme.
+        // CSS URL is relative to theme.
         else {
           $css[$key] = '/' . $theme_path . '/' . $url;
         }

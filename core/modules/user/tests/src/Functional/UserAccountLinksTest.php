@@ -117,7 +117,7 @@ class UserAccountLinksTest extends BrowserTestBase {
   }
 
   /**
-   * Ensures that logout url redirects an anonymous user to the front page.
+   * Ensures that logout URL redirects an anonymous user to the front page.
    */
   public function testAnonymousLogout() {
     $this->drupalGet('user/logout');

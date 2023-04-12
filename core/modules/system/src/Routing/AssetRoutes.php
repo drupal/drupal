@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Route;
 
 /**
- * Defines a routes' callback to register an url for serving assets.
+ * Defines a routes' callback to register a URL for serving assets.
  */
 class AssetRoutes implements ContainerInjectionInterface {
 

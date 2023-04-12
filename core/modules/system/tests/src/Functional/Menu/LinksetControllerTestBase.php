@@ -151,7 +151,7 @@ abstract class LinksetControllerTestBase extends BrowserTestBase {
   }
 
   /**
-   * Retrieve reference linkset controller output adjusted for proper base url.
+   * Retrieve reference linkset controller output adjusted for proper base URL.
    *
    * @param string $filename
    *   Name of the file to read.

@@ -29,7 +29,7 @@ trait FakeLogEntries {
    *   - 'link': String linking to view the result of the event.
    *   - 'uid': Int identifying the user id for the user.
    *   - 'request_uri': String identifying the location of the request.
-   *   - 'referer': String identifying the referring url.
+   *   - 'referer': String identifying the referring URL.
    *   - 'ip': String The ip address of the client machine triggering the log
    *     entry.
    *   - 'timestamp': Int unix timestamp.

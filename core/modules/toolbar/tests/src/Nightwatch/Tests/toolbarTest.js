@@ -44,7 +44,7 @@ module.exports = {
       // To clear active tab/tray from previous tests
       .execute(function () {
         localStorage.clear();
-        // Clear escapeAdmin url values.
+        // Clear escapeAdmin URL values.
         sessionStorage.clear();
       })
       .drupalRelativeURL('/')

@@ -338,7 +338,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $display['display_options']['rendering_language'] = '***LANGUAGE_entity_translation***';
     $view->save();
 
-    // Need to check from the beginning, including the base_path, in the url
+    // Need to check from the beginning, including the base_path, in the URL
     // since the pattern for the default language might be a substring of
     // the strings for other languages.
     $base_path = base_path();

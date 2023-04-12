@@ -26,7 +26,7 @@ interface MenuLinkContentInterface extends ContentEntityInterface, EntityChanged
   public function getTitle();
 
   /**
-   * Gets the url object pointing to the URL of the menu link content entity.
+   * Gets the URL object pointing to the URL of the menu link content entity.
    *
    * @return \Drupal\Core\Url
    *   A Url object instance.

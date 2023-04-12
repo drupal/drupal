@@ -63,7 +63,7 @@ class EntityController implements ContainerInjectionInterface {
   protected $renderer;
 
   /**
-   * The url generator.
+   * The URL generator.
    */
   protected UrlGeneratorInterface $urlGenerator;
 

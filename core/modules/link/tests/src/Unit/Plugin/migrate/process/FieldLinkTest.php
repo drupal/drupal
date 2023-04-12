@@ -14,7 +14,7 @@ use Drupal\Tests\UnitTestCase;
 class FieldLinkTest extends UnitTestCase {
 
   /**
-   * Tests the url transformations in the FieldLink process plugin.
+   * Tests the URL transformations in the FieldLink process plugin.
    *
    * @dataProvider canonicalizeUriDataProvider
    */

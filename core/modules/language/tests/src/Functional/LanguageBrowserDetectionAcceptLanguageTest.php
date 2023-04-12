@@ -40,7 +40,7 @@ class LanguageBrowserDetectionAcceptLanguageTest extends BrowserTestBase {
 
     // Create FR.
     ConfigurableLanguage::createFromLangcode('fr')->save();
-    // Set language detection to url and browser detection.
+    // Set language detection to URL and browser detection.
     $this->drupalGet('/admin/config/regional/language/detection');
     $this->submitForm([
       'language_interface[enabled][language-url]' => TRUE,

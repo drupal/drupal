@@ -156,7 +156,7 @@ class AdminTest extends BrowserTestBase {
 
     // The front page defaults to 'user/login', which redirects to 'user/{user}'
     // for authenticated users. We cannot use '<front>', since this does not
-    // match the redirected url.
+    // match the redirected URL.
     $frontpage_url = 'user/' . $this->adminUser->id();
 
     $this->drupalGet('admin/compact/on');

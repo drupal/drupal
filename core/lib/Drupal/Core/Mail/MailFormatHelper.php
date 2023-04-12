@@ -12,7 +12,7 @@ use Drupal\Core\Site\Settings;
 class MailFormatHelper {
 
   /**
-   * Internal array of urls replaced with tokens.
+   * Internal array of URLs replaced with tokens.
    *
    * @var array
    */

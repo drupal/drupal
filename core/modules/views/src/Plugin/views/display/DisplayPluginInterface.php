@@ -588,7 +588,7 @@ interface DisplayPluginInterface {
    *     where you can configure what should be done if the argument does not
    *     exist.
    *   - description: A description about how arguments are passed
-   *     to the display. For example blocks can't get arguments from url.
+   *     to the display. For example blocks can't get arguments from URL.
    */
   public function getArgumentText();
 

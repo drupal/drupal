@@ -38,7 +38,7 @@ class UrlGenerator implements UrlGeneratorInterface {
   protected $requestStack;
 
   /**
-   * The path processor to convert the system path to one suitable for urls.
+   * The path processor to convert the system path to one suitable for URLs.
    *
    * @var \Drupal\Core\PathProcessor\OutboundPathProcessorInterface
    */
@@ -76,7 +76,7 @@ class UrlGenerator implements UrlGeneratorInterface {
    * @param \Drupal\Core\Routing\RouteProviderInterface $provider
    *   The route provider to be searched for routes.
    * @param \Drupal\Core\PathProcessor\OutboundPathProcessorInterface $path_processor
-   *   The path processor to convert the system path to one suitable for urls.
+   *   The path processor to convert the system path to one suitable for URLs.
    * @param \Drupal\Core\RouteProcessor\OutboundRouteProcessorInterface $route_processor
    *   The route processor.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack

@@ -119,7 +119,7 @@ class UserPasswordResetTest extends BrowserTestBase {
 
     $resetURL = $this->getResetURL();
     $this->drupalGet($resetURL);
-    // Ensure that the current url does not contain the hash and timestamp.
+    // Ensure that the current URL does not contain the hash and timestamp.
     $this->assertSession()->addressEquals(Url::fromRoute('user.reset.form', ['uid' => $this->account->id()]));
 
     $this->assertSession()->responseHeaderDoesNotExist('X-Drupal-Cache');

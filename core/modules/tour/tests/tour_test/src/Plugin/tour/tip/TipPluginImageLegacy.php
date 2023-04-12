@@ -19,10 +19,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class TipPluginImageLegacy extends TipPluginBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The url which is used for the image in this Tip.
+   * The URL which is used for the image in this Tip.
    *
    * @var string
-   *   A url used for the image.
+   *   A URL used for the image.
    */
   protected $url;
 

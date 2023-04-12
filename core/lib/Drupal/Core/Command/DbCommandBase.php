@@ -30,7 +30,7 @@ class DbCommandBase extends Command {
    * @return \Drupal\Core\Database\Connection
    */
   protected function getDatabaseConnection(InputInterface $input) {
-    // Load connection from a url.
+    // Load connection from a URL.
     if ($input->getOption('database-url')) {
       // @todo this could probably be refactored to not use a global connection.
       // Ensure database connection isn't set.

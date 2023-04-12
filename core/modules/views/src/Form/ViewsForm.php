@@ -73,7 +73,7 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
    * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
    *   The class resolver to get the subform form objects.
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
-   *   The url generator to generate the form action.
+   *   The URL generator to generate the form action.
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
    * @param string $view_id

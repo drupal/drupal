@@ -301,7 +301,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     $this->submitForm($edit, 'Apply');
     $this->submitForm([], 'Save');
 
-    // Visit the view's page url and validate the results.
+    // Visit the view's page URL and validate the results.
     $this->drupalGet('/test-taxonomy-exposed-grouped-filter');
     $this->submitForm(['field_views_testing_tags_target_id' => 1], 'Apply');
     $this->assertSession()->pageTextContains($nodes[0]->getTitle());

@@ -138,7 +138,7 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
     $kernel = TestRunnerKernel::createFromRequest($request, $autoloader);
     $kernel->loadLegacyIncludes();
 
-    // Set the update url. This must be set here rather than in
+    // Set the update URL. This must be set here rather than in
     // self::__construct() or the old URL generator will leak additional test
     // sites. Additionally, we need to prevent the path alias processor from
     // running because we might not have a working alias system before running

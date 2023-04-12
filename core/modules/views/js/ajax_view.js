@@ -81,7 +81,7 @@
         .slice(1)
         .replace(/q=[^&]+&?|&?render=[^&]+/, '');
       if (queryString !== '') {
-        // If there is a '?' in ajaxPath, clean url are on and & should be
+        // If there is a '?' in ajaxPath, clean URL are on and & should be
         // used to add parameters.
         queryString = (/\?/.test(ajaxPath) ? '&' : '?') + queryString;
       }
