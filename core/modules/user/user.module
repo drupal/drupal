@@ -1012,8 +1012,7 @@ function user_role_revoke_permissions($rid, array $permissions = []) {
 }
 
 /**
- * Conditionally create and send a notification email when a certain
- * operation happens on the given user account.
+ * Creates and sends a notification email following a change to a user account.
  *
  * @param string $op
  *   The operation being performed on the account. Possible values:
