@@ -1,0 +1,5 @@
+name: 'Many assets test'
+type: module
+description: 'Tests loading order of many assets'
+package: Testing
+version: VERSION
