@@ -1,11 +1,24 @@
-/* Modules page */
-.system-modules fieldset {
-  border: 0;
-  border-top: 1px solid #ccc;
+/**
+ * @file
+ * Styles for the Modules page.
+ */
+
+:root {
+  --modules-page-system-modules-fieldset-color: #ccc;
+  --modules-page-system-modules-tr-border-color: #fff;
+  --modules-page-system-modules-tr-bg-color: #f3f4ee;
 }
-.system-modules .fieldset-wrapper {
-  padding: 0;
+.system-modules {
+  & fieldset {
+    border: 0;
+    border-top: 1px solid var(--modules-page-system-modules-fieldset-color);
+  }
+
+  & .fieldset-wrapper {
+    padding: 0;
+  }
 }
+
 .system-modules table,
 .locale-translation-status-form table {
   border: 0;
@@ -15,8 +28,8 @@
 .locale-translation-status-form tr.even,
 .locale-translation-status-form tr.odd {
   border: 0;
-  border-bottom: 10px solid #fff;
-  background: #f3f4ee;
+  border-bottom: 10px solid var(--modules-page-system-modules-tr-border-color);
+  background: var(--modules-page-system-modules-tr-bg-color);
 }
 .system-modules tr td:last-child,
 .locale-translation-status-form tr td:last-child {
@@ -25,7 +38,7 @@
 .system-modules table th,
 .locale-translation-status-form table th {
   border: 0;
-  border-bottom: 10px solid #fff;
+  border-bottom: 10px solid var(--modules-page-system-modules-tr-border-color);
 }
 .system-modules .sticky-header th,
 .locale-translation-status-form .sticky-header th {
