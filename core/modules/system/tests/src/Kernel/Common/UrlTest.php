@@ -12,11 +12,10 @@ use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Confirm that \Drupal\Core\Url,
- * \Drupal\Component\Utility\UrlHelper::filterQueryParameters(),
- * \Drupal\Component\Utility\UrlHelper::buildQuery(), and
- * \Drupal\Core\Utility\LinkGeneratorInterface::generate()
- * work correctly with various input.
+ * Tests the Url object.
+ *
+ * @covers \Drupal\Component\Utility\UrlHelper::filterQueryParameters
+ * @covers \Drupal\Core\Utility\LinkGenerator::generate
  *
  * @group Common
  */

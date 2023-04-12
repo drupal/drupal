@@ -8,8 +8,7 @@ use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 
 /**
- * Verifies that the field order in user account forms is compatible with
- * password managers of web browsers.
+ * Verifies the field order in user account forms.
  *
  * @group user
  */
