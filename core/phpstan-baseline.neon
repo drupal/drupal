@@ -481,11 +481,6 @@ parameters:
 			path: lib/Drupal/Core/Extension/ExtensionVersion.php
 
 		-
-			message: "#^Variable \\$graph might not be defined\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Extension/ModuleHandler.php
-
-		-
 			message: "#^Variable \\$callback in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Field/FieldDefinition.php

@@ -230,7 +230,7 @@ class ModuleHandler implements ModuleHandlerInterface {
         }
       }
     }
-    $graph_object = new Graph($graph);
+    $graph_object = new Graph($graph ?? []);
     $graph = $graph_object->searchAndSort();
     foreach ($graph as $module_name => $data) {
       $modules[$module_name]->required_by = $data['reverse_paths'] ?? [];
