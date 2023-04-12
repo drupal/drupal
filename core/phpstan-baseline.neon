@@ -3381,11 +3381,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/KeyValueStore/GarbageCollectionTest.php
 
 		-
-			message: "#^\\#pre_render callback 'element_info_test…' at key '1' is not trusted\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Render/Element/WeightTest.php
-
-		-
 			message: "#^@covers value drupal_rewrite_settings\\(\\) references an invalid class or function\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Site/LegacySettingsRewriteTest.php
@@ -3829,16 +3824,6 @@ parameters:
 			message: "#^Constructor of class Drupal\\\\Tests\\\\Core\\\\Plugin\\\\TestPluginManager has an unused parameter \\$namespaces\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Plugin/TestPluginManager.php
-
-		-
-			message: "#^\\#lazy_builder callback '\\\\\\\\Drupal\\\\\\\\Tests\\\\\\\\Core…' at key '0' is not trusted\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Render/RendererCallbackTest.php
-
-		-
-			message: "#^\\#pre_render callback '\\\\\\\\Drupal\\\\\\\\Tests\\\\\\\\Core…' at key '0' is not trusted\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Render/RendererCallbackTest.php
 
 		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
