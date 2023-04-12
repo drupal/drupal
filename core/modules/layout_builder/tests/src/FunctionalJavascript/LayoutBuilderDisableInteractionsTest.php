@@ -236,7 +236,6 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
     $this->clickContextualLink('.block-field-blocknodebundle-with-section-fieldbody [data-contextual-id^="layout_builder_block"]', 'Configure');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas'));
     $page->pressButton('Close');
-    $this->markTestSkipped('Temporarily skipped due to random failures.');
     $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
     $this->assertContextualLinkRetainsMouseup();
   }
