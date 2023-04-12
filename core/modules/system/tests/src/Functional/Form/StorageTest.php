@@ -7,8 +7,7 @@ use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests a multistep form using form storage and makes sure validation and
- * caching works right.
+ * Tests a multistep form using form storage.
  *
  * The tested form puts data into the storage during the initial form
  * construction. These tests verify that there are no duplicate form

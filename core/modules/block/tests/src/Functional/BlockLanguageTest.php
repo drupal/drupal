@@ -6,8 +6,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\block\Entity\Block;
 
 /**
- * Tests if a block can be configured to be only visible on a particular
- * language.
+ * Tests per-language block configuration.
  *
  * @group block
  */
