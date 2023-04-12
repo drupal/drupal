@@ -168,6 +168,9 @@ class BigPipePlaceholderTestCases {
       '<hello',
       [
         '#lazy_builder' => [
+          // We specifically test an invalid callback here. We need to let
+          // PHPStan ignore it.
+          // @phpstan-ignore-next-line
           'hello_or_yarhar',
           [],
         ],
@@ -201,6 +204,9 @@ class BigPipePlaceholderTestCases {
       ],
       '<time>CURRENT TIME</time>',
       [
+        // We specifically test an invalid callback here. We need to let
+        // PHPStan ignore it.
+        // @phpstan-ignore-next-line
         '#pre_render' => ['current_time'],
       ]
     );

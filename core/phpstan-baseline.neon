@@ -786,16 +786,6 @@ parameters:
 			path: modules/action/src/Form/ActionFormBase.php
 
 		-
-			message: "#^\\#lazy_builder callback 'hello_or_yarhar' at key '0' is not callable\\.$#"
-			count: 1
-			path: modules/big_pipe/tests/modules/big_pipe_test/src/BigPipePlaceholderTestCases.php
-
-		-
-			message: "#^\\#pre_render callback 'current_time' at key '0' is not callable\\.$#"
-			count: 1
-			path: modules/big_pipe/tests/modules/big_pipe_test/src/BigPipePlaceholderTestCases.php
-
-		-
 			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
 			count: 1
 			path: modules/block/src/BlockForm.php
