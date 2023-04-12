@@ -6,8 +6,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests that the language condition, provided by the language module, is
- * working properly.
+ * Tests the language condition plugin.
  *
  * @group language
  */

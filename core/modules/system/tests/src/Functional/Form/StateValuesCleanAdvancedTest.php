@@ -6,9 +6,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
- * Tests proper removal of submitted form values using
- * \Drupal\Core\Form\FormState::cleanValues() when having forms with elements
- * containing buttons like "managed_file".
+ * Tests the removal of internal Form API elements from submitted form values.
  *
  * @group Form
  */

@@ -12,8 +12,10 @@ use Drupal\tour\Entity\Tour;
 use Drupal\user\Entity\Role;
 
 /**
- * Tests installation and removal of configuration objects in install, disable
- * and uninstall functionality.
+ * Tests that configuration objects are correct after various operations.
+ *
+ * The installation and removal of configuration objects in install, disable
+ * and uninstall functionality is tested.
  *
  * @group config
  */

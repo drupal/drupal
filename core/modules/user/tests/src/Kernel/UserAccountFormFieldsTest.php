@@ -6,8 +6,7 @@ use Drupal\Core\Form\FormState;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Verifies that the field order in user account forms is compatible with
- * password managers of web browsers.
+ * Verifies the field order in user account forms.
  *
  * @group user
  */

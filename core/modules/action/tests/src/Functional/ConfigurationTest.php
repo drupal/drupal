@@ -6,8 +6,7 @@ use Drupal\system\Entity\Action;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests complex actions configuration by adding, editing, and deleting a
- * complex action.
+ * Tests complex actions configuration.
  *
  * @group action
  */
