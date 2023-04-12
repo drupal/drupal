@@ -2,8 +2,7 @@
 
 /**
  * @file
- * Dummy module emptying comment titles to test for appropriate and accessible
- * markup in edge case scenarios where comments have empty titles.
+ * Empties comment titles to test markup in edge case scenarios.
  */
 
 /**

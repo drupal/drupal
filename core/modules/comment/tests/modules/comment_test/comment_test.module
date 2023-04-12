@@ -2,8 +2,7 @@
 
 /**
  * @file
- * Dummy module implementing comment related hooks to test API interaction with
- * the Comment module.
+ * Implements comment-related hooks to test API interactions.
  */
 
 use Drupal\comment\CommentInterface;

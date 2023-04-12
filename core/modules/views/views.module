@@ -225,8 +225,7 @@ function views_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * A theme preprocess function to automatically allow view-based node
- * templates if called from a view.
+ * Allows view-based node templates if called from a view.
  *
  * The 'modules/node.views.inc' file is a better place for this, but
  * we haven't got a chance to load that file before Drupal builds the
@@ -262,8 +261,7 @@ function views_theme_suggestions_node_alter(array &$suggestions, array $variable
 }
 
 /**
- * A theme preprocess function to automatically allow view-based node
- * templates if called from a view.
+ * Allows view-based comment templates if called from a view.
  */
 function views_preprocess_comment(&$variables) {
   // The view data is added to the comment in
