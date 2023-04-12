@@ -8,30 +8,23 @@
 /**
  * Action links layout.
  */
-.action-links,
-[dir="rtl"] .action-links {
+.action-links {
   margin: var(--space-l) 0;
   list-style: none;
 }
 
 .action-links__item {
   display: inline-block;
-}
 
-.action-links__item + .action-links__item > .action-link {
-  margin-left: var(--space-s); /* LTR */
-}
-[dir="rtl"] .action-links__item + .action-links__item > .action-link {
-  margin-right: var(--space-s);
-  margin-left: 0;
-}
+  & + .action-links__item {
+    & > .action-link {
+      margin-inline-start: var(--space-s);
+    }
 
-.action-links__item + .action-links__item > .action-link--small {
-  margin-left: var(--space-xs); /* LTR */
-}
-[dir="rtl"] .action-links__item + .action-links__item > .action-link--small {
-  margin-right: var(--space-xs);
-  margin-left: 0;
+    & > .action-link--small {
+      margin-inline-start: var(--space-xs);
+    }
+  }
 }
 
 /**
@@ -47,67 +40,80 @@
   background-color: var(--color-bg);
   font-size: var(--font-size-base);
   font-weight: 700;
-  line-height: var(--space-l); /* Bigger line-height needed to prevent the icon from increasing the height */
+  line-height: var(--space-l);
+  /* Bigger line-height needed to prevent the icon from increasing the height */
   -webkit-font-smoothing: antialiased;
+
+  /* Action link states */
+  &:hover {
+    text-decoration: none;
+    color: var(--color-absolutezero-hover);
+    background-color: var(--color-bgblue-hover);
+  }
+
+  &:focus {
+    position: relative;
+    z-index: 1;
+    text-decoration: none;
+  }
+
+  &:active {
+    color: var(--color-absolutezero-active);
+    background-color: var(--color-bgblue-active);
+  }
+
+  /**
+  * Action link icons with states.
+  *
+  * We use parent-relative units here to follow the .action-link's font size.
+  */
+
+  /* Defaults for icons */
+  &::before {
+    position: relative;
+    inset-block-start: 0.125rem;
+    /* Set the proper vertical alignment */
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    margin-inline: calc(var(--space-s) - var(--space-m)) 0.5em;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+  }
+
+  & + .action-link {
+    margin-inline-start: var(--space-s);
+  }
+
+  /**
+  * Action links inside form-actions.
+  *
+  * Add the same margin for action-link inside form-actions as button has.
+  */
+  @nest .form-actions & {
+    margin-inline: 0 var(--space-s);
+  }
 }
 
-/* Small variant. */
-.no-touchevents .action-link--small {
-  padding: calc(var(--space-s) - ((var(--space-l) - var(--space-s)) / 2)) var(--space-s);
-  font-size: var(--font-size-s);
-}
+.no-touchevents {
 
-/* Extra small variant. */
-.no-touchevents .action-link--extrasmall {
-  padding: 0 var(--space-xs);
-  font-size: var(--font-size-s);
-}
+  /* Small variant. */
+  & .action-link--small {
+    padding: calc(var(--space-s) - ((var(--space-l) - var(--space-s)) / 2)) var(--space-s);
+    font-size: var(--font-size-s);
+  }
 
-.action-link + .action-link {
-  margin-left: var(--space-s); /* LTR */
-}
-[dir="rtl"] .action-link + .action-link {
-  margin-right: var(--space-s);
-  margin-left: 0;
-}
-.no-touchevents .action-link--small + .action-link--small,
-.no-touchevents .action-link--extrasmall + .action-link--extrasmall {
-  margin-left: var(--space-xs); /* LTR */
-}
-[dir="rtl"] .no-touchevents .action-link--small + .action-link--small,
-[dir="rtl"] .no-touchevents .action-link--extrasmall + .action-link--extrasmall {
-  margin-right: var(--space-xs);
-  margin-left: 0;
-}
+  /* Extra small variant. */
+  & .action-link--extrasmall {
+    padding: 0 var(--space-xs);
+    font-size: var(--font-size-s);
+  }
 
-/**
- * Action links inside form-actions.
- *
- * Add the same margin for action-link inside form-actions as button has.
- */
-.form-actions .action-link {
-  margin-right: var(--space-s); /* LTR */
-  margin-left: 0; /* LTR */
-}
-[dir="rtl"] .form-actions .action-link {
-  margin-right: 0;
-  margin-left: var(--space-s);
-}
-
-/* Action link states */
-.action-link:hover {
-  text-decoration: none;
-  color: var(--color-absolutezero-hover);
-  background-color: var(--color-bgblue-hover);
-}
-.action-link:focus {
-  position: relative;
-  z-index: 1;
-  text-decoration: none;
-}
-.action-link:active {
-  color: var(--color-absolutezero-active);
-  background-color: var(--color-bgblue-active);
+  & .action-link--small + .action-link--small,
+  & .action-link--extrasmall + .action-link--extrasmall {
+    margin-inline-start: var(--space-xs);
+  }
 }
 
 /**
@@ -116,332 +122,374 @@
 /* Danger. */
 .action-link--danger {
   color: var(--color-maximumred);
-}
-.action-link--danger:hover {
-  color: var(--color-maximumred-hover);
-  background-color: var(--color-bgred-hover);
-}
-.action-link--danger:active {
-  color: var(--color-maximumred-active);
-  background-color: var(--color-bgred-active);
-}
 
-/**
- * Action link icons with states.
- *
- * We use parent-relative units here to follow the .action-link's font size.
- */
+  &:hover {
+    color: var(--color-maximumred-hover);
+    background-color: var(--color-bgred-hover);
+  }
 
-/* Defaults for icons */
-.action-link::before {
-  position: relative;
-  top: 0.125rem; /* Set the proper vertical alignment */
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  margin-right: 0.5em; /* LTR */
-  margin-left: calc(var(--space-s) - var(--space-m)); /* LTR */
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-}
-[dir="rtl"] .action-link::before {
-  margin-right: calc(var(--space-s) - var(--space-m));
-  margin-left: 0.5em;
+  &:active {
+    color: var(--color-maximumred-active);
+    background-color: var(--color-bgred-active);
+  }
 }
 
 .no-touchevents .action-link--small::before,
 .no-touchevents .action-link--extrasmall::before {
-  top: 0.0625rem; /* Set the proper vertical alignment */
+  inset-block-start: 0.0625rem;
+  /* Set the proper vertical alignment */
   width: var(--space-s);
   height: var(--space-s);
+  margin-inline: -0.125rem 0.4em;
 }
 
-.no-touchevents .action-link--extrasmall::before {
-  margin-right: 0.4em; /* LTR */
-  margin-left: -0.125rem; /* LTR */
-}
-[dir="rtl"].no-touchevents .action-link--extrasmall::before {
-  margin-right: -0.125rem;
-  margin-left: 0.4em;
-}
+.action-link--icon-plus {
 
-/* Plus */
-.action-link--icon-plus::before {
-  content: "";
-  background-image: url(../../images/icons/545560/plus.svg);
-}
+  /* Plus */
+  &::before {
+    content: "";
+    background-image: url(../../images/icons/545560/plus.svg);
 
-.action-link--icon-plus:hover::before {
-  background-image: url(../../images/icons/0036b1/plus.svg);
-}
-.action-link--icon-plus:active::before {
-  background-image: url(../../images/icons/002e9a/plus.svg);
-}
+    @media (forced-colors: active) {
+      background: linktext !important;
+      mask-repeat: no-repeat;
+      mask-image: url(../../images/icons/d72222/plus.svg);
+    }
+  }
 
-/* Plus — danger */
-.action-link--icon-plus.action-link--danger::before {
-  background-image: url(../../images/icons/d72222/plus.svg);
-}
-.action-link--icon-plus.action-link--danger:hover::before {
-  background-image: url(../../images/icons/c11f1f/plus.svg);
-}
-.action-link--icon-plus.action-link--danger:active::before {
-  background-image: url(../../images/icons/ab1b1b/plus.svg);
-}
+  &:hover::before {
+    background-image: url(../../images/icons/0036b1/plus.svg);
+  }
 
-@media (forced-colors: active) {
-  .action-link--icon-plus::before {
-    background: linktext !important;
-    mask-repeat: no-repeat;
-    mask-image: url(../../images/icons/d72222/plus.svg);
+  &:active::before {
+    background-image: url(../../images/icons/002e9a/plus.svg);
+  }
+
+  &.action-link--danger {
+
+    /* Plus — danger */
+    &::before {
+      background-image: url(../../images/icons/d72222/plus.svg);
+    }
+
+    &:hover::before {
+      background-image: url(../../images/icons/c11f1f/plus.svg);
+    }
+
+    &:active::before {
+      background-image: url(../../images/icons/ab1b1b/plus.svg);
+    }
   }
 }
 
-/* Trash */
-.action-link--icon-trash::before {
-  content: "";
-  background-image: url(../../images/icons/545560/trash.svg);
-}
-.action-link--icon-trash:hover::before {
-  background-image: url(../../images/icons/0036b1/trash.svg);
-}
-.action-link--icon-trash:active::before {
-  background-image: url(../../images/icons/002e9a/trash.svg);
-}
+.action-link--icon-trash {
 
-/* Trash — danger */
-.action-link--icon-trash.action-link--danger::before {
-  background-image: url(../../images/icons/d72222/trash.svg);
-}
-.action-link--icon-trash.action-link--danger:hover::before {
-  background-image: url(../../images/icons/c11f1f/trash.svg);
-}
-.action-link--icon-trash.action-link--danger:active::before {
-  background-image: url(../../images/icons/ab1b1b/trash.svg);
-}
+  /* Trash */
+  &::before {
+    content: "";
+    background-image: url(../../images/icons/545560/trash.svg);
 
-@media (forced-colors: active) {
-  .action-link--icon-trash::before {
-    background: linktext !important;
-    mask-repeat: no-repeat;
-    mask-image: url(../../images/icons/d72222/trash.svg);
+    @media (forced-colors: active) {
+      background: linktext !important;
+      mask-repeat: no-repeat;
+      mask-image: url(../../images/icons/d72222/trash.svg);
+    }
+  }
+
+  &:hover::before {
+    background-image: url(../../images/icons/0036b1/trash.svg);
+  }
+
+  &:active::before {
+    background-image: url(../../images/icons/002e9a/trash.svg);
+  }
+
+  &.action-link--danger {
+
+    /* Trash — danger */
+    &::before {
+      background-image: url(../../images/icons/d72222/trash.svg);
+    }
+
+    &:hover::before {
+      background-image: url(../../images/icons/c11f1f/trash.svg);
+    }
+
+    &:active::before {
+      background-image: url(../../images/icons/ab1b1b/trash.svg);
+    }
   }
 }
 
-/* Ex */
-.action-link--icon-ex::before {
-  content: "";
-  background-image: url(../../images/icons/545560/ex.svg);
-}
-.action-link--icon-ex:hover::before {
-  background-image: url(../../images/icons/0036b1/ex.svg);
-}
-.action-link--icon-ex:active::before {
-  background-image: url(../../images/icons/002e9a/ex.svg);
-}
+.action-link--icon-ex {
 
-/* Ex — danger */
-.action-link--icon-ex.action-link--danger::before {
-  background-image: url(../../images/icons/d72222/ex.svg);
-}
-.action-link--icon-ex.action-link--danger:hover::before {
-  background-image: url(../../images/icons/c11f1f/ex.svg);
-}
-.action-link--icon-ex.action-link--danger:active::before {
-  background-image: url(../../images/icons/ab1b1b/ex.svg);
-}
+  /* Ex */
+  &::before {
+    content: "";
+    background-image: url(../../images/icons/545560/ex.svg);
 
-@media (forced-colors: active) {
-  .action-link--icon-ex::before {
-    background: linktext !important;
-    mask-repeat: no-repeat;
-    mask-image: url(../../images/icons/d72222/ex.svg);
+    @media (forced-colors: active) {
+      background: linktext !important;
+      mask-repeat: no-repeat;
+      mask-image: url(../../images/icons/d72222/ex.svg);
+    }
+  }
+
+  &:hover::before {
+    background-image: url(../../images/icons/0036b1/ex.svg);
+  }
+
+  &:active::before {
+    background-image: url(../../images/icons/002e9a/ex.svg);
+  }
+
+  &.action-link--danger {
+
+    /* Ex — danger */
+    &::before {
+      background-image: url(../../images/icons/d72222/ex.svg);
+    }
+
+    &:hover::before {
+      background-image: url(../../images/icons/c11f1f/ex.svg);
+    }
+
+    &:active::before {
+      background-image: url(../../images/icons/ab1b1b/ex.svg);
+    }
   }
 }
 
-/* Checkmark */
-.action-link--icon-checkmark::before {
-  content: "";
-  background-image: url(../../images/icons/545560/checkmark.svg);
-}
-.action-link--icon-checkmark:hover::before {
-  background-image: url(../../images/icons/0036b1/checkmark.svg);
-}
-.action-link--icon-checkmark:active::before {
-  background-image: url(../../images/icons/002e9a/checkmark.svg);
-}
+.action-link--icon-checkmark {
 
-/* Checkmark — danger */
-.action-link--icon-checkmark.action-link--danger::before {
-  background-image: url(../../images/icons/d72222/checkmark.svg);
-}
-.action-link--icon-checkmark.action-link--danger:hover::before {
-  background-image: url(../../images/icons/c11f1f/checkmark.svg);
-}
-.action-link--icon-checkmark.action-link--danger:active::before {
-  background-image: url(../../images/icons/ab1b1b/checkmark.svg);
-}
+  /* Checkmark */
+  &::before {
+    content: "";
+    background-image: url(../../images/icons/545560/checkmark.svg);
 
-@media (forced-colors: active) {
-  .action-link--icon-checkmark::before {
-    background: linktext !important;
-    mask-repeat: no-repeat;
-    mask-image: url(../../images/icons/d72222/checkmark.svg);
+    @media (forced-colors: active) {
+      background: linktext !important;
+      mask-repeat: no-repeat;
+      mask-image: url(../../images/icons/d72222/checkmark.svg);
+    }
+  }
+
+  &:hover::before {
+    background-image: url(../../images/icons/0036b1/checkmark.svg);
+  }
+
+  &:active::before {
+    background-image: url(../../images/icons/002e9a/checkmark.svg);
+  }
+
+  &.action-link--danger {
+
+    /* Checkmark — danger */
+    &::before {
+      background-image: url(../../images/icons/d72222/checkmark.svg);
+    }
+
+    &:hover::before {
+      background-image: url(../../images/icons/c11f1f/checkmark.svg);
+    }
+
+    &:active::before {
+      background-image: url(../../images/icons/ab1b1b/checkmark.svg);
+    }
   }
 }
 
-/* Cog */
-.action-link--icon-cog::before {
-  content: "";
-  background-image: url(../../images/icons/545560/cog.svg);
-}
-.action-link--icon-cog:hover::before {
-  background-image: url(../../images/icons/0036b1/cog.svg);
-}
-.action-link--icon-cog:active::before {
-  background-image: url(../../images/icons/002e9a/cog.svg);
-}
+.action-link--icon-cog {
 
-/* Cog — danger */
-.action-link--icon-cog.action-link--danger::before {
-  background-image: url(../../images/icons/d72222/cog.svg);
-}
-.action-link--icon-cog.action-link--danger:hover::before {
-  background-image: url(../../images/icons/c11f1f/cog.svg);
-}
-.action-link--icon-cog.action-link--danger:active::before {
-  background-image: url(../../images/icons/ab1b1b/cog.svg);
-}
+  /* Cog */
+  &::before {
+    content: "";
+    background-image: url(../../images/icons/545560/cog.svg);
 
-@media (forced-colors: active) {
-  .action-link--icon-cog::before {
-    background: linktext !important;
-    mask-repeat: no-repeat;
-    mask-image: url(../../images/icons/d72222/cog.svg);
+    @media (forced-colors: active) {
+      background: linktext !important;
+      mask-repeat: no-repeat;
+      mask-image: url(../../images/icons/d72222/cog.svg);
+    }
+  }
+
+  &:hover::before {
+    background-image: url(../../images/icons/0036b1/cog.svg);
+  }
+
+  &:active::before {
+    background-image: url(../../images/icons/002e9a/cog.svg);
+  }
+
+  &.action-link--danger {
+
+    /* Cog — danger */
+    &::before {
+      background-image: url(../../images/icons/d72222/cog.svg);
+    }
+
+    &:hover::before {
+      background-image: url(../../images/icons/c11f1f/cog.svg);
+    }
+
+    &:active::before {
+      background-image: url(../../images/icons/ab1b1b/cog.svg);
+    }
   }
 }
 
-/* Show */
-.action-link--icon-show::before {
-  content: "";
-  background-image: url(../../images/icons/545560/show.svg);
-}
-.action-link--icon-show:hover::before {
-  background-image: url(../../images/icons/0036b1/show.svg);
-}
-.action-link--icon-show:active::before {
-  background-image: url(../../images/icons/002e9a/show.svg);
-}
+.action-link--icon-show {
 
-/* Show - danger */
-.action-link--icon-show.action-link--danger::before {
-  background-image: url(../../images/icons/d72222/show.svg);
-}
-.action-link--icon-show.action-link--danger:hover::before {
-  background-image: url(../../images/icons/c11f1f/show.svg);
-}
-.action-link--icon-show.action-link--danger:active::before {
-  background-image: url(../../images/icons/ab1b1b/show.svg);
-}
+  /* Show */
+  &::before {
+    content: "";
+    background-image: url(../../images/icons/545560/show.svg);
 
-@media (forced-colors: active) {
-  .action-link--icon-show::before {
-    background: linktext !important;
-    mask-repeat: no-repeat;
-    mask-image: url(../../images/icons/d72222/show.svg);
+    @media (forced-colors: active) {
+      background: linktext !important;
+      mask-repeat: no-repeat;
+      mask-image: url(../../images/icons/d72222/show.svg);
+    }
+  }
+
+  &:hover::before {
+    background-image: url(../../images/icons/0036b1/show.svg);
+  }
+
+  &:active::before {
+    background-image: url(../../images/icons/002e9a/show.svg);
+  }
+
+  &.action-link--danger {
+
+    /* Show - danger */
+    &::before {
+      background-image: url(../../images/icons/d72222/show.svg);
+    }
+
+    &:hover::before {
+      background-image: url(../../images/icons/c11f1f/show.svg);
+    }
+
+    &:active::before {
+      background-image: url(../../images/icons/ab1b1b/show.svg);
+    }
   }
 }
 
-/* Hide */
-.action-link--icon-hide::before {
-  content: "";
-  background-image: url(../../images/icons/545560/hide.svg);
-}
-.action-link--icon-hide:hover::before {
-  background-image: url(../../images/icons/0036b1/hide.svg);
-}
-.action-link--icon-hide:active::before {
-  background-image: url(../../images/icons/002e9a/hide.svg);
-}
+.action-link--icon-hide {
 
-/* Hide - danger */
-.action-link--icon-hide.action-link--danger::before {
-  background-image: url(../../images/icons/d72222/hide.svg);
-}
-.action-link--icon-hide.action-link--danger:hover::before {
-  background-image: url(../../images/icons/c11f1f/hide.svg);
-}
-.action-link--icon-hide.action-link--danger:active::before {
-  background-image: url(../../images/icons/ab1b1b/hide.svg);
-}
+  /* Hide */
+  &::before {
+    content: "";
+    background-image: url(../../images/icons/545560/hide.svg);
 
-@media (forced-colors: active) {
-  .action-link--icon-hide::before {
-    background: linktext !important;
-    mask-repeat: no-repeat;
-    mask-image: url(../../images/icons/d72222/hide.svg);
+    @media (forced-colors: active) {
+      background: linktext !important;
+      mask-repeat: no-repeat;
+      mask-image: url(../../images/icons/d72222/hide.svg);
+    }
+  }
+
+  &:hover::before {
+    background-image: url(../../images/icons/0036b1/hide.svg);
+  }
+
+  &:active::before {
+    background-image: url(../../images/icons/002e9a/hide.svg);
+  }
+
+  &.action-link--danger {
+
+    /* Hide - danger */
+    &::before {
+      background-image: url(../../images/icons/d72222/hide.svg);
+    }
+
+    &:hover::before {
+      background-image: url(../../images/icons/c11f1f/hide.svg);
+    }
+
+    &:active::before {
+      background-image: url(../../images/icons/ab1b1b/hide.svg);
+    }
   }
 }
 
-/* Key */
-.action-link--icon-key::before {
-  content: "";
-  background-image: url("../../images/icons/545560/key.svg");
-}
-.action-link--icon-key:hover::before {
-  background-image: url("../../images/icons/0036b1/key.svg");
-}
-.action-link--icon-key:active::before {
-  background-image: url("../../images/icons/002e9a/key.svg");
-}
+.action-link--icon-key {
 
-/* Key — danger */
-.action-link--icon-key.action-link--danger::before {
-  background-image: url("../../images/icons/d72222/key.svg");
-}
-.action-link--icon-key.action-link--danger:hover::before {
-  background-image: url("../../images/icons/c11f1f/key.svg");
-}
-.action-link--icon-key.action-link--danger:active::before {
-  background-image: url("../../images/icons/ab1b1b/key.svg");
-}
+  /* Key */
+  &::before {
+    content: "";
+    background-image: url("../../images/icons/545560/key.svg");
 
-@media (forced-colors: active) {
-  .action-link--icon-key::before {
-    background: linktext !important;
-    mask-repeat: no-repeat;
-    mask-image: url(../../images/icons/d72222/key.svg);
+    @media (forced-colors: active) {
+      background: linktext !important;
+      mask-repeat: no-repeat;
+      mask-image: url(../../images/icons/d72222/key.svg);
+    }
+  }
+
+  &:hover::before {
+    background-image: url("../../images/icons/0036b1/key.svg");
+  }
+
+  &:active::before {
+    background-image: url("../../images/icons/002e9a/key.svg");
+  }
+
+  &.action-link--danger {
+
+    /* Key — danger */
+    &::before {
+      background-image: url("../../images/icons/d72222/key.svg");
+    }
+
+    &:hover::before {
+      background-image: url("../../images/icons/c11f1f/key.svg");
+    }
+
+    &:active::before {
+      background-image: url("../../images/icons/ab1b1b/key.svg");
+    }
   }
 }
 
-/* Question Mark */
-.action-link--icon-questionmark::before {
-  content: "";
-  background-image: url("../../images/icons/545560/questionmark.svg");
-}
-.action-link--icon-questionmark:hover::before {
-  background-image: url("../../images/icons/0036b1/questionmark.svg");
-}
-.action-link--icon-questionmark:active::before {
-  background-image: url("../../images/icons/002e9a/questionmark.svg");
-}
+.action-link--icon-questionmark {
 
-/* Question Mark - danger */
-.action-link--icon-questionmark.action-link--danger::before {
-  background-image: url("../../images/icons/d72222/questionmark.svg");
-}
-.action-link--icon-questionmark.action-link--danger:hover::before {
-  background-image: url("../../images/icons/c11f1f/questionmark.svg");
-}
-.action-link--icon-questionmark.action-link--danger:active::before {
-  background-image: url("../../images/icons/ab1b1b/questionmark.svg");
-}
+  /* Question Mark */
+  &::before {
+    content: "";
+    background-image: url("../../images/icons/545560/questionmark.svg");
 
-@media (forced-colors: active) {
-  .action-link--icon-questionmark::before {
-    background: linktext !important;
-    mask-repeat: no-repeat;
-    mask-image: url(../../images/icons/d72222/questionmark.svg);
+    @media (forced-colors: active) {
+      background: linktext !important;
+      mask-repeat: no-repeat;
+      mask-image: url(../../images/icons/d72222/questionmark.svg);
+    }
+  }
+
+  &:hover::before {
+    background-image: url("../../images/icons/0036b1/questionmark.svg");
+  }
+
+  &:active::before {
+    background-image: url("../../images/icons/002e9a/questionmark.svg");
+  }
+
+  &.action-link--danger {
+
+    /* Question Mark - danger */
+    &::before {
+      background-image: url("../../images/icons/d72222/questionmark.svg");
+    }
+
+    &:hover::before {
+      background-image: url("../../images/icons/c11f1f/questionmark.svg");
+    }
+
+    &:active::before {
+      background-image: url("../../images/icons/ab1b1b/questionmark.svg");
+    }
   }
 }
