@@ -42,8 +42,9 @@ function file_test_reset() {
 }
 
 /**
- * Get the arguments passed to invocation of a given hook since
- * file_test_reset() was last called.
+ * Gets the arguments passed to a given hook invocation.
+ *
+ * Arguments are gathered since file_test_reset() was last called.
  *
  * @param string $op
  *   One of the hook_file_* operations: 'load', 'validate', 'download',
