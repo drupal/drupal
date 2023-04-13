@@ -100,7 +100,6 @@ class LayoutBuilderTest extends WebDriverTestBase {
    * Tests the Layout Builder UI.
    */
   public function testLayoutBuilderUi() {
-    $this->markTestSkipped();
     $layout_url = 'node/1/layout';
     $node_url = 'node/1';
 
