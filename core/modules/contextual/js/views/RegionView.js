@@ -5,7 +5,7 @@
 
 (function (Drupal, Backbone) {
   /**
-   * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. There is no
+   * @deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. There is no
    *  replacement.
    */
   Drupal.contextual.RegionView = Backbone.View.extend(
