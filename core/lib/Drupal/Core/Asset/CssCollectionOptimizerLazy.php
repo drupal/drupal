@@ -123,7 +123,7 @@ class CssCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfa
         $query = ['delta' => "$order"] + $query_args;
         $filename = 'css_' . $this->generateHash($css_asset) . '.css';
         $uri = 'assets://css/' . $filename;
-        $css_assets[$order]['data'] = $this->fileUrlGenerator->generateAbsoluteString($uri) . '?' . UrlHelper::buildQuery($query);
+        $css_assets[$order]['data'] = $this->fileUrlGenerator->generateString($uri) . '?' . UrlHelper::buildQuery($query);
       }
       unset($css_assets[$order]['items']);
     }

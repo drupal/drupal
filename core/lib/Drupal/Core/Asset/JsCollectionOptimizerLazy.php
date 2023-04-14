@@ -135,7 +135,7 @@ class JsCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfac
           ] + $query_args;
           $filename = 'js_' . $this->generateHash($js_asset) . '.js';
           $uri = 'assets://js/' . $filename;
-          $js_assets[$order]['data'] = $this->fileUrlGenerator->generateAbsoluteString($uri) . '?' . UrlHelper::buildQuery($query);
+          $js_assets[$order]['data'] = $this->fileUrlGenerator->generateString($uri) . '?' . UrlHelper::buildQuery($query);
         }
         unset($js_assets[$order]['items']);
       }
