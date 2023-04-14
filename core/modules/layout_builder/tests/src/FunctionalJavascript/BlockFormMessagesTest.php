@@ -61,7 +61,6 @@ class BlockFormMessagesTest extends WebDriverTestBase {
     $page->findLink('Add block')->click();
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas .block-categories'));
     $page->findLink('Powered by Drupal')->click();
-    $this->markTestSkipped("Skipped temporarily for random fails.");
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas [name="settings[label]"]'));
     $page->findField('Title')->setValue('');
     $page->findButton('Add block')->click();
