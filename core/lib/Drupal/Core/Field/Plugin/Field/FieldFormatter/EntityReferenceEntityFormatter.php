@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @FieldFormatter(
  *   id = "entity_reference_entity_view",
  *   label = @Translation("Rendered entity"),
- *   description = @Translation("Display the referenced entities rendered by entity_view()."),
+ *   description = @Translation("Render the referenced entity."),
  *   field_types = {
  *     "entity_reference"
  *   }
