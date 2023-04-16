@@ -251,6 +251,8 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     if ($this->user2) {
       $this->user2->delete();
     }
+
+    parent::tearDown();
   }
 
   /**

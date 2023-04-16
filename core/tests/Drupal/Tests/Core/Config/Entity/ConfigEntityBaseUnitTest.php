@@ -115,6 +115,8 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->id = $this->randomMachineName();
     $values = [
       'id' => $this->id,

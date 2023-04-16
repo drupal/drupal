@@ -127,6 +127,8 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->id = 1;
     $values = [
       'id' => $this->id,

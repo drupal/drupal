@@ -47,6 +47,8 @@ class ImageTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     // Use the Druplicon image.
     $this->source = __DIR__ . '/../../../../../misc/druplicon.png';
   }

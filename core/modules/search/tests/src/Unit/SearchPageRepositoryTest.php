@@ -50,6 +50,8 @@ class SearchPageRepositoryTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->query = $this->createMock('Drupal\Core\Entity\Query\QueryInterface');
 
     $this->storage = $this->createMock('Drupal\Core\Config\Entity\ConfigEntityStorageInterface');

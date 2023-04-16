@@ -23,6 +23,8 @@ class TranslationTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->translationManager = $this->getStringTranslationStub();
   }
 

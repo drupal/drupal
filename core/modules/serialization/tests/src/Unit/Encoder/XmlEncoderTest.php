@@ -37,6 +37,8 @@ class XmlEncoderTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->baseEncoder = $this->createMock(BaseXmlEncoder::class);
     $this->encoder = new XmlEncoder();
     $this->encoder->setBaseEncoder($this->baseEncoder);

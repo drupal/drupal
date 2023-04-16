@@ -45,6 +45,8 @@ class HelpTopicTwigTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->helpTopic = new HelpTopicTwig([],
       self::PLUGIN_INFORMATION['id'],
       self::PLUGIN_INFORMATION,

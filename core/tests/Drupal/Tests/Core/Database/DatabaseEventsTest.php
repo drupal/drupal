@@ -27,6 +27,8 @@ class DatabaseEventsTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->connection = new StubConnection($this->createMock(StubPDO::class), []);
   }
 

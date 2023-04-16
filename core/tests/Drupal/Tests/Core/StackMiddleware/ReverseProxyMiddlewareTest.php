@@ -25,6 +25,8 @@ class ReverseProxyMiddlewareTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $responseMock = $this->createMock(Response::class);
     $this->mockHttpKernel = $this->createMock(HttpKernelInterface::class);
     $this->mockHttpKernel->method('handle')

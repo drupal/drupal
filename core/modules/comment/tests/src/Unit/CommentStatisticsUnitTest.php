@@ -51,6 +51,8 @@ class CommentStatisticsUnitTest extends UnitTestCase {
    * Sets up required mocks and the CommentStatistics service under test.
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->statement = $this->getMockBuilder('Drupal\sqlite\Driver\Database\sqlite\Statement')
       ->disableOriginalConstructor()
       ->getMock();

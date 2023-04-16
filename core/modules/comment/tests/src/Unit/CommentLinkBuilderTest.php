@@ -69,6 +69,8 @@ class CommentLinkBuilderTest extends UnitTestCase {
    * Prepares mocks for the test.
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->commentManager = $this->createMock('\Drupal\comment\CommentManagerInterface');
     $this->stringTranslation = $this->getStringTranslationStub();
     $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);

@@ -14,6 +14,8 @@ class PhpArrayContainerTest extends ContainerTest {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->machineFormat = FALSE;
     $this->containerClass = '\Drupal\Component\DependencyInjection\PhpArrayContainer';
     $this->containerDefinition = $this->getMockContainerDefinition();

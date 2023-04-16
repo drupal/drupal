@@ -30,6 +30,8 @@ class BackendCompilerPassTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->backendPass = new BackendCompilerPass();
   }
 

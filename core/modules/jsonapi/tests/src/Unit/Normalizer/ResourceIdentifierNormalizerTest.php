@@ -45,6 +45,8 @@ class ResourceIdentifierNormalizerTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $target_resource_type = new ResourceType('lorem', 'dummy_bundle', NULL);
     $relationship_fields = [
       'field_dummy' => new ResourceTypeRelationship('field_dummy'),

@@ -23,6 +23,8 @@ class MemoryBackendTest extends UnitTestCase {
   protected $flood;
 
   protected function setUp(): void {
+    parent::setUp();
+
     $request = new RequestStack();
     $request_mock = $this->getMockBuilder(Request::class)
       ->onlyMethods(['getClientIp'])

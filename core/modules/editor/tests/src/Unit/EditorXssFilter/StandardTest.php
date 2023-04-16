@@ -27,6 +27,7 @@ class StandardTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
 
     // Mock text format configuration entity object.
     $this->format = $this->getMockBuilder('\Drupal\filter\Entity\FilterFormat')

@@ -30,6 +30,8 @@ class EntityAccessCheckTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $cache_contexts_manager = $this->prophesize(CacheContextsManager::class)->reveal();
     $container = new Container();
     $container->set('cache_contexts_manager', $cache_contexts_manager);

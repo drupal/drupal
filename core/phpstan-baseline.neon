@@ -806,16 +806,6 @@ parameters:
 			path: modules/block/tests/src/Kernel/NewDefaultThemeBlocksTest.php
 
 		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/block/tests/src/Unit/BlockConfigEntityUnitTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/block/tests/src/Unit/CategoryAutocompleteTest.php
-
-		-
 			message: "#^Variable \\$row in empty\\(\\) is never defined\\.$#"
 			count: 1
 			path: modules/block/tests/src/Unit/Plugin/migrate/process/BlockSettingsTest.php
@@ -884,11 +874,6 @@ parameters:
 			message: "#^Method Drupal\\\\book\\\\Form\\\\BookOutlineForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/book/src/Form/BookOutlineForm.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/book/tests/src/Unit/BookManagerTest.php
 
 		-
 			message: "#^Function _add_ajax_listeners_to_plugin_inputs not found\\.$#"
@@ -996,16 +981,6 @@ parameters:
 			path: modules/comment/tests/src/Functional/Views/DefaultViewRecentCommentsTest.php
 
 		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Unit/CommentLinkBuilderTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Unit/CommentStatisticsUnitTest.php
-
-		-
 			message: "#^Variable \\$data might not be defined\\.$#"
 			count: 2
 			path: modules/config/src/Form/ConfigSingleImportForm.php
@@ -1041,26 +1016,6 @@ parameters:
 			path: modules/config_translation/tests/src/Functional/ConfigTranslationUiTest.php
 
 		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/config_translation/tests/src/Unit/ConfigEntityMapperTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/config_translation/tests/src/Unit/ConfigFieldMapperTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/config_translation/tests/src/Unit/ConfigMapperManagerTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/config_translation/tests/src/Unit/ConfigNamesMapperTest.php
-
-		-
 			message: "#^Method Drupal\\\\contact\\\\ContactFormEditForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/contact/src/ContactFormEditForm.php
@@ -1094,11 +1049,6 @@ parameters:
 			message: "#^Method Drupal\\\\content_moderation\\\\ModerationInformation\\:\\:getDefaultRevisionId\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/content_moderation/src/ModerationInformation.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Unit/ContentModerationRouteSubscriberTest.php
 
 		-
 			message: "#^Variable \\$checkbox_id might not be defined\\.$#"
@@ -1211,16 +1161,6 @@ parameters:
 			path: modules/dblog/tests/src/Kernel/DbLogTest.php
 
 		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/editor/tests/src/Unit/EditorConfigEntityUnitTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/editor/tests/src/Unit/EditorXssFilter/StandardTest.php
-
-		-
 			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
 			count: 2
 			path: modules/field/field.module
@@ -1259,16 +1199,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/field/tests/src/Kernel/Timestamp/TimestampFormatterTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/field/tests/src/Unit/FieldConfigEntityUnitTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/field/tests/src/Unit/FieldStorageConfigEntityUnitTest.php
 
 		-
 			message: "#^Variable \\$entity_display might not be defined\\.$#"
@@ -1391,16 +1321,6 @@ parameters:
 			path: modules/file/tests/src/Kernel/UsageTest.php
 
 		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/file/tests/src/Unit/Plugin/migrate/field/d6/FileFieldTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/file/tests/src/Unit/Plugin/migrate/field/d7/FileFieldTest.php
-
-		-
 			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
 			count: 2
 			path: modules/filter/src/FilterFormatFormBase.php
@@ -1419,16 +1339,6 @@ parameters:
 			message: "#^Variable \\$vocabulary in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/forum/src/ForumUninstallValidator.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/help_topics/tests/src/Unit/HelpTopicTwigLoaderTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/help_topics/tests/src/Unit/HelpTopicTwigTest.php
 
 		-
 			message: "#^Method Drupal\\\\history\\\\Plugin\\\\views\\\\field\\\\HistoryUserTimestamp\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#"
@@ -1486,16 +1396,6 @@ parameters:
 			path: modules/image/tests/src/Functional/ImageStyleFlushTest.php
 
 		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/image/tests/src/Unit/ImageStyleTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/image/tests/src/Unit/PageCache/DenyPrivateImageStyleDownloadTest.php
-
-		-
 			message: "#^Variable \\$reason in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/jsonapi/src/Context/FieldResolver.php
@@ -1541,24 +1441,9 @@ parameters:
 			path: modules/jsonapi/tests/src/Functional/ResourceTestBase.php
 
 		-
-			message: "#^Missing call to parent\\:\\:tearDown\\(\\) method\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Kernel/Normalizer/JsonApiDocumentTopLevelNormalizerTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Unit/Normalizer/JsonApiDocumentTopLevelNormalizerTest.php
-
-		-
 			message: "#^Variable \\$id in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 2
 			path: modules/jsonapi/tests/src/Unit/Normalizer/JsonApiDocumentTopLevelNormalizerTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Unit/Normalizer/ResourceIdentifierNormalizerTest.php
 
 		-
 			message: "#^Method Drupal\\\\language\\\\Form\\\\LanguageAddForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
@@ -1586,26 +1471,6 @@ parameters:
 			path: modules/language/src/Plugin/LanguageNegotiation/LanguageNegotiationContentEntity.php
 
 		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/language/tests/src/Unit/Config/LanguageConfigOverrideTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/language/tests/src/Unit/ContentLanguageSettingsUnitTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/language/tests/src/Unit/LanguageNegotiationUrlTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/language/tests/src/Unit/Plugin/LanguageNegotiation/LanguageNegotiationContentEntityTest.php
-
-		-
 			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
 			count: 1
 			path: modules/layout_builder/src/Entity/LayoutBuilderEntityViewDisplay.php
@@ -1619,11 +1484,6 @@ parameters:
 			message: "#^Constructor of class Drupal\\\\link\\\\Plugin\\\\migrate\\\\process\\\\FieldLink has an unused parameter \\$migration\\.$#"
 			count: 1
 			path: modules/link/src/Plugin/migrate/process/FieldLink.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/link/tests/src/Unit/Plugin/migrate/field/d6/LinkFieldTest.php
 
 		-
 			message: "#^Function locale_config_batch_update_components\\(\\) should return array but return statement is missing\\.$#"
@@ -1699,16 +1559,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/locale/tests/src/Functional/LocaleUpdateInterfaceTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/locale/tests/src/Unit/LocaleLookupTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/locale/tests/src/Unit/LocaleTranslationTest.php
 
 		-
 			message: "#^Variable \\$error in empty\\(\\) always exists and is not falsy\\.$#"
@@ -1831,11 +1681,6 @@ parameters:
 			path: modules/migrate/tests/src/Kernel/MigrateTestBase.php
 
 		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/migrate/tests/src/Unit/MigrateSqlIdMapTest.php
-
-		-
 			message: "#^Variable \\$sub_process_plugins might not be defined\\.$#"
 			count: 2
 			path: modules/migrate/tests/src/Unit/process/SubProcessTest.php
@@ -1884,11 +1729,6 @@ parameters:
 			message: "#^Variable \\$statement might not be defined\\.$#"
 			count: 1
 			path: modules/migrate_drupal/tests/src/Unit/MigrationConfigurationTraitTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/migrate_drupal/tests/src/Unit/source/d6/Drupal6SqlBaseTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1964,16 +1804,6 @@ parameters:
 			message: "#^Variable \\$string_check might not be defined\\.$#"
 			count: 1
 			path: modules/mysql/tests/src/Kernel/mysql/SchemaTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/mysql/tests/src/Unit/ConnectionTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/mysql/tests/src/Unit/InstallTasksTest.php
 
 		-
 			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
@@ -2066,11 +1896,6 @@ parameters:
 			path: modules/node/tests/src/Kernel/Migrate/d7/MigrateNodeTest.php
 
 		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/node/tests/src/Unit/PageCache/DenyNodePreviewTest.php
-
-		-
 			message: "#^Method Drupal\\\\options\\\\Plugin\\\\Field\\\\FieldType\\\\ListFloatItem\\:\\:validateAllowedValue\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: modules/options/src/Plugin/Field/FieldType/ListFloatItem.php
@@ -2126,11 +1951,6 @@ parameters:
 			path: modules/path_alias/src/AliasManager.php
 
 		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/path_alias/tests/src/Unit/PathProcessor/AliasPathProcessorTest.php
-
-		-
 			message: "#^Variable \\$table_field might not be defined\\.$#"
 			count: 1
 			path: modules/pgsql/src/Driver/Database/pgsql/Select.php
@@ -2149,11 +1969,6 @@ parameters:
 			message: "#^Method Drupal\\\\responsive_image\\\\ResponsiveImageStyleForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/responsive_image/src/ResponsiveImageStyleForm.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/responsive_image/tests/src/Unit/ResponsiveImageStyleConfigEntityUnitTest.php
 
 		-
 			message: "#^Method Drupal\\\\rest\\\\Routing\\\\ResourceRoutes\\:\\:onDynamicRouteEvent\\(\\) should return array but return statement is missing\\.$#"
@@ -2211,16 +2026,6 @@ parameters:
 			path: modules/search/tests/src/Functional/SearchRankingTest.php
 
 		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/search/tests/src/Unit/SearchPageRepositoryTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/search/tests/src/Unit/SearchPluginCollectionTest.php
-
-		-
 			message: "#^Call to an undefined method Drupal\\\\serialization\\\\Normalizer\\\\EntityNormalizer\\:\\:getCustomSerializedPropertyNames\\(\\)\\.$#"
 			count: 1
 			path: modules/serialization/src/Normalizer/EntityNormalizer.php
@@ -2234,61 +2039,6 @@ parameters:
 			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
 			count: 1
 			path: modules/serialization/src/Normalizer/FieldItemNormalizer.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/serialization/tests/src/Unit/Encoder/XmlEncoderTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/serialization/tests/src/Unit/EntityResolver/ChainEntityResolverTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/serialization/tests/src/Unit/EntityResolver/UuidResolverTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/serialization/tests/src/Unit/Normalizer/ComplexDataNormalizerTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/serialization/tests/src/Unit/Normalizer/ContentEntityNormalizerTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/serialization/tests/src/Unit/Normalizer/EntityNormalizerTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/serialization/tests/src/Unit/Normalizer/EntityReferenceFieldItemNormalizerTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/serialization/tests/src/Unit/Normalizer/ListNormalizerTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/serialization/tests/src/Unit/Normalizer/NullNormalizerTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/serialization/tests/src/Unit/Normalizer/PrimitiveDataNormalizerTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/serialization/tests/src/Unit/Normalizer/TypedDataNormalizerTest.php
 
 		-
 			message: "#^Method Drupal\\\\shortcut\\\\Form\\\\SetCustomize\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
@@ -2521,29 +2271,9 @@ parameters:
 			path: modules/taxonomy/tests/src/Kernel/TermKernelTest.php
 
 		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/taxonomy/tests/src/Unit/Plugin/migrate/field/TaxonomyTermReferenceFieldTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/text/tests/src/Unit/Plugin/migrate/field/d6/TextFieldTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/text/tests/src/Unit/Plugin/migrate/field/d7/TextFieldTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/toolbar/src/Controller/ToolbarController.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/toolbar/tests/src/Unit/PageCache/AllowToolbarPathTest.php
 
 		-
 			message: "#^Method Drupal\\\\tour\\\\TipPluginBase\\:\\:get\\(\\) should return string but return statement is missing\\.$#"
@@ -2684,11 +2414,6 @@ parameters:
 			message: "#^Variable \\$result in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: modules/user/tests/src/Unit/UserAccessControlHandlerTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/user/tests/src/Unit/UserAuthTest.php
 
 		-
 			message: "#^Variable \\$batch in isset\\(\\) is never defined\\.$#"
@@ -3071,46 +2796,6 @@ parameters:
 			path: modules/views/tests/src/Kernel/ViewsTemplateTest.php
 
 		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/views/tests/src/Unit/Controller/ViewAjaxControllerTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/views/tests/src/Unit/EventSubscriber/RouteSubscriberTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/views/tests/src/Unit/Plugin/Derivative/ViewsLocalTaskTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/views/tests/src/Unit/Plugin/pager/PagerPluginBaseTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/views/tests/src/Unit/Plugin/pager/SqlBaseTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/views/tests/src/Unit/Plugin/views/field/EntityOperationsUnitTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/views/tests/src/Unit/Routing/ViewPageControllerTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: modules/views/tests/src/Unit/ViewsDataTest.php
-
-		-
 			message: "#^Variable \\$relationship_handler in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/views_ui/src/Form/Ajax/ConfigHandler.php
@@ -3426,11 +3111,6 @@ parameters:
 			path: tests/Drupal/Tests/Component/DependencyInjection/Dumper/OptimizedPhpArrayDumperTest.php
 
 		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/DependencyInjection/PhpArrayContainerTest.php
-
-		-
 			message: "#^Constructor of class Drupal\\\\Tests\\\\Component\\\\Plugin\\\\Factory\\\\ArgumentsAllNull has an unused parameter \\$charismatic\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Component/Plugin/Factory/ReflectionFactoryTest.php
@@ -3496,121 +3176,6 @@ parameters:
 			path: tests/Drupal/Tests/Composer/ComposerTest.php
 
 		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Composer/Plugin/Scaffold/Functional/ComposerHookTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:tearDown\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Composer/Plugin/Scaffold/Functional/ComposerHookTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Access/CsrfAccessCheckTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Access/RouteProcessorCsrfTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Ajax/AjaxResponseTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Annotation/TranslationTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Asset/LibraryDependencyResolverTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Asset/LibraryDiscoveryCollectorTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Breadcrumb/BreadcrumbManagerTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Cache/CacheCollectorTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Cache/Context/SessionCacheContextTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Config/ConfigFactoryTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Config/ConfigTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Config/Entity/ConfigEntityBaseUnitTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Config/Entity/ConfigEntityTypeTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Config/Entity/EntityDisplayModeBaseUnitTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Config/ReadOnlyStorageTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Config/StorageComparerTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Controller/AjaxRendererTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Controller/ControllerBaseTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Controller/TitleResolverTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Database/DatabaseEventsTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Database/DatabaseTest.php
-
-		-
 			message: "#^Class Drupal\\\\Driver\\\\Database\\\\corefake\\\\Install\\\\Tasks not found\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Database/InstallerObjectTest.php
@@ -3619,146 +3184,6 @@ parameters:
 			message: "#^Class Drupal\\\\Driver\\\\Database\\\\fake\\\\Install\\\\Tasks not found\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Database/InstallerObjectTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Database/OrderByTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/DependencyInjection/Compiler/BackendCompilerPassTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/DependencyInjection/Compiler/StackedKernelPassTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Entity/BaseFieldDefinitionTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Entity/ContentEntityBaseUnitTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Entity/EntityAccessCheckTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Entity/EntityResolverManagerTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Entity/EntityUnitTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Entity/FieldDefinitionTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Entity/Sql/SqlContentEntityStorageSchemaTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Entity/Sql/SqlContentEntityStorageTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Entity/TypedData/EntityAdapterUnitTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/EventSubscriber/CustomPageExceptionHtmlSubscriberTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/EventSubscriber/ModuleRouteSubscriberTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/EventSubscriber/PathRootsSubscriberTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/EventSubscriber/PsrResponseSubscriberTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Flood/MemoryBackendTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Http/ClientFactoryTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Image/ImageTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Lock/LockBackendAbstractTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Menu/ContextualLinkManagerTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Menu/LocalActionManagerTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/PageCache/ChainRequestPolicyTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/PageCache/ChainResponsePolicyTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/PageCache/CommandLineOrUnsafeMethodTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/PageCache/NoSessionOpenTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Path/PathMatcherTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/PathProcessor/PathProcessorTest.php
 
 		-
 			message: "#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
@@ -3771,34 +3196,9 @@ parameters:
 			path: tests/Drupal/Tests/Core/Plugin/CategorizingPluginManagerTraitTest.php
 
 		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Plugin/CategorizingPluginManagerTraitTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Plugin/DefaultPluginManagerTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Plugin/Discovery/DerivativeDiscoveryDecoratorTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Plugin/Discovery/HookDiscoveryTest.php
-
-		-
 			message: "#^Constructor of class Drupal\\\\Tests\\\\Core\\\\Plugin\\\\Discovery\\\\TestContainerDerivativeDiscovery has an unused parameter \\$example_service\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Plugin/Discovery/TestContainerDerivativeDiscovery.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Plugin/LazyPluginCollectionTestBase.php
 
 		-
 			message: "#^Constructor of class Drupal\\\\Tests\\\\Core\\\\Plugin\\\\TestPluginManager has an unused parameter \\$namespaces\\.$#"
@@ -3806,61 +3206,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/Plugin/TestPluginManager.php
 
 		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/RouteProcessor/RouteProcessorManagerTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Routing/RouteBuilderTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Routing/RoutePreloaderTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Routing/UrlGeneratorTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Session/WriteSafeSessionHandlerTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Site/SettingsTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/StackMiddleware/ReverseProxyMiddlewareTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/StringTranslation/StringTranslationTraitTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/StringTranslation/TranslationManagerTest.php
-
-		-
 			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Theme/ThemeNegotiatorTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Utility/TokenTest.php

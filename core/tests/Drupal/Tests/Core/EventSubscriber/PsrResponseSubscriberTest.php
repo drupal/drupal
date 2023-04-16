@@ -33,6 +33,8 @@ class PsrResponseSubscriberTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $factory = $this->getMockBuilder('Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface')
       ->disableOriginalConstructor()
       ->getMock();

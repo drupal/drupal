@@ -39,6 +39,8 @@ class ChainResponsePolicyTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->policy = new ChainResponsePolicy();
     $this->response = new Response();
     $this->request = new Request();
