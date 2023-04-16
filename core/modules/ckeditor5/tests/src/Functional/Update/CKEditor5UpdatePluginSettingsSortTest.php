@@ -6,7 +6,7 @@ use Drupal\editor\Entity\Editor;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 
 /**
- * @covers ckeditor5_post_update_plugins_settings_export_order()
+ * @covers ckeditor5_post_update_plugins_settings_export_order
  * @group Update
  * @group ckeditor5
  */

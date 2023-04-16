@@ -901,11 +901,6 @@ parameters:
 			path: modules/ckeditor5/src/Plugin/Validation/Constraint/StyleSensibleElementConstraintValidator.php
 
 		-
-			message: "#^@covers value ckeditor5_post_update_plugins_settings_export_order\\(\\) references an invalid class or function\\.$#"
-			count: 1
-			path: modules/ckeditor5/tests/src/Functional/Update/CKEditor5UpdatePluginSettingsSortTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/comment/src/CommentForm.php
@@ -1861,11 +1856,6 @@ parameters:
 			path: modules/node/tests/src/Functional/NodeRevisionsTest.php
 
 		-
-			message: "#^@covers value node_local_tasks_alter\\(\\) references an invalid class or function\\.$#"
-			count: 1
-			path: modules/node/tests/src/Functional/NodeRevisionsUiTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/node/tests/src/Functional/NodeSaveTest.php
@@ -2186,16 +2176,6 @@ parameters:
 			path: modules/system/tests/src/Functional/Theme/ThemeUiTest.php
 
 		-
-			message: "#^@covers value \\\\hook_requirements references an invalid class or function\\.$#"
-			count: 1
-			path: modules/system/tests/src/Kernel/Module/RequirementsTest.php
-
-		-
-			message: "#^@covers value \\\\hook_requirements_alter references an invalid class or function\\.$#"
-			count: 1
-			path: modules/system/tests/src/Kernel/Module/RequirementsTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/system/tests/src/Kernel/Token/TokenReplaceKernelTest.php
@@ -2299,11 +2279,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 4
 			path: modules/update/src/UpdateProcessor.php
-
-		-
-			message: "#^@covers value template_preprocess_update_report\\(\\) references an invalid class or function\\.$#"
-			count: 1
-			path: modules/update/tests/src/Kernel/UpdateReportTest.php
 
 		-
 			message: "#^Variable \\$users might not be defined\\.$#"
@@ -2791,11 +2766,6 @@ parameters:
 			path: modules/views/tests/src/Kernel/RenderCacheIntegrationTest.php
 
 		-
-			message: "#^@covers value views_theme_suggestions_container_alter\\(\\)\\. references an invalid class or function\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/ViewsTemplateTest.php
-
-		-
 			message: "#^Variable \\$relationship_handler in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/views_ui/src/Form/Ajax/ConfigHandler.php
@@ -3046,24 +3016,9 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/KeyValueStore/GarbageCollectionTest.php
 
 		-
-			message: "#^@covers value drupal_rewrite_settings\\(\\) references an invalid class or function\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Site/LegacySettingsRewriteTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/TempStore/TempStoreDatabaseTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\Core\\\\Template\\\\FrontMatterSourceDecorator references an invalid class or function\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Theme/FrontMatterTest.php
-
-		-
-			message: "#^@covers value \\\\Drupal\\\\Core\\\\Template\\\\Loader\\\\FrontMatterLoaderDecorator references an invalid class or function\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Theme/FrontMatterTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"

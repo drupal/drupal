@@ -13,8 +13,6 @@ use Twig\Loader\FilesystemLoader;
 /**
  * Tests Twig front matter support.
  *
- * @covers \Drupal\Core\Template\Loader\FrontMatterLoaderDecorator
- * @covers \Drupal\Core\Template\FrontMatterSourceDecorator
  * @group Twig
  */
 class FrontMatterTest extends KernelTestBase {

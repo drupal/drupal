@@ -10,7 +10,7 @@ use Drupal\KernelTests\KernelTestBase;
  *
  * @group system
  * @group legacy
- * @covers drupal_rewrite_settings()
+ * @covers drupal_rewrite_settings
  */
 class LegacySettingsRewriteTest extends KernelTestBase {
 

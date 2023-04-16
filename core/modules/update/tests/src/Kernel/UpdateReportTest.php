@@ -10,7 +10,7 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 /**
  * Tests update report functionality.
  *
- * @covers template_preprocess_update_report()
+ * @covers template_preprocess_update_report
  * @group update
  */
 class UpdateReportTest extends KernelTestBase {
