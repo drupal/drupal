@@ -25,7 +25,7 @@
   & .ui-dialog-titlebar {
     all: revert;
 
-    &:before {
+    &::before {
       content: none;
     }
 
@@ -68,7 +68,7 @@
     font-weight: bold;
     line-height: 1.2;
 
-    &:before {
+    &::before {
       position: absolute;
       inset-inline-start: 0;
       display: block;
@@ -154,7 +154,7 @@
       background-color: #666;
     }
 
-    &:before {
+    &::before {
       position: absolute;
       inset-inline-start: var(--off-canvas-padding);
       display: block;
@@ -166,8 +166,8 @@
     }
   }
 
-  & .active-workspace--default .active-workspace__label:before,
-  & .workspaces__item--default:before {
+  & .active-workspace--default .active-workspace__label::before,
+  & .workspaces__item--default::before {
     background-image: url("../icons/81c071/ws_icon.svg"); /* Green icon. */
   }
 

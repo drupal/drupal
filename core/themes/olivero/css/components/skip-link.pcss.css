@@ -24,7 +24,7 @@
     color: var(--color--white);
   }
 
-  &:after {
+  &::after {
     content: "\0020	➔";
   }
 }

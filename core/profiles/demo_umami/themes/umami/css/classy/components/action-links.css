@@ -29,13 +29,13 @@
   text-decoration: none;
   line-height: 160%;
 }
-.button-action:before {
+.button-action::before {
   margin-left: -0.1em; /* LTR */
   padding-right: 0.2em; /* LTR */
   content: "+";
   font-weight: 900;
 }
-[dir="rtl"] .button-action:before {
+[dir="rtl"] .button-action::before {
   margin-right: -0.1em;
   margin-left: 0;
   padding-right: 0;

@@ -24,7 +24,7 @@
  *
  * Based on http://codepen.io/flesler/pen/AEIFc.
  */
-.caption > figcaption[contenteditable=true]:empty:before {
+.caption > figcaption[contenteditable=true]:empty::before {
   content: attr(data-placeholder);
   font-style: italic;
 }

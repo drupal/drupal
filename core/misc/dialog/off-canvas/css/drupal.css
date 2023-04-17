@@ -26,10 +26,10 @@
   margin: 0 0 0.625rem 0;
 }
 
-#drupal-off-canvas-wrapper small .admin-link:before {
+#drupal-off-canvas-wrapper small .admin-link::before {
   content: " [";
 }
 
-#drupal-off-canvas-wrapper small .admin-link:after {
+#drupal-off-canvas-wrapper small .admin-link::after {
   content: "]";
 }

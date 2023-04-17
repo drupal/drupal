@@ -92,8 +92,8 @@
   background: none;
   appearance: none;
 
-  &:before,
-  &:after {
+  &::before,
+  &::after {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -104,11 +104,11 @@
     border-top: solid 2px var(--color--gray-60);
   }
 
-  &:before {
+  &::before {
     transform: translate(-50%, -50%) rotate(45deg);
   }
 
-  &:after {
+  &::after {
     transform: translate(-50%, -50%) rotate(-45deg);
   }
 

@@ -22,7 +22,7 @@ body:not(.is-always-mobile-nav) {
       margin: 0;
 
       /* If the secondary nav is the first item within the header, it does not need left separator. */
-      &:first-child .secondary-nav:before {
+      &:first-child .secondary-nav::before {
         content: none;
       }
     }

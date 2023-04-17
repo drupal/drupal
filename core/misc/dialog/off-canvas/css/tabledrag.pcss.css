@@ -45,7 +45,7 @@
   & .tabledrag-handle {
     flex-shrink: 0;
 
-    &:after {
+    &::after {
       display: block;
       width: 20px;
       height: 20px;

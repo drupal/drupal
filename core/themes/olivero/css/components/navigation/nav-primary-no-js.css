@@ -65,8 +65,8 @@
   html:not(.js) .primary-nav__button-toggle {
     display: none;
   }
-  html:not(.js) .primary-nav__menu-link--button.primary-nav__menu-link--has-children:before,
-  html:not(.js) .primary-nav__menu-link--button.primary-nav__menu-link--has-children:after {
+  html:not(.js) .primary-nav__menu-link--button.primary-nav__menu-link--has-children::before,
+  html:not(.js) .primary-nav__menu-link--button.primary-nav__menu-link--has-children::after {
     content: none;
   }
 }
@@ -120,8 +120,8 @@
   html:not(.js) body.is-always-mobile-nav .primary-nav__button-toggle {
     display: none;
   }
-  html:not(.js) body.is-always-mobile-nav .primary-nav__menu-link--button.primary-nav__menu-link--has-children:before,
-  html:not(.js) body.is-always-mobile-nav .primary-nav__menu-link--button.primary-nav__menu-link--has-children:after {
+  html:not(.js) body.is-always-mobile-nav .primary-nav__menu-link--button.primary-nav__menu-link--has-children::before,
+  html:not(.js) body.is-always-mobile-nav .primary-nav__menu-link--button.primary-nav__menu-link--has-children::after {
     content: none;
   }
 

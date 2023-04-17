@@ -107,7 +107,7 @@
   font-weight: bold;
 }
 
-.system-status-report__status-icon:before {
+.system-status-report__status-icon::before {
   position: absolute;
   inset-block-start: 1em;
   inset-inline-start: 10px;
@@ -121,25 +121,25 @@
   background-position: top center;
   background-size: contain;
 }
-.system-status-report__status-icon--error:before {
+.system-status-report__status-icon--error::before {
   background-image: url(../../../../misc/icons/dc2323/error.svg);
 }
-.system-status-report__status-icon--warning:before {
+.system-status-report__status-icon--warning::before {
   background-image: url(../../images/core/e29700/warning.svg);
 }
 
 @media (forced-colors: active) {
-  .system-status-report__status-icon:before {
+  .system-status-report__status-icon::before {
     background-color: canvastext;
     background-image: none;
     mask-repeat: no-repeat;
     mask-position: top center;
     mask-size: contain;
   }
-  .system-status-report__status-icon--error:before {
+  .system-status-report__status-icon--error::before {
     mask-image: url(../../../../misc/icons/dc2323/error.svg);
   }
-  .system-status-report__status-icon--warning:before {
+  .system-status-report__status-icon--warning::before {
     mask-image: url(../../images/core/e29700/warning.svg);
   }
 }

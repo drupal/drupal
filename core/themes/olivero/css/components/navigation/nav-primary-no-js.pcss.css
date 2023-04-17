@@ -58,8 +58,8 @@ html:not(.js) {
     }
 
     & .primary-nav__menu-link--button.primary-nav__menu-link--has-children {
-      &:before,
-      &:after {
+      &::before,
+      &::after {
         content: none;
       }
     }
@@ -113,8 +113,8 @@ html:not(.js) {
       }
 
       & .primary-nav__menu-link--button.primary-nav__menu-link--has-children {
-        &:before,
-        &:after {
+        &::before,
+        &::after {
           content: none;
         }
       }

@@ -42,20 +42,20 @@
   background-image: linear-gradient(to bottom, #0066a1, #005b98);
 }
 /* Make the inactive icon gray. */
-.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item:before {
+.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item::before {
   background-image: url(../../../../misc/icons/bebebe/pencil.svg);
 }
 /* Make the active icon white. */
-.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item.is-active:before {
+.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item.is-active::before {
   background-image: url(../../../../misc/icons/ffffff/pencil.svg);
 }
-.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item:hover:before {
+.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item:hover::before {
   background-image: url(../../../../misc/icons/ffffff/pencil.svg);
 }
-.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item:hover > .toolbar-icon-edit:before {
+.toolbar-tab > .toolbar-icon.toolbar-icon-edit.toolbar-item:hover > .toolbar-icon-edit::before {
   background-image: url(../../../../misc/icons/ffffff/pencil.svg);
 }
-.toolbar-tab > .button.toolbar-icon.toolbar-icon.toolbar-icon-edit:before {
+.toolbar-tab > .button.toolbar-icon.toolbar-icon.toolbar-icon-edit::before {
   background-image: url(../../../../misc/icons/ffffff/pencil.svg);
 }
 

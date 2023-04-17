@@ -48,7 +48,7 @@
   line-height: 1.3125rem;
 }
 
-.comments__count:after {
+.comments__count::after {
   position: absolute;
   inset-block-end: -0.4375rem;
   inset-inline-start: 0.5rem;
@@ -203,7 +203,7 @@
   margin-inline-start: var(--comment-indentation);
 }
 
-.indented > .comment:not(:last-of-type, .has-children):before {
+.indented > .comment:not(:last-of-type, .has-children)::before {
   position: absolute;
   inset-block-start: var(--sp2);
   inset-inline-start: calc(-1 * var(--comment-indentation) - var(--sp)); /* Comment's padding-top */
@@ -215,7 +215,7 @@
 
 @media (min-width: 43.75rem) {
 
-  .indented > .comment:not(:last-of-type, .has-children):before {
+  .indented > .comment:not(:last-of-type, .has-children)::before {
     inset-inline-start: calc(-1 * var(--comment-indentation--md) + var(--sp));
   }
 }
@@ -246,11 +246,11 @@
   appearance: none;
 }
 
-.show-hide-btn[aria-expanded="true"]:after {
+.show-hide-btn[aria-expanded="true"]::after {
   content: "\0020 -";
 }
 
-.show-hide-btn[aria-expanded="false"]:after {
+.show-hide-btn[aria-expanded="false"]::after {
   content: "\0020 +";
 }
 

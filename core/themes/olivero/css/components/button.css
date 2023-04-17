@@ -122,7 +122,7 @@
   align-items: center;
 }
 
-.button--icon-back:before {
+.button--icon-back::before {
   display: block;
   width: 0.5em;
   height: 0.5em;
@@ -133,7 +133,7 @@
   border-inline-start: solid 2px currentColor;
 }
 
-[dir="rtl"] .button--icon-back:before {
+[dir="rtl"] .button--icon-back::before {
   transform: rotate(-45deg);
 }
 

@@ -76,20 +76,20 @@
 
 @media (min-width: 43.75rem) {
 
-  .layout--content-narrow.text-content blockquote:before,
-  .layout--pass--content-narrow > *.text-content blockquote:before,
-  .layout--content-narrow .text-content blockquote:before,
-  .layout--pass--content-narrow > * .text-content blockquote:before {
+  .layout--content-narrow.text-content blockquote::before,
+  .layout--pass--content-narrow > *.text-content blockquote::before,
+  .layout--content-narrow .text-content blockquote::before,
+  .layout--pass--content-narrow > * .text-content blockquote::before {
     inset-inline-start: calc(-1 * (var(--grid-col-width) + var(--grid-gap)));
   }
 }
 
 @media (min-width: 43.75rem) {
 
-  .layout--content-narrow.text-content blockquote:after,
-  .layout--pass--content-narrow > *.text-content blockquote:after,
-  .layout--content-narrow .text-content blockquote:after,
-  .layout--pass--content-narrow > * .text-content blockquote:after {
+  .layout--content-narrow.text-content blockquote::after,
+  .layout--pass--content-narrow > *.text-content blockquote::after,
+  .layout--content-narrow .text-content blockquote::after,
+  .layout--pass--content-narrow > * .text-content blockquote::after {
     inset-inline-start: calc(-1 * (var(--grid-col-width) + var(--grid-gap)));
     width: var(--sp);
     height: calc(100% - 2.8125rem);

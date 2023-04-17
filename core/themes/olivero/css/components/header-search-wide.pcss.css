@@ -105,7 +105,7 @@
       background-position: center;
       background-size: contain;
 
-      &:after {
+      &::after {
         position: absolute;
         inset-block-end: 0;
         inset-inline-start: 0;
@@ -124,14 +124,14 @@
       outline-offset: -4px;
       box-shadow: none;
 
-      & span:after {
+      & span::after {
         transform: scaleX(1);
       }
 
       @media screen and (-ms-high-contrast: active) {
         border-bottom-width: var(--sp0-5);
 
-        & span:after {
+        & span::after {
           content: none;
         }
       }
@@ -183,7 +183,7 @@
     position: relative;
     outline: 0;
 
-    &:after {
+    &::after {
       position: absolute;
       top: 50%;
       left: 50%;
@@ -199,13 +199,13 @@
   &[aria-expanded="true"] {
     background: var(--color--black);
 
-    &:focus:after {
+    &:focus::after {
       border-color: var(--color--white);
     }
 
     & .block-search-wide__button-close {
-      &:before,
-      &:after {
+      &::before,
+      &::after {
         position: absolute;
         top: 50%;
         left: 50%;
@@ -215,11 +215,11 @@
         border-block-start: solid 2px var(--color--white);
       }
 
-      &:before {
+      &::before {
         transform: translate(-50%, -50%) rotate(-45deg);
       }
 
-      &:after {
+      &::after {
         transform: translate(-50%, -50%) rotate(45deg);
       }
     }
@@ -267,7 +267,7 @@ html:not(.js) .search-block-form:focus-within .block-search-wide__wrapper {
     background-position: bottom right;
   }
 
-  & .search-form__submit .icon--search:after {
+  & .search-form__submit .icon--search::after {
     transform-origin: right;
   }
 }

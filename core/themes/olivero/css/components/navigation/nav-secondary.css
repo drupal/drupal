@@ -52,7 +52,7 @@
   color: inherit;
 }
 
-.secondary-nav__menu-link:after {
+.secondary-nav__menu-link::after {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -66,7 +66,7 @@
   border-top: solid 2px currentColor;
 }
 
-.secondary-nav__menu-link:hover:after {
+.secondary-nav__menu-link:hover::after {
   transform: translateY(0);
   opacity: 0.8;
 }
@@ -79,7 +79,7 @@
     padding-inline-start: var(--sp2);
   }
 
-  body:not(.is-always-mobile-nav) .secondary-nav:before {
+  body:not(.is-always-mobile-nav) .secondary-nav::before {
     position: absolute;
     inset-block-start: 50%;
     inset-inline-start: 0;
@@ -98,7 +98,7 @@
     outline: 0;
   }
 
-  body:not(.is-always-mobile-nav) .secondary-nav__menu-link:focus:before {
+  body:not(.is-always-mobile-nav) .secondary-nav__menu-link:focus::before {
     position: absolute;
     top: 50%;
     left: 50%;

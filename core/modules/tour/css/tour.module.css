@@ -91,19 +91,19 @@
 
 .shepherd-element,
 .shepherd-element *,
-.shepherd-element :after,
-.shepherd-element :before {
+.shepherd-element ::after,
+.shepherd-element ::before {
   box-sizing: border-box;
 }
 
 .shepherd-arrow,
-.shepherd-arrow:before {
+.shepherd-arrow::before {
   position: absolute;
   width: 16px;
   height: 16px;
 }
 
-.shepherd-arrow:before {
+.shepherd-arrow::before {
   content: "";
   transform: rotate(45deg);
   background: #fff;

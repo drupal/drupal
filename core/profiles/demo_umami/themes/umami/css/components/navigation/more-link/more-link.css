@@ -24,7 +24,7 @@
   border-bottom: 1px solid #008068;
   background-color: inherit;
 }
-.read-more__link:before {
+.read-more__link::before {
   position: absolute;
   top: 50%;
   right: 0; /* LTR */
@@ -37,7 +37,7 @@
   background-position: 0 0;
   background-size: contain;
 }
-[dir=rtl] .read-more__link:before {
+[dir=rtl] .read-more__link::before {
   right: unset;
   left: 0;
   transform: rotate(180deg);

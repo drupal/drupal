@@ -22,7 +22,7 @@
     font-weight: bold;
 
     /* The pencil icon. */
-    &:before {
+    &::before {
       position: absolute;
       top: 0;
       inset-inline-start: 1em;
@@ -64,8 +64,8 @@
     }
 
     /* The plus icon. */
-    &:before,
-    &:after {
+    &::before,
+    &::after {
       position: absolute;
       top: calc(50% - 1px);
       left: 50%;
@@ -75,11 +75,11 @@
       border-top: solid 2px currentColor;
     }
 
-    &:before {
+    &::before {
       transform: translate(-50%, 50%) rotate(-45deg);
     }
 
-    &:after {
+    &::after {
       transform: translate(-50%, 50%) rotate(45deg);
     }
 

@@ -9,7 +9,7 @@
 .layout-container {
   margin: 0 1.5em;
 }
-.layout-container:after {
+.layout-container::after {
   display: table;
   clear: both;
   content: "";
@@ -66,10 +66,10 @@
 /**
  * Quick inline admin links.
  */
-small .admin-link:before {
+small .admin-link::before {
   content: " [";
 }
-small .admin-link:after {
+small .admin-link::after {
   content: "]";
 }
 
@@ -220,7 +220,7 @@ small .admin-link:after {
 [dir="rtl"] .system-status-report__status-title {
   padding: 10px 40px 10px 6px;
 }
-.system-status-report__status-icon:before {
+.system-status-report__status-icon::before {
   position: absolute;
   top: 12px;
   left: 12px; /* LTR */
@@ -230,14 +230,14 @@ small .admin-link:after {
   content: "";
   background-repeat: no-repeat;
 }
-[dir="rtl"] .system-status-report__status-icon:before {
+[dir="rtl"] .system-status-report__status-icon::before {
   right: 12px;
   left: auto;
 }
-.system-status-report__status-icon--error:before {
+.system-status-report__status-icon--error::before {
   background-image: url(../../../../misc/icons/e32700/error.svg);
 }
-.system-status-report__status-icon--warning:before {
+.system-status-report__status-icon--warning::before {
   background-image: url(../../../../misc/icons/e29700/warning.svg);
 }
 .system-status-report__entry__value {

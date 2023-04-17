@@ -469,7 +469,7 @@ td.group-title {
   padding: var(--space-s) var(--space-m) var(--space-xs);
   background-color: var(--color-gray-050);
 }
-.views-ui-dialog .views-offset-top:not(:empty):after {
+.views-ui-dialog .views-offset-top:not(:empty)::after {
   position: absolute;
   bottom: 0;
   left: 0;

@@ -50,7 +50,7 @@
 }
 
 .book-pager__link--previous {
-  &:before {
+  &::before {
     display: block;
     width: var(--sp0-5);
     height: var(--sp0-5);
@@ -63,7 +63,7 @@
 }
 
 .book-pager__link--next {
-  &:after {
+  &::after {
     display: block;
     width: var(--sp0-5);
     height: var(--sp0-5);
@@ -94,11 +94,11 @@
 }
 
 [dir="rtl"] {
-  & .book-pager__link--previous:before {
+  & .book-pager__link--previous::before {
     transform: rotate(45deg);
   }
 
-  & .book-pager__link--next:after {
+  & .book-pager__link--next::after {
     transform: rotate(-135deg);
   }
 }

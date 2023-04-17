@@ -89,7 +89,7 @@ tr.selected td {
   padding-inline-end: var(--space-xs);
 }
 
-.views-bulk-actions__item .form-item__label:after {
+.views-bulk-actions__item .form-item__label::after {
   content: ":";
 }
 

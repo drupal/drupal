@@ -20,11 +20,11 @@
     margin: 0 0 10px 0;
   }
 
-  & small .admin-link:before {
+  & small .admin-link::before {
     content: " [";
   }
 
-  & small .admin-link:after {
+  & small .admin-link::after {
     content: "]";
   }
 }

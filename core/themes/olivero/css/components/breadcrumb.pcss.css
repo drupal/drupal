@@ -12,7 +12,7 @@
   line-height: var(--sp1);
 
   /* Shadow on the right side of breadcrumbs for narrow screens. */
-  &:after {
+  &::after {
     position: absolute;
     inset-block-start: 0;
     inset-inline-end: calc(var(--sp1) * -1);
@@ -31,7 +31,7 @@
   }
 }
 
-[dir="rtl"] .breadcrumb:after {
+[dir="rtl"] .breadcrumb::after {
   background: linear-gradient(to right, var(--color--white) 0%, rgba(255, 255, 255, 0) 100%);
 }
 
@@ -76,7 +76,7 @@
 .breadcrumb__item {
   display: inline-block;
 
-  &:nth-child(n+2):before {
+  &:nth-child(n+2)::before {
     display: inline-block;
     width: 8px;
     height: 8px;
@@ -96,7 +96,7 @@
   }
 }
 
-[dir="rtl"] .breadcrumb__item:nth-child(n+2):before {
+[dir="rtl"] .breadcrumb__item:nth-child(n+2)::before {
   transform: rotate(-45deg);
 }
 

@@ -11,7 +11,7 @@
   padding-right: 2.75em;
   padding-left: 1.3333em;
 }
-.toolbar .toolbar-icon:before {
+.toolbar .toolbar-icon::before {
   position: absolute;
   top: 0;
   left: 0.6667em; /* LTR */
@@ -25,7 +25,7 @@
   background-position: center center;
   background-size: 100% auto;
 }
-[dir="rtl"] .toolbar .toolbar-icon:before {
+[dir="rtl"] .toolbar .toolbar-icon::before {
   right: 0.6667em;
   left: auto;
 }
@@ -41,7 +41,7 @@
   padding-right: 1.3333em;
   padding-left: 0;
 }
-.toolbar .toolbar-menu ul a.toolbar-icon:before {
+.toolbar .toolbar-menu ul a.toolbar-icon::before {
   display: none;
 }
 .toolbar .toolbar-tray-vertical .toolbar-menu ul a {
@@ -71,78 +71,78 @@
 /**
  * Top level icons.
  */
-.toolbar-bar .toolbar-icon-menu:before {
+.toolbar-bar .toolbar-icon-menu::before {
   background-image: url(../../../../misc/icons/bebebe/hamburger.svg);
 }
-.toolbar-bar .toolbar-icon-menu:active:before,
-.toolbar-bar .toolbar-icon-menu.is-active:before {
+.toolbar-bar .toolbar-icon-menu:active::before,
+.toolbar-bar .toolbar-icon-menu.is-active::before {
   background-image: url(../../../../misc/icons/ffffff/hamburger.svg);
 }
-.toolbar-bar .toolbar-icon-help:before {
+.toolbar-bar .toolbar-icon-help::before {
   background-image: url(../../../../misc/icons/bebebe/questionmark-disc.svg);
 }
-.toolbar-bar .toolbar-icon-help:active:before,
-.toolbar-bar .toolbar-icon-help.is-active:before {
+.toolbar-bar .toolbar-icon-help:active::before,
+.toolbar-bar .toolbar-icon-help.is-active::before {
   background-image: url(../../../../misc/icons/ffffff/questionmark-disc.svg);
 }
 
 /**
  * Main menu icons.
  */
-.toolbar-icon-system-admin-content:before {
+.toolbar-icon-system-admin-content::before {
   background-image: url(../../../../misc/icons/787878/file.svg);
 }
-.toolbar-icon-system-admin-content:active:before,
-.toolbar-icon-system-admin-content.is-active:before {
+.toolbar-icon-system-admin-content:active::before,
+.toolbar-icon-system-admin-content.is-active::before {
   background-image: url(../../../../misc/icons/000000/file.svg);
 }
-.toolbar-icon-system-admin-structure:before {
+.toolbar-icon-system-admin-structure::before {
   background-image: url(../../../../misc/icons/787878/orgchart.svg);
 }
-.toolbar-icon-system-admin-structure:active:before,
-.toolbar-icon-system-admin-structure.is-active:before {
+.toolbar-icon-system-admin-structure:active::before,
+.toolbar-icon-system-admin-structure.is-active::before {
   background-image: url(../../../../misc/icons/000000/orgchart.svg);
 }
-.toolbar-icon-system-themes-page:before {
+.toolbar-icon-system-themes-page::before {
   background-image: url(../../../../misc/icons/787878/paintbrush.svg);
 }
-.toolbar-icon-system-themes-page:active:before,
-.toolbar-icon-system-themes-page.is-active:before {
+.toolbar-icon-system-themes-page:active::before,
+.toolbar-icon-system-themes-page.is-active::before {
   background-image: url(../../../../misc/icons/000000/paintbrush.svg);
 }
-.toolbar-icon-entity-user-collection:before {
+.toolbar-icon-entity-user-collection::before {
   background-image: url(../../../../misc/icons/787878/people.svg);
 }
-.toolbar-icon-entity-user-collection:active:before,
-.toolbar-icon-entity-user-collection.is-active:before {
+.toolbar-icon-entity-user-collection:active::before,
+.toolbar-icon-entity-user-collection.is-active::before {
   background-image: url(../../../../misc/icons/000000/people.svg);
 }
-.toolbar-icon-system-modules-list:before {
+.toolbar-icon-system-modules-list::before {
   background-image: url(../../../../misc/icons/787878/puzzlepiece.svg);
 }
-.toolbar-icon-system-modules-list:active:before,
-.toolbar-icon-system-modules-list.is-active:before {
+.toolbar-icon-system-modules-list:active::before,
+.toolbar-icon-system-modules-list.is-active::before {
   background-image: url(../../../../misc/icons/000000/puzzlepiece.svg);
 }
-.toolbar-icon-system-admin-config:before {
+.toolbar-icon-system-admin-config::before {
   background-image: url(../../../../misc/icons/787878/wrench.svg);
 }
-.toolbar-icon-system-admin-config:active:before,
-.toolbar-icon-system-admin-config.is-active:before {
+.toolbar-icon-system-admin-config:active::before,
+.toolbar-icon-system-admin-config.is-active::before {
   background-image: url(../../../../misc/icons/000000/wrench.svg);
 }
-.toolbar-icon-system-admin-reports:before {
+.toolbar-icon-system-admin-reports::before {
   background-image: url(../../../../misc/icons/787878/barchart.svg);
 }
-.toolbar-icon-system-admin-reports:active:before,
-.toolbar-icon-system-admin-reports.is-active:before {
+.toolbar-icon-system-admin-reports:active::before,
+.toolbar-icon-system-admin-reports.is-active::before {
   background-image: url(../../../../misc/icons/000000/barchart.svg);
 }
-.toolbar-icon-help-main:before {
+.toolbar-icon-help-main::before {
   background-image: url(../../../../misc/icons/787878/questionmark-disc.svg);
 }
-.toolbar-icon-help-main:active:before,
-.toolbar-icon-help-main.is-active:before {
+.toolbar-icon-help-main:active::before,
+.toolbar-icon-help-main.is-active::before {
   background-image: url(../../../../misc/icons/000000/questionmark-disc.svg);
 }
 
@@ -155,15 +155,15 @@
     padding-left: 0;
     text-indent: -9999px;
   }
-  .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon:before {
+  .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon::before {
     left: 0; /* LTR */
     width: 100%;
     background-size: 42% auto;
   }
-  .no-svg .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon:before {
+  .no-svg .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon::before {
     background-size: auto auto;
   }
-  [dir="rtl"] .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon:before {
+  [dir="rtl"] .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon::before {
     right: 0;
     left: auto;
   }
@@ -182,15 +182,15 @@
     padding-left: 1.3333em;
     background-position: right center;
   }
-  .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon:before {
+  .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon::before {
     left: 0.6667em; /* LTR */
     width: 20px;
     background-size: 100% auto;
   }
-  .no-svg .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon:before {
+  .no-svg .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon::before {
     background-size: auto auto;
   }
-  [dir="rtl"] .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon:before {
+  [dir="rtl"] .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon::before {
     right: 0.6667em;
     left: 0;
   }
@@ -226,31 +226,31 @@
   width: 4em;
   text-indent: -9999px;
 }
-.toolbar .toolbar-icon.toolbar-handle:before {
+.toolbar .toolbar-icon.toolbar-handle::before {
   left: 1.6667em; /* LTR */
 }
-[dir="rtl"] .toolbar .toolbar-icon.toolbar-handle:before {
+[dir="rtl"] .toolbar .toolbar-icon.toolbar-handle::before {
   right: 1.6667em;
   left: auto;
 }
-.toolbar .toolbar-icon.toolbar-handle:before {
+.toolbar .toolbar-icon.toolbar-handle::before {
   background-image: url(../../../../misc/icons/5181c6/chevron-disc-down.svg);
 }
-.toolbar .toolbar-icon.toolbar-handle.open:before {
+.toolbar .toolbar-icon.toolbar-handle.open::before {
   background-image: url(../../../../misc/icons/787878/chevron-disc-up.svg);
 }
-.toolbar .toolbar-menu .toolbar-menu .toolbar-icon.toolbar-handle:before {
+.toolbar .toolbar-menu .toolbar-menu .toolbar-icon.toolbar-handle::before {
   background-image: url(../../../../misc/icons/5181c6/twistie-down.svg);
   background-size: 75%;
 }
-.toolbar .toolbar-menu .toolbar-menu .toolbar-icon.toolbar-handle.open:before {
+.toolbar .toolbar-menu .toolbar-menu .toolbar-icon.toolbar-handle.open::before {
   background-image: url(../../../../misc/icons/787878/twistie-up.svg);
   background-size: 75%;
 }
-.toolbar .toolbar-icon-escape-admin:before {
+.toolbar .toolbar-icon-escape-admin::before {
   background-image: url(../../../../misc/icons/bebebe/chevron-disc-left.svg);
 }
-[dir="rtl"] .toolbar .toolbar-icon-escape-admin:before {
+[dir="rtl"] .toolbar .toolbar-icon-escape-admin::before {
   background-image: url(../../../../misc/icons/bebebe/chevron-disc-right.svg);
 }
 /**
@@ -262,7 +262,7 @@
   padding: 0;
   text-indent: -999em;
 }
-.toolbar .toolbar-toggle-orientation button:before {
+.toolbar .toolbar-toggle-orientation button::before {
   right: 0;
   left: 0;
   margin: 0 auto;
@@ -275,24 +275,24 @@
  * RTL text direction and no SVG support, this little icon requires some very
  * specific targeting, setting and unsetting.
  */
-.toolbar .toolbar-toggle-orientation [value="vertical"]:before {
+.toolbar .toolbar-toggle-orientation [value="vertical"]::before {
   background-image: url(../../../../misc/icons/bebebe/push-left.svg); /* LTR */
 }
-.toolbar .toolbar-toggle-orientation [value="vertical"]:hover:before,
-.toolbar .toolbar-toggle-orientation [value="vertical"]:focus:before {
+.toolbar .toolbar-toggle-orientation [value="vertical"]:hover::before,
+.toolbar .toolbar-toggle-orientation [value="vertical"]:focus::before {
   background-image: url(../../../../misc/icons/787878/push-left.svg); /* LTR */
 }
-[dir="rtl"] .toolbar .toolbar-toggle-orientation [value="vertical"]:before {
+[dir="rtl"] .toolbar .toolbar-toggle-orientation [value="vertical"]::before {
   background-image: url(../../../../misc/icons/bebebe/push-right.svg);
 }
-[dir="rtl"] .toolbar .toolbar-toggle-orientation [value="vertical"]:hover:before,
-[dir="rtl"] .toolbar .toolbar-toggle-orientation [value="vertical"]:focus:before {
+[dir="rtl"] .toolbar .toolbar-toggle-orientation [value="vertical"]:hover::before,
+[dir="rtl"] .toolbar .toolbar-toggle-orientation [value="vertical"]:focus::before {
   background-image: url(../../../../misc/icons/787878/push-right.svg);
 }
-.toolbar .toolbar-toggle-orientation [value="horizontal"]:before {
+.toolbar .toolbar-toggle-orientation [value="horizontal"]::before {
   background-image: url(../../../../misc/icons/bebebe/push-up.svg);
 }
-.toolbar .toolbar-toggle-orientation [value="horizontal"]:hover:before,
-.toolbar .toolbar-toggle-orientation [value="horizontal"]:focus:before {
+.toolbar .toolbar-toggle-orientation [value="horizontal"]:hover::before,
+.toolbar .toolbar-toggle-orientation [value="horizontal"]:focus::before {
   background-image: url(../../../../misc/icons/787878/push-up.svg);
 }

@@ -58,7 +58,7 @@
   }
 }
 
-.toolbar .toolbar-icon-workspace:before {
+.toolbar .toolbar-icon-workspace::before {
   background-image: url("../icons/000000/workspaces.svg");
 }
 
@@ -76,7 +76,7 @@
     text-overflow: ellipsis;
   }
 
-  .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace:before {
+  .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace::before {
     inset-inline-start: 0.6667em;
     width: 20px;
     background-size: 100% auto;

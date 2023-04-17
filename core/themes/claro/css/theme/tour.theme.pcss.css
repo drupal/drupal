@@ -23,7 +23,7 @@
   }
 }
 
-.shepherd-arrow:before {
+.shepherd-arrow::before {
   background: none;
 }
 

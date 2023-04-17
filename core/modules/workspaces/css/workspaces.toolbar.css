@@ -70,7 +70,7 @@
   text-align: initial;
 }
 
-.toolbar .toolbar-icon-workspace:before {
+.toolbar .toolbar-icon-workspace::before {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e  %3cpath d='M14,12 L16,12 L16,0 L4,0 L4,2 L14,2 L14,12 Z M0,4 L12,4 L12,16 L0,16 L0,4 Z'/%3e%3c/svg%3e");
 }
 
@@ -88,7 +88,7 @@
     text-overflow: ellipsis;
   }
 
-  .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace:before {
+  .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace::before {
     inset-inline-start: 0.6667em;
     width: 1.25rem;
     background-size: 100% auto;

@@ -46,7 +46,7 @@
   text-decoration: none;
   color: inherit;
 
-  &:after {
+  &::after {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -61,7 +61,7 @@
   }
 
   &:hover {
-    &:after {
+    &::after {
       transform: translateY(0);
       opacity: 0.8;
     }
@@ -76,7 +76,7 @@ body:not(.is-always-mobile-nav) {
       margin-inline-start: var(--sp);
       padding-inline-start: var(--sp2);
 
-      &:before {
+      &::before {
         position: absolute;
         inset-block-start: 50%;
         inset-inline-start: 0;
@@ -97,7 +97,7 @@ body:not(.is-always-mobile-nav) {
         position: relative;
         outline: 0;
 
-        &:before {
+        &::before {
           position: absolute;
           top: 50%;
           left: 50%;

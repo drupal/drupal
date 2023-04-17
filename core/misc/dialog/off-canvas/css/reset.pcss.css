@@ -11,8 +11,8 @@
   -webkit-font-smoothing: antialiased;
   line-height: 1.4;
 
-  &:after,
-  &:before {
+  &::after,
+  &::before {
     all: revert;
     box-sizing: border-box;
     -webkit-font-smoothing: antialiased;

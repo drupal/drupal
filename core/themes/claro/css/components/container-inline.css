@@ -10,7 +10,7 @@
  * Inline items.
  */
 
-.container-inline .form-radios label:after {
+.container-inline .form-radios label::after {
   content: "";
 }
 

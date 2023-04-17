@@ -34,7 +34,7 @@
   /* Bottom divider line. */
 }
 
-.menu--sidebar .menu__link:after {
+.menu--sidebar .menu__link::after {
   position: absolute;
   inset-block-end: 0;
   inset-inline-start: 0;
@@ -56,6 +56,6 @@
 
 /* No bottom divider line for last menu item. */
 
-:is(.menu--sidebar .menu__item--level-1:last-child > .menu__link:last-child,.menu--sidebar .menu__item--level-1:last-child > .menu__item--level-2:last-child > .menu__link:last-child):after {
+:is(.menu--sidebar .menu__item--level-1:last-child > .menu__link:last-child,.menu--sidebar .menu__item--level-1:last-child > .menu__item--level-2:last-child > .menu__link:last-child)::after {
   content: none;
 }

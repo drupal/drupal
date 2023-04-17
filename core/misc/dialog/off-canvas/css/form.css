@@ -59,7 +59,7 @@
   font-size: 0.75rem;
 }
 
-#drupal-off-canvas-wrapper .form-required:after {
+#drupal-off-canvas-wrapper .form-required::after {
   content: "*";
 }
 

@@ -94,16 +94,16 @@ html:not(.js) .tabs__tab {
   outline-offset: -3px;
 }
 .tabs__link.is-active {
-  position: relative; /* Anchor :after pseudo-element. */
+  position: relative; /* Anchor ::after pseudo-element. */
   color: var(--tabs-text-color-active);
   font-weight: 600;
 
   /*
-     * We use :after pseudo-element in place of border so edges do not appear
+     * We use ::after pseudo-element in place of border so edges do not appear
      * diagonally cut off due to other edges with transparent borders.
      */
 }
-.tabs__link.is-active:after {
+.tabs__link.is-active::after {
   position: absolute;
   inset-block-start: calc(-1 * var(--tabs-border-width));
   inset-inline-start: calc(-1 * var(--tabs-border-width));
@@ -113,7 +113,7 @@ html:not(.js) .tabs__tab {
 }
 
 @media (min-width: 43.75rem) {
-  .tabs__link.is-active:after {
+  .tabs__link.is-active::after {
     inset-block: auto calc(-1 * var(--tabs-border-width));
     width: calc(100% + 2 * var(--tabs-border-width));
     height: 0;

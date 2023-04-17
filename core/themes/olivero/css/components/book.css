@@ -59,7 +59,7 @@
   font-weight: 600;
 }
 
-.book-pager__link--previous:before {
+.book-pager__link--previous::before {
   display: block;
   width: var(--sp0-5);
   height: var(--sp0-5);
@@ -70,7 +70,7 @@
   border-inline-start: solid 0.1875rem currentColor;
 }
 
-.book-pager__link--next:after {
+.book-pager__link--next::after {
   display: block;
   width: var(--sp0-5);
   height: var(--sp0-5);
@@ -99,10 +99,10 @@
   list-style: none;
 }
 
-[dir="rtl"] .book-pager__link--previous:before {
+[dir="rtl"] .book-pager__link--previous::before {
   transform: rotate(45deg);
 }
 
-[dir="rtl"] .book-pager__link--next:after {
+[dir="rtl"] .book-pager__link--next::after {
   transform: rotate(-135deg);
 }

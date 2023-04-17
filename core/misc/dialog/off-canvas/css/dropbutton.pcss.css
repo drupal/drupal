@@ -34,7 +34,7 @@
         border-radius: var(--off-canvas-dropbutton-border-radius) var(--off-canvas-dropbutton-border-radius) 0 0;
       }
 
-      & .dropbutton-toggle button:before {
+      & .dropbutton-toggle button::before {
         transform: translateY(25%) rotate(225deg);
       }
     }
@@ -107,7 +107,7 @@
         outline-offset: -2px;
       }
 
-      &:before {
+      &::before {
         display: block;
         width: 6px;
         height: 6px;

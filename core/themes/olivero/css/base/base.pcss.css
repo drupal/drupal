@@ -6,8 +6,8 @@
 @import "media-queries.pcss.css";
 
 *,
-*:before,
-*:after {
+*::before,
+*::after {
   box-sizing: border-box;
 }
 

@@ -105,11 +105,11 @@ h3 {
     padding: 1rem 3rem 1rem 1rem;
     border-radius: 2rem 0 0 2rem;
   }
-  .task-list li:before {
+  .task-list li::before {
     margin-right: 0.375rem;
     content: counter(steps);
   }
-  [dir="rtl"] .task-list li:before {
+  [dir="rtl"] .task-list li::before {
     margin-right: 0;
     margin-left: 0.375rem;
   }
@@ -138,7 +138,7 @@ h3 {
   background: #fff;
   box-shadow: var(--shadow-z3);
 }
-.layout-container:after { /* No reason for a clearfix in the markup. */
+.layout-container::after { /* No reason for a clearfix in the markup. */
   display: table;
   clear: both;
   content: "";

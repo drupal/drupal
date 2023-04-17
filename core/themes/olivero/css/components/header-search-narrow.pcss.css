@@ -88,7 +88,7 @@
       background-position: center;
       background-size: auto;
 
-      &:after {
+      &::after {
         position: absolute;
         inset-block-end: 0;
         inset-inline-start: 0;
@@ -114,14 +114,14 @@
       outline-offset: -4px;
       box-shadow: none;
 
-      & span:after {
+      & span::after {
         transform: scaleX(1);
       }
 
       @media screen and (-ms-high-contrast: active) {
         border-bottom-width: var(--sp0-5);
 
-        & span:after {
+        & span::after {
           content: none;
         }
       }
@@ -167,7 +167,7 @@ body:not(.is-always-mobile-nav) .block-search-narrow {
     background-position: bottom right;
   }
 
-  & .search-form__submit .icon--search:after {
+  & .search-form__submit .icon--search::after {
     transform-origin: right;
   }
 }

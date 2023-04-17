@@ -76,7 +76,7 @@ tr.selected td {
   & .form-item__label {
     display: inline;
     padding-inline-end: var(--space-xs);
-    &:after {
+    &::after {
       content: ":";
     }
   }

@@ -30,7 +30,7 @@
   color: var(--color--white);
 }
 
-.skip-link:after {
+.skip-link::after {
   content: "\0020	➔";
 }
 

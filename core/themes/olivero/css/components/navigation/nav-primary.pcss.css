@@ -70,8 +70,8 @@
   &.primary-nav__menu-link--has-children {
     padding-inline-end: var(--sp3); /* Ensure text does not overlap icon. */
 
-    &:before,
-    &:after {
+    &::before,
+    &::after {
       position: absolute;
       inset-inline-end: 9px;
       inset-block-start: calc(var(--sp0-5) + 17px); /* Visually align button with menu link text. */
@@ -82,12 +82,12 @@
       border-top: solid 3px var(--color--primary-50);
     }
 
-    &:after {
+    &::after {
       transition: opacity 0.2s;
       transform: rotate(90deg);
     }
 
-    &[aria-expanded="true"]:after {
+    &[aria-expanded="true"]::after {
       opacity: 0;
     }
   }
@@ -101,7 +101,7 @@
   padding-inline-start: 0;
   padding-inline-end: 0;
 
-  &:after {
+  &::after {
     position: absolute;
     inset-block-end: 0;
     inset-inline-start: 0;
@@ -115,7 +115,7 @@
     border-top: solid 5px var(--color--primary-50);
   }
 
-  &:after {
+  &::after {
     @nest .primary-nav__menu-link:hover & {
       transform: scaleX(1);
     }
@@ -194,7 +194,7 @@ html:not(.js) {
 
 [dir="rtl"] {
   & .primary-nav__menu-link-inner {
-    &:after {
+    &::after {
       transform-origin: right;
     }
   }

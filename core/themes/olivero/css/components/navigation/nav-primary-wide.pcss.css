@@ -17,7 +17,7 @@ body:not(.is-always-mobile-nav) {
         }
 
         /* Remove hover state if submenu exists. */
-        & .primary-nav__menu-link--level-1 .primary-nav__menu-link-inner:after {
+        & .primary-nav__menu-link--level-1 .primary-nav__menu-link-inner::after {
           content: none;
         }
       }
@@ -32,7 +32,7 @@ body:not(.is-always-mobile-nav) {
         position: relative;
         outline: 0;
 
-        &:before {
+        &::before {
           position: absolute;
           top: 50%;
           left: 50%;
@@ -51,17 +51,17 @@ body:not(.is-always-mobile-nav) {
         overflow: visible; /* Necessary to view icon in IE11 */
         padding-inline-end: 9px;
 
-        &:focus:before {
+        &:focus::before {
           width: calc(100% + var(--sp1-5));
           content: "";
         }
 
-        &:before {
+        &::before {
           content: none;
         }
 
         /* Chevron icon for desktop navigation. */
-        &:after {
+        &::after {
           position: absolute;
           inset-block-start: 50%;
           inset-inline-start: calc(100% - 3px);
@@ -75,7 +75,7 @@ body:not(.is-always-mobile-nav) {
           border-bottom: solid 2px currentColor;
         }
 
-        &[aria-expanded="true"]:after {
+        &[aria-expanded="true"]::after {
           opacity: 1;
         }
       }
@@ -86,7 +86,7 @@ body:not(.is-always-mobile-nav) {
       padding-inline-start: 0;
       padding-inline-end: 0;
 
-      &:after {
+      &::after {
         transform-origin: center;
         border-top-width: var(--sp0-5);
       }
@@ -152,7 +152,7 @@ body:not(.is-always-mobile-nav) {
     & .primary-nav__menu-link--level-2 {
       display: block;
 
-      &:focus:before {
+      &:focus::before {
         top: 0;
         left: calc(var(--sp0-5) * -1);
         height: 100%;
@@ -164,7 +164,7 @@ body:not(.is-always-mobile-nav) {
         padding-inline-start: 0;
         padding-inline-end: 0;
 
-        &:after {
+        &::after {
           transform-origin: left; /* LTR */
           border-top-width: 3px;
 

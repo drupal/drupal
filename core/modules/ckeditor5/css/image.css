@@ -51,14 +51,14 @@
   color: #fff;
   background: none !important; /* Override background for all states. */
 }
-.ck .image-alternative-text-missing-wrapper .ck.ck-button:before {
+.ck .image-alternative-text-missing-wrapper .ck.ck-button::before {
   width: 16px;
   height: 16px;
   padding-right: 8px;
   content: "";
   background: url("../icons/warning.svg") left center no-repeat;
 }
-.ck .image-alternative-text-missing-wrapper .ck.ck-button:after {
+.ck .image-alternative-text-missing-wrapper .ck.ck-button::after {
   display: inline-block;
   width: 12px;
   height: 12px;

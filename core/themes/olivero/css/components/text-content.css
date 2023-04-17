@@ -105,8 +105,8 @@
   line-height: var(--sp2);
 }
 
-.text-content blockquote:before,
-.cke_editable blockquote:before {
+.text-content blockquote::before,
+.cke_editable blockquote::before {
   position: absolute;
   inset-block-start: 0;
   inset-inline-start: 0;
@@ -115,8 +115,8 @@
   font-size: 3.375rem;
 }
 
-.text-content blockquote:after,
-.cke_editable blockquote:after {
+.text-content blockquote::after,
+.cke_editable blockquote::after {
   position: absolute;
   inset-block-end: 0;
   inset-inline-start: 0;

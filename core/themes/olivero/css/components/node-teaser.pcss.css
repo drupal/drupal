@@ -9,7 +9,7 @@
   position: relative; /* Anchor after pseudo-element. */
   margin-block-end: var(--sp1-5);
 
-  &:after {
+  &::after {
     position: absolute;
     inset-block-end: 0;
     width: var(--sp3);

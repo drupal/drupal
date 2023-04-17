@@ -110,7 +110,7 @@
   display: inline-flex;
   align-items: center;
 
-  &:before {
+  &::before {
     display: block;
     width: 0.5em;
     height: 0.5em;
@@ -122,7 +122,7 @@
   }
 }
 
-[dir="rtl"] .button--icon-back:before {
+[dir="rtl"] .button--icon-back::before {
   transform: rotate(-45deg);
 }
 

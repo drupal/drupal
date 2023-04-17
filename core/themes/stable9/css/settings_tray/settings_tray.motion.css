@@ -7,7 +7,7 @@
  */
 
 /* Transition the edit icon in the toolbar. */
-#toolbar-bar.button.toolbar-icon.toolbar-icon.toolbar-icon-edit:before {
+#toolbar-bar.button.toolbar-icon.toolbar-icon.toolbar-icon-edit::before {
   transition: all 0.7s ease;
 }
 

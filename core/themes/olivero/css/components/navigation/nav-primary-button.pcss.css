@@ -37,8 +37,8 @@
     transform: translate(-50%, -50%);
     border-radius: 2px;
 
-    &:before,
-    &:after {
+    &::before,
+    &::after {
       position: absolute;
       /* stylelint-disable csstools/use-logical */
       top: 50%;
@@ -52,13 +52,13 @@
       border-top: solid 3px var(--color--primary-50);
     }
 
-    &:after {
+    &::after {
       transition: opacity 0.2s;
       transform: translate(-50%, -50%) rotate(90deg);
     }
   }
 
-  &[aria-expanded="true"] .icon--menu-toggle:after {
+  &[aria-expanded="true"] .icon--menu-toggle::after {
     opacity: 0;
   }
 
@@ -94,7 +94,7 @@ body:not(.is-always-mobile-nav) {
         color: currentColor;
       }
 
-      &[aria-expanded="true"] .icon--menu-toggle:after {
+      &[aria-expanded="true"] .icon--menu-toggle::after {
         opacity: 0.8;
       }
 
@@ -105,11 +105,11 @@ body:not(.is-always-mobile-nav) {
         border-radius: 4px;
         background-color: var(--color--white);
 
-        &:before {
+        &::before {
           content: none;
         }
 
-        &:after {
+        &::after {
           /* stylelint-disable csstools/use-logical */
           top: calc(50% - 2px);
           left: 3px;

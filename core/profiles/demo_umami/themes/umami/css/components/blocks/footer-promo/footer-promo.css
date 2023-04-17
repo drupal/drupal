@@ -28,7 +28,7 @@ footer a.footer-promo-block__link:hover {
   background-color: transparent;
 }
 
-.footer-promo-block__link.footer-promo-block__link:after {
+.footer-promo-block__link.footer-promo-block__link::after {
   display: inline-block;
   width: 14px;
   height: 14px;

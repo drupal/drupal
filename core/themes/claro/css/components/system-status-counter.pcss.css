@@ -58,15 +58,15 @@
 }
 
 @media (forced-colors: active) {
-  .system-status-counter__status-icon--error:before {
+  .system-status-counter__status-icon--error::before {
     mask-image: var(--system-status-counter-status-icon-error);
   }
 
-  .system-status-counter__status-icon--warning:before {
+  .system-status-counter__status-icon--warning::before {
     mask-image: var(--system-status-counter-status-icon-warning);
   }
 
-  .system-status-counter__status-icon--checked:before {
+  .system-status-counter__status-icon--checked::before {
     mask-image: var(--system-status-counter-status-icon-checked);
   }
 }

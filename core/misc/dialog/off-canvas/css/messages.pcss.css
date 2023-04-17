@@ -16,7 +16,7 @@
   --off-canvas-messages-icon-error: url(../../../icons/e32700/error.svg);
 
   & .messages {
-    position: relative; /* Anchor :before pseudo-element. */
+    position: relative; /* Anchor ::before pseudo-element. */
     margin-top: calc(2 * var(--off-canvas-vertical-spacing-unit));
     padding: calc(2 * var(--off-canvas-vertical-spacing-unit));
     padding-inline-start: calc(2 * var(--off-canvas-messages-icon-size)); /* Room for icon. */
@@ -24,7 +24,7 @@
     background-color: var(--off-canvas-messages-background-color);
 
     /* Icon. */
-    &:before {
+    &::before {
       position: absolute;
       top: 50%;
       display: block;
@@ -69,7 +69,7 @@
   & .messages--status {
     color: var(--off-canvas-messages-text-color-status);
 
-    &:before {
+    &::before {
       background-image: var(--off-canvas-messages-icon-status);
 
       @media (forced-colors: active) {
@@ -82,7 +82,7 @@
   & .messages--warning {
     color: var(--off-canvas-messages-text-color-warning);
 
-    &:before {
+    &::before {
       background-image: var(--off-canvas-messages-icon-warning);
 
       @media (forced-colors: active) {
@@ -95,7 +95,7 @@
   & .messages--error {
     color: var(--off-canvas-messages-text-color-error);
 
-    &:before {
+    &::before {
       background-image: var(--off-canvas-messages-icon-error);
 
       @media (forced-colors: active) {

@@ -14,10 +14,10 @@
  * Quick inline admin links.
  */
 small .admin-link {
-  &:before {
+  &::before {
     content: " [";
   }
-  &:after {
+  &::after {
     content: "]";
   }
 }

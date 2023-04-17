@@ -38,7 +38,7 @@
 }
 
 /* Arrow icon */
-.olivero-details__summary:before {
+.olivero-details__summary::before {
   position: absolute;
   inset-block-start: 50%;
   inset-inline-start: var(--sp0-75);
@@ -51,12 +51,12 @@
   border-right: solid 2px currentColor;
 }
 
-[dir="rtl"] .olivero-details__summary:before {
+[dir="rtl"] .olivero-details__summary::before {
   transform: translateY(-50%) rotate(-135deg);
 }
 
 /* Pseudo-selector to manage focus styles */
-.olivero-details__summary:after {
+.olivero-details__summary::after {
   position: absolute;
   inset: calc(var(--details-border-width) * -1);
   content: "";
@@ -83,8 +83,8 @@
 }
 
 /* Details summary, focus and active states */
-.olivero-details__summary:focus:after,
-.olivero-details__summary:active:after {
+.olivero-details__summary:focus::after,
+.olivero-details__summary:active::after {
   opacity: 1;
 }
 

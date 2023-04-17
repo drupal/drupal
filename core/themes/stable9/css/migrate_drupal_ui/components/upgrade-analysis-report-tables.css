@@ -2,7 +2,7 @@
  * @file
  * Styles for the upgrade analysis report tables.
  */
-.upgrade-analysis-report__status-icon:before {
+.upgrade-analysis-report__status-icon::before {
   display: inline-block;
   width: 32px;
   height: 14px;
@@ -12,12 +12,12 @@
   background-size: 16px;
 }
 
-.upgrade-analysis-report__status-icon--warning:before {
+.upgrade-analysis-report__status-icon--warning::before {
   background-image: url(../../../../../misc/icons/e29700/warning.svg);
 }
-.upgrade-analysis-report__status-icon--checked:before {
+.upgrade-analysis-report__status-icon--checked::before {
   background-image: url(../../../../../misc/icons/73b355/check.svg);
 }
-.upgrade-analysis-report__status-icon--error:before {
+.upgrade-analysis-report__status-icon--error::before {
   background-image: url(../../../../../misc/icons/e32700/error.svg);
 }

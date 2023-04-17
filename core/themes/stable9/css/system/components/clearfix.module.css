@@ -8,7 +8,7 @@
  * @see http://nicolasgallagher.com/micro-clearfix-hack
  */
 
-.clearfix:after {
+.clearfix::after {
   display: table;
   clear: both;
   content: "";

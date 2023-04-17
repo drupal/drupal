@@ -53,8 +53,8 @@ html {
   box-sizing: border-box;
 }
 *,
-*:before,
-*:after {
+*::before,
+*::after {
   box-sizing: inherit;
   margin-top: 0; /* This allows us to ensure that items side-by-side line up nicely. */
 }

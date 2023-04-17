@@ -70,7 +70,7 @@ label.option {
 .marker {
   color: #e00;
 }
-.form-required:after {
+.form-required::after {
   display: inline-block;
   width: 6px;
   height: 6px;
@@ -93,7 +93,7 @@ abbr.ajax-changed {
 }
 
 /* Inline error messages. */
-.form-item--error-message:before {
+.form-item--error-message::before {
   display: inline-block;
   width: 14px;
   height: 14px;

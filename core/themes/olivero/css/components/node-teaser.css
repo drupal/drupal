@@ -15,7 +15,7 @@
   margin-block-end: var(--sp1-5);
 }
 
-.node--view-mode-teaser:after {
+.node--view-mode-teaser::after {
   position: absolute;
   inset-block-end: 0;
   width: var(--sp3);

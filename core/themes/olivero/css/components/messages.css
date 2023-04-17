@@ -100,8 +100,8 @@
   appearance: none;
 }
 
-.messages__close:before,
-.messages__close:after {
+.messages__close::before,
+.messages__close::after {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -112,11 +112,11 @@
   border-top: solid 2px var(--color--gray-60);
 }
 
-.messages__close:before {
+.messages__close::before {
   transform: translate(-50%, -50%) rotate(45deg);
 }
 
-.messages__close:after {
+.messages__close::after {
   transform: translate(-50%, -50%) rotate(-45deg);
 }
 

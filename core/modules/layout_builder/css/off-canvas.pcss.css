@@ -53,7 +53,7 @@
     font-size: 16px;
 
     /* Plus icon. */
-    &:before {
+    &::before {
       position: absolute;
       top: 50%;
       left: var(--off-canvas-padding);

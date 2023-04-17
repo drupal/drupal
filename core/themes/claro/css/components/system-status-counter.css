@@ -63,17 +63,17 @@
 }
 
 @media (forced-colors: active) {
-  .system-status-counter__status-icon--error:before {
+  .system-status-counter__status-icon--error::before {
     -webkit-mask-image: var(--system-status-counter-status-icon-error);
     mask-image: var(--system-status-counter-status-icon-error);
   }
 
-  .system-status-counter__status-icon--warning:before {
+  .system-status-counter__status-icon--warning::before {
     -webkit-mask-image: var(--system-status-counter-status-icon-warning);
     mask-image: var(--system-status-counter-status-icon-warning);
   }
 
-  .system-status-counter__status-icon--checked:before {
+  .system-status-counter__status-icon--checked::before {
     -webkit-mask-image: var(--system-status-counter-status-icon-checked);
     mask-image: var(--system-status-counter-status-icon-checked);
   }

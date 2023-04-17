@@ -19,7 +19,7 @@
   /* Shadow on the right side of breadcrumbs for narrow screens. */
 }
 
-.breadcrumb:after {
+.breadcrumb::after {
   position: absolute;
   inset-block-start: 0;
   inset-inline-end: calc(var(--sp1) * -1);
@@ -31,7 +31,7 @@
 
 @media (min-width: 62.5rem) {
 
-  .breadcrumb:after {
+  .breadcrumb::after {
     content: none;
   }
 }
@@ -43,7 +43,7 @@
   }
 }
 
-[dir="rtl"] .breadcrumb:after {
+[dir="rtl"] .breadcrumb::after {
   background: linear-gradient(to right, var(--color--white) 0%, rgba(255, 255, 255, 0) 100%);
 }
 
@@ -95,7 +95,7 @@
   display: inline-block;
 }
 
-.breadcrumb__item:nth-child(n+2):before {
+.breadcrumb__item:nth-child(n+2)::before {
   display: inline-block;
   width: 0.5rem;
   height: 0.5rem;
@@ -117,7 +117,7 @@
   }
 }
 
-[dir="rtl"] .breadcrumb__item:nth-child(n+2):before {
+[dir="rtl"] .breadcrumb__item:nth-child(n+2)::before {
   transform: rotate(-45deg);
 }
 

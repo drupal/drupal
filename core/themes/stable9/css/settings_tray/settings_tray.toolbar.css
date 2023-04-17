@@ -43,18 +43,18 @@
   background-color: #0a7bc1;
   background-image: linear-gradient(to bottom, #0a7bc1, #0a6eb4);
 }
-.toolbar-icon.toolbar-icon-edit.toolbar-item:before,
-button.toolbar-icon.toolbar-icon-edit.toolbar-item:before {
+.toolbar-icon.toolbar-icon-edit.toolbar-item::before,
+button.toolbar-icon.toolbar-icon-edit.toolbar-item::before {
   background-image: url(../../../../misc/icons/bebebe/pencil.svg);
 }
-.toolbar-icon.toolbar-icon-edit.toolbar-item:before:hover,
-button.toolbar-icon.toolbar-icon-edit.toolbar-item:before:focus {
+.toolbar-icon.toolbar-icon-edit.toolbar-item::before:hover,
+button.toolbar-icon.toolbar-icon-edit.toolbar-item::before:focus {
   background-image: url(../../../../misc/icons/ffffff/pencil.svg);
 }
-.toolbar-icon.toolbar-icon-edit.toolbar-item:hover > .toolbar-icon-edit:before {
+.toolbar-icon.toolbar-icon-edit.toolbar-item:hover > .toolbar-icon-edit::before {
   background-image: url(../../../../misc/icons/ffffff/pencil.svg);
 }
-#toolbar-bar.button.toolbar-icon.toolbar-icon.toolbar-icon-edit:before {
+#toolbar-bar.button.toolbar-icon.toolbar-icon.toolbar-icon-edit::before {
   background-image: url(../../../../misc/icons/ffffff/pencil.svg);
 }
 

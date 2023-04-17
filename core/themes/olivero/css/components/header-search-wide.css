@@ -115,7 +115,7 @@
   background-size: contain;
 }
 
-.block-search-wide__wrapper .search-form__submit .icon--search:after {
+.block-search-wide__wrapper .search-form__submit .icon--search::after {
   position: absolute;
   inset-block-end: 0;
   inset-inline-start: 0;
@@ -134,7 +134,7 @@
   box-shadow: none;
 }
 
-.block-search-wide__wrapper .search-form__submit:focus span:after {
+.block-search-wide__wrapper .search-form__submit:focus span::after {
   transform: scaleX(1);
 }
 
@@ -144,7 +144,7 @@
     border-bottom-width: var(--sp0-5);
   }
 
-  .block-search-wide__wrapper .search-form__submit:focus span:after {
+  .block-search-wide__wrapper .search-form__submit:focus span::after {
     content: none;
   }
 }
@@ -194,7 +194,7 @@
   outline: 0;
 }
 
-.block-search-wide__button:focus:after {
+.block-search-wide__button:focus::after {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -210,12 +210,12 @@
   background: var(--color--black);
 }
 
-.block-search-wide__button[aria-expanded="true"]:focus:after {
+.block-search-wide__button[aria-expanded="true"]:focus::after {
   border-color: var(--color--white);
 }
 
-.block-search-wide__button[aria-expanded="true"] .block-search-wide__button-close:before,
-.block-search-wide__button[aria-expanded="true"] .block-search-wide__button-close:after {
+.block-search-wide__button[aria-expanded="true"] .block-search-wide__button-close::before,
+.block-search-wide__button[aria-expanded="true"] .block-search-wide__button-close::after {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -225,11 +225,11 @@
   border-block-start: solid 2px var(--color--white);
 }
 
-.block-search-wide__button[aria-expanded="true"] .block-search-wide__button-close:before {
+.block-search-wide__button[aria-expanded="true"] .block-search-wide__button-close::before {
   transform: translate(-50%, -50%) rotate(-45deg);
 }
 
-.block-search-wide__button[aria-expanded="true"] .block-search-wide__button-close:after {
+.block-search-wide__button[aria-expanded="true"] .block-search-wide__button-close::after {
   transform: translate(-50%, -50%) rotate(45deg);
 }
 
@@ -278,7 +278,7 @@ html:not(.js) .search-block-form:focus-within .block-search-wide__wrapper {
   background-position: bottom right;
 }
 
-[dir="rtl"] .block-search-wide__wrapper .search-form__submit .icon--search:after {
+[dir="rtl"] .block-search-wide__wrapper .search-form__submit .icon--search::after {
   transform-origin: right;
 }
 

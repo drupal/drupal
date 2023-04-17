@@ -11,9 +11,9 @@
   margin: 0;
   padding: 0;
 }
-.item-list__comma-list li:after {
+.item-list__comma-list li::after {
   content: ", ";
 }
-.item-list__comma-list li:last-child:after {
+.item-list__comma-list li:last-child::after {
   content: "";
 }
