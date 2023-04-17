@@ -155,7 +155,6 @@ Configuration UI
 
 Configuration Translation
 - Gábor Hojtsy 'Gábor Hojtsy' https://www.drupal.org/u/gábor-hojtsy
-- Tobias Zimmermann 'tstoeckler' https://www.drupal.org/u/tstoeckler
 - Vijayachandran Mani 'vijaycs85' https://www.drupal.org/u/vijaycs85
 
 Contact
@@ -217,7 +216,6 @@ Entity API
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
 - Hristo Chonov 'hchonov' https://www.drupal.org/u/hchonov
 - Sascha Grossenbacher 'Berdir' https://www.drupal.org/u/berdir
-- Tobias Zimmermann 'tstoeckler' https://www.drupal.org/u/tstoeckler
 
 Extension API
 - ?
@@ -399,7 +397,6 @@ Seven
 - ?
 
 Shortcut
-- Tobias Zimmermann 'tstoeckler' https://www.drupal.org/u/tstoeckler
 - Jibran Ijaz 'jibran' https://www.drupal.org/u/jibran
 
 Stable
