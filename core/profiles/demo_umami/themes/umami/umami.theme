@@ -48,7 +48,7 @@ function umami_preprocess_field(&$variables, $hook) {
  */
 function umami_preprocess_block(&$variables) {
   $variables['title_attributes']['class'][] = 'block__title';
-  // Add a class indicating the custom block bundle.
+  // Add a class indicating the content block bundle.
   if (isset($variables['elements']['content']['#block_content'])) {
     $variables['attributes']['class'][] = Html::getClass('block-type-' . $variables['elements']['content']['#block_content']->bundle());
   }
@@ -58,7 +58,7 @@ function umami_preprocess_block(&$variables) {
  * Implements hook_theme_suggestions_HOOK_alter() for block templates.
  */
 function umami_theme_suggestions_block_alter(array &$suggestions, array $variables) {
-  // Block suggestions for custom block bundles.
+  // Block suggestions for content block bundles.
   if (isset($variables['elements']['content']['#block_content'])) {
     array_splice($suggestions, 1, 0, 'block__bundle__' . $variables['elements']['content']['#block_content']->bundle());
   }

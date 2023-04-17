@@ -104,7 +104,7 @@ class HelpTest extends BrowserTestBase {
     $page_text = $this->getTextContent();
     $start = strpos($page_text, 'Module overviews');
     $pos = $start;
-    $list = ['Block', 'Breakpoint', 'Custom Block', 'History', 'Text Editor'];
+    $list = ['Block', 'Block Content', 'Breakpoint', 'History', 'Text Editor'];
     foreach ($list as $name) {
       $this->assertSession()->linkExists($name);
       $new_pos = strpos($page_text, $name, $start);

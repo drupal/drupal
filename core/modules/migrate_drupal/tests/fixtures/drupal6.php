@@ -1222,13 +1222,13 @@ $connection->insert('boxes')
 ))
 ->values(array(
   'bid' => '1',
-  'body' => '<h3>My first custom block body</h3>',
+  'body' => '<h3>My first content block body</h3>',
   'info' => 'My block 1',
   'format' => '2',
 ))
 ->values(array(
   'bid' => '2',
-  'body' => '<h3>My second custom block body</h3>',
+  'body' => '<h3>My second content block body</h3>',
   'info' => 'My block 2',
   'format' => '2',
 ))
@@ -14918,7 +14918,7 @@ $connection->insert('locales_source')
   'lid' => '525',
   'location' => 'block:1:body',
   'textgroup' => 'blocks',
-  'source' => '<h3>My first custom block body</h3>',
+  'source' => '<h3>My first content block body</h3>',
   'version' => '1',
 ))
 ->values(array(
@@ -14932,7 +14932,7 @@ $connection->insert('locales_source')
   'lid' => '527',
   'location' => 'block:2:body',
   'textgroup' => 'blocks',
-  'source' => '<h3>My second custom block body</h3>',
+  'source' => '<h3>My second content block body</h3>',
   'version' => '1',
 ))
 ->values(array(
@@ -27303,7 +27303,7 @@ $connection->insert('locales_target')
 ))
 ->values(array(
   'lid' => '525',
-  'translation' => '<h3>fr - My first custom block body</h3>',
+  'translation' => '<h3>fr - My first content block body</h3>',
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
@@ -28239,7 +28239,7 @@ $connection->insert('locales_target')
 ))
 ->values(array(
   'lid' => '525',
-  'translation' => '<h3>zu - My first custom block body</h3>',
+  'translation' => '<h3>zu - My first content block body</h3>',
   'language' => 'zu',
   'plid' => '0',
   'plural' => '0',

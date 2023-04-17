@@ -7,7 +7,7 @@ use Drupal\block_content\Entity\BlockContent;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 
 /**
- * Tests migration of custom blocks.
+ * Tests migration of content blocks.
  *
  * @group block_content
  */
@@ -36,7 +36,7 @@ class MigrateCustomBlockTest extends MigrateDrupal7TestBase {
   }
 
   /**
-   * Tests migration of custom blocks from Drupal 7 to Drupal 8.
+   * Tests migration of content blocks from Drupal 7 to Drupal 8.
    */
   public function testCustomBlockMigration() {
     $block = BlockContent::load(1);

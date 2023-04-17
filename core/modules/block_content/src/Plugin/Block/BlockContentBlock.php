@@ -15,12 +15,12 @@ use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Defines a generic custom block type.
+ * Defines a generic block type.
  *
  * @Block(
  *  id = "block_content",
- *  admin_label = @Translation("Custom block"),
- *  category = @Translation("Custom"),
+ *  admin_label = @Translation("Content block"),
+ *  category = @Translation("Content block"),
  *  deriver = "Drupal\block_content\Plugin\Derivative\BlockContent"
  * )
  */
@@ -164,7 +164,7 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
-    // Invalidate the block cache to update custom block-based derivatives.
+    // Invalidate the block cache to update content block-based derivatives.
     $this->configuration['view_mode'] = $form_state->getValue('view_mode');
     $this->blockManager->clearCachedDefinitions();
   }
@@ -188,7 +188,7 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
     }
     else {
       return [
-        '#markup' => $this->t('Block with uuid %uuid does not exist. <a href=":url">Add custom block</a>.', [
+        '#markup' => $this->t('Block with uuid %uuid does not exist. <a href=":url">Add content block</a>.', [
           '%uuid' => $this->getDerivativeId(),
           ':url' => $this->urlGenerator->generate('block_content.add_page'),
         ]),

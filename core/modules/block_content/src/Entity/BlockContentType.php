@@ -6,17 +6,17 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\block_content\BlockContentTypeInterface;
 
 /**
- * Defines the custom block type entity.
+ * Defines the block type entity.
  *
  * @ConfigEntityType(
  *   id = "block_content_type",
- *   label = @Translation("Custom block type"),
- *   label_collection = @Translation("Custom block types"),
- *   label_singular = @Translation("custom block type"),
- *   label_plural = @Translation("custom block types"),
+ *   label = @Translation("Block type"),
+ *   label_collection = @Translation("Block types"),
+ *   label_singular = @Translation("block type"),
+ *   label_plural = @Translation("block types"),
  *   label_count = @PluralTranslation(
- *     singular = "@count custom block type",
- *     plural = "@count custom block types",
+ *     singular = "@count block type",
+ *     plural = "@count block types",
  *   ),
  *   handlers = {
  *     "access" = "Drupal\block_content\BlockTypeAccessControlHandler",
@@ -56,21 +56,21 @@ use Drupal\block_content\BlockContentTypeInterface;
 class BlockContentType extends ConfigEntityBundleBase implements BlockContentTypeInterface {
 
   /**
-   * The custom block type ID.
+   * The block type ID.
    *
    * @var string
    */
   protected $id;
 
   /**
-   * The custom block type label.
+   * The block type label.
    *
    * @var string
    */
   protected $label;
 
   /**
-   * The default revision setting for custom blocks of this type.
+   * The default revision setting for content blocks of this type.
    *
    * @var bool
    */

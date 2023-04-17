@@ -7,7 +7,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 
 /**
- * Modifies the 'Add custom block' local action.
+ * Modifies the 'Add content block' local action.
  */
 class BlockContentAddLocalAction extends LocalActionDefault {
 
@@ -20,7 +20,7 @@ class BlockContentAddLocalAction extends LocalActionDefault {
     if ($theme = $route_match->getParameter('theme')) {
       $options['query']['theme'] = $theme;
     }
-    // Adds a destination on custom block listing.
+    // Adds a destination on content block listing.
     if ($route_match->getRouteName() == 'entity.block_content.collection') {
       $options['query']['destination'] = Url::fromRoute('<current>')->toString();
     }

@@ -36,8 +36,8 @@ function block_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dd>' . t('To change the settings of an individual block click on the <em>Configure</em> link on the <a href=":blocks">Block layout page</a>. The available options vary depending on the module that provides the block. For all blocks you can change the block title and toggle whether to display it.', [':blocks' => Url::fromRoute('block.admin_display')->toString()]) . '</dd>';
       $output .= '<dt>' . t('Controlling visibility') . '</dt>';
       $output .= '<dd>' . t('You can control the visibility of a block by restricting it to specific pages, content types, and/or roles by setting the appropriate options under <em>Visibility settings</em> of the block configuration.') . '</dd>';
-      $output .= '<dt>' . t('Adding custom blocks') . '</dt>';
-      $output .= '<dd>' . t('You can add custom blocks, if the <em>Custom Block</em> module is installed. For more information, see the <a href=":blockcontent-help">Custom Block help page</a>.', [':blockcontent-help' => $block_content]) . '</dd>';
+      $output .= '<dt>' . t('Adding content blocks') . '</dt>';
+      $output .= '<dd>' . t('You can add content blocks, if the <em>Block Content</em> module is installed. For more information, see the <a href=":blockcontent-help">Block Content help page</a>.', [':blockcontent-help' => $block_content]) . '</dd>';
       $output .= '</dl>';
       return $output;
   }

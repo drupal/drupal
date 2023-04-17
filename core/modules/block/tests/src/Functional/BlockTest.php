@@ -397,7 +397,7 @@ class BlockTest extends BlockTestBase {
       'footer' => '//footer[@role = "contentinfo"]',
     ];
 
-    // Confirm that the custom block was found at the proper region.
+    // Confirm that the content block was found at the proper region.
     $xpath = $this->assertSession()->buildXPathQuery($region_xpath[$region] . '//div[@id=:block-id]/*', [
       ':block-id' => 'block-' . str_replace('_', '-', strtolower($block['id'])),
     ]);

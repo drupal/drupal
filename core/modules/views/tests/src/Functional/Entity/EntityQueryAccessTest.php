@@ -103,7 +103,7 @@ class EntityQueryAccessTest extends ViewTestBase {
     ]);
     $this->drupalLogin($account);
 
-    $this->drupalGet('/admin/content/block-content');
+    $this->drupalGet('/admin/content/block');
     $assert_session = $this->assertSession();
     $assert_session->statusCodeEquals(200);
     $assert_session->pageTextContains($accessible_block->label());

@@ -76,7 +76,7 @@ function field_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('Terminology') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Entities and entity types') . '</dt>';
-      $output .= '<dd>' . t("The website's content and configuration is managed using <em>entities</em>, which are grouped into <em>entity types</em>. <em>Content entity types</em> are the entity types for site content (such as the main site content, comments, custom blocks, taxonomy terms, and user accounts). <em>Configuration entity types</em> are used to store configuration information for your site, such as individual views in the Views module, and settings for your main site content types.") . '</dd>';
+      $output .= '<dd>' . t("The website's content and configuration is managed using <em>entities</em>, which are grouped into <em>entity types</em>. <em>Content entity types</em> are the entity types for site content (such as the main site content, comments, content blocks, taxonomy terms, and user accounts). <em>Configuration entity types</em> are used to store configuration information for your site, such as individual views in the Views module, and settings for your main site content types.") . '</dd>';
       $output .= '<dt>' . t('Entity sub-types') . '</dt>';
       $output .= '<dd>' . t('Some content entity types are further grouped into sub-types (for example, you could have article and page content types within the main site content entity type, and tag and category vocabularies within the taxonomy term entity type); other entity types, such as user accounts, do not have sub-types. Programmers use the term <em>bundle</em> for entity sub-types.') . '</dd>';
       $output .= '<dt>' . t('Fields and field types') . '</dt>';

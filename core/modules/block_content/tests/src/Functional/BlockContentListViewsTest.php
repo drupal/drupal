@@ -5,7 +5,7 @@ namespace Drupal\Tests\block_content\Functional;
 use Drupal\block_content\Entity\BlockContent;
 
 /**
- * Tests the Views-powered listing of custom blocks.
+ * Tests the Views-powered listing of content blocks.
  *
  * @group block_content
  * @see \Drupal\block\BlockContentListBuilder
@@ -73,15 +73,15 @@ class BlockContentListViewsTest extends BlockContentTestBase {
   }
 
   /**
-   * Tests the custom block listing page.
+   * Tests the content block listing page.
    */
   public function testListing() {
     // Test with an admin user.
     $this->drupalLogin($this->adminUser);
-    $this->drupalGet('admin/content/block-content');
+    $this->drupalGet('admin/content/block');
 
     // Test for the page title.
-    $this->assertSession()->titleEquals('Custom blocks | Drupal');
+    $this->assertSession()->titleEquals('Content blocks | Drupal');
 
     // Test for the exposed filters.
     $this->assertSession()->fieldExists('info');
@@ -102,7 +102,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $label = 'Antelope';
     $new_label = 'Albatross';
     // Add a new entity using the operations link.
-    $this->clickLink('Add custom block');
+    $this->clickLink('Add content block');
     $this->assertSession()->statusCodeEquals(200);
     $edit = [];
     $edit['info[0][value]'] = $label;
@@ -130,7 +130,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
       $this->assertSession()->linkByHrefExists('block/' . $block->id());
       $this->clickLink('Edit');
       $this->assertSession()->statusCodeEquals(200);
-      $this->assertSession()->titleEquals("Edit custom block $label | Drupal");
+      $this->assertSession()->titleEquals("Edit content block $label | Drupal");
       $edit = ['info[0][value]' => $new_label];
       $this->submitForm($edit, 'Save');
     }
@@ -146,7 +146,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $this->assertSession()->linkByHrefExists('block/' . $block->id() . '/delete');
     $this->clickLink('Delete');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->titleEquals("Are you sure you want to delete the custom block $new_label? | Drupal");
+    $this->assertSession()->titleEquals("Are you sure you want to delete the content block $new_label? | Drupal");
     $this->submitForm([], 'Delete');
 
     // Verify that the text of the label and machine name does not appear in
@@ -154,8 +154,8 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $this->assertSession()->elementTextNotContains('xpath', '//td', $new_label);
 
     // Confirm that the empty text is displayed.
-    $this->assertSession()->pageTextContains('There are no custom blocks available.');
-    $this->assertSession()->linkExists('custom block');
+    $this->assertSession()->pageTextContains('There are no content blocks available.');
+    $this->assertSession()->linkExists('content block');
 
     $block_content = BlockContent::create([
       'info' => 'Non-reusable block',
@@ -164,9 +164,9 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     ]);
     $block_content->save();
 
-    $this->drupalGet('admin/content/block-content');
+    $this->drupalGet('admin/content/block');
     // Confirm that the empty text is displayed.
-    $this->assertSession()->pageTextContains('There are no custom blocks available.');
+    $this->assertSession()->pageTextContains('There are no content blocks available.');
     // Confirm the non-reusable block is not on the page.
     $this->assertSession()->pageTextNotContains('Non-reusable block');
 
@@ -175,10 +175,10 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     // Create test block for other user tests.
     $test_block = $this->createBlockContent($label);
 
-    $link_text = t('Add custom block');
+    $link_text = t('Add content block');
     // Test as a user with view only permissions.
     $this->drupalLogin($this->baseUser1);
-    $this->drupalGet('admin/content/block-content');
+    $this->drupalGet('admin/content/block');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->linkNotExists($link_text);
     $matches = $this->xpath('//td/a');
@@ -192,7 +192,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
 
     // Test as a user with permission to create/edit/delete basic blocks.
     $this->drupalLogin($this->baseUser2);
-    $this->drupalGet('admin/content/block-content');
+    $this->drupalGet('admin/content/block');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->linkExists($link_text);
     $matches = $this->xpath('//td/a');

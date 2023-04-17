@@ -5,9 +5,9 @@ dependencies:
     - block_content
     - user
 id: block_content
-label: 'Custom blocks'
+label: 'Content blocks'
 module: views
-description: 'Create and edit custom block content.'
+description: 'Create and edit content blocks.'
 tag: default
 base_table: block_content_field_data
 base_field: id
@@ -18,7 +18,7 @@ display:
     display_plugin: default
     position: 0
     display_options:
-      title: 'Custom blocks'
+      title: 'Content blocks'
       fields:
         info:
           id: info
@@ -302,7 +302,7 @@ display:
           admin_label: ''
           plugin_id: text_custom
           empty: true
-          content: 'There are no custom blocks available.'
+          content: 'There are no content blocks available.'
           tokenize: false
         block_content_listing_empty:
           id: block_content_listing_empty
@@ -520,11 +520,11 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      path: admin/content/block-content
+      path: admin/content/block
       menu:
         type: tab
-        title: 'Custom blocks'
-        description: 'Create and edit custom block content.'
+        title: 'Blocks'
+        description: 'Create and edit content blocks.'
         weight: 0
         menu_name: admin
         parent: system.admin_content

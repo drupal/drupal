@@ -2,9 +2,9 @@
 
 /**
  * @file
- * A dummy module for testing custom block related hooks.
+ * A dummy module for testing content block related hooks.
  *
- * This is a dummy module that implements custom block related hooks to test API
+ * This is a dummy module that implements content block related hooks to test API
  * interaction with the block_content module.
  */
 

@@ -6,7 +6,7 @@ use Drupal\block_content\Entity\BlockContent;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 
 /**
- * Upgrade custom blocks.
+ * Upgrade content blocks.
  *
  * @group migrate_drupal_6
  */
@@ -34,7 +34,7 @@ class MigrateBlockContentTest extends MigrateDrupal6TestBase {
   }
 
   /**
-   * Tests the Drupal 6 custom block to Drupal 8 migration.
+   * Tests the Drupal 6 content block to Drupal 8 migration.
    */
   public function testBlockMigration() {
     /** @var \Drupal\block_content\Entity\BlockContent $block */
@@ -43,7 +43,7 @@ class MigrateBlockContentTest extends MigrateDrupal6TestBase {
     $this->assertGreaterThanOrEqual(REQUEST_TIME, $block->getChangedTime());
     $this->assertLessThanOrEqual(time(), $block->getChangedTime());
     $this->assertSame('en', $block->language()->getId());
-    $this->assertSame('<h3>My first custom block body</h3>', $block->body->value);
+    $this->assertSame('<h3>My first content block body</h3>', $block->body->value);
     $this->assertSame('full_html', $block->body->format);
 
     $block = BlockContent::load(2);
@@ -51,7 +51,7 @@ class MigrateBlockContentTest extends MigrateDrupal6TestBase {
     $this->assertGreaterThanOrEqual(REQUEST_TIME, $block->getChangedTime());
     $this->assertLessThanOrEqual(time(), $block->getChangedTime());
     $this->assertSame('en', $block->language()->getId());
-    $this->assertSame('<h3>My second custom block body</h3>', $block->body->value);
+    $this->assertSame('<h3>My second content block body</h3>', $block->body->value);
     $this->assertSame('full_html', $block->body->format);
   }
 

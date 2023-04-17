@@ -50,7 +50,7 @@ class PageEditTest extends BlockContentTestBase {
       ->condition('info', $edit['info[0][value]'])
       ->execute();
     $block = BlockContent::load(reset($blocks));
-    $this->assertNotEmpty($block, 'Custom block found in database.');
+    $this->assertNotEmpty($block, 'Content block found in database.');
 
     // Load the edit page.
     $this->drupalGet('block/' . $block->id());
@@ -80,7 +80,7 @@ class PageEditTest extends BlockContentTestBase {
     // Test deleting the block.
     $this->drupalGet("block/" . $revised_block->id());
     $this->clickLink('Delete');
-    $this->assertSession()->pageTextContains('Are you sure you want to delete the custom block ' . $revised_block->label() . '?');
+    $this->assertSession()->pageTextContains('Are you sure you want to delete the content block ' . $revised_block->label() . '?');
 
     // Test breadcrumb.
     $trail = [

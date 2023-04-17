@@ -6,7 +6,7 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\RevisionableEntityBundleInterface;
 
 /**
- * Provides an interface defining a custom block type entity.
+ * Provides an interface defining a block type entity.
  */
 interface BlockContentTypeInterface extends ConfigEntityInterface, RevisionableEntityBundleInterface {
 

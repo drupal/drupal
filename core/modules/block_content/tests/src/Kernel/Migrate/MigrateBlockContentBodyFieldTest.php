@@ -9,7 +9,7 @@ use Drupal\field\FieldStorageConfigInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 
 /**
- * Attaches a body field to the custom block type.
+ * Attaches a body field to the block type.
  *
  * @group block_content
  */

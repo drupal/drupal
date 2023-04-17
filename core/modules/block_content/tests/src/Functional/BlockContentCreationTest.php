@@ -71,7 +71,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
       ->getStorage('block_content')
       ->loadByProperties(['info' => $edit['info[0][value]']]);
     $block = reset($blocks);
-    $this->assertNotEmpty($block, 'Custom Block found in database.');
+    $this->assertNotEmpty($block, 'Content Block found in database.');
   }
 
   /**
@@ -140,20 +140,20 @@ class BlockContentCreationTest extends BlockContentTestBase {
       ->getStorage('block_content')
       ->loadByProperties(['info' => $edit['info[0][value]']]);
     $block = reset($blocks);
-    $this->assertNotEmpty($block, 'Custom Block found in database.');
+    $this->assertNotEmpty($block, 'Content Block found in database.');
   }
 
   /**
-   * Create a default custom block.
+   * Create a default content block.
    *
-   * Creates a custom block from defaults and ensures that the 'basic block'
+   * Creates a content block from defaults and ensures that the 'basic block'
    * type is being used.
    */
   public function testDefaultBlockContentCreation() {
     $edit = [];
     $edit['info[0][value]'] = $this->randomMachineName(8);
     $edit['body[0][value]'] = $this->randomMachineName(16);
-    // Don't pass the custom block type in the URL so the default is forced.
+    // Don't pass the content block type in the URL so the default is forced.
     $this->drupalGet('block/add');
     $this->submitForm($edit, 'Save');
 
@@ -165,7 +165,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
       ->getStorage('block_content')
       ->loadByProperties(['info' => $edit['info[0][value]']]);
     $block = reset($blocks);
-    $this->assertNotEmpty($block, 'Default Custom Block found in database.');
+    $this->assertNotEmpty($block, 'Default Content Block found in database.');
   }
 
   /**
@@ -229,7 +229,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->assertSession()->pageTextContains('This will also remove 1 placed block instance.');
 
     $this->submitForm([], 'Delete');
-    $this->assertSession()->pageTextContains('The custom block ' . $edit['info[0][value]'] . ' has been deleted.');
+    $this->assertSession()->pageTextContains('The content block ' . $edit['info[0][value]'] . ' has been deleted.');
 
     // Create another block and force the plugin cache to flush.
     $edit2 = [];

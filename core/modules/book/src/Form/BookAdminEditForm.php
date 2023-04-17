@@ -46,7 +46,7 @@ class BookAdminEditForm extends FormBase {
    * Constructs a new BookAdminEditForm.
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
-   *   The custom block storage.
+   *   The content block storage.
    * @param \Drupal\book\BookManagerInterface $book_manager
    *   The book manager.
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository

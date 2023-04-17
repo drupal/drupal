@@ -65,7 +65,7 @@ abstract class BlockContentTestBase extends BrowserTestBase {
   }
 
   /**
-   * Creates a custom block.
+   * Creates a content block.
    *
    * @param bool|string $title
    *   (optional) Title of block. When no value is given uses a random name.
@@ -76,7 +76,7 @@ abstract class BlockContentTestBase extends BrowserTestBase {
    *   (optional) Whether to save the block. Defaults to TRUE.
    *
    * @return \Drupal\block_content\Entity\BlockContent
-   *   Created custom block.
+   *   Created content block.
    */
   protected function createBlockContent($title = FALSE, $bundle = 'basic', $save = TRUE) {
     $title = $title ?: $this->randomMachineName();
@@ -92,7 +92,7 @@ abstract class BlockContentTestBase extends BrowserTestBase {
   }
 
   /**
-   * Creates a custom block type (bundle).
+   * Creates a block type (bundle).
    *
    * @param array|string $values
    *   The value to create the block content type. If $values is an array
@@ -102,7 +102,7 @@ abstract class BlockContentTestBase extends BrowserTestBase {
    *   Whether or not to create the body field
    *
    * @return \Drupal\block_content\Entity\BlockContentType
-   *   Created custom block type.
+   *   Created block type.
    */
   protected function createBlockContentType($values, $create_body = FALSE) {
     if (is_array($values)) {

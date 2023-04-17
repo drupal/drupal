@@ -189,7 +189,7 @@ class AdminTest extends BrowserTestBase {
     // Go to Config administration page.
     $this->drupalGet('admin/config');
     $this->assertSession()->statusCodeEquals(200);
-    // Validates the custom block without description.
+    // Validates the content block without description.
     $this->assertSession()->pageTextContains('Test custom admin block without description');
     // Validates an empty description block.
     $this->assertSession()->elementNotExists('xpath', '//dd[@class="list-group__description"][not(text())]');

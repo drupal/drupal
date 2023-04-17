@@ -24,10 +24,10 @@ class BlockContentTypeForm extends BundleEntityFormBase {
     $block_type = $this->entity;
 
     if ($this->operation == 'add') {
-      $form['#title'] = $this->t('Add custom block type');
+      $form['#title'] = $this->t('Add block type');
     }
     else {
-      $form['#title'] = $this->t('Edit %label custom block type', ['%label' => $block_type->label()]);
+      $form['#title'] = $this->t('Edit %label block type', ['%label' => $block_type->label()]);
     }
 
     $form['label'] = [
@@ -100,13 +100,13 @@ class BlockContentTypeForm extends BundleEntityFormBase {
     $edit_link = $this->entity->toLink($this->t('Edit'), 'edit-form')->toString();
     $logger = $this->logger('block_content');
     if ($status == SAVED_UPDATED) {
-      $this->messenger()->addStatus($this->t('Custom block type %label has been updated.', ['%label' => $block_type->label()]));
-      $logger->notice('Custom block type %label has been updated.', ['%label' => $block_type->label(), 'link' => $edit_link]);
+      $this->messenger()->addStatus($this->t('Block type %label has been updated.', ['%label' => $block_type->label()]));
+      $logger->notice('Block type %label has been updated.', ['%label' => $block_type->label(), 'link' => $edit_link]);
     }
     else {
       block_content_add_body_field($block_type->id());
-      $this->messenger()->addStatus($this->t('Custom block type %label has been added.', ['%label' => $block_type->label()]));
-      $logger->notice('Custom block type %label has been added.', ['%label' => $block_type->label(), 'link' => $edit_link]);
+      $this->messenger()->addStatus($this->t('Block type %label has been added.', ['%label' => $block_type->label()]));
+      $logger->notice('Block type %label has been added.', ['%label' => $block_type->label(), 'link' => $edit_link]);
     }
 
     $form_state->setRedirectUrl($this->entity->toUrl('collection'));

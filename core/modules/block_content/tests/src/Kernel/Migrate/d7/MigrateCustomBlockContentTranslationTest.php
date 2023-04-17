@@ -6,7 +6,7 @@ use Drupal\block_content\Entity\BlockContent;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 
 /**
- * Tests migration of i18n custom block strings.
+ * Tests migration of i18n content block strings.
  *
  * @group migrate_drupal_7
  */
@@ -41,7 +41,7 @@ class MigrateCustomBlockContentTranslationTest extends MigrateDrupal7TestBase {
   }
 
   /**
-   * Tests the Drupal 7 i18n custom block strings to Drupal 8 migration.
+   * Tests the Drupal 7 i18n content block strings to Drupal 8 migration.
    */
   public function testCustomBlockContentTranslation() {
     /** @var \Drupal\block_content\Entity\BlockContent $block */

@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Defines the access control handler for the custom block entity type.
+ * Defines the access control handler for the content block entity type.
  *
  * @see \Drupal\block_content\Entity\BlockContent
  */

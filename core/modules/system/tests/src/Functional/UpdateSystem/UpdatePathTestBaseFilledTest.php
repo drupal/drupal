@@ -85,7 +85,7 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
       }
     }
 
-    // Make sure the custom block appears.
+    // Make sure the content block appears.
     $this->drupalGet('<front>');
     // Block title.
     $this->assertSession()->pageTextContains('Another block');
@@ -166,11 +166,11 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     $this->drupalGet('admin/content');
     $this->assertSession()->pageTextContains('Test title');
 
-    // Make sure our custom blocks show up.
+    // Make sure our content blocks show up.
     $this->drupalGet('admin/structure/block');
     $this->assertSession()->pageTextContains('Another block');
     $this->assertSession()->pageTextContains('Test block');
-    $this->drupalGet('admin/content/block-content');
+    $this->drupalGet('admin/content/block');
     $this->assertSession()->pageTextContains('Another block');
     $this->assertSession()->pageTextContains('Test block');
 

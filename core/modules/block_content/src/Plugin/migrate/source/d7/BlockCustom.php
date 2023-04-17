@@ -5,7 +5,7 @@ namespace Drupal\block_content\Plugin\migrate\source\d7;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
- * Drupal 7 custom block source from database.
+ * Drupal 7 content block source from database.
  *
  * For available configuration keys, refer to the parent classes.
  *
@@ -34,7 +34,7 @@ class BlockCustom extends DrupalSqlBase {
       'bid' => $this->t('The numeric identifier of the block/box'),
       'body' => $this->t('The block/box content'),
       'info' => $this->t('Admin title of the block/box.'),
-      'format' => $this->t('Input format of the custom block/box content.'),
+      'format' => $this->t('Input format of the content block/box content.'),
     ];
   }
 

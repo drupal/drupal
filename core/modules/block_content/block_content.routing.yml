@@ -2,7 +2,7 @@ block_content.add_page:
   path: '/block/add'
   defaults:
     _controller: '\Drupal\block_content\Controller\BlockContentController::add'
-    _title: 'Add custom block'
+    _title: 'Add content block'
   options:
     _admin_route: TRUE
   requirements:
@@ -72,9 +72,9 @@ block_content.type_add:
     _entity_create_access: 'block_content_type'
 
 entity.block_content.collection:
-  path: '/admin/content/block-content'
+  path: '/admin/content/block'
   defaults:
-    _title: 'Custom blocks'
+    _title: 'Content blocks'
     _entity_list: 'block_content'
   requirements:
     _permission: 'access block library+administer block content'

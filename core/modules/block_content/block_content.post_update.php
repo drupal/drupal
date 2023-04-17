@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Post update functions for Custom Block.
+ * Post update functions for Content Block.
  */
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
@@ -42,11 +42,13 @@ function block_content_post_update_move_custom_block_library() {
     return;
   }
 
-  $display['display_options']['path'] = 'admin/content/block-content';
+  $display['display_options']['path'] = 'admin/content/block';
   $menu =& $display['display_options']['menu'];
-  $menu['description'] = 'Create and edit custom block content.';
+  $menu['title'] = 'Blocks';
+  $menu['description'] = 'Create and edit block content.';
   $menu['expanded'] = FALSE;
   $menu['parent'] = 'system.admin_content';
+  $view->set('label', 'Content blocks');
 
   $view->save();
 }

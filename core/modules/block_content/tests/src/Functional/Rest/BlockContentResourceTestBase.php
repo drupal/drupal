@@ -72,7 +72,7 @@ abstract class BlockContentResourceTestBase extends EntityResourceTestBase {
       block_content_add_body_field($block_content_type->id());
     }
 
-    // Create a "Llama" custom block.
+    // Create a "Llama" content block.
     $block_content = BlockContent::create([
       'info' => 'Llama',
       'type' => 'basic',

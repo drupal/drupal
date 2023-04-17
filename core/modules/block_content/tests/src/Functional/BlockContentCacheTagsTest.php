@@ -11,7 +11,7 @@ use Drupal\Tests\system\Functional\Entity\EntityCacheTagsTestBase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests the Custom Block entity's cache tags.
+ * Tests the Content Block entity's cache tags.
  *
  * @group block_content
  */
@@ -39,7 +39,7 @@ class BlockContentCacheTagsTest extends EntityCacheTagsTestBase {
     $block_content_type->save();
     block_content_add_body_field($block_content_type->id());
 
-    // Create a "Llama" custom block.
+    // Create a "Llama" content block.
     $block_content = BlockContent::create([
       'info' => 'Llama',
       'type' => 'basic',

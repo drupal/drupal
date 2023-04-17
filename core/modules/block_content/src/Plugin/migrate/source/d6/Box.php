@@ -38,7 +38,7 @@ class Box extends DrupalSqlBase {
       'bid' => $this->t('The numeric identifier of the block/box'),
       'body' => $this->t('The block/box content'),
       'info' => $this->t('Admin title of the block/box.'),
-      'format' => $this->t('Input format of the custom block/box content.'),
+      'format' => $this->t('Input format of the content block/box content.'),
     ];
   }
 

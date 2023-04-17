@@ -1,5 +1,5 @@
 id: d6_custom_block
-label: Custom blocks
+label: Content blocks
 audit: true
 migration_tags:
   - Drupal 6

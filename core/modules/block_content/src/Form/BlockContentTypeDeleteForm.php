@@ -6,7 +6,7 @@ use Drupal\Core\Entity\EntityDeleteForm;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Provides a confirmation form for deleting a custom block type entity.
+ * Provides a confirmation form for deleting a block type entity.
  *
  * @internal
  */
@@ -22,7 +22,7 @@ class BlockContentTypeDeleteForm extends EntityDeleteForm {
       ->count()
       ->execute();
     if ($block_count) {
-      $caption = '<p>' . $this->formatPlural($block_count, '%label is used by 1 custom block on your site. You can not remove this block type until you have removed all of the %label blocks.', '%label is used by @count custom blocks on your site. You may not remove %label until you have removed all of the %label custom blocks.', ['%label' => $this->entity->label()]) . '</p>';
+      $caption = '<p>' . $this->formatPlural($block_count, '%label is used by 1 content block on your site. You can not remove this block type until you have removed all of the %label blocks.', '%label is used by @count content blocks on your site. You may not remove %label until you have removed all of the %label content blocks.', ['%label' => $this->entity->label()]) . '</p>';
       $form['description'] = ['#markup' => $caption];
       return $form;
     }

@@ -1,12 +1,12 @@
 block_content_type_add:
   route_name: block_content.type_add
-  title: 'Add custom block type'
+  title: 'Add block type'
   appears_on:
     - entity.block_content_type.collection
 
 block_content_add_action:
   route_name: block_content.add_page
-  title: 'Add custom block'
+  title: 'Add content block'
   appears_on:
     - block.admin_library
     - entity.block_content.collection

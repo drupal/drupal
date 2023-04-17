@@ -48,7 +48,7 @@ class BlockContentPermissions implements ContainerInjectionInterface {
   }
 
   /**
-   * Return all the permissions available for a custom block type.
+   * Return all the permissions available for a block type.
    *
    * @param \Drupal\block_content\Entity\BlockContentType $type
    *   The block type.
@@ -61,22 +61,22 @@ class BlockContentPermissions implements ContainerInjectionInterface {
     $type_params = ['%type_name' => $type->label()];
     return [
       "create $type_id block content" => [
-        'title' => $this->t('%type_name: Create new custom block', $type_params),
+        'title' => $this->t('%type_name: Create new content block', $type_params),
       ],
       "edit any $type_id block content" => [
-        'title' => $this->t('%type_name: Edit custom block', $type_params),
+        'title' => $this->t('%type_name: Edit content block', $type_params),
       ],
       "delete any $type_id block content" => [
-        'title' => $this->t('%type_name: Delete custom block', $type_params),
+        'title' => $this->t('%type_name: Delete content block', $type_params),
       ],
       "view any $type_id block content history" => [
-        'title' => $this->t('%type_name: View custom block history pages', $type_params),
+        'title' => $this->t('%type_name: View content block history pages', $type_params),
       ],
       "revert any $type_id block content revisions" => [
-        'title' => $this->t('%type_name: Revert custom block revisions', $type_params),
+        'title' => $this->t('%type_name: Revert content block revisions', $type_params),
       ],
       "delete any $type_id block content revisions" => [
-        'title' => $this->t('%type_name: Delete custom block revisions', $type_params),
+        'title' => $this->t('%type_name: Delete content block revisions', $type_params),
       ],
     ];
   }

@@ -8,7 +8,7 @@ use Drupal\Core\Url;
 use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 
 /**
- * Ensures that custom block type functions work correctly.
+ * Ensures that block type functions work correctly.
  *
  * @group block_content
  */
@@ -138,12 +138,12 @@ class BlockContentTypeTest extends BlockContentTestBase {
       'label' => 'Bar',
     ];
     $this->drupalGet('admin/structure/block-content/manage/basic');
-    $this->assertSession()->titleEquals('Edit basic custom block type | Drupal');
+    $this->assertSession()->titleEquals('Edit basic block type | Drupal');
     $this->submitForm($edit, 'Save');
     $front_page_path = Url::fromRoute('<front>')->toString();
     $this->assertBreadcrumb('admin/structure/block-content/manage/basic/fields', [
       $front_page_path => 'Home',
-      'admin/structure/block-content' => 'Custom block types',
+      'admin/structure/block-content' => 'Block types',
       'admin/structure/block-content/manage/basic' => 'Edit Bar',
     ]);
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
@@ -181,14 +181,14 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $block = $this->createBlockContent(FALSE, 'foo');
     // Attempt to delete the block type, which should not be allowed.
     $this->drupalGet('admin/structure/block-content/manage/' . $type->id() . '/delete');
-    $this->assertSession()->pageTextContains($type->label() . ' is used by 1 custom block on your site. You can not remove this block type until you have removed all of the ' . $type->label() . ' blocks.');
+    $this->assertSession()->pageTextContains($type->label() . ' is used by 1 content block on your site. You can not remove this block type until you have removed all of the ' . $type->label() . ' blocks.');
     $this->assertSession()->pageTextNotContains('This action cannot be undone.');
 
     // Delete the block.
     $block->delete();
     // Attempt to delete the block type, which should now be allowed.
     $this->drupalGet('admin/structure/block-content/manage/' . $type->id() . '/delete');
-    $this->assertSession()->pageTextContains('Are you sure you want to delete the custom block type ' . $type->id() . '?');
+    $this->assertSession()->pageTextContains('Are you sure you want to delete the block type ' . $type->id() . '?');
     $this->assertSession()->pageTextContains('This action cannot be undone.');
   }
 
@@ -204,7 +204,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->createBlockContentType('foo');
     $this->createBlockContentType('bar');
 
-    // Get the custom block storage.
+    // Get the content block storage.
     $storage = $this->container
       ->get('entity_type.manager')
       ->getStorage('block_content');
@@ -225,7 +225,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
         $path = $theme == $default_theme ? 'admin/structure/block' : "admin/structure/block/list/$theme";
         $this->drupalGet($path);
         $this->clickLink('Place block');
-        $this->clickLink('Add custom block');
+        $this->clickLink('Add content block');
         $this->clickLink('foo');
         // Create a new block.
         $edit = ['info[0][value]' => $this->randomMachineName(8)];
@@ -243,10 +243,10 @@ class BlockContentTypeTest extends BlockContentTestBase {
       }
     }
 
-    // Test that adding a block from the 'custom blocks list' doesn't send you
+    // Test that adding a block from the 'content blocks list' doesn't send you
     // to the block configure form.
-    $this->drupalGet('admin/content/block-content');
-    $this->clickLink('Add custom block');
+    $this->drupalGet('admin/content/block');
+    $this->clickLink('Add content block');
     $this->clickLink('foo');
     $edit = ['info[0][value]' => $this->randomMachineName(8)];
     $this->submitForm($edit, 'Save');
@@ -280,11 +280,11 @@ class BlockContentTypeTest extends BlockContentTestBase {
    */
   public function testBlockLibraryRedirect() {
     $this->drupalLogin($this->adminUser);
-    $this->expectDeprecation('The path /admin/structure/block/block-content is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/content/block-content. See https://www.drupal.org/node/3320855.');
+    $this->expectDeprecation('The path /admin/structure/block/block-content is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/content/block. See https://www.drupal.org/node/3320855.');
     $this->drupalGet('admin/structure/block/block-content');
     $base_path = parse_url($this->baseUrl, PHP_URL_PATH) ?? '';
     $this->assertSession()
-      ->pageTextContains("You have been redirected from $base_path/admin/structure/block/block-content. Update links, shortcuts, and bookmarks to use $base_path/admin/content/block-content.");
+      ->pageTextContains("You have been redirected from $base_path/admin/structure/block/block-content. Update links, shortcuts, and bookmarks to use $base_path/admin/content/block.");
   }
 
 }

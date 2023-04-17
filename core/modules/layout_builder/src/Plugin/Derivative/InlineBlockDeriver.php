@@ -8,7 +8,7 @@ use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides inline block plugin definitions for all custom block types.
+ * Provides inline block plugin definitions for all block types.
  *
  * @internal
  *   Plugin derivers are internal.

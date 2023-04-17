@@ -33,7 +33,7 @@ function block_content_update_10100(&$sandbox = NULL): TranslatableMarkup {
     ->setLinkTemplate('revision-revert-form', '/block/{block_content}/revision/{block_content_revision}/revert')
     ->setLinkTemplate('version-history', '/block/{block_content}/revisions');
   $entityDefinitionUpdateManager->updateEntityType($definition);
-  return \t('Added revision routes to Custom block entity type.');
+  return \t('Added revision routes to Content block entity type.');
 }
 
 /**

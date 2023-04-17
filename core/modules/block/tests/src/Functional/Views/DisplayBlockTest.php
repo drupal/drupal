@@ -59,7 +59,7 @@ class DisplayBlockTest extends ViewTestBase {
   }
 
   /**
-   * Tests default and custom block categories.
+   * Tests default and content block categories.
    */
   public function testBlockCategory() {
     $this->drupalLogin($this->drupalCreateUser([
