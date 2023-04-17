@@ -1407,13 +1407,17 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
         return FALSE;
       }
       if (isset($selected_group) && isset($this->options['group_info']['group_items'][$selected_group])) {
-        $input[$this->options['expose']['operator']] = $this->options['group_info']['group_items'][$selected_group]['operator'];
+        $selected_group_options = $this->options['group_info']['group_items'][$selected_group];
+
+        $operator_id = $this->options['expose']['operator'];
+        $input[$operator_id] = $selected_group_options['operator'];
+        $this->options['expose']['operator_id'] = $operator_id;
+        $this->options['expose']['use_operator'] = TRUE;
 
         // Value can be optional, For example for 'empty' and 'not empty' filters.
-        if (isset($this->options['group_info']['group_items'][$selected_group]['value']) && $this->options['group_info']['group_items'][$selected_group]['value'] !== '') {
-          $input[$this->options['group_info']['identifier']] = $this->options['group_info']['group_items'][$selected_group]['value'];
+        if (isset($selected_group_options['value']) && $selected_group_options['value'] !== '') {
+          $input[$this->options['group_info']['identifier']] = $selected_group_options['value'];
         }
-        $this->options['expose']['use_operator'] = TRUE;
 
         $this->group_info = $input[$this->options['group_info']['identifier']];
         return TRUE;
