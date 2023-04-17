@@ -1,0 +1,12 @@
+$schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
+name: Lib Overrides
+status: stable
+libraryOverrides:
+  version: 1
+  dependencies:
+    - core/drupal.dialog
+  css:
+    component:
+      another-stylesheet.css: { }
+  js:
+    lib-overrides.js: { attributes: { defer: true, bar: foo } }

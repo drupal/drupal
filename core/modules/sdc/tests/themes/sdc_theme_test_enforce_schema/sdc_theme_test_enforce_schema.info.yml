@@ -1,0 +1,7 @@
+name: 'SDC test theme'
+type: theme
+description: 'Test theme for sdc that enforces schema definitions.'
+version: VERSION
+base theme: sdc_theme_test
+
+enforce_prop_schemas: true

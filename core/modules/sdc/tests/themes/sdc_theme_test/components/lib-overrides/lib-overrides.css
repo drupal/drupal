@@ -1,0 +1,4 @@
+/* The linter does not allow empty CSS. Let's add anything here. */
+div {
+  display: block;
+}

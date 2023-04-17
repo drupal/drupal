@@ -1,0 +1,6 @@
+{% if target is not empty %}
+  {% set attributes = attributes.setAttribute('target', target) %}
+{% endif %}
+<a {{ attributes }} href="{{ href }}">
+  {{ text }}
+</a>

@@ -1,0 +1,24 @@
+.component--my-banner {
+  position: relative;
+  width: 80%;
+  max-width: 1200px;
+  padding: 2em;
+  color: white;
+  background: black;
+  background-size: cover;
+}
+.component--my-banner--header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.component--my-banner--header h3 {
+  margin: 0;
+  font-size: 2em;
+}
+.component--my-banner--body > * {
+  margin-bottom: 0;
+}
+.component--my-banner--body > :first-child {
+  margin-top: 1em;
+}

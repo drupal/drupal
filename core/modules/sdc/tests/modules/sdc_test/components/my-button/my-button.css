@@ -1,0 +1,15 @@
+button.component--my-button {
+  margin: 0;
+  box-shadow: 1px 1px 2px #000c;
+}
+button.component--my-button svg {
+  width: 30px;
+  height: 30px;
+  padding-left: 5px;
+  vertical-align: bottom;
+  fill: white;
+}
+button.component--my-button:focus svg,
+button.component--my-button:hover svg {
+  fill: black;
+}

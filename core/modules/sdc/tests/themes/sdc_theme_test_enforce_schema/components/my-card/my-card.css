@@ -1,0 +1,23 @@
+.component--my-card {
+  max-width: 500px;
+  margin: 15px auto;
+  color: #f1f1f1;
+  border: 1px solid #141414;
+  background-color: #252525;
+}
+
+.component--my-card__header {
+  margin: 0;
+  padding: 12px 24px 5px 24px;
+  border-bottom: 1px solid #4a4a4a;
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.component--my-card__body {
+  padding: 12px 24px 24px 24px;
+}
+.component--my-card__body .component--my-button {
+  display: block;
+  margin: 0 auto;
+}

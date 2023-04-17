@@ -1,0 +1,3 @@
+$schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
+name: Card Without Schema
+status: experimental

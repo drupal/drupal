@@ -1,0 +1,7 @@
+name: 'SDC test theme'
+type: theme
+description: 'Test theme for sdc.'
+version: VERSION
+base theme: starterkit_theme
+
+enforce_prop_schemas: false

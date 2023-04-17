@@ -1,0 +1,5 @@
+name: 'Components Test Replacements'
+type: module
+dependencies:
+  - sdc:sdc
+package: Testing

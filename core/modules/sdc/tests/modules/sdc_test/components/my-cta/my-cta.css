@@ -1,0 +1,8 @@
+.component--my-cta {
+  margin: 0;
+  padding: 1em 2em;
+  text-decoration: none;
+  text-transform: uppercase;
+  color: white;
+  background-color: #008068;
+}

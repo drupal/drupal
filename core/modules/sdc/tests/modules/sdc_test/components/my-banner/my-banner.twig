@@ -1,0 +1,16 @@
+{# Prepare presentational attributes #}
+{% if image is not empty %}
+  {% set attributes = attributes.setAttribute('style', 'background-image: linear-gradient(to right, black, black, rgba(0, 0, 0, 70%), transparent), url("' ~ image ~ '");') %}
+{% endif %}
+
+{# Markup for the component #}
+<div {{ attributes }}>
+  <div class="component--my-banner--header">
+    <h3>{{ heading }}</h3>
+    {% include 'sdc_test:my-cta' with { text: ctaText, href: ctaHref, target: ctaTarget } only %}
+  </div>
+  <div class="component--my-banner--body">
+    {% block banner_body %}
+    {% endblock %}
+  </div>
+</div>

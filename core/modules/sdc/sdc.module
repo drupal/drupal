@@ -1,0 +1,77 @@
+<?php
+
+/**
+ * @file
+ * Module implementation file.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\sdc\Plugin\Component;
+use Drupal\sdc\ComponentPluginManager;
+
+/**
+ * @file
+ * Module implementation file.
+ */
+
+// Set class aliases for the classes that will go into core.
+// See the experimental modules policy https://www.drupal.org/core/experimental
+// @todo: remove class aliases in #3354389
+@class_alias('Drupal\sdc\Element\ComponentElement', 'Drupal\Core\Render\Element\ComponentElement');
+@class_alias('Drupal\sdc\Exception\ComponentNotFoundException', 'Drupal\Core\Render\Component\Exception\ComponentNotFoundException');
+@class_alias('Drupal\sdc\Exception\IncompatibleComponentSchema', 'Drupal\Core\Render\Component\Exception\IncompatibleComponentSchema');
+@class_alias('Drupal\sdc\Exception\InvalidComponentDataException', 'Drupal\Core\Render\Component\Exception\InvalidComponentDataException');
+@class_alias('Drupal\sdc\Exception\InvalidComponentException', 'Drupal\Core\Render\Component\Exception\InvalidComponentException');
+
+/**
+ * Implements hook_help().
+ */
+function sdc_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.sdc':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Single Directory Components is a module that aims to simplify the front-end development workflow, and improve maintainability of core and contrib themes. For more information, see the <a href=":docs">online documentation for the Single Directory Components module</a>.', [
+        ':docs' => 'https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components',
+      ]) . '</p>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('General') . '</dt>';
+      $output .= '<dd>' . t('Single Directory Components introduces the concept of UI components to Drupal core. A component is a combination of a Twig template, stylesheets, scripts, assets, and metadata, that live in the same directory. Components represent an encapsulated and re-usable UI element.') . '</dd>';
+      $output .= '<dd>' . t('<a href=":sdc-docs">Single Directory Components</a> reduce the number of framework implementation details required to put templated HTML, CSS, and JS in a Drupal page. They also define explicit component APIs, and provide a methodology to replace a component provided upstream (in a parent theme or module).', [
+        ':sdc-docs' => 'https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components',
+      ]) . '</dd>';
+      $output .= '</dl>';
+
+      return $output;
+  }
+  return NULL;
+}
+
+/**
+ * Implements hook_library_info_build().
+ */
+function sdc_library_info_build() {
+  // Iterate over all the components to get the CSS and JS files.
+  $plugin_manager = \Drupal::service('plugin.manager.sdc');
+  assert($plugin_manager instanceof ComponentPluginManager);
+  $components = $plugin_manager->getAllComponents();
+  $libraries = array_reduce(
+    $components,
+    static function (array $libraries, Component $component) {
+      $library = $component->library;
+      if (empty($library)) {
+        return $libraries;
+      }
+      $library_name = $component->getLibraryName();
+      [, $library_id] = explode('/', $library_name);
+      return array_merge($libraries, [$library_id => $library]);
+    },
+    []
+  );
+  $libraries['all'] = [
+    'dependencies' => array_map(
+      static fn(Component $component) => $component->getLibraryName(),
+      $components
+    ),
+  ];
+  return $libraries;
+}
