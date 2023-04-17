@@ -15,13 +15,14 @@ class MigrateTaxonomyTermTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['taxonomy'];
+  protected static $modules = ['comment', 'forum', 'taxonomy'];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->installConfig('forum');
     $this->installEntitySchema('taxonomy_term');
     $this->executeMigrations(['d6_taxonomy_vocabulary', 'd6_taxonomy_term']);
   }
@@ -113,6 +114,10 @@ class MigrateTaxonomyTermTest extends MigrateDrupal6TestBase {
       sort($actual_parents);
       $this->assertEquals($expected_parents, $actual_parents, "Term $tid has correct parents in vocabulary tree");
     }
+
+    // Check the forum is not a container.
+    $term = Term::load(8);
+    $this->assertEquals(0, $term->forum_container->value);
   }
 
 }
