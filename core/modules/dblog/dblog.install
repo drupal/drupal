@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for the dblog module.
  */
 
+use Drupal\Core\Database\Database;
+
 /**
  * Implements hook_schema().
  */
@@ -15,6 +17,7 @@ function dblog_schema() {
       'wid' => [
         'type' => 'serial',
         'not null' => TRUE,
+        'size' => 'big',
         'description' => 'Primary Key: Unique watchdog event ID.',
       ],
       'uid' => [
@@ -114,4 +117,21 @@ function dblog_update_10100(&$sandbox = NULL) {
     ];
     $connection->schema()->changeField('watchdog', 'timestamp', 'timestamp', $new);
   }
+}
+
+/**
+ * Converts the 'wid' of the 'watchdog' table to a big integer.
+ */
+function dblog_update_10101(&$sandbox = NULL) {
+  $schema = Database::getConnection()->schema();
+
+  // Increase the size of the field.
+  $new_specification = [
+    'size' => 'big',
+    'type' => 'serial',
+    'not null' => TRUE,
+    'description' => 'Primary Key: Unique watchdog event ID.',
+  ];
+  $schema->changeField('watchdog', 'wid', 'wid', $new_specification);
+
 }
