@@ -66,7 +66,6 @@ class LayoutBuilderNestedFormUiTest extends WebDriverTestBase {
    * Tests blocks containing forms can be successfully saved editing defaults.
    */
   public function testAddingFormBlocksToDefaults() {
-    $this->markTestSkipped();
     $this->drupalLogin($this->drupalCreateUser([
       'configure any layout',
       'administer node display',
