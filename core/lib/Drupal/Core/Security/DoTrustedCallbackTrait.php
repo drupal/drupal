@@ -2,9 +2,12 @@
 
 namespace Drupal\Core\Security;
 
+use Drupal\Core\Security\Attribute\TrustedCallback;
+
 /**
- * Ensures that TrustedCallbackInterface can be enforced for callback methods.
+ * Ensures that only predefined methods can be used as callback methods.
  *
+ * @see \Drupal\Core\Security\Attribute\TrustedCallback
  * @see \Drupal\Core\Security\TrustedCallbackInterface
  */
 trait DoTrustedCallbackTrait {
@@ -13,8 +16,10 @@ trait DoTrustedCallbackTrait {
    * Performs a callback.
    *
    * If the callback is trusted the callback will occur. Trusted callbacks must
-   * be methods of a class that implements
-   * \Drupal\Core\Security\TrustedCallbackInterface or $extra_trusted_interface
+   * be methods that are tagged with the
+   * \Drupal\Core\Security\Attribute\TrustedCallback attribute, or be methods of
+   * a class that implements
+   * \Drupal\Core\Security\TrustedCallbackInterface or $extra_trusted_interface,
    * or be an anonymous function. If the callback is not trusted then whether or
    * not the callback is called and what type of error is thrown depends on
    * $error_type. To provide time for dependent code to use trusted callbacks
@@ -46,6 +51,7 @@ trait DoTrustedCallbackTrait {
    *   Exception thrown if the callback is not trusted and $error_type equals
    *   TrustedCallbackInterface::THROW_EXCEPTION.
    *
+   * @see \Drupal\Core\Security\Attribute\TrustedCallback
    * @see \Drupal\Core\Security\TrustedCallbackInterface
    */
   public function doTrustedCallback(callable $callback, array $args, $message, $error_type = TrustedCallbackInterface::THROW_EXCEPTION, $extra_trusted_interface = NULL) {
@@ -71,6 +77,10 @@ trait DoTrustedCallbackTrait {
           $methods = call_user_func($object_or_classname . '::trustedCallbacks');
         }
         $safe_callback = in_array($method_name, $methods, TRUE);
+      }
+      if (!$safe_callback) {
+        $method = new \ReflectionMethod($object_or_classname, $method_name);
+        $safe_callback = (bool) $method->getAttributes(TrustedCallback::class);
       }
     }
     elseif ($callback instanceof \Closure) {
