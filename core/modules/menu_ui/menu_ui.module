@@ -374,7 +374,7 @@ function menu_ui_form_node_type_form_alter(&$form, FormStateInterface $form_stat
     '#title' => t('Available menus'),
     '#default_value' => $type->getThirdPartySetting('menu_ui', 'available_menus', ['main']),
     '#options' => $menu_options,
-    '#description' => t('The menus available to place links in for this content type.'),
+    '#description' => t('Content of this type can be placed in the selected menus.'),
   ];
   // @todo See if we can avoid pre-loading all options by changing the form or
   //   using a #process callback. https://www.drupal.org/node/2310319
