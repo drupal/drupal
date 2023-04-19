@@ -69,7 +69,7 @@ class FileDownloadController extends ControllerBase {
   public function download(Request $request, $scheme = 'private') {
     $target = $request->query->get('file');
     // Merge remaining path arguments into relative file path.
-    $uri = $scheme . '://' . $target;
+    $uri = $this->streamWrapperManager->normalizeUri($scheme . '://' . $target);
 
     if ($this->streamWrapperManager->isValidScheme($scheme) && is_file($uri)) {
       // Let other modules provide headers and controls access to the file.
