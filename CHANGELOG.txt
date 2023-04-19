@@ -1,3 +1,8 @@
+Drupal 7.96, 2023-04-19
+-----------------------
+- Fixed security issues:
+   - SA-CORE-2023-005
+
 Drupal 7.95, 2023-03-15
 -----------------------
 - Fixed security issues:
