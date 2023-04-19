@@ -28,6 +28,7 @@ use Drupal\Core\Queue\QueueGarbageCollectionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\StreamWrapper\LocalStream;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\Url;
 use GuzzleHttp\Exception\TransferException;
@@ -1389,6 +1390,26 @@ function system_page_top() {
  * Implements hook_file_download().
  */
 function system_file_download($uri) {
+  $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
+  $scheme = $stream_wrapper_manager->getScheme($uri);
+  if ($stream_wrapper_manager->isValidScheme($scheme)) {
+    $target = $stream_wrapper_manager->getTarget($uri);
+    if ($target !== FALSE) {
+      if (!in_array($scheme, Settings::get('file_sa_core_2023_005_schemes', []))) {
+        if (DIRECTORY_SEPARATOR !== '/') {
+          $class = $stream_wrapper_manager->getClass($scheme);
+          if (is_subclass_of($class, LocalStream::class)) {
+            $target = str_replace(DIRECTORY_SEPARATOR, '/', $target);
+          }
+        }
+        $parts = explode('/', $target);
+        if (array_intersect($parts, ['.', '..'])) {
+          return -1;
+        }
+      }
+    }
+  }
+
   $core_schemes = ['public', 'private', 'temporary'];
   $additional_public_schemes = array_diff(Settings::get('file_additional_public_schemes', []), $core_schemes);
   if ($additional_public_schemes) {

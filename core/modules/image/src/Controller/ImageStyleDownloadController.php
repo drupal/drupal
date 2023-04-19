@@ -114,6 +114,19 @@ class ImageStyleDownloadController extends FileDownloadController {
   public function deliver(Request $request, $scheme, ImageStyleInterface $image_style) {
     $target = $request->query->get('file');
     $image_uri = $scheme . '://' . $target;
+    $image_uri = $this->streamWrapperManager->normalizeUri($image_uri);
+
+    if ($this->streamWrapperManager->isValidScheme($scheme)) {
+      $normalized_target = $this->streamWrapperManager->getTarget($image_uri);
+      if ($normalized_target !== FALSE) {
+        if (!in_array($scheme, Settings::get('file_sa_core_2023_005_schemes', []))) {
+          $parts = explode('/', $normalized_target);
+          if (array_intersect($parts, ['.', '..'])) {
+            throw new NotFoundHttpException();
+          }
+        }
+      }
+    }
 
     // Check that the style is defined and the scheme is valid.
     $valid = !empty($image_style) && $this->streamWrapperManager->isValidScheme($scheme);
@@ -129,7 +142,8 @@ class ImageStyleDownloadController extends FileDownloadController {
     // styles/<style_name>/... as structure, so we check if the $target variable
     // starts with styles/.
     $token = $request->query->get(IMAGE_DERIVATIVE_TOKEN, '');
-    $token_is_valid = hash_equals($image_style->getPathToken($image_uri), $token);
+    $token_is_valid = hash_equals($image_style->getPathToken($image_uri), $token)
+      || hash_equals($image_style->getPathToken($scheme . '://' . $target), $token);
     if (!$this->config('image.settings')->get('allow_insecure_derivatives') || strpos(ltrim($target, '\/'), 'styles/') === 0) {
       $valid = $valid && $token_is_valid;
     }
