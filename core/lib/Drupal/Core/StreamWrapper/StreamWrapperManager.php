@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\StreamWrapper;
 
+use Drupal\Core\Site\Settings;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
@@ -242,6 +243,36 @@ class StreamWrapperManager implements ContainerAwareInterface, StreamWrapperMana
       $target = $this->getTarget($uri);
 
       if ($target !== FALSE) {
+
+        if (!in_array($scheme, Settings::get('file_sa_core_2023_005_schemes', []))) {
+          $class = $this->getClass($scheme);
+          $is_local = is_subclass_of($class, LocalStream::class);
+          if ($is_local) {
+            $target = str_replace(DIRECTORY_SEPARATOR, '/', $target);
+          }
+
+          $parts = explode('/', $target);
+          $normalized_parts = [];
+          while ($parts) {
+            $part = array_shift($parts);
+            if ($part === '' || $part === '.') {
+              continue;
+            }
+            elseif ($part === '..' && $is_local && $normalized_parts === []) {
+              $normalized_parts[] = $part;
+              break;
+            }
+            elseif ($part === '..') {
+              array_pop($normalized_parts);
+            }
+            else {
+              $normalized_parts[] = $part;
+            }
+          }
+
+          $target = implode('/', array_merge($normalized_parts, $parts));
+        }
+
         $uri = $scheme . '://' . $target;
       }
     }
