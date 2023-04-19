@@ -4093,6 +4093,25 @@ function system_admin_paths() {
  * Implements hook_file_download().
  */
 function system_file_download($uri) {
+  $scheme = file_uri_scheme($uri);
+  if (file_stream_wrapper_valid_scheme($scheme)) {
+    $target = file_uri_target($uri);
+    if ($target !== FALSE) {
+      if (!in_array($scheme, variable_get('file_sa_core_2023_005_schemes', array()))) {
+        if (DIRECTORY_SEPARATOR !== '/') {
+          $class = file_stream_wrapper_get_class($scheme);
+          if (is_subclass_of($class, DrupalLocalStreamWrapper::class)) {
+            $target = str_replace(DIRECTORY_SEPARATOR, '/', $target);
+          }
+        }
+        $parts = explode('/', $target);
+        if (array_intersect($parts, array('.', '..'))) {
+          return -1;
+        }
+      }
+    }
+  }
+
   $core_schemes = array('public', 'private', 'temporary');
   $additional_public_schemes = array_diff(variable_get('file_additional_public_schemes', array()), $core_schemes);
   if ($additional_public_schemes) {

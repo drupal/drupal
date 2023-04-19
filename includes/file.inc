@@ -2073,6 +2073,7 @@ function file_download() {
   $scheme = array_shift($args);
   $target = implode('/', $args);
   $uri = $scheme . '://' . $target;
+  $uri = file_uri_normalize_dot_segments($uri);
   if (file_stream_wrapper_valid_scheme($scheme) && file_exists($uri)) {
     $headers = file_download_headers($uri);
     if (count($headers)) {
@@ -2728,6 +2729,58 @@ function file_get_content_headers($file) {
     'Content-Length' => $file->filesize,
     'Cache-Control' => 'private',
   );
+}
+
+/**
+ * Normalize dot segments in a URI.
+ *
+ * @param $uri
+ *   A stream, referenced as "scheme://target".
+ *
+ * @return string
+ *   The URI with dot segments removed and slashes as directory separator.
+ */
+function file_uri_normalize_dot_segments($uri) {
+  $scheme = file_uri_scheme($uri);
+
+  if (file_stream_wrapper_valid_scheme($scheme)) {
+    $target = file_uri_target($uri);
+
+    if ($target !== FALSE) {
+      if (!in_array($scheme, variable_get('file_sa_core_2023_005_schemes', array()))) {
+        $class = file_stream_wrapper_get_class($scheme);
+        $is_local = is_subclass_of($class, DrupalLocalStreamWrapper::class);
+        if ($is_local) {
+          $target = str_replace(DIRECTORY_SEPARATOR, '/', $target);
+        }
+
+        $parts = explode('/', $target);
+        $normalized_parts = array();
+        while ($parts) {
+          $part = array_shift($parts);
+          if ($part === '' || $part === '.') {
+            continue;
+          }
+          elseif ($part === '..' && $is_local && $normalized_parts === array()) {
+            $normalized_parts[] = $part;
+            break;
+          }
+          elseif ($part === '..') {
+            array_pop($normalized_parts);
+          }
+          else {
+            $normalized_parts[] = $part;
+          }
+        }
+
+        $target = implode('/', array_merge($normalized_parts, $parts));
+      }
+
+      $uri = $scheme . '://' . $target;
+    }
+  }
+
+  return $uri;
 }
 
 /**
