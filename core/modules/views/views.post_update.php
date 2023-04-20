@@ -94,3 +94,28 @@ function views_post_update_fix_revision_id_part(&$sandbox = NULL): void {
       return $view_config_updater->needsRevisionFieldHyphenFix($view);
     });
 }
+
+/**
+ * Add missing taxonomy cache tags to views.
+ */
+function views_post_update_add_tid_cache_tags(&$sandbox = NULL): void {
+  // Re-save all existing views to force cache tags to be recalculated.This will
+  // add the missing taxonomy cache tag for views using the taxonomy filter.
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function ($view) {
+    $display_settings = $view->get('display');
+    $save = FALSE;
+    foreach ($display_settings as &$display) {
+      if (!empty($display['display_options']['filters'])) {
+        foreach ($display['display_options']['filters'] as &$filter_value) {
+          if (!array_key_exists('exposed', $filter_value)) {
+            continue;
+          }
+          if ($filter_value['exposed'] === TRUE && $filter_value['plugin_id'] == 'taxonomy_index_tid') {
+            $save = TRUE;
+          }
+        }
+      }
+    }
+    return $save;
+  });
+}

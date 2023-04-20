@@ -19,7 +19,7 @@ class TaxonomyIndexTidFilterTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $testViews = ['test_filter_taxonomy_index_tid__non_existing_dependency'];
+  public static $testViews = ['test_filter_taxonomy_index_tid__non_existing_dependency', 'test_filter_taxonomy_index_tid'];
 
   /**
    * @var \Drupal\taxonomy\TermInterface[]
@@ -97,6 +97,23 @@ class TaxonomyIndexTidFilterTest extends TaxonomyTestBase {
         'user',
       ],
     ], $view->calculateDependencies()->getDependencies());
+  }
+
+  /**
+   * Tests that the cache tags for the chosen vocabulary are added.
+   */
+  public function testGetCacheTags() {
+    /** @var \Drupal\views\Entity\View $view */
+    $view = View::load('test_filter_taxonomy_index_tid');
+    $view_executable = $view->getExecutable();
+    $view_executable->initDisplay();
+    $cache_metadata = $view_executable->getDisplay()->calculateCacheMetadata();
+
+    $expected_cache_tags = [
+      'config:taxonomy.vocabulary.tags',
+      'taxonomy_term_list:tags',
+    ];
+    $this->assertEquals($expected_cache_tags, $cache_metadata->getCacheTags());
   }
 
 }
