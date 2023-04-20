@@ -140,6 +140,8 @@ class TwigExtension extends AbstractExtension {
       // CSS class and ID filters.
       new TwigFilter('clean_class', '\Drupal\Component\Utility\Html::getClass'),
       new TwigFilter('clean_id', '\Drupal\Component\Utility\Html::getId'),
+      new TwigFilter('add_class', [$this, 'addClass']),
+      new TwigFilter('set_attribute', [$this, 'setAttribute']),
       // This filter will render a renderable array to use the string results.
       new TwigFilter('render', [$this, 'renderVar']),
       new TwigFilter('format_date', [$this->dateFormatter, 'format']),
@@ -702,6 +704,58 @@ class TwigExtension extends AbstractExtension {
     if (isset($element['#cache']['keys'])) {
       $element['#cache']['keys'][] = $suggestion;
     }
+
+    return $element;
+  }
+
+  /**
+   * Adds a value into the class attributes of a given element.
+   *
+   * Assumes element is an array.
+   *
+   * @param array $element
+   *   A render element.
+   * @param string[]|string ...$classes
+   *   The class(es) to add to the element. Arguments can include string keys
+   *   directly, or arrays of string keys.
+   *
+   * @return array
+   *   The element with the given class(es) in attributes.
+   */
+  public function addClass(array $element, ...$classes): array {
+    $attributes = new Attribute($element['#attributes'] ?? []);
+    $attributes->addClass(...$classes);
+    $element['#attributes'] = $attributes->toArray();
+
+    // Make sure element gets rendered again.
+    unset($element['#printed']);
+
+    return $element;
+  }
+
+  /**
+   * Sets an attribute on a given element.
+   *
+   * Assumes the element is an array.
+   *
+   * @param array $element
+   *   A render element.
+   * @param string $name
+   *   The attribute name.
+   * @param mixed $value
+   *   (optional) The attribute value.
+   *
+   * @return array
+   *   The element with the given sanitized attribute's value.
+   */
+  public function setAttribute(array $element, string $name, mixed $value = NULL): array {
+    $element['#attributes'] = AttributeHelper::mergeCollections(
+      $element['#attributes'] ?? [],
+      new Attribute([$name => $value])
+    );
+
+    // Make sure element gets rendered again.
+    unset($element['#printed']);
 
     return $element;
   }
