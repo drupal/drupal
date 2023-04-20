@@ -150,6 +150,13 @@ abstract class MenuLinkBase extends PluginBase implements MenuLinkInterface {
    * {@inheritdoc}
    */
   public function getEditRoute() {
+    return Url::fromRoute('menu_ui.link_edit', ['menu_link_plugin' => $this->getPluginId()]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getResetRoute(): Url|NULL {
     return NULL;
   }
 
@@ -158,6 +165,41 @@ abstract class MenuLinkBase extends PluginBase implements MenuLinkInterface {
    */
   public function getTranslateRoute() {
     return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOperations(): array {
+    $operations = [];
+
+    $operations['edit'] = [
+      'title' => $this->t('Edit'),
+      'url' => $this->getEditRoute(),
+    ];
+
+    // Links can either be reset or deleted, not both.
+    if ($this->isResettable()) {
+      $operations['reset'] = [
+        'title' => $this->t('Reset'),
+        'url' => $this->getResetRoute(),
+      ];
+    }
+    elseif ($this->isDeletable()) {
+      $operations['delete'] = [
+        'title' => $this->t('Delete'),
+        'url' => $this->getDeleteRoute(),
+      ];
+    }
+
+    if ($this->isTranslatable()) {
+      $operations['translate'] = [
+        'title' => $this->t('Translate'),
+        'url' => $this->getTranslateRoute(),
+      ];
+    }
+
+    return $operations;
   }
 
   /**

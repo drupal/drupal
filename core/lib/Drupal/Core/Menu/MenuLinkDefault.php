@@ -3,6 +3,7 @@
 namespace Drupal\Core\Menu;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -78,6 +79,13 @@ class MenuLinkDefault extends MenuLinkBase implements ContainerFactoryPluginInte
   public function isResettable() {
     // The link can be reset if it has an override.
     return (bool) $this->staticOverride->loadOverride($this->getPluginId());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getResetRoute(): Url {
+    return Url::fromRoute('menu_ui.link_reset', ['menu_link_plugin' => $this->getPluginId()]);
   }
 
   /**

@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for Menu Operations Link Test module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\menu_link_content\Entity\MenuLinkContent;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_entity_operation_alter().
+ */
+function menu_operations_link_test_entity_operation_alter(array &$operations, EntityInterface $entity) {
+  if (!$entity instanceof MenuLinkContent) {
+    return;
+  }
+  // Alter the title of the edit link appearing in operations menu.
+  $operations['edit']['title'] = t('Altered Edit Title');
+}
+
+/**
+ * Implements hook_entity_operation().
+ */
+function menu_operations_link_test_entity_operation(EntityInterface $entity) {
+  if (!$entity instanceof MenuLinkContent) {
+    return;
+  }
+  $operations['custom_operation'] = [
+    'title' => t('Custom Home'),
+    'weight' => 20,
+    'url' => Url::fromRoute('<front>'),
+  ];
+  return $operations;
+}
