@@ -1217,7 +1217,7 @@ parameters:
 
 		-
 			message: "#^Variable \\$updated_rows might not be defined\\.$#"
-			count: 1
+			count: 2
 			path: modules/field_ui/src/Form/EntityDisplayFormBase.php
 
 		-

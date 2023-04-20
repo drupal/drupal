@@ -485,4 +485,85 @@ class ManageDisplayTest extends WebDriverTestBase {
     $this->assertNotEmpty($row, 'Field was created and appears in the overview page.');
   }
 
+  /**
+   * Confirms that notifications to save appear when necessary.
+   */
+  public function testNotAppliedUntilSavedWarning() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    // Admin Manage Fields page.
+    $manage_fields = 'admin/structure/types/manage/' . $this->type;
+
+    $this->fieldUIAddNewField($manage_fields, 'test', 'Test field');
+    $manage_display = 'admin/structure/types/manage/' . $this->type . '/display';
+    $manage_form = 'admin/structure/types/manage/' . $this->type . '/form-display';
+
+    // Form display, change widget type.
+    $this->drupalGet($manage_form);
+    $assert_session->elementNotExists('css', '.tabledrag-changed-warning');
+    $assert_session->elementNotExists('css', 'abbr.tabledrag-changed');
+    $page->selectFieldOption('fields[uid][type]', 'options_buttons');
+    $this->assertNotNull($changed_warning = $assert_session->waitForElementVisible('css', '.tabledrag-changed-warning'));
+    $this->assertNotNull($assert_session->waitForElementVisible('css', ' #uid abbr.tabledrag-changed'));
+    $this->assertSame('* You have unsaved changes.', $changed_warning->getText());
+
+    // Form display, change widget settings.
+    $this->drupalGet($manage_form);
+    $edit_widget_button = $assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-fields-uid-settings-edit"]');
+    $edit_widget_button->press();
+    $assert_session->waitForText('3rd party formatter settings form');
+
+    // Confirm the AJAX operation of opening the form does not result in the row
+    // being set as changed. New settings must be submitted for that to happen.
+    $assert_session->elementNotExists('css', 'abbr.tabledrag-changed');
+    $cancel_button = $assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-fields-uid-settings-edit-form-actions-cancel-settings"]');
+    $cancel_button->press();
+    $assert_session->assertNoElementAfterWait('css', '[data-drupal-selector="edit-fields-uid-settings-edit-form-actions-cancel-settings"]');
+    $assert_session->elementNotExists('css', '.tabledrag-changed-warning');
+    $assert_session->elementNotExists('css', 'abbr.tabledrag-changed');
+    $edit_widget_button = $assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-fields-uid-settings-edit"]');
+    $edit_widget_button->press();
+    $widget_field = $assert_session->waitForField('fields[uid][settings_edit_form][third_party_settings][field_third_party_test][field_test_widget_third_party_settings_form]');
+    $widget_field->setValue('honk');
+    $update_button = $assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-fields-uid-settings-edit-form-actions-save-settings"]');
+    $update_button->press();
+    $assert_session->assertNoElementAfterWait('css', '[data-drupal-selector="edit-fields-field-test-settings-edit-form-actions-cancel-settings"]');
+    $this->assertNotNull($changed_warning = $assert_session->waitForElementVisible('css', '.tabledrag-changed-warning'));
+    $this->assertNotNull($assert_session->waitForElementVisible('css', ' #uid abbr.tabledrag-changed'));
+    $this->assertSame('* You have unsaved changes.', $changed_warning->getText());
+
+    // Content display, change formatter type.
+    $this->drupalGet($manage_display);
+    $assert_session->elementNotExists('css', '.tabledrag-changed-warning');
+    $assert_session->elementNotExists('css', 'abbr.tabledrag-changed');
+    $page->selectFieldOption('edit-fields-field-test-label', 'inline');
+    $this->assertNotNull($changed_warning = $assert_session->waitForElementVisible('css', '.tabledrag-changed-warning'));
+    $this->assertNotNull($assert_session->waitForElementVisible('css', ' #field-test abbr.tabledrag-changed'));
+    $this->assertSame('* You have unsaved changes.', $changed_warning->getText());
+
+    // Content display, change formatter settings.
+    $this->drupalGet($manage_display);
+    $assert_session->elementNotExists('css', '.tabledrag-changed-warning');
+    $assert_session->elementNotExists('css', 'abbr.tabledrag-changed');
+    $edit_formatter_button = $assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-fields-field-test-settings-edit"]');
+    $edit_formatter_button->press();
+    $assert_session->waitForText('3rd party formatter settings form');
+    $cancel_button = $assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-fields-field-test-settings-edit-form-actions-cancel-settings"]');
+    $cancel_button->press();
+    $assert_session->assertNoElementAfterWait('css', '[data-drupal-selector="edit-fields-field-test-settings-edit-form-actions-cancel-settings"]');
+    $assert_session->elementNotExists('css', '.tabledrag-changed-warning');
+    $assert_session->elementNotExists('css', 'abbr.tabledrag-changed');
+    $edit_formatter_button = $assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-fields-field-test-settings-edit"]');
+    $edit_formatter_button->press();
+    $formatter_field = $assert_session->waitForField('fields[field_test][settings_edit_form][third_party_settings][field_third_party_test][field_test_field_formatter_third_party_settings_form]');
+    $formatter_field->setValue('honk');
+    $update_button = $assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-fields-field-test-settings-edit-form-actions-save-settings"]');
+    $update_button->press();
+    $assert_session->assertNoElementAfterWait('css', '[data-drupal-selector="edit-fields-field-test-settings-edit-form-actions-cancel-settings"]');
+    $this->assertNotNull($changed_warning = $assert_session->waitForElementVisible('css', '.tabledrag-changed-warning'));
+    $this->assertNotNull($assert_session->waitForElementVisible('css', ' #field-test abbr.tabledrag-changed'));
+    $this->assertSame('* You have unsaved changes.', $changed_warning->getText());
+  }
+
 }

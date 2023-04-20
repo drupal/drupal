@@ -149,8 +149,14 @@
     onChange() {
       const $trigger = $(this);
       const $row = $trigger.closest('tr');
-      const rowHandler = $row.data('fieldUIRowHandler');
 
+      // Do not fire change listeners for items within forms that have their
+      // own AJAX callbacks to process a change.
+      if ($trigger.closest('.ajax-new-content').length !== 0) {
+        return;
+      }
+
+      const rowHandler = $row.data('fieldUIRowHandler');
       const refreshRows = {};
       refreshRows[rowHandler.name] = $trigger.get(0);
 
@@ -168,8 +174,27 @@
         rowHandler.region = region;
       }
 
-      // Ajax-update the rows.
-      Drupal.fieldUIOverview.AJAXRefreshRows(refreshRows);
+      // Fields inside `.tabledrag-hide` are typically hidden. They can be
+      // visible when "Show row weights" are enabled. If their value is changed
+      // while visible, the row should be marked as changed, but they should not
+      // be processed via AJAXRefreshRows as they are intended to be fields AJAX
+      // updates the value of.
+      if ($trigger.closest('.tabledrag-hide').length) {
+        const thisTableDrag = Drupal.tableDrag['field-display-overview'];
+        // eslint-disable-next-line new-cap
+        const rowObject = new thisTableDrag.row(
+          $row[0],
+          '',
+          thisTableDrag.indentEnabled,
+          thisTableDrag.maxDepth,
+          true,
+        );
+        rowObject.markChanged();
+        rowObject.addChangedWarning();
+      } else {
+        // Ajax-update the rows.
+        Drupal.fieldUIOverview.AJAXRefreshRows(refreshRows);
+      }
     },
 
     /**
@@ -262,7 +287,6 @@
         rowNames.push(rowName);
         ajaxElements.push(rows[rowName]);
       });
-
       if (rowNames.length) {
         // Add a throbber next each of the ajaxElements.
         $(ajaxElements).after(Drupal.theme.ajaxProgressThrobber());
@@ -285,9 +309,11 @@
           // jQuery trigger().
           $(input).on('mousedown', () => {
             returnFocus = {
-              drupalSelector: document.activeElement.getAttribute(
+              drupalSelector: document.activeElement.hasAttribute(
                 'data-drupal-selector',
-              ),
+              )
+                ? document.activeElement.getAttribute('data-drupal-selector')
+                : false,
               scrollY: window.scrollY,
             };
           });
@@ -300,14 +326,13 @@
                   `[data-drupal-selector="${returnFocus.drupalSelector}"]`,
                 )
                 .focus();
-
-              // Ensure the scroll position is the same as when the input was
-              // initially changed.
-              window.scrollTo({
-                top: returnFocus.scrollY,
-              });
-              returnFocus = {};
             }
+            // Ensure the scroll position is the same as when the input was
+            // initially changed.
+            window.scrollTo({
+              top: returnFocus.scrollY,
+            });
+            returnFocus = {};
           });
         });
         $('input[data-drupal-selector="edit-refresh"]').trigger('mousedown');
@@ -347,14 +372,11 @@
     this.region = data.region;
     this.tableDrag = data.tableDrag;
     this.defaultPlugin = data.defaultPlugin;
-
-    // Attach change listener to the 'plugin type' select.
     this.$pluginSelect = $(row).find('.field-plugin-type');
-    this.$pluginSelect.on('change', Drupal.fieldUIOverview.onChange);
-
-    // Attach change listener to the 'region' select.
     this.$regionSelect = $(row).find('select.field-region');
-    this.$regionSelect.on('change', Drupal.fieldUIOverview.onChange);
+
+    // Attach change listeners to select and input elements in the row.
+    $(row).find('select, input').on('change', Drupal.fieldUIOverview.onChange);
 
     return this;
   };

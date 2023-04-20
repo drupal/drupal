@@ -4,6 +4,10 @@ namespace Drupal\field_ui\Form;
 
 use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Component\Plugin\PluginManagerBase;
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Ajax\TabledragWarningCommand;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
@@ -299,7 +303,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
 
     // Disable fields without any applicable plugins.
     if (empty($this->getApplicablePluginOptions($field_definition))) {
-      $this->entity->removeComponent($field_name)->save();
+      $this->entity->removeComponent($field_name);
       $display_options = $this->entity->getComponent($field_name);
     }
 
@@ -679,6 +683,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
    * Ajax handler for multistep buttons.
    */
   public function multistepAjax($form, FormStateInterface $form_state) {
+    $response = new AjaxResponse();
     $trigger = $form_state->getTriggeringElement();
     $op = $trigger['#op'];
 
@@ -709,8 +714,19 @@ abstract class EntityDisplayFormBase extends EntityForm {
       }
     }
 
-    // Return the whole table.
-    return $form['fields'];
+    // Replace the whole table.
+    $response->addCommand(new ReplaceCommand('#field-display-overview-wrapper', $form['fields']));
+
+    // Add "row updated" warning after the table has been replaced.
+    if (!in_array($op, ['cancel', 'edit'])) {
+      foreach ($updated_rows as $name) {
+        // The ID of the rendered table row is `$name` processed by getClass().
+        // @see \Drupal\field_ui\Element\FieldUiTable::tablePreRender
+        $response->addCommand(new TabledragWarningCommand(Html::getClass($name), 'field-display-overview'));
+      }
+    }
+
+    return $response;
   }
 
   /**

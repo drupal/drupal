@@ -122,6 +122,7 @@
       if (cell.find('.js-tabledrag-changed-marker').length === 0) {
         cell.find('.js-tabledrag-handle').after(marker);
       }
+      Drupal.tableDrag[this.table.id].changedRowIds.add(this.element.id);
     },
 
     /**

@@ -180,6 +180,14 @@
      * @type {boolean}
      */
     this.indentEnabled = false;
+
+    /**
+     * Keeps track of rows that have changed.
+     */
+    this.changedRowIds = Drupal.tableDrag[table.id]
+      ? Drupal.tableDrag[table.id].changedRowIds
+      : new Set();
+
     Object.keys(tableSettings || {}).forEach((group) => {
       Object.keys(tableSettings[group] || {}).forEach((n) => {
         if (tableSettings[group][n].relationship === 'parent') {
@@ -269,6 +277,20 @@
         }
       }, this),
     );
+
+    // Check for any rows marked as changed before this tabledrag was rerendered
+    // and mark them as changed for this current render.
+    this.changedRowIds.forEach((changedRowId) => {
+      // eslint-disable-next-line new-cap
+      const rowObject = new self.row(
+        document.getElementById(changedRowId),
+        '',
+        self.indentEnabled,
+        self.maxDepth,
+        true,
+      );
+      rowObject.markChanged();
+    });
   };
 
   /**
@@ -842,10 +864,7 @@
 
         self.rowObject.markChanged();
         if (self.changed === false) {
-          $(Drupal.theme('tableDragChangedWarning'))
-            .insertBefore(self.table)
-            .hide()
-            .fadeIn('slow');
+          self.rowObject.addChangedWarning();
           self.changed = true;
         }
       }
@@ -1335,6 +1354,28 @@
   };
 
   /**
+   * Adds a warning above the table informing users they must save changes.
+   */
+  Drupal.tableDrag.prototype.row.prototype.addChangedWarning = function () {
+    // Do not add the changed warning if one is already present.
+    if (!$(this.table.parentNode).find('.tabledrag-changed-warning').length) {
+      const $form = $(this.table).closest('form');
+      $(Drupal.theme('tableDragChangedWarning'))
+        .insertBefore(this.table)
+        .hide()
+        // If a warning has already been shown, do not fade the warning in, so
+        // it appears static when the table is rebuilt.
+        .fadeIn(
+          $form[0].hasAttribute('data-tabledrag-save-warning') ? 0 : 'slow',
+        );
+
+      // Keep track of the warning having been added in an element that lives
+      // outside the table which rebuilds when certain changes occur.
+      $form[0].setAttribute('data-tabledrag-save-warning', true);
+    }
+  };
+
+  /**
    * Find all children of rowObject by indentation.
    *
    * @param {boolean} addClasses
@@ -1619,6 +1660,7 @@
     if (cell.find('abbr.tabledrag-changed').length === 0) {
       cell.append(marker);
     }
+    Drupal.tableDrag[this.table.id].changedRowIds.add(this.element.id);
   };
 
   /**

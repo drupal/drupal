@@ -382,6 +382,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $this->assertNotNull($assert_session->waitForElementVisible('css', '[data-drupal-selector=edit-filters-media-embed-settings]', 0));
 
     $page->clickLink('Embed media');
+    $assert_session->waitForField('filters[media_embed][settings][allowed_view_modes][view_mode_2]');
     $page->checkField('filters[media_embed][settings][allowed_view_modes][view_mode_1]');
     $page->checkField('filters[media_embed][settings][allowed_view_modes][view_mode_2]');
     $assert_session->assertWaitOnAjaxRequest();

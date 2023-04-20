@@ -678,6 +678,14 @@ drupal.tabledrag:
     - core/once
     - core/drupal.touchevents-test
 
+drupal.tabledrag.ajax:
+  version: VERSION
+  js:
+    misc/tabledrag-ajax.js: { }
+  dependencies:
+    - core/ajax
+    - core/tabledrag
+
 drupal.tableheader:
   version: VERSION
   js:
