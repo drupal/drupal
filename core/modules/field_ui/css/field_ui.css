@@ -1,0 +1,9 @@
+.region-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+#block-claro-content {
+  width: 100%;
+}

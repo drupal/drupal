@@ -10,3 +10,7 @@ drupal.field_ui:
     - core/drupal
     - core/drupalSettings
     - core/once
+drupal.field_ui_css:
+  css:
+    theme:
+      css/field_ui.css: {}
