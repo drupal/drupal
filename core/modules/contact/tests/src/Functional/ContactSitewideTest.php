@@ -310,7 +310,7 @@ class ContactSitewideTest extends BrowserTestBase {
     }
 
     $this->assertSession()->statusCodeEquals(200);
-    $this->clickLink('Add field');
+    $this->clickLink('Create a new field');
     $this->assertSession()->statusCodeEquals(200);
 
     // Create a simple textfield.

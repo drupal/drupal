@@ -14,3 +14,8 @@ services:
     arguments: ['@entity_type.manager']
     tags:
       - { name: access_check, applies_to: _field_ui_form_mode_access }
+  access_check.field_ui.field_reuse:
+    class: Drupal\field_ui\Access\FieldReuseAccessCheck
+    autowire: true
+    tags:
+      - { name: access_check, applies_to: _field_ui_field_reuse_access }

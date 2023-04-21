@@ -3,7 +3,7 @@
  * Attaches the behaviors for the Field UI module.
  */
 
-(function ($, Drupal, drupalSettings) {
+(function ($, Drupal, drupalSettings, debounce) {
   /**
    * @type {Drupal~behavior}
    *
@@ -448,4 +448,64 @@
       return refreshRows;
     },
   };
-})(jQuery, Drupal, drupalSettings);
+
+  /**
+   * Filters the existing fields table by the field name or field type.
+   *
+   * @type {Drupal~behavior}
+   */
+  Drupal.behaviors.tableFilterByText = {
+    attach() {
+      const [input] = once('table-filter-text', '.js-table-filter-text');
+      if (!input) {
+        return;
+      }
+      const $table = $(input.getAttribute('data-table'));
+      let $rows;
+      let searching = false;
+
+      function filterRows(e) {
+        const query = e.target.value;
+        function showRow(index, row) {
+          const sources = row.querySelectorAll('.form-item');
+          let sourcesConcat = '';
+          // Concatenate the textContent of the elements in the row, with a
+          // space in between.
+          sources.forEach((item) => {
+            sourcesConcat += ` ${item.textContent}`;
+          });
+          // Make it case-insensitive.
+          const textMatch = sourcesConcat
+            .toLowerCase()
+            .includes(query.toLowerCase());
+          $(row).closest('tr').toggle(textMatch);
+        }
+
+        // Filter if the length of the query is at least 1 character.
+        if (query.length > 0) {
+          searching = true;
+          $rows.each(showRow);
+        } else if (searching) {
+          searching = false;
+          $rows.show();
+        }
+      }
+
+      function preventEnterKey(event) {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      }
+
+      if ($table.length) {
+        $rows = $table.find('tbody tr');
+
+        $(input).on({
+          keyup: debounce(filterRows, 200),
+          keydown: preventEnterKey,
+        });
+      }
+    },
+  };
+})(jQuery, Drupal, drupalSettings, Drupal.debounce);

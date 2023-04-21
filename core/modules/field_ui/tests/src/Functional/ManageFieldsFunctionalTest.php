@@ -183,8 +183,8 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       $this->assertSession()->responseContains($table_header . '</th>');
     }
 
-    // Test the "Add field" action link.
-    $this->assertSession()->linkExists('Add field');
+    // Test the "Create a new field" action link.
+    $this->assertSession()->linkExists('Create a new field');
 
     // Assert entity operations for all fields.
     $number_of_links = 3;
@@ -261,17 +261,17 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
    */
   public function addExistingField() {
     // Check "Re-use existing field" appears.
-    $this->drupalGet('admin/structure/types/manage/page/fields/add-field');
+    $this->drupalGet('admin/structure/types/manage/page/fields');
     $this->assertSession()->pageTextContains('Re-use an existing field');
-
+    $this->clickLink('Re-use an existing field');
     // Check that fields of other entity types (here, the 'comment_body' field)
     // do not show up in the "Re-use existing field" list.
-    $this->assertSession()->optionNotExists('edit-existing-storage-name', 'comment');
+    $this->assertSession()->elementNotExists('css', '.js-reuse-table [data-field-id="comment_body"]');
     // Validate the FALSE assertion above by also testing a valid one.
-    $this->assertSession()->optionExists('edit-existing-storage-name', $this->fieldName);
-
+    $this->assertSession()->elementExists('css', ".js-reuse-table [data-field-id='{$this->fieldName}']");
+    $new_label = $this->fieldLabel . '_2';
     // Add a new field based on an existing field.
-    $this->fieldUIAddExistingField("admin/structure/types/manage/page", $this->fieldName, $this->fieldLabel . '_2');
+    $this->fieldUIAddExistingField("admin/structure/types/manage/page", $this->fieldName, $new_label);
   }
 
   /**
@@ -438,8 +438,8 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       $this->submitForm([], 'Delete');
     }
     // Check "Re-use existing field" appears.
-    $this->drupalGet('admin/structure/types/manage/page/fields/add-field');
-    $this->assertSession()->pageTextContains("Re-use an existing field");
+    $this->drupalGet('admin/structure/types/manage/page/fields');
+    $this->assertSession()->pageTextContains('Re-use an existing field');
 
     // Ensure that we test with a label that contains HTML.
     $label = $this->randomString(4) . '<br/>' . $this->randomString(4);
@@ -543,7 +543,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $field = FieldConfig::loadByName('node', $this->contentType, $field_name);
     $this->assertEquals([['value' => 1]], $field->getDefaultValueLiteral(), 'The default value was correctly saved.');
 
-    // Check that the default value shows up in the form
+    // Check that the default value shows up in the form.
     $this->drupalGet($admin_path);
     $this->assertSession()->fieldValueEquals($element_id, '1');
 
@@ -612,7 +612,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
 
     // Check that the field was deleted.
     $this->assertNull(FieldConfig::loadByName('node', $this->contentType, $this->fieldName), 'Field was deleted.');
-    // Check that the field storage was not deleted
+    // Check that the field storage was not deleted.
     $this->assertNotNull(FieldStorageConfig::loadByName('node', $this->fieldName), 'Field storage was not deleted.');
 
     // Delete the second field.
@@ -722,12 +722,13 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
 
     // Check that the field does not appear in the 're-use existing field' row
     // on other bundles.
-    $this->drupalGet('admin/structure/types/manage/page/fields/add-field');
-    $this->assertSession()->optionNotExists('edit-existing-storage-name', $field_name);
-    $this->assertSession()->optionExists('edit-existing-storage-name', 'field_tags');
+    $this->drupalGet('admin/structure/types/manage/page/fields/reuse');
+    $this->assertSession()->elementNotExists('css', ".js-reuse-table [data-field-id='{$field_name}']");
+    $this->assertSession()->elementExists('css', '.js-reuse-table [data-field-id="field_tags"]');
 
     // Check that non-configurable fields are not available.
     $field_types = \Drupal::service('plugin.manager.field.field_type')->getDefinitions();
+    $this->drupalGet('admin/structure/types/manage/page/fields/add-field');
     foreach ($field_types as $field_type => $definition) {
       if (empty($definition['no_ui'])) {
         $this->assertSession()->optionExists('edit-new-storage-type', $field_type);
@@ -794,7 +795,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
    * Tests that help descriptions render valid HTML.
    */
   public function testHelpDescriptions() {
-    // Create an image field
+    // Create an image field.
     FieldStorageConfig::create([
       'field_name' => 'field_image',
       'entity_type' => 'node',
@@ -900,18 +901,10 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $label = $this->randomMachineName();
 
     // Create field with pre-configured options.
-    $this->drupalGet($bundle1['path']);
+    $this->drupalGet($bundle1['path'] . "/fields/add-field");
     $this->fieldUIAddNewField(NULL, $field_name, $label, 'field_ui:test_field_with_preconfigured_options:custom_options');
-
     $new_label = $this->randomMachineName();
-    $initial_edit = [
-      'existing_storage_name' => "field_{$field_name}",
-      'existing_storage_label' => $new_label,
-    ];
-
-    $this->drupalGet($bundle2['path']);
-    $this->submitForm($initial_edit, 'Save and continue');
-
+    $this->fieldUIAddExistingField($bundle2['path'], "field_{$field_name}", $new_label);
     $field = FieldConfig::loadByName($entity_type, $bundle2['id'], "field_{$field_name}");
     $this->assertTrue($field->isRequired());
     $this->assertEquals($new_label, $field->label());
@@ -983,7 +976,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $label = $this->randomMachineName();
 
     // Create field with pre-configured options.
-    $this->drupalGet($bundle1['path']);
+    $this->drupalGet($bundle1['path'] . "/fields/add-field");
     $this->fieldUIAddNewField(NULL, $field_name, $label, 'field_ui:test_field_with_preconfigured_options:custom_options');
     $view_display->setComponent("field_{$field_name}", [
       'type' => 'field_test_default',
@@ -995,13 +988,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     ])->save();
 
     $new_label = $this->randomMachineName();
-    $initial_edit = [
-      'existing_storage_name' => "field_{$field_name}",
-      'existing_storage_label' => $new_label,
-    ];
-
-    $this->drupalGet($bundle2['path']);
-    $this->submitForm($initial_edit, 'Save and continue');
+    $this->fieldUIAddExistingField($bundle2['path'], "field_{$field_name}", $new_label);
 
     $field = FieldConfig::loadByName($entity_type, $bundle2['id'], "field_{$field_name}");
     $this->assertTrue($field->isRequired());
@@ -1032,22 +1019,22 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
         'entity_type' => 'node',
         'article' => [
           'id' => 'article',
-          'path' => 'admin/structure/types/manage/article/fields/add-field',
+          'path' => 'admin/structure/types/manage/article',
         ],
         'page' => [
           'id' => 'page',
-          'path' => 'admin/structure/types/manage/page/fields/add-field',
+          'path' => 'admin/structure/types/manage/page',
         ],
       ],
       'taxonomy' => [
         'entity_type' => 'taxonomy_term',
         'tags' => [
           'id' => 'tags',
-          'path' => 'admin/structure/taxonomy/manage/tags/overview/fields/add-field',
+          'path' => 'admin/structure/taxonomy/manage/tags/overview',
         ],
         'kittens' => [
           'id' => 'kittens',
-          'path' => 'admin/structure/taxonomy/manage/kittens/overview/fields/add-field',
+          'path' => 'admin/structure/taxonomy/manage/kittens/overview',
         ],
       ],
     ];

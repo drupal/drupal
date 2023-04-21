@@ -83,14 +83,16 @@ trait FieldUiTestTrait {
    */
   public function fieldUIAddExistingField($bundle_path, $existing_storage_name, $label = NULL, array $field_edit = []) {
     $label = $label ?: $this->randomMachineName();
-    $initial_edit = [
-      'existing_storage_name' => $existing_storage_name,
-      'existing_storage_label' => $label,
-    ];
+    $field_edit['edit-label'] = $label;
 
-    // First step: 'Re-use existing field' on the 'Add field' page.
-    $this->drupalGet("{$bundle_path}/fields/add-field");
-    $this->submitForm($initial_edit, 'Save and continue');
+    // First step: navigate to the re-use field page.
+    $this->drupalGet("{$bundle_path}/fields/");
+    // Confirm that the local action is visible.
+    $this->assertSession()->linkExists('Re-use an existing field');
+    $this->clickLink('Re-use an existing field');
+    $this->assertSession()->elementExists('css', "input[value=Re-use][name=$existing_storage_name]");
+    $this->click("input[value=Re-use][name=$existing_storage_name]");
+
     // Set the main content to only the content region because the label can
     // contain HTML which will be auto-escaped by Twig.
     $this->assertSession()->responseContains('field-config-edit-form');

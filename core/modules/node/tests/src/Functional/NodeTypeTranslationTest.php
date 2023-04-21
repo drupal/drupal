@@ -188,8 +188,8 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     $this->submitForm(['site_default_language' => 'es'], 'Save configuration');
 
     // Try re-using the email field.
-    $this->drupalGet("es/admin/structure/types/manage/$type/fields/add-field");
-    $this->submitForm(['existing_storage_name' => 'field_email', 'existing_storage_label' => 'Email'], 'Save and continue');
+    $this->drupalGet("es/admin/structure/types/manage/$type/fields/reuse");
+    $this->submitForm([], 'Re-use');
     $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet("es/admin/structure/types/manage/$type/fields/node.$type.field_email/translate");
     $this->assertSession()->statusCodeEquals(200);

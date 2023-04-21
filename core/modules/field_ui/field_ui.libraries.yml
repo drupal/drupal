@@ -10,3 +10,5 @@ drupal.field_ui:
     - core/drupal
     - core/drupalSettings
     - core/once
+    - core/drupal.ajax
+    - core/drupal.dialog
