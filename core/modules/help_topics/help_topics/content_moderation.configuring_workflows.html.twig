@@ -10,13 +10,16 @@ related:
 {% set user_overview_topic = render_var(help_topic_link('user.overview')) %}
 {% set user_permissions_topic = render_var(help_topic_link('user.permissions')) %}
 {% set workflows_overview_topic = render_var(help_topic_link('workflows.overview')) %}
-{% set content_moderation_permissions = render_var(url('user.admin_permissions.module', {'modules': 'content_moderation'})) %}
-{% set workflows_permissions = render_var(url('user.admin_permissions.module', {'modules': 'workflows'})) %}
-{% set workflows_url = render_var(url('entity.workflow.collection')) %}
+{% set content_moderation_permissions_link_text %}{% trans %}Content Moderation{% endtrans %}{% endset %}
+{% set content_moderation_permissions_link = render_var(help_route_link(content_moderation_permissions_link_text, 'user.admin_permissions', {}, {'fragment': 'module-content_moderation'})) %}
+{% set workflows_permissions_link_text %}{% trans %}Administer workflows{% endtrans %}{% endset %}
+{% set workflows_permissions_link = render_var(help_route_link(workflows_permissions_link_text, 'user.admin_permissions', {}, {'fragment': 'module-workflows'})) %}
+{% set workflows_link_text %}{% trans %}Workflows{% endtrans %}{% endset %}
+{% set workflows_link = render_var(help_route_link(workflows_link_text, 'entity.workflow.collection')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Create or edit a workflow with various workflow states (for example <em>Concept</em>, <em>Archived</em>, etc.) for moderating content. See {{ workflows_overview_topic }} for more information on workflows.{% endtrans %}</p>
 <h2>{% trans %}Who can configure a workflow?{% endtrans %}</h2>
-<p>{% trans %}Users with the <em><a href="{{ workflows_permissions }}">Administer workflows</a></em> permission (typically administrators) can configure workflows.{% endtrans %}</p>
+<p>{% trans %}Users with <em>workflows permissions</em> (typically administrators) can configure workflows. See Permissions &gt; <em>{{ workflows_permissions_link }}</em> to configure workflows permissions.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
   <li>{% trans %}Make a plan for the new workflow:{% endtrans %}
@@ -35,7 +38,7 @@ related:
       <li>{% trans %}Decide which <em>entity types</em> and subtypes the workflow should apply to. Only entity types that support revisions are possible to define workflows for. See {{ content_structure_topic }} for more information on content entities and fields.{% endtrans %}</li>
     </ul>
   </li>
-  <li>{% trans %}To implement your plan, in the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Workflow</em> &gt; <a href="{{ workflows_url}}"><em>Workflows</em></a>. A list of workflows is shown, including the default workflow <em>Editorial</em> that you can adapt.{% endtrans %}</li>
+  <li>{% trans %}To implement your plan, in the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Workflow</em> &gt; <em>{{ workflows_link }}</em>. A list of workflows is shown, including the default workflow <em>Editorial</em> that you can adapt.{% endtrans %}</li>
   <li>{% trans %}Click <em>Add workflow</em>.{% endtrans %}</li>
   <li>{% trans %}Enter a name in the <em>Label</em> field, select <em>Content moderation</em> from the <em>Workflow type</em> field, and click <em>Save</em>.{% endtrans %}</li>
   <li>{% trans %}Verify that the <em>States</em> list matches your planned states. You can add missing states by clicking <em>Add a new state</em>. You can edit or delete states by clicking <em>Edit</em> or <em>Delete</em> under <em>Operations</em> (if the <em>Delete</em> option is not available, you will first need to delete any <em>Transitions</em> to or from this state).{% endtrans %}</li>
@@ -45,6 +48,6 @@ related:
   <li>{% trans %}Click <em>Save</em>.{% endtrans %}</li>
   <li>{% trans %}Under <em>Workflow settings</em>, select the <em>Default moderation state</em> for new content.{% endtrans %}</li>
   <li>{% trans %}Click <em>Save</em> to save your workflow.{% endtrans %}</li>
-  <li>{% trans %}Follow the steps in {{ user_permissions_topic }} to assign permissions for each transition to roles. The permissions are listed under the <em><a href="{{ content_moderation_permissions }}">Content Moderation</a></em> section; there is one permission for each transition in each workflow.{% endtrans %}</li>
+  <li>{% trans %}Follow the steps in {{ user_permissions_topic }} to assign permissions for each transition to roles. The permissions are listed under the <em>{{ content_moderation_permissions_link }}</em> section; there is one permission for each transition in each workflow.{% endtrans %}</li>
   <li>{% trans %}Optionally (recommended), create a view for your custom workflow, to provide a page for content editors to see what content needs to be moderated. You can do this if the Views UI module is installed, by following the steps in the related <em>Creating a new view</em> topic listed below under <em>Related topics</em>. When creating the view, under <em>View settings</em> &gt; <em>Show</em>, select the revision data type you configured the workflow for, and be sure to display the <em>Workflow State</em> field in your view.{% endtrans %}</li>
 </ol>

@@ -2,7 +2,8 @@
 label: 'Managing content structure'
 top_level: true
 ---
-{% set help_url = render_var(url('help.main')) %}
+{% set help_link_text %}{% trans %}Help{% endtrans %}{% endset %}
+{% set help_link = render_var(help_route_link(help_link_text, 'help.main')) %}
 <h2>{% trans %}What types of data does a site have?{% endtrans %}</h2>
 <p>{% trans %}There are four main types of data. <em>Content</em> is the information (text, images, etc.) meant to be displayed to website visitors. <em>Configuration</em> is data that defines how the content is displayed; some configuration (such as field labels) may also be visible to site visitors. <em>State</em> is temporary data about the state of your site, such as the last time the system <em>cron</em> jobs ran. <em>Session</em> is a subset of State information, related to users' interactions with the site, such as site cookies and whether or not they are logged in.{% endtrans %}</p>
 <h2>{% trans %}What is a content entity?{% endtrans %}</h2>
@@ -41,7 +42,7 @@ top_level: true
   <li>{% trans %}The core Layout Builder module provides a more flexible user interface for configuring the display of entities.{% endtrans %}</li>
   <li>{% trans %}The core Filter, Responsive Image, and Path modules provide settings and display options for entities and fields.{% endtrans %}</li>
 </ul>
-<p>{% trans %}Depending on the core and contributed modules that you currently have installed on your site, the related topics below, and other topics listed on the main <a href="{{ help_url }}">Help page</a>, will help you with tasks related to content structure.{% endtrans %}</p>
+<p>{% trans %}Depending on the core and contributed modules that you currently have installed on your site, the related topics below and other topics listed on the main help page (see {{ help_link }}) will help you with tasks related to content structure.{% endtrans %}</p>
 <h2>{% trans %}Additional resources{% endtrans %}</h2>
 <ul>
   <li>{% trans %}<a href="https://www.drupal.org/docs/user_guide/en/understanding-data.html">Concept: Types of Data topic in the User Guide</a>{% endtrans %}</li>

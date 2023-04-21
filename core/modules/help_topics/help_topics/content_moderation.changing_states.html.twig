@@ -7,15 +7,17 @@ related:
 ---
 {% set workflows_overview_topic = render_var(help_topic_link('workflows.overview')) %}
 {% set content_structure_topic = render_var(help_topic_link('core.content_structure')) %}
-{% set content_moderation_permissions = render_var(url('user.admin_permissions.module', {'modules': 'content_moderation'})) %}
-{% set content = render_var(url('system.admin_content')) %}
+{% set content_moderation_permissions_link_text %}{% trans %}Content Moderation{% endtrans %}{% endset %}
+{% set content_moderation_permissions_link = render_var(help_route_link(content_moderation_permissions_link_text, 'user.admin_permissions', {}, {'fragment': 'module-content_moderation'})) %}
+{% set content_link_text %}{% trans %}Content{% endtrans %}{% endset %}
+{% set content_link = render_var(help_route_link(content_link_text, 'system.admin_content')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>
 <p>{% trans %}Change the workflow state of a particular entity. See {{ workflows_overview_topic }} for an overview of workflows, and {{ content_structure_topic }} for an overview of content entities.{% endtrans %}</p>
 <h2>{% trans %}Who can change workflow states?{% endtrans %}</h2>
-<p>{% trans %}Users with the <a href="{{ content_moderation_permissions }}">content moderation permissions</a> can change workflow states. There are separate permissions for each transition.{% endtrans %}</p>
+<p>{% trans %}Users with <em>content moderation permissions</em> can change workflow states. There are separate permissions for each transition. See Permissions &gt; <em>{{ content_moderation_permissions_link }}</em> to configure content moderation permissions.{% endtrans %}</p>
 <h2>{% trans %}Steps{% endtrans %}</h2>
 <ol>
-  <li>{% trans %}Find the entity that you want to moderate in either the content moderation view page, if you created one, or the appropriate administrative page for managing that type of entity (such as the <a href="{{ content }}">Content</a> administration page for content items).{% endtrans %}</li>
+  <li>{% trans %}Find the entity that you want to moderate in either the content moderation view page, if you created one, or the appropriate administrative page for managing that type of entity (such as the administration page for content items; see {{ content_link }}).{% endtrans %}</li>
   <li>{% trans %}Click <em>Edit</em> to edit the entity.{% endtrans %}</li>
   <li>{% trans %}At the bottom of the page, select the new workflow state under <em>Change to:</em> and click <em>Save</em>.{% endtrans %}</li>
 </ol>
