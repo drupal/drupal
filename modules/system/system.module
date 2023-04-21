@@ -4100,7 +4100,7 @@ function system_file_download($uri) {
       if (!in_array($scheme, variable_get('file_sa_core_2023_005_schemes', array()))) {
         if (DIRECTORY_SEPARATOR !== '/') {
           $class = file_stream_wrapper_get_class($scheme);
-          if (is_subclass_of($class, DrupalLocalStreamWrapper::class)) {
+          if (is_subclass_of($class, 'DrupalLocalStreamWrapper')) {
             $target = str_replace(DIRECTORY_SEPARATOR, '/', $target);
           }
         }

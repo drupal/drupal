@@ -2749,7 +2749,7 @@ function file_uri_normalize_dot_segments($uri) {
     if ($target !== FALSE) {
       if (!in_array($scheme, variable_get('file_sa_core_2023_005_schemes', array()))) {
         $class = file_stream_wrapper_get_class($scheme);
-        $is_local = is_subclass_of($class, DrupalLocalStreamWrapper::class);
+        $is_local = is_subclass_of($class, 'DrupalLocalStreamWrapper');
         if ($is_local) {
           $target = str_replace(DIRECTORY_SEPARATOR, '/', $target);
         }
