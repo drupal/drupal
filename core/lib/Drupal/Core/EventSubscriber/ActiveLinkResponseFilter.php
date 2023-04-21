@@ -12,6 +12,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
+// cspell:ignore noemptytag
 /**
  * Subscribes to filter HTML responses, to set the 'is-active' class on links.
  *

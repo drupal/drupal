@@ -78,7 +78,7 @@ class ReadOnlyStreamWrapperTest extends FileTestBase {
     // Attempt to close the stream.  (Suppress errors, as fclose triggers fflush.)
     $this->assertTrue(fclose($handle), 'Able to close file using the read_only stream wrapper.');
     // Test the rename() function
-    $this->assertFalse(@rename($uri, $this->scheme . '://newname.txt'), 'Unable to rename files using the read-only stream wrapper.');
+    $this->assertFalse(@rename($uri, $this->scheme . '://new_name.txt'), 'Unable to rename files using the read-only stream wrapper.');
     // Test the unlink() function
     $this->assertTrue(@$file_system->unlink($uri), 'Able to unlink file using read-only stream wrapper.');
     $this->assertFileExists($filepath);

@@ -105,7 +105,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
       // If a session cookie exists, initialize the session. Otherwise the
       // session is only started on demand in save(), making
       // anonymous users not use a session cookie unless something is stored in
-      // $_SESSION. This allows HTTP proxies to cache anonymous pageviews.
+      // $_SESSION. This allows HTTP proxies to cache anonymous page views.
       $result = $this->startNow();
     }
 

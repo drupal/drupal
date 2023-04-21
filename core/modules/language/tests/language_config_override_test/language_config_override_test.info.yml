@@ -1,4 +1,4 @@
-name: 'Language config overridetest'
+name: 'Language config override test'
 type: module
 description: 'Support module for the language config override test.'
 package: Testing

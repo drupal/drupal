@@ -188,7 +188,7 @@ class EntityReferenceTranslationDeriver extends DeriverBase implements Container
           else {
             // If this is an existing derivative, it means this bundle has more
             // than one entity reference field. In that case, we only want to add
-            // the field to the process pipeline and make it overwritable.
+            // the field to the process pipeline and set it to be overwritten.
             $this->derivatives[$derivative_key]['process'] += $derivative['process'];
             $this->derivatives[$derivative_key]['destination']['overwrite_properties'] += $derivative['destination']['overwrite_properties'];
           }

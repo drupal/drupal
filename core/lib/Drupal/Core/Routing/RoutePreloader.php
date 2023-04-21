@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Route;
 
 /**
- * Defines a class which preloads non-admin routes.
+ * Defines a class that can pre-load non-admin routes.
  *
  * On an actual site we want to avoid too many database queries so we build a
  * list of all routes which most likely appear on the actual site, which are all

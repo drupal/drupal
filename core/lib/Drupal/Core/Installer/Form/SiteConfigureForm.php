@@ -293,7 +293,7 @@ class SiteConfigureForm extends ConfigFormBase {
       }
     }
 
-    // We precreated user 1 with placeholder values. Let's save the real values.
+    // We created user 1 with placeholder values. Let's save the real values.
     $account = $this->userStorage->load(1);
     $account->init = $account->mail = $account_values['mail'];
     $account->roles = $account->getRoles();

@@ -44,7 +44,7 @@ class PoStreamWriterTest extends TestCase {
     $this->poWriter->setHeader($poHeader->reveal());
 
     $root = vfsStream::setup();
-    $this->poFile = new vfsStreamFile('powriter.po');
+    $this->poFile = new vfsStreamFile('poWriter.po');
     $root->addChild($this->poFile);
   }
 
