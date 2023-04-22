@@ -190,7 +190,7 @@ class ConfigCRUDTest extends KernelTestBase {
    */
   public function testNameValidation() {
     // Verify that an object name without namespace causes an exception.
-    $name = 'no_namespace';
+    $name = 'nonamespace';
     try {
       $this->config($name)->save();
       $this->fail('Expected ConfigNameException was thrown for a name without a namespace.');

@@ -7,8 +7,6 @@ use Drupal\Core\Logger\LogMessageParserInterface;
 use Drupal\Core\Logger\RfcLoggerTrait;
 use Psr\Log\LoggerInterface;
 
-// cspell:ignore ndelay
-
 /**
  * Redirects logging messages to syslog.
  */
