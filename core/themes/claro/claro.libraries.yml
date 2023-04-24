@@ -116,14 +116,6 @@ drupal.nav-tabs:
     - core/once
     - core/drupal.debounce
 
-drupal.responsive-detail:
-  version: VERSION
-  js:
-    js/responsive-details.js: {}
-  dependencies:
-    - core/jquery
-    - core/once
-
 claro.jquery.ui:
   version: VERSION
   css:
