@@ -324,7 +324,6 @@ dnumber
 docroot
 docroots
 dolore
-dotenv
 downcasting
 doxygen
 dragtable
@@ -548,7 +547,6 @@ invalididentifier
 invokable
 iopt
 isam
-isdst
 isinstallable
 itoa
 itok
@@ -689,7 +687,6 @@ mikey
 milli
 mimetypes
 minifyzombies
-minimatch
 minimise
 minipager
 minky
