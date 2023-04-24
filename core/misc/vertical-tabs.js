@@ -118,6 +118,21 @@
           }
         },
       );
+
+      // If a validation error is within a vertical tab, open that tab.
+      context.querySelectorAll('details .form-item .error').forEach((item) => {
+        const details = item.closest('details');
+
+        if (details.style.display === 'none') {
+          const tabSelect = document.querySelector(
+            "[href='#".concat(details.id, "']"),
+          );
+
+          if (tabSelect) {
+            tabSelect.click();
+          }
+        }
+      });
     },
   };
 
