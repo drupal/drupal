@@ -79,7 +79,7 @@
 .ajax-progress--fullscreen,
 .ui-dialog .ajax-progress--throbber {
   position: fixed;
-  z-index: 1000;
+  z-index: 1261;
   inset-block-start: 50%;
   inset-inline-start: 50%;
   box-sizing: border-box;
