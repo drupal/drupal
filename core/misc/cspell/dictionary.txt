@@ -53,7 +53,6 @@ attrval
 attrvals
 authless
 autocompletefocus
-autocompleteresponses
 autocompletesearch
 autocompleteselect
 autocompleting
@@ -325,7 +324,6 @@ dnumber
 docroot
 docroots
 dolore
-dotenv
 downcasting
 doxygen
 dragtable
@@ -549,7 +547,6 @@ invalididentifier
 invokable
 iopt
 isam
-isdst
 isinstallable
 itoa
 itok
@@ -692,7 +689,6 @@ mikey
 milli
 mimetypes
 minifyzombies
-minimatch
 minimise
 minipager
 minky
@@ -770,7 +766,6 @@ newnode
 newstr
 newterm
 nids
-nightlies
 nightwatch
 nightwatchjs
 nikic
