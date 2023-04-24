@@ -81,7 +81,7 @@
         model: model
       },
       deprecatedProperty: 'model',
-      message: 'The model property is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. There is no replacement.'
+      message: 'The model property is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. There is no replacement.'
     }));
     adjustIfNestedAndOverlapping($contextual);
   }
