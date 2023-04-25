@@ -195,6 +195,19 @@ td > .ajax-new-content > .form-item > .form-element {
   width: 100%;
 }
 
+td > .form-item > .form-element--type-select,
+td > .ajax-new-content > .form-item > .form-element--type-select {
+  width: auto;
+}
+
+@supports (min-width: max-content) {
+  td > .form-item > .form-element--type-select,
+  td > .ajax-new-content > .form-item > .form-element--type-select {
+    width: max-content;
+    min-width: 100%;
+  }
+}
+
 /* Win over table-file-multiple-widget. */
 th.is-disabled.is-disabled {
   color: var(--input--disabled-fg-color);
