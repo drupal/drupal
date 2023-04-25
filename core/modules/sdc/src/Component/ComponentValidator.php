@@ -21,7 +21,7 @@ final class ComponentValidator {
    *
    * @var \JsonSchema\Validator|null
    */
-  protected ?Validator $validator;
+  protected ?Validator $validator = NULL;
 
   /**
    * Sets the validator service if available.
