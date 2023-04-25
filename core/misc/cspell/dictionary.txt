@@ -593,7 +593,6 @@ invalididentifier
 invokable
 iopt
 isam
-isdst
 isinstallable
 itoa
 itok
@@ -735,7 +734,7 @@ metapackage
 metapackages
 metatag
 metatags
-meΦΩ
+meφω
 miaus
 middlewares
 mikey
@@ -1523,7 +1522,6 @@ whitespaces
 whos
 widthx
 wimoids
-windir
 wmet
 wmlscript
 wordprocessingml
@@ -1583,8 +1581,7 @@ zwei
 zwjhek
 zxvf
 zzgroup
-Èxample
-Über
 åwesome
+èxample
 über
-Ȅchȏ
+ȅchȏ

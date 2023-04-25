@@ -25,7 +25,7 @@
     "test:nightwatch": "cross-env BABEL_ENV=development node -r dotenv-safe/config -r @babel/register ./node_modules/.bin/nightwatch --config ./tests/Drupal/Nightwatch/nightwatch.conf.js",
     "prettier": "prettier --write \"./**/*.es6.js\" \"./tests/Drupal/Nightwatch/**/*.js\" \"./modules/ckeditor5/js/ckeditor5_plugins/**/*.js\"",
     "spellcheck": "cspell",
-    "spellcheck:make-drupal-dict": "rm -f misc/cspell/dictionary.txt && touch misc/cspell/dictionary.txt && yarn -s spellcheck:core --unique --wordsOnly | tr '[:upper:]' '[:lower:]' | tr -d \\\\\\\\ | LC_ALL=C sort -u -o misc/cspell/dictionary.txt",
+    "spellcheck:make-drupal-dict": "rm -f misc/cspell/dictionary.txt && touch misc/cspell/dictionary.txt && yarn -s spellcheck:core --unique --wordsOnly | perl -Mopen=locale -pe '$_=lc$_' | tr -d \\\\\\\\ | LC_ALL=C sort -u -o misc/cspell/dictionary.txt",
     "spellcheck:core": "cspell \"**/*\" \".*\" \"../composer/**/*\" \"../composer.json\"",
     "vendor-update": "node ./scripts/js/vendor-update.js",
     "watch:ckeditor5": "webpack --config ./modules/ckeditor5/webpack.config.js --watch",
