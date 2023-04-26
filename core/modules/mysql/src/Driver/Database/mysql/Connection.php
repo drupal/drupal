@@ -232,6 +232,11 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     $connection_options['init_commands'] += [
       'sql_mode' => "SET sql_mode = 'ANSI,TRADITIONAL'",
     ];
+    if (!empty($connection_options['isolation_level'])) {
+      $connection_options['init_commands'] += [
+        'isolation_level' => 'SET SESSION TRANSACTION ISOLATION LEVEL ' . strtoupper($connection_options['isolation_level']),
+      ];
+    }
 
     // Execute initial commands.
     foreach ($connection_options['init_commands'] as $sql) {

@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Render\Markup;
 
 /**
  * Implements hook_requirements().
@@ -33,13 +34,48 @@ function mysql_requirements($phase) {
 
       $isolation_level = $connection->query($query)->fetchField();
 
+      $tables_missing_primary_key = [];
+      $tables = $connection->schema()->findTables('%');
+      foreach ($tables as $table) {
+        $primary_key_column = Database::getConnection()->query("SHOW KEYS FROM {" . $table . "} WHERE Key_name = 'PRIMARY'")->fetchAllAssoc('Column_name');
+        if (empty($primary_key_column)) {
+          $tables_missing_primary_key[] = $table;
+        }
+      }
+
+      $description = [];
+      if ($isolation_level == 'READ-COMMITTED') {
+        if (empty($tables_missing_primary_key)) {
+          $severity_level = REQUIREMENT_OK;
+        }
+        else {
+          $severity_level = REQUIREMENT_ERROR;
+        }
+      }
+      else {
+        if ($isolation_level == 'REPEATABLE-READ') {
+          $severity_level = REQUIREMENT_WARNING;
+        }
+        else {
+          $severity_level = REQUIREMENT_ERROR;
+          $description[] = t('This is not supported by Drupal.');
+        }
+        $description[] = t('The recommended level for Drupal is "READ COMMITTED".');
+      }
+
+      if (!empty($tables_missing_primary_key)) {
+        $description[] = t('For this to work correctly, all tables must have a primary key. The following table(s) do not have a primary key: @tables.', ['@tables' => implode(', ', $tables_missing_primary_key)]);
+      }
+
+      $description[] = t('See the <a href=":performance_doc">setting MySQL transaction isolation level</a> page for more information.', [
+        ':performance_doc' => 'https://www.drupal.org/docs/system-requirements/setting-the-mysql-transaction-isolation-level',
+      ]);
+
       $requirements['mysql_transaction_level'] = [
-        'title' => t('Database Isolation Level'),
-        'severity' => $isolation_level === 'READ-COMMITTED' ? REQUIREMENT_OK : REQUIREMENT_WARNING,
+        'title' => t('Transaction isolation level'),
+        'severity' => $severity_level,
         'value' => $isolation_level,
-        'description' => t('For the best performance and to minimize locking issues, the READ-COMMITTED transaction isolation level is recommended. See the <a href=":performance_doc">setting MySQL transaction isolation level</a> page for more information.', [
-          ':performance_doc' => 'https://www.drupal.org/docs/system-requirements/setting-the-mysql-transaction-isolation-level',
-        ]),
+        'description' => Markup::create(implode(' ', $description)),
       ];
     }
   }

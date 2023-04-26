@@ -510,6 +510,7 @@ trait FunctionalTestSetupTrait {
     unset($connection_info['default']['autoload']);
     unset($connection_info['default']['pdo']);
     unset($connection_info['default']['init_commands']);
+    unset($connection_info['default']['isolation_level']);
     // Remove database connection info that is not used by SQLite.
     if ($driver === 'sqlite') {
       unset($connection_info['default']['username']);
