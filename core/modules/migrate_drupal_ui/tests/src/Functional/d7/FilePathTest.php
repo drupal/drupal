@@ -127,7 +127,7 @@ class FilePathTest extends MigrateUpgradeTestBase {
     $drivers = drupal_get_database_types();
     $form = $drivers[$driver]->getFormOptions($connection_options);
     $connection_options = array_intersect_key($connection_options, $form + $form['advanced_options']);
-    // Remove isolation_level since that options is not configurable in the UI.
+    // Remove isolation_level since that option is not configurable in the UI.
     unset($connection_options['isolation_level']);
     $edit = [
       $driver => $connection_options,
