@@ -5,6 +5,7 @@ namespace Drupal\Tests\views\Unit\Plugin\views\field;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\UnitTestCase;
+use Drupal\Tests\views\Traits\ViewsLoggerTestTrait;
 use Drupal\views\Plugin\views\field\EntityOperations;
 use Drupal\views\ResultRow;
 
@@ -13,6 +14,8 @@ use Drupal\views\ResultRow;
  * @group Views
  */
 class EntityOperationsUnitTest extends UnitTestCase {
+
+  use ViewsLoggerTestTrait;
 
   /**
    * The entity type manager.
@@ -54,7 +57,7 @@ class EntityOperationsUnitTest extends UnitTestCase {
     $this->entityRepository = $this->createMock(EntityRepositoryInterface::class);
     $this->languageManager = $this->createMock('\Drupal\Core\Language\LanguageManagerInterface');
 
-    $configuration = [];
+    $configuration = ['entity_type' => 'foo', 'entity field' => 'bar'];
     $plugin_id = $this->randomMachineName();
     $plugin_definition = [
       'title' => $this->randomMachineName(),
@@ -180,6 +183,8 @@ class EntityOperationsUnitTest extends UnitTestCase {
    * @covers ::render
    */
   public function testRenderWithoutEntity() {
+    $this->setUpMockLoggerWithMissingEntity();
+
     $entity = NULL;
 
     $result = new ResultRow();
