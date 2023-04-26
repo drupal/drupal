@@ -225,7 +225,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->assertSession()->pageTextContains($body);
 
     // Delete the block.
-    $this->drupalGet('block/1/delete');
+    $this->drupalGet('admin/content/block/1/delete');
     $this->assertSession()->pageTextContains('This will also remove 1 placed block instance.');
 
     $this->submitForm([], 'Delete');
@@ -251,7 +251,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->submitForm($edit3, 'Save');
 
     // Show the delete confirm form.
-    $this->drupalGet('block/3/delete');
+    $this->drupalGet('admin/content/block/3/delete');
     $this->assertSession()->pageTextNotContains('This will also remove');
   }
 

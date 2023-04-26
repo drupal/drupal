@@ -127,7 +127,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
       ->loadByProperties(['info' => $label]);
     $block = reset($blocks);
     if (!empty($block)) {
-      $this->assertSession()->linkByHrefExists('block/' . $block->id());
+      $this->assertSession()->linkByHrefExists('admin/content/block/' . $block->id());
       $this->clickLink('Edit');
       $this->assertSession()->statusCodeEquals(200);
       $this->assertSession()->titleEquals("Edit content block $label | Drupal");
@@ -143,7 +143,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $this->assertSession()->elementTextContains('xpath', '//td/a', $new_label);
 
     // Delete the added entity using the operations link.
-    $this->assertSession()->linkByHrefExists('block/' . $block->id() . '/delete');
+    $this->assertSession()->linkByHrefExists('admin/content/block/' . $block->id() . '/delete');
     $this->clickLink('Delete');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->titleEquals("Are you sure you want to delete the content block $new_label? | Drupal");
@@ -186,7 +186,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $this->assertEquals($label, $actual, 'Label found for test block.');
     $this->assertSession()->linkNotExists('Edit');
     $this->assertSession()->linkNotExists('Delete');
-    $this->assertSession()->linkByHrefNotExists('block/' . $test_block->id() . '/delete');
+    $this->assertSession()->linkByHrefNotExists('admin/content/block/' . $test_block->id() . '/delete');
 
     $this->drupalLogout();
 
@@ -198,8 +198,8 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $matches = $this->xpath('//td/a');
     $actual = $matches[0]->getText();
     $this->assertEquals($label, $actual, 'Label found for test block.');
-    $this->assertSession()->linkByHrefExists('block/' . $test_block->id());
-    $this->assertSession()->linkByHrefExists('block/' . $test_block->id() . '/delete');
+    $this->assertSession()->linkByHrefExists('admin/content/block/' . $test_block->id());
+    $this->assertSession()->linkByHrefExists('admin/content/block/' . $test_block->id() . '/delete');
   }
 
 }

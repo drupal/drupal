@@ -130,7 +130,7 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
 
     // Check that the translate operation link is shown.
     $this->drupalGet('admin/content/block');
-    $this->assertSession()->linkByHrefExists('block/' . $entity->id() . '/translations');
+    $this->assertSession()->linkByHrefExists('admin/content/block/' . $entity->id() . '/translations');
   }
 
   /**

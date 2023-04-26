@@ -78,7 +78,7 @@ class BlockContentRevisionRevertTest extends BlockContentTestBase {
     $this->submitForm([], 'Revert');
     $this->assertEquals($count + 1, $countRevisions());
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->addressEquals(sprintf('block/%s/revisions', $entity->id()));
+    $this->assertSession()->addressEquals(sprintf('admin/content/block/%s/revisions', $entity->id()));
     $this->assertSession()->pageTextContains(sprintf('basic %s has been reverted to the revision from Sun, 01/11/2009 - 16:00.', $entity->label()));
     // Three rows, from the top: the newly reverted revision, the revision from
     // 5pm, and the revision from 4pm.

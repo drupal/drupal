@@ -29,9 +29,9 @@ function block_content_update_10100(&$sandbox = NULL): TranslatableMarkup {
     ->setFormClass('revision-delete', RevisionDeleteForm::class)
     ->setFormClass('revision-revert', RevisionRevertForm::class)
     ->set('route_provider', $routeProviders)
-    ->setLinkTemplate('revision-delete-form', '/block/{block_content}/revision/{block_content_revision}/delete')
-    ->setLinkTemplate('revision-revert-form', '/block/{block_content}/revision/{block_content_revision}/revert')
-    ->setLinkTemplate('version-history', '/block/{block_content}/revisions');
+    ->setLinkTemplate('revision-delete-form', '/admin/content/block/{block_content}/revision/{block_content_revision}/delete')
+    ->setLinkTemplate('revision-revert-form', '/admin/content/block/{block_content}/revision/{block_content_revision}/revert')
+    ->setLinkTemplate('version-history', '/admin/content/block/{block_content}/revisions');
   $entityDefinitionUpdateManager->updateEntityType($definition);
   return \t('Added revision routes to Content block entity type.');
 }

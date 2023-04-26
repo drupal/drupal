@@ -78,7 +78,7 @@ class BlockContentRevisionDeleteTest extends BlockContentTestBase {
     $this->submitForm([], 'Delete');
     $this->assertEquals($count - 1, $countRevisions());
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->addressEquals(sprintf('block/%s/revisions', $entity->id()));
+    $this->assertSession()->addressEquals(sprintf('admin/content/block/%s/revisions', $entity->id()));
     $this->assertSession()->pageTextContains(sprintf('Revision from Sun, 01/11/2009 - 16:00 of basic %s has been deleted.', $entity->label()));
     $this->assertSession()->elementsCount('css', 'table tbody tr', 1);
   }

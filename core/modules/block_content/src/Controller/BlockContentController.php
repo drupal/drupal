@@ -4,6 +4,7 @@ namespace Drupal\block_content\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\block_content\BlockContentInterface;
 use Drupal\block_content\BlockContentTypeInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Url;
@@ -188,6 +189,64 @@ class BlockContentController extends ControllerBase {
       ->warning('A user was redirected from %old_path to %new_path. This redirect will be removed in a future version of Drupal. Update links, shortcuts, and bookmarks to use %new_path. See %change_record for more information.', $params);
 
     return $this->redirect($route, [], [], 301);
+  }
+
+  /**
+   * Provides a redirect to block edit page.
+   *
+   * @param Drupal\block_content\BlockContentInterface $block_content
+   *   The block to be edited.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   *   /admin/content/block/{block_content} directly instead of
+   *   /block/{block_content}.
+   *
+   * @see https://www.drupal.org/node/2317981
+   */
+  public function editRedirect(BlockContentInterface $block_content): RedirectResponse {
+    @trigger_error('The path /block/{block_content} is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/content/block/{block_content}. See https://www.drupal.org/node/2317981.', E_USER_DEPRECATED);
+    $route = 'entity.block_content.edit_form';
+    $params = [
+      '%old_path' => Url::fromRoute("$route.bc", ['block_content' => $block_content->id()])->toString(),
+      '%new_path' => Url::fromRoute($route, ['block_content' => $block_content->id()])->toString(),
+      '%change_record' => 'https://www.drupal.org/node/3320855',
+    ];
+    $warning_message = $this->t('You have been redirected from %old_path. Update links, shortcuts, and bookmarks to use %new_path.', $params);
+    $this->messenger()->addWarning($warning_message);
+    $this->getLogger('block_content')->warning('A user was redirected from %old_path to %new_path. This redirect will be removed in a future version of Drupal. Update links, shortcuts, and bookmarks to use %new_path. See %change_record for more information.', $params);
+
+    return $this->redirect($route, ['block_content' => $block_content->id()], [], 301);
+  }
+
+  /**
+   * Provides a redirect to block delete page.
+   *
+   * @param Drupal\block_content\BlockContentInterface $block_content
+   *   The block to be deleted.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   *   /admin/content/block/{block_content}/delete directly instead of
+   *   /block/{block_content}/delete.
+   *
+   * @see https://www.drupal.org/node/2317981
+   */
+  public function deleteRedirect(BlockContentInterface $block_content): RedirectResponse {
+    @trigger_error('The path /block/{block_content}/delete is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/content/block/{block_content}/delete. See https://www.drupal.org/node/2317981.', E_USER_DEPRECATED);
+    $route = 'entity.block_content.delete_form';
+    $params = [
+      '%old_path' => Url::fromRoute("$route.bc", ['block_content' => $block_content->id()])->toString(),
+      '%new_path' => Url::fromRoute($route, ['block_content' => $block_content->id()])->toString(),
+      '%change_record' => 'https://www.drupal.org/node/3320855',
+    ];
+    $warning_message = $this->t('You have been redirected from %old_path. Update links, shortcuts, and bookmarks to use %new_path.', $params);
+    $this->messenger()->addWarning($warning_message);
+    $this->getLogger('block_content')->warning('A user was redirected from %old_path to %new_path. This redirect will be removed in a future version of Drupal. Update links, shortcuts, and bookmarks to use %new_path. See %change_record for more information.', $params);
+
+    return $this->redirect($route, ['block_content' => $block_content->id()], [], 301);
   }
 
 }
