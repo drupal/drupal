@@ -1,0 +1,13 @@
+.announcements ul {
+  margin-inline-start: 0;
+  list-style: none;
+}
+
+.announcement:not(.announcement:last-child) {
+  margin-block-end: 1rem;
+}
+
+.announcement.announcement--featured + .announcement.announcement--standard {
+  padding-block-start: 1rem;
+  border-top: 1px solid #aaa;
+}

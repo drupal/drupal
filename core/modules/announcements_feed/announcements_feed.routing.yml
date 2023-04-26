@@ -1,0 +1,7 @@
+announcements_feed.announcement:
+  path: '/admin/announcements_feed'
+  defaults:
+    _controller: '\Drupal\announcements_feed\Controller\AnnounceController::getAnnouncements'
+    _title: 'Community announcements'
+  requirements:
+    _permission: 'access announcements'

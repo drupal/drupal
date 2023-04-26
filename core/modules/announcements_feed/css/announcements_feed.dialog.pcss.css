@@ -1,0 +1,49 @@
+/**
+ * @file
+ *
+ * Styles for the announcements feed within the off-canvas dialog.
+ */
+
+#drupal-off-canvas-wrapper {
+
+  & .ui-dialog-titlebar.announce-titlebar::before {
+    -webkit-mask-image: url("../images/announcement-bell.svg");
+    mask-image: url("../images/announcement-bell.svg");
+  }
+
+  & .announcements {
+    padding-block-start: var(--off-canvas-padding);
+  }
+
+  & .announcements ul {
+    margin: 0;
+    padding-inline-start: 0;
+    list-style: none;
+  }
+
+  & .announcement {
+    font-size: 0.875rem;
+  }
+
+  & .announcement--featured {
+    position: relative;
+    margin-inline: calc(-1 * var(--off-canvas-padding));
+    padding: 0 var(--off-canvas-padding) var(--off-canvas-padding);
+  }
+
+  & .announcement.announcement--featured + .announcement.announcement--standard {
+    border-block-start: 1px solid var(--off-canvas-border-color);
+  }
+
+  & .announcement--standard {
+    padding-block-start: var(--off-canvas-padding);
+  }
+
+  & .announcement__title {
+    font-size: 1rem;
+  }
+
+  & .announcements--view-all {
+    margin-block-start: 3rem;
+  }
+}

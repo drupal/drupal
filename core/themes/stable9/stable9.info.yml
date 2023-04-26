@@ -11,6 +11,18 @@ libraries-override:
     css:
       theme:
         css/block.admin.css: css/block/block.admin.css
+  announcements_feed/drupal.announcements_feed.page:
+    css:
+      component:
+        css/announcements_feed.page.css: css/announcements_feed/announcements_feed.page.css
+  announcements_feed/drupal.announcements_feed.dialog:
+    css:
+      component:
+        css/announcements_feed.dialog.css: css/announcements_feed/announcements_feed.dialog.css
+  announcements_feed/drupal.announcements_feed.toolbar:
+    css:
+      component:
+        css/announcements_feed.toolbar.css: css/announcements_feed/announcements_feed.toolbar.css
 
   config_translation/drupal.config_translation.admin:
     css:

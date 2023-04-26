@@ -1,0 +1,57 @@
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "Drupal Announcements Feed",
+  "home_page_url": "https://www.drupal.org",
+  "feed_url": "https://www.drupal.org/announcements.json",
+  "favicon": "https://www.drupal.org/favicon.ico",
+  "items": [
+    {
+      "id": "201",
+      "title": "new 9 - 10 Drupal 9.1.3 is available",
+      "content_html": "This release will have a community alert prototype to notify site admins about drupal updates and required information",
+      "url": "https://www.drupal.org/project/announce",
+      "date_modified": "2021-01-19T07:29:38+00:00",
+      "date_published": "2021-01-18T07:29:38+00:00",
+      "_drupalorg": {
+        "featured": false,
+        "version": "^9 | ^10"
+      }
+    },
+    {
+      "id": "2021",
+      "title": "updated 10 - DrupalCon is here",
+      "content_html": "This release will have a community alert prototype to notify site admins about drupal updates and required information",
+      "url": "https://www.drupal.org/project/announce",
+      "date_modified": "2021-01-19T07:29:38+00:00",
+      "date_published": "2021-01-18T07:29:38+00:00",
+      "_drupalorg":  {
+        "featured": true,
+        "version": "^10"
+      }
+    },
+    {
+      "id": "2031",
+      "title": "new 9 only - Download latest drupal here",
+      "content_html": "This release will have a community alert prototype to notify site admins about drupal updates and required information",
+      "url": "https://www.drupal.org/project/announce",
+      "date_modified": "2021-01-19T07:29:38+00:00",
+      "date_published": "2021-01-18T07:29:38+00:00",
+      "_drupalorg":  {
+        "featured": false,
+        "version": "^9"
+      }
+    },
+    {
+      "id": "2043",
+      "title": "Only 10 - Drupal 106 is available",
+      "content_html": "This release will have a community alert prototype to notify site admins about drupal updates and required information",
+      "url": "https://www.drupal.org/project/announce",
+      "date_modified": "2021-01-19T07:29:39+00:00",
+      "date_published": "2021-01-18T07:29:39+00:00",
+      "_drupalorg":  {
+        "featured": false,
+        "version": "^10"
+      }
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+name: 'Announce feed test'
+type: module
+description: 'Support module for announce feed testing.'
+package: Testing

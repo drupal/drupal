@@ -1,0 +1,27 @@
+{#
+/**
+ * @file
+ * Template file for the theming of announcement_feed admin page.
+ *
+ * This template will get rendered when the user gets navigated to the announcements_feed.announcement route.
+ *
+ * Available variables:
+ * - count: Contains the total number of announcements.
+ * - featured: A list of featured announcement objects.
+ * - standard: A list of non-featured announcement objects.
+ *
+ * Announcement objects have the following variables:
+ * - id: Unique id of the announcement.
+ * - title: Title of the standard announcement.
+ * - content: Short description of the announcement.
+ * - datePublishedTimestamp: Timestamp of the announcement.
+ * - url: Learn more link of the standard announcement.
+ *
+ * @see announcements_feed_theme()
+ *
+ * @ingroup themeable
+ */
+#}
+{{ attach_library('announcements_feed/drupal.announcements_feed.page') }}
+
+{% include '@announcements_feed/announcements.html.twig' %}

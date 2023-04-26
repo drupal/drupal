@@ -1,0 +1,8 @@
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "Drupal Announcements Feed",
+  "home_page_url": "https://www.drupal.org",
+  "feed_url": "https://www.drupal.org/announcements.json",
+  "favicon": "https://www.drupal.org/favicon.ico",
+  "items": []
+}

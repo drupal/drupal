@@ -1,0 +1,15 @@
+parameters:
+  announcements_feed.feed_json_url: https://www.drupal.org/announcements.json
+  announcements_feed.feed_link: https://www.drupal.org/about/announcements
+
+services:
+  announcements_feed.fetcher:
+    class: Drupal\announcements_feed\AnnounceFetcher
+    arguments: ['@http_client', '@config.factory', '@keyvalue.expirable', '@logger.channel.announcements_feed', '%announcements_feed.feed_json_url%']
+  logger.channel.announcements_feed:
+    parent: logger.channel_base
+    arguments: ['announcements_feed']
+    public: false
+  announcements_feed.lazy_builders:
+    class: Drupal\announcements_feed\LazyBuilders
+    arguments: [ '@plugin.manager.element_info']

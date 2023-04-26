@@ -1,0 +1,25 @@
+{#
+/**
+ * @file
+ * Template file for the theming of announcement_feed off-canvas dialog.
+ *
+ * This template will get rendered when the user clicks the announcement button in the toolbar.
+ *
+ * Available variables:
+ * - count: Contains the total number of announcements.
+ * - featured: A list of featured announcement objects.
+ * - standard: A list of non-featured announcement objects.
+ *
+ * Announcement objects have the following variables:
+ * - id: Unique id of the announcement.
+ * - title: Title of the standard announcement.
+ * - content: Short description of the announcement.
+ * - datePublishedTimestamp: Timestamp of the announcement.
+ * - url: Learn more link of the standard announcement.
+ *
+ * @see announcements_feed_theme()
+ *
+ * @ingroup themeable
+ */
+#}
+{% include '@announcements_feed/announcements.html.twig' %}

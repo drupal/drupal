@@ -1,0 +1,17 @@
+drupal.announcements_feed.dialog:
+  version: VERSION
+  css:
+    component:
+      css/announcements_feed.dialog.css: {}
+
+drupal.announcements_feed.toolbar:
+  version: VERSION
+  css:
+    component:
+      css/announcements_feed.toolbar.css: {}
+
+drupal.announcements_feed.page:
+  version: VERSION
+  css:
+    component:
+      css/announcements_feed.page.css: {}

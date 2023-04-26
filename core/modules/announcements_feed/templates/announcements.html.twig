@@ -1,0 +1,37 @@
+{% if count %}
+  <nav class="announcements">
+    <ul>
+      {% if featured|length %}
+        {% for announcement in featured %}
+          <li class="announcement announcement--featured" data-drupal-featured>
+            <div class="announcement__title">
+              <h4>{{ announcement.title }}</h4>
+            </div>
+            <div class="announcement__teaser">
+              {{ announcement.content }}
+            </div>
+            <div class="announcement__link">
+              <a href="{{ announcement.url }}">{{ 'Learn More'|t }}</a>
+            </div>
+          </li>
+        {% endfor %}
+      {% endif %}
+      {% for announcement in standard %}
+        <li class="announcement announcement--standard">
+          <div class="announcement__title">
+            <a href="{{ announcement.url }}">{{ announcement.title }}</a>
+            <div class="announcement__date">{{ announcement.datePublishedTimestamp | format_date('short') }}</div>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  </nav>
+
+  {% if feed_link %}
+    <p class="announcements--view-all">
+      <a target="_blank" href="{{ feed_link }}">{{ 'View all announcements'|t }}</a>
+    </p>
+  {% endif %}
+{% else %}
+  <div class="announcements announcements--empty"><p> {{ 'No announcements available'|t }}</p></div>
+{% endif %}

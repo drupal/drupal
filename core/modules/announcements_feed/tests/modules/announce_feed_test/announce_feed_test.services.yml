@@ -1,0 +1,5 @@
+services:
+  announce_feed_test.announce_client_middleware:
+    class: Drupal\announce_feed_test\AnnounceTestHttpClientMiddleware
+    tags:
+      - { name: http_client_middleware }

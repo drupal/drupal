@@ -1,0 +1,31 @@
+#drupal-off-canvas-wrapper .announcements {
+  padding-block-start: var(--off-canvas-padding);
+}
+
+#drupal-off-canvas-wrapper .announcements ul {
+  margin: 0;
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+#drupal-off-canvas-wrapper .announcement {
+  font-size: 0.875rem;
+}
+
+#drupal-off-canvas-wrapper .announcement--featured {
+  position: relative;
+  margin-inline: calc(-1 * var(--off-canvas-padding));
+  padding: 0 var(--off-canvas-padding) var(--off-canvas-padding);
+}
+
+#drupal-off-canvas-wrapper .announcement.announcement--featured + .announcement.announcement--standard {
+  border-block-start: 1px solid var(--off-canvas-border-color);
+}
+
+#drupal-off-canvas-wrapper .announcement--standard {
+  padding-block-start: var(--off-canvas-padding);
+}
+
+#drupal-off-canvas-wrapper .announcement__title {
+  font-size: 1rem;
+}
