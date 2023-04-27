@@ -103,13 +103,15 @@
 }
 /* Position the admin toolbar fixed when the configured standard breakpoint is
  * active. */
-body.toolbar-fixed .toolbar-oriented .toolbar-bar {
+body.toolbar-fixed .toolbar-oriented .toolbar-bar,
+html.toolbar-fixed .toolbar-oriented .toolbar-bar {
   position: fixed;
 }
 /* When the configured narrow breakpoint is active, the toolbar is sized to wrap
  * around the trays in order to provide a context for scrolling tray content
  * that is taller than the viewport. */
-body.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
+body.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented,
+html.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
   bottom: 0;
   width: 240px;
   width: 15rem;
@@ -198,7 +200,8 @@ body.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
  * the tray scroll within the confines of the viewport.
  */
 .toolbar .toolbar-tray-vertical.is-active,
-body.toolbar-fixed .toolbar .toolbar-tray-vertical {
+body.toolbar-fixed .toolbar .toolbar-tray-vertical,
+html.toolbar-fixed .toolbar .toolbar-tray-vertical {
   position: fixed;
   overflow-x: hidden;
   overflow-y: auto;
@@ -217,24 +220,28 @@ body.toolbar-fixed .toolbar .toolbar-tray-vertical {
 }
 /* When the configured standard breakpoint is active, the tray appears to push
  * the page content away from the edge of the viewport. */
-body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
+body.toolbar-tray-open.toolbar-vertical.toolbar-fixed,
+html.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
   margin-left: 240px; /* LTR */
   margin-left: 15rem; /* LTR */
 }
 
 @media print {
-  body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
+  body.toolbar-tray-open.toolbar-vertical.toolbar-fixed,
+  html.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
     margin-left: 0;
   }
 }
-[dir="rtl"] body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
+[dir="rtl"] body.toolbar-tray-open.toolbar-vertical.toolbar-fixed,
+[dir="rtl"].toolbar-tray-open.toolbar-vertical.toolbar-fixed {
   margin-right: 240px;
   margin-right: 15rem;
   margin-left: auto;
 }
 
 @media print {
-  [dir="rtl"] body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
+  [dir="rtl"] body.toolbar-tray-open.toolbar-vertical.toolbar-fixed,
+  [dir="rtl"].toolbar-tray-open.toolbar-vertical.toolbar-fixed {
     margin-right: 0;
   }
 }

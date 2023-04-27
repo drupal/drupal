@@ -1203,6 +1203,9 @@ function user_toolbar() {
     $items['user']['tray']['user_links'] = [
       '#lazy_builder' => ['user.toolbar_link_builder:renderToolbarLinks', []],
       '#create_placeholder' => TRUE,
+      '#lazy_builder_preview' => [
+        '#markup' => '<a href="#" class="toolbar-tray-lazy-placeholder-link">&nbsp;</a>',
+      ],
     ];
   }
 

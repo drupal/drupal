@@ -4,6 +4,39 @@
  */
 
 (function ($, Drupal, drupalSettings) {
+  // Set UI-impacting toolbar classes before Drupal behaviors initialize to
+  // minimize flickering on load. This is encapsulated in a function to
+  // emphasize this having a distinct purpose than the code that follows it.
+  (() => {
+    if (!sessionStorage.getItem('Drupal.toolbar.toolbarState')) {
+      return;
+    }
+    const toolbarState = JSON.parse(
+      sessionStorage.getItem('Drupal.toolbar.toolbarState'),
+    );
+    const { activeTray, orientation, isOriented } = toolbarState;
+    const activeTrayElement = document.querySelector(
+      `.toolbar-tray[data-toolbar-tray="${activeTray}"]`,
+    );
+    const activeTrayToggle = document.querySelector(
+      `.toolbar-item[data-toolbar-tray="${activeTray}"]`,
+    );
+
+    if (activeTrayElement) {
+      activeTrayElement.classList.add(
+        `toolbar-tray-${orientation}`,
+        'is-active',
+      );
+      activeTrayToggle.classList.add('is-active');
+    }
+
+    if (isOriented) {
+      document
+        .querySelector('#toolbar-administration')
+        .classList.add('toolbar-oriented');
+    }
+  })();
+
   // Merge run-time settings with the defaults.
   const options = $.extend(
     {
@@ -150,13 +183,20 @@
             $(document).trigger('drupalToolbarTrayChange', tray);
           });
 
-        // If the toolbar's orientation is horizontal and no active tab is
-        // defined then show the tray of the first toolbar tab by default (but
-        // not the first 'Home' toolbar tab).
+        const toolbarState = sessionStorage.getItem(
+          'Drupal.toolbar.toolbarState',
+        )
+          ? JSON.parse(sessionStorage.getItem('Drupal.toolbar.toolbarState'))
+          : {};
+        // If the toolbar's orientation is horizontal, no active tab is defined,
+        // and the orientation state is not set (which means the user has not
+        // yet interacted with the toolbar), then show the tray of the first
+        // toolbar tab by default (but not the first 'Home' toolbar tab).
         if (
           Drupal.toolbar.models.toolbarModel.get('orientation') ===
             'horizontal' &&
-          Drupal.toolbar.models.toolbarModel.get('activeTab') === null
+          Drupal.toolbar.models.toolbarModel.get('activeTab') === null &&
+          !toolbarState.orientation
         ) {
           Drupal.toolbar.models.toolbarModel.set({
             activeTab: $(
@@ -190,6 +230,42 @@
           },
         });
       });
+
+      // Add anti-flicker functionality.
+      if (
+        once('toolbarAntiFlicker', '#toolbar-administration', context).length
+      ) {
+        Drupal.toolbar.models.toolbarModel.on(
+          'change:activeTab change:orientation change:isOriented change:isTrayToggleVisible change:offsets',
+          function () {
+            const hasActiveTab = !!$(this.get('activeTab')).length > 0;
+            const previousToolbarState = sessionStorage.getItem(
+              'Drupal.toolbar.toolbarState',
+            )
+              ? JSON.parse(
+                  sessionStorage.getItem('Drupal.toolbar.toolbarState'),
+                )
+              : {};
+            const toolbarState = {
+              ...previousToolbarState,
+              orientation:
+                Drupal.toolbar.models.toolbarModel.get('orientation'),
+              hasActiveTab,
+              activeTabId: hasActiveTab ? this.get('activeTab').id : null,
+              activeTray: $(this.get('activeTab')).attr('data-toolbar-tray'),
+              isOriented: this.get('isOriented'),
+              isFixed: this.get('isFixed'),
+            };
+            // Store toolbar UI state in session storage, so it can be accessed
+            // by JavaScript that executes before the first paint.
+            // @see core/modules/toolbar/js/toolbar.anti-flicker.js
+            sessionStorage.setItem(
+              'Drupal.toolbar.toolbarState',
+              JSON.stringify(toolbarState),
+            );
+          },
+        );
+      }
     },
   };
 

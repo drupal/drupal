@@ -79,23 +79,6 @@
   right: 0;
   left: 0;
 }
-/* .toolbar-loading is required by Toolbar JavaScript to pre-render markup
- * style to avoid extra reflow & flicker. */
-@media (min-width: 61em) {
-  .toolbar-loading.toolbar-horizontal .toolbar .toolbar-bar .toolbar-tab:last-child .toolbar-tray {
-    position: relative;
-    z-index: -999;
-    display: block;
-    visibility: hidden;
-    width: 1px;
-  }
-  .toolbar-loading.toolbar-horizontal .toolbar .toolbar-bar .toolbar-tab:last-child .toolbar-tray .toolbar-lining {
-    width: 999em;
-  }
-  .toolbar-loading.toolbar-horizontal .toolbar .toolbar-bar .home-toolbar-tab + .toolbar-tab .toolbar-tray {
-    display: block;
-  }
-}
 
 /* Layer the bar just above the trays and above contextual link triggers. */
 .toolbar-oriented .toolbar-bar {
@@ -103,13 +86,13 @@
 }
 /* Position the admin toolbar fixed when the configured standard breakpoint is
  * active. */
-body.toolbar-fixed .toolbar-oriented .toolbar-bar {
+.toolbar-fixed .toolbar-oriented .toolbar-bar {
   position: fixed;
 }
 /* When the configured narrow breakpoint is active, the toolbar is sized to wrap
  * around the trays in order to provide a context for scrolling tray content
  * that is taller than the viewport. */
-body.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
+.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
   bottom: 0;
   width: 240px;
   width: 15rem;
@@ -198,7 +181,7 @@ body.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
  * the tray scroll within the confines of the viewport.
  */
 .toolbar .toolbar-tray-vertical.is-active,
-body.toolbar-fixed .toolbar .toolbar-tray-vertical {
+.toolbar-fixed .toolbar .toolbar-tray-vertical {
   position: fixed;
   overflow-x: hidden;
   overflow-y: auto;
@@ -217,27 +200,16 @@ body.toolbar-fixed .toolbar .toolbar-tray-vertical {
 }
 /* When the configured standard breakpoint is active, the tray appears to push
  * the page content away from the edge of the viewport. */
-body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
-  margin-left: 240px; /* LTR */
-  margin-left: 15rem; /* LTR */
+.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
+  margin-inline-start: 15rem;
 }
 
 @media print {
-  body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
-    margin-left: 0;
+  .toolbar-tray-open.toolbar-vertical.toolbar-fixed {
+    margin-inline-start: 0;
   }
-}
-[dir="rtl"] body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
-  margin-right: 240px;
-  margin-right: 15rem;
-  margin-left: auto;
 }
 
-@media print {
-  [dir="rtl"] body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
-    margin-right: 0;
-  }
-}
 /**
  * ToolBar tray orientation toggle.
  */
@@ -277,4 +249,47 @@ body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
 }
 .path-admin .toolbar-bar .home-toolbar-tab {
   display: block;
+}
+
+/* Anti flicker styling. */
+.toolbar-anti-flicker.toolbar-loading.toolbar-fixed body {
+  padding-top: 2.4375rem;
+}
+.toolbar-anti-flicker.toolbar-loading.toolbar-fixed.toolbar-horizontal.toolbar-tray-open body {
+  padding-top: 4.91331rem;
+}
+
+.toolbar-anti-flicker.toolbar-loading.toolbar-vertical.toolbar-tray-open .toolbar-tray {
+  position: fixed;
+  z-index: -1;
+  top: 2.4375rem;
+  bottom: 0;
+  display: block;
+  width: 15rem;
+  inset-inline-start: 0;
+}
+.toolbar-tray-lazy-placeholder-link {
+  position: relative;
+  z-index: 0;
+  display: block;
+}
+.toolbar-tray-open.toolbar-fixed.toolbar-vertical #toolbar-administration {
+  margin-inline-start: -15rem;
+}
+.toolbar .toolbar-tray-vertical > .toolbar-lining::before {
+  width: 100%;
+}
+.toolbar-oriented .toolbar-tray-vertical > .toolbar-lining::before {
+  position: fixed;
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+  display: block;
+  width: 15rem;
+  content: "";
+  inset-inline-start: 0;
+}
+
+.toolbar-anti-flicker.toolbar-vertical.toolbar-tray-open .menu-item + .menu-item {
+  border-top: 1px solid #ddd;
 }

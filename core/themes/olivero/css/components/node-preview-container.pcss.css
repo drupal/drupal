@@ -17,7 +17,7 @@
   box-shadow: 36px 1px 36px rgba(0, 0, 0, 0.08);
 }
 
-body.toolbar-vertical.toolbar-tray-open .node-preview-container {
+.toolbar-vertical.toolbar-tray-open .node-preview-container {
   max-width: calc(100vw - var(--toolbar-tray-vertical-width) - var(--scrollbar-width));
 }
 

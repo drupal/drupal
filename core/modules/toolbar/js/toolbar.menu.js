@@ -113,7 +113,11 @@
           });
           $item
             .children('.toolbar-box')
-            .append(Drupal.theme('toolbarMenuItemToggle', options));
+            .append(
+              $(Drupal.theme('toolbarMenuItemToggle', options))
+                .hide()
+                .fadeIn(150),
+            );
         }
       });
     }
