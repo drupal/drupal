@@ -32,16 +32,16 @@ Framework managers
 
   Frontend
   - Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
+  - Ben Mullins 'bnjmnm' https://www.drupal.org/u/bnjmnm
   - (provisional) Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
   - (provisional) Cristina Chumillas 'ckrina' https://www.drupal.org/u/ckrina
-  - (provisional) Ben Mullins 'bnjmnm' https://www.drupal.org/u/bnjmnm
   - (provisional) Sally Young 'justafish' https://www.drupal.org/u/justafish
 
 Release managers
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
+- Victoria Spagnolo 'quietone' https://www.drupal.org/u/quietone
 - (provisional) Dave Long 'longwave' https://www.drupal.org/u/longwave
-- (provisional) Victoria Spagnolo 'quietone' https://www.drupal.org/u/quietone
 
 Core JavaScript packages
  - Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
