@@ -106,6 +106,7 @@ bergmann
 berne
 bgblue
 bgred
+bidi
 bigpipe
 bikeshed
 bikesheds
@@ -150,6 +151,7 @@ buttonpane
 buttonset
 buttontext
 buytaert
+bytea
 cacheability
 cacheable
 cachebackend
@@ -371,6 +373,7 @@ egulias
 eins
 elbonia
 elems
+embeddable
 encapsed
 endapply
 endautoescape
@@ -412,6 +415,7 @@ fakepath
 falsey
 falsish
 fapi
+fastcgi
 fatals
 favourite
 favstar
@@ -423,6 +427,7 @@ fieldable
 fieldapi
 fieldblock
 fieldbody
+fieldgroup
 fieldgroups
 fielditem
 fieldlayout
@@ -507,6 +512,7 @@ hinode
 hippopotamidae
 hisu
 hisue
+hmac
 hoglet
 hola
 hookname
@@ -609,7 +615,6 @@ lified
 lightninggreen
 linebreak
 linebreaks
-linefeeds
 linkability
 linkback
 linkgenerator
@@ -766,6 +771,7 @@ newfieldinitial
 newnode
 newstr
 newterm
+newwin
 nids
 nightwatch
 nightwatchjs
@@ -780,6 +786,7 @@ nocache
 nocase
 nocdata
 nocookie
+nodelist
 nodereference
 nodir
 nodo
@@ -825,7 +832,6 @@ onoff
 opendocument
 openxmlformats
 optgroups
-optimizable
 optin
 optionchecker
 orgchart
@@ -959,7 +965,6 @@ qzzz
 ragdoll
 ralouphie
 rasterizable
-rasterized
 rasterizes
 rawurlencoded
 readmore
@@ -982,7 +987,6 @@ referencers
 referer
 refinable
 regexes
-reindex
 reindexing
 reinject
 relname
@@ -1098,6 +1102,7 @@ starterkit
 starzzzz
 statuscode
 stdclass
+stddev
 stickied
 stitle
 streamwrapper
@@ -1385,7 +1390,6 @@ userid
 userinfo
 userref
 userreference
-userspace
 usuario
 vampirize
 varchar
@@ -1410,7 +1414,6 @@ webhosting
 webmention
 webmozart
 webroot
-webserver
 webservers
 webtest
 webuser
