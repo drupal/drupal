@@ -141,6 +141,31 @@ ckeditor5.plugin.media_media:
       constraints:
         NotNull: []
 
+# Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\CodeBlock
+ckeditor5.plugin.ckeditor5_codeBlock:
+  type: mapping
+  label: Code Block
+  mapping:
+    languages:
+      type: sequence
+      orderby: ~
+      label: 'Languages'
+      constraints:
+        NotBlank:
+          message: "Enable at least one language, otherwise disable the Code Block plugin."
+        UniqueLabelInList:
+          labelKey: label
+      sequence:
+        type: mapping
+        label: 'Language'
+        mapping:
+          label:
+            type: label
+            label: 'Language label'
+          language:
+            type: string
+            label: 'Language key'
+
 # Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style
 ckeditor5.plugin.ckeditor5_style:
   type: mapping

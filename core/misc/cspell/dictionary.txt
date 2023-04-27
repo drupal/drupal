@@ -1086,6 +1086,7 @@ spacebar
 spagna
 specialchars
 spiffiness
+splitbutton
 splitbuttons
 spreadsheetml
 sqlpassword

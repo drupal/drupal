@@ -89,3 +89,18 @@ function ckeditor5_post_update_plugins_settings_export_order(&$sandbox = []) {
     return TRUE;
   });
 }
+
+/**
+ * Updates Text Editors using CKEditor 5 Code Block.
+ */
+function ckeditor5_post_update_code_block(&$sandbox = []) {
+  $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
+  $config_entity_updater->update($sandbox, 'editor', function (Editor $editor): bool {
+    // Only try to update editors using CKEditor 5.
+    if ($editor->getEditor() !== 'ckeditor5') {
+      return FALSE;
+    }
+    $settings = $editor->getSettings();
+    return in_array('codeBlock', $settings['toolbar']['items'], TRUE);
+  });
+}

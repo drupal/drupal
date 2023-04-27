@@ -263,6 +263,7 @@ ckeditor5_codeBlock:
     label: Code Block
     library: ckeditor5/internal.drupal.ckeditor5.codeBlock
     admin_library: ckeditor5/internal.admin.codeBlock
+    class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\CodeBlock
     toolbar_items:
       codeBlock:
         label: Code Block

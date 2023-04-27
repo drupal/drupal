@@ -22,6 +22,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
+use Drupal\editor\EditorInterface;
 use Symfony\Component\Validator\Constraints\Choice;
 
 /**
@@ -647,4 +648,35 @@ function _ckeditor5_theme_css($theme = NULL): array {
     }
   }
   return $css;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for editor entities.
+ */
+function ckeditor5_editor_presave(EditorInterface $editor) {
+  if ($editor->getEditor() === 'ckeditor5') {
+    $settings = $editor->getSettings();
+    if (in_array('codeBlock', $settings['toolbar']['items'], TRUE) && !isset($settings['plugins']['ckeditor5_codeBlock'])) {
+      // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\CodeBlock::defaultConfiguration()
+      $settings['plugins']['ckeditor5_codeBlock'] = [
+        'languages' => [
+          ['label' => 'Plain text', 'language' => 'plaintext'],
+          ['label' => 'C', 'language' => 'c'],
+          ['label' => 'C#', 'language' => 'cs'],
+          ['label' => 'C++', 'language' => 'cpp'],
+          ['label' => 'CSS', 'language' => 'css'],
+          ['label' => 'Diff', 'language' => 'diff'],
+          ['label' => 'HTML', 'language' => 'html'],
+          ['label' => 'Java', 'language' => 'java'],
+          ['label' => 'JavaScript', 'language' => 'javascript'],
+          ['label' => 'PHP', 'language' => 'php'],
+          ['label' => 'Python', 'language' => 'python'],
+          ['label' => 'Ruby', 'language' => 'ruby'],
+          ['label' => 'TypeScript', 'language' => 'typescript'],
+          ['label' => 'XML', 'language' => 'xml'],
+        ],
+      ];
+      $editor->setSettings($settings);
+    }
+  }
 }
