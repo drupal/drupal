@@ -266,6 +266,9 @@ function user_admin_account_submit($form, &$form_state) {
   }
 }
 
+/**
+ * Form validation handler for the user_admin_account() form.
+ */
 function user_admin_account_validate($form, &$form_state) {
   $form_state['values']['accounts'] = array_filter($form_state['values']['accounts']);
   if (count($form_state['values']['accounts']) == 0) {
