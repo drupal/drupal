@@ -80,6 +80,7 @@ class ModeratedNodeListBuilder extends NodeListBuilder {
    */
   protected function getEntityRevisionIds() {
     $query = $this->entityTypeManager->getStorage('content_moderation_state')->getAggregateQuery()
+      ->accessCheck(TRUE)
       ->aggregate('content_entity_id', 'MAX')
       ->groupBy('content_entity_revision_id')
       ->condition('content_entity_type_id', $this->entityTypeId)

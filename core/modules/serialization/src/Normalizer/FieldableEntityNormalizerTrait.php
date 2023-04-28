@@ -108,7 +108,7 @@ trait FieldableEntityNormalizerTrait {
 
     // Get the bundle entity type from the entity type definition.
     $bundle_type_id = $entity_type_definition->getBundleEntityType();
-    $bundle_types = $bundle_type_id ? $this->getEntityTypeManager()->getStorage($bundle_type_id)->getQuery()->execute() : [];
+    $bundle_types = $bundle_type_id ? $this->getEntityTypeManager()->getStorage($bundle_type_id)->getQuery()->accessCheck(TRUE)->execute() : [];
 
     // Make sure a bundle has been provided.
     if (!is_string($bundle_value)) {

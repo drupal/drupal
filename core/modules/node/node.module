@@ -727,6 +727,7 @@ function node_get_recent($number = 10) {
     // to see these in addition to published nodes. Check that they actually
     // have some unpublished nodes to view before adding the condition.
     $access_query = \Drupal::entityQuery('node')
+      ->accessCheck(TRUE)
       ->condition('uid', $account->id())
       ->condition('status', NodeInterface::NOT_PUBLISHED);
     if ($account->hasPermission('view own unpublished content') && ($own_unpublished = $access_query->execute())) {
@@ -740,6 +741,7 @@ function node_get_recent($number = 10) {
     }
   }
   $nids = $query
+    ->accessCheck(TRUE)
     ->sort('changed', 'DESC')
     ->range(0, $number)
     ->addTag('node_access')

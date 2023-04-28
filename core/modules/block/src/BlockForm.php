@@ -34,7 +34,7 @@ class BlockForm extends EntityForm {
   /**
    * The block storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface
    */
   protected $storage;
 

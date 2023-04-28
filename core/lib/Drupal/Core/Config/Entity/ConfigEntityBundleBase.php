@@ -102,7 +102,9 @@ abstract class ConfigEntityBundleBase extends ConfigEntityBase {
    *   A list of matching displays.
    */
   protected function loadDisplays($entity_type_id) {
-    $ids = \Drupal::entityQuery($entity_type_id)
+    /** @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $storage */
+    $storage = $this->entityTypeManager()->getStorage($entity_type_id);
+    $ids = $storage->getQuery()
       ->condition('id', $this->getEntityType()->getBundleOf() . '.' . $this->getOriginalId() . '.', 'STARTS_WITH')
       ->execute();
     if ($ids) {
