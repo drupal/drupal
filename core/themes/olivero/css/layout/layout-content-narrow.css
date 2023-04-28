@@ -17,7 +17,6 @@
 }
 
 @media (min-width: 43.75rem) {
-
   .layout--content-narrow,
   .layout--pass--content-narrow > * {
     grid-column: 2 / 14;
@@ -25,7 +24,6 @@
 }
 
 @media (min-width: 62.5rem) {
-
   .layout--content-narrow,
   .layout--pass--content-narrow > * {
     grid-column: 3 / 11;
@@ -42,7 +40,6 @@
 */
 
 @media (min-width: 43.75rem) {
-
   .layout--content-narrow .layout--content-narrow,
   .layout--pass--content-narrow > * .layout--content-narrow,
   .layout--content-medium .layout--content-narrow,
@@ -56,7 +53,6 @@
 }
 
 @media (min-width: 62.5rem) {
-
   .layout--content-narrow .layout--content-narrow,
   .layout--pass--content-narrow > * .layout--content-narrow,
   .layout--content-medium .layout--content-narrow,
@@ -75,7 +71,6 @@
 */
 
 @media (min-width: 43.75rem) {
-
   .layout--content-narrow.text-content blockquote::before,
   .layout--pass--content-narrow > *.text-content blockquote::before,
   .layout--content-narrow .text-content blockquote::before,
@@ -85,7 +80,6 @@
 }
 
 @media (min-width: 43.75rem) {
-
   .layout--content-narrow.text-content blockquote::after,
   .layout--pass--content-narrow > *.text-content blockquote::after,
   .layout--content-narrow .text-content blockquote::after,
@@ -98,7 +92,6 @@
 }
 
 @media (min-width: 43.75rem) {
-
   .layout--content-narrow.text-content blockquote,
   .layout--pass--content-narrow > *.text-content blockquote,
   .layout--content-narrow .text-content blockquote,
@@ -110,7 +103,6 @@
 }
 
 @media (min-width: 43.75rem) {
-
   .layout--content-narrow.text-content pre,
   .layout--pass--content-narrow > *.text-content pre,
   .layout--content-narrow .text-content pre,
@@ -120,7 +112,6 @@
 }
 
 @media (min-width: 62.5rem) {
-
   .layout--content-narrow.text-content pre,
   .layout--pass--content-narrow > *.text-content pre,
   .layout--content-narrow .text-content pre,

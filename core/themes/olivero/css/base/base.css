@@ -78,7 +78,6 @@ h1 {
 }
 
 @media (min-width: 43.75rem) {
-
   h1 {
     font-size: 3.75rem;
     line-height: var(--sp4);
@@ -92,7 +91,6 @@ h2 {
 }
 
 @media (min-width: 43.75rem) {
-
   h2 {
     font-size: 2.25rem;
     line-height: var(--sp3);
@@ -105,7 +103,6 @@ h3 {
 }
 
 @media (min-width: 43.75rem) {
-
   h3 {
     font-size: 1.5rem;
     line-height: var(--sp2);
@@ -140,7 +137,6 @@ h6 {
 }
 
 @media (min-width: 43.75rem) {
-
   h1,
   h2,
   h3,

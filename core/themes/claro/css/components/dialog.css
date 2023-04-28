@@ -26,7 +26,8 @@
   box-shadow: var(--jui-dialog--focus-box-shadow);
 }
 
-@media all and (max-width: 48em) { /* 768px */
+@media all and (max-width: 48em) {
+  /* 768px */
   .ui-dialog:not(.ui-dialog-off-canvas) {
     min-width: 92%;
     max-width: 92%;

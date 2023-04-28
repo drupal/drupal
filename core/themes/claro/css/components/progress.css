@@ -62,14 +62,12 @@
 }
 
 @media screen and (prefers-reduced-motion: reduce) {
-
   .progress__bar {
     transition: none;
   }
 }
 
 @media (forced-colors: active) {
-
   .progress__bar {
     background-color: canvastext;
   }

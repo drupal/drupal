@@ -34,7 +34,6 @@ input[type="radio"]:focus {
 }
 
 @supports (outline-style: double) {
-
   input[type="checkbox"]:focus,
   input[type="radio"]:focus {
     border-width: 1px;

@@ -34,14 +34,12 @@
 }
 
 @media (min-width: 75rem) {
-
-:root {
+  :root {
     --container-padding: var(--sp2);
-}
   }
+}
 
 :root {
-
   /**
    * Grid helpers.
    *
@@ -57,36 +55,31 @@
 }
 
 @media (min-width: 43.75rem) {
-
-:root {
+  :root {
     --grid-col-count: 14;
     --grid-gap: var(--sp2);
-}
   }
+}
 
 @media (min-width: 62.5rem) {
-
-:root {
+  :root {
     --scrollbar-width: 0.9375rem; /* Approximate width of a scrollbar. Doesn't have to be perfect. */
-}
   }
+}
 
 @media (min-width: 75rem) {
-
-:root {
+  :root {
     --grid-full-width: calc(100vw - var(--scrollbar-width) - var(--content-left) - var(--sp4));
-}
   }
+}
 
 @media (min-width: 90rem) {
-
-:root {
+  :root {
     --grid-full-width: calc(var(--max-width) - var(--sp4));
-}
   }
+}
 
 :root {
-
   /* Layout helpers */
   --sp0-25: calc(0.25 * var(--sp));
   --sp0-5: calc(0.5 * var(--sp));

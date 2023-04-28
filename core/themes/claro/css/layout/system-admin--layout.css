@@ -34,7 +34,7 @@
   }
   .toolbar-tray-open:not(.toolbar-vertical) .layout-column,
   body:not(.toolbar-tray-open) .layout-column {
-    float: left;  /* LTR */
+    float: left; /* LTR */
     box-sizing: border-box;
     padding-right: 1.5em;
     padding-left: 1.5em;
@@ -67,7 +67,7 @@
     margin-left: -1.5em;
   }
   .layout-column {
-    float: left;  /* LTR */
+    float: left; /* LTR */
     box-sizing: border-box;
     padding-right: 1.5em;
     padding-left: 1.5em;

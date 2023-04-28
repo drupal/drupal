@@ -15,7 +15,6 @@
 }
 
 @media (min-width: 47.9375rem) {
-
   #drupal-off-canvas-wrapper.workspaces-dialog .ui-dialog-content > div {
     display: flex;
     align-items: flex-end;
@@ -53,7 +52,6 @@
 }
 
 @media (min-width: 47.9375rem) {
-
   #drupal-off-canvas-wrapper.workspaces-dialog .active-workspace {
     display: flex;
     flex-direction: column;
@@ -91,7 +89,6 @@
 }
 
 @media (min-width: 47.9375rem) {
-
   #drupal-off-canvas-wrapper.workspaces-dialog .active-workspace__label::before {
     width: 2.5rem;
     height: 2.5rem;
@@ -114,7 +111,6 @@
 }
 
 @media (min-width: 47.9375rem) {
-
   #drupal-off-canvas-wrapper.workspaces-dialog .all-workspaces {
     grid-row: 1;
     grid-column: 2;
@@ -139,7 +135,6 @@
 }
 
 @media (min-width: 47.9375rem) {
-
   #drupal-off-canvas-wrapper.workspaces-dialog .workspaces ul {
     flex-direction: row;
   }
@@ -150,7 +145,6 @@
 }
 
 @media (min-width: 47.9375rem) {
-
   #drupal-off-canvas-wrapper.workspaces-dialog .workspaces {
     display: grid;
     flex-grow: 8;
@@ -199,7 +193,6 @@
 }
 
 @media (max-width: 47.9375rem) {
-
   #drupal-off-canvas-wrapper.workspaces-dialog {
     height: 100% !important;
   }

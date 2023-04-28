@@ -27,7 +27,6 @@
 }
 
 @media (forced-colors: active) {
-
   #drupal-off-canvas-wrapper .ajax-progress,
   #drupal-off-canvas-wrapper .ajax-progress-throbber {
     border-top-color: transparent;

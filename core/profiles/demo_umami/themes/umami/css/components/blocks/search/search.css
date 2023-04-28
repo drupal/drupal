@@ -128,8 +128,7 @@
 .search-block-form .form-submit {
   margin: 0;
   padding: 0.6em 1.25em 0.4em;
-  transition: background-color 0.5s ease;
-  transition: border 0.5s ease;
+  transition: background-color 0.5s ease, border 0.5s ease;
   color: #000;
   border: 2px solid #fff;
   background-color: #fff;

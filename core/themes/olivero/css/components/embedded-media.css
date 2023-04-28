@@ -27,7 +27,6 @@ figcaption {
 }
 
 @media (min-width: 31.25rem) {
-
   figcaption {
     padding-block: var(--sp);
     padding-inline-start: var(--sp);
@@ -44,7 +43,6 @@ figcaption {
 }
 
 @media (min-width: 43.75rem) {
-
   .align-right {
     float: right; /* LTR */
     max-width: 50%;
@@ -72,7 +70,6 @@ figcaption {
 /* @todo this can be simplified. */
 
 @media (min-width: 43.75rem) {
-
   .layout--content-narrow .align-right,
   .layout--pass--content-narrow > * .align-right {
     margin-inline-end: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))));
@@ -80,7 +77,6 @@ figcaption {
 }
 
 @media (min-width: 62.5rem) {
-
   .layout--content-narrow .align-right,
   .layout--pass--content-narrow > * .align-right {
     margin-inline-end: calc(-2 * ((var(--grid-col-width) + var(--grid-gap))));
@@ -88,7 +84,6 @@ figcaption {
 }
 
 @media (min-width: 75rem) {
-
   .layout--content-narrow .align-right,
   .layout--pass--content-narrow > * .align-right {
     margin-inline-end: calc(-3 * ((var(--grid-col-width) + var(--grid-gap))));
@@ -96,7 +91,6 @@ figcaption {
 }
 
 @media (min-width: 90rem) {
-
   .layout--content-narrow .align-right,
   .layout--pass--content-narrow > * .align-right {
     margin-inline-end: calc(-3 * ((var(--grid-col-width) + var(--grid-gap))));
@@ -113,7 +107,6 @@ figcaption {
 }
 
 @media (min-width: 43.75rem) {
-
   .align-left {
     float: left; /* LTR */
     max-width: 50%;
@@ -139,7 +132,6 @@ figcaption {
 /* Pull out of grid if nested in content narrow layout. */
 
 @media (min-width: 43.75rem) {
-
   .layout--content-narrow .align-left,
   .layout--pass--content-narrow > * .align-left {
     margin-inline-start: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))));

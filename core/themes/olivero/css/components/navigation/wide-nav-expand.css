@@ -15,7 +15,6 @@
 }
 
 @media (min-width: 75rem) {
-
   .wide-nav-expand {
     display: flex;
     visibility: hidden;
@@ -38,14 +37,12 @@
 }
 
 @media (min-width: 75rem) {
-
   body:not(.is-always-mobile-nav) .is-fixed .wide-nav-expand {
     visibility: visible;
   }
 }
 
 @media (min-width: 75rem) {
-
   body.is-always-mobile-nav .wide-nav-expand {
     visibility: hidden;
   }

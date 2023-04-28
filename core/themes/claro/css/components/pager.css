@@ -96,7 +96,6 @@
   background-repeat: no-repeat;
   background-position: center;
 }
-
 @media (forced-colors: active) {
   .pager__item--first .pager__link::before,
   .pager__item--previous .pager__link::before,
@@ -137,7 +136,6 @@
 .pager__item-title--forward {
   margin-inline-end: 0.5rem;
 }
-
 @media (forced-colors: active) {
   .pager__item a:hover {
     text-decoration: underline;

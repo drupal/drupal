@@ -38,7 +38,8 @@
   position: absolute !important;
 }
 
-.skip-link.focusable:focus { /* Override position from module file. */
+.skip-link.focusable:focus {
+  /* Override position from module file. */
   z-index: 503;
   width: 100%;
   height: 2.5rem;

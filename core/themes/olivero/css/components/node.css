@@ -24,7 +24,6 @@
 }
 
 @media (min-width: 31.25rem) {
-
   .node__meta {
     margin-block-end: var(--sp2);
   }
@@ -64,7 +63,6 @@
 }
 
 @media (min-width: 62.5rem) {
-
   .node__content {
     padding-block-end: var(--sp3);
   }

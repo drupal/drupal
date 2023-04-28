@@ -12,7 +12,6 @@
  */
 
 @media (min-width: 75rem) {
-
   .social-bar {
     flex-shrink: 0;
     width: var(--content-left);
@@ -28,7 +27,6 @@
 }
 
 @media (min-width: 75rem) {
-
   .social-bar__inner {
     position: relative;
     width: var(--content-left);
@@ -50,7 +48,6 @@
 }
 
 @media (min-width: 75rem) {
-
   .rotate > * {
     display: flex;
     align-items: center;
@@ -63,7 +60,6 @@
 }
 
 @media (min-width: 75rem) {
-
   .rotate .contextual {
     inset-inline: 100% auto;
     transform: rotate(90deg); /* LTR */
@@ -88,7 +84,6 @@
 }
 
 @media (min-width: 75rem) {
-
   .rotate {
     position: absolute;
     inset-inline-start: 50%;
@@ -100,7 +95,6 @@
   }
 
   @supports (width: max-content) {
-
     .rotate {
       width: max-content;
     }

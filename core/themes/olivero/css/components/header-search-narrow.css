@@ -56,7 +56,6 @@
 }
 
 @media (min-width: 43.75rem) {
-
   .block-search-narrow input[type="search"] {
     height: calc(4 * var(--sp));
     padding-inline-start: var(--sp2);
@@ -114,7 +113,6 @@
 }
 
 @media (forced-colors: active) {
-
   .block-search-narrow .search-form__submit .icon--search {
     background: buttontext;
     -webkit-mask-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='26' height='27.2' viewBox='0 0 26 27.2'%3e  %3cpath fill='%23fff' d='M25.8,25.5l-5.3-5.3c2.1-2.1,3.4-5.1,3.4-8.3C23.9,5.3,18.5,0,11.9,0C5.3,0,0,5.3,0,11.9c0,6.6,5.3,11.9,11.9,11.9c2.6,0,5.1-0.9,7-2.3l5.4,5.4c0.4,0.4,1,0.4,1.4,0C26.1,26.6,26.1,25.9,25.8,25.5z M11.9,21.9c-5.5,0-9.9-4.4-9.9-9.9S6.4,2,11.9,2c5.5,0,9.9,4.4,9.9,9.9S17.4,21.9,11.9,21.9z'/%3e%3c/svg%3e");
@@ -137,7 +135,6 @@
 }
 
 @media screen and (-ms-high-contrast: active) {
-
   .block-search-narrow .search-form__submit:focus {
     border-bottom-width: var(--sp0-5);
   }
@@ -148,7 +145,6 @@
 }
 
 @media (min-width: 43.75rem) {
-
   .block-search-narrow .search-form__submit {
     width: 5rem;
   }
@@ -174,7 +170,6 @@
 /* 500px is the width of the primary nav at mobile. */
 
 @media (min-width: 31.25rem) {
-
   .block-search-narrow {
     margin-inline-start: 0;
     margin-inline-end: 0;
@@ -182,7 +177,6 @@
 }
 
 @media (min-width: 75rem) {
-
   body:not(.is-always-mobile-nav) .block-search-narrow {
     display: none;
   }

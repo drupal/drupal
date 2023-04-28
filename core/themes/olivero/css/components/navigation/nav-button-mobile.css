@@ -39,7 +39,6 @@
 }
 
 @media (min-width: 31.25rem) {
-
   .mobile-nav-button {
     display: inline-flex;
     width: auto;
@@ -60,7 +59,6 @@
 }
 
 @media (min-width: 31.25rem) {
-
   .mobile-nav-button__label {
     position: static;
     overflow: visible;

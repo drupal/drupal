@@ -5,6 +5,7 @@
   ],
   "rules": {
     "alpha-value-notation": "number",
+    "at-rule-empty-line-before": null,
     "color-function-notation": "legacy",
     "comment-empty-line-before": null,
     "custom-property-pattern": "^[a-z][-_a-z0-9IE]*$",
@@ -23,7 +24,7 @@
       ]
     }],
     "media-feature-name-no-vendor-prefix": null,
-    "number-leading-zero": "always",
+    "media-feature-range-notation": "prefix",
     "number-max-precision": 5,
     "order/order": [
       "custom-properties",
@@ -378,7 +379,6 @@
     "selector-id-pattern": "^[a-z][-_a-z0-9]*$",
     "selector-no-vendor-prefix": null,
     "shorthand-property-no-redundant-values": null,
-    "string-quotes": "double",
     "unit-allowed-list": ["ch", "deg", "dpcm", "em", "ex", "fr", "ms", "rem", "%", "s", "px", "vw", "vh"],
     "value-keyword-case": ["lower", {
       "camelCaseSvgKeywords": true,

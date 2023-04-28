@@ -27,7 +27,6 @@
 }
 
 @media (min-width: 43.75rem) {
-
   .node--type-book .links.inline {
     text-align: end;
   }

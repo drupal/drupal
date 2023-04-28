@@ -42,7 +42,6 @@
 }
 
 @media (forced-colors: active) {
-
   .breadcrumb__item + .breadcrumb__item::before {
     width: 0.3125rem; /* Width and height of the SVG. */
     height: 0.5rem;

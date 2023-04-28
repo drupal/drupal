@@ -42,7 +42,6 @@ body.is-fixed .container {
 /* Contains the social sidebar, and the primary content area. */
 
 @media (min-width: 75rem) {
-
   .layout-main {
     display: flex;
     flex-direction: row-reverse;
@@ -51,7 +50,6 @@ body.is-fixed .container {
 }
 
 @media (min-width: 75rem) {
-
   .main-content {
     width: calc(100% - var(--content-left));
     margin-inline-end: auto;
@@ -63,7 +61,6 @@ body.is-fixed .container {
 }
 
 @media (min-width: 43.75rem) {
-
   .main-content__container {
     padding-block-start: var(--sp5);
   }

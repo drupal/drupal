@@ -48,7 +48,6 @@
 }
 
 @media (forced-colors: active) {
-
   #drupal-off-canvas-wrapper .messages::before {
     background: canvastext;
     -webkit-mask-repeat: no-repeat;
@@ -90,7 +89,6 @@
 }
 
 @media (forced-colors: active) {
-
   #drupal-off-canvas-wrapper .messages--status::before {
     background: canvastext;
     -webkit-mask-image: var(--off-canvas-messages-icon-status);
@@ -107,7 +105,6 @@
 }
 
 @media (forced-colors: active) {
-
   #drupal-off-canvas-wrapper .messages--warning::before {
     background: canvastext;
     -webkit-mask-image: var(--off-canvas-messages-icon-warning);
@@ -124,7 +121,6 @@
 }
 
 @media (forced-colors: active) {
-
   #drupal-off-canvas-wrapper .messages--error::before {
     background: canvastext;
     -webkit-mask-image: var(--off-canvas-messages-icon-error);

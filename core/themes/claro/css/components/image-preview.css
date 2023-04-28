@@ -31,16 +31,8 @@
 }
 
 .image-preview img {
-  background-image:
-    linear-gradient(-45deg, var(--color-pattern) 25%, transparent 26%),
-    linear-gradient(-45deg, var(--color-pattern) 25%, transparent 26%),
-    linear-gradient(135deg, var(--color-pattern) 25%, transparent 26%),
-    linear-gradient(135deg, var(--color-pattern) 25%, transparent 26%);
-  background-position:
-    0 0,
-    var(--size-pattern-square) var(--size-pattern-square),
-    var(--size-pattern-square) var(--size-pattern-square),
-    0 0;
+  background-image: linear-gradient(-45deg, var(--color-pattern) 25%, transparent 26%), linear-gradient(-45deg, var(--color-pattern) 25%, transparent 26%), linear-gradient(135deg, var(--color-pattern) 25%, transparent 26%), linear-gradient(135deg, var(--color-pattern) 25%, transparent 26%);
+  background-position: 0 0, var(--size-pattern-square) var(--size-pattern-square), var(--size-pattern-square) var(--size-pattern-square), 0 0;
   background-size: calc(var(--size-pattern-square) * 2) calc(var(--size-pattern-square) * 2);
 }
 

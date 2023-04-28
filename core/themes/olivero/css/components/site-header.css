@@ -20,7 +20,6 @@
 }
 
 @media (min-width: 75rem) {
-
   .site-header {
     /* Necessary to keep the content from jumping up when header transitions to fixed. */
     min-height: var(--site-header-height-wide);
@@ -72,21 +71,18 @@
  */
 
 @media (min-width: 75rem) {
-
   html.js body:not(.is-always-mobile-nav) .site-header__inner {
     transition: opacity 0.3s, transform 0.3s, box-shadow 0.3s;
   }
 }
 
 @media (min-width: 75rem) {
-
   .site-header__fixable.is-expanded .site-header__inner {
     box-shadow: -36px 1px 36px rgba(0, 0, 0, 0.08); /* LTR */
   }
 }
 
 @media (min-width: 75rem) {
-
   [dir="rtl"] .site-header__fixable.is-expanded .site-header__inner {
     box-shadow: 36px 1px 36px rgba(0, 0, 0, 0.08);
   }
@@ -95,7 +91,6 @@
 /* Hide the desktop nav when it's fixed and not active. */
 
 @media (min-width: 75rem) {
-
   body:not(.is-always-mobile-nav) .site-header__fixable.is-fixed:not(.is-expanded) .site-header__inner {
     transform: translateX(-101%); /* LTR */
     opacity: 0;
@@ -103,7 +98,6 @@
 }
 
 @media (min-width: 75rem) {
-
   [dir="rtl"] body:not(.is-always-mobile-nav) .site-header__fixable.is-fixed:not(.is-expanded) .site-header__inner {
     transform: translateX(101%);
   }

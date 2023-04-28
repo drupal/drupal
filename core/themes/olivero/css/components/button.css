@@ -65,7 +65,6 @@
   */
 
 @supports (display: inline-flex) {
-
   .button {
     display: inline-flex;
     align-items: center;

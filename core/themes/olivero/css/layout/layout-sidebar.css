@@ -16,14 +16,12 @@
 }
 
 @media (min-width: 43.75rem) {
-
   .sidebar-grid > .site-main {
     grid-column: 1 / 15;
   }
 }
 
 @media (min-width: 62.5rem) {
-
   .sidebar-grid > .site-main {
     display: grid;
     grid-template-columns: repeat(8, minmax(0, 1fr));
@@ -49,14 +47,12 @@
 }
 
 @media (min-width: 43.75rem) {
-
   .sidebar-grid .region--sidebar {
     grid-column: 3 / 13;
   }
 }
 
 @media (min-width: 62.5rem) {
-
   .sidebar-grid .region--sidebar {
     grid-column: 12 / 15;
   }

@@ -30,7 +30,6 @@
 }
 
 @media (min-width: 43.75rem) {
-
   .field--tags__label {
     line-height: 2;
   }
@@ -61,7 +60,7 @@
   margin-inline-end: calc(var(--sp0-5) / 2);
 }
 
-.field--tags__item:nth-last-child(n+2)::after {
+.field--tags__item:nth-last-child(n + 2)::after {
   content: ",";
   font-size: var(--font-size-base);
   line-height: 1.5;

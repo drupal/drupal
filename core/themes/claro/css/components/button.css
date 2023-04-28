@@ -46,7 +46,7 @@
   cursor: pointer;
   text-align: center;
   text-decoration: none;
-  color: var(--button-fg-color);  /* 2 */
+  color: var(--button-fg-color); /* 2 */
   border-radius: var(--button-border-radius-size);
   background-color: var(--button-bg-color);
   font-size: var(--font-size-base);
@@ -54,7 +54,7 @@
   line-height: 1rem;
   -webkit-appearance: none;
   appearance: none;
-  -webkit-font-smoothing: antialiased;  /* 3 */
+  -webkit-font-smoothing: antialiased; /* 3 */
 }
 
 [dir="rtl"] .button {

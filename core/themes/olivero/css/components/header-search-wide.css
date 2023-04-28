@@ -139,7 +139,6 @@
 }
 
 @media screen and (-ms-high-contrast: active) {
-
   .block-search-wide__wrapper .search-form__submit:focus {
     border-bottom-width: var(--sp0-5);
   }
@@ -243,7 +242,6 @@
 }
 
 @media (forced-colors: active) {
-
   .block-search-wide__button {
     background: ButtonFace;
   }
@@ -283,7 +281,6 @@ html:not(.js) .search-block-form:focus-within .block-search-wide__wrapper {
 }
 
 @media (min-width: 75rem) {
-
   body:not(.is-always-mobile-nav) .block-search-wide__wrapper,
   body:not(.is-always-mobile-nav) .block-search-wide__button {
     display: block;

@@ -73,7 +73,8 @@ h3 {
  * Shows on both the install screen and the database update page.
  */
 
-@media all and (max-width: 48em) { /* 768px */
+@media all and (max-width: 48em) {
+  /* 768px */
   header[role="banner"] {
     position: relative;
   }
@@ -90,7 +91,8 @@ h3 {
   }
 }
 
-@media all and (min-width: 48em) { /* 768px */
+@media all and (min-width: 48em) {
+  /* 768px */
   .step-indicator {
     display: none;
   }
@@ -151,13 +153,15 @@ h3 {
   box-shadow: var(--shadow-z3);
 }
 
-.layout-container::after { /* No reason for a clearfix in the markup. */
+.layout-container::after {
+  /* No reason for a clearfix in the markup. */
   display: table;
   clear: both;
   content: "";
 }
 
-@media all and (max-width: 48em) { /* 768px */
+@media all and (max-width: 48em) {
+  /* 768px */
   .layout-container {
     margin: 1.25em;
     padding: var(--space-m) var(--space-l);
@@ -168,7 +172,8 @@ h3 {
   }
 }
 
-@media all and (min-width: 48em) { /* 768px */
+@media all and (min-width: 48em) {
+  /* 768px */
   html {
     display: table;
   }

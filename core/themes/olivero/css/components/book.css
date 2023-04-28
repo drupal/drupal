@@ -28,21 +28,18 @@
 }
 
 @media (min-width: 31.25rem) {
-
   .book-pager__item {
     flex: 0 0 33.33%;
   }
 }
 
 @media (min-width: 31.25rem) {
-
   .book-pager__item--center {
     text-align: center;
   }
 }
 
 @media (min-width: 31.25rem) {
-
   .book-pager__item--next {
     margin-inline-start: auto;
     text-align: end;

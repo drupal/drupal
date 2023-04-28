@@ -35,7 +35,6 @@
   background-position: right center;
   background-size: 2.5rem;
 }
-
 @media (forced-colors: active) {
   .system-status-counter__status-icon::before {
     background-color: canvastext;
@@ -61,7 +60,6 @@
 .system-status-counter__status-icon--checked::before {
   background-image: var(--system-status-counter-status-icon-checked);
 }
-
 @media (forced-colors: active) {
   .system-status-counter__status-icon--error::before {
     -webkit-mask-image: var(--system-status-counter-status-icon-error);
@@ -97,7 +95,6 @@
   font-weight: normal;
   line-height: 1.5;
 }
-
 @media screen and (min-width: 61rem) {
   .system-status-report-counters__item {
     padding-block: var(--space-s);

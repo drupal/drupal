@@ -18,7 +18,6 @@
 }
 
 @media (min-width: 43.75rem) {
-
   .wide-image {
     width: calc(var(--grid-col-count) * var(--grid-col-width) + var(--grid-gap-count) * var(--grid-gap));
     margin-block: var(--sp2) var(--sp4);
@@ -27,7 +26,6 @@
 }
 
 @media (min-width: 62.5rem) {
-
   .wide-image {
     width: calc(12 * var(--grid-col-width) + 11 * var(--grid-gap));
     margin-inline-start: calc(-1 * (var(--grid-col-width) + var(--grid-gap)));
@@ -37,14 +35,12 @@
 /* Ensure that image doesn't overlap sidebar. */
 
 @media (min-width: 62.5rem) {
-
   .sidebar-grid .wide-image {
     width: calc(9 * var(--grid-col-width) + 8 * var(--grid-gap));
   }
 }
 
 @media (min-width: 81.25rem) {
-
   .sidebar-grid .wide-image {
     width: calc(10 * var(--grid-col-width) + 9 * var(--grid-gap));
   }

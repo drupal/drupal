@@ -35,7 +35,6 @@
 }
 
 @media (min-width: 31.25rem) {
-
   .pager__item {
     width: var(--sp3);
     height: var(--sp3);

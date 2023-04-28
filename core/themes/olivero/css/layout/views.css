@@ -19,7 +19,6 @@
 }
 
 @media (min-width: 43.75rem) {
-
   .view > * {
     margin-block-end: var(--sp3);
   }

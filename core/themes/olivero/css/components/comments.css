@@ -74,7 +74,6 @@
 }
 
 @media (min-width: 43.75rem) {
-
   .comment {
     padding-inline-start: 0;
   }
@@ -142,7 +141,6 @@
 }
 
 @media all and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-
   .add-comment__picture img,
   .comment__picture img {
     position: absolute;
@@ -157,7 +155,6 @@
 }
 
 @media (min-width: 43.75rem) {
-
   .add-comment__picture,
   .comment__picture {
     inset-inline-start: calc(-1 * var(--sp5));
@@ -167,7 +164,6 @@
 }
 
 @media (min-width: 43.75rem) {
-
   .indented .comment__picture {
     inset-inline-start: calc(-1 * var(--sp4));
     width: var(--sp2);
@@ -214,14 +210,12 @@
 }
 
 @media (min-width: 43.75rem) {
-
   .indented > .comment:not(:last-of-type, .has-children)::before {
     inset-inline-start: calc(-1 * var(--comment-indentation--md) + var(--sp));
   }
 }
 
 @media (min-width: 43.75rem) {
-
   .indented {
     margin-inline-start: var(--comment-indentation--md);
   }
@@ -255,7 +249,6 @@
 }
 
 @media (min-width: 43.75rem) {
-
   .show-hide-btn {
     margin-inline-start: 0;
   }

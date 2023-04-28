@@ -21,7 +21,6 @@
 }
 
 @media (min-width: 43.75rem) {
-
   .layout--twocol-section > .layout__region {
     flex-grow: 0;
     flex-shrink: 0;

@@ -170,7 +170,6 @@
 }
 
 @media (min-width: 43.75rem) {
-
   .primary-nav__menu--level-2 {
     margin-inline-start: calc(-1 * var(--sp3));
     padding-inline-start: var(--sp3);

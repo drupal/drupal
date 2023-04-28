@@ -25,7 +25,6 @@
 }
 
 @media (min-width: 75rem) {
-
   .site-footer__inner {
     padding-block: var(--sp4) calc(13 * var(--sp));
   }
@@ -37,7 +36,6 @@
 }
 
 @media (min-width: 43.75rem) {
-
   .region--footer_top__inner > *,
   .region--footer_bottom__inner > * {
     flex: 1;
@@ -51,7 +49,6 @@
 }
 
 @media (min-width: 43.75rem) {
-
   .region--footer_top__inner,
   .region--footer_bottom__inner {
     display: flex;

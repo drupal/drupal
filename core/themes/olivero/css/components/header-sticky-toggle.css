@@ -18,7 +18,6 @@
 }
 
 @media (min-width: 75rem) {
-
   .sticky-header-toggle {
     display: flex;
     flex-shrink: 0;
@@ -43,14 +42,12 @@
 }
 
 @media (min-width: 75rem) {
-
   body:not(.is-always-mobile-nav) .is-fixed .sticky-header-toggle {
     visibility: visible;
   }
 }
 
 @media (min-width: 75rem) {
-
   body.is-always-mobile-nav .sticky-header-toggle {
     visibility: hidden;
   }

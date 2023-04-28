@@ -21,7 +21,6 @@
 }
 
 @media (min-width: 43.75rem) {
-
   .layout--fourcol-section > .layout__region {
     flex-basis: calc(50% - (var(--grid-gap) * 0.5));
     flex-grow: 0;
