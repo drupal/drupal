@@ -1682,7 +1682,10 @@ function form_clear_error() {
 }
 
 /**
- * Returns an associative array of all errors.
+ * Returns an associative array of all errors if any.
+ *
+ * @return array|null
+ *   The form errors if any, NULL otherwise.
  */
 function form_get_errors() {
   $form = form_set_error();
