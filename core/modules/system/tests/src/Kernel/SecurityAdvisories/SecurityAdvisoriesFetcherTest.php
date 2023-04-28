@@ -26,11 +26,11 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
   use RfcLoggerTrait;
 
   /**
-   * The log messages from watchdog_exception.
+   * The error messages.
    *
    * @var string[]
    */
-  protected $watchdogExceptionMessages = [];
+  protected $errorMessages = [];
 
   /**
    * The log error log messages.
@@ -658,7 +658,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
     $this->assertCount(1, $advisories);
     $this->assertSame('http://example.com', $advisories[0]->getUrl());
     $this->assertSame('SA title', $advisories[0]->getTitle());
-    $this->assertSame(["Server error: `GET https://updates.drupal.org/psa.json` resulted in a `500 Internal Server Error` response:\nHTTPS failed\n"], $this->watchdogExceptionMessages);
+    $this->assertSame(["Server error: `GET https://updates.drupal.org/psa.json` resulted in a `500 Internal Server Error` response:\nHTTPS failed\n"], $this->errorMessages);
   }
 
   /**
@@ -745,7 +745,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
    */
   public function log($level, $message, array $context = []): void {
     if (isset($context['@message'])) {
-      $this->watchdogExceptionMessages[] = $context['@message'];
+      $this->errorMessages[] = $context['@message'];
     }
     if ($level === RfcLogLevel::ERROR) {
       $this->logErrorMessages[] = $message;

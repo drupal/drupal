@@ -14,16 +14,17 @@ use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityBundleListenerInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Entity\Schema\DynamicallyFieldableEntityStorageSchemaInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Utility\Error;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -758,7 +759,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       if (isset($transaction)) {
         $transaction->rollBack();
       }
-      watchdog_exception($this->entityTypeId, $e);
+      Error::logException(\Drupal::logger($this->entityTypeId), $e);
       throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
     }
   }
@@ -812,7 +813,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       if (isset($transaction)) {
         $transaction->rollBack();
       }
-      watchdog_exception($this->entityTypeId, $e);
+      Error::logException(\Drupal::logger($this->entityTypeId), $e);
       throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
     }
   }
@@ -861,7 +862,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       if (isset($transaction)) {
         $transaction->rollBack();
       }
-      watchdog_exception($this->entityTypeId, $e);
+      Error::logException(\Drupal::logger($this->entityTypeId), $e);
       throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
     }
   }

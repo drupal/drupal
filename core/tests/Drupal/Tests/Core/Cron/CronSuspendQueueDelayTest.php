@@ -70,7 +70,7 @@ final class CronSuspendQueueDelayTest extends UnitTestCase {
       'queue_config' => [],
     ];
 
-    // Capture logs to watchdog_exception().
+    // Capture error logs.
     $config = $this->createMock(ImmutableConfig::class);
     $config->expects($this->any())
       ->method('get')

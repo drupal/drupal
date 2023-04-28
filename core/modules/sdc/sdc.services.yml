@@ -8,6 +8,7 @@ services:
   Drupal\sdc\Twig\TwigComponentLoader:
     arguments:
       - '@plugin.manager.sdc'
+      - '@logger.channel.default'
     tags:
       - { name: twig.loader, priority: 5 }
 

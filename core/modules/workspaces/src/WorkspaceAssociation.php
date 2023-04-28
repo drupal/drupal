@@ -6,8 +6,10 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
+use Drupal\Core\Utility\Error;
 use Drupal\workspaces\Event\WorkspacePostPublishEvent;
 use Drupal\workspaces\Event\WorkspacePublishEvent;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -50,11 +52,17 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
    *   The entity type manager for querying revisions.
    * @param \Drupal\workspaces\WorkspaceRepositoryInterface $workspace_repository
    *   The Workspace repository service.
+   * @param \Psr\Log\LoggerInterface|null $logger
+   *   The logger.
    */
-  public function __construct(Connection $connection, EntityTypeManagerInterface $entity_type_manager, WorkspaceRepositoryInterface $workspace_repository) {
+  public function __construct(Connection $connection, EntityTypeManagerInterface $entity_type_manager, WorkspaceRepositoryInterface $workspace_repository, protected ?LoggerInterface $logger = NULL) {
     $this->database = $connection;
     $this->entityTypeManager = $entity_type_manager;
     $this->workspaceRepository = $workspace_repository;
+    if ($this->logger === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $logger argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/2932520', E_USER_DEPRECATED);
+      $this->logger = \Drupal::service('logger.channel.workspaces');
+    }
   }
 
   /**
@@ -116,7 +124,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       if (isset($transaction)) {
         $transaction->rollBack();
       }
-      watchdog_exception('workspaces', $e);
+      Error::logException($this->logger, $e);
       throw $e;
     }
   }

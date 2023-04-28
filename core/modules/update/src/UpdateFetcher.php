@@ -5,8 +5,10 @@ namespace Drupal\update;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\Utility\Error;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
+use Psr\Log\LoggerInterface;
 
 /**
  * Fetches project information from remote locations.
@@ -57,12 +59,18 @@ class UpdateFetcher implements UpdateFetcherInterface {
    *   A Guzzle client object.
    * @param \Drupal\Core\Site\Settings $settings
    *   The settings instance.
+   * @param \Psr\Log\LoggerInterface|null $logger
+   *   The logger.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ClientInterface $http_client, Settings $settings) {
+  public function __construct(ConfigFactoryInterface $config_factory, ClientInterface $http_client, Settings $settings, protected ?LoggerInterface $logger = NULL) {
     $this->fetchUrl = $config_factory->get('update.settings')->get('fetch.url');
     $this->httpClient = $http_client;
     $this->updateSettings = $config_factory->get('update.settings');
     $this->withHttpFallback = $settings->get('update_fetch_with_http_fallback', FALSE);
+    if ($this->logger === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $logger argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/2932520', E_USER_DEPRECATED);
+      $this->logger = \Drupal::service('logger.channel.update');
+    }
   }
 
   /**
@@ -97,7 +105,7 @@ class UpdateFetcher implements UpdateFetcherInterface {
         ->getBody();
     }
     catch (TransferException $exception) {
-      watchdog_exception('update', $exception);
+      Error::logException($this->logger, $exception);
       if ($with_http_fallback && !str_contains($url, "http://")) {
         $url = str_replace('https://', 'http://', $url);
         return $this->doRequest($url, $options, FALSE);

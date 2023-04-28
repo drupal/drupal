@@ -6,10 +6,10 @@ services:
       - { name: service_id_collector, tag: workspace_negotiator }
   workspaces.operation_factory:
     class: Drupal\workspaces\WorkspaceOperationFactory
-    arguments: ['@entity_type.manager', '@database', '@workspaces.manager', '@workspaces.association', '@cache_tags.invalidator', '@event_dispatcher']
+    arguments: ['@entity_type.manager', '@database', '@workspaces.manager', '@workspaces.association', '@cache_tags.invalidator', '@event_dispatcher', '@logger.channel.workspaces']
   workspaces.association:
     class: Drupal\workspaces\WorkspaceAssociation
-    arguments: ['@database', '@entity_type.manager', '@workspaces.repository']
+    arguments: ['@database', '@entity_type.manager', '@workspaces.repository', '@logger.channel.workspaces']
     tags:
       - { name: backend_overridable }
       - { name: event_subscriber }

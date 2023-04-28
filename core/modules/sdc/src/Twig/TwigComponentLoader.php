@@ -2,9 +2,11 @@
 
 namespace Drupal\sdc\Twig;
 
+use Drupal\Core\Utility\Error;
 use Drupal\sdc\ComponentPluginManager;
 use Drupal\sdc\Exception\ComponentNotFoundException;
 use Drupal\Component\Discovery\YamlDirectoryDiscovery;
+use Psr\Log\LoggerInterface;
 use Twig\Error\LoaderError;
 use Twig\Loader\LoaderInterface;
 use Twig\Source;
@@ -21,8 +23,13 @@ final class TwigComponentLoader implements LoaderInterface {
    *
    * @param \Drupal\sdc\ComponentPluginManager $pluginManager
    *   The plugin manager.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   The logger.
    */
-  public function __construct(protected ComponentPluginManager $pluginManager) {}
+  public function __construct(
+    protected ComponentPluginManager $pluginManager,
+    protected LoggerInterface $logger,
+  ) {}
 
   /**
    * Finds a template in the file system based on the template name.
@@ -69,7 +76,7 @@ final class TwigComponentLoader implements LoaderInterface {
       return TRUE;
     }
     catch (ComponentNotFoundException $e) {
-      watchdog_exception('sdc', $e);
+      Error::logException($this->logger, $e);
       return FALSE;
     }
   }

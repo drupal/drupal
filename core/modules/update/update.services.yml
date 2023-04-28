@@ -12,7 +12,10 @@ services:
     arguments: ['@config.factory', '@queue', '@update.fetcher', '@state', '@private_key', '@keyvalue', '@keyvalue.expirable']
   update.fetcher:
     class: Drupal\update\UpdateFetcher
-    arguments: ['@config.factory', '@http_client', '@settings']
+    arguments: ['@config.factory', '@http_client', '@settings', '@logger.channel.update']
   update.root:
     class: Drupal\update\UpdateRoot
     arguments: ['@kernel', '@request_stack']
+  logger.channel.update:
+    parent: logger.channel_base
+    arguments: [ 'update' ]

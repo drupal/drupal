@@ -7,17 +7,18 @@ use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\Timer;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
-use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Queue\DelayableQueueInterface;
+use Drupal\Core\Queue\DelayedRequeueException;
+use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Queue\QueueInterface;
 use Drupal\Core\Queue\QueueWorkerInterface;
 use Drupal\Core\Queue\QueueWorkerManagerInterface;
-use Drupal\Core\Queue\DelayedRequeueException;
 use Drupal\Core\Queue\RequeueException;
 use Drupal\Core\Queue\SuspendQueueException;
 use Drupal\Core\Session\AccountSwitcherInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\State\StateInterface;
+use Drupal\Core\Utility\Error;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -298,7 +299,7 @@ class Cron implements CronInterface {
       catch (\Exception $e) {
         // In case of any other kind of exception, log it and leave the item
         // in the queue to be processed again later.
-        watchdog_exception('cron', $e);
+        Error::logException($this->logger, $e);
       }
     }
   }
@@ -334,7 +335,7 @@ class Cron implements CronInterface {
         $hook();
       }
       catch (\Exception $e) {
-        watchdog_exception('cron', $e);
+        Error::logException($this->logger, $e);
       }
 
       Timer::stop('cron_' . $module);

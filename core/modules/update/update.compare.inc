@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Extension\ExtensionVersion;
+use Drupal\Core\Utility\Error;
 use Drupal\update\ProjectRelease;
 use Drupal\update\UpdateFetcherInterface;
 use Drupal\update\UpdateManagerInterface;
@@ -363,12 +364,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
     catch (UnexpectedValueException $exception) {
       // Ignore releases that are in an invalid format. Although this is highly
       // unlikely we should still process releases in the correct format.
-      watchdog_exception(
-        'update',
-        $exception,
-        'Invalid project format: @release',
-        ['@release' => print_r($release_info, TRUE)]
-      );
+      Error::logException(\Drupal::logger('update'), $exception, 'Invalid project format: @release', ['@release' => print_r($release_info, TRUE)]);
       continue;
     }
 

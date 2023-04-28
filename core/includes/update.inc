@@ -175,9 +175,9 @@ function update_do_one($module, $number, $dependency_map, &$context) {
     // return the message for printing.
     // @see https://www.drupal.org/node/2564311
     catch (Exception $e) {
-      watchdog_exception('update', $e);
-
       $variables = Error::decodeException($e);
+      \Drupal::logger('update')->error(Error::DEFAULT_ERROR_MESSAGE, $variables);
+
       unset($variables['backtrace'], $variables['exception'], $variables['severity_level']);
       $ret['#abort'] = ['success' => FALSE, 'query' => t(Error::DEFAULT_ERROR_MESSAGE, $variables)];
     }
@@ -244,9 +244,8 @@ function update_invoke_post_update($function, &$context) {
     // for printing.
     // @see https://www.drupal.org/node/2564311
     catch (Exception $e) {
-      watchdog_exception('update', $e);
-
       $variables = Error::decodeException($e);
+      \Drupal::logger('update')->error(Error::DEFAULT_ERROR_MESSAGE, $variables);
       unset($variables['backtrace'], $variables['exception'], $variables['severity_level']);
       $ret['#abort'] = [
         'success' => FALSE,

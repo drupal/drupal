@@ -4,6 +4,8 @@ namespace Drupal\Core\Routing;
 
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\State\StateInterface;
+use Drupal\Core\Utility\Error;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\RouteCollection;
 
 use Drupal\Core\Database\Connection;
@@ -44,6 +46,13 @@ class MatcherDumper implements MatcherDumperInterface {
   protected $tableName;
 
   /**
+   * The logger.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected LoggerInterface $logger;
+
+  /**
    * Construct the MatcherDumper.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -51,14 +60,25 @@ class MatcherDumper implements MatcherDumperInterface {
    *   information.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state.
+   * @param \Psr\Log\LoggerInterface|null $logger
+   *   The logger.
    * @param string $table
    *   (optional) The table to store the route info in. Defaults to 'router'.
    */
-  public function __construct(Connection $connection, StateInterface $state, $table = 'router') {
+  public function __construct(Connection $connection, StateInterface $state, LoggerInterface|string|null $logger = NULL, $table = 'router') {
     $this->connection = $connection;
     $this->state = $state;
-
-    $this->tableName = $table;
+    if (is_string($logger) || is_null($logger)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $logger argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/2932520', E_USER_DEPRECATED);
+      $this->logger = \Drupal::service('logger.channel.router');
+      $this->tableName = $logger;
+    }
+    else {
+      $this->logger = $logger;
+    }
+    if (is_null($this->tableName)) {
+      $this->tableName = $table;
+    }
   }
 
   /**
@@ -152,7 +172,7 @@ class MatcherDumper implements MatcherDumperInterface {
       if (isset($transaction)) {
         $transaction->rollBack();
       }
-      watchdog_exception('Routing', $e);
+      Error::logException($this->logger, $e);
       throw $e;
     }
     // Sort the masks so they are in order of descending fit.

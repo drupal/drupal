@@ -201,8 +201,8 @@ use Drupal\Core\Database\Query\SelectInterface;
  *       $transaction->rollBack();
  *     }
  *
- *     // Log the exception to watchdog.
- *     watchdog_exception('type', $e);
+ *     // Log the exception.
+ *     Error::logException(\Drupal::logger('type'), $e);
  *   }
  *
  *   // $transaction goes out of scope here. Unless the transaction was rolled

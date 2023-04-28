@@ -494,6 +494,12 @@ services:
   logger.channel.security:
     parent: logger.channel_base
     arguments: ['security']
+  logger.channel.menu:
+    parent: logger.channel_base
+    arguments: ['menu']
+  logger.channel.router:
+    parent: logger.channel_base
+    arguments: ['router']
   logger.log_message_parser:
     class: Drupal\Core\Logger\LogMessageParser
   Drupal\Core\Logger\LogMessageParserInterface: '@logger.log_message_parser'
@@ -586,7 +592,7 @@ services:
     class: Drupal\Core\Extension\ModuleInstaller
     tags:
       - { name: service_collector, tag: 'module_install.uninstall_validator', call: addUninstallValidator }
-    arguments: ['%app.root%', '@module_handler', '@kernel', '@database', '@update.update_hook_registry']
+    arguments: ['%app.root%', '@module_handler', '@kernel', '@database', '@update.update_hook_registry', '@logger.channel.default']
     lazy: true
   Drupal\Core\Extension\ModuleInstallerInterface: '@module_installer'
   extension.list.module:
@@ -1055,7 +1061,7 @@ services:
     arguments: ['@keyvalue']
   router.dumper:
     class: Drupal\Core\Routing\MatcherDumper
-    arguments: ['@database', '@state']
+    arguments: ['@database', '@state', '@logger.channel.router']
     tags:
       - { name: backend_overridable }
     lazy: true
@@ -1069,7 +1075,7 @@ services:
   Drupal\Core\Routing\RouteBuilderInterface: '@router.builder'
   menu.rebuild_subscriber:
     class: Drupal\Core\EventSubscriber\MenuRouterRebuildSubscriber
-    arguments: ['@lock', '@plugin.manager.menu.link', '@database', '@database.replica_kill_switch']
+    arguments: ['@lock', '@plugin.manager.menu.link', '@database', '@database.replica_kill_switch', '@logger.channel.menu']
     tags:
       - { name: event_subscriber }
   path.matcher:

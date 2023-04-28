@@ -5,8 +5,10 @@ namespace Drupal\workspaces;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Utility\Error;
 use Drupal\workspaces\Event\WorkspacePostPublishEvent;
 use Drupal\workspaces\Event\WorkspacePrePublishEvent;
+use Psr\Log\LoggerInterface;
 
 /**
  * Default implementation of the workspace publisher.
@@ -74,8 +76,10 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
    *   The event dispatcher.
    * @param \Drupal\workspaces\WorkspaceInterface $source
    *   The source workspace entity.
+   * @param \Psr\Log\LoggerInterface|null $logger
+   *   The logger.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, Connection $database, WorkspaceManagerInterface $workspace_manager, WorkspaceAssociationInterface $workspace_association, $event_dispatcher, WorkspaceInterface $source = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, Connection $database, WorkspaceManagerInterface $workspace_manager, WorkspaceAssociationInterface $workspace_association, $event_dispatcher, WorkspaceInterface $source = NULL, protected ?LoggerInterface $logger = NULL) {
     $this->entityTypeManager = $entity_type_manager;
     $this->database = $database;
     $this->workspaceManager = $workspace_manager;
@@ -87,6 +91,10 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
     }
     $this->eventDispatcher = $event_dispatcher;
     $this->sourceWorkspace = $source;
+    if ($this->logger === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $logger argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/2932520', E_USER_DEPRECATED);
+      $this->logger = \Drupal::service('logger.channel.workspaces');
+    }
   }
 
   /**
@@ -142,7 +150,7 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
       if (isset($transaction)) {
         $transaction->rollBack();
       }
-      watchdog_exception('workspaces', $e);
+      Error::logException($this->logger, $e);
       throw $e;
     }
 
