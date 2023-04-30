@@ -14,14 +14,6 @@
 
 {{ attach_library('olivero/feed') }}
 
-{#
-  @todo - This works around https://www.drupal.org/project/drupal/issues/3156244,
-  Title variable isn't set by Syndicate block.
- #}
-{% if title is not defined or title is null %}
-  {% set title = 'RSS Feed'|t %}
-{% endif %}
-
 <a href="{{ url }}"{{ attributes.addClass('feed-icon') }}>
   <span class="feed-icon__label">
     {{ title }}
