@@ -451,7 +451,7 @@ class UrlGenerator implements UrlGeneratorInterface {
    * @return string
    *   Either the route name, or a string that uniquely identifies the route.
    *
-   * @todo Remove in https://www.drupal.org/i/3151019
+   * @todo Remove in https://www.drupal.org/project/drupal/issues/3339710
    *
    * @internal
    */
