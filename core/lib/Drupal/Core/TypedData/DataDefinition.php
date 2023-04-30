@@ -78,7 +78,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
   /**
    * Sets the human-readable label.
    *
-   * @param string $label
+   * @param string|\Drupal\Core\StringTranslation\TranslatableMarkup $label
    *   The label to set.
    *
    * @return static
@@ -99,7 +99,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
   /**
    * Sets the human-readable description.
    *
-   * @param string $description
+   * @param string|\Drupal\Core\StringTranslation\TranslatableMarkup $description
    *   The description to set.
    *
    * @return static
