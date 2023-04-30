@@ -73,8 +73,7 @@ class ViewElementTest extends ViewTestBase {
   }
 
   /**
-   * Tests the rendered output and form output of a view element, using the
-   * embed display plugin.
+   * Tests the rendered output and form output of the "embed" display plugin.
    */
   public function testViewElementEmbed() {
     $view = Views::getView('test_view_embed');

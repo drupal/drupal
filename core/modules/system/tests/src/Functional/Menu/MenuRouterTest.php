@@ -224,8 +224,10 @@ class MenuRouterTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that an authenticated user hitting 'user/login' gets redirected to
-   * 'user' and 'user/register' gets redirected to the user edit page.
+   * Tests authenticated user login redirects.
+   *
+   * An authenticated user hitting 'user/login' should be redirected to 'user',
+   * and 'user/register' should be redirected to the user edit page.
    */
   public function testAuthUserUserLogin() {
     $web_user = $this->drupalCreateUser([]);
@@ -267,8 +269,7 @@ class MenuRouterTest extends BrowserTestBase {
   }
 
   /**
-   * Tests the theme negotiation when it is set to use an administrative
-   * theme.
+   * Tests theme negotiation for an administrative theme.
    */
   protected function doTestThemeCallbackAdministrative() {
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');

@@ -42,8 +42,7 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
   }
 
   /**
-   * Assert that all of the specified hook_file_* hooks were called once, other
-   * values result in failure.
+   * Asserts that the specified file hooks were called only once.
    *
    * @param array $expected
    *   Array with string containing with the hook name, e.g. 'load', 'save',
@@ -146,8 +145,7 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
   }
 
   /**
-   * Create a file and save it to the files table and assert that it occurs
-   * correctly.
+   * Creates and saves a file, asserting that it was saved.
    *
    * @param string $filepath
    *   Optional string specifying the file path. If none is provided then a

@@ -405,8 +405,7 @@ class DbLogTest extends BrowserTestBase {
   }
 
   /**
-   * Tests the escaping of links in the operation row of a database log detail
-   * page.
+   * Tests link escaping in the operation row of a database log detail page.
    */
   private function verifyLinkEscaping() {
     $link = Link::fromTextAndUrl('View', Url::fromRoute('entity.node.canonical', ['node' => 1]))->toString();

@@ -1462,8 +1462,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
 }
 
 /**
- * Provides an entity with dummy implementations of static methods, because
- * those cannot be mocked.
+ * Provides an entity with dummy implementations of static methods.
  */
 abstract class SqlContentEntityStorageTestEntityInterface implements EntityInterface {
 

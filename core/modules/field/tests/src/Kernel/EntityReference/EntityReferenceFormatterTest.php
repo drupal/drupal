@@ -409,7 +409,9 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
   }
 
   /**
-   * Sets field values and returns a render array as built by
+   * Sets field values and returns a render array.
+   *
+   * The render array structure is as built by
    * \Drupal\Core\Field\FieldItemListInterface::view().
    *
    * @param \Drupal\Core\Entity\EntityInterface[] $referenced_entities

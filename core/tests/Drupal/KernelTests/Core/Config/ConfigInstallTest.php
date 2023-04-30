@@ -227,8 +227,7 @@ class ConfigInstallTest extends KernelTestBase {
   }
 
   /**
-   * Tests imported configuration entities with and without language
-   * information.
+   * Tests imported configuration entities with/without language information.
    */
   public function testLanguage() {
     $this->installModules(['config_test_language']);

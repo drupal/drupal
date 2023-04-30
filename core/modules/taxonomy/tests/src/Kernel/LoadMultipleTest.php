@@ -37,8 +37,7 @@ class LoadMultipleTest extends KernelTestBase {
   }
 
   /**
-   * Create a vocabulary and some taxonomy terms, ensuring they're loaded
-   * correctly using entity_load_multiple().
+   * Tests loading multiple taxonomy terms by term ID and vocabulary.
    */
   public function testTaxonomyTermMultipleLoad() {
     // Create a vocabulary.

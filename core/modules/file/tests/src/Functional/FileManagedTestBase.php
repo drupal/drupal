@@ -29,8 +29,7 @@ abstract class FileManagedTestBase extends BrowserTestBase {
   }
 
   /**
-   * Assert that all of the specified hook_file_* hooks were called once, other
-   * values result in failure.
+   * Asserts that the specified file hooks were called only once.
    *
    * @param string[] $expected
    *   An array of strings containing with the hook name; for example, 'load',
@@ -133,8 +132,7 @@ abstract class FileManagedTestBase extends BrowserTestBase {
   }
 
   /**
-   * Create a file and save it to the files table and assert that it occurs
-   * correctly.
+   * Creates and saves a file, asserting that it was saved.
    *
    * @param string $filepath
    *   Optional string specifying the file path. If none is provided then a

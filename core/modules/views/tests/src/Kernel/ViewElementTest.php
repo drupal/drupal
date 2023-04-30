@@ -70,8 +70,7 @@ class ViewElementTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Tests the rendered output and form output of a view element, using the
-   * embed display plugin.
+   * Tests the rendered output and form output of the "embed" display plugin.
    */
   public function testViewElementEmbed() {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
