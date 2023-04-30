@@ -6,6 +6,7 @@ use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Entity\Query\QueryInterface;
 
 /**
  * Defines a generic implementation to build a listing of entities.
@@ -94,6 +95,16 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
    *   An array of entity IDs.
    */
   protected function getEntityIds() {
+    return $this->getQuery()->execute();
+  }
+
+  /**
+   * Returns a query object for loading entity IDs from the storage.
+   *
+   * @return \Drupal\Core\Entity\Query\QueryInterface
+   *   A query object used to load entity IDs.
+   */
+  protected function getQuery(): QueryInterface {
     $query = $this->getStorage()->getQuery()
       ->accessCheck(TRUE)
       ->sort($this->entityType->getKey('id'));
@@ -102,7 +113,7 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
     if ($this->limit) {
       $query->pager($this->limit);
     }
-    return $query->execute();
+    return $query;
   }
 
   /**
