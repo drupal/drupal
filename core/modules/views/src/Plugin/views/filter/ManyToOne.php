@@ -114,8 +114,7 @@ class ManyToOne extends InOperator {
   }
 
   /**
-   * Override ensureMyTable so we can control how this joins in.
-   * The operator actually has influence over joining.
+   * {@inheritdoc}
    */
   public function ensureMyTable() {
     // Defer to helper if the operator specifies it.

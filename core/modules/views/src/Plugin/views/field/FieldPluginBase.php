@@ -518,8 +518,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
   }
 
   /**
-   * Default options form that provides the label widget that all fields
-   * should have.
+   * Default option form that provides label widget that all fields should have.
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
@@ -1384,8 +1383,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
   }
 
   /**
-   * Render this field as a link, with the info from a fieldset set by
-   * the user.
+   * Render this field as a link, with the info from a fieldset set by the user.
    */
   protected function renderAsLink($alter, $text, $tokens) {
     $options = [

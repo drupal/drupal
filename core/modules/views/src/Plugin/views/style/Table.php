@@ -140,6 +140,8 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
   }
 
   /**
+   * Sanitizes the columns.
+   *
    * Normalize a list of columns based upon the fields that are
    * available. This compares the fields stored in the style handler
    * to the list of fields actually in the view, removing fields that

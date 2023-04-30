@@ -679,8 +679,10 @@ class ModuleHandler implements ModuleHandlerInterface {
   }
 
   /**
-   * Verifies an array of implementations loaded from the cache, by including
-   * the lazy-loaded $module.$group.inc, and checking function_exists().
+   * Verifies an array of implementations loaded from cache.
+   *
+   * Verification is done by including the lazy-loaded $module.$group.inc file,
+   * and checking function_exists().
    *
    * @param string[] $implementations
    *   Implementation "group" by module name.

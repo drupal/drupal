@@ -102,8 +102,7 @@ class Date extends Formula implements ContainerFactoryPluginInterface {
   }
 
   /**
-   * Set the empty argument value to the current date,
-   * formatted appropriately for this argument.
+   * Gets the date default argument, formatted appropriately for this argument.
    */
   public function getDefaultArgument($raw = FALSE) {
     if (!$raw && $this->options['default_argument_type'] == 'date') {

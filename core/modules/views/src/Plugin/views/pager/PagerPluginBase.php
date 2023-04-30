@@ -122,8 +122,7 @@ abstract class PagerPluginBase extends PluginBase {
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {}
 
   /**
-   * Return a string to display as the clickable title for the
-   * pager plugin.
+   * Returns a string to display as the clickable title for the pager plugin.
    */
   public function summaryTitle() {
     return $this->t('Unknown');
@@ -148,8 +147,9 @@ abstract class PagerPluginBase extends PluginBase {
   }
 
   /**
-   * Execute the count query, which will be done just prior to the query
-   * itself being executed.
+   * Executes the count query.
+   *
+   * This will be done just prior to the query itself being executed.
    */
   public function executeCountQuery(&$count_query) {
     $this->total_items = $count_query->execute()->fetchField();
@@ -163,6 +163,8 @@ abstract class PagerPluginBase extends PluginBase {
   }
 
   /**
+   * Updates the pager information.
+   *
    * If there are pagers that need global values set, this method can
    * be used to set them. It will be called after the query is run.
    */
