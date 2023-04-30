@@ -311,8 +311,9 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
   }
 
   /**
-   * This method is intentionally not implemented. Use
-   * Drupal\Core\Url instead.
+   * This method is intentionally not implemented.
+   *
+   * Use Drupal\Core\Url instead.
    *
    * @see https://www.drupal.org/node/2820197
    *

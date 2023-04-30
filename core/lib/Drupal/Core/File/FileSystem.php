@@ -240,8 +240,7 @@ class FileSystem implements FileSystemInterface {
   }
 
   /**
-   * Helper function. Ensures we don't pass a NULL as a context resource to
-   * mkdir().
+   * Ensures we don't pass a NULL as a context resource to mkdir().
    *
    * @see self::mkdir()
    */

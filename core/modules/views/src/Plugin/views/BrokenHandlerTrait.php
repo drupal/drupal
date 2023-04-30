@@ -29,8 +29,7 @@ trait BrokenHandlerTrait {
   }
 
   /**
-   * Ensure the main table for this handler is in the query. This is used
-   * a lot.
+   * Ensures that the main table for this handler is in the query.
    *
    * @see \Drupal\views\Plugin\views\HandlerBase::ensureMyTable()
    */

@@ -26,9 +26,10 @@ interface TypedConfigManagerInterface extends TypedDataManagerInterface {
   public function get($name);
 
   /**
-   * Creates a new data definition object from a type definition array and
-   * actual configuration data. Since type definitions may contain variables
-   * to be replaced, we need the configuration value to create it.
+   * Creates a new data definition object.
+   *
+   * Since type definitions may contain variables to be replaced, we need the
+   * configuration value to create it.
    *
    * @param array $definition
    *   The base type definition array, for which a data definition should be

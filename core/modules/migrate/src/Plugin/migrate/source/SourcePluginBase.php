@@ -528,8 +528,9 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   }
 
   /**
-   * Gets the source count checking if the source is countable or using the
-   * iterator_count function.
+   * Gets the source count.
+   *
+   * Checks if the source is countable or using the iterator_count function.
    *
    * @return int
    */

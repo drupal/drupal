@@ -173,8 +173,7 @@ interface FileSystemInterface {
   public function basename($uri, $suffix = NULL);
 
   /**
-   * Creates a directory, optionally creating missing components in the path to
-   * the directory.
+   * Creates a directory, optionally creating missing components in the path.
    *
    * When PHP's mkdir() creates a directory, the requested mode is affected by
    * the process's umask. This function overrides the umask and sets the mode
