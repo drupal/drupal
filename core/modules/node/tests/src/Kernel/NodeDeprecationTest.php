@@ -28,7 +28,7 @@ class NodeDeprecationTest extends KernelTestBase {
    */
   public function testNodeRevisionLoadDeprecation(): void {
     $this->installEntitySchema('node');
-    $this->expectDeprecation('node_revision_load is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\EntityStorageInterface::loadRevision instead. See https://www.drupal.org/node/3323340');
+    $this->expectDeprecation('node_revision_load is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\RevisionableStorageInterface::loadRevision instead. See https://www.drupal.org/node/3294237');
     node_revision_load(1);
   }
 
@@ -39,7 +39,7 @@ class NodeDeprecationTest extends KernelTestBase {
    */
   public function testNodeRevisionDeleteDeprecation(): void {
     $this->installEntitySchema('node');
-    $this->expectDeprecation('node_revision_delete is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\EntityStorageInterface::deleteRevision instead. See https://www.drupal.org/node/3323340');
+    $this->expectDeprecation('node_revision_delete is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\RevisionableStorageInterface::deleteRevision instead. See https://www.drupal.org/node/3294237');
     node_revision_delete(1);
   }
 
@@ -50,7 +50,7 @@ class NodeDeprecationTest extends KernelTestBase {
    */
   public function testNodeTypeUpdateNodesDeprecation(): void {
     $this->installEntitySchema('node');
-    $this->expectDeprecation('node_type_update_nodes is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\EntityStorageInterface::updateType instead. See https://www.drupal.org/node/3323340');
+    $this->expectDeprecation('node_type_update_nodes is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\EntityStorageInterface::updateType instead. See https://www.drupal.org/node/3294237');
     node_type_update_nodes(1, 2);
   }
 

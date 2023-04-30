@@ -354,7 +354,7 @@ function node_entity_extra_field_info() {
  * @see https://www.drupal.org/node/3323340
  */
 function node_type_update_nodes($old_id, $new_id) {
-  @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\EntityStorageInterface::updateType instead. See https://www.drupal.org/node/3323340', E_USER_DEPRECATED);
+  @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\EntityStorageInterface::updateType instead. See https://www.drupal.org/node/3294237', E_USER_DEPRECATED);
   return \Drupal::entityTypeManager()->getStorage('node')->updateType($old_id, $new_id);
 }
 
@@ -368,12 +368,12 @@ function node_type_update_nodes($old_id, $new_id) {
  *   A fully-populated node entity, or NULL if the node is not found.
  *
  * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
- *   \Drupal\Core\Entity\EntityStorageInterface::loadRevision instead.
+ *   \Drupal\Core\Entity\RevisionableStorageInterface::loadRevision instead.
  *
  * @see https://www.drupal.org/node/3323340
  */
 function node_revision_load($vid = NULL) {
-  @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\EntityStorageInterface::loadRevision instead. See https://www.drupal.org/node/3323340', E_USER_DEPRECATED);
+  @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\RevisionableStorageInterface::loadRevision instead. See https://www.drupal.org/node/3294237', E_USER_DEPRECATED);
   return \Drupal::entityTypeManager()->getStorage('node')->loadRevision($vid);
 }
 
@@ -384,12 +384,12 @@ function node_revision_load($vid = NULL) {
  *   The revision ID to delete.
  *
  * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
- *   \Drupal\Core\Entity\EntityStorageInterface::deleteRevision instead.
+ *   \Drupal\Core\Entity\RevisionableStorageInterface::deleteRevision instead.
  *
  * @see https://www.drupal.org/node/3323340
  */
 function node_revision_delete($revision_id) {
-  @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\EntityStorageInterface::deleteRevision instead. See https://www.drupal.org/node/3323340', E_USER_DEPRECATED);
+  @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\RevisionableStorageInterface::deleteRevision instead. See https://www.drupal.org/node/3294237', E_USER_DEPRECATED);
   \Drupal::entityTypeManager()->getStorage('node')->deleteRevision($revision_id);
 }
 
