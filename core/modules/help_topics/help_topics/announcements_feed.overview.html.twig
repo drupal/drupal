@@ -1,0 +1,24 @@
+---
+label: 'Viewing Drupal announcements'
+top_level: true
+---
+{% set actions_link_text %}
+{% trans %}Announcements{% endtrans %}
+{% endset %}
+{% set actions_link = render_var(help_route_link(actions_link_text, 'announcements_feed.announcement')) %}
+{% set permissions_link_text %}
+{% trans %}View official announcements related to Drupal{% endtrans %}
+{% endset %}
+{% set permissions_link = render_var(help_route_link(permissions_link_text, 'user.admin_permissions.module', {'modules': 'announcements_feed'})) %}
+<h2>{% trans %}What are Drupal announcements?{% endtrans %}</h2>
+<p>{% trans %}A feed of announcements about the Drupal project and Drupal Association programs.{% endtrans %}</p>
+<p>{% trans %}The purpose of this feed is to provide a channel for outreach directly to Drupal site owners. This content must be highly relevant to site owners interests, serve the strategic goals of the project, and/or promote the sustainability of the project and the Drupal Association.{% endtrans %}</p>
+<p>{% trans %}The module sources its content from a JSON feed generated from <a href="https://www.drupal.org/about/announcements">here</a>. The governance policy for the content is documented <a href="https://www.drupal.org/node/3274085">here</a>.{% endtrans %}</p>
+<h2>{% trans %}How can I see the Announcements in my site?{% endtrans %}</h2>
+<p>{% trans %}If you have the toolbar module enabled, you will see a direct link to them in the toolbar. If the toolbar module is not enabled, the content can always be accessed in the <em>{{ actions_link }}</em> page.{% endtrans %}</p>
+<h2>{% trans %}Who can see the Announcements?{% endtrans %}</h2>
+<p>{% trans %}Users with the <em>{{ permissions_link }}</em> permission can view Drupal announcements.{% endtrans %}</p>
+<h2>{% trans %}Additional resources{% endtrans %}</h2>
+<ul>
+  <li><a href="https://www.drupal.org/docs/core-modules-and-themes/core-modules/announcements-feed/announcements-feed-module-overview">{% trans %}Announcement module overview{% endtrans %}</a></li>
+</ul>
