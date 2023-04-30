@@ -188,6 +188,8 @@ class Views {
   }
 
   /**
+   * Gets view and display IDs for a given setting in display plugin settings.
+   *
    * Return a list of all view IDs and display IDs that have a particular
    * setting in their display's plugin settings.
    *
@@ -276,8 +278,9 @@ class Views {
   }
 
   /**
-   * Returns an array of view as options array, that can be used by select,
-   * checkboxes and radios as #options.
+   * Returns an array of view as options array.
+   *
+   * This array can be used by select, checkboxes and radios as #options.
    *
    * @param bool $views_only
    *   If TRUE, only return views, not displays.
@@ -409,8 +412,9 @@ class Views {
   }
 
   /**
-   * Provide a list of views handler types used in a view, with some information
-   * about them.
+   * Provide a list of views handler types used in a view.
+   *
+   * Also provides some information about them.
    *
    * @return array
    *   An array of associative arrays containing:

@@ -23,6 +23,8 @@ use Drupal\views\Views;
  */
 
 /**
+ * Relationship plugin base.
+ *
  * Simple relationship handler that allows a new version of the primary table
  * to be linked in.
  *

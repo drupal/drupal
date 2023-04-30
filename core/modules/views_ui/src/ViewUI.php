@@ -277,9 +277,10 @@ class ViewUI implements ViewEntityInterface {
   }
 
   /**
-   * Provide a standard set of Apply/Cancel/OK buttons for the forms. Also provide
-   * a hidden op operator because the forms plugin doesn't seem to properly
-   * provide which button was clicked.
+   * Provides a standard set of Apply/Cancel/OK buttons for the forms.
+   *
+   * This will also provide a hidden op operator because the forms plugin
+   * doesn't seem to properly provide which button was clicked.
    *
    * TODO: Is the hidden op operator still here somewhere, or is that part of the
    * docblock outdated?
@@ -381,8 +382,9 @@ class ViewUI implements ViewEntityInterface {
   }
 
   /**
-   * Add another form to the stack; clicking 'apply' will go to this form
-   * rather than closing the ajax popup.
+   * Adds another form to the stack.
+   *
+   * Clicking 'apply' will go to this form rather than closing the ajax popup.
    */
   public function addFormToStack($key, $display_id, $type, $id = NULL, $top = FALSE, $rebuild_keys = FALSE) {
     // Reset the cache of IDs. Drupal rather aggressively prevents ID

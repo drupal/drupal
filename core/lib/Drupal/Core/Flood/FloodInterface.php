@@ -64,8 +64,9 @@ interface FloodInterface {
   public function isAllowed($name, $threshold, $window = 3600, $identifier = NULL);
 
   /**
-   * Cleans up expired flood events. This method is called automatically on
-   * cron run.
+   * Cleans up expired flood events.
+   *
+   * This method is called automatically on cron run.
    *
    * @see system_cron()
    */

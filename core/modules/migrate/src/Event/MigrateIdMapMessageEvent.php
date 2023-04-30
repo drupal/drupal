@@ -88,8 +88,11 @@ class MigrateIdMapMessageEvent extends Event {
   }
 
   /**
-   * Gets the severity level of the message (one of the
-   * MigrationInterface::MESSAGE_* constants).
+   * Gets the severity level of the message.
+   *
+   * Message levels are declared in MigrationInterface and start with MESSAGE_.
+   *
+   * @see \Drupal\migrate\Plugin\MigrationInterface
    *
    * @return int
    *   The message level.

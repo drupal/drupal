@@ -858,8 +858,10 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   }
 
   /**
-   * Build a form containing a group of operator | values to apply as a
-   * single filter.
+   * Builds a group form.
+   *
+   * The form contains a group of operator or values to apply as a single
+   * filter.
    */
   public function groupForm(&$form, FormStateInterface $form_state) {
     if (!empty($this->options['group_info']['optional']) && !$this->multipleExposedInput()) {
@@ -1281,8 +1283,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   }
 
   /**
-   * Make some translations to a form item to make it more suitable to
-   * exposing.
+   * Make some translations to a form item to make it more suitable to exposing.
    */
   protected function exposedTranslate(&$form, $type) {
     if (!isset($form['#type'])) {
@@ -1346,8 +1347,10 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   }
 
   /**
-   * Tell the renderer about our exposed form. This only needs to be
-   * overridden for particularly complex forms. And maybe not even then.
+   * Tell the renderer about our exposed form.
+   *
+   * This only needs to be overridden for particularly complex forms. And maybe
+   * not even then.
    *
    * @return array|null
    *   For standard exposed filters. An array with the following keys:
@@ -1429,6 +1432,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   }
 
   /**
+   * Group multiple exposed input.
+   *
    * Returns the options available for a grouped filter that users checkboxes
    * as widget, and therefore has to be applied several times, one per
    * item selected.
@@ -1441,6 +1446,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   }
 
   /**
+   * Multiple exposed input.
+   *
    * Returns TRUE if users can select multiple groups items of a
    * grouped exposed filter.
    */

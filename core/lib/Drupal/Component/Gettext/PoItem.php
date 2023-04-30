@@ -103,8 +103,7 @@ class PoItem {
   }
 
   /**
-   * Gets the source string or the array of strings if the translation has
-   * plurals.
+   * Gets the source string(s) if the translation has plurals.
    *
    * @return string or array $translation
    */
@@ -113,8 +112,7 @@ class PoItem {
   }
 
   /**
-   * Set the source string or the array of strings if the translation has
-   * plurals.
+   * Sets the source string(s) if the translation has plurals.
    *
    * @param string|array $source
    *   The source string or the array of strings if the translation has plurals.
@@ -124,8 +122,7 @@ class PoItem {
   }
 
   /**
-   * Gets the translation string or the array of strings if the translation has
-   * plurals.
+   * Gets the translation string(s) if the translation has plurals.
    *
    * @return string or array $translation
    */
@@ -134,8 +131,7 @@ class PoItem {
   }
 
   /**
-   * Set the translation string or the array of strings if the translation has
-   * plurals.
+   * Sets the translation string(s) if the translation has plurals.
    *
    * @param string|array $translation
    *   The translation string or the array of strings if the translation has

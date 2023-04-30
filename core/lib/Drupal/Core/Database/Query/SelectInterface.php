@@ -104,8 +104,9 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   public function &getTables();
 
   /**
-   * Returns a reference to the union queries for this query. This include
-   * queries for UNION, UNION ALL, and UNION DISTINCT.
+   * Returns a reference to the union queries for this query.
+   *
+   * This includes queries for UNION, UNION ALL, and UNION DISTINCT.
    *
    * Because this method returns by reference, alter hooks may edit the tables
    * array directly to make their changes. If just adding union queries,

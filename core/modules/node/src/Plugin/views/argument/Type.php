@@ -52,16 +52,14 @@ class Type extends StringArgument {
   }
 
   /**
-   * Override the behavior of summaryName(). Get the user friendly version
-   * of the node type.
+   * {@inheritdoc}
    */
   public function summaryName($data) {
     return $this->node_type($data->{$this->name_alias});
   }
 
   /**
-   * Override the behavior of title(). Get the user friendly version of the
-   * node type.
+   * {@inheritdoc}
    */
   public function title() {
     return $this->node_type($this->argument);

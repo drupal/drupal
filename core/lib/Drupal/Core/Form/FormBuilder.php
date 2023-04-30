@@ -108,8 +108,10 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   protected $formCache;
 
   /**
-   * Defines element value callables which are safe to run even when the form
-   * state has an invalid CSRF token.
+   * Defines callables that are safe to run with invalid CSRF tokens.
+   *
+   * These Element value callables are safe to run even when the form state has
+   * an invalid CSRF token.
    *
    * Excluded from this list on purpose:
    *  - Drupal\file\Element\ManagedFile::valueCallback
