@@ -146,8 +146,7 @@ class StorageTest extends BrowserTestBase {
   }
 
   /**
-   * Verifies that form build-id is regenerated when loading an immutable form
-   * from the cache.
+   * Tests form build ID regeneration when loading a cached immutable form.
    */
   public function testImmutableForm() {
     // Request the form with 'cache' query parameter to enable form caching.

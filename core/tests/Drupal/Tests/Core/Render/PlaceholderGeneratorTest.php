@@ -38,9 +38,10 @@ class PlaceholderGeneratorTest extends RendererTestBase {
   }
 
   /**
-   * Create an element with #lazy_builder callback. Between two renders, cache
-   * contexts nor tags sort change. Placeholder should generate same hash to not
-   * be rendered twice.
+   * Tests the creation of an element with a #lazy_builder callback.
+   *
+   * Between two renders neither the cache contexts nor tags sort should change.
+   * A placeholder should generate the same hash, so it is not rendered twice.
    *
    * @covers ::createPlaceholder
    */

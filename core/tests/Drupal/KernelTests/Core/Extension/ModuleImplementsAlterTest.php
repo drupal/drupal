@@ -64,8 +64,7 @@ class ModuleImplementsAlterTest extends KernelTestBase {
   }
 
   /**
-   * Tests what happens if hook_module_implements_alter() adds a non-existing
-   * function to the implementations.
+   * Tests adding a non-existing function to hook_module_implements_alter().
    *
    * @see \Drupal\Core\Extension\ModuleHandler::buildImplementationInfo()
    * @see module_test_module_implements_alter()

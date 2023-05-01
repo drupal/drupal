@@ -55,7 +55,9 @@ class UserFieldsAccessChangeTest extends UserTestBase {
   }
 
   /**
-   * Tests the user name formatter shows a link to the user when there is
+   * Test user name link.
+   *
+   * Tests that the user name formatter shows a link to the user when there is
    * access but not otherwise.
    */
   public function testUserNameLink() {

@@ -113,8 +113,7 @@ class DirectoryTest extends FileTestBase {
   }
 
   /**
-   * This will take a directory and path, and find a valid filepath that is not
-   * taken by another file.
+   * Tests the file paths of newly created files.
    */
   public function testFileCreateNewFilepath() {
     // First we test against an imaginary file that does not exist in a
@@ -138,6 +137,8 @@ class DirectoryTest extends FileTestBase {
   }
 
   /**
+   * Tests the destination file path.
+   *
    * This will test the filepath for a destination based on passed flags and
    * whether or not the file exists.
    *

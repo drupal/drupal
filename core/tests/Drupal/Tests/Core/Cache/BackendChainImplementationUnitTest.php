@@ -195,8 +195,7 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
   }
 
   /**
-   * Tests that the delete all operation is propagated to all backends in the
-   * chain.
+   * Tests that the delete all operation is propagated to all chained backends.
    */
   public function testDeleteAllPropagation() {
     // Set both expiring and permanent keys.
@@ -213,8 +212,7 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
   }
 
   /**
-   * Tests that the delete tags operation is propagated to all backends
-   * in the chain.
+   * Tests that the delete tags operation is propagated to all chained backends.
    */
   public function testDeleteTagsPropagation() {
     // Create two cache entries with the same tag and tag value.

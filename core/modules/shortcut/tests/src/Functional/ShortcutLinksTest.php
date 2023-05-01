@@ -403,8 +403,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
   }
 
   /**
-   * Tests that the 'access shortcuts' permission is required for shortcut set
-   * administration page access.
+   * Tests the 'access shortcuts' permission for shortcut set administration.
    */
   private function verifyAccessShortcutsPermissionForEditPages() {
     // Create a user with customize links and switch sets permissions  but
@@ -427,8 +426,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
   }
 
   /**
-   * Tests that the 'access shortcuts' permission is required to access the
-   * shortcut block.
+   * Tests the 'access shortcuts' permission with the shortcut block.
    */
   public function testShortcutBlockAccess() {
     // Creates a block instance and place in a region through api.

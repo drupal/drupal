@@ -299,8 +299,10 @@ class EntityReferenceAdminTest extends BrowserTestBase {
   }
 
   /**
-   * Tests field settings for an entity reference field when the field has
-   * multiple target bundles and is set to auto-create the target entity.
+   * Tests field settings for an entity reference field.
+   *
+   * The tested entity reference field has multiple target bundles and is set
+   * to auto-create the target entity.
    */
   public function testMultipleTargetBundles() {
     /** @var \Drupal\taxonomy\Entity\Vocabulary[] $vocabularies */
