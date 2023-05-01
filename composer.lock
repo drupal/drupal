@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5d9667a31f9310fc88c2bbcb55616128",
+    "content-hash": "9d0eb544305d5006f3bf6851ba171dfe",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -5357,21 +5357,21 @@
         },
         {
             "name": "mglaman/phpstan-drupal",
-            "version": "1.1.30",
+            "version": "1.1.31",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mglaman/phpstan-drupal.git",
-                "reference": "21b62499bb1233667f4d2bc6ce11db73500734fe"
+                "reference": "266474ca92b6cfe7443359c6a5972698781aef9f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mglaman/phpstan-drupal/zipball/21b62499bb1233667f4d2bc6ce11db73500734fe",
-                "reference": "21b62499bb1233667f4d2bc6ce11db73500734fe",
+                "url": "https://api.github.com/repos/mglaman/phpstan-drupal/zipball/266474ca92b6cfe7443359c6a5972698781aef9f",
+                "reference": "266474ca92b6cfe7443359c6a5972698781aef9f",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.4 || ^8.0",
-                "phpstan/phpstan": "^1.9.0",
+                "phpstan/phpstan": "^1.10.1",
                 "symfony/finder": "~3.4.5 ||^4.2 || ^5.0 || ^6.0",
                 "symfony/yaml": "~3.4.5 || ^4.2|| ^5.0 || ^6.0",
                 "webflo/drupal-finder": "^1.2"
@@ -5380,7 +5380,7 @@
                 "behat/mink": "^1.8",
                 "composer/installers": "^1.9",
                 "drupal/core-recommended": "^8.8@alpha || ^9.0",
-                "drush/drush": "^9.6 || ^10.0",
+                "drush/drush": "^9.6 || ^10.0 || ^11",
                 "phpstan/extension-installer": "^1.1",
                 "phpstan/phpstan-deprecation-rules": "^1.0",
                 "phpstan/phpstan-strict-rules": "^1.0",
@@ -5441,7 +5441,7 @@
             "description": "Drupal extension and rules for PHPStan",
             "support": {
                 "issues": "https://github.com/mglaman/phpstan-drupal/issues",
-                "source": "https://github.com/mglaman/phpstan-drupal/tree/1.1.30"
+                "source": "https://github.com/mglaman/phpstan-drupal/tree/1.1.31"
             },
             "funding": [
                 {
@@ -5457,7 +5457,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-04-07T13:36:19+00:00"
+            "time": "2023-04-27T17:33:01+00:00"
         },
         {
             "name": "mikey179/vfsstream",

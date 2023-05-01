@@ -1521,11 +1521,6 @@ parameters:
 			path: modules/menu_ui/src/MenuForm.php
 
 		-
-			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
-			count: 1
-			path: modules/menu_ui/src/MenuForm.php
-
-		-
 			message: "#^Constructor of class Drupal\\\\migrate\\\\MigrateException has an unused parameter \\$code\\.$#"
 			count: 1
 			path: modules/migrate/src/MigrateException.php
@@ -2786,11 +2781,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/DrupalKernel/DrupalKernelTest.php
 
 		-
-			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
-			count: 2
-			path: tests/Drupal/KernelTests/Core/Entity/ConfigEntityQueryTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 4
 			path: tests/Drupal/KernelTests/Core/Entity/ContentEntityChangedTest.php
@@ -2989,6 +2979,11 @@ parameters:
 			message: "#^Constructor of class Drupal\\\\Tests\\\\Core\\\\Plugin\\\\TestPluginManager has an unused parameter \\$namespaces\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Plugin/TestPluginManager.php
+
+		-
+			message: "#^\\#access_callback callback class 'Drupal\\\\\\\\Tests\\\\\\\\Core…' at key '0' does not implement Drupal\\\\Core\\\\Security\\\\TrustedCallbackInterface\\.$#"
+			count: 4
+			path: tests/Drupal/Tests/Core/Render/RendererTest.php
 
 		-
 			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"
