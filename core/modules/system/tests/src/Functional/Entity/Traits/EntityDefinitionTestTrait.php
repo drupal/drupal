@@ -200,8 +200,7 @@ trait EntityDefinitionTestTrait {
   }
 
   /**
-   * Updates the 'entity_test_update' entity type to revisionable and
-   * translatable.
+   * Updates the test entity type to be revisionable and translatable.
    *
    * @param bool $perform_update
    *   (optional) Whether the change should be performed by the entity

@@ -421,8 +421,7 @@ class MigrateSourceTest extends MigrateTestCase {
   }
 
   /**
-   * Tests that cacheCounts, skipCount, trackChanges preserve their default
-   * values.
+   * Tests that default values are preserved for several source methods.
    */
   public function testDefaultPropertiesValues() {
     $this->migrationConfiguration['id'] = 'test_migration';

@@ -153,8 +153,7 @@ class FilterTest extends ViewTestBase {
   }
 
   /**
-   * Tests no error message is displayed when all options are selected in an
-   * exposed filter.
+   * Tests an exposed filter when all options are selected.
    */
   public function testInOperatorSelectAllOptions() {
     $row['row[type]'] = 'fields';

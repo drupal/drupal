@@ -57,8 +57,7 @@ class ConfigImporterTest extends KernelTestBase {
   }
 
   /**
-   * Tests that trying to import from an empty sync configuration directory
-   * fails.
+   * Tests that trying to import from empty sync configuration directory fails.
    */
   public function testEmptyImportFails() {
     $this->expectException(ConfigImporterException::class);

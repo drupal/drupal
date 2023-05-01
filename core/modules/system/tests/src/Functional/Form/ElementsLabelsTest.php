@@ -25,8 +25,13 @@ class ElementsLabelsTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Tests form elements, labels, title attributes and required marks output
-   * correctly and have the correct label option class if needed.
+   * Tests form element rendering.
+   *
+   * This method provides test coverage for:
+   * - Form label rendering with different form elements.
+   * - Rendering of the "Required" field marker.
+   * - Prefix and suffix render element placement.
+   * - Form element title attributes.
    */
   public function testFormLabels() {
     $this->drupalGet('form_test/form-labels');

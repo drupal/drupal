@@ -29,8 +29,7 @@ class UserRolesAssignmentTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Tests that a user can be assigned a role and that the role can be removed
-   * again.
+   * Test that user can be assigned role and that the role can be removed again.
    */
   public function testAssignAndRemoveRole() {
     $rid = $this->drupalCreateRole(['administer users']);
@@ -52,8 +51,7 @@ class UserRolesAssignmentTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that when creating a user the role can be assigned. And that it can
-   * be removed again.
+   * Tests assigning a role at user creation and removing the role.
    */
   public function testCreateUserWithRole() {
     $rid = $this->drupalCreateRole(['administer users']);

@@ -376,8 +376,7 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
   }
 
   /**
-   * Returns an entity label in the format needed by the EntityAutocomplete
-   * element.
+   * Returns an entity label in format needed by the EntityAutocomplete element.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   A Drupal entity.

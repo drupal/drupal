@@ -328,8 +328,12 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
   }
 
   /**
-   * This duplicates some of the 'file_upload' REST resource plugin test
-   * coverage, to be able to test it on a concrete use case.
+   * Tests the 'file_upload' REST resource plugin.
+   *
+   * This test duplicates some of the 'file_upload' REST resource plugin test
+   * coverage.
+   *
+   * @see \Drupal\Tests\rest\Functional\FileUploadResourceTestBase
    */
   protected function uploadFile() {
     // Enable the 'file_upload' REST resource for the current format + auth.

@@ -49,8 +49,7 @@ class MigrateTermNodeTest extends MigrateDrupal6TestBase {
   }
 
   /**
-   * Tests that term associations are ignored when they belong to nodes which
-   * were not migrated.
+   * Tests that term relationships are ignored for un-migrated nodes.
    */
   public function testSkipNonExistentNode() {
     // Node 2 is migrated by d6_node__story, but we need to pretend that it

@@ -11,11 +11,11 @@
 function update_test_description_update_8001() {
 }
 
-// @codingStandardsIgnoreStart
+// phpcs:disable Drupal.Commenting.DocComment.ShortSingleLine
 /**
  * Update test with multiline description, the quick brown fox jumped over the
  * lazy dog.
  */
+// phpcs:enable
 function update_test_description_update_8002() {
 }
-// @codingStandardsIgnoreEnd

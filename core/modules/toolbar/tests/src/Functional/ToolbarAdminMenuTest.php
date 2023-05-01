@@ -114,8 +114,10 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
   }
 
   /**
-   * Tests the toolbar_modules_installed() and toolbar_modules_uninstalled() hook
-   * implementations.
+   * Tests Toolbar's responses to installing and uninstalling modules.
+   *
+   * @see toolbar_modules_installed()
+   * @see toolbar_modules_uninstalled()
    */
   public function testModuleStatusChangeSubtreesHashCacheClear() {
     // Use an admin role to ensure the user has all available permissions. This
@@ -174,8 +176,10 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
   }
 
   /**
-   * Exercises the toolbar_user_role_update() and toolbar_user_update() hook
-   * implementations.
+   * Tests Toolbar's responses to user data updates.
+   *
+   * @see toolbar_user_role_update()
+   * @see toolbar_user_update()
    */
   public function testUserRoleUpdateSubtreesHashCacheClear() {
     // Find the new role ID.
@@ -240,8 +244,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that changes to a user account by another user clears the changed
-   * account's toolbar cached, not the user's who took the action.
+   * Tests cache invalidation when one user modifies another user.
    */
   public function testNonCurrentUserAccountUpdates() {
     $admin_user_id = $this->adminUser->id();
@@ -454,8 +457,10 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
   }
 
   /**
-   * Asserts the subtrees hash on a fresh page GET is different from the hash
-   * from the previous page GET.
+   * Checks the subtree hash of the current page with that of the previous page.
+   *
+   * Asserts that the subtrees hash on a fresh page GET is different from the
+   * subtree hash from the previous page GET.
    *
    * @internal
    */

@@ -49,6 +49,8 @@ class ConfigEntityTypeTest extends UnitTestCase {
   }
 
   /**
+   * Tests when the prefix length exceeds the maximum defined prefix length.
+   *
    * Tests that we get an exception when the length of the config prefix that is
    * returned by getConfigPrefix() exceeds the maximum defined prefix length.
    *
@@ -68,6 +70,8 @@ class ConfigEntityTypeTest extends UnitTestCase {
   }
 
   /**
+   * Tests when the prefix length is valid.
+   *
    * Tests that a valid config prefix returned by getConfigPrefix()
    * does not throw an exception and is formatted as expected.
    *
