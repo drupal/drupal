@@ -16,7 +16,7 @@ final class DebugExtension extends AbstractExtension {
    *
    * Defined as a string because the Symfony VarDumper does not always exist.
    *
-   * @type string
+   * @var string
    */
   private const SYMFONY_VAR_DUMPER_CLASS = '\Symfony\Component\VarDumper\VarDumper';
 
