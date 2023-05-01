@@ -1601,11 +1601,6 @@ parameters:
 			path: modules/menu_ui/src/MenuForm.php
 
 		-
-			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"
-			count: 1
-			path: modules/menu_ui/src/MenuForm.php
-
-		-
 			message: "#^Constructor of class Drupal\\\\migrate\\\\MigrateException has an unused parameter \\$code\\.$#"
 			count: 1
 			path: modules/migrate/src/MigrateException.php
@@ -3149,6 +3144,11 @@ parameters:
 			message: "#^\\#pre_render callback '\\\\\\\\Drupal\\\\\\\\Tests\\\\\\\\Core…' at key '0' is not trusted\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Render/RendererCallbackTest.php
+
+		-
+			message: "#^\\#access_callback callback class 'Drupal\\\\\\\\Tests\\\\\\\\Core…' at key '0' does not implement Drupal\\\\Core\\\\Security\\\\TrustedCallbackInterface\\.$#"
+			count: 4
+			path: tests/Drupal/Tests/Core/Render/RendererTest.php
 
 		-
 			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"
