@@ -62,7 +62,7 @@ use Drupal\Component\Utility\Xss;
  *
  * @param \Drupal\Core\Session\AccountInterface $account
  *   The account object whose grants are requested.
- * @param string $op
+ * @param string $operation
  *   The node operation to be performed, such as 'view', 'update', or 'delete'.
  *
  * @return array
@@ -73,7 +73,7 @@ use Drupal\Component\Utility\Xss;
  * @see node_access_rebuild()
  * @ingroup node_access
  */
-function hook_node_grants(\Drupal\Core\Session\AccountInterface $account, $op) {
+function hook_node_grants(\Drupal\Core\Session\AccountInterface $account, $operation) {
   if ($account->hasPermission('access private content')) {
     $grants['example'] = [1];
   }
@@ -253,7 +253,7 @@ function hook_node_access_records_alter(&$grants, \Drupal\node\NodeInterface $no
  *   The $grants array returned by hook_node_grants().
  * @param \Drupal\Core\Session\AccountInterface $account
  *   The account requesting access to content.
- * @param string $op
+ * @param string $operation
  *   The operation being performed, 'view', 'update' or 'delete'.
  *
  * @see hook_node_grants()
@@ -261,7 +261,7 @@ function hook_node_access_records_alter(&$grants, \Drupal\node\NodeInterface $no
  * @see hook_node_access_records_alter()
  * @ingroup node_access
  */
-function hook_node_grants_alter(&$grants, \Drupal\Core\Session\AccountInterface $account, $op) {
+function hook_node_grants_alter(&$grants, \Drupal\Core\Session\AccountInterface $account, $operation) {
   // Our sample module never allows certain roles to edit or delete
   // content. Since some other node access modules might allow this
   // permission, we expressly remove it by returning an empty $grants
@@ -270,7 +270,7 @@ function hook_node_grants_alter(&$grants, \Drupal\Core\Session\AccountInterface 
   // Get our list of banned roles.
   $restricted = \Drupal::config('example.settings')->get('restricted_roles');
 
-  if ($op != 'view' && !empty($restricted)) {
+  if ($operation != 'view' && !empty($restricted)) {
     // Now check the roles for this account against the restrictions.
     foreach ($account->getRoles() as $rid) {
       if (in_array($rid, $restricted)) {

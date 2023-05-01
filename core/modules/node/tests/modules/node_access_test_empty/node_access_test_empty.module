@@ -10,7 +10,7 @@ use Drupal\node\NodeInterface;
 /**
  * Implements hook_node_grants().
  */
-function node_access_test_empty_node_grants($account, $op) {
+function node_access_test_empty_node_grants($account, $operation) {
   return [];
 }
 

@@ -15,7 +15,7 @@ use Drupal\node\NodeInterface;
  *
  * This module defines a single grant realm. All users belong to this group.
  */
-function node_access_test_language_node_grants($account, $op) {
+function node_access_test_language_node_grants($account, $operation) {
   $grants['node_access_language_test'] = [7888];
   return $grants;
 }

@@ -30,7 +30,7 @@ interface NodeGrantDatabaseStorageInterface {
    *   Query that is being altered.
    * @param array $tables
    *   A list of tables that need to be part of the alter.
-   * @param string $op
+   * @param string $operation
    *   The operation to be performed on the node. Possible values are:
    *   - "view"
    *   - "update"
@@ -45,7 +45,7 @@ interface NodeGrantDatabaseStorageInterface {
    * @return int
    *   Status of the access check.
    */
-  public function alterQuery($query, array $tables, $op, AccountInterface $account, $base_table);
+  public function alterQuery($query, array $tables, $operation, AccountInterface $account, $base_table);
 
   /**
    * Writes a list of grants to the database, deleting previously saved ones.

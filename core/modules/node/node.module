@@ -856,11 +856,11 @@ function node_form_system_themes_admin_form_submit($form, FormStateInterface $fo
 /**
  * Implements hook_ENTITY_TYPE_access().
  */
-function node_node_access(NodeInterface $node, $op, AccountInterface $account) {
+function node_node_access(NodeInterface $node, $operation, AccountInterface $account) {
   $type = $node->bundle();
 
   // Note create access is handled by hook_ENTITY_TYPE_create_access().
-  switch ($op) {
+  switch ($operation) {
     case 'update':
       $access = AccessResult::allowedIfHasPermission($account, 'edit any ' . $type . ' content');
       if (!$access->isAllowed() && $account->hasPermission('edit own ' . $type . ' content')) {
@@ -893,7 +893,7 @@ function node_node_access(NodeInterface $node, $op, AccountInterface $account) {
  * grants array by reference. This hook allows for complex business logic to be
  * applied when integrating multiple node access modules.
  *
- * @param string $op
+ * @param string $operation
  *   The operation that the user is trying to perform.
  * @param \Drupal\Core\Session\AccountInterface $account
  *   The account object for the user performing the operation.
@@ -902,11 +902,11 @@ function node_node_access(NodeInterface $node, $op, AccountInterface $account) {
  *   An associative array in which the keys are realms, and the values are
  *   arrays of grants for those realms.
  */
-function node_access_grants($op, AccountInterface $account) {
+function node_access_grants($operation, AccountInterface $account) {
   // Fetch node access grants from other modules.
-  $grants = \Drupal::moduleHandler()->invokeAll('node_grants', [$account, $op]);
+  $grants = \Drupal::moduleHandler()->invokeAll('node_grants', [$account, $operation]);
   // Allow modules to alter the assigned grants.
-  \Drupal::moduleHandler()->alter('node_grants', $grants, $account, $op);
+  \Drupal::moduleHandler()->alter('node_grants', $grants, $account, $operation);
 
   return array_merge(['all' => [0]], $grants);
 }

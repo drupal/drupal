@@ -146,7 +146,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
   /**
    * {@inheritdoc}
    */
-  public function alterQuery($query, array $tables, $op, AccountInterface $account, $base_table) {
+  public function alterQuery($query, array $tables, $operation, AccountInterface $account, $base_table) {
     if (!$langcode = $query->getMetaData('langcode')) {
       $langcode = FALSE;
     }
@@ -154,7 +154,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     // Find all instances of the base table being joined -- could appear
     // more than once in the query, and could be aliased. Join each one to
     // the node_access table.
-    $grants = node_access_grants($op, $account);
+    $grants = node_access_grants($operation, $account);
     // If any grant exists for the specified user, then user has access to the
     // node for the specified operation.
     $grant_conditions = $this->buildGrantsQueryCondition($grants);
@@ -172,7 +172,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
         if ($grants_exist) {
           $subquery->condition($grant_conditions);
         }
-        $subquery->condition('na.grant_' . $op, 1, '>=');
+        $subquery->condition('na.grant_' . $operation, 1, '>=');
 
         // Add langcode-based filtering if this is a multilingual site.
         if ($is_multilingual) {

@@ -55,7 +55,7 @@ function node_test_node_build_defaults_alter(array &$build, NodeInterface &$node
 /**
  * Implements hook_node_grants().
  */
-function node_test_node_grants(AccountInterface $account, $op) {
+function node_test_node_grants(AccountInterface $account, $operation) {
   // Give everyone full grants so we don't break other node tests.
   // Our node access tests asserts three realms of access.
   // See testGrantAlter().
@@ -118,7 +118,7 @@ function node_test_node_access_records_alter(&$grants, NodeInterface $node) {
 /**
  * Implements hook_node_grants_alter().
  */
-function node_test_node_grants_alter(&$grants, AccountInterface $account, $op) {
+function node_test_node_grants_alter(&$grants, AccountInterface $account, $operation) {
   // Return an empty array of grants to prove that we can alter by reference.
   $grants = [];
 }
