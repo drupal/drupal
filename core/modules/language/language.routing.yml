@@ -81,7 +81,7 @@ language.negotiation_browser_delete:
 language.content_settings_page:
   path: '/admin/config/regional/content-language'
   defaults:
-    _title: 'Content language'
+    _title_callback: '\Drupal\language\Form\ContentLanguageSettingsForm::getTitle'
     _form: '\Drupal\language\Form\ContentLanguageSettingsForm'
   requirements:
     _permission: 'administer languages'

@@ -5,6 +5,7 @@ namespace Drupal\language\Form;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\language\Entity\ContentLanguageSettings;
@@ -39,16 +40,26 @@ class ContentLanguageSettingsForm extends FormBase {
   protected $multipleCapable = TRUE;
 
   /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * Constructs an \Drupal\views\Plugin\views\argument_validator\Entity object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
    *   The entity type bundle info.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, ModuleHandlerInterface $module_handler) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -57,8 +68,24 @@ class ContentLanguageSettingsForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager'),
-      $container->get('entity_type.bundle.info')
+      $container->get('entity_type.bundle.info'),
+      $container->get('module_handler')
     );
+  }
+
+  /**
+   * The _title_callback for the language.content_settings_page route.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *   The page title.
+   */
+  public function getTitle(): string {
+    if ($this->moduleHandler->moduleExists('content_translation')) {
+      return $this->t('Content language and translation');
+    }
+    else {
+      return $this->t('Content language');
+    }
   }
 
   /**
