@@ -164,6 +164,10 @@ trait DeprecationListenerTrait {
       if (($type === E_USER_DEPRECATED || $type === E_DEPRECATED) && static::isDeprecationSkipped($msg)) {
         return;
       }
+      // Drupal 9 uses PHP syntax that's deprecated in PHP 8.2.
+      if (PHP_VERSION_ID >= 80200 && $type === E_DEPRECATED) {
+        return;
+      }
       return call_user_func($this->previousHandler, $type, $msg, $file, $line, $context);
     };
 
