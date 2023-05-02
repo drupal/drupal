@@ -26,8 +26,7 @@ class LoadMultipleTest extends TaxonomyTestBase {
   }
 
   /**
-   * Create a vocabulary and some taxonomy terms, ensuring they're loaded
-   * correctly using entity_load_multiple().
+   * Tests entity_load_multiple().
    */
   public function testTaxonomyTermMultipleLoad() {
     // Create a vocabulary.
