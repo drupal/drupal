@@ -337,12 +337,6 @@ class MediaLibraryUiBuilder {
 
     $args = [$state->getSelectedTypeId()];
 
-    // Make sure the state parameters are set in the request so the view can
-    // pass the parameters along in the pager, filters etc.
-    $request = $view_executable->getRequest();
-    $request->query->add($state->all());
-    $view_executable->setRequest($request);
-
     $view_executable->setDisplay($display_id);
     $view_executable->preExecute($args);
     $view_executable->execute($display_id);
