@@ -5,7 +5,8 @@ namespace Drupal\quickedit\Ajax;
 use Drupal\Core\Ajax\BaseCommand;
 
 /**
- * Passes validation errors when saving a form field failed.
+ * AJAX command to indicate a field form was attempted to be saved but failed
+ * validation and pass the validation errors.
  */
 class FieldFormValidationErrorsCommand extends BaseCommand {
 

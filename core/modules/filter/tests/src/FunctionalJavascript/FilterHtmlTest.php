@@ -51,7 +51,8 @@ class FilterHtmlTest extends WebDriverTestBase {
   }
 
   /**
-   * Tests the Allowed Tags configuration with CSS classes.
+   * Tests that CSS classes defined in the Styles Dropdown section don't
+   * restrict elements in the Allowed Tags configuration that allow all classes.
    *
    * @group legacy
    */

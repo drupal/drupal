@@ -205,7 +205,8 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   protected $destinationIds = [];
 
   /**
-   * The source_row_status for the current map row.
+   * Specify value of source_row_status for current map row. Usually set by
+   * MigrateFieldHandler implementations.
    *
    * @var int
    */
