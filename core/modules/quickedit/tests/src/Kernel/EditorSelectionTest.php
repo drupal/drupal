@@ -84,6 +84,8 @@ class EditorSelectionTest extends QuickEditTestBase {
   }
 
   /**
+   * Tests a textual field with varying text format compatibility.
+   *
    * Tests a textual field, with text filtering, with cardinality 1 and >1,
    * always with an Editor plugin present that supports textual fields with text
    * filtering, but with varying text format compatibility.

@@ -6,8 +6,7 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\node\Entity\Node;
 
 /**
- * Tests making aggregator_feed and aggregator_item base fields' displays
- * configurable.
+ * Tests aggregator_feed and aggregator_item base fields' displays.
  *
  * @group aggregator
  * @group legacy
@@ -29,8 +28,7 @@ class AggregatorDisplayConfigurableTest extends AggregatorTestBase {
   }
 
   /**
-   * Sets feed base fields to configurable display and checks settings are
-   * respected.
+   * Tests base fields to configurable display settings.
    */
   public function testFeedDisplayConfigurable() {
     $display = EntityViewDisplay::load('aggregator_feed.aggregator_feed.summary');
@@ -77,8 +75,7 @@ class AggregatorDisplayConfigurableTest extends AggregatorTestBase {
   }
 
   /**
-   * Sets item base fields to configurable display and checks settings are
-   * respected.
+   * Tests item base fields settings.
    */
   public function testItemDisplayConfigurable() {
     $this->createSampleNodes(1);

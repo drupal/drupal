@@ -270,6 +270,8 @@ class ToolkitGdTest extends KernelTestBase {
   }
 
   /**
+   * Tests height, width and color for the corners for the final images.
+   *
    * Since PHP can't visually check that our images have been manipulated
    * properly, build a list of expected color values for each of the corners and
    * the expected height and widths for the final images.

@@ -31,8 +31,7 @@ class CKEditor5UpdateAlignmentTest extends UpdatePathTestBase {
   }
 
   /**
-   * Tests that CKEditor 5 alignment configurations that are individual buttons
-   * are updated to be in dropdown form in the toolbar.
+   * Tests update of individual button that are alignment configuration.
    */
   public function testUpdateAlignmentButtons() {
     $editor = Editor::load('test_format');
