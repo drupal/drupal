@@ -87,18 +87,16 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   protected static $patchProtectedFieldNames;
 
   /**
-   * A list of fields that need a unique value.
-   *
-   * This is for each new each entity created by a POST request.
+   * The fields that need a different (random) value for each new entity created
+   * by a POST request.
    *
    * @var string[]
    */
   protected static $uniqueFieldNames = [];
 
   /**
-   * Optionally specify which field is the 'label' field.
-   *
-   * Some entities do not specify a 'label' entity key. For example: User.
+   * Optionally specify which field is the 'label' field. Some entities do not
+   * specify a 'label' entity key. For example: User.
    *
    * @see ::getInvalidNormalizedEntityToCreate
    *
