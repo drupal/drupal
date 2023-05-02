@@ -238,6 +238,7 @@ class Xss {
               'rel',
               'property',
               'class',
+              'datetime',
             ]);
 
             $working = $mode = 1;
