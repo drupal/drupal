@@ -23,6 +23,9 @@ class QueryFactory extends BaseQueryFactory {
   /**
    * Constructs a QueryFactory object.
    *
+   * Initializes the list of namespaces used to locate query
+   * classes for different entity types.
+   *
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection used by the entity query.
    * @param \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager
