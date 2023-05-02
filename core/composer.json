@@ -34,7 +34,7 @@
         "doctrine/annotations": "^1.14",
         "guzzlehttp/guzzle": "^7.5",
         "guzzlehttp/psr7": "^2.4",
-        "egulias/email-validator": "^3.2.1",
+        "egulias/email-validator": "^3.2.1|^4.0",
         "masterminds/html5": "^2.7",
         "symfony/psr-http-message-bridge": "^2.1",
         "composer-runtime-api": "^2.1",

@@ -491,14 +491,14 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "4a6aa3700723fe42a3a8add8c27af45f8710ddb2"
+                "reference": "d55f9a95d0d10b10b2945d162fa86b383ecc9cda"
             },
             "require": {
                 "asm89/stack-cors": "^2.1",
                 "composer-runtime-api": "^2.1",
                 "composer/semver": "^3.3",
                 "doctrine/annotations": "^1.14",
-                "egulias/email-validator": "^3.2.1",
+                "egulias/email-validator": "^3.2.1|^4.0",
                 "ext-date": "*",
                 "ext-dom": "*",
                 "ext-filter": "*",
