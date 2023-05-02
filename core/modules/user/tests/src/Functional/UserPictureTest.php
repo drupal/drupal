@@ -128,7 +128,7 @@ class UserPictureTest extends BrowserTestBase {
 
     // Verify that the image is displayed on the node page.
     $this->drupalGet('node/' . $node->id());
-    $elements = $this->cssSelect('article[role="article"] > footer img[alt="' . $alt_text . '"][src="' . $image_url . '"]');
+    $elements = $this->cssSelect('article > footer img[alt="' . $alt_text . '"][src="' . $image_url . '"]');
     $this->assertCount(1, $elements, 'User picture with alt text found on node page.');
 
     // Enable user pictures on comments, instead of nodes.
