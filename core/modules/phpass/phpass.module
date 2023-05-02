@@ -2,8 +2,7 @@
 
 /**
  * @file
- * The password compatibility module provides the password checking algorithm
- * for user entities created with Drupal prior to version 10.1.x.
+ * Provides the password checking algorithm used prior to version 10.1.x.
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;

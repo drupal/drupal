@@ -80,8 +80,7 @@ class PageRenderTest extends KernelTestBase {
   }
 
   /**
-   * Assert that HtmlRenderer::invokePageAttachmentHooks is called in a render
-   * context.
+   * Tests HtmlRenderer::invokePageAttachmentHooks in a render context.
    */
   public function testHtmlRendererAttachmentsRenderContext(): void {
     $this->enableModules(['common_test', 'system']);

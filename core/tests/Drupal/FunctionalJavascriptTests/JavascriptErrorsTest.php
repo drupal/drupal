@@ -40,8 +40,7 @@ class JavascriptErrorsTest extends WebDriverTestBase {
   }
 
   /**
-   * Tests that JavaScript console errors will result in a test failure
-   * during asynchronous calls.
+   * Tests JavaScript console errors during asynchronous calls.
    */
   public function testJavascriptErrorsAsync(): void {
     // Visit page that will throw a JavaScript console error in async context.

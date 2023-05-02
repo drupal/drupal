@@ -6,8 +6,7 @@ use Drupal\KernelTests\Core\File\FileTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
- * Base class for archive tests that adds some additional archive specific
- * assertions and helper properties.
+ * Provides archive specific assertions and helper properties for archive tests.
  */
 abstract class ArchiverTestBase extends FileTestBase {
   use TestFileCreationTrait;
