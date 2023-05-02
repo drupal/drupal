@@ -1015,23 +1015,23 @@ class FilterKernelTest extends KernelTestBase {
 
     $f = Html::normalize('<script>alert("test")</script>');
     $this->assertEquals('<script>
-<!--//--><![CDATA[// ><!--
+//<![CDATA[
 alert("test")
-//--><!]]>
+//]]>
 </script>', $f, 'HTML corrector -- CDATA added to script element');
 
     $f = Html::normalize('<p><script>alert("test")</script></p>');
     $this->assertEquals('<p><script>
-<!--//--><![CDATA[// ><!--
+//<![CDATA[
 alert("test")
-//--><!]]>
+//]]>
 </script></p>', $f, 'HTML corrector -- CDATA added to a nested script element');
 
     $f = Html::normalize('<p><style> /* Styling */ body {color:red}</style></p>');
     $this->assertEquals('<p><style>
-<!--/*--><![CDATA[/* ><!--*/
+/*<![CDATA[*/
  /* Styling */ body {color:red}
-/*--><!]]>*/
+/*]]>*/
 </style></p>', $f, 'HTML corrector -- CDATA added to a style element.');
 
     $filtered_data = Html::normalize('<p><style>
@@ -1041,50 +1041,38 @@ body {color:red}
 /*]]>*/
 </style></p>');
     $this->assertEquals('<p><style>
-<!--/*--><![CDATA[/* ><!--*/
-
 /*<![CDATA[*/
 /* Styling */
 body {color:red}
-/*]]]]><![CDATA[>*/
-
-/*--><!]]>*/
+/*]]>*/
 </style></p>', $filtered_data,
       new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '/*<![CDATA[*/'])
     );
 
     $filtered_data = Html::normalize('<p><style>
-  <!--/*--><![CDATA[/* ><!--*/
+/*<![CDATA[*/
   /* Styling */
   body {color:red}
-  /*--><!]]>*/
+/*]]>*/
 </style></p>');
     $this->assertEquals('<p><style>
-<!--/*--><![CDATA[/* ><!--*/
-
-  <!--/*--><![CDATA[/* ><!--*/
+/*<![CDATA[*/
   /* Styling */
   body {color:red}
-  /*--><!]]]]><![CDATA[>*/
-
-/*--><!]]>*/
+/*]]>*/
 </style></p>', $filtered_data,
       new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '<!--/*--><![CDATA[/* ><!--*/'])
     );
 
     $filtered_data = Html::normalize('<p><script>
-<!--//--><![CDATA[// ><!--
+//<![CDATA[
   alert("test");
-//--><!]]>
+//]]>
 </script></p>');
     $this->assertEquals('<p><script>
-<!--//--><![CDATA[// ><!--
-
-<!--//--><![CDATA[// ><!--
+//<![CDATA[
   alert("test");
-//--><!]]]]><![CDATA[>
-
-//--><!]]>
+//]]>
 </script></p>', $filtered_data,
       new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '<!--//--><![CDATA[// ><!--'])
     );
@@ -1092,18 +1080,43 @@ body {color:red}
     $filtered_data = Html::normalize('<p><script>
 // <![CDATA[
   alert("test");
-// ]]>
+//]]>
 </script></p>');
     $this->assertEquals('<p><script>
-<!--//--><![CDATA[// ><!--
-
 // <![CDATA[
   alert("test");
-// ]]]]><![CDATA[>
-
-//--><!]]>
+//]]>
 </script></p>', $filtered_data,
       new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '// <![CDATA['])
+    );
+
+    $filtered_data = Html::normalize('<p><script>
+// <![CDATA[![CDATA[![CDATA[
+  alert("test");
+//]]]]]]>
+</script></p>');
+    $this->assertEquals('<p><script>
+// <![CDATA[![CDATA[![CDATA[
+  alert("test");
+//]]]]]]>
+</script></p>', $filtered_data,
+      new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '// <![CDATA[![CDATA[![CDATA['])
+    );
+
+    // Test calling Html::normalize() twice.
+    $filtered_data = Html::normalize('<p><script>
+// <![CDATA[![CDATA[![CDATA[
+  alert("test");
+//]]]]]]>
+</script></p>');
+    $filtered_data = Html::normalize($filtered_data);
+
+    $this->assertEquals('<p><script>
+// <![CDATA[![CDATA[![CDATA[
+  alert("test");
+//]]]]]]>
+</script></p>', $filtered_data,
+      new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '// <![CDATA[![CDATA[![CDATA['])
     );
 
   }
