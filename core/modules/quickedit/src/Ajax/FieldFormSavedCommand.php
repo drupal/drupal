@@ -5,9 +5,7 @@ namespace Drupal\quickedit\Ajax;
 use Drupal\Core\Ajax\BaseCommand;
 
 /**
- * AJAX command to indicate a field was saved into PrivateTempStore without
- * validation errors and pass the rerendered field to Quick Edit's JavaScript
- * app.
+ * Indicates a field was saved and passes the rerendered field to Quick Edit.
  */
 class FieldFormSavedCommand extends BaseCommand {
 

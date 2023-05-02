@@ -54,8 +54,7 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
   protected $referencedEntity;
 
   /**
-   * The entity that is not yet saved to its persistent storage to be referenced
-   * in this test.
+   * An entity that is not yet saved to its persistent storage.
    *
    * @var \Drupal\Core\Entity\EntityInterface
    */

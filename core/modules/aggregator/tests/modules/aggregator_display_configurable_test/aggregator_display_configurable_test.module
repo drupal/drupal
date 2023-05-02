@@ -2,8 +2,7 @@
 
 /**
  * @file
- * A module for testing making aggregator_feed base fields' displays
- * configurable.
+ * Allows testing of making aggregator_feed base fields' displays configurable.
  */
 
 use Drupal\Core\Entity\EntityTypeInterface;

@@ -186,6 +186,8 @@ class FormState implements FormStateInterface {
   protected $requestMethod = 'GET';
 
   /**
+   * Determines if the unprocessed form structure is cached.
+   *
    * If set to TRUE the original, unprocessed form structure will be cached,
    * which allows the entire form to be rebuilt from cache. A typical form
    * workflow involves two page requests; first, a form is built and rendered

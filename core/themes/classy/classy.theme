@@ -53,6 +53,8 @@ function classy_preprocess_image_widget(array &$variables) {
 }
 
 /**
+ * Classy theme is deprecated.
+ *
  * No changes that impact functionality should be made to this file, as Classy
  * will be deprecated in Drupal 9. Changes should instead be made in the core
  * themes Bartik, Seven, Claro and/or Umami.

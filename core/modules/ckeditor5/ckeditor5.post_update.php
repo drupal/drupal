@@ -10,8 +10,7 @@ use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\editor\Entity\Editor;
 
 /**
- * Updates if an already migrated CKEditor 5 configuration for text formats
- * has alignment shown as individual buttons instead of a dropdown.
+ * Updates text formats that has alignment shown as individual buttons.
  */
 function ckeditor5_post_update_alignment_buttons(&$sandbox = []) {
   $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);

@@ -15,8 +15,7 @@ use Drupal\Tests\UnitTestCase;
 class FieldUiRouteEnhancerTest extends UnitTestCase {
 
   /**
-   * Tests deprecation of the Drupal\field_ui\Routing\FieldUiRouteEnhancer
-   * class.
+   * Tests deprecation of the Drupal\field_ui\Routing\FieldUiRouteEnhancer.
    */
   public function testDeprecation() {
     $this->expectDeprecation('The Drupal\field_ui\Routing\EntityBundleRouteEnhancer is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Instead, use \Drupal\Core\Entity\Enhancer\EntityBundleRouteEnhancer. See https://www.drupal.org/node/3245017');
