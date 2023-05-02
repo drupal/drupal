@@ -42,10 +42,10 @@ class Xss {
    * - Makes sure no HTML tags contain URLs with a disallowed protocol (e.g.
    *   javascript:).
    *
-   * @param $string
+   * @param string $string
    *   The string with raw HTML in it. It will be stripped of everything that
    *   can cause an XSS attack.
-   * @param array $html_tags
+   * @param string[] $html_tags
    *   An array of HTML tags.
    *
    * @return string
@@ -140,7 +140,7 @@ class Xss {
    *   If the element isn't allowed, an empty string. Otherwise, the cleaned up
    *   version of the HTML element.
    */
-  protected static function split($string, $html_tags, $class) {
+  protected static function split($string, array $html_tags, $class) {
     if (substr($string, 0, 1) != '<') {
       // We matched a lone ">" character.
       return '&gt;';
@@ -329,15 +329,15 @@ class Xss {
   /**
    * Whether this element needs to be removed altogether.
    *
-   * @param $html_tags
+   * @param string[] $html_tags
    *   The list of HTML tags.
-   * @param $elem
+   * @param string $elem
    *   The name of the HTML element.
    *
    * @return bool
    *   TRUE if this element needs to be removed.
    */
-  protected static function needsRemoval($html_tags, $elem) {
+  protected static function needsRemoval(array $html_tags, $elem) {
     return !isset($html_tags[strtolower($elem)]);
   }
 

@@ -129,7 +129,7 @@ class Standard extends Xss implements EditorXssFilterInterface {
   /**
    * {@inheritdoc}
    */
-  protected static function needsRemoval($html_tags, $elem) {
+  protected static function needsRemoval(array $html_tags, $elem) {
     // See static::filterXss() about how this class uses blacklisting instead
     // of the normal whitelisting.
     return !parent::needsRemoval($html_tags, $elem);
