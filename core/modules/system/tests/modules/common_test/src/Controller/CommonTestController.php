@@ -93,8 +93,7 @@ class CommonTestController {
   }
 
   /**
-   * Returns a sample response with some early rendering in
-   * common_test_page_attachments.
+   * Returns a response with early rendering in common_test_page_attachments.
    *
    * @return \Symfony\Component\HttpFoundation\Response
    *   A new Response object.
