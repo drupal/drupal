@@ -186,18 +186,62 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
     $id_field = $table_mapping->getColumnNames($entity_type->getKey('id'))['value'];
     $revision_id_field = $table_mapping->getColumnNames($entity_type->getKey('revision'))['value'];
 
+    $workspace_tree = $this->workspaceRepository->loadTree();
+    if (isset($workspace_tree[$workspace_id])) {
+      $workspace_candidates = array_merge([$workspace_id], $workspace_tree[$workspace_id]['ancestors']);
+    }
+    else {
+      $workspace_candidates = [$workspace_id];
+    }
+
     $query = $this->database->select($entity_type->getRevisionTable(), 'revision');
     $query->leftJoin($entity_type->getBaseTable(), 'base', "[revision].[$id_field] = [base].[$id_field]");
 
     $query
       ->fields('revision', [$revision_id_field, $id_field])
-      ->condition("revision.$workspace_field", $workspace_id)
-      ->where("[revision].[$revision_id_field] > [base].[$revision_id_field]")
+      ->condition("revision.$workspace_field", $workspace_candidates, 'IN')
+      ->where("[revision].[$revision_id_field] >= [base].[$revision_id_field]")
       ->orderBy("revision.$revision_id_field", 'ASC');
 
     // Restrict the result to a set of entity ID's if provided.
     if ($entity_ids) {
       $query->condition("revision.$id_field", $entity_ids, 'IN');
+    }
+
+    return $query->execute()->fetchAllKeyed();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAssociatedInitialRevisions(string $workspace_id, string $entity_type_id, array $entity_ids = []) {
+    /** @var \Drupal\Core\Entity\EntityStorageInterface $storage */
+    $storage = $this->entityTypeManager->getStorage($entity_type_id);
+
+    // If the entity type is not using core's default entity storage, we can't
+    // assume the table mapping layout so we have to return only the latest
+    // tracked revisions.
+    if (!$storage instanceof SqlContentEntityStorage) {
+      return $this->getTrackedEntities($workspace_id, $entity_type_id, $entity_ids)[$entity_type_id];
+    }
+
+    $entity_type = $storage->getEntityType();
+    $table_mapping = $storage->getTableMapping();
+    $workspace_field = $table_mapping->getColumnNames($entity_type->get('revision_metadata_keys')['workspace'])['target_id'];
+    $id_field = $table_mapping->getColumnNames($entity_type->getKey('id'))['value'];
+    $revision_id_field = $table_mapping->getColumnNames($entity_type->getKey('revision'))['value'];
+
+    $query = $this->database->select($entity_type->getBaseTable(), 'base');
+    $query->leftJoin($entity_type->getRevisionTable(), 'revision', "[base].[$revision_id_field] = [revision].[$revision_id_field]");
+
+    $query
+      ->fields('base', [$revision_id_field, $id_field])
+      ->condition("revision.$workspace_field", $workspace_id, '=')
+      ->orderBy("base.$revision_id_field", 'ASC');
+
+    // Restrict the result to a set of entity ID's if provided.
+    if ($entity_ids) {
+      $query->condition("base.$id_field", $entity_ids, 'IN');
     }
 
     return $query->execute()->fetchAllKeyed();

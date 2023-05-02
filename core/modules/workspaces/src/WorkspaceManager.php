@@ -316,31 +316,60 @@ class WorkspaceManager implements WorkspaceManagerInterface {
     // Get the first deleted workspace from the list and delete the revisions
     // associated with it, along with the workspace association records.
     $workspace_id = reset($deleted_workspace_ids);
-    $tracked_entities = $this->workspaceAssociation->getTrackedEntities($workspace_id);
+
+    $all_associated_revisions = [];
+    foreach (array_keys($this->getSupportedEntityTypes()) as $entity_type_id) {
+      $all_associated_revisions[$entity_type_id] = $this->workspaceAssociation->getAssociatedRevisions($workspace_id, $entity_type_id);
+    }
+    $all_associated_revisions = array_filter($all_associated_revisions);
 
     $count = 1;
-    foreach ($tracked_entities as $entity_type_id => $entities) {
+    foreach ($all_associated_revisions as $entity_type_id => $associated_revisions) {
       $associated_entity_storage = $this->entityTypeManager->getStorage($entity_type_id);
-      $associated_revisions = $this->workspaceAssociation->getAssociatedRevisions($workspace_id, $entity_type_id);
+
+      // Sort the associated revisions in reverse ID order, so we can delete the
+      // most recent revisions first.
+      krsort($associated_revisions);
+
+      // Get a list of default revisions tracked by the given workspace, because
+      // they need to be handled differently than pending revisions.
+      $initial_revision_ids = $this->workspaceAssociation->getAssociatedInitialRevisions($workspace_id, $entity_type_id);
+
       foreach (array_keys($associated_revisions) as $revision_id) {
         if ($count > $batch_size) {
           continue 2;
         }
 
-        // Delete the associated entity revision.
-        $associated_entity_storage->deleteRevision($revision_id);
+        // If the workspace is tracking the entity's default revision (i.e. the
+        // entity was created inside that workspace), we need to delete the
+        // whole entity after all of its pending revisions are gone.
+        if (isset($initial_revision_ids[$revision_id])) {
+          $associated_entity_storage->delete([$associated_entity_storage->load($initial_revision_ids[$revision_id])]);
+        }
+        else {
+          // Delete the associated entity revision.
+          $associated_entity_storage->deleteRevision($revision_id);
+        }
         $count++;
       }
-      // Delete the workspace association entries.
-      $this->workspaceAssociation->deleteAssociations($workspace_id, $entity_type_id, $entities);
     }
 
     // The purging operation above might have taken a long time, so we need to
     // request a fresh list of tracked entities. If it is empty, we can go ahead
     // and remove the deleted workspace ID entry from state.
-    if (!$this->workspaceAssociation->getTrackedEntities($workspace_id)) {
+    $has_associated_revisions = FALSE;
+    foreach (array_keys($this->getSupportedEntityTypes()) as $entity_type_id) {
+      if (!empty($this->workspaceAssociation->getAssociatedRevisions($workspace_id, $entity_type_id))) {
+        $has_associated_revisions = TRUE;
+        break;
+      }
+    }
+    if (!$has_associated_revisions) {
       unset($deleted_workspace_ids[$workspace_id]);
       $this->state->set('workspace.deleted', $deleted_workspace_ids);
+
+      // Delete any possible leftover association entries.
+      $this->workspaceAssociation->deleteAssociations($workspace_id);
     }
   }
 

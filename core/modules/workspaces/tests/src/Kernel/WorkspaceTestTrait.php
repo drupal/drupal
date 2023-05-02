@@ -37,6 +37,12 @@ trait WorkspaceTestTrait {
     $this->installEntitySchema('workspace');
     $this->installSchema('workspaces', ['workspace_association']);
 
+    // Install the entity schema for supported entity types to ensure that the
+    // 'workspace' revision metadata field gets created.
+    foreach (array_keys($this->workspaceManager->getSupportedEntityTypes()) as $entity_type_id) {
+      $this->installEntitySchema($entity_type_id);
+    }
+
     // Create two workspaces by default, 'live' and 'stage'.
     $this->workspaces['live'] = Workspace::create(['id' => 'live', 'label' => 'Live']);
     $this->workspaces['live']->save();

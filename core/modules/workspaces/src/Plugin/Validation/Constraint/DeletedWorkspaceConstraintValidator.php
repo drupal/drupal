@@ -3,7 +3,7 @@
 namespace Drupal\workspaces\Plugin\Validation\Constraint;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\workspaces\WorkspaceAssociationInterface;
+use Drupal\Core\State\StateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -14,20 +14,20 @@ use Symfony\Component\Validator\ConstraintValidator;
 class DeletedWorkspaceConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   /**
-   * The workspace association service.
+   * The state service.
    *
-   * @var \Drupal\workspaces\WorkspaceAssociationInterface
+   * @var \Drupal\Core\State\StateInterface
    */
-  protected $workspaceAssociation;
+  protected $state;
 
   /**
    * Creates a new DeletedWorkspaceConstraintValidator instance.
    *
-   * @param \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association
-   *   The workspace association service.
+   * @param \Drupal\Core\State\StateInterface $state
+   *   The state service.
    */
-  public function __construct(WorkspaceAssociationInterface $workspace_association) {
-    $this->workspaceAssociation = $workspace_association;
+  public function __construct(StateInterface $state) {
+    $this->state = $state;
   }
 
   /**
@@ -35,7 +35,7 @@ class DeletedWorkspaceConstraintValidator extends ConstraintValidator implements
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('workspaces.association')
+      $container->get('state')
     );
   }
 
@@ -49,7 +49,8 @@ class DeletedWorkspaceConstraintValidator extends ConstraintValidator implements
       return;
     }
 
-    if ($this->workspaceAssociation->getTrackedEntities($value->getEntity()->id())) {
+    $deleted_workspace_ids = $this->state->get('workspace.deleted', []);
+    if (isset($deleted_workspace_ids[$value->getEntity()->id()])) {
       $this->context->addViolation($constraint->message);
     }
   }

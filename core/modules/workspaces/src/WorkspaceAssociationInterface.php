@@ -75,6 +75,23 @@ interface WorkspaceAssociationInterface {
   public function getAssociatedRevisions($workspace_id, $entity_type_id, $entity_ids = NULL);
 
   /**
+   * Retrieves all content revisions that were created in a given workspace.
+   *
+   * @param string $workspace_id
+   *   The ID of the workspace.
+   * @param string $entity_type_id
+   *   An entity type ID to find revisions for.
+   * @param int[]|string[] $entity_ids
+   *   (optional) An array of entity IDs to filter the results by. Defaults to
+   *   an empty array.
+   *
+   * @return array
+   *   Returns an array where the values are an array of entity IDs keyed by
+   *   revision IDs.
+   */
+  public function getAssociatedInitialRevisions(string $workspace_id, string $entity_type_id, array $entity_ids = []);
+
+  /**
    * Gets a list of workspace IDs in which an entity is tracked.
    *
    * @param \Drupal\Core\Entity\RevisionableInterface $entity
