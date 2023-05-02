@@ -553,6 +553,24 @@ class XssTest extends TestCase {
         'Image tag with malformed SRC',
         ['img'],
       ],
+      [
+        '<del datetime="1789-08-22T12:30:00.1-04:00">deleted text</del>',
+        '<del datetime="1789-08-22T12:30:00.1-04:00">deleted text</del>',
+        'Del with datetime attribute',
+        ['del'],
+      ],
+      [
+        '<ins datetime="1986-01-28 11:38:00.010">inserted text</ins>',
+        '<ins datetime="1986-01-28 11:38:00.010">inserted text</ins>',
+        'Ins with datetime attribute',
+        ['ins'],
+      ],
+      [
+        '<time datetime="1978-11-19T05:00:00Z">#DBD</time>',
+        '<time datetime="1978-11-19T05:00:00Z">#DBD</time>',
+        'Time with datetime attribute',
+        ['time'],
+      ],
     ];
   }
 
