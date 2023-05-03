@@ -54,6 +54,14 @@ class ToolbarStoredStateTest extends WebDriverTestBase {
       $this->getSession()->evaluateScript("sessionStorage.getItem('Drupal.toolbar.toolbarState')")
     );
 
+    // The userButtonMinWidth property will differ depending on the length of
+    // the test-generated username, so it is checked differently and the value
+    // is copied to the expected value array.
+    $this->assertNotNull($toolbar_stored_state['userButtonMinWidth']);
+    $this->assertIsNumeric($toolbar_stored_state['userButtonMinWidth']);
+    $this->assertGreaterThan(60, $toolbar_stored_state['userButtonMinWidth']);
+    $expected['userButtonMinWidth'] = $toolbar_stored_state['userButtonMinWidth'];
+
     $this->assertSame($expected, $toolbar_stored_state);
 
     $page->clickLink('toolbar-item-user');

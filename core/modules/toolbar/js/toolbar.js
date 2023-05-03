@@ -238,6 +238,7 @@
         Drupal.toolbar.models.toolbarModel.on(
           'change:activeTab change:orientation change:isOriented change:isTrayToggleVisible change:offsets',
           function () {
+            const userButton = document.querySelector('#toolbar-item-user');
             const hasActiveTab = !!$(this.get('activeTab')).length > 0;
             const previousToolbarState = sessionStorage.getItem(
               'Drupal.toolbar.toolbarState',
@@ -255,6 +256,7 @@
               activeTray: $(this.get('activeTab')).attr('data-toolbar-tray'),
               isOriented: this.get('isOriented'),
               isFixed: this.get('isFixed'),
+              userButtonMinWidth: userButton ? userButton.clientWidth : 0,
             };
             // Store toolbar UI state in session storage, so it can be accessed
             // by JavaScript that executes before the first paint.
