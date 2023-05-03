@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\statistics\Functional;
 
-use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\node\Entity\Node;
 
@@ -99,8 +98,6 @@ class StatisticsLoggingTest extends BrowserTestBase {
       ->set('count_content_views', 1)
       ->save();
 
-    // Clear the logs.
-    Database::getConnection()->truncate('node_counter');
     $this->client = \Drupal::httpClient();
   }
 
