@@ -1,0 +1,7 @@
+install_form_test.test-form:
+  path: /test-form
+  defaults:
+    _form: \Drupal\install_form_test\Form\ExtendedForm
+    _title: Extended Site Settings Form
+  requirements:
+    _access: 'TRUE'

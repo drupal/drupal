@@ -1,0 +1,5 @@
+name: Install Form Test
+type: module
+description: Test the SiteSettingsForm can be extended.
+package: Testing
+version: VERSION

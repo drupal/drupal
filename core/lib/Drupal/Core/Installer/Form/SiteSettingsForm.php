@@ -67,6 +67,8 @@ class SiteSettingsForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    // Make sure the install API is available.
+    include_once DRUPAL_ROOT . '/core/includes/install.inc';
     $settings_file = './' . $this->sitePath . '/settings.php';
 
     $form['#title'] = $this->t('Database configuration');
@@ -155,6 +157,9 @@ class SiteSettingsForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
+    // Make sure the install API is available.
+    include_once DRUPAL_ROOT . '/core/includes/install.inc';
+
     $driver = $form_state->getValue('driver');
     $database = $form_state->getValue($driver);
     $drivers = drupal_get_database_types();
@@ -235,6 +240,9 @@ class SiteSettingsForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     global $install_state;
+
+    // Make sure the install API is available.
+    include_once DRUPAL_ROOT . '/core/includes/install.inc';
 
     // Update global settings array and save.
     $settings = [];
