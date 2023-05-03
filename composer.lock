@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5f4a4c41590df5987149cf3bc3dcc06c",
+    "content-hash": "0534dcd7462ce864c31da1958a0e4868",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -526,7 +526,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "5c09ab3619cc05468ae971be99f7e37aff6377bd"
+                "reference": "20c999f07138dea4cbf192c39809c84ec93ed01f"
             },
             "require": {
                 "asm89/stack-cors": "^1.3",
@@ -548,8 +548,8 @@
                 "ext-tokenizer": "*",
                 "ext-xml": "*",
                 "guzzlehttp/guzzle": "^6.5.8 || ^7.4.5",
-                "laminas/laminas-diactoros": "^2.11",
                 "laminas/laminas-feed": "^2.17",
+                "longwave/laminas-diactoros": "^2.14",
                 "masterminds/html5": "^2.7",
                 "pear/archive_tar": "^1.4.14",
                 "php": ">=7.3.0",
@@ -5249,8 +5249,14 @@
             "version": "8.3.15",
             "source": {
                 "type": "git",
-                "url": "https://git.drupalcode.org/project/coder.git",
+                "url": "https://github.com/pfrenssen/coder.git",
                 "reference": "0cfad3a21f1168bdc3030ae73351c31f88abba74"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pfrenssen/coder/zipball/0cfad3a21f1168bdc3030ae73351c31f88abba74",
+                "reference": "0cfad3a21f1168bdc3030ae73351c31f88abba74",
+                "shasum": ""
             },
             "require": {
                 "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
