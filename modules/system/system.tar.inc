@@ -1460,6 +1460,8 @@ class Archive_Tar
 
         $v_magic = 'ustar ';
         $v_version = ' ';
+        $v_uname = '';
+        $v_gname = '';
 
         if (function_exists('posix_getpwuid')) {
             $userinfo = posix_getpwuid($v_info[4]);
