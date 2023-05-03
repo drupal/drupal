@@ -732,6 +732,7 @@ lolspeak
 longblob
 longerthan
 longtext
+longwave
 loquesea
 loreming
 loremingipsum
