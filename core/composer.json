@@ -43,7 +43,7 @@
         "egulias/email-validator": "^2.1.22|^3.2",
         "masterminds/html5": "^2.7",
         "symfony/psr-http-message-bridge": "^2.1",
-        "laminas/laminas-diactoros": "^2.14",
+        "longwave/laminas-diactoros": "^2.14",
         "composer/semver": "^3.3",
         "asm89/stack-cors": "^1.3",
         "pear/archive_tar": "^1.4.14",
