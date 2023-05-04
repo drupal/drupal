@@ -23,7 +23,7 @@ abstract class DriverSpecificKernelTestBase extends KernelTestBase {
   protected $connection;
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
