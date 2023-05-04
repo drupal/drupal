@@ -122,7 +122,7 @@ class ResourceResponseSubscriber implements EventSubscriberInterface {
       return $acceptable_formats[0];
     }
 
-    // Sometimes, there are no acceptable formats, e.g. DELETE routes.
+    // Sometimes, there are no acceptable formats.
     return NULL;
   }
 
@@ -141,8 +141,7 @@ class ResourceResponseSubscriber implements EventSubscriberInterface {
    * @param \Symfony\Component\Serializer\SerializerInterface $serializer
    *   The serializer to use.
    * @param string|null $format
-   *   The response format, or NULL in case the response does not need a format,
-   *   for example for the response to a DELETE request.
+   *   The response format, or NULL in case the response does not need a format.
    *
    * @todo Add test coverage for language negotiation contexts in
    *   https://www.drupal.org/node/2135829.
