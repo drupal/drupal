@@ -27,14 +27,14 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
   /**
    * The mocked entity type manager used in this test.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\Prophecy\Prophecy\ObjectProphecy
    */
   protected $entityTypeManager;
 
   /**
    * The mocked entity field manager used in this test.
    *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface|\Prophecy\Prophecy\ObjectProphecy
    */
   protected $entityFieldManager;
 
@@ -79,8 +79,8 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->entityTypeManager = $this->createMock(EntityTypeManager::class);
-    $this->entityFieldManager = $this->createMock(EntityFieldManager::class);
+    $this->entityTypeManager = $this->prophesize(EntityTypeManager::class);
+    $this->entityFieldManager = $this->prophesize(EntityFieldManager::class);
     $this->entityLastInstalledSchemaRepository = $this->createMock(EntityLastInstalledSchemaRepositoryInterface::class);
     $this->storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
       ->disableOriginalConstructor()
@@ -1222,7 +1222,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ->willReturn($this->storageDefinitions);
 
     $this->storageSchema = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema')
-      ->setConstructorArgs([$this->entityTypeManager, $this->entityType, $this->storage, $connection, $this->entityFieldManager, $this->entityLastInstalledSchemaRepository])
+      ->setConstructorArgs([$this->entityTypeManager->reveal(), $this->entityType, $this->storage, $connection, $this->entityFieldManager->reveal(), $this->entityLastInstalledSchemaRepository])
       ->onlyMethods(['installedStorageSchema', 'hasSharedTableStructureChange'])
       ->getMock();
 
@@ -1356,24 +1356,20 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    *   be created. Defaults to expecting nothing.
    */
   protected function setUpStorageSchema(array $expected = []) {
-    $this->entityTypeManager->expects($this->any())
-      ->method('getDefinition')
-      ->with($this->entityType->id())
+    $this->entityTypeManager
+      ->getDefinition($this->entityType->id())
       ->willReturn($this->entityType);
 
-    $this->entityTypeManager->expects($this->any())
-      ->method('getActiveDefinition')
-      ->with($this->entityType->id())
+    $this->entityTypeManager
+      ->getActiveDefinition($this->entityType->id())
       ->willReturn($this->entityType);
 
-    $this->entityFieldManager->expects($this->any())
-      ->method('getFieldStorageDefinitions')
-      ->with($this->entityType->id())
+    $this->entityFieldManager
+      ->getFieldStorageDefinitions($this->entityType->id())
       ->willReturn($this->storageDefinitions);
 
-    $this->entityFieldManager->expects($this->any())
-      ->method('getActiveFieldStorageDefinitions')
-      ->with($this->entityType->id())
+    $this->entityFieldManager
+      ->getActiveFieldStorageDefinitions($this->entityType->id())
       ->willReturn($this->storageDefinitions);
 
     $this->dbSchemaHandler = $this->getMockBuilder('Drupal\Core\Database\Schema')
@@ -1419,7 +1415,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ->willReturn($this->storageDefinitions);
 
     $this->storageSchema = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema')
-      ->setConstructorArgs([$this->entityTypeManager, $this->entityType, $this->storage, $connection, $this->entityFieldManager, $this->entityLastInstalledSchemaRepository])
+      ->setConstructorArgs([$this->entityTypeManager->reveal(), $this->entityType, $this->storage, $connection, $this->entityFieldManager->reveal(), $this->entityLastInstalledSchemaRepository])
       ->onlyMethods(['installedStorageSchema', 'loadEntitySchemaData', 'hasSharedTableNameChanges', 'isTableEmpty', 'getTableMapping'])
       ->getMock();
     $this->storageSchema

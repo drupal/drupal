@@ -31,7 +31,7 @@ class FileSystemTest extends UnitTestCase {
   /**
    * The stream wrapper manager.
    *
-   * @var \Drupal\Core\StreamWrapper\StreamWrapperInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $streamWrapperManager;
 

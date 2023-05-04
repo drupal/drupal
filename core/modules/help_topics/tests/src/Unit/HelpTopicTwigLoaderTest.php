@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\help_topics\Unit;
 
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\help_topics\HelpTopicTwigLoader;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
@@ -36,10 +38,19 @@ class HelpTopicTwigLoaderTest extends UnitTestCase {
     parent::setUp();
 
     $this->setUpVfs();
-    $this->helpLoader = new HelpTopicTwigLoader('\fake\root\path',
-      $this->getHandlerMock('module'),
-      $this->getHandlerMock('theme')
-    );
+
+    $module_handler = $this->createMock(ModuleHandlerInterface::class);
+    $module_handler
+      ->method('getModuleDirectories')
+      ->willReturn($this->directories['module']);
+
+    /** @var \Drupal\Core\Extension\ThemeHandlerInterface|\Prophecy\Prophecy\ObjectProphecy $module_handler */
+    $theme_handler = $this->createMock(ThemeHandlerInterface::class);
+    $theme_handler
+      ->method('getThemeDirectories')
+      ->willReturn($this->directories['theme']);
+
+    $this->helpLoader = new HelpTopicTwigLoader('\fake\root\path', $module_handler, $theme_handler);
   }
 
   /**
@@ -70,37 +81,6 @@ class HelpTopicTwigLoaderTest extends UnitTestCase {
     $this->expectExceptionMessage("Malformed YAML in help topic \"vfs://root/modules/test/help_topics/test.invalid_yaml.html.twig\":");
 
     $this->helpLoader->getSourceContext('@' . HelpTopicTwigLoader::MAIN_NAMESPACE . '/test.invalid_yaml.html.twig');
-  }
-
-  /**
-   * Creates a mock module or theme handler class for the test.
-   *
-   * @param string $type
-   *   Type of handler to return: 'module' or 'theme'.
-   *
-   * @return \PHPUnit\Framework\MockObject\MockObject
-   *   The mock of module or theme handler.
-   */
-  protected function getHandlerMock($type) {
-    if ($type == 'module') {
-      $class = 'Drupal\Core\Extension\ModuleHandlerInterface';
-      $method = 'getModuleDirectories';
-    }
-    else {
-      $class = 'Drupal\Core\Extension\ThemeHandlerInterface';
-      $method = 'getThemeDirectories';
-    }
-
-    $handler = $this
-      ->getMockBuilder($class)
-      ->disableOriginalConstructor()
-      ->getMock();
-
-    $handler
-      ->method($method)
-      ->willReturn($this->directories[$type]);
-
-    return $handler;
   }
 
   /**

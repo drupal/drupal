@@ -84,9 +84,9 @@ class ViewExecutableTest extends UnitTestCase {
   protected $viewsData;
 
   /**
-   * The mocked display handler.
+   * The mocked display router handler.
    *
-   * @var \Drupal\views\Plugin\views\display\DisplayPluginInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\views\Plugin\views\display\DisplayRouterInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $displayHandler;
 

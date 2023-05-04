@@ -263,8 +263,8 @@ class FormValidatorTest extends UnitTestCase {
   public function testExecuteValidateHandlers() {
     $form_validator = new FormValidator(new RequestStack(), $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler);
 
-    $mock = $this->getMockBuilder('stdClass')
-      ->addMethods(['validate_handler', 'hash_validate'])
+    $mock = $this->getMockBuilder(FormValidatorTestMockInterface::class)
+      ->onlyMethods(['validate_handler', 'hash_validate', 'element_validate'])
       ->getMock();
     $mock->expects($this->once())
       ->method('validate_handler')
@@ -346,8 +346,8 @@ class FormValidatorTest extends UnitTestCase {
       ->getMock();
     $form_validator->expects($this->once())
       ->method('executeValidateHandlers');
-    $mock = $this->getMockBuilder('stdClass')
-      ->addMethods(['element_validate'])
+    $mock = $this->getMockBuilder(FormValidatorTestMockInterface::class)
+      ->onlyMethods(['validate_handler', 'hash_validate', 'element_validate'])
       ->getMock();
     $mock->expects($this->once())
       ->method('element_validate')
@@ -464,5 +464,27 @@ class FormValidatorTest extends UnitTestCase {
       ],
     ];
   }
+
+}
+
+/**
+ * Interface used in the mocking process of this test.
+ */
+interface FormValidatorTestMockInterface {
+
+  /**
+   * Function used in the mocking process of this test.
+   */
+  public function validate_handler();
+
+  /**
+   * Function used in the mocking process of this test.
+   */
+  public function hash_validate();
+
+  /**
+   * Function used in the mocking process of this test.
+   */
+  public function element_validate();
 
 }

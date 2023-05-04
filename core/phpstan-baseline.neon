@@ -2951,6 +2951,16 @@ parameters:
 			path: tests/Drupal/Tests/Core/Database/InstallerObjectTest.php
 
 		-
+			message: "#^Trying to mock an undefined method getRevisionId\\(\\) on class Drupal\\\\Tests\\\\Core\\\\Entity\\\\UrlTestEntity\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Core/Entity/EntityUrlTest.php
+
+		-
+			message: "#^Trying to mock an undefined method isDefaultRevision\\(\\) on class Drupal\\\\Tests\\\\Core\\\\Entity\\\\UrlTestEntity\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Core/Entity/EntityUrlTest.php
+
+		-
 			message: "#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Plugin/CategorizingPluginManagerTraitTest.php

@@ -47,9 +47,9 @@ class ConfigNamesMapperTest extends UnitTestCase {
   protected $localeConfigManager;
 
   /**
-   * The locale configuration manager.
+   * The typed configuration manager.
    *
-   * @var \Drupal\locale\LocaleConfigManager|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\Config\TypedConfigManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $typedConfigManager;
 

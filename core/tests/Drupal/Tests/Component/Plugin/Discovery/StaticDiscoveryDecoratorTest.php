@@ -22,8 +22,8 @@ class StaticDiscoveryDecoratorTest extends TestCase {
    *   called once.
    */
   public function getRegisterDefinitionsCallback() {
-    $mock_callable = $this->getMockBuilder('\stdClass')
-      ->addMethods(['registerDefinitionsCallback'])
+    $mock_callable = $this->getMockBuilder(StaticDiscoveryDecoratorTestMockInterface::class)
+      ->onlyMethods(['registerDefinitionsCallback'])
       ->getMock();
     // Set expectations for the callback method.
     $mock_callable->expects($this->once())
@@ -225,5 +225,17 @@ class StaticDiscoveryDecoratorTest extends TestCase {
       \call_user_func_array([$mock_decorated, $method], $args)
     );
   }
+
+}
+
+/**
+ * Interface used in the mocking process of this test.
+ */
+interface StaticDiscoveryDecoratorTestMockInterface {
+
+  /**
+   * Function used in the mocking process of this test.
+   */
+  public function registerDefinitionsCallback();
 
 }

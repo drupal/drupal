@@ -28,9 +28,9 @@ class RouteSubscriberTest extends UnitTestCase {
   protected $entityTypeManager;
 
   /**
-   * The mocked view storage.
+   * The mocked config entity storage.
    *
-   * @var \Drupal\Tests\views\Kernel\ViewStorageTest|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $viewStorage;
 

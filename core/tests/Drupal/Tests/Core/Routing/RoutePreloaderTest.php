@@ -16,9 +16,9 @@ use Symfony\Component\Routing\RouteCollection;
 class RoutePreloaderTest extends UnitTestCase {
 
   /**
-   * The mocked route provider.
+   * The mocked preloadable route provider.
    *
-   * @var \Drupal\Core\Routing\RouteProviderInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\Routing\PreloadableRouteProviderInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $routeProvider;
 
