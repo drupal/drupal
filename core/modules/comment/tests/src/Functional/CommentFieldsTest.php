@@ -184,6 +184,15 @@ class CommentFieldsTest extends CommentTestBase {
     $this->submitForm($edit, 'Save field settings');
     // We shouldn't get an error message.
     $this->assertSession()->pageTextNotContains('The submitted value in the Comment type element is not allowed.');
+
+    // Try to save the comment field with "Comments per page"
+    // setting value as zero.
+    $edit = [
+      'settings[per_page]' => 0,
+    ];
+    $this->drupalGet('admin/config/people/accounts/fields/user.user.field_user_comment');
+    $this->submitForm($edit, 'Save settings');
+    $this->assertSession()->statusMessageContains('Saved User comment configuration.', 'status');
   }
 
   /**
