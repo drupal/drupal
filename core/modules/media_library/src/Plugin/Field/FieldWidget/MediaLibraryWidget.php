@@ -1009,6 +1009,11 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
       return;
     }
 
+    // If user has no access, the validation isn't needed.
+    if (isset($element['#access']) && !$element['#access']) {
+      return;
+    }
+
     $field_state = static::getFieldState($element, $form_state);
     // Trigger error if the field is required and no media is present. Although
     // the Form API's default validation would also catch this, the validation
