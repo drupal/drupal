@@ -6,6 +6,7 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestStringId;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\TestTools\Random;
 
 /**
  * Tests the unique field value validation constraint.
@@ -102,14 +103,14 @@ class UniqueFieldConstraintTest extends KernelTestBase {
    *
    * @see self::testEntityWithStringIdWithViolation()
    */
-  public function providerTestEntityWithStringIdWithViolation() {
+  public static function providerTestEntityWithStringIdWithViolation() {
     return [
       'without an id' => [NULL],
       'zero as integer' => [0],
       'zero as string' => ["0"],
       'non-zero as integer' => [mt_rand(1, 127)],
       'non-zero as string' => [(string) mt_rand(1, 127)],
-      'alphanumeric' => [$this->randomMachineName()],
+      'alphanumeric' => [Random::machineName()],
     ];
   }
 

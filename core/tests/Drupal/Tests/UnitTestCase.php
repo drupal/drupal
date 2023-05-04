@@ -4,12 +4,12 @@ namespace Drupal\Tests;
 
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\Random;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Tests\Traits\PhpUnitWarnings;
+use Drupal\TestTools\Random;
 use Drupal\TestTools\TestVarDumper;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -30,13 +30,6 @@ abstract class UnitTestCase extends TestCase {
   use PhpUnitCompatibilityTrait;
   use ProphecyTrait;
   use ExpectDeprecationTrait;
-
-  /**
-   * The random generator.
-   *
-   * @var \Drupal\Component\Utility\Random
-   */
-  protected $randomGenerator;
 
   /**
    * The app root.
@@ -72,6 +65,15 @@ abstract class UnitTestCase extends TestCase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function __get(string $name) {
+    if ($name === 'randomGenerator') {
+      return Random::getGenerator();
+    }
+  }
+
+  /**
    * Generates a unique random string containing letters and numbers.
    *
    * @param int $length
@@ -83,7 +85,7 @@ abstract class UnitTestCase extends TestCase {
    * @see \Drupal\Component\Utility\Random::name()
    */
   public function randomMachineName($length = 8) {
-    return $this->getRandomGenerator()->name($length, TRUE);
+    return Random::machineName($length);
   }
 
   /**
@@ -93,10 +95,7 @@ abstract class UnitTestCase extends TestCase {
    *   The random generator
    */
   protected function getRandomGenerator() {
-    if (!is_object($this->randomGenerator)) {
-      $this->randomGenerator = new Random();
-    }
-    return $this->randomGenerator;
+    return Random::getGenerator();
   }
 
   /**

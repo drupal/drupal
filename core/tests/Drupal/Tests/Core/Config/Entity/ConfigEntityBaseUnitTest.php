@@ -20,6 +20,7 @@ use Drupal\Core\Test\TestKernel;
 use Drupal\Tests\Core\Config\Entity\Fixtures\ConfigEntityBaseWithPluginCollections;
 use Drupal\Tests\Core\Plugin\Fixtures\TestConfigurablePlugin;
 use Drupal\Tests\UnitTestCase;
+use Drupal\TestTools\Random;
 
 /**
  * @coversDefaultClass \Drupal\Core\Config\Entity\ConfigEntityBase
@@ -292,8 +293,8 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    */
   public function providerCalculateDependenciesWithPluginCollections() {
     // Start with 'a' so that order of the dependency array is fixed.
-    $instance_dependency_1 = 'a' . $this->randomMachineName(10);
-    $instance_dependency_2 = 'a' . $this->randomMachineName(11);
+    $instance_dependency_1 = 'a' . Random::machineName(10);
+    $instance_dependency_2 = 'a' . Random::machineName(11);
 
     return [
       // Tests that the plugin provider is a module dependency.
@@ -613,7 +614,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     // Test setThirdPartySetting().
     $this->entity->setThirdPartySetting($third_party, $key, $value);
     $this->assertEquals($value, $this->entity->getThirdPartySetting($third_party, $key));
-    $this->assertEquals($value, $this->entity->getThirdPartySetting($third_party, $key, $this->randomGenerator->string()));
+    $this->assertEquals($value, $this->entity->getThirdPartySetting($third_party, $key, $this->getRandomGenerator()->string()));
 
     // Test getThirdPartySettings().
     $this->entity->setThirdPartySetting($third_party, 'test2', 'value2');

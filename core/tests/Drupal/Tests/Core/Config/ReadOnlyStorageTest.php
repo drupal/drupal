@@ -7,6 +7,7 @@ use Drupal\Core\Config\ReadOnlyStorage;
 use Drupal\Core\Config\StorageCopyTrait;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Tests\UnitTestCase;
+use Drupal\TestTools\Random;
 
 /**
  * @coversDefaultClass \Drupal\Core\Config\ReadOnlyStorage
@@ -115,19 +116,19 @@ class ReadOnlyStorageTest extends UnitTestCase {
    * @return array
    *   The data
    */
-  public function writeMethodsProvider() {
+  public static function writeMethodsProvider() {
     $fixture = [
       StorageInterface::DEFAULT_COLLECTION => ['config.a', 'config.b'],
     ];
 
     $data = [];
-    $data[] = ['write', ['config.a', (array) $this->getRandomGenerator()->object()], $fixture];
-    $data[] = ['write', [$this->randomMachineName(), (array) $this->getRandomGenerator()->object()], $fixture];
+    $data[] = ['write', ['config.a', (array) Random::getGenerator()->object()], $fixture];
+    $data[] = ['write', [Random::MachineName(), (array) Random::getGenerator()->object()], $fixture];
     $data[] = ['delete', ['config.a'], $fixture];
-    $data[] = ['delete', [$this->randomMachineName()], $fixture];
+    $data[] = ['delete', [Random::MachineName()], $fixture];
     $data[] = ['rename', ['config.a', 'config.b'], $fixture];
-    $data[] = ['rename', ['config.a', $this->randomMachineName()], $fixture];
-    $data[] = ['rename', [$this->randomMachineName(), $this->randomMachineName()], $fixture];
+    $data[] = ['rename', ['config.a', Random::MachineName()], $fixture];
+    $data[] = ['rename', [Random::MachineName(), Random::MachineName()], $fixture];
     $data[] = ['deleteAll', [''], $fixture];
     $data[] = ['deleteAll', ['config'], $fixture];
     $data[] = ['deleteAll', ['other'], $fixture];

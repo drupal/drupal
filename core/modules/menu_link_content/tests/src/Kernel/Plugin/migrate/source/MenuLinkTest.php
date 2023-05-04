@@ -4,6 +4,7 @@ namespace Drupal\Tests\menu_link_content\Kernel\Plugin\migrate\source;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
+use Drupal\TestTools\Random;
 
 /**
  * Tests the menu link source plugin.
@@ -275,7 +276,7 @@ class MenuLinkTest extends MigrateSqlSourceTestBase {
     ];
 
     // Add long link title attributes to source data.
-    $title = $this->getRandomGenerator()->string('500');
+    $title = Random::getGenerator()->string('500');
     $tests[0]['source_data']['menu_links'][0]['options']['attributes']['title'] = $title;
 
     // Build the expected results.

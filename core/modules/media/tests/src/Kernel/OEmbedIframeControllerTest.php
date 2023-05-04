@@ -6,6 +6,7 @@ use Drupal\Core\Render\HtmlResponse;
 use Drupal\media\Controller\OEmbedIframeController;
 use Drupal\media\OEmbed\Provider;
 use Drupal\media\OEmbed\Resource;
+use Drupal\TestTools\Random;
 use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -26,13 +27,13 @@ class OEmbedIframeControllerTest extends MediaKernelTestBase {
    *
    * @return array
    */
-  public function providerBadHashParameter() {
+  public static function providerBadHashParameter() {
     return [
       'no hash' => [
         '',
       ],
       'invalid hash' => [
-        $this->randomString(),
+        Random::string(),
       ],
     ];
   }

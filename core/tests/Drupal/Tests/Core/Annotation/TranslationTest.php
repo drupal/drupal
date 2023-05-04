@@ -5,6 +5,7 @@ namespace Drupal\Tests\Core\Annotation;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
+use Drupal\TestTools\Random;
 
 /**
  * @coversDefaultClass \Drupal\Core\Annotation\Translation
@@ -46,7 +47,7 @@ class TranslationTest extends UnitTestCase {
   /**
    * Provides data to self::testGet().
    */
-  public function providerTestGet() {
+  public static function providerTestGet() {
     $data = [];
     $data[] = [
       [
@@ -54,7 +55,7 @@ class TranslationTest extends UnitTestCase {
       ],
       'Foo',
     ];
-    $random = $this->randomMachineName();
+    $random = Random::machineName();
     $random_html_entity = '&' . $random;
     $data[] = [
       [
@@ -64,7 +65,7 @@ class TranslationTest extends UnitTestCase {
           '@baz' => $random_html_entity,
           '%qux' => $random_html_entity,
         ],
-        'context' => $this->randomMachineName(),
+        'context' => Random::machineName(),
       ],
       'Foo ' . $random . ' &amp;' . $random . ' <em class="placeholder">&amp;' . $random . '</em>',
     ];

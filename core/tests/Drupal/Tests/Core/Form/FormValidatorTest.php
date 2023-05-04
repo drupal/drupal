@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormValidator;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Drupal\TestTools\Random;
 
 /**
  * @coversDefaultClass \Drupal\Core\Form\FormValidator
@@ -397,7 +398,7 @@ class FormValidatorTest extends UnitTestCase {
     $form_validator->validateForm('test_form_id', $form, $form_state);
   }
 
-  public function providerTestPerformRequiredValidation() {
+  public static function providerTestPerformRequiredValidation() {
     return [
       [
         [
@@ -457,7 +458,7 @@ class FormValidatorTest extends UnitTestCase {
         [
           '#type' => 'textfield',
           '#maxlength' => 7,
-          '#value' => $this->randomMachineName(8),
+          '#value' => Random::machineName(8),
         ],
         'Test cannot be longer than <em class="placeholder">7</em> characters but is currently <em class="placeholder">8</em> characters long.',
         FALSE,

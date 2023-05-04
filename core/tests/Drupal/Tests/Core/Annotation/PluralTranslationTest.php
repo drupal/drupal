@@ -4,6 +4,7 @@ namespace Drupal\Tests\Core\Annotation;
 
 use Drupal\Core\Annotation\PluralTranslation;
 use Drupal\Tests\UnitTestCase;
+use Drupal\TestTools\Random;
 
 /**
  * @coversDefaultClass \Drupal\Core\Annotation\PluralTranslation
@@ -28,19 +29,19 @@ class PluralTranslationTest extends UnitTestCase {
   /**
    * Provides data to self::testGet().
    */
-  public function providerTestGet() {
+  public static function providerTestGet() {
     $data = [];
     $data[] = [
       [
-        'singular' => $this->randomMachineName(),
-        'plural' => $this->randomMachineName(),
-        'context' => $this->randomMachineName(),
+        'singular' => Random::machineName(),
+        'plural' => Random::machineName(),
+        'context' => Random::machineName(),
       ],
     ];
     $data[] = [
       [
-        'singular' => $this->randomMachineName(),
-        'plural' => $this->randomMachineName(),
+        'singular' => Random::machineName(),
+        'plural' => Random::machineName(),
       ],
     ];
 

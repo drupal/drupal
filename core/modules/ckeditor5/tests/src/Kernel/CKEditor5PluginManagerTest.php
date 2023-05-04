@@ -14,6 +14,7 @@ use Drupal\editor\Entity\Editor;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\SchemaCheckTestTrait;
+use Drupal\TestTools\Random;
 use org\bovigo\vfs\vfsStream;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag;
@@ -1046,8 +1047,8 @@ PHP,
    * @return array
    *   Test scenarios.
    */
-  public function providerProvidedElementsInvalidElementSubset(): array {
-    $random_tag_name = strtolower($this->randomMachineName());
+  public static function providerProvidedElementsInvalidElementSubset(): array {
+    $random_tag_name = strtolower(Random::machineName());
     $random_tag = "<$random_tag_name>";
     return [
       'superset: random tag not listed in the plugin definition' => [

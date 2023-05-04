@@ -5,6 +5,7 @@ namespace Drupal\Tests\Core\Menu;
 use Drupal\Core\Menu\MenuActiveTrail;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Tests\UnitTestCase;
+use Drupal\TestTools\Random;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\InputBag;
@@ -93,7 +94,7 @@ class MenuActiveTrailTest extends UnitTestCase {
    *     - menu_name: The active menu name.
    *     - expected_link: The expected active link for the given menu.
    */
-  public function provider() {
+  public static function provider() {
     $data = [];
 
     $mock_route = new Route('');
@@ -111,24 +112,24 @@ class MenuActiveTrailTest extends UnitTestCase {
     $empty_active_trail = [''];
 
     // No active link is returned when zero links match the current route.
-    $data[] = [$request, [], $this->randomMachineName(), NULL, $empty_active_trail];
+    $data[] = [$request, [], Random::machineName(), NULL, $empty_active_trail];
 
     // The first (and only) matching link is returned when one link matches the
     // current route.
-    $data[] = [$request, ['baby_llama_link_1' => $link_1], $this->randomMachineName(), $link_1, $link_1_parent_ids];
+    $data[] = [$request, ['baby_llama_link_1' => $link_1], Random::machineName(), $link_1, $link_1_parent_ids];
 
     // The first of multiple matching links is returned when multiple links
     // match the current route, where "first" is determined by sorting by key.
-    $data[] = [$request, ['baby_llama_link_1' => $link_1, 'baby_llama_link_2' => $link_2], $this->randomMachineName(), $link_1, $link_1_parent_ids];
+    $data[] = [$request, ['baby_llama_link_1' => $link_1, 'baby_llama_link_2' => $link_2], Random::machineName(), $link_1, $link_1_parent_ids];
 
     // No active link is returned in case of a 403.
     $request = new Request();
     $request->attributes->set('_exception_statuscode', 403);
-    $data[] = [$request, FALSE, $this->randomMachineName(), NULL, $empty_active_trail];
+    $data[] = [$request, FALSE, Random::machineName(), NULL, $empty_active_trail];
 
     // No active link is returned when the route name is missing.
     $request = new Request();
-    $data[] = [$request, FALSE, $this->randomMachineName(), NULL, $empty_active_trail];
+    $data[] = [$request, FALSE, Random::machineName(), NULL, $empty_active_trail];
 
     return $data;
   }
