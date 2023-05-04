@@ -177,7 +177,7 @@ system.logging_settings:
 system.performance_settings:
   path: '/admin/config/development/performance'
   defaults:
-    _form: '\Drupal\system\Form\PerformanceForm'
+    _controller: '\Drupal\system\Controller\PerformanceController::build'
     _title: 'Performance'
   requirements:
     _permission: 'administer site configuration'
