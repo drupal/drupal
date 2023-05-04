@@ -196,6 +196,13 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   protected $configImporter;
 
   /**
+   * The key_value service that must persist between container rebuilds.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueMemoryFactory
+   */
+  protected $keyValue;
+
+  /**
    * The app root.
    *
    * @var string
@@ -545,11 +552,17 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $container
       ->register('cache_factory', 'Drupal\Core\Cache\MemoryBackendFactory');
     $container
-      ->register('keyvalue.memory', 'Drupal\Core\KeyValueStore\KeyValueMemoryFactory')
-      // Must persist container rebuilds, or all data would vanish otherwise.
-      ->addTag('persist');
+      ->register('keyvalue.memory', 'Drupal\Core\KeyValueStore\KeyValueMemoryFactory');
     $container
       ->setAlias('keyvalue', 'keyvalue.memory');
+
+    // Must persist container rebuilds, or all data would vanish otherwise.
+    if ($this->keyValue !== NULL) {
+      $container->set('keyvalue.memory', $this->keyValue);
+    }
+    else {
+      $this->keyValue = $container->get('keyvalue.memory');
+    }
 
     // Set the default language on the minimal container.
     $container->setParameter('language.default_values', Language::$defaultValues);
