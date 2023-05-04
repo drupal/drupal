@@ -443,7 +443,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "d5230c2446619aaafdf71d8c184a15d652cdb9f7"
+                "reference": "9cac43a52969b4e81d5d4220ce865ab7f5186775"
             },
             "require": {
                 "asm89/stack-cors": "^2.1",
@@ -465,7 +465,7 @@
                 "ext-tokenizer": "*",
                 "ext-xml": "*",
                 "guzzlehttp/guzzle": "^7.5",
-                "guzzlehttp/psr7": "^2.4",
+                "guzzlehttp/psr7": "^2.4.5",
                 "masterminds/html5": "^2.7",
                 "pear/archive_tar": "^1.4.14",
                 "php": ">=8.1.0",

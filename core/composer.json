@@ -33,7 +33,7 @@
         "twig/twig": "^3.4.3",
         "doctrine/annotations": "^1.13",
         "guzzlehttp/guzzle": "^7.5",
-        "guzzlehttp/psr7": "^2.4",
+        "guzzlehttp/psr7": "^2.4.5",
         "egulias/email-validator": "^3.2.1",
         "masterminds/html5": "^2.7",
         "symfony/psr-http-message-bridge": "^2.1",
