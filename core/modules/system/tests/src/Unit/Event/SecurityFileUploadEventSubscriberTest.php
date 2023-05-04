@@ -86,6 +86,9 @@ class SecurityFileUploadEventSubscriberTest extends UnitTestCase {
       'null bytes are removed' => ['foo' . chr(0) . '.txt' . chr(0), '', 'foo.txt'],
       'dot files are renamed' => ['.git', '', 'git'],
       'htaccess files are renamed even if allowed' => ['.htaccess', 'htaccess txt', '.htaccess_.txt', '.htaccess'],
+      '.phtml extension allowed with .phtml file' => ['foo.phtml', 'phtml', 'foo.phtml'],
+      '.phtml, .txt extension allowed with .phtml file' => ['foo.phtml', 'phtml txt', 'foo.phtml_.txt', 'foo.phtml'],
+      'All extensions allowed with .phtml file' => ['foo.phtml', '', 'foo.phtml_.txt', 'foo.phtml'],
     ];
   }
 

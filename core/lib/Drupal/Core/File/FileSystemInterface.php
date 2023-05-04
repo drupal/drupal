@@ -37,14 +37,14 @@ interface FileSystemInterface {
    *
    * @see \Drupal\Core\File\FileSystemInterface::INSECURE_EXTENSION_REGEX
    */
-  public const INSECURE_EXTENSIONS = ['phar', 'php', 'pl', 'py', 'cgi', 'asp', 'js', 'htaccess'];
+  public const INSECURE_EXTENSIONS = ['phar', 'php', 'pl', 'py', 'cgi', 'asp', 'js', 'htaccess', 'phtml'];
 
   /**
    * The regex pattern used when checking for insecure file types.
    *
    * @see \Drupal\Core\File\FileSystemInterface::INSECURE_EXTENSIONS
    */
-  public const INSECURE_EXTENSION_REGEX = '/\.(phar|php|pl|py|cgi|asp|js|htaccess)(\.|$)/i';
+  public const INSECURE_EXTENSION_REGEX = '/\.(phar|php|pl|py|cgi|asp|js|htaccess|phtml)(\.|$)/i';
 
   /**
    * Moves an uploaded file to a new location.
