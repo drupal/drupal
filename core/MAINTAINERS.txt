@@ -388,12 +388,6 @@ Taxonomy
 Telephone
 - Stephen Mustgrave 'smustgrave' https://www.drupal.org/u/smustgrave
 
-Testing framework
-- Alex Pott 'alexpott' https://www.drupal.org/u/alexpott
-- Sascha Grossenbacher 'Berdir' https://www.drupal.org/u/berdir
-- Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
-- Alberto M. 'mondrake' https://www.drupal.org/u/mondrake
-
 Text Field
 - Stephen Mustgrave 'smustgrave' https://www.drupal.org/u/smustgrave
 
@@ -466,7 +460,10 @@ Performance
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
 
 Testing
-- ?
+- Alex Pott 'alexpott' https://www.drupal.org/u/alexpott
+- Sascha Grossenbacher 'Berdir' https://www.drupal.org/u/berdir
+- Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
+- Alberto M. 'mondrake' https://www.drupal.org/u/mondrake
 
 Usability
 - Cristina Chumillas 'ckrina' https://www.drupal.org/u/ckrina
