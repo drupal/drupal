@@ -56,7 +56,7 @@ class FileListingTest extends FileFieldTestBase {
   /**
    * Calculates total count of usages for a file.
    *
-   * @param $usage array
+   * @param array $usage
    *   Array of file usage information as returned from file_usage subsystem.
    *
    * @return int
