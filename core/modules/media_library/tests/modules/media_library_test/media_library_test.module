@@ -27,7 +27,10 @@ function media_library_test_media_create_access(AccountInterface $account, array
  * Implements hook_entity_field_access().
  */
 function media_library_test_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
-  return AccessResult::forbiddenIf($field_definition->getName() === 'field_media_no_access', 'Field access denied by test module');
+  $deny_fields = \Drupal::state()->get('media_library_test_entity_field_access_deny_fields', []);
+  // Always deny the field_media_no_access field.
+  $deny_fields[] = 'field_media_no_access';
+  return AccessResult::forbiddenIf(in_array($field_definition->getName(), $deny_fields, TRUE), 'Field access denied by test module');
 }
 
 /**
