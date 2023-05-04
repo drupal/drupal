@@ -491,7 +491,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "d55f9a95d0d10b10b2945d162fa86b383ecc9cda"
+                "reference": "5a9a3329284c00b698aa63e5921d98daddae69cb"
             },
             "require": {
                 "asm89/stack-cors": "^2.1",
@@ -513,7 +513,7 @@
                 "ext-tokenizer": "*",
                 "ext-xml": "*",
                 "guzzlehttp/guzzle": "^7.5",
-                "guzzlehttp/psr7": "^2.4",
+                "guzzlehttp/psr7": "^2.4.5",
                 "masterminds/html5": "^2.7",
                 "mck89/peast": "^1.14",
                 "pear/archive_tar": "^1.4.14",
