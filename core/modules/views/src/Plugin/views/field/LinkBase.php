@@ -164,9 +164,12 @@ abstract class LinkBase extends FieldPluginBase {
    */
   public function render(ResultRow $row) {
     $access = $this->checkUrlAccess($row);
-    $build = ['#markup' => $access->isAllowed() ? $this->renderLink($row) : ''];
-    BubbleableMetadata::createFromObject($access)->applyTo($build);
-    return $build;
+    if ($access) {
+      $build = ['#markup' => $access->isAllowed() ? $this->renderLink($row) : ''];
+      BubbleableMetadata::createFromObject($access)->applyTo($build);
+      return $build;
+    }
+    return '';
   }
 
   /**
@@ -175,12 +178,13 @@ abstract class LinkBase extends FieldPluginBase {
    * @param \Drupal\views\ResultRow $row
    *   A view result row.
    *
-   * @return \Drupal\Core\Access\AccessResultInterface
-   *   The access result.
+   * @return \Drupal\Core\Access\AccessResultInterface|null
+   *   The access result, or NULL if the URI elements of the link doesn't exist.
    */
   protected function checkUrlAccess(ResultRow $row) {
-    $url = $this->getUrlInfo($row);
-    return $this->accessManager->checkNamedRoute($url->getRouteName(), $url->getRouteParameters(), $this->currentUser(), TRUE);
+    if ($url = $this->getUrlInfo($row)) {
+      return $this->accessManager->checkNamedRoute($url->getRouteName(), $url->getRouteParameters(), $this->currentUser(), TRUE);
+    }
   }
 
   /**
@@ -189,7 +193,7 @@ abstract class LinkBase extends FieldPluginBase {
    * @param \Drupal\views\ResultRow $row
    *   A view result row.
    *
-   * @return \Drupal\Core\Url
+   * @return \Drupal\Core\Url|null
    *   The URI elements of the link.
    */
   abstract protected function getUrlInfo(ResultRow $row);
@@ -219,7 +223,7 @@ abstract class LinkBase extends FieldPluginBase {
    */
   protected function addLangcode(ResultRow $row) {
     $entity = $this->getEntity($row);
-    if ($this->languageManager->isMultilingual()) {
+    if ($entity && $this->languageManager->isMultilingual()) {
       $this->options['alter']['language'] = $this->getEntityTranslation($entity, $row)->language();
     }
   }

@@ -288,17 +288,23 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
       // Render checkboxes for all rows.
       $form[$this->options['id']]['#tree'] = TRUE;
       foreach ($this->view->result as $row_index => $row) {
-        $entity = $this->getEntityTranslation($this->getEntity($row), $row);
+        $entity = $this->getEntity($row);
+        if ($entity !== NULL) {
+          $entity = $this->getEntityTranslation($entity, $row);
 
-        $form[$this->options['id']][$row_index] = [
-          '#type' => 'checkbox',
-          // We are not able to determine a main "title" for each row, so we can
-          // only output a generic label.
-          '#title' => $this->t('Update this item'),
-          '#title_display' => 'invisible',
-          '#default_value' => !empty($form_state->getValue($this->options['id'])[$row_index]) ? 1 : NULL,
-          '#return_value' => $this->calculateEntityBulkFormKey($entity, $use_revision),
-        ];
+          $form[$this->options['id']][$row_index] = [
+            '#type' => 'checkbox',
+            // We are not able to determine a main "title" for each row, so we
+            // can only output a generic label.
+            '#title' => $this->t('Update this item'),
+            '#title_display' => 'invisible',
+            '#default_value' => !empty($form_state->getValue($this->options['id'])[$row_index]) ? 1 : NULL,
+            '#return_value' => $this->calculateEntityBulkFormKey($entity, $use_revision),
+          ];
+        }
+        else {
+          $form[$this->options['id']][$row_index] = [];
+        }
       }
 
       // Replace the form submit button label.
