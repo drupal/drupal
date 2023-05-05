@@ -3,6 +3,7 @@
 namespace Drupal\Tests\Component\Diff\Engine;
 
 use Drupal\Component\Diff\Engine\DiffOp;
+use Drupal\Tests\Traits\PhpUnitWarnings;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
@@ -21,6 +22,7 @@ use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 class DiffOpTest extends TestCase {
 
   use ExpectDeprecationTrait;
+  use PhpUnitWarnings;
 
   /**
    * DiffOp::reverse() always throws an error.

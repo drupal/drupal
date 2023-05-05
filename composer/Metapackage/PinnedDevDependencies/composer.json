@@ -44,7 +44,7 @@
         "phpunit/php-invoker": "3.1.1",
         "phpunit/php-text-template": "2.0.4",
         "phpunit/php-timer": "5.0.3",
-        "phpunit/phpunit": "9.5.28",
+        "phpunit/phpunit": "9.6.7",
         "react/promise": "v2.9.0",
         "sebastian/cli-parser": "1.0.1",
         "sebastian/code-unit": "1.0.8",

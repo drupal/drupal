@@ -22,6 +22,12 @@
 %"PHPUnit\\Framework\\TestSuite".*is considered internal%
 %"PHPUnit\\TextUI\\DefaultResultPrinter".*is considered internal%
 
+# PHPUnit 9.6.
+%Expecting E_WARNING and E_USER_WARNING is deprecated and will no longer be possible in PHPUnit 10%
+%Expecting E_ERROR and E_USER_ERROR is deprecated and will no longer be possible in PHPUnit 10%
+%assertObjectHasAttribute\(\) is deprecated and will be removed in PHPUnit 10%
+%assertObjectNotHasAttribute\(\) is deprecated and will be removed in PHPUnit 10%
+
 # Skip deprecations for EditorMediaDialog, EditorImageDialog and EditorLinkDialog triggered by
 # \Drupal\Core\Entity\EntityResolverManager::setRouteOptions().
 %Drupal\\media\\Form\\EditorMediaDialog is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/project/drupal/issues/3291493%
