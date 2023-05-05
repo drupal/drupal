@@ -135,4 +135,33 @@ class FormGroupingElementsTest extends WebDriverTestBase {
     $this->assertEquals('true', $summary->getAttribute('aria-pressed'));
   }
 
+  /**
+   * Confirms tabs containing a field with a validation error are open.
+   */
+  public function testVerticalTabValidationVisibility() {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    $this->drupalGet('form-test/group-vertical-tabs');
+    $page->clickLink('Second group element');
+    $input_field = $assert_session->waitForField('element_2');
+    $this->assertNotNull($input_field);
+
+    // Enter a value that will trigger a validation error.
+    $input_field->setValue('bad');
+
+    // Switch to a tab that does not have the error-causing field.
+    $page->clickLink('First group element');
+    $this->assertNotNull($assert_session->waitForElementVisible('css', '#edit-meta'));
+
+    // Submit the form.
+    $page->pressButton('Save');
+
+    // Confirm there is an error.
+    $assert_session->waitForText('there was an error');
+
+    // Confirm the tab containing the field with error is open.
+    $this->assertNotNull($assert_session->waitForElementVisible('css', '[name="element_2"].error'));
+  }
+
 }

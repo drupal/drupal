@@ -55,6 +55,15 @@
           tabFocus.data('verticalTab').focus();
         }
       });
+      context.querySelectorAll('details .form-item .error').forEach(function (item) {
+        var details = item.closest('details');
+        if (details.style.display === 'none') {
+          var tabSelect = document.querySelector("[href='#".concat(details.id, "']"));
+          if (tabSelect) {
+            tabSelect.click();
+          }
+        }
+      });
     }
   };
   Drupal.verticalTab = function (settings) {

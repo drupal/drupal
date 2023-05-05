@@ -513,17 +513,4 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
     $(filterStatusCheckboxes).off('click.filterUpdate');
     originalFilterStatusAttach(context, settings);
   };
-  Drupal.behaviors.tabErrorsVisible = {
-    attach: function attach(context) {
-      context.querySelectorAll('details .form-item .error').forEach(function (item) {
-        var details = item.closest('details');
-        if (details.style.display === 'none') {
-          var tabSelect = document.querySelector("[href='#".concat(details.id, "']"));
-          if (tabSelect) {
-            tabSelect.click();
-          }
-        }
-      });
-    }
-  };
 })(Drupal, drupalSettings, jQuery, JSON, once, Sortable, tabbable);
