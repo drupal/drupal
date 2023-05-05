@@ -30,6 +30,7 @@ abstract class UnitTestCase extends TestCase {
   use PhpUnitCompatibilityTrait;
   use ProphecyTrait;
   use ExpectDeprecationTrait;
+  use RandomGeneratorTrait;
 
   /**
    * The app root.
@@ -71,31 +72,6 @@ abstract class UnitTestCase extends TestCase {
     if ($name === 'randomGenerator') {
       return Random::getGenerator();
     }
-  }
-
-  /**
-   * Generates a unique random string containing letters and numbers.
-   *
-   * @param int $length
-   *   Length of random string to generate.
-   *
-   * @return string
-   *   Randomly generated unique string.
-   *
-   * @see \Drupal\Component\Utility\Random::name()
-   */
-  public function randomMachineName($length = 8) {
-    return Random::machineName($length);
-  }
-
-  /**
-   * Gets the random generator for the utility methods.
-   *
-   * @return \Drupal\Component\Utility\Random
-   *   The random generator
-   */
-  protected function getRandomGenerator() {
-    return Random::getGenerator();
   }
 
   /**
