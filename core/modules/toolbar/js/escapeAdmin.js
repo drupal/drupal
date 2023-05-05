@@ -20,7 +20,7 @@
   }
 
   /**
-   * Replaces the "Home" link with "Back to site" link.
+   * Replaces "Back to site" link url when appropriate.
    *
    * Back to site link points to the last non-administrative page the user
    * visited within the same browser tab.
@@ -33,12 +33,12 @@
   Drupal.behaviors.escapeAdmin = {
     attach() {
       const toolbarEscape = once('escapeAdmin', '[data-toolbar-escape-admin]');
-      if (toolbarEscape.length && pathInfo.currentPathIsAdmin) {
-        if (escapeAdminPath !== null) {
-          $(toolbarEscape).attr('href', escapeAdminPath);
-        } else {
-          toolbarEscape[0].textContent = Drupal.t('Home');
-        }
+      if (
+        toolbarEscape.length &&
+        pathInfo.currentPathIsAdmin &&
+        escapeAdminPath !== null
+      ) {
+        $(toolbarEscape).attr('href', escapeAdminPath);
       }
     },
   };
