@@ -7,6 +7,7 @@
 
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements callback_allowed_values_function().
@@ -53,6 +54,15 @@ function options_test_dynamic_values_callback(FieldStorageDefinitionInterface $d
   }
   // We need the values of the entity as keys.
   return array_combine($values, $values);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function options_test_form_entity_test_entity_test_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (\Drupal::state()->get('options_test.form_alter_enable', FALSE)) {
+    $form['card_1']['widget']['#required_error'] = t('This is custom message for required field.');
+  }
 }
 
 /**
