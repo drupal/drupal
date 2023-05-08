@@ -1040,4 +1040,26 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     ];
   }
 
+  /**
+   * Test translation defaults.
+   */
+  public function testTranslationDefaults() {
+    $this->createField();
+    $field_storage = FieldStorageConfig::loadByName('node', 'field_' . $this->fieldNameInput);
+    $this->assertTrue($field_storage->isTranslatable(), 'Field storage translatable.');
+
+    $field = FieldConfig::loadByName('node', $this->contentType, 'field_' . $this->fieldNameInput);
+    $this->assertFalse($field->isTranslatable(), 'Field instance should not be translatable by default.');
+
+    // Add a new field based on an existing field.
+    $this->drupalCreateContentType(['type' => 'additional', 'name' => 'Additional type']);
+    $this->fieldUIAddExistingField("admin/structure/types/manage/additional", $this->fieldName, 'Additional type');
+
+    $field_storage = FieldStorageConfig::loadByName('node', 'field_' . $this->fieldNameInput);
+    $this->assertTrue($field_storage->isTranslatable(), 'Field storage translatable.');
+
+    $field = FieldConfig::loadByName('node', 'additional', 'field_' . $this->fieldNameInput);
+    $this->assertFalse($field->isTranslatable(), 'Field instance should not be translatable by default.');
+  }
+
 }

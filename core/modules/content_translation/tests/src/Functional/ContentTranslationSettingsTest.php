@@ -305,6 +305,9 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
     $this->assertSession()->fieldDisabled('edit-translatable');
     $this->assertSession()->pageTextContains('To configure translation for this field, enable language support for this type.');
 
+    // 'Users may translate this field' should be unchecked by default.
+    $this->assertSession()->checkboxNotChecked('translatable');
+
     // Tests that field has translatable setting if bundle is translatable.
     // Note: this field is not translatable when enable bundle translatability.
     $edit = [
