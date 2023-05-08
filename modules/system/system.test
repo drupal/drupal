@@ -2871,6 +2871,15 @@ class SystemAdminTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Test the phpinfo() page.
+   */
+  function testAdminPhpInfo() {
+    $this->drupalGet('admin/reports/status/php');
+    $this->assertText('PHP');
+    $this->assertNoText('_COOKIE[');
+  }
+
+  /**
    * Test compact mode.
    */
   function testCompactMode() {
