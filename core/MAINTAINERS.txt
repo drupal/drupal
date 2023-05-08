@@ -84,7 +84,7 @@ Bartik
 - Emma Maria Karayiannis 'emma.maria' https://www.drupal.org/u/emma.maria
 
 Base system
-- ?
+- See "Framework managers" above.
 
 Basic Auth
 - Juampy Novillo Requena 'juampy' https://www.drupal.org/u/juampy
