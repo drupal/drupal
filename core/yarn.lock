@@ -30,6 +30,13 @@
   dependencies:
     ckeditor5 "^37.1.0"
 
+"@ckeditor/ckeditor5-autoformat@~37.1.0":
+  version "37.1.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-autoformat/-/ckeditor5-autoformat-37.1.0.tgz#a4bfc9435388bb071a6bff019c8cfa961664234c"
+  integrity sha512-wZSuqsD6oz06fbE2zCn8PUDyax5YUDWFnB/26piLBu0HteRYFXJtIq6s2vA+zBbFfR3FL7362t+DP9VEHGigtw==
+  dependencies:
+    ckeditor5 "^37.1.0"
+
 "@ckeditor/ckeditor5-basic-styles@~37.1.0":
   version "37.1.0"
   resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-basic-styles/-/ckeditor5-basic-styles-37.1.0.tgz#d79a8dcf1b21b02bd29f17c6624fce5f627f671e"

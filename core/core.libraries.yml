@@ -314,6 +314,18 @@ ckeditor5.translations:
     # are not allowed.
     assets/vendor/ckeditor5/translation.js: {}
 
+ckeditor5.autoformat:
+  remote: https://github.com/ckeditor/ckeditor5
+  version: "37.1.0"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v37.1.0/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/ckeditor5/autoformat/autoformat.js: { minified: true }
+  dependencies:
+    - core/ckeditor5
+
 css.escape:
   version: VERSION
   drupalSettings: {}

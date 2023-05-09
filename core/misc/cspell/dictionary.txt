@@ -63,6 +63,7 @@ autoescape
 autoescaped
 autoescaping
 autofix
+autoformat
 autogenerator
 autoloadable
 autoloaded

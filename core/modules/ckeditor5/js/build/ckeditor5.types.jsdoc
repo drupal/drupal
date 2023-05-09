@@ -23,6 +23,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-autoformat/src/blockautoformatediting.js
+ *
+ * @typedef {module:autoformat/blockautoformatediting} module:autoformat/blockautoformatediting~blockAutoformatEditing
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-basic-styles/src/attributecommand.js
  *
  * @typedef {module:basic-styles/attributecommand} module:basic-styles/attributecommand~AttributeCommand

@@ -441,6 +441,15 @@ ckeditor5_alignment:
     elements:
       - <$text-container class="text-align-left text-align-center text-align-right text-align-justify">
 
+ckeditor5_autoformat:
+  ckeditor5:
+    plugins:
+      - autoformat.Autoformat
+  drupal:
+    label: Autoformat
+    library: core/ckeditor5.autoformat
+    elements: false
+
 ckeditor5_removeFormat:
   ckeditor5:
     plugins: [removeFormat.RemoveFormat]
