@@ -17,6 +17,14 @@ class LocaleNonInteractiveInstallTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    $this->markTestSkipped('Skipped due to major version-specific logic. See https://www.drupal.org/project/drupal/issues/3359322');
+    parent::setUp();
+  }
+
+  /**
    * Gets the version string to use in the translation file.
    *
    * @return string

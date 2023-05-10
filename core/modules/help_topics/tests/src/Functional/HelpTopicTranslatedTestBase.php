@@ -80,8 +80,7 @@ msgid "Non-word-item to translate."
 msgstr "Non-word-german sdfwedrsdf."
 
 ENDPO;
-    include_once $this->root . '/core/includes/install.core.inc';
-    $version = _install_get_version_info(\Drupal::VERSION)['major'] . '.0.0';
+    $version = explode('.', \Drupal::VERSION)[0] . '.0.0';
     file_put_contents($this->publicFilesDirectory . "/translations/drupal-{$version}.de.po", $contents);
     return $parameters;
   }
