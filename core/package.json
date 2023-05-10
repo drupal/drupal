@@ -81,7 +81,7 @@
     "postcss": "^8.4.16",
     "postcss-header": "^3.0.2",
     "postcss-import": "^15.0.0",
-    "postcss-preset-env": "^7.8.1",
+    "postcss-preset-env": "^8.3.2",
     "postcss-pxtorem": "^6.0.0",
     "postcss-url": "^10.1.3",
     "prettier": "^2.1.2",

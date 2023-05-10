@@ -191,6 +191,7 @@
 
   .system-status-report__status-title:hover,
   .system-status-report__status-title:focus {
+    -webkit-text-decoration: none;
     text-decoration: none;
   }
 

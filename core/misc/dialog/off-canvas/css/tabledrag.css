@@ -46,6 +46,7 @@
 
 #drupal-off-canvas-wrapper td abbr {
   margin-inline: 0 0.3125rem;
+  -webkit-text-decoration: none;
   text-decoration: none;
 }
 

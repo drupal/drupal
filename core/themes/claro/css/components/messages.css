@@ -52,6 +52,7 @@
 }
 
 .messages a {
+  -webkit-text-decoration: underline;
   text-decoration: underline;
   color: var(--messages__link-color);
 }

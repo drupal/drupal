@@ -37,6 +37,7 @@
 
 .primary-nav__menu-link {
   flex-grow: 1;
+  -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--color-text-neutral-loud);
   font-size: 1.75rem;

@@ -41,6 +41,7 @@
   display: inline-block;
   padding: calc(var(--space-m) - ((var(--space-l) - var(--space-m)) / 2)) var(--space-m);
   cursor: pointer;
+  -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--color-gray-800);
   border-radius: var(--button-border-radius-size);
@@ -55,6 +56,7 @@
 }
 
 .action-link:hover {
+  -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--color-absolutezero-hover);
   background-color: var(--color-bgblue-hover);
@@ -63,6 +65,7 @@
 .action-link:focus {
   position: relative;
   z-index: 1;
+  -webkit-text-decoration: none;
   text-decoration: none;
 }
 

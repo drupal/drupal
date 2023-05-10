@@ -30,16 +30,8 @@
   --sp: 1.125rem;
   --content-left: 5.625rem;
   --site-header-height-wide: var(--sp10);
-  --container-padding: var(--sp); /* Inline padding on .container elements. */
-}
+  --container-padding: var(--sp);
 
-@media (min-width: 75rem) {
-  :root {
-    --container-padding: var(--sp2);
-  }
-}
-
-:root {
   /**
    * Grid helpers.
    *
@@ -51,35 +43,8 @@
   --grid-gap: var(--sp);
   --grid-gap-count: calc(var(--grid-col-count) - 1); /* Count of grid-gaps. */
   --grid-full-width: calc(100vw - var(--sp2) - var(--scrollbar-width)); /* Width of the entire grid. */
-  --grid-col-width: calc((var(--grid-full-width) - (var(--grid-gap-count) * var(--grid-gap))) / var(--grid-col-count)); /* Width of a grid column. */
-}
+  --grid-col-width: calc((var(--grid-full-width) - (var(--grid-gap-count) * var(--grid-gap))) / var(--grid-col-count));
 
-@media (min-width: 43.75rem) {
-  :root {
-    --grid-col-count: 14;
-    --grid-gap: var(--sp2);
-  }
-}
-
-@media (min-width: 62.5rem) {
-  :root {
-    --scrollbar-width: 0.9375rem; /* Approximate width of a scrollbar. Doesn't have to be perfect. */
-  }
-}
-
-@media (min-width: 75rem) {
-  :root {
-    --grid-full-width: calc(100vw - var(--scrollbar-width) - var(--content-left) - var(--sp4));
-  }
-}
-
-@media (min-width: 90rem) {
-  :root {
-    --grid-full-width: calc(var(--max-width) - var(--sp4));
-  }
-}
-
-:root {
   /* Layout helpers */
   --sp0-25: calc(0.25 * var(--sp));
   --sp0-5: calc(0.5 * var(--sp));
@@ -115,7 +80,7 @@
   --color--gray-70: hsl(var(--color--gray-hue), var(--color--gray-saturation), 72%); /* Gray medium 2 */
   --color--gray-90: hsl(var(--color--gray-hue), var(--color--gray-saturation), 88%); /* Gray light */
   --color--gray-95: hsl(var(--color--gray-hue), var(--color--gray-saturation), 93%); /* Gray light 1 */
-  --color--gray-100: hsl(var(--color--gray-hue), var(--color--gray-saturation), 97%); /* Gray light 2 */
+  --color--gray-100: hsl(var(--color--gray-hue), var(--color--gray-saturation), 97%);
 
   /**
    * Primary colors.
@@ -129,7 +94,7 @@
   --color--primary-40: hsl(var(--color--primary-hue), var(--color--primary-saturation), calc(1% * (var(--color--primary-lightness) - (0.24 * var(--color--primary-lightness))))); /* Blue dark */
   --color--primary-50: hsl(var(--color--primary-hue), var(--color--primary-saturation), calc(1% * var(--color--primary-lightness))); /* Blue medium */
   --color--primary-60: hsl(var(--color--primary-hue), var(--color--primary-saturation), calc(1% * (var(--color--primary-lightness) + (0.24 * (100 - var(--color--primary-lightness)))))); /* Blue bright */
-  --color--primary-80: hsl(var(--color--primary-hue), var(--color--primary-saturation), calc(1% * (var(--color--primary-lightness) + (0.85 * (100 - var(--color--primary-lightness)))))); /* Blue very bright */
+  --color--primary-80: hsl(var(--color--primary-hue), var(--color--primary-saturation), calc(1% * (var(--color--primary-lightness) + (0.85 * (100 - var(--color--primary-lightness))))));
 
   /**
    * Variables specific to text.
@@ -148,7 +113,7 @@
   --color--white: #fff; /* White */
   --color--red: #e33f1e; /* Red */
   --color--gold: #fdca40; /* Gold */
-  --color--green: #3fa21c; /* Green */
+  --color--green: #3fa21c;
 
   /* Header */
   --header-height-wide-when-fixed: calc(6 * var(--sp));
@@ -157,5 +122,44 @@
   --mobile-nav-width: 31.25rem;
 
   /* Border radius */
-  --border-radius: 0.1875rem;
+  --border-radius: 0.1875rem; /* Inline padding on .container elements. */
+}
+
+@media (min-width: 75rem) {
+  :root {
+    --container-padding: var(--sp2);
+  }
+}
+
+/* Green */
+
+/* Width of a grid column. */
+
+@media (min-width: 43.75rem) {
+  :root {
+    --grid-col-count: 14;
+    --grid-gap: var(--sp2);
+  }
+}
+
+/* Blue very bright */
+
+@media (min-width: 62.5rem) {
+  :root {
+    --scrollbar-width: 0.9375rem; /* Approximate width of a scrollbar. Doesn't have to be perfect. */
+  }
+}
+
+/* Gray light 2 */
+
+@media (min-width: 75rem) {
+  :root {
+    --grid-full-width: calc(100vw - var(--scrollbar-width) - var(--content-left) - var(--sp4));
+  }
+}
+
+@media (min-width: 90rem) {
+  :root {
+    --grid-full-width: calc(var(--max-width) - var(--sp4));
+  }
 }

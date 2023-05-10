@@ -36,6 +36,7 @@
 }
 
 .skip-link:focus {
+  -webkit-text-decoration: none;
   text-decoration: none;
 }
 

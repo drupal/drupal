@@ -18,6 +18,7 @@
 }
 
 .views-admin a:hover {
+  -webkit-text-decoration: none;
   text-decoration: none;
 }
 

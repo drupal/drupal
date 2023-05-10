@@ -45,6 +45,7 @@
   min-inline-size: var(--pager-size);
   block-size: var(--pager-size);
   padding-inline: var(--space-xs);
+  -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--pager-fg-color);
   border-radius: var(--space-m); /* Pager size ÷ 2 */
@@ -54,6 +55,7 @@
 .pager__link:hover,
 .pager__link:focus,
 .pager__link:active {
+  -webkit-text-decoration: none;
   text-decoration: none;
 }
 .pager__link:hover,
@@ -138,6 +140,7 @@
 }
 @media (forced-colors: active) {
   .pager__item a:hover {
+    -webkit-text-decoration: underline;
     text-decoration: underline;
   }
 }

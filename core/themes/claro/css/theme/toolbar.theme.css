@@ -26,11 +26,13 @@
 .toolbar .toolbar-item {
   padding: 1em 1.3333em;
   cursor: pointer;
+  -webkit-text-decoration: none;
   text-decoration: none;
   line-height: 1em;
 }
 .toolbar .toolbar-item:hover,
 .toolbar .toolbar-item:focus {
+  -webkit-text-decoration: underline;
   text-decoration: underline;
 }
 /**
@@ -94,6 +96,7 @@
 .toolbar-tray a:visited {
   padding: 1em 1.3333em;
   cursor: pointer;
+  -webkit-text-decoration: none;
   text-decoration: none;
   color: #565656;
 }
@@ -101,6 +104,7 @@
 .toolbar-tray a:active,
 .toolbar-tray a:focus,
 .toolbar-tray a.is-active {
+  -webkit-text-decoration: underline;
   text-decoration: underline;
   color: #000;
 }

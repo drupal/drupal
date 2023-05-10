@@ -233,6 +233,7 @@ details.fieldset-no-legend {
 }
 
 .views-tabs .views-display-deleted-link {
+  -webkit-text-decoration: line-through;
   text-decoration: line-through;
 }
 
@@ -292,6 +293,7 @@ details.fieldset-no-legend {
 }
 
 .views-tabs li a {
+  -webkit-text-decoration: none;
   text-decoration: none;
   background-color: #fff;
 }

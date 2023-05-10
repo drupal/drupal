@@ -49,6 +49,7 @@
 .book-pager__link {
   display: inline-flex;
   align-items: center;
+  -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--color-text-primary-medium);
   font-family: var(--font-serif);

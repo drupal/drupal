@@ -269,6 +269,7 @@
   padding: calc(var(--dropbutton-spacing-size) - var(--dropbutton-border-size)) calc(var(--space-l) - var(--dropbutton-border-size));
   cursor: pointer;
   text-align: center;
+  -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--button-fg-color); /* 1 */
   border-radius: var(--button-border-radius-size);
@@ -304,6 +305,7 @@
 
 .dropbutton__item:first-of-type > *:hover,
 .dropbutton__item:first-of-type > .button:hover {
+  -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--button-fg-color);
   background-color: var(--button--hover-bg-color);
@@ -316,6 +318,7 @@
 }
 
 .dropbutton__item:first-of-type > *:focus {
+  -webkit-text-decoration: none;
   text-decoration: none;
 }
 
@@ -395,6 +398,7 @@
 .dropbutton__item:first-of-type ~ .dropbutton__item > .button {
   position: relative;
   padding: calc(var(--dropbutton-spacing-size) - var(--dropbutton-border-size));
+  -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--color-gray-800); /* 1 */
   border-radius: var(--dropbutton-border-radius-size);

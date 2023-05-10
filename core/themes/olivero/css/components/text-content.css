@@ -38,12 +38,14 @@
   .text-content a:where(:not(.button)),
   .cke_editable a:where(:not(.button)) {
     transition: box-shadow 0.3s cubic-bezier(0.55, 0.085, 0, 0.99);
+    -webkit-text-decoration: none;
     text-decoration: none;
     box-shadow: inset 0 -2px 0 0 var(--color--primary-50);
   }
 
   .text-content a:where(:not(.button)):hover,
   .cke_editable a:where(:not(.button)):hover {
+    -webkit-text-decoration: underline;
     text-decoration: underline;
     color: var(--color--black);
     box-shadow: inset 0 -2em 0 0 var(--color--primary-80);
@@ -162,12 +164,14 @@
 }
 
 .site-footer .text-content a {
+  -webkit-text-decoration: underline;
   text-decoration: underline;
   color: var(--color--white);
   box-shadow: none;
 }
 
 .site-footer .text-content a:hover {
+  -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--color--white);
   box-shadow: none;

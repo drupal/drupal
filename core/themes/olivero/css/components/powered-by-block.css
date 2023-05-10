@@ -17,11 +17,13 @@
 }
 
 .block-system-powered-by-block a {
+  -webkit-text-decoration: underline;
   text-decoration: underline;
 }
 
 .block-system-powered-by-block a:hover,
 .block-system-powered-by-block a:focus {
+  -webkit-text-decoration: none;
   text-decoration: none;
 }
 

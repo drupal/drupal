@@ -26,6 +26,7 @@
 .breadcrumb__item,
 .breadcrumb__link {
   display: inline;
+  -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--color-text);
   font-weight: bold;
@@ -60,5 +61,6 @@
 
 .breadcrumb__link:hover,
 .breadcrumb__link:focus {
+  -webkit-text-decoration: none;
   text-decoration: none;
 }

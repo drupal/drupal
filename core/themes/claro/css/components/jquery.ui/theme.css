@@ -963,6 +963,7 @@
 
 .ui-autocomplete .ui-menu-item-wrapper:focus,
 .ui-autocomplete .ui-menu-item-wrapper:hover {
+  -webkit-text-decoration: none;
   text-decoration: none;
 }
 

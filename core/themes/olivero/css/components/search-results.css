@@ -36,6 +36,7 @@
 .search-result__title a {
   padding-block-end: 0.1875rem;
   transition: background-size 0.2s, color 0.2s;
+  -webkit-text-decoration: none;
   text-decoration: none;
   background-color: transparent;
   background-image: linear-gradient(var(--color--primary-50), var(--color--primary-50)); /* Two values are needed for IE11 support. */
