@@ -71,6 +71,7 @@
   display: block;
   margin-top: calc(var(--vertical-tabs-border-size) * -1);
   padding: var(--space-s) var(--space-s) var(--space-s) calc(var(--space-l) - var(--vertical-tabs-menu-link--active-border-size)); /* LTR */
+  -webkit-text-decoration: none;
   text-decoration: none;
   word-wrap: break-word;
   -webkit-hyphens: auto;
@@ -92,11 +93,13 @@
 
 .media-library-menu__link:focus {
   z-index: calc(var(--vertical-tabs-menu--z-index) + 3); /* Focus state should be on the highest level to make the focus effect be fully visible. This also means that it should have bigger z-index than the selected link. */
+  -webkit-text-decoration: none;
   text-decoration: none;
   box-shadow: none;
 }
 
 .media-library-menu__link:hover {
+  -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--color-absolutezero);
   /* These borders are necessary to replace the dividing lines while in the hover state. */
@@ -717,6 +720,7 @@
   position: absolute;
   top: var(--space-s);
   right: var(--space-m); /* LTR */
+  -webkit-text-decoration: none;
   text-decoration: none;
 }
 

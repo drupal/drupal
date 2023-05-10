@@ -45,6 +45,7 @@
 }
 
 .menu--sidebar .menu__link--link {
+  -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--color-text-neutral-loud);
   font-weight: 600;

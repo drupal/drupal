@@ -19,6 +19,7 @@
   padding-block: var(--sp0-5);
   padding-inline-start: var(--sp);
   padding-inline-end: var(--sp);
+  -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--color--white);
   outline: 0;
@@ -26,6 +27,7 @@
 }
 
 .skip-link:hover {
+  -webkit-text-decoration: underline;
   text-decoration: underline;
   color: var(--color--white);
 }

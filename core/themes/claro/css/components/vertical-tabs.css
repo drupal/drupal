@@ -125,6 +125,7 @@
   display: block;
   margin-top: calc(var(--vertical-tabs-border-size) * -1);
   padding: var(--space-s) var(--space-s) var(--space-s) calc(var(--space-l) - var(--vertical-tabs-menu-link--active-border-size)); /* LTR */
+  -webkit-text-decoration: none;
   text-decoration: none;
   word-wrap: break-word;
   -webkit-hyphens: auto;
@@ -146,11 +147,13 @@
 
 .vertical-tabs__menu-link:focus {
   z-index: 4; /* Focus state should be on the highest level to make the focus effect be fully visible. This also means that it should have bigger z-index than the selected link. */
+  -webkit-text-decoration: none;
   text-decoration: none;
   box-shadow: none;
 }
 
 .vertical-tabs__menu-link:hover {
+  -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--color-absolutezero);
 }

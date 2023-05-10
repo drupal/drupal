@@ -70,6 +70,7 @@
   position: relative;
   display: flex;
   align-items: center;
+  -webkit-text-decoration: none;
   text-decoration: none;
   letter-spacing: 0.02em;
   color: var(--color-text-primary-medium);

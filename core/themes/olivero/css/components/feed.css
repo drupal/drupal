@@ -13,6 +13,7 @@
 .feed-icon {
   display: flex;
   align-items: center;
+  -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--color-text-neutral-soft);
 }

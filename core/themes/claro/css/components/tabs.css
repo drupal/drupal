@@ -86,6 +86,7 @@
   box-sizing: border-box;
   min-height: var(--tabs-link-height);
   padding: var(--space-s) var(--space-l);
+  -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--color-gray-800);
   line-height: 1.2rem;
@@ -95,6 +96,7 @@
   min-height: calc(var(--tabs-link-height) + var(--tabs--focus-height) - 1px);
   margin: -1px;
   padding-inline-start: calc(var(--space-l) - var(--tabs--focus-height) + 1px);
+  -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--color-gray-800);
   border: var(--tabs--focus-height) solid var(--color-focus);
@@ -104,6 +106,7 @@
 }
 
 .tabs__link:hover {
+  -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--color-text);
 }

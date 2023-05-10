@@ -240,6 +240,7 @@
  */
 
 .toolbar-tab a:focus {
+  -webkit-text-decoration: underline;
   text-decoration: underline;
   outline: none;
 }
@@ -255,6 +256,7 @@
 }
 
 .toolbar-box a:hover:focus {
+  -webkit-text-decoration: underline;
   text-decoration: underline;
 }
 

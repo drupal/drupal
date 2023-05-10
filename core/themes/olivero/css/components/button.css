@@ -20,6 +20,7 @@
   padding-inline: var(--sp1-5);
   cursor: pointer;
   text-align: center;
+  -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--color-text-primary-medium);
   border: solid 2px currentColor;
@@ -35,6 +36,7 @@
 
 .button:hover,
 .button:focus {
+  -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--color-text-primary-loud);
   border: solid 2px currentColor;

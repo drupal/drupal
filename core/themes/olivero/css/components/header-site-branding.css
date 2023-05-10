@@ -69,6 +69,7 @@
 }
 
 .site-branding__inner a {
+  -webkit-text-decoration: none;
   text-decoration: none;
 }
 

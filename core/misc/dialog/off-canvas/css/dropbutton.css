@@ -127,6 +127,7 @@
   min-height: var(--off-canvas-dropbutton-height);
   margin-bottom: -2px;
   padding: 0 0.5625rem;
+  -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--off-canvas-dropbutton-text-color);
   font-weight: 600;

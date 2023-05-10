@@ -39,6 +39,7 @@
 
 #drupal-off-canvas-wrapper a,
 #drupal-off-canvas-wrapper .link {
+  -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--off-canvas-link-color);
 }

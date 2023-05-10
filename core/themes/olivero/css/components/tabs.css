@@ -74,6 +74,7 @@ html:not(.js) .tabs__tab {
   padding-block: 0;
   padding-inline: var(--tabs-padding-inline);
   transition: background-color var(--tabs-transition-duration);
+  -webkit-text-decoration: none;
   text-decoration: none;
   letter-spacing: var(--tabs-letter-spacing);
   color: var(--tabs-text-color);

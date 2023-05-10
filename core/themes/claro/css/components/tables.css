@@ -59,6 +59,7 @@ th {
 .sortable-heading > a {
   display: block;
   padding: var(--space-xs) 1.5rem var(--space-xs) 0; /* LTR */
+  -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
 }
@@ -120,6 +121,7 @@ th {
 
 .sortable-heading > a:focus,
 .sortable-heading > a:hover {
+  -webkit-text-decoration: none;
   text-decoration: none;
 }
 
