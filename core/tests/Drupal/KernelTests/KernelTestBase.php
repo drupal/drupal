@@ -200,7 +200,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    *
    * @var \Drupal\Core\KeyValueStore\KeyValueMemoryFactory
    */
-  protected KeyValueMemoryFactory $keyValue;
+  protected $keyValue;
 
   /**
    * The app root.
