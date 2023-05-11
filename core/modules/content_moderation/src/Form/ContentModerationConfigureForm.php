@@ -121,7 +121,7 @@ class ContentModerationConfigureForm extends WorkflowTypeConfigureFormBase imple
                 'class' => ['use-ajax'],
                 'data-dialog-type' => 'modal',
                 'data-dialog-options' => Json::encode([
-                  'width' => 700,
+                  'width' => 880,
                 ]),
               ],
             ],
