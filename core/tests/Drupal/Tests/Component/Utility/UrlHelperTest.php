@@ -430,14 +430,14 @@ class UrlHelperTest extends TestCase {
       ['https://example.com/external/path', TRUE],
       ['javascript://fake-external-path', FALSE],
       // External URL without an explicit protocol.
-      ['//www.drupal.org/foo/bar?foo=bar&bar=baz&baz#foo', TRUE],
+      ['//www.example.com/foo/bar?foo=bar&bar=baz&baz#foo', TRUE],
       // Internal URL starting with a slash.
-      ['/www.drupal.org', FALSE],
+      ['/www.example.com', FALSE],
       // Simple external URLs.
       ['http://example.com', TRUE],
       ['https://example.com', TRUE],
-      ['http://drupal.org/foo/bar?foo=bar&bar=baz&baz#foo', TRUE],
-      ['//drupal.org', TRUE],
+      ['http://example.com/foo/bar?foo=bar&bar=baz&baz#foo', TRUE],
+      ['//example.com', TRUE],
       // Some browsers ignore or strip leading control characters.
       ["\x00//www.example.com", TRUE],
       ["\x08//www.example.com", TRUE],
@@ -455,7 +455,7 @@ class UrlHelperTest extends TestCase {
       ['/system/ajax', FALSE],
       ['?q=foo:bar', FALSE],
       ['node/edit:me', FALSE],
-      ['/drupal.org', FALSE],
+      ['/example.com', FALSE],
       ['<front>', FALSE],
     ];
   }
