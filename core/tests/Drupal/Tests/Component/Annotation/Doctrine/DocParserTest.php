@@ -830,6 +830,10 @@ DOCBLOCK;
              })',
             array(
                 AnnotationWithConstants::STRING => AnnotationWithConstants::INTEGER,
+                // Since this class is a near-copy of
+                // Doctrine\Tests\Common\Annotations\DocParserTest, we don't fix
+                // PHPStan errors here.
+                // @phpstan-ignore-next-line
                 ClassWithConstants::SOME_KEY    => ClassWithConstants::SOME_VALUE,
                 ClassWithConstants::SOME_KEY    => IntefaceWithConstants::SOME_VALUE
             )
