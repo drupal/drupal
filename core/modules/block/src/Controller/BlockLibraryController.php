@@ -134,7 +134,7 @@ class BlockLibraryController extends ControllerBase {
           'class' => ['use-ajax'],
           'data-dialog-type' => 'modal',
           'data-dialog-options' => Json::encode([
-            'width' => 700,
+            'width' => 970,
           ]),
         ],
       ];

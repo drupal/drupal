@@ -236,7 +236,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
           'class' => ['use-ajax', 'button', 'button--small'],
           'data-dialog-type' => 'modal',
           'data-dialog-options' => Json::encode([
-            'width' => 700,
+            'width' => 880,
           ]),
         ],
       ];
