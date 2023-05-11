@@ -94,7 +94,7 @@ class LinkFieldUITest extends BrowserTestBase {
       DRUPAL_OPTIONAL,
     ];
     $link_types = [
-      LinkItemInterface::LINK_EXTERNAL => 'http://drupal.org',
+      LinkItemInterface::LINK_EXTERNAL => 'http://example.com',
       LinkItemInterface::LINK_GENERIC => '',
       LinkItemInterface::LINK_INTERNAL => '<front>',
     ];

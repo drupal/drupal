@@ -245,9 +245,9 @@ class ProjectReleaseTest extends UnitTestCase {
   protected function getValidData(): array {
     return [
       'status' => 'published',
-      'release_link' => 'https://drupal.org/release-link',
+      'release_link' => 'https://example.com/release-link',
       'version' => '8.0.0',
-      'download_link' => 'https://drupal.org/download-link',
+      'download_link' => 'https://example.com/download-link',
       'core_compatibility_message' => 'This is compatible',
       'date' => 1452229200,
       'terms' => [

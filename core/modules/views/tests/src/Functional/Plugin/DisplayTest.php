@@ -231,11 +231,11 @@ class DisplayTest extends ViewTestBase {
 
     // Test more link with absolute URL.
     $view->display_handler->setOption('link_display', 'custom_url');
-    $view->display_handler->setOption('link_url', 'http://drupal.org');
+    $view->display_handler->setOption('link_url', 'http://example.com');
     $this->executeView($view);
     $output = $view->preview();
     $output = $renderer->renderRoot($output);
-    $this->assertStringContainsString('http://drupal.org', $output, 'The read more link with href "http://drupal.org" was found.');
+    $this->assertStringContainsString('http://example.com', $output, 'The read more link with href "http://example.com" was found.');
 
     // Test more link with query parameters in the URL.
     $view->display_handler->setOption('link_display', 'custom_url');

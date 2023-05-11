@@ -327,7 +327,7 @@ abstract class JsonApiFunctionalTestBase extends BrowserTestBase {
       // Make sure that there is at least 1 https link for ::testRead() #19.
       $this->nodes[0]->field_link = [
         'title' => 'Drupal',
-        'uri' => 'https://drupal.org',
+        'uri' => 'https://example.com',
       ];
       $this->nodes[0]->save();
     }
