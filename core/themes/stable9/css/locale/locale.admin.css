@@ -72,12 +72,18 @@
   vertical-align: top;
 }
 .locale-translation-update__wrapper {
-  margin-left: -12px;
-  padding-left: 12px;
-  background: transparent url(../../../../misc/menu-collapsed.png) left 0.6em no-repeat;
+  margin-inline-start: -12px;
+  padding-inline-start: 12px;
+  background: transparent url(../../../misc/menu-collapsed.png) left 0.6em no-repeat; /* LTR */
+}
+[dir="rtl"] .locale-translation-update__wrapper {
+  background: transparent url(../../../misc/menu-collapsed-rtl.png) right 0.6em no-repeat; /* LTR */
 }
 .expanded .locale-translation-update__wrapper {
-  background: transparent url(../../../../misc/menu-expanded.png) left 0.6em no-repeat;
+  background: transparent url(../../../misc/menu-expanded.png) left 0.6em no-repeat;
+}
+[dir="rtl"] .expanded .locale-translation-update__wrapper {
+  background-position: right 0.6em;
 }
 #locale-translation-status-form .description {
   cursor: pointer;
