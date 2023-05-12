@@ -12,6 +12,10 @@
   border-radius: var(--jui-dialog-border-radius);
   background: transparent;
   box-shadow: var(--jui-dialog-box-shadow);
+
+  @media (forced-colors: active) {
+    border: 1px solid transparent;
+  }
 }
 
 .ui-dialog:focus {
