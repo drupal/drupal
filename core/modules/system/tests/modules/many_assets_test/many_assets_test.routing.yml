@@ -1,0 +1,7 @@
+many_assets_test_page:
+  path: '/many_assets_test'
+  defaults:
+    _controller: '\Drupal\many_assets_test\Controller\ManyAssetsTestController::build'
+    _title: 'Test jQuery UI asset loading order'
+  requirements:
+    _access: 'TRUE'

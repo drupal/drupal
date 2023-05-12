@@ -1,0 +1,39 @@
+many-dependencies:
+  version: VERSION
+  # JS and CSS dependencies will be populated in jqueryui_library_assets_test_library_info_build().
+  js: {}
+  css: {}
+
+weighted:
+  version: VERSION
+  js:
+    js/weighted/weighted_114_a.js: { weight: -11.4, attributes: { data-weight: '-11.4' } }
+    js/weighted/weighted_115_a.js: { weight: -11.5, attributes: { data-weight: '-11.5' } }
+    js/weighted/weighted_116_a.js: { weight: -11.6, attributes: { data-weight: '-11.6' } }
+    js/weighted/weighted_116_b.js: { weight: -11.6, attributes: { data-weight: '-11.6' } }
+    js/weighted/weighted_116_c.js: { weight: -11.6, attributes: { data-weight: '-11.6' } }
+  css:
+    component:
+      css/weighted/weighted_114_a.css: { weight: -11.4, attributes: { data-weight: '-11.4' } }
+      css/weighted/weighted_115_a.css: { weight: -11.5, attributes: { data-weight: '-11.5' } }
+      css/weighted/weighted_116_a.css: { weight: -11.6, attributes: { data-weight: '-11.6' } }
+      css/weighted/weighted_116_b.css: { weight: -11.6, attributes: { data-weight: '-11.6' } }
+      css/weighted/weighted_116_c.css: { weight: -11.6, attributes: { data-weight: '-11.6' } }
+
+weighted_again:
+  version: VERSION
+  js:
+    js/weighted/weighted_114_b.js: { weight: -11.4, attributes: { data-weight: '-11.4' } }
+    js/weighted/weighted_114_c.js: { weight: -11.4, attributes: { data-weight: '-11.4' } }
+    js/weighted/weighted_115_b.js: { weight: -11.5, attributes: { data-weight: '-11.5' } }
+    js/weighted/weighted_116_d.js: { weight: -11.6, attributes: { data-weight: '-11.6' } }
+    js/weighted/weighted_116_e.js: { weight: -11.6, attributes: { data-weight: '-11.6' } }
+    js/weighted/weighted_116_f.js: { weight: -11.6, attributes: { data-weight: '-11.6' } }
+  css:
+    component:
+      css/weighted/weighted_114_b.css: { weight: -11.4, attributes: { data-weight: '-11.4' } }
+      css/weighted/weighted_114_c.css: { weight: -11.4, attributes: { data-weight: '-11.4' } }
+      css/weighted/weighted_115_b.css: { weight: -11.5, attributes: { data-weight: '-11.5' } }
+      css/weighted/weighted_116_d.css: { weight: -11.6, attributes: { data-weight: '-11.6' } }
+      css/weighted/weighted_116_e.css: { weight: -11.6, attributes: { data-weight: '-11.6' } }
+      css/weighted/weighted_116_f.css: { weight: -11.6, attributes: { data-weight: '-11.6' } }
