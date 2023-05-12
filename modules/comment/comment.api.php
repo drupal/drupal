@@ -105,7 +105,7 @@ function hook_comment_view_alter(&$build) {
 }
 
 /**
- * The comment is being published by the moderator.
+ * Act on a comment that is being saved in a published state.
  *
  * @param $comment
  *   Passes in the comment the action is being performed on.
@@ -117,7 +117,7 @@ function hook_comment_publish($comment) {
 }
 
 /**
- * The comment is being unpublished by the moderator.
+ * Act on a comment that is being saved in an unpublished state.
  *
  * @param $comment
  *   Passes in the comment the action is being performed on.
