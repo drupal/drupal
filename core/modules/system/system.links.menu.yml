@@ -76,6 +76,12 @@ system.performance_settings:
   description: 'Configure caching and bandwidth optimization.'
   route_name: system.performance_settings
   weight: -20
+system.development_settings:
+  title: Development settings
+  parent: system.admin_config_development
+  description: 'Configure theme development settings'
+  route_name: system.development_settings
+  weight: -19
 system.logging_settings:
   title: 'Logging and errors'
   parent: system.admin_config_development
