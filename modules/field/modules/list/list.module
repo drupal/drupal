@@ -67,7 +67,7 @@ function list_field_settings_form($field, $instance, $has_data) {
       $form['allowed_values'] = array(
         '#type' => 'textarea',
         '#title' => t('Allowed values list'),
-        '#default_value' => empty($settings['allowed_values_function']) ? list_allowed_values_string($settings['allowed_values']) : array(),
+        '#default_value' => empty($settings['allowed_values_function']) ? list_allowed_values_string($settings['allowed_values']) : '',
         '#rows' => 10,
         '#element_validate' => array('list_allowed_values_setting_validate'),
         '#field_has_data' => $has_data,
