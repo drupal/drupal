@@ -182,6 +182,14 @@ system.performance_settings:
   requirements:
     _permission: 'administer site configuration'
 
+system.development_settings:
+  path: '/admin/config/development/settings'
+  defaults:
+    _form: '\Drupal\system\Form\DevelopmentSettingsForm'
+    _title: 'Development settings'
+  requirements:
+    _permission: 'administer site configuration'
+
 system.file_system_settings:
   path: '/admin/config/media/file-system'
   defaults:
