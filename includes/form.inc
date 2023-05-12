@@ -2310,8 +2310,8 @@ function form_state_values_clean(&$form_state) {
  *   A keyed array containing the current state of the form.
  *
  * @return
- *   The data that will appear in the $form_state['values'] collection
- *   for this element. Return nothing to use the default.
+ *   The data that will appear in $form_state['values'] for this element, or
+ *   nothing to use the default.
  */
 function form_type_image_button_value($form, $input, $form_state) {
   if ($input !== FALSE) {
@@ -2356,8 +2356,8 @@ function form_type_image_button_value($form, $input, $form_state) {
  *   the element's default value should be returned.
  *
  * @return
- *   The data that will appear in the $element_state['values'] collection
- *   for this element. Return nothing to use the default.
+ *   The data that will appear in $form_state['values'] for this element, or
+ *   nothing to use the default.
  */
 function form_type_checkbox_value($element, $input = FALSE) {
   if ($input === FALSE) {
@@ -2397,8 +2397,8 @@ function form_type_checkbox_value($element, $input = FALSE) {
  *   the element's default value should be returned.
  *
  * @return
- *   The data that will appear in the $element_state['values'] collection
- *   for this element. Return nothing to use the default.
+ *   The data that will appear in $form_state['values'] for this element, or
+ *   nothing to use the default.
  */
 function form_type_checkboxes_value($element, $input = FALSE) {
   if ($input === FALSE) {
@@ -2438,8 +2438,8 @@ function form_type_checkboxes_value($element, $input = FALSE) {
  *   the element's default value should be returned.
  *
  * @return
- *   The data that will appear in the $element_state['values'] collection
- *   for this element. Return nothing to use the default.
+ *   The data that will appear in $form_state['values'] for this element, or
+ *   nothing to use the default.
  */
 function form_type_tableselect_value($element, $input = FALSE) {
   // If $element['#multiple'] == FALSE, then radio buttons are displayed and
@@ -2474,8 +2474,8 @@ function form_type_tableselect_value($element, $input = FALSE) {
  *   element's default value is returned. Defaults to FALSE.
  *
  * @return
- *   The data that will appear in the $element_state['values'] collection for
- *   this element.
+ *   The data that will appear in $form_state['values'] for this element, or
+ *   nothing to use the default.
  */
 function form_type_radios_value(&$element, $input = FALSE) {
   if ($input !== FALSE) {
@@ -2513,8 +2513,8 @@ function form_type_radios_value(&$element, $input = FALSE) {
  *   the element's default value should be returned.
  *
  * @return
- *   The data that will appear in the $element_state['values'] collection
- *   for this element. Return nothing to use the default.
+ *   The data that will appear in $form_state['values'] for this element, or
+ *   nothing to use the default.
  */
 function form_type_password_confirm_value($element, $input = FALSE) {
   if ($input === FALSE) {
@@ -2544,8 +2544,8 @@ function form_type_password_confirm_value($element, $input = FALSE) {
  *   the element's default value should be returned.
  *
  * @return
- *   The data that will appear in the $element_state['values'] collection
- *   for this element. Return nothing to use the default.
+ *   The data that will appear in $form_state['values'] for this element, or
+ *   nothing to use the default.
  */
 function form_type_select_value($element, $input = FALSE) {
   if ($input !== FALSE) {
@@ -2581,12 +2581,12 @@ function form_type_select_value($element, $input = FALSE) {
  * @param array $element
  *   The form element whose value is being populated.
  * @param mixed $input
- *   The incoming input to populate the form element. If this is FALSE,
- *   the element's default value should be returned.
+ *   The incoming input to populate the form element. If this is FALSE, the
+ *   element's default value should be returned.
  *
  * @return string
- *   The data that will appear in the $element_state['values'] collection
- *   for this element. Return nothing to use the default.
+ *   The data that will appear in $form_state['values'] for this element, or
+ *   nothing to use the default.
  */
 function form_type_textarea_value($element, $input = FALSE) {
   if ($input !== FALSE && $input !== NULL) {
@@ -2606,8 +2606,8 @@ function form_type_textarea_value($element, $input = FALSE) {
  *   the element's default value should be returned.
  *
  * @return
- *   The data that will appear in the $element_state['values'] collection
- *   for this element. Return nothing to use the default.
+ *   The data that will appear in $form_state['values'] for this element, or
+ *   nothing to use the default.
  */
 function form_type_textfield_value($element, $input = FALSE) {
   if ($input !== FALSE && $input !== NULL) {
@@ -2630,8 +2630,8 @@ function form_type_textfield_value($element, $input = FALSE) {
  *   the element's default value should be returned.
  *
  * @return
- *   The data that will appear in the $element_state['values'] collection
- *   for this element. Return nothing to use the default.
+ *   The data that will appear in $form_state['values'] for this element, or
+ *   nothing to use the default.
  */
 function form_type_token_value($element, $input = FALSE) {
   if ($input !== FALSE) {
