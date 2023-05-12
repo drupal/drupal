@@ -141,6 +141,35 @@ function taxonomy_test_query_taxonomy_term_access_alter(QueryAlterableInterface 
 }
 
 /**
+ * Implements hook_block_info().
+ */
+function taxonomy_test_block_info() {
+  $blocks['test_block_form'] = array(
+    'info' => t('Test block with form'),
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function taxonomy_test_block_view($delta = 0) {
+  $form = drupal_get_form('taxonomy_test_simple_form');
+  return array('subject' => 'Simple form', 'content' => drupal_render($form));
+}
+
+/**
+ * Form builder for testing submission on taxonomy terms overview page.
+ */
+function taxonomy_test_simple_form($form, &$form_state) {
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+  return $form;
+}
+
+/**
  * Test controller class for taxonomy terms.
  *
  * The main purpose is to make cacheGet() method available for testing.

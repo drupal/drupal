@@ -1044,6 +1044,31 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     variable_set('taxonomy_nodes_test_query_node_access_alter', FALSE);
   }
 
+  /**
+   * Test multiple forms on taxonomy terms overview page.
+   */
+  function testTaxonomyTermsOverviewPage() {
+    // Enable block with custom form on taxonomy terms overview page.
+    module_enable(array('taxonomy_test'));
+
+    $this->drupalLogout();
+    $admin_user1 = $this->drupalCreateUser(array('administer taxonomy', 'administer blocks', 'bypass node access'));
+    $this->drupalLogin($admin_user1);
+
+    $this->createTerm($this->vocabulary);
+    $this->createTerm($this->vocabulary);
+
+    $edit = array();
+    $edit['blocks[taxonomy_test_test_block_form][region]'] = 'header';
+    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
+
+    $this->drupalGet('admin/structure/taxonomy/' . $this->vocabulary->machine_name);
+    $this->assertText('Simple form', 'Block successfully being displayed on the page.');
+
+    // Try to submit the custom form to verify there are no errors.
+    $this->drupalPost(NULL, array(), t('Submit'));
+  }
+
 }
 
 /**
