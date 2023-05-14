@@ -10,7 +10,7 @@
     "license": "GPL-2.0-or-later",
     "require": {
         "php": ">=8.1.0",
-        "symfony/validator": "^6.2"
+        "symfony/validator": "^6.3"
     },
     "autoload": {
         "psr-4": {
@@ -24,5 +24,6 @@
         "_readme": [
             "This file was partially generated automatically. See: https://www.drupal.org/node/3293830"
         ]
-    }
+    },
+    "minimum-stability": "beta"
 }

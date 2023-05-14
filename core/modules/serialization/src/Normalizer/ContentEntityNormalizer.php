@@ -34,4 +34,13 @@ class ContentEntityNormalizer extends EntityNormalizer {
     return $attributes;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getSupportedTypes(?string $format): array {
+    return [
+      ContentEntityInterface::class => TRUE,
+    ];
+  }
+
 }

@@ -531,6 +531,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   * @return void
    */
   public function setContainer(ContainerInterface $container = NULL) {
     if (isset($this->container)) {
@@ -670,6 +673,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   * @return void
    */
   public function terminate(Request $request, Response $response) {
     // Only run terminate() when essential services have been set up properly

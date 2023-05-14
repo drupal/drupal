@@ -65,4 +65,13 @@ class EntityAccessDeniedHttpExceptionNormalizer extends HttpExceptionNormalizer 
     return $errors;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getSupportedTypes(?string $format): array {
+    return [
+      EntityAccessDeniedHttpException::class => TRUE,
+    ];
+  }
+
 }

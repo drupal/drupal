@@ -133,7 +133,7 @@ class ExecutionContext implements ExecutionContextInterface {
   /**
    * {@inheritdoc}
    */
-  public function setNode($value, $object, MetadataInterface $metadata = NULL, $propertyPath) {
+  public function setNode($value, $object, MetadataInterface $metadata = NULL, $propertyPath): void {
     $this->value = $value;
     $this->data = $object;
     $this->metadata = $metadata;
@@ -143,19 +143,22 @@ class ExecutionContext implements ExecutionContextInterface {
   /**
    * {@inheritdoc}
    */
-  public function setGroup($group) {
+  public function setGroup($group): void {
     $this->group = $group;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setConstraint(Constraint $constraint) {
+  public function setConstraint(Constraint $constraint): void {
     $this->constraint = $constraint;
   }
 
   /**
    * {@inheritdoc}
+   *
+   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   * @return void
    */
   public function addViolation($message, array $parameters = []) {
     $this->violations->add(new ConstraintViolation($this->translator->trans($message, $parameters, $this->translationDomain), $message, $parameters, $this->root, $this->propertyPath, $this->value, NULL, NULL, $this->constraint));
@@ -241,7 +244,7 @@ class ExecutionContext implements ExecutionContextInterface {
   /**
    * {@inheritdoc}
    */
-  public function markConstraintAsValidated($cache_key, $constraint_hash) {
+  public function markConstraintAsValidated($cache_key, $constraint_hash): void {
     $this->validatedConstraints[$cache_key . ':' . $constraint_hash] = TRUE;
   }
 
@@ -255,7 +258,7 @@ class ExecutionContext implements ExecutionContextInterface {
   /**
    * {@inheritdoc}
    */
-  public function markGroupAsValidated($cache_key, $group_hash) {
+  public function markGroupAsValidated($cache_key, $group_hash): void {
     $this->validatedObjects[$cache_key][$group_hash] = TRUE;
   }
 
@@ -269,7 +272,7 @@ class ExecutionContext implements ExecutionContextInterface {
   /**
    * {@inheritdoc}
    */
-  public function markObjectAsInitialized($cache_key) {
+  public function markObjectAsInitialized($cache_key): void {
     throw new \LogicException('\Symfony\Component\Validator\Context\ExecutionContextInterface::markObjectAsInitialized is unsupported.');
   }
 

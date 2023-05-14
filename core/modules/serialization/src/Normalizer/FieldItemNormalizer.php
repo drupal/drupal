@@ -39,4 +39,13 @@ class FieldItemNormalizer extends ComplexDataNormalizer implements DenormalizerI
     return $field_item;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getSupportedTypes(?string $format): array {
+    return [
+      FieldItemInterface::class => TRUE,
+    ];
+  }
+
 }

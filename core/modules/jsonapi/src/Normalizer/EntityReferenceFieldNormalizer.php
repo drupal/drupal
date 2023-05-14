@@ -115,4 +115,13 @@ class EntityReferenceFieldNormalizer extends FieldNormalizer {
     return FALSE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getSupportedTypes(?string $format): array {
+    return [
+      EntityReferenceFieldItemListInterface::class => TRUE,
+    ];
+  }
+
 }

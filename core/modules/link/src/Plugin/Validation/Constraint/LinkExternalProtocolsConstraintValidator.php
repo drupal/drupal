@@ -13,6 +13,9 @@ class LinkExternalProtocolsConstraintValidator extends ConstraintValidator {
 
   /**
    * {@inheritdoc}
+   *
+   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   * @return void
    */
   public function validate($value, Constraint $constraint) {
     if (isset($value)) {

@@ -187,6 +187,9 @@ class EntityConstraintViolationList extends ConstraintViolationList implements E
 
   /**
    * {@inheritdoc}
+   *
+   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   * @return void
    */
   public function add(ConstraintViolationInterface $violation) {
     parent::add($violation);
@@ -196,6 +199,9 @@ class EntityConstraintViolationList extends ConstraintViolationList implements E
 
   /**
    * {@inheritdoc}
+   *
+   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   * @return void
    */
   public function remove($offset) {
     parent::remove($offset);
@@ -205,6 +211,9 @@ class EntityConstraintViolationList extends ConstraintViolationList implements E
 
   /**
    * {@inheritdoc}
+   *
+   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   * @return void
    */
   public function set($offset, ConstraintViolationInterface $violation) {
     parent::set($offset, $violation);

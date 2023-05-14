@@ -210,6 +210,9 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   * @return void
    */
   public function addListener($event_name, $listener, $priority = 0) {
     $this->listeners[$event_name][$priority][] = ['callable' => $listener];
@@ -218,6 +221,9 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   * @return void
    */
   public function removeListener($event_name, $listener) {
     if (!isset($this->listeners[$event_name])) {
@@ -255,6 +261,9 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   * @return void
    */
   public function addSubscriber(EventSubscriberInterface $subscriber) {
     foreach ($subscriber->getSubscribedEvents() as $event_name => $params) {
@@ -274,6 +283,9 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   * @return void
    */
   public function removeSubscriber(EventSubscriberInterface $subscriber) {
     foreach ($subscriber->getSubscribedEvents() as $event_name => $params) {
