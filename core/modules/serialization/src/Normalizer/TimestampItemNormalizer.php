@@ -42,4 +42,13 @@ class TimestampItemNormalizer extends FieldItemNormalizer {
     return ['value' => $this->serializer->denormalize($data['value'], Timestamp::class, NULL, $context)];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getSupportedTypes(?string $format): array {
+    return [
+      TimestampItem::class => TRUE,
+    ];
+  }
+
 }

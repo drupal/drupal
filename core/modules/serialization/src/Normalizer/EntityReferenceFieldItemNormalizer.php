@@ -92,4 +92,13 @@ class EntityReferenceFieldItemNormalizer extends FieldItemNormalizer {
     return parent::constructValue($data, $context);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getSupportedTypes(?string $format): array {
+    return [
+      EntityReferenceItem::class => TRUE,
+    ];
+  }
+
 }

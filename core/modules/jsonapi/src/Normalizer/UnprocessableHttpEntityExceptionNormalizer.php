@@ -78,4 +78,13 @@ class UnprocessableHttpEntityExceptionNormalizer extends HttpExceptionNormalizer
     return $errors;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getSupportedTypes(?string $format): array {
+    return [
+      UnprocessableHttpEntityException::class => TRUE,
+    ];
+  }
+
 }

@@ -44,4 +44,13 @@ class TimestampNormalizer extends DateTimeNormalizer {
     return $denormalized->getTimestamp();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getSupportedTypes(?string $format): array {
+    return [
+      Timestamp::class => TRUE,
+    ];
+  }
+
 }

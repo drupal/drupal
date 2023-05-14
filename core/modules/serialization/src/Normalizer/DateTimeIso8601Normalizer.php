@@ -87,4 +87,13 @@ class DateTimeIso8601Normalizer extends DateTimeNormalizer {
     return $datetime->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getSupportedTypes(?string $format): array {
+    return [
+      DateTimeIso8601::class => TRUE,
+    ];
+  }
+
 }

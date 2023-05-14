@@ -54,4 +54,13 @@ class FieldNormalizer extends ListNormalizer implements DenormalizerInterface {
     return $items;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getSupportedTypes(?string $format): array {
+    return [
+      FieldItemListInterface::class => TRUE,
+    ];
+  }
+
 }

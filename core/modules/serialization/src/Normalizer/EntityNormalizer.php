@@ -75,4 +75,13 @@ class EntityNormalizer extends ComplexDataNormalizer implements DenormalizerInte
     return $entity;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getSupportedTypes(?string $format): array {
+    return [
+      EntityInterface::class => TRUE,
+    ];
+  }
+
 }

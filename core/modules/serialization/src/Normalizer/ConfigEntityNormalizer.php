@@ -47,4 +47,13 @@ class ConfigEntityNormalizer extends EntityNormalizer {
     return array_diff_key($data, ['_core' => TRUE]);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getSupportedTypes(?string $format): array {
+    return [
+      ConfigEntityInterface::class => TRUE,
+    ];
+  }
+
 }
