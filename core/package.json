@@ -68,7 +68,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-yml": "^1.2.0",
     "glob": "^8.0.3",
-    "jquery": "~3.6.3",
+    "jquery": "~3.7.0",
     "jquery-form": "4.3.x",
     "jquery-ui": "1.13.x",
     "js-cookie": "3.0.x",
