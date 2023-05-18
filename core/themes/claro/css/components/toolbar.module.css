@@ -97,11 +97,7 @@
  * style to avoid extra reflow & flicker. */
 @media (min-width: 61em) {
   .toolbar-loading.toolbar-horizontal .toolbar .toolbar-bar .toolbar-tab:last-child .toolbar-tray {
-    position: relative;
-    z-index: -999;
-    display: block;
-    visibility: hidden;
-    width: 1px;
+    display: none;
   }
 }
 /* Position the admin toolbar fixed when the configured standard breakpoint is
