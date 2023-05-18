@@ -351,7 +351,7 @@ class Datetime extends DateElementBase {
     $input = NestedArray::getValue($form_state->getValues(), $element['#parents'], $input_exists);
     if ($input_exists) {
 
-      $title = !empty($element['#title']) ? $element['#title'] : '';
+      $title = static::getElementTitle($element, $complete_form);
       $date_format = $element['#date_date_element'] != 'none' ? static::getHtml5DateFormat($element) : '';
       $time_format = $element['#date_time_element'] != 'none' ? static::getHtml5TimeFormat($element) : '';
       $format = trim($date_format . ' ' . $time_format);
