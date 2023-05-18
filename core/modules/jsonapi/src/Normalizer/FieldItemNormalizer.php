@@ -30,13 +30,6 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
   use SerializedColumnNormalizerTrait;
 
   /**
-   * The interface or class that this Normalizer supports.
-   *
-   * @var string
-   */
-  protected $supportedInterfaceOrClass = FieldItemInterface::class;
-
-  /**
    * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface

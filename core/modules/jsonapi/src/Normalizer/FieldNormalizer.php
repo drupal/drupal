@@ -21,13 +21,6 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 class FieldNormalizer extends NormalizerBase implements DenormalizerInterface {
 
   /**
-   * The interface or class that this Normalizer supports.
-   *
-   * @var string
-   */
-  protected $supportedInterfaceOrClass = FieldItemListInterface::class;
-
-  /**
    * {@inheritdoc}
    */
   public function normalize($field, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {

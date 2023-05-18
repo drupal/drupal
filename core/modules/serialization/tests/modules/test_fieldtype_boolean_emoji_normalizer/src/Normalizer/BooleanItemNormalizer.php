@@ -14,11 +14,6 @@ class BooleanItemNormalizer extends FieldItemNormalizer implements DenormalizerI
   /**
    * {@inheritdoc}
    */
-  protected $supportedInterfaceOrClass = BooleanItem::class;
-
-  /**
-   * {@inheritdoc}
-   */
   public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     $data = parent::normalize($object, $format, $context);
     $data['value'] = $data['value'] ? '👍' : '👎';
@@ -41,6 +36,13 @@ class BooleanItemNormalizer extends FieldItemNormalizer implements DenormalizerI
     }
     $data['value'] = ($data['value'] === '👍');
     return $data;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSupportedTypes(?string $format): array {
+    return [BooleanItem::class => TRUE];
   }
 
 }

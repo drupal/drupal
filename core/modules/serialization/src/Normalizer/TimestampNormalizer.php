@@ -27,11 +27,6 @@ class TimestampNormalizer extends DateTimeNormalizer {
   /**
    * {@inheritdoc}
    */
-  protected $supportedInterfaceOrClass = Timestamp::class;
-
-  /**
-   * {@inheritdoc}
-   */
   protected function getNormalizationTimezone() {
     return new \DateTimeZone('UTC');
   }

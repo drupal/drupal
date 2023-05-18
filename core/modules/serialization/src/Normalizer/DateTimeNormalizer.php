@@ -30,11 +30,6 @@ class DateTimeNormalizer extends NormalizerBase implements DenormalizerInterface
   ];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $supportedInterfaceOrClass = DateTimeInterface::class;
-
-  /**
    * The system's date configuration.
    *
    * @var \Drupal\Core\Config\ImmutableConfig

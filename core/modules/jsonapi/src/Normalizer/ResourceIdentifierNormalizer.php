@@ -24,11 +24,6 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 class ResourceIdentifierNormalizer extends NormalizerBase implements DenormalizerInterface {
 
   /**
-   * {@inheritdoc}
-   */
-  protected $supportedInterfaceOrClass = ResourceIdentifier::class;
-
-  /**
    * The entity field manager.
    *
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface
