@@ -25,14 +25,14 @@ class NormalizerBaseTest extends UnitTestCase {
    *   The expected boolean return value from supportNormalization.
    * @param mixed $data
    *   The data passed to supportsNormalization.
-   * @param string $supported_interface_or_class
+   * @param string $supported_types
    *   (optional) The supported interface or class to set on the normalizer.
    */
-  public function testSupportsNormalization($expected_return, $data, $supported_interface_or_class = NULL) {
+  public function testSupportsNormalization($expected_return, $data, $supported_types = NULL) {
     $normalizer_base = $this->getMockForAbstractClass('Drupal\Tests\serialization\Unit\Normalizer\TestNormalizerBase');
 
-    if (isset($supported_interface_or_class)) {
-      $normalizer_base->setSupportedInterfaceOrClass($supported_interface_or_class);
+    if (isset($supported_types)) {
+      $normalizer_base->setSupportedTypes($supported_types);
     }
 
     $this->assertSame($expected_return, $normalizer_base->supportsNormalization($data));
@@ -76,13 +76,13 @@ abstract class TestNormalizerBase extends NormalizerBase {
   protected array $supportedTypes = ['*' => FALSE];
 
   /**
-   * Sets the protected supportedInterfaceOrClass property.
+   * Sets the supported types.
    *
-   * @param string $supported_interface_or_class
+   * @param string $supported_types
    *   The class name to set.
    */
-  public function setSupportedInterfaceOrClass($supported_interface_or_class) {
-    $this->supportedTypes = [$supported_interface_or_class => FALSE];
+  public function setSupportedTypes($supported_types): void {
+    $this->supportedTypes = [$supported_types => FALSE];
   }
 
   /**
