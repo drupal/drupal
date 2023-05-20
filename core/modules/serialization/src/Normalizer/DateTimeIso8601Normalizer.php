@@ -32,11 +32,6 @@ class DateTimeIso8601Normalizer extends DateTimeNormalizer {
   /**
    * {@inheritdoc}
    */
-  protected $supportedInterfaceOrClass = DateTimeIso8601::class;
-
-  /**
-   * {@inheritdoc}
-   */
   public function normalize($datetime, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     assert($datetime instanceof DateTimeIso8601);
     $field_item = $datetime->getParent();

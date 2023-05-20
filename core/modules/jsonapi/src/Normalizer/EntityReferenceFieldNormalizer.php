@@ -27,11 +27,6 @@ class EntityReferenceFieldNormalizer extends FieldNormalizer {
   /**
    * {@inheritdoc}
    */
-  protected $supportedInterfaceOrClass = EntityReferenceFieldItemListInterface::class;
-
-  /**
-   * {@inheritdoc}
-   */
   public function normalize($field, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     assert($field instanceof EntityReferenceFieldItemListInterface);
     // Build the relationship object based on the Entity Reference and normalize

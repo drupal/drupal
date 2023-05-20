@@ -14,11 +14,6 @@ class BooleanNormalizer extends NormalizerBase implements DenormalizerInterface 
   /**
    * {@inheritdoc}
    */
-  protected $supportedInterfaceOrClass = BooleanData::class;
-
-  /**
-   * {@inheritdoc}
-   */
   public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     return $object->getValue() ? '👍' : '👎';
   }
@@ -36,8 +31,8 @@ class BooleanNormalizer extends NormalizerBase implements DenormalizerInterface 
   /**
    * {@inheritdoc}
    */
-  public function hasCacheableSupportsMethod(): bool {
-    return TRUE;
+  public function getSupportedTypes(?string $format): array {
+    return [BooleanData::class => TRUE];
   }
 
 }
