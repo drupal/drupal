@@ -129,6 +129,7 @@ class HelpTest extends BrowserTestBase {
       $this->assertSession()->pageTextNotContains('This page shows you all available administration tasks for each module.');
     }
 
+    $module_list = \Drupal::service('extension.list.module');
     foreach ($this->getModuleList() as $module => $name) {
       // View module help page.
       $this->drupalGet('admin/help/' . $module);
@@ -136,8 +137,8 @@ class HelpTest extends BrowserTestBase {
       if ($response == 200) {
         $this->assertSession()->titleEquals("$name | Drupal");
         $this->assertEquals($name, $this->cssSelect('h1.page-title')[0]->getText(), "$module heading was displayed");
-        $info = \Drupal::service('extension.list.module')->getExtensionInfo($module);
-        $admin_tasks = system_get_module_admin_tasks($module, $info);
+        $info = $module_list->getExtensionInfo($module);
+        $admin_tasks = system_get_module_admin_tasks($module, $info['name']);
         if (!empty($admin_tasks)) {
           $this->assertSession()->pageTextContains($name . ' administration pages');
         }

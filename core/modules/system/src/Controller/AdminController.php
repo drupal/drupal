@@ -51,7 +51,7 @@ class AdminController extends ControllerBase {
 
     foreach ($extensions as $module => $extension) {
       // Only display a section if there are any available tasks.
-      if ($admin_tasks = system_get_module_admin_tasks($module, $extension->info)) {
+      if ($admin_tasks = system_get_module_admin_tasks($module, $extension->info['name'])) {
         // Sort links by title.
         uasort($admin_tasks, ['\Drupal\Component\Utility\SortArray', 'sortByTitleElement']);
         // Move 'Configure permissions' links to the bottom of each section.

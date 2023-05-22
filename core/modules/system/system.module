@@ -973,14 +973,20 @@ function system_admin_compact_mode() {
  *
  * @param string $module
  *   Module name.
- * @param array $info
- *   The module's information, as provided by
- *   \Drupal::service('extension.list.module')->getExtensionInfo().
+ * @param string|array $module_name
+ *   The module's display name. Passing information, as provided by
+ *   \Drupal::service('extension.list.module')->getExtensionInfo() is
+ *   deprecated in drupal:10.2.0. Pass only $info["name"] instead.
  *
  * @return array
  *   An array of task links.
  */
-function system_get_module_admin_tasks($module, array $info) {
+function system_get_module_admin_tasks($module, string|array $module_name) {
+  if (!is_string($module_name)) {
+    @trigger_error('Calling ' . __FUNCTION__ . '() with $module_name argument as array is deprecated in drupal:10.2.0 and is required to be string from drupal:11.0.0. Pass only $info["name"] instead. See https://www.drupal.org/node/3357711', E_USER_DEPRECATED);
+    $module_name = $module_name['name'];
+  }
+
   $tree = &drupal_static(__FUNCTION__);
 
   $menu_tree = \Drupal::menuTree();
@@ -1027,7 +1033,7 @@ function system_get_module_admin_tasks($module, array $info) {
       /** @var \Drupal\Core\Url $url */
       $url = new Url('user.admin_permissions.module', ['modules' => $module]);
       $admin_tasks["user.admin_permissions.$module"] = [
-        'title' => t('Configure @module permissions', ['@module' => $info['name']]),
+        'title' => t('Configure @module permissions', ['@module' => $module_name]),
         'description' => '',
         'url' => $url,
       ];
