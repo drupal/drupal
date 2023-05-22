@@ -211,11 +211,6 @@ parameters:
 			path: lib/Drupal/Core/Asset/JsCollectionRenderer.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: lib/Drupal/Core/Batch/BatchStorage.php
-
-		-
 			message: "#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Block/BlockManager.php

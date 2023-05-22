@@ -110,6 +110,14 @@ namespace Drupal\Core\ProxyClass\Batch {
         /**
          * {@inheritdoc}
          */
+        public function getId(): int
+        {
+            return $this->lazyLoadItself()->getId();
+        }
+
+        /**
+         * {@inheritdoc}
+         */
         public function schemaDefinition()
         {
             return $this->lazyLoadItself()->schemaDefinition();

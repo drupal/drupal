@@ -2,10 +2,11 @@
 
 namespace Drupal\Core\Batch;
 
+use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Drupal\Core\Access\CsrfTokenGenerator;
 
 class BatchStorage implements BatchStorageInterface {
 
@@ -36,6 +37,11 @@ class BatchStorage implements BatchStorageInterface {
   protected $csrfToken;
 
   /**
+   * The time service.
+   */
+  protected readonly TimeInterface $time;
+
+  /**
    * Constructs the database batch storage service.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -44,11 +50,18 @@ class BatchStorage implements BatchStorageInterface {
    *   The session.
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token generator.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    */
-  public function __construct(Connection $connection, SessionInterface $session, CsrfTokenGenerator $csrf_token) {
+  public function __construct(Connection $connection, SessionInterface $session, CsrfTokenGenerator $csrf_token, TimeInterface $time = NULL) {
     $this->connection = $connection;
     $this->session = $session;
     $this->csrfToken = $csrf_token;
+    if (!$time) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3220378', E_USER_DEPRECATED);
+      $time = \Drupal::service('datetime.time');
+    }
+    $this->time = $time;
   }
 
   /**
@@ -109,7 +122,7 @@ class BatchStorage implements BatchStorageInterface {
     try {
       // Cleanup the batch table and the queue for failed batches.
       $this->connection->delete('batch')
-        ->condition('timestamp', REQUEST_TIME - 864000, '<')
+        ->condition('timestamp', $this->time->getRequestTime() - 864000, '<')
         ->execute();
     }
     catch (\Exception $e) {
@@ -121,12 +134,29 @@ class BatchStorage implements BatchStorageInterface {
    * {@inheritdoc}
    */
   public function create(array $batch) {
-    // Ensure that a session is started before using the CSRF token generator.
+    // Ensure that a session is started before using the CSRF token generator,
+    // and update the database record.
     $this->session->start();
+    $this->connection->update('batch')
+      ->fields([
+        'token' => $this->csrfToken->get($batch['id']),
+        'batch' => serialize($batch),
+      ])
+      ->condition('bid', $batch['id'])
+      ->execute();
+  }
+
+  /**
+   * Returns a new batch id.
+   *
+   * @return int
+   *   A batch id.
+   */
+  public function getId(): int {
     $try_again = FALSE;
     try {
       // The batch table might not yet exist.
-      $this->doCreate($batch);
+      return $this->doInsertBatchRecord();
     }
     catch (\Exception $e) {
       // If there was an exception, try to create the table.
@@ -138,23 +168,22 @@ class BatchStorage implements BatchStorageInterface {
     }
     // Now that the table has been created, try again if necessary.
     if ($try_again) {
-      $this->doCreate($batch);
+      return $this->doInsertBatchRecord();
     }
   }
 
   /**
-   * Saves a batch.
+   * Inserts a record in the table and returns the batch id.
    *
-   * @param array $batch
-   *   The array representing the batch to create.
+   * @return int
+   *   A batch id.
    */
-  protected function doCreate(array $batch) {
-    $this->connection->insert('batch')
+  protected function doInsertBatchRecord(): int {
+    return $this->connection->insert('batch')
       ->fields([
-        'bid' => $batch['id'],
-        'timestamp' => REQUEST_TIME,
-        'token' => $this->csrfToken->get($batch['id']),
-        'batch' => serialize($batch),
+        'timestamp' => $this->time->getRequestTime(),
+        'token' => '',
+        'batch' => NULL,
       ])
       ->execute();
   }
@@ -208,9 +237,7 @@ class BatchStorage implements BatchStorageInterface {
       'fields' => [
         'bid' => [
           'description' => 'Primary Key: Unique batch ID.',
-          // This is not a serial column, to allow both progressive and
-          // non-progressive batches. See batch_process().
-          'type' => 'int',
+          'type' => 'serial',
           'unsigned' => TRUE,
           'not null' => TRUE,
         ],
