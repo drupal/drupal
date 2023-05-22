@@ -30,7 +30,15 @@ class DrupalCoreRecommendedBuilder extends DrupalPackageBuilder {
     }
 
     // Make a list of packages we do not want to put in the 'require' section.
-    $remove_list = ['drupal/core', 'wikimedia/composer-merge-plugin', 'composer/installers'];
+    $remove_list = [
+      'drupal/core',
+      'wikimedia/composer-merge-plugin',
+      'composer/installers',
+      // @see https://www.drupal.org/node/3354670
+      'laminas/laminas-escaper',
+      'laminas/laminas-feed',
+      'laminas/laminas-stdlib',
+    ];
 
     // Copy the 'packages' section from the Composer lock into our 'require'
     // section. There is also a 'packages-dev' section, but we do not need
