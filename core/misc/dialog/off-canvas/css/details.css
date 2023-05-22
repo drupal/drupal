@@ -56,15 +56,12 @@
   outline-offset: -4px; /* Ensure focus doesn't get cut off. */
 }
 
-#drupal-off-canvas-wrapper summary {
+#drupal-off-canvas-wrapper summary a {
+  color: var(--off-canvas-details-text-color);
+}
 
-  a {
-    color: var(--off-canvas-details-text-color);
-  }
-
-  a:hover {
-    color: var(--off-canvas-details-summary-text-color-hover);
-  }
+#drupal-off-canvas-wrapper summary a:hover {
+  color: var(--off-canvas-details-summary-text-color-hover);
 }
 
 #drupal-off-canvas-wrapper .details-wrapper {
