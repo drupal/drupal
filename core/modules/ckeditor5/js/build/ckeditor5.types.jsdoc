@@ -209,6 +209,30 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-clipboard/src/dragdropblocktoolbar.js
+ *
+ * @typedef {module:clipboard/dragdropblocktoolbar} module:clipboard/dragdropblocktoolbar~DragDropBlockToolbar
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-clipboard/src/dragdropexperimental.js
+ *
+ * @typedef {module:clipboard/dragdropexperimental} module:clipboard/dragdropexperimental~DragDropExperimental
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-clipboard/src/dragdroptarget.js
+ *
+ * @typedef {module:clipboard/dragdroptarget} module:clipboard/dragdroptarget~DragDropTarget
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-clipboard/src/lineview.js
+ *
+ * @typedef {module:clipboard/lineview} module:clipboard/lineview~LineView
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-clipboard/src/pasteplaintext.js
  *
  * @typedef {module:clipboard/pasteplaintext} module:clipboard/pasteplaintext~PastePlainText
@@ -1589,6 +1613,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-paste-from-office/src/normalizers/googlesheetsnormalizer.js
+ *
+ * @typedef {module:paste-from-office/normalizers/googlesheetsnormalizer} module:paste-from-office/normalizers/googlesheetsnormalizer~GoogleSheetsNormalizer
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-paste-from-office/src/normalizers/mswordnormalizer.js
  *
  * @typedef {module:paste-from-office/normalizers/mswordnormalizer} module:paste-from-office/normalizers/mswordnormalizer~MSWordNormalizer
@@ -1706,6 +1736,24 @@
  * Declared in file @ckeditor/ckeditor5-special-characters/src/ui/specialcharactersview.js
  *
  * @typedef {module:special-characters/ui/specialcharactersview} module:special-characters/ui/specialcharactersview~SpecialCharactersView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-style/src/integrations/documentlist.js
+ *
+ * @typedef {module:style/integrations/documentlist} module:style/integrations/documentlist~DocumentListStyleSupport
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-style/src/integrations/link.js
+ *
+ * @typedef {module:style/integrations/link} module:style/integrations/link~LinkStyleSupport
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-style/src/integrations/table.js
+ *
+ * @typedef {module:style/integrations/table} module:style/integrations/table~TableStyleSupport
  */
 
 /**
@@ -2087,6 +2135,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-ui/src/colorpicker/colorpickerview.js
+ *
+ * @typedef {module:ui/colorpicker/colorpickerview} module:ui/colorpicker/colorpickerview~ColorPickerView
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-ui/src/componentfactory.js
  *
  * @typedef {module:ui/componentfactory} module:ui/componentfactory~ComponentFactory
@@ -2429,6 +2483,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-utils/src/delay.js
+ *
+ * @typedef {module:utils/delay} module:utils/delay~delay
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-utils/src/diff.js
  *
  * @typedef {module:utils/diff} module:utils/diff~diff
@@ -2522,6 +2582,12 @@
  * Declared in file @ckeditor/ckeditor5-utils/src/dom/istext.js
  *
  * @typedef {module:utils/dom/istext} module:utils/dom/istext~isText
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-utils/src/dom/isvalidattributename.js
+ *
+ * @typedef {module:utils/dom/isvalidattributename} module:utils/dom/isvalidattributename~isValidAttributeName
  */
 
 /**
@@ -2678,6 +2744,12 @@
  * Declared in file @ckeditor/ckeditor5-utils/src/uid.js
  *
  * @typedef {module:utils/uid} module:utils/uid~uid
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-utils/src/verifylicense.js
+ *
+ * @typedef {module:utils/verifylicense} module:utils/verifylicense~verifyLicense
  */
 
 /**
