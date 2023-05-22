@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
-// cSpell:words conversionutils datafilter eventinfo downcastdispatcher generalhtmlsupport
+// cSpell:words datafilter eventinfo downcastdispatcher generalhtmlsupport
 import { Plugin } from 'ckeditor5/src/core';
-import { setViewAttributes } from '@ckeditor/ckeditor5-html-support/src/conversionutils';
+import { setViewAttributes } from '@ckeditor/ckeditor5-html-support/src/utils';
 
 /**
  * View-to-model conversion helper for Drupal Media.
