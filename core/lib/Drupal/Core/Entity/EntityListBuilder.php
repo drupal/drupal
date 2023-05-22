@@ -95,7 +95,7 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
    *   An array of entity IDs.
    */
   protected function getEntityIds() {
-    return $this->getQuery()->execute();
+    return $this->getEntityListQuery()->execute();
   }
 
   /**
@@ -104,7 +104,7 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
    * @return \Drupal\Core\Entity\Query\QueryInterface
    *   A query object used to load entity IDs.
    */
-  protected function getQuery(): QueryInterface {
+  protected function getEntityListQuery(): QueryInterface {
     $query = $this->getStorage()->getQuery()
       ->accessCheck(TRUE)
       ->sort($this->entityType->getKey('id'));
