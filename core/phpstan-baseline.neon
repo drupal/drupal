@@ -2746,21 +2746,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Database/DriverSpecificKernelTestBase.php
 
 		-
-			message: "#^\\#date_date_callbacks callback array\\{\\$this\\(Drupal\\\\KernelTests\\\\Core\\\\Datetime\\\\DatelistElementFormTest\\), string\\} at key '0' is not callable\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Datetime/DatelistElementFormTest.php
-
-		-
-			message: "#^\\#date_date_callbacks callback array\\{\\$this\\(Drupal\\\\KernelTests\\\\Core\\\\Datetime\\\\DatetimeElementFormTest\\), string\\} at key '0' is not callable\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Datetime/DatetimeElementFormTest.php
-
-		-
-			message: "#^\\#date_time_callbacks callback array\\{\\$this\\(Drupal\\\\KernelTests\\\\Core\\\\Datetime\\\\DatetimeElementFormTest\\), string\\} at key '0' is not callable\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Datetime/DatetimeElementFormTest.php
-
-		-
 			message: "#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/DrupalKernel/DrupalKernelTest.php
