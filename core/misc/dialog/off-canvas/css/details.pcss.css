@@ -47,7 +47,7 @@
       outline-offset: -4px; /* Ensure focus doesn't get cut off. */
     }
 
-    a {
+    & a {
       color: var(--off-canvas-details-text-color);
 
       &:hover {
