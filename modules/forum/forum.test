@@ -210,6 +210,46 @@ class ForumTestCase extends DrupalWebTestCase {
     $node->uid = 1;
     $node->taxonomy_forums[LANGUAGE_NONE][0]['tid'] = $this->root_forum['tid'];
     node_save($node);
+
+    // Verify that adding taxonomy_forums reference field to another content
+    // type does not trigger any errors.
+    // Create new content type.
+    $type_name = 'test_' . strtolower($this->randomName());
+    $type = $this->drupalCreateContentType(array('name' => $type_name, 'type' => $type_name));
+    // Create field instance on the bundle.
+    $vocabulary = taxonomy_vocabulary_load(variable_get('forum_nav_vocabulary', 0));
+    $instance = array(
+      'field_name' => 'taxonomy_forums',
+      'entity_type' => 'node',
+      'label' => $vocabulary->name,
+      'bundle' => $type->type,
+      'required' => FALSE,
+      'widget' => array(
+        'type' => 'options_select',
+      ),
+      'display' => array(
+        'default' => array(
+          'type' => 'taxonomy_term_reference_link',
+          'weight' => 10,
+        ),
+        'teaser' => array(
+          'type' => 'taxonomy_term_reference_link',
+          'weight' => 10,
+        ),
+      ),
+    );
+    field_create_instance($instance);
+    // Create node and access node detail page.
+    $settings = array(
+      'type' => $type->type,
+      'title' => $type_name,
+      'taxonomy_forums' => array(LANGUAGE_NONE => array()),
+    );
+    $node1 = $this->drupalCreateNode($settings);
+    $this->drupalGet('node/' . $node1->nid);
+    $this->assertResponse(200);
+    // Remove the field instance.
+    field_delete_instance($instance);
   }
 
   /**

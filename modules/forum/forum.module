@@ -263,7 +263,7 @@ function _forum_node_check_node_type($node) {
  * Implements hook_node_view().
  */
 function forum_node_view($node, $view_mode) {
-  if (_forum_node_check_node_type($node)) {
+  if (!empty($node->forum_tid) && _forum_node_check_node_type($node)) {
     if ($view_mode == 'full' && node_is_page($node)) {
       $vid = variable_get('forum_nav_vocabulary', 0);
       $vocabulary = taxonomy_vocabulary_load($vid);
