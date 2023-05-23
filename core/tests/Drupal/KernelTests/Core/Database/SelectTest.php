@@ -627,4 +627,18 @@ class SelectTest extends DatabaseTestBase {
       ->execute();
   }
 
+  /**
+   * Tests thrown exception for non array operator conditions with array value.
+   *
+   * @dataProvider providerNonArrayOperatorWithArrayValueCondition
+   * @group legacy
+   */
+  public function testNonArrayOperatorWithArrayValueConditionDeprecated($operator, $operator_in_exception_message) {
+    $this->expectDeprecation('Calling Drupal\Core\Database\Query\Condition::condition() without an array compatible operator is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3350985');
+    $this->connection->select('test', 't')
+      ->fields('t')
+      ->condition('age', [26], $operator)
+      ->execute();
+  }
+
 }
