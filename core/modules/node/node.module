@@ -554,9 +554,11 @@ function template_preprocess_node(&$variables) {
         // 'compact' view mode on the User entity. Note that the 'compact'
         // view mode might not be configured, so remember to always check the
         // theme setting first.
-        $variables['author_picture'] = \Drupal::entityTypeManager()
-          ->getViewBuilder('user')
-          ->view($node->getOwner(), 'compact');
+        if ($node_owner = $node->getOwner()) {
+          $variables['author_picture'] = \Drupal::entityTypeManager()
+            ->getViewBuilder('user')
+            ->view($node_owner, 'compact');
+        }
       }
     }
   }
