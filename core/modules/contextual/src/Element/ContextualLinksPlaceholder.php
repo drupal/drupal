@@ -49,6 +49,7 @@ class ContextualLinksPlaceholder extends RenderElement {
     $attribute = new Attribute([
       'data-contextual-id' => $element['#id'],
       'data-contextual-token' => $token,
+      'data-drupal-ajax-container' => '',
     ]);
     $element['#markup'] = new FormattableMarkup('<div@attributes></div>', ['@attributes' => $attribute]);
 

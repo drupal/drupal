@@ -88,6 +88,14 @@ class ContextualLinksTest extends WebDriverTestBase {
     $this->clickContextualLink('#block-branding', 'Test Link with Ajax');
     $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', '#drupal-modal'));
     $this->assertSession()->elementContains('css', '#drupal-modal', 'Everything is contextual!');
+    $this->getSession()->getPage()->pressButton('Close');
+    $this->assertSession()->assertNoElementAfterWait('css', 'ui.dialog');
+
+    // When the dialog is closed, the opening contextual link is now inside a
+    // collapsed container, so focus should be routed to the contextual link
+    // toggle button.
+    $this->assertJsCondition('document.activeElement === document.querySelector("#block-branding button.trigger")');
+
     // Check to make sure that page was not reloaded.
     $this->assertSession()->pageTextContains($current_page_string);
 

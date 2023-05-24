@@ -29,3 +29,11 @@ dialog_renderer_test.modal_content_input:
     _title: 'Thing 3'
   requirements:
     _access: 'TRUE'
+
+dialog_renderer_test.collapsed_opener:
+  path: '/dialog_renderer-collapsed-opener'
+  defaults:
+    _controller: '\Drupal\dialog_renderer_test\Controller\TestController::collapsedOpener'
+    _title: 'Collapsed Openers'
+  requirements:
+    _access: 'TRUE'
