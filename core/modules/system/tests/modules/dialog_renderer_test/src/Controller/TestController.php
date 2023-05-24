@@ -189,4 +189,39 @@ class TestController {
     ];
   }
 
+  /**
+   * Displays a dropbutton with a link that opens in a modal dialog.
+   *
+   * @return array
+   *   Render array with links.
+   */
+  public function collapsedOpener() {
+    return [
+      '#markup' => '<h2>Honk</h2>',
+      'dropbutton' => [
+        '#type' => 'dropbutton',
+        '#dropbutton_type' => 'small',
+        '#links' => [
+          'front' => [
+            'title' => 'front!',
+            'url' => Url::fromRoute('<front>'),
+          ],
+          'in a dropbutton' => [
+            'title' => 'inside a dropbutton',
+            'url' => Url::fromRoute('dialog_renderer_test.modal_content'),
+            'attributes' => [
+              'class' => ['use-ajax'],
+              'data-dialog-type' => 'modal',
+            ],
+          ],
+        ],
+      ],
+      '#attached' => [
+        'library' => [
+          'core/drupal.ajax',
+        ],
+      ],
+    ];
+  }
+
 }
