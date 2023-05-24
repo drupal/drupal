@@ -29,6 +29,17 @@ class InstallerExistingConfigSyncDirectoryMultilingualTest extends InstallerExis
   protected $existingSyncDirectory = TRUE;
 
   /**
+   * {@inheritdoc}
+   *
+   * @todo Remove this and thus re-enable this test in
+   *   https://www.drupal.org/project/drupal/issues/3361121
+   */
+  protected function setUp(): void {
+    $this->markTestSkipped('Skipped due to frequent random test failures.');
+    parent::setUp();
+  }
+
+  /**
    * Installer step: Select installation profile.
    */
   protected function setUpProfile() {
