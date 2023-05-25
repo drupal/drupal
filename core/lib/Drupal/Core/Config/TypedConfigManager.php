@@ -400,7 +400,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
   public function createFromNameAndData($config_name, array $config_data) {
     $definition = $this->getDefinition($config_name);
     $data_definition = $this->buildDataDefinition($definition, $config_data);
-    return $this->create($data_definition, $config_data);
+    return $this->create($data_definition, $config_data, $config_name);
   }
 
 }
