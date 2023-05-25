@@ -333,14 +333,10 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     }
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:image.style.large');
 
-    // Test the fallback image style.
-    $image = \Drupal::service('image.factory')->get($image_uri);
-    $fallback_image = [
-      '#theme' => 'image',
-      '#alt' => $alt,
-      '#uri' => $this->fileUrlGenerator->transformRelative($large_style->buildUrl($image->getSource())),
-      '#attributes' => ['loading' => 'lazy'],
-    ];
+    // Test the fallback image style. Copy the source image:
+    $fallback_image = $image;
+    // Set the fallback image style uri:
+    $fallback_image['#uri'] = $this->fileUrlGenerator->transformRelative($large_style->buildUrl($image_uri));
     // The image.html.twig template has a newline after the <img> tag but
     // responsive-image.html.twig doesn't have one after the fallback image, so
     // we remove it here.
@@ -509,7 +505,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Assert the picture tag has source tags that include dimensions.
     $this->drupalGet('node/' . $nid);
-    $this->assertSession()->responseMatches('/<picture>\s+<source srcset="' . \preg_quote($large_transform_url, '/') . ' 1x" media="\(min-width: 851px\)" type="image\/png" width="480" height="480"\/>\s+<source srcset="' . \preg_quote($medium_transform_url, '/') . ' 1x, ' . \preg_quote($large_transform_url, '/') . ' 1.5x, ' . \preg_quote($large_transform_url, '/') . ' 2x" type="image\/png" width="220" height="220"\/>\s+<img loading="eager" src="' . \preg_quote($large_transform_url, '/') . '" alt="\w+" \/>\s+<\/picture>/');
+    $this->assertSession()->responseMatches('/<picture>\s+<source srcset="' . \preg_quote($large_transform_url, '/') . ' 1x" media="\(min-width: 851px\)" type="image\/png" width="480" height="480"\/>\s+<source srcset="' . \preg_quote($medium_transform_url, '/') . ' 1x, ' . \preg_quote($large_transform_url, '/') . ' 1.5x, ' . \preg_quote($large_transform_url, '/') . ' 2x" type="image\/png" width="220" height="220"\/>\s+<img loading="eager" src="' . \preg_quote($large_transform_url, '/') . '" width="480" height="480" alt="\w+" \/>\s+<\/picture>/');
   }
 
   /**
