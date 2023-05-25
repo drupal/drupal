@@ -15,7 +15,7 @@
         "drupal/coder": "^8.3.10",
         "instaclick/php-webdriver": "^1.4.1",
         "justinrainbow/json-schema": "^5.2",
-        "mglaman/phpstan-drupal": "^1.1.33",
+        "mglaman/phpstan-drupal": "^1.1.34",
         "mikey179/vfsstream": "^1.6.11",
         "phpspec/prophecy-phpunit": "^2",
         "phpstan/extension-installer": "^1.1",
