@@ -801,11 +801,6 @@ parameters:
 			path: modules/block_content/tests/src/Kernel/Migrate/d6/MigrateCustomBlockContentTranslationTest.php
 
 		-
-			message: "#^Variable \\$book_links in empty\\(\\) is never defined\\.$#"
-			count: 1
-			path: modules/book/book.module
-
-		-
 			message: "#^Variable \\$callable in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/book/src/BookExport.php
