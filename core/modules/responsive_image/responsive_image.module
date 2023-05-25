@@ -190,18 +190,6 @@ function template_preprocess_responsive_image(&$variables) {
       '#uri' => _responsive_image_image_style_url($responsive_image_style->getFallbackImageStyle(), $variables['uri']),
       '#attributes' => [],
     ];
-
-    // We don't set dimensions for fallback image if rendered in picture tag.
-    // In Firefox, it results in sizing the entire picture element to the size
-    // of the fallback image, instead of the size on the source element.
-    $dimensions = responsive_image_get_image_dimensions($responsive_image_style->getFallbackImageStyle(), [
-      'width' => $variables['width'],
-      'height' => $variables['height'],
-    ],
-      $variables['uri']
-    );
-    $variables['img_element']['#width'] = $dimensions['width'];
-    $variables['img_element']['#height'] = $dimensions['height'];
   }
   else {
     $variables['output_image_tag'] = FALSE;
@@ -213,6 +201,18 @@ function template_preprocess_responsive_image(&$variables) {
       '#attributes' => [],
     ];
   }
+
+  // Get width and height from fallback responsive image style and transfer them
+  // to img tag so browser can do aspect ratio calculation and prevent
+  // recalculation of layout on image load.
+  $dimensions = responsive_image_get_image_dimensions($responsive_image_style->getFallbackImageStyle(), [
+    'width' => $variables['width'],
+    'height' => $variables['height'],
+  ],
+    $variables['uri']
+  );
+  $variables['img_element']['#width'] = $dimensions['width'];
+  $variables['img_element']['#height'] = $dimensions['height'];
 
   if (isset($variables['attributes'])) {
     if (isset($variables['attributes']['alt'])) {
