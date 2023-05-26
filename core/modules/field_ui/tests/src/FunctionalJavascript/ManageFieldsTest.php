@@ -147,4 +147,23 @@ class ManageFieldsTest extends WebDriverTestBase {
     $this->assertTrue($carrot_field_row->isVisible());
   }
 
+  /**
+   * Tests that field delete operation opens in modal.
+   */
+  public function testFieldDelete() {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    $this->drupalGet('admin/structure/types/manage/article/fields');
+
+    $page->find('css', '.dropbutton-toggle button')->click();
+    $page->clickLink('Delete');
+
+    // Asserts a dialog opens with the expected text.
+    $this->assertEquals('Are you sure you want to delete the field Body?', $assert_session->waitForElement('css', '.ui-dialog-title')->getText());
+
+    $page->find('css', '.ui-dialog-buttonset')->pressButton('Delete');
+    $assert_session->waitForText('The field Body has been deleted from the Article content type.');
+  }
+
 }

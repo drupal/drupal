@@ -2,6 +2,7 @@
 
 namespace Drupal\field_ui;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -194,6 +195,11 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
         'url' => $entity->toUrl("{$entity->getTargetEntityTypeId()}-field-delete-form"),
         'attributes' => [
           'title' => $this->t('Delete field.'),
+          'class' => ['use-ajax'],
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => Json::encode([
+            'width' => 880,
+          ]),
         ],
       ];
     }
