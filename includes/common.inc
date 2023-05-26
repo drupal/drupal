@@ -7363,6 +7363,13 @@ function _drupal_schema_initialize(&$schema, $module, $remove_descriptions = TRU
         unset($field['description']);
       }
     }
+    // Set the type key for all fields where it is not set (mostly when using
+    // datatabase specific data types).
+    foreach ($table['fields'] as &$field) {
+      if (!isset($field['type'])) {
+        $field['type'] = NULL;
+      }
+    }
   }
 }
 

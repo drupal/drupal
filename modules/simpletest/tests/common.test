@@ -2703,6 +2703,12 @@ class DrupalDataApiTest extends DrupalWebTestCase {
     // Update the record.
     $update_result = drupal_write_record('node_access', $node_access, array('nid', 'gid', 'realm'));
     $this->assertTrue($update_result == SAVED_UPDATED, 'Correct value returned when a record is updated with drupal_write_record() for a table with a multi-field primary key.');
+
+    // Insert a new record to the table with a database specific data type.
+    $person = new stdClass();
+    $person->age = 25;
+    $insert_result = drupal_write_record('test_db_specific_datatype', $person);
+    $this->assertTrue($insert_result == SAVED_NEW, 'Correct value returned when a record is inserted with drupal_write_record() for a table with a database specific data type.');
   }
 
 }

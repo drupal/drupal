@@ -276,5 +276,25 @@ function database_test_schema() {
 
   $schema['TEST_UPPERCASE'] = $schema['test'];
 
+  $schema['test_db_specific_datatype'] = array(
+    'description' => 'Schema with database specific data type.',
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'age' => array(
+        'description' => "The person's age.",
+        'mysql_type' => 'tinyint',
+        'pgsql_type' => 'smallint',
+        'sqlite_type' => 'tinyint',
+        'not null' => FALSE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+
   return $schema;
 }
