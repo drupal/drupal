@@ -2385,7 +2385,8 @@ function system_run_cron() {
  * Menu callback: return information about PHP.
  */
 function system_php() {
-  phpinfo(~ (INFO_VARIABLES | INFO_ENVIRONMENT));
+  $phpinfo_flags = variable_get('sa_core_2023_004_phpinfo_flags', ~(INFO_VARIABLES | INFO_ENVIRONMENT));
+  phpinfo($phpinfo_flags);
   drupal_exit();
 }
 
