@@ -93,6 +93,15 @@ class StatusTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/status/php');
     $this->assertSession()->statusCodeEquals(200);
 
+    $settings['settings']['sa_core_2023_004_phpinfo_flags'] = (object) [
+      'value' => INFO_ALL,
+      'required' => TRUE,
+    ];
+    $this->writeSettings($settings);
+    $this->drupalGet('admin/reports/status/php');
+    $this->assertSession()->pageTextContains('PHP');
+    $this->assertSession()->pageTextContains('$_COOKIE');
+
     // Check if cron error is displayed in errors section.
     $cron_last_run = \Drupal::state()->get('system.cron_last');
     \Drupal::state()->set('system.cron_last', 0);
