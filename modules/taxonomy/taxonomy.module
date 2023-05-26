@@ -1684,7 +1684,7 @@ function taxonomy_field_formatter_prepare_view($entity_type, $entities, $field, 
     }
   }
   if ($tids) {
-    $terms = taxonomy_term_load_multiple($tids);
+    $terms = taxonomy_term_load_multiple(array_filter($tids));
 
     // Iterate through the fieldable entities again to attach the loaded term data.
     foreach ($entities as $id => $entity) {
