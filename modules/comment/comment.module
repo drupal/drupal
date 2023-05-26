@@ -730,10 +730,16 @@ function comment_node_page_additions($node) {
     $comments_per_page = variable_get('comment_default_per_page_' . $node->type, 50);
     if ($cids = comment_get_thread($node, $mode, $comments_per_page)) {
       $comments = comment_load_multiple($cids);
-      comment_prepare_thread($comments);
-      $build = comment_view_multiple($comments, $node);
-      $build['pager']['#theme'] = 'pager';
-      $additions['comments'] = $build;
+      if ($comments) {
+        comment_prepare_thread($comments);
+        $build = comment_view_multiple($comments, $node);
+        $build['pager']['#theme'] = 'pager';
+        $additions['comments'] = $build;
+      }
+      elseif ($node->comment_count > 0) {
+        // Comment count has got out of line, update it.
+        db_query("UPDATE {node_comment_statistics} SET comment_count = 0 WHERE nid = :nid", array(':nid' => $node->nid));
+      }
     }
   }
 
@@ -1360,9 +1366,11 @@ function comment_node_update_index($node) {
     $comments_per_page = variable_get('comment_default_per_page_' . $node->type, 50);
     if ($node->comment && $cids = comment_get_thread($node, $mode, $comments_per_page)) {
       $comments = comment_load_multiple($cids);
-      comment_prepare_thread($comments);
-      $build = comment_view_multiple($comments, $node);
-      return drupal_render($build);
+      if ($comments) {
+        comment_prepare_thread($comments);
+        $build = comment_view_multiple($comments, $node);
+        return drupal_render($build);
+      }
     }
   }
   return '';
