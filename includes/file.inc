@@ -70,6 +70,13 @@ define('FILE_EXISTS_ERROR', 2);
 define('FILE_STATUS_PERMANENT', 1);
 
 /**
+ * A pipe-separated list of insecure extensions.
+ *
+ * @see file_munge_filename(), file_save_upload()
+ */
+define('FILE_INSECURE_EXTENSIONS', 'php|phar|pl|py|cgi|asp|js|phtml');
+
+/**
  * Provides Drupal stream wrapper registry.
  *
  * A stream wrapper is an abstraction of a file system that allows Drupal to
@@ -1180,9 +1187,8 @@ function file_munge_filename($filename, $extensions, $alerts = TRUE) {
 
     $whitelist = array_unique(explode(' ', strtolower(trim($extensions))));
 
-    // Remove unsafe extensions from the list of allowed extensions. The list is
-    // copied from file_save_upload().
-    $whitelist = array_diff($whitelist, explode('|', 'php|phar|pl|py|cgi|asp|js'));
+    // Remove unsafe extensions from the list of allowed extensions.
+    $whitelist = array_diff($whitelist, explode('|', FILE_INSECURE_EXTENSIONS));
 
     // Split the filename up by periods. The first part becomes the basename
     // the last part the final extension.
@@ -1562,7 +1568,7 @@ function file_save_upload($form_field_name, $validators = array(), $destination 
     // rename filename.php.foo and filename.php to filename.php_.foo_.txt and
     // filename.php_.txt, respectively). Don't rename if 'allow_insecure_uploads'
     // evaluates to TRUE.
-    if (preg_match('/\.(php|phar|pl|py|cgi|asp|js)(\.|$)/i', $file->filename)) {
+    if (preg_match('/\.(' . FILE_INSECURE_EXTENSIONS . ')(\.|$)/i', $file->filename)) {
       // If the file will be rejected anyway due to a disallowed extension, it
       // should not be renamed; rather, we'll let file_validate_extensions()
       // reject it below.
@@ -1754,7 +1760,7 @@ function file_validate(stdClass &$file, $validators = array()) {
   // malicious extension. Contributed and custom code that calls this method
   // needs to take similar steps if they need to permit files with malicious
   // extensions to be uploaded.
-  if (empty($errors) && !variable_get('allow_insecure_uploads', 0) && preg_match('/\.(php|phar|pl|py|cgi|asp|js)(\.|$)/i', $file->filename)) {
+  if (empty($errors) && !variable_get('allow_insecure_uploads', 0) && preg_match('/\.(' . FILE_INSECURE_EXTENSIONS . ')(\.|$)/i', $file->filename)) {
     $errors[] = t('For security reasons, your upload has been rejected.');
   }
 
