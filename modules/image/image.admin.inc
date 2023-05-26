@@ -252,7 +252,7 @@ function image_style_add_form($form, &$form_state) {
     '#size' => '64',
     '#required' => TRUE,
     '#machine_name' => array(
-      'exists' => 'image_style_load',
+      'exists' => 'image_style_add_form_name_exists',
       'source' => array('label'),
       'replace_pattern' => '[^0-9a-z_\-]',
       'error' => t('Please only use lowercase alphanumeric characters, underscores (_), and hyphens (-) for style names.'),
@@ -265,6 +265,19 @@ function image_style_add_form($form, &$form_state) {
   );
 
   return $form;
+}
+
+/**
+ * Check if the proposed machine name is already taken.
+ *
+ * @param string $name
+ *   An image style machine name.
+ *
+ * @return bool
+ *   TRUE if the image style machine name already exists, FALSE otherwise.
+ */
+function image_style_add_form_name_exists($name) {
+  return (bool) image_style_load($name);
 }
 
 /**

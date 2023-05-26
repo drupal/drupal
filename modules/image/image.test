@@ -850,6 +850,25 @@ class ImageAdminStylesUnitTest extends ImageFieldTestCase {
     $effects = array_values($style['effects']);
     $this->assertEqual($effects[0]['name'], 'image_scale', 'The default effect still exists in the reverted style.');
     $this->assertFalse(array_key_exists(1, $effects), 'The added effect has been removed in the reverted style.');
+
+    // Verify that a new style with the same name as the default one could not
+    // be created.
+    $edit = array(
+      'name' => $style_name,
+      'label' => $style_label,
+    );
+    // The default style is not overriden.
+    $this->drupalPost('admin/config/media/image-styles/add', $edit, t('Create new style'));
+    $this->assertNoRaw(t('Style %name was created.', array('%name' => $style_label)), 'Image style successfully created.');
+    // Override the default.
+    $this->drupalPost($edit_path, array(), t('Override defaults'));
+    $this->assertRaw(t('The %style style has been overridden, allowing you to change its settings.', array('%style' => $style_label)), 'Default image style may be overridden.');
+    // The default style is overriden.
+    $this->drupalPost('admin/config/media/image-styles/add', $edit, t('Create new style'));
+    $this->assertNoRaw(t('Style %name was created.', array('%name' => $style_label)), 'Image style successfully created.');
+    // Revert the image style.
+    $this->drupalPost($revert_path, array(), t('Revert'));
+    drupal_static_reset('image_styles');
   }
 
   /**
