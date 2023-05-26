@@ -67,53 +67,53 @@
   margin: 0;
 }
 
-.js .dropbutton {
+.dropbutton {
   min-width: 6rem; /* Help mitigate long dropbutton text from obscuring other dropbuttons. */
   height: var(--dropbutton-toggle-size);
 }
 
-.js .dropbutton-widget {
+.dropbutton-widget {
   border-radius: var(--button-border-radius-size);
   background-color: var(--button-bg-color);
 }
 
-.js .dropbutton-action {
+.dropbutton-action {
   border-inline-end: var(--dropbutton-border-size) solid white;
 }
 
 /* Variants. */
-.js.no-touchevents .dropbutton--small {
+.dropbutton--small {
   height: var(--dropbutton-small-toggle-size);
 }
 
-.js.no-touchevents .dropbutton--extrasmall {
+.dropbutton--extrasmall {
   height: var(--dropbutton-extrasmall-toggle-size);
 }
 
 /**
  * First dropbutton list item.
  */
-.js .dropbutton--multiple .dropbutton__item:first-of-type {
+.dropbutton--multiple .dropbutton__item:first-of-type {
   margin-right: calc(var(--dropbutton-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
 }
-[dir="rtl"].js .dropbutton--multiple .dropbutton__item:first-of-type {
+[dir="rtl"] .dropbutton--multiple .dropbutton__item:first-of-type {
   margin-right: 0;
   margin-left: calc(var(--dropbutton-toggle-size) + var(--dropbutton-toggle-size-spacing));
 }
 
 /* First dropbutton list item variants */
-.js.no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type {
+.no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type {
   margin-right: calc(var(--dropbutton-small-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
 }
-[dir="rtl"].js.no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type {
+[dir="rtl"].no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type {
   margin-right: 0;
   margin-left: calc(var(--dropbutton-small-toggle-size) + var(--dropbutton-toggle-size-spacing));
 }
 
-.js.no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__item:first-of-type {
+.no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__item:first-of-type {
   margin-right: calc(var(--dropbutton-extrasmall-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
 }
-[dir="rtl"].js.no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__item:first-of-type {
+[dir="rtl"].no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__item:first-of-type {
   margin-right: 0;
   margin-left: calc(var(--dropbutton-extrasmall-toggle-size) + var(--dropbutton-toggle-size-spacing));
 }
@@ -300,10 +300,10 @@
   z-index: 2;
 }
 
-.js .dropbutton--multiple .dropbutton__item:first-of-type > * {
+.dropbutton--multiple .dropbutton__item:first-of-type > * {
   border-radius: var(--button-border-radius-size) 0 0 var(--button-border-radius-size); /* LTR */
 }
-[dir="rtl"].js .dropbutton--multiple .dropbutton__item:first-of-type > * {
+[dir="rtl"] .dropbutton--multiple .dropbutton__item:first-of-type > * {
   border-radius: 0 var(--button-border-radius-size) var(--button-border-radius-size) 0;
 }
 
@@ -320,7 +320,7 @@
   text-align: right;
 }
 
-.js .dropbutton-wrapper:not(.open) .dropbutton__item:first-of-type ~ .dropbutton__item {
+.dropbutton-wrapper:not(.open) .dropbutton__item:first-of-type ~ .dropbutton__item {
   visibility: hidden;
 }
 

@@ -40,6 +40,28 @@ function claro_theme_suggestions_details_alter(&$suggestions, $variables) {
 }
 
 /**
+ * Implements hook_page_attachments_alter().
+ */
+function claro_page_attachments_alter(array &$attachments) {
+  $theme_path = \Drupal::request()->getBasePath() . '/' . \Drupal::service('extension.list.theme')->getPath('claro');
+  $query_string = \Drupal::state()->get('system.css_js_query_string') ?: '0';
+
+  // Attach non-JavaScript specific CSS via a noscript tag to prevent unwanted
+  // layout shifts.
+  $attachments['#attached']['html_head'][] = [
+    [
+      '#tag' => 'link',
+      '#noscript' => TRUE,
+      '#attributes' => [
+        'rel' => 'stylesheet',
+        'href' => $theme_path . '/css/components/dropbutton-noscript.css?' . $query_string,
+      ],
+    ],
+    'dropbutton_noscript',
+  ];
+}
+
+/**
  * Implements hook_preprocess_HOOK() for menu-local-tasks templates.
  *
  * Use preprocess hook to set #attached to child elements because they will be
