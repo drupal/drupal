@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\config\Functional;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\config_test\Entity\ConfigTest;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -71,6 +72,13 @@ class ConfigEntityListTest extends BrowserTestBase {
       'delete' => [
         'title' => 'Delete',
         'weight' => 100,
+        'attributes' => [
+          'class' => ['use-ajax'],
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => Json::encode([
+            'width' => 880,
+          ]),
+        ],
         'url' => $entity->toUrl('delete-form')->setOption('query', $this->getRedirectDestination()->getAsArray()),
       ],
     ];
@@ -141,6 +149,13 @@ class ConfigEntityListTest extends BrowserTestBase {
       'delete' => [
         'title' => 'Delete',
         'weight' => 100,
+        'attributes' => [
+          'class' => ['use-ajax'],
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => Json::encode([
+            'width' => 880,
+          ]),
+        ],
         'url' => $entity->toUrl('delete-form')->setOption('query', $this->getRedirectDestination()->getAsArray()),
       ],
     ];
