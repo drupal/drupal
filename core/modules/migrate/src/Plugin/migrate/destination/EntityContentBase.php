@@ -342,9 +342,10 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
       $row->setDestinationProperty($bundle_key, reset($this->bundles));
     }
 
+    $bundle = $row->getDestinationProperty($bundle_key) ?? $this->storage->getEntityTypeId();
     // Populate any required fields not already populated.
     $fields = $this->entityFieldManager
-      ->getFieldDefinitions($this->storage->getEntityTypeId(), $row->getDestinationProperty($bundle_key));
+      ->getFieldDefinitions($this->storage->getEntityTypeId(), $bundle);
     foreach ($fields as $field_name => $field_definition) {
       if ($field_definition->isRequired() && is_null($row->getDestinationProperty($field_name))) {
         // Use the configured default value for this specific field, if any.
