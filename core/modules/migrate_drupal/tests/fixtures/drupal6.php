@@ -2964,6 +2964,18 @@ $connection->insert('content_node_field')
   'locked' => '0',
 ))
 ->values(array(
+  'field_name' => 'field_company_4',
+  'type' => 'nodereference',
+  'global_settings' => 'a:1:{s:19:"referenceable_types";a:10:{s:7:"company";s:7:"company";s:7:"article";i:0;s:8:"employee";i:0;s:5:"forum";i:0;s:10:"test_event";i:0;s:9:"test_page";i:0;s:11:"test_planet";i:0;s:10:"test_story";i:0;s:7:"sponsor";i:0;s:5:"story";i:0;}}',
+  'required' => '0',
+  'multiple' => '0',
+  'db_storage' => '1',
+  'module' => 'nodereference',
+  'db_columns' => 'a:1:{s:3:"nid";a:4:{s:4:"type";s:3:"int";s:8:"unsigned";b:1;s:8:"not null";b:0;s:5:"index";b:1;}}',
+  'active' => '1',
+  'locked' => '0',
+))
+->values(array(
   'field_name' => 'field_multivalue',
   'type' => 'number_decimal',
   'global_settings' => 'a:9:{s:6:"prefix";s:0:"";s:6:"suffix";s:0:"";s:3:"min";s:0:"";s:3:"max";s:0:"";s:14:"allowed_values";s:0:"";s:18:"allowed_values_php";s:0:"";s:9:"precision";s:2:"10";s:5:"scale";s:1:"2";s:7:"decimal";s:1:".";}',
@@ -3441,6 +3453,18 @@ $connection->insert('content_node_field_instance')
   'widget_active' => '1',
 ))
 ->values(array(
+  'field_name' => 'field_company_4',
+  'type_name' => 'employee',
+  'weight' => '36',
+  'label' => 'Company 4',
+  'widget_type' => 'nodereference_url',
+  'widget_settings' => 'a:7:{s:18:"autocomplete_match";s:8:"contains";s:4:"size";s:2:"60";s:13:"default_value";a:1:{i:0;a:2:{s:3:"nid";N;s:14:"_error_element";s:50:"default_value_widget][field_company_4][0][nid][nid";}}s:17:"default_value_php";N;s:9:"node_link";a:5:{s:6:"teaser";i:0;s:4:"full";i:1;s:5:"title";s:14:"Company create";s:11:"hover_title";s:0:"";s:11:"destination";s:4:"node";}s:8:"fallback";s:12:"autocomplete";s:13:"edit_fallback";i:1;}',
+  'display_settings' => 'a:5:{s:5:"label";a:2:{s:6:"format";s:5:"above";s:7:"exclude";i:0;}i:5;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}s:6:"teaser";a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}s:4:"full";a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}i:4;a:2:{s:6:"format";s:7:"default";s:7:"exclude";i:0;}}',
+  'description' => '',
+  'widget_module' => 'nodereference',
+  'widget_active' => '1',
+))
+->values(array(
   'field_name' => 'field_multivalue',
   'type_name' => 'test_planet',
   'weight' => '2',
@@ -3847,6 +3871,12 @@ $connection->schema()->createTable('content_type_employee', array(
       'size' => 'normal',
       'unsigned' => TRUE,
     ),
+    'field_company_4_nid' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
     'field_sync_email' => array(
       'type' => 'varchar',
       'not null' => FALSE,
@@ -3869,6 +3899,9 @@ $connection->schema()->createTable('content_type_employee', array(
     'field_company_3_nid' => array(
       'field_company_3_nid',
     ),
+    'field_company_4_nid' => array(
+      'field_company_4_nid',
+    ),
   ),
   'mysql_character_set' => 'utf8',
 ));
@@ -3880,6 +3913,7 @@ $connection->insert('content_type_employee')
   'field_commander_uid',
   'field_company_2_nid',
   'field_company_3_nid',
+  'field_company_4_nid',
   'field_sync_email',
 ))
 ->values(array(
@@ -3888,6 +3922,7 @@ $connection->insert('content_type_employee')
   'field_commander_uid' => '8',
   'field_company_2_nid' => '15',
   'field_company_3_nid' => '16',
+  'field_company_4_nid' => '16',
   'field_sync_email' => NULL,
 ))
 ->values(array(
@@ -3896,6 +3931,7 @@ $connection->insert('content_type_employee')
   'field_commander_uid' => NULL,
   'field_company_2_nid' => NULL,
   'field_company_3_nid' => NULL,
+  'field_company_4_nid' => NULL,
   'field_sync_email' => 'jsmith@example.com',
 ))
 ->values(array(
@@ -3904,6 +3940,7 @@ $connection->insert('content_type_employee')
   'field_commander_uid' => NULL,
   'field_company_2_nid' => NULL,
   'field_company_3_nid' => NULL,
+  'field_company_4_nid' => NULL,
   'field_sync_email' => 'jsmith@example.com',
 ))
 ->execute();
@@ -48072,6 +48109,18 @@ $connection->insert('system')
   'schema_version' => '-1',
   'weight' => '0',
   'info' => 'a:13:{s:4:"name";s:10:"Pushbutton";s:11:"description";s:52:"Tabled, multi-column theme in blue and orange tones.";s:7:"version";s:4:"6.38";s:4:"core";s:3:"6.x";s:6:"engine";s:11:"phptemplate";s:7:"project";s:6:"drupal";s:9:"datestamp";s:10:"1456343372";s:7:"regions";a:5:{s:4:"left";s:12:"Left sidebar";s:5:"right";s:13:"Right sidebar";s:7:"content";s:7:"Content";s:6:"header";s:6:"Header";s:6:"footer";s:6:"Footer";}s:8:"features";a:10:{i:0;s:20:"comment_user_picture";i:1;s:7:"favicon";i:2;s:7:"mission";i:3;s:4:"logo";i:4;s:4:"name";i:5;s:17:"node_user_picture";i:6;s:6:"search";i:7;s:6:"slogan";i:8;s:13:"primary_links";i:9;s:15:"secondary_links";}s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:9:"style.css";s:27:"themes/pushbutton/style.css";}}s:7:"scripts";a:1:{s:9:"script.js";s:27:"themes/pushbutton/script.js";}s:10:"screenshot";s:32:"themes/pushbutton/screenshot.png";s:3:"php";s:5:"4.3.5";}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/nodereference_url/nodereference_url.module',
+  'name' => 'nodereference_url',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '1',
+  'throttle' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '6100',
+  'weight' => '0',
+  'info' => 'a:8:{s:4:"name";s:25:"Node Reference URL Widget";s:11:"description";s:99:"Adds an additional widget to the CCK Node Reference field that prepopulates a reference by the URL.";s:12:"dependencies";a:1:{i:0;s:13:"nodereference";}s:7:"package";s:3:"CCK";s:4:"core";s:3:"6.x";s:10:"dependents";a:0:{}s:7:"version";N;s:3:"php";s:5:"4.3.5";}',
 ))
 ->execute();
 $connection->schema()->createTable('term_data', array(

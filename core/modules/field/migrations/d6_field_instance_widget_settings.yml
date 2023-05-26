@@ -58,6 +58,7 @@ process:
         optionwidgets_buttons: options_buttons
         optionwidgets_select: options_select
         nodereference_select: options_select
+        nodereference_url: entity_reference_autocomplete
         nodereference_buttons: options_buttons
         nodereference_autocomplete: entity_reference_autocomplete_tags
         userreference_select: options_select
