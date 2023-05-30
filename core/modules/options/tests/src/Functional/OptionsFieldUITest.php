@@ -384,4 +384,27 @@ class OptionsFieldUITest extends FieldTestBase {
     }
   }
 
+  /**
+   * Confirms the allowed value list is a required field.
+   */
+  public function testRequiredPropertyForAllowedValuesList() {
+    $field_types = [
+      'list_float',
+      'list_string',
+      'list_integer',
+    ];
+
+    foreach ($field_types as $field_type) {
+      $this->fieldName = "field_options_$field_type";
+      $this->createOptionsField($field_type);
+
+      // Try to proceed without entering any value.
+      $this->drupalGet($this->adminPath);
+      $this->submitForm([], 'Save field settings');
+
+      // Confirmation message that this is a required field.
+      $this->assertSession()->pageTextContains('Allowed values list field is required.');
+    }
+  }
+
 }
