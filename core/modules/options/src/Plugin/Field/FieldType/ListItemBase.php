@@ -98,6 +98,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       '#field_name' => $this->getFieldDefinition()->getName(),
       '#entity_type' => $this->getEntity()->getEntityTypeId(),
       '#allowed_values' => $allowed_values,
+      '#required' => TRUE,
     ];
 
     $element['allowed_values']['#description'] = $this->allowedValuesDescription();
