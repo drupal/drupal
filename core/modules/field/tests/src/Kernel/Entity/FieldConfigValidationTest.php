@@ -36,7 +36,7 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
     $dependencies['config'] = [];
     $this->entity->set('dependencies', $dependencies);
 
-    $this->assertValidationErrors(['This field requires a field storage.']);
+    $this->assertValidationErrors(['' => 'This field requires a field storage.']);
 
     // Things look sort-of like `field.storage.*.*` should fail validation
     // because they don't exist.
@@ -47,9 +47,9 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
     ];
     $this->entity->set('dependencies', $dependencies);
     $this->assertValidationErrors([
-      "The 'field.storage.fake' config does not exist.",
-      "The 'field.storage.' config does not exist.",
-      "The 'field.storage.user.' config does not exist.",
+      'dependencies.config.0' => "The 'field.storage.fake' config does not exist.",
+      'dependencies.config.1' => "The 'field.storage.' config does not exist.",
+      'dependencies.config.2' => "The 'field.storage.user.' config does not exist.",
     ]);
   }
 

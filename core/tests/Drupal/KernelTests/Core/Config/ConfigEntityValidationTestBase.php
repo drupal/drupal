@@ -61,7 +61,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
           'fun_stuff' => ['star-trek.deep-space-nine'],
         ],
         [
-          "'fun_stuff' is not a supported key.",
+          'dependencies' => "'fun_stuff' is not a supported key.",
         ],
       ],
       'empty string in config dependencies' => [
@@ -69,8 +69,10 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
           'config' => [''],
         ],
         [
-          'This value should not be blank.',
-          "The '' config does not exist.",
+          'dependencies.config.0' => [
+            'This value should not be blank.',
+            "The '' config does not exist.",
+          ],
         ],
       ],
       'non-existent config dependency' => [
@@ -78,7 +80,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
           'config' => ['fake_settings'],
         ],
         [
-          "The 'fake_settings' config does not exist.",
+          'dependencies.config.0' => "The 'fake_settings' config does not exist.",
         ],
       ],
       'empty string in module dependencies' => [
@@ -86,8 +88,10 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
           'module' => [''],
         ],
         [
-          'This value should not be blank.',
-          "Module '' is not installed.",
+          'dependencies.module.0' => [
+            'This value should not be blank.',
+            "Module '' is not installed.",
+          ],
         ],
       ],
       'invalid module dependency' => [
@@ -95,8 +99,10 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
           'module' => ['invalid-module-name'],
         ],
         [
-          'This value is not valid.',
-          "Module 'invalid-module-name' is not installed.",
+          'dependencies.module.0' => [
+            'This value is not valid.',
+            "Module 'invalid-module-name' is not installed.",
+          ],
         ],
       ],
       'non-installed module dependency' => [
@@ -104,7 +110,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
           'module' => ['bad_judgment'],
         ],
         [
-          "Module 'bad_judgment' is not installed.",
+          'dependencies.module.0' => "Module 'bad_judgment' is not installed.",
         ],
       ],
       'empty string in theme dependencies' => [
@@ -112,8 +118,10 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
           'theme' => [''],
         ],
         [
-          'This value should not be blank.',
-          "Theme '' is not installed.",
+          'dependencies.theme.0' => [
+            'This value should not be blank.',
+            "Theme '' is not installed.",
+          ],
         ],
       ],
       'invalid theme dependency' => [
@@ -121,8 +129,10 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
           'theme' => ['invalid-theme-name'],
         ],
         [
-          'This value is not valid.',
-          "Theme 'invalid-theme-name' is not installed.",
+          'dependencies.theme.0' => [
+            'This value is not valid.',
+            "Theme 'invalid-theme-name' is not installed.",
+          ],
         ],
       ],
       'non-installed theme dependency' => [
@@ -130,7 +140,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
           'theme' => ['ugly_theme'],
         ],
         [
-          "Theme 'ugly_theme' is not installed.",
+          'dependencies.theme.0' => "Theme 'ugly_theme' is not installed.",
         ],
       ],
     ];
@@ -141,8 +151,10 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
    *
    * @param array[] $dependencies
    *   The dependencies that should be added to the config entity under test.
-   * @param string[] $expected_messages
-   *   The expected constraint violation messages.
+   * @param array<string, string|string[]> $expected_messages
+   *   The expected validation error messages. Keys are property paths, values
+   *   are the expected messages: a string if a single message is expected, an
+   *   array of strings if multiple are expected.
    *
    * @dataProvider providerConfigDependenciesValidation
    */
@@ -154,7 +166,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
 
     // Add the dependencies we were given to the dependencies that may already
     // exist in the entity.
-    $dependencies = NestedArray::mergeDeep($this->entity->getDependencies(), $dependencies);
+    $dependencies = NestedArray::mergeDeep($dependencies, $this->entity->getDependencies());
 
     $this->entity->set('dependencies', $dependencies);
     $this->assertValidationErrors($expected_messages);
@@ -163,14 +175,23 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     $this->entity->set('dependencies', [
       'enforced' => $dependencies,
     ]);
-    $this->assertValidationErrors($expected_messages);
+    // We now expect validation errors not at `dependencies.module.0`, but at
+    // `dependencies.enforced.module.0`. So reuse the same messages, but perform
+    // string replacement in the keys.
+    $expected_enforced_messages = array_combine(
+      str_replace('dependencies', 'dependencies.enforced', array_keys($expected_messages)),
+      array_values($expected_messages),
+    );
+    $this->assertValidationErrors($expected_enforced_messages);
   }
 
   /**
    * Asserts a set of validation errors is raised when the entity is validated.
    *
-   * @param string[] $expected_messages
-   *   The expected validation error messages.
+   * @param array<string, string|string[]> $expected_messages
+   *   The expected validation error messages. Keys are property paths, values
+   *   are the expected messages: a string if a single message is expected, an
+   *   array of strings if multiple are expected.
    */
   protected function assertValidationErrors(array $expected_messages): void {
     /** @var \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data */
@@ -180,7 +201,17 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
 
     $actual_messages = [];
     foreach ($violations as $violation) {
-      $actual_messages[] = (string) $violation->getMessage();
+      if (!isset($actual_messages[$violation->getPropertyPath()])) {
+        $actual_messages[$violation->getPropertyPath()] = (string) $violation->getMessage();
+      }
+      else {
+        // Transform value from string to array.
+        if (is_string($actual_messages[$violation->getPropertyPath()])) {
+          $actual_messages[$violation->getPropertyPath()] = (array) $actual_messages[$violation->getPropertyPath()];
+        }
+        // And append.
+        $actual_messages[$violation->getPropertyPath()][] = (string) $violation->getMessage();
+      }
     }
     $this->assertSame($expected_messages, $actual_messages);
   }

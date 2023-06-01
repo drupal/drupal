@@ -36,7 +36,7 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
    */
   public function testInvalidPluginId(): void {
     $this->entity->set('plugin', 'non_existent');
-    $this->assertValidationErrors(["The 'non_existent' plugin does not exist."]);
+    $this->assertValidationErrors(['plugin' => "The 'non_existent' plugin does not exist."]);
   }
 
 }

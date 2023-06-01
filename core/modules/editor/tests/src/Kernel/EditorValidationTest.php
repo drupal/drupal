@@ -46,7 +46,7 @@ class EditorValidationTest extends ConfigEntityValidationTestBase {
     $dependencies['config'] = [];
     $this->entity->set('dependencies', $dependencies);
 
-    $this->assertValidationErrors(['This text editor requires a text format.']);
+    $this->assertValidationErrors(['' => 'This text editor requires a text format.']);
 
     // Things look sort-of like `filter.format.*` should fail validation
     // because they don't exist.
@@ -56,9 +56,9 @@ class EditorValidationTest extends ConfigEntityValidationTestBase {
     ];
     $this->entity->set('dependencies', $dependencies);
     $this->assertValidationErrors([
-      'This text editor requires a text format.',
-      "The 'filter.format' config does not exist.",
-      "The 'filter.format.' config does not exist.",
+      '' => 'This text editor requires a text format.',
+      'dependencies.config.0' => "The 'filter.format' config does not exist.",
+      'dependencies.config.1' => "The 'filter.format.' config does not exist.",
     ]);
   }
 
@@ -67,7 +67,7 @@ class EditorValidationTest extends ConfigEntityValidationTestBase {
    */
   public function testInvalidPluginId(): void {
     $this->entity->setEditor('non_existent');
-    $this->assertValidationErrors(["The 'non_existent' plugin does not exist."]);
+    $this->assertValidationErrors(['editor' => "The 'non_existent' plugin does not exist."]);
   }
 
 }
