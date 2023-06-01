@@ -277,6 +277,9 @@ function claro_element_info_alter(&$type) {
     array_unshift($operations_pre_renders, [ClaroPreRender::class, 'operations']);
 
     $type['operations']['#pre_render'] = $operations_pre_renders;
+
+    // @todo Remove when https://www.drupal.org/node/1945262 is fixed.
+    $type['operations']['#attached']['library'][] = 'core/drupal.dialog.ajax';
   }
 
   if (isset($type['vertical_tabs'])) {
