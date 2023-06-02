@@ -1814,26 +1814,24 @@ function template_preprocess_pager(&$variables) {
     }
   }
 
-  if ($i != $pager_max) {
-    // Add an ellipsis if there are further previous pages.
-    if ($i > 1) {
-      $variables['ellipses']['previous'] = TRUE;
+  // Add an ellipsis if there are further previous pages.
+  if ($i > 1) {
+    $variables['ellipses']['previous'] = TRUE;
+  }
+  // Now generate the actual pager piece.
+  for (; $i <= $pager_last && $i <= $pager_max; $i++) {
+    $options = [
+      'query' => $pager_manager->getUpdatedParameters($parameters, $element, $i - 1),
+    ];
+    $items['pages'][$i]['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
+    $items['pages'][$i]['attributes'] = new Attribute();
+    if ($i == $pager_current) {
+      $variables['current'] = $i;
     }
-    // Now generate the actual pager piece.
-    for (; $i <= $pager_last && $i <= $pager_max; $i++) {
-      $options = [
-        'query' => $pager_manager->getUpdatedParameters($parameters, $element, $i - 1),
-      ];
-      $items['pages'][$i]['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
-      $items['pages'][$i]['attributes'] = new Attribute();
-      if ($i == $pager_current) {
-        $variables['current'] = $i;
-      }
-    }
-    // Add an ellipsis if there are further next pages.
-    if ($i < $pager_max + 1) {
-      $variables['ellipses']['next'] = TRUE;
-    }
+  }
+  // Add an ellipsis if there are further next pages.
+  if ($i < $pager_max + 1) {
+    $variables['ellipses']['next'] = TRUE;
   }
 
   // Create the "next" and "last" links if we are not on the last page.
