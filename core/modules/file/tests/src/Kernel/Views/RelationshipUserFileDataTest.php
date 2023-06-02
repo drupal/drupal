@@ -1,12 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\file\Kernel\Views;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\file\Entity\File;
-use Drupal\KernelTests\KernelTestBase;
+use Drupal\file\FileInterface;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
+use Drupal\user\Entity\User;
 use Drupal\views\Tests\ViewResultAssertionTrait;
 use Drupal\views\Views;
 use Drupal\views\Tests\ViewTestData;
@@ -16,7 +20,7 @@ use Drupal\views\Tests\ViewTestData;
  *
  * @group file
  */
-class RelationshipUserFileDataTest extends KernelTestBase {
+class RelationshipUserFileDataTest extends ViewsKernelTestBase {
 
   use UserCreationTrait;
   use ViewResultAssertionTrait;
@@ -38,15 +42,14 @@ class RelationshipUserFileDataTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_file_user_file_data'];
+  public static $testViews = ['test_file_user_file_data', 'test_user_to_file', 'test_file_to_user'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
-    parent::setUp();
+  protected function setUp($import_test_views = TRUE): void {
+    parent::setUp($import_test_views);
 
-    $this->installSchema('system', ['sequences']);
     $this->installSchema('file', ['file_usage']);
     $this->installEntitySchema('user');
     $this->installEntitySchema('file');
@@ -68,12 +71,13 @@ class RelationshipUserFileDataTest extends KernelTestBase {
     ])->save();
 
     ViewTestData::createTestViews(static::class, ['file_test_views']);
+    $this->installConfig(['field', 'file_test_views']);
   }
 
   /**
    * Tests using the views file relationship.
    */
-  public function testViewsHandlerRelationshipUserFileData() {
+  public function testViewsHandlerRelationshipUserFileData(): void {
     $file = File::create([
       'fid' => 2,
       'uid' => 2,
@@ -107,6 +111,116 @@ class RelationshipUserFileDataTest extends KernelTestBase {
       ],
     ];
     $column_map = ['file_managed_user__user_file_fid' => 'file_managed_user__user_file_fid'];
+    $this->assertIdenticalResultset($view, $expected_result, $column_map);
+  }
+
+  /**
+   * Tests using the views user_to_file relationship.
+   */
+  public function testViewsHandlerRelationshipUserToFile(): void {
+    $file1 = File::create([
+      'filename' => 'image-test.jpg',
+      'uri' => "public://image-test.jpg",
+      'filemime' => 'image/jpeg',
+      'created' => 1,
+      'changed' => 1,
+      'status' => FileInterface::STATUS_PERMANENT,
+    ]);
+    $file1->enforceIsNew();
+    file_put_contents($file1->getFileUri(), file_get_contents('core/tests/fixtures/files/image-1.png'));
+    $file1->save();
+
+    $file2 = File::create([
+      'filename' => 'image-test-2.jpg',
+      'uri' => "public://image-test-2.jpg",
+      'filemime' => 'image/jpeg',
+      'created' => 1,
+      'changed' => 1,
+      'status' => FileInterface::STATUS_PERMANENT,
+    ]);
+    $file2->enforceIsNew();
+    file_put_contents($file2->getFileUri(), file_get_contents('core/tests/fixtures/files/image-1.png'));
+    $file2->save();
+
+    User::create([
+      'name' => $this->randomMachineName(8),
+      'mail' => $this->randomMachineName(4) . '@' . $this->randomMachineName(4) . '.com',
+    ])->save();
+
+    $account = User::create([
+      'name' => $this->randomMachineName(8),
+      'mail' => $this->randomMachineName(4) . '@' . $this->randomMachineName(4) . '.com',
+      'user_file' => ['target_id' => $file2->id()],
+    ]);
+    $account->save();
+
+    $view = Views::getView('test_user_to_file');
+    $this->executeView($view);
+    // We should only see a single file, the one on the user account. The other
+    // account's UUID, nor the other unlinked file, should appear in the
+    // results.
+    $expected_result = [
+      [
+        'fid' => $file2->id(),
+        'uuid' => $account->uuid(),
+      ],
+    ];
+    $column_map = ['fid' => 'fid', 'uuid' => 'uuid'];
+    $this->assertIdenticalResultset($view, $expected_result, $column_map);
+  }
+
+  /**
+   * Tests using the views file_to_user relationship.
+   */
+  public function testViewsHandlerRelationshipFileToUser(): void {
+    $file1 = File::create([
+      'filename' => 'image-test.jpg',
+      'uri' => "public://image-test.jpg",
+      'filemime' => 'image/jpeg',
+      'created' => 1,
+      'changed' => 1,
+      'status' => FileInterface::STATUS_PERMANENT,
+    ]);
+    $file1->enforceIsNew();
+    file_put_contents($file1->getFileUri(), file_get_contents('core/tests/fixtures/files/image-1.png'));
+    $file1->save();
+
+    $file2 = File::create([
+      'filename' => 'image-test-2.jpg',
+      'uri' => "public://image-test-2.jpg",
+      'filemime' => 'image/jpeg',
+      'created' => 1,
+      'changed' => 1,
+      'status' => FileInterface::STATUS_PERMANENT,
+    ]);
+    $file2->enforceIsNew();
+    file_put_contents($file2->getFileUri(), file_get_contents('core/tests/fixtures/files/image-1.png'));
+    $file2->save();
+
+    User::create([
+      'name' => $this->randomMachineName(8),
+      'mail' => $this->randomMachineName(4) . '@' . $this->randomMachineName(4) . '.com',
+    ])->save();
+
+    $account = User::create([
+      'name' => $this->randomMachineName(8),
+      'mail' => $this->randomMachineName(4) . '@' . $this->randomMachineName(4) . '.com',
+      'user_file' => ['target_id' => $file2->id()],
+    ]);
+    $account->save();
+
+    $view = Views::getView('test_file_to_user');
+    $this->executeView($view);
+    // We should only see a single file, the one on the user account. The other
+    // account's UUID, nor the other unlinked file, should appear in the
+    // results.
+    $expected_result = [
+      [
+        'fid' => $file2->id(),
+        'uuid' => $account->uuid(),
+      ],
+    ];
+    $column_map = ['fid' => 'fid', 'uuid' => 'uuid'];
     $this->assertIdenticalResultset($view, $expected_result, $column_map);
   }
 
