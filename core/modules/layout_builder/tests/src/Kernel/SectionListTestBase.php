@@ -37,10 +37,10 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
 
     $section_data = [
       new Section('layout_test_plugin', [], [
-        'first-uuid' => new SectionComponent('first-uuid', 'content', ['id' => 'foo']),
+        '10000000-0000-1000-a000-000000000000' => new SectionComponent('10000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
       ]),
       new Section('layout_test_plugin', ['setting_1' => 'bar'], [
-        'second-uuid' => new SectionComponent('second-uuid', 'content', ['id' => 'foo']),
+        '20000000-0000-1000-a000-000000000000' => new SectionComponent('20000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
       ]),
     ];
     $this->sectionList = $this->getSectionList($section_data);
@@ -63,10 +63,10 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
   public function testGetSections() {
     $expected = [
       new Section('layout_test_plugin', ['setting_1' => 'Default'], [
-        'first-uuid' => new SectionComponent('first-uuid', 'content', ['id' => 'foo']),
+        '10000000-0000-1000-a000-000000000000' => new SectionComponent('10000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
       ]),
       new Section('layout_test_plugin', ['setting_1' => 'bar'], [
-        'second-uuid' => new SectionComponent('second-uuid', 'content', ['id' => 'foo']),
+        '20000000-0000-1000-a000-000000000000' => new SectionComponent('20000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
       ]),
     ];
     $this->assertSections($expected);
@@ -94,11 +94,11 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
   public function testInsertSection() {
     $expected = [
       new Section('layout_test_plugin', ['setting_1' => 'Default'], [
-        'first-uuid' => new SectionComponent('first-uuid', 'content', ['id' => 'foo']),
+        '10000000-0000-1000-a000-000000000000' => new SectionComponent('10000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
       ]),
       new Section('layout_onecol'),
       new Section('layout_test_plugin', ['setting_1' => 'bar'], [
-        'second-uuid' => new SectionComponent('second-uuid', 'content', ['id' => 'foo']),
+        '20000000-0000-1000-a000-000000000000' => new SectionComponent('20000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
       ]),
     ];
 
@@ -112,10 +112,10 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
   public function testAppendSection() {
     $expected = [
       new Section('layout_test_plugin', ['setting_1' => 'Default'], [
-        'first-uuid' => new SectionComponent('first-uuid', 'content', ['id' => 'foo']),
+        '10000000-0000-1000-a000-000000000000' => new SectionComponent('10000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
       ]),
       new Section('layout_test_plugin', ['setting_1' => 'bar'], [
-        'second-uuid' => new SectionComponent('second-uuid', 'content', ['id' => 'foo']),
+        '20000000-0000-1000-a000-000000000000' => new SectionComponent('20000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
       ]),
       new Section('layout_onecol'),
     ];
@@ -156,7 +156,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
   public function testRemoveSection() {
     $expected = [
       new Section('layout_test_plugin', ['setting_1' => 'bar'], [
-        'second-uuid' => new SectionComponent('second-uuid', 'content', ['id' => 'foo']),
+        '20000000-0000-1000-a000-000000000000' => new SectionComponent('20000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
       ]),
     ];
 

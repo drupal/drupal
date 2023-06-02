@@ -34,8 +34,8 @@ class SectionTest extends UnitTestCase {
       [],
       [
         new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']),
-        (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
-        (new SectionComponent('first-uuid', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
+        (new SectionComponent('20000000-0000-1000-a000-000000000000', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
+        (new SectionComponent('10000000-0000-1000-a000-000000000000', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
       ],
       [
         'bad_judgement' => ['blink_speed' => 'fast', 'spin_direction' => 'clockwise'],
@@ -52,8 +52,8 @@ class SectionTest extends UnitTestCase {
   public function testGetComponents() {
     $expected = [
       'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
-      'second-uuid' => (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
-      'first-uuid' => (new SectionComponent('first-uuid', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
+      '20000000-0000-1000-a000-000000000000' => (new SectionComponent('20000000-0000-1000-a000-000000000000', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
+      '10000000-0000-1000-a000-000000000000' => (new SectionComponent('10000000-0000-1000-a000-000000000000', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
     ];
 
     $this->assertComponents($expected, $this->section);
@@ -84,10 +84,10 @@ class SectionTest extends UnitTestCase {
   public function testRemoveComponent() {
     $expected = [
       'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
-      'second-uuid' => (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
+      '20000000-0000-1000-a000-000000000000' => (new SectionComponent('20000000-0000-1000-a000-000000000000', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
     ];
 
-    $this->section->removeComponent('first-uuid');
+    $this->section->removeComponent('10000000-0000-1000-a000-000000000000');
     $this->assertComponents($expected, $this->section);
   }
 
@@ -99,8 +99,8 @@ class SectionTest extends UnitTestCase {
   public function testAppendComponent() {
     $expected = [
       'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
-      'second-uuid' => (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
-      'first-uuid' => (new SectionComponent('first-uuid', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
+      '20000000-0000-1000-a000-000000000000' => (new SectionComponent('20000000-0000-1000-a000-000000000000', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
+      '10000000-0000-1000-a000-000000000000' => (new SectionComponent('10000000-0000-1000-a000-000000000000', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
       'new-uuid' => (new SectionComponent('new-uuid', 'some-region', []))->setWeight(1),
     ];
 
@@ -114,12 +114,12 @@ class SectionTest extends UnitTestCase {
   public function testInsertAfterComponent() {
     $expected = [
       'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
-      'second-uuid' => (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(4),
-      'first-uuid' => (new SectionComponent('first-uuid', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
+      '20000000-0000-1000-a000-000000000000' => (new SectionComponent('20000000-0000-1000-a000-000000000000', 'ordered-region', ['id' => 'second-block-id']))->setWeight(4),
+      '10000000-0000-1000-a000-000000000000' => (new SectionComponent('10000000-0000-1000-a000-000000000000', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
       'new-uuid' => (new SectionComponent('new-uuid', 'ordered-region', []))->setWeight(3),
     ];
 
-    $this->section->insertAfterComponent('first-uuid', new SectionComponent('new-uuid', 'ordered-region'));
+    $this->section->insertAfterComponent('10000000-0000-1000-a000-000000000000', new SectionComponent('new-uuid', 'ordered-region'));
     $this->assertComponents($expected, $this->section);
   }
 
@@ -148,8 +148,8 @@ class SectionTest extends UnitTestCase {
   public function testInsertComponent() {
     $expected = [
       'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
-      'second-uuid' => (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(4),
-      'first-uuid' => (new SectionComponent('first-uuid', 'ordered-region', ['id' => 'first-block-id']))->setWeight(3),
+      '20000000-0000-1000-a000-000000000000' => (new SectionComponent('20000000-0000-1000-a000-000000000000', 'ordered-region', ['id' => 'second-block-id']))->setWeight(4),
+      '10000000-0000-1000-a000-000000000000' => (new SectionComponent('10000000-0000-1000-a000-000000000000', 'ordered-region', ['id' => 'first-block-id']))->setWeight(3),
       'new-uuid' => (new SectionComponent('new-uuid', 'ordered-region', []))->setWeight(2),
     ];
 
@@ -163,8 +163,8 @@ class SectionTest extends UnitTestCase {
   public function testInsertComponentAppend() {
     $expected = [
       'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
-      'second-uuid' => (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
-      'first-uuid' => (new SectionComponent('first-uuid', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
+      '20000000-0000-1000-a000-000000000000' => (new SectionComponent('20000000-0000-1000-a000-000000000000', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
+      '10000000-0000-1000-a000-000000000000' => (new SectionComponent('10000000-0000-1000-a000-000000000000', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
       'new-uuid' => (new SectionComponent('new-uuid', 'ordered-region', []))->setWeight(4),
     ];
 
