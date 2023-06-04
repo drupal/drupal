@@ -20,14 +20,12 @@ class BlockContentRedirectTest extends BlockContentTestBase {
    *
    * @group legacy
    */
-  public function testBlockContentEditRedirect(): void {
-    $block = $this->createBlockContent();
+  public function testBlockContentTypeRedirect() {
     $this->drupalLogin($this->adminUser);
-    $this->expectDeprecation('The path /block/{block_content} is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/content/block/{block_content}. See https://www.drupal.org/node/2317981.');
-    $this->drupalGet("/block/{$block->id()}");
-    $base_path = parse_url($this->baseUrl, PHP_URL_PATH) ?? '';
+    $this->expectDeprecation('The path /admin/structure/block/block-content/types is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/structure/block-content. See https://www.drupal.org/node/3320855.');
+    $this->drupalGet('/admin/structure/block/block-content/types');
     $this->assertSession()
-      ->pageTextContains("You have been redirected from $base_path/block/{$block->id()}. Update links, shortcuts, and bookmarks to use $base_path/admin/content/block/{$block->id()}.");
+      ->pageTextContains("You have been redirected from admin/structure/block/block-content/types. Update links, shortcuts, and bookmarks to use admin/structure/block-content.");
   }
 
   /**
@@ -35,14 +33,40 @@ class BlockContentRedirectTest extends BlockContentTestBase {
    *
    * @group legacy
    */
+  public function testBlockLibraryRedirect() {
+    $this->drupalLogin($this->adminUser);
+    $this->expectDeprecation('The path /admin/structure/block/block-content is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/content/block. See https://www.drupal.org/node/3320855.');
+    $this->drupalGet('admin/structure/block/block-content');
+    $this->assertSession()
+      ->pageTextContains("You have been redirected from admin/structure/block/block-content. Update links, shortcuts, and bookmarks to use admin/content/block.");
+  }
+
+  /**
+   * Tests the deprecation message from the old block edit page.
+   *
+   * @group legacy
+   */
+  public function testBlockContentEditRedirect(): void {
+    $block = $this->createBlockContent();
+    $this->drupalLogin($this->adminUser);
+    $this->expectDeprecation('The path /block/{block_content} is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/content/block/{block_content}. See https://www.drupal.org/node/3320855.');
+    $this->drupalGet("/block/{$block->id()}");
+    $this->assertSession()
+      ->pageTextContains("You have been redirected from block/{$block->id()}. Update links, shortcuts, and bookmarks to use admin/content/block/{$block->id()}.");
+  }
+
+  /**
+   * Tests the deprecation message from the old block delete page.
+   *
+   * @group legacy
+   */
   public function testBlockContentDeleteRedirect(): void {
     $block = $this->createBlockContent();
     $this->drupalLogin($this->adminUser);
-    $this->expectDeprecation('The path /block/{block_content}/delete is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/content/block/{block_content}/delete. See https://www.drupal.org/node/2317981.');
+    $this->expectDeprecation('The path /block/{block_content} is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/content/block/{block_content}. See https://www.drupal.org/node/3320855.');
     $this->drupalGet("/block/{$block->id()}/delete");
-    $base_path = parse_url($this->baseUrl, PHP_URL_PATH) ?? '';
     $this->assertSession()
-      ->pageTextContains("You have been redirected from $base_path/block/{$block->id()}/delete. Update links, shortcuts, and bookmarks to use $base_path/admin/content/block/{$block->id()}/delete.");
+      ->pageTextContains("You have been redirected from block/{$block->id()}/delete. Update links, shortcuts, and bookmarks to use admin/content/block/{$block->id()}/delete.");
   }
 
 }
