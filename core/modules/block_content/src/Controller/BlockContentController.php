@@ -4,6 +4,8 @@ namespace Drupal\block_content\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Routing\PathChangedHelper;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\block_content\BlockContentInterface;
 use Drupal\block_content\BlockContentTypeInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
@@ -141,6 +143,11 @@ class BlockContentController extends ControllerBase {
   /**
    * Provides a redirect to the list of block types.
    *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   A route match object, used for the route name and the parameters.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request object.
+   *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *
    * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
@@ -149,23 +156,28 @@ class BlockContentController extends ControllerBase {
    *
    * @see https://www.drupal.org/node/3320855
    */
-  public function blockContentTypeRedirect(): RedirectResponse {
+  public function blockContentTypeRedirect(RouteMatchInterface $route_match, Request $request): RedirectResponse {
     @trigger_error('The path /admin/structure/block/block-content/types is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/structure/block-content. See https://www.drupal.org/node/3320855.', E_USER_DEPRECATED);
-    $route = 'entity.block_content_type.collection';
+    $helper = new PathChangedHelper($route_match, $request);
     $params = [
-      '%old_path' => Url::fromRoute("$route.bc")->toString(),
-      '%new_path' => Url::fromRoute($route)->toString(),
+      '%old_path' => $helper->oldPath(),
+      '%new_path' => $helper->newPath(),
       '%change_record' => 'https://www.drupal.org/node/3320855',
     ];
     $warning_message = $this->t('You have been redirected from %old_path. Update links, shortcuts, and bookmarks to use %new_path.', $params);
     $this->messenger()->addWarning($warning_message);
-    $this->getLogger('block_content')->warning('A user was redirected from %old_path to %new_path. This redirect will be removed in a future version of Drupal. Update links, shortcuts, and bookmarks to use %new_path. See %change_record for more information.', $params);
+    $this->getLogger('block_content')->warning('A user was redirected from %old_path. This redirect will be removed in a future version of Drupal. Update links, shortcuts, and bookmarks to use %new_path. See %change_record for more information.', $params);
 
-    return $this->redirect($route, [], [], 301);
+    return $helper->redirect();
   }
 
   /**
    * Provides a redirect to the content block library.
+   *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   A route match object, used for the route name and the parameters.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request object.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *
@@ -175,25 +187,29 @@ class BlockContentController extends ControllerBase {
    *
    * @see https://www.drupal.org/node/3320855
    */
-  public function blockLibraryRedirect() {
+  public function blockLibraryRedirect(RouteMatchInterface $route_match, Request $request) {
     @trigger_error('The path /admin/structure/block/block-content is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/content/block. See https://www.drupal.org/node/3320855.', E_USER_DEPRECATED);
-    $route = 'entity.block_content.collection';
+    $helper = new PathChangedHelper($route_match, $request);
     $params = [
-      '%old_path' => Url::fromRoute("$route.bc")->toString(),
-      '%new_path' => Url::fromRoute($route)->toString(),
+      '%old_path' => $helper->oldPath(),
+      '%new_path' => $helper->newPath(),
       '%change_record' => 'https://www.drupal.org/node/3320855',
     ];
     $warning_message = $this->t('You have been redirected from %old_path. Update links, shortcuts, and bookmarks to use %new_path.', $params);
     $this->messenger()->addWarning($warning_message);
     $this->getLogger('block_content')
-      ->warning('A user was redirected from %old_path to %new_path. This redirect will be removed in a future version of Drupal. Update links, shortcuts, and bookmarks to use %new_path. See %change_record for more information.', $params);
+      ->warning('A user was redirected from %old_path. This redirect will be removed in a future version of Drupal. Update links, shortcuts, and bookmarks to use %new_path. See %change_record for more information.', $params);
 
-    return $this->redirect($route, [], [], 301);
+    return $helper->redirect();
   }
 
   /**
    * Provides a redirect to block edit page.
    *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   A route match object, used for the route name and the parameters.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request object.
    * @param Drupal\block_content\BlockContentInterface $block_content
    *   The block to be edited.
    *
@@ -203,50 +219,21 @@ class BlockContentController extends ControllerBase {
    *   /admin/content/block/{block_content} directly instead of
    *   /block/{block_content}.
    *
-   * @see https://www.drupal.org/node/2317981
+   * @see https://www.drupal.org/node/3320855
    */
-  public function editRedirect(BlockContentInterface $block_content): RedirectResponse {
-    @trigger_error('The path /block/{block_content} is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/content/block/{block_content}. See https://www.drupal.org/node/2317981.', E_USER_DEPRECATED);
-    $route = 'entity.block_content.edit_form';
+  public function editRedirect(RouteMatchInterface $route_match, Request $request, BlockContentInterface $block_content): RedirectResponse {
+    @trigger_error('The path /block/{block_content} is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/content/block/{block_content}. See https://www.drupal.org/node/3320855.', E_USER_DEPRECATED);
+    $helper = new PathChangedHelper($route_match, $request);
     $params = [
-      '%old_path' => Url::fromRoute("$route.bc", ['block_content' => $block_content->id()])->toString(),
-      '%new_path' => Url::fromRoute($route, ['block_content' => $block_content->id()])->toString(),
+      '%old_path' => $helper->oldPath(),
+      '%new_path' => $helper->newPath(),
       '%change_record' => 'https://www.drupal.org/node/3320855',
     ];
     $warning_message = $this->t('You have been redirected from %old_path. Update links, shortcuts, and bookmarks to use %new_path.', $params);
     $this->messenger()->addWarning($warning_message);
     $this->getLogger('block_content')->warning('A user was redirected from %old_path to %new_path. This redirect will be removed in a future version of Drupal. Update links, shortcuts, and bookmarks to use %new_path. See %change_record for more information.', $params);
 
-    return $this->redirect($route, ['block_content' => $block_content->id()], [], 301);
-  }
-
-  /**
-   * Provides a redirect to block delete page.
-   *
-   * @param Drupal\block_content\BlockContentInterface $block_content
-   *   The block to be deleted.
-   *
-   * @return \Symfony\Component\HttpFoundation\RedirectResponse
-   *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
-   *   /admin/content/block/{block_content}/delete directly instead of
-   *   /block/{block_content}/delete.
-   *
-   * @see https://www.drupal.org/node/2317981
-   */
-  public function deleteRedirect(BlockContentInterface $block_content): RedirectResponse {
-    @trigger_error('The path /block/{block_content}/delete is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/content/block/{block_content}/delete. See https://www.drupal.org/node/2317981.', E_USER_DEPRECATED);
-    $route = 'entity.block_content.delete_form';
-    $params = [
-      '%old_path' => Url::fromRoute("$route.bc", ['block_content' => $block_content->id()])->toString(),
-      '%new_path' => Url::fromRoute($route, ['block_content' => $block_content->id()])->toString(),
-      '%change_record' => 'https://www.drupal.org/node/3320855',
-    ];
-    $warning_message = $this->t('You have been redirected from %old_path. Update links, shortcuts, and bookmarks to use %new_path.', $params);
-    $this->messenger()->addWarning($warning_message);
-    $this->getLogger('block_content')->warning('A user was redirected from %old_path to %new_path. This redirect will be removed in a future version of Drupal. Update links, shortcuts, and bookmarks to use %new_path. See %change_record for more information.', $params);
-
-    return $this->redirect($route, ['block_content' => $block_content->id()], [], 301);
+    return $helper->redirect();
   }
 
 }

@@ -1,0 +1,12 @@
+path.changed:
+  path: '/new/path/{block_type}'
+  defaults:
+    _controller: '\Drupal\path_changed_helper_test\Controller\TestController::test'
+  requirements:
+    _access: 'TRUE'
+path.changed.bc:
+  path: '/old/path/{block_type}'
+  defaults:
+    _controller: '\Drupal\path_changed_helper_test\Controller\TestController::test'
+  requirements:
+    _access: 'TRUE'

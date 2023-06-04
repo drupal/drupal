@@ -1,0 +1,5 @@
+name: 'PathChangedHelper test'
+type: module
+description: 'Create routes to test the PathChangedHelper class.'
+package: Testing
+version: VERSION
