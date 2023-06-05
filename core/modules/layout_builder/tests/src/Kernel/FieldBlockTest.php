@@ -272,7 +272,7 @@ class FieldBlockTest extends EntityKernelTestBase {
       ],
     ];
     if ($expected_markup) {
-      $expected['content']['#markup'] = $expected_markup;
+      $expected[0]['content']['#markup'] = $expected_markup;
     }
 
     $actual = $block->build();
