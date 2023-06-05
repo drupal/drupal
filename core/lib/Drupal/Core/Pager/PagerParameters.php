@@ -36,7 +36,7 @@ class PagerParameters implements PagerParametersInterface {
     $request = $this->requestStack->getCurrentRequest();
     if ($request) {
       return UrlHelper::filterQueryParameters(
-        $request->query->all(), ['page']
+        $request->query->all(), ['page', 'ajax_page_state']
       );
     }
     return [];
