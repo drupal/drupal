@@ -195,7 +195,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
 
     $this->redirectDestination->expects($this->atLeastOnce())
       ->method('set')
-      ->with('/test-page?ajax_page_state=drupal.settings%5B%5D&type=article');
+      ->with('/test-page?type=article');
     $this->currentPath->expects($this->once())
       ->method('setPath')
       ->with('/test-page', $request);
@@ -224,7 +224,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
 
     $this->redirectDestination->expects($this->atLeastOnce())
       ->method('set')
-      ->with('test-page?ajax_page_state=drupal.settings%5B%5D&type=article');
+      ->with('/test-page?type=article');
     $this->currentPath->expects($this->once())
       ->method('setPath')
       ->with('/test-page');

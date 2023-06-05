@@ -162,17 +162,21 @@ class ViewAjaxController implements ContainerInjectionInterface {
           $this->currentPath->setPath('/' . ltrim($path, '/'), $request);
         }
 
+        // Create a clone of the request object to avoid mutating the request
+        // object stored in the request stack.
+        $request_clone = clone $request;
+
         // Add all POST data, because AJAX is sometimes a POST and many things,
         // such as tablesorts, exposed filters and paging assume GET.
-        $request_all = $request->request->all();
-        $query_all = $request->query->all();
-        $request->query->replace($request_all + $query_all);
+        $param_union = $request_clone->request->all() + $request_clone->query->all();
+        unset($param_union['ajax_page_state']);
+        $request_clone->query->replace($param_union);
 
         // Overwrite the destination.
         // @see the redirect.destination service.
-        $origin_destination = $path;
+        $origin_destination = $request_clone->getBasePath() . '/' . ltrim($path ?? '/', '/');
 
-        $used_query_parameters = $request->query->all();
+        $used_query_parameters = $request_clone->query->all();
         $query = UrlHelper::buildQuery($used_query_parameters);
         if ($query != '') {
           $origin_destination .= '?' . $query;
