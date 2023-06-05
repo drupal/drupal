@@ -159,7 +159,11 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
     $display_settings['third_party_settings']['layout_builder']['view_mode'] = $this->getContextValue('view_mode');
     $entity = $this->getEntity();
     try {
-      $build = $entity->get($this->fieldName)->view($display_settings);
+      $build = [];
+      $view = $entity->get($this->fieldName)->view($display_settings);
+      if ($view) {
+        $build = [$view];
+      }
     }
     // @todo Remove in https://www.drupal.org/project/drupal/issues/2367555.
     catch (EnforcedResponseException $e) {

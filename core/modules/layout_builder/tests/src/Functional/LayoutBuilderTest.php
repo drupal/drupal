@@ -1306,6 +1306,46 @@ class LayoutBuilderTest extends BrowserTestBase {
   }
 
   /**
+   * Tests the ability to use a specified block label for field blocks.
+   */
+  public function testFieldBlockLabel() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]));
+
+    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+    $this->drupalGet("$field_ui_prefix/display/default");
+    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+
+    // Customize the default view mode.
+    $this->drupalGet("$field_ui_prefix/display/default/layout");
+
+    // Add a body block whose label will be overridden.
+    $this->clickLink('Add block');
+    $this->clickLink('Body');
+
+    // Enable the Label Display and set the Label to a modified field
+    // block label.
+    $modified_field_block_label = 'Modified Field Block Label';
+    $page->checkField('settings[label_display]');
+    $page->fillField('settings[label]', $modified_field_block_label);
+
+    // Save the block and layout.
+    $page->pressButton('Add block');
+    $page->pressButton('Save layout');
+
+    // Revisit the default layout view mode page.
+    $this->drupalGet("$field_ui_prefix/display/default/layout");
+
+    // The modified field block label is displayed.
+    $assert_session->pageTextContains($modified_field_block_label);
+  }
+
+  /**
    * Tests a custom alter of the overrides form.
    */
   public function testOverridesFormAlter() {
