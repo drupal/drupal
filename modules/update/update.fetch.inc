@@ -155,6 +155,9 @@ function _update_process_fetch_task($project) {
 
   if (empty($fail[$fetch_url_base]) || $fail[$fetch_url_base] < $max_fetch_attempts) {
     $xml = drupal_http_request($url);
+    if (isset($xml->error)) {
+      watchdog('update', 'Error %errorcode (%message) occurred when trying to fetch available update data for the project %project.', array('%errorcode' => $xml->code, '%message' => $xml->error, '%project' => $project_name), WATCHDOG_ERROR);
+    }
     if (!isset($xml->error) && isset($xml->data)) {
       $data = $xml->data;
     }

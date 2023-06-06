@@ -14,7 +14,7 @@
 /**
  * URL to check for updates, if a given project doesn't define its own.
  */
-define('UPDATE_DEFAULT_URL', 'http://updates.drupal.org/release-history');
+define('UPDATE_DEFAULT_URL', 'https://updates.drupal.org/release-history');
 
 // These are internally used constants for this code, do not modify.
 

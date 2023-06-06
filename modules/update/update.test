@@ -231,6 +231,8 @@ class UpdateCoreTestCase extends UpdateTestHelper {
     // Ensure that no "Warning: SimpleXMLElement..." parse errors are found.
     $this->assertNoText('SimpleXMLElement');
     $this->assertUniqueText(t('Failed to get available update data for one project.'));
+    $update_log = db_query_range('SELECT message FROM {watchdog} WHERE type = :type ORDER BY wid DESC', 0, 1, array(':type' => 'update'))->fetchField();
+    $this->assertEqual('Error %errorcode (%message) occurred when trying to fetch available update data for the project %project.', $update_log, 'Failed update logged');
   }
 
   /**

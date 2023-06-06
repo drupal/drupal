@@ -854,3 +854,13 @@ $conf['mail_display_name_site_name'] = TRUE;
  * @see https://www.php.net/manual/function.phpinfo.php
  */
 # $conf['sa_core_2023_004_phpinfo_flags'] = ~(INFO_VARIABLES | INFO_ENVIRONMENT);
+
+/**
+ * URL for update information.
+ *
+ * Drupal's update module can check for the availability of updates. By default
+ * https is used for this check. If for any reason your site cannot use https
+ * you can change this variable to fallback to http. It is recommended to fix
+ * the problem with SSL/TLS rather than use http which provides no security.
+ */
+# $conf['update_fetch_url'] = 'https://updates.drupal.org/release-history';
