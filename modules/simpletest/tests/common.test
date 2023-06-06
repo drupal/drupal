@@ -1787,6 +1787,29 @@ class JavaScriptTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Tests the double submit form protection and
+   * 'javascript_use_double_submit_protection' variable.
+   */
+  function testDoubleSubmitFormProtection() {
+    // The default front page of the site should have the double submit
+    // protection enabled as there is a login block.
+    $this->drupalGet('');
+    $this->assertRaw('misc/form-single-submit.js', 'Default behavior: Double submit protection is enabled.');
+
+    // The default front page should have the double submit protection disabled
+    // when the 'javascript_always_use_jquery' variable is set to FALSE or the
+    // 'javascript_use_double_submit_protection' variable is set to FALSE.
+    variable_set('javascript_always_use_jquery', FALSE);
+    $this->drupalGet('');
+    $this->assertNoRaw('misc/form-single-submit.js', 'When "javascript_always_use_jquery" is FALSE: Double submit protection is disabled.');
+    variable_del('javascript_always_use_jquery');
+    variable_set('javascript_use_double_submit_protection', FALSE);
+    $this->drupalGet('');
+    $this->assertNoRaw('misc/form-single-submit.js', 'When "javascript_use_double_submit_protection" is FALSE: Double submit protection is disabled.');
+    variable_del('javascript_use_double_submit_protection');
+  }
+
+  /**
    * Test drupal_add_js() sets preproccess to false when cache is set to false.
    */
   function testNoCache() {

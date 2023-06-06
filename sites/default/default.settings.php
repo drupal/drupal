@@ -872,3 +872,12 @@ $conf['mail_display_name_site_name'] = TRUE;
  * the problem with SSL/TLS rather than use http which provides no security.
  */
 # $conf['update_fetch_url'] = 'https://updates.drupal.org/release-history';
+
+/**
+ * Opt out of double submit protection.
+ *
+ * By default Drupal will prevent consecutive form submissions of identical form
+ * values. Set this variable to FALSE in order to opt out of this
+ * prevention and revert to the original behaviour.
+ */
+# $conf['javascript_use_double_submit_protection'] = FALSE;

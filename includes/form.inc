@@ -3381,6 +3381,30 @@ function form_process_actions($element, &$form_state) {
 }
 
 /**
+ * Processes a form button element.
+ *
+ * @param $element
+ *   An associative array containing the properties and children of the
+ *   form button.
+ * @param $form_state
+ *   The $form_state array for the form this element belongs to.
+ *
+ * @return
+ *   The processed element.
+ */
+function form_process_button($element, &$form_state) {
+  // We normally want to add drupal.form-single-submit so that the double submit
+  // protection can be added to the site, however, with the addition of
+  // javascript_always_use_jquery, this would make most pages with a login
+  // block or a search form have jquery always added, changing what people who
+  // set the javascript_always_use_jquery variable to FALSE would have expected.
+  if (variable_get('javascript_always_use_jquery', TRUE) && variable_get('javascript_use_double_submit_protection', TRUE)) {
+    $element['#attached']['library'][] = array('system', 'drupal.form-single-submit');
+  }
+  return $element;
+}
+
+/**
  * Processes a container element.
  *
  * @param $element

@@ -335,7 +335,7 @@ function system_element_info() {
     '#button_type' => 'submit',
     '#executes_submit_callback' => TRUE,
     '#limit_validation_errors' => FALSE,
-    '#process' => array('ajax_process_form'),
+    '#process' => array('ajax_process_form', 'form_process_button'),
     '#theme_wrappers' => array('button'),
   );
   $types['button'] = array(
@@ -344,7 +344,7 @@ function system_element_info() {
     '#button_type' => 'submit',
     '#executes_submit_callback' => FALSE,
     '#limit_validation_errors' => FALSE,
-    '#process' => array('ajax_process_form'),
+    '#process' => array('ajax_process_form', 'form_process_button'),
     '#theme_wrappers' => array('button'),
   );
   $types['image_button'] = array(
@@ -352,7 +352,7 @@ function system_element_info() {
     '#button_type' => 'submit',
     '#executes_submit_callback' => TRUE,
     '#limit_validation_errors' => FALSE,
-    '#process' => array('ajax_process_form'),
+    '#process' => array('ajax_process_form', 'form_process_button'),
     '#return_value' => TRUE,
     '#has_garbage_value' => TRUE,
     '#src' => NULL,
@@ -1136,6 +1136,15 @@ function system_library() {
     'version' => VERSION,
     'js' => array(
       'misc/form.js' => array('group' => JS_LIBRARY, 'weight' => 1),
+    ),
+  );
+
+  // Drupal's form single submit library.
+  $libraries['drupal.form-single-submit'] = array(
+    'title' => 'Drupal form single submit library',
+    'version' => VERSION,
+    'js' => array(
+      'misc/form-single-submit.js' => array('group' => JS_LIBRARY, 'weight' => 1),
     ),
   );
 
