@@ -856,6 +856,14 @@ $conf['mail_display_name_site_name'] = TRUE;
 # $conf['sa_core_2023_004_phpinfo_flags'] = ~(INFO_VARIABLES | INFO_ENVIRONMENT);
 
 /**
+ * Session IDs are hashed by default before being stored in the database. This
+ * reduces the risk of sessions being hijacked if the database is compromised.
+ *
+ * This variable allows opting out of this security improvement.
+ */
+# $conf['do_not_hash_session_ids'] = TRUE;
+
+/**
  * URL for update information.
  *
  * Drupal's update module can check for the availability of updates. By default
