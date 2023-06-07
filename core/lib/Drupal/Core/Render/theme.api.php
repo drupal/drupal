@@ -68,6 +68,23 @@
  * rendered by the Twig template; the processed variables that the Twig template
  * receives are documented in the header of the default Twig template file.
  *
+ * Theme hooks can declare a variable deprecated using the reserved
+ * 'deprecations' variable. For example:
+ * @code
+ *  search_result' => [
+ *   'variables' => [
+ *     'result' => NULL,
+ *     'new_result' => NULL,
+ *     'plugin_id' => NULL,
+ *     'deprecations' => [
+ *       'result' => "'result' is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use 'new_result' instead. See https://www.example.com."
+ *     ]
+ *   ],
+ * ],
+ * @endcode
+ * Template engines should trigger a deprecation error if a deprecated
+ * variable is used in a template.
+ *
  * @section sec_overriding_theme_hooks Overriding Theme Hooks
  * Themes may register new theme hooks within a hook_theme() implementation, but
  * it is more common for themes to override default implementations provided by

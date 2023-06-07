@@ -1,0 +1,8 @@
+{# Test use of variables deprecated in a preprocess hook. #}
+{% set set_var = 'set_var' %}
+{{- foo }}|
+{{- set_var }}|
+{%- for for_var in contents %}
+    {{- for_var }}|
+{%- endfor %}
+{{- bar }}

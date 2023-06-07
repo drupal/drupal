@@ -63,6 +63,33 @@ function theme_test_theme($existing, $type, $theme, $path) {
       'message' => '',
     ],
   ];
+  $items['theme_test_deprecations_preprocess'] = [
+    'variables' => [
+      'foo' => '',
+      'bar' => '',
+      'gaz' => '',
+      'set_var' => '',
+      'for_var' => '',
+      'contents' => [],
+    ],
+  ];
+  $items['theme_test_deprecations_child'] = [
+    'variables' => [
+      'foo' => '',
+      'bar' => '',
+      'gaz' => '',
+    ],
+  ];
+  $items['theme_test_deprecations_hook_theme'] = [
+    'variables' => [
+      'foo' => '',
+      'bar' => '',
+      'deprecations' => [
+        'foo' => "'foo' is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use 'new_foo' instead. See https://www.example.com.",
+        'bar' => "'bar' is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use 'new_bar' instead. See https://www.example.com.",
+      ],
+    ],
+  ];
   return $items;
 }
 
@@ -172,6 +199,18 @@ function theme_test_theme_suggestions_node(array $variables) {
  * Implements template_preprocess_HOOK() for theme_test_registered_by_module.
  */
 function template_preprocess_theme_test_registered_by_module() {
+}
+
+/**
+ * Implements template_preprocess_HOOK() for theme_test_deprecations_preprocess.
+ *
+ * Default template: theme-test-deprecations-preprocess.html.twig.
+ *
+ * @param array $variables
+ *   An associative array of variables.
+ */
+function template_preprocess_theme_test_deprecations_preprocess(array &$variables) {
+  $variables = array_merge($variables, \Drupal::state()->get('theme_test.theme_test_deprecations_preprocess'));
 }
 
 /**
