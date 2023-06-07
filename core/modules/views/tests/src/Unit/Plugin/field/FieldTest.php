@@ -649,6 +649,11 @@ class FieldTest extends UnitTestCase {
     $data[] = [['group_rows' => TRUE, 'delta_limit' => 1, 'delta_first_last' => TRUE], [3]];
     $data[] = [['group_rows' => TRUE, 'delta_offset' => 1, 'delta_first_last' => TRUE], [1, 9]];
 
+    // Test with string values where we would expect integers to be provided.
+    $data[] = [['group_rows' => TRUE, 'delta_limit' => 'All'], [3, 1, 4, 1, 5, 9]];
+    $data[] = [['group_rows' => TRUE, 'delta_limit' => 'three'], [3, 1, 4, 1, 5, 9]];
+    $data[] = [['group_rows' => TRUE, 'delta_limit' => 'three', 'delta_offset' => 'two'], [3, 1, 4, 1, 5, 9]];
+
     return $data;
   }
 
