@@ -749,7 +749,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
         $offset = 0;
       }
       else {
-        $delta_limit = $this->options['delta_limit'];
+        $delta_limit = (int) $this->options['delta_limit'];
         $offset = intval($this->options['delta_offset']);
 
         // We should only get here in this case if there is an offset, and in
