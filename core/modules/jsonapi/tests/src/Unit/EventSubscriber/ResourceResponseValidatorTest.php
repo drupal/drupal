@@ -192,8 +192,8 @@ EOD
     $test_cases = array_map(function ($input) use ($defaults) {
       [$json, $expected, $description, $route_name, $resource_type] = array_values($input + $defaults);
       return [
-        $this->createRequest($route_name, $resource_type),
-        $this->createResponse($json),
+        static::createRequest($route_name, $resource_type),
+        static::createResponse($json),
         $expected,
         $description,
       ];
@@ -213,7 +213,7 @@ EOD
    * @return \Symfony\Component\HttpFoundation\Request
    *   The mock request object.
    */
-  protected function createRequest($route_name, ResourceType $resource_type) {
+  protected static function createRequest(string $route_name, ResourceType $resource_type): Request {
     $request = new Request();
     $request->attributes->set(RouteObjectInterface::ROUTE_NAME, $route_name);
     $request->attributes->set(Routes::RESOURCE_TYPE_KEY, $resource_type);
@@ -229,7 +229,7 @@ EOD
    * @return \Drupal\rest\ResourceResponse
    *   The mock response object.
    */
-  protected function createResponse($json = NULL) {
+  protected static function createResponse(?string $json = NULL): ResourceResponse {
     $response = new ResourceResponse();
     if ($json) {
       $response->setContent($json);

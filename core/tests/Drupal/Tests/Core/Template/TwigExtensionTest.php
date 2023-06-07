@@ -15,6 +15,7 @@ use Drupal\Core\Template\TwigEnvironment;
 use Drupal\Core\Template\TwigExtension;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
+use Prophecy\Prophet;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\FilesystemLoader;
@@ -293,10 +294,10 @@ class TwigExtensionTest extends UnitTestCase {
     $this->assertEquals('Rendered output', $this->systemUnderTest->renderVar($input));
   }
 
-  public function providerTestRenderVar() {
+  public static function providerTestRenderVar() {
     $data = [];
 
-    $renderable = $this->prophesize(RenderableInterface::class);
+    $renderable = (new Prophet())->prophesize(RenderableInterface::class);
     $render_array = ['#type' => 'test', '#var' => 'giraffe'];
     $renderable->toRenderable()->willReturn($render_array);
     $data['renderable'] = [$render_array, $renderable->reveal()];

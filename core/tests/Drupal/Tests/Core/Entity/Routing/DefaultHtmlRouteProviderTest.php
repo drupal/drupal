@@ -18,6 +18,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
+use Prophecy\Prophet;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -68,19 +69,19 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
     $this->assertEquals($expected, $route);
   }
 
-  public function providerTestGetAddPageRoute() {
+  public static function providerTestGetAddPageRoute() {
     $data = [];
 
-    $entity_type1 = $this->getEntityType();
+    $entity_type1 = static::getEntityType();
     $entity_type1->hasLinkTemplate('add-page')->willReturn(FALSE);
     $data['no_add_page_link_template'] = [NULL, $entity_type1->reveal()];
 
-    $entity_type2 = $this->getEntityType();
+    $entity_type2 = static::getEntityType();
     $entity_type2->hasLinkTemplate('add-page')->willReturn(TRUE);
     $entity_type2->getKey('bundle')->willReturn(NULL);
     $data['no_bundle'] = [NULL, $entity_type2->reveal()];
 
-    $entity_type3 = $this->getEntityType();
+    $entity_type3 = static::getEntityType();
     $entity_type3->hasLinkTemplate('add-page')->willReturn(TRUE);
     $entity_type3->getLinkTemplate('add-page')->willReturn('/the/add/page/link/template');
     $entity_type3->id()->willReturn('the_entity_type_id');
@@ -115,15 +116,16 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
     $this->assertEquals($expected, $route);
   }
 
-  public function providerTestGetAddFormRoute() {
+  public static function providerTestGetAddFormRoute() {
+    $prophet = new Prophet();
     $data = [];
 
-    $entity_type1 = $this->getEntityType();
+    $entity_type1 = static::getEntityType();
     $entity_type1->hasLinkTemplate('add-form')->willReturn(FALSE);
 
     $data['no_add_form_link_template'] = [NULL, $entity_type1->reveal()];
 
-    $entity_type2 = $this->getEntityType();
+    $entity_type2 = static::getEntityType();
     $entity_type2->getBundleEntityType()->willReturn(NULL);
     $entity_type2->hasLinkTemplate('add-form')->willReturn(TRUE);
     $entity_type2->id()->willReturn('the_entity_type_id');
@@ -139,12 +141,12 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
       ->setRequirement('_entity_create_access', 'the_entity_type_id');
     $data['no_add_form_no_bundle'] = [clone $route, $entity_type2->reveal()];
 
-    $entity_type3 = $this->getEntityType($entity_type2);
+    $entity_type3 = static::getEntityType($entity_type2);
     $entity_type3->getFormClass('add')->willReturn('Drupal\Core\Entity\EntityForm');
     $route->setDefault('_entity_form', 'the_entity_type_id.add');
     $data['add_form_no_bundle'] = [clone $route, $entity_type3->reveal()];
 
-    $entity_type4 = $this->getEntityType($entity_type3);
+    $entity_type4 = static::getEntityType($entity_type3);
     $entity_type4->getKey('bundle')->willReturn('the_bundle_key');
     $entity_type4->getBundleEntityType()->willReturn(NULL);
     $entity_type4->getLinkTemplate('add-form')->willReturn('/the/add/form/link/template/{the_bundle_key}');
@@ -155,10 +157,10 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
       ->setRequirement('_entity_create_access', 'the_entity_type_id:{the_bundle_key}');
     $data['add_form_bundle_static'] = [clone $route, $entity_type4->reveal()];
 
-    $entity_type5 = $this->getEntityType($entity_type4);
+    $entity_type5 = static::getEntityType($entity_type4);
     $entity_type5->getBundleEntityType()->willReturn('the_bundle_entity_type_id');
     $entity_type5->getLinkTemplate('add-form')->willReturn('/the/add/form/link/template/{the_bundle_entity_type_id}');
-    $bundle_entity_type = $this->getEntityType();
+    $bundle_entity_type = static::getEntityType();
     $bundle_entity_type->entityClassImplements(FieldableEntityInterface::class)->willReturn(FALSE);
     $route->setPath('/the/add/form/link/template/{the_bundle_entity_type_id}');
     $route
@@ -171,18 +173,18 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
       ]);
     $data['add_form_bundle_entity_id_key_type_null'] = [clone $route, $entity_type5->reveal(), $bundle_entity_type->reveal()];
 
-    $entity_type6 = $this->getEntityType($entity_type5);
-    $bundle_entity_type = $this->getEntityType();
+    $entity_type6 = static::getEntityType($entity_type5);
+    $bundle_entity_type = static::getEntityType();
     $bundle_entity_type->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE);
-    $field_storage_definition = $this->prophesize(FieldStorageDefinitionInterface::class);
+    $field_storage_definition = $prophet->prophesize(FieldStorageDefinitionInterface::class);
     $field_storage_definition->getType()->willReturn('integer');
     $route->setRequirement('the_entity_type_id', '\d+');
     $data['add_form_bundle_entity_id_key_type_integer'] = [clone $route, $entity_type6->reveal(), $bundle_entity_type->reveal(), $field_storage_definition->reveal()];
 
-    $entity_type7 = $this->getEntityType($entity_type6);
-    $bundle_entity_type = $this->prophesize(ConfigEntityTypeInterface::class);
+    $entity_type7 = static::getEntityType($entity_type6);
+    $bundle_entity_type = $prophet->prophesize(ConfigEntityTypeInterface::class);
     $bundle_entity_type->entityClassImplements(FieldableEntityInterface::class)->willReturn(FALSE);
-    $field_storage_definition = $this->prophesize(FieldStorageDefinitionInterface::class);
+    $field_storage_definition = $prophet->prophesize(FieldStorageDefinitionInterface::class);
     $route
       // Unset the 'the_entity_type_id' requirement.
       ->setRequirements(['_entity_create_access' => $route->getRequirement('_entity_create_access')])
@@ -211,19 +213,20 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
     $this->assertEquals($expected, $route);
   }
 
-  public function providerTestGetCanonicalRoute() {
+  public static function providerTestGetCanonicalRoute() {
+    $prophet = new Prophet();
     $data = [];
 
-    $entity_type1 = $this->getEntityType();
+    $entity_type1 = static::getEntityType();
     $entity_type1->hasLinkTemplate('canonical')->willReturn(FALSE);
     $data['no_canonical_link_template'] = [NULL, $entity_type1->reveal()];
 
-    $entity_type2 = $this->getEntityType();
+    $entity_type2 = static::getEntityType();
     $entity_type2->hasLinkTemplate('canonical')->willReturn(TRUE);
     $entity_type2->hasViewBuilderClass()->willReturn(FALSE);
     $data['no_view_builder'] = [NULL, $entity_type2->reveal()];
 
-    $entity_type3 = $this->getEntityType($entity_type2);
+    $entity_type3 = static::getEntityType($entity_type2);
     $entity_type3->hasViewBuilderClass()->willReturn(TRUE);
     $entity_type3->id()->willReturn('the_entity_type_id');
     $entity_type3->getLinkTemplate('canonical')->willReturn('/the/canonical/link/template');
@@ -245,11 +248,11 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
       ]);
     $data['id_key_type_null'] = [clone $route, $entity_type3->reveal()];
 
-    $entity_type4 = $this->getEntityType($entity_type3);
+    $entity_type4 = static::getEntityType($entity_type3);
     $entity_type4->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE);
     $entity_type4->getKey('id')->willReturn('id');
     $route->setRequirement('the_entity_type_id', '\d+');
-    $field_storage_definition = $this->prophesize(FieldStorageDefinitionInterface::class);
+    $field_storage_definition = $prophet->prophesize(FieldStorageDefinitionInterface::class);
     $field_storage_definition->getType()->willReturn('integer');
     $data['id_key_type_integer'] = [clone $route, $entity_type4->reveal(), $field_storage_definition->reveal()];
 
@@ -265,24 +268,24 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
     $this->assertEquals($expected, $route);
   }
 
-  public function providerTestGetCollectionRoute() {
+  public static function providerTestGetCollectionRoute() {
     $data = [];
 
-    $entity_type1 = $this->getEntityType();
+    $entity_type1 = static::getEntityType();
     $entity_type1->hasLinkTemplate('collection')->willReturn(FALSE);
     $data['no_collection_link_template'] = [NULL, $entity_type1->reveal()];
 
-    $entity_type2 = $this->getEntityType();
+    $entity_type2 = static::getEntityType();
     $entity_type2->hasLinkTemplate('collection')->willReturn(TRUE);
     $entity_type2->hasListBuilderClass()->willReturn(FALSE);
     $data['no_list_builder'] = [NULL, $entity_type2->reveal()];
 
-    $entity_type3 = $this->getEntityType($entity_type2);
+    $entity_type3 = static::getEntityType($entity_type2);
     $entity_type3->hasListBuilderClass()->willReturn(TRUE);
     $entity_type3->getAdminPermission()->willReturn(FALSE);
     $data['no_admin_permission'] = [NULL, $entity_type3->reveal()];
 
-    $entity_type4 = $this->getEntityType($entity_type3);
+    $entity_type4 = static::getEntityType($entity_type3);
     $entity_type4->getAdminPermission()->willReturn('administer the entity type');
     $entity_type4->id()->willReturn('the_entity_type_id');
     $entity_type4->getLabel()->willReturn('The entity type');
@@ -339,8 +342,8 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
    *
    * @return \Prophecy\Prophecy\ObjectProphecy
    */
-  protected function getEntityType(ObjectProphecy $base_entity_type = NULL) {
-    $entity_type = $this->prophesize(EntityTypeInterface::class);
+  protected static function getEntityType(ObjectProphecy $base_entity_type = NULL) {
+    $entity_type = (new Prophet())->prophesize(EntityTypeInterface::class);
     if ($base_entity_type) {
       foreach ($base_entity_type->getMethodProphecies() as $method => $prophecies) {
         foreach ($prophecies as $prophecy) {

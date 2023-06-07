@@ -5,6 +5,7 @@ namespace Drupal\Tests\Core\Field;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Component\Render\MarkupInterface;
+use Prophecy\Prophet;
 
 /**
  * @coversDefaultClass \Drupal\Core\Field\FieldFilteredMarkup
@@ -28,7 +29,7 @@ class FieldFilteredMarkupTest extends UnitTestCase {
   /**
    * Provides data for testCreate().
    */
-  public function providerTestCreate() {
+  public static function providerTestCreate() {
     $data = [];
     $data[] = ['', '', FALSE];
     // Certain tags are filtered.
@@ -39,7 +40,7 @@ class FieldFilteredMarkupTest extends UnitTestCase {
     $data[] = ['<em>teststring', '<em>teststring</em>', TRUE];
 
     // Even safe strings will be escaped.
-    $safe_string = $this->prophesize(MarkupInterface::class);
+    $safe_string = (new Prophet())->prophesize(MarkupInterface::class);
     $safe_string->__toString()->willReturn('<script>teststring</script>');
     $data[] = [$safe_string->reveal(), 'teststring', TRUE];
 

@@ -8,6 +8,7 @@ use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use Prophecy\Prophet;
 
 /**
  * @coversDefaultClass \Drupal\system\DateFormatAccessControlHandler
@@ -81,7 +82,7 @@ class DateFormatAccessControlHandlerTest extends KernelTestBase {
 
   public function testAccessProvider() {
     $c = new ContainerBuilder();
-    $cache_contexts_manager = $this->prophesize(CacheContextsManager::class);
+    $cache_contexts_manager = (new Prophet())->prophesize(CacheContextsManager::class);
     $cache_contexts_manager->assertValidTokens()->willReturn(TRUE);
     $cache_contexts_manager->reveal();
     $c->set('cache_contexts_manager', $cache_contexts_manager);
