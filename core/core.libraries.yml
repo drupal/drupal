@@ -867,10 +867,10 @@ sortable:
 
 tabbable:
   remote: https://github.com/focus-trap/tabbable
-  version: "6.0.1"
+  version: "6.1.2"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/focus-trap/tabbable/v6.0.1/LICENSE
+    url: https://raw.githubusercontent.com/focus-trap/tabbable/v6.1.2/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/tabbable/index.umd.min.js: { weight: -1, minified: true }
@@ -934,10 +934,10 @@ drupal.dialog.off_canvas:
 
 js-cookie:
   remote: https://github.com/js-cookie/js-cookie
-  version: "3.0.1"
+  version: "3.0.5"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/js-cookie/js-cookie/v3.0.1/LICENSE
+    url: https://raw.githubusercontent.com/js-cookie/js-cookie/v3.0.5/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/js-cookie/js.cookie.min.js: {}
