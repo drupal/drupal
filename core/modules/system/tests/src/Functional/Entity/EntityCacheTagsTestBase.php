@@ -3,6 +3,8 @@
 namespace Drupal\Tests\system\Functional\Entity;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -372,26 +374,22 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
 
     // Also verify the existence of an entity render cache entry.
     $cache_keys = ['entity_view', 'entity_test', $this->referencingEntity->id(), 'full'];
-    $cid = $this->createCacheId($cache_keys, $entity_cache_contexts);
     $access_cache_contexts = $this->getAccessCacheContextsForEntity($this->entity);
     $additional_cache_contexts = $this->getAdditionalCacheContextsForEntity($this->referencingEntity);
-    $redirected_cid = NULL;
     if (count($access_cache_contexts) || count($additional_cache_contexts)) {
       $cache_contexts = Cache::mergeContexts($entity_cache_contexts, $additional_cache_contexts);
       $cache_contexts = Cache::mergeContexts($cache_contexts, $access_cache_contexts);
-      $redirected_cid = $this->createCacheId($cache_keys, $cache_contexts);
       $context_metadata = \Drupal::service('cache_contexts_manager')->convertTokensToKeys($cache_contexts);
       $referencing_entity_cache_tags = Cache::mergeTags($referencing_entity_cache_tags, $context_metadata->getCacheTags());
     }
-    $this->verifyRenderCache($cid, $referencing_entity_cache_tags, $redirected_cid);
+    $this->verifyRenderCache($cache_keys, $referencing_entity_cache_tags, (new CacheableMetadata())->setCacheContexts($entity_cache_contexts));
 
     $this->verifyPageCache($non_referencing_entity_url, 'MISS');
     // Verify a cache hit, but also the presence of the correct cache tags.
     $this->verifyPageCache($non_referencing_entity_url, 'HIT', Cache::mergeTags($non_referencing_entity_cache_tags, $page_cache_tags));
     // Also verify the existence of an entity render cache entry.
     $cache_keys = ['entity_view', 'entity_test', $this->nonReferencingEntity->id(), 'full'];
-    $cid = $this->createCacheId($cache_keys, $entity_cache_contexts);
-    $this->verifyRenderCache($cid, $non_referencing_entity_cache_tags);
+    $this->verifyRenderCache($cache_keys, $non_referencing_entity_cache_tags, (new CacheableMetadata())->setCacheContexts($entity_cache_contexts));
 
     // Prime the page cache for the listing of referencing entities.
     $this->verifyPageCache($listing_url, 'MISS');
@@ -620,8 +618,14 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
    *
    * @return string
    *   The cache ID string.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3354596
    */
   protected function createCacheId(array $keys, array $contexts) {
+    @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See: https://www.drupal.org/project/drupal/issues/2551419.', E_USER_DEPRECATED);
     $cid_parts = $keys;
 
     $contexts = \Drupal::service('cache_contexts_manager')->convertTokensToKeys($contexts);
@@ -633,38 +637,36 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
   /**
    * Verify that a given render cache entry exists, with the correct cache tags.
    *
-   * @param string $cid
-   *   The render cache item ID.
+   * @param string[] $keys
+   *   The render cache item keys.
    * @param array $tags
    *   An array of expected cache tags.
-   * @param string|null $redirected_cid
-   *   (optional) The redirected render cache item ID.
+   * @param \Drupal\Core\Cache\CacheableDependencyInterface $cacheability
+   *   The initial cacheability the item was rendered with.
    */
-  protected function verifyRenderCache($cid, array $tags, $redirected_cid = NULL) {
+  protected function verifyRenderCache(array $keys, array $tags, CacheableDependencyInterface $cacheability) {
+    $cache_bin = $this->getRenderCacheBackend();
+
     // Also verify the existence of an entity render cache entry.
-    $cache_entry = \Drupal::cache('render')->get($cid);
+    $cache_entry = $cache_bin->get($keys, $cacheability);
     $this->assertInstanceOf(\stdClass::class, $cache_entry);
     sort($cache_entry->tags);
     sort($tags);
     $this->assertSame($cache_entry->tags, $tags);
-    $is_redirecting_cache_item = isset($cache_entry->data['#cache_redirect']);
-    if ($redirected_cid === NULL) {
-      $this->assertFalse($is_redirecting_cache_item, 'Render cache entry is not a redirect.');
-    }
-    else {
-      // Verify that $cid contains a cache redirect.
-      $this->assertTrue($is_redirecting_cache_item, 'Render cache entry is a redirect.');
-      // Verify that the cache redirect points to the expected CID.
-      $redirect_cache_metadata = $cache_entry->data['#cache'];
-      $actual_redirection_cid = $this->createCacheId(
-        $redirect_cache_metadata['keys'],
-        $redirect_cache_metadata['contexts']
-      );
-      $this->assertSame($redirected_cid, $actual_redirection_cid);
-      // Finally, verify that the redirected CID exists and has the same cache
-      // tags.
-      $this->verifyRenderCache($redirected_cid, $tags);
-    }
+  }
+
+  /**
+   * Retrieves the render cache backend as a variation cache.
+   *
+   * This is how Drupal\Core\Render\RenderCache uses the render cache backend.
+   *
+   * @return \Drupal\Core\Cache\VariationCacheInterface
+   *   The render cache backend as a variation cache.
+   */
+  protected function getRenderCacheBackend() {
+    /** @var \Drupal\Core\Cache\VariationCacheFactoryInterface $variation_cache_factory */
+    $variation_cache_factory = \Drupal::service('variation_cache_factory');
+    return $variation_cache_factory->get('render');
   }
 
 }

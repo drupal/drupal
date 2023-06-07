@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\shortcut\Functional;
 
-use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Url;
 use Drupal\shortcut\Entity\Shortcut;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
@@ -67,18 +67,23 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
    * Tests that when creating a shortcut, the shortcut set tag is invalidated.
    */
   public function testEntityCreation() {
+    $cache_bin = $this->getRenderCacheBackend();
+
     // Create a cache entry that is tagged with a shortcut set cache tag.
     $cache_tags = ['config:shortcut.set.default'];
-    \Drupal::cache('render')->set('foo', 'bar', CacheBackendInterface::CACHE_PERMANENT, $cache_tags);
+
+    $cacheability = new CacheableMetadata();
+    $cacheability->addCacheTags($cache_tags);
+    $cache_bin->set(['foo'], 'bar', $cacheability, $cacheability);
 
     // Verify a cache hit.
-    $this->verifyRenderCache('foo', $cache_tags);
+    $this->verifyRenderCache(['foo'], $cache_tags, $cacheability);
 
     // Now create a shortcut entity in that shortcut set.
     $this->createEntity();
 
     // Verify a cache miss.
-    $this->assertFalse(\Drupal::cache('render')->get('foo'), 'Creating a new shortcut invalidates the cache tag of the shortcut set.');
+    $this->assertFalse($cache_bin->get(['foo'], $cacheability), 'Creating a new shortcut invalidates the cache tag of the shortcut set.');
   }
 
   /**
@@ -102,9 +107,7 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
       'config:shortcut.set.default',
       'config:system.menu.admin',
       'config:system.theme',
-      'config:user.role.authenticated',
       'rendered',
-      'user:' . $this->rootUser->id(),
     ];
     $this->assertCacheTags($expected_cache_tags);
 

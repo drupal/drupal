@@ -4,6 +4,7 @@ namespace Drupal\Tests\block\Kernel;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\block\Entity\Block;
@@ -147,6 +148,10 @@ class BlockViewBuilderTest extends KernelTestBase {
    * @see ::testBlockViewBuilderCache()
    */
   protected function verifyRenderCacheHandling() {
+    /** @var \Drupal\Core\Cache\VariationCacheFactoryInterface $variation_cache_factory */
+    $variation_cache_factory = $this->container->get('variation_cache_factory');
+    $cache_bin = $variation_cache_factory->get('render');
+
     // Force a request via GET so we can test the render cache.
     $request = \Drupal::request();
     $request_method = $request->server->get('REQUEST_METHOD');
@@ -154,13 +159,13 @@ class BlockViewBuilderTest extends KernelTestBase {
 
     // Test that a cache entry is created.
     $build = $this->getBlockRenderArray();
-    $cid = 'entity_view:block:test_block:' . implode(':', \Drupal::service('cache_contexts_manager')->convertTokensToKeys(['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'user.permissions'])->getKeys());
+    $cache_keys = ['entity_view', 'block', 'test_block'];
     $this->renderer->renderRoot($build);
-    $this->assertNotEmpty($this->container->get('cache.render')->get($cid), 'The block render element has been cached.');
+    $this->assertNotEmpty($cache_bin->get($cache_keys, CacheableMetadata::createFromRenderArray($build)), 'The block render element has been cached.');
 
     // Re-save the block and check that the cache entry has been deleted.
     $this->block->save();
-    $this->assertFalse($this->container->get('cache.render')->get($cid), 'The block render cache entry has been cleared when the block was saved.');
+    $this->assertFalse($cache_bin->get($cache_keys, CacheableMetadata::createFromRenderArray($build)), 'The block render cache entry has been cleared when the block was saved.');
 
     // Rebuild the render array (creating a new cache entry in the process) and
     // delete the block to check the cache entry is deleted.
@@ -170,9 +175,9 @@ class BlockViewBuilderTest extends KernelTestBase {
     $build['#block'] = $this->block;
 
     $this->renderer->renderRoot($build);
-    $this->assertNotEmpty($this->container->get('cache.render')->get($cid), 'The block render element has been cached.');
+    $this->assertNotEmpty($cache_bin->get($cache_keys, CacheableMetadata::createFromRenderArray($build)), 'The block render element has been cached.');
     $this->block->delete();
-    $this->assertFalse($this->container->get('cache.render')->get($cid), 'The block render cache entry has been cleared when the block was deleted.');
+    $this->assertFalse($cache_bin->get($cache_keys, CacheableMetadata::createFromRenderArray($build)), 'The block render cache entry has been cleared when the block was deleted.');
 
     // Restore the previous request method.
     $request->setMethod($request_method);
@@ -292,6 +297,10 @@ class BlockViewBuilderTest extends KernelTestBase {
    * @internal
    */
   protected function assertBlockRenderedWithExpectedCacheability(array $expected_keys, array $expected_contexts, array $expected_tags, int $expected_max_age): void {
+    /** @var \Drupal\Core\Cache\VariationCacheFactoryInterface $variation_cache_factory */
+    $variation_cache_factory = $this->container->get('variation_cache_factory');
+    $cache_bin = $variation_cache_factory->get('render');
+
     $required_cache_contexts = ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'user.permissions'];
 
     // Check that the expected cacheability metadata is present in:
@@ -306,15 +315,14 @@ class BlockViewBuilderTest extends KernelTestBase {
     $this->renderer->renderRoot($build);
     // - the render cache item.
     $final_cache_contexts = Cache::mergeContexts($expected_contexts, $required_cache_contexts);
-    $cid = implode(':', $expected_keys) . ':' . implode(':', \Drupal::service('cache_contexts_manager')->convertTokensToKeys($final_cache_contexts)->getKeys());
-    $cache_item = $this->container->get('cache.render')->get($cid);
-    $this->assertNotEmpty($cache_item, 'The block render element has been cached with the expected cache ID.');
+    $cache_item = $cache_bin->get($expected_keys, CacheableMetadata::createFromRenderArray($build));
+    $this->assertNotEmpty($cache_item, 'The block render element has been cached with the expected cache keys.');
     $this->assertEqualsCanonicalizing(Cache::mergeTags($expected_tags, ['rendered']), $cache_item->tags);
     $this->assertEqualsCanonicalizing($final_cache_contexts, $cache_item->data['#cache']['contexts']);
     $this->assertEqualsCanonicalizing($expected_tags, $cache_item->data['#cache']['tags']);
     $this->assertSame($expected_max_age, $cache_item->data['#cache']['max-age']);
 
-    $this->container->get('cache.render')->delete($cid);
+    $cache_bin->delete($expected_keys, CacheableMetadata::createFromRenderArray($build));
   }
 
   /**

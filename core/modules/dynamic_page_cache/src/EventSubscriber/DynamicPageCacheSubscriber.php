@@ -5,9 +5,10 @@ namespace Drupal\dynamic_page_cache\EventSubscriber;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheableResponseInterface;
+use Drupal\Core\Cache\Context\CacheContextsManager;
+use Drupal\Core\Cache\VariationCacheInterface;
 use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\PageCache\ResponsePolicyInterface;
-use Drupal\Core\Render\RenderCacheInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -54,11 +55,34 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
   protected $responsePolicy;
 
   /**
-   * The render cache.
+   * The variation cache.
    *
-   * @var \Drupal\Core\Render\RenderCacheInterface
+   * @var \Drupal\Core\Cache\VariationCacheInterface
    */
-  protected $renderCache;
+  protected $cache;
+
+  /**
+   * The default cache contexts to vary every cache item by.
+   *
+   * @var string[]
+   */
+  protected $cacheContexts = [
+    'route',
+    // Some routes' controllers rely on the request format (they don't have
+    // a separate route for each request format). Additionally, a controller
+    // may be returning a domain object that a KernelEvents::VIEW subscriber
+    // must turn into an actual response, but perhaps a format is being
+    // requested that the subscriber does not support.
+    // @see \Drupal\Core\EventSubscriber\RenderArrayNonHtmlSubscriber::onResponse()
+    'request_format',
+  ];
+
+  /**
+   * The cache contexts manager service.
+   *
+   * @var \Drupal\Core\Cache\Context\CacheContextsManager
+   */
+  protected $cacheContextsManager;
 
   /**
    * The renderer configuration array.
@@ -66,28 +90,6 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
    * @var array
    */
   protected $rendererConfig;
-
-  /**
-   * Dynamic Page Cache's redirect render array.
-   *
-   * @var array
-   */
-  protected $dynamicPageCacheRedirectRenderArray = [
-    '#cache' => [
-      'keys' => ['response'],
-      'contexts' => [
-        'route',
-        // Some routes' controllers rely on the request format (they don't have
-        // a separate route for each request format). Additionally, a controller
-        // may be returning a domain object that a KernelEvents::VIEW subscriber
-        // must turn into an actual response, but perhaps a format is being
-        // requested that the subscriber does not support.
-        // @see \Drupal\Core\EventSubscriber\RenderArrayNonHtmlSubscriber::onResponse()
-        'request_format',
-      ],
-      'bin' => 'dynamic_page_cache',
-    ],
-  ];
 
   /**
    * Internal cache of request policy results.
@@ -103,15 +105,18 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
    *   A policy rule determining the cacheability of a request.
    * @param \Drupal\Core\PageCache\ResponsePolicyInterface $response_policy
    *   A policy rule determining the cacheability of the response.
-   * @param \Drupal\Core\Render\RenderCacheInterface $render_cache
-   *   The render cache.
+   * @param \Drupal\Core\Cache\VariationCacheInterface $cache
+   *   The variation cache.
+   * @param \Drupal\Core\Cache\Context\CacheContextsManager $cache_contexts_manager
+   *   The cache contexts manager service.
    * @param array $renderer_config
    *   The renderer configuration array.
    */
-  public function __construct(RequestPolicyInterface $request_policy, ResponsePolicyInterface $response_policy, RenderCacheInterface $render_cache, array $renderer_config) {
+  public function __construct(RequestPolicyInterface $request_policy, ResponsePolicyInterface $response_policy, VariationCacheInterface $cache, CacheContextsManager $cache_contexts_manager, array $renderer_config) {
     $this->requestPolicy = $request_policy;
     $this->responsePolicy = $response_policy;
-    $this->renderCache = $render_cache;
+    $this->cache = $cache;
+    $this->cacheContextsManager = $cache_contexts_manager;
     $this->rendererConfig = $renderer_config;
     $this->requestPolicyResults = new \SplObjectStorage();
   }
@@ -134,9 +139,9 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
     }
 
     // Sets the response for the current route, if cached.
-    $cached = $this->renderCache->get($this->dynamicPageCacheRedirectRenderArray);
+    $cached = $this->cache->get(['response'], (new CacheableMetadata())->setCacheContexts($this->cacheContexts));
     if ($cached) {
-      $response = $this->renderArrayToResponse($cached);
+      $response = $cached->data;
       $response->headers->set(self::HEADER, 'HIT');
       $event->setResponse($response);
     }
@@ -194,10 +199,13 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    // Embed the response object in a render array so that RenderCache is able
-    // to cache it, handling cache redirection for us.
-    $response_as_render_array = $this->responseToRenderArray($response);
-    $this->renderCache->set($response_as_render_array, $this->dynamicPageCacheRedirectRenderArray);
+    $cacheable_metadata = CacheableMetadata::createFromObject($response->getCacheableMetadata());
+    $this->cache->set(
+      ['response'],
+      $response,
+      $cacheable_metadata->addCacheContexts($this->cacheContexts),
+      (new CacheableMetadata())->setCacheContexts($this->cacheContexts)
+    );
 
     // The response was generated, mark the response as a cache miss. The next
     // time, it will be a cache hit.
@@ -229,12 +237,18 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
   protected function shouldCacheResponse(CacheableResponseInterface $response) {
     $conditions = $this->rendererConfig['auto_placeholder_conditions'];
 
-    $cacheability = $response->getCacheableMetadata();
+    // Create a new CacheableMetadata to avoid changing the response itself.
+    $cacheability = CacheableMetadata::createFromObject($response->getCacheableMetadata());
 
     // Response's max-age is at or below the configured threshold.
     if ($cacheability->getCacheMaxAge() !== Cache::PERMANENT && $cacheability->getCacheMaxAge() <= $conditions['max-age']) {
       return FALSE;
     }
+
+    // Optimize the contexts and let them affect the cache tags to mimic what
+    // happens to the cacheability in the variation cache.
+    $cacheability->addCacheableDependency($this->cacheContextsManager->convertTokensToKeys($cacheability->getCacheContexts()));
+    $cacheability->setCacheContexts($this->cacheContextsManager->optimizeTokens($cacheability->getCacheContexts()));
 
     // Response has a high-cardinality cache context.
     if (array_intersect($cacheability->getCacheContexts(), $conditions['contexts'])) {
@@ -247,58 +261,6 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
     }
 
     return TRUE;
-  }
-
-  /**
-   * Embeds a Response object in a render array so that RenderCache can cache it.
-   *
-   * @param \Drupal\Core\Cache\CacheableResponseInterface $response
-   *   A cacheable response.
-   *
-   * @return array
-   *   A render array that embeds the given cacheable response object, with the
-   *   cacheability metadata of the response object present in the #cache
-   *   property of the render array.
-   *
-   * @see renderArrayToResponse()
-   *
-   * @todo Refactor/remove once https://www.drupal.org/node/2551419 lands.
-   */
-  protected function responseToRenderArray(CacheableResponseInterface $response) {
-    $response_as_render_array = $this->dynamicPageCacheRedirectRenderArray + [
-      // The data we actually care about.
-      '#response' => $response,
-      // Tell RenderCache to cache the #response property: the data we actually
-      // care about.
-      '#cache_properties' => ['#response'],
-      // These exist only to fulfill the requirements of the RenderCache, which
-      // is designed to work with render arrays only. We don't care about these.
-      '#markup' => '',
-      '#attached' => '',
-    ];
-
-    // Merge the response's cacheability metadata, so that RenderCache can take
-    // care of cache redirects for us.
-    CacheableMetadata::createFromObject($response->getCacheableMetadata())
-      ->merge(CacheableMetadata::createFromRenderArray($response_as_render_array))
-      ->applyTo($response_as_render_array);
-
-    return $response_as_render_array;
-  }
-
-  /**
-   * Gets the embedded Response object in a render array.
-   *
-   * @param array $render_array
-   *   A render array with a #response property.
-   *
-   * @return \Drupal\Core\Cache\CacheableResponseInterface
-   *   The cacheable response object.
-   *
-   * @see responseToRenderArray()
-   */
-  protected function renderArrayToResponse(array $render_array) {
-    return $render_array['#response'];
   }
 
   /**

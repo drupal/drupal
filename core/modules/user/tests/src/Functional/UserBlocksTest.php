@@ -96,6 +96,11 @@ class UserBlocksTest extends BrowserTestBase {
 
     // Log out again and repeat with a non-403 page including query arguments.
     $this->drupalLogout();
+    // @todo This test should not check for cache hits. Because it does and the
+    // cache has some clever redirect logic internally, we need to request the
+    // page twice to see the cache HIT in the headers.
+    // @see https://www.drupal.org/project/drupal/issues/2551419 #154
+    $this->drupalGet('filter/tips', ['query' => ['cat' => 'dog']]);
     $this->drupalGet('filter/tips', ['query' => ['foo' => 'bar']]);
     $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'HIT');
     $this->submitForm($edit, 'Log in');

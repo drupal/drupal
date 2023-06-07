@@ -194,6 +194,10 @@ services:
     calls:
       - [setContainer, ['@service_container']]
   Drupal\Core\Cache\CacheFactoryInterface: '@cache_factory'
+  variation_cache_factory:
+    class: Drupal\Core\Cache\VariationCacheFactory
+    arguments: ['@request_stack', '@cache_factory', '@cache_contexts_manager']
+  Drupal\Core\Cache\VariationCacheFactory: '@variation_cache_factory'
   cache_contexts_manager:
     class: Drupal\Core\Cache\Context\CacheContextsManager
     arguments: ['@service_container', '%cache_contexts%' ]
@@ -1780,11 +1784,11 @@ services:
   #   https://www.drupal.org/node/2367555 lands.
   render_placeholder_generator:
     class: Drupal\Core\Render\PlaceholderGenerator
-    arguments: ['%renderer.config%']
+    arguments: ['@cache_contexts_manager', '%renderer.config%']
   Drupal\Core\Render\PlaceholderGeneratorInterface: '@render_placeholder_generator'
   render_cache:
     class: Drupal\Core\Render\PlaceholderingRenderCache
-    arguments: ['@request_stack', '@cache_factory', '@cache_contexts_manager', '@render_placeholder_generator']
+    arguments: ['@request_stack', '@variation_cache_factory', '@cache_contexts_manager', '@render_placeholder_generator']
   Drupal\Core\Render\RenderCacheInterface: '@render_cache'
   renderer:
     class: Drupal\Core\Render\Renderer

@@ -3,6 +3,7 @@
 namespace Drupal\Tests\system\Functional\Entity;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
@@ -43,16 +44,10 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
     // type supports render caching.
     if (\Drupal::entityTypeManager()->getDefinition($entity_type)->isRenderCacheable()) {
       $cache_keys = ['entity_view', $entity_type, $this->entity->id(), $view_mode];
-      $cid = $this->createCacheId($cache_keys, $entity_cache_contexts);
-      $redirected_cid = NULL;
-      $additional_cache_contexts = $this->getAdditionalCacheContextsForEntity($this->entity);
-      if (count($additional_cache_contexts)) {
-        $redirected_cid = $this->createCacheId($cache_keys, Cache::mergeContexts($entity_cache_contexts, $additional_cache_contexts));
-      }
       $expected_cache_tags = Cache::mergeTags($cache_tag, $view_cache_tag);
       $expected_cache_tags = Cache::mergeTags($expected_cache_tags, $this->getAdditionalCacheTagsForEntity($this->entity));
       $expected_cache_tags = Cache::mergeTags($expected_cache_tags, [$render_cache_tag]);
-      $this->verifyRenderCache($cid, $expected_cache_tags, $redirected_cid);
+      $this->verifyRenderCache($cache_keys, $expected_cache_tags, (new CacheableMetadata())->setCacheContexts($entity_cache_contexts));
     }
 
     // Verify that after modifying the entity, there is a cache miss.

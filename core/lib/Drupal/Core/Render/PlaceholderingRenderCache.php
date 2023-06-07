@@ -76,14 +76,18 @@ class PlaceholderingRenderCache extends RenderCache {
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
-   * @param \Drupal\Core\Cache\CacheFactoryInterface $cache_factory
-   *   The cache factory.
+   * @param \Drupal\Core\Cache\VariationCacheFactoryInterface $cache_factory
+   *   The variation cache factory.
    * @param \Drupal\Core\Cache\Context\CacheContextsManager $cache_contexts_manager
    *   The cache contexts manager.
    * @param \Drupal\Core\Render\PlaceholderGeneratorInterface $placeholder_generator
    *   The placeholder generator.
    */
-  public function __construct(RequestStack $request_stack, CacheFactoryInterface $cache_factory, CacheContextsManager $cache_contexts_manager, PlaceholderGeneratorInterface $placeholder_generator) {
+  public function __construct(RequestStack $request_stack, $cache_factory, CacheContextsManager $cache_contexts_manager, PlaceholderGeneratorInterface $placeholder_generator) {
+    if ($cache_factory instanceof CacheFactoryInterface) {
+      @trigger_error('Injecting ' . __CLASS__ . ' with the "cache_factory" service is deprecated in drupal:10.1.0, use "variation_cache_factory" instead.', E_USER_DEPRECATED);
+      $cache_factory = \Drupal::service('variation_cache_factory');
+    }
     parent::__construct($request_stack, $cache_factory, $cache_contexts_manager);
     $this->placeholderGenerator = $placeholder_generator;
   }
