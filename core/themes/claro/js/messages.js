@@ -25,7 +25,10 @@
     const messagesTypes = Drupal.Message.getMessageTypeLabels();
     const messageWrapper = document.createElement('div');
 
-    messageWrapper.setAttribute('class', `messages messages--${type}`);
+    messageWrapper.setAttribute(
+      'class',
+      `messages messages--${type} messages-list__item`,
+    );
     messageWrapper.setAttribute(
       'role',
       type === 'error' || type === 'warning' ? 'alert' : 'status',

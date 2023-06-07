@@ -23,50 +23,52 @@
  */
 #}
 <div data-drupal-messages class="messages-list">
-{% for type, messages in message_list %}
-  {%
-    set classes = [
-      'messages-list__item',
-      'messages',
-      'messages--' ~ type,
-    ]
-  %}
-  {%
-    set is_message_with_title = status_headings[type]
-  %}
-  {%
-    set is_message_with_icon = type in ['error', 'status', 'warning']
-  %}
+  <div class="messages-list__wrapper">
+    {% for type, messages in message_list %}
+      {%
+        set classes = [
+          'messages-list__item',
+          'messages',
+          'messages--' ~ type,
+        ]
+      %}
+      {%
+        set is_message_with_title = status_headings[type]
+      %}
+      {%
+        set is_message_with_icon = type in ['error', 'status', 'warning']
+      %}
 
-  <div role="contentinfo" aria-labelledby="{{ title_ids[type] }}"{{ attributes.addClass(classes)|without('role', 'aria-label') }}>
-    {% if type == 'error' %}
-      <div role="alert">
-    {% endif %}
-      {% if is_message_with_title or is_message_with_icon %}
-        <div class="messages__header">
-          {% if is_message_with_title %}
-            <h2 id="{{ title_ids[type] }}" class="messages__title">
-              {{ status_headings[type] }}
-            </h2>
+      <div role="contentinfo" aria-labelledby="{{ title_ids[type] }}"{{ attributes.addClass(classes)|without('role', 'aria-label') }}>
+        {% if type == 'error' %}
+          <div role="alert">
+        {% endif %}
+          {% if is_message_with_title or is_message_with_icon %}
+            <div class="messages__header">
+              {% if is_message_with_title %}
+                <h2 id="{{ title_ids[type] }}" class="messages__title">
+                  {{ status_headings[type] }}
+                </h2>
+              {% endif %}
+            </div>
           {% endif %}
-        </div>
-      {% endif %}
-      <div class="messages__content">
-        {% if messages|length > 1 %}
-          <ul class="messages__list">
-            {% for message in messages %}
-              <li class="messages__item">{{ message }}</li>
-            {% endfor %}
-          </ul>
-        {% else %}
-          {{ messages|first }}
+          <div class="messages__content">
+            {% if messages|length > 1 %}
+              <ul class="messages__list">
+                {% for message in messages %}
+                  <li class="messages__item">{{ message }}</li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              {{ messages|first }}
+            {% endif %}
+          </div>
+        {% if type == 'error' %}
+          </div>
         {% endif %}
       </div>
-    {% if type == 'error' %}
-      </div>
-    {% endif %}
+      {# Remove type specific classes. #}
+      {% set attributes = attributes.removeClass(classes) %}
+    {% endfor %}
   </div>
-  {# Remove type specific classes. #}
-  {% set attributes = attributes.removeClass(classes) %}
-{% endfor %}
 </div>

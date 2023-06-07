@@ -1,5 +1,6 @@
-const mainContent = '#block-olivero-content';
-const mainMessagesContainer = '[data-drupal-messages] > .messages__wrapper';
+const mainContent = '.region-content';
+const mainMessagesContainer =
+  '[data-drupal-messages] > .messages-list__wrapper';
 const secondaryMessagesContainer = '[data-drupal-messages-other]';
 
 const mainButtons = {
@@ -22,13 +23,12 @@ const secondaryButtons = {
 };
 
 module.exports = {
-  '@tags': ['core', 'olivero'],
+  '@tags': ['core', 'claro'],
   before(browser) {
-    browser.drupalInstall({
-      setupFile:
-        'core/tests/Drupal/TestSite/TestSiteOliveroInstallTestScript.php',
-      installProfile: 'minimal',
-    });
+    browser
+      .drupalInstall()
+      .drupalInstallModule('js_message_test')
+      .drupalEnableTheme('claro');
   },
   after(browser) {
     browser.drupalUninstall();
