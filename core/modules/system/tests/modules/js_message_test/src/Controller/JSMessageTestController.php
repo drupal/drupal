@@ -30,6 +30,22 @@ class JSMessageTestController {
   }
 
   /**
+   * Displays links to show messages via JavaScript with messages from backend.
+   *
+   * @return array
+   *   Render array for links.
+   */
+  public function messageLinksWithSystemMessages() {
+    // Add PHP rendered messages to the page.
+    $messenger = \Drupal::messenger();
+    $messenger->addStatus('PHP Status');
+    $messenger->addWarning('PHP Warning');
+    $messenger->addError('PHP Error');
+
+    return $this->messageLinks();
+  }
+
+  /**
    * Displays links to show messages via JavaScript.
    *
    * @return array

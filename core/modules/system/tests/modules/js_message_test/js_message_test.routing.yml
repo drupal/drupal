@@ -5,3 +5,11 @@ js_message_test.links:
     _title: 'JsMessageLinks'
   requirements:
     _access: 'TRUE'
+
+js_message_test.links_with_system_messages:
+  path: '/js_message_test_link_with_system_messages'
+  defaults:
+    _controller: '\Drupal\js_message_test\Controller\JSMessageTestController::messageLinksWithSystemMessages'
+    _title: 'JsMessageLinks'
+  requirements:
+    _access: 'TRUE'
