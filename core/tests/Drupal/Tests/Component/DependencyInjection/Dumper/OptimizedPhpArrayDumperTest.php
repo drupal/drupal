@@ -10,6 +10,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
   use Drupal\Component\Utility\Crypt;
   use PHPUnit\Framework\TestCase;
   use Prophecy\PhpUnit\ProphecyTrait;
+  use Prophecy\Prophet;
   use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
   use Symfony\Component\DependencyInjection\Definition;
   use Symfony\Component\DependencyInjection\Reference;
@@ -234,7 +235,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
      *     - parameters as expected in the container definition.
      *     - frozen value
      */
-    public function getDefinitionsDataProvider() {
+    public static function getDefinitionsDataProvider() {
       $base_service_definition = [
         'class' => '\stdClass',
         'public' => TRUE,
@@ -277,7 +278,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $service_definitions[] = [
         'arguments' => ['foo', new Reference('bar')],
         'arguments_count' => 2,
-        'arguments_expected' => $this->getCollection(['foo', $this->getServiceCall('bar')]),
+        'arguments_expected' => static::getCollection(['foo', static::getServiceCall('bar')]),
       ] + $base_service_definition;
 
       // Test a public reference that should not throw an Exception.
@@ -285,7 +286,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $service_definitions[] = [
         'arguments' => [$reference],
         'arguments_count' => 1,
-        'arguments_expected' => $this->getCollection([$this->getServiceCall('bar', ContainerInterface::NULL_ON_INVALID_REFERENCE)]),
+        'arguments_expected' => static::getCollection([static::getServiceCall('bar', ContainerInterface::NULL_ON_INVALID_REFERENCE)]),
       ] + $base_service_definition;
 
       // Test a private shared service, denoted by having a Reference.
@@ -298,9 +299,9 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $service_definitions[] = [
         'arguments' => ['foo', new Reference('private_definition')],
         'arguments_count' => 2,
-        'arguments_expected' => $this->getCollection([
+        'arguments_expected' => static::getCollection([
           'foo',
-          $this->getPrivateServiceCall('private_definition', $private_definition, TRUE),
+          static::getPrivateServiceCall('private_definition', $private_definition, TRUE),
         ]),
       ] + $base_service_definition;
 
@@ -311,9 +312,9 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $service_definitions[] = [
         'arguments' => ['foo', $private_definition_object],
         'arguments_count' => 2,
-        'arguments_expected' => $this->getCollection([
+        'arguments_expected' => static::getCollection([
           'foo',
-          $this->getPrivateServiceCall(NULL, $private_definition),
+          static::getPrivateServiceCall(NULL, $private_definition),
         ]),
       ] + $base_service_definition;
 
@@ -327,20 +328,20 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $service_definitions[] = [
         'arguments' => [[new Reference('bar')]],
         'arguments_count' => 1,
-        'arguments_expected' => $this->getCollection([$this->getCollection([$this->getServiceCall('bar')])]),
+        'arguments_expected' => static::getCollection([static::getCollection([static::getServiceCall('bar')])]),
       ] + $base_service_definition;
 
       // Test a collection with a variable to resolve.
       $service_definitions[] = [
         'arguments' => [new Parameter('llama_parameter')],
         'arguments_count' => 1,
-        'arguments_expected' => $this->getCollection([$this->getParameterCall('llama_parameter')]),
+        'arguments_expected' => static::getCollection([static::getParameterCall('llama_parameter')]),
       ] + $base_service_definition;
 
       // Test getMethodCalls.
       $calls = [
-        ['method', $this->getCollection([])],
-        ['method2', $this->getCollection([])],
+        ['method', static::getCollection([])],
+        ['method2', static::getCollection([])],
       ];
       $service_definitions[] = [
         'calls' => $calls,
@@ -353,7 +354,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       // Test factory.
       $service_definitions[] = [
         'factory' => [new Reference('bar'), 'factoryMethod'],
-        'factory_expected' => [$this->getServiceCall('bar'), 'factoryMethod'],
+        'factory_expected' => [static::getServiceCall('bar'), 'factoryMethod'],
       ] + $base_service_definition;
 
       // Test invalid factory - needed to test deep dumpValue().
@@ -369,7 +370,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       // Test configurator.
       $service_definitions[] = [
         'configurator' => [new Reference('bar'), 'configureService'],
-        'configurator_expected' => [$this->getServiceCall('bar'), 'configureService'],
+        'configurator_expected' => [static::getServiceCall('bar'), 'configureService'],
       ] + $base_service_definition;
 
       $services_provided = [];
@@ -379,7 +380,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       ];
 
       foreach ($service_definitions as $service_definition) {
-        $definition = $this->prophesize('\Symfony\Component\DependencyInjection\Definition');
+        $definition = (new Prophet())->prophesize('\Symfony\Component\DependencyInjection\Definition');
         $definition->getClass()->willReturn($service_definition['class']);
         $definition->isPublic()->willReturn($service_definition['public']);
         $definition->getFile()->willReturn($service_definition['file']);
@@ -430,7 +431,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
 
         $services_provided[] = [
           ['foo_service' => $definition->reveal()],
-          ['foo_service' => $this->serializeDefinition($filtered_service_definition)],
+          ['foo_service' => static::serializeDefinition($filtered_service_definition)],
         ];
       }
 
@@ -442,14 +443,14 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
      *
      * Used to override serialization.
      */
-    protected function serializeDefinition(array $service_definition) {
+    protected static function serializeDefinition(array $service_definition) {
       return serialize($service_definition);
     }
 
     /**
      * Helper function to return a service definition.
      */
-    protected function getServiceCall($id, $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
+    protected static function getServiceCall($id, $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
       return (object) [
         'type' => 'service',
         'id' => $id,
@@ -493,19 +494,19 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $this->containerBuilder->getDefinition('bar')->willReturn($bar_definition);
       $dump = $this->dumper->getArray();
       if ($public) {
-        $service_definition = $this->getServiceCall('bar');
+        $service_definition = static::getServiceCall('bar');
       }
       else {
-        $service_definition = $this->getPrivateServiceCall('bar', $bar_definition_php_array, TRUE);
+        $service_definition = static::getPrivateServiceCall('bar', $bar_definition_php_array, TRUE);
       }
       $data = [
         'class' => '\stdClass',
-        'arguments' => $this->getCollection([
+        'arguments' => static::getCollection([
           $service_definition,
         ]),
         'arguments_count' => 1,
       ];
-      $this->assertEquals($this->serializeDefinition($data), $dump['services']['foo'], 'Expected definition matches dump.');
+      $this->assertEquals(static::serializeDefinition($data), $dump['services']['foo'], 'Expected definition matches dump.');
     }
 
     public function publicPrivateDataProvider() {
@@ -593,10 +594,10 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $this->expectDeprecation('_serviceId is deprecated in drupal:9.5.0 and is removed from drupal:11.0.0. Use \Drupal\Core\DrupalKernelInterface::getServiceIdMapping() instead. See https://www.drupal.org/node/3292540');
       $a = $this->dumper->getArray();
       $this->assertEquals(
-        $this->serializeDefinition([
+        static::serializeDefinition([
           'class' => '\stdClass',
           // Legacy code takes care of converting _serviceId into this.
-          'arguments' => $this->getCollection([$this->getServiceCall('foo')]),
+          'arguments' => static::getCollection([static::getServiceCall('foo')]),
           'arguments_count' => 1,
         ]), $a['services']['bar']);
     }
@@ -633,9 +634,9 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
 
       $dump = $this->dumper->getArray();
 
-      $this->assertEquals($this->serializeDefinition([
+      $this->assertEquals(static::serializeDefinition([
         'class' => '\stdClass',
-        'arguments' => $this->getCollection([
+        'arguments' => static::getCollection([
           $this->getRaw($expected),
         ]),
         'arguments_count' => 1,
@@ -665,7 +666,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
     /**
      * Helper function to return a private service definition.
      */
-    protected function getPrivateServiceCall($id, $service_definition, $shared = FALSE) {
+    protected static function getPrivateServiceCall($id, $service_definition, $shared = FALSE) {
       if (!$id) {
         $hash = Crypt::hashBase64(serialize($service_definition));
         $id = 'private__' . $hash;
@@ -681,7 +682,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
     /**
      * Helper function to return a machine-optimized collection.
      */
-    protected function getCollection($collection, $resolve = TRUE) {
+    protected static function getCollection($collection, $resolve = TRUE) {
       return (object) [
         'type' => 'collection',
         'value' => $collection,
@@ -692,7 +693,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
     /**
      * Helper function to return a parameter definition.
      */
-    protected function getParameterCall($name) {
+    protected static function getParameterCall($name) {
       return (object) [
         'type' => 'parameter',
         'name' => $name,

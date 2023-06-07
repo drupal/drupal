@@ -21,6 +21,7 @@ use Drupal\Core\TypedData\TypedDataManager;
 use Drupal\Core\Validation\ConstraintManager;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
+use Prophecy\Prophet;
 
 /**
  * @coversDefaultClass \Drupal\Core\Plugin\Context\EntityContextDefinition
@@ -133,7 +134,7 @@ class EntityContextDefinitionIsSatisfiedTest extends UnitTestCase {
   /**
    * Provides test data for ::testIsSatisfiedBy().
    */
-  public function providerTestIsSatisfiedBy() {
+  public static function providerTestIsSatisfiedBy() {
     $data = [];
 
     $content = new EntityType(['id' => 'test_content']);
@@ -145,7 +146,7 @@ class EntityContextDefinitionIsSatisfiedTest extends UnitTestCase {
       EntityContextDefinition::fromEntityType($content),
       EntityContextDefinition::fromEntityType($content),
     ];
-    $entity = $this->prophesize(ContentEntityInterface::class)->willImplement(\IteratorAggregate::class);
+    $entity = (new Prophet())->prophesize(ContentEntityInterface::class)->willImplement(\IteratorAggregate::class);
     $entity->getIterator()->willReturn(new \ArrayIterator([]));
     $entity->getCacheContexts()->willReturn([]);
     $entity->getCacheTags()->willReturn([]);

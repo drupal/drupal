@@ -22,14 +22,14 @@ class PhpArrayDumperTest extends OptimizedPhpArrayDumperTest {
   /**
    * {@inheritdoc}
    */
-  protected function serializeDefinition(array $service_definition) {
+  protected static function serializeDefinition(array $service_definition) {
     return $service_definition;
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getServiceCall($id, $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
+  protected static function getServiceCall($id, $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
     if ($invalid_behavior !== ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
       return sprintf('@?%s', $id);
     }
@@ -40,14 +40,14 @@ class PhpArrayDumperTest extends OptimizedPhpArrayDumperTest {
   /**
    * {@inheritdoc}
    */
-  protected function getParameterCall($name) {
+  protected static function getParameterCall($name) {
     return '%' . $name . '%';
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getCollection($collection, $resolve = TRUE) {
+  protected static function getCollection($collection, $resolve = TRUE) {
     return $collection;
   }
 

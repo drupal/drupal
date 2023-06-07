@@ -18,6 +18,7 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\TestTools\Random;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
+use Prophecy\Prophet;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -39,10 +40,10 @@ class BigPipeResponseAttachmentsProcessorTest extends UnitTestCase {
     $big_pipe_response_attachments_processor->processAttachments($non_html_response);
   }
 
-  public function nonHtmlResponseProvider() {
+  public static function nonHtmlResponseProvider() {
     return [
       'AjaxResponse, which implements AttachmentsInterface' => [AjaxResponse::class],
-      'A dummy that implements AttachmentsInterface' => [get_class($this->prophesize(AttachmentsInterface::class)->reveal())],
+      'A dummy that implements AttachmentsInterface' => [get_class((new Prophet())->prophesize(AttachmentsInterface::class)->reveal())],
     ];
   }
 
