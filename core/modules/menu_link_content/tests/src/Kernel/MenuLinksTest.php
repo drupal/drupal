@@ -44,7 +44,6 @@ class MenuLinksTest extends KernelTestBase {
 
     $this->menuLinkManager = \Drupal::service('plugin.manager.menu.link');
 
-    $this->installSchema('system', ['sequences']);
     $this->installSchema('user', ['users_data']);
     $this->installEntitySchema('entity_test_external');
     $this->installEntitySchema('menu_link_content');

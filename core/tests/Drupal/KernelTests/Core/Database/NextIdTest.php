@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\Database;
  * Tests the sequences API.
  *
  * @group Database
+ * @group legacy
  */
 class NextIdTest extends DatabaseTestBase {
 
@@ -21,13 +22,28 @@ class NextIdTest extends DatabaseTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->installSchema('system', 'sequences');
+
+    $table_specification = [
+      'description' => 'Stores IDs.',
+      'fields' => [
+        'value' => [
+          'description' => 'The value of the sequence.',
+          'type' => 'serial',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ],
+      ],
+      'primary key' => ['value'],
+    ];
+    $this->connection->schema()->createTable('sequences', $table_specification);
   }
 
   /**
    * Tests that the sequences API works.
    */
   public function testDbNextId() {
+    $this->expectDeprecation('Drupal\Core\Database\Connection::nextId() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Modules should use instead the keyvalue storage for the last used id. See https://www.drupal.org/node/3349345');
+
     $first = $this->connection->nextId();
     $second = $this->connection->nextId();
     // We can test for exact increase in here because we know there is no

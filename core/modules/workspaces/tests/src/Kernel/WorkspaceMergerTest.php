@@ -61,7 +61,6 @@ class WorkspaceMergerTest extends KernelTestBase {
 
     $this->installConfig(['filter', 'node', 'system']);
 
-    $this->installSchema('system', ['sequences']);
     $this->installSchema('node', ['node_access']);
 
     $this->createContentType(['type' => 'article']);

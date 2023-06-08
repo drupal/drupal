@@ -32,7 +32,6 @@ class ContentEntityHasChangesTest extends KernelTestBase {
 
     $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test_mulrev_changed_rev');
-    $this->installSchema('system', 'sequences');
   }
 
   /**

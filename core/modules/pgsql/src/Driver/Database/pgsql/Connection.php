@@ -298,7 +298,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    * and updating a sequences table.
    */
   public function nextId($existing = 0) {
-
+    @trigger_error('Drupal\Core\Database\Connection::nextId() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Modules should use instead the keyvalue storage for the last used id. See https://www.drupal.org/node/3349345', E_USER_DEPRECATED);
     // Retrieve the name of the sequence. This information cannot be cached
     // because the prefix may change, for example, like it does in tests.
     $sequence_name = $this->makeSequenceName('sequences', 'value');

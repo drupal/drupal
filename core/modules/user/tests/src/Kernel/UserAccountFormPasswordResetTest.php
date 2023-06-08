@@ -34,7 +34,6 @@ class UserAccountFormPasswordResetTest extends KernelTestBase {
     parent::setUp();
     // Install default configuration; required for AccountFormController.
     $this->installConfig(['user']);
-    $this->installSchema('system', ['sequences']);
     $this->installEntitySchema('user');
 
     // Create an user to login.

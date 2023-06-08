@@ -27,7 +27,6 @@ class DeleteActionTest extends KernelTestBase {
     parent::setUp();
     $this->installEntitySchema('entity_test_mulrevpub');
     $this->installEntitySchema('user');
-    $this->installSchema('system', ['sequences']);
 
     $this->testUser = User::create([
       'name' => 'foobar',

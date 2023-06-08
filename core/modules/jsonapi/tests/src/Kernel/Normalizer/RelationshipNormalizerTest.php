@@ -150,7 +150,6 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
     $this->installEntitySchema('file');
 
     // Add the additional table schemas.
-    $this->installSchema('system', ['sequences']);
     $this->installSchema('node', ['node_access']);
     $this->installSchema('file', ['file_usage']);
     NodeType::create([

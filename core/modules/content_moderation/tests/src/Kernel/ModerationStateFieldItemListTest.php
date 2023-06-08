@@ -44,7 +44,6 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
     parent::setUp();
 
     $this->installSchema('node', 'node_access');
-    $this->installSchema('system', 'sequences');
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
     $this->installEntitySchema('content_moderation_state');

@@ -38,7 +38,6 @@ class HandlerArgumentUserUidTest extends KernelTestBase {
    * Tests the generated title of a user: uid argument.
    */
   public function testArgumentTitle() {
-    $this->installSchema('system', ['sequences']);
     $this->installEntitySchema('user');
     $this->installConfig(['user']);
     User::create(['uid' => 0, 'name' => ''])->save();

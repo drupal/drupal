@@ -56,7 +56,6 @@ class WorkflowAccessControlHandlerTest extends KernelTestBase {
     parent::setUp();
 
     $this->installEntitySchema('user');
-    $this->installSchema('system', ['sequences']);
 
     $this->accessControlHandler = $this->container->get('entity_type.manager')->getAccessControlHandler('workflow');
 

@@ -33,7 +33,6 @@ class MigrateTermNodeTranslationTest extends MigrateDrupal6TestBase {
     $this->installEntitySchema('node');
     $this->installConfig(['node']);
     $this->installSchema('node', ['node_access']);
-    $this->installSchema('system', ['sequences']);
 
     $this->executeMigration('language');
     $this->executeMigration('d6_node_settings');

@@ -58,7 +58,6 @@ class WorkspaceAssociationTest extends KernelTestBase {
     $this->installConfig(['filter', 'node', 'system']);
 
     $this->installSchema('node', ['node_access']);
-    $this->installSchema('system', ['sequences']);
     $this->installSchema('workspaces', ['workspace_association']);
 
     $this->createContentType(['type' => 'article']);

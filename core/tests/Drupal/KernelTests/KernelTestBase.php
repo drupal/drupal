@@ -760,6 +760,9 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $schema = $this->container->get('database')->schema();
     $tables = (array) $tables;
     foreach ($tables as $table) {
+      if ($module === 'system' && $table === 'sequences') {
+        @trigger_error('Installing the table sequences with the method KernelTestBase::installSchema() is deprecated in drupal:10.2.0 and is removed from drupal:12.0.0. See https://www.drupal.org/node/3349345', E_USER_DEPRECATED);
+      }
       if (empty($specification[$table])) {
         throw new \LogicException("$module module does not define a schema for table '$table'.");
       }

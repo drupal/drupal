@@ -76,9 +76,6 @@ class EntitySerializationTest extends NormalizerTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    // User create needs sequence table.
-    $this->installSchema('system', ['sequences']);
-
     FilterFormat::create([
       'format' => 'my_text_format',
       'name' => 'My Text Format',

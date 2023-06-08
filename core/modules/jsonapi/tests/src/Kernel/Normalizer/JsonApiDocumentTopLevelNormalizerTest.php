@@ -135,7 +135,6 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     $this->installEntitySchema('taxonomy_term');
     $this->installEntitySchema('file');
     // Add the additional table schemas.
-    $this->installSchema('system', ['sequences']);
     $this->installSchema('node', ['node_access']);
     $this->installSchema('user', ['users_data']);
     $this->installSchema('file', ['file_usage']);

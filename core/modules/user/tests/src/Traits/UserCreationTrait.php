@@ -4,7 +4,6 @@ namespace Drupal\Tests\user\Traits;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
-use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\KernelTests\KernelTestBase;
@@ -55,13 +54,6 @@ trait UserCreationTrait {
     // the "sequences" table.
     if (!\Drupal::moduleHandler()->moduleExists('system')) {
       $values['uid'] = 0;
-    }
-    if ($this instanceof KernelTestBase && (!isset($values['uid']) || $values['uid'])) {
-      try {
-        $this->installSchema('system', ['sequences']);
-      }
-      catch (SchemaObjectExistsException $e) {
-      }
     }
 
     // Creating an administrator or assigning custom permissions would result in

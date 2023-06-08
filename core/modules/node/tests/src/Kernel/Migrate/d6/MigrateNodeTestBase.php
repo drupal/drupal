@@ -19,7 +19,6 @@ abstract class MigrateNodeTestBase extends MigrateDrupal6TestBase {
     $this->installEntitySchema('node');
     $this->installConfig(['node']);
     $this->installSchema('node', ['node_access']);
-    $this->installSchema('system', ['sequences']);
 
     // Create a new user which needs to have UID 1, because that is expected by
     // the assertions from

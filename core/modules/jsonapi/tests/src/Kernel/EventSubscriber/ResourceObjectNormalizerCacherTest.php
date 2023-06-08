@@ -61,7 +61,6 @@ class ResourceObjectNormalizerCacherTest extends KernelTestBase {
     // Add the entity schemas.
     $this->installEntitySchema('user');
     // Add the additional table schemas.
-    $this->installSchema('system', ['sequences']);
     $this->installSchema('user', ['users_data']);
     $this->resourceTypeRepository = $this->container->get('jsonapi.resource_type.repository');
     $this->serializer = $this->container->get('jsonapi.serializer');

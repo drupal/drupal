@@ -63,7 +63,6 @@ class LinkCollectionNormalizerTest extends KernelTestBase {
     // Add the entity schemas.
     $this->installEntitySchema('user');
     // Add the additional table schemas.
-    $this->installSchema('system', ['sequences']);
     $this->installSchema('user', ['users_data']);
     // Set the user IDs to something higher than 1 so these users cannot be
     // mistaken for the site admin.

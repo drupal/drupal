@@ -85,7 +85,6 @@ class BookMultilingualTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installSchema('book', ['book']);
     $this->installSchema('node', ['node_access']);
-    $this->installSchema('system', ['sequences']);
     $this->installConfig(['node', 'book', 'field']);
     $node_type = NodeType::create([
       'type' => $this->randomMachineName(),

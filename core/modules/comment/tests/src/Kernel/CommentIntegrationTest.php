@@ -42,7 +42,6 @@ class CommentIntegrationTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('comment');
     $this->installSchema('dblog', ['watchdog']);
-    $this->installSchema('system', ['sequences']);
 
     // Create a new 'comment' comment-type.
     CommentType::create([

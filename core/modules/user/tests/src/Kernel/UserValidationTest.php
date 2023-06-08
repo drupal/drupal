@@ -30,7 +30,6 @@ class UserValidationTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('user');
-    $this->installSchema('system', ['sequences']);
 
     // Make sure that the default roles exist.
     $this->installConfig(['user']);

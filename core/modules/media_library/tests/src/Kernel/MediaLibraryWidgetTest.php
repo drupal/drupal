@@ -70,7 +70,6 @@ class MediaLibraryWidgetTest extends KernelTestBase {
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('entity_test_rev');
     $this->installEntitySchema('user');
-    $this->installSchema('system', ['sequences']);
     $this->installConfig([
       'system',
       'image',

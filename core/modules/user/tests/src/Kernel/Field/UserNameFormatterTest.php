@@ -44,7 +44,6 @@ class UserNameFormatterTest extends KernelTestBase {
 
     $this->installConfig(['field']);
     $this->installEntitySchema('user');
-    $this->installSchema('system', ['sequences']);
 
     $this->entityType = 'user';
     $this->bundle = $this->entityType;

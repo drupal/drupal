@@ -43,7 +43,6 @@ class RelationshipRepresentativeNodeTest extends KernelTestBase {
    * Tests the relationship.
    */
   public function testRelationship() {
-    $this->installSchema('system', ['sequences']);
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
     $this->installConfig(['filter']);

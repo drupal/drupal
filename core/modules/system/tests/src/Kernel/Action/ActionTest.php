@@ -34,7 +34,6 @@ class ActionTest extends KernelTestBase {
 
     $this->actionManager = $this->container->get('plugin.manager.action');
     $this->installEntitySchema('user');
-    $this->installSchema('system', ['sequences']);
   }
 
   /**

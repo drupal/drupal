@@ -55,7 +55,6 @@ class FormActionXssTest extends KernelTestBase implements FormInterface {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->installSchema('system', ['sequences']);
     $this->installEntitySchema('user');
 
     $test_user = User::create([

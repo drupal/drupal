@@ -1663,6 +1663,11 @@ abstract class Connection {
    * @return int|string
    *   An integer number larger than any number returned by earlier calls and
    *   also larger than the $existing_id if one was passed in.
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Modules
+   *   should use instead the keyvalue storage for the last used id.
+   *
+   * @see https://www.drupal.org/node/3349345
    */
   abstract public function nextId($existing_id = 0);
 

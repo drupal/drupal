@@ -270,7 +270,6 @@ class FilterTest extends JsonapiKernelTestBase {
    * Sets up the schemas.
    */
   protected function setUpSchemas() {
-    $this->installSchema('system', ['sequences']);
     $this->installSchema('node', ['node_access']);
     $this->installSchema('user', ['users_data']);
 

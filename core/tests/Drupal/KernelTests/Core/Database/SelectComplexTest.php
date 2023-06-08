@@ -347,8 +347,6 @@ class SelectComplexTest extends DatabaseTestBase {
    * Tests that we can join on a query.
    */
   public function testJoinSubquery() {
-    $this->installSchema('system', 'sequences');
-
     $account = User::create([
       'name' => $this->randomMachineName(),
       'mail' => $this->randomMachineName() . '@example.com',

@@ -62,7 +62,6 @@ class MigrateNodeCompleteTest extends MigrateDrupal7TestBase {
     $this->installEntitySchema('taxonomy_term');
     $this->installSchema('comment', ['comment_entity_statistics']);
     $this->installSchema('node', ['node_access']);
-    $this->installSchema('system', ['sequences']);
 
     $this->createContent();
 

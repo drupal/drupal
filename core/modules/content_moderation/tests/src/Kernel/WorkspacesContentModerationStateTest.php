@@ -43,8 +43,6 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->installSchema('system', ['sequences']);
-
     $this->initializeWorkspacesModule();
     $this->switchToWorkspace('stage');
   }

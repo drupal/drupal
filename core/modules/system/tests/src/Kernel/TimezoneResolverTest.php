@@ -29,7 +29,6 @@ class TimezoneResolverTest extends KernelTestBase {
    */
   public function testGetTimeZone() {
     $this->installEntitySchema('user');
-    $this->installSchema('system', ['sequences']);
     $this->installConfig(['system']);
 
     // Check the default test timezone.

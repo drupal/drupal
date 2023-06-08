@@ -35,14 +35,6 @@ class DateTimeFormInjectionTest extends KernelTestBase implements FormInterface 
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
-    parent::setUp();
-    $this->installSchema('system', ['sequences']);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getFormId() {
     return 'datetime_test_injection_form';
   }

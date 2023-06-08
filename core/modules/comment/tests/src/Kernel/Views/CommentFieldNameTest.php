@@ -57,7 +57,6 @@ class CommentFieldNameTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
     $this->installEntitySchema('comment');
-    $this->installSchema('system', ['sequences']);
     $this->installSchema('comment', ['comment_entity_statistics']);
     $this->installConfig(['filter']);
 

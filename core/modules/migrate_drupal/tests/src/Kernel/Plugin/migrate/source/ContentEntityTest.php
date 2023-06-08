@@ -94,7 +94,6 @@ class ContentEntityTest extends KernelTestBase {
     $this->installEntitySchema('media');
     $this->installEntitySchema('taxonomy_term');
     $this->installEntitySchema('user');
-    $this->installSchema('system', ['sequences']);
     $this->installSchema('user', 'users_data');
     $this->installSchema('file', 'file_usage');
     $this->installSchema('node', ['node_access']);
