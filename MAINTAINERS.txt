@@ -13,7 +13,7 @@ The branch maintainers for Drupal 7 are:
 - Dries Buytaert 'dries' https://www.drupal.org/u/dries
 - Fabian Franz 'Fabianx' https://www.drupal.org/u/fabianx
 - Drew Webber 'mcdruid' https://www.drupal.org/u/mcdruid
-- (provisional) Juraj Nemec 'poker10' https://www.drupal.org/u/poker10
+- Juraj Nemec 'poker10' https://www.drupal.org/u/poker10
 
 
 Component maintainers
