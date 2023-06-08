@@ -717,8 +717,14 @@ function node_user_predelete($account) {
  * @return \Drupal\node\NodeInterface[]
  *   An array of node entities or an empty array if there are no recent nodes
  *   visible to the current user.
+ *
+ * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal::entityQuery() instead.
+ *
+ * @see https://www.drupal.org/node/3356516
  */
 function node_get_recent($number = 10) {
+  @trigger_error(__METHOD__ . ' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal::entityQuery() instead. See https://www.drupal.org/node/3356516', E_USER_DEPRECATED);
   $account = \Drupal::currentUser();
   $query = \Drupal::entityQuery('node');
 
