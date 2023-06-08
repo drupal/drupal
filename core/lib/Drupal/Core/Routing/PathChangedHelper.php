@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
  * compatibility (BC). If the original route is example.route, then the BC route
  * should be named example.route.bc.
  *
- * The controller for the BC route should have an deprecated annotation, a
+ * The controller for the BC route should have a deprecated annotation, a
  * deprecation error, and type declarations for any parameters that are required
  * for access checking. Then the body of the controller can use the methods
  * provided by this class:
