@@ -40,12 +40,12 @@ class Convert extends GDImageToolkitOperationBase {
    * {@inheritdoc}
    */
   protected function execute(array $arguments) {
-    // Create a new resource of the required dimensions and format, and copy
-    // the original resource on it with resampling. Destroy the original
-    // resource upon success.
+    // Create a new image of the required dimensions and format, and copy
+    // the original image on it with resampling. Restore the original image upon
+    // failure.
     $width = $this->getToolkit()->getWidth();
     $height = $this->getToolkit()->getHeight();
-    $original_resource = $this->getToolkit()->getResource();
+    $original_image = $this->getToolkit()->getImage();
     $original_type = $this->getToolkit()->getType();
     $data = [
       'width' => $width,
@@ -55,12 +55,11 @@ class Convert extends GDImageToolkitOperationBase {
       'is_temp' => TRUE,
     ];
     if ($this->getToolkit()->apply('create_new', $data)) {
-      if (imagecopyresampled($this->getToolkit()->getResource(), $original_resource, 0, 0, 0, 0, $width, $height, $width, $height)) {
-        imagedestroy($original_resource);
+      if (imagecopyresampled($this->getToolkit()->getImage(), $original_image, 0, 0, 0, 0, $width, $height, $width, $height)) {
         return TRUE;
       }
-      // In case of error, reset resource and type to as it was.
-      $this->getToolkit()->setResource($original_resource);
+      // In case of error, reset image and type to as it was.
+      $this->getToolkit()->setImage($original_image);
       $this->getToolkit()->setType($original_type);
     }
     return FALSE;

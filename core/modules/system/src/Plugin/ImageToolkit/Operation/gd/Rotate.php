@@ -52,18 +52,18 @@ class Rotate extends GDImageToolkitOperationBase {
       $background = ['red' => 255, 'green' => 255, 'blue' => 255, 'alpha' => 127];
     }
     // Store the color index for the background as that is what GD uses.
-    $arguments['background_idx'] = imagecolorallocatealpha($this->getToolkit()->getResource(), $background['red'], $background['green'], $background['blue'], $background['alpha']);
+    $arguments['background_idx'] = imagecolorallocatealpha($this->getToolkit()->getImage(), $background['red'], $background['green'], $background['blue'], $background['alpha']);
 
     if ($this->getToolkit()->getType() === IMAGETYPE_GIF) {
       // GIF does not work with a transparency channel, but can define 1 color
       // in its palette to act as transparent.
 
       // Get the current transparent color, if any.
-      $gif_transparent_id = imagecolortransparent($this->getToolkit()->getResource());
+      $gif_transparent_id = imagecolortransparent($this->getToolkit()->getImage());
       if ($gif_transparent_id !== -1) {
         // The gif already has a transparent color set: remember it to set it on
         // the rotated image as well.
-        $arguments['gif_transparent_color'] = imagecolorsforindex($this->getToolkit()->getResource(), $gif_transparent_id);
+        $arguments['gif_transparent_color'] = imagecolorsforindex($this->getToolkit()->getImage(), $gif_transparent_id);
 
         if ($background['alpha'] >= 127) {
           // We want a transparent background: use the color already set to act
@@ -93,19 +93,15 @@ class Rotate extends GDImageToolkitOperationBase {
       return FALSE;
     }
 
-    // Stores the original GD resource.
-    $original_res = $this->getToolkit()->getResource();
-
-    if ($new_res = imagerotate($this->getToolkit()->getResource(), 360 - $arguments['degrees'], $arguments['background_idx'])) {
-      $this->getToolkit()->setResource($new_res);
-      imagedestroy($original_res);
+    if ($new_image = imagerotate($this->getToolkit()->getImage(), 360 - $arguments['degrees'], $arguments['background_idx'])) {
+      $this->getToolkit()->setImage($new_image);
 
       // GIFs need to reassign the transparent color after performing the
       // rotate, but only do so, if the image already had transparency of its
       // own, or the rotate added a transparent background.
       if (!empty($arguments['gif_transparent_color'])) {
-        $transparent_idx = imagecolorexactalpha($this->getToolkit()->getResource(), $arguments['gif_transparent_color']['red'], $arguments['gif_transparent_color']['green'], $arguments['gif_transparent_color']['blue'], $arguments['gif_transparent_color']['alpha']);
-        imagecolortransparent($this->getToolkit()->getResource(), $transparent_idx);
+        $transparent_idx = imagecolorexactalpha($this->getToolkit()->getImage(), $arguments['gif_transparent_color']['red'], $arguments['gif_transparent_color']['green'], $arguments['gif_transparent_color']['blue'], $arguments['gif_transparent_color']['alpha']);
+        imagecolortransparent($this->getToolkit()->getImage(), $transparent_idx);
       }
 
       return TRUE;

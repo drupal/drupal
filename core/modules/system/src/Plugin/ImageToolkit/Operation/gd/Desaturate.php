@@ -33,7 +33,7 @@ class Desaturate extends GDImageToolkitOperationBase {
       return FALSE;
     }
 
-    return imagefilter($this->getToolkit()->getResource(), IMG_FILTER_GRAYSCALE);
+    return imagefilter($this->getToolkit()->getImage(), IMG_FILTER_GRAYSCALE);
   }
 
 }

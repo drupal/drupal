@@ -77,13 +77,10 @@ class RectangleTest extends TestCase {
    *   protected function rotateResults($width, $height, $angle, &$new_width, &$new_height) {
    *     $image = \Drupal::service('image.factory')->get(NULL, 'gd');
    *     $image->createNew($width, $height);
-   *     $old_res = $image->getToolkit()->getResource();
+   *     $old = $image->getToolkit()->getGdImage();
    *     $image->rotate($angle);
    *     $new_width = $image->getWidth();
    *     $new_height = $image->getHeight();
-   *     if (is_resource($old_res)) {
-   *       imagedestroy($old_res);
-   *     }
    *   }
    * @endcode
    *
