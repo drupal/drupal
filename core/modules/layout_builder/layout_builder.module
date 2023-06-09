@@ -228,6 +228,13 @@ function layout_builder_cron() {
  * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
  */
 function layout_builder_plugin_filter_block__layout_builder_alter(array &$definitions, array $extra) {
+  // Remove blocks that are not useful within Layout Builder.
+  unset($definitions['system_messages_block']);
+  unset($definitions['help_block']);
+  unset($definitions['local_tasks_block']);
+  unset($definitions['local_actions_block']);
+
+  // Remove blocks that are non-functional within Layout Builder.
   unset($definitions['system_main_block']);
   // @todo Restore the page title block in https://www.drupal.org/node/2938129.
   unset($definitions['page_title_block']);

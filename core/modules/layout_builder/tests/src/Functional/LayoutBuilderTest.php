@@ -1004,6 +1004,10 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->linkNotExists('Sticky at top of lists');
     $assert_session->linkNotExists('Main page content');
     $assert_session->linkNotExists('Page title');
+    $assert_session->linkNotExists('Messages');
+    $assert_session->linkNotExists('Help');
+    $assert_session->linkNotExists('Tabs');
+    $assert_session->linkNotExists('Primary admin actions');
 
     // Verify that Changed block is not present on first section.
     $assert_session->linkNotExists('Changed');
