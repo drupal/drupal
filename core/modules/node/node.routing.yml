@@ -164,4 +164,4 @@ node.configure_rebuild_confirm:
   defaults:
     _form: '\Drupal\node\Form\RebuildPermissionsForm'
   requirements:
-    _permission: 'access administration pages'
+    _permission: 'administer nodes'

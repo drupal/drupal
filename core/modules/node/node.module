@@ -42,7 +42,7 @@ function node_help($route_name, RouteMatchInterface $route_match) {
   // for rebuild. We don't need to issue the message on the confirm form, or
   // while the rebuild is being processed.
   if ($route_name != 'node.configure_rebuild_confirm' && $route_name != 'system.batch_page.html' && $route_name != 'help.page.node' && $route_name != 'help.main'
-    && \Drupal::currentUser()->hasPermission('access administration pages') && node_access_needs_rebuild()) {
+    && \Drupal::currentUser()->hasPermission('administer nodes') && node_access_needs_rebuild()) {
     if ($route_name == 'system.status') {
       $message = t('The content access permissions need to be rebuilt.');
     }
