@@ -117,21 +117,24 @@ class TitleResolverTest extends UnitTestCase {
   }
 
   /**
-   * Tests a static title with a NULL value parameter.
+   * Tests a static title with a non-scalar value parameter.
    *
    * @see \Drupal\Core\Controller\TitleResolver::getTitle()
    */
-  public function testStaticTitleWithNullValueParameter() {
-    $raw_variables = new ParameterBag(['test' => NULL, 'test2' => 'value']);
+  public function testStaticTitleWithNullAndArrayValueParameter() {
+    $raw_variables = new ParameterBag(['test1' => NULL, 'test2' => ['foo' => 'bar'], 'test3' => 'value']);
     $request = new Request();
     $request->attributes->set('_raw_variables', $raw_variables);
 
-    $route = new Route('/test-route', ['_title' => 'static title %test @test']);
+    $route = new Route('/test-route', ['_title' => 'static title %test1 @test1 %test2 @test2 %test3 @test3']);
     $translatable_markup = $this->titleResolver->getTitle($request, $route);
-    $this->assertSame('', $translatable_markup->getArguments()['@test']);
-    $this->assertSame('', $translatable_markup->getArguments()['%test']);
-    $this->assertSame('value', $translatable_markup->getArguments()['@test2']);
-    $this->assertSame('value', $translatable_markup->getArguments()['%test2']);
+    $arguments = $translatable_markup->getArguments();
+    $this->assertNotContains('@test1', $arguments);
+    $this->assertNotContains('%test1', $arguments);
+    $this->assertNotContains('@test2', $arguments);
+    $this->assertNotContains('%test2', $arguments);
+    $this->assertSame('value', $translatable_markup->getArguments()['@test3']);
+    $this->assertSame('value', $translatable_markup->getArguments()['%test3']);
   }
 
   /**

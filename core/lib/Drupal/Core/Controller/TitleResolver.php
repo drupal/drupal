@@ -66,8 +66,10 @@ class TitleResolver implements TitleResolverInterface {
       $args = [];
       if (($raw_parameters = $request->attributes->get('_raw_variables'))) {
         foreach ($raw_parameters->all() as $key => $value) {
-          $args['@' . $key] = $value ?? '';
-          $args['%' . $key] = $value ?? '';
+          if (is_scalar($value)) {
+            $args['@' . $key] = $value;
+            $args['%' . $key] = $value;
+          }
         }
       }
       if ($title_arguments = $route->getDefault('_title_arguments')) {
