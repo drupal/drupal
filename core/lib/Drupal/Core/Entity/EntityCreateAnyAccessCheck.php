@@ -3,6 +3,7 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultReasonInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -92,11 +93,16 @@ class EntityCreateAnyAccessCheck implements AccessInterface {
 
     // Check whether an entity of any bundle may be created.
     foreach ($bundles as $bundle) {
-      $access = $access->orIf($access_control_handler->createAccess($bundle, $account, [], TRUE));
-      // In case there is a least one bundle user can create entities for,
+      $bundle_access = $access_control_handler->createAccess($bundle, $account, [], TRUE);
+      $access->inheritCacheability($bundle_access);
+      if ($bundle_access instanceof AccessResultReasonInterface && $bundle_access->getReason() !== "" && $access->getReason() === "") {
+        $access->setReason($bundle_access->getReason());
+      }
+
+      // In case there is at least one bundle the user can create entities for,
       // access is allowed.
-      if ($access->isAllowed()) {
-        break;
+      if ($bundle_access->isAllowed()) {
+        return AccessResult::allowed()->inheritCacheability($access);
       }
     }
 
