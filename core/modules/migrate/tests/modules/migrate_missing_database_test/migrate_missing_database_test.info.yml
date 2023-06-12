@@ -1,0 +1,6 @@
+name: 'Migration missing database test'
+type: module
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:migrate
