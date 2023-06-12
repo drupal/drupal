@@ -777,6 +777,12 @@ function entity_test_entity_create_access(AccountInterface $account, $context, $
   \Drupal::state()->set('entity_test_entity_create_access', TRUE);
   \Drupal::state()->set('entity_test_entity_create_access_context', $context);
 
+  if ($entity_bundle === 'forbidden_access_bundle') {
+    // We need to cover a case in which a bundle is specifically forbidden
+    // from creation (as opposed to neutral access).
+    return AccessResult::forbidden();
+  }
+
   // No opinion.
   return AccessResult::neutral();
 }
