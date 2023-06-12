@@ -28,8 +28,10 @@ abstract class TourTestBase extends BrowserTestBase {
    *
    * @param array $tips
    *   A list of tips which provide either a "data-id" or "data-class".
+   * @param bool $expectEmpty
+   *   Whether or not the field is expected to be Empty.
    */
-  public function assertTourTips($tips = []) {
+  public function assertTourTips(array $tips = [], bool $expectEmpty = FALSE) {
     // Get the rendered tips and their data-id and data-class attributes.
     if (empty($tips)) {
       // Tips are rendered as drupalSettings values.
@@ -43,29 +45,33 @@ abstract class TourTestBase extends BrowserTestBase {
       }
     }
 
-    // If the tips are still empty we need to fail.
-    if (empty($tips)) {
-      $this->fail('Could not find tour tips on the current page.');
+    $tip_count = count($tips);
+    if ($tip_count === 0 && $expectEmpty) {
+      // No tips found as expected.
+      return;
     }
-    else {
-      // Check for corresponding page elements.
-      $total = 0;
-      $modals = 0;
-      foreach ($tips as $tip) {
-        if (!empty($tip['data-id'])) {
-          $elements = $this->getSession()->getPage()->findAll('css', '#' . $tip['data-id']);
-          $this->assertCount(1, $elements, new FormattableMarkup('Found corresponding page element for tour tip with id #%data-id', ['%data-id' => $tip['data-id']]));
-        }
-        elseif (!empty($tip['data-class'])) {
-          $elements = $this->getSession()->getPage()->findAll('css', '.' . $tip['data-class']);
-          $this->assertNotEmpty($elements, sprintf("Page element for tour tip with class .%s should be present", $tip['data-class']));
-        }
-        else {
-          // It's a modal.
-          $modals++;
-        }
-        $total++;
+    if ($tip_count > 0 && $expectEmpty) {
+      $this->fail(sprintf('No tips were expected but %d were found', $tip_count));
+    }
+    $this->assertGreaterThan(0, $tip_count);
+
+    // Check for corresponding page elements.
+    $total = 0;
+    $modals = 0;
+    foreach ($tips as $tip) {
+      if (!empty($tip['data-id'])) {
+        $elements = $this->getSession()->getPage()->findAll('css', '#' . $tip['data-id']);
+        $this->assertCount(1, $elements, new FormattableMarkup('Found corresponding page element for tour tip with id #%data-id', ['%data-id' => $tip['data-id']]));
       }
+      elseif (!empty($tip['data-class'])) {
+        $elements = $this->getSession()->getPage()->findAll('css', '.' . $tip['data-class']);
+        $this->assertNotEmpty($elements, sprintf("Page element for tour tip with class .%s should be present", $tip['data-class']));
+      }
+      else {
+        // It's a modal.
+        $modals++;
+      }
+      $total++;
     }
   }
 

@@ -85,6 +85,7 @@ function tour_page_bottom(array &$page_bottom) {
 
   $results = \Drupal::entityQuery('tour')
     ->condition('routes.*.route_name', $route_name)
+    ->condition('status', TRUE)
     ->execute();
   if (!empty($results) && $tours = Tour::loadMultiple(array_keys($results))) {
     foreach ($tours as $id => $tour) {

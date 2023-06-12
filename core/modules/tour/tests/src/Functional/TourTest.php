@@ -235,6 +235,33 @@ class TourTest extends TourTestBasic {
   }
 
   /**
+   * Tests enabling and disabling the tour tip functionality.
+   */
+  public function testStatus() {
+    // Set tour tip status as enabled.
+    $tour = Tour::load('tour-test');
+    $tour->setStatus(TRUE);
+    $tour->save();
+
+    $this->drupalGet('tour-test-1');
+    $this->assertSession()->statusCodeEquals(200);
+
+    // Tour tips should be visible on the page.
+    $this->assertTourTips();
+
+    $tour->setStatus(FALSE);
+    $tour->save();
+
+    // Navigate and verify the tour_test_1 tip is not found with
+    // appropriate classes.
+    $this->drupalGet('tour-test-1');
+    $this->assertSession()->statusCodeEquals(200);
+
+    // No tips expected as tour is disabled.
+    $this->assertTourTips(expectEmpty: TRUE);
+  }
+
+  /**
    * Gets tour tips from the JavaScript drupalSettings variable.
    *
    * @return array
