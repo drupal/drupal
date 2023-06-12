@@ -129,6 +129,27 @@ class SqlBaseTest extends MigrateTestBase {
   }
 
   /**
+   * Tests the exception when a connection is defined but not available.
+   */
+  public function testBrokenConnection(): void {
+    $sql_base = new TestSqlBase([], $this->migration);
+    $target = 'test_state_db_target2';
+    $key = 'test_state_migrate_connection2';
+    $database = Database::getConnectionInfo('default')['default'];
+    $database['database'] = 'godot';
+    $config = ['target' => $target, 'key' => $key, 'database' => $database];
+    $database_state_key = 'migrate_sql_base_test2';
+    \Drupal::state()->set($database_state_key, $config);
+    $sql_base->setConfiguration(['database_state_key' => $database_state_key]);
+
+    // Call checkRequirements(): it will call getDatabase() and convert the
+    // exception to a RequirementsException.
+    $this->expectException(RequirementsException::class);
+    $this->expectExceptionMessage('No database connection available for source plugin sql_base');
+    $sql_base->checkRequirements();
+  }
+
+  /**
    * Tests that SqlBase respects high-water values.
    *
    * @param mixed $high_water
@@ -201,7 +222,7 @@ class TestSqlBase extends SqlBase {
    *   (optional) The migration being run.
    */
   public function __construct(array $configuration = [], MigrationInterface $migration = NULL) {
-    parent::__construct($configuration, 'sql_base', [], $migration, \Drupal::state());
+    parent::__construct($configuration, 'sql_base', ['requirements_met' => TRUE], $migration, \Drupal::state());
   }
 
   /**
