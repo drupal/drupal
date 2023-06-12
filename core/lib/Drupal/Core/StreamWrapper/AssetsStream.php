@@ -41,7 +41,7 @@ class AssetsStream extends PublicStream {
   public static function basePath($site_path = NULL): string {
     return Settings::get(
       'file_assets_path',
-      Settings::get('file_public_path', 'sites/default/files')
+      parent::basePath($site_path)
     );
   }
 

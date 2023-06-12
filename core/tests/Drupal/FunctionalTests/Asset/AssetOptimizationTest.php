@@ -33,11 +33,36 @@ class AssetOptimizationTest extends BrowserTestBase {
    * Tests that asset aggregates are rendered and created on disk.
    */
   public function testAssetAggregation(): void {
+    // Test aggregation with a custom file_assets_path.
     $this->fileAssetsPath = $this->publicFilesDirectory . '/test-assets';
     $settings['settings']['file_assets_path'] = (object) [
       'value' => $this->fileAssetsPath,
       'required' => TRUE,
     ];
+    $this->doTestAggregation($settings);
+
+    // Test aggregation with no configured file_assets_path or file_public_path,
+    // since tests run in a multisite, this tests multisite installs where
+    // settings.php is the default.
+    $this->fileAssetsPath = $this->publicFilesDirectory;
+    $settings['settings']['file_public_path'] = (object) [
+      'value' => NULL,
+      'required' => TRUE,
+    ];
+    $settings['settings']['file_assets_path'] = (object) [
+      'value' => NULL,
+      'required' => TRUE,
+    ];
+    $this->doTestAggregation($settings);
+  }
+
+  /**
+   * Helper to test aggregate file URLs.
+   *
+   * @param array $settings
+   *   A settings array to pass to ::writeSettings()
+   */
+  protected function doTestAggregation(array $settings): void {
     $this->writeSettings($settings);
     $this->rebuildAll();
     $this->config('system.performance')->set('css', [
