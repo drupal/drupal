@@ -351,7 +351,6 @@ drupalSettings:
     # These placeholder values will be set by system_js_settings_alter().
     path:
       baseUrl: null
-      scriptPath: null
       pathPrefix: null
       currentPath: null
       currentPathIsAdmin: null
