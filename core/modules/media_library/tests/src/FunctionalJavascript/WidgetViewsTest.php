@@ -98,6 +98,13 @@ class WidgetViewsTest extends MediaLibraryTestBase {
     $this->waitForElementTextContains('.js-media-library-view .js-pager__items > li:nth-of-type(1)', 'Page 1');
     $this->assertCount(24, $this->getCheckboxes());
 
+    $page->checkField('Select Bear');
+    $this->pressInsertSelected('Added one media item.');
+    $assert_session->pageTextContains('Bear');
+    $assert_session->pageTextNotContains('Cat');
+    $assert_session->pageTextNotContains('Turtle');
+
+    $this->openMediaLibraryForField('field_unlimited_media');
     $this->switchToMediaLibraryTable();
 
     // Assert the 'Apply filter' button is not moved to the button pane.
@@ -111,7 +118,7 @@ class WidgetViewsTest extends MediaLibraryTestBase {
     $page->fillField('Name', 'Dog');
     $page->pressButton('Apply filters');
     $this->waitForText('Dog');
-    $this->waitForNoText('Bear');
+    $this->waitForNoText('Crocodile');
     $assert_session->pageTextNotContains('Turtle');
     $page->checkField('Select Dog');
     $assert_session->linkExists('Table');
@@ -120,7 +127,7 @@ class WidgetViewsTest extends MediaLibraryTestBase {
     // Assert the exposed filters are persisted when changing display.
     $this->assertSame('Dog', $page->findField('Name')->getValue());
     $assert_session->pageTextContains('Dog');
-    $assert_session->pageTextNotContains('Bear');
+    $assert_session->pageTextNotContains('Crocodile');
     $assert_session->pageTextNotContains('Turtle');
     $assert_session->linkExists('Grid');
     $this->switchToMediaLibraryTable();
@@ -129,7 +136,7 @@ class WidgetViewsTest extends MediaLibraryTestBase {
     $this->pressInsertSelected('Added one media item.');
     // Ensure that the selection completed successfully.
     $assert_session->pageTextContains('Dog');
-    $assert_session->pageTextNotContains('Bear');
+    $assert_session->pageTextContains('Bear');
     $assert_session->pageTextNotContains('Turtle');
   }
 
