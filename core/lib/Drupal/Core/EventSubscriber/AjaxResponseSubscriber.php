@@ -45,7 +45,7 @@ class AjaxResponseSubscriber implements EventSubscriberInterface {
    */
   public function onRequest(RequestEvent $event) {
     // Pass to the Html class that the current request is an Ajax request.
-    if ($event->getRequest()->request->get(static::AJAX_REQUEST_PARAMETER)) {
+    if ($event->getRequest()->get(static::AJAX_REQUEST_PARAMETER)) {
       Html::setIsAjax(TRUE);
     }
   }
