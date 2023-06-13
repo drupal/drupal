@@ -37,6 +37,7 @@ final class ComponentRenderTest extends ComponentKernelTestBase {
     $this->checkIncludeDataMapping();
     $this->checkEmbedWithNested();
     $this->checkPropValidation();
+    $this->checkArrayObjectTypeCast();
     $this->checkNonExistingComponent();
     $this->checkLibraryOverrides();
     $this->checkAttributeMerging();
@@ -168,6 +169,25 @@ final class ComponentRenderTest extends ComponentKernelTestBase {
     }
     catch (\Throwable $e) {
       $this->addToAssertionCount(1);
+    }
+  }
+
+  /**
+   * Ensure fuzzy coercing of arrays and objects works properly.
+   */
+  protected function checkArrayObjectTypeCast(): void {
+    $content = ['test' => []];
+    $build = [
+      '#type' => 'inline_template',
+      '#context' => ['content' => $content],
+      '#template' => "{{ include('sdc_test:array-to-object', { testProp: content.test }, with_context = false) }}",
+    ];
+    try {
+      $this->renderComponentRenderArray($build);
+      $this->addToAssertionCount(1);
+    }
+    catch (\Throwable $e) {
+      $this->fail('Empty array was not converted to object');
     }
   }
 
