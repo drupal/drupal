@@ -5,6 +5,7 @@ namespace Drupal\sdc\Component;
 use Drupal\sdc\Exception\InvalidComponentException;
 use Drupal\sdc\Plugin\Component;
 use Drupal\sdc\Utilities;
+use JsonSchema\Constraints\Constraint;
 use JsonSchema\Validator;
 
 /**
@@ -164,7 +165,7 @@ final class ComponentValidator {
     $schema = Validator::arrayToObjectRecursive($schema);
     $props = Validator::arrayToObjectRecursive($props_raw);
     $validator = new Validator();
-    $validator->validate($props, $schema);
+    $validator->validate($props, $schema, Constraint::CHECK_MODE_TYPE_CAST);
     $validator->getErrors();
     if ($validator->isValid()) {
       return TRUE;
@@ -183,7 +184,17 @@ final class ComponentValidator {
       return TRUE;
     }
     $message_parts = array_map(
-      static fn(array $error): string => sprintf("[%s] %s", $error['property'], $error['message']),
+      static function (array $error): string {
+        // We check the error message instead of values and definitions here
+        // because it's hard to access both given the possible complexity of a
+        // schema. Since this is a small non critical DX improvement error
+        // message checking should be sufficient.
+        if (str_contains($error['message'], 'NULL value found, but a ')) {
+          $error['message'] .= '. This may be because the property is empty instead of having data present. If possible fix the source data, use the |default() twig filter, or update the schema to allow multiple types.';
+        }
+
+        return sprintf("[%s] %s", $error['property'], $error['message']);
+      },
       $errors
     );
     $message = implode("/n", $message_parts);
