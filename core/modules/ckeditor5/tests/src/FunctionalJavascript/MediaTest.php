@@ -1059,6 +1059,12 @@ class MediaTest extends WebDriverTestBase {
 
     $this->assertNotEmpty($drupalmedia = $assert_session->waitForElementVisible('css', '.ck-content .ck-widget.drupal-media'));
     $drupalmedia->click();
+    $this->assertVisibleBalloon('.ck-toolbar[aria-label="Drupal Media toolbar"]');
+
+    // Turn off caption, so we don't accidentally put our link in that text
+    // field instead of on the actual media.
+    $this->getBalloonButton('Toggle caption off')->click();
+    $assert_session->assertNoElementAfterWait('css', 'figure.drupal-media > figcaption');
 
     $this->assertVisibleBalloon('.ck-toolbar[aria-label="Drupal Media toolbar"]');
     $this->getBalloonButton('Link media')->click();
