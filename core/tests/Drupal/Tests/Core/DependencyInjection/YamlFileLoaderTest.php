@@ -91,7 +91,7 @@ services:
   _defaults:
     invalid: string
 YAML,
-        'The configuration key "invalid" cannot be used to define a default value in "vfs://drupal/modules/example/example.yml". Allowed keys are "public", "tags", "autowire".',
+        'The configuration key "invalid" cannot be used to define a default value in "vfs://drupal/modules/example/example.yml". Allowed keys are "public", "tags", "autowire", "autoconfigure".',
       ],
       'default tags must be an array' => [<<<YAML
 services:

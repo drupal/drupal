@@ -27,6 +27,7 @@ use Drupal\Core\Plugin\PluginManagerPass;
 use Drupal\Core\Render\MainContent\MainContentRenderersPass;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * ServiceProvider class for mandatory core services.
@@ -97,6 +98,8 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
 
     $container->addCompilerPass(new DeprecatedServicePass());
 
+    $container->registerForAutoconfiguration(EventSubscriberInterface::class)
+      ->addTag('event_subscriber');
   }
 
   /**
