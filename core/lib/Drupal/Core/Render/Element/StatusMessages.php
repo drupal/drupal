@@ -30,7 +30,7 @@ class StatusMessages extends RenderElement {
       // of that specific type.
       '#display' => NULL,
       '#pre_render' => [
-        self::class . '::generatePlaceholder',
+        static::class . '::generatePlaceholder',
       ],
       '#include_fallback' => FALSE,
     ];
@@ -47,7 +47,7 @@ class StatusMessages extends RenderElement {
    */
   public static function generatePlaceholder(array $element) {
     $build = [
-      '#lazy_builder' => [self::class . '::renderMessages', [$element['#display']]],
+      '#lazy_builder' => [static::class . '::renderMessages', [$element['#display']]],
       '#create_placeholder' => TRUE,
     ];
 
