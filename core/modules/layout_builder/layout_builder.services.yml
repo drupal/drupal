@@ -2,6 +2,7 @@ services:
   layout_builder.tempstore_repository:
     class: Drupal\layout_builder\LayoutTempstoreRepository
     arguments: ['@tempstore.shared']
+  Drupal\layout_builder\LayoutTempstoreRepositoryInterface: '@layout_builder.tempstore_repository'
   access_check.entity.layout_builder_access:
     class: Drupal\layout_builder\Access\LayoutBuilderAccessCheck
     tags:
@@ -10,6 +11,7 @@ services:
     class: Drupal\layout_builder\SectionStorage\SectionStorageManager
     parent: default_plugin_manager
     arguments: ['@context.handler']
+  Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface: '@plugin.manager.layout_builder.section_storage'
   layout_builder.routes:
     class: Drupal\layout_builder\Routing\LayoutBuilderRoutes
     arguments: ['@plugin.manager.layout_builder.section_storage']
@@ -38,6 +40,7 @@ services:
   layout_builder.sample_entity_generator:
     class: Drupal\layout_builder\Entity\LayoutBuilderSampleEntityGenerator
     arguments: ['@tempstore.shared', '@entity_type.manager']
+  Drupal\layout_builder\Entity\SampleEntityGeneratorInterface: '@layout_builder.sample_entity_generator'
   layout_builder.render_block_component_subscriber:
     class: Drupal\layout_builder\EventSubscriber\BlockComponentRenderArray
     arguments: ['@current_user']
@@ -49,6 +52,7 @@ services:
   inline_block.usage:
     class: Drupal\layout_builder\InlineBlockUsage
     arguments: ['@database']
+  Drupal\layout_builder\InlineBlockUsageInterface: '@inline_block.usage'
   layout_builder.controller.entity_form:
     # Override the entity form controller to handle the entity layout_builder
     # operation.
@@ -56,6 +60,7 @@ services:
     class: Drupal\layout_builder\Controller\LayoutBuilderHtmlEntityFormController
     public: false
     arguments: ['@layout_builder.controller.entity_form.inner']
+  Drupal\layout_builder\Controller\LayoutBuilderHtmlEntityFormController: '@layout_builder.controller.entity_form'
   layout_builder.element.prepare_layout:
     class: Drupal\layout_builder\EventSubscriber\PrepareLayout
     arguments: ['@layout_builder.tempstore_repository', '@messenger']

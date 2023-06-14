@@ -25,3 +25,4 @@ services:
       - '@module_handler'
       - '@config.typed'
       - '@theme_handler'
+  Drupal\config_translation\ConfigMapperManagerInterface: '@plugin.manager.config_translation.mapper'

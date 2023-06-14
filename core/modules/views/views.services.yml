@@ -61,15 +61,19 @@ services:
     arguments: ['@cache.default', '@config.factory', '@module_handler', '@language_manager']
     tags:
       - { name: backend_overridable }
+  Drupal\views\ViewsData: '@views.views_data'
   views.views_data_helper:
     class: Drupal\views\ViewsDataHelper
     arguments: ['@views.views_data']
+  Drupal\views\ViewsDataHelper: '@views.views_data_helper'
   views.executable:
     class: Drupal\views\ViewExecutableFactory
     arguments: ['@current_user', '@request_stack', '@views.views_data', '@router.route_provider']
+  Drupal\views\ViewExecutableFactory: '@views.executable'
   views.analyzer:
     class: Drupal\views\Analyzer
     arguments: ['@module_handler']
+  Drupal\views\Analyzer: '@views.analyzer'
   views.route_subscriber:
     class: Drupal\views\EventSubscriber\RouteSubscriber
     arguments: ['@entity_type.manager', '@state']
@@ -77,6 +81,7 @@ services:
       - { name: 'event_subscriber' }
   views.exposed_form_cache:
     class: Drupal\views\ExposedFormCache
+  Drupal\views\ExposedFormCache: '@views.exposed_form_cache'
   views.entity_schema_subscriber:
     class: Drupal\views\EventSubscriber\ViewsEntitySchemaSubscriber
     arguments: ['@entity_type.manager', '@logger.channel.default']

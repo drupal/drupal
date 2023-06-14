@@ -7,17 +7,21 @@ services:
   book.manager:
     class: Drupal\book\BookManager
     arguments: ['@entity_type.manager', '@string_translation', '@config.factory', '@book.outline_storage', '@renderer', '@language_manager', '@entity.repository', '@book.backend_chained_cache', '@book.memory_cache']
+  Drupal\book\BookManagerInterface: '@book.manager'
   book.outline:
     class: Drupal\book\BookOutline
     arguments: ['@book.manager']
+  Drupal\book\BookOutline: '@book.outline'
   book.export:
     class: Drupal\book\BookExport
     arguments: ['@entity_type.manager', '@book.manager', '@entity.repository']
+  Drupal\book\BookExport: '@book.export'
   book.outline_storage:
     class: Drupal\book\BookOutlineStorage
     arguments: ['@database']
     tags:
       - { name: backend_overridable }
+  Drupal\book\BookOutlineStorageInterface: '@book.outline_storage'
   access_check.book.removable:
     class: Drupal\book\Access\BookNodeIsRemovableAccessCheck
     arguments: ['@book.manager']

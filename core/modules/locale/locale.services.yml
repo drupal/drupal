@@ -3,20 +3,25 @@ services:
     class: Drupal\locale\LocaleDefaultConfigStorage
     arguments: ['@config.storage', '@language_manager', '%install_profile%']
     public: false
+  Drupal\locale\LocaleDefaultConfigStorage: '@locale.default.config.storage'
   locale.config_manager:
     class: Drupal\locale\LocaleConfigManager
     arguments: ['@config.storage', '@locale.storage', '@config.factory', '@config.typed', '@language_manager', '@locale.default.config.storage', '@config.manager']
+  Drupal\locale\LocaleConfigManager: '@locale.config_manager'
   locale.storage:
     class: Drupal\locale\StringDatabaseStorage
     arguments: ['@database']
     tags:
       - { name: backend_overridable }
+  Drupal\locale\StringStorageInterface: '@locale.storage'
   locale.project:
     class: Drupal\locale\LocaleProjectStorage
     arguments: ['@keyvalue']
+  Drupal\locale\LocaleProjectStorageInterface: '@locale.project'
   locale.plural.formula:
     class: Drupal\locale\PluralFormula
     arguments: ['@language_manager', '@state']
+  Drupal\locale\PluralFormulaInterface: '@locale.plural.formula'
   string_translator.locale.lookup:
     class: Drupal\locale\LocaleTranslation
     arguments: ['@locale.storage', '@cache.default', '@lock', '@config.factory', '@language_manager', '@request_stack']

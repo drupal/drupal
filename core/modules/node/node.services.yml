@@ -8,6 +8,7 @@ services:
     arguments: ['@database', '@module_handler', '@language_manager']
     tags:
       - { name: backend_overridable }
+  Drupal\node\NodeGrantDatabaseStorageInterface: '@node.grant_storage'
   access_check.node.preview:
     class: Drupal\node\Access\NodePreviewAccessCheck
     arguments: ['@entity_type.manager']

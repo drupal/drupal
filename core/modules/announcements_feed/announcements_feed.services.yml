@@ -6,6 +6,7 @@ services:
   announcements_feed.fetcher:
     class: Drupal\announcements_feed\AnnounceFetcher
     arguments: ['@http_client', '@config.factory', '@keyvalue.expirable', '@logger.channel.announcements_feed', '%announcements_feed.feed_json_url%']
+  Drupal\announcements_feed\AnnounceFetcher: '@announcements_feed.fetcher'
   logger.channel.announcements_feed:
     parent: logger.channel_base
     arguments: ['announcements_feed']

@@ -93,6 +93,7 @@ services:
       - { name: encoder, format: xml }
   serializer.entity_resolver:
     class: Drupal\serialization\EntityResolver\ChainEntityResolver
+  Drupal\serialization\EntityResolver\ChainEntityResolverInterface: '@serializer.entity_resolver'
   serializer.entity_resolver.uuid:
     class: Drupal\serialization\EntityResolver\UuidResolver
     tags:

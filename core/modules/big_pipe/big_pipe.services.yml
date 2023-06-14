@@ -12,6 +12,7 @@ services:
   big_pipe:
     class: Drupal\big_pipe\Render\BigPipe
     arguments: ['@renderer', '@session', '@request_stack', '@http_kernel', '@event_dispatcher', '@config.factory']
+  Drupal\big_pipe\Render\BigPipe: '@big_pipe'
   html_response.attachments_processor.big_pipe:
     public: false
     class: \Drupal\big_pipe\Render\BigPipeResponseAttachmentsProcessor

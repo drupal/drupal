@@ -4,6 +4,7 @@ services:
     arguments: ['@config.factory', '@entity_type.manager', '@database', '@string_translation', '@comment.manager', '@entity_field.manager']
     tags:
       - { name: backend_overridable }
+  Drupal\forum\ForumManagerInterface: '@forum_manager'
   forum.breadcrumb.node:
     class: Drupal\forum\Breadcrumb\ForumNodeBreadcrumbBuilder
     arguments: ['@entity_type.manager', '@config.factory', '@forum_manager', '@string_translation']
@@ -19,6 +20,7 @@ services:
     arguments: ['@database']
     tags:
       - { name: backend_overridable }
+  Drupal\forum\ForumIndexStorageInterface: '@forum.index_storage'
 
   forum.uninstall_validator:
     class: Drupal\forum\ForumUninstallValidator

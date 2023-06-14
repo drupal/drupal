@@ -26,6 +26,7 @@ services:
     arguments: ['@database']
     tags:
       - { name: backend_overridable }
+  Drupal\user\UserDataInterface: '@user.data'
   user_maintenance_mode_subscriber:
     class: Drupal\user\EventSubscriber\MaintenanceModeSubscriber
     arguments: ['@maintenance_mode', '@current_user']
@@ -49,9 +50,11 @@ services:
   user.auth:
     class: Drupal\user\UserAuth
     arguments: ['@entity_type.manager', '@password']
+  Drupal\user\UserAuthInterface: '@user.auth'
   user.permissions:
     class: Drupal\user\PermissionHandler
     arguments: ['@module_handler', '@string_translation', '@controller_resolver']
+  Drupal\user\PermissionHandlerInterface: '@user.permissions'
   user.current_user_context:
     class: Drupal\user\ContextProvider\CurrentUserContext
     arguments: ['@current_user', '@entity_type.manager']
@@ -63,6 +66,7 @@ services:
   user.flood_control:
     class: Drupal\user\UserFloodControl
     arguments: ['@flood', '@event_dispatcher', '@request_stack']
+  Drupal\user\UserFloodControlInterface: '@user.flood_control'
   user.flood_subscriber:
     class: Drupal\user\EventSubscriber\UserFloodSubscriber
     arguments: ['@logger.channel.user']

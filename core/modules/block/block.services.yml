@@ -10,3 +10,4 @@ services:
   block.repository:
     class: Drupal\block\BlockRepository
     arguments: ['@entity_type.manager', '@theme.manager', '@context.handler']
+  Drupal\block\BlockRepositoryInterface: '@block.repository'

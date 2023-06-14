@@ -84,6 +84,7 @@ services:
   jsonapi.resource_type.repository:
     class: Drupal\jsonapi\ResourceType\ResourceTypeRepository
     arguments: ['@entity_type.manager', '@entity_type.bundle.info', '@entity_field.manager', '@cache.jsonapi_resource_types', '@event_dispatcher']
+  Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface: '@jsonapi.resource_type.repository'
   jsonapi.route_enhancer:
     class: Drupal\jsonapi\Routing\RouteEnhancer
     tags:
@@ -91,11 +92,13 @@ services:
   jsonapi.field_resolver:
     class: Drupal\jsonapi\Context\FieldResolver
     arguments: ['@entity_type.manager', '@entity_field.manager', '@entity_type.bundle.info', '@jsonapi.resource_type.repository', '@module_handler', '@current_user']
+  Drupal\jsonapi\Context\FieldResolver: '@jsonapi.field_resolver'
   jsonapi.include_resolver:
     class: Drupal\jsonapi\IncludeResolver
     arguments:
       - '@entity_type.manager'
       - '@jsonapi.entity_access_checker'
+  Drupal\jsonapi\IncludeResolver: '@jsonapi.include_resolver'
   paramconverter.jsonapi.entity_uuid:
     parent: paramconverter.entity
     class: Drupal\jsonapi\ParamConverter\EntityUuidConverter
@@ -158,6 +161,7 @@ services:
     calls:
       # This is a temporary measure. JSON:API should not need to be aware of the Content Moderation module.
       - [setLatestRevisionCheck, ['@?access_check.latest_revision']] # This is only injected when the service is available.
+  Drupal\jsonapi\Access\EntityAccessChecker: '@jsonapi.entity_access_checker'
   access_check.jsonapi.relationship_route_access:
     class: Drupal\jsonapi\Access\RelationshipRouteAccessCheck
     arguments: ['@jsonapi.entity_access_checker']
@@ -186,6 +190,7 @@ services:
       - '@jsonapi.serializer'
       - '@datetime.time'
       - '@current_user'
+  Drupal\jsonapi\Controller\EntityResource: '@jsonapi.entity_resource'
   jsonapi.file_upload:
     class: Drupal\jsonapi\Controller\FileUpload
     arguments:
@@ -193,6 +198,7 @@ services:
       - '@entity_field.manager'
       - '@jsonapi.file.uploader.field'
       - '@http_kernel'
+  Drupal\jsonapi\Controller\FileUpload: '@jsonapi.file_upload'
 
   # Event subscribers.
   jsonapi.custom_query_parameter_names_validator.subscriber:
@@ -223,6 +229,7 @@ services:
     public: false
     tags:
       - { name: service_collector, tag: jsonapi_version_negotiator, call: addVersionNegotiator }
+  Drupal\jsonapi\Revisions\VersionNegotiator: '@jsonapi.version_negotiator'
   jsonapi.version_negotiator.default:
     arguments: ['@entity_type.manager']
     public: false
@@ -250,3 +257,4 @@ services:
     class: Drupal\jsonapi\Controller\TemporaryJsonapiFileFieldUploader
     public: false
     arguments: ['@logger.channel.file', '@file_system', '@file.mime_type.guesser', '@token', '@lock', '@config.factory']
+  Drupal\jsonapi\Controller\TemporaryJsonapiFileFieldUploader: '@jsonapi.file.uploader.field'

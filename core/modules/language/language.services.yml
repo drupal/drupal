@@ -7,6 +7,7 @@ services:
     arguments: ['@language_manager', '@plugin.manager.language_negotiation_method', '@config.factory', '@settings', '@request_stack']
     calls:
       - [initLanguageManager]
+  Drupal\language\LanguageNegotiatorInterface: '@language_negotiator'
   language.config_subscriber:
     class: Drupal\language\EventSubscriber\ConfigSubscriber
     arguments: ['@language_manager', '@language.default', '@config.factory', '@language_negotiator']
@@ -18,6 +19,8 @@ services:
     tags:
       - { name: config.factory.override, priority: -254 }
       - { name: event_subscriber }
+  Drupal\language\Config\LanguageConfigFactoryOverrideInterface: '@language.config_factory_override'
+  Drupal\Core\Config\ConfigFactoryOverrideInterface: '@language.config_factory_override'
   language_converter:
     class: Drupal\language\LanguageConverter
     arguments: ['@language_manager']

@@ -5,15 +5,19 @@ services:
   media.oembed.url_resolver:
     class: Drupal\media\OEmbed\UrlResolver
     arguments: ['@media.oembed.provider_repository', '@media.oembed.resource_fetcher', '@http_client', '@module_handler', '@cache.default']
+  Drupal\media\OEmbed\UrlResolverInterface: '@media.oembed.url_resolver'
   media.oembed.provider_repository:
     class: Drupal\media\OEmbed\ProviderRepository
     arguments: ['@http_client', '@config.factory', '@datetime.time', '@keyvalue', '@logger.factory']
+  Drupal\media\OEmbed\ProviderRepositoryInterface: '@media.oembed.provider_repository'
   media.oembed.resource_fetcher:
     class: Drupal\media\OEmbed\ResourceFetcher
     arguments: ['@http_client', '@media.oembed.provider_repository', '@cache.default']
+  Drupal\media\OEmbed\ResourceFetcherInterface: '@media.oembed.resource_fetcher'
   media.oembed.iframe_url_helper:
     class: Drupal\media\IFrameUrlHelper
     arguments: ['@router.request_context', '@private_key']
+  Drupal\media\IFrameUrlHelper: '@media.oembed.iframe_url_helper'
   media.config_subscriber:
     class: Drupal\media\EventSubscriber\MediaConfigSubscriber
     arguments: ['@router.builder', '@cache_tags.invalidator', '@entity_type.manager']

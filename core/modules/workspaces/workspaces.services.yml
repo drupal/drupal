@@ -4,18 +4,22 @@ services:
     arguments: ['@request_stack', '@entity_type.manager', '@entity.memory_cache', '@current_user', '@state', '@logger.channel.workspaces', '@class_resolver', '@workspaces.association']
     tags:
       - { name: service_id_collector, tag: workspace_negotiator }
+  Drupal\workspaces\WorkspaceManagerInterface: '@workspaces.manager'
   workspaces.operation_factory:
     class: Drupal\workspaces\WorkspaceOperationFactory
     arguments: ['@entity_type.manager', '@database', '@workspaces.manager', '@workspaces.association', '@cache_tags.invalidator', '@event_dispatcher', '@logger.channel.workspaces']
+  Drupal\workspaces\WorkspaceOperationFactory: '@workspaces.operation_factory'
   workspaces.association:
     class: Drupal\workspaces\WorkspaceAssociation
     arguments: ['@database', '@entity_type.manager', '@workspaces.repository', '@logger.channel.workspaces']
     tags:
       - { name: backend_overridable }
       - { name: event_subscriber }
+  Drupal\workspaces\WorkspaceAssociationInterface: '@workspaces.association'
   workspaces.repository:
     class: Drupal\workspaces\WorkspaceRepository
     arguments: ['@entity_type.manager', '@cache.default']
+  Drupal\workspaces\WorkspaceRepositoryInterface: '@workspaces.repository'
 
   workspaces.negotiator.session:
     class: Drupal\workspaces\Negotiator\SessionWorkspaceNegotiator

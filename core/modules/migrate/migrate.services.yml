@@ -30,9 +30,13 @@ services:
   plugin.manager.migration:
     class: Drupal\migrate\Plugin\MigrationPluginManager
     arguments: ['@module_handler', '@cache.discovery_migration', '@language_manager']
+  Drupal\migrate\Plugin\MigrationPluginManagerInterface: '@plugin.manager.migration'
+  Drupal\migrate\MigrateBuildDependencyInterface: '@plugin.manager.migration'
   migrate.lookup:
     class: Drupal\migrate\MigrateLookup
     arguments: ['@plugin.manager.migration']
+  Drupal\migrate\MigrateLookupInterface: '@migrate.lookup'
   migrate.stub:
     class: Drupal\migrate\MigrateStub
     arguments: ['@plugin.manager.migration']
+  Drupal\migrate\MigrateStubInterface: '@migrate.stub'

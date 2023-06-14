@@ -7,6 +7,7 @@ services:
       - '@cache.discovery'
       - '@module_handler'
       - '\Drupal\migrate_drupal\Annotation\MigrateField'
+  Drupal\migrate_drupal\Plugin\MigrateFieldPluginManagerInterface: '@plugin.manager.migrate.field'
   logger.channel.migrate_drupal:
     parent: logger.channel_base
     arguments: ['migrate_drupal']
@@ -16,6 +17,8 @@ services:
       - '@plugin.manager.migrate.field'
       - '@plugin.manager.migration'
       - '@logger.channel.migrate_drupal'
+  Drupal\migrate_drupal\FieldDiscoveryInterface: '@migrate_drupal.field_discovery'
   migrate_drupal.migration_state:
     class: Drupal\migrate_drupal\MigrationState
     arguments: ['@plugin.manager.migrate.field', '@module_handler', '@messenger', '@string_translation']
+  Drupal\migrate_drupal\MigrationState: '@migrate_drupal.migration_state'

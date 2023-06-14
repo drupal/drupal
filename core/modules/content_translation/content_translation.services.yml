@@ -2,6 +2,7 @@ services:
   content_translation.synchronizer:
     class: Drupal\content_translation\FieldTranslationSynchronizer
     arguments: ['@entity_type.manager', '@plugin.manager.field.field_type']
+  Drupal\content_translation\FieldTranslationSynchronizerInterface: '@content_translation.synchronizer'
 
   content_translation.subscriber:
     class: Drupal\content_translation\Routing\ContentTranslationRouteSubscriber
@@ -30,3 +31,5 @@ services:
   content_translation.manager:
     class: Drupal\content_translation\ContentTranslationManager
     arguments: ['@entity_type.manager', '@entity_type.bundle.info']
+  Drupal\content_translation\ContentTranslationManagerInterface: '@content_translation.manager'
+  Drupal\content_translation\BundleTranslationSettingsInterface: '@content_translation.manager'

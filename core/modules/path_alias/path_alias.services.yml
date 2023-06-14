@@ -13,13 +13,16 @@ services:
   path_alias.manager:
     class: Drupal\path_alias\AliasManager
     arguments: ['@path_alias.repository', '@path_alias.whitelist', '@language_manager', '@cache.data']
+  Drupal\path_alias\AliasManagerInterface: '@path_alias.manager'
   path_alias.repository:
     class: Drupal\path_alias\AliasRepository
     arguments: ['@database']
     tags:
       - { name: backend_overridable }
+  Drupal\path_alias\AliasRepositoryInterface: '@path_alias.repository'
   path_alias.whitelist:
     class: Drupal\path_alias\AliasWhitelist
     tags:
       - { name: needs_destruction }
     arguments: [path_alias_whitelist, '@cache.bootstrap', '@lock', '@state', '@path_alias.repository']
+  Drupal\path_alias\AliasWhitelistInterface: '@path_alias.whitelist'

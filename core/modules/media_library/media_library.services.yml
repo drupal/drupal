@@ -2,6 +2,7 @@ services:
   media_library.ui_builder:
     class: Drupal\media_library\MediaLibraryUiBuilder
     arguments: ['@entity_type.manager', '@request_stack', '@views.executable', '@form_builder', '@media_library.opener_resolver']
+  Drupal\media_library\MediaLibraryUiBuilder: '@media_library.ui_builder'
   media_library.route_subscriber:
     class: Drupal\media_library\Routing\RouteSubscriber
     tags:
@@ -10,6 +11,7 @@ services:
     class: Drupal\media_library\OpenerResolver
     calls:
       - [setContainer, ['@service_container']]
+  Drupal\media_library\OpenerResolverInterface: '@media_library.opener_resolver'
   media_library.opener.field_widget:
     class: Drupal\media_library\MediaLibraryFieldWidgetOpener
     arguments: ['@entity_type.manager']
