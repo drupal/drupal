@@ -1996,6 +1996,20 @@ function hook_queue_info_alter(&$queues) {
 }
 
 /**
+ * Alter the information provided in \Drupal\Core\Condition\ConditionManager::getDefinitions().
+ *
+ * @param array $definitions
+ *   The array of condition definitions.
+ */
+function hook_condition_info_alter(array &$definitions) {
+  // Add custom or modify existing condition definitions.
+  if (isset($definitions['node_type']) && $definitions['node_type']['class'] == 'Drupal\node\Plugin\Condition\NodeType') {
+    // If the node_type's class is unaltered, use a custom implementation.
+    $definitions['node_type']['class'] = 'Drupal\mymodule\Plugin\Condition\NodeType';
+  }
+}
+
+/**
  * Alter an email message created with MailManagerInterface->mail().
  *
  * Hook hook_mail_alter() allows modification of email messages created and sent
