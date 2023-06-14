@@ -12,6 +12,7 @@ use Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -128,11 +129,15 @@ class UserSelection extends DefaultSelection {
     ];
 
     if ($configuration['filter']['type'] == 'role') {
+      $roles = Role::loadMultiple();
+      unset($roles[RoleInterface::ANONYMOUS_ID]);
+      unset($roles[RoleInterface::AUTHENTICATED_ID]);
+      $roles = array_map(fn(RoleInterface $role) => $role->label(), $roles);
       $form['filter']['settings']['role'] = [
         '#type' => 'checkboxes',
         '#title' => $this->t('Restrict to the selected roles'),
         '#required' => TRUE,
-        '#options' => array_diff_key(user_role_names(TRUE), [RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID]),
+        '#options' => $roles,
         '#default_value' => $configuration['filter']['role'],
       ];
     }

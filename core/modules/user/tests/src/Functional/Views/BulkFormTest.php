@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\user\Functional\Views;
 
+use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 use Drupal\views\Views;
@@ -56,7 +57,8 @@ class BulkFormTest extends UserTestBase {
 
     // Assign a role to a user.
     $account = $user_storage->load($this->users[0]->id());
-    $roles = user_role_names(TRUE);
+    $roles = Role::loadMultiple();
+    unset($roles[RoleInterface::ANONYMOUS_ID]);
     unset($roles[RoleInterface::AUTHENTICATED_ID]);
     $role = key($roles);
 

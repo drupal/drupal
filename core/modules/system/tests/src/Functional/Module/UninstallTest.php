@@ -8,6 +8,8 @@ use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests the uninstallation of modules.
@@ -37,7 +39,8 @@ class UninstallTest extends BrowserTestBase {
     $this->container->get('module_installer')->uninstall(['module_test']);
 
     // Are the perms defined by module_test removed?
-    $this->assertEmpty(user_roles(FALSE, 'module_test perm'), 'Permissions were all removed.');
+    $roles = array_filter(Role::loadMultiple(), fn(RoleInterface $role) => $role->hasPermission('module_test perm'));
+    $this->assertEmpty($roles, 'Permissions were all removed.');
   }
 
   /**

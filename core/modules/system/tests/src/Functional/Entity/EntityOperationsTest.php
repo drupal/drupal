@@ -4,6 +4,7 @@ namespace Drupal\Tests\system\Functional\Entity;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\user\Entity\Role;
 
 /**
  * Tests that operations can be injected from the hook.
@@ -42,7 +43,7 @@ class EntityOperationsTest extends BrowserTestBase {
   public function testEntityOperationAlter() {
     // Check that role listing contain our test_operation operation.
     $this->drupalGet('admin/people/roles');
-    $roles = user_roles();
+    $roles = Role::loadMultiple();
     foreach ($roles as $role) {
       $this->assertSession()->linkByHrefExists($role->toUrl()->toString() . '/test_operation');
       $this->assertSession()->linkExists(new FormattableMarkup('Test Operation: @label', ['@label' => $role->label()]));

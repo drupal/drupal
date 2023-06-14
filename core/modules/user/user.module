@@ -829,8 +829,15 @@ function user_mail_tokens(&$replacements, $data, $options) {
  * @return array
  *   An associative array with the role id as the key and the role name as
  *   value.
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\user\Entity\Role::loadMultiple() and, if necessary, an inline
+ *   implementation instead.
+ *
+ * @see https://www.drupal.org/node/3349759
  */
 function user_role_names($membersonly = FALSE, $permission = NULL) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\user\Entity\Role::loadMultiple() and, if necessary, an inline implementation instead. See https://www.drupal.org/node/3349759', E_USER_DEPRECATED);
   return array_map(function ($item) {
     return $item->label();
   }, user_roles($membersonly, $permission));
@@ -911,8 +918,15 @@ function user_user_role_delete(RoleInterface $role) {
  * @return \Drupal\user\RoleInterface[]
  *   An associative array with the role id as the key and the role object as
  *   value.
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\user\Entity\Role::loadMultiple() and, if necessary, an inline
+ *   implementation instead.
+ *
+ * @see https://www.drupal.org/node/3349759
  */
 function user_roles($membersonly = FALSE, $permission = NULL) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\user\Entity\Role::loadMultiple() and, if necessary, an inline implementation instead. See https://www.drupal.org/node/3349759', E_USER_DEPRECATED);
   $roles = Role::loadMultiple();
   if ($membersonly) {
     unset($roles[RoleInterface::ANONYMOUS_ID]);

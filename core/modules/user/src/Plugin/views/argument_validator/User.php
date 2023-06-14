@@ -2,9 +2,12 @@
 
 namespace Drupal\user\Plugin\views\argument_validator;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\argument_validator\Entity;
@@ -58,10 +61,13 @@ class User extends Entity {
       '#default_value' => $this->options['restrict_roles'],
     ];
 
+    $roles = Role::loadMultiple();
+    unset($roles[RoleInterface::ANONYMOUS_ID]);
+    $roles = array_map(fn(RoleInterface $role) => Html::escape($role->label()), $roles);
     $form['roles'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Restrict to the selected roles'),
-      '#options' => array_map(['\Drupal\Component\Utility\Html', 'escape'], user_role_names(TRUE)),
+      '#options' => $roles,
       '#default_value' => $this->options['roles'],
       '#description' => $this->t('If no roles are selected, users from any role will be allowed.'),
       '#states' => [

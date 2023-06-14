@@ -107,7 +107,7 @@ class UserRoleAdminTest extends BrowserTestBase {
    */
   public function testRoleWeightOrdering() {
     $this->drupalLogin($this->adminUser);
-    $roles = user_roles();
+    $roles = Role::loadMultiple();
     $weight = count($roles);
     $new_role_weights = [];
     $saved_rids = [];
@@ -125,7 +125,7 @@ class UserRoleAdminTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('The role settings have been updated.');
 
     // Load up the user roles with the new weights.
-    $roles = user_roles();
+    $roles = Role::loadMultiple();
     $rids = [];
     // Test that the role weights have been correctly saved.
     foreach ($roles as $role) {
