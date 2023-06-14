@@ -253,8 +253,7 @@ JS;
     $this->assertSame('true', $buttons[0]->getAttribute('aria-disabled'));
     $this->assertFalse($buttons[1]->hasAttribute('aria-disabled'));
     $this->assertSame('true', $buttons[2]->getAttribute('aria-disabled'));
-    // @todo Uncomment this after https://github.com/ckeditor/ckeditor5/issues/11709 is fixed.
-    // $this->assertSame('true', $buttons[3]->getAttribute('aria-disabled'));
+    $this->assertSame('true', $buttons[3]->getAttribute('aria-disabled'));
     $this->assertTrue($buttons[0]->hasClass('ck-off'));
     $this->assertTrue($buttons[1]->hasClass('ck-off'));
     $this->assertTrue($buttons[2]->hasClass('ck-off'));
@@ -283,8 +282,7 @@ JS;
     $this->assertFalse($buttons[0]->hasAttribute('aria-disabled'));
     $this->assertSame('true', $buttons[1]->getAttribute('aria-disabled'));
     $this->assertSame('true', $buttons[2]->getAttribute('aria-disabled'));
-    // @todo Uncomment this after https://github.com/ckeditor/ckeditor5/issues/11709 is fixed.
-    // $this->assertSame('true', $buttons[3]->getAttribute('aria-disabled'));
+    $this->assertSame('true', $buttons[3]->getAttribute('aria-disabled'));
     // Close the dropdown.
     $style_dropdown->click();
 
@@ -301,8 +299,7 @@ JS;
     $this->assertFalse($buttons[0]->hasAttribute('aria-disabled'));
     $this->assertSame('true', $buttons[1]->getAttribute('aria-disabled'));
     $this->assertFalse($buttons[2]->hasAttribute('aria-disabled'));
-    // @todo Uncomment this after https://github.com/ckeditor/ckeditor5/issues/11709 is fixed.
-    // $this->assertSame('true', $buttons[3]->getAttribute('aria-disabled'));
+    $this->assertSame('true', $buttons[3]->getAttribute('aria-disabled'));
     // Close the dropdown.
     $style_dropdown->click();
 
