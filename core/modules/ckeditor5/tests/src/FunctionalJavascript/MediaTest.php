@@ -633,6 +633,7 @@ class MediaTest extends WebDriverTestBase {
 
     // Ensure that caption can be linked.
     $this->assertNotEmpty($figcaption = $assert_session->waitForElement('css', '.drupal-media figcaption'));
+    $figcaption->click();
     $this->selectTextInsideElement('.drupal-media figcaption');
     $this->assertNotEmpty($assert_session->waitForElement('css', '.drupal-media figcaption.ck-editor__nested-editable'));
     $this->pressEditorButton('Link');
