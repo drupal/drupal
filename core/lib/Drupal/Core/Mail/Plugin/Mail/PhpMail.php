@@ -101,10 +101,20 @@ class PhpMail implements MailInterface {
     // line-ending format appropriate for your system. If you need to
     // override this, adjust $settings['mail_line_endings'] in settings.php.
     $mail_body = preg_replace('@\r?\n@', $line_endings, $message['body']);
-    // For headers, PHP's API suggests that we use CRLF normally,
-    // but some MTAs incorrectly replace LF with CRLF. See #234403.
-    $mail_headers = str_replace("\r\n", "\n", $headers->toString());
-    $mail_subject = str_replace("\r\n", "\n", $mail_subject);
+    $mail_headers = $headers->toString();
+
+    // Since Drupal 10+ does not support PHP < 8, this block is only relevant for Drupal 9.x.
+    // See: https://www.drupal.org/node/3270647
+    if (version_compare(PHP_VERSION, '8.0.0') < 0) {
+      // For headers, PHP's API suggests that we use CRLF normally,
+      // but some MTAs incorrectly replace LF with CRLF. See #234403.
+      // PHP 8+ requires headers to be separated by CRLF,
+      // so we'll replace CRLF by LF only when using PHP < 8. See:
+      // - https://bugs.php.net/bug.php?id=81158
+      // - https://github.com/php/php-src/commit/6983ae751cd301886c966b84367fc7aaa1273b2d#diff-c6922cd89f6f75912eb377833ca1eddb7dd41de088be821024b8a0e340fed3df
+      $mail_headers = str_replace("\r\n", "\n", $mail_headers);
+      $mail_subject = str_replace("\r\n", "\n", $mail_subject);
+    }
 
     if (substr(PHP_OS, 0, 3) != 'WIN') {
       // On most non-Windows systems, the "-f" option to the sendmail command
