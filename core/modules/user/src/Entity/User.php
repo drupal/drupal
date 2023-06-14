@@ -212,12 +212,7 @@ class User extends ContentEntityBase implements UserInterface {
    * {@inheritdoc}
    */
   public function hasPermission($permission) {
-    // User #1 has all privileges.
-    if ((int) $this->id() === 1) {
-      return TRUE;
-    }
-
-    return $this->getRoleStorage()->isPermissionInRoles($permission, $this->getRoles());
+    return \Drupal::service('permission_checker')->hasPermission($permission, $this);
   }
 
   /**
