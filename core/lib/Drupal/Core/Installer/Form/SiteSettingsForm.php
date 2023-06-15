@@ -4,6 +4,7 @@ namespace Drupal\Core\Installer\Form;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Extension\DatabaseDriverList;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -20,30 +21,19 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class SiteSettingsForm extends FormBase {
 
   /**
-   * The site path.
-   *
-   * @var string
-   */
-  protected $sitePath;
-
-  /**
-   * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
    * Constructs a new SiteSettingsForm.
    *
-   * @param string $site_path
+   * @param string $sitePath
    *   The site path.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
+   * @param \Drupal\Core\Extension\DatabaseDriverList $databaseDriverList
+   *   The list provider of database drivers.
    */
-  public function __construct($site_path, RendererInterface $renderer) {
-    $this->sitePath = $site_path;
-    $this->renderer = $renderer;
+  public function __construct(
+    protected string $sitePath,
+    protected RendererInterface $renderer,
+    protected DatabaseDriverList $databaseDriverList) {
   }
 
   /**
@@ -52,7 +42,8 @@ class SiteSettingsForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->getParameter('site.path'),
-      $container->get('renderer')
+      $container->get('renderer'),
+      $container->get('extension.list.database_driver')
     );
   }
 
@@ -73,20 +64,24 @@ class SiteSettingsForm extends FormBase {
 
     $form['#title'] = $this->t('Database configuration');
 
-    $drivers = drupal_get_database_types();
+    $drivers = $this->databaseDriverList->getInstallableList();
     $drivers_keys = array_keys($drivers);
 
     // Unless there is input for this form (for a non-interactive installation,
     // input originates from the $settings array passed into install_drupal()),
     // check whether database connection settings have been prepared in
     // settings.php already.
+    // Since there could potentially be multiple drivers with the same name,
+    // provided by different modules, we fill the 'driver' form field with the
+    // driver's namespace, not with the driver name, so to ensure uniqueness of
+    // the selection.
     // Note: The installer even executes this form if there is a valid database
     // connection already, since the submit handler of this form is responsible
     // for writing all $settings to settings.php (not limited to $databases).
     $input = &$form_state->getUserInput();
     if (!isset($input['driver']) && $database = Database::getConnectionInfo()) {
-      $input['driver'] = $database['default']['driver'];
-      $input[$database['default']['driver']] = $database['default'];
+      $input['driver'] = $database['default']['namespace'];
+      $input[$database['default']['namespace']] = $database['default'];
     }
 
     if (isset($input['driver'])) {
@@ -121,10 +116,9 @@ class SiteSettingsForm extends FormBase {
 
     // Add driver specific configuration options.
     foreach ($drivers as $key => $driver) {
-      $form['driver']['#options'][$key] = $driver->name();
-
-      $form['settings'][$key] = $driver->getFormOptions($default_options);
-      $form['settings'][$key]['#prefix'] = '<h2 class="js-hide">' . $this->t('@driver_name settings', ['@driver_name' => $driver->name()]) . '</h2>';
+      $form['driver']['#options'][$key] = $driver->getInstallTasks()->name();
+      $form['settings'][$key] = $driver->getInstallTasks()->getFormOptions($default_options);
+      $form['settings'][$key]['#prefix'] = '<h2 class="js-hide">' . $this->t('@driver_name settings', ['@driver_name' => $driver->getInstallTasks()->name()]) . '</h2>';
       $form['settings'][$key]['#type'] = 'container';
       $form['settings'][$key]['#tree'] = TRUE;
       $form['settings'][$key]['advanced_options']['#parents'] = [$key];
@@ -162,18 +156,12 @@ class SiteSettingsForm extends FormBase {
 
     $driver = $form_state->getValue('driver');
     $database = $form_state->getValue($driver);
-    $drivers = drupal_get_database_types();
-    $reflection = new \ReflectionClass($drivers[$driver]);
-    $install_namespace = $reflection->getNamespaceName();
-    // Cut the trailing \Install from namespace.
-    $database['namespace'] = substr($install_namespace, 0, strrpos($install_namespace, '\\'));
+
     $database['driver'] = $driver;
-    // See default.settings.php for an explanation of the 'autoload' key.
-    if ($autoload = Database::findDriverAutoloadDirectory($database['namespace'], DRUPAL_ROOT)) {
-      $database['autoload'] = $autoload;
-    }
+    $database = array_merge($database, $this->databaseDriverList->get($driver)->getAutoloadInfo());
 
     $form_state->set('database', $database);
+
     foreach ($this->getDatabaseErrors($database, $form_state->getValue('settings_file')) as $name => $message) {
       $form_state->setErrorByName($name, $message);
     }
@@ -246,11 +234,17 @@ class SiteSettingsForm extends FormBase {
 
     // Update global settings array and save.
     $settings = [];
+
+    // For BC, just save the database driver name, not the database driver
+    // extension name which equals the driver's namespace.
     $database = $form_state->get('database');
+    $namespaceParts = explode('\\', $database['driver']);
+    $database['driver'] = end($namespaceParts);
     $settings['databases']['default']['default'] = (object) [
       'value'    => $database,
       'required' => TRUE,
     ];
+
     $settings['settings']['hash_salt'] = (object) [
       'value'    => Crypt::randomBytesBase64(55),
       'required' => TRUE,

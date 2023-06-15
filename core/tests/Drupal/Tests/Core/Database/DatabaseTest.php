@@ -3,7 +3,10 @@
 namespace Drupal\Tests\Core\Database;
 
 use Composer\Autoload\ClassLoader;
+use Drupal\Core\Cache\NullBackend;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Extension\DatabaseDriverList;
+use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -42,11 +45,18 @@ class DatabaseTest extends UnitTestCase {
     // Mock the container so we don't need to mock drupal_valid_test_ua().
     // @see \Drupal\Core\Extension\ExtensionDiscovery::scan()
     $this->root = dirname(__DIR__, 6);
+    $databaseDriverList = new DatabaseDriverList($this->root, 'database_driver', new NullBackend('database_driver'));
     $container = $this->createMock(ContainerInterface::class);
     $container->expects($this->any())
       ->method('has')
-      ->with('kernel')
-      ->willReturn(TRUE);
+      ->willReturnMap([
+        ['kernel', TRUE],
+        ['extension.list.database_driver', TRUE],
+      ]);
+    $container->expects($this->any())
+      ->method('get')
+      ->with('extension.list.database_driver')
+      ->willReturn($databaseDriverList);
     $container->expects($this->any())
       ->method('getParameter')
       ->with('site.path')
@@ -57,9 +67,18 @@ class DatabaseTest extends UnitTestCase {
   /**
    * @covers ::findDriverAutoloadDirectory
    * @dataProvider providerFindDriverAutoloadDirectory
+   * @group legacy
    */
   public function testFindDriverAutoloadDirectory($expected, $namespace, $include_test_drivers) {
-    $this->assertSame($expected, Database::findDriverAutoloadDirectory($namespace, $this->root, $include_test_drivers));
+    $this->expectDeprecation('Drupal\Core\Database\Database::findDriverAutoloadDirectory() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use DatabaseDriverList::getList() instead. See https://www.drupal.org/node/3258175');
+    // The only module that provides a driver in core is a test module.
+    if (!$expected) {
+      $this->expectException(UnknownExtensionException::class);
+      Database::findDriverAutoloadDirectory($namespace, $this->root, $include_test_drivers);
+    }
+    else {
+      $this->assertSame($expected, Database::findDriverAutoloadDirectory($namespace, $this->root, $include_test_drivers));
+    }
   }
 
   /**
@@ -78,9 +97,11 @@ class DatabaseTest extends UnitTestCase {
   /**
    * @covers ::findDriverAutoloadDirectory
    * @dataProvider providerFindDriverAutoloadDirectoryException
+   * @group legacy
    */
   public function testFindDriverAutoloadDirectoryException($expected_message, $namespace, $include_tests) {
-    $this->expectException(\RuntimeException::class);
+    $this->expectDeprecation('Drupal\Core\Database\Database::findDriverAutoloadDirectory() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use DatabaseDriverList::getList() instead. See https://www.drupal.org/node/3258175');
+    $this->expectException(UnknownExtensionException::class);
     $this->expectExceptionMessage($expected_message);
     Database::findDriverAutoloadDirectory($namespace, $this->root, $include_tests);
   }
@@ -92,9 +113,21 @@ class DatabaseTest extends UnitTestCase {
    */
   public function providerFindDriverAutoloadDirectoryException() {
     return [
-      'test module but tests not included' => ["Cannot find the module 'driver_test' for the database driver namespace 'Drupal\driver_test\Driver\Database\DrivertestMysql'", 'Drupal\driver_test\Driver\Database\DrivertestMysql', FALSE],
-      'non-existent driver in test module' => ["Cannot find the database driver namespace 'Drupal\driver_test\Driver\Database\sqlite' in module 'driver_test'", 'Drupal\driver_test\Driver\Database\sqlite', TRUE],
-      'non-existent module' => ["Cannot find the module 'does_not_exist' for the database driver namespace 'Drupal\does_not_exist\Driver\Database\mysql'", 'Drupal\does_not_exist\Driver\Database\mysql', TRUE],
+      'test module but tests not included' => [
+        "The database_driver Drupal\driver_test\Driver\Database\DrivertestMysql does not exist.",
+        'Drupal\driver_test\Driver\Database\DrivertestMysql',
+        FALSE,
+      ],
+      'non-existent driver in test module' => [
+        "The database_driver Drupal\driver_test\Driver\Database\sqlite does not exist.",
+        'Drupal\driver_test\Driver\Database\sqlite',
+        TRUE,
+      ],
+      'non-existent module' => [
+        "The database_driver Drupal\does_not_exist\Driver\Database\mysql does not exist.",
+        'Drupal\does_not_exist\Driver\Database\mysql',
+        TRUE,
+      ],
     ];
   }
 

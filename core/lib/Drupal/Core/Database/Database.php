@@ -5,7 +5,8 @@ namespace Drupal\Core\Database;
 use Composer\Autoload\ClassLoader;
 use Drupal\Core\Database\Event\StatementExecutionEndEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
-use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\Extension\DatabaseDriverList;
+use Drupal\Core\Cache\NullBackend;
 
 /**
  * Primary front-controller for the database system.
@@ -326,6 +327,18 @@ abstract class Database {
       // for the driver.
       if (isset($info['autoload']) && $class_loader && $app_root) {
         $class_loader->addPsr4($info['namespace'] . '\\', $app_root . '/' . $info['autoload']);
+
+        // When the database driver is extending from other database drivers,
+        // then add autoload directory for the parent database driver modules
+        // as well.
+        if (!empty($info['dependencies'])) {
+          assert(is_array($info['dependencies']));
+          foreach ($info['dependencies'] as $dependency) {
+            if (isset($dependency['namespace']) && isset($dependency['autoload'])) {
+              $class_loader->addPsr4($dependency['namespace'] . '\\', $app_root . '/' . $dependency['autoload']);
+            }
+          }
+        }
       }
     }
   }
@@ -534,57 +547,77 @@ abstract class Database {
     if (preg_match('/^(.*):\/\//', $url, $matches) !== 1) {
       throw new \InvalidArgumentException("Missing scheme in URL '$url'");
     }
-    $driver = $matches[1];
+    $driverName = $matches[1];
 
     // Determine if the database driver is provided by a module.
     // @todo https://www.drupal.org/project/drupal/issues/3250999. Refactor when
     // all database drivers are provided by modules.
-    $module = NULL;
-    $connection_class = NULL;
     $url_components = parse_url($url);
     $url_component_query = $url_components['query'] ?? '';
     parse_str($url_component_query, $query);
 
     // Add the module key for core database drivers when the module key is not
     // set.
-    if (!isset($query['module']) && in_array($driver, ['mysql', 'pgsql', 'sqlite'], TRUE)) {
-      $query['module'] = $driver;
+    if (!isset($query['module']) && in_array($driverName, ['mysql', 'pgsql', 'sqlite'], TRUE)) {
+      $query['module'] = $driverName;
+    }
+    if (!isset($query['module'])) {
+      throw new \InvalidArgumentException("Can not convert '$url' to a database connection, the module providing the driver '{$driverName}' is not specified");
     }
 
-    if (isset($query['module']) && $query['module']) {
-      $module = $query['module'];
-      // Set up an additional autoloader. We don't use the main autoloader as
-      // this method can be called before Drupal is installed and is never
-      // called during regular runtime.
-      $namespace = "Drupal\\$module\\Driver\\Database\\$driver";
-      $psr4_base_directory = Database::findDriverAutoloadDirectory($namespace, $root, $include_test_drivers);
-      $additional_class_loader = new ClassLoader();
-      $additional_class_loader->addPsr4($namespace . '\\', $psr4_base_directory);
-      $additional_class_loader->register(TRUE);
-      $connection_class = $namespace . '\\Connection';
-    }
+    $driverNamespace = "Drupal\\{$query['module']}\\Driver\\Database\\{$driverName}";
 
-    if (!$module) {
-      // Determine the connection class to use. Discover if the URL has a valid
-      // driver scheme for a Drupal 8 style custom driver.
-      // @todo Remove this in Drupal 10.
-      $connection_class = "Drupal\\Driver\\Database\\{$driver}\\Connection";
-    }
+    /** @var \Drupal\Core\Extension\DatabaseDriver $driver */
+    $driver = self::getDriverList()
+      ->includeTestDrivers($include_test_drivers)
+      ->get($driverNamespace);
 
+    // Set up an additional autoloader. We don't use the main autoloader as
+    // this method can be called before Drupal is installed and is never
+    // called during regular runtime.
+    $additional_class_loader = new ClassLoader();
+    $additional_class_loader->addPsr4($driverNamespace . '\\', $driver->getPath());
+    $connection_class = $driverNamespace . '\\Connection';
     if (!class_exists($connection_class)) {
       throw new \InvalidArgumentException("Can not convert '$url' to a database connection, class '$connection_class' does not exist");
     }
 
+    // When the database driver is extending another database driver, then
+    // add autoload info for the parent database driver as well.
+    $autoloadInfo = $driver->getAutoloadInfo();
+    if (isset($autoloadInfo['dependencies'])) {
+      foreach ($autoloadInfo['dependencies'] as $dependency) {
+        $additional_class_loader->addPsr4($dependency['namespace'] . '\\', $dependency['autoload']);
+      }
+    }
+
+    $additional_class_loader->register(TRUE);
+
     $options = $connection_class::createConnectionOptionsFromUrl($url, $root);
 
-    // If the driver is provided by a module add the necessary information to
-    // autoload the code.
+    // Add the necessary information to autoload code.
     // @see \Drupal\Core\Site\Settings::initialize()
-    if (isset($psr4_base_directory)) {
-      $options['autoload'] = $psr4_base_directory;
+    $options['autoload'] = $driver->getPath() . DIRECTORY_SEPARATOR;
+    if (isset($autoloadInfo['dependencies'])) {
+      $options['dependencies'] = $autoloadInfo['dependencies'];
     }
 
     return $options;
+  }
+
+  /**
+   * Returns the list provider for available database drivers.
+   *
+   * @return \Drupal\Core\Extension\DatabaseDriverList
+   *   The list provider for available database drivers.
+   */
+  public static function getDriverList(): DatabaseDriverList {
+    if (\Drupal::hasContainer() && \Drupal::hasService('extension.list.database_driver')) {
+      return \Drupal::service('extension.list.database_driver');
+    }
+    else {
+      return new DatabaseDriverList(DRUPAL_ROOT, 'database_driver', new NullBackend('database_driver'));
+    }
   }
 
   /**
@@ -641,33 +674,19 @@ abstract class Database {
    *
    * @throws \RuntimeException
    *   Exception thrown when a module provided database driver does not exist.
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+   *   DatabaseDriverList::getList() instead.
+   *
+   * @see https://www.drupal.org/node/3258175
    */
   public static function findDriverAutoloadDirectory($namespace, $root, ?bool $include_test_drivers = NULL) {
-    // As explained by this method's documentation, return FALSE if the
-    // namespace is not a sub-namespace of a Drupal module.
-    if (!static::isWithinModuleNamespace($namespace)) {
-      return FALSE;
-    }
-
-    // Extract the module information from the namespace.
-    [, $module, $module_relative_namespace] = explode('\\', $namespace, 3);
-
-    // The namespace is within a Drupal module. Find the directory where the
-    // module is located.
-    $extension_discovery = new ExtensionDiscovery($root, FALSE, []);
-    $modules = $extension_discovery->scan('module', $include_test_drivers);
-    if (!isset($modules[$module])) {
-      throw new \RuntimeException(sprintf("Cannot find the module '%s' for the database driver namespace '%s'", $module, $namespace));
-    }
-    $module_directory = $modules[$module]->getPath();
-
-    // All code within the Drupal\MODULE namespace is expected to follow a
-    // PSR-4 layout within the module's "src" directory.
-    $driver_directory = $module_directory . '/src/' . str_replace('\\', '/', $module_relative_namespace) . '/';
-    if (!is_dir($root . '/' . $driver_directory)) {
-      throw new \RuntimeException(sprintf("Cannot find the database driver namespace '%s' in module '%s'", $namespace, $module));
-    }
-    return $driver_directory;
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use DatabaseDriverList::getList() instead. See https://www.drupal.org/node/3258175', E_USER_DEPRECATED);
+    $autoload_info = static::getDriverList()
+      ->includeTestDrivers($include_test_drivers)
+      ->get($namespace)
+      ->getAutoloadInfo();
+    return $autoload_info['autoload'] ?? FALSE;
   }
 
   /**
@@ -713,9 +732,9 @@ abstract class Database {
    *   TRUE if the passed in namespace is a sub-namespace of a Drupal module's
    *   namespace.
    *
-   * @todo https://www.drupal.org/project/drupal/issues/3125476 Remove if we
-   *   add this to the extension API or if
-   *   \Drupal\Core\Database\Database::getConnectionInfoAsUrl() is removed.
+   * @todo remove in Drupal 11.
+   *
+   * @see https://www.drupal.org/node/3256524
    */
   private static function isWithinModuleNamespace(string $namespace) {
     [$first, $second] = explode('\\', $namespace, 3);

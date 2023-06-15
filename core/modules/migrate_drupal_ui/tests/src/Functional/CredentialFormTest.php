@@ -4,6 +4,8 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional;
 
 use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
 
+// cspell:ignore drupalmysqldriverdatabasemysql
+
 /**
  * Test the credential form for both Drupal 6 and Drupal 7 sources.
  *
@@ -40,7 +42,7 @@ class CredentialFormTest extends MigrateUpgradeTestBase {
 
     $this->submitForm([], 'Continue');
     $session->pageTextContains('Provide credentials for the database of the Drupal site you want to upgrade.');
-    $session->fieldExists('mysql[host]');
+    $session->fieldExists('edit-drupalmysqldriverdatabasemysql-host');
 
     // Ensure submitting the form with invalid database credentials gives us a
     // nice warning.

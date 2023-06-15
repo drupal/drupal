@@ -608,6 +608,10 @@ services:
     class: Drupal\Core\Extension\ThemeEngineExtensionList
     arguments: ['%app.root%', 'theme_engine', '@cache.default', '@info_parser', '@module_handler', '@state', '%install_profile%']
   Drupal\Core\Extension\ThemeEngineExtensionList: '@extension.list.theme_engine'
+  extension.list.database_driver:
+    class: Drupal\Core\Extension\DatabaseDriverList
+    arguments: ['%app.root%', 'database_driver', '@cache.default']
+  Drupal\Core\Extension\DatabaseDriverList: '@extension.list.database_driver'
   extension.path.resolver:
     class: Drupal\Core\Extension\ExtensionPathResolver
     arguments: ['@extension.list.module', '@extension.list.profile', '@extension.list.theme', '@extension.list.theme_engine']

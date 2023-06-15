@@ -146,8 +146,14 @@ function drupal_install_profile_distribution_version() {
  *
  * @return array
  *   An array of database types compiled into PHP.
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   DatabaseDriverList::getList() instead.
+ *
+ * @see https://www.drupal.org/node/3258175
  */
 function drupal_detect_database_types() {
+  @trigger_error('drupal_detect_database_types() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use DatabaseDriverList::getList() instead. See https://www.drupal.org/node/3258175', E_USER_DEPRECATED);
   $databases = drupal_get_database_types();
 
   foreach ($databases as $driver => $installer) {
@@ -162,8 +168,14 @@ function drupal_detect_database_types() {
  *
  * @return \Drupal\Core\Database\Install\Tasks[]
  *   An array of available database driver installer objects.
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   DatabaseDriverList::getList() instead.
+ *
+ * @see https://www.drupal.org/node/3258175
  */
 function drupal_get_database_types() {
+  @trigger_error('drupal_get_database_types() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use DatabaseDriverList::getList() instead. See https://www.drupal.org/node/3258175', E_USER_DEPRECATED);
   $databases = [];
   $drivers = [];
 

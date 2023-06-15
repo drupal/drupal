@@ -50,6 +50,12 @@ class DatabaseDriverProvidedByModuleTest extends BrowserTestBase {
       'driver' => 'Drivertest' . ucfirst($driver),
       'namespace' => 'Drupal\\driver_test\\Driver\\Database\\Drivertest' . ucfirst($driver),
       'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/Drivertest' . ucfirst($driver),
+      'dependencies' => [
+        $driver => [
+          'namespace' => "Drupal\\{$driver}",
+          'autoload' => "core/modules/$driver/src/",
+        ],
+      ],
     ];
     if (isset($connection_info['default']['port'])) {
       $database['port'] = $connection_info['default']['port'];

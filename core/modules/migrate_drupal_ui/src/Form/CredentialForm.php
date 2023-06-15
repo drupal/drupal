@@ -172,7 +172,7 @@ class CredentialForm extends MigrateUpgradeFormBase {
           ':input[name=driver]' => ['value' => $key],
         ],
       ];
-      if ($key != 'sqlite') {
+      if (!str_ends_with($key, '\\sqlite')) {
         $form['database']['settings'][$key]['username']['#states'] = [
           'required' => [
             ':input[name=source_connection]' => ['value' => ''],
@@ -395,7 +395,11 @@ class CredentialForm extends MigrateUpgradeFormBase {
   protected function getDatabaseTypes() {
     // Make sure the install API is available.
     include_once DRUPAL_ROOT . '/core/includes/install.inc';
-    return drupal_get_database_types();
+    $database_types = [];
+    foreach (Database::getDriverList()->getInstallableList() as $name => $driver) {
+      $database_types[$name] = $driver->getInstallTasks();
+    }
+    return $database_types;
   }
 
   /**

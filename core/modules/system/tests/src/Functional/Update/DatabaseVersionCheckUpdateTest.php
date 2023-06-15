@@ -39,17 +39,22 @@ class DatabaseVersionCheckUpdateTest extends BrowserTestBase {
     // Use a database driver that reports a fake database version that does
     // not meet requirements. Only change the necessary settings in the database
     // settings array so that run-tests.sh continues to work.
-    $autoload = Database::findDriverAutoloadDirectory('Drupal\driver_test\Driver\Database\DrivertestMysqlDeprecatedVersion', \Drupal::root());
+    $driverExtensionName = 'Drupal\\driver_test\\Driver\\Database\\DrivertestMysqlDeprecatedVersion';
+    $autoloading = \Drupal::service('extension.list.database_driver')->get($driverExtensionName)->getAutoloadInfo();
     $settings['databases']['default']['default']['driver'] = (object) [
       'value' => 'DrivertestMysqlDeprecatedVersion',
       'required' => TRUE,
     ];
     $settings['databases']['default']['default']['namespace'] = (object) [
-      'value' => 'Drupal\\driver_test\\Driver\\Database\\DrivertestMysqlDeprecatedVersion',
+      'value' => $driverExtensionName,
       'required' => TRUE,
     ];
     $settings['databases']['default']['default']['autoload'] = (object) [
-      'value' => $autoload,
+      'value' => $autoloading['autoload'],
+      'required' => TRUE,
+    ];
+    $settings['databases']['default']['default']['dependencies'] = (object) [
+      'value' => $autoloading['dependencies'],
       'required' => TRUE,
     ];
     $settings['settings'] = [

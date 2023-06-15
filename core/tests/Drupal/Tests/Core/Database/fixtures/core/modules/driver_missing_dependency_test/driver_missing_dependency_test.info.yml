@@ -1,0 +1,7 @@
+name: 'Contrib database driver test with a missing dependency'
+type: module
+description: 'Support database contrib driver testing.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:a_really_missing_module

@@ -228,6 +228,12 @@ class ExtensionDiscovery {
    */
   public function setProfileDirectoriesFromSettings() {
     $this->profileDirectories = [];
+    // This method may be called by the database system early in bootstrap
+    // before the container is initialized. In that case, the parameter is not
+    // accessible yet, hence return.
+    if (!\Drupal::hasContainer() || !\Drupal::getContainer()->hasParameter('install_profile')) {
+      return $this;
+    }
     if ($profile = \Drupal::installProfile()) {
       $this->profileDirectories[] = \Drupal::service('extension.list.profile')->getPath($profile);
     }

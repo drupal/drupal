@@ -503,21 +503,24 @@ trait FunctionalTestSetupTrait {
    *   Array of parameters for use in install_drupal().
    */
   protected function installParameters() {
-    $connection_info = Database::getConnectionInfo();
-    $driver = $connection_info['default']['driver'];
-    unset($connection_info['default']['driver']);
-    unset($connection_info['default']['namespace']);
-    unset($connection_info['default']['autoload']);
-    unset($connection_info['default']['pdo']);
-    unset($connection_info['default']['init_commands']);
-    unset($connection_info['default']['isolation_level']);
+    $formInput = Database::getConnectionInfo()['default'];
+    $driverName = $formInput['driver'];
+    $driverNamespace = $formInput['namespace'];
+
+    unset($formInput['driver']);
+    unset($formInput['namespace']);
+    unset($formInput['autoload']);
+    unset($formInput['pdo']);
+    unset($formInput['init_commands']);
+    unset($formInput['isolation_level']);
     // Remove database connection info that is not used by SQLite.
-    if ($driver === 'sqlite') {
-      unset($connection_info['default']['username']);
-      unset($connection_info['default']['password']);
-      unset($connection_info['default']['host']);
-      unset($connection_info['default']['port']);
+    if ($driverName === "sqlite") {
+      unset($formInput['username']);
+      unset($formInput['password']);
+      unset($formInput['host']);
+      unset($formInput['port']);
     }
+
     $parameters = [
       'interactive' => FALSE,
       'parameters' => [
@@ -526,8 +529,8 @@ trait FunctionalTestSetupTrait {
       ],
       'forms' => [
         'install_settings_form' => [
-          'driver' => $driver,
-          $driver => $connection_info['default'],
+          'driver' => $driverNamespace,
+          $driverNamespace => $formInput,
         ],
         'install_configure_form' => [
           'site_name' => 'Drupal',
@@ -550,7 +553,6 @@ trait FunctionalTestSetupTrait {
     ];
 
     // If we only have one db driver available, we cannot set the driver.
-    include_once DRUPAL_ROOT . '/core/includes/install.inc';
     if (count($this->getDatabaseTypes()) == 1) {
       unset($parameters['forms']['install_settings_form']['driver']);
     }
@@ -687,7 +689,8 @@ trait FunctionalTestSetupTrait {
   /**
    * Returns all supported database driver installer objects.
    *
-   * This wraps drupal_get_database_types() for use without a current container.
+   * This wraps DatabaseDriverList::getInstallableList() for use without a
+   * current container.
    *
    * @return \Drupal\Core\Database\Install\Tasks[]
    *   An array of available database driver installer objects.
@@ -696,7 +699,10 @@ trait FunctionalTestSetupTrait {
     if (isset($this->originalContainer) && $this->originalContainer) {
       \Drupal::setContainer($this->originalContainer);
     }
-    $database_types = drupal_get_database_types();
+    $database_types = [];
+    foreach (Database::getDriverList()->getInstallableList() as $name => $driver) {
+      $database_types[$name] = $driver->getInstallTasks();
+    }
     if (isset($this->originalContainer) && $this->originalContainer) {
       \Drupal::unsetContainer();
     }
