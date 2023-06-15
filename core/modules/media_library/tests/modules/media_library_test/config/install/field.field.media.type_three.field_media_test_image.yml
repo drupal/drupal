@@ -20,7 +20,7 @@ settings:
   handler: 'default:file'
   handler_settings: {  }
   file_directory: type-three-dir
-  file_extensions: 'png gif jpg jpeg'
+  file_extensions: 'png gif jpg jpeg webp'
   max_filesize: ''
   max_resolution: ''
   min_resolution: ''

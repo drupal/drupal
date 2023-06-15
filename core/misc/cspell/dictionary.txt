@@ -1418,6 +1418,7 @@ webheads
 webhosting
 webmention
 webmozart
+webp
 webroot
 webservers
 webtest

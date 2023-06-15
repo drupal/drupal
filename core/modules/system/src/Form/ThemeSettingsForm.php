@@ -280,7 +280,7 @@ class ThemeSettingsForm extends ConfigFormBase {
         '#description' => $this->t("If you don't have direct file access to the server, use this field to upload your shortcut icon."),
         '#upload_validators' => [
           'file_validate_extensions' => [
-            'ico png gif jpg jpeg apng svg',
+            'ico png gif jpg jpeg apng svg webp',
           ],
         ],
       ];

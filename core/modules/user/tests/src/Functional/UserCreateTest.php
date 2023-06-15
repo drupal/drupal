@@ -63,7 +63,7 @@ class UserCreateTest extends BrowserTestBase {
       'description' => 'Your virtual face or picture.',
       'required' => FALSE,
       'settings' => [
-        'file_extensions' => 'png gif jpg jpeg',
+        'file_extensions' => 'png gif jpg jpeg webp',
         'file_directory' => 'pictures',
         'max_filesize' => '30 KB',
         'alt_field' => 0,
