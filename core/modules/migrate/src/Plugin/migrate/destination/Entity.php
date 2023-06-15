@@ -3,6 +3,7 @@
 namespace Drupal\migrate\Plugin\migrate\destination;
 
 use Drupal\Component\Plugin\DependentPluginInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\DependencyTrait;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -215,6 +216,9 @@ abstract class Entity extends DestinationBase implements ContainerFactoryPluginI
     // Delete the specified entity from Drupal if it exists.
     $entity = $this->storage->load(reset($destination_identifier));
     if ($entity) {
+      if ($entity instanceof ContentEntityInterface) {
+        $entity->setSyncing(TRUE);
+      }
       $entity->delete();
     }
   }

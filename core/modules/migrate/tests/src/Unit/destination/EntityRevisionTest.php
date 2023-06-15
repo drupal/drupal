@@ -15,6 +15,7 @@ use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\destination\EntityRevision as RealEntityRevision;
 use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
+use Prophecy\Argument;
 
 /**
  * Tests entity revision destination.
@@ -178,6 +179,9 @@ class EntityRevisionTest extends UnitTestCase {
     $entity = $this->prophesize('\Drupal\Core\Entity\ContentEntityInterface');
     $entity->save()
       ->shouldBeCalled();
+    // Syncing should be set once.
+    $entity->setSyncing(Argument::exact(TRUE))
+      ->shouldBeCalledTimes(1);
     $entity->getRevisionId()
       ->shouldBeCalled()
       ->willReturn(1234);

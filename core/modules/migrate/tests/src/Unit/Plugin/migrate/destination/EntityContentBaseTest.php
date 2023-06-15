@@ -14,6 +14,7 @@ use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\migrate\destination\EntityContentBase;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Row;
+use Prophecy\Argument;
 
 /**
  * Tests base entity migration destination functionality.
@@ -43,6 +44,9 @@ class EntityContentBaseTest extends EntityTestBase {
       ->shouldBeCalledTimes(1);
     // Assert that save is called.
     $entity->save()
+      ->shouldBeCalledTimes(1);
+    // Syncing should be set once.
+    $entity->setSyncing(Argument::exact(TRUE))
       ->shouldBeCalledTimes(1);
     // Set an id for the entity
     $entity->id()
