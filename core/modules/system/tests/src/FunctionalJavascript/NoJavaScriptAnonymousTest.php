@@ -1,9 +1,9 @@
 <?php
 
-namespace Drupal\Tests\system\Functional\Common;
+namespace Drupal\Tests\system\FunctionalJavaScript;
 
+use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
 use Drupal\node\NodeInterface;
-use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests that anonymous users are not served any JavaScript.
@@ -13,7 +13,7 @@ use Drupal\Tests\BrowserTestBase;
  *
  * @group Common
  */
-class NoJavaScriptAnonymousTest extends BrowserTestBase {
+class NoJavaScriptAnonymousTest extends PerformanceTestBase {
 
   /**
    * {@inheritdoc}
@@ -69,6 +69,7 @@ class NoJavaScriptAnonymousTest extends BrowserTestBase {
     $settings = $this->getDrupalSettings();
     $this->assertEmpty($settings, 'drupalSettings is not set.');
     $this->assertSession()->responseNotMatches('/\.js/');
+    $this->assertSame(0, $this->scriptCount);
   }
 
 }
