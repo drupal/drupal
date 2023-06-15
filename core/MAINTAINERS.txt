@@ -19,6 +19,7 @@ BDFL
 Product managers
 - Dries Buytaert 'dries' https://www.drupal.org/u/dries
 - Gábor Hojtsy 'Gábor Hojtsy' https://www.drupal.org/u/gábor-hojtsy
+- Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
 - Roy Scholten 'yoroy' https://www.drupal.org/u/yoroy
 
 Framework managers
@@ -30,7 +31,6 @@ Framework managers
   - Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
 
   Frontend
-  - Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
   - Ben Mullins 'bnjmnm' https://www.drupal.org/u/bnjmnm
   - (provisional) Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
   - (provisional) Cristina Chumillas 'ckrina' https://www.drupal.org/u/ckrina
