@@ -233,7 +233,6 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
    *   An array containing the entity ID.
    */
   protected function save(ContentEntityInterface $entity, array $old_destination_id_values = []) {
-    $entity->setSyncing(TRUE);
     $entity->save();
     return [$entity->id()];
   }
@@ -381,7 +380,6 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
               $translation = $entity->getTranslation($langcode);
               if (!$translation->isDefaultTranslation()) {
                 $entity->removeTranslation($langcode);
-                $entity->setSyncing(TRUE);
                 $entity->save();
               }
             }

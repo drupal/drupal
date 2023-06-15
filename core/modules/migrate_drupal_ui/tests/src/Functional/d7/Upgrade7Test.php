@@ -227,7 +227,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
     $this->assertUserLogIn(2, 'a password');
 
     $this->assertFollowUpMigrationResults();
-    $this->assertEntityRevisionsCount('node', 19);
+
     $this->assertEmailsSent();
   }
 
