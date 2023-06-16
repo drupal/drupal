@@ -7,16 +7,25 @@ use Drupal\Core\Database\DatabaseException;
 /**
  * Tests adding UNIQUE keys to tables.
  *
- * @coversDefaultClass \Drupal\Core\Database\Schema
- *
  * @group Database
  */
-class SchemaUniquePrefixedKeysIndexTest extends DatabaseTestBase {
+abstract class SchemaUniquePrefixedKeysIndexTestBase extends DriverSpecificDatabaseTestBase {
+
+  /**
+   * Set the value used to test the schema unique prefixed keys index.
+   *
+   * The basic syntax of passing an array (field, prefix length) as a key column
+   * specifier must always be accepted by the driver. However, due to technical
+   * limitations, some drivers may choose to ignore them.
+   *
+   * '123456789 bar' if the current database (driver) will conform to the prefix
+   * length specified as part of a key column specifier, '123456789 foo' if it
+   * will be ignored.
+   */
+  protected string $columnValue;
 
   /**
    * Tests UNIQUE keys put directly on the table definition.
-   *
-   * @covers ::createTable
    */
   public function testCreateTable(): void {
     $this->connection->schema()->createTable('test_unique', [
@@ -36,8 +45,6 @@ class SchemaUniquePrefixedKeysIndexTest extends DatabaseTestBase {
 
   /**
    * Tests adding a UNIQUE key to an existing table.
-   *
-   * @covers ::addUniqueKey
    */
   public function testAddUniqueKey(): void {
     $this->connection->schema()
@@ -48,8 +55,6 @@ class SchemaUniquePrefixedKeysIndexTest extends DatabaseTestBase {
 
   /**
    * Tests adding a new field with UNIQUE key.
-   *
-   * @covers ::addField
    */
   public function testAddField(): void {
     $field_spec = [
@@ -69,8 +74,6 @@ class SchemaUniquePrefixedKeysIndexTest extends DatabaseTestBase {
 
   /**
    * Tests changing a field to add a UNIQUE key.
-   *
-   * @covers ::changeField
    */
   public function testChangeField(): void {
     $field_spec = [
@@ -109,27 +112,11 @@ class SchemaUniquePrefixedKeysIndexTest extends DatabaseTestBase {
       ->execute();
 
     $this->expectException(DatabaseException::class);
-    $value = '1234567890 ' . ($this->supportsPrefixLength() ? 'bar' : 'foo');
     $this->connection->insert($table)
       ->fields([
-        $column => $value,
+        $column => $this->columnValue,
       ])
       ->execute();
-  }
-
-  /**
-   * Determines whether the current database supports prefix lengths for keys.
-   *
-   * The basic syntax of passing an array (field, prefix length) as a key column
-   * specifier must always be accepted by the driver. However, due to technical
-   * limitations, some drivers may choose to ignore them.
-   *
-   * @return bool
-   *   TRUE if the current database (driver) will conform to the prefix length
-   *   specified as part of a key column specifier, FALSE if it will be ignored.
-   */
-  protected function supportsPrefixLength(): bool {
-    return $this->connection->driver() === 'mysql';
   }
 
 }
