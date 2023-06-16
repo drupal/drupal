@@ -1,0 +1,6 @@
+announcements_feed.announcement:
+  title: Announcements
+  description: 'Displays announcements from the Drupal community.'
+  route_name: announcements_feed.announcement
+  weight: 10
+  parent: system.admin
