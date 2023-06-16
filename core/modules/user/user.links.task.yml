@@ -3,6 +3,11 @@ entity.user_role.edit_form:
   route_name: entity.user_role.edit_form
   base_route: entity.user_role.edit_form
 
+entity.user_role.edit_permissions_form:
+  title: 'Permissions'
+  route_name: entity.user_role.edit_permissions_form
+  base_route: entity.user_role.edit_form
+
 user.account_settings_tab:
   route_name: entity.user.admin_form
   title: 'Settings'
