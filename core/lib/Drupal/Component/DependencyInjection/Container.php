@@ -304,6 +304,9 @@ class Container implements ContainerInterface, ResetInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   * @return void
    */
   public function set($id, $service) {
     $this->services[$id] = $service;
@@ -340,6 +343,9 @@ class Container implements ContainerInterface, ResetInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   * @return void
    */
   public function setParameter($name, $value) {
     if ($this->frozen) {

@@ -866,11 +866,6 @@ parameters:
 			path: modules/block_content/tests/src/Kernel/Migrate/d6/MigrateCustomBlockContentTranslationTest.php
 
 		-
-			message: "#^Variable \\$book_links in empty\\(\\) is never defined\\.$#"
-			count: 1
-			path: modules/book/book.module
-
-		-
 			message: "#^Variable \\$callable in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/book/src/BookExport.php
@@ -2889,21 +2884,6 @@ parameters:
 			message: "#^Variable \\$expected_driver might not be defined\\.$#"
 			count: 2
 			path: tests/Drupal/KernelTests/Core/Database/DriverSpecificKernelTestBase.php
-
-		-
-			message: "#^\\#date_date_callbacks callback array\\{\\$this\\(Drupal\\\\KernelTests\\\\Core\\\\Datetime\\\\DatelistElementFormTest\\), string\\} at key '0' is not callable\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Datetime/DatelistElementFormTest.php
-
-		-
-			message: "#^\\#date_date_callbacks callback array\\{\\$this\\(Drupal\\\\KernelTests\\\\Core\\\\Datetime\\\\DatetimeElementFormTest\\), string\\} at key '0' is not callable\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Datetime/DatetimeElementFormTest.php
-
-		-
-			message: "#^\\#date_time_callbacks callback array\\{\\$this\\(Drupal\\\\KernelTests\\\\Core\\\\Datetime\\\\DatetimeElementFormTest\\), string\\} at key '0' is not callable\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Datetime/DatetimeElementFormTest.php
 
 		-
 			message: "#^Relying on entity queries to check access by default is deprecated in drupal\\:9\\.2\\.0 and an error will be thrown from drupal\\:10\\.0\\.0\\. Call \\\\Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryInterface\\:\\:accessCheck\\(\\) with TRUE or FALSE to specify whether access should be checked\\.$#"

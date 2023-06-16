@@ -96,6 +96,9 @@ class UrlGenerator implements UrlGeneratorInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   * @return void
    */
   public function setContext(SymfonyRequestContext $context) {
     $this->context = $context;
