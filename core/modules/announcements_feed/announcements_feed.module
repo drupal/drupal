@@ -6,6 +6,7 @@
  */
 
 use Drupal\announcements_feed\RenderCallbacks;
+use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -19,7 +20,9 @@ function announcements_feed_help($route_name, RouteMatchInterface $route_match) 
       $output .= '<p>' . t('The Announcements module displays announcements from the Drupal community. For more information, see the <a href=":documentation">online documentation for the Announcements module</a>.', [':documentation' => 'https://www.drupal.org/docs/core-modules-and-themes/core-modules/announcements-feed']) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl><dt>' . t('Accessing announcements') . '</dt>';
-      $output .= '<dd>' . t('Users with the "View drupal.org announcements" permission may click on the "Announcements" item in the administration toolbar to see all announcements relevant to the Drupal version of your site.') . '</dd>';
+      $output .= '<dd>' . t('Users with the "View drupal.org announcements" permission may click on the "Announcements" item in the administration toolbar, or access @link, to see all announcements relevant to the Drupal version of your site.', [
+        '@link' => Link::createFromRoute(t('Announcements'), 'announcements_feed.announcement')->toString(),
+      ]) . '</dd>';
       $output .= '</dl>';
       return $output;
   }
@@ -63,6 +66,22 @@ function announcements_feed_toolbar() {
   $items['announcement'] += \Drupal::service('plugin.manager.element_info')->getInfo('toolbar_item');
   $items['announcement']['#pre_render'][] = [RenderCallbacks::class, 'removeTabAttributes'];
   return $items;
+}
+
+/**
+ * Implements hook_toolbar_alter().
+ */
+function announcements_feed_toolbar_alter(&$items) {
+  // As the "Announcements" link is shown already in the top toolbar bar, we
+  // don't need it again in the administration menu tray, so hide it.
+  if (!empty($items['administration']['tray'])) {
+    $callable = function (array $element) {
+      unset($element['administration_menu']['#items']['announcements_feed.announcement']);
+      return $element;
+    };
+
+    $items['administration']['tray']['toolbar_administration']['#pre_render'][] = $callable;
+  }
 }
 
 /**
