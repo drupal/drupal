@@ -30,7 +30,7 @@ interface ResourceTypeRepositoryInterface {
    *   The ID for the bundle to find. If the entity type does not have a bundle,
    *   then the entity type ID again.
    *
-   * @return \Drupal\jsonapi\ResourceType\ResourceType
+   * @return \Drupal\jsonapi\ResourceType\ResourceType|null
    *   The requested JSON:API resource type, if it exists. NULL otherwise.
    *
    * @see \Drupal\Core\Entity\EntityInterface::bundle()
