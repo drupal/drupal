@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ruleset name="drupal_core">
-  <arg name="extensions" value="inc,install,module,php,profile,test,theme,yml"/>
+  <arg name="extensions" value="engine,inc,install,module,php,profile,test,theme,yml"/>
   <description>Default PHP CodeSniffer configuration for Drupal core.</description>
 
   <!--Exclude folders used by common frontend tools. These folders match the file_scan_ignore_directories setting in default.settings.php-->
