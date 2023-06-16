@@ -95,10 +95,6 @@ details.fieldset-no-legend {
   padding-inline-end: calc(2rem - var(--input-border-size));
   background-position-y: 56%;
 }
-/**
- * Elements must communicate width to table rendering.
- * @todo revisit in https://drupal.org/node/3135457
- */
 .views-ui-dialog td .form-element {
   width: auto;
 }
