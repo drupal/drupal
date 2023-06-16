@@ -13,18 +13,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class EntityDisplayModeAddForm extends EntityDisplayModeFormBase {
 
   /**
-   * The entity type for which the display mode is being created.
-   *
-   * @var string
-   */
-  protected $targetEntityTypeId;
-
-  /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL) {
-    $this->targetEntityTypeId = $entity_type_id;
-    $form = parent::buildForm($form, $form_state);
+    $form = parent::buildForm($form, $form_state, $entity_type_id);
+
     // Change replace_pattern to avoid undesired dots.
     $form['id']['#machine_name']['replace_pattern'] = '[^a-z0-9_]+';
     $definition = $this->entityTypeManager->getDefinition($this->targetEntityTypeId);

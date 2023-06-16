@@ -2,6 +2,7 @@ field_ui.entity_view_mode_add:
   route_name: field_ui.entity_view_mode_add
   title: 'Add view mode'
   weight: 1
+  class: \Drupal\field_ui\DisplayModeLocalAction
   appears_on:
     - entity.entity_view_mode.collection
 
@@ -9,6 +10,7 @@ field_ui.entity_form_mode_add:
   route_name: field_ui.entity_form_mode_add
   title: 'Add form mode'
   weight: 1
+  class: \Drupal\field_ui\DisplayModeLocalAction
   appears_on:
     - entity.entity_form_mode.collection
 
