@@ -12,6 +12,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controller routines for machine name transliteration routes.
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/2662330
  */
 class MachineNameController implements ContainerInjectionInterface {
 
@@ -63,6 +68,7 @@ class MachineNameController implements ContainerInjectionInterface {
    *   The transliterated string.
    */
   public function transliterate(Request $request) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3367037', E_USER_DEPRECATED);
     $text = $request->query->get('text');
     $langcode = $request->query->get('langcode');
     $replace_pattern = $request->query->get('replace_pattern');

@@ -24,7 +24,8 @@
     "Sortable": true,
     "once": true,
     "CKEditor5": true,
-    "tabbable": true
+    "tabbable": true,
+    "slugify": true
   },
   "rules": {
     "prettier/prettier": "error",

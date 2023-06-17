@@ -1,9 +1,11 @@
 /**
  * @file
  * Machine name functionality.
+ *
+ * @internal
  */
 
-(function ($, Drupal, drupalSettings) {
+(function ($, Drupal, drupalSettings, slugify) {
   /**
    * Attach the machine-readable name form element behavior.
    *
@@ -41,8 +43,6 @@
     attach(context, settings) {
       const self = this;
       const $context = $(context);
-      let timeout = null;
-      let xhr = null;
 
       function clickEditHandler(e) {
         const data = e.data;
@@ -68,25 +68,10 @@
           .replace(rx, options.replace)
           .substr(0, options.maxlength);
 
-        // Abort the last pending request because the label has changed and it
-        // is no longer valid.
-        if (xhr && xhr.readystate !== 4) {
-          xhr.abort();
-          xhr = null;
-        }
-
-        // Wait 300 milliseconds for Ajax request since the last event to update
-        // the machine name i.e., after the user has stopped typing.
-        if (timeout) {
-          clearTimeout(timeout);
-          timeout = null;
-        }
-        if (baseValue.toLowerCase() !== expected) {
-          timeout = setTimeout(() => {
-            xhr = self.transliterate(baseValue, options).done((machine) => {
-              self.showMachineName(machine.substr(0, options.maxlength), data);
-            });
-          }, 300);
+        const needsTransliteration = !/^[A-Za-z0-9_\s]*$/.test(baseValue);
+        if (needsTransliteration) {
+          const machineName = self.transliterate(baseValue, options);
+          self.showMachineName(machineName.substr(0, options.maxlength), data);
         } else {
           self.showMachineName(expected, data);
         }
@@ -167,12 +152,20 @@
         // If no initial value, determine machine name based on the
         // human-readable form element value.
         if (machine === '' && $source[0].value !== '') {
-          self.transliterate($source[0].value, options).done((machineName) => {
+          if (/^[A-Za-z0-9_\s]*$/.test($source[0].value)) {
+            const rx = new RegExp(options.replace_pattern, 'g');
+            const expected = $source[0].value
+              .toLowerCase()
+              .replace(rx, options.replace)
+              .substr(0, options.maxlength);
+            self.showMachineName(expected, eventData);
+          } else {
+            self.transliterate($source[0].value, options);
             self.showMachineName(
-              machineName.substr(0, options.maxlength),
+              machine.substr(0, options.maxlength),
               eventData,
             );
-          });
+          }
         }
 
         // If it is editable, append an edit link.
@@ -225,25 +218,35 @@
      * @param {string} settings.replace_pattern
      *   A regular expression (without modifiers) matching disallowed characters
      *   in the machine name; e.g., '[^a-z0-9]+'.
-     * @param {string} settings.replace_token
-     *   A token to validate the regular expression.
      * @param {string} settings.replace
      *   A character to replace disallowed characters with; e.g., '_' or '-'.
      * @param {number} settings.maxlength
      *   The maximum length of the machine name.
      *
-     * @return {jQuery}
+     * @return {string}
      *   The transliterated source string.
      */
     transliterate(source, settings) {
-      return $.get(Drupal.url('machine_name/transliterate'), {
-        text: source,
-        langcode: drupalSettings.langcode,
-        replace_pattern: settings.replace_pattern,
-        replace_token: settings.replace_token,
-        replace: settings.replace,
-        lowercase: true,
+      const languageOverrides =
+        drupalSettings.transliteration_language_overrides[
+          drupalSettings.langcode
+        ];
+      const normalizedLanguageOverrides = {};
+      if (languageOverrides) {
+        Object.keys(languageOverrides).forEach((key) => {
+          // Updates the keys from hexadecimal to strings.
+          normalizedLanguageOverrides[String.fromCharCode(key)] =
+            languageOverrides[key];
+        });
+      }
+      slugify.config({
+        separator: settings.replace,
+        allowedChars: settings.replace_pattern,
+        replace: normalizedLanguageOverrides,
       });
+      const transliterated = slugify(source.substr(0, settings.maxlength));
+      const rx = new RegExp(settings.replace_pattern, 'g');
+      return transliterated.replace(rx, settings.replace);
     },
   };
-})(jQuery, Drupal, drupalSettings);
+})(jQuery, Drupal, drupalSettings, slugify);

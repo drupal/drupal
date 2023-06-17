@@ -94,6 +94,7 @@
     "tabbable": "^6.1.2",
     "terser": "^5.17.7",
     "terser-webpack-plugin": "^5.3.9",
+    "transliteration": "^2.3.5",
     "underscore": "~1.13.4",
     "webpack": "^5.85.1",
     "webpack-cli": "^5.1.3"

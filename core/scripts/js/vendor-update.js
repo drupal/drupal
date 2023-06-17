@@ -142,6 +142,13 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       files: [{ from: 'dist/loadjs.min.js', to: 'loadjs.min.js' }],
     },
     {
+      pack: 'transliteration',
+      files: [
+        { from: 'dist/browser/bundle.umd.min.js', to: 'bundle.umd.min.js' },
+        { from: 'dist/browser/bundle.umd.min.js.map', to: 'bundle.umd.min.js.map' },
+      ],
+    },
+    {
       pack: 'jquery-ui',
       folder: 'jquery.ui',
       process: {

@@ -626,6 +626,7 @@ drupal.machine-name:
     - core/drupal
     - core/drupalSettings
     - core/drupal.form
+    - core/transliteration
 
 drupal.message:
   version: VERSION
@@ -873,6 +874,16 @@ tabbable:
     gpl-compatible: true
   js:
     assets/vendor/tabbable/index.umd.min.js: { weight: -1, minified: true }
+
+transliteration:
+  remote: https://github.com/dzcpy/transliteration
+  version: "2.3.5"
+  license:
+    name: MIT
+    url: https://raw.githubusercontent.com/dzcpy/transliteration/1.6.5/LICENSE.txt
+    gpl-compatible: true
+  js:
+    assets/vendor/transliteration/bundle.umd.min.js: { minified: true }
 
 tabbable.jquery.shim:
   version: VERSION
