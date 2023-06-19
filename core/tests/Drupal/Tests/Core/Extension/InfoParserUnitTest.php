@@ -296,7 +296,9 @@ CORE_INCOMPATIBILITY;
    * Data provider for testCoreIncompatibility().
    */
   public function providerCoreIncompatibility() {
-    [$major, $minor] = explode('.', \Drupal::VERSION);
+    // Remove possible stability suffix to properly parse 11.0-dev.
+    $version = preg_replace('/-dev$/', '', \Drupal::VERSION);
+    [$major, $minor] = explode('.', $version, 2);
 
     $next_minor = $minor + 1;
     $next_major = $major + 1;
