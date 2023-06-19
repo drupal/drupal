@@ -428,6 +428,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    * Asserts that the grid display of the widget view is visible.
    */
   protected function assertMediaLibraryGrid() {
+    $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertSession()
       ->elementExists('css', '.js-media-library-view[data-view-display-id="widget"]');
   }
