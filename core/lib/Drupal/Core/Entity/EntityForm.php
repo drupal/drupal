@@ -255,7 +255,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
         ],
         '#url' => $route_info,
         '#attached' => [
-          'library' => 'core/drupal.dialog.ajax',
+          'library' => ['core/drupal.dialog.ajax'],
         ],
       ];
     }
