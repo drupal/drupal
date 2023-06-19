@@ -351,14 +351,6 @@ condition.plugin.request_path:
     pages:
       type: string
 
-condition.plugin.response_status:
-  type: condition.plugin
-  mapping:
-    status_codes:
-      type: sequence
-      sequence:
-        type: integer
-
 system.feature_flags:
   type: config_object
   label: 'System Feature Flags'

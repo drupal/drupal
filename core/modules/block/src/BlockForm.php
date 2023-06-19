@@ -247,23 +247,16 @@ class BlockForm extends EntityForm {
       $form[$condition_id] = $condition_form;
     }
 
-    // Disable negation for specific conditions.
-    $disable_negation = [
-      'entity_bundle:node',
-      'language',
-      'response_status',
-      'user_role',
-    ];
-    foreach ($disable_negation as $condition) {
-      if (isset($form[$condition])) {
-        $form[$condition]['negate']['#type'] = 'value';
-        $form[$condition]['negate']['#value'] = $form[$condition]['negate']['#default_value'];
-      }
+    if (isset($form['entity_bundle:node'])) {
+      $form['entity_bundle:node']['negate']['#type'] = 'value';
+      $form['entity_bundle:node']['negate']['#title_display'] = 'invisible';
+      $form['entity_bundle:node']['negate']['#value'] = $form['entity_bundle:node']['negate']['#default_value'];
     }
-
     if (isset($form['user_role'])) {
       $form['user_role']['#title'] = $this->t('Roles');
       unset($form['user_role']['roles']['#description']);
+      $form['user_role']['negate']['#type'] = 'value';
+      $form['user_role']['negate']['#value'] = $form['user_role']['negate']['#default_value'];
     }
     if (isset($form['request_path'])) {
       $form['request_path']['#title'] = $this->t('Pages');
@@ -274,6 +267,10 @@ class BlockForm extends EntityForm {
         $this->t('Show for the listed pages'),
         $this->t('Hide for the listed pages'),
       ];
+    }
+    if (isset($form['language'])) {
+      $form['language']['negate']['#type'] = 'value';
+      $form['language']['negate']['#value'] = $form['language']['negate']['#default_value'];
     }
     return $form;
   }
