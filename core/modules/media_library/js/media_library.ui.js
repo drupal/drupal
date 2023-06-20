@@ -309,6 +309,17 @@
         $('.js-media-library-selected-count').html(selectItemsText);
       }
 
+      function checkEnabled() {
+        updateSelectionCount(settings.media_library.selection_remaining);
+        if (
+          currentSelection.length === settings.media_library.selection_remaining
+        ) {
+          disableItems($mediaItems.not(':checked'));
+          enableItems($mediaItems.filter(':checked'));
+        } else {
+          enableItems($mediaItems);
+        }
+      }
       // Update the selection array and the hidden form field when a media item
       // is selected.
       $(once('media-item-change', $mediaItems)).on('change', (e) => {
@@ -345,7 +356,7 @@
             item.value = currentSelection.join();
           });
       });
-
+      checkEnabled();
       // The hidden selection form field changes when the selection is updated.
       $(
         once(
@@ -353,17 +364,7 @@
           $form.find('#media-library-modal-selection'),
         ),
       ).on('change', (e) => {
-        updateSelectionCount(settings.media_library.selection_remaining);
-
-        // Prevent users from selecting more items than allowed.
-        if (
-          currentSelection.length === settings.media_library.selection_remaining
-        ) {
-          disableItems($mediaItems.not(':checked'));
-          enableItems($mediaItems.filter(':checked'));
-        } else {
-          enableItems($mediaItems);
-        }
+        checkEnabled();
       });
 
       // Apply the current selection to the media library view. Changing the
