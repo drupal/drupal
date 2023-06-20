@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\ckeditor5\Plugin\CKEditor4To5Upgrade;
 
+// cspell:ignore codesnippet
+
 use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\ckeditor5\Plugin\CKEditor4To5UpgradePluginInterface;
 use Drupal\Core\Plugin\PluginBase;
@@ -15,9 +17,11 @@ use Drupal\filter\FilterFormatInterface;
  * @CKEditor4To5Upgrade(
  *   id = "contrib",
  *   cke4_buttons = {
- *     "Code"
+ *     "Code",
+ *     "CodeSnippet",
  *   },
  *   cke4_plugin_settings = {
+ *     "codesnippet",
  *   },
  *   cke5_plugin_elements_subset_configuration = {
  *   }
@@ -37,6 +41,10 @@ class Contrib extends PluginBase implements CKEditor4To5UpgradePluginInterface {
       case 'Code':
         return ['code'];
 
+      // @see https://www.drupal.org/project/codesnippet
+      case 'CodeSnippet':
+        return ['codeBlock'];
+
       default:
         throw new \OutOfBoundsException();
     }
@@ -46,7 +54,25 @@ class Contrib extends PluginBase implements CKEditor4To5UpgradePluginInterface {
    * {@inheritdoc}
    */
   public function mapCKEditor4SettingsToCKEditor5Configuration(string $cke4_plugin_id, array $cke4_plugin_settings): ?array {
-    throw new \OutOfBoundsException();
+    switch ($cke4_plugin_id) {
+      case 'codesnippet':
+        $languages = [];
+        $enabled_cke4_languages = array_filter($cke4_plugin_settings['highlight_languages']);
+        foreach ($enabled_cke4_languages as $language) {
+          $languages[] = [
+            'language' => $language,
+            'label' => $language,
+          ];
+        }
+        return [
+          'ckeditor5_codeBlock' => [
+            'languages' => $languages,
+          ],
+        ];
+
+      default:
+        throw new \OutOfBoundsException();
+    }
   }
 
   /**
