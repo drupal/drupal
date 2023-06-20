@@ -32,6 +32,7 @@ internal.drupal.ckeditor5:
     - core/jquery
     - core/once
     - core/drupal
+    - core/drupal.ajax
     - core/drupal.debounce
     - core/ckeditor5.editorClassic
     - core/ckeditor5.editorDecoupled
