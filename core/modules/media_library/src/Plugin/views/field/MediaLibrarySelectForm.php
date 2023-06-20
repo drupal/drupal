@@ -2,7 +2,9 @@
 
 namespace Drupal\media_library\Plugin\views\field;
 
+use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\CloseDialogCommand;
+use Drupal\Core\Ajax\MessageCommand;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -46,6 +48,14 @@ class MediaLibrarySelectForm extends FieldPluginBase {
    */
   public function viewsForm(array &$form, FormStateInterface $form_state) {
     $form['#attributes']['class'] = ['js-media-library-views-form'];
+    // Add target for AJAX messages.
+    $form['media_library_messages'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'id' => 'media-library-messages',
+      ],
+      '#weight' => -10,
+    ];
 
     // Add an attribute that identifies the media type displayed in the form.
     if (isset($this->view->args[0])) {
@@ -124,6 +134,19 @@ class MediaLibrarySelectForm extends FieldPluginBase {
 
     // Allow the opener service to handle the selection.
     $state = MediaLibraryState::fromRequest($request);
+
+    $current_selection = $form_state->getValue('media_library_select_form_selection');
+    $available_slots = $state->getAvailableSlots();
+    $selected_count = count(explode(',', $current_selection));
+    if ($available_slots > 0 && $selected_count > $available_slots) {
+      $response = new AjaxResponse();
+      $error = \Drupal::translation()->formatPlural($selected_count - $available_slots, 'There are currently @total items selected. The maximum number of items for the field is @max. Please remove @count item from the selection.', 'There are currently @total items selected. The maximum number of items for the field is @max. Please remove @count items from the selection.', [
+        '@total' => $selected_count,
+        '@max' => $available_slots,
+      ]);
+      $response->addCommand(new MessageCommand($error, '#media-library-messages', ['type' => 'error']));
+      return $response;
+    }
 
     return \Drupal::service('media_library.opener_resolver')
       ->get($state)

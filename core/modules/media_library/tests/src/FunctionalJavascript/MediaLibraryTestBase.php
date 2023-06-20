@@ -354,17 +354,21 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    * @param string $expected_announcement
    *   (optional) The expected screen reader announcement once the modal is
    *   closed.
+   * @param bool $should_close
+   *   (optional) TRUE if we expect the modal to be successfully closed.
    *
    * @todo Consider requiring screen reader assertion every time "Insert
    *   selected" is pressed in
    *   https://www.drupal.org/project/drupal/issues/3087227.
    */
-  protected function pressInsertSelected($expected_announcement = NULL) {
+  protected function pressInsertSelected($expected_announcement = NULL, bool $should_close = TRUE) {
     $this->assertSession()
       ->elementExists('css', '.ui-dialog-buttonpane')
       ->pressButton('Insert selected');
-    $this->waitForNoText('Add or select media');
 
+    if ($should_close) {
+      $this->waitForNoText('Add or select media');
+    }
     if ($expected_announcement) {
       $this->waitForText($expected_announcement);
     }
@@ -398,6 +402,18 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
     if ($expected_selected_count) {
       $this->assertSelectedMediaCount($expected_selected_count);
     }
+  }
+
+  /**
+   * De-selects an item in the media library modal.
+   *
+   * @param int $index
+   *   The zero-based index of the item to unselect.
+   */
+  protected function deselectMediaItem(int $index): void {
+    $checkboxes = $this->getCheckboxes();
+    $this->assertGreaterThan($index, count($checkboxes));
+    $checkboxes[$index]->uncheck();
   }
 
   /**
