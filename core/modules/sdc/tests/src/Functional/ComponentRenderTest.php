@@ -42,6 +42,10 @@ final class ComponentRenderTest extends BrowserTestBase {
     $this->assertStringContainsString('dialog.position.js', $output);
     // Ensure that libraryOverrides processes attributes properly.
     $this->assertMatchesRegularExpression('@<script.*src="[^"]*lib-overrides\.js\?v=1[^"]*".*defer.*bar="foo"></script>@', $output);
+    // Ensure that libraryOverrides processes external CSS properly.
+    $this->assertMatchesRegularExpression('@<link.*href="https://drupal\.org/fake-dependency/styles\.css" />@', $output);
+    // Ensure that libraryOverrides processes external JS properly.
+    $this->assertMatchesRegularExpression('@<script.*src="https://drupal\.org/fake-dependency/index\.min\.js"></script>@', $output);
   }
 
 }

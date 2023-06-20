@@ -5,6 +5,7 @@ namespace Drupal\sdc;
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Discovery\YamlDirectoryDiscovery;
 use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -385,15 +386,25 @@ final class ComponentPluginManager extends DefaultPluginManager {
     $js = $overrides['js'] ?? [];
     foreach ($css as $dir => $css_info) {
       foreach ($css_info as $filename => $options) {
-        $absolute_filename = sprintf('%s%s%s', $component_directory, DIRECTORY_SEPARATOR, $filename);
-        $altered_filename = $this->makePathRelativeToLibraryRoot($absolute_filename);
-        $altered_overrides['css'][$dir][$altered_filename] = $options;
+        if (!UrlHelper::isExternal($filename)) {
+          $absolute_filename = sprintf('%s%s%s', $component_directory, DIRECTORY_SEPARATOR, $filename);
+          $altered_filename = $this->makePathRelativeToLibraryRoot($absolute_filename);
+          $altered_overrides['css'][$dir][$altered_filename] = $options;
+        }
+        else {
+          $altered_overrides['css'][$dir][$filename] = $options;
+        }
       }
     }
     foreach ($js as $filename => $options) {
-      $absolute_filename = sprintf('%s%s%s', $component_directory, DIRECTORY_SEPARATOR, $filename);
-      $altered_filename = $this->makePathRelativeToLibraryRoot($absolute_filename);
-      $altered_overrides['js'][$altered_filename] = $options;
+      if (!UrlHelper::isExternal($filename)) {
+        $absolute_filename = sprintf('%s%s%s', $component_directory, DIRECTORY_SEPARATOR, $filename);
+        $altered_filename = $this->makePathRelativeToLibraryRoot($absolute_filename);
+        $altered_overrides['js'][$altered_filename] = $options;
+      }
+      else {
+        $altered_overrides['js'][$filename] = $options;
+      }
     }
     return $altered_overrides;
   }
