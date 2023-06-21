@@ -1461,11 +1461,6 @@ parameters:
 			path: modules/media_library/tests/src/FunctionalJavascript/EmbeddedFormWidgetTest.php
 
 		-
-			message: "#^Constructor of class Drupal\\\\menu_link_content\\\\Form\\\\MenuLinkContentForm has an unused parameter \\$language_manager\\.$#"
-			count: 1
-			path: modules/menu_link_content/src/Form/MenuLinkContentForm.php
-
-		-
 			message: "#^Method Drupal\\\\menu_link_content\\\\Form\\\\MenuLinkContentForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/menu_link_content/src/Form/MenuLinkContentForm.php
