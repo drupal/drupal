@@ -2,6 +2,7 @@
 
 namespace Drupal\config_translation\Controller;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\config_translation\ConfigMapperManagerInterface;
 use Drupal\config_translation\Exception\ConfigMapperLanguageException;
 use Drupal\Core\Access\AccessManagerInterface;
@@ -222,6 +223,13 @@ class ConfigTranslationController extends ControllerBase {
           $operations['add'] = [
             'title' => $this->t('Add'),
             'url' => Url::fromRoute($mapper->getAddRouteName(), $mapper->getAddRouteParameters()),
+            'attributes' => [
+              'class' => ['use-ajax'],
+              'data-dialog-type' => 'modal',
+              'data-dialog-options' => Json::encode([
+                'width' => 880,
+              ]),
+            ],
           ];
         }
         else {
@@ -229,11 +237,25 @@ class ConfigTranslationController extends ControllerBase {
           $operations['edit'] = [
             'title' => $this->t('Edit'),
             'url' => Url::fromRoute($mapper->getEditRouteName(), $mapper->getEditRouteParameters()),
+            'attributes' => [
+              'class' => ['use-ajax'],
+              'data-dialog-type' => 'modal',
+              'data-dialog-options' => Json::encode([
+                'width' => 880,
+              ]),
+            ],
           ];
 
           $operations['delete'] = [
             'title' => $this->t('Delete'),
             'url' => Url::fromRoute($mapper->getDeleteRouteName(), $mapper->getDeleteRouteParameters()),
+            'attributes' => [
+              'class' => ['use-ajax'],
+              'data-dialog-type' => 'modal',
+              'data-dialog-options' => Json::encode([
+                'width' => 880,
+              ]),
+            ],
           ];
         }
       }
@@ -248,6 +270,7 @@ class ConfigTranslationController extends ControllerBase {
         // Even if the mapper contains multiple language codes, the source
         // configuration can still be edited.
         '#access' => ($langcode == $original_langcode) || $operations_access,
+        '#attached' => ['library' => ['core/drupal.dialog.ajax']],
       ];
     }
     return $page;
