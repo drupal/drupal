@@ -46,15 +46,22 @@ class ConfigInstallProfileUnmetDependenciesTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
+  public function setUpSettings() {
     // During set up an UnmetDependenciesException should be thrown, which will
     // be re-thrown by TestHttpClientMiddleware as a standard Exception.
     try {
-      parent::setUp();
+      parent::setUpSettings();
     }
     catch (\Exception $exception) {
       $this->expectedException = $exception;
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUpSite() {
+    // This step can no longer be reached.
   }
 
   /**
