@@ -5,6 +5,8 @@ namespace Drupal\Tests\menu_ui\Functional;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
+use Drupal\system\Entity\Menu;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -430,6 +432,41 @@ class MenuUiNodeTest extends BrowserTestBase {
     $this->assertFalse($node->access('view', $admin_user_without_content_access));
     $this->drupalGet('node/add/page');
     $this->assertSession()->optionNotExists('edit-menu-menu-parent', 'main:' . $link->getPluginId());
+  }
+
+  /**
+   * Tests main menu links are prioritized when editing nodes.
+   *
+   * @see menu_ui_get_menu_link_defaults()
+   */
+  public function testMainMenuIsPrioritized(): void {
+    $this->drupalLogin($this->rootUser);
+    $menu_name = $this->randomMachineName();
+    $mainLinkTitle = $this->randomMachineName();
+    $nonMainLinkTitle = $this->randomMachineName();
+    Menu::create(['id' => $menu_name, 'label' => $menu_name])->save();
+    $nodeType = NodeType::load('page');
+    $nodeType->setThirdPartySetting('menu_ui', 'available_menus', [$menu_name, 'main'])->save();
+    $node = Node::create([
+      'type' => 'page',
+      'title' => $this->randomMachineName(),
+      'uid' => $this->rootUser->id(),
+      'status' => 1,
+    ]);
+    $node->save();
+    MenuLinkContent::create([
+      'link' => [['uri' => 'entity:node/' . $node->id()]],
+      'title' => $nonMainLinkTitle,
+      'menu_name' => $menu_name,
+    ])->save();
+    MenuLinkContent::create([
+      'link' => [['uri' => 'entity:node/' . $node->id()]],
+      'title' => $mainLinkTitle,
+      'menu_name' => 'main',
+    ])->save();
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $element = $this->assertSession()->elementExists('css', 'input[name="menu[title]"]');
+    $this->assertEquals($mainLinkTitle, $element->getValue());
   }
 
 }

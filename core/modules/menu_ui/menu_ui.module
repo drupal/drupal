@@ -141,7 +141,7 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
     if (in_array($menu_name, $type_menus)) {
       $query = \Drupal::entityQuery('menu_link_content')
         ->accessCheck(TRUE)
-        ->condition('link.uri', 'node/' . $node->id())
+        ->condition('link.uri', 'entity:node/' . $node->id())
         ->condition('menu_name', $menu_name)
         ->sort('id', 'ASC')
         ->range(0, 1);
