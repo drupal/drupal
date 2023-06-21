@@ -311,7 +311,6 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
   public function getContextsDuringPreview() {
     $contexts = parent::getContextsDuringPreview();
 
-    // @todo Remove this in https://www.drupal.org/node/3018782.
     if (isset($contexts['entity'])) {
       $contexts['layout_builder.entity'] = $contexts['entity'];
       unset($contexts['entity']);

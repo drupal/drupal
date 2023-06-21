@@ -303,7 +303,6 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    */
   protected function buildSections(FieldableEntityInterface $entity) {
     $contexts = $this->getContextsForEntity($entity);
-    // @todo Remove in https://www.drupal.org/project/drupal/issues/3018782.
     $label = new TranslatableMarkup('@entity being viewed', [
       '@entity' => $entity->getEntityType()->getSingularLabel(),
     ]);
