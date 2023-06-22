@@ -195,7 +195,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
       'uid' => $this->user,
       'body' => [
         'format' => 'plain_text',
-        'value' => $this->randomStringValidate(42),
+        'value' => $this->randomString(),
       ],
       'field_tags' => [
         ['target_id' => $this->term1->id()],
