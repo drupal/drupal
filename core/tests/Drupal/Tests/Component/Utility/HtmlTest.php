@@ -90,7 +90,7 @@ class HtmlTest extends TestCase {
   /**
    * Tests that Html::getClass() cleans the class name properly.
    *
-   * @coversDefaultClass ::getClass
+   * @covers ::getClass
    */
   public function testHtmlClass() {
     // Verify Drupal coding standards are enforced.

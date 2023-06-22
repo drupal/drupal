@@ -1466,11 +1466,6 @@ parameters:
 			path: modules/menu_link_content/src/Plugin/Menu/MenuLinkContent.php
 
 		-
-			message: "#^@coversDefaultClass defined on class method testPendingRevisions\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Kernel/MenuLinksTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/menu_link_content/tests/src/Kernel/MenuLinksTest.php
@@ -2641,11 +2636,6 @@ parameters:
 			path: modules/workspaces/src/WorkspacePublisher.php
 
 		-
-			message: "#^@coversDefaultClass defined on class method testWorkspaceSelection\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Kernel/WorkspaceAccessTest.php
-
-		-
 			message: "#^Variable \\$keyed_content might not be defined\\.$#"
 			count: 1
 			path: profiles/demo_umami/modules/demo_umami_content/src/InstallHelper.php
@@ -2839,11 +2829,6 @@ parameters:
 			message: "#^Constructor of class Drupal\\\\Tests\\\\Component\\\\Plugin\\\\Factory\\\\ArgumentsPluginId has an unused parameter \\$plugin_id\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Component/Plugin/Factory/ReflectionFactoryTest.php
-
-		-
-			message: "#^@coversDefaultClass defined on class method testHtmlClass\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/Utility/HtmlTest.php
 
 		-
 			message: "#^Result of static method Drupal\\\\Composer\\\\Composer\\:\\:ensureComposerVersion\\(\\) \\(void\\) is used\\.$#"
