@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests;
 
 use Drupal\Component\FileCache\FileCacheFactory;
+use Drupal\Component\Utility\Random;
 use Drupal\Core\Database\Database;
 use GuzzleHttp\Exception\GuzzleException;
 use Drupal\Tests\StreamCapturer;
@@ -363,6 +364,19 @@ class KernelTestBaseTest extends KernelTestBase {
 
     // Test that the module that is providing the database driver is enabled.
     $this->assertSame(1, \Drupal::service('extension.list.module')->get($module)->status);
+  }
+
+  /**
+   * Tests the deprecation of accessing the randomGenerator property directly.
+   *
+   * @group legacy
+   */
+  public function testGetRandomGeneratorPropertyDeprecation() {
+    $this->expectDeprecation('Accessing the randomGenerator property is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use getRandomGenerator() instead. See https://www.drupal.org/node/3358445');
+    // We purposely test accessing an undefined property here. We need to tell
+    // PHPStan to ignore that.
+    // @phpstan-ignore-next-line
+    $this->assertInstanceOf(Random::class, $this->randomGenerator);
   }
 
 }

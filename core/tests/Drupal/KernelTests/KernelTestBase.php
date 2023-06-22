@@ -24,7 +24,6 @@ use Drupal\Tests\TestRequirementsTrait;
 use Drupal\Tests\Traits\PhpUnitWarnings;
 use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
 use Drupal\TestTools\Extension\SchemaInspector;
-use Drupal\TestTools\Random;
 use Drupal\TestTools\TestVarDumper;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
@@ -267,7 +266,9 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    */
   public function __get(string $name) {
     if ($name === 'randomGenerator') {
-      return Random::getGenerator();
+      @trigger_error('Accessing the randomGenerator property is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use getRandomGenerator() instead. See https://www.drupal.org/node/3358445', E_USER_DEPRECATED);
+
+      return $this->getRandomGenerator();
     }
   }
 
