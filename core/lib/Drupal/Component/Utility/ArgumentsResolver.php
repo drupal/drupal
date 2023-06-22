@@ -119,7 +119,13 @@ class ArgumentsResolver implements ArgumentsResolverInterface {
    *   The ReflectionMethod or ReflectionFunction to introspect the callable.
    */
   protected function getReflector(callable $callable) {
-    return is_array($callable) ? new \ReflectionMethod($callable[0], $callable[1]) : new \ReflectionFunction($callable);
+    if (is_array($callable)) {
+      return new \ReflectionMethod($callable[0], $callable[1]);
+    }
+    if (is_string($callable) && str_contains($callable, "::")) {
+      return new \ReflectionMethod($callable);
+    }
+    return new \ReflectionFunction($callable);
   }
 
   /**

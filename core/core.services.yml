@@ -827,7 +827,7 @@ services:
   Symfony\Contracts\EventDispatcher\EventDispatcherInterface: '@event_dispatcher'
   controller_resolver:
     class: Drupal\Core\Controller\ControllerResolver
-    arguments: ['@psr7.http_message_factory', '@class_resolver']
+    arguments: ['@callable_resolver']
   Drupal\Core\Controller\ControllerResolverInterface: '@controller_resolver'
   Symfony\Component\HttpKernel\Controller\ControllerResolverInterface: '@controller_resolver'
   class_resolver:
@@ -835,6 +835,10 @@ services:
     calls:
       - [setContainer, ['@service_container']]
   Drupal\Core\DependencyInjection\ClassResolverInterface: '@class_resolver'
+  callable_resolver:
+    class: Drupal\Core\Utility\CallableResolver
+    arguments: ['@class_resolver']
+  Drupal\Core\Utility\CallableResolver: '@callable_resolver'
   title_resolver:
     class: Drupal\Core\Controller\TitleResolver
     arguments: ['@controller_resolver', '@string_translation', '@http_kernel.controller.argument_resolver']
