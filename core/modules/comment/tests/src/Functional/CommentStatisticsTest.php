@@ -4,7 +4,6 @@ namespace Drupal\Tests\comment\Functional;
 
 use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\Entity\Comment;
-use Drupal\user\RoleInterface;
 
 /**
  * Tests comment statistics on nodes.
@@ -77,15 +76,20 @@ class CommentStatisticsTest extends CommentTestBase {
     $this->assertEquals(1, $node->get('comment')->comment_count, 'The value of node comment_count is 1.');
 
     // Prepare for anonymous comment submission (comment approval enabled).
-    $this->drupalLogin($this->adminUser);
-    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
-      'access comments' => TRUE,
-      'post comments' => TRUE,
-      'skip comment approval' => FALSE,
-    ]);
+    // Note we don't use user_role_change_permissions(), because that caused
+    // random test failures.
+    $this->drupalLogin($this->rootUser);
+    $this->drupalGet('admin/people/permissions');
+    $edit = [
+      'anonymous[access comments]' => 1,
+      'anonymous[post comments]' => 1,
+      'anonymous[skip comment approval]' => 0,
+    ];
+    $this->submitForm($edit, 'Save permissions');
+    $this->drupalLogout();
+
     // Ensure that the poster can leave some contact info.
     $this->setCommentAnonymous('1');
-    $this->drupalLogout();
 
     // Post comment #2 as anonymous (comment approval enabled).
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
@@ -101,12 +105,14 @@ class CommentStatisticsTest extends CommentTestBase {
     $this->assertEquals(1, $node->get('comment')->comment_count, 'The value of node comment_count is still 1.');
 
     // Prepare for anonymous comment submission (no approval required).
-    $this->drupalLogin($this->adminUser);
-    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
-      'access comments' => TRUE,
-      'post comments' => TRUE,
-      'skip comment approval' => TRUE,
-    ]);
+    // Note we don't use user_role_change_permissions(), because that caused
+    // random test failures.
+    $this->drupalLogin($this->rootUser);
+    $this->drupalGet('admin/people/permissions');
+    $edit = [
+      'anonymous[skip comment approval]' => 1,
+    ];
+    $this->submitForm($edit, 'Save permissions');
     $this->drupalLogout();
 
     // Post comment #3 as anonymous.
