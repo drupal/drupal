@@ -179,6 +179,9 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     // HTML tags, there is nothing left (that is, all text is translated).
     $text = preg_replace('|\s+|', '', $this->renderHelpTopic($template_text, 'remove_translated'));
     $this->assertEmpty($text, 'Topic ' . $id . ' Twig file has all of its text translated');
+
+    // Verify that the Twig url() function was not used.
+    $this->assertStringNotContainsString('url(', $template, 'Topic ' . $id . ' appears to use the url() function. Replace with help_topic_link() or help_topic_route(). See https://drupal.org/node/3074421');
   }
 
   /**
@@ -273,6 +276,10 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
 
         case 'hierarchy':
           $this->assertStringContainsString('has the correct H2-H6 heading hierarchy', $message);
+          break;
+
+        case 'url_func_used':
+          $this->assertStringContainsString('appears to use the url() function', $message);
           break;
 
         default:

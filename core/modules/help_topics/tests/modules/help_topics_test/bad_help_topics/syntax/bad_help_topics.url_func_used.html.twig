@@ -1,0 +1,9 @@
+---
+label: 'URL test topic that uses outdated url function'
+top_level: true
+---
+{% set link_uses_url_func = render_var(url('valid.route')) %}
+<p>{% trans %}This topic should be top-level. It is used to test URLs{% endtrans %}</p>
+<ul>
+  <li>{% trans %}Valid link, but generated with <code>url()</code> instead of <code>help_route_link()</code> or <code>help_topic_link()</code>: {{ link_uses_url_func }}{% endtrans %}</li>
+</ul>
