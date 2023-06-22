@@ -2881,16 +2881,6 @@ parameters:
 			path: tests/Drupal/Tests/Composer/ComposerTest.php
 
 		-
-			message: "#^Class Drupal\\\\Driver\\\\Database\\\\corefake\\\\Install\\\\Tasks not found\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Database/InstallerObjectTest.php
-
-		-
-			message: "#^Class Drupal\\\\Driver\\\\Database\\\\fake\\\\Install\\\\Tasks not found\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Database/InstallerObjectTest.php
-
-		-
 			message: "#^Trying to mock an undefined method getRevisionId\\(\\) on class Drupal\\\\Tests\\\\Core\\\\Entity\\\\UrlTestEntity\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Entity/EntityUrlTest.php

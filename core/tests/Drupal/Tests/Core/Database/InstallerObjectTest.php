@@ -63,9 +63,11 @@ class InstallerObjectTest extends UnitTestCase {
       ['mysql', "Drupal\\mysql\\Driver\\Database\\mysql", MysqlInstallTasks::class],
 
       // A driver only in the custom namespace.
+      // @phpstan-ignore-next-line
       ['fake', "Drupal\\Driver\\Database\\fake", FakeInstallTasks::class],
 
       // A driver in both namespaces. The custom one takes precedence.
+      // @phpstan-ignore-next-line
       ['corefake', "Drupal\\Driver\\Database\\corefake", CustomCoreFakeInstallTasks::class],
 
       // A driver from a module that has a different name as the driver.
