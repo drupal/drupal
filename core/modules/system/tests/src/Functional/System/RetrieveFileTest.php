@@ -8,6 +8,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests HTTP file fetching and error handling.
  *
  * @group system
+ * @group legacy
  */
 class RetrieveFileTest extends BrowserTestBase {
 

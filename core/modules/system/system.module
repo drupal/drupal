@@ -1154,8 +1154,14 @@ function system_time_zones($blank = NULL, $grouped = FALSE) {
  *   - If it succeeds and $managed is TRUE, a \Drupal\file\FileInterface
  *     object which describes the file.
  *   - If it fails, FALSE.
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3223362
  */
 function system_retrieve_file($url, $destination = NULL, $managed = FALSE, $replace = FileSystemInterface::EXISTS_RENAME) {
+  @trigger_error('system_retrieve_file is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3223362', E_USER_DEPRECATED);
   $parsed_url = parse_url($url);
   /** @var \Drupal\Core\File\FileSystemInterface $file_system */
   $file_system = \Drupal::service('file_system');
