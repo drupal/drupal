@@ -107,6 +107,7 @@
 
 .dropbutton--multiple .dropbutton__item:first-of-type {
   margin-right: calc(var(--dropbutton-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
+  white-space: nowrap;
 }
 
 [dir="rtl"] .dropbutton--multiple .dropbutton__item:first-of-type {
@@ -118,6 +119,7 @@
 
 .no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type {
   margin-right: calc(var(--dropbutton-small-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
+  white-space: nowrap;
 }
 
 [dir="rtl"].no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type {
@@ -127,6 +129,7 @@
 
 .no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__item:first-of-type {
   margin-right: calc(var(--dropbutton-extrasmall-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
+  white-space: nowrap;
 }
 
 [dir="rtl"].no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__item:first-of-type {
