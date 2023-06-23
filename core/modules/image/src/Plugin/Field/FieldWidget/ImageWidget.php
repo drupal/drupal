@@ -146,11 +146,14 @@ class ImageWidget extends FileWidget {
     $field_settings = $this->getFieldSettings();
 
     // Add image validation.
-    $element['#upload_validators']['file_validate_is_image'] = [];
+    $element['#upload_validators']['FileIsImage'] = [];
 
     // Add upload resolution validation.
     if ($field_settings['max_resolution'] || $field_settings['min_resolution']) {
-      $element['#upload_validators']['file_validate_image_resolution'] = [$field_settings['max_resolution'], $field_settings['min_resolution']];
+      $element['#upload_validators']['FileImageDimensions'] = [
+        'maxDimensions' => $field_settings['max_resolution'],
+        'minDimensions' => $field_settings['min_resolution'],
+      ];
     }
 
     $extensions = $field_settings['file_extensions'];
@@ -160,7 +163,7 @@ class ImageWidget extends FileWidget {
     // supported by the current image toolkit. Otherwise, validate against all
     // toolkit supported extensions.
     $extensions = !empty($extensions) ? array_intersect(explode(' ', $extensions), $supported_extensions) : $supported_extensions;
-    $element['#upload_validators']['file_validate_extensions'][0] = implode(' ', $extensions);
+    $element['#upload_validators']['FileExtension']['extensions'] = implode(' ', $extensions);
 
     // Add mobile device image capture acceptance.
     $element['#accept'] = 'image/*';

@@ -5,7 +5,6 @@ namespace Drupal\jsonapi\Controller;
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Core\Access\AccessResultReasonInterface;
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Entity\EntityConstraintViolationListInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -27,6 +26,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
  * Handles file upload requests.
@@ -120,7 +120,7 @@ class FileUpload {
     $filename = $this->fileUploader->validateAndParseContentDispositionHeader($request);
     $file = $this->fileUploader->handleFileUploadForField($field_definition, $filename, $this->currentUser);
 
-    if ($file instanceof EntityConstraintViolationListInterface) {
+    if ($file instanceof ConstraintViolationListInterface) {
       $violations = $file;
       $message = "Unprocessable Entity: file validation failed.\n";
       $message .= implode("\n", array_map(function (ConstraintViolationInterface $violation) {
@@ -170,7 +170,7 @@ class FileUpload {
     $filename = $this->fileUploader->validateAndParseContentDispositionHeader($request);
     $file = $this->fileUploader->handleFileUploadForField($field_definition, $filename, $this->currentUser);
 
-    if ($file instanceof EntityConstraintViolationListInterface) {
+    if ($file instanceof ConstraintViolationListInterface) {
       $violations = $file;
       $message = "Unprocessable Entity: file validation failed.\n";
       $message .= implode("\n", array_map(function (ConstraintViolationInterface $violation) {

@@ -6,9 +6,20 @@ services:
       - { name: backend_overridable }
   file.upload_handler:
     class: Drupal\file\Upload\FileUploadHandler
-    arguments: [ '@file_system', '@entity_type.manager', '@stream_wrapper_manager', '@event_dispatcher', '@file.mime_type.guesser', '@current_user', '@request_stack', '@file.repository' ]
+    arguments: ['@file_system', '@entity_type.manager', '@stream_wrapper_manager', '@event_dispatcher', '@file.mime_type.guesser', '@current_user', '@request_stack', '@file.repository', '@file.validator']
   Drupal\file\Upload\FileUploadHandler: '@file.upload_handler'
   file.repository:
     class: Drupal\file\FileRepository
     arguments: [ '@file_system', '@stream_wrapper_manager', '@entity_type.manager', '@module_handler', '@file.usage', '@current_user' ]
   Drupal\file\FileRepositoryInterface: '@file.repository'
+  file.recursive_validator_factory:
+    class: Drupal\file\Validation\RecursiveValidatorFactory
+    arguments: ['@class_resolver', '@typed_data_manager']
+  Drupal\file\Validation\RecursiveValidatorFactory: '@file.recursive_validator_factory'
+  file.recursive_validator:
+    class: Symfony\Component\Validator\Validator\ValidatorInterface
+    factory: ['@file.recursive_validator_factory', 'createValidator']
+  file.validator:
+    class: Drupal\file\Validation\FileValidator
+    arguments: ['@file.recursive_validator', '@validation.constraint', '@event_dispatcher', '@module_handler']
+  Drupal\file\Validation\FileValidatorInterface: '@file.validator'

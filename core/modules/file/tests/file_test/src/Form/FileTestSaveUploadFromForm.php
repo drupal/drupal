@@ -141,18 +141,18 @@ class FileTestSaveUploadFromForm extends FormBase {
     // Setup validators.
     $validators = [];
     if ($form_state->getValue('is_image_file')) {
-      $validators['file_validate_is_image'] = [];
+      $validators['FileIsImage'] = [];
     }
 
     $allow = $form_state->getValue('allow_all_extensions');
     if ($allow === 'empty_array') {
-      $validators['file_validate_extensions'] = [];
+      $validators['FileExtension'] = [];
     }
     elseif ($allow === 'empty_string') {
-      $validators['file_validate_extensions'] = [''];
+      $validators['FileExtension'] = ['extensions' => ''];
     }
     elseif (!$form_state->isValueEmpty('extensions')) {
-      $validators['file_validate_extensions'] = [$form_state->getValue('extensions')];
+      $validators['FileExtension'] = ['extensions' => $form_state->getValue('extensions')];
     }
 
     // The test for \Drupal::service('file_system')->moveUploadedFile()

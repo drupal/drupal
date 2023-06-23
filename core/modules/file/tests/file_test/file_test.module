@@ -140,14 +140,6 @@ function file_test_file_load($files) {
 }
 
 /**
- * Implements hook_file_validate().
- */
-function file_test_file_validate(File $file) {
-  _file_test_log_call('validate', [$file->id()]);
-  return _file_test_get_return('validate');
-}
-
-/**
  * Implements hook_file_download().
  */
 function file_test_file_download($uri) {

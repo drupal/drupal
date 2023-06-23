@@ -49,6 +49,7 @@ class LinkCollectionNormalizerTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'file',
     'jsonapi',
     'serialization',
     'system',

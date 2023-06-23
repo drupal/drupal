@@ -16,12 +16,16 @@ use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
  */
 class FieldResolverTest extends JsonapiKernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'entity_test',
+    'field',
+    'file',
     'jsonapi_test_field_aliasing',
     'jsonapi_test_field_filter_access',
     'serialization',
-    'field',
     'text',
     'user',
   ];

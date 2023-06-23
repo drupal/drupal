@@ -21,7 +21,7 @@ function test_theme_theme_form_system_theme_settings_alter(&$form, FormStateInte
     '#progress_message'   => t('Please wait...'),
     '#upload_location' => 'public://test',
     '#upload_validators'  => [
-      'file_validate_extensions' => ['gif png jpg jpeg'],
+      'FileExtension' => ['extensions' => 'gif png jpg jpeg'],
     ],
   ];
 

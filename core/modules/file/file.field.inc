@@ -153,20 +153,39 @@ function template_preprocess_file_upload_help(&$variables) {
     }
   }
   if (isset($upload_validators['file_validate_size'])) {
+    @trigger_error('\'file_validate_size\' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the \'FileSizeLimit\' constraint instead. See https://www.drupal.org/node/3363700', E_USER_DEPRECATED);
     $descriptions[] = t('@size limit.', ['@size' => format_size($upload_validators['file_validate_size'][0])]);
   }
-  if (isset($upload_validators['file_validate_extensions'])) {
-    $descriptions[] = t('Allowed types: @extensions.', ['@extensions' => $upload_validators['file_validate_extensions'][0]]);
+  if (isset($upload_validators['FileSizeLimit'])) {
+    $descriptions[] = t('@size limit.', ['@size' => format_size($upload_validators['FileSizeLimit']['fileLimit'])]);
   }
 
-  if (isset($upload_validators['file_validate_image_resolution'])) {
-    $max = $upload_validators['file_validate_image_resolution'][0];
-    $min = $upload_validators['file_validate_image_resolution'][1];
+  if (isset($upload_validators['file_validate_extensions'])) {
+    @trigger_error('\'file_validate_extensions\' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the \'FileExtension\' constraint instead. See https://www.drupal.org/node/3363700', E_USER_DEPRECATED);
+    $descriptions[] = t('Allowed types: @extensions.', ['@extensions' => $upload_validators['file_validate_extensions'][0]]);
+  }
+  if (isset($upload_validators['FileExtension'])) {
+    $descriptions[] = t('Allowed types: @extensions.', ['@extensions' => $upload_validators['FileExtension']['extensions']]);
+  }
+
+  if (isset($upload_validators['file_validate_image_resolution']) || isset($upload_validators['FileImageDimensions'])) {
+    if (isset($upload_validators['file_validate_image_resolution'])) {
+      @trigger_error('\'file_validate_image_resolution\' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the \'FileImageDimensions\' constraint instead. See https://www.drupal.org/node/3363700', E_USER_DEPRECATED);
+      $max = $upload_validators['file_validate_image_resolution'][0];
+      $min = $upload_validators['file_validate_image_resolution'][1];
+    }
+    else {
+      $max = $upload_validators['FileImageDimensions']['maxDimensions'];
+      $min = $upload_validators['FileImageDimensions']['minDimensions'];
+    }
     if ($min && $max && $min == $max) {
       $descriptions[] = t('Images must be exactly <strong>@size</strong> pixels.', ['@size' => $max]);
     }
     elseif ($min && $max) {
-      $descriptions[] = t('Images must be larger than <strong>@min</strong> pixels. Images larger than <strong>@max</strong> pixels will be resized.', ['@min' => $min, '@max' => $max]);
+      $descriptions[] = t('Images must be larger than <strong>@min</strong> pixels. Images larger than <strong>@max</strong> pixels will be resized.', [
+        '@min' => $min,
+        '@max' => $max,
+      ]);
     }
     elseif ($min) {
       $descriptions[] = t('Images must be larger than <strong>@min</strong> pixels.', ['@min' => $min]);

@@ -15,21 +15,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
 
   /**
-   * The system.file configuration.
-   *
-   * @var \Drupal\Core\Config\Config
-   */
-  protected $config;
-
-  /**
    * Constructs a new file event listener.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory.
    */
-  public function __construct(ConfigFactoryInterface $config_factory) {
-    $this->config = $config_factory->get('system.file');
-  }
+  public function __construct(
+    protected ConfigFactoryInterface $configFactory
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -37,7 +30,10 @@ class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
   public static function getSubscribedEvents(): array {
     // This event must be run last to ensure the filename obeys the security
     // rules.
-    $events[FileUploadSanitizeNameEvent::class][] = ['sanitizeName', PHP_INT_MIN];
+    $events[FileUploadSanitizeNameEvent::class][] = [
+      'sanitizeName',
+      PHP_INT_MIN,
+    ];
     return $events;
   }
 
@@ -67,7 +63,7 @@ class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
     // e.g. .htaccess. In this scenario there is only one 'part' and the
     // extension becomes the filename. We use the original filename from the
     // event rather than the trimmed version above.
-    $insecure_uploads = $this->config->get('allow_insecure_uploads');
+    $insecure_uploads = $this->configFactory->get('system.file')->get('allow_insecure_uploads');
     if (!$insecure_uploads && $final_extension === '' && str_contains($event->getFilename(), '.') && in_array(strtolower($filename), FileSystemInterface::INSECURE_EXTENSIONS, TRUE)) {
       $final_extension = $filename;
       $filename = '';
@@ -75,13 +71,13 @@ class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
 
     $extensions = $event->getAllowedExtensions();
     if (!empty($extensions) && !in_array(strtolower($final_extension), $extensions, TRUE)) {
-      // This upload will be rejected by file_validate_extensions() anyway so do
+      // This upload will be rejected by FileExtension constraint anyway so do
       // not make any alterations to the filename. This prevents a file named
       // 'example.php' being renamed to 'example.php_.txt' and uploaded if the
       // .txt extension is allowed but .php is not. It is the responsibility of
-      // the function that dispatched the event to ensure file_validate() is
-      // called with 'file_validate_extensions' in the list of validators if
-      // $extensions is not empty.
+      // the function that dispatched the event to ensure
+      // FileValidator::validate() is called with 'FileExtension' in the list of
+      // validators if $extensions is not empty.
       return;
     }
 
@@ -95,7 +91,7 @@ class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
       }
       else {
         // Since .txt is not an allowed extension do not rename the file. The
-        // file will be rejected by file_validate().
+        // file will be rejected by FileValidator::validate().
         return;
       }
     }

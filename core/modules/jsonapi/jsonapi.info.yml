@@ -6,3 +6,4 @@ version: VERSION
 configure: jsonapi.settings
 dependencies:
   - drupal:serialization
+  - drupal:file

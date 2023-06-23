@@ -331,11 +331,11 @@ class FileItem extends EntityReferenceItem {
     }
 
     // There is always a file size limit due to the PHP server limit.
-    $validators['file_validate_size'] = [$max_filesize];
+    $validators['FileSizeLimit'] = ['fileLimit' => $max_filesize];
 
     // Add the extension check if necessary.
     if (!empty($settings['file_extensions'])) {
-      $validators['file_validate_extensions'] = [$settings['file_extensions']];
+      $validators['FileExtension'] = ['extensions' => $settings['file_extensions']];
     }
 
     return $validators;

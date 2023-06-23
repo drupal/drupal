@@ -1,0 +1,7 @@
+name: File validator test
+type: module
+description: Provides classes for file validator tests
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:file

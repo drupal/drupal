@@ -9,24 +9,22 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Environment;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\File\Event\FileUploadSanitizeNameEvent;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\editor\Entity\Editor;
-use Drupal\Core\Validation\DrupalTranslator;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
+use Drupal\file\Validation\FileValidatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\Mime\MimeTypeGuesserInterface;
-use Symfony\Component\Validator\ConstraintViolation;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Symfony\Component\Mime\MimeTypeGuesserInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Returns response for CKEditor 5 Simple image upload adapter.
@@ -72,6 +70,13 @@ class CKEditor5ImageController extends ControllerBase {
   protected $eventDispatcher;
 
   /**
+   * The file validator.
+   *
+   * @var \Drupal\file\Validation\FileValidatorInterface
+   */
+  protected FileValidatorInterface $fileValidator;
+
+  /**
    * Constructs a new CKEditor5ImageController.
    *
    * @param \Drupal\Core\File\FileSystemInterface $file_system
@@ -84,13 +89,20 @@ class CKEditor5ImageController extends ControllerBase {
    *   The lock service.
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
+   * @param \Drupal\file\Validation\FileValidatorInterface|null $file_validator
+   *   The file validator.
    */
-  public function __construct(FileSystemInterface $file_system, AccountInterface $current_user, MimeTypeGuesserInterface $mime_type_guesser, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher) {
+  public function __construct(FileSystemInterface $file_system, AccountInterface $current_user, MimeTypeGuesserInterface $mime_type_guesser, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, FileValidatorInterface $file_validator = NULL) {
     $this->fileSystem = $file_system;
     $this->currentUser = $current_user;
     $this->mimeTypeGuesser = $mime_type_guesser;
     $this->lock = $lock;
     $this->eventDispatcher = $event_dispatcher;
+    if (!$file_validator) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $file_validator argument is deprecated in drupal:10.2.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3363700', E_USER_DEPRECATED);
+      $file_validator = \Drupal::service('file.validator');
+    }
+    $this->fileValidator = $file_validator;
   }
 
   /**
@@ -103,6 +115,7 @@ class CKEditor5ImageController extends ControllerBase {
       $container->get('file.mime_type.guesser'),
       $container->get('lock'),
       $container->get('event_dispatcher'),
+      $container->get('file.validator')
     );
   }
 
@@ -144,13 +157,20 @@ class CKEditor5ImageController extends ControllerBase {
       $max_dimensions = 0;
     }
 
+    $allowed_extensions = 'gif png jpg jpeg';
     $validators = [
-      'file_validate_extensions' => ['gif png jpg jpeg'],
-      'file_validate_size' => [$max_filesize],
-      'file_validate_image_resolution' => [$max_dimensions],
+      'FileExtension' => [
+        'extensions' => $allowed_extensions,
+      ],
+      'FileSizeLimit' => [
+        'fileLimit' => $max_filesize,
+      ],
+      'FileImageDimensions' => [
+        'maxDimensions' => $max_dimensions,
+      ],
     ];
 
-    $prepared_filename = $this->prepareFilename($filename, $validators);
+    $prepared_filename = $this->prepareFilename($filename, $allowed_extensions);
 
     // Create the file.
     $file_uri = "{$destination}/{$prepared_filename}";
@@ -225,7 +245,7 @@ class CKEditor5ImageController extends ControllerBase {
    * @param \Drupal\file\FileInterface $file
    *   The file entity to validate.
    * @param array $validators
-   *   An array of upload validators to pass to file_validate().
+   *   An array of upload validators to pass to the FileValidator.
    *
    * @return \Drupal\Core\Entity\EntityConstraintViolationListInterface
    *   The list of constraint violations, if any.
@@ -238,20 +258,7 @@ class CKEditor5ImageController extends ControllerBase {
     $violations->filterByFieldAccess();
 
     // Validate the file based on the field definition configuration.
-    $errors = file_validate($file, $validators);
-    if (!empty($errors)) {
-      $translator = new DrupalTranslator();
-      foreach ($errors as $error) {
-        $violation = new ConstraintViolation($translator->trans($error),
-          (string) $error,
-          [],
-          EntityAdapter::createFromEntity($file),
-          '',
-          NULL
-        );
-        $violations->add($violation);
-      }
-    }
+    $violations->addAll($this->fileValidator->validate($file, $validators));
 
     return $violations;
   }
@@ -261,15 +268,14 @@ class CKEditor5ImageController extends ControllerBase {
    *
    * @param string $filename
    *   The file name.
-   * @param array $validators
-   *   The array of upload validators.
+   * @param string $allowed_extensions
+   *   The allowed extensions.
    *
    * @return string
    *   The prepared/munged filename.
    */
-  protected function prepareFilename($filename, array &$validators) {
-    $extensions = $validators['file_validate_extensions'][0] ?? '';
-    $event = new FileUploadSanitizeNameEvent($filename, $extensions);
+  protected function prepareFilename(string $filename, string $allowed_extensions): string {
+    $event = new FileUploadSanitizeNameEvent($filename, $allowed_extensions);
     $this->eventDispatcher->dispatch($event);
 
     return $event->getFilename();

@@ -1,0 +1,5 @@
+services:
+  file_validation_test_subscriber:
+    class: Drupal\file_validator_test\EventSubscriber\FileValidationTestSubscriber
+    tags:
+      - { name: event_subscriber }

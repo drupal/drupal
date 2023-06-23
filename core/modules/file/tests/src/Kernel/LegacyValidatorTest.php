@@ -8,8 +8,9 @@ use Drupal\file\Entity\File;
  * Tests the functions used to validate uploaded files.
  *
  * @group file
+ * @group legacy
  */
-class ValidatorTest extends FileManagedUnitTestBase {
+class LegacyValidatorTest extends FileManagedUnitTestBase {
 
   /**
    * An image file.
@@ -47,6 +48,7 @@ class ValidatorTest extends FileManagedUnitTestBase {
    */
   public function testFileValidateExtensions() {
     $file = File::create(['filename' => 'asdf.txt']);
+    $this->expectDeprecation('file_validate_extensions() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the \'file.validator\' service instead. See https://www.drupal.org/node/3363700');
     $errors = file_validate_extensions($file, 'asdf txt pork');
     $this->assertCount(0, $errors, 'Valid extension accepted.');
 
@@ -69,6 +71,7 @@ class ValidatorTest extends FileManagedUnitTestBase {
    */
   public function testFileValidateExtensionsOnUri(array $file_properties, array $extensions, array $expected_errors) {
     $file = File::create($file_properties);
+    $this->expectDeprecation('file_validate_extensions() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the \'file.validator\' service instead. See https://www.drupal.org/node/3363700');
     $actual_errors = file_validate_extensions($file, implode(' ', $extensions));
     $actual_errors_as_string = array_map(function ($error_message) {
       return (string) $error_message;
@@ -143,6 +146,7 @@ class ValidatorTest extends FileManagedUnitTestBase {
    */
   public function testFileValidateIsImage() {
     $this->assertFileExists($this->image->getFileUri());
+    $this->expectDeprecation('file_validate_is_image() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the \'file.validator\' service instead. See https://www.drupal.org/node/3363700');
     $errors = file_validate_is_image($this->image);
     $this->assertCount(0, $errors, 'No error reported for our image file.');
 
@@ -158,6 +162,7 @@ class ValidatorTest extends FileManagedUnitTestBase {
    */
   public function testFileValidateImageResolution() {
     // Non-images.
+    $this->expectDeprecation('file_validate_image_resolution() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the \'file.validator\' service instead. See https://www.drupal.org/node/3363700');
     $errors = file_validate_image_resolution($this->nonImage);
     $this->assertCount(0, $errors, 'Should not get any errors for a non-image file.');
     $errors = file_validate_image_resolution($this->nonImage, '50x50', '100x100');
@@ -212,6 +217,7 @@ class ValidatorTest extends FileManagedUnitTestBase {
     // Add a filename with an allowed length and test it.
     $file->setFilename(str_repeat('x', 240));
     $this->assertEquals(240, strlen($file->getFilename()));
+    $this->expectDeprecation('file_validate_name_length() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the \'file.validator\' service instead. See https://www.drupal.org/node/3363700');
     $errors = file_validate_name_length($file);
     $this->assertCount(0, $errors, 'No errors reported for 240 length filename.');
 
@@ -232,6 +238,7 @@ class ValidatorTest extends FileManagedUnitTestBase {
   public function testFileValidateSize() {
     // Create a file with a size of 1000 bytes, and quotas of only 1 byte.
     $file = File::create(['filesize' => 1000]);
+    $this->expectDeprecation('file_validate_size() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the \'file.validator\' service instead. See https://www.drupal.org/node/3363700');
     $errors = file_validate_size($file, 0, 0);
     $this->assertCount(0, $errors, 'No limits means no errors.');
     $errors = file_validate_size($file, 1, 0);

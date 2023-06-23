@@ -16,7 +16,7 @@ abstract class JsonapiKernelTestBase extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['jsonapi'];
+  protected static $modules = ['jsonapi', 'file'];
 
   /**
    * Creates a field of an entity reference field storage on the bundle.

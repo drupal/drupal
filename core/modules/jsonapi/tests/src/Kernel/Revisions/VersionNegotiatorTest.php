@@ -57,7 +57,11 @@ class VersionNegotiatorTest extends JsonapiKernelTestBase {
    */
   protected $node2;
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
+    'file',
     'node',
     'field',
     'jsonapi',

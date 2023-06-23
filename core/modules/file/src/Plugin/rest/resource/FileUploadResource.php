@@ -2,35 +2,35 @@
 
 namespace Drupal\file\Plugin\rest\resource;
 
+use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Environment;
 use Drupal\Core\Config\Config;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\File\Event\FileUploadSanitizeNameEvent;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Utility\Token;
-use Drupal\file\FileInterface;
-use Drupal\Core\File\Event\FileUploadSanitizeNameEvent;
+use Drupal\file\Entity\File;
+use Drupal\file\Validation\FileValidatorInterface;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
-use Drupal\Component\Render\PlainTextOutput;
-use Drupal\Core\Entity\EntityFieldManagerInterface;
-use Drupal\file\Entity\File;
 use Drupal\rest\Plugin\rest\resource\EntityResourceValidationTrait;
 use Drupal\rest\RequestHandler;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -135,6 +135,13 @@ class FileUploadResource extends ResourceBase {
   protected $eventDispatcher;
 
   /**
+   * The file validator.
+   *
+   * @var \Drupal\file\Validation\FileValidatorInterface
+   */
+  protected FileValidatorInterface $fileValidator;
+
+  /**
    * Constructs a FileUploadResource instance.
    *
    * @param array $configuration
@@ -165,8 +172,10 @@ class FileUploadResource extends ResourceBase {
    *   The system file configuration.
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher service.
+   * @param \Drupal\file\Validation\FileValidatorInterface|null $file_validator
+   *   The file validator service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, $serializer_formats, LoggerInterface $logger, FileSystemInterface $file_system, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, AccountInterface $current_user, $mime_type_guesser, Token $token, LockBackendInterface $lock, Config $system_file_config, EventDispatcherInterface $event_dispatcher) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, $serializer_formats, LoggerInterface $logger, FileSystemInterface $file_system, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, AccountInterface $current_user, $mime_type_guesser, Token $token, LockBackendInterface $lock, Config $system_file_config, EventDispatcherInterface $event_dispatcher, FileValidatorInterface $file_validator = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     $this->fileSystem = $file_system;
     $this->entityTypeManager = $entity_type_manager;
@@ -177,6 +186,11 @@ class FileUploadResource extends ResourceBase {
     $this->lock = $lock;
     $this->systemFileConfig = $system_file_config;
     $this->eventDispatcher = $event_dispatcher;
+    if (!$file_validator) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $file_validator argument is deprecated in drupal:10.2.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3363700', E_USER_DEPRECATED);
+      $file_validator = \Drupal::service('file.validator');
+    }
+    $this->fileValidator = $file_validator;
   }
 
   /**
@@ -197,7 +211,8 @@ class FileUploadResource extends ResourceBase {
       $container->get('token'),
       $container->get('lock'),
       $container->get('config.factory')->get('system.file'),
-      $container->get('event_dispatcher')
+      $container->get('event_dispatcher'),
+      $container->get('file.validator')
     );
   }
 
@@ -279,11 +294,15 @@ class FileUploadResource extends ResourceBase {
     // leave that method behavior unchanged.
     // @todo Improve this with a file uploader service in
     //   https://www.drupal.org/project/drupal/issues/2940383
-    $errors = file_validate($file, $validators);
+    $violations = $this->fileValidator->validate($file, $validators);
 
-    if (!empty($errors)) {
+    if (count($violations) > 0) {
       $message = "Unprocessable Entity: file validation failed.\n";
-      $message .= implode("\n", array_map([PlainTextOutput::class, 'renderFromHtml'], $errors));
+      $errors = [];
+      foreach ($violations as $violation) {
+        $errors[] = PlainTextOutput::renderFromHtml($violation->getMessage());
+      }
+      $message .= implode("\n", $errors);
 
       throw new UnprocessableEntityHttpException($message);
     }
@@ -452,38 +471,6 @@ class FileUploadResource extends ResourceBase {
   }
 
   /**
-   * Validates the file.
-   *
-   * @todo this method is unused in this class because file validation needs to
-   *   be split up in 2 steps in ::post(). Add a deprecation notice as soon as a
-   *   central core file upload service can be used in this class.
-   *   See https://www.drupal.org/project/drupal/issues/2940383
-   *
-   * @param \Drupal\file\FileInterface $file
-   *   The file entity to validate.
-   * @param array $validators
-   *   An array of upload validators to pass to file_validate().
-   *
-   * @throws \Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException
-   *   Thrown when there are file validation errors.
-   */
-  protected function validate(FileInterface $file, array $validators) {
-    $this->resourceValidate($file);
-
-    // Validate the file based on the field definition configuration.
-    $errors = file_validate($file, $validators);
-
-    if (!empty($errors)) {
-      $message = "Unprocessable Entity: file validation failed.\n";
-      $message .= implode("\n", array_map(function ($error) {
-        return PlainTextOutput::renderFromHtml($error);
-      }, $errors));
-
-      throw new UnprocessableEntityHttpException($message);
-    }
-  }
-
-  /**
    * Prepares the filename to strip out any malicious extensions.
    *
    * @param string $filename
@@ -497,7 +484,7 @@ class FileUploadResource extends ResourceBase {
   protected function prepareFilename($filename, array &$validators) {
     // The actual extension validation occurs in
     // \Drupal\file\Plugin\rest\resource\FileUploadResource::validate().
-    $extensions = $validators['file_validate_extensions'][0] ?? '';
+    $extensions = $validators['FileExtension']['extensions'] ?? '';
     $event = new FileUploadSanitizeNameEvent($filename, $extensions);
     $this->eventDispatcher->dispatch($event);
     return $event->getFilename();
@@ -538,7 +525,7 @@ class FileUploadResource extends ResourceBase {
   protected function getUploadValidators(FieldDefinitionInterface $field_definition) {
     $validators = [
       // Add in our check of the file name length.
-      'file_validate_name_length' => [],
+      'FileNameLength' => [],
     ];
     $settings = $field_definition->getSettings();
 
@@ -549,11 +536,15 @@ class FileUploadResource extends ResourceBase {
     }
 
     // There is always a file size limit due to the PHP server limit.
-    $validators['file_validate_size'] = [$max_filesize];
+    $validators['FileSizeLimit'] = [
+      'fileLimit' => $max_filesize,
+    ];
 
     // Add the extension check if necessary.
     if (!empty($settings['file_extensions'])) {
-      $validators['file_validate_extensions'] = [$settings['file_extensions']];
+      $validators['FileExtension'] = [
+        'extensions' => $settings['file_extensions'],
+      ];
     }
 
     return $validators;

@@ -360,8 +360,15 @@ class ManagedFile extends FormElement {
     }
 
     // Add the extension list to the page as JavaScript settings.
-    if (isset($element['#upload_validators']['file_validate_extensions'][0])) {
-      $extension_list = implode(',', array_filter(explode(' ', $element['#upload_validators']['file_validate_extensions'][0])));
+    if (isset($element['#upload_validators']['file_validate_extensions'][0]) || isset($element['#upload_validators']['FileExtension']['extensions'])) {
+      if (isset($element['#upload_validators']['file_validate_extensions'][0])) {
+        @trigger_error('\'file_validate_extensions\' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the \'FileExtension\' constraint instead. See https://www.drupal.org/node/3363700', E_USER_DEPRECATED);
+        $allowed_extensions = $element['#upload_validators']['file_validate_extensions'][0];
+      }
+      else {
+        $allowed_extensions = $element['#upload_validators']['FileExtension']['extensions'];
+      }
+      $extension_list = implode(',', array_filter(explode(' ', $allowed_extensions)));
       $element['upload']['#attached']['drupalSettings']['file']['elements']['#' . $id] = $extension_list;
     }
 

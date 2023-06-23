@@ -24,7 +24,7 @@ class SaveUploadTest extends FileManagedTestBase {
    *
    * @var array
    */
-  protected static $modules = ['dblog'];
+  protected static $modules = ['dblog', 'file_validator_test'];
 
   /**
    * {@inheritdoc}
@@ -351,6 +351,8 @@ class SaveUploadTest extends FileManagedTestBase {
     // Reset the hook counters.
     file_test_reset();
 
+    \Drupal::service('cache.config')->deleteAll();
+
     $edit = [
       'file_test_replace' => FileSystemInterface::EXISTS_REPLACE,
       'files[file_test_upload]' => \Drupal::service('file_system')->realpath($this->phpfile->uri),
@@ -565,7 +567,7 @@ class SaveUploadTest extends FileManagedTestBase {
     // Reset the hook counters.
     file_test_reset();
 
-    // Ensure that setting $validators['file_validate_extensions'] = ['']
+    // Ensure that setting $validators['FileExtension'] = ['extensions' = '']
     // rejects all files without munging or renaming.
     $edit = [
       'files[file_test_upload][]' => \Drupal::service('file_system')->realpath($this->image->getFileUri()),
