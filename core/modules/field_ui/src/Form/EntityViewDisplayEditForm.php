@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\field\FieldLabelOptionsTrait;
 
 /**
  * Edit form for the EntityViewDisplay entity type.
@@ -15,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class EntityViewDisplayEditForm extends EntityDisplayFormBase {
-
+  use FieldLabelOptionsTrait;
   /**
    * {@inheritdoc}
    */
@@ -145,21 +146,6 @@ class EntityViewDisplayEditForm extends EntityDisplayFormBase {
     return Url::fromRoute('entity.entity_view_display.' . $this->entity->getTargetEntityTypeId() . '.view_mode', [
       'view_mode_name' => $mode,
     ] + FieldUI::getRouteBundleParameter($entity_type, $this->entity->getTargetBundle()));
-  }
-
-  /**
-   * Returns an array of visibility options for field labels.
-   *
-   * @return array
-   *   An array of visibility options.
-   */
-  protected function getFieldLabelOptions() {
-    return [
-      'above' => $this->t('Above'),
-      'inline' => $this->t('Inline'),
-      'hidden' => '- ' . $this->t('Hidden') . ' -',
-      'visually_hidden' => '- ' . $this->t('Visually Hidden') . ' -',
-    ];
   }
 
   /**
