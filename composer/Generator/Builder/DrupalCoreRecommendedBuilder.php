@@ -38,6 +38,9 @@ class DrupalCoreRecommendedBuilder extends DrupalPackageBuilder {
       // to use any compatible version without needing to switch off of
       // drupal/core-recommended.
       'psr/http-message',
+      // Guzzle Promises is a dependency of some other libraries, so be less
+      // restrictive here and trust Guzzle to maintain compatibility.
+      'guzzlehttp/promises',
     ];
 
     // Copy the 'packages' section from the Composer lock into our 'require'

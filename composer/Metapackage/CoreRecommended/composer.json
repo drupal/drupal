@@ -15,7 +15,6 @@
         "doctrine/lexer": "~2.1.0",
         "egulias/email-validator": "~4.0.1",
         "guzzlehttp/guzzle": "~7.7.0",
-        "guzzlehttp/promises": "~2.0.0",
         "guzzlehttp/psr7": "~2.5.0",
         "masterminds/html5": "~2.8.0",
         "mck89/peast": "~v1.15.1",
