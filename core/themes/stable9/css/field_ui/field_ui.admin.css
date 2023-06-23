@@ -22,6 +22,10 @@
   font-size: 1em;
 }
 
+.allowed-values-table .form-item:where(:not(.hidden)) {
+  display: inline-table;
+}
+
 /* 'Manage form display' and 'Manage display' overview */
 .field-ui-overview .field-plugin-summary-cell {
   line-height: 1em;

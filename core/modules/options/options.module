@@ -5,10 +5,12 @@
  * Defines selection, check box and radio button widgets for text and numeric fields.
  */
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Url;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\field\FieldStorageConfigInterface;
 
@@ -135,4 +137,21 @@ function _options_values_in_use($entity_type, $field_name, $values) {
   }
 
   return FALSE;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Add additional classes to enable styling for list field types.
+ *
+ * @see \Drupal\options\Plugin\Field\FieldType\ListItemBase::storageSettingsForm
+ */
+function options_form_field_storage_config_edit_form_alter(&$form, FormStateInterface $form_state) {
+  $table = &NestedArray::getValue($form, ['settings', 'allowed_values', 'table']);
+  if (!$table) {
+    return;
+  }
+
+  $form['#attached']['library'][] = 'field_ui/drupal.field_ui';
+  $table['#attributes']['class'][] = 'allowed-values-table';
 }

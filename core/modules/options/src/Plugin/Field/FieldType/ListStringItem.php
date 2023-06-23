@@ -4,6 +4,8 @@ namespace Drupal\options\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
 
@@ -54,9 +56,8 @@ class ListStringItem extends ListItemBase {
    * {@inheritdoc}
    */
   protected function allowedValuesDescription() {
-    $description = '<p>' . $this->t('The possible values this field can contain. Enter one value per line, in the format key|label.');
-    $description .= '<br/>' . $this->t('The key is the stored value. The label will be used in displayed values and edit forms.');
-    $description .= '<br/>' . $this->t('The label is optional: if a line contains a single string, it will be used as key and label.');
+    $description = '<p>' . $this->t('The name will be used in displayed options and edit forms.');
+    $description .= '<br/>' . $this->t('The value is automatically generated machine name of the name provided and will be the stored value.');
     $description .= '</p>';
     $description .= '<p>' . $this->t('Allowed HTML tags in labels: @tags', ['@tags' => FieldFilteredMarkup::displayAllowedTags()]) . '</p>';
     return $description;
@@ -76,6 +77,48 @@ class ListStringItem extends ListItemBase {
    */
   protected static function castAllowedValue($value) {
     return (string) $value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
+    $element = parent::storageSettingsForm($form, $form_state, $has_data);
+
+    // Improve user experience by using an automatically generated machine name.
+    foreach (Element::children($element['allowed_values']['table']) as $delta => $row) {
+      $element['allowed_values']['table'][$delta]['item']['key']['#type'] = 'machine_name';
+      $element['allowed_values']['table'][$delta]['item']['key']['#machine_name'] = [
+        'exists' => [static::class, 'exists'],
+      ];
+      $element['allowed_values']['table'][$delta]['item']['key']['#process'] = array_merge(
+        [[static::class, 'processAllowedValuesKey']],
+        // Workaround for https://drupal.org/i/1300290#comment-12873635.
+        \Drupal::service('plugin.manager.element_info')->getInfoProperty('machine_name', '#process', []),
+      );
+    }
+
+    return $element;
+  }
+
+  /**
+   * Sets the machine name source to be the label.
+   */
+  public static function processAllowedValuesKey(array &$element): array {
+    $parents = $element['#parents'];
+    array_pop($parents);
+    $parents[] = 'label';
+    $element['#machine_name']['source'] = $parents;
+    return $element;
+  }
+
+  /**
+   * Checks for existing keys for allowed values.
+   */
+  public static function exists(): bool {
+    // Without access to the current form state, we cannot know if a given key
+    // is in use. Return FALSE in all cases.
+    return FALSE;
   }
 
 }

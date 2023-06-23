@@ -2,10 +2,13 @@
 
 namespace Drupal\options\Plugin\Field\FieldType;
 
+use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\OptGroup;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\OptionsProviderInterface;
@@ -84,24 +87,131 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    * {@inheritdoc}
    */
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
-    $allowed_values = $this->getSetting('allowed_values');
+    if (!array_key_exists('allowed_values', $form_state->getStorage())) {
+      $form_state->set('allowed_values', $this->getFieldDefinition()->getSetting('allowed_values'));
+    }
+
+    $allowed_values = $form_state->getStorage()['allowed_values'];
     $allowed_values_function = $this->getSetting('allowed_values_function');
 
+    if (!$form_state->get('items_count')) {
+      $form_state->set('items_count', max(count($allowed_values), 0));
+    }
+
+    $wrapper_id = Html::getUniqueId('allowed-values-wrapper');
     $element['allowed_values'] = [
-      '#type' => 'textarea',
-      '#title' => $this->t('Allowed values list'),
-      '#default_value' => $this->allowedValuesString($allowed_values),
-      '#rows' => 10,
-      '#access' => empty($allowed_values_function),
       '#element_validate' => [[static::class, 'validateAllowedValues']],
       '#field_has_data' => $has_data,
-      '#field_name' => $this->getFieldDefinition()->getName(),
-      '#entity_type' => $this->getEntity()->getEntityTypeId(),
       '#allowed_values' => $allowed_values,
       '#required' => TRUE,
+      '#prefix' => '<div id="' . $wrapper_id . '">',
+      '#suffix' => '</div>',
+      '#access' => empty($allowed_values_function),
+      'help_text' => ['#markup' => $this->allowedValuesDescription()],
+    ];
+    $element['allowed_values']['table'] = [
+      '#type' => 'table',
+      '#header' => [
+        $this->t('Allowed values'),
+        $this->t('Delete'),
+        $this->t('Weight'),
+      ],
+      '#attributes' => [
+        'id' => 'allowed-values-order',
+      ],
+      '#tabledrag' => [
+        [
+          'action' => 'order',
+          'relationship' => 'sibling',
+          'group' => 'weight',
+        ],
+      ],
     ];
 
-    $element['allowed_values']['#description'] = $this->allowedValuesDescription();
+    $max = $form_state->get('items_count');
+    $entity_type_id = $this->getFieldDefinition()->getTargetEntityTypeId();
+    $field_name = $this->getFieldDefinition()->getName();
+    $current_keys = array_keys($allowed_values);
+    for ($delta = 0; $delta <= $max; $delta++) {
+      $element['allowed_values']['table'][$delta] = [
+        '#attributes' => [
+          'class' => ['draggable'],
+        ],
+        '#weight' => $delta,
+      ];
+      $element['allowed_values']['table'][$delta]['item'] = [
+        'label' => [
+          '#type' => 'textfield',
+          '#title' => $this->t('Name'),
+          '#weight' => -30,
+          '#default_value' => isset($current_keys[$delta]) ? $allowed_values[$current_keys[$delta]] : '',
+          '#required' => $delta === 0,
+        ],
+        'key' => [
+          '#type' => 'textfield',
+          '#maxlength' => 255,
+          '#title' => $this->t('Value'),
+          '#default_value' => $current_keys[$delta] ?? '',
+          '#weight' => -20,
+          '#required' => $delta === 0,
+        ],
+      ];
+      $element['allowed_values']['table'][$delta]['delete'] = [
+        '#type' => 'submit',
+        '#value' => $this->t('Remove'),
+        '#name' => "remove_row_button__$delta",
+        '#id' => "remove_row_button__$delta",
+        '#delta' => $delta,
+        '#submit' => [[static::class, 'deleteSubmit']],
+        '#limit_validation_errors' => [],
+        '#ajax' => [
+          'callback' => [static::class, 'deleteAjax'],
+          'wrapper' => $wrapper_id,
+          'effect' => 'fade',
+        ],
+      ];
+      $element['allowed_values']['table'][$delta]['weight'] = [
+        '#type' => 'weight',
+        '#title' => $this->t('Weight for row @number', ['@number' => $delta + 1]),
+        '#title_display' => 'invisible',
+        '#delta' => 50,
+        '#default_value' => 0,
+        '#attributes' => ['class' => ['weight']],
+      ];
+      if ($delta < count($allowed_values)) {
+        $query = \Drupal::entityQuery($entity_type_id)
+          ->accessCheck(FALSE)
+          ->condition($field_name, $current_keys[$delta]);
+        $entity_ids = $query->execute();
+        if (!empty($entity_ids)) {
+          $element['allowed_values']['table'][$delta]['item']['key']['#attributes']['disabled'] = 'disabled';
+          $element['allowed_values']['table'][$delta]['delete']['#attributes']['disabled'] = 'disabled';
+          $element['allowed_values']['table'][$delta]['delete'] += [
+            'message' => [
+              '#type' => 'item',
+              '#markup' => $this->t('Cannot be removed: option in use.'),
+            ],
+          ];
+        }
+      }
+    }
+    $element['allowed_values']['table']['#max_delta'] = $max;
+
+    $element['allowed_values']['add_more_allowed_values'] = [
+      '#type' => 'submit',
+      '#name' => 'add_more_allowed_values',
+      '#value' => $this->t('Add another item'),
+      '#attributes' => ['class' => ['field-add-more-submit']],
+      // Allow users to add another row without requiring existing rows to have
+      // values.
+      '#limit_validation_errors' => [],
+      '#submit' => [[static::class, 'addMoreSubmit']],
+      '#ajax' => [
+        'callback' => [static::class, 'addMoreAjax'],
+        'wrapper' => $wrapper_id,
+        'effect' => 'fade',
+      ],
+    ];
 
     $element['allowed_values_function'] = [
       '#type' => 'item',
@@ -112,6 +222,71 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     ];
 
     return $element;
+  }
+
+  /**
+   * Adds a new option.
+   *
+   * @param array $form
+   *   The form array to add elements to.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  public static function addMoreSubmit(array $form, FormStateInterface $form_state) {
+    $form_state->set('items_count', $form_state->get('items_count') + 1);
+    $form_state->setRebuild();
+  }
+
+  /**
+   * Ajax callback for the "Add another item" button.
+   */
+  public static function addMoreAjax(array $form, FormStateInterface $form_state) {
+    $button = $form_state->getTriggeringElement();
+
+    // Go one level up in the form.
+    $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
+    $delta = $element['table']['#max_delta'];
+    $element['table'][$delta]['item']['#prefix'] = '<div class="ajax-new-content">' . ($element['table'][$delta]['item']['#prefix'] ?? '');
+    $element['table'][$delta]['item']['#suffix'] = ($element['table'][$delta]['item']['#suffix'] ?? '') . '</div>';
+
+    return $element;
+  }
+
+  /**
+   * Deletes a row/option.
+   *
+   * @param array $form
+   *   The form array to add elements to.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  public static function deleteSubmit(array $form, FormStateInterface $form_state) {
+    $allowed_values = $form_state->getStorage()['allowed_values'];
+    $button = $form_state->getTriggeringElement();
+    $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
+    $item_to_be_removed = $element['item']['label']['#default_value'];
+    $remaining_allowed_values = array_diff($allowed_values, [$item_to_be_removed]);
+    $form_state->set('allowed_values', $remaining_allowed_values);
+
+    $delta = $button['#delta'];
+    $user_input = $form_state->getUserInput();
+    // The user input is directly modified to preserve the rest of the data on
+    // the page as it cannot be rebuilt from a fresh form state.
+    unset($user_input['settings']['allowed_values']['table'][$delta]);
+    $user_input['settings']['allowed_values']['table'] = array_values($user_input['settings']['allowed_values']['table']);
+    $form_state->setUserInput($user_input);
+    $form_state->set('items_count', $form_state->get('items_count') - 1);
+
+    $form_state->setRebuild();
+  }
+
+  /**
+   * Ajax callback for per row delete button.
+   */
+  public static function deleteAjax(array $form, FormStateInterface $form_state) {
+    $button = $form_state->getTriggeringElement();
+
+    return NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -3));
   }
 
   /**
@@ -134,7 +309,30 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    * @see \Drupal\Core\Render\Element\FormElement::processPattern()
    */
   public static function validateAllowedValues($element, FormStateInterface $form_state) {
-    $values = static::extractAllowedValues($element['#value'], $element['#field_has_data']);
+    $items = array_filter(array_map(function ($item) use ($element) {
+      $current_element = $element['table'][$item];
+      if ($current_element['item']['key']['#value'] !== NULL && $current_element['item']['label']['#value']) {
+        return $current_element['item']['key']['#value'] . '|' . $current_element['item']['label']['#value'];
+      }
+      elseif ($current_element['item']['key']['#value']) {
+        return $current_element['item']['key']['#value'];
+      }
+      elseif ($current_element['item']['label']['#value']) {
+        return $current_element['item']['label']['#value'];
+      }
+
+      return NULL;
+    }, Element::children($element['table'])), function ($item) {
+      return $item;
+    });
+    if ($reordered_items = $form_state->getValue(['settings', 'allowed_values', 'table'])) {
+      uksort($items, function ($a, $b) use ($reordered_items) {
+        $a_weight = $reordered_items[$a]['weight'] ?? 0;
+        $b_weight = $reordered_items[$b]['weight'] ?? 0;
+        return $a_weight <=> $b_weight;
+      });
+    }
+    $values = static::extractAllowedValues($items, $element['#field_has_data']);
 
     if (!is_array($values)) {
       $form_state->setError($element, new TranslatableMarkup('Allowed values list: invalid input.'));
@@ -148,14 +346,6 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
         }
       }
 
-      // Prevent removing values currently in use.
-      if ($element['#field_has_data']) {
-        $lost_keys = array_keys(array_diff_key($element['#allowed_values'], $values));
-        if (_options_values_in_use($element['#entity_type'], $element['#field_name'], $lost_keys)) {
-          $form_state->setError($element, new TranslatableMarkup('Allowed values list: some values are being removed while currently in use.'));
-        }
-      }
-
       $form_state->setValueForElement($element, $values);
     }
   }
@@ -163,8 +353,8 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   /**
    * Extracts the allowed values array from the allowed_values element.
    *
-   * @param string $string
-   *   The raw string to extract values from.
+   * @param string|array $list
+   *   The raw string or array to extract values from.
    * @param bool $has_data
    *   The current field already has data inserted or not.
    *
@@ -173,12 +363,15 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    *
    * @see \Drupal\options\Plugin\Field\FieldType\ListItemBase::allowedValuesString()
    */
-  protected static function extractAllowedValues($string, $has_data) {
+  protected static function extractAllowedValues($list, $has_data) {
     $values = [];
 
-    $list = explode("\n", $string);
-    $list = array_map('trim', $list);
-    $list = array_filter($list, 'strlen');
+    if (is_string($list)) {
+      trigger_error('Passing a string to ' . __METHOD__ . '() is deprecated in drupal:10.2.0 and will be removed from drupal:11.0.0. Please use an array instead.', E_USER_DEPRECATED);
+      $list = explode("\n", $list);
+      $list = array_map('trim', $list);
+      $list = array_filter($list, 'strlen');
+    }
 
     $generated_keys = $explicit_keys = FALSE;
     foreach ($list as $position => $text) {

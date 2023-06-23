@@ -4,6 +4,8 @@ namespace Drupal\options\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
 
@@ -52,11 +54,7 @@ class ListIntegerItem extends ListItemBase {
    * {@inheritdoc}
    */
   protected function allowedValuesDescription() {
-    $description = '<p>' . $this->t('The possible values this field can contain. Enter one value per line, in the format key|label.');
-    $description .= '<br/>' . $this->t('The key is the stored value, and must be numeric. The label will be used in displayed values and edit forms.');
-    $description .= '<br/>' . $this->t('The label is optional: if a line contains a single number, it will be used as key and label.');
-    $description .= '<br/>' . $this->t('Lists of labels are also accepted (one label per line), only if the field does not hold any values yet. Numeric keys will be automatically generated from the positions in the list.');
-    $description .= '</p>';
+    $description = '<p>' . $this->t('The name will be used in displayed options and edit forms. The value is the stored value, and must be numeric.') . '</p>';
     $description .= '<p>' . $this->t('Allowed HTML tags in labels: @tags', ['@tags' => FieldFilteredMarkup::displayAllowedTags()]) . '</p>';
     return $description;
   }
@@ -75,6 +73,21 @@ class ListIntegerItem extends ListItemBase {
    */
   protected static function castAllowedValue($value) {
     return (int) $value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
+    $element = parent::storageSettingsForm($form, $form_state, $has_data);
+
+    foreach (Element::children($element['allowed_values']['table']) as $delta => $row) {
+      // @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/number
+      // @see \Drupal\Core\Field\Plugin\Field\FieldWidget\NumberWidget::formElement()
+      $element['allowed_values']['table'][$delta]['item']['key']['#type'] = 'number';
+    }
+
+    return $element;
   }
 
 }

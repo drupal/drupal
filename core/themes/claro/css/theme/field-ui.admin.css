@@ -94,3 +94,7 @@
 .field-settings-summary-cell li:first-child {
   font-size: 1em;
 }
+
+.allowed-values-table .form-item:where(:not(.hidden)) {
+  display: inline-table;
+}
