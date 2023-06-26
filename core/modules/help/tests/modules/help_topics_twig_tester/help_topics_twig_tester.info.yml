@@ -1,0 +1,6 @@
+name: 'Help Topics Twig Tester'
+type: module
+description: 'Support module for help testing.'
+package: Testing
+dependencies:
+  - drupal:help

@@ -1,6 +1,0 @@
-help.help_topic:
-  path: '/admin/help/topic/{id}'
-  defaults:
-    _controller: '\Drupal\help_topics\Controller\HelpTopicPluginController::viewHelpTopic'
-  requirements:
-    _permission: 'access administration pages'

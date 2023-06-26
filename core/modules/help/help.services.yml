@@ -2,3 +2,28 @@ services:
   plugin.manager.help_section:
     class: Drupal\help\HelpSectionManager
     parent: default_plugin_manager
+    calls:
+      - [setSearchManager, ['@?plugin.manager.search']]
+    tags:
+      - { name: plugin_manager_cache_clear }
+  help.breadcrumb:
+    class: Drupal\help\HelpBreadcrumbBuilder
+    tags:
+      - { name: breadcrumb_builder, priority: 900 }
+    public: false
+  plugin.manager.help_topic:
+    class: Drupal\help\HelpTopicPluginManager
+    arguments: ['@module_handler', '@theme_handler', '@cache.discovery', '%app.root%']
+  Drupal\help\HelpTopicPluginManagerInterface: '@plugin.manager.help_topic'
+  help.twig.loader:
+    class: Drupal\help\HelpTopicTwigLoader
+    arguments: ['%app.root%', '@module_handler', '@theme_handler']
+    # Lowest core priority because loading help topics is not the usual case.
+    tags:
+      - { name: twig.loader, priority: -200 }
+    public: false
+  help_twig.extension:
+    class: Drupal\help\HelpTwigExtension
+    arguments: ['@access_manager', '@plugin.manager.help_topic', '@string_translation']
+    tags:
+      - { name: twig.extension }

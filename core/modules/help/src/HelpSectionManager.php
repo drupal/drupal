@@ -2,6 +2,7 @@
 
 namespace Drupal\help;
 
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
@@ -15,6 +16,13 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  * @see hook_help_section_info_alter()
  */
 class HelpSectionManager extends DefaultPluginManager {
+
+  /**
+   * The search manager.
+   *
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
+   */
+  protected ?PluginManagerInterface $searchManager = NULL;
 
   /**
    * Constructs a new HelpSectionManager.
@@ -32,6 +40,31 @@ class HelpSectionManager extends DefaultPluginManager {
 
     $this->alterInfo('help_section_info');
     $this->setCacheBackend($cache_backend, 'help_section_plugins');
+  }
+
+  /**
+   * Sets the search manager.
+   *
+   * @param \Drupal\Component\Plugin\PluginManagerInterface|null $search_manager
+   *   The search manager if the Search module is installed.
+   */
+  public function setSearchManager(?PluginManagerInterface $search_manager = NULL) {
+    $this->searchManager = $search_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function clearCachedDefinitions() {
+    parent::clearCachedDefinitions();
+    $version = \Drupal::service('update.update_hook_registry')->getInstalledVersion('help');
+    if ($this->searchManager && $version >= 10100) {
+      // Rebuild the index on cache clear so that new help topics are indexed
+      // and any changes due to help topics edits or translation changes are
+      // picked up.
+      $help_search = $this->searchManager->createInstance('help_search');
+      $help_search->markForReindex();
+    }
   }
 
 }

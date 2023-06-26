@@ -1,0 +1,26 @@
+---
+label: 'Working with help topics'
+top_level: true
+related:
+- help.help_topic_search
+- locale.translate_strings
+---
+{% set help_link_text %}{% trans %}Help{% endtrans %}{% endset %}
+{% set help_link = render_var(help_route_link(help_link_text, 'help.main')) %}
+{% set translate_text %}{% trans %}User interface translation{% endtrans %}{% endset %}
+{% set translate_link = render_var(help_route_link(translate_text, 'locale.translate_page')) %}
+{% set help_search_topic = render_var(help_topic_link('help.help_topic_search')) %}
+<h2>{% trans %}What is a help topic?{% endtrans %}</h2>
+<p>{% trans %}A help topic describes a concept, or steps to accomplish a task, related to a feature provided by one or more modules or themes. If the core Search module is enabled, these topics are also searchable.{% endtrans %}</p>
+<h2>{% trans %}Where are help topics listed?{% endtrans %}</h2>
+<p>{% trans %}The top-level help topics are listed at {{ help_link }}. Links to other topics, including non-top-level help topics, can be found under the "Related" heading when viewing a topic page.{% endtrans %}</p>
+<h2>{% trans %}How are help topics provided?{% endtrans %}</h2>
+<p>{% trans %}Modules and themes can provide help topics as Twig-file-based plugins in a project sub-directory called <em>help_topics</em>; plugin metadata is provided in YAML front matter within each Twig file. Plugin-based help topics provided by modules and themes will automatically be updated when a module or theme is updated. Use the plugins in <em>core/modules/help/help_topics</em> as a guide when writing and formatting a help topic plugin for your theme or module.{% endtrans %}</p>
+<h2>{% trans %}How are help topics translated?{% endtrans %}</h2>
+<p>{% trans %}The title and body text of help topics provided by contributed modules and themes are translatable using {{ translate_link }} (provided by Interface Translation module). Topics provided by custom modules and themes are also translatable if they have been viewed at least once in a non-English language, which triggers putting their translatable text into the translation database.{% endtrans %}</p>
+<h2>{% trans %}How can users search for help topics?{% endtrans %}</h2>
+<p>{% trans %}To enable users to search help, including help topics, you will need to install the core Search module, configure a search page, and add a search block to the Help page or another administrative page. (A search page is provided automatically, and if you use the core Claro administrative theme, a help search block is shown on the main Help page.) Then users with search permissions, and permission to view help, will be able to search help. See the related topic, {{ help_search_topic }}, for step-by-step instructions.{% endtrans %}</p>
+<h2>{% trans %}Additional resources{% endtrans %}</h2>
+<ul>
+  <li><a href="https://www.drupal.org/node/3074421">{% trans %}Help Topics Standards{% endtrans %}</a></li>
+</ul>

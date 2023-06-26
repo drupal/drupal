@@ -13,3 +13,10 @@ help.page:
     _title: 'Help'
   requirements:
     _permission: 'access administration pages'
+
+help.help_topic:
+  path: '/admin/help/topic/{id}'
+  defaults:
+    _controller: '\Drupal\help\Controller\HelpTopicPluginController::viewHelpTopic'
+  requirements:
+    _permission: 'access administration pages'

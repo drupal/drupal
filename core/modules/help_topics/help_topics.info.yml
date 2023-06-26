@@ -2,7 +2,8 @@ name: Help Topics
 type: module
 description: 'Displays help topics provided by themes and modules.'
 package: Core (Experimental)
-lifecycle: experimental
+lifecycle: deprecated
+lifecycle_link: https://www.drupal.org/node/3223395#s-help_topics
 version: VERSION
 dependencies:
   - drupal:help

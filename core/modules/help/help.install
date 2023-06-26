@@ -1,0 +1,98 @@
+<?php
+
+/**
+ * @file
+ * Install and uninstall functions for help module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function help_schema() {
+  $schema['help_search_items'] = [
+    'description' => 'Stores information about indexed help search items',
+    'fields' => [
+      'sid' => [
+        'description' => 'Numeric index of this item in the search index',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'section_plugin_id' => [
+        'description' => 'The help section the item comes from',
+        'type' => 'varchar_ascii',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'permission' => [
+        'description' => 'The permission needed to view this item',
+        'type' => 'varchar_ascii',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'topic_id' => [
+        'description' => 'The topic ID of the item',
+        'type' => 'varchar_ascii',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+    ],
+    'primary key' => ['sid'],
+    'indexes' => [
+      'section_plugin_id' => ['section_plugin_id'],
+      'topic_id' => ['topic_id'],
+    ],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Install search index table for help topics.
+ */
+function help_update_10200(&$sandbox = NULL) {
+  $connection = \Drupal::database();
+  if (!$connection->schema()->tableExists('help_search_items')) {
+    $table = [
+      'description' => 'Stores information about indexed help search items',
+      'fields' => [
+        'sid' => [
+          'description' => 'Numeric index of this item in the search index',
+          'type' => 'serial',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ],
+        'section_plugin_id' => [
+          'description' => 'The help section the item comes from',
+          'type' => 'varchar_ascii',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+        ],
+        'permission' => [
+          'description' => 'The permission needed to view this item',
+          'type' => 'varchar_ascii',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+        ],
+        'topic_id' => [
+          'description' => 'The topic ID of the item',
+          'type' => 'varchar_ascii',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+        ],
+      ],
+      'primary key' => ['sid'],
+      'indexes' => [
+        'section_plugin_id' => ['section_plugin_id'],
+        'topic_id' => ['topic_id'],
+      ],
+    ];
+    $connection->schema()->createTable('help_search_items', $table);
+  }
+}
