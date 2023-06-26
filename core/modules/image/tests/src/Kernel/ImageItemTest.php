@@ -63,6 +63,13 @@ class ImageItemTest extends FieldKernelTestBase {
       'type' => 'image',
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ])->save();
+    FieldStorageConfig::create([
+      'entity_type' => 'entity_test',
+      'field_name' => 'image_test_generation',
+      'type' => 'image',
+      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
+    ])->save();
+
     FieldConfig::create([
       'entity_type' => 'entity_test',
       'field_name' => 'image_test',
@@ -71,6 +78,15 @@ class ImageItemTest extends FieldKernelTestBase {
         'file_extensions' => 'jpg',
       ],
     ])->save();
+    FieldConfig::create([
+      'entity_type' => 'entity_test',
+      'field_name' => 'image_test_generation',
+      'bundle' => 'entity_test',
+      'settings' => [
+        'min_resolution' => '800x800',
+      ],
+    ])->save();
+
     \Drupal::service('file_system')->copy($this->root . '/core/misc/druplicon.png', 'public://example.jpg');
     $this->image = File::create([
       'uri' => 'public://example.jpg',
@@ -136,11 +152,25 @@ class ImageItemTest extends FieldKernelTestBase {
     $properties = $entity->getFieldDefinition('image_test')->getFieldStorageDefinition()->getPropertyDefinitions();
     $this->assertEquals($expected, array_keys($properties));
 
-    // Test the generateSampleValue() method.
+  }
+
+  /**
+   * Tests generateSampleItems() method under different resolutions.
+   */
+  public function testImageItemSampleValueGeneration() {
+
+    // Default behaviour. No resolution configuration.
     $entity = EntityTest::create();
     $entity->image_test->generateSampleItems();
     $this->entityValidateAndSave($entity);
     $this->assertEquals('image/jpeg', $entity->image_test->entity->get('filemime')->value);
+
+    // Max resolution bigger than 600x600.
+    $entity->image_test_generation->generateSampleItems();
+    $this->entityValidateAndSave($entity);
+    $imageItem = $entity->image_test_generation->first()->getValue();
+    $this->assertEquals('800', $imageItem['width']);
+    $this->assertEquals('800', $imageItem['height']);
   }
 
   /**
