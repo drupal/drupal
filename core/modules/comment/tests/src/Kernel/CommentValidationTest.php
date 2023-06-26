@@ -3,8 +3,12 @@
 namespace Drupal\Tests\comment\Kernel;
 
 use Drupal\comment\CommentInterface;
+use Drupal\comment\Entity\Comment;
+use Drupal\comment\Entity\CommentType;
+use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\node\Entity\Node;
+use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 use Drupal\user\Entity\User;
 
 /**
@@ -13,6 +17,8 @@ use Drupal\user\Entity\User;
  * @group comment
  */
 class CommentValidationTest extends EntityKernelTestBase {
+  use CommentTestTrait;
+  use EntityReferenceTestTrait;
 
   /**
    * Modules to install.
@@ -27,6 +33,7 @@ class CommentValidationTest extends EntityKernelTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->installSchema('comment', ['comment_entity_statistics']);
+    $this->installConfig(['comment']);
   }
 
   /**
@@ -178,6 +185,102 @@ class CommentValidationTest extends EntityKernelTestBase {
     $this->assertCount(1, $violations, 'Violation found when author name and comment author do not match.');
     $this->assertEquals('name', $violations[0]->getPropertyPath());
     $this->assertEquals('The specified author name does not match the comment author.', $violations[0]->getMessage());
+  }
+
+  /**
+   * Tests that comments of unpublished nodes are not valid.
+   */
+  public function testValidationOfCommentOfUnpublishedNode() {
+    // Create a page node type.
+    $this->entityTypeManager->getStorage('node_type')->create([
+      'type' => 'page',
+      'name' => 'page',
+    ])->save();
+
+    // Create a comment type.
+    CommentType::create([
+      'id' => 'comment',
+      'label' => 'Default comments',
+      'description' => 'Default comment field',
+      'target_entity_type_id' => 'node',
+    ])->save();
+
+    // Add comment and entity reference comment fields.
+    $this->addDefaultCommentField('node', 'page', 'comment');
+    $this->createEntityReferenceField(
+      'node',
+      'page',
+      'entity_reference_comment',
+      'Entity Reference Comment',
+      'comment',
+      'default',
+      ['target_bundles' => ['comment']]
+    );
+
+    $comment_admin_user = $this->drupalCreateUser([
+      'skip comment approval',
+      'post comments',
+      'access comments',
+      'access content',
+      'administer nodes',
+      'administer comments',
+      'bypass node access',
+    ]);
+    $comment_non_admin_user = $this->drupalCreateUser([
+      'access comments',
+      'post comments',
+      'create page content',
+      'edit own comments',
+      'skip comment approval',
+      'access content',
+    ]);
+
+    // Create a node with a comment and make it unpublished.
+    $node1 = $this->entityTypeManager->getStorage('node')->create([
+      'type' => 'page',
+      'title' => 'test 1',
+      'promote' => 1,
+      'status' => 0,
+      'uid' => $comment_non_admin_user->id(),
+    ]);
+    $node1->save();
+    $comment1 = $this->entityTypeManager->getStorage('comment')->create([
+      'entity_id' => $node1->id(),
+      'entity_type' => 'node',
+      'field_name' => 'comment',
+      'comment_body' => $this->randomMachineName(),
+    ]);
+    $comment1->save();
+    $this->assertInstanceOf(Comment::class, $comment1);
+
+    // Create a second published node.
+    /** @var \Drupal\node\Entity\Node $node2 */
+    $node2 = $this->entityTypeManager->getStorage('node')->create([
+      'type' => 'page',
+      'title' => 'test 2',
+      'promote' => 1,
+      'status' => 1,
+      'uid' => $comment_non_admin_user->id(),
+    ]);
+    $node2->save();
+
+    // Test the validation API directly.
+    $this->drupalSetCurrentUser($comment_non_admin_user);
+    $this->assertEquals(\Drupal::currentUser()->id(), $comment_non_admin_user->id());
+    $node2->set('entity_reference_comment', $comment1->id());
+    $violations = $node2->validate();
+    $this->assertCount(1, $violations);
+    $this->assertEquals('entity_reference_comment.0.target_id', $violations[0]->getPropertyPath());
+    $this->assertEquals(t('This entity (%type: %name) cannot be referenced.', [
+      '%type' => $comment1->getEntityTypeId(),
+      '%name' => $comment1->id(),
+    ]), $violations[0]->getMessage());
+
+    $this->drupalSetCurrentUser($comment_admin_user);
+    $this->assertEquals(\Drupal::currentUser()->id(), $comment_admin_user->id());
+    $node2->set('entity_reference_comment', $comment1->id());
+    $violations = $node2->validate();
+    $this->assertCount(0, $violations);
   }
 
   /**
