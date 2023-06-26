@@ -66,6 +66,27 @@ class CommentSelection extends DefaultSelection {
   /**
    * {@inheritdoc}
    */
+  public function validateReferenceableEntities(array $ids) {
+    $result = [];
+    if ($ids) {
+      $target_type = $this->configuration['target_type'];
+      $entity_type = $this->entityTypeManager->getDefinition($target_type);
+      $query = $this->buildEntityQuery();
+      // Mirror the conditions checked in buildEntityQuery().
+      if (!$this->currentUser->hasPermission('administer comments')) {
+        $query->condition('status', 1);
+      }
+      $result = $query
+        ->condition($entity_type->getKey('id'), $ids, 'IN')
+        ->execute();
+    }
+
+    return $result;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function entityQueryAlter(SelectInterface $query) {
     parent::entityQueryAlter($query);
 
@@ -77,9 +98,16 @@ class CommentSelection extends DefaultSelection {
       $query->innerJoin($data_table, NULL, "[base_table].[cid] = [$data_table].[cid] AND [$data_table].[default_langcode] = 1");
     }
 
-    // Find the host entity type the comment field is on.
+    // Historically, comments were always linked to 'node' entities, but that is
+    // no longer the case, as the 'node' module might not even be enabled.
+    // Comments can now be linked to any entity and they can also be referenced
+    // by other entities, so we won't have a single table to join to. That
+    // actually means that we can no longer optimize the query on those cases.
+    // However, the most common case remains to be comment replies, and in this
+    // case, we can get the host entity type if the 'entity' value is present
+    // and perform the extra joins and alterations needed.
     $comment = $this->getConfiguration()['entity'];
-    if ($comment) {
+    if ($comment instanceof CommentInterface) {
       $host_entity_type_id = $comment->getCommentedEntityTypeId();
 
       /** @var \Drupal\Core\Entity\EntityTypeInterface $host_entity_type */
