@@ -127,6 +127,11 @@ class FieldLayoutTest extends WebDriverTestBase {
     $this->assertSession()->elementExists('css', '.layout__region--second .field--name-field-test-text');
     $this->assertFieldInRegion('field_test_text[0][value]', 'second');
 
+    // Tests if this layout works in an embedded context.
+    $this->drupalGet('/field-layout-embedded-form');
+    $this->assertSession()->elementExists('css', '.layout__region--second .field--name-field-test-text');
+    $this->assertFieldInRegion('foo[field_test_text][0][value]', 'second');
+
     // Move the field to the second region without tabledrag.
     $this->drupalGet('entity_test/structure/entity_test/form-display');
     $this->getSession()->getPage()->pressButton('Show row weights');
