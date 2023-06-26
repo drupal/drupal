@@ -133,6 +133,8 @@ class JsCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfac
             'scope' => $js_asset['scope'] === 'header' ? 'header' : 'footer',
             'delta' => "$order",
           ] + $query_args;
+          // Add a filename prefix to mitigate ad blockers which can block
+          // any script beginning with 'ad'.
           $filename = 'js_' . $this->generateHash($js_asset) . '.js';
           $uri = 'assets://js/' . $filename;
           $js_assets[$order]['data'] = $this->fileUrlGenerator->generateString($uri) . '?' . UrlHelper::buildQuery($query);
