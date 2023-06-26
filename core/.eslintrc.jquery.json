@@ -11,7 +11,7 @@
     "jquery/no-class": 0,
     "jquery/no-clone": 0,
     "jquery/no-closest": 0,
-    "jquery/no-css": 0,
+    "jquery/no-css": 2,
     "jquery/no-data": 0,
     "jquery/no-deferred": 0,
     "jquery/no-delegate": 2,

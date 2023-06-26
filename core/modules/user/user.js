@@ -221,9 +221,8 @@
               );
             }
             // Adjust the length of the strength indicator.
-            password.$strengthBar
-              .css('width', `${result.strength}%`)
-              .addClass(result.indicatorClass);
+            password.$strengthBar[0].style.width = `${result.strength}%`;
+            password.$strengthBar.addClass(result.indicatorClass);
 
             // Update the strength indication text.
             password.$strengthTextWrapper.html(result.indicatorText);
@@ -232,9 +231,9 @@
           // Check the value in the confirm input and show results.
           if ($confirmInput[0].value) {
             passwordCheckMatch($confirmInput[0].value);
-            $passwordConfirmMessage.css({ visibility: 'visible' });
+            $passwordConfirmMessage[0].style.visibility = 'visible';
           } else {
-            $passwordConfirmMessage.css({ visibility: 'hidden' });
+            $passwordConfirmMessage[0].style.visibility = 'hidden';
           }
 
           if (widgetClassesToRemove) {
