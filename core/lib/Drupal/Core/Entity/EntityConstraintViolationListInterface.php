@@ -48,6 +48,20 @@ interface EntityConstraintViolationListInterface extends ConstraintViolationList
   public function getByFields(array $field_names);
 
   /**
+   * Filters this violation list by the given error codes.
+   *
+   * Copied from Symfony parent class
+   * \Symfony\Component\Validator\ConstraintViolationList.
+   *
+   * @param string|string[] $codes
+   *   The codes to find.
+   *
+   * @return \Drupal\Core\Entity\EntityConstraintViolationListInterface
+   *   A list of violations of the given fields.
+   */
+  public function findByCodes(string|array $codes): static;
+
+  /**
    * Filters this violation list by the given fields.
    *
    * The returned object just has violations attached to the provided fields.

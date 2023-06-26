@@ -76,6 +76,22 @@ class EntityConstraintViolationListTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::findByCodes
+   */
+  public function testFindByCodes() {
+    $account = $this->prophesize('\Drupal\Core\Session\AccountInterface')->reveal();
+    $entity = $this->setupEntity($account);
+
+    $constraint_list = $this->setupConstraintListWithoutCompositeConstraint($entity);
+    $violations = iterator_to_array($constraint_list);
+
+    $codes = ['test-code-violation-name', 'test-code-violation2-name'];
+    $actual = $constraint_list->findByCodes($codes);
+    $this->assertCount(2, $actual);
+    $this->assertEquals(iterator_to_array($actual), $violations);
+  }
+
+  /**
    * Builds the entity.
    *
    * @param \Drupal\Core\Session\AccountInterface $account
@@ -121,11 +137,11 @@ class EntityConstraintViolationListTest extends UnitTestCase {
     $violations = [];
 
     // Add two violations to two specific fields.
-    $violations[] = new ConstraintViolation('test name violation', '', [], '', 'name', 'invalid');
-    $violations[] = new ConstraintViolation('test name violation2', '', [], '', 'name', 'invalid');
+    $violations[] = new ConstraintViolation('test name violation', '', [], '', 'name', 'invalid', NULL, 'test-code-violation-name');
+    $violations[] = new ConstraintViolation('test name violation2', '', [], '', 'name', 'invalid', NULL, 'test-code-violation2-name');
 
-    $violations[] = new ConstraintViolation('test type violation', '', [], '', 'type', 'invalid');
-    $violations[] = new ConstraintViolation('test type violation2', '', [], '', 'type', 'invalid');
+    $violations[] = new ConstraintViolation('test type violation', '', [], '', 'type', 'invalid', NULL, 'test-code-violation-type');
+    $violations[] = new ConstraintViolation('test type violation2', '', [], '', 'type', 'invalid', NULL, 'test-code-violation2-type');
 
     // Add two entity level specific violations.
     $violations[] = new ConstraintViolation('test entity violation', '', [], '', '', 'invalid');

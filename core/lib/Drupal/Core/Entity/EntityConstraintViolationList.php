@@ -173,6 +173,20 @@ class EntityConstraintViolationList extends ConstraintViolationList implements E
   /**
    * {@inheritdoc}
    */
+  public function findByCodes(string|array $codes): static {
+    $violations = [];
+    foreach ($this as $violation) {
+      if (in_array($violation->getCode(), $codes, TRUE)) {
+        $violations[] = $violation;
+      }
+    }
+
+    return new static($this->getEntity(), $violations);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getFieldNames() {
     $this->groupViolationOffsets();
     return array_keys($this->violationOffsetsByField);
