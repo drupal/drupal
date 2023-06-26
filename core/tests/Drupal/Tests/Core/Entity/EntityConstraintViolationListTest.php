@@ -88,7 +88,7 @@ class EntityConstraintViolationListTest extends UnitTestCase {
     $codes = ['test-code-violation-name', 'test-code-violation2-name'];
     $actual = $constraint_list->findByCodes($codes);
     $this->assertCount(2, $actual);
-    $this->assertEquals(iterator_to_array($actual), $violations);
+    $this->assertEquals(iterator_to_array($actual), [$violations[0], $violations[1]]);
   }
 
   /**
