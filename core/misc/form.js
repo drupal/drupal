@@ -177,7 +177,7 @@
   Drupal.behaviors.formUpdated = {
     attach(context) {
       const $context = $(context);
-      const contextIsForm = $context.is('form');
+      const contextIsForm = context.tagName === 'FORM';
       const $forms = $(
         once('form-updated', contextIsForm ? $context : $context.find('form')),
       );
@@ -212,7 +212,7 @@
     },
     detach(context, settings, trigger) {
       const $context = $(context);
-      const contextIsForm = $context.is('form');
+      const contextIsForm = context.tagName === 'FORM';
       if (trigger === 'unload') {
         once
           .remove(

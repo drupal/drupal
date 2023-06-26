@@ -467,7 +467,7 @@
       .map((delta) => {
         const targetClass = tableSettingsGroup[delta].target;
         let rowSettings;
-        if (field.is(`.${targetClass}`)) {
+        if (field[0].matches(`.${targetClass}`)) {
           // Return a copy of the row settings.
           rowSettings = {};
           Object.keys(tableSettingsGroup[delta]).forEach((n) => {
@@ -567,7 +567,7 @@
         case 63232: {
           let $previousRow = $(self.rowObject.element).prev('tr').eq(0);
           let previousRow = $previousRow.get(0);
-          while (previousRow && $previousRow.is(':hidden')) {
+          while (previousRow && Drupal.elementIsHidden(previousRow)) {
             $previousRow = $(previousRow).prev('tr').eq(0);
             previousRow = $previousRow.get(0);
           }
@@ -577,7 +577,7 @@
             self.rowObject.direction = 'up';
             keyChange = true;
 
-            if ($(item).is('.tabledrag-root')) {
+            if (item.matches('.tabledrag-root')) {
               // Swap with the previous top-level row.
               groupHeight = 0;
               while (
@@ -586,7 +586,7 @@
               ) {
                 $previousRow = $(previousRow).prev('tr').eq(0);
                 previousRow = $previousRow.get(0);
-                groupHeight += $previousRow.is(':hidden')
+                groupHeight += Drupal.elementIsHidden(previousRow)
                   ? 0
                   : previousRow.offsetHeight;
               }
@@ -597,7 +597,7 @@
               }
             } else if (
               self.table.tBodies[0].rows[0] !== previousRow ||
-              $previousRow.is('.draggable')
+              previousRow.matches('.draggable')
             ) {
               // Swap with the previous row (unless previous row is the first
               // one and undraggable).
@@ -625,7 +625,7 @@
         case 63233: {
           let $nextRow = $(self.rowObject.group).eq(-1).next('tr').eq(0);
           let nextRow = $nextRow.get(0);
-          while (nextRow && $nextRow.is(':hidden')) {
+          while (nextRow && Drupal.elementIsHidden(nextRow)) {
             $nextRow = $(nextRow).next('tr').eq(0);
             nextRow = $nextRow.get(0);
           }
@@ -635,7 +635,7 @@
             self.rowObject.direction = 'down';
             keyChange = true;
 
-            if ($(item).is('.tabledrag-root')) {
+            if (item.matches('.tabledrag-root')) {
               // Swap with the next group (necessarily a top-level one).
               groupHeight = 0;
               const nextGroup = new self.row(
@@ -647,7 +647,9 @@
               );
               if (nextGroup) {
                 $(nextGroup.group).each(function () {
-                  groupHeight += $(this).is(':hidden') ? 0 : this.offsetHeight;
+                  groupHeight += Drupal.elementIsHidden(this)
+                    ? 0
+                    : this.offsetHeight;
                 });
                 const nextGroupRow = $(nextGroup.group).eq(-1).get(0);
                 self.rowObject.swap('after', nextGroupRow);
@@ -984,7 +986,10 @@
         // We may have found the row the mouse just passed over, but it doesn't
         // take into account hidden rows. Skip backwards until we find a
         // draggable row.
-        while ($row.is(':hidden') && $row.prev('tr').is(':hidden')) {
+        while (
+          Drupal.elementIsHidden(row) &&
+          Drupal.elementIsHidden($row.prev('tr')[0])
+        ) {
           $row = $row.prev('tr:first-of-type');
           row = $row.get(0);
         }
@@ -1038,7 +1043,8 @@
       const nextRow = $nextRow.get(0);
       sourceRow = changedRow;
       if (
-        $previousRow.is('.draggable') &&
+        previousRow &&
+        previousRow.matches('.draggable') &&
         $previousRow.find(`.${group}`).length
       ) {
         if (this.indentEnabled) {
@@ -1052,7 +1058,8 @@
           sourceRow = previousRow;
         }
       } else if (
-        $nextRow.is('.draggable') &&
+        nextRow &&
+        nextRow.matches('.draggable') &&
         $nextRow.find(`.${group}`).length
       ) {
         if (this.indentEnabled) {
@@ -1133,7 +1140,7 @@
 
         case 'order': {
           const siblings = this.rowObject.findSiblings(rowSettings);
-          if ($(targetElement).is('select')) {
+          if (targetElement.tagName === 'SELECT') {
             // Get a list of acceptable values.
             const values = [];
             $(targetElement)
@@ -1456,7 +1463,7 @@
     }
 
     // Do not let an un-draggable first row have anything put before it.
-    if (this.table.tBodies[0].rows[0] === row && $row.is(':not(.draggable)')) {
+    if (this.table.tBodies[0].rows[0] === row && !row.matches('.draggable')) {
       return false;
     }
 
@@ -1513,8 +1520,8 @@
     // Maximum indentation:
     if (
       !prevRow ||
-      $prevRow.is(':not(.draggable)') ||
-      $(this.element).is('.tabledrag-root')
+      !prevRow.matches('.draggable') ||
+      this.element.matches('.tabledrag-root')
     ) {
       // Do not indent:
       // - the first row in the table,
@@ -1525,7 +1532,8 @@
       // Do not go deeper than as a child of the previous row.
       maxIndent =
         $prevRow.find('.js-indentation').length +
-        ($prevRow.is('.tabledrag-leaf') ? 0 : 1);
+        (prevRow.matches('.tabledrag-leaf') ? 0 : 1);
+
       // Limit by the maximum allowed depth for the table.
       if (this.maxDepth) {
         maxIndent = Math.min(

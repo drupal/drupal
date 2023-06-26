@@ -40,7 +40,7 @@
         const $optionsContext = $(context);
         const values = [];
 
-        if ($optionsContext.find('input').is(':checked')) {
+        if ($optionsContext.find('input:checked').length) {
           $optionsContext
             .find('input:checked')
             .next('label')

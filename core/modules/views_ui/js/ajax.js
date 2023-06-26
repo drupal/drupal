@@ -104,7 +104,7 @@
     response,
     status,
   ) {
-    if ($('input#edit-displays-live-preview').is(':checked')) {
+    if ($('input#edit-displays-live-preview')[0].checked) {
       $('#preview-submit').trigger('click');
     }
   };
@@ -173,7 +173,7 @@
       $(once('views-ajax', 'input#edit-displays-live-preview', context)).on(
         'click',
         function () {
-          if ($(this).is(':checked')) {
+          if (this.checked) {
             $('#preview-submit').trigger('click');
           }
         },

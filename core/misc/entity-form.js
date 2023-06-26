@@ -31,7 +31,7 @@
           // without the "Administer content" permission the checkbox won't appear,
           // but the revision log will if the content type is set to auto-revision.
           if (
-            revisionCheckbox.is(':checked') ||
+            (revisionCheckbox.length && revisionCheckbox[0].checked) ||
             (!revisionCheckbox.length &&
               $revisionContext.find('.js-form-item-revision-log textarea')
                 .length)
@@ -52,14 +52,14 @@
           );
 
           if ($checkbox.length) {
-            translate = $checkbox.is(':checked')
+            translate = $checkbox[0].checked
               ? Drupal.t('Needs to be updated')
               : Drupal.t('Does not need to be updated');
           } else {
             $checkbox = $translationContext.find(
               '.js-form-item-translation-retranslate input',
             );
-            translate = $checkbox.is(':checked')
+            translate = $checkbox[0].checked
               ? Drupal.t('Flag other translations as outdated')
               : Drupal.t('Do not flag other translations as outdated');
           }

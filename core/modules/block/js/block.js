@@ -110,13 +110,13 @@
           }
           // This region has become empty.
           if (
-            $this.next('tr').is(':not(.draggable)') ||
+            !$this.next('tr')[0].matches('.draggable') ||
             $this.next('tr').length === 0
           ) {
             $this.removeClass('region-populated').addClass('region-empty');
           }
           // This region has become populated.
-          else if ($this.is('.region-empty')) {
+          else if (this.matches('.region-empty')) {
             $this.removeClass('region-empty').addClass('region-populated');
           }
         });
@@ -135,7 +135,7 @@
         table.find('.color-success').removeClass('color-success');
 
         const $rowObject = $(rowObject);
-        if (!$rowObject.is('.drag-previous')) {
+        if (!rowObject.matches('.drag-previous')) {
           table.find('.drag-previous').removeClass('drag-previous');
           $rowObject.addClass('drag-previous');
         }
@@ -199,7 +199,7 @@
         }
 
         // Update region and weight fields if the region has been changed.
-        if (!regionField.is(`.block-region-${regionName}`)) {
+        if (!regionField[0].matches(`.block-region-${regionName}`)) {
           const weightField = $rowElement.find('select.block-weight');
           const oldRegionName = weightField[0].className.replace(
             /([^ ]+[ ]+)*block-weight-([^ ]+)([ ]+[^ ]+)*/,

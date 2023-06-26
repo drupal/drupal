@@ -36,7 +36,7 @@
         // Bind click handler to this checkbox to conditionally show and hide
         // the filter's tableDrag row and vertical tab pane.
         $checkbox.on('click.filterUpdate', () => {
-          if ($checkbox.is(':checked')) {
+          if (checkbox.checked) {
             $row.show();
             if (filterSettingsTab) {
               filterSettingsTab.tabShow().updateSummary();
@@ -60,9 +60,7 @@
         // Attach summary for configurable filters (only for screen readers).
         if (filterSettingsTab) {
           filterSettingsTab.details.drupalSetSummary(() =>
-            $checkbox.is(':checked')
-              ? Drupal.t('Enabled')
-              : Drupal.t('Disabled'),
+            checkbox.checked ? Drupal.t('Enabled') : Drupal.t('Disabled'),
           );
         }
 

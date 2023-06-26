@@ -26,7 +26,7 @@
               Drupal.checkPlain($(this).find('label')[0].textContent),
             );
           });
-        if (!$(context).find('#edit-options-status').is(':checked')) {
+        if ($(context).find('#edit-options-status:checked').length === 0) {
           values.unshift(Drupal.t('Not published'));
         }
         return values.join(', ');

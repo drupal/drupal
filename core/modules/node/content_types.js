@@ -32,7 +32,7 @@
           .each(function () {
             values.push(Drupal.checkPlain(this.textContent));
           });
-        if (!$(context).find('#edit-options-status').is(':checked')) {
+        if ($(context).find('#edit-options-status:checked').length === 0) {
           values.unshift(Drupal.t('Not published'));
         }
         return values.join(', ');
@@ -64,7 +64,7 @@
           .each(function () {
             values.push(Drupal.checkPlain(this.textContent));
           });
-        if (!$editContext.find('#edit-display-submitted').is(':checked')) {
+        if ($editContext.find('#edit-display-submitted:checked').length === 0) {
           values.unshift(Drupal.t("Don't display post information"));
         }
         return values.join(', ');

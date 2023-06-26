@@ -254,13 +254,13 @@
           }
           // This region has become empty.
           if (
-            $this.next('tr').is(':not(.draggable)') ||
-            $this.next('tr').length === 0
+            $this.next('tr').length === 0 ||
+            !$this.next('tr')[0].matches('.draggable')
           ) {
             $this.removeClass('region-populated').addClass('region-empty');
           }
           // This region has become populated.
-          else if ($this.is('.region-empty')) {
+          else if (this.matches('.region-empty')) {
             $this.removeClass('region-empty').addClass('region-populated');
           }
         });

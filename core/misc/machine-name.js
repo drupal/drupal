@@ -136,7 +136,7 @@
         $suffix.append($preview);
 
         // If the machine name cannot be edited, stop further processing.
-        if ($target.is(':disabled')) {
+        if ($target[0].disabled) {
           return;
         }
 

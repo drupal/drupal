@@ -71,7 +71,7 @@
       .find('th.select-all')
       .prepend($(Drupal.theme('checkbox')).attr('title', strings.selectAll))
       .on('click', (event) => {
-        if ($(event.target).is('input[type="checkbox"]')) {
+        if (event.target.matches('input[type="checkbox"]')) {
           // Loop through all checkboxes and set their state to the select all
           // checkbox' state.
           checkboxes.each(function () {

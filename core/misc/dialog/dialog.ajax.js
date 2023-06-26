@@ -96,7 +96,7 @@
           click(e) {
             // If the original button is an anchor tag, triggering the "click"
             // event will not simulate a click. Use the click method instead.
-            if ($originalButton.is('a')) {
+            if ($originalButton[0].tagName === 'A') {
               $originalButton[0].click();
             } else {
               $originalButton
