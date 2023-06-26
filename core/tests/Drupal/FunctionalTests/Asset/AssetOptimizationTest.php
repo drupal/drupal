@@ -163,6 +163,9 @@ class AssetOptimizationTest extends BrowserTestBase {
     $session->visit($this->invalidExclude($url));
     $this->assertSession()->statusCodeEquals(400);
 
+    $session->visit($this->replaceFileNamePrefix($url));
+    $this->assertSession()->statusCodeEquals(400);
+
     $session->visit($this->setInvalidLibrary($url));
     $this->assertSession()->statusCodeEquals(200);
 
@@ -208,6 +211,19 @@ class AssetOptimizationTest extends BrowserTestBase {
     $hash = strtok($parts[1], '.');
     $parts[1] = str_replace($hash, 'abcdefghijklmnop', $parts[1]);
     return $this->getAbsoluteUrl(implode('_', $parts));
+  }
+
+  /**
+   * Replaces the filename prefix in the given URL.
+   *
+   * @param string $url
+   *   The source URL.
+   *
+   * @return string
+   *   The URL with the file name prefix replaced.
+   */
+  protected function replaceFileNamePrefix(string $url): string {
+    return str_replace(['/css_', '/js_'], '/xyz_', $url);
   }
 
   /**
