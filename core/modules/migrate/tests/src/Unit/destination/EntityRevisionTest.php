@@ -242,6 +242,14 @@ class EntityRevision extends RealEntityRevision {
    * This method is from the parent and we aren't concerned with the inner
    * workings of its implementation which would trickle into mock assertions. An
    * empty implementation avoids this.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to update.
+   * @param \Drupal\migrate\Row $row
+   *   The row object to update from.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   An updated entity from row values.
    */
   protected function updateEntity(EntityInterface $entity, Row $row) {
     return $entity;

@@ -90,12 +90,7 @@ class EntitySearchPage extends EntityConfigBase {
   }
 
   /**
-   * Updates the entity with the contents of a row.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The search page entity.
-   * @param \Drupal\migrate\Row $row
-   *   The row object to update from.
+   * {@inheritdoc}
    */
   protected function updateEntity(EntityInterface $entity, Row $row) {
     parent::updateEntity($entity, $row);
@@ -105,6 +100,7 @@ class EntitySearchPage extends EntityConfigBase {
     if ($plugin instanceof ConfigurableSearchPluginBase) {
       $plugin->setConfiguration($row->getDestinationProperty('configuration'));
     }
+    return $entity;
   }
 
 }

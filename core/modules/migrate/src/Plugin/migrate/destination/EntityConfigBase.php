@@ -193,6 +193,9 @@ class EntityConfigBase extends Entity {
    * @param \Drupal\migrate\Row $row
    *   The row object to update from.
    *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   An updated entity from row values.
+   *
    * @throws \LogicException
    *   Thrown if the destination is for translations and either the "property"
    *   or "translation" property does not exist.
@@ -226,6 +229,8 @@ class EntityConfigBase extends Entity {
       }
       $this->setRollbackAction($row->getIdMap());
     }
+
+    return $entity;
   }
 
   /**
