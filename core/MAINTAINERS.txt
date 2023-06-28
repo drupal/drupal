@@ -226,9 +226,6 @@ History
 - Andrey Postnikov 'andypost' https://www.drupal.org/u/andypost
 
 Help
-- ?
-
-Help Topics
 - Amber Matz 'Amber Himes Matz' https://www.drupal.org/u/amber-himes-matz
 - Andrey Postnikov 'andypost' https://www.drupal.org/u/andypost
 
