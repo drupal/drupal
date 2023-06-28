@@ -1673,4 +1673,25 @@ JS;
     return $this->getSession()->evaluateScript($javascript);
   }
 
+  /**
+   * Ensure media preview isn't clickable.
+   */
+  public function testMediaPointerEvent() {
+    $entityViewDisplay = EntityViewDisplay::load('media.image.view_mode_1');
+    $thumbnail = $entityViewDisplay->getComponent('thumbnail');
+    $thumbnail['settings']['image_link'] = 'file';
+    $entityViewDisplay->setComponent('thumbnail', $thumbnail);
+    $entityViewDisplay->save();
+
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+    $url = $this->host->toUrl('edit-form');
+    $this->drupalGet($url);
+    $this->waitForEditor();
+    $assert_session->waitForLink('default alt');
+    $page->find('css', '.ck .drupal-media')->click();
+    // Assert that the media preview is not clickable by comparing the URL.
+    $this->assertEquals($url->toString(), $this->getUrl());
+  }
+
 }
