@@ -112,6 +112,15 @@ class EmailFieldTest extends BrowserTestBase {
     $content = $display->build($entity);
     $rendered_content = (string) \Drupal::service('renderer')->renderRoot($content);
     $this->assertStringContainsString('href="mailto:test@example.com"', $rendered_content);
+
+    // Test Email validation message.
+    $this->drupalGet('entity_test/add');
+    $value = 'abc.@in';
+    $edit = [
+      "{$field_name}[0][value]" => $value,
+    ];
+    $this->submitForm($edit, 'Save');
+    $this->assertSession()->statusMessageContains("The email address {$value} is not valid. Use the format user@example.com.", 'error');
   }
 
 }
