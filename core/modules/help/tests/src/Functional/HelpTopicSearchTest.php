@@ -39,7 +39,7 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
 
     // Log in.
     $this->drupalLogin($this->createUser([
-      'access administration pages',
+      'access help pages',
       'administer site configuration',
       'view the administration theme',
       'administer permissions',
@@ -218,7 +218,7 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
     // items, and verify they can still search for help topics but not see these
     // items.
     $this->drupalLogin($this->createUser([
-      'access administration pages',
+      'access help pages',
       'administer site configuration',
       'view the administration theme',
       'administer permissions',

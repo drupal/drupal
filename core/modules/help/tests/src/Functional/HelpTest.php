@@ -53,7 +53,7 @@ class HelpTest extends BrowserTestBase {
 
     // Create users.
     $this->adminUser = $this->drupalCreateUser([
-      'access administration pages',
+      'access help pages',
       'view the administration theme',
       'administer permissions',
     ]);

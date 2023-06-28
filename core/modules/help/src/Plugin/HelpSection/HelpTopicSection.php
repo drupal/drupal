@@ -23,7 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   title = @Translation("Topics"),
  *   weight = -10,
  *   description = @Translation("Topics can be provided by modules or themes. Top-level help topics on your site:"),
- *   permission = "access administration pages"
+ *   permission = "access help pages"
  * )
  *
  * @internal

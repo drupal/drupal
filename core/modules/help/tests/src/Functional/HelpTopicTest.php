@@ -74,6 +74,7 @@ class HelpTopicTest extends BrowserTestBase {
     // Create users.
     $this->adminUser = $this->createUser([
       'access administration pages',
+      'access help pages',
       'view the administration theme',
       'administer permissions',
       'administer site configuration',
@@ -81,7 +82,7 @@ class HelpTopicTest extends BrowserTestBase {
     ]);
 
     $this->noTestUser = $this->createUser([
-      'access administration pages',
+      'access help pages',
       'view the administration theme',
       'administer permissions',
       'administer site configuration',

@@ -39,7 +39,7 @@ class HelpPageOrderTest extends BrowserTestBase {
 
     // Create and log in user.
     $account = $this->drupalCreateUser([
-      'access administration pages',
+      'access help pages',
       'view the administration theme',
       'administer permissions',
       'access tour',

@@ -42,7 +42,7 @@ class ExperimentalHelpTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->adminUser = $this->drupalCreateUser(['access administration pages']);
+    $this->adminUser = $this->drupalCreateUser(['access help pages']);
   }
 
   /**

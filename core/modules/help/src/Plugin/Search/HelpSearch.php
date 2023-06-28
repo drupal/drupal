@@ -158,7 +158,7 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
    * {@inheritdoc}
    */
   public function access($operation = 'view', AccountInterface $account = NULL, $return_as_object = FALSE) {
-    $result = AccessResult::allowedIfHasPermission($account, 'access administration pages');
+    $result = AccessResult::allowedIfHasPermission($account, 'access help pages');
     return $return_as_object ? $result : $result->isAllowed();
   }
 
@@ -195,12 +195,12 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
     // We need to check access for the current user to see the topics that
     // could be returned by search. Each entry in the help_search_items
     // database has an optional permission that comes from the HelpSection
-    // plugin, in addition to the generic 'access administration pages'
+    // plugin, in addition to the generic 'access help pages'
     // permission. In order to enforce these permissions so only topics that
     // the current user has permission to view are selected by the query, make
     // a list of the permission strings and pre-check those permissions.
     $this->addCacheContexts(['user.permissions']);
-    if (!$this->account->hasPermission('access administration pages')) {
+    if (!$this->account->hasPermission('access help pages')) {
       return NULL;
     }
     $permissions = $this->database

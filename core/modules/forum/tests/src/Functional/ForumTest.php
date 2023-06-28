@@ -97,6 +97,7 @@ class ForumTest extends BrowserTestBase {
     // Create users.
     $this->adminUser = $this->drupalCreateUser([
       'access administration pages',
+      'access help pages',
       'administer modules',
       'administer blocks',
       'administer forums',
@@ -107,6 +108,7 @@ class ForumTest extends BrowserTestBase {
     ]);
     $this->editAnyTopicsUser = $this->drupalCreateUser([
       'access administration pages',
+      'access help pages',
       'create forum content',
       'edit any forum content',
       'delete any forum content',

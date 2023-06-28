@@ -5,7 +5,9 @@
  * Post update functions for the Help module.
  */
 
+use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\search\Entity\SearchPage;
+use Drupal\user\RoleInterface;
 
 /**
  * Install or update config for help topics if the search module installed.
@@ -94,4 +96,17 @@ function help_post_update_help_topics_uninstall() {
   if (\Drupal::moduleHandler()->moduleExists('help_topics')) {
     \Drupal::service('module_installer')->uninstall(['help_topics'], FALSE);
   }
+}
+
+/**
+ * Grant all admin roles the 'access help pages' permission.
+ */
+function help_post_update_add_permissions_to_roles(?array &$sandbox = []): void {
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'user_role', function (RoleInterface $role): bool {
+    if ($role->isAdmin() || !$role->hasPermission('access administration pages')) {
+      return FALSE;
+    }
+    $role->grantPermission('access help pages');
+    return TRUE;
+  });
 }

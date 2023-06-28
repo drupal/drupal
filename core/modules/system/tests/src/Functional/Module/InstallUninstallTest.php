@@ -84,6 +84,9 @@ class InstallUninstallTest extends ModuleTestBase {
     $this->assertSession()->pageTextContains('hook_modules_installed fired for help');
     $this->assertModuleSuccessfullyInstalled('help');
 
+    // Add new role to allow browsing help pages.
+    $this->adminUser->addRole($this->createRole(['access help pages']))->save();
+
     // Test help for the required modules.
     foreach ($required_modules as $name => $module) {
       $this->assertHelp($name, $module->info['name']);

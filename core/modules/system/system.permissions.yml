@@ -9,7 +9,7 @@ administer software updates:
   title: 'Administer software updates'
   restrict access: true
 access administration pages:
-  title: 'Use the administration pages and help'
+  title: 'Use the administration pages'
 access site in maintenance mode:
   title: 'Use the site in maintenance mode'
 view the administration theme:

@@ -24,7 +24,7 @@ class HelpTopicTranslationTest extends HelpTopicTranslatedTestBase {
 
     // Create user and log in.
     $this->drupalLogin($this->createUser([
-      'access administration pages',
+      'access help pages',
       'view the administration theme',
       'administer permissions',
     ]));
