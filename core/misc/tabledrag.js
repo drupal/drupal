@@ -238,10 +238,10 @@
     );
     this.$toggleWeightButton.on(
       'click',
-      $.proxy(function (e) {
+      function (e) {
         e.preventDefault();
         this.toggleColumns();
-      }, this),
+      }.bind(this),
     );
     $table.before($toggleWeightWrapper);
 
@@ -267,7 +267,7 @@
     // React to localStorage event showing or hiding weight columns.
     $(window).on(
       'storage',
-      $.proxy(function (e) {
+      function (e) {
         // Only react to 'Drupal.tableDrag.showWeight' value change.
         if (e.originalEvent.key === 'Drupal.tableDrag.showWeight') {
           // This was changed in another window, get the new value for this
@@ -275,7 +275,7 @@
           showWeight = JSON.parse(e.originalEvent.newValue);
           this.displayColumns(showWeight);
         }
-      }, this),
+      }.bind(this),
     );
 
     // Check for any rows marked as changed before this tabledrag was rerendered

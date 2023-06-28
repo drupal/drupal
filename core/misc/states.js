@@ -477,7 +477,7 @@
       // Attach the event callback.
       this.element.on(
         event,
-        $.proxy(function (e) {
+        function (e) {
           const value = valueFn.call(this.element, e);
           // Only trigger the event if the value has actually changed.
           if (oldValue !== value) {
@@ -488,18 +488,18 @@
             });
             oldValue = value;
           }
-        }, this),
+        }.bind(this),
       );
 
       states.postponed.push(
-        $.proxy(function () {
+        function () {
           // Trigger the event once for initialization purposes.
           this.element.trigger({
             type: `state:${this.state}`,
             value: oldValue,
             oldValue: null,
           });
-        }, this),
+        }.bind(this),
       );
     },
   };

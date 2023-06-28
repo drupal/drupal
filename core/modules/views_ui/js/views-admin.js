@@ -157,9 +157,7 @@
 
     // Create bound versions of this instance's object methods to use as event
     // handlers. This will let us easily unbind those specific handlers later
-    // on. NOTE: jQuery.proxy will not work for this because it assumes we want
-    // only one bound version of an object method, whereas we need one version
-    // per object instance.
+    // on.
     const self = this;
 
     /**
@@ -294,7 +292,7 @@
     this.$form = $form;
     this.$form
       .find('.views-filterable-options :checkbox')
-      .on('click', $.proxy(this.handleCheck, this));
+      .on('click', this.handleCheck.bind(this));
 
     /**
      * Find the wrapper of the displayed text.
@@ -498,7 +496,7 @@
     this.$form.on(
       'formUpdated',
       `${searchBoxSelector},${controlGroupSelector}`,
-      $.proxy(this.handleFilter, this),
+      this.handleFilter.bind(this),
     );
 
     this.$searchBox = this.$form.find(searchBoxSelector);
@@ -715,7 +713,7 @@
       ),
     ).on(
       'change.views-rearrange-filter-handler',
-      $.proxy(this, 'redrawOperatorLabels'),
+      this.redrawOperatorLabels.bind(this),
     );
 
     // Bind handlers so that when a "Remove" link is clicked, we:
@@ -732,11 +730,11 @@
     )
       .on(
         'click.views-rearrange-filter-handler',
-        $.proxy(this, 'updateRowspans'),
+        this.updateRowspans.bind(this),
       )
       .on(
         'click.views-rearrange-filter-handler',
-        $.proxy(this, 'redrawOperatorLabels'),
+        this.redrawOperatorLabels.bind(this),
       );
   };
 
@@ -764,7 +762,7 @@
           .find('#views-add-group-link')
           .on(
             'click.views-rearrange-filter-handler',
-            $.proxy(this, 'clickAddGroupButton'),
+            this.clickAddGroupButton.bind(this),
           );
 
         // Find each (visually hidden) button for removing a filter group and
@@ -788,7 +786,7 @@
           ).on(
             'click.views-rearrange-filter-handler',
             { buttonId },
-            $.proxy(this, 'clickRemoveGroupButton'),
+            this.clickRemoveGroupButton.bind(this),
           );
         }
       },
@@ -884,7 +882,7 @@
           return;
         }
 
-        this.dropdowns.on('change', $.proxy(this, 'operatorChangeHandler'));
+        this.dropdowns.on('change', this.operatorChangeHandler.bind(this));
       },
 
       /**
@@ -1214,7 +1212,7 @@
     this.$button.hide();
     this.$parent.find('.exposed-description, .grouped-description').hide();
 
-    this.$input.on('click', $.proxy(this, 'clickHandler'));
+    this.$input.on('click', this.clickHandler.bind(this));
   };
 
   /**

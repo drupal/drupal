@@ -44,7 +44,7 @@
           Drupal.theme('detailsSummarizedContentWrapper'),
         );
         this.$node
-          .on('summaryUpdated', $.proxy(this.onSummaryUpdated, this))
+          .on('summaryUpdated', this.onSummaryUpdated.bind(this))
           .trigger('summaryUpdated')
           .find('> summary')
           .append(this.$detailsSummarizedContentWrapper);

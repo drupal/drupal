@@ -37,7 +37,7 @@
     "jquery/no-parents": 0,
     "jquery/no-parse-html": 0,
     "jquery/no-prop": 0,
-    "jquery/no-proxy": 0,
+    "jquery/no-proxy": 2,
     "jquery/no-ready": 2,
     "jquery/no-serialize": 0,
     "jquery/no-show": 0,
