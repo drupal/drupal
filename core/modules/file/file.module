@@ -599,8 +599,6 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
  *   there was an error. Function returns NULL if no file was uploaded.
  *
  * @see _file_save_upload_from_form()
- *
- * @todo: move this logic to a service in https://www.drupal.org/node/2244513.
  */
 function file_save_upload($form_field_name, $validators = [], $destination = FALSE, $delta = NULL, $replace = FileSystemInterface::EXISTS_RENAME) {
   static $upload_cache;
