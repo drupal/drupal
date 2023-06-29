@@ -50,7 +50,7 @@ use Drupal\migrate\Row;
  *   bar:
  *     plugin: explode
  *     source: foo
- *     limit: 1
+ *     limit: 2
  *     delimiter: /
  * @endcode
  *
@@ -58,7 +58,7 @@ use Drupal\migrate\Row;
  * equivalent of this would be:
  *
  * @code
- *   $bar = explode('/', $foo, 1);
+ *   $bar = explode('/', $foo, 2);
  * @endcode
  *
  * If the 'strict' configuration is set to FALSE, the input value is casted to a
