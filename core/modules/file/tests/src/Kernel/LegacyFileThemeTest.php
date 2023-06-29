@@ -5,7 +5,7 @@ namespace Drupal\Tests\file\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests legacy deprecated functions in file.field.inc.
+ * Tests legacy deprecated functions in file.module.
  *
  * @group file
  * @group legacy
