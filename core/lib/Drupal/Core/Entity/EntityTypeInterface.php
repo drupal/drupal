@@ -385,6 +385,16 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
   public function getAdminPermission();
 
   /**
+   * Gets the name of the default collection permission.
+   *
+   * @see \Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider::getCollectionRoute()
+   *
+   * @return string|null
+   *   The collection permission name, or NULL if none.
+   */
+  public function getCollectionPermission(): ?string;
+
+  /**
    * Gets the permission granularity level.
    *
    * The allowed values are respectively "entity_type" or "bundle".

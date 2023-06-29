@@ -70,6 +70,7 @@ use Drupal\user\EntityOwnerTrait;
  *   field_ui_base_route = "entity.node_type.edit_form",
  *   common_reference_target = TRUE,
  *   permission_granularity = "bundle",
+ *   collection_permission = "access content overview",
  *   links = {
  *     "canonical" = "/node/{node}",
  *     "delete-form" = "/node/{node}/delete",

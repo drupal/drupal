@@ -44,6 +44,7 @@ use Drupal\user\UserInterface;
  *     "translation" = "Drupal\block_content\BlockContentTranslationHandler"
  *   },
  *   admin_permission = "administer block content",
+ *   collection_permission = "access block library",
  *   base_table = "block_content",
  *   revision_table = "block_content_revision",
  *   data_table = "block_content_field_data",
