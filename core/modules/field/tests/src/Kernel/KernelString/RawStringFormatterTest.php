@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\field\Kernel\String;
+namespace Drupal\Tests\field\Kernel\KernelString;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;

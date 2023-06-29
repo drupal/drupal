@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\field\Kernel\String;
+namespace Drupal\Tests\field\Kernel\KernelString;
 
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\field\Functional\String;
+namespace Drupal\Tests\field\Functional\FunctionalString;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\entity_test\Entity\EntityTest;
