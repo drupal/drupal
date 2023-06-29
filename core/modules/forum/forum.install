@@ -161,6 +161,7 @@ function forum_schema() {
       'created' => ['created'],
       'last_comment_timestamp' => ['last_comment_timestamp'],
     ],
+    'primary key' => ['nid', 'tid'],
     'foreign keys' => [
       'tracked_node' => [
         'table' => 'node',
@@ -203,4 +204,16 @@ function forum_update_10100(&$sandbox = NULL) {
     ];
     $connection->schema()->changeField('forum_index', 'last_comment_timestamp', 'last_comment_timestamp', $new);
   }
+}
+
+/**
+ * Add a primary key to forum_index.
+ */
+function forum_update_10101(&$sandbox = NULL) {
+  $connection = \Drupal::database();
+  if ($connection->schema()->tableExists('forum_index')) {
+    $connection->schema()->addPrimaryKey('forum_index', ['nid', 'tid']);
+    return \t('Added primary key to the forum_index table.');
+  }
+  return \t('The forum_index table does not exist, the update was skipped.');
 }
