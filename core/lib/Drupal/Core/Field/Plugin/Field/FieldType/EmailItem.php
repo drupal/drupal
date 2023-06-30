@@ -16,7 +16,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @FieldType(
  *   id = "email",
  *   label = @Translation("Email"),
- *   description = @Translation("An entity field containing an email value."),
+ *   description = @Translation("Field to store an email address."),
  *   default_widget = "email_default",
  *   default_formatter = "basic_string"
  * )

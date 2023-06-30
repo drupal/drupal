@@ -10,6 +10,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\Core\Field\FieldTypePluginManager;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
@@ -346,6 +347,9 @@ function media_library_field_ui_preconfigured_options_alter(array &$options, $fi
   // Set the default field widget for media to be the Media library.
   if (!empty($options['media'])) {
     $options['media']['entity_form_display']['type'] = 'media_library_widget';
+    $options['media']['description'] = t('Field to reference media. Allows uploading and selecting from uploaded media.');
+    $options['media']['weight'] = -25;
+    $options['media']['category'] = FieldTypePluginManager::DEFAULT_CATEGORY;
   }
 }
 

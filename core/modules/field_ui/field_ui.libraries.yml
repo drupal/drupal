@@ -12,3 +12,12 @@ drupal.field_ui:
     - core/once
     - core/drupal.ajax
     - core/drupal.dialog
+
+drupal.field_ui.manage_fields:
+  version: VERSION
+  css:
+    component:
+      css/field_ui_add_field.module.css: {}
+    theme:
+      css/field_ui_add_field.theme.css: {}
+      css/field_ui.icons.theme.css: {}

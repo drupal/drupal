@@ -200,27 +200,21 @@ function media_form_field_ui_field_storage_add_form_alter(&$form, FormStateInter
       '@help_url' => Url::fromRoute('help.page', ['name' => 'media'])->toString(),
     ]);
   }
-  $form['add']['description_wrapper'] = [
-    '#type' => 'container',
-  ];
   $field_types = [
-    'file',
-    'image',
+    'file_upload',
     'field_ui:entity_reference:media',
   ];
-  foreach ($field_types as $field_name) {
-    $form['add']['description_wrapper']["description_{$field_name}"] = [
+  if (in_array($form_state->getValue('selected_field_type'), $field_types)) {
+    $form['group_field_options_wrapper']['description_wrapper'] = [
       '#type' => 'item',
       '#markup' => $description_text,
-      '#states' => [
-        'visible' => [
-          ':input[name="new_storage_type"]' => ['value' => $field_name],
-        ],
-      ],
     ];
   }
-  $form['add']['new_storage_type']['#weight'] = 0;
-  $form['add']['description_wrapper']['#weight'] = 1;
+
+  // Remove Media from the Reference group since it already exists as a field.
+  if ($form_state->getValue('selected_field_type') === 'reference') {
+    unset($form['group_field_options_wrapper']['fields']['field_ui:entity_reference:media']);
+  }
 }
 
 /**
@@ -538,4 +532,11 @@ function media_views_query_substitutions(ViewExecutable $view) {
     '***VIEW_OWN_UNPUBLISHED_MEDIA***' => (int) $account->hasPermission('view own unpublished media'),
     '***ADMINISTER_MEDIA***' => (int) $account->hasPermission('administer media'),
   ];
+}
+
+/**
+ * Implements hook_preprocess_form_element__new_storage_type().
+ */
+function media_preprocess_form_element__new_storage_type(&$variables) {
+  $variables['#attached']['library'][] = 'media/drupal.media-icon';
 }

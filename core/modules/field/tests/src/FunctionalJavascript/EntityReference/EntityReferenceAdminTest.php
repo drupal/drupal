@@ -6,6 +6,7 @@ use Behat\Mink\Element\NodeElement;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -18,6 +19,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 class EntityReferenceAdminTest extends WebDriverTestBase {
 
   use FieldUiTestTrait;
+  use FieldUiJSTestTrait;
 
   /**
    * Modules to install.
@@ -113,20 +115,19 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $bundle_path = 'admin/structure/types/manage/' . $this->type;
 
     $page = $this->getSession()->getPage();
+    /** @var \Drupal\FunctionalJavascriptTests\JSWebAssert $assert_session */
     $assert_session = $this->assertSession();
 
     // First step: 'Add new field' on the 'Manage fields' page.
     $this->drupalGet($bundle_path . '/fields/add-field');
 
     // Check if the commonly referenced entity types appear in the list.
-    $this->assertSession()->optionExists('edit-new-storage-type', 'field_ui:entity_reference:node');
-    $this->assertSession()->optionExists('edit-new-storage-type', 'field_ui:entity_reference:user');
+    $page->find('css', "[name='new_storage_type'][value='reference']")->click();
+    $assert_session->waitForText('Choose an option below');
+    $this->assertSession()->elementExists('css', "[name='group_field_options_wrapper'][value='field_ui:entity_reference:node']");
+    $this->assertSession()->elementExists('css', "[name='group_field_options_wrapper'][value='field_ui:entity_reference:user']");
 
-    $page->findField('new_storage_type')->setValue('entity_reference');
-    $assert_session->waitForField('label')->setValue('Test');
-    $machine_name = $assert_session->waitForElement('xpath', '//*[@id="edit-label-machine-name-suffix"]/span[contains(text(), "field_test")]');
-    $this->assertNotEmpty($machine_name);
-    $page->pressButton('Save and continue');
+    $this->fieldUIAddNewFieldJS(NULL, 'test', 'Test', 'entity_reference', FALSE);
 
     // Node should be selected by default.
     $this->assertSession()->fieldValueEquals('settings[target_type]', 'node');

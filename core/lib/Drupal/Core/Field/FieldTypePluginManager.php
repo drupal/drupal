@@ -8,6 +8,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\CategorizingPluginManagerTrait;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 
 /**
@@ -17,7 +18,14 @@ use Drupal\Core\TypedData\TypedDataManagerInterface;
  */
 class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePluginManagerInterface {
 
-  use CategorizingPluginManagerTrait;
+  /**
+   * Default category for field types.
+   */
+  const DEFAULT_CATEGORY = 'general';
+
+  use CategorizingPluginManagerTrait {
+    getGroupedDefinitions as protected getGroupedDefinitionsTrait;
+  }
 
   /**
    * The typed data manager.
@@ -91,9 +99,13 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
       $definition['list_class'] = '\Drupal\Core\Field\FieldItemList';
     }
 
-    // Ensure that every field type has a category.
-    if (empty($definition['category'])) {
-      $definition['category'] = $this->t('General');
+    if ($definition['category'] instanceof TranslatableMarkup) {
+      @trigger_error('Using a translatable string as a category for field type is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3364271', E_USER_DEPRECATED);
+      $definition['category'] = static::DEFAULT_CATEGORY;
+    }
+    elseif (empty($definition['category'])) {
+      // Ensure that every field type has a category.
+      $definition['category'] = static::DEFAULT_CATEGORY;
     }
   }
 
@@ -148,6 +160,23 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
   /**
    * {@inheritdoc}
    */
+  public function getGroupedDefinitions(array $definitions = NULL, $label_key = 'label') {
+    $grouped_categories = $this->getGroupedDefinitionsTrait($definitions, $label_key);
+    $category_info = \Drupal::moduleHandler()->invokeAll('field_type_category_info');
+    foreach ($grouped_categories as $group => $definitions) {
+      if (!isset($category_info[$group]) && $group !== static::DEFAULT_CATEGORY) {
+        assert(FALSE, "\"$group\" must be defined in hook_field_type_category_info().");
+        $grouped_categories[static::DEFAULT_CATEGORY] += $definitions;
+        unset($grouped_categories[$group]);
+      }
+    }
+
+    return $grouped_categories;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getUiDefinitions() {
     $definitions = $this->getDefinitions();
 
@@ -162,7 +191,7 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
         foreach ($this->getPreconfiguredOptions($definition['id']) as $key => $option) {
           $definitions["field_ui:$id:$key"] = array_intersect_key(
             $option,
-            ['label' => 0, 'category' => 1]
+            ['label' => 0, 'category' => 1, 'weight' => 1, 'description' => 0]
           ) + $definition;
         }
       }

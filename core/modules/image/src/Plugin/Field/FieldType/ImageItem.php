@@ -21,8 +21,12 @@ use Drupal\file\Plugin\Field\FieldType\FileItem;
  * @FieldType(
  *   id = "image",
  *   label = @Translation("Image"),
- *   description = @Translation("This field stores the ID of an image file as an integer value."),
- *   category = @Translation("Reference"),
+ *   description = {
+ *     @Translation("For uploading images"),
+ *     @Translation("Allows a user to upload an image with configurable extensions, image resolutions, upload size"),
+ *     @Translation("Can be configured with options such as allowed file extensions, maximum upload size and image resolution minimums/maximums"),
+ *   },
+ *   category = "file_upload",
  *   default_widget = "image_image",
  *   default_formatter = "image",
  *   column_groups = {

@@ -15,7 +15,6 @@ use Drupal\entity_test\TypedData\ComputedString;
  *   id = "internal_property_test",
  *   label = @Translation("Internal Property (test)"),
  *   description = @Translation("A field containing one string, from which two strings are computed (one internal, one not)."),
- *   category = @Translation("Test"),
  *   default_widget = "string_textfield",
  *   default_formatter = "string"
  * )

@@ -11,7 +11,6 @@ use Drupal\text\Plugin\Field\FieldType\TextLongItem;
  *   id = "editor_test_text_long",
  *   label = @Translation("Filter test text (formatted, long)"),
  *   description = @Translation("This field stores a long text with a text format."),
- *   category = @Translation("Text"),
  *   default_widget = "text_textarea",
  *   default_formatter = "text_default"
  * )

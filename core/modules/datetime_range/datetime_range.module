@@ -27,3 +27,10 @@ function datetime_range_help($route_name, RouteMatchInterface $route_match) {
       return $output;
   }
 }
+
+/**
+ * Implements hook_preprocess_form_element__new_storage_type().
+ */
+function datetime_range_preprocess_form_element__new_storage_type(&$variables) {
+  $variables['#attached']['library'][] = 'datetime_range/drupal.datetime_range-icon';
+}

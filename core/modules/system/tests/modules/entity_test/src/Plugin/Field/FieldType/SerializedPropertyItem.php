@@ -14,7 +14,6 @@ use Drupal\Core\TypedData\DataDefinition;
  *   id = "serialized_property_item_test",
  *   label = @Translation("Test serialized property field item"),
  *   description = @Translation("A field containing a string representing serialized data."),
- *   category = @Translation("Field"),
  *   serialized_property_names = {
  *     "value"
  *   }

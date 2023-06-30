@@ -471,16 +471,6 @@ parameters:
 			path: lib/Drupal/Core/Field/FieldItemList.php
 
 		-
-			message: "#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Field/FieldTypePluginManager.php
-
-		-
-			message: "#^Call to method getSortedDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Field/FieldTypePluginManager.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: lib/Drupal/Core/Field/Plugin/Field/FieldFormatter/TimestampFormatter.php

@@ -1,0 +1,27 @@
+/**
+ * @file field_ui_add_field.theme.css
+ */
+:root {
+  --shadow-z1: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-z2: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.add-field-container .field-option:not(:focus),
+.group-field-options .subfield-option:not(:focus) {
+  box-shadow: var(--shadow-z2);
+}
+
+.field-option .form-item__label,
+.subfield-option.subfield-option .form-item__label {
+  font-size: 16px;
+  font-weight: revert;
+}
+
+.subfield-option.subfield-option .form-item__label {
+  padding-bottom: 10px;
+}
+
+.field-option .field-option__description,
+.subfield-option .description .item-list {
+  font-size: 14px;
+}

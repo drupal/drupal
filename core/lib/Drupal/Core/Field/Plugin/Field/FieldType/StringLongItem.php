@@ -12,8 +12,12 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
  * @FieldType(
  *   id = "string_long",
  *   label = @Translation("Text (plain, long)"),
- *   description = @Translation("A field containing a long string value."),
- *   category = @Translation("Text"),
+ *   description = {
+ *     @Translation("Ideal for longer texts, like body or description"),
+ *     @Translation("Supports long text without specifying a maximum length"),
+ *     @Translation("May use more storage and be slower for searching and sorting"),
+ *   },
+ *   category = "plain_text",
  *   default_widget = "string_textarea",
  *   default_formatter = "basic_string",
  * )

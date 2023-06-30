@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\field_ui\Functional;
 
+use Behat\Mink\Exception\ElementNotFoundException;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityFormMode;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
@@ -692,8 +693,8 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
   public function testHiddenFields() {
     // Check that the field type is not available in the 'add new field' row.
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/add-field');
-    $this->assertSession()->optionNotExists('edit-new-storage-type', 'hidden_test_field');
-    $this->assertSession()->optionExists('edit-new-storage-type', 'shape');
+    $this->assertSession()->elementNotExists('css', "[name='new_storage_type'][value='hidden_test_field']");
+    $this->assertSession()->elementExists('css', "[name='new_storage_type'][value='shape']");
 
     // Create a field storage and a field programmatically.
     $field_name = 'hidden_test_field';
@@ -731,10 +732,19 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/types/manage/page/fields/add-field');
     foreach ($field_types as $field_type => $definition) {
       if (empty($definition['no_ui'])) {
-        $this->assertSession()->optionExists('edit-new-storage-type', $field_type);
+        try {
+          $this->assertSession()
+            ->elementExists('css', "[name='new_storage_type'][value='$field_type']");
+        }
+        catch (ElementNotFoundException) {
+          if ($this->getFieldFromGroup($field_type)) {
+            $this->assertSession()
+              ->elementExists('css', "[name='group_field_options_wrapper'][value='$field_type']");
+          }
+        }
       }
       else {
-        $this->assertSession()->optionNotExists('edit-new-storage-type', $field_type);
+        $this->assertSession()->elementNotExists('css', "[name='new_storage_type'][value='$field_type']");
       }
     }
   }
@@ -745,17 +755,11 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
   public function testDuplicateFieldName() {
     // field_tags already exists, so we're expecting an error when trying to
     // create a new field with the same name.
-    $edit = [
-      'field_name' => 'tags',
-      'label' => $this->randomMachineName(),
-      'new_storage_type' => 'entity_reference',
-    ];
-    $url = 'admin/structure/types/manage/' . $this->contentType . '/fields/add-field';
-    $this->drupalGet($url);
-    $this->submitForm($edit, 'Save and continue');
+    $url = 'admin/structure/types/manage/' . $this->contentType;
+    $this->fieldUIAddNewField($url, 'tags', $this->randomMachineName(), 'entity_reference', [], [], FALSE);
 
     $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
-    $this->assertSession()->addressEquals($url);
+    $this->assertSession()->addressEquals($url . '/fields/add-field');
   }
 
   /**
@@ -855,8 +859,8 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
 
     // Check that the preconfigured field option exist alongside the regular
     // field type option.
-    $this->assertSession()->optionExists('edit-new-storage-type', 'field_ui:test_field_with_preconfigured_options:custom_options');
-    $this->assertSession()->optionExists('edit-new-storage-type', 'test_field_with_preconfigured_options');
+    $this->assertSession()->elementExists('css', "[name='new_storage_type'][value='field_ui:test_field_with_preconfigured_options:custom_options']");
+    $this->assertSession()->elementExists('css', "[name='new_storage_type'][value='test_field_with_preconfigured_options']");
 
     // Add a field with every possible preconfigured value.
     $this->fieldUIAddNewField(NULL, 'test_custom_options', 'Test label', 'field_ui:test_field_with_preconfigured_options:custom_options');

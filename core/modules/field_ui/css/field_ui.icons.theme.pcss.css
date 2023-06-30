@@ -1,0 +1,38 @@
+/* cspell:ignore cacbd */
+.field-option__icon {
+  position: relative;
+  height: 100%;
+  background-image: url(../../../misc/icons/cacbd2/puzzle_piece_placeholder.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 60%;
+}
+
+.field-icon-boolean {
+  background-image: url(../../../misc/icons/55565b/boolean.svg);
+}
+
+.field-icon-plain_text {
+  background-image: url(../../../misc/icons/55565b/plain_text.svg);
+  background-size: 38%;
+}
+
+.field-icon-date_time {
+  background-image: url(../../../misc/icons/55565b/date_and_time.svg);
+}
+
+.field-icon-email {
+  background-image: url(../../../misc/icons/55565b/email.svg);
+}
+
+.field-icon-number {
+  background-image: url(../../../misc/icons/55565b/number.svg);
+}
+
+.field-icon-reference {
+  background-image: url(../../../misc/icons/55565b/reference.svg);
+}
+
+.field-icon-daterange {
+  background-image: url(../../../misc/icons/55565b/daterange.svg);
+}

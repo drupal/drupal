@@ -4,6 +4,7 @@ namespace Drupal\Tests\search\Functional;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 
 /**
@@ -14,6 +15,7 @@ use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 class SearchPageCacheTagsTest extends BrowserTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;
+  use FieldUiTestTrait;
 
   /**
    * {@inheritdoc}
@@ -155,17 +157,7 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
     ]);
     $this->drupalLogin($admin_user);
 
-    // First step: 'Add new field' on the 'Manage fields' page.
-    $this->drupalGet($bundle_path . '/fields/add-field');
-    $this->submitForm([
-      'label' => 'Test label',
-      'field_name' => 'test__ref',
-      'new_storage_type' => 'entity_reference',
-    ], 'Save and continue');
-
-    // Second step: 'Field settings' form.
-    $this->submitForm([], 'Save field settings');
-
+    $this->fieldUIAddNewField($bundle_path, 'test__ref', 'Test label', 'entity_reference', [], [], FALSE);
     // Create a new node of our newly created node type and fill in the entity
     // reference field.
     $edit = [

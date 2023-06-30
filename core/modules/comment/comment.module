@@ -238,10 +238,22 @@ function comment_form_field_ui_field_storage_add_form_alter(&$form, FormStateInt
     $form['#title'] = \Drupal::service('comment.manager')->getFieldUIPageTitle($route_match->getParameter('commented_entity_type'), $route_match->getParameter('field_name'));
   }
   if (!_comment_entity_uses_integer_id($form_state->get('entity_type_id'))) {
-    $optgroup = (string) t('General');
-    // You cannot use comment fields on entity types with non-integer IDs.
-    unset($form['add']['new_storage_type']['#options'][$optgroup]['comment']);
+    $form['add']['new_storage_type']['#process'][] = 'comment_new_storage_type_process_callback';
   }
+}
+
+/**
+ * Process callback to remove comment type field option.
+ */
+function comment_new_storage_type_process_callback($element, &$form_state, $form) {
+  foreach ($element as $key => $value) {
+    if (isset($value['radio']['#return_value']) && $value['radio']['#return_value'] === 'comment') {
+      // You cannot use comment fields on entity types with non-integer IDs.
+      unset($element[$key]);
+    }
+  }
+
+  return $element;
 }
 
 /**
@@ -770,4 +782,11 @@ function comment_entity_view_display_presave(EntityViewDisplayInterface $display
       $view_display->save();
     }
   }
+}
+
+/**
+ * Implements hook_preprocess_form_element__new_storage_type().
+ */
+function comment_preprocess_form_element__new_storage_type(&$variables) {
+  $variables['#attached']['library'][] = 'comment/drupal.comment-icon';
 }

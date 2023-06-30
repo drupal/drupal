@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\field_ui\FunctionalJavascript;
 
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
 
@@ -164,6 +165,81 @@ class ManageFieldsTest extends WebDriverTestBase {
 
     $page->find('css', '.ui-dialog-buttonset')->pressButton('Delete');
     $assert_session->waitForText('The field Body has been deleted from the Article content type.');
+  }
+
+  /**
+   * Tests field add.
+   */
+  public function testAddField() {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    $this->drupalGet('admin/structure/types/manage/article/fields/add-field');
+    $field_name = 'test_field_1';
+    $page->fillField('label', $field_name);
+
+    // Test validation.
+    $page->pressButton('Save and continue');
+    $assert_session->pageTextContains('You need to select a field type.');
+    $assert_session->elementExists('css', '[name="new_storage_type"].error');
+    $assert_session->pageTextNotContains('Choose an option below');
+
+    $this->assertNotEmpty($number_field = $page->find('xpath', '//*[text() = "Number"]'));
+    $number_field->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="number"]')->isSelected());
+    $assert_session->pageTextContains('Choose an option below');
+    $page->pressButton('Save and continue');
+    $assert_session->pageTextContains('You need to select a field type.');
+    $assert_session->elementNotExists('css', '[name="new_storage_type"].error');
+    $assert_session->elementExists('css', '[name="group_field_options_wrapper"].error');
+
+    // Try adding a field using a grouped field type.
+    $this->assertNotEmpty($email_field = $page->find('xpath', '//*[text() = "Email"]'));
+    $email_field->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="email"]')->isSelected());
+    $assert_session->pageTextNotContains('Choose an option below');
+
+    $this->assertNotEmpty($text = $page->find('xpath', '//*[text() = "Plain text"]'));
+    $text->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="plain_text"]')->isSelected());
+    $assert_session->pageTextContains('Choose an option below');
+
+    $this->assertNotEmpty($text_plain = $page->find('xpath', '//*[text() = "Text (plain)"]'));
+    $text_plain->click();
+    $this->assertTrue($assert_session->elementExists('css', '[name="group_field_options_wrapper"][value="string"]')->isSelected());
+
+    $page->pressButton('Save and continue');
+    $assert_session->pageTextContains('Your settings have been saved.');
+    $this->assertNotNull($field_storage = FieldStorageConfig::loadByName('node', "field_$field_name"));
+    $this->assertEquals('string', $field_storage->getType());
+
+    // Try adding a field using a non-grouped field type.
+    $this->drupalGet('admin/structure/types/manage/article/fields/add-field');
+    $field_name = 'test_field_2';
+    $page->fillField('label', $field_name);
+
+    $this->assertNotEmpty($number_field = $page->find('xpath', '//*[text() = "Number"]'));
+    $number_field->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="number"]')->isSelected());
+    $assert_session->pageTextContains('Choose an option below');
+    $this->assertNotEmpty($number_integer = $page->find('xpath', '//*[text() = "Number (integer)"]'));
+    $number_integer->click();
+    $this->assertTrue($assert_session->elementExists('css', '[name="group_field_options_wrapper"][value="integer"]')->isSelected());
+
+    $this->assertNotEmpty($test_field = $page->find('xpath', '//*[text() = "Test field"]'));
+    $test_field->click();
+    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="test_field"]')->isSelected());
+    $assert_session->pageTextNotContains('Choose an option below');
+
+    $page->pressButton('Save and continue');
+    $assert_session->pageTextContains('Your settings have been saved.');
+    $this->assertNotNull($field_storage = FieldStorageConfig::loadByName('node', "field_$field_name"));
+    $this->assertEquals('test_field', $field_storage->getType());
   }
 
 }

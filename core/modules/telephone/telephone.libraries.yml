@@ -1,0 +1,7 @@
+drupal.telephone-icon:
+  version: VERSION
+  css:
+    theme:
+      css/telephone.icon.theme.css: {}
+  dependencies:
+    - field_ui/drupal.field_ui.manage_fields

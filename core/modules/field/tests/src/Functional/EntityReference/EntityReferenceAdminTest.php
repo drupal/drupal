@@ -113,13 +113,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
 
     // Create a test entity reference field.
     $field_name = 'test_entity_ref_field';
-    $edit = [
-      'new_storage_type' => 'field_ui:entity_reference:node',
-      'label' => 'Test Entity Reference Field',
-      'field_name' => $field_name,
-    ];
-    $this->drupalGet($bundle_path . '/fields/add-field');
-    $this->submitForm($edit, 'Save and continue');
+    $this->fieldUIAddNewField($bundle_path, $field_name, 'Test Entity Reference Field', 'field_ui:entity_reference:node', [], [], FALSE);
 
     // Set to unlimited.
     $edit = [

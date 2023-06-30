@@ -14,7 +14,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  *   id = "image_module_test_dummy_ajax",
  *   label = @Translation("Dummy AJAX"),
  *   description = @Translation("A field containing an AJAX handler."),
- *   category = @Translation("Field"),
  *   default_widget = "image_module_test_dummy_ajax_widget",
  *   default_formatter = "image_module_test_dummy_ajax_formatter"
  * )

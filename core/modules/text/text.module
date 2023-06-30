@@ -164,3 +164,23 @@ function text_summary($text, $format = NULL, $size = NULL) {
 
   return $summary;
 }
+
+/**
+ * Implements hook_field_type_category_info().
+ */
+function text_field_type_category_info() {
+  return [
+    'formatted_text' => [
+      'label' => t('Formatted text'),
+      'description' => t('Text field with markup support and optional editor.'),
+      'weight' => -45,
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_form_element__new_storage_type().
+ */
+function text_preprocess_form_element__new_storage_type(&$variables) {
+  $variables['#attached']['library'][] = 'text/drupal.text-icon';
+}

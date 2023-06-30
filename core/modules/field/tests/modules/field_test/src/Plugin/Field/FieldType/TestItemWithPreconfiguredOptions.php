@@ -26,7 +26,6 @@ class TestItemWithPreconfiguredOptions extends TestItem implements Preconfigured
     return [
       'custom_options' => [
         'label' => new TranslatableMarkup('All custom options'),
-        'category' => new TranslatableMarkup('Custom category'),
         'field_storage_config' => [
           'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
           'settings' => [

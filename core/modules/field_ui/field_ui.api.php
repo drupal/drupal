@@ -123,5 +123,31 @@ function hook_field_widget_settings_summary_alter(array &$summary, array $contex
 }
 
 /**
+ * Provides information about field categories used for the UI.
+ *
+ * @return array
+ *   Returns an array with the field category information.
+ */
+function hook_field_type_category_info() {
+  return [
+    'selection_list' => [
+      'label' => t('Selection list'),
+      'description' => t('Field to select from predefined options.'),
+      'weight' => -30,
+    ],
+    'number' => [
+      'label' => t('Number'),
+      'description' => t('Field to store number. I.e. id, price, or quantity.'),
+      'weight' => -20,
+    ],
+    'date_time' => [
+      'label' => t('Date and time'),
+      'description' => t('Field to store date and time values.'),
+      'weight' => -12,
+    ],
+  ];
+}
+
+/**
  * @} End of "addtogroup field_types".
  */

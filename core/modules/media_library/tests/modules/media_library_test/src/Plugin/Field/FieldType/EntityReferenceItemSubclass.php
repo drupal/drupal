@@ -11,10 +11,10 @@ use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
  *   id = "entity_reference_subclass",
  *   label = @Translation("Entity reference subclass"),
  *   description = @Translation("An entity field containing an entity reference."),
- *   category = @Translation("Reference"),
+ *   category = "reference",
  *   default_widget = "entity_reference_autocomplete",
  *   default_formatter = "entity_reference_label",
- *   list_class = "\Drupal\Core\Field\EntityReferenceFieldItemList"
+ *   list_class = "\Drupal\Core\Field\EntityReferenceFieldItemList",
  * )
  */
 class EntityReferenceItemSubclass extends EntityReferenceItem {

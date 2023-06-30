@@ -40,3 +40,11 @@ media_embed_ckeditor_theme:
     js/media_embed_ckeditor.theme.js: {}
   dependencies:
     - core/drupal
+
+drupal.media-icon:
+  version: VERSION
+  css:
+    theme:
+      css/media.icon.theme.css: {}
+  dependencies:
+    - field_ui/drupal.field_ui.manage_fields

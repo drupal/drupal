@@ -13,7 +13,12 @@ use Drupal\Core\TypedData\DataDefinition;
  * @FieldType(
  *   id = "timestamp",
  *   label = @Translation("Timestamp"),
- *   description = @Translation("An entity field containing a UNIX timestamp value."),
+ *   description = {
+ *     @Translation("Ideal for using date and time calculations or comparisons"),
+ *     @Translation("Date and time stored in the form of seconds since January 1, 1970 (UTC)"),
+ *     @Translation("Compact and efficient for storage, sorting and calculations"),
+ *   },
+ *   category = "date_time",
  *   default_widget = "datetime_timestamp",
  *   default_formatter = "timestamp",
  *   constraints = {

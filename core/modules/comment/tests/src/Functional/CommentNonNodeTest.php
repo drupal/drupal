@@ -501,9 +501,9 @@ class CommentNonNodeTest extends BrowserTestBase {
     // Visit the Field UI field add page.
     $this->drupalGet('entity_test_string_id/structure/entity_test/fields/add-field');
     // Ensure field isn't shown for string IDs.
-    $this->assertSession()->optionNotExists('edit-new-storage-type', 'comment');
+    $this->assertSession()->elementNotExists('css', "[name='new_storage_type'][value='comment']");
     // Ensure a core field type shown.
-    $this->assertSession()->optionExists('edit-new-storage-type', 'boolean');
+    $this->assertSession()->elementExists('css', "[name='new_storage_type'][value='boolean']");
 
     // Attempt to add a comment-type referencing this entity-type.
     $this->drupalGet('admin/structure/comment/types/add');
@@ -518,9 +518,9 @@ class CommentNonNodeTest extends BrowserTestBase {
     // Visit the Field UI field add page.
     $this->drupalGet('entity_test_no_id/structure/entity_test/fields/add-field');
     // Ensure field isn't shown for empty IDs.
-    $this->assertSession()->optionNotExists('edit-new-storage-type', 'comment');
+    $this->assertSession()->elementNotExists('css', "[name='new_storage_type'][value='comment']");
     // Ensure a core field type shown.
-    $this->assertSession()->optionExists('edit-new-storage-type', 'boolean');
+    $this->assertSession()->elementExists('css', "[name='new_storage_type'][value='boolean']");
   }
 
 }

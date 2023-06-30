@@ -1,0 +1,46 @@
+{#
+/**
+ * @file
+ * Theme override for a storage type option form element.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the containing element.
+ * - errors: (optional) Any errors for this form element, may not be set.
+ * - label: A rendered label element.
+ * - description: (optional) A list of description properties containing:
+ *    - content: A description of the form element, may not be set.
+ *    - attributes: (optional) A list of HTML attributes to apply to the
+ *      description content wrapper. Will only be set when description is set.
+ * - variant: specifies option type. Typically 'field-option' or 'field-suboption'.
+ *
+ * @see template_preprocess_form_element()
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set classes = [
+  errors ? 'form-item--error',
+  variant ? variant ~ '__item'
+]
+%}
+<div{{ attributes.addClass(classes) }}>
+  {% if variant == 'field-option' %}
+    {{ label }}
+    <div{{ description.attributes }}>
+      {{ description.content }}
+    </div>
+  {% endif %}
+  {{ children }}
+  {% if variant == 'field-suboption' %}
+    {{ label }}
+    <div{{ description.attributes.addClass(description_classes) }}>
+      {{ description.content }}
+    </div>
+  {% endif %}
+  {% if errors %}
+    <div class="form-item--error-message">
+      {{ errors }}
+    </div>
+  {% endif %}
+</div>

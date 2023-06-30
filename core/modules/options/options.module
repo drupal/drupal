@@ -140,6 +140,19 @@ function _options_values_in_use($entity_type, $field_name, $values) {
 }
 
 /**
+ * Implements hook_field_type_category_info().
+ */
+function options_field_type_category_info() {
+  return [
+    'selection_list' => [
+      'label' => t('Selection list'),
+      'description' => t('Field to select from predefined options.'),
+      'weight' => -15,
+    ],
+  ];
+}
+
+/**
  * Implements hook_form_FORM_ID_alter().
  *
  * Add additional classes to enable styling for list field types.
@@ -154,4 +167,11 @@ function options_form_field_storage_config_edit_form_alter(&$form, FormStateInte
 
   $form['#attached']['library'][] = 'field_ui/drupal.field_ui';
   $table['#attributes']['class'][] = 'allowed-values-table';
+}
+
+/**
+ * Implements hook_preprocess_form_element__new_storage_type().
+ */
+function options_preprocess_form_element__new_storage_type(&$variables) {
+  $variables['#attached']['library'][] = 'options/drupal.options-icon';
 }

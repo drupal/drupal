@@ -65,3 +65,10 @@ function link_theme() {
 function template_preprocess_link_formatter_link_separate(&$variables) {
   $variables['link'] = Link::fromTextAndUrl($variables['url_title'], $variables['url'])->toString();
 }
+
+/**
+ * Implements hook_preprocess_form_element__new_storage_type().
+ */
+function link_preprocess_form_element__new_storage_type(&$variables) {
+  $variables['#attached']['library'][] = 'link/drupal.link-icon';
+}

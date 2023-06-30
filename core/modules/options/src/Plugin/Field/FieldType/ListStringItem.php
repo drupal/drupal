@@ -15,8 +15,11 @@ use Drupal\Core\TypedData\DataDefinition;
  * @FieldType(
  *   id = "list_string",
  *   label = @Translation("List (text)"),
- *   description = @Translation("This field stores text values from a list of allowed 'value => label' pairs, i.e. 'US States': IL => Illinois, IA => Iowa, IN => Indiana."),
- *   category = @Translation("Text"),
+ *   description = {
+ *     @Translation("Values stored are text values"),
+ *     @Translation("For example, 'US States': IL => Illinois, IA => Iowa, IN => Indiana"),
+ *   },
+ *   category = "selection_list",
  *   default_widget = "options_select",
  *   default_formatter = "list_default",
  * )

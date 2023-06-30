@@ -10,6 +10,7 @@ use Drupal\Core\Language\Language;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 
 /**
  * Tests the content translation settings UI.
@@ -19,6 +20,7 @@ use Drupal\Tests\BrowserTestBase;
 class ContentTranslationSettingsTest extends BrowserTestBase {
 
   use CommentTestTrait;
+  use FieldUiTestTrait;
 
   /**
    * Modules to enable.
@@ -290,13 +292,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
     // At least one field needs to be translatable to enable article for
     // translation. Create an extra field to be used for this purpose. We use
     // the UI to test our form alterations.
-    $edit = [
-      'new_storage_type' => 'text',
-      'label' => 'Test',
-      'field_name' => 'article_text',
-    ];
-    $this->drupalGet('admin/structure/types/manage/article/fields/add-field');
-    $this->submitForm($edit, 'Save and continue');
+    $this->fieldUIAddNewField('admin/structure/types/manage/article', 'article_text', 'Test', 'text');
 
     // Tests that field doesn't have translatable setting if bundle is not
     // translatable.

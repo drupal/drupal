@@ -5,6 +5,7 @@ namespace Drupal\Tests\file\Functional;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
+use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 
 /**
  * Tests the display of file fields in node and views.
@@ -12,6 +13,8 @@ use Drupal\node\Entity\Node;
  * @group file
  */
 class FileFieldDisplayTest extends FileFieldTestBase {
+
+  use FieldUiTestTrait;
 
   /**
    * {@inheritdoc}
@@ -165,20 +168,10 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     ];
     $this->drupalGet('admin/structure/types/add');
     $this->submitForm($edit, 'Save and manage fields');
-    $edit = [
-      'new_storage_type' => $field_type,
-      'field_name' => $field_name,
-      'label' => $this->randomString(),
-    ];
-    $this->drupalGet('/admin/structure/types/manage/' . $type_name . '/fields/add-field');
-    $this->submitForm($edit, 'Save and continue');
-    $this->submitForm([], 'Save field settings');
-    // Ensure the description field is selected on the field instance settings
-    // form. That's what this test is all about.
-    $edit = [
+    $field_edit = [
       'settings[description_field]' => TRUE,
     ];
-    $this->submitForm($edit, 'Save settings');
+    $this->fieldUIAddNewField('/admin/structure/types/manage/' . $type_name, $field_name, $this->randomString(), $field_type, [], $field_edit);
     // Add a node of our new type and upload a file to it.
     $file = current($this->drupalGetTestFiles('text'));
     $title = $this->randomString();

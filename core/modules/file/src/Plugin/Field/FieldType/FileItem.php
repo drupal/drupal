@@ -21,8 +21,11 @@ use Drupal\Core\TypedData\DataDefinition;
  * @FieldType(
  *   id = "file",
  *   label = @Translation("File"),
- *   description = @Translation("This field stores the ID of a file as an integer value."),
- *   category = @Translation("Reference"),
+ *   description = {
+ *     @Translation("For uploading files"),
+ *     @Translation("Can be configured with options such as allowed file extensions and maximum upload size"),
+ *   },
+ *   category = "file_upload",
  *   default_widget = "file_generic",
  *   default_formatter = "file_default",
  *   list_class = "\Drupal\file\Plugin\Field\FieldType\FileFieldItemList",

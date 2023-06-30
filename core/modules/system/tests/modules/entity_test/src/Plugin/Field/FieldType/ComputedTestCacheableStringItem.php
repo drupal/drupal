@@ -14,7 +14,6 @@ use Drupal\Core\TypedData\DataDefinition;
  *   id = "computed_test_cacheable_string_item",
  *   label = @Translation("Test Text (plain string with cacheability)"),
  *   description = @Translation("A test field containing a plain string value and cacheability metadata."),
- *   category = @Translation("Text"),
  *   no_ui = TRUE,
  *   default_widget = "string_textfield",
  *   default_formatter = "string"

@@ -63,6 +63,15 @@ function field_ui_theme() {
         'empty' => '',
       ],
     ],
+    // Provide a dedicated template for new storage options as their styling
+    // is quite different from a typical form element, so it works best to not
+    // include default form element classes.
+    'form_element__new_storage_type' => [
+      'base hook' => 'form_element',
+      'variables' => [
+        'variant' => NULL,
+      ],
+    ],
   ];
 }
 
@@ -247,4 +256,32 @@ function field_ui_form_field_ui_field_storage_add_form_alter(array &$form) {
   // "Other".
   unset($form['add']['new_storage_type']['#options'][$optgroup]['entity_reference']);
   $form['add']['new_storage_type']['#options'][$optgroup]['entity_reference'] = t('Other…');
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function field_ui_theme_suggestions_form_element_alter(array &$suggestions, array $variables, $hook) {
+  // Create a template suggestions for radio items in the add field form.
+  if ($variables['element']['#type'] !== 'radio' || !isset($variables['element']['#name'])) {
+    return;
+  }
+  $names = [
+    'new_storage_type',
+    'group_field_options_wrapper',
+  ];
+  if (!in_array($variables['element']['#name'], $names, TRUE)) {
+    return;
+  }
+
+  $suggestions[] = $hook . '__new_storage_type';
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function field_ui_preprocess_form_element__new_storage_type(&$variables) {
+  // Add support for a variant string so radios in the add field form can be
+  // programmatically distinguished.
+  $variables['variant'] = $variables['element']['#variant'] ?? NULL;
 }

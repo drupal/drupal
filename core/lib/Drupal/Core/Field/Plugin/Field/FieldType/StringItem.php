@@ -13,8 +13,13 @@ use Drupal\Core\Form\FormStateInterface;
  * @FieldType(
  *   id = "string",
  *   label = @Translation("Text (plain)"),
- *   description = @Translation("A field containing a plain string value."),
- *   category = @Translation("Text"),
+ *   description = {
+ *     @Translation("Ideal for titles and names"),
+ *     @Translation("Efficient storage for short text"),
+ *     @Translation("Requires specifying a maximum length"),
+ *     @Translation("Good for fields with known or predictable length"),
+ *   },
+ *   category = "plain_text",
  *   default_widget = "string_textfield",
  *   default_formatter = "string"
  * )

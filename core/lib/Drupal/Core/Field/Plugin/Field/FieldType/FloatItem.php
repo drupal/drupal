@@ -13,8 +13,12 @@ use Drupal\Core\TypedData\DataDefinition;
  * @FieldType(
  *   id = "float",
  *   label = @Translation("Number (float)"),
- *   description = @Translation("This field stores a number in the database in a floating point format."),
- *   category = @Translation("Number"),
+ *   description = {
+ *     @Translation("In most instances, it is best to use Number (decimal) instead, as decimal numbers stored as floats may contain errors in precision"),
+ *     @Translation("This type of field offers faster processing and more compact storage, but the differences are typically negligible on modern sites"),
+ *     @Translation("For example, 123.4 km when used in imprecise contexts such as a walking trail distance"),
+ *   },
+ *   category = "number",
  *   default_widget = "number",
  *   default_formatter = "number_decimal"
  * )

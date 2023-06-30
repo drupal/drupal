@@ -11,7 +11,6 @@ use Drupal\Core\Field\Plugin\Field\FieldType\IntegerItem;
  *   id = "auto_incrementing_test",
  *   label = @Translation("Auto incrementing test field item"),
  *   description = @Translation("An entity field designed to test the field method invocation order."),
- *   category = @Translation("Number"),
  *   no_ui = TRUE,
  * )
  */

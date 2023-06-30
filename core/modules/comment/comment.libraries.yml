@@ -36,3 +36,11 @@ drupal.node-new-comments-link:
     - core/once
     - core/drupal
     - history/api
+
+drupal.comment-icon:
+  version: VERSION
+  css:
+    theme:
+      css/comment.icon.theme.css: {}
+  dependencies:
+    - field_ui/drupal.field_ui.manage_fields

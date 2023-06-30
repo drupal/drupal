@@ -18,6 +18,15 @@ class Stable9LibraryOverrideTest extends StableLibraryOverrideTestBase {
     'core/drupal.dialog.off_canvas',
     'layout_builder/drupal.layout_builder',
     'views/views.responsive-grid',
+    'field_ui/drupal.field_ui.manage_fields',
+    'comment/drupal.comment-icon',
+    'file/drupal.file-icon',
+    'text/drupal.text-icon',
+    'link/drupal.link-icon',
+    'media/drupal.media-icon',
+    'options/drupal.options-icon',
+    'telephone/drupal.telephone-icon',
+    'datetime_range/drupal.datetime_range-icon',
   ];
 
   /**

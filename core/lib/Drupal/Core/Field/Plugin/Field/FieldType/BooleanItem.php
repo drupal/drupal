@@ -17,7 +17,7 @@ use Drupal\Core\TypedData\DataDefinition;
  * @FieldType(
  *   id = "boolean",
  *   label = @Translation("Boolean"),
- *   description = @Translation("An entity field containing a boolean value."),
+ *   description = @Translation("Field to store a true or false value."),
  *   default_widget = "boolean_checkbox",
  *   default_formatter = "boolean",
  * )

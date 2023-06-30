@@ -15,7 +15,12 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @FieldType(
  *   id = "datetime",
  *   label = @Translation("Date"),
- *   description = @Translation("Create and store date values."),
+ *   description = {
+ *     @Translation("Ideal when date and time needs to be input by users, like event dates and times"),
+ *     @Translation("Date or date and time stored in a readable string format"),
+ *     @Translation("Easy to read and understand for humans"),
+ *   },
+ *   category = "date_time",
  *   default_widget = "datetime_default",
  *   default_formatter = "datetime_default",
  *   list_class = "\Drupal\datetime\Plugin\Field\FieldType\DateTimeFieldItemList",

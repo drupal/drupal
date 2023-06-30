@@ -19,8 +19,13 @@ trait FieldUiJSTestTrait {
    * @param string $field_type
    *   (optional) The field type of the new field storage. Defaults to
    *   'test_field'.
+   * @param bool $save_settings
+   *   (optional) Parameter for conditional execution of second and third step
+   *   (Saving the storage settings and field settings). Defaults to 'TRUE'.
+   *
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
    */
-  public function fieldUIAddNewFieldJS(?string $bundle_path, string $field_name, ?string $label = NULL, string $field_type = 'test_field'): void {
+  public function fieldUIAddNewFieldJS(?string $bundle_path, string $field_name, ?string $label = NULL, string $field_type = 'test_field', bool $save_settings = TRUE): void {
     $label = $label ?: $field_name;
 
     // Allow the caller to set a NULL path in case they navigated to the right
@@ -36,13 +41,19 @@ trait FieldUiJSTestTrait {
     $page = $session->getPage();
     $assert_session = $this->assertSession();
 
-    $field_new_storage_type = $page->findField('new_storage_type');
-    $field_new_storage_type->setValue($field_type);
-
-    $field_label = $page->findField('label');
+    if ($assert_session->waitForElementVisible('css', "[name='new_storage_type'][value='$field_type']")) {
+      $page = $this->getSession()->getPage();
+      $field_card = $page->find('css', "[name='new_storage_type'][value='$field_type']");
+    }
+    else {
+      $field_card = $this->getFieldFromGroupJS($field_type);
+    }
+    $field_card?->click();
+    $field_label = $page->findField('edit-label');
     $this->assertTrue($field_label->isVisible());
+    $field_label = $page->find('css', 'input[data-drupal-selector="edit-label"]');
     $field_label->setValue($label);
-    $machine_name = $assert_session->waitForElementVisible('css', '[name="label"] + * .machine-name-value');
+    $machine_name = $assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-label"] + * .machine-name-value');
     $this->assertNotEmpty($machine_name);
     $page->findButton('Edit')->press();
 
@@ -51,24 +62,25 @@ trait FieldUiJSTestTrait {
     $field_field_name->setValue($field_name);
 
     $page->findButton('Save and continue')->click();
+    $assert_session->waitForText("These settings apply to the $label field everywhere it is used.");
+    if ($save_settings) {
+      $breadcrumb_link = $page->findLink($label);
 
-    $assert_session->pageTextContains("These settings apply to the $label field everywhere it is used.");
-    $breadcrumb_link = $page->findLink($label);
+      // Test breadcrumb.
+      $this->assertTrue($breadcrumb_link->isVisible());
 
-    // Test breadcrumb.
-    $this->assertTrue($breadcrumb_link->isVisible());
+      // Second step: 'Storage settings' form.
+      $page->findButton('Save field settings')->click();
+      $assert_session->pageTextContains("Updated field $label field settings.");
 
-    // Second step: 'Storage settings' form.
-    $page->findButton('Save field settings')->click();
-    $assert_session->pageTextContains("Updated field $label field settings.");
+      // Third step: 'Field settings' form.
+      $page->findButton('Save settings')->click();
+      $assert_session->pageTextContains("Saved $label configuration.");
 
-    // Third step: 'Field settings' form.
-    $page->findButton('Save settings')->click();
-    $assert_session->pageTextContains("Saved $label configuration.");
-
-    // Check that the field appears in the overview form.
-    $row = $page->find('css', '#field-' . $field_name);
-    $this->assertNotEmpty($row, 'Field was created and appears in the overview page.');
+      // Check that the field appears in the overview form.
+      $row = $page->find('css', '#field-' . $field_name);
+      $this->assertNotEmpty($row, 'Field was created and appears in the overview page.');
+    }
   }
 
   /**
@@ -114,6 +126,34 @@ trait FieldUiJSTestTrait {
       ':label' => $label,
     ]);
     $this->assertSession()->elementExists('xpath', $xpath);
+  }
+
+  /**
+   * Helper function that returns the field card element if it is in a group.
+   *
+   * @param string $field_type
+   *   The name of the field type.
+   *
+   * @return \Behat\Mink\Element\NodeElement|false|mixed|null
+   *   Field card element within a group.
+   */
+  public function getFieldFromGroupJS($field_type) {
+    $group_elements = $this->getSession()->getPage()->findAll('css', '.field-option-radio');
+    $groups = [];
+    foreach ($group_elements as $group_element) {
+      $groups[] = $group_element->getAttribute('value');
+    }
+    $field_card = NULL;
+    foreach ($groups as $group) {
+      $group_field_card = $this->getSession()->getPage()->find('css', "[name='new_storage_type'][value='$group']");
+      $group_field_card->click();
+      $this->assertSession()->assertWaitOnAjaxRequest();
+      $field_card = $this->getSession()->getPage()->find('css', "[name='group_field_options_wrapper'][value='$field_type']");
+      if ($field_card) {
+        break;
+      }
+    }
+    return $field_card;
   }
 
 }

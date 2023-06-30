@@ -426,3 +426,31 @@ function field_field_config_presave(FieldConfigInterface $field) {
     ]);
   }
 }
+
+/**
+ * Returns field category properties.
+ */
+function field_field_type_category_info() {
+  return [
+    'plain_text' => [
+      'label' => t('Plain text'),
+      'description' => t('Text field that does not support markup.'),
+      'weight' => -50,
+    ],
+    'number' => [
+      'label' => t('Number'),
+      'description' => t('Field to store number. I.e. id, price, or quantity.'),
+      'weight' => -40,
+    ],
+    'reference' => [
+      'label' => t('Reference'),
+      'description' => t('Field to reference other content.'),
+      'weight' => -30,
+    ],
+    'date_time' => [
+      'label' => t('Date and time'),
+      'description' => t('Field to store date and time values.'),
+      'weight' => -10,
+    ],
+  ];
+}
