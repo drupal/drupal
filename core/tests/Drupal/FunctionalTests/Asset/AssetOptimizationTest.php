@@ -57,6 +57,15 @@ class AssetOptimizationTest extends BrowserTestBase {
   }
 
   /**
+   * Creates a user and requests a page.
+   */
+  protected function requestPage(): void {
+    $user = $this->createUser();
+    $this->drupalLogin($user);
+    $this->drupalGet('');
+  }
+
+  /**
    * Helper to test aggregate file URLs.
    *
    * @param array $settings
@@ -73,44 +82,35 @@ class AssetOptimizationTest extends BrowserTestBase {
       'preprocess' => TRUE,
       'gzip' => TRUE,
     ])->save();
-    $user = $this->createUser();
-    $this->drupalLogin($user);
-    $this->drupalGet('');
+    $this->requestPage();
     $session = $this->getSession();
     $page = $session->getPage();
 
-    $elements = $page->findAll('xpath', '//link[@rel="stylesheet"]');
-    $urls = [];
-    foreach ($elements as $element) {
+    // Collect all the URLs for all the script and styles prior to making any
+    // more requests.
+    $style_elements = $page->findAll('xpath', '//link[@rel="stylesheet"]');
+    $script_elements = $page->findAll('xpath', '//script');
+    $style_urls = [];
+    foreach ($style_elements as $element) {
       if ($element->hasAttribute('href')) {
-        $urls[] = $element->getAttribute('href');
+        $style_urls[] = $element->getAttribute('href');
       }
     }
-    foreach ($urls as $url) {
+    $script_urls = [];
+    foreach ($script_elements as $element) {
+      if ($element->hasAttribute('src')) {
+        $script_urls[] = $element->getAttribute('src');
+      }
+    }
+    foreach ($style_urls as $url) {
       $this->assertAggregate($url);
-    }
-    foreach ($urls as $url) {
       $this->assertAggregate($url, FALSE);
-    }
-
-    foreach ($urls as $url) {
       $this->assertInvalidAggregates($url);
     }
 
-    $elements = $page->findAll('xpath', '//script');
-    $urls = [];
-    foreach ($elements as $element) {
-      if ($element->hasAttribute('src')) {
-        $urls[] = $element->getAttribute('src');
-      }
-    }
-    foreach ($urls as $url) {
+    foreach ($script_urls as $url) {
       $this->assertAggregate($url);
-    }
-    foreach ($urls as $url) {
       $this->assertAggregate($url, FALSE);
-    }
-    foreach ($urls as $url) {
       $this->assertInvalidAggregates($url);
     }
   }
@@ -125,16 +125,20 @@ class AssetOptimizationTest extends BrowserTestBase {
    */
   protected function assertAggregate(string $url, bool $from_php = TRUE): void {
     $url = $this->getAbsoluteUrl($url);
-    $this->assertStringContainsString($this->fileAssetsPath, $url);
+    // Not every script or style on a page is aggregated.
+    if (!str_contains($url, $this->fileAssetsPath)) {
+      return;
+    }
     $session = $this->getSession();
     $session->visit($url);
     $this->assertSession()->statusCodeEquals(200);
     $headers = $session->getResponseHeaders();
     if ($from_php) {
       $this->assertEquals(['no-store, private'], $headers['Cache-Control']);
+      $this->assertArrayHasKey('X-Generator', $headers);
     }
     else {
-      $this->assertArrayNotHasKey('Cache-Control', $headers);
+      $this->assertArrayNotHasKey('X-Generator', $headers);
     }
   }
 
@@ -147,6 +151,11 @@ class AssetOptimizationTest extends BrowserTestBase {
    * @throws \Behat\Mink\Exception\ExpectationException
    */
   protected function assertInvalidAggregates(string $url): void {
+    $url = $this->getAbsoluteUrl($url);
+    // Not every script or style on a page is aggregated.
+    if (!str_contains($url, $this->fileAssetsPath)) {
+      return;
+    }
     $session = $this->getSession();
     $session->visit($this->replaceGroupDelta($url));
     $this->assertSession()->statusCodeEquals(200);
