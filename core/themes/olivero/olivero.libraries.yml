@@ -52,12 +52,12 @@ global-styling:
 
   js:
     js/checkbox.js: {}
-    js/navigation-utils.js: {}
 
   dependencies:
     - core/drupal
     - core/once
     - core/tabbable
+    - olivero/navigation-base
 
 book:
   version: VERSION
@@ -213,6 +213,15 @@ messages:
   dependencies:
     - olivero/global-styling
 
+navigation-base:
+  version: VERSION
+  js:
+    js/navigation-utils.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+    - core/tabbable
+
 navigation-primary:
   version: VERSION
   css:
@@ -225,8 +234,7 @@ navigation-primary:
     js/second-level-navigation.js: {}
     js/nav-resize.js: {}
   dependencies:
-    - core/drupal
-    - core/once
+    - olivero/navigation-base
 
 navigation-secondary:
   version: VERSION
@@ -265,6 +273,8 @@ search-wide:
       css/components/header-search-wide.css: {}
   js:
     js/search.js: {}
+  dependencies:
+    - olivero/navigation-primary
 
 sidebar:
   version: VERSION
