@@ -443,8 +443,8 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
    */
   public function updateIndexState() {
     $query = $this->database->select('help_search_items', 'hsi');
-    $query->addExpression('COUNT(DISTINCT(hsi.sid))');
-    $query->leftJoin('search_dataset', 'sd', 'hsi.sid = sd.sid AND sd.type = :type', [':type' => $this->getType()]);
+    $query->addExpression('COUNT(DISTINCT([hsi].[sid]))');
+    $query->leftJoin('search_dataset', 'sd', '[hsi].[sid] = [sd].[sid] AND [sd].[type] = :type', [':type' => $this->getType()]);
     $query->isNull('sd.sid');
     $never_indexed = $query->execute()->fetchField();
     $this->state->set('help_search_unindexed_count', $never_indexed);
