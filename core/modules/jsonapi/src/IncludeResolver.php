@@ -6,7 +6,8 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
+use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItemInterface;
+use Drupal\Core\TypedData\DataReferenceDefinitionInterface;
 use Drupal\jsonapi\Access\EntityAccessChecker;
 use Drupal\jsonapi\Context\FieldResolver;
 use Drupal\jsonapi\Exception\EntityAccessDeniedHttpException;
@@ -137,11 +138,32 @@ class IncludeResolver {
           $includes = IncludedData::merge($includes, new IncludedData([$exception]));
           continue;
         }
-        $target_type = $field_list->getFieldDefinition()->getFieldStorageDefinition()->getSetting('target_type');
-        assert(!empty($target_type));
-        foreach ($field_list as $field_item) {
-          assert($field_item instanceof EntityReferenceItem);
-          $references[$target_type][] = $field_item->get($field_item::mainPropertyName())->getValue();
+        if (is_subclass_of($field_list->getItemDefinition()->getClass(), EntityReferenceItemInterface::class)) {
+          foreach ($field_list as $field_item) {
+            if (!($field_item->getDataDefinition()->getPropertyDefinition('entity') instanceof DataReferenceDefinitionInterface)) {
+              continue;
+            }
+
+            if (!($field_item->entity instanceof EntityInterface)) {
+              continue;
+            }
+
+            // Support entity reference fields that don't have the referenced
+            // target type stored in settings.
+            $references[$field_item->entity->getEntityTypeId()][] = $field_item->get($field_item::mainPropertyName())->getValue();
+          }
+        }
+        else {
+          @trigger_error(
+            sprintf('Entity reference field items not implementing %s is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3279140', EntityReferenceItemInterface::class),
+            E_USER_DEPRECATED
+          );
+          $target_type = $field_list->getFieldDefinition()->getFieldStorageDefinition()->getSetting('target_type');
+          if (!empty($target_type)) {
+            foreach ($field_list as $field_item) {
+              $references[$target_type][] = $field_item->get($field_item::mainPropertyName())->getValue();
+            }
+          }
         }
       }
       foreach ($references as $target_type => $ids) {
