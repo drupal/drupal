@@ -1,0 +1,18 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a forum topic.
+ *
+ * Available variables:
+ * - title_link: The forum title link to display.
+ * - submitted: Indicates when and by whom a topic was submitted.
+ *
+ * @see template_preprocess_forums()
+ *
+ * @ingroup themeable
+ */
+#}
+<div class="forum__title">
+  <div>{{ title_link }}</div>
+  <div>{{ submitted }}</div>
+</div>

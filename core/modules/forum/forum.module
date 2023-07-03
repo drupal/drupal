@@ -98,6 +98,9 @@ function forum_theme() {
     'forum_submitted' => [
       'variables' => ['topic' => NULL],
     ],
+    'forum_topic' => [
+      'variables' => ['title_link' => NULL, 'submitted' => NULL],
+    ],
   ];
 }
 
@@ -486,7 +489,9 @@ function template_preprocess_forums(&$variables) {
           'data' => [
             $topic->icon,
             [
-              '#markup' => '<div class="forum__title"><div>' . $topic->title_link . '</div><div>' . $topic->submitted . '</div></div>',
+              '#theme' => 'forum_topic',
+              '#title_link' => $topic->title_link,
+              '#submitted' => $topic->submitted,
             ],
           ],
           'class' => ['forum__topic'],
