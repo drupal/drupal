@@ -212,8 +212,15 @@ system.menu.*:
   label: 'Menu'
   mapping:
     id:
-      type: string
+      type: machine_name
       label: 'ID'
+      # Menu IDs are specifically limited to 32 characters, and allow dashes but not
+      # underscores.
+      # @see \Drupal\menu_ui\MenuForm::form()
+      constraints:
+        Regex: '/^[a-z0-9-]+$/'
+        Length:
+          max: 32
     label:
       type: label
       label: 'Label'
@@ -229,7 +236,7 @@ system.action.*:
   label: 'System action'
   mapping:
     id:
-      type: string
+      type: machine_name
       label: 'ID'
     label:
       type: label

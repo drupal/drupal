@@ -5,8 +5,15 @@ shortcut.set.*:
   label: 'Shortcut settings'
   mapping:
     id:
-      type: string
+      type: machine_name
       label: 'ID'
+      # Shortcut set IDs are specifically limited to 23 characters, and allow
+      # dashes but not underscores.
+      # @see \Drupal\shortcut\ShortcutSetForm::form()
+      constraints:
+        Regex: '/^[a-z0-9-]+$/'
+        Length:
+          max: 23
     label:
       type: label
       label: 'Label'

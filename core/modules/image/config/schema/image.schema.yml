@@ -5,7 +5,7 @@ image.style.*:
   label: 'Image style'
   mapping:
     name:
-      type: string
+      type: machine_name
     label:
       type: label
       label: 'Label'

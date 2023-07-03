@@ -72,7 +72,7 @@ search.page.*:
   label: 'Search page'
   mapping:
     id:
-      type: string
+      type: machine_name
       label: 'ID'
     label:
       type: label

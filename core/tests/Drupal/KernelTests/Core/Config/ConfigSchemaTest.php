@@ -176,7 +176,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['class'] = Mapping::class;
     $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
     $expected['unwrap_for_canonical_representation'] = TRUE;
-    $expected['mapping']['name']['type'] = 'string';
+    $expected['mapping']['name']['type'] = 'machine_name';
     $expected['mapping']['uuid']['type'] = 'uuid';
     $expected['mapping']['uuid']['label'] = 'UUID';
     $expected['mapping']['langcode']['type'] = 'string';
@@ -185,7 +185,6 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['mapping']['status']['label'] = 'Status';
     $expected['mapping']['dependencies']['type'] = 'config_dependencies';
     $expected['mapping']['dependencies']['label'] = 'Dependencies';
-    $expected['mapping']['name']['type'] = 'string';
     $expected['mapping']['label']['type'] = 'label';
     $expected['mapping']['label']['label'] = 'Label';
     $expected['mapping']['effects']['type'] = 'sequence';

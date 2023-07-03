@@ -70,8 +70,13 @@ views.view.*:
   label: 'View'
   mapping:
     id:
-      type: string
+      type: machine_name
       label: 'ID'
+      constraints:
+        Length:
+          # View IDs are specifically limited to 128 characters.
+          # @see \Drupal\views_ui\ViewAddForm::form()
+          max: 128
     label:
       type: label
       label: 'Label'

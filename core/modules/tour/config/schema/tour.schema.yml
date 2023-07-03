@@ -5,7 +5,7 @@ tour.tour.*:
   label: 'Tour settings'
   mapping:
     id:
-      type: string
+      type: machine_name
       label: 'ID'
     label:
       type: label

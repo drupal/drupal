@@ -5,8 +5,13 @@ block.block.*:
   label: 'Block'
   mapping:
     id:
-      type: string
+      type: machine_name
       label: 'ID'
+      # Blocks have atypical machine names: they allow periods for historical reasons.
+      # @see https://www.drupal.org/project/drupal/issues/2685917
+      # @see https://www.drupal.org/project/drupal/issues/2043527
+      constraints:
+        Regex: '/^[a-z0-9_.]+$/'
     theme:
       type: string
       label: 'Theme'

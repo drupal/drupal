@@ -108,7 +108,7 @@ user.role.*:
   label: 'User role settings'
   mapping:
     id:
-      type: string
+      type: machine_name
       label: 'ID'
     label:
       type: label

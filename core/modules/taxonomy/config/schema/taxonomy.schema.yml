@@ -22,8 +22,13 @@ taxonomy.vocabulary.*:
       type: label
       label: 'Name'
     vid:
-      type: string
+      type: machine_name
       label: 'Machine name'
+      # Vocabulary machine names are specifically limited to 32 characters.
+      # @see \Drupal\taxonomy\VocabularyForm::form()
+      constraints:
+        Length:
+          max: 32
     description:
       type: label
       label: 'Description'

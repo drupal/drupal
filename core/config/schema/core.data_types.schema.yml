@@ -94,6 +94,16 @@ color_hex:
   type: string
   label: 'Color'
 
+# Machine-readable identifier that can only contain certain characters.
+machine_name:
+  type: string
+  label: 'Machine name'
+  constraints:
+    Regex: '/^[a-z0-9_]+$/'
+    Length:
+      # @see \Drupal\Core\Config\Entity\ConfigEntityStorage::MAX_ID_LENGTH
+      max: 166
+
 # Complex extended data types:
 
 # Root of a configuration object.
