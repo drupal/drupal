@@ -51,6 +51,10 @@ function node_token_info() {
     'name' => t('Language code'),
     'description' => t('The language code of the language the node is written in.'),
   ];
+  $node['published_status'] = [
+    'name' => t('Published'),
+    'description' => t('The publication status of the node ("Published" or "Unpublished").'),
+  ];
   $node['url'] = [
     'name' => t("URL"),
     'description' => t("The URL of the node."),
@@ -165,6 +169,10 @@ function node_tokens($type, $tokens, array $data, array $options, BubbleableMeta
 
         case 'langcode':
           $replacements[$original] = $node->language()->getId();
+          break;
+
+        case 'published_status':
+          $replacements[$original] = $node->isPublished() ? t('Published') : t('Unpublished');
           break;
 
         case 'url':
