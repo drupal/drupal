@@ -100,8 +100,20 @@ class AggregatorRenderingTest extends AggregatorTestBase {
 
     // Create a feed with 30 items.
     $this->createSampleNodes(30);
+
+    // Request the /aggregator page so that it is cached.
+    $this->drupalGet('aggregator');
+
     $feed = $this->createFeed();
     $this->updateFeedItems($feed, 30);
+
+    // Verify that items are loaded on the page by checking for the pager.
+    $this->drupalGet('aggregator');
+    $this->assertSession()->elementExists('xpath', '//ul[contains(@class, "pager__items")]');
+
+    // Save the feed entity to invalidate the cache so that the paginated cache
+    // context can be tested.
+    $feed->save();
 
     // Request page with no feed items to ensure cache context is set correctly.
     $this->drupalGet('aggregator', ['query' => ['page' => 2]]);

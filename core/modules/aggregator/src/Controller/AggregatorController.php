@@ -176,6 +176,7 @@ class AggregatorController extends ControllerBase {
     $items = $this->entityTypeManager()->getStorage('aggregator_item')->loadAll(20);
     $build = $this->buildPageList($items);
     $build['#attached']['feed'][] = ['aggregator/rss', $this->config('system.site')->get('name') . ' ' . $this->t('aggregator')];
+    $build['#cache']['tags'] = $this->entityTypeManager()->getDefinition('aggregator_item')->getListCacheTags();
     return $build;
   }
 
