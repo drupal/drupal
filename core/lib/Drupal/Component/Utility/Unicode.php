@@ -297,7 +297,7 @@ EOD;
    *   you had set $min_wordsafe_length to 10, though, the function would realise
    *   that "See" alone is too short, and would then just truncate ignoring word
    *   boundaries, giving you "See myverylongurl..." (assuming you had set
-   *   $add_ellipses to TRUE).
+   *   $add_ellipsis to TRUE).
    *
    * @return string
    *   The truncated string.
