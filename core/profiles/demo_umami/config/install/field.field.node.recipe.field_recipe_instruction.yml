@@ -10,7 +10,7 @@ id: node.recipe.field_recipe_instruction
 field_name: field_recipe_instruction
 entity_type: node
 bundle: recipe
-label: 'Recipe instruction'
+label: 'Directions'
 description: ''
 required: true
 translatable: true
