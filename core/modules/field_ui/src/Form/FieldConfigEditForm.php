@@ -136,7 +136,7 @@ class FieldConfigEditForm extends EntityForm {
       ]);
 
       if (!$has_required) {
-        $has_default_value = $this->hasAnyElementDefaultValue($element);
+        $has_default_value = count($this->entity->getDefaultValue($form['#entity'])) > 0;
         $element['#states'] = [
           'invisible' => [
             ':input[name="set_default_value"]' => ['checked' => FALSE],
@@ -178,29 +178,6 @@ class FieldConfigEditForm extends EntityForm {
     }
 
     return $has_required;
-  }
-
-  /**
-   * A function to check if element contains elements with #default_value.
-   *
-   * @param array $element
-   *   An element to check.
-   *
-   * @return bool
-   */
-  private function hasAnyElementDefaultValue(array $element) {
-    $has_default_value = FALSE;
-    foreach (Element::children($element) as $child) {
-      if (isset($element[$child]['#default_value']) && $element[$child]['#default_value']) {
-        $has_default_value = TRUE;
-        break;
-      }
-      if (Element::children($element[$child])) {
-        return $this->hasAnyElementDefaultValue($element[$child]);
-      }
-    }
-
-    return $has_default_value;
   }
 
   /**

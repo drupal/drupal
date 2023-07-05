@@ -12,6 +12,11 @@ class FieldUiIntegrationTest extends MediaLibraryTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $strictConfigSchema = FALSE;
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['field_ui', 'block'];
 
   /**
@@ -35,6 +40,14 @@ class FieldUiIntegrationTest extends MediaLibraryTestBase {
     $this->drupalLogin($user);
     $this->drupalCreateContentType(['type' => 'article']);
     $this->drupalCreateContentType(['type' => 'page']);
+    $this->createMediaItems([
+      'type_one' => [
+        'Horse',
+        'Bear',
+        'Cat',
+        'Dog',
+      ],
+    ]);
   }
 
   /**
@@ -47,6 +60,8 @@ class FieldUiIntegrationTest extends MediaLibraryTestBase {
       'access administration pages',
       'administer node fields',
       'administer node form display',
+      'view media',
+      'bypass node access',
     ]);
     $this->drupalLogin($user);
 
@@ -66,6 +81,21 @@ class FieldUiIntegrationTest extends MediaLibraryTestBase {
     $this->assertElementExistsAfterWait('css', '[name="settings[handler_settings][target_bundles][type_three]"][checked="checked"]');
     $page->pressButton('Save settings');
     $assert_session->pageTextContains('Saved Shatner configuration.');
+
+    $this->drupalGet('/admin/structure/types/manage/article/fields/node.article.field_shatner');
+    $assert_session->checkboxNotChecked('set_default_value');
+    $page->checkField('set_default_value');
+    $this->assertElementExistsAfterWait('css', "#field_shatner-media-library-wrapper-default_value_input")
+      ->pressButton('Add media');
+    $this->waitForText('Add or select media');
+    $this->selectMediaItem(0);
+    $this->pressInsertSelected();
+
+    $page->pressButton('Save settings');
+    $assert_session->pageTextContains('Saved Shatner configuration.');
+
+    $this->drupalGet('/admin/structure/types/manage/article/fields/node.article.field_shatner');
+    $assert_session->checkboxChecked('set_default_value');
 
     // Create a new instance of an existing field storage and assert that it
     // automatically uses the media library.
