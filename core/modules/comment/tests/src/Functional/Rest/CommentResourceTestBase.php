@@ -4,6 +4,7 @@ namespace Drupal\Tests\comment\Functional\Rest;
 
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Cache\Cache;
 use Drupal\entity_test\Entity\EntityTest;
@@ -94,6 +95,7 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
     $commented_entity = EntityTest::create([
       'name' => 'Camelids',
       'type' => 'bar',
+      'comment' => CommentItemInterface::OPEN,
     ]);
     $commented_entity->save();
 
