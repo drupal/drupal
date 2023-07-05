@@ -16,14 +16,18 @@
               .addClass('hidden');
           };
 
-          $input.on('autocompletesearch', (event) => {
-            $(event.target).addClass('is-autocompleting');
-            $(event.target)
-              .siblings('[data-drupal-selector="autocomplete-message"]')
-              .removeClass('hidden');
-          });
-
           $input.autocomplete({
+            search(event) {
+              const result = Drupal.autocomplete.options.search(event);
+              if (result) {
+                $(event.target).addClass('is-autocompleting');
+                $(event.target)
+                  .siblings('[data-drupal-selector="autocomplete-message"]')
+                  .removeClass('hidden');
+              }
+
+              return result;
+            },
             response(event) {
               classRemove($(event.target));
             },

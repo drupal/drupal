@@ -47,6 +47,14 @@ class FormTestAutocompleteForm extends FormBase {
         '#autocomplete_route_name' => 'form_test.autocomplete_1',
       ],
     ];
+    $form['autocomplete_4'] = [
+      '#type' => 'textfield',
+      '#title' => 'Autocomplete 4',
+      '#autocomplete_route_name' => 'form_test.autocomplete_1',
+      '#attributes' => [
+        'data-autocomplete-first-character-blacklist' => '/',
+      ],
+    ];
 
     return $form;
   }
