@@ -7,6 +7,53 @@
 
 (function ($, Drupal, drupalSettings, slugify) {
   /**
+   * Trims string by a character.
+   *
+   * @param {string} string
+   *   The string to trim.
+   * @param {string} character
+   *   The characters to trim.
+   *
+   * @returns {string}
+   *   A trimmed string.
+   */
+  const trimByChar = (string, character) => {
+    const first = [...string].findIndex((char) => char !== character);
+    const last = [...string].reverse().findIndex((char) => char !== character);
+    return string.substring(first, string.length - last);
+  };
+
+  /**
+   * Transform a human-readable name to a machine name.
+   *
+   * @param {string} source
+   *   A string to transform.
+   * @see trans {object} settings
+   *   The machine name settings for the corresponding field.
+   * @param {string} settings.replace_pattern
+   *   A regular expression (without modifiers) matching disallowed characters
+   *   in the machine name; e.g., '[^a-z0-9]+'.
+   * @param {string} settings.replace
+   *   A character to replace disallowed characters with; e.g., '_' or '-'.
+   * @param {number} settings.maxlength
+   *   The maximum length of the machine name.
+   *
+   * @return {string}
+   *   The machine name string.
+   */
+  const prepareMachineName = (source, settings) => {
+    const rx = new RegExp(settings.replace_pattern, 'g');
+
+    return trimByChar(
+      source
+        .toLowerCase()
+        .replace(rx, settings.replace)
+        .substring(0, settings.maxlength),
+      settings.replace,
+    );
+  };
+
+  /**
    * Attach the machine-readable name form element behavior.
    *
    * @type {Drupal~behavior}
@@ -62,18 +109,11 @@
         const options = data.options;
         const baseValue = e.target.value;
 
-        const rx = new RegExp(options.replace_pattern, 'g');
-        const expected = baseValue
-          .toLowerCase()
-          .replace(rx, options.replace)
-          .substr(0, options.maxlength);
-
         const needsTransliteration = !/^[A-Za-z0-9_\s]*$/.test(baseValue);
         if (needsTransliteration) {
-          const machineName = self.transliterate(baseValue, options);
-          self.showMachineName(machineName.substr(0, options.maxlength), data);
+          self.showMachineName(self.transliterate(baseValue, options), data);
         } else {
-          self.showMachineName(expected, data);
+          self.showMachineName(prepareMachineName(baseValue, options), data);
         }
       }
 
@@ -153,18 +193,12 @@
         // human-readable form element value.
         if (machine === '' && $source[0].value !== '') {
           if (/^[A-Za-z0-9_\s]*$/.test($source[0].value)) {
-            const rx = new RegExp(options.replace_pattern, 'g');
-            const expected = $source[0].value
-              .toLowerCase()
-              .replace(rx, options.replace)
-              .substr(0, options.maxlength);
-            self.showMachineName(expected, eventData);
-          } else {
-            self.transliterate($source[0].value, options);
             self.showMachineName(
-              machine.substr(0, options.maxlength),
+              prepareMachineName($source[0].value, options),
               eventData,
             );
+          } else {
+            self.showMachineName(machine, eventData);
           }
         }
 
@@ -253,9 +287,8 @@
         allowedChars: settings.replace_pattern,
         replace: normalizedLanguageOverrides,
       });
-      const transliterated = slugify(source.substr(0, settings.maxlength));
-      const rx = new RegExp(settings.replace_pattern, 'g');
-      return transliterated.replace(rx, settings.replace);
+
+      return prepareMachineName(slugify(source), settings);
     },
   };
 })(jQuery, Drupal, drupalSettings, slugify);
