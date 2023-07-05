@@ -2,6 +2,7 @@
 
 namespace Drupal\comment;
 
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
@@ -98,9 +99,22 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
         'field_name',
         'pid',
       ];
-      if ($items && ($entity = $items->getEntity()) && $entity->isNew() && in_array($field_definition->getName(), $create_only_fields, TRUE)) {
-        // We are creating a new comment, user can edit create only fields.
-        return AccessResult::allowedIfHasPermission($account, 'post comments')->addCacheableDependency($entity);
+      /** @var \Drupal\comment\CommentInterface|null $entity */
+      $entity = $items ? $items->getEntity() : NULL;
+      $commented_entity = $entity ? $entity->getCommentedEntity() : NULL;
+      if ($entity && $entity->isNew() && in_array($field_definition->getName(), $create_only_fields, TRUE)) {
+        $access_result = AccessResult::allowedIfHasPermission($account, 'post comments')
+          ->addCacheableDependency($entity);
+        $comment_field_name = $entity->get('field_name')->value;
+        if ($commented_entity && $comment_field_name) {
+          // We are creating a new comment, user can edit create only fields if
+          // commenting is open.
+          $commenting_status = (int) $commented_entity->get($comment_field_name)->status;
+          $access_result = $access_result
+            ->andIf(AccessResult::allowedIf($commenting_status !== CommentItemInterface::CLOSED))
+            ->addCacheableDependency($commented_entity);
+        }
+        return $access_result;
       }
       // We are editing an existing comment - create only fields are now read
       // only.
@@ -121,9 +135,6 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
           return AccessResult::forbidden();
         }
         $is_name = $field_definition->getName() === 'name';
-        /** @var \Drupal\comment\CommentInterface $entity */
-        $entity = $items->getEntity();
-        $commented_entity = $entity->getCommentedEntity();
         $anonymous_contact = $commented_entity->get($entity->getFieldName())->getFieldDefinition()->getSetting('anonymous');
         $admin_access = AccessResult::allowedIfHasPermission($account, 'administer comments');
         $anonymous_access = AccessResult::allowedIf($entity->isNew() && $account->isAnonymous() && ($anonymous_contact != CommentInterface::ANONYMOUS_MAYNOT_CONTACT || $is_name) && $account->hasPermission('post comments'))
