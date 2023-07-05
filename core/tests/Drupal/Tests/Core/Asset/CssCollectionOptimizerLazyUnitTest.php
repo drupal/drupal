@@ -11,7 +11,6 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\State\StateInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -46,13 +45,12 @@ class CssCollectionOptimizerLazyUnitTest extends UnitTestCase {
       );
     $mock_theme_manager = $this->createMock(ThemeManagerInterface::class);
     $mock_dependency_resolver = $this->createMock(LibraryDependencyResolverInterface::class);
-    $mock_state = $this->createMock(StateInterface::class);
     $mock_file_system = $this->createMock(FileSystemInterface::class);
     $mock_config_factory = $this->createMock(ConfigFactoryInterface::class);
     $mock_file_url_generator = $this->createMock(FileUrlGeneratorInterface::class);
     $mock_time = $this->createMock(TimeInterface::class);
     $mock_language = $this->createMock(LanguageManagerInterface::class);
-    $optimizer = new CssCollectionOptimizerLazy($mock_grouper, $mock_optimizer, $mock_theme_manager, $mock_dependency_resolver, new RequestStack(), $mock_file_system, $mock_config_factory, $mock_file_url_generator, $mock_time, $mock_language, $mock_state);
+    $optimizer = new CssCollectionOptimizerLazy($mock_grouper, $mock_optimizer, $mock_theme_manager, $mock_dependency_resolver, new RequestStack(), $mock_file_system, $mock_config_factory, $mock_file_url_generator, $mock_time, $mock_language);
     $gpl_license = [
       'name' => 'GNU-GPL-2.0-or-later',
       'url' => 'https://www.drupal.org/licensing/faq',
@@ -106,13 +104,12 @@ class CssCollectionOptimizerLazyUnitTest extends UnitTestCase {
       );
     $mock_theme_manager = $this->createMock(ThemeManagerInterface::class);
     $mock_dependency_resolver = $this->createMock(LibraryDependencyResolverInterface::class);
-    $mock_state = $this->createMock(StateInterface::class);
     $mock_file_system = $this->createMock(FileSystemInterface::class);
     $mock_config_factory = $this->createMock(ConfigFactoryInterface::class);
     $mock_file_url_generator = $this->createMock(FileUrlGeneratorInterface::class);
     $mock_time = $this->createMock(TimeInterface::class);
     $mock_language = $this->createMock(LanguageManagerInterface::class);
-    $optimizer = new CssCollectionOptimizerLazy($mock_grouper, $mock_optimizer, $mock_theme_manager, $mock_dependency_resolver, new RequestStack(), $mock_file_system, $mock_config_factory, $mock_file_url_generator, $mock_time, $mock_language, $mock_state);
+    $optimizer = new CssCollectionOptimizerLazy($mock_grouper, $mock_optimizer, $mock_theme_manager, $mock_dependency_resolver, new RequestStack(), $mock_file_system, $mock_config_factory, $mock_file_url_generator, $mock_time, $mock_language);
     $gpl_license = [
       'name' => 'GNU-GPL-2.0-or-later',
       'url' => 'https://www.drupal.org/licensing/faq',

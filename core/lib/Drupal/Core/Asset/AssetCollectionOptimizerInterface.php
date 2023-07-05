@@ -25,6 +25,11 @@ interface AssetCollectionOptimizerInterface {
    *
    * @return string[]
    *   URIs for all optimized asset collection assets.
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is
+   *   no replacement.
+   *
+   * @see https://www.drupal.org/node/3301744
    */
   public function getAll();
 

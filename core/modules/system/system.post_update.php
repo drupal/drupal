@@ -100,3 +100,14 @@ function system_post_update_timestamp_formatter(array &$sandbox = NULL): void {
 function system_post_update_enable_password_compatibility() {
   \Drupal::service('module_installer')->install(['phpass']);
 }
+
+/**
+ * Remove redundant asset state and config.
+ */
+function system_post_update_remove_asset_entries() {
+  \Drupal::state()->delete('drupal_css_cache_files');
+  \Drupal::state()->delete('system.js_cache_files');
+  $config = \Drupal::configFactory()->getEditable('system.performance');
+  $config->clear('stale_file_threshold');
+  $config->save();
+}

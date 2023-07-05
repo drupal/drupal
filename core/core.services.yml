@@ -1583,7 +1583,7 @@ services:
     arguments: [ '@state', '@file_url_generator' ]
   asset.css.collection_optimizer:
     class: Drupal\Core\Asset\CssCollectionOptimizerLazy
-    arguments: [ '@asset.css.collection_grouper', '@asset.css.optimizer', '@theme.manager', '@library.dependency_resolver', '@request_stack', '@file_system', '@config.factory', '@file_url_generator', '@datetime.time', '@language_manager', '@state']
+    arguments: [ '@asset.css.collection_grouper', '@asset.css.optimizer', '@theme.manager', '@library.dependency_resolver', '@request_stack', '@file_system', '@config.factory', '@file_url_generator', '@datetime.time', '@language_manager']
   asset.css.optimizer:
     class: Drupal\Core\Asset\CssOptimizer
     arguments: ['@file_url_generator']
@@ -1597,7 +1597,7 @@ services:
     arguments: [ '@state', '@file_url_generator' ]
   asset.js.collection_optimizer:
     class: Drupal\Core\Asset\JsCollectionOptimizerLazy
-    arguments: [ '@asset.js.collection_grouper', '@asset.js.optimizer', '@theme.manager', '@library.dependency_resolver', '@request_stack', '@file_system', '@config.factory', '@file_url_generator', '@datetime.time', '@language_manager', '@state']
+    arguments: [ '@asset.js.collection_grouper', '@asset.js.optimizer', '@theme.manager', '@library.dependency_resolver', '@request_stack', '@file_system', '@config.factory', '@file_url_generator', '@datetime.time', '@language_manager']
   asset.js.optimizer:
     class: Drupal\Core\Asset\JsOptimizer
   asset.js.collection_grouper:

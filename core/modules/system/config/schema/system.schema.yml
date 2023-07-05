@@ -180,9 +180,6 @@ system.performance:
         gzip:
           type: boolean
           label: 'Compress JavaScript files.'
-    stale_file_threshold:
-      type: integer
-      label: 'Stale file threshold'
 
 system.rss:
   type: config_object

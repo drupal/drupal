@@ -88,8 +88,6 @@ class MigrateSystemConfigurationTest extends MigrateDrupal7TestBase {
         // gzip is not handled by the migration.
         'gzip' => TRUE,
       ],
-      // stale_file_threshold is not handled by the migration.
-      'stale_file_threshold' => 2592000,
     ],
     'system.rss' => [
       'items' => [

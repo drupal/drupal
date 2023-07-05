@@ -12,4 +12,3 @@ fast_404:
 js:
   preprocess: true
   gzip: true
-stale_file_threshold: 2592000
