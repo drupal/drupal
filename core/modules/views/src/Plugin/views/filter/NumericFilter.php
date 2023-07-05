@@ -145,6 +145,12 @@ class NumericFilter extends FilterPluginBase {
         'method' => 'opRegex',
         'values' => 1,
       ],
+      'not_regular_expression' => [
+        'title' => $this->t('Negated regular expression'),
+        'short' => $this->t('not regex'),
+        'method' => 'opNotRegex',
+        'values' => 1,
+      ],
     ];
 
     // if the definition allows for the empty operator, add it.
@@ -375,6 +381,16 @@ class NumericFilter extends FilterPluginBase {
    */
   protected function opRegex($field) {
     $this->query->addWhere($this->options['group'], $field, $this->value['value'], 'REGEXP');
+  }
+
+  /**
+   * Filters by a negated regular expression.
+   *
+   * @param string $field
+   *   The expression pointing to the queries field, for example "foo.bar".
+   */
+  protected function opNotRegex($field) {
+    $this->query->addWhere($this->options['group'], $field, $this->value['value'], 'NOT REGEXP');
   }
 
   public function adminSummary() {
