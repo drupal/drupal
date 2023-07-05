@@ -71,38 +71,4 @@ class FieldConfigEditFormTest extends UnitTestCase {
     ];
   }
 
-  /**
-   * @covers ::hasAnyElementDefaultValue
-   *
-   * @dataProvider providerDefaultValue
-   */
-  public function testHasAnyElementDefaultValueRecursive(array $element, bool $result) {
-    $reflection = new \ReflectionClass('\Drupal\field_ui\Form\FieldConfigEditForm');
-    $method = $reflection->getMethod('hasAnyElementDefaultValue');
-    $method->setAccessible(TRUE);
-    $this->assertEquals($result, $method->invoke($this->fieldConfigEditForm, $element));
-  }
-
-  /**
-   * Provides test cases for detecting default values in a render array.
-   */
-  public function providerDefaultValue(): \Generator {
-    yield 'includes default value' => [
-      [['#default_value' => '🐈']],
-      TRUE,
-    ];
-    yield 'no default value' => [
-      [[]],
-      FALSE,
-    ];
-    yield 'includes default value deep' => [
-      [[[['#default_value' => '🐈']]]],
-      TRUE,
-    ];
-    yield 'includes default value and no default value' => [
-      [['#default_value' => '🐈'], []],
-      TRUE,
-    ];
-  }
-
 }
