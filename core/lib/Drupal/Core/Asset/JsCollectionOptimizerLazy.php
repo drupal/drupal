@@ -158,18 +158,7 @@ class JsCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfac
    */
   public function deleteAll() {
     $this->state->delete('system.js_cache_files');
-    $delete_stale = function ($uri) {
-      $threshold = $this->configFactory
-        ->get('system.performance')
-        ->get('stale_file_threshold');
-      // Default stale file threshold is 30 days.
-      if ($this->time->getRequestTime() - filemtime($uri) > $threshold) {
-        $this->fileSystem->delete($uri);
-      }
-    };
-    if (is_dir('assets://js')) {
-      $this->fileSystem->scanDirectory('assets://js', '/.*/', ['callback' => $delete_stale]);
-    }
+    $this->fileSystem->deleteRecursive('assets://js');
   }
 
   /**

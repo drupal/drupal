@@ -143,19 +143,7 @@ class CssCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfa
    */
   public function deleteAll() {
     $this->state->delete('drupal_css_cache_files');
-
-    $delete_stale = function ($uri) {
-      $threshold = $this->configFactory
-        ->get('system.performance')
-        ->get('stale_file_threshold');
-      // Default stale file threshold is 30 days.
-      if ($this->time->getRequestTime() - filemtime($uri) > $threshold) {
-        $this->fileSystem->delete($uri);
-      }
-    };
-    if (is_dir('assets://css')) {
-      $this->fileSystem->scanDirectory('assets://css', '/.*/', ['callback' => $delete_stale]);
-    }
+    $this->fileSystem->deleteRecursive('assets://css');
   }
 
   /**
