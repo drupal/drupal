@@ -500,6 +500,45 @@ ckeditor5_table:
       - <tfoot>
       - <caption>
 
+ckeditor5_table_properties:
+  ckeditor5:
+    plugins:
+      - table.TableProperties
+    config:
+      table:
+        contentToolbar: [tableProperties]
+  drupal:
+    label: Table properties
+    library: ckeditor5/internal.drupal.ckeditor5.table
+    conditions:
+      plugins:
+        - ckeditor5_table
+        # When arbitrary HTML is already allowed, it's harmless to enable CKEditor 5's UI for table properties.
+        - ckeditor5_arbitraryHtmlSupport
+    elements:
+      - <table style>
+
+ckeditor5_table_cell_properties:
+  ckeditor5:
+    plugins:
+      - table.TableCellProperties
+    config:
+      table:
+        contentToolbar: [tableCellProperties]
+  drupal:
+    label: Table cell properties
+    library: ckeditor5/internal.drupal.ckeditor5.table
+    conditions:
+      plugins:
+        - ckeditor5_table
+        # When arbitrary HTML is already allowed, it's harmless to enable CKEditor 5's UI for table cell properties.
+        - ckeditor5_arbitraryHtmlSupport
+    elements:
+      - <td style>
+      - <td rowspan colspan style>
+      - <th style>
+      - <th rowspan colspan style>
+
 ckeditor5_image:
   ckeditor5:
     plugins:
