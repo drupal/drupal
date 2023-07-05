@@ -37,13 +37,13 @@ class Error {
   /**
    * Decodes an exception and retrieves the correct caller.
    *
-   * @param \Exception|\Throwable $exception
+   * @param \Throwable $exception
    *   The exception object that was thrown.
    *
    * @return array
    *   An error in the format expected by _drupal_log_error().
    */
-  public static function decodeException($exception) {
+  public static function decodeException(\Throwable $exception): array {
     $message = $exception->getMessage();
 
     $backtrace = $exception->getTrace();
