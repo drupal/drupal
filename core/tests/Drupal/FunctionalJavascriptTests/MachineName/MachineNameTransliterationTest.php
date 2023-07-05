@@ -81,10 +81,10 @@ class MachineNameTransliterationTest extends WebDriverTestBase {
       // ['en', '𐌰𐌸', '__'],
       ['en', 'Ä Ö Ü Å Ø äöüåøhello', 'a_o_u_a_o_aouaohello'],
       ['de', 'Ä Ö Ü Å Ø äöüåøhello', 'ae_oe_ue_a_o_aeoeueaohello'],
-      ['de', ']URY&m_G^;', ' ury_m_g'],
+      ['de', ']URY&m_G^;', ' _ury_m_g_'],
       ['da', 'Ä Ö Ü Å Ø äöüåøhello', 'a_o_u_aa_oe_aouaaoehello'],
       ['kg', 'ц', 'ts'],
-      ['en', ' Hello Abventor! ', 'hello_abventor'],
+      ['en', ' Hello Abventor! ', '_hello_abventor_'],
       // cSpell:enable
     ];
   }
