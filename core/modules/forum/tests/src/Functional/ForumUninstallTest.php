@@ -121,7 +121,7 @@ class ForumUninstallTest extends BrowserTestBase {
       'type' => 'forum',
     ];
     $this->drupalGet('admin/structure/types/add');
-    $this->submitForm($edit, 'Save content type');
+    $this->submitForm($edit, 'Save');
     $this->assertTrue((bool) NodeType::load('forum'), 'Node type with machine forum created.');
     $this->drupalGet('admin/structure/types/manage/forum');
     $this->clickLink('Delete');

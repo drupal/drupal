@@ -112,7 +112,7 @@ class ModerationStateNodeTypeTest extends ModerationStateTestBase {
     // Ensure checkboxes in the 'workflow' section can be altered, even when
     // 'revision' is enforced and disabled.
     $this->drupalGet('admin/structure/types/manage/moderated');
-    $this->submitForm(['options[promote]' => TRUE], 'Save content type');
+    $this->submitForm(['options[promote]' => TRUE], 'Save');
     $this->drupalGet('admin/structure/types/manage/moderated');
     $this->assertSession()->checkboxChecked('options[promote]');
   }

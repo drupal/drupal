@@ -77,7 +77,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
       'language_configuration[language_alterable]' => TRUE,
     ];
     $this->drupalGet('admin/structure/types/manage/article');
-    $this->submitForm($edit, 'Save content type');
+    $this->submitForm($edit, 'Save');
     $this->drupalGet('node/add/article');
     // Ensure that the language is selectable on node add page when language
     // not hidden.
@@ -101,7 +101,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
       'language_configuration[langcode]' => 'en',
     ];
     $this->drupalGet('admin/structure/types/manage/article');
-    $this->submitForm($edit, 'Save content type');
+    $this->submitForm($edit, 'Save');
     $this->drupalGet('node/add/article');
     $this->assertTrue($this->assertSession()->optionExists('edit-langcode-0-value', 'en')->isSelected());
   }

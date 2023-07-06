@@ -86,7 +86,11 @@ class BlockContentTypeTest extends BlockContentTestBase {
       'id' => 'foo',
       'label' => 'title for foo',
     ];
-    $this->submitForm($edit, 'Save');
+    $this->submitForm($edit, 'Save and manage fields');
+
+    // Asserts that form submit redirects to the expected manage fields page.
+    $this->assertSession()->addressEquals('admin/structure/block-content/manage/' . $edit['id'] . '/fields');
+
     $block_type = BlockContentType::load('foo');
     $this->assertInstanceOf(BlockContentType::class, $block_type);
 

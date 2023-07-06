@@ -98,7 +98,7 @@ class MenuUiNodeTest extends BrowserTestBase {
       'menu_options[main]' => FALSE,
     ];
     $this->drupalGet('admin/structure/types/manage/page');
-    $this->submitForm($edit, 'Save content type');
+    $this->submitForm($edit, 'Save');
 
     // Verify that no menu settings are displayed and nodes can be created.
     $this->drupalGet('node/add/page');
@@ -120,7 +120,7 @@ class MenuUiNodeTest extends BrowserTestBase {
       'menu_parent' => 'main:',
     ];
     $this->drupalGet('admin/structure/types/manage/page');
-    $this->submitForm($edit, 'Save content type');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('The selected menu link is not under one of the selected menus.');
     $this->assertSession()->pageTextNotContains("The content type Basic page has been updated.");
 
@@ -131,7 +131,7 @@ class MenuUiNodeTest extends BrowserTestBase {
       'menu_parent' => 'main:',
     ];
     $this->drupalGet('admin/structure/types/manage/page');
-    $this->submitForm($edit, 'Save content type');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains("The content type Basic page has been updated.");
 
     // Test that we can preview a node that will create a menu item.

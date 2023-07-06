@@ -68,7 +68,7 @@ class ContentTranslationEnableTest extends BrowserTestBase {
       'type' => 'foo',
     ];
     $this->drupalGet('admin/structure/types/add');
-    $this->submitForm($edit, 'Save content type');
+    $this->submitForm($edit, 'Save');
     $this->drupalGet('admin/config/regional/content-language');
     $this->assertSession()->responseContains('entity_types[node]');
   }

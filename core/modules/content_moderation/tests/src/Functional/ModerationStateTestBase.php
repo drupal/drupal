@@ -116,7 +116,7 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
       'name' => $content_type_name,
       'type' => $content_type_id,
     ];
-    $this->submitForm($edit, 'Save content type');
+    $this->submitForm($edit, 'Save');
 
     // Check the content type has been set to create new revisions.
     $this->assertTrue(NodeType::load($content_type_id)->shouldCreateNewRevision());

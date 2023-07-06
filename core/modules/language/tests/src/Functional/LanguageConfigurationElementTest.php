@@ -182,7 +182,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
       'language_configuration[language_alterable]' => TRUE,
     ];
     $this->drupalGet('admin/structure/types/manage/article');
-    $this->submitForm($edit, 'Save content type');
+    $this->submitForm($edit, 'Save');
     // Check the language default configuration for the articles.
     $configuration = ContentLanguageSettings::loadByEntityTypeBundle('node', 'article');
     $uuid = $configuration->uuid();
@@ -193,7 +193,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
       'title_label' => 'Name',
     ];
     $this->drupalGet('admin/structure/types/manage/article');
-    $this->submitForm($edit, 'Save content type');
+    $this->submitForm($edit, 'Save');
     // Check that we still have the settings for the updated node type.
     $configuration = ContentLanguageSettings::loadByEntityTypeBundle('node', 'article');
     $this->assertEquals('current_interface', $configuration->getDefaultLangcode(), 'The default language configuration has been kept on the updated Article content type.');
@@ -222,7 +222,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
       'language_configuration[language_alterable]' => TRUE,
     ];
     $this->drupalGet('admin/structure/types/manage/article');
-    $this->submitForm($edit, 'Save content type');
+    $this->submitForm($edit, 'Save');
 
     // Check the language default configuration for articles is present.
     $configuration = \Drupal::entityTypeManager()->getStorage('language_content_settings')->load('node.article');

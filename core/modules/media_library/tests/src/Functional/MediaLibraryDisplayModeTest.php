@@ -112,8 +112,8 @@ class MediaLibraryDisplayModeTest extends BrowserTestBase {
       'source' => 'file',
     ];
     $this->drupalGet('admin/structure/media/add');
-    $this->submitForm($edit, 'Save');
-    $this->submitForm([], 'Save');
+    $this->submitForm($edit, 'Save and manage fields');
+    $this->submitForm([], 'Save and manage fields');
     $this->assertSession()->pageTextContains("Media Library form and view displays have been created for the $type_five_id media type.");
     $this->assertFormDisplay($type_five_id, TRUE, FALSE);
     $this->assertViewDisplay($type_five_id, 'medium');

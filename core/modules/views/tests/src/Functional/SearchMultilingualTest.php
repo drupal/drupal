@@ -64,7 +64,7 @@ class SearchMultilingualTest extends ViewTestBase {
       'language_configuration[language_alterable]' => TRUE,
     ];
     $this->drupalGet('admin/structure/types/manage/' . $type->id());
-    $this->submitForm($edit, 'Save content type');
+    $this->submitForm($edit, 'Save');
     $edit = [
       'entity_types[node]' => TRUE,
       'settings[node][' . $type->id() . '][translatable]' => TRUE,

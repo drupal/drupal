@@ -76,7 +76,11 @@ class CommentTypeTest extends CommentTestBase {
       'target_entity_type_id' => 'node',
     ];
     $this->drupalGet('admin/structure/comment/types/add');
-    $this->submitForm($edit, 'Save');
+    $this->submitForm($edit, 'Save and manage fields');
+
+    // Asserts that form submit redirects to the expected manage fields page.
+    $this->assertSession()->addressEquals('admin/structure/comment/manage/' . $edit['id'] . '/fields');
+
     $comment_type = CommentType::load('foo');
     $this->assertInstanceOf(CommentType::class, $comment_type);
 

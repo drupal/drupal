@@ -47,7 +47,7 @@ class ContentTranslationEntityBundleUITest extends BrowserTestBase {
     // Enable content translation.
     $edit = ['language_configuration[content_translation]' => TRUE];
     $this->drupalGet('admin/structure/types/manage/article');
-    $this->submitForm($edit, 'Save content type');
+    $this->submitForm($edit, 'Save');
 
     // Make sure add page does not inherit translation configuration from first
     // content type.

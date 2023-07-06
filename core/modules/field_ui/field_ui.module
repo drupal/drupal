@@ -124,26 +124,6 @@ function field_ui_entity_bundle_create($entity_type, $bundle) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
- *
- * Adds a button 'Save and manage fields' to the 'Create content type' form.
- *
- * @see \Drupal\node\NodeTypeForm
- * @see field_ui_form_node_type_form_submit()
- */
-function field_ui_form_node_type_form_alter(&$form, FormStateInterface $form_state) {
-  // We want to display the button only on add page.
-  if ($form_state->getFormObject()->getEntity()->isNew()) {
-    $form['actions']['save_continue'] = $form['actions']['submit'];
-    $form['actions']['save_continue']['#value'] = t('Save and manage fields');
-    $form['actions']['save_continue']['#weight'] = $form['actions']['save_continue']['#weight'] + 5;
-    $form['actions']['save_continue']['#submit'][] = 'field_ui_form_node_type_form_submit';
-    // Hide the 'Save content type' button.
-    $form['actions']['submit']['#access'] = FALSE;
-  }
-}
-
-/**
  * Implements hook_entity_operation().
  */
 function field_ui_entity_operation(EntityInterface $entity) {
@@ -183,17 +163,6 @@ function field_ui_entity_operation(EntityInterface $entity) {
   }
 
   return $operations;
-}
-
-/**
- * Form submission handler for the 'Save and manage fields' button.
- *
- * @see field_ui_form_node_type_form_alter()
- */
-function field_ui_form_node_type_form_submit($form, FormStateInterface $form_state) {
-  if ($form_state->getTriggeringElement()['#parents'][0] === 'save_continue' && $route_info = FieldUI::getOverviewRouteInfo('node', $form_state->getValue('type'))) {
-    $form_state->setRedirectUrl($route_info);
-  }
 }
 
 /**
@@ -284,4 +253,48 @@ function field_ui_preprocess_form_element__new_storage_type(&$variables) {
   // Add support for a variant string so radios in the add field form can be
   // programmatically distinguished.
   $variables['variant'] = $variables['element']['#variant'] ?? NULL;
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Adds a button 'Save and manage fields' to forms.
+ *
+ * @see \Drupal\node\NodeTypeForm
+ * @see \Drupal\comment\CommentTypeForm
+ * @see \Drupal\media\MediaTypeForm
+ * @see \Drupal\block_content\BlockContentTypeForm
+ * @see field_ui_form_manage_field_form_submit()
+ */
+function field_ui_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $forms = [
+    'node_type_add_form',
+    'comment_type_add_form',
+    'media_type_add_form',
+    'block_content_type_add_form',
+  ];
+
+  if (!in_array($form_id, $forms)) {
+    return;
+  }
+  if ($form_state->getFormObject()->getEntity()->isNew()) {
+    $form['actions']['save_continue'] = $form['actions']['submit'];
+    unset($form['actions']['submit']['#button_type']);
+    $form['actions']['save_continue']['#value'] = t('Save and manage fields');
+    $form['actions']['save_continue']['#weight'] = $form['actions']['save_continue']['#weight'] - 5;
+    $form['actions']['save_continue']['#submit'][] = 'field_ui_form_manage_field_form_submit';
+  }
+}
+
+/**
+ * Form submission handler for the 'Save and manage fields' button.
+ *
+ * @see field_ui_form_alter()
+ */
+function field_ui_form_manage_field_form_submit($form, FormStateInterface $form_state) {
+  $provider = $form_state->getFormObject()->getEntity()->getEntityType()->getProvider();
+  $id = $form_state->getFormObject()->getEntity()->id();
+  if ($form_state->getTriggeringElement()['#parents'][0] === 'save_continue' && $route_info = FieldUI::getOverviewRouteInfo($provider, $id)) {
+    $form_state->setRedirectUrl($route_info);
+  }
 }
