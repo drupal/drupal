@@ -26,12 +26,4 @@ class VocabularyJsonAnonTest extends VocabularyResourceTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  /**
-   * Disable the GET test coverage due to bug in taxonomy module.
-   * @todo Fix in https://www.drupal.org/node/2805281: remove this override.
-   */
-  public function testGet() {
-    $this->markTestSkipped();
-  }
-
 }
