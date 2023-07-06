@@ -9,11 +9,11 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
- * Tests add more behavior for a multiple value field.
+ * Tests widget form for a multiple value field.
  *
  * @group field
  */
-class FormJSAddMoreTest extends WebDriverTestBase {
+class MultipleValueWidgetTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}
@@ -64,7 +64,7 @@ class FormJSAddMoreTest extends WebDriverTestBase {
   /**
    * Tests the 'Add more' functionality.
    */
-  public function testFieldFormJsAddMore() {
+  public function testFieldMultipleValueWidget() {
     $this->drupalGet('entity_test/add');
 
     $assert_session = $this->assertSession();
@@ -75,10 +75,16 @@ class FormJSAddMoreTest extends WebDriverTestBase {
     $field_0 = $page->findField('field_unlimited[0][value]');
     $field_0->setValue('1');
 
+    $field_0_remove_button = $page->findButton('field_unlimited_0_remove_button');
+    $this->assertNotEmpty($field_0_remove_button, 'First field has a remove button.');
+
     // Add another item.
     $add_more_button->click();
     $field_1 = $assert_session->waitForField('field_unlimited[1][value]');
     $this->assertNotEmpty($field_1, 'Successfully added another item.');
+
+    $field_1_remove_button = $page->findButton('field_unlimited_1_remove_button');
+    $this->assertNotEmpty($field_1_remove_button, 'Also second field has a remove button.');
 
     // Validate the value of the first field has not changed.
     $this->assertEquals('1', $field_0->getValue(), 'Value for the first item has not changed.');
@@ -123,6 +129,27 @@ class FormJSAddMoreTest extends WebDriverTestBase {
     // Validate no extraneous widget is displayed.
     $element = $page->findField('field_unlimited[4][value]');
     $this->assertEmpty($element);
+
+    // Test removing items/values.
+    $field_0_remove_button->click();
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    // Test the updated widget.
+    // First item is the initial second item.
+    $this->assertEquals('2', $field_0->getValue(), 'Value for the first item has changed.');
+    // We do not have the initial first item anymore.
+    $this->assertEmpty($field_2->getValue(), 'Value for the third item is currently empty.');
+    $element = $page->findField('field_unlimited[3][value]');
+    $this->assertEmpty($element);
+
+    // We can also remove empty items.
+    $field_2_remove_button = $page->findButton('field_unlimited_2_remove_button');
+    $field_2_remove_button->click();
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $element = $page->findField('field_unlimited[2][value]');
+    $this->assertEmpty($element, 'Empty field also removed.');
+
+    // Assert that the wrapper exists and isn't nested.
+    $this->assertSession()->elementsCount('css', '[data-drupal-selector="edit-field-unlimited-wrapper"]', 1);
   }
 
 }
