@@ -157,6 +157,10 @@ class EntityReferenceFieldDefaultValueTest extends BrowserTestBase {
       'default_value_input[' . $field_name . '][1][target_id]' => $referenced_node_type2->label() . ' (' . $referenced_node_type2->id() . ')',
     ];
     $this->drupalGet('admin/structure/types/manage/reference_content/fields/node.reference_content.' . $field_name);
+    $this->assertSession()->fieldExists("default_value_input[{$field_name}][0][target_id]");
+    $this->assertSession()->fieldNotExists("default_value_input[{$field_name}][1][target_id]");
+    $this->submitForm([], 'Add another item');
+    $this->assertSession()->fieldExists("default_value_input[{$field_name}][1][target_id]");
     $this->submitForm($field_edit, 'Save settings');
 
     // Check that the field has a dependency on the default value.
