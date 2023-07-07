@@ -790,7 +790,7 @@ function node_form_system_themes_admin_form_alter(&$form, FormStateInterface $fo
   $form['admin_theme']['use_admin_theme'] = [
     '#type' => 'checkbox',
     '#title' => t('Use the administration theme when editing or creating content'),
-    '#description' => t('Control which roles can "View the administration theme" on the <a href=":permissions">Permissions page</a>.', [':permissions' => Url::fromRoute('user.admin_permissions')->toString()]),
+    '#description' => t('Control which roles can "View the administration theme" on the <a href=":permissions">Permissions page</a>.', [':permissions' => Url::fromRoute('user.admin_permissions.module', ['modules' => 'system'])->toString()]),
     '#default_value' => \Drupal::configFactory()->getEditable('node.settings')->get('use_admin_theme'),
   ];
   $form['#submit'][] = 'node_form_system_themes_admin_form_submit';
