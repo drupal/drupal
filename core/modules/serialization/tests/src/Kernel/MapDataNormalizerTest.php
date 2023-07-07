@@ -7,7 +7,7 @@ use Drupal\Core\TypedData\MapDataDefinition;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * @group typedData
+ * @group TypedData
  */
 class MapDataNormalizerTest extends KernelTestBase {
 
