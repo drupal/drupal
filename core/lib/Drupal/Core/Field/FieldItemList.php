@@ -350,13 +350,27 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
       $definition->setRequired(FALSE);
       $definition->setDescription('');
 
-      // Use the widget currently configured for the 'default' form mode, or
-      // fallback to the default widget for the field type.
+      /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $entity_form_display */
       $entity_form_display = \Drupal::service('entity_display.repository')
         ->getFormDisplay($entity->getEntityTypeId(), $entity->bundle());
-      $widget = $entity_form_display->getRenderer($this->getFieldDefinition()->getName());
-      if (!$widget) {
-        $widget = \Drupal::service('plugin.manager.field.widget')->getInstance(['field_definition' => $this->getFieldDefinition()]);
+      /** @var \Drupal\Core\Field\WidgetPluginManager $field_widget_plugin_manager */
+      $field_widget_plugin_manager = \Drupal::service('plugin.manager.field.widget');
+
+      // Use the widget currently configured for the 'default' form mode, or
+      // fallback to the default widget for the field type.
+      if (($configuration = $entity_form_display->getComponent($definition->getName())) && isset($configuration['type'])) {
+        // Get the plugin instance manually to ensure an up-to-date field
+        // definition is used.
+        // @see \Drupal\Core\Entity\Entity\EntityFormDisplay::getRenderer
+        $widget = $field_widget_plugin_manager->getInstance([
+          'field_definition' => $definition,
+          'form_mode' => $entity_form_display->getOriginalMode(),
+          'prepare' => FALSE,
+          'configuration' => $configuration,
+        ]);
+      }
+      else {
+        $widget = $field_widget_plugin_manager->getInstance(['field_definition' => $definition]);
       }
 
       $form_state->set('default_value_widget', $widget);

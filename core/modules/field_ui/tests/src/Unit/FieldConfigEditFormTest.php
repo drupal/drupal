@@ -26,7 +26,8 @@ class FieldConfigEditFormTest extends UnitTestCase {
     parent::setUp();
 
     $entity_type_bundle_info = $this->createMock('\Drupal\Core\Entity\EntityTypeBundleInfoInterface');
-    $this->fieldConfigEditForm = new FieldConfigEditForm($entity_type_bundle_info);
+    $typed_data = $this->createMock('\Drupal\Core\TypedData\TypedDataManagerInterface');
+    $this->fieldConfigEditForm = new FieldConfigEditForm($entity_type_bundle_info, $typed_data);
   }
 
   /**
