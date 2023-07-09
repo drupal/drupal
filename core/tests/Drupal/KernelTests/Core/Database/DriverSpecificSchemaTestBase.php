@@ -735,11 +735,16 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     }
 
     // Ensure auto numbering now works.
+    // We use a >= assertion to allow non-core drivers, that may have specific
+    // strategies on automatic incrementing, to run core tests. For example,
+    // Oracle will allocate a 10 id with the previous insert that was meant to
+    // fail; that id will be discarded, and the insert here will get a new 11
+    // id instead.
     $id = $this->connection
       ->insert($table_name)
       ->fields(['test_field_string' => 'test'])
       ->execute();
-    $this->assertEquals(10, $id);
+    $this->assertGreaterThanOrEqual(10, $id);
   }
 
   /**
