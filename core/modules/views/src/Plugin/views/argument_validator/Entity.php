@@ -177,7 +177,7 @@ class Entity extends ArgumentValidatorPluginBase {
   public function validateArgument($argument) {
     $entity_type = $this->definition['entity_type'];
 
-    if ($this->multipleCapable && $this->options['multiple']) {
+    if ($this->multipleCapable && $this->options['multiple'] && isset($argument)) {
       // At this point only interested in individual IDs no matter what type,
       // just splitting by the allowed delimiters.
       $ids = array_filter(preg_split('/[,+ ]/', $argument));
