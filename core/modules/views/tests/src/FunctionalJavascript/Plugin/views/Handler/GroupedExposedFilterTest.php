@@ -111,6 +111,23 @@ class GroupedExposedFilterTest extends WebDriverTestBase {
       $this->assertNotEmpty($weight->find('named', ['option', $value]));
     }
     $this->assertEmpty($weight->find('named', ['option', 5]));
+
+    // Set the date value to a zero value and make sure it's stored.
+    $between_from = $page->findField('options[group_info][group_items][1][value][min]');
+    $between_from->setValue('0');
+    $apply_button = $page->find('css', '.views-ui-dialog button.button--primary');
+    $this->assertNotEmpty($apply_button);
+    $apply_button->press();
+    $web_assert->assertWaitOnAjaxRequest();
+
+    // Open the dialog for the grouped filter.
+    $page->clickLink('Content: Authored on (grouped)');
+    $web_assert->assertWaitOnAjaxRequest();
+
+    // Test that the 'min' field is shown and that it contains the right value.
+    $between_from = $page->findField('options[group_info][group_items][1][value][min]');
+    $this->assertNotEmpty($between_from->isVisible());
+    $this->assertEquals('0', $between_from->getValue());
   }
 
 }
