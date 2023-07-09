@@ -31,6 +31,7 @@ class MemoryStorage implements StorageInterface {
   public function __construct($collection = StorageInterface::DEFAULT_COLLECTION) {
     $this->collection = $collection;
     $this->config = new \ArrayObject();
+    $this->config[$collection] = [];
   }
 
   /**

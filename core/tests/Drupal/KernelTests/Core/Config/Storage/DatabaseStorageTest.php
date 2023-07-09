@@ -20,9 +20,6 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
 
     $this->storage = new DatabaseStorage($this->container->get('database'), 'config');
     $this->invalidStorage = new DatabaseStorage($this->container->get('database'), 'invalid');
-
-    // ::listAll() verifications require other configuration data to exist.
-    $this->storage->write('system.performance', []);
   }
 
   protected function read($name) {
