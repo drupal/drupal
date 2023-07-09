@@ -1165,7 +1165,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
             }
           }
 
-          if (!empty($this->options['group_info']['group_items'][$item_id]['value'][$child])) {
+          if (isset($this->options['group_info']['group_items'][$item_id]['value'][$child])) {
             $row['value'][$child]['#default_value'] = $this->options['group_info']['group_items'][$item_id]['value'][$child];
           }
         }
