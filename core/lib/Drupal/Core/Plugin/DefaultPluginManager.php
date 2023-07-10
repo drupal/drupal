@@ -110,7 +110,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
   protected $additionalAnnotationNamespaces = [];
 
   /**
-   * Creates the discovery object.
+   * Constructs a new \Drupal\Core\Plugin\DefaultPluginManager object.
    *
    * @param string|bool $subdir
    *   The plugin's subdirectory, for example Plugin/views/filter.
