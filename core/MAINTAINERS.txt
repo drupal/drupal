@@ -13,7 +13,7 @@ Core committers
 The Drupal core committers oversee the development of Drupal as a whole. The
 core committers for Drupal are (in alphabetical order):
 
-BDFL
+Project Lead
 - Dries Buytaert 'dries' https://www.drupal.org/u/dries
 
 Product managers
