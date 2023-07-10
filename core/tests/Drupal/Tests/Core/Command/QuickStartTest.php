@@ -85,7 +85,8 @@ class QuickStartTest extends TestCase {
    * Tests the quick-start command.
    */
   public function testQuickStartCommand() {
-    if (version_compare(\SQLite3::version()['versionString'], Tasks::SQLITE_MINIMUM_VERSION) < 0) {
+    $sqlite = (new \PDO('sqlite::memory:'))->query('select sqlite_version()')->fetch()[0];
+    if (version_compare($sqlite, Tasks::SQLITE_MINIMUM_VERSION) < 0) {
       $this->markTestSkipped();
     }
 
@@ -140,7 +141,8 @@ class QuickStartTest extends TestCase {
    * Tests the quick-start commands.
    */
   public function testQuickStartInstallAndServerCommands() {
-    if (version_compare(\SQLite3::version()['versionString'], Tasks::SQLITE_MINIMUM_VERSION) < 0) {
+    $sqlite = (new \PDO('sqlite::memory:'))->query('select sqlite_version()')->fetch()[0];
+    if (version_compare($sqlite, Tasks::SQLITE_MINIMUM_VERSION) < 0) {
       $this->markTestSkipped();
     }
 
