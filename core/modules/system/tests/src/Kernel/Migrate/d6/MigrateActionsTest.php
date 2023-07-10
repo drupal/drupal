@@ -12,7 +12,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
  */
 class MigrateActionsTest extends MigrateDrupal6TestBase {
 
-  protected static $modules = ['action', 'comment', 'node'];
+  protected static $modules = ['comment', 'node'];
 
   /**
    * {@inheritdoc}
