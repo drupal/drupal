@@ -66,41 +66,6 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
   protected $databaseDumpFiles = [];
 
   /**
-   * Flag that indicates whether the child site has been updated.
-   *
-   * @var bool
-   */
-  protected $upgradedSite = FALSE;
-
-  /**
-   * Array of errors triggered during the update process.
-   *
-   * @var array
-   */
-  protected $upgradeErrors = [];
-
-  /**
-   * Array of modules loaded when the test starts.
-   *
-   * @var array
-   */
-  protected $loadedModules = [];
-
-  /**
-   * Flag to indicate whether zlib is installed or not.
-   *
-   * @var bool
-   */
-  protected $zlibInstalled = TRUE;
-
-  /**
-   * Flag to indicate whether there are pending updates or not.
-   *
-   * @var bool
-   */
-  protected $pendingUpdates = TRUE;
-
-  /**
    * The update URL.
    *
    * @var string
@@ -120,7 +85,9 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    $this->zlibInstalled = function_exists('gzopen');
+    if (!extension_loaded('zlib')) {
+      $this->markTestSkipped('The zlib extension is not available.');
+    }
 
     parent::setUp();
   }
@@ -140,13 +107,6 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
     // running because we might not have a working alias system before running
     // the updates.
     $this->updateUrl = Url::fromRoute('system.db_update', [], ['path_processing' => FALSE]);
-
-    // We are going to set a missing zlib requirement property for usage
-    // during the performUpgrade() and tearDown() methods. Also set that the
-    // tests failed.
-    if (!$this->zlibInstalled) {
-      return;
-    }
 
     $this->initUserSession();
     $this->prepareSettings();
@@ -240,10 +200,6 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
    * Helper function to run pending database updates.
    */
   protected function runUpdates() {
-    if (!$this->zlibInstalled) {
-      $this->fail('Missing zlib requirement for update tests.');
-      return FALSE;
-    }
     $this->doRunUpdates($this->updateUrl);
   }
 
