@@ -107,6 +107,8 @@ trait WorkspaceTestUtilities {
     $session->buttonExists('Activate');
     $this->submitForm(['workspace_id' => $workspace->id()], 'Activate');
     $session->pageTextContains($workspace->label() . ' is now the active workspace.');
+    // Keep the test runner in sync with the system under test.
+    \Drupal::service('workspaces.manager')->setActiveWorkspace($workspace);
   }
 
   /**
@@ -120,6 +122,8 @@ trait WorkspaceTestUtilities {
     $session = $this->assertSession();
     $this->submitForm([], 'Switch to Live');
     $session->pageTextContains('You are now viewing the live version of the site.');
+    // Keep the test runner in sync with the system under test.
+    \Drupal::service('workspaces.manager')->switchToLive();
   }
 
   /**

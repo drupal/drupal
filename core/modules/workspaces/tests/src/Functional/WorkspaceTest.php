@@ -172,6 +172,9 @@ class WorkspaceTest extends BrowserTestBase {
     $this->setupWorkspaceSwitcherBlock();
     $assert_session = $this->assertSession();
 
+    $this->drupalCreateContentType(['type' => 'test', 'label' => 'Test']);
+    $vocabulary = $this->createVocabulary();
+
     $test_1 = $this->createWorkspaceThroughUi('Test 1', 'test_1');
     $test_2 = $this->createWorkspaceThroughUi('Test 2', 'test_2');
 
@@ -188,10 +191,8 @@ class WorkspaceTest extends BrowserTestBase {
     $assert_session->linkExists('Switch to this workspace');
 
     // Create some test content.
-    $this->drupalCreateContentType(['type' => 'test', 'label' => 'Test']);
     $this->createNodeThroughUi('Node 1', 'test');
     $this->createNodeThroughUi('Node 2', 'test');
-    $vocabulary = $this->createVocabulary();
     $edit = [
       'name[0][value]' => 'Term 1',
     ];

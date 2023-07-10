@@ -56,6 +56,7 @@ class WorkspaceBypassTest extends BrowserTestBase {
 
     // Create a new user that should be able to edit anything in the Bears
     // workspace.
+    $this->switchToLive();
     $lombardi = $this->drupalCreateUser(array_merge($permissions, ['view any workspace']));
     $this->drupalLogin($lombardi);
     $this->switchToWorkspace($bears);

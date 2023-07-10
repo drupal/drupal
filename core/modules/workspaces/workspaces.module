@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -183,6 +184,22 @@ function workspaces_entity_create_access(AccountInterface $account, array $conte
   return \Drupal::service('class_resolver')
     ->getInstanceFromDefinition(EntityAccess::class)
     ->entityCreateAccess($account, $context, $entity_bundle);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update() for the 'menu_link_content' entity type.
+ */
+function workspaces_menu_link_content_update(EntityInterface $entity) {
+  /** @var \Drupal\menu_link_content\MenuLinkContentInterface $entity */
+  if ($entity->getLoadedRevisionId() != $entity->getRevisionId()) {
+    // We are not updating the menu tree definitions when a custom menu link
+    // entity is saved as a pending revision (because the parent can not be
+    // changed), so we need to clear the system menu cache manually. However,
+    // inserting or deleting a custom menu link updates the menu tree
+    // definitions, so we don't have to do anything in those cases.
+    $cache_tags = Cache::buildTags('config:system.menu', [$entity->getMenuName()], '.');
+    \Drupal::service('cache_tags.invalidator')->invalidateTags($cache_tags);
+  }
 }
 
 /**

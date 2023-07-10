@@ -68,3 +68,12 @@ services:
     arguments: ['@database', '@workspaces.manager']
     public: false
     decoration_priority: 50
+
+  workspaces.menu.tree_storage:
+    decorates: menu.tree_storage
+    class: Drupal\workspaces\WorkspacesMenuTreeStorage
+    arguments: ['@workspaces.manager', '@workspaces.association', '@entity_type.manager', '@database', '@cache.menu', '@cache_tags.invalidator', 'menu_tree']
+    public: false
+    decoration_priority: 50
+    tags:
+      - { name: backend_overridable }
