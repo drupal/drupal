@@ -10,6 +10,11 @@ use Symfony\Component\Process\ExecutableFinder;
  * Allows test classes to require external command line applications.
  *
  * Use annotation such as '(at)requires externalCommand git'.
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ * Drupal\\TestTools\\Extension\\RequiresComposerTrait instead.
+ *
+ * @see https://www.drupal.org/node/3362239
  */
 trait ExternalCommandRequirementsTrait {
 
@@ -28,6 +33,7 @@ trait ExternalCommandRequirementsTrait {
    *   skipped. Callers should not catch this exception.
    */
   private static function checkClassCommandRequirements() {
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Drupal\\TestTools\\Extension\\RequiresComposerTrait instead. See https://www.drupal.org/node/3362239", E_USER_DEPRECATED);
     $annotations = Test::parseTestMethodAnnotations(static::class);
     if (!empty($annotations['class']['requires'])) {
       static::checkExternalCommandRequirements($annotations['class']['requires']);
@@ -42,6 +48,7 @@ trait ExternalCommandRequirementsTrait {
    *   skipped. Callers should not catch this exception.
    */
   private static function checkMethodCommandRequirements($name) {
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Drupal\\TestTools\\Extension\\RequiresComposerTrait instead. See https://www.drupal.org/node/3362239", E_USER_DEPRECATED);
     $annotations = Test::parseTestMethodAnnotations(static::class, $name);
     if (!empty($annotations['method']['requires'])) {
       static::checkExternalCommandRequirements($annotations['method']['requires']);
@@ -59,10 +66,12 @@ trait ExternalCommandRequirementsTrait {
    *   skipped. Callers should not catch this exception.
    */
   private static function checkExternalCommandRequirements(array $annotations) {
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Drupal\\TestTools\\Extension\\RequiresComposerTrait instead. See https://www.drupal.org/node/3362239", E_USER_DEPRECATED);
     // Make a list of required commands.
     $required_commands = [];
     foreach ($annotations as $requirement) {
       if (str_starts_with($requirement, 'externalCommand ')) {
+        @trigger_error("The '@require externalCommand' annotation for tests is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Drupal\\TestTools\\Extension\\RequiresComposerTrait instead. See https://www.drupal.org/node/3362239", E_USER_DEPRECATED);
         $command = trim(str_replace('externalCommand ', '', $requirement));
         // Use named keys to avoid duplicates.
         $required_commands[$command] = $command;

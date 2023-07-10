@@ -5,20 +5,25 @@ namespace Drupal\BuildTests\Framework\Tests;
 use Drupal\BuildTests\Framework\ExternalCommandRequirementsTrait;
 use PHPUnit\Framework\SkippedTestError;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * @coversDefaultClass \Drupal\BuildTests\Framework\ExternalCommandRequirementsTrait
  * @group Build
+ * @group legacy
  */
 class ExternalCommandRequirementTest extends TestCase {
+
+  use ExpectDeprecationTrait;
 
   /**
    * @covers ::checkExternalCommandRequirements
    */
   public function testCheckExternalCommandRequirementsNotAvailable() {
+    $this->expectDeprecation('Drupal\BuildTests\Framework\ExternalCommandRequirementsTrait::checkExternalCommandRequirements() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Drupal\\TestTools\\Extension\\RequiresComposerTrait instead. See https://www.drupal.org/node/3362239');
+    $this->expectDeprecation('The \'@require externalCommand\' annotation for tests is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Drupal\\TestTools\\Extension\\RequiresComposerTrait instead. See https://www.drupal.org/node/3362239');
     $requires = new UsesCommandRequirements();
     $ref_check_requirements = new \ReflectionMethod($requires, 'checkExternalCommandRequirements');
-    $ref_check_requirements->setAccessible(TRUE);
 
     // Use a try/catch block because otherwise PHPUnit might think this test is
     // legitimately skipped.
@@ -37,9 +42,10 @@ class ExternalCommandRequirementTest extends TestCase {
    * @covers ::checkExternalCommandRequirements
    */
   public function testCheckExternalCommandRequirementsAvailable() {
+    $this->expectDeprecation('Drupal\BuildTests\Framework\ExternalCommandRequirementsTrait::checkExternalCommandRequirements() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Drupal\\TestTools\\Extension\\RequiresComposerTrait instead. See https://www.drupal.org/node/3362239');
+    $this->expectDeprecation('The \'@require externalCommand\' annotation for tests is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Drupal\\TestTools\\Extension\\RequiresComposerTrait instead. See https://www.drupal.org/node/3362239');
     $requires = new UsesCommandRequirements();
     $ref_check_requirements = new \ReflectionMethod($requires, 'checkExternalCommandRequirements');
-    $ref_check_requirements->setAccessible(TRUE);
 
     // Use a try/catch block because otherwise PHPUnit might think this test is
     // legitimately skipped.
@@ -57,9 +63,9 @@ class ExternalCommandRequirementTest extends TestCase {
    * @covers ::checkClassCommandRequirements
    */
   public function testClassRequiresAvailable() {
+    $this->expectDeprecation('Drupal\BuildTests\Framework\ExternalCommandRequirementsTrait::checkClassCommandRequirements() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Drupal\\TestTools\\Extension\\RequiresComposerTrait instead. See https://www.drupal.org/node/3362239');
     $requires = new ClassRequiresAvailable();
     $ref_check = new \ReflectionMethod($requires, 'checkClassCommandRequirements');
-    $ref_check->setAccessible(TRUE);
     // Use a try/catch block because otherwise PHPUnit might think this test is
     // legitimately skipped.
     try {
@@ -74,9 +80,9 @@ class ExternalCommandRequirementTest extends TestCase {
    * @covers ::checkClassCommandRequirements
    */
   public function testClassRequiresUnavailable() {
+    $this->expectDeprecation('Drupal\BuildTests\Framework\ExternalCommandRequirementsTrait::checkClassCommandRequirements() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Drupal\\TestTools\\Extension\\RequiresComposerTrait instead. See https://www.drupal.org/node/3362239');
     $requires = new ClassRequiresUnavailable();
     $ref_check = new \ReflectionMethod($requires, 'checkClassCommandRequirements');
-    $ref_check->setAccessible(TRUE);
     // Use a try/catch block because otherwise PHPUnit might think this test is
     // legitimately skipped.
     try {
@@ -92,9 +98,9 @@ class ExternalCommandRequirementTest extends TestCase {
    * @covers ::checkMethodCommandRequirements
    */
   public function testMethodRequiresAvailable() {
+    $this->expectDeprecation('Drupal\BuildTests\Framework\ExternalCommandRequirementsTrait::checkMethodCommandRequirements() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Drupal\\TestTools\\Extension\\RequiresComposerTrait instead. See https://www.drupal.org/node/3362239');
     $requires = new MethodRequires();
     $ref_check = new \ReflectionMethod($requires, 'checkMethodCommandRequirements');
-    $ref_check->setAccessible(TRUE);
     // Use a try/catch block because otherwise PHPUnit might think this test is
     // legitimately skipped.
     try {
@@ -109,9 +115,9 @@ class ExternalCommandRequirementTest extends TestCase {
    * @covers ::checkMethodCommandRequirements
    */
   public function testMethodRequiresUnavailable() {
+    $this->expectDeprecation('Drupal\BuildTests\Framework\ExternalCommandRequirementsTrait::checkMethodCommandRequirements() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Drupal\\TestTools\\Extension\\RequiresComposerTrait instead. See https://www.drupal.org/node/3362239');
     $requires = new MethodRequires();
     $ref_check = new \ReflectionMethod($requires, 'checkMethodCommandRequirements');
-    $ref_check->setAccessible(TRUE);
     // Use a try/catch block because otherwise PHPUnit might think this test is
     // legitimately skipped.
     try {
