@@ -13,8 +13,6 @@ use Drupal\Composer\Composer;
  * @group Component
  *
  * @coversNothing
- *
- * @requires externalCommand composer
  */
 class ComponentsIsolatedBuildTest extends ComposerBuildTestBase {
 
