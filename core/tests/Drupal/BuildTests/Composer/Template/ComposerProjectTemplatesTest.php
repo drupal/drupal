@@ -22,6 +22,8 @@ use Drupal\Composer\Composer;
  *
  * @group #slow
  * @group Template
+ *
+ * @requires externalCommand composer
  */
 class ComposerProjectTemplatesTest extends ComposerBuildTestBase {
 

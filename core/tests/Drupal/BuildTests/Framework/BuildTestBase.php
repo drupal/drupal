@@ -9,7 +9,6 @@ use Drupal\Component\FileSystem\FileSystem as DrupalFilesystem;
 use Drupal\Tests\DrupalTestBrowser;
 use Drupal\Tests\PhpUnitCompatibilityTrait;
 use Drupal\Tests\Traits\PhpUnitWarnings;
-use Drupal\TestTools\Extension\RequiresComposerTrait;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem as SymfonyFilesystem;
 use Symfony\Component\Finder\Finder;
@@ -53,7 +52,7 @@ use Symfony\Component\Process\Process;
  */
 abstract class BuildTestBase extends TestCase {
 
-  use RequiresComposerTrait;
+  use ExternalCommandRequirementsTrait;
   use PhpUnitWarnings;
   use PhpUnitCompatibilityTrait;
 
@@ -153,8 +152,17 @@ abstract class BuildTestBase extends TestCase {
   /**
    * {@inheritdoc}
    */
+  public static function setUpBeforeClass(): void {
+    parent::setUpBeforeClass();
+    static::checkClassCommandRequirements();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
+    static::checkMethodCommandRequirements($this->getName());
     $this->phpFinder = new PhpExecutableFinder();
     // Set up the workspace directory.
     // @todo Glean working directory from env vars, etc.

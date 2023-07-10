@@ -7,6 +7,7 @@ use Drupal\Tests\Composer\ComposerIntegrationTrait;
 
 /**
  * @group Composer
+ * @requires externalCommand composer
  */
 class ComposerValidateTest extends BuildTestBase {
 
