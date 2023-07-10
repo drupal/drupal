@@ -1,0 +1,4 @@
+# Schema for the entity reference 'entity_test_all_except_host' selection
+# handler settings.
+entity_reference_selection.entity_test_all_except_host:
+  type: entity_reference_selection.default
