@@ -1,0 +1,25 @@
+# This is so your IDE knows about the syntax for fixes and autocomplete.
+$schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
+
+# The human readable name.
+name: Disclaimer
+
+# Status can be: "experimental", "stable", "deprecated", "obsolete".
+status: experimental
+
+# Schema for the props. We support www.json-schema.org. Learn more about the
+# syntax there.
+props:
+  # Props are always an object with keys. Each key is a variable in your
+  # component template.
+  type: object
+
+  properties:
+    disclaimer:
+      type: string
+      description: Disclaimer text
+    copyright:
+      type: string
+      description: Copyright text of Disclaimer
+      examples:
+        - Terms & Conditions
