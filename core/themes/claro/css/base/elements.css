@@ -121,38 +121,25 @@ dl {
 
 dl dd,
 dl dl {
-  margin-bottom: 0.625rem;
-  margin-left: 1.25rem; /* LTR */
-}
-
-[dir="rtl"] dl dd,
-[dir="rtl"] dl dl {
-  margin-right: 1.25rem;
+  margin-block-end: 0.625rem;
+  margin-inline-start: 1.25rem;
 }
 
 blockquote {
   position: relative;
-  margin: var(--space-l);
-  margin-left: 2.5rem; /* LTR */
+  margin-block: var(--space-l);
+  margin-inline: 2.5rem var(--space-l);
   font-size: var(--font-size-h6);
-}
-
-[dir="rtl"] blockquote {
-  margin-right: 2.5rem;
 }
 
 blockquote::before {
   position: absolute;
-  left: -2.5rem; /* LTR */
+  inset-inline-start: -2.5rem;
   content: open-quote;
   color: var(--color-absolutezero);
   font-family: var(--font-family-serif);
   font-size: var(--space-xl);
   line-height: 1em;
-}
-
-[dir="rtl"] blockquote::before {
-  right: -2.5rem;
 }
 
 blockquote::after {
@@ -202,33 +189,18 @@ acronym {
 }
 
 ul {
-  margin: 0.25em 0 0.25em 1.5em; /* LTR */
-  padding-left: 0;
+  margin-block: 0.25em;
+  margin-inline: 1.5em 0;
+  padding-inline-start: 0;
   list-style-type: disc;
   list-style-image: none;
 }
 
-[dir="rtl"] ul {
-  margin-right: 1.5em;
-  margin-left: 0;
-  padding-right: 0;
-}
-
-/* This is required to win over specificity of [dir="rtl"] ul */
-
-[dir="rtl"] .messages__list {
-  margin-right: 0;
-}
-
 ol {
-  margin: 0.25em 0 0.25em 2em; /* LTR */
+  margin-block: 0.25em;
+  margin-inline: 2em 0;
   padding: 0;
   list-style-type: decimal;
-}
-
-[dir="rtl"] ol {
-  margin-right: 2em;
-  margin-left: 0;
 }
 
 /**
