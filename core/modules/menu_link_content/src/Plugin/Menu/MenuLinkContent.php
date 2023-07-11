@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Menu\MenuLinkBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\menu_link_content\MenuLinkContentInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -130,7 +131,7 @@ class MenuLinkContent extends MenuLinkBase implements ContainerFactoryPluginInte
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    *   If the entity ID and UUID are both invalid or missing.
    */
-  protected function getEntity() {
+  public function getEntity(): MenuLinkContentInterface {
     if (empty($this->entity)) {
       $entity = NULL;
       $storage = $this->entityTypeManager->getStorage('menu_link_content');

@@ -7,6 +7,7 @@ use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\entity_test\Entity\EntityTestExternal;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
+use Drupal\menu_link_content\Plugin\Menu\MenuLinkContent as MenuLinkContentPlugin;
 use Drupal\system\Entity\Menu;
 use Drupal\user\Entity\User;
 
@@ -431,6 +432,31 @@ class MenuLinksTest extends KernelTestBase {
     $this->assertCount(1, $violations);
     $this->assertEquals('You can only change the hierarchy for the published version of this menu link.', $violations[0]->getMessage());
     $this->assertEquals('menu_parent', $violations[0]->getPropertyPath());
+  }
+
+  /**
+   * Tests that getEntity() method returns correct value.
+   */
+  public function testMenuLinkContentGetEntity(): void {
+    // Set up a custom menu link pointing to a specific path.
+    $user = User::create(['name' => 'username']);
+    $user->save();
+
+    $title = $this->randomMachineName();
+    $menu_link = MenuLinkContent::create([
+      'title' => $title,
+      'link' => [['uri' => 'internal:/' . $user->toUrl('collection')->getInternalPath()]],
+      'menu_name' => 'menu_test',
+    ]);
+    $menu_link->save();
+    $menu_tree = \Drupal::menuTree()->load('menu_test', new MenuTreeParameters());
+    $this->assertCount(1, $menu_tree);
+    /** @var \Drupal\Core\Menu\MenuLinkTreeElement $tree_element */
+    $tree_element = reset($menu_tree);
+    $this->assertInstanceOf(MenuLinkContentPlugin::class, $tree_element->link);
+    $this->assertInstanceOf(MenuLinkContent::class, $tree_element->link->getEntity());
+    $this->assertEquals($title, $tree_element->link->getEntity()->getTitle());
+    $this->assertEquals($menu_link->id(), $tree_element->link->getEntity()->id());
   }
 
 }
