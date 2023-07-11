@@ -87,10 +87,6 @@
   background-color: var(--button-bg-color);
 }
 
-.dropbutton-action {
-  border-inline-end: var(--dropbutton-border-size) solid white;
-}
-
 /* Variants. */
 
 .dropbutton--small {
@@ -140,6 +136,7 @@
 
 .dropbutton__toggle {
   border: var(--dropbutton-border-size) solid transparent !important;
+  border-inline-start: var(--dropbutton-border-size) solid white !important;
 }
 
 .dropbutton__toggle {

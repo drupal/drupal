@@ -77,10 +77,6 @@
   background-color: var(--button-bg-color);
 }
 
-.dropbutton-action {
-  border-inline-end: var(--dropbutton-border-size) solid white;
-}
-
 /* Variants. */
 .dropbutton--small {
   height: var(--dropbutton-small-toggle-size);
@@ -130,6 +126,7 @@
   width: var(--dropbutton-toggle-size);
   height: var(--dropbutton-toggle-size);
   border: var(--dropbutton-border-size) solid transparent !important; /* 1 */
+  border-inline-start: var(--dropbutton-border-size) solid white !important;
   border-radius: 0 var(--button-border-radius-size) var(--button-border-radius-size) 0; /* LTR */
   background: var(--button-bg-color);
   font-size: 1px; /* iOS Safari sets a minimum button-width based on font-size. */
