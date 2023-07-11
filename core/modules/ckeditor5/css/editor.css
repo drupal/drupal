@@ -19,3 +19,8 @@
    * any toolbars. */
   max-height: calc(100vh - var(--drupal-displace-offset-top, 0px) - var(--drupal-displace-offset-bottom, 0px) - 20px);
 }
+
+/* Show the scrollbar on the source editing area. */
+.ck-editor__main > .ck-source-editing-area textarea {
+  overflow: auto;
+}

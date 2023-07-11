@@ -125,6 +125,47 @@ module.exports = {
             );
           },
         )
+        // Source Editor textarea should have vertical scrollbar when needed.
+        .click('.ck-source-editing-button')
+        .waitForElementVisible('.ck-source-editing-area')
+        .execute(
+          // eslint-disable-next-line func-names, prefer-arrow-callback, no-shadow
+          function () {
+            function isScrollableY(element) {
+              const style = window.getComputedStyle(element);
+
+              if (
+                element.scrollHeight > element.clientHeight &&
+                style.overflow !== 'hidden' &&
+                style['overflow-y'] !== 'hidden' &&
+                style.overflow !== 'clip' &&
+                style['overflow-y'] !== 'clip'
+              ) {
+                if (
+                  element === document.scrollingElement ||
+                  (style.overflow !== 'visible' &&
+                    style['overflow-y'] !== 'visible')
+                ) {
+                  return true;
+                }
+              }
+
+              return false;
+            }
+
+            return isScrollableY(
+              document.querySelector('.ck-source-editing-area textarea'),
+            );
+          },
+          [],
+          (result) => {
+            browser.assert.strictEqual(
+              result.value,
+              true,
+              'Source Editor textarea should have vertical scrollbar when needed.',
+            );
+          },
+        )
 
         // Double the editor row count.
         .drupalRelativeURL('/admin/structure/types/manage/test/form-display')
