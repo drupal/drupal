@@ -366,7 +366,7 @@ function olivero_preprocess_field(&$variables) {
   }
 
   if ($variables['field_type'] == 'image' && $variables['element']['#view_mode'] == 'full' && !$variables["element"]["#is_multiple"] && $variables['field_name'] !== 'user_picture') {
-    $variables['attributes']['class'][] = 'wide-image';
+    $variables['attributes']['class'][] = 'wide-content';
   }
 }
 

@@ -48,7 +48,7 @@ global-styling:
       css/components/table.css: {}
       css/components/text-content.css: {}
       css/components/tabledrag.css: {}
-      css/components/wide-image.css: {}
+      css/components/wide-content.css: {}
 
   js:
     js/checkbox.js: {}
