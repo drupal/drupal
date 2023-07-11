@@ -311,17 +311,19 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
   protected function processAssetLibraries(AttachedAssetsInterface $assets, array $placeholders) {
     $variables = [];
 
+    $maintenance_mode = defined('MAINTENANCE_MODE') || \Drupal::state()->get('system.maintenance_mode');
+
     // Print styles - if present.
     if (isset($placeholders['styles'])) {
       // Optimize CSS if necessary, but only during normal site operation.
-      $optimize_css = !defined('MAINTENANCE_MODE') && $this->config->get('css.preprocess');
+      $optimize_css = !$maintenance_mode && $this->config->get('css.preprocess');
       $variables['styles'] = $this->cssCollectionRenderer->render($this->assetResolver->getCssAssets($assets, $optimize_css, $this->languageManager->getCurrentLanguage()));
     }
 
     // Print scripts - if any are present.
     if (isset($placeholders['scripts']) || isset($placeholders['scripts_bottom'])) {
       // Optimize JS if necessary, but only during normal site operation.
-      $optimize_js = !defined('MAINTENANCE_MODE') && !\Drupal::state()->get('system.maintenance_mode') && $this->config->get('js.preprocess');
+      $optimize_js = !$maintenance_mode && $this->config->get('js.preprocess');
       [$js_assets_header, $js_assets_footer] = $this->assetResolver->getJsAssets($assets, $optimize_js, $this->languageManager->getCurrentLanguage());
       $variables['scripts'] = $this->jsCollectionRenderer->render($js_assets_header);
       $variables['scripts_bottom'] = $this->jsCollectionRenderer->render($js_assets_footer);
