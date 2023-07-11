@@ -20,7 +20,7 @@ entity.image_style.delete_form:
     _entity_form: 'image_style.delete'
     _title: 'Delete'
   requirements:
-    _permission: 'administer image styles'
+    _entity_access: 'image_style.delete'
 
 entity.image_style.flush_form:
   path: '/admin/config/media/image-styles/manage/{image_style}/flush'
