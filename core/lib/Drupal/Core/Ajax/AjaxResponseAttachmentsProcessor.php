@@ -133,10 +133,11 @@ class AjaxResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    */
   protected function buildAttachmentsCommands(AjaxResponse $response, Request $request) {
     $ajax_page_state = $request->get('ajax_page_state');
+    $maintenance_mode = defined('MAINTENANCE_MODE') || \Drupal::state()->get('system.maintenance_mode');
 
     // Aggregate CSS/JS if necessary, but only during normal site operation.
-    $optimize_css = !defined('MAINTENANCE_MODE') && $this->config->get('css.preprocess');
-    $optimize_js = !defined('MAINTENANCE_MODE') && $this->config->get('js.preprocess');
+    $optimize_css = !$maintenance_mode && $this->config->get('css.preprocess');
+    $optimize_js = $maintenance_mode && $this->config->get('js.preprocess');
 
     $attachments = $response->getAttachments();
 
