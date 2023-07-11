@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the pgsql_test module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function pgsql_test_schema() {
+  $schema['pgsql_sequence_test'] = [
+    'description' => 'Test sequence changes on pgsql driver.',
+    'fields' => [
+      'sequence_field' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: A serial integer field.',
+      ],
+    ],
+    'primary key' => ['sequence_field'],
+  ];
+  return $schema;
+}

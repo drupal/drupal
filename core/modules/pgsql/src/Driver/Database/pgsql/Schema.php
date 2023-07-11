@@ -982,7 +982,7 @@ EOD;
       // not when altering. Because of that, the sequence needs to be created
       // and initialized by hand.
       $seq = $this->connection->makeSequenceName($table, $field_new);
-      $this->connection->query("CREATE SEQUENCE " . $seq);
+      $this->connection->query("CREATE SEQUENCE " . $seq . " OWNED BY {" . $table . "}.[" . $field_new . ']');
       // Set sequence to maximal field value to not conflict with existing
       // entries.
       $this->connection->query("SELECT setval('" . $seq . "', MAX([" . $field . "])) FROM {" . $table . "}");

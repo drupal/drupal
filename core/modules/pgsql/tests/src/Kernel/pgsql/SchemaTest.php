@@ -4,6 +4,9 @@ namespace Drupal\Tests\pgsql\Kernel\pgsql;
 
 use Drupal\KernelTests\Core\Database\DriverSpecificSchemaTestBase;
 
+// cSpell:ignore relkind objid refobjid regclass attname attrelid attnum
+// cSpell:ignore refobjsubid
+
 /**
  * Tests schema API for the PostgreSQL driver.
  *
@@ -241,6 +244,69 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
 
     // Test the method for an existing extension.
     $this->assertTrue($this->schema->extensionExists('pg_trgm'));
+  }
+
+  /**
+   * Tests if the new sequences get the right ownership.
+   */
+  public function testPgsqlSequences(): void {
+    $table_specification = [
+      'description' => 'A test table with an ANSI reserved keywords for naming.',
+      'fields' => [
+        'uid' => [
+          'description' => 'Simple unique ID.',
+          'type' => 'serial',
+          'not null' => TRUE,
+        ],
+        'update' => [
+          'description' => 'A column with reserved name.',
+          'type' => 'varchar',
+          'length' => 255,
+        ],
+      ],
+      'primary key' => ['uid'],
+      'unique keys' => [
+        'having' => ['update'],
+      ],
+      'indexes' => [
+        'in' => ['uid', 'update'],
+      ],
+    ];
+
+    // Creating a table.
+    $table_name = 'sequence_test';
+    $this->schema->createTable($table_name, $table_specification);
+    $this->assertTrue($this->schema->tableExists($table_name));
+
+    // Retrieves a sequence name that is owned by the table and column.
+    $sequence_name = $this->connection
+      ->query("SELECT pg_get_serial_sequence(:table, :column)", [
+        ':table' => $this->connection->getPrefix() . 'sequence_test',
+        ':column' => 'uid',
+      ])
+      ->fetchField();
+
+    // @todo replace 'public.' with defaultSchema when issue https://www.drupal.org/i/1060476 lands.
+    $this->assertEquals('public.' . $this->connection->getPrefix() . 'sequence_test_uid_seq', $sequence_name);
+
+    // Checks if the sequence exists.
+    $this->assertTrue((bool) \Drupal::database()
+      ->query("SELECT c.relname FROM pg_class as c WHERE c.relkind = 'S' AND c.relname = :name", [
+        ':name' => $this->connection->getPrefix() . 'sequence_test_uid_seq',
+      ])
+      ->fetchField());
+
+    // Retrieves the sequence owner object.
+    $sequence_owner = \Drupal::database()->query("SELECT d.refobjid::regclass as table_name, a.attname as field_name
+      FROM pg_depend d
+      JOIN pg_attribute a ON a.attrelid = d.refobjid AND a.attnum = d.refobjsubid
+      WHERE d.objid = :seq_name::regclass
+      AND d.refobjsubid > 0
+      AND d.classid = 'pg_class'::regclass", [':seq_name' => $sequence_name])->fetchObject();
+
+    $this->assertEquals($this->connection->getPrefix() . 'sequence_test', $sequence_owner->table_name);
+    $this->assertEquals('uid', $sequence_owner->field_name, 'New sequence is owned by its table.');
+
   }
 
 }
