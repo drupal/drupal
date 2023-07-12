@@ -64,13 +64,4 @@ class RedirectFormBlock extends BlockBase implements ContainerFactoryPluginInter
     return $this->formBuilder->getForm('Drupal\form_test\Form\RedirectBlockForm');
   }
 
-  /**
-   * {@inheritdoc}
-   *
-   * @todo Make cacheable once https://www.drupal.org/node/2351015 lands.
-   */
-  public function getCacheMaxAge() {
-    return 0;
-  }
-
 }
