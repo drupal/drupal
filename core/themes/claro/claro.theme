@@ -298,16 +298,6 @@ function claro_element_info_alter(&$type) {
 }
 
 /**
- * Implements template_preprocess_filter_guidelines().
- */
-function claro_preprocess_filter_guidelines(&$variables) {
-  // Fix filter guidelines selector issue of 'filter/drupal.filter'.
-  // @todo Remove when https://www.drupal.org/node/2881212 is fixed.
-  $variables['attributes']['class'][] = 'filter-guidelines-item';
-  $variables['attributes']['class'][] = 'filter-guidelines-' . $variables['format']->id();
-}
-
-/**
  * Implements template_preprocess_text_format_wrapper().
  *
  * @todo Remove when https://www.drupal.org/node/3016343 is fixed.
