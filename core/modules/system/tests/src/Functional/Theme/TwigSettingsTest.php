@@ -92,7 +92,7 @@ class TwigSettingsTest extends BrowserTestBase {
     $this->container->set('theme.registry', NULL);
 
     // Load array of Twig templates.
-    // reset() is necessary to invalidate caches tagged with 'theme_registry'.
+    // reset() is necessary to invalidate caches.
     $registry = $this->container->get('theme.registry');
     $registry->reset();
     $templates = $registry->getRuntime();

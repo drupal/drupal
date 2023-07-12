@@ -6,6 +6,7 @@ use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Extension\ThemeHandlerInterface;
+use Drupal\Core\Theme\Registry;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -34,10 +35,16 @@ class ConfigCacheTag implements EventSubscriberInterface {
    *   The theme handler.
    * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tags_invalidator
    *   The cache tags invalidator.
+   * @param \Drupal\Core\Theme\Registry|null $themeRegistry
+   *   The theme registry.
    */
-  public function __construct(ThemeHandlerInterface $theme_handler, CacheTagsInvalidatorInterface $cache_tags_invalidator) {
+  public function __construct(ThemeHandlerInterface $theme_handler, CacheTagsInvalidatorInterface $cache_tags_invalidator, protected ?Registry $themeRegistry = NULL) {
     $this->themeHandler = $theme_handler;
     $this->cacheTagsInvalidator = $cache_tags_invalidator;
+    if ($this->themeRegistry === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $themeRegistry argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0.', E_USER_DEPRECATED);
+      $this->themeRegistry = \Drupal::service('theme.registry');
+    }
   }
 
   /**
@@ -63,7 +70,8 @@ class ConfigCacheTag implements EventSubscriberInterface {
     // Library and template overrides potentially change for the default theme
     // when the admin theme is changed.
     if ($config_name === 'system.theme' && $event->isChanged('admin')) {
-      $this->cacheTagsInvalidator->invalidateTags(['library_info', 'theme_registry']);
+      $this->themeRegistry->reset();
+      $this->cacheTagsInvalidator->invalidateTags(['library_info']);
     }
 
     // Theme-specific settings, check if this matches a theme settings

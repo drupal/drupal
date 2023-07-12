@@ -113,6 +113,7 @@ function help_modules_uninstalled(array $modules) {
  * Implements hook_themes_uninstalled().
  */
 function help_themes_uninstalled(array $themes) {
+  \Drupal::service('plugin.cache_clearer')->clearCachedDefinitions();
   _help_search_update();
 }
 
@@ -127,6 +128,7 @@ function help_modules_installed(array $modules, $is_syncing) {
  * Implements hook_themes_installed().
  */
 function help_themes_installed(array $themes) {
+  \Drupal::service('plugin.cache_clearer')->clearCachedDefinitions();
   _help_search_update();
 }
 

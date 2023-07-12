@@ -100,9 +100,7 @@ class HelpTopicPluginManager extends DefaultPluginManager implements HelpTopicPl
     // annotated class discovery.
     $this->moduleHandler = $module_handler;
     $this->alterInfo('help_topics_info');
-    // Use the 'config:core.extension' cache tag so the plugin cache is
-    // invalidated on theme install and uninstall.
-    $this->setCacheBackend($cache_backend, 'help_topics', ['config:core.extension']);
+    $this->setCacheBackend($cache_backend, 'help_topics');
   }
 
   /**

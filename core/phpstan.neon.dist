@@ -35,5 +35,4 @@ parameters:
     - "#Drupal calls should be avoided in classes, use dependency injection instead#"
     - "#^Plugin definitions cannot be altered.#"
     - "#^Missing cache backend declaration for performance.#"
-    - "#cache tag might be unclear and does not contain the cache key in it.#"
     - "#^Class .* extends @internal class#"

@@ -55,7 +55,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
   public function __construct(ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager) {
     $this->factory = new ContainerFactory($this, $this->pluginInterface);
     $this->alterInfo('migration_plugins');
-    $this->setCacheBackend($cache_backend, 'migration_plugins', ['migration_plugins']);
+    $this->setCacheBackend($cache_backend, 'migration_plugins');
     $this->moduleHandler = $module_handler;
   }
 

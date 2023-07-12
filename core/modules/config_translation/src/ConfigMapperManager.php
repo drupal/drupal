@@ -37,6 +37,13 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
   protected $themeHandler;
 
   /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected LanguageManagerInterface $languageManager;
+
+  /**
    * {@inheritdoc}
    */
   protected $defaults = [
@@ -62,6 +69,7 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
    */
   public function __construct(CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager, ModuleHandlerInterface $module_handler, TypedConfigManagerInterface $typed_config_manager, ThemeHandlerInterface $theme_handler) {
     $this->typedConfigManager = $typed_config_manager;
+    $this->languageManager = $language_manager;
 
     $this->factory = new ContainerFactory($this, '\Drupal\config_translation\ConfigMapperInterface');
 
@@ -72,7 +80,7 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
     $this->alterInfo('config_translation_info');
     // Config translation only uses an info hook discovery, cache by language.
     $cache_key = 'config_translation_info_plugins' . ':' . $language_manager->getCurrentLanguage()->getId();
-    $this->setCacheBackend($cache_backend, $cache_key, ['config_translation_info_plugins']);
+    $this->setCacheBackend($cache_backend, $cache_key);
   }
 
   /**
@@ -194,6 +202,18 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
       $definition = $element->getDataDefinition();
       return isset($definition['translatable']) && $definition['translatable'];
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function clearCachedDefinitions() {
+    $cids = [];
+    foreach ($this->languageManager->getLanguages() as $language) {
+      $cids[] = 'config_translation_info_plugins:' . $language->getId();
+    }
+    $this->cacheBackend->deleteMultiple($cids);
+    $this->definitions = NULL;
   }
 
 }

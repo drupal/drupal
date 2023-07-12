@@ -43,7 +43,7 @@ class LinkRelationTypeManager extends DefaultPluginManager {
     $this->root = $root;
     $this->pluginInterface = LinkRelationTypeInterface::class;
     $this->moduleHandler = $module_handler;
-    $this->setCacheBackend($cache, 'link_relation_type_plugins', ['link_relation_type']);
+    $this->setCacheBackend($cache, 'link_relation_type_plugins');
   }
 
   /**

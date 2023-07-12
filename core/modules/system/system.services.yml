@@ -41,7 +41,7 @@ services:
       - { name: event_subscriber }
   system.config_cache_tag:
     class: Drupal\system\EventSubscriber\ConfigCacheTag
-    arguments: ['@theme_handler', '@cache_tags.invalidator']
+    arguments: ['@theme_handler', '@cache_tags.invalidator', '@theme.registry']
     tags:
       - { name: event_subscriber }
   system.timezone_resolver:

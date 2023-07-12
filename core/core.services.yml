@@ -1419,7 +1419,7 @@ services:
   Drupal\Core\Executable\ExecutableManagerInterface: '@plugin.manager.condition'
   plugin.manager.element_info:
     class: Drupal\Core\Render\ElementInfoManager
-    arguments: ['@container.namespaces', '@cache.discovery', '@cache_tags.invalidator', '@module_handler', '@theme.manager']
+    arguments: ['@container.namespaces', '@cache.discovery', '@theme_handler', '@module_handler', '@theme.manager']
   Drupal\Core\Render\ElementInfoManagerInterface: '@plugin.manager.element_info'
   stream_wrapper_manager:
     class: Drupal\Core\StreamWrapper\StreamWrapperManager
