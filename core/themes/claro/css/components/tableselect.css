@@ -130,3 +130,9 @@ tr.selected td {
     width: auto;
   }
 }
+
+.position-sticky thead {
+  position: sticky;
+  z-index: 500;
+  top: var(--drupal-displace-offset-top);
+}

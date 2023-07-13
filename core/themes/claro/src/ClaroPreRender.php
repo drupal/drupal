@@ -190,6 +190,17 @@ class ClaroPreRender implements TrustedCallbackInterface {
   }
 
   /**
+   * Prerender callback for table elements.
+   */
+  public static function tablePositionSticky(array $element) {
+    if (isset($element['#attributes']['class']) && in_array('sticky-enabled', $element['#attributes']['class'])) {
+      unset($element['#attributes']['class'][array_search('sticky-enabled', $element['#attributes']['class'])]);
+      $element['#attributes']['class'][] = 'position-sticky';
+    }
+    return $element;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
@@ -200,6 +211,7 @@ class ClaroPreRender implements TrustedCallbackInterface {
       'container',
       'textFormat',
       'messagePlaceholder',
+      'tablePositionSticky',
     ];
   }
 
