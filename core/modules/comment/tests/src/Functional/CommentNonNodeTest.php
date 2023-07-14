@@ -458,9 +458,9 @@ class CommentNonNodeTest extends BrowserTestBase {
     $new_entity = EntityTest::create($data);
     $new_entity->save();
     $this->drupalGet('entity_test/manage/' . $new_entity->id() . '/edit');
-    $this->assertSession()->checkboxNotChecked('edit-field-foobar-0-status-1');
     $this->assertSession()->checkboxChecked('edit-field-foobar-0-status-2');
-    $this->assertSession()->fieldNotExists('edit-field-foobar-0-status-0');
+    $this->assertSession()->checkboxNotChecked('edit-field-foobar-0-status-0');
+    $this->assertSession()->fieldNotExists('edit-field-foobar-0-status-1');
 
     // @todo Check proper URL and form https://www.drupal.org/node/2458323
     $this->drupalGet('comment/reply/entity_test/comment/' . $new_entity->id());
@@ -544,6 +544,7 @@ class CommentNonNodeTest extends BrowserTestBase {
     // with the default value.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('/entity_test/add');
+    $this->assertSession()->checkboxChecked('edit-comment-0-status-0');
     $edit = [
       "name[0][value]" => 'Comment test',
     ];

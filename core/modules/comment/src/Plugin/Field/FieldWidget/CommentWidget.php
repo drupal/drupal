@@ -32,6 +32,7 @@ class CommentWidget extends WidgetBase {
       '#title' => $this->t('Comments'),
       '#title_display' => 'invisible',
       '#default_value' => $items->status,
+      '#required ' => TRUE,
       '#options' => [
         CommentItemInterface::OPEN => $this->t('Open'),
         CommentItemInterface::CLOSED => $this->t('Closed'),
@@ -44,22 +45,18 @@ class CommentWidget extends WidgetBase {
         '#description' => $this->t('Users cannot post comments, but existing comments will be displayed.'),
       ],
       CommentItemInterface::HIDDEN => [
-        '#description' => $this->t('Comments are hidden from view.'),
+        '#description' => $this->t('Comments and the comment form are hidden from view.'),
       ],
     ];
 
-    // Setting a value in the default value widget is required.
-    if ($this->isDefaultValueWidget($form_state)) {
-      $element['status']['#required'] = TRUE;
-    }
-
-    // If the entity doesn't have any comments, the "hidden" option makes no
+    // If the entity doesn't have any comments, the "Closed" option makes no
     // sense, so don't even bother presenting it to the user unless this is the
     // default value widget on the field settings form.
     if (!$this->isDefaultValueWidget($form_state) && !$items->comment_count) {
-      $element['status'][CommentItemInterface::HIDDEN]['#access'] = FALSE;
-      // Also adjust the description of the "closed" option.
-      $element['status'][CommentItemInterface::CLOSED]['#description'] = $this->t('Users cannot post comments.');
+      // Only hide the option when it's not the currently selected option.
+      if ($element['status']['#default_value'] !== CommentItemInterface::CLOSED) {
+        $element['status'][CommentItemInterface::CLOSED]['#access'] = FALSE;
+      }
     }
     // If the advanced settings tabs-set is available (normally rendered in the
     // second column on wide-resolutions), place the field as a details element
