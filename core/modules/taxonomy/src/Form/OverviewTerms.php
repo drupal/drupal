@@ -326,6 +326,7 @@ class OverviewTerms extends FormBase {
       '#empty' => $empty,
       '#header' => [
         'term' => $this->t('Name'),
+        'status' => $this->t('Status'),
         'operations' => $this->t('Operations'),
         'weight' => !$operations_access ? $this->t('Weight') : NULL,
       ],
@@ -338,6 +339,7 @@ class OverviewTerms extends FormBase {
     foreach ($current_page as $key => $term) {
       $form['terms'][$key] = [
         'term' => [],
+        'status' => [],
         'operations' => [],
         'weight' => $update_tree_access->isAllowed() ? [] : NULL,
       ];
@@ -356,6 +358,10 @@ class OverviewTerms extends FormBase {
         '#type' => 'link',
         '#title' => $term->getName(),
         '#url' => $term->toUrl(),
+      ];
+      $form['terms'][$key]['status'] = [
+        '#type' => 'item',
+        '#markup' => ($term->isPublished()) ? t('Published') : t('Unpublished'),
       ];
 
       // Add a special class for terms with pending revision so we can highlight
