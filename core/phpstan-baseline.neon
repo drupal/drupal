@@ -626,11 +626,6 @@ parameters:
 			path: lib/Drupal/Core/Render/MainContent/HtmlRenderer.php
 
 		-
-			message: "#^Variable \\$context in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Render/Renderer.php
-
-		-
 			message: "#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Routing/MatcherDumper.php
