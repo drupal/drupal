@@ -64,9 +64,6 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
       'associative array' => [['test' => 'foobar']],
       'boolean true' => [TRUE],
       'boolean false' => [FALSE],
-      // @todo Not supported. https://www.drupal.org/node/2427811
-      // [new \stdClass()],
-      // [(object) ['test' => 'foobar']],
     ];
   }
 
