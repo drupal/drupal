@@ -32,7 +32,6 @@ class CommentWidget extends WidgetBase {
       '#title' => $this->t('Comments'),
       '#title_display' => 'invisible',
       '#default_value' => $items->status,
-      '#required' => TRUE,
       '#options' => [
         CommentItemInterface::OPEN => $this->t('Open'),
         CommentItemInterface::CLOSED => $this->t('Closed'),
@@ -48,6 +47,12 @@ class CommentWidget extends WidgetBase {
         '#description' => $this->t('Comments are hidden from view.'),
       ],
     ];
+
+    // Setting a value in the default value widget is required.
+    if ($this->isDefaultValueWidget($form_state)) {
+      $element['status']['#required'] = TRUE;
+    }
+
     // If the entity doesn't have any comments, the "hidden" option makes no
     // sense, so don't even bother presenting it to the user unless this is the
     // default value widget on the field settings form.
