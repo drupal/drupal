@@ -63,6 +63,20 @@ class SyslogTest extends KernelTestBase {
   }
 
   /**
+   * Tests that missing facility prevents writing to the syslog.
+   *
+   * @covers ::openConnection
+   */
+  public function testSyslogMissingFacility() {
+    $config = $this->container->get('config.factory')->getEditable('syslog.settings');
+    $config->clear('facility');
+    $config->save();
+    \Drupal::logger('my_module')->warning('My warning message.');
+    $log_filename = $this->container->get('file_system')->realpath('public://syslog.log');
+    $this->assertFileDoesNotExist($log_filename);
+  }
+
+  /**
    * Tests severity level logging.
    *
    * @covers ::log
