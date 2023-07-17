@@ -53,7 +53,6 @@ attrval
 attrvals
 authless
 autocompletefocus
-autocompletesearch
 autocompleteselect
 autocompleting
 autocreate
@@ -63,7 +62,6 @@ autoescape
 autoescaped
 autoescaping
 autofix
-autoformat
 autogenerator
 autoloadable
 autoloaded
@@ -691,7 +689,6 @@ metatags
 meφω
 mglaman
 miaus
-middlewares
 mikey
 milli
 mimetypes
@@ -1035,12 +1032,10 @@ sameline
 samename
 sameorigin
 samesite
-sata
 savepoints
 sayre
 scarlett
 schemaapi
-schemaless
 schemeless
 schipulcon
 scorewords
@@ -1097,7 +1092,6 @@ squiz
 squizlabs
 srcset
 ssess
-ssid
 stardivision
 starrrrr
 starterkit
@@ -1285,7 +1279,6 @@ trailingslash
 transferthick
 translatables
 trayblock
-trex
 trgm
 trid
 troopal
@@ -1371,7 +1364,6 @@ unstripped
 unsynchronized
 untabbable
 untarring
-untruncated
 untrustable
 unvalidated
 unversioned
