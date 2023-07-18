@@ -42,9 +42,7 @@ class RouterUnsupportedTest extends UnitTestCase {
   public function testDeprecatedAdd() {
     // Test needs access to router's protected properties.
     $filters = new \ReflectionProperty(Router::class, 'filters');
-    $filters->setAccessible(TRUE);
     $enhancers = new \ReflectionProperty(Router::class, 'enhancers');
-    $enhancers->setAccessible(TRUE);
 
     $route_provider = $this->prophesize(RouteProviderInterface::class);
     $current_path_stack = $this->prophesize(CurrentPathStack::class);

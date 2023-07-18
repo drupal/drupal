@@ -83,7 +83,6 @@ class MigrationSourceCacheTest extends MigrateTestBase {
 
     // Verify the cache keys are different.
     $cache_key_property = new \ReflectionProperty(SourcePluginBase::class, 'cacheKey');
-    $cache_key_property->setAccessible(TRUE);
     $this->assertNotEquals($cache_key_property->getValue($migration_1_source), $cache_key_property->getValue($migration_2_source));
   }
 
@@ -112,7 +111,6 @@ class MigrationSourceCacheTest extends MigrateTestBase {
 
     // Pollute the cache.
     $cache_key_property = new \ReflectionProperty($migration_source, 'cacheKey');
-    $cache_key_property->setAccessible(TRUE);
     $cache_key = $cache_key_property->getValue($migration_source);
     \Drupal::cache('migrate')->set($cache_key, 7);
     $this->assertCount(7, $migration_source);

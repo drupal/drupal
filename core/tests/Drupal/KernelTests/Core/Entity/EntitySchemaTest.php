@@ -258,7 +258,6 @@ class EntitySchemaTest extends EntityKernelTestBase {
 
     $schema = $this->database->schema();
     $find_primary_key_columns = new \ReflectionMethod(get_class($schema), 'findPrimaryKeyColumns');
-    $find_primary_key_columns->setAccessible(TRUE);
 
     // Build up a map of primary keys depending on the entity type
     // configuration. If the field that is being removed is part of a table's

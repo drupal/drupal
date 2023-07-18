@@ -254,7 +254,6 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
 
     // Test the primary key columns.
     $method = new \ReflectionMethod(get_class($this->schema), 'findPrimaryKeyColumns');
-    $method->setAccessible(TRUE);
     $this->assertSame(['test_serial'], $method->invoke($this->schema, 'test_table'));
 
     $this->assertTrue($this->tryInsert(), 'Insert with a serial succeeded.');
@@ -579,7 +578,6 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
    */
   public function testSchemaChangePrimaryKey(array $initial_primary_key, array $renamed_primary_key): void {
     $find_primary_key_columns = new \ReflectionMethod(get_class($this->schema), 'findPrimaryKeyColumns');
-    $find_primary_key_columns->setAccessible(TRUE);
 
     // Test making the field the primary key of the table upon creation.
     $table_name = 'test_table';
@@ -892,7 +890,6 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
    */
   public function testFindPrimaryKeyColumns(): void {
     $method = new \ReflectionMethod(get_class($this->schema), 'findPrimaryKeyColumns');
-    $method->setAccessible(TRUE);
 
     // Test with single column primary key.
     $this->schema->createTable('table_with_pk_0', [

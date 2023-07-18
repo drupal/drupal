@@ -107,13 +107,11 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
     unset($table_specification['fields']);
 
     $introspect_index_schema = new \ReflectionMethod(get_class($this->schema), 'introspectIndexSchema');
-    $introspect_index_schema->setAccessible(TRUE);
     $index_schema = $introspect_index_schema->invoke($this->schema, $table_name);
 
     // The PostgreSQL driver is using a custom naming scheme for its indexes, so
     // we need to adjust the initial table specification.
     $ensure_identifier_length = new \ReflectionMethod(get_class($this->schema), 'ensureIdentifiersLength');
-    $ensure_identifier_length->setAccessible(TRUE);
 
     foreach ($table_specification['unique keys'] as $original_index_name => $columns) {
       unset($table_specification['unique keys'][$original_index_name]);

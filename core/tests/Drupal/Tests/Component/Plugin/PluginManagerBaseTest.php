@@ -56,7 +56,6 @@ class PluginManagerBaseTest extends TestCase {
     // PluginManagerBase::createInstance() looks for a factory object and then
     // calls createInstance() on it. So we have to mock a factory object.
     $factory_ref = new \ReflectionProperty($manager, 'factory');
-    $factory_ref->setAccessible(TRUE);
     $factory_ref->setValue($manager, $this->getMockFactoryInterface(1));
 
     // Finally the test.
@@ -77,7 +76,6 @@ class PluginManagerBaseTest extends TestCase {
     $manager = new StubFallbackPluginManager();
     // Put our stubbed factory on the base object.
     $factory_ref = new \ReflectionProperty($manager, 'factory');
-    $factory_ref->setAccessible(TRUE);
 
     // Set up the configuration array.
     $configuration_array = ['config' => 'something'];

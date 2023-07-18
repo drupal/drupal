@@ -133,7 +133,6 @@ class CronQueueTest extends KernelTestBase {
     // Ensure that the memory queue expiry time is unchanged after the
     // DelayedRequeueException has been thrown.
     $property = (new \ReflectionClass($memory))->getProperty('queue');
-    $property->setAccessible(TRUE);
     $memory_queue_internal = $property->getValue($memory);
     $this->assertEquals($this->currentTime + $memory_lease_time, reset($memory_queue_internal)->expire);
   }

@@ -258,11 +258,9 @@ class LocalTaskManagerTest extends UnitTestCase {
     $this->manager = new LocalTaskManager($this->argumentResolver, $request_stack, $this->routeMatch, $this->routeProvider, $module_handler, $this->cacheBackend, $language_manager, $this->accessManager, $this->account);
 
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'discovery');
-    $property->setAccessible(TRUE);
     $property->setValue($this->manager, $this->pluginDiscovery);
 
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'factory');
-    $property->setAccessible(TRUE);
     $property->setValue($this->manager, $this->factory);
 
   }

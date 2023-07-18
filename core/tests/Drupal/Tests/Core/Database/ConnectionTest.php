@@ -55,7 +55,6 @@ class ConnectionTest extends UnitTestCase {
     // setPrefix() is protected, so we make it accessible with reflection.
     $reflection = new \ReflectionClass('Drupal\Tests\Core\Database\Stub\StubConnection');
     $set_prefix = $reflection->getMethod('setPrefix');
-    $set_prefix->setAccessible(TRUE);
 
     // Set the prefix data.
     $set_prefix->invokeArgs($connection, [$prefix_info]);
@@ -423,7 +422,6 @@ class ConnectionTest extends UnitTestCase {
     // filterComment() is protected, so we make it accessible with reflection.
     $reflection = new \ReflectionClass('Drupal\Tests\Core\Database\Stub\StubConnection');
     $filter_comment = $reflection->getMethod('filterComment');
-    $filter_comment->setAccessible(TRUE);
 
     $this->assertEquals(
       $expected,
@@ -599,7 +597,6 @@ class ConnectionTest extends UnitTestCase {
     $connection = new StubConnection($mock_pdo, []);
 
     $preprocess_method = new \ReflectionMethod($connection, 'preprocessStatement');
-    $preprocess_method->setAccessible(TRUE);
     $this->assertSame($expected, $preprocess_method->invoke($connection, $query, $options));
   }
 
@@ -663,7 +660,7 @@ class ConnectionTest extends UnitTestCase {
     $result = $connection->findCallerFromDebugBacktrace();
     $this->assertSame([
       'file' => __FILE__,
-      'line' => 663,
+      'line' => 660,
       'function' => 'testFindCallerFromDebugBacktrace',
       'class' => 'Drupal\Tests\Core\Database\ConnectionTest',
       'type' => '->',

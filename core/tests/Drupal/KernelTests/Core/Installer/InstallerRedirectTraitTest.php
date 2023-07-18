@@ -83,12 +83,10 @@ class InstallerRedirectTraitTest extends KernelTestBase {
 
       // Un-protect the method using reflection.
       $method_ref = new \ReflectionMethod($trait, 'shouldRedirectToInstaller');
-      $method_ref->setAccessible(TRUE);
 
       // Mock the database connection info.
       $db = $this->getMockForAbstractClass(Database::class);
       $property_ref = new \ReflectionProperty($db, 'databaseInfo');
-      $property_ref->setAccessible(TRUE);
       $property_ref->setValue($db, ['default' => $connection_info]);
 
       if ($connection) {

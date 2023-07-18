@@ -115,7 +115,6 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
 
     // Gain access to the protected property.
     $property = new \ReflectionProperty($mock, 'targetEntityType');
-    $property->setAccessible(TRUE);
     // Set the property to a known state.
     $property->setValue($mock, $bad_target);
 
@@ -142,7 +141,6 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
 
     // Gain access to the protected property.
     $property = new \ReflectionProperty($mock, 'targetEntityType');
-    $property->setAccessible(TRUE);
     // Set the property to a known state.
     $property->setValue($mock, $target);
 

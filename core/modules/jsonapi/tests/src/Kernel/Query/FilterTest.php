@@ -154,14 +154,11 @@ class FilterTest extends JsonapiKernelTestBase {
       // Expose parts of \Drupal\Core\Entity\Query\Sql\Query::execute().
       $o = new \ReflectionObject($entity_query);
       $m1 = $o->getMethod('prepare');
-      $m1->setAccessible(TRUE);
       $m2 = $o->getMethod('compile');
-      $m2->setAccessible(TRUE);
 
       // The private property computed by the two previous private calls, whose
       // value we need to inspect.
       $p = $o->getProperty('sqlQuery');
-      $p->setAccessible(TRUE);
 
       $m1->invoke($entity_query);
       $m2->invoke($entity_query);

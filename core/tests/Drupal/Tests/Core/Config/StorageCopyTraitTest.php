@@ -87,7 +87,6 @@ class StorageCopyTraitTest extends UnitTestCase {
   protected static function toArray(MemoryStorage $storage) {
     $reflection = new \ReflectionObject($storage);
     $property = $reflection->getProperty('config');
-    $property->setAccessible(TRUE);
 
     return $property->getValue($storage)->getArrayCopy();
   }

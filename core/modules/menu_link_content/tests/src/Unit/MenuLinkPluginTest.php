@@ -23,7 +23,6 @@ class MenuLinkPluginTest extends UnitTestCase {
 
     $class = new \ReflectionClass(MenuLinkContent::class);
     $instance_method = $class->getMethod('getUuid');
-    $instance_method->setAccessible(TRUE);
 
     $this->assertEquals('test_id', $instance_method->invoke($menu_link_content_plugin));
   }
