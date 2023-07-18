@@ -73,12 +73,32 @@ class PathPluginBaseTest extends UnitTestCase {
 
     $config = [
       'views.settings' => [
-        'skip_cache' => TRUE,
         'display_extenders' => [],
       ],
     ];
 
     $container->set('config.factory', $this->getConfigFactoryStub($config));
+
+    $language = $this->createMock('\Drupal\Core\Language\LanguageInterface');
+    $language->expects($this->any())
+      ->method('getId')
+      ->willReturn('nl');
+
+    $language_manager = $this->getMockBuilder('Drupal\Core\Language\LanguageManagerInterface')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $language_manager->expects($this->any())
+      ->method('getCurrentLanguage')
+      ->willReturn($language);
+    $container->set('language_manager', $language_manager);
+
+    $cache = $this->getMockBuilder('Drupal\Core\Cache\CacheBackendInterface')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $cache->expects($this->any())
+      ->method('get')
+      ->willReturn([]);
+    $container->set('cache.data', $cache);
 
     \Drupal::setContainer($container);
   }
@@ -547,6 +567,9 @@ class PathPluginBaseTest extends UnitTestCase {
     $view_entity->expects($this->any())
       ->method('id')
       ->willReturn('test_id');
+    $view_entity->expects($this->any())
+      ->method('getCacheTags')
+      ->willReturn([]);
 
     $view = $this->getMockBuilder('Drupal\views\ViewExecutable')
       ->disableOriginalConstructor()

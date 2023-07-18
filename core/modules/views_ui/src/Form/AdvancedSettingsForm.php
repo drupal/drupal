@@ -40,13 +40,6 @@ class AdvancedSettingsForm extends ConfigFormBase {
       '#open' => TRUE,
     ];
 
-    $form['cache']['skip_cache'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Disable views data caching'),
-      '#description' => $this->t("Views caches data about tables, modules and views available, to increase performance. By checking this box, Views will skip this cache and always rebuild this data when needed. This can have a serious performance impact on your site."),
-      '#default_value' => $config->get('skip_cache'),
-    ];
-
     $form['cache']['clear_cache'] = [
       '#type' => 'submit',
       '#value' => $this->t("Clear Views' cache"),
@@ -90,7 +83,6 @@ class AdvancedSettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('views.settings')
-      ->set('skip_cache', $form_state->getValue('skip_cache'))
       ->set('sql_signature', $form_state->getValue('sql_signature'))
       ->set('display_extenders', $form_state->getValue('display_extenders', []))
       ->save();

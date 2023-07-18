@@ -94,3 +94,13 @@ function views_post_update_fix_revision_id_part(&$sandbox = NULL): void {
       return $view_config_updater->needsRevisionFieldHyphenFix($view);
     });
 }
+
+/**
+ * Remove the skip_cache settings.
+ */
+function views_post_update_remove_skip_cache_setting(): void {
+  \Drupal::configFactory()
+    ->getEditable('views.settings')
+    ->clear('skip_cache')
+    ->save(TRUE);
+}

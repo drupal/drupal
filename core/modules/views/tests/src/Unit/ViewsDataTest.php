@@ -65,16 +65,13 @@ class ViewsDataTest extends UnitTestCase {
     $this->cacheBackend = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->getContainerWithCacheTagsInvalidator($this->cacheTagsInvalidator);
 
-    $configs = [];
-    $configs['views.settings']['skip_cache'] = FALSE;
-    $this->configFactory = $this->getConfigFactoryStub($configs);
     $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->languageManager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
     $this->languageManager->expects($this->any())
       ->method('getCurrentLanguage')
       ->willReturn(new Language(['id' => 'en']));
 
-    $this->viewsData = new ViewsData($this->cacheBackend, $this->configFactory, $this->moduleHandler, $this->languageManager);
+    $this->viewsData = new ViewsData($this->cacheBackend, $this->moduleHandler, $this->languageManager);
   }
 
   /**

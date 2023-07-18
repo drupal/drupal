@@ -58,7 +58,7 @@ services:
     arguments: [wizard, '@container.namespaces', '@cache.discovery', '@module_handler']
   views.views_data:
     class: Drupal\views\ViewsData
-    arguments: ['@cache.default', '@config.factory', '@module_handler', '@language_manager']
+    arguments: ['@cache.default', '@module_handler', '@language_manager']
     tags:
       - { name: backend_overridable }
   Drupal\views\ViewsData: '@views.views_data'

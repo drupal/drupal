@@ -10,9 +10,6 @@ views.settings:
       sequence:
         type: string
         label: 'Display extender'
-    skip_cache:
-      type: boolean
-      label: 'Disable views data caching'
     sql_signature:
       type: boolean
       label: 'Add Views signature to all SQL queries'

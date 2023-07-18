@@ -192,27 +192,20 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       unset($options['defaults']);
     }
 
-    $skip_cache = \Drupal::config('views.settings')->get('skip_cache');
-
-    if (!$skip_cache) {
-      $cid = 'views:unpack_options:' . hash('sha256', serialize([$this->options, $options])) . ':' . \Drupal::languageManager()->getCurrentLanguage()->getId();
-      if (empty(static::$unpackOptions[$cid])) {
-        $cache = \Drupal::cache('data')->get($cid);
-        if (!empty($cache->data)) {
-          $this->options = $cache->data;
-        }
-        else {
-          $this->unpackOptions($this->options, $options);
-          \Drupal::cache('data')->set($cid, $this->options, Cache::PERMANENT, $this->view->storage->getCacheTags());
-        }
-        static::$unpackOptions[$cid] = $this->options;
+    $cid = 'views:unpack_options:' . hash('sha256', serialize([$this->options, $options])) . ':' . \Drupal::languageManager()->getCurrentLanguage()->getId();
+    if (empty(static::$unpackOptions[$cid])) {
+      $cache = \Drupal::cache('data')->get($cid);
+      if (!empty($cache->data)) {
+        $this->options = $cache->data;
       }
       else {
-        $this->options = static::$unpackOptions[$cid];
+        $this->unpackOptions($this->options, $options);
+        \Drupal::cache('data')->set($cid, $this->options, Cache::PERMANENT, $this->view->storage->getCacheTags());
       }
+      static::$unpackOptions[$cid] = $this->options;
     }
     else {
-      $this->unpackOptions($this->options, $options);
+      $this->options = static::$unpackOptions[$cid];
     }
 
     // Mark the view as changed so the user has a chance to save it.
