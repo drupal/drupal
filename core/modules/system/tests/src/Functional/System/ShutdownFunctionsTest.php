@@ -42,18 +42,18 @@ class ShutdownFunctionsTest extends BrowserTestBase {
     $arg2 = $this->randomMachineName();
     $this->drupalGet('system-test/shutdown-functions/' . $arg1 . '/' . $arg2);
 
-    // If using PHP-FPM then fastcgi_finish_request() will have been fired
-    // returning the response before shutdown functions have fired.
+    // If using PHP-FPM or output buffering, the response will be flushed to
+    // the client before shutdown functions have fired.
     // @see \Drupal\system_test\Controller\SystemTestController::shutdownFunctions()
-    $server_using_fastcgi = strpos($this->getSession()->getPage()->getContent(), 'The function fastcgi_finish_request exists when serving the request.');
-    if ($server_using_fastcgi) {
+    $response_will_flush = strpos($this->getSession()->getPage()->getContent(), 'The response will flush before shutdown functions are called.');
+    if ($response_will_flush) {
       // We need to wait to ensure that the shutdown functions have fired.
       sleep(1);
     }
     $this->assertEquals([$arg1, $arg2], \Drupal::state()->get('_system_test_first_shutdown_function'));
     $this->assertEquals([$arg1, $arg2], \Drupal::state()->get('_system_test_second_shutdown_function'));
 
-    if (!$server_using_fastcgi) {
+    if (!$response_will_flush) {
       // Make sure exceptions displayed through
       // \Drupal\Core\Utility\Error::renderExceptionSafe() are correctly
       // escaped.

@@ -501,6 +501,17 @@ function system_requirements($phase) {
     }
   }
 
+  if ($phase === 'runtime') {
+    if (!function_exists('fastcgi_finish_request') && !function_exists('litespeed_finish_request') && !ob_get_status()) {
+      $requirements['output_buffering'] = [
+        'title' => t('Output Buffering'),
+        'error_value' => t('Not enabled'),
+        'severity' => REQUIREMENT_WARNING,
+        'description' => t('<a href="https://www.php.net/manual/en/function.ob-start.php">Output buffering</a> is not enabled. This may degrade Drupal\'s performance. You can enable output buffering by default <a href="https://www.php.net/manual/en/outcontrol.configuration.php#ini.output-buffering">in your PHP settings</a>.'),
+      ];
+    }
+  }
+
   if ($phase == 'install' || $phase == 'update') {
     // Test for PDO (database).
     $requirements['database_extensions'] = [
