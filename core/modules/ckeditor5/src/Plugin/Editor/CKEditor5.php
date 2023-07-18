@@ -859,7 +859,6 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     $paired_editor->enforceIsNew(TRUE);
     $reflector = new \ReflectionObject($paired_editor);
     $property = $reflector->getProperty('filterFormat');
-    $property->setAccessible(TRUE);
     $property->setValue($paired_editor, clone $filter_format);
     return $paired_editor;
   }

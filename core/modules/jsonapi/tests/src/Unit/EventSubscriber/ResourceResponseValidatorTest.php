@@ -103,7 +103,6 @@ class ResourceResponseValidatorTest extends UnitTestCase {
     // Expose protected ResourceResponseSubscriber::validateResponse() method.
     $object = new \ReflectionObject($this->subscriber);
     $method = $object->getMethod('validateResponse');
-    $method->setAccessible(TRUE);
 
     $this->assertSame($expected, $method->invoke($this->subscriber, $response, $request), $description);
   }

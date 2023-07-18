@@ -71,7 +71,6 @@ COMPOUND
     $parser = new TestFileParser();
 
     $ref_parse = new \ReflectionMethod($parser, 'parseContents');
-    $ref_parse->setAccessible(TRUE);
 
     $this->assertSame($expected, $ref_parse->invoke($parser, $contents));
   }

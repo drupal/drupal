@@ -302,7 +302,6 @@ class ContentEntityCloneTest extends EntityKernelTestBase {
     foreach ($properties as $property) {
       // Modify each entity property on the clone and assert that the change is
       // not propagated to the original entity.
-      $property->setAccessible(TRUE);
       $property->setValue($entity, 'default-value');
       $property->setValue($translation, 'default-value');
       $property->setValue($clone, 'test-entity-cloning');

@@ -237,7 +237,6 @@ class ViewStorageTest extends ViewsKernelTestBase {
     // it.
     $view = $this->controller->create([]);
     $ref_generate_display_id = new \ReflectionMethod($view, 'generateDisplayId');
-    $ref_generate_display_id->setAccessible(TRUE);
     $this->assertEquals('default', $ref_generate_display_id->invoke($view, 'default'), 'The plugin ID for default is always default.');
     $this->assertEquals('feed_1', $ref_generate_display_id->invoke($view, 'feed'), 'The generated ID for the first instance of a plugin type should have an suffix of _1.');
     $view->addDisplay('feed', 'feed title');

@@ -79,7 +79,6 @@ class BlockManagerTest extends UnitTestCase {
     ]);
     // Force the discovery object onto the block manager.
     $property = new \ReflectionProperty(BlockManager::class, 'discovery');
-    $property->setAccessible(TRUE);
     $property->setValue($this->blockManager, $discovery->reveal());
   }
 

@@ -90,7 +90,6 @@ class PhpMailTest extends UnitTestCase {
 
     $reflection = new \ReflectionClass($mailer);
     $reflection_property = $reflection->getProperty('request');
-    $reflection_property->setAccessible(TRUE);
     $reflection_property->setValue($mailer, $request);
     return $mailer;
   }

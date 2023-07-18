@@ -51,7 +51,6 @@ class StringTranslationTraitTest extends UnitTestCase {
    */
   public function testT() {
     $method = $this->reflection->getMethod('t');
-    $method->setAccessible(TRUE);
 
     $result = $method->invoke($this->translation, 'something');
     $this->assertInstanceOf(TranslatableMarkup::class, $result);
@@ -63,7 +62,6 @@ class StringTranslationTraitTest extends UnitTestCase {
    */
   public function testFormatPlural() {
     $method = $this->reflection->getMethod('formatPlural');
-    $method->setAccessible(TRUE);
 
     $result = $method->invoke($this->translation, 2, 'apple', 'apples');
     $this->assertInstanceOf(PluralTranslatableMarkup::class, $result);

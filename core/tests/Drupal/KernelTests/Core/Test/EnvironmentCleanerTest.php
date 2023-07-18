@@ -42,7 +42,6 @@ class EnvironmentCleanerTest extends KernelTestBase {
     );
 
     $do_cleanup_ref = new \ReflectionMethod($cleaner, 'doCleanTemporaryDirectories');
-    $do_cleanup_ref->setAccessible(TRUE);
 
     $this->assertFileExists(vfsStream::url('cleanup_test/sites/simpletest/delete_dir/delete.me'));
     $this->assertFileExists(vfsStream::url('cleanup_test/sites/simpletest/delete_me.too'));
