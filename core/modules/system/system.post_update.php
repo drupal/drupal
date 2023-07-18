@@ -111,3 +111,10 @@ function system_post_update_remove_asset_entries() {
   $config->clear('stale_file_threshold');
   $config->save();
 }
+
+/**
+ * Remove redundant asset query string state.
+ */
+function system_post_update_remove_asset_query_string() {
+  \Drupal::state()->delete('system.css_js_query_string');
+}

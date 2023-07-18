@@ -292,6 +292,12 @@ services:
       - { name: cache.bin, default_backend: cache.backend.chainedfast }
     factory: ['@cache_factory', 'get']
     arguments: [discovery]
+  Drupal\Core\Asset\AssetQueryStringInterface: '@asset.query_string'
+  asset.query_string:
+    class: Drupal\Core\Asset\AssetQueryString
+    arguments:
+      - '@state'
+      - '@datetime.time'
   cache_router_rebuild_subscriber:
     class: Drupal\Core\EventSubscriber\CacheRouterRebuildSubscriber
   page_cache_request_policy:
@@ -1580,7 +1586,7 @@ services:
   Drupal\Core\Session\MetadataBag: '@session_manager.metadata_bag'
   asset.css.collection_renderer:
     class: Drupal\Core\Asset\CssCollectionRenderer
-    arguments: [ '@state', '@file_url_generator' ]
+    arguments: [ '@asset.query_string', '@file_url_generator' ]
   asset.css.collection_optimizer:
     class: Drupal\Core\Asset\CssCollectionOptimizerLazy
     arguments: [ '@asset.css.collection_grouper', '@asset.css.optimizer', '@theme.manager', '@library.dependency_resolver', '@request_stack', '@file_system', '@config.factory', '@file_url_generator', '@datetime.time', '@language_manager']
@@ -1594,7 +1600,7 @@ services:
     arguments: ['@file_system']
   asset.js.collection_renderer:
     class: Drupal\Core\Asset\JsCollectionRenderer
-    arguments: [ '@state', '@file_url_generator' ]
+    arguments: [ '@asset.query_string','@file_url_generator' ]
   asset.js.collection_optimizer:
     class: Drupal\Core\Asset\JsCollectionOptimizerLazy
     arguments: [ '@asset.js.collection_grouper', '@asset.js.optimizer', '@theme.manager', '@library.dependency_resolver', '@request_stack', '@file_system', '@config.factory', '@file_url_generator', '@datetime.time', '@language_manager']

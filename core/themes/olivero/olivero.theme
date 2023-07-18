@@ -31,7 +31,7 @@ function olivero_preprocess_html(&$variables) {
   // So fonts can be preloaded from base theme in the event Olivero is used as a subtheme.
   $variables['olivero_path'] = \Drupal::request()->getBasePath() . '/' . \Drupal::service('extension.list.theme')->getPath('olivero');
 
-  $query_string = \Drupal::state()->get('system.css_js_query_string') ?: '0';
+  $query_string = \Drupal::service('asset.query_string')->get();
 
   // Create render array with noscript tag to output non-JavaScript
   // stylesheet for primary menu.

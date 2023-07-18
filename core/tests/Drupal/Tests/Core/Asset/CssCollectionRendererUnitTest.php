@@ -2,10 +2,11 @@
 
 namespace Drupal\Tests\Core\Asset;
 
+use Drupal\Core\Asset\AssetQueryStringInterface;
 use Drupal\Core\Asset\CssCollectionRenderer;
 use Drupal\Core\File\FileUrlGeneratorInterface;
-use Drupal\Tests\UnitTestCase;
 use Drupal\Core\State\StateInterface;
+use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests the CSS asset collection renderer.
@@ -34,6 +35,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
     $state = $this->prophesize(StateInterface::class);
+    $assetQueryString = $this->prophesize(AssetQueryStringInterface::class);
     $file_url_generator = $this->createMock(FileUrlGeneratorInterface::class);
     $file_url_generator->expects($this->any())
       ->method('generateString')
@@ -41,8 +43,8 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
       ->willReturnCallback(function ($uri) {
          return 'generated-relative-url:' . $uri;
       });
-    $state->get('system.css_js_query_string', '0')->shouldBeCalledOnce()->willReturn(NULL);
-    $this->renderer = new CssCollectionRenderer($state->reveal(), $file_url_generator);
+    $assetQueryString->get()->shouldBeCalledOnce()->willReturn('');
+    $this->renderer = new CssCollectionRenderer($assetQueryString->reveal(), $file_url_generator);
     $this->fileCssGroup = [
       'group' => -100,
       'type' => 'file',

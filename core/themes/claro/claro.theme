@@ -44,7 +44,7 @@ function claro_theme_suggestions_details_alter(&$suggestions, $variables) {
  */
 function claro_page_attachments_alter(array &$attachments) {
   $theme_path = \Drupal::request()->getBasePath() . '/' . \Drupal::service('extension.list.theme')->getPath('claro');
-  $query_string = \Drupal::state()->get('system.css_js_query_string') ?: '0';
+  $query_string = \Drupal::service('asset.query_string')->get();
 
   // Attach non-JavaScript specific CSS via a noscript tag to prevent unwanted
   // layout shifts.
