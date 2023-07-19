@@ -354,6 +354,10 @@ class FileSystem implements FileSystemInterface {
       call_user_func($callback, $path);
     }
 
+    if (!file_exists($path)) {
+      return TRUE;
+    }
+
     if (is_dir($path)) {
       $dir = dir($path);
       while (($entry = $dir->read()) !== FALSE) {
