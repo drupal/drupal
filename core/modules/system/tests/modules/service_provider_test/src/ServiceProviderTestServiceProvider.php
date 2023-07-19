@@ -18,6 +18,18 @@ class ServiceProviderTestServiceProvider implements ServiceModifierInterface {
       $definition->setClass('Drupal\service_provider_test\TestFileUsage');
     }
 
+    // Make sure a cached service can be also called in a service provider.
+    // https://www.drupal.org/project/drupal/issues/2363351
+    /** @var \Drupal\Core\Extension\ModuleHandlerInterface $module_handler */
+    $module_handler = $container->get('module_handler');
+    try {
+      $this_module_relative_path = $module_handler->getModule('service_provider_test')->getPath();
+      $container->setParameter('service_provider_test_path', $this_module_relative_path);
+    }
+    catch (\Exception $e) {
+      throw new \LogicException('Unable to identify installation path of this module.');
+    }
+
     if ($indicator = Settings::get('deployment_identifier')) {
       $container->setParameter('container_rebuild_indicator', $indicator);
     }

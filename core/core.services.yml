@@ -4,6 +4,9 @@ parameters:
   # allow IDEs to autocomplete them when writing new service YAML files.
   app.root: ''
   site.path: ''
+  # \Drupal\Core\Cache\ListCacheBinsPass::process() will override this but defining this allows the cache system to
+  # function properly before that runs.
+  cache_default_bin_backends: []
   session.storage.options:
     gc_probability: 1
     gc_divisor: 100
