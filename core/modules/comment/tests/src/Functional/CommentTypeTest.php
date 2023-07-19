@@ -75,10 +75,17 @@ class CommentTypeTest extends CommentTestBase {
       'id' => 'foo',
       'label' => 'title for foo',
       'description' => '',
-      'target_entity_type_id' => 'node',
     ];
     $this->drupalGet('admin/structure/comment/types/add');
+
+    // Ensure that target entity type is a required field.
     $this->submitForm($edit, 'Save and manage fields');
+    $this->assertSession()->pageTextContains('Target entity type field is required.');
+
+    // Ensure that comment type is saved when target entity type is provided.
+    $edit['target_entity_type_id'] = 'node';
+    $this->submitForm($edit, 'Save and manage fields');
+    $this->assertSession()->pageTextContains('Comment type title for foo has been added.');
 
     // Asserts that form submit redirects to the expected manage fields page.
     $this->assertSession()->addressEquals('admin/structure/comment/manage/' . $edit['id'] . '/fields');
@@ -103,6 +110,10 @@ class CommentTypeTest extends CommentTestBase {
     \Drupal::entityTypeManager()->getStorage('comment_type')->resetCache(['foo']);
     $comment_type = CommentType::load('foo');
     $this->assertEquals('node', $comment_type->getTargetEntityTypeId());
+
+    // Ensure that target type is displayed in the comment type list.
+    $this->drupalGet('admin/structure/comment');
+    $this->assertSession()->elementExists('xpath', '//td[text() = "Content"]');
   }
 
   /**
