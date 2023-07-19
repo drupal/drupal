@@ -113,13 +113,6 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   protected $label;
 
   /**
-   * The plugin ID for the row.
-   *
-   * @var string
-   */
-  protected $row;
-
-  /**
    * The source configuration, with at least a 'plugin' key.
    *
    * Used to initialize the $sourcePlugin.
@@ -183,16 +176,6 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    * @var \Drupal\migrate\Plugin\MigrateIdMapInterface
    */
   protected $idMapPlugin;
-
-  /**
-   * The source identifiers.
-   *
-   * An array of source identifiers: the keys are the name of the properties,
-   * the values are dependent on the ID map plugin.
-   *
-   * @var array
-   */
-  protected $sourceIds = [];
 
   /**
    * The destination identifiers.
