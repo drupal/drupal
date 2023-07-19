@@ -801,21 +801,6 @@ parameters:
 			path: modules/book/src/Form/BookOutlineForm.php
 
 		-
-			message: "#^Function _add_ajax_listeners_to_plugin_inputs not found\\.$#"
-			count: 2
-			path: modules/ckeditor5/ckeditor5.module
-
-		-
-			message: "#^Function _add_attachments_to_editor_update_response not found\\.$#"
-			count: 2
-			path: modules/ckeditor5/ckeditor5.module
-
-		-
-			message: "#^Inner named functions are not supported by PHPStan\\. Consider refactoring to an anonymous function, class method, or a top\\-level\\-defined function\\. See issue \\#165 \\(https\\://github\\.com/phpstan/phpstan/issues/165\\) for more details\\.$#"
-			count: 2
-			path: modules/ckeditor5/ckeditor5.module
-
-		-
 			message: "#^Variable \\$ghs_config_classes in empty\\(\\) always exists and is always falsy\\.$#"
 			count: 1
 			path: modules/ckeditor5/src/Plugin/Validation/Constraint/StyleSensibleElementConstraintValidator.php

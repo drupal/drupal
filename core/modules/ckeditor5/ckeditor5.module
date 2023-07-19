@@ -184,45 +184,41 @@ function ckeditor5_form_filter_format_form_alter(array &$form, FormStateInterfac
     ];
   }
 
-  if (!function_exists('_add_ajax_listeners_to_plugin_inputs')) {
-
-    /**
-     * Recursively adds AJAX listeners to plugin settings elements.
-     *
-     * These are added so allowed tags and other fields that have values
-     * dependent on plugin settings can be updated via AJAX when these settings
-     * are changed in the editor form.
-     *
-     * @param array $plugins_config_form
-     *   The plugins config subform render array.
-     */
-    function _add_ajax_listeners_to_plugin_inputs(array &$plugins_config_form): void {
-      $field_types = [
-        'checkbox',
-        'select',
-        'radios',
-        'textarea',
+  /**
+   * Recursively adds AJAX listeners to plugin settings elements.
+   *
+   * These are added so allowed tags and other fields that have values
+   * dependent on plugin settings can be updated via AJAX when these settings
+   * are changed in the editor form.
+   *
+   * @param array $plugins_config_form
+   *   The plugins config subform render array.
+   */
+  $add_listener = function (array &$plugins_config_form) use (&$add_listener): void {
+    $field_types = [
+      'checkbox',
+      'select',
+      'radios',
+      'textarea',
+    ];
+    if (isset($plugins_config_form['#type']) && in_array($plugins_config_form['#type'], $field_types) && !isset($plugins_config_form['#ajax'])) {
+      $plugins_config_form['#ajax'] = [
+        'callback' => '_update_ckeditor5_html_filter',
+        'trigger_as' => ['name' => 'editor_configure'],
+        'event' => 'change',
+        'ckeditor5_only' => 'true',
       ];
-      if (isset($plugins_config_form['#type']) && in_array($plugins_config_form['#type'], $field_types) && !isset($plugins_config_form['#ajax'])) {
-        $plugins_config_form['#ajax'] = [
-          'callback' => '_update_ckeditor5_html_filter',
-          'trigger_as' => ['name' => 'editor_configure'],
-          'event' => 'change',
-          'ckeditor5_only' => 'true',
-        ];
-      }
-
-      foreach ($plugins_config_form as $key => &$value) {
-        if (is_array($value) && !str_contains((string) $key, '#')) {
-          _add_ajax_listeners_to_plugin_inputs($value);
-        }
-      }
     }
 
-  }
+    foreach ($plugins_config_form as $key => &$value) {
+      if (is_array($value) && !str_contains((string) $key, '#')) {
+        $add_listener($value);
+      }
+    }
+  };
 
   if (isset($form['editor']['settings']['subform']['plugins'])) {
-    _add_ajax_listeners_to_plugin_inputs($form['editor']['settings']['subform']['plugins']);
+    $add_listener($form['editor']['settings']['subform']['plugins']);
   }
 
   // Add an ID to the filter settings vertical tabs wrapper to facilitate AJAX
@@ -330,31 +326,27 @@ function _update_ckeditor5_html_filter(array $form, FormStateInterface $form_sta
   $response->addCommand(new InvokeCommand('[data-drupal-selector="edit-editor-editor"]', $ckeditor5_selected_but_errors ? 'addClass' : 'removeClass', ['error']));
   $response->addCommand(new InvokeCommand('[data-drupal-selector="edit-editor-editor"]', $ckeditor5_selected_but_errors ? 'attr' : 'removeAttr', ['data-error-switching-to-ckeditor5', TRUE]));
 
-  if (!function_exists('_add_attachments_to_editor_update_response')) {
-
-    /**
-     * Recursively find #attach items in the form and add as attachments to the
-     * AJAX response.
-     *
-     * @param array $form
-     *   A form array.
-     * @param \Drupal\Core\Ajax\AjaxResponse $response
-     *   The AJAX response attachments will be added to.
-     */
-    function _add_attachments_to_editor_update_response(array $form, AjaxResponse &$response): void {
-      foreach ($form as $key => $value) {
-        if ($key === "#attached") {
-          $response->addAttachments(array_diff_key($value, ['placeholders' => '']));
-        }
-        elseif (is_array($value) && !str_contains((string) $key, '#')) {
-          _add_attachments_to_editor_update_response($value, $response);
-        }
+  /**
+   * Recursively find #attach items in the form and add as attachments to the
+   * AJAX response.
+   *
+   * @param array $form
+   *   A form array.
+   * @param \Drupal\Core\Ajax\AjaxResponse $response
+   *   The AJAX response attachments will be added to.
+   */
+  $attach = function (array $form, AjaxResponse &$response) use (&$attach): void {
+    foreach ($form as $key => $value) {
+      if ($key === "#attached") {
+        $response->addAttachments(array_diff_key($value, ['placeholders' => '']));
+      }
+      elseif (is_array($value) && !str_contains((string) $key, '#')) {
+        $attach($value, $response);
       }
     }
+  };
 
-  }
-
-  _add_attachments_to_editor_update_response($form, $response);
+  $attach($form, $response);
 
   return $response;
 }
