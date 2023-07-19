@@ -47,6 +47,7 @@ class CommentTypeTest extends CommentTestBase {
     parent::setUp();
 
     $this->drupalPlaceBlock('page_title_block');
+    $this->drupalPlaceBlock('system_breadcrumb_block');
 
     $this->adminUser = $this->drupalCreateUser($this->permissions);
   }
@@ -67,6 +68,7 @@ class CommentTypeTest extends CommentTestBase {
     // Ensure that the new comment type admin page can be accessed.
     $this->drupalGet('admin/structure/comment/manage/' . $type->id());
     $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->elementTextEquals('css', 'h1', "Edit {$comment_type->label()} comment type");
 
     // Create a comment type via the user interface.
     $edit = [
@@ -80,6 +82,9 @@ class CommentTypeTest extends CommentTestBase {
 
     // Asserts that form submit redirects to the expected manage fields page.
     $this->assertSession()->addressEquals('admin/structure/comment/manage/' . $edit['id'] . '/fields');
+
+    // Asserts that the comment type is visible in breadcrumb.
+    $this->assertTrue($this->assertSession()->elementExists('css', 'nav[role="navigation"]')->hasLink('title for foo'));
 
     $comment_type = CommentType::load('foo');
     $this->assertInstanceOf(CommentType::class, $comment_type);

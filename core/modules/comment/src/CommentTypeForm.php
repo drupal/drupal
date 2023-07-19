@@ -74,6 +74,10 @@ class CommentTypeForm extends EntityForm {
 
     $comment_type = $this->entity;
 
+    if ($this->operation === 'edit') {
+      $form['#title'] = $this->t('Edit %label comment type', ['%label' => $comment_type->label()]);
+    }
+
     $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),

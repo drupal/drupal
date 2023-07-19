@@ -135,7 +135,7 @@ entity.comment_type.edit_form:
   path: '/admin/structure/comment/manage/{comment_type}'
   defaults:
     _entity_form: 'comment_type.edit'
-    _title: 'Edit'
+    _title_callback: '\Drupal\Core\Entity\Controller\EntityController::title'
   requirements:
     _entity_access: 'comment_type.update'
   options:
