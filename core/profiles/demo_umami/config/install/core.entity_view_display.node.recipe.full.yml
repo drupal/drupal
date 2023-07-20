@@ -15,12 +15,14 @@ dependencies:
     - field.field.node.recipe.field_tags
     - field.field.node.recipe.layout_builder__layout
     - node.type.recipe
+    - views.view.related_recipes
   module:
     - layout_builder
     - layout_discovery
     - options
     - text
     - user
+    - views
   theme:
     - umami
 third_party_settings:
@@ -242,6 +244,26 @@ third_party_settings:
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
+            weight: 0
+            additional: {  }
+        third_party_settings: {  }
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: related
+          context_mapping: {  }
+        components:
+          3164f99a-0a52-403e-a921-fad17cb6e8c7:
+            uuid: 3164f99a-0a52-403e-a921-fad17cb6e8c7
+            region: content
+            configuration:
+              id: 'views_block:related_recipes-related_recipes_block'
+              label: ''
+              label_display: visible
+              provider: views
+              context_mapping: {  }
+              views_label: ''
+              items_per_page: none
             weight: 0
             additional: {  }
         third_party_settings: {  }
