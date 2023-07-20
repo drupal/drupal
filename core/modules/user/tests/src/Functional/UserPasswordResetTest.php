@@ -371,9 +371,9 @@ class UserPasswordResetTest extends BrowserTestBase {
   }
 
   /**
-   * Prefill the text box on incorrect login via link to password reset page.
+   * Tests the text box on incorrect login via link to password reset page.
    */
-  public function testUserResetPasswordTextboxFilled() {
+  public function testUserResetPasswordTextboxNotFilled() {
     $this->drupalGet('user/login');
     $edit = [
       'name' => $this->randomMachineName(),
@@ -383,11 +383,16 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->submitForm($edit, 'Log in');
     $this->assertSession()->pageTextContains("Unrecognized username or password. Forgot your password?");
     $this->assertSession()->linkExists("Forgot your password?");
-    $this->assertSession()->linkByHrefExists(Url::fromRoute('user.pass', [], ['query' => ['name' => $edit['name']]])->toString());
+    // Verify we don't pass the username as a query parameter.
+    $this->assertSession()->linkByHrefNotExists(Url::fromRoute('user.pass', [], ['query' => ['name' => $edit['name']]])->toString());
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('user.pass')->toString());
     unset($edit['pass']);
+    // Verify the field is empty by default.
+    $this->drupalGet('user/password');
+    $this->assertSession()->fieldValueEquals('name', '');
+    // Ensure the name field value is not cached.
     $this->drupalGet('user/password', ['query' => ['name' => $edit['name']]]);
     $this->assertSession()->fieldValueEquals('name', $edit['name']);
-    // Ensure the name field value is not cached.
     $this->drupalGet('user/password');
     $this->assertSession()->fieldValueNotEquals('name', $edit['name']);
   }
