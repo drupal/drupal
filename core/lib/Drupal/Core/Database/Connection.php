@@ -899,6 +899,20 @@ abstract class Connection {
    *   The name of the class that should be used for this driver.
    */
   public function getDriverClass($class) {
+    match($class) {
+      'ExceptionHandler',
+      'Select',
+      'Insert',
+      'Merge',
+      'Upsert',
+      'Update',
+      'Delete',
+      'Truncate',
+      'Schema',
+      'Condition',
+      'Transaction' => @trigger_error('Calling ' . __METHOD__ . '() for \'' . $class . '\' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use standard autoloading in the methods that return database operations. See https://www.drupal.org/node/3217534', E_USER_DEPRECATED),
+      default => NULL,
+    };
     if (empty($this->driverClasses[$class])) {
       $driver_class = $this->connectionOptions['namespace'] . '\\' . $class;
       if (class_exists($driver_class)) {
@@ -963,6 +977,8 @@ abstract class Connection {
    *
    * @return \Drupal\Core\Database\ExceptionHandler
    *   The database exceptions handler.
+   *
+   * @todo in drupal:11.0.0, return a new ExceptionHandler instance directly.
    */
   public function exceptionHandler() {
     $class = $this->getDriverClass('ExceptionHandler');
@@ -987,6 +1003,8 @@ abstract class Connection {
    *   driver.
    *
    * @see \Drupal\Core\Database\Query\Select
+   *
+   * @todo in drupal:11.0.0, return a new Query\Select instance directly.
    */
   public function select($table, $alias = NULL, array $options = []) {
     assert(is_string($alias) || $alias === NULL, 'The \'$alias\' argument to ' . __METHOD__ . '() must be a string or NULL');
@@ -1009,6 +1027,8 @@ abstract class Connection {
    *
    * @see \Drupal\Core\Database\Query\Insert
    * @see \Drupal\Core\Database\Connection::defaultOptions()
+   *
+   * @todo in drupal:11.0.0, return a new Query\Insert instance directly.
    */
   public function insert($table, array $options = []) {
     $class = $this->getDriverClass('Insert');
@@ -1057,6 +1077,8 @@ abstract class Connection {
    *   A new Merge query object.
    *
    * @see \Drupal\Core\Database\Query\Merge
+   *
+   * @todo in drupal:11.0.0, return a new Query\Merge instance directly.
    */
   public function merge($table, array $options = []) {
     $class = $this->getDriverClass('Merge');
@@ -1075,6 +1097,9 @@ abstract class Connection {
    *   A new Upsert query object.
    *
    * @see \Drupal\Core\Database\Query\Upsert
+   *
+   * @todo in drupal:11.0.0, make this method abstract since Query\Upsert is
+   *   an abstract class.
    */
   public function upsert($table, array $options = []) {
     $class = $this->getDriverClass('Upsert');
@@ -1096,6 +1121,8 @@ abstract class Connection {
    *
    * @see \Drupal\Core\Database\Query\Update
    * @see \Drupal\Core\Database\Connection::defaultOptions()
+   *
+   * @todo in drupal:11.0.0, return a new Query\Update instance directly.
    */
   public function update($table, array $options = []) {
     $class = $this->getDriverClass('Update');
@@ -1117,6 +1144,8 @@ abstract class Connection {
    *
    * @see \Drupal\Core\Database\Query\Delete
    * @see \Drupal\Core\Database\Connection::defaultOptions()
+   *
+   * @todo in drupal:11.0.0, return a new Query\Delete instance directly.
    */
   public function delete($table, array $options = []) {
     $class = $this->getDriverClass('Delete');
@@ -1135,6 +1164,8 @@ abstract class Connection {
    *   A new Truncate query object.
    *
    * @see \Drupal\Core\Database\Query\Truncate
+   *
+   * @todo in drupal:11.0.0, return a new Query\Truncate instance directly.
    */
   public function truncate($table, array $options = []) {
     $class = $this->getDriverClass('Truncate');
@@ -1148,6 +1179,9 @@ abstract class Connection {
    *
    * @return \Drupal\Core\Database\Schema
    *   The database Schema object for this connection.
+   *
+   * @todo in drupal:11.0.0, make this method abstract since Schema is
+   *   an abstract class.
    */
   public function schema() {
     if (empty($this->schema)) {
@@ -1167,6 +1201,8 @@ abstract class Connection {
    *   A new Condition query object.
    *
    * @see \Drupal\Core\Database\Query\Condition
+   *
+   * @todo in drupal:11.0.0, return a new Condition instance directly.
    */
   public function condition($conjunction) {
     $class = $this->getDriverClass('Condition');
@@ -1324,6 +1360,8 @@ abstract class Connection {
    *   A Transaction object.
    *
    * @see \Drupal\Core\Database\Transaction
+   *
+   * @todo in drupal:11.0.0, return a new Transaction instance directly.
    */
   public function startTransaction($name = '') {
     $class = $this->getDriverClass('Transaction');

@@ -5,6 +5,7 @@ namespace Drupal\Tests\Core\Database;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\PlaceholderInterface;
+use Drupal\Tests\Core\Database\Stub\StubCondition;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
@@ -184,23 +185,12 @@ class ConditionTest extends UnitTestCase {
    * Tests that the core Condition can be overridden.
    */
   public function testContribCondition() {
-    $mockCondition = $this->getMockBuilder(Condition::class)
-      ->setMockClassName('MockCondition')
-      ->setConstructorArgs([NULL])
-      ->disableOriginalConstructor()
-      ->getMock();
-    $contrib_namespace = 'Drupal\mock\Driver\Database\mock';
-    $mocked_namespace = $contrib_namespace . '\\Condition';
-    class_alias('MockCondition', $mocked_namespace);
-
-    $options['namespace'] = $contrib_namespace;
-    $options['prefix'] = '';
-
-    $mockPdo = $this->createMock(StubPDO::class);
-
-    $connection = new StubConnection($mockPdo, $options);
+    $connection = new StubConnection($this->createMock(StubPDO::class), [
+      'namespace' => 'Drupal\mock\Driver\Database\mock',
+      'prefix' => '',
+    ]);
     $condition = $connection->condition('AND');
-    $this->assertSame('MockCondition', get_class($condition));
+    $this->assertSame(StubCondition::class, get_class($condition));
   }
 
 }

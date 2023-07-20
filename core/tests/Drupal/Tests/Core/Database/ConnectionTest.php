@@ -315,6 +315,7 @@ class ConnectionTest extends UnitTestCase {
   /**
    * @covers ::getDriverClass
    * @dataProvider providerGetDriverClass
+   * @group legacy
    */
   public function testGetDriverClass($expected, $namespace, $class) {
     $additional_class_loader = new ClassLoader();
@@ -324,6 +325,20 @@ class ConnectionTest extends UnitTestCase {
 
     $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
     $connection = new StubConnection($mock_pdo, ['namespace' => $namespace]);
+    match($class) {
+      'ExceptionHandler',
+      'Select',
+      'Insert',
+      'Merge',
+      'Upsert',
+      'Update',
+      'Delete',
+      'Truncate',
+      'Schema',
+      'Condition',
+      'Transaction' => $this->expectDeprecation('Calling Drupal\\Core\\Database\\Connection::getDriverClass() for \'' . $class . '\' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use standard autoloading in the methods that return database operations. See https://www.drupal.org/node/3217534'),
+      default => NULL,
+    };
     $this->assertEquals($expected, $connection->getDriverClass($class));
   }
 
@@ -660,7 +675,7 @@ class ConnectionTest extends UnitTestCase {
     $result = $connection->findCallerFromDebugBacktrace();
     $this->assertSame([
       'file' => __FILE__,
-      'line' => 660,
+      'line' => __LINE__ - 3,
       'function' => 'testFindCallerFromDebugBacktrace',
       'class' => 'Drupal\Tests\Core\Database\ConnectionTest',
       'type' => '->',
