@@ -215,6 +215,7 @@ class FieldStorageAddForm extends FormBase {
           '#parents' => ['new_storage_type'],
           '#title_display' => 'before',
           '#description_display' => 'before',
+          '#theme_wrappers' => ['form_element__new_storage_type'],
           // If it is a category, set return value as the category label,
           // otherwise, set it as the field type id.
           '#return_value' => $display_as_group ? $val['category'] : $val['unique_identifier'],
@@ -284,6 +285,7 @@ class FieldStorageAddForm extends FormBase {
         foreach ($unique_definitions[$selected_field_type] as $option_key => $option) {
           $radio_element = [
             '#type' => 'radio',
+            '#theme_wrappers' => ['form_element__new_storage_type'],
             '#title' => $option['label']->render(),
             '#description' => [
               '#theme' => 'item_list',

@@ -68,9 +68,7 @@ function field_ui_theme() {
     // include default form element classes.
     'form_element__new_storage_type' => [
       'base hook' => 'form_element',
-      'variables' => [
-        'variant' => NULL,
-      ],
+      'render element' => 'element',
     ],
   ];
 }
@@ -225,25 +223,6 @@ function field_ui_form_field_ui_field_storage_add_form_alter(array &$form) {
   // "Other".
   unset($form['add']['new_storage_type']['#options'][$optgroup]['entity_reference']);
   $form['add']['new_storage_type']['#options'][$optgroup]['entity_reference'] = t('Other…');
-}
-
-/**
- * Implements hook_theme_suggestions_HOOK_alter().
- */
-function field_ui_theme_suggestions_form_element_alter(array &$suggestions, array $variables, $hook) {
-  // Create a template suggestions for radio items in the add field form.
-  if ($variables['element']['#type'] !== 'radio' || !isset($variables['element']['#name'])) {
-    return;
-  }
-  $names = [
-    'new_storage_type',
-    'group_field_options_wrapper',
-  ];
-  if (!in_array($variables['element']['#name'], $names, TRUE)) {
-    return;
-  }
-
-  $suggestions[] = $hook . '__new_storage_type';
 }
 
 /**
