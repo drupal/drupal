@@ -2,50 +2,138 @@
 
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 /**
  * Validates that a field is unique for the given entity type.
  */
-class UniqueFieldValueValidator extends ConstraintValidator {
+class UniqueFieldValueValidator extends ConstraintValidator implements ContainerInjectionInterface {
+
+  /**
+   * Creates a UniqueFieldValueValidator object.
+   *
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
+   *   The entity type manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The entity type manager.
+   */
+  public function __construct(protected EntityFieldManagerInterface $entityFieldManager, protected EntityTypeManagerInterface $entityTypeManager) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity_field.manager'),
+      $container->get('entity_type.manager')
+    );
+  }
 
   /**
    * {@inheritdoc}
    */
   public function validate($items, Constraint $constraint) {
-    if (!$item = $items->first()) {
+    if (!$items->first()) {
       return;
     }
-    $field_name = $items->getFieldDefinition()->getName();
+
     /** @var \Drupal\Core\Entity\EntityInterface $entity */
     $entity = $items->getEntity();
-    $entity_type_id = $entity->getEntityTypeId();
-    $id_key = $entity->getEntityType()->getKey('id');
+    $entity_type = $entity->getEntityType();
+    $entity_type_id = $entity_type->id();
+    $entity_label = $entity->getEntityType()->getSingularLabel();
 
-    $query = \Drupal::entityQuery($entity_type_id)
-      ->accessCheck(FALSE);
+    $field_name = $items->getFieldDefinition()->getName();
+    $field_label = $items->getFieldDefinition()->getLabel();
+    $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($entity_type_id);
+    $property_name = $field_storage_definitions[$field_name]->getMainPropertyName();
 
-    $entity_id = $entity->id();
-    // Using isset() instead of !empty() as 0 and '0' are valid ID values for
-    // entity types using string IDs.
-    if (isset($entity_id)) {
+    $id_key = $entity_type->getKey('id');
+    $is_multiple = $field_storage_definitions[$field_name]->isMultiple();
+    $is_new = $entity->isNew();
+    $item_values = array_column($items->getValue(), $property_name);
+
+    // Check if any item values for this field already exist in other entities.
+    $query = $this->entityTypeManager
+      ->getStorage($entity_type_id)
+      ->getAggregateQuery()
+      ->accessCheck(FALSE)
+      ->condition($field_name, $item_values, 'IN')
+      ->groupBy("$field_name.$property_name");
+    if (!$is_new) {
+      $entity_id = $entity->id();
       $query->condition($id_key, $entity_id, '<>');
     }
+    $results = $query->execute();
 
-    $value_taken = (bool) $query
-      ->condition($field_name, $item->value)
-      ->range(0, 1)
-      ->count()
-      ->execute();
+    if (!empty($results)) {
+      // The results array is a single-column multidimensional array. The
+      // column key includes the field name but may or may not include the
+      // property name. Pop the column key from the first result to be sure.
+      $column_key = key(reset($results));
+      $other_entity_values = array_column($results, $column_key);
 
-    if ($value_taken) {
-      $this->context->addViolation($constraint->message, [
-        '%value' => $item->value,
-        '@entity_type' => $entity->getEntityType()->getSingularLabel(),
-        '@field_name' => $items->getFieldDefinition()->getLabel(),
-      ]);
+      // If our entity duplicates field values in any other entity, the query
+      // will return all field values that belong to those entities. Narrow
+      // down to only the specific duplicate values.
+      $duplicate_values = array_intersect($item_values, $other_entity_values);
+
+      foreach ($duplicate_values as $delta => $dupe) {
+        $violation = $this->context
+          ->buildViolation($constraint->message)
+          ->setParameter('@entity_type', $entity_label)
+          ->setParameter('@field_name', $field_label)
+          ->setParameter('%value', $dupe);
+        if ($is_multiple) {
+          $violation->atPath($delta);
+        }
+        $violation->addViolation();
+      }
     }
+
+    // Check if items are duplicated within this entity.
+    if ($is_multiple) {
+      $duplicate_values = $this->extractDuplicates($item_values);
+      foreach ($duplicate_values as $delta => $dupe) {
+        $this->context
+          ->buildViolation($constraint->message)
+          ->setParameter('@entity_type', $entity_label)
+          ->setParameter('@field_name', $field_label)
+          ->setParameter('%value', $dupe)
+          ->atPath($delta)
+          ->addViolation();
+      }
+    }
+  }
+
+  /**
+   * Get an array of duplicate field values.
+   *
+   * @param array $item_values
+   *   The item values.
+   *
+   * @return array
+   *   Item values only for deltas that duplicate an earlier delta.
+   */
+  private function extractDuplicates(array $item_values): array {
+    $value_frequency = array_count_values($item_values);
+
+    // Filter out item values which are not duplicates while preserving deltas
+    $duplicate_values = array_intersect($item_values, array_keys(array_filter(
+      $value_frequency, function ($value) {
+        return $value > 1;
+      })
+    ));
+
+    // Exclude the first delta of each duplicate value.
+    $first_deltas = array_unique($duplicate_values);
+    return array_diff_key($duplicate_values, $first_deltas);
   }
 
 }

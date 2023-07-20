@@ -7,3 +7,4 @@ dependencies:
   - drupal:field
   - drupal:text
   - drupal:system
+  - drupal:user
