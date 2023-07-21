@@ -27,11 +27,13 @@ use Drupal\Core\Entity\EntityFormModeInterface;
  *   label = @Translation("Form mode"),
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "label"
+ *     "label" = "label",
+ *     "description" = "description",
  *   },
  *   config_export = {
  *     "id",
  *     "label",
+ *     "description",
  *     "targetEntityType",
  *     "cache",
  *   }

@@ -5,5 +5,6 @@ dependencies:
     - node
 id: node.full
 label: 'Full content'
+description: ''
 targetEntityType: node
 cache: true

@@ -60,6 +60,7 @@ class EntityDisplayModeListBuilder extends ConfigEntityListBuilder {
    */
   public function buildHeader() {
     $header['label'] = $this->t('Name');
+    $header['description'] = $this->t('Description');
     return $header + parent::buildHeader();
   }
 
@@ -68,6 +69,7 @@ class EntityDisplayModeListBuilder extends ConfigEntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     $row['label'] = $entity->label();
+    $row['description'] = $entity->getDescription();
     return $row + parent::buildRow($entity);
   }
 

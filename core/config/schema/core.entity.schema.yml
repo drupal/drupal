@@ -10,6 +10,9 @@ core.entity_view_mode.*.*:
     label:
       type: label
       label: 'The human-readable name of the view mode'
+    description:
+      type: text
+      label: 'Description'
     targetEntityType:
       type: string
       label: 'Target entity type'
@@ -27,6 +30,9 @@ core.entity_form_mode.*.*:
     label:
       type: label
       label: 'Label'
+    description:
+      type: text
+      label: 'Description'
     targetEntityType:
       type: string
       label: 'Target entity type'

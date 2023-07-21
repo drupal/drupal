@@ -15,6 +15,8 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Datetime\TimeZoneFormHelper;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
+use Drupal\Core\Entity\EntityViewModeInterface;
+use Drupal\Core\Entity\EntityFormModeInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\TimestampFormatter;
@@ -1394,5 +1396,31 @@ function system_entity_view_display_presave(EntityViewDisplayInterface $entity_v
       @trigger_error("The 'timestamp' formatter plugin 'tooltip' and 'time_diff' settings were added in drupal:10.1.0 and will be mandatory in Drupal 11.0.0. See https://www.drupal.org/node/2993639", E_USER_DEPRECATED);
       $entity_view_display->setComponent($name, $component);
     }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for view mode entities.
+ *
+ * Sets the description property to an empty string.
+ *
+ * @todo Remove this BC layer in drupal:11.0.0.
+ */
+function system_entity_view_mode_presave(EntityViewModeInterface $entity_view_mode) {
+  if ($entity_view_mode->get('description') === NULL) {
+    $entity_view_mode->set('description', '');
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for form mode entities.
+ *
+ * Sets the description property to an empty string.
+ *
+ * @todo Remove this BC layer in drupal:11.0.0.
+ */
+function system_entity_form_mode_presave(EntityFormModeInterface $entity_form_mode) {
+  if ($entity_form_mode->get('description') === NULL) {
+    $entity_form_mode->set('description', '');
   }
 }

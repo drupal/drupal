@@ -89,6 +89,15 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
       '#default_value' => $this->entity->label(),
     ];
 
+    $form['description'] = [
+      '#title' => $this->t('Description'),
+      '#type' => 'textarea',
+      '#default_value' => $this->entity->getDescription(),
+      '#description' => $this->t('This text will be displayed on the @mode_label list page.', [
+        '@mode_label' => $this->entity->getEntityType()->getPluralLabel(),
+      ]),
+    ];
+
     $form['id'] = [
       '#type' => 'machine_name',
       '#description' => $this->t('A unique machine-readable name. Can only contain lowercase letters, numbers, and underscores.'),

@@ -5,5 +5,6 @@ dependencies:
     - taxonomy
 id: taxonomy_term.full
 label: 'Taxonomy term page'
+description: ''
 targetEntityType: taxonomy_term
 cache: true
