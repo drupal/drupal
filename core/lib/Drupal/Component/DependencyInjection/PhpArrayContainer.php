@@ -165,6 +165,13 @@ class PhpArrayContainer extends Container {
 
           continue;
         }
+        elseif ($type == 'service_closure') {
+          $arguments[$key] = function () use ($argument) {
+            return $this->get($argument->id, $argument->invalidBehavior);
+          };
+
+          continue;
+        }
         elseif ($type == 'raw') {
           $arguments[$key] = $argument->value;
 
