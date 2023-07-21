@@ -23,6 +23,7 @@ use Drupal\Tests\BrowserTestBase;
  * initial state and availability scenario.
  */
 abstract class UpdateTestBase extends BrowserTestBase {
+  use UpdateTestTrait;
 
   /**
    * Denotes a security update will be required in the test case.
@@ -70,7 +71,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
     // update_test module.
     $this->config('update.settings')->set('fetch.url', Url::fromUri('base:' . $url, ['absolute' => TRUE])->toString())->save();
     // Save the map for UpdateTestController::updateTest() to use.
-    $this->config('update_test.settings')->set('xml_map', $xml_map)->save();
+    $this->mockReleaseHistory($xml_map);
     // Manually check the update status.
     $this->drupalGet('admin/reports/updates');
     $this->clickLink('Check manually');

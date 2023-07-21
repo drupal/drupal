@@ -10,6 +10,7 @@ namespace Drupal\Tests\update\Functional;
  * @group update
  */
 class UpdateManagerUpdateTest extends UpdateTestBase {
+  use UpdateTestTrait;
 
   /**
    * Modules to enable.
@@ -42,10 +43,7 @@ class UpdateManagerUpdateTest extends UpdateTestBase {
     // The installed state of the system is the same for all test cases. What
     // varies for each test scenario is which release history fixture we fetch,
     // which in turn changes the expected state of the UpdateManagerUpdateForm.
-    $system_info = [
-      '#all' => [
-        'version' => '8.0.0',
-      ],
+    $this->mockInstalledExtensionsInfo([
       'aaa_update_test' => [
         'project' => 'aaa_update_test',
         'version' => '8.x-1.0',
@@ -56,8 +54,8 @@ class UpdateManagerUpdateTest extends UpdateTestBase {
         'version' => '8.x-1.0',
         'hidden' => FALSE,
       ],
-    ];
-    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    ]);
+    $this->mockDefaultExtensionsInfo(['version' => '8.0.0']);
   }
 
   /**
