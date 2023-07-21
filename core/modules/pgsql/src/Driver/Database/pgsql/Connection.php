@@ -184,15 +184,6 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   public function query($query, array $args = [], $options = []) {
     $options += $this->defaultOptions();
 
-    // The PDO PostgreSQL driver has a bug which doesn't type cast booleans
-    // correctly when parameters are bound using associative arrays.
-    // @see http://bugs.php.net/bug.php?id=48383
-    foreach ($args as &$value) {
-      if (is_bool($value)) {
-        $value = (int) $value;
-      }
-    }
-
     // We need to wrap queries with a savepoint if:
     // - Currently in a transaction.
     // - A 'mimic_implicit_commit' does not exist already.
