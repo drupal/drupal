@@ -246,7 +246,10 @@
  *   module B some time later, then module A's config/optional directory will be
  *   scanned at that time for newly met dependencies, and the configuration will
  *   be installed then. If module B is never installed, the configuration item
- *   will not be installed either.
+ *   will not be installed either. Optional configuration items are ignored if
+ *   they already exist or if they are not configuration entities (this also
+ *   includes configuration that has an implicit dependency on modules that
+ *   are not yet installed).
  * - Exporting and importing configuration.
  *
  * The file storage format for configuration information in Drupal is
