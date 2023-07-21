@@ -1,0 +1,4 @@
+test_category:
+  label: 'Test category'
+  description: 'This is a test field type category.'
+  weight: -10

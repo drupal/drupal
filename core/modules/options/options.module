@@ -140,19 +140,6 @@ function _options_values_in_use($entity_type, $field_name, $values) {
 }
 
 /**
- * Implements hook_field_type_category_info().
- */
-function options_field_type_category_info() {
-  return [
-    'selection_list' => [
-      'label' => t('Selection list'),
-      'description' => t('Field to select from predefined options.'),
-      'weight' => -15,
-    ],
-  ];
-}
-
-/**
  * Implements hook_form_FORM_ID_alter().
  *
  * Add additional classes to enable styling for list field types.

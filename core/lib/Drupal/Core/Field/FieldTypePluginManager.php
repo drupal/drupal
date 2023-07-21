@@ -46,12 +46,18 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
    *   The module handler.
    * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data_manager
    *   The typed data manager.
+   * @param \Drupal\Core\Field\FieldTypeCategoryManagerInterface|null $fieldTypeCategoryManager
+   *   The field type category plugin manager.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, TypedDataManagerInterface $typed_data_manager) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, TypedDataManagerInterface $typed_data_manager, protected ?FieldTypeCategoryManagerInterface $fieldTypeCategoryManager = NULL) {
     parent::__construct('Plugin/Field/FieldType', $namespaces, $module_handler, 'Drupal\Core\Field\FieldItemInterface', 'Drupal\Core\Field\Annotation\FieldType');
     $this->alterInfo('field_info');
     $this->setCacheBackend($cache_backend, 'field_types_plugins');
     $this->typedDataManager = $typed_data_manager;
+    if ($this->fieldTypeCategoryManager === NULL) {
+      @trigger_error('Calling FieldTypePluginManager::__construct() without the $fieldTypeCategoryManager argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3375737', E_USER_DEPRECATED);
+      $this->fieldTypeCategoryManager = \Drupal::service('plugin.manager.field.field_type_category');
+    }
   }
 
   /**
@@ -162,10 +168,10 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
    */
   public function getGroupedDefinitions(array $definitions = NULL, $label_key = 'label') {
     $grouped_categories = $this->getGroupedDefinitionsTrait($definitions, $label_key);
-    $category_info = \Drupal::moduleHandler()->invokeAll('field_type_category_info');
+    $category_info = $this->fieldTypeCategoryManager->getDefinitions();
     foreach ($grouped_categories as $group => $definitions) {
       if (!isset($category_info[$group]) && $group !== static::DEFAULT_CATEGORY) {
-        assert(FALSE, "\"$group\" must be defined in hook_field_type_category_info().");
+        assert(FALSE, "\"$group\" must be defined in MODULE_NAME.field_type_categories.yml");
         $grouped_categories[static::DEFAULT_CATEGORY] += $definitions;
         unset($grouped_categories[$group]);
       }

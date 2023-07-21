@@ -1,0 +1,18 @@
+plain_text:
+  label: 'Plain text'
+  description: 'Text field that does not support markup.'
+  weight: -50
+number:
+  label: 'Number'
+  description: 'Field to store number. I.e. id, price, or quantity.'
+  weight: -40
+reference:
+  label: 'Reference'
+  description: 'Field to reference other content.'
+  weight: -30
+date_time:
+  label: 'Date and time'
+  description: 'Field to store date and time values.'
+  weight: -10
+general:
+  class: \Drupal\Core\Field\FallbackFieldTypeCategory
