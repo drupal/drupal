@@ -15,18 +15,21 @@
 @media (min-width: 61rem) {
   .layout-node-form {
     display: grid;
+    grid-template-rows: auto 1fr;
     grid-template-columns: 3fr minmax(360px, 1fr);
     gap: var(--space-l);
   }
 
   .layout-region--node-main,
   .layout-region--node-footer {
+    grid-column: 1;
     margin-inline: auto;
     width: min(832px, 100%);
   }
 
   /* Push sidebar down to horizontal align with form section. */
   .layout-region--node-secondary {
+    grid-row: span 2;
     margin-block-start: var(--space-l);
   }
 }
