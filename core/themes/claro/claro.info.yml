@@ -155,6 +155,8 @@ libraries-extend:
     - claro/media_library.theme
   media_library/widget:
     - claro/media_library.theme
+  image/admin:
+    - claro/image.admin
 
 regions:
   header: Header

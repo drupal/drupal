@@ -147,6 +147,12 @@ media-form:
   dependencies:
     - media/form
 
+image.admin:
+  version: VERSION
+  css:
+    component:
+      css/components/image.admin.css: {}
+
 system.admin:
   version: VERSION
   css:
