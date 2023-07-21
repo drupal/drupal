@@ -114,6 +114,15 @@ _core_config_info:
     default_config_hash:
       type: string
       label: 'Default configuration hash'
+      constraints:
+        NotNull: []
+        Regex: '/^[a-zA-Z0-9\-_]+$/'
+        # The hash is a base64-encoded version of the config's SHA-256 hash. Given
+        # the deterministic length of a SHA-256 hash, and the way base64 encoding
+        # works, this is always going to be 43 characters long.
+        Length: 43
+  constraints:
+    ValidKeys: ['default_config_hash']
 
 config_object:
   type: mapping
