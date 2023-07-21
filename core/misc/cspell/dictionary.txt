@@ -123,7 +123,6 @@ blocknodebundle
 blockpromoted
 blockquotes
 blockrecipe
-blockrelated
 blocktest
 bloggy
 blub
