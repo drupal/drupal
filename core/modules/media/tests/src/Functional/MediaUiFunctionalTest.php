@@ -27,7 +27,6 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     'block',
     'media_test_source',
     'media',
-    'media_library',
   ];
 
   /**
