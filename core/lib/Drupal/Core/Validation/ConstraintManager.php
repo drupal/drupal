@@ -7,6 +7,11 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Validation\Plugin\Validation\Constraint\EmailConstraint;
+use Symfony\Component\Validator\Constraints\Blank;
+use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Constraints\Choice;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Constraint plugin manager.
@@ -87,23 +92,28 @@ class ConstraintManager extends DefaultPluginManager {
   public function registerDefinitions() {
     $this->getDiscovery()->setDefinition('Callback', [
       'label' => new TranslatableMarkup('Callback'),
-      'class' => '\Symfony\Component\Validator\Constraints\Callback',
+      'class' => Callback::class,
       'type' => FALSE,
     ]);
     $this->getDiscovery()->setDefinition('Blank', [
       'label' => new TranslatableMarkup('Blank'),
-      'class' => '\Symfony\Component\Validator\Constraints\Blank',
+      'class' => Blank::class,
       'type' => FALSE,
     ]);
     $this->getDiscovery()->setDefinition('NotBlank', [
       'label' => new TranslatableMarkup('Not blank'),
-      'class' => '\Symfony\Component\Validator\Constraints\NotBlank',
+      'class' => NotBlank::class,
       'type' => FALSE,
     ]);
     $this->getDiscovery()->setDefinition('Email', [
       'label' => new TranslatableMarkup('Email'),
-      'class' => '\Drupal\Core\Validation\Plugin\Validation\Constraint\EmailConstraint',
+      'class' => EmailConstraint::class,
       'type' => ['string'],
+    ]);
+    $this->getDiscovery()->setDefinition('Choice', [
+      'label' => new TranslatableMarkup('Choice'),
+      'class' => Choice::class,
+      'type' => FALSE,
     ]);
   }
 

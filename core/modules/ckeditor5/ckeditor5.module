@@ -23,7 +23,6 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\editor\EditorInterface;
-use Symfony\Component\Validator\Constraints\Choice;
 
 /**
  * Implements hook_help().
@@ -565,24 +564,6 @@ function ckeditor5_js_alter(&$javascript, AttachedAssetsInterface $assets, Langu
         unset($javascript[$index]);
       }
     }
-  }
-}
-
-/**
- * Implements hook_validation_constraint_alter().
- */
-function ckeditor5_validation_constraint_alter(array &$definitions) {
-  // Add the Symfony validation constraints that Drupal core does not add in
-  // \Drupal\Core\Validation\ConstraintManager::registerDefinitions() for
-  // unknown reasons. Do it defensively, to not break when this changes.
-  if (!isset($definitions['Choice'])) {
-    $definitions['Choice'] = [
-      'label' => 'Choice',
-      'class' => Choice::class,
-      'type' => FALSE,
-      'provider' => 'core',
-      'id' => 'Choice',
-    ];
   }
 }
 

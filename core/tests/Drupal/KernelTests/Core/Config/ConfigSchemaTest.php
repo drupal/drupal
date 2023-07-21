@@ -68,8 +68,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected = [];
     $expected['label'] = 'Schema test data';
     $expected['class'] = Mapping::class;
-    $expected['mapping']['langcode']['type'] = 'string';
-    $expected['mapping']['langcode']['label'] = 'Language code';
+    $expected['mapping']['langcode']['type'] = 'langcode';
     $expected['mapping']['_core']['type'] = '_core_config_info';
     $expected['mapping']['testitem'] = ['label' => 'Test item'];
     $expected['mapping']['testlist'] = ['label' => 'Test list'];
@@ -115,8 +114,7 @@ class ConfigSchemaTest extends KernelTestBase {
       'type' => 'text',
     ];
     $expected['mapping']['langcode'] = [
-      'label' => 'Language code',
-      'type' => 'string',
+      'type' => 'langcode',
     ];
     $expected['mapping']['_core']['type'] = '_core_config_info';
     $expected['type'] = 'system.maintenance';
@@ -131,8 +129,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['class'] = Mapping::class;
     $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
     $expected['mapping']['langcode'] = [
-      'type' => 'string',
-      'label' => 'Language code',
+      'type' => 'langcode',
     ];
     $expected['mapping']['_core']['type'] = '_core_config_info';
     $expected['mapping']['label'] = [
@@ -179,8 +176,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['mapping']['name']['type'] = 'machine_name';
     $expected['mapping']['uuid']['type'] = 'uuid';
     $expected['mapping']['uuid']['label'] = 'UUID';
-    $expected['mapping']['langcode']['type'] = 'string';
-    $expected['mapping']['langcode']['label'] = 'Language code';
+    $expected['mapping']['langcode']['type'] = 'langcode';
     $expected['mapping']['status']['type'] = 'boolean';
     $expected['mapping']['status']['label'] = 'Status';
     $expected['mapping']['dependencies']['type'] = 'config_dependencies';
@@ -247,8 +243,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected = [];
     $expected['label'] = 'Schema multiple filesystem marker test';
     $expected['class'] = Mapping::class;
-    $expected['mapping']['langcode']['type'] = 'string';
-    $expected['mapping']['langcode']['label'] = 'Language code';
+    $expected['mapping']['langcode']['type'] = 'langcode';
     $expected['mapping']['_core']['type'] = '_core_config_info';
     $expected['mapping']['testid']['type'] = 'string';
     $expected['mapping']['testid']['label'] = 'ID';
@@ -518,8 +513,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['class'] = Mapping::class;
     $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
     $expected['unwrap_for_canonical_representation'] = TRUE;
-    $expected['mapping']['langcode']['type'] = 'string';
-    $expected['mapping']['langcode']['label'] = 'Language code';
+    $expected['mapping']['langcode']['type'] = 'langcode';
     $expected['mapping']['_core']['type'] = '_core_config_info';
     $expected['mapping']['testid']['type'] = 'string';
     $expected['mapping']['testid']['label'] = 'ID';

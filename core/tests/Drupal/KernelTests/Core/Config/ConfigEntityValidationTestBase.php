@@ -4,7 +4,11 @@ namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\TypedData\Plugin\DataType\LanguageReference;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
  * Base class for testing validation of config entities.
@@ -309,6 +313,55 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
       }
     }
     $this->assertSame($expected_messages, $actual_messages);
+  }
+
+  /**
+   * Tests that the config entity's langcode is validated.
+   */
+  public function testLangcode(): void {
+    $this->entity->set('langcode', NULL);
+    $this->assertValidationErrors([
+      'langcode' => 'This value should not be null.',
+    ]);
+
+    // A langcode from the standard list should always be acceptable.
+    $standard_languages = LanguageManager::getStandardLanguageList();
+    $this->assertNotEmpty($standard_languages);
+    $this->entity->set('langcode', key($standard_languages));
+    $this->assertValidationErrors([]);
+
+    // All special, internal langcodes should be acceptable.
+    $system_langcodes = [
+      LanguageInterface::LANGCODE_NOT_SPECIFIED,
+      LanguageInterface::LANGCODE_NOT_APPLICABLE,
+      LanguageInterface::LANGCODE_DEFAULT,
+      LanguageInterface::LANGCODE_SITE_DEFAULT,
+      LanguageInterface::LANGCODE_SYSTEM,
+    ];
+    foreach ($system_langcodes as $langcode) {
+      $this->entity->set('langcode', $langcode);
+      $this->assertValidationErrors([]);
+    }
+
+    // An invalid langcode should be unacceptable, even if it "looks" right.
+    $fake_langcode = 'definitely-not-a-language';
+    $this->assertArrayNotHasKey($fake_langcode, LanguageReference::getAllValidLangcodes());
+    $this->entity->set('langcode', $fake_langcode);
+    $this->assertValidationErrors([
+      'langcode' => 'The value you selected is not a valid choice.',
+    ]);
+
+    // If a new configurable language is created with a non-standard langcode,
+    // it should be acceptable.
+    $this->enableModules(['language']);
+    // The language doesn't exist yet, so it shouldn't be a valid choice.
+    $this->entity->set('langcode', 'kthxbai');
+    $this->assertValidationErrors([
+      'langcode' => 'The value you selected is not a valid choice.',
+    ]);
+    // Once we create the language, it should be a valid choice.
+    ConfigurableLanguage::createFromLangcode('kthxbai')->save();
+    $this->assertValidationErrors([]);
   }
 
 }

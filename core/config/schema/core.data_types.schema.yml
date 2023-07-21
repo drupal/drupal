@@ -104,6 +104,15 @@ machine_name:
       # @see \Drupal\Core\Config\Entity\ConfigEntityStorage::MAX_ID_LENGTH
       max: 166
 
+# A language identifier.
+langcode:
+  type: string
+  label: 'Language code'
+  constraints:
+    NotNull: []
+    Choice:
+      callback: 'Drupal\Core\TypedData\Plugin\DataType\LanguageReference::getAllValidLangcodes'
+
 # Complex extended data types:
 
 # Root of a configuration object.
@@ -130,8 +139,7 @@ config_object:
     _core:
       type: _core_config_info
     langcode:
-      type: string
-      label: 'Language code'
+      type: langcode
 
 # Mail text with subject and body parts.
 mail:
@@ -305,8 +313,7 @@ config_entity:
       type: uuid
       label: 'UUID'
     langcode:
-      type: string
-      label: 'Language code'
+      type: langcode
     status:
       type: boolean
       label: 'Status'

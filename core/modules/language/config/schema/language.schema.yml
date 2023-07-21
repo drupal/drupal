@@ -71,7 +71,7 @@ language.negotiation:
             type: string
             label: 'Domain'
     selected_langcode:
-      type: string
+      type: langcode
       label: 'Selected language'
 
 language.mappings:
@@ -118,7 +118,7 @@ language.content_settings.*.*:
       type:  string
       label: 'Bundle'
     default_langcode:
-      type: string
+      type: langcode
       label: 'Default language'
     language_alterable:
       type: boolean
@@ -130,7 +130,7 @@ condition.plugin.language:
     langcodes:
       type: sequence
       sequence:
-        type: string
+        type: langcode
 
 field.widget.settings.language_select:
   type: mapping
