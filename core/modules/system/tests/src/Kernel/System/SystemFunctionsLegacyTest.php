@@ -39,13 +39,16 @@ class SystemFunctionsLegacyTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::system_get_module_admin_tasks
+   * Tests system_get_module_admin_tasks() deprecation.
+   *
+   * @see system_get_module_admin_tasks()
+   * @see drupal_static_reset()
    */
-  public function testSystemGetModuleAdminTasksArgument() {
-    $module_name = 'System';
-    $expected = system_get_module_admin_tasks('system', $module_name);
-    $this->expectDeprecation('Calling system_get_module_admin_tasks() with $module_name argument as array is deprecated in drupal:10.2.0 and is required to be string from drupal:11.0.0. Pass only $info["name"] instead. See https://www.drupal.org/node/3357711');
-    $this->assertSame($expected, system_get_module_admin_tasks('system', ['name' => $module_name]));
+  public function testSystemGetModuleAdminTasksDeprecation(): void {
+    $this->expectDeprecation("system_get_module_admin_tasks() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the 'system.module_admin_links_helper' service with the getModuleAdminLinks() method and 'user.module_permissions_link_helper' service with the ::getModulePermissionsLink() method instead. See https://www.drupal.org/node/3038972");
+    system_get_module_admin_tasks('foo', 'Foo');
+    $this->expectDeprecation("Calling drupal_static_reset() with 'system_get_module_admin_tasks' as an argument is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is no replacement for this usage. See https://www.drupal.org/node/3038972");
+    drupal_static_reset('system_get_module_admin_tasks');
   }
 
 }

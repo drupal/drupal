@@ -25,7 +25,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Link;
-use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\Queue\QueueGarbageCollectionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -980,67 +979,21 @@ function system_admin_compact_mode() {
  *
  * @return array
  *   An array of task links.
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the
+ *   'system.module_admin_links_helper' service with the getModuleAdminLinks() method
+ *   and 'user.module_permissions_link_helper' service with the
+ *   ::getModulePermissionsLink() method instead.
+ *
+ * @see https://www.drupal.org/node/3038972
  */
 function system_get_module_admin_tasks($module, string|array $module_name) {
-  if (!is_string($module_name)) {
-    @trigger_error('Calling ' . __FUNCTION__ . '() with $module_name argument as array is deprecated in drupal:10.2.0 and is required to be string from drupal:11.0.0. Pass only $info["name"] instead. See https://www.drupal.org/node/3357711', E_USER_DEPRECATED);
-    $module_name = $module_name['name'];
+  @trigger_error("system_get_module_admin_tasks() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the 'system.module_admin_links_helper' service with the getModuleAdminLinks() method and 'user.module_permissions_link_helper' service with the ::getModulePermissionsLink() method instead. See https://www.drupal.org/node/3038972", E_USER_DEPRECATED);
+  $module_admin_links = \Drupal::service('system.module_admin_links_helper')->getModuleAdminLinks($module);
+  if ($module_permissions_link = \Drupal::service('user.module_permissions_link_helper')->getModulePermissionsLink($module, $module_name)) {
+    $module_admin_links["user.admin_permissions.{$module}"] = $module_permissions_link;
   }
-
-  $tree = &drupal_static(__FUNCTION__);
-
-  $menu_tree = \Drupal::menuTree();
-
-  if (!isset($tree)) {
-    $parameters = new MenuTreeParameters();
-    $parameters->setRoot('system.admin')->excludeRoot()->onlyEnabledLinks();
-    $tree = $menu_tree->load('system.admin', $parameters);
-    $manipulators = [
-      ['callable' => 'menu.default_tree_manipulators:checkAccess'],
-      ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
-      ['callable' => 'menu.default_tree_manipulators:flatten'],
-    ];
-    $tree = $menu_tree->transform($tree, $manipulators);
-  }
-
-  $admin_tasks = [];
-  foreach ($tree as $element) {
-    if (!$element->access->isAllowed()) {
-      // @todo Bubble cacheability metadata of both accessible and inaccessible
-      //   links. Currently made impossible by the way admin tasks are rendered.
-      continue;
-    }
-
-    $link = $element->link;
-    if ($link->getProvider() != $module) {
-      continue;
-    }
-    $admin_tasks[] = [
-      'title' => $link->getTitle(),
-      'description' => $link->getDescription(),
-      'url' => $link->getUrlObject(),
-    ];
-  }
-
-  // Append link for permissions.
-  /** @var \Drupal\user\PermissionHandlerInterface $permission_handler */
-  $permission_handler = \Drupal::service('user.permissions');
-
-  if ($permission_handler->moduleProvidesPermissions($module)) {
-    /** @var \Drupal\Core\Access\AccessManagerInterface $access_manager */
-    $access_manager = \Drupal::service('access_manager');
-    if ($access_manager->checkNamedRoute('user.admin_permissions.module', ['modules' => $module], \Drupal::currentUser())) {
-      /** @var \Drupal\Core\Url $url */
-      $url = new Url('user.admin_permissions.module', ['modules' => $module]);
-      $admin_tasks["user.admin_permissions.$module"] = [
-        'title' => t('Configure @module permissions', ['@module' => $module_name]),
-        'description' => '',
-        'url' => $url,
-      ];
-    }
-  }
-
-  return $admin_tasks;
+  return $module_admin_links;
 }
 
 /**
