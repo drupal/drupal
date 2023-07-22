@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\comment\Functional;
 
+use Drupal\comment\CommentInterface;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -41,7 +42,7 @@ class CommentAdminTest extends CommentTestBase {
     ]);
     $this->drupalLogin($this->adminUser);
     // Ensure that doesn't require contact info.
-    $this->setCommentAnonymous('0');
+    $this->setCommentAnonymous(CommentInterface::ANONYMOUS_MAYNOT_CONTACT);
 
     // Test that the comments page loads correctly when there are no comments
     $this->drupalGet('admin/content/comment');
@@ -134,7 +135,7 @@ class CommentAdminTest extends CommentTestBase {
     ]);
     $this->drupalLogin($this->adminUser);
     // Ensure that doesn't require contact info.
-    $this->setCommentAnonymous('0');
+    $this->setCommentAnonymous(CommentInterface::ANONYMOUS_MAYNOT_CONTACT);
     $this->drupalLogout();
 
     // Post anonymous comment without contact info.
@@ -220,7 +221,7 @@ class CommentAdminTest extends CommentTestBase {
     // Post anonymous comment.
     $this->drupalLogin($this->adminUser);
     // Ensure that we need email id before posting comment.
-    $this->setCommentAnonymous('2');
+    $this->setCommentAnonymous(CommentInterface::ANONYMOUS_MUST_CONTACT);
     $this->drupalLogout();
 
     // Post comment with contact info (required).
@@ -256,7 +257,7 @@ class CommentAdminTest extends CommentTestBase {
     // Rebuild the container to update the default language container variable.
     $this->rebuildContainer();
     // Ensure that doesn't require contact info.
-    $this->setCommentAnonymous('0');
+    $this->setCommentAnonymous(CommentInterface::ANONYMOUS_MAYNOT_CONTACT);
     $this->drupalLogin($this->webUser);
     $count_query = \Drupal::entityTypeManager()
       ->getStorage('comment')
