@@ -94,6 +94,7 @@
     "tabbable": "^6.1.2",
     "terser": "^5.19.0",
     "terser-webpack-plugin": "^5.3.9",
+    "tua-body-scroll-lock": "^1.4.0",
     "transliteration": "^2.3.5",
     "underscore": "~1.13.4",
     "webpack": "^5.85.1",

@@ -15,6 +15,7 @@ views_ui.admin:
     - core/drupal.dropbutton
     - views/views.ajax
     - views_ui/admin.styling
+    - core/drupal.dialog
 
 views_ui.listing:
   version: VERSION

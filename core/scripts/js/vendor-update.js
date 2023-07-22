@@ -142,6 +142,12 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       files: [{ from: 'dist/loadjs.min.js', to: 'loadjs.min.js' }],
     },
     {
+      pack: 'tua-body-scroll-lock',
+      files: [
+        { from: 'dist/tua-bsl.umd.min.js', to: 'tua-bsl.umd.min.js' },
+      ],
+    },
+    {
       pack: 'transliteration',
       files: [
         { from: 'dist/browser/bundle.umd.min.js', to: 'bundle.umd.min.js' },

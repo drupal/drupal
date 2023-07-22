@@ -422,8 +422,8 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
   protected function switchToMediaLibraryGrid() {
     $this->getSession()->getPage()->clickLink('Grid');
     // Assert the display change is correctly announced for screen readers.
-    $this->waitForText('Loading grid view.');
-    $this->waitForText('Changed to grid view.');
+    $this->assertAnnounceContains('Loading grid view.');
+    $this->assertAnnounceContains('Changed to grid view.');
     $this->assertMediaLibraryGrid();
   }
 
@@ -434,9 +434,9 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
     hold_test_response(TRUE);
     $this->getSession()->getPage()->clickLink('Table');
     // Assert the display change is correctly announced for screen readers.
-    $this->waitForText('Loading table view.');
+    $this->assertAnnounceContains('Loading table view.');
     hold_test_response(FALSE);
-    $this->waitForText('Changed to table view.');
+    $this->assertAnnounceContains('Changed to table view.');
     $this->assertMediaLibraryTable();
   }
 
@@ -471,6 +471,19 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
     $this->assertSame('polite', $selected_count->getAttribute('aria-live'));
     $this->assertSame('true', $selected_count->getAttribute('aria-atomic'));
     $this->assertSame($text, $selected_count->getText());
+  }
+
+  /**
+   * Checks for inclusion of text in #drupal-live-announce.
+   *
+   * @param string $expected_message
+   *   The text expected to be present in #drupal-live-announce.
+   *
+   * @internal
+   */
+  protected function assertAnnounceContains(string $expected_message): void {
+    $assert_session = $this->assertSession();
+    $this->assertNotEmpty($assert_session->waitForElement('css', "#drupal-live-announce:contains('$expected_message')"));
   }
 
 }

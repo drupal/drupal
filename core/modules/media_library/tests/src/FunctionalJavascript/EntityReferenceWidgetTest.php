@@ -155,7 +155,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
 
     // Insert media to test validation with null target_bundles.
     $this->switchToMediaType('One');
-    $this->assertNotEmpty($assert_session->waitForText('Showing Type One media.'));
+    $this->assertAnnounceContains('Showing Type One media.');
     $this->selectMediaItem(0);
     $this->pressInsertSelected('Added one media item.');
 
@@ -207,12 +207,12 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     // Assert the announcements for media type navigation in the media library.
     $this->openMediaLibraryForField('field_unlimited_media');
     $this->switchToMediaType('Three');
-    $this->assertNotEmpty($assert_session->waitForText('Showing Type Three media.'));
+    $this->assertAnnounceContains('Showing Type Three media.');
     $this->switchToMediaType('One');
-    $this->assertNotEmpty($assert_session->waitForText('Showing Type One media.'));
+    $this->assertAnnounceContains('Showing Type One media.');
     // Assert the links can be triggered by via the spacebar.
     $assert_session->elementExists('named', ['link', 'Type Three'])->keyPress(32);
-    $this->waitForText('Showing Type Three media.');
+    $this->assertAnnounceContains('Showing Type Three media.');
     $assert_session->elementExists('css', '.ui-dialog-titlebar-close')->click();
 
     // Assert media is only visible on the tab for the related media type.
@@ -221,7 +221,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $assert_session->pageTextContains('Bear');
     $assert_session->pageTextNotContains('Turtle');
     $this->switchToMediaType('Three');
-    $this->assertNotEmpty($assert_session->waitForText('Showing Type Three media.'));
+    $this->assertAnnounceContains('Showing Type Three media.');
     $assert_session->elementExists('named', ['link', 'Show Type Three media (selected)']);
     $assert_session->pageTextNotContains('Dog');
     $assert_session->pageTextNotContains('Bear');
@@ -559,6 +559,19 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
 
     $assert_session->elementTextContains('css', '.field--name-field-unlimited-media > .field__items > .field__item:first-child', 'Cat');
     $assert_session->elementTextContains('css', '.field--name-field-unlimited-media > .field__items > .field__item:last-child', 'Bear');
+  }
+
+  /**
+   * Checks for inclusion of text in #drupal-live-announce.
+   *
+   * @param string $expected_message
+   *   The text that is expected to be present in the #drupal-live-announce element.
+   *
+   * @internal
+   */
+  protected function assertAnnounceContains(string $expected_message): void {
+    $assert_session = $this->assertSession();
+    $this->assertNotEmpty($assert_session->waitForElement('css', "#drupal-live-announce:contains('$expected_message')"));
   }
 
   /**

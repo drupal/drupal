@@ -534,6 +534,7 @@ drupal.dialog:
     assets/vendor/jquery.ui/ui/safe-blur-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/widget-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/version-min.js: { weight: -11.9, minified: true }
+    assets/vendor/tua-body-scroll-lock/tua-bsl.umd.min.js: { weight: -1,  minified: true }
   # All CSS assets previously came from core/jquery.ui, a deprecated library.
   # @todo replace with solution found in https://drupal.org/node/2158943
   css:

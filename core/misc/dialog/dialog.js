@@ -5,7 +5,7 @@
  * @see http://www.whatwg.org/specs/web-apps/current-work/multipage/commands.html#the-dialog-element
  */
 
-(function ($, Drupal, drupalSettings) {
+(function ($, Drupal, drupalSettings, bodyScrollLock) {
   /**
    * Default dialog options.
    *
@@ -73,11 +73,21 @@
       $(window).trigger('dialog:beforecreate', [dialog, $element, settings]);
       $element.dialog(settings);
       dialog.open = true;
+
+      // Locks the body scroll only when it opens in modal.
+      if (settings.modal) {
+        // Locks the body when the dialog opens.
+        bodyScrollLock.lock($element.get(0));
+      }
+
       $(window).trigger('dialog:aftercreate', [dialog, $element, settings]);
     }
 
     function closeDialog(value) {
       $(window).trigger('dialog:beforeclose', [dialog, $element]);
+      // Unlocks the body when the dialog closes.
+      bodyScrollLock.unlock($element.get(0));
+
       $element.dialog('close');
       dialog.returnValue = value;
       dialog.open = false;
@@ -94,4 +104,4 @@
 
     return dialog;
   };
-})(jQuery, Drupal, drupalSettings);
+})(jQuery, Drupal, drupalSettings, bodyScrollLock);
