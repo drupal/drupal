@@ -129,8 +129,8 @@ class LocaleDefaultConfigStorage {
   public function getComponentNames($type, array $list) {
     $names = array_unique(
       array_merge(
-        array_keys($this->requiredInstallStorage->getComponentNames($type, $list)),
-        array_keys($this->optionalInstallStorage->getComponentNames($type, $list))
+        array_keys($this->requiredInstallStorage->getComponentNames($list)),
+        array_keys($this->optionalInstallStorage->getComponentNames($list))
       )
     );
     if ($type == 'module' && in_array('language', $list)) {
