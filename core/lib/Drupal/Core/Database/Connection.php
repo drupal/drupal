@@ -900,6 +900,7 @@ abstract class Connection {
    */
   public function getDriverClass($class) {
     match($class) {
+      'Install\\Tasks',
       'ExceptionHandler',
       'Select',
       'Insert',

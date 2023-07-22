@@ -326,6 +326,7 @@ class ConnectionTest extends UnitTestCase {
     $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
     $connection = new StubConnection($mock_pdo, ['namespace' => $namespace]);
     match($class) {
+      'Install\\Tasks',
       'ExceptionHandler',
       'Select',
       'Insert',

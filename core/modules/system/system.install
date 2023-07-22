@@ -555,7 +555,7 @@ function system_requirements($phase) {
 
   if ($phase === 'runtime' || $phase === 'update') {
     // Database information.
-    $class = Database::getConnection()->getDriverClass('Install\\Tasks');
+    $class = Database::getConnection()->getConnectionOptions()['namespace'] . '\\Install\\Tasks';
     /** @var \Drupal\Core\Database\Install\Tasks $tasks */
     $tasks = new $class();
     $requirements['database_system'] = [
