@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Helper module for unversioned asset test.
+ */
+
+/**
+ * Implements hook_library_info_build().
+ */
+function unversioned_assets_test_library_info_alter(&$libraries, $extension) {
+  if ($extension === 'system') {
+    // Remove the version and provide an additional CSS file we can alter the
+    // contents of .
+    unset($libraries['base']['version']);
+    $libraries['base']['css']['component']['public://test.css'] = ['weight' => -10];
+  }
+}

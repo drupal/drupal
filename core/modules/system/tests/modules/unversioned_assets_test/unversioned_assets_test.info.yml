@@ -1,0 +1,5 @@
+name: 'Unversioned assets test'
+type: module
+description: 'Tests that aggregates change when unversioned assets change'
+package: Testing
+version: VERSION
