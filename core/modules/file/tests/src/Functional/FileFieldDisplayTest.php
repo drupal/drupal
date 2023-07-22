@@ -239,6 +239,16 @@ class FileFieldDisplayTest extends FileFieldTestBase {
 
     $this->drupalGet('node/' . $nid);
     $this->assertSession()->elementTextContains('xpath', '//a[@href="' . $node->{$field_name}->entity->createFileUrl() . '"]', $description);
+
+    // Test that null file size is rendered as "Unknown".
+    $nonexistent_file = File::create([
+      'uri' => 'temporary://' . $this->randomMachineName() . '.txt',
+    ]);
+    $nonexistent_file->save();
+    $node->set($field_name, $nonexistent_file->id());
+    $node->save();
+    $this->drupalGet('node/' . $nid);
+    $this->assertSession()->elementTextEquals('xpath', '//a[@href="' . $node->{$field_name}->entity->createFileUrl() . '"]/../../../td[2]', 'Unknown');
   }
 
 }
