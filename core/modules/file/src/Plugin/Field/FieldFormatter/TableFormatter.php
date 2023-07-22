@@ -39,7 +39,7 @@ class TableFormatter extends DescriptionAwareFileFormatterBase {
               ],
             ],
           ],
-          ['data' => format_size($file->getSize())],
+          ['data' => $file->getSize() !== NULL ? format_size($file->getSize()) : $this->t('Unknown')],
         ];
       }
 
