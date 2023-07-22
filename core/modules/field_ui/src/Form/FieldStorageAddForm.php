@@ -180,16 +180,16 @@ class FieldStorageAddForm extends FormBase {
       ],
     ];
     $field_type_options_radios = [];
-    foreach ($field_type_options as $field_option => $val) {
+    foreach ($field_type_options as $id => $field_type) {
       /** @var  \Drupal\Core\Field\FieldTypeCategoryInterface $category_info */
-      $category_info = $this->fieldTypeCategoryManager->createInstance($val['category'], $val);
+      $category_info = $this->fieldTypeCategoryManager->createInstance($field_type['category'], $field_type);
       $display_as_group = !($category_info instanceof FallbackFieldTypeCategory);
-      $cleaned_class_name = Html::getClass($val['unique_identifier']);
-      $field_type_options_radios[$field_option] = [
+      $cleaned_class_name = Html::getClass($field_type['unique_identifier']);
+      $field_type_options_radios[$id] = [
         '#type' => 'container',
         '#attributes' => [
           'class' => ['field-option', 'js-click-to-select'],
-          'checked' => $this->getRequest()->request->get('new_storage_type') !== NULL && $this->getRequest()->request->get('new_storage_type') == ($display_as_group ? $val['category'] : $val['unique_identifier']),
+          'checked' => $this->getRequest()->request->get('new_storage_type') !== NULL && $this->getRequest()->request->get('new_storage_type') == ($display_as_group ? $field_type['category'] : $field_type['unique_identifier']),
         ],
         '#weight' => $category_info->getWeight(),
         'thumb' => [
@@ -201,7 +201,7 @@ class FieldStorageAddForm extends FormBase {
             '#type' => 'container',
             '#attributes' => [
               'class' => ['field-option__icon', $display_as_group ?
-                "field-icon-$val[category]" : "field-icon-$cleaned_class_name",
+                "field-icon-$field_type[category]" : "field-icon-$cleaned_class_name",
               ],
             ],
           ],
@@ -219,7 +219,7 @@ class FieldStorageAddForm extends FormBase {
           '#theme_wrappers' => ['form_element__new_storage_type'],
           // If it is a category, set return value as the category label,
           // otherwise, set it as the field type id.
-          '#return_value' => $display_as_group ? $val['category'] : $val['unique_identifier'],
+          '#return_value' => $display_as_group ? $field_type['category'] : $field_type['unique_identifier'],
           '#attributes' => [
             'class' => ['field-option-radio'],
           ],
