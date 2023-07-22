@@ -616,6 +616,11 @@ class ViewEditForm extends ViewFormBase {
     $build['columns']['third']['relationships'] = $this->getFormBucket($view, 'relationship', $display);
     $build['columns']['third']['arguments'] = $this->getFormBucket($view, 'argument', $display);
 
+    // If there is a contextual filter or a relationship set, expand the
+    // Advanced column to display these values to the user.
+    if (!empty($build['columns']['third']['relationships']['fields']) || !empty($build['columns']['third']['arguments']['fields'])) {
+      $build['columns']['third']['#open'] = TRUE;
+    }
     return $build;
   }
 
