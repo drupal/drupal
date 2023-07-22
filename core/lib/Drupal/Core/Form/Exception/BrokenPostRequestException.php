@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Form\Exception;
 
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -12,36 +14,36 @@ class BrokenPostRequestException extends BadRequestHttpException {
   /**
    * The maximum upload size.
    *
-   * @var string
+   * @var int
    */
-  protected $size;
+  protected int $size;
 
   /**
    * Constructs a new BrokenPostRequestException.
    *
-   * @param string $max_upload_size
-   *   The size of the maximum upload size.
+   * @param int $max_upload_size
+   *   The size of the maximum upload size in bytes.
    * @param string $message
    *   The internal exception message.
-   * @param \Exception $previous
+   * @param \Exception|null $previous
    *   The previous exception.
    * @param int $code
    *   The internal exception code.
    */
-  public function __construct($max_upload_size, $message = '', \Exception $previous = NULL, $code = 0) {
+  public function __construct(int $max_upload_size, string $message = '', \Exception $previous = NULL, int $code = 0) {
     parent::__construct($message, $previous, $code);
 
     $this->size = $max_upload_size;
   }
 
   /**
-   * Returns the maximum upload size.
+   * Returns the maximum upload size in bytes.
    *
-   * @return string
-   *   A translated string representation of the size of the file size limit
-   *   based on the PHP upload_max_filesize and post_max_size.
+   * @return int
+   *   The file size limit in bytes based on the PHP upload_max_filesize and
+   *   post_max_size.
    */
-  public function getSize() {
+  public function getSize(): int {
     return $this->size;
   }
 
