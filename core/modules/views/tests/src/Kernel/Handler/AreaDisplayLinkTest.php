@@ -308,7 +308,9 @@ class AreaDisplayLinkTest extends ViewsKernelTestBase {
   protected function assertFormOptions(ViewExecutable $view, string $display_link_id): void {
     $form = [];
     $form_state = new FormState();
-    $view->display_handler->getHandler('header', $display_link_id)->buildOptionsForm($form, $form_state);
+    /** @var \Drupal\views\Plugin\views\area\DisplayLink $display_handler */
+    $display_handler = $view->display_handler->getHandler('header', $display_link_id);
+    $display_handler->buildOptionsForm($form, $form_state);
     $this->assertTrue(isset($form['display_id']['#options']['page_1']));
     $this->assertTrue(isset($form['display_id']['#options']['page_2']));
     $this->assertFalse(isset($form['display_id']['#options']['block_1']));

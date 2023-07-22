@@ -179,7 +179,9 @@ class AreaEntityTest extends ViewsKernelTestBase {
     $form = [];
     $form_state = (new FormState())
       ->set('type', 'header');
-    $view->display_handler->getHandler('header', 'entity_entity_test')->buildOptionsForm($form, $form_state);
+    /** @var \Drupal\views\Plugin\views\area\DisplayLink $display_handler */
+    $display_handler = $view->display_handler->getHandler('header', 'entity_entity_test');
+    $display_handler->buildOptionsForm($form, $form_state);
     $this->assertTrue(isset($form['view_mode']['#options']['test']), 'Ensure that the test view mode is available.');
     $this->assertTrue(isset($form['view_mode']['#options']['default']), 'Ensure that the default view mode is available.');
   }

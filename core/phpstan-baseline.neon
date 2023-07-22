@@ -2446,16 +2446,6 @@ parameters:
 			path: modules/views/tests/src/FunctionalJavascript/ClickSortingAJAXTest.php
 
 		-
-			message: "#^Offset 'display_id' on array\\{\\} in isset\\(\\) does not exist\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Handler/AreaDisplayLinkTest.php
-
-		-
-			message: "#^Offset 'view_mode' on array\\{\\} in isset\\(\\) does not exist\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Handler/AreaEntityTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 3
 			path: modules/views/tests/src/Kernel/Handler/FieldDropbuttonTest.php
