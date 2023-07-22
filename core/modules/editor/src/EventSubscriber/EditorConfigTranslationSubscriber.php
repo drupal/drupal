@@ -2,7 +2,7 @@
 
 namespace Drupal\editor\EventSubscriber;
 
-use Drupal\config_translation\ConfigEntityMapper;
+use Drupal\config_translation\ConfigEntityMapperInterface;
 use Drupal\config_translation\Event\ConfigMapperPopulateEvent;
 use Drupal\config_translation\Event\ConfigTranslationEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -49,7 +49,7 @@ class EditorConfigTranslationSubscriber implements EventSubscriberInterface {
    */
   public function addConfigNames(ConfigMapperPopulateEvent $event) {
     $mapper = $event->getMapper();
-    if ($mapper instanceof ConfigEntityMapper && $mapper->getType() == 'filter_format') {
+    if ($mapper instanceof ConfigEntityMapperInterface && $mapper->getType() == 'filter_format') {
       $editor_config_name = 'editor.editor.' . $mapper->getEntity()->id();
       // Only add the text editor config if it exists, otherwise we assume no
       // editor has been set for this text format.

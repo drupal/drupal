@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Route;
 /**
  * Configuration mapper for configuration entities.
  */
-class ConfigEntityMapper extends ConfigNamesMapper {
+class ConfigEntityMapper extends ConfigNamesMapper implements ConfigEntityMapperInterface {
 
   /**
    * The entity type manager.
@@ -115,29 +115,14 @@ class ConfigEntityMapper extends ConfigNamesMapper {
   }
 
   /**
-   * Gets the entity instance for this mapper.
-   *
-   * @return \Drupal\Core\Config\Entity\ConfigEntityInterface
-   *   The configuration entity.
+   * {@inheritdoc}
    */
   public function getEntity() {
     return $this->entity;
   }
 
   /**
-   * Sets the entity instance for this mapper.
-   *
-   * This method can only be invoked when the concrete entity is known, that is
-   * in a request for an entity translation path. After this method is called,
-   * the mapper is fully populated with the proper display title and
-   * configuration names to use to check permissions or display a translation
-   * screen.
-   *
-   * @param \Drupal\Core\Config\Entity\ConfigEntityInterface $entity
-   *   The configuration entity to set.
-   *
-   * @return bool
-   *   TRUE, if the entity was set successfully; FALSE otherwise.
+   * {@inheritdoc}
    */
   public function setEntity(ConfigEntityInterface $entity) {
     if (isset($this->entity)) {
@@ -173,34 +158,20 @@ class ConfigEntityMapper extends ConfigNamesMapper {
   }
 
   /**
-   * Set entity type for this mapper.
-   *
-   * This should be set in initialization. A mapper that knows its type but
-   * not yet its names is still useful for router item and tab generation. The
-   * concrete entity only turns out later with actual controller invocations,
-   * when the setEntity() method is invoked before the rest of the methods are
-   * used.
-   *
-   * @param string $entity_type
-   *   The entity type to set.
-   *
-   * @return bool
-   *   TRUE if the entity type was set correctly; FALSE otherwise.
+   * {@inheritdoc}
    */
-  public function setType($entity_type) {
+  public function setType(string $entity_type_id): bool {
     if (isset($this->entityType)) {
       return FALSE;
     }
-    $this->entityType = $entity_type;
+    $this->entityType = $entity_type_id;
     return TRUE;
   }
 
   /**
-   * Gets the entity type from this mapper.
-   *
-   * @return string
+   * {@inheritdoc}
    */
-  public function getType() {
+  public function getType(): string {
     return $this->entityType;
   }
 
