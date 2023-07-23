@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Config;
 
+use Drupal\Core\Config\Schema\Sequence;
 use Drupal\Core\Config\Schema\SequenceDataDefinition;
 use Drupal\Core\Config\Schema\TypedConfigInterface;
 use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
@@ -73,6 +74,9 @@ class TypedConfigTest extends KernelTestBase {
     // Test accessing sequences.
     $sequence = $typed_config->get('giraffe');
     /** @var \Drupal\Core\TypedData\ListInterface $sequence */
+    $this->assertInstanceOf(SequenceDataDefinition::class, $sequence->getDataDefinition());
+    $this->assertSame(Sequence::class, $sequence->getDataDefinition()->getClass());
+    $this->assertSame('sequence', $sequence->getDataDefinition()->getDataType());
     $this->assertInstanceOf(ComplexDataInterface::class, $sequence);
     $this->assertInstanceOf(StringInterface::class, $sequence->get('hum1'));
     $this->assertEquals('hum1', $sequence->get('hum1')->getValue());
