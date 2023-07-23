@@ -394,7 +394,7 @@ class DateTimeFieldTest extends DateTestBase {
     \Drupal::formBuilder()->submitForm($form, $form_state);
     $errors = $form_state->getErrors();
     $arguments = $errors["{$field_name}][0][value"]->getArguments();
-    $expected_error_message = new FormattableMarkup('The %field date is required. Please enter a date in the format %format.', ['%field' => $field_label, '%format' => $arguments['%format']]);
+    $expected_error_message = new FormattableMarkup('The %field date is required. Enter a date in the format %format.', ['%field' => $field_label, '%format' => $arguments['%format']]);
     $actual_error_message = $errors["{$field_name}][0][value"]->__toString();
     $this->assertEquals($expected_error_message->__toString(), $actual_error_message);
     // Verify the format value is in the "YYYY-MM-DD HH:MM:SS" format.

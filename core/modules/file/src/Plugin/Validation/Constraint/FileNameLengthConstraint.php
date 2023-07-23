@@ -27,13 +27,13 @@ class FileNameLengthConstraint extends Constraint {
    *
    * @var string
    */
-  public string $messageEmpty = "The file's name is empty. Please give a name to the file.";
+  public string $messageEmpty = "The file's name is empty. Enter a name for the file.";
 
   /**
    * The message when file name is too long.
    *
    * @var string
    */
-  public string $messageTooLong = "The file's name exceeds the %maxLength characters limit. Please rename the file and try again.";
+  public string $messageTooLong = "The file's name exceeds the %maxLength characters limit. Rename the file and try again.";
 
 }

@@ -138,26 +138,26 @@ class SearchPageTextTest extends BrowserTestBase {
     $this->assertSession()->statusMessageContains("Your search used too many AND/OR expressions. Only the first {$limit} terms were included in this search.", 'warning');
 
     // Test that a search on Node or User with no keywords entered generates
-    // the "Please enter some keywords" message.
+    // the "Enter some keywords" message.
     $this->drupalGet('search/node');
     $this->submitForm([], 'Search');
-    $this->assertSession()->statusMessageContains('Please enter some keywords', 'error');
+    $this->assertSession()->statusMessageContains('Enter some keywords', 'error');
     $this->drupalGet('search/user');
     $this->submitForm([], 'Search');
-    $this->assertSession()->statusMessageContains('Please enter some keywords', 'error');
+    $this->assertSession()->statusMessageContains('Enter some keywords', 'error');
 
-    // Make sure the "Please enter some keywords" message is NOT displayed if
-    // you use "or" words or phrases in Advanced Search.
+    // Make sure the "Enter some keywords" message is NOT displayed if you use
+    // "or" words or phrases in Advanced Search.
     $this->drupalGet('search/node');
     $this->submitForm([
       'or' => $this->randomMachineName() . ' ' . $this->randomMachineName(),
     ], 'edit-submit--2');
-    $this->assertSession()->statusMessageNotContains('Please enter some keywords');
+    $this->assertSession()->statusMessageNotContains('Enter some keywords');
     $this->drupalGet('search/node');
     $this->submitForm([
       'phrase' => '"' . $this->randomMachineName() . '" "' . $this->randomMachineName() . '"',
     ], 'edit-submit--2');
-    $this->assertSession()->statusMessageNotContains('Please enter some keywords');
+    $this->assertSession()->statusMessageNotContains('Enter some keywords');
 
     // Verify that if you search for a too-short keyword, you get the right
     // message, and that if after that you search for a longer keyword, you
@@ -165,7 +165,7 @@ class SearchPageTextTest extends BrowserTestBase {
     $this->drupalGet('search/node');
     $this->submitForm(['keys' => $this->randomMachineName(1)], 'Search');
     $this->assertSession()->statusMessageContains('You must include at least one keyword', 'warning');
-    $this->assertSession()->statusMessageNotContains('Please enter some keywords');
+    $this->assertSession()->statusMessageNotContains('Enter some keywords');
     $this->submitForm(['keys' => $this->randomMachineName()], 'Search');
     $this->assertSession()->statusMessageNotContains('You must include at least one keyword');
 

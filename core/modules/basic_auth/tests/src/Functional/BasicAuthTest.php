@@ -180,7 +180,7 @@ class BasicAuthTest extends BrowserTestBase {
     $this->drupalGet($url);
     $this->assertSession()->statusCodeEquals(401);
     $this->assertSession()->pageTextNotContains('Exception');
-    $this->assertSession()->pageTextContains('Please log in to access this page.');
+    $this->assertSession()->pageTextContains('Log in to access this page.');
 
     // Case when empty credentials are passed, a user friendly access denied
     // message is displayed.

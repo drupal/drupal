@@ -102,7 +102,7 @@ class SearchBlockTest extends BrowserTestBase {
     $this->drupalGet('');
     $this->submitForm($terms, 'Search');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->statusMessageContains('Please enter some keywords', 'error');
+    $this->assertSession()->statusMessageContains('Enter some keywords', 'error');
 
     // Confirm that the user is redirected to the search page, when form is
     // submitted empty.
@@ -117,7 +117,7 @@ class SearchBlockTest extends BrowserTestBase {
     $this->drupalGet('node');
     $this->submitForm(['keys' => $this->randomMachineName(1)], 'Search');
     $this->assertSession()->statusMessageContains('You must include at least one keyword to match in the content', 'warning');
-    $this->assertSession()->statusMessageNotContains('Please enter some keywords');
+    $this->assertSession()->statusMessageNotContains('Enter some keywords');
     $this->submitForm(['keys' => $this->randomMachineName()], 'Search', 'search-block-form');
     $this->assertSession()->statusMessageNotContains('You must include at least one keyword to match in the content');
 

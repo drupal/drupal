@@ -34,7 +34,7 @@ class FileSaveHtaccessLoggingTest extends BrowserTestBase {
     $this->assertFalse($htaccess->write($private, TRUE));
     $this->drupalLogin($this->rootUser);
     $this->drupalGet('admin/reports/dblog');
-    $this->clickLink("Security warning: Couldn't write .htaccess file. Please…");
+    $this->clickLink("Security warning: Couldn't write .htaccess file.");
 
     $lines = FileSecurity::htaccessLines(TRUE);
     foreach (array_filter(explode("\n", $lines)) as $line) {

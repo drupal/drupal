@@ -192,14 +192,14 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     $edit = [
-      $lid => 'Please enter your Llama username.',
+      $lid => 'Enter your Llama username.',
     ];
     $this->drupalGet('admin/config/regional/translate');
     $this->submitForm($edit, 'Save translations');
 
     $this->drupalLogout();
     $this->drupalGet('xx/user/login');
-    $this->assertSession()->pageTextContains('Please enter your Llama username.');
+    $this->assertSession()->pageTextContains('Enter your Llama username.');
 
     // Delete the language.
     $this->drupalLogin($admin_user);

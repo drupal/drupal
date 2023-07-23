@@ -114,7 +114,7 @@ class ResourceResponseValidator implements EventSubscriberInterface {
    * @see self::validateResponse
    */
   public function doValidateResponse(Response $response, Request $request) {
-    assert($this->validateResponse($response, $request), 'A JSON:API response failed validation (see the logs for details). Please report this in the issue queue on drupal.org');
+    assert($this->validateResponse($response, $request), 'A JSON:API response failed validation (see the logs for details). Report this in the issue queue on drupal.org');
   }
 
   /**

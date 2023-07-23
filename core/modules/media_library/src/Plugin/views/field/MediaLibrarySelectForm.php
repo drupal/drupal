@@ -140,7 +140,7 @@ class MediaLibrarySelectForm extends FieldPluginBase {
     $selected_count = count(explode(',', $current_selection));
     if ($available_slots > 0 && $selected_count > $available_slots) {
       $response = new AjaxResponse();
-      $error = \Drupal::translation()->formatPlural($selected_count - $available_slots, 'There are currently @total items selected. The maximum number of items for the field is @max. Please remove @count item from the selection.', 'There are currently @total items selected. The maximum number of items for the field is @max. Please remove @count items from the selection.', [
+      $error = \Drupal::translation()->formatPlural($selected_count - $available_slots, 'There are currently @total items selected. The maximum number of items for the field is @max. Remove @count item from the selection.', 'There are currently @total items selected. The maximum number of items for the field is @max. Remove @count items from the selection.', [
         '@total' => $selected_count,
         '@max' => $available_slots,
       ]);

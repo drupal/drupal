@@ -226,8 +226,8 @@ function hook_modules_installed($modules, $is_syncing) {
  * available when this hook is called. Use cases could be displaying a user
  * message, or calling a module function necessary for initial setup, etc.
  *
- * Please be sure that anything added or modified in this function that can
- * be removed during uninstall should be removed with hook_uninstall().
+ * Ensure that anything added or modified in this function that can be removed
+ * during uninstall should be removed with hook_uninstall().
  *
  * @param bool $is_syncing
  *   TRUE if the module is being installed as part of a configuration import. In

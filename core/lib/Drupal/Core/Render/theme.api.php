@@ -1236,9 +1236,9 @@ function hook_page_bottom(array &$page_bottom) {
  *     the standard preprocess functions to run. This can be used to give a
  *     theme FULL control over how variables are set. For example, if a theme
  *     wants total control over how certain variables in the page.html.twig are
- *     set, this can be set to true. Please keep in mind that when this is used
- *     by a theme, that theme becomes responsible for making sure necessary
- *     variables are set.
+ *     set, this can be set to true. Keep in mind that when this is used by a
+ *     theme, that theme becomes responsible for making sure necessary variables
+ *     are set.
  *   - type: (automatically derived) Where the theme hook is defined:
  *     'module', 'theme_engine', or 'theme'.
  *   - theme path: The directory path of the theme or module. If not defined,

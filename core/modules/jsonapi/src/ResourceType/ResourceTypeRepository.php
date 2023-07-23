@@ -290,7 +290,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
       /** @var \Drupal\jsonapi\ResourceType\ResourceTypeField $field */
       foreach (array_diff_key($fields, array_flip([$reserved_field_name])) as $field) {
         if ($aliased_reserved_field->getPublicName() === $field->getPublicName()) {
-          throw new \LogicException("The generated alias '{$aliased_reserved_field->getPublicName()}' for field name '{$aliased_reserved_field->getInternalName()}' conflicts with an existing field. Please report this in the JSON:API issue queue!");
+          throw new \LogicException("The generated alias '{$aliased_reserved_field->getPublicName()}' for field name '{$aliased_reserved_field->getInternalName()}' conflicts with an existing field. Report this in the JSON:API issue queue!");
         }
       }
     }
@@ -469,7 +469,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
         if (!InstallerKernel::installationAttempted()) {
           trigger_error(
             sprintf(
-              'The "%s" at "%s:%s" references the "%s:%s" entity type that does not exist. Please take action.',
+              'The "%s" at "%s:%s" references the "%s:%s" entity type that does not exist.',
               $field_definition->getName(),
               $field_definition->getTargetEntityTypeId(),
               $field_definition->getTargetBundle(),

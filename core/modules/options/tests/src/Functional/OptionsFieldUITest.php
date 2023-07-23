@@ -141,7 +141,7 @@ class OptionsFieldUITest extends FieldTestBase {
     $node->delete();
     $this->drupalGet($this->adminPath);
     $delete_button_1->click();
-    $assert_session->pageTextNotContains('Please wait');
+    $assert_session->pageTextNotContains('Processing...');
     $page->findById('edit-submit')->click();
     $field_storage = FieldStorageConfig::loadByName('node', $this->fieldName);
     $this->assertSame($field_storage->getSetting('allowed_values'), [0 => 'Zero']);
@@ -221,7 +221,7 @@ class OptionsFieldUITest extends FieldTestBase {
     $node->delete();
     $this->drupalGet($this->adminPath);
     $delete_button_1->click();
-    $assert_session->pageTextNotContains('Please wait');
+    $assert_session->pageTextNotContains('Processing...');
     $page->findById('edit-submit')->click();
     $field_storage = FieldStorageConfig::loadByName('node', $this->fieldName);
     $this->assertSame($field_storage->getSetting('allowed_values'), [0 => 'Zero', 2 => 'Two']);
@@ -301,7 +301,7 @@ class OptionsFieldUITest extends FieldTestBase {
     $node->delete();
     $this->drupalGet($this->adminPath);
     $delete_button_1->click();
-    $assert_session->pageTextNotContains('Please wait');
+    $assert_session->pageTextNotContains('Processing...');
     $page->findById('edit-submit')->click();
     $field_storage = FieldStorageConfig::loadByName('node', $this->fieldName);
     $this->assertSame($field_storage->getSetting('allowed_values'), ['zero' => 'Zero']);

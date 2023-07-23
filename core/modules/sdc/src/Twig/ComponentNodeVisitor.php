@@ -155,7 +155,7 @@ final class ComponentNodeVisitor implements NodeVisitorInterface {
     $error_messages = [];
     if (!empty($undocumented_ids)) {
       $error_messages[] = sprintf(
-        'We found an unexpected slot that is not declared: [%s]. Please declare them in "%s.component.yml".',
+        'We found an unexpected slot that is not declared: [%s]. Declare them in "%s.component.yml".',
         implode(', ', $undocumented_ids),
         $component->machineName
       );

@@ -58,7 +58,7 @@ export default class DrupalMediaEditing extends Plugin {
       themeError ||
       `
       <p>${Drupal.t(
-        'An error occurred while trying to preview the media. Please save your work and reload this page.',
+        'An error occurred while trying to preview the media. Save your work and reload this page.',
       )}<p>
     `;
 

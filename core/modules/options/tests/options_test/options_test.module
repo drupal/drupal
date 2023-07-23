@@ -71,7 +71,7 @@ function options_test_form_entity_test_entity_test_form_alter(&$form, FormStateI
 function options_test_options_list_alter(array &$options, array $context) {
   if ($context['fieldDefinition']->getName() === 'card_4' && $context['widget']->getPluginId() === 'options_select') {
     // Rename _none option.
-    $options['_none'] = '- Please select something -';
+    $options['_none'] = '- Select something -';
   }
 
   if ($context['fieldDefinition']->getName() === 'card_4' && $context['entity']->bundle() === 'entity_test') {

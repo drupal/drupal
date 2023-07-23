@@ -169,7 +169,7 @@ class ForumUninstallTest extends BrowserTestBase {
 
     // Now attempt to uninstall forum.
     $this->drupalGet('admin/modules/uninstall');
-    $this->assertSession()->responseNotContains('The website encountered an unexpected error. Please try again later');
+    $this->assertSession()->responseNotContains('The website encountered an unexpected error. Try again later');
     $this->assertSession()->statusCodeEquals(200);
 
     // Assert forum is no longer required.

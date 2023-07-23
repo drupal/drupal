@@ -517,7 +517,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
         && is_numeric($matches[1]));
     });
     if (!empty($numeric_placeholders)) {
-      $errors[] = $this->t("Numeric placeholders may not be used. Please use plain placeholders (%).");
+      $errors[] = $this->t("Numeric placeholders may not be used. Use plain placeholders (%).");
     }
     return $errors;
   }

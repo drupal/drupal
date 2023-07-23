@@ -17,7 +17,7 @@ function test_theme_settings_form_system_theme_settings_alter(&$form, FormStateI
     '#title' => t('Secondary logo.'),
     '#default_value' => theme_get_setting('custom_logo'),
     '#progress_indicator' => 'bar',
-    '#progress_message'   => t('Please wait...'),
+    '#progress_message'   => t('Processing...'),
     '#upload_location' => 'public://test',
     '#upload_validators'  => [
       'FileExtension' => ['extensions' => 'gif png jpg jpeg'],

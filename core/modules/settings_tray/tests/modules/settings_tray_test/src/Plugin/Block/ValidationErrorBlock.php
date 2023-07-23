@@ -27,7 +27,7 @@ class ValidationErrorBlock extends BlockBase {
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     parent::validateConfigurationForm($form, $form_state);
-    $form_state->setError($form['label'], 'Sorry system error. Please save again.');
+    $form_state->setError($form['label'], 'Sorry system error. Save again.');
   }
 
 }

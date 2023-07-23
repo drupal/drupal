@@ -34,6 +34,6 @@ following in your "Database file" field:
   sites/default/files/.ht.sqlite
 
 Note: The .ht in the name will tell Apache to prevent the database from being
-downloaded. Please check that the file is, indeed, protected by your webserver.
-If not, please consult the documentation of your webserver on how to protect a
-file from downloading.
+downloaded. Check that the file is, indeed, protected by your webserver. If not,
+consult the documentation of your webserver on how to protect a file from
+downloading.

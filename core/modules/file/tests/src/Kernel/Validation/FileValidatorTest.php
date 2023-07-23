@@ -53,8 +53,8 @@ class FileValidatorTest extends FileValidatorTestBase {
     $this->file->set('filename', $this->randomMachineName(241));
     $violations = $this->validator->validate($this->file, $validators);
     $this->assertCount(2, $violations);
-    $this->assertEquals("The file's name exceeds the 240 characters limit. Please rename the file and try again.", $violations[0]->getMessage());
-    $this->assertEquals("The file's name exceeds the 240 characters limit. Please rename the file and try again.", $violations[1]->getMessage());
+    $this->assertEquals("The file's name exceeds the 240 characters limit. Rename the file and try again.", $violations[0]->getMessage());
+    $this->assertEquals("The file's name exceeds the 240 characters limit. Rename the file and try again.", $violations[1]->getMessage());
     $this->assertCount(1, file_test_get_calls('validate'));
   }
 

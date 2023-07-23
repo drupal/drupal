@@ -151,7 +151,7 @@ class EarlyRenderingControllerWrapperSubscriber implements EventSubscriberInterf
       // is not permitted in that case. It is the developer's responsibility
       // to not use early rendering.
       elseif ($response instanceof AttachmentsInterface || $response instanceof CacheableResponseInterface || $response instanceof CacheableDependencyInterface) {
-        throw new \LogicException(sprintf('The controller result claims to be providing relevant cache metadata, but leaked metadata was detected. Please ensure you are not rendering content too early. Returned object class: %s.', get_class($response)));
+        throw new \LogicException(sprintf('The controller result claims to be providing relevant cache metadata, but leaked metadata was detected. Ensure you are not rendering content too early. Returned object class: %s.', get_class($response)));
       }
       else {
         // A Response or domain object is returned that does not care about

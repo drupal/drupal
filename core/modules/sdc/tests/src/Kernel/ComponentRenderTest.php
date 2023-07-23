@@ -108,7 +108,7 @@ final class ComponentRenderTest extends ComponentKernelTestBase {
       '#component' => 'sdc_test:my-banner',
       '#props' => [
         'heading' => $this->t('I am a banner'),
-        'ctaText' => $this->t('Click me, please'),
+        'ctaText' => $this->t('Click me'),
         'ctaHref' => 'https://www.example.org',
         'ctaTarget' => '',
       ],
@@ -260,7 +260,7 @@ final class ComponentRenderTest extends ComponentKernelTestBase {
       '#component' => 'sdc_test:my-banner',
       '#props' => [
         'heading' => $this->t('I am a banner'),
-        'ctaText' => $this->t('Click me, please'),
+        'ctaText' => $this->t('Click me'),
         'ctaHref' => 'https://www.example.org',
         'ctaTarget' => '',
       ],
@@ -292,7 +292,7 @@ final class ComponentRenderTest extends ComponentKernelTestBase {
       '#component' => 'sdc_test:my-banner',
       '#props' => [
         'heading' => $this->t('I am a banner'),
-        'ctaText' => $this->t('Click me, please'),
+        'ctaText' => $this->t('Click me'),
         'ctaHref' => 'https://www.example.org',
         'ctaTarget' => '',
       ],

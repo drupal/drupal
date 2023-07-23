@@ -362,7 +362,7 @@
    * @prop {string} [progress.type='throbber']
    *   Type of progress element, core provides `'bar'`, `'throbber'` and
    *   `'fullscreen'`.
-   * @prop {string} [progress.message=Drupal.t('Please wait...')]
+   * @prop {string} [progress.message=Drupal.t('Processing...')]
    *   Custom message to be used with the bar indicator.
    * @prop {object} [submit]
    *   Extra data to be sent with the Ajax request.
@@ -407,7 +407,7 @@
       method: 'replaceWith',
       progress: {
         type: 'throbber',
-        message: Drupal.t('Please wait...'),
+        message: Drupal.t('Processing...'),
       },
       submit: {
         js: true,

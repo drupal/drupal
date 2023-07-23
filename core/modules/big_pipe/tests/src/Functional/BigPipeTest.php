@@ -207,7 +207,7 @@ class BigPipeTest extends BrowserTestBase {
     $this->config('system.logging')->set('error_level', ERROR_REPORTING_DISPLAY_VERBOSE)->save();
     $this->drupalGet(Url::fromRoute('big_pipe_test'));
     // The 'edge_case__html_exception' case throws an exception.
-    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Please try again later');
+    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Try again later');
     $this->assertSession()->pageTextContains('You are not allowed to say llamas are not cool!');
     // Check that stop signal and closing body tag are absent.
     $this->assertSession()->responseNotContains(BigPipe::STOP_SIGNAL);
@@ -279,7 +279,7 @@ class BigPipeTest extends BrowserTestBase {
     $this->config('system.logging')->set('error_level', ERROR_REPORTING_DISPLAY_VERBOSE)->save();
     $this->drupalGet(Url::fromRoute('big_pipe_test'));
     // The 'edge_case__html_exception' case throws an exception.
-    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Please try again later');
+    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Try again later');
     $this->assertSession()->pageTextContains('You are not allowed to say llamas are not cool!');
     $this->assertSession()->responseNotContains('</body>');
     // The exception is expected. Do not interpret it as a test failure.

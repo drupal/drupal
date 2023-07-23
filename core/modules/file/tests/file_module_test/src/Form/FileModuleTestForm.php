@@ -42,7 +42,7 @@ class FileModuleTestForm extends FormBase {
       '#type' => 'managed_file',
       '#title' => $this->t('Managed <em>@type</em>', ['@type' => 'file & butter']),
       '#upload_location' => 'public://test',
-      '#progress_message' => $this->t('Please wait...'),
+      '#progress_message' => $this->t('Processing...'),
       '#extended' => (bool) $extended,
       '#size' => 13,
       '#multiple' => (bool) $multiple,

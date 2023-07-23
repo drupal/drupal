@@ -29,7 +29,7 @@ class Http4xxController extends ControllerBase {
    */
   public function on401() {
     return [
-      '#markup' => $this->t('Please log in to access this page.'),
+      '#markup' => $this->t('Log in to access this page.'),
     ];
   }
 

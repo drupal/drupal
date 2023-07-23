@@ -35,19 +35,19 @@ class FormattableMarkupTest extends TestCase {
    * @covers ::jsonSerialize
    */
   public function testToString() {
-    $string = 'Can I please have a @replacement';
+    $string = 'Can I have a @replacement';
     $formattable_string = new FormattableMarkup($string, ['@replacement' => 'kitten']);
     $text = (string) $formattable_string;
-    $this->assertEquals('Can I please have a kitten', $text);
+    $this->assertEquals('Can I have a kitten', $text);
     $text = $formattable_string->jsonSerialize();
-    $this->assertEquals('Can I please have a kitten', $text);
+    $this->assertEquals('Can I have a kitten', $text);
   }
 
   /**
    * @covers ::count
    */
   public function testCount() {
-    $string = 'Can I please have a @replacement';
+    $string = 'Can I have a @replacement';
     $formattable_string = new FormattableMarkup($string, ['@replacement' => 'kitten']);
     $this->assertEquals(strlen($string), $formattable_string->count());
   }

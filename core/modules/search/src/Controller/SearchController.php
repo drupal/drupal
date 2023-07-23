@@ -104,7 +104,7 @@ class SearchController extends ControllerBase {
       else {
         // The search not being executable means that no keywords or other
         // conditions were entered.
-        $this->messenger()->addError($this->t('Please enter some keywords.'));
+        $this->messenger()->addError($this->t('Enter some keywords.'));
       }
     }
 

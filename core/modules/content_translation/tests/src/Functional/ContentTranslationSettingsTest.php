@@ -258,8 +258,8 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
 
     // Make sure account settings can be saved.
     $this->drupalGet('admin/config/people/accounts');
-    $this->submitForm(['anonymous' => 'Save me please!'], 'Save configuration');
-    $this->assertSession()->fieldValueEquals('anonymous', 'Save me please!');
+    $this->submitForm(['anonymous' => 'Save me!'], 'Save configuration');
+    $this->assertSession()->fieldValueEquals('anonymous', 'Save me!');
     $this->assertSession()->statusMessageContains('The configuration options have been saved.', 'status');
   }
 

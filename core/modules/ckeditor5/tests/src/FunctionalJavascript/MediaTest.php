@@ -415,7 +415,7 @@ class MediaTest extends WebDriverTestBase {
     $assert_session->waitForElementVisible('css', '.ck-widget.drupal-media');
     $this->assertEmpty($assert_session->waitForElementVisible('css', 'img[src*="image-test.png"]', 1000));
     $assert_session->elementNotExists('css', '.ck-widget.drupal-media .media');
-    $this->assertNotEmpty($assert_session->waitForText('An error occurred while trying to preview the media. Please save your work and reload this page.'));
+    $this->assertNotEmpty($assert_session->waitForText('An error occurred while trying to preview the media. Save your work and reload this page.'));
     // Now assert that the error doesn't appear when the override to force an
     // error is removed.
     $this->container->get('state')->set('test_media_filter_controller_throw_error', FALSE);
