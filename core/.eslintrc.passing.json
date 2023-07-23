@@ -13,7 +13,6 @@
     "default-param-last": "off",
     "prefer-destructuring": "off",
     "prefer-regex-literals": "off",
-    "import/named": "off",
     "import/no-import-module-exports": "off"
   }
 }
