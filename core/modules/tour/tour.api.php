@@ -6,6 +6,21 @@
  */
 
 /**
+ * @defgroup help_docs Help and documentation
+ * @{
+ * Documenting modules, themes, and install profiles
+ *
+ * @section sec_tour Tours
+ * Modules can provide tours of administrative pages by creating tour config
+ * files and placing them in their config/optional subdirectory. See
+ * @link https://www.drupal.org/docs/8/api/tour-api/overview Tour API overview @endlink
+ * for more information. The contributed
+ * @link https://www.drupal.org/project/tour_ui Tour UI module @endlink
+ * can also be used to create tour config files.
+ * @}
+ */
+
+/**
  * @addtogroup hooks
  * @{
  */

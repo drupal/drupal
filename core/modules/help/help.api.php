@@ -26,14 +26,6 @@ use Drupal\Core\Url;
  * hook_help() documentation and
  * @link https://www.drupal.org/docs/develop/documenting-your-project/help-text-standards Help text standards @endlink
  * for more information.
- *
- * @section sec_tour Tours
- * Modules can provide tours of administrative pages by creating tour config
- * files and placing them in their config/optional subdirectory. See
- * @link https://www.drupal.org/docs/8/api/tour-api/overview Tour API overview @endlink
- * for more information. The contributed
- * @link https://www.drupal.org/project/tour_ui Tour UI module @endlink
- * can also be used to create tour config files.
  * @}
  */
 
