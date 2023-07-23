@@ -176,6 +176,13 @@ class ContentTranslationUntranslatableFieldsTest extends ContentTranslationPendi
     $this->submitForm([$settings_key => 0], 'Save configuration');
     $this->assertSession()->fieldValueEquals($field_name, 1);
     $this->assertSession()->fieldDisabled($field_name);
+
+    // Verify that the untranslatable fields warning message is not displayed
+    // when submitting.
+    $this->drupalGet($it_edit_url);
+    $this->assertSession()->pageTextContains('Fields that apply to all languages are hidden to avoid conflicting changes.');
+    $this->submitForm([], 'Save (this translation)');
+    $this->assertSession()->pageTextNotContains('Fields that apply to all languages are hidden to avoid conflicting changes.');
   }
 
 }

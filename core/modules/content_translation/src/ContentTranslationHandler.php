@@ -629,9 +629,21 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
       }
     }
 
-    if ($display_warning && !$form_state->isSubmitted() && !$form_state->isRebuilding()) {
+    if ($display_warning) {
       $url = $entity->getUntranslated()->toUrl('edit-form')->toString();
-      $this->messenger->addWarning($this->t('Fields that apply to all languages are hidden to avoid conflicting changes. <a href=":url">Edit them on the original language form</a>.', [':url' => $url]));
+      $message['warning'][] = $this->t('Fields that apply to all languages are hidden to avoid conflicting changes. <a href=":url">Edit them on the original language form</a>.', [':url' => $url]);
+      // Explicitly renders this warning message. This prevents repetition on
+      // AJAX operations or form submission. Other messages will be rendered in
+      // the default location.
+      // @see \Drupal\Core\Render\Element\StatusMessages.
+      $element['hidden_fields_warning_message'] = [
+        '#theme' => 'status_messages',
+        '#message_list' => $message,
+        '#weight' => -100,
+        '#status_headings' => [
+          'warning' => $this->t('Warning message'),
+        ],
+      ];
     }
 
     return $element;

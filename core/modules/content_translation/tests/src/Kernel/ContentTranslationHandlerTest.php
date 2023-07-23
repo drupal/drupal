@@ -93,21 +93,15 @@ class ContentTranslationHandlerTest extends KernelTestBase {
    *   Whether or not the entity is the default translation.
    * @param bool $translation_form
    *   Whether or not the form is a translation form.
-   * @param bool $is_submitted
-   *   Whether or not the form should be marked as submitted.
-   * @param bool $is_rebuilding
-   *   Whether or not the form should be flagged for rebuild.
    * @param array $expected
    *   The expected altered element.
-   * @param bool $display_warning
-   *   Whether or not the warning message should be displayed.
    *
    * @dataProvider providerTestEntityFormSharedElements
    *
    * @covers ::entityFormSharedElements
    * @covers ::addTranslatabilityClue
    */
-  public function testEntityFormSharedElements(array $element, $default_translation_affected, $default_translation, $translation_form, $is_submitted, $is_rebuilding, array $expected, $display_warning) {
+  public function testEntityFormSharedElements(array $element, $default_translation_affected, $default_translation, $translation_form, array $expected) {
     $this->state->set('entity_test.translation', TRUE);
     $this->state->set('entity_test.untranslatable_fields.default_translation_affected', $default_translation_affected);
     $this->entityTypeBundleInfo->clearCachedBundles();
@@ -126,21 +120,11 @@ class ContentTranslationHandlerTest extends KernelTestBase {
     $form_state
       ->addBuildInfo('callback_object', $form_object)
       ->set(['content_translation', 'translation_form'], $translation_form);
-    if ($is_submitted) {
-      $form_state->setSubmitted();
-    }
-    $form_state->setRebuild($is_rebuilding);
 
     $handler = $this->entityTypeManager->getHandler($this->entityTypeId, 'translation');
     $actual = $handler->entityFormSharedElements($element, $form_state, $element);
 
     $this->assertEquals($expected, $actual);
-    if ($display_warning) {
-      $messages = $this->messenger->messagesByType('warning');
-      $this->assertCount(1, $messages);
-      $expected_message = sprintf('Fields that apply to all languages are hidden to avoid conflicting changes. <a href="%s">Edit them on the original language form</a>.', $entity->toUrl('edit-form')->toString());
-      $this->assertSame($expected_message, (string) reset($messages));
-    }
   }
 
   /**
@@ -159,10 +143,7 @@ class ContentTranslationHandlerTest extends KernelTestBase {
       'default_translation_affected' => TRUE,
       'default_translation' => TRUE,
       'translation_form' => FALSE,
-      'is_submitted' => TRUE,
-      'is_rebuilding' => TRUE,
       'expected' => $element,
-      'display_warning' => FALSE,
     ];
 
     $element = [
@@ -226,19 +207,22 @@ class ContentTranslationHandlerTest extends KernelTestBase {
       'name' => [
         '#type' => 'textfield',
       ],
+      'hidden_fields_warning_message' => [
+        '#theme' => 'status_messages',
+        '#message_list' => [
+          'warning' => [t('Fields that apply to all languages are hidden to avoid conflicting changes. <a href=":url">Edit them on the original language form</a>.')],
+        ],
+        '#weight' => -100,
+        '#status_headings' => [
+          'warning' => t('Warning message'),
+        ],
+      ],
     ];
     $expected = $element;
     $expected['name']['#access'] = FALSE;
     $tests['hide-untranslatable'] = $tests['unknown-field'];
     $tests['hide-untranslatable']['element'] = $element;
     $tests['hide-untranslatable']['expected'] = $expected;
-
-    $tests['is-rebuilding'] = $tests['hide-untranslatable'];
-    $tests['is-rebuilding']['is_submitted'] = FALSE;
-
-    $tests['display-warning'] = $tests['is-rebuilding'];
-    $tests['display-warning']['is_rebuilding'] = FALSE;
-    $tests['display-warning']['display_warning'] = TRUE;
 
     $tests['no-translation-form'] = $tests['no-translatability-clue'];
     $tests['no-translation-form']['translation_form'] = FALSE;
