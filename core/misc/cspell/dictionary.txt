@@ -603,9 +603,7 @@ langcode
 langcodes
 langname
 languageswitcher
-layouted
 lazybuilder
-lazyload
 lcode
 leftjoin
 libc
@@ -640,11 +638,6 @@ longblob
 longerthan
 longtext
 loquesea
-loreming
-loremingipsum
-loremipsum
-loremipsumloremipsum
-lowlevel
 lowline
 lrdd
 lstitle
@@ -662,7 +655,6 @@ mainpage
 makealternatemessage
 makedefaultmessage
 makewarningmessage
-mame
 mank
 maryjane
 marz
@@ -698,13 +690,11 @@ mimetypes
 minifyzombies
 minimise
 minipager
-minky
 minusthick
 missingkey
 missingkeys
 mlfr
 mlid
-mlids
 moby
 mocktail
 mocktails
@@ -716,11 +706,9 @@ mojito
 montag
 monthnames
 mooooh
-mosie
 mostrar
 moutons
 moyenne
-mple
 msgctxt
 msgid
 msgstr
