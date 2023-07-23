@@ -238,7 +238,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
     $form_state->clearErrors();
 
     // Return the processed form together with form_state and errors
-    // to allow the caller lowlevel access to the form.
+    // to allow the caller low-level access to the form.
     return [$form, $form_state, $errors];
   }
 

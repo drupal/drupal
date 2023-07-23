@@ -498,7 +498,7 @@ class MenuForm extends EntityForm {
         if ($updated_values) {
           // Use the ID from the actual plugin instance since the hidden value
           // in the form could be tampered with.
-          $this->menuLinkManager->updateDefinition($element['#item']->link->getPLuginId(), $updated_values);
+          $this->menuLinkManager->updateDefinition($element['#item']->link->getPluginId(), $updated_values);
         }
       }
     }

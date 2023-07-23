@@ -185,7 +185,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
       'hostname' => 'magic.example.com',
       // Unpublished.
       'status' => 0,
-      'subject' => 'Gail the minky whale',
+      'subject' => 'Gail the minke whale',
       'entity_id' => $host->id(),
       'comment_type' => 'comment',
       'field_name' => 'comment_other',

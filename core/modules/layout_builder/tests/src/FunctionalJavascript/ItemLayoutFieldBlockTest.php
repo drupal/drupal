@@ -69,7 +69,7 @@ class ItemLayoutFieldBlockTest extends WebDriverTestBase {
     $this->clickLink('Add block');
     $assert_session->assertWaitOnAjaxRequest();
 
-    // Validate that only field blocks for layouted bundle are present.
+    // Validate that only field blocks for layout bundles are present.
     $valid_links = $page->findAll('css', 'a[href$="field_block%3Anode%3Abundle_with_layout_overrides%3Abody"]');
     $this->assertCount(1, $valid_links);
     $invalid_links = $page->findAll('css', 'a[href$="field_block%3Anode%3Afiller_bundle%3Abody"]');

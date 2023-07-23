@@ -737,7 +737,7 @@ class FilterKernelTest extends KernelTestBase {
       ],
       '<p>Test &lt;br/&gt;: This is a www.example17.com example <strong>with</strong> various http://www.example18.com tags. *<br/>
        It is important www.example19.com to *<br/>test different URLs and http://www.example20.com in the same paragraph. *<br>
-      HTML www.example21.com soup by person@example22.com can litererally http://www.example23.com contain *img*<img> anything. Just a www.example24.com with http://www.example25.com thrown in. www.example26.com from person@example27.com with extra http://www.example28.com.
+       HTML www.example21.com soup by person@example22.com can literally http://www.example23.com contain *img*<img> anything. Just a www.example24.com with http://www.example25.com thrown in. www.example26.com from person@example27.com with extra http://www.example28.com.
       ' => [
         'href="http://www.example17.com"' => TRUE,
         'href="http://www.example18.com"' => TRUE,

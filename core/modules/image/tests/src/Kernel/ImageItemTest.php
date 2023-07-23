@@ -144,7 +144,7 @@ class ImageItemTest extends FieldKernelTestBase {
 
     // Delete the image and try to save the entity again.
     $this->image->delete();
-    $entity = EntityTest::create(['mame' => $this->randomMachineName()]);
+    $entity = EntityTest::create(['name' => $this->randomMachineName()]);
     $entity->save();
 
     // Test image item properties.
