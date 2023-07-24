@@ -88,19 +88,15 @@ class AssetOptimizationTest extends BrowserTestBase {
 
     // Collect all the URLs for all the script and styles prior to making any
     // more requests.
-    $style_elements = $page->findAll('xpath', '//link[@rel="stylesheet"]');
-    $script_elements = $page->findAll('xpath', '//script');
+    $style_elements = $page->findAll('xpath', '//link[@href and @rel="stylesheet"]');
+    $script_elements = $page->findAll('xpath', '//script[@src]');
     $style_urls = [];
     foreach ($style_elements as $element) {
-      if ($element->hasAttribute('href')) {
-        $style_urls[] = $element->getAttribute('href');
-      }
+      $style_urls[] = $element->getAttribute('href');
     }
     $script_urls = [];
     foreach ($script_elements as $element) {
-      if ($element->hasAttribute('src')) {
-        $script_urls[] = $element->getAttribute('src');
-      }
+      $script_urls[] = $element->getAttribute('src');
     }
     foreach ($style_urls as $url) {
       $this->assertAggregate($url);
