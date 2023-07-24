@@ -47,6 +47,7 @@
       { "name": "drupal", "path": "./misc/cspell/dictionary.txt"}
     ],
     "flagWords": [
+      "e-mail",
       "grey",
       "hte",
       "please"

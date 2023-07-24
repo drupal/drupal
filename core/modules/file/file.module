@@ -795,7 +795,7 @@ function file_tokens($type, $tokens, array $data, array $options, BubbleableMeta
 
         case 'url':
           // Ideally, this would use return a relative URL, but because tokens
-          // are also often used in e-mails, it's better to keep absolute file
+          // are also often used in emails, it's better to keep absolute file
           // URLs. The 'url.site' cache context is associated to ensure the
           // correct absolute URL is used in case of a multisite setup.
           $replacements[$original] = $file->createFileUrl(FALSE);

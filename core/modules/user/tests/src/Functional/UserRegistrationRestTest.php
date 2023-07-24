@@ -88,7 +88,7 @@ class UserRegistrationRestTest extends ResourceTestBase {
     $response = $this->registerRequest('Rick.Deckard', FALSE);
     $this->assertResourceErrorResponse(422, "No password provided.", $response);
 
-    // Attempt to register with a password when e-mail verification is on.
+    // Attempt to register with a password when email verification is on.
     $config->set('register', UserInterface::REGISTER_VISITORS);
     $config->set('verify_mail', 1);
     $config->save();
@@ -119,7 +119,7 @@ class UserRegistrationRestTest extends ResourceTestBase {
     $this->assertMailString('body', 'Your application for an account is', 2);
     $this->assertMailString('body', 'Argaven has applied for an account', 2);
 
-    // Allow visitors to register with Admin approval and e-mail verification.
+    // Allow visitors to register with Admin approval and email verification.
     $config->set('register', UserInterface::REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);
     $config->set('verify_mail', 1);
     $config->save();

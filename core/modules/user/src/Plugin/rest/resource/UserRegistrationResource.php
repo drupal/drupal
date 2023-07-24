@@ -153,13 +153,13 @@ class UserRegistrationResource extends ResourceBase {
 
     if (!$this->userSettings->get('verify_mail')) {
       if (empty($account->getPassword())) {
-        // If no e-mail verification then the user must provide a password.
+        // If no email verification then the user must provide a password.
         throw new UnprocessableEntityHttpException('No password provided.');
       }
     }
     else {
       if (!empty($account->getPassword())) {
-        // If e-mail verification required then a password cannot provided.
+        // If email verification required then a password cannot provided.
         // The password will be set when the user logs in.
         throw new UnprocessableEntityHttpException('A Password cannot be specified. It will be generated on login.');
       }
@@ -174,7 +174,7 @@ class UserRegistrationResource extends ResourceBase {
    */
   protected function sendEmailNotifications(UserInterface $account) {
     $approval_settings = $this->userSettings->get('register');
-    // No e-mail verification is required. Activating the user.
+    // No email verification is required. Activating the user.
     if ($approval_settings == UserInterface::REGISTER_VISITORS) {
       if ($this->userSettings->get('verify_mail')) {
         // No administrator approval required.

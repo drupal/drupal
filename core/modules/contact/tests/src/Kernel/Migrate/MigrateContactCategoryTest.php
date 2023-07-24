@@ -36,7 +36,7 @@ class MigrateContactCategoryTest extends MigrateDrupal6TestBase {
    * @param string $expected_label
    *   The expected label.
    * @param string[] $expected_recipients
-   *   The recipient e-mail addresses the form should have.
+   *   The recipient email addresses the form should have.
    * @param string $expected_reply
    *   The expected reply message.
    * @param int $expected_weight

@@ -111,7 +111,7 @@ class UserMailRequiredValidatorTest extends UnitTestCase {
     $items->isEmpty()->willReturn(TRUE);
     $cases['Existing users without an email should add a violation'] = [$items->reveal(), TRUE];
 
-    // Case 4: New user with an e-mail is valid.
+    // Case 4: New user with an email is valid.
     $items = $prophet->prophesize(FieldItemListInterface::class);
     $account = $prophet->prophesize(UserInterface::class);
     $account->isNew()->willReturn(TRUE);
@@ -121,7 +121,7 @@ class UserMailRequiredValidatorTest extends UnitTestCase {
     $account->getFieldDefinition("mail")->willReturn($field_definition->reveal())->shouldBeCalledTimes(1);
     $items->getEntity()->willReturn($account->reveal())->shouldBeCalledTimes(1);
     $items->isEmpty()->willReturn(FALSE);
-    $cases['New user with an e-mail is valid'] = [$items->reveal(), FALSE];
+    $cases['New user with an email is valid'] = [$items->reveal(), FALSE];
 
     // Case 5: Existing users with an email should be ignored.
     $items = $prophet->prophesize(FieldItemListInterface::class);

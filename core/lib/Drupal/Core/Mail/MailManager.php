@@ -172,7 +172,7 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
    */
   public function mail($module, $key, $to, $langcode, $params = [], $reply = NULL, $send = TRUE) {
     // Mailing can invoke rendering (e.g., generating URLs, replacing tokens),
-    // but e-mails are not HTTP responses: they're not cached, they don't have
+    // but emails are not HTTP responses: they're not cached, they don't have
     // attachments. Therefore we perform mailing inside its own render context,
     // to ensure it doesn't leak into the render context for the HTTP response
     // to the current request.

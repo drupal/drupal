@@ -452,7 +452,7 @@ EOD;
    * transformed and should generally be avoided.
    *
    * Necessary for HTML that is served outside of a website, for example, RSS
-   * and e-mail.
+   * and email.
    *
    * @param string $html
    *   The partial (X)HTML snippet to load. Invalid markup will be corrected on
