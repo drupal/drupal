@@ -177,6 +177,48 @@ class MenuUiTest extends BrowserTestBase {
     $instance = $menu_link_manager->createInstance($instance->getPluginId());
     $this->assertEquals($edit['weight'], $instance->getWeight(), 'Saving an existing link updates the weight.');
     $this->resetMenuLink($instance, $old_weight);
+
+    // Tests the menus are listed alphabetically
+    // Delete all existing menus.
+    $existing = Menu::loadMultiple();
+    foreach ($existing as $existingMenu) {
+      $existingMenu->delete();
+    }
+
+    // Test alphabetical order without pager.
+    $menus = [];
+    for ($i = 1; $i < 6; $i++) {
+      $menus[] = strtolower($this->getRandomGenerator()->name());
+    }
+    sort($menus);
+    foreach ($menus as $menu) {
+      Menu::create(['id' => $menu, 'label' => $menu])->save();
+    }
+    $this->drupalGet('/admin/structure/menu');
+    $base_path = parse_url($this->baseUrl, PHP_URL_PATH) ?? '';
+    $first_link = $this->assertSession()->elementExists('css', 'tbody tr:nth-of-type(1) a');
+    $last_link = $this->assertSession()->elementExists('css', 'tbody tr:nth-of-type(5) a');
+    $this->assertEquals($first_link->getAttribute('href'), sprintf('%s/admin/structure/menu/manage/%s', $base_path, $menus[0]));
+    $this->assertEquals($last_link->getAttribute('href'), sprintf('%s/admin/structure/menu/manage/%s', $base_path, $menus[4]));
+    // Test alphabetical order with pager.
+    $new_menus = [];
+    for ($i = 1; $i < 61; $i++) {
+      $new_menus[] = strtolower($this->getRandomGenerator()->name());
+    }
+    foreach ($new_menus as $menu) {
+      Menu::create(['id' => $menu, 'label' => $menu])->save();
+    }
+    $menus = array_merge($menus, $new_menus);
+    sort($menus);
+    $this->drupalGet('/admin/structure/menu', [
+      'query' => [
+        'page' => 1,
+      ],
+    ]);
+    $first_link = $this->assertSession()->elementExists('css', 'tbody tr:nth-of-type(1) a');
+    $last_link = $this->assertSession()->elementExists('css', 'tbody tr:nth-of-type(15) a');
+    $this->assertEquals($first_link->getAttribute('href'), sprintf('%s/admin/structure/menu/manage/%s', $base_path, $menus[50]));
+    $this->assertEquals($last_link->getAttribute('href'), sprintf('%s/admin/structure/menu/manage/%s', $base_path, $menus[64]));
   }
 
   /**
