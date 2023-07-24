@@ -36,6 +36,7 @@ use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\Url;
 use GuzzleHttp\Exception\TransferException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 /**
  * Disabled option on forms and settings.
@@ -305,15 +306,11 @@ function system_theme_suggestions_page(array $variables) {
   $path_args = explode('/', trim(\Drupal::service('path.current')->getPath(), '/'));
   $suggestions = theme_get_suggestions($path_args, 'page');
 
-  $http_error_suggestions = [
-    'system.401' => 'page__401',
-    'system.403' => 'page__403',
-    'system.404' => 'page__404',
-  ];
-  $route_name = \Drupal::routeMatch()->getRouteName();
-  if (isset($http_error_suggestions[$route_name])) {
+  $supported_http_error_codes = [401, 403, 404];
+  $exception = \Drupal::requestStack()->getCurrentRequest()->attributes->get('exception');
+  if ($exception instanceof HttpExceptionInterface && in_array($exception->getStatusCode(), $supported_http_error_codes, TRUE)) {
     $suggestions[] = 'page__4xx';
-    $suggestions[] = $http_error_suggestions[$route_name];
+    $suggestions[] = 'page__' . $exception->getStatusCode();
   }
 
   return $suggestions;
