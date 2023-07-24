@@ -14,7 +14,7 @@ class HelpPageOrderTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['help', 'tour'];
+  protected static $modules = ['help', 'help_page_test'];
 
   /**
    * {@inheritdoc}
@@ -28,7 +28,7 @@ class HelpPageOrderTest extends BrowserTestBase {
    */
   protected $stringOrder = [
     'Module overviews are provided',
-    'Tours guide you',
+    'This description should appear',
   ];
 
   /**
@@ -42,7 +42,6 @@ class HelpPageOrderTest extends BrowserTestBase {
       'access help pages',
       'view the administration theme',
       'administer permissions',
-      'access tour',
     ]);
     $this->drupalLogin($account);
   }
