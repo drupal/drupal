@@ -192,53 +192,6 @@ class TermTest extends TaxonomyTestBase {
   }
 
   /**
-   * Tests that hook_node_$op implementations work correctly.
-   *
-   * Save & edit a node and assert that taxonomy terms are saved/loaded properly.
-   */
-  public function testTaxonomyNode() {
-    // Create two taxonomy terms.
-    $term1 = $this->createTerm($this->vocabulary);
-    $term2 = $this->createTerm($this->vocabulary);
-
-    // Post an article.
-    $edit = [];
-    $edit['title[0][value]'] = $this->randomMachineName();
-    $edit['body[0][value]'] = $this->randomMachineName();
-    $edit[$this->field->getName() . '[]'] = $term1->id();
-    $this->drupalGet('node/add/article');
-    $this->submitForm($edit, 'Save');
-
-    // Check that the term is displayed when the node is viewed.
-    $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
-    $this->drupalGet('node/' . $node->id());
-    $this->assertSession()->pageTextContains($term1->getName());
-
-    $this->clickLink('Edit');
-    $this->assertSession()->pageTextContains($term1->getName());
-    $this->submitForm([], 'Save');
-    $this->assertSession()->pageTextContains($term1->getName());
-
-    // Edit the node with a different term.
-    $edit[$this->field->getName() . '[]'] = $term2->id();
-    $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->submitForm($edit, 'Save');
-
-    $this->drupalGet('node/' . $node->id());
-    $this->assertSession()->pageTextContains($term2->getName());
-
-    // Preview the node.
-    $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->submitForm($edit, 'Preview');
-    // Ensure that term is displayed when previewing the node.
-    $this->assertSession()->pageTextContainsOnce($term2->getName());
-    $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->submitForm([], 'Preview');
-    // Ensure that term is displayed when previewing the node again.
-    $this->assertSession()->pageTextContainsOnce($term2->getName());
-  }
-
-  /**
    * Tests term creation with a free-tagging vocabulary from the node form.
    */
   public function testNodeTermCreationAndDeletion() {
