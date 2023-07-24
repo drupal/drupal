@@ -619,13 +619,13 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
    * @return string
    *   The cache ID string.
    *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is no
    *   replacement.
    *
    * @see https://www.drupal.org/node/3354596
    */
   protected function createCacheId(array $keys, array $contexts) {
-    @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See: https://www.drupal.org/project/drupal/issues/2551419.', E_USER_DEPRECATED);
+    @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is no replacement. See: https://www.drupal.org/project/drupal/issues/2551419.', E_USER_DEPRECATED);
     $cid_parts = $keys;
 
     $contexts = \Drupal::service('cache_contexts_manager')->convertTokensToKeys($contexts);

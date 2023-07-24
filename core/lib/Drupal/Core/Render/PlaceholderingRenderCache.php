@@ -85,7 +85,7 @@ class PlaceholderingRenderCache extends RenderCache {
    */
   public function __construct(RequestStack $request_stack, $cache_factory, CacheContextsManager $cache_contexts_manager, PlaceholderGeneratorInterface $placeholder_generator) {
     if ($cache_factory instanceof CacheFactoryInterface) {
-      @trigger_error('Injecting ' . __CLASS__ . ' with the "cache_factory" service is deprecated in drupal:10.1.0, use "variation_cache_factory" instead.', E_USER_DEPRECATED);
+      @trigger_error('Injecting ' . __CLASS__ . ' with the "cache_factory" service is deprecated in drupal:10.2.0, use "variation_cache_factory" instead.', E_USER_DEPRECATED);
       $cache_factory = \Drupal::service('variation_cache_factory');
     }
     parent::__construct($request_stack, $cache_factory, $cache_contexts_manager);
