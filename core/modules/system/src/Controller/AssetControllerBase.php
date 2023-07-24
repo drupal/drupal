@@ -117,7 +117,12 @@ abstract class AssetControllerBase extends FileDownloadController {
     // Check to see whether a file matching the $uri already exists, this can
     // happen if it was created while this request was in progress.
     if (file_exists($uri)) {
-      return new BinaryFileResponse($uri, 200, ['Cache-control' => static::CACHE_CONTROL]);
+      return new BinaryFileResponse($uri, 200, [
+        'Cache-control' => static::CACHE_CONTROL,
+        // @todo: remove the explicit setting of Content-Type once this is
+        // fixed in https://www.drupal.org/project/drupal/issues/3172550.
+        'Content-Type' => $this->contentType,
+      ]);
     }
 
     // First validate that the request is valid enough to produce an asset group
