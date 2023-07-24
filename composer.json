@@ -68,6 +68,9 @@
         }
     },
     "extra": {
+        "branch-alias": {
+          "dev-11.x": "10.2.x-dev"
+        },
         "_readme": [
             "By default Drupal loads the autoloader from ./vendor/autoload.php.",
             "To change the autoloader you can edit ./autoload.php.",
