@@ -53,7 +53,7 @@ use Drupal\Core\Url;
  * - Module overview help, see content_translation_help(). Module overview
  *   help should follow
  *   @link https://www.drupal.org/node/632280 the standard help template. @endlink
- * - Page-specific help using only routes, see book_help().
+ * - Page-specific help using only routes, see node_help().
  * - Page-specific help using routes and $request, see block_help().
  *
  * @param string $route_name
