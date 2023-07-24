@@ -122,6 +122,34 @@ BROKEN;
   }
 
   /**
+   * Tests the module form with a module with an empty description in info.yml.
+   */
+  public function testModulesListFormWithEmptyDescriptionInfoFile() {
+    $path = \Drupal::getContainer()
+      ->getParameter('site.path') . "/modules/missing_description";
+    mkdir($path, 0777, TRUE);
+    $file_path = "$path/missing_description.info.yml";
+
+    $yml = <<<BROKEN
+name: Module with empty description
+type: module
+core_version_requirement: '*'
+description:
+BROKEN;
+
+    file_put_contents($file_path, $yml);
+
+    $this->drupalGet('admin/modules');
+    $this->assertSession()->statusCodeEquals(200);
+
+    $this->assertSession()
+      ->pageTextContains("Module with empty description");
+
+    // Check that the module filter text box is available.
+    $this->assertSession()->elementExists('xpath', '//input[@name="text"]');
+  }
+
+  /**
    * Confirm that module 'Required By' descriptions include dependent themes.
    */
   public function testRequiredByThemeMessage() {
