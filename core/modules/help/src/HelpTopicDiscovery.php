@@ -98,12 +98,6 @@ class HelpTopicDiscovery implements DiscoveryInterface {
         $plugin_id = substr(basename($file), 0, -10);
         // The plugin ID begins with provider.
         [$file_name_provider] = explode('.', $plugin_id, 2);
-        // Only the Help module can provide topics for other extensions.
-        // @todo https://www.drupal.org/i/3025577 Remove help special case once
-        //   all Help Topics are moved to their own modules.
-        if ($provider !== 'help' && $provider !== $file_name_provider) {
-          throw new DiscoveryException("$file file name should begin with '$provider'");
-        }
         $data = [
           // The plugin ID is derived from the filename. The extension
           // '.html.twig' is removed.

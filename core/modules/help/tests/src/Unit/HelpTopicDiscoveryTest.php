@@ -19,28 +19,6 @@ class HelpTopicDiscoveryTest extends UnitTestCase {
   /**
    * @covers ::findAll
    */
-  public function testDiscoveryExceptionProviderMismatch() {
-    vfsStream::setup('root');
-    vfsStream::create([
-      'modules' => [
-        'foo' => [
-          'help_topics' => [
-            // The content of the help topic does not matter.
-            'test.topic.html.twig' => '',
-          ],
-        ],
-      ],
-    ]);
-    $discovery = new HelpTopicDiscovery(['foo' => vfsStream::url('root/modules/foo/help_topics')]);
-
-    $this->expectException(DiscoveryException::class);
-    $this->expectExceptionMessage("vfs://root/modules/foo/help_topics/test.topic.html.twig file name should begin with 'foo'");
-    $discovery->getDefinitions();
-  }
-
-  /**
-   * @covers ::findAll
-   */
   public function testDiscoveryExceptionMissingLabel() {
     vfsStream::setup('root');
 
