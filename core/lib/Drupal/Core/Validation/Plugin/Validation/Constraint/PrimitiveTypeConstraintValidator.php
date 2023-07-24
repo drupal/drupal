@@ -5,6 +5,7 @@ namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 use Drupal\Core\TypedData\Type\BinaryInterface;
 use Drupal\Core\TypedData\Type\BooleanInterface;
 use Drupal\Core\TypedData\Type\DateTimeInterface;
+use Drupal\Core\TypedData\Type\DecimalInterface;
 use Drupal\Core\TypedData\Type\DurationInterface;
 use Drupal\Core\TypedData\Type\FloatInterface;
 use Drupal\Core\TypedData\Type\IntegerInterface;
@@ -46,6 +47,9 @@ class PrimitiveTypeConstraintValidator extends ConstraintValidator {
       $valid = FALSE;
     }
     if ($typed_data instanceof IntegerInterface && filter_var($value, FILTER_VALIDATE_INT) === FALSE) {
+      $valid = FALSE;
+    }
+    if ($typed_data instanceof DecimalInterface && !preg_match('/^[+-]?((\d+(\.\d*)?)|(\.\d+))$/i', $value)) {
       $valid = FALSE;
     }
     if ($typed_data instanceof StringInterface && !is_scalar($value) && !($value instanceof MarkupInterface)) {

@@ -10,6 +10,7 @@ use Drupal\Core\TypedData\MapDataDefinition;
 use Drupal\Core\TypedData\Type\BinaryInterface;
 use Drupal\Core\TypedData\Type\BooleanInterface;
 use Drupal\Core\TypedData\Type\DateTimeInterface;
+use Drupal\Core\TypedData\Type\DecimalInterface;
 use Drupal\Core\TypedData\Type\DurationInterface;
 use Drupal\Core\TypedData\Type\FloatInterface;
 use Drupal\Core\TypedData\Type\IntegerInterface;
@@ -115,6 +116,27 @@ class TypedDataTest extends KernelTestBase {
     $typed_data->setValue(NULL);
     $this->assertNull($typed_data->getValue(), 'Integer wrapper is null-able.');
     $this->assertEquals(0, $typed_data->validate()->count());
+    $typed_data->setValue('invalid');
+    $this->assertEquals(1, $typed_data->validate()->count(), 'Validation detected invalid value.');
+
+    // Decimal type.
+    $value = (string) (mt_rand(1, 10000) / 100);
+    $typed_data = $this->createTypedData(['type' => 'decimal'], $value);
+    $this->assertInstanceOf(DecimalInterface::class, $typed_data);
+    $this->assertSame($value, $typed_data->getValue(), 'Decimal value was fetched.');
+    $this->assertEquals(0, $typed_data->validate()->count());
+    $new_value = (string) (mt_rand(1, 10000) / 100);
+    $typed_data->setValue($new_value);
+    $this->assertSame($new_value, $typed_data->getValue(), 'Decimal value was changed.');
+    $this->assertIsString($typed_data->getString());
+    $this->assertEquals(0, $typed_data->validate()->count());
+    $typed_data->setValue(NULL);
+    $this->assertNull($typed_data->getValue(), 'Decimal wrapper is null-able.');
+    $this->assertEquals(0, $typed_data->validate()->count());
+    $typed_data->setValue(0);
+    $this->assertSame('0.0', $typed_data->getCastedValue(), '0.0 casted value was fetched.');
+    $typed_data->setValue('1337e0');
+    $this->assertEquals(1, $typed_data->validate()->count(), 'Scientific notation is not allowed in numeric type.');
     $typed_data->setValue('invalid');
     $this->assertEquals(1, $typed_data->validate()->count(), 'Validation detected invalid value.');
 
