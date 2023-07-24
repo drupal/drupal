@@ -5,10 +5,10 @@ namespace Drupal\KernelTests\Core\Theme;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Path\PathMatcherInterface;
-use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Theme\Registry;
 use Drupal\Core\Utility\ThemeRegistry;
 use Drupal\KernelTests\KernelTestBase;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 /**
  * Tests the behavior of the ThemeRegistry class.
@@ -193,6 +193,26 @@ class RegistryTest extends KernelTestBase {
   }
 
   /**
+   * Tests page theme suggestions for 200 responses.
+   */
+  public function test200ThemeSuggestions() {
+    $path_matcher = $this->prophesize(PathMatcherInterface::class);
+    $path_matcher->isFrontPage()->willReturn(FALSE);
+    \Drupal::getContainer()->set('path.matcher', $path_matcher->reveal());
+
+    $path_current = $this->prophesize(CurrentPathStack::class);
+    $path_current->getPath()->willReturn('/node/123');
+    \Drupal::getContainer()->set('path.current', $path_current->reveal());
+
+    $suggestions = \Drupal::moduleHandler()->invokeAll('theme_suggestions_page', [[]]);
+    $this->assertSame([
+      'page__node',
+      'page__node__%',
+      'page__node__123',
+    ], $suggestions);
+  }
+
+  /**
    * Data provider for test40xThemeSuggestions().
    *
    * @return array
@@ -200,9 +220,9 @@ class RegistryTest extends KernelTestBase {
    */
   public function provider40xThemeSuggestions() {
     return [
-      ['system.401', 'page__401'],
-      ['system.403', 'page__403'],
-      ['system.404', 'page__404'],
+      [401, 'page__401'],
+      [403, 'page__403'],
+      [404, 'page__404'],
     ];
   }
 
@@ -211,19 +231,18 @@ class RegistryTest extends KernelTestBase {
    *
    * @dataProvider provider40xThemeSuggestions
    */
-  public function test40xThemeSuggestions($route, $suggestion) {
-    /** @var \Drupal\Core\Path\PathMatcherInterface $path_matcher */
+  public function test40xThemeSuggestions(int $httpCode, string $suggestion): void {
     $path_matcher = $this->prophesize(PathMatcherInterface::class);
     $path_matcher->isFrontPage()->willReturn(FALSE);
     \Drupal::getContainer()->set('path.matcher', $path_matcher->reveal());
-    /** @var \Drupal\Core\Path\CurrentPathStack $path_current */
+
     $path_current = $this->prophesize(CurrentPathStack::class);
     $path_current->getPath()->willReturn('/node/123');
     \Drupal::getContainer()->set('path.current', $path_current->reveal());
-    /** @var \Drupal\Core\Routing\RouteMatchInterface $route_matcher */
-    $route_matcher = $this->prophesize(RouteMatchInterface::class);
-    $route_matcher->getRouteName()->willReturn($route);
-    \Drupal::getContainer()->set('current_route_match', $route_matcher->reveal());
+
+    $exception = $this->prophesize(HttpExceptionInterface::class);
+    $exception->getStatusCode()->willReturn($httpCode);
+    \Drupal::requestStack()->getCurrentRequest()->attributes->set('exception', $exception->reveal());
 
     $suggestions = \Drupal::moduleHandler()->invokeAll('theme_suggestions_page', [[]]);
     $this->assertSame([
