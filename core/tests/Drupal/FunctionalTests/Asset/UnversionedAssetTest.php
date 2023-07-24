@@ -50,24 +50,22 @@ class UnversionedAssetTest extends BrowserTestBase {
     $session = $this->getSession();
     $page = $session->getPage();
 
-    $style_elements = $page->findAll('xpath', '//link[@rel="stylesheet"]');
+    $style_elements = $page->findAll('xpath', '//link[@href and @rel="stylesheet"]');
     $this->assertNotEmpty($style_elements);
     $href = NULL;
     foreach ($style_elements as $element) {
-      if ($element->hasAttribute('href')) {
-        $href = $element->getAttribute('href');
-        $url = $this->getAbsoluteUrl($href);
-        // Not every script or style on a page is aggregated.
-        if (!str_contains($url, $this->fileAssetsPath)) {
-          continue;
-        }
-        $session = $this->getSession();
-        $session->visit($url);
-        $this->assertSession()->statusCodeEquals(200);
-        $aggregate = $session = $session->getPage()->getContent();
-        $this->assertStringContainsString('original-content', $aggregate);
-        $this->assertStringNotContainsString('extra-stuff', $aggregate);
+      $href = $element->getAttribute('href');
+      $url = $this->getAbsoluteUrl($href);
+      // Not every script or style on a page is aggregated.
+      if (!str_contains($url, $this->fileAssetsPath)) {
+        continue;
       }
+      $session = $this->getSession();
+      $session->visit($url);
+      $this->assertSession()->statusCodeEquals(200);
+      $aggregate = $session = $session->getPage()->getContent();
+      $this->assertStringContainsString('original-content', $aggregate);
+      $this->assertStringNotContainsString('extra-stuff', $aggregate);
     }
     $file = file_get_contents('public://test.css') . '.extra-stuff{display:none;}';
     file_put_contents('public://test.css', $file);
@@ -78,24 +76,22 @@ class UnversionedAssetTest extends BrowserTestBase {
     $this->drupalGet('<front>');
     $session = $this->getSession();
     $page = $session->getPage();
-    $style_elements = $page->findAll('xpath', '//link[@rel="stylesheet"]');
+    $style_elements = $page->findAll('xpath', '//link[@href and @rel="stylesheet"]');
     $this->assertNotEmpty($style_elements);
     foreach ($style_elements as $element) {
-      if ($element->hasAttribute('href')) {
-        $new_href = $element->getAttribute('href');
-        $this->assertNotSame($new_href, $href);
-        $url = $this->getAbsoluteUrl($new_href);
-        // Not every script or style on a page is aggregated.
-        if (!str_contains($url, $this->fileAssetsPath)) {
-          continue;
-        }
-        $session = $this->getSession();
-        $session->visit($url);
-        $this->assertSession()->statusCodeEquals(200);
-        $aggregate = $session = $session->getPage()->getContent();
-        $this->assertStringContainsString('original-content', $aggregate);
-        $this->assertStringContainsString('extra-stuff', $aggregate);
+      $new_href = $element->getAttribute('href');
+      $this->assertNotSame($new_href, $href);
+      $url = $this->getAbsoluteUrl($new_href);
+      // Not every script or style on a page is aggregated.
+      if (!str_contains($url, $this->fileAssetsPath)) {
+        continue;
       }
+      $session = $this->getSession();
+      $session->visit($url);
+      $this->assertSession()->statusCodeEquals(200);
+      $aggregate = $session = $session->getPage()->getContent();
+      $this->assertStringContainsString('original-content', $aggregate);
+      $this->assertStringContainsString('extra-stuff', $aggregate);
     }
   }
 
