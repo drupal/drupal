@@ -1,0 +1,15 @@
+<div class="branding">
+  {% if site_logo %}
+    <a href="{{ path('<front>') }}" rel="home" class="branding__site-logo">
+      <img src="{{ site_logo }}" alt="{{ 'Home'|t }}" />
+    </a>
+  {% endif %}
+  {% if site_name %}
+    <div class="branding__site-name">
+      <a href="{{ path('<front>') }}" rel="home">{{ site_name }}</a>
+    </div>
+  {% endif %}
+  {% if site_slogan %}
+    <div class="branding__site-slogan">{{ site_slogan }}</div>
+  {% endif %}
+</div>

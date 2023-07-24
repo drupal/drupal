@@ -1,0 +1,26 @@
+# This is so your IDE knows about the syntax for fixes and autocomplete.
+$schema: https://git.drupalcode.org/project/drupal/-/raw/10.1.x/core/modules/sdc/src/metadata.schema.json
+
+# The human readable name.
+name: Branding
+
+# Status can be: "experimental", "stable", "deprecated", "obsolete".
+status: experimental
+
+# Use this key to organize components together.
+group: Navigation
+
+# Schema for the props. We support www.json-schema.org. Learn more about the
+# syntax there.
+props:
+  # Props are always an object with keys. Each key is a variable in your
+  # component template.
+  type: object
+
+  properties:
+    site_logo:
+      type: string
+    site_name:
+      type: string
+    site_slogan:
+      type: string
