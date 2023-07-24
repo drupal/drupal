@@ -89,7 +89,7 @@ each line:
       "drupal-core-project-message": {
         "post-create-project-cmd-message": [
           "Thanks for installing this project.",
-          "Please visit our documentation here: http://example.com/docs"
+          "Read our documentation here: http://example.com/docs"
         ]
       }
     }

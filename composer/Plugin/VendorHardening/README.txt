@@ -50,7 +50,7 @@ When you install or update, this plugin will look through each package and
 remove directories it knows about.
 
 You can see the list of default package cleanups for this plugin in Config.php.
-If you discover that this list needs updating, please file an issue about it:
+If you discover that this list needs updating, file an issue about it:
 https://www.drupal.org/project/issues/drupal
 
 In addition to the default list of packages, you can configure the plugin using

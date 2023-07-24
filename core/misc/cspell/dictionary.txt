@@ -622,7 +622,6 @@ linksby
 linkset
 linktext
 lisu
-litererally
 litespeed
 llamaids
 llamasarelame
@@ -676,14 +675,12 @@ mediumtext
 membersonly
 merhaba
 messagekey
-metainformation
 metapackage
 metapackages
 metatag
 metatags
 meφω
 mglaman
-miaus
 mikey
 milli
 mimetypes
@@ -740,8 +737,6 @@ mysite
 mysqladmin
 mysqldump
 mystarterkit
-myverylongurl
-myverylongurlexample
 műveletek
 nalias
 nameofbin

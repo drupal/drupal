@@ -99,7 +99,7 @@ class Composer {
     $composerVersion = method_exists(ComposerApp::class, 'getVersion') ?
       ComposerApp::getVersion() : ComposerApp::VERSION;
     if (Comparator::lessThan($composerVersion, '2.3.6')) {
-      throw new \RuntimeException("Drupal core development requires Composer 2.3.6, but Composer $composerVersion is installed. Please run 'composer self-update'.");
+      throw new \RuntimeException("Drupal core development requires Composer 2.3.6, but Composer $composerVersion is installed. Run 'composer self-update'.");
     }
   }
 
