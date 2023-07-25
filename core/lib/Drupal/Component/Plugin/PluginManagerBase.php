@@ -125,7 +125,7 @@ abstract class PluginManagerBase implements PluginManagerInterface {
    *   If the method is not implemented in the concrete plugin manager class.
    */
   protected function getFallbackPluginId($plugin_id, array $configuration = []) {
-    throw new \BadMethodCallException(get_class() . '::getFallbackPluginId() not implemented.');
+    throw new \BadMethodCallException(static::class . '::getFallbackPluginId() not implemented.');
   }
 
   /**
