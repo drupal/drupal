@@ -520,7 +520,10 @@ class DbLogTest extends BrowserTestBase {
 
     // Create a node using the form in order to generate an add content event
     // (which is not triggered by drupalCreateNode).
-    $edit = $this->getContent();
+    $edit = [
+      'title[0][value]' => $this->randomMachineName(8),
+      'body[0][value]'  => $this->randomMachineName(32),
+    ];
     $title = $edit['title[0][value]'];
     $this->drupalGet('node/add/' . $type);
     $this->submitForm($edit, 'Save');
@@ -529,7 +532,9 @@ class DbLogTest extends BrowserTestBase {
     $node = $this->drupalGetNodeByTitle($title);
     $this->assertNotNull($node, new FormattableMarkup('Node @title was loaded', ['@title' => $title]));
     // Edit the node.
-    $edit = $this->getContentUpdate($type);
+    $edit = [
+      'body[0][value]' => $this->randomMachineName(32),
+    ];
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
@@ -569,36 +574,6 @@ class DbLogTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
     // Verify that the 'page not found' event was recorded.
     $this->assertSession()->pageTextContains('node/' . $node->id());
-  }
-
-  /**
-   * Creates random content based on node content type.
-   *
-   * @return array
-   *   Random content needed by various node types.
-   */
-  private function getContent() {
-    $content = [
-      'title[0][value]' => $this->randomMachineName(8),
-      'body[0][value]' => $this->randomMachineName(32),
-    ];
-    return $content;
-  }
-
-  /**
-   * Creates random content as an update based on node content type.
-   *
-   * @param string $type
-   *   Node content type (e.g., 'article').
-   *
-   * @return array
-   *   Random content needed by various node types.
-   */
-  private function getContentUpdate($type) {
-    $content = [
-      'body[0][value]' => $this->randomMachineName(32),
-    ];
-    return $content;
   }
 
   /**
