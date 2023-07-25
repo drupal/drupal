@@ -45,8 +45,8 @@ class Xss {
    * @param string $string
    *   The string with raw HTML in it. It will be stripped of everything that
    *   can cause an XSS attack.
-   * @param string[] $html_tags
-   *   An array of HTML tags.
+   * @param string[]|null $allowed_html_tags
+   *   An array of allowed HTML tags.
    *
    * @return string
    *   An XSS safe version of $string, or an empty string if $string is not
@@ -56,9 +56,9 @@ class Xss {
    *
    * @ingroup sanitization
    */
-  public static function filter($string, array $html_tags = NULL) {
-    if (is_null($html_tags)) {
-      $html_tags = static::$htmlTags;
+  public static function filter($string, array $allowed_html_tags = NULL) {
+    if (is_null($allowed_html_tags)) {
+      $allowed_html_tags = static::$htmlTags;
     }
     // Only operate on valid UTF-8 strings. This is necessary to prevent cross
     // site scripting issues on Internet Explorer 6.
@@ -79,11 +79,11 @@ class Xss {
     $string = preg_replace('/&amp;#[Xx]0*((?:[0-9A-Fa-f]{2})+;)/', '&#x\1', $string);
     // Named entities.
     $string = preg_replace('/&amp;([A-Za-z][A-Za-z0-9]*;)/', '&\1', $string);
-    $html_tags = array_flip($html_tags);
+    $allowed_html_tags = array_flip($allowed_html_tags);
     // Late static binding does not work inside anonymous functions.
     $class = static::class;
-    $splitter = function ($matches) use ($html_tags, $class) {
-      return $class::split($matches[1], $html_tags, $class);
+    $splitter = function ($matches) use ($allowed_html_tags, $class) {
+      return $class::split($matches[1], $allowed_html_tags, $class);
     };
     // Strip any tags that are not in the list of allowed html tags.
     return preg_replace_callback('%
