@@ -495,6 +495,57 @@ class UserPasswordResetTest extends BrowserTestBase {
   }
 
   /**
+   * Tests user password reset flood control is cleared on admin reset.
+   */
+  public function testUserResetPasswordUserFloodControlAdmin() {
+    $admin_user = $this->drupalCreateUser([
+      'administer account settings',
+      'administer users',
+    ]);
+    \Drupal::configFactory()->getEditable('user.flood')
+      ->set('user_limit', 3)
+      ->save();
+
+    $edit = [
+      'name' => $this->account->getAccountName(),
+      'pass' => 'wrong_password',
+    ];
+
+    // Try 3 requests that should not trigger flood control.
+    for ($i = 0; $i < 3; $i++) {
+      $this->drupalGet('user/login');
+      $this->submitForm($edit, 'Log in');
+      $this->assertSession()->pageTextNotContains('There have been more than 3 failed login attempts for this account. It is temporarily blocked.');
+    }
+    $this->drupalGet('user/login');
+    $this->submitForm($edit, 'Log in');
+    $this->assertSession()->pageTextContains('There have been more than 3 failed login attempts for this account. It is temporarily blocked.');
+
+    $password = $this->randomMachineName();
+    $edit = [
+      'pass[pass1]' => $password,
+      'pass[pass2]' => $password,
+    ];
+    // Log in as admin and change the user password.
+    $this->drupalLogin($admin_user);
+    $this->drupalGet('user/' . $this->account->id() . '/edit');
+    $this->submitForm($edit, 'Save');
+    $this->drupalLogout();
+
+    $edit = [
+      'name' => $this->account->getAccountName(),
+      'pass' => $password,
+    ];
+
+    // The next request should *not* trigger flood control, since the
+    // password change should have cleared flood events for this user.
+    $this->account->passRaw = $password;
+    $this->drupalLogin($this->account);
+
+    $this->assertSession()->pageTextNotContains('There have been more than 3 failed login attempts for this account. It is temporarily blocked.');
+  }
+
+  /**
    * Helper function to make assertions about a valid password reset.
    *
    * @internal

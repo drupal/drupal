@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Flood\PrefixFloodInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\user\RoleInterface;
 use Drupal\user\StatusItem;
@@ -125,6 +126,18 @@ class User extends ContentEntityBase implements UserInterface {
         if ($this->id() == \Drupal::currentUser()->id()) {
           \Drupal::service('session')->migrate();
         }
+
+        $flood_config = \Drupal::config('user.flood');
+        $flood_service = \Drupal::flood();
+        $identifier = $this->id();
+        if ($flood_config->get('uid_only')) {
+          // Clear flood events based on the uid only if configured.
+          $flood_service->clear('user.failed_login_user', $identifier);
+        }
+        elseif ($flood_service instanceof PrefixFloodInterface) {
+          $flood_service->clearByPrefix('user.failed_login_user', $identifier);
+        }
+
       }
 
       // If the user was blocked, delete the user's sessions to force a logout.
