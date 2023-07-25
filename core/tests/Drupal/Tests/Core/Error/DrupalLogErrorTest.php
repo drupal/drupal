@@ -14,10 +14,42 @@ class DrupalLogErrorTest extends UnitTestCase {
 
   /**
    * Tests that fatal errors return a non-zero exit code.
+   *
+   * @dataProvider provideFatalExitCodeData
    */
-  public function testFatalExitCode() {
-    $script = <<<'EOT'
-<?php
+  public function testFatalExitCode(string $script, string $output, string $errorOutput, bool $processIsSuccessful) {
+    // We need to override the current working directory for invocations from
+    // run-tests.sh to work properly.
+    $process = new PhpProcess($script, $this->root);
+    $process->run();
+
+    // Assert the output strings as unrelated errors (like the log-exit.php
+    // script throwing a PHP error) would still pass the final assertion.
+    $this->assertEquals($output, $process->getOutput());
+    $this->assertEquals($errorOutput, $process->getErrorOutput());
+    $this->assertSame($processIsSuccessful, $process->isSuccessful());
+  }
+
+  public function provideFatalExitCodeData() {
+    $verbose = "\$GLOBALS['config']['system.logging']['error_level'] = 'verbose';";
+    $scriptBody = $this->getScriptBody();
+    $data['normal'] = [
+      "<?php\n\$fatal = TRUE;\n$scriptBody",
+      "kernel test: This is a test message in test_function (line 456 of test.module).\n",
+      "kernel test: This is a test message in test.module on line 456 backtrace\nand-more-backtrace\n",
+      FALSE,
+    ];
+    $data['verbose'] = [
+      "<?php\n\$fatal = FALSE;\n$verbose\n$scriptBody",
+      "<details class=\"error-with-backtrace\"><summary><em class=\"placeholder\">kernel test</em>: This is a test message in <em class=\"placeholder\">test_function</em> (line <em class=\"placeholder\">456</em> of <em class=\"placeholder\">test.module</em>).</summary><pre class=\"backtrace\"></pre></details>",
+      "",
+      TRUE,
+    ];
+    return $data;
+  }
+
+  protected function getScriptBody() {
+    return <<<'EOT'
 if (PHP_SAPI !== 'cli') {
   return;
 }
@@ -32,24 +64,13 @@ $error = [
   '%function' => 'test_function',
   '%file' => 'test.module',
   '%line' => 456,
-  '@backtrace_string' => 'backtrace',
+  '@backtrace_string' => "backtrace\nand-more-backtrace",
   'severity_level' => 0,
   'backtrace' => [],
   'exception' => NULL,
 ];
-_drupal_log_error($error, TRUE);
+_drupal_log_error($error, $fatal);
 EOT;
-
-    // We need to override the current working directory for invocations from
-    // run-tests.sh to work properly.
-    $process = new PhpProcess($script, $this->root);
-    $process->run();
-
-    // Assert the output strings as unrelated errors (like the log-exit.php
-    // script throwing a PHP error) would still pass the final assertion.
-    $this->assertEquals("kernel test: This is a test message in test_function (line 456 of test.module).\n", $process->getOutput());
-    $this->assertEquals("kernel test: This is a test message in test.module on line 456 backtrace\n", $process->getErrorOutput());
-    $this->assertFalse($process->isSuccessful());
   }
 
 }
