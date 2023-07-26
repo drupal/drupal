@@ -146,3 +146,15 @@ function system_post_update_add_description_to_entity_form_mode(array &$sandbox 
 
   $config_entity_updater->update($sandbox, 'entity_form_mode', $callback);
 }
+
+/**
+ * Updates system.theme.global:logo.url config if it's still at the default.
+ */
+function system_post_update_set_blank_log_url_to_null() {
+  $global_theme_settings = \Drupal::configFactory()->getEditable('system.theme.global');
+  if ($global_theme_settings->get('logo.url') === '') {
+    $global_theme_settings
+      ->set('logo.url', NULL)
+      ->save(TRUE);
+  }
+}

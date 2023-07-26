@@ -12,7 +12,6 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Config\Schema\SchemaCheckTrait;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
@@ -49,8 +48,6 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  *   Plugin classes are internal.
  */
 class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
-
-  use SchemaCheckTrait;
 
   /**
    * The CKEditor plugin manager.
@@ -729,8 +726,6 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     // ::getGeneratedAllowedHtmlValue(), to update filter_html's
     // "allowed_html".
     $form_state->set('ckeditor5_validated_pair', $eventual_editor_and_format);
-
-    assert(TRUE === $this->checkConfigSchema(\Drupal::getContainer()->get('config.typed'), 'editor.editor.id_does_not_matter', $submitted_editor->toArray()), 'Schema errors: ' . print_r($this->checkConfigSchema(\Drupal::getContainer()->get('config.typed'), 'editor.editor.id_does_not_matter', $submitted_editor->toArray()), TRUE));
   }
 
   /**

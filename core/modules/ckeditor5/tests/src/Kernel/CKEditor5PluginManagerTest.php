@@ -83,6 +83,16 @@ class CKEditor5PluginManagerTest extends KernelTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function enableModules(array $modules) {
+    parent::enableModules($modules);
+    // Ensure the CKEditor 5 plugin manager instance on the test reflects the
+    // status after the module is installed.
+    $this->manager = $this->container->get('plugin.manager.ckeditor5.plugin');
+  }
+
+  /**
    * Mocks a module providing a CKEditor 5 plugin in VFS.
    *
    * @param string $module_name

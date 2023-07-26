@@ -43,6 +43,15 @@ use Drupal\block\Entity\Block;
 class LanguageUILanguageNegotiationTest extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected static $configSchemaCheckerExclusions = [
+    // Necessary to allow setting `selected_langcode` to NULL.
+    // @see testUILanguageNegotiation()
+    'language.negotiation',
+  ];
+
+  /**
    * The admin user for testing.
    *
    * @var \Drupal\user\Entity\User

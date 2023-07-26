@@ -595,20 +595,15 @@ class ValidatorsTest extends KernelTestBase {
       ->set('name', $this->randomString())
       ->save();
 
-    $this->assertConfigSchema(
-      $this->typedConfig,
-      $text_editor->getConfigDependencyName(),
-      $text_editor->toArray()
-    );
-    // TRICKY: only validate the Editor entity in isolation if we expect NO
-    // violations: when violations are expected, this would just find the very
-    // violations that the next assertion is checking.
-    // @todo Remove in https://www.drupal.org/project/drupal/issues/3361534, which moves this into ::assertConfigSchema()
+    // TRICKY: only assert config schema (and validation constraints) if we
+    // expect NO violations: when violations are expected, this would just find
+    // the very violations that the next assertion is checking.
     if (empty($expected_violations)) {
-      $this->assertSame([], array_map(
-        fn ($v) => sprintf("[%s] %s", $v->getPropertyPath(), (string) $v->getMessage()),
-        iterator_to_array($this->typedConfig->createFromNameAndData($text_editor->getConfigDependencyName(), $text_editor->toArray())->validate())
-      ));
+      $this->assertConfigSchema(
+        $this->typedConfig,
+        $text_editor->getConfigDependencyName(),
+        $text_editor->toArray()
+      );
     }
 
     $this->assertSame($expected_violations, $this->validatePairToViolationsArray($text_editor, $text_format, TRUE));

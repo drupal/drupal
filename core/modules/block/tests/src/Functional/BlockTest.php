@@ -580,6 +580,7 @@ class BlockTest extends BlockTestBase {
     $block = Block::create([
       'id' => $this->randomMachineName(),
       'plugin' => 'system_powered_by_block',
+      'theme' => 'stark',
     ]);
 
     $block->setVisibilityConfig('user_role', [

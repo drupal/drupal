@@ -69,7 +69,7 @@ class BlockContentDeletionTest extends KernelTestBase {
     $block_content->save();
 
     $plugin_id = 'block_content' . PluginBase::DERIVATIVE_SEPARATOR . $block_content->uuid();
-    $block = $this->placeBlock($plugin_id, ['region' => 'content']);
+    $block = $this->placeBlock($plugin_id, ['region' => 'content', 'theme' => 'stark']);
 
     // Delete it via storage.
     $storage = $this->container->get('entity_type.manager')->getStorage('block_content');

@@ -106,14 +106,18 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     $constraints = $this->getMachineNameConstraints();
 
     $this->assertNotEmpty($constraints['Regex']);
-    $this->assertIsString($constraints['Regex']);
+    $this->assertIsArray($constraints['Regex']);
+    $this->assertArrayHasKey('pattern', $constraints['Regex']);
+    $this->assertIsString($constraints['Regex']['pattern']);
+    $this->assertArrayHasKey('message', $constraints['Regex']);
+    $this->assertIsString($constraints['Regex']['message']);
 
     $id_key = $this->entity->getEntityType()->getKey('id');
     if ($is_expected_to_be_valid) {
       $expected_errors = [];
     }
     else {
-      $expected_errors = [$id_key => 'This value is not valid.'];
+      $expected_errors = [$id_key => sprintf('The <em class="placeholder">&quot;%s&quot;</em> machine name is not valid.', $machine_name)];
     }
 
     $this->entity->set(

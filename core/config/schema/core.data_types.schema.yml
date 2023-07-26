@@ -99,7 +99,9 @@ machine_name:
   type: string
   label: 'Machine name'
   constraints:
-    Regex: '/^[a-z0-9_]+$/'
+    Regex:
+      pattern: '/^[a-z0-9_]+$/'
+      message: "The %value machine name is not valid."
     Length:
       # @see \Drupal\Core\Config\Entity\ConfigEntityStorage::MAX_ID_LENGTH
       max: 166
@@ -233,6 +235,7 @@ theme_settings:
           label: 'Logo path'
         url:
           type: uri
+          nullable: true
           label: 'URL'
         use_default:
           type: boolean

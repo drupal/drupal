@@ -9,6 +9,7 @@ use Drupal\Core\TypedData\Type\BooleanInterface;
 use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\Core\TypedData\Type\FloatInterface;
 use Drupal\Core\TypedData\Type\IntegerInterface;
+use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * Provides a trait for checking configuration schema.
@@ -57,6 +58,34 @@ trait SchemaCheckTrait {
       $errors[] = $this->checkValue($key, $value);
     }
     $errors = array_merge(...$errors);
+    // Also perform explicit validation. Note this does NOT require every node
+    // in the config schema tree to have validation constraints defined.
+    $violations = $this->schema->validate();
+    $ignored_validation_constraint_messages = [
+      // @see \Drupal\Core\Config\Plugin\Validation\Constraint\ConfigExistsConstraint::$message
+      // @todo Remove this in https://www.drupal.org/project/drupal/issues/3362453
+      "The '.*' config does not exist.",
+      // @see \Drupal\Core\Extension\Plugin\Validation\Constraint\ExtensionExistsConstraint::$moduleMessage
+      // @see \Drupal\Core\Extension\Plugin\Validation\Constraint\ExtensionExistsConstraint::$themeMessage
+      // @todo Remove this in https://www.drupal.org/project/drupal/issues/3362456
+      "Module '.*' is not installed.",
+      "Theme '.*' is not installed.",
+      // @see \Drupal\Core\Plugin\Plugin\Validation\Constraint\PluginExistsConstraint::$unknownPluginMessage
+      // @todo Remove this in https://www.drupal.org/project/drupal/issues/3362457
+      "The '.*' plugin does not exist.",
+      // @see "machine_name" in core.data_types.schema.yml
+      // @todo Remove this in https://www.drupal.org/project/drupal/issues/3372972
+      "The <em class=\"placeholder\">.*<\/em> machine name is not valid.",
+    ];
+    $filtered_violations = array_filter(
+      iterator_to_array($violations),
+      fn (ConstraintViolation $v) => preg_match(sprintf("/^(%s)$/", implode('|', $ignored_validation_constraint_messages)), (string) $v->getMessage()) !== 1
+    );
+    $validation_errors = array_map(
+      fn (ConstraintViolation $v) => sprintf("[%s] %s", $v->getPropertyPath(), (string) $v->getMessage()),
+      $filtered_violations
+    );
+    $errors = array_merge($errors, $validation_errors);
     if (empty($errors)) {
       return TRUE;
     }

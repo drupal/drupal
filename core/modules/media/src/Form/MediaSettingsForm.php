@@ -117,8 +117,13 @@ class MediaSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $iframe_domain = $form_state->getValue('iframe_domain');
+    // The empty string is not a valid URI, but NULL is allowed.
+    if ($iframe_domain === '') {
+      $iframe_domain = NULL;
+    }
     $this->config('media.settings')
-      ->set('iframe_domain', $form_state->getValue('iframe_domain'))
+      ->set('iframe_domain', $iframe_domain)
       ->set('standalone_url', $form_state->getValue('standalone_url'))
       ->save();
 

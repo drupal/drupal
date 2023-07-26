@@ -215,7 +215,9 @@ system.menu.*:
       # underscores.
       # @see \Drupal\menu_ui\MenuForm::form()
       constraints:
-        Regex: '/^[a-z0-9-]+$/'
+        Regex:
+          pattern: '/^[a-z0-9-]+$/'
+          message: "The %value machine name is not valid."
         Length:
           max: 32
     label:

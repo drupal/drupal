@@ -120,6 +120,10 @@ language.content_settings.*.*:
     default_langcode:
       type: langcode
       label: 'Default language'
+      constraints:
+        Choice:
+          # The "default language" has a different list of allowed values.
+          callback: '\Drupal\language\Entity\ContentLanguageSettings::getAllValidDefaultLangcodes'
     language_alterable:
       type: boolean
       label: 'Allow to alter the language'

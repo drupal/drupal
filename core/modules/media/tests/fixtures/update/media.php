@@ -50,3 +50,21 @@ $connection->update('key_value')
   ->condition('name', 'existing_updates')
   ->execute();
 
+// Create media.settings.
+$connection->insert('config')
+  ->fields([
+    'collection',
+    'name',
+    'data',
+  ])
+  ->values([
+    'collection' => '',
+    'name' => 'media.settings',
+    'data' => serialize([
+      'icon_base_uri' => 'public://media-icons/generic',
+      'iframe_domain' => '',
+      'oembed_providers_url' => 'https://oembed.com/providers.json',
+      'standalone_url' => FALSE,
+    ]),
+  ])
+  ->execute();

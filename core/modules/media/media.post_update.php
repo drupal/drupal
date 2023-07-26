@@ -33,3 +33,15 @@ function media_post_update_oembed_loading_attribute(array &$sandbox = NULL): voi
     return $media_config_updater->processOembedEagerLoadField($view_display);
   });
 }
+
+/**
+ * Updates media.settings:iframe_domain config if it's still at the default.
+ */
+function media_post_update_set_blank_iframe_domain_to_null() {
+  $media_settings = \Drupal::configFactory()->getEditable('media.settings');
+  if ($media_settings->get('iframe_domain') === '') {
+    $media_settings
+      ->set('iframe_domain', NULL)
+      ->save(TRUE);
+  }
+}

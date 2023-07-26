@@ -28,6 +28,11 @@ class TypedConfigTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
+  protected static $configSchemaCheckerExclusions = ['config_test.validation'];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -90,7 +95,7 @@ class TypedConfigTest extends KernelTestBase {
     $typed_config_manager = \Drupal::service('config.typed');
     $typed_config = $typed_config_manager->createFromNameAndData('config_test.validation', \Drupal::configFactory()->get('config_test.validation')->get());
     $this->assertInstanceOf(TypedConfigInterface::class, $typed_config);
-    $this->assertEquals(['_core', 'llama', 'cat', 'giraffe', 'uuid'], array_keys($typed_config->getElements()));
+    $this->assertEquals(['_core', 'llama', 'cat', 'giraffe', 'uuid', 'langcode'], array_keys($typed_config->getElements()));
     $this->assertSame('config_test.validation', $typed_config->getName());
     $this->assertSame('config_test.validation', $typed_config->getPropertyPath());
     $this->assertSame('config_test.validation.llama', $typed_config->get('llama')->getPropertyPath());

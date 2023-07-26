@@ -204,7 +204,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
 
     // Remove the field default from articles.
     $default_image_settings = $field->getSetting('default_image');
-    $default_image_settings['uuid'] = 0;
+    $default_image_settings['uuid'] = \Drupal::service('uuid')->generate();
     $field->setSetting('default_image', $default_image_settings);
     $field->save();
 

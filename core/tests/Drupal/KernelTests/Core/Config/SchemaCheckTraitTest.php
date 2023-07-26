@@ -56,9 +56,14 @@ class SchemaCheckTraitTest extends KernelTestBase {
     $config_data['boolean'] = [];
     $ret = $this->checkConfigSchema($this->typedConfig, 'config_test.types', $config_data);
     $expected = [
+      // Storage type check errors.
+      // @see \Drupal\Core\Config\Schema\SchemaCheckTrait::checkValue()
       'config_test.types:new_key' => 'missing schema',
       'config_test.types:new_array' => 'missing schema',
       'config_test.types:boolean' => 'non-scalar value but not defined as an array (such as mapping or sequence)',
+      // Validation constraints violations.
+      // @see \Drupal\Core\TypedData\TypedDataInterface::validate()
+      '0' => '[boolean] This value should be of the correct primitive type.',
     ];
     $this->assertEquals($expected, $ret);
   }

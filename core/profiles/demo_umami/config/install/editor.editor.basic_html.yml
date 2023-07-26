@@ -33,6 +33,9 @@ settings:
         - heading4
         - heading5
         - heading6
+    ckeditor5_list:
+      reversed: false
+      startIndex: false
     ckeditor5_sourceEditing:
       allowed_tags:
         - '<cite>'
@@ -50,6 +53,8 @@ settings:
         - '<h6 id>'
         - '<img src alt data-entity-type data-entity-uuid data-align data-caption width height>'
         - '<drupal-media data-view-mode title>'
+    media_media:
+      allow_view_mode_override: false
 image_upload:
   status: false
   scheme: public

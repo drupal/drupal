@@ -541,6 +541,13 @@ class SmartDefaultSettingsTest extends KernelTestBase {
 
     // Ensure that the result of ::computeSmartDefaultSettings() always complies
     // with the config schema.
+    // TRICKY: because we're validating using `editor.editor.*` as the config
+    // name, TextEditorObjectDependentValidatorTrait will load the stored filter
+    // format. That has not yet been updated at this point, so in order for
+    // validation to pass, it must first be saved.
+    // @see \Drupal\ckeditor5\Plugin\Validation\Constraint\TextEditorObjectDependentValidatorTrait::createTextEditorObjectFromContext()
+    // @todo Remove this work-around in https://www.drupal.org/project/drupal/issues/3231354
+    $updated_text_editor->getFilterFormat()->save();
     $this->assertConfigSchema(
       $this->typedConfig,
       $updated_text_editor->getConfigDependencyName(),
