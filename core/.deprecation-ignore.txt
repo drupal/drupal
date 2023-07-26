@@ -10,11 +10,14 @@
 
 # Skip DebugClassLoader false positives.
 %Method "[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "(?!Drupal\\)[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
-%The "Drupal\\[^"]+" method will require a new "[^"]+" argument in the next major version of its interface "Drupal\\[^"]+", not defining it is deprecated%
 
 # The following deprecation is listed for Twig 2 compatibility when unit
 # testing using \Symfony\Component\ErrorHandler\DebugClassLoader.
 %The "Twig\\Environment::getTemplateClass\(\)" method is considered internal\. It may change without further notice\. You should not extend it from "Drupal\\Core\\Template\\TwigEnvironment"\.%
+
+# Drupal 11.
+%Drupal\\Core\\Form\\FormBuilder::getForm\(\).* will require a new "mixed \.\.\. \$args" argument in the next major version of its interface%
+%Drupal\\Core\\Form\\FormBuilder::submitForm\(\).* will require a new "mixed \.\.\. \$args" argument in the next major version of its interface%
 
 # PHPUnit 9.
 %"PHPUnit\\Framework\\TestListener".*is deprecated%

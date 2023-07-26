@@ -120,7 +120,8 @@ interface StatementInterface extends \Traversable {
    * or stdClass if not specified.
    *
    * phpcs:disable Drupal.Commenting
-   * @todo Remove PHPCS overrides https://www.drupal.org/node/3354672.
+   * @todo Uncomment new method parameters before drupal:11.0.0.
+   * @see https://www.drupal.org/project/drupal/issues/3354672
    *
    * @param string|null $class_name
    *   Name of the created class.
