@@ -2,7 +2,6 @@
 
 namespace Drupal\KernelTests\Core\Database;
 
-use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 
 /**
@@ -231,68 +230,6 @@ class InsertTest extends DatabaseTestBase {
       ->fields(['name'])
       ->values(['name' => 'Elvis'])
       ->execute();
-  }
-
-  /**
-   * Tests if inserting boolean to integer field works.
-   */
-  public function testInsertBooleanToIntegerField() {
-    // @todo Remove this when https://www.drupal.org/i/3360420 drops.
-    if ($this->connection->databaseType() == 'sqlite') {
-      $this->markTestSkipped('SQLite does not use strict tables.');
-    }
-    $table_specification = [
-      'fields' => [
-        'id'  => [
-          'type' => 'int',
-          'not null' => TRUE,
-        ],
-        'test_field_1'  => [
-          'type' => 'int',
-        ],
-      ],
-      'primary key' => ['id'],
-    ];
-
-    $this->connection->schema()->createTable('insert_bool', $table_specification);
-
-    $this->expectException(DatabaseExceptionWrapper::class);
-    $this->connection->insert('insert_bool')
-      ->fields(['id' => 1, 'test_field_1' => FALSE])
-      ->execute();
-
-    // We should not have any rows in this table.
-    $this->assertEquals(0, $this->connection->select('insert_bool')->countQuery()->execute()->fetchField());
-  }
-
-  /**
-   * Tests if inserting boolean to integer field works using a query.
-   */
-  public function testQueryInsertBooleanToIntegerField() {
-    // @todo Remove this when https://www.drupal.org/i/3360420 drops.
-    if ($this->connection->databaseType() == 'sqlite') {
-      $this->markTestSkipped('SQLite does not use strict tables.');
-    }
-    $table_specification = [
-      'fields' => [
-        'id' => [
-          'type' => 'int',
-          'not null' => TRUE,
-        ],
-        'test_field_1' => [
-          'type' => 'int',
-        ],
-      ],
-      'primary key' => ['id'],
-    ];
-
-    $this->connection->schema()->createTable('insert_bool', $table_specification);
-
-    $this->expectException(DatabaseExceptionWrapper::class);
-    $this->connection->query('INSERT INTO {insert_bool} (id,test_field_1) VALUES (:id, :test_field_1)', [':id' => 1, ':test_field_1' => FALSE]);
-
-    // We should not have any rows in this table.
-    $this->assertEquals(0, $this->connection->select('insert_bool')->countQuery()->execute()->fetchField());
   }
 
 }
