@@ -495,7 +495,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "d8c2e380c13d2892038560c5591ef07ac31c6add"
+                "reference": "4c5eafca7cdc5f796a213a6722415c7f371731ef"
             },
             "require": {
                 "asm89/stack-cors": "^2.1",
@@ -573,6 +573,9 @@
             },
             "type": "drupal-core",
             "extra": {
+                "branch-alias": {
+                    "dev-11.x": "10.2.x-dev"
+                },
                 "drupal-scaffold": {
                     "file-mapping": {
                         "[project-root]/.editorconfig": "assets/scaffold/files/editorconfig",
