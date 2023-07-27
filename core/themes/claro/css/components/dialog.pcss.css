@@ -89,6 +89,12 @@
   background: url(../../images/icons/d3d4d9/ex.svg) no-repeat 50%;
 }
 
+@media (forced-colors: active) {
+  .ui-dialog .ui-icon.ui-icon-closethick {
+    background: url(../../images/icons/buttonText/ex.svg) no-repeat 50%;
+  }
+}
+
 .ui-dialog > .ui-dialog-content {
   overflow: auto;
   padding: var(--space-m) var(--space-l);
