@@ -101,6 +101,12 @@
   background: url("data:image/svg+xml,%3csvg width='12' height='12' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M11 1.318l-10 10M11 11.318l-10-10' stroke='%23D3D4D9' stroke-width='1.5'/%3e%3c/svg%3e") no-repeat 50%;
 }
 
+@media (forced-colors: active) {
+  .ui-dialog .ui-icon.ui-icon-closethick {
+    background: url("data:image/svg+xml,%3csvg width='12' height='12' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M11 1.318l-10 10M11 11.318l-10-10' stroke='buttonText' stroke-width='1.5'/%3e%3c/svg%3e") no-repeat 50%;
+  }
+}
+
 .ui-dialog > .ui-dialog-content {
   overflow: auto;
   padding: var(--space-m) var(--space-l);
