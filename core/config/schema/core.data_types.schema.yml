@@ -46,6 +46,10 @@ mapping:
   label: Mapping
   class: '\Drupal\Core\Config\Schema\Mapping'
   definition_class: '\Drupal\Core\TypedData\MapDataDefinition'
+  mapping: {}
+  constraints:
+    # By default, only allow the explicitly listed mapping keys.
+    ValidKeys: '<infer>'
 sequence:
   label: Sequence
   class: '\Drupal\Core\Config\Schema\Sequence'
