@@ -9,6 +9,7 @@
  */
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Crypt;
@@ -1827,6 +1828,7 @@ function template_preprocess_pager(&$variables) {
     $items['pages'][$i]['attributes'] = new Attribute();
     if ($i == $pager_current) {
       $variables['current'] = $i;
+      $items['pages'][$i]['attributes']->setAttribute('aria-current', new TranslatableMarkup('Current page'));
     }
   }
   // Add an ellipsis if there are further next pages.
