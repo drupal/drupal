@@ -2,13 +2,17 @@
 
 namespace Drupal\Tests\demo_umami\Functional;
 
+use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\StorageInterface;
+use Drupal\editor\Entity\Editor;
 use Drupal\KernelTests\AssertConfigTrait;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Tests\SchemaCheckTestTrait;
+use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * Tests demo_umami profile.
@@ -17,6 +21,7 @@ use Drupal\Component\Render\FormattableMarkup;
  */
 class DemoUmamiProfileTest extends BrowserTestBase {
   use AssertConfigTrait;
+  use SchemaCheckTestTrait;
 
   /**
    * {@inheritdoc}
@@ -57,6 +62,36 @@ class DemoUmamiProfileTest extends BrowserTestBase {
 
     $default_config_storage = new FileStorage($this->container->get('extension.list.profile')->getPath('demo_umami') . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY, InstallStorage::DEFAULT_COLLECTION);
     $this->assertDefaultConfig($default_config_storage, $active_config_storage);
+
+    // Now we have all configuration imported, test all of them for schema
+    // conformance. Ensures all imported default configuration is valid when
+    // Demo Umami profile modules are enabled.
+    $names = $this->container->get('config.storage')->listAll();
+    /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config */
+    $typed_config = $this->container->get('config.typed');
+    foreach ($names as $name) {
+      $config = $this->config($name);
+      $this->assertConfigSchema($typed_config, $name, $config->get());
+    }
+
+    // Validate all configuration.
+    // @todo Generalize in https://www.drupal.org/project/drupal/issues/2164373
+    foreach (Editor::loadMultiple() as $editor) {
+      // Currently only text editors using CKEditor 5 can be validated.
+      if ($editor->getEditor() !== 'ckeditor5') {
+        continue;
+      }
+
+      $this->assertSame([], array_map(
+        function (ConstraintViolation $v) {
+          return (string) $v->getMessage();
+        },
+        iterator_to_array(CKEditor5::validatePair(
+          $editor,
+          $editor->getFilterFormat()
+        ))
+      ));
+    }
   }
 
   /**
