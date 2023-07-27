@@ -33,7 +33,6 @@ install:
   - file
   - views
   - views_ui
-  - tour
   - automated_cron
 themes:
   - olivero

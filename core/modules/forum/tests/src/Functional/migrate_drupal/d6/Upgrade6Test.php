@@ -71,7 +71,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'path_alias' => 4,
       'taxonomy_term' => 3,
       'taxonomy_vocabulary' => 2,
-      'tour' => 2,
       'user' => 3,
       'user_role' => 4,
       'menu_link_content' => 1,
