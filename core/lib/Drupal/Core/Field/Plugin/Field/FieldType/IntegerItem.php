@@ -18,6 +18,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  *     @Translation("For example, 123"),
  *   },
  *   category = "number",
+ *   weight = -50,
  *   default_widget = "number",
  *   default_formatter = "number_integer"
  * )

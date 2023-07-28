@@ -20,6 +20,7 @@ use Drupal\Core\TypedData\DataDefinition;
  *     @Translation("For example, 'Lifetime in days': 1 => 1 day, 7 => 1 week, 31 => 1 month"),
  *   },
  *   category = "selection_list",
+ *   weight = -30,
  *   default_widget = "options_select",
  *   default_formatter = "list_default",
  * )

@@ -25,6 +25,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     'field_ui',
     'field_test',
     'block',
+    'options',
   ];
 
   /**
@@ -240,6 +241,43 @@ class ManageFieldsTest extends WebDriverTestBase {
     $assert_session->pageTextContains('Your settings have been saved.');
     $this->assertNotNull($field_storage = FieldStorageConfig::loadByName('node', "field_$field_name"));
     $this->assertEquals('test_field', $field_storage->getType());
+  }
+
+  /**
+   * Tests the order in which the field types appear in the form.
+   */
+  public function testFieldTypeOrder() {
+    $this->drupalget('admin/structure/types/manage/article/fields/add-field');
+    $page = $this->getSession()->getPage();
+    $field_type_categories = [
+      'selection_list',
+      'number',
+    ];
+    foreach ($field_type_categories as $field_type_category) {
+      // Select the group card.
+      $group_field_card = $page->find('css', "[name='new_storage_type'][value='$field_type_category']");
+      $group_field_card->click();
+      $this->assertSession()->assertWaitOnAjaxRequest();
+      $field_types = $page->findAll('css', '.subfield-option .option');
+      $field_type_labels = [];
+      foreach ($field_types as $field_type) {
+        $field_type_labels[] = $field_type->getText();
+      }
+      $expected_field_types = match ($field_type_category) {
+        'selection_list' => [
+          'List (text)',
+          'List (integer)',
+          'List (float)',
+        ],
+        'number' => [
+          'Number (integer)',
+          'Number (decimal)',
+          'Number (float)',
+        ],
+      };
+      // Assert that the field type options are displayed as per their weights.
+      $this->assertSame($expected_field_types, $field_type_labels);
+    }
   }
 
 }

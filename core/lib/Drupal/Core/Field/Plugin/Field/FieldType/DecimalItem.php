@@ -20,6 +20,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  *     @Translation("For example, 12.34 km or € when used for further detailed calculations (such as summing many of these)"),
  *   },
  *   category = "number",
+ *   weight = -30,
  *   default_widget = "number",
  *   default_formatter = "number_decimal"
  * )

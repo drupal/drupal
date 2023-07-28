@@ -20,6 +20,7 @@ use Drupal\Core\TypedData\DataDefinition;
  *     @Translation("For example, 'Fraction': 0 => 0, .25 => 1/4, .75 => 3/4, 1 => 1"),
  *   },
  *   category = "selection_list",
+ *   weight = -10,
  *   default_widget = "options_select",
  *   default_formatter = "list_default",
  * )

@@ -19,6 +19,7 @@ use Drupal\Core\TypedData\DataDefinition;
  *     @Translation("For example, 123.4 km when used in imprecise contexts such as a walking trail distance"),
  *   },
  *   category = "number",
+ *   weight = -10,
  *   default_widget = "number",
  *   default_formatter = "number_decimal"
  * )

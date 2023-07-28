@@ -58,6 +58,13 @@ class FieldType extends DataType {
   public $category = '';
 
   /**
+   * The weight of the field type.
+   *
+   * @var int
+   */
+  public $weight = 0;
+
+  /**
    * The plugin_id of the default widget for this field type.
    *
    * This widget must be available whenever the field type is available (i.e.

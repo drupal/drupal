@@ -292,6 +292,7 @@ class FieldStorageAddForm extends FormBase {
               '#items' => $unique_definitions[$selected_field_type][$option_key]['description'],
             ],
             '#id' => $option['unique_identifier'],
+            '#weight' => $option['weight'],
             '#parents' => ['group_field_options_wrapper'],
             '#attributes' => [
               'class' => ['field-option-radio'],
@@ -307,8 +308,10 @@ class FieldStorageAddForm extends FormBase {
             $radio_element['#title'] = 'Other';
             $radio_element['#weight'] = 10;
           }
-          $form['group_field_options_wrapper']['fields'][$option['unique_identifier']] = $radio_element;
+          $group_field_options[$option['unique_identifier']] = $radio_element;
         }
+        uasort($group_field_options, [SortArray::class, 'sortByWeightProperty']);
+        $form['group_field_options_wrapper']['fields'] += $group_field_options;
       }
     }
     $field_prefix = $this->config('field_ui.settings')->get('field_prefix');

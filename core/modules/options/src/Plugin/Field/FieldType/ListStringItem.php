@@ -20,6 +20,7 @@ use Drupal\Core\TypedData\DataDefinition;
  *     @Translation("For example, 'US States': IL => Illinois, IA => Iowa, IN => Indiana"),
  *   },
  *   category = "selection_list",
+ *   weight = -50,
  *   default_widget = "options_select",
  *   default_formatter = "list_default",
  * )
