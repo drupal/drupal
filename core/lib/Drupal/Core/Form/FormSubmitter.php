@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Form;
 
+use Drupal\Core\EventSubscriber\RedirectResponseSubscriber;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -28,16 +29,30 @@ class FormSubmitter implements FormSubmitterInterface {
   protected $requestStack;
 
   /**
+   * The redirect response subscriber.
+   *
+   * @var \Drupal\Core\EventSubscriber\RedirectResponseSubscriber
+   */
+  protected RedirectResponseSubscriber $redirectResponseSubscriber;
+
+  /**
    * Constructs a new FormSubmitter.
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The URL generator.
+   * @param \Drupal\Core\EventSubscriber\RedirectResponseSubscriber|null $redirect_response_subscriber
+   *   The redirect response subscriber.
    */
-  public function __construct(RequestStack $request_stack, UrlGeneratorInterface $url_generator) {
+  public function __construct(RequestStack $request_stack, UrlGeneratorInterface $url_generator, ?RedirectResponseSubscriber $redirect_response_subscriber) {
     $this->requestStack = $request_stack;
     $this->urlGenerator = $url_generator;
+    if (is_null($redirect_response_subscriber)) {
+      @trigger_error('Calling ' . __CLASS__ . '::__construct() without the $redirect_response_subscriber argument is deprecated in drupal:10.2.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3377297', E_USER_DEPRECATED);
+      $redirect_response_subscriber = \Drupal::service('redirect_response_subscriber');
+    }
+    $this->redirectResponseSubscriber = $redirect_response_subscriber;
   }
 
   /**
@@ -121,6 +136,8 @@ class FormSubmitter implements FormSubmitterInterface {
    */
   public function redirectForm(FormStateInterface $form_state) {
     $redirect = $form_state->getRedirect();
+
+    $this->redirectResponseSubscriber->setIgnoreDestination($form_state->getIgnoreDestination());
 
     // Allow using redirect responses directly if needed.
     if ($redirect instanceof RedirectResponse) {

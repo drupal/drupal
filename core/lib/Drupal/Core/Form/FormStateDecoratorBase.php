@@ -614,6 +614,20 @@ abstract class FormStateDecoratorBase implements FormStateInterface {
   /**
    * {@inheritdoc}
    */
+  public function setIgnoreDestination(bool $status = TRUE) {
+    return $this->decoratedFormState->setIgnoreDestination($status);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getIgnoreDestination(): bool {
+    return $this->decoratedFormState->getIgnoreDestination();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function hasAnyErrors() {
     return FormState::hasAnyErrors();
   }

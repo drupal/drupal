@@ -3,6 +3,7 @@
 namespace Drupal\Tests\Core\Form;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\EventSubscriber\RedirectResponseSubscriber;
 use Drupal\Core\Form\FormBuilder;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
@@ -136,6 +137,11 @@ abstract class FormTestBase extends UnitTestCase {
   protected $logger;
 
   /**
+   * @var \PHPUnit\Framework\MockObject\MockObject|\Drupal\Core\EventSubscriber\RedirectResponseSubscriber
+   */
+  protected $redirectResponseSubscriber;
+
+  /**
    * The mocked theme manager.
    *
    * @var \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
@@ -156,6 +162,7 @@ abstract class FormTestBase extends UnitTestCase {
     $this->formCache = $this->createMock('Drupal\Core\Form\FormCacheInterface');
     $this->cache = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->urlGenerator = $this->createMock('Drupal\Core\Routing\UrlGeneratorInterface');
+    $this->redirectResponseSubscriber = $this->createMock(RedirectResponseSubscriber::class);
 
     $this->classResolver = $this->getClassResolverStub();
 
@@ -182,7 +189,7 @@ abstract class FormTestBase extends UnitTestCase {
     $form_error_handler = $this->createMock('Drupal\Core\Form\FormErrorHandlerInterface');
     $this->formValidator = new FormValidator($this->requestStack, $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $form_error_handler);
     $this->formSubmitter = $this->getMockBuilder('Drupal\Core\Form\FormSubmitter')
-      ->setConstructorArgs([$this->requestStack, $this->urlGenerator])
+      ->setConstructorArgs([$this->requestStack, $this->urlGenerator, $this->redirectResponseSubscriber])
       ->onlyMethods(['batchGet'])
       ->getMock();
     $this->root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);

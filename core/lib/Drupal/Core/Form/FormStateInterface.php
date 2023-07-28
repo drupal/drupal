@@ -159,6 +159,26 @@ interface FormStateInterface {
   public function getRedirect();
 
   /**
+   * Determines whether the redirect respects the destination query parameter.
+   *
+   * @param bool $status
+   *   (optional) TRUE if the redirect should take precedence over the
+   *   destination query parameter. FALSE if not. Defaults to TRUE.
+   *
+   * @return $this
+   */
+  public function setIgnoreDestination(bool $status = TRUE);
+
+  /**
+   * Gets whether the redirect respects the destination query parameter.
+   *
+   * @return bool
+   *   TRUE if the redirect should take precedence over the destination query
+   *   parameter.
+   */
+  public function getIgnoreDestination(): bool;
+
+  /**
    * Sets the entire set of arbitrary data.
    *
    * @param array $storage

@@ -220,6 +220,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
         ],
         ['query' => ['weight' => $form_state->getValue('weight')]]
       );
+      $form_state->setIgnoreDestination();
     }
     // If there's no form, immediately add the image effect.
     else {
