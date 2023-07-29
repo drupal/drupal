@@ -230,7 +230,7 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
       'expose',
       'field_identifier',
     ]);
-    if (!preg_match('/^[a-zA-z][a-zA-Z0-9_~.\-]*$/', $field_identifier)) {
+    if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_~.\-]*$/', $field_identifier)) {
       $form_state->setErrorByName('expose][field_identifier', $this->t('This identifier has illegal characters.'));
       return;
     }

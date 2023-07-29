@@ -150,8 +150,11 @@ class ExposedFormUITest extends UITestBase {
     $this->submitForm($edit, 'Apply');
     $this->assertSession()->pageTextContains('Sort field identifier field is required.');
 
-    // Try with an invalid identifier.
+    // Try with an invalid identifiers.
     $edit['options[expose][field_identifier]'] = 'abc&! ###08.';
+    $this->submitForm($edit, 'Apply');
+    $this->assertSession()->pageTextContains('This identifier has illegal characters.');
+    $edit['options[expose][field_identifier]'] = '^abcde';
     $this->submitForm($edit, 'Apply');
     $this->assertSession()->pageTextContains('This identifier has illegal characters.');
 
