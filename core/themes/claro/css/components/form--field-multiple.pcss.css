@@ -4,11 +4,9 @@
  */
 
 .field-multiple-table {
-  margin-top: var(--space-m);
-  margin-bottom: var(--space-m);
+  margin-block: var(--space-m);
 }
 
 .form-item--multiple .field-add-more-submit {
-  margin-top: 0;
-  margin-bottom: 0;
+  margin-block: 0;
 }
