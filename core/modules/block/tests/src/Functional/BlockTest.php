@@ -35,11 +35,13 @@ class BlockTest extends BlockTestBase {
       'settings[label]' => $title,
       'settings[label_display]' => TRUE,
     ];
-    // Set the block to be hidden on any user path, and to be shown only to
-    // authenticated users.
+    // Set the block to be hidden on any user path, to be shown only to
+    // authenticated users, and to be shown only on 200 and 404 responses.
     $edit['visibility[request_path][pages]'] = '/user*';
     $edit['visibility[request_path][negate]'] = TRUE;
     $edit['visibility[user_role][roles][' . RoleInterface::AUTHENTICATED_ID . ']'] = TRUE;
+    $edit['visibility[response_status][status_codes][200]'] = 200;
+    $edit['visibility[response_status][status_codes][404]'] = 404;
     $this->drupalGet('admin/structure/block/add/' . $block_name . '/' . $default_theme);
     $this->assertSession()->checkboxChecked('edit-visibility-request-path-negate-0');
 
@@ -48,14 +50,24 @@ class BlockTest extends BlockTestBase {
 
     $this->clickLink('Configure');
     $this->assertSession()->checkboxChecked('edit-visibility-request-path-negate-1');
+    $this->assertSession()->checkboxChecked('edit-visibility-response-status-status-codes-200');
+    $this->assertSession()->checkboxChecked('edit-visibility-response-status-status-codes-404');
 
-    // Confirm that the block is displayed on the front page.
+    // Confirm that the block is displayed on the front page (200 response).
     $this->drupalGet('');
     $this->assertSession()->pageTextContains($title);
 
-    // Confirm that the block is not displayed according to block visibility
+    // Confirm that the block is not displayed according to path visibility
     // rules.
     $this->drupalGet('user');
+    $this->assertSession()->pageTextNotContains($title);
+
+    // Confirm that the block is displayed on a 404 response.
+    $this->drupalGet('/0/null');
+    $this->assertSession()->pageTextContains($title);
+
+    // Confirm that the block is not displayed on a 403 response.
+    $this->drupalGet('/admin/config/system/cron');
     $this->assertSession()->pageTextNotContains($title);
 
     // Confirm that the block is not displayed to anonymous users.
