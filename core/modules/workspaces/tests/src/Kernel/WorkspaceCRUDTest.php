@@ -201,6 +201,9 @@ class WorkspaceCRUDTest extends KernelTestBase {
 
     $workspace_deleted = \Drupal::state()->get('workspace.deleted');
     $this->assertCount(0, $workspace_deleted);
+
+    // Check that the deleted workspace is no longer active.
+    $this->assertFalse($this->workspaceManager->hasActiveWorkspace());
   }
 
   /**
