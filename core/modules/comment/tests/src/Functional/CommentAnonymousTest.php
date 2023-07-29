@@ -40,9 +40,7 @@ class CommentAnonymousTest extends CommentTestBase {
    * Tests anonymous comment functionality.
    */
   public function testAnonymous() {
-    $this->drupalLogin($this->adminUser);
     $this->setCommentAnonymous(CommentInterface::ANONYMOUS_MAYNOT_CONTACT);
-    $this->drupalLogout();
 
     // Preview comments (with `skip comment approval` permission).
     $edit = [];
@@ -118,9 +116,7 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->assertSession()->pageTextContains('The name you used (' . $this->adminUser->getAccountName() . ') belongs to a registered user.');
 
     // Require contact info.
-    $this->drupalLogin($this->adminUser);
     $this->setCommentAnonymous(CommentInterface::ANONYMOUS_MUST_CONTACT);
-    $this->drupalLogout();
 
     // Try to post comment with contact info (required).
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');

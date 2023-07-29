@@ -35,13 +35,10 @@ class CommentPreviewTest extends CommentTestBase {
    * Tests comment preview.
    */
   public function testCommentPreview() {
-    // As admin user, configure comment settings.
-    $this->drupalLogin($this->adminUser);
     $this->setCommentPreview(DRUPAL_OPTIONAL);
     $this->setCommentForm(TRUE);
     $this->setCommentSubject(TRUE);
     $this->setCommentSettings('default_mode', CommentManagerInterface::COMMENT_MODE_THREADED, 'Comment paging changed.');
-    $this->drupalLogout();
 
     // Log in as web user.
     $this->drupalLogin($this->webUser);
@@ -94,13 +91,10 @@ class CommentPreviewTest extends CommentTestBase {
    * Tests comment preview.
    */
   public function testCommentPreviewDuplicateSubmission() {
-    // As admin user, configure comment settings.
-    $this->drupalLogin($this->adminUser);
     $this->setCommentPreview(DRUPAL_OPTIONAL);
     $this->setCommentForm(TRUE);
     $this->setCommentSubject(TRUE);
     $this->setCommentSettings('default_mode', CommentManagerInterface::COMMENT_MODE_THREADED, 'Comment paging changed.');
-    $this->drupalLogout();
 
     // Log in as web user.
     $this->drupalLogin($this->webUser);

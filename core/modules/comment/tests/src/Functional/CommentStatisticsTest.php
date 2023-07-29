@@ -49,12 +49,10 @@ class CommentStatisticsTest extends CommentTestBase {
   public function testCommentNodeCommentStatistics() {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     // Set comments to have subject and preview disabled.
-    $this->drupalLogin($this->adminUser);
     $this->setCommentPreview(DRUPAL_DISABLED);
     $this->setCommentForm(TRUE);
     $this->setCommentSubject(FALSE);
     $this->setCommentSettings('default_mode', CommentManagerInterface::COMMENT_MODE_THREADED, 'Comment paging changed.');
-    $this->drupalLogout();
 
     // Checks the initial values of node comment statistics with no comment.
     $node = $node_storage->load($this->node->id());
@@ -75,6 +73,7 @@ class CommentStatisticsTest extends CommentTestBase {
     $this->assertSame('', $node->get('comment')->last_comment_name, 'The value of node last_comment_name should be an empty string.');
     $this->assertEquals($this->webUser2->id(), $node->get('comment')->last_comment_uid, 'The value of node last_comment_uid is the comment #1 uid.');
     $this->assertEquals(1, $node->get('comment')->comment_count, 'The value of node comment_count is 1.');
+    $this->drupalLogout();
 
     // Prepare for anonymous comment submission (comment approval enabled).
     // Note we don't use user_role_change_permissions(), because that caused

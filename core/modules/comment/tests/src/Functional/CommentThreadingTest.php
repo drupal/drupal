@@ -21,12 +21,10 @@ class CommentThreadingTest extends CommentTestBase {
    */
   public function testCommentThreading() {
     // Set comments to have a subject with preview disabled.
-    $this->drupalLogin($this->adminUser);
     $this->setCommentPreview(DRUPAL_DISABLED);
     $this->setCommentForm(TRUE);
     $this->setCommentSubject(TRUE);
     $this->setCommentSettings('default_mode', CommentManagerInterface::COMMENT_MODE_THREADED, 'Comment paging changed.');
-    $this->drupalLogout();
 
     // Create a node.
     $this->drupalLogin($this->webUser);

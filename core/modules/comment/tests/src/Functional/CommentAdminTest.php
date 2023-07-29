@@ -133,10 +133,8 @@ class CommentAdminTest extends CommentTestBase {
       'post comments' => TRUE,
       'skip comment approval' => FALSE,
     ]);
-    $this->drupalLogin($this->adminUser);
     // Ensure that doesn't require contact info.
     $this->setCommentAnonymous(CommentInterface::ANONYMOUS_MAYNOT_CONTACT);
-    $this->drupalLogout();
 
     // Post anonymous comment without contact info.
     $subject = $this->randomMachineName();
@@ -219,10 +217,8 @@ class CommentAdminTest extends CommentTestBase {
     $this->drupalLogout();
 
     // Post anonymous comment.
-    $this->drupalLogin($this->adminUser);
     // Ensure that we need email id before posting comment.
     $this->setCommentAnonymous(CommentInterface::ANONYMOUS_MUST_CONTACT);
-    $this->drupalLogout();
 
     // Post comment with contact info (required).
     $author_name = $this->randomMachineName();
