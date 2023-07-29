@@ -1236,7 +1236,7 @@ function simpletest_script_format_result($result) {
 
   $message = trim(strip_tags($result->message));
   if ($args['non-html']) {
-    $message = Html::decodeEntities($message, ENT_QUOTES, 'UTF-8');
+    $message = Html::decodeEntities($message);
   }
   $lines = explode("\n", wordwrap($message), 76);
   foreach ($lines as $line) {
