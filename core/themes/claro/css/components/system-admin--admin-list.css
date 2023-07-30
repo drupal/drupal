@@ -15,8 +15,7 @@
  */
 
 .admin-list {
-  margin-top: 1em;
-  margin-bottom: 2em;
+  margin-block: 1em 2em;
   padding: 0;
 }
 
@@ -29,12 +28,8 @@
  */
 
 .admin-item {
-  padding: 0.75em 1.5em 0.75em 3em;
-}
-
-[dir="rtl"] .admin-item {
-  padding-right: 3em;
-  padding-left: 1.5em;
+  padding-block: 0.75em;
+  padding-inline: 3em 1.5em;
 }
 
 .admin-item:not(:last-child) {
@@ -48,23 +43,20 @@
 .admin-item__link {
   position: relative;
   display: inline-block;
-  margin-left: -1.5em;
-  padding-left: 1.5em;
+  margin-inline-start: -1.5em;
+  padding-inline-start: 1.5em;
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
-[dir="rtl"] .admin-item__link {
-  margin-right: -1.5em;
-  margin-left: 0;
-  padding-right: 1.5em;
-  padding-left: 0;
-}
+/**
+ * Admin item link icon.
+ */
 
 .admin-item__link::before {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset-block-start: 0;
+  inset-inline-start: 0;
   display: block;
   width: 1em;
   height: 1.5em;
@@ -74,8 +66,6 @@
 }
 
 [dir="rtl"] .admin-item__link::before {
-  right: 0;
-  left: auto;
   transform: scaleX(-1);
 }
 
@@ -93,10 +83,7 @@
 }
 
 .admin-item__description {
-  margin: 0.5em 0 0.25em;
+  margin-block: 0.5em 0.25em;
+  margin-inline: 0;
   color: var(--color-gray-800);
-}
-
-[dir="rtl"] .admin-item__description {
-  margin-right: 0;
 }
