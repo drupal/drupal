@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\taxonomy\Kernel\Plugin\migrate\source\d7;
 
+// cspell:ignore ltlanguage objectid objectindex tdlanguage tsid
+
 /**
  * Tests D7 i18n term localized source plugin.
  *

@@ -5,6 +5,8 @@ namespace Drupal\field\Plugin\migrate\source\d7;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
+// cspell:ignore localizable
+
 /**
  * Drupal 7 field instances source from database.
  *

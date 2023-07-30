@@ -66,12 +66,12 @@ class MigrateExternalTranslatedTest extends MigrateTestBase {
     $this->assertEquals('en', $node->language()->getId());
     $this->assertEquals('Cat', $node->title->value);
     $this->assertEquals('Chat', $node->getTranslation('fr')->title->value);
-    $this->assertEquals('Gato', $node->getTranslation('es')->title->value);
+    $this->assertEquals('es - Cat', $node->getTranslation('es')->title->value);
 
     $node = $storage->load(2);
     $this->assertEquals('en', $node->language()->getId());
     $this->assertEquals('Dog', $node->title->value);
-    $this->assertEquals('Chien', $node->getTranslation('fr')->title->value);
+    $this->assertEquals('fr - Dog', $node->getTranslation('fr')->title->value);
     $this->assertFalse($node->hasTranslation('es'), "No spanish translation for node 2");
 
     $node = $storage->load(3);

@@ -1,4 +1,5 @@
 # Migrates all revisions and all revision translations.
+# cspell:ignore tnid
 id: d7_node_complete
 label: Node complete
 audit: true

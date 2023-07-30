@@ -4,6 +4,8 @@ namespace Drupal\Tests\field\Kernel\Plugin\migrate\source\d7;
 
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
+// cspell:ignore objectid objectindex
+
 /**
  * Tests the field option translation source plugin.
  *
@@ -140,7 +142,7 @@ class FieldOptionTranslationTest extends MigrateSqlSourceTestBase {
       ],
       [
         'lid' => '1',
-        'translation' => 'Haute',
+        'translation' => 'fr - high',
         'language' => 'fr',
         'plid' => '0',
         'plural' => '0',
@@ -148,7 +150,7 @@ class FieldOptionTranslationTest extends MigrateSqlSourceTestBase {
       ],
       [
         'lid' => '2',
-        'translation' => 'Moyenne',
+        'translation' => 'fr - average',
         'language' => 'fr',
         'plid' => '0',
         'plural' => '0',
@@ -156,7 +158,7 @@ class FieldOptionTranslationTest extends MigrateSqlSourceTestBase {
       ],
       [
         'lid' => '3',
-        'translation' => 'Faible',
+        'translation' => 'fr - low',
         'language' => 'fr',
         'plid' => '0',
         'plural' => '0',
@@ -182,7 +184,7 @@ class FieldOptionTranslationTest extends MigrateSqlSourceTestBase {
         'objectindex' => '0',
         'format' => '',
         'language' => 'fr',
-        'translation' => 'Haute',
+        'translation' => 'fr - high',
         'plid' => 0,
         'plural' => 0,
         'i18n_status' => 0,
@@ -202,7 +204,7 @@ class FieldOptionTranslationTest extends MigrateSqlSourceTestBase {
         'objectindex' => '0',
         'format' => '',
         'language' => 'fr',
-        'translation' => 'Moyenne',
+        'translation' => 'fr - average',
         'plid' => 0,
         'plural' => 0,
         'i18n_status' => 0,
@@ -222,7 +224,7 @@ class FieldOptionTranslationTest extends MigrateSqlSourceTestBase {
         'objectindex' => '0',
         'format' => '',
         'language' => 'fr',
-        'translation' => 'Faible',
+        'translation' => 'fr - low',
         'plid' => 0,
         'plural' => 0,
         'i18n_status' => 0,

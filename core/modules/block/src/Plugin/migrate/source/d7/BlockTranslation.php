@@ -4,6 +4,8 @@ namespace Drupal\block\Plugin\migrate\source\d7;
 
 use Drupal\block\Plugin\migrate\source\Block;
 
+// cspell:ignore objectid objectindex
+
 /**
  * Drupal 7 i18n block data from database.
  *
@@ -52,7 +54,7 @@ class BlockTranslation extends Block {
         'plural',
       ])
       ->condition('i18n_mode', 1);
-    $query->leftjoin($this->blockTable, 'b', ('[b].[delta] = [i18n].[objectid]'));
+    $query->leftJoin($this->blockTable, 'b', ('[b].[delta] = [i18n].[objectid]'));
     $query->innerJoin('locales_target', 'lt', '[lt].[lid] = [i18n].[lid]');
 
     // The i18n_string module adds a status column to locale_target. It was

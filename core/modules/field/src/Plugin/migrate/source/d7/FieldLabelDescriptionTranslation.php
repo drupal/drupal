@@ -4,6 +4,8 @@ namespace Drupal\field\Plugin\migrate\source\d7;
 
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
+// cspell:ignore objectid objectindex
+
 /**
  * Drupal 7 i18n field label and description source from database.
  *
@@ -50,7 +52,7 @@ class FieldLabelDescriptionTranslation extends DrupalSqlBase {
     $query->condition($condition);
     $query->innerJoin('locales_target', 'lt', '[lt].[lid] = [i18n].[lid]');
 
-    $query->leftjoin('field_config_instance', 'fci', '[fci].[bundle] = [i18n].[objectid] AND [fci].[field_name] = [i18n].[type]');
+    $query->leftJoin('field_config_instance', 'fci', '[fci].[bundle] = [i18n].[objectid] AND [fci].[field_name] = [i18n].[type]');
     return $query;
   }
 

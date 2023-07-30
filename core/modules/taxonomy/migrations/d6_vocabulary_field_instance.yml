@@ -1,3 +1,4 @@
+# cspell:ignore localizable
 id: d6_vocabulary_field_instance
 label: Vocabulary field instance configuration
 migration_tags:

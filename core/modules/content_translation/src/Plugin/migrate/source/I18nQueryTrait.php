@@ -6,6 +6,8 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Row;
 
+// cspell:ignore objectid
+
 /**
  * Gets an i18n translation from the source database.
  */

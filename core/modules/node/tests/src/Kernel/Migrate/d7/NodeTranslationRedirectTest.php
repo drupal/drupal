@@ -7,7 +7,7 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests node translation redirections.
+ * Tests node translation redirects.
  *
  * @group migrate_drupal
  * @group node

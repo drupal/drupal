@@ -4,6 +4,8 @@ namespace Drupal\config_translation\Plugin\migrate\source\d6;
 
 use Drupal\user\Plugin\migrate\source\ProfileField;
 
+// cspell:ignore nprofile objectid
+
 /**
  * Drupal 6 i18n strings profile field source from database.
  *

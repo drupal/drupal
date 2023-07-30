@@ -2,6 +2,8 @@
 
 namespace Drupal\migrate_drupal\Plugin\migrate\field\d6;
 
+// cspell:ignore userreference
+
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate_drupal\Plugin\migrate\field\ReferenceBase;
 

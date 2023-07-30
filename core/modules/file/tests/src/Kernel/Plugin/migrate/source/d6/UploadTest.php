@@ -4,7 +4,7 @@ namespace Drupal\Tests\file\Kernel\Plugin\migrate\source\d6;
 
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
-// cspell:ignore abantu
+// cspell:ignore abantu tnid
 
 /**
  * Tests D6 d6_upload source plugin.

@@ -11,7 +11,7 @@ use Drupal\migrate\Event\MigratePostRowSaveEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Creates a key value collection for migrated node translation redirections.
+ * Creates a key value collection for migrated node translation mappings.
  *
  * If we are migrating node translations from Drupal 6 or 7, these nodes will be
  * combined with their source node. Since there still might be references to the
@@ -87,7 +87,7 @@ class NodeTranslationMigrateSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Set the node_translation_redirect state to enable the redirections.
+   * Set the node_translation_redirect state to enable the redirects.
    *
    * @param \Drupal\migrate\Event\MigrateImportEvent $event
    *   The migrate import event.

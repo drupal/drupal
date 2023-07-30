@@ -6,6 +6,8 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use Drupal\TestTools\Random;
 
+// cspell:ignore tsid
+
 /**
  * Tests the menu link source plugin.
  *

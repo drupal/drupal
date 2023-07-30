@@ -49,7 +49,6 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
     /** @var \Drupal\node\NodeInterface $node */
     $node = Node::create([
       'type' => 'article',
-      'tnid' => 0,
       'uid' => $account->id(),
       'title' => '<blink>Blinking Text</blink>',
       'body' => [['value' => 'Regular NODE body for the test.', 'summary' => 'Fancy NODE summary.', 'format' => 'plain_text']],

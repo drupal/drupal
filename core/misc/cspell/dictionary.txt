@@ -12,7 +12,6 @@ adminlabel
 afterclose
 aftercreate
 ahah
-aimez
 aiufyfh
 ajaxcallback
 ajaxing
@@ -178,7 +177,6 @@ catchable
 ccyy
 ccyymm
 ccyymmdd
-cette
 cfield
 chainedfast
 changelist
@@ -212,8 +210,6 @@ clicksorter
 clist
 closethick
 cnenzrgre
-cnfi
-cochez
 codesniffer
 colgroups
 colinodell
@@ -410,7 +406,6 @@ extlink
 extraday
 extrasmall
 extraspace
-faible
 failonerror
 fakepath
 falsey
@@ -475,7 +470,6 @@ functionaltest
 funic
 furchtbar
 gabilondo
-gato
 gethttpclient
 getlist
 getview
@@ -501,7 +495,6 @@ hasdata
 hasher
 hashmarks
 hateoas
-heke
 heroless
 herro
 heure
@@ -525,7 +518,6 @@ httpheader
 httpkernel
 httplug
 httponly
-huhuu
 hurlant
 hustlin
 hwldf
@@ -542,7 +534,6 @@ imagecreatefrom
 imagetest
 imagetextalternative
 indexname
-ingoa
 inited
 inno
 insidekeyword
@@ -559,7 +550,6 @@ isinstallable
 itoa
 itok
 ized
-j'aime
 jamo
 januar
 januari
@@ -605,7 +595,6 @@ langname
 languageswitcher
 lazybuilder
 lcode
-leftjoin
 libc
 libellé
 libmysqlclient
@@ -630,7 +619,6 @@ lnumber
 loadjs
 localemark
 localetranslatedirty
-localizable
 localpath
 lolspeak
 longblob
@@ -641,11 +629,9 @@ lowline
 lrdd
 lstitle
 ltitle
-ltlanguage
 lundi
 lzma
 lzop
-maailma
 macbinary
 machinename
 madeup
@@ -705,7 +691,6 @@ monthnames
 mooooh
 mostrar
 moutons
-moyenne
 msgctxt
 msgid
 msgstr
@@ -771,7 +756,6 @@ nocase
 nocdata
 nocookie
 nodelist
-nodereference
 nodir
 nodo
 noemptytag
@@ -801,7 +785,6 @@ nyan
 nyancat
 nyans
 nœud
-objectindex
 oembed
 officedocument
 olivero
@@ -829,7 +812,6 @@ overrider
 overrider's
 overriders
 overridetest
-overwritable
 owasp
 oypa
 pageable
@@ -877,7 +859,6 @@ pluggable
 pluralforms
 plusthick
 poink
-pommes
 ponedjeljak
 porterstemmer
 português
@@ -962,7 +943,6 @@ rebuilder
 reclosed
 recolorable
 redeclaration
-redirections
 redstrawberryhiddenfield
 refactorings
 refback
@@ -1050,7 +1030,6 @@ sirbrillig
 sisko
 sitename
 sitewide
-sivun
 skiptags
 skynet
 slatkin
@@ -1174,7 +1153,6 @@ taskless
 tatou
 tbodies
 tcomment
-tdlanguage
 teletubbies
 tempfile
 templating
@@ -1251,7 +1229,6 @@ titlealert
 titlebar
 tlds
 tmpfs
-tnid
 toggleable
 togglewrap
 tongatapu
@@ -1272,7 +1249,6 @@ trgm
 trid
 troopal
 truecolor
-tsid
 turbolinks
 tuvan
 twistie
@@ -1372,7 +1348,6 @@ usecase
 userid
 userinfo
 userref
-userreference
 usuario
 vampirize
 varchar
@@ -1386,7 +1361,6 @@ viewports
 vocabs
 volgende
 vorige
-vous
 wcag
 wcprops
 webassert

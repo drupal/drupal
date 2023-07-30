@@ -4,6 +4,8 @@ namespace Drupal\Tests\field\Kernel\Plugin\migrate\source\d7;
 
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
+// cspell:ignore objectid
+
 /**
  * Tests the field label and description translation source plugin.
  *

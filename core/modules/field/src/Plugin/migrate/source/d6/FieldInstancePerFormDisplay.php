@@ -4,6 +4,8 @@ namespace Drupal\field\Plugin\migrate\source\d6;
 
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
+// cspell:ignore cnfi
+
 /**
  * Drupal 6 field instance per form display source from database.
  *

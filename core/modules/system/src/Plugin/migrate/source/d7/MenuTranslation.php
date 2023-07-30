@@ -4,6 +4,8 @@ namespace Drupal\system\Plugin\migrate\source\d7;
 
 use Drupal\system\Plugin\migrate\source\Menu;
 
+// cspell:ignore objectindex
+
 /**
  * Drupal 7 i18n menu translation source from database.
  *

@@ -1,4 +1,4 @@
-# cspell:ignore entityreference
+# cspell:ignore entityreference nodereference userreference
 finished:
   6:
     nodereference: core

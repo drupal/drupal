@@ -5,7 +5,7 @@ namespace Drupal\field\Plugin\migrate\source\d6;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
-// cspell:ignore nodeapi
+// cspell:ignore cnfi nodeapi nsync
 
 /**
  * Drupal 6 field instances source from database.

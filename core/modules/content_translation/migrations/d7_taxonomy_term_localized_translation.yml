@@ -1,3 +1,4 @@
+# cspell:ignore ltlanguage
 id: d7_taxonomy_term_localized_translation
 label: Taxonomy localized term translations
 migration_tags:

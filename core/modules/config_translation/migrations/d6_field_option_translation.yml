@@ -1,4 +1,6 @@
-# cspell:ignore filefield imagefield optionwidgets
+# cspell:ignore filefield imagefield nodereference objectid optionwidgets
+# cspell:ignore userreference
+
 id: d6_field_option_translation
 label: Field option configuration translation
 migration_tags:

@@ -5,6 +5,8 @@ namespace Drupal\taxonomy\Plugin\migrate\source\d6;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
+// cspell:ignore ltlanguage objectindex
+
 /**
  * Drupal 6 i18n vocabulary translations source from database.
  *

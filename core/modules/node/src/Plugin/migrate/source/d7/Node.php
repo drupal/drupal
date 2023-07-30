@@ -11,6 +11,8 @@ use Drupal\Core\State\StateInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+// cspell:ignore tnid
+
 /**
  * Drupal 7 node source from database.
  *

@@ -2,6 +2,8 @@
 
 namespace Drupal\taxonomy\Plugin\migrate\source\d7;
 
+// cspell:ignore objectid objectindex
+
 /**
  * Drupal 7 i18n vocabulary translations source from database.
  *
@@ -22,7 +24,7 @@ class VocabularyTranslation extends Vocabulary {
    */
   public function query() {
     $query = parent::query();
-    $query->leftjoin('i18n_string', 'i18n', 'CAST ([v].[vid] AS CHAR(222)) = [i18n].[objectid]');
+    $query->leftJoin('i18n_string', 'i18n', 'CAST ([v].[vid] AS CHAR(222)) = [i18n].[objectid]');
     $query->innerJoin('locales_target', 'lt', '[lt].[lid] = [i18n].[lid]');
     $query
       ->condition('type', 'vocabulary')

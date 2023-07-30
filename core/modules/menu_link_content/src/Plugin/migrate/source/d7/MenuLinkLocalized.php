@@ -5,6 +5,8 @@ namespace Drupal\menu_link_content\Plugin\migrate\source\d7;
 use Drupal\menu_link_content\Plugin\migrate\source\MenuLink;
 use Drupal\migrate\Row;
 
+// cspell:ignore tsid
+
 /**
  * Drupal 7 localized menu link translations source from database.
  *

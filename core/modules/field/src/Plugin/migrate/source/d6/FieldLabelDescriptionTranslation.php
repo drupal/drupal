@@ -4,6 +4,8 @@ namespace Drupal\field\Plugin\migrate\source\d6;
 
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
+// cspell:ignore objectid
+
 /**
  * Drupal 6 i18n field label and description source from database.
  *

@@ -11,6 +11,8 @@ use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+// cspell:ignore cnfi tnid
+
 /**
  * Drupal 6 node source from database.
  *

@@ -5,6 +5,8 @@ namespace Drupal\language\Plugin\migrate\source\d6;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
+// cspell:ignore localizable
+
 /**
  * Drupal 6 i18n vocabularies source from database.
  *

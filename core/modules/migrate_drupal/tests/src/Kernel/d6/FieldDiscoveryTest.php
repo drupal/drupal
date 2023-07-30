@@ -7,7 +7,8 @@ use Drupal\field_discovery_test\FieldDiscoveryTestClass;
 use Drupal\migrate_drupal\FieldDiscoveryInterface;
 use Drupal\Tests\migrate_drupal\Traits\FieldDiscoveryTestTrait;
 
-// cspell:ignore filefield imagefield imagelink nodelink selectlist spamspan
+// cspell:ignore filefield imagefield imagelink nodelink nodereference
+// cspell:ignore selectlist spamspan userreference
 
 /**
  * Tests FieldDiscovery service against Drupal 6.

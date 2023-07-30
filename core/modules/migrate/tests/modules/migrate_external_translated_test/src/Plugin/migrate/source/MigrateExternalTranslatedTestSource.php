@@ -22,9 +22,9 @@ class MigrateExternalTranslatedTestSource extends SourcePluginBase {
   protected $import = [
     ['name' => 'cat', 'title' => 'Cat', 'lang' => 'English'],
     ['name' => 'cat', 'title' => 'Chat', 'lang' => 'French'],
-    ['name' => 'cat', 'title' => 'Gato', 'lang' => 'Spanish'],
+    ['name' => 'cat', 'title' => 'es - Cat', 'lang' => 'Spanish'],
     ['name' => 'dog', 'title' => 'Dog', 'lang' => 'English'],
-    ['name' => 'dog', 'title' => 'Chien', 'lang' => 'French'],
+    ['name' => 'dog', 'title' => 'fr - Dog', 'lang' => 'French'],
     ['name' => 'monkey', 'title' => 'Monkey', 'lang' => 'English'],
   ];
 

@@ -4,6 +4,8 @@ namespace Drupal\Tests\node\Kernel\Plugin\migrate\source\d6;
 
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
+// cspell:ignore tnid
+
 /**
  * Tests D6 node revision source plugin.
  *

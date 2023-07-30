@@ -280,8 +280,8 @@ class FilePathTest extends MigrateUpgradeTestBase {
         'uri' => 'private://Babylon5.txt',
       ],
       [
-        'filename' => 'TerokNor.txt',
-        'uri' => 'temporary://TerokNor.txt',
+        'filename' => 'DeepSpaceNine.txt',
+        'uri' => 'temporary://DeepSpaceNine.txt',
       ],
     ];
   }

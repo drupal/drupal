@@ -5,6 +5,8 @@ namespace Drupal\node\Plugin\migrate\source\d7;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\migrate\Row;
 
+// cspell:ignore tnid
+
 /**
  * Drupal 7 all node revisions source, including translation revisions.
  *

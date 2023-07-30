@@ -1,4 +1,4 @@
-# cspell:ignore filefield imagefield optionwidgets
+# cspell:ignore filefield imagefield optionwidgets nodereference userreference
 id: d6_field
 label: Field configuration
 migration_tags:

@@ -4,6 +4,8 @@ namespace Drupal\Tests\user\Kernel\Plugin\migrate\source\d6;
 
 use Drupal\Tests\user\Kernel\Plugin\migrate\source\ProfileFieldTest;
 
+// cspell:ignore objectid
+
 /**
  * Tests the field option translation source plugin.
  *

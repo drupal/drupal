@@ -170,7 +170,7 @@ class ContentEntityTest extends KernelTestBase {
     ]);
     $node->save();
     $node->addTranslation('fr', [
-      'title' => 'Pommes',
+      'title' => 'fr - Apples',
       $this->fieldName => $term->id(),
     ])->save();
 
@@ -320,7 +320,7 @@ class ContentEntityTest extends KernelTestBase {
       }
       $this->assertEquals('fr', $values['langcode']);
       $this->assertEquals(1, $values['status'][0]['value']);
-      $this->assertEquals('Pommes', $values['title'][0]['value']);
+      $this->assertEquals('fr - Apples', $values['title'][0]['value']);
       $this->assertEquals(0, $values['default_langcode'][0]['value']);
       $this->assertEquals(1, $values['field_entity_reference'][0]['target_id']);
     }
