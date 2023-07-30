@@ -8,48 +8,58 @@
 /**
  * @file
  * Entity meta.
+ * This file contains the styles for the top right hand sidebar of the node/add form.
+ *
  */
 
-:root {
-  --size-entity-meta-spacing: var(--space-xs);
+.entity-meta {
+  --entity-meta-spacing-xs: var(--space-xs);
+  --entity-meta-spacing-l: var(--space-l);
+  --entity-meta-spacing-m: var(--space-m);
+  --entity-meta-color-fg: var(--color-fg);
+  --entity-meta-color-bg: var(--color-bg);
+  --entity-meta-color-white: var(--color-white);
+  --entity-meta-border-size: var(--details-border-size);
+  --entity-meta-border-color: var(--details-border-color);
+  --entity-meta-border-size-radius: var(--details-accordion-border-size-radius);
+  --entity-meta-font-size-base: var(--font-size-base);
 }
 
 .entity-meta__header {
-  padding: calc(var(--space-m) - var(--size-entity-meta-spacing)) var(--space-m) calc(var(--space-l) - var(--size-entity-meta-spacing));
-  color: var(--color-fg);
-  border: var(--details-border-size) solid var(--details-border-color);
-  border-radius: var(--details-accordion-border-size-radius);
-  background-color: var(--color-bg);
-}
-
-@media screen and (min-width: 48em) {
-  .entity-meta__header {
-    padding: calc(var(--space-l) - var(--size-entity-meta-spacing)) var(--space-l) var(--space-l);
-  }
+  padding: calc(var(--entity-meta-spacing-m) - var(--entity-meta-spacing-xs)) var(--entity-meta-spacing-m) calc(var(--entity-meta-spacing-l) - var(--entity-meta-spacing-xs));
+  color: var(--entity-meta-color-fg);
+  border: var(--entity-meta-border-size) solid var(--entity-meta-border-color);
+  border-radius: var(--entity-meta-border-size-radius);
+  background-color: var(--entity-meta-color-bg);
 }
 
 .entity-meta__header .form-item {
-  margin-top: var(--size-entity-meta-spacing);
-  margin-bottom: var(--size-entity-meta-spacing);
-}
-
-.entity-meta__title {
-  margin: 0.25em 0;
-  text-shadow: 0 1px 0 #fff;
-  font-size: 1.231em;
-  font-weight: bold;
-}
-
-.entity-meta__revision {
-  margin-top: var(--space-l);
+  margin-block: var(--entity-meta-spacing-xs);
 }
 
 .entity-meta__header .form-type--item .form-item__label {
   display: inline-block;
   margin: 0;
-  font-size: var(--font-size-base);
+  font-size: var(--entity-meta-font-size-base);
 }
 
 .entity-meta__header .form-type--item .form-item__label::after {
   content: ":";
+}
+
+@media screen and (min-width: 48em) {
+  .entity-meta__header {
+    padding: calc(var(--entity-meta-spacing-l) - var(--entity-meta-spacing-xs)) var(--entity-meta-spacing-l) var(--entity-meta-spacing-l);
+  }
+}
+
+.entity-meta__title {
+  margin: 0.25em 0;
+  text-shadow: 0 1px 0 var(--entity-meta-color-white);
+  font-size: 1.231em;
+  font-weight: bold;
+}
+
+.entity-meta__revision {
+  margin-block-start: var(--entity-meta-spacing-l);
 }
