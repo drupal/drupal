@@ -151,6 +151,7 @@ class WorkspacePublishForm extends ConfirmFormBase implements WorkspaceFormInter
     }
     catch (\Exception $e) {
       $this->messenger()->addMessage($this->t('Publication failed. All errors have been logged.'), 'error');
+      $this->getLogger('workspaces')->error($e->getMessage());
     }
   }
 
