@@ -122,7 +122,6 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    * {@inheritdoc}
    */
   public function preSave(EntityStorageInterface $storage) {
-    parent::preSave($storage);
 
     $original_value = isset($this->original) ? $this->original->isOverridable() : FALSE;
     $new_value = $this->isOverridable();
@@ -137,6 +136,8 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
         $this->removeSectionField($entity_type_id, $bundle, OverridesSectionStorage::FIELD_NAME);
       }
     }
+
+    parent::preSave($storage);
 
     $already_enabled = isset($this->original) ? $this->original->isLayoutBuilderEnabled() : FALSE;
     $set_enabled = $this->isLayoutBuilderEnabled();

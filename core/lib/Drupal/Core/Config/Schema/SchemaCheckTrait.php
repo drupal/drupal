@@ -62,9 +62,6 @@ trait SchemaCheckTrait {
     // in the config schema tree to have validation constraints defined.
     $violations = $this->schema->validate();
     $ignored_validation_constraint_messages = [
-      // @see \Drupal\Core\Config\Plugin\Validation\Constraint\ConfigExistsConstraint::$message
-      // @todo Remove this in https://www.drupal.org/project/drupal/issues/3362453
-      "The '.*' config does not exist.",
       // @see \Drupal\Core\Extension\Plugin\Validation\Constraint\ExtensionExistsConstraint::$moduleMessage
       // @see \Drupal\Core\Extension\Plugin\Validation\Constraint\ExtensionExistsConstraint::$themeMessage
       // @todo Remove this in https://www.drupal.org/project/drupal/issues/3362456

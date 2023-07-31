@@ -61,7 +61,7 @@ abstract class FieldKernelTestBase extends KernelTestBase {
     $this->installEntitySchema('user');
 
     // Set default storage backend and configure the theme system.
-    $this->installConfig(['field', 'system']);
+    $this->installConfig(['field', 'system', 'user']);
 
     // Create user 1.
     $storage = \Drupal::entityTypeManager()->getStorage('user');
