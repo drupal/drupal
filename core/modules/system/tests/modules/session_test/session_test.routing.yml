@@ -161,3 +161,13 @@ session_test.has_bag_flag:
     no_cache: TRUE
   requirements:
     _access: 'TRUE'
+
+session_test.trigger_write_exception:
+  path: '/session-test/trigger-write-exception'
+  defaults:
+    _title: 'Trigger an exception when the session is written'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::triggerWriteException'
+  options:
+    no_cache: TRUE
+  requirements:
+    _access: 'TRUE'

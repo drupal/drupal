@@ -245,4 +245,43 @@ class SessionTestController extends ControllerBase {
     );
   }
 
+  /**
+   * Trigger an exception when the session is written.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   */
+  public function triggerWriteException(Request $request) {
+    $session = $request->getSession();
+    $session->set('test_value', 'Ensure session contains some data');
+
+    // Move sessions table out of the way.
+    $schema = \Drupal::database()->schema();
+    $schema->renameTable('sessions', 'sessions_tmp');
+
+    // There needs to be a session table, otherwise
+    // InstallerRedirectTrait::shouldRedirectToInstaller() will instruct the
+    // handleException::handleException to redirect to the installer.
+    $schema->createTable('sessions', [
+      'description' => "Fake sessions table missing some columns.",
+      'fields' => [
+        'sid' => [
+          'description' => "A fake session ID column.",
+          'type' => 'varchar_ascii',
+          'length' => 128,
+          'not null' => TRUE,
+        ],
+      ],
+      'primary key' => ['sid'],
+    ]);
+
+    drupal_register_shutdown_function(function () {
+      $schema = \Drupal::database()->schema();
+      $schema->dropTable('sessions');
+      $schema->renameTable('sessions_tmp', 'sessions');
+    });
+
+    return new Response();
+  }
+
 }

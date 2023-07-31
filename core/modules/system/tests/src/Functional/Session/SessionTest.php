@@ -359,6 +359,20 @@ class SessionTest extends BrowserTestBase {
   }
 
   /**
+   * Test exception thrown during session write close.
+   */
+  public function testSessionWriteError() {
+    // Login to ensure a session exists.
+    $user = $this->drupalCreateUser([]);
+    $this->drupalLogin($user);
+
+    // Trigger an exception in SessionHandler::write().
+    $this->expectExceptionMessageMatches("/^Drupal\\\\Core\\\\Database\\\\DatabaseExceptionWrapper:/");
+    $this->drupalGet('/session-test/trigger-write-exception');
+    $this->assertSession()->statusCodeEquals(500);
+  }
+
+  /**
    * Reset the cookie file so that it refers to the specified user.
    */
   public function sessionReset() {

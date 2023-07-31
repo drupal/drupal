@@ -5,7 +5,6 @@ namespace Drupal\Core\Session;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
-use Drupal\Core\Utility\Error;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Storage\Proxy\AbstractProxy;
 
@@ -71,32 +70,18 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
    */
   #[\ReturnTypeWillChange]
   public function write(#[\SensitiveParameter] $sid, $value) {
-    // The exception handler is not active at this point, so we need to do it
-    // manually.
-    try {
-      $request = $this->requestStack->getCurrentRequest();
-      $fields = [
-        'uid' => $request->getSession()->get('uid', 0),
-        'hostname' => $request->getClientIP(),
-        'session' => $value,
-        'timestamp' => REQUEST_TIME,
-      ];
-      $this->connection->merge('sessions')
-        ->keys(['sid' => Crypt::hashBase64($sid)])
-        ->fields($fields)
-        ->execute();
-      return TRUE;
-    }
-    catch (\Exception $exception) {
-      require_once DRUPAL_ROOT . '/core/includes/errors.inc';
-      // If we are displaying errors, then do so with no possibility of a
-      // further uncaught exception being thrown.
-      if (error_displayable()) {
-        print '<h1>Uncaught exception thrown in session handler.</h1>';
-        print '<p>' . Error::renderExceptionSafe($exception) . '</p><hr />';
-      }
-      return FALSE;
-    }
+    $request = $this->requestStack->getCurrentRequest();
+    $fields = [
+      'uid' => $request->getSession()->get('uid', 0),
+      'hostname' => $request->getClientIP(),
+      'session' => $value,
+      'timestamp' => REQUEST_TIME,
+    ];
+    $this->connection->merge('sessions')
+      ->keys(['sid' => Crypt::hashBase64($sid)])
+      ->fields($fields)
+      ->execute();
+    return TRUE;
   }
 
   /**
