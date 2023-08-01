@@ -30,6 +30,7 @@ class CacheabilityMetadataConfigOverrideTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->container->get('theme_installer')->install(['stark']);
     $this->installEntitySchema('block_content');
     $this->installConfig(['config_override_test']);
   }

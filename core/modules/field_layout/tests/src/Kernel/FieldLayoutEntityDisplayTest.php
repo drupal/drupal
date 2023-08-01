@@ -110,11 +110,11 @@ class FieldLayoutEntityDisplayTest extends KernelTestBase {
     // After saving, the dependencies have been updated.
     $entity_display->save();
     $expected['dependencies']['module'] = [
-      'dependency_from_annotation',
-      'dependency_from_calculateDependencies',
       'entity_test',
       'field_layout',
       'field_layout_test',
+      'layout_discovery',
+      'system',
     ];
     $this->assertEntityValues($expected, $entity_display->toArray());
 

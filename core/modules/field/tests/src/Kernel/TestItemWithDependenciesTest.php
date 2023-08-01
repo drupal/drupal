@@ -17,7 +17,7 @@ class TestItemWithDependenciesTest extends FieldKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['field_test'];
+  protected static $modules = ['field_test', 'system'];
 
   /**
    * The name of the field to use in this test.
@@ -29,7 +29,7 @@ class TestItemWithDependenciesTest extends FieldKernelTestBase {
   /**
    * Tests that field types can add dependencies to field config entities.
    */
-  public function testTestItemWithDepenencies() {
+  public function testTestItemWithDependencies() {
     // Create a 'test_field_with_dependencies' field and storage for validation.
     FieldStorageConfig::create([
       'field_name' => $this->fieldName,
@@ -48,7 +48,7 @@ class TestItemWithDependenciesTest extends FieldKernelTestBase {
     $this->assertEquals([
       'content' => ['node:article:uuid'],
       'config' => ['field.storage.entity_test.field_test'],
-      'module' => ['entity_test', 'field_test', 'test_module'],
+      'module' => ['entity_test', 'field_test', 'system'],
     ], $field->getDependencies());
   }
 

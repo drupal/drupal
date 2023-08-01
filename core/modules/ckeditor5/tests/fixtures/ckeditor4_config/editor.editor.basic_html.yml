@@ -3,8 +3,9 @@ status: true
 dependencies:
   config:
     - filter.format.basic_html
-  module:
-    - ckeditor
+# TRICKY: This technically is a module that this config depends on, but it has been removed from Drupal >=10.
+#  module:
+#    - ckeditor
 format: basic_html
 editor: ckeditor
 settings:

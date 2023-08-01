@@ -65,6 +65,7 @@ class EntityCrudHookTest extends EntityKernelTestBase {
     $this->installSchema('node', ['node_access']);
     $this->installSchema('comment', ['comment_entity_statistics']);
     $this->installConfig(['node', 'comment']);
+    $this->container->get('theme_installer')->install(['stark']);
   }
 
   /**

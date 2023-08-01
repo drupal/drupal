@@ -49,7 +49,7 @@ class BlockViewBuilderTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-
+    $this->container->get('theme_installer')->install(['stark']);
     $this->controller = $this->container
       ->get('entity_type.manager')
       ->getStorage('block');

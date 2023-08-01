@@ -19,7 +19,7 @@ class ConfigEntityUpdaterTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['config_test'];
+  protected static $modules = ['config_test', 'system'];
 
   /**
    * @covers ::update
@@ -92,13 +92,13 @@ class ConfigEntityUpdaterTest extends KernelTestBase {
     new Settings($settings);
     $updater = $this->container->get('class_resolver')->getInstanceFromDefinition(ConfigEntityUpdater::class);
     // Cause a dependency to be added during an update.
-    \Drupal::state()->set('config_test_new_dependency', 'added_dependency');
+    \Drupal::state()->set('config_test_new_dependency', 'system');
 
     // This should run against the first 10 entities.
     $updater->update($sandbox, 'config_test');
     $entities = $storage->loadMultiple();
-    $this->assertEquals(['added_dependency'], $entities['config_test_7']->getDependencies()['module']);
-    $this->assertEquals(['added_dependency'], $entities['config_test_8']->getDependencies()['module']);
+    $this->assertEquals(['system'], $entities['config_test_7']->getDependencies()['module']);
+    $this->assertEquals(['system'], $entities['config_test_8']->getDependencies()['module']);
     $this->assertEquals([], $entities['config_test_9']->getDependencies());
     $this->assertEquals([], $entities['config_test_14']->getDependencies());
     $this->assertEquals(15, $sandbox['config_entity_updater']['count']);
@@ -108,8 +108,8 @@ class ConfigEntityUpdaterTest extends KernelTestBase {
     // Update the rest.
     $updater->update($sandbox, 'config_test');
     $entities = $storage->loadMultiple();
-    $this->assertEquals(['added_dependency'], $entities['config_test_9']->getDependencies()['module']);
-    $this->assertEquals(['added_dependency'], $entities['config_test_14']->getDependencies()['module']);
+    $this->assertEquals(['system'], $entities['config_test_9']->getDependencies()['module']);
+    $this->assertEquals(['system'], $entities['config_test_14']->getDependencies()['module']);
     $this->assertEquals(1, $sandbox['#finished']);
     $this->assertCount(0, $sandbox['config_entity_updater']['entities']);
   }

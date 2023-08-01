@@ -15,7 +15,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
  *   default_formatter = "field_test_default",
  *   config_dependencies = {
  *     "module" = {
- *       "test_module"
+ *       "system"
  *     }
  *   }
  * )

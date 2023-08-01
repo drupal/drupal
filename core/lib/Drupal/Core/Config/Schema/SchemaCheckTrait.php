@@ -62,11 +62,7 @@ trait SchemaCheckTrait {
     // in the config schema tree to have validation constraints defined.
     $violations = $this->schema->validate();
     $ignored_validation_constraint_messages = [
-      // @see \Drupal\Core\Extension\Plugin\Validation\Constraint\ExtensionExistsConstraint::$moduleMessage
-      // @see \Drupal\Core\Extension\Plugin\Validation\Constraint\ExtensionExistsConstraint::$themeMessage
-      // @todo Remove this in https://www.drupal.org/project/drupal/issues/3362456
-      "Module '.*' is not installed.",
-      "Theme '.*' is not installed.",
+      // Currently none!
     ];
     $filtered_violations = array_filter(
       iterator_to_array($violations),

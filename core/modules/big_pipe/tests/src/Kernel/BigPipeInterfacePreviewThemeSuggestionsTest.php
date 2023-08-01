@@ -51,6 +51,8 @@ class BigPipeInterfacePreviewThemeSuggestionsTest extends KernelTestBase {
     $this->blockViewBuilder = $this->container
       ->get('entity_type.manager')
       ->getViewBuilder('block');
+
+    $this->container->get('theme_installer')->install(['stark']);
   }
 
   /**

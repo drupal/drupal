@@ -44,6 +44,7 @@ class WhosOnlineBlockTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->container->get('theme_installer')->install(['stark']);
     $this->installConfig(['system', 'block', 'views', 'user']);
     $this->installEntitySchema('user');
 

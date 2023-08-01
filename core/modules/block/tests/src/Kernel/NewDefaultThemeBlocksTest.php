@@ -31,6 +31,7 @@ class NewDefaultThemeBlocksTest extends KernelTestBase {
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
     $theme_installer = $this->container->get('theme_installer');
     $default_theme = $this->config('system.theme')->get('default');
+    $theme_installer->install([$default_theme]);
 
     // Add two instances of the user login block.
     $this->placeBlock('user_login_block', [
