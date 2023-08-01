@@ -462,7 +462,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
     }
 
     // Look for the 'recommended' version if we haven't found it yet (see
-    // phpdoc at the top of this function for the definition).
+    // PHPDoc at the top of this function for the definition).
     if (!isset($project_data['recommended'])
         && $release_major_version == $target_major) {
       if ($recommended_version_without_extra !== $release_version_without_extra) {

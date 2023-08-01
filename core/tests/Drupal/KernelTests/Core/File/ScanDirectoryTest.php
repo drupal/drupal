@@ -78,7 +78,7 @@ class ScanDirectoryTest extends FileTestBase {
   public function testOptionCallback() {
 
     // When nothing is matched nothing should be passed to the callback.
-    $all_files = $this->fileSystem->scanDirectory($this->path, '/^NONEXISTINGFILENAME/', ['callback' => 'file_test_file_scan_callback']);
+    $all_files = $this->fileSystem->scanDirectory($this->path, '/^NON-EXISTING-FILENAME/', ['callback' => 'file_test_file_scan_callback']);
     $this->assertCount(0, $all_files, 'No files were found.');
     $results = file_test_file_scan_callback();
     file_test_file_scan_callback_reset();

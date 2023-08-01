@@ -8,6 +8,8 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\RequestOptions;
 
+// cspell:ignore nocdata
+
 /**
  * Fetches and caches oEmbed resources.
  */

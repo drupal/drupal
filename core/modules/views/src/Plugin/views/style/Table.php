@@ -170,7 +170,7 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
     if ($fields === NULL) {
       $fields = $this->displayHandler->getOption('fields');
     }
-    // Preconfigure the sanitized array so that the order is retained.
+    // Pre-configure the sanitized array so that the order is retained.
     foreach ($fields as $field => $info) {
       // Set to itself so that if it isn't touched, it gets column
       // status automatically.

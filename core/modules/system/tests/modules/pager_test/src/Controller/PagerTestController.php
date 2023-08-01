@@ -39,7 +39,7 @@ class PagerTestController extends ControllerBase implements TrustedCallbackInter
   }
 
   /**
-   * Builds a render array for a pageable test table.
+   * Builds a render array for a multi-page test table.
    *
    * @param int $element
    *   The pager element to be used for paging.

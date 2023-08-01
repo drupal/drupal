@@ -8,7 +8,7 @@ use Drupal\Core\Database\Event\StatementExecutionEndEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 
 /**
- * An implementation of StatementInterface that prefetches all data.
+ * An implementation of StatementInterface that pre-fetches all data.
  *
  * This class behaves very similar to a StatementWrapper of a \PDOStatement
  * but as it always fetches every row it is possible to manipulate those

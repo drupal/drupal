@@ -9,6 +9,8 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
 
+// cspell:ignore omitscript
+
 /**
  * Converts oEmbed media URLs into endpoint-specific resource URLs.
  */

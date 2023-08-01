@@ -310,7 +310,7 @@ class ContainerAwareEventDispatcherTest extends TestCase {
     $this->dispatcher->dispatch(new Event(), self::PREFOO);
     $this->assertTrue($this->listener->preFooInvoked);
     $this->assertFalse($this->listener->postFooInvoked);
-    $this->assertInstanceOf(Event::class, $this->dispatcher->dispatch(new Event(), 'noevent'));
+    $this->assertInstanceOf(Event::class, $this->dispatcher->dispatch(new Event(), 'no_event'));
     $this->assertInstanceOf(Event::class, $this->dispatcher->dispatch(new Event(), self::PREFOO));
     // Any kind of object can be dispatched, not only instances of Event.
     $this->assertInstanceOf(\stdClass::class, $this->dispatcher->dispatch(new \stdClass(), self::PREFOO));
