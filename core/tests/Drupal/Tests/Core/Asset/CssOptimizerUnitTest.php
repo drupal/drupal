@@ -222,6 +222,18 @@ class CssOptimizerUnitTest extends UnitTestCase {
         ],
         file_get_contents($absolute_path . 'quotes.css.optimized.css'),
       ],
+      [
+        [
+          'group' => -100,
+          'type' => 'file',
+          'weight' => 0.013,
+          'media' => 'all',
+          'preprocess' => TRUE,
+          'data' => $path . 'import3.css',
+          'basename' => 'import3.css',
+        ],
+        file_get_contents($absolute_path . 'import3.css.optimized.css'),
+      ],
     ];
   }
 
