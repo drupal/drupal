@@ -47,7 +47,7 @@ class MigrateShortcutSetUsersTest extends MigrateDrupal7TestBase {
     $account = User::load(2);
     $shortcut_set = shortcut_current_displayed_set($account);
     /** @var \Drupal\shortcut\ShortcutSetInterface $shortcut_set */
-    $this->assertSame('shortcut_set_2', $shortcut_set->id());
+    $this->assertSame('shortcut-set-2', $shortcut_set->id());
   }
 
 }

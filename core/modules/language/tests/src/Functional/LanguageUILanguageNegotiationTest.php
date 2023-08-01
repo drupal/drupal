@@ -475,7 +475,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
     // Place a site branding block in the header region.
     $this->drupalPlaceBlock('system_branding_block', [
       'region' => 'header',
-      'id' => 'site-branding',
+      'id' => 'site_branding',
     ]);
 
     // Access the front page without specifying any valid URL language prefix

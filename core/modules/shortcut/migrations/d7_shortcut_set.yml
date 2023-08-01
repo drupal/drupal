@@ -16,6 +16,8 @@ process:
     -
       plugin: machine_name
       field: id
+      # @see shortcut.schema.yml
+      replace_pattern: /[^a-z0-9-]+/
   label: title
 destination:
   plugin: entity:shortcut_set

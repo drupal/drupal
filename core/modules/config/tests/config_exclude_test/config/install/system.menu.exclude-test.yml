@@ -4,7 +4,7 @@ dependencies:
   enforced:
     module:
       - config_test
-id: exclude_test
+id: exclude-test
 label: Test
 description: 'Test menu depending on config_test'
 locked: true

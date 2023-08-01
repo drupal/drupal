@@ -237,6 +237,12 @@ system.action.*:
     id:
       type: machine_name
       label: 'ID'
+      constraints:
+        # Action IDs also allow periods.
+        # @see user_user_role_insert()
+        Regex:
+          pattern: '/^[a-z0-9_\.]+$/'
+          message: "The %value machine name is not valid."
     label:
       type: label
       label: 'Label'

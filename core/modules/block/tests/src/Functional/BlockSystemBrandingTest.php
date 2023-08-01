@@ -31,7 +31,7 @@ class BlockSystemBrandingTest extends BlockTestBase {
       ->set('slogan', 'Community plumbing')
       ->save();
     // Add the system branding block to the page.
-    $this->drupalPlaceBlock('system_branding_block', ['region' => 'header', 'id' => 'site-branding']);
+    $this->drupalPlaceBlock('system_branding_block', ['region' => 'header', 'id' => 'site_branding']);
   }
 
   /**
@@ -64,7 +64,7 @@ class BlockSystemBrandingTest extends BlockTestBase {
     $this->assertSession()->responseNotContains('<script>alert("Community carpentry");</script>');
 
     // Turn just the logo off.
-    $this->config('block.block.site-branding')
+    $this->config('block.block.site_branding')
       ->set('settings.use_site_logo', 0)
       ->save();
     $this->drupalGet('');
@@ -77,7 +77,7 @@ class BlockSystemBrandingTest extends BlockTestBase {
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:system.site');
 
     // Turn just the site name off.
-    $this->config('block.block.site-branding')
+    $this->config('block.block.site_branding')
       ->set('settings.use_site_logo', 1)
       ->set('settings.use_site_name', 0)
       ->save();
@@ -91,7 +91,7 @@ class BlockSystemBrandingTest extends BlockTestBase {
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:system.site');
 
     // Turn just the site slogan off.
-    $this->config('block.block.site-branding')
+    $this->config('block.block.site_branding')
       ->set('settings.use_site_name', 1)
       ->set('settings.use_site_slogan', 0)
       ->save();
@@ -104,7 +104,7 @@ class BlockSystemBrandingTest extends BlockTestBase {
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:system.site');
 
     // Turn the site name and the site slogan off.
-    $this->config('block.block.site-branding')
+    $this->config('block.block.site_branding')
       ->set('settings.use_site_name', 0)
       ->set('settings.use_site_slogan', 0)
       ->save();

@@ -151,7 +151,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     $this->submitForm(['predefined_langcode' => 'af'], 'Add language');
 
     // Add the system branding block to the page.
-    $this->drupalPlaceBlock('system_branding_block', ['region' => 'header', 'id' => 'site-branding']);
+    $this->drupalPlaceBlock('system_branding_block', ['region' => 'header', 'id' => 'site_branding']);
     $this->drupalGet('admin/config/system/site-information');
     $this->submitForm(['site_slogan' => 'Test site slogan'], 'Save configuration');
     $this->drupalGet('admin/config/system/site-information/translate/af/edit');

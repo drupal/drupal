@@ -70,9 +70,6 @@ trait SchemaCheckTrait {
       // @see \Drupal\Core\Plugin\Plugin\Validation\Constraint\PluginExistsConstraint::$unknownPluginMessage
       // @todo Remove this in https://www.drupal.org/project/drupal/issues/3362457
       "The '.*' plugin does not exist.",
-      // @see "machine_name" in core.data_types.schema.yml
-      // @todo Remove this in https://www.drupal.org/project/drupal/issues/3372972
-      "The <em class=\"placeholder\">.*<\/em> machine name is not valid.",
     ];
     $filtered_violations = array_filter(
       iterator_to_array($violations),

@@ -27,7 +27,6 @@ class BlockContentWizardTest extends BlockContentTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->drupalLogin($this->drupalCreateUser(['administer views']));
-    $this->createBlockContentType('Basic block');
   }
 
   /**

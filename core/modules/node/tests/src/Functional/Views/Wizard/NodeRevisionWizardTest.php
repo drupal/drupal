@@ -42,8 +42,8 @@ class NodeRevisionWizardTest extends WizardTestBase {
     $node->changed->value = REQUEST_TIME + 10;
     $node->save();
 
-    $this->drupalCreateContentType(['type' => 'not-article']);
-    $node = $node_storage->create(['title' => $this->randomString(), 'type' => 'not-article', 'changed' => REQUEST_TIME + 80]);
+    $this->drupalCreateContentType(['type' => 'not_article']);
+    $node = $node_storage->create(['title' => $this->randomString(), 'type' => 'not_article', 'changed' => REQUEST_TIME + 80]);
     $node->save();
 
     $type = [

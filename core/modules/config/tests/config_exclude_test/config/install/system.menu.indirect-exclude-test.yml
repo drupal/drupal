@@ -3,8 +3,8 @@ status: true
 dependencies:
   enforced:
     config:
-      - system.menu.exclude_test
-id: indirect_exclude_test
+      - system.menu.exclude-test
+id: indirect-exclude-test
 label: Test
 description: 'Test menu depending indirectly on config_test'
 locked: true

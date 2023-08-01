@@ -57,7 +57,7 @@ abstract class ShortcutSetResourceTestBase extends ConfigEntityResourceTestBase 
    */
   protected function createEntity() {
     $set = ShortcutSet::create([
-      'id' => 'llama_set',
+      'id' => 'llama-set',
       'label' => 'Llama Set',
     ]);
     $set->save();
@@ -69,7 +69,7 @@ abstract class ShortcutSetResourceTestBase extends ConfigEntityResourceTestBase 
    */
   protected function getExpectedNormalizedEntity() {
     return [
-      'id' => 'llama_set',
+      'id' => 'llama-set',
       'uuid' => $this->entity->uuid(),
       'label' => 'Llama Set',
       'status' => TRUE,

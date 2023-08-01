@@ -163,7 +163,7 @@ class ArgumentDefaultTest extends ViewTestBase {
     // Place the block, visit the pages that display the block, and check that
     // the nodes we expect appear in the respective pages.
     $id = 'view-block-id';
-    $this->drupalPlaceBlock("views_block:test_argument_default_node-block_1", ['id' => $id]);
+    $this->drupalPlaceBlock("views_block:test_argument_default_node-block_1", ['id' => 'view_block_id']);
     $this->drupalGet('node/' . $node1->id());
     $this->assertSession()->elementTextContains('xpath', '//*[@id="block-' . $id . '"]', $node1->getTitle());
     $this->drupalGet('node/' . $node2->id());

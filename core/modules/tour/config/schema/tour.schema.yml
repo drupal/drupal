@@ -7,6 +7,11 @@ tour.tour.*:
     id:
       type: machine_name
       label: 'ID'
+      constraints:
+        # Tour IDs also allow dashes.
+        Regex:
+          pattern: '/^[a-z0-9_-]+$/'
+          message: "The %value machine name is not valid."
     label:
       type: label
       label: 'Label'
