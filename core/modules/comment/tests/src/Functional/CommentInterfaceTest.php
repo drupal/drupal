@@ -309,7 +309,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->assertSession()->responseContains('<p>' . $comment_text . '</p>');
 
     // Create a new comment entity view mode.
-    $mode = mb_strtolower($this->randomMachineName());
+    $mode = $this->randomMachineName();
     EntityViewMode::create([
       'targetEntityType' => 'comment',
       'id' => "comment.$mode",

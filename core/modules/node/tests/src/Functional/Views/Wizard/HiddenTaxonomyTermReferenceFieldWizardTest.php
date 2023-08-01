@@ -37,7 +37,7 @@ class HiddenTaxonomyTermReferenceFieldWizardTest extends WizardTestBase {
     // Create a taxonomy_term_reference field on the article Content Type. By
     // not assigning a widget to that field we make sure it is hidden on the
     // Form Display.
-    $field_name = mb_strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'node',

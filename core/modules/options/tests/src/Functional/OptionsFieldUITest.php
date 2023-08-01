@@ -80,7 +80,7 @@ class OptionsFieldUITest extends FieldTestBase {
     $this->drupalLogin($admin_user);
 
     // Create content type, with underscores.
-    $this->typeName = 'test_' . strtolower($this->randomMachineName());
+    $this->typeName = 'test_' . $this->randomMachineName();
     $type = $this->drupalCreateContentType(['name' => $this->typeName, 'type' => $this->typeName]);
     $this->type = $type->id();
   }
@@ -390,7 +390,7 @@ class OptionsFieldUITest extends FieldTestBase {
    * Tests normal and key formatter display on node display.
    */
   public function testNodeDisplay() {
-    $this->fieldName = strtolower($this->randomMachineName());
+    $this->fieldName = $this->randomMachineName();
     $this->createOptionsField('list_integer');
     $node = $this->drupalCreateNode(['type' => $this->type]);
 

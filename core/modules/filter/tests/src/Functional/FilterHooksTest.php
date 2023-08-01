@@ -32,7 +32,7 @@ class FilterHooksTest extends BrowserTestBase {
    */
   public function testFilterHooks() {
     // Create content type, with underscores.
-    $type_name = 'test_' . strtolower($this->randomMachineName());
+    $type_name = 'test_' . $this->randomMachineName();
     $type = $this->drupalCreateContentType(['name' => $type_name, 'type' => $type_name]);
     $node_permission = "create $type_name content";
 
@@ -46,7 +46,7 @@ class FilterHooksTest extends BrowserTestBase {
     // Add a text format.
     $name = $this->randomMachineName();
     $edit = [];
-    $edit['format'] = mb_strtolower($this->randomMachineName());
+    $edit['format'] = $this->randomMachineName();
     $edit['name'] = $name;
     $edit['roles[' . RoleInterface::ANONYMOUS_ID . ']'] = 1;
     $this->drupalGet('admin/config/content/formats/add');

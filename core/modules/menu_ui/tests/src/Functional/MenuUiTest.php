@@ -226,7 +226,7 @@ class MenuUiTest extends BrowserTestBase {
    */
   public function addCustomMenuCRUD() {
     // Add a new custom menu.
-    $menu_name = strtolower($this->randomMachineName(MenuStorage::MAX_ID_LENGTH));
+    $menu_name = $this->randomMachineName(MenuStorage::MAX_ID_LENGTH);
     $label = $this->randomMachineName(16);
 
     $menu = Menu::create([
@@ -267,7 +267,7 @@ class MenuUiTest extends BrowserTestBase {
   public function addCustomMenu() {
     // Try adding a menu using a menu_name that is too long.
     $this->drupalGet('admin/structure/menu/add');
-    $menu_name = strtolower($this->randomMachineName(MenuStorage::MAX_ID_LENGTH + 1));
+    $menu_name = $this->randomMachineName(MenuStorage::MAX_ID_LENGTH + 1);
     $label = $this->randomMachineName(16);
     $edit = [
       'id' => $menu_name,
@@ -282,7 +282,7 @@ class MenuUiTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains("Menu name cannot be longer than " . MenuStorage::MAX_ID_LENGTH . " characters but is currently " . mb_strlen($menu_name) . " characters long.");
 
     // Change the menu_name so it no longer exceeds the maximum length.
-    $menu_name = strtolower($this->randomMachineName(MenuStorage::MAX_ID_LENGTH));
+    $menu_name = $this->randomMachineName(MenuStorage::MAX_ID_LENGTH);
     $edit['id'] = $menu_name;
     $this->drupalGet('admin/structure/menu/add');
     $this->submitForm($edit, 'Save');

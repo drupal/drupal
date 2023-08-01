@@ -39,7 +39,7 @@ class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     // Create a file field on the "Basic page" node type.
-    $this->fieldName = strtolower($this->randomMachineName());
+    $this->fieldName = $this->randomMachineName();
     $this->createFileField($this->fieldName, 'node', 'page', ['uri_scheme' => 'private']);
 
     // Create and log in user.

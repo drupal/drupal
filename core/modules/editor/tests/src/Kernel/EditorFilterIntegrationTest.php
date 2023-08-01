@@ -24,7 +24,7 @@ class EditorFilterIntegrationTest extends KernelTestBase {
   public function testTextFormatIntegration() {
     // Create an arbitrary text format.
     $format = FilterFormat::create([
-      'format' => mb_strtolower($this->randomMachineName()),
+      'format' => $this->randomMachineName(),
       'name' => $this->randomString(),
     ]);
     $format->save();

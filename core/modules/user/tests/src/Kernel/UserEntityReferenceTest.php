@@ -37,13 +37,13 @@ class UserEntityReferenceTest extends EntityKernelTestBase {
     parent::setUp();
 
     $this->role1 = Role::create([
-      'id' => strtolower($this->randomMachineName(8)),
+      'id' => $this->randomMachineName(8),
       'label' => $this->randomMachineName(8),
     ]);
     $this->role1->save();
 
     $this->role2 = Role::create([
-      'id' => strtolower($this->randomMachineName(8)),
+      'id' => $this->randomMachineName(8),
       'label' => $this->randomMachineName(8),
     ]);
     $this->role2->save();

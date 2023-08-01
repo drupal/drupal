@@ -88,7 +88,7 @@ abstract class BlockContentTestBase extends ViewTestBase {
     // Find a non-existent random type name.
     if (!isset($values['id'])) {
       do {
-        $id = strtolower($this->randomMachineName(8));
+        $id = $this->randomMachineName(8);
       } while (BlockContentType::load($id));
     }
     else {

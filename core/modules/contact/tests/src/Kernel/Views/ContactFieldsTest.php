@@ -34,7 +34,7 @@ class ContactFieldsTest extends KernelTestBase {
     FieldStorageConfig::create([
       'type' => 'text',
       'entity_type' => 'contact_message',
-      'field_name' => $field_name = strtolower($this->randomMachineName()),
+      'field_name' => $field_name = $this->randomMachineName(),
     ])->save();
 
     ContactForm::create([

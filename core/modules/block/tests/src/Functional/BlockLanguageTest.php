@@ -79,7 +79,7 @@ class BlockLanguageTest extends BrowserTestBase {
     // Enable a standard block and set the visibility setting for one language.
     $edit = [
       'visibility[language][langcodes][en]' => TRUE,
-      'id' => strtolower($this->randomMachineName(8)),
+      'id' => $this->randomMachineName(8),
       'region' => 'sidebar_first',
     ];
     $this->drupalGet('admin/structure/block/add/system_powered_by_block' . '/' . $default_theme);
@@ -165,7 +165,7 @@ class BlockLanguageTest extends BrowserTestBase {
     $this->assertSession()->fieldExists('visibility[language][context_mapping][language]');
 
     // Enable a standard block and set visibility to French only.
-    $block_id = strtolower($this->randomMachineName(8));
+    $block_id = $this->randomMachineName(8);
     $edit = [
       'visibility[language][context_mapping][language]' => '@language.current_language_context:language_interface',
       'visibility[language][langcodes][fr]' => TRUE,

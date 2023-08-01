@@ -44,7 +44,7 @@ class WizardTest extends WizardTestBase {
   public function testCommentWizard() {
     $view = [];
     $view['label'] = $this->randomMachineName(16);
-    $view['id'] = strtolower($this->randomMachineName(16));
+    $view['id'] = $this->randomMachineName(16);
     $view['show[wizard_key]'] = 'comment';
     $view['page[create]'] = TRUE;
     $view['page[path]'] = $this->randomMachineName(16);
@@ -73,7 +73,7 @@ class WizardTest extends WizardTestBase {
     }
     $this->assertEquals($expected_options, $actual_options);
 
-    $view['id'] = strtolower($this->randomMachineName(16));
+    $view['id'] = $this->randomMachineName(16);
     $this->submitForm($view, 'Save and edit');
     // Verify that the view saving was successful and the browser got redirected
     // to the edit page.

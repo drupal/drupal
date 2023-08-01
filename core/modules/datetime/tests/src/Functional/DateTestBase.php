@@ -114,8 +114,8 @@ abstract class DateTestBase extends BrowserTestBase {
    * Creates a date test field.
    */
   protected function createField() {
-    $field_name = mb_strtolower($this->randomMachineName());
-    $field_label = Unicode::ucfirst(mb_strtolower($this->randomMachineName()));
+    $field_name = $this->randomMachineName();
+    $field_label = Unicode::ucfirst($this->randomMachineName());
     $type = $this->getTestFieldType();
     $widget_type = $formatter_type = $type . '_default';
 

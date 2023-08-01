@@ -46,7 +46,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
     // Create a new vocabulary.
     $this->clickLink('Add vocabulary');
     $edit = [];
-    $vid = mb_strtolower($this->randomMachineName());
+    $vid = $this->randomMachineName();
     $edit['name'] = $this->randomMachineName();
     $edit['description'] = $this->randomMachineName();
     $edit['vid'] = $vid;
@@ -157,7 +157,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
    */
   public function testTaxonomyAdminDeletingVocabulary() {
     // Create a vocabulary.
-    $vid = mb_strtolower($this->randomMachineName());
+    $vid = $this->randomMachineName();
     $edit = [
       'name' => $this->randomMachineName(),
       'vid' => $vid,

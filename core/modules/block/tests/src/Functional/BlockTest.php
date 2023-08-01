@@ -30,7 +30,7 @@ class BlockTest extends BlockTestBase {
     // Enable a standard block.
     $default_theme = $this->config('system.theme')->get('default');
     $edit = [
-      'id' => strtolower($this->randomMachineName(8)),
+      'id' => $this->randomMachineName(8),
       'region' => 'sidebar_first',
       'settings[label]' => $title,
       'settings[label_display]' => TRUE,
@@ -90,7 +90,7 @@ class BlockTest extends BlockTestBase {
     // Enable a standard block.
     $default_theme = $this->config('system.theme')->get('default');
     $edit = [
-      'id' => strtolower($this->randomMachineName(8)),
+      'id' => $this->randomMachineName(8),
       'region' => 'sidebar_first',
       'settings[label]' => $title,
     ];
@@ -127,7 +127,7 @@ class BlockTest extends BlockTestBase {
     // Enable a standard block.
     $default_theme = $this->config('system.theme')->get('default');
     $edit = [
-      'id' => strtolower($this->randomMachineName(8)),
+      'id' => $this->randomMachineName(8),
       'region' => 'sidebar_first',
       'settings[label]' => $title,
       'visibility[request_path][negate]' => TRUE,
@@ -187,7 +187,7 @@ class BlockTest extends BlockTestBase {
 
       // Create a random title for the block.
       $title = $this->randomMachineName(8);
-      $block_id = strtolower($this->randomMachineName(8));
+      $block_id = $this->randomMachineName(8);
       $edit = [
         'id' => $block_id,
         'settings[label]' => $title,
@@ -304,7 +304,7 @@ class BlockTest extends BlockTestBase {
       $this->assertSession()->titleEquals('Block layout | Drupal');
       // Select the 'Powered by Drupal' block to be placed.
       $block = [];
-      $block['id'] = strtolower($this->randomMachineName());
+      $block['id'] = $this->randomMachineName();
       $block['theme'] = $theme;
       $block['region'] = 'content';
       $this->drupalGet('admin/structure/block/add/system_powered_by_block');
@@ -343,7 +343,7 @@ class BlockTest extends BlockTestBase {
     $block_name = 'system_powered_by_block';
     // Create a random title for the block.
     $title = $this->randomMachineName(8);
-    $id = strtolower($this->randomMachineName(8));
+    $id = $this->randomMachineName(8);
     // Enable a standard block.
     $default_theme = $this->config('system.theme')->get('default');
     $edit = [

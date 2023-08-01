@@ -54,7 +54,7 @@ class NodeRevisionWizardTest extends WizardTestBase {
 
     $view = [];
     $view['label'] = $this->randomMachineName(16);
-    $view['id'] = strtolower($this->randomMachineName(16));
+    $view['id'] = $this->randomMachineName(16);
     $view['description'] = $this->randomMachineName(16);
     $view['page[create]'] = FALSE;
     $view['show[type]'] = 'article';
@@ -85,7 +85,7 @@ class NodeRevisionWizardTest extends WizardTestBase {
     $this->submitForm($type, 'Update "Show" choice');
     $view = [];
     $view['label'] = $this->randomMachineName(16);
-    $view['id'] = strtolower($this->randomMachineName(16));
+    $view['id'] = $this->randomMachineName(16);
     $view['description'] = $this->randomMachineName(16);
     $view['page[create]'] = FALSE;
     $view['show[type]'] = 'all';

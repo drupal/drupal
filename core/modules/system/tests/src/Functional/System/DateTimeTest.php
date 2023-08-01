@@ -104,7 +104,7 @@ class DateTimeTest extends BrowserTestBase {
 
     // Add custom date format.
     $this->clickLink('Add format');
-    $date_format_id = strtolower($this->randomMachineName(8));
+    $date_format_id = $this->randomMachineName(8);
     $name = ucwords($date_format_id);
     $date_format = 'd.m.Y - H:i';
     $edit = [
@@ -156,7 +156,7 @@ class DateTimeTest extends BrowserTestBase {
     $this->assertNull($date_format);
 
     // Add a new date format with an existing format.
-    $date_format_id = strtolower($this->randomMachineName(8));
+    $date_format_id = $this->randomMachineName(8);
     $name = ucwords($date_format_id);
     $date_format = 'Y';
     $edit = [
@@ -186,7 +186,7 @@ class DateTimeTest extends BrowserTestBase {
     $this->assertSession()->assertEscaped("<script>alert('XSS');</script>");
 
     // Add a new date format with HTML in it.
-    $date_format_id = strtolower($this->randomMachineName(8));
+    $date_format_id = $this->randomMachineName(8);
     $name = ucwords($date_format_id);
     $date_format = '& \<\e\m\>Y\<\/\e\m\>';
     $edit = [

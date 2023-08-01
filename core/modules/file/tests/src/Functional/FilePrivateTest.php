@@ -47,7 +47,7 @@ class FilePrivateTest extends FileFieldTestBase {
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     $type_name = 'article';
-    $field_name = strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     $this->createFileField($field_name, 'node', $type_name, ['uri_scheme' => 'private']);
 
     $test_file = $this->getTestFile('text');

@@ -39,7 +39,7 @@ class PageEditTest extends BlockContentTestBase {
     $body_key = 'body[0][value]';
     // Create block to edit.
     $edit = [];
-    $edit['info[0][value]'] = mb_strtolower($this->randomMachineName(8));
+    $edit['info[0][value]'] = $this->randomMachineName(8);
     $edit[$body_key] = $this->randomMachineName(16);
     $this->drupalGet('block/add/basic');
     $this->submitForm($edit, 'Save');

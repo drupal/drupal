@@ -86,7 +86,7 @@ class LinkFieldTest extends BrowserTestBase {
    * Tests link field URL validation.
    */
   protected function doTestURLValidation() {
-    $field_name = mb_strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     // Create a field with settings to validate.
     $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => $field_name,
@@ -270,7 +270,7 @@ class LinkFieldTest extends BrowserTestBase {
    * Tests the link title settings of a link field.
    */
   protected function doTestLinkTitle() {
-    $field_name = mb_strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     // Create a field with settings to validate.
     $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => $field_name,
@@ -395,7 +395,7 @@ class LinkFieldTest extends BrowserTestBase {
    * Tests the default 'link' formatter.
    */
   protected function doTestLinkFormatter() {
-    $field_name = mb_strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     // Create a field with settings to validate.
     $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => $field_name,
@@ -552,7 +552,7 @@ class LinkFieldTest extends BrowserTestBase {
    * merged, since they involve different configuration and output.
    */
   protected function doTestLinkSeparateFormatter() {
-    $field_name = mb_strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     // Create a field with settings to validate.
     $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => $field_name,
@@ -681,7 +681,7 @@ class LinkFieldTest extends BrowserTestBase {
   protected function doTestLinkTypeOnLinkWidget() {
 
     $link_type = LinkItemInterface::LINK_EXTERNAL;
-    $field_name = mb_strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
 
     // Create a field with settings to validate.
     $this->fieldStorage = FieldStorageConfig::create([
@@ -779,7 +779,7 @@ class LinkFieldTest extends BrowserTestBase {
    * Tests <nolink> and <none> as link uri.
    */
   public function testNoLinkUri() {
-    $field_name = mb_strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',

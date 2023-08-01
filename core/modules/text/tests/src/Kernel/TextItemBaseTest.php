@@ -70,7 +70,7 @@ class TextItemBaseTest extends KernelTestBase {
       'name' => 'Test format',
     ]);
     $format->save();
-    $fieldName = mb_strtolower($this->randomMachineName());
+    $fieldName = $this->randomMachineName();
     $field_storage = FieldStorageConfig::create([
       'field_name' => $fieldName,
       'entity_type' => 'entity_test',

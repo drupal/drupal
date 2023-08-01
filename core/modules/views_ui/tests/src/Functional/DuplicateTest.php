@@ -36,7 +36,7 @@ class DuplicateTest extends UITestBase {
 
     // Generate random label and id for new view.
     $view['label'] = $this->randomMachineName(255);
-    $view['id'] = strtolower($this->randomMachineName(128));
+    $view['id'] = $this->randomMachineName(128);
 
     // Duplicate view.
     $this->drupalGet('admin/structure/views/view/' . $random_view['id'] . '/duplicate');

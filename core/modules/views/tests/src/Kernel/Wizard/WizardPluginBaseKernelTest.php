@@ -49,7 +49,7 @@ class WizardPluginBaseKernelTest extends ViewsKernelTestBase {
     $form = [];
     $form_state = new FormState();
     $form = $this->wizard->buildForm($form, $form_state);
-    $random_id = strtolower($this->randomMachineName());
+    $random_id = $this->randomMachineName();
     $random_label = $this->randomMachineName();
     $random_description = $this->randomMachineName();
 

@@ -98,7 +98,7 @@ class TermAutocompleteTest extends TaxonomyTestBase {
 
     // Create a taxonomy_term_reference field on the article Content Type that
     // uses a taxonomy_autocomplete widget.
-    $this->fieldName = mb_strtolower($this->randomMachineName());
+    $this->fieldName = $this->randomMachineName();
     FieldStorageConfig::create([
       'field_name' => $this->fieldName,
       'entity_type' => 'node',

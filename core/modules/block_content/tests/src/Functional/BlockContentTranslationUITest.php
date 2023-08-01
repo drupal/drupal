@@ -88,7 +88,7 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
    * {@inheritdoc}
    */
   protected function getNewEntityValues($langcode) {
-    return ['info' => mb_strtolower($this->randomMachineName())] + parent::getNewEntityValues($langcode);
+    return ['info' => $this->randomMachineName()] + parent::getNewEntityValues($langcode);
   }
 
   /**

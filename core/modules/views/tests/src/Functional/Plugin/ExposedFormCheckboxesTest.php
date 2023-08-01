@@ -127,7 +127,7 @@ class ExposedFormCheckboxesTest extends ViewTestBase {
     }
 
     // Create a field.
-    $field_name = mb_strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     $handler_settings = [
       'target_bundles' => [
         $this->vocabulary->id() => $this->vocabulary->id(),

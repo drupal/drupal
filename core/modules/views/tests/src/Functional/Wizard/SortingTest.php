@@ -37,7 +37,7 @@ class SortingTest extends WizardTestBase {
     // Create a view that sorts oldest first.
     $view1 = [];
     $view1['label'] = $this->randomMachineName(16);
-    $view1['id'] = strtolower($this->randomMachineName(16));
+    $view1['id'] = $this->randomMachineName(16);
     $view1['description'] = $this->randomMachineName(16);
     $view1['show[sort]'] = 'node_field_data-created:ASC';
     $view1['page[create]'] = 1;
@@ -64,7 +64,7 @@ class SortingTest extends WizardTestBase {
     // Create a view that sorts newest first.
     $view2 = [];
     $view2['label'] = $this->randomMachineName(16);
-    $view2['id'] = strtolower($this->randomMachineName(16));
+    $view2['id'] = $this->randomMachineName(16);
     $view2['description'] = $this->randomMachineName(16);
     $view2['show[sort]'] = 'node_field_data-created:DESC';
     $view2['page[create]'] = 1;

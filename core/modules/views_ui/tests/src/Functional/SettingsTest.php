@@ -55,7 +55,7 @@ class SettingsTest extends UITestBase {
 
     $view = [];
     $view['label'] = $this->randomMachineName(16);
-    $view['id'] = strtolower($this->randomMachineName(16));
+    $view['id'] = $this->randomMachineName(16);
     $view['description'] = $this->randomMachineName(16);
     $view['page[create]'] = TRUE;
     $view['page[title]'] = $this->randomMachineName(16);
@@ -78,7 +78,7 @@ class SettingsTest extends UITestBase {
 
     // Create a view with an additional display, so default should be hidden.
     $view['page[create]'] = TRUE;
-    $view['id'] = strtolower($this->randomMachineName());
+    $view['id'] = $this->randomMachineName();
     $this->drupalGet('admin/structure/views/add');
     $this->submitForm($view, 'Save and edit');
 
@@ -94,7 +94,7 @@ class SettingsTest extends UITestBase {
     $this->drupalGet('admin/structure/views/settings');
     $this->submitForm($edit, 'Save configuration');
 
-    $view['id'] = strtolower($this->randomMachineName());
+    $view['id'] = $this->randomMachineName();
     $this->drupalGet('admin/structure/views/add');
     $this->submitForm($view, 'Save and edit');
     $this->assertSession()->buttonExists('edit-displays-top-add-display-embed');
@@ -116,7 +116,7 @@ class SettingsTest extends UITestBase {
     $this->drupalGet('admin/structure/views/settings');
     $this->submitForm($edit, 'Save configuration');
 
-    $view['id'] = strtolower($this->randomMachineName());
+    $view['id'] = $this->randomMachineName();
     $this->drupalGet('admin/structure/views/add');
     $this->submitForm($view, 'Save and edit');
 
@@ -130,7 +130,7 @@ class SettingsTest extends UITestBase {
     $this->drupalGet('admin/structure/views/settings');
     $this->submitForm($edit, 'Save configuration');
 
-    $view['id'] = strtolower($this->randomMachineName());
+    $view['id'] = $this->randomMachineName();
     $this->drupalGet('admin/structure/views/add');
     $this->submitForm($view, 'Save and edit');
 

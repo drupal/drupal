@@ -238,7 +238,7 @@ class DisplayPathTest extends UITestBase {
 
     $edit = [];
     $edit['label'] = $this->randomMachineName(16);
-    $view_id = $edit['id'] = strtolower($this->randomMachineName(16));
+    $view_id = $edit['id'] = $this->randomMachineName(16);
     $edit['description'] = $this->randomMachineName(16);
     $edit['page[create]'] = TRUE;
     $edit['page[path]'] = 'admin/foo';

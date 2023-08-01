@@ -54,7 +54,7 @@ class FieldFormatterTest extends KernelTestBase {
 
     $entity_type = 'entity_test_rev';
     $bundle = $entity_type;
-    $this->fieldName = mb_strtolower($this->randomMachineName());
+    $this->fieldName = $this->randomMachineName();
 
     $field_storage = FieldStorageConfig::create([
       'field_name' => $this->fieldName,

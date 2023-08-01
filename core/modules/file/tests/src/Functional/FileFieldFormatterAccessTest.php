@@ -25,7 +25,7 @@ class FileFieldFormatterAccessTest extends FileFieldTestBase {
    */
   public function testFileAccessHandler() {
     $type_name = 'article';
-    $field_name = strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     $this->createFileField($field_name, 'node', $type_name);
     \Drupal::state()->set('file_test_alternate_access_handler', TRUE);
     \Drupal::entityTypeManager()->clearCachedDefinitions();

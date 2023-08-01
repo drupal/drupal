@@ -46,7 +46,7 @@ abstract class FileMediaFormatterTestBase extends BrowserTestBase {
    */
   protected function createMediaField($formatter, $file_extensions, array $formatter_settings = []) {
     $entity_type = $bundle = 'entity_test';
-    $field_name = mb_strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
 
     FieldStorageConfig::create([
       'entity_type' => $entity_type,

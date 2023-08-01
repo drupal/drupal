@@ -57,7 +57,7 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
 
     // Create a vocabulary and add two term reference fields to article nodes.
 
-    $this->fieldName1 = mb_strtolower($this->randomMachineName());
+    $this->fieldName1 = $this->randomMachineName();
 
     $handler_settings = [
       'target_bundles' => [

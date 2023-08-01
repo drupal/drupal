@@ -57,7 +57,7 @@ abstract class UITestBase extends ViewTestBase {
     // Create a new view in the UI.
     $default = [];
     $default['label'] = $this->randomMachineName(16);
-    $default['id'] = strtolower($this->randomMachineName(16));
+    $default['id'] = $this->randomMachineName(16);
     $default['description'] = $this->randomMachineName(16);
     $default['page[create]'] = TRUE;
     $default['page[path]'] = $default['id'];

@@ -26,7 +26,7 @@ class MenuTest extends WizardTestBase {
     // Create a view with a page display and a menu link in the Main Menu.
     $view = [];
     $view['label'] = $this->randomMachineName(16);
-    $view['id'] = strtolower($this->randomMachineName(16));
+    $view['id'] = $this->randomMachineName(16);
     $view['description'] = $this->randomMachineName(16);
     $view['page[create]'] = 1;
     $view['page[title]'] = $this->randomMachineName(16);

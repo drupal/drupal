@@ -36,7 +36,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
       ->save();
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $type_name = 'article';
-    $field_name = strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     $this->createFileField($field_name, 'node', $type_name);
     // Create the same fields for users.
     $this->createFileField($field_name, 'user', 'user');

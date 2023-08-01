@@ -130,7 +130,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $this->drupalLogin($this->adminUser);
     $edit = [
       'label' => $this->randomMachineName(),
-      'id' => strtolower($this->randomMachineName()),
+      'id' => $this->randomMachineName(),
     ];
     $this->drupalGet('admin/config/user-interface/shortcut/add-set');
     $this->submitForm($edit, 'Save');

@@ -61,7 +61,7 @@ class MenuUiLanguageTest extends BrowserTestBase {
   public function testMenuLanguage() {
     // Create a test menu to test the various language-related settings.
     // Machine name has to be lowercase.
-    $menu_name = mb_strtolower($this->randomMachineName(16));
+    $menu_name = $this->randomMachineName(16);
     $label = $this->randomString();
     $edit = [
       'id' => $menu_name,

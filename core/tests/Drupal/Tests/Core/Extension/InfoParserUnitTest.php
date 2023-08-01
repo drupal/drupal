@@ -505,7 +505,7 @@ INFO;
     vfsStream::setup('modules');
     // Use a random file name to bypass the static caching in
     // \Drupal\Core\Extension\InfoParser.
-    $random = mb_strtolower($this->randomMachineName());
+    $random = $this->randomMachineName();
     $filename = "lifecycle-$random.info.yml";
     vfsStream::create([
       'fixtures' => [

@@ -154,7 +154,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     $id_key = $this->entity->getEntityType()->getKey('id');
     $this->entity->set(
       $id_key,
-      mb_strtolower($this->randomMachineName($max_length + 2))
+      $this->randomMachineName($max_length + 2)
     );
     $this->assertValidationErrors([
       $id_key => 'This value is too long. It should have <em class="placeholder">' . $max_length . '</em> characters or less.',

@@ -186,14 +186,14 @@ class PrepareUninstallTest extends BrowserTestBase {
     $storage = $this->container->get('entity_type.manager')
       ->getStorage('entity_test_no_label');
     $storage->create([
-      'id' => mb_strtolower($this->randomMachineName()),
+      'id' => $this->randomMachineName(),
       'name' => $this->randomMachineName(),
     ])->save();
     $this->drupalGet('admin/modules/uninstall/entity/entity_test_no_label');
     $this->assertSession()->pageTextContains('This will delete 1 entity test without label.');
     $this->assertSession()->buttonExists("Delete all entity test without label entities");
     $storage->create([
-      'id' => mb_strtolower($this->randomMachineName()),
+      'id' => $this->randomMachineName(),
       'name' => $this->randomMachineName(),
     ])->save();
     $this->drupalGet('admin/modules/uninstall/entity/entity_test_no_label');

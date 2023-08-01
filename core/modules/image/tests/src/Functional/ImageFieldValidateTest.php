@@ -29,7 +29,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $file_system = $this->container->get('file_system');
     $image_files = $this->drupalGetTestFiles('image');
 
-    $field_name = strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     $this->createImageField($field_name, 'article', [], ['file_directory' => 'test-upload']);
     $expected_path = 'public://test-upload';
 
@@ -89,9 +89,9 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
    */
   public function testResolution() {
     $field_names = [
-      0 => strtolower($this->randomMachineName()),
-      1 => strtolower($this->randomMachineName()),
-      2 => strtolower($this->randomMachineName()),
+      0 => $this->randomMachineName(),
+      1 => $this->randomMachineName(),
+      2 => $this->randomMachineName(),
     ];
     $min_resolution = [
       'width' => 50,
@@ -163,7 +163,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
    * Tests that required alt/title fields gets validated right.
    */
   public function testRequiredAttributes() {
-    $field_name = strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     $field_settings = [
       'alt_field' => 1,
       'alt_field_required' => 1,

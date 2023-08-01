@@ -45,7 +45,7 @@ class FieldCrudTest extends FieldKernelTestBase {
     parent::setUp();
 
     $this->fieldStorageDefinition = [
-      'field_name' => mb_strtolower($this->randomMachineName()),
+      'field_name' => $this->randomMachineName(),
       'entity_type' => 'entity_test',
       'type' => 'test_field',
     ];
@@ -201,7 +201,7 @@ class FieldCrudTest extends FieldKernelTestBase {
    * Tests creating a field with custom storage set.
    */
   public function testCreateFieldCustomStorage() {
-    $field_name = mb_strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     \Drupal::state()->set('field_test_custom_storage', $field_name);
 
     $field_storage = FieldStorageConfig::create([

@@ -70,7 +70,7 @@ class DisplayBlockTest extends ViewTestBase {
     // Create a new view in the UI.
     $edit = [];
     $edit['label'] = $this->randomString();
-    $edit['id'] = strtolower($this->randomMachineName());
+    $edit['id'] = $this->randomMachineName();
     $edit['show[wizard_key]'] = 'standard:views_test_data';
     $edit['description'] = $this->randomString();
     $edit['block[create]'] = TRUE;

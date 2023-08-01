@@ -62,7 +62,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
 
     // Create an image field storage and add a field to the article content
     // type.
-    $field_name = strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     $storage_settings['default_image'] = [
       'uuid' => $default_images['field_storage']->uuid(),
       'alt' => '',
@@ -261,7 +261,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
    */
   public function testInvalidDefaultImage() {
     $field_storage = FieldStorageConfig::create([
-      'field_name' => mb_strtolower($this->randomMachineName()),
+      'field_name' => $this->randomMachineName(),
       'entity_type' => 'node',
       'type' => 'image',
       'settings' => [

@@ -65,7 +65,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
     // Test adding a view mode including dots in machine_name.
     $this->clickLink('Test entity');
     $edit = [
-      'id' => strtolower($this->randomMachineName()) . '.' . strtolower($this->randomMachineName()),
+      'id' => $this->randomMachineName() . '.' . $this->randomMachineName(),
       'label' => $this->randomString(),
     ];
     $this->submitForm($edit, 'Save');
@@ -73,7 +73,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
 
     // Test adding a view mode.
     $edit = [
-      'id' => strtolower($this->randomMachineName()),
+      'id' => $this->randomMachineName(),
       'label' => $this->randomString(),
     ];
     $this->submitForm($edit, 'Save');
@@ -119,7 +119,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
     // Test adding a view mode including dots in machine_name.
     $this->clickLink('Test entity');
     $edit = [
-      'id' => strtolower($this->randomMachineName()) . '.' . strtolower($this->randomMachineName()),
+      'id' => $this->randomMachineName() . '.' . $this->randomMachineName(),
       'label' => $this->randomString(),
     ];
     $this->submitForm($edit, 'Save');
@@ -127,7 +127,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
 
     // Test adding a form mode.
     $edit = [
-      'id' => strtolower($this->randomMachineName()),
+      'id' => $this->randomMachineName(),
       'label' => $this->randomString(),
     ];
     $this->submitForm($edit, 'Save');

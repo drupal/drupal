@@ -49,7 +49,7 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
     $this->drupalCreateContentType(['type' => 'basicpage', 'name' => 'Basic page', 'new_revision' => FALSE]);
 
     // Create an image field on the "Basic page" node type.
-    $this->fieldName = strtolower($this->randomMachineName());
+    $this->fieldName = $this->randomMachineName();
     $this->createImageField($this->fieldName, 'basicpage', [], ['title_field' => 1]);
 
     // Create and log in user.

@@ -87,7 +87,7 @@ class FieldUITest extends UITestBase {
     // labels by default.
     $view = [];
     $view['label'] = $this->randomMachineName(16);
-    $view['id'] = strtolower($this->randomMachineName(16));
+    $view['id'] = $this->randomMachineName(16);
     $view['description'] = $this->randomMachineName(16);
     $view['show[wizard_key]'] = 'node';
     $view['page[create]'] = TRUE;

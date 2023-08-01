@@ -317,7 +317,7 @@ class BlockUiTest extends BrowserTestBase {
 
     // Select the 'Powered by Drupal' block to be placed.
     $block = [];
-    $block['id'] = strtolower($this->randomMachineName());
+    $block['id'] = $this->randomMachineName();
     $block['theme'] = 'stark';
     $block['region'] = 'content';
 

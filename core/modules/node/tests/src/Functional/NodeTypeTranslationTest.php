@@ -103,7 +103,7 @@ class NodeTypeTranslationTest extends BrowserTestBase {
    * Tests the node type translation.
    */
   public function testNodeTypeTranslation() {
-    $type = mb_strtolower($this->randomMachineName(16));
+    $type = $this->randomMachineName(16);
     $name = $this->randomString();
     $this->drupalLogin($this->adminUser);
     $this->drupalCreateContentType(['type' => $type, 'name' => $name]);
@@ -140,7 +140,7 @@ class NodeTypeTranslationTest extends BrowserTestBase {
    * Tests the node type title label translation.
    */
   public function testNodeTypeTitleLabelTranslation() {
-    $type = mb_strtolower($this->randomMachineName(16));
+    $type = $this->randomMachineName(16);
     $name = $this->randomString();
     $this->drupalLogin($this->adminUser);
     $this->drupalCreateContentType(['type' => $type, 'name' => $name]);
@@ -176,7 +176,7 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     $this->submitForm([], 'Save field settings');
     $this->submitForm([], 'Save settings');
 
-    $type = mb_strtolower($this->randomMachineName(16));
+    $type = $this->randomMachineName(16);
     $name = $this->randomString();
     $this->drupalCreateContentType(['type' => $type, 'name' => $name]);
 

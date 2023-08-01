@@ -120,7 +120,7 @@ class PagePreviewTest extends NodeTestBase {
     $field_config->save();
 
     // Create a field.
-    $this->fieldName = mb_strtolower($this->randomMachineName());
+    $this->fieldName = $this->randomMachineName();
     $handler_settings = [
       'target_bundles' => [
         $vocabulary->id() => $vocabulary->id(),

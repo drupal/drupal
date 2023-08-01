@@ -104,13 +104,13 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $this->drupalLogin($admin_user);
 
     // Create content type, with underscores.
-    $type_name = strtolower($this->randomMachineName(8)) . '_test';
+    $type_name = $this->randomMachineName(8) . '_test';
     $type = $this->drupalCreateContentType(['name' => $type_name, 'type' => $type_name]);
     $this->contentType = $type->id();
 
     // Create random field name with markup to test escaping.
     $this->fieldLabel = '<em>' . $this->randomMachineName(8) . '</em>';
-    $this->fieldNameInput = strtolower($this->randomMachineName(8));
+    $this->fieldNameInput = $this->randomMachineName(8);
     $this->fieldName = 'field_' . $this->fieldNameInput;
 
     // Create Basic page and Article node types.
@@ -477,7 +477,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
    */
   public function testFieldPrefix() {
     // Change default field prefix.
-    $field_prefix = strtolower($this->randomMachineName(10));
+    $field_prefix = $this->randomMachineName(10);
     $this->config('field_ui.settings')->set('field_prefix', $field_prefix)->save();
 
     // Create a field input and label exceeding the new maxlength, which is 22.
@@ -600,7 +600,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $this->fieldUIAddNewField($bundle_path1, $this->fieldNameInput, $this->fieldLabel);
 
     // Create an additional node type.
-    $type_name2 = strtolower($this->randomMachineName(8)) . '_test';
+    $type_name2 = $this->randomMachineName(8) . '_test';
     $type2 = $this->drupalCreateContentType(['name' => $type_name2, 'type' => $type_name2]);
     $type_name2 = $type2->id();
 
@@ -659,7 +659,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
   public function testLockedField() {
     // Create a locked field and attach it to a bundle. We need to do this
     // programmatically as there's no way to create a locked field through UI.
-    $field_name = strtolower($this->randomMachineName(8));
+    $field_name = $this->randomMachineName(8);
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'node',

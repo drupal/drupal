@@ -89,7 +89,7 @@ class ConfigImportRenameValidationTest extends KernelTestBase {
 
     // Create a content type with a matching UUID in the active storage.
     $content_type = NodeType::create([
-      'type' => mb_strtolower($this->randomMachineName(16)),
+      'type' => $this->randomMachineName(16),
       'name' => $this->randomMachineName(),
       'uuid' => $uuid,
     ]);

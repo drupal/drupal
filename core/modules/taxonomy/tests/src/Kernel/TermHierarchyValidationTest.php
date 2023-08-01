@@ -32,7 +32,7 @@ class TermHierarchyValidationTest extends EntityKernelTestBase {
    * Tests the term hierarchy validation with re-parenting in pending revisions.
    */
   public function testTermHierarchyValidation() {
-    $vocabulary_id = mb_strtolower($this->randomMachineName());
+    $vocabulary_id = $this->randomMachineName();
     $vocabulary = Vocabulary::create([
       'name' => $vocabulary_id,
       'vid' => $vocabulary_id,

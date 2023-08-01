@@ -239,7 +239,7 @@ trait UserCreationTrait {
   protected function createRole(array $permissions, $rid = NULL, $name = NULL, $weight = NULL) {
     // Generate a random, lowercase machine name if none was passed.
     if (!isset($rid)) {
-      $rid = strtolower($this->randomMachineName(8));
+      $rid = $this->randomMachineName(8);
     }
     // Generate a random label.
     if (!isset($name)) {

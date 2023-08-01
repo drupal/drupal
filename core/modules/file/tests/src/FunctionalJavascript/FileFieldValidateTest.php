@@ -33,7 +33,7 @@ class FileFieldValidateTest extends WebDriverTestBase {
    * Tests the validation message is displayed only once for ajax uploads.
    */
   public function testAjaxValidationMessage() {
-    $field_name = strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
     $this->createFileField($field_name, 'node', 'article', [], ['file_extensions' => 'txt']);
 

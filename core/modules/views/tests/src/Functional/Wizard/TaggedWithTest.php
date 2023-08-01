@@ -156,7 +156,7 @@ class TaggedWithTest extends WizardTestBase {
     $this->submitForm($view1, 'Update "of type" choice');
     // Now resubmit the entire form to the same URL.
     $view1['label'] = $this->randomMachineName(16);
-    $view1['id'] = strtolower($this->randomMachineName(16));
+    $view1['id'] = $this->randomMachineName(16);
     $view1['description'] = $this->randomMachineName(16);
     $view1['show[tagged_with]'] = 'tag1';
     $view1['page[create]'] = 1;
@@ -179,7 +179,7 @@ class TaggedWithTest extends WizardTestBase {
     $this->submitForm($view2, 'Update "of type" choice');
     $this->assertSession()->statusCodeEquals(200);
     $view2['label'] = $this->randomMachineName(16);
-    $view2['id'] = strtolower($this->randomMachineName(16));
+    $view2['id'] = $this->randomMachineName(16);
     $view2['description'] = $this->randomMachineName(16);
     $view2['show[tagged_with]'] = 'tag2';
     $view2['page[create]'] = 1;

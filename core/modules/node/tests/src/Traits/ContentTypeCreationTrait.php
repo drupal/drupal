@@ -27,7 +27,7 @@ trait ContentTypeCreationTrait {
     // Find a non-existent random type name.
     if (!isset($values['type'])) {
       do {
-        $id = strtolower($this->randomMachineName(8));
+        $id = $this->randomMachineName(8);
       } while (NodeType::load($id));
     }
     else {

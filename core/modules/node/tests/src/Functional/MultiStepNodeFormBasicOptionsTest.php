@@ -36,7 +36,7 @@ class MultiStepNodeFormBasicOptionsTest extends NodeTestBase {
     $this->drupalLogin($web_user);
 
     // Create an unlimited cardinality field.
-    $this->fieldName = mb_strtolower($this->randomMachineName());
+    $this->fieldName = $this->randomMachineName();
     FieldStorageConfig::create([
       'field_name' => $this->fieldName,
       'entity_type' => 'node',

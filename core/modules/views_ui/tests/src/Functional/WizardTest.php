@@ -25,7 +25,7 @@ class WizardTest extends WizardTestBase {
   public function testWizardFieldLength() {
     $view = [];
     $view['label'] = $this->randomMachineName(256);
-    $view['id'] = strtolower($this->randomMachineName(129));
+    $view['id'] = $this->randomMachineName(129);
     $view['page[create]'] = TRUE;
     $view['page[path]'] = $this->randomMachineName(255);
     $view['page[title]'] = $this->randomMachineName(256);
@@ -48,7 +48,7 @@ class WizardTest extends WizardTestBase {
     $this->assertSession()->pageTextContains('REST export path cannot be longer than 254 characters but is currently 255 characters long.');
 
     $view['label'] = $this->randomMachineName(255);
-    $view['id'] = strtolower($this->randomMachineName(128));
+    $view['id'] = $this->randomMachineName(128);
     $view['page[create]'] = TRUE;
     $view['page[path]'] = $this->randomMachineName(254);
     $view['page[title]'] = $this->randomMachineName(255);

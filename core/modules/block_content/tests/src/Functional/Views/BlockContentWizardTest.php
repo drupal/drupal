@@ -35,7 +35,7 @@ class BlockContentWizardTest extends BlockContentTestBase {
   public function testViewAddBlockContent() {
     $view = [];
     $view['label'] = $this->randomMachineName(16);
-    $view['id'] = strtolower($this->randomMachineName(16));
+    $view['id'] = $this->randomMachineName(16);
     $view['description'] = $this->randomMachineName(16);
     $view['page[create]'] = FALSE;
     $view['show[wizard_key]'] = 'block_content';

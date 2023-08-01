@@ -57,7 +57,7 @@ class ViewsUITourTest extends TourTestBase {
     // Create a basic view that shows all content, with a page and a block
     // display.
     $view['label'] = $this->randomMachineName(16);
-    $view['id'] = strtolower($this->randomMachineName(16));
+    $view['id'] = $this->randomMachineName(16);
     $view['page[create]'] = 1;
     $view['page[path]'] = $this->randomMachineName(16);
     $this->drupalGet('admin/structure/views/add');
@@ -97,7 +97,7 @@ class ViewsUITourTest extends TourTestBase {
     // Create a basic view that shows all content, with a page and a block
     // display.
     $view['label'] = $this->randomMachineName(16);
-    $view['id'] = strtolower($this->randomMachineName(16));
+    $view['id'] = $this->randomMachineName(16);
     $view['page[create]'] = 1;
     $view['page[path]'] = $this->randomMachineName(16);
     // Load the page in dutch.

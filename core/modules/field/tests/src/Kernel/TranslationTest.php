@@ -76,7 +76,7 @@ class TranslationTest extends FieldKernelTestBase {
     $this->installEntitySchema('node');
     $this->installConfig(['language']);
 
-    $this->fieldName = mb_strtolower($this->randomMachineName());
+    $this->fieldName = $this->randomMachineName();
 
     $this->entityType = 'entity_test';
 
@@ -141,7 +141,7 @@ class TranslationTest extends FieldKernelTestBase {
     }
 
     // Test default values.
-    $field_name_default = mb_strtolower($this->randomMachineName() . '_field_name');
+    $field_name_default = $this->randomMachineName() . '_field_name';
     $field_storage_definition = $this->fieldStorageDefinition;
     $field_storage_definition['field_name'] = $field_name_default;
     $field_storage = FieldStorageConfig::create($field_storage_definition);

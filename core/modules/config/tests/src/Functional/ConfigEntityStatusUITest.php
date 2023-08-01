@@ -31,7 +31,7 @@ class ConfigEntityStatusUITest extends BrowserTestBase {
       'administer site configuration',
     ]));
 
-    $id = strtolower($this->randomMachineName());
+    $id = $this->randomMachineName();
     $edit = [
       'id' => $id,
       'label' => $this->randomMachineName(),

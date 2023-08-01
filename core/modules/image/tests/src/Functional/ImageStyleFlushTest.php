@@ -60,7 +60,7 @@ class ImageStyleFlushTest extends ImageFieldTestBase {
   public function testFlush() {
 
     // Setup a style to be created and effects to add to it.
-    $style_name = strtolower($this->randomMachineName(10));
+    $style_name = $this->randomMachineName(10);
     $style_label = $this->randomString();
     $style_path = 'admin/config/media/image-styles/manage/' . $style_name;
     $effect_edits = [

@@ -28,7 +28,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
   public function testRequired() {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $type_name = 'article';
-    $field_name = strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     $storage = $this->createFileField($field_name, 'node', $type_name, [], ['required' => '1']);
     $field = FieldConfig::loadByName('node', $type_name, $field_name);
 
@@ -78,7 +78,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
   public function testFileMaxSize() {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $type_name = 'article';
-    $field_name = strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     $this->createFileField($field_name, 'node', $type_name, [], ['required' => '1']);
 
     // 128KB.
@@ -130,7 +130,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
   public function testFileExtension() {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $type_name = 'article';
-    $field_name = strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     $this->createFileField($field_name, 'node', $type_name);
 
     $test_file = $this->getTestFile('image');

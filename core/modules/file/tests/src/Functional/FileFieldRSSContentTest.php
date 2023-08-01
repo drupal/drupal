@@ -28,7 +28,7 @@ class FileFieldRSSContentTest extends FileFieldTestBase {
    */
   public function testFileFieldRSSContent() {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
-    $field_name = strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     $type_name = 'article';
 
     $this->createFileField($field_name, 'node', $type_name);

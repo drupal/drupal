@@ -48,7 +48,7 @@ class MediaTypeCreationTest extends MediaFunctionalTestBase {
    * Data provider for testMediaTypeCreationForm().
    */
   public function providerMediaTypeCreationForm() {
-    $machine_name = mb_strtolower($this->randomMachineName());
+    $machine_name = $this->randomMachineName();
     return [
       [
         'Save',

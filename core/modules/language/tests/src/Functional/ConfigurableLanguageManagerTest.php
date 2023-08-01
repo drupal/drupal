@@ -212,8 +212,8 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
     ]);
 
     // Create a field on the user entity.
-    $field_name = mb_strtolower($this->randomMachineName());
-    $label = mb_strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
+    $label = $this->randomMachineName();
     $field_label_en = "English $label";
     $field_label_es = "Español $label";
 

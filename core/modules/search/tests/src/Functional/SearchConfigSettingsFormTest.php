@@ -280,8 +280,8 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
 
     $first = [];
     $first['label'] = $this->randomString();
-    $first_id = $first['id'] = strtolower($this->randomMachineName(8));
-    $first['path'] = strtolower($this->randomMachineName(8));
+    $first_id = $first['id'] = $this->randomMachineName(8);
+    $first['path'] = $this->randomMachineName(8);
     $this->submitForm($first, 'Save');
     $this->assertDefaultSearch($first_id, 'The default page matches the only search page.');
     $this->assertSession()->statusMessageContains("The {$first['label']} search page has been added.", 'status');
@@ -292,7 +292,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     $this->submitForm($edit, 'Add search page');
     $edit = [];
     $edit['label'] = $this->randomString();
-    $edit['id'] = strtolower($this->randomMachineName(8));
+    $edit['id'] = $this->randomMachineName(8);
     $edit['path'] = $first['path'];
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusMessageContains('The search page path must be unique.', 'error');
@@ -300,8 +300,8 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     // Add a second search page.
     $second = [];
     $second['label'] = $this->randomString();
-    $second_id = $second['id'] = strtolower($this->randomMachineName(8));
-    $second['path'] = strtolower($this->randomMachineName(8));
+    $second_id = $second['id'] = $this->randomMachineName(8);
+    $second['path'] = $this->randomMachineName(8);
     $this->submitForm($second, 'Save');
     $this->assertDefaultSearch($first_id, 'The default page matches the only search page.');
 
