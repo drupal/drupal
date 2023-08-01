@@ -1,0 +1,6 @@
+div {
+  clip-path: url('#clip-cloud');
+}
+div {
+  clip-path: url('/abc/#clip-cloud');
+}

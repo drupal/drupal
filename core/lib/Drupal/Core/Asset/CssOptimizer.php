@@ -90,8 +90,8 @@ class CssOptimizer implements AssetOptimizerInterface {
     // Store base path.
     $this->rewriteFileURIBasePath = $css_base_path . '/';
 
-    // Anchor all paths in the CSS with its base URL, ignoring external and absolute paths.
-    return preg_replace_callback('/url\(\s*[\'"]?(?![a-z]+:|\/+)([^\'")]+)[\'"]?\s*\)/i', [$this, 'rewriteFileURI'], $contents);
+    // Anchor all paths in the CSS with its base URL, ignoring external and absolute paths and paths starting with '#'.
+    return preg_replace_callback('/url\(\s*[\'"]?(?![a-z]+:|\/+|#|%23)([^\'")]+)[\'"]?\s*\)/i', [$this, 'rewriteFileURI'], $contents);
   }
 
   /**
