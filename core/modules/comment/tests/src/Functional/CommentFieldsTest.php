@@ -117,7 +117,7 @@ class CommentFieldsTest extends CommentTestBase {
       'type' => 'test_node_type',
     ]);
 
-    // Go to the node first so that webuser2 see new comments.
+    // Go to the node first so that web_user2 see new comments.
     $this->drupalLogin($web_user2);
     $this->drupalGet($node->toUrl());
     $this->drupalLogout();

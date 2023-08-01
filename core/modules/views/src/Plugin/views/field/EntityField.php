@@ -78,7 +78,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
   protected $formatterOptions;
 
   /**
-   * The entity typemanager.
+   * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */

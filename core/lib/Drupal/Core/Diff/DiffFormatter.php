@@ -7,6 +7,8 @@ use Drupal\Component\Diff\WordLevelDiff;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Config\ConfigFactoryInterface;
 
+// cspell:ignore xbeg, xlen, ybeg, ylen
+
 /**
  * Diff formatter which uses returns output that can be rendered to a table.
  */

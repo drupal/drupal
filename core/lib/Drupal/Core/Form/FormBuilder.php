@@ -698,6 +698,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       // See https://www.drupal.org/node/2562341.
       // The placeholder uses a unique string that is returned by
       // Crypt::hashBase64('Drupal\Core\Form\FormBuilder::prepareForm').
+      // cspell:disable-next-line
       $placeholder = 'form_action_p_pvdeGsVG5zNF_XLGPTvYSKCf43t8qZYSwcfZl2uzM';
 
       $form['#attached']['placeholders'][$placeholder] = [

@@ -334,7 +334,7 @@ class TypedDataTest extends KernelTestBase {
     $typed_data->setValue(NULL);
     $this->assertNull($typed_data->getValue(), 'Email wrapper is null-able.');
     $this->assertEquals(0, $typed_data->validate()->count());
-    $typed_data->setValue('invalidATexample.com');
+    $typed_data->setValue('invalidAtExample.com');
     $this->assertEquals(1, $typed_data->validate()->count(), 'Validation detected invalid value.');
 
     // Binary type.

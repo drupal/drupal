@@ -133,7 +133,7 @@ class EntityConverter implements ParamConverterInterface {
     }
 
     // Do not inject the context repository as it is not an actual dependency:
-    // it will be removed once both the TODOs below are fixed.
+    // it will be removed once both the todo items below are fixed.
     /** @var \Drupal\Core\Plugin\Context\ContextRepositoryInterface $contexts_repository */
     $contexts_repository = \Drupal::service('context.repository');
     // @todo Consider deprecating the legacy context operation altogether in

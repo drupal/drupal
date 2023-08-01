@@ -8,6 +8,8 @@ use Drupal\Core\Site\Settings;
 use Symfony\Component\Mime\Header\Headers;
 use Symfony\Component\Mime\Header\UnstructuredHeader;
 
+// cspell:ignore windir
+
 /**
  * Defines the default Drupal mail backend, using PHP's native mail() function.
  *
