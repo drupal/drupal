@@ -67,9 +67,6 @@ trait SchemaCheckTrait {
       // @todo Remove this in https://www.drupal.org/project/drupal/issues/3362456
       "Module '.*' is not installed.",
       "Theme '.*' is not installed.",
-      // @see \Drupal\Core\Plugin\Plugin\Validation\Constraint\PluginExistsConstraint::$unknownPluginMessage
-      // @todo Remove this in https://www.drupal.org/project/drupal/issues/3362457
-      "The '.*' plugin does not exist.",
     ];
     $filtered_violations = array_filter(
       iterator_to_array($violations),

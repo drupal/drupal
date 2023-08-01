@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\Core\Plugin\Plugin\Validation\Constraint;
 
 use Drupal\Component\Plugin\Factory\DefaultFactory;
+use Drupal\Component\Plugin\FallbackPluginManagerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -20,6 +21,12 @@ class PluginExistsConstraintValidator extends ConstraintValidator {
     assert($constraint instanceof PluginExistsConstraint);
 
     $definition = $constraint->pluginManager->getDefinition($plugin_id, FALSE);
+    // Some plugin managers provide fallbacks.
+    if ($constraint->pluginManager instanceof FallbackPluginManagerInterface) {
+      $fallback_plugin_id = $constraint->pluginManager->getFallbackPluginId($plugin_id);
+      $definition = $constraint->pluginManager->getDefinition($fallback_plugin_id, FALSE);
+    }
+
     if (empty($definition)) {
       $this->context->addViolation($constraint->unknownPluginMessage, [
         '@plugin_id' => $plugin_id,

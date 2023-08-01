@@ -20,6 +20,7 @@ class NewDefaultThemeBlocksTest extends KernelTestBase {
   protected static $modules = [
     'block',
     'system',
+    'user',
   ];
 
   /**

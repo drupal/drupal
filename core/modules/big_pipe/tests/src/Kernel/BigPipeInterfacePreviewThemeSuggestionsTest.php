@@ -60,7 +60,7 @@ class BigPipeInterfacePreviewThemeSuggestionsTest extends KernelTestBase {
     $entity = $this->controller->create([
       'id' => 'test_block1',
       'theme' => 'stark',
-      'plugin' => 'test_html',
+      'plugin' => 'system_powered_by_block',
     ]);
     $entity->save();
 

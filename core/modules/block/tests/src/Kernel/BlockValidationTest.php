@@ -35,8 +35,17 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
    * Tests validating a block with an unknown plugin ID.
    */
   public function testInvalidPluginId(): void {
+    $this->entity->set('plugin', 'block_content:d7c9d8ba-663f-41b4-8756-86bc55c44653');
+    // Block config entities with invalid block plugin IDs automatically fall
+    // back to the `broken` block plugin.
+    // @see https://www.drupal.org/node/2249303
+    // @see \Drupal\Core\Block\BlockManager::getFallbackPluginId()
+    // @see \Drupal\Core\Block\Plugin\Block\Broken
+    $this->assertValidationErrors([]);
+
     $this->entity->set('plugin', 'non_existent');
-    $this->assertValidationErrors(['plugin' => "The 'non_existent' plugin does not exist."]);
+    // @todo Expect error for this in https://www.drupal.org/project/drupal/issues/3377709
+    $this->assertValidationErrors([]);
   }
 
   /**
