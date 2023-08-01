@@ -62,6 +62,15 @@ label:
   type: string
   label: 'Label'
   translatable: true
+  constraints:
+    Regex:
+      # Forbid any kind of line ending:
+      # - Windows: `\r\n`
+      # - old macOS: `\r`
+      # - *nix: `\n`
+      pattern: '/(\r\n|\r|\n)/'
+      match: false
+      message: 'Labels are not allowed to span multiple lines.'
 
 # String containing plural variants, separated by EXT.
 plural_label:

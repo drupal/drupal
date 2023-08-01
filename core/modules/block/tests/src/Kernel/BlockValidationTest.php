@@ -3,6 +3,7 @@
 namespace Drupal\Tests\block\Kernel;
 
 use Drupal\block\Entity\Block;
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 
 /**
@@ -27,6 +28,9 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
       'id' => 'test_block',
       'theme' => 'stark',
       'plugin' => 'system_powered_by_block',
+      'settings' => [
+        'label' => 'Powered by Drupal 🚀',
+      ],
     ]);
     $this->entity->save();
   }
@@ -60,6 +64,29 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
     // And instead add a test case that verifies it is allowed for blocks.
     $cases['VALID: period separated'] = ['period.separated', TRUE];
     return $cases;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static function setLabel(ConfigEntityInterface $block, string $label): void {
+    static::assertInstanceOf(Block::class, $block);
+    $settings = $block->get('settings');
+    static::assertNotEmpty($settings['label']);
+    $settings['label'] = $label;
+    $block->set('settings', $settings);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testLabelValidation(): void {
+    static::setLabel($this->entity, "Multi\nLine");
+    // TRICKY: because the Block config entity type does not specify a `label`
+    // key, it is impossible for the generic ::testLabelValidation()
+    // implementation in the base class to know at which property to expect a
+    // validation error. Hence it is hardcoded in this case.
+    $this->assertValidationErrors(['settings.label' => "Labels are not allowed to span multiple lines."]);
   }
 
 }

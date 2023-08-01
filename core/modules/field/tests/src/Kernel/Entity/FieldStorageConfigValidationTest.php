@@ -22,6 +22,7 @@ class FieldStorageConfigValidationTest extends ConfigEntityValidationTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->installEntitySchema('user');
 
     $this->entity = FieldStorageConfig::create([
       'type' => 'boolean',

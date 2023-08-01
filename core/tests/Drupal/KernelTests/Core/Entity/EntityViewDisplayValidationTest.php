@@ -15,11 +15,15 @@ class EntityViewDisplayValidationTest extends EntityViewModeValidationTest {
   /**
    * {@inheritdoc}
    */
+  protected bool $hasLabel = FALSE;
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
     $this->entity = EntityViewDisplay::create([
-      'label' => 'Test',
       'targetEntityType' => 'user',
       'bundle' => 'user',
       // The mode was created by the parent class.

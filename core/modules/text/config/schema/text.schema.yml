@@ -138,7 +138,7 @@ field.widget.settings.text_textarea_with_summary:
       type: integer
       label: 'Number of summary rows'
     placeholder:
-      type: label
+      type: text
       label: 'Placeholder'
     show_summary:
       type: boolean

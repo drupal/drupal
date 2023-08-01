@@ -20,6 +20,11 @@ class ContentLanguageSettingsValidationTest extends ConfigEntityValidationTestBa
   /**
    * {@inheritdoc}
    */
+  protected bool $hasLabel = FALSE;
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

@@ -28,7 +28,7 @@ contact.form.*:
       type: integer
       label: 'Weight'
     message:
-      type: label
+      type: text
       label: 'Message displayed to user on submission'
     redirect:
       type: path

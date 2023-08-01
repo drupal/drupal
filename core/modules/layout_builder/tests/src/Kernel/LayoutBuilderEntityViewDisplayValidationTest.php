@@ -39,4 +39,13 @@ class LayoutBuilderEntityViewDisplayValidationTest extends ConfigEntityValidatio
     $this->entity->save();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function testLabelValidation(): void {
+    // @todo Remove this override in https://www.drupal.org/i/2939931. The label of Layout Builder's EntityViewDisplay override is computed dynamically, that issue will change this.
+    // @see \Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay::label()
+    $this->markTestSkipped();
+  }
+
 }

@@ -70,4 +70,13 @@ class EditorValidationTest extends ConfigEntityValidationTestBase {
     $this->assertValidationErrors(['editor' => "The 'non_existent' plugin does not exist."]);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function testLabelValidation(): void {
+    // @todo Remove this override in https://www.drupal.org/i/3231354. The label of Editor entities is dynamically computed: it's retrieved from the associated FilterFormat entity. That issue will change this.
+    // @see \Drupal\editor\Entity\Editor::label()
+    $this->markTestSkipped();
+  }
+
 }
