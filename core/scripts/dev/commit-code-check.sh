@@ -352,13 +352,8 @@ for FILE in $FILES; do
   # Ensure the file still exists (i.e. is not being deleted).
   if [ -a $FILE ]; then
     if [ ${FILE: -3} != ".sh" ]; then
-      # Ensure the file has the correct mode.
-      STAT="$(stat -f "%A" $FILE 2>/dev/null)"
-      if [ $? -ne 0 ]; then
-        STAT="$(stat -c "%a" $FILE 2>/dev/null)"
-      fi
-      if [ "$STAT" -ne "644" ]; then
-        printf "${red}check failed:${reset} file $FILE should be 644 not $STAT\n"
+      if [ -x $FILE ]; then
+        printf "${red}check failed:${reset} file $FILE should not be executable\n"
         STATUS=1
       fi
     fi
