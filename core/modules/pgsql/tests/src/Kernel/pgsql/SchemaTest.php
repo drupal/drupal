@@ -284,8 +284,8 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
       ])
       ->fetchField();
 
-    // @todo replace 'public.' with defaultSchema when issue https://www.drupal.org/i/1060476 lands.
-    $this->assertEquals('public.' . $this->connection->getPrefix() . 'sequence_test_uid_seq', $sequence_name);
+    $schema = $this->connection->getConnectionOptions()['schema'] ?? 'public';
+    $this->assertEquals($schema . '.' . $this->connection->getPrefix() . 'sequence_test_uid_seq', $sequence_name);
 
     // Checks if the sequence exists.
     $this->assertTrue((bool) \Drupal::database()
