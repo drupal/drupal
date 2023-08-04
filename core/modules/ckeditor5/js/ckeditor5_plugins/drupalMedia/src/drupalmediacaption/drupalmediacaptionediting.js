@@ -247,11 +247,11 @@ export default class DrupalMediaCaptionEditing extends Plugin {
         }
 
         const figcaptionElement = writer.createEditableElement('figcaption');
+        figcaptionElement.placeholder = Drupal.t('Enter media caption');
 
         enablePlaceholder({
           view,
           element: figcaptionElement,
-          text: Drupal.t('Enter media caption'),
           keepOnFocus: true,
         });
 
