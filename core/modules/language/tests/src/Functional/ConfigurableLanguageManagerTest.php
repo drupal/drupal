@@ -11,6 +11,7 @@ use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\WaitTerminateTestTrait;
 
 /**
  * Tests Language Negotiation.
@@ -20,6 +21,8 @@ use Drupal\Tests\BrowserTestBase;
  * @group language
  */
 class ConfigurableLanguageManagerTest extends BrowserTestBase {
+
+  use WaitTerminateTestTrait;
 
   /**
    * {@inheritdoc}
@@ -44,6 +47,8 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+
+    $this->setWaitForTerminate();
 
     /** @var \Drupal\user\UserInterface $user */
     $user = $this->createUser([], '', TRUE);
@@ -264,18 +269,6 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
     $this->submitForm(['edit-preferred-admin-langcode' => 'en'], 'edit-submit');
     $assert_session->pageTextContains($field_label_en);
     $assert_session->pageTextNotContains($field_label_es);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function drupalGet($path, array $options = [], array $headers = []) {
-    $response = parent::drupalGet($path, $options, $headers);
-    // The \Drupal\locale\LocaleTranslation service clears caches after the
-    // response is flushed to the client; wait for Drupal to perform its
-    // termination work before continuing.
-    sleep(1);
-    return $response;
   }
 
 }

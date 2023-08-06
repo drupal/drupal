@@ -11,6 +11,7 @@ use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\jsonapi\Traits\CommonCollectionFilterAccessTestPatternsTrait;
+use Drupal\Tests\WaitTerminateTestTrait;
 use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
 
@@ -22,6 +23,7 @@ use GuzzleHttp\RequestOptions;
 class NodeTest extends ResourceTestBase {
 
   use CommonCollectionFilterAccessTestPatternsTrait;
+  use WaitTerminateTestTrait;
 
   /**
    * {@inheritdoc}
@@ -315,6 +317,8 @@ class NodeTest extends ResourceTestBase {
    * {@inheritdoc}
    */
   public function testGetIndividual() {
+    $this->setWaitForTerminate();
+
     parent::testGetIndividual();
 
     $this->assertCacheableNormalizations();
@@ -393,15 +397,11 @@ class NodeTest extends ResourceTestBase {
     $request_options = $this->getAuthenticationRequestOptions();
     $request_options[RequestOptions::QUERY] = ['fields' => ['node--camelids' => 'title']];
     $this->request('GET', $url, $request_options);
-    // Cacheable normalizations are written after the response is flushed to
-    // the client; give the server a chance to complete this work.
-    sleep(1);
     // Ensure the normalization cache is being incrementally built. After
     // requesting the title, only the title is in the cache.
     $this->assertNormalizedFieldsAreCached(['title']);
     $request_options[RequestOptions::QUERY] = ['fields' => ['node--camelids' => 'field_rest_test']];
     $this->request('GET', $url, $request_options);
-    sleep(1);
     // After requesting an additional field, then that field is in the cache and
     // the old one is still there.
     $this->assertNormalizedFieldsAreCached(['title', 'field_rest_test']);
