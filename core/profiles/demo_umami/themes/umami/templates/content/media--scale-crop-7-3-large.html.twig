@@ -1,0 +1,21 @@
+{#
+/**
+ * @file
+ * Theme override to display a hero media item for the Umami theme.
+ *
+ * Wrapping elements are intentionally removed because the attributes can add
+ * `position: relative`, which interferes with absolutely positioned image.
+ *
+ * Available variables:
+ * - name: Name of the media.
+ * - content: Media content.
+ *
+ * @see template_preprocess_media()
+ *
+ * @ingroup themeable
+ */
+#}
+
+{% if content %}
+  {{ content }}
+{% endif %}

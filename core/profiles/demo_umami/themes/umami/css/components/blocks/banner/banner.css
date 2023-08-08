@@ -3,15 +3,12 @@
  * This file is used to style the banner block.
  */
 
-.block-type-banner-block {
-  background-size: 0 0;
-}
-
-.block-type-banner-block .summary {
+.banner-block__content {
   margin: 1rem 4%;
+  font-size: 1.188em;
 }
 
-.block-type-banner-block .field--name-field-title {
+.banner-block .field--name-field-title {
   margin: 0 0 0.5em 0;
   font-family: "Scope One", Georgia, serif;
   font-size: 1.777em;
@@ -19,12 +16,7 @@
   line-height: 1.2em;
 }
 
-.block-type-banner-block .field--name-field-summary {
-  margin-bottom: 1.28em;
-  font-size: 1.188em;
-}
-
-.block-type-banner-block .field--name-field-content-link a {
+.banner-block .field--name-field-content-link a {
   display: inline-block;
   padding: 0.7em 1.3em;
   cursor: pointer;
@@ -40,8 +32,8 @@
   font-weight: 400;
 }
 
-.block-type-banner-block .field--name-field-content-link a:focus,
-.block-type-banner-block .field--name-field-content-link a:hover {
+.banner-block .field--name-field-content-link a:focus,
+.banner-block .field--name-field-content-link a:hover {
   color: #000;
   border-color: #d93760;
   outline-color: #fff;
@@ -50,25 +42,23 @@
 }
 /* Medium */
 @media screen and (min-width: 48rem) { /* 768px */
-  .block-type-banner-block {
+  .banner-block {
+    position: relative; /* Anchor absolutely positioned background image. */
     background-color: #464646;
-    background-repeat: no-repeat;
-    background-position: left center;
-    background-size: cover;
-    /* Image ratio 7:3 */
   }
 
-  .block-type-banner-block .block-inner {
+  .banner-block__inner {
     display: flex;
     align-items: center;
     max-width: 1200px;
     min-height: 54vw;
-    margin: 0 auto;
+    margin: auto;
     padding: 0 4%;
   }
 
-  .block-type-banner-block .summary {
-    flex: 0 0 50%;
+  .banner-block__content {
+    position: relative; /* Establish stacking context to appear above absolutely positioned background image. */
+    max-width: 50%;
     margin: 0;
     padding: 1.777em;
     color: #fff;
@@ -76,32 +66,27 @@
     background: rgba(0, 0, 0, 0.42);
   }
 
-  .block-type-banner-block .field--name-field-media-image {
-    /**
-     * We need to ensure that the alt text on the image is accessible to
-     * screenreaders, so, when on large screens, let's give this the same CSS
-     * as the .visually-hidden class has.
-     */
-    position: absolute !important;
-    overflow: hidden;
-    clip: rect(1px, 1px, 1px, 1px);
-    width: 1px;
-    height: 1px;
-    word-wrap: normal;
+  .banner-block__image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 }
 /* Large */
 @media screen and (min-width: 60rem) { /* 960px */
-  .block-type-banner-block .summary {
-    flex: 0 0 41%;
+  .banner-block__content {
+    max-width: 41%;
   }
-  .block-type-banner-block .block-inner {
+  .banner-block__inner {
     min-height: 43vw;
   }
 }
 /* Extra large + side margins */
 @media screen and (min-width: 80rem) { /* 1200px (large) + 80px (side margins) = 1280px */
-  .block-type-banner-block .block-inner {
+  .banner-block__inner {
     padding: 0;
   }
 }

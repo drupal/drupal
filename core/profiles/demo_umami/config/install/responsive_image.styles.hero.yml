@@ -1,0 +1,35 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - image.style.scale_crop_7_3_large
+    - image.style.scale_crop_7_3_medium
+    - image.style.scale_crop_7_3_tiny
+    - image.style.scale_crop_7_3_wide
+  theme:
+    - umami
+id: hero
+label: Hero
+image_style_mappings:
+  -
+    image_mapping_type: image_style
+    image_mapping: scale_crop_7_3_wide
+    breakpoint_id: umami.hero_wide
+    multiplier: 1x
+  -
+    image_mapping_type: image_style
+    image_mapping: scale_crop_7_3_large
+    breakpoint_id: umami.hero_large
+    multiplier: 1x
+  -
+    image_mapping_type: image_style
+    image_mapping: scale_crop_7_3_medium
+    breakpoint_id: umami.hero_medium
+    multiplier: 1x
+  -
+    image_mapping_type: image_style
+    image_mapping: scale_crop_7_3_tiny
+    breakpoint_id: umami.hero_tiny
+    multiplier: 1x
+breakpoint_group: umami
+fallback_image_style: scale_crop_7_3_medium

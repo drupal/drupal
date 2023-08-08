@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies: {  }
+name: scale_crop_7_3_wide
+label: 'Scale crop 7:3 wide'
+effects:
+  4f1587ba-8629-4007-9521-90cae1c041cf:
+    uuid: 4f1587ba-8629-4007-9521-90cae1c041cf
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 3000
+      height: 1285
+      anchor: center-center
+  d88116a5-6a1a-40ba-8a47-c635b2536de9:
+    uuid: d88116a5-6a1a-40ba-8a47-c635b2536de9
+    id: image_convert
+    weight: 2
+    data:
+      extension: webp

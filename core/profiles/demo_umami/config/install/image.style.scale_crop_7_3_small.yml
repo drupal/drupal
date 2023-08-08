@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies: {  }
+name: scale_crop_7_3_small
+label: 'Scale crop 7:3 small'
+effects:
+  566727ce-59a0-4078-88dc-4f0fe7badd16:
+    uuid: 566727ce-59a0-4078-88dc-4f0fe7badd16
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 800
+      height: 342
+      anchor: center-center
+  d5eb26a0-f961-4ba4-9f01-94a44440b4fa:
+    uuid: d5eb26a0-f961-4ba4-9f01-94a44440b4fa
+    id: image_convert
+    weight: 2
+    data:
+      extension: webp

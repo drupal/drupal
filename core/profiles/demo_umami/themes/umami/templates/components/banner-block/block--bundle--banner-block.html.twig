@@ -28,25 +28,25 @@
 #}
 {%
   set classes = [
+    'banner-block',
     'block',
     'block-' ~ configuration.provider|clean_class,
     'block-' ~ plugin_id|clean_class,
-    'cover-image',
   ]
 %}
 
-{% set background_image = file_url(content.field_media_image[0]['#media'].field_media_image.entity.uri.value) %}
-
-<div{{ attributes.addClass(classes) }} style="background-image: url({{ background_image }})">
-  <div class="block-inner">
+<div{{attributes.addClass(classes)}}>
+  <div class="banner-block__inner">
     {{ title_prefix }}
     {% if label %}
-      <h2{{ title_attributes }}>{{ label }}</h2>
+      <h2{{title_attributes}}>{{ label }}</h2>
     {% endif %}
     {{ title_suffix }}
     {% block content %}
-      {{ content.field_media_image }}
-      <div class="summary">
+      <div class="banner-block__image">
+        {{ content.field_media_image }}
+      </div>
+      <div class="banner-block__content">
         {{ content|without('field_media_image') }}
       </div>
     {% endblock %}
