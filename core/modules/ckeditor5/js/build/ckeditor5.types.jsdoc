@@ -2141,6 +2141,24 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-ui/src/colorselector/colorgridsfragmentview.js
+ *
+ * @typedef {module:ui/colorselector/colorgridsfragmentview} module:ui/colorselector/colorgridsfragmentview~ColorGridsFragmentView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ui/src/colorselector/colorpickerfragmentview.js
+ *
+ * @typedef {module:ui/colorselector/colorpickerfragmentview} module:ui/colorselector/colorpickerfragmentview~ColorPickerFragmentView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ui/src/colorselector/colorselectorview.js
+ *
+ * @typedef {module:ui/colorselector/colorselectorview} module:ui/colorselector/colorselectorview~ColorSelectorView
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-ui/src/componentfactory.js
  *
  * @typedef {module:ui/componentfactory} module:ui/componentfactory~ComponentFactory
@@ -2543,9 +2561,21 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-utils/src/dom/getelementsintersectionrect.js
+ *
+ * @typedef {module:utils/dom/getelementsintersectionrect} module:utils/dom/getelementsintersectionrect~getElementsIntersectionRect
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-utils/src/dom/getpositionedancestor.js
  *
  * @typedef {module:utils/dom/getpositionedancestor} module:utils/dom/getpositionedancestor~getPositionedAncestor
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-utils/src/dom/getscrollableancestors.js
+ *
+ * @typedef {module:utils/dom/getscrollableancestors} module:utils/dom/getscrollableancestors~getScrollableAncestors
  */
 
 /**
