@@ -454,6 +454,9 @@ abstract class DrupalCacheArray implements ArrayAccess {
    * Destructs the DrupalCacheArray object.
    */
   public function __destruct() {
+    if ($this->bin == 'cache_form' && !variable_get('drupal_cache_array_persist_cache_form', FALSE)) {
+      return;
+    }
     $data = array();
     foreach ($this->keysToPersist as $offset => $persist) {
       if ($persist) {
