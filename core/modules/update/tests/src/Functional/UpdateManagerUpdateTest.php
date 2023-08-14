@@ -54,6 +54,11 @@ class UpdateManagerUpdateTest extends UpdateTestBase {
         'version' => '8.x-1.0',
         'hidden' => FALSE,
       ],
+      'ccc_update_test' => [
+        'project' => 'ccc_update_test',
+        'version' => '8.x-1.0',
+        'hidden' => FALSE,
+      ],
     ]);
     $this->mockDefaultExtensionsInfo(['version' => '8.0.0']);
   }
@@ -228,6 +233,96 @@ class UpdateManagerUpdateTest extends UpdateTestBase {
     else {
       // Verify there is no incompatible updates table.
       $assert_session->elementNotExists('css', $incompatible_table_locator);
+    }
+  }
+
+  /**
+   * Tests the Update form with an uninstalled module in the system.
+   */
+  public function testUninstalledUpdatesTable() {
+    $assert_session = $this->assertSession();
+    $compatible_table_locator = '[data-drupal-selector="edit-projects"]';
+    // @todo In https://www.drupal.org/project/drupal/issues/3121870 change this
+    //   selector when the implementation details catch up with the UI strings.
+    $uninstalled_table_locator = '[data-drupal-selector="edit-disabled-projects"]';
+
+    $fixtures = [
+      'drupal' => '1.1-core_compatibility',
+      'aaa_update_test' => '8.x-1.2',
+      // Use a fixture with only a 8.x-1.0 release so BBB is up to date.
+      'bbb_update_test' => '1_0',
+      // CCC is not installed and is missing an update, 8.x-1.1.
+      'ccc_update_test' => '1_1',
+    ];
+    $this->refreshUpdateStatus($fixtures);
+    $this->drupalGet('admin/reports/updates/update');
+
+    // Confirm there is no table for uninstalled extensions.
+    $assert_session->pageTextNotContains('CCC Update test');
+    $assert_session->responseNotContains('<h2>Uninstalled</h2>');
+
+    // Confirm the table for installed modules exists without a header.
+    $assert_session->responseNotContains('<h2>Installed</h2>');
+    $assert_session->elementNotExists('css', $uninstalled_table_locator);
+    $assert_session->elementsCount('css', "$compatible_table_locator tbody tr", 1);
+    $compatible_headers = [
+      // First column has no header, it's the select-all checkbox.
+      'th:nth-of-type(2)' => 'Name',
+      'th:nth-of-type(3)' => 'Site version',
+      'th:nth-of-type(4)' => 'Recommended version',
+    ];
+    $this->checkTableHeaders($compatible_table_locator, $compatible_headers);
+
+    $installed_row = "$compatible_table_locator tbody tr";
+    $assert_session->elementsCount('css', $installed_row, 1);
+    $assert_session->elementTextContains('css', "$compatible_table_locator td:nth-of-type(2)", "AAA Update test");
+    $assert_session->elementTextContains('css', "$compatible_table_locator td:nth-of-type(3)", '8.x-1.0');
+    $assert_session->elementTextContains('css', "$compatible_table_locator td:nth-of-type(4)", '8.x-1.2');
+
+    // Change the setting so we check for uninstalled modules, too.
+    $this->config('update.settings')
+      ->set('check.disabled_extensions', TRUE)
+      ->save();
+
+    // Reload the page so the new setting goes into effect.
+    $this->drupalGet('admin/reports/updates/update');
+
+    // Confirm the table for installed modules exists with a header.
+    $assert_session->responseContains('<h2>Installed</h2>');
+    $assert_session->elementsCount('css', "$compatible_table_locator tbody tr", 1);
+    $this->checkTableHeaders($compatible_table_locator, $compatible_headers);
+
+    // Confirm the table for uninstalled extensions exists.
+    $assert_session->responseContains('<h2>Uninstalled</h2>');
+    $uninstalled_headers = [
+      // First column has no header, it's the select-all checkbox.
+      'th:nth-of-type(2)' => 'Name',
+      'th:nth-of-type(3)' => 'Site version',
+      'th:nth-of-type(4)' => 'Recommended version',
+    ];
+    $this->checkTableHeaders($uninstalled_table_locator, $uninstalled_headers);
+
+    $uninstalled_row = "$uninstalled_table_locator tbody tr";
+    $assert_session->elementsCount('css', $uninstalled_row, 1);
+    $assert_session->elementTextContains('css', "$uninstalled_row td:nth-of-type(2)", "CCC Update test");
+    $assert_session->elementTextContains('css', "$uninstalled_row td:nth-of-type(3)", '8.x-1.0');
+    $assert_session->elementTextContains('css', "$uninstalled_row td:nth-of-type(4)", '8.x-1.1');
+  }
+
+  /**
+   * Checks headers for a given table on the Update form.
+   *
+   * @param string $table_locator
+   *   CSS locator to find the table to check the headers on.
+   * @param string[] $expected_headers
+   *   Array of expected header texts, keyed by CSS selectors relative to the
+   *   thead tr (for example, "th:nth-of-type(3)").
+   */
+  private function checkTableHeaders($table_locator, array $expected_headers) {
+    $assert_session = $this->assertSession();
+    $assert_session->elementExists('css', $table_locator);
+    foreach ($expected_headers as $locator => $header) {
+      $assert_session->elementTextContains('css', "$table_locator thead tr $locator", $header);
     }
   }
 

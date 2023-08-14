@@ -266,7 +266,7 @@ class UpdateManagerUpdate extends FormBase {
         'data' => $this->t('Name'),
         'class' => ['update-project-name'],
       ],
-      'installed_version' => $this->t('Installed version'),
+      'installed_version' => $this->t('Site version'),
       'recommended_version' => $this->t('Recommended version'),
     ];
 
@@ -277,7 +277,7 @@ class UpdateManagerUpdate extends FormBase {
         '#options' => $projects['enabled'],
       ];
       if (!empty($projects['disabled'])) {
-        $form['projects']['#prefix'] = '<h2>' . $this->t('Enabled') . '</h2>';
+        $form['projects']['#prefix'] = '<h2>' . $this->t('Installed') . '</h2>';
       }
     }
 
@@ -287,7 +287,7 @@ class UpdateManagerUpdate extends FormBase {
         '#header' => $headers,
         '#options' => $projects['disabled'],
         '#weight' => 1,
-        '#prefix' => '<h2>' . $this->t('Disabled') . '</h2>',
+        '#prefix' => '<h2>' . $this->t('Uninstalled') . '</h2>',
       ];
     }
 
