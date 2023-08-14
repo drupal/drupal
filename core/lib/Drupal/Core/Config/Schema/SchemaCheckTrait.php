@@ -72,11 +72,33 @@ trait SchemaCheckTrait {
       fn (ConstraintViolation $v) => sprintf("[%s] %s", $v->getPropertyPath(), (string) $v->getMessage()),
       $filtered_violations
     );
-    $errors = array_merge($errors, $validation_errors);
+    // If config validation errors are encountered for a contrib module, avoid
+    // failing the test (which would be too disruptive for the ecosystem), but
+    // trigger a deprecation notice instead.
+    if (!empty($validation_errors) && $this->isContribViolation()) {
+      @trigger_error(sprintf("The '%s' configuration contains validation errors. Invalid config is deprecated in drupal:10.2.0 and will be required to be valid in drupal:11.0.0. The following validation errors were found:\n\t\t- %s",
+        $config_name,
+        implode("\n\t\t- ", $validation_errors)
+      ), E_USER_DEPRECATED);
+    }
+    else {
+      $errors = array_merge($errors, $validation_errors);
+    }
     if (empty($errors)) {
       return TRUE;
     }
     return $errors;
+  }
+
+  /**
+   * Whether the current test is for a contrib module.
+   *
+   * @return bool
+   */
+  private function isContribViolation(): bool {
+    $test_file_name = (new \ReflectionClass($this))->getFileName();
+    $root = dirname(__DIR__, 6);
+    return !str_starts_with($test_file_name, $root . DIRECTORY_SEPARATOR . 'core');
   }
 
   /**
