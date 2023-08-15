@@ -168,3 +168,12 @@
   display: inline-block;
   cursor: pointer;
 }
+@media (forced-colors: active) {
+  .toolbar-horizontal .toolbar-tray > .toolbar-lining,
+  .toolbar-horizontal .toolbar .toolbar-toggle-orientation .toolbar-icon {
+    border-top: 1px solid transparent;
+  }
+  .toolbar .toolbar-bar {
+    border-bottom: 1px solid transparent;
+  }
+}
