@@ -4,48 +4,40 @@
  */
 
 .form-element--type-select {
-  padding-right: calc(2rem - var(--input-border-size));
+  padding-inline-end: calc(2rem - var(--input-border-size));
   background-image: url(../../images/icons/545560/chevron-down.svg);
   background-repeat: no-repeat;
   background-position: 100% 50%;
   background-size: 2.75rem 0.5625rem; /* w: 14px + (2 * 15px), h: 9px */
-}
-[dir="rtl"] .form-element--type-select {
-  padding-right: calc(1rem - var(--input-border-size));
-  padding-left: calc(2rem - var(--input-border-size));
-  background-position: 0 50%;
 
-  @media (forced-colors: active) {
-    padding-left: var(--input-padding-horizontal);
+  /**
+   * Select states.
+   */
+  &:focus {
+    background-image: url(../../images/icons/003ecc/chevron-down.svg);
   }
-}
+  &[disabled] {
+    background-image: url(../../images/icons/8e929c/chevron-down.svg);
+  }
 
-.no-touchevents .form-element--type-select.form-element--extrasmall,
-.no-touchevents .form-element--type-select[name$="][_weight]"] {
-  padding-right: calc(1.5rem - var(--input-border-size));
-  background-size: 1.75rem 0.4375rem; /* w: 14px + (2 * 7px), h: 7px */
-}
-[dir="rtl"].no-touchevents .form-element--type-select.form-element--extrasmall,
-[dir="rtl"].no-touchevents .form-element--type-select[name$="][_weight]"] {
-  padding-right: calc(0.5rem - var(--input-border-size));
-  padding-left: calc(1.5rem - var(--input-border-size));
-}
+  @nest [dir="rtl"] & {
+    background-position: 0 50%;
+  }
 
-/**
- * Select states.
- */
-.form-element--type-select:focus {
-  background-image: url(../../images/icons/003ecc/chevron-down.svg);
-}
-.form-element--type-select[disabled] {
-  background-image: url(../../images/icons/8e929c/chevron-down.svg);
+  @nest .no-touchevents & {
+    &.form-element--extrasmall,
+    &[name$="][_weight]"] {
+      padding-inline-end: calc(1.5rem - var(--input-border-size));
+      background-size: 1.75rem 0.4375rem; /* w: 14px + (2 * 7px), h: 7px */
+    }
+  }
 }
 
 @media (forced-colors: active) {
   .form-element--type-select,
   .form-element--type-select:focus,
   .form-element--type-select[disabled] {
-    padding-right: var(--input-padding-horizontal);
+    padding-inline-end: var(--input-padding-horizontal);
     background-image: none;
     appearance: revert; /* Revert <select> appearance value for modern browsers. */
   }
