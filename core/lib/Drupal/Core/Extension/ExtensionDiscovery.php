@@ -4,7 +4,7 @@ namespace Drupal\Core\Extension;
 
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Core\DrupalKernel;
-use Drupal\Core\Extension\Discovery\RecursiveExtensionFilterIterator;
+use Drupal\Core\Extension\Discovery\RecursiveExtensionFilterCallback;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -388,7 +388,7 @@ class ExtensionDiscovery {
    *   are associative arrays of \Drupal\Core\Extension\Extension objects, keyed
    *   by absolute path name.
    *
-   * @see \Drupal\Core\Extension\Discovery\RecursiveExtensionFilterIterator
+   * @see \Drupal\Core\Extension\Discovery\RecursiveExtensionFilterCallback
    */
   protected function scanDirectory($dir, $include_tests) {
     $files = [];
@@ -424,8 +424,8 @@ class ExtensionDiscovery {
     // Important: Without a RecursiveFilterIterator, RecursiveDirectoryIterator
     // would recurse into the entire filesystem directory tree without any kind
     // of limitations.
-    $filter = new RecursiveExtensionFilterIterator($directory_iterator, $ignore_directories);
-    $filter->acceptTests($include_tests);
+    $callback = new RecursiveExtensionFilterCallback($ignore_directories, $include_tests);
+    $filter = new \RecursiveCallbackFilterIterator($directory_iterator, [$callback, 'accept']);
 
     // The actual recursive filesystem scan is only invoked by instantiating the
     // RecursiveIteratorIterator.

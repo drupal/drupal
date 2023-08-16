@@ -11,10 +11,10 @@ namespace Drupal\Core\Extension\Discovery;
  * subdirectory tree recursion is avoided.
  *
  * The list of globally ignored directory names is defined in the
- * RecursiveExtensionFilterIterator::$skippedFolders property.
+ * RecursiveExtensionFilterCallback::$skippedFolders property.
  *
  * In addition, all 'config' directories are skipped, unless the directory path
- * ends with 'modules/config', so as to still find the config module provided by
+ * ends with 'modules/config', to still find the config module provided by
  * Drupal core and still allow that module to be overridden with a custom config
  * module.
  *
@@ -25,12 +25,9 @@ namespace Drupal\Core\Extension\Discovery;
  * @see ExtensionDiscovery::scan()
  * @see ExtensionDiscovery::scanDirectory()
  *
- * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
- *   \Drupal\Core\Extension\Discovery\RecursiveExtensionFilterCallback instead.
- *
- * @see https://www.drupal.org/node/3343023
+ * @internal
  */
-class RecursiveExtensionFilterIterator extends \RecursiveFilterIterator {
+class RecursiveExtensionFilterCallback {
 
   /**
    * List of base extension type directory names to scan.
@@ -38,9 +35,9 @@ class RecursiveExtensionFilterIterator extends \RecursiveFilterIterator {
    * Only these directory names are considered when starting a filesystem
    * recursion in a search path.
    *
-   * @var array
+   * @var string[]
    */
-  protected $allowedExtensionTypes = [
+  protected array $allowedExtensionTypes = [
     'profiles',
     'modules',
     'themes',
@@ -53,9 +50,9 @@ class RecursiveExtensionFilterIterator extends \RecursiveFilterIterator {
    * i.e., extensions (of all types) are not able to use any of these names,
    * because their directory names will be skipped.
    *
-   * @var array
+   * @var string[]
    */
-  protected $skippedFolders = [
+  protected array $skippedFolders = [
     // Object-oriented code subdirectories.
     'src',
     'lib',
@@ -77,74 +74,48 @@ class RecursiveExtensionFilterIterator extends \RecursiveFilterIterator {
   ];
 
   /**
-   * Whether to include test directories when recursing.
+   * Construct a RecursiveExtensionFilterCallback.
    *
-   * @var bool
-   */
-  protected $acceptTests = FALSE;
-
-  /**
-   * Construct a RecursiveExtensionFilterIterator.
-   *
-   * @param \RecursiveIterator $iterator
-   *   The iterator to filter.
-   * @param string[] $skipped_folders
+   * @param array $skipped_folders
    *   (optional) Add to the list of directories that should be filtered out
    *   during the iteration.
+   * @param bool $accept_tests
+   *   (optional) Pass FALSE to skip all test directories in the discovery. If
+   *   TRUE, extensions in test directories will be discovered and only the
+   *   global directory skip list in
+   *   RecursiveExtensionFilterCallback::$skippedFolders and $skipped_folders
+   *   are applied.
    */
-  public function __construct(\RecursiveIterator $iterator, array $skipped_folders = []) {
-    @trigger_error('The ' . __NAMESPACE__ . '\RecursiveExtensionFilterIterator is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Extension\Discovery\RecursiveExtensionFilterCallback instead. See https://www.drupal.org/node/3343023', E_USER_DEPRECATED);
-    parent::__construct($iterator);
+  public function __construct(array $skipped_folders = [], bool $accept_tests = FALSE) {
     $this->skippedFolders = array_merge($this->skippedFolders, $skipped_folders);
-  }
-
-  /**
-   * Controls whether test directories will be scanned.
-   *
-   * @param bool $flag
-   *   Pass FALSE to skip all test directories in the discovery. If TRUE,
-   *   extensions in test directories will be discovered and only the global
-   *   directory skip list in RecursiveExtensionFilterIterator::$skippedFolders
-   *   is applied.
-   */
-  public function acceptTests($flag = FALSE) {
-    $this->acceptTests = $flag;
-    if (!$this->acceptTests) {
+    if (!$accept_tests) {
       $this->skippedFolders[] = 'tests';
     }
   }
 
   /**
-   * {@inheritdoc}
+   * Checks whether a given filesystem directory is acceptable.
+   *
+   * @param \RecursiveDirectoryIterator $filesystem_directory
+   *   The filesystem directory to check.
+   *
+   * @return bool
+   *   TRUE if the given filesystem directory is acceptable, otherwise FALSE.
    */
-  #[\ReturnTypeWillChange]
-  public function getChildren() {
-    $filter = parent::getChildren();
-    // Pass on the skipped folders list.
-    $filter->skippedFolders = $this->skippedFolders;
-    // Pass the $acceptTests flag forward to child iterators.
-    $filter->acceptTests($this->acceptTests);
-    return $filter;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  #[\ReturnTypeWillChange]
-  public function accept() {
-    $name = $this->current()->getFilename();
+  public function accept(\RecursiveDirectoryIterator $filesystem_directory): bool {
+    $name = $filesystem_directory->getFilename();
     // FilesystemIterator::SKIP_DOTS only skips '.' and '..', but not hidden
     // directories (like '.git').
-    if ($name[0] == '.') {
+    if ($name[0] === '.') {
       return FALSE;
     }
-    if ($this->current()->isDir()) {
+    if ($filesystem_directory->isDir()) {
       // If this is a subdirectory of a base search path, only recurse into the
       // fixed list of expected extension type directory names. Required for
       // scanning the top-level/root directory; without this condition, we would
       // recurse into the whole filesystem tree that possibly contains other
       // files aside from Drupal.
-      if ($this->current()->getSubPath() == '') {
+      if ($filesystem_directory->getSubPath() === '') {
         return in_array($name, $this->allowedExtensionTypes, TRUE);
       }
       // 'config' directories are special-cased here, because every extension
@@ -155,16 +126,14 @@ class RecursiveExtensionFilterIterator extends \RecursiveFilterIterator {
       // other config directories, and at the same time, still allow the core
       // config module to be overridden/replaced in a profile/site directory
       // (whereas it must be located directly in a modules directory).
-      if ($name == 'config') {
-        return substr($this->current()->getPathname(), -14) == 'modules/config';
+      if ($name === 'config') {
+        return str_ends_with($filesystem_directory->getPathname(), 'modules/config');
       }
       // Accept the directory unless the folder is skipped.
       return !in_array($name, $this->skippedFolders, TRUE);
     }
-    else {
-      // Only accept extension info files.
-      return substr($name, -9) == '.info.yml';
-    }
+    // Only accept extension info files.
+    return str_ends_with($name, '.info.yml');
   }
 
 }
