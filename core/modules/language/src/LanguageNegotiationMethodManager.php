@@ -12,11 +12,6 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 class LanguageNegotiationMethodManager extends DefaultPluginManager {
 
   /**
-   * The cache key prefix.
-   */
-  protected string $cacheKeyPrefix;
-
-  /**
    * Constructs a new LanguageNegotiationMethodManager object.
    *
    * @param \Traversable $namespaces
@@ -30,8 +25,7 @@ class LanguageNegotiationMethodManager extends DefaultPluginManager {
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     parent::__construct('Plugin/LanguageNegotiation', $namespaces, $module_handler, 'Drupal\language\LanguageNegotiationMethodInterface', 'Drupal\language\Annotation\LanguageNegotiation');
     $this->cacheBackend = $cache_backend;
-    $this->cacheKeyPrefix = 'language_negotiation_plugins';
-    $this->cacheKey = 'language_negotiation_plugins';
+    $this->setCacheBackend($cache_backend, 'language_negotiation_plugins');
     $this->alterInfo('language_negotiation_info');
   }
 
