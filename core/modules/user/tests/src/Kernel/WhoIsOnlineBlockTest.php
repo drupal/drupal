@@ -11,7 +11,7 @@ use Drupal\user\Entity\User;
  *
  * @group user
  */
-class WhosOnlineBlockTest extends KernelTestBase {
+class WhoIsOnlineBlockTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
@@ -71,7 +71,7 @@ class WhosOnlineBlockTest extends KernelTestBase {
   /**
    * Tests the Who's Online block.
    */
-  public function testWhosOnlineBlock() {
+  public function testWhoIsOnlineBlock() {
     $request_time = \Drupal::time()->getRequestTime();
     // Generate users.
     $user1 = User::create([

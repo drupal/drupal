@@ -187,7 +187,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     $this->drupalGet(str_replace(IMAGE_DERIVATIVE_TOKEN . '=', IMAGE_DERIVATIVE_TOKEN . '=Zo', $generate_url));
     $this->assertSession()->statusCodeEquals(404);
     // Change the parameter name so the token is missing.
-    $this->drupalGet(str_replace(IMAGE_DERIVATIVE_TOKEN . '=', 'wrongparam=', $generate_url));
+    $this->drupalGet(str_replace(IMAGE_DERIVATIVE_TOKEN . '=', 'wrong_parameter=', $generate_url));
     $this->assertSession()->statusCodeEquals(404);
 
     // Check that the generated URL is the same when we pass in a relative path
@@ -306,7 +306,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     $nested_url = $this->style->buildUrl($generated_uri, $clean_url);
     $matches_expected_url_format = (boolean) preg_match('/styles\/' . $this->style->id() . '\/' . $scheme . '\/styles\/' . $this->style->id() . '\/' . $scheme . '/', $nested_url);
     $this->assertTrue($matches_expected_url_format, "URL for a derivative of an image style matches expected format.");
-    $nested_url_with_wrong_token = str_replace(IMAGE_DERIVATIVE_TOKEN . '=', 'wrongparam=', $nested_url);
+    $nested_url_with_wrong_token = str_replace(IMAGE_DERIVATIVE_TOKEN . '=', 'wrong_parameter=', $nested_url);
     $this->drupalGet($nested_url_with_wrong_token);
     $this->assertSession()->statusCodeEquals(404);
     // Check that this restriction cannot be bypassed by adding extra slashes

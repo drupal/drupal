@@ -640,7 +640,7 @@ function system_requirements($phase) {
     }
   }
 
-  // Test configuration files and directory for writability.
+  // Test if configuration files and directory are writable.
   if ($phase == 'runtime') {
     $conf_errors = [];
     // Find the site path. Kernel service is not always available at this point,

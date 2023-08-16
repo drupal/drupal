@@ -1341,7 +1341,6 @@ wcprops
 webassert
 webcal
 webflo
-webheads
 webhosting
 webmention
 webmozart
@@ -1350,19 +1349,14 @@ webroot
 webservers
 webtest
 whitespaces
-whos
 widthx
-wimoids
 wmet
 wmlscript
 wordprocessingml
 wordsafe
 wordword
 workspaceswitcher
-writability
 writeln
-wrongparam
-wsod
 wwwrun
 xbap
 xbitmap

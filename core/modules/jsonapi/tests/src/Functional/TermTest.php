@@ -464,7 +464,7 @@ class TermTest extends ResourceTestBase {
       ->setName('Lamoids')
       ->save();
     Term::create(['vid' => Vocabulary::load('camelids')->id()])
-      ->setName('Wimoids')
+      ->setName('Camels')
       ->save();
 
     // Modify the entity under test to use the provided parent terms.
