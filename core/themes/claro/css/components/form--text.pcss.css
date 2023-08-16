@@ -108,13 +108,12 @@
   .form-element {
     float: none;
     width: 100%;
-    margin-top: 0.75rem;
-    margin-right: 0;
-    margin-left: 0;
+    margin-block-start: 0.75rem;
+    margin-inline: 0;
   }
   .form-element:first-child,
   .form-item__label + .form-element {
-    margin-top: 0;
+    margin-block-start: 0;
   }
 }
 
