@@ -27,10 +27,10 @@ class PerformanceTest extends PerformanceTestBase {
   }
 
   /**
-   * Load the front page as a user with access to Tours.
+   * Load the front page as a user with access to Toolbar.
    */
-  public function testFrontPageTour(): void {
-    $admin_user = $this->drupalCreateUser(['access tour']);
+  public function testFrontPagePerformance(): void {
+    $admin_user = $this->drupalCreateUser(['access toolbar']);
     $this->drupalLogin($admin_user);
     $this->drupalGet('<front>');
     $this->assertSession()->pageTextContains('Umami');

@@ -25,8 +25,6 @@ libraries-override:
 libraries-extend:
   core/drupal.message:
     - umami/messages
-  tour/tour-styling:
-    - umami/demo-umami-tour
   core/drupal.dialog:
     - umami/classy.dialog
   core/drupal.dropbutton:

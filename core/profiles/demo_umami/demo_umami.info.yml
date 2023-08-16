@@ -37,7 +37,6 @@ install:
   - file
   - views
   - views_ui
-  - tour
   - automated_cron
   - responsive_image
   - content_moderation

@@ -49,8 +49,6 @@ global:
       css/layout/layout.css: {}
   js:
     js/components/navigation/menu-main/menu-main.js: {}
-  dependencies:
-    - umami/demo-umami-tour
 
 messages:
   css:
@@ -107,13 +105,6 @@ view-mode-card-common-alt:
       css/components/content/card-common-alt/card-common-alt.css: {}
   dependencies:
     - umami/more-link
-
-demo-umami-tour:
-  css:
-    theme:
-      css/components/tour/tour.theme.css: {}
-  dependencies:
-    - claro/tour-styling
 
 oneplusfourgrid_section:
   css:
