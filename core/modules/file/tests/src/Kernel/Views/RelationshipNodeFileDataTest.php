@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Kernel\Views;
 
-use Drupal\Core\Database\Database;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
@@ -39,10 +38,6 @@ class RelationshipNodeFileDataTest extends ViewsKernelTestBase {
    */
   protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
-
-    if (Database::getConnection()->driver() === 'pgsql') {
-      $this->markTestSkipped('Skipped because PostgreSQL is currently failing: https://www.drupal.org/project/drupal/issues/3364621');
-    }
 
     $this->installSchema('file', 'file_usage');
     $this->installEntitySchema('node');

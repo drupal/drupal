@@ -100,3 +100,7 @@ services:
     class: Drupal\views\Plugin\views\query\SqliteDateSql
     arguments: ['@database']
     public: false
+  views.cast_sql:
+    class: Drupal\views\Plugin\views\query\CastSql
+    tags:
+      - { name: backend_overridable }
