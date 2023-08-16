@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-// cSpell:words downcasted linkimageediting emptyelement downcastdispatcher
+// cSpell:words datafilter downcasted linkimageediting emptyelement downcastdispatcher
 import { Plugin } from 'ckeditor5/src/core';
 import { setViewAttributes } from '@ckeditor/ckeditor5-html-support/src/utils';
 
@@ -539,6 +539,61 @@ function viewImageToModelImage(editor) {
 }
 
 /**
+ * General HTML Support integration for attributes on links wrapping images.
+ *
+ * This plugin needs to integrate with GHS manually because upstream image link
+ * plugin GHS integration assumes that the `<a>` element is inside the
+ * `<imageBlock>` which is not true in the case of Drupal.
+ *
+ * @param {module:html-support/datafilter~DataFilter} dataFilter
+ *   The General HTML support data filter.
+ *
+ * @return {function}
+ *   Callback that binds an event to its parameter.
+ */
+function upcastImageBlockLinkGhsAttributes(dataFilter) {
+  /**
+   * Callback for the element:img upcast event.
+   *
+   * @type {converterHandler}
+   */
+  function converter(event, data, conversionApi) {
+    if (!data.modelRange) {
+      return;
+    }
+
+    const viewImageElement = data.viewItem;
+    const viewContainerElement = viewImageElement.parent;
+
+    if (!viewContainerElement.is('element', 'a')) {
+      return;
+    }
+    if (!data.modelRange.getContainedElement().is('element', 'imageBlock')) {
+      return;
+    }
+
+    const viewAttributes = dataFilter.processViewAttributes(
+      viewContainerElement,
+      conversionApi,
+    );
+
+    if (viewAttributes) {
+      conversionApi.writer.setAttribute(
+        'htmlLinkAttributes',
+        viewAttributes,
+        data.modelRange,
+      );
+    }
+  }
+
+  return (dispatcher) => {
+    dispatcher.on('element:img', converter, {
+      priority: 'high',
+    });
+  };
+}
+
+/**
  * Modified alternative implementation of linkimageediting.js' downcastImageLink.
  *
  * @return {function}
@@ -598,8 +653,10 @@ function downcastBlockImageLink() {
 }
 
 /**
- * Add handling of 'dataEntityUuid', 'dataEntityType', 'isDecorative', 'width',
- * 'height' attributes on image elements.
+ * Drupal Image plugin.
+ *
+ * This plugin extends the CKEditor 5 image plugin with custom attributes, and
+ * removes a wrapping `<figure>` from `<img>` elements in the data downcast.
  *
  * @private
  */
@@ -684,6 +741,13 @@ export default class DrupalImageEditing extends Plugin {
           },
         },
       });
+
+    if (editor.plugins.has('DataFilter')) {
+      const dataFilter = editor.plugins.get('DataFilter');
+      conversion
+        .for('upcast')
+        .add(upcastImageBlockLinkGhsAttributes(dataFilter));
+    }
 
     conversion
       .for('downcast')
