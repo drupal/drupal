@@ -55,6 +55,8 @@ class TranslatedViewTest extends UITestBase {
       'translate interface',
     ];
 
+    $this->drupalPlaceBlock('local_tasks_block', ['id' => 'test_role_admin_test_local_tasks_block']);
+
     // Create and log in user.
     $this->adminUser = $this->drupalCreateUser($permissions);
     $this->drupalLogin($this->adminUser);
@@ -114,6 +116,12 @@ class TranslatedViewTest extends UITestBase {
     $this->drupalGet($translation_url);
     $this->assertSession()->fieldExists('translation[config_names][views.view.files][display][block_1][display_options][fields][filename][alter][path]');
     $this->assertSession()->fieldExists('translation[config_names][views.view.files][display][default][display_options][link_url]');
+
+    // Assert that the View translation link is shown when viewing a display.
+    $this->drupalGet($edit_url);
+    $this->assertSession()->linkExists('Translate view');
+    $this->drupalGet('/admin/structure/views/view/files/edit/block_1');
+    $this->assertSession()->linkExists('Translate view');
   }
 
 }
