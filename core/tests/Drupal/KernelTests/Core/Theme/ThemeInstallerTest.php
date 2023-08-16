@@ -242,7 +242,7 @@ class ThemeInstallerTest extends KernelTestBase {
     $this->assertTrue(isset($themes[$other_name]));
 
     try {
-      $message = 'ThemeInstaller::uninstall() throws InvalidArgumentException upon disabling default theme.';
+      $message = 'ThemeInstaller::uninstall() throws InvalidArgumentException upon uninstalling default theme.';
       $this->themeInstaller()->uninstall([$name]);
       $this->fail($message);
     }
