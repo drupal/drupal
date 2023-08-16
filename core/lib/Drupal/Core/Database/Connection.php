@@ -668,8 +668,14 @@ abstract class Connection {
    *
    * @return string
    *   A table prefix-parsed string for the sequence name.
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is
+   *   no replacement.
+   *
+   * @see https://www.drupal.org/node/3377046
    */
   public function makeSequenceName($table, $field) {
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3377046", E_USER_DEPRECATED);
     $sequence_name = $this->prefixTables('{' . $table . '}_' . $field . '_seq');
     // Remove identifier quotes as we are constructing a new name from a
     // prefixed and quoted table name.

@@ -295,6 +295,28 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   }
 
   /**
+   * Creates the appropriate sequence name for a given table and serial field.
+   *
+   * This method should only be called by the driver's code.
+   *
+   * @param string $table
+   *   The table name to use for the sequence.
+   * @param string $field
+   *   The field name to use for the sequence.
+   *
+   * @return string
+   *   A table prefix-parsed string for the sequence name.
+   *
+   * @internal
+   */
+  public function makeSequenceName($table, $field) {
+    $sequence_name = $this->prefixTables('{' . $table . '}_' . $field . '_seq');
+    // Remove identifier quotes as we are constructing a new name from a
+    // prefixed and quoted table name.
+    return str_replace($this->identifierQuotes, '', $sequence_name);
+  }
+
+  /**
    * Retrieve a the next id in a sequence.
    *
    * PostgreSQL has built in sequences. We'll use these instead of inserting

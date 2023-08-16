@@ -1,25 +1,17 @@
 <?php
 
-namespace Drupal\Tests\mysql\Kernel\mysql;
+declare(strict_types=1);
 
-use Drupal\Core\Database\Database;
-use Drupal\Core\Database\DatabaseExceptionWrapper;
+namespace Drupal\Tests\sqlite\Kernel\sqlite;
+
 use Drupal\KernelTests\Core\Database\DriverSpecificDatabaseTestBase;
 
 /**
- * MySQL-specific connection tests.
+ * SQLite-specific connection tests.
  *
  * @group Database
  */
 class ConnectionTest extends DriverSpecificDatabaseTestBase {
-
-  /**
-   * Ensure that you cannot execute multiple statements on MySQL.
-   */
-  public function testMultipleStatementsForNewPhp(): void {
-    $this->expectException(DatabaseExceptionWrapper::class);
-    Database::getConnection('default', 'default')->query('SELECT * FROM {test}; SELECT * FROM {test_people}', [], ['allow_delimiter_in_query' => TRUE]);
-  }
 
   /**
    * Tests deprecation of ::makeSequenceName().

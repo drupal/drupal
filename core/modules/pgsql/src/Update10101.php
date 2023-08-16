@@ -222,7 +222,7 @@ class Update10101 implements ContainerInjectionInterface {
    * @return bool
    *   TRUE if the sequence exists by the name.
    *
-   * @see \Drupal\Core\Database\Connection::makeSequenceName()
+   * @see \Drupal\pgsql\Driver\Database\pgsql\Connection::makeSequenceName()
    */
   private function sequenceExists(string $name): bool {
     return (bool) \Drupal::database()
