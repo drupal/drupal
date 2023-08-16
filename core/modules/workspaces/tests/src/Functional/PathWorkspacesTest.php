@@ -69,6 +69,10 @@ class PathWorkspacesTest extends BrowserTestBase {
     \Drupal::entityTypeManager()->clearCachedDefinitions();
 
     $this->setupWorkspaceSwitcherBlock();
+
+    // The \Drupal\path_alias\AliasWhitelist service performs cache clears after
+    // Drupal has flushed the response to the client. We use
+    // WaitTerminateTestTrait to wait for Drupal to do this before continuing.
     $this->setWaitForTerminate();
   }
 

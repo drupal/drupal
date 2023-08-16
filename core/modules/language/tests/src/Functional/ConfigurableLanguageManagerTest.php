@@ -48,6 +48,9 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    // The \Drupal\locale\LocaleTranslation service clears caches after the
+    // response is flushed to the client. We use WaitTerminateTestTrait to wait
+    // for Drupal to perform its termination work before continuing.
     $this->setWaitForTerminate();
 
     /** @var \Drupal\user\UserInterface $user */

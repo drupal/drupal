@@ -317,6 +317,9 @@ class NodeTest extends ResourceTestBase {
    * {@inheritdoc}
    */
   public function testGetIndividual() {
+    // Cacheable normalizations are written after the response is flushed to
+    // the client. We use WaitTerminateTestTrait to wait for Drupal to perform
+    // its termination work before continuing.
     $this->setWaitForTerminate();
 
     parent::testGetIndividual();
