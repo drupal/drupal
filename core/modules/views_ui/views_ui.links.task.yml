@@ -28,3 +28,8 @@ entity.view.edit_form:
   title: 'Edit'
   route_name: entity.view.edit_form
   base_route: entity.view.edit_form
+
+entity.view.edit_display_form:
+  title: 'Edit display'
+  route_name: entity.view.edit_display_form
+  parent_id: entity.view.edit_form
