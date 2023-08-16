@@ -362,9 +362,6 @@ views_argument:
     default_argument_options:
       type: views.argument_default.[%parent.default_argument_type]
       label: 'Default argument options'
-    default_argument_skip_url:
-      type: boolean
-      label: 'Skip default argument for view URL'
     summary_options:
       type: views.style.[%parent.summary.format]
       label: 'Summary options'

@@ -247,7 +247,6 @@ display:
           admin_label: ''
           title_enable: false
           title: ''
-          default_argument_skip_url: false
           summary_options: {  }
           validate:
             type: none
@@ -401,7 +400,6 @@ display:
           admin_label: ''
           title_enable: false
           title: ''
-          default_argument_skip_url: false
           validate:
             type: none
             fail: 'not found'

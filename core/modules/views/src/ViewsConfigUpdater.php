@@ -145,6 +145,9 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       if ($this->processRevisionFieldHyphenFix($view)) {
         $changed = TRUE;
       }
+      if ($this->processDefaultArgumentSkipUrlUpdate($handler, $handler_type)) {
+        $changed = TRUE;
+      }
       return $changed;
     });
   }
@@ -410,6 +413,41 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
     return $this->processDisplayHandlers($view, TRUE, function (&$handler, $handler_type) use ($view) {
       return $this->processRevisionFieldHyphenFix($view);
     });
+  }
+
+  /**
+   * Checks for each view if default_argument_skip_url needs to be removed.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The view entity.
+   *
+   * @return bool
+   *   TRUE if the view has any arguments that need to have
+   *   default_argument_skip_url removed.
+   */
+  public function needsDefaultArgumentSkipUrlUpdate(ViewEntityInterface $view) {
+    return $this->processDisplayHandlers($view, TRUE, function (&$handler, $handler_type) {
+      return $this->processDefaultArgumentSkipUrlUpdate($handler, $handler_type);
+    });
+  }
+
+  /**
+   * Processes arguments and removes the default_argument_skip_url setting.
+   *
+   * @param array $handler
+   *   A display handler.
+   * @param string $handler_type
+   *   The handler type.
+   *
+   * @return bool
+   *   Whether the handler was updated.
+   */
+  public function processDefaultArgumentSkipUrlUpdate(array &$handler, string $handler_type): bool {
+    if ($handler_type === 'argument' && isset($handler['default_argument_skip_url'])) {
+      unset($handler['default_argument_skip_url']);
+      return TRUE;
+    }
+    return FALSE;
   }
 
 }

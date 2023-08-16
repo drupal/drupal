@@ -1,3 +1,4 @@
+uuid: 6a7eb126-7ba9-493f-a209-e3aa0672b8f5
 langcode: en
 status: true
 dependencies:
@@ -7,7 +8,7 @@ dependencies:
     - node
     - taxonomy
     - user
-id: taxonomy_term
+id: remove_default_argument_skip_url
 label: 'Taxonomy term'
 module: taxonomy
 description: 'Content belonging to a certain taxonomy term.'
@@ -105,6 +106,7 @@ display:
           default_argument_type: fixed
           default_argument_options:
             argument: ''
+          default_argument_skip_url: false
           summary_options:
             base_path: ''
             count: true

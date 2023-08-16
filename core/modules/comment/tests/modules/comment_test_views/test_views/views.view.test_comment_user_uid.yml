@@ -20,7 +20,6 @@ display:
         type: perm
       arguments:
         uid_touch:
-          default_argument_skip_url: false
           default_argument_type: fixed
           field: uid_touch
           id: uid_touch

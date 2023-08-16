@@ -1961,7 +1961,7 @@ class ViewExecutable {
       $position = 0;
       if (!empty($this->argument)) {
         foreach ($this->argument as $argument) {
-          if (!empty($argument->is_default) && !empty($argument->options['default_argument_skip_url'])) {
+          if (!empty($argument->is_default)) {
             unset($args[$position]);
           }
           $position++;
