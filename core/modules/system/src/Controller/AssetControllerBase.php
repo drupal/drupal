@@ -195,11 +195,7 @@ abstract class AssetControllerBase extends FileDownloadController {
     // from filling the disk, while still serving aggregates that may be
     // referenced in cached HTML.
     if (hash_equals($generated_hash, $received_hash)) {
-      $uri = $this->dumper->dumpToUri($data, $this->assetType, $uri);
-      $state_key = 'drupal_' . $this->assetType . '_cache_files';
-      $files = $this->state()->get($state_key, []);
-      $files[] = $uri;
-      $this->state()->set($state_key, $files);
+      $this->dumper->dumpToUri($data, $this->assetType, $uri);
     }
     return new Response($data, 200, [
       'Cache-control' => static::CACHE_CONTROL,
