@@ -45,7 +45,7 @@ class FormSubmitter implements FormSubmitterInterface {
    * @param \Drupal\Core\EventSubscriber\RedirectResponseSubscriber|null $redirect_response_subscriber
    *   The redirect response subscriber.
    */
-  public function __construct(RequestStack $request_stack, UrlGeneratorInterface $url_generator, ?RedirectResponseSubscriber $redirect_response_subscriber) {
+  public function __construct(RequestStack $request_stack, UrlGeneratorInterface $url_generator, ?RedirectResponseSubscriber $redirect_response_subscriber = NULL) {
     $this->requestStack = $request_stack;
     $this->urlGenerator = $url_generator;
     if (is_null($redirect_response_subscriber)) {
