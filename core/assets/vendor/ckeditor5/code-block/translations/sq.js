@@ -1,0 +1,1 @@
+!function(t){const i=t.sq=t.sq||{};i.dictionary=Object.assign(i.dictionary||{},{"Insert code block":"Shto bllokun e kodit","Plain text":"Teksti i thjeshtë"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
