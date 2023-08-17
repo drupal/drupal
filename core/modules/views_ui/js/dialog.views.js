@@ -88,21 +88,4 @@
       bodyScrollLock.lock($scroll.get(0));
     }
   });
-
-  /**
-   * Binds a listener on dialog close to handle Views modal scroll.
-   *
-   * @param {jQuery.Event} e
-   *   The event triggered.
-   * @param {Drupal.dialog~dialogDefinition} dialog
-   *   The dialog instance.
-   * @param {jQuery} $element
-   *   The jQuery collection of the dialog element.
-   */
-  $(window).on('dialog:beforeclose', (e, dialog, $element) => {
-    const $scroll = $element.find('.scroll');
-    if ($scroll.length) {
-      bodyScrollLock.unlock($scroll.get(0));
-    }
-  });
 })(jQuery, Drupal, drupalSettings, bodyScrollLock);

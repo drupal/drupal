@@ -86,7 +86,7 @@
     function closeDialog(value) {
       $(window).trigger('dialog:beforeclose', [dialog, $element]);
       // Unlocks the body when the dialog closes.
-      bodyScrollLock.unlock($element.get(0));
+      bodyScrollLock.clearBodyLocks();
 
       $element.dialog('close');
       dialog.returnValue = value;
