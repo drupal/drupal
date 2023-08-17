@@ -86,7 +86,7 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
     // key, it is impossible for the generic ::testLabelValidation()
     // implementation in the base class to know at which property to expect a
     // validation error. Hence it is hardcoded in this case.
-    $this->assertValidationErrors(['settings.label' => "Labels are not allowed to span multiple lines."]);
+    $this->assertValidationErrors(['settings.label' => "Labels are not allowed to span multiple lines or contain control characters."]);
   }
 
 }

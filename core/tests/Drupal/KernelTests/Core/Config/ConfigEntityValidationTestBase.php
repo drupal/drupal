@@ -318,7 +318,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     }
 
     static::setLabel($this->entity, "Multi\nLine");
-    $this->assertValidationErrors([$this->entity->getEntityType()->getKey('label') => "Labels are not allowed to span multiple lines."]);
+    $this->assertValidationErrors([$this->entity->getEntityType()->getKey('label') => "Labels are not allowed to span multiple lines or contain control characters."]);
   }
 
   /**

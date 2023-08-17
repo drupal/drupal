@@ -72,4 +72,81 @@ class SimpleConfigValidationTest extends KernelTestBase {
     $this->assertSame("'invalid_key' is not a supported key.", (string) $violations[0]->getMessage());
   }
 
+  /**
+   * Data provider for ::testSpecialCharacters().
+   *
+   * @return array[]
+   *   The test cases.
+   */
+  public function providerSpecialCharacters(): array {
+    $data = [];
+
+    for ($code_point = 0; $code_point < 32; $code_point++) {
+      $data["label $code_point"] = [
+        'system.site',
+        'name',
+        mb_chr($code_point),
+        'Labels are not allowed to span multiple lines or contain control characters.',
+      ];
+      $data["text $code_point"] = [
+        'system.maintenance',
+        'message',
+        mb_chr($code_point),
+        'Text is not allowed to contain control characters, only visible characters.',
+      ];
+    }
+    // Line feeds (ASCII 10) and carriage returns (ASCII 13) are used to create
+    // new lines, so they are allowed in text data, along with tabs (ASCII 9).
+    $data['text 9'][3] = $data['text 10'][3] = $data['text 13'][3] = NULL;
+
+    // Ensure emoji are allowed.
+    $data['emoji in label'] = [
+      'system.site',
+      'name',
+      '😎',
+      NULL,
+    ];
+    $data['emoji in text'] = [
+      'system.maintenance',
+      'message',
+      '🤓',
+      NULL,
+    ];
+
+    return $data;
+  }
+
+  /**
+   * Tests that special characters are not allowed in labels or text data.
+   *
+   * @param string $config_name
+   *   The name of the simple config to test with.
+   * @param string $property
+   *   The config property in which to embed a control character.
+   * @param string $character
+   *   A special character to embed.
+   * @param string|null $expected_error_message
+   *   The expected validation error message, if any.
+   *
+   * @dataProvider providerSpecialCharacters
+   */
+  public function testSpecialCharacters(string $config_name, string $property, string $character, ?string $expected_error_message): void {
+    $config = $this->config($config_name)
+      ->set($property, "This has a special character: $character");
+
+    $violations = $this->container->get('config.typed')
+      ->createFromNameAndData($config->getName(), $config->get())
+      ->validate();
+
+    if ($expected_error_message === NULL) {
+      $this->assertCount(0, $violations);
+    }
+    else {
+      $code_point = mb_ord($character);
+      $this->assertCount(1, $violations, "Character $code_point did not raise a constraint violation.");
+      $this->assertSame($property, $violations[0]->getPropertyPath());
+      $this->assertSame($expected_error_message, (string) $violations[0]->getMessage());
+    }
+  }
+
 }

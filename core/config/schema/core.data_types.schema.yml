@@ -64,13 +64,11 @@ label:
   translatable: true
   constraints:
     Regex:
-      # Forbid any kind of line ending:
-      # - Windows: `\r\n`
-      # - old macOS: `\r`
-      # - *nix: `\n`
-      pattern: '/(\r\n|\r|\n)/'
+      # Forbid any kind of control character.
+      # @see https://stackoverflow.com/a/66587087
+      pattern: '/([^\PC])/u'
       match: false
-      message: 'Labels are not allowed to span multiple lines.'
+      message: 'Labels are not allowed to span multiple lines or contain control characters.'
 
 required_label:
   type: label
@@ -93,6 +91,18 @@ text:
   type: string
   label: 'Text'
   translatable: true
+  constraints:
+    Regex:
+      # Disallow all control characters except for tabs (ASCII 9, 0x09) as well
+      # as carriage returns (ASCII 13, 0x0D) and line feeds (ASCII 10, 0x0A),
+      # which are used for line endings:
+      # - Windows: `\r\n`
+      # - old macOS: `\r`
+      # - *nix: `\n`
+      # @see https://stackoverflow.com/a/66587087
+      pattern: '/([^\PC\x09\x0a\x0d])/u'
+      match: false
+      message: 'Text is not allowed to contain control characters, only visible characters.'
 
 # A UUID.
 uuid:
