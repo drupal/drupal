@@ -79,7 +79,8 @@ class OptionsFieldUITest extends WebDriverTestBase {
    *
    * @dataProvider providerTestOptionsAllowedValues
    */
-  public function testOptionsAllowedValues($option_type, $options, $is_string_option) {
+  public function testOptionsAllowedValues($option_type, $options, $is_string_option, string $add_row_method) {
+    $assert = $this->assertSession();
     $this->fieldName = 'field_options_text';
     $this->createOptionsField($option_type);
     $page = $this->getSession()->getPage();
@@ -87,15 +88,79 @@ class OptionsFieldUITest extends WebDriverTestBase {
     $this->drupalGet($this->adminPath);
 
     $i = 0;
+    $expected_rows = 1;
+    $this->assertAllowValuesRowCount(1);
     foreach ($options as $option_key => $option_label) {
-      $page->fillField("settings[allowed_values][table][$i][item][label]", $option_label);
+      $enter_element_name = $label_element_name = "settings[allowed_values][table][$i][item][label]";
+      $page->fillField($label_element_name, $option_label);
+      $key_element_name = "settings[allowed_values][table][$i][item][key]";
+
       // Add keys if not string option list.
       if (!$is_string_option) {
-        $page->fillField("settings[allowed_values][table][$i][item][key]", $option_key);
+        $this->pressEnterOnElement("[name=\"$label_element_name\"]");
+        // Assert that pressing enter on label field does not create the new
+        // row if the key field is visible.
+        $this->assertAllowValuesRowCount($expected_rows);
+        $enter_element_name = $key_element_name;
+        $this->assertHasFocusByAttribute('name', $key_element_name);
+        $page->fillField($key_element_name, $option_key);
       }
-      $page->pressButton('Add another item');
+      else {
+        $this->assertFalse($assert->fieldExists($key_element_name)->isVisible());
+      }
+      switch ($add_row_method) {
+        case 'Press button':
+          $page->pressButton('Add another item');
+          break;
+
+        case 'Enter button':
+          $button = $assert->buttonExists('Add another item');
+          $this->pressEnterOnElement('[data-drupal-selector="' . $button->getAttribute('data-drupal-selector') . '"]');
+          break;
+
+        case 'Enter element':
+          // If testing using the "enter" key while focused on element there a
+          // few different scenarios to test.
+          switch ($i) {
+            case 0:
+              // For string options the machine name input can be exposed which
+              // will mean the label input will no longer create the next row.
+              if ($is_string_option) {
+                $this->exposeOptionMachineName($expected_rows);
+                $this->pressEnterOnElement("[name=\"$enter_element_name\"]");
+                $this->assertHasFocusByAttribute('name', $key_element_name);
+                // Ensure that pressing enter while focused on the label input
+                // did not create a new row if the machine name field is
+                // visible.
+                $this->assertAllowValuesRowCount($expected_rows);
+                $enter_element_name = $key_element_name;
+              }
+              break;
+          }
+          $this->pressEnterOnElement("[name=\"$enter_element_name\"]");
+          break;
+
+        default:
+          throw new \UnexpectedValueException("Unknown method $add_row_method");
+      }
+
       $i++;
+      $expected_rows++;
       $this->assertSession()->waitForElementVisible('css', "[name='settings[allowed_values][table][$i][item][label]']");
+      $this->assertHasFocusByAttribute('name', "settings[allowed_values][table][$i][item][label]");
+      $this->assertAllowValuesRowCount($expected_rows);
+
+      if ($is_string_option) {
+        // Expose the key input for string options for the previous row to test
+        // shifting focus from the label to key inputs on the previous row by
+        // pressing enter.
+        $this->exposeOptionMachineName($expected_rows - 1);
+      }
+      // Test that pressing enter on the label input on previous row will shift
+      // focus to key input of that row.
+      $this->pressEnterOnElement("[name=\"$label_element_name\"]");
+      $this->assertHasFocusByAttribute('name', $key_element_name);
+      $this->assertAllowValuesRowCount($expected_rows);
     }
     $page->pressButton('Save field settings');
 
@@ -201,6 +266,21 @@ class OptionsFieldUITest extends WebDriverTestBase {
   }
 
   /**
+   * Presses "Enter" on the specified element.
+   *
+   * @param string $selector
+   *   Current element having focus.
+   */
+  private function pressEnterOnElement(string $selector): void {
+    $javascript = <<<JS
+      const element = document.querySelector('$selector');
+      const event = new KeyboardEvent('keypress', { key: 'Enter', keyCode: 13, bubbles: true });
+      element.dispatchEvent(event);
+JS;
+    $this->getSession()->executeScript($javascript);
+  }
+
+  /**
    * Data provider for testOptionsAllowedValues().
    *
    * @return array
@@ -208,9 +288,11 @@ class OptionsFieldUITest extends WebDriverTestBase {
    *   - Option type.
    *   - Array of option type values.
    *   - Whether option type is string type or not.
+   *   - The method which should be used to add another row to the table. The
+   *     possible values are 'Press button', 'Enter button' or 'Enter element'.
    */
   public function providerTestOptionsAllowedValues() {
-    return [
+    $type_cases = [
       'List integer' => [
         'list_integer',
         [1 => 'First', 2 => 'Second', 3 => 'Third'],
@@ -227,6 +309,62 @@ class OptionsFieldUITest extends WebDriverTestBase {
         TRUE,
       ],
     ];
+    // Test adding options for each option field type using several possible
+    // methods that could be used for navigating the options list:
+    // - Press button: add a new item by pressing the 'Add another item'
+    // button using mouse.
+    // - Enter button: add a new item by pressing the 'Add another item'
+    // button using enter key on the keyboard.
+    // - Enter element: add a new item by pressing enter on the last text
+    // field inside the table.
+    $test_cases = [];
+    foreach ($type_cases as $key => $type_case) {
+      foreach (['Press button', 'Enter button', 'Enter element'] as $add_more_method) {
+        $test_cases["$key: $add_more_method"] = array_merge($type_case, [$add_more_method]);
+      }
+    }
+    return $test_cases;
+  }
+
+  /**
+   * Assert the count of the allowed values rows.
+   *
+   * @param int $expected_count
+   *   The expected row count.
+   */
+  private function assertAllowValuesRowCount(int $expected_count): void {
+    $this->assertCount(
+      $expected_count,
+      $this->getSession()->getPage()->findAll('css', '#allowed-values-order tr.draggable')
+    );
+  }
+
+  /**
+   * Asserts an element specified by an attribute value has focus.
+   *
+   * @param string $name
+   *   The attribute name.
+   * @param string $value
+   *   The attribute value.
+   *
+   * @todo Replace with assertHasFocus() in https://drupal.org/i/3041768.
+   */
+  private function assertHasFocusByAttribute(string $name, string $value): void {
+    $active_element = $this->getSession()->evaluateScript('document.activeElement');
+    $this->assertSame($value, $active_element->getAttribute($name));
+  }
+
+  /**
+   * Exposes the machine name input for a row.
+   *
+   * @param int $row
+   *   The row number.
+   */
+  private function exposeOptionMachineName(int $row): void {
+    $index = $row - 1;
+    $rows = $this->getSession()->getPage()->findAll('css', '#allowed-values-order tr.draggable');
+    $this->assertSession()->buttonExists('Edit', $rows[$index])->click();
+    $this->assertSession()->waitForElementVisible('css', "[name='settings[allowed_values][table][$index][item][key]']");
   }
 
 }
