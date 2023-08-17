@@ -35,6 +35,7 @@ class CommentHostnameTest extends KernelTestBase {
 
     CommentType::create([
       'id' => 'foo',
+      'label' => 'Foo',
       'target_entity_type_id' => 'entity_test',
     ])->save();
 

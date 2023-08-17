@@ -153,7 +153,7 @@ class ArgumentDefaultTest extends ViewTestBase {
     $this->drupalLogin($views_admin);
 
     // Create nodes where should show themselves again as view block.
-    $node_type = NodeType::create(['type' => 'page', 'label' => 'Page']);
+    $node_type = NodeType::create(['type' => 'page', 'name' => 'Page']);
     $node_type->save();
     $node1 = Node::create(['title' => 'Test node 1', 'type' => 'page']);
     $node1->save();

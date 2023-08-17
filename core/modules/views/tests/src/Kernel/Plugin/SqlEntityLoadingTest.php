@@ -40,6 +40,7 @@ class SqlEntityLoadingTest extends ViewsKernelTestBase {
   public function testViewWithNonDefaultPendingRevision() {
     $node_type = NodeType::create([
       'type' => 'page',
+      'name' => 'Page',
     ]);
     $node_type->save();
 

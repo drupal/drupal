@@ -49,8 +49,8 @@ class LanguageNegotiationContentEntityTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    ConfigurableLanguage::create(['id' => 'es'])->save();
-    ConfigurableLanguage::create(['id' => 'fr'])->save();
+    ConfigurableLanguage::createFromLangcode('es')->save();
+    ConfigurableLanguage::createFromLangcode('fr')->save();
 
     // In order to reflect the changes for a multilingual site in the container
     // we have to rebuild it.

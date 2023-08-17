@@ -45,8 +45,10 @@ class SortTranslationTest extends ViewsKernelTestBase {
     // $this->installConfig('node');
     $this->container->get('kernel')->rebuildContainer();
 
-    $node_type = NodeType::create(['type' => 'article']);
-    $node_type->save();
+    NodeType::create([
+      'type' => 'article',
+      'name' => 'Article',
+    ])->save();
 
     FieldStorageConfig::create([
       'field_name' => 'text',

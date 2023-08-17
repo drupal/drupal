@@ -31,6 +31,7 @@ class MigrateNodeBundleSettingsTest extends MigrateDrupal6TestBase {
       'field_name' => 'promote',
       'entity_type' => 'node',
       'bundle' => 'page',
+      'label' => 'Promoted to front page',
     ])->save();
 
     $this->executeMigrations([

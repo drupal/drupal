@@ -43,9 +43,11 @@ class ModerationStateWidgetTest extends KernelTestBase {
 
     NodeType::create([
       'type' => 'moderated',
+      'name' => 'Moderated',
     ])->save();
     NodeType::create([
       'type' => 'unmoderated',
+      'name' => 'Unmoderated',
     ])->save();
 
     $workflow = $this->createEditorialWorkflow();

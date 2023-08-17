@@ -7,7 +7,7 @@ image.style.*:
     name:
       type: machine_name
     label:
-      type: label
+      type: required_label
       label: 'Label'
     effects:
       type: sequence

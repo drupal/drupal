@@ -49,7 +49,7 @@ class ViewsConfigDependenciesIntegrationTest extends ViewsKernelTestBase {
    */
   public function testImage() {
     /** @var \Drupal\image\ImageStyleInterface $style */
-    $style = ImageStyle::create(['name' => 'foo']);
+    $style = ImageStyle::create(['name' => 'foo', 'label' => 'Foo']);
     $style->save();
 
     // Create a new image field 'bar' to be used in 'entity_test_fields' view.

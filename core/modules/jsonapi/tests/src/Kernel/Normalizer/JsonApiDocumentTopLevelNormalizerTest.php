@@ -140,6 +140,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     $this->installSchema('file', ['file_usage']);
     $type = NodeType::create([
       'type' => 'article',
+      'name' => 'Article',
     ]);
     $type->save();
     $this->createEntityReferenceField(

@@ -23,6 +23,7 @@ class ImageImportTest extends KernelTestBase {
   public function testImport() {
     $style = ImageStyle::create([
       'name' => 'test',
+      'label' => 'Test',
     ]);
 
     $style->addImageEffect(['id' => 'image_module_test_null']);

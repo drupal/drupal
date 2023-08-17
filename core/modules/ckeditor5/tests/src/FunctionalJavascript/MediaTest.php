@@ -791,7 +791,7 @@ class MediaTest extends WebDriverTestBase {
   public function testTranslationAlt() {
     \Drupal::service('module_installer')->install(['language', 'content_translation']);
     $this->resetAll();
-    ConfigurableLanguage::create(['id' => 'fr'])->save();
+    ConfigurableLanguage::createFromLangcode('fr')->save();
     ContentLanguageSettings::loadByEntityTypeBundle('media', 'image')
       ->setDefaultLangcode('en')
       ->setLanguageAlterable(TRUE)

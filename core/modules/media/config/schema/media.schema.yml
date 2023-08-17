@@ -29,7 +29,7 @@ media.type.*:
           # @see \Drupal\media\MediaTypeForm::form()
           max: 32
     label:
-      type: label
+      type: required_label
       label: 'Name'
     description:
       type: text

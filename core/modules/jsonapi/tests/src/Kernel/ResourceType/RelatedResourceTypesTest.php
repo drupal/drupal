@@ -64,10 +64,12 @@ class RelatedResourceTypesTest extends JsonapiKernelTestBase {
 
     NodeType::create([
       'type' => 'foo',
+      'name' => 'Foo',
     ])->save();
 
     NodeType::create([
       'type' => 'bar',
+      'name' => 'Bar',
     ])->save();
 
     $this->createEntityReferenceField(

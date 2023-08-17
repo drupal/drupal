@@ -82,6 +82,7 @@ class SerializerTest extends JsonapiKernelTestBase {
     $this->user->save();
     NodeType::create([
       'type' => 'foo',
+      'name' => 'Foo',
     ])->save();
     $this->createTextField('node', 'foo', 'field_text', 'Text');
     $this->node = Node::create([

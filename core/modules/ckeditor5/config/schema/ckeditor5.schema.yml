@@ -160,7 +160,7 @@ ckeditor5.plugin.ckeditor5_codeBlock:
         label: 'Language'
         mapping:
           label:
-            type: label
+            type: required_label
             label: 'Language label'
           language:
             type: string
@@ -185,7 +185,7 @@ ckeditor5.plugin.ckeditor5_style:
         label: 'Style'
         mapping:
           label:
-            type: label
+            type: required_label
             label: 'Style label'
           element:
             type: ckeditor5.element

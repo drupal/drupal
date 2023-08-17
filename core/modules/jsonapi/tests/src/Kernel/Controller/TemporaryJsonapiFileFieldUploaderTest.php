@@ -41,13 +41,16 @@ class TemporaryJsonapiFileFieldUploaderTest extends JsonapiKernelTestBase {
     $this->installSchema('user', ['users_data']);
     NodeType::create([
       'type' => 'lorem',
+      'name' => 'Lorem',
     ])->save();
     $type = NodeType::create([
       'type' => 'article',
+      'name' => 'Article',
     ]);
     $type->save();
     $type = NodeType::create([
       'type' => 'page',
+      'name' => 'Page',
     ]);
     $type->save();
     $this->createEntityReferenceField('node', 'article', 'field_relationships', 'Relationship', 'node', 'default', ['target_bundles' => ['article']], FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);

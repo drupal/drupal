@@ -282,6 +282,7 @@ class FilterTest extends JsonapiKernelTestBase {
   protected function savePaintingType() {
     NodeType::create([
       'type' => 'painting',
+      'name' => 'Painting',
     ])->save();
     $this->createTextField(
       'node', 'painting',

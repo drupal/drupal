@@ -106,7 +106,10 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
     $this->testAuthor->save();
 
     // Make sure we do not try to render non-existing user data.
-    $node_type = NodeType::create(['type' => 'test']);
+    $node_type = NodeType::create([
+      'type' => 'test',
+      'name' => 'Test',
+    ]);
     $node_type->setDisplaySubmitted(FALSE);
     $node_type->save();
 

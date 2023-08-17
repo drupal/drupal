@@ -45,7 +45,7 @@ class EntityDeriverTest extends KernelTestBase {
     NodeType::create(['type' => 'article', 'name' => 'Article'])->save();
     CommentType::create([
       'id' => 'comment',
-      'name' => 'Default comment',
+      'label' => 'Default comment',
       'target_entity_type_id' => 'node',
     ])->save();
     entity_test_create_bundle('foo', NULL, 'entity_test_no_bundle');

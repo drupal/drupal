@@ -13,7 +13,7 @@ contact.form.*:
           # @see \Drupal\contact\ContactFormEditForm::form()
           max: 32
     label:
-      type: label
+      type: required_label
       label: 'Label'
     recipients:
       type: sequence

@@ -34,7 +34,7 @@ class VocabularySerializationTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    Vocabulary::create(['vid' => 'test'])->save();
+    Vocabulary::create(['vid' => 'test', 'name' => 'Test'])->save();
   }
 
   public function testSerialization() {

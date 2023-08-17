@@ -28,14 +28,8 @@ class UserViewsFieldAccessTest extends FieldFieldAccessTestBase {
   }
 
   public function testUserFields() {
-    ConfigurableLanguage::create([
-      'id' => 'es',
-      'name' => 'Spanish',
-    ])->save();
-    ConfigurableLanguage::create([
-      'id' => 'fr',
-      'name' => 'French',
-    ])->save();
+    ConfigurableLanguage::createFromLangcode('es')->save();
+    ConfigurableLanguage::createFromLangcode('fr')->save();
 
     $user = User::create([
       'name' => 'test user',

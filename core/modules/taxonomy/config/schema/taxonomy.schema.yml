@@ -19,7 +19,7 @@ taxonomy.vocabulary.*:
   label: 'Vocabulary'
   mapping:
     name:
-      type: label
+      type: required_label
       label: 'Name'
     vid:
       type: machine_name

@@ -5,7 +5,7 @@ user.settings:
   label: 'User settings'
   mapping:
     anonymous:
-      type: label
+      type: required_label
       label: 'Name'
     verify_mail:
       type: boolean
@@ -111,7 +111,7 @@ user.role.*:
       type: machine_name
       label: 'ID'
     label:
-      type: label
+      type: required_label
       label: 'Label'
     weight:
       type: integer

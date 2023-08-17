@@ -45,6 +45,7 @@ class InitialStateTest extends KernelTestBase {
   public function testInitialState() {
     $node_type = NodeType::create([
       'type' => 'example',
+      'name' => 'Example',
     ]);
     $node_type->save();
 

@@ -73,6 +73,7 @@ class DisplayModeUpdateTest extends FieldKernelTestBase {
     // Create a view-mode 'foobar', create view-display that uses it.
     EntityViewMode::create([
       'id' => 'entity_test.foobar',
+      'label' => 'Foobar',
       'targetEntityType' => 'entity_test',
       'status' => TRUE,
       'enabled' => TRUE,
@@ -89,6 +90,7 @@ class DisplayModeUpdateTest extends FieldKernelTestBase {
     // Create a new form-mode 'foobar', create form-display that uses it.
     EntityFormMode::create([
       'id' => 'entity_test.foobar',
+      'label' => 'Foobar',
       'targetEntityType' => 'entity_test',
       'status' => TRUE,
       'enabled' => TRUE,

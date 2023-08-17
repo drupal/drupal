@@ -69,6 +69,7 @@ final class LinksetControllerTest extends LinksetControllerTestBase {
 
     NodeType::create([
       'type' => 'page',
+      'name' => 'Page',
     ])->save();
 
     $home_page_link = $this->createMenuItem([

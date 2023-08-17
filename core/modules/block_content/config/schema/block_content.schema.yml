@@ -8,7 +8,7 @@ block_content.type.*:
       type: machine_name
       label: 'ID'
     label:
-      type: label
+      type: required_label
       label: 'Label'
     revision:
       type: integer

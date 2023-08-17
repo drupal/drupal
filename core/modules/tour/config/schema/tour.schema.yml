@@ -13,7 +13,7 @@ tour.tour.*:
           pattern: '/^[a-z0-9_-]+$/'
           message: "The %value machine name is not valid."
     label:
-      type: label
+      type: required_label
       label: 'Label'
     module:
       type: string
@@ -42,7 +42,7 @@ tour.tip:
       type: string
       label: 'Plugin'
     label:
-      type: label
+      type: required_label
       label: 'Label'
     weight:
       type: integer

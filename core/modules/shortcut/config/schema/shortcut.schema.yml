@@ -17,7 +17,7 @@ shortcut.set.*:
         Length:
           max: 23
     label:
-      type: label
+      type: required_label
       label: 'Label'
 
 # Schema for theme settings.

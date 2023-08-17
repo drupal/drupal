@@ -55,7 +55,7 @@ class TermParentsTest extends BrowserTestBase {
     $this->termStorage = $entity_type_manager->getStorage('taxonomy_term');
     $this->state = $this->container->get('state');
 
-    Vocabulary::create(['vid' => $this->vocabularyId])->save();
+    Vocabulary::create(['vid' => $this->vocabularyId, 'name' => 'Test'])->save();
     $this->drupalLogin($this->drupalCreateUser(['administer taxonomy']));
   }
 

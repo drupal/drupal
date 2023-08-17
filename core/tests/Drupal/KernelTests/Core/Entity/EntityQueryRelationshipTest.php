@@ -71,6 +71,7 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
     // storage and a field. First, create the vocabulary.
     $vocabulary = Vocabulary::create([
       'vid' => $this->randomMachineName(),
+      'name' => 'Tags',
     ]);
     $vocabulary->save();
 

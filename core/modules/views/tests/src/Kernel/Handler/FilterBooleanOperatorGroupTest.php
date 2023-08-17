@@ -51,7 +51,10 @@ class FilterBooleanOperatorGroupTest extends ViewsKernelTestBase {
     $this->installSchema('node', ['node_access']);
     $this->installConfig(['node']);
 
-    $node_type = NodeType::create(['type' => 'page']);
+    $node_type = NodeType::create([
+      'type' => 'page',
+      'name' => 'Page',
+    ]);
     $node_type->setDisplaySubmitted(FALSE);
     $node_type->save();
 

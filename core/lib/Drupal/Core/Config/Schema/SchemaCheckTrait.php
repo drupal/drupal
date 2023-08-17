@@ -2,7 +2,10 @@
 
 namespace Drupal\Core\Config\Schema;
 
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Config\Entity\ConfigEntityType;
 use Drupal\Core\Config\TypedConfigManagerInterface;
+use Drupal\Core\Entity\Plugin\DataType\ConfigEntityAdapter;
 use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\Core\TypedData\TraversableTypedDataInterface;
 use Drupal\Core\TypedData\Type\BooleanInterface;
@@ -25,6 +28,31 @@ trait SchemaCheckTrait {
    * The configuration object name under test.
    */
   protected string $configName;
+
+  /**
+   * The ignored property paths.
+   *
+   * Allow ignoring specific config schema types (top-level keys, require an
+   * exact match to one of the top-level entries in *.schema.yml files) by
+   * allowing one or more partial property path matches.
+   *
+   * Keys must be an exact match for a Config object's schema type.
+   * Values must be wildcard matches for property paths, where any property
+   * path segment can use a wildcard (`*`) to indicate any value for that
+   * segment should be accepted for this property path to be ignored.
+   *
+   * @var \string[][]
+   */
+  protected static array $ignoredPropertyPaths = [
+    'search.page.*' => [
+      // @todo Fix config or tweak schema of `type: search.page.*` in
+      //   https://drupal.org/i/3380475.
+      // @see search.schema.yml
+      'label' => [
+        'This value should not be blank.',
+      ],
+    ],
+  ];
 
   /**
    * Checks the TypedConfigManager has a valid schema for the configuration.
@@ -61,12 +89,9 @@ trait SchemaCheckTrait {
     // Also perform explicit validation. Note this does NOT require every node
     // in the config schema tree to have validation constraints defined.
     $violations = $this->schema->validate();
-    $ignored_validation_constraint_messages = [
-      // Currently none!
-    ];
     $filtered_violations = array_filter(
       iterator_to_array($violations),
-      fn (ConstraintViolation $v) => preg_match(sprintf("/^(%s)$/", implode('|', $ignored_validation_constraint_messages)), (string) $v->getMessage()) !== 1
+      fn (ConstraintViolation $v) => !static::isViolationForIgnoredPropertyPath($v),
     );
     $validation_errors = array_map(
       fn (ConstraintViolation $v) => sprintf("[%s] %s", $v->getPropertyPath(), (string) $v->getMessage()),
@@ -88,6 +113,68 @@ trait SchemaCheckTrait {
       return TRUE;
     }
     return $errors;
+  }
+
+  /**
+   * Determines whether this violation is for an ignored Config property path.
+   *
+   * @param \Symfony\Component\Validator\ConstraintViolation $v
+   *   A validation constraint violation for a Config object.
+   *
+   * @return bool
+   */
+  protected static function isViolationForIgnoredPropertyPath(ConstraintViolation $v): bool {
+    // When the validated object is a config entity wrapped in a
+    // ConfigEntityAdapter, some work is necessary to map from e.g.
+    // `entity:comment_type` to the corresponding `comment.type.*`.
+    if ($v->getRoot() instanceof ConfigEntityAdapter) {
+      $config_entity = $v->getRoot()->getEntity();
+      assert($config_entity instanceof ConfigEntityInterface);
+      $config_entity_type = $config_entity->getEntityType();
+      assert($config_entity_type instanceof ConfigEntityType);
+      $config_prefix = $config_entity_type->getConfigPrefix();
+      // Compute the data type of the config object being validated:
+      // - the config entity type's config prefix
+      // - with as many `.*`-suffixes appended as there are parts in the ID (for
+      //   example, for NodeType there's only 1 part, for EntityViewDisplay
+      //   there are 3 parts.)
+      // TRICKY: in principle it is possible to compute the exact number of
+      // suffixes by inspecting ConfigEntity::getConfigDependencyName(), except
+      // when the entity ID itself is invalid. Unfortunately that means
+      // gradually discovering it is the only available alternative.
+      $suffix_count = 1;
+      do {
+        $config_object_data_type = $config_prefix . str_repeat('.*', $suffix_count);
+        $suffix_count++;
+      } while ($suffix_count <= 3 && !array_key_exists($config_object_data_type, static::$ignoredPropertyPaths));
+    }
+    else {
+      $config_object_data_type = $v->getRoot()
+        ->getDataDefinition()
+        ->getDataType();
+    }
+    if (!array_key_exists($config_object_data_type, static::$ignoredPropertyPaths)) {
+      return FALSE;
+    }
+
+    foreach (static::$ignoredPropertyPaths[$config_object_data_type] as $ignored_property_path_expression => $ignored_validation_constraint_messages) {
+      // Convert the wildcard-based expression to a regex: treat `*` nor in the
+      // regex sense nor as something to be escaped: treat it as the wildcard
+      // for a segment in a property path (property path segments are separated
+      // by periods).
+      // That requires first ensuring that preg_quote() does not escape it, and
+      // then replacing it with an appropriate regular expression: `[^\.]+`,
+      // which means: ">=1 characters that are anything except a period".
+      $ignored_property_path_regex = str_replace(' ', '[^\.]+', preg_quote(str_replace('*', ' ', $ignored_property_path_expression)));
+
+      // To ignore this violation constraint, require a match on both the
+      // property path and the message.
+      $property_path_match = preg_match('/^' . $ignored_property_path_regex . '$/', $v->getPropertyPath(), $matches) === 1;
+      if ($property_path_match) {
+        return preg_match(sprintf("/^(%s)$/", implode('|', $ignored_validation_constraint_messages)), (string) $v->getMessage()) === 1;
+      }
+    }
+    return FALSE;
   }
 
   /**

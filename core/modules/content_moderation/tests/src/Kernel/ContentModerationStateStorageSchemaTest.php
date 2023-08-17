@@ -46,6 +46,7 @@ class ContentModerationStateStorageSchemaTest extends KernelTestBase {
 
     NodeType::create([
       'type' => 'example',
+      'name' => 'Example',
     ])->save();
     $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example');

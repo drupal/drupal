@@ -412,7 +412,10 @@ class FilterAdminTest extends BrowserTestBase {
    */
   public function testDisabledFormat() {
     // Create a node type and add a standard body field.
-    $node_type = NodeType::create(['type' => $this->randomMachineName()]);
+    $node_type = NodeType::create([
+      'type' => $this->randomMachineName(),
+      'name' => $this->randomString(),
+    ]);
     $node_type->save();
     node_add_body_field($node_type, $this->randomString());
 

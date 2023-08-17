@@ -13,7 +13,7 @@ node.type.*:
   label: 'Content type'
   mapping:
     name:
-      type: label
+      type: required_label
       label: 'Name'
     type:
       type: machine_name

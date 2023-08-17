@@ -16,7 +16,7 @@ filter.format.*:
   label: 'Text formats'
   mapping:
     name:
-      type: label
+      type: required_label
       label: 'Name'
     format:
       type: machine_name

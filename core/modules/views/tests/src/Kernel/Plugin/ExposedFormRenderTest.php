@@ -57,8 +57,10 @@ class ExposedFormRenderTest extends ViewsKernelTestBase {
    * Tests the exposed form raw input.
    */
   public function testExposedFormRawInput() {
-    $node_type = NodeType::create(['type' => 'article']);
-    $node_type->save();
+    NodeType::create([
+      'type' => 'article',
+      'name' => 'Article',
+    ])->save();
 
     $view = Views::getView('test_exposed_form_buttons');
     $view->setDisplay();

@@ -102,9 +102,11 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
 
     NodeType::create([
       'type' => $this->randomMachineName(),
+      'name' => $this->randomString(),
     ])->save();
     CommentType::create([
       'id' => $this->randomMachineName(),
+      'label' => $this->randomString(),
       'target_entity_type_id' => 'node',
     ])->save();
 

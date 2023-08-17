@@ -75,7 +75,7 @@ search.page.*:
       type: machine_name
       label: 'ID'
     label:
-      type: label
+      type: required_label
       label: 'Label'
     path:
       type: string

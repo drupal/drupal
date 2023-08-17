@@ -313,6 +313,7 @@ class CommentInterfaceTest extends CommentTestBase {
     EntityViewMode::create([
       'targetEntityType' => 'comment',
       'id' => "comment.$mode",
+      'label' => 'Comment test',
     ])->save();
     // Create the corresponding entity view display for article node-type. Note
     // that this new view display mode doesn't contain the comment body.

@@ -30,7 +30,7 @@ class NodeAccessCacheabilityWithNodeGrants extends BrowserTestBase {
    * Tests node view access cacheability with node grants.
    */
   public function testAccessCacheabilityWithNodeGrants() {
-    NodeType::create(['type' => 'page'])->save();
+    NodeType::create(['type' => 'page', 'name' => 'Page'])->save();
     $this->createEntityReferenceField('node', 'page', 'ref', 'Ref', 'node');
     EntityViewDisplay::create([
       'targetEntityType' => 'node',

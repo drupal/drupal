@@ -154,6 +154,7 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
     $this->installSchema('file', ['file_usage']);
     NodeType::create([
       'type' => 'referencer',
+      'name' => 'Referencer',
     ])->save();
     $this->createEntityReferenceField('node', 'referencer', 'field_user', 'User', 'user', 'default', ['target_bundles' => NULL], 1);
     $this->createEntityReferenceField('node', 'referencer', 'field_users', 'Users', 'user', 'default', ['target_bundles' => NULL], FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);

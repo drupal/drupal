@@ -44,7 +44,7 @@ class FieldEntityTranslationTest extends ViewTestBase {
 
     $node_type = NodeType::create([
       'type' => 'article',
-      'label' => 'Article',
+      'name' => 'Article',
     ]);
     $node_type->save();
 

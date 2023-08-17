@@ -34,7 +34,7 @@ class FileViewsFieldAccessTest extends FieldFieldAccessTestBase {
   public function testFileFields() {
     ConfigurableLanguage::create([
       'id' => 'fr',
-      'name' => 'French',
+      'label' => 'French',
     ])->save();
 
     $user = User::create([

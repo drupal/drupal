@@ -64,6 +64,7 @@ class CommentIntegrationTest extends KernelTestBase {
       'id' => "comment.$mode",
       'targetEntityType' => 'comment',
       'settings' => ['comment_type' => 'comment'],
+      'label' => $mode,
     ])->save();
     EntityViewDisplay::create([
       'targetEntityType' => 'comment',

@@ -51,7 +51,7 @@ class BookMultilingualTest extends KernelTestBase {
     parent::setUp();
     // Create the translation language.
     $this->installConfig(['language']);
-    ConfigurableLanguage::create(['id' => self::LANGCODE])->save();
+    ConfigurableLanguage::createFromLangcode(self::LANGCODE)->save();
     // Set up language negotiation.
     $config = $this->config('language.types');
     $config->set('configurable', [

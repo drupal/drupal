@@ -49,6 +49,7 @@ class NodeFieldAccessTest extends EntityKernelTestBase {
     // Create the page node type with revisions disabled.
     $page = NodeType::create([
       'type' => 'page',
+      'name' => 'Page',
       'new_revision' => FALSE,
     ]);
     $page->save();
@@ -56,6 +57,7 @@ class NodeFieldAccessTest extends EntityKernelTestBase {
     // Create the article node type with revisions enabled.
     $article = NodeType::create([
       'type' => 'article',
+      'name' => 'Article',
       'new_revision' => TRUE,
     ]);
     $article->save();

@@ -144,20 +144,21 @@ class TestViewsTest extends KernelTestBase {
     $this->installConfig('system');
     // `node.type.article` is a config dependency.
     // @see core/modules/options/tests/options_test_views/test_views/views.view.test_options_list_argument_numeric.yml
-    NodeType::create(['type' => 'article'])->save();
+    NodeType::create(['type' => 'article', 'name' => 'Article'])->save();
     // `node.type.page` is a config dependency.
     // @see core/modules/views/tests/modules/views_test_config/test_views/views.view.test_argument_default_node.yml
-    NodeType::create(['type' => 'page'])->save();
+    NodeType::create(['type' => 'page', 'name' => 'Page'])->save();
     // `taxonomy.vocabulary.tags` is a config dependency.
     // @see core/modules/taxonomy/tests/modules/taxonomy_test_views/test_views/views.view.test_taxonomy_exposed_grouped_filter.yml
-    Vocabulary::create(['vid' => 'tags'])->save();
+    Vocabulary::create(['vid' => 'tags', 'name' => 'Tags'])->save();
     // `taxonomy.vocabulary.test_exposed_checkboxes` is a config dependency.
     // @see core/modules/views/tests/modules/views_test_config/test_views/views.view.test_exposed_form_checkboxes.yml
-    Vocabulary::create(['vid' => 'test_exposed_checkboxes'])->save();
+    Vocabulary::create(['vid' => 'test_exposed_checkboxes', 'name' => 'Exposed checkboxes test'])->save();
     // `core.entity_view_mode.node.default` is a config dependency.
     // @see core/modules/views/tests/modules/views_test_config/test_views/views.view.test_entity_field_renderered_entity.yml
     EntityViewMode::create([
       'id' => 'node.default',
+      'label' => 'Default',
       'targetEntityType' => 'node',
     ])->save();
     // `field.storage.node.field_link` is a config dependency.

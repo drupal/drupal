@@ -489,9 +489,15 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     $response = $this->request('GET', Url::fromUri('internal:/jsonapi/node/dog'), $request_options);
     $this->assertSame(404, $response->getStatusCode());
 
-    $node_type_dog = NodeType::create(['type' => 'dog']);
+    $node_type_dog = NodeType::create([
+      'type' => 'dog',
+      'name' => 'Dog',
+    ]);
     $node_type_dog->save();
-    NodeType::create(['type' => 'cat'])->save();
+    NodeType::create([
+      'type' => 'cat',
+      'name' => 'Cat',
+    ])->save();
     \Drupal::service('router.builder')->rebuildIfNeeded();
 
     $response = $this->request('GET', Url::fromUri('internal:/jsonapi/node/dog'), $request_options);
@@ -596,7 +602,10 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     $anonymous_role->grantPermission('access content');
     $anonymous_role->trustData()->save();
 
-    NodeType::create(['type' => 'emu_fact'])->save();
+    NodeType::create([
+      'type' => 'emu_fact',
+      'name' => 'Emu Fact',
+    ])->save();
     \Drupal::service('router.builder')->rebuildIfNeeded();
 
     $node = Node::create([

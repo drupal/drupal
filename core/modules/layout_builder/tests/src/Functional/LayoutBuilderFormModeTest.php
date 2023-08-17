@@ -67,6 +67,7 @@ class LayoutBuilderFormModeTest extends BrowserTestBase {
     // Add the form mode and show the field with a constraint.
     EntityFormMode::create([
       'id' => 'entity_test.layout_builder',
+      'label' => 'Layout Builder',
       'targetEntityType' => 'entity_test',
     ])->save();
     EntityFormDisplay::create([

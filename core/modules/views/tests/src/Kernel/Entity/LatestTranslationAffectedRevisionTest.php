@@ -39,7 +39,10 @@ class LatestTranslationAffectedRevisionTest extends ViewsKernelTestBase {
     $this->installSchema('node', ['node_access']);
 
     ConfigurableLanguage::createFromLangcode('fr')->save();
-    NodeType::create(['type' => 'article'])->save();
+    NodeType::create([
+      'type' => 'article',
+      'name' => 'Article',
+    ])->save();
     $node = Node::create([
       'title' => 'Original translation - default revision',
       'type' => 'test',

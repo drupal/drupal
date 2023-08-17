@@ -61,6 +61,7 @@ class GroupedExposedFilterTest extends WebDriverTestBase {
     // Setup a node type that has the right fields for the test view.
     NodeType::create([
       'type' => 'page',
+      'name' => 'Page',
     ])->save();
 
     FieldConfig::create([

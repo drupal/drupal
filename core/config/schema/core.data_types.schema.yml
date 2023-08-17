@@ -60,7 +60,7 @@ sequence:
 # Human readable string that must be plain text and editable with a text field.
 label:
   type: string
-  label: 'Label'
+  label: 'Optional label'
   translatable: true
   constraints:
     Regex:
@@ -71,6 +71,12 @@ label:
       pattern: '/(\r\n|\r|\n)/'
       match: false
       message: 'Labels are not allowed to span multiple lines.'
+
+required_label:
+  type: label
+  label: 'Label'
+  constraints:
+    NotBlank: {}
 
 # String containing plural variants, separated by EXT.
 plural_label:
@@ -162,7 +168,7 @@ mail:
   label: 'Mail'
   mapping:
     subject:
-      type: label
+      type: required_label
       label: 'Subject'
     body:
       type: text
@@ -412,7 +418,7 @@ display_variant.plugin:
       type: string
       label: 'ID'
     label:
-      type: label
+      type: required_label
       label: 'Label'
     weight:
       type: integer
@@ -459,7 +465,7 @@ field_config_base:
       type: string
       label: 'Bundle'
     label:
-      type: label
+      type: required_label
       label: 'Label'
     description:
       type: text
@@ -497,7 +503,7 @@ core.date_format.*:
       type: string
       label: 'ID'
     label:
-      type: label
+      type: required_label
       label: 'Label'
     locked:
       type: boolean
@@ -689,10 +695,10 @@ field.field_settings.boolean:
   type: mapping
   mapping:
     on_label:
-      type: label
+      type: required_label
       label: 'On label'
     off_label:
-      type: label
+      type: required_label
       label: 'Off label'
 
 field.value.boolean:

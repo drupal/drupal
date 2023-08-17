@@ -6,7 +6,7 @@ workflows.workflow.*:
       type: machine_name
       label: 'ID'
     label:
-      type: label
+      type: required_label
       label: 'Label'
     type:
       type: string

@@ -725,6 +725,9 @@ class ContentModerationStateTest extends KernelTestBase {
         $bundle_entity = $bundle_entity_storage->create([
           $bundle_entity_type->getKey('id') => 'example',
         ]);
+        if ($bundle_entity_type->hasKey('label')) {
+          $bundle_entity->set($bundle_entity_type->getKey('label'), $this->randomMachineName());
+        }
         if ($entity_type_id == 'media') {
           $bundle_entity->set('source', 'test');
           $bundle_entity->save();

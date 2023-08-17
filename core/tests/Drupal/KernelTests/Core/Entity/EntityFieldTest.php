@@ -745,8 +745,10 @@ class EntityFieldTest extends EntityKernelTestBase {
     $this->assertEquals(1, $violations->count());
 
     // Test bundle validation.
-    NodeType::create(['type' => 'article'])
-      ->save();
+    NodeType::create([
+      'type' => 'article',
+      'name' => 'Article',
+    ])->save();
     $definition = BaseFieldDefinition::create('entity_reference')
       ->setLabel('Test entity')
       ->setSetting('target_type', 'node')

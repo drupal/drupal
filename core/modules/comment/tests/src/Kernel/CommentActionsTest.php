@@ -59,6 +59,7 @@ class CommentActionsTest extends EntityKernelTestBase {
     DateFormat::create([
       'id' => 'fallback',
       'pattern' => 'D, m/d/Y - H:i',
+      'label' => 'Fallback',
     ])->save();
 
     // Create format without filters to prevent filtering.

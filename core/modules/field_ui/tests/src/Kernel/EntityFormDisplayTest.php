@@ -209,7 +209,11 @@ class EntityFormDisplayTest extends KernelTestBase {
     $field->save();
 
     // Create default and compact entity display.
-    EntityFormMode::create(['id' => 'entity_test.compact', 'targetEntityType' => 'entity_test'])->save();
+    EntityFormMode::create([
+      'id' => 'entity_test.compact',
+      'label' => 'Compact',
+      'targetEntityType' => 'entity_test',
+    ])->save();
     EntityFormDisplay::create([
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',

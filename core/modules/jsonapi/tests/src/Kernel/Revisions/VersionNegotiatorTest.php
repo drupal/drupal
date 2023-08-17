@@ -83,6 +83,7 @@ class VersionNegotiatorTest extends JsonapiKernelTestBase {
     $this->installSchema('user', ['users_data']);
     $type = NodeType::create([
       'type' => 'dummy',
+      'name' => 'Dummy',
       'new_revision' => TRUE,
     ]);
     $type->save();

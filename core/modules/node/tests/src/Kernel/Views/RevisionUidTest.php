@@ -74,6 +74,7 @@ class RevisionUidTest extends ViewsKernelTestBase {
 
     $node_type = NodeType::create([
       'type' => 'page',
+      'name' => 'Page',
     ]);
     $node_type->save();
     $node = Node::create([

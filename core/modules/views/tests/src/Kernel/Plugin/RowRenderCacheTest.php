@@ -66,8 +66,10 @@ class RowRenderCacheTest extends ViewsKernelTestBase {
     $this->installEntitySchema('node');
     $this->installSchema('node', 'node_access');
 
-    $type = NodeType::create(['type' => 'test']);
-    $type->save();
+    NodeType::create([
+      'type' => 'test',
+      'name' => 'Test',
+    ])->save();
 
     $this->editorUser = $this->createUser(['bypass node access']);
     $this->powerUser = $this->createUser(['access content', 'create test content', 'edit own test content', 'delete own test content']);

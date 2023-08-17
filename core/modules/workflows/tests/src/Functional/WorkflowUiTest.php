@@ -91,6 +91,7 @@ class WorkflowUiTest extends BrowserTestBase {
   public function testStateMachineNameValidation() {
     Workflow::create([
       'id' => 'test_workflow',
+      'label' => 'Test workflow',
       'type' => 'workflow_type_test',
     ])->save();
 

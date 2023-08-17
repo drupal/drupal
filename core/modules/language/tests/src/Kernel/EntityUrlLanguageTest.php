@@ -42,8 +42,8 @@ class EntityUrlLanguageTest extends LanguageTestBase {
 
     // In order to reflect the changes for a multilingual site in the container
     // we have to rebuild it.
-    ConfigurableLanguage::create(['id' => 'es'])->save();
-    ConfigurableLanguage::create(['id' => 'fr'])->save();
+    ConfigurableLanguage::createFromLangcode('es')->save();
+    ConfigurableLanguage::createFromLangcode('fr')->save();
 
     $config = $this->config('language.negotiation');
     $config->set('url.prefixes', ['en' => 'en', 'es' => 'es', 'fr' => 'fr'])

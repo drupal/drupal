@@ -184,7 +184,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['mapping']['status']['label'] = 'Status';
     $expected['mapping']['dependencies']['type'] = 'config_dependencies';
     $expected['mapping']['dependencies']['label'] = 'Dependencies';
-    $expected['mapping']['label']['type'] = 'label';
+    $expected['mapping']['label']['type'] = 'required_label';
     $expected['mapping']['label']['label'] = 'Label';
     $expected['mapping']['effects']['type'] = 'sequence';
     $expected['mapping']['effects']['sequence']['type'] = 'mapping';

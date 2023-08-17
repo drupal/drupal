@@ -81,9 +81,7 @@ abstract class OptionsTestBase extends ViewsKernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
 
-    NodeType::create(
-      ['type' => 'article']
-    )->save();
+    NodeType::create(['type' => 'article', 'name' => 'Article'])->save();
     $this->fieldValues = [
       $this->randomMachineName(),
       $this->randomMachineName(),

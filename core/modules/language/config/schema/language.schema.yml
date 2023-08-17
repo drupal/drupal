@@ -92,7 +92,7 @@ language.entity.*:
       type: string
       label: 'ID'
     label:
-      type: label
+      type: required_label
       label: 'Label'
     direction:
       type: string

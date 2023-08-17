@@ -111,7 +111,11 @@ class DisplayApiTest extends FieldKernelTestBase {
       ->setComponent($this->fieldName, $this->displayOptions['default'])
       ->save();
     // Create a display for the teaser view mode.
-    EntityViewMode::create(['id' => 'entity_test.teaser', 'targetEntityType' => 'entity_test'])->save();
+    EntityViewMode::create([
+      'id' => 'entity_test.teaser',
+      'label' => 'Teaser',
+      'targetEntityType' => 'entity_test',
+    ])->save();
     $display_repository->getViewDisplay($field['entity_type'], $field['bundle'], 'teaser')
       ->setComponent($this->fieldName, $this->displayOptions['teaser'])
       ->save();
