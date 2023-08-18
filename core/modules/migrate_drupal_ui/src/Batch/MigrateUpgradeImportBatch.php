@@ -362,8 +362,13 @@ class MigrateUpgradeImportBatch {
     else {
       $type = 'error';
     }
+    $migration_id = $event->getMigration()->getPluginId();
     $source_id_string = implode(',', $event->getSourceIdValues());
-    $message = t('Source ID @source_id: @message', ['@source_id' => $source_id_string, '@message' => $event->getMessage()]);
+    $message = t('Migration @migration_id: Source ID @source_id: @message', [
+      '@migration_id' => $migration_id,
+      '@source_id' => $source_id_string,
+      '@message' => $event->getMessage(),
+    ]);
     static::$messages->display($message, $type);
   }
 
