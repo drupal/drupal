@@ -79,7 +79,7 @@ class FieldTypeCategoryManager extends DefaultPluginManager implements FieldType
    * {@inheritdoc}
    */
   public function getFallbackPluginId($plugin_id, array $configuration = []): string {
-    return 'general';
+    return FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY;
   }
 
 }

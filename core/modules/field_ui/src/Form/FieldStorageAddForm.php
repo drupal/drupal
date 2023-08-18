@@ -156,7 +156,7 @@ class FieldStorageAddForm extends FormBase {
     ];
 
     $field_type_options = $unique_definitions = [];
-    $grouped_definitions = $this->fieldTypePluginManager->getGroupedDefinitions($this->fieldTypePluginManager->getUiDefinitions());
+    $grouped_definitions = $this->fieldTypePluginManager->getGroupedDefinitions($this->fieldTypePluginManager->getUiDefinitions(), 'label', 'id');
     // Invoke a hook to get category properties.
     foreach ($grouped_definitions as $category => $field_types) {
       foreach ($field_types as $name => $field_type) {
@@ -164,6 +164,9 @@ class FieldStorageAddForm extends FormBase {
         if ($this->fieldTypeCategoryManager->hasDefinition($category)) {
           $category_plugin = $this->fieldTypeCategoryManager->createInstance($category, $unique_definitions[$category][$name]);
           $field_type_options[$category_plugin->getPluginId()] = ['unique_identifier' => $name] + $field_type;
+        }
+        else {
+          $field_type_options[(string) $field_type['label']] = ['unique_identifier' => $name] + $field_type;
         }
       }
     }

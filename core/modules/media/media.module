@@ -9,7 +9,7 @@ use Drupal\Component\Plugin\DerivativeInspectionInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Field\FieldTypePluginManager;
+use Drupal\Core\Field\FieldTypeCategoryManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\RenderElement;
@@ -187,7 +187,7 @@ function media_field_ui_preconfigured_options_alter(array &$options, $field_type
   if (!empty($options['media'])) {
     $options['media']['description'] = t('Field to reference media. Allows uploading and selecting from uploaded media.');
     $options['media']['weight'] = -25;
-    $options['media']['category'] = FieldTypePluginManager::DEFAULT_CATEGORY;
+    $options['media']['category'] = FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY;
     $options['media']['entity_view_display']['type'] = 'entity_reference_entity_view';
   }
 }
