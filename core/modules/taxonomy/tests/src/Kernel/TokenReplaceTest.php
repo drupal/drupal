@@ -1,16 +1,25 @@
 <?php
 
-namespace Drupal\Tests\taxonomy\Functional;
+namespace Drupal\Tests\taxonomy\Kernel;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\node\Entity\NodeType;
+use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
+use Drupal\Tests\node\Traits\NodeCreationTrait;
+use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 
 /**
  * Tests taxonomy token replacement.
  *
  * @group taxonomy
  */
-class TokenReplaceTest extends TaxonomyTestBase {
+class TokenReplaceTest extends KernelTestBase {
+
+  use EntityReferenceTestTrait;
+  use NodeCreationTrait;
+  use TaxonomyTestTrait;
 
   /**
    * The vocabulary used for creating terms.
@@ -29,17 +38,35 @@ class TokenReplaceTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected static $modules = [
+    'system',
+    'user',
+    'field',
+    'filter',
+    'text',
+    'node',
+    'taxonomy',
+  ];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->drupalLogin($this->drupalCreateUser([
-      'administer taxonomy',
-      'bypass node access',
-    ]));
+
+    $this->installEntitySchema('user');
+    $this->installEntitySchema('node');
+    $this->installEntitySchema('taxonomy_term');
+    $this->installSchema('node', 'node_access');
+    $this->installConfig(['filter']);
+    $this->installConfig(['taxonomy']);
+
+    $type = NodeType::create([
+      'type' => 'article',
+      'name' => 'Article',
+    ]);
+    $type->save();
+
     $this->vocabulary = $this->createVocabulary();
     $this->fieldName = 'taxonomy_' . $this->vocabulary->id();
 
@@ -74,21 +101,16 @@ class TokenReplaceTest extends TaxonomyTestBase {
 
     // Create two taxonomy terms.
     $term1 = $this->createTerm($this->vocabulary);
-    $term2 = $this->createTerm($this->vocabulary);
-
-    // Edit $term2, setting $term1 as parent.
-    $edit = [];
-    $edit['name[0][value]'] = '<blink>Blinking Text</blink>';
-    $edit['parent[]'] = [$term1->id()];
-    $this->drupalGet('taxonomy/term/' . $term2->id() . '/edit');
-    $this->submitForm($edit, 'Save');
+    // Set $term1 as parent of $term2.
+    $term2 = $this->createTerm($this->vocabulary, [
+      'parent' => $term1->id(),
+    ]);
 
     // Create node with term2.
-    $edit = [];
-    $node = $this->drupalCreateNode(['type' => 'article']);
-    $edit[$this->fieldName . '[]'] = $term2->id();
-    $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->submitForm($edit, 'Save');
+    $node = $this->createNode([
+      'type' => 'article',
+      $this->fieldName => $term2->id(),
+    ]);
 
     // Generate and test sanitized tokens for term1.
     $tests = [];
