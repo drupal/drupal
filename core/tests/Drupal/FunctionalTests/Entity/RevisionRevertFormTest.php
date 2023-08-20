@@ -5,6 +5,7 @@ namespace Drupal\FunctionalTests\Entity;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\entity_test\Entity\EntityTestRev;
+use Drupal\entity_test\Entity\EntityTestRevPub;
 use Drupal\entity_test_revlog\Entity\EntityTestWithRevisionLog;
 use Drupal\Tests\BrowserTestBase;
 
@@ -91,11 +92,11 @@ class RevisionRevertFormTest extends BrowserTestBase {
   }
 
   /**
-   * Test cannot revert latest revision.
+   * Test cannot revert latest default revision.
    *
    * @covers \Drupal\Core\Entity\EntityAccessControlHandler::checkAccess
    */
-  public function testAccessRevertLatest(): void {
+  public function testAccessRevertLatestDefault(): void {
     /** @var \Drupal\entity_test\Entity\EntityTestRev $entity */
     $entity = EntityTestRev::create();
     $entity->setName('revert');
@@ -106,6 +107,31 @@ class RevisionRevertFormTest extends BrowserTestBase {
 
     $this->drupalGet($entity->toUrl('revision-revert-form'));
     $this->assertSession()->statusCodeEquals(403);
+    $this->assertFalse($entity->access('revert', $this->rootUser, FALSE));
+  }
+
+  /**
+   * Ensures that forward revisions can be reverted.
+   *
+   * @covers \Drupal\Core\Entity\EntityAccessControlHandler::checkAccess
+   */
+  public function testAccessRevertLatestForwardRevision(): void {
+    /** @var \Drupal\entity_test\Entity\EntityTestRev $entity */
+    $entity = EntityTestRevPub::create();
+    $entity->setName('revert');
+    $entity->isDefaultRevision(TRUE);
+    $entity->setPublished();
+    $entity->setNewRevision();
+    $entity->save();
+
+    $entity->isDefaultRevision(FALSE);
+    $entity->setUnpublished();
+    $entity->setNewRevision();
+    $entity->save();
+
+    $this->drupalGet($entity->toUrl('revision-revert-form'));
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertTrue($entity->access('revert', $this->rootUser, FALSE));
   }
 
   /**
@@ -128,6 +154,7 @@ class RevisionRevertFormTest extends BrowserTestBase {
       ->loadRevision($revisionId);
     $this->drupalGet($revision->toUrl('revision-revert-form'));
     $this->assertSession()->statusCodeEquals(200);
+    $this->assertTrue($revision->access('revert', $this->rootUser, FALSE));
   }
 
   /**

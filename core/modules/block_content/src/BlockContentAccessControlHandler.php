@@ -6,9 +6,9 @@ use Drupal\block_content\Access\DependentAccessInterface;
 use Drupal\block_content\Event\BlockContentGetDependencyEvent;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
+use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -57,7 +57,6 @@ class BlockContentAccessControlHandler extends EntityAccessControlHandler implem
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     assert($entity instanceof BlockContentInterface);
     $bundle = $entity->bundle();
-    $forbidIfNotDefaultAndLatest = fn (): AccessResultInterface => AccessResult::forbiddenIf($entity->isDefaultRevision() && $entity->isLatestRevision());
     $forbidIfNotReusable = fn (): AccessResultInterface => AccessResult::forbiddenIf($entity->isReusable() === FALSE, sprintf('Block content must be reusable to use `%s` operation', $operation));
     $access = match ($operation) {
       // Allow view and update access to user with the 'edit any (type) block
@@ -90,12 +89,11 @@ class BlockContentAccessControlHandler extends EntityAccessControlHandler implem
       'revert' => AccessResult::allowedIfHasPermissions($account, [
         'access block library',
         'revert any ' . $bundle . ' block content revisions',
-      ])->orIf($forbidIfNotDefaultAndLatest())->orIf($forbidIfNotReusable()),
+      ])->orIf($forbidIfNotReusable()),
       'delete revision' => AccessResult::allowedIfHasPermissions($account, [
         'access block library',
         'delete any ' . $bundle . ' block content revisions',
       ])
-        ->orIf($forbidIfNotDefaultAndLatest())
         ->orIf($forbidIfNotReusable())
         ->orIf(AccessResult::allowedIfHasPermissions($account, [
           'administer block content',

@@ -95,7 +95,7 @@ class RevisionDeleteFormTest extends BrowserTestBase {
    *
    * @covers \Drupal\Core\Entity\EntityAccessControlHandler::checkAccess
    */
-  public function testAccessDeleteLatest(): void {
+  public function testAccessDeleteLatestDefault(): void {
     /** @var \Drupal\entity_test\Entity\EntityTestRev $entity */
     $entity = EntityTestRev::create();
     $entity->setName('delete revision');
@@ -106,6 +106,32 @@ class RevisionDeleteFormTest extends BrowserTestBase {
 
     $this->drupalGet($entity->toUrl('revision-delete-form'));
     $this->assertSession()->statusCodeEquals(403);
+  }
+
+  /**
+   * Ensure that forward revision can be deleted.
+   *
+   * @covers \Drupal\Core\Entity\EntityAccessControlHandler::checkAccess
+   */
+  public function testAccessDeleteLatestForwardRevision(): void {
+    /** @var \Drupal\entity_test\Entity\EntityTestRevPub $entity */
+    $entity = EntityTestRevPub::create();
+    $entity->setName('delete revision');
+    $entity->save();
+
+    $entity->isDefaultRevision(TRUE);
+    $entity->setPublished();
+    $entity->setNewRevision();
+    $entity->save();
+
+    $entity->isDefaultRevision(FALSE);
+    $entity->setUnpublished();
+    $entity->setNewRevision();
+    $entity->save();
+
+    $this->drupalGet($entity->toUrl('revision-delete-form'));
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertTrue($entity->access('delete revision', $this->rootUser, FALSE));
   }
 
   /**
@@ -137,8 +163,9 @@ class RevisionDeleteFormTest extends BrowserTestBase {
     // Check default but not latest.
     $this->assertTrue($revision->isDefaultRevision());
     $this->assertFalse($revision->isLatestRevision());
-    $this->drupalGet($entity->toUrl('revision-delete-form'));
+    $this->drupalGet($revision->toUrl('revision-delete-form'));
     $this->assertSession()->statusCodeEquals(403);
+    $this->assertFalse($revision->access('delete revision', $this->rootUser, FALSE));
   }
 
   /**
@@ -162,6 +189,7 @@ class RevisionDeleteFormTest extends BrowserTestBase {
       ->loadRevision($revisionId);
     $this->drupalGet($revision->toUrl('revision-delete-form'));
     $this->assertSession()->statusCodeEquals(200);
+    $this->assertTrue($revision->access('delete revision', $this->rootUser, FALSE));
   }
 
   /**

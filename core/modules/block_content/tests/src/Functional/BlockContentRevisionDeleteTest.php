@@ -50,20 +50,31 @@ class BlockContentRevisionDeleteTest extends BlockContentTestBase {
     $this->drupalGet($entity->toUrl('revision-delete-form'));
     $this->assertSession()->statusCodeEquals(403);
 
-    // Create a new latest revision.
+    // Create a new non default revision.
     $entity
       ->setRevisionCreationTime((new \DateTimeImmutable('11 January 2009 5pm'))->getTimestamp())
       ->setRevisionTranslationAffected(TRUE)
       ->setNewRevision();
+    $entity->isDefaultRevision(FALSE);
     $entity->save();
+    $nonDefaultRevisionId = $entity->getRevisionId();
 
-    // Reload the entity.
+    // Reload the default entity.
     $revision = \Drupal::entityTypeManager()->getStorage('block_content')
       ->loadRevision($revisionId);
+    // Cannot delete default revision.
     $this->drupalGet($revision->toUrl('revision-delete-form'));
-    $this->assertSession()->pageTextContains('Are you sure you want to delete the revision from Sun, 01/11/2009 - 16:00?');
+    $this->assertSession()->statusCodeEquals(403);
+    $this->assertFalse($revision->access('delete revision', $this->adminUser, FALSE));
+
+    // Reload the non default entity.
+    $revision2 = \Drupal::entityTypeManager()->getStorage('block_content')
+      ->loadRevision($nonDefaultRevisionId);
+    $this->drupalGet($revision2->toUrl('revision-delete-form'));
+    $this->assertSession()->pageTextContains('Are you sure you want to delete the revision from Sun, 01/11/2009 - 17:00?');
     $this->assertSession()->buttonExists('Delete');
     $this->assertSession()->linkExists('Cancel');
+    $this->assertTrue($revision2->access('delete revision', $this->adminUser, FALSE));
 
     $countRevisions = static function (): int {
       return (int) \Drupal::entityTypeManager()->getStorage('block_content')
@@ -79,7 +90,7 @@ class BlockContentRevisionDeleteTest extends BlockContentTestBase {
     $this->assertEquals($count - 1, $countRevisions());
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->addressEquals(sprintf('admin/content/block/%s/revisions', $entity->id()));
-    $this->assertSession()->pageTextContains(sprintf('Revision from Sun, 01/11/2009 - 16:00 of basic %s has been deleted.', $entity->label()));
+    $this->assertSession()->pageTextContains(sprintf('Revision from Sun, 01/11/2009 - 17:00 of basic %s has been deleted.', $entity->label()));
     $this->assertSession()->elementsCount('css', 'table tbody tr', 1);
   }
 
