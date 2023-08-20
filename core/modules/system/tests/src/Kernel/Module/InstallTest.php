@@ -3,6 +3,7 @@
 namespace Drupal\Tests\system\Kernel\Module;
 
 use Drupal\Core\Extension\ExtensionNameLengthException;
+use Drupal\Core\Extension\ExtensionNameReservedException;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -117,6 +118,24 @@ class InstallTest extends KernelTestBase {
     $this->expectException(ExtensionNameLengthException::class);
     $this->expectExceptionMessage("Module name 'invalid_module_name_over_the_maximum_allowed_character_length' is over the maximum allowed length of 50 characters");
     $this->moduleInstaller->install([$module_name], FALSE);
+  }
+
+  /**
+   * Tests installing a module with the same name as an enabled theme.
+   */
+  public function testInstallModuleSameNameAsTheme() {
+    $name = 'name_collision_test';
+
+    // Install and uninstall the module.
+    $this->moduleInstaller->install([$name]);
+    $this->moduleInstaller->uninstall([$name]);
+
+    // Install the theme, then the module.
+    $this->container->get('theme_installer')->install([$name]);
+    $message = "Module name {$name} is already in use by an installed theme.";
+    $this->expectException(ExtensionNameReservedException::class);
+    $this->expectExceptionMessage($message);
+    $this->moduleInstaller->install([$name]);
   }
 
 }

@@ -4,6 +4,7 @@ namespace Drupal\KernelTests\Core\Theme;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\ExtensionNameLengthException;
+use Drupal\Core\Extension\ExtensionNameReservedException;
 use Drupal\Core\Extension\MissingDependencyException;
 use Drupal\Core\Extension\ModuleUninstallValidatorException;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
@@ -143,12 +144,30 @@ class ThemeInstallerTest extends KernelTestBase {
   }
 
   /**
+   * Tests installing a theme with the same name as an enabled module.
+   */
+  public function testInstallThemeSameNameAsModule() {
+    $name = 'name_collision_test';
+
+    // Install and uninstall the theme.
+    $this->themeInstaller()->install([$name]);
+    $this->themeInstaller()->uninstall([$name]);
+
+    // Install the module, then the theme.
+    $this->moduleInstaller()->install([$name]);
+    $message = "Theme name {$name} is already in use by an installed module.";
+    $this->expectException(ExtensionNameReservedException::class);
+    $this->expectExceptionMessage($message);
+    $this->themeInstaller()->install([$name]);
+  }
+
+  /**
    * Tests installing a theme with unmet module dependencies.
    *
    * @dataProvider providerTestInstallThemeWithUnmetModuleDependencies
    */
   public function testInstallThemeWithUnmetModuleDependencies($theme_name, $installed_modules, $message) {
-    $this->container->get('module_installer')->install($installed_modules);
+    $this->moduleInstaller()->install($installed_modules);
     $themes = $this->themeHandler()->listInfo();
     $this->assertEmpty($themes);
     $this->expectException(MissingDependencyException::class);
@@ -219,13 +238,13 @@ class ThemeInstallerTest extends KernelTestBase {
     $name = 'test_theme_depending_on_modules';
     $themes = $this->themeHandler()->listInfo();
     $this->assertArrayNotHasKey($name, $themes);
-    $this->container->get('module_installer')->install(['test_module_required_by_theme', 'test_another_module_required_by_theme']);
+    $this->moduleInstaller()->install(['test_module_required_by_theme', 'test_another_module_required_by_theme']);
     $this->themeInstaller()->install([$name]);
     $themes = $this->themeHandler()->listInfo();
     $this->assertArrayHasKey($name, $themes);
     $this->expectException(ModuleUninstallValidatorException::class);
     $this->expectExceptionMessage('The following reasons prevent the modules from being uninstalled: Required by the theme: Test Theme Depending on Modules');
-    $this->container->get('module_installer')->uninstall(['test_module_required_by_theme']);
+    $this->moduleInstaller()->uninstall(['test_module_required_by_theme']);
   }
 
   /**

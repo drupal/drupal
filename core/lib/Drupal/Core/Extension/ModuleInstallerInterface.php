@@ -41,6 +41,9 @@ interface ModuleInstallerInterface {
    *   Thrown when the extension's name is longer than
    *   DRUPAL_EXTENSION_NAME_MAX_LENGTH.
    *
+   * @throws \Drupal\Core\Extension\ExtensionNameReservedException
+   *   Thrown when a module's name is already used by an installed theme.
+   *
    * @see hook_module_preinstall()
    * @see hook_install()
    * @see hook_modules_installed()

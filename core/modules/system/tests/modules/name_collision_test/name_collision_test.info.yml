@@ -1,0 +1,5 @@
+name: 'Module Same Name as Theme'
+type: module
+description: 'Test module with the same name as a theme.'
+package: Testing
+version: VERSION
