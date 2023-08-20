@@ -15,7 +15,8 @@
   --module-table-cell-padding-horizontal: calc(var(--space-m) - (var(--input-border-size) * 2));
 }
 
-.modules-table-filter {
+.modules-table-filter,
+.permissions-table-filter {
   padding: 0.25rem var(--space-l);
   border: 1px solid var(--color-gray-200);
   border-radius: 2px 2px 0 0;
@@ -24,11 +25,13 @@
 
 /* Visually hide the module filter input description. */
 
-.modules-table-filter .form-item__description {
+.modules-table-filter .form-item__description,
+.permissions-table-filter .form-item__description {
   position: absolute !important;
 }
 
-.modules-table-filter .form-item__description {
+.modules-table-filter .form-item__description,
+.permissions-table-filter .form-item__description {
   overflow: hidden;
   clip: rect(1px, 1px, 1px, 1px);
   width: 1px;

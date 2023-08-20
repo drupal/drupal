@@ -142,6 +142,27 @@ class UserPermissionsForm extends FormBase {
       '#type' => 'system_compact_link',
     ];
 
+    $form['filters'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => ['table-filter', 'js-show'],
+      ],
+    ];
+
+    $form['filters']['text'] = [
+      '#type' => 'search',
+      '#title' => $this->t('Filter permissions'),
+      '#title_display' => 'invisible',
+      '#size' => 30,
+      '#placeholder' => $this->t('Filter by permission name'),
+      '#description' => $this->t('Enter permission name'),
+      '#attributes' => [
+        'class' => ['table-filter-text'],
+        'data-table' => '#permissions',
+        'autocomplete' => 'off',
+      ],
+    ];
+
     $form['permissions'] = [
       '#type' => 'table',
       '#header' => [$this->t('Permission')],
@@ -177,7 +198,7 @@ class UserPermissionsForm extends FormBase {
         ];
         $form['permissions'][$perm]['description'] = [
           '#type' => 'inline_template',
-          '#template' => '<div class="permission"><span class="title">{{ title }}</span>{% if description or warning %}<div class="description">{% if warning %}<em class="permission-warning">{{ warning }}</em> {% endif %}{{ description }}</div>{% endif %}</div>',
+          '#template' => '<div class="permission"><span class="title table-filter-text-source">{{ title }}</span>{% if description or warning %}<div class="description">{% if warning %}<em class="permission-warning">{{ warning }}</em> {% endif %}{{ description }}</div>{% endif %}</div>',
           '#context' => [
             'title' => $perm_item['title'],
           ],

@@ -1770,3 +1770,16 @@ function claro_system_module_invoked_theme_registry_alter(array &$theme_registry
     }
   }
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter() for the user_admin_permissions form.
+ */
+function claro_form_user_admin_permissions_alter(&$form, FormStateInterface $form_state) {
+  if (isset($form['filters'])) {
+    $form['filters']['#attributes']['class'][] = 'permissions-table-filter';
+    if (isset($form['filters']['text'])) {
+      unset($form['filters']['text']['#title_display']);
+      $form['filters']['text']['#title'] = t('Filter');
+    }
+  }
+}
