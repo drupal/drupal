@@ -399,8 +399,8 @@ function node_revision_delete($revision_id) {
  * @param \Drupal\node\NodeInterface $node
  *   A node entity.
  *
- * @return int|false
- *   The ID of the node if this is a full page view, otherwise FALSE.
+ * @return bool
+ *   TRUE if this is a full page view, otherwise FALSE.
  */
 function node_is_page(NodeInterface $node) {
   $route_match = \Drupal::routeMatch();
