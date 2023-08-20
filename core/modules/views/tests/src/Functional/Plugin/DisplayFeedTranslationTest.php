@@ -6,6 +6,7 @@ use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
+use Drupal\Tests\WaitTerminateTestTrait;
 
 /**
  * Tests the feed display plugin with translated content.
@@ -16,6 +17,7 @@ use Drupal\node\Entity\Node;
 class DisplayFeedTranslationTest extends ViewTestBase {
 
   use PathAliasTestTrait;
+  use WaitTerminateTestTrait;
 
   /**
    * Views used by this test.
@@ -85,6 +87,11 @@ class DisplayFeedTranslationTest extends ViewTestBase {
     // Rebuild the container so that the new languages are picked up by services
     // that hold a list of languages.
     $this->rebuildContainer();
+
+    // The \Drupal\path_alias\AliasWhitelist service performs cache clears after
+    // Drupal has flushed the response to the client. We use
+    // WaitTerminateTestTrait to wait for Drupal to do this before continuing.
+    $this->setWaitForTerminate();
   }
 
   /**
