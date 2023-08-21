@@ -12,15 +12,39 @@
  * Replaces /core/misc/vertical-tabs.css.
  */
 
+:root {
+  /**
+   * Vertical Tabs.
+   */
+  --vertical-tabs-margin-vertical: var(--space-s);
+  --vertical-tabs-border-radius: var(--details-accordion-border-size-radius);
+  --vertical-tabs-shadow: var(--details-box-shadow);
+  --vertical-tabs-border-color: var(--details-border-color);
+  --vertical-tabs-border-size: 1px;
+  --vertical-tabs-border: var(--vertical-tabs-border-size) solid var(--vertical-tabs-border-color);
+  --vertical-tabs-menu-item-shadow-extraspace: 0.5rem;
+  --vertical-tabs-menu-item--top-margin: calc(var(--vertical-tabs-menu-item-shadow-extraspace) * -2);
+  --vertical-tabs-menu-item--right-margin: calc(var(--vertical-tabs-border-size) * -1);
+  --vertical-tabs-menu-item--bottom-margin: calc(var(--vertical-tabs-menu-item-shadow-extraspace) * -1);
+  --vertical-tabs-menu-item--left-margin: calc(var(--vertical-tabs-menu-item-shadow-extraspace) * -1);
+  --vertical-tabs-menu-separator-color: var(--color-gray-200);
+  --vertical-tabs-menu-separator-size: 1px;
+  --vertical-tabs-menu-width: 20em;
+  --vertical-tabs-pane-width: calc(100% - var(--vertical-tabs-menu-width));
+  --vertical-tabs-menu-link-focus-border-size: var(--details-summary-focus-border-size);
+  --vertical-tabs-menu-link--active-border-size: 0.25rem;
+  --vertical-tabs-menu-link--active-border-color: var(--color-absolutezero);
+  --vertical-tabs-menu--z-index: 0;
+}
+
 /**
  * Main wrapper of vertical tabs.
  * This wrapper div is added by JavaScript.
  */
 
 .vertical-tabs {
-  margin-top: var(--vertical-tabs-margin-vertical);
-  margin-bottom: var(--vertical-tabs-margin-vertical);
-  border-top: 1px solid transparent; /* Need to hide the pane wrapper clearfix's height */
+  margin-block: var(--vertical-tabs-margin-vertical);
+  border-block-start: 1px solid transparent; /* Need to hide the pane wrapper clearfix's height */
 }
 
 /**
@@ -33,14 +57,13 @@
   float: left; /* LTR */
   width: var(--vertical-tabs-menu-width);
   margin: 0;
-  padding-top: var(--vertical-tabs-menu-item-shadow-extraspace);
+  padding-block-start: var(--vertical-tabs-menu-item-shadow-extraspace);
   list-style: none;
   color: var(--color-text);
 }
 
 [dir="rtl"] .vertical-tabs__menu {
   float: right;
-  margin: 0;
 }
 
 /**
@@ -49,15 +72,10 @@
 
 .vertical-tabs__menu-item {
   overflow: hidden;
-  margin: var(--vertical-tabs-menu-item--top-margin) var(--vertical-tabs-menu-item--right-margin) var(--vertical-tabs-menu-item--bottom-margin) var(--vertical-tabs-menu-item--left-margin); /* LTR */
-  padding: var(--vertical-tabs-menu-item-shadow-extraspace) 0 var(--vertical-tabs-menu-item-shadow-extraspace) var(--vertical-tabs-menu-item-shadow-extraspace); /* LTR */
-}
-
-[dir="rtl"] .vertical-tabs__menu-item {
-  margin-right: var(--vertical-tabs-menu-item--left-margin);
-  margin-left: var(--vertical-tabs-menu-item--right-margin);
-  padding-right: var(--vertical-tabs-menu-item-shadow-extraspace);
-  padding-left: 0;
+  margin-block: var(--vertical-tabs-menu-item--top-margin);
+  margin-inline: var(--vertical-tabs-menu-item--left-margin) var(--vertical-tabs-menu-item--right-margin);
+  padding-block: var(--vertical-tabs-menu-item-shadow-extraspace);
+  padding-inline: var(--vertical-tabs-menu-item-shadow-extraspace) 0;
 }
 
 /**
@@ -71,8 +89,8 @@
   z-index: 1; /* The line should be kept above the vertical tabs menu link to keep it visible even if the link is hovered and gets the 'hover' background color. */
   display: block;
   width: 100%;
-  margin-top: calc(var(--vertical-tabs-menu-separator-size) * -1);
-  border-top: var(--vertical-tabs-menu-separator-size) solid var(--vertical-tabs-menu-separator-color);
+  margin-block-start: calc(var(--vertical-tabs-menu-separator-size) * -1);
+  border-block-start: var(--vertical-tabs-menu-separator-size) solid var(--vertical-tabs-menu-separator-color);
 }
 
 /**
@@ -123,8 +141,8 @@
 .vertical-tabs__menu-link {
   position: relative;
   display: block;
-  margin-top: calc(var(--vertical-tabs-border-size) * -1);
-  padding: var(--space-s) var(--space-s) var(--space-s) calc(var(--space-l) - var(--vertical-tabs-menu-link--active-border-size)); /* LTR */
+  margin-block-start: calc(var(--vertical-tabs-border-size) * -1);
+  padding: var(--space-s) var(--space-s) var(--space-s) calc(var(--space-l) - var(--vertical-tabs-menu-link--active-border-size));
   -webkit-text-decoration: none;
   text-decoration: none;
   word-wrap: break-word;
@@ -132,18 +150,13 @@
   hyphens: auto;
   color: var(--color-text);
   border: var(--vertical-tabs-border-size) solid transparent;
-  border-width: var(--vertical-tabs-border-size) 0 var(--vertical-tabs-border-size) var(--vertical-tabs-menu-link--active-border-size); /* LTR */
-  border-radius: var(--vertical-tabs-border-radius) 0 0 var(--vertical-tabs-border-radius); /* LTR */
+  border-block-width: var(--vertical-tabs-border-size);
+  border-inline-width: var(--vertical-tabs-menu-link--active-border-size) 0;
+  border-start-start-radius: var(--vertical-tabs-border-radius);
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+  border-end-start-radius: var(--vertical-tabs-border-radius);
 }
-
-[dir="rtl"] .vertical-tabs__menu-link {
-  padding-right: calc(var(--space-l) - var(--vertical-tabs-menu-link--active-border-size));
-  padding-left: var(--space-s);
-  border-width: var(--vertical-tabs-border-size) var(--vertical-tabs-menu-link--active-border-size) var(--vertical-tabs-border-size) 0;
-  border-radius: 0 var(--vertical-tabs-border-radius) var(--vertical-tabs-border-radius) 0;
-}
-
-/* Menu link states. */
 
 .vertical-tabs__menu-link:focus {
   z-index: 4; /* Focus state should be on the highest level to make the focus effect be fully visible. This also means that it should have bigger z-index than the selected link. */
@@ -152,46 +165,34 @@
   box-shadow: none;
 }
 
+.vertical-tabs__menu-link:focus::after {
+  position: absolute;
+  inset: 0;
+  margin: calc(var(--vertical-tabs-border-size) * -1) calc(var(--vertical-tabs-menu-link--active-border-size) * -1);
+  content: "";
+  pointer-events: none;
+  border: var(--vertical-tabs-menu-link-focus-border-size) solid var(--color-focus);
+  border-radius: var(--vertical-tabs-border-radius);
+}
+
 .vertical-tabs__menu-link:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--color-absolutezero);
 }
 
-/* This pseudo element provides the background for the hover state. */
-
-.vertical-tabs__menu-link::before {
-  position: absolute;
-  z-index: 0; /* This should be on a lower level than the menu-item separator lines. */
-  top: calc(var(--vertical-tabs-border-size) * -1);
-  right: 0; /* LTR */
-  bottom: calc(var(--vertical-tabs-border-size) * -1);
-  left: calc(var(--vertical-tabs-menu-link--active-border-size) * -1); /* LTR */
-  content: "";
-  pointer-events: none;
-  background-clip: padding-box;
-}
-
-[dir="rtl"] .vertical-tabs__menu-link::before {
-  right: calc(var(--vertical-tabs-menu-link--active-border-size) * -1);
-  left: 0;
-}
-
 .vertical-tabs__menu-link:hover::before {
   background: var(--color-bgblue-hover);
 }
 
-.vertical-tabs__menu-link:focus::after {
+.vertical-tabs__menu-link::before {
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  margin: calc(var(--vertical-tabs-border-size) * -1) calc(var(--vertical-tabs-menu-link--active-border-size) * -1);
+  z-index: 0; /* This should be on a lower level than the menu-item separator lines. */
+  inset-block: calc(var(--vertical-tabs-border-size) * -1);
+  inset-inline: calc(var(--vertical-tabs-menu-link--active-border-size) * -1) 0;
   content: "";
   pointer-events: none;
-  border: var(--vertical-tabs-menu-link-focus-border-size) solid var(--color-focus);
-  border-radius: var(--vertical-tabs-border-radius);
+  background-clip: padding-box;
 }
 
 .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link {
@@ -209,14 +210,12 @@
 
 .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link::before {
   z-index: 1; /* The blue active-tab indication should be on a higher level than the green focus border. */
-  border-left: var(--vertical-tabs-menu-link--active-border-size) solid var(--vertical-tabs-menu-link--active-border-color); /* LTR */
-  border-radius: var(--base-border-radius) 0 0 var(--base-border-radius); /* LTR */
-}
-
-[dir="rtl"] .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link::before {
-  border-right: var(--vertical-tabs-menu-link--active-border-size) solid var(--vertical-tabs-menu-link--active-border-color);
-  border-left: 0;
-  border-radius: 0 var(--base-border-radius) var(--base-border-radius) 0;
+  border-inline-start: var(--vertical-tabs-menu-link--active-border-size) solid var(--vertical-tabs-menu-link--active-border-color);
+  border-radius: var(--base-border-radius) 0 0 var(--base-border-radius);
+  border-start-start-radius: var(--base-border-radius);
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+  border-end-start-radius: var(--base-border-radius);
 }
 
 .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link:hover::before {
@@ -245,8 +244,7 @@
 
 .vertical-tabs__items {
   box-sizing: border-box;
-  margin-top: var(--vertical-tabs-margin-vertical);
-  margin-bottom: var(--vertical-tabs-margin-vertical);
+  margin-block: var(--vertical-tabs-margin-vertical);
   color: var(--color-text);
   border: var(--vertical-tabs-border);
   border-radius: var(--vertical-tabs-border-radius);
@@ -259,29 +257,23 @@
 .vertical-tabs__panes {
   position: relative;
   z-index: 1; /* The wrapper of the details of the vertical tabs should be on a higher level than the vertical tabs menu */
-  top: -1px;
-  margin-top: 0;
-  margin-bottom: 0;
+  inset-block-start: -1px;
+  margin-block: 0;
 }
 
-/* This clearfix makes the pane wrapper at least as tall as the menu. */
-
 .vertical-tabs__panes::after {
-  display: block;
+  display: block; /* This clearfix makes the pane wrapper at least as tall as the menu. */
   clear: both;
   content: "";
 }
 
 .vertical-tabs .vertical-tabs__panes {
-  margin-left: var(--vertical-tabs-menu-width); /* LTR */
-  border-top-left-radius: 0; /* LTR */
+  margin-inline-start: var(--vertical-tabs-menu-width);
+  border-top-left-radius: 0;
 }
 
-[dir="rtl"] .vertical-tabs .vertical-tabs__panes {
-  margin-right: var(--vertical-tabs-menu-width);
-  margin-left: 0;
+[dir="rtl"] :is(.vertical-tabs .vertical-tabs__panes) {
   border-top-left-radius: var(--vertical-tabs-border-radius);
-  border-top-right-radius: 0;
 }
 
 /**
