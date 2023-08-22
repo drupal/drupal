@@ -7,6 +7,8 @@ libraries:
   - umami/classy.base
   - core/normalize
   - umami/global
+dependencies:
+  - drupal:sdc
 
 libraries-override:
   layout_builder/twocol_section:
