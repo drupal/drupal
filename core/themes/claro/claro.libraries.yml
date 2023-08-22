@@ -127,6 +127,8 @@ claro.drupal.dialog:
   css:
     theme:
       css/components/dialog.css: {}
+  dependencies:
+    - claro/claro.jquery.ui
 
 claro.tabledrag:
   version: VERSION
@@ -186,6 +188,7 @@ autocomplete:
     js/autocomplete.js: {}
   dependencies:
     - core/once
+    - claro/claro.jquery.ui
 
 drupal.shortcut:
   version: VERSION
@@ -267,6 +270,11 @@ progress:
   css:
     component:
       css/components/progress.css: {}
+
+tabbingmanager:
+  version: VERSION
+  dependencies:
+    - claro/claro.jquery.ui
 
 filter:
   version: VERSION
