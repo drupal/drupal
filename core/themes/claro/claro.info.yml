@@ -109,7 +109,6 @@ libraries-extend:
     - claro/details-focus
   core/drupal.dialog:
     - claro/claro.drupal.dialog
-    - claro/claro.jquery.ui
   core/drupal.dropbutton:
     - claro/dropbutton
   core/drupal.checkbox:
@@ -119,7 +118,7 @@ libraries-extend:
   core/drupal.progress:
     - claro/progress
   core/drupal.tabbingmanager:
-    - claro/claro.jquery.ui
+    - claro/tabbingmanager
   core/drupal.tabledrag:
     - claro/claro.tabledrag
   core/drupal.tableselect:
@@ -136,7 +135,6 @@ libraries-extend:
     - claro/system.admin
   core/drupal.autocomplete:
     - claro/autocomplete
-    - claro/claro.jquery.ui
   tour/tour-styling:
     - claro/tour-styling
   shortcut/drupal.shortcut:
