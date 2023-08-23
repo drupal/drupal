@@ -18,7 +18,7 @@
         "guzzlehttp/promises": "~2.0.0",
         "guzzlehttp/psr7": "~2.5.0",
         "masterminds/html5": "~2.8.0",
-        "mck89/peast": "~v1.15.2",
+        "mck89/peast": "~v1.15.4",
         "pear/archive_tar": "~1.4.14",
         "pear/console_getopt": "~v1.4.3",
         "pear/pear-core-minimal": "~v1.10.13",
