@@ -82,6 +82,17 @@ class FieldTypeCategoryManager extends DefaultPluginManager implements FieldType
   /**
    * {@inheritdoc}
    */
+  protected function alterDefinitions(&$definitions): void {
+    parent::alterDefinitions($definitions);
+
+    if (!isset($definitions[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY])) {
+      throw new \LogicException('Missing fallback category.');
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getFallbackPluginId($plugin_id, array $configuration = []): string {
     return FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY;
   }

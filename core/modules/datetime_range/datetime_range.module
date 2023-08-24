@@ -33,9 +33,7 @@ function datetime_range_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_field_type_category_info_alter().
  */
 function datetime_range_field_type_category_info_alter(&$definitions) {
-  // TRICKY: the `datetime_range` field type belongs in the `general` category,
-  // so the libraries need to be attached using an alter hook.
-  if (array_key_exists(FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY, $definitions)) {
-    $definitions[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY]['libraries'][] = 'datetime_range/drupal.datetime_range-icon';
-  }
+  // The `datetime_range` field type belongs in the `general` category, so the
+  // libraries need to be attached using an alter hook.
+  $definitions[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY]['libraries'][] = 'datetime_range/drupal.datetime_range-icon';
 }

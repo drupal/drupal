@@ -71,9 +71,7 @@ function template_preprocess_link_formatter_link_separate(&$variables) {
  * Implements hook_field_type_category_info_alter().
  */
 function link_field_type_category_info_alter(&$definitions) {
-  // TRICKY: the `link` field type belongs in the `general` category, so the
-  // libraries need to be attached using an alter hook.
-  if (array_key_exists(FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY, $definitions)) {
-    $definitions[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY]['libraries'][] = 'link/drupal.link-icon';
-  }
+  // The `link` field type belongs in the `general` category, so the libraries
+  // need to be attached using an alter hook.
+  $definitions[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY]['libraries'][] = 'link/drupal.link-icon';
 }

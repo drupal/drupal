@@ -537,9 +537,7 @@ function media_views_query_substitutions(ViewExecutable $view) {
  * Implements hook_field_type_category_info_alter().
  */
 function media_field_type_category_info_alter(&$definitions) {
-  // TRICKY: the `media` field type belongs in the `general` category, so the
-  // libraries need to be attached using an alter hook.
-  if (array_key_exists(FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY, $definitions)) {
-    $definitions[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY]['libraries'][] = 'media/drupal.media-icon';
-  }
+  // The `media` field type belongs in the `general` category, so the libraries
+  // need to be attached using an alter hook.
+  $definitions[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY]['libraries'][] = 'media/drupal.media-icon';
 }

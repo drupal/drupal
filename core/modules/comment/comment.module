@@ -789,9 +789,7 @@ function comment_entity_view_display_presave(EntityViewDisplayInterface $display
  * Implements hook_field_type_category_info_alter().
  */
 function comment_field_type_category_info_alter(&$definitions) {
-  // TRICKY: the `comment` field type belongs in the `general` category, so the
+  // The `comment` field type belongs in the `general` category, so the
   // libraries need to be attached using an alter hook.
-  if (array_key_exists(FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY, $definitions)) {
-    $definitions[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY]['libraries'][] = 'comment/drupal.comment-icon';
-  }
+  $definitions[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY]['libraries'][] = 'comment/drupal.comment-icon';
 }
