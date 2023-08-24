@@ -28,7 +28,6 @@ toolbar:
     - core/once
     - core/drupal.displace
     - toolbar/toolbar.menu
-    - toolbar/toolbar.anti-flicker
 
 toolbar.menu:
   version: VERSION
@@ -51,9 +50,3 @@ toolbar.escapeAdmin:
     - core/drupal
     - core/drupalSettings
     - core/once
-toolbar.anti-flicker:
-  # Block the page from being loaded until anti-flicker is initialized.
-  version: VERSION
-  header: true
-  js:
-    js/toolbar.anti-flicker.js: {}
