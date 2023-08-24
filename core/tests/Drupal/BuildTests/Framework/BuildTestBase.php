@@ -45,8 +45,6 @@ use Symfony\Component\Process\Process;
  *   built into the test, or abstract base classes.
  * - Allow parallel testing, using random/unique port numbers for different HTTP
  *   servers.
- * - Allow the use of PHPUnit-style (at)require annotations for external shell
- *   commands.
  *
  * We don't use UiHelperInterface because it is too tightly integrated to
  * Drupal.
