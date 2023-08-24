@@ -69,10 +69,23 @@ update.theme_install:
     _access_update_manager: 'TRUE'
 
 update.theme_update:
-  path: '/admin/theme/update'
+  path: '/admin/appearance/update'
   defaults:
     _form: '\Drupal\update\Form\UpdateManagerUpdate'
     _title: 'Update'
+  requirements:
+    _permission: 'administer software updates'
+    _access_update_manager: 'TRUE'
+
+# @todo Deprecate this route once
+#   https://www.drupal.org/project/drupal/issues/3159210 is fixed, or remove
+#   it in Drupal 11.
+# @see https://www.drupal.org/node/3375850
+update.theme_update.bc:
+  path: '/admin/theme/update'
+  defaults:
+    _title: 'Update'
+    _controller: '\Drupal\update\Controller\UpdateController::updateRedirect'
   requirements:
     _permission: 'administer software updates'
     _access_update_manager: 'TRUE'
