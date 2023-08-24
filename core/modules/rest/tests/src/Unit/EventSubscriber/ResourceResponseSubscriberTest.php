@@ -222,8 +222,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
 
     $safe_method_test_cases = [
       'safe methods: client requested format (JSON)' => [
-        // @todo add 'HEAD' in https://www.drupal.org/node/2752325
-        ['GET'],
+        ['GET', 'HEAD'],
         ['xml', 'json'],
         [],
         'json',
@@ -234,8 +233,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
         $json_encoded,
       ],
       'safe methods: client requested format (XML)' => [
-        // @todo add 'HEAD' in https://www.drupal.org/node/2752325
-        ['GET'],
+        ['GET', 'HEAD'],
         ['xml', 'json'],
         [],
         'xml',
@@ -246,8 +244,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
         $xml_encoded,
       ],
       'safe methods: client requested no format: response should use the first configured format (JSON)' => [
-        // @todo add 'HEAD' in https://www.drupal.org/node/2752325
-        ['GET'],
+        ['GET', 'HEAD'],
         ['json', 'xml'],
         [],
         FALSE,
@@ -258,8 +255,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
         $json_encoded,
       ],
       'safe methods: client requested no format: response should use the first configured format (XML)' => [
-        // @todo add 'HEAD' in https://www.drupal.org/node/2752325
-        ['GET'],
+        ['GET', 'HEAD'],
         ['xml', 'json'],
         [],
         FALSE,
