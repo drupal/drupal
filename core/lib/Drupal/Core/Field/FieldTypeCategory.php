@@ -33,4 +33,11 @@ class FieldTypeCategory extends PluginBase implements FieldTypeCategoryInterface
     return $this->pluginDefinition['weight'];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getLibraries(): array {
+    return $this->pluginDefinition['libraries'] ?? [];
+  }
+
 }

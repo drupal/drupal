@@ -29,12 +29,14 @@ class FieldTypeCategoryDiscoveryTest extends KernelTestBase {
       'Test category',
       'This is a test field type category.',
       -10,
+      ['field_plugins_test/test_library'],
     ];
 
     $this->assertSame($expected, [
       (string) $category->getLabel(),
       (string) $category->getDescription(),
       $category->getWeight(),
+      $category->getLibraries(),
     ]);
   }
 

@@ -16,6 +16,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Field\FieldTypeCategoryManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
@@ -785,8 +786,12 @@ function comment_entity_view_display_presave(EntityViewDisplayInterface $display
 }
 
 /**
- * Implements hook_preprocess_form_element__new_storage_type().
+ * Implements hook_field_type_category_info_alter().
  */
-function comment_preprocess_form_element__new_storage_type(&$variables) {
-  $variables['#attached']['library'][] = 'comment/drupal.comment-icon';
+function comment_field_type_category_info_alter(&$definitions) {
+  // TRICKY: the `comment` field type belongs in the `general` category, so the
+  // libraries need to be attached using an alter hook.
+  if (array_key_exists(FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY, $definitions)) {
+    $definitions[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY]['libraries'][] = 'comment/drupal.comment-icon';
+  }
 }

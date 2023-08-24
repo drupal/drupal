@@ -2,3 +2,5 @@ formatted_text:
   label: 'Formatted text'
   description: 'Text field with markup support and optional editor.'
   weight: -45
+  libraries:
+    - text/drupal.text-icon

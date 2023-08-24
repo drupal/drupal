@@ -33,4 +33,12 @@ interface FieldTypeCategoryInterface {
    */
   public function getWeight(): int;
 
+  /**
+   * Returns asset libraries for the field group.
+   *
+   * @return array
+   *   The asset libraries to attach.
+   */
+  public function getLibraries(): array;
+
 }

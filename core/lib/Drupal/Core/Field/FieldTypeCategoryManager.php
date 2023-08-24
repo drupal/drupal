@@ -19,6 +19,8 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  *     label: STRING
  *     description: STRING
  *     weight: INTEGER
+ *     libraries:
+ *       - STRING
  * @endcode
  * For example:
  * @code
@@ -26,6 +28,8 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  *   label: Text
  *   description: Text fields.
  *   weight: 2
+ *   libraries:
+ *     - module_name/library_name
  * @endcode
  *
  * @see \Drupal\Core\Field\FieldTypeCategoryInterface

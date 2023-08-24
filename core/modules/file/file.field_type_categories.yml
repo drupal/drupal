@@ -2,3 +2,5 @@ file_upload:
   label: 'File upload'
   description: 'Field to upload any type of files.'
   weight: -15
+  libraries:
+    - file/drupal.file-icon

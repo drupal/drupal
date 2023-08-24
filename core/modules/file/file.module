@@ -1552,10 +1552,3 @@ function file_field_find_file_reference_column(FieldDefinitionInterface $field) 
   }
   return FALSE;
 }
-
-/**
- * Implements hook_preprocess_form_element__new_storage_type().
- */
-function file_preprocess_form_element__new_storage_type(&$variables) {
-  $variables['#attached']['library'][] = 'file/drupal.file-icon';
-}

@@ -2,3 +2,5 @@ test_category:
   label: 'Test category'
   description: 'This is a test field type category.'
   weight: -10
+  libraries:
+    - field_plugins_test/test_library

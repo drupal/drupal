@@ -157,12 +157,13 @@ class FieldStorageAddForm extends FormBase {
 
     $field_type_options = $unique_definitions = [];
     $grouped_definitions = $this->fieldTypePluginManager->getGroupedDefinitions($this->fieldTypePluginManager->getUiDefinitions(), 'label', 'id');
+    $category_definitions = $this->fieldTypeCategoryManager->getDefinitions();
     // Invoke a hook to get category properties.
     foreach ($grouped_definitions as $category => $field_types) {
       foreach ($field_types as $name => $field_type) {
         $unique_definitions[$category][$name] = ['unique_identifier' => $name] + $field_type;
         if ($this->fieldTypeCategoryManager->hasDefinition($category)) {
-          $category_plugin = $this->fieldTypeCategoryManager->createInstance($category, $unique_definitions[$category][$name]);
+          $category_plugin = $this->fieldTypeCategoryManager->createInstance($category, $unique_definitions[$category][$name], $category_definitions[$category]);
           $field_type_options[$category_plugin->getPluginId()] = ['unique_identifier' => $name] + $field_type;
         }
         else {
@@ -243,6 +244,10 @@ class FieldStorageAddForm extends FormBase {
           '#variant' => 'field-option',
         ],
       ];
+
+      if ($libraries = $category_info->getLibraries()) {
+        $field_type_options_radios[$id]['#attached']['library'] = $libraries;
+      }
     }
     uasort($field_type_options_radios, [SortArray::class, 'sortByWeightProperty']);
     $form['add']['new_storage_type'] = $field_type_options_radios;
