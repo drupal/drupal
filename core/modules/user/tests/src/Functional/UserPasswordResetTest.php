@@ -339,6 +339,13 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->assertSession()->linkExists('log out');
     $this->assertSession()->linkByHrefExists(Url::fromRoute('user.logout')->toString());
 
+    // Verify that the invalid password reset page does not show the user name.
+    $attack_reset_url = "user/reset/" . $another_account->id() . "/1/1";
+    $this->drupalGet($attack_reset_url);
+    $this->assertSession()->pageTextNotContains($another_account->getAccountName());
+    $this->assertSession()->addressEquals('user/' . $this->account->id());
+    $this->assertSession()->pageTextContains('The one-time login link you clicked is invalid.');
+
     $another_account->delete();
     $this->drupalGet($resetURL);
     $this->assertSession()->pageTextContains('The one-time login link you clicked is invalid.');
