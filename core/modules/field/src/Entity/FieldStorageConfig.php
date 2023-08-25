@@ -280,6 +280,28 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function postCreate(EntityStorageInterface $storage) {
+    parent::postCreate($storage);
+
+    // Check that the field type is known.
+    $field_type = \Drupal::service('plugin.manager.field.field_type')->getDefinition($this->type, FALSE);
+    if (!$field_type) {
+      throw new FieldException("Attempt to create a field storage of unknown type {$this->type}.");
+    }
+    $this->module = $field_type['provider'];
+
+    // Make sure all expected runtime settings are present.
+    $default_settings = \Drupal::service('plugin.manager.field.field_type')
+      ->getDefaultStorageSettings($this->getType());
+
+    // Filter out any unknown (unsupported) settings.
+    $supported_settings = array_intersect_key($this->getSettings(), $default_settings);
+    $this->set('settings', $supported_settings + $default_settings);
+  }
+
+  /**
    * Overrides \Drupal\Core\Entity\Entity::preSave().
    *
    * @throws \Drupal\Core\Field\FieldException
@@ -319,7 +341,6 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    */
   protected function preSaveNew(EntityStorageInterface $storage) {
     $entity_field_manager = \Drupal::service('entity_field.manager');
-    $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
 
     // Assign the ID.
     $this->id = $this->id();
@@ -336,13 +357,6 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     if (in_array($this->getName(), $disallowed_field_names)) {
       throw new FieldException("Attempt to create field storage {$this->getName()} which is reserved by entity type {$this->getTargetEntityTypeId()}.");
     }
-
-    // Check that the field type is known.
-    $field_type = $field_type_manager->getDefinition($this->getType(), FALSE);
-    if (!$field_type) {
-      throw new FieldException("Attempt to create a field storage of unknown type {$this->getType()}.");
-    }
-    $this->module = $field_type['provider'];
 
     // Notify the field storage definition listener.
     \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionCreate($this);

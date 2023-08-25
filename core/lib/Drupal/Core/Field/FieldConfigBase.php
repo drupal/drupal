@@ -279,6 +279,13 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
     if (empty($this->field_type)) {
       $this->field_type = $this->getFieldStorageDefinition()->getType();
     }
+
+    // Make sure all expected runtime settings are present.
+    $default_settings = \Drupal::service('plugin.manager.field.field_type')
+      ->getDefaultFieldSettings($this->getType());
+    // Filter out any unknown (unsupported) settings.
+    $supported_settings = array_intersect_key($this->getSettings(), $default_settings);
+    $this->set('settings', $supported_settings + $default_settings);
   }
 
   /**
