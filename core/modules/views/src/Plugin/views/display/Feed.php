@@ -325,7 +325,7 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function attachTo(ViewExecutable $clone, $display_id, array &$build) {
+  public function attachTo(ViewExecutable $view, $display_id, array &$build) {
     $displays = $this->getOption('displays');
     if (empty($displays[$display_id])) {
       return;
@@ -333,19 +333,15 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
 
     // Defer to the feed style; it may put in meta information, and/or
     // attach a feed icon.
-    $clone->setArguments($this->view->args);
-    $clone->setDisplay($this->display['id']);
-    $clone->buildTitle();
-    if ($plugin = $clone->display_handler->getPlugin('style')) {
-      $plugin->attachTo($build, $display_id, $clone->getUrl(), $clone->getTitle());
-      foreach ($clone->feedIcons as $feed_icon) {
+    $view->setArguments($this->view->args);
+    $view->setDisplay($this->display['id']);
+    $view->buildTitle();
+    if ($plugin = $view->display_handler->getPlugin('style')) {
+      $plugin->attachTo($build, $display_id, $view->getUrl(), $view->getTitle());
+      foreach ($view->feedIcons as $feed_icon) {
         $this->view->feedIcons[] = $feed_icon;
       }
     }
-
-    // Clean up.
-    $clone->destroy();
-    unset($clone);
   }
 
   /**
