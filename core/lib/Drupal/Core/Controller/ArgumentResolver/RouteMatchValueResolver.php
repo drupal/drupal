@@ -5,14 +5,13 @@ namespace Drupal\Core\Controller\ArgumentResolver;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Controller\ArgumentValueResolverInterface;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
 /**
  * Yields a RouteMatch object based on the request object passed along.
  */
-final class RouteMatchValueResolver implements ArgumentValueResolverInterface, ValueResolverInterface {
+final class RouteMatchValueResolver implements ValueResolverInterface {
 
   /**
    * {@inheritdoc}

@@ -308,22 +308,6 @@ parameters:
 
 		-
 			message: """
-				#^Class Drupal\\\\Core\\\\Controller\\\\ArgumentResolver\\\\Psr7RequestValueResolver implements deprecated interface Symfony\\\\Component\\\\HttpKernel\\\\Controller\\\\ArgumentValueResolverInterface\\:
-				since Symfony 6\\.2, implement ValueResolverInterface instead$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Controller/ArgumentResolver/Psr7RequestValueResolver.php
-
-		-
-			message: """
-				#^Class Drupal\\\\Core\\\\Controller\\\\ArgumentResolver\\\\RouteMatchValueResolver implements deprecated interface Symfony\\\\Component\\\\HttpKernel\\\\Controller\\\\ArgumentValueResolverInterface\\:
-				since Symfony 6\\.2, implement ValueResolverInterface instead$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Controller/ArgumentResolver/RouteMatchValueResolver.php
-
-		-
-			message: """
 				#^Fetching deprecated class constant RETURN_AFFECTED of class Drupal\\\\Core\\\\Database\\\\Database\\:
 				in drupal\\:9\\.4\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
 				  replacement\\.$#
