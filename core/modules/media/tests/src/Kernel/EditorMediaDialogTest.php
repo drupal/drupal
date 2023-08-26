@@ -13,6 +13,7 @@ use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 /**
  * @coversDefaultClass \Drupal\media\Form\EditorMediaDialog
  * @group media
+ * @group legacy
  */
 class EditorMediaDialogTest extends KernelTestBase {
 
