@@ -1,8 +1,0 @@
-/**
-* @file
-* This file is used to style the 'Card common alt' view mode.
-*/
-
-.node--view-mode-card-common-alt .node__content {
-  order: -1;
-}

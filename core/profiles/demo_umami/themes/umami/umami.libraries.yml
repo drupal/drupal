@@ -57,11 +57,6 @@ messages:
   js:
     js/components/messages/messages.js: {}
 
-more-link:
-  css:
-    theme:
-      css/components/navigation/more-link/more-link.css: { weight: -10 }
-
 quicklinks:
   css:
     theme:
@@ -83,28 +78,12 @@ user:
     component:
       css/components/user/user.css: { weight: -10 }
 
-view-mode-card:
+demo-umami-tour:
   css:
     theme:
-      css/components/content/card/card.css: {}
+      css/components/tour/tour.theme.css: {}
   dependencies:
-    - umami/more-link
-
-view-mode-card-common:
-  css:
-    theme:
-      css/components/content/card/card.css: {}
-      css/components/content/card-common/card-common.css: {}
-  dependencies:
-    - umami/more-link
-
-view-mode-card-common-alt:
-  css:
-    theme:
-      css/components/content/card/card.css: {}
-      css/components/content/card-common-alt/card-common-alt.css: {}
-  dependencies:
-    - umami/more-link
+    - claro/tour-styling
 
 oneplusfourgrid_section:
   css:
