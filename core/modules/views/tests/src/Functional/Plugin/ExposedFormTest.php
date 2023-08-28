@@ -9,6 +9,7 @@ use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 use Drupal\views\Entity\View;
+use Drupal\views\Plugin\views\filter\FilterPluginBase;
 
 /**
  * Tests exposed forms functionality.
@@ -161,6 +162,37 @@ class ExposedFormTest extends ViewTestBase {
       'page_1' => ['This identifier has illegal characters.'],
     ];
     $this->assertEquals($expected, $errors);
+
+    foreach (FilterPluginBase::RESTRICTED_IDENTIFIERS as $restricted_identifier) {
+      $view = Views::getView('test_exposed_form_buttons');
+      $view->setDisplay();
+      $view->displayHandlers->get('default')->overrideOption('filters', [
+        'type' => [
+          'exposed' => TRUE,
+          'field' => 'type',
+          'id' => 'type',
+          'table' => 'node_field_data',
+          'plugin_id' => 'in_operator',
+          'entity_type' => 'node',
+          'entity_field' => 'type',
+          'expose' => [
+            'identifier' => $restricted_identifier,
+            'label' => 'Content: Type',
+            'operator_id' => 'type_op',
+            'reduce' => FALSE,
+            'description' => 'Exposed overridden description',
+          ],
+        ],
+      ]);
+      $this->executeView($view);
+
+      $errors = $view->validate();
+      $expected = [
+        'default' => ['This identifier is not allowed.'],
+        'page_1' => ['This identifier is not allowed.'],
+      ];
+      $this->assertEquals($expected, $errors);
+    }
   }
 
   /**

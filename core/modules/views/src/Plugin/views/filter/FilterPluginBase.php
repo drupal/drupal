@@ -47,6 +47,23 @@ use Drupal\views\ViewExecutable;
 abstract class FilterPluginBase extends HandlerBase implements CacheableDependencyInterface {
 
   /**
+   * A list of restricted identifiers.
+   *
+   * This list contains strings that could cause clashes with other site
+   * operations when used as a filter identifier.
+   *
+   * @var array
+   */
+  const RESTRICTED_IDENTIFIERS = [
+    'value',
+    'q',
+    'destination',
+    '_format',
+    '_wrapper_format',
+    'token',
+  ];
+
+  /**
    * The value.
    *
    * Contains the actual value of the field,either configured in the views ui
@@ -660,7 +677,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       '#default_value' => $this->options['expose']['identifier'],
       '#title' => $this->t('Filter identifier'),
       '#size' => 40,
-      '#description' => $this->t('This will appear in the URL after the ? to identify this filter. Cannot be blank. Only letters, digits and the dot ("."), hyphen ("-"), underscore ("_"), and tilde ("~") characters are allowed.'),
+      '#description' => $this->t('This will appear in the URL after the ? to identify this filter. Cannot be blank. Only letters, digits and the dot ("."), hyphen ("-"), underscore ("_"), and tilde ("~") characters are allowed. @reserved_identifiers are reserved words and cannot be used.',
+        ['@reserved_identifiers' => '"' . implode('", "', self::RESTRICTED_IDENTIFIERS) . '"']),
     ];
   }
 
@@ -771,7 +789,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     if (empty($identifier)) {
       $error = $this->t('The identifier is required if the filter is exposed.');
     }
-    elseif ($identifier == 'value') {
+    elseif (in_array($identifier, self::RESTRICTED_IDENTIFIERS)) {
       $error = $this->t('This identifier is not allowed.');
     }
     elseif (preg_match('/[^a-zA-Z0-9_~\.\-]+/', $identifier)) {
@@ -1029,7 +1047,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       '#default_value' => $identifier,
       '#title' => $this->t('Filter identifier'),
       '#size' => 40,
-      '#description' => $this->t('This will appear in the URL after the ? to identify this filter. Cannot be blank. Only letters, digits and the dot ("."), hyphen ("-"), underscore ("_"), and tilde ("~") characters are allowed.'),
+      '#description' => $this->t('This will appear in the URL after the ? to identify this filter. Cannot be blank. Only letters, digits and the dot ("."), hyphen ("-"), underscore ("_"), and tilde ("~") characters are allowed. @reserved_identifiers are reserved words and cannot be used.',
+        ['@reserved_identifiers' => '"' . implode('", "', self::RESTRICTED_IDENTIFIERS) . '"']),
     ];
     $form['group_info']['label'] = [
       '#type' => 'textfield',
@@ -1083,7 +1102,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       '#default_value' => $identifier,
       '#title' => $this->t('Filter identifier'),
       '#size' => 40,
-      '#description' => $this->t('This will appear in the URL after the ? to identify this filter. Cannot be blank. Only letters, digits and the dot ("."), hyphen ("-"), underscore ("_"), and tilde ("~") characters are allowed.'),
+      '#description' => $this->t('This will appear in the URL after the ? to identify this filter. Cannot be blank. Only letters, digits and the dot ("."), hyphen ("-"), underscore ("_"), and tilde ("~") characters are allowed. @reserved_identifiers are reserved words and cannot be used.',
+        ['@reserved_identifiers' => '"' . implode('", "', self::RESTRICTED_IDENTIFIERS) . '"']),
     ];
     $form['group_info']['label'] = [
       '#type' => 'textfield',
