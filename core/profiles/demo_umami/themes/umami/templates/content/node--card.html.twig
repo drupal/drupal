@@ -78,6 +78,10 @@
 %}
 {{ attach_library('umami/classy.node') }}
 
+{% set read_more %}
+{% trans %}View {{ node.type.entity.label() }}{% endtrans %}
+{% endset %}
+
 {% embed "umami:card" with { attributes: attributes.addClass(classes) } %}
   {% block content %}
     {% include "umami:title" with {
@@ -91,7 +95,7 @@
     </div>
     {% include "umami:read-more" with {
       url,
-      text: 'View'|t ~ ' ' ~ node.type.entity.label()|t,
+      text: read_more,
       a11y: label,
       extra_classes: 'umami-card__read-more'
     } only %}
