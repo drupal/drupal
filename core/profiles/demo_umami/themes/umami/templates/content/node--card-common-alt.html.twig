@@ -79,7 +79,7 @@
 %}
 {{ attach_library('umami/classy.node') }}
 
-{% embed "umami:card" with { attributes: attributes.addClass(classes) } %}
+{% embed "umami:card" with { attributes: attributes.addClass(classes) } only %}
   {% block content %}
     <div{{content_attributes.addClass('umami-card__content')}}>
       {{ content }}
