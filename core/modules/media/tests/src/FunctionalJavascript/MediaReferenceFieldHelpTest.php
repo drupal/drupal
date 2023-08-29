@@ -46,7 +46,7 @@ class MediaReferenceFieldHelpTest extends MediaJavascriptTestBase {
     // Choose a boolean field, none of the description containers should be
     // visible.
     $assert_session->elementExists('css', "[name='new_storage_type'][value='boolean']");
-    $page->find('css', "[name='new_storage_type'][value='boolean']")->click();
+    $page->find('css', "[name='new_storage_type'][value='boolean']")->getParent()->click();
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains($help_text);
 
@@ -54,7 +54,8 @@ class MediaReferenceFieldHelpTest extends MediaJavascriptTestBase {
     // descriptions are now visible and match the expected text.
     foreach ($field_groups as $field_group) {
       $assert_session->elementExists('css', "[name='new_storage_type'][value='$field_group']");
-      $page->find('css', "[name='new_storage_type'][value='$field_group']")->click();
+      $page->find('css', "[name='new_storage_type'][value='$field_group']")->getParent()->click();
+
       $assert_session->assertWaitOnAjaxRequest();
       $assert_session->pageTextContains($help_text);
     }

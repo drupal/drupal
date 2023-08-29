@@ -510,7 +510,8 @@
   };
 
   /**
-   * Allows users to select an element which checks a radio button.
+   * Allows users to select an element which checks a radio button and
+   * adds a class used for css styling on different states.
    *
    * @type {Drupal~behavior}
    *
@@ -519,24 +520,49 @@
    */
   Drupal.behaviors.clickToSelect = {
     attach(context) {
-      $(once('field-click-to-select', '.js-click-to-select', context)).on(
-        'click',
-        (event) => {
-          const clickToSelect = event.target.closest('.js-click-to-select');
-          const input = clickToSelect.querySelector('input');
-          input.checked = true;
-          // Ensure focus is added at the end of the process so wrap in
-          // a timeout.
-          setTimeout(() => {
-            // Remove the disabled attribute added by Drupal ajax so the
-            // element is focusable. This is safe as clicking the element
-            // multiple times causes no problems.
-            input.removeAttribute('disabled');
-            input.focus();
-          }, 0);
-          $(input).trigger('updateOptions');
+      once('field-click-to-select', '.js-click-to-select', context).forEach(
+        (clickToSelectEl) => {
+          const input = clickToSelectEl.querySelector('input');
+          if (input) {
+            Drupal.behaviors.clickToSelect.clickHandler(clickToSelectEl, input);
+          }
+          if (input.classList.contains('error')) {
+            clickToSelectEl.classList.add('error');
+          }
+          if (input.checked) {
+            this.selectHandler(clickToSelectEl, input);
+          }
         },
       );
+    },
+    // Adds click event listener to the field card.
+    clickHandler(clickToSelectEl, input) {
+      $(clickToSelectEl).on('click', (event) => {
+        const clickToSelect = event.target.closest('.js-click-to-select');
+        this.selectHandler(clickToSelect, input);
+        $(input).trigger('updateOptions');
+      });
+    },
+    // Handles adding and removing classes for the different states.
+    selectHandler(clickToSelect, input) {
+      $(input).on('focus', () => clickToSelect.classList.add('focus'));
+      $(input).on('blur', () => clickToSelect.classList.remove('focus'));
+      input.checked = true;
+      document
+        .querySelectorAll('.js-click-to-select.selected')
+        .forEach((item) => {
+          item.classList.remove('selected');
+        });
+      clickToSelect.classList.add('selected');
+      // Ensure focus is added at the end of the process so wrap in
+      // a timeout.
+      setTimeout(() => {
+        // Remove the disabled attribute added by Drupal ajax so the
+        // element is focusable. This is safe as clicking the element
+        // multiple times causes no problems.
+        input.removeAttribute('disabled');
+        input.focus();
+      }, 0);
     },
   };
 })(jQuery, Drupal, drupalSettings, Drupal.debounce);

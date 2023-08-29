@@ -1,0 +1,117 @@
+/**
+ * @file field_ui_add_field.module.css
+ */
+
+.field-ui-field-storage-add-form {
+  --thumb-size: 72px;
+}
+
+.field-ui-new-storage-wrapper {
+  margin-bottom: 0.75rem;
+}
+
+.group-field-options-wrapper {
+  margin-block: 1.5em;
+}
+
+.add-field-container,
+.group-field-options {
+  display: grid;
+  gap: 0.75rem 1.25rem;
+  margin-block: 0.625rem;
+
+  @media (min-width: 45rem) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.add-field-container {
+  @media (min-width: 75rem) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (min-width: 87.5rem) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.field-option {
+  display: grid;
+  grid-template-columns: var(--thumb-size) auto;
+  align-items: center;
+  padding: 0.25rem;
+  padding-inline-end: 0.75rem;
+  border: 1px solid var(--color-gray-100, #dedfe4);
+  gap: 0.75rem;
+  border-radius: 4px;
+}
+
+.field-option__item {
+  display: grid;
+  grid-template-rows: auto 2fr;
+  grid-template-columns: auto 1.1875rem;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+  column-gap: 1.25rem;
+  padding-block: 0.25rem;
+
+  > *:not(input) {
+    grid-column: 1;
+  }
+
+  > input {
+    grid-row: 1 / -1;
+    grid-column: 2;
+  }
+}
+
+.field-option__thumb {
+  height: 100%;
+  min-height: var(--thumb-size);
+  background-color: var(--color-gray-050, #f3f4f9);
+}
+
+.subfield-option {
+  margin-block: 0.625rem;
+  padding: 1rem;
+  padding-inline-end: 2rem;
+  border: 1px solid var(--color-gray-200, #d3d4d9);
+  border-radius: 4px;
+
+  .field-option-radio {
+    margin-inline-end: 0.4375rem;
+  }
+
+  .item-list ul {
+    margin-inline: 0;
+  }
+}
+
+.field-option,
+.subfield-option {
+  cursor: pointer;
+  &.focus {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+  &.hover {
+    border-color: var(--color-gray);
+    box-shadow: inset 0 0 0 1px var(--color-gray), var(--details-box-shadow);
+  }
+  &:not(.selected, .error):hover .form-boolean {
+    border-color: var(--input-fg-color);
+    box-shadow: inset 0 0 0 1px var(--input-fg-color);
+  }
+  &.selected {
+    border-color: var(--color-blue);
+    box-shadow: inset 0 0 0 2px var(--color-blue-600), var(--details-box-shadow);
+  }
+  &.error {
+    border-color: var(--color-red-500);
+    box-shadow: inset 0 0 0 1px var(--color-red-500), var(--details-box-shadow);
+  }
+  & .form-item__label.has-error {
+    color: currentColor;
+  }
+}

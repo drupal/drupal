@@ -122,7 +122,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $this->drupalGet($bundle_path . '/fields/add-field');
 
     // Check if the commonly referenced entity types appear in the list.
-    $page->find('css', "[name='new_storage_type'][value='reference']")->click();
+    $page->find('css', "[name='new_storage_type'][value='reference']")->getParent()->click();
     $assert_session->waitForText('Choose an option below');
     $this->assertSession()->elementExists('css', "[name='group_field_options_wrapper'][value='field_ui:entity_reference:node']");
     $this->assertSession()->elementExists('css', "[name='group_field_options_wrapper'][value='field_ui:entity_reference:user']");

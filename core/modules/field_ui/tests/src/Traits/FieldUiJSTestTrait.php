@@ -43,7 +43,7 @@ trait FieldUiJSTestTrait {
 
     if ($assert_session->waitForElementVisible('css', "[name='new_storage_type'][value='$field_type']")) {
       $page = $this->getSession()->getPage();
-      $field_card = $page->find('css', "[name='new_storage_type'][value='$field_type']");
+      $field_card = $page->find('css', "[name='new_storage_type'][value='$field_type']")->getParent();
     }
     else {
       $field_card = $this->getFieldFromGroupJS($field_type);
@@ -145,7 +145,7 @@ trait FieldUiJSTestTrait {
     }
     $field_card = NULL;
     foreach ($groups as $group) {
-      $group_field_card = $this->getSession()->getPage()->find('css', "[name='new_storage_type'][value='$group']");
+      $group_field_card = $this->getSession()->getPage()->find('css', "[name='new_storage_type'][value='$group']")->getParent();
       $group_field_card->click();
       $this->assertSession()->assertWaitOnAjaxRequest();
       $field_card = $this->getSession()->getPage()->find('css', "[name='group_field_options_wrapper'][value='$field_type']");
@@ -153,7 +153,7 @@ trait FieldUiJSTestTrait {
         break;
       }
     }
-    return $field_card;
+    return $field_card->getParent();
   }
 
 }

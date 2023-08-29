@@ -5,7 +5,7 @@
   background-image: url(../../../misc/icons/cacbd2/puzzle_piece_placeholder.svg);
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 60%;
+  background-size: 36px;
 }
 
 .field-icon-boolean {
@@ -14,7 +14,6 @@
 
 .field-icon-plain_text {
   background-image: url(../../../misc/icons/55565b/plain_text.svg);
-  background-size: 38%;
 }
 
 .field-icon-date_time {
