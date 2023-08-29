@@ -59,6 +59,7 @@ class RevisionableContentEntityBaseTest extends EntityKernelTestBase {
     $revision_id = $entity->getRevisionId();
     $revision_ids[] = $revision_id;
 
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = \Drupal::entityTypeManager()->getStorage('entity_test_mul_revlog');
     $entity = $storage->loadRevision($revision_id);
     $this->assertEquals($random_timestamp, $entity->getRevisionCreationTime());
@@ -135,6 +136,7 @@ class RevisionableContentEntityBaseTest extends EntityKernelTestBase {
     $this->assertFalse($entity->wasDefaultRevision());
 
     // Check that the default revision status was stored correctly.
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = $this->entityTypeManager->getStorage($entity_type_id);
     foreach ([TRUE, FALSE, TRUE, FALSE] as $index => $expected) {
       /** @var \Drupal\entity_test_revlog\Entity\EntityTestMulWithRevisionLog $revision */

@@ -54,7 +54,9 @@ class RevisionRouteProviderTest extends BrowserTestBase {
     $entity->save();
 
     // Reload the object.
-    $revision = \Drupal::entityTypeManager()->getStorage('entity_test_rev')->loadRevision($revisionId);
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
+    $storage = \Drupal::entityTypeManager()->getStorage('entity_test_rev');
+    $revision = $storage->loadRevision($revisionId);
     $this->drupalGet($revision->toUrl('revision'));
     $this->assertSession()->responseContains('first revision');
     $this->assertSession()->responseNotContains('second revision');

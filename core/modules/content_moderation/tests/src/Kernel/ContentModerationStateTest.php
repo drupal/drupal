@@ -150,6 +150,7 @@ class ContentModerationStateTest extends KernelTestBase {
     $entity->save();
 
     // Revert to the previous (published) revision.
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $entity_storage */
     $entity_storage = $this->entityTypeManager->getStorage($entity_type_id);
     $previous_revision = $entity_storage->loadRevision(4);
     $previous_revision->isDefaultRevision(TRUE);
@@ -780,6 +781,7 @@ class ContentModerationStateTest extends KernelTestBase {
    *   The reloaded entity.
    */
   protected function reloadEntity(EntityInterface $entity, $revision_id = FALSE) {
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = \Drupal::entityTypeManager()->getStorage($entity->getEntityTypeId());
     $storage->resetCache([$entity->id()]);
     if ($revision_id) {

@@ -137,10 +137,15 @@ class EntityRevision extends EntityContentBase {
     $revision_id = $old_destination_id_values ?
       reset($old_destination_id_values) :
       $row->getDestinationProperty($this->getKey('revision'));
-    if (!empty($revision_id) && ($entity = $this->storage->loadRevision($revision_id))) {
-      $entity->setNewRevision(FALSE);
+    $entity = NULL;
+    if (!empty($revision_id)) {
+      /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
+      $storage = $this->storage;
+      if ($entity = $storage->loadRevision($revision_id)) {
+        $entity->setNewRevision(FALSE);
+      }
     }
-    else {
+    if ($entity === NULL) {
       $entity_id = $row->getDestinationProperty($this->getKey('id'));
       $entity = $this->storage->load($entity_id);
 

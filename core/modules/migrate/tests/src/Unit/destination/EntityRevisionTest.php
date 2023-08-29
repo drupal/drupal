@@ -31,7 +31,7 @@ class EntityRevisionTest extends UnitTestCase {
   protected $migration;
 
   /**
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\Core\Entity\RevisionableStorageInterface
    */
   protected $storage;
 
@@ -60,7 +60,7 @@ class EntityRevisionTest extends UnitTestCase {
 
     // Setup mocks to be used when creating a revision destination.
     $this->migration = $this->prophesize(MigrationInterface::class);
-    $this->storage = $this->prophesize('\Drupal\Core\Entity\EntityStorageInterface');
+    $this->storage = $this->prophesize('\Drupal\Core\Entity\RevisionableStorageInterface');
 
     $entity_type = $this->prophesize(EntityTypeInterface::class);
     $entity_type->getSingularLabel()->willReturn('crazy');

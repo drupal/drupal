@@ -75,6 +75,7 @@ abstract class NegotiatorBase implements VersionNegotiatorInterface {
    *   Thrown if the storage handler couldn't be loaded.
    */
   protected function loadRevision(EntityInterface $entity, $revision_id) {
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
     $revision = static::ensureVersionExists($storage->loadRevision($revision_id));
     if ($revision->id() !== $entity->id()) {

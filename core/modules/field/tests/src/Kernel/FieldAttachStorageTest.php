@@ -50,6 +50,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
       $values[$current_revision] = $current_values;
     }
 
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = $this->container->get('entity_type.manager')->getStorage($entity_type);
     $storage->resetCache();
     $entity = $storage->load($entity_id);
@@ -252,6 +253,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
     $entity->setNewRevision();
     $entity->save();
     $vids[] = $entity->getRevisionId();
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $controller */
     $controller = $this->container->get('entity_type.manager')->getStorage($entity->getEntityTypeId());
     $controller->resetCache();
 

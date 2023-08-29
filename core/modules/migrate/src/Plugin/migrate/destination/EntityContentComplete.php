@@ -59,10 +59,15 @@ class EntityContentComplete extends EntityContentBase {
       : $row->getDestinationProperty($this->getKey('revision'));
     // If we are re-running a migration with set revision IDs and the
     // destination revision ID already exists then do not create a new revision.
-    if (!empty($revision_id) && ($entity = $this->storage->loadRevision($revision_id))) {
-      $entity->setNewRevision(FALSE);
+    $entity = NULL;
+    if (!empty($revision_id)) {
+      /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
+      $storage = $this->storage;
+      if ($entity = $storage->loadRevision($revision_id)) {
+        $entity->setNewRevision(FALSE);
+      }
     }
-    elseif (($entity_id = $row->getDestinationProperty($this->getKey('id'))) && ($entity = $this->storage->load($entity_id))) {
+    if ($entity === NULL && ($entity_id = $row->getDestinationProperty($this->getKey('id'))) && ($entity = $this->storage->load($entity_id))) {
       // We want to create a new entity. Set enforceIsNew() FALSE is  necessary
       // to properly save a new entity while setting the ID. Without it, the
       // system would see that the ID is already set and assume it is an update.
@@ -71,7 +76,7 @@ class EntityContentComplete extends EntityContentBase {
       // not be necessary, it is done for clarity.
       $entity->setNewRevision(TRUE);
     }
-    else {
+    if ($entity === NULL) {
       // Attempt to set the bundle.
       if ($bundle = $this->getBundle($row)) {
         $row->setDestinationProperty($this->getKey('bundle'), $bundle);

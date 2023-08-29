@@ -115,6 +115,7 @@ class ContentModerationSyncingTest extends KernelTestBase {
    * Tests modifying a previous revision during a sync.
    */
   public function testUpdatingPreviousRevisionDuringSync() {
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = $this->container->get('entity_type.manager')->getStorage('entity_test_mulrevpub');
 
     $entity = EntityTestMulRevPub::create([
@@ -142,6 +143,7 @@ class ContentModerationSyncingTest extends KernelTestBase {
    * Tests a moderation state changed on a previous revision during a sync.
    */
   public function testStateChangedPreviousRevisionDuringSync() {
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = $this->container->get('entity_type.manager')->getStorage('entity_test_mulrevpub');
 
     $entity = EntityTestMulRevPub::create([
@@ -188,6 +190,7 @@ class ContentModerationSyncingTest extends KernelTestBase {
    *   An array of revision names.
    */
   protected function getAllRevisionNames(EntityTestMulRevPub $entity) {
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = $this->container->get('entity_type.manager')->getStorage('entity_test_mulrevpub');
     return array_map(function ($revision_id) use ($storage) {
       return $storage->loadRevision($revision_id)->name->value;

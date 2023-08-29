@@ -3129,9 +3129,14 @@ abstract class ResourceTestBase extends BrowserTestBase {
       [$revision_id, $relationship_url, $related_url] = $revision_case;
       // Load the revision that will be requested.
       $this->entityStorage->resetCache([$entity->id()]);
-      $revision = is_null($revision_id)
-        ? $this->entityStorage->load($entity->id())
-        : $this->entityStorage->loadRevision($revision_id);
+      if ($revision_id === NULL) {
+        $revision = $this->entityStorage->load($entity->id());
+      }
+      else {
+        /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
+        $storage = $this->entityStorage;
+        $revision = $storage->loadRevision($revision_id);
+      }
       // Request the relationship resource without access to the relationship
       // field.
       $actual_response = $this->request('GET', $relationship_url, $request_options);
@@ -3156,9 +3161,14 @@ abstract class ResourceTestBase extends BrowserTestBase {
       [$revision_id, $relationship_url, $related_url] = $revision_case;
       // Load the revision that will be requested.
       $this->entityStorage->resetCache([$entity->id()]);
-      $revision = is_null($revision_id)
-        ? $this->entityStorage->load($entity->id())
-        : $this->entityStorage->loadRevision($revision_id);
+      if ($revision_id === NULL) {
+        $revision = $this->entityStorage->load($entity->id());
+      }
+      else {
+        /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
+        $storage = $this->entityStorage;
+        $revision = $storage->loadRevision($revision_id);
+      }
       // Request the relationship resource after granting access to the
       // relationship field.
       $actual_response = $this->request('GET', $relationship_url, $request_options);

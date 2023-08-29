@@ -1633,6 +1633,7 @@ class Sql extends QueryPluginBase {
 
     // Now load all revisions.
     foreach ($revision_ids_by_type as $entity_type => $revision_ids) {
+      /** @var \Drupal\Core\Entity\RevisionableStorageInterface $entity_storage */
       $entity_storage = $this->entityTypeManager->getStorage($entity_type);
       $entities = [];
 

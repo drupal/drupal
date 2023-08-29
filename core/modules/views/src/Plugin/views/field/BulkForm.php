@@ -551,7 +551,13 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
 
     // Load the entity or a specific revision depending on the given key.
     $storage = $this->entityTypeManager->getStorage($this->getEntityType());
-    $entity = $revision_id ? $storage->loadRevision($revision_id) : $storage->load($id);
+    if ($revision_id) {
+      /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
+      $entity = $storage->loadRevision($revision_id);
+    }
+    else {
+      $entity = $storage->load($id);
+    }
 
     if ($entity instanceof TranslatableInterface) {
       $entity = $entity->getTranslation($langcode);

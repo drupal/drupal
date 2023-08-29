@@ -202,8 +202,9 @@ class RevisionVersionHistoryTest extends BrowserTestBase {
     $row1Link = $this->assertSession()->elementExists('css', 'table tbody tr:nth-child(1) a');
     $this->assertEquals($entity->toUrl()->toString(), $row1Link->getAttribute('href'));
     // Reload revision so object has the properties to build a revision link.
-    $firstRevision = \Drupal::entityTypeManager()->getStorage('entity_test_revlog')
-      ->loadRevision($firstRevisionId);
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
+    $storage = \Drupal::entityTypeManager()->getStorage('entity_test_revlog');
+    $firstRevision = $storage->loadRevision($firstRevisionId);
     $row2Link = $this->assertSession()->elementExists('css', 'table tbody tr:nth-child(2) a');
     $this->assertEquals($firstRevision->toUrl('revision')->toString(), $row2Link->getAttribute('href'));
   }

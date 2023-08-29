@@ -50,7 +50,7 @@ class ContentEntityHasChangesTest extends KernelTestBase {
     ]);
     $user2->save();
 
-    /** @var \Drupal\Core\Entity\EntityStorageInterface $storage */
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = $this->container->get('entity_type.manager')
       ->getStorage('entity_test_mulrev_changed_rev');
     /** @var \Drupal\entity_test\Entity\EntityTestMulRevChangedWithRevisionLog $entity */

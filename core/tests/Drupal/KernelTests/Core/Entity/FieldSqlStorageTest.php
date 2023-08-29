@@ -107,6 +107,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
    */
   public function testFieldLoad() {
     $entity_type = $bundle = 'entity_test_rev';
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = $this->container->get('entity_type.manager')->getStorage($entity_type);
 
     $columns = ['bundle', 'deleted', 'entity_id', 'revision_id', 'delta', 'langcode', $this->tableMapping->getFieldColumnName($this->fieldStorage, 'value')];

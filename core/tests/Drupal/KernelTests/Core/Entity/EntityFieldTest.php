@@ -103,6 +103,7 @@ class EntityFieldTest extends EntityKernelTestBase {
    * Test setting field values on revisionable entities.
    */
   public function testFieldEntityRevisionWrite() {
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = \Drupal::entityTypeManager()->getStorage('entity_test_rev');
 
     // Create a new entity, with a field value 'foo'.

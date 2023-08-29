@@ -60,6 +60,7 @@ class MediaLibraryFieldWidgetOpener implements MediaLibraryOpenerInterface {
       throw new \LogicException("The media library can only be opened by fieldable entities.");
     }
 
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = $this->entityTypeManager->getStorage($entity_type_id);
     $access_handler = $this->entityTypeManager->getAccessControlHandler($entity_type_id);
 

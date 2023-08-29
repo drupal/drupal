@@ -86,6 +86,7 @@ class EntityWorkspaceConflictConstraintValidator extends ConstraintValidator imp
       // Get the latest revision of the entity in order to check if it's being
       // edited in a different workspace.
       $latest_revision = $this->workspaceManager->executeOutsideWorkspace(function () use ($entity) {
+        /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
         $storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
         return $storage->loadRevision($storage->getLatestRevisionId($entity->id()));
       });
