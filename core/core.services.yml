@@ -1676,6 +1676,7 @@ services:
     arguments: [ '@asset.js.collection_grouper', '@asset.js.optimizer', '@theme.manager', '@library.dependency_resolver', '@request_stack', '@file_system', '@config.factory', '@file_url_generator', '@datetime.time', '@language_manager', '@state']
   asset.js.optimizer:
     class: Drupal\Core\Asset\JsOptimizer
+    arguments: ['@logger.channel.default']
   asset.js.collection_grouper:
     class: Drupal\Core\Asset\JsCollectionGrouper
   asset.js.dumper:
