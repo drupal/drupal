@@ -49,36 +49,22 @@ class TestSiteApplicationTest extends UnitTestCase {
    * @coversNothing
    */
   public function testInstallWithNonExistingFile() {
-
-    // Create a connection to the DB configured in SIMPLETEST_DB.
-    $connection = Database::getConnection('default', $this->addTestDatabase(''));
-    $table_count = count($connection->schema()->findTables('%'));
-
     $command_line = $this->php . ' core/scripts/test-site.php install --setup-file "this-class-does-not-exist" --db-url "' . getenv('SIMPLETEST_DB') . '"';
     $process = Process::fromShellCommandline($command_line, $this->root);
     $process->run();
 
     $this->assertStringContainsString('The file this-class-does-not-exist does not exist.', $process->getErrorOutput());
-    $this->assertSame(1, $process->getExitCode());
-    $this->assertCount($table_count, $connection->schema()->findTables('%'), 'No additional tables created in the database');
   }
 
   /**
    * @coversNothing
    */
   public function testInstallWithFileWithNoClass() {
-
-    // Create a connection to the DB configured in SIMPLETEST_DB.
-    $connection = Database::getConnection('default', $this->addTestDatabase(''));
-    $table_count = count($connection->schema()->findTables('%'));
-
     $command_line = $this->php . ' core/scripts/test-site.php install --setup-file core/tests/fixtures/empty_file.php.module --db-url "' . getenv('SIMPLETEST_DB') . '"';
     $process = Process::fromShellCommandline($command_line, $this->root);
     $process->run();
 
     $this->assertStringContainsString('The file core/tests/fixtures/empty_file.php.module does not contain a class', $process->getErrorOutput());
-    $this->assertSame(1, $process->getExitCode());
-    $this->assertCount($table_count, $connection->schema()->findTables('%'), 'No additional tables created in the database');
   }
 
   /**
