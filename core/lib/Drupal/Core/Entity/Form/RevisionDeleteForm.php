@@ -140,6 +140,7 @@ class RevisionDeleteForm extends ConfirmFormBase implements EntityFormInterface 
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $entityTypeId = $this->revision->getEntityTypeId();
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $entityStorage */
     $entityStorage = $this->entityTypeManager->getStorage($entityTypeId);
     $entityStorage->deleteRevision($this->revision->getRevisionId());
 

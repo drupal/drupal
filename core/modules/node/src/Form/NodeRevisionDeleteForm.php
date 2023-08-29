@@ -142,7 +142,9 @@ class NodeRevisionDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->nodeStorage->deleteRevision($this->revision->getRevisionId());
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
+    $storage = $this->nodeStorage;
+    $storage->deleteRevision($this->revision->getRevisionId());
 
     $this->logger('content')->info('@type: deleted %title revision %revision.', ['@type' => $this->revision->bundle(), '%title' => $this->revision->label(), '%revision' => $this->revision->getRevisionId()]);
     $node_type = $this->nodeTypeStorage->load($this->revision->bundle())->label();

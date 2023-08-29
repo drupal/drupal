@@ -325,6 +325,7 @@ class WorkspaceManager implements WorkspaceManagerInterface {
 
     $count = 1;
     foreach ($all_associated_revisions as $entity_type_id => $associated_revisions) {
+      /** @var \Drupal\Core\Entity\RevisionableStorageInterface $associated_entity_storage */
       $associated_entity_storage = $this->entityTypeManager->getStorage($entity_type_id);
 
       // Sort the associated revisions in reverse ID order, so we can delete the

@@ -533,15 +533,6 @@ parameters:
 			path: lib/Drupal/Core/Entity/EntityDisplayBase.php
 
 		-
-			message: """
-				#^Call to deprecated method deleteRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:deleteRevision instead\\.$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Entity/Form/RevisionDeleteForm.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\Entity\\\\KeyValueStore\\\\KeyValueContentEntityStorage\\:\\:createTranslation\\(\\) should return Drupal\\\\Core\\\\Entity\\\\ContentEntityInterface but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Entity/KeyValueStore/KeyValueContentEntityStorage.php
@@ -1190,15 +1181,6 @@ parameters:
 			"""
 			count: 1
 			path: modules/content_moderation/src/Plugin/Field/FieldWidget/ModerationStateWidget.php
-
-		-
-			message: """
-				#^Call to deprecated method deleteRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:deleteRevision instead\\.$#
-			"""
-			count: 3
-			path: modules/content_moderation/tests/src/Kernel/ContentModerationStateTest.php
 
 		-
 			message: """
@@ -2066,15 +2048,6 @@ parameters:
 			message: "#^Method Drupal\\\\node\\\\ConfigTranslation\\\\NodeTypeMapper\\:\\:setEntity\\(\\) should return bool but return statement is missing\\.$#"
 			count: 1
 			path: modules/node/src/ConfigTranslation/NodeTypeMapper.php
-
-		-
-			message: """
-				#^Call to deprecated method deleteRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:deleteRevision instead\\.$#
-			"""
-			count: 1
-			path: modules/node/src/Form/NodeRevisionDeleteForm.php
 
 		-
 			message: "#^Method Drupal\\\\node\\\\NodeForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
@@ -3146,15 +3119,6 @@ parameters:
 			message: "#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: modules/workspaces/src/WorkspaceAssociation.php
-
-		-
-			message: """
-				#^Call to deprecated method deleteRevision\\(\\) of class Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				\\\\Drupal\\\\Core\\\\Entity\\\\RevisionableStorageInterface\\:\\:deleteRevision instead\\.$#
-			"""
-			count: 1
-			path: modules/workspaces/src/WorkspaceManager.php
 
 		-
 			message: "#^Method Drupal\\\\workspaces\\\\WorkspaceMerger\\:\\:checkConflictsOnTarget\\(\\) should return array but return statement is missing\\.$#"
