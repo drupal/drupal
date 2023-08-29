@@ -16,8 +16,9 @@ $autoloader = require_once 'autoload.php';
 $_SERVER['HTTPS'] = NULL;
 ini_set('session.cookie_secure', FALSE);
 foreach ($_SERVER as &$value) {
-  $value = str_replace('core/modules/system/tests/http.php', 'index.php', $value);
-  $value = str_replace('https://', 'http://', $value);
+  // Because HTTPS is null.
+  $value = $value ? str_replace('core/modules/system/tests/http.php', 'index.php', $value) : "";
+  $value = $value ? str_replace('https://', 'http://', $value) : "";
 }
 
 $kernel = new TestKernel('testing', $autoloader, TRUE);

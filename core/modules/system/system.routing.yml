@@ -515,8 +515,7 @@ system.db_update:
 system.admin_content:
   path: '/admin/content'
   defaults:
-    _controller: '\Drupal\system\Controller\SystemController::overview'
-    link_id: 'system.admin_content'
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
     _title: 'Content'
   requirements:
     _permission: 'access administration pages'

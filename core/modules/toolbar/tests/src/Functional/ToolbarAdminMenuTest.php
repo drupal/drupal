@@ -65,6 +65,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     'language',
     'test_page_test',
     'locale',
+    'search',
   ];
 
   /**
@@ -95,6 +96,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
       'administer taxonomy',
       'administer languages',
       'translate interface',
+      'administer search',
     ];
 
     // Create an administrative user and log it in.
@@ -329,6 +331,8 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     // should create a new menu hash if the toolbar subtrees cache is correctly
     // invalidated.
     $this->drupalLogin($translate_user);
+    // We need to visit the page to get the string to be translated.
+    $this->drupalGet($langcode . '/admin/config');
     $search = [
       'string' => 'Search and metadata',
       'langcode' => $langcode,
@@ -358,6 +362,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     // of the link items in the Structure tree (Menus) has had its text
     // translated.
     $this->drupalLogin($admin_user);
+    $this->drupalGet('admin/config');
     // Have the adminUser request a page in the new language.
     $this->drupalGet($langcode . '/test-page');
     $this->assertSession()->statusCodeEquals(200);

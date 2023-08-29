@@ -7,6 +7,11 @@ services:
     class: Drupal\system\Access\DbUpdateAccessCheck
     tags:
       - { name: access_check, applies_to: _access_system_update }
+  access_check.admin_menu_block_page:
+    class: Drupal\system\Access\SystemAdminMenuBlockAccessCheck
+    arguments: ['@access_manager', '@menu.link_tree', '@router', '@plugin.manager.menu.link']
+    tags:
+      - { name: access_check, applies_to: _access_admin_menu_block_page }
   system.manager:
     class: Drupal\system\SystemManager
     arguments: ['@module_handler', '@request_stack', '@menu.link_tree', '@menu.active_trail']
@@ -77,3 +82,7 @@ services:
     arguments: ['@menu.link_tree', '@system.module_admin_links_memory_cache']
   system.module_admin_links_memory_cache:
     class: Drupal\Core\Cache\MemoryCache\MemoryCache
+  system.access_route_alter_subscriber:
+    class: Drupal\system\EventSubscriber\AccessRouteAlterSubscriber
+    tags:
+      - { name: event_subscriber }
