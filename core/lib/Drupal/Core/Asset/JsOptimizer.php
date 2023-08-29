@@ -3,14 +3,25 @@
 namespace Drupal\Core\Asset;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Utility\Error;
 use Peast\Formatter\Compact as CompactFormatter;
 use Peast\Peast;
 use Peast\Renderer;
+use Peast\Syntax\Exception as PeastSyntaxException;
+use Psr\Log\LoggerInterface;
 
 /**
  * Optimizes a JavaScript asset.
  */
 class JsOptimizer implements AssetOptimizerInterface {
+
+  /**
+   * Constructs a new JsOptimizer object.
+   *
+   * @param \Psr\Log\LoggerInterface $logger
+   *   The logger.
+   */
+  public function __construct(protected readonly LoggerInterface $logger) {}
 
   /**
    * {@inheritdoc}
@@ -34,10 +45,27 @@ class JsOptimizer implements AssetOptimizerInterface {
       $data = Unicode::convertToUtf8($data, $js_asset['attributes']['charset']);
     }
     // Remove comments, whitespace, and optional braces.
-    $ast = Peast::latest($data)->parse();
-    $renderer = new Renderer();
-    $renderer->setFormatter(new CompactFormatter());
-    return $renderer->render($ast);
+    try {
+      $ast = Peast::latest($data)->parse();
+      $renderer = new Renderer();
+      $renderer->setFormatter(new CompactFormatter());
+      return $renderer->render($ast);
+    }
+    catch (\Exception $exception) {
+      if ($exception instanceof PeastSyntaxException) {
+        $position = $exception->getPosition();
+        Error::logException($this->logger, $exception, 'Syntax error:  @message, File: @asset_file, Line: @asset_line, Column: @asset_column, Index: @asset_index', [
+          '@asset_file' => $js_asset['data'],
+          '@asset_line' => $position->getLine(),
+          '@asset_column' => $position->getColumn(),
+          '@asset_index' => $position->getIndex(),
+        ]);
+      }
+      else {
+        Error::logException($this->logger, $exception);
+      }
+      return $data;
+    }
   }
 
   /**

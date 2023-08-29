@@ -24,8 +24,8 @@ class JsOptimizerUnitTest extends UnitTestCase {
    */
   protected function setUp(): void {
     parent::setUp();
-
-    $this->optimizer = new JsOptimizer();
+    $logger = $this->createMock('\Psr\Log\LoggerInterface');
+    $this->optimizer = new JsOptimizer($logger);
   }
 
   /**
@@ -118,6 +118,16 @@ class JsOptimizerUnitTest extends UnitTestCase {
           'data' => $path . 'to_be_minified.js',
         ],
         file_get_contents($path . 'to_be_minified.js.optimized.js'),
+      ],
+      4 => [
+        [
+          'type' => 'file',
+          'preprocess' => TRUE,
+          'data' => $path . 'syntax_error.js',
+        ],
+        // When there is a syntax error, the 'optimized' contents are the
+        // contents of the original file.
+        file_get_contents($path . 'syntax_error.js'),
       ],
     ];
   }
