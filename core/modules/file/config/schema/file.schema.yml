@@ -24,6 +24,28 @@ file.settings:
     make_unused_managed_files_temporary:
       type: boolean
       label: 'Controls if unused files should be marked temporary'
+    filename_sanitization:
+      type: mapping
+      label: 'Uploaded filename sanitization options'
+      mapping:
+        transliterate:
+          type: boolean
+          label: 'Transliterate'
+        replace_whitespace:
+          type: boolean
+          label: 'Replace whitespace'
+        replace_non_alphanumeric:
+          type: boolean
+          label: 'Replace non-alphanumeric characters except dot, underscore and dash'
+        deduplicate_separators:
+          type: boolean
+          label: 'Replace sequences of dots, underscores and/or dashes with the replacement character'
+        lowercase:
+          type: boolean
+          label: 'Convert to lowercase'
+        replacement_character:
+          type: string
+          label: 'Character to use in replacements'
 
 field.storage_settings.file:
   type: base_entity_reference_field_settings

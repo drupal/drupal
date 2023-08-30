@@ -4,3 +4,10 @@ description:
 icon:
   directory: 'core/modules/file/icons'
 make_unused_managed_files_temporary: false
+filename_sanitization:
+  transliterate: false
+  replace_whitespace: false
+  replace_non_alphanumeric: false
+  deduplicate_separators: false
+  lowercase: false
+  replacement_character: '-'
