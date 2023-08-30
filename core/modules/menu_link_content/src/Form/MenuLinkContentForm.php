@@ -91,7 +91,16 @@ class MenuLinkContentForm extends ContentEntityForm {
 
     $default = $this->entity->getMenuName() . ':' . $this->entity->getParentId();
     $id = $this->entity->isNew() ? '' : $this->entity->getPluginId();
-    $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($default, $id);
+    if ($this->entity->isNew()) {
+      $menu_id = $this->entity->getMenuName();
+      $menu = $this->entityTypeManager->getStorage('menu')->load($menu_id);
+      $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($default, $id, [
+        $menu_id => $menu->label(),
+      ]);
+    }
+    else {
+      $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($default, $id);
+    }
     $form['menu_parent']['#weight'] = 10;
     $form['menu_parent']['#title'] = $this->t('Parent link');
     $form['menu_parent']['#description'] = $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.');

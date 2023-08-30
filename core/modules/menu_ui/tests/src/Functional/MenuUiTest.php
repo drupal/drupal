@@ -806,7 +806,7 @@ class MenuUiTest extends BrowserTestBase {
         'expanded[value]' => FALSE,
         'weight[0][value]' => '0',
       ];
-      $this->drupalGet("admin/structure/menu/manage/{$this->menu->id()}/add");
+      $this->drupalGet("admin/structure/menu/manage/tools/add");
       $this->submitForm($edit, 'Save');
       $menu_links = \Drupal::entityTypeManager()->getStorage('menu_link_content')->loadByProperties(['title' => $title]);
       $last_link = reset($menu_links);
@@ -814,7 +814,7 @@ class MenuUiTest extends BrowserTestBase {
     }
 
     // The last link cannot be a parent in the new menu link form.
-    $this->drupalGet('admin/structure/menu/manage/admin/add');
+    $this->drupalGet('admin/structure/menu/manage/tools/add');
     $value = 'tools:' . $last_link->getPluginId();
     $this->assertSession()->optionNotExists('edit-menu-parent', $value);
 
