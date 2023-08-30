@@ -84,7 +84,7 @@ module.exports = {
         toReturn.toolbarModelOffsetsTop =
           models.toolbarModel.get('offsets').top === 79;
         toReturn.toolbarModelSubtrees =
-          Object.keys(models.menuModel.get('subtrees')).length === 0;
+          models.menuModel.get('subtrees') === null;
         return toReturn;
       },
       [],
