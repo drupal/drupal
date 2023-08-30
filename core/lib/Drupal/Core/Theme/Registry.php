@@ -329,8 +329,8 @@ class Registry implements DestructableInterface {
    * See the @link themeable Default theme implementations topic @endlink for
    * details.
    *
-   * @return \Drupal\Core\Utility\ThemeRegistry
-   *   The build theme registry.
+   * @return array
+   *   The built theme registry.
    *
    * @see hook_theme_registry_alter()
    */
