@@ -153,6 +153,10 @@ class EntityPermissionsForm extends UserPermissionsForm {
    *   The access result.
    */
   public function access(Route $route, RouteMatchInterface $route_match, $bundle = NULL): AccessResultInterface {
+    $permission = $route->getRequirement('_permission');
+    if ($permission && !$this->currentUser()->hasPermission($permission)) {
+      return AccessResult::neutral()->cachePerPermissions();
+    }
     // Set $this->bundle for use by ::permissionsByProvider().
     if ($bundle instanceof EntityInterface) {
       $this->bundle = $bundle;
