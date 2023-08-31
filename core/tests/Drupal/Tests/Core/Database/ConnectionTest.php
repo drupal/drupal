@@ -5,6 +5,7 @@ namespace Drupal\Tests\Core\Database;
 use Composer\Autoload\ClassLoader;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\StatementPrefetch;
+use Drupal\Core\Database\StatementPrefetchIterator;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
@@ -904,6 +905,79 @@ class ConnectionTest extends UnitTestCase {
     $mockConnection = new StubConnection($mockPdo, []);
     $statement = new StatementPrefetch($mockPdo, $mockConnection, '');
     $this->assertInstanceOf(StatementPrefetch::class, $statement);
+  }
+
+  /**
+   * Provides data for testSupportedFetchModes.
+   *
+   * @return array
+   *   An associative array of simple arrays, each having the following
+   *   elements:
+   *   - a PDO fetch mode.
+   */
+  public static function providerSupportedFetchModes(): array {
+    return [
+      'FETCH_ASSOC' => [\PDO::FETCH_ASSOC],
+      'FETCH_CLASS' => [\PDO::FETCH_CLASS],
+      'FETCH_CLASS | FETCH_PROPS_LATE' => [\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE],
+      'FETCH_COLUMN' => [\PDO::FETCH_COLUMN],
+      'FETCH_NUM' => [\PDO::FETCH_NUM],
+      'FETCH_OBJ' => [\PDO::FETCH_OBJ],
+    ];
+  }
+
+  /**
+   * Tests supported fetch modes.
+   *
+   * @dataProvider providerSupportedFetchModes
+   */
+  public function testSupportedFetchModes(int $mode): void {
+    $mockPdo = $this->createMock(StubPDO::class);
+    $mockConnection = new StubConnection($mockPdo, []);
+    $statement = new StatementPrefetchIterator($mockPdo, $mockConnection, '');
+    $this->assertInstanceOf(StatementPrefetchIterator::class, $statement);
+    $statement->setFetchMode($mode);
+  }
+
+  /**
+   * Provides data for testDeprecatedFetchModes.
+   *
+   * @return array
+   *   An associative array of simple arrays, each having the following
+   *   elements:
+   *   - a PDO fetch mode.
+   */
+  public static function providerDeprecatedFetchModes(): array {
+    return [
+      'FETCH_DEFAULT' => [\PDO::FETCH_DEFAULT],
+      'FETCH_LAZY' => [\PDO::FETCH_LAZY],
+      'FETCH_BOTH' => [\PDO::FETCH_BOTH],
+      'FETCH_BOUND' => [\PDO::FETCH_BOUND],
+      'FETCH_INTO' => [\PDO::FETCH_INTO],
+      'FETCH_FUNC' => [\PDO::FETCH_FUNC],
+      'FETCH_NAMED' => [\PDO::FETCH_NAMED],
+      'FETCH_KEY_PAIR' => [\PDO::FETCH_KEY_PAIR],
+      'FETCH_CLASS | FETCH_CLASSTYPE' => [\PDO::FETCH_CLASS | \PDO::FETCH_CLASSTYPE],
+    ];
+  }
+
+  /**
+   * Tests deprecated fetch modes.
+   *
+   * @todo in drupal:11.0.0, do not remove this test but convert it to expect
+   *   exceptions instead of deprecations.
+   *
+   * @dataProvider providerDeprecatedFetchModes
+   *
+   * @group legacy
+   */
+  public function testDeprecatedFetchModes(int $mode): void {
+    $this->expectDeprecation('Fetch mode %A is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use supported modes only. See https://www.drupal.org/node/3377999');
+    $mockPdo = $this->createMock(StubPDO::class);
+    $mockConnection = new StubConnection($mockPdo, []);
+    $statement = new StatementPrefetchIterator($mockPdo, $mockConnection, '');
+    $this->assertInstanceOf(StatementPrefetchIterator::class, $statement);
+    $statement->setFetchMode($mode);
   }
 
 }

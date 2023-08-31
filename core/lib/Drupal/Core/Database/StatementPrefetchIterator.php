@@ -188,6 +188,9 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function setFetchMode($mode, $a1 = NULL, $a2 = []) {
+    if (!in_array($mode, $this->supportedFetchModes)) {
+      @trigger_error('Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use supported modes only. See https://www.drupal.org/node/3377999', E_USER_DEPRECATED);
+    }
     $this->defaultFetchStyle = $mode;
     switch ($mode) {
       case \PDO::FETCH_CLASS:
@@ -237,14 +240,18 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
 
     // Now, format the next prefetched record according to the required fetch
     // style.
+    // @todo in Drupal 11, remove arms for deprecated fetch modes.
     $rowAssoc = $this->data[$currentKey];
     $row = match($fetch_style ?? $this->defaultFetchStyle) {
       \PDO::FETCH_ASSOC => $rowAssoc,
+      // @phpstan-ignore-next-line
       \PDO::FETCH_BOTH => $this->assocToBoth($rowAssoc),
       \PDO::FETCH_NUM => $this->assocToNum($rowAssoc),
       \PDO::FETCH_LAZY, \PDO::FETCH_OBJ => $this->assocToObj($rowAssoc),
+      // @phpstan-ignore-next-line
       \PDO::FETCH_CLASS | \PDO::FETCH_CLASSTYPE => $this->assocToClassType($rowAssoc, $this->fetchOptions['constructor_args']),
       \PDO::FETCH_CLASS => $this->assocToClass($rowAssoc, $this->fetchOptions['class'], $this->fetchOptions['constructor_args']),
+      // @phpstan-ignore-next-line
       \PDO::FETCH_INTO => $this->assocIntoObject($rowAssoc, $this->fetchOptions['object']),
       \PDO::FETCH_COLUMN => $this->assocToColumn($rowAssoc, $this->columnNames, $this->fetchOptions['column']),
       // @todo in Drupal 11, throw an exception if the fetch style cannot be
@@ -297,6 +304,9 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchAll($mode = NULL, $column_index = NULL, $constructor_arguments = NULL) {
+    if (isset($mode) && !in_array($mode, $this->supportedFetchModes)) {
+      @trigger_error('Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use supported modes only. See https://www.drupal.org/node/3377999', E_USER_DEPRECATED);
+    }
     $fetchStyle = $mode ?? $this->defaultFetchStyle;
     if (isset($column_index)) {
       $this->fetchOptions['column'] = $column_index;
