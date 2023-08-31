@@ -11,7 +11,7 @@ use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\StatementWrapperIterator;
 use Drupal\Core\Database\SupportsTemporaryTablesInterface;
-use Drupal\Core\Database\Transaction;
+use Drupal\Core\Database\Transaction\TransactionManagerInterface;
 
 // cSpell:ignore ilike nextval
 
@@ -71,6 +71,21 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    * {@inheritdoc}
    */
   protected $identifierQuotes = ['"', '"'];
+
+  /**
+   * An array of transaction savepoints.
+   *
+   * The main use for this array is to store information about transaction
+   * savepoints opened to to mimic MySql's InnoDB functionality, which provides
+   * an inherent savepoint before any query in a transaction.
+   *
+   * @see ::addSavepoint()
+   * @see ::releaseSavepoint()
+   * @see ::rollbackSavepoint()
+   *
+   * @var array<string,Transaction>
+   */
+  protected array $savepoints = [];
 
   /**
    * Constructs a connection object.
@@ -198,7 +213,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     // - A 'mimic_implicit_commit' does not exist already.
     // - The query is not a savepoint query.
     $wrap_with_savepoint = $this->inTransaction() &&
-      !isset($this->transactionLayers['mimic_implicit_commit']) &&
+      !$this->transactionManager()->has('mimic_implicit_commit') &&
       !(is_string($query) && (
         stripos($query, 'ROLLBACK TO SAVEPOINT ') === 0 ||
         stripos($query, 'RELEASE SAVEPOINT ') === 0 ||
@@ -380,12 +395,10 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    * @param $savepoint_name
    *   A string representing the savepoint name. By default,
    *   "mimic_implicit_commit" is used.
-   *
-   * @see Drupal\Core\Database\Connection::pushTransaction()
    */
   public function addSavepoint($savepoint_name = 'mimic_implicit_commit') {
     if ($this->inTransaction()) {
-      $this->pushTransaction($savepoint_name);
+      $this->savepoints[$savepoint_name] = $this->startTransaction($savepoint_name);
     }
   }
 
@@ -395,12 +408,10 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    * @param $savepoint_name
    *   A string representing the savepoint name. By default,
    *   "mimic_implicit_commit" is used.
-   *
-   * @see Drupal\Core\Database\Connection::popTransaction()
    */
   public function releaseSavepoint($savepoint_name = 'mimic_implicit_commit') {
-    if (isset($this->transactionLayers[$savepoint_name])) {
-      $this->popTransaction($savepoint_name);
+    if ($this->inTransaction() && $this->transactionManager()->has($savepoint_name)) {
+      unset($this->savepoints[$savepoint_name]);
     }
   }
 
@@ -412,8 +423,9 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    *   "mimic_implicit_commit" is used.
    */
   public function rollbackSavepoint($savepoint_name = 'mimic_implicit_commit') {
-    if (isset($this->transactionLayers[$savepoint_name])) {
-      $this->rollBack($savepoint_name);
+    if ($this->inTransaction() && $this->transactionManager()->has($savepoint_name)) {
+      $this->savepoints[$savepoint_name]->rollBack();
+      unset($this->savepoints[$savepoint_name]);
     }
   }
 
@@ -505,8 +517,15 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   /**
    * {@inheritdoc}
    */
+  protected function driverTransactionManager(): TransactionManagerInterface {
+    return new TransactionManager($this);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function startTransaction($name = '') {
-    return new Transaction($this, $name);
+    return $this->transactionManager()->push($name);
   }
 
 }

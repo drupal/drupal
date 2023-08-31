@@ -68,6 +68,14 @@ class EndOfTransactionQueriesTest extends KernelTestBase {
 
     $executed_statements = [];
     foreach (Database::getLog('testEntitySave') as $log) {
+      // Exclude transaction related statements from the log.
+      if (
+        str_starts_with($log['query'], 'ROLLBACK TO SAVEPOINT ') ||
+        str_starts_with($log['query'], 'RELEASE SAVEPOINT ') ||
+        str_starts_with($log['query'], 'SAVEPOINT ')
+      ) {
+        continue;
+      }
       $executed_statements[] = $log['query'];
     }
     $last_statement_index = max(array_keys($executed_statements));

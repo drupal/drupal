@@ -9,7 +9,7 @@ use Drupal\Core\Database\ExceptionHandler;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\SupportsTemporaryTablesInterface;
-use Drupal\Core\Database\Transaction;
+use Drupal\Core\Database\Transaction\TransactionManagerInterface;
 
 /**
  * SQLite implementation of \Drupal\Core\Database\Connection.
@@ -30,6 +30,11 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    * Whether or not the active transaction (if any) will be rolled back.
    *
    * @var bool
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. It is
+   *   unused.
+   *
+   * @see https://www.drupal.org/node/3381002
    */
   protected $willRollback;
 
@@ -587,8 +592,15 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   /**
    * {@inheritdoc}
    */
+  protected function driverTransactionManager(): TransactionManagerInterface {
+    return new TransactionManager($this);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function startTransaction($name = '') {
-    return new Transaction($this, $name);
+    return $this->transactionManager()->push($name);
   }
 
 }

@@ -1,0 +1,112 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Drupal\Core\Database\Transaction;
+
+use Drupal\Core\Database\Transaction;
+
+/**
+ * Interface for the database transaction manager classes.
+ */
+interface TransactionManagerInterface {
+
+  /**
+   * Determines if there is an active transaction open.
+   *
+   * @return bool
+   *   TRUE if we're currently in a transaction, FALSE otherwise.
+   */
+  public function inTransaction(): bool;
+
+  /**
+   * Checks if a named Drupal transaction is active.
+   *
+   * @param string $name
+   *   The name of the transaction.
+   *
+   * @return bool
+   *   TRUE if the transaction is active, FALSE otherwise.
+   */
+  public function has(string $name): bool;
+
+  /**
+   * Pushes a new Drupal transaction on the stack.
+   *
+   * This begins a client connection transaction if there is not one active,
+   * or adds a savepoint to the active one.
+   *
+   * @param string $name
+   *   (optional) The name of the savepoint.
+   *
+   * @return \Drupal\Core\Database\Transaction
+   *   A Transaction object.
+   *
+   * @throws \Drupal\Core\Database\TransactionNameNonUniqueException
+   *   If a Drupal Transaction with the specified name exists already.
+   */
+  public function push(string $name = ''): Transaction;
+
+  /**
+   * Removes a Drupal transaction from the stack.
+   *
+   * The unpiled item does not necessarily need to be the last on the stack.
+   * This method should only be called by a Transaction object going out of
+   * scope.
+   *
+   * @param string $name
+   *   (optional) The name of the savepoint.
+   *
+   * @throws \Drupal\Core\Database\TransactionOutOfOrderException
+   *   If a Drupal Transaction with the specified name does not exist.
+   * @throws \Drupal\Core\Database\TransactionCommitFailedException
+   *   If the commit of the root transaction failed.
+   */
+  public function unpile(string $name): void;
+
+  /**
+   * Rolls back a Drupal transaction.
+   *
+   * Rollbacks for nested transactions need to occur in reverse order to the
+   * pushes to the stack. Rolling back the last active Drupal transaction leads
+   * to rolling back the client connection (or to committing it in the edge
+   * case when the root was unpiled earlier).
+   *
+   * @param string $name
+   *   (optional) The name of the savepoint.
+   *
+   * @throws \Drupal\Core\Database\TransactionNoActiveException
+   *   If there is no active client connection.
+   * @throws \Drupal\Core\Database\TransactionOutOfOrderException
+   *   If the order of rollback is not in reverse sequence against the pushes
+   *   to the stack.
+   * @throws \Drupal\Core\Database\TransactionCommitFailedException
+   *   If the commit of the root transaction failed.
+   */
+  public function rollback(string $name): void;
+
+  /**
+   * Adds a root transaction end callback.
+   *
+   * These callbacks are invoked immediately after the client transaction has
+   * been committed or rolled back.
+   *
+   * It can for example be used to avoid deadlocks on write-heavy tables that
+   * do not need to be part of the transaction, like cache tag invalidations.
+   *
+   * Another use case is that services using alternative backends like Redis
+   * and Memcache cache implementations can replicate the transaction-behavior
+   * of the database cache backend and avoid race conditions.
+   *
+   * An argument is passed to the callbacks that indicates whether the
+   * transaction was successful or not.
+   *
+   * @param callable $callback
+   *   The callback to invoke.
+   *
+   * @throws \LogicException
+   *   When a callback addition is attempted but no transaction is active.
+   */
+  public function addPostTransactionCallback(callable $callback): void;
+
+}

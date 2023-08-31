@@ -48,9 +48,16 @@ class Transaction {
   protected $name;
 
   public function __construct(Connection $connection, $name = NULL) {
+    if ($connection->transactionManager()) {
+      $this->connection = $connection;
+      $this->name = $name;
+      return;
+    }
+    // Start of BC layer.
     $this->connection = $connection;
     // If there is no transaction depth, then no transaction has started. Name
     // the transaction 'drupal_transaction'.
+    // @phpstan-ignore-next-line
     if (!$depth = $connection->transactionDepth()) {
       $this->name = 'drupal_transaction';
     }
@@ -62,14 +69,23 @@ class Transaction {
     else {
       $this->name = $name;
     }
+    // @phpstan-ignore-next-line
     $this->connection->pushTransaction($this->name);
+    // End of BC layer.
   }
 
   public function __destruct() {
+    if ($this->connection->transactionManager()) {
+      $this->connection->transactionManager()->unpile($this->name);
+      return;
+    }
+    // Start of BC layer.
     // If we rolled back then the transaction would have already been popped.
     if (!$this->rolledBack) {
+      // @phpstan-ignore-next-line
       $this->connection->popTransaction($this->name);
     }
+    // End of BC layer.
   }
 
   /**
@@ -90,8 +106,15 @@ class Transaction {
    * @see \Drupal\Core\Database\Connection::rollBack()
    */
   public function rollBack() {
+    if ($this->connection->transactionManager()) {
+      $this->connection->transactionManager()->rollback($this->name);
+      return;
+    }
+    // Start of BC layer.
     $this->rolledBack = TRUE;
+    // @phpstan-ignore-next-line
     $this->connection->rollBack($this->name);
+    // End of BC layer.
   }
 
 }

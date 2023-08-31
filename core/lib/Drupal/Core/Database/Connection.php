@@ -13,6 +13,7 @@ use Drupal\Core\Database\Query\Select;
 use Drupal\Core\Database\Query\Truncate;
 use Drupal\Core\Database\Query\Update;
 use Drupal\Core\Database\Query\Upsert;
+use Drupal\Core\Database\Transaction\TransactionManagerInterface;
 use Drupal\Core\Pager\PagerManagerInterface;
 
 /**
@@ -62,6 +63,11 @@ abstract class Connection {
    * transaction.
    *
    * @var array
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. The
+   *   transaction stack is now managed by TransactionManager.
+   *
+   * @see https://www.drupal.org/node/3381002
    */
   protected $transactionLayers = [];
 
@@ -204,6 +210,11 @@ abstract class Connection {
    * Post-root (non-nested) transaction commit callbacks.
    *
    * @var callable[]
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. The
+   *   transaction end callbacks are now managed by TransactionManager.
+   *
+   * @see https://www.drupal.org/node/3381002
    */
   protected $rootTransactionEndCallbacks = [];
 
@@ -225,6 +236,11 @@ abstract class Connection {
    * Call ::enableEvents() to enable them.
    */
   private array $enabledEvents = [];
+
+  /**
+   * The transaction manager.
+   */
+  protected TransactionManagerInterface|FALSE $transactionManager;
 
   /**
    * Constructs a Connection object.
@@ -274,6 +290,20 @@ abstract class Connection {
     // using $this in the call to set the statement class can be garbage
     // collected.
     $this->connection = NULL;
+  }
+
+  /**
+   * Returns the client-level database connection object.
+   *
+   * This method should normally be used only within database driver code. Not
+   * doing so constitutes a risk of introducing code that is not database
+   * independent.
+   *
+   * @return object
+   *   The client-level database connection, for example \PDO.
+   */
+  public function getClientConnection(): object {
+    return $this->connection;
   }
 
   /**
@@ -1338,13 +1368,54 @@ abstract class Connection {
   }
 
   /**
+   * Returns the transaction manager.
+   *
+   * @return \Drupal\Core\Database\Transaction\TransactionManagerInterface|false
+   *   The transaction manager, or FALSE if not available.
+   */
+  public function transactionManager(): TransactionManagerInterface|FALSE {
+    if (!isset($this->transactionManager)) {
+      try {
+        $this->transactionManager = $this->driverTransactionManager();
+      }
+      catch (\LogicException $e) {
+        $this->transactionManager = FALSE;
+      }
+    }
+    return $this->transactionManager;
+  }
+
+  /**
+   * Returns a new instance of the driver's transaction manager.
+   *
+   * Database drivers must implement their own class extending from
+   * \Drupal\Core\Database\Transaction\TransactionManagerBase, and instantiate
+   * it here.
+   *
+   * @return \Drupal\Core\Database\Transaction\TransactionManagerInterface
+   *   The transaction manager.
+   *
+   * @throws \LogicException
+   *   If the transaction manager is undefined or unavailable.
+   */
+  protected function driverTransactionManager(): TransactionManagerInterface {
+    throw new \LogicException('The database driver has no TransactionManager implementation');
+  }
+
+  /**
    * Determines if there is an active transaction open.
    *
    * @return bool
    *   TRUE if we're currently in a transaction, FALSE otherwise.
    */
   public function inTransaction() {
+    if ($this->transactionManager()) {
+      return $this->transactionManager()->inTransaction();
+    }
+    // Start of BC layer.
+    // @phpstan-ignore-next-line
     return ($this->transactionDepth() > 0);
+    // End of BC layer.
   }
 
   /**
@@ -1352,8 +1423,17 @@ abstract class Connection {
    *
    * @return int
    *   The current transaction depth.
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Do not
+   *   access the transaction stack depth, it is an implementation detail.
+   *
+   * @see https://www.drupal.org/node/3381002
    */
   public function transactionDepth() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Do not access the transaction stack depth, it is an implementation detail. See https://www.drupal.org/node/3381002', E_USER_DEPRECATED);
+    if ($this->transactionManager()) {
+      return $this->transactionManager()->stackDepth();
+    }
     return count($this->transactionLayers);
   }
 
@@ -1368,9 +1448,12 @@ abstract class Connection {
    *
    * @see \Drupal\Core\Database\Transaction
    *
-   * @todo in drupal:11.0.0, return a new Transaction instance directly.
+   * @todo in drupal:11.0.0, push to the TransactionManager directly.
    */
   public function startTransaction($name = '') {
+    if ($this->transactionManager()) {
+      return $this->transactionManager()->push($name);
+    }
     $class = $this->getDriverClass('Transaction');
     return new $class($this, $name);
   }
@@ -1388,8 +1471,18 @@ abstract class Connection {
    * @throws \Drupal\Core\Database\TransactionNoActiveException
    *
    * @see \Drupal\Core\Database\Transaction::rollBack()
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Do not
+   *   rollback the connection, roll back the Transaction objects instead.
+   *
+   * @see https://www.drupal.org/node/3381002
    */
   public function rollBack($savepoint_name = 'drupal_transaction') {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Do not rollback the connection, roll back the Transaction objects instead. See https://www.drupal.org/node/3381002', E_USER_DEPRECATED);
+    if ($this->transactionManager()) {
+      $this->transactionManager()->rollback($savepoint_name);
+      return;
+    }
     if (!$this->inTransaction()) {
       throw new TransactionNoActiveException();
     }
@@ -1447,8 +1540,14 @@ abstract class Connection {
    * @throws \Drupal\Core\Database\TransactionNameNonUniqueException
    *
    * @see \Drupal\Core\Database\Transaction
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+   *   TransactionManagerInterface methods instead.
+   *
+   * @see https://www.drupal.org/node/3381002
    */
   public function pushTransaction($name) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use TransactionManagerInterface methods instead. See https://www.drupal.org/node/3381002', E_USER_DEPRECATED);
     if (isset($this->transactionLayers[$name])) {
       throw new TransactionNameNonUniqueException($name . " is already in use.");
     }
@@ -1477,8 +1576,14 @@ abstract class Connection {
    * @throws \Drupal\Core\Database\TransactionCommitFailedException
    *
    * @see \Drupal\Core\Database\Transaction
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+   *   TransactionManagerInterface methods instead.
+   *
+   * @see https://www.drupal.org/node/3381002
    */
   public function popTransaction($name) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use TransactionManagerInterface methods instead. See https://www.drupal.org/node/3381002', E_USER_DEPRECATED);
     // The transaction has already been committed earlier. There is nothing we
     // need to do. If this transaction was part of an earlier out-of-order
     // rollback, an exception would already have been thrown by
@@ -1512,8 +1617,18 @@ abstract class Connection {
    *   The callback to invoke.
    *
    * @see \Drupal\Core\Database\Connection::doCommit()
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+   *   TransactionManagerInterface::addPostTransactionCallback() instead.
+   *
+   * @see https://www.drupal.org/node/3381002
    */
   public function addRootTransactionEndCallback(callable $callback) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use TransactionManagerInterface::addPostTransactionCallback() instead. See https://www.drupal.org/node/3381002', E_USER_DEPRECATED);
+    if ($this->transactionManager()) {
+      $this->transactionManager()->addPostTransactionCallback($callback);
+      return;
+    }
     if (!$this->transactionLayers) {
       throw new \LogicException('Root transaction end callbacks can only be added when there is an active transaction.');
     }
@@ -1524,8 +1639,14 @@ abstract class Connection {
    * Commit all the transaction layers that can commit.
    *
    * @internal
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+   *   TransactionManagerInterface methods instead.
+   *
+   * @see https://www.drupal.org/node/3381002
    */
   protected function popCommittableTransactions() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use TransactionManagerInterface methods instead. See https://www.drupal.org/node/3381002', E_USER_DEPRECATED);
     // Commit all the committable layers.
     foreach (array_reverse($this->transactionLayers) as $name => $active) {
       // Stop once we found an active transaction.
@@ -1548,8 +1669,14 @@ abstract class Connection {
    * Do the actual commit, invoke post-commit callbacks.
    *
    * @internal
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+   *   TransactionManagerInterface methods instead.
+   *
+   * @see https://www.drupal.org/node/3381002
    */
   protected function doCommit() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use TransactionManagerInterface methods instead. See https://www.drupal.org/node/3381002', E_USER_DEPRECATED);
     $success = $this->connection->commit();
     if (!empty($this->rootTransactionEndCallbacks)) {
       $callbacks = $this->rootTransactionEndCallbacks;
@@ -1687,8 +1814,14 @@ abstract class Connection {
    * @throws \Drupal\Core\Database\TransactionExplicitCommitNotAllowedException
    *
    * @see \Drupal\Core\Database\Transaction
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Do not
+   *   commit the connection, void the Transaction objects instead.
+   *
+   * @see https://www.drupal.org/node/3381002
    */
   public function commit() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Do not commit the connection, void the Transaction objects instead. See https://www.drupal.org/node/3381002', E_USER_DEPRECATED);
     throw new TransactionExplicitCommitNotAllowedException();
   }
 
