@@ -157,7 +157,7 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
     ]);
     $this->drupalLogin($admin_user);
 
-    $this->fieldUIAddNewField($bundle_path, 'test__ref', 'Test label', 'entity_reference', [], [], FALSE);
+    $this->fieldUIAddNewField($bundle_path, 'test__ref', 'Test label', 'entity_reference', [], ['settings[handler_settings][target_bundles][page]' => TRUE]);
     // Create a new node of our newly created node type and fill in the entity
     // reference field.
     $edit = [

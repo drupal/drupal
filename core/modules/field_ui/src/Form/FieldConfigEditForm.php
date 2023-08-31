@@ -2,13 +2,16 @@
 
 namespace Drupal\field_ui\Form;
 
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\Core\Url;
@@ -22,6 +25,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class FieldConfigEditForm extends EntityForm {
+
+  use FieldStorageCreationTrait;
 
   /**
    * The entity being used by this form.
@@ -38,15 +43,45 @@ class FieldConfigEditForm extends EntityForm {
   protected $entityTypeBundleInfo;
 
   /**
+   * The name of the entity type.
+   *
+   * @var string
+   */
+  protected string $entityTypeId;
+
+  /**
+   * The entity bundle.
+   *
+   * @var string
+   */
+  protected string $bundle;
+
+  /**
    * Constructs a new FieldConfigDeleteForm object.
    *
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
    *   The entity type bundle info service.
    * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typedDataManager
    *   The type data manger.
+   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface|null $entityDisplayRepository
+   *   The entity display repository.
+   * @param \Drupal\Core\TempStore\PrivateTempStore|null $tempStore
+   *   The private tempstore.
    */
-  public function __construct(EntityTypeBundleInfoInterface $entity_type_bundle_info, protected TypedDataManagerInterface $typedDataManager) {
+  public function __construct(
+    EntityTypeBundleInfoInterface $entity_type_bundle_info,
+    protected TypedDataManagerInterface $typedDataManager,
+    protected ?EntityDisplayRepositoryInterface $entityDisplayRepository = NULL,
+    protected ?PrivateTempStore $tempStore = NULL) {
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
+    if ($this->entityDisplayRepository === NULL) {
+      @trigger_error('Calling FieldConfigEditForm::__construct() without the $entityDisplayRepository argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3383771', E_USER_DEPRECATED);
+      $this->entityDisplayRepository = \Drupal::service('entity_display.repository');
+    }
+    if ($this->tempStore === NULL) {
+      @trigger_error('Calling FieldConfigEditForm::__construct() without the $tempStore argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3383771', E_USER_DEPRECATED);
+      $this->tempStore = \Drupal::service('tempstore.private')->get('field_ui');
+    }
   }
 
   /**
@@ -55,7 +90,9 @@ class FieldConfigEditForm extends EntityForm {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.bundle.info'),
-      $container->get('typed_data_manager')
+      $container->get('typed_data_manager'),
+      $container->get('entity_display.repository'),
+      $container->get('tempstore.private')->get('field_ui')
     );
   }
 
@@ -261,7 +298,34 @@ class FieldConfigEditForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
+    $temp_storage = $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName());
+    if ($this->entity->isNew()) {
+      // @todo remove in https://www.drupal.org/project/drupal/issues/3347291.
+      if ($temp_storage && $temp_storage['field_storage']->isNew()) {
+        // Save field storage.
+        try {
+          $temp_storage['field_storage']->save();
+        }
+        catch (EntityStorageException $e) {
+          $this->tempStore->delete($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName());
+          $form_state->setRedirectUrl(FieldUI::getOverviewRouteInfo($this->entity->getTargetEntityTypeId(), $this->entity->getTargetBundle()));
+          $this->messenger()->addError($this->t('An error occurred while saving the field: @error', ['@error' => $e->getMessage()]));
+          return;
+        }
+      }
+    }
+    // Save field config.
     $this->entity->save();
+    if (isset($form_state->getStorage()['default_options'])) {
+      $default_options = $form_state->getStorage()['default_options'];
+      // Configure the default display modes.
+      $this->entityTypeId = $temp_storage['field_config_values']['entity_type'];
+      $this->bundle = $temp_storage['field_config_values']['bundle'];
+      $this->configureEntityFormDisplay($temp_storage['field_config_values']['field_name'], $default_options['entity_form_display'] ?? []);
+      $this->configureEntityViewDisplay($temp_storage['field_config_values']['field_name'], $default_options['entity_view_display'] ?? []);
+      // Delete the temp store entry.
+      $this->tempStore->delete($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName());
+    }
 
     $this->messenger()->addStatus($this->t('Saved %label configuration.', ['%label' => $this->entity->getLabel()]));
 

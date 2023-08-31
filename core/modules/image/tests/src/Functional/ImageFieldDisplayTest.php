@@ -337,7 +337,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->drupalGet('admin/structure/types/manage/article/fields/node.article.' . $field_name . '/storage');
     $this->submitForm([
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-    ], 'Save field settings');
+    ], 'Save');
     $edit = [
       'files[' . $field_name . '_1][]' => \Drupal::service('file_system')->realpath($test_image->uri),
     ];
@@ -504,7 +504,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       'settings[default_image][title]' => $title,
     ];
     $this->drupalGet("admin/structure/types/manage/article/fields/node.article.{$field_name}/storage");
-    $this->submitForm($edit, 'Save field settings');
+    $this->submitForm($edit, 'Save');
     // Clear field definition cache so the new default image is detected.
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
     $field_storage = FieldStorageConfig::loadByName('node', $field_name);
@@ -560,7 +560,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Can't use fillField cause Mink can't fill hidden fields.
     $this->drupalGet("admin/structure/types/manage/article/fields/node.article.$field_name/storage");
     $this->getSession()->getPage()->find('css', 'input[name="settings[default_image][uuid][fids]"]')->setValue(0);
-    $this->getSession()->getPage()->pressButton('Save field settings');
+    $this->getSession()->getPage()->pressButton('Save');
 
     // Clear field definition cache so the new default image is detected.
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
@@ -579,7 +579,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       'settings[default_image][title]' => $title,
     ];
     $this->drupalGet('admin/structure/types/manage/article/fields/node.article.' . $private_field_name . '/storage');
-    $this->submitForm($edit, 'Save field settings');
+    $this->submitForm($edit, 'Save');
     // Clear field definition cache so the new default image is detected.
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 

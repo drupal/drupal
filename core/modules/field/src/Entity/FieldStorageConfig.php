@@ -6,6 +6,8 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\FieldableEntityStorageInterface;
+use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldException;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\OptionsProviderInterface;
@@ -680,7 +682,19 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     // runtime item object, so that it can be used as the options provider
     // without modifying the entity being worked on.
     if (is_subclass_of($this->getFieldItemClass(), OptionsProviderInterface::class)) {
-      $items = $entity->get($this->getName());
+      try {
+        $items = $entity->get($this->getName());
+      }
+      catch (\InvalidArgumentException $e) {
+        // When a field doesn't exist, create a new field item list using a
+        // temporary base field definition. This step is necessary since there
+        // may not be a field configuration for the storage when creating a new
+        // field.
+        // @todo Simplify in https://www.drupal.org/project/drupal/issues/3347291.
+        $field_storage = BaseFieldDefinition::createFromFieldStorageDefinition($this);
+        $entity_adapter = EntityAdapter::createFromEntity($entity);
+        $items = \Drupal::typedDataManager()->create($field_storage, name: $field_storage->getName(), parent: $entity_adapter);
+      }
       return \Drupal::service('plugin.manager.field.field_type')->createFieldItem($items, 0);
     }
     // @todo: Allow setting custom options provider, see
@@ -724,7 +738,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    *   TRUE if the field has data for any entity; FALSE otherwise.
    */
   public function hasData() {
-    return \Drupal::entityTypeManager()->getStorage($this->entity_type)->countFieldData($this, TRUE);
+    return !$this->isNew() && \Drupal::entityTypeManager()->getStorage($this->entity_type)->countFieldData($this, TRUE);
   }
 
   /**

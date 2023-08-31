@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityViewModeInterface;
 use Drupal\Core\Entity\EntityFormModeInterface;
 use Drupal\Core\Url;
 use Drupal\field_ui\FieldUI;
+use Drupal\field_ui\Form\FieldConfigEditForm;
 use Drupal\field_ui\Plugin\Derivative\FieldUiLocalTask;
 
 /**
@@ -79,6 +80,7 @@ function field_ui_theme() {
 function field_ui_entity_type_build(array &$entity_types) {
   /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   $entity_types['field_config']->setFormClass('edit', 'Drupal\field_ui\Form\FieldConfigEditForm');
+  $entity_types['field_config']->setFormClass('default', FieldConfigEditForm::class);
   $entity_types['field_config']->setFormClass('delete', 'Drupal\field_ui\Form\FieldConfigDeleteForm');
   $entity_types['field_config']->setListBuilderClass('Drupal\field_ui\FieldConfigListBuilder');
 

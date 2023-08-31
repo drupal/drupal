@@ -373,7 +373,7 @@ class OptionsFieldUITest extends FieldTestBase {
     $add_button->click();
     $add_button->click();
 
-    $this->submitForm($input, 'Save field settings');
+    $this->submitForm($input, 'Save');
     // Verify that the page does not have double escaped HTML tags.
     $this->assertSession()->responseNotContains('&amp;lt;');
 
@@ -406,8 +406,7 @@ class OptionsFieldUITest extends FieldTestBase {
     $this->drupalGet($this->adminPath);
     $page = $this->getSession()->getPage();
     $page->findButton('Add another item')->click();
-    $this->submitForm($edit, 'Save field settings');
-    $this->assertSession()->pageTextContains('Updated field ' . $this->fieldName . ' field settings.');
+    $this->submitForm($edit, 'Save');
 
     // Select a default value.
     $edit = [
@@ -469,7 +468,7 @@ class OptionsFieldUITest extends FieldTestBase {
       // Assert that the button is disabled again.
       $this->assertTrue($delete_button_0->hasAttribute('disabled'), 'Button is disabled');
       // Try to proceed without entering any value.
-      $page->findButton('Save field settings')->click();
+      $page->findButton('Save')->click();
 
       if ($field_type == 'list_string') {
         // Asserting only name field as there is no value field for list_string.

@@ -78,7 +78,7 @@ class OptionsFloatFieldImportTest extends FieldTestBase {
       'settings[allowed_values][table][1][item][label]' => 'One',
     ];
     $this->drupalGet($admin_path);
-    $this->submitForm($edit, 'Save field settings');
+    $this->submitForm($edit, 'Save');
     $field_storage = FieldStorageConfig::loadByName('node', $field_name);
     $this->assertSame($array = ['0' => 'Zero', '1' => 'One'], $field_storage->getSetting('allowed_values'));
 

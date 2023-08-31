@@ -70,8 +70,10 @@ class FieldUiIntegrationTest extends MediaLibraryTestBase {
     $this->assertNotNull($assert_session->waitForField('label'));
     $page->fillField('label', 'Shatner');
     $this->waitForText('field_shatner');
-    $page->pressButton('Save and continue');
-    $page->pressButton('Save field settings');
+    $page->pressButton('Continue');
+    $this->assertMatchesRegularExpression('/.*article\/add-storage\/node\/field_shatner.*/', $this->getUrl());
+    $page->pressButton('Continue');
+    $this->assertMatchesRegularExpression('/.*article\/add-field\/node\/field_shatner.*/', $this->getUrl());
     $assert_session->pageTextNotContains('Undefined index: target_bundles');
     $this->waitForFieldExists('Type One')->check();
     $this->assertElementExistsAfterWait('css', '[name="settings[handler_settings][target_bundles][type_one]"][checked="checked"]');

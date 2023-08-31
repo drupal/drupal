@@ -260,7 +260,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     // Change the field setting to make its files private, and upload a file.
     $edit = ['settings[uri_scheme]' => 'private'];
     $this->drupalGet("admin/structure/types/manage/{$type_name}/fields/{$field_id}/storage");
-    $this->submitForm($edit, 'Save field settings');
+    $this->submitForm($edit, 'Save');
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
     $node = $node_storage->loadUnchanged($nid);
     $node_file = File::load($node->{$field_name}->target_id);

@@ -5,7 +5,6 @@ namespace Drupal\field_ui\Form;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FallbackFieldTypeCategory;
@@ -13,6 +12,7 @@ use Drupal\Core\Field\FieldTypeCategoryManagerInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -23,8 +23,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class FieldStorageAddForm extends FormBase {
-
-  use FieldStorageCreationTrait;
 
   /**
    * The name of the entity type.
@@ -55,13 +53,6 @@ class FieldStorageAddForm extends FormBase {
   protected $entityFieldManager;
 
   /**
-   * The entity display repository.
-   *
-   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
-   */
-  protected $entityDisplayRepository;
-
-  /**
    * The field type plugin manager.
    *
    * @var \Drupal\Core\Field\FieldTypePluginManagerInterface
@@ -86,17 +77,20 @@ class FieldStorageAddForm extends FormBase {
    *   The configuration factory.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   (optional) The entity field manager.
-   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
-   *   (optional) The entity display repository.
+   * @param \Drupal\Core\TempStore\PrivateTempStore|null $tempStore
+   *   The private tempstore.
    * @param \Drupal\Core\Field\FieldTypeCategoryManagerInterface|null $fieldTypeCategoryManager
    *   The field type category plugin manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, FieldTypePluginManagerInterface $field_type_plugin_manager, ConfigFactoryInterface $config_factory, EntityFieldManagerInterface $entity_field_manager, EntityDisplayRepositoryInterface $entity_display_repository, protected ?FieldTypeCategoryManagerInterface $fieldTypeCategoryManager = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, FieldTypePluginManagerInterface $field_type_plugin_manager, ConfigFactoryInterface $config_factory, EntityFieldManagerInterface $entity_field_manager, protected ?PrivateTempStore $tempStore = NULL, protected ?FieldTypeCategoryManagerInterface $fieldTypeCategoryManager = NULL) {
     $this->entityTypeManager = $entity_type_manager;
     $this->fieldTypePluginManager = $field_type_plugin_manager;
     $this->configFactory = $config_factory;
     $this->entityFieldManager = $entity_field_manager;
-    $this->entityDisplayRepository = $entity_display_repository;
+    if ($this->tempStore === NULL) {
+      @trigger_error('Calling FieldStorageAddForm::__construct() without the $tempStore argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3383719', E_USER_DEPRECATED);
+      $this->tempStore = \Drupal::service('tempstore.private')->get('field_ui');
+    }
     if ($this->fieldTypeCategoryManager === NULL) {
       @trigger_error('Calling FieldStorageAddForm::__construct() without the $fieldTypeCategoryManager argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3375740', E_USER_DEPRECATED);
       $this->fieldTypeCategoryManager = \Drupal::service('plugin.manager.field.field_type_category');
@@ -119,7 +113,7 @@ class FieldStorageAddForm extends FormBase {
       $container->get('plugin.manager.field.field_type'),
       $container->get('config.factory'),
       $container->get('entity_field.manager'),
-      $container->get('entity_display.repository'),
+      $container->get('tempstore.private')->get('field_ui'),
       $container->get('plugin.manager.field.field_type_category'),
     );
   }
@@ -349,7 +343,7 @@ class FieldStorageAddForm extends FormBase {
     $form['actions'] = ['#type' => 'actions'];
     $form['actions']['submit'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Save and continue'),
+      '#value' => $this->t('Continue'),
       '#button_type' => 'primary',
     ];
 
@@ -421,6 +415,8 @@ class FieldStorageAddForm extends FormBase {
       'entity_type' => $this->entityTypeId,
       'bundle' => $this->bundle,
     ];
+    $default_options = [];
+
     // Check if we're dealing with a preconfigured field.
     if (strpos($field_storage_type, 'field_ui:') === 0) {
       [, $field_type, $preset_key] = explode(':', $field_storage_type, 3);
@@ -446,40 +442,32 @@ class FieldStorageAddForm extends FormBase {
     ];
 
     try {
-      // Create the field storage.
-      $this->entityTypeManager->getStorage('field_storage_config')
-        ->create($field_storage_values)->save();
-
-      // Create the field.
-      $field = $this->entityTypeManager->getStorage('field_config')
-        ->create($field_values);
-      $field->save();
-
-      // Configure the display modes.
-      $this->configureEntityFormDisplay($field_name, $default_options['entity_form_display'] ?? []);
-      $this->configureEntityViewDisplay($field_name, $default_options['entity_view_display'] ?? []);
+      $field_storage_entity = $this->entityTypeManager->getStorage('field_storage_config')->create($field_storage_values);
     }
     catch (\Exception $e) {
-      $this->messenger()->addError($this->t(
-        'There was a problem creating field %label: @message',
-        ['%label' => $values['label'], '@message' => $e->getMessage()]));
+      $this->messenger()->addError($this->t('There was a problem creating field %label: @message', ['%label' => $values['label'], '@message' => $e->getMessage()]));
       return;
     }
+
+    // Save field and field storage values in tempstore.
+    $this->tempStore->set($this->entityTypeId . ':' . $field_name, [
+      'field_storage' => $field_storage_entity,
+      'field_config_values' => $field_values,
+      'default_options' => $default_options,
+    ]);
 
     // Configure next steps in the multi-part form.
     $destinations = [];
     $route_parameters = [
-      'field_config' => $field->id(),
+      'entity_type' => $this->entityTypeId,
+      'field_name' => $field_name,
     ] + FieldUI::getRouteBundleParameter($entity_type, $this->bundle);
-    // Always show the field settings step, as the cardinality needs to be
-    // configured for new fields.
     $destinations[] = [
-      'route_name' => "entity.field_config.{$this->entityTypeId}_storage_edit_form",
+      'route_name' => "field_ui.field_storage_add_{$this->entityTypeId}",
       'route_parameters' => $route_parameters,
     ];
-
     $destinations[] = [
-      'route_name' => "entity.field_config.{$this->entityTypeId}_field_edit_form",
+      'route_name' => "field_ui.field_add_{$this->entityTypeId}",
       'route_parameters' => $route_parameters,
     ];
     $destinations[] = [
@@ -494,8 +482,6 @@ class FieldStorageAddForm extends FormBase {
 
     // Store new field information for any additional submit handlers.
     $form_state->set(['fields_added', '_add_new_field'], $field_name);
-
-    $this->messenger()->addMessage($this->t('Your settings have been saved.'));
   }
 
   /**

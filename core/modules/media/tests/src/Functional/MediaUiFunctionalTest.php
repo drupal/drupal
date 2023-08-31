@@ -196,7 +196,8 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $assert_session = $this->assertSession();
 
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Page']);
-    $this->fieldUIAddNewField('/admin/structure/types/manage/page', 'foo_field', 'Foo field', 'field_ui:entity_reference:media', [], [], FALSE);
+    $this->createMediaType('image', ['id' => 'image', 'new_revision' => TRUE]);
+    $this->fieldUIAddNewField('/admin/structure/types/manage/page', 'foo_field', 'Foo field', 'field_ui:entity_reference:media', [], ['settings[handler_settings][target_bundles][image]' => TRUE]);
     $this->drupalGet('/admin/structure/types/manage/page/display');
     $assert_session->fieldValueEquals('fields[field_foo_field][type]', 'entity_reference_entity_view');
   }
@@ -340,13 +341,11 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     // settings form.
     // Using submitForm() to avoid dealing with JavaScript on the previous
     // page in the field creation.
-    $this->fieldUIAddNewField("admin/structure/types/manage/{$content_type->id()}", 'media_reference', "Media (cardinality $cardinality)", 'field_ui:entity_reference:media', [], [], FALSE);
-    $edit = [];
+    $field_edit = [];
     foreach ($media_types as $type) {
-      $edit["settings[handler_settings][target_bundles][$type]"] = TRUE;
+      $field_edit["settings[handler_settings][target_bundles][$type]"] = TRUE;
     }
-    $this->drupalGet("admin/structure/types/manage/{$content_type->id()}/fields/node.{$content_type->id()}.field_media_reference");
-    $this->submitForm($edit, "Save settings");
+    $this->fieldUIAddNewField("admin/structure/types/manage/{$content_type->id()}", 'media_reference', "Media (cardinality $cardinality)", 'field_ui:entity_reference:media', [], $field_edit);
     \Drupal::entityTypeManager()
       ->getStorage('entity_form_display')
       ->load('node.' . $content_type->id() . '.default')

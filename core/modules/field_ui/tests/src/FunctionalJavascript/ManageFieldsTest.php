@@ -180,7 +180,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $page->fillField('label', $field_name);
 
     // Test validation.
-    $page->pressButton('Save and continue');
+    $page->pressButton('Continue');
     $assert_session->pageTextContains('You need to select a field type.');
     $assert_session->elementExists('css', '[name="new_storage_type"].error');
     $assert_session->pageTextNotContains('Choose an option below');
@@ -190,7 +190,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="number"]')->isSelected());
     $assert_session->pageTextContains('Choose an option below');
-    $page->pressButton('Save and continue');
+    $page->pressButton('Continue');
     $assert_session->pageTextContains('You need to select a field type.');
     $assert_session->elementNotExists('css', '[name="new_storage_type"].error');
     $assert_session->elementExists('css', '[name="group_field_options_wrapper"].error');
@@ -211,9 +211,12 @@ class ManageFieldsTest extends WebDriverTestBase {
     $this->assertNotEmpty($text_plain = $page->find('xpath', '//*[text() = "Text (plain)"]')->getParent());
     $text_plain->click();
     $this->assertTrue($assert_session->elementExists('css', '[name="group_field_options_wrapper"][value="string"]')->isSelected());
-
-    $page->pressButton('Save and continue');
-    $assert_session->pageTextContains('Your settings have been saved.');
+    $page->pressButton('Continue');
+    $this->assertMatchesRegularExpression('/.*article\/add-storage\/node\/field_test_field_1.*/', $this->getUrl());
+    $page->pressButton('Continue');
+    $this->assertMatchesRegularExpression('/.*article\/add-field\/node\/field_test_field_1.*/', $this->getUrl());
+    $page->pressButton('Save settings');
+    $assert_session->pageTextContains('Saved ' . $field_name . ' configuration.');
     $this->assertNotNull($field_storage = FieldStorageConfig::loadByName('node', "field_$field_name"));
     $this->assertEquals('string', $field_storage->getType());
 
@@ -237,8 +240,12 @@ class ManageFieldsTest extends WebDriverTestBase {
     $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="test_field"]')->isSelected());
     $assert_session->pageTextNotContains('Choose an option below');
 
-    $page->pressButton('Save and continue');
-    $assert_session->pageTextContains('Your settings have been saved.');
+    $page->pressButton('Continue');
+    $this->assertMatchesRegularExpression('/.*article\/add-storage\/node\/field_test_field_2.*/', $this->getUrl());
+    $page->pressButton('Continue');
+    $this->assertMatchesRegularExpression('/.*article\/add-field\/node\/field_test_field_2.*/', $this->getUrl());
+    $page->pressButton('Save settings');
+    $assert_session->pageTextContains('Saved ' . $field_name . ' configuration.');
     $this->assertNotNull($field_storage = FieldStorageConfig::loadByName('node', "field_$field_name"));
     $this->assertEquals('test_field', $field_storage->getType());
   }

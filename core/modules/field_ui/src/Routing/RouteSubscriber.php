@@ -5,6 +5,8 @@ namespace Drupal\field_ui\Routing;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteSubscriberBase;
 use Drupal\Core\Routing\RoutingEvents;
+use Drupal\field_ui\Controller\FieldConfigAddController;
+use Drupal\field_ui\Controller\FieldStorageAddController;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -108,6 +110,29 @@ class RouteSubscriber extends RouteSubscriberBase {
           $options
         );
         $collection->add("field_ui.field_storage_config_add_$entity_type_id", $route);
+
+        $route = new Route(
+          "$path/add-field/{entity_type}/{field_name}",
+          [
+            '_controller' => FieldConfigAddController::class . '::fieldConfigAddConfigureForm',
+            '_title' => 'Add field',
+          ] + $defaults,
+          ['_permission' => 'administer ' . $entity_type_id . ' fields'],
+          $options
+        );
+        $collection->add("field_ui.field_add_$entity_type_id", $route);
+
+        // @todo remove in https://www.drupal.org/project/drupal/issues/3347291.
+        $route = new Route(
+          "$path/add-storage/{entity_type}/{field_name}",
+          [
+            '_controller' => FieldStorageAddController::class . '::storageAddConfigureForm',
+            '_title' => 'Add storage',
+          ] + $defaults,
+          ['_permission' => 'administer ' . $entity_type_id . ' fields'],
+          $options
+        );
+        $collection->add("field_ui.field_storage_add_$entity_type_id", $route);
 
         $route = new Route(
           "$path/fields/reuse",
