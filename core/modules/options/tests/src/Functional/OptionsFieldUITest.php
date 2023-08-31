@@ -454,8 +454,21 @@ class OptionsFieldUITest extends FieldTestBase {
       $this->createOptionsField($field_type);
       $page = $this->getSession()->getPage();
 
-      // Try to proceed without entering any value.
       $this->drupalGet($this->adminPath);
+      // Assert that the delete button for a single row is disabled.
+      $this->assertCount(1, $page->findAll('css', '#allowed-values-order tr.draggable'));
+      $delete_button_0 = $page->findById('remove_row_button__0');
+      $this->assertTrue($delete_button_0->hasAttribute('disabled'), 'Button is disabled');
+      $page->findButton('Add another item')->click();
+      // Assert that the delete button for the first row is enabled if there are
+      // more that one rows.
+      $this->assertCount(2, $page->findAll('css', '#allowed-values-order tr.draggable'));
+      $this->assertFalse($delete_button_0->hasAttribute('disabled'), 'Button is enabled');
+      // Delete a row.
+      $delete_button_0->click();
+      // Assert that the button is disabled again.
+      $this->assertTrue($delete_button_0->hasAttribute('disabled'), 'Button is disabled');
+      // Try to proceed without entering any value.
       $page->findButton('Save field settings')->click();
 
       if ($field_type == 'list_string') {

@@ -185,6 +185,10 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
         '#default_value' => 0,
         '#attributes' => ['class' => ['weight']],
       ];
+      // Disable the remove button if there is only one row in the table.
+      if ($max === 0) {
+        $element['allowed_values']['table'][0]['delete']['#attributes']['disabled'] = 'disabled';
+      }
       if ($delta < count($allowed_values)) {
         $query = \Drupal::entityQuery($entity_type_id)
           ->accessCheck(FALSE)
@@ -261,6 +265,10 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     $delta = $element['table']['#max_delta'];
     $element['table'][$delta]['item']['#prefix'] = '<div class="ajax-new-content" data-drupal-selector="field-list-add-more-focus-target">' . ($element['table'][$delta]['item']['#prefix'] ?? '');
     $element['table'][$delta]['item']['#suffix'] = ($element['table'][$delta]['item']['#suffix'] ?? '') . '</div>';
+    // Enable the remove button for the first row if there are more rows.
+    if ($delta > 0 && isset($element['table'][0]['delete']['#attributes']['disabled']) && !isset($element['table'][0]['item']['key']['#attributes']['disabled'])) {
+      unset($element['table'][0]['delete']['#attributes']['disabled']);
+    }
 
     $response = new AjaxResponse();
     $response->addCommand(new InsertCommand(NULL, $element));
