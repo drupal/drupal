@@ -34,7 +34,8 @@ class FormTestControllerObject extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     \Drupal::messenger()->addStatus(t('The FormTestControllerObject::create() method was used for this form.'));
     return new static(
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('config.typed')
     );
   }
 

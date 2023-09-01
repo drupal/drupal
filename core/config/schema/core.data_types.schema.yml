@@ -25,6 +25,9 @@ boolean:
 email:
   label: 'Email'
   class: '\Drupal\Core\TypedData\Plugin\DataType\Email'
+  constraints:
+    Email:
+      message: "%value is not a valid email address."
 integer:
   label: 'Integer'
   class: '\Drupal\Core\TypedData\Plugin\DataType\IntegerData'

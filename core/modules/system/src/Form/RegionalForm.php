@@ -3,6 +3,7 @@
 namespace Drupal\system\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Datetime\TimeZoneFormHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Locale\CountryManagerInterface;
@@ -28,11 +29,13 @@ class RegionalForm extends ConfigFormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typedConfigManager
+   *   The typed config manager.
    * @param \Drupal\Core\Locale\CountryManagerInterface $country_manager
    *   The country manager.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, CountryManagerInterface $country_manager) {
-    parent::__construct($config_factory);
+  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, CountryManagerInterface $country_manager) {
+    parent::__construct($config_factory, $typedConfigManager);
     $this->countryManager = $country_manager;
   }
 
@@ -42,6 +45,7 @@ class RegionalForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
+      $container->get('config.typed'),
       $container->get('country_manager')
     );
   }

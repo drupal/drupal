@@ -3,6 +3,7 @@
 namespace Drupal\system\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\ImageToolkit\ImageToolkitManager;
@@ -27,11 +28,13 @@ class ImageToolkitForm extends ConfigFormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typedConfigManager
+   *   The typed config manager.
    * @param \Drupal\Core\ImageToolkit\ImageToolkitManager $manager
    *   The image toolkit plugin manager.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ImageToolkitManager $manager) {
-    parent::__construct($config_factory);
+  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, ImageToolkitManager $manager) {
+    parent::__construct($config_factory, $typedConfigManager);
 
     foreach ($manager->getAvailableToolkits() as $id => $definition) {
       $this->availableToolkits[$id] = $manager->createInstance($id);
@@ -44,6 +47,7 @@ class ImageToolkitForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
+      $container->get('config.typed'),
       $container->get('image.toolkit.manager')
     );
   }

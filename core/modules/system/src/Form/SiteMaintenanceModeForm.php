@@ -3,6 +3,7 @@
 namespace Drupal\system\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Form\ConfigFormBase;
@@ -36,13 +37,15 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typedConfigManager
+   *   The typed config manager.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state keyvalue collection to use.
    * @param \Drupal\user\PermissionHandlerInterface $permission_handler
    *   The permission handler.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, StateInterface $state, PermissionHandlerInterface $permission_handler) {
-    parent::__construct($config_factory);
+  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, StateInterface $state, PermissionHandlerInterface $permission_handler) {
+    parent::__construct($config_factory, $typedConfigManager);
     $this->state = $state;
     $this->permissionHandler = $permission_handler;
   }
@@ -53,6 +56,7 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
+      $container->get('config.typed'),
       $container->get('state'),
       $container->get('user.permissions')
     );

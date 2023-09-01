@@ -323,6 +323,8 @@ class EntityForm extends FormBase implements EntityFormInterface {
    *   A nested array of form elements comprising the form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
+   *
+   * @see \Drupal\Core\Form\ConfigFormBase::copyFormValuesToConfig()
    */
   protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state) {
     $values = $form_state->getValues();
