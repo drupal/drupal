@@ -272,6 +272,8 @@ trait UiHelperTrait {
    *   An absolute URL string.
    */
   protected function buildUrl($path, array $options = []) {
+    global $base_path;
+
     if ($path instanceof Url) {
       $url_options = $path->getOptions();
       $options = $url_options + $options;
@@ -281,6 +283,12 @@ trait UiHelperTrait {
     // The URL generator service is not necessarily available yet; e.g., in
     // interactive installer tests.
     elseif (\Drupal::hasService('url_generator')) {
+      // Strip $base_path, if existent.
+      $length = strlen($base_path);
+      if (substr($path, 0, $length) === $base_path) {
+        $path = substr($path, $length);
+      }
+
       $force_internal = isset($options['external']) && $options['external'] == FALSE;
       if (!$force_internal && UrlHelper::isExternal($path)) {
         return Url::fromUri($path, $options)->toString();
