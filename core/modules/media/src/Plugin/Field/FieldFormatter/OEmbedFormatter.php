@@ -201,6 +201,7 @@ class OEmbedFormatter extends FormatterBase {
       }
       else {
         $url = Url::fromRoute('media.oembed_iframe', [], [
+          'absolute' => TRUE,
           'query' => [
             'url' => $value,
             'max_width' => $max_width,
