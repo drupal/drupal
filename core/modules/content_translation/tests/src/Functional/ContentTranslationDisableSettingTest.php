@@ -7,6 +7,8 @@ use Drupal\Tests\BrowserTestBase;
 /**
  * Test disabling content translation module.
  *
+ * @covers \Drupal\language\Form\ContentLanguageSettingsForm
+ * @covers ::_content_translation_form_language_content_settings_form_alter
  * @group content_translation
  */
 class ContentTranslationDisableSettingTest extends BrowserTestBase {
