@@ -78,13 +78,6 @@ user:
     component:
       css/components/user/user.css: { weight: -10 }
 
-demo-umami-tour:
-  css:
-    theme:
-      css/components/tour/tour.theme.css: {}
-  dependencies:
-    - claro/tour-styling
-
 oneplusfourgrid_section:
   css:
     theme:

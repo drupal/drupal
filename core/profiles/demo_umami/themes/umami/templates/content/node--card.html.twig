@@ -82,7 +82,17 @@
 {% trans %}View {{ node.type.entity.label() }}{% endtrans %}
 {% endset %}
 
-{% embed "umami:card" with { attributes: attributes.addClass(classes) } %}
+{% embed "umami:card" with {
+  attributes: attributes.addClass(classes),
+  content,
+  content_attributes,
+  label,
+  title_attributes,
+  title_prefix,
+  title_suffix,
+  read_more,
+  url,
+  } only %}
   {% block content %}
     {% include "umami:title" with {
       attributes: title_attributes.addClass('umami-card__title'),
