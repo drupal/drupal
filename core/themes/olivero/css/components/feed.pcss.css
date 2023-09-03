@@ -14,6 +14,11 @@
   &:hover {
     color: var(--color--primary-50);
   }
+
+  @media (--max-nav) {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+  }
 }
 
 .feed-icon__label {
@@ -32,10 +37,15 @@
   height: var(--sp1-5);
   margin-inline-start: var(--sp0-5);
   color: var(--color--white);
+  border-radius: 2px;
   background-color: var(--color--primary-50);
 
   & svg {
     vertical-align: top;
     fill: currentColor;
+  }
+
+  @media (--max-nav) {
+    margin-inline: 0 var(--sp0-5);
   }
 }
