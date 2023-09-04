@@ -541,10 +541,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
         '#type' => 'textfield',
         '#title' => t('Authored on'),
         '#maxlength' => 25,
-        '#description' => t('Format: %time. The date format is YYYY-MM-DD and %timezone is the time zone offset from UTC. Leave blank to use the time of form submission.', [
-          '%time' => $this->dateFormatter->format(REQUEST_TIME, 'custom', 'Y-m-d H:i:s O'),
-          '%timezone' => $this->dateFormatter->format(REQUEST_TIME, 'custom', 'O'),
-        ]),
+        '#description' => t('Leave blank to use the time of form submission.'),
         '#default_value' => $new_translation || !$date ? '' : $this->dateFormatter->format($date, 'custom', 'Y-m-d H:i:s O'),
       ];
 

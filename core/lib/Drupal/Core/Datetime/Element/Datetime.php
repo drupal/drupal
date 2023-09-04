@@ -239,7 +239,6 @@ class Datetime extends DateElementBase {
       // placeholders are invalid for HTML5 date and datetime, so an example
       // format is appended to the title to appear in tooltips.
       $extra_attributes = [
-        'title' => t('Date (e.g. @format)', ['@format' => static::formatExample($date_format)]),
         'type' => $element['#date_date_element'],
       ];
 
@@ -285,7 +284,6 @@ class Datetime extends DateElementBase {
 
       // Adds the HTML5 attributes.
       $extra_attributes = [
-        'title' => t('Time (e.g. @format)', ['@format' => static::formatExample($time_format)]),
         'type' => $element['#date_time_element'],
         'step' => $element['#date_increment'],
       ];
@@ -352,9 +350,6 @@ class Datetime extends DateElementBase {
     if ($input_exists) {
 
       $title = static::getElementTitle($element, $complete_form);
-      $date_format = $element['#date_date_element'] != 'none' ? static::getHtml5DateFormat($element) : '';
-      $time_format = $element['#date_time_element'] != 'none' ? static::getHtml5TimeFormat($element) : '';
-      $format = trim($date_format . ' ' . $time_format);
 
       // If there's empty input and the field is not required, set it to empty.
       if (empty($input['date']) && empty($input['time']) && !$element['#required']) {
@@ -363,7 +358,7 @@ class Datetime extends DateElementBase {
       // If there's empty input and the field is required, set an error. A
       // reminder of the required format in the message provides a good UX.
       elseif (empty($input['date']) && empty($input['time']) && $element['#required']) {
-        $form_state->setError($element, t('The %field date is required. Enter a date in the format %format.', ['%field' => $title, '%format' => static::formatExample($format)]));
+        $form_state->setError($element, t('The %field date is required.', ['%field' => $title]));
       }
       else {
         // If the date is valid, set it.
@@ -374,7 +369,7 @@ class Datetime extends DateElementBase {
         // If the date is invalid, set an error. A reminder of the required
         // format in the message provides a good UX.
         else {
-          $form_state->setError($element, t('The %field date is invalid. Enter a date in the format %format.', ['%field' => $title, '%format' => static::formatExample($format)]));
+          $form_state->setError($element, t('The %field date is invalid. Enter a date in the correct format.', ['%field' => $title]));
         }
       }
     }
@@ -389,8 +384,14 @@ class Datetime extends DateElementBase {
    *   The date format.
    *
    * @return string
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0.
+   *   There is no replacement.
+   *
+   * @see https://www.drupal.org/node/3385058
    */
   public static function formatExample($format) {
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3385058', E_USER_DEPRECATED);
     if (!static::$dateExample) {
       static::$dateExample = new DrupalDateTime();
     }
