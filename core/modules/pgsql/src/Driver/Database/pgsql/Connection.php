@@ -268,22 +268,34 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   public function createDatabase($database) {
     // Escape the database name.
     $database = Database::getConnection()->escapeDatabase($database);
+    $db_created = FALSE;
 
-    // If the PECL intl extension is installed, use it to determine the proper
-    // locale.  Otherwise, fall back to en_US.
-    if (class_exists('Locale')) {
-      $locale = \Locale::getDefault();
-    }
-    else {
-      $locale = 'en_US';
+    // Try to determine the proper locales for character classification and
+    // collation. If we could determine locales other than 'en_US', try creating
+    // the database with these first.
+    $ctype = setlocale(LC_CTYPE, 0);
+    $collate = setlocale(LC_COLLATE, 0);
+    if ($ctype && $collate) {
+      try {
+        $this->connection->exec("CREATE DATABASE $database WITH TEMPLATE template0 ENCODING='UTF8' LC_CTYPE='$ctype.UTF-8' LC_COLLATE='$collate.UTF-8'");
+        $db_created = TRUE;
+      }
+      catch (\Exception $e) {
+        // It might be that the server is remote and does not support the
+        // locale and collation of the webserver, so we will try again.
+      }
     }
 
-    try {
-      // Create the database and set it as active.
-      $this->connection->exec("CREATE DATABASE $database WITH TEMPLATE template0 ENCODING='utf8' LC_CTYPE='$locale.utf8' LC_COLLATE='$locale.utf8'");
-    }
-    catch (\Exception $e) {
-      throw new DatabaseNotFoundException($e->getMessage());
+    // Otherwise fall back to creating the database using the 'en_US' locales.
+    if (!$db_created) {
+      try {
+        $this->connection->exec("CREATE DATABASE $database WITH TEMPLATE template0 ENCODING='UTF8' LC_CTYPE='en_US.UTF-8' LC_COLLATE='en_US.UTF-8'");
+      }
+      catch (\Exception $e) {
+        // If the database can't be created with the 'en_US' locale either,
+        // we're finally throwing an exception.
+        throw new DatabaseNotFoundException($e->getMessage());
+      }
     }
   }
 
