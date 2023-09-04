@@ -29,9 +29,13 @@
     for (let i = 0; i < pairs.length; i++) {
       pair = pairs[i].split('=');
       // Ignore the 'q' path argument, if present.
-      if (pair[0] !== 'q' && pair[1]) {
-        args[decodeURIComponent(pair[0].replace(/\+/g, ' '))] =
-          decodeURIComponent(pair[1].replace(/\+/g, ' '));
+      if (pair[0] !== 'q') {
+        if (pair[1]) {
+          args[decodeURIComponent(pair[0].replace(/\+/g, ' '))] =
+            decodeURIComponent(pair[1].replace(/\+/g, ' '));
+        } else {
+          args[decodeURIComponent(pair[0].replace(/\+/g, ' '))] = '';
+        }
       }
     }
     return args;
