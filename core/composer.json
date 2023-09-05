@@ -115,9 +115,6 @@
         "ext-zip": "Needed to extend the plugin.manager.archiver service capability with the handling of files in the ZIP format."
     },
     "extra": {
-        "branch-alias": {
-          "dev-11.x": "10.2.x-dev"
-        },
         "drupal-scaffold": {
             "file-mapping": {
                 "[project-root]/.editorconfig": "assets/scaffold/files/editorconfig",

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1023c262eb294df10ca4ff80c6d3ceb6",
+    "content-hash": "f3f72146ac9ba2de4360c6b6ba23518b",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -495,7 +495,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "4c5eafca7cdc5f796a213a6722415c7f371731ef"
+                "reference": "d8c2e380c13d2892038560c5591ef07ac31c6add"
             },
             "require": {
                 "asm89/stack-cors": "^2.1",
@@ -573,9 +573,6 @@
             },
             "type": "drupal-core",
             "extra": {
-                "branch-alias": {
-                    "dev-11.x": "10.2.x-dev"
-                },
                 "drupal-scaffold": {
                     "file-mapping": {
                         "[project-root]/.editorconfig": "assets/scaffold/files/editorconfig",
