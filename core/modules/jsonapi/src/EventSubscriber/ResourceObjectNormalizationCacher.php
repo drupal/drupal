@@ -3,9 +3,10 @@
 namespace Drupal\jsonapi\EventSubscriber;
 
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Render\RenderCacheInterface;
+use Drupal\Core\Cache\VariationCacheInterface;
 use Drupal\jsonapi\JsonApiResource\ResourceObject;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -14,7 +15,6 @@ use Symfony\Component\HttpKernel\KernelEvents;
  *
  * @internal
  * @see \Drupal\jsonapi\Normalizer\ResourceObjectNormalizer::getNormalization()
- * @todo Refactor once https://www.drupal.org/node/2551419 lands.
  */
 class ResourceObjectNormalizationCacher implements EventSubscriberInterface {
 
@@ -40,11 +40,18 @@ class ResourceObjectNormalizationCacher implements EventSubscriberInterface {
   const RESOURCE_CACHE_SUBSET_FIELDS = 'fields';
 
   /**
-   * The render cache.
+   * The variation cache.
    *
-   * @var \Drupal\Core\Render\RenderCacheInterface
+   * @var \Drupal\Core\Cache\VariationCacheInterface
    */
-  protected $renderCache;
+  protected $variationCache;
+
+  /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
 
   /**
    * The things to cache after the response has been sent.
@@ -54,13 +61,23 @@ class ResourceObjectNormalizationCacher implements EventSubscriberInterface {
   protected $toCache = [];
 
   /**
-   * Sets the render cache service.
+   * Sets the variation cache.
    *
-   * @param \Drupal\Core\Render\RenderCacheInterface $render_cache
-   *   The render cache.
+   * @param \Drupal\Core\Cache\VariationCacheInterface $variation_cache
+   *   The variation cache.
    */
-  public function setRenderCache(RenderCacheInterface $render_cache) {
-    $this->renderCache = $render_cache;
+  public function setVariationCache(VariationCacheInterface $variation_cache) {
+    $this->variationCache = $variation_cache;
+  }
+
+  /**
+   * Sets the request stack.
+   *
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
+   */
+  public function setRequestStack(RequestStack $request_stack) {
+    $this->requestStack = $request_stack;
   }
 
   /**
@@ -78,8 +95,14 @@ class ResourceObjectNormalizationCacher implements EventSubscriberInterface {
    * @see \Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber::renderArrayToResponse()
    */
   public function get(ResourceObject $object) {
-    $cached = $this->renderCache->get(static::generateLookupRenderArray($object));
-    return $cached ? $cached['#data'] : FALSE;
+    // @todo Investigate whether to cache POST and PATCH requests.
+    // @todo Follow up on https://www.drupal.org/project/drupal/issues/3381898.
+    if (!$this->requestStack->getCurrentRequest()->isMethodCacheable()) {
+      return FALSE;
+    }
+
+    $cached = $this->variationCache->get($this->generateCacheKeys($object), new CacheableMetadata());
+    return $cached ? $cached->data : FALSE;
   }
 
   /**
@@ -122,52 +145,36 @@ class ResourceObjectNormalizationCacher implements EventSubscriberInterface {
    *   The resource object for which to generate a cache item.
    * @param array $normalization_parts
    *   The normalization parts to cache.
-   *
-   * @see \Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber::responseToRenderArray()
-   * @todo Refactor/remove once https://www.drupal.org/node/2551419 lands.
    */
   protected function set(ResourceObject $object, array $normalization_parts) {
-    $base = static::generateLookupRenderArray($object);
-    $data_as_render_array = $base + [
-      // The data we actually care about.
-      '#data' => $normalization_parts,
-      // Tell RenderCache to cache the #data property: the data we actually care
-      // about.
-      '#cache_properties' => ['#data'],
-      // These exist only to fulfill the requirements of the RenderCache, which
-      // is designed to work with render arrays only. We don't care about these.
-      '#markup' => '',
-      '#attached' => '',
-    ];
+    // @todo Investigate whether to cache POST and PATCH requests.
+    // @todo Follow up on https://www.drupal.org/project/drupal/issues/3381898.
+    if (!$this->requestStack->getCurrentRequest()->isMethodCacheable()) {
+      return;
+    }
 
     // Merge the entity's cacheability metadata with that of the normalization
-    // parts, so that RenderCache can take care of cache redirects for us.
-    CacheableMetadata::createFromObject($object)
+    // parts, so that VariationCache can take care of cache redirects for us.
+    $cacheability = CacheableMetadata::createFromObject($object)
       ->merge(static::mergeCacheableDependencies($normalization_parts[static::RESOURCE_CACHE_SUBSET_BASE]))
-      ->merge(static::mergeCacheableDependencies($normalization_parts[static::RESOURCE_CACHE_SUBSET_FIELDS]))
-      ->applyTo($data_as_render_array);
+      ->merge(static::mergeCacheableDependencies($normalization_parts[static::RESOURCE_CACHE_SUBSET_FIELDS]));
 
-    $this->renderCache->set($data_as_render_array, $base);
+    $this->variationCache->set($this->generateCacheKeys($object), $normalization_parts, $cacheability, new CacheableMetadata());
   }
 
   /**
-   * Generates a lookup render array for a normalization.
+   * Generates the cache keys for a normalization.
    *
    * @param \Drupal\jsonapi\JsonApiResource\ResourceObject $object
-   *   The resource object for which to generate a cache item.
+   *   The resource object for which to generate the cache keys.
    *
-   * @return array
-   *   A render array for use with the RenderCache service.
+   * @return string[]
+   *   The cache keys to pass to the variation cache.
    *
    * @see \Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber::$dynamicPageCacheRedirectRenderArray
    */
-  protected static function generateLookupRenderArray(ResourceObject $object) {
-    return [
-      '#cache' => [
-        'keys' => [$object->getResourceType()->getTypeName(), $object->getId(), $object->getLanguage()->getId()],
-        'bin' => 'jsonapi_normalizations',
-      ],
-    ];
+  protected static function generateCacheKeys(ResourceObject $object) {
+    return [$object->getResourceType()->getTypeName(), $object->getId(), $object->getLanguage()->getId()];
   }
 
   /**

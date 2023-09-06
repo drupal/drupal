@@ -50,7 +50,8 @@ services:
   jsonapi.normalization_cacher:
     class: Drupal\jsonapi\EventSubscriber\ResourceObjectNormalizationCacher
     calls:
-      - ['setRenderCache', ['@render_cache']]
+      - ['setVariationCache', ['@variation_cache.jsonapi_normalizations']]
+      - ['setRequestStack', ['@request_stack']]
     tags:
       - { name: event_subscriber }
   serializer.normalizer.content_entity.jsonapi:
@@ -143,6 +144,10 @@ services:
     tags:
       - { name: cache.bin }
     factory: ['@cache_factory', 'get']
+    arguments: [jsonapi_normalizations]
+  variation_cache.jsonapi_normalizations:
+    class: Drupal\Core\Cache\VariationCacheInterface
+    factory: ['@variation_cache_factory', 'get']
     arguments: [jsonapi_normalizations]
 
   # Route filter.
