@@ -43,11 +43,14 @@ Release managers
 - (provisional) Dave Long 'longwave' https://www.drupal.org/u/longwave
 
 Core JavaScript packages
- - Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
- - Sally Young 'justafish' https://www.drupal.org/u/justafish
+- Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
+- Sally Young 'justafish' https://www.drupal.org/u/justafish
 
 Committer team facilitators
 - Pamela Barone 'pameeela' https://www.drupal.org/u/pameeela
+
+Core initiative facilitators
+- Gábor Hojtsy 'Gábor Hojtsy' https://www.drupal.org/u/gábor-hojtsy
 
 Subsystem maintainers
 ---------------------
