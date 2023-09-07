@@ -20,7 +20,6 @@ process:
   content_translation_uid: uid
   content_translation_created: created
   changed: changed
-  forum_container: is_container
 destination:
   plugin: entity:taxonomy_term
   translations: true

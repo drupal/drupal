@@ -1353,6 +1353,49 @@ $connection->schema()->createTable('cache_path', array(
   'mysql_character_set' => 'utf8',
 ));
 
+$connection->schema()->createTable('cache_variable', array(
+  'fields' => array(
+    'cid' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '255',
+      'default' => '',
+    ),
+    'data' => array(
+      'type' => 'blob',
+      'not null' => FALSE,
+      'size' => 'big',
+    ),
+    'expire' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+    'created' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+    'serialized' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'small',
+      'default' => '0',
+    ),
+  ),
+  'primary key' => array(
+    'cid',
+  ),
+  'indexes' => array(
+    'expire' => array(
+      'expire',
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
 $connection->schema()->createTable('comment', array(
   'fields' => array(
     'cid' => array(
@@ -1770,6 +1813,153 @@ $connection->insert('date_formats')
   'locked' => '0',
 ))
 ->execute();
+$connection->schema()->createTable('entity_translation', array(
+  'fields' => array(
+    'entity_type' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'entity_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'revision_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+    'source' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+    'uid' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+    'status' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '1',
+    ),
+    'translate' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+    'created' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+    'changed' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+  ),
+  'primary key' => array(
+    'entity_type',
+    'entity_id',
+    'language',
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
+$connection->schema()->createTable('entity_translation_revision', array(
+  'fields' => array(
+    'entity_type' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'entity_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'revision_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+    'source' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+    'uid' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+    'status' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '1',
+    ),
+    'translate' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+    'created' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+    'changed' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+  ),
+  'primary key' => array(
+    'entity_type',
+    'revision_id',
+    'language',
+  ),
+  'indexes' => array(
+    'revision_id' => array(
+      'revision_id',
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
 $connection->schema()->createTable('field_config', array(
   'fields' => array(
     'id' => array(
@@ -1908,7 +2098,7 @@ $connection->insert('field_config')
   'storage_module' => 'field_sql_storage',
   'storage_active' => '1',
   'locked' => '0',
-  'data' => 'a:7:{s:8:"settings";a:3:{s:14:"allowed_values";a:1:{i:0;a:2:{s:10:"vocabulary";s:4:"tags";s:6:"parent";i:0;}}s:21:"options_list_callback";N;s:23:"entity_translation_sync";b:0;}s:12:"entity_types";a:0:{}s:12:"translatable";s:1:"0";s:7:"storage";a:5:{s:4:"type";s:17:"field_sql_storage";s:8:"settings";a:0:{}s:6:"module";s:17:"field_sql_storage";s:6:"active";s:1:"1";s:7:"details";a:1:{s:3:"sql";a:2:{s:18:"FIELD_LOAD_CURRENT";a:1:{s:21:"field_data_field_tags";a:1:{s:3:"tid";s:14:"field_tags_tid";}}s:19:"FIELD_LOAD_REVISION";a:1:{s:25:"field_revision_field_tags";a:1:{s:3:"tid";s:14:"field_tags_tid";}}}}}s:12:"foreign keys";a:1:{s:3:"tid";a:2:{s:5:"table";s:18:"taxonomy_term_data";s:7:"columns";a:1:{s:3:"tid";s:3:"tid";}}}s:7:"indexes";a:1:{s:3:"tid";a:1:{i:0;s:3:"tid";}}s:2:"id";s:1:"3";}',
+  'data' => 'a:7:{s:8:"settings";a:3:{s:14:"allowed_values";a:1:{i:0;a:2:{s:10:"vocabulary";s:4:"tags";s:6:"parent";i:0;}}s:21:"options_list_callback";s:28:"i18n_taxonomy_allowed_values";s:23:"entity_translation_sync";b:0;}s:12:"entity_types";a:0:{}s:12:"translatable";s:1:"0";s:7:"storage";a:5:{s:4:"type";s:17:"field_sql_storage";s:8:"settings";a:0:{}s:6:"module";s:17:"field_sql_storage";s:6:"active";s:1:"1";s:7:"details";a:1:{s:3:"sql";a:2:{s:18:"FIELD_LOAD_CURRENT";a:1:{s:21:"field_data_field_tags";a:1:{s:3:"tid";s:14:"field_tags_tid";}}s:19:"FIELD_LOAD_REVISION";a:1:{s:25:"field_revision_field_tags";a:1:{s:3:"tid";s:14:"field_tags_tid";}}}}}s:12:"foreign keys";a:1:{s:3:"tid";a:2:{s:5:"table";s:18:"taxonomy_term_data";s:7:"columns";a:1:{s:3:"tid";s:3:"tid";}}}s:7:"indexes";a:1:{s:3:"tid";a:1:{i:0;s:3:"tid";}}s:2:"id";s:1:"3";}',
   'cardinality' => '-1',
   'translatable' => '0',
   'deleted' => '0',
@@ -1938,7 +2128,7 @@ $connection->insert('field_config')
   'storage_module' => 'field_sql_storage',
   'storage_active' => '1',
   'locked' => '0',
-  'data' => 'a:7:{s:8:"settings";a:3:{s:14:"allowed_values";a:1:{i:0;a:2:{s:10:"vocabulary";s:19:"sujet_de_discussion";s:6:"parent";i:0;}}s:21:"options_list_callback";N;s:23:"entity_translation_sync";b:0;}s:12:"entity_types";a:0:{}s:12:"translatable";s:1:"0";s:7:"storage";a:5:{s:4:"type";s:17:"field_sql_storage";s:8:"settings";a:0:{}s:6:"module";s:17:"field_sql_storage";s:6:"active";s:1:"1";s:7:"details";a:1:{s:3:"sql";a:2:{s:18:"FIELD_LOAD_CURRENT";a:1:{s:26:"field_data_taxonomy_forums";a:1:{s:3:"tid";s:19:"taxonomy_forums_tid";}}s:19:"FIELD_LOAD_REVISION";a:1:{s:30:"field_revision_taxonomy_forums";a:1:{s:3:"tid";s:19:"taxonomy_forums_tid";}}}}}s:12:"foreign keys";a:1:{s:3:"tid";a:2:{s:5:"table";s:18:"taxonomy_term_data";s:7:"columns";a:1:{s:3:"tid";s:3:"tid";}}}s:7:"indexes";a:1:{s:3:"tid";a:1:{i:0;s:3:"tid";}}s:2:"id";s:1:"5";}',
+  'data' => 'a:7:{s:8:"settings";a:3:{s:14:"allowed_values";a:1:{i:0;a:2:{s:10:"vocabulary";s:19:"sujet_de_discussion";s:6:"parent";i:0;}}s:21:"options_list_callback";s:28:"i18n_taxonomy_allowed_values";s:23:"entity_translation_sync";b:0;}s:12:"entity_types";a:0:{}s:12:"translatable";s:1:"0";s:7:"storage";a:5:{s:4:"type";s:17:"field_sql_storage";s:8:"settings";a:0:{}s:6:"module";s:17:"field_sql_storage";s:6:"active";s:1:"1";s:7:"details";a:1:{s:3:"sql";a:2:{s:18:"FIELD_LOAD_CURRENT";a:1:{s:26:"field_data_taxonomy_forums";a:1:{s:3:"tid";s:19:"taxonomy_forums_tid";}}s:19:"FIELD_LOAD_REVISION";a:1:{s:30:"field_revision_taxonomy_forums";a:1:{s:3:"tid";s:19:"taxonomy_forums_tid";}}}}}s:12:"foreign keys";a:1:{s:3:"tid";a:2:{s:5:"table";s:18:"taxonomy_term_data";s:7:"columns";a:1:{s:3:"tid";s:3:"tid";}}}s:7:"indexes";a:1:{s:3:"tid";a:1:{i:0;s:3:"tid";}}s:2:"id";s:1:"5";}',
   'cardinality' => '1',
   'translatable' => '0',
   'deleted' => '0',
@@ -2096,15 +2286,6 @@ $connection->insert('field_config_instance')
   'deleted' => '0',
 ))
 ->values(array(
-  'id' => '9',
-  'field_id' => '1',
-  'field_name' => 'comment_body',
-  'entity_type' => 'comment',
-  'bundle' => 'comment_node_book',
-  'data' => 'a:6:{s:5:"label";s:7:"Comment";s:8:"settings";a:2:{s:15:"text_processing";i:1;s:18:"user_register_form";b:0;}s:8:"required";b:1;s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:6:"hidden";s:4:"type";s:12:"text_default";s:6:"weight";i:0;s:8:"settings";a:0:{}s:6:"module";s:4:"text";}}s:6:"widget";a:4:{s:4:"type";s:13:"text_textarea";s:8:"settings";a:1:{s:4:"rows";i:5;}s:6:"weight";i:0;s:6:"module";s:4:"text";}s:11:"description";s:0:"";}',
-  'deleted' => '1',
-))
-->values(array(
   'id' => '11',
   'field_id' => '5',
   'field_name' => 'taxonomy_forums',
@@ -2147,6 +2328,42 @@ $connection->insert('field_config_instance')
   'entity_type' => 'node',
   'bundle' => 'forum',
   'data' => 'a:6:{s:5:"label";s:5:"event";s:6:"widget";a:5:{s:6:"weight";s:1:"2";s:4:"type";s:9:"date_text";s:6:"module";s:4:"date";s:6:"active";i:1;s:8:"settings";a:7:{s:12:"input_format";s:13:"m/d/Y - H:i:s";s:19:"input_format_custom";s:0:"";s:10:"year_range";s:5:"-3:+3";s:9:"increment";i:1;s:14:"label_position";s:5:"above";s:10:"text_parts";a:0:{}s:11:"no_fieldset";i:0;}}s:8:"settings";a:6:{s:13:"default_value";s:3:"now";s:18:"default_value_code";s:0:"";s:14:"default_value2";s:4:"same";s:19:"default_value_code2";s:0:"";s:18:"user_register_form";b:0;s:23:"entity_translation_sync";b:0;}s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:12:"date_default";s:8:"settings";a:6:{s:11:"format_type";s:4:"long";s:15:"multiple_number";s:0:"";s:13:"multiple_from";s:0:"";s:11:"multiple_to";s:0:"";s:6:"fromto";s:4:"both";s:19:"show_remaining_days";b:0;}s:6:"module";s:4:"date";s:6:"weight";i:12;}}s:8:"required";i:0;s:11:"description";s:0:"";}',
+  'deleted' => '0',
+))
+->values(array(
+  'id' => '95',
+  'field_id' => '1',
+  'field_name' => 'comment_body',
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_et',
+  'data' => 'a:6:{s:5:"label";s:7:"Comment";s:8:"settings";a:2:{s:15:"text_processing";i:1;s:18:"user_register_form";b:0;}s:8:"required";b:1;s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:6:"hidden";s:4:"type";s:12:"text_default";s:6:"weight";i:0;s:8:"settings";a:0:{}s:6:"module";s:4:"text";}}s:6:"widget";a:4:{s:4:"type";s:13:"text_textarea";s:8:"settings";a:1:{s:4:"rows";i:5;}s:6:"weight";i:0;s:6:"module";s:4:"text";}s:11:"description";s:0:"";}',
+  'deleted' => '0',
+))
+->values(array(
+  'id' => '96',
+  'field_id' => '2',
+  'field_name' => 'body',
+  'entity_type' => 'node',
+  'bundle' => 'et',
+  'data' => 'a:6:{s:5:"label";s:4:"Body";s:6:"widget";a:4:{s:4:"type";s:26:"text_textarea_with_summary";s:8:"settings";a:2:{s:4:"rows";i:20;s:12:"summary_rows";i:5;}s:6:"weight";i:-4;s:6:"module";s:4:"text";}s:8:"settings";a:3:{s:15:"display_summary";b:1;s:15:"text_processing";i:1;s:18:"user_register_form";b:0;}s:7:"display";a:2:{s:7:"default";a:5:{s:5:"label";s:6:"hidden";s:4:"type";s:12:"text_default";s:8:"settings";a:0:{}s:6:"module";s:4:"text";s:6:"weight";i:0;}s:6:"teaser";a:5:{s:5:"label";s:6:"hidden";s:4:"type";s:23:"text_summary_or_trimmed";s:8:"settings";a:1:{s:11:"trim_length";i:600;}s:6:"module";s:4:"text";s:6:"weight";i:0;}}s:8:"required";b:0;s:11:"description";s:0:"";}',
+  'deleted' => '0',
+))
+->values(array(
+  'id' => '97',
+  'field_id' => '1',
+  'field_name' => 'comment_body',
+  'entity_type' => 'comment',
+  'bundle' => 'comment_node_test_content_type',
+  'data' => 'a:6:{s:5:"label";s:7:"Comment";s:8:"settings";a:2:{s:15:"text_processing";i:1;s:18:"user_register_form";b:0;}s:8:"required";b:1;s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:6:"hidden";s:4:"type";s:12:"text_default";s:6:"weight";i:0;s:8:"settings";a:0:{}s:6:"module";s:4:"text";}}s:6:"widget";a:4:{s:4:"type";s:13:"text_textarea";s:8:"settings";a:1:{s:4:"rows";i:5;}s:6:"weight";i:0;s:6:"module";s:4:"text";}s:11:"description";s:0:"";}',
+  'deleted' => '0',
+))
+->values(array(
+  'id' => '98',
+  'field_id' => '2',
+  'field_name' => 'body',
+  'entity_type' => 'node',
+  'bundle' => 'test_content_type',
+  'data' => 'a:6:{s:5:"label";s:4:"Body";s:6:"widget";a:4:{s:4:"type";s:26:"text_textarea_with_summary";s:8:"settings";a:2:{s:4:"rows";i:20;s:12:"summary_rows";i:5;}s:6:"weight";i:-4;s:6:"module";s:4:"text";}s:8:"settings";a:3:{s:15:"display_summary";b:1;s:15:"text_processing";i:1;s:18:"user_register_form";b:0;}s:7:"display";a:2:{s:7:"default";a:5:{s:5:"label";s:6:"hidden";s:4:"type";s:12:"text_default";s:8:"settings";a:0:{}s:6:"module";s:4:"text";s:6:"weight";i:0;}s:6:"teaser";a:5:{s:5:"label";s:6:"hidden";s:4:"type";s:23:"text_summary_or_trimmed";s:8:"settings";a:1:{s:11:"trim_length";i:600;}s:6:"module";s:4:"text";s:6:"weight";i:0;}}s:8:"required";b:0;s:11:"description";s:0:"";}',
   'deleted' => '0',
 ))
 ->execute();
@@ -4158,6 +4375,187 @@ $connection->schema()->createTable('history', array(
   'mysql_character_set' => 'utf8',
 ));
 
+$connection->schema()->createTable('i18n_string', array(
+  'fields' => array(
+    'lid' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+    'textgroup' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '50',
+      'default' => 'default',
+    ),
+    'context' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '255',
+      'default' => '',
+    ),
+    'objectid' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '255',
+      'default' => '',
+    ),
+    'type' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '255',
+      'default' => '',
+    ),
+    'property' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '255',
+      'default' => '',
+    ),
+    'objectindex' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'big',
+      'default' => '0',
+    ),
+    'format' => array(
+      'type' => 'varchar',
+      'not null' => FALSE,
+      'length' => '255',
+    ),
+  ),
+  'primary key' => array(
+    'lid',
+  ),
+  'indexes' => array(
+    'group_context' => array(
+      'textgroup',
+      array(
+        'context',
+        '50',
+      ),
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
+$connection->insert('i18n_string')
+->fields(array(
+  'lid',
+  'textgroup',
+  'context',
+  'objectid',
+  'type',
+  'property',
+  'objectindex',
+  'format',
+))
+->values(array(
+  'lid' => '272',
+  'textgroup' => 'taxonomy',
+  'context' => 'vocabulary:2:name',
+  'objectid' => '2',
+  'type' => 'vocabulary',
+  'property' => 'name',
+  'objectindex' => '2',
+  'format' => '',
+))
+->values(array(
+  'lid' => '273',
+  'textgroup' => 'taxonomy',
+  'context' => 'vocabulary:2:description',
+  'objectid' => '2',
+  'type' => 'vocabulary',
+  'property' => 'description',
+  'objectindex' => '2',
+  'format' => '',
+))
+->values(array(
+  'lid' => '274',
+  'textgroup' => 'taxonomy',
+  'context' => 'vocabulary:1:name',
+  'objectid' => '1',
+  'type' => 'vocabulary',
+  'property' => 'name',
+  'objectindex' => '1',
+  'format' => '',
+))
+->values(array(
+  'lid' => '275',
+  'textgroup' => 'taxonomy',
+  'context' => 'vocabulary:1:description',
+  'objectid' => '1',
+  'type' => 'vocabulary',
+  'property' => 'description',
+  'objectindex' => '1',
+  'format' => '',
+))
+->execute();
+$connection->schema()->createTable('i18n_translation_set', array(
+  'fields' => array(
+    'tsid' => array(
+      'type' => 'serial',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'title' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '255',
+      'default' => '',
+    ),
+    'type' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+    'bundle' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'master_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+      'unsigned' => TRUE,
+    ),
+    'status' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '1',
+    ),
+    'created' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+    'changed' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
+  ),
+  'primary key' => array(
+    'tsid',
+  ),
+  'indexes' => array(
+    'entity_bundle' => array(
+      'type',
+      'bundle',
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
 $connection->schema()->createTable('image_effects', array(
   'fields' => array(
     'ieid' => array(
@@ -4462,6 +4860,15 @@ $connection->schema()->createTable('locales_source', array(
   ),
   'primary key' => array(
     'lid',
+  ),
+  'indexes' => array(
+    'textgroup_context' => array(
+      'textgroup',
+      array(
+        'context',
+        '50',
+      ),
+    ),
   ),
   'mysql_character_set' => 'utf8',
 ));
@@ -5995,6 +6402,38 @@ $connection->insert('locales_source')
   'context' => '',
   'version' => '7.92',
 ))
+->values(array(
+  'lid' => '272',
+  'location' => 'taxonomy:vocabulary:2:name',
+  'textgroup' => 'taxonomy',
+  'source' => 'Subject of discussion',
+  'context' => 'vocabulary:2:name',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '273',
+  'location' => 'taxonomy:vocabulary:2:description',
+  'textgroup' => 'taxonomy',
+  'source' => 'Forum navigation vocabulary',
+  'context' => 'vocabulary:2:description',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '274',
+  'location' => 'taxonomy:vocabulary:1:name',
+  'textgroup' => 'taxonomy',
+  'source' => 'Tags',
+  'context' => 'vocabulary:1:name',
+  'version' => '1',
+))
+->values(array(
+  'lid' => '275',
+  'location' => 'taxonomy:vocabulary:1:description',
+  'textgroup' => 'taxonomy',
+  'source' => 'Use tags to group articles on similar topics into categories.',
+  'context' => 'vocabulary:1:description',
+  'version' => '1',
+))
 ->execute();
 $connection->schema()->createTable('locales_target', array(
   'fields' => array(
@@ -6027,6 +6466,12 @@ $connection->schema()->createTable('locales_target', array(
       'size' => 'normal',
       'default' => '0',
     ),
+    'i18n_status' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+    ),
   ),
   'primary key' => array(
     'lid',
@@ -6043,6 +6488,7 @@ $connection->insert('locales_target')
   'language',
   'plid',
   'plural',
+  'i18n_status',
 ))
 ->values(array(
   'lid' => '163',
@@ -6050,6 +6496,7 @@ $connection->insert('locales_target')
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '678',
@@ -6057,6 +6504,7 @@ $connection->insert('locales_target')
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '684',
@@ -6064,6 +6512,7 @@ $connection->insert('locales_target')
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '687',
@@ -6071,6 +6520,7 @@ $connection->insert('locales_target')
   'language' => 'is',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '688',
@@ -6078,6 +6528,7 @@ $connection->insert('locales_target')
   'language' => 'is',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '758',
@@ -6085,6 +6536,7 @@ $connection->insert('locales_target')
   'language' => 'is',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '761',
@@ -6092,6 +6544,7 @@ $connection->insert('locales_target')
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '761',
@@ -6099,6 +6552,7 @@ $connection->insert('locales_target')
   'language' => 'is',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '762',
@@ -6106,6 +6560,7 @@ $connection->insert('locales_target')
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '762',
@@ -6113,6 +6568,7 @@ $connection->insert('locales_target')
   'language' => 'is',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '763',
@@ -6120,6 +6576,7 @@ $connection->insert('locales_target')
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '763',
@@ -6127,6 +6584,7 @@ $connection->insert('locales_target')
   'language' => 'is',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '764',
@@ -6134,6 +6592,7 @@ $connection->insert('locales_target')
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '764',
@@ -6141,6 +6600,7 @@ $connection->insert('locales_target')
   'language' => 'is',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '765',
@@ -6148,6 +6608,7 @@ $connection->insert('locales_target')
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '765',
@@ -6155,6 +6616,7 @@ $connection->insert('locales_target')
   'language' => 'is',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '766',
@@ -6162,6 +6624,7 @@ $connection->insert('locales_target')
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '766',
@@ -6169,6 +6632,7 @@ $connection->insert('locales_target')
   'language' => 'is',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '767',
@@ -6176,6 +6640,7 @@ $connection->insert('locales_target')
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '767',
@@ -6183,6 +6648,7 @@ $connection->insert('locales_target')
   'language' => 'is',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '768',
@@ -6190,6 +6656,7 @@ $connection->insert('locales_target')
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '768',
@@ -6197,6 +6664,7 @@ $connection->insert('locales_target')
   'language' => 'is',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '797',
@@ -6204,6 +6672,7 @@ $connection->insert('locales_target')
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '798',
@@ -6211,6 +6680,7 @@ $connection->insert('locales_target')
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '800',
@@ -6218,6 +6688,7 @@ $connection->insert('locales_target')
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '800',
@@ -6225,6 +6696,7 @@ $connection->insert('locales_target')
   'language' => 'is',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '801',
@@ -6232,6 +6704,7 @@ $connection->insert('locales_target')
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '801',
@@ -6239,6 +6712,7 @@ $connection->insert('locales_target')
   'language' => 'is',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '802',
@@ -6246,6 +6720,7 @@ $connection->insert('locales_target')
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '803',
@@ -6253,6 +6728,7 @@ $connection->insert('locales_target')
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '804',
@@ -6260,6 +6736,7 @@ $connection->insert('locales_target')
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '805',
@@ -6267,6 +6744,7 @@ $connection->insert('locales_target')
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '805',
@@ -6274,6 +6752,7 @@ $connection->insert('locales_target')
   'language' => 'is',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '806',
@@ -6281,6 +6760,7 @@ $connection->insert('locales_target')
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->values(array(
   'lid' => '806',
@@ -6288,6 +6768,7 @@ $connection->insert('locales_target')
   'language' => 'is',
   'plid' => '0',
   'plural' => '0',
+  'i18n_status' => '0',
 ))
 ->execute();
 $connection->schema()->createTable('menu_custom', array(
@@ -11275,9 +11756,9 @@ $connection->insert('menu_links')
   'module' => 'system',
   'hidden' => '-1',
   'external' => '0',
-  'has_children' => '0',
+  'has_children' => '1',
   'expanded' => '0',
-  'weight' => '2',
+  'weight' => '1',
   'depth' => '2',
   'customized' => '0',
   'p1' => '5',
@@ -13015,6 +13496,492 @@ $connection->insert('menu_links')
   'p5' => '162',
   'p6' => '955',
   'p7' => '965',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'navigation',
+  'mlid' => '966',
+  'plid' => '6',
+  'link_path' => 'node/add/et',
+  'router_path' => 'node/add/et',
+  'link_title' => 'et',
+  'options' => 'a:0:{}',
+  'module' => 'system',
+  'hidden' => '0',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '2',
+  'customized' => '0',
+  'p1' => '6',
+  'p2' => '966',
+  'p3' => '0',
+  'p4' => '0',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'navigation',
+  'mlid' => '967',
+  'plid' => '6',
+  'link_path' => 'node/add/test-content-type',
+  'router_path' => 'node/add/test-content-type',
+  'link_title' => 'test_content_type',
+  'options' => 'a:0:{}',
+  'module' => 'system',
+  'hidden' => '0',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '2',
+  'customized' => '0',
+  'p1' => '6',
+  'p2' => '967',
+  'p3' => '0',
+  'p4' => '0',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'management',
+  'mlid' => '968',
+  'plid' => '48',
+  'link_path' => 'admin/config/regional/i18n',
+  'router_path' => 'admin/config/regional/i18n',
+  'link_title' => 'Multilingual settings',
+  'options' => 'a:1:{s:10:"attributes";a:1:{s:5:"title";s:69:"Configure extended options for multilingual content and translations.";}}',
+  'module' => 'system',
+  'hidden' => '0',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '10',
+  'depth' => '4',
+  'customized' => '0',
+  'p1' => '1',
+  'p2' => '8',
+  'p3' => '48',
+  'p4' => '968',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'management',
+  'mlid' => '969',
+  'plid' => '968',
+  'link_path' => 'admin/config/regional/i18n/configure',
+  'router_path' => 'admin/config/regional/i18n/configure',
+  'link_title' => 'Multilingual system',
+  'options' => 'a:1:{s:10:"attributes";a:1:{s:5:"title";s:69:"Configure extended options for multilingual content and translations.";}}',
+  'module' => 'system',
+  'hidden' => '-1',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '5',
+  'customized' => '0',
+  'p1' => '1',
+  'p2' => '8',
+  'p3' => '48',
+  'p4' => '968',
+  'p5' => '969',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'management',
+  'mlid' => '970',
+  'plid' => '48',
+  'link_path' => 'admin/config/regional/entity_translation',
+  'router_path' => 'admin/config/regional/entity_translation',
+  'link_title' => 'Entity translation',
+  'options' => 'a:1:{s:10:"attributes";a:1:{s:5:"title";s:83:"Configure which entities can be translated and enable or disable language fallback.";}}',
+  'module' => 'system',
+  'hidden' => '0',
+  'external' => '0',
+  'has_children' => '1',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '4',
+  'customized' => '0',
+  'p1' => '1',
+  'p2' => '8',
+  'p3' => '48',
+  'p4' => '970',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'navigation',
+  'mlid' => '971',
+  'plid' => '39',
+  'link_path' => 'node/%/edit/%',
+  'router_path' => 'node/%/edit/%',
+  'link_title' => 'Edit',
+  'options' => 'a:0:{}',
+  'module' => 'system',
+  'hidden' => '-1',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '3',
+  'customized' => '0',
+  'p1' => '5',
+  'p2' => '39',
+  'p3' => '971',
+  'p4' => '0',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'navigation',
+  'mlid' => '972',
+  'plid' => '365',
+  'link_path' => 'node/%/translate/delete/%',
+  'router_path' => 'node/%/translate/delete/%',
+  'link_title' => 'Delete',
+  'options' => 'a:0:{}',
+  'module' => 'system',
+  'hidden' => '0',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '3',
+  'customized' => '0',
+  'p1' => '5',
+  'p2' => '365',
+  'p3' => '972',
+  'p4' => '0',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'navigation',
+  'mlid' => '973',
+  'plid' => '39',
+  'link_path' => 'node/%/edit/add/%/%',
+  'router_path' => 'node/%/edit/add/%/%',
+  'link_title' => 'Edit',
+  'options' => 'a:0:{}',
+  'module' => 'system',
+  'hidden' => '-1',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '3',
+  'customized' => '0',
+  'p1' => '5',
+  'p2' => '39',
+  'p3' => '973',
+  'p4' => '0',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'management',
+  'mlid' => '974',
+  'plid' => '970',
+  'link_path' => 'admin/config/regional/entity_translation/translatable/%',
+  'router_path' => 'admin/config/regional/entity_translation/translatable/%',
+  'link_title' => 'Confirm change in translatability.',
+  'options' => 'a:1:{s:10:"attributes";a:1:{s:5:"title";s:53:"Confirmation page for changing field translatability.";}}',
+  'module' => 'system',
+  'hidden' => '0',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '5',
+  'customized' => '0',
+  'p1' => '1',
+  'p2' => '8',
+  'p3' => '48',
+  'p4' => '970',
+  'p5' => '974',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'management',
+  'mlid' => '975',
+  'plid' => '968',
+  'link_path' => 'admin/config/regional/i18n/strings',
+  'router_path' => 'admin/config/regional/i18n/strings',
+  'link_title' => 'Strings',
+  'options' => 'a:1:{s:10:"attributes";a:1:{s:5:"title";s:33:"Options for user defined strings.";}}',
+  'module' => 'system',
+  'hidden' => '-1',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '20',
+  'depth' => '5',
+  'customized' => '0',
+  'p1' => '1',
+  'p2' => '8',
+  'p3' => '48',
+  'p4' => '968',
+  'p5' => '975',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'management',
+  'mlid' => '976',
+  'plid' => '413',
+  'link_path' => 'admin/config/regional/translate/i18n_string',
+  'router_path' => 'admin/config/regional/translate/i18n_string',
+  'link_title' => 'Strings',
+  'options' => 'a:1:{s:10:"attributes";a:1:{s:5:"title";s:29:"Refresh user defined strings.";}}',
+  'module' => 'system',
+  'hidden' => '-1',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '20',
+  'depth' => '5',
+  'customized' => '0',
+  'p1' => '1',
+  'p2' => '8',
+  'p3' => '48',
+  'p4' => '413',
+  'p5' => '976',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'navigation',
+  'mlid' => '977',
+  'plid' => '176',
+  'link_path' => 'taxonomy/term/%/translate',
+  'router_path' => 'taxonomy/term/%/translate',
+  'link_title' => 'Translate',
+  'options' => 'a:0:{}',
+  'module' => 'system',
+  'hidden' => '-1',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '10',
+  'depth' => '2',
+  'customized' => '0',
+  'p1' => '176',
+  'p2' => '977',
+  'p3' => '0',
+  'p4' => '0',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'management',
+  'mlid' => '978',
+  'plid' => '48',
+  'link_path' => 'admin/config/regional/i18n_translation',
+  'router_path' => 'admin/config/regional/i18n_translation',
+  'link_title' => 'Translation sets',
+  'options' => 'a:1:{s:10:"attributes";a:1:{s:5:"title";s:26:"Translation sets overview.";}}',
+  'module' => 'system',
+  'hidden' => '0',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '10',
+  'depth' => '4',
+  'customized' => '0',
+  'p1' => '1',
+  'p2' => '8',
+  'p3' => '48',
+  'p4' => '978',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'management',
+  'mlid' => '979',
+  'plid' => '212',
+  'link_path' => 'admin/structure/taxonomy/%/translate',
+  'router_path' => 'admin/structure/taxonomy/%/translate',
+  'link_title' => 'Translate',
+  'options' => 'a:0:{}',
+  'module' => 'system',
+  'hidden' => '-1',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '10',
+  'depth' => '5',
+  'customized' => '0',
+  'p1' => '1',
+  'p2' => '20',
+  'p3' => '180',
+  'p4' => '212',
+  'p5' => '979',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'management',
+  'mlid' => '980',
+  'plid' => '978',
+  'link_path' => 'admin/config/regional/i18n_translation/configure',
+  'router_path' => 'admin/config/regional/i18n_translation/configure',
+  'link_title' => 'Translation sets',
+  'options' => 'a:1:{s:10:"attributes";a:1:{s:5:"title";s:38:"Overview of existing translation sets.";}}',
+  'module' => 'system',
+  'hidden' => '-1',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '5',
+  'customized' => '0',
+  'p1' => '1',
+  'p2' => '8',
+  'p3' => '48',
+  'p4' => '978',
+  'p5' => '980',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'management',
+  'mlid' => '981',
+  'plid' => '226',
+  'link_path' => 'admin/structure/taxonomy/%/list/list',
+  'router_path' => 'admin/structure/taxonomy/%/list/list',
+  'link_title' => 'Terms',
+  'options' => 'a:0:{}',
+  'module' => 'system',
+  'hidden' => '-1',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '-20',
+  'depth' => '6',
+  'customized' => '0',
+  'p1' => '1',
+  'p2' => '20',
+  'p3' => '180',
+  'p4' => '212',
+  'p5' => '226',
+  'p6' => '981',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'management',
+  'mlid' => '982',
+  'plid' => '226',
+  'link_path' => 'admin/structure/taxonomy/%/list/sets',
+  'router_path' => 'admin/structure/taxonomy/%/list/sets',
+  'link_title' => 'Translation sets',
+  'options' => 'a:0:{}',
+  'module' => 'system',
+  'hidden' => '-1',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '6',
+  'customized' => '0',
+  'p1' => '1',
+  'p2' => '20',
+  'p3' => '180',
+  'p4' => '212',
+  'p5' => '226',
+  'p6' => '982',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+))
+->values(array(
+  'menu_name' => 'management',
+  'mlid' => '983',
+  'plid' => '982',
+  'link_path' => 'admin/structure/taxonomy/%/list/sets/add',
+  'router_path' => 'admin/structure/taxonomy/%/list/sets/add',
+  'link_title' => 'Create new translation',
+  'options' => 'a:0:{}',
+  'module' => 'system',
+  'hidden' => '-1',
+  'external' => '0',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '7',
+  'customized' => '0',
+  'p1' => '1',
+  'p2' => '20',
+  'p3' => '180',
+  'p4' => '212',
+  'p5' => '226',
+  'p6' => '982',
+  'p7' => '983',
   'p8' => '0',
   'p9' => '0',
   'updated' => '0',
@@ -14788,6 +15755,181 @@ $connection->insert('menu_router')
   'include_file' => 'modules/system/system.admin.inc',
 ))
 ->values(array(
+  'path' => 'admin/config/regional/entity_translation',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:29:"administer entity translation";}',
+  'page_callback' => 'drupal_get_form',
+  'page_arguments' => 'a:1:{i:0;s:29:"entity_translation_admin_form";}',
+  'delivery_callback' => '',
+  'fit' => '15',
+  'number_parts' => '4',
+  'context' => '0',
+  'tab_parent' => '',
+  'tab_root' => 'admin/config/regional/entity_translation',
+  'title' => 'Entity translation',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '6',
+  'description' => 'Configure which entities can be translated and enable or disable language fallback.',
+  'position' => '',
+  'weight' => '0',
+  'include_file' => 'sites/all/modules/entity_translation/entity_translation.admin.inc',
+))
+->values(array(
+  'path' => 'admin/config/regional/entity_translation/translatable/%',
+  'load_functions' => 'a:1:{i:5;N;}',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:28:"toggle field translatability";}',
+  'page_callback' => 'drupal_get_form',
+  'page_arguments' => 'a:2:{i:0;s:36:"entity_translation_translatable_form";i:1;i:5;}',
+  'delivery_callback' => '',
+  'fit' => '62',
+  'number_parts' => '6',
+  'context' => '0',
+  'tab_parent' => '',
+  'tab_root' => 'admin/config/regional/entity_translation/translatable/%',
+  'title' => 'Confirm change in translatability.',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '6',
+  'description' => 'Confirmation page for changing field translatability.',
+  'position' => '',
+  'weight' => '0',
+  'include_file' => 'sites/all/modules/entity_translation/entity_translation.admin.inc',
+))
+->values(array(
+  'path' => 'admin/config/regional/i18n',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:29:"administer site configuration";}',
+  'page_callback' => 'drupal_get_form',
+  'page_arguments' => 'a:2:{i:0;s:20:"variable_module_form";i:1;s:4:"i18n";}',
+  'delivery_callback' => '',
+  'fit' => '15',
+  'number_parts' => '4',
+  'context' => '0',
+  'tab_parent' => '',
+  'tab_root' => 'admin/config/regional/i18n',
+  'title' => 'Multilingual settings',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '6',
+  'description' => 'Configure extended options for multilingual content and translations.',
+  'position' => '',
+  'weight' => '10',
+  'include_file' => '',
+))
+->values(array(
+  'path' => 'admin/config/regional/i18n/configure',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:29:"administer site configuration";}',
+  'page_callback' => 'drupal_get_form',
+  'page_arguments' => 'a:2:{i:0;s:20:"variable_module_form";i:1;s:4:"i18n";}',
+  'delivery_callback' => '',
+  'fit' => '31',
+  'number_parts' => '5',
+  'context' => '1',
+  'tab_parent' => 'admin/config/regional/i18n',
+  'tab_root' => 'admin/config/regional/i18n',
+  'title' => 'Multilingual system',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '140',
+  'description' => 'Configure extended options for multilingual content and translations.',
+  'position' => '',
+  'weight' => '0',
+  'include_file' => '',
+))
+->values(array(
+  'path' => 'admin/config/regional/i18n/strings',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:29:"administer site configuration";}',
+  'page_callback' => 'drupal_get_form',
+  'page_arguments' => 'a:2:{i:0;s:18:"variable_edit_form";i:1;a:3:{i:0;s:27:"i18n_string_allowed_formats";i:1;s:27:"i18n_string_source_language";i:2;s:39:"i18n_string_textgroup_class_[textgroup]";}}',
+  'delivery_callback' => '',
+  'fit' => '31',
+  'number_parts' => '5',
+  'context' => '1',
+  'tab_parent' => 'admin/config/regional/i18n',
+  'tab_root' => 'admin/config/regional/i18n',
+  'title' => 'Strings',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '132',
+  'description' => 'Options for user defined strings.',
+  'position' => '',
+  'weight' => '20',
+  'include_file' => '',
+))
+->values(array(
+  'path' => 'admin/config/regional/i18n_translation',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:29:"administer site configuration";}',
+  'page_callback' => 'i18n_translation_admin_overview',
+  'page_arguments' => 'a:0:{}',
+  'delivery_callback' => '',
+  'fit' => '15',
+  'number_parts' => '4',
+  'context' => '0',
+  'tab_parent' => '',
+  'tab_root' => 'admin/config/regional/i18n_translation',
+  'title' => 'Translation sets',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '6',
+  'description' => 'Translation sets overview.',
+  'position' => '',
+  'weight' => '10',
+  'include_file' => 'sites/all/modules/i18n/i18n_translation/i18n_translation.admin.inc',
+))
+->values(array(
+  'path' => 'admin/config/regional/i18n_translation/configure',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:29:"administer site configuration";}',
+  'page_callback' => 'i18n_translation_admin_overview',
+  'page_arguments' => 'a:0:{}',
+  'delivery_callback' => '',
+  'fit' => '31',
+  'number_parts' => '5',
+  'context' => '1',
+  'tab_parent' => 'admin/config/regional/i18n_translation',
+  'tab_root' => 'admin/config/regional/i18n_translation',
+  'title' => 'Translation sets',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '140',
+  'description' => 'Overview of existing translation sets.',
+  'position' => '',
+  'weight' => '0',
+  'include_file' => 'sites/all/modules/i18n/i18n_translation/i18n_translation.admin.inc',
+))
+->values(array(
   'path' => 'admin/config/regional/language',
   'load_functions' => '',
   'to_arg_functions' => '',
@@ -15069,7 +16211,7 @@ $connection->insert('menu_router')
   'access_callback' => 'user_access',
   'access_arguments' => 'a:1:{i:0;s:19:"translate interface";}',
   'page_callback' => 'drupal_get_form',
-  'page_arguments' => 'a:2:{i:0;s:26:"locale_translate_edit_form";i:1;i:5;}',
+  'page_arguments' => 'a:2:{i:0;s:38:"i18n_string_locale_translate_edit_form";i:1;i:5;}',
   'delivery_callback' => '',
   'fit' => '62',
   'number_parts' => '6',
@@ -15085,7 +16227,7 @@ $connection->insert('menu_router')
   'description' => '',
   'position' => '',
   'weight' => '0',
-  'include_file' => 'modules/locale/locale.admin.inc',
+  'include_file' => 'sites/all/modules/i18n/i18n_string/i18n_string.pages.inc',
 ))
 ->values(array(
   'path' => 'admin/config/regional/translate/export',
@@ -15111,6 +16253,31 @@ $connection->insert('menu_router')
   'position' => '',
   'weight' => '30',
   'include_file' => 'modules/locale/locale.admin.inc',
+))
+->values(array(
+  'path' => 'admin/config/regional/translate/i18n_string',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:19:"translate interface";}',
+  'page_callback' => 'drupal_get_form',
+  'page_arguments' => 'a:1:{i:0;s:30:"i18n_string_admin_refresh_form";}',
+  'delivery_callback' => '',
+  'fit' => '31',
+  'number_parts' => '5',
+  'context' => '1',
+  'tab_parent' => 'admin/config/regional/translate',
+  'tab_root' => 'admin/config/regional/translate',
+  'title' => 'Strings',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '132',
+  'description' => 'Refresh user defined strings.',
+  'position' => '',
+  'weight' => '20',
+  'include_file' => 'sites/all/modules/i18n/i18n_string/i18n_string.admin.inc',
 ))
 ->values(array(
   'path' => 'admin/config/regional/translate/import',
@@ -15168,7 +16335,7 @@ $connection->insert('menu_router')
   'to_arg_functions' => '',
   'access_callback' => 'user_access',
   'access_arguments' => 'a:1:{i:0;s:19:"translate interface";}',
-  'page_callback' => 'locale_translate_seek_screen',
+  'page_callback' => 'i18n_string_locale_translate_seek_screen',
   'page_arguments' => 'a:0:{}',
   'delivery_callback' => '',
   'fit' => '31',
@@ -15185,7 +16352,7 @@ $connection->insert('menu_router')
   'description' => '',
   'position' => '',
   'weight' => '10',
-  'include_file' => 'modules/locale/locale.admin.inc',
+  'include_file' => 'sites/all/modules/i18n/i18n_string/i18n_string.pages.inc',
 ))
 ->values(array(
   'path' => 'admin/config/search',
@@ -17638,6 +18805,181 @@ $connection->insert('menu_router')
   'include_file' => 'modules/taxonomy/taxonomy.admin.inc',
 ))
 ->values(array(
+  'path' => 'admin/structure/taxonomy/%/list/list',
+  'load_functions' => 'a:1:{i:3;s:37:"taxonomy_vocabulary_machine_name_load";}',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:19:"administer taxonomy";}',
+  'page_callback' => 'drupal_get_form',
+  'page_arguments' => 'a:2:{i:0;s:23:"taxonomy_overview_terms";i:1;i:3;}',
+  'delivery_callback' => '',
+  'fit' => '59',
+  'number_parts' => '6',
+  'context' => '1',
+  'tab_parent' => 'admin/structure/taxonomy/%/list',
+  'tab_root' => 'admin/structure/taxonomy/%',
+  'title' => 'Terms',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '140',
+  'description' => '',
+  'position' => '',
+  'weight' => '-20',
+  'include_file' => 'modules/taxonomy/taxonomy.admin.inc',
+))
+->values(array(
+  'path' => 'admin/structure/taxonomy/%/list/sets',
+  'load_functions' => 'a:1:{i:3;s:37:"taxonomy_vocabulary_machine_name_load";}',
+  'to_arg_functions' => '',
+  'access_callback' => 'i18n_taxonomy_vocabulary_translation_tab_sets_access',
+  'access_arguments' => 'a:1:{i:0;i:3;}',
+  'page_callback' => 'i18n_taxonomy_translation_sets_overview',
+  'page_arguments' => 'a:1:{i:0;i:3;}',
+  'delivery_callback' => '',
+  'fit' => '59',
+  'number_parts' => '6',
+  'context' => '1',
+  'tab_parent' => 'admin/structure/taxonomy/%/list',
+  'tab_root' => 'admin/structure/taxonomy/%',
+  'title' => 'Translation sets',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '132',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'include_file' => 'sites/all/modules/i18n/i18n_taxonomy/i18n_taxonomy.admin.inc',
+))
+->values(array(
+  'path' => 'admin/structure/taxonomy/%/list/sets/add',
+  'load_functions' => 'a:1:{i:3;s:37:"taxonomy_vocabulary_machine_name_load";}',
+  'to_arg_functions' => '',
+  'access_callback' => 'i18n_taxonomy_vocabulary_translation_tab_sets_access',
+  'access_arguments' => 'a:1:{i:0;i:3;}',
+  'page_callback' => 'drupal_get_form',
+  'page_arguments' => 'a:2:{i:0;s:35:"i18n_taxonomy_translation_term_form";i:1;i:3;}',
+  'delivery_callback' => '',
+  'fit' => '119',
+  'number_parts' => '7',
+  'context' => '1',
+  'tab_parent' => 'admin/structure/taxonomy/%/list/sets',
+  'tab_root' => 'admin/structure/taxonomy/%',
+  'title' => 'Create new translation',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '388',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'include_file' => 'sites/all/modules/i18n/i18n_taxonomy/i18n_taxonomy.admin.inc',
+))
+->values(array(
+  'path' => 'admin/structure/taxonomy/%/list/sets/delete/%',
+  'load_functions' => 'a:2:{i:3;s:37:"taxonomy_vocabulary_machine_name_load";i:7;s:34:"i18n_taxonomy_translation_set_load";}',
+  'to_arg_functions' => '',
+  'access_callback' => 'i18n_taxonomy_vocabulary_translation_tab_sets_access',
+  'access_arguments' => 'a:1:{i:0;i:3;}',
+  'page_callback' => 'drupal_get_form',
+  'page_arguments' => 'a:2:{i:0;s:35:"i18n_translation_set_delete_confirm";i:1;i:7;}',
+  'delivery_callback' => '',
+  'fit' => '238',
+  'number_parts' => '8',
+  'context' => '0',
+  'tab_parent' => '',
+  'tab_root' => 'admin/structure/taxonomy/%/list/sets/delete/%',
+  'title' => 'Delete translation',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '0',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'include_file' => '',
+))
+->values(array(
+  'path' => 'admin/structure/taxonomy/%/list/sets/edit/%',
+  'load_functions' => 'a:2:{i:3;s:37:"taxonomy_vocabulary_machine_name_load";i:7;s:34:"i18n_taxonomy_translation_set_load";}',
+  'to_arg_functions' => '',
+  'access_callback' => 'i18n_taxonomy_vocabulary_translation_tab_sets_access',
+  'access_arguments' => 'a:1:{i:0;i:3;}',
+  'page_callback' => 'drupal_get_form',
+  'page_arguments' => 'a:3:{i:0;s:35:"i18n_taxonomy_translation_term_form";i:1;i:3;i:2;i:7;}',
+  'delivery_callback' => '',
+  'fit' => '238',
+  'number_parts' => '8',
+  'context' => '0',
+  'tab_parent' => '',
+  'tab_root' => 'admin/structure/taxonomy/%/list/sets/edit/%',
+  'title' => 'Edit translation',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '0',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'include_file' => 'sites/all/modules/i18n/i18n_taxonomy/i18n_taxonomy.admin.inc',
+))
+->values(array(
+  'path' => 'admin/structure/taxonomy/%/translate',
+  'load_functions' => 'a:1:{i:3;s:37:"taxonomy_vocabulary_machine_name_load";}',
+  'to_arg_functions' => '',
+  'access_callback' => 'i18n_object_translate_access',
+  'access_arguments' => 'a:2:{i:0;s:19:"taxonomy_vocabulary";i:1;i:3;}',
+  'page_callback' => 'i18n_page_translate_localize',
+  'page_arguments' => 'a:2:{i:0;s:19:"taxonomy_vocabulary";i:1;i:3;}',
+  'delivery_callback' => '',
+  'fit' => '29',
+  'number_parts' => '5',
+  'context' => '1',
+  'tab_parent' => 'admin/structure/taxonomy/%',
+  'tab_root' => 'admin/structure/taxonomy/%',
+  'title' => 'Translate',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '132',
+  'description' => '',
+  'position' => '',
+  'weight' => '10',
+  'include_file' => 'sites/all/modules/i18n/i18n.pages.inc',
+))
+->values(array(
+  'path' => 'admin/structure/taxonomy/%/translate/%',
+  'load_functions' => 'a:2:{i:3;s:37:"taxonomy_vocabulary_machine_name_load";i:5;s:18:"i18n_language_load";}',
+  'to_arg_functions' => '',
+  'access_callback' => 'i18n_object_translate_access',
+  'access_arguments' => 'a:2:{i:0;s:19:"taxonomy_vocabulary";i:1;i:3;}',
+  'page_callback' => 'i18n_page_translate_localize',
+  'page_arguments' => 'a:3:{i:0;s:19:"taxonomy_vocabulary";i:1;i:3;i:2;i:5;}',
+  'delivery_callback' => '',
+  'fit' => '58',
+  'number_parts' => '6',
+  'context' => '0',
+  'tab_parent' => '',
+  'tab_root' => 'admin/structure/taxonomy/%/translate/%',
+  'title' => 'Translate',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '0',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'include_file' => 'sites/all/modules/i18n/i18n.pages.inc',
+))
+->values(array(
   'path' => 'admin/structure/taxonomy/add',
   'load_functions' => '',
   'to_arg_functions' => '',
@@ -18588,6 +19930,31 @@ $connection->insert('menu_router')
   'include_file' => 'modules/comment/comment.pages.inc',
 ))
 ->values(array(
+  'path' => 'entity_translation/taxonomy_term/autocomplete',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:14:"access content";}',
+  'page_callback' => 'entity_translation_taxonomy_term_autocomplete',
+  'page_arguments' => 'a:0:{}',
+  'delivery_callback' => '',
+  'fit' => '7',
+  'number_parts' => '3',
+  'context' => '0',
+  'tab_parent' => '',
+  'tab_root' => 'entity_translation/taxonomy_term/autocomplete',
+  'title' => 'Entity translation autocomplete',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '0',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'include_file' => '',
+))
+->values(array(
   'path' => 'file/ajax',
   'load_functions' => '',
   'to_arg_functions' => '',
@@ -18738,6 +20105,81 @@ $connection->insert('menu_router')
   'include_file' => 'modules/forum/forum.pages.inc',
 ))
 ->values(array(
+  'path' => 'i18n/taxonomy/autocomplete/language/%',
+  'load_functions' => 'a:1:{i:4;N;}',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:14:"access content";}',
+  'page_callback' => 'i18n_taxonomy_autocomplete_language',
+  'page_arguments' => 'a:2:{i:0;i:4;i:1;N;}',
+  'delivery_callback' => '',
+  'fit' => '30',
+  'number_parts' => '5',
+  'context' => '0',
+  'tab_parent' => '',
+  'tab_root' => 'i18n/taxonomy/autocomplete/language/%',
+  'title' => 'Autocomplete taxonomy',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '0',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'include_file' => 'sites/all/modules/i18n/i18n_taxonomy/i18n_taxonomy.pages.inc',
+))
+->values(array(
+  'path' => 'i18n/taxonomy/autocomplete/vocabulary/%/%',
+  'load_functions' => 'a:2:{i:4;s:37:"taxonomy_vocabulary_machine_name_load";i:5;N;}',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:14:"access content";}',
+  'page_callback' => 'i18n_taxonomy_autocomplete_language',
+  'page_arguments' => 'a:2:{i:0;i:5;i:1;i:4;}',
+  'delivery_callback' => '',
+  'fit' => '60',
+  'number_parts' => '6',
+  'context' => '0',
+  'tab_parent' => '',
+  'tab_root' => 'i18n/taxonomy/autocomplete/vocabulary/%/%',
+  'title' => 'Autocomplete taxonomy',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '0',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'include_file' => 'sites/all/modules/i18n/i18n_taxonomy/i18n_taxonomy.pages.inc',
+))
+->values(array(
+  'path' => 'i18n_string/save',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'user_access',
+  'access_arguments' => 'a:1:{i:0;s:23:"use on-page translation";}',
+  'page_callback' => 'i18n_string_l10n_client_save_string',
+  'page_arguments' => 'a:0:{}',
+  'delivery_callback' => '',
+  'fit' => '3',
+  'number_parts' => '2',
+  'context' => '0',
+  'tab_parent' => '',
+  'tab_root' => 'i18n_string/save',
+  'title' => 'Save string',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '0',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'include_file' => 'sites/all/modules/i18n/i18n_string/i18n_string.pages.inc',
+))
+->values(array(
   'path' => 'node',
   'load_functions' => '',
   'to_arg_functions' => '',
@@ -18816,10 +20258,10 @@ $connection->insert('menu_router')
   'path' => 'node/%/edit',
   'load_functions' => 'a:1:{i:1;s:9:"node_load";}',
   'to_arg_functions' => '',
-  'access_callback' => 'node_access',
-  'access_arguments' => 'a:2:{i:0;s:6:"update";i:1;i:1;}',
-  'page_callback' => 'node_page_edit',
-  'page_arguments' => 'a:1:{i:0;i:1;}',
+  'access_callback' => 'entity_translation_edit_access',
+  'access_arguments' => 'a:6:{i:0;s:4:"node";i:1;i:1;i:2;b:0;i:3;a:10:{s:5:"title";s:4:"Edit";s:13:"page callback";s:14:"node_page_edit";s:14:"page arguments";a:1:{i:0;i:1;}s:15:"access callback";s:11:"node_access";s:16:"access arguments";a:2:{i:0;s:6:"update";i:1;i:1;}s:6:"weight";i:0;s:4:"type";i:132;s:7:"context";i:3;s:4:"file";s:14:"node.pages.inc";s:6:"module";s:4:"node";}i:4;s:6:"update";i:5;i:1;}',
+  'page_callback' => 'entity_translation_edit_page',
+  'page_arguments' => 'a:5:{i:0;s:4:"node";i:1;i:1;i:2;b:0;i:3;a:10:{s:5:"title";s:4:"Edit";s:13:"page callback";s:14:"node_page_edit";s:14:"page arguments";a:1:{i:0;i:1;}s:15:"access callback";s:11:"node_access";s:16:"access arguments";a:2:{i:0;s:6:"update";i:1;i:1;}s:6:"weight";i:0;s:4:"type";i:132;s:7:"context";i:3;s:4:"file";s:14:"node.pages.inc";s:6:"module";s:4:"node";}i:4;i:1;}',
   'delivery_callback' => '',
   'fit' => '5',
   'number_parts' => '3',
@@ -18828,6 +20270,56 @@ $connection->insert('menu_router')
   'tab_root' => 'node/%',
   'title' => 'Edit',
   'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '132',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'include_file' => 'modules/node/node.pages.inc',
+))
+->values(array(
+  'path' => 'node/%/edit/%',
+  'load_functions' => 'a:2:{i:1;s:9:"node_load";i:3;s:32:"entity_translation_language_load";}',
+  'to_arg_functions' => '',
+  'access_callback' => 'entity_translation_edit_access',
+  'access_arguments' => 'a:6:{i:0;s:4:"node";i:1;i:1;i:2;i:3;i:3;a:10:{s:5:"title";s:4:"Edit";s:13:"page callback";s:14:"node_page_edit";s:14:"page arguments";a:1:{i:0;i:1;}s:15:"access callback";s:11:"node_access";s:16:"access arguments";a:2:{i:0;s:6:"update";i:1;i:1;}s:6:"weight";i:0;s:4:"type";i:132;s:7:"context";i:3;s:4:"file";s:14:"node.pages.inc";s:6:"module";s:4:"node";}i:4;s:6:"update";i:5;i:1;}',
+  'page_callback' => 'entity_translation_edit_page',
+  'page_arguments' => 'a:5:{i:0;s:4:"node";i:1;i:1;i:2;i:3;i:3;a:10:{s:5:"title";s:4:"Edit";s:13:"page callback";s:14:"node_page_edit";s:14:"page arguments";a:1:{i:0;i:1;}s:15:"access callback";s:11:"node_access";s:16:"access arguments";a:2:{i:0;s:6:"update";i:1;i:1;}s:6:"weight";i:0;s:4:"type";i:132;s:7:"context";i:3;s:4:"file";s:14:"node.pages.inc";s:6:"module";s:4:"node";}i:4;i:1;}',
+  'delivery_callback' => '',
+  'fit' => '10',
+  'number_parts' => '4',
+  'context' => '3',
+  'tab_parent' => 'node/%/edit',
+  'tab_root' => 'node/%',
+  'title' => 'Edit',
+  'title_callback' => 'entity_translation_edit_title',
+  'title_arguments' => 'a:1:{i:0;i:3;}',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '140',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'include_file' => 'modules/node/node.pages.inc',
+))
+->values(array(
+  'path' => 'node/%/edit/add/%/%',
+  'load_functions' => 'a:3:{i:1;s:9:"node_load";i:4;s:32:"entity_translation_language_load";i:5;s:32:"entity_translation_language_load";}',
+  'to_arg_functions' => '',
+  'access_callback' => 'entity_translation_add_access',
+  'access_arguments' => 'a:7:{i:0;s:4:"node";i:1;i:1;i:2;i:4;i:3;i:5;i:4;a:10:{s:5:"title";s:4:"Edit";s:13:"page callback";s:14:"node_page_edit";s:14:"page arguments";a:1:{i:0;i:1;}s:15:"access callback";s:11:"node_access";s:16:"access arguments";a:2:{i:0;s:6:"update";i:1;i:1;}s:6:"weight";i:0;s:4:"type";i:132;s:7:"context";i:3;s:4:"file";s:14:"node.pages.inc";s:6:"module";s:4:"node";}i:5;s:6:"update";i:6;i:1;}',
+  'page_callback' => 'entity_translation_add_page',
+  'page_arguments' => 'a:6:{i:0;s:4:"node";i:1;i:1;i:2;i:4;i:3;i:5;i:4;a:10:{s:5:"title";s:4:"Edit";s:13:"page callback";s:14:"node_page_edit";s:14:"page arguments";a:1:{i:0;i:1;}s:15:"access callback";s:11:"node_access";s:16:"access arguments";a:2:{i:0;s:6:"update";i:1;i:1;}s:6:"weight";i:0;s:4:"type";i:132;s:7:"context";i:3;s:4:"file";s:14:"node.pages.inc";s:6:"module";s:4:"node";}i:5;i:1;}',
+  'delivery_callback' => '',
+  'fit' => '44',
+  'number_parts' => '6',
+  'context' => '3',
+  'tab_parent' => 'node/%/edit',
+  'tab_root' => 'node/%',
+  'title' => 'Edit',
+  'title_callback' => 'Add translation',
   'title_arguments' => '',
   'theme_callback' => '',
   'theme_arguments' => 'a:0:{}',
@@ -18941,14 +20433,14 @@ $connection->insert('menu_router')
   'path' => 'node/%/translate',
   'load_functions' => 'a:1:{i:1;s:9:"node_load";}',
   'to_arg_functions' => '',
-  'access_callback' => '_translation_tab_access',
-  'access_arguments' => 'a:1:{i:0;i:1;}',
-  'page_callback' => 'translation_node_overview',
-  'page_arguments' => 'a:1:{i:0;i:1;}',
+  'access_callback' => 'entity_translation_node_tab_access',
+  'access_arguments' => 'a:3:{i:0;i:1;i:1;s:23:"_translation_tab_access";i:2;i:1;}',
+  'page_callback' => 'entity_translation_overview',
+  'page_arguments' => 'a:4:{i:0;s:4:"node";i:1;i:1;i:2;a:3:{s:13:"page callback";s:25:"translation_node_overview";s:4:"file";s:21:"translation.pages.inc";s:6:"module";s:11:"translation";}i:3;i:1;}',
   'delivery_callback' => '',
   'fit' => '5',
   'number_parts' => '3',
-  'context' => '1',
+  'context' => '3',
   'tab_parent' => 'node/%',
   'tab_root' => 'node/%',
   'title' => 'Translate',
@@ -18959,8 +20451,33 @@ $connection->insert('menu_router')
   'type' => '132',
   'description' => '',
   'position' => '',
-  'weight' => '2',
-  'include_file' => 'modules/translation/translation.pages.inc',
+  'weight' => '1',
+  'include_file' => 'sites/all/modules/entity_translation/entity_translation.admin.inc',
+))
+->values(array(
+  'path' => 'node/%/translate/delete/%',
+  'load_functions' => 'a:2:{i:1;s:9:"node_load";i:4;s:32:"entity_translation_language_load";}',
+  'to_arg_functions' => '',
+  'access_callback' => 'entity_translation_node_tab_access',
+  'access_arguments' => 'a:1:{i:0;i:1;}',
+  'page_callback' => 'drupal_get_form',
+  'page_arguments' => 'a:4:{i:0;s:33:"entity_translation_delete_confirm";i:1;s:4:"node";i:2;i:1;i:3;i:4;}',
+  'delivery_callback' => '',
+  'fit' => '22',
+  'number_parts' => '5',
+  'context' => '0',
+  'tab_parent' => '',
+  'tab_root' => 'node/%/translate/delete/%',
+  'title' => 'Delete',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '6',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'include_file' => 'sites/all/modules/entity_translation/entity_translation.admin.inc',
 ))
 ->values(array(
   'path' => 'node/%/view',
@@ -19038,6 +20555,31 @@ $connection->insert('menu_router')
   'include_file' => 'modules/node/node.pages.inc',
 ))
 ->values(array(
+  'path' => 'node/add/et',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'node_access',
+  'access_arguments' => 'a:2:{i:0;s:6:"create";i:1;s:2:"et";}',
+  'page_callback' => 'node_add',
+  'page_arguments' => 'a:1:{i:0;s:2:"et";}',
+  'delivery_callback' => '',
+  'fit' => '7',
+  'number_parts' => '3',
+  'context' => '0',
+  'tab_parent' => '',
+  'tab_root' => 'node/add/et',
+  'title' => 'et',
+  'title_callback' => 'check_plain',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '6',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'include_file' => 'modules/node/node.pages.inc',
+))
+->values(array(
   'path' => 'node/add/forum',
   'load_functions' => '',
   'to_arg_functions' => '',
@@ -19083,6 +20625,31 @@ $connection->insert('menu_router')
   'theme_arguments' => 'a:0:{}',
   'type' => '6',
   'description' => "Use <em>basic pages</em> for your static content, such as an 'About us' page.",
+  'position' => '',
+  'weight' => '0',
+  'include_file' => 'modules/node/node.pages.inc',
+))
+->values(array(
+  'path' => 'node/add/test-content-type',
+  'load_functions' => '',
+  'to_arg_functions' => '',
+  'access_callback' => 'node_access',
+  'access_arguments' => 'a:2:{i:0;s:6:"create";i:1;s:17:"test_content_type";}',
+  'page_callback' => 'node_add',
+  'page_arguments' => 'a:1:{i:0;s:17:"test_content_type";}',
+  'delivery_callback' => '',
+  'fit' => '7',
+  'number_parts' => '3',
+  'context' => '0',
+  'tab_parent' => '',
+  'tab_root' => 'node/add/test-content-type',
+  'title' => 'test_content_type',
+  'title_callback' => 'check_plain',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '6',
+  'description' => '',
   'position' => '',
   'weight' => '0',
   'include_file' => 'modules/node/node.pages.inc',
@@ -19343,7 +20910,7 @@ $connection->insert('menu_router')
   'to_arg_functions' => '',
   'access_callback' => 'user_access',
   'access_arguments' => 'a:1:{i:0;s:14:"access content";}',
-  'page_callback' => 'taxonomy_autocomplete',
+  'page_callback' => 'i18n_taxonomy_autocomplete_field',
   'page_arguments' => 'a:0:{}',
   'delivery_callback' => '',
   'fit' => '3',
@@ -19360,7 +20927,7 @@ $connection->insert('menu_router')
   'description' => '',
   'position' => '',
   'weight' => '0',
-  'include_file' => 'modules/taxonomy/taxonomy.pages.inc',
+  'include_file' => 'sites/all/modules/i18n/i18n_taxonomy/i18n_taxonomy.pages.inc',
 ))
 ->values(array(
   'path' => 'taxonomy/term/%',
@@ -19368,7 +20935,7 @@ $connection->insert('menu_router')
   'to_arg_functions' => '',
   'access_callback' => 'user_access',
   'access_arguments' => 'a:1:{i:0;s:14:"access content";}',
-  'page_callback' => 'taxonomy_term_page',
+  'page_callback' => 'i18n_taxonomy_term_page',
   'page_arguments' => 'a:1:{i:0;i:2;}',
   'delivery_callback' => '',
   'fit' => '6',
@@ -19377,7 +20944,7 @@ $connection->insert('menu_router')
   'tab_parent' => '',
   'tab_root' => 'taxonomy/term/%',
   'title' => 'Taxonomy term',
-  'title_callback' => 'taxonomy_term_title',
+  'title_callback' => 'i18n_taxonomy_term_name',
   'title_arguments' => 'a:1:{i:0;i:2;}',
   'theme_callback' => '',
   'theme_arguments' => 'a:0:{}',
@@ -19385,7 +20952,7 @@ $connection->insert('menu_router')
   'description' => '',
   'position' => '',
   'weight' => '0',
-  'include_file' => 'modules/taxonomy/taxonomy.pages.inc',
+  'include_file' => 'sites/all/modules/i18n/i18n_taxonomy/i18n_taxonomy.pages.inc',
 ))
 ->values(array(
   'path' => 'taxonomy/term/%/edit',
@@ -19438,12 +21005,62 @@ $connection->insert('menu_router')
   'include_file' => 'modules/taxonomy/taxonomy.pages.inc',
 ))
 ->values(array(
+  'path' => 'taxonomy/term/%/translate',
+  'load_functions' => 'a:1:{i:2;s:18:"taxonomy_term_load";}',
+  'to_arg_functions' => '',
+  'access_callback' => 'i18n_object_translate_access',
+  'access_arguments' => 'a:2:{i:0;s:13:"taxonomy_term";i:1;i:2;}',
+  'page_callback' => 'i18n_page_translate_tab',
+  'page_arguments' => 'a:2:{i:0;s:13:"taxonomy_term";i:1;i:2;}',
+  'delivery_callback' => '',
+  'fit' => '13',
+  'number_parts' => '4',
+  'context' => '1',
+  'tab_parent' => 'taxonomy/term/%',
+  'tab_root' => 'taxonomy/term/%',
+  'title' => 'Translate',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '132',
+  'description' => '',
+  'position' => '',
+  'weight' => '10',
+  'include_file' => 'sites/all/modules/i18n/i18n.pages.inc',
+))
+->values(array(
+  'path' => 'taxonomy/term/%/translate/%',
+  'load_functions' => 'a:2:{i:2;s:18:"taxonomy_term_load";i:4;s:18:"i18n_language_load";}',
+  'to_arg_functions' => '',
+  'access_callback' => 'i18n_object_translate_access',
+  'access_arguments' => 'a:2:{i:0;s:13:"taxonomy_term";i:1;i:2;}',
+  'page_callback' => 'i18n_page_translate_tab',
+  'page_arguments' => 'a:3:{i:0;s:13:"taxonomy_term";i:1;i:2;i:2;i:4;}',
+  'delivery_callback' => '',
+  'fit' => '26',
+  'number_parts' => '5',
+  'context' => '0',
+  'tab_parent' => '',
+  'tab_root' => 'taxonomy/term/%/translate/%',
+  'title' => 'Translate',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '0',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'include_file' => 'sites/all/modules/i18n/i18n.pages.inc',
+))
+->values(array(
   'path' => 'taxonomy/term/%/view',
   'load_functions' => 'a:1:{i:2;s:18:"taxonomy_term_load";}',
   'to_arg_functions' => '',
   'access_callback' => 'user_access',
   'access_arguments' => 'a:1:{i:0;s:14:"access content";}',
-  'page_callback' => 'taxonomy_term_page',
+  'page_callback' => 'i18n_taxonomy_term_page',
   'page_arguments' => 'a:1:{i:0;i:2;}',
   'delivery_callback' => '',
   'fit' => '13',
@@ -19460,7 +21077,7 @@ $connection->insert('menu_router')
   'description' => '',
   'position' => '',
   'weight' => '0',
-  'include_file' => 'modules/taxonomy/taxonomy.pages.inc',
+  'include_file' => 'sites/all/modules/i18n/i18n_taxonomy/i18n_taxonomy.pages.inc',
 ))
 ->values(array(
   'path' => 'user',
@@ -20310,6 +21927,21 @@ $connection->insert('node_type')
   'orig_type' => 'blog',
 ))
 ->values(array(
+  'type' => 'et',
+  'name' => 'et',
+  'base' => 'node_content',
+  'module' => 'node',
+  'description' => '',
+  'help' => '',
+  'has_title' => '1',
+  'title_label' => 'Title',
+  'custom' => '1',
+  'modified' => '1',
+  'locked' => '0',
+  'disabled' => '0',
+  'orig_type' => 'et',
+))
+->values(array(
   'type' => 'forum',
   'name' => 'Forum topic',
   'base' => 'forum',
@@ -20338,6 +21970,21 @@ $connection->insert('node_type')
   'locked' => '0',
   'disabled' => '0',
   'orig_type' => 'page',
+))
+->values(array(
+  'type' => 'test_content_type',
+  'name' => 'test_content_type',
+  'base' => 'node_content',
+  'module' => 'node',
+  'description' => '',
+  'help' => '',
+  'has_title' => '1',
+  'title_label' => 'Title',
+  'custom' => '1',
+  'modified' => '1',
+  'locked' => '0',
+  'disabled' => '0',
+  'orig_type' => 'test_content_type',
 ))
 ->execute();
 $connection->schema()->createTable('queue', array(
@@ -21084,6 +22731,20 @@ $connection->insert('registry')
   'weight' => '0',
 ))
 ->values(array(
+  'name' => 'Drupali18nConfigTestCase',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/i18n/i18n.test',
+  'module' => 'i18n',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'Drupali18nTestCase',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/i18n/i18n.test',
+  'module' => 'i18n',
+  'weight' => '0',
+))
+->values(array(
   'name' => 'DrupalLocalStreamWrapper',
   'type' => 'class',
   'filename' => 'includes/stream_wrappers.inc',
@@ -21200,6 +22861,167 @@ $connection->insert('registry')
   'type' => 'class',
   'filename' => 'modules/field/tests/field.test',
   'module' => 'field',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'EntityTranslationCommentHandler',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/includes/translation.handler.comment.inc',
+  'module' => 'entity_translation',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'EntityTranslationCommentTestCase',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/tests/entity_translation.test',
+  'module' => 'entity_translation',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'EntityTranslationContentTranslationTestCase',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/tests/entity_translation.test',
+  'module' => 'entity_translation',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'EntityTranslationDefaultHandler',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/includes/translation.handler.inc',
+  'module' => 'entity_translation',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'EntityTranslationHandlerFactory',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/includes/translation.handler_factory.inc',
+  'module' => 'entity_translation',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'EntityTranslationHandlerInterface',
+  'type' => 'interface',
+  'filename' => 'sites/all/modules/entity_translation/includes/translation.handler.inc',
+  'module' => 'entity_translation',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'EntityTranslationHierarchyTestCase',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/tests/entity_translation.test',
+  'module' => 'entity_translation',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'EntityTranslationHookTestCase',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/tests/entity_translation.test',
+  'module' => 'entity_translation',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'EntityTranslationIntegrationTestCase',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/tests/entity_translation.test',
+  'module' => 'entity_translation',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'EntityTranslationNodeHandler',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/includes/translation.handler.node.inc',
+  'module' => 'entity_translation',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'EntityTranslationTaxonomyAutocompleteTestCase',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/tests/entity_translation.test',
+  'module' => 'entity_translation',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'EntityTranslationTaxonomyTermHandler',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/includes/translation.handler.taxonomy_term.inc',
+  'module' => 'entity_translation',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'EntityTranslationTestCase',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/tests/entity_translation.test',
+  'module' => 'entity_translation',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'EntityTranslationToggleFieldsTranslatabilityTestCase',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/tests/entity_translation.test',
+  'module' => 'entity_translation',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'EntityTranslationTranslationTestCase',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/tests/entity_translation.test',
+  'module' => 'entity_translation',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'EntityTranslationUserHandler',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/includes/translation.handler.user.inc',
+  'module' => 'entity_translation',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'entity_translation_handler_field_field',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/views/entity_translation_handler_field_field.inc',
+  'module' => 'entity_translation',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'entity_translation_handler_field_label',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/views/entity_translation_handler_field_label.inc',
+  'module' => 'entity_translation',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'entity_translation_handler_field_translate_link',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/views/entity_translation_handler_field_translate_link.inc',
+  'module' => 'entity_translation',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'entity_translation_handler_filter_entity_type',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/views/entity_translation_handler_filter_entity_type.inc',
+  'module' => 'entity_translation',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'entity_translation_handler_filter_language',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/views/entity_translation_handler_filter_language.inc',
+  'module' => 'entity_translation',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'entity_translation_handler_filter_translation_exists',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/views/entity_translation_handler_filter_translation_exists.inc',
+  'module' => 'entity_translation',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'entity_translation_handler_relationship',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/views/entity_translation_handler_relationship.inc',
+  'module' => 'entity_translation',
   'weight' => '0',
 ))
 ->values(array(
@@ -21602,6 +23424,76 @@ $connection->insert('registry')
   'weight' => '0',
 ))
 ->values(array(
+  'name' => 'i18nStringTestCase',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/i18n/i18n_string/i18n_string.test',
+  'module' => 'i18n_string',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'i18nTaxonomyTestCase',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/i18n/i18n_taxonomy/i18n_taxonomy.test',
+  'module' => 'i18n_taxonomy',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'i18n_object_wrapper',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/i18n/i18n_object.inc',
+  'module' => 'i18n',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'i18n_string_object',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/i18n/i18n_string/i18n_string.inc',
+  'module' => 'i18n_string',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'i18n_string_object_wrapper',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/i18n/i18n_string/i18n_string.inc',
+  'module' => 'i18n_string',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'i18n_string_textgroup_cached',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/i18n/i18n_string/i18n_string.inc',
+  'module' => 'i18n_string',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'i18n_string_textgroup_default',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/i18n/i18n_string/i18n_string.inc',
+  'module' => 'i18n_string',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'i18n_taxonomy_term',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/i18n/i18n_taxonomy/i18n_taxonomy.inc',
+  'module' => 'i18n_taxonomy',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'i18n_taxonomy_translation_set',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/i18n/i18n_taxonomy/i18n_taxonomy.inc',
+  'module' => 'i18n_taxonomy',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'i18n_translation_set',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/i18n/i18n_translation/i18n_translation.inc',
+  'module' => 'i18n_translation',
+  'weight' => '0',
+))
+->values(array(
   'name' => 'ImageAdminStylesUnitTest',
   'type' => 'class',
   'filename' => 'modules/image/image.test',
@@ -21942,6 +23834,13 @@ $connection->insert('registry')
   'type' => 'class',
   'filename' => 'includes/database/query.inc',
   'module' => '',
+  'weight' => '0',
+))
+->values(array(
+  'name' => 'MigrateTranslationEntityHandler',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/entity_translation/includes/translation.migrate.inc',
+  'module' => 'entity_translation',
   'weight' => '0',
 ))
 ->values(array(
@@ -23134,6 +25033,13 @@ $connection->insert('registry')
   'module' => 'user',
   'weight' => '0',
 ))
+->values(array(
+  'name' => 'VariableTestCase',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/variable/variable.test',
+  'module' => 'variable',
+  'weight' => '0',
+))
 ->execute();
 $connection->schema()->createTable('registry_file', array(
   'fields' => array(
@@ -23635,6 +25541,142 @@ $connection->insert('registry_file')
   'filename' => 'sites/all/modules/date/tests/DateValidationTestCase.test',
   'hash' => '675c3dce13d95e424364de4db2c49d88cba19ce8eb86530341374c82a3b1292f',
 ))
+->values(array(
+  'filename' => 'sites/all/modules/entity_translation/includes/translation.handler.comment.inc',
+  'hash' => 'c1667be0bdea8805be52b10bad904f60a278213b749d4c9903e3887b6165448c',
+))
+->values(array(
+  'filename' => 'sites/all/modules/entity_translation/includes/translation.handler.inc',
+  'hash' => 'd470382679e75b63f370e7d476a737eb104e7bae0937668d912873bc2c94ce89',
+))
+->values(array(
+  'filename' => 'sites/all/modules/entity_translation/includes/translation.handler.node.inc',
+  'hash' => '255963e0d0a38349e1c5cb3ff072819b9c39cb5760a71b312ddaac1dd2edbb82',
+))
+->values(array(
+  'filename' => 'sites/all/modules/entity_translation/includes/translation.handler.taxonomy_term.inc',
+  'hash' => '587417ed1ba9debd4caef9b32722ca003be28c325d12f3fcb82b70384c095814',
+))
+->values(array(
+  'filename' => 'sites/all/modules/entity_translation/includes/translation.handler.user.inc',
+  'hash' => '4574d55fc756f566bc10f574231ee7900a181fbaa68d647ae973d9e06b4167ac',
+))
+->values(array(
+  'filename' => 'sites/all/modules/entity_translation/includes/translation.handler_factory.inc',
+  'hash' => '80ed7658c3d685bc18e7d29129893b2fb48dcda029e730241c1d0f53db7ad367',
+))
+->values(array(
+  'filename' => 'sites/all/modules/entity_translation/includes/translation.migrate.inc',
+  'hash' => 'e5c56971c44ad5352089481e48e01fb83bfefbb5359c8033949ce5227a917d42',
+))
+->values(array(
+  'filename' => 'sites/all/modules/entity_translation/tests/entity_translation.test',
+  'hash' => 'b3aa79b5d0805999336c000aafa63c9384303bd5018ca57d78cb94fa380eb854',
+))
+->values(array(
+  'filename' => 'sites/all/modules/entity_translation/views/entity_translation_handler_field_field.inc',
+  'hash' => '4681a5b5e8963b562e6fbb39c3385024034f392162eb4ff7f52a1684db628ea8',
+))
+->values(array(
+  'filename' => 'sites/all/modules/entity_translation/views/entity_translation_handler_field_label.inc',
+  'hash' => 'd31ea1af45150832df052fad29af729c6c028a54fa44d62a023a861bbeba744d',
+))
+->values(array(
+  'filename' => 'sites/all/modules/entity_translation/views/entity_translation_handler_field_translate_link.inc',
+  'hash' => '78cfa9c4e9b074e5d45d887fe8f69a8966fc0112d95a6abc74b9b13421b58047',
+))
+->values(array(
+  'filename' => 'sites/all/modules/entity_translation/views/entity_translation_handler_filter_entity_type.inc',
+  'hash' => 'd86bb73731c60f8ebaa3d8c29f837403935e91fe062c5ab6293901aa253da3e7',
+))
+->values(array(
+  'filename' => 'sites/all/modules/entity_translation/views/entity_translation_handler_filter_language.inc',
+  'hash' => '44c3a6928b8f7cde5fea6ae7cff973982d6c7781a3c8be663838ff770435c939',
+))
+->values(array(
+  'filename' => 'sites/all/modules/entity_translation/views/entity_translation_handler_filter_translation_exists.inc',
+  'hash' => '25d8ee7f5d45a5e3984572d00816368902121574f04277a67bbabd004b67f39a',
+))
+->values(array(
+  'filename' => 'sites/all/modules/entity_translation/views/entity_translation_handler_relationship.inc',
+  'hash' => 'aac136a9eab8c4b832edd73b942e124c3fdf1f48b6c8a8d0bf5383ba1d32259c',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/i18n.test',
+  'hash' => 'c52b5076bfd40ec8820a1f58dd9ea6f8d0098c771f65d740298143137d52866e',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/i18n_object.inc',
+  'hash' => '13118a2525f7ef27040f1c4824fcd05258154fcba128bdb5802c0aac471293c8',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/i18n_string/i18n_string.admin.inc',
+  'hash' => 'ace6c13b12cbb5379c803def1f4c4ba073457aa7fe84d1f87a4a4693e28b216c',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/i18n_string/i18n_string.inc',
+  'hash' => '35569a693d0bb7df4035acefddc026087676f5671f0957ec56bbdd63eadd1fbc',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/i18n_string/i18n_string.test',
+  'hash' => '5127520c1b08f78d3314d6df948b6a59eeb5a889c74687a196bfa3244c33f6d8',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/i18n_taxonomy/i18n_taxonomy.admin.inc',
+  'hash' => '5b609efc7ae96ddf4129dc9ee59a4a17fd522c8f9c6e148ffb1ac6eb24700246',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/i18n_taxonomy/i18n_taxonomy.inc',
+  'hash' => '7bc643c59e25c8a00491bc70258821793bbcb232a70510eff071a02bb1e4343e',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/i18n_taxonomy/i18n_taxonomy.pages.inc',
+  'hash' => 'cd0cb343cbfe113a13583450618163b90e6bee8778f79b6dc76ce12dfd13a2f4',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/i18n_taxonomy/i18n_taxonomy.test',
+  'hash' => '29fc8c69345e4d2b8eda25ae5d7775772ff1432452f07d51d66b727857ba3690',
+))
+->values(array(
+  'filename' => 'sites/all/modules/i18n/i18n_translation/i18n_translation.inc',
+  'hash' => 'e7e38105a080efcb1d947e7e6d2f1487127b166905b2722c516582827ddaf143',
+))
+->values(array(
+  'filename' => 'sites/all/modules/variable/includes/forum.variable.inc',
+  'hash' => '84ab5992d648c704b2ae6d680cf8e02d3150cccd8939170f7e8fd82ac054b516',
+))
+->values(array(
+  'filename' => 'sites/all/modules/variable/includes/locale.variable.inc',
+  'hash' => '27173d9c9e526a8ba88c5f48bf516aaac59ad932b64ef654621bc11f1ccd9f7a',
+))
+->values(array(
+  'filename' => 'sites/all/modules/variable/includes/menu.variable.inc',
+  'hash' => 'bc776840ee32060a9fda616ca154d3fd315461fbe07ce822d7969b79fccd8160',
+))
+->values(array(
+  'filename' => 'sites/all/modules/variable/includes/node.variable.inc',
+  'hash' => '596064101f8fbd3affdb61ca1240354ce0b51778601a8b02c021a1150bbf4e06',
+))
+->values(array(
+  'filename' => 'sites/all/modules/variable/includes/system.variable.inc',
+  'hash' => '909bae0f1e3a4d85c32c385a92a58c559576fb60fd13a0e4f71127eee27afd3e',
+))
+->values(array(
+  'filename' => 'sites/all/modules/variable/includes/taxonomy.variable.inc',
+  'hash' => '7792f07f8ea088cd8c3350e16f4cacef262c319c2e605dd911f17999a872f09e',
+))
+->values(array(
+  'filename' => 'sites/all/modules/variable/includes/translation.variable.inc',
+  'hash' => '3e4e82f779986bfb32987d6b27bdab9f907ba5e18841847f138a20c42cf725d4',
+))
+->values(array(
+  'filename' => 'sites/all/modules/variable/includes/user.variable.inc',
+  'hash' => 'b80094c1db0037f396f197bdd70c19e87afe76f4378c5c6089c4199af3bcb03a',
+))
+->values(array(
+  'filename' => 'sites/all/modules/variable/variable.test',
+  'hash' => 'a6614814c24aee5ae1d2f2f8c23c08138466c41a82e57ee670e070d7cdd6e4b2',
+))
 ->execute();
 $connection->schema()->createTable('role', array(
   'fields' => array(
@@ -23828,6 +25870,11 @@ $connection->insert('role_permission')
   'rid' => '3',
   'permission' => 'administer content types',
   'module' => 'node',
+))
+->values(array(
+  'rid' => '3',
+  'permission' => 'administer entity translation',
+  'module' => 'entity_translation',
 ))
 ->values(array(
   'rid' => '3',
@@ -24036,6 +26083,21 @@ $connection->insert('role_permission')
 ))
 ->values(array(
   'rid' => '3',
+  'permission' => 'toggle field translatability',
+  'module' => 'entity_translation',
+))
+->values(array(
+  'rid' => '3',
+  'permission' => 'translate admin strings',
+  'module' => 'i18n_string',
+))
+->values(array(
+  'rid' => '3',
+  'permission' => 'translate any entity',
+  'module' => 'entity_translation',
+))
+->values(array(
+  'rid' => '3',
   'permission' => 'translate content',
   'module' => 'translation',
 ))
@@ -24043,6 +26105,16 @@ $connection->insert('role_permission')
   'rid' => '3',
   'permission' => 'translate interface',
   'module' => 'locale',
+))
+->values(array(
+  'rid' => '3',
+  'permission' => 'translate node entities',
+  'module' => 'entity_translation',
+))
+->values(array(
+  'rid' => '3',
+  'permission' => 'translate user-defined strings',
+  'module' => 'i18n_string',
 ))
 ->values(array(
   'rid' => '3',
@@ -26326,10 +28398,10 @@ $connection->insert('system')
   'name' => 'entity_translation',
   'type' => 'module',
   'owner' => '',
-  'status' => '0',
+  'status' => '1',
   'bootstrap' => '0',
-  'schema_version' => '-1',
-  'weight' => '0',
+  'schema_version' => '7009',
+  'weight' => '11',
   'info' => 'a:12:{s:4:"name";s:18:"Entity Translation";s:11:"description";s:58:"Allows entities to be translated into different languages.";s:7:"package";s:33:"Multilingual - Entity Translation";s:4:"core";s:3:"7.x";s:9:"configure";s:40:"admin/config/regional/entity_translation";s:12:"dependencies";a:1:{i:0;s:14:"locale (>7.14)";}s:17:"test_dependencies";a:2:{i:0;s:17:"pathauto:pathauto";i:1;s:11:"title:title";}s:5:"files";a:15:{i:0;s:40:"includes/translation.handler_factory.inc";i:1;s:32:"includes/translation.handler.inc";i:2;s:40:"includes/translation.handler.comment.inc";i:3;s:37:"includes/translation.handler.node.inc";i:4;s:46:"includes/translation.handler.taxonomy_term.inc";i:5;s:37:"includes/translation.handler.user.inc";i:6;s:32:"includes/translation.migrate.inc";i:7;s:29:"tests/entity_translation.test";i:8;s:49:"views/entity_translation_handler_relationship.inc";i:9;s:57:"views/entity_translation_handler_field_translate_link.inc";i:10;s:48:"views/entity_translation_handler_field_label.inc";i:11;s:55:"views/entity_translation_handler_filter_entity_type.inc";i:12;s:52:"views/entity_translation_handler_filter_language.inc";i:13;s:62:"views/entity_translation_handler_filter_translation_exists.inc";i:14;s:48:"views/entity_translation_handler_field_field.inc";}s:5:"mtime";i:1664867622;s:7:"version";N;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
@@ -26370,10 +28442,10 @@ $connection->insert('system')
   'name' => 'i18n',
   'type' => 'module',
   'owner' => '',
-  'status' => '0',
-  'bootstrap' => '0',
-  'schema_version' => '-1',
-  'weight' => '0',
+  'status' => '1',
+  'bootstrap' => '1',
+  'schema_version' => '7001',
+  'weight' => '10',
   'info' => 'a:11:{s:4:"name";s:20:"Internationalization";s:11:"description";s:49:"Extends Drupal support for multilingual features.";s:12:"dependencies";a:2:{i:0;s:6:"locale";i:1;s:8:"variable";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:5:"files";a:2:{i:0;s:15:"i18n_object.inc";i:1;s:9:"i18n.test";}s:9:"configure";s:26:"admin/config/regional/i18n";s:5:"mtime";i:1664867462;s:7:"version";N;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
@@ -26480,10 +28552,10 @@ $connection->insert('system')
   'name' => 'i18n_string',
   'type' => 'module',
   'owner' => '',
-  'status' => '0',
+  'status' => '1',
   'bootstrap' => '0',
-  'schema_version' => '-1',
-  'weight' => '0',
+  'schema_version' => '7004',
+  'weight' => '10',
   'info' => 'a:11:{s:4:"name";s:18:"String translation";s:11:"description";s:57:"Provides support for translation of user defined strings.";s:12:"dependencies";a:2:{i:0;s:6:"locale";i:1;s:4:"i18n";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:5:"files";a:3:{i:0;s:21:"i18n_string.admin.inc";i:1;s:15:"i18n_string.inc";i:2;s:16:"i18n_string.test";}s:9:"configure";s:34:"admin/config/regional/i18n/strings";s:5:"mtime";i:1664867462;s:7:"version";N;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
@@ -26502,10 +28574,10 @@ $connection->insert('system')
   'name' => 'i18n_taxonomy',
   'type' => 'module',
   'owner' => '',
-  'status' => '0',
+  'status' => '1',
   'bootstrap' => '0',
-  'schema_version' => '-1',
-  'weight' => '0',
+  'schema_version' => '7004',
+  'weight' => '5',
   'info' => 'a:10:{s:4:"name";s:20:"Taxonomy translation";s:11:"description";s:30:"Enables multilingual taxonomy.";s:12:"dependencies";a:3:{i:0;s:8:"taxonomy";i:1;s:11:"i18n_string";i:2;s:16:"i18n_translation";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:5:"files";a:4:{i:0;s:17:"i18n_taxonomy.inc";i:1;s:23:"i18n_taxonomy.pages.inc";i:2;s:23:"i18n_taxonomy.admin.inc";i:3;s:18:"i18n_taxonomy.test";}s:5:"mtime";i:1664867462;s:7:"version";N;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
@@ -26513,9 +28585,9 @@ $connection->insert('system')
   'name' => 'i18n_translation',
   'type' => 'module',
   'owner' => '',
-  'status' => '0',
+  'status' => '1',
   'bootstrap' => '0',
-  'schema_version' => '-1',
+  'schema_version' => '0',
   'weight' => '0',
   'info' => 'a:10:{s:4:"name";s:16:"Translation sets";s:11:"description";s:47:"Simple translation sets API for generic objects";s:12:"dependencies";a:1:{i:0;s:4:"i18n";}s:7:"package";s:35:"Multilingual - Internationalization";s:4:"core";s:3:"7.x";s:5:"files";a:1:{i:0;s:20:"i18n_translation.inc";}s:5:"mtime";i:1664867462;s:7:"version";N;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
@@ -26700,9 +28772,9 @@ $connection->insert('system')
   'name' => 'variable',
   'type' => 'module',
   'owner' => '',
-  'status' => '0',
-  'bootstrap' => '0',
-  'schema_version' => '-1',
+  'status' => '1',
+  'bootstrap' => '1',
+  'schema_version' => '0',
   'weight' => '0',
   'info' => 'a:10:{s:4:"name";s:8:"Variable";s:11:"description";s:43:"Variable Information and basic variable API";s:7:"package";s:8:"Variable";s:4:"core";s:3:"7.x";s:5:"files";a:9:{i:0;s:27:"includes/forum.variable.inc";i:1;s:28:"includes/locale.variable.inc";i:2;s:26:"includes/menu.variable.inc";i:3;s:26:"includes/node.variable.inc";i:4;s:28:"includes/system.variable.inc";i:5;s:30:"includes/taxonomy.variable.inc";i:6;s:33:"includes/translation.variable.inc";i:7;s:26:"includes/user.variable.inc";i:8;s:13:"variable.test";}s:5:"mtime";i:1664867493;s:12:"dependencies";a:0:{}s:7:"version";N;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
@@ -26905,6 +28977,19 @@ $connection->schema()->createTable('taxonomy_term_data', array(
       'size' => 'normal',
       'default' => '0',
     ),
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '12',
+      'default' => 'und',
+    ),
+    'i18n_tsid' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+      'unsigned' => TRUE,
+    ),
   ),
   'primary key' => array(
     'tid',
@@ -26920,6 +29005,8 @@ $connection->insert('taxonomy_term_data')
   'description',
   'format',
   'weight',
+  'language',
+  'i18n_tsid',
 ))
 ->values(array(
   'tid' => '1',
@@ -26928,6 +29015,8 @@ $connection->insert('taxonomy_term_data')
   'description' => '',
   'format' => NULL,
   'weight' => '2',
+  'language' => 'und',
+  'i18n_tsid' => '0',
 ))
 ->values(array(
   'tid' => '5',
@@ -26936,6 +29025,8 @@ $connection->insert('taxonomy_term_data')
   'description' => 'Where the cool kids are.',
   'format' => NULL,
   'weight' => '3',
+  'language' => 'und',
+  'i18n_tsid' => '0',
 ))
 ->values(array(
   'tid' => '6',
@@ -26944,6 +29035,8 @@ $connection->insert('taxonomy_term_data')
   'description' => '',
   'format' => NULL,
   'weight' => '4',
+  'language' => 'und',
+  'i18n_tsid' => '0',
 ))
 ->values(array(
   'tid' => '7',
@@ -26952,6 +29045,8 @@ $connection->insert('taxonomy_term_data')
   'description' => '',
   'format' => NULL,
   'weight' => '1',
+  'language' => 'und',
+  'i18n_tsid' => '0',
 ))
 ->values(array(
   'tid' => '8',
@@ -26960,6 +29055,8 @@ $connection->insert('taxonomy_term_data')
   'description' => '',
   'format' => NULL,
   'weight' => '0',
+  'language' => 'und',
+  'i18n_tsid' => '0',
 ))
 ->execute();
 $connection->schema()->createTable('taxonomy_term_hierarchy', array(
@@ -27056,6 +29153,19 @@ $connection->schema()->createTable('taxonomy_vocabulary', array(
       'size' => 'normal',
       'default' => '0',
     ),
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '12',
+      'default' => 'und',
+    ),
+    'i18n_mode' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'default' => '0',
+      'unsigned' => TRUE,
+    ),
   ),
   'primary key' => array(
     'vid',
@@ -27072,6 +29182,8 @@ $connection->insert('taxonomy_vocabulary')
   'hierarchy',
   'module',
   'weight',
+  'language',
+  'i18n_mode',
 ))
 ->values(array(
   'vid' => '1',
@@ -27081,6 +29193,8 @@ $connection->insert('taxonomy_vocabulary')
   'hierarchy' => '0',
   'module' => 'taxonomy',
   'weight' => '0',
+  'language' => 'und',
+  'i18n_mode' => '0',
 ))
 ->values(array(
   'vid' => '2',
@@ -27090,6 +29204,8 @@ $connection->insert('taxonomy_vocabulary')
   'hierarchy' => '1',
   'module' => 'forum',
   'weight' => '-10',
+  'language' => 'und',
+  'i18n_mode' => '0',
 ))
 ->execute();
 $connection->schema()->createTable('url_alias', array(
@@ -27282,8 +29398,8 @@ $connection->insert('users')
   'signature' => '',
   'signature_format' => NULL,
   'created' => '0',
-  'access' => '1675415332',
-  'login' => '1675410565',
+  'access' => '1679731173',
+  'login' => '1679731173',
   'status' => '1',
   'timezone' => NULL,
   'language' => '',
@@ -27415,6 +29531,10 @@ $connection->insert('variable')
   'value' => 's:13:"edit-workflow";',
 ))
 ->values(array(
+  'name' => 'additional_settings__active_tab_et',
+  'value' => 's:9:"edit-menu";',
+))
+->values(array(
   'name' => 'additional_settings__active_tab_forum',
   'value' => 's:15:"edit-submission";',
 ))
@@ -27424,7 +29544,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'additional_settings__active_tab_test_content_type',
-  'value' => 's:13:"edit-workflow";',
+  'value' => 's:9:"edit-menu";',
 ))
 ->values(array(
   'name' => 'admin_compact_mode',
@@ -27460,39 +29580,39 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'cache_flush_cache',
-  'value' => 'i:0;',
+  'value' => 'i:1679731162;',
 ))
 ->values(array(
   'name' => 'cache_flush_cache_block',
-  'value' => 'i:0;',
+  'value' => 'i:1679731162;',
 ))
 ->values(array(
   'name' => 'cache_flush_cache_field',
-  'value' => 'i:0;',
+  'value' => 'i:1679731162;',
 ))
 ->values(array(
   'name' => 'cache_flush_cache_filter',
-  'value' => 'i:1675411087;',
+  'value' => 'i:0;',
 ))
 ->values(array(
   'name' => 'cache_flush_cache_form',
-  'value' => 'i:0;',
+  'value' => 'i:1679731162;',
 ))
 ->values(array(
   'name' => 'cache_flush_cache_image',
-  'value' => 'i:1675411087;',
+  'value' => 'i:0;',
 ))
 ->values(array(
   'name' => 'cache_flush_cache_menu',
-  'value' => 'i:0;',
+  'value' => 'i:1679731162;',
 ))
 ->values(array(
   'name' => 'cache_flush_cache_page',
-  'value' => 'i:0;',
+  'value' => 'i:1679731162;',
 ))
 ->values(array(
   'name' => 'cache_flush_cache_path',
-  'value' => 'i:0;',
+  'value' => 'i:1679731162;',
 ))
 ->values(array(
   'name' => 'cache_flush_cache_variable',
@@ -27555,11 +29675,19 @@ $connection->insert('variable')
   'value' => 'i:0;',
 ))
 ->values(array(
+  'name' => 'comment_anonymous_et',
+  'value' => 'i:0;',
+))
+->values(array(
   'name' => 'comment_anonymous_forum',
   'value' => 'i:0;',
 ))
 ->values(array(
   'name' => 'comment_anonymous_page',
+  'value' => 'i:0;',
+))
+->values(array(
+  'name' => 'comment_anonymous_test_content_type',
   'value' => 'i:0;',
 ))
 ->values(array(
@@ -27579,11 +29707,19 @@ $connection->insert('variable')
   'value' => 'i:1;',
 ))
 ->values(array(
+  'name' => 'comment_default_mode_et',
+  'value' => 'i:1;',
+))
+->values(array(
   'name' => 'comment_default_mode_forum',
   'value' => 'i:1;',
 ))
 ->values(array(
   'name' => 'comment_default_mode_page',
+  'value' => 'i:1;',
+))
+->values(array(
+  'name' => 'comment_default_mode_test_content_type',
   'value' => 'i:1;',
 ))
 ->values(array(
@@ -27595,12 +29731,24 @@ $connection->insert('variable')
   'value' => 's:2:"50";',
 ))
 ->values(array(
+  'name' => 'comment_default_per_page_et',
+  'value' => 's:2:"50";',
+))
+->values(array(
   'name' => 'comment_default_per_page_forum',
   'value' => 's:2:"50";',
 ))
 ->values(array(
   'name' => 'comment_default_per_page_page',
   'value' => 's:2:"50";',
+))
+->values(array(
+  'name' => 'comment_default_per_page_test_content_type',
+  'value' => 's:2:"50";',
+))
+->values(array(
+  'name' => 'comment_et',
+  'value' => 's:1:"2";',
 ))
 ->values(array(
   'name' => 'comment_form_location_article',
@@ -27611,11 +29759,19 @@ $connection->insert('variable')
   'value' => 'i:1;',
 ))
 ->values(array(
+  'name' => 'comment_form_location_et',
+  'value' => 'i:1;',
+))
+->values(array(
   'name' => 'comment_form_location_forum',
   'value' => 'i:1;',
 ))
 ->values(array(
   'name' => 'comment_form_location_page',
+  'value' => 'i:1;',
+))
+->values(array(
+  'name' => 'comment_form_location_test_content_type',
   'value' => 'i:1;',
 ))
 ->values(array(
@@ -27635,11 +29791,19 @@ $connection->insert('variable')
   'value' => 's:1:"1";',
 ))
 ->values(array(
+  'name' => 'comment_preview_et',
+  'value' => 's:1:"1";',
+))
+->values(array(
   'name' => 'comment_preview_forum',
   'value' => 's:1:"1";',
 ))
 ->values(array(
   'name' => 'comment_preview_page',
+  'value' => 's:1:"1";',
+))
+->values(array(
+  'name' => 'comment_preview_test_content_type',
   'value' => 's:1:"1";',
 ))
 ->values(array(
@@ -27651,12 +29815,24 @@ $connection->insert('variable')
   'value' => 'i:1;',
 ))
 ->values(array(
+  'name' => 'comment_subject_field_et',
+  'value' => 'i:1;',
+))
+->values(array(
   'name' => 'comment_subject_field_forum',
   'value' => 'i:1;',
 ))
 ->values(array(
   'name' => 'comment_subject_field_page',
   'value' => 'i:1;',
+))
+->values(array(
+  'name' => 'comment_subject_field_test_content_type',
+  'value' => 'i:1;',
+))
+->values(array(
+  'name' => 'comment_test_content_type',
+  'value' => 's:1:"2";',
 ))
 ->values(array(
   'name' => 'configurable_timezones',
@@ -27668,7 +29844,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'cron_last',
-  'value' => 'i:1675411087;',
+  'value' => 'i:1679731162;',
 ))
 ->values(array(
   'name' => 'cron_threshold_error',
@@ -27680,7 +29856,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'css_js_query_string',
-  'value' => 's:6:"rphyrh";',
+  'value' => 's:6:"rs2gzt";',
 ))
 ->values(array(
   'name' => 'ctools_last_cron',
@@ -27729,6 +29905,18 @@ $connection->insert('variable')
 ->values(array(
   'name' => 'entity_cache_tables_created',
   'value' => 'N;',
+))
+->values(array(
+  'name' => 'entity_translation_entity_types',
+  'value' => 'a:1:{s:4:"node";s:4:"node";}',
+))
+->values(array(
+  'name' => 'entity_translation_revision_enabled',
+  'value' => 'b:1;',
+))
+->values(array(
+  'name' => 'entity_translation_taxonomy_autocomplete',
+  'value' => 'b:1;',
 ))
 ->values(array(
   'name' => 'error_level',
@@ -27872,7 +30060,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'javascript_parsed',
-  'value' => 'a:9:{i:0;s:14:"misc/drupal.js";i:1;s:14:"misc/jquery.js";i:2;s:27:"misc/jquery-extend-3.4.0.js";i:3;s:44:"misc/jquery-html-prefilter-3.5.0-backport.js";i:4;s:19:"misc/jquery.once.js";i:5;s:24:"modules/system/system.js";i:6;s:12:"misc/form.js";s:10:"refresh:fr";s:7:"waiting";s:10:"refresh:is";s:7:"waiting";}',
+  'value' => 'a:10:{i:0;s:14:"misc/drupal.js";i:1;s:14:"misc/jquery.js";i:2;s:27:"misc/jquery-extend-3.4.0.js";i:3;s:44:"misc/jquery-html-prefilter-3.5.0-backport.js";i:4;s:19:"misc/jquery.once.js";i:5;s:19:"misc/tableheader.js";i:6;s:12:"misc/form.js";i:7;s:16:"misc/collapse.js";s:10:"refresh:fr";s:7:"waiting";s:10:"refresh:is";s:7:"waiting";}',
 ))
 ->values(array(
   'name' => 'language_content_type_article',
@@ -27888,7 +30076,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'language_content_type_et',
-  'value' => 's:1:"4";',
+  'value' => 's:1:"0";',
 ))
 ->values(array(
   'name' => 'language_content_type_forum',
@@ -27900,7 +30088,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'language_content_type_test_content_type',
-  'value' => 's:1:"4";',
+  'value' => 's:1:"0";',
 ))
 ->values(array(
   'name' => 'language_count',
@@ -27924,7 +30112,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'language_types',
-  'value' => 'a:3:{s:8:"language";b:1;s:16:"language_content";b:0;s:12:"language_url";b:0;}',
+  'value' => 'a:3:{s:8:"language";b:1;s:16:"language_content";b:1;s:12:"language_url";b:0;}',
 ))
 ->values(array(
   'name' => 'locale_language_negotiation_session_param',
@@ -27960,7 +30148,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'menu_masks',
-  'value' => 'a:33:{i:0;i:501;i:1;i:493;i:2;i:250;i:3;i:247;i:4;i:246;i:5;i:245;i:6;i:125;i:7;i:123;i:8;i:122;i:9;i:121;i:10;i:117;i:11;i:63;i:12;i:62;i:13;i:61;i:14;i:60;i:15;i:59;i:16;i:58;i:17;i:44;i:18;i:31;i:19;i:30;i:20;i:29;i:21;i:24;i:22;i:21;i:23;i:15;i:24;i:14;i:25;i:13;i:26;i:11;i:27;i:7;i:28;i:6;i:29;i:5;i:30;i:3;i:31;i:2;i:32;i:1;}',
+  'value' => 'a:38:{i:0;i:501;i:1;i:493;i:2;i:250;i:3;i:247;i:4;i:246;i:5;i:245;i:6;i:238;i:7;i:125;i:8;i:123;i:9;i:122;i:10;i:121;i:11;i:119;i:12;i:117;i:13;i:63;i:14;i:62;i:15;i:61;i:16;i:60;i:17;i:59;i:18;i:58;i:19;i:44;i:20;i:31;i:21;i:30;i:22;i:29;i:23;i:26;i:24;i:24;i:25;i:22;i:26;i:21;i:27;i:15;i:28;i:14;i:29;i:13;i:30;i:11;i:31;i:10;i:32;i:7;i:33;i:6;i:34;i:5;i:35;i:3;i:36;i:2;i:37;i:1;}',
 ))
 ->values(array(
   'name' => 'menu_options_article',
@@ -27975,6 +30163,10 @@ $connection->insert('variable')
   'value' => 'a:1:{i:0;s:9:"main-menu";}',
 ))
 ->values(array(
+  'name' => 'menu_options_et',
+  'value' => 'a:0:{}',
+))
+->values(array(
   'name' => 'menu_options_forum',
   'value' => 'a:1:{i:0;s:9:"main-menu";}',
 ))
@@ -27984,7 +30176,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'menu_options_test_content_type',
-  'value' => 'a:4:{i:0;s:9:"main-menu";i:1;s:10:"management";i:2;s:10:"navigation";i:3;s:9:"user-menu";}',
+  'value' => 'a:0:{}',
 ))
 ->values(array(
   'name' => 'menu_override_parent_selector',
@@ -28000,6 +30192,10 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'menu_parent_book',
+  'value' => 's:11:"main-menu:0";',
+))
+->values(array(
+  'name' => 'menu_parent_et',
   'value' => 's:11:"main-menu:0";',
 ))
 ->values(array(
@@ -28039,6 +30235,10 @@ $connection->insert('variable')
   'value' => 'a:2:{i:0;s:6:"status";i:1;s:8:"revision";}',
 ))
 ->values(array(
+  'name' => 'node_options_et',
+  'value' => 'a:2:{i:0;s:6:"status";i:1;s:7:"promote";}',
+))
+->values(array(
   'name' => 'node_options_forum',
   'value' => 'a:1:{i:0;s:6:"status";}',
 ))
@@ -28048,7 +30248,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'node_options_test_content_type',
-  'value' => 'a:3:{i:0;s:6:"status";i:1;s:7:"promote";i:2;s:8:"revision";}',
+  'value' => 'a:2:{i:0;s:6:"status";i:1;s:7:"promote";}',
 ))
 ->values(array(
   'name' => 'node_preview_article',
@@ -28059,11 +30259,19 @@ $connection->insert('variable')
   'value' => 's:1:"1";',
 ))
 ->values(array(
+  'name' => 'node_preview_et',
+  'value' => 's:1:"1";',
+))
+->values(array(
   'name' => 'node_preview_forum',
   'value' => 's:1:"1";',
 ))
 ->values(array(
   'name' => 'node_preview_page',
+  'value' => 's:1:"1";',
+))
+->values(array(
+  'name' => 'node_preview_test_content_type',
   'value' => 's:1:"1";',
 ))
 ->values(array(
@@ -28099,6 +30307,10 @@ $connection->insert('variable')
   'value' => 'i:1;',
 ))
 ->values(array(
+  'name' => 'node_submitted_et',
+  'value' => 'i:1;',
+))
+->values(array(
   'name' => 'node_submitted_forum',
   'value' => 'i:1;',
 ))
@@ -28108,7 +30320,7 @@ $connection->insert('variable')
 ))
 ->values(array(
   'name' => 'node_submitted_test_content_type',
-  'value' => 'i:0;',
+  'value' => 'i:1;',
 ))
 ->values(array(
   'name' => 'overlap_cjk',
@@ -28133,6 +30345,10 @@ $connection->insert('variable')
 ->values(array(
   'name' => 'preprocess_js',
   'value' => 'i:0;',
+))
+->values(array(
+  'name' => 'save_continue_et',
+  'value' => 's:19:"Save and add fields";',
 ))
 ->values(array(
   'name' => 'save_continue_test_content_type',
@@ -28217,6 +30433,10 @@ $connection->insert('variable')
 ->values(array(
   'name' => 'theme_seven_settings',
   'value' => 'a:15:{s:11:"toggle_logo";i:1;s:11:"toggle_name";i:1;s:13:"toggle_slogan";i:1;s:24:"toggle_node_user_picture";i:1;s:27:"toggle_comment_user_picture";i:0;s:32:"toggle_comment_user_verification";i:1;s:14:"toggle_favicon";i:1;s:16:"toggle_main_menu";i:1;s:21:"toggle_secondary_menu";i:0;s:12:"default_logo";i:1;s:9:"logo_path";s:0:"";s:11:"logo_upload";s:0:"";s:15:"default_favicon";i:1;s:12:"favicon_path";s:0:"";s:14:"favicon_upload";s:0:"";}',
+))
+->values(array(
+  'name' => 'translation_language_type',
+  'value' => 's:16:"language_content";',
 ))
 ->values(array(
   'name' => 'user_admin_role',
@@ -28365,6 +30585,10 @@ $connection->insert('variable')
 ->values(array(
   'name' => 'user_signatures',
   'value' => 'i:0;',
+))
+->values(array(
+  'name' => 'variable_module_list',
+  'value' => 'a:2:{s:4:"i18n";a:1:{i:0;s:18:"i18n_language_list";}s:11:"i18n_string";a:7:{i:0;s:33:"i18n_string_translate_langcode_en";i:1;s:33:"i18n_string_translate_langcode_fr";i:2;s:33:"i18n_string_translate_langcode_is";i:3;s:27:"i18n_string_allowed_formats";i:4;s:27:"i18n_string_source_language";i:5;s:17:"i18n_string_debug";i:6;s:39:"i18n_string_textgroup_class_[textgroup]";}}',
 ))
 ->execute();
 

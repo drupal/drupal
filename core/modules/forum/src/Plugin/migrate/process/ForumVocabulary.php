@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\taxonomy\Plugin\migrate\process;
+namespace Drupal\forum\Plugin\migrate\process;
 
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
@@ -27,27 +27,11 @@ use Drupal\migrate\Row;
  *     machine_name: taxonomy_forums
  * @endcode
  *
- * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
- *   \Drupal\forum\Plugin\migrate\process\ForumVocabulary instead.
- *
- * @see https://www.drupal.org/node/000000
+ * @MigrateProcessPlugin(
+ *   id = "forum_vocabulary"
+ * )
  */
 class ForumVocabulary extends ProcessPluginBase {
-
-  /**
-   * Constructs a MigrationLookup object.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
-    @trigger_error(__CLASS__ . 'is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\forum\Plugin\migrate\process\ForumVocabulary instead. See https://www.drupal.org/node/000000 ', E_USER_DEPRECATED);
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-  }
 
   /**
    * {@inheritdoc}

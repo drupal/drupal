@@ -7,19 +7,12 @@ source:
   plugin: d7_taxonomy_vocabulary
 process:
   vid:
-    -
-      plugin: make_unique_entity_field
-      source: machine_name
-      entity_type: taxonomy_vocabulary
-      field: vid
-      length: 30
-      migrated: true
-    -
-      # This plugin checks if the vocabulary being migrated is the one used by
-      # Forum. If so, we use the machine name that Forum expects. Otherwise, we
-      # leave it unchanged.
-      plugin: forum_vocabulary
-      machine_name: forums
+    plugin: make_unique_entity_field
+    source: machine_name
+    entity_type: taxonomy_vocabulary
+    field: vid
+    length: 30
+    migrated: true
   label: name
   name: name
   description: description

@@ -1,29 +1,31 @@
 <?php
 
-namespace Drupal\Tests\taxonomy\Kernel\Migrate\d7;
+namespace Drupal\Tests\forum\Kernel\Migrate\d6;
 
+use Drupal\Tests\taxonomy\Kernel\Migrate\d6\MigrateTaxonomyVocabularyTest as TaxonomyVocabularyTest;
 use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use Drupal\taxonomy\VocabularyInterface;
 
 /**
- * Migrate taxonomy vocabularies to taxonomy.vocabulary.*.yml.
+ * Migrate forum vocabulary to taxonomy.vocabulary.*.yml.
  *
- * @group taxonomy
+ * @group forum
  */
-class MigrateTaxonomyVocabularyTest extends MigrateDrupal7TestBase {
+class MigrateTaxonomyVocabularyTest extends TaxonomyVocabularyTest {
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['taxonomy', 'text'];
+  protected static $modules = [
+    'comment',
+    'forum',
+  ];
 
   /**
-   * {@inheritdoc}
+   * Gets the path to the fixture file.
    */
-  protected function setUp(): void {
-    parent::setUp();
-    $this->executeMigration('d7_taxonomy_vocabulary');
+  protected function getFixtureFilePath() {
+    return __DIR__ . '/../../../../fixtures/drupal6.php';
   }
 
   /**
@@ -50,13 +52,12 @@ class MigrateTaxonomyVocabularyTest extends MigrateDrupal7TestBase {
   }
 
   /**
-   * Tests the Drupal 7 taxonomy vocabularies to Drupal 8 migration.
+   * Tests the Drupal 6 taxonomy vocabularies migration.
    */
   public function testTaxonomyVocabulary() {
-    $this->assertEntity('tags', 'Tags', 'Use tags to group articles on similar topics into categories.', 0);
-    $this->assertEntity('sujet_de_discussion', 'Sujet de discussion', 'Forum navigation vocabulary', -10);
-    $this->assertEntity('test_vocabulary', 'Test Vocabulary', 'This is the vocabulary description', 0);
-    $this->assertEntity('vocabulary_name_much_longer_th', 'vocabulary name clearly different than machine name and much longer than thirty two characters', 'description of vocabulary name much longer than thirty two characters', 0);
+    $this->assertEntity('forums', 'Forums', '', 0);
+    $this->assertEntity('trees', 'Trees', 'A list of trees.', 0);
+    $this->assertEntity('freetags', 'FreeTags', '', 0);
   }
 
 }

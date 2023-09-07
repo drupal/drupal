@@ -43,7 +43,7 @@ class MigrateLanguageContentTaxonomyVocabularySettingsTest extends MigrateDrupal
     $target_entity = 'taxonomy_term';
     // No multilingual options for terms, i18n_mode = 0.
     $this->assertLanguageContentSettings($target_entity, 'tags', LanguageInterface::LANGCODE_NOT_SPECIFIED, FALSE, ['enabled' => FALSE]);
-    $this->assertLanguageContentSettings($target_entity, 'forums', LanguageInterface::LANGCODE_NOT_SPECIFIED, FALSE, ['enabled' => FALSE]);
+    $this->assertLanguageContentSettings($target_entity, 'sujet_de_discussion', LanguageInterface::LANGCODE_NOT_SPECIFIED, FALSE, ['enabled' => FALSE]);
     $this->assertLanguageContentSettings($target_entity, 'vocabulary_name_much_longer_th', LanguageInterface::LANGCODE_NOT_SPECIFIED, FALSE, ['enabled' => FALSE]);
     $this->assertLanguageContentSettings($target_entity, 'test_vocabulary', LanguageInterface::LANGCODE_NOT_SPECIFIED, FALSE, ['enabled' => FALSE]);
     // Localize, i18n_mode = 1.

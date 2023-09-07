@@ -132,11 +132,6 @@ class Term extends FieldableEntity {
       ->fetchCol();
     $row->setSourceProperty('parent', $parents);
 
-    // Determine if this is a forum container.
-    $forum_container_tids = $this->variableGet('forum_containers', []);
-    $current_tid = $row->getSourceProperty('tid');
-    $row->setSourceProperty('is_container', in_array($current_tid, $forum_container_tids));
-
     // If the term name or term description were replaced by real fields using
     // the Drupal 7 Title module, use the fields value instead of the term name
     // or term description.

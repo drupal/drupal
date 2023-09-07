@@ -103,11 +103,6 @@ class TermEntityTranslation extends FieldableEntity {
         $row->setSourceProperty('format', $description_field[0]['format']);
       }
     }
-
-    // Determine if this is a forum container.
-    $forum_container_tids = $this->variableGet('forum_containers', []);
-    $row->setSourceProperty('is_container', in_array($tid, $forum_container_tids));
-
     return parent::prepareRow($row);
   }
 
