@@ -21,6 +21,13 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 abstract class FieldableEntity extends DrupalSqlBase {
 
   /**
+   * Cached field and field instance definitions.
+   *
+   * @var array
+   */
+  protected $fieldInfo;
+
+  /**
    * Returns all non-deleted field instances attached to a specific entity type.
    *
    * Typically, getFields() is used in the prepareRow method of a source plugin
@@ -38,18 +45,23 @@ abstract class FieldableEntity extends DrupalSqlBase {
    *   The field instances, keyed by field name.
    */
   protected function getFields($entity_type, $bundle = NULL) {
-    $query = $this->select('field_config_instance', 'fci')
-      ->fields('fci')
-      ->condition('fci.entity_type', $entity_type)
-      ->condition('fci.bundle', $bundle ?? $entity_type)
-      ->condition('fci.deleted', 0);
+    $cid = $entity_type . ':' . ($bundle ?? '');
+    if (!isset($this->fieldInfo[$cid])) {
+      $query = $this->select('field_config_instance', 'fci')
+        ->fields('fci')
+        ->condition('fci.entity_type', $entity_type)
+        ->condition('fci.bundle', $bundle ?? $entity_type)
+        ->condition('fci.deleted', 0);
 
-    // Join the 'field_config' table and add the 'translatable' setting to the
-    // query.
-    $query->leftJoin('field_config', 'fc', '[fci].[field_id] = [fc].[id]');
-    $query->addField('fc', 'translatable');
+      // Join the 'field_config' table and add the 'translatable' setting to the
+      // query.
+      $query->leftJoin('field_config', 'fc', '[fci].[field_id] = [fc].[id]');
+      $query->addField('fc', 'translatable');
 
-    return $query->execute()->fetchAllAssoc('field_name');
+      $this->fieldInfo[$cid] = $query->execute()->fetchAllAssoc('field_name');
+    }
+
+    return $this->fieldInfo[$cid];
   }
 
   /**
