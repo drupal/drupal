@@ -223,7 +223,7 @@ class WebAssert extends MinkWebAssert {
     $option_field = $select_field->find('named_exact', ['option', $option]);
 
     if ($option_field === NULL) {
-      throw new ElementNotFoundException($this->session->getDriver(), 'select', 'id|name|label|value', $option);
+      throw new ElementNotFoundException($this->session->getDriver(), 'option', 'id|name|label|value', $option);
     }
 
     return $option_field;
