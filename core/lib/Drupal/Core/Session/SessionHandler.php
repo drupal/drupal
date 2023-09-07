@@ -46,7 +46,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
    * {@inheritdoc}
    */
   #[\ReturnTypeWillChange]
-  public function open($save_path, $name) {
+  public function open(string $save_path, string $name) {
     return TRUE;
   }
 
@@ -54,7 +54,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
    * {@inheritdoc}
    */
   #[\ReturnTypeWillChange]
-  public function read(#[\SensitiveParameter] $sid) {
+  public function read(#[\SensitiveParameter] string $sid) {
     $data = '';
     if (!empty($sid)) {
       // Read the session data from the database.
@@ -69,7 +69,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
    * {@inheritdoc}
    */
   #[\ReturnTypeWillChange]
-  public function write(#[\SensitiveParameter] $sid, $value) {
+  public function write(#[\SensitiveParameter] string $sid, $value) {
     $request = $this->requestStack->getCurrentRequest();
     $fields = [
       'uid' => $request->getSession()->get('uid', 0),
@@ -96,7 +96,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
    * {@inheritdoc}
    */
   #[\ReturnTypeWillChange]
-  public function destroy(#[\SensitiveParameter] $sid) {
+  public function destroy(#[\SensitiveParameter] string $sid) {
     // Delete session data.
     $this->connection->delete('sessions')
       ->condition('sid', Crypt::hashBase64($sid))
@@ -109,16 +109,15 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
    * {@inheritdoc}
    */
   #[\ReturnTypeWillChange]
-  public function gc($lifetime) {
+  public function gc(int $lifetime) {
     // Be sure to adjust 'php_value session.gc_maxlifetime' to a large enough
     // value. For example, if you want user sessions to stay in your database
     // for three weeks before deleting them, you need to set gc_maxlifetime
     // to '1814400'. At that value, only after a user doesn't log in after
     // three weeks (1814400 seconds) will their session be removed.
-    $this->connection->delete('sessions')
+    return $this->connection->delete('sessions')
       ->condition('timestamp', REQUEST_TIME - $lifetime, '<')
       ->execute();
-    return TRUE;
   }
 
 }
