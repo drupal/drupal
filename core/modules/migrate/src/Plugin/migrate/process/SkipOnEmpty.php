@@ -50,9 +50,28 @@ use Drupal\migrate\MigrateSkipRowException;
  *       migration: d6_taxonomy_term
  * @endcode
  * If 'parent' is empty, any further processing of the property is skipped and
- * the next process plugin (migration_lookup) will not be run. Combining
- * skip_on_empty and migration_lookup is a typical process pipeline combination
- * for hierarchical entities where the root entity does not have a parent.
+ * the next process plugin (migration_lookup) will not be run. If the
+ * migration_lookup process is executed it will use 'parent' as the source.
+ * Combining skip_on_empty and migration_lookup is a typical process pipeline
+ * combination for hierarchical entities where the root entity does not have a
+ * parent.
+ *
+ * @code
+ * process:
+ *   parent:
+ *     -
+ *       plugin: skip_on_empty
+ *       method: process
+ *       source: parent
+ *     -
+ *       plugin: migration_lookup
+ *       migration: d6_taxonomy_term
+ *       source: original_term
+ * @endcode
+ * If 'parent' is empty, any further processing of the property is skipped and
+ * the next process plugin (migration_lookup) will not be run. If the
+ * migration_lookup process is executed it will use 'original_term' as the
+ * source.
  *
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
  *
