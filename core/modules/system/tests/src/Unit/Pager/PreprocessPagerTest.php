@@ -88,7 +88,7 @@ class PreprocessPagerTest extends UnitTestCase {
     /** @var \Drupal\Core\Template\AttributeString $attribute */
     $attribute = $variables['items']['pages']['2']['attributes']->offsetGet('aria-current');
     $this->assertInstanceOf(AttributeString::class, $attribute);
-    $this->assertEquals('Current page', $attribute->value());
+    $this->assertEquals('page', $attribute->value());
   }
 
 }
