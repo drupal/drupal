@@ -36,3 +36,14 @@
     padding: 0;
   }
 }
+
+.region-header .block-system-branding-block {
+  flex: 0 1 40%;
+}
+
+@media screen and (min-width: 48em) {
+  .region-header .block-system-branding-block {
+    flex: 0 1 220px;
+    margin: 2.5rem 0;
+  }
+}
