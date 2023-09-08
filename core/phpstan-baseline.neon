@@ -746,14 +746,6 @@ parameters:
 			path: lib/Drupal/Core/Form/FormValidator.php
 
 		-
-			message: """
-				#^Call to deprecated function GuzzleHttp\\\\default_user_agent\\(\\)\\:
-				default_user_agent will be removed in guzzlehttp/guzzle\\:8\\.0\\. Use Utils\\:\\:defaultUserAgent instead\\.$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Http/ClientFactory.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 4
 			path: lib/Drupal/Core/KeyValueStore/DatabaseStorageExpirable.php

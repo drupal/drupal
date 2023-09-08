@@ -6,6 +6,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Site\Settings;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Utils;
 
 /**
  * Helper class to construct a HTTP client with Drupal specific config.
@@ -49,7 +50,7 @@ class ClientFactory {
       'verify' => TRUE,
       'timeout' => 30,
       'headers' => [
-        'User-Agent' => 'Drupal/' . \Drupal::VERSION . ' (+https://www.drupal.org/) ' . \GuzzleHttp\default_user_agent(),
+        'User-Agent' => 'Drupal/' . \Drupal::VERSION . ' (+https://www.drupal.org/) ' . Utils::defaultUserAgent(),
       ],
       'handler' => $this->stack,
       // Security consideration: prevent Guzzle from using environment variables
