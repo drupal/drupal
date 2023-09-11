@@ -19,6 +19,7 @@ use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Link;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -1228,6 +1229,14 @@ function _locale_rebuild_js($langcode = NULL) {
   $translations = [];
   foreach (\Drupal::service('locale.storage')->getTranslations($conditions) as $data) {
     $translations[$data->context][$data->source] = $data->translation;
+  }
+
+  // Include custom string overrides.
+  $custom_strings = Settings::get('locale_custom_strings_' . $language->getId(), []);
+  foreach ($custom_strings as $context => $strings) {
+    foreach ($strings as $source => $translation) {
+      $translations[$context][$source] = $translation;
+    }
   }
 
   // Construct the JavaScript file, if there are translations.
