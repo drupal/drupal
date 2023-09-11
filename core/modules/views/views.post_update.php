@@ -115,3 +115,14 @@ function views_post_update_remove_default_argument_skip_url(array &$sandbox = NU
     return $view_config_updater->needsDefaultArgumentSkipUrlUpdate($view);
   });
 }
+
+/**
+ * Removes User context from views with taxonomy filters.
+ */
+function views_post_update_taxonomy_filter_user_context(?array &$sandbox = NULL): void {
+  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
+  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater): bool {
+    return $view_config_updater->needsTaxonomyTermFilterUpdate($view);
+  });
+}

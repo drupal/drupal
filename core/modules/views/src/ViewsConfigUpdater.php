@@ -3,11 +3,13 @@
 namespace Drupal\views;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\TimestampFormatter;
+use Drupal\Core\Language\LanguageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -448,6 +450,60 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       return TRUE;
     }
     return FALSE;
+  }
+
+  /**
+   * Removes user context from all views using term filter configurations.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The View to update.
+   *
+   * @return bool
+   *   Whether the view was updated.
+   */
+  public function needsTaxonomyTermFilterUpdate(ViewEntityInterface $view): bool {
+    return $this->processDisplayHandlers($view, TRUE, function (&$handler, $handler_type) use ($view) {
+      return $this->processTaxonomyTermFilterHandler($handler, $handler_type, $view);
+    });
+  }
+
+  /**
+   * Processes taxonomy_index_tid type filters.
+   *
+   * @param array $handler
+   *   A display handler.
+   * @param string $handler_type
+   *   The handler type.
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The View being updated.
+   *
+   * @return bool
+   *   Whether the handler was updated.
+   */
+  protected function processTaxonomyTermFilterHandler(array &$handler, string $handler_type, ViewEntityInterface $view): bool {
+    $changed = FALSE;
+
+    // Force view resave if using taxonomy id filter.
+    $plugin_id = $handler['plugin_id'] ?? '';
+    if ($handler_type === 'filter' && $plugin_id === 'taxonomy_index_tid') {
+
+      // This cannot be done in View::preSave() due to trusted data.
+      $executable = $view->getExecutable();
+      $displays = $view->get('display');
+      foreach ($displays as $display_id => &$display) {
+        $executable->setDisplay($display_id);
+
+        $cache_metadata = $executable->getDisplay()->calculateCacheMetadata();
+        $display['cache_metadata']['contexts'] = $cache_metadata->getCacheContexts();
+        // Always include at least the 'languages:' context as there will most
+        // probably be translatable strings in the view output.
+        $display['cache_metadata']['contexts'] = Cache::mergeContexts($display['cache_metadata']['contexts'], ['languages:' . LanguageInterface::TYPE_INTERFACE]);
+        sort($display['cache_metadata']['contexts']);
+      }
+      $view->set('display', $displays);
+      $changed = TRUE;
+    }
+    return $changed;
   }
 
 }
