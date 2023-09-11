@@ -31,7 +31,14 @@
    */
   $.fn.drupalGetSummary = function () {
     const callback = this.data('summaryCallback');
-    return this[0] && callback ? callback(this[0]).trim() : '';
+
+    if (!this[0] || !callback) {
+      return '';
+    }
+
+    const result = callback(this[0]);
+
+    return result ? result.trim() : '';
   };
 
   /**
