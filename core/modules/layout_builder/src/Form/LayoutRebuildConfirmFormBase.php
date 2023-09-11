@@ -84,6 +84,10 @@ abstract class LayoutRebuildConfirmFormBase extends ConfirmFormBase {
       $form['actions']['cancel']['#attributes']['class'][] = 'dialog-cancel';
       $target_highlight_id = !empty($this->uuid) ? $this->blockUpdateHighlightId($this->uuid) : $this->sectionUpdateHighlightId($delta);
       $form['#attributes']['data-layout-builder-target-highlight-id'] = $target_highlight_id;
+      // The AJAX system automatically moves focus to the first tabbable
+      // element after closing a dialog, sometimes scrolling to a page top.
+      // Disable refocus on the button.
+      $form['actions']['submit']['#ajax']['disable-refocus'] = TRUE;
     }
 
     // Mark this as an administrative page for JavaScript ("Back to site" link).
