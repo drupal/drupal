@@ -4,6 +4,7 @@ namespace Drupal\Core\Access;
 
 use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Routing\Access\AccessInterface as RoutingAccessInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
@@ -56,11 +57,14 @@ class CustomAccessCheck implements RoutingAccessInterface {
    *   The route match object to be checked.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The account being checked.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   Optional, a request. Only supply this parameter when checking the
+   *   incoming request.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function access(Route $route, RouteMatchInterface $route_match, AccountInterface $account) {
+  public function access(Route $route, RouteMatchInterface $route_match, AccountInterface $account, Request $request = NULL) {
     try {
       $callable = $this->controllerResolver->getControllerFromDefinition($route->getRequirement('_custom_access'));
     }
@@ -69,7 +73,7 @@ class CustomAccessCheck implements RoutingAccessInterface {
       throw new \BadMethodCallException(sprintf('The "%s" method is not callable as a _custom_access callback in route "%s"', $route->getRequirement('_custom_access'), $route->getPath()));
     }
 
-    $arguments_resolver = $this->argumentsResolverFactory->getArgumentsResolver($route_match, $account);
+    $arguments_resolver = $this->argumentsResolverFactory->getArgumentsResolver($route_match, $account, $request);
     $arguments = $arguments_resolver->getArguments($callable);
 
     return call_user_func_array($callable, $arguments);
