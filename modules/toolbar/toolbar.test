@@ -26,17 +26,17 @@ class ToolbarTestCase extends DrupalWebTestCase {
   function testToolbarCollapsedCookie() {
     $this->drupalGet('toolbar/toggle');
     $set_cookie = $this->drupalGetHeader('set-cookie', TRUE);
-    $this->assertTrue((strpos('Drupal.toolbar.collapsed=1; path=/; SameSite=Lax', $set_cookie) !== FALSE), 'Toolbar cookie set to collapsed by default.');
+    $this->assertTrue((strpos('Drupal.toolbar.collapsed=1; path=' . base_path() . '; SameSite=Lax', $set_cookie) !== FALSE), 'Toolbar cookie set to collapsed by default.');
 
     // The next request should toggle the toolbar.collapsed cookie to off.
     $this->drupalGet('toolbar/toggle');
     $set_cookie = $this->drupalGetHeader('set-cookie', TRUE);
-    $this->assertTrue((bool) preg_match('#Drupal.toolbar.collapsed=deleted; expires=Thu, 01.Jan.1970 00:00:01 GMT;( Max-Age=0;)? path=\/; SameSite=Lax#', $set_cookie), 'Toolbar cookie toggled to off (deleted).');
+    $this->assertTrue((bool) preg_match('#Drupal.toolbar.collapsed=deleted; expires=Thu, 01.Jan.1970 00:00:01 GMT;( Max-Age=0;)? path=' . str_replace('/', '\/', base_path()) . '; SameSite=Lax#', $set_cookie), 'Toolbar cookie toggled to off (deleted).');
 
     // The next request should toggle the toolbar.collapsed cookie back to 1.
     $this->drupalGet('toolbar/toggle');
     $set_cookie = $this->drupalGetHeader('set-cookie', TRUE);
-    $this->assertTrue((strpos('Drupal.toolbar.collapsed=1; path=/; SameSite=Lax', $set_cookie) !== FALSE), 'Toolbar cookie toggled to 1.');
+    $this->assertTrue((strpos('Drupal.toolbar.collapsed=1; path=' . base_path() . '; SameSite=Lax', $set_cookie) !== FALSE), 'Toolbar cookie toggled to 1.');
   }
 
 }
