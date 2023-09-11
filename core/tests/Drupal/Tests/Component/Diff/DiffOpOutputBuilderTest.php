@@ -65,6 +65,14 @@ class DiffOpOutputBuilderTest extends TestCase {
         ['a', 'b', 'd'],
         ['a'],
       ],
+      'change-copy' => [
+        [
+          new DiffOpChange(['aa', 'bb', 'cc'], ['a', 'c']),
+          new DiffOpCopy(['d']),
+        ],
+        ['aa', 'bb', 'cc', 'd'],
+        ['a', 'c', 'd'],
+      ],
     ];
   }
 
