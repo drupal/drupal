@@ -207,9 +207,10 @@ fi
 if [ $DEPENDENCIES_NEED_INSTALLING -ne 0 ]; then
   exit 1;
 fi
-
-# Check all files for spelling in one go for better performance.
-yarn run -s spellcheck --no-must-find-files --root $TOP_LEVEL $ABS_FILES
+# Check all files for spelling in one go for better performance. We pipe the
+# list files in so we obey the globs set on the spellcheck:core command in
+# core/package.json.
+echo "${ABS_FILES}" | tr ' ' '\n' | yarn run -s spellcheck:core --no-must-find-files --root $TOP_LEVEL --file-list stdin
 if [ "$?" -ne "0" ]; then
   # If there are failures set the status to a number other than 0.
   FINAL_STATUS=1
