@@ -373,6 +373,10 @@ td.group-title {
   margin-top: 0.3125rem;
 }
 
+.view-preview-form .views-bulk-actions__item {
+  margin-block-start: 0;
+}
+
 .view-preview-form .arguments-preview {
   font-size: 1em;
 }

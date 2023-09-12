@@ -299,6 +299,9 @@ td.group-title {
 .view-preview-form .form-actions {
   margin-top: 5px;
 }
+.view-preview-form .views-bulk-actions__item {
+  margin-block-start: 0;
+}
 .view-preview-form .arguments-preview {
   font-size: 1em;
 }
