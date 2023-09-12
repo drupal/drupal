@@ -5,11 +5,22 @@
 %The "Symfony\\Component\\Validator\\Context\\ExecutionContextInterface::.*\(\)" method is considered internal Used by the validator engine\. (Should not be called by user\W+code\. )?It may change without further notice\. You should not extend it from "[^"]+"\.%
 %The "PHPUnit\\Framework\\TestCase::addWarning\(\)" method is considered internal%
 
-# Skip non-Symfony DebugClassLoader forward compatibility warnings.
-%Method "(?!Symfony\\)[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
+# Skip some dependencies' DebugClassLoader forward compatibility warnings.
+%Method "Behat\\[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
+%Method "Composer\\EventDispatcher\\EventSubscriberInterface::getSubscribedEvents\(\)" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
+%Method "Composer\\Plugin\\PluginInterface::(activate|deactivate|uninstall)\(\)" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
+%Method "Doctrine\\Common\\Annotations\\Reader::[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
+%Method "Twig\\Extension\\ExtensionInterface::[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
+%Method "Twig\\Loader\\FilesystemLoader::findTemplate\(\)" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
+%Method "Twig\\Loader\\LoaderInterface::exists\(\)" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
+%Method "Twig\\Node\\Node::compile\(\)" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
+%Method "Twig\\NodeVisitor\\AbstractNodeVisitor::[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
+%Method "Twig\\NodeVisitor\\NodeVisitorInterface::[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
+%Method "Twig\\TokenParser\\TokenParserInterface::[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
 
-# Skip DebugClassLoader false positives.
-%Method "[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "(?!Drupal\\)[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
+# Skip root namespace native DebugClassLoader forward compatibility warnings.
+# These mostly refer to PHP native classes, could be fixed for PHP 8.1.
+%Method "[^\\]+::\w+\(\)" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
 
 # The following deprecation is listed for Twig 2 compatibility when unit
 # testing using \Symfony\Component\ErrorHandler\DebugClassLoader.
