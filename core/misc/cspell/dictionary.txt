@@ -592,7 +592,6 @@ kontex
 kpresenter
 kristiaan
 kspread
-kthxbai
 kword
 laatste
 labely
@@ -620,7 +619,6 @@ linksby
 linkset
 linktext
 lisu
-litererally
 llamaids
 llamasarelame
 llamma
@@ -673,14 +671,12 @@ mediumtext
 membersonly
 merhaba
 messagekey
-metainformation
 metapackage
 metapackages
 metatag
 metatags
 meφω
 mglaman
-miaus
 mikey
 milli
 mimetypes
@@ -737,8 +733,6 @@ mysite
 mysqladmin
 mysqldump
 mystarterkit
-myverylongurl
-myverylongurlexample
 műveletek
 nalias
 nameofbin
