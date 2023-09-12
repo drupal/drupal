@@ -22,7 +22,7 @@
     "prettier": "prettier --write \"./**/*.js\"",
     "spellcheck": "cspell -c .cspell.json",
     "spellcheck:make-drupal-dict": "rm -f misc/cspell/dictionary.txt && touch misc/cspell/dictionary.txt && yarn -s spellcheck:core --unique --words-only | perl -Mopen=locale -pe '$_=lc$_' | LC_ALL=en_US.UTF-8 tr -d \\\\\\\\ | LC_ALL=C sort -u -o misc/cspell/dictionary.txt",
-    "spellcheck:core": "cspell -c .cspell.json --no-progress --root .. \"core/**/*\" \"composer/**/*\" \"composer.json\"",
+    "spellcheck:core": "cspell -c .cspell.json --root .. \"core/**/*\" \"composer/**/*\" \"composer.json\"",
     "vendor-update": "node ./scripts/js/vendor-update.js",
     "watch:ckeditor5": "webpack --config ./modules/ckeditor5/webpack.config.js --watch",
     "build:ckeditor5": "webpack --config ./modules/ckeditor5/webpack.config.js",
