@@ -3,6 +3,7 @@
 namespace Drupal\FunctionalTests;
 
 use Behat\Mink\Exception\ExpectationException;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Behat\Mink\Exception\ResponseTextException;
@@ -131,6 +132,154 @@ class WebAssertTest extends BrowserTestBase {
     $this->expectException(ExpectationException::class);
     $this->expectExceptionMessage('Current page is "/test-page?a=b&c=d", but should not be.');
     $this->assertSession()->addressNotEquals('test-page?a=b&c=d');
+  }
+
+  /**
+   * Tests linkExists() with pipe character (|) in locator.
+   *
+   * @covers ::linkExists
+   */
+  public function testPipeCharInLocator() {
+    $this->drupalGet('test-pipe-char');
+    $this->assertSession()->linkExists('foo|bar|baz');
+  }
+
+  /**
+   * Tests linkExistsExact() functionality.
+   *
+   * @covers ::linkExistsExact
+   */
+  public function testLinkExistsExact() {
+    $this->drupalGet('test-pipe-char');
+    $this->assertSession()->linkExistsExact('foo|bar|baz');
+  }
+
+  /**
+   * Tests linkExistsExact() functionality fail.
+   *
+   * @covers ::linkExistsExact
+   */
+  public function testInvalidLinkExistsExact() {
+    $this->drupalGet('test-pipe-char');
+    $this->expectException(ExpectationException::class);
+    $this->expectExceptionMessage('Link with label foo|bar not found');
+    $this->assertSession()->linkExistsExact('foo|bar');
+  }
+
+  /**
+   * Tests linkNotExistsExact() functionality.
+   *
+   * @covers ::linkNotExistsExact
+   */
+  public function testLinkNotExistsExact() {
+    $this->drupalGet('test-pipe-char');
+    $this->assertSession()->linkNotExistsExact('foo|bar');
+  }
+
+  /**
+   * Tests linkNotExistsExact() functionality fail.
+   *
+   * @covers ::linkNotExistsExact
+   */
+  public function testInvalidLinkNotExistsExact() {
+    $this->drupalGet('test-pipe-char');
+    $this->expectException(ExpectationException::class);
+    $this->expectExceptionMessage('Link with label foo|bar|baz found');
+    $this->assertSession()->linkNotExistsExact('foo|bar|baz');
+  }
+
+  /**
+   * Tests legacy text asserts.
+   *
+   * @covers ::responseContains
+   * @covers ::responseNotContains
+   */
+  public function testTextAsserts() {
+    $this->drupalGet('test-encoded');
+    $dangerous = 'Bad html <script>alert(123);</script>';
+    $sanitized = Html::escape($dangerous);
+    $this->assertSession()->responseNotContains($dangerous);
+    $this->assertSession()->responseContains($sanitized);
+  }
+
+  /**
+   * Tests legacy field asserts for button field type.
+   *
+   * @covers ::buttonExists
+   * @covers ::buttonNotExists
+   */
+  public function testFieldAssertsForButton() {
+    $this->drupalGet('test-field-xpath');
+
+    // Verify if the test passes with button ID.
+    $this->assertSession()->buttonExists('edit-save');
+    // Verify if the test passes with button Value.
+    $this->assertSession()->buttonExists('Save');
+    // Verify if the test passes with button Name.
+    $this->assertSession()->buttonExists('op');
+
+    // Verify if the test passes with button ID.
+    $this->assertSession()->buttonNotExists('i-do-not-exist');
+    // Verify if the test passes with button Value.
+    $this->assertSession()->buttonNotExists('I do not exist');
+    // Verify if the test passes with button Name.
+    $this->assertSession()->buttonNotExists('no');
+
+    // Test that multiple fields with the same name are validated correctly.
+    $this->assertSession()->buttonExists('duplicate_button');
+    $this->assertSession()->buttonExists('Duplicate button 1');
+    $this->assertSession()->buttonExists('Duplicate button 2');
+    $this->assertSession()->buttonNotExists('Rabbit');
+
+    try {
+      $this->assertSession()->buttonNotExists('Duplicate button 2');
+      $this->fail('The "duplicate_button" field with the value Duplicate button 2 was not found.');
+    }
+    catch (ExpectationException $e) {
+      // Expected exception; just continue testing.
+    }
+  }
+
+  /**
+   * Tests pageContainsNoDuplicateId() functionality.
+   *
+   * @covers ::pageContainsNoDuplicateId
+   */
+  public function testPageContainsNoDuplicateId() {
+    $assert_session = $this->assertSession();
+    $this->drupalGet(Url::fromRoute('test_page_test.page_without_duplicate_ids'));
+    $assert_session->pageContainsNoDuplicateId();
+
+    $this->drupalGet(Url::fromRoute('test_page_test.page_with_duplicate_ids'));
+    $this->expectException(ExpectationException::class);
+    $this->expectExceptionMessage('The page contains a duplicate HTML ID "page-element".');
+    $assert_session->pageContainsNoDuplicateId();
+  }
+
+  /**
+   * Tests assertEscaped() and assertUnescaped().
+   *
+   * @covers ::assertNoEscaped
+   * @covers ::assertEscaped
+   */
+  public function testEscapingAssertions() {
+    $assert = $this->assertSession();
+
+    $this->drupalGet('test-escaped-characters');
+    $assert->assertNoEscaped('<div class="escaped">');
+    $assert->responseContains('<div class="escaped">');
+    $assert->assertEscaped('Escaped: <"\'&>');
+
+    $this->drupalGet('test-escaped-script');
+    $assert->assertNoEscaped('<div class="escaped">');
+    $assert->responseContains('<div class="escaped">');
+    $assert->assertEscaped("<script>alert('XSS');alert(\"XSS\");</script>");
+
+    $this->drupalGet('test-unescaped-script');
+    $assert->assertNoEscaped('<div class="unescaped">');
+    $assert->responseContains('<div class="unescaped">');
+    $assert->responseContains("<script>alert('Marked safe');alert(\"Marked safe\");</script>");
+    $assert->assertNoEscaped("<script>alert('Marked safe');alert(\"Marked safe\");</script>");
   }
 
 }
