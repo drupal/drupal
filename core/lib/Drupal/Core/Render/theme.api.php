@@ -890,31 +890,31 @@ function hook_js_alter(&$javascript, \Drupal\Core\Asset\AttachedAssetsInterface 
 function hook_library_info_build() {
   $libraries = [];
   // Add a library whose information changes depending on certain conditions.
-  $libraries['mymodule.zombie'] = [
+  $libraries['zombie'] = [
     'dependencies' => [
       'core/once',
     ],
   ];
   if (Drupal::moduleHandler()->moduleExists('minifyzombies')) {
-    $libraries['mymodule.zombie'] += [
+    $libraries['zombie'] += [
       'js' => [
-        'mymodule.zombie.min.js' => [],
+        'zombie.min.js' => [],
       ],
       'css' => [
         'base' => [
-          'mymodule.zombie.min.css' => [],
+          'zombie.min.css' => [],
         ],
       ],
     ];
   }
   else {
-    $libraries['mymodule.zombie'] += [
+    $libraries['zombie'] += [
       'js' => [
-        'mymodule.zombie.js' => [],
+        'zombie.js' => [],
       ],
       'css' => [
         'base' => [
-          'mymodule.zombie.css' => [],
+          'zombie.css' => [],
         ],
       ],
     ];
@@ -926,7 +926,7 @@ function hook_library_info_build() {
   // the library (of course) not be loaded but no notices or errors will be
   // triggered.
   if (Drupal::moduleHandler()->moduleExists('vampirize')) {
-    $libraries['mymodule.vampire'] = [
+    $libraries['vampire'] = [
       'js' => [
         'js/vampire.js' => [],
       ],
