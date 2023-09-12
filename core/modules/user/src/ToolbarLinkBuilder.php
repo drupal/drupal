@@ -80,7 +80,7 @@ class ToolbarLinkBuilder implements TrustedCallbackInterface {
    */
   public function renderDisplayName() {
     return [
-      '#markup' => $this->account->getDisplayName(),
+      '#plain_text' => $this->account->getDisplayName(),
     ];
   }
 
