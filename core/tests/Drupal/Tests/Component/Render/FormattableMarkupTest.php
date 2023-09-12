@@ -117,12 +117,12 @@ class FormattableMarkupTest extends TestCase {
    */
   public function providerTestUnexpectedPlaceholder() {
     return [
-      ['Non alpha starting character: ~placeholder', ['~placeholder' => 'replaced'], E_USER_WARNING, 'Invalid placeholder (~placeholder) with string: "Non alpha starting character: ~placeholder"'],
-      ['Alpha starting character: placeholder', ['placeholder' => 'replaced'], E_USER_WARNING, 'Invalid placeholder (placeholder) with string: "Alpha starting character: placeholder"'],
+      ['Non alpha, non-allowed starting character: ~placeholder', ['~placeholder' => 'replaced'], E_USER_WARNING, 'Invalid placeholder (~placeholder) with string: "Non alpha, non-allowed starting character: ~placeholder"'],
+      ['Alpha starting character: placeholder', ['placeholder' => 'replaced'], NULL, ''],
       // Ensure that where the placeholder is located in the string is
       // irrelevant.
-      ['placeholder', ['placeholder' => 'replaced'], E_USER_WARNING, 'Invalid placeholder (placeholder) with string: "placeholder"'],
-      ['No replacements', ['foo' => 'bar'], E_USER_WARNING, 'Invalid placeholder (foo) with string: "No replacements"'],
+      ['placeholder', ['placeholder' => 'replaced'], NULL, ''],
+      ['No replacements', ['foo' => 'bar'], NULL, ''],
     ];
   }
 

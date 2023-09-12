@@ -241,8 +241,10 @@ class FormattableMarkup implements MarkupInterface, \Countable {
           break;
 
         default:
-          // Warn for random variables that won't be replaced.
-          trigger_error(sprintf('Invalid placeholder (%s) with string: "%s"', $key, $string), E_USER_WARNING);
+          if (!ctype_alnum($key[0])) {
+            // Warn for random placeholders that won't be replaced.
+            trigger_error(sprintf('Invalid placeholder (%s) with string: "%s"', $key, $string), E_USER_WARNING);
+          }
           // No replacement possible therefore we can discard the argument.
           unset($args[$key]);
           break;
