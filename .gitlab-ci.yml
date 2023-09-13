@@ -1,0 +1,114 @@
+################
+# Drupal GitLabCI template.
+#
+# Based off GitlabCI templates project: https://git.drupalcode.org/project/gitlab_templates
+# Guide: https://www.drupal.org/docs/develop/git/using-gitlab-to-contribute-to-drupal/gitlab-ci
+#
+# With thanks to:
+# - The GitLab Acceleration Initiative participants
+# - DrupalSpoons
+################
+
+################
+# Includes
+#
+# Additional configuration can be provided through includes.
+# One advantage of include files is that if they are updated upstream, the
+# changes affect all pipelines using that include.
+#
+# Includes can be overridden by re-declaring anything provided in an include,
+# here in gitlab-ci.yml.
+# https://docs.gitlab.com/ee/ci/yaml/includes.html#override-included-configuration-values
+################
+
+include:
+  - project: $_GITLAB_TEMPLATES_REPO
+    ref: $_GITLAB_TEMPLATES_REF
+    file:
+      - '/includes/include.drupalci.variables.yml'
+      - '/includes/include.drupalci.workflows.yml'
+
+################
+# Variables
+#
+# Overriding variables
+# - To override one or more of these variables, simply declare your own variables keyword.
+# - Keywords declared directly in .gitlab-ci.yml take precedence over include files.
+# - Documentation:  https://docs.gitlab.com/ee/ci/variables/
+# - Predefined variables: https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
+#
+################
+
+variables:
+  _TARGET_PHP: "8.2"
+  COMPOSER: composer.json
+  # Let composer know what self.version means.
+  COMPOSER_ROOT_VERSION: "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}-dev"
+  CONCURRENCY: 32
+
+################
+# Stages
+#
+# Each job is assigned to a stage, defining the order in which the jobs are executed.
+# Jobs in the same stage run in parallel.
+#
+# If all jobs in a stage succeed, the pipeline will proceed to the next stage.
+# If any job in the stage fails, the pipeline will exit early.
+################
+
+.default-stage: &default-stage
+  stage: test
+  trigger:
+    # Rely on the status of the child pipeline.
+    strategy: depend
+    include:
+      - local: .gitlab-ci/pipeline.yml
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+.run-manually: &run-manually
+  when: manual
+
+'PHP 8.2 MySQL 5.7':
+  <<: [ *default-stage, *run-manually ]
+  variables:
+    _TARGET_DB_TYPE: "mysql"
+    _TARGET_DB_VERSION: "5.7"
+    _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
+
+'PHP 8.2 MySQL 8':
+  <<: *default-stage
+  variables:
+    _TARGET_DB_TYPE: "mysql"
+    _TARGET_DB_VERSION: "8"
+    _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+'PHP 8.2 PostgreSQL 13.5':
+  <<: [ *default-stage, *run-manually ]
+  variables:
+    _TARGET_DB_TYPE: "pgsql"
+    _TARGET_DB_VERSION: "13.5"
+    _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
+
+'PHP 8.2 PostgreSQL 14.1':
+  <<: [ *default-stage, *run-manually ]
+  variables:
+    _TARGET_DB_TYPE: "pgsql"
+    _TARGET_DB_VERSION: "14.1"
+    _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
+
+# 'PHP 8.2 SQLite 3.26.0':
+#   <<: [ *default-stage, *run-manually ]
+#   variables:
+#     _TARGET_DB_TYPE: "sqlite"
+#     _TARGET_DB_VERSION: "3.26.0"
+#     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
+
+# 'PHP 8.2 MariaDB 10.3.22':
+#   <<: [ *default-stage, *run-manually ]
+#   variables:
+#     _TARGET_DB_TYPE: "mariadb"
+#     _TARGET_DB_VERSION: "10.3.22"
+#     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
