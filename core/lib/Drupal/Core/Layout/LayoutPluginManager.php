@@ -199,9 +199,7 @@ class LayoutPluginManager extends DefaultPluginManager implements LayoutPluginMa
   public function getSortedDefinitions(array $definitions = NULL, $label_key = 'label') {
     // Sort the plugins first by category, then by label.
     $definitions = $definitions ?? $this->getDefinitions();
-    // Suppress errors because PHPUnit will indirectly modify the contents,
-    // triggering https://bugs.php.net/bug.php?id=50688.
-    @uasort($definitions, function (LayoutDefinition $a, LayoutDefinition $b) {
+    uasort($definitions, function (LayoutDefinition $a, LayoutDefinition $b) {
       if ($a->getCategory() != $b->getCategory()) {
         return strnatcasecmp($a->getCategory(), $b->getCategory());
       }

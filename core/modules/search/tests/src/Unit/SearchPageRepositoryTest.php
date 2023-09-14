@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\search\Unit;
 
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\search\Entity\SearchPage;
 use Drupal\search\SearchPageRepository;
@@ -252,26 +253,62 @@ class SearchPageRepositoryTest extends UnitTestCase {
    * Tests the sortSearchPages() method.
    */
   public function testSortSearchPages() {
-    $entity_type = $this->createMock('Drupal\Core\Entity\EntityTypeInterface');
-    $entity_type->expects($this->any())
+    $entity_type = $this->createMock(EntityTypeInterface::class);
+    $entity_type
       ->method('getClass')
-      ->willReturn('Drupal\Tests\search\Unit\TestSearchPage');
+      ->willReturn(TestSearchPage::class);
     $this->storage->expects($this->once())
       ->method('getEntityType')
       ->willReturn($entity_type);
 
-    // Declare entities out of their expected order so we can be sure they were
-    // sorted. We cannot mock these because of uasort(), see
-    // https://bugs.php.net/bug.php?id=50688.
-    $unsorted_entities['test4'] = new TestSearchPage(['weight' => 0, 'status' => FALSE, 'label' => 'Test4']);
-    $unsorted_entities['test3'] = new TestSearchPage(['weight' => 10, 'status' => TRUE, 'label' => 'Test3']);
-    $unsorted_entities['test2'] = new TestSearchPage(['weight' => 0, 'status' => TRUE, 'label' => 'Test2']);
-    $unsorted_entities['test1'] = new TestSearchPage(['weight' => 0, 'status' => TRUE, 'label' => 'Test1']);
-    $expected = $unsorted_entities;
-    ksort($expected);
+    // Declare entities out of their expected order, so we can be sure they were
+    // sorted.
+    $entity_test4 = $this->createMock(TestSearchPage::class);
+    $entity_test4
+      ->method('label')
+      ->willReturn('Test4');
+    $entity_test4
+      ->method('status')
+      ->willReturn(FALSE);
+    $entity_test4
+      ->method('getWeight')
+      ->willReturn(0);
+    $entity_test3 = $this->createMock(TestSearchPage::class);
+    $entity_test3
+      ->method('label')
+      ->willReturn('Test3');
+    $entity_test3
+      ->method('status')
+      ->willReturn(FALSE);
+    $entity_test3
+      ->method('getWeight')
+      ->willReturn(10);
+    $entity_test2 = $this->createMock(TestSearchPage::class);
+    $entity_test2
+      ->method('label')
+      ->willReturn('Test2');
+    $entity_test2
+      ->method('status')
+      ->willReturn(TRUE);
+    $entity_test2
+      ->method('getWeight')
+      ->willReturn(0);
+    $entity_test1 = $this->createMock(TestSearchPage::class);
+    $entity_test1
+      ->method('label')
+      ->willReturn('Test1');
+    $entity_test1
+      ->method('status')
+      ->willReturn(TRUE);
+    $entity_test1
+      ->method('getWeight')
+      ->willReturn(0);
+
+    $unsorted_entities = [$entity_test4, $entity_test3, $entity_test2, $entity_test1];
+    $expected = [$entity_test1, $entity_test2, $entity_test3, $entity_test4];
 
     $sorted_entities = $this->searchPageRepository->sortSearchPages($unsorted_entities);
-    $this->assertSame($expected, $sorted_entities);
+    $this->assertSame($expected, array_values($sorted_entities));
   }
 
 }
