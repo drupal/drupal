@@ -73,6 +73,16 @@ class DiffOpOutputBuilderTest extends TestCase {
         ['aa', 'bb', 'cc', 'd'],
         ['a', 'c', 'd'],
       ],
+      'copy-change-copy-change' => [
+        [
+          new DiffOpCopy(['a']),
+          new DiffOpChange(['bb'], ['b', 'c']),
+          new DiffOpCopy(['d']),
+          new DiffOpChange(['ee'], ['e']),
+        ],
+        ['a', 'bb', 'd', 'ee'],
+        ['a', 'b', 'c', 'd', 'e'],
+      ],
     ];
   }
 
@@ -111,12 +121,11 @@ class DiffOpOutputBuilderTest extends TestCase {
     $differ = new Differ($diffOpBuilder);
     $diff = $differ->diffToArray($from, $to);
     $diffOps = $diffOpBuilder->toOpsArray($diff);
-    $this->assertCount(5, $diffOps);
+    $this->assertCount(4, $diffOps);
     $this->assertEquals($diffOps[0], new DiffOpAdd(['    - image.style.max_325x325']));
     $this->assertEquals($diffOps[1], new DiffOpCopy(['    - image.style.max_650x650']));
-    $this->assertEquals($diffOps[2], new DiffOpChange(['    - image.style.max_325x325'], ['_core:']));
-    $this->assertEquals($diffOps[3], new DiffOpAdd(['  default_config_hash: 3mjM9p-kQ8syzH7N8T0L9OnCJDSPvHAZoi3q6jcXJKM']));
-    $this->assertEquals($diffOps[4], new DiffOpCopy(['fallback_image_style: max_325x325', '']));
+    $this->assertEquals($diffOps[2], new DiffOpChange(['    - image.style.max_325x325'], ['_core:', '  default_config_hash: 3mjM9p-kQ8syzH7N8T0L9OnCJDSPvHAZoi3q6jcXJKM']));
+    $this->assertEquals($diffOps[3], new DiffOpCopy(['fallback_image_style: max_325x325', '']));
   }
 
 }

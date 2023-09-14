@@ -70,6 +70,24 @@ class DiffEngineTest extends TestCase {
         ['a', 'b', 'd'],
         ['a'],
       ],
+      'change-copy' => [
+        [
+          DiffOpChange::class,
+          DiffOpCopy::class,
+        ],
+        ['aa', 'bb', 'cc', 'd'],
+        ['a', 'c', 'd'],
+      ],
+      'copy-change-copy-change' => [
+        [
+          DiffOpCopy::class,
+          DiffOpChange::class,
+          DiffOpCopy::class,
+          DiffOpChange::class,
+        ],
+        ['a', 'bb', 'd', 'ee'],
+        ['a', 'b', 'c', 'd', 'e'],
+      ],
     ];
   }
 
