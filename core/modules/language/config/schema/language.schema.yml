@@ -135,11 +135,3 @@ condition.plugin.language:
       type: sequence
       sequence:
         type: langcode
-
-field.widget.settings.language_select:
-  type: mapping
-  label: 'Language format settings'
-  mapping:
-    include_locked:
-      type: boolean
-      label: 'Include locked languages'
