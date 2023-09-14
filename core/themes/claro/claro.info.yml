@@ -47,12 +47,7 @@ libraries-override:
       component:
         misc/vertical-tabs.css: false
 
-  core/drupal.autocomplete:
-    css:
-      theme:
-        assets/vendor/jquery.ui/themes/base/theme.css: false
-
-  core/drupal.tabbingmanager:
+  core/internal.jquery_ui:
     css:
       theme:
         assets/vendor/jquery.ui/themes/base/theme.css: false
@@ -61,8 +56,6 @@ libraries-override:
     css:
       component:
         assets/vendor/jquery.ui/themes/base/dialog.css: false
-      theme:
-        assets/vendor/jquery.ui/themes/base/theme.css: false
 
   user/drupal.user:
     css:
