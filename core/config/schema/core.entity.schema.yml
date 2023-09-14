@@ -233,6 +233,14 @@ field.widget.settings.checkbox:
       type: boolean
       label: 'Use field label instead of the "On value" as label'
 
+field.widget.settings.language_select:
+  type: mapping
+  label: 'Language format settings'
+  mapping:
+    include_locked:
+      type: boolean
+      label: 'Include locked languages'
+
 field.widget.settings.entity_reference_autocomplete_tags:
   type: mapping
   label: 'Entity reference autocomplete (Tags style) display format settings'
