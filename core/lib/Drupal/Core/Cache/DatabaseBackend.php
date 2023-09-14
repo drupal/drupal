@@ -33,6 +33,11 @@ class DatabaseBackend implements CacheBackendInterface {
   const MAXIMUM_NONE = -1;
 
   /**
+   * The chunk size for inserting cache entities.
+   */
+  const MAX_ITEMS_PER_CACHE_SET = 100;
+
+  /**
    * The maximum number of rows that this cache bin table is allowed to store.
    *
    * @see ::MAXIMUM_NONE
@@ -215,62 +220,68 @@ class DatabaseBackend implements CacheBackendInterface {
    * @see \Drupal\Core\Cache\CacheBackendInterface::setMultiple()
    */
   protected function doSetMultiple(array $items) {
-    $values = [];
+    // Chunk the items as the database might not be able to receive thousands
+    // of items in a single query.
+    $chunks = array_chunk($items, self::MAX_ITEMS_PER_CACHE_SET, TRUE);
 
-    foreach ($items as $cid => $item) {
-      $item += [
-        'expire' => CacheBackendInterface::CACHE_PERMANENT,
-        'tags' => [],
-      ];
+    foreach ($chunks as $chunk_items) {
+      $values = [];
 
-      assert(Inspector::assertAllStrings($item['tags']), 'Cache Tags must be strings.');
-      $item['tags'] = array_unique($item['tags']);
-      // Sort the cache tags so that they are stored consistently in the DB.
-      sort($item['tags']);
+      foreach ($chunk_items as $cid => $item) {
+        $item += [
+          'expire' => CacheBackendInterface::CACHE_PERMANENT,
+          'tags' => [],
+        ];
 
-      $fields = [
-        'cid' => $this->normalizeCid($cid),
-        'expire' => $item['expire'],
-        'created' => round(microtime(TRUE), 3),
-        'tags' => implode(' ', $item['tags']),
-        'checksum' => $this->checksumProvider->getCurrentChecksum($item['tags']),
-      ];
+        assert(Inspector::assertAllStrings($item['tags']), 'Cache Tags must be strings.');
+        $item['tags'] = array_unique($item['tags']);
+        // Sort the cache tags so that they are stored consistently in the DB.
+        sort($item['tags']);
 
-      // Avoid useless writes.
-      if ($fields['checksum'] === CacheTagsChecksumInterface::INVALID_CHECKSUM_WHILE_IN_TRANSACTION) {
-        continue;
+        $fields = [
+          'cid' => $this->normalizeCid($cid),
+          'expire' => $item['expire'],
+          'created' => round(microtime(TRUE), 3),
+          'tags' => implode(' ', $item['tags']),
+          'checksum' => $this->checksumProvider->getCurrentChecksum($item['tags']),
+        ];
+
+        // Avoid useless writes.
+        if ($fields['checksum'] === CacheTagsChecksumInterface::INVALID_CHECKSUM_WHILE_IN_TRANSACTION) {
+          continue;
+        }
+
+        if (!is_string($item['data'])) {
+          $fields['data'] = serialize($item['data']);
+          $fields['serialized'] = 1;
+        }
+        else {
+          $fields['data'] = $item['data'];
+          $fields['serialized'] = 0;
+        }
+        $values[] = $fields;
       }
 
-      if (!is_string($item['data'])) {
-        $fields['data'] = serialize($item['data']);
-        $fields['serialized'] = 1;
+      // If all $items were useless writes, we may end up with zero writes.
+      if (count($values) === 0) {
+        return;
       }
-      else {
-        $fields['data'] = $item['data'];
-        $fields['serialized'] = 0;
+
+      // Use an upsert query which is atomic and optimized for multiple-row
+      // merges.
+      $query = $this->connection
+        ->upsert($this->bin)
+        ->key('cid')
+        ->fields(['cid', 'expire', 'created', 'tags', 'checksum', 'data', 'serialized']);
+      foreach ($values as $fields) {
+        // Only pass the values since the order of $fields matches the order of
+        // the insert fields. This is a performance optimization to avoid
+        // unnecessary loops within the method.
+        $query->values(array_values($fields));
       }
-      $values[] = $fields;
-    }
 
-    // If all $items were useless writes, we may end up with zero writes.
-    if (empty($values)) {
-      return;
+      $query->execute();
     }
-
-    // Use an upsert query which is atomic and optimized for multiple-row
-    // merges.
-    $query = $this->connection
-      ->upsert($this->bin)
-      ->key('cid')
-      ->fields(['cid', 'expire', 'created', 'tags', 'checksum', 'data', 'serialized']);
-    foreach ($values as $fields) {
-      // Only pass the values since the order of $fields matches the order of
-      // the insert fields. This is a performance optimization to avoid
-      // unnecessary loops within the method.
-      $query->values(array_values($fields));
-    }
-
-    $query->execute();
   }
 
   /**

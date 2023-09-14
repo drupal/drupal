@@ -53,6 +53,15 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
     $cached_value_short = $this->randomMachineName();
     $backend->set($cid_short, $cached_value_short);
     $this->assertSame($cached_value_short, $backend->get($cid_short)->data, "Backend contains the correct value for short, non-ASCII cache id.");
+
+    // Set multiple items to test exceeding the chunk size.
+    $backend->deleteAll();
+    $items = [];
+    for ($i = 0; $i <= DatabaseBackend::MAX_ITEMS_PER_CACHE_SET; $i++) {
+      $items["test$i"]['data'] = $i;
+    }
+    $backend->setMultiple($items);
+    $this->assertSame(DatabaseBackend::MAX_ITEMS_PER_CACHE_SET + 1, $this->getNumRows());
   }
 
   /**
