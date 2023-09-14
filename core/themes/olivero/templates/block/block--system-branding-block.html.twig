@@ -18,7 +18,7 @@
   <div class="site-branding__inner">
     {% if site_logo %}
       <a href="{{ path('<front>') }}" rel="home" class="site-branding__logo">
-        <img src="{{ site_logo }}" alt="{{ 'Home'|t }}" />
+        <img src="{{ site_logo }}" alt="{{ 'Home'|t }}" fetchpriority="high" />
       </a>
     {% endif %}
     {% if site_name %}
