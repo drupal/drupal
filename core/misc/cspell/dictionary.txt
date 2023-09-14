@@ -306,7 +306,6 @@ desaturate
 desaturated
 desaturates
 desaturating
-descoping
 descripcion
 destructable
 deutsch

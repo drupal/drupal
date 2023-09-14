@@ -27,31 +27,21 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
   /**
    * The stack of Drupal transactions currently active.
    *
-   * This property is keeping track of the Transaction objects started and
-   * ended as a LIFO (Last In, First Out) stack.
+   * This is not a real LIFO (Last In, First Out) stack, where we would only
+   * remove the layers according to the order they were introduced. For commits
+   * the layer order is enforced, while for rollbacks the API allows to
+   * rollback to savepoints before the last one.
    *
-   * The database API allows to begin transactions, add an arbitrary number of
-   * additional savepoints, and release any savepoint in the sequence. When
-   * this happens, the database will implicitly release all the savepoints
-   * created after the one released. Given Drupal implementation of the
-   * Transaction objects, we cannot force descoping of the corresponding
-   * Transaction savepoint objects from the manager, because they live in the
-   * scope of the calling code. This stack ensures that when an outlived
-   * Transaction object gets out of scope, it will not try to release on the
-   * database a savepoint that no longer exists.
-   *
-   * Differently, rollbacks are strictly being checked for LIFO order: if a
-   * rollback is requested against a savepoint that is not the last created,
-   * the manager will throw a TransactionOutOfOrderException.
-   *
-   * The array key is the transaction's unique id, its value a StackItem.
-   *
-   * @var array<string,StackItem>
-   *
-   * @todo in https://www.drupal.org/project/drupal/issues/3384995, complete
-   *   the LIFO logic extending it to the root transaction too.
+   * @var array<string,StackItemType>
    */
   private array $stack = [];
+
+  /**
+   * A list of Drupal transactions rolled back but not yet unpiled.
+   *
+   * @var array<string,true>
+   */
+  private array $rollbacks = [];
 
   /**
    * A list of post-transaction callbacks.
@@ -101,7 +91,7 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
    * $stack property.
    *
    * phpcs:ignore Drupal.Commenting.FunctionComment.InvalidReturn
-   * @return array<string,StackItem>
+   * @return array<string,StackItemType>
    *   The elements of the transaction stack.
    */
   protected function stack(): array {
@@ -124,13 +114,13 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
    * Drivers should not override this method unless they also override the
    * $stack property.
    *
-   * @param string $id
-   *   The id of the transaction.
-   * @param \Drupal\Core\Database\Transaction\StackItem $item
-   *   The stack item.
+   * @param string $name
+   *   The name of the transaction.
+   * @param \Drupal\Core\Database\Transaction\StackItemType $type
+   *   The stack item type.
    */
-  protected function addStackItem(string $id, StackItem $item): void {
-    $this->stack[$id] = $item;
+  protected function addStackItem(string $name, StackItemType $type): void {
+    $this->stack[$name] = $type;
   }
 
   /**
@@ -139,11 +129,11 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
    * Drivers should not override this method unless they also override the
    * $stack property.
    *
-   * @param string $id
-   *   The id of the transaction.
+   * @param string $name
+   *   The name of the transaction.
    */
-  protected function removeStackItem(string $id): void {
-    unset($this->stack[$id]);
+  protected function removeStackItem(string $name): void {
+    unset($this->stack[$name]);
   }
 
   /**
@@ -186,30 +176,23 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
       $type = StackItemType::Savepoint;
     }
 
-    // Define an unique id for the transaction.
-    $id = uniqid();
+    // Push the transaction on the stack, increasing its depth.
+    $this->addStackItem($name, $type);
 
-    // Add an item on the stack, increasing its depth.
-    $this->addStackItem($id, new StackItem($name, $type));
-
-    // Actually return a new Transaction object.
-    return new Transaction($this->connection, $name, $id);
+    return new Transaction($this->connection, $name);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function unpile(string $name, string $id): void {
-    // If the $id does not correspond to the one in the stack for that $name,
-    // we are facing an orphaned Transaction object (for example in case of a
-    // DDL statement breaking an active transaction), so there is nothing more
-    // to do.
-    if (!isset($this->stack()[$id]) || $this->stack()[$id]->name !== $name) {
+  public function unpile(string $name): void {
+    // If an already rolled back Drupal transaction, do nothing on the client
+    // connection, just cleanup the list of transactions rolled back.
+    if (isset($this->rollbacks[$name])) {
+      unset($this->rollbacks[$name]);
       return;
     }
 
-    // If unpiling a savepoint, but that does not exist on the stack, the stack
-    // got corrupted.
     if ($name !== 'drupal_transaction' && !$this->has($name)) {
       throw new TransactionOutOfOrderException();
     }
@@ -218,20 +201,14 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
     // is not a root one.
     if (
       $this->has($name)
-      && $this->stack()[$id]->type === StackItemType::Savepoint
+      && $this->stack()[$name] === StackItemType::Savepoint
       && $this->getConnectionTransactionState() === ClientConnectionTransactionState::Active
     ) {
-      // If we are not releasing the last savepoint but an earlier one, all
-      // subsequent savepoints will have been released as well. The stack must
-      // be diminished accordingly.
-      while (($i = array_key_last($this->stack())) !== $id) {
-        $this->removeStackItem($i);
-      }
       $this->releaseClientSavepoint($name);
     }
 
     // Remove the transaction from the stack.
-    $this->removeStackItem($id);
+    $this->removeStackItem($name);
 
     // If this was the last Drupal transaction open, we can commit the client
     // transaction.
@@ -246,47 +223,24 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function rollback(string $name, string $id): void {
-    // @todo remove in drupal:11.0.0.
-    // Start of BC layer.
-    if ($id === 'bc-force-rollback') {
-      foreach ($this->stack() as $stackId => $item) {
-        if ($item->name === $name) {
-          $id = $stackId;
-          break;
-        }
-      }
-      if ($id === 'bc-force-rollback') {
-        throw new TransactionOutOfOrderException();
-      }
-    }
-    // End of BC layer.
-
-    // If the $id does not correspond to the one in the stack for that $name,
-    // we are facing an orphaned Transaction object (for example in case of a
-    // DDL statement breaking an active transaction), so there is nothing more
-    // to do.
-    if (!isset($this->stack()[$id]) || $this->stack()[$id]->name !== $name) {
-      return;
-    }
-
+  public function rollback(string $name): void {
     if (!$this->inTransaction()) {
       throw new TransactionNoActiveException();
     }
 
     // Do the client-level processing.
-    match ($this->stack()[$id]->type) {
+    match ($this->stack()[$name]) {
       StackItemType::Root => $this->processRootRollback(),
       StackItemType::Savepoint => $this->rollbackClientSavepoint($name),
     };
 
     // Rolled back item should match the last one in stack.
-    if ($id !== array_key_last($this->stack())) {
+    if ($name !== array_key_last($this->stack())) {
       throw new TransactionOutOfOrderException();
     }
 
-    // Remove the transaction from the stack.
-    $this->removeStackItem($id);
+    $this->rollbacks[$name] = TRUE;
+    $this->removeStackItem($name);
 
     // If this was the last Drupal transaction open, we can commit the client
     // transaction.
@@ -309,12 +263,7 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
    * {@inheritdoc}
    */
   public function has(string $name): bool {
-    foreach ($this->stack() as $item) {
-      if ($item->name === $name) {
-        return TRUE;
-      }
-    }
-    return FALSE;
+    return isset($this->stack()[$name]);
   }
 
   /**

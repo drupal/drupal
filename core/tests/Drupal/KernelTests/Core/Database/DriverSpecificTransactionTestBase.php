@@ -577,30 +577,6 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
   }
 
   /**
-   * Tests releasing a savepoint before last is safe.
-   */
-  public function testReleaseIntermediateSavepoint(): void {
-    $transaction = $this->connection->startTransaction();
-    $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
-    $savepoint1 = $this->connection->startTransaction();
-    $this->assertSame(2, $this->connection->transactionManager()->stackDepth());
-    $savepoint2 = $this->connection->startTransaction();
-    $this->assertSame(3, $this->connection->transactionManager()->stackDepth());
-    $savepoint3 = $this->connection->startTransaction();
-    $this->assertSame(4, $this->connection->transactionManager()->stackDepth());
-    $savepoint4 = $this->connection->startTransaction();
-    $this->assertSame(5, $this->connection->transactionManager()->stackDepth());
-    $this->insertRow('row');
-    unset($savepoint2);
-    $this->assertSame(2, $this->connection->transactionManager()->stackDepth());
-    $this->assertRowPresent('row');
-    unset($savepoint1);
-    unset($transaction);
-    $this->assertFalse($this->connection->inTransaction());
-    $this->assertRowPresent('row');
-  }
-
-  /**
    * Tests for transaction names.
    */
   public function testTransactionName(): void {

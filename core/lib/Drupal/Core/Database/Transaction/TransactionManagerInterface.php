@@ -36,8 +36,6 @@ interface TransactionManagerInterface {
    * This begins a client connection transaction if there is not one active,
    * or adds a savepoint to the active one.
    *
-   * This method should only be called internally by a database driver.
-   *
    * @param string $name
    *   (optional) The name of the savepoint.
    *
@@ -56,19 +54,15 @@ interface TransactionManagerInterface {
    * This method should only be called by a Transaction object going out of
    * scope.
    *
-   * This method should only be called internally by a database driver.
-   *
    * @param string $name
-   *   The name of the transaction.
-   * @param string $id
-   *   The id of the transaction.
+   *   (optional) The name of the savepoint.
    *
    * @throws \Drupal\Core\Database\TransactionOutOfOrderException
    *   If a Drupal Transaction with the specified name does not exist.
    * @throws \Drupal\Core\Database\TransactionCommitFailedException
    *   If the commit of the root transaction failed.
    */
-  public function unpile(string $name, string $id): void;
+  public function unpile(string $name): void;
 
   /**
    * Rolls back a Drupal transaction.
@@ -78,12 +72,8 @@ interface TransactionManagerInterface {
    * to rolling back the client connection (or to committing it in the edge
    * case when the root was unpiled earlier).
    *
-   * This method should only be called internally by a database driver.
-   *
    * @param string $name
-   *   The name of the transaction.
-   * @param string $id
-   *   The id of the transaction.
+   *   (optional) The name of the savepoint.
    *
    * @throws \Drupal\Core\Database\TransactionNoActiveException
    *   If there is no active client connection.
@@ -93,7 +83,7 @@ interface TransactionManagerInterface {
    * @throws \Drupal\Core\Database\TransactionCommitFailedException
    *   If the commit of the root transaction failed.
    */
-  public function rollback(string $name, string $id): void;
+  public function rollback(string $name): void;
 
   /**
    * Adds a root transaction end callback.
