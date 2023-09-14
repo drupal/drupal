@@ -34,6 +34,11 @@ class Transaction {
    * A boolean value to indicate whether this transaction has been rolled back.
    *
    * @var bool
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is
+   *   no replacement.
+   *
+   * @see https://www.drupal.org/node/3381002
    */
   protected $rolledBack = FALSE;
 
@@ -47,7 +52,11 @@ class Transaction {
    */
   protected $name;
 
-  public function __construct(Connection $connection, $name = NULL) {
+  public function __construct(
+    Connection $connection,
+    $name = NULL,
+    protected readonly string $id = '',
+  ) {
     if ($connection->transactionManager()) {
       $this->connection = $connection;
       $this->name = $name;
@@ -76,11 +85,12 @@ class Transaction {
 
   public function __destruct() {
     if ($this->connection->transactionManager()) {
-      $this->connection->transactionManager()->unpile($this->name);
+      $this->connection->transactionManager()->unpile($this->name, $this->id);
       return;
     }
     // Start of BC layer.
     // If we rolled back then the transaction would have already been popped.
+    // @phpstan-ignore-next-line
     if (!$this->rolledBack) {
       // @phpstan-ignore-next-line
       $this->connection->popTransaction($this->name);
@@ -107,10 +117,11 @@ class Transaction {
    */
   public function rollBack() {
     if ($this->connection->transactionManager()) {
-      $this->connection->transactionManager()->rollback($this->name);
+      $this->connection->transactionManager()->rollback($this->name, $this->id);
       return;
     }
     // Start of BC layer.
+    // @phpstan-ignore-next-line
     $this->rolledBack = TRUE;
     // @phpstan-ignore-next-line
     $this->connection->rollBack($this->name);

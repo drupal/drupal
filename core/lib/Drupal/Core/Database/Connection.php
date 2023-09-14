@@ -1480,7 +1480,7 @@ abstract class Connection {
   public function rollBack($savepoint_name = 'drupal_transaction') {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Do not rollback the connection, roll back the Transaction objects instead. See https://www.drupal.org/node/3381002', E_USER_DEPRECATED);
     if ($this->transactionManager()) {
-      $this->transactionManager()->rollback($savepoint_name);
+      $this->transactionManager()->rollback($savepoint_name, 'bc-force-rollback');
       return;
     }
     if (!$this->inTransaction()) {
