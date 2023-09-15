@@ -40,7 +40,6 @@ include:
 ################
 
 variables:
-  _TARGET_PHP: "8.2"
   COMPOSER: composer.json
   # Let composer know what self.version means.
   COMPOSER_ROOT_VERSION: "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}-dev"
@@ -63,55 +62,71 @@ variables:
     strategy: depend
     include:
       - local: .gitlab-ci/pipeline.yml
+
+.run-on-commit: &run-on-commit
   rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: manual
+      allow_failure: true
 
-.run-manually: &run-manually
-  when: manual
+.run-daily: &run-daily
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: manual
+      allow_failure: true
 
-'PHP 8.2 MySQL 5.7':
-  <<: [ *default-stage, *run-manually ]
-  variables:
-    _TARGET_DB_TYPE: "mysql"
-    _TARGET_DB_VERSION: "5.7"
-    _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
-
+# Default configuration.
 'PHP 8.2 MySQL 8':
   <<: *default-stage
   variables:
-    _TARGET_DB_TYPE: "mysql"
-    _TARGET_DB_VERSION: "8"
-    _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
+    _TARGET_PHP: "8.2"
+    _TARGET_DB: "mysql-8"
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
-    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project"
-    - if: $CI_PIPELINE_SOURCE == "web" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
-'PHP 8.2 PostgreSQL 13.5':
-  <<: [ *default-stage, *run-manually ]
+# Run on commit, or manually.
+'PHP 8.1 MySQL 5.7':
+  <<: [ *default-stage, *run-on-commit ]
   variables:
-    _TARGET_DB_TYPE: "pgsql"
-    _TARGET_DB_VERSION: "13.5"
-    _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
+    _TARGET_PHP: "8.1"
+    _TARGET_DB: "mysql-5.7"
 
 'PHP 8.2 PostgreSQL 14.1':
-  <<: [ *default-stage, *run-manually ]
+  <<: [ *default-stage, *run-on-commit ]
   variables:
-    _TARGET_DB_TYPE: "pgsql"
-    _TARGET_DB_VERSION: "14.1"
-    _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
+    _TARGET_PHP: "8.2"
+    _TARGET_DB: "pgsql-14.1"
 
-# 'PHP 8.2 SQLite 3.26.0':
-#   <<: [ *default-stage, *run-manually ]
+# 'PHP 8.2 SQLite 3.34.0':
+#   <<: [ *default-stage, *run-on-commit ]
 #   variables:
-#     _TARGET_DB_TYPE: "sqlite"
-#     _TARGET_DB_VERSION: "3.26.0"
-#     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
+#     _TARGET_PHP: "8.2"
+#     _TARGET_DB: "php-$_TARGET_PHP-apache"
 
-# 'PHP 8.2 MariaDB 10.3.22':
-#   <<: [ *default-stage, *run-manually ]
+# Run daily, or manually.
+# 'PHP 8.1 MariaDB 10.3.22':
+#   <<: [ *default-stage, *run-daily ]
 #   variables:
-#     _TARGET_DB_TYPE: "mariadb"
-#     _TARGET_DB_VERSION: "10.3.22"
-#     _DB_IMAGE: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB_TYPE-$_TARGET_DB_VERSION:production
+#     _TARGET_PHP: "8.1"
+#     _TARGET_DB: "mariadb-10.3.22"
+
+# 'PHP 8.1 MySQL 5.7 with updated deps':
+#   <<: [ *default-stage, *run-daily ]
+#   variables:
+#     _TARGET_PHP: "8.1"
+#     _TARGET_DB: "mysql-5.7"
+
+'PHP 8.1 PostgreSQL 14.1':
+  <<: [ *default-stage, *run-daily ]
+  variables:
+    _TARGET_PHP: "8.1"
+    _TARGET_DB: "pgsql-14.1"
+
+# 'PHP 8.1 SQLite 3.27.0':
+#   <<: [ *default-stage, *run-daily ]
+#   variables:
+#     _TARGET_PHP: "8.1"
+#     _TARGET_DB: "php-$_TARGET_PHP-apache"
