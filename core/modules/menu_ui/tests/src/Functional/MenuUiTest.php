@@ -504,6 +504,10 @@ class MenuUiTest extends BrowserTestBase {
     $this->toggleMenuLink($item1);
     $this->toggleMenuLink($item2);
 
+    // Test the "Add child" link for two siblings.
+    $this->verifyAddChildLink($item5);
+    $this->verifyAddChildLink($item6);
+
     // Move link and verify that descendants are updated.
     $this->moveMenuLink($item2, $item5->getPluginId(), $menu_name);
     // Hierarchy
@@ -787,7 +791,7 @@ class MenuUiTest extends BrowserTestBase {
    */
   public function checkInvalidParentMenuLinks() {
     $last_link = NULL;
-    $created_links = [];
+    $plugin_ids = [];
 
     // Get the max depth of the tree.
     $menu_link_tree = \Drupal::service('menu.link_tree');
@@ -810,18 +814,28 @@ class MenuUiTest extends BrowserTestBase {
       $this->submitForm($edit, 'Save');
       $menu_links = \Drupal::entityTypeManager()->getStorage('menu_link_content')->loadByProperties(['title' => $title]);
       $last_link = reset($menu_links);
-      $created_links[] = 'tools:' . $last_link->getPluginId();
+      $plugin_ids[] = $last_link->getPluginId();
     }
+
+    $last_plugin_id = array_pop($plugin_ids);
 
     // The last link cannot be a parent in the new menu link form.
     $this->drupalGet('admin/structure/menu/manage/tools/add');
-    $value = 'tools:' . $last_link->getPluginId();
+    $value = 'tools:' . $last_plugin_id;
     $this->assertSession()->optionNotExists('edit-menu-parent', $value);
 
     // All but the last link can be parents in the new menu link form.
-    array_pop($created_links);
-    foreach ($created_links as $key => $link) {
-      $this->assertSession()->optionExists('edit-menu-parent', $link);
+    foreach ($plugin_ids as $plugin_id) {
+      $this->assertSession()->optionExists('edit-menu-parent', 'tools:' . $plugin_id);
+    }
+
+    // The last link does not have an "Add child" operation.
+    $this->drupalGet('admin/structure/menu/manage/tools');
+    $this->assertSession()->linkByHrefNotExists('parent=' . urlencode($last_plugin_id));
+
+    // All but the last link do have an "Add child" operation.
+    foreach ($plugin_ids as $plugin_id) {
+      $this->assertSession()->linkByHrefExists('parent=' . urlencode($plugin_id));
     }
   }
 
@@ -907,6 +921,25 @@ class MenuUiTest extends BrowserTestBase {
     // Verify menu link.
     $this->drupalGet('admin/structure/menu/manage/' . $item->getMenuName());
     $this->assertSession()->pageTextContains($title);
+  }
+
+  /**
+   * Verifies that the "Add child" link selects the correct parent item.
+   *
+   * @param \Drupal\menu_link_content\Entity\MenuLinkContent $item
+   *   Menu link entity.
+   */
+  public function verifyAddChildLink(MenuLinkContent $item): void {
+    $menu_name = $item->getMenuName();
+
+    $this->drupalGet('admin/structure/menu/manage/' . $menu_name);
+    $links = $this->xpath('//a[normalize-space()=:item_label]/following::a[normalize-space()=:link_label]', [
+      ':item_label' => $item->getTitle(),
+      ':link_label' => 'Add child',
+    ]);
+    $links[0]->click();
+    $option = $this->assertSession()->optionExists('edit-menu-parent', $menu_name . ':' . $item->getPluginId());
+    $this->assertTrue($option->isSelected());
   }
 
   /**

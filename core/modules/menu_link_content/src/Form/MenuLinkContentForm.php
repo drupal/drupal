@@ -89,7 +89,8 @@ class MenuLinkContentForm extends ContentEntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
-    $default = $this->entity->getMenuName() . ':' . $this->entity->getParentId();
+    $parent_id = $this->entity->getParentId() ?: $this->getRequest()->query->get('parent');
+    $default = $this->entity->getMenuName() . ':' . $parent_id;
     $id = $this->entity->isNew() ? '' : $this->entity->getPluginId();
     if ($this->entity->isNew()) {
       $menu_id = $this->entity->getMenuName();
