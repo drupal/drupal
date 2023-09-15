@@ -116,8 +116,6 @@ stages:
   MYSQL_DATABASE: mysql
   MYSQL_USER: drupaltestbot
   MYSQL_PASSWORD: drupaltestbotpw
-  MARIADB_TAG: $_TARGET_DB_VERSION
-  POSTGRES_TAG: $_TARGET_DB_VERSION
   POSTGRES_DB: drupaltestbot
   POSTGRES_USER: drupaltestbot
   POSTGRES_PASSWORD: drupaltestbotpw
@@ -126,7 +124,7 @@ stages:
   CI_PARALLEL_NODE_TOTAL: $CI_NODE_TOTAL
 
 .with-database: &with-database
-  name: $_DB_IMAGE
+  name: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB:production
   alias: database
 
 .with-chrome: &with-chrome
@@ -158,10 +156,10 @@ stages:
   script:
     # Determine DB driver.
     - |
-      [[ $_TARGET_DB_TYPE == "sqlite" ]] && export SIMPLETEST_DB=sqlite://localhost/subdirectory/sites/default/files/db.sqlite?module=sqlite
-      [[ $_TARGET_DB_TYPE == "mysql" ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
-      [[ $_TARGET_DB_TYPE == "mariadb" ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
-      [[ $_TARGET_DB_TYPE == "pgsql" ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
+      [[ $_TARGET_DB == php* ]] && export SIMPLETEST_DB=sqlite://localhost/subdirectory/sites/default/files/db.sqlite?module=sqlite
+      [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
+      [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
+      [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
     - export
     - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
     - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
@@ -182,15 +180,6 @@ stages:
 ################
 # Build Jobs
 ################
-
-'ℹ️ Output build parameters':
-  <<: *default-job-settings
-  stage: 🏗️ Build
-  script:
-    - echo "Checking variables"
-    - echo $_TARGET_PHP
-    - echo $_TARGET_DB_TYPE
-    - echo $_TARGET_DB_VERSION
 
 '📦️ Composer':
   <<: *default-job-settings
@@ -335,10 +324,10 @@ stages:
   script:
     # Determine DB driver.
     - |
-      [[ $_TARGET_DB_TYPE == "sqlite" ]] && export DRUPAL_TEST_DB_URL=sqlite://localhost/subdirectory/sites/default/files/db.sqlite?module=sqlite
-      [[ $_TARGET_DB_TYPE == "mysql" ]] && export DRUPAL_TEST_DB_URL=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
-      [[ $_TARGET_DB_TYPE == "mariadb" ]] && export DRUPAL_TEST_DB_URL=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
-      [[ $_TARGET_DB_TYPE == "pgsql" ]] && export DRUPAL_TEST_DB_URL=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
+      [[ $_TARGET_DB == php* ]] && export DRUPAL_TEST_DB_URL=sqlite://localhost/subdirectory/sites/default/files/db.sqlite?module=sqlite
+      [[ $_TARGET_DB == mysql* ]] && export DRUPAL_TEST_DB_URL=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
+      [[ $_TARGET_DB == mariadb* ]] && export DRUPAL_TEST_DB_URL=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
+      [[ $_TARGET_DB == pgsql* ]] && export DRUPAL_TEST_DB_URL=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
     - export
     - cp ./core/.env.example ./core/.env
     # dotenv-safe/config does not support environment variables
