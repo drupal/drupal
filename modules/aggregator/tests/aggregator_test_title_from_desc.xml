@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="0.91">
+  <channel>
+    <title>Example with no title</title>
+    <link>http://example.com</link>
+    <description>Example RSS Feed With no Title so that a Title is parsed from the Description</description>
+    <language>en-us</language>
+    <item>
+      <title></title>
+      <link>http://example.com/example-turns-one</link>
+      <description>This description should be used to generate a &lt;title&gt;title&lt;/title&gt;. This description should be used to generate a title. This description should be used to generate a &lt;title&gt;title&lt;/title&gt;. This description should be used to generate a title. This description should be used to generate a &lt;title&gt;title&lt;/title&gt;. This description should be used to generate a title. This description should be used to generate a &lt;title&gt;title&lt;/title&gt;. This description should be used to generate a title. This description should be used to generate a &lt;title&gt;title&lt;/title&gt;. This description should be used to generate a title.</description>
+    </item>
+  </channel>
+</rss>
