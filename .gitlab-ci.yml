@@ -78,21 +78,21 @@ variables:
       allow_failure: true
 
 # Default configuration.
-'PHP 8.2 MySQL 8':
+'PHP 8.1 MySQL 5.7':
   <<: *default-stage
   variables:
-    _TARGET_PHP: "8.2"
-    _TARGET_DB: "mysql-8"
+    _TARGET_PHP: "8.1"
+    _TARGET_DB: "mysql-5.7"
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 # Run on commit, or manually.
-'PHP 8.1 MySQL 5.7':
+'PHP 8.2 MySQL 8':
   <<: [ *default-stage, *run-on-commit ]
   variables:
-    _TARGET_PHP: "8.1"
-    _TARGET_DB: "mysql-5.7"
+    _TARGET_PHP: "8.2"
+    _TARGET_DB: "mysql-8"
 
 'PHP 8.2 PostgreSQL 14.1':
   <<: [ *default-stage, *run-on-commit ]
