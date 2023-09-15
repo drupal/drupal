@@ -1179,10 +1179,11 @@ function _node_access_rebuild_batch_operation(&$context) {
     ->execute();
   $node_storage->resetCache($nids);
   $nodes = Node::loadMultiple($nids);
-  foreach ($nodes as $nid => $node) {
+  foreach ($nids as $nid) {
     // To preserve database integrity, only write grants if the node
     // loads successfully.
-    if (!empty($node)) {
+    if (!empty($nodes[$nid])) {
+      $node = $nodes[$nid];
       /** @var \Drupal\node\NodeAccessControlHandlerInterface $access_control_handler */
       $access_control_handler = \Drupal::entityTypeManager()->getAccessControlHandler('node');
       $grants = $access_control_handler->acquireGrants($node);
