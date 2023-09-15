@@ -5,6 +5,7 @@ namespace Drupal\Tests\file\Functional;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\file\Entity\File;
 
 /**
@@ -54,7 +55,7 @@ class FileTokenReplaceTest extends FileFieldTestBase {
     $tests['[file:name]'] = Html::escape($file->getFilename());
     $tests['[file:path]'] = Html::escape($file->getFileUri());
     $tests['[file:mime]'] = Html::escape($file->getMimeType());
-    $tests['[file:size]'] = format_size($file->getSize());
+    $tests['[file:size]'] = ByteSizeMarkup::create($file->getSize());
     $tests['[file:url]'] = Html::escape($file->createFileUrl(FALSE));
     $tests['[file:created]'] = $date_formatter->format($file->getCreatedTime(), 'medium', '', NULL, $language_interface->getId());
     $tests['[file:created:short]'] = $date_formatter->format($file->getCreatedTime(), 'short', '', NULL, $language_interface->getId());
@@ -95,7 +96,7 @@ class FileTokenReplaceTest extends FileFieldTestBase {
     $tests['[file:name]'] = $file->getFilename();
     $tests['[file:path]'] = $file->getFileUri();
     $tests['[file:mime]'] = $file->getMimeType();
-    $tests['[file:size]'] = format_size($file->getSize());
+    $tests['[file:size]'] = ByteSizeMarkup::create($file->getSize());
 
     foreach ($tests as $input => $expected) {
       $output = $token_service->replace($input, ['file' => $file], ['langcode' => $language_interface->getId(), 'sanitize' => FALSE]);

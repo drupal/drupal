@@ -5,6 +5,7 @@ namespace Drupal\file\Plugin\Validation\Constraint;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -50,8 +51,8 @@ class FileSizeLimitConstraintValidator extends BaseFileConstraintValidator imple
 
     if ($fileLimit && $file->getSize() > $fileLimit) {
       $this->context->addViolation($constraint->maxFileSizeMessage, [
-        '%filesize' => format_size($file->getSize()),
-        '%maxsize' => format_size($fileLimit),
+        '%filesize' => ByteSizeMarkup::create($file->getSize()),
+        '%maxsize' => ByteSizeMarkup::create($fileLimit),
       ]);
     }
 
@@ -64,8 +65,8 @@ class FileSizeLimitConstraintValidator extends BaseFileConstraintValidator imple
       $spaceUsed = $fileStorage->spaceUsed($this->currentUser->id()) + $file->getSize();
       if ($spaceUsed > $userLimit) {
         $this->context->addViolation($constraint->diskQuotaMessage, [
-          '%filesize' => format_size($file->getSize()),
-          '%quota' => format_size($userLimit),
+          '%filesize' => ByteSizeMarkup::create($file->getSize()),
+          '%quota' => ByteSizeMarkup::create($userLimit),
         ]);
       }
     }

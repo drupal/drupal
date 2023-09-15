@@ -5,6 +5,7 @@ namespace Drupal\file\Plugin\Field\FieldFormatter;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
+use Drupal\Core\StringTranslation\ByteSizeMarkup;
 
 /**
  * Formatter that shows the file size in a human readable way.
@@ -33,7 +34,7 @@ class FileSize extends FormatterBase {
     $elements = [];
 
     foreach ($items as $delta => $item) {
-      $elements[$delta] = ['#markup' => format_size($item->value)];
+      $elements[$delta] = ['#markup' => ByteSizeMarkup::create((int) $item->value)];
     }
 
     return $elements;

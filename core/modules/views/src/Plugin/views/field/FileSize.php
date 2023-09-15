@@ -3,6 +3,7 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\views\ResultRow;
 
 /**
@@ -52,7 +53,7 @@ class FileSize extends FieldPluginBase {
 
         case 'formatted':
         default:
-          return format_size($value);
+          return ByteSizeMarkup::create((int) $value);
       }
     }
     else {

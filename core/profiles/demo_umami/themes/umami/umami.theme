@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\search\SearchPageInterface;
 use Drupal\views\Form\ViewsForm;
 use Drupal\Core\Render\Element;
@@ -150,7 +151,7 @@ function umami_form_alter(array &$form, FormStateInterface $form_state, $form_id
 function umami_preprocess_image_widget(&$variables) {
   if (!empty($variables['element']['fids']['#value'])) {
     $file = reset($variables['element']['#files']);
-    $variables['data']["file_{$file->id()}"]['filename']['#suffix'] = ' <span class="file-size">(' . format_size($file->getSize()) . ')</span> ';
+    $variables['data']["file_{$file->id()}"]['filename']['#suffix'] = ' <span class="file-size">(' . ByteSizeMarkup::create($file->getSize()) . ')</span> ';
   }
 }
 

@@ -22,6 +22,7 @@ use Drupal\Core\Render\Markup;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PrivateStream;
 use Drupal\Core\StreamWrapper\PublicStream;
+use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
@@ -422,7 +423,7 @@ function system_requirements($phase) {
     $requirements['php_apcu_available']['title'] = t('PHP APCu available caching');
     if (extension_loaded('apcu') && filter_var(ini_get('apc.enabled'), FILTER_VALIDATE_BOOLEAN)) {
       $memory_info = apcu_sma_info(TRUE);
-      $apcu_actual_size = format_size($memory_info['seg_size']);
+      $apcu_actual_size = ByteSizeMarkup::create($memory_info['seg_size']);
       $apcu_recommended_size = '32 MB';
       $requirements['php_apcu_enabled']['value'] = t('Enabled (@size)', ['@size' => $apcu_actual_size]);
       if (Bytes::toNumber($apcu_actual_size) < Bytes::toNumber($apcu_recommended_size)) {
@@ -450,7 +451,7 @@ function system_requirements($phase) {
           $requirements['php_apcu_available']['severity'] = REQUIREMENT_OK;
         }
         $requirements['php_apcu_available']['value'] = t('Memory available: @available.', [
-          '@available' => format_size($memory_info['avail_mem']),
+          '@available' => ByteSizeMarkup::create($memory_info['avail_mem']),
         ]);
       }
     }
