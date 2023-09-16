@@ -1,3 +1,5 @@
+# cspell:ignore drupaltestbot drupaltestbotpw codequality Micheh micheh
+
 ################
 # Drupal GitLabCI template.
 #
@@ -46,6 +48,77 @@ variables:
   CONCURRENCY: 32
   GIT_DEPTH: "3"
 
+
+#############
+# Stages    #
+#############
+stages:
+  - 🏗️ Build
+  - 🪄 Lint
+  - 🗜️ Test
+
+#############
+# Templates #
+#############
+
+.default-job-settings: &default-job-settings-lint
+  allow_failure: false
+  variables:
+    _TARGET_PHP: "8.2"
+    _TARGET_DB: "mysql-8"
+  image:
+    name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+.composer-cache: &composer-cache
+  key:
+    files:
+      - ./composer.json
+      - ./composer.lock
+  paths:
+    - ./vendor
+
+.yarn-cache: &yarn-cache
+  key:
+    files:
+      - ./core/package.json
+      - ./core/yarn.lock
+  paths:
+    - ./core/node_modules
+
+.pull-composer-cache: &pull-composer-cache
+  cache:
+    policy: pull
+    <<: *composer-cache
+  dependencies:
+    - '📦️ Composer'
+
+.with-composer-cache: &with-composer-cache
+  needs:
+    - '📦️ Composer'
+  <<: *pull-composer-cache
+
+.with-yarn-cache: &with-yarn-cache
+  dependencies:
+    - '📦️ Yarn'
+  needs:
+    - '📦️ Yarn'
+  cache:
+    policy: pull
+    <<: *yarn-cache
+
+.junit-artifacts: &junit-artifacts
+  artifacts:
+    expose_as: junit
+    expire_in: 6 mos
+    paths:
+      - junit.xml
+    reports:
+      junit: junit.xml
+
+
 ################
 # Stages
 #
@@ -57,7 +130,7 @@ variables:
 ################
 
 .default-stage: &default-stage
-  stage: test
+  stage: 🗜️ Test
   trigger:
     # Rely on the status of the child pipeline.
     strategy: depend
@@ -131,3 +204,82 @@ variables:
 #   variables:
 #     _TARGET_PHP: "8.1"
 #     _TARGET_DB: "php-$_TARGET_PHP-apache"
+
+
+################
+# Build Jobs for linting
+################
+
+'📦️ Composer':
+  <<: *default-job-settings-lint
+  stage: 🏗️ Build
+  cache:
+    <<: *composer-cache
+  artifacts:
+    expire_in: 1 week
+    expose_as: 'web-vendor'
+    paths:
+      - vendor/
+  script:
+      - export
+      - composer validate
+      - composer install
+
+'📦️ Yarn':
+  <<: *default-job-settings-lint
+  stage: 🏗️ Build
+  cache:
+    <<: *yarn-cache
+  artifacts:
+    expire_in: 1 week
+    expose_as: 'yarn-vendor'
+    paths:
+      - core/node_modules/
+  script:
+    # Installs all core javascript dependencies and adds junit formatter.
+    - yarn --cwd ./core add stylelint-junit-formatter
+
+################
+# Lint Jobs
+################
+
+'🧹 PHP Coding standards (PHPCS)':
+  <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings-lint ]
+  stage: 🪄 Lint
+  script:
+    - composer phpcs -- --report-junit=junit.xml --report-full --report-summary
+
+'🧹 PHP Static Analysis (phpstan)':
+  <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings-lint ]
+  stage: 🪄 Lint
+  script:
+    # Turn off apc to avoid corrupt composer cache.
+    - php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=junit > junit.xml
+
+'🧹 CSS linting (stylelint)':
+  <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings-lint ]
+  stage: 🪄 Lint
+  script:
+    - yarn run --cwd=./core lint:css --color --custom-formatter node_modules/stylelint-junit-formatter > junit.xml
+
+'🧹 Compilation check':
+  <<: [ *with-yarn-cache, *default-job-settings-lint ]
+  stage: 🪄 Lint
+  script:
+    - yarn run --cwd=./core build:css --check
+    - cd core && yarn run -s check:ckeditor5
+
+'🧹 JavaScript linting (eslint)':
+  <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings-lint ]
+  stage: 🪄 Lint
+  script:
+    - yarn --cwd=./core run -s lint:core-js-passing --format junit > junit.xml
+
+'📔 Spell-checking':
+  <<: [ *with-yarn-cache, *default-job-settings-lint ]
+  stage: 🪄 Lint
+  script:
+    - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
+    - git fetch -vn --depth=$GIT_DEPTH "${CI_MERGE_REQUEST_PROJECT_URL:-origin}" "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
+    - export MODIFIED=`git diff --name-only refs/heads/$TARGET_BRANCH|while read r;do echo "$CI_PROJECT_DIR/$r";done|tr "\n" " "`
+    - echo $MODIFIED | tr ' ' '\n' | yarn --cwd=./core run -s spellcheck:core --no-must-find-files --file-list stdin

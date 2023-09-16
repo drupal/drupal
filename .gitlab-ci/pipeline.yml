@@ -9,13 +9,6 @@ stages:
   - 🏗️ Build
 
   ################
-  # Code quality checks
-  #
-  # This stage includes any codebase validation before running tests.
-  ################
-  - 🪄 Lint
-
-  ################
   # Test
   #
   # The test phase actually executes the tests, as well as gathering results
@@ -80,18 +73,6 @@ stages:
       - junit.xml
     reports:
       junit: junit.xml
-
-.with-linting: &with-linting
-  needs:
-    - '📦️ Composer'
-    - '🧹 PHP Static Analysis (phpstan)'
-    - '🧹 PHP Coding standards (PHPCS)'
-    - '🧹 Compilation check'
-    - '📦️ Yarn'
-    - '📔 Spell-checking'
-    - '🧹 JavaScript linting (eslint)'
-    - '🧹 CSS linting (stylelint)'
-  <<: *pull-composer-cache
 
 .with-unit-tests: &with-unit-tests
   needs:
@@ -211,51 +192,6 @@ stages:
     - yarn --cwd ./core add stylelint-junit-formatter
 
 ################
-# Lint Jobs
-################
-
-'🧹 PHP Coding standards (PHPCS)':
-  <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings ]
-  stage: 🪄 Lint
-  script:
-    - composer phpcs -- --report-junit=junit.xml --report-full --report-summary
-
-'🧹 PHP Static Analysis (phpstan)':
-  <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings ]
-  stage: 🪄 Lint
-  script:
-    # Turn off apc to avoid corrupt composer cache.
-    - php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=junit > junit.xml
-
-'🧹 CSS linting (stylelint)':
-  <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings ]
-  stage: 🪄 Lint
-  script:
-    - yarn run --cwd=./core lint:css --color --custom-formatter node_modules/stylelint-junit-formatter > junit.xml
-
-'🧹 Compilation check':
-  <<: [ *with-yarn-cache, *default-job-settings ]
-  stage: 🪄 Lint
-  script:
-    - yarn run --cwd=./core build:css --check
-    - cd core && yarn run -s check:ckeditor5
-
-'🧹 JavaScript linting (eslint)':
-  <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings ]
-  stage: 🪄 Lint
-  script:
-    - yarn --cwd=./core run -s lint:core-js-passing --format junit > junit.xml
-
-'📔 Spell-checking':
-  <<: [ *with-yarn-cache, *default-job-settings ]
-  stage: 🪄 Lint
-  script:
-    - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
-    - git fetch -vn --depth=$GIT_DEPTH "${CI_MERGE_REQUEST_PROJECT_URL:-origin}" "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
-    - export MODIFIED=`git diff --name-only refs/heads/$TARGET_BRANCH|while read r;do echo "$CI_PROJECT_DIR/$r";done|tr "\n" " "`
-    - echo $MODIFIED | tr ' ' '\n' | yarn --cwd=./core run -s spellcheck:core --no-must-find-files --file-list stdin
-
-################
 # Test Jobs
 ################
 
@@ -271,10 +207,20 @@ stages:
     TESTSUITE: PHPUnit-Unit
     CONCURRENCY: "$CONCURRENCY"
 
-'⚙️️ PHPUnit Kernel':
-  <<: [ *with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
+'🌐️️ PHPUnit Functional':
+  <<: [ *with-unit-tests, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
-  parallel: 3
+  parallel: 6
+  variables:
+    <<: *test-variables
+    TESTSUITE: PHPUnit-Functional
+    CONCURRENCY: "$CONCURRENCY"
+  services:
+    - <<: *with-database
+
+'⚙️️ PHPUnit Kernel':
+  <<: [*with-unit-tests, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
+  stage: 🗜️ Test
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Kernel
@@ -283,7 +229,7 @@ stages:
     - <<: *with-database
 
 '🖱️️️ PHPUnit Functional Javascript':
-  <<: [ *with-linting, *with-unit-tests, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
+  <<: [ *with-unit-tests, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
   variables:
     <<: *test-variables
@@ -294,22 +240,11 @@ stages:
     - <<: *with-chrome
 
 '👷️️️ PHPUnit Build':
-  <<: [ *with-linting, *with-unit-tests, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
+  <<: [ *with-unit-tests, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Build
-    CONCURRENCY: "$CONCURRENCY"
-  services:
-    - <<: *with-database
-
-'🌐️️ PHPUnit Functional':
-  <<: [ *with-linting, *with-unit-tests, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
-  stage: 🗜️ Test
-  parallel: 8
-  variables:
-    <<: *test-variables
-    TESTSUITE: PHPUnit-Functional
     CONCURRENCY: "$CONCURRENCY"
   services:
     - <<: *with-database
