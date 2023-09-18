@@ -388,6 +388,29 @@ class WebAssert extends MinkWebAssert {
   }
 
   /**
+   * Passes if a link with a given href is found.
+   *
+   * @param string $href
+   *   The full value of the 'href' attribute of the anchor tag.
+   * @param int $index
+   *   Link position counting from zero.
+   * @param string $message
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
+   *   variables in the message text, not t(). If left blank, a default message
+   *   will be displayed.
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
+   *   Thrown when element doesn't exist, or the link label is a different one.
+   */
+  public function linkByHrefExistsExact(string $href, int $index = 0, string $message = ''): void {
+    $xpath = $this->buildXPathQuery('//a[@href=:href]', [':href' => $href]);
+    $message = ($message ?: strtr('No link with href %href found.', ['%href' => $href]));
+    $links = $this->session->getPage()->findAll('xpath', $xpath);
+    $this->assert(!empty($links[$index]), $message);
+  }
+
+  /**
    * Passes if a link containing a given href (part) is not found.
    *
    * @param string $href
@@ -404,6 +427,27 @@ class WebAssert extends MinkWebAssert {
   public function linkByHrefNotExists($href, $message = '') {
     $xpath = $this->buildXPathQuery('//a[contains(@href, :href)]', [':href' => $href]);
     $message = ($message ? $message : strtr('Link containing href %href found.', ['%href' => $href]));
+    $links = $this->session->getPage()->findAll('xpath', $xpath);
+    $this->assert(empty($links), $message);
+  }
+
+  /**
+   * Passes if a link with a given href is not found.
+   *
+   * @param string $href
+   *   The full value of the 'href' attribute of the anchor tag.
+   * @param string $message
+   *   (optional) A message to display with the assertion. Do not translate
+   *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
+   *   variables in the message text, not t(). If left blank, a default message
+   *   will be displayed.
+   *
+   * @throws \Behat\Mink\Exception\ExpectationException
+   *   Thrown when element doesn't exist, or the link label is a different one.
+   */
+  public function linkByHrefNotExistsExact(string $href, string $message = ''): void {
+    $xpath = $this->buildXPathQuery('//a[@href=:href]', [':href' => $href]);
+    $message = ($message ?: strtr('Link with href %href found.', ['%href' => $href]));
     $links = $this->session->getPage()->findAll('xpath', $xpath);
     $this->assert(empty($links), $message);
   }
