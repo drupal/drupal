@@ -67,7 +67,7 @@ tr.selected td {
       box-shadow: none;
     }
   }
-  & .button--primary {
+  & .button--primary:not(:disabled, .is-disabled) {
     background: var(--color-blue-400);
     &:hover {
       background: var(--color-blue-500);
