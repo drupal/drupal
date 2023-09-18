@@ -62,6 +62,7 @@ stages:
 #############
 
 .default-job-settings: &default-job-settings-lint
+  interruptible: true
   allow_failure: false
   variables:
     _TARGET_PHP: "8.2"
