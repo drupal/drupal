@@ -186,30 +186,40 @@ class MenuUiTest extends BrowserTestBase {
     }
 
     // Test alphabetical order without pager.
-    $menus = [];
+    $menu_entities = [];
     for ($i = 1; $i < 6; $i++) {
-      $menus[] = strtolower($this->getRandomGenerator()->name());
+      $menu = strtolower($this->getRandomGenerator()->name());
+      $menu_entity = Menu::create(['id' => $menu, 'label' => $menu]);
+      $menu_entities[] = $menu_entity;
+      $menu_entity->save();
     }
-    sort($menus);
-    foreach ($menus as $menu) {
-      Menu::create(['id' => $menu, 'label' => $menu])->save();
-    }
+    uasort($menu_entities, [Menu::class, 'sort']);
+    $menu_entities = array_values($menu_entities);
     $this->drupalGet('/admin/structure/menu');
     $base_path = parse_url($this->baseUrl, PHP_URL_PATH) ?? '';
     $first_link = $this->assertSession()->elementExists('css', 'tbody tr:nth-of-type(1) a');
     $last_link = $this->assertSession()->elementExists('css', 'tbody tr:nth-of-type(5) a');
-    $this->assertEquals($first_link->getAttribute('href'), sprintf('%s/admin/structure/menu/manage/%s', $base_path, $menus[0]));
-    $this->assertEquals($last_link->getAttribute('href'), sprintf('%s/admin/structure/menu/manage/%s', $base_path, $menus[4]));
+    $this->assertEquals($first_link->getAttribute('href'), sprintf('%s/admin/structure/menu/manage/%s', $base_path, $menu_entities[0]->label()));
+    $this->assertEquals($last_link->getAttribute('href'), sprintf('%s/admin/structure/menu/manage/%s', $base_path, $menu_entities[4]->label()));
+
     // Test alphabetical order with pager.
-    $new_menus = [];
+    $new_menu_entities = [];
     for ($i = 1; $i < 61; $i++) {
-      $new_menus[] = strtolower($this->getRandomGenerator()->name());
+      $new_menu = strtolower($this->getRandomGenerator()->name());
+      $new_menu_entity = Menu::create(['id' => $new_menu, 'label' => $new_menu]);
+      $new_menu_entities[] = $new_menu_entity;
+      $new_menu_entity->save();
     }
-    foreach ($new_menus as $menu) {
-      Menu::create(['id' => $menu, 'label' => $menu])->save();
-    }
-    $menus = array_merge($menus, $new_menus);
-    sort($menus);
+    $menu_entities = array_merge($menu_entities, $new_menu_entities);
+
+    // To accommodate the current non-natural sorting of the pager, we have to
+    // first non-natural sort the array of menu entities, and then do a
+    // natural-sort on the ones that are on page 1.
+    sort($menu_entities);
+    $menu_entities_page_one = array_slice($menu_entities, 50, 64, TRUE);
+    uasort($menu_entities_page_one, [Menu::class, 'sort']);
+    $menu_entities_page_one = array_values($menu_entities_page_one);
+
     $this->drupalGet('/admin/structure/menu', [
       'query' => [
         'page' => 1,
@@ -217,8 +227,8 @@ class MenuUiTest extends BrowserTestBase {
     ]);
     $first_link = $this->assertSession()->elementExists('css', 'tbody tr:nth-of-type(1) a');
     $last_link = $this->assertSession()->elementExists('css', 'tbody tr:nth-of-type(15) a');
-    $this->assertEquals($first_link->getAttribute('href'), sprintf('%s/admin/structure/menu/manage/%s', $base_path, $menus[50]));
-    $this->assertEquals($last_link->getAttribute('href'), sprintf('%s/admin/structure/menu/manage/%s', $base_path, $menus[64]));
+    $this->assertEquals($first_link->getAttribute('href'), sprintf('%s/admin/structure/menu/manage/%s', $base_path, $menu_entities_page_one[0]->label()));
+    $this->assertEquals($last_link->getAttribute('href'), sprintf('%s/admin/structure/menu/manage/%s', $base_path, $menu_entities_page_one[14]->label()));
   }
 
   /**
