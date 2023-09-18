@@ -108,6 +108,30 @@ class EntityUrlTest extends UnitTestCase {
   }
 
   /**
+   * Tests the toUrl() method without specifying the $rel parameter..
+   *
+   * @covers ::toUrl
+   */
+  public function testToUrlDefault() {
+    $values = ['id' => $this->entityId];
+    $entity = $this->getEntity(UrlTestEntity::class, $values);
+
+    $this->expectException(UndefinedLinkTemplateException::class);
+    $this->expectExceptionMessage("Cannot generate default URL because no link template 'canonical' or 'edit-form' was found for the '" . $this->entityTypeId . "' entity type");
+    $entity->toUrl();
+
+    $this->registerLinkTemplate('edit-form');
+    /** @var \Drupal\Core\Url $url */
+    $url = $entity->toUrl();
+    $this->assertUrl('entity.test_entity.edit_form', ['test_entity' => $this->entityId], $entity, FALSE, $url);
+
+    $this->registerLinkTemplate('canonical');
+    /** @var \Drupal\Core\Url $url */
+    $url = $entity->toUrl();
+    $this->assertUrl('entity.test_entity.canonical', ['test_entity' => $this->entityId], $entity, FALSE, $url);
+  }
+
+  /**
    * Tests the toUrl() method with simple link templates.
    *
    * @param string $link_template

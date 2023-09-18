@@ -26,7 +26,7 @@ class EntityTestExternal extends EntityTest {
   /**
    * {@inheritdoc}
    */
-  public function toUrl($rel = 'canonical', array $options = []) {
+  public function toUrl($rel = NULL, array $options = []) {
     if ($rel === 'canonical') {
       return Url::fromUri('http://example.com', $options);
     }

@@ -120,7 +120,9 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    * entity/entityType/id.
    *
    * @param string $rel
-   *   The link relationship type, for example: canonical or edit-form.
+   *   The link relationship type, for example: canonical or edit-form. If none
+   *   is provided, canonical is assumed, or edit-form if no canonical link
+   *   exists.
    * @param array $options
    *   See \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute() for
    *   the available options.
@@ -131,7 +133,7 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    * @throws \Drupal\Core\Entity\EntityMalformedException
    * @throws \Drupal\Core\Entity\Exception\UndefinedLinkTemplateException
    */
-  public function toUrl($rel = 'canonical', array $options = []);
+  public function toUrl($rel = NULL, array $options = []);
 
   /**
    * Generates the HTML for a link to this entity.

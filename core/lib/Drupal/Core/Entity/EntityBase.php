@@ -156,13 +156,26 @@ abstract class EntityBase implements EntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function toUrl($rel = 'canonical', array $options = []) {
+  public function toUrl($rel = NULL, array $options = []) {
     if ($this->id() === NULL) {
       throw new EntityMalformedException(sprintf('The "%s" entity cannot have a URI as it does not have an ID', $this->getEntityTypeId()));
     }
 
     // The links array might contain URI templates set in annotations.
     $link_templates = $this->linkTemplates();
+
+    // Use the canonical link template by default, or edit-form if there is not
+    // a canonical one.
+    if ($rel === NULL) {
+      $rel_candidates = array_intersect(
+        ['canonical', 'edit-form'],
+        array_flip($link_templates),
+      );
+      $rel = array_shift($rel_candidates);
+      if ($rel === NULL) {
+        throw new UndefinedLinkTemplateException("Cannot generate default URL because no link template 'canonical' or 'edit-form' was found for the '{$this->getEntityTypeId()}' entity type");
+      }
+    }
 
     // Links pointing to the current revision point to the actual entity. So
     // instead of using the 'revision' link, use the 'canonical' link.

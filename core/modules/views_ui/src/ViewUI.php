@@ -1004,7 +1004,7 @@ class ViewUI implements ViewEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function toUrl($rel = 'edit-form', array $options = []) {
+  public function toUrl($rel = NULL, array $options = []) {
     return $this->storage->toUrl($rel, $options);
   }
 
