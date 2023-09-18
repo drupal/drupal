@@ -1,0 +1,13 @@
+id: config_test.dynamic.enforced_and_base_dependencies
+label: 'Module test with a mix of enforced and base modular dependencies'
+weight: 0
+style: ''
+status: true
+langcode: en
+protected_property: Default
+dependencies:
+  enforced:
+    module:
+      - config_install_dependency_enforced_combo_test
+  module:
+    - readonly_field_widget
