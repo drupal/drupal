@@ -175,6 +175,18 @@ stages:
     _TARGET_PHP: "8.2"
     _TARGET_DB: "pgsql-14.1"
 
+'PHP 8.2 PostgreSQL 15':
+  <<: [ *default-stage, *run-on-commit ]
+  variables:
+    _TARGET_PHP: "8.2"
+    _TARGET_DB: "pgsql-15"
+
+'PHP 8.2 PostgreSQL 16':
+  <<: [ *default-stage, *run-on-commit ]
+  variables:
+    _TARGET_PHP: "8.2"
+    _TARGET_DB: "pgsql-16"
+
 # 'PHP 8.2 SQLite 3.34.0':
 #   <<: [ *default-stage, *run-on-commit ]
 #   variables:
