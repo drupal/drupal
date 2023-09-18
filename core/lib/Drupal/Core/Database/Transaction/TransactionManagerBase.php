@@ -187,7 +187,7 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
     }
 
     // Define an unique id for the transaction.
-    $id = uniqid();
+    $id = uniqid('', TRUE);
 
     // Add an item on the stack, increasing its depth.
     $this->addStackItem($id, new StackItem($name, $type));
