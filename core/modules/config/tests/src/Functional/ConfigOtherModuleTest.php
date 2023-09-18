@@ -90,6 +90,11 @@ class ConfigOtherModuleTest extends BrowserTestBase {
     // recreated.
     $this->installModule('config');
     $this->assertNull($this->getStorage()->load('other_module_test_optional_entity_unmet'), 'The optional configuration config_test.dynamic.other_module_test_optional_entity_unmet whose dependencies are met is not installed when an unrelated module is installed.');
+
+    // Ensure that enforced dependencies do not overwrite base ones.
+    $this->installModule('config_install_dependency_enforced_combo_test');
+    $this->assertTrue(\Drupal::moduleHandler()->moduleExists('config_install_dependency_enforced_combo_test'), 'The config_install_dependency_enforced_combo_test module is installed.');
+    $this->assertNull($this->getStorage()->load('config_test.dynamic.enforced_and_base_dependencies'), 'The optional configuration config_test.dynamic.enforced_and_base_dependencies whose enforced dependencies are met but base module dependencies are not met is not created.');
   }
 
   /**

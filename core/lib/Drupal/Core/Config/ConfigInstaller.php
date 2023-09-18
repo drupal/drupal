@@ -3,6 +3,7 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\Entity\ConfigDependencyManager;
 use Drupal\Core\Extension\ExtensionPathResolver;
 use Drupal\Core\Installer\InstallerKernel;
@@ -620,7 +621,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
 
       // Ensure enforced dependencies are included.
       if (isset($all_dependencies['enforced'])) {
-        $all_dependencies = array_merge($all_dependencies, $data['dependencies']['enforced']);
+        $all_dependencies = NestedArray::mergeDeep($all_dependencies, $data['dependencies']['enforced']);
         unset($all_dependencies['enforced']);
       }
       // Ensure the configuration entity type provider is in the list of
