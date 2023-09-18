@@ -1,0 +1,5 @@
+name: 'User language tests'
+type: module
+description: 'Support module for user language testing.'
+package: Testing
+version: VERSION
