@@ -215,7 +215,7 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
   /**
    * {@inheritdoc}
    */
-  public function fetchObject(string $class_name = NULL, array $constructor_arguments = NULL) {
+  public function fetchObject(string $class_name = NULL, array $constructor_arguments = []) {
     if ($class_name) {
       $row = $this->clientStatement->fetchObject($class_name, $constructor_arguments);
     }

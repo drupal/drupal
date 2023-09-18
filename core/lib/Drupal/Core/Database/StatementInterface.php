@@ -125,7 +125,7 @@ interface StatementInterface extends \Traversable {
    *
    * @param string|null $class_name
    *   Name of the created class.
-   * @param array|null $constructor_arguments
+   * @param array $constructor_arguments
    *   Elements of this array are passed to the constructor.
    * phpcs:enable
    *
@@ -133,7 +133,7 @@ interface StatementInterface extends \Traversable {
    *   The object of specified class or \stdClass if not specified. Returns
    *   FALSE or NULL if there is no next row.
    */
-  public function fetchObject(/* string $class_name = NULL, array $constructor_arguments = NULL */);
+  public function fetchObject(/* string $class_name = NULL, array $constructor_arguments = [] */);
 
   /**
    * Fetches the next row and returns it as an associative array.
