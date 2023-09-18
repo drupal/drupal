@@ -2,6 +2,7 @@
 
 namespace Drupal\FunctionalTests\Entity;
 
+use Drupal\Core\Entity\Controller\VersionHistoryController;
 use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\entity_test_revlog\Entity\EntityTestWithRevisionLog;
 use Drupal\Tests\BrowserTestBase;
@@ -303,6 +304,46 @@ class RevisionVersionHistoryTest extends BrowserTestBase {
     $this->assertSession()->elementNotExists('named', ['link', 'Delete'], $row3);
     $this->drupalGet($entity->toUrl('version-history'));
     $this->assertSession()->elementsCount('css', 'table tbody tr', 3);
+  }
+
+  /**
+   * Test revisions are paginated.
+   */
+  public function testRevisionsPagination(): void {
+    /** @var \Drupal\entity_test\Entity\EntityTestRev $entity */
+    $entity = EntityTestRev::create([
+      'type' => 'entity_test_rev',
+      'name' => 'view all revisions,view revision',
+    ]);
+    $entity->save();
+
+    $firstRevisionId = $entity->getRevisionId();
+
+    for ($i = 0; $i < VersionHistoryController::REVISIONS_PER_PAGE; $i++) {
+      $entity->setNewRevision(TRUE);
+      // We need to change something on the entity for it to be considered a new
+      // revision to display. We need "view all revisions" and "view revision"
+      // in a comma separated string to grant access.
+      $entity->setName('view all revisions,view revision,' . $i)->save();
+    }
+
+    $this->drupalGet($entity->toUrl('version-history'));
+    $this->assertSession()->elementsCount('css', 'table tbody tr', VersionHistoryController::REVISIONS_PER_PAGE);
+    $this->assertSession()->elementExists('css', '.pager');
+
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
+    $storage = $this->container->get('entity_type.manager')->getStorage($entity->getEntityTypeId());
+    $firstRevision = $storage->loadRevision($firstRevisionId);
+    $secondRevision = $storage->loadRevision($firstRevisionId + 1);
+    // We should see everything up to the second revision, but not the first.
+    $this->assertSession()->linkByHrefExists($secondRevision->toUrl('revision')->toString());
+    $this->assertSession()->linkByHrefNotExists($firstRevision->toUrl('revision')->toString());
+    // The next page should show just the first revision.
+    $this->clickLink('Go to next page');
+    $this->assertSession()->elementsCount('css', 'table tbody tr', 1);
+    $this->assertSession()->elementExists('css', '.pager');
+    $this->assertSession()->linkByHrefNotExists($secondRevision->toUrl('revision')->toString());
+    $this->assertSession()->linkByHrefExists($firstRevision->toUrl('revision')->toString());
   }
 
 }
