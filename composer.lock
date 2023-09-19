@@ -491,7 +491,7 @@
         },
         {
             "name": "drupal/core",
-            "version": "10.1.3",
+            "version": "10.1.4",
             "dist": {
                 "type": "path",
                 "url": "core",
@@ -648,7 +648,7 @@
         },
         {
             "name": "drupal/core-project-message",
-            "version": "10.1.3",
+            "version": "10.1.4",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/ProjectMessage",
@@ -681,7 +681,7 @@
         },
         {
             "name": "drupal/core-vendor-hardening",
-            "version": "10.1.3",
+            "version": "10.1.4",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/VendorHardening",
