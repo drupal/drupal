@@ -51,6 +51,12 @@ class HttpExceptionNormalizer extends NormalizerBase {
   public function normalize($object, $format = NULL, array $context = []) {
     $cacheability = new CacheableMetadata();
     $cacheability->addCacheableDependency($object);
+
+    $cacheability->addCacheTags(['config:system.logging']);
+    if (\Drupal::config('system.logging')->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {
+      $cacheability->setCacheMaxAge(0);
+    }
+
     return new HttpExceptionNormalizerValue($cacheability, static::rasterizeValueRecursive($this->buildErrorObjects($object)));
   }
 
@@ -89,7 +95,10 @@ class HttpExceptionNormalizer extends NormalizerBase {
     if ($exception->getCode() !== 0) {
       $error['code'] = (string) $exception->getCode();
     }
-    if ($this->currentUser->hasPermission('access site reports')) {
+
+    $is_verbose_reporting = \Drupal::config('system.logging')->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE;
+    $site_report_access = $this->currentUser->hasPermission('access site reports');
+    if ($site_report_access && $is_verbose_reporting) {
       // The following information may contain sensitive information. Only show
       // it to authorized users.
       $error['source'] = [
