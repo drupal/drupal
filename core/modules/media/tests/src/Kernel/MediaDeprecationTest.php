@@ -24,7 +24,7 @@ class MediaDeprecationTest extends KernelTestBase {
    * @see EditorMediaDialog
    */
   public function testEditorLinkDialog(): void {
-    $this->expectDeprecation('Drupal\media\Form\EditorMediaDialog is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/project/drupal/issues/3291493');
+    $this->expectDeprecation('Drupal\media\Form\EditorMediaDialog is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3291493');
     new EditorMediaDialog($this->createMock('\Drupal\Core\Entity\EntityRepository'), $this->createMock('\Drupal\Core\Entity\EntityDisplayRepository'));
   }
 

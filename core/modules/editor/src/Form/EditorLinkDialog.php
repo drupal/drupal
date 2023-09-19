@@ -16,7 +16,7 @@ use Drupal\Core\Ajax\CloseModalDialogCommand;
  * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
  * replacement.
  *
- * @see https://www.drupal.org/project/drupal/issues/3291493
+ * @see https://www.drupal.org/node/3291493
  *
  * @internal
  */
@@ -26,7 +26,7 @@ class EditorLinkDialog extends FormBase {
    * Constructs a form object for link dialog.
    */
   public function __construct() {
-    @trigger_error(__NAMESPACE__ . '\EditorLinkDialog is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/project/drupal/issues/3291493', E_USER_DEPRECATED);
+    @trigger_error(__NAMESPACE__ . '\EditorLinkDialog is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3291493', E_USER_DEPRECATED);
   }
 
   /**

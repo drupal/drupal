@@ -30,9 +30,9 @@
 
 # Skip deprecations for EditorMediaDialog, EditorImageDialog and EditorLinkDialog triggered by
 # \Drupal\Core\Entity\EntityResolverManager::setRouteOptions().
-%Drupal\\media\\Form\\EditorMediaDialog is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/project/drupal/issues/3291493%
-%Drupal\\editor\\Form\\EditorImageDialog is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/project/drupal/issues/3291493%
-%Drupal\\editor\\Form\\EditorLinkDialog is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/project/drupal/issues/3291493%
+%Drupal\\media\\Form\\EditorMediaDialog is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3291493%
+%Drupal\\editor\\Form\\EditorImageDialog is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3291493%
+%Drupal\\editor\\Form\\EditorLinkDialog is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3291493%
 
 # Symfony 7.
 %Method "Symfony\\Contracts\\Service\\ResetInterface::reset\(\)" might add "void" as a native return type declaration in the future. Do the same in implementation "Drupal\\Component\\DependencyInjection\\Container" now to avoid errors or add an explicit @return annotation to suppress this message.%
