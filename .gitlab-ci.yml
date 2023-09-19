@@ -248,8 +248,7 @@ stages:
     paths:
       - core/node_modules/
   script:
-    # Installs all core javascript dependencies and adds junit formatter.
-    - yarn --cwd ./core add stylelint-junit-formatter
+    - yarn --cwd ./core install
 
 ################
 # Lint Jobs
@@ -259,20 +258,31 @@ stages:
   <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
   script:
-    - composer phpcs -- --report-junit=junit.xml --report-full --report-summary
+    - composer phpcs -- --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
+  artifacts:
+    reports:
+      codequality: phpcs-quality-report.json
 
 '🧹 PHP Static Analysis (phpstan)':
   <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
   script:
     # Turn off apc to avoid corrupt composer cache.
-    - php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=junit > junit.xml
+    - php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > phpstan-quality-report.json
+  artifacts:
+    reports:
+      codequality: phpstan-quality-report.json
 
 '🧹 CSS linting (stylelint)':
   <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
+  variables:
+    STYLELINT_CODE_QUALITY_REPORT: ../stylelint-quality-report.json
   script:
-    - yarn run --cwd=./core lint:css --color --custom-formatter node_modules/stylelint-junit-formatter > junit.xml
+    - yarn run --cwd=./core lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
+  artifacts:
+    reports:
+      codequality: stylelint-quality-report.json
 
 '🧹 Compilation check':
   <<: [ *with-yarn-cache, *default-job-settings-lint ]
@@ -284,8 +294,13 @@ stages:
 '🧹 JavaScript linting (eslint)':
   <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
+  variables:
+    ESLINT_CODE_QUALITY_REPORT: ../eslint-quality-report.json
   script:
-    - yarn --cwd=./core run -s lint:core-js-passing --format junit > junit.xml
+    - yarn --cwd=./core run -s lint:core-js-passing --format gitlab
+  artifacts:
+    reports:
+      codequality: eslint-quality-report.json
 
 '📔 Spell-checking':
   <<: [ *with-yarn-cache, *default-job-settings-lint ]

@@ -16,6 +16,7 @@
         "instaclick/php-webdriver": "^1.4.1",
         "justinrainbow/json-schema": "^5.2",
         "mglaman/phpstan-drupal": "^1.2",
+        "micheh/phpcs-gitlab": "^1.1",
         "mikey179/vfsstream": "^1.6.11",
         "open-telemetry/exporter-otlp": "@beta",
         "open-telemetry/sdk": "@beta",

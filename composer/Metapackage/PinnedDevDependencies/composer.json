@@ -26,6 +26,7 @@
         "instaclick/php-webdriver": "1.4.16",
         "justinrainbow/json-schema": "5.2.12",
         "mglaman/phpstan-drupal": "1.2.0",
+        "micheh/phpcs-gitlab": "1.1.0",
         "mikey179/vfsstream": "v1.6.11",
         "myclabs/deep-copy": "1.11.1",
         "nikic/php-parser": "v4.15.5",
