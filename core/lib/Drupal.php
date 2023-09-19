@@ -75,7 +75,7 @@ class Drupal {
   /**
    * The current system version.
    */
-  const VERSION = '10.0.10';
+  const VERSION = '10.0.11';
 
   /**
    * Core API compatibility.
