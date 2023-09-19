@@ -170,13 +170,13 @@ stages:
     _TARGET_DB: "mysql-8"
 
 'PHP 8.2 PostgreSQL 14.1':
-  <<: [ *default-stage, *run-on-commit ]
+  <<: [ *default-stage, *run-daily ]
   variables:
     _TARGET_PHP: "8.2"
     _TARGET_DB: "pgsql-14.1"
 
 'PHP 8.2 PostgreSQL 15':
-  <<: [ *default-stage, *run-on-commit ]
+  <<: [ *default-stage, *run-daily ]
   variables:
     _TARGET_PHP: "8.2"
     _TARGET_DB: "pgsql-15"
