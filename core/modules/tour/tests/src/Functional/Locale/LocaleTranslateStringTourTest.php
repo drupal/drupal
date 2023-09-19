@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\Tests\locale\Functional;
+namespace Drupal\Tests\tour\Functional\Locale;
 
 use Drupal\Tests\tour\Functional\TourTestBase;
 
 /**
  * Tests the Translate Interface tour.
  *
- * @group locale
+ * @group tour
  */
 class LocaleTranslateStringTourTest extends TourTestBase {
 

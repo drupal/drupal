@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\Tests\block\Functional;
+namespace Drupal\Tests\tour\Functional\Block;
 
 use Drupal\Tests\tour\Functional\TourTestBase;
 
 /**
  * Tests the Block Layout tour.
  *
- * @group block
+ * @group tour
  */
 class BlockLayoutTourTest extends TourTestBase {
 

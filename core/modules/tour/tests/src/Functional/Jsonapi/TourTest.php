@@ -1,14 +1,15 @@
 <?php
 
-namespace Drupal\Tests\jsonapi\Functional;
+namespace Drupal\Tests\tour\Functional\Jsonapi;
 
 use Drupal\Core\Url;
+use Drupal\Tests\jsonapi\Functional\ConfigEntityResourceTestBase;
 use Drupal\tour\Entity\Tour;
 
 /**
  * JSON:API integration test for the "Tour" config entity type.
  *
- * @group jsonapi
+ * @group tour
  */
 class TourTest extends ConfigEntityResourceTestBase {
 
