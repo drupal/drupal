@@ -25,7 +25,7 @@ class EditorDeprecationTest extends KernelTestBase {
    * @see EditorLinkDialog
    */
   public function testEditorLinkDialog(): void {
-    $this->expectDeprecation('Drupal\editor\Form\EditorLinkDialog is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/project/drupal/issues/3291493');
+    $this->expectDeprecation('Drupal\editor\Form\EditorLinkDialog is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3291493');
     new EditorLinkDialog();
   }
 
@@ -35,7 +35,7 @@ class EditorDeprecationTest extends KernelTestBase {
    * @see EditorImageDialog
    */
   public function testEditorImageDialog(): void {
-    $this->expectDeprecation('Drupal\editor\Form\EditorImageDialog is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/project/drupal/issues/3291493');
+    $this->expectDeprecation('Drupal\editor\Form\EditorImageDialog is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3291493');
     new EditorImageDialog($this->createMock('\Drupal\file\FileStorage'));
   }
 

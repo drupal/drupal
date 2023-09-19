@@ -20,7 +20,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
  * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
  * replacement.
  *
- * @see https://www.drupal.org/project/drupal/issues/3291493
+ * @see https://www.drupal.org/node/3291493
  *
  * @internal
  */
@@ -40,7 +40,7 @@ class EditorImageDialog extends FormBase {
    *   The file storage service.
    */
   public function __construct(EntityStorageInterface $file_storage) {
-    @trigger_error(__NAMESPACE__ . '\EditorImageDialog is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/project/drupal/issues/3291493', E_USER_DEPRECATED);
+    @trigger_error(__NAMESPACE__ . '\EditorImageDialog is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3291493', E_USER_DEPRECATED);
     $this->fileStorage = $file_storage;
   }
 
