@@ -276,8 +276,6 @@ stages:
 '🧹 CSS linting (stylelint)':
   <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
-  variables:
-    STYLELINT_CODE_QUALITY_REPORT: ../stylelint-quality-report.json
   script:
     - yarn run --cwd=./core lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
   artifacts:
@@ -294,8 +292,6 @@ stages:
 '🧹 JavaScript linting (eslint)':
   <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
-  variables:
-    ESLINT_CODE_QUALITY_REPORT: ../eslint-quality-report.json
   script:
     - yarn --cwd=./core run -s lint:core-js-passing --format gitlab
   artifacts:
