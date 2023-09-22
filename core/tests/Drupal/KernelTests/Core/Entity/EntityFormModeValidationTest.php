@@ -34,4 +34,12 @@ class EntityFormModeValidationTest extends ConfigEntityValidationTestBase {
     $this->entity->save();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function testImmutableProperties(array $valid_values = []): void {
+    $valid_values['id'] = 'user.test_changed';
+    parent::testImmutableProperties($valid_values);
+  }
+
 }

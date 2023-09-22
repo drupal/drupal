@@ -86,4 +86,16 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
     $this->assertValidationErrors([]);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function testImmutableProperties(array $valid_values = []): void {
+    // If we don't clear the previous settings here, we will get unrelated
+    // validation errors (in addition to the one we're expecting), because the
+    // settings from the *old* field_type won't match the config schema for the
+    // settings of the *new* field_type.
+    $this->entity->set('settings', []);
+    parent::testImmutableProperties($valid_values);
+  }
+
 }

@@ -36,6 +36,9 @@ use Drupal\Core\Entity\EntityFormModeInterface;
  *     "description",
  *     "targetEntityType",
  *     "cache",
+ *   },
+ *   constraints = {
+ *     "ImmutableProperties" = {"id", "targetEntityType"},
  *   }
  * )
  */

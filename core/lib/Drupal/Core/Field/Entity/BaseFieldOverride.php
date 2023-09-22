@@ -37,6 +37,9 @@ use Drupal\Core\Field\FieldException;
  *     "default_value_callback",
  *     "settings",
  *     "field_type",
+ *   },
+ *   constraints = {
+ *     "ImmutableProperties" = {"id", "entity_type", "bundle", "field_name", "field_type"},
  *   }
  * )
  */

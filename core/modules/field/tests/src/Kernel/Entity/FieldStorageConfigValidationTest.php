@@ -15,7 +15,7 @@ class FieldStorageConfigValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['field', 'user'];
+  protected static $modules = ['field', 'node', 'user'];
 
   /**
    * {@inheritdoc}

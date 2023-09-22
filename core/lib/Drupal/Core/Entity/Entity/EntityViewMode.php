@@ -38,6 +38,9 @@ use Drupal\Core\Entity\EntityViewModeInterface;
  *     "description",
  *     "targetEntityType",
  *     "cache",
+ *   },
+ *   constraints = {
+ *     "ImmutableProperties" = {"id", "targetEntityType"},
  *   }
  * )
  */
