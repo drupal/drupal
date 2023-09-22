@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: test_field_argument_tokens
-label: null
+label: test_field_argument_tokens
 module: views
 description: ''
 tag: ''

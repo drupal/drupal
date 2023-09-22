@@ -4,7 +4,7 @@ dependencies:
   module:
     - node
 id: test_pager_some
-label: ''
+label: test_pager_some
 module: views
 description: ''
 tag: ''

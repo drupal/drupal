@@ -4,7 +4,7 @@ dependencies:
   content:
     - entity_test:entity_test:aa0c61cb-b7bb-4795-972a-493dabcf529c
 id: test_entity_area
-label: ''
+label: test_entity_area
 module: views
 description: ''
 tag: ''

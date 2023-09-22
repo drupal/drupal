@@ -2,6 +2,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: test_field_config_translation_filter
+label: test_field_config_translation_filter
 module: views
 description: ''
 tag: ''

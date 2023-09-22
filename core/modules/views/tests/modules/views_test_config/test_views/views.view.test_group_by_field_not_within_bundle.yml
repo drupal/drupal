@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: test_group_by_field_not_within_bundle
-label: ''
+label: test_group_by_field_not_within_bundle
 module: views
 description: ''
 tag: ''

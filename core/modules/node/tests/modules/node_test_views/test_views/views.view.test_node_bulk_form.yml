@@ -4,7 +4,7 @@ dependencies:
   module:
     - node
 id: test_node_bulk_form
-label: ''
+label: test_node_bulk_form
 module: views
 description: ''
 tag: ''

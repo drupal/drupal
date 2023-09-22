@@ -4,7 +4,7 @@ dependencies:
   module:
     - node
 id: test_entity_type_filter
-label: ''
+label: test_entity_type_filter
 module: views
 description: ''
 tag: ''

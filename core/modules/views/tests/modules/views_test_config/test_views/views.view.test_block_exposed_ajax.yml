@@ -6,7 +6,7 @@ dependencies:
   module:
     - node
 id: test_block_exposed_ajax
-label: ''
+label: test_block_exposed_ajax
 module: views
 description: ''
 tag: ''

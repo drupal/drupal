@@ -6,7 +6,7 @@ dependencies:
   content:
     - StaticTest
 id: test_page_display_route
-label: ''
+label: test_page_display_route
 module: views
 description: ''
 tag: ''

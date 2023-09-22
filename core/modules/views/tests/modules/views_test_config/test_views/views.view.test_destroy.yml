@@ -6,7 +6,7 @@ dependencies:
     - node
     - user
 id: test_destroy
-label: ''
+label: test_destroy
 module: views
 description: ''
 tag: ''

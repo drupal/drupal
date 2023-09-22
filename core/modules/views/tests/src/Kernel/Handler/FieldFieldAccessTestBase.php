@@ -93,6 +93,7 @@ abstract class FieldFieldAccessTestBase extends ViewsKernelTestBase {
     $base_table = ($data_table && ($field_name !== 'uuid')) ? $data_table : $entity_type->getBaseTable();
     $entity = View::create([
       'id' => $view_id,
+      'label' => $view_id,
       'base_table' => $base_table,
       'display' => [
         'default' => [

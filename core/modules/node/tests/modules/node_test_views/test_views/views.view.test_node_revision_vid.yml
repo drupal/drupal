@@ -4,7 +4,7 @@ dependencies:
   module:
     - node
 id: test_node_revision_vid
-label: null
+label: test_node_revision_vid
 module: views
 description: ''
 tag: ''

@@ -109,6 +109,7 @@ class CommentUserNameTest extends ViewsKernelTestBase {
     $view_id = $this->randomMachineName();
     $view = View::create([
       'id' => $view_id,
+      'label' => $view_id,
       'base_table' => 'comment_field_data',
       'display' => [
         'default' => [

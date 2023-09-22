@@ -150,8 +150,28 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       if ($this->processDefaultArgumentSkipUrlUpdate($handler, $handler_type)) {
         $changed = TRUE;
       }
+      if ($this->addLabelIfMissing($view)) {
+        $changed = TRUE;
+      }
       return $changed;
     });
+  }
+
+  /**
+   * Adds a label to views which don't have one.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The view to update.
+   *
+   * @return bool
+   *   Whether the view was updated.
+   */
+  public function addLabelIfMissing(ViewEntityInterface $view): bool {
+    if (!$view->get('label')) {
+      $view->set('label', $view->id());
+      return TRUE;
+    }
+    return FALSE;
   }
 
   /**
@@ -283,7 +303,7 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
     $deprecations_triggered = &$this->triggeredDeprecations['3212351'][$view->id()];
     if ($this->deprecationsEnabled && $changed && !$deprecations_triggered) {
       $deprecations_triggered = TRUE;
-      @trigger_error(sprintf('The oEmbed loading attribute update for view "%s" is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Profile, module and theme provided configuration should be updated to accommodate the changes described at https://www.drupal.org/node/3275103.', $view->id()), E_USER_DEPRECATED);
+      @trigger_error(sprintf('The oEmbed loading attribute update for view "%s" is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Profile, module and theme provided configuration should be updated. See https://www.drupal.org/node/3275103', $view->id()), E_USER_DEPRECATED);
     }
 
     return $changed;

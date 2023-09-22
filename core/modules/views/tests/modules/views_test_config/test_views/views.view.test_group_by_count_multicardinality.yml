@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: test_group_by_count_multicardinality
-label: ''
+label: test_group_by_count_multicardinality
 module: views
 description: ''
 tag: ''

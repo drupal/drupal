@@ -6,7 +6,7 @@ dependencies:
   module:
     - node
 id: test_exposed_form_pager
-label: ''
+label: test_exposed_form_pager
 module: views
 description: ''
 tag: ''

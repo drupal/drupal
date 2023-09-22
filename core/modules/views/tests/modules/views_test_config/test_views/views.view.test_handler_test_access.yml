@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: test_handler_test_access
-label: null
+label: test_handler_test_access
 module: views
 description: ''
 tag: ''

@@ -4,7 +4,7 @@ dependencies:
   module:
     - node
 id: test_exposed_form_buttons
-label: ''
+label: test_exposed_form_buttons
 module: views
 description: ''
 tag: ''

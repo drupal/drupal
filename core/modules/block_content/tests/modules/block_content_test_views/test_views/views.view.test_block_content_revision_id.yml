@@ -4,7 +4,7 @@ dependencies:
   module:
     - block_content
 id: test_block_content_revision_id
-label: null
+label: test_block_content_revision_id
 module: views
 description: ''
 tag: ''

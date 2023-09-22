@@ -4,7 +4,7 @@ dependencies:
   module:
     - user
 id: test_filter_permission
-label: null
+label: test_filter_permission
 module: views
 description: ''
 tag: ''

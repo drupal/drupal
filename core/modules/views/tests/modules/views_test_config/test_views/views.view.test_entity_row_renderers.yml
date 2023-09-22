@@ -6,7 +6,7 @@ dependencies:
   module:
     - node
 id: test_entity_row_renderers
-label: ''
+label: test_entity_row_renderers
 module: views
 description: ''
 tag: ''

@@ -5,7 +5,7 @@ dependencies:
     - node
     - user
 id: test_argument_validation
-label: ''
+label: test_argument_validation
 module: views
 description: 'This view is used to test the argument validator schema.'
 tag: ''

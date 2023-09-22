@@ -4,7 +4,7 @@ dependencies:
   module:
     - node
 id: test_filter_in_operator_ui
-label: ''
+label: test_filter_in_operator_ui
 module: views
 description: ''
 tag: ''

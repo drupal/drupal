@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: test_entity_reference_group_by_empty_relationships
-label: ''
+label: test_entity_reference_group_by_empty_relationships
 module: views
 description: ''
 tag: ''

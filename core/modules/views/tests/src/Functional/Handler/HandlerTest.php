@@ -271,7 +271,11 @@ class HandlerTest extends ViewTestBase {
     $this->assertSession()->fieldNotExists($relationship_name);
 
     // Create a view of comments with node relationship.
-    View::create(['base_table' => 'comment_field_data', 'id' => 'test_get_entity_type'])->save();
+    View::create([
+      'base_table' => 'comment_field_data',
+      'id' => 'test_get_entity_type',
+      'label' => 'Test',
+    ])->save();
     $this->drupalGet('admin/structure/views/nojs/add-handler/test_get_entity_type/default/relationship');
     $this->submitForm(['name[comment_field_data.node]' => 'comment_field_data.node'], 'Add and configure relationships');
     $this->submitForm([], 'Apply');

@@ -2,7 +2,7 @@ langcode: und
 status: true
 dependencies: {  }
 id: test_argument_datetime
-label: ''
+label: test_argument_datetime
 module: views
 description: ''
 tag: ''

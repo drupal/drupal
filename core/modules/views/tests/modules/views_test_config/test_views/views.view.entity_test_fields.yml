@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: entity_test_fields
-label: ''
+label: entity_test_fields
 module: views
 description: ''
 tag: ''

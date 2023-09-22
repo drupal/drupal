@@ -4,7 +4,7 @@ dependencies:
   module:
     - node
 id: test_exposed_form_sort_items_per_page
-label: ''
+label: test_exposed_form_sort_items_per_page
 module: views
 description: ''
 tag: ''

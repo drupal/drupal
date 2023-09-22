@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: test_preprocess
-label: ''
+label: test_preprocess
 module: views
 description: ''
 tag: ''

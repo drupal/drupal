@@ -4,7 +4,7 @@ dependencies:
   module:
     - node
 id: test_view_pager_full_zero_items_per_page
-label: ''
+label: test_view_pager_full_zero_items_per_page
 module: views
 description: ''
 tag: ''

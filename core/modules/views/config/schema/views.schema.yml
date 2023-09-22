@@ -75,7 +75,7 @@ views.view.*:
           # @see \Drupal\views_ui\ViewAddForm::form()
           max: 128
     label:
-      type: label
+      type: required_label
       label: 'Label'
     module:
       type: string

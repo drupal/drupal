@@ -4,7 +4,7 @@ dependencies:
   module:
     - user
 id: test_user_bulk_form
-label: ''
+label: test_user_bulk_form
 module: views
 description: ''
 tag: ''

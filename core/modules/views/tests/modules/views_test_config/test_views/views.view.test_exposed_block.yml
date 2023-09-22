@@ -4,7 +4,7 @@ dependencies:
   module:
     - node
 id: test_exposed_block
-label: ''
+label: test_exposed_block
 module: views
 description: ''
 tag: ''

@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: test_field_output
-label: ''
+label: test_field_output
 module: views
 description: ''
 tag: ''

@@ -6,7 +6,7 @@ dependencies:
   module:
     - node
 id: test_remember_selected
-label: ''
+label: test_remember_selected
 module: views
 description: ''
 tag: ''

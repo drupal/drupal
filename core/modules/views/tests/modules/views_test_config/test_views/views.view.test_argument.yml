@@ -1,7 +1,7 @@
 langcode: en
 status: true
 dependencies: {  }
-label: ''
+label: test_argument
 module: views
 description: ''
 tag: ''

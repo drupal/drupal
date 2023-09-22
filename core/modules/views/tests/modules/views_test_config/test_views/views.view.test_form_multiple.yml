@@ -4,7 +4,7 @@ dependencies:
   module:
     - node
 id: test_form_multiple
-label: ''
+label: test_form_multiple
 module: views
 description: ''
 tag: ''

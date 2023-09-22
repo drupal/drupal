@@ -6,7 +6,7 @@ dependencies:
   content:
     - StaticTest
 id: test_access_static
-label: ''
+label: test_access_static
 module: views
 description: ''
 tag: ''

@@ -4,7 +4,7 @@ dependencies:
   module:
     - node
 id: test_exposed_admin_ui
-label: ''
+label: test_exposed_admin_ui
 module: views
 description: ''
 tag: ''

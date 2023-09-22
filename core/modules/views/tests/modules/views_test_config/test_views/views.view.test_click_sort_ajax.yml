@@ -2,6 +2,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: test_click_sort_ajax
+label: test_click_sort_ajax
 module: views
 description: ''
 tag: ''

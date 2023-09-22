@@ -4,7 +4,7 @@ dependencies:
   module:
     - node
 id: test_filter_date_between
-label: ''
+label: test_filter_date_between
 module: views
 description: ''
 tag: ''

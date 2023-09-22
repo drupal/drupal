@@ -4,7 +4,7 @@ dependencies:
   module:
     - user
 id: test_user_uid_argument
-label: null
+label: test_user_uid_argument
 module: views
 description: ''
 tag: ''

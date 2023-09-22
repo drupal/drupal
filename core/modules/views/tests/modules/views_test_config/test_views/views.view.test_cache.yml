@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: test_cache
-label: ''
+label: test_cache
 module: views
 description: ''
 tag: ''

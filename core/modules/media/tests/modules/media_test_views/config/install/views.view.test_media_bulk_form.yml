@@ -5,7 +5,7 @@ dependencies:
     - media
     - user
 id: test_media_bulk_form
-label: ''
+label: test_media_bulk_form
 module: views
 description: ''
 tag: ''

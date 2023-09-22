@@ -1,7 +1,7 @@
 langcode: en
 status: true
 id: test_area_order
-label: ''
+label: test_area_order
 module: views
 description: ''
 tag: ''

@@ -2,6 +2,7 @@ langcode: und
 status: true
 dependencies: {  }
 id: test_field_field_revision_complex_test
+label: test_field_field_revision_complex_test
 module: views
 description: ''
 tag: ''
