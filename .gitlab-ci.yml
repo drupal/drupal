@@ -89,22 +89,15 @@ stages:
   paths:
     - ./core/node_modules
 
-.pull-composer-cache: &pull-composer-cache
+.with-composer-cache: &with-composer-cache
   cache:
     policy: pull
     <<: *composer-cache
   dependencies:
     - '📦️ Composer'
 
-.with-composer-cache: &with-composer-cache
-  needs:
-    - '📦️ Composer'
-  <<: *pull-composer-cache
-
 .with-yarn-cache: &with-yarn-cache
   dependencies:
-    - '📦️ Yarn'
-  needs:
     - '📦️ Yarn'
   cache:
     policy: pull
