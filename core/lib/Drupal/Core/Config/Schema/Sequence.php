@@ -28,6 +28,8 @@ class Sequence extends ArrayElement {
     $definition = [];
     if (isset($this->definition['sequence'][0])) {
       $definition = $this->definition['sequence'][0];
+      $bc_sequence_location = $this->getPropertyPath();
+      @trigger_error("The definition for the '$bc_sequence_location' sequence declares the type of its items in a way that is deprecated in drupal:8.0.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/2442603", E_USER_DEPRECATED);
     }
     elseif ($this->definition['sequence']) {
       $definition = $this->definition['sequence'];
