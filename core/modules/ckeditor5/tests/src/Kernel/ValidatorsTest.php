@@ -95,11 +95,8 @@ class ValidatorsTest extends KernelTestBase {
     );
     $violations = $typed_config->validate();
 
-    $actual_violations = [];
-    foreach ($violations as $violation) {
-      $actual_violations[$violation->getPropertyPath()] = (string) $violation->getMessage();
-    }
-    $this->assertSame($expected_violations, $actual_violations);
+    $actual_violations = self::violationsToArray($violations);
+    $this->assertSame($expected_violations, self::violationsToArray($violations));
 
     if (empty($expected_violations)) {
       $this->assertConfigSchema(
@@ -509,7 +506,10 @@ class ValidatorsTest extends KernelTestBase {
       ],
       'violations' => [
         'settings.plugins.ckeditor5_style.styles.0.element' => 'The following tag is missing the required attribute <code>class</code>: <code>&lt;p&gt;</code>.',
-        'settings.plugins.ckeditor5_style.styles.1.element' => 'The following tag does not have the minimum of 1 allowed values for the required attribute <code>class</code>: <code>&lt;blockquote class=&quot;&quot;&gt;</code>.',
+        'settings.plugins.ckeditor5_style.styles.1.element' => [
+          'The following tag is not valid HTML: <em class="placeholder">&lt;blockquote class=&quot;&quot;&gt;</em>.',
+          'The following tag does not have the minimum of 1 allowed values for the required attribute <code>class</code>: <code>&lt;blockquote class=&quot;&quot;&gt;</code>.',
+        ],
       ],
     ];
     $data['VALID: Style plugin has multiple styles with different labels'] = [

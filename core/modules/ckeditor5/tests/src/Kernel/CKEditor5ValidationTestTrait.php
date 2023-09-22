@@ -7,6 +7,7 @@ namespace Drupal\Tests\ckeditor5\Kernel;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\EditorInterface;
 use Drupal\filter\FilterFormatInterface;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
  * Defines a trait for testing CKEditor 5 validity.
@@ -30,6 +31,19 @@ trait CKEditor5ValidationTestTrait {
    */
   private function validatePairToViolationsArray(EditorInterface $text_editor, FilterFormatInterface $text_format, bool $all_compatibility_problems): array {
     $violations = CKEditor5::validatePair($text_editor, $text_format, $all_compatibility_problems);
+    return self::violationsToArray($violations);
+  }
+
+  /**
+   * Transforms a constraint violation list object to an assertable array.
+   *
+   * @param \Symfony\Component\Validator\ConstraintViolationListInterface $violations
+   *   Validation constraint violations.
+   *
+   * @return array
+   *   An array with property paths as keys and violation messages as values.
+   */
+  private static function violationsToArray(ConstraintViolationListInterface $violations): array {
     $actual_violations = [];
     foreach ($violations as $violation) {
       if (!isset($actual_violations[$violation->getPropertyPath()])) {
