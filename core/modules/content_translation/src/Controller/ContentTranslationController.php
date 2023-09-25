@@ -68,6 +68,33 @@ class ContentTranslationController extends ControllerBase {
    */
   public function prepareTranslation(ContentEntityInterface $entity, LanguageInterface $source, LanguageInterface $target) {
     $source_langcode = $source->getId();
+    /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
+    $storage = $this->entityTypeManager()->getStorage($entity->getEntityTypeId());
+
+    // Once translations from the default revision are added, there may be
+    // additional draft translations that don't exist in the default revision.
+    // Add those translations too so that they aren't deleted when the new
+    // translation is saved.
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $default_revision */
+    $default_revision = $storage->load($entity->id());
+    // Check the entity isn't missing any translations.
+    $languages = $this->languageManager()->getLanguages();
+    foreach ($languages as $language) {
+      $langcode = $language->getId();
+      if ($entity->hasTranslation($langcode) || $target->getId() === $langcode) {
+        continue;
+      }
+      $latest_revision_id = $storage->getLatestTranslationAffectedRevisionId($entity->id(), $langcode);
+      if ($latest_revision_id) {
+        if ($default_revision->hasTranslation($langcode)) {
+          $existing_translation = $default_revision->getTranslation($langcode);
+          $existing_translation->setNewRevision(FALSE);
+          $existing_translation->isDefaultRevision(FALSE);
+          $existing_translation->setRevisionTranslationAffected(FALSE);
+          $entity->addTranslation($langcode, $existing_translation->toArray());
+        }
+      }
+    }
     /** @var \Drupal\Core\Entity\ContentEntityInterface $source_translation */
     $source_translation = $entity->getTranslation($source_langcode);
     $target_translation = $entity->addTranslation($target->getId(), $source_translation->toArray());

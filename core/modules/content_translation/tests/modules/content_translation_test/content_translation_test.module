@@ -68,3 +68,10 @@ function content_translation_test_form_node_form_alter(&$form, FormStateInterfac
 function content_translation_test_form_node_form_submit($form, FormStateInterface $form_state) {
   \Drupal::state()->set('test_field_only_en_fr', $form_state->getValue('test_field_only_en_fr'));
 }
+
+/**
+ * Implements hook_entity_translation_delete().
+ */
+function content_translation_test_entity_translation_delete(EntityInterface $translation) {
+  \Drupal::state()->set('content_translation_test.translation_deleted', TRUE);
+}
