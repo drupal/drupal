@@ -14,6 +14,7 @@ use Drupal\views\Entity\View;
  * Tests exposed forms functionality.
  *
  * @group views
+ * @group #slow
  */
 class ExposedFormTest extends ViewTestBase {
 

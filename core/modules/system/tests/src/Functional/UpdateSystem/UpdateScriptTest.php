@@ -12,6 +12,7 @@ use Drupal\Tests\RequirementsPageTrait;
  * Tests the update script access and functionality.
  *
  * @group Update
+ * @group #slow
  */
 class UpdateScriptTest extends BrowserTestBase {
 

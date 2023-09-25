@@ -7,6 +7,7 @@ use Drupal\filter\Entity\FilterFormat;
 /**
  * @covers ::media_filter_format_edit_form_validate
  * @group media
+ * @group #slow
  */
 class MediaEmbedFilterConfigurationUiTest extends MediaJavascriptTestBase {
 

@@ -12,6 +12,7 @@ use Drupal\Tests\system\Functional\Module\ModuleTestBase;
  * Tests the largest configuration import possible with all available modules.
  *
  * @group config
+ * @group #slow
  */
 class ConfigImportAllTest extends ModuleTestBase {
 

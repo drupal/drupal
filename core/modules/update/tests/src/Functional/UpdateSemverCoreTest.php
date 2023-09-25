@@ -8,6 +8,7 @@ use Drupal\Core\Url;
  * Tests the semantic version handling in the Update Manager.
  *
  * @group update
+ * @group #slow
  */
 class UpdateSemverCoreTest extends UpdateSemverTestBase {
 

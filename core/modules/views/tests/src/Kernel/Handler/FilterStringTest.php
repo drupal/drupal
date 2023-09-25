@@ -9,6 +9,7 @@ use Drupal\views\Views;
  * Tests the core Drupal\views\Plugin\views\filter\StringFilter handler.
  *
  * @group views
+ * @group #slow
  */
 class FilterStringTest extends ViewsKernelTestBase {
 

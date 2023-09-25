@@ -15,6 +15,7 @@ use Drupal\field\Entity\FieldStorageConfig;
  * Tests field form handling.
  *
  * @group field
+ * @group #slow
  */
 class FormTest extends FieldTestBase {
 

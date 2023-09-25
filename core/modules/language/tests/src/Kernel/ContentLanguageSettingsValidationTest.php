@@ -9,6 +9,7 @@ use Drupal\language\Entity\ContentLanguageSettings;
  * Tests validation of content_language_settings entities.
  *
  * @group language
+ * @group #slow
  */
 class ContentLanguageSettingsValidationTest extends ConfigEntityValidationTestBase {
 

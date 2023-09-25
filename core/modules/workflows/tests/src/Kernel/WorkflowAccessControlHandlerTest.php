@@ -13,6 +13,7 @@ use Prophecy\Prophet;
 /**
  * @coversDefaultClass \Drupal\workflows\WorkflowAccessControlHandler
  * @group workflows
+ * @group #slow
  */
 class WorkflowAccessControlHandlerTest extends KernelTestBase {
 

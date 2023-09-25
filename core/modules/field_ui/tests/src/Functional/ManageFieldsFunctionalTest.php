@@ -20,6 +20,7 @@ use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
  * Tests the Field UI "Manage fields" screen.
  *
  * @group field_ui
+ * @group #slow
  */
 class ManageFieldsFunctionalTest extends BrowserTestBase {
 

@@ -16,6 +16,7 @@ use PHPUnit\Framework\ExpectationFailedException;
  * Tests BrowserTestBase functionality.
  *
  * @group browsertestbase
+ * @group #slow
  */
 class BrowserTestBaseTest extends BrowserTestBase {
 

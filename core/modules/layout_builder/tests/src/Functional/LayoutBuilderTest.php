@@ -12,6 +12,7 @@ use Drupal\views\Entity\View;
  * Tests the Layout Builder UI.
  *
  * @group layout_builder
+ * @group #slow
  */
 class LayoutBuilderTest extends BrowserTestBase {
 

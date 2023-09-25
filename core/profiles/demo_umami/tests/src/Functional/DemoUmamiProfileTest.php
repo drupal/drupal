@@ -14,6 +14,7 @@ use Drupal\Component\Render\FormattableMarkup;
  * Tests demo_umami profile.
  *
  * @group demo_umami
+ * @group #slow
  */
 class DemoUmamiProfileTest extends BrowserTestBase {
   use AssertConfigTrait;

@@ -17,6 +17,7 @@ use Drupal\workspaces\WorkspacePublishException;
  *
  * @group content_moderation
  * @group workspaces
+ * @group #slow
  */
 class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
 
