@@ -18,6 +18,7 @@ use Symfony\Component\Validator\ConstraintViolation;
  * Tests demo_umami profile.
  *
  * @group demo_umami
+ * @group #slow
  */
 class DemoUmamiProfileTest extends BrowserTestBase {
   use AssertConfigTrait;

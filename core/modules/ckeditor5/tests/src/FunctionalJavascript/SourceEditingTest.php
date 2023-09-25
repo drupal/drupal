@@ -15,6 +15,7 @@ use Symfony\Component\Validator\ConstraintViolation;
  * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing
  * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getCKEditor5PluginConfig
  * @group ckeditor5
+ * @group #slow
  * @internal
  */
 class SourceEditingTest extends CKEditor5TestBase {

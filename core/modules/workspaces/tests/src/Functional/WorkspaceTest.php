@@ -11,6 +11,7 @@ use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
  * Test the workspace entity.
  *
  * @group workspaces
+ * @group #slow
  */
 class WorkspaceTest extends BrowserTestBase {
 

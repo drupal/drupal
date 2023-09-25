@@ -17,6 +17,7 @@ use GuzzleHttp\RequestOptions;
  * JSON:API integration test for the "User" content entity type.
  *
  * @group jsonapi
+ * @group #slow
  */
 class UserTest extends ResourceTestBase {
 

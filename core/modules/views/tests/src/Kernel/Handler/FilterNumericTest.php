@@ -9,6 +9,7 @@ use Drupal\views\Views;
  * Tests the numeric filter handler.
  *
  * @group views
+ * @group #slow
  */
 class FilterNumericTest extends ViewsKernelTestBase {
 

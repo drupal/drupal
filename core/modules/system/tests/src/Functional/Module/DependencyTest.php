@@ -9,6 +9,7 @@ use Drupal\Component\Utility\Unicode;
  * Enable module without dependency enabled.
  *
  * @group Module
+ * @group #slow
  */
 class DependencyTest extends ModuleTestBase {
 

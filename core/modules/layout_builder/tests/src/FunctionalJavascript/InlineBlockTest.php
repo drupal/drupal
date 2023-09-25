@@ -9,6 +9,7 @@ use Drupal\node\Entity\Node;
  * Tests that the inline block feature works correctly.
  *
  * @group layout_builder
+ * @group #slow
  */
 class InlineBlockTest extends InlineBlockTestBase {
 

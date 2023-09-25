@@ -15,6 +15,7 @@ use Drupal\Tests\system\Functional\Module\ModuleTestBase;
  * of all default configuration is also tested.
  *
  * @group config
+ * @group #slow
  */
 class ConfigImportAllTest extends ModuleTestBase {
 

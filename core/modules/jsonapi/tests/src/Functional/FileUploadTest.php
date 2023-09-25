@@ -20,6 +20,7 @@ use Psr\Http\Message\ResponseInterface;
  * Tests binary data file upload route.
  *
  * @group jsonapi
+ * @group #slow
  */
 class FileUploadTest extends ResourceTestBase {
 

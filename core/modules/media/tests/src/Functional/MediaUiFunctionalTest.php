@@ -13,6 +13,7 @@ use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
  * Ensures that media UI works correctly.
  *
  * @group media
+ * @group #slow
  */
 class MediaUiFunctionalTest extends MediaFunctionalTestBase {
 

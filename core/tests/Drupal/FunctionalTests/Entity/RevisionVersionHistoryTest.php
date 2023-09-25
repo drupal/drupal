@@ -11,6 +11,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests version history page.
  *
  * @group Entity
+ * @group #slow
  * @coversDefaultClass \Drupal\Core\Entity\Controller\VersionHistoryController
  */
 class RevisionVersionHistoryTest extends BrowserTestBase {
