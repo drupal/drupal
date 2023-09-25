@@ -86,7 +86,7 @@ export default class InsertDrupalMediaCommand extends Command {
     }
 
     this.editor.model.change((writer) => {
-      this.editor.model.insertContent(
+      this.editor.model.insertObject(
         createDrupalMedia(writer, modelAttributes),
       );
     });
