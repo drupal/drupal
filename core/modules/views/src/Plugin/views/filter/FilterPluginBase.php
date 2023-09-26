@@ -1091,49 +1091,6 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       '#default_value' => $this->options['group_info']['remember'],
     ];
 
-    if (!empty($this->options['group_info']['identifier'])) {
-      $identifier = $this->options['group_info']['identifier'];
-    }
-    else {
-      $identifier = 'group_' . $this->options['expose']['identifier'];
-    }
-    $form['group_info']['identifier'] = [
-      '#type' => 'textfield',
-      '#default_value' => $identifier,
-      '#title' => $this->t('Filter identifier'),
-      '#size' => 40,
-      '#description' => $this->t('This will appear in the URL after the ? to identify this filter. Cannot be blank. Only letters, digits and the dot ("."), hyphen ("-"), underscore ("_"), and tilde ("~") characters are allowed. @reserved_identifiers are reserved words and cannot be used.',
-        ['@reserved_identifiers' => '"' . implode('", "', self::RESTRICTED_IDENTIFIERS) . '"']),
-    ];
-    $form['group_info']['label'] = [
-      '#type' => 'textfield',
-      '#default_value' => $this->options['group_info']['label'],
-      '#title' => $this->t('Label'),
-      '#size' => 40,
-    ];
-    $form['group_info']['optional'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Optional'),
-      '#description' => $this->t('This exposed filter is optional and will have added options to allow it not to be set.'),
-      '#default_value' => $this->options['group_info']['optional'],
-    ];
-    $form['group_info']['widget'] = [
-      '#type' => 'radios',
-      '#default_value' => $this->options['group_info']['widget'],
-      '#title' => $this->t('Widget type'),
-      '#options' => [
-        'radios' => $this->t('Radios'),
-        'select' => $this->t('Select'),
-      ],
-      '#description' => $this->t('Select which kind of widget will be used to render the group of filters'),
-    ];
-    $form['group_info']['remember'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Remember'),
-      '#description' => $this->t('Remember the last setting the user gave this filter.'),
-      '#default_value' => $this->options['group_info']['remember'],
-    ];
-
     // The string '- Any -' will not be rendered.
     // @see theme_views_ui_build_group_filter_form()
     $groups = ['All' => $this->t('- Any -')];
