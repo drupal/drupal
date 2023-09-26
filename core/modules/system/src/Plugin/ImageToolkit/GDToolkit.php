@@ -115,7 +115,7 @@ class GDToolkit extends ImageToolkitBase {
    */
   public function __get(string $name) {
     if ($name === 'resource') {
-      @trigger_error('Accessing the \Drupal\system\Plugin\ImageToolkit\GDToolkit::resource property is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\system\Plugin\ImageToolkit\GDToolkit::image instead.', E_USER_DEPRECATED);
+      @trigger_error('Accessing the \Drupal\system\Plugin\ImageToolkit\GDToolkit::resource property is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\system\Plugin\ImageToolkit\GDToolkit::image instead. See https://www.drupal.org/node/3265963', E_USER_DEPRECATED);
       return $this->image;
     }
   }
@@ -125,7 +125,7 @@ class GDToolkit extends ImageToolkitBase {
    */
   public function __set(string $name, mixed $value): void {
     if ($name === 'resource') {
-      @trigger_error('Setting the \Drupal\system\Plugin\ImageToolkit\GDToolkit::resource property is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\system\Plugin\ImageToolkit\GDToolkit::image instead.', E_USER_DEPRECATED);
+      @trigger_error('Setting the \Drupal\system\Plugin\ImageToolkit\GDToolkit::resource property is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\system\Plugin\ImageToolkit\GDToolkit::image instead. See https://www.drupal.org/node/3265963', E_USER_DEPRECATED);
       $this->image = $value;
     }
   }
@@ -135,7 +135,7 @@ class GDToolkit extends ImageToolkitBase {
    */
   public function __isset(string $name): bool {
     if ($name === 'resource') {
-      @trigger_error('Checking the \Drupal\system\Plugin\ImageToolkit\GDToolkit::resource property is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\system\Plugin\ImageToolkit\GDToolkit::image instead.', E_USER_DEPRECATED);
+      @trigger_error('Checking the \Drupal\system\Plugin\ImageToolkit\GDToolkit::resource property is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\system\Plugin\ImageToolkit\GDToolkit::image instead. See https://www.drupal.org/node/3265963', E_USER_DEPRECATED);
       return isset($this->image);
     }
     return FALSE;
@@ -146,7 +146,7 @@ class GDToolkit extends ImageToolkitBase {
    */
   public function __unset(string $name): void {
     if ($name === 'resource') {
-      @trigger_error('Unsetting the \Drupal\system\Plugin\ImageToolkit\GDToolkit::resource property is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\system\Plugin\ImageToolkit\GDToolkit::image instead.', E_USER_DEPRECATED);
+      @trigger_error('Unsetting the \Drupal\system\Plugin\ImageToolkit\GDToolkit::resource property is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\system\Plugin\ImageToolkit\GDToolkit::image instead. See https://www.drupal.org/node/3265963', E_USER_DEPRECATED);
       unset($this->image);
     }
   }

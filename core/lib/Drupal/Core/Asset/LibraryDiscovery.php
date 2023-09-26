@@ -60,6 +60,7 @@ class LibraryDiscovery implements LibraryDiscoveryInterface {
       return FALSE;
     }
     if (isset($libraries[$name]['deprecated'])) {
+      // phpcs:ignore Drupal.Semantics.FunctionTriggerError
       @trigger_error(str_replace('%library_id%', "$extension/$name", $libraries[$name]['deprecated']), E_USER_DEPRECATED);
     }
     return $libraries[$name];

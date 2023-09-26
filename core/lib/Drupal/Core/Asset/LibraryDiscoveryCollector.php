@@ -139,6 +139,7 @@ class LibraryDiscoveryCollector extends CacheCollector {
         if (isset($library_definition['deprecated'])) {
           $extend_message = sprintf('Theme "%s" is extending a deprecated library.', $extension);
           $library_deprecation = str_replace('%library_id%', "$extension/$library_name", $library_definition['deprecated']);
+          // phpcs:ignore Drupal.Semantics.FunctionTriggerError
           @trigger_error("$extend_message $library_deprecation", E_USER_DEPRECATED);
         }
         if (!is_string($library_extend_name)) {

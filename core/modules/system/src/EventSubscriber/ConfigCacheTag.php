@@ -42,7 +42,7 @@ class ConfigCacheTag implements EventSubscriberInterface {
     $this->themeHandler = $theme_handler;
     $this->cacheTagsInvalidator = $cache_tags_invalidator;
     if ($this->themeRegistry === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $themeRegistry argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0.', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $themeRegistry argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3355227', E_USER_DEPRECATED);
       $this->themeRegistry = \Drupal::service('theme.registry');
     }
   }

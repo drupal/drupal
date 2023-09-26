@@ -126,6 +126,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         throw new ObsoleteExtensionException("Unable to install modules: module '$module' is obsolete.");
       }
       if ($module_data[$module]->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::DEPRECATED) {
+        // phpcs:ignore Drupal.Semantics.FunctionTriggerError
         @trigger_error("The module '$module' is deprecated. See " . $module_data[$module]->info['lifecycle_link'], E_USER_DEPRECATED);
       }
     }

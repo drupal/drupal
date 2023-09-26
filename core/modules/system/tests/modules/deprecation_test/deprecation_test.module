@@ -17,6 +17,7 @@
  * @see https://www.drupal.org/project/drupal/issues/2870194
  */
 function deprecation_test_function() {
+  // phpcs:ignore Drupal.Semantics.FunctionTriggerError
   @trigger_error('This is the deprecation message for deprecation_test_function().', E_USER_DEPRECATED);
   return 'known_return_value';
 }

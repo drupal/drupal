@@ -54,7 +54,7 @@ class DrupalListener implements TestListener {
     // Check for incorrect visibility of the $modules property.
     $class = new \ReflectionClass($test);
     if ($class->hasProperty('modules') && !$class->getProperty('modules')->isProtected()) {
-      @trigger_error('The ' . get_class($test) . '::$modules property must be declared protected. See https://www.drupal.org/node/2909426', E_USER_DEPRECATED);
+      @trigger_error('Declaring ' . get_class($test) . '::$modules with public visibility is deprecated in drupal:9.1.0 and must be declared protected in drupal:10.0.0. See https://www.drupal.org/node/2909426', E_USER_DEPRECATED);
     }
   }
 

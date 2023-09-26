@@ -48,6 +48,7 @@ class TestHttpClientMiddleware {
                       // Fire the same deprecation message to allow it to be
                       // collected by
                       // \Symfony\Bridge\PhpUnit\DeprecationErrorHandler::collectDeprecations().
+                      // phpcs:ignore Drupal.Semantics.FunctionTriggerError
                       @trigger_error((string) $parameters[0], E_USER_DEPRECATED);
                     }
                     else {

@@ -100,7 +100,7 @@ class AjaxResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
     $this->renderer = $renderer;
     $this->moduleHandler = $module_handler;
     if (!isset($languageManager)) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $language_manager argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $language_manager argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3347754', E_USER_DEPRECATED);
       $this->languageManager = \Drupal::languageManager();
     }
   }

@@ -109,6 +109,7 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
     $this->renderer = $renderer;
     $this->moduleHandler = $module_handler;
     if (!isset($languageManager)) {
+      // phpcs:ignore Drupal.Semantics.FunctionTriggerError
       @trigger_error('Calling ' . __METHOD__ . '() without the $languageManager argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
       $this->languageManager = \Drupal::languageManager();
     }

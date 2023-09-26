@@ -2,7 +2,7 @@
 
 namespace Drupal\Component\Assertion;
 
-trigger_error(__NAMESPACE__ . '\Handle is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead, use assert_options(ASSERT_EXCEPTION, TRUE). See https://drupal.org/node/3105918', E_USER_DEPRECATED);
+trigger_error(__NAMESPACE__ . '\Handle is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead, use assert_options(ASSERT_EXCEPTION, TRUE). See https://www.drupal.org/node/3105918', E_USER_DEPRECATED);
 
 /**
  * Handler for runtime assertion failures.

@@ -85,7 +85,7 @@ class WorkspaceOperationFactory {
     $this->workspaceAssociation = $workspace_association;
     $this->cacheTagsInvalidator = $cache_tags_invalidator;
     if (!$event_dispatcher) {
-      @trigger_error('The event dispatcher service should be passed to WorkspaceOperationFactory::__construct() since 10.1.0. This will be required in Drupal 11.0.0.', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $event_dispatcher argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3242573', E_USER_DEPRECATED);
       $event_dispatcher = \Drupal::service('event_dispatcher');
     }
     $this->eventDispatcher = $event_dispatcher;

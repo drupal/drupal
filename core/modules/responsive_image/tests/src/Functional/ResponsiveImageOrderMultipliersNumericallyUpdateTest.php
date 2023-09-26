@@ -53,7 +53,7 @@ class ResponsiveImageOrderMultipliersNumericallyUpdateTest extends UpdatePathTes
    * @covers ::orderMultipliersNumerically
    */
   public function testEntitySave(): void {
-    $this->expectDeprecation('The responsive image style multiplier re-ordering update for "responsive_image_style" is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Profile, module and theme provided Responsive Image configuration should be updated to accommodate the changes described at https://www.drupal.org/node/3274803.');
+    $this->expectDeprecation('The responsive image style multiplier re-ordering update for "responsive_image_style" is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Profile, module and theme provided Responsive Image configuration should be updated. See https://www.drupal.org/node/3274803');
     $image_style = ResponsiveImageStyle::load('responsive_image_style');
     $mappings = $image_style->getImageStyleMappings();
     $this->assertEquals('1.5x', $mappings[0]['multiplier']);

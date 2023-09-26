@@ -131,7 +131,7 @@ class CssCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfa
    * {@inheritdoc}
    */
   public function getAll() {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.2.0 and will be removed in drupal:11.0.0, there is no replacement. See https:// www.drupal.org/node/3301744', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3301744', E_USER_DEPRECATED);
     return [];
   }
 

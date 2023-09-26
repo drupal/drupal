@@ -48,7 +48,7 @@ class ResponsiveImageLazyLoadUpdateTest extends UpdatePathTestBase {
    * @covers ::processResponsiveImageField
    */
   public function testEntitySave(): void {
-    $this->expectDeprecation('The responsive image loading attribute update for "node.article.default" is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Configuration should be updated to accommodate the changes described at https://www.drupal.org/node/3279032.');
+    $this->expectDeprecation('The responsive image loading attribute update for "node.article.default" is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Configuration should be updated. See https://www.drupal.org/node/3279032');
     $view_display = EntityViewDisplay::load('node.article.default');
     $this->assertArrayNotHasKey('image_loading', $view_display->toArray()['content']['field_image']['settings']);
 

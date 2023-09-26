@@ -192,7 +192,7 @@ class CacheTest extends UnitTestCase {
    * @group legacy
    */
   public function testKeyFromQuery() {
-    $this->expectDeprecation('Drupal\Core\Cache\Cache::keyFromQuery is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. No replacement provided. https://www.drupal.org/node/3322044');
+    $this->expectDeprecation('Drupal\Core\Cache\Cache::keyFromQuery is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. No replacement provided. See https://www.drupal.org/node/3322044');
     $query = new Select(new StubConnection(new StubPDO(), []), 'dne');
     Cache::keyFromQuery($query);
   }

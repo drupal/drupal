@@ -57,6 +57,7 @@ class State implements StateInterface {
     // If the caller is asking for the value of a deprecated state, trigger a
     // deprecation message about it.
     if (isset(self::$deprecatedState[$key])) {
+      // phpcs:ignore Drupal.Semantics.FunctionTriggerError
       @trigger_error(self::$deprecatedState[$key]['message'], E_USER_DEPRECATED);
       $key = self::$deprecatedState[$key]['replacement'];
     }
@@ -104,6 +105,7 @@ class State implements StateInterface {
    */
   public function set($key, $value) {
     if (isset(self::$deprecatedState[$key])) {
+      // phpcs:ignore Drupal.Semantics.FunctionTriggerError
       @trigger_error(self::$deprecatedState[$key]['message'], E_USER_DEPRECATED);
       $key = self::$deprecatedState[$key]['replacement'];
     }

@@ -101,7 +101,7 @@ trait SchemaCheckTrait {
     // failing the test (which would be too disruptive for the ecosystem), but
     // trigger a deprecation notice instead.
     if (!empty($validation_errors) && $this->isContribViolation()) {
-      @trigger_error(sprintf("The '%s' configuration contains validation errors. Invalid config is deprecated in drupal:10.2.0 and will be required to be valid in drupal:11.0.0. The following validation errors were found:\n\t\t- %s",
+      @trigger_error(sprintf("The '%s' configuration contains validation errors. Invalid config is deprecated in drupal:10.2.0 and will be required to be valid in drupal:11.0.0. The following validation errors were found:\n\t\t- %s\nSee https://www.drupal.org/node/3362879",
         $config_name,
         implode("\n\t\t- ", $validation_errors)
       ), E_USER_DEPRECATED);

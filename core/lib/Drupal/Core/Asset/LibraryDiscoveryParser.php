@@ -404,6 +404,7 @@ class LibraryDiscoveryParser {
           if (isset($library['deprecated'])) {
             $override_message = sprintf('Theme "%s" is overriding a deprecated library.', $extension);
             $library_deprecation = str_replace('%library_id%', "$extension/$library_name", $library['deprecated']);
+            // phpcs:ignore Drupal.Semantics.FunctionTriggerError
             @trigger_error("$override_message $library_deprecation", E_USER_DEPRECATED);
           }
           // Active theme defines an override for this library.

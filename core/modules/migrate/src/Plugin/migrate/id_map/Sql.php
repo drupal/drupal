@@ -1021,7 +1021,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    * @see https://www.drupal.org/node/3277306
    */
   protected function getMigrationPluginManager() {
-    @trigger_error('deprecated in drupal:9.5.0 and is removed from drupal:11.0.0. Use $this->migrationPluginManager instead. See https://www.drupal.org/node/3277306', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.5.0 and is removed from drupal:11.0.0. Use $this->migrationPluginManager instead. See https://www.drupal.org/node/3277306', E_USER_DEPRECATED);
     return $this->migrationPluginManager;
   }
 

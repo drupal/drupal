@@ -112,6 +112,7 @@ abstract class WebDriverTestBase extends BrowserTestBase {
       $warnings = $this->getSession()->evaluateScript("JSON.parse(sessionStorage.getItem('js_testing_log_test.warnings') || JSON.stringify([]))");
       foreach ($warnings as $warning) {
         if (str_starts_with($warning, '[Deprecation]')) {
+          // phpcs:ignore Drupal.Semantics.FunctionTriggerError
           @trigger_error('Javascript Deprecation:' . substr($warning, 13), E_USER_DEPRECATED);
         }
       }

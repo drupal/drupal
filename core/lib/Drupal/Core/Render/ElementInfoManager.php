@@ -73,7 +73,7 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
     $this->setCacheBackend($cache_backend, 'element_info');
     $this->themeManager = $theme_manager;
     if ($theme_handler instanceof CacheTagsInvalidatorInterface) {
-      @trigger_error('Calling ' . __METHOD__ . '() with the $cache_tag_invalidator argument is deprecated and replaced with $theme_handler in drupal:10.2.0 and will be removed in drupal:11.0.0.', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() with the $cache_tag_invalidator argument is deprecated in drupal:10.2.0 and will be removed in drupal:11.0.0. Pass $theme_handler instead. See https://www.drupal.org/node/3355227', E_USER_DEPRECATED);
       $theme_handler = \Drupal::service('theme_handler');
     }
     $this->themeHandler = $theme_handler;

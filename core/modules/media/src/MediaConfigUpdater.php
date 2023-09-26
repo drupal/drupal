@@ -63,7 +63,7 @@ class MediaConfigUpdater {
     $deprecations_triggered = &$this->triggeredDeprecations['3212351'][$view_display->id()];
     if ($this->deprecationsEnabled && $changed && !$deprecations_triggered) {
       $deprecations_triggered = TRUE;
-      @trigger_error(sprintf('The oEmbed loading attribute update for view display "%s" is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Profile, module and theme provided configuration should be updated to accommodate the changes described at https://www.drupal.org/node/3275103.', $view_display->id()), E_USER_DEPRECATED);
+      @trigger_error(sprintf('The oEmbed loading attribute update for view display "%s" is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Profile, module and theme provided configuration should be updated. See https://www.drupal.org/node/3275103', $view_display->id()), E_USER_DEPRECATED);
     }
 
     return $changed;

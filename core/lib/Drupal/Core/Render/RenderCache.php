@@ -47,7 +47,7 @@ class RenderCache implements RenderCacheInterface {
    */
   public function __construct(RequestStack $request_stack, $cache_factory, CacheContextsManager $cache_contexts_manager) {
     if ($cache_factory instanceof CacheFactoryInterface) {
-      @trigger_error('Injecting ' . __CLASS__ . ' with the "cache_factory" service is deprecated in drupal:10.2.0, use "variation_cache_factory" instead.', E_USER_DEPRECATED);
+      @trigger_error('Injecting ' . __CLASS__ . ' with the "cache_factory" service is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use "variation_cache_factory" instead. See https://www.drupal.org/node/3365546', E_USER_DEPRECATED);
       $cache_factory = \Drupal::service('variation_cache_factory');
     }
     $this->requestStack = $request_stack;

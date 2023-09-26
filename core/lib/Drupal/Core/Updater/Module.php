@@ -87,7 +87,7 @@ class Module extends Updater implements UpdaterInterface {
    * @see https://www.drupal.org/node/3359445
    */
   public function getSchemaUpdates() {
-    @trigger_error(__METHOD__ . "() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Update\UpdateHookRegistry::getAvailableUpdates() instead. https://www.drupal.org/node/3359445", E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Update\UpdateHookRegistry::getAvailableUpdates() instead. See https://www.drupal.org/node/3359445", E_USER_DEPRECATED);
     require_once DRUPAL_ROOT . '/core/includes/install.inc';
     require_once DRUPAL_ROOT . '/core/includes/update.inc';
 

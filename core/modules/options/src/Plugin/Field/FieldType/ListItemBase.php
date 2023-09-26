@@ -392,7 +392,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     $values = [];
 
     if (is_string($list)) {
-      trigger_error('Passing a string to ' . __METHOD__ . '() is deprecated in drupal:10.2.0 and will be removed from drupal:11.0.0. Use an array instead.', E_USER_DEPRECATED);
+      trigger_error('Passing a string to ' . __METHOD__ . '() is deprecated in drupal:10.2.0 and will cause an error from drupal:11.0.0. Use an array instead. See https://www.drupal.org/node/3376368', E_USER_DEPRECATED);
       $list = explode("\n", $list);
       $list = array_map('trim', $list);
       $list = array_filter($list, 'strlen');

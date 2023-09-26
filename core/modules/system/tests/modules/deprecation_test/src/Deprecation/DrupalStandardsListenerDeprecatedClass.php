@@ -2,6 +2,7 @@
 
 namespace Drupal\deprecation_test\Deprecation;
 
+// phpcs:ignore Drupal.Semantics.FunctionTriggerError
 @trigger_error(__NAMESPACE__ . '\DrupalStandardsListenerDeprecatedClass is deprecated.', E_USER_DEPRECATED);
 
 /**
