@@ -30,7 +30,7 @@ use Drupal\migrate\Row;
  * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
  *   \Drupal\forum\Plugin\migrate\process\ForumVocabulary instead.
  *
- * @see https://www.drupal.org/node/000000
+ * @see https://www.drupal.org/node/3387830
  */
 class ForumVocabulary extends ProcessPluginBase {
 
@@ -45,7 +45,7 @@ class ForumVocabulary extends ProcessPluginBase {
    *   The plugin implementation definition.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
-    @trigger_error(__CLASS__ . 'is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\forum\Plugin\migrate\process\ForumVocabulary instead. See https://www.drupal.org/node/000000 ', E_USER_DEPRECATED);
+    @trigger_error(__CLASS__ . 'is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\forum\Plugin\migrate\process\ForumVocabulary instead. See https://www.drupal.org/node/3387830', E_USER_DEPRECATED);
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
