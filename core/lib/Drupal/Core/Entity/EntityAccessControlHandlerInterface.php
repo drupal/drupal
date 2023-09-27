@@ -86,8 +86,9 @@ interface EntityAccessControlHandlerInterface {
    * \Drupal\Core\Entity\EntityAccessControlHandlerInterface::access().
    *
    * @param string $operation
-   *   The operation access should be checked for.
-   *   Usually one of "view" or "edit".
+   *   The operation access should be checked for. Usually one of "view" or
+   *   "edit". Unlike entity access, for field access there is no distinction
+   *   between creating and updating.
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
    *   The field definition.
    * @param \Drupal\Core\Session\AccountInterface $account
