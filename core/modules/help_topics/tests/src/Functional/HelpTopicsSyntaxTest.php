@@ -13,13 +13,7 @@ use PHPUnit\Framework\AssertionFailedError;
 /**
  * Verifies that all core Help topics can be rendered and comply with standards.
  *
- * @todo This test should eventually be folded into
- * Drupal\Tests\system\Functional\Module\InstallUninstallTest
- * when help_topics becomes stable, so that it will test with only one module
- * at a time installed and not duplicate the effort of installing. See issue
- * https://www.drupal.org/project/drupal/issues/3074040
- *
- * @group help_topics
+ * @group help
  */
 class HelpTopicsSyntaxTest extends BrowserTestBase {
 
