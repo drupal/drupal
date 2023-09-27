@@ -1012,8 +1012,14 @@ function hook_js_settings_alter(array &$settings, \Drupal\Core\Asset\AttachedAss
  * and themes that may be using the library.
  *
  * @param array $libraries
- *   An associative array of libraries registered by $extension. Keyed by
- *   internal library name and passed by reference.
+ *   An associative array of libraries, passed by reference. The array key
+ *   for any particular library will be the name registered in *.libraries.yml.
+ *   In the example below, the array key would be $libraries['foo'].
+ *   @code
+ *   foo:
+ *     js:
+ *       .......
+ *   @endcode
  * @param string $extension
  *   Can either be 'core' or the machine name of the extension that registered
  *   the libraries.
