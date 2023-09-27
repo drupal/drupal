@@ -758,17 +758,7 @@ testScenarios.element = testScenarios.selector;
 module.exports = {
   '@tags': ['core'],
   before(browser) {
-    browser.drupalInstall().drupalLoginAsAdmin(() => {
-      browser
-        .drupalRelativeURL('/admin/modules')
-        .setValue('input[type="search"]', 'position Shim Test')
-        .waitForElementVisible(
-          'input[name="modules[position_shim_test][enable]"]',
-          1000,
-        )
-        .click('input[name="modules[position_shim_test][enable]"]')
-        .click('input[type="submit"]');
-    });
+    browser.drupalInstall().drupalInstallModule('position_shim_test');
   },
   after(browser) {
     browser.drupalUninstall();

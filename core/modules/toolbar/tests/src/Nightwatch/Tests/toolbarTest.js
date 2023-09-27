@@ -15,8 +15,7 @@ module.exports = {
   before(browser) {
     browser
       .drupalInstall()
-      .drupalInstallModule('breakpoint')
-      .drupalInstallModule('toolbar')
+      .drupalInstallModule('toolbar', true)
       .drupalCreateUser({
         name: 'user',
         password: '123',

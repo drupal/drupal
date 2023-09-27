@@ -3,12 +3,14 @@
  *
  * @param {string} module
  *   The module machine name to enable.
+ * @param {boolean} force
+ *   Force to install dependencies if applicable.
  * @param {function} callback
  *   A callback which will be called, when the module has been enabled.
  * @return {object}
  *   The drupalInstallModule command.
  */
-exports.command = function drupalInstallModule(module, callback) {
+exports.command = function drupalInstallModule(module, force, callback) {
   const self = this;
   this.drupalLoginAsAdmin(() => {
     this.drupalRelativeURL('/admin/modules')
@@ -22,13 +24,22 @@ exports.command = function drupalInstallModule(module, callback) {
         10000,
       )
       .click(`form.system-modules [name="modules[${module}][enable]"]`)
-      .submitForm('form.system-modules')
-      // Wait for the checkbox for the module to be disabled as a sign that the
-      // module has been enabled.
-      .waitForElementPresent(
-        `form.system-modules [name="modules[${module}][enable]"]:disabled`,
+      .submitForm('form.system-modules');
+    if (force) {
+      // Click `Continue` if applicable.
+      this.waitForElementPresent(
+        '#system-modules-confirm-form',
         10000,
+        false,
+        () => self.click('input[value=Continue]'),
       );
+    }
+    // Wait for the checkbox for the module to be disabled as a sign that the
+    // module has been enabled.
+    this.waitForElementPresent(
+      `form.system-modules [name="modules[${module}][enable]"]:disabled`,
+      10000,
+    );
   }).perform(() => {
     if (typeof callback === 'function') {
       callback.call(self);

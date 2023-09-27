@@ -1,17 +1,7 @@
 module.exports = {
   '@tags': ['core'],
   before(browser) {
-    browser.drupalInstall().drupalLoginAsAdmin(() => {
-      browser
-        .drupalRelativeURL('/admin/modules')
-        .setValue('input[type="search"]', 'JS Once Test')
-        .waitForElementVisible(
-          'input[name="modules[js_once_test][enable]"]',
-          1000,
-        )
-        .click('input[name="modules[js_once_test][enable]"]')
-        .click('input[type="submit"]'); // Submit module form.
-    });
+    browser.drupalInstall().drupalInstallModule('js_once_test');
   },
   after(browser) {
     browser.drupalUninstall();

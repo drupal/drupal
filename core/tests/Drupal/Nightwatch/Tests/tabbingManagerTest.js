@@ -1,17 +1,7 @@
 module.exports = {
   '@tags': ['core'],
   before(browser) {
-    browser.drupalInstall().drupalLoginAsAdmin(() => {
-      browser
-        .drupalRelativeURL('/admin/modules')
-        .setValue('input[type="search"]', 'Tabbing Manager Test')
-        .waitForElementVisible(
-          'input[name="modules[tabbingmanager_test][enable]"]',
-          1000,
-        )
-        .click('input[name="modules[tabbingmanager_test][enable]"]')
-        .click('input[type="submit"]');
-    });
+    browser.drupalInstall().drupalInstallModule('tabbingmanager_test');
   },
   after(browser) {
     browser.drupalUninstall();

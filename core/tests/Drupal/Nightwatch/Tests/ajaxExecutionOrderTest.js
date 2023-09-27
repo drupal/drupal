@@ -1,20 +1,7 @@
 module.exports = {
   '@tags': ['core', 'ajax'],
   before(browser) {
-    browser.drupalInstall().drupalLoginAsAdmin(() => {
-      browser
-        .drupalRelativeURL('/admin/modules')
-        .setValue('input[type="search"]', 'Ajax test')
-        .waitForElementVisible('input[name="modules[ajax_test][enable]"]', 1000)
-        .click('input[name="modules[ajax_test][enable]"]')
-        .submitForm('input[type="submit"]') // Submit module form.
-        .waitForElementVisible(
-          '.system-modules-confirm-form input[value="Continue"]',
-          2000,
-        )
-        .submitForm('input[value="Continue"]') // Confirm installation of dependencies.
-        .waitForElementVisible('.system-modules', 10000);
-    });
+    browser.drupalInstall().drupalInstallModule('ajax_test', true);
   },
   after(browser) {
     browser.drupalUninstall();

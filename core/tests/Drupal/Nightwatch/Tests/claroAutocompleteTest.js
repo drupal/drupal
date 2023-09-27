@@ -2,25 +2,15 @@ module.exports = {
   '@tags': ['core'],
 
   before(browser) {
-    browser.drupalInstall().drupalLoginAsAdmin(() => {
-      browser
-        .drupalRelativeURL('/admin/modules')
-        .setValue('input[type="search"]', 'FormAPI Test')
-        .waitForElementVisible('input[name="modules[form_test][enable]"]', 1000)
-        .click('input[name="modules[form_test][enable]"]')
-        .submitForm('input[type="submit"]') // Submit module form.
-        .waitForElementVisible(
-          '.system-modules-confirm-form input[value="Continue"]',
-          2000,
-        )
-        .submitForm('input[value="Continue"]') // Confirm installation of dependencies.
-        .waitForElementVisible('.system-modules', 10000);
-
-      browser
-        .drupalRelativeURL('/admin/appearance')
-        .click('[title="Install Claro as default theme"]')
-        .waitForElementVisible('.system-themes-list', 10000); // Confirm installation.
-    });
+    browser
+      .drupalInstall()
+      .drupalInstallModule('form_test', true)
+      .drupalLoginAsAdmin(() => {
+        browser
+          .drupalRelativeURL('/admin/appearance')
+          .click('[title="Install Claro as default theme"]')
+          .waitForElementVisible('.system-themes-list', 10000); // Confirm installation.
+      });
   },
   after(browser) {
     browser.drupalUninstall();
