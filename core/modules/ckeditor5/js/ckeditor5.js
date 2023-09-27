@@ -425,6 +425,11 @@
             element.removeAttribute('required');
           }
 
+          // If the textarea is disabled, enable CKEditor's read-only mode.
+          if (element.hasAttribute('disabled')) {
+            editor.enableReadOnlyMode('ckeditor5_disabled');
+          }
+
           // Integrate CKEditor 5 viewport offset with Drupal displace.
           // @see \Drupal\Tests\ckeditor5\FunctionalJavascript\CKEditor5ToolbarTest
           // @see https://ckeditor.com/docs/ckeditor5/latest/api/module_core_editor_editorui-EditorUI.html#member-viewportOffset

@@ -1,0 +1,6 @@
+name: CKEditor 5 read-only mode test
+type: module
+description: "Provides code for testing disabled CKEditor 5 editors."
+package: Testing
+dependencies:
+  - ckeditor5:ckeditor5
