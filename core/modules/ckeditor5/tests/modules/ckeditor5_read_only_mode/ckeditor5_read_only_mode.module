@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Implements hooks for the CKEditor 5 read-only mode test module.
+ */
+
+declare(strict_types = 1);
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_alter().
+ */
+function ckeditor5_read_only_mode_form_node_page_form_alter(array &$form, FormStateInterface $form_state, string $form_id): void {
+  $form['body']['#disabled'] = \Drupal::state()->get('ckeditor5_read_only_mode_body_enabled', FALSE);
+  $form['field_second_ckeditor5_field']['#disabled'] = \Drupal::state()->get('ckeditor5_read_only_mode_second_ckeditor5_field_enabled', FALSE);
+}
