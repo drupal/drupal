@@ -39,9 +39,22 @@ class DemoUmamiProfileTest extends BrowserTestBase {
   protected $profile = 'demo_umami';
 
   /**
+   * Tests some features specific to being a demonstration profile.
+   */
+  public function testDemoSpecificFeatures() {
+    // This test coverage is organized into separate protected methods rather
+    // than individual test methods to avoid having to reinstall Umami for
+    // a handful of assertions each.
+    $this->testUser();
+    $this->testWarningsOnStatusPage();
+    $this->testAppearance();
+    $this->testDemonstrationWarningMessage();
+  }
+
+  /**
    * Tests demo_umami profile warnings shown on Status Page.
    */
-  public function testWarningsOnStatusPage() {
+  protected function testWarningsOnStatusPage() {
     $account = $this->drupalCreateUser(['administer site configuration']);
     $this->drupalLogin($account);
 
@@ -129,7 +142,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
   /**
    * Tests that the users can log in with the admin password entered at install.
    */
-  public function testUser() {
+  protected function testUser() {
     $password = $this->rootUser->pass_raw;
     $ids = \Drupal::entityQuery('user')
       ->accessCheck(FALSE)
@@ -176,7 +189,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
   /**
    * Tests that the Umami theme is available on the Appearance page.
    */
-  public function testAppearance() {
+  protected function testAppearance() {
     $account = $this->drupalCreateUser(['administer themes']);
     $this->drupalLogin($account);
     $webassert = $this->assertSession();
@@ -188,7 +201,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
   /**
    * Tests that the toolbar warning only appears on the admin pages.
    */
-  public function testDemonstrationWarningMessage() {
+  protected function testDemonstrationWarningMessage() {
     $permissions = [
       'access content overview',
       'access toolbar',
