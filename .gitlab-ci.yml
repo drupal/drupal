@@ -260,8 +260,7 @@ stages:
   <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
   script:
-    # Turn off apc to avoid corrupt composer cache.
-    - php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > phpstan-quality-report.json
+    - php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > phpstan-quality-report.json
   artifacts:
     reports:
       codequality: phpstan-quality-report.json
