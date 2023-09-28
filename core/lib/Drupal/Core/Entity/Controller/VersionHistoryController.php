@@ -225,7 +225,7 @@ class VersionHistoryController extends ControllerBase {
       // Only show revisions that are affected by the language that is being
       // displayed.
       if (!$translatable || ($revision->hasTranslation($currentLangcode) && $revision->getTranslation($currentLangcode)->isRevisionTranslationAffected())) {
-        yield $revision;
+        yield ($translatable ? $revision->getTranslation($currentLangcode) : $revision);
       }
     }
   }
