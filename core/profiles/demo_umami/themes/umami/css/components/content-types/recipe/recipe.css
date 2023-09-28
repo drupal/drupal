@@ -72,3 +72,7 @@
 .node--type-recipe.node--view-mode-full .field--name-field-difficulty {
   background-image: url(../../../../images/svg/difficulty.svg);
 }
+
+.node--type-recipe.node--view-mode-full .block-views-blockrelated-recipes-related-recipes-block {
+  margin-top: 2rem;
+}
