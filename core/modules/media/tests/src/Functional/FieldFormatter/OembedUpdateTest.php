@@ -10,6 +10,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  *
  * @group media
  * @group legacy
+ * @group #slow
  */
 class OembedUpdateTest extends UpdatePathTestBase {
 

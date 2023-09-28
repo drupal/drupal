@@ -10,6 +10,7 @@ use Drupal\user\RoleInterface;
  * JSON:API integration test for the "Action" config entity type.
  *
  * @group jsonapi
+ * @group #slow
  */
 class ActionTest extends ConfigEntityResourceTestBase {
 

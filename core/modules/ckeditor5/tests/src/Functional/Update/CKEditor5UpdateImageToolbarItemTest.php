@@ -16,6 +16,7 @@ use Symfony\Component\Validator\ConstraintViolation;
  * Tests the update path for the CKEditor 5 image toolbar item.
  *
  * @group Update
+ * @group #slow
  */
 class CKEditor5UpdateImageToolbarItemTest extends UpdatePathTestBase {
 

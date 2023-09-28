@@ -9,6 +9,7 @@ use Drupal\system\Entity\Menu;
  * JSON:API integration test for the "Menu" config entity type.
  *
  * @group jsonapi
+ * @group #slow
  */
 class MenuTest extends ConfigEntityResourceTestBase {
 

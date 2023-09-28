@@ -13,6 +13,7 @@ use PHPUnit\Framework\AssertionFailedError;
  * Tests WebAssert functionality.
  *
  * @group browsertestbase
+ * @group #slow
  * @coversDefaultClass \Drupal\Tests\WebAssert
  */
 class WebAssertTest extends BrowserTestBase {

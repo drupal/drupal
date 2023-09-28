@@ -7,6 +7,7 @@ use Drupal\Tests\rest\Functional\FileUploadResourceTestBase;
 
 /**
  * @group file
+ * @group #slow
  */
 class FileUploadJsonBasicAuthTest extends FileUploadResourceTestBase {
 

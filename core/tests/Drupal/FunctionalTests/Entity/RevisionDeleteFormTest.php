@@ -12,6 +12,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests deleting a revision with revision delete form.
  *
  * @group Entity
+ * @group #slow
  * @coversDefaultClass \Drupal\Core\Entity\Form\RevisionDeleteForm
  */
 class RevisionDeleteFormTest extends BrowserTestBase {

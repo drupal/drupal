@@ -11,6 +11,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests the creation of numeric fields.
  *
  * @group field
+ * @group #slow
  */
 class NumberFieldTest extends BrowserTestBase {
 

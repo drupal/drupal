@@ -9,6 +9,7 @@ use Drupal\shortcut\Entity\ShortcutSet;
  * JSON:API integration test for the "ShortcutSet" config entity type.
  *
  * @group jsonapi
+ * @group #slow
  */
 class ShortcutSetTest extends ConfigEntityResourceTestBase {
 

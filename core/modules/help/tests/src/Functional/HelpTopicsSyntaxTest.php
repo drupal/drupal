@@ -14,6 +14,7 @@ use PHPUnit\Framework\AssertionFailedError;
  * Verifies that all core Help topics can be rendered and comply with standards.
  *
  * @group help
+ * @group #slow
  */
 class HelpTopicsSyntaxTest extends BrowserTestBase {
 

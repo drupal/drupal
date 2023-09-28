@@ -13,6 +13,7 @@ use Drupal\filter\Entity\FilterFormat;
  * JSON:API integration test for the "Editor" config entity type.
  *
  * @group jsonapi
+ * @group #slow
  */
 class EditorTest extends ConfigEntityResourceTestBase {
 

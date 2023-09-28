@@ -10,6 +10,7 @@ use Drupal\Tests\media\Traits\OEmbedTestTrait;
  * @coversDefaultClass \Drupal\media\OEmbed\UrlResolver
  *
  * @group media
+ * @group #slow
  */
 class UrlResolverTest extends MediaFunctionalTestBase {
 

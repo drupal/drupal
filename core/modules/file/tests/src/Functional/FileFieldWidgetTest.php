@@ -19,6 +19,7 @@ use Drupal\user\UserInterface;
  * Tests the file field widget with public and private files.
  *
  * @group file
+ * @group #slow
  */
 class FileFieldWidgetTest extends FileFieldTestBase {
 

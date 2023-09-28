@@ -9,6 +9,7 @@ use Drupal\Core\Url;
  * Tests the moderation form, specifically on nodes.
  *
  * @group content_moderation
+ * @group #slow
  */
 class ModerationFormTest extends ModerationStateTestBase {
 

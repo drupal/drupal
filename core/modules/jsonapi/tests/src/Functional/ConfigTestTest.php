@@ -9,6 +9,7 @@ use Drupal\Core\Url;
  * JSON:API integration test for the "ConfigTest" config entity type.
  *
  * @group jsonapi
+ * @group #slow
  */
 class ConfigTestTest extends ConfigEntityResourceTestBase {
 

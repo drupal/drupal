@@ -9,6 +9,7 @@ use Drupal\workflows\WorkflowInterface;
  * Tests Drupal 6 upgrade using the migrate UI with Content Moderation.
  *
  * @group migrate_drupal_ui
+ * @group #slow
  */
 class Upgrade6TestWithContentModeration extends Upgrade6Test {
 

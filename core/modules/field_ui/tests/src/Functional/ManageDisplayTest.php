@@ -17,6 +17,7 @@ use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
  * Tests the Field UI "Manage display" and "Manage form display" screens.
  *
  * @group field_ui
+ * @group #slow
  */
 class ManageDisplayTest extends BrowserTestBase {
 
