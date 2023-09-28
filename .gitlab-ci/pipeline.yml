@@ -45,14 +45,14 @@ stages:
     - ./core/node_modules
 
 .with-composer-cache: &with-composer-cache
-  dependencies:
+  needs:
     - '📦️ Composer'
   cache:
     policy: pull
     <<: *composer-cache
 
 .with-yarn-cache: &with-yarn-cache
-  dependencies:
+  needs:
     - '📦️ Yarn'
   cache:
     policy: pull

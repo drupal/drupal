@@ -93,11 +93,11 @@ stages:
   cache:
     policy: pull
     <<: *composer-cache
-  dependencies:
+  needs:
     - '📦️ Composer'
 
 .with-yarn-cache: &with-yarn-cache
-  dependencies:
+  needs:
     - '📦️ Yarn'
   cache:
     policy: pull
@@ -247,15 +247,6 @@ stages:
 # Lint Jobs
 ################
 
-'🧹 PHP Coding standards (PHPCS)':
-  <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings-lint ]
-  stage: 🪄 Lint
-  script:
-    - composer phpcs -- --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
-  artifacts:
-    reports:
-      codequality: phpcs-quality-report.json
-
 '🧹 PHP Static Analysis (phpstan)':
   <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
@@ -264,6 +255,15 @@ stages:
   artifacts:
     reports:
       codequality: phpstan-quality-report.json
+
+'🧹 PHP Coding standards (PHPCS)':
+  <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings-lint ]
+  stage: 🪄 Lint
+  script:
+    - composer phpcs -- --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
+  artifacts:
+    reports:
+      codequality: phpcs-quality-report.json
 
 '🧹 CSS linting (stylelint)':
   <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings-lint ]
