@@ -383,10 +383,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * Tests using the file upload POST route with invalid headers.
    */
-  public function testPostFileUploadInvalidHeaders() {
-    $this->setUpAuthorization('POST');
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
-
+  protected function testPostFileUploadInvalidHeaders() {
     $uri = Url::fromUri('base:' . static::$postUri);
 
     // The wrong content type header should return a 415 code.
@@ -445,24 +442,6 @@ class FileUploadTest extends ResourceTestBase {
 
     // Check the actual file data.
     $this->assertSame($this->testFileData, file_get_contents('public://foobar/example_0.txt'));
-  }
-
-  /**
-   * Tests using the file upload POST route twice, simulating a race condition.
-   *
-   * A validation error should occur when the filenames are not unique.
-   */
-  public function testPostFileUploadDuplicateFileRaceCondition() {
-    $this->setUpAuthorization('POST');
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
-
-    $uri = Url::fromUri('base:' . static::$postUri);
-
-    // This request will have the default 'application/octet-stream' content
-    // type header.
-    $response = $this->fileRequest($uri, $this->testFileData);
-
-    $this->assertSame(201, $response->getStatusCode());
 
     // Simulate a race condition where two files are uploaded at almost the same
     // time, by removing the first uploaded file from disk (leaving the entry in
@@ -521,6 +500,17 @@ class FileUploadTest extends ResourceTestBase {
     // Check the actual file data. It should have been written to the configured
     // directory, not /foobar/directory/example.txt.
     $this->assertSame($this->testFileData, file_get_contents('public://foobar/passwd'));
+  }
+
+  /**
+   * Tests invalid file uploads.
+   */
+  public function testInvalidFileUploads() {
+    $this->setUpAuthorization('POST');
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->testPostFileUploadInvalidHeaders();
+    $this->testFileUploadLargerFileSize();
+    $this->testFileUploadMaliciousExtension();
   }
 
   /**
@@ -583,14 +573,11 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * Tests using the file upload route with a file size larger than allowed.
    */
-  public function testFileUploadLargerFileSize() {
+  protected function testFileUploadLargerFileSize() {
     // Set a limit of 50 bytes.
     $this->field->setSetting('max_filesize', 50)
       ->save();
     $this->rebuildAll();
-
-    $this->setUpAuthorization('POST');
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
 
     $uri = Url::fromUri('base:' . static::$postUri);
 
@@ -606,13 +593,10 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * Tests using the file upload POST route with malicious extensions.
    */
-  public function testFileUploadMaliciousExtension() {
+  protected function testFileUploadMaliciousExtension() {
     // Allow all file uploads but system.file::allow_insecure_uploads is set to
     // FALSE.
     $this->field->setSetting('file_extensions', '')->save();
-
-    $this->setUpAuthorization('POST');
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
 
     $uri = Url::fromUri('base:' . static::$postUri);
 
@@ -723,9 +707,9 @@ class FileUploadTest extends ResourceTestBase {
   }
 
   /**
-   * Tests using the file upload POST route no extension configured.
+   * Tests using the file upload POST route no configuration.
    */
-  public function testFileUploadNoExtensionSetting() {
+  public function testFileUploadNoConfiguration() {
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
 
@@ -740,22 +724,11 @@ class FileUploadTest extends ResourceTestBase {
 
     $this->assertResponseData($expected, $response);
     $this->assertFileExists('public://foobar/example.txt');
-  }
-
-  /**
-   * Tests using the file upload POST route no directory configured.
-   */
-  public function testFileUploadNoDirectorySetting() {
-    $this->setUpAuthorization('POST');
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
-
-    $uri = Url::fromUri('base:' . static::$postUri);
-
     $this->field->setSetting('file_directory', '')
       ->save();
 
     $response = $this->fileRequest($uri, $this->testFileData, ['Content-Disposition' => 'filename="example.txt"']);
-    $expected = $this->getExpectedDocument(1, 'example.txt', TRUE);
+    $expected = $this->getExpectedDocument(2, 'example.txt', TRUE);
     $expected['data']['attributes']['uri']['value'] = 'public://example.txt';
     $expected['data']['attributes']['uri']['url'] = base_path() . $this->siteDirectory . '/files/example.txt';
 
