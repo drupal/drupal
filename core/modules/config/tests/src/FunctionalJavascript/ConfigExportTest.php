@@ -33,12 +33,19 @@ class ConfigExportTest extends WebDriverTestBase {
 
     // Check that the export is empty on load.
     $this->drupalGet('admin/config/development/configuration/single/export');
+    $this->assertTrue($this->assertSession()->optionExists('edit-config-name', '- Select -')->isSelected());
     $this->assertSession()->fieldValueEquals('export', '');
 
     // Check that the export is filled when selecting a config name.
     $page->selectFieldOption('config_name', 'system.site');
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertSession()->fieldValueNotEquals('export', '');
+
+    // Check that the export is empty when selecting "- Select -" option in
+    // the config name.
+    $page->selectFieldOption('config_name', '- Select -');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->fieldValueEquals('export', '');
 
     // Check that the export is emptied again when selecting a config type.
     $page->selectFieldOption('config_type', 'Action');

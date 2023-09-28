@@ -154,8 +154,9 @@ class ConfigSingleExportForm extends FormBase {
       $name = $form_state->getValue('config_name');
     }
     // Read the raw data for this config name, encode it, and display it.
-    $form['export']['#value'] = Yaml::encode($this->configStorage->read($name));
-    $form['export']['#description'] = $this->t('Filename: %name', ['%name' => $name . '.yml']);
+    $exists = $this->configStorage->exists($name);
+    $form['export']['#value'] = !$exists ? NULL : Yaml::encode($this->configStorage->read($name));
+    $form['export']['#description'] = !$exists ? NULL : $this->t('Filename: %name', ['%name' => $name . '.yml']);
     return $form['export'];
   }
 
@@ -187,7 +188,7 @@ class ConfigSingleExportForm extends FormBase {
       }, $this->definitions);
 
       // Find all config, and then filter our anything matching a config prefix.
-      $names = $this->configStorage->listAll();
+      $names += $this->configStorage->listAll();
       $names = array_combine($names, $names);
       foreach ($names as $config_name) {
         foreach ($config_prefixes as $config_prefix) {
