@@ -5,7 +5,11 @@ declare(strict_types=1);
 namespace Drupal\Tests\ckeditor5\Unit;
 
 use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Language;
+use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
+use Drupal\Core\Language\Language as LanguageLanguage;
 use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\editor\EditorInterface;
 use Drupal\Tests\UnitTestCase;
 
@@ -20,7 +24,7 @@ class LanguagePluginTest extends UnitTestCase {
    * Provides a list of configs to test.
    */
   public static function providerGetDynamicPluginConfig(): array {
-    $un_expected_output = [
+    $united_nations_expected_output = [
       'language' => [
         'textPartLanguage' => [
           [
@@ -54,7 +58,25 @@ class LanguagePluginTest extends UnitTestCase {
     return [
       'un' => [
         ['language_list' => 'un'],
-        $un_expected_output,
+        $united_nations_expected_output,
+      ],
+      'site_configured' => [
+        ['language_list' => 'site_configured'],
+        [
+          'language' => [
+            'textPartLanguage' => [
+              [
+                'title' => 'Arabic',
+                'languageCode' => 'ar',
+                'textDirection' => 'rtl',
+              ],
+              [
+                'title' => 'German',
+                'languageCode' => 'de',
+              ],
+            ],
+          ],
+        ],
       ],
       'all' => [
         ['language_list' => 'all'],
@@ -66,7 +88,7 @@ class LanguagePluginTest extends UnitTestCase {
       ],
       'default configuration' => [
         [],
-        $un_expected_output,
+        $united_nations_expected_output,
       ],
     ];
   }
@@ -101,7 +123,20 @@ class LanguagePluginTest extends UnitTestCase {
    * @dataProvider providerGetDynamicPluginConfig
    */
   public function testGetDynamicPluginConfig(array $configuration, array $expected_dynamic_config): void {
-    $plugin = new Language($configuration, 'ckeditor5_language', NULL);
+    $route_provider = $this->prophesize(RouteProviderInterface::class);
+    $language_manager = $this->prophesize(LanguageManagerInterface::class);
+    $language_manager->getLanguages()->willReturn([
+      new LanguageLanguage([
+        'id' => 'de',
+        'name' => 'German',
+      ]),
+      new LanguageLanguage([
+        'id' => 'ar',
+        'name' => 'Arabic',
+        'direction' => 'rtl',
+      ]),
+    ]);
+    $plugin = new Language($configuration, 'ckeditor5_language', new CKEditor5PluginDefinition(['id' => 'IRRELEVANT-FOR-A-UNIT-TEST']), $language_manager->reveal(), $route_provider->reveal());
     $dynamic_config = $plugin->getDynamicPluginConfig([], $this->prophesize(EditorInterface::class)
       ->reveal());
     $this->assertSame($expected_dynamic_config, $dynamic_config);

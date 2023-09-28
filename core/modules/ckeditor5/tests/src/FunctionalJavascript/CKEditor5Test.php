@@ -7,13 +7,14 @@ use Drupal\Core\Language\LanguageManager;
 use Drupal\editor\Entity\Editor;
 use Drupal\file\Entity\File;
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\RoleInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 
-// cspell:ignore esque splitbutton upcasted sourceediting
+// cspell:ignore esque māori sourceediting splitbutton upcasted
 
 /**
  * Tests for CKEditor 5.
@@ -31,6 +32,7 @@ class CKEditor5Test extends CKEditor5TestBase {
    */
   protected static $modules = [
     'media_library',
+    'language',
   ];
 
   /**
@@ -41,7 +43,7 @@ class CKEditor5Test extends CKEditor5TestBase {
     $assert_session = $this->assertSession();
 
     // Add a node with text rendered via the Plain Text format.
-    $this->drupalGet('node/add');
+    $this->drupalGet('node/add/page');
     $page->fillField('title[0][value]', 'My test content');
     $page->fillField('body[0][value]', '<p>This is test content</p>');
     $page->pressButton('Save');
@@ -103,7 +105,7 @@ class CKEditor5Test extends CKEditor5TestBase {
       ))
     ));
 
-    $this->drupalGet('node/add');
+    $this->drupalGet('node/add/page');
     $this->waitForEditor();
     $page->fillField('title[0][value]', 'My test content');
 
@@ -147,7 +149,7 @@ class CKEditor5Test extends CKEditor5TestBase {
     $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
     $this->assertHtmlEsqueFieldValueEquals('filters[filter_html][settings][allowed_html]', '<br> <p> <h2> <h3> <h4> <h5> <h6> <strong> <em>');
 
-    $this->drupalGet('node/add');
+    $this->drupalGet('node/add/page');
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-heading-dropdown button'));
 
     $page->find('css', '.ck-heading-dropdown button')->click();
@@ -188,7 +190,7 @@ class CKEditor5Test extends CKEditor5TestBase {
 
     $page->pressButton('Save configuration');
 
-    $this->drupalGet('node/add');
+    $this->drupalGet('node/add/page');
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-heading-dropdown button'));
 
     $page->find('css', '.ck-heading-dropdown button')->click();
@@ -212,12 +214,43 @@ class CKEditor5Test extends CKEditor5TestBase {
   }
 
   /**
-   * Test for plugin Language of parts.
+   * Test for Language of Parts plugin.
    */
   public function testLanguageOfPartsPlugin() {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
+    $this->languageOfPartsPluginInitialConfigurationHelper($page, $assert_session);
+
+    // Test for "United Nations' official languages" option.
+    $languages = LanguageManager::getUnitedNationsLanguageList();
+    $this->languageOfPartsPluginConfigureLanguageListHelper($page, $assert_session, 'un');
+    $this->languageOfPartsPluginTestHelper($page, $assert_session, $languages);
+
+    // Test for "Drupal predefined languages" option.
+    $languages = LanguageManager::getStandardLanguageList();
+    $this->languageOfPartsPluginConfigureLanguageListHelper($page, $assert_session, 'all');
+    $this->languageOfPartsPluginTestHelper($page, $assert_session, $languages);
+
+    // Test for "Site-configured languages" option.
+    ConfigurableLanguage::createFromLangcode('ar')->save();
+    ConfigurableLanguage::createFromLangcode('fr')->save();
+    ConfigurableLanguage::createFromLangcode('mi')->setName('Māori')->save();
+    $configured_languages = \Drupal::languageManager()->getLanguages();
+    $languages = [];
+    foreach ($configured_languages as $language) {
+      $language_name = $language->getName();
+      $language_code = $language->getId();
+      $languages[$language_code] = [$language_name];
+    }
+    $this->languageOfPartsPluginConfigureLanguageListHelper($page, $assert_session, 'site_configured');
+    $this->languageOfPartsPluginTestHelper($page, $assert_session, $languages);
+  }
+
+  /**
+   * Helper to configure CKEditor5 with Language plugin.
+   */
+  public function languageOfPartsPluginInitialConfigurationHelper($page, $assert_session) {
     $this->createNewTextFormat($page, $assert_session);
     // Press arrow down key to add the button to the active toolbar.
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-textPartLanguage'));
@@ -248,21 +281,15 @@ JS;
 
     // Confirm there are no longer any warnings.
     $assert_session->waitForElementRemoved('css', '[data-drupal-messages] [role="alert"]');
-
-    // Test for "United Nations' official languages" option.
-    $languages = LanguageManager::getUnitedNationsLanguageList();
-    $this->languageOfPartsPluginTestHelper($page, $assert_session, $languages, "un");
-
-    // Test for "All 95 languages" option.
-    $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
-    $languages = LanguageManager::getStandardLanguageList();
-    $this->languageOfPartsPluginTestHelper($page, $assert_session, $languages, "all");
+    $page->pressButton('Save configuration');
+    $assert_session->responseContains('Added text format <em class="placeholder">ckeditor5</em>.');
   }
 
   /**
-   * Validate the available languages on the basis of selected language option.
+   * Helper to set language list option for CKEditor.
    */
-  public function languageOfPartsPluginTestHelper($page, $assert_session, $predefined_languages, $option) {
+  public function languageOfPartsPluginConfigureLanguageListHelper($page, $assert_session, $option) {
+    $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
     $this->assertNotEmpty($assert_session->waitForElement('css', 'a[href^="#edit-editor-settings-plugins-ckeditor5-language"]'));
 
     // Set correct value.
@@ -271,9 +298,14 @@ JS;
     $page->selectFieldOption('editor[settings][plugins][ckeditor5_language][language_list]', $option);
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Save configuration');
+    $assert_session->responseContains('The text format <em class="placeholder">ckeditor5</em> has been updated.');
+  }
 
-    // Validate plugin on node add page.
-    $this->drupalGet('node/add');
+  /**
+   * Validate expected languages available in editor.
+   */
+  public function languageOfPartsPluginTestHelper($page, $assert_session, $configured_languages) {
+    $this->drupalGet('node/add/page');
     $this->assertNotEmpty($assert_session->waitForText('Choose language'));
 
     // Click on the dropdown button.
@@ -290,13 +322,13 @@ JS;
     foreach ($current_languages as $item) {
       $languages[] = $item->getText();
     }
+
     // Return the values from a single column.
-    $predefined_languages = array_column($predefined_languages, 0);
+    $configured_languages = array_column($configured_languages, 0);
 
     // Sort on full language name.
-    asort($predefined_languages);
-
-    $this->assertSame(array_values($predefined_languages), $languages);
+    asort($configured_languages);
+    $this->assertSame(array_values($configured_languages), $languages);
   }
 
   /**
@@ -518,7 +550,7 @@ JS;
     $assert_session->assertWaitOnAjaxRequest();
     $this->saveNewTextFormat($page, $assert_session);
 
-    $this->drupalGet('node/add');
+    $this->drupalGet('node/add/page');
     $page->fillField('title[0][value]', 'My test content');
 
     // Ensure that CKEditor 5 is focused.
@@ -566,7 +598,7 @@ JS;
     $assert_session = $this->assertSession();
 
     // Add a node with text rendered via the Plain Text format.
-    $this->drupalGet('node/add');
+    $this->drupalGet('node/add/page');
     $page->fillField('title[0][value]', 'My test content');
     $page->fillField('body[0][value]', '<p>This is a <em>test!</em></p>');
     $page->pressButton('Save');
@@ -624,7 +656,7 @@ JS;
     $ordered_list_html = '<ol><li>apple</li><li>banana</li><li>cantaloupe</li></ol>';
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
-    $this->drupalGet('node/add');
+    $this->drupalGet('node/add/page');
     $page->fillField('title[0][value]', 'My test content');
     $this->pressEditorButton('Source');
     $source_text_area = $assert_session->waitForElement('css', '.ck-source-editing-area textarea');
@@ -690,7 +722,7 @@ JS;
     $assert_session = $this->assertSession();
 
     // Add a node with text rendered via the Plain Text format.
-    $this->drupalGet('node/add');
+    $this->drupalGet('node/add/page');
     $page->fillField('title[0][value]', 'Multilingual Hello World');
     // cSpell:disable-next-line
     $page->fillField('body[0][value]', '<p dir="ltr" lang="en">Hello World</p><p dir="rtl" lang="ar">مرحبا بالعالم</p>');

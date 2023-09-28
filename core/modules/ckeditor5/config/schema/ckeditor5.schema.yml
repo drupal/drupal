@@ -41,10 +41,14 @@ ckeditor5.plugin.ckeditor5_language:
         # Configuring this does not make sense without the corresponding button.
         CKEditor5ToolbarItemDependencyConstraint:
           toolbarItem: textPartLanguage
-        # Only two possible values are accepted.
+        # Only the following values are accepted.
         Choice:
+          # United Nations "official languages".
           - un
+          # Drupal's predefined language list.
           - all
+          # Languages configured at /admin/config/regional/language for the site.
+          - site_configured
 
 # Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Heading
 ckeditor5.plugin.ckeditor5_heading:
