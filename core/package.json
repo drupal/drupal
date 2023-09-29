@@ -103,7 +103,8 @@
     "webpack-cli": "^5.1.3"
   },
   "resolutions": {
-    "nightwatch/semver": "~7.5.2"
+    "nightwatch/semver": "~7.5.2",
+    "get-func-name": "^2.0.2"
   },
   "browserslist": [
     "last 2 Chrome major versions",
