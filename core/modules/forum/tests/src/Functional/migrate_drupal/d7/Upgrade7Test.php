@@ -4,8 +4,6 @@ namespace Drupal\Tests\forum\Functional\migrate_drupal\d7;
 
 use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
 
-// cspell:ignore Filefield Multiupload Imagefield
-
 /**
  * Tests Drupal 7 upgrade using the migrate UI.
  *
