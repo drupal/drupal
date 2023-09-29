@@ -66,7 +66,7 @@ stages:
   allow_failure: false
   variables:
     _TARGET_PHP: "8.2"
-    _TARGET_DB: "mysql-8"
+    _TARGET_DB: "sqlite-3"
   image:
     name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
   rules:
@@ -180,11 +180,11 @@ stages:
     _TARGET_PHP: "8.2"
     _TARGET_DB: "pgsql-16"
 
-# 'PHP 8.2 SQLite 3.34.0':
-#   <<: [ *default-stage, *run-on-commit ]
-#   variables:
-#     _TARGET_PHP: "8.2"
-#     _TARGET_DB: "php-$_TARGET_PHP-apache"
+'PHP 8.2 SQLite 3':
+  <<: [ *default-stage, *run-on-commit ]
+  variables:
+    _TARGET_PHP: "8.2"
+    _TARGET_DB: "sqlite-3"
 
 # Run daily, or manually.
 # 'PHP 8.1 MariaDB 10.3.22':
@@ -205,11 +205,11 @@ stages:
     _TARGET_PHP: "8.1"
     _TARGET_DB: "pgsql-14.1"
 
-# 'PHP 8.1 SQLite 3.27.0':
-#   <<: [ *default-stage, *run-daily ]
-#   variables:
-#     _TARGET_PHP: "8.1"
-#     _TARGET_DB: "php-$_TARGET_PHP-apache"
+'PHP 8.1 SQLite 3':
+  <<: [ *default-stage, *run-daily ]
+  variables:
+    _TARGET_PHP: "8.1"
+    _TARGET_DB: "sqlite-3"
 
 
 ################
