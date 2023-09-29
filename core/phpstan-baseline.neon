@@ -1090,16 +1090,6 @@ parameters:
 			path: modules/config_translation/src/FormElement/DateFormat.php
 
 		-
-			message: "#^Variable \\$settings_locations in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 1
-			path: modules/config_translation/tests/src/Functional/ConfigTranslationUiTest.php
-
-		-
-			message: "#^Variable \\$source_string in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 1
-			path: modules/config_translation/tests/src/Functional/ConfigTranslationUiTest.php
-
-		-
 			message: "#^Method Drupal\\\\contact\\\\ContactFormEditForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/contact/src/ContactFormEditForm.php
