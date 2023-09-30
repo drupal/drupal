@@ -35,7 +35,7 @@ class BlockContentTypeForm extends BundleEntityFormBase {
       '#title' => $this->t('Label'),
       '#maxlength' => 255,
       '#default_value' => $block_type->label(),
-      '#description' => $this->t("Provide a label for this block type to help identify it in the administration pages."),
+      '#description' => $this->t("The human-readable name for this block type, displayed on the <em>Block types</em> page."),
       '#required' => TRUE,
     ];
     $form['id'] = [
@@ -44,13 +44,14 @@ class BlockContentTypeForm extends BundleEntityFormBase {
       '#machine_name' => [
         'exists' => '\Drupal\block_content\Entity\BlockContentType::load',
       ],
+      '#description' => $this->t("Unique machine-readable name: lowercase letters, numbers, and underscores only."),
       '#maxlength' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
     ];
 
     $form['description'] = [
       '#type' => 'textarea',
       '#default_value' => $block_type->getDescription(),
-      '#description' => $this->t('Enter a description for this block type.'),
+      '#description' => $this->t('Displays on the <em>Block types</em> page.'),
       '#title' => $this->t('Description'),
     ];
 
