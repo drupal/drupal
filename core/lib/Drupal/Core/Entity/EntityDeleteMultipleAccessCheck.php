@@ -23,7 +23,7 @@ class EntityDeleteMultipleAccessCheck implements AccessInterface {
   /**
    * The tempstore service.
    *
-   * @var \Drupal\Core\TempStore\PrivateTempStoreFactory
+   * @var \Drupal\Core\TempStore\PrivateTempStore
    */
   protected $tempStore;
 
@@ -40,7 +40,7 @@ class EntityDeleteMultipleAccessCheck implements AccessInterface {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
-   *   The tempstore service.
+   *   The tempstore factory service.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack service.
    */
