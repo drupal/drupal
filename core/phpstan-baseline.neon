@@ -2907,11 +2907,6 @@ parameters:
 			path: tests/Drupal/BuildTests/Framework/Tests/ExternalCommandRequirementTest.php
 
 		-
-			message: "#^Variable \\$machine_name_1_value in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalJavascriptTests/Core/MachineNameTest.php
-
-		-
 			message: "#^Variable \\$rawResult on left side of \\?\\? always exists and is not nullable\\.$#"
 			count: 1
 			path: tests/Drupal/FunctionalJavascriptTests/WebDriverCurlService.php

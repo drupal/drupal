@@ -104,11 +104,6 @@ class MachineNameTest extends WebDriverTestBase {
     // Assert that a machine name based on a default value is initialized.
     $this->assertJsCondition('jQuery("#edit-machine-name-3-label-machine-name-suffix .machine-name-value").html() == "yet_another_machine_name"');
 
-    // Field must be present for the rest of the test to work.
-    if (empty($machine_name_1_value)) {
-      $this->fail('Cannot finish test, missing machine name field');
-    }
-
     // Test each value for conversion to a machine name.
     foreach ($test_values as $test_info) {
       // Set the value for the field, triggering the machine name update.
