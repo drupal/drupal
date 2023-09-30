@@ -207,9 +207,9 @@ class ConfigFileContentTest extends KernelTestBase {
     ];
 
     // Encode and write, and reload and decode the configuration data.
-    $filestorage = new FileStorage(Settings::get('config_sync_directory'));
-    $filestorage->write($name, $config_data);
-    $config_parsed = $filestorage->read($name);
+    $file_storage = new FileStorage(Settings::get('config_sync_directory'));
+    $file_storage->write($name, $config_data);
+    $config_parsed = $file_storage->read($name);
 
     $key = 'numeric keys';
     $this->assertSame($config_data[$key], $config_parsed[$key]);

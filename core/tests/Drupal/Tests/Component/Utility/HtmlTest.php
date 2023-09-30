@@ -300,6 +300,7 @@ class HtmlTest extends TestCase {
       ['→', '→'],
       ['➼', '➼'],
       ['€', '€'],
+      // cspell:disable-next-line
       ['Drup�al', "Drup\x80al"],
     ];
   }

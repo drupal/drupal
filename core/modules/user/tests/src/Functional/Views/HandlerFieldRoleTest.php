@@ -27,29 +27,29 @@ class HandlerFieldRoleTest extends UserTestBase {
 
   public function testRole() {
     // Create a couple of roles for the view.
-    $rolename_a = 'a' . $this->randomMachineName(8);
-    $this->drupalCreateRole(['access content'], $rolename_a, '<em>' . $rolename_a . '</em>', 9);
+    $role_name_a = 'a' . $this->randomMachineName(8);
+    $this->drupalCreateRole(['access content'], $role_name_a, '<em>' . $role_name_a . '</em>', 9);
 
-    $rolename_b = 'b' . $this->randomMachineName(8);
-    $this->drupalCreateRole(['access content'], $rolename_b, $rolename_b, 8);
+    $role_name_b = 'b' . $this->randomMachineName(8);
+    $this->drupalCreateRole(['access content'], $role_name_b, $role_name_b, 8);
 
-    $rolename_not_assigned = $this->randomMachineName(8);
-    $this->drupalCreateRole(['access content'], $rolename_not_assigned, $rolename_not_assigned);
+    $role_name_not_assigned = $this->randomMachineName(8);
+    $this->drupalCreateRole(['access content'], $role_name_not_assigned, $role_name_not_assigned);
 
     // Add roles to user 1.
     $user = User::load(1);
-    $user->addRole($rolename_a);
-    $user->addRole($rolename_b);
+    $user->addRole($role_name_a);
+    $user->addRole($role_name_b);
     $user->save();
 
     $this->drupalLogin($this->createUser(['access user profiles']));
     $this->drupalGet('/test-views-handler-field-role');
     // Verify that the view test_views_handler_field_role renders role assigned
     // to user in the correct order and markup in role names is escaped.
-    $this->assertSession()->responseContains($rolename_b . Html::escape('<em>' . $rolename_a . '</em>'));
+    $this->assertSession()->responseContains($role_name_b . Html::escape('<em>' . $role_name_a . '</em>'));
     // Verify that the view test_views_handler_field_role does not render a role
     // not assigned to a user.
-    $this->assertSession()->pageTextNotContains($rolename_not_assigned);
+    $this->assertSession()->pageTextNotContains($role_name_not_assigned);
   }
 
 }

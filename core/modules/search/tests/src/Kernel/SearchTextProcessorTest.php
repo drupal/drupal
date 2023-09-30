@@ -46,14 +46,14 @@ class SearchTextProcessorTest extends KernelTestBase {
         // \Drupal\search\SearchTextProcessorInterface::analyze().
         $start = 0;
         while ($start < mb_strlen($string)) {
-          $newstr = mb_substr($string, $start, 30);
+          $new_string = mb_substr($string, $start, 30);
           // Special case: leading zeros are removed from numeric strings,
           // and there's one string in this file that is numbers starting with
           // zero, so prepend a 1 on that string.
-          if (preg_match('/^[0-9]+$/', $newstr)) {
-            $newstr = '1' . $newstr;
+          if (preg_match('/^[0-9]+$/', $new_string)) {
+            $new_string = '1' . $new_string;
           }
-          $strings[] = $newstr;
+          $strings[] = $new_string;
           $start += 30;
         }
       }

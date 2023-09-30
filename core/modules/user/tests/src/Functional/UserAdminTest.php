@@ -143,15 +143,15 @@ class UserAdminTest extends BrowserTestBase {
     $this->assertSession()->elementExists('xpath', static::getLinkSelectorForUser($user_c));
 
     // Test unblocking of a user from /admin/people page and sending of activation mail
-    $editunblock = [];
-    $editunblock['action'] = 'user_unblock_user_action';
-    $editunblock['user_bulk_form[4]'] = TRUE;
+    $edit_unblock = [];
+    $edit_unblock['action'] = 'user_unblock_user_action';
+    $edit_unblock['user_bulk_form[4]'] = TRUE;
     $this->drupalGet('admin/people', [
       // Sort the table by username so that we know reliably which user will be
       // targeted with the blocking action.
       'query' => ['order' => 'name', 'sort' => 'asc'],
     ]);
-    $this->submitForm($editunblock, 'Apply to selected items');
+    $this->submitForm($edit_unblock, 'Apply to selected items');
     $user_storage->resetCache([$user_c->id()]);
     $account = $user_storage->load($user_c->id());
     $this->assertTrue($account->isActive(), 'User C unblocked');
