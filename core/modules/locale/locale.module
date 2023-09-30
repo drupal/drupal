@@ -802,7 +802,7 @@ function locale_translation_get_file_history() {
  */
 function locale_translation_update_file_history($file) {
   $status = \Drupal::database()->merge('locale_file')
-    ->key([
+    ->keys([
       'project' => $file->project,
       'langcode' => $file->langcode,
     ])
