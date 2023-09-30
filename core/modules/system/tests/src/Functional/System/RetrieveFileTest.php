@@ -23,15 +23,15 @@ class RetrieveFileTest extends BrowserTestBase {
     // Test 404 handling by trying to fetch a randomly named file.
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
-    $file_system->mkdir($sourcedir = 'public://' . $this->randomMachineName());
+    $file_system->mkdir($source_dir = 'public://' . $this->randomMachineName());
     // cSpell:disable-next-line
     $filename = 'Файл для тестирования ' . $this->randomMachineName();
-    $url = \Drupal::service('file_url_generator')->generateAbsoluteString($sourcedir . '/' . $filename);
+    $url = \Drupal::service('file_url_generator')->generateAbsoluteString($source_dir . '/' . $filename);
     $retrieved_file = system_retrieve_file($url);
     $this->assertFalse($retrieved_file, 'Non-existent file not fetched.');
 
     // Actually create that file, download it via HTTP and test the returned path.
-    file_put_contents($sourcedir . '/' . $filename, 'testing');
+    file_put_contents($source_dir . '/' . $filename, 'testing');
     $retrieved_file = system_retrieve_file($url);
 
     // URLs could not contains characters outside the ASCII set so $filename
@@ -46,15 +46,15 @@ class RetrieveFileTest extends BrowserTestBase {
     $file_system->delete($retrieved_file);
 
     // Test downloading file to a different location.
-    $file_system->mkdir($targetdir = 'temporary://' . $this->randomMachineName());
-    $retrieved_file = system_retrieve_file($url, $targetdir);
-    $this->assertEquals("{$targetdir}/{$encoded_filename}", $retrieved_file, 'Sane path for downloaded file returned (temporary:// scheme).');
+    $file_system->mkdir($target_dir = 'temporary://' . $this->randomMachineName());
+    $retrieved_file = system_retrieve_file($url, $target_dir);
+    $this->assertEquals("{$target_dir}/{$encoded_filename}", $retrieved_file, 'Sane path for downloaded file returned (temporary:// scheme).');
     $this->assertFileExists($retrieved_file);
     $this->assertEquals(7, filesize($retrieved_file), 'File size of downloaded file is correct (temporary:// scheme).');
     $file_system->delete($retrieved_file);
 
-    $file_system->deleteRecursive($sourcedir);
-    $file_system->deleteRecursive($targetdir);
+    $file_system->deleteRecursive($source_dir);
+    $file_system->deleteRecursive($target_dir);
   }
 
 }

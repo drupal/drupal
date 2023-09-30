@@ -19,7 +19,6 @@ ajaxing
 akiko
 allwords
 alphadecimal
-alterjs
 alternatif
 amet
 amphibius
@@ -130,8 +129,6 @@ bodyvalue
 boing
 bomofo
 bonacieux
-boskoop
-boskop
 bovigo
 breezer
 brion
@@ -344,7 +341,6 @@ drivertext
 dropbutton
 dropbuttons
 drudbal
-drup
 drupalci
 drupaldatetime
 drupaldevdays
@@ -369,7 +365,6 @@ drush
 drépal
 détruire
 editables
-editunblock
 eerste
 egulias
 eins
@@ -439,7 +434,6 @@ fieldsets
 filelist
 filemime
 filesort
-filestorage
 filesystems
 filetransfer
 filevalidationerror
@@ -456,7 +450,6 @@ fooalert
 foobarbaz
 foobargorilla
 foofoo
-foos
 formattable
 formvalidation
 fouc
@@ -753,7 +746,6 @@ negotiatiors
 newcol
 newfieldinitial
 newnode
-newstr
 newterm
 newwin
 nids
@@ -918,8 +910,6 @@ presetname
 pretransaction
 preuninstall
 processlist
-projecta
-projectb
 proname
 prophesize
 prophesized
@@ -1001,7 +991,6 @@ revlog
 revpub
 ribisi
 ritchie
-rolename
 roly
 routable
 routeable
@@ -1062,7 +1051,6 @@ somemodule
 someschema
 somethinggeneric
 sortablejs
-sourcedir
 sourceediting
 spacebar
 spagna
@@ -1165,7 +1153,6 @@ tagstack
 tagwords
 takeshita
 tappable
-targetdir
 tarz
 taskless
 tatou

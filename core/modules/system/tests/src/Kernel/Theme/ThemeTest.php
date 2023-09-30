@@ -55,8 +55,8 @@ class ThemeTest extends KernelTestBase {
     // theme_test_false is an implemented theme hook so \Drupal::theme() service
     // should return a string or an object that implements MarkupInterface,
     // even though the theme function itself can return anything.
-    $foos = ['null' => NULL, 'false' => FALSE, 'integer' => 1, 'string' => 'foo', 'empty_string' => ''];
-    foreach ($foos as $type => $example) {
+    $types = ['null' => NULL, 'false' => FALSE, 'integer' => 1, 'string' => 'foo', 'empty_string' => ''];
+    foreach ($types as $type => $example) {
       $output = \Drupal::theme()->render('theme_test_foo', ['foo' => $example]);
       $this->assertTrue($output instanceof MarkupInterface || is_string($output), new FormattableMarkup('\Drupal::theme() returns an object that implements MarkupInterface or a string for data type @type.', ['@type' => $type]));
       if ($output instanceof MarkupInterface) {
