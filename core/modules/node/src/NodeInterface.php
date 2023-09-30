@@ -54,8 +54,9 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, 
   /**
    * Gets the node title.
    *
-   * @return string
-   *   Title of the node.
+   * @return string|null
+   *   Title of the node, or NULL if the node doesn't yet have a title (for
+   *   example, if a new node is being previewed).
    */
   public function getTitle();
 
