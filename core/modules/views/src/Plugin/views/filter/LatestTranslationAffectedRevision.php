@@ -93,23 +93,27 @@ class LatestTranslationAffectedRevision extends FilterPluginBase implements Cont
     $entity_type = $this->entityTypeManager->getDefinition($this->getEntityType());
     $keys = $entity_type->getKeys();
 
+    $subquery = $query->getConnection()->select($query_base_table, 'base_table');
+    $subquery->addExpression("MAX(base_table.{$keys['revision']})", $keys['revision']);
+    $subquery->fields('base_table', [$keys['id'], 'langcode']);
+    $subquery->groupBy("base_table.{$keys['id']}");
+    $subquery->groupBy('base_table.langcode');
+    $subquery->condition('base_table.revision_translation_affected', '1');
+
     $definition = [
-      'table' => $query_base_table,
-      'type' => 'LEFT',
+      'table formula' => $subquery,
+      'type' => 'INNER',
       'field' => $keys['id'],
       'left_table' => $query_base_table,
       'left_field' => $keys['id'],
       'extra' => [
-        ['left_field' => $keys['revision'], 'field' => $keys['revision'], 'operator' => '>'],
+        ['left_field' => $keys['revision'], 'field' => $keys['revision'], 'operator' => '='],
         ['left_field' => 'langcode', 'field' => 'langcode', 'operator' => '='],
-        ['field' => 'revision_translation_affected', 'value' => '1', 'operator' => '='],
       ],
     ];
 
     $join = $this->joinHandler->createInstance('standard', $definition);
-
-    $join_table_alias = $query->addTable($query_base_table, $this->relationship, $join);
-    $query->addWhere($this->options['group'], "$join_table_alias.{$keys['id']}", NULL, 'IS NULL');
+    $query->addTable($query_base_table, $this->relationship, $join);
     $query->addWhere($this->options['group'], "$query_base_table.revision_translation_affected", '1', '=');
   }
 

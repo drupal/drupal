@@ -93,21 +93,10 @@ class LatestRevision extends FilterPluginBase implements ContainerFactoryPluginI
     $entity_type = $this->entityTypeManager->getDefinition($this->getEntityType());
     $keys = $entity_type->getKeys();
 
-    $definition = [
-      'table' => $query_base_table,
-      'type' => 'LEFT',
-      'field' => $keys['id'],
-      'left_table' => $query_base_table,
-      'left_field' => $keys['id'],
-      'extra' => [
-        ['left_field' => $keys['revision'], 'field' => $keys['revision'], 'operator' => '>'],
-      ],
-    ];
-
-    $join = $this->joinHandler->createInstance('standard', $definition);
-
-    $join_table_alias = $query->addTable($query_base_table, $this->relationship, $join);
-    $query->addWhere($this->options['group'], "$join_table_alias.{$keys['id']}", NULL, 'IS NULL');
+    $subquery = $query->getConnection()->select($query_base_table, 'base_table');
+    $subquery->addExpression("MAX(base_table.{$keys['revision']})", $keys['revision']);
+    $subquery->groupBy("base_table.{$keys['id']}");
+    $query->addWhere($this->options['group'], "$query_base_table.{$keys['revision']}", $subquery, 'IN');
   }
 
 }
