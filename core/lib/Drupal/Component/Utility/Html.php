@@ -472,23 +472,25 @@ EOD;
     $xpath = new \DOMXpath($html_dom);
 
     // Update all root-relative URLs to absolute URLs in the given HTML.
+    // Perform on attributes that may contain a single URI.
     foreach (static::$uriAttributes as $attr) {
       foreach ($xpath->query("//*[starts-with(@$attr, '/') and not(starts-with(@$attr, '//'))]") as $node) {
         $node->setAttribute($attr, $scheme_and_host . $node->getAttribute($attr));
       }
-      foreach ($xpath->query("//*[@srcset]") as $node) {
-        // @see https://html.spec.whatwg.org/multipage/embedded-content.html#attr-img-srcset
-        // @see https://html.spec.whatwg.org/multipage/embedded-content.html#image-candidate-string
-        $image_candidate_strings = explode(',', $node->getAttribute('srcset'));
-        $image_candidate_strings = array_map('trim', $image_candidate_strings);
-        for ($i = 0; $i < count($image_candidate_strings); $i++) {
-          $image_candidate_string = $image_candidate_strings[$i];
-          if ($image_candidate_string[0] === '/' && $image_candidate_string[1] !== '/') {
-            $image_candidate_strings[$i] = $scheme_and_host . $image_candidate_string;
-          }
+    }
+    // Perform on each URI within "srcset" attributes.
+    foreach ($xpath->query("//*[@srcset]") as $node) {
+      // @see https://html.spec.whatwg.org/multipage/embedded-content.html#attr-img-srcset
+      // @see https://html.spec.whatwg.org/multipage/embedded-content.html#image-candidate-string
+      $image_candidate_strings = explode(',', $node->getAttribute('srcset'));
+      $image_candidate_strings = array_map('trim', $image_candidate_strings);
+      for ($i = 0; $i < count($image_candidate_strings); $i++) {
+        $image_candidate_string = $image_candidate_strings[$i];
+        if ($image_candidate_string[0] === '/' && $image_candidate_string[1] !== '/') {
+          $image_candidate_strings[$i] = $scheme_and_host . $image_candidate_string;
         }
-        $node->setAttribute('srcset', implode(', ', $image_candidate_strings));
       }
+      $node->setAttribute('srcset', implode(', ', $image_candidate_strings));
     }
     return Html::serialize($html_dom);
   }
