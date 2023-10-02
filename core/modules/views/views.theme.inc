@@ -501,19 +501,19 @@ function template_preprocess_views_view_table(&$variables) {
 
       $variables['header'][$field]['default_classes'] = $fields[$field]->options['element_default_classes'];
       // Set up the header label class.
-      $variables['header'][$field]['attributes'] = [];
+      $variables['header'][$field]['attributes'] = new Attribute();
       $class = $fields[$field]->elementLabelClasses(0);
       if ($class) {
-        $variables['header'][$field]['attributes']['class'][] = $class;
+        $variables['header'][$field]['attributes']->addClass($class);
       }
       // Add responsive header classes.
       if (!empty($options['info'][$field]['responsive'])) {
-        $variables['header'][$field]['attributes']['class'][] = $options['info'][$field]['responsive'];
+        $variables['header'][$field]['attributes']->addClass($options['info'][$field]['responsive']);
         $responsive = TRUE;
       }
       // Add a CSS align class to each field if one was set.
       if (!empty($options['info'][$field]['align'])) {
-        $variables['header'][$field]['attributes']['class'][] = Html::cleanCssIdentifier($options['info'][$field]['align']);
+        $variables['header'][$field]['attributes']->addClass(Html::cleanCssIdentifier($options['info'][$field]['align']));
       }
       // Add a header label wrapper if one was selected.
       if ($variables['header'][$field]['content']) {
@@ -522,7 +522,7 @@ function template_preprocess_views_view_table(&$variables) {
           $variables['header'][$field]['wrapper_element'] = $element_label_type;
         }
         // Improves accessibility of complex tables.
-        $variables['header'][$field]['attributes']['id'] = Html::getUniqueId('view-' . $field . '-table-column');
+        $variables['header'][$field]['attributes']->setAttribute('id', Html::getUniqueId('view-' . $field . '-table-column'));
       }
       // aria-sort is a WAI-ARIA property that indicates if items in a table
       // or grid are sorted in ascending or descending order. See
@@ -535,8 +535,6 @@ function template_preprocess_views_view_table(&$variables) {
       if (!empty($variables['header'][$field]['content'])) {
         $has_header_labels = TRUE;
       }
-
-      $variables['header'][$field]['attributes'] = new Attribute($variables['header'][$field]['attributes']);
     }
 
     // Add a CSS align class to each field if one was set.
@@ -564,21 +562,24 @@ function template_preprocess_views_view_table(&$variables) {
 
       // Add field classes.
       if (!isset($column_reference['attributes'])) {
-        $column_reference['attributes'] = [];
+        $column_reference['attributes'] = new Attribute();
+      }
+      elseif (!($column_reference['attributes'] instanceof Attribute)) {
+        $column_reference['attributes'] = new Attribute($column_reference['attributes']);
       }
 
       if ($classes = $fields[$field]->elementClasses($num)) {
-        $column_reference['attributes']['class'][] = $classes;
+        $column_reference['attributes']->addClass(preg_split('/\s+/', $classes));
       }
 
       // Add responsive header classes.
       if (!empty($options['info'][$field]['responsive'])) {
-        $column_reference['attributes']['class'][] = $options['info'][$field]['responsive'];
+        $column_reference['attributes']->addClass($options['info'][$field]['responsive']);
       }
 
       // Improves accessibility of complex tables.
       if (isset($variables['header'][$field]['attributes']['id'])) {
-        $column_reference['attributes']['headers'] = [$variables['header'][$field]['attributes']['id']];
+        $column_reference['attributes']->setAttribute('headers', [$variables['header'][$field]['attributes']['id']]);
       }
 
       if (!empty($fields[$field])) {
@@ -604,7 +605,6 @@ function template_preprocess_views_view_table(&$variables) {
           }
         }
       }
-      $column_reference['attributes'] = new Attribute($column_reference['attributes']);
     }
 
     // Remove columns if the "empty_column" option is checked and the
