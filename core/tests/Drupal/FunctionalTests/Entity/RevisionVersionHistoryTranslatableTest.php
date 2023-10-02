@@ -75,14 +75,8 @@ final class RevisionVersionHistoryTranslatableTest extends BrowserTestBase {
     $this->assertSession()->linkByHrefNotExists($firstRevision->getTranslation('es')->toUrl('revision-delete-form')->toString());
 
     $this->drupalGet($entity->getTranslation('es')->toUrl('version-history'));
-    // We can't use linkByHrefNotExists here because it does a "contains" match
-    // and the translated URLs contain the non translated ones.
-    // i.e /es/entity_test_mul_revlog/1/revision/1/revert contains
-    // /entity_test_mul_revlog/1/revision/1/revert.
-    $xpath = $this->assertSession()->buildXPathQuery('//a[@href=:href]', [':href' => $firstRevision->toUrl('revision-revert-form')->toString()]);
-    $this->assertEmpty($this->getSession()->getPage()->findAll('xpath', $xpath));
-    $xpath = $this->assertSession()->buildXPathQuery('//a[@href=:href]', [':href' => $firstRevision->toUrl('revision-delete-form')->toString()]);
-    $this->assertEmpty($this->getSession()->getPage()->findAll('xpath', $xpath));
+    $this->assertSession()->linkByHrefNotExistsExact($firstRevision->toUrl('revision-revert-form')->toString());
+    $this->assertSession()->linkByHrefNotExistsExact($firstRevision->toUrl('revision-delete-form')->toString());
     $this->assertSession()->linkByHrefExists($firstRevision->getTranslation('es')->toUrl('revision-revert-form')->toString());
     $this->assertSession()->linkByHrefExists($firstRevision->getTranslation('es')->toUrl('revision-delete-form')->toString());
   }

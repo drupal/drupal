@@ -190,6 +190,104 @@ class WebAssertTest extends BrowserTestBase {
   }
 
   /**
+   * Tests linkExistsByHref() functionality.
+   *
+   * @covers ::linkByHrefExists
+   */
+  public function testLinkByHrefExists(): void {
+    $this->drupalGet('test-page');
+    // Partial matching.
+    $this->assertSession()->linkByHrefExists('/user');
+    // Full matching.
+    $this->assertSession()->linkByHrefExists('/user/login');
+  }
+
+  /**
+   * Tests linkExistsByHref() functionality fail.
+   *
+   * @covers ::linkByHrefExists
+   */
+  public function testInvalidLinkByHrefExists(): void {
+    $this->drupalGet('test-page');
+    $this->expectException(ExpectationException::class);
+    $this->assertSession()->linkByHrefExists('/foo');
+  }
+
+  /**
+   * Tests linkByHrefNotExists() functionality.
+   *
+   * @covers ::linkByHrefNotExists
+   */
+  public function testLinkByHrefNotExists(): void {
+    $this->drupalGet('test-page');
+    $this->assertSession()->linkByHrefNotExists('/foo');
+  }
+
+  /**
+   * Tests LinkByHrefNotExists() functionality fail partial match.
+   *
+   * @covers ::linkByHrefNotExists
+   */
+  public function testInvalidLinkByHrefNotExistsPartial(): void {
+    $this->drupalGet('test-page');
+    $this->expectException(ExpectationException::class);
+    $this->assertSession()->linkByHrefNotExists('/user');
+  }
+
+  /**
+   * Tests LinkByHrefNotExists() functionality fail full match.
+   *
+   * @covers ::linkByHrefNotExists
+   */
+  public function testInvalidLinkByHrefNotExistsFull(): void {
+    $this->drupalGet('test-page');
+    $this->expectException(ExpectationException::class);
+    $this->assertSession()->linkByHrefNotExists('/user/login');
+  }
+
+  /**
+   * Tests linkExistsByHref() functionality.
+   *
+   * @covers ::linkByHrefExistsExact
+   */
+  public function testLinkByHrefExistsExact(): void {
+    $this->drupalGet('test-page');
+    $this->assertSession()->linkByHrefExistsExact('/user/login');
+  }
+
+  /**
+   * Tests linkByHrefExistsExact() functionality fail.
+   *
+   * @covers ::linkByHrefExistsExact
+   */
+  public function testInvalidLinkByHrefExistsExact(): void {
+    $this->drupalGet('test-page');
+    $this->expectException(ExpectationException::class);
+    $this->assertSession()->linkByHrefExistsExact('/foo');
+  }
+
+  /**
+   * Tests linkByHrefNotExistsExact() functionality.
+   *
+   * @covers ::linkByHrefNotExistsExact
+   */
+  public function testLinkByHrefNotExistsExact(): void {
+    $this->drupalGet('test-page');
+    $this->assertSession()->linkByHrefNotExistsExact('/foo');
+  }
+
+  /**
+   * Tests linkByHrefNotExistsExact() functionality fail.
+   *
+   * @covers ::linkByHrefNotExistsExact
+   */
+  public function testInvalidLinkByHrefNotExistsExact(): void {
+    $this->drupalGet('test-page');
+    $this->expectException(ExpectationException::class);
+    $this->assertSession()->linkByHrefNotExistsExact('/user/login');
+  }
+
+  /**
    * Tests legacy text asserts.
    *
    * @covers ::responseContains
