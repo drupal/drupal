@@ -3,13 +3,12 @@
 namespace Drupal\Tests\update\Functional;
 
 /**
- * Tests the Update Manager module with a contrib module with semver versions.
+ * Base class for Update manager semantic versioning tests of contrib projects.
  *
- * @group update
- * @group #slow
+ * This wires up the protected data from UpdateSemverTestBase for a contrib
+ * module with semantic version releases.
  */
-class UpdateSemverContribTest extends UpdateSemverTestBase {
-  use UpdateTestTrait;
+class UpdateSemverContribTestBase extends UpdateSemverTestBase {
 
   /**
    * {@inheritdoc}
