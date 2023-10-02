@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bfd416e5a3556fed83f84928cf81fa18",
+    "content-hash": "08eb7490111bc0f0461e809135f110a1",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -491,7 +491,7 @@
         },
         {
             "name": "drupal/core",
-            "version": "11.x-dev",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "core",
@@ -648,7 +648,7 @@
         },
         {
             "name": "drupal/core-project-message",
-            "version": "11.x-dev",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/ProjectMessage",
@@ -681,7 +681,7 @@
         },
         {
             "name": "drupal/core-vendor-hardening",
-            "version": "11.x-dev",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/VendorHardening",
@@ -4216,26 +4216,28 @@
     "packages-dev": [
         {
             "name": "behat/mink",
-            "version": "v1.10.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/minkphp/Mink.git",
-                "reference": "19e58905632e7cfdc5b2bafb9b950a3521af32c5"
+                "reference": "9e4feb98518a4baeeaefd2e93963558e1ca3f8a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/minkphp/Mink/zipball/19e58905632e7cfdc5b2bafb9b950a3521af32c5",
-                "reference": "19e58905632e7cfdc5b2bafb9b950a3521af32c5",
+                "url": "https://api.github.com/repos/minkphp/Mink/zipball/9e4feb98518a4baeeaefd2e93963558e1ca3f8a4",
+                "reference": "9e4feb98518a4baeeaefd2e93963558e1ca3f8a4",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.2",
-                "symfony/css-selector": "^4.4 || ^5.0 || ^6.0"
+                "symfony/css-selector": "^4.4 || ^5.0 || ^6.0 || ^7.0"
             },
             "require-dev": {
+                "phpstan/phpstan": "^1.10",
+                "phpstan/phpstan-phpunit": "^1.3",
                 "phpunit/phpunit": "^8.5.22 || ^9.5.11",
-                "symfony/error-handler": "^4.4 || ^5.0 || ^6.0",
-                "symfony/phpunit-bridge": "^5.4 || ^6.0"
+                "symfony/error-handler": "^4.4 || ^5.0 || ^6.0 || ^7.0",
+                "symfony/phpunit-bridge": "^5.4 || ^6.0 || ^7.0"
             },
             "suggest": {
                 "behat/mink-browserkit-driver": "fast headless driver for any app without JS emulation",
@@ -4243,6 +4245,7 @@
                 "behat/mink-zombie-driver": "fast and JS-enabled headless driver for any app (requires node.js)",
                 "dmore/chrome-mink-driver": "fast and JS-enabled driver for any app (requires chromium or google chrome)"
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -4274,9 +4277,9 @@
             ],
             "support": {
                 "issues": "https://github.com/minkphp/Mink/issues",
-                "source": "https://github.com/minkphp/Mink/tree/v1.10.0"
+                "source": "https://github.com/minkphp/Mink/tree/master"
             },
-            "time": "2022-03-28T14:22:43+00:00"
+            "time": "2023-09-26T16:13:14+00:00"
         },
         {
             "name": "behat/mink-browserkit-driver",
@@ -4345,26 +4348,28 @@
         },
         {
             "name": "behat/mink-selenium2-driver",
-            "version": "v1.6.0",
+            "version": "dev-w3c-compat",
             "source": {
                 "type": "git",
-                "url": "https://github.com/minkphp/MinkSelenium2Driver.git",
-                "reference": "e5f8421654930da725499fb92983e6948c6f973e"
+                "url": "https://github.com/Lullabot/MinkSelenium2Driver.git",
+                "reference": "b84f67bab79f1cf606b3a6550c2bf84b6fb455e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/minkphp/MinkSelenium2Driver/zipball/e5f8421654930da725499fb92983e6948c6f973e",
-                "reference": "e5f8421654930da725499fb92983e6948c6f973e",
+                "url": "https://api.github.com/repos/Lullabot/MinkSelenium2Driver/zipball/b84f67bab79f1cf606b3a6550c2bf84b6fb455e2",
+                "reference": "b84f67bab79f1cf606b3a6550c2bf84b6fb455e2",
                 "shasum": ""
             },
             "require": {
-                "behat/mink": "^1.9@dev",
+                "behat/mink": "^1.11@dev",
                 "ext-json": "*",
-                "instaclick/php-webdriver": "^1.4",
+                "instaclick/php-webdriver": "^1.4.14",
                 "php": ">=7.2"
             },
             "require-dev": {
                 "mink/driver-testsuite": "dev-master",
+                "phpstan/phpstan": "^1.10",
+                "phpstan/phpstan-phpunit": "^1.3",
                 "phpunit/phpunit": "^8.5.22 || ^9.5.11",
                 "symfony/error-handler": "^4.4 || ^5.0"
             },
@@ -4379,7 +4384,11 @@
                     "Behat\\Mink\\Driver\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Behat\\Mink\\Tests\\Driver\\": "tests"
+                }
+            },
             "license": [
                 "MIT"
             ],
@@ -4406,10 +4415,9 @@
                 "webdriver"
             ],
             "support": {
-                "issues": "https://github.com/minkphp/MinkSelenium2Driver/issues",
-                "source": "https://github.com/minkphp/MinkSelenium2Driver/tree/v1.6.0"
+                "source": "https://github.com/Lullabot/MinkSelenium2Driver/tree/w3c-compat"
             },
-            "time": "2022-03-28T14:55:17+00:00"
+            "time": "2023-10-02T15:11:03+00:00"
         },
         {
             "name": "colinodell/psr-testlogger",
@@ -8801,16 +8809,16 @@
         },
         {
             "name": "symfony/css-selector",
-            "version": "v6.3.0",
+            "version": "v6.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/css-selector.git",
-                "reference": "88453e64cd86c5b60e8d2fb2c6f953bbc353ffbf"
+                "reference": "883d961421ab1709877c10ac99451632a3d6fa57"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/css-selector/zipball/88453e64cd86c5b60e8d2fb2c6f953bbc353ffbf",
-                "reference": "88453e64cd86c5b60e8d2fb2c6f953bbc353ffbf",
+                "url": "https://api.github.com/repos/symfony/css-selector/zipball/883d961421ab1709877c10ac99451632a3d6fa57",
+                "reference": "883d961421ab1709877c10ac99451632a3d6fa57",
                 "shasum": ""
             },
             "require": {
@@ -8846,7 +8854,7 @@
             "description": "Converts CSS selectors to XPath expressions",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/css-selector/tree/v6.3.0"
+                "source": "https://github.com/symfony/css-selector/tree/v6.3.2"
             },
             "funding": [
                 {
@@ -8862,7 +8870,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-03-20T16:43:42+00:00"
+            "time": "2023-07-12T16:00:22+00:00"
         },
         {
             "name": "symfony/dom-crawler",
@@ -9456,6 +9464,7 @@
         "drupal/core": 20,
         "drupal/core-project-message": 20,
         "drupal/core-vendor-hardening": 20,
+        "behat/mink-selenium2-driver": 20,
         "open-telemetry/exporter-otlp": 10,
         "open-telemetry/sdk": 10
     },
@@ -9466,5 +9475,5 @@
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

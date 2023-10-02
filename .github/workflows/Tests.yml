@@ -1,0 +1,37 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  Functional-JavaScript:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ddev/github-action-setup-ddev@v1
+
+      - name: Install dependencies
+        run: ddev composer install
+
+      - name: Configure tests
+        run: cp .github/workflows/phpunit.xml core/phpunit.xml
+
+      - name: Run tests
+        run: ddev exec php ./core/scripts/run-tests.sh --color --keep-results --types "PHPUnit-FunctionalJavascript" --concurrency "4" --repeat "1" --sqlite "./sites/default/files/.sqlite" --verbose --non-html --all
+
+      - name: Upload test artifacts
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: browser_output
+          path: sites/simpletest/browser_output

@@ -1,0 +1,23 @@
+version: '3.6'
+
+services:
+  chrome:
+    container_name: ddev-${DDEV_SITENAME}-chrome
+    image: seleniarm/standalone-chromium:4.1.2-20220227
+    labels:
+      com.ddev.site-name: ${DDEV_SITENAME}
+      com.ddev.approot: $DDEV_APPROOT
+    shm_size: 2gb
+    expose:
+      - 7900
+    environment:
+      - VIRTUAL_HOST=$DDEV_HOSTNAME
+      - HTTPS_EXPOSE=7900:7900
+      - HTTP_EXPOSE=7910:7900
+    links:
+      - web:web
+    external_links:
+      - ddev-router:${DDEV_SITENAME}.${DDEV_TLD}
+    volumes:
+      - ".:/mnt/ddev_config:ro"
+      - ddev-global-cache:/mnt/ddev-global-cache

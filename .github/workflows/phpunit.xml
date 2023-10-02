@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- For how to customize PHPUnit configuration, see core/tests/README.md. -->
+<!-- TODO set checkForUnintentionallyCoveredCode="true" once https://www.drupal.org/node/2626832 is resolved. -->
+<!-- PHPUnit expects functional tests to be run with either a privileged user
+ or your current system user. See core/tests/README.md and
+ https://www.drupal.org/node/2116263 for details.
+-->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         bootstrap="tests/bootstrap.php" colors="true"
+         beStrictAboutTestsThatDoNotTestAnything="true"
+         beStrictAboutOutputDuringTests="true"
+         beStrictAboutChangesToGlobalState="true"
+         failOnWarning="true"
+         printerClass="\Drupal\Tests\Listeners\HtmlOutputPrinter"
+         cacheResult="false"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <php>
+    <!-- Set error reporting to E_ALL. -->
+    <ini name="error_reporting" value="32767"/>
+    <!-- Do not limit the amount of memory tests take to run. -->
+    <ini name="memory_limit" value="-1"/>
+    <!-- Example SIMPLETEST_BASE_URL value: http://localhost -->
+    <env name="SIMPLETEST_BASE_URL" value="http://drupal-webdriver.ddev.site"/>
+    <!-- Example SIMPLETEST_DB value: mysql://username:password@localhost/databasename#table_prefix -->
+    <env name="SIMPLETEST_DB" value="mysql://db:db@db/db"/>
+    <!-- Example BROWSERTEST_OUTPUT_DIRECTORY value: /path/to/webroot/sites/simpletest/browser_output -->
+    <env name="BROWSERTEST_OUTPUT_DIRECTORY" value="/var/www/html/sites/simpletest/browser_output"/>
+    <!-- By default, browser tests will output links that use the base URL set
+     in SIMPLETEST_BASE_URL. However, if your SIMPLETEST_BASE_URL is an internal
+     path (such as may be the case in a virtual or Docker-based environment),
+     you can set the base URL used in the browser test output links to something
+     reachable from your host machine here. This will allow you to follow them
+     directly and view the output. -->
+    <env name="BROWSERTEST_OUTPUT_BASE_URL" value=""/>
+
+    <!-- Deprecation testing is managed through Symfony's PHPUnit Bridge.
+      The environment variable SYMFONY_DEPRECATIONS_HELPER is used to configure
+      the behaviour of the deprecation tests.
+      See https://symfony.com/doc/current/components/phpunit_bridge.html#configuration
+      Drupal core's testing framework is setting this variable to its defaults.
+      Projects with their own requirements need to manage this variable
+      explicitly.
+    -->
+    <!-- To disable deprecation testing completely uncomment the next line. -->
+    <!-- <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/> -->
+    <!-- Deprecation errors can be selectively ignored by specifying a file of
+      regular expression patterns for exclusion.
+      See https://symfony.com/doc/current/components/phpunit_bridge.html#ignoring-deprecations
+      Uncomment the line below to specify a custom deprecations ignore file.
+      NOTE: it may be required to specify the full path to the file to run tests
+      correctly.
+    -->
+    <!-- <env name="SYMFONY_DEPRECATIONS_HELPER" value="ignoreFile=.deprecation-ignore.txt"/> -->
+
+    <!-- Example for changing the driver class for mink tests MINK_DRIVER_CLASS value: 'Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver' -->
+    <env name="MINK_DRIVER_CLASS" value=''/>
+    <!-- Example for changing the driver args to mink tests MINK_DRIVER_ARGS value: '["http://127.0.0.1:8510"]' -->
+    <env name="MINK_DRIVER_ARGS" value='["chrome", {"browserName":"chrome", "goog:chromeOptions":{"args":["--no-sandbox","--ignore-certificate-errors", "--allow-insecure-localhost"]}}, "http://chrome:4444"]'/>
+    <!-- Example for changing the driver args to webdriver tests MINK_DRIVER_ARGS_WEBDRIVER value: '["chrome", { "chromeOptions": { "w3c": false } }, "http://localhost:4444/wd/hub"]' For using the Firefox browser, replace "chrome" with "firefox" -->
+    <env name="MINK_DRIVER_ARGS_WEBDRIVER" value='["chrome", {"browserName":"chrome", "goog:chromeOptions":{"args":["--no-sandbox","--ignore-certificate-errors", "--allow-insecure-localhost"]}}, "http://chrome:4444"]'/>
+  </php>
+  <testsuites>
+    <testsuite name="unit">
+      <file>./tests/TestSuites/UnitTestSuite.php</file>
+    </testsuite>
+    <testsuite name="kernel">
+      <file>./tests/TestSuites/KernelTestSuite.php</file>
+    </testsuite>
+    <testsuite name="functional">
+      <file>./tests/TestSuites/FunctionalTestSuite.php</file>
+    </testsuite>
+    <testsuite name="functional-javascript">
+      <file>./tests/TestSuites/FunctionalJavascriptTestSuite.php</file>
+    </testsuite>
+    <testsuite name="build">
+      <file>./tests/TestSuites/BuildTestSuite.php</file>
+    </testsuite>
+  </testsuites>
+  <listeners>
+    <listener class="\Drupal\Tests\Listeners\DrupalListener">
+    </listener>
+  </listeners>
+  <!-- Settings for coverage reports. -->
+  <coverage>
+    <include>
+      <directory>./includes</directory>
+      <directory>./lib</directory>
+      <directory>./modules</directory>
+      <directory>../modules</directory>
+      <directory>../sites</directory>
+    </include>
+    <exclude>
+      <directory>./modules/*/src/Tests</directory>
+      <directory>./modules/*/tests</directory>
+      <directory>../modules/*/src/Tests</directory>
+      <directory>../modules/*/tests</directory>
+      <directory>../modules/*/*/src/Tests</directory>
+      <directory>../modules/*/*/tests</directory>
+      <directory suffix=".api.php">./lib/**</directory>
+      <directory suffix=".api.php">./modules/**</directory>
+      <directory suffix=".api.php">../modules/**</directory>
+    </exclude>
+  </coverage>
+</phpunit>

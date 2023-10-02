@@ -67,7 +67,8 @@ class WebDriverCurlService extends CurlService {
               curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($parameters));
             }
             else {
-              $customHeaders[] = 'Content-Length: 0';
+              curl_setopt($curl, CURLOPT_POSTFIELDS, "{}");
+              $customHeaders[] = 'Content-Length: 2';
 
               // Suppress "Transfer-Encoding: chunked" header automatically
               // added by cURL that causes a 400 bad request (bad
@@ -92,7 +93,8 @@ class WebDriverCurlService extends CurlService {
               curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($parameters));
             }
             else {
-              $customHeaders[] = 'Content-Length: 0';
+              curl_setopt($curl, CURLOPT_POSTFIELDS, "{}");
+              $customHeaders[] = 'Content-Length: 2';
 
               // Suppress "Transfer-Encoding: chunked" header automatically
               // added by cURL that causes a 400 bad request (bad
