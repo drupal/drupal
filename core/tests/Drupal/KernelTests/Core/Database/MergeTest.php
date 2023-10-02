@@ -227,7 +227,7 @@ class MergeTest extends DatabaseTestBase {
    *
    * @group legacy
    */
-  public function tesDeprecatedKeyArrayArgument(): void {
+  public function testDeprecatedKeyArrayArgument(): void {
     $this->expectDeprecation('Passing an array to the $field argument of Drupal\Core\Database\Query\Merge::key() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/2205327');
     $this->connection->merge('select')
       ->key(['id' => 2])
