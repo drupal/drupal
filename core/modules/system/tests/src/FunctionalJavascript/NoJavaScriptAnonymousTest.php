@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\FunctionalJavascript;
 
+use Drupal\Tests\PerformanceData;
 use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
 use Drupal\node\NodeInterface;
 
@@ -46,30 +47,39 @@ class NoJavaScriptAnonymousTest extends PerformanceTestBase {
     ]);
 
     // Test frontpage.
-    $this->drupalGet('');
-    $this->assertNoJavaScript();
+    $performance_data = $this->collectPerformanceData(function () {
+      $this->drupalGet('');
+    });
+    $this->assertNoJavaScript($performance_data);
 
     // Test node page.
-    $this->drupalGet('node/1');
-    $this->assertNoJavaScript();
+    $performance_data = $this->collectPerformanceData(function () {
+      $this->drupalGet('node/1');
+    });
+    $this->assertNoJavaScript($performance_data);
 
     // Test user profile page.
     $user = $this->drupalCreateUser();
-    $this->drupalGet('user/' . $user->id());
-    $this->assertNoJavaScript();
+    $performance_data = $this->collectPerformanceData(function () use ($user) {
+      $this->drupalGet('user/' . $user->id());
+    });
+    $this->assertNoJavaScript($performance_data);
   }
 
   /**
    * Passes if no JavaScript is found on the page.
    *
+   * @param Drupal\Tests\PerformanceData $performance_data
+   *   A PerformanceData value object.
+   *
    * @internal
    */
-  protected function assertNoJavaScript(): void {
+  protected function assertNoJavaScript(PerformanceData $performance_data): void {
     // Ensure drupalSettings is not set.
     $settings = $this->getDrupalSettings();
     $this->assertEmpty($settings, 'drupalSettings is not set.');
     $this->assertSession()->responseNotMatches('/\.js/');
-    $this->assertSame(0, $this->scriptCount);
+    $this->assertSame(0, $performance_data->getScriptCount());
   }
 
 }

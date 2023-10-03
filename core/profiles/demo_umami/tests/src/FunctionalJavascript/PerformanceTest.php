@@ -7,7 +7,7 @@ use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
 /**
  * Tests demo_umami profile performance.
  *
- * @group performance
+ * @group Performance
  */
 class PerformanceTest extends PerformanceTestBase {
 
@@ -19,11 +19,19 @@ class PerformanceTest extends PerformanceTestBase {
   /**
    * Just load the front page.
    */
-  public function testFrontPage(): void {
-    $this->drupalGet('<front>');
+  public function testPagesAnonymous(): void {
+    $performance_data = $this->collectPerformanceData(function () {
+      $this->drupalGet('<front>');
+    });
     $this->assertSession()->pageTextContains('Umami');
-    $this->assertSame(2, $this->stylesheetCount);
-    $this->assertSame(1, $this->scriptCount);
+    $this->assertSame(2, $performance_data->getStylesheetCount());
+    $this->assertSame(1, $performance_data->getScriptCount());
+
+    $performance_data = $this->collectPerformanceData(function () {
+      $this->drupalGet('node/1');
+    });
+    $this->assertSame(2, $performance_data->getStylesheetCount());
+    $this->assertSame(1, $performance_data->getScriptCount());
   }
 
   /**
@@ -32,10 +40,12 @@ class PerformanceTest extends PerformanceTestBase {
   public function testFrontPagePerformance(): void {
     $admin_user = $this->drupalCreateUser(['access toolbar']);
     $this->drupalLogin($admin_user);
-    $this->drupalGet('<front>');
+    $performance_data = $this->collectPerformanceData(function () {
+      $this->drupalGet('<front>');
+    });
     $this->assertSession()->pageTextContains('Umami');
-    $this->assertSame(2, $this->stylesheetCount);
-    $this->assertSame(2, $this->scriptCount);
+    $this->assertSame(2, $performance_data->getStylesheetCount());
+    $this->assertSame(2, $performance_data->getScriptCount());
   }
 
 }
