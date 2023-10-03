@@ -27,6 +27,8 @@ class UrlConversionTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->root = dirname(__FILE__, 7);
+    // This unit test relies on reading files relative to Drupal root.
+    chdir($this->root);
   }
 
   /**

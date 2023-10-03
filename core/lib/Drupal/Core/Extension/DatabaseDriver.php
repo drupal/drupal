@@ -207,7 +207,7 @@ class DatabaseDriver extends Extension {
   private function getModuleInfo(): void {
     if (!isset($this->info)) {
       $infoParser = new InfoParser($this->root);
-      $this->info = $infoParser->parse($this->root . DIRECTORY_SEPARATOR . $this->getModule()->getPathname());
+      $this->info = $infoParser->parse($this->getModule()->getPathname());
     }
   }
 
