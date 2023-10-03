@@ -51,7 +51,7 @@ class InfoParserDynamic implements InfoParserInterface {
         throw new InfoParserException('Missing required keys (' . implode(', ', $missing_keys) . ') in ' . $filename);
       }
       if (!isset($parsed_info['core_version_requirement'])) {
-        if (str_starts_with($filename, 'core/') || str_starts_with($filename, $this->root . DIRECTORY_SEPARATOR . 'core/')) {
+        if (str_starts_with($filename, 'core/') || str_starts_with($filename, $this->root . '/core/')) {
           // Core extensions do not need to specify core compatibility: they are
           // by definition compatible so a sensible default is used. Core
           // modules are allowed to provide these for testing purposes.
