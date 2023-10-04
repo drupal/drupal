@@ -213,7 +213,7 @@ trait PerformanceTestTrait {
       // Since chrome timestamps are since OS start, we take the first network
       // request as '0' and calculate offsets against that.
       if ($timestamp === NULL && $message['method'] === 'Network.requestWillBeSent') {
-        $url = $message['url'];
+        $url = $message['params']['request']['url'];
         $timestamp = (int) ($message['params']['wallTime'] * $nanoseconds_per_second);
         // Network timestamps are formatted as a second float with three point
         // precision. Record this so it can be compared against other
