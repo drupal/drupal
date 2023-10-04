@@ -2,6 +2,9 @@
 
 namespace Drupal\Component\Utility;
 
+use Masterminds\HTML5;
+use Masterminds\HTML5\Serializer\Traverser;
+
 /**
  * Provides DOMDocument helpers for parsing and serializing HTML strings.
  *
@@ -146,7 +149,7 @@ class Html {
    * This function ensures that each passed HTML ID value only exists once on
    * the page. By tracking the already returned ids, this function enables
    * forms, blocks, and other content to be output multiple times on the same
-   * page, without breaking (X)HTML validation.
+   * page, without breaking HTML validation.
    *
    * For already existing IDs, a counter is appended to the ID string.
    * Therefore, JavaScript and CSS code should not rely on any value that was
@@ -258,49 +261,39 @@ class Html {
   /**
    * Parses an HTML snippet and returns it as a DOM object.
    *
-   * This function loads the body part of a partial (X)HTML document and returns
-   * a full \DOMDocument object that represents this document.
+   * This function loads the body part of a partial HTML document and returns a
+   * full \DOMDocument object that represents this document.
    *
    * Use \Drupal\Component\Utility\Html::serialize() to serialize this
    * \DOMDocument back to a string.
    *
    * @param string $html
-   *   The partial (X)HTML snippet to load. Invalid markup will be corrected on
+   *   The partial HTML snippet to load. Invalid markup will be corrected on
    *   import.
    *
    * @return \DOMDocument
-   *   A \DOMDocument that represents the loaded (X)HTML snippet.
+   *   A \DOMDocument that represents the loaded HTML snippet.
    */
   public static function load($html) {
     $document = <<<EOD
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
-<body>!html</body>
+<!DOCTYPE html>
+<html>
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head>
+<body>$html</body>
 </html>
 EOD;
 
-    // PHP's \DOMDocument::saveXML() encodes carriage returns as &#13; so
-    // normalize all newlines to line feeds.
-    $html = str_replace(["\r\n", "\r"], "\n", $html);
-
-    // PHP's \DOMDocument serialization adds extra whitespace when the markup
-    // of the wrapping document contains newlines, so ensure we remove all
-    // newlines before injecting the actual HTML body to be processed.
-    $document = strtr($document, ["\n" => '', '!html' => $html]);
-
-    $dom = new \DOMDocument();
-    // Ignore warnings during HTML soup loading.
-    @$dom->loadHTML($document, LIBXML_NOBLANKS);
-
-    return $dom;
+    // Instantiate the HTML5 parser, but without the HTML5 namespace being
+    // added to the DOM document.
+    $html5 = new HTML5(['disable_html_ns' => TRUE]);
+    return $html5->loadHTML($document);
   }
 
   /**
    * Converts the body of a \DOMDocument back to an HTML snippet.
    *
-   * The function serializes the body part of a \DOMDocument back to an (X)HTML
-   * snippet. The resulting (X)HTML snippet will be properly formatted to be
+   * The function serializes the body part of a \DOMDocument back to an HTML
+   * snippet. The resulting HTML snippet will be properly formatted to be
    * compatible with HTML user agents.
    *
    * @param \DOMDocument $document
@@ -308,7 +301,7 @@ EOD;
    *   node will be converted.
    *
    * @return string
-   *   A valid (X)HTML snippet, as a string.
+   *   A valid HTML snippet, as a string.
    */
   public static function serialize(\DOMDocument $document) {
     $body_node = $document->getElementsByTagName('body')->item(0);
@@ -321,10 +314,23 @@ EOD;
       foreach ($body_node->getElementsByTagName('style') as $node) {
         static::escapeCdataElement($node, '/*', '*/');
       }
+
+      // Serialize the body using our custom set of rules.
+      // @see \Masterminds\HTML5::saveHTML()
+      $stream = fopen('php://temp', 'wb');
+      $rules = new HtmlSerializerRules($stream);
       foreach ($body_node->childNodes as $node) {
-        $html .= $document->saveXML($node);
+        $traverser = new Traverser($node, $stream, $rules);
+        $traverser->walk();
       }
+      $rules->unsetTraverser();
+      $html = stream_get_contents($stream, -1, 0);
+      fclose($stream);
     }
+
+    // Normalize all newlines.
+    $html = str_replace(["\r\n", "\r"], "\n", $html);
+
     return $html;
   }
 
@@ -455,13 +461,13 @@ EOD;
    * and email.
    *
    * @param string $html
-   *   The partial (X)HTML snippet to load. Invalid markup will be corrected on
+   *   The partial HTML snippet to load. Invalid markup will be corrected on
    *   import.
    * @param string $scheme_and_host
    *   The root URL, which has a URI scheme, host and optional port.
    *
    * @return string
-   *   The updated (X)HTML snippet.
+   *   The updated HTML snippet.
    */
   public static function transformRootRelativeUrlsToAbsolute($html, $scheme_and_host) {
     assert(empty(array_diff(array_keys(parse_url($scheme_and_host)), ["scheme", "host", "port"])), '$scheme_and_host contains scheme, host and port at most.');

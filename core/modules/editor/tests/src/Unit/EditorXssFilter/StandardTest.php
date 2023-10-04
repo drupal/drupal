@@ -517,12 +517,12 @@ xss:ex/*XSS*//*/*/pression(alert("XSS"))\'>',
     // @see \Drupal\editor\EditorXssFilter::filterXssDataAttributes()
 
     // The following two test cases verify that XSS attack vectors are filtered.
-    $data[] = ['<img src="butterfly.jpg" data-caption="&lt;script&gt;alert();&lt;/script&gt;" />', '<img src="butterfly.jpg" data-caption="alert();" />'];
-    $data[] = ['<img src="butterfly.jpg" data-caption="&lt;EMBED SRC=&quot;http://ha.ckers.org/xss.swf&quot; AllowScriptAccess=&quot;always&quot;&gt;&lt;/EMBED&gt;" />', '<img src="butterfly.jpg" data-caption="" />'];
+    $data[] = ['<img src="butterfly.jpg" data-caption="&lt;script&gt;alert();&lt;/script&gt;" />', '<img src="butterfly.jpg" data-caption="alert();">'];
+    $data[] = ['<img src="butterfly.jpg" data-caption="&lt;EMBED SRC=&quot;http://ha.ckers.org/xss.swf&quot; AllowScriptAccess=&quot;always&quot;&gt;&lt;/EMBED&gt;" />', '<img src="butterfly.jpg" data-caption>'];
 
     // When including HTML-tags as visible content, they are double-escaped.
     // This test case ensures that we leave that content unchanged.
-    $data[] = ['<img src="butterfly.jpg" data-caption="&amp;lt;script&amp;gt;alert();&amp;lt;/script&amp;gt;" />', '<img src="butterfly.jpg" data-caption="&amp;lt;script&amp;gt;alert();&amp;lt;/script&amp;gt;" />'];
+    $data[] = ['<img src="butterfly.jpg" data-caption="&amp;lt;script&amp;gt;alert();&amp;lt;/script&amp;gt;" />', '<img src="butterfly.jpg" data-caption="&amp;lt;script&amp;gt;alert();&amp;lt;/script&amp;gt;">'];
 
     return $data;
   }

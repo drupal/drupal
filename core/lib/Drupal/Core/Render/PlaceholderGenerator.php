@@ -116,7 +116,11 @@ class PlaceholderGenerator implements PlaceholderGeneratorInterface {
     $callback = $placeholder_render_array['#lazy_builder'][0];
     $arguments = UrlHelper::buildQuery($placeholder_render_array['#lazy_builder'][1]);
     $token = Crypt::hashBase64(serialize($placeholder_render_array));
-    $placeholder_markup = '<drupal-render-placeholder callback="' . Html::escape($callback) . '" arguments="' . Html::escape($arguments) . '" token="' . Html::escape($token) . '"></drupal-render-placeholder>';
+    $placeholder_markup = '<drupal-render-placeholder callback="' . Html::escape($callback) . '"';
+    if ($arguments !== '') {
+      $placeholder_markup .= ' arguments="' . Html::escape($arguments) . '"';
+    }
+    $placeholder_markup .= ' token="' . Html::escape($token) . '"></drupal-render-placeholder>';
 
     // Build the placeholder element to return.
     $placeholder_element = [];

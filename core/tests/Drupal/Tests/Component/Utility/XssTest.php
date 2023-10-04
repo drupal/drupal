@@ -608,6 +608,16 @@ class XssTest extends TestCase {
   }
 
   /**
+   * Checks that escaped HTML embedded in an attribute is not filtered.
+   *
+   * @see \Drupal\Component\Utility\HtmlSerializerRules
+   */
+  public function testFilterNormalizedHtml5() {
+    $input = '<span data-caption="foo &lt;em&gt;bar&lt;/em&gt;"></span>';
+    $this->assertEquals($input, Xss::filter(Html::normalize($input), ['span']));
+  }
+
+  /**
    * Asserts that a text transformed to lowercase with HTML entities decoded does contain a given string.
    *
    * Otherwise fails the test with a given message, similar to all the

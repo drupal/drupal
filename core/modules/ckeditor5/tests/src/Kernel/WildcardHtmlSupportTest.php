@@ -159,7 +159,7 @@ class WildcardHtmlSupportTest extends KernelTestBase {
         ['alignment'],
       ],
       '<$text-container> with attribute from multiple plugins' => [
-        '<p data-llama class"> <br>',
+        '<p data-llama class> <br>',
         ['<$text-container data-llama>', '<p class>'],
         [
           [

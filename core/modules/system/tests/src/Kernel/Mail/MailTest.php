@@ -324,7 +324,7 @@ class MailTest extends KernelTestBase {
         '#theme' => 'image',
         '#uri' => $input_path,
       ];
-      $expected_html = "<img src=\"$expected_path\" alt=\"\" />";
+      $expected_html = "<img src=\"$expected_path\" alt>\n";
 
       // Send a test message that mail_cancel_test_mail_alter should cancel.
       \Drupal::service('plugin.manager.mail')->mail('mail_html_test', 'render_from_message_param', 'relative_url@example.com', $language_interface->getId(), ['message' => $render]);

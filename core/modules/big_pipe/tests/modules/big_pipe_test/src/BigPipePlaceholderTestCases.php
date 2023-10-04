@@ -303,7 +303,7 @@ class BigPipePlaceholderTestCases {
         '#lazy_builder' => ['\Drupal\big_pipe_test\BigPipeTestController::responseException', []],
         '#create_placeholder' => TRUE,
       ],
-      '<drupal-render-placeholder callback="\Drupal\big_pipe_test\BigPipeTestController::responseException" arguments="" token="' . $token . ' "></drupal-render-placeholder>',
+      '<drupal-render-placeholder callback="\Drupal\big_pipe_test\BigPipeTestController::responseException" arguments token="' . $token . ' "></drupal-render-placeholder>',
       [
         '#lazy_builder' => ['\Drupal\big_pipe_test\BigPipeTestController::responseException', []],
       ]

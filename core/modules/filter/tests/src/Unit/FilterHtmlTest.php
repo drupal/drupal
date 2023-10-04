@@ -56,9 +56,7 @@ class FilterHtmlTest extends UnitTestCase {
       ['<p dir="rtl" />', '<p dir="rtl"></p>'],
       ['<p dir="bogus" />', '<p></p>'],
       ['<p id="first" />', '<p></p>'],
-      // The addition of xml:lang isn't especially desired, but is still valid
-      // HTML5. See https://www.drupal.org/node/1333730.
-      ['<p id="first" lang="en">text</p>', '<p lang="en" xml:lang="en">text</p>'],
+      ['<p id="first" lang="en">text</p>', '<p lang="en">text</p>'],
       ['<p style="display: none;" />', '<p></p>'],
       ['<code class="pretty invalid">foreach ($a as $b) {}</code>', '<code class="pretty">foreach ($a as $b) {}</code>'],
       ['<code class="boring pretty">foreach ($a as $b) {}</code>', '<code class="boring pretty">foreach ($a as $b) {}</code>'],
