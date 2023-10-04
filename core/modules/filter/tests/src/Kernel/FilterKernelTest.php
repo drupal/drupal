@@ -1008,6 +1008,9 @@ class FilterKernelTest extends KernelTestBase {
     $f = Html::normalize('<p>text');
     $this->assertEquals('<p>text</p>', $f, 'HTML corrector -- tag closing at the end of input.');
 
+    $f = Html::normalize('<p>text <img alt="ao');
+    $this->assertEquals('<p>text <img alt="ao"></p>', $f, 'HTML corrector -- tag closing at the end of input + broken attribute.');
+
     $f = Html::normalize('<p>text<p><p>text');
     $this->assertEquals('<p>text</p><p></p><p>text</p>', $f, 'HTML corrector -- tag closing.');
 
