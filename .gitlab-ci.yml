@@ -45,7 +45,7 @@ variables:
   COMPOSER: composer.json
   # Let composer know what self.version means.
   COMPOSER_ROOT_VERSION: "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}-dev"
-  CONCURRENCY: 32
+  CONCURRENCY: 24
   GIT_DEPTH: "3"
 
 
@@ -265,6 +265,15 @@ stages:
     reports:
       codequality: phpcs-quality-report.json
 
+'🧹 JavaScript linting (eslint)':
+  <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings-lint ]
+  stage: 🪄 Lint
+  script:
+    - yarn --cwd=./core run -s lint:core-js-passing --format gitlab
+  artifacts:
+    reports:
+      codequality: eslint-quality-report.json
+
 '🧹 CSS linting (stylelint)':
   <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
@@ -280,15 +289,6 @@ stages:
   script:
     - yarn run --cwd=./core build:css --check
     - cd core && yarn run -s check:ckeditor5
-
-'🧹 JavaScript linting (eslint)':
-  <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings-lint ]
-  stage: 🪄 Lint
-  script:
-    - yarn --cwd=./core run -s lint:core-js-passing --format gitlab
-  artifacts:
-    reports:
-      codequality: eslint-quality-report.json
 
 '📔 Spell-checking':
   <<: [ *with-yarn-cache, *default-job-settings-lint ]

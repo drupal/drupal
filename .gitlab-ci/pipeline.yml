@@ -179,22 +179,10 @@ stages:
 # Test Jobs
 ################
 
-'⚡️ PHPUnit Unit':
-  <<: [ *with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
-  stage: 🗜️ Test
-  services:
-    # There are some unit tests that need a database.
-    # @todo Remove after https://www.drupal.org/project/drupal/issues/3386217
-    - <<: *with-database
-  variables:
-    <<: *test-variables
-    TESTSUITE: PHPUnit-Unit
-    CONCURRENCY: "$CONCURRENCY"
-
 '🌐️️ PHPUnit Functional':
   <<: [ *with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
-  parallel: 6
+  parallel: 7
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Functional
@@ -253,6 +241,7 @@ stages:
 '⚙️️ PHPUnit Kernel':
   <<: [*with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
+  parallel: 2
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Kernel
@@ -263,6 +252,7 @@ stages:
 '🖱️️️ PHPUnit Functional Javascript':
   <<: [ *with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   stage: 🗜️ Test
+  parallel: 2
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-FunctionalJavascript
@@ -280,6 +270,18 @@ stages:
     CONCURRENCY: "$CONCURRENCY"
   services:
     - <<: *with-database
+
+'⚡️ PHPUnit Unit':
+  <<: [ *with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
+  stage: 🗜️ Test
+  services:
+    # There are some unit tests that need a database.
+    # @todo Remove after https://www.drupal.org/project/drupal/issues/3386217
+    - <<: *with-database
+  variables:
+    <<: *test-variables
+    TESTSUITE: PHPUnit-Unit
+    CONCURRENCY: "$CONCURRENCY"
 
 '🦉️️️ Nightwatch':
   <<: [ *with-composer-and-yarn, *setup-webserver, *default-job-settings ]
