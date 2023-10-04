@@ -64,6 +64,14 @@ stages:
 .default-job-settings: &default-job-settings-lint
   interruptible: true
   allow_failure: false
+  retry:
+    max: 2
+    when:
+      - unknown_failure
+      - api_failure
+      - stuck_or_timeout_failure
+      - runner_system_failure
+      - scheduler_failure
   variables:
     _TARGET_PHP: "8.2"
     _TARGET_DB: "sqlite-3"
