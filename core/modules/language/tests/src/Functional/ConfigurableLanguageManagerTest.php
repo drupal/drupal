@@ -13,6 +13,8 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\WaitTerminateTestTrait;
 
+// cspell:ignore funciona
+
 /**
  * Tests Language Negotiation.
  *

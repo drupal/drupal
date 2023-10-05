@@ -7,6 +7,7 @@ use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
 use Drupal\language\Entity\ConfigurableLanguage;
 
+// cspell:ignore eerste laatste volgende vorige
 /**
  * Tests the pluggable pager system.
  *

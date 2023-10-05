@@ -7,6 +7,8 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Tests\BrowserTestBase;
 
+// cspell:ignore heure heures jours ponedjeljak
+
 /**
  * Tests plural handling for various languages.
  *

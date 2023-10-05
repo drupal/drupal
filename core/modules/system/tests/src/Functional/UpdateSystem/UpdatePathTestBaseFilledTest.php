@@ -7,6 +7,8 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\user\Entity\User;
 
+// cspell:ignore usuario
+
 /**
  * Runs UpdatePathTestBaseTest with a dump filled with content.
  *

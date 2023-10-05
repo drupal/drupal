@@ -9,6 +9,8 @@ use Drupal\file\Entity\File;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Component\Render\FormattableMarkup;
 
+// cspell:ignore februar januar juni marz
+
 /**
  * Base class for testing updates to string translations.
  */

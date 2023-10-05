@@ -7,6 +7,8 @@ use Drupal\node\Entity\Node;
 use Drupal\Tests\migrate\Kernel\MigrateTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
+// cspell:ignore tabarnak
+
 /**
  * Tests the EntityRevision destination plugin.
  *

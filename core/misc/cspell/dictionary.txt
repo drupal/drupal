@@ -180,8 +180,6 @@ checkboxified
 checkboxifier
 checkboxify
 checkboxradio
-chien
-chiens
 childlist
 chocolatiers
 chromedriver
@@ -302,7 +300,6 @@ desaturated
 desaturates
 desaturating
 descoping
-descripcion
 destructable
 deutsch
 deutscher
@@ -360,7 +357,6 @@ drush
 drépal
 détruire
 editables
-eerste
 egulias
 eins
 elbonia
@@ -412,8 +408,6 @@ favourite
 favstar
 fcgi
 fdiv
-februar
-fichiers
 fieldable
 fieldapi
 fieldblock
@@ -488,8 +482,6 @@ hashmarks
 hateoas
 heroless
 herro
-heure
-heures
 hexcode
 hilited
 hinode
@@ -509,7 +501,6 @@ httpheader
 httpkernel
 httplug
 httponly
-hurlant
 hustlin
 hwldf
 icann
@@ -543,21 +534,16 @@ itoa
 itok
 ized
 jamo
-januar
-januari
-janvier
 javascripts
 jessebeach
 jnoub
 johansson
 johndoe
-jours
 jqueryui
 jsonapi
 jsonlint
 jssdk
 jumplinks
-juni
 justinrainbow
 kakec
 kangarookitten
@@ -578,7 +564,6 @@ kristiaan
 kspread
 kthxbai
 kword
-laatste
 labely
 lamoids
 langcode
@@ -588,7 +573,6 @@ languageswitcher
 lazybuilder
 lcode
 libc
-libellé
 libmysqlclient
 licious
 lified
@@ -632,8 +616,6 @@ makedefaultmessage
 makewarningmessage
 mank
 maryjane
-marz
-marzo
 matchout
 mathematica
 maxage
@@ -680,8 +662,6 @@ mojito
 montag
 monthnames
 mooooh
-mostrar
-moutons
 msgctxt
 msgid
 msgstr
@@ -712,7 +692,6 @@ mysite
 mysqladmin
 mysqldump
 mystarterkit
-műveletek
 nalias
 nameofbin
 namespacing
@@ -836,7 +815,6 @@ pluggable
 pluralforms
 plusthick
 poink
-ponedjeljak
 porterstemmer
 português
 postbar
@@ -1089,14 +1067,11 @@ sulaco
 sunz
 sunzzzzzzz
 supercede
-svenska
 svgz
-svibanj
 sxto
 synchronizable
 syrop
 szwr
-tabarnak
 tabbingmanager
 tabledrag
 tableheader
@@ -1114,7 +1089,6 @@ takeshita
 tappable
 tarz
 taskless
-tatou
 tbodies
 tcomment
 tempfile
@@ -1208,7 +1182,6 @@ trid
 troopal
 truecolor
 turbolinks
-tuvan
 twistie
 twocol
 txtzzzz
@@ -1304,7 +1277,6 @@ usecase
 userid
 userinfo
 userref
-usuario
 vampirize
 varchar
 veniam
@@ -1315,8 +1287,6 @@ vfsstream
 viewmode
 viewports
 vocabs
-volgende
-vorige
 wcag
 wcprops
 webassert

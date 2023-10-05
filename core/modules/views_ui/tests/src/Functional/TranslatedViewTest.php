@@ -4,6 +4,8 @@ namespace Drupal\Tests\views_ui\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 
+// cspell:ignore fichiers
+
 /**
  * Tests that translated strings in views UI don't override original strings.
  *
