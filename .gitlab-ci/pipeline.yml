@@ -1,19 +1,6 @@
 # cspell:ignore drupaltestbot drupaltestbotpw
 
 stages:
-  ################
-  # Build
-  #
-  # Assemble the test environment.
-  ################
-  - 🏗️ Build
-
-  ################
-  # Test
-  #
-  # The test phase actually executes the tests, as well as gathering results
-  # and artifacts.
-  ################
   - 🗜️ Test
 
 #############
@@ -21,6 +8,7 @@ stages:
 #############
 
 .default-job-settings: &default-job-settings
+  stage: 🗜️ Test
   interruptible: true
   allow_failure: false
   retry:
@@ -36,36 +24,6 @@ stages:
   rules:
     - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
 
-.composer-cache: &composer-cache
-  key:
-    files:
-      - ./composer.json
-      - ./composer.lock
-  paths:
-    - ./vendor
-
-.yarn-cache: &yarn-cache
-  key:
-    files:
-      - ./core/package.json
-      - ./core/yarn.lock
-  paths:
-    - ./core/node_modules
-
-.with-composer-cache: &with-composer-cache
-  needs:
-    - '📦️ Composer'
-  cache:
-    policy: pull
-    <<: *composer-cache
-
-.with-yarn-cache: &with-yarn-cache
-  needs:
-    - '📦️ Yarn'
-  cache:
-    policy: pull
-    <<: *yarn-cache
-
 .junit-artifacts: &junit-artifacts
   artifacts:
     expose_as: junit
@@ -75,13 +33,17 @@ stages:
     reports:
       junit: junit.xml
 
+.with-composer: &with-composer
+  needs:
+    - pipeline: $PARENT_PIPELINE_ID
+      job: '📦️ Composer'
+
 .with-composer-and-yarn: &with-composer-and-yarn
   needs:
-    - '📦️ Composer'
-    - '📦️ Yarn'
-  dependencies:
-    - '📦️ Yarn'
-    - '📦️ Composer'
+    - pipeline: $PARENT_PIPELINE_ID
+      job: '📦️ Composer'
+    - pipeline: $PARENT_PIPELINE_ID
+      job: '📦️ Yarn'
 
 .test-variables: &test-variables
   FF_NETWORK_PER_BUILD: 1
@@ -151,45 +113,8 @@ stages:
 # Documentation: https://docs.gitlab.com/ee/ci/jobs/
 ################
 
-################
-# Build Jobs
-################
-
-'📦️ Composer':
-  <<: *default-job-settings
-  stage: 🏗️ Build
-  cache:
-    <<: *composer-cache
-  artifacts:
-    expire_in: 1 week
-    expose_as: 'web-vendor'
-    paths:
-      - vendor/
-  script:
-      - composer validate
-      - composer install
-
-'📦️ Yarn':
-  <<: *default-job-settings
-  stage: 🏗️ Build
-  cache:
-    <<: *yarn-cache
-  artifacts:
-    expire_in: 1 week
-    expose_as: 'yarn-vendor'
-    paths:
-      - core/node_modules/
-  script:
-    # Installs all core javascript dependencies and adds junit formatter.
-    - yarn --cwd ./core add stylelint-junit-formatter
-
-################
-# Test Jobs
-################
-
 '🌐️️ PHPUnit Functional':
-  <<: [ *with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
-  stage: 🗜️ Test
+  <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   parallel: 7
   variables:
     <<: *test-variables
@@ -199,8 +124,7 @@ stages:
     - <<: *with-database
 
 '🩹 Test-only changes':
-  <<: [ *with-composer-cache, *phpunit-artifacts, *setup-webserver, *default-job-settings ]
-  stage: 🗜️ Test
+  <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *default-job-settings ]
   when: manual
   interruptible: true
   allow_failure: true
@@ -246,8 +170,7 @@ stages:
       fi
 
 '⚙️️ PHPUnit Kernel':
-  <<: [*with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
-  stage: 🗜️ Test
+  <<: [*with-composer, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   parallel: 2
   variables:
     <<: *test-variables
@@ -257,8 +180,7 @@ stages:
     - <<: *with-database
 
 '🖱️️️ PHPUnit Functional Javascript':
-  <<: [ *with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
-  stage: 🗜️ Test
+  <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   parallel: 2
   variables:
     <<: *test-variables
@@ -269,8 +191,7 @@ stages:
     - <<: *with-chrome
 
 '👷️️️ PHPUnit Build':
-  <<: [ *with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
-  stage: 🗜️ Test
+  <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   variables:
     <<: *test-variables
     TESTSUITE: PHPUnit-Build
@@ -279,8 +200,7 @@ stages:
     - <<: *with-database
 
 '⚡️ PHPUnit Unit':
-  <<: [ *with-composer-cache, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
-  stage: 🗜️ Test
+  <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
   services:
     # There are some unit tests that need a database.
     # @todo Remove after https://www.drupal.org/project/drupal/issues/3386217
@@ -292,7 +212,6 @@ stages:
 
 '🦉️️️ Nightwatch':
   <<: [ *with-composer-and-yarn, *setup-webserver, *default-job-settings ]
-  stage: 🗜️ Test
   variables:
     <<: *test-variables
   services:
