@@ -13,6 +13,7 @@ use Drupal\Tests\media\Traits\OEmbedTestTrait;
  * @covers \Drupal\media\Plugin\Field\FieldFormatter\OEmbedFormatter
  *
  * @group media
+ * @group #slow
  */
 class OEmbedFormatterTest extends MediaFunctionalTestBase {
 

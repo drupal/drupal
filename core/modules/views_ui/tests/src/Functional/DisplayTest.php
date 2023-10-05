@@ -9,6 +9,7 @@ use Drupal\views\Views;
  * Tests the display UI.
  *
  * @group views_ui
+ * @group #slow
  */
 class DisplayTest extends UITestBase {
 
