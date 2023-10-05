@@ -314,6 +314,11 @@ class PlaceholdersTest implements TrustedCallbackInterface {
    *   A renderable array.
    */
   public static function callbackPerUser($animal) {
+    // As well as adding the user cache context, additionally suspend the
+    // current Fiber if there is one.
+    if ($fiber = \Fiber::getCurrent()) {
+      $fiber->suspend();
+    }
     $build = static::callback($animal);
     $build['#cache']['contexts'][] = 'user';
     return $build;
