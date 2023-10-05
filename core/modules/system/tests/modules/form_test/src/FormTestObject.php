@@ -39,7 +39,7 @@ class FormTestObject extends ConfigFormBase {
     $form['strawberry'] = [
       '#type' => 'hidden',
       '#value' => 'red',
-      '#attributes' => ['id' => 'redstrawberryhiddenfield'],
+      '#attributes' => ['id' => 'red-strawberry-hidden-field'],
     ];
 
     $form['actions']['#type'] = 'actions';

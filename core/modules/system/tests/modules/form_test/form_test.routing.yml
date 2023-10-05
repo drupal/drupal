@@ -15,7 +15,7 @@ form_test.route2:
 form_test.route3:
   path: '/form-test/object-service-builder'
   defaults:
-    _form: 'form_test.form.serviceform'
+    _form: 'form_test.form.service_form'
   requirements:
     _access: 'TRUE'
 

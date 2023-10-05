@@ -29,7 +29,7 @@ function delay_cache_tags_invalidation_entity_test_insert(EntityTest $entity) {
 
   // Trigger a nested entity save and hence a nested transaction.
   User::create([
-    'name' => 'johndoe',
+    'name' => 'john doe',
     'status' => 1,
   ])->save();
 }
@@ -38,7 +38,7 @@ function delay_cache_tags_invalidation_entity_test_insert(EntityTest $entity) {
  * Implements hook_ENTITY_TYPE_insert().
  */
 function delay_cache_tags_invalidation_user_insert(UserInterface $entity) {
-  if ($entity->getAccountName() === 'johndoe') {
+  if ($entity->getAccountName() === 'john doe') {
     // Read the in-transaction cache writes.
     // @see  delay_cache_tags_invalidation_entity_test_insert()
     \Drupal::state()->set(__FUNCTION__ . '__during_transaction_foobar', \Drupal::cache()->get('delay_cache_tags_invalidation_entity_test_insert__during_transaction_foobar'));

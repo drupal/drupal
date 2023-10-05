@@ -119,7 +119,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     // Check that the hidden field exists and has a specific value.
     $this->assertSession()->hiddenFieldExists('strawberry');
     $this->assertSession()->hiddenFieldExists('red');
-    $this->assertSession()->hiddenFieldExists('redstrawberryhiddenfield');
+    $this->assertSession()->hiddenFieldExists('red-strawberry-hidden-field');
     $this->assertSession()->hiddenFieldValueNotEquals('strawberry', 'brown');
     $this->assertSession()->hiddenFieldValueEquals('strawberry', 'red');
 

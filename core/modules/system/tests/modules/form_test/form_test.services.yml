@@ -1,5 +1,5 @@
 services:
-  form_test.form.serviceform:
+  form_test.form.service_form:
     class: Drupal\form_test\FormTestServiceObject
     arguments: ['@config.factory', '@config.typed']
   form_test.event_subscriber:

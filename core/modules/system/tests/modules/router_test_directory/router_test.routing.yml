@@ -23,7 +23,7 @@ router_test.4:
   path: '/router_test/test4/{value}'
   defaults:
     _controller: '\Drupal\router_test\TestControllers::test4'
-    value: 'narf'
+    value: 'Lassie'
   requirements:
     _access: 'TRUE'
 

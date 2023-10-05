@@ -91,7 +91,7 @@ class UrlGeneratorTest extends UnitTestCase {
 
     $routes = new RouteCollection();
     $first_route = new Route('/test/one');
-    $second_route = new Route('/test/two/{narf}');
+    $second_route = new Route('/test/two/{Lassie}');
     $third_route = new Route('/test/two/');
     $fourth_route = new Route('/test/four', [], [], [], '', ['https']);
     $none_route = new Route('', [], [], ['_no_path' => TRUE]);
@@ -319,7 +319,7 @@ class UrlGeneratorTest extends UnitTestCase {
    * Confirms that generated routes will have aliased paths.
    */
   public function testAliasGenerationWithParameters() {
-    $url = $this->generator->generate('test_2', ['narf' => '5']);
+    $url = $this->generator->generate('test_2', ['Lassie' => '5']);
     $this->assertEquals('/goodbye/cruel/world', $url);
     // No cacheability to test; UrlGenerator::generate() doesn't support
     // collecting cacheability metadata.
@@ -333,17 +333,17 @@ class UrlGeneratorTest extends UnitTestCase {
     $this->assertGenerateFromRoute('test_1', ['zoo' => 5], $options, '/hello/world?zoo=5#top', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
 
     $options = ['query' => ['page' => '1'], 'fragment' => 'bottom'];
-    $this->assertGenerateFromRoute('test_2', ['narf' => 5], $options, '/goodbye/cruel/world?page=1#bottom', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
+    $this->assertGenerateFromRoute('test_2', ['Lassie' => 5], $options, '/goodbye/cruel/world?page=1#bottom', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
 
     // Changing the parameters, the route still matches but there is no alias.
-    $this->assertGenerateFromRoute('test_2', ['narf' => 7], $options, '/test/two/7?page=1#bottom', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
+    $this->assertGenerateFromRoute('test_2', ['Lassie' => 7], $options, '/test/two/7?page=1#bottom', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
 
-    $path = $this->generator->getPathFromRoute('test_2', ['narf' => '5']);
+    $path = $this->generator->getPathFromRoute('test_2', ['Lassie' => '5']);
     $this->assertEquals('test/two/5', $path);
 
     // Specify a query parameter with NULL.
     $options = ['query' => ['page' => NULL], 'fragment' => 'bottom'];
-    $this->assertGenerateFromRoute('test_2', ['narf' => 5], $options, '/goodbye/cruel/world?page#bottom', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
+    $this->assertGenerateFromRoute('test_2', ['Lassie' => 5], $options, '/goodbye/cruel/world?page#bottom', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
   }
 
   /**
@@ -369,28 +369,28 @@ class UrlGeneratorTest extends UnitTestCase {
     ];
     $data[] = [
       'test_2',
-      ['narf' => '5'],
+      ['Lassie' => '5'],
       ['query' => ['page' => '1'], 'fragment' => 'bottom'],
       '/goodbye/cruel/world?page=1#bottom',
     ];
     // Changing the parameters, the route still matches but there is no alias.
     $data[] = [
       'test_2',
-      ['narf' => '7'],
+      ['Lassie' => '7'],
       ['query' => ['page' => '1'], 'fragment' => 'bottom'],
       '/test/two/7?page=1#bottom',
     ];
     // Query string values containing '/' should be decoded.
     $data[] = [
       'test_2',
-      ['narf' => '7'],
+      ['Lassie' => '7'],
       ['query' => ['page' => '1/2'], 'fragment' => 'bottom'],
       '/test/two/7?page=1/2#bottom',
     ];
     // A NULL query string.
     $data['query-with-NULL'] = [
       'test_2',
-      ['narf' => '7'],
+      ['Lassie' => '7'],
       ['query' => NULL, 'fragment' => 'bottom'],
       '/test/two/7#bottom',
     ];
@@ -550,7 +550,7 @@ class UrlGeneratorTest extends UnitTestCase {
     $this->processorManager->addOutbound($path_processor);
 
     $options = [];
-    $this->assertGenerateFromRoute('test_2', ['narf' => 5], $options, '/goodbye/cruel/world?zoo=5#foo', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
+    $this->assertGenerateFromRoute('test_2', ['Lassie' => 5], $options, '/goodbye/cruel/world?zoo=5#foo', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
   }
 
   /**

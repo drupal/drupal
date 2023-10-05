@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\conneg_test\Controller;
+namespace Drupal\content_negotiation_test\Controller;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

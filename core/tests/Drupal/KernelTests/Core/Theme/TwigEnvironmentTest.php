@@ -37,7 +37,7 @@ class TwigEnvironmentTest extends KernelTestBase {
     /** @var \Drupal\Core\Template\TwigEnvironment $environment */
     $environment = \Drupal::service('twig');
     $this->assertEquals('test-no-context', $environment->renderInline('test-no-context'));
-    $this->assertEquals('test-with-context muuh', $environment->renderInline('test-with-context {{ llama }}', ['llama' => 'muuh']));
+    $this->assertEquals('test-with-context social', $environment->renderInline('test-with-context {{ llama }}', ['llama' => 'social']));
 
     $element = [];
     $unsafe_string = '<script>alert(\'Danger! High voltage!\');</script>';
@@ -61,12 +61,12 @@ class TwigEnvironmentTest extends KernelTestBase {
     $element['test'] = [
       '#type' => 'inline_template',
       '#template' => 'test-with-context {{ llama }}',
-      '#context' => ['llama' => 'muuh'],
+      '#context' => ['llama' => 'social'],
     ];
     $element_copy = $element;
     // Render it twice so that twig caching is triggered.
-    $this->assertEquals('test-with-context muuh', $renderer->renderRoot($element));
-    $this->assertEquals('test-with-context muuh', $renderer->renderRoot($element_copy));
+    $this->assertEquals('test-with-context social', $renderer->renderRoot($element));
+    $this->assertEquals('test-with-context social', $renderer->renderRoot($element_copy));
 
     // Tests caching of inline templates with long content to ensure the
     // generated cache key can be used as a filename.

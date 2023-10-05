@@ -64,7 +64,7 @@ class NodeRSSContentTest extends NodeTestBase {
 
     // Check that extra RSS elements and namespaces are added to RSS feed.
     $test_element = "<testElement>Value of testElement RSS element for node {$node->id()}.</testElement>";
-    $test_ns = 'xmlns:drupaltest="http://example.com/test-namespace"';
+    $test_ns = 'xmlns:test="http://example.com/test-namespace"';
     $this->assertSession()->responseContains($test_element);
     $this->assertSession()->responseContains($test_ns);
 

@@ -20,7 +20,7 @@ class ContentNegotiationRoutingTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['conneg_test', 'path_alias'];
+  protected static $modules = ['content_negotiation_test', 'path_alias'];
 
   /**
    * {@inheritdoc}
@@ -50,39 +50,39 @@ class ContentNegotiationRoutingTest extends KernelTestBase {
    */
   public function testContentRouting() {
     // Alias with extension pointing to no extension/constant content-type.
-    $this->createPathAlias('/conneg/html', '/alias.html');
+    $this->createPathAlias('/content_negotiation/html', '/alias.html');
 
     // Alias with extension pointing to dynamic extension/linked content-type.
-    $this->createPathAlias('/conneg/html?_format=json', '/alias.json');
+    $this->createPathAlias('/content_negotiation/html?_format=json', '/alias.json');
 
     $tests = [
       // ['path', 'accept', 'content-type'],
 
       // Extension is part of the route path. Constant Content-type.
-      ['conneg/simple.json', '', 'application/json'],
-      ['conneg/simple.json', 'application/xml', 'application/json'],
-      ['conneg/simple.json', 'application/json', 'application/json'],
+      ['content_negotiation/simple.json', '', 'application/json'],
+      ['content_negotiation/simple.json', 'application/xml', 'application/json'],
+      ['content_negotiation/simple.json', 'application/json', 'application/json'],
       // No extension. Constant Content-type.
-      ['conneg/html', '', 'text/html'],
-      ['conneg/html', '*/*', 'text/html'],
-      ['conneg/html', 'application/xml', 'text/html'],
-      ['conneg/html', 'text/xml', 'text/html'],
-      ['conneg/html', 'text/html', 'text/html'],
+      ['content_negotiation/html', '', 'text/html'],
+      ['content_negotiation/html', '*/*', 'text/html'],
+      ['content_negotiation/html', 'application/xml', 'text/html'],
+      ['content_negotiation/html', 'text/xml', 'text/html'],
+      ['content_negotiation/html', 'text/html', 'text/html'],
       // Dynamic extension. Linked Content-type.
-      ['conneg/html?_format=json', '', 'application/json'],
-      ['conneg/html?_format=json', '*/*', 'application/json'],
-      ['conneg/html?_format=json', 'application/xml', 'application/json'],
-      ['conneg/html?_format=json', 'application/json', 'application/json'],
-      ['conneg/html?_format=xml', '', 'application/xml'],
-      ['conneg/html?_format=xml', '*/*', 'application/xml'],
-      ['conneg/html?_format=xml', 'application/json', 'application/xml'],
-      ['conneg/html?_format=xml', 'application/xml', 'application/xml'],
+      ['content_negotiation/html?_format=json', '', 'application/json'],
+      ['content_negotiation/html?_format=json', '*/*', 'application/json'],
+      ['content_negotiation/html?_format=json', 'application/xml', 'application/json'],
+      ['content_negotiation/html?_format=json', 'application/json', 'application/json'],
+      ['content_negotiation/html?_format=xml', '', 'application/xml'],
+      ['content_negotiation/html?_format=xml', '*/*', 'application/xml'],
+      ['content_negotiation/html?_format=xml', 'application/json', 'application/xml'],
+      ['content_negotiation/html?_format=xml', 'application/xml', 'application/xml'],
 
       // Path with a variable. Variable contains a period.
-      ['conneg/plugin/plugin.id', '', 'text/html'],
-      ['conneg/plugin/plugin.id', '*/*', 'text/html'],
-      ['conneg/plugin/plugin.id', 'text/xml', 'text/html'],
-      ['conneg/plugin/plugin.id', 'text/html', 'text/html'],
+      ['content_negotiation/plugin/plugin.id', '', 'text/html'],
+      ['content_negotiation/plugin/plugin.id', '*/*', 'text/html'],
+      ['content_negotiation/plugin/plugin.id', 'text/xml', 'text/html'],
+      ['content_negotiation/plugin/plugin.id', 'text/html', 'text/html'],
 
       // Alias with extension pointing to no extension/constant content-type.
       ['alias.html', '', 'text/html'],
@@ -118,14 +118,14 @@ class ContentNegotiationRoutingTest extends KernelTestBase {
       // ['path', 'accept', 'content-type'],
 
       // 406?
-      ['conneg/negotiate', '', 'text/html'],
+      ['content_negotiation/negotiate', '', 'text/html'],
       // 406?
-      ['conneg/negotiate', '', 'text/html'],
-      // ['conneg/negotiate', '*/*', '??'],
-      ['conneg/negotiate', 'application/json', 'application/json'],
-      ['conneg/negotiate', 'application/xml', 'application/xml'],
-      ['conneg/negotiate', 'application/json', 'application/json'],
-      ['conneg/negotiate', 'application/xml', 'application/xml'],
+      ['content_negotiation/negotiate', '', 'text/html'],
+      // ['content_negotiation/negotiate', '*/*', '??'],
+      ['content_negotiation/negotiate', 'application/json', 'application/json'],
+      ['content_negotiation/negotiate', 'application/xml', 'application/xml'],
+      ['content_negotiation/negotiate', 'application/json', 'application/json'],
+      ['content_negotiation/negotiate', 'application/xml', 'application/xml'],
     ];
 
     foreach ($tests as $test) {

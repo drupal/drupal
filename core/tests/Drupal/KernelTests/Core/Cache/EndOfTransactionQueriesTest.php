@@ -83,7 +83,7 @@ class EndOfTransactionQueriesTest extends KernelTestBase {
     $this->assertSame($last_statement_index - count($cachetag_statements) + 1, min($cachetag_statements), 'All of the last queries in the transaction are for the "cachetags" table.');
 
     // Verify that a nested entity save occurred.
-    $this->assertSame('johndoe', User::load(1)->getAccountName());
+    $this->assertSame('john doe', User::load(1)->getAccountName());
 
     // Cache reads occurring during a transaction that DO NOT depend on
     // invalidated cache tags result in cache HITs. Similarly, cache writes that
@@ -132,7 +132,7 @@ class EndOfTransactionQueriesTest extends KernelTestBase {
     // Save a user, that should invalidate the cache tagged with user_list but
     // not the one with entity_test_list.
     User::create([
-      'name' => 'johndoe',
+      'name' => 'john doe',
       'status' => 1,
     ])->save();
 

@@ -172,7 +172,7 @@ class RouterTest extends BrowserTestBase {
   public function testControllerPlaceholdersDefaultValues() {
     $this->drupalGet('router_test/test4');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextContains('narf');
+    $this->assertSession()->pageTextContains('Lassie');
 
     // Confirm that the page wrapping is being added, so we're not getting a
     // raw body returned.

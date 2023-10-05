@@ -140,7 +140,7 @@ display:
           expose:
             label: ''
           granularity: second
-      title: safa
+      title: foo
       header: {  }
       footer: {  }
       empty: {  }

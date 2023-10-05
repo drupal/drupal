@@ -5,7 +5,7 @@ dependencies:
     - block_content
   theme:
     - stark
-id: foobargorilla
+id: foobar_gorilla
 theme: stark
 region: content
 weight: null

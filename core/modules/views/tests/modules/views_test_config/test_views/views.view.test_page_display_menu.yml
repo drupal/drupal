@@ -108,7 +108,7 @@ display:
       menu:
         type: normal
         title: 'Test child with non-existing parent'
-        parent: llamasarelame
+        parent: llamas_are_lame
         description: ''
         menu_name: admin
         weight: 0
