@@ -38,3 +38,11 @@ function image_module_test_image_effect_info_alter(&$effects) {
 function image_module_test_image_style_presave(ImageStyleInterface $style) {
   $style->setThirdPartySetting('image_module_test', 'foo', 'bar');
 }
+
+/**
+ * Implements hook_image_style_flush().
+ */
+function image_module_test_image_style_flush($style, $path = NULL) {
+  $state = \Drupal::state();
+  $state->set('image_module_test_image_style_flush.called', $path);
+}

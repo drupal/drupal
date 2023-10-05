@@ -278,25 +278,25 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
           // Ignore failed deletes.
         }
       }
-      return $this;
     }
-
-    // Delete the style directory in each registered wrapper.
-    $wrappers = $this->getStreamWrapperManager()->getWrappers(StreamWrapperInterface::WRITE_VISIBLE);
-    foreach ($wrappers as $wrapper => $wrapper_data) {
-      if (file_exists($directory = $wrapper . '://styles/' . $this->id())) {
-        try {
-          $file_system->deleteRecursive($directory);
-        }
-        catch (FileException $e) {
-          // Ignore failed deletes.
+    else {
+      // Delete the style directory in each registered wrapper.
+      $wrappers = $this->getStreamWrapperManager()->getWrappers(StreamWrapperInterface::WRITE_VISIBLE);
+      foreach ($wrappers as $wrapper => $wrapper_data) {
+        if (file_exists($directory = $wrapper . '://styles/' . $this->id())) {
+          try {
+            $file_system->deleteRecursive($directory);
+          }
+          catch (FileException $e) {
+            // Ignore failed deletes.
+          }
         }
       }
     }
 
     // Let other modules update as necessary on flush.
     $module_handler = \Drupal::moduleHandler();
-    $module_handler->invokeAll('image_style_flush', [$this]);
+    $module_handler->invokeAll('image_style_flush', [$this, $path]);
 
     // Clear caches so that formatters may be added for this style.
     \Drupal::service('theme.registry')->reset();
