@@ -237,20 +237,44 @@ class Registry implements DestructableInterface {
    */
   public function get() {
     $this->init($this->themeName);
-    if (isset($this->registry[$this->theme->getName()])) {
-      return $this->registry[$this->theme->getName()];
+    if ($cached = $this->cacheGet()) {
+      return $cached;
     }
-    if ($cache = $this->cache->get('theme_registry:' . $this->theme->getName())) {
-      $this->registry[$this->theme->getName()] = $cache->data;
-    }
-    else {
-      $this->build();
-      // Only persist it if all modules are loaded to ensure it is complete.
-      if ($this->moduleHandler->isLoaded()) {
-        $this->setCache();
+    // If called from inside a Fiber, suspend it, this may allow another code
+    // path to begin an asynchronous operation before we do the CPU-intensive
+    // task of building the theme registry.
+    if (\Fiber::getCurrent() !== NULL) {
+      \Fiber::suspend();
+      // When the Fiber is resumed, check the cache again since it may have been
+      // built in the meantime, either in this process or via a different
+      // request altogether.
+      if ($cached = $this->cacheGet()) {
+        return $cached;
       }
     }
+    $this->build();
+    // Only persist it if all modules are loaded to ensure it is complete.
+    if ($this->moduleHandler->isLoaded()) {
+      $this->setCache();
+    }
     return $this->registry[$this->theme->getName()];
+  }
+
+  /**
+   * Gets the theme registry cache.
+   *
+   * @return array|null
+   */
+  protected function cacheGet(): ?array {
+    $theme_name = $this->theme->getName();
+    if (isset($this->registry[$theme_name])) {
+      return $this->registry[$theme_name];
+    }
+    elseif ($cache = $this->cache->get('theme_registry:' . $theme_name)) {
+      $this->registry[$theme_name] = $cache->data;
+      return $this->registry[$theme_name];
+    }
+    return NULL;
   }
 
   /**

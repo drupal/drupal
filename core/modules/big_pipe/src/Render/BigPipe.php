@@ -536,74 +536,104 @@ class BigPipe {
     $fake_request = $this->requestStack->getMainRequest()->duplicate();
     $fake_request->headers->set('Accept', 'application/vnd.drupal-ajax');
 
+    // Create a Fiber for each placeholder.
+    $fibers = [];
+    $message_placeholder_id = NULL;
     foreach ($placeholder_order as $placeholder_id) {
       if (!isset($placeholders[$placeholder_id])) {
         continue;
       }
-
-      // Render the placeholder.
       $placeholder_render_array = $placeholders[$placeholder_id];
-      try {
-        $elements = $this->renderPlaceholder($placeholder_id, $placeholder_render_array);
+
+      // Ensure the messages placeholder renders last, the render order of every
+      // other placeholder is safe to change.
+      // @see static::getPlaceholderOrder()
+      if (isset($placeholder_render_array['#lazy_builder']) && $placeholder_render_array['#lazy_builder'][0] === 'Drupal\Core\Render\Element\StatusMessages::renderMessages') {
+        $message_placeholder_id = $placeholder_id;
       }
-      catch (\Exception $e) {
-        if ($this->configFactory->get('system.logging')->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {
-          throw $e;
-        }
-        else {
-          trigger_error($e, E_USER_ERROR);
+      $fibers[$placeholder_id] = new \Fiber(fn() => $this->renderPlaceholder($placeholder_id, $placeholder_render_array));
+    }
+    while (count($fibers) > 0) {
+      $iterations = 0;
+      foreach ($fibers as $placeholder_id => $fiber) {
+        // Keep skipping the messages placeholder until it's the only Fiber
+        // remaining. @todo https://www.drupal.org/project/drupal/issues/3379885
+        if (isset($message_placeholder_id) && $placeholder_id === $message_placeholder_id && count($fibers) > 1) {
           continue;
         }
-      }
+        try {
+          if (!$fiber->isStarted()) {
+            $fiber->start();
+          }
+          elseif ($fiber->isSuspended()) {
+            $fiber->resume();
+          }
+          // If the Fiber hasn't terminated by this point, move onto the next
+          // placeholder, we'll resume this Fiber again when we get back here.
+          if (!$fiber->isTerminated()) {
+            // If we've gone through the placeholders once already, and they're
+            // still not finished, then start to allow code higher up the stack
+            // to get on with something else.
+            if ($iterations) {
+              $fiber = \Fiber::getCurrent();
+              if ($fiber !== NULL) {
+                $fiber->suspend();
+              }
+            }
+            continue;
+          }
+          $elements = $fiber->getReturn();
+          unset($fibers[$placeholder_id]);
+          // Create a new AjaxResponse.
+          $ajax_response = new AjaxResponse();
+          // JavaScript's querySelector automatically decodes HTML entities in
+          // attributes, so we must decode the entities of the current BigPipe
+          // placeholder ID (which has HTML entities encoded since we use it to
+          // find the placeholders).
+          $big_pipe_js_placeholder_id = Html::decodeEntities($placeholder_id);
+          $ajax_response->addCommand(new ReplaceCommand(sprintf('[data-big-pipe-placeholder-id="%s"]', $big_pipe_js_placeholder_id), $elements['#markup']));
+          $ajax_response->setAttachments($elements['#attached']);
 
-      // Create a new AjaxResponse.
-      $ajax_response = new AjaxResponse();
-      // JavaScript's querySelector automatically decodes HTML entities in
-      // attributes, so we must decode the entities of the current BigPipe
-      // placeholder ID (which has HTML entities encoded since we use it to find
-      // the placeholders).
-      $big_pipe_js_placeholder_id = Html::decodeEntities($placeholder_id);
-      $ajax_response->addCommand(new ReplaceCommand(sprintf('[data-big-pipe-placeholder-id="%s"]', $big_pipe_js_placeholder_id), $elements['#markup']));
-      $ajax_response->setAttachments($elements['#attached']);
-
-      // Push a fake request with the asset libraries loaded so far and dispatch
-      // KernelEvents::RESPONSE event. This results in the attachments for the
-      // AJAX response being processed by AjaxResponseAttachmentsProcessor and
-      // hence:
-      // - the necessary AJAX commands to load the necessary missing asset
-      //   libraries and updated AJAX page state are added to the AJAX response
-      // - the attachments associated with the response are finalized, which
-      //   allows us to track the total set of asset libraries sent in the
-      //   initial HTML response plus all embedded AJAX responses sent so far.
-      $fake_request->query->set('ajax_page_state', ['libraries' => implode(',', $cumulative_assets->getAlreadyLoadedLibraries())] + $cumulative_assets->getSettings()['ajaxPageState']);
-      try {
-        $ajax_response = $this->filterEmbeddedResponse($fake_request, $ajax_response);
-      }
-      catch (\Exception $e) {
-        if ($this->configFactory->get('system.logging')->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {
-          throw $e;
-        }
-        else {
-          trigger_error($e, E_USER_ERROR);
-          continue;
-        }
-      }
-
-      // Send this embedded AJAX response.
-      $json = $ajax_response->getContent();
-      $output = <<<EOF
-    <script type="application/vnd.drupal-ajax" data-big-pipe-replacement-for-placeholder-with-id="$placeholder_id">
-    $json
-    </script>
+          // Push a fake request with the asset libraries loaded so far and
+          // dispatch KernelEvents::RESPONSE event. This results in the
+          // attachments for the AJAX response being processed by
+          // AjaxResponseAttachmentsProcessor and hence:
+          // - the necessary AJAX commands to load the necessary missing asset
+          //   libraries and updated AJAX page state are added to the AJAX
+          //   response
+          // - the attachments associated with the response are finalized,
+          // which allows us to track the total set of asset libraries sent in
+          // the initial HTML response plus all embedded AJAX responses sent so
+          // far.
+          $fake_request->query->set('ajax_page_state', ['libraries' => implode(',', $cumulative_assets->getAlreadyLoadedLibraries())] + $cumulative_assets->getSettings()['ajaxPageState']);
+          $ajax_response = $this->filterEmbeddedResponse($fake_request, $ajax_response);
+          // Send this embedded AJAX response.
+          $json = $ajax_response->getContent();
+          $output = <<<EOF
+<script type="application/vnd.drupal-ajax" data-big-pipe-replacement-for-placeholder-with-id="$placeholder_id">
+$json
+</script>
 EOF;
-      $this->sendChunk($output);
+          $this->sendChunk($output);
 
-      // Another placeholder was rendered and sent, track the set of asset
-      // libraries sent so far. Any new settings are already sent; we don't need
-      // to track those.
-      if (isset($ajax_response->getAttachments()['drupalSettings']['ajaxPageState']['libraries'])) {
-        $cumulative_assets->setAlreadyLoadedLibraries(explode(',', $ajax_response->getAttachments()['drupalSettings']['ajaxPageState']['libraries']));
+          // Another placeholder was rendered and sent, track the set of asset
+          // libraries sent so far. Any new settings are already sent; we
+          // don't need to track those.
+          if (isset($ajax_response->getAttachments()['drupalSettings']['ajaxPageState']['libraries'])) {
+            $cumulative_assets->setAlreadyLoadedLibraries(explode(',', $ajax_response->getAttachments()['drupalSettings']['ajaxPageState']['libraries']));
+          }
+        }
+        catch (\Exception $e) {
+          unset($fibers[$placeholder_id]);
+          if ($this->configFactory->get('system.logging')->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {
+            throw $e;
+          }
+          else {
+            trigger_error($e, E_USER_ERROR);
+          }
+        }
       }
+      $iterations++;
     }
 
     // Send the stop signal.
@@ -696,7 +726,7 @@ EOF;
   /**
    * Gets the BigPipe placeholder order.
    *
-   * Determines the order in which BigPipe placeholders must be replaced.
+   * Determines the order in which BigPipe placeholders are executed.
    *
    * @param string $html
    *   HTML markup.
@@ -705,10 +735,14 @@ EOF;
    *   placeholder IDs.
    *
    * @return array
-   *   Indexed array; the order in which the BigPipe placeholders must be sent.
-   *   Values are the BigPipe placeholder IDs. Note that only unique
-   *   placeholders are kept: if the same placeholder occurs multiple times, we
-   *   only keep the first occurrence.
+   *   Indexed array; the order in which the BigPipe placeholders will start
+   *   execution. Placeholders begin execution in DOM order, except for the
+   *   messages placeholder which must always be executed last. Note that due to
+   *   the Fibers implementation of BigPipe, although placeholders will start
+   *   executing in DOM order, they may finish and render in any order. Values
+   *   are the BigPipe placeholder IDs. Note that only unique placeholders are
+   *   kept: if the same placeholder occurs multiple times, we only keep the
+   *   first occurrence.
    */
   protected function getPlaceholderOrder($html, $placeholders) {
     $placeholder_ids = [];

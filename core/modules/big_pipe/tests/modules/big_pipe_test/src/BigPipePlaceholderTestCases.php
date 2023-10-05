@@ -4,6 +4,7 @@
  * @file
  */
 // cSpell:ignore Vxezb
+// cSpell:ignore divpiggydiv
 
 namespace Drupal\big_pipe_test;
 
@@ -188,7 +189,63 @@ class BigPipePlaceholderTestCases {
     ];
     $hello->embeddedHtmlResponse = '<marquee>Yarhar llamas forever!</marquee>';
 
-    // 5. Edge case: non-#lazy_builder placeholder.
+    // 5. Edge case: non-#lazy_builder placeholder that calls Fiber::suspend().
+    $piggy = new BigPipePlaceholderTestCase(
+      [
+        '#markup' => BigPipeMarkup::create('<div>piggy</div>'),
+        '#attached' => [
+          'placeholders' => [
+            '<div>piggy</div>' => [
+              '#pre_render' => [
+                '\Drupal\big_pipe_test\BigPipeTestController::piggy',
+              ],
+            ],
+          ],
+        ],
+      ],
+      '<div>piggy</div>',
+      []
+    );
+    $piggy->bigPipePlaceholderId = 'divpiggydiv';
+    $piggy->bigPipePlaceholderRenderArray = [
+      '#prefix' => '<span data-big-pipe-placeholder-id="divpiggydiv">',
+      'interface_preview' => [],
+      '#suffix' => '</span>',
+      '#cache' => $cacheability_depends_on_session_and_nojs_cookie,
+      '#attached' => [
+        'library' => ['big_pipe/big_pipe'],
+        'drupalSettings' => [
+          'bigPipePlaceholderIds' => [
+            'divpiggydiv' => TRUE,
+          ],
+        ],
+        'big_pipe_placeholders' => [
+          'divpiggydiv' => $piggy->placeholderRenderArray,
+        ],
+      ],
+    ];
+    $piggy->embeddedAjaxResponseCommands = [
+      [
+        'command' => 'insert',
+        'method' => 'replaceWith',
+        'selector' => '[data-big-pipe-placeholder-id="divpiggydiv"]',
+        'data' => '<span>This 🐷 little 🐽 piggy 🐖 stayed 🐽 at 🐷 home.</span>',
+        'settings' => NULL,
+      ],
+    ];
+    $piggy->bigPipeNoJsPlaceholder = '<span data-big-pipe-nojs-placeholder-id="divpiggydiv></span>';
+    $piggy->bigPipeNoJsPlaceholderRenderArray = [
+      '#markup' => '<span data-big-pipe-nojs-placeholder-id="divpiggydiv"></span>',
+      '#cache' => $cacheability_depends_on_session_and_nojs_cookie,
+      '#attached' => [
+        'big_pipe_nojs_placeholders' => [
+          '<span data-big-pipe-nojs-placeholder-id="divpiggydiv"></span>' => $piggy->placeholderRenderArray,
+        ],
+      ],
+    ];
+    $piggy->embeddedHtmlResponse = '<span>This 🐷 little 🐽 piggy 🐖 stayed 🐽 at 🐷 home.</span>';
+
+    // 6. Edge case: non-#lazy_builder placeholder.
     $current_time = new BigPipePlaceholderTestCase(
       [
         '#markup' => BigPipeMarkup::create('<time>CURRENT TIME</time>'),
@@ -249,7 +306,7 @@ class BigPipePlaceholderTestCases {
     ];
     $current_time->embeddedHtmlResponse = '<time datetime="1991-03-14"></time>';
 
-    // 6. Edge case: #lazy_builder that throws an exception.
+    // 7. Edge case: #lazy_builder that throws an exception.
     $exception = new BigPipePlaceholderTestCase(
       [
         '#lazy_builder' => ['\Drupal\big_pipe_test\BigPipeTestController::exception', ['llamas', 'suck']],
@@ -297,7 +354,7 @@ class BigPipePlaceholderTestCases {
 
     // cSpell:disable-next-line.
     $token = 'PxOHfS_QL-T01NjBgu7Z7I04tIwMp6La5vM-mVxezbU';
-    // 7. Edge case: response filter throwing an exception for this placeholder.
+    // 8. Edge case: response filter throwing an exception for this placeholder.
     $embedded_response_exception = new BigPipePlaceholderTestCase(
       [
         '#lazy_builder' => ['\Drupal\big_pipe_test\BigPipeTestController::responseException', []],
@@ -348,6 +405,7 @@ class BigPipePlaceholderTestCases {
       'html_attribute_value' => $form_action,
       'html_attribute_value_subset' => $csrf_token,
       'edge_case__invalid_html' => $hello,
+      'edge_case__html_non_lazy_builder_suspend' => $piggy,
       'edge_case__html_non_lazy_builder' => $current_time,
       'exception__lazy_builder' => $exception,
       'exception__embedded_response' => $embedded_response_exception,

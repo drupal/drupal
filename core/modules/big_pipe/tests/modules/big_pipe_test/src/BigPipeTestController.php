@@ -39,13 +39,16 @@ class BigPipeTestController implements TrustedCallbackInterface {
     // happens to not be valid HTML.
     $build['edge_case__invalid_html'] = $cases['edge_case__invalid_html']->renderArray;
 
-    // 5. Edge case: non-#lazy_builder placeholder.
+    // 5. Edge case: non-#lazy_builder placeholder that suspends.
+    $build['edge_case__html_non_lazy_builder_suspend'] = $cases['edge_case__html_non_lazy_builder_suspend']->renderArray;
+
+    // 6. Edge case: non-#lazy_builder placeholder.
     $build['edge_case__html_non_lazy_builder'] = $cases['edge_case__html_non_lazy_builder']->renderArray;
 
-    // 6. Exception: #lazy_builder that throws an exception.
+    // 7. Exception: #lazy_builder that throws an exception.
     $build['exception__lazy_builder'] = $cases['exception__lazy_builder']->renderArray;
 
-    // 7. Exception: placeholder that causes response filter to throw exception.
+    // 8. Exception: placeholder that causes response filter to throw exception.
     $build['exception__embedded_response'] = $cases['exception__embedded_response']->renderArray;
 
     return $build;
@@ -128,6 +131,24 @@ class BigPipeTestController implements TrustedCallbackInterface {
   }
 
   /**
+   * #lazy_builder callback; suspends its own execution then returns markup.
+   *
+   * @return array
+   */
+  public static function piggy(): array {
+    // Immediately call Fiber::suspend(), so that other placeholders are
+    // executed next. When this is resumed, it will immediately return the
+    // render array.
+    if (\Fiber::getCurrent() !== NULL) {
+      \Fiber::suspend();
+    }
+    return [
+      '#markup' => '<span>This 🐷 little 🐽 piggy 🐖 stayed 🐽 at 🐷 home.</span>',
+      '#cache' => ['max-age' => 0],
+    ];
+  }
+
+  /**
    * #lazy_builder callback; says "hello" or "yarhar".
    *
    * @return array
@@ -193,7 +214,7 @@ class BigPipeTestController implements TrustedCallbackInterface {
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['currentTime', 'helloOrYarhar', 'exception', 'responseException', 'counter'];
+    return ['currentTime', 'piggy', 'helloOrYarhar', 'exception', 'responseException', 'counter'];
   }
 
 }

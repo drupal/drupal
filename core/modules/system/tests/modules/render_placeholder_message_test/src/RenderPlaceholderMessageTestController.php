@@ -91,6 +91,13 @@ class RenderPlaceholderMessageTestController implements ContainerAwareInterface,
    *   A renderable array containing the message.
    */
   public static function setAndLogMessage($message) {
+    // Ensure that messages are rendered last even when earlier placeholders
+    // suspend the Fiber, this will cause BigPipe::renderPlaceholders() to loop
+    // around all of the fibers before resuming this one, then finally rendering
+    // the messages when there are no other placeholders left.
+    if (\Fiber::getCurrent() !== NULL) {
+      \Fiber::suspend();
+    }
     // Set message.
     \Drupal::messenger()->addStatus($message);
 
