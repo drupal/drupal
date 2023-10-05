@@ -141,8 +141,6 @@ class FileUploadTest extends ResourceTestBase {
 
     // Reload entity so that it has the new field.
     $this->entity = $this->entityStorage->loadUnchanged($this->entity->id());
-
-    $this->rebuildAll();
   }
 
   /**
@@ -203,9 +201,18 @@ class FileUploadTest extends ResourceTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function testRelated() {
+    \Drupal::service('router.builder')->rebuild();
+    parent::testRelated();
+  }
+
+  /**
    * Tests using the file upload POST route; needs second request to "use" file.
    */
   public function testPostFileUpload() {
+    \Drupal::service('router.builder')->rebuild();
     $uri = Url::fromUri('base:' . static::$postUri);
 
     // DX: 405 when read-only mode is enabled.
@@ -270,6 +277,7 @@ class FileUploadTest extends ResourceTestBase {
    * Tests using the 'file upload and "use" file in single request" POST route.
    */
   public function testPostFileUploadAndUseInSingleRequest() {
+    \Drupal::service('router.builder')->rebuild();
     // Update the test entity so it already has a file. This allows verifying
     // that this route appends files, and does not replace them.
     mkdir('public://foobar');
@@ -420,6 +428,7 @@ class FileUploadTest extends ResourceTestBase {
    * A new file should be created with a suffixed name.
    */
   public function testPostFileUploadDuplicateFile() {
+    \Drupal::service('router.builder')->rebuild();
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
 
@@ -460,6 +469,7 @@ class FileUploadTest extends ResourceTestBase {
    * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition#Directives
    */
   public function testFileUploadStrippedFilePath() {
+    \Drupal::service('router.builder')->rebuild();
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
 
@@ -488,7 +498,7 @@ class FileUploadTest extends ResourceTestBase {
     // with no extension to pass validation.
     $this->field->setSetting('file_extensions', '')
       ->save();
-    $this->rebuildAll();
+    \Drupal::service('router.builder')->rebuild();
 
     $response = $this->fileRequest($uri, $this->testFileData, ['Content-Disposition' => 'file; filename="/etc/passwd"']);
     $this->assertSame(201, $response->getStatusCode());
@@ -506,6 +516,7 @@ class FileUploadTest extends ResourceTestBase {
    * Tests invalid file uploads.
    */
   public function testInvalidFileUploads() {
+    \Drupal::service('router.builder')->rebuild();
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
     $this->testPostFileUploadInvalidHeaders();
@@ -517,6 +528,7 @@ class FileUploadTest extends ResourceTestBase {
    * Tests using the file upload route with a unicode file name.
    */
   public function testFileUploadUnicodeFilename() {
+    \Drupal::service('router.builder')->rebuild();
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
 
@@ -535,6 +547,7 @@ class FileUploadTest extends ResourceTestBase {
    * Tests using the file upload route with a zero byte file.
    */
   public function testFileUploadZeroByteFile() {
+    \Drupal::service('router.builder')->rebuild();
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
 
@@ -556,6 +569,7 @@ class FileUploadTest extends ResourceTestBase {
    * Tests using the file upload route with an invalid file type.
    */
   public function testFileUploadInvalidFileType() {
+    \Drupal::service('router.builder')->rebuild();
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
 
@@ -577,8 +591,7 @@ class FileUploadTest extends ResourceTestBase {
     // Set a limit of 50 bytes.
     $this->field->setSetting('max_filesize', 50)
       ->save();
-    $this->rebuildAll();
-
+    \Drupal::service('router.builder')->rebuild();
     $uri = Url::fromUri('base:' . static::$postUri);
 
     // Generate a string larger than the 50 byte limit set.
@@ -694,7 +707,7 @@ class FileUploadTest extends ResourceTestBase {
       ->save();
     // Allow all file uploads. This is very insecure.
     $this->field->setSetting('file_extensions', '')->save();
-    $this->rebuildAll();
+    \Drupal::service('router.builder')->rebuild();
 
     $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example_7.php"']);
     $expected = $this->getExpectedDocument(7, 'example_7.php', TRUE);
@@ -717,7 +730,7 @@ class FileUploadTest extends ResourceTestBase {
 
     $this->field->setSetting('file_extensions', '')
       ->save();
-    $this->rebuildAll();
+    \Drupal::service('router.builder')->rebuild();
 
     $response = $this->fileRequest($uri, $this->testFileData, ['Content-Disposition' => 'filename="example.txt"']);
     $expected = $this->getExpectedDocument(1, 'example.txt', TRUE);
