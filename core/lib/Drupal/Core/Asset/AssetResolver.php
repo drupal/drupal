@@ -170,11 +170,13 @@ class AssetResolver implements AssetResolverInterface {
     $this->moduleHandler->alter('css', $css, $assets, $language);
     $this->themeManager->alter('css', $css, $assets, $language);
 
-    // Sort CSS items, so that they appear in the correct order.
-    uasort($css, [static::class, 'sort']);
+    if (!empty($css)) {
+      // Sort CSS items, so that they appear in the correct order.
+      uasort($css, [static::class, 'sort']);
 
-    if ($optimize) {
-      $css = \Drupal::service('asset.css.collection_optimizer')->optimize($css, $libraries_to_load, $language);
+      if ($optimize) {
+        $css = \Drupal::service('asset.css.collection_optimizer')->optimize($css, $libraries_to_load, $language);
+      }
     }
     $this->cache->set($cid, $css, CacheBackendInterface::CACHE_PERMANENT, ['library_info']);
 
