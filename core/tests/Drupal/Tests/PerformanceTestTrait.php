@@ -127,6 +127,8 @@ trait PerformanceTestTrait {
   protected function processChromeDriverPerformanceLogs(?string $service_name): PerformanceData {
     $attempts = 0;
     $lcp_count = 0;
+    $request_count = 0;
+    $response_count = 0;
     $messages = [];
     $session = $this->getSession();
     while ($attempts <= 30) {
@@ -139,11 +141,27 @@ trait PerformanceTestTrait {
         if ($message['method'] === 'Tracing.dataCollected' && $message['params']['name'] === 'largestContentfulPaint::Candidate') {
           $lcp_count++;
         }
+        if ($message['method'] === 'Network.requestWillBeSent') {
+          $request_count++;
+        }
+        if ($message['method'] === 'Network.responseReceived') {
+          $response_count++;
+        }
         $messages[] = $message;
       }
-      // Only check once if $service_name is not set, since
-      // largestContentfulPaint is not currently asserted on.
-      if ($lcp_count === 2 || !isset($service_name)) {
+      // Performance entries are logged indeterminately since page loading
+      // varies by request. Chrome returns a response as soon as the HTML page
+      // has returned to the browser, but CSS, JavaScript, image and AJAX
+      // requests may all occur after this, and in turn trigger further requests
+      // and page rendering events, and there is no performance log event for
+      // the page loading 'finishing' since this is cannot be detected as such.
+      // Therefore, continue collecting performance data until all of the
+      // following are true, or until 30 seconds has passed:
+      // - a largestContentfulPaint::candidate event has been fired
+      // - all network requests have received a response
+      // - no new performance log events have been recorded since the last
+      //   iteration.
+      if ($lcp_count && empty($performance_log) && ($request_count === $response_count)) {
         break;
       }
       sleep(1);
