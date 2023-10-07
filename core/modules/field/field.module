@@ -448,3 +448,51 @@ function field_field_config_presave(FieldConfigInterface $field) {
     ]);
   }
 }
+
+/**
+ * Entity form builder for field config edit form.
+ *
+ * @param string $entity_type_id
+ *   The entity type identifier.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity updated with the submitted values.
+ * @param array $form
+ *   The complete form array.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
+ *
+ * @see \Drupal\field_ui\Form\FieldConfigEditForm::form
+ * @see \Drupal\field_ui\Form\FieldConfigEditForm::copyFormValuesToEntity
+ */
+function field_form_field_config_edit_form_entity_builder($entity_type_id, $entity, &$form, FormStateInterface $form_state) {
+  assert($entity instanceof FieldConfigInterface);
+  $previous_field_storage = $form_state->getFormObject()->getEntity()->getFieldStorageDefinition();
+  assert($previous_field_storage instanceof FieldStorageConfigInterface);
+
+  // Act on all sub-types of the entity_reference field type.
+  /** @var \Drupal\Core\Field\FieldTypePluginManager $field_type_manager */
+  $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
+  $item_class = 'Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem';
+  $class = $field_type_manager->getPluginClass($entity->getFieldStorageDefinition()->getType());
+  if ($class !== $item_class && !is_subclass_of($class, $item_class)) {
+    return;
+  }
+
+  // Update handler settings when target_type is changed.
+  if ($entity->getFieldStorageDefinition()->getSetting('target_type') !== $previous_field_storage->getSetting('target_type')) {
+    // @see field_field_storage_config_update().
+    $entity->setSetting('handler_settings', []);
+    // @see field_field_config_presave().
+    field_field_config_create($entity);
+
+    // Store updated settings in form state so that the form state can be copied
+    // directly to the entity.
+    $form_state->setValue('settings', $entity->getSettings());
+
+    // Unset user input for the settings because they are not valid after the
+    // target type has changed.
+    $user_input = $form_state->getUserInput();
+    unset($user_input['settings']);
+    $form_state->setUserInput($user_input);
+  }
+}

@@ -51,7 +51,7 @@ class ManageFieldsLifecycleTest extends ManageFieldsFunctionalTestBase {
     $this->assertSession()->linkExists('Create a new field');
 
     // Assert entity operations for all fields.
-    $number_of_links = 3;
+    $number_of_links = 2;
     $number_of_links_found = 0;
     $operation_links = $this->xpath('//ul[@class = "dropbutton"]/li/a');
     $url = base_path() . "admin/structure/types/manage/$type/fields/node.$type.body";
@@ -60,11 +60,6 @@ class ManageFieldsLifecycleTest extends ManageFieldsFunctionalTestBase {
       switch ($link->getAttribute('title')) {
         case 'Edit field settings.':
           $this->assertSame($url, $link->getAttribute('href'));
-          $number_of_links_found++;
-          break;
-
-        case 'Edit storage settings.':
-          $this->assertSame("$url/storage", $link->getAttribute('href'));
           $number_of_links_found++;
           break;
 
@@ -95,20 +90,14 @@ class ManageFieldsLifecycleTest extends ManageFieldsFunctionalTestBase {
   protected function updateField() {
     $field_id = 'node.' . $this->contentType . '.' . $this->fieldName;
     // Go to the field edit page.
-    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field_id . '/storage');
+    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field_id);
     $this->assertSession()->assertEscaped($this->fieldLabel);
 
     // Populate the field settings with new settings.
     $string = 'updated dummy test string';
     $edit = [
-      'settings[test_field_storage_setting]' => $string,
-    ];
-    $this->submitForm($edit, 'Save');
-
-    // Go to the field edit page.
-    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field_id);
-    $edit = [
       'settings[test_field_setting]' => $string,
+      'field_storage[subform][settings][test_field_storage_setting]' => $string,
     ];
     $this->assertSession()->pageTextContains('Default value');
     $this->submitForm($edit, 'Save settings');
@@ -145,34 +134,28 @@ class ManageFieldsLifecycleTest extends ManageFieldsFunctionalTestBase {
    * numeric value. That is tested already in FormTest::testNumber().
    */
   protected function cardinalitySettings() {
-    $field_edit_path = 'admin/structure/types/manage/article/fields/node.article.body/storage';
+    $field_edit_path = 'admin/structure/types/manage/article/fields/node.article.body';
 
     // Assert the cardinality other field cannot be empty when cardinality is
     // set to 'number'.
     $edit = [
-      'cardinality' => 'number',
-      'cardinality_number' => '',
+      'field_storage[subform][cardinality]' => 'number',
+      'field_storage[subform][cardinality_number]' => '',
     ];
     $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save');
+    $this->submitForm($edit, 'Update settings');
     $this->assertSession()->pageTextContains('Number of values is required.');
 
     // Submit a custom number.
     $edit = [
-      'cardinality' => 'number',
-      'cardinality_number' => 6,
+      'field_storage[subform][cardinality]' => 'number',
+      'field_storage[subform][cardinality_number]' => 6,
     ];
+    $this->submitForm($edit, 'Update settings');
+    $this->submitForm([], 'Save settings');
     $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save');
-    $this->drupalGet($field_edit_path);
-    $this->assertSession()->fieldValueEquals('cardinality', 'number');
-    $this->assertSession()->fieldValueEquals('cardinality_number', 6);
-
-    // Check that tabs displayed.
-    $this->assertSession()->linkExists('Edit');
-    $this->assertSession()->linkByHrefExists('admin/structure/types/manage/article/fields/node.article.body');
-    $this->assertSession()->linkExists('Field settings');
-    $this->assertSession()->linkByHrefExists($field_edit_path);
+    $this->assertSession()->fieldValueEquals('field_storage[subform][cardinality]', 'number');
+    $this->assertSession()->fieldValueEquals('field_storage[subform][cardinality_number]', 6);
 
     // Add two entries in the body.
     $edit = ['title[0][value]' => 'Cardinality', 'body[0][value]' => 'Body 1', 'body[1][value]' => 'Body 2'];
@@ -182,11 +165,11 @@ class ManageFieldsLifecycleTest extends ManageFieldsFunctionalTestBase {
     // Assert that you can't set the cardinality to a lower number than the
     // highest delta of this field.
     $edit = [
-      'cardinality' => 'number',
-      'cardinality_number' => 1,
+      'field_storage[subform][cardinality]' => 'number',
+      'field_storage[subform][cardinality_number]' => 1,
     ];
     $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save');
+    $this->submitForm($edit, 'Update settings');
     $this->assertSession()->pageTextContains("There is 1 entity with 2 or more values in this field");
 
     // Create a second entity with three values.
@@ -196,47 +179,49 @@ class ManageFieldsLifecycleTest extends ManageFieldsFunctionalTestBase {
 
     // Set to unlimited.
     $edit = [
-      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
+      'field_storage[subform][cardinality]' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ];
     $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save');
+    $this->submitForm($edit, 'Update settings');
+    $this->submitForm([], 'Save settings');
     $this->drupalGet($field_edit_path);
-    $this->assertSession()->fieldValueEquals('cardinality', FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
-    $this->assertSession()->fieldValueEquals('cardinality_number', 1);
+    $this->assertSession()->fieldValueEquals('field_storage[subform][cardinality]', FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+    $this->assertSession()->fieldValueEquals('field_storage[subform][cardinality_number]', 1);
 
     // Assert that you can't set the cardinality to a lower number then the
     // highest delta of this field but can set it to the same.
     $edit = [
-      'cardinality' => 'number',
-      'cardinality_number' => 1,
+      'field_storage[subform][cardinality]' => 'number',
+      'field_storage[subform][cardinality_number]' => 1,
     ];
     $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save');
+    $this->submitForm($edit, 'Update settings');
+    $this->submitForm([], 'Save settings');
     $this->assertSession()->pageTextContains("There are 2 entities with 2 or more values in this field");
 
     $edit = [
-      'cardinality' => 'number',
-      'cardinality_number' => 2,
+      'field_storage[subform][cardinality]' => 'number',
+      'field_storage[subform][cardinality_number]' => 2,
     ];
     $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save');
+    $this->submitForm($edit, 'Update settings');
     $this->assertSession()->pageTextContains("There is 1 entity with 3 or more values in this field");
 
     $edit = [
-      'cardinality' => 'number',
-      'cardinality_number' => 3,
+      'field_storage[subform][cardinality]' => 'number',
+      'field_storage[subform][cardinality_number]' => 3,
     ];
     $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save');
+    $this->submitForm($edit, 'Update settings');
 
     // Test the cardinality validation is not access sensitive.
 
     // Remove the cardinality limit 4 so we can add a node the user doesn't have access to.
     $edit = [
-      'cardinality' => (string) FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
+      'field_storage[subform][cardinality]' => (string) FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ];
     $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save');
+    $this->submitForm($edit, 'Update settings');
     $node = $this->drupalCreateNode([
       'private' => TRUE,
       'uid' => 0,
@@ -253,25 +238,26 @@ class ManageFieldsLifecycleTest extends ManageFieldsFunctionalTestBase {
     // set it to the same.
     $this->drupalGet($field_edit_path);
     $edit = [
-      'cardinality' => 'number',
-      'cardinality_number' => 2,
+      'field_storage[subform][cardinality]' => 'number',
+      'field_storage[subform][cardinality_number]' => 2,
     ];
     $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save');
+    $this->submitForm($edit, 'Update settings');
     $this->assertSession()->pageTextContains("There are 2 entities with 3 or more values in this field");
     $edit = [
-      'cardinality' => 'number',
-      'cardinality_number' => 3,
+      'field_storage[subform][cardinality]' => 'number',
+      'field_storage[subform][cardinality_number]' => 3,
     ];
     $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save');
+    $this->submitForm($edit, 'Update settings');
     $this->assertSession()->pageTextContains("There is 1 entity with 4 or more values in this field");
     $edit = [
-      'cardinality' => 'number',
-      'cardinality_number' => 4,
+      'field_storage[subform][cardinality]' => 'number',
+      'field_storage[subform][cardinality_number]' => 4,
     ];
     $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save');
+    $this->submitForm($edit, 'Update settings');
+    $this->submitForm([], 'Save settings');
   }
 
   /**

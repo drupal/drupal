@@ -559,8 +559,8 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $this->drupalLogin($this->administrator);
     // Make the image field a multi-value field in order to display a
     // details form element.
-    $edit = ['cardinality_number' => 2];
-    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.field_image/storage');
+    $edit = ['field_storage[subform][cardinality_number]' => 2];
+    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.field_image');
     $this->submitForm($edit, 'Save');
 
     // Make the image field non-translatable.

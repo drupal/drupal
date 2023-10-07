@@ -118,9 +118,9 @@ class EntityReferenceAdminTest extends BrowserTestBase {
 
     // Set to unlimited.
     $edit = [
-      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
+      'field_storage[subform][cardinality]' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ];
-    $this->submitForm($edit, 'Continue');
+    $this->submitForm($edit, 'Update settings');
 
     // Add the view to the test field.
     $edit = [
@@ -204,12 +204,11 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     Vocabulary::create(['vid' => 'tags', 'name' => 'tags'])->save();
     $taxonomy_term_field_name = $this->createEntityReferenceField('taxonomy_term', ['tags']);
     $field_path = 'node.' . $this->type . '.field_' . $taxonomy_term_field_name;
-    $this->drupalGet($bundle_path . '/fields/' . $field_path . '/storage');
-    $edit = [
-      'cardinality' => -1,
-    ];
-    $this->submitForm($edit, 'Save');
     $this->drupalGet($bundle_path . '/fields/' . $field_path);
+    $edit = [
+      'field_storage[subform][cardinality]' => -1,
+    ];
+    $this->submitForm($edit, 'Update settings');
     $term_name = $this->randomString();
     $result = \Drupal::entityQuery('taxonomy_term')
       ->condition('name', $term_name)
@@ -382,7 +381,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $field_name = $this->randomMachineName();
 
     $storage_edit = $field_edit = [];
-    $storage_edit['settings[target_type]'] = $target_type;
+    $storage_edit['field_storage[subform][settings][target_type]'] = $target_type;
     foreach ($bundles as $bundle) {
       $field_edit['settings[handler_settings][target_bundles][' . $bundle . ']'] = TRUE;
     }

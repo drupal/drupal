@@ -259,8 +259,8 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $test_file = $this->getTestFile('text');
 
     // Change the field setting to make its files private, and upload a file.
-    $edit = ['settings[uri_scheme]' => 'private'];
-    $this->drupalGet("admin/structure/types/manage/{$type_name}/fields/{$field_id}/storage");
+    $edit = ['field_storage[subform][settings][uri_scheme]' => 'private'];
+    $this->drupalGet("admin/structure/types/manage/{$type_name}/fields/{$field_id}");
     $this->submitForm($edit, 'Save');
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
     $node = $node_storage->loadUnchanged($nid);
@@ -273,13 +273,13 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     // Ensure we can't change 'uri_scheme' field settings while there are some
     // entities with uploaded files.
-    $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field_id/storage");
-    $this->assertSession()->fieldDisabled("edit-settings-uri-scheme-public");
+    $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field_id");
+    $this->assertSession()->fieldDisabled("edit-field-storage-subform-settings-uri-scheme-public");
 
     // Delete node and confirm that setting could be changed.
     $node->delete();
-    $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field_id/storage");
-    $this->assertSession()->fieldEnabled("edit-settings-uri-scheme-public");
+    $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field_id");
+    $this->assertSession()->fieldEnabled("edit-field-storage-subform-settings-uri-scheme-public");
   }
 
   /**
@@ -302,7 +302,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     $name = $this->randomMachineName();
     $label = $this->randomMachineName();
-    $storage_edit = ['settings[uri_scheme]' => 'private'];
+    $storage_edit = ['field_storage[subform][settings][uri_scheme]' => 'private'];
     $this->fieldUIAddNewField('admin/structure/comment/manage/comment', $name, $label, 'file', $storage_edit);
 
     // Manually clear cache on the tester side.

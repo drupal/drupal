@@ -257,10 +257,10 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     $options = [
       'query' => ['destinations' => ['http://example.com']],
     ];
-    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.body/storage', $options);
-    $this->submitForm([], 'Save');
+    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.body', $options);
+    $this->submitForm([], 'Save settings');
     // The external redirect should not fire.
-    $this->assertSession()->addressEquals('admin/structure/types/manage/article/fields/node.article.body/storage?destinations%5B0%5D=http%3A//example.com');
+    $this->assertSession()->addressEquals('admin/structure/types/manage/article/fields/node.article.body?destinations%5B0%5D=http%3A//example.com');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseContains('Attempt to update field <em class="placeholder">Body</em> failed: <em class="placeholder">The internal path component &#039;http://example.com&#039; is external. You are not allowed to specify an external URL together with internal:/.</em>.');
   }
@@ -369,9 +369,33 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
 
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field_id);
     $this->assertSession()->statusCodeEquals(404);
+  }
 
-    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field_id . '/storage');
-    $this->assertSession()->statusCodeEquals(404);
+  /**
+   * Tests that the 'field_prefix' setting works on Field UI.
+   */
+  public function testFieldPrefix() {
+    // Change default field prefix.
+    $field_prefix = $this->randomMachineName(10);
+    $this->config('field_ui.settings')->set('field_prefix', $field_prefix)->save();
+
+    // Create a field input and label exceeding the new maxlength, which is 22.
+    $field_exceed_max_length_label = $this->randomString(23);
+    $field_exceed_max_length_input = $this->randomMachineName(23);
+
+    // Try to create the field.
+    $edit = [
+      'label' => $field_exceed_max_length_label,
+      'field_name' => $field_exceed_max_length_input,
+    ];
+    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/add-field');
+    $this->submitForm($edit, 'Continue');
+    $this->assertSession()->pageTextContains('Machine-readable name cannot be longer than 22 characters but is currently 23 characters long.');
+
+    // Create a valid field.
+    $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->contentType, $this->fieldNameInput, $this->fieldLabel);
+    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/node.' . $this->contentType . '.' . $field_prefix . $this->fieldNameInput);
+    $this->assertSession()->pageTextContains($this->fieldLabel . ' settings for ' . $this->contentType);
   }
 
   /**

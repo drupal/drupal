@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Drupal\field_ui\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface;
-use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -23,15 +21,9 @@ final class FieldConfigAddController extends ControllerBase {
    *
    * @param \Drupal\Core\TempStore\PrivateTempStore $tempStore
    *   The private tempstore.
-   * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $fieldTypeManager
-   *   The field type plugin manager.
-   * @param \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface $selectionManager
-   *   The entity reference selection plugin manager.
    */
   public function __construct(
     protected readonly PrivateTempStore $tempStore,
-    protected readonly FieldTypePluginManagerInterface $fieldTypeManager,
-    protected readonly SelectionPluginManagerInterface $selectionManager,
   ) {}
 
   /**
@@ -40,8 +32,6 @@ final class FieldConfigAddController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('tempstore.private')->get('field_ui'),
-      $container->get('plugin.manager.field.field_type'),
-      $container->get('plugin.manager.entity_reference_selection')
     );
   }
 

@@ -1,0 +1,5 @@
+name: 'Field UI test deprecated'
+type: module
+description: 'Support module for testing deprecated Field UI functionality.'
+package: Testing
+version: VERSION

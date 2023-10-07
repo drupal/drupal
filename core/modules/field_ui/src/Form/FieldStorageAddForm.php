@@ -463,10 +463,6 @@ class FieldStorageAddForm extends FormBase {
       'field_name' => $field_name,
     ] + FieldUI::getRouteBundleParameter($entity_type, $this->bundle);
     $destinations[] = [
-      'route_name' => "field_ui.field_storage_add_{$this->entityTypeId}",
-      'route_parameters' => $route_parameters,
-    ];
-    $destinations[] = [
       'route_name' => "field_ui.field_add_{$this->entityTypeId}",
       'route_parameters' => $route_parameters,
     ];

@@ -107,13 +107,6 @@ class FieldUiLocalTask extends DeriverBase implements ContainerDeriverInterface 
           'base_route' => "entity.field_config.{$entity_type_id}_field_edit_form",
         ];
 
-        // Field settings tab.
-        $this->derivatives["field_storage_$entity_type_id"] = [
-          'route_name' => "entity.field_config.{$entity_type_id}_storage_edit_form",
-          'title' => $this->t('Field settings'),
-          'base_route' => "entity.field_config.{$entity_type_id}_field_edit_form",
-        ];
-
         // View and form modes secondary tabs.
         // The same base $path for the menu item (with a placeholder) can be
         // used for all bundles of a given entity type; but depending on

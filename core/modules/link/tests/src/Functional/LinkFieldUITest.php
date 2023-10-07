@@ -165,7 +165,7 @@ class LinkFieldUITest extends BrowserTestBase {
       $field_edit['default_value_input[field_' . $field_name . '][0][title]'] = 'Default title';
     }
     $storage_edit = [
-      'cardinality_number' => $cardinality,
+      'field_storage[subform][cardinality_number]' => $cardinality,
     ];
     $this->fieldUIAddNewField($type_path, $field_name, $label, 'link', $storage_edit, $field_edit);
 

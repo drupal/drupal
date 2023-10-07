@@ -162,8 +162,7 @@ class CommentFieldsTest extends CommentTestBase {
 
     // Try to save the comment field without selecting a comment type.
     $edit = [];
-    $this->drupalGet('admin/config/people/accounts/add-storage/user/field_user_comment');
-    $this->submitForm($edit, 'Continue');
+    $this->submitForm($edit, 'Update settings');
     // We should get an error message.
     $this->assertSession()->pageTextContains('The submitted value in the Comment type element is not allowed.');
 
@@ -178,10 +177,10 @@ class CommentFieldsTest extends CommentTestBase {
 
     // Select a comment type and try to save again.
     $edit = [
-      'settings[comment_type]' => 'user_comment_type',
+      'field_storage[subform][settings][comment_type]' => 'user_comment_type',
     ];
-    $this->drupalGet('admin/config/people/accounts/add-storage/user/field_user_comment');
-    $this->submitForm($edit, 'Continue');
+    $this->drupalGet('admin/config/people/accounts/add-field/user/field_user_comment');
+    $this->submitForm($edit, 'Update settings');
     // We shouldn't get an error message.
     $this->assertSession()->pageTextNotContains('The submitted value in the Comment type element is not allowed.');
 

@@ -93,6 +93,8 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     if (!array_key_exists('allowed_values', $form_state->getStorage())) {
       $form_state->set('allowed_values', $this->getFieldDefinition()->getSetting('allowed_values'));
     }
+    $form['field_storage_submit']['#submit'][] = [static::class, 'submitFieldStorageUpdate'];
+    $form['field_storage_submit']['#limit_validation_errors'] = [];
 
     $allowed_values = $form_state->getStorage()['allowed_values'];
     $allowed_values_function = $this->getSetting('allowed_values_function');
@@ -122,6 +124,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
       '#attributes' => [
         'id' => 'allowed-values-order',
         'data-field-list-table' => TRUE,
+        'class' => ['allowed-values-table'],
       ],
       '#tabledrag' => [
         [
@@ -131,7 +134,10 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
         ],
       ],
       '#attached' => [
-        'library' => ['core/drupal.fieldListKeyboardNavigation'],
+        'library' => [
+          'core/drupal.fieldListKeyboardNavigation',
+          'field_ui/drupal.field_ui',
+        ],
       ],
     ];
 
@@ -293,12 +299,17 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     $remaining_allowed_values = array_diff($allowed_values, [$item_to_be_removed]);
     $form_state->set('allowed_values', $remaining_allowed_values);
 
-    $delta = $button['#delta'];
-    $user_input = $form_state->getUserInput();
     // The user input is directly modified to preserve the rest of the data on
     // the page as it cannot be rebuilt from a fresh form state.
-    unset($user_input['settings']['allowed_values']['table'][$delta]);
-    $user_input['settings']['allowed_values']['table'] = array_values($user_input['settings']['allowed_values']['table']);
+    $user_input = $form_state->getUserInput();
+    NestedArray::unsetValue($user_input, $element['#parents']);
+
+    // Reset the keys in the array.
+    $table_parents = $element['#parents'];
+    array_pop($table_parents);
+    $new_values = array_values(NestedArray::getValue($user_input, $table_parents));
+    NestedArray::setValue($user_input, $table_parents, $new_values);
+
     $form_state->setUserInput($user_input);
     $form_state->set('items_count', $form_state->get('items_count') - 1);
 
@@ -350,7 +361,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
     }, Element::children($element['table'])), function ($item) {
       return $item;
     });
-    if ($reordered_items = $form_state->getValue(['settings', 'allowed_values', 'table'])) {
+    if ($reordered_items = $form_state->getValue([...$element['#parents'], 'table'])) {
       uksort($items, function ($a, $b) use ($reordered_items) {
         $a_weight = $reordered_items[$a]['weight'] ?? 0;
         $b_weight = $reordered_items[$b]['weight'] ?? 0;
@@ -550,6 +561,13 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    */
   protected static function castAllowedValue($value) {
     return $value;
+  }
+
+  /**
+   * Resets the static variable on field storage update.
+   */
+  public static function submitFieldStorageUpdate() {
+    drupal_static_reset('options_allowed_values');
   }
 
 }

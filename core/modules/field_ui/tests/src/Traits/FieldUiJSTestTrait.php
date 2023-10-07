@@ -64,10 +64,7 @@ trait FieldUiJSTestTrait {
     $page->findButton('Continue')->click();
     $assert_session->waitForText("These settings apply to the $label field everywhere it is used.");
     if ($save_settings) {
-      // Second step: 'Storage settings' form.
-      $page->findButton('Continue')->click();
-
-      // Third step: 'Field settings' form.
+      // Second step: Save field settings.
       $page->findButton('Save settings')->click();
       $assert_session->pageTextContains("Saved $label configuration.");
 

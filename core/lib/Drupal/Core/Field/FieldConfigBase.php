@@ -6,7 +6,6 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
-use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Base class for configurable field definitions.
@@ -474,11 +473,6 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
     // Only serialize necessary properties, excluding those that can be
     // recalculated.
     unset($properties['itemDefinition'], $properties['original']);
-
-    // Field storage can be recalculated if it's not new.
-    if (array_key_exists('fieldStorage', $properties) && $properties['fieldStorage'] instanceof FieldStorageConfig && !$properties['fieldStorage']->isNew()) {
-      unset($properties['fieldStorage']);
-    }
 
     return array_keys($properties);
   }
