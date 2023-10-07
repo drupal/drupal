@@ -119,7 +119,7 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\Component\\\\Diff\\\\Engine\\\\DiffEngine\\:\\:\\$xchanged\\.$#"
-			count: 2
+			count: 6
 			path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
 
 		-
@@ -134,7 +134,7 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\Component\\\\Diff\\\\Engine\\\\DiffEngine\\:\\:\\$ychanged\\.$#"
-			count: 2
+			count: 5
 			path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
 
 		-
