@@ -69,7 +69,7 @@ class DateTimeNormalizer extends NormalizerBase implements DenormalizerInterface
    * @see ::normalize
    * @see \Drupal\Core\Datetime\DrupalDateTime::prepareTimezone()
    *
-   * @returns \DateTimeZone
+   * @return \DateTimeZone
    *   The timezone to use.
    */
   protected function getNormalizationTimezone() {

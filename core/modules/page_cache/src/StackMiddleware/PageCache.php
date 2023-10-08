@@ -99,7 +99,7 @@ class PageCache implements HttpKernelInterface {
    * @param bool $catch
    *   Whether to catch exceptions or not
    *
-   * @returns \Symfony\Component\HttpFoundation\Response $response
+   * @return \Symfony\Component\HttpFoundation\Response
    *   A response object.
    */
   protected function pass(Request $request, $type = self::MAIN_REQUEST, $catch = TRUE) {
@@ -117,7 +117,7 @@ class PageCache implements HttpKernelInterface {
    * @param bool $catch
    *   Whether to catch exceptions or not
    *
-   * @returns \Symfony\Component\HttpFoundation\Response $response
+   * @return \Symfony\Component\HttpFoundation\Response
    *   A response object.
    */
   protected function lookup(Request $request, $type = self::MAIN_REQUEST, $catch = TRUE) {
@@ -183,7 +183,7 @@ class PageCache implements HttpKernelInterface {
    * @param bool $catch
    *   Whether to catch exceptions or not
    *
-   * @returns \Symfony\Component\HttpFoundation\Response $response
+   * @return \Symfony\Component\HttpFoundation\Response
    *   A response object.
    */
   protected function fetch(Request $request, $type = self::MAIN_REQUEST, $catch = TRUE) {
@@ -207,7 +207,8 @@ class PageCache implements HttpKernelInterface {
    * @param \Symfony\Component\HttpFoundation\Response $response
    *   A response object that should be stored in the page cache.
    *
-   * @returns bool
+   * @return bool
+   *   TRUE if the response has been stored successfully, FALSE otherwise.
    */
   protected function storeResponse(Request $request, Response $response) {
     // Drupal's primary cache invalidation architecture is cache tags: any

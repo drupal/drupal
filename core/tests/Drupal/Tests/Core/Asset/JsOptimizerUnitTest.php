@@ -33,7 +33,7 @@ class JsOptimizerUnitTest extends UnitTestCase {
    *
    * @see \Drupal\Core\Asset\JsOptimizer::clean()
    *
-   * @returns array
+   * @return array
    *   An array of test data.
    */
   public function providerTestClean() {
@@ -80,7 +80,7 @@ class JsOptimizerUnitTest extends UnitTestCase {
    *
    * @see \Drupal\Core\Asset\JsOptimizer::optimize()
    *
-   * @returns array
+   * @return array
    *   An array of test data.
    */
   public function providerTestOptimize() {

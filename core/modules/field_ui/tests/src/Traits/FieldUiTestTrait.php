@@ -176,8 +176,8 @@ trait FieldUiTestTrait {
    * @param string $field_type
    *   The name of the field type.
    *
-   * @returns string
-   *  Group name
+   * @return string
+   *   Group name
    */
   public function getFieldFromGroup($field_type) {
     $group_elements = $this->getSession()->getPage()->findAll('css', '.field-option-radio');

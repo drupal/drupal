@@ -526,7 +526,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   /**
    * Data provider for testGet().
    *
-   * @returns
+   * @return array
    *   - Expected output from get().
    *   - Field name parameter to get().
    *   - Language code for $activeLanguage.
@@ -586,7 +586,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   /**
    * Data provider for testGetFields().
    *
-   * @returns array
+   * @return array
    *   - Expected output from getFields().
    *   - $include_computed value to pass to getFields().
    *   - Value to mock from all field definitions for isComputed().

@@ -50,7 +50,7 @@ class EntityLink extends LinkBase {
   /**
    * Returns the entity link template name identifying the link route.
    *
-   * @returns string
+   * @return string
    *   The link template name.
    */
   protected function getEntityLinkTemplate() {

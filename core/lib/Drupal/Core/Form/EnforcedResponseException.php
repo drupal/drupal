@@ -37,7 +37,7 @@ class EnforcedResponseException extends \Exception {
   /**
    * Return the response to be enforced.
    *
-   * @returns \Symfony\Component\HttpFoundation\Response $response
+   * @return \Symfony\Component\HttpFoundation\Response
    *   The response to be enforced.
    */
   public function getResponse() {
