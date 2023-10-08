@@ -60,7 +60,7 @@ class PasswordItem extends StringItem {
       }
     }
 
-    // Ensure that the existing password is unset to minimise risks of it
+    // Ensure that the existing password is unset to minimize risks of it
     // getting serialized and stored somewhere.
     $this->existing = NULL;
   }

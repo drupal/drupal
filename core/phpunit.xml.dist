@@ -36,7 +36,7 @@
 
     <!-- Deprecation testing is managed through Symfony's PHPUnit Bridge.
       The environment variable SYMFONY_DEPRECATIONS_HELPER is used to configure
-      the behaviour of the deprecation tests.
+      the behavior of the deprecation tests.
       See https://symfony.com/doc/current/components/phpunit_bridge.html#configuration
       Drupal core's testing framework is setting this variable to its defaults.
       Projects with their own requirements need to manage this variable

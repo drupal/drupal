@@ -42,7 +42,7 @@ class AnalyzeTest extends UITestBase {
     $this->assertSession()->titleEquals('View analysis | Drupal');
 
     foreach (['ok', 'warning', 'error'] as $type) {
-      // Check that analyse messages with the expected type found.
+      // Check that analyze messages with the expected type found.
       $this->assertSession()->elementExists('css', 'div.' . $type);
     }
 

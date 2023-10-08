@@ -22,8 +22,6 @@ alternatif
 amet
 amphibius
 ampm
-analyse
-analysed
 andif
 annot
 anonyme
@@ -107,8 +105,6 @@ bgblue
 bgred
 bidi
 bigpipe
-bikeshed
-bikesheds
 bitmask
 bkmgtpezy
 bkslshv
@@ -254,10 +250,8 @@ customly
 customrequest
 cweagans
 cádiz
-databasefilename
 databasename
 datas
-dateformatter
 datelist
 dateonly
 daterange
@@ -286,7 +280,6 @@ denormalizer
 denormalizers
 denormalizes
 denormalizing
-denyall
 depcn
 dependee
 dependee's
@@ -464,7 +457,6 @@ gnumeric
 goldfinger
 googleapis
 gotit
-grandgrandchild
 grayskull
 greeking
 gripsmall
@@ -644,7 +636,6 @@ mikey
 milli
 mimetypes
 minifyzombies
-minimise
 minipager
 minusthick
 missingkey
@@ -885,7 +876,6 @@ rasterizes
 rawurlencoded
 readmore
 readonlydir
-realise
 realpaths
 realword
 rebuilder
@@ -922,7 +912,6 @@ restriped
 restui
 rethrown
 returntransfer
-revisionability
 revisionable
 revisioned
 revisionid
@@ -953,7 +942,6 @@ schemaapi
 schemeless
 schipulcon
 scorewords
-screenreaders
 scriptable
 scrollbars
 searchdirs
@@ -996,8 +984,6 @@ spiffiness
 splitbutton
 splitbuttons
 spreadsheetml
-sqlpassword
-sqlusername
 squaresmall
 squiz
 squizlabs
@@ -1050,7 +1036,6 @@ subrequest's
 subrequests
 subresults
 subselect
-subsequentially
 subshell
 substrategies
 subsubtheme
@@ -1255,7 +1240,6 @@ unshortened
 unsimplified
 unsticky
 unstripped
-unsynchronized
 untabbable
 untarring
 untrustable
@@ -1272,7 +1256,6 @@ uppercased
 upscaling
 urandom
 urlalias
-urldecoding
 usecase
 userid
 userinfo

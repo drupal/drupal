@@ -458,7 +458,7 @@ function claro_form_alter(array &$form, FormStateInterface $form_state, $form_id
 
         // Group the bulk actions select and submit elements, and add a label
         // that makes the purpose of these elements more clear to
-        // screenreaders.
+        // screen readers.
         $form['bulk_actions_container']['#attributes']['role'] = 'group';
         $form['bulk_actions_container']['#attributes']['aria-labelledby'] = $label_id;
         $form['bulk_actions_container']['group_label'] = [
@@ -835,7 +835,7 @@ function claro_form_views_exposed_form_alter(&$form, FormStateInterface $form_st
   $view = $form_state->getStorage()['view'];
   $view_title = $view->getTitle();
 
-  // Add a label so screenreaders can identify the purpose of the exposed form
+  // Add a label so screen readers can identify the purpose of the exposed form
   // without having to scan content that appears further down the page.
   $form['#attributes']['aria-label'] = t('Filter the contents of the %view_title view', ['%view_title' => $view_title]);
 }

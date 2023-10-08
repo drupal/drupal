@@ -159,7 +159,7 @@ class ImageItemTest extends FieldKernelTestBase {
    */
   public function testImageItemSampleValueGeneration() {
 
-    // Default behaviour. No resolution configuration.
+    // Default behavior. No resolution configuration.
     $entity = EntityTest::create();
     $entity->image_test->generateSampleItems();
     $this->entityValidateAndSave($entity);

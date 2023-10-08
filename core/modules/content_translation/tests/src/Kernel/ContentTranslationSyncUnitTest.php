@@ -252,7 +252,7 @@ class ContentTranslationSyncUnitTest extends KernelTestBase {
       for ($delta = 0; $delta < $this->cardinality; $delta++) {
         foreach ($this->columns as $column) {
           // If the column is synchronized, the value should have been synced,
-          // for unsynchronized columns, the value must not change.
+          // for columns that are not synchronized, the value must not change.
           $expected_value = in_array($column, $this->synchronized) ? $changed_items[$delta][$column] : $this->unchangedFieldValues[$langcode][$delta][$column];
           $this->assertEquals($expected_value, $field_values[$langcode][$delta][$column], "Differing Item {$delta} column {$column} for langcode {$langcode} synced correctly");
         }

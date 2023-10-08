@@ -342,7 +342,7 @@ class RendererBubblingTest extends RendererTestBase {
             // A lower max-age; the redirecting cache item should be updated.
             'max-age' => 1800,
           ],
-          'grandgrandchild' => [
+          'great grandchild' => [
             '#access_callback' => function () use (&$current_user_role) {
               // Only role C can access this subtree.
               return $current_user_role === 'C';
@@ -400,7 +400,7 @@ class RendererBubblingTest extends RendererTestBase {
       '#markup' => 'parent',
     ]);
 
-    // Request 3: role C, both the grandchild and the grandgrandchild are
+    // Request 3: role C, both the grandchild and the great grandchild are
     // accessible => bubbled cache contexts: foo, bar, user.roles + merged
     // max-age: 300.
     $element = $test_element;

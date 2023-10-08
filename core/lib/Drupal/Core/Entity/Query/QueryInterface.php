@@ -259,14 +259,14 @@ interface QueryInterface extends AlterableInterface {
    *
    * For example, consider a map entity with an 'attributes' field
    * containing 'building_type' and 'color' columns. To find all green and
-   * red bikesheds:
+   * red sheds:
    * @code
    *   $query = \Drupal::entityQuery('map')->accessCheck(FALSE);
    *   $group = $query->orConditionGroup()
    *     ->condition('attributes.color', 'red')
    *     ->condition('attributes.color', 'green');
    *   $entity_ids = $query
-   *     ->condition('attributes.building_type', 'bikeshed')
+   *     ->condition('attributes.building_type', 'shed')
    *     ->condition($group)
    *     ->execute();
    * @endcode
@@ -274,7 +274,7 @@ interface QueryInterface extends AlterableInterface {
    * @code
    *   $entity_ids = $query
    *     ->condition('attributes.color', ['red', 'green'])
-   *     ->condition('attributes.building_type', 'bikeshed')
+   *     ->condition('attributes.building_type', 'shed')
    *     ->execute();
    * @endcode
    *

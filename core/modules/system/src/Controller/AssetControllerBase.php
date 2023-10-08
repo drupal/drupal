@@ -57,7 +57,7 @@ abstract class AssetControllerBase extends FileDownloadController {
    * for the file will be served from disk and be cached. This is done to
    * avoid situations such as where one CDN endpoint is serving a version
    * cached from PHP, while another is serving a version cached from disk.
-   * Should there be any discrepancy in behaviour between those files, this
+   * Should there be any discrepancy in behavior between those files, this
    * can make debugging very difficult.
    */
   protected const CACHE_CONTROL = 'private, no-store';

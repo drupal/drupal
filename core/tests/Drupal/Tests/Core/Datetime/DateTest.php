@@ -192,7 +192,7 @@ class DateTest extends UnitTestCase {
     $timestamp = $this->createTimestamp('2013-12-11 10:09:09');
     $options = [];
 
-    // Mocks the formatDiff function of the dateformatter object.
+    // Mocks the formatDiff function of the DateFormatter object.
     $this->dateFormatterStub
       ->expects($this->exactly(2))
       ->method('formatDiff')
@@ -225,7 +225,7 @@ class DateTest extends UnitTestCase {
     $request_time = $this->createTimestamp('2013-12-11 10:09:08');
     $options = [];
 
-    // Mocks the formatDiff function of the dateformatter object.
+    // Mocks the formatDiff function of the DateFormatter object.
     $this->dateFormatterStub
       ->expects($this->exactly(2))
       ->method('formatDiff')

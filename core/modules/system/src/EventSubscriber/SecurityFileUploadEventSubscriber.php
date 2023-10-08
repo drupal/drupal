@@ -102,7 +102,7 @@ class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
 
     // Munge the filename to protect against possible malicious extension hiding
     // within an unknown file type (i.e. filename.html.foo). This was introduced
-    // as part of SA-2006-006 to fix Apache's risky fallback behaviour.
+    // as part of SA-2006-006 to fix Apache's risky fallback behavior.
 
     // Loop through the middle parts of the name and add an underscore to the
     // end of each section that could be a file extension but isn't in the

@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
  *
  * Upgrading a Composer plugin can be a dangerous operation. If the plugin
  * instantiates any classes during the activate method, and the plugin code
- * is subsequentially modified by a `composer update` operation, then any
+ * is subsequently modified by a `composer update` operation, then any
  * post-update hook (& etc.) may run with inconsistent code, leading to
  * runtime errors. This test ensures that it is possible to upgrade from the
  * last available stable 8.8.x tag to the current Scaffold plugin code (e.g. in

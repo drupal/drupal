@@ -32,7 +32,7 @@ use Symfony\Component\Routing\Route;
  * plugin should have an annotation that includes the plugin's metadata, for
  * example:
  * @Plugin(
- *   id = "denyall",
+ *   id = "deny_all",
  *   title = @Translation("No Access"),
  *   help = @Translation("Will not be accessible.")
  * )

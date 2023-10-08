@@ -9,7 +9,7 @@ use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
 /**
- * Tests the revisionability of media entities.
+ * Tests the revisions of media entities.
  *
  * @group media
  */
