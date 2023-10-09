@@ -3,6 +3,8 @@
 namespace Drupal\Tests\mysql\Kernel\mysql;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Database\Exception\SchemaTableColumnSizeTooLargeException;
+use Drupal\Core\Database\Exception\SchemaTableKeyTooLargeException;
 use Drupal\Core\Database\SchemaException;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\SchemaObjectExistsException;
@@ -243,6 +245,70 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
     $index_schema = $introspect_index_schema->invoke($this->schema, $table_name);
 
     $this->assertEquals($table_specification, $index_schema);
+  }
+
+  /**
+   * Tests SchemaTableKeyTooLargeException.
+   */
+  public function testSchemaTableKeyTooLargeException(): void {
+    $this->expectException(SchemaTableKeyTooLargeException::class);
+    $this->schema->createTable('test_schema', [
+      'description' => 'Tests SchemaTableKeyTooLargeException.',
+      'fields' => [
+        'id'  => [
+          'type' => 'varchar',
+          'length' => 64,
+          'not null' => TRUE,
+        ],
+        'id1'  => [
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+        ],
+        'id2'  => [
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+        ],
+        'id3'  => [
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+        ],
+        'id4'  => [
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+        ],
+        'id5'  => [
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+        ],
+      ],
+      'primary key' => ['id'],
+      'indexes' => [
+        'key1' => ['id1', 'id2', 'id3', 'id4', 'id5'],
+      ],
+    ]);
+  }
+
+  /**
+   * Tests SchemaTableColumnSizeTooLargeException.
+   */
+  public function testSchemaTableColumnSizeTooLargeException(): void {
+    $this->expectException(SchemaTableColumnSizeTooLargeException::class);
+    $this->expectExceptionMessage("Column length too big for column 'too_large' (max = 16383); use BLOB or TEXT instead");
+    $this->schema->createTable('test_schema', [
+      'description' => 'Tests SchemaTableColumnSizeTooLargeException.',
+      'fields' => [
+        'too_large'  => [
+          'type' => 'varchar',
+          'length' => 65536,
+          'not null' => TRUE,
+        ],
+      ],
+    ]);
   }
 
 }

@@ -4,6 +4,7 @@ namespace Drupal\migrate\Plugin\migrate\id_map;
 
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\Exception\SchemaTableKeyTooLargeException;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
@@ -424,13 +425,11 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
             ->createTable($this->mapTableName, $schema);
           break;
         }
-        catch (DatabaseException $e) {
-          $pdo_exception = $e->getPrevious();
-          $mysql_index_error = $pdo_exception instanceof \PDOException && $pdo_exception->getCode() === '42000' && $pdo_exception->errorInfo[1] === 1071;
+        catch (SchemaTableKeyTooLargeException $e) {
           $chunk_size--;
           // Rethrow the exception if the source IDs can not be in smaller
           // groups.
-          if (!$mysql_index_error || $chunk_size <= 0) {
+          if ($chunk_size <= 0) {
             throw $e;
           }
         }

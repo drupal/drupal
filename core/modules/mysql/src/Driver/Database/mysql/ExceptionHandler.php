@@ -5,6 +5,8 @@ namespace Drupal\mysql\Driver\Database\mysql;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\ExceptionHandler as BaseExceptionHandler;
+use Drupal\Core\Database\Exception\SchemaTableColumnSizeTooLargeException;
+use Drupal\Core\Database\Exception\SchemaTableKeyTooLargeException;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\StatementInterface;
 
@@ -41,6 +43,14 @@ class ExceptionHandler extends BaseExceptionHandler {
         ($exception->errorInfo[1] ?? NULL) === 1364
       ) {
         throw new IntegrityConstraintViolationException($message, $code, $exception);
+      }
+
+      if ($exception->getCode() === '42000') {
+        match ($exception->errorInfo[1]) {
+          1071 => throw new SchemaTableKeyTooLargeException($message, $code, $exception),
+          1074 => throw new SchemaTableColumnSizeTooLargeException($message, $code, $exception),
+          default => throw new DatabaseExceptionWrapper($message, 0, $exception),
+        };
       }
 
       throw new DatabaseExceptionWrapper($message, 0, $exception);
