@@ -320,6 +320,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     // Switch the target type to 'entity_test'.
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
     $page->findField('field_storage[subform][settings][target_type]')->setValue('entity_test');
+    $assert_session->assertWaitOnAjaxRequest();
     $page->findField('settings[handler]')->setValue('views');
     $assert_session->assertWaitOnAjaxRequest();
     $page
