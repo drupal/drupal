@@ -76,6 +76,22 @@ class ExceptionLoggingSubscriber implements EventSubscriberInterface {
   }
 
   /**
+   * Log 4xx errors that are not 403 or 404.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
+   *   The event to process.
+   */
+  public function onClientError(ExceptionEvent $event) {
+    $exception = $event->getThrowable();
+    $error = Error::decodeException($exception);
+    $error += [
+      'status_code' => $exception->getStatusCode(),
+    ];
+    $this->logger->get('client error')
+      ->log($error['severity_level'], Error::DEFAULT_ERROR_MESSAGE, $error);
+  }
+
+  /**
    * Log all exceptions.
    *
    * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
@@ -88,9 +104,13 @@ class ExceptionLoggingSubscriber implements EventSubscriberInterface {
 
     // Treat any non-HTTP exception as if it were one, so we log it the same.
     if ($exception instanceof HttpExceptionInterface) {
-      $possible_method = 'on' . $exception->getStatusCode();
+      $status_code = $exception->getStatusCode();
+      $possible_method = 'on' . $status_code;
       if (method_exists($this, $possible_method)) {
         $method = $possible_method;
+      }
+      elseif ($status_code >= 400 && $status_code < 500) {
+        $method = 'onClientError';
       }
     }
 
