@@ -96,6 +96,19 @@ interface TransactionManagerInterface {
   public function rollback(string $name, string $id): void;
 
   /**
+   * Voids the client connection.
+   *
+   * In some cases the active transaction can be automatically committed by the
+   * database server (for example, MySql when a DDL statement is executed
+   * during a transaction). In such cases we need to void the remaining items
+   * on the stack so that when outliving Transaction object get out of scope
+   * the do not try operations on the database.
+   *
+   * This method should only be called internally by a database driver.
+   */
+  public function voidClientTransaction(): void;
+
+  /**
    * Adds a root transaction end callback.
    *
    * These callbacks are invoked immediately after the client transaction has

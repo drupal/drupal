@@ -2,9 +2,11 @@
 
 namespace Drupal\KernelTests\Core\Database;
 
+use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Transaction\StackItem;
+use Drupal\Core\Database\Transaction\StackItemType;
 use Drupal\Core\Database\TransactionExplicitCommitNotAllowedException;
 use Drupal\Core\Database\TransactionNameNonUniqueException;
-use Drupal\Core\Database\TransactionNoActiveException;
 use Drupal\Core\Database\TransactionOutOfOrderException;
 use PHPUnit\Framework\Error\Warning;
 
@@ -370,23 +372,6 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->assertRowPresent('outer');
     $this->assertRowPresent('inner');
 
-    // Pop the transaction in a different order they have been pushed.
-    $this->cleanUp();
-    $transaction = $this->connection->startTransaction();
-    $this->insertRow('outer');
-    $transaction2 = $this->connection->startTransaction();
-    $this->insertRow('inner');
-    // Pop the outer transaction, nothing should happen.
-    unset($transaction);
-    $this->insertRow('inner-after-outer-commit');
-    $this->assertTrue($this->connection->inTransaction(), 'Still in a transaction after popping the outer transaction');
-    // Pop the inner transaction, the whole transaction should commit.
-    unset($transaction2);
-    $this->assertFalse($this->connection->inTransaction(), 'Transaction closed after popping the inner transaction');
-    $this->assertRowPresent('outer');
-    $this->assertRowPresent('inner');
-    $this->assertRowPresent('inner-after-outer-commit');
-
     // Rollback the inner transaction.
     $this->cleanUp();
     $transaction = $this->connection->startTransaction();
@@ -411,15 +396,17 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->insertRow('outer');
     $transaction2 = $this->connection->startTransaction();
     $this->insertRow('inner');
-    // Pop the outer transaction, nothing should happen.
+    // Unset the outer (root) transaction, should commit.
     unset($transaction);
-    $this->assertTrue($this->connection->inTransaction(), 'Still in a transaction after popping the outer transaction');
-    // Now rollback the inner transaction, it should rollback.
+    $this->assertFalse($this->connection->inTransaction());
+    // Unpile the inner (savepoint) Transaction object, it should be a no-op
+    // anyway given it was dropped by the database already, and removed from
+    // our transaction stack.
     $transaction2->rollBack();
     unset($transaction2);
     $this->assertFalse($this->connection->inTransaction(), 'Transaction closed after popping the inner transaction');
     $this->assertRowPresent('outer');
-    $this->assertRowAbsent('inner');
+    $this->assertRowPresent('inner');
 
     // Rollback the outer transaction while the inner transaction is active.
     // In that case, an exception will be triggered because we cannot
@@ -440,19 +427,14 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     catch (TransactionOutOfOrderException $e) {
       // Expected exception; just continue testing.
     }
-    $this->assertFalse($this->connection->inTransaction(), 'No more in a transaction after rolling back the outer transaction');
-    // Try to commit one inner transaction.
+    // Rollback of the root Transaction failed, we are still in an active
+    // client transaction.
+    $this->assertTrue($this->connection->inTransaction());
+    // Release latest savepoint (=inner2) transaction.
     unset($transaction3);
-
-    // Try to rollback one inner transaction.
-    try {
-      $transaction->rollBack();
-      unset($transaction2);
-      $this->fail('Trying to commit an inner transaction resulted in an exception.');
-    }
-    catch (TransactionNoActiveException $e) {
-      // Expected exception; just continue testing.
-    }
+    // Rollback remaining transactions in backwards order.
+    $transaction2->rollBack();
+    $transaction->rollBack();
     $this->assertRowAbsent('outer');
     $this->assertRowAbsent('inner');
     $this->assertRowAbsent('inner2');
@@ -580,22 +562,77 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
    * Tests releasing a savepoint before last is safe.
    */
   public function testReleaseIntermediateSavepoint(): void {
+    // Start root transaction. Corresponds to 'BEGIN TRANSACTION' on the
+    // database.
     $transaction = $this->connection->startTransaction();
     $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
+    // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_1'
+    // on the database.
     $savepoint1 = $this->connection->startTransaction();
     $this->assertSame(2, $this->connection->transactionManager()->stackDepth());
+    // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_2'
+    // on the database.
     $savepoint2 = $this->connection->startTransaction();
     $this->assertSame(3, $this->connection->transactionManager()->stackDepth());
+    // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_3'
+    // on the database.
     $savepoint3 = $this->connection->startTransaction();
     $this->assertSame(4, $this->connection->transactionManager()->stackDepth());
+    // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_4'
+    // on the database.
     $savepoint4 = $this->connection->startTransaction();
     $this->assertSame(5, $this->connection->transactionManager()->stackDepth());
+
     $this->insertRow('row');
+
+    // Unsets a savepoint transaction. Corresponds to 'RELEASE SAVEPOINT
+    // savepoint_2' on the database.
     unset($savepoint2);
+    // Since we have committed an intermediate savepoint Transaction object,
+    // the savepoints created later have been dropped by the database already.
     $this->assertSame(2, $this->connection->transactionManager()->stackDepth());
     $this->assertRowPresent('row');
+
+    // Unsets the remaining Transaction objects. The client transaction is
+    // eventually committed.
     unset($savepoint1);
     unset($transaction);
+    $this->assertFalse($this->connection->inTransaction());
+    $this->assertRowPresent('row');
+  }
+
+  /**
+   * Tests committing a transaction while savepoints are active.
+   */
+  public function testCommitWithActiveSavepoint(): void {
+    // Start root transaction. Corresponds to 'BEGIN TRANSACTION' on the
+    // database.
+    $transaction = $this->connection->startTransaction();
+    $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
+    // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_1'
+    // on the database.
+    $savepoint1 = $this->connection->startTransaction();
+    $this->assertSame(2, $this->connection->transactionManager()->stackDepth());
+    // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_2'
+    // on the database.
+    $savepoint2 = $this->connection->startTransaction();
+    $this->assertSame(3, $this->connection->transactionManager()->stackDepth());
+
+    $this->insertRow('row');
+
+    // Unsets the root transaction. Corresponds to 'COMMIT' on the database.
+    unset($transaction);
+    // Since we have committed the outer (root) Transaction object, the inner
+    // (savepoint) ones have been dropped by the database already, and we are
+    // no longer in an active transaction state.
+    $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
+    $this->assertFalse($this->connection->inTransaction());
+    $this->assertRowPresent('row');
+    // Unpile the inner (savepoint) Transaction object, it should be a no-op
+    // anyway given it was dropped by the database already, and removed from
+    // our transaction stack.
+    unset($savepoint2);
+    $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
     $this->assertFalse($this->connection->inTransaction());
     $this->assertRowPresent('row');
   }
@@ -662,6 +699,24 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
   public function rootTransactionCallback(bool $success): void {
     $this->postTransactionCallbackAction = $success ? 'rtcCommit' : 'rtcRollback';
     $this->insertRow($this->postTransactionCallbackAction);
+  }
+
+  /**
+   * Tests TransactionManager failure.
+   */
+  public function testTransactionManagerFailureOnPendingStackItems(): void {
+    $connectionInfo = Database::getConnectionInfo();
+    Database::addConnectionInfo('default', 'test_fail', $connectionInfo['default']);
+    $testConnection = Database::getConnection('test_fail');
+
+    // Add a fake item to the stack.
+    $reflectionMethod = new \ReflectionMethod(get_class($testConnection->transactionManager()), 'addStackItem');
+    $reflectionMethod->invoke($testConnection->transactionManager(), 'bar', new StackItem('qux', StackItemType::Savepoint));
+
+    $this->expectException(\AssertionError::class);
+    $this->expectExceptionMessage('Transaction $stack was not empty');
+    unset($testConnection);
+    Database::closeConnection('test_fail');
   }
 
   /**

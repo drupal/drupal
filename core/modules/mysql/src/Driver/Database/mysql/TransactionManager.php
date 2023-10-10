@@ -29,8 +29,7 @@ class TransactionManager extends TransactionManagerBase {
    */
   protected function processRootCommit(): void {
     if (!$this->connection->getClientConnection()->inTransaction()) {
-      $this->setConnectionTransactionState(ClientConnectionTransactionState::Voided);
-      $this->processPostTransactionCallbacks();
+      $this->voidClientTransaction();
       return;
     }
     parent::processRootCommit();
@@ -41,9 +40,7 @@ class TransactionManager extends TransactionManagerBase {
    */
   protected function rollbackClientSavepoint(string $name): bool {
     if (!$this->connection->getClientConnection()->inTransaction()) {
-      $this->resetStack();
-      $this->setConnectionTransactionState(ClientConnectionTransactionState::Voided);
-      $this->processPostTransactionCallbacks();
+      $this->voidClientTransaction();
       return TRUE;
     }
     return parent::rollbackClientSavepoint($name);
@@ -54,9 +51,7 @@ class TransactionManager extends TransactionManagerBase {
    */
   protected function releaseClientSavepoint(string $name): bool {
     if (!$this->connection->getClientConnection()->inTransaction()) {
-      $this->resetStack();
-      $this->setConnectionTransactionState(ClientConnectionTransactionState::Voided);
-      $this->processPostTransactionCallbacks();
+      $this->voidClientTransaction();
       return TRUE;
     }
     return parent::releaseClientSavepoint($name);
@@ -66,11 +61,6 @@ class TransactionManager extends TransactionManagerBase {
    * {@inheritdoc}
    */
   protected function commitClientTransaction(): bool {
-    if (!$this->connection->getClientConnection()->inTransaction()) {
-      $this->setConnectionTransactionState(ClientConnectionTransactionState::Voided);
-      $this->processPostTransactionCallbacks();
-      return TRUE;
-    }
     $clientCommit = $this->connection->getClientConnection()->commit();
     $this->setConnectionTransactionState($clientCommit ?
       ClientConnectionTransactionState::Committed :
@@ -84,9 +74,9 @@ class TransactionManager extends TransactionManagerBase {
    */
   protected function rollbackClientTransaction(): bool {
     if (!$this->connection->getClientConnection()->inTransaction()) {
-      $this->setConnectionTransactionState(ClientConnectionTransactionState::Voided);
-      $this->processPostTransactionCallbacks();
       trigger_error('Rollback attempted when there is no active transaction. This can cause data integrity issues.', E_USER_WARNING);
+      $this->voidClientTransaction();
+      return FALSE;
     }
     $clientRollback = $this->connection->getClientConnection()->rollBack();
     $this->setConnectionTransactionState($clientRollback ?
