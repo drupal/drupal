@@ -321,12 +321,26 @@ class TermTest extends TaxonomyTestBase {
     $this->assertSession()->pageTextContains($edit['name[0][value]']);
     $this->assertSession()->pageTextContains($edit['description[0][value]']);
 
+    // Test the "Add child" link on the overview page.
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
+    $this->assertSession()->linkExistsExact('Add child');
+    $this->clickLink('Add child');
+    $edit = [
+      'name[0][value]' => 'Child term',
+    ];
+    $this->submitForm($edit, 'Save');
+    $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties([
+      'name' => 'Child term',
+    ]);
+    $child = reset($terms);
+    $this->assertNotNull($child, 'Child term found in database.');
+    $this->assertEquals($term->id(), $child->get('parent')->getValue()[0]['target_id']);
+
+    // Edit the term.
     $edit = [
       'name[0][value]' => $this->randomMachineName(14),
       'description[0][value]' => $this->randomMachineName(102),
     ];
-
-    // Edit the term.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
     $this->submitForm($edit, 'Save');
 

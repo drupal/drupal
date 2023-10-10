@@ -125,6 +125,26 @@ function template_preprocess_taxonomy_term(&$variables) {
 }
 
 /**
+ * Implements hook_entity_operation().
+ */
+function taxonomy_entity_operation(EntityInterface $term) {
+  $operations = [];
+  if ($term instanceof Term && $term->access('create')) {
+    $operations['add-child'] = [
+      'title' => t('Add child'),
+      'weight' => 10,
+      'url' => Url::fromRoute(
+        'entity.taxonomy_term.add_form',
+        ['taxonomy_vocabulary' => $term->bundle()],
+        ['query' => ['parent' => $term->id()]],
+      ),
+    ];
+  }
+
+  return $operations;
+}
+
+/**
  * Returns whether the current page is the page of the passed-in term.
  *
  * @param \Drupal\taxonomy\Entity\Term $term
