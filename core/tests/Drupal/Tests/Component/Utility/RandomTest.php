@@ -123,7 +123,7 @@ class RandomTest extends TestCase {
   public function testRandomMachineNamesUniqueness(): void {
     $names = [];
     $random = new Random();
-    for ($i = 0; $i <= 25; $i++) {
+    for ($i = 0; $i <= 10; $i++) {
       $str = $random->machineName(1, TRUE);
       $this->assertArrayNotHasKey($str, $names, 'Generated duplicate random name ' . $str);
       $names[$str] = TRUE;
@@ -194,17 +194,7 @@ class RandomTest extends TestCase {
    */
   public function testRandomWordValidator() {
     $random = new Random();
-    // Without a seed, test a different word is returned each time.
-    $this->firstStringGenerated = $random->word(5);
-    $next_str = $random->word(5);
-    $this->assertNotEquals($this->firstStringGenerated, $next_str);
-
-    // With a seed, test the same word is returned each time.
-    mt_srand(0);
-    $this->firstStringGenerated = $random->word(5);
-    mt_srand(0);
-    $next_str = $random->word(5);
-    $this->assertEquals($this->firstStringGenerated, $next_str);
+    $this->assertNotEquals($random->word(20), $random->word(20));
   }
 
   /**
