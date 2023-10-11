@@ -33,6 +33,32 @@ class BigPipeRegressionTestController implements TrustedCallbackInterface {
   }
 
   /**
+   * A page with large content.
+   *
+   * @see \Drupal\Tests\big_pipe\FunctionalJavascript\BigPipeRegressionTest::testBigPipeLargeContent
+   */
+  public function largeContent() {
+    return [
+      'item1' => [
+        '#lazy_builder' => [static::class . '::largeContentBuilder', []],
+        '#create_placeholder' => TRUE,
+      ],
+    ];
+  }
+
+  /**
+   * Renders large content.
+   *
+   * @see \Drupal\Tests\big_pipe\FunctionalJavascript\BigPipeRegressionTest::testBigPipeLargeContent
+   */
+  public static function largeContentBuilder() {
+    return [
+      '#theme' => 'big_pipe_test_large_content',
+      '#cache' => ['max-age' => 0],
+    ];
+  }
+
+  /**
    * #lazy_builder callback; builds <time> markup with current time.
    *
    * @return array
@@ -48,7 +74,7 @@ class BigPipeRegressionTestController implements TrustedCallbackInterface {
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['currentTime'];
+    return ['currentTime', 'largeContentBuilder'];
   }
 
 }
