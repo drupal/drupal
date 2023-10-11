@@ -1,0 +1,1 @@
+!function(i){const o=i.sv=i.sv||{};o.dictionary=Object.assign(o.dictionary||{},{"Show blocks":"Visa block"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

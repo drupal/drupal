@@ -1673,6 +1673,30 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-show-blocks/src/showblocks.js
+ *
+ * @typedef {module:show-blocks/showblocks} module:show-blocks/showblocks~ShowBlocks
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-show-blocks/src/showblockscommand.js
+ *
+ * @typedef {module:show-blocks/showblockscommand} module:show-blocks/showblockscommand~ShowBlocksCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-show-blocks/src/showblocksediting.js
+ *
+ * @typedef {module:show-blocks/showblocksediting} module:show-blocks/showblocksediting~ShowBlocksEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-show-blocks/src/showblocksui.js
+ *
+ * @typedef {module:show-blocks/showblocksui} module:show-blocks/showblocksui~ShowBlocksUI
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-source-editing/src/sourceediting.js
  *
  * @typedef {module:source-editing/sourceediting} module:source-editing/sourceediting~SourceEditing

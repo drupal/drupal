@@ -1,0 +1,1 @@
+!function(o){const i=o.cs=o.cs||{};i.dictionary=Object.assign(i.dictionary||{},{"Show blocks":"Zobrazit bloky"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

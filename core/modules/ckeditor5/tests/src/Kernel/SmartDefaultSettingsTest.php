@@ -1280,6 +1280,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
             'heading',
             'codeBlock',
             '|',
+            'showBlocks',
             'sourceEditing',
           ],
         ],

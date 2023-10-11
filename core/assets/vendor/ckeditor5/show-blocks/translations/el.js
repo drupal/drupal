@@ -1,0 +1,1 @@
+!function(i){const n=i.el=i.el||{};n.dictionary=Object.assign(n.dictionary||{},{"Show blocks":"Εμφάνιση μπλοκ"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
