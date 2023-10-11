@@ -566,7 +566,11 @@ abstract class DrupalTestCase {
             $this->$method();
             // Finish up.
           }
+          catch (Throwable $e) {
+            $this->exceptionHandler($e);
+          }
           catch (Exception $e) {
+            // Cater for older PHP versions.
             $this->exceptionHandler($e);
           }
           $this->tearDown();
