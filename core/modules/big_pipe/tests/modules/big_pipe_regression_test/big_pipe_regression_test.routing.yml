@@ -11,3 +11,11 @@ big_pipe_regression_test.2802923:
     _controller: '\Drupal\big_pipe_regression_test\BigPipeRegressionTestController::regression2802923'
   requirements:
     _access: 'TRUE'
+
+big_pipe_test_large_content:
+  path: '/big_pipe_test_large_content'
+  defaults:
+    _controller: '\Drupal\big_pipe_regression_test\BigPipeRegressionTestController::largeContent'
+    _title: 'BigPipe test large content'
+  requirements:
+    _access: 'TRUE'

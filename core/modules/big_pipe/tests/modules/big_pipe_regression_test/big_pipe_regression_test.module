@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * @file
+ * Support module for BigPipe testing.
+ */
+
+/**
+ * Implements hook_theme().
+ *
+ * @see \Drupal\Tests\big_pipe\FunctionalJavascript\BigPipeRegressionTest::testBigPipeLargeContent
+ */
+function big_pipe_regression_test_theme() {
+  return [
+    'big_pipe_test_large_content' => [
+      'variables' => [],
+    ],
+  ];
+}
