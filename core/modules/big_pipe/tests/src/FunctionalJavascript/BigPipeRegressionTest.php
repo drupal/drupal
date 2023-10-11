@@ -124,4 +124,28 @@ JS;
     $this->assertJsCondition('document.querySelectorAll(\'p\').length === 1');
   }
 
+  /**
+   * Tests BigPipe large content.
+   *
+   * Repeat loading of same page for two times, after second time the page is
+   * cached and the bug consistently reproducible.
+   */
+  public function testBigPipeLargeContent() {
+    $user = $this->drupalCreateUser();
+    $this->drupalLogin($user);
+    $assert_session = $this->assertSession();
+
+    $this->drupalGet(Url::fromRoute('big_pipe_test_large_content'));
+    $this->assertNotNull($assert_session->waitForElement('css', 'script[data-big-pipe-event="stop"]'));
+    $this->assertCount(0, $this->getDrupalSettings()['bigPipePlaceholderIds']);
+    $this->assertCount(2, $this->getSession()->getPage()->findAll('css', 'script[data-big-pipe-replacement-for-placeholder-with-id]'));
+    $assert_session->elementExists('css', '#big-pipe-large-content');
+
+    $this->drupalGet(Url::fromRoute('big_pipe_test_large_content'));
+    $this->assertNotNull($assert_session->waitForElement('css', 'script[data-big-pipe-event="stop"]'));
+    $this->assertCount(0, $this->getDrupalSettings()['bigPipePlaceholderIds']);
+    $this->assertCount(2, $this->getSession()->getPage()->findAll('css', 'script[data-big-pipe-replacement-for-placeholder-with-id]'));
+    $assert_session->elementExists('css', '#big-pipe-large-content');
+  }
+
 }

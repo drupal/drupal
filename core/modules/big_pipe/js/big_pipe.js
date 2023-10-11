@@ -59,8 +59,9 @@
    */
   function processReplacement(replacement) {
     const id = replacement.dataset.bigPipeReplacementForPlaceholderWithId;
-    // Because we use a mutation observer the content is guaranteed to be
-    // complete at this point.
+    // The content is not guaranteed to be complete at this point, but trimming
+    // it will not make a big change, since json will not be valid if it was
+    // not fully loaded anyway.
     const content = replacement.textContent.trim();
 
     // Ignore any placeholders that are not in the known placeholder list. Used
@@ -69,18 +70,30 @@
       return;
     }
 
-    // Immediately remove the replacement to prevent it being processed twice.
-    delete drupalSettings.bigPipePlaceholderIds[id];
-
     const response = mapTextContentToAjaxResponse(content);
 
     if (response === false) {
       return;
     }
 
+    // Immediately remove the replacement to prevent it being processed twice.
+    delete drupalSettings.bigPipePlaceholderIds[id];
+
     // Then, simulate an AJAX response having arrived, and let the Ajax system
     // handle it.
     ajaxObject.success(response, 'success');
+  }
+
+  /**
+   * Checks if node is valid big pipe replacement.
+   */
+  function checkMutation(node) {
+    return Boolean(
+      node.nodeType === Node.ELEMENT_NODE &&
+        node.nodeName === 'SCRIPT' &&
+        node.dataset &&
+        node.dataset.bigPipeReplacementForPlaceholderWithId,
+    );
   }
 
   /**
@@ -90,12 +103,7 @@
    *  The node added to the body element.
    */
   function checkMutationAndProcess(node) {
-    if (
-      node.nodeType === Node.ELEMENT_NODE &&
-      node.nodeName === 'SCRIPT' &&
-      node.dataset &&
-      node.dataset.bigPipeReplacementForPlaceholderWithId
-    ) {
+    if (checkMutation(node)) {
       processReplacement(node);
     }
   }
@@ -107,8 +115,20 @@
    *  The list of mutations registered by the browser.
    */
   function processMutations(mutations) {
-    mutations.forEach(({ addedNodes }) => {
+    mutations.forEach(({ addedNodes, type, target }) => {
       addedNodes.forEach(checkMutationAndProcess);
+
+      // Checks if parent node of target node has not been processed.
+      // @see `@ingroup large_chunk` for more information.
+      if (
+        type === 'characterData' &&
+        checkMutation(target.parentNode) &&
+        drupalSettings.bigPipePlaceholderIds[
+          target.parentNode.dataset.bigPipeReplacementForPlaceholderWithId
+        ] === true
+      ) {
+        processReplacement(target.parentNode);
+      }
     });
   }
 
@@ -121,8 +141,19 @@
   // in the DOM before the mutation observer is started.
   document.querySelectorAll(replacementsSelector).forEach(processReplacement);
 
-  // Start observing the body element for new children.
-  observer.observe(document.body, { childList: true });
+  // Start observing the body element for new children and for new changes in
+  // Text nodes of elements. We need to track Text nodes because content
+  // of the node can be too large, browser will receive not fully loaded chunk
+  // and render it as is. At this moment json inside script will be invalid and
+  // we need to track new changes to that json (Text node), once it will be
+  // fully loaded it will be processed.
+  // @ingroup large_chunk
+  observer.observe(document.body, {
+    childList: true,
+    // Without this options characterData will not be triggered inside child nodes.
+    subtree: true,
+    characterData: true,
+  });
 
   // As soon as the document is loaded, no more replacements will be added.
   // Immediately fetch and process all pending mutations and stop the observer.
