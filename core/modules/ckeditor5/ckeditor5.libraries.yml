@@ -187,6 +187,11 @@ internal.admin.drupalmedia:
     theme:
       css/drupalmedia.admin.css: { }
 
+internal.admin.showBlocks:
+  css:
+    theme:
+      css/show-blocks.admin.css: { }
+
 internal.admin.sourceEditing:
   css:
     theme:

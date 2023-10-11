@@ -1,0 +1,1 @@
+!function(o){const n=o.hu=o.hu||{};n.dictionary=Object.assign(n.dictionary||{},{"Show blocks":"Blokkok megjelenítése"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

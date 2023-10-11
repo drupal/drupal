@@ -1,0 +1,1 @@
+!function(o){const i=o.lt=o.lt||{};i.dictionary=Object.assign(i.dictionary||{},{"Show blocks":"Rodyti blokus"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

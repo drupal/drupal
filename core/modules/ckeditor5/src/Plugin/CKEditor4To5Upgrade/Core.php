@@ -153,11 +153,13 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
       case 'Paste':
       case 'PasteText':
       case 'PasteFromWord':
-      case 'ShowBlocks':
       case 'Maximize':
       case '-':
         // @see https://www.drupal.org/project/ckeditor5/issues/3211049#comment-14167764
         return NULL;
+
+      case 'ShowBlocks':
+        return ['showBlocks'];
 
       // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\RemoveFormat
       case 'RemoveFormat':

@@ -1,0 +1,1 @@
+!function(o){const i=o.gl=o.gl||{};i.dictionary=Object.assign(i.dictionary||{},{"Show blocks":"Amosar os bloques"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

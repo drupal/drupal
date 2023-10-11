@@ -292,6 +292,18 @@ ckeditor5.codeBlock:
     - core/ckeditor5
     - core/ckeditor5.translations
 
+ckeditor5.showBlocks:
+  remote: https://github.com/ckeditor/ckeditor5
+  version: "39.0.1"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v37.1.0/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/ckeditor5/show-blocks/show-blocks.js: { minified: true }
+  dependencies:
+    - core/ckeditor5
+
 ckeditor5.style:
   remote: https://github.com/ckeditor/ckeditor5
   version: "39.0.1"

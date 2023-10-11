@@ -218,6 +218,14 @@
     "@ckeditor/ckeditor5-ui" "39.0.1"
     "@ckeditor/ckeditor5-utils" "39.0.1"
 
+"@ckeditor/ckeditor5-show-blocks@~39.0.1":
+  version "39.0.1"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-show-blocks/-/ckeditor5-show-blocks-39.0.1.tgz#3b2b10f2b611516e6d7f2fe0cd9a20b6e54778dc"
+  integrity sha512-oYCmv557EqDDNPZQ6EUri6ZgiOymjIxoE4m2HV6nvapjKWKyVQOl/z+zwhV5DHCfqLlIyl3ODiHuUqrTVJUEaw==
+  dependencies:
+    "@ckeditor/ckeditor5-ui" "39.0.1"
+    ckeditor5 "39.0.1"
+
 "@ckeditor/ckeditor5-source-editing@~39.0.1":
   version "39.0.1"
   resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-source-editing/-/ckeditor5-source-editing-39.0.1.tgz#c1dd151bdd0bbb564dc017fc758c645ffd299896"

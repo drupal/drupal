@@ -689,6 +689,18 @@ ckeditor5_language:
     elements:
       - <span lang dir>
 
+ckeditor5_showBlocks:
+  ckeditor5:
+    plugins: [showBlocks.ShowBlocks]
+  drupal:
+    label: Show blocks
+    library: core/ckeditor5.showBlocks
+    admin_library: ckeditor5/internal.admin.showBlocks
+    toolbar_items:
+      showBlocks:
+        label: Show blocks
+    elements: false
+
 media_media:
   provider: media
   ckeditor5:
