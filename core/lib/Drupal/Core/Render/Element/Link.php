@@ -4,6 +4,7 @@ namespace Drupal\Core\Render\Element;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Html as HtmlUtility;
+use Drupal\Core\Form\FormHelper;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url as CoreUrl;
@@ -57,6 +58,12 @@ class Link extends RenderElement {
    *   The passed-in element containing a rendered link in '#markup'.
    */
   public static function preRenderLink($element) {
+    // As the preRenderLink() method is executed before Renderer::doRender(),
+    // call processStates() to make sure that states are added to link elements.
+    if (!empty($element['#states'])) {
+      FormHelper::processStates($element);
+    }
+
     // By default, link options to pass to the link generator are normally set
     // in #options.
     $element += ['#options' => []];
