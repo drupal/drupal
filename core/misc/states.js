@@ -724,9 +724,14 @@
 
   $document.on('state:visible', (e) => {
     if (e.trigger) {
-      $(e.target)
-        .closest('.js-form-item, .js-form-submit, .js-form-wrapper')
-        .toggle(e.value);
+      let $element = $(e.target).closest(
+        '.js-form-item, .js-form-submit, .js-form-wrapper',
+      );
+      // For links, update the state of itself instead of the wrapper.
+      if (e.target.tagName === 'A') {
+        $element = $(e.target);
+      }
+      $element.toggle(e.value);
     }
   });
 
