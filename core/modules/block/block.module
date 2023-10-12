@@ -128,11 +128,12 @@ function block_theme_initialize($theme) {
     $default_theme_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties(['theme' => $default_theme]);
     foreach ($default_theme_blocks as $default_theme_block_id => $default_theme_block) {
       if (str_starts_with($default_theme_block_id, $default_theme . '_')) {
-        $id = str_replace($default_theme, $theme, $default_theme_block_id);
+        $id = str_replace($default_theme . '_', '', $default_theme_block_id);
       }
       else {
-        $id = $theme . '_' . $default_theme_block_id;
+        $id = $default_theme_block_id;
       }
+      $id = \Drupal::service('block.repository')->getUniqueMachineName($id, $theme);
       $block = $default_theme_block->createDuplicateBlock($id, $theme);
       // If the region isn't supported by the theme, assign the block to the
       // theme's default region.
