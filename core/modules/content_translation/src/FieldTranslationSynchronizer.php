@@ -327,7 +327,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
    * @param array $properties
    *   An array of column names to be synchronized.
    *
-   * @returns string
+   * @return string
    *   A hash code that can be used to identify the item.
    */
   protected function itemHash(array $items, $delta, array $properties) {

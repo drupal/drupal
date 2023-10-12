@@ -641,7 +641,7 @@ class Renderer implements RendererInterface {
    *   bubbleable metadata associated with the markup that replaced the
    *   placeholders.
    *
-   * @returns bool
+   * @return bool
    *   Whether placeholders were replaced.
    *
    * @see \Drupal\Core\Render\Renderer::renderPlaceholder()

@@ -106,7 +106,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
   /**
    * Get a list of required plugin IDs.
    *
-   * @returns string[]
+   * @return string[]
    */
   public function getRequirements(): array;
 

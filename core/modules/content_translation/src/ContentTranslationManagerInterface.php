@@ -71,7 +71,7 @@ interface ContentTranslationManagerInterface {
    *   (optional) The bundle of the entity. If no bundle is provided, all the
    *   available bundles are checked.
    *
-   * @returns bool
+   * @return bool
    *   TRUE if the specified bundle is translatable. If no bundle is provided
    *   returns TRUE if at least one of the entity bundles is translatable.
    */
