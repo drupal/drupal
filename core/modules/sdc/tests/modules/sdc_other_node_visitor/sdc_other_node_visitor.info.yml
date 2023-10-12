@@ -1,0 +1,5 @@
+name: 'Add another node visitor'
+type: module
+dependencies:
+  - sdc:sdc
+package: Testing
