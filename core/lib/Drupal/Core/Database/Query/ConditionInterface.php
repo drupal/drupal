@@ -56,7 +56,7 @@ interface ConditionInterface {
    *   The operator to use. Supported for all supported databases are at least:
    *   - The comparison operators =, <>, <, <=, >, >=.
    *   - The operators (NOT) BETWEEN, (NOT) IN, (NOT) EXISTS, (NOT) LIKE.
-   *   Other operators (e.g. LIKE, BINARY) may or may not work. Defaults to =.
+   *   Other operators (e.g. LIKE BINARY) may or may not work. Defaults to =.
    *
    * @return $this
    *   The called object.
