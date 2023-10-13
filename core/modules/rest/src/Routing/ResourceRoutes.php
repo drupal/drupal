@@ -58,8 +58,6 @@ class ResourceRoutes implements EventSubscriberInterface {
    *
    * @param \Drupal\Core\Routing\RouteBuildEvent $event
    *   The route build event.
-   *
-   * @return array
    */
   public function onDynamicRouteEvent(RouteBuildEvent $event) {
     // Iterate over all enabled REST resource config entities.

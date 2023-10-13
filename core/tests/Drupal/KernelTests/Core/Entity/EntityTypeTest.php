@@ -43,7 +43,7 @@ class EntityTypeTest extends KernelTestBase {
       }
 
       /**
-       * @return array
+       * Always throw an exception.
        */
       public function __serialize(): array {
         throw new \Exception();

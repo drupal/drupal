@@ -221,11 +221,8 @@
 /**
  * Alters all the menu links discovered by the menu link plugin manager.
  *
- * @param array $links
- *   The link definitions to be altered.
- *
- * @return array
- *   An array of discovered menu links. Each link has a key that is the machine
+ * @param array &$links
+ *   The link definitions to be altered. Each link has a key that is the machine
  *   name, which must be unique. By default, use the route name as the
  *   machine name. In cases where multiple links use the same route name, such
  *   as two links to the same page in different menus, or two links using the

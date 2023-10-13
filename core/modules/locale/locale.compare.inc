@@ -177,9 +177,6 @@ function locale_translation_default_translation_server() {
  * @param array $langcodes
  *   Array of language codes. Defaults to all translatable languages.
  *
- * @return array
- *   Available sources indexed by project and language.
- *
  * @todo Return batch or NULL.
  */
 function locale_translation_check_projects($projects = [], $langcodes = []) {
