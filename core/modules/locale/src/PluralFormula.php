@@ -93,8 +93,6 @@ class PluralFormula implements PluralFormulaInterface {
 
   /**
    * Loads the formulae and stores them on the PluralFormula object if not set.
-   *
-   * @return array
    */
   protected function loadFormulae() {
     if (!isset($this->formulae)) {
