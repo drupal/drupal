@@ -3413,14 +3413,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
 
 		-
-			message: """
-				#^Call to deprecated method setMethods\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\:
-				https\\://github\\.com/sebastianbergmann/phpunit/pull/3687$#
-			"""
-			count: 1
-			path: tests/Drupal/Tests/Core/Test/PhpUnitTestRunnerTest.php
-
-		-
 			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/UrlTest.php
