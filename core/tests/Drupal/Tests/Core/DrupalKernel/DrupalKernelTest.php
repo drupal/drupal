@@ -177,8 +177,7 @@ class FakeAutoloader {
   /**
    * Loads the given class or interface.
    *
-   * @return null
-   *   This class never loads.
+   * This class never loads.
    */
   public function loadClass() {
     return NULL;
@@ -187,8 +186,7 @@ class FakeAutoloader {
   /**
    * Finds a file by class name while caching lookups to APC.
    *
-   * @return null
-   *   This class never finds.
+   * This class never finds.
    */
   public function findFile() {
     return NULL;
