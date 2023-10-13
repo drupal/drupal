@@ -379,9 +379,9 @@ class SharedTempStoreTest extends UnitTestCase {
 class UnserializableRequest extends Request {
 
   /**
-   * @return array
+   * Always throw an exception.
    */
-  public function __serialize(): array {
+  public function __serialize() {
     throw new \LogicException('Oops!');
   }
 

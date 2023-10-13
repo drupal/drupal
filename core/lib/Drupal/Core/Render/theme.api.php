@@ -688,9 +688,6 @@ function hook_theme_suggestions_HOOK(array $variables) {
  *   (in this case 'node__article') is available in
  *   $variables['theme_hook_original'].
  *
- * @return array
- *   An array of theme suggestions.
- *
  * @see hook_theme_suggestions_HOOK_alter()
  */
 function hook_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {

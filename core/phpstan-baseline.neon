@@ -426,16 +426,6 @@ parameters:
 			path: lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php
 
 		-
-			message: "#^Method Drupal\\\\Core\\\\Entity\\\\Sql\\\\SqlContentEntityStorageSchema\\:\\:processDataTable\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php
-
-		-
-			message: "#^Method Drupal\\\\Core\\\\Entity\\\\Sql\\\\SqlContentEntityStorageSchema\\:\\:processRevisionDataTable\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php
-
-		-
 			message: "#^Variable \\$initial_storage_value in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php
@@ -1371,11 +1361,6 @@ parameters:
 			path: modules/locale/locale.bulk.inc
 
 		-
-			message: "#^Function locale_translation_check_projects\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: modules/locale/locale.compare.inc
-
-		-
 			message: "#^Variable \\$item in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/locale/src/Form/ExportForm.php
@@ -1399,11 +1384,6 @@ parameters:
 			message: "#^Variable \\$cache in isset\\(\\) is never defined\\.$#"
 			count: 1
 			path: modules/locale/src/LocaleProjectStorage.php
-
-		-
-			message: "#^Method Drupal\\\\locale\\\\PluralFormula\\:\\:loadFormulae\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: modules/locale/src/PluralFormula.php
 
 		-
 			message: "#^Method Drupal\\\\locale\\\\PoDatabaseReader\\:\\:readItem\\(\\) should return Drupal\\\\Component\\\\Gettext\\\\PoItem but return statement is missing\\.$#"
@@ -1819,11 +1799,6 @@ parameters:
 			message: "#^Method Drupal\\\\responsive_image\\\\ResponsiveImageStyleForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/responsive_image/src/ResponsiveImageStyleForm.php
-
-		-
-			message: "#^Method Drupal\\\\rest\\\\Routing\\\\ResourceRoutes\\:\\:onDynamicRouteEvent\\(\\) should return array but return statement is missing\\.$#"
-			count: 1
-			path: modules/rest/src/Routing/ResourceRoutes.php
 
 		-
 			message: "#^Variable \\$created_entity might not be defined\\.$#"

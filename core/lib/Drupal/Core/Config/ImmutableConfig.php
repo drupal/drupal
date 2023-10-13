@@ -42,10 +42,7 @@ class ImmutableConfig extends Config {
   }
 
   /**
-   * Deletes the configuration object.
-   *
-   * @return \Drupal\Core\Config\Config
-   *   The configuration object.
+   * {@inheritdoc}
    */
   public function delete() {
     throw new ImmutableConfigException("Can not delete immutable configuration {$this->getName()}. Use \\Drupal\\Core\\Config\\ConfigFactoryInterface::getEditable() to retrieve a mutable configuration object");
