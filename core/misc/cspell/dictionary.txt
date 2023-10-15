@@ -223,7 +223,6 @@ contentblock
 contextuals
 controlgroup
 conv
-corefake
 coretest
 corge
 countquery

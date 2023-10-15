@@ -136,178 +136,178 @@ class ConnectionTest extends UnitTestCase {
         NULL,
         'Select',
       ],
-      // Tests with the corefake database driver. This driver has no custom
+      // Tests with the CoreFake database driver. This driver has no custom
       // driver classes.
       [
         'Drupal\Core\Database\Query\Condition',
-        'Drupal\corefake\Driver\Database\corefake',
+        'Drupal\CoreFake\Driver\Database\CoreFake',
         'Condition',
       ],
       [
         'Drupal\Core\Database\Query\Delete',
-        'Drupal\corefake\Driver\Database\corefake',
+        'Drupal\CoreFake\Driver\Database\CoreFake',
         'Delete',
       ],
       [
         'Drupal\Core\Database\ExceptionHandler',
-        'Drupal\corefake\Driver\Database\corefake',
+        'Drupal\CoreFake\Driver\Database\CoreFake',
         'ExceptionHandler',
       ],
       [
         'Drupal\Core\Database\Query\Insert',
-        'Drupal\corefake\Driver\Database\corefake',
+        'Drupal\CoreFake\Driver\Database\CoreFake',
         'Insert',
       ],
       [
         'Drupal\Core\Database\Query\Merge',
-        'Drupal\corefake\Driver\Database\corefake',
+        'Drupal\CoreFake\Driver\Database\CoreFake',
         'Merge',
       ],
       [
         'PagerSelectExtender',
-        'Drupal\corefake\Driver\Database\corefake',
+        'Drupal\CoreFake\Driver\Database\CoreFake',
         'PagerSelectExtender',
       ],
       [
         'Drupal\Core\Database\Schema',
-        'Drupal\corefake\Driver\Database\corefake',
+        'Drupal\CoreFake\Driver\Database\CoreFake',
         'Schema',
       ],
       [
         'SearchQuery',
-        'Drupal\corefake\Driver\Database\corefake',
+        'Drupal\CoreFake\Driver\Database\CoreFake',
         'SearchQuery',
       ],
       [
         'Drupal\Core\Database\Query\Select',
-        'Drupal\corefake\Driver\Database\corefake',
+        'Drupal\CoreFake\Driver\Database\CoreFake',
         'Select',
       ],
       [
         'Drupal\Core\Database\Transaction',
-        'Drupal\corefake\Driver\Database\corefake',
+        'Drupal\CoreFake\Driver\Database\CoreFake',
         'Transaction',
       ],
       [
         'TableSortExtender',
-        'Drupal\corefake\Driver\Database\corefake',
+        'Drupal\CoreFake\Driver\Database\CoreFake',
         'TableSortExtender',
       ],
       [
         'Drupal\Core\Database\Query\Truncate',
-        'Drupal\corefake\Driver\Database\corefake',
+        'Drupal\CoreFake\Driver\Database\CoreFake',
         'Truncate',
       ],
       [
         'Drupal\Core\Database\Query\Update',
-        'Drupal\corefake\Driver\Database\corefake',
+        'Drupal\CoreFake\Driver\Database\CoreFake',
         'Update',
       ],
       [
         'Drupal\Core\Database\Query\Upsert',
-        'Drupal\corefake\Driver\Database\corefake',
+        'Drupal\CoreFake\Driver\Database\CoreFake',
         'Upsert',
       ],
-      // Tests with the corefakeWithAllCustomClasses database driver. This
+      // Tests with the CoreFakeWithAllCustomClasses database driver. This
       // driver has custom driver classes for all classes.
       [
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\Condition',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses\Condition',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
         'Condition',
       ],
       [
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\Delete',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses\Delete',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
         'Delete',
       ],
       [
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\ExceptionHandler',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses\ExceptionHandler',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
         'ExceptionHandler',
       ],
       [
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\Insert',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses\Insert',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
         'Insert',
       ],
       [
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\Merge',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses\Merge',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
         'Merge',
       ],
       [
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\PagerSelectExtender',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses\PagerSelectExtender',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
         'PagerSelectExtender',
       ],
       [
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\Schema',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses\Schema',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
         'Schema',
       ],
       [
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\SearchQuery',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses\SearchQuery',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
         'SearchQuery',
       ],
       [
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\Select',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses\Select',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
         'Select',
       ],
       [
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\TableSortExtender',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses\TableSortExtender',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
         'TableSortExtender',
       ],
       [
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\Transaction',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses\Transaction',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
         'Transaction',
       ],
       [
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\Truncate',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses\Truncate',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
         'Truncate',
       ],
       [
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\Update',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses\Update',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
         'Update',
       ],
       [
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\Upsert',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses\Upsert',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
         'Upsert',
       ],
       [
         'Drupal\Core\Database\Query\PagerSelectExtender',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
         'Drupal\Core\Database\Query\PagerSelectExtender',
       ],
       [
         '\Drupal\Core\Database\Query\PagerSelectExtender',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
         '\Drupal\Core\Database\Query\PagerSelectExtender',
       ],
       [
         'Drupal\Core\Database\Query\TableSortExtender',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
         'Drupal\Core\Database\Query\TableSortExtender',
       ],
       [
         '\Drupal\Core\Database\Query\TableSortExtender',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
         '\Drupal\Core\Database\Query\TableSortExtender',
       ],
       [
         'Drupal\search\SearchQuery',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
         'Drupal\search\SearchQuery',
       ],
       [
         '\Drupal\search\SearchQuery',
-        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
         '\Drupal\search\SearchQuery',
       ],
     ];
@@ -320,8 +320,8 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testGetDriverClass($expected, $namespace, $class) {
     $additional_class_loader = new ClassLoader();
-    $additional_class_loader->addPsr4("Drupal\\corefake\\Driver\\Database\\corefake\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/module/corefake/src/Driver/Database/corefake");
-    $additional_class_loader->addPsr4("Drupal\\corefake\\Driver\\Database\\corefakeWithAllCustomClasses\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/module/corefake/src/Driver/Database/corefakeWithAllCustomClasses");
+    $additional_class_loader->addPsr4("Drupal\\core_fake\\Driver\\Database\\CoreFake\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/module/core_fake/src/Driver/Database/CoreFake");
+    $additional_class_loader->addPsr4("Drupal\\core_fake\\Driver\\Database\\CoreFakeWithAllCustomClasses\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/module/core_fake/src/Driver/Database/CoreFakeWithAllCustomClasses");
     $additional_class_loader->register(TRUE);
 
     $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');

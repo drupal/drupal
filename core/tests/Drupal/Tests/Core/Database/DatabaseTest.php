@@ -89,7 +89,7 @@ class DatabaseTest extends UnitTestCase {
   public function providerFindDriverAutoloadDirectory() {
     return [
       'core mysql' => ['core/modules/mysql/src/Driver/Database/mysql/', 'Drupal\mysql\Driver\Database\mysql', FALSE],
-      'D8 custom fake' => [FALSE, 'Drupal\Driver\Database\corefake', TRUE],
+      'D8 custom fake' => [FALSE, 'Drupal\Driver\Database\CoreFake', TRUE],
       'module mysql' => ['core/modules/system/tests/modules/driver_test/src/Driver/Database/DrivertestMysql/', 'Drupal\driver_test\Driver\Database\DrivertestMysql', TRUE],
     ];
   }
@@ -135,7 +135,7 @@ class DatabaseTest extends UnitTestCase {
    * Adds a database driver that uses the D8's Drupal\Driver\Database namespace.
    */
   protected function addD8CustomDrivers() {
-    $this->additionalClassloader->addPsr4("Drupal\\Driver\\Database\\corefake\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/custom/corefake");
+    $this->additionalClassloader->addPsr4("Drupal\\Driver\\Database\\CoreFake\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/custom/CoreFake");
   }
 
   /**
@@ -143,7 +143,7 @@ class DatabaseTest extends UnitTestCase {
    */
   protected function addModuleDrivers() {
     $this->additionalClassloader->addPsr4("Drupal\\driver_test\\Driver\\Database\\DrivertestMysql\\", __DIR__ . "/../../../../../modules/system/tests/modules/driver_test/src/Driver/Database/DrivertestMysql");
-    $this->additionalClassloader->addPsr4("Drupal\\corefake\\Driver\\Database\\corefake\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/module/corefake/src/Driver/Database/corefake");
+    $this->additionalClassloader->addPsr4("Drupal\\CoreFake\\Driver\\Database\\CoreFake\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/module/core_fake/src/Driver/Database/CoreFake");
   }
 
 }
