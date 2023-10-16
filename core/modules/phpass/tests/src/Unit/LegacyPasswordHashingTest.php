@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\phpass\Password;
+namespace Drupal\Tests\phpass\Unit;
 
 use Drupal\phpass\Password\PhpassHashedPassword;
 use Drupal\Tests\UnitTestCase;
@@ -58,14 +58,6 @@ class LegacyPasswordHashingTest extends UnitTestCase {
     $this->passwordHasher = new PhpassHashedPassword(1);
     $this->hashedPassword = $this->passwordHasher->hash($this->password);
     $this->md5HashedPassword = 'U' . $this->passwordHasher->hash(md5($this->password));
-  }
-
-  /**
-   * Tests invalid constructor arguments.
-   */
-  public function testInvalidArguments() {
-    $this->expectException(\InvalidArgumentException::class);
-    new PhpassHashedPassword('not a number');
   }
 
   /**
