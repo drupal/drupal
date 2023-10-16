@@ -129,3 +129,19 @@ ajax_test.throw_exception:
     _controller: '\Drupal\ajax_test\Controller\AjaxTestController::throwException'
   requirements:
     _access: 'TRUE'
+
+ajax_test.http_methods:
+  path: '/ajax-test/http-methods'
+  defaults:
+    _controller: Drupal\ajax_test\Controller\AjaxTestController::httpMethods
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
+
+ajax_test.http_methods.dialog:
+  path: '/ajax-test/http-methods-dialog'
+  defaults:
+    _controller: Drupal\ajax_test\Controller\AjaxTestController::httpMethodsDialog
+  requirements:
+    _access: 'TRUE'
