@@ -61,7 +61,7 @@ class DialogRenderer implements MainContentRendererInterface {
     $title = $main_content['#title'] ?? $this->titleResolver->getTitle($request, $route_match->getRouteObject());
 
     // Determine the dialog options and the target for the OpenDialogCommand.
-    $options = $request->request->all('dialogOptions');
+    $options = $this->getDialogOptions($request);
     $target = $this->determineTargetSelector($options, $route_match);
 
     $response->addCommand(new OpenDialogCommand($target, $title, $content, $options));
@@ -98,6 +98,22 @@ class DialogRenderer implements MainContentRendererInterface {
       $target = '#' . Html::getUniqueId("drupal-dialog-$route_name");
     }
     return $target;
+  }
+
+  /**
+   * Returns the dialog options from request.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The HTTP request.
+   *
+   * @return array
+   *   The dialog options used for OpenDialogCommand.
+   */
+  protected function getDialogOptions(Request $request): array {
+    if ($request->getMethod() === 'GET') {
+      return $request->query->all('dialogOptions');
+    }
+    return $request->request->all('dialogOptions');
   }
 
 }
