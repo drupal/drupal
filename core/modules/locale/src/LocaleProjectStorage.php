@@ -140,8 +140,8 @@ class LocaleProjectStorage implements LocaleProjectStorageInterface {
     $projects = $this->keyValueStore->getAll();
     foreach (array_keys($projects) as $key) {
       $projects[$key]['status'] = 0;
-      if (isset($cache[$key])) {
-        $cache[$key] = $projects[$key];
+      if (isset($this->cache[$key])) {
+        $this->cache[$key] = $projects[$key];
       }
     }
     $this->keyValueStore->setMultiple($projects);

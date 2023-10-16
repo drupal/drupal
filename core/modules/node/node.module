@@ -1144,7 +1144,7 @@ function node_access_rebuild($batch_mode = FALSE) {
     $access_control_handler->writeDefaultGrant();
   }
 
-  if (!isset($batch)) {
+  if (!isset($batch_builder)) {
     \Drupal::messenger()->addStatus(t('Content permissions have been rebuilt.'));
     node_access_needs_rebuild(FALSE);
   }
