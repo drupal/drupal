@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\phpass\Password;
+namespace Drupal\Tests\phpass\Unit;
 
 use Drupal\phpass\Password\PhpassHashedPassword;
 use Drupal\Core\Password\PasswordInterface;
