@@ -188,4 +188,38 @@ class DialogTest extends WebDriverTestBase {
     $this->assertNotNull($form_title, 'The add form title is as expected.');
   }
 
+  /**
+   * Tests dialog link opener with different HTTP methods.
+   */
+  public function testHttpMethod(): void {
+    $assert = $this->assertSession();
+    $script = <<<SCRIPT
+      (function() {
+        return document.querySelector('div[aria-describedby="drupal-modal"]').offsetWidth;
+      }())
+      SCRIPT;
+
+    // Open the modal dialog with POST HTTP method.
+    $this->drupalGet('/ajax-test/http-methods');
+    $this->clickLink('Link');
+    $assert->assertWaitOnAjaxRequest();
+    $assert->pageTextContains('Modal dialog contents');
+    $width = $this->getSession()->getDriver()->evaluateScript($script);
+    // The theme is adding 4px as padding and border on each side.
+    $this->assertSame(808, $width);
+
+    // Switch to GET HTTP method.
+    // @see \Drupal\ajax_test\Controller\AjaxTestController::httpMethods()
+    \Drupal::state()->set('ajax_test.http_method', 'GET');
+
+    // Open the modal dialog with GET HTTP method.
+    $this->drupalGet('/ajax-test/http-methods');
+    $this->clickLink('Link');
+    $assert->assertWaitOnAjaxRequest();
+    $assert->pageTextContains('Modal dialog contents');
+    $width = $this->getSession()->getDriver()->evaluateScript($script);
+    // The theme is adding 4px as padding and border on each side.
+    $this->assertSame(808, $width);
+  }
+
 }
