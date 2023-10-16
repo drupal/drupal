@@ -80,7 +80,7 @@ final class PhpRequirements {
     // The string cast ensures the value is a string, even if the PHP EOL date
     // array is empty. As of PHP 8.1, version_compare() no longer accepts NULL
     // as a parameter; empty string must be used instead.
-    $lowest_supported_version = $lowest_supported_version ?? (string) array_key_last(static::$phpEolDates);
+    $lowest_supported_version = (string) array_key_last(static::$phpEolDates);
 
     // Next, look at versions that are end-of-life after the current date.
     // Find the lowest PHP version that is still supported.

@@ -860,11 +860,6 @@ parameters:
 			path: lib/Drupal/Core/Theme/ThemeInitialization.php
 
 		-
-			message: "#^Variable \\$candidate in isset\\(\\) is never defined\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Theme/ThemeManager.php
-
-		-
 			message: "#^Variable \\$candidate might not be defined\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Theme/ThemeManager.php
@@ -900,11 +895,6 @@ parameters:
 			path: lib/Drupal/Core/Updater/Module.php
 
 		-
-			message: "#^Variable \\$lowest_supported_version on left side of \\?\\? is never defined\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Utility/PhpRequirements.php
-
-		-
 			message: "#^Method Drupal\\\\action\\\\Form\\\\ActionFormBase\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/action/src/Form/ActionFormBase.php
@@ -918,11 +908,6 @@ parameters:
 			message: "#^Variable \\$edit might not be defined\\.$#"
 			count: 1
 			path: modules/block/tests/src/Functional/BlockUiTest.php
-
-		-
-			message: "#^Variable \\$row in empty\\(\\) is never defined\\.$#"
-			count: 1
-			path: modules/block/tests/src/Unit/Plugin/migrate/process/BlockSettingsTest.php
 
 		-
 			message: "#^Variable \\$dependency in empty\\(\\) always exists and is not falsy\\.$#"
@@ -1530,11 +1515,6 @@ parameters:
 			path: modules/locale/src/LocaleProjectStorage.php
 
 		-
-			message: "#^Variable \\$cache in isset\\(\\) is never defined\\.$#"
-			count: 1
-			path: modules/locale/src/LocaleProjectStorage.php
-
-		-
 			message: "#^Method Drupal\\\\locale\\\\PoDatabaseReader\\:\\:readItem\\(\\) should return Drupal\\\\Component\\\\Gettext\\\\PoItem but return statement is missing\\.$#"
 			count: 1
 			path: modules/locale/src/PoDatabaseReader.php
@@ -1801,11 +1781,6 @@ parameters:
 			message: "#^Variable \\$string_check might not be defined\\.$#"
 			count: 1
 			path: modules/mysql/tests/src/Kernel/mysql/SchemaTest.php
-
-		-
-			message: "#^Variable \\$batch in isset\\(\\) is never defined\\.$#"
-			count: 1
-			path: modules/node/node.module
 
 		-
 			message: "#^Method Drupal\\\\node\\\\ConfigTranslation\\\\NodeTypeMapper\\:\\:setEntity\\(\\) should return bool but return statement is missing\\.$#"
@@ -2364,11 +2339,6 @@ parameters:
 			message: "#^Variable \\$result in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: modules/user/tests/src/Unit/UserAccessControlHandlerTest.php
-
-		-
-			message: "#^Variable \\$batch in isset\\(\\) is never defined\\.$#"
-			count: 1
-			path: modules/views/src/Form/ViewsExposedForm.php
 
 		-
 			message: "#^Method Drupal\\\\views\\\\Form\\\\ViewsFormMainForm\\:\\:getFormId\\(\\) should return string but return statement is missing\\.$#"
