@@ -101,7 +101,9 @@ class AutowireTest extends KernelTestBase {
       }
     }
 
-    $this->assertSame($expected, array_intersect($expected, $aliases));
+    $missing = array_diff($expected, $aliases);
+    $formatted = Yaml::encode(array_map(fn ($alias) => sprintf('@%s', $alias), $missing));
+    $this->assertSame($expected, array_intersect($expected, $aliases), sprintf('The following core services do not have map the class name to an alias. Add the following to core.services.yml in the appropriate place: %s%s%s', \PHP_EOL, \PHP_EOL, $formatted));
   }
 
 }
