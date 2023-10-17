@@ -14,3 +14,4 @@ services:
   announcements_feed.lazy_builders:
     class: Drupal\announcements_feed\LazyBuilders
     arguments: [ '@plugin.manager.element_info']
+  Drupal\announcements_feed\LazyBuilders: '@announcements_feed.lazy_builders'

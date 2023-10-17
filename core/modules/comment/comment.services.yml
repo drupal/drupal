@@ -20,6 +20,7 @@ services:
   comment.lazy_builders:
     class: Drupal\comment\CommentLazyBuilders
     arguments: ['@entity_type.manager', '@entity.form_builder', '@current_user', '@comment.manager', '@module_handler', '@renderer']
+  Drupal\comment\CommentLazyBuilders: '@comment.lazy_builders'
 
   comment.link_builder:
     class: Drupal\comment\CommentLinkBuilder
