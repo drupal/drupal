@@ -944,7 +944,21 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
     if ($method == 'postSave' && !empty($entity->original)) {
       $original_langcodes = array_keys($entity->original->getTranslationLanguages());
       foreach (array_diff($original_langcodes, $langcodes) as $removed_langcode) {
+        /** @var \Drupal\Core\Entity\ContentEntityInterface $translation */
         $translation = $entity->original->getTranslation($removed_langcode);
+
+        // Fields may rely on the isDefaultTranslation() method to determine
+        // what is going to be deleted - the whole entity or a particular
+        // translation.
+        if ($translation->isDefaultTranslation()) {
+          if (method_exists($translation, 'setDefaultTranslationEnforced')) {
+            $translation->setDefaultTranslationEnforced(FALSE);
+          }
+          else {
+            @trigger_error('Not providing a setDefaultTranslationEnforced() method when implementing \Drupal\Core\TypedData\TranslatableInterface is deprecated in drupal:10.2.0 and is required from drupal:11.0.0. See https://www.drupal.org/node/3376146', E_USER_DEPRECATED);
+          }
+        }
+
         $fields = $translation->getTranslatableFields();
         foreach ($fields as $name => $items) {
           $items->delete();
