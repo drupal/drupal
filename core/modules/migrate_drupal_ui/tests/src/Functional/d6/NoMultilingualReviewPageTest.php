@@ -23,7 +23,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
     'datetime_range',
     'language',
     'telephone',
-    'book',
     'statistics',
     'syslog',
     'update',
@@ -54,7 +53,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
     return [
       'Blog',
       'Blog API',
-      'Book',
       'Calendar Signup',
       'Comment',
       'Contact',
@@ -140,6 +138,7 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       // Block is set not_finished in migrate_state_not_finished_test.
       'Block',
       'Block translation',
+      'Book',
       'CCK translation',
       'Color',
       'Content type translation',

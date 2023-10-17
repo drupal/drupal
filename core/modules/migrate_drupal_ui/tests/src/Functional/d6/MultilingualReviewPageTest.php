@@ -25,7 +25,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
     'content_translation',
     'config_translation',
     'telephone',
-    'book',
     'statistics',
     'syslog',
     'update',
@@ -59,7 +58,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Block translation',
       'Blog',
       'Blog API',
-      'Book',
       'CCK translation',
       'Calendar Signup',
       'Comment',
@@ -144,6 +142,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
   protected function getMissingPaths() {
     return [
       'Aggregator',
+      'Book',
       // Block is set not_finished in migrate_state_not_finished_test.
       'Block',
       'Color',

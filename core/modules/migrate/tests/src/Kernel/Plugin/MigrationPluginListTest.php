@@ -28,6 +28,7 @@ class MigrationPluginListTest extends KernelTestBase {
     'ban',
     'block',
     'block_content',
+    // @todo Remove book in https://www.drupal.org/project/drupal/issues/3376101
     'book',
     'comment',
     'contact',

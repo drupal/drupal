@@ -22,7 +22,6 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'book',
     'config_translation',
     'content_translation',
     'datetime_range',
@@ -70,7 +69,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getEntityCounts() {
     return [
-      'block' => 28,
+      'block' => 27,
       'block_content' => 1,
       'block_content_type' => 1,
       'comment' => 4,
@@ -107,8 +106,8 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'entity_form_display' => 23,
       'entity_form_mode' => 1,
       'entity_view_display' => 33,
-      'entity_view_mode' => 12,
-      'base_field_override' => 3,
+      'entity_view_mode' => 11,
+      'base_field_override' => 2,
     ];
   }
 
@@ -134,7 +133,6 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
     return [
       'Block languages',
       'Block',
-      'Book',
       'Chaos tools',
       'Comment',
       'Contact',
@@ -199,6 +197,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
   protected function getMissingPaths() {
     return [
       'Aggregator',
+      'Book',
       'Color',
       'Forum',
       'RDF',

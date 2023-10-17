@@ -39,6 +39,7 @@ class StateFileExistsTest extends MigrateDrupalTestBase {
     'ban',
     'block',
     'block_content',
+    // @todo Remove book in https://www.drupal.org/project/drupal/issues/3376101
     'book',
     'comment',
     'config_translation',
