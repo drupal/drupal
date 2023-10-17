@@ -580,6 +580,16 @@ function olivero_preprocess_search_result(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_item_list__search_results().
+ */
+function olivero_preprocess_item_list__search_results(&$variables) {
+  if (isset($variables['empty'])) {
+    $variables['empty']['#attributes']['class'][] = 'empty-search-results-text';
+    $variables['empty']['#attached']['library'][] = 'olivero/search-results';
+  }
+}
+
+/**
  * Implements hook_preprocess_links__comment().
  */
 function olivero_preprocess_links__comment(&$variables) {

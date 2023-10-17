@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Functions to support theming in the Stable9 theme.
+ */
+
+/**
+ * Implements hook_preprocess_item_list__search_results().
+ *
+ * Converts the markup of #empty for search results.
+ */
+function stable9_preprocess_item_list__search_results(&$variables) {
+  if (isset($variables['empty']['#tag'])) {
+    $variables['empty']['#tag'] = 'h3';
+  }
+}
