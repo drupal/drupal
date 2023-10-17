@@ -24,7 +24,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
     'language',
     'content_translation',
     'telephone',
-    'book',
     'statistics',
     'syslog',
     'update',
@@ -55,7 +54,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
     return [
       'Block languages',
       'Blog',
-      'Book',
       'Bulk Export',
       'Chaos tools',
       'Chaos Tools (CTools) AJAX Example',
@@ -146,6 +144,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Aggregator',
       // Block is set not_finished in migrate_state_not_finished_test.
       'Block',
+      'Book',
       'Breakpoints',
       'Color',
       'Contact translation',
