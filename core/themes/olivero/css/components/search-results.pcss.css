@@ -95,3 +95,19 @@
     margin-block-end: var(--sp3);
   }
 }
+
+.empty-search-results-text {
+  color: var(--color-text-neutral-loud);
+  font-family: var(--font-sans);
+  font-size: 20px;
+  font-weight: bold;
+  font-style: normal;
+  line-height: var(--sp1-5);
+  margin-block: var(--sp);
+
+  @media (--md) {
+    margin-block: var(--sp2);
+    font-size: 24px;
+    line-height: var(--sp2);
+  }
+}
