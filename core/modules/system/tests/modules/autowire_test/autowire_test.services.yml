@@ -6,6 +6,8 @@ services:
     public: false
   Drupal\autowire_test\TestInjection2:
     public: false
+  Drupal\autowire_test\TestInjection3:
+    public: false
 
   # An alias that specifies which service to use by default for arguments that
   # type-hint to the interface.
@@ -14,6 +16,7 @@ services:
   Drupal\autowire_test\TestInjectionInterface:
     alias: 'Drupal\autowire_test\TestInjection'
     public: false
+  Drupal\autowire_test\TestInjectionInterface $testInjection3: '@Drupal\autowire_test\TestInjection3'
 
   # A service that tests autowiring for four constructor arguments:
   # - One type-hinted to TestInjectionInterface.

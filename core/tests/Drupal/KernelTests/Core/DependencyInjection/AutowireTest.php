@@ -4,9 +4,11 @@ namespace Drupal\KernelTests\Core\DependencyInjection;
 
 use Drupal\autowire_test\TestInjection;
 use Drupal\autowire_test\TestInjection2;
+use Drupal\autowire_test\TestInjection3;
 use Drupal\autowire_test\TestService;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\DrupalKernelInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\KernelTests\FileSystemModuleDiscoveryDataProviderTrait;
 use Drupal\KernelTests\KernelTestBase;
@@ -33,6 +35,7 @@ class AutowireTest extends KernelTestBase {
 
     // Ensure an autowired interface works.
     $this->assertInstanceOf(TestInjection::class, $service->getTestInjection());
+    $this->assertInstanceOf(TestInjection3::class, $service->getTestInjection3());
     // Ensure an autowired class works.
     $this->assertInstanceOf(TestInjection2::class, $service->getTestInjection2());
     // Ensure an autowired core class works.
@@ -98,6 +101,10 @@ class AutowireTest extends KernelTestBase {
       // Expect standalone classes to be aliased.
       $implements = class_implements($class);
       if (!$implements) {
+        $expected[$class] = $id;
+      }
+      elseif (count($implements) === 1 && TrustedCallbackInterface::class === reset($implements)) {
+        // Classes implementing only TrustedCallbackInterface should be aliased.
         $expected[$class] = $id;
       }
 

@@ -2,3 +2,4 @@ services:
   shortcut.lazy_builders:
     class: Drupal\shortcut\ShortcutLazyBuilders
     arguments: ['@renderer']
+  Drupal\shortcut\ShortcutLazyBuilders: '@shortcut.lazy_builders'
