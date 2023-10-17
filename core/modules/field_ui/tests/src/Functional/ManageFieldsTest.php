@@ -313,4 +313,36 @@ class ManageFieldsTest extends BrowserTestBase {
     $this->assertSession()->elementTextContains('css', '#edit-field-storage', 'Greetings from the field_storage_config_edit_form() alter.');
   }
 
+  /**
+   * Tests hook_form_field_storage_config_form_edit_alter().
+   *
+   * @group legacy
+   */
+  public function testFieldTypeCardinalityAlter() {
+    $node_type = $this->drupalCreateContentType();
+    $bundle = $node_type->id();
+
+    /** @var \Drupal\field\FieldStorageConfigInterface $storage */
+    $storage = $this->container->get('entity_type.manager')
+      ->getStorage('field_storage_config')
+      ->create([
+        'type' => 'test_field',
+        'field_name' => 'field_test_field',
+        'entity_type' => 'node',
+      ]);
+    $storage->save();
+
+    $this->container->get('entity_type.manager')
+      ->getStorage('field_config')
+      ->create([
+        'field_storage' => $storage,
+        'bundle' => $bundle,
+        'entity_type' => 'node',
+      ])
+      ->save();
+
+    $this->drupalGet("/admin/structure/types/manage/$bundle/fields/node.$bundle.field_test_field");
+    $this->assertSession()->elementTextContains('css', '#edit-field-storage', 'Greetings from Drupal\field_test\Plugin\Field\FieldType\TestItem::storageSettingsForm');
+  }
+
 }

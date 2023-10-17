@@ -94,6 +94,9 @@ class FieldStorageConfigEditForm extends EntityForm {
     $field_label = $form_state->get('field_config')->label();
     $form['#prefix'] = '<p>' . $this->t('These settings apply to the %field field everywhere it is used. Some also impact the way that data is stored and cannot be changed once data has been created.', ['%field' => $field_label]) . '</p>';
 
+    // Add the cardinality sub-form.
+    $form['cardinality_container'] = $this->getCardinalityForm();
+
     // Add settings provided by the field module. The field module is
     // responsible for not returning settings that cannot be changed if
     // the field already has data.
@@ -118,9 +121,6 @@ class FieldStorageConfigEditForm extends EntityForm {
     }
     $item = $items->first() ?: $items->appendItem();
     $form['settings'] += $item->storageSettingsForm($form, $form_state, $this->entity->hasData());
-
-    // Add the cardinality sub-form.
-    $form['cardinality_container'] = $this->getCardinalityForm();
 
     return $form;
   }

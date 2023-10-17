@@ -75,6 +75,11 @@ class TestItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
+    $form['cardinality_container'][] = [
+      '#type' => 'html_tag',
+      '#tag' => 'p',
+      '#value' => 'Greetings from ' . __METHOD__,
+    ];
     $element = [];
     $element['test_field_storage_setting'] = [
       '#type' => 'textfield',
