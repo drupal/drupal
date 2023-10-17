@@ -87,6 +87,18 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   protected $activeLangcode = LanguageInterface::LANGCODE_DEFAULT;
 
   /**
+   * Override the result of isDefaultTranslation().
+   *
+   * Under certain circumstances, such as when changing default translation, the
+   * default value needs to be overridden.
+   *
+   * @var bool|null
+   *
+   * @internal
+   */
+  protected ?bool $enforceDefaultTranslation = NULL;
+
+  /**
    * Local cache for the default language code.
    *
    * @var string
@@ -410,9 +422,27 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   }
 
   /**
+   * Set or clear an override of the isDefaultTranslation() result.
+   *
+   * @param bool|null $enforce_default_translation
+   *   If boolean value is passed, the value will override the result of
+   *   isDefaultTranslation() method. If NULL is passed, the default logic will
+   *   be used.
+   *
+   * @return $this
+   */
+  public function setDefaultTranslationEnforced(?bool $enforce_default_translation): static {
+    $this->enforceDefaultTranslation = $enforce_default_translation;
+    return $this;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function isDefaultTranslation() {
+    if ($this->enforceDefaultTranslation !== NULL) {
+      return $this->enforceDefaultTranslation;
+    }
     return $this->activeLangcode === LanguageInterface::LANGCODE_DEFAULT;
   }
 
