@@ -263,7 +263,8 @@ td.group-title {
   border-bottom: 1px solid var(--color-gray-200-o-80);
   background-color: var(--color-gray-050);
 }
-.form-edit .form-actions {
+.form-edit .form-actions,
+.form-edit .field-actions {
   margin-top: 0;
   padding: var(--space-s) var(--space-m);
   border-right: 1px solid var(--color-gray-200-o-80);
@@ -296,7 +297,8 @@ td.group-title {
   margin-top: 0;
 }
 .view-preview-form .form-item--view-args,
-.view-preview-form .form-actions {
+.view-preview-form .form-actions,
+.view-preview-form .field-actions {
   margin-top: 5px;
 }
 .view-preview-form .views-bulk-actions__item {
@@ -317,7 +319,8 @@ td.group-title {
   display: inline-block;
 }
 .form-item--live-preview,
-.view-preview-form .form-actions {
+.view-preview-form .form-actions,
+.view-preview-form .field-actions {
   vertical-align: top;
 }
 
