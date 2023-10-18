@@ -381,7 +381,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $field_name = $this->randomMachineName();
 
     $storage_edit = $field_edit = [];
-    $storage_edit['field_storage[subform][settings][target_type]'] = $target_type;
+    $storage_edit['settings[target_type]'] = $target_type;
     foreach ($bundles as $bundle) {
       $field_edit['settings[handler_settings][target_bundles][' . $bundle . ']'] = TRUE;
     }
