@@ -84,8 +84,23 @@ trait FieldUiTestTrait {
       // Test Breadcrumbs.
       $this->getSession()->getPage()->findLink($label);
 
+      // Ensure that each array key in $storage_edit is prefixed with field_storage.
+      $prefixed_storage_edit = [];
+      foreach ($storage_edit as $key => $value) {
+        if (str_starts_with($key, 'field_storage')) {
+          $prefixed_storage_edit[$key] = $value;
+          continue;
+        }
+        // If the key starts with settings, it needs to be prefixed differently.
+        if (str_starts_with($key, 'settings[')) {
+          $prefixed_storage_edit[str_replace('settings[', 'field_storage[subform][settings][', $key)] = $value;
+          continue;
+        }
+        $prefixed_storage_edit['field_storage[subform][' . $key . ']'] = $value;
+      }
+
       // Second step: 'Storage settings' form.
-      $this->submitForm($storage_edit, 'Update settings');
+      $this->submitForm($prefixed_storage_edit, 'Update settings');
 
       // Third step: 'Field settings' form.
       $this->submitForm($field_edit, 'Save settings');
