@@ -1,4 +1,3 @@
-abcdefghijklmno
 abcdefghijkmnopqrstuvwxyz
 abcdefghjklmnpqrstuvwxyz
 absolutezero
@@ -8,7 +7,6 @@ adamson
 addedline
 addtogroup
 adminforms
-adminlabel
 afterclose
 aftercreate
 ahah
@@ -19,7 +17,6 @@ akiko
 allwords
 alphadecimal
 alternatif
-amet
 amphibius
 ampm
 andif
@@ -32,7 +29,6 @@ applix
 archiver
 archivers
 arctor
-argaven
 arrakis
 arrayx
 arrowrefresh
@@ -81,7 +77,6 @@ bakeware
 bangpow
 barbar
 barchart
-barfoo
 barqux
 bartik
 basefield
@@ -90,9 +85,6 @@ basestrings
 basetheme
 basicpage
 bazbaz
-bazinga
-bazqux
-bazs
 beatle
 bebebe
 beforeclose
@@ -108,7 +100,6 @@ bigpipe
 bitmask
 bkmgtpezy
 bkslshv
-blist
 blockarticles
 blockbasic
 blockcontent
@@ -118,8 +109,6 @@ blockquotes
 blockrecipe
 blockrelated
 blocktest
-bloggy
-blub
 bodyformat
 bodyless
 bodyvalue
@@ -154,10 +143,8 @@ cacher
 cachetag
 cachetags
 cafr
-cagatio
 callables
 callout
-camelcase
 camelid
 camelids
 canonicalized
@@ -169,14 +156,12 @@ catchable
 ccyy
 ccyymm
 ccyymmdd
-cfield
 chainedfast
 changelist
 checkboxified
 checkboxifier
 checkboxify
 checkboxradio
-childlist
 chocolatiers
 chromedriver
 chtext
@@ -286,7 +271,6 @@ dependees
 depenencies
 deprioritize
 derivedfrom
-derp
 desaturate
 desaturated
 desaturates
@@ -321,7 +305,6 @@ drei
 drillable
 drivernumber
 drivertest
-drivertestpqsql
 drivertext
 dropbutton
 dropbuttons
@@ -453,7 +436,6 @@ getview
 gids
 gloop
 gnumeric
-goldfinger
 googleapis
 gotit
 grayskull
@@ -471,7 +453,6 @@ hasdata
 hasher
 hashmarks
 hateoas
-heroless
 herro
 hexcode
 hilited
@@ -504,7 +485,6 @@ iframeupload
 ignoretag
 imagecache
 imagecreatefrom
-imagetest
 imagetextalternative
 indexname
 inited
@@ -598,13 +578,8 @@ lundi
 lzma
 lzop
 macbinary
-machinename
 madeup
-magrathea
 mainpage
-makealternatemessage
-makedefaultmessage
-makewarningmessage
 mank
 maryjane
 matchout
@@ -641,7 +616,6 @@ missingkey
 missingkeys
 mlfr
 mlid
-moby
 mocktail
 mocktails
 mocky
@@ -672,7 +646,6 @@ multistar
 multistep
 multivalue
 multivalued
-multiwidgetfield
 munge
 muun
 muuuh
@@ -768,7 +741,6 @@ pagetop
 pagina
 paramconverter
 parens
-parentlist
 parseable
 parsererror
 pastafazoul
@@ -919,7 +891,6 @@ revlog
 revpub
 ribisi
 ritchie
-roly
 routable
 routeable
 rowspans
@@ -927,7 +898,6 @@ rpos
 rsyslog
 rtsp
 ruleset
-rulesets
 répét
 répété
 sameline
@@ -1251,7 +1221,6 @@ updateprogress
 updatetype
 uploaders
 uploadprogress
-uppercased
 upscaling
 urandom
 urlalias

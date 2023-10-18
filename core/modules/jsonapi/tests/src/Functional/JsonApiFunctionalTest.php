@@ -113,7 +113,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
     $this->assertArrayNotHasKey('attributes', $single_output['data'][0]);
     $this->assertArrayHasKey('related', $single_output['links']);
     // 8b. Single related item, empty.
-    $single_output = Json::decode($this->drupalGet('/jsonapi/node/article/' . $uuid . '/field_heroless'));
+    $single_output = Json::decode($this->drupalGet('/jsonapi/node/article/' . $uuid . '/field_no_hero'));
     $this->assertSession()->statusCodeEquals(200);
     $this->assertNull($single_output['data']);
     // 9. Related tags with includes.

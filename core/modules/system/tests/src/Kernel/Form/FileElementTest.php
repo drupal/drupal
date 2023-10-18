@@ -26,7 +26,7 @@ class FileElementTest extends KernelTestBase {
 
     $this->assertSame('file', $form['file']['#type']);
     $this->assertTrue($form['file']['#multiple']);
-    $this->assertContains('cagatio', $form['file']['#attributes']['class']);
+    $this->assertContains('some-class', $form['file']['#attributes']['class']);
   }
 
 }

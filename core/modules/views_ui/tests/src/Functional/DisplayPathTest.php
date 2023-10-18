@@ -105,7 +105,7 @@ class DisplayPathTest extends UITestBase {
     $url = 'admin/structure/views/nojs/display/test_view/page_1/path';
 
     $this->drupalGet($url);
-    $this->submitForm(['path' => '%/magrathea'], 'Apply');
+    $this->submitForm(['path' => '%/foo'], 'Apply');
     $this->assertSession()->addressEquals($url);
     $this->assertSession()->pageTextContains('"%" may not be used for the first segment of a path.');
 

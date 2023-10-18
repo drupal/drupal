@@ -29,7 +29,7 @@ class PathEncodedTest extends BrowserTestBase {
   public function testGetEncoded() {
     $route_paths = [
       'path_encoded_test.colon' => '/hi/llama:party',
-      'path_encoded_test.at_sign' => '/bloggy/@Dries',
+      'path_encoded_test.at_sign' => '/blog/@Dries',
       'path_encoded_test.parens' => '/cat(box)',
     ];
     foreach ($route_paths as $route_name => $path) {
@@ -41,7 +41,7 @@ class PathEncodedTest extends BrowserTestBase {
   public function testAliasToEncoded() {
     $route_paths = [
       'path_encoded_test.colon' => '/hi/llama:party',
-      'path_encoded_test.at_sign' => '/bloggy/@Dries',
+      'path_encoded_test.at_sign' => '/blog/@Dries',
       'path_encoded_test.parens' => '/cat(box)',
     ];
     $aliases = [];

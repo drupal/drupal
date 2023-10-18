@@ -89,7 +89,7 @@ class FieldDropbuttonTest extends ViewsKernelTestBase {
     // And three nodes.
     $this->node1 = $this->createNode([
       'type' => 'bar',
-      'title' => 'bazs',
+      'title' => 'foo',
       'status' => 1,
       'uid' => $admin->id(),
       'created' => REQUEST_TIME - 10,

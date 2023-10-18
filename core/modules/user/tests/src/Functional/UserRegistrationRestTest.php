@@ -111,13 +111,13 @@ class UserRegistrationRestTest extends ResourceTestBase {
     $config->set('register', UserInterface::REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);
     $config->set('verify_mail', 0);
     $config->save();
-    $name = 'Argaven';
+    $name = 'Alex';
     $user = $this->registerUser($name);
     $this->resetAll();
     $this->assertNotEmpty($user->getPassword());
     $this->assertTrue($user->isBlocked());
     $this->assertMailString('body', 'Your application for an account is', 2);
-    $this->assertMailString('body', 'Argaven has applied for an account', 2);
+    $this->assertMailString('body', 'Alex has applied for an account', 2);
 
     // Allow visitors to register with Admin approval and email verification.
     $config->set('register', UserInterface::REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);

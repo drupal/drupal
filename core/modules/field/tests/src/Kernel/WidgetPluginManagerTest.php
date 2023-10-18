@@ -32,7 +32,7 @@ class WidgetPluginManagerTest extends FieldKernelTestBase {
 
     $base_field_definition = BaseFieldDefinition::create('test_field')
       // Set a name that will make isApplicable() return TRUE.
-      ->setName('field_multiwidgetfield');
+      ->setName('field_multi_widget_field');
 
     $widget_options = [
       'field_definition' => $base_field_definition,

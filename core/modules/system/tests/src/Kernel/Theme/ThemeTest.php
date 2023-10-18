@@ -42,10 +42,10 @@ class ThemeTest extends KernelTestBase {
         '#attributes' => ['data-foo' => 'bar'],
       ],
       'attributes' => [
-        'id' => 'bazinga',
+        'id' => 'some_attribute',
       ],
     ];
-    $this->assertThemeOutput('theme_test_render_element', $theme_test_render_element, '<div id="bazinga" data-foo="bar" data-variables-are-preprocessed></div>' . "\n");
+    $this->assertThemeOutput('theme_test_render_element', $theme_test_render_element, '<div id="some_attribute" data-foo="bar" data-variables-are-preprocessed></div>' . "\n");
   }
 
   /**

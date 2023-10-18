@@ -1024,10 +1024,10 @@ class FilterKernelTest extends KernelTestBase {
     $this->assertEquals('<hr><br>', $f, 'HTML corrector -- void element.');
 
     $f = Html::normalize('<P>test</P>');
-    $this->assertEquals('<p>test</p>', $f, 'HTML corrector -- Convert uppercased tags to proper lowercased ones.');
+    $this->assertEquals('<p>test</p>', $f, 'HTML corrector -- Convert upper cased tags to proper lowercased ones.');
 
     $f = Html::normalize('<P>test</p>');
-    $this->assertEquals('<p>test</p>', $f, 'HTML corrector -- Convert uppercased tags to proper lowercased ones.');
+    $this->assertEquals('<p>test</p>', $f, 'HTML corrector -- Convert upper cased tags to proper lowercased ones.');
 
     $f = Html::normalize('test<hr />');
     $this->assertEquals('test<hr>', $f, 'HTML corrector -- convert self-closing element to HTML5 void element.');

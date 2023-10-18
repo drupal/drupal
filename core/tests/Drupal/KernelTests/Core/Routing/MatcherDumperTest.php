@@ -155,8 +155,8 @@ class MatcherDumperTest extends KernelTestBase {
     $collection = new RouteCollection();
     $collection->add('test_route_1', new Route('/test-length-3/{my}/path'));
     $collection->add('test_route_2', new Route('/test-length-3/hello/path'));
-    $collection->add('test_route_3', new Route('/test-length-5/{my}/path/marvin/magrathea'));
-    $collection->add('test_route_4', new Route('/test-length-7/{my}/path/marvin/magrathea/earth/ursa-minor'));
+    $collection->add('test_route_3', new Route('/test-length-5/{my}/path/marvin/android'));
+    $collection->add('test_route_4', new Route('/test-length-7/{my}/path/marvin/android/earth/ursa-minor'));
 
     $dumper->addRoutes($collection);
 

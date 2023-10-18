@@ -517,21 +517,21 @@ class DefaultTableMappingTest extends UnitTestCase {
     ];
     $data['long entity type; short field name; no prefix'] = [
       [
-        'entity_type_id' => 'long_entity_type_abcdefghijklmnopqrstuvwxyz',
+        'entity_type_id' => 'long_entity_type_all_forty_three_characters',
         'field_name' => 'short_field_name',
         'prefix' => '',
       ],
-      'long_entity_type_abcdefghijklmno__a526e4e042',
-      'long_entity_type_abcdefghijklmno_r__a526e4e042',
+      'long_entity_type_all_forty_three__d52fc85045',
+      'long_entity_type_all_forty_three_r__d52fc85045',
     ];
     $data['long entity type; long field name; no prefix'] = [
       [
-        'entity_type_id' => 'long_entity_type_abcdefghijklmnopqrstuvwxyz',
-        'field_name' => 'long_field_name_abcdefghijklmnopqrstuvwxyz',
+        'entity_type_id' => 'long_entity_type_all_forty_three_characters',
+        'field_name' => 'long_field_name_using_forty_two_characters',
         'prefix' => '',
       ],
-      'long_entity_type_abcdefghijklmno__7705d52d75',
-      'long_entity_type_abcdefghijklmno_r__7705d52d75',
+      'long_entity_type_all_forty_three__7f5744e4fd',
+      'long_entity_type_all_forty_three_r__7f5744e4fd',
     ];
 
     $data['short entity type; short field name; with prefix'] = [

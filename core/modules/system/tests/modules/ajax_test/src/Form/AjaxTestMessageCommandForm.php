@@ -31,7 +31,7 @@ class AjaxTestMessageCommandForm implements FormInterface {
     ];
     $form['button_default'] = [
       '#type' => 'submit',
-      '#name' => 'makedefaultmessage',
+      '#name' => 'make_default_message',
       '#value' => 'Make Message In Default Location',
       '#ajax' => [
         'callback' => '::makeMessageDefault',
@@ -39,7 +39,7 @@ class AjaxTestMessageCommandForm implements FormInterface {
     ];
     $form['button_alternate'] = [
       '#type' => 'submit',
-      '#name' => 'makealternatemessage',
+      '#name' => 'make_alternate_message',
       '#value' => 'Make Message In Alternate Location',
       '#ajax' => [
         'callback' => '::makeMessageAlternate',
@@ -47,7 +47,7 @@ class AjaxTestMessageCommandForm implements FormInterface {
     ];
     $form['button_warning'] = [
       '#type' => 'submit',
-      '#name' => 'makewarningmessage',
+      '#name' => 'make_warning_message',
       '#value' => 'Make Warning Message',
       '#ajax' => [
         'callback' => '::makeMessageWarning',
