@@ -91,7 +91,8 @@
   *
   * Add the same margin for action-link inside form-actions as button has.
   */
-  @nest .form-actions & {
+  .form-actions &,
+  .field-actions & {
     margin-inline: 0 var(--space-s);
   }
 }

@@ -330,7 +330,8 @@ td.group-title {
   background-color: var(--color-gray-050);
 }
 
-.form-edit .form-actions {
+.form-edit .form-actions,
+.form-edit .field-actions {
   margin-top: 0;
   padding: var(--space-s) var(--space-m);
   border-right: 1px solid var(--color-gray-200-o-80);
@@ -369,7 +370,8 @@ td.group-title {
 }
 
 .view-preview-form .form-item--view-args,
-.view-preview-form .form-actions {
+.view-preview-form .form-actions,
+.view-preview-form .field-actions {
   margin-top: 0.3125rem;
 }
 
@@ -396,7 +398,8 @@ td.group-title {
 }
 
 .form-item--live-preview,
-.view-preview-form .form-actions {
+.view-preview-form .form-actions,
+.view-preview-form .field-actions {
   vertical-align: top;
 }
 

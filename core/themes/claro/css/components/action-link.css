@@ -105,7 +105,8 @@
   * Add the same margin for action-link inside form-actions as button has.
   */
 
-.form-actions .action-link {
+.form-actions .action-link,
+.field-actions .action-link {
   margin-inline: 0 var(--space-s);
 }
 

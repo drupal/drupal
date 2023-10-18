@@ -133,7 +133,8 @@ tr .form-item,
  * Form actions.
  */
 
-.form-actions {
+.form-actions,
+.field-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
@@ -141,11 +142,14 @@ tr .form-item,
 }
 
 .form-actions .button,
-.form-actions .action-link {
+.field-actions .button,
+.form-actions .action-link,
+.field-actions .action-link {
   margin-block: var(--space-m);
 }
 
-.form-actions .ajax-progress--throbber {
+.form-actions .ajax-progress--throbber,
+.field-actions .ajax-progress--throbber {
   align-self: center;
 }
 
