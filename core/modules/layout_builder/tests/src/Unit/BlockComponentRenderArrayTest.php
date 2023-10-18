@@ -359,7 +359,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $block->getPluginId()->willReturn('block_plugin_id');
     $block->getBaseId()->willReturn('block_plugin_id');
     $block->getDerivativeId()->willReturn(NULL);
-    $block->getPluginDefinition()->willReturn(['admin_label' => 'adminlabel']);
+    $block->getPluginDefinition()->willReturn(['admin_label' => 'admin']);
     $placeholder_string = 'The placeholder string';
     $block->getPreviewFallbackString()->willReturn($placeholder_string);
 

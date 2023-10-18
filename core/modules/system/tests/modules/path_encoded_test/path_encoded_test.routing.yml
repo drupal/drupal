@@ -7,7 +7,7 @@ path_encoded_test.colon:
     _access: 'TRUE'
 
 path_encoded_test.at_sign:
-  path: '/bloggy/@Dries'
+  path: '/blog/@Dries'
   defaults:
     _title: 'At sign'
     _controller: '\Drupal\path_encoded_test\Controller\PathEncodedTestController::simple'

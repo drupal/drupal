@@ -62,7 +62,7 @@ class ToolkitGdTest extends KernelTestBase {
     $this->assertEquals('gd', $this->imageFactory->getToolkitId(), 'The image factory is set to use the \'gd\' image toolkit.');
 
     // Prepare a directory for test file results.
-    $this->directory = 'public://imagetest';
+    $this->directory = 'public://image_test';
     \Drupal::service('file_system')->prepareDirectory($this->directory, FileSystemInterface::CREATE_DIRECTORY);
   }
 

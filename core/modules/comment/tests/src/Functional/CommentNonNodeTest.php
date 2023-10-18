@@ -442,10 +442,10 @@ class CommentNonNodeTest extends BrowserTestBase {
     $this->fieldUIAddNewField('entity_test/structure/entity_test', 'foobar', 'Foobar', 'comment', $storage_edit);
 
     // Add a third comment field.
-    $this->fieldUIAddNewField('entity_test/structure/entity_test', 'barfoo', 'BarFoo', 'comment', $storage_edit);
+    $this->fieldUIAddNewField('entity_test/structure/entity_test', 'bar_foo', 'Bar_Foo', 'comment', $storage_edit);
 
     // Check the field contains the correct comment type.
-    $field_storage = FieldStorageConfig::load('entity_test.field_barfoo');
+    $field_storage = FieldStorageConfig::load('entity_test.field_bar_foo');
     $this->assertInstanceOf(FieldStorageConfig::class, $field_storage);
     $this->assertEquals('foobar', $field_storage->getSetting('comment_type'));
     $this->assertEquals(1, $field_storage->getCardinality());
