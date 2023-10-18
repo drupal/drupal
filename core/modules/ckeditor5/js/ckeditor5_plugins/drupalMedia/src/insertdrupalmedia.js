@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-// cSpell:words insertdrupalmediacommand
+// cspell:ignore insertdrupalmediacommand
 import { Command } from 'ckeditor5/src/core';
 import { groupNameToModelAttributeKey } from './utils';
 

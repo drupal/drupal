@@ -1,4 +1,4 @@
-// cSpell:words drupalhtmlbuilder dataprocessor basichtmlwriter htmlwriter
+// cspell:ignore drupalhtmlbuilder dataprocessor basichtmlwriter htmlwriter
 import DrupalHtmlBuilder from './drupalhtmlbuilder';
 
 /**

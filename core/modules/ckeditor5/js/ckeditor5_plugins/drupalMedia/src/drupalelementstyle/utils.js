@@ -1,4 +1,4 @@
-/* cspell:words documentselection */
+/* cspell:ignore documentselection */
 /**
  * Checks the schema to see if drupalElementStyle is supported on the element.
  *
