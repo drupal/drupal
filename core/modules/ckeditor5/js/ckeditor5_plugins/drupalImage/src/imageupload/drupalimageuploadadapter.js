@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:words simpleuploadadapter filerepository */
+/* cspell:ignore simpleuploadadapter filerepository */
 
 /**
  * Upload adapter.

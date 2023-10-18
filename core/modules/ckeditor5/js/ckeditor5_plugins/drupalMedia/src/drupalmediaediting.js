@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:words insertdrupalmedia drupalmediaediting insertdrupalmediacommand drupalmediametadatarepository */
+/* cspell:ignore insertdrupalmedia drupalmediaediting insertdrupalmediacommand drupalmediametadatarepository */
 
 import { Plugin } from 'ckeditor5/src/core';
 import { toWidget, Widget } from 'ckeditor5/src/widget';

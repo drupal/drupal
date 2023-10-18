@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:words uploadurl drupalimageuploadadapter  */
+/* cspell:ignore uploadurl drupalimageuploadadapter  */
 
 import { Plugin } from 'ckeditor5/src/core';
 import { FileRepository } from 'ckeditor5/src/upload';
