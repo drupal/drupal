@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:words insertdrupalmedia JSONified drupalmediacaptioncommand downcasted */
+/* cspell:ignore insertdrupalmedia JSONified drupalmediacaptioncommand downcasted */
 import { Plugin } from 'ckeditor5/src/core';
 import { Element, enablePlaceholder } from 'ckeditor5/src/engine';
 import { toWidgetEditable } from 'ckeditor5/src/widget';

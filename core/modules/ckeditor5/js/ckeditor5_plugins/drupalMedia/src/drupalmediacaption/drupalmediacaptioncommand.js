@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:words imagecaption */
+/* cspell:ignore imagecaption */
 import { Command } from 'ckeditor5/src/core';
 import { getClosestSelectedDrupalMediaElement, isDrupalMedia } from '../utils';
 import { getMediaCaptionFromModelSelection } from './utils';
