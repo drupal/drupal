@@ -68,12 +68,18 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
     $field_name = $this->fieldDefinition->getName();
     $parents = $form['#parents'];
 
-    // Store field information in $form_state.
-    if (!static::getWidgetState($parents, $field_name, $form_state)) {
+    if (!$field_state = static::getWidgetState($parents, $field_name, $form_state)) {
       $field_state = [
         'items_count' => count($items),
         'array_parents' => [],
       ];
+      static::setWidgetState($parents, $field_name, $form_state, $field_state);
+    }
+
+    // Remove deleted items from the field item list.
+    if (isset($field_state['deleted_item']) && $items->get($field_state['deleted_item'])) {
+      $items->removeItem($field_state['deleted_item']);
+      unset($field_state['deleted_item']);
       static::setWidgetState($parents, $field_name, $form_state, $field_state);
     }
 
@@ -383,6 +389,8 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
       NestedArray::setValue($user_input, $parent_element['#parents'], $field_values);
       $form_state->setUserInput($user_input);
     }
+
+    $field_state['deleted_item'] = $delta;
 
     unset($parent_element[$delta]);
     NestedArray::setValue($form, $array_parents, $parent_element);
