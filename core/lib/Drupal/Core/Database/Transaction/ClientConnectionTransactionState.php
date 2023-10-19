@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Enumeration of the possible states of a client connection transaction.
- */
-
 declare(strict_types=1);
 
 namespace Drupal\Core\Database\Transaction;
