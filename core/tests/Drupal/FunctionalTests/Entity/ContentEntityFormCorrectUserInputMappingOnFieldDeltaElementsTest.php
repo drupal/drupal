@@ -77,10 +77,10 @@ class ContentEntityFormCorrectUserInputMappingOnFieldDeltaElementsTest extends B
    * Tests the correct user input mapping on complex fields.
    */
   public function testCorrectUserInputMappingOnComplexFields() {
-    /** @var ContentEntityStorageInterface $storage */
+    /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
     $storage = $this->container->get('entity_type.manager')->getStorage($this->entityTypeId);
 
-    /** @var ContentEntityInterface $entity */
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $storage->create([
       $this->fieldName => [
         ['shape' => 'rectangle', 'color' => 'green'],
@@ -118,6 +118,24 @@ class ContentEntityFormCorrectUserInputMappingOnFieldDeltaElementsTest extends B
       ['shape' => 'circle', 'color' => 'blue'],
       ['shape' => 'rectangle', 'color' => 'green'],
     ], $entity->get($this->fieldName)->getValue());
+
+    $this->drupalGet($this->entityTypeId . '/manage/' . $entity->id() . '/edit');
+
+    // Delete one of the field items and ensure that the user input is mapped on
+    // the correct delta field items.
+    $edit = [
+      "$this->fieldName[0][_weight]" => 0,
+      "$this->fieldName[1][_weight]" => -1,
+    ];
+    $this->submitForm($edit, "{$this->fieldName}_0_remove_button");
+    $this->submitForm([], 'Save');
+
+    $storage->resetCache([$entity->id()]);
+    $entity = $storage->load($entity->id());
+    $this->assertEquals([
+      ['shape' => 'rectangle', 'color' => 'green'],
+    ], $entity->get($this->fieldName)->getValue());
+
   }
 
 }
