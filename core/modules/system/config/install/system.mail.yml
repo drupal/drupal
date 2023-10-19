@@ -1,3 +1,2 @@
 interface:
   default: 'php_mail'
-mailer_dsn: "sendmail://default"

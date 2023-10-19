@@ -500,9 +500,6 @@ services:
   logger.channel.security:
     parent: logger.channel_base
     arguments: ['security']
-  logger.channel.mail:
-    parent: logger.channel_base
-    arguments: ['mail']
   logger.channel.menu:
     parent: logger.channel_base
     arguments: ['menu']

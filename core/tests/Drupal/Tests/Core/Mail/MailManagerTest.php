@@ -119,7 +119,6 @@ class MailManagerTest extends UnitTestCase {
     $this->configFactory = $this->getConfigFactoryStub([
       'system.mail' => [
         'interface' => $interface,
-        'mailer_dsn' => 'null://null',
       ],
       'system.site' => [
         'mail' => 'test@example.com',

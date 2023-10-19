@@ -327,7 +327,6 @@ trait FunctionalTestSetupTrait {
     // some tests expect to be able to test mail system implementations.
     $config->getEditable('system.mail')
       ->set('interface.default', 'test_mail_collector')
-      ->set('mailer_dsn', 'null://null')
       ->save();
 
     // By default, verbosely display all errors and disable all production
