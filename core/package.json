@@ -78,7 +78,7 @@
     "mkdirp": "^3.0.1",
     "nightwatch": "^2.3.9",
     "normalize.css": "8.0.x",
-    "postcss": "^8.4.24",
+    "postcss": "^8.4.31",
     "postcss-header": "^3.0.2",
     "postcss-import": "^15.0.0",
     "postcss-preset-env": "^8.4.2",
