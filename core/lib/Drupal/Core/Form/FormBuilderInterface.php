@@ -257,8 +257,7 @@ interface FormBuilderInterface {
    * customize what happens. For example, during this function's life cycle,
    * the following functions get called for each element:
    * - $element['#value_callback']: A callable that implements how user input is
-   *   mapped to an element's #value property. This defaults to a function named
-   *   'form_type_TYPE_value' where TYPE is $element['#type'].
+   *   mapped to an element's #value property.
    * - $element['#process']: An array of functions called after user input has
    *   been mapped to the element's #value property. These functions can be used
    *   to dynamically add child elements: for example, for the 'date' element
