@@ -15,6 +15,12 @@ process:
     map:
       DefaultMailSystem: php_mail
       MailTestCase: test_mail_collector
+  'mailer_dsn':
+    plugin: static_map
+    source: 'mail_system/default-system'
+    map:
+      DefaultMailSystem: 'sendmail://default'
+      MailTestCase: 'null://null'
 destination:
   plugin: config
   config_name: system.mail
