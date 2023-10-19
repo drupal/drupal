@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Enum for supported extension types.
- */
-
 namespace Drupal\sdc;
 
 /**
