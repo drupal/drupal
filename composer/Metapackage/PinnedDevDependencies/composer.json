@@ -86,6 +86,7 @@
         "symfony/filesystem": "v6.3.0",
         "symfony/finder": "v6.3.0",
         "symfony/lock": "v6.3.0",
+        "symfony/mailer": "v6.3.5",
         "symfony/phpunit-bridge": "v6.3.0",
         "symfony/polyfill-php82": "v1.27.0",
         "theseer/tokenizer": "1.2.1",
