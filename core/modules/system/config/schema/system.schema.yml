@@ -302,6 +302,9 @@ system.mail:
       sequence:
         type: string
         label: 'Interface'
+    mailer_dsn:
+      type: string
+      label: 'Symfony mailer transport DSN'
 
 system.theme.global:
   type: theme_settings
