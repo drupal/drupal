@@ -11,6 +11,12 @@
 
 .field-ui-field-storage-add-form {
   --thumb-size: 4.5rem;
+  --color-focus: #26a769;
+  --color-gray: #232429;
+  --input-fg-color: var(--color-gray);
+  --color-blue: #003ecc;
+  --color-red: #dc2323;
+  --details-box-shadow: 0 2px 0.25rem rgba(0, 0, 0, 0.1);
 }
 
 .field-ui-new-storage-wrapper {
@@ -53,7 +59,7 @@
   align-items: center;
   padding: 0.25rem;
   padding-inline-end: 0.75rem;
-  border: 1px solid var(--color-gray-100, #dedfe4);
+  border: 1px solid #dedfe4;
   gap: 0.75rem;
   border-radius: 0.25rem;
 }
@@ -81,14 +87,14 @@
 .field-option__thumb {
   height: 100%;
   min-height: var(--thumb-size);
-  background-color: var(--color-gray-050, #f3f4f9);
+  background-color: #f3f4f9;
 }
 
 .subfield-option {
   margin-block: 0.625rem;
   padding: 1rem;
   padding-inline-end: 2rem;
-  border: 1px solid var(--color-gray-200, #d3d4d9);
+  border: 1px solid #d3d4d9;
   border-radius: 0.25rem;
 }
 
@@ -126,13 +132,13 @@
 .field-option.selected,
 .subfield-option.selected {
   border-color: var(--color-blue);
-  box-shadow: inset 0 0 0 2px var(--color-blue-600), var(--details-box-shadow);
+  box-shadow: inset 0 0 0 2px var(--color-blue), var(--details-box-shadow);
 }
 
 .field-option.error,
 .subfield-option.error {
-  border-color: var(--color-red-500);
-  box-shadow: inset 0 0 0 1px var(--color-red-500), var(--details-box-shadow);
+  border-color: var(--color-red);
+  box-shadow: inset 0 0 0 1px var(--color-red), var(--details-box-shadow);
 }
 
 .field-option .form-item__label.has-error,

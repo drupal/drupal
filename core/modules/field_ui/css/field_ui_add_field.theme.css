@@ -15,7 +15,7 @@
 
 .field-option .field-option__description,
 .subfield-option .description .item-list {
-  color: var(--color-gray-700);
+  color: #75767b;
   font-size: 14px;
   line-height: 1.2;
 }
