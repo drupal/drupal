@@ -4,7 +4,7 @@
  */
 
 .block-page-title-block {
-  margin-block-start: var(--space-s);
+  margin-block-end: var(--space-s);
 
   &:last-child {
     margin-block-end: var(--space-l);

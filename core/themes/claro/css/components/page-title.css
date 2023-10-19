@@ -11,7 +11,7 @@
  */
 
 .block-page-title-block {
-  margin-block-start: var(--space-s);
+  margin-block-end: var(--space-s);
 }
 
 .block-page-title-block:last-child {
