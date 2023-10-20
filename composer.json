@@ -41,6 +41,7 @@
         "symfony/filesystem": "^6.3",
         "symfony/finder": "^6.3",
         "symfony/lock": "^6.3",
+        "symfony/mailer": "^6.3",
         "symfony/phpunit-bridge": "^6.3",
         "symfony/var-dumper": "^6.3"
     },
