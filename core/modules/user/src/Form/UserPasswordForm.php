@@ -120,6 +120,7 @@ class UserPasswordForm extends FormBase {
         'autocapitalize' => 'off',
         'spellcheck' => 'false',
         'autofocus' => 'autofocus',
+        'autocomplete' => 'username',
       ],
     ];
     // Allow logged in users to request this also.
