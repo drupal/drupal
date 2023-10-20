@@ -343,4 +343,15 @@ class UserLoginTest extends BrowserTestBase {
     $this->submitForm([], 'Log in');
   }
 
+  /**
+   * Tests that user login form has the autocomplete attributes.
+   */
+  public function testAutocompleteHtmlAttributes() {
+    $this->drupalGet('user/login');
+    $name_field = $this->getSession()->getPage()->findField('name');
+    $pass_field = $this->getSession()->getPage()->findField('pass');
+    $this->assertEquals('username', $name_field->getAttribute('autocomplete'));
+    $this->assertEquals('current-password', $pass_field->getAttribute('autocomplete'));
+  }
+
 }

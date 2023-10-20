@@ -642,4 +642,13 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('You have tried to use a one-time login link that has either been used or is no longer valid. Request a new one using the form below.');
   }
 
+  /**
+   * Test the autocomplete attribute is present.
+   */
+  public function testResetFormHasAutocompleteAttribute() {
+    $this->drupalGet('user/password');
+    $field = $this->getSession()->getPage()->findField('name');
+    $this->assertEquals('username', $field->getAttribute('autocomplete'));
+  }
+
 }
