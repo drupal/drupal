@@ -73,34 +73,41 @@
     node.isPromoted() ? 'node--promoted',
     node.isSticky() ? 'node--sticky',
     not node.isPublished() ? 'node--unpublished',
-    'view-mode-card',
     view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
   ]
 %}
 {{ attach_library('umami/classy.node') }}
-{{ attach_library('umami/view-mode-card') }}
-{% block libraries %}
-{{ attach_library('umami/view-mode-card-common') }}
-{% endblock %}
 
-<article{{ attributes.addClass(classes) }}>
+{% set read_more %}
+{% trans %}View {{ node.type.entity.label() }}{% endtrans %}
+{% endset %}
 
-  {{ title_prefix }}
-  {% if label and not page %}
-    <h2{{ title_attributes.addClass('node__title') }}>
-      {{ label }}
-    </h2>
-  {% endif %}
-  {{ title_suffix }}
-
-  <div class="read-more">
-    <a class="read-more__link" href="{{ url }}">
-      {% trans %}View {{ node.type.entity.label() }}{% endtrans %} <span class="visually-hidden"> - {{ label }}</span>
-    </a>
-  </div>
-
-  <div{{ content_attributes.addClass('node__content') }}>
-    {{ content }}
-  </div>
-
-</article>
+{% embed "umami:card" with {
+  attributes: attributes.addClass(classes),
+  content,
+  content_attributes,
+  label,
+  title_attributes,
+  title_prefix,
+  title_suffix,
+  read_more,
+  url,
+  } only %}
+  {% block content %}
+    {% include "umami:title" with {
+      attributes: title_attributes.addClass('umami-card__title'),
+      label,
+      title_prefix,
+      title_suffix,
+    } only %}
+    {% include "umami:read-more" with {
+      url,
+      text: read_more,
+      a11y: label,
+      extra_classes: 'umami-card__read-more'
+    } only %}
+    <div{{content_attributes.addClass('umami-card__content')}}>
+      {{ content }}
+    </div>
+  {% endblock %}
+{% endembed %}
