@@ -1185,8 +1185,8 @@ function _locale_invalidate_js($langcode = NULL) {
   if (empty($langcode)) {
     // Invalidate all languages.
     $languages = locale_translatable_language_list();
-    foreach ($languages as $lcode => $data) {
-      $parsed['refresh:' . $lcode] = 'waiting';
+    foreach ($languages as $language_code => $data) {
+      $parsed['refresh:' . $language_code] = 'waiting';
     }
   }
   else {

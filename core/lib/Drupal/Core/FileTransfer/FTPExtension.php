@@ -106,12 +106,12 @@ class FTPExtension extends FTP implements ChmodInterface {
       throw new FileTransferException("Unable to set permissions on %file", 0, ['%file' => $path]);
     }
     if ($this->isDirectory($path) && $recursive) {
-      $filelist = @ftp_nlist($this->connection, $path);
-      if (!$filelist) {
+      $file_list = @ftp_nlist($this->connection, $path);
+      if (!$file_list) {
         // empty directory - returns false
         return;
       }
-      foreach ($filelist as $file) {
+      foreach ($file_list as $file) {
         $this->chmodJailed($file, $mode, $recursive);
       }
     }

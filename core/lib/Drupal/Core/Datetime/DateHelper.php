@@ -81,7 +81,7 @@ class DateHelper {
   public static function monthNames($required = FALSE) {
     // Force the key to use the correct month value, rather than
     // starting with zero.
-    $monthnames = [
+    $month_names = [
       1  => t('January', [], ['context' => 'Long month name']),
       2  => t('February', [], ['context' => 'Long month name']),
       3  => t('March', [], ['context' => 'Long month name']),
@@ -96,7 +96,7 @@ class DateHelper {
       12 => t('December', [], ['context' => 'Long month name']),
     ];
     $none = ['' => ''];
-    return !$required ? $none + $monthnames : $monthnames;
+    return !$required ? $none + $month_names : $month_names;
   }
 
   /**
@@ -112,7 +112,7 @@ class DateHelper {
   public static function monthNamesAbbr($required = FALSE) {
     // Force the key to use the correct month value, rather than
     // starting with zero.
-    $monthnames = [
+    $month_names = [
       1  => t('Jan', [], ['context' => 'Abbreviated month name']),
       2  => t('Feb', [], ['context' => 'Abbreviated month name']),
       3  => t('Mar', [], ['context' => 'Abbreviated month name']),
@@ -127,7 +127,7 @@ class DateHelper {
       12 => t('Dec', [], ['context' => 'Abbreviated month name']),
     ];
     $none = ['' => ''];
-    return !$required ? $none + $monthnames : $monthnames;
+    return !$required ? $none + $month_names : $month_names;
   }
 
   /**

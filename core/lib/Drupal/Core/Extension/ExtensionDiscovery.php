@@ -158,15 +158,15 @@ class ExtensionDiscovery {
     }
 
     // Search the core directory.
-    $searchdirs[static::ORIGIN_CORE] = 'core';
+    $search_dirs[static::ORIGIN_CORE] = 'core';
 
     // Search the legacy sites/all directory.
-    $searchdirs[static::ORIGIN_SITES_ALL] = 'sites/all';
+    $search_dirs[static::ORIGIN_SITES_ALL] = 'sites/all';
 
     // Search for contributed and custom extensions in top-level directories.
     // The scan uses a list of extension types to limit recursion to the
     // expected extension type specific directory names only.
-    $searchdirs[static::ORIGIN_ROOT] = '';
+    $search_dirs[static::ORIGIN_ROOT] = '';
 
     // Tests use the regular built-in multi-site functionality of Drupal for
     // running web tests. As a consequence, extensions of the parent site
@@ -176,7 +176,7 @@ class ExtensionDiscovery {
     // so that contained extensions are still discovered.
     // @see \Drupal\Core\Test\FunctionalTestSetupTrait::prepareSettings().
     if ($parent_site = Settings::get('test_parent_site')) {
-      $searchdirs[static::ORIGIN_PARENT_SITE] = $parent_site;
+      $search_dirs[static::ORIGIN_PARENT_SITE] = $parent_site;
     }
 
     // Find the site-specific directory to search. Since we are using this
@@ -184,10 +184,10 @@ class ExtensionDiscovery {
     // at install time. Therefore Kernel service is not always available, but is
     // preferred.
     if (\Drupal::hasService('kernel')) {
-      $searchdirs[static::ORIGIN_SITE] = \Drupal::getContainer()->getParameter('site.path');
+      $search_dirs[static::ORIGIN_SITE] = \Drupal::getContainer()->getParameter('site.path');
     }
     else {
-      $searchdirs[static::ORIGIN_SITE] = $this->sitePath ?: DrupalKernel::findSitePath(Request::createFromGlobals());
+      $search_dirs[static::ORIGIN_SITE] = $this->sitePath ?: DrupalKernel::findSitePath(Request::createFromGlobals());
     }
 
     // Unless an explicit value has been passed, manually check whether we are
@@ -199,7 +199,7 @@ class ExtensionDiscovery {
     }
 
     $files = [];
-    foreach ($searchdirs as $dir) {
+    foreach ($search_dirs as $dir) {
       // Discover all extensions in the directory, unless we did already.
       if (!isset(static::$files[$this->root][$dir][$include_tests])) {
         static::$files[$this->root][$dir][$include_tests] = $this->scanDirectory($dir, $include_tests);
@@ -214,7 +214,7 @@ class ExtensionDiscovery {
     // installation profiles.
     $files = $this->filterByProfileDirectories($files);
     // Sort the discovered extensions by their originating directories.
-    $origin_weights = array_flip($searchdirs);
+    $origin_weights = array_flip($search_dirs);
     $files = $this->sort($files, $origin_weights);
 
     // Process and return the list of extensions keyed by extension name.

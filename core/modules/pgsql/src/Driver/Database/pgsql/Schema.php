@@ -646,9 +646,9 @@ EOD;
       $this->ensureNotNullPrimaryKey($new_keys['primary key'], [$field => $spec]);
     }
 
-    $fixnull = FALSE;
+    $fix_null = FALSE;
     if (!empty($spec['not null']) && !isset($spec['default']) && !$is_primary_key) {
-      $fixnull = TRUE;
+      $fix_null = TRUE;
       $spec['not null'] = FALSE;
     }
     $query = 'ALTER TABLE {' . $table . '} ADD COLUMN ';
@@ -672,7 +672,7 @@ EOD;
         ->fields([$field => $spec['initial']])
         ->execute();
     }
-    if ($fixnull) {
+    if ($fix_null) {
       $this->connection->query("ALTER TABLE {" . $table . "} ALTER $field SET NOT NULL");
     }
     if (isset($new_keys)) {

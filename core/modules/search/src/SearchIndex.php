@@ -99,11 +99,11 @@ class SearchIndex implements SearchIndexInterface {
     // Starting score per word.
     $score = 1;
     // Accumulator for cleaned up data.
-    $accum = ' ';
+    $accumulator = ' ';
     // Stack with open tags.
-    $tagstack = [];
+    $tag_stack = [];
     // Counter for consecutive words.
-    $tagwords = 0;
+    $tag_words = 0;
     // Focus state.
     $focus = 1;
 
@@ -120,30 +120,30 @@ class SearchIndex implements SearchIndexInterface {
           $tagname = substr($tagname, 1);
           // If we encounter unexpected tags, reset score to avoid incorrect
           // boosting.
-          if (!count($tagstack) || $tagstack[0] != $tagname) {
-            $tagstack = [];
+          if (!count($tag_stack) || $tag_stack[0] != $tagname) {
+            $tag_stack = [];
             $score = 1;
           }
           else {
             // Remove from tag stack and decrement score.
-            $score = max(1, $score - $tags[array_shift($tagstack)]);
+            $score = max(1, $score - $tags[array_shift($tag_stack)]);
           }
         }
         else {
-          if (isset($tagstack[0]) && $tagstack[0] == $tagname) {
+          if (isset($tag_stack[0]) && $tag_stack[0] == $tagname) {
             // None of the tags we look for make sense when nested identically.
             // If they are, it's probably broken HTML.
-            $tagstack = [];
+            $tag_stack = [];
             $score = 1;
           }
           else {
             // Add to open tag stack and increment score.
-            array_unshift($tagstack, $tagname);
+            array_unshift($tag_stack, $tagname);
             $score += $tags[$tagname];
           }
         }
         // A tag change occurred, reset counter.
-        $tagwords = 0;
+        $tag_words = 0;
       }
       else {
         // Note: use of PREG_SPLIT_DELIM_CAPTURE above will introduce empty
@@ -152,7 +152,7 @@ class SearchIndex implements SearchIndexInterface {
           $words = $this->textProcessor->process($value, $langcode);
           foreach ($words as $word) {
             // Add word to accumulator.
-            $accum .= $word . ' ';
+            $accumulator .= $word . ' ';
             // Check word length.
             if (is_numeric($word) || mb_strlen($word) >= $minimum_word_size) {
               if (!isset($scored_words[$word])) {
@@ -164,11 +164,11 @@ class SearchIndex implements SearchIndexInterface {
               // e.g. 0.5 at 500 words and 0.3 at 1000 words.
               $focus = min(1, .01 + 3.5 / (2 + count($scored_words) * .015));
             }
-            $tagwords++;
+            $tag_words++;
             // Too many words inside a single tag probably mean a tag was
             // accidentally left open.
-            if (count($tagstack) && $tagwords >= 15) {
-              $tagstack = [];
+            if (count($tag_stack) && $tag_words >= 15) {
+              $tag_stack = [];
               $score = 1;
             }
           }
@@ -188,7 +188,7 @@ class SearchIndex implements SearchIndexInterface {
           'sid' => $sid,
           'langcode' => $langcode,
           'type' => $type,
-          'data' => $accum,
+          'data' => $accumulator,
           'reindex' => 0,
         ])
         ->execute();

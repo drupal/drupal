@@ -2,7 +2,6 @@ abcdefghijkmnopqrstuvwxyz
 abcdefghjklmnpqrstuvwxyz
 absolutezero
 accesslog
-accum
 adamson
 addedline
 addtogroup
@@ -393,14 +392,12 @@ fieldlayout
 fieldlinks
 fieldnames
 fieldsets
-filelist
 filemime
 filesort
 filesystems
 filetransfer
 filevalidationerror
 findwith
-fixnull
 flickr
 flipfit
 foat
@@ -482,7 +479,6 @@ idekey
 idempotency
 iframes
 iframeupload
-ignoretag
 imagecache
 imagecreatefrom
 imagetextalternative
@@ -539,10 +535,8 @@ labely
 lamoids
 langcode
 langcodes
-langname
 languageswitcher
 lazybuilder
-lcode
 libc
 libmysqlclient
 licious
@@ -564,7 +558,6 @@ lnumber
 loadjs
 localemark
 localetranslatedirty
-localpath
 lolspeak
 longblob
 longerthan
@@ -596,7 +589,6 @@ mediaimagetextalternativeediting
 mediaimagetextalternativeui
 mediumint
 mediumtext
-membersonly
 merhaba
 messagekey
 metapackage
@@ -624,7 +616,6 @@ modernizr
 modulenarrow
 mojito
 montag
-monthnames
 mooooh
 msgctxt
 msgid
@@ -655,12 +646,10 @@ mysite
 mysqladmin
 mysqldump
 mystarterkit
-nalias
 nameofbin
 namespacing
 navs
 nbaz
-nbchoices
 ndocs
 nearbykeyword
 necolas
@@ -824,10 +813,8 @@ proxied
 proxying
 pseudotag
 ptablenode
-pterm
 puzzlepiece
 pwprompt
-queryor
 querystring
 questionmark
 quicklinks
@@ -894,7 +881,6 @@ ritchie
 routable
 routeable
 rowspans
-rpos
 rsyslog
 rtsp
 ruleset
@@ -913,7 +899,6 @@ schipulcon
 scorewords
 scriptable
 scrollbars
-searchdirs
 sebastianbergmann
 sebe
 seld
@@ -1037,8 +1022,6 @@ tablesort's
 tablesorts
 tabset
 tabwidth
-tagstack
-tagwords
 takeshita
 tappable
 tarz
@@ -1109,7 +1092,6 @@ timespan
 timetime
 tinyint
 tinytext
-tiplist
 titel
 titlealert
 titlebar
@@ -1125,7 +1107,6 @@ topop
 torder
 totalcount
 touchevents
-tparams
 trackback
 trailingslash
 transferthick
@@ -1290,7 +1271,6 @@ zettabytes
 zipf's
 zomg
 zoneinfo
-zonelist
 zoomin
 zoomout
 zwei

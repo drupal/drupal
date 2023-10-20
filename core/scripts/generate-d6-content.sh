@@ -167,8 +167,8 @@ for ($i = 0; $i < 12; $i++) {
   $node->created = $now + $i * 43200;
   $node->log = "added $i poll";
 
-  $nbchoices = ($i % 4) + 2;
-  for ($c = 0; $c < $nbchoices; $c++) {
+  $number_of_choices = ($i % 4) + 2;
+  for ($c = 0; $c < $number_of_choices; $c++) {
     $node->choice[] = array('chtext' => "Choice $c for poll $i");
   }
   node_save($node);
@@ -177,7 +177,7 @@ for ($i = 0; $i < 12; $i++) {
 
   // Add some votes
   for ($v = 0; $v < ($i % 4) + 5; $v++) {
-    $c = $v % $nbchoices;
+    $c = $v % $number_of_choices;
     $form_state = array();
     $form_state['values']['choice'] = $c;
     $form_state['values']['op'] = t('Vote');
