@@ -243,8 +243,8 @@ for ($i = 0; $i < 12; $i++) {
   $node->log = "added $i poll";
   $node->path = array('alias' => "content/poll/$i");
 
-  $nbchoices = ($i % 4) + 2;
-  for ($c = 0; $c < $nbchoices; $c++) {
+  $number_of_choices = ($i % 4) + 2;
+  for ($c = 0; $c < $number_of_choices; $c++) {
     $node->choice[] = array('chtext' => "Choice $c for poll $i", 'chvotes' => 0, 'weight' => 0);
   }
   node_save($node);
@@ -262,7 +262,7 @@ for ($i = 0; $i < 12; $i++) {
     drupal_static_reset('ip_address');
     $_SERVER['REMOTE_ADDR'] = "127.0.$v.1";
     $GLOBALS['user'] = drupal_anonymous_user();// We should have already allowed anon to vote.
-    $c = $v % $nbchoices;
+    $c = $v % $number_of_choices;
     $form_state = array();
     $form_state['values']['choice'] = $choices[$c];
     $form_state['values']['op'] = t('Vote');

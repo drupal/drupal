@@ -31,7 +31,7 @@ class TranslateEditForm extends TranslateFormBase {
     $this->languageManager->reset();
     $languages = $this->languageManager->getLanguages();
 
-    $langname = isset($langcode) ? $languages[$langcode]->getName() : "- None -";
+    $language_name = isset($langcode) ? $languages[$langcode]->getName() : "- None -";
 
     $form['#attached']['library'][] = 'locale/drupal.locale.admin';
 
@@ -43,10 +43,10 @@ class TranslateEditForm extends TranslateFormBase {
     $form['strings'] = [
       '#type' => 'table',
       '#tree' => TRUE,
-      '#language' => $langname,
+      '#language' => $language_name,
       '#header' => [
         $this->t('Source string'),
-        $this->t('Translation for @language', ['@language' => $langname]),
+        $this->t('Translation for @language', ['@language' => $language_name]),
       ],
       '#empty' => $this->t('No strings available.'),
       '#attributes' => ['class' => ['locale-translate-edit-table']],
@@ -113,7 +113,7 @@ class TranslateEditForm extends TranslateFormBase {
         if (!$plural) {
           $form['strings'][$string->lid]['translations'][0] = [
             '#type' => 'textarea',
-            '#title' => $this->t('Translated string (@language)', ['@language' => $langname]),
+            '#title' => $this->t('Translated string (@language)', ['@language' => $language_name]),
             '#title_display' => 'invisible',
             '#rows' => $rows,
             '#default_value' => $translation_array[0],
@@ -130,7 +130,7 @@ class TranslateEditForm extends TranslateFormBase {
               '#rows' => $rows,
               '#default_value' => $translation_array[$i] ?? '',
               '#attributes' => ['lang' => $langcode],
-              '#prefix' => $i == 0 ? ('<span class="visually-hidden">' . $this->t('Translated string (@language)', ['@language' => $langname]) . '</span>') : '',
+              '#prefix' => $i == 0 ? ('<span class="visually-hidden">' . $this->t('Translated string (@language)', ['@language' => $language_name]) . '</span>') : '',
             ];
           }
           if ($plurals == 2) {

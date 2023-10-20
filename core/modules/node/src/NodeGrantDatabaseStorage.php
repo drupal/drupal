@@ -161,7 +161,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     $grants_exist = count($grant_conditions->conditions()) > 0;
 
     $is_multilingual = \Drupal::languageManager()->isMultilingual();
-    foreach ($tables as $nalias => $tableinfo) {
+    foreach ($tables as $table_alias => $tableinfo) {
       $table = $tableinfo['table'];
       if (!($table instanceof SelectInterface) && $table == $base_table) {
         // Set the subquery.
@@ -189,7 +189,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
 
         $field = 'nid';
         // Now handle entities.
-        $subquery->where("[$nalias].[$field] = [na].[nid]");
+        $subquery->where("[$table_alias].[$field] = [na].[nid]");
 
         $query->exists($subquery);
       }

@@ -203,12 +203,12 @@ class EditorMediaDialog extends FormBase {
       $warning = $this->t('There is nothing to configure for this media.');
       $form['no_access_notice'] = ['#markup' => $warning];
       if ($format->access('update')) {
-        $tparams = [
+        $arguments = [
           '@warning' => $warning,
           '@edit_url' => $format->toUrl('edit-form')->toString(),
           '%format' => $format->label(),
         ];
-        $form['no_access_notice']['#markup'] = $this->t('@warning <a href="@edit_url">Edit the text format %format</a> to modify the attributes that can be overridden.', $tparams);
+        $form['no_access_notice']['#markup'] = $this->t('@warning <a href="@edit_url">Edit the text format %format</a> to modify the attributes that can be overridden.', $arguments);
       }
     }
 

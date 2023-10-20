@@ -421,15 +421,15 @@ function template_preprocess_text_format_wrapper(&$variables) {
 function template_preprocess_filter_tips(&$variables) {
   $tips = $variables['tips'];
 
-  foreach ($variables['tips'] as $name => $tiplist) {
-    foreach ($tiplist as $tip_key => $tip) {
-      $tiplist[$tip_key]['attributes'] = new Attribute();
+  foreach ($variables['tips'] as $name => $tip_list) {
+    foreach ($tip_list as $tip_key => $tip) {
+      $tip_list[$tip_key]['attributes'] = new Attribute();
     }
 
     $variables['tips'][$name] = [
       'attributes' => new Attribute(),
       'name' => $name,
-      'list' => $tiplist,
+      'list' => $tip_list,
     ];
   }
 
@@ -709,7 +709,7 @@ function _filter_autop($text) {
   // Note: PHP ensures the array consists of alternating delimiters and literals
   // and begins and ends with a literal (inserting NULL as required).
   $ignore = FALSE;
-  $ignoretag = '';
+  $ignore_tag = '';
   $output = '';
   foreach ($chunks as $i => $chunk) {
     if ($i % 2) {
@@ -725,13 +725,13 @@ function _filter_autop($text) {
       if (!$ignore) {
         if ($open) {
           $ignore = TRUE;
-          $ignoretag = $tag;
+          $ignore_tag = $tag;
         }
       }
       // Only allow a matching tag to close it.
-      elseif (!$open && $ignoretag == $tag) {
+      elseif (!$open && $ignore_tag == $tag) {
         $ignore = FALSE;
-        $ignoretag = '';
+        $ignore_tag = '';
       }
     }
     elseif (!$ignore) {

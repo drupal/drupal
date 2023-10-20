@@ -155,12 +155,12 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
    */
   public function revisionOverview(NodeInterface $node) {
     $langcode = $node->language()->getId();
-    $langname = $node->language()->getName();
+    $language_name = $node->language()->getName();
     $languages = $node->getTranslationLanguages();
     $has_translations = (count($languages) > 1);
     $node_storage = $this->entityTypeManager()->getStorage('node');
 
-    $build['#title'] = $has_translations ? $this->t('@langname revisions for %title', ['@langname' => $langname, '%title' => $node->label()]) : $this->t('Revisions for %title', ['%title' => $node->label()]);
+    $build['#title'] = $has_translations ? $this->t('@language_name revisions for %title', ['@language_name' => $language_name, '%title' => $node->label()]) : $this->t('Revisions for %title', ['%title' => $node->label()]);
     $header = [$this->t('Revision'), $this->t('Operations')];
 
     $rows = [];

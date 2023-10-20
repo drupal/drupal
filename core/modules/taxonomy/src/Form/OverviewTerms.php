@@ -182,10 +182,10 @@ class OverviewTerms extends FormBase {
       $term = $tree[$tree_index];
       if (isset($term->depth) && ($term->depth > 0) && !isset($back_step)) {
         $back_step = 0;
-        while ($pterm = $tree[--$tree_index]) {
+        while ($parent_term = $tree[--$tree_index]) {
           $before_entries--;
           $back_step++;
-          if ($pterm->depth == 0) {
+          if ($parent_term->depth == 0) {
             $tree_index--;
             // Jump back to the start of the root level parent.
             continue 2;
