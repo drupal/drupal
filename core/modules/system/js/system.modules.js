@@ -103,7 +103,7 @@
         $details = $rowsAndDetails.filter('.package-listing');
 
         $(input).on({
-          keyup: debounce(filterModuleList, 200),
+          input: debounce(filterModuleList, 200),
           keydown: preventEnterKey,
         });
       }
