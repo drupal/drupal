@@ -39,6 +39,7 @@
         "symfony/event-dispatcher-contracts": "~v3.3.0",
         "symfony/http-foundation": "~v6.3.0",
         "symfony/http-kernel": "~v6.3.0",
+        "symfony/mailer": "~v6.3.5",
         "symfony/mime": "~v6.3.0",
         "symfony/polyfill-ctype": "~v1.27.0",
         "symfony/polyfill-iconv": "~v1.27.0",
