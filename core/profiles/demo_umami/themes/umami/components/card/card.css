@@ -1,0 +1,65 @@
+.umami-card {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #fcece7;
+  background-color: #fff;
+}
+
+.umami-card__content {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.umami-card__label-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.1rem;
+  margin: 0;
+  color: #5f635d;
+  font-size: 0.889rem;
+}
+
+.umami-card__read-more {
+  justify-self: start;
+}
+
+.umami-card__title {
+  flex-grow: 1;
+  margin: 0;
+  text-decoration: none;
+  color: #000;
+  font-size: 1.424rem;
+  font-weight: 400;
+}
+
+.umami-card__title a {
+  text-decoration: none;
+  color: #000;
+  background-color: inherit;
+}
+
+.umami-card__title a:hover,
+.umami-card__title a:focus {
+  text-decoration: underline;
+  color: #000;
+}
+
+.umami-card__wrapper {
+  display: grid;
+  gap: 1rem;
+  grid-template-rows: 1fr auto auto;
+  height: 100%;
+}
+
+.umami-card--alt .umami-card__wrapper {
+  grid-template-rows: auto 1fr auto;
+}
+
+.umami-card .field--name-field-media-image {
+  line-height: 0;
+}
+
+.umami-card .field--name-field-media-image img {
+  display: block;
+  width: 100%;
+}

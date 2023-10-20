@@ -66,8 +66,49 @@
  * @see template_preprocess_node()
  */
 #}
-{% extends "node--card-common.html.twig" %}
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    node.isPromoted() ? 'node--promoted',
+    node.isSticky() ? 'node--sticky',
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+    'umami-card--alt',
+  ]
+%}
+{{ attach_library('umami/classy.node') }}
 
-{% block libraries %}
-  {{ attach_library('umami/view-mode-card-common-alt') }}
-{% endblock %}
+{% set read_more %}
+{% trans %}View {{ node.type.entity.label() }}{% endtrans %}
+{% endset %}
+
+{% embed "umami:card" with {
+  attributes: attributes.addClass(classes),
+  content,
+  content_attributes,
+  label,
+  title_attributes,
+  title_prefix,
+  title_suffix,
+  read_more,
+  url,
+  } only %}
+  {% block content %}
+    <div{{content_attributes.addClass('umami-card__content')}}>
+      {{ content }}
+    </div>
+    {% include "umami:title" with {
+      attributes: title_attributes.addClass('umami-card__title'),
+      label,
+      title_prefix,
+      title_suffix,
+    } only %}
+    {% include "umami:read-more" with {
+      url,
+      text: read_more,
+      a11y: label,
+      extra_classes: 'umami-card__read-more'
+    } only %}
+  {% endblock %}
+{% endembed %}

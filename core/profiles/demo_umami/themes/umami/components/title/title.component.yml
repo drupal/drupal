@@ -1,0 +1,38 @@
+# This is so your IDE knows about the syntax for fixes and autocomplete.
+$schema: https://git.drupalcode.org/project/drupal/-/raw/10.1.x/core/modules/sdc/src/metadata.schema.json
+
+# The human readable name.
+name: Title
+
+# Status can be: "experimental", "stable", "deprecated", "obsolete".
+status: experimental
+
+# Schema for the props. We support www.json-schema.org. Learn more about the
+# syntax there.
+props:
+  type: object
+  properties:
+    attributes:
+      type: Drupal\Core\Template\Attribute
+      title: Attributes
+      description: Wrapper attributes.
+    html_tag:
+      type: string
+      title: HTML tag for title
+      # Limit the available options by using enums.
+      enum:
+        - h1
+        - h2
+        - h3
+        - h4
+        - h5
+        - h6
+        - span
+      # Provide a default value
+      default: h2
+    title_prefix:
+      type: object
+      title: Title prefix
+    title_suffix:
+      type: object
+      title: Title suffix
