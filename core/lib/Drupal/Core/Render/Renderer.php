@@ -708,8 +708,8 @@ class Renderer implements RendererInterface {
         });
       }
     }
+    $iterations = 0;
     while (count($fibers) > 0) {
-      $iterations = 0;
       foreach ($fibers as $placeholder => $fiber) {
         if (!$fiber->isStarted()) {
           $fiber->start();

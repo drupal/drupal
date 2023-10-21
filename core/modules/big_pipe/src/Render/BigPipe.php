@@ -553,8 +553,8 @@ class BigPipe {
       }
       $fibers[$placeholder_id] = new \Fiber(fn() => $this->renderPlaceholder($placeholder_id, $placeholder_render_array));
     }
+    $iterations = 0;
     while (count($fibers) > 0) {
-      $iterations = 0;
       foreach ($fibers as $placeholder_id => $fiber) {
         // Keep skipping the messages placeholder until it's the only Fiber
         // remaining. @todo https://www.drupal.org/project/drupal/issues/3379885
