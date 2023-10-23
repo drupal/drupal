@@ -183,6 +183,7 @@ function jsonapi_jsonapi_block_content_filter_access(EntityTypeInterface $entity
   // \Drupal\jsonapi\Access\TemporaryQueryGuard adds the condition for
   // (isReusable()), so this does not have to.
   return ([
+    JSONAPI_FILTER_AMONG_ALL => AccessResult::allowedIfHasPermission($account, 'access block library'),
     JSONAPI_FILTER_AMONG_PUBLISHED => AccessResult::allowed(),
   ]);
 }
