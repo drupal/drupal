@@ -23,6 +23,11 @@ interface UploadedFileInterface {
    *
    * @return bool
    *   TRUE if the file has been uploaded with HTTP and no error occurred.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+   *   \Drupal\file\Validation\UploadedFileValidatorInterface::validate()
+   *   instead.
+   * @see https://www.drupal.org/node/3375456
    */
   public function isValid(): bool;
 
@@ -31,6 +36,12 @@ interface UploadedFileInterface {
    *
    * @return string
    *   The error message regarding a failed upload.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+   *   \Drupal\file\Validation\UploadedFileValidatorInterface::validate()
+   *   instead.
+   *
+   * @see https://www.drupal.org/node/3375456
    */
   public function getErrorMessage(): string;
 
@@ -42,6 +53,12 @@ interface UploadedFileInterface {
    *
    * @return int
    *   The upload error code.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+   *   \Drupal\file\Validation\UploadedFileValidatorInterface::validate()
+   *   instead.
+   *
+   * @see https://www.drupal.org/node/3375456
    */
   public function getError(): int;
 

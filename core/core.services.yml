@@ -974,6 +974,10 @@ services:
     parent: default_plugin_manager
     tags:
       - { name: plugin_manager_cache_clear }
+  validation.basic_recursive_validator_factory:
+    class: Drupal\Core\Validation\BasicRecursiveValidatorFactory
+    arguments: ['@class_resolver']
+  Drupal\Core\Validation\BasicRecursiveValidatorFactory: '@validation.basic_recursive_validator_factory'
   lock:
     class: Drupal\Core\Lock\DatabaseLockBackend
     arguments: ['@database']

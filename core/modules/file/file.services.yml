@@ -28,3 +28,7 @@ services:
     class: Drupal\file\Validation\FileValidator
     arguments: ['@file.recursive_validator', '@validation.constraint', '@event_dispatcher', '@module_handler']
   Drupal\file\Validation\FileValidatorInterface: '@file.validator'
+  file.uploaded_file_validator:
+    class: Drupal\file\Validation\UploadedFileValidator
+    arguments: ['@validation.basic_recursive_validator_factory']
+  Drupal\file\Validation\UploadedFileValidatorInterface: '@file.uploaded_file_validator'

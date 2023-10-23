@@ -156,47 +156,58 @@ class FileUploadHandler {
    *   - FileSystemInterface::EXISTS_RENAME - Append _{incrementing number}
    *     until the filename is unique.
    *   - FileSystemInterface::EXISTS_ERROR - Throw an exception.
+   * @param bool $throw
+   *   (optional) Whether to throw an exception if the file is invalid.
    *
    * @return \Drupal\file\Upload\FileUploadResult
    *   The created file entity.
    *
    * @throws \Symfony\Component\HttpFoundation\File\Exception\FileException
-   *   Thrown when a file upload error occurred.
+   *    Thrown when a file upload error occurred and $throws is TRUE.
    * @throws \Drupal\Core\File\Exception\FileWriteException
-   *   Thrown when there is an error moving the file.
+   *    Thrown when there is an error moving the file and $throws is TRUE.
    * @throws \Drupal\Core\File\Exception\FileException
-   *   Thrown when a file system error occurs.
+   *    Thrown when a file system error occurs and $throws is TRUE.
    * @throws \Drupal\file\Upload\FileValidationException
-   *   Thrown when file validation fails.
+   *    Thrown when file validation fails and $throws is TRUE.
    */
-  public function handleFileUpload(UploadedFileInterface $uploadedFile, array $validators = [], string $destination = 'temporary://', int $replace = FileSystemInterface::EXISTS_REPLACE): FileUploadResult {
+  public function handleFileUpload(UploadedFileInterface $uploadedFile, array $validators = [], string $destination = 'temporary://', int $replace = FileSystemInterface::EXISTS_REPLACE, bool $throw = TRUE): FileUploadResult {
     $originalName = $uploadedFile->getClientOriginalName();
-
-    if (!$uploadedFile->isValid()) {
+    // @phpstan-ignore-next-line
+    if ($throw && !$uploadedFile->isValid()) {
+      @trigger_error('Calling ' . __METHOD__ . '() with the $throw argument as TRUE is deprecated in drupal:10.3.0 and will be removed in drupal:11.0.0. Use \Drupal\file\Upload\FileUploadResult::getViolations() instead. See https://www.drupal.org/node/3375456', E_USER_DEPRECATED);
+      // @phpstan-ignore-next-line
       switch ($uploadedFile->getError()) {
         case \UPLOAD_ERR_INI_SIZE:
+          // @phpstan-ignore-next-line
           throw new IniSizeFileException($uploadedFile->getErrorMessage());
 
         case \UPLOAD_ERR_FORM_SIZE:
+          // @phpstan-ignore-next-line
           throw new FormSizeFileException($uploadedFile->getErrorMessage());
 
         case \UPLOAD_ERR_PARTIAL:
+          // @phpstan-ignore-next-line
           throw new PartialFileException($uploadedFile->getErrorMessage());
 
         case \UPLOAD_ERR_NO_FILE:
+          // @phpstan-ignore-next-line
           throw new NoFileException($uploadedFile->getErrorMessage());
 
         case \UPLOAD_ERR_CANT_WRITE:
+          // @phpstan-ignore-next-line
           throw new CannotWriteFileException($uploadedFile->getErrorMessage());
 
         case \UPLOAD_ERR_NO_TMP_DIR:
+          // @phpstan-ignore-next-line
           throw new NoTmpDirFileException($uploadedFile->getErrorMessage());
 
         case \UPLOAD_ERR_EXTENSION:
+          // @phpstan-ignore-next-line
           throw new ExtensionFileException($uploadedFile->getErrorMessage());
 
       }
-
+      // @phpstan-ignore-next-line
       throw new FileException($uploadedFile->getErrorMessage());
     }
 
@@ -239,14 +250,23 @@ class FileUploadHandler {
     // Add in our check of the file name length.
     $validators['FileNameLength'] = [];
 
+    $result = new FileUploadResult();
+
     // Call the validation functions specified by this function's caller.
     $violations = $this->fileValidator->validate($file, $validators);
-    $errors = [];
-    foreach ($violations as $violation) {
-      $errors[] = $violation->getMessage();
+    if (count($violations) > 0) {
+      $result->addViolations($violations);
+      return $result;
     }
-    if (!empty($errors)) {
-      throw new FileValidationException('File validation failed', $filename, $errors);
+
+    if ($throw) {
+      $errors = [];
+      foreach ($violations as $violation) {
+        $errors[] = $violation->getMessage();
+      }
+      if (!empty($errors)) {
+        throw new FileValidationException('File validation failed', $filename, $errors);
+      }
     }
 
     $file->setFileUri($destinationFilename);
@@ -267,8 +287,7 @@ class FileUploadHandler {
       }
     }
 
-    $result = (new FileUploadResult())
-      ->setOriginalFilename($originalName)
+    $result->setOriginalFilename($originalName)
       ->setSanitizedFilename($filename)
       ->setFile($file);
 
@@ -282,11 +301,17 @@ class FileUploadHandler {
 
     // We can now validate the file object itself before it's saved.
     $violations = $file->validate();
-    foreach ($violations as $violation) {
-      $errors[] = $violation->getMessage();
+    if ($throw) {
+      foreach ($violations as $violation) {
+        $errors[] = $violation->getMessage();
+      }
+      if (!empty($errors)) {
+        throw new FileValidationException('File validation failed', $filename, $errors);
+      }
     }
-    if (!empty($errors)) {
-      throw new FileValidationException('File validation failed', $filename, $errors);
+    if (count($violations) > 0) {
+      $result->addViolations($violations);
+      return $result;
     }
 
     // If we made it this far it's safe to record this file in the database.

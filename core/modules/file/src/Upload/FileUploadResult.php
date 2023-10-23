@@ -3,6 +3,9 @@
 namespace Drupal\file\Upload;
 
 use Drupal\file\FileInterface;
+use Symfony\Component\Validator\ConstraintViolationInterface;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
  * Value object for a file upload result.
@@ -36,6 +39,20 @@ class FileUploadResult {
    * @var \Drupal\file\FileInterface
    */
   protected $file;
+
+  /**
+   * The constraint violations.
+   *
+   * @var \Symfony\Component\Validator\ConstraintViolationListInterface
+   */
+  protected ConstraintViolationListInterface $violations;
+
+  /**
+   * Creates a new FileUploadResult.
+   */
+  public function __construct() {
+    $this->violations = new ConstraintViolationList();
+  }
 
   /**
    * Flags the result as having had a security rename.
@@ -129,6 +146,43 @@ class FileUploadResult {
    */
   public function getFile(): FileInterface {
     return $this->file;
+  }
+
+  /**
+   * Adds a constraint violation.
+   *
+   * @param \Symfony\Component\Validator\ConstraintViolationInterface $violation
+   *   The constraint violation.
+   */
+  public function addViolation(ConstraintViolationInterface $violation): void {
+    $this->violations->add($violation);
+  }
+
+  /**
+   * Adds constraint violations.
+   *
+   * @param \Symfony\Component\Validator\ConstraintViolationListInterface $violations
+   *   The constraint violations.
+   */
+  public function addViolations(ConstraintViolationListInterface $violations): void {
+    $this->violations->addAll($violations);
+  }
+
+  /**
+   * Gets the constraint violations.
+   *
+   * @return \Symfony\Component\Validator\ConstraintViolationListInterface
+   *   The constraint violations.
+   */
+  public function getViolations(): ConstraintViolationListInterface {
+    return $this->violations;
+  }
+
+  /**
+   * Returns TRUE if there are constraint violations.
+   */
+  public function hasViolations(): bool {
+    return $this->violations->count() > 0;
   }
 
 }

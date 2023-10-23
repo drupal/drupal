@@ -5,7 +5,6 @@
  * Defines a "managed_file" Form API field and a "file" field for Field module.
  */
 
-use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -27,13 +26,7 @@ use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
-use Drupal\file\Upload\FileValidationException;
 use Drupal\file\Upload\FormUploadedFile;
-use Symfony\Component\HttpFoundation\File\Exception\FileException as SymfonyFileException;
-use Symfony\Component\HttpFoundation\File\Exception\FormSizeFileException;
-use Symfony\Component\HttpFoundation\File\Exception\IniSizeFileException;
-use Symfony\Component\HttpFoundation\File\Exception\NoFileException;
-use Symfony\Component\HttpFoundation\File\Exception\PartialFileException;
 
 // cspell:ignore abiword widthx
 
@@ -651,11 +644,41 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
   /** @var \Drupal\Core\Render\RendererInterface $renderer */
   $renderer = \Drupal::service('renderer');
   $files = [];
+  /** @var \Drupal\file\Validation\UploadedFileValidatorInterface $uploaded_file_validator */
+  $uploaded_file_validator = \Drupal::service('file.uploaded_file_validator');
   /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $uploaded_file */
   foreach ($uploaded_files as $i => $uploaded_file) {
     try {
+      $violations = $uploaded_file_validator->validate($uploaded_file);
+      if (count($violations) > 0) {
+        // We only get one violation for uploaded files.
+        \Drupal::messenger()->addError($violations->get(0)->getMessage());
+        $files[$i] = FALSE;
+        continue;
+      }
       $form_uploaded_file = new FormUploadedFile($uploaded_file);
-      $result = $file_upload_handler->handleFileUpload($form_uploaded_file, $validators, $destination, $replace);
+      $result = $file_upload_handler->handleFileUpload($form_uploaded_file, $validators, $destination, $replace, FALSE);
+      if ($result->hasViolations()) {
+        $errors = [];
+        foreach ($result->getViolations() as $violation) {
+          $errors[] = $violation->getMessage();
+        }
+        $message = [
+          'error' => [
+            '#markup' => t('The specified file %name could not be uploaded.', ['%name' => $uploaded_file->getClientOriginalName()]),
+          ],
+          'item_list' => [
+            '#theme' => 'item_list',
+            '#items' => $errors,
+          ],
+        ];
+        // @todo Add support for render arrays in
+        // \Drupal\Core\Messenger\MessengerInterface::addMessage()?
+        // @see https://www.drupal.org/node/2505497.
+        \Drupal::messenger()->addError($renderer->renderPlain($message));
+        $files[$i] = FALSE;
+        continue;
+      }
       $file = $result->getFile();
       // If the filename has been modified, let the user know.
       if ($result->isRenamed()) {
@@ -675,39 +698,6 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
     }
     catch (InvalidStreamWrapperException $e) {
       \Drupal::messenger()->addError(t('The file could not be uploaded because the destination "%destination" is invalid.', ['%destination' => $destination]));
-      $files[$i] = FALSE;
-    }
-    catch (IniSizeFileException | FormSizeFileException $e) {
-      \Drupal::messenger()->addError(t('The file %file could not be saved because it exceeds %maxsize, the maximum allowed size for uploads.', [
-        '%file' => $uploaded_file->getFilename(),
-        '%maxsize' => ByteSizeMarkup::create(Environment::getUploadMaxSize()),
-      ]));
-      $files[$i] = FALSE;
-    }
-    catch (PartialFileException | NoFileException $e) {
-      \Drupal::messenger()->addError(t('The file %file could not be saved because the upload did not complete.', [
-        '%file' => $uploaded_file->getFilename(),
-      ]));
-      $files[$i] = FALSE;
-    }
-    catch (SymfonyFileException $e) {
-      \Drupal::messenger()->addError(t('The file %file could not be saved. An unknown error has occurred.', ['%file' => $uploaded_file->getFilename()]));
-      $files[$i] = FALSE;
-    }
-    catch (FileValidationException $e) {
-      $message = [
-        'error' => [
-          '#markup' => t('The specified file %name could not be uploaded.', ['%name' => $e->getFilename()]),
-        ],
-        'item_list' => [
-          '#theme' => 'item_list',
-          '#items' => $e->getErrors(),
-        ],
-      ];
-      // @todo Add support for render arrays in
-      // \Drupal\Core\Messenger\MessengerInterface::addMessage()?
-      // @see https://www.drupal.org/node/2505497.
-      \Drupal::messenger()->addError($renderer->renderPlain($message));
       $files[$i] = FALSE;
     }
     catch (FileWriteException $e) {
