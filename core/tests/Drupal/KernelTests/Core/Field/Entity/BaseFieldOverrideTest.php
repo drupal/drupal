@@ -83,6 +83,38 @@ class BaseFieldOverrideTest extends KernelTestBase {
   }
 
   /**
+   * Tests that some properties are inherited from the BaseFieldDefinition.
+   *
+   * @covers ::isReadOnly
+   * @covers ::isComputed
+   * @covers ::isInternal
+   * @covers ::getUniqueIdentifier
+   */
+  public function testInheritedProperties() {
+    $base_field = BaseFieldDefinition::create('string')
+      ->setName('Test Field')
+      ->setTargetEntityTypeId('entity_test')
+      ->setReadOnly(TRUE)
+      /** Ensure that the internal property is inherited from the base field and not the parent class. @see FieldConfigBase::isInternal */
+      ->setInternal(TRUE)
+      ->setComputed(FALSE);
+
+    // Getters of the properties to check.
+    $methods = [
+      'getUniqueIdentifier',
+      'getClass',
+      'isComputed',
+      'isReadOnly',
+      'isInternal',
+    ];
+
+    $override = BaseFieldOverride::createFromBaseFieldDefinition($base_field, 'test_bundle');
+    foreach ($methods as $method) {
+      $this->assertEquals($base_field->$method(), $override->$method());
+    }
+  }
+
+  /**
    * A default value callback which returns a primitive value.
    *
    * @return int
