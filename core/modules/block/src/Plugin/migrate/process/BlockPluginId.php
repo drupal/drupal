@@ -28,7 +28,7 @@ class BlockPluginId extends ProcessPluginBase implements ContainerFactoryPluginI
   /**
    * The block_content entity storage handler.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface|null
    */
   protected $blockContentStorage;
 
@@ -41,12 +41,13 @@ class BlockPluginId extends ProcessPluginBase implements ContainerFactoryPluginI
    *   The plugin ID.
    * @param array $plugin_definition
    *   The plugin definition.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
-   *   The block content storage object.
+   * @param \Drupal\Core\Entity\EntityStorageInterface|null $storage
+   *   The block content storage object. NULL if the block_content module is
+   *   not installed.
    * @param \Drupal\migrate\MigrateLookupInterface $migrate_lookup
    *   The migrate lookup service.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityStorageInterface $storage, MigrateLookupInterface $migrate_lookup) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ?EntityStorageInterface $storage, MigrateLookupInterface $migrate_lookup) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->blockContentStorage = $storage;
     $this->migrateLookup = $migrate_lookup;
@@ -61,7 +62,7 @@ class BlockPluginId extends ProcessPluginBase implements ContainerFactoryPluginI
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $entity_type_manager->getDefinition('block_content') ? $entity_type_manager->getStorage('block_content') : NULL,
+      $entity_type_manager->hasDefinition('block_content') ? $entity_type_manager->getStorage('block_content') : NULL,
       $container->get('migrate.lookup')
     );
   }
