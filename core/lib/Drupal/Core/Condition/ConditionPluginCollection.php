@@ -44,7 +44,12 @@ class ConditionPluginCollection extends DefaultLazyPluginCollection {
       unset($instance_config['context_mapping']);
       ksort($default_config);
       ksort($instance_config);
-      if ($default_config === $instance_config) {
+      // With PHP 8 type juggling, there should not be an issue using equal
+      // operator instead of identical operator. Allowing looser comparison here
+      // will prevent configuration from being erroneously exported when values
+      // are updated via form elements that return values of the wrong type, for
+      // example, '0'/'1' vs FALSE/TRUE.
+      if ($default_config == $instance_config) {
         unset($configuration[$instance_id]);
       }
     }
