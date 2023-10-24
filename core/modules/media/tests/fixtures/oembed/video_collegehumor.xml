@@ -10,7 +10,7 @@
   <provider_url>http://www.collegehumor.com</provider_url>
   <width>610</width>
   <height>343</height>
-  <html><h1>By the power of Grayskull, CollegeHumor works!</h1>
+  <html><h1>CollegeHumor works!</h1>
   </html>
   <!-- The thumbnail URL does not contain a file extension, so we use
   this to test the oEmbed source plugin's thumbnail handling;

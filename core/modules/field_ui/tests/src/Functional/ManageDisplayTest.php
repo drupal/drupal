@@ -246,12 +246,12 @@ class ManageDisplayTest extends BrowserTestBase {
     $this->assertOrderInPage(['RSS', 'Teaser']);
 
     $edit = [
-      'label' => 'Breezer',
+      'label' => 'Breezier',
     ];
     $this->drupalGet('admin/structure/display-modes/view/manage/node.teaser');
     $this->submitForm($edit, 'Save');
 
-    $this->assertOrderInPage(['Breezer', 'RSS']);
+    $this->assertOrderInPage(['Breezier', 'RSS']);
   }
 
   /**

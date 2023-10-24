@@ -237,7 +237,7 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
       ],
       'name' => [
         [
-          'value' => 'Dramallama',
+          'value' => 'Drama llama',
         ],
       ],
       'field_rest_file_test' => [

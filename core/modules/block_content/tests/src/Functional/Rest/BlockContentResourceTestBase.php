@@ -184,7 +184,7 @@ abstract class BlockContentResourceTestBase extends EntityResourceTestBase {
       ],
       'info' => [
         [
-          'value' => 'Dramallama',
+          'value' => 'Drama llama',
         ],
       ],
     ];

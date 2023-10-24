@@ -141,8 +141,8 @@ class SearchCommentTest extends BrowserTestBase {
     // script tag nearby a keyword in the comment body. Use the 'FULL HTML' text
     // format so the script tag stored.
     $edit_comment2 = [];
-    $edit_comment2['subject[0][value]'] = "<script>alert('subjectkeyword');</script>";
-    $edit_comment2['comment_body[0][value]'] = "nearbykeyword<script>alert('somethinggeneric');</script>";
+    $edit_comment2['subject[0][value]'] = "<script>alert('subject_keyword');</script>";
+    $edit_comment2['comment_body[0][value]'] = "nearby-keyword<script>alert('something generic');</script>";
     $edit_comment2['comment_body[0][format]'] = $full_html_format_id;
     $this->drupalGet('comment/reply/node/' . $node->id() . '/comment');
     $this->submitForm($edit_comment2, 'Save');
@@ -151,7 +151,7 @@ class SearchCommentTest extends BrowserTestBase {
     // body. Use the 'FULL HTML' text format so the script tag is stored.
     $edit_comment3 = [];
     $edit_comment3['subject[0][value]'] = 'a subject';
-    $edit_comment3['comment_body[0][value]'] = "<script>alert('insidekeyword');</script>";
+    $edit_comment3['comment_body[0][value]'] = "<script>alert('inside-keyword');</script>";
     $edit_comment3['comment_body[0][format]'] = $full_html_format_id;
     $this->drupalGet('comment/reply/node/' . $node->id() . '/comment');
     $this->submitForm($edit_comment3, 'Save');
@@ -186,30 +186,30 @@ class SearchCommentTest extends BrowserTestBase {
 
     // Search for the evil script comment subject.
     $edit = [
-      'keys' => 'subjectkeyword',
+      'keys' => 'subject_keyword',
     ];
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'Search');
 
     // Verify the evil comment subject is escaped in search results.
-    $this->assertSession()->responseContains('&lt;script&gt;alert(&#039;<strong>subjectkeyword</strong>&#039;);');
+    $this->assertSession()->responseContains('&lt;script&gt;alert(&#039;<strong>subject_keyword</strong>&#039;);');
     $this->assertSession()->responseNotContains('<script>');
 
     // Search for the keyword near the evil script tag in the comment body.
     $edit = [
-      'keys' => 'nearbykeyword',
+      'keys' => 'nearby-keyword',
     ];
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'Search');
 
     // Verify that nearby script tag in the evil comment body is stripped from
     // search results.
-    $this->assertSession()->responseContains('<strong>nearbykeyword</strong>');
+    $this->assertSession()->responseContains('<strong>nearby-keyword</strong>');
     $this->assertSession()->responseNotContains('<script>');
 
     // Search for contents inside the evil script tag in the comment body.
     $edit = [
-      'keys' => 'insidekeyword',
+      'keys' => 'inside-keyword',
     ];
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'Search');

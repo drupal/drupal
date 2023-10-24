@@ -194,20 +194,20 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     // Without a hash should be denied.
     $no_hash_query = array_diff_key($query, ['hash' => '']);
     $this->drupalGet('media/oembed', ['query' => $no_hash_query]);
-    $assert_session->pageTextNotContains('By the power of Grayskull, Vimeo works!');
+    $assert_session->pageTextNotContains('Vimeo works!');
     $assert_session->pageTextContains('Client error');
 
     // A correct query should be allowed because the anonymous role has the
     // 'view media' permission.
     $this->drupalGet('media/oembed', ['query' => $query]);
-    $assert_session->pageTextContains('By the power of Grayskull, Vimeo works!');
+    $assert_session->pageTextContains('Vimeo works!');
 
     // Remove the 'view media' permission to test that this restricts access.
     $role = Role::load(AccountInterface::ANONYMOUS_ROLE);
     $role->revokePermission('view media');
     $role->save();
     $this->drupalGet('media/oembed', ['query' => $query]);
-    $assert_session->pageTextNotContains('By the power of Grayskull, Vimeo works!');
+    $assert_session->pageTextNotContains('Vimeo works!');
     $assert_session->pageTextContains('Access denied');
   }
 
