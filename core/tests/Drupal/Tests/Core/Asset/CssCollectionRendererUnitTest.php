@@ -96,6 +96,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
       return ['group' => 0, 'type' => 'file', 'media' => $media, 'preprocess' => $preprocess, 'data' => $data];
     };
 
+    // cspell:disable-next-line
     $custom_attributes = ['integrity' => 'sha384-psK1OYPAYjYUhtDYW+Pj2yc', 'crossorigin' => 'anonymous', 'random-attribute' => 'test'];
 
     return [

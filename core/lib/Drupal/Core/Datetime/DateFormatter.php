@@ -174,6 +174,7 @@ class DateFormatter implements DateFormatterInterface {
   public function getSampleDateFormats($langcode = NULL, $timestamp = NULL, $timezone = NULL) {
     $timestamp = $timestamp ?: time();
     // All date format characters for the PHP date() function.
+    // cspell:disable-next-line
     $date_chars = str_split('dDjlNSwzWFmMntLoYyaABgGhHisueIOPTZcrU');
     $date_elements = array_combine($date_chars, $date_chars);
     return array_map(function ($character) use ($timestamp, $timezone, $langcode) {

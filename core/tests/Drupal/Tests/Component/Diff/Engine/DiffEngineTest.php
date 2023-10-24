@@ -123,7 +123,7 @@ class DiffEngineTest extends TestCase {
     $this->assertCount(4, $diff);
     $this->assertEquals($diff[0], new DiffOpDelete(['    - image.style.max_650x650']));
     $this->assertEquals($diff[1], new DiffOpCopy(['    - image.style.max_325x325']));
-    $this->assertEquals($diff[2], new DiffOpAdd(['    - image.style.max_650x650', '_core:', '  default_config_hash: 3mjM9p-kQ8syzH7N8T0L9OnCJDSPvHAZoi3q6jcXJKM']));
+    $this->assertEquals($diff[2], new DiffOpAdd(['    - image.style.max_650x650', '_core:', '  default_config_hash: random_hash_string_here']));
     $this->assertEquals($diff[3], new DiffOpCopy(['fallback_image_style: max_325x325', '']));
   }
 

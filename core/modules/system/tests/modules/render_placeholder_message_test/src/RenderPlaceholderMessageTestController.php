@@ -16,9 +16,11 @@ class RenderPlaceholderMessageTestController implements ContainerAwareInterface,
    */
   public function messagesPlaceholderFirst() {
     return $this->build([
+      // cspell:disable
       '<drupal-render-placeholder callback="Drupal\Core\Render\Element\StatusMessages::renderMessages" arguments="0" token="_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA"></drupal-render-placeholder>',
       '<drupal-render-placeholder callback="\Drupal\render_placeholder_message_test\RenderPlaceholderMessageTestController::setAndLogMessage" arguments="0=P1" token="JBp04zOwNhYqMBgRkyBnPdma8m4l2elDnXMJ9tEsP6k"></drupal-render-placeholder>',
       '<drupal-render-placeholder callback="\Drupal\render_placeholder_message_test\RenderPlaceholderMessageTestController::setAndLogMessage" arguments="0=P2" token="JnoubSJT1l92Dm4fJw4EPsSzRsmE88H6Q1zu9-OzDh4"></drupal-render-placeholder>',
+      // cspell:enable
     ]);
   }
 
@@ -27,9 +29,11 @@ class RenderPlaceholderMessageTestController implements ContainerAwareInterface,
    */
   public function messagesPlaceholderMiddle() {
     return $this->build([
+      // cspell:disable
       '<drupal-render-placeholder callback="\Drupal\render_placeholder_message_test\RenderPlaceholderMessageTestController::setAndLogMessage" arguments="0=P1" token="JBp04zOwNhYqMBgRkyBnPdma8m4l2elDnXMJ9tEsP6k"></drupal-render-placeholder>',
       '<drupal-render-placeholder callback="Drupal\Core\Render\Element\StatusMessages::renderMessages" arguments="0" token="_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA"></drupal-render-placeholder>',
       '<drupal-render-placeholder callback="\Drupal\render_placeholder_message_test\RenderPlaceholderMessageTestController::setAndLogMessage" arguments="0=P2" token="JnoubSJT1l92Dm4fJw4EPsSzRsmE88H6Q1zu9-OzDh4"></drupal-render-placeholder>',
+      // cspell:enable
     ]);
   }
 
@@ -38,9 +42,11 @@ class RenderPlaceholderMessageTestController implements ContainerAwareInterface,
    */
   public function messagesPlaceholderLast() {
     return $this->build([
+      // cspell:disable
       '<drupal-render-placeholder callback="\Drupal\render_placeholder_message_test\RenderPlaceholderMessageTestController::setAndLogMessage" arguments="0=P1" token="JBp04zOwNhYqMBgRkyBnPdma8m4l2elDnXMJ9tEsP6k"></drupal-render-placeholder>',
       '<drupal-render-placeholder callback="\Drupal\render_placeholder_message_test\RenderPlaceholderMessageTestController::setAndLogMessage" arguments="0=P2" token="JnoubSJT1l92Dm4fJw4EPsSzRsmE88H6Q1zu9-OzDh4"></drupal-render-placeholder>',
       '<drupal-render-placeholder callback="Drupal\Core\Render\Element\StatusMessages::renderMessages" arguments="0" token="_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA"></drupal-render-placeholder>',
+      // cspell:enable
     ]);
   }
 
