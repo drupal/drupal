@@ -306,6 +306,7 @@ class BigPipeTest extends BrowserTestBase {
     // @see performMetaRefresh()
 
     $this->drupalGet(Url::fromRoute('big_pipe_test_multi_occurrence'));
+    // cspell:disable-next-line
     $big_pipe_placeholder_id = 'callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&amp;args%5B0%5D&amp;token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA';
     $expected_placeholder_replacement = '<script type="application/vnd.drupal-ajax" data-big-pipe-replacement-for-placeholder-with-id="' . $big_pipe_placeholder_id . '">';
     $this->assertSession()->pageTextContains('The count is 1.');

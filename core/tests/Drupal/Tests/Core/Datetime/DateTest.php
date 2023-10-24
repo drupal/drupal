@@ -173,6 +173,7 @@ class DateTest extends UnitTestCase {
 
     // Removed characters related to timezone 'e' and 'T', as test does not have
     // timezone set.
+    // cspell:disable-next-line
     $date_characters = 'dDjlNSwzWFmMntLoYyaABgGhHisuIOPZcrU';
     $date_chars = str_split($date_characters);
 

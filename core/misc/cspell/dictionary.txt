@@ -9,7 +9,6 @@ adminforms
 afterclose
 aftercreate
 ahah
-aiufyfh
 ajaxcallback
 ajaxing
 allwords
@@ -165,7 +164,6 @@ cidhash
 cids
 cillum
 circlesmall
-cjds
 ckeditor
 classloader
 classmap
@@ -254,7 +252,6 @@ denormalizer
 denormalizers
 denormalizes
 denormalizing
-depcn
 dependee
 dependee's
 dependees
@@ -352,7 +349,6 @@ evenodd
 eventhandler
 exampleurl
 exitcode
-exoshbm
 expirable
 extlink
 extraday
@@ -441,8 +437,6 @@ hexcode
 hilited
 hinode
 hippopotamidae
-hisu
-hisue
 hmac
 hoglet
 hola
@@ -479,7 +473,6 @@ introspectable
 invalidators
 invalididentifier
 invokable
-iopt
 isam
 isinstallable
 itoa
@@ -488,7 +481,6 @@ ized
 jamo
 javascripts
 jessebeach
-jnoub
 johansson
 johndoe
 jqueryui
@@ -706,7 +698,6 @@ overrider
 overrider's
 overriders
 owasp
-oypa
 pagecache
 pagetop
 pagina
@@ -719,7 +710,6 @@ pathauto
 pathnames
 pcre
 pcss
-pdma
 peast
 percona
 permissionless
@@ -808,7 +798,6 @@ qvalue
 qvalues
 qwer
 qwerqwer
-qzzz
 ragdoll
 ralouphie
 rasterizable
@@ -882,7 +871,6 @@ scorewords
 scriptable
 scrollbars
 sebastianbergmann
-sebe
 seld
 selectbox
 sess
@@ -987,10 +975,8 @@ sunz
 sunzzzzzzz
 supercede
 svgz
-sxto
 synchronizable
 syrop
-szwr
 tabbingmanager
 tabledrag
 tableheader
@@ -1211,7 +1197,6 @@ webservers
 webtest
 whitespaces
 widthx
-wmet
 wmlscript
 wordprocessingml
 wordsafe
@@ -1221,7 +1206,6 @@ wwwrun
 xbap
 xbitmap
 xfbml
-xjkm
 xmlhttp
 xmlhttprequest
 xoxo
@@ -1229,7 +1213,6 @@ xpsdocument
 xsiemax
 xtmpl
 xxgroup
-xyabz
 yamls
 yarhar
 yarr
@@ -1239,8 +1222,6 @@ yottabyte
 yottabytes
 yourmodule
 yowser
-yqpr
-yuqk
 yygroup
 zartan
 zettabyte
@@ -1251,7 +1232,6 @@ zoneinfo
 zoomin
 zoomout
 zwei
-zwjhek
 zxvf
 zzgroup
 åwesome

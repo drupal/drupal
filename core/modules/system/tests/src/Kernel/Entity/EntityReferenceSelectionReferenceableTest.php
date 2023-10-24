@@ -8,6 +8,8 @@ use Drupal\node\Entity\NodeType;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 
+// cspell:ignore xyabz
+
 /**
  * Tests entity reference selection plugins.
  *

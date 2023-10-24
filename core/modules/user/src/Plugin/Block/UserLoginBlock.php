@@ -98,6 +98,7 @@ class UserLoginBlock extends BlockBase implements ContainerFactoryPluginInterfac
     // This is based on the implementation in
     // \Drupal\Core\Form\FormBuilder::prepareForm(), but the user login block
     // requires different behavior for the destination query argument.
+    // cspell:disable-next-line
     $placeholder = 'form_action_p_4r8ITd22yaUvXM6SzwrSe9rnQWe48hz9k1Sxto3pBvE';
 
     $form['#attached']['placeholders'][$placeholder] = [
