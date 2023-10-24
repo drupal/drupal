@@ -398,6 +398,8 @@ services:
   context.repository:
     class: Drupal\Core\Plugin\Context\LazyContextRepository
     arguments: ['@service_container']
+    tags:
+      - { name: service_id_collector, tag: context_provider }
   Drupal\Core\Plugin\Context\ContextRepositoryInterface: '@context.repository'
   Drupal\Component\DependencyInjection\ReverseContainer:
     arguments: [ '@service_container' ]
