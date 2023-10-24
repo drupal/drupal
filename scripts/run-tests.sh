@@ -175,6 +175,14 @@ All arguments are long options.
               development of individual test cases. This option implies --cache.
               To clear all cache entries use --clean.
 
+  --ci-parallel-node-index
+
+              The index of the job in the job set.
+
+  --ci-parallel-node-total
+
+              The total number of instances of this job running in parallel.
+
   <test1>[,<test2>[,<test3> ...]]
 
               One or more tests to be run. By default, these are interpreted
@@ -226,6 +234,8 @@ function simpletest_script_parse_args() {
     'test-id' => 0,
     'execute-test' => '',
     'xml' => '',
+    'ci-parallel-node-index' => 1,
+    'ci-parallel-node-total' => 1,
   );
 
   // Override with set values.
@@ -594,6 +604,12 @@ function simpletest_script_get_test_list() {
     simpletest_script_print_error('No valid tests were specified.');
     exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
   }
+
+  if ((int) $args['ci-parallel-node-total'] > 1) {
+    $tests_per_job = ceil(count($test_list) / $args['ci-parallel-node-total']);
+    $test_list = array_slice($test_list, ($args['ci-parallel-node-index'] - 1) * $tests_per_job, $tests_per_job);
+  }
+
   return $test_list;
 }
 

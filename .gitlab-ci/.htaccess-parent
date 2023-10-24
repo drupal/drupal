@@ -1,0 +1,4 @@
+# Redirect everything via the subdirectory.
+
+RewriteEngine on
+RewriteRule (.*) subdirectory/$1 [L]

@@ -1,0 +1,210 @@
+################
+# Drupal GitLabCI template
+#
+# Based off GitlabCI templates project: https://git.drupalcode.org/project/gitlab_templates
+# Guide: https://www.drupal.org/docs/develop/git/using-gitlab-to-contribute-to-drupal/gitlab-ci
+#
+# With thanks to:
+# - The GitLab Acceleration Initiative participants
+# - DrupalSpoons
+################
+
+################
+# Includes
+#
+# Additional configuration can be provided through includes.
+# One advantage of include files is that if they are updated upstream, the
+# changes affect all pipelines using that include.
+#
+# Includes can be overriden by re-declaring anything provided in an include,
+# here in gitlab-ci.yml
+# https://docs.gitlab.com/ee/ci/yaml/includes.html#override-included-configuration-values
+################
+
+include:
+  - project: $_GITLAB_TEMPLATES_REPO
+    ref: $_GITLAB_TEMPLATES_REF
+    file:
+      - '/includes/include.drupalci.variables.yml'
+      - '/includes/include.drupalci.workflows.yml'
+
+################
+# Variables
+#
+# Overriding variables
+# - To override one or more of these variables, simply declare your own
+#   variables keyword.
+# - Keywords declared directly in .gitlab-ci.yml take precedence over include
+#   files.
+# - Documentation:  https://docs.gitlab.com/ee/ci/variables/
+# - Predefined variables: https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
+#
+################
+
+variables:
+  _TARGET_PHP: "8.1"
+  CONCURRENCY: 24
+  GIT_DEPTH: "3"
+
+################
+# Stages
+#
+# Each job is assigned to a stage, defining the order in which the jobs are executed.
+# Jobs in the same stage run in parallel.
+#
+# If all jobs in a stage succeed, the pipeline will proceed to the next stage.
+# If any job in the stage fails, the pipeline will exit early.
+################
+
+stages:
+  ################
+  # Code quality checks
+  #
+  # This stage includes any codebase validation that we want to perform
+  # before running functional tests.
+  ################
+  - 🪄 Lint
+
+  ################
+  # Test
+  #
+  # The test phase actually executes the tests, as well as gathering results
+  # and artifacts.
+  ################
+  - 🗜️ Test
+
+#############
+# Templates #
+#############
+
+.run-on-mr: &run-on-mr
+  if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+.run-on-mr-manual: &run-on-mr-manual
+  if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  when: manual
+  allow_failure: true
+
+.run-on-commit: &run-on-commit
+  if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+
+.run-daily: &run-daily
+  if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+
+.default-stage: &default-stage
+  stage: 🗜️ Test
+  trigger:
+    # Rely on the status of the child pipeline.
+    strategy: depend
+    include:
+      - local: .gitlab-ci/pipeline.yml
+  rules:
+    - <<: *run-on-commit
+    - <<: *run-on-mr-manual
+
+################
+# Jobs
+#
+# Jobs define what scripts are actually executed in each stage.
+################
+
+'🧹 PHP Compatibility checks (PHPCS)':
+  stage: 🪄 Lint
+  variables:
+    PHPCS_PHP_VERSION: "5.6"
+  interruptible: true
+  allow_failure: false
+  retry:
+    max: 2
+    when:
+      - unknown_failure
+      - api_failure
+      - stuck_or_timeout_failure
+      - runner_system_failure
+      - scheduler_failure
+  image:
+    name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
+  artifacts:
+    expire_in: 6 mos
+    paths:
+      - phpcs-quality-report.json
+    reports:
+      codequality: phpcs-quality-report.json
+  rules:
+    - <<: *run-on-commit
+    - <<: *run-on-mr
+  before_script:
+    - echo "{}" > composer.json
+    - composer config allow-plugins true -n
+    - composer require --dev drupal/coder:^8.2@stable micheh/phpcs-gitlab phpcompatibility/php-compatibility dealerdirect/phpcodesniffer-composer-installer
+    - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
+  script:
+    - git fetch -vn --depth=$GIT_DEPTH "${CI_MERGE_REQUEST_PROJECT_URL:-origin}" "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
+    - export MODIFIED=`git diff --name-only refs/heads/$TARGET_BRANCH|while read r;do echo "$CI_PROJECT_DIR/$r";done|tr "\n" " "`
+    - echo -e "$MODIFIED" | tr " " "\n"
+    - echo "If this list contains more files than what you changed, then you need to rebase your branch."
+    - vendor/bin/phpcs --basepath=$CI_PROJECT_DIR --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json --report-full --report-summary --standard=PHPCompatibility --runtime-set testVersion $PHPCS_PHP_VERSION --extensions=php,module,inc,install,test,profile,theme $MODIFIED
+
+# Default job.
+'PHP 8.1 MySQL 5.7':
+  <<: *default-stage
+  variables:
+    _TARGET_PHP: "8.1"
+    _TARGET_DB: "mysql-5.7"
+  rules:
+    - <<: *run-on-commit
+    - <<: *run-on-mr
+
+'PHP 5.6 MySQL 5.5':
+  <<: *default-stage
+  variables:
+    _TARGET_PHP: "5.6"
+    _TARGET_DB: "mysql-5.5"
+
+'PHP 7.2 MySQL 5.7':
+  <<: *default-stage
+  variables:
+    _TARGET_PHP: "7.2"
+    _TARGET_DB: "mysql-5.7"
+
+'PHP 7.4 MySQL 5.7':
+  <<: *default-stage
+  variables:
+    _TARGET_PHP: "7.4"
+    _TARGET_DB: "mysql-5.7"
+
+'PHP 8.0 MySQL 5.7':
+  <<: *default-stage
+  variables:
+    _TARGET_PHP: "8.0"
+    _TARGET_DB: "mysql-5.7"
+
+'PHP 8.2 MySQL 8':
+  <<: *default-stage
+  variables:
+    _TARGET_PHP: "8.2"
+    _TARGET_DB: "mysql-8"
+
+'PHP 7.4 PostgreSQL 9.5':
+  <<: *default-stage
+  variables:
+    _TARGET_PHP: "7.4"
+    _TARGET_DB: "pgsql-9.5"
+
+'PHP 8.1 PostgreSQL 14.1':
+  <<: *default-stage
+  variables:
+    _TARGET_PHP: "8.1"
+    _TARGET_DB: "pgsql-14.1"
+
+'PHP 7.4 SQLite 3.27.0':
+  <<: *default-stage
+  variables:
+    _TARGET_PHP: "7.4"
+    _TARGET_DB: "php-7.4-apache"
+
+# 'PHP 8.1 MariaDB 10.3.22':
+#   <<: *default-stage
+#   variables:
+#    _TARGET_PHP: "8.1"
+#    _TARGET_DB: "mariadb-10.3.22"

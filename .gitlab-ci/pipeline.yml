@@ -1,0 +1,158 @@
+stages:
+  ################
+  # Test
+  #
+  # The test phase actually executes the tests, as well as gathering results
+  # and artifacts.
+  ################
+  - 🗜️ Test
+
+#############
+# Templates #
+#############
+
+.default-job-settings: &default-job-settings
+  interruptible: true
+  allow_failure: false
+  retry:
+    max: 2
+    when:
+      - unknown_failure
+      - api_failure
+      - stuck_or_timeout_failure
+      - runner_system_failure
+      - scheduler_failure
+  image:
+    name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
+
+.test-variables: &test-variables
+  FF_NETWORK_PER_BUILD: 1
+  SIMPLETEST_BASE_URL: http://localhost/subdirectory
+  DB_DRIVER: mysql
+  MYSQL_ROOT_PASSWORD: root
+  MYSQL_DATABASE: drupal
+  MYSQL_USER: drupaltestbot
+  MYSQL_PASSWORD: drupaltestbotpw
+  POSTGRES_DB: drupaltestbot
+  POSTGRES_USER: drupaltestbot
+  POSTGRES_PASSWORD: drupaltestbotpw
+  CI_PARALLEL_NODE_INDEX: $CI_NODE_INDEX
+  CI_PARALLEL_NODE_TOTAL: $CI_NODE_TOTAL
+
+.with-database: &with-database
+  name: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB:production
+  alias: database
+
+.with-chrome: &with-chrome
+  name: $_CONFIG_DOCKERHUB_ROOT/chromedriver:production
+  alias: chrome
+  entrypoint:
+    - chromedriver
+    - "--no-sandbox"
+    - "--log-path=/tmp/chromedriver.log"
+    - "--verbose"
+    - "--whitelisted-ips="
+
+.phpunit-artifacts: &phpunit-artifacts
+  artifacts:
+    when: always
+    expire_in: 6 mos
+    reports:
+      junit: ./sites/default/files/simpletest/*.xml
+    paths:
+      - ./sites/default/files/simpletest
+
+.setup-webroot: &setup-webserver
+  before_script:
+    - ln -s $CI_PROJECT_DIR /var/www/html/subdirectory
+    - cp $CI_PROJECT_DIR/.gitlab-ci/.htaccess-parent /var/www/html/.htaccess
+    - sudo service apache2 start
+
+.get-simpletest-db: &get-simpletest-db
+  - |
+    # Assume SQLite unless we have another known target.
+    export SIMPLETEST_DB=sqlite://localhost/subdirectory/sites/default/files/db.sqlite
+    [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE
+    [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE
+    [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB
+
+.prepare-dirs: &prepare-dirs
+  - mkdir -p ./sites/default/files ./sites/default/files/simpletest ./build/logs/junit
+  - chown -R www-data:www-data ./sites ./build/logs/junit /var/www/
+  - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
+
+.install-drupal: &install-drupal
+  - /usr/local/bin/drush si -y --db-url=$SIMPLETEST_DB --clean-url=0 --account-name=admin --account-pass=drupal --account-mail=admin@example.com
+  - /usr/local/bin/drush vset simpletest_clear_results '0'
+  - /usr/local/bin/drush vset simpletest_verbose '1'
+  - /usr/local/bin/drush en -y simpletest
+
+.run-tests: &run-tests
+  script:
+    - *get-simpletest-db
+    - *prepare-dirs
+    - *install-drupal
+    # We need to pass this along directly even though it's set in the environment parameters.
+    - sudo -u www-data php ./scripts/run-tests.sh --color --concurrency "$CONCURRENCY" --url "$SIMPLETEST_BASE_URL" --verbose --fail-only --all --xml "$CI_PROJECT_DIR/sites/default/files/simpletest" --ci-parallel-node-index $CI_PARALLEL_NODE_INDEX --ci-parallel-node-total $CI_PARALLEL_NODE_TOTAL
+
+.run-test-only-tests: &run-test-only-tests
+  script:
+    - *get-simpletest-db
+    - *prepare-dirs
+    - *install-drupal
+    - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
+    - git fetch -vn --depth=3 "${CI_MERGE_REQUEST_PROJECT_URL:-origin}" "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
+    - |
+      echo "ℹ️ Changes from ${TARGET_BRANCH}"
+      git diff origin/${TARGET_BRANCH} --name-only
+      echo "1️⃣ Reverting non test changes"
+      if [ $(git diff origin/${TARGET_BRANCH} --diff-filter=DM --name-only|grep -Ev '.test$'|grep -v .gitlab-ci|grep -v scripts/run-tests.sh) ]; then
+        git diff origin/${TARGET_BRANCH} --diff-filter=DM --name-only|grep -Ev '.test$'|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
+          echo "↩️ Reverting $file"
+          git checkout origin/${TARGET_BRANCH} -- $file
+        done
+      fi
+      echo "2️⃣ Deleting new files"
+      if [ $(git diff origin/${TARGET_BRANCH} --diff-filter=A --name-only|grep -Ev '.test$'|grep -v .gitlab-ci|grep -v scripts/run-tests.sh) ]; then
+        git diff origin/${TARGET_BRANCH} --diff-filter=A --name-only|grep -Ev '.test$'|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
+          echo "🗑️️ Deleting $file"
+          git rm $file
+        done
+      fi
+      echo "3️⃣ Running test changes for this branch"
+      if [ $(git diff origin/${TARGET_BRANCH} --name-only|grep -E '.test$') ]; then
+        git diff origin/${TARGET_BRANCH} --name-only|grep -E ".test$"|while read file;do
+          sudo -u www-data php ./scripts/run-tests.sh --color --concurrency "$CONCURRENCY" --url "$SIMPLETEST_BASE_URL" --verbose --fail-only --xml "$CI_PROJECT_DIR/sites/default/files/simpletest/test-only" --file "$file"
+        done
+      fi
+
+################
+# Jobs
+#
+# Jobs define what scripts are actually executed in each stage.
+################
+
+'⚡️ PHPUnit Unit':
+  <<: [ *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
+  stage: 🗜️ Test
+  parallel: 3
+  services:
+    - <<: *with-database
+    - <<: *with-chrome
+  variables:
+    <<: *test-variables
+    CONCURRENCY: "$CONCURRENCY"
+
+'🩹 Test-only changes':
+  <<: [ *phpunit-artifacts, *setup-webserver, *run-test-only-tests, *default-job-settings ]
+  stage: 🗜️ Test
+  when: manual
+  interruptible: true
+  allow_failure: true
+  variables:
+    <<: *test-variables
+  services:
+    - <<: *with-database
+    - <<: *with-chrome
