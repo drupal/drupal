@@ -298,7 +298,7 @@ class MediaTest extends ResourceTestBase {
       'data' => [
         'type' => 'media--camelids',
         'attributes' => [
-          'name' => 'Dramallama',
+          'name' => 'Drama llama',
         ],
         'relationships' => [
           'field_media_file' => [

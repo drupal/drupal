@@ -371,7 +371,7 @@ class FileUploadTest extends ResourceTestBase {
       'data' => [
         'type' => 'entity_test--entity_test',
         'attributes' => [
-          'name' => 'Dramallama',
+          'name' => 'Drama llama',
         ],
         'relationships' => [
           'field_rest_file_test' => [

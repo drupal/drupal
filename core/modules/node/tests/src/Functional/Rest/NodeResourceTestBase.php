@@ -205,7 +205,7 @@ abstract class NodeResourceTestBase extends EntityResourceTestBase {
       ],
       'title' => [
         [
-          'value' => 'Dramallama',
+          'value' => 'Drama llama',
         ],
       ],
     ];

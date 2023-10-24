@@ -241,7 +241,7 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
       ],
       'subject' => [
         [
-          'value' => 'Dramallama',
+          'value' => 'Drama llama',
         ],
       ],
       'comment_body' => [

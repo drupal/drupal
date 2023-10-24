@@ -266,7 +266,7 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
       ],
       'name' => [
         [
-          'value' => 'Dramallama',
+          'value' => 'Drama llama',
         ],
       ],
       'field_media_file' => [

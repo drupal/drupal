@@ -350,9 +350,9 @@ class TermTest extends ResourceTestBase {
       'data' => [
         'type' => 'taxonomy_term--camelids',
         'attributes' => [
-          'name' => 'Dramallama',
+          'name' => 'Drama llama',
           'description' => [
-            'value' => 'Dramallamas are the coolest camelids.',
+            'value' => 'Drama llamas are the coolest camelids.',
             'format' => NULL,
           ],
         ],

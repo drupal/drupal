@@ -207,7 +207,7 @@ class BlockContentTest extends ResourceTestBase {
       'data' => [
         'type' => 'block_content--basic',
         'attributes' => [
-          'info' => 'Dramallama',
+          'info' => 'Drama llama',
         ],
       ],
     ];

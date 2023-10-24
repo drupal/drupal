@@ -85,14 +85,14 @@ class UserRegistrationRestTest extends ResourceTestBase {
     $this->assertEquals(0, $email_count);
 
     // Attempt to register without sending a password.
-    $response = $this->registerRequest('Rick.Deckard', FALSE);
+    $response = $this->registerRequest('PhilipK.Dick', FALSE);
     $this->assertResourceErrorResponse(422, "No password provided.", $response);
 
     // Attempt to register with a password when email verification is on.
     $config->set('register', UserInterface::REGISTER_VISITORS);
     $config->set('verify_mail', 1);
     $config->save();
-    $response = $this->registerRequest('Estraven');
+    $response = $this->registerRequest('UrsulaK.LeGuin');
     $this->assertResourceErrorResponse(422, 'A Password cannot be specified. It will be generated on login.', $response);
 
     // Allow visitors to register with email verification.
@@ -123,14 +123,14 @@ class UserRegistrationRestTest extends ResourceTestBase {
     $config->set('register', UserInterface::REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);
     $config->set('verify_mail', 1);
     $config->save();
-    $name = 'Bob.Arctor';
+    $name = 'PhilipK.Dick';
     $user = $this->registerUser($name, FALSE);
     $this->resetAll();
     $this->assertEmpty($user->getPassword());
     $this->assertTrue($user->isBlocked());
 
     $this->assertMailString('body', 'Your application for an account is', 2);
-    $this->assertMailString('body', 'Bob.Arctor has applied for an account', 2);
+    $this->assertMailString('body', 'PhilipK.Dick has applied for an account', 2);
 
     // Verify that an authenticated user cannot register a new user, despite
     // being granted permission to do so because only anonymous users can

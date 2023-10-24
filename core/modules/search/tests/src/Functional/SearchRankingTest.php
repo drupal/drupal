@@ -217,7 +217,7 @@ class SearchRankingTest extends BrowserTestBase {
     $full_html_format->save();
 
     // Test HTML tags with different weights.
-    $sorted_tags = ['h1', 'h2', 'h3', 'h4', 'a', 'h5', 'h6', 'notag'];
+    $sorted_tags = ['h1', 'h2', 'h3', 'h4', 'a', 'h5', 'h6', 'NoTag'];
     $shuffled_tags = $sorted_tags;
 
     // Shuffle tags to ensure HTML tags are ranked properly.
@@ -233,7 +233,7 @@ class SearchRankingTest extends BrowserTestBase {
           $settings['body'] = [['value' => Link::fromTextAndUrl('Drupal Rocks', Url::fromRoute('<front>'))->toString(), 'format' => 'full_html']];
           break;
 
-        case 'notag':
+        case 'NoTag':
           $settings['body'] = [['value' => 'Drupal Rocks']];
           break;
 
@@ -256,7 +256,7 @@ class SearchRankingTest extends BrowserTestBase {
     // Test the ranking of each tag.
     foreach ($sorted_tags as $tag_rank => $tag) {
       // Assert the results.
-      if ($tag == 'notag') {
+      if ($tag == 'NoTag') {
         $this->assertEquals($nodes[$tag]->id(), $set[$tag_rank]['node']->id(), 'Search tag ranking for plain text order.');
       }
       else {

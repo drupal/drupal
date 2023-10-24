@@ -252,7 +252,7 @@ class NodeTest extends ResourceTestBase {
       'data' => [
         'type' => 'node--camelids',
         'attributes' => [
-          'title' => 'Dramallama',
+          'title' => 'Drama llama',
         ],
       ],
     ];

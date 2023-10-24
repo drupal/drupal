@@ -148,7 +148,7 @@ class EntityTestComputedFieldTest extends ResourceTestBase {
       'data' => [
         'type' => 'entity_test_computed_field--entity_test_computed_field',
         'attributes' => [
-          'name' => 'Dramallama',
+          'name' => 'Drama llama',
         ],
       ],
     ];

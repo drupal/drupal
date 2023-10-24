@@ -156,7 +156,7 @@ abstract class EntityTestResourceTestBase extends ConfigEntityResourceTestBase {
       ],
       'name' => [
         [
-          'value' => 'Dramallama',
+          'value' => 'Drama llama',
         ],
       ],
     ];
