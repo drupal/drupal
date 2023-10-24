@@ -309,13 +309,6 @@ class BlockForm extends EntityForm {
   protected function validateVisibility(array $form, FormStateInterface $form_state) {
     // Validate visibility condition settings.
     foreach ($form_state->getValue('visibility') as $condition_id => $values) {
-      // All condition plugins use 'negate' as a Boolean in their schema.
-      // However, certain form elements may return it as 0/1. Cast here to
-      // ensure the data is in the expected type.
-      if (array_key_exists('negate', $values)) {
-        $form_state->setValue(['visibility', $condition_id, 'negate'], (bool) $values['negate']);
-      }
-
       // Allow the condition to validate the form.
       $condition = $form_state->get(['conditions', $condition_id]);
       $condition->validateConfigurationForm($form['visibility'][$condition_id], SubformState::createForSubform($form['visibility'][$condition_id], $form, $form_state));
@@ -342,9 +335,13 @@ class BlockForm extends EntityForm {
     }
 
     $this->submitVisibility($form, $form_state);
+  }
 
-    // Save the settings of the plugin.
-    $entity->save();
+  /**
+   * {@inheritdoc}
+   */
+  public function save(array $form, FormStateInterface $form_state) {
+    $value = parent::save($form, $form_state);
 
     $this->messenger()->addStatus($this->t('The block configuration has been saved.'));
     $form_state->setRedirect(
@@ -354,6 +351,8 @@ class BlockForm extends EntityForm {
       ],
       ['query' => ['block-placement' => Html::getClass($this->entity->id())]]
     );
+
+    return $value;
   }
 
   /**
