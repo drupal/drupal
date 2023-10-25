@@ -59,7 +59,7 @@
             $checkbox = $translationContext.find(
               '.js-form-item-translation-retranslate input',
             );
-            translate = $checkbox[0].checked
+            translate = $checkbox[0]?.checked
               ? Drupal.t('Flag other translations as outdated')
               : Drupal.t('Do not flag other translations as outdated');
           }
