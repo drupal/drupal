@@ -75,7 +75,7 @@ function umami_theme_suggestions_block_alter(array &$suggestions, array $variabl
 function umami_preprocess_block__bundle__footer_promo_block(&$variables) {
   if (isset($variables['content']['field_content_link'])) {
     foreach (Element::children($variables['content']['field_content_link']) as $key) {
-      $variables['content']['field_content_link'][$key]['#attributes']['class'][] = 'footer-promo-block__link';
+      $variables['content']['field_content_link'][$key]['#attributes']['class'][] = 'footer-block__link';
     }
   }
 }

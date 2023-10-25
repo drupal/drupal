@@ -9,17 +9,24 @@
     'block',
     'block-' ~ configuration.provider|clean_class,
     'block-' ~ plugin_id|clean_class,
-    'menu-footer-wrapper',
   ]
 %}
-{% set title_classes = ['menu-footer__title'] %}
-<div{{ attributes.addClass(classes) }}>
-  {{ title_prefix }}
-  {% if label %}
-    <h2{{ title_attributes.addClass(title_classes) }}>{{ label }}</h2>
-  {% endif %}
-  {{ title_suffix }}
+
+{% embed "umami:footer-block" with {
+  attributes: attributes.addClass(classes),
+  content,
+  label,
+  title_attributes,
+  title_prefix,
+  title_suffix,
+} only %}
   {% block content %}
+    {% include "umami:title" with {
+      attributes: title_attributes.addClass('footer-block__title'),
+      label: label,
+      title_prefix,
+      title_suffix,
+    } only %}
     {{ content }}
   {% endblock %}
-</div>
+{% endembed %}

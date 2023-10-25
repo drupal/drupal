@@ -1,0 +1,47 @@
+.footer-block {
+  font-size: 0.9rem;
+}
+
+.footer-block__link {
+  color: #fff;
+  background-color: inherit;
+  font-weight: 700;
+}
+
+.footer-block__link::after {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  content: "";
+  vertical-align: middle;
+  background: url("../../images/svg/pointer--white.svg") no-repeat center center;
+}
+
+.footer-block__link:active,
+.footer-block__link:focus,
+.footer-block__link:hover {
+  color: #fff;
+}
+
+.footer-block__title {
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+@media screen and (min-width: 60rem) {
+  .footer-block__title {
+    padding-top: 2rem;
+  }
+}
+
+.footer-block__wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+@media screen and (min-width: 60rem) {
+  .footer-block__wrapper {
+    flex-direction: row;
+  }
+}

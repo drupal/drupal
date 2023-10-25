@@ -26,22 +26,29 @@
  * @see template_preprocess_block()
  */
 #}
-<div{{ attributes }}>
-  {{ content.field_media_image }}
-  {{ title_prefix }}
-  {% if label %}
-    <h2{{ title_attributes }}>{{ label }}</h2>
-  {% elseif content.field_title %}
-    <h2{{ title_attributes }}>{{ content.field_title }}</h2>
-  {% endif %}
-  {{ title_suffix }}
-  {% block content %}
-    <div class="footer-promo-content">
-      {% if not label %}
-        {{ content|without('field_title')|without('field_media_image') }}
-      {% else %}
-        {{ content|without('field_media_image') }}
-      {% endif %}
-    </div>
+
+{% embed "umami:footer-block" with {
+  attributes,
+  content,
+  label,
+  title_attributes,
+  title_prefix,
+  title_suffix,
+} only %}
+  {% block image %}
+    {{ content.field_media_image }}
   {% endblock %}
-</div>
+  {% block content %}
+    {% include "umami:title" with {
+      attributes: title_attributes.addClass('footer-block__title'),
+      label: label ? label : content.field_title,
+      title_prefix,
+      title_suffix,
+    } only %}
+    {% if not label %}
+      {{ content|without('field_title')|without('field_media_image') }}
+    {% else %}
+      {{ content|without('field_media_image') }}
+    {% endif %}
+  {% endblock %}
+{% endembed %}
