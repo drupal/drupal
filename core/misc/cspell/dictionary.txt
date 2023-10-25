@@ -98,6 +98,7 @@ bkslshv
 blockarticles
 blockbasic
 blockcontent
+blockfooter
 blocknodebundle
 blockpromoted
 blockquotes

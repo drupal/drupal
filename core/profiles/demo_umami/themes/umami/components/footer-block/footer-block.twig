@@ -1,0 +1,14 @@
+<div{{attributes.addClass('footer-block')}}>
+  <div class="footer-block__wrapper">
+    {% block image %}
+      {% if image %}
+        <div class="footer-block__media">
+          {{~ image ~}}
+        </div>
+      {% endif %}
+    {% endblock %}
+    <div class="footer-block__content">
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+</div>

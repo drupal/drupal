@@ -7,7 +7,6 @@ global:
       css/components/blocks/banner/banner.css: {}
       css/components/blocks/help/help.css: {}
       css/components/blocks/page-title/page-title.css: {}
-      css/components/blocks/footer-promo/footer-promo.css: {}
       css/components/blocks/language-switcher/language-switcher.css: {}
       css/components/blocks/search/search.css: {}
       css/components/blocks/search/search-results.css: {}
