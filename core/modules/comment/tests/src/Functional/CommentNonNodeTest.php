@@ -477,7 +477,7 @@ class CommentNonNodeTest extends BrowserTestBase {
 
     $this->drupalGet('comment/reply/entity_test/' . $this->entity->id() . '/comment');
     $this->assertSession()->fieldValueEquals('comment_body[0][value]', '');
-    $this->fieldUIDeleteField('admin/structure/comment/manage/comment', 'comment.comment.comment_body', 'Comment', 'Comment settings');
+    $this->fieldUIDeleteField('admin/structure/comment/manage/comment', 'comment.comment.comment_body', 'Comment', 'Comment settings', 'comment type');
     $this->drupalGet('comment/reply/entity_test/' . $this->entity->id() . '/comment');
     $this->assertSession()->fieldNotExists('comment_body[0][value]');
     // Set subject field to autogenerate it.
