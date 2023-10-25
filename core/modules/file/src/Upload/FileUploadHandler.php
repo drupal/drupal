@@ -376,10 +376,19 @@ class FileUploadHandler {
       }
     }
     else {
+      if (!empty($validators['file_validate_extensions'][0])) {
+        // The deprecated 'file_validate_extensions' has configuration, so that
+        // should be used.
+        $validators['FileExtension']['extensions'] = $validators['file_validate_extensions'][0];
+        @trigger_error('\'file_validate_extensions\' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the \'FileExtension\' constraint instead. See https://www.drupal.org/node/3363700', E_USER_DEPRECATED);
+        return $validators['FileExtension']['extensions'];
+      }
+
       // No validator was provided, so add one using the default list.
       // Build a default non-munged safe list for
       // \Drupal\system\EventSubscriber\SecurityFileUploadEventSubscriber::sanitizeName().
       $validators['FileExtension'] = ['extensions' => self::DEFAULT_EXTENSIONS];
+
     }
     return $validators['FileExtension']['extensions'] ?? '';
   }

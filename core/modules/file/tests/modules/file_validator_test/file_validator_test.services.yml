@@ -3,3 +3,7 @@ services:
     class: Drupal\file_validator_test\EventSubscriber\FileValidationTestSubscriber
     tags:
       - { name: event_subscriber }
+  file_validation_sanitization_subscriber:
+    class: Drupal\file_validator_test\EventSubscriber\FileSanitizationEventSubscriber
+    tags:
+      - {name: event_subscriber}
