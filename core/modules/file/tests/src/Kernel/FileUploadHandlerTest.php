@@ -2,11 +2,10 @@
 
 namespace Drupal\Tests\file\Kernel;
 
-use Drupal\Component\Utility\Environment;
-use Drupal\Core\StringTranslation\ByteSizeMarkup;
+use Drupal\file\Upload\FileUploadHandler;
 use Drupal\file\Upload\UploadedFileInterface;
 use Drupal\KernelTests\KernelTestBase;
-use Symfony\Component\HttpFoundation\File\Exception\FormSizeFileException;
+use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
 /**
  * Tests the file upload handler.
@@ -18,14 +17,12 @@ class FileUploadHandlerTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['file'];
+  protected static $modules = ['file', 'file_validator_test'];
 
   /**
    * The file upload handler under test.
-   *
-   * @var \Drupal\file\Upload\FileUploadHandler
    */
-  protected $fileUploadHandler;
+  protected FileUploadHandler $fileUploadHandler;
 
   /**
    * {@inheritdoc}
@@ -36,17 +33,41 @@ class FileUploadHandlerTest extends KernelTestBase {
   }
 
   /**
-   * Tests file size upload errors.
+   * Tests the legacy extension support.
+   *
+   * @group legacy
    */
-  public function testFileSaveUploadSingleErrorFormSize() {
-    $file_name = $this->randomMachineName();
-    $file_info = $this->createMock(UploadedFileInterface::class);
-    $file_info->expects($this->once())->method('getError')->willReturn(UPLOAD_ERR_FORM_SIZE);
-    $file_info->expects($this->once())->method('getClientOriginalName')->willReturn($file_name);
-    $file_info->expects($this->once())->method('getErrorMessage')->willReturn(sprintf('The file "%s" could not be saved because it exceeds %s, the maximum allowed size for uploads.', $file_name, ByteSizeMarkup::create(Environment::getUploadMaxSize())));
-    $this->expectException(FormSizeFileException::class);
-    $this->expectExceptionMessage(sprintf('The file "%s" could not be saved because it exceeds %s, the maximum allowed size for uploads.', $file_name, ByteSizeMarkup::create(Environment::getUploadMaxSize())));
-    $this->fileUploadHandler->handleFileUpload($file_info);
+  public function testLegacyExtensions(): void {
+    $filename = $this->randomMachineName() . '.txt';
+    $uploadedFile = $this->createMock(UploadedFileInterface::class);
+    $uploadedFile->expects($this->once())
+      ->method('getClientOriginalName')
+      ->willReturn($filename);
+    $uploadedFile->expects($this->once())->method('isValid')->willReturn(TRUE);
+
+    // Throw an exception in mimeTypeGuesser to return early from the method.
+    $mimeTypeGuesser = $this->createMock(MimeTypeGuesserInterface::class);
+    $mimeTypeGuesser->expects($this->once())->method('guessMimeType')
+      ->willThrowException(new \RuntimeException('Expected exception'));
+
+    $fileUploadHandler = new FileUploadHandler(
+      fileSystem: $this->container->get('file_system'),
+      entityTypeManager: $this->container->get('entity_type.manager'),
+      streamWrapperManager: $this->container->get('stream_wrapper_manager'),
+      eventDispatcher: $this->container->get('event_dispatcher'),
+      mimeTypeGuesser: $mimeTypeGuesser,
+      currentUser: $this->container->get('current_user'),
+      requestStack: $this->container->get('request_stack'),
+      fileRepository: $this->container->get('file.repository'),
+      file_validator: $this->container->get('file.validator'),
+    );
+
+    $this->expectException(\Exception::class);
+    $this->expectDeprecation('\'file_validate_extensions\' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the \'FileExtension\' constraint instead. See https://www.drupal.org/node/3363700');
+    $fileUploadHandler->handleFileUpload($uploadedFile, ['file_validate_extensions' => ['txt']]);
+
+    $subscriber = $this->container->get('file_validation_sanitization_subscriber');
+    $this->assertEquals(['txt'], $subscriber->getAllowedExtensions());
   }
 
 }
