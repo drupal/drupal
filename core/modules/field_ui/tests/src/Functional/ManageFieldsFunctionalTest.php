@@ -275,7 +275,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     $this->fieldUIAddNewField($bundle_path, $this->fieldNameInput, $this->fieldLabel);
 
     // Delete the field.
-    $this->fieldUIDeleteField($bundle_path, "taxonomy_term.tags.$this->fieldName", $this->fieldLabel, 'Tags');
+    $this->fieldUIDeleteField($bundle_path, "taxonomy_term.tags.$this->fieldName", $this->fieldLabel, 'Tags', 'taxonomy vocabulary');
 
     // Check that the field was deleted.
     $this->assertNull(FieldConfig::loadByName('taxonomy_term', 'tags', $this->fieldName), 'Field was deleted.');
