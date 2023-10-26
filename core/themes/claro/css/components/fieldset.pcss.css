@@ -79,6 +79,10 @@
     padding-right: var(--space-l);
     padding-left: var(--space-l);
   }
+
+  .fieldset__label--group {
+    padding: 0;
+  }
 }
 
 .fieldset__description {
