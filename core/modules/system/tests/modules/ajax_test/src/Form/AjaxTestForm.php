@@ -2,6 +2,8 @@
 
 namespace Drupal\ajax_test\Form;
 
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\MessageCommand;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -39,24 +41,42 @@ class AjaxTestForm extends FormBase {
       '#value' => $this->t('Do it'),
     ];
     $form['actions']['preview'] = [
+      '#title' => 'Preview',
+      '#type' => 'link',
+      '#url' => Url::fromRoute('ajax_test.dialog_form'),
+      '#attributes' => [
+        'class' => ['use-ajax', 'button'],
+        'data-dialog-type' => 'modal',
+      ],
+    ];
+    $form['actions']['hello_world'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Preview'),
+      '#value' => $this->t('Hello world'),
       // No regular submit-handler. This form only works via JavaScript.
       '#submit' => [],
       '#ajax' => [
-        // This means the ::preview() method on this class would be invoked in
-        // case of a click event. However, since Drupal core's test runner only
-        // is able to execute PHP, not JS, there is no point in actually
-        // implementing this method, because we can never let it be called from
-        // JS; we'd have to manually call it from PHP, at which point we would
-        // not actually be testing it.
-        // Therefore we consciously choose to not implement this method, because
-        // we cannot meaningfully test it anyway.
-        'callback' => '::preview',
+        'callback' => '::helloWorld',
         'event' => 'click',
       ],
     ];
     return $form;
+  }
+
+  /**
+   * An AJAX callback that prints "Hello World!" as a message.
+   *
+   * @param array $form
+   *   The form array to remove elements from.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   An AJAX response.
+   */
+  public function helloWorld(array &$form, FormStateInterface $form_state) {
+    $response = new AjaxResponse();
+    $response->addCommand(new MessageCommand('Hello world!'));
+    return $response;
   }
 
   /**
