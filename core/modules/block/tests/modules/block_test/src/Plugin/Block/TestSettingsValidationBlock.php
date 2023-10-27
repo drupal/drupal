@@ -2,17 +2,18 @@
 
 namespace Drupal\block_test\Plugin\Block;
 
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Provides a test settings validation block.
- *
- * @Block(
- *  id = "test_settings_validation",
- *  admin_label = @Translation("Test settings validation block"),
- * )
  */
+#[Block(
+  id: "test_settings_validation",
+  admin_label: new TranslatableMarkup("Test settings validation block"),
+)]
 class TestSettingsValidationBlock extends BlockBase {
 
   /**

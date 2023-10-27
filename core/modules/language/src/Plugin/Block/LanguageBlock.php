@@ -3,24 +3,26 @@
 namespace Drupal\language\Plugin\Block;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\language\Plugin\Derivative\LanguageBlock as LanguageBlockDeriver;
 
 /**
  * Provides a 'Language switcher' block.
- *
- * @Block(
- *   id = "language_block",
- *   admin_label = @Translation("Language switcher"),
- *   category = @Translation("System"),
- *   deriver = "Drupal\language\Plugin\Derivative\LanguageBlock"
- * )
  */
+#[Block(
+  id: "language_block",
+  admin_label: new TranslatableMarkup("Language switcher"),
+  category: new TranslatableMarkup("System"),
+  deriver: LanguageBlockDeriver::class
+)]
 class LanguageBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**

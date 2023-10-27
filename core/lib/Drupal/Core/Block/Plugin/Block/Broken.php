@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Block\Plugin\Block;
 
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Block\BlockPluginTrait;
 use Drupal\Core\Cache\CacheableDependencyTrait;
@@ -9,17 +10,17 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a fallback plugin for missing block plugins.
- *
- * @Block(
- *   id = "broken",
- *   admin_label = @Translation("Broken/Missing"),
- *   category = @Translation("Block"),
- * )
  */
+#[Block(
+  id: "broken",
+  admin_label: new TranslatableMarkup("Broken/Missing"),
+  category: new TranslatableMarkup("Block")
+)]
 class Broken extends PluginBase implements BlockPluginInterface, ContainerFactoryPluginInterface {
 
   use BlockPluginTrait;

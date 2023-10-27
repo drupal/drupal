@@ -17,13 +17,13 @@ class EntityContextDefinition extends ContextDefinition {
   /**
    * {@inheritdoc}
    */
-  public function __construct($data_type = 'any', $label = NULL, $required = TRUE, $multiple = FALSE, $description = NULL, $default_value = NULL) {
+  public function __construct($data_type = 'any', $label = NULL, $required = TRUE, $multiple = FALSE, $description = NULL, $default_value = NULL, array $constraints = []) {
     // Prefix the data type with 'entity:' so that this class can be constructed
     // like so: new EntityContextDefinition('node')
     if (!str_starts_with($data_type, 'entity:')) {
       $data_type = "entity:$data_type";
     }
-    parent::__construct($data_type, $label, $required, $multiple, $description, $default_value);
+    parent::__construct($data_type, $label, $required, $multiple, $description, $default_value, $constraints);
   }
 
   /**

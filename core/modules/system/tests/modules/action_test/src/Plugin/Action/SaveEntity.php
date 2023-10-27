@@ -3,17 +3,18 @@
 namespace Drupal\action_test\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;
+use Drupal\Core\Action\Attribute\Action;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Provides an operation to save user entities.
- *
- * @Action(
- *   id = "action_test_save_entity",
- *   label = @Translation("Saves entities"),
- *   type = "user"
- * )
  */
+#[Action(
+  id: 'action_test_save_entity',
+  label: new TranslatableMarkup('Saves entities'),
+  type: 'user'
+)]
 class SaveEntity extends ActionBase {
 
   /**

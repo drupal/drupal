@@ -2,18 +2,20 @@
 
 namespace Drupal\views\Plugin\Block;
 
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Cache\Cache;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Plugin\Derivative\ViewsExposedFilterBlock as ViewsExposedFilterBlockDeriver;
 
 /**
  * Provides a 'Views Exposed Filter' block.
- *
- * @Block(
- *   id = "views_exposed_filter_block",
- *   admin_label = @Translation("Views Exposed Filter Block"),
- *   deriver = "Drupal\views\Plugin\Derivative\ViewsExposedFilterBlock"
- * )
  */
+#[Block(
+  id: "views_exposed_filter_block",
+  admin_label: new TranslatableMarkup("Views Exposed Filter Block"),
+  deriver: ViewsExposedFilterBlockDeriver::class
+)]
 class ViewsExposedFilterBlock extends ViewsBlockBase {
 
   /**

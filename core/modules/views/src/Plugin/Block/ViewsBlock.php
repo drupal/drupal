@@ -3,19 +3,21 @@
 namespace Drupal\views\Plugin\Block;
 
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\Element\View;
+use Drupal\views\Plugin\Derivative\ViewsBlock as ViewsBlockDeriver;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Provides a generic Views block.
- *
- * @Block(
- *   id = "views_block",
- *   admin_label = @Translation("Views Block"),
- *   deriver = "Drupal\views\Plugin\Derivative\ViewsBlock"
- * )
  */
+#[Block(
+  id: "views_block",
+  admin_label: new TranslatableMarkup("Views Block"),
+  deriver: ViewsBlockDeriver::class
+)]
 class ViewsBlock extends ViewsBlockBase {
 
   /**

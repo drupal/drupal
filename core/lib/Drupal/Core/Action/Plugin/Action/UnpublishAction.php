@@ -2,17 +2,19 @@
 
 namespace Drupal\Core\Action\Plugin\Action;
 
+use Drupal\Core\Action\Plugin\Action\Derivative\EntityPublishedActionDeriver;
+use Drupal\Core\Action\Attribute\Action;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Unpublishes an entity.
- *
- * @Action(
- *   id = "entity:unpublish_action",
- *   action_label = @Translation("Unpublish"),
- *   deriver = "Drupal\Core\Action\Plugin\Action\Derivative\EntityPublishedActionDeriver",
- * )
  */
+#[Action(
+  id: 'entity:unpublish_action',
+  action_label: new TranslatableMarkup('Unpublish'),
+  deriver: EntityPublishedActionDeriver::class
+)]
 class UnpublishAction extends EntityActionBase {
 
   /**

@@ -2,11 +2,13 @@
 
 namespace Drupal\book\Plugin\Block;
 
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\book\BookManagerInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -14,13 +16,12 @@ use Drupal\Core\Entity\EntityStorageInterface;
 
 /**
  * Provides a 'Book navigation' block.
- *
- * @Block(
- *   id = "book_navigation",
- *   admin_label = @Translation("Book navigation"),
- *   category = @Translation("Menus")
- * )
  */
+#[Block(
+  id: "book_navigation",
+  admin_label: new TranslatableMarkup("Book navigation"),
+  category: new TranslatableMarkup("Menus")
+)]
 class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**

@@ -2,22 +2,23 @@
 
 namespace Drupal\form_test\Plugin\Block;
 
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a block containing a simple redirect form.
  *
  * @see \Drupal\form_test\Form\RedirectBlockForm
- *
- * @Block(
- *   id = "redirect_form_block",
- *   admin_label = @Translation("Redirecting form"),
- *   category = @Translation("Forms")
- * )
  */
+#[Block(
+  id: "redirect_form_block",
+  admin_label: new TranslatableMarkup("Redirecting form"),
+  category: new TranslatableMarkup("Forms"),
+)]
 class RedirectFormBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**

@@ -3,6 +3,7 @@
 namespace Drupal\Core\Block;
 
 use Drupal\Component\Plugin\FallbackPluginManagerInterface;
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\CategorizingPluginManagerTrait;
@@ -45,7 +46,7 @@ class BlockManager extends DefaultPluginManager implements BlockManagerInterface
    *   The logger.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, LoggerInterface $logger) {
-    parent::__construct('Plugin/Block', $namespaces, $module_handler, 'Drupal\Core\Block\BlockPluginInterface', 'Drupal\Core\Block\Annotation\Block');
+    parent::__construct('Plugin/Block', $namespaces, $module_handler, 'Drupal\Core\Block\BlockPluginInterface', Block::class, 'Drupal\Core\Block\Annotation\Block');
 
     $this->alterInfo($this->getType());
     $this->setCacheBackend($cache_backend, 'block_plugins');

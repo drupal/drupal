@@ -2,20 +2,21 @@
 
 namespace Drupal\Core\Menu\Plugin\Block;
 
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Menu\LocalActionManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Provides a block to display the local actions.
- *
- * @Block(
- *   id = "local_actions_block",
- *   admin_label = @Translation("Primary admin actions")
- * )
  */
+#[Block(
+  id: "local_actions_block",
+  admin_label: new TranslatableMarkup("Primary admin actions")
+)]
 class LocalActionsBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**

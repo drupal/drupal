@@ -104,14 +104,20 @@ class ContextDefinition implements ContextDefinitionInterface {
    *   The description of this context definition for the UI.
    * @param mixed $default_value
    *   The default value of this definition.
+   * @param array $constraints
+   *   An array of constraints keyed by the constraint name and a value of an
+   *   array constraint options or a NULL.
    */
-  public function __construct($data_type = 'any', $label = NULL, $required = TRUE, $multiple = FALSE, $description = NULL, $default_value = NULL) {
+  public function __construct($data_type = 'any', $label = NULL, $required = TRUE, $multiple = FALSE, $description = NULL, $default_value = NULL, array $constraints = []) {
     $this->dataType = $data_type;
     $this->label = $label;
     $this->isRequired = $required;
     $this->isMultiple = $multiple;
     $this->description = $description;
     $this->defaultValue = $default_value;
+    foreach ($constraints as $constraint_name => $options) {
+      $this->addConstraint($constraint_name, $options);
+    }
 
     assert(!str_starts_with($data_type, 'entity:') || $this instanceof EntityContextDefinition);
   }

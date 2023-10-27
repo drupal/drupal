@@ -4,18 +4,19 @@ namespace Drupal\action_form_ajax_test\Plugin\Action;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Action\ConfigurableActionBase;
+use Drupal\Core\Action\Attribute\Action;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin used for testing AJAX in action config entity forms.
- *
- * @Action(
- *   id = "action_form_ajax_test",
- *   label = @Translation("action_form_ajax_test"),
- *   type = "system"
- * )
  */
+#[Action(
+  id: 'action_form_ajax_test',
+  label: new TranslatableMarkup('action_form_ajax_test'),
+  type: 'system'
+)]
 class ActionAjaxTest extends ConfigurableActionBase {
 
   /**

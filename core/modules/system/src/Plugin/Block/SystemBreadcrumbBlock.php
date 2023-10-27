@@ -2,20 +2,21 @@
 
 namespace Drupal\system\Plugin\Block;
 
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a block to display the breadcrumbs.
- *
- * @Block(
- *   id = "system_breadcrumb_block",
- *   admin_label = @Translation("Breadcrumbs")
- * )
  */
+#[Block(
+  id: "system_breadcrumb_block",
+  admin_label: new TranslatableMarkup("Breadcrumbs")
+)]
 class SystemBreadcrumbBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**

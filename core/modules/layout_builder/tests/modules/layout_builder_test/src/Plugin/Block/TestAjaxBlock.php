@@ -2,18 +2,19 @@
 
 namespace Drupal\layout_builder_test\Plugin\Block;
 
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Provides a 'TestAjax' block.
- *
- * @Block(
- *   id = "layout_builder_test_testajax",
- *   admin_label = @Translation("TestAjax"),
- *   category = @Translation("Test")
- * )
  */
+#[Block(
+  id: "layout_builder_test_testajax",
+  admin_label: new TranslatableMarkup("TestAjax"),
+  category: new TranslatableMarkup("Test")
+)]
 class TestAjaxBlock extends BlockBase {
 
   /**

@@ -2,22 +2,23 @@
 
 namespace Drupal\workspaces\Plugin\Block;
 
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\workspaces\Form\WorkspaceSwitcherForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a 'Workspace switcher' block.
- *
- * @Block(
- *   id = "workspace_switcher",
- *   admin_label = @Translation("Workspace switcher"),
- *   category = @Translation("Workspace"),
- * )
  */
+#[Block(
+  id: "workspace_switcher",
+  admin_label: new TranslatableMarkup("Workspace switcher"),
+  category: new TranslatableMarkup("Workspace")
+)]
 class WorkspaceSwitcherBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**

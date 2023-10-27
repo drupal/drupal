@@ -2,17 +2,18 @@
 
 namespace Drupal\forum\Plugin\Block;
 
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Database\Database;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Provides a 'New forum topics' block.
- *
- * @Block(
- *   id = "forum_new_block",
- *   admin_label = @Translation("New forum topics"),
- *   category = @Translation("Lists (Views)")
- * )
  */
+#[Block(
+  id: "forum_new_block",
+  admin_label: new TranslatableMarkup("New forum topics"),
+  category: new TranslatableMarkup("Lists (Views)")
+)]
 class NewTopicsBlock extends ForumBlockBase {
 
   /**

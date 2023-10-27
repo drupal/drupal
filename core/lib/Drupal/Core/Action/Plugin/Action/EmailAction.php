@@ -6,25 +6,26 @@ use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\EmailValidatorInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Action\ConfigurableActionBase;
+use Drupal\Core\Action\Attribute\Action;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Utility\Token;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Sends an email message.
- *
- * @Action(
- *   id = "action_send_email_action",
- *   label = @Translation("Send email"),
- *   type = "system"
- * )
  */
+#[Action(
+  id: 'action_send_email_action',
+  label: new TranslatableMarkup('Send email'),
+  type: 'system'
+)]
 class EmailAction extends ConfigurableActionBase implements ContainerFactoryPluginInterface {
 
   /**

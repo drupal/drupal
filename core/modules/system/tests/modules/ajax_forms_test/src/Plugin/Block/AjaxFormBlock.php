@@ -2,23 +2,24 @@
 
 namespace Drupal\ajax_forms_test\Plugin\Block;
 
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides an AJAX form block.
- *
- * @Block(
- *   id = "ajax_forms_test_block",
- *   admin_label = @Translation("AJAX test form"),
- *   category = @Translation("Forms")
- * )
  */
+#[Block(
+  id: "ajax_forms_test_block",
+  admin_label: new TranslatableMarkup("AJAX test form"),
+  category: new TranslatableMarkup("Forms")
+)]
 class AjaxFormBlock extends BlockBase implements FormInterface, ContainerFactoryPluginInterface {
 
   /**

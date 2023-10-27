@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Menu\Plugin\Block;
 
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Form\FormStateInterface;
@@ -9,16 +10,16 @@ use Drupal\Core\Menu\LocalTaskManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a "Tabs" block to display the local tasks.
- *
- * @Block(
- *   id = "local_tasks_block",
- *   admin_label = @Translation("Tabs"),
- * )
  */
+#[Block(
+  id: "local_tasks_block",
+  admin_label: new TranslatableMarkup("Tabs")
+)]
 class LocalTasksBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**

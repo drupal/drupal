@@ -2,17 +2,18 @@
 
 namespace Drupal\settings_tray_test\Plugin\Block;
 
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Provides a 'Block with validation error' test block.
- *
- * @Block(
- *   id = "settings_tray_test_validation",
- *   admin_label = @Translation("Block with validation error")
- * )
  */
+#[Block(
+  id: "settings_tray_test_validation",
+  admin_label: new TranslatableMarkup("Block with validation error"),
+)]
 class ValidationErrorBlock extends BlockBase {
 
   /**
