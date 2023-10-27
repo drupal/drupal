@@ -46,7 +46,7 @@ class ConfigInstallTest extends KernelTestBase {
 
     // Ensure that schema provided by modules that are not installed is not
     // available.
-    $this->assertFalse(\Drupal::service('config.typed')->hasConfigSchema('config_schema_test.someschema'), 'Configuration schema for config_schema_test.someschema does not exist.');
+    $this->assertFalse(\Drupal::service('config.typed')->hasConfigSchema('config_schema_test.some_schema'), 'Configuration schema for config_schema_test.some_schema does not exist.');
 
     // Install the test module.
     $this->installModules(['config_test']);
@@ -73,12 +73,12 @@ class ConfigInstallTest extends KernelTestBase {
     $this->installConfig(['config_schema_test']);
 
     // After module installation the new schema should exist.
-    $this->assertTrue(\Drupal::service('config.typed')->hasConfigSchema('config_schema_test.someschema'), 'Configuration schema for config_schema_test.someschema exists.');
+    $this->assertTrue(\Drupal::service('config.typed')->hasConfigSchema('config_schema_test.some_schema'), 'Configuration schema for config_schema_test.some_schema exists.');
 
     // Test that uninstalling configuration removes configuration schema.
     $this->config('core.extension')->set('module', [])->save();
     \Drupal::service('config.manager')->uninstall('module', 'config_test');
-    $this->assertFalse(\Drupal::service('config.typed')->hasConfigSchema('config_schema_test.someschema'), 'Configuration schema for config_schema_test.someschema does not exist.');
+    $this->assertFalse(\Drupal::service('config.typed')->hasConfigSchema('config_schema_test.some_schema'), 'Configuration schema for config_schema_test.some_schema does not exist.');
   }
 
   /**

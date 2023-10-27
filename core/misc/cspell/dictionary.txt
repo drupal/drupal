@@ -35,7 +35,6 @@ arrowthick
 arrowthickstop
 arrr
 assertable
-asterix
 attrval
 attrvals
 authless
@@ -70,7 +69,6 @@ backlink
 backlinks
 backreferences
 bakeware
-bangpow
 barbar
 barchart
 barqux
@@ -242,8 +240,6 @@ defaultable
 defgroup
 delayable
 deletedline
-deletee
-deleter
 delsp
 denormalizable
 denormalization
@@ -658,7 +654,6 @@ nomask
 nonconfigurable
 nonoptional
 noquotes
-noschema
 nosniff
 nostart
 notexisting
@@ -897,8 +892,6 @@ smacss
 smalldatetime
 somecompany
 somelinks
-somemodule
-someschema
 sortablejs
 sourceediting
 spacebar
@@ -1228,7 +1221,6 @@ zartan
 zettabyte
 zettabytes
 zipf's
-zomg
 zoneinfo
 zoomin
 zoomout

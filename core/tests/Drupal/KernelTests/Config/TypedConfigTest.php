@@ -101,8 +101,8 @@ class TypedConfigTest extends KernelTestBase {
     $this->assertSame('config_test.validation.llama', $typed_config->get('llama')->getPropertyPath());
 
     $config_test_entity = \Drupal::entityTypeManager()->getStorage('config_test')->create([
-      'id' => 'asterix',
-      'label' => 'Asterix',
+      'id' => 'test',
+      'label' => 'Test',
       'weight' => 11,
       'style' => 'test_style',
     ]);

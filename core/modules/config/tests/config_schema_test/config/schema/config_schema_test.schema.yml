@@ -1,6 +1,6 @@
 # Schema for the configuration files of the Configuration Schema Test module.
 
-config_schema_test.someschema:
+config_schema_test.some_schema:
   type: config_object
   label: 'Schema test data'
   mapping:
@@ -9,7 +9,7 @@ config_schema_test.someschema:
     testlist:
       label: 'Test list'
 
-config_schema_test.someschema.with_parents:
+config_schema_test.some_schema.with_parents:
   label: 'Schema test data with parenting'
   type: config_object
   mapping:
@@ -21,7 +21,7 @@ config_schema_test.someschema.with_parents:
           label: 'Key used in parent relation'
           type: string
         testitem:
-          type: config_schema_test.someschema.with_parents.[%parent.target_key]
+          type: config_schema_test.some_schema.with_parents.[%parent.target_key]
     two_levels:
       label: 'Parenting two levels up'
       type: mapping
@@ -34,7 +34,7 @@ config_schema_test.someschema.with_parents:
           type: mapping
           mapping:
             testitem:
-              type: config_schema_test.someschema.with_parents.[%parent.%parent.target_key]
+              type: config_schema_test.some_schema.with_parents.[%parent.%parent.target_key]
     three_levels:
       label: 'Parenting three levels up'
       type: mapping
@@ -51,19 +51,19 @@ config_schema_test.someschema.with_parents:
               type: mapping
               mapping:
                 testitem:
-                  type: config_schema_test.someschema.with_parents.[%parent.%parent.%parent.target_key]
+                  type: config_schema_test.some_schema.with_parents.[%parent.%parent.%parent.target_key]
 
-config_schema_test.someschema.with_parents.key_1:
+config_schema_test.some_schema.with_parents.key_1:
   label: 'Test item nested one level'
   type: string
-config_schema_test.someschema.with_parents.key_2:
+config_schema_test.some_schema.with_parents.key_2:
   label: 'Test item nested two levels'
   type: string
-config_schema_test.someschema.with_parents.key_3:
+config_schema_test.some_schema.with_parents.key_3:
   label: 'Test item nested three levels'
   type: string
 
-config_schema_test.someschema.somemodule.*.*:
+config_schema_test.some_schema.some_module.*.*:
   type: config_object
   label: 'Schema multiple filesystem marker test'
   mapping:

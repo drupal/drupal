@@ -28,7 +28,7 @@ class ConfigDiffTest extends KernelTestBase {
     $change_key = 'foo';
     $remove_key = '404';
     $add_key = 'biff';
-    $add_data = 'bangpow';
+    $add_data = 'bangPow';
     $change_data = 'foobar';
 
     // Install the default config.

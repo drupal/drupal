@@ -216,9 +216,9 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
    */
   public function testSchemaChecking() {
     // Create some configuration that should be skipped.
-    $this->config('config_schema_test.noschema')->set('foo', 'bar')->save();
+    $this->config('config_schema_test.no_schema')->set('foo', 'bar')->save();
     $this->runUpdates();
-    $this->assertSame('bar', $this->config('config_schema_test.noschema')->get('foo'));
+    $this->assertSame('bar', $this->config('config_schema_test.no_schema')->get('foo'));
 
   }
 
