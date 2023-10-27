@@ -12,6 +12,12 @@
   flex: 0 1 100%;
 }
 
+.layout--oneplusfourgrid-section > .layout__four-grid-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.96rem;
+}
+
 /* Large */
 @media screen and (min-width: 60rem) { /* 960px */
   .layout--oneplusfourgrid-section {
@@ -24,9 +30,10 @@
     margin-left: 1.5%;
   }
   .layout--oneplusfourgrid-section > .layout__four-grid-group {
-    display: flex;
     flex: 0 1 50%;
+    flex-direction: row;
     flex-wrap: wrap;
+    gap: 0;
   }
   .layout__four-grid-group > .layout__region--second,
   .layout__four-grid-group > .layout__region--third,
