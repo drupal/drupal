@@ -325,7 +325,7 @@ namespace Drupal\comment;
 
 if (!function_exists('history_read')) {
 
-  function history_read() {
+  function history_read($nid) {
     return 0;
   }
 

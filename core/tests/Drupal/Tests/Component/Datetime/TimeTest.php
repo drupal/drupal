@@ -141,6 +141,6 @@ function time() {
  *
  * @return float
  */
-function microtime() {
+function microtime(bool $as_float = FALSE) {
   return 1234567.89;
 }

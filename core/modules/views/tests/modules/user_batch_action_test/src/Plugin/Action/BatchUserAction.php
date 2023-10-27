@@ -48,7 +48,8 @@ class BatchUserAction extends ActionBase {
   /**
    * {@inheritdoc}
    */
-  public function execute(ContentEntityInterface $entity = NULL) {
+  public function execute($entity = NULL) {
+    assert($entity instanceof ContentEntityInterface);
     $this->executeMultiple([$entity]);
   }
 
