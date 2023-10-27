@@ -143,7 +143,7 @@ interface DataDefinitionInterface {
    *   The setting name.
    *
    * @return mixed
-   *   The setting value.
+   *   The setting value or NULL if the setting name doesn't exist.
    */
   public function getSetting($setting_name);
 
