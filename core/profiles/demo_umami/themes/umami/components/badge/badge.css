@@ -1,0 +1,40 @@
+.umami-badge__container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Large */
+@media screen and (min-width: 60rem) {  /* 960px */
+  .umami-badge__container {
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+    padding-block: 0.96em;
+  }
+}
+
+.umami-badge__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+/* Large */
+@media screen and (min-width: 60rem) {  /* 960px */
+  .umami-badge__icon {
+    align-items: start;
+    width: 56px;
+    height: 64px;
+  }
+}
+
+.umami-badge__label {
+  font-weight: bold;
+}
+
+.umami-badge__label::after {
+  content: ":";
+}
