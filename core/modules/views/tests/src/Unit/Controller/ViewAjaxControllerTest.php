@@ -4,6 +4,7 @@ namespace Drupal\Tests\views\Unit\Controller;
 
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\Renderer;
+use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Ajax\ViewAjaxResponse;
 use Drupal\views\Controller\ViewAjaxController;
@@ -102,7 +103,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $request_stack = new RequestStack();
     $request_stack->push(new Request());
     $this->renderer = new Renderer(
-      $this->createMock('\Drupal\Core\Controller\ControllerResolverInterface'),
+      $this->createMock(CallableResolver::class),
       $this->createMock('\Drupal\Core\Theme\ThemeManagerInterface'),
       $element_info_manager,
       $this->createMock('\Drupal\Core\Render\PlaceholderGeneratorInterface'),
