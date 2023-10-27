@@ -94,6 +94,7 @@
         buttons.push({
           text: $originalButton.html() || $originalButton.attr('value'),
           class: $originalButton.attr('class'),
+          'data-once': $originalButton.data('once'),
           click(e) {
             // If the original button is an anchor tag, triggering the "click"
             // event will not simulate a click. Use the click method instead.
@@ -104,8 +105,8 @@
                 .trigger('mousedown')
                 .trigger('mouseup')
                 .trigger('click');
-              e.preventDefault();
             }
+            e.preventDefault();
           },
         });
       });
