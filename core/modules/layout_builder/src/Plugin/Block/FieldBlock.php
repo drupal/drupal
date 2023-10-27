@@ -5,6 +5,7 @@ namespace Drupal\layout_builder\Plugin\Block;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityDisplayBase;
@@ -21,6 +22,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\layout_builder\Plugin\Derivative\FieldBlockDeriver;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\field\FieldLabelOptionsTrait;
@@ -28,14 +30,13 @@ use Drupal\field\FieldLabelOptionsTrait;
 /**
  * Provides a block that renders a field from an entity.
  *
- * @Block(
- *   id = "field_block",
- *   deriver = "\Drupal\layout_builder\Plugin\Derivative\FieldBlockDeriver",
- * )
- *
  * @internal
  *   Plugin classes are internal.
  */
+#[Block(
+  id: "field_block",
+  deriver: FieldBlockDeriver::class
+)]
 class FieldBlock extends BlockBase implements ContextAwarePluginInterface, ContainerFactoryPluginInterface {
 
   use FieldLabelOptionsTrait;

@@ -3,6 +3,7 @@
 namespace Drupal\Core\Action;
 
 use Drupal\Component\Plugin\CategorizingPluginManagerInterface;
+use Drupal\Core\Action\Attribute\Action;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\CategorizingPluginManagerTrait;
@@ -32,7 +33,7 @@ class ActionManager extends DefaultPluginManager implements CategorizingPluginMa
    *   The module handler to invoke the alter hook with.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/Action', $namespaces, $module_handler, 'Drupal\Core\Action\ActionInterface', 'Drupal\Core\Annotation\Action');
+    parent::__construct('Plugin/Action', $namespaces, $module_handler, 'Drupal\Core\Action\ActionInterface', Action::class, 'Drupal\Core\Annotation\Action');
     $this->alterInfo('action_info');
     $this->setCacheBackend($cache_backend, 'action_info');
   }

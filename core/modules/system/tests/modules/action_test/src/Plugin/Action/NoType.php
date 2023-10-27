@@ -4,16 +4,17 @@ namespace Drupal\action_test\Plugin\Action;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Action\ActionBase;
+use Drupal\Core\Action\Attribute\Action;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Provides an operation with no type specified.
- *
- * @Action(
- *   id = "action_test_no_type",
- *   label = @Translation("An operation with no type specified")
- * )
  */
+#[Action(
+  id: 'action_test_no_type',
+  label: new TranslatableMarkup('An operation with no type specified'),
+)]
 class NoType extends ActionBase {
 
   /**

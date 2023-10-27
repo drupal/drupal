@@ -4,23 +4,24 @@ namespace Drupal\Core\Action\Plugin\Action;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Action\ConfigurableActionBase;
+use Drupal\Core\Action\Attribute\Action;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Utility\Token;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Sends a message to the current user's screen.
- *
- * @Action(
- *   id = "action_message_action",
- *   label = @Translation("Display a message to the user"),
- *   type = "system"
- * )
  */
+#[Action(
+  id: 'action_message_action',
+  label: new TranslatableMarkup('Display a message to the user'),
+  type: 'system'
+)]
 class MessageAction extends ConfigurableActionBase implements ContainerFactoryPluginInterface {
 
   /**

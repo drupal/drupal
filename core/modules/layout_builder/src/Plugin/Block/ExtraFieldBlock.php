@@ -2,6 +2,7 @@
 
 namespace Drupal\layout_builder\Plugin\Block;
 
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -11,6 +12,7 @@ use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\layout_builder\Plugin\Derivative\ExtraFieldBlockDeriver;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -23,14 +25,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   This block plugin handles all other field entities not provided by
  *   hook_entity_extra_field_info().
  *
- * @Block(
- *   id = "extra_field_block",
- *   deriver = "\Drupal\layout_builder\Plugin\Derivative\ExtraFieldBlockDeriver",
- * )
- *
  * @internal
  *   Plugin classes are internal.
  */
+#[Block(
+  id: "extra_field_block",
+  deriver: ExtraFieldBlockDeriver::class
+)]
 class ExtraFieldBlock extends BlockBase implements ContextAwarePluginInterface, ContainerFactoryPluginInterface {
 
   /**

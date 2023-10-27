@@ -4,18 +4,19 @@ namespace Drupal\node\Plugin\Action;
 
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Action\ConfigurableActionBase;
+use Drupal\Core\Action\Attribute\Action;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Unpublishes a node containing certain keywords.
- *
- * @Action(
- *   id = "node_unpublish_by_keyword_action",
- *   label = @Translation("Unpublish content containing keyword(s)"),
- *   type = "node"
- * )
  */
+#[Action(
+  id: 'node_unpublish_by_keyword_action',
+  label: new TranslatableMarkup('Unpublish content containing keyword(s)'),
+  type: 'node'
+)]
 class UnpublishByKeywordNode extends ConfigurableActionBase {
 
   /**

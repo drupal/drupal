@@ -3,24 +3,25 @@
 namespace Drupal\search\Plugin\Block;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\search\Form\SearchBlockForm;
 use Drupal\search\SearchPageRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a 'Search form' block.
- *
- * @Block(
- *   id = "search_form_block",
- *   admin_label = @Translation("Search form"),
- *   category = @Translation("Forms")
- * )
  */
+#[Block(
+  id: "search_form_block",
+  admin_label: new TranslatableMarkup("Search form"),
+  category: new TranslatableMarkup("Forms"),
+)]
 class SearchBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**

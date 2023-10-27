@@ -2,19 +2,20 @@
 
 namespace Drupal\layout_builder_form_block_test\Plugin\Block;
 
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Provides a block containing inline template with <form> tag.
  *
  * For use in Layout Builder tests.
- *
- * @Block(
- *   id = "layout_builder_form_block_test_inline_template_form_block",
- *   admin_label = @Translation("Layout Builder form block test inline template form block"),
- *   category = @Translation("Layout Builder form block test")
- * )
  */
+#[Block(
+  id: "layout_builder_form_block_test_inline_template_form_block",
+  admin_label: new TranslatableMarkup("Layout Builder form block test inline template form block"),
+  category: new TranslatableMarkup("Layout Builder form block test")
+)]
 class TestInlineTemplateFormBlock extends BlockBase {
 
   /**

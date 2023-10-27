@@ -2,19 +2,21 @@
 
 namespace Drupal\block_test\Plugin\Block;
 
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Plugin\Context\EntityContextDefinition;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Provides a context-aware block.
- *
- * @Block(
- *   id = "test_context_aware_unsatisfied",
- *   admin_label = @Translation("Test context-aware unsatisfied block"),
- *   context_definitions = {
- *     "user" = @ContextDefinition("entity:foobar")
- *   }
- * )
  */
+#[Block(
+  id: "test_context_aware_unsatisfied",
+  admin_label: new TranslatableMarkup("Test context-aware unsatisfied block"),
+  context_definitions: [
+    'user' => new EntityContextDefinition('entity:foobar'),
+  ]
+)]
 class TestContextAwareUnsatisfiedBlock extends BlockBase {
 
   /**

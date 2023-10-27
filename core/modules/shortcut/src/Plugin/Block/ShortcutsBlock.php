@@ -3,18 +3,19 @@
 namespace Drupal\shortcut\Plugin\Block;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Provides a 'Shortcut' block.
- *
- * @Block(
- *   id = "shortcuts",
- *   admin_label = @Translation("Shortcuts"),
- *   category = @Translation("Menus")
- * )
  */
+#[Block(
+  id: "shortcuts",
+  admin_label: new TranslatableMarkup("Shortcuts"),
+  category: new TranslatableMarkup("Menus")
+)]
 class ShortcutsBlock extends BlockBase {
 
   /**

@@ -2,25 +2,24 @@
 
 namespace Drupal\help\Plugin\Block;
 
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides a 'Help' block.
- *
- * @Block(
- *   id = "help_block",
- *   admin_label = @Translation("Help"),
- *   forms = {
- *     "settings_tray" = FALSE,
- *   },
- * )
  */
+#[Block(
+  id: "help_block",
+  admin_label: new TranslatableMarkup("Help"),
+  forms: ['settings_tray' => FALSE]
+)]
 class HelpBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**

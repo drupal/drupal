@@ -2,15 +2,17 @@
 
 namespace Drupal\user\Plugin\Action;
 
+use Drupal\Core\Action\Attribute\Action;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
 /**
  * Removes a role from a user.
- *
- * @Action(
- *   id = "user_remove_role_action",
- *   label = @Translation("Remove a role from the selected users"),
- *   type = "user"
- * )
  */
+#[Action(
+  id: 'user_remove_role_action',
+  label: new TranslatableMarkup('Remove a role from the selected users'),
+  type: 'user'
+)]
 class RemoveRoleUser extends ChangeUserRoleBase {
 
   /**

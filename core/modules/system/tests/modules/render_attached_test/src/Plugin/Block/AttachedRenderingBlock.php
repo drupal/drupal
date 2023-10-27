@@ -2,6 +2,8 @@
 
 namespace Drupal\render_attached_test\Plugin\Block;
 
+use Drupal\Core\Block\Attribute\Block;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\render_attached_test\Controller\RenderAttachedTestController;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\Cache;
@@ -10,13 +12,12 @@ use Drupal\Core\Render\BubbleableMetadata;
 /**
  * A block we can use to test caching of #attached headers.
  *
- * @Block(
- *   id = "attached_rendering_block",
- *   admin_label = @Translation("AttachedRenderingBlock")
- * )
- *
  * @see \Drupal\system\Tests\Render\HtmlResponseAttachmentsTest
  */
+#[Block(
+  id: "attached_rendering_block",
+  admin_label: new TranslatableMarkup("AttachedRenderingBlock")
+)]
 class AttachedRenderingBlock extends BlockBase {
 
   /**

@@ -3,19 +3,21 @@
 namespace Drupal\Core\Action\Plugin\Action;
 
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Action\Plugin\Action\Derivative\EntityChangedActionDeriver;
+use Drupal\Core\Action\Attribute\Action;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides an action that can save any entity.
- *
- * @Action(
- *   id = "entity:save_action",
- *   action_label = @Translation("Save"),
- *   deriver = "Drupal\Core\Action\Plugin\Action\Derivative\EntityChangedActionDeriver",
- * )
  */
+#[Action(
+  id: 'entity:save_action',
+  action_label: new TranslatableMarkup('Save'),
+  deriver: EntityChangedActionDeriver::class
+)]
 class SaveAction extends EntityActionBase {
 
   /**

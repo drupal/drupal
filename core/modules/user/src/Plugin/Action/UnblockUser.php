@@ -3,17 +3,18 @@
 namespace Drupal\user\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;
+use Drupal\Core\Action\Attribute\Action;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Unblocks a user.
- *
- * @Action(
- *   id = "user_unblock_user_action",
- *   label = @Translation("Unblock the selected users"),
- *   type = "user"
- * )
  */
+#[Action(
+  id: 'user_unblock_user_action',
+  label: new TranslatableMarkup('Unblock the selected users'),
+  type: 'user'
+)]
 class UnblockUser extends ActionBase {
 
   /**

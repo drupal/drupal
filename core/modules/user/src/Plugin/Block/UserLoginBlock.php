@@ -4,10 +4,12 @@ namespace Drupal\user\Plugin\Block;
 
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Block\BlockBase;
@@ -16,13 +18,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a 'User login' block.
- *
- * @Block(
- *   id = "user_login_block",
- *   admin_label = @Translation("User login"),
- *   category = @Translation("Forms")
- * )
  */
+#[Block(
+  id: "user_login_block",
+  admin_label: new TranslatableMarkup("User login"),
+  category: new TranslatableMarkup("Forms")
+)]
 class UserLoginBlock extends BlockBase implements ContainerFactoryPluginInterface, TrustedCallbackInterface {
 
   use RedirectDestinationTrait;

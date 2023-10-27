@@ -3,24 +3,25 @@
 namespace Drupal\statistics\Plugin\Block;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\statistics\StatisticsStorageInterface;
 
 /**
  * Provides a 'Popular content' block.
- *
- * @Block(
- *   id = "statistics_popular_block",
- *   admin_label = @Translation("Popular content")
- * )
  */
+#[Block(
+  id: "statistics_popular_block",
+  admin_label: new TranslatableMarkup("Popular content"),
+)]
 class StatisticsPopularBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**

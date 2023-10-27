@@ -2,19 +2,21 @@
 
 namespace Drupal\node_block_test\Plugin\Block;
 
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Plugin\Context\EntityContextDefinition;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Provides a 'Node Context Test' block.
- *
- * @Block(
- *   id = "node_block_test_context",
- *   label = @Translation("Node Context Test"),
- *   context_definitions = {
- *     "node" = @ContextDefinition("entity:node", label = @Translation("Node"))
- *   }
- * )
  */
+#[Block(
+  id: "node_block_test_context",
+  admin_label: new TranslatableMarkup("Node Context Test"),
+  context_definitions: [
+    'node' => new EntityContextDefinition('entity:node', new TranslatableMarkup("Node")),
+  ]
+)]
 class NodeContextTestBlock extends BlockBase {
 
   /**
