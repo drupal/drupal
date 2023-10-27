@@ -42,7 +42,7 @@ class SchemaCheckTraitTest extends KernelTestBase {
    */
   public function testTrait() {
     // Test a non existing schema.
-    $ret = $this->checkConfigSchema($this->typedConfig, 'config_schema_test.noschema', $this->config('config_schema_test.noschema')->get());
+    $ret = $this->checkConfigSchema($this->typedConfig, 'config_schema_test.no_schema', $this->config('config_schema_test.no_schema')->get());
     $this->assertFalse($ret);
 
     // Test an existing schema with valid data.

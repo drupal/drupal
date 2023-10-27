@@ -286,36 +286,36 @@ class ConfigImporterTest extends KernelTestBase {
   /**
    * Tests that secondary updates for deleted files work as expected.
    */
-  public function testSecondaryUpdateDeletedDeleterFirst() {
-    $name_deleter = 'config_test.dynamic.deleter';
-    $name_deletee = 'config_test.dynamic.deletee';
+  public function testSecondaryUpdateDeletedParentFirst() {
+    $name_dependency = 'config_test.dynamic.dependency';
+    $name_dependent = 'config_test.dynamic.dependent';
     $name_other = 'config_test.dynamic.other';
     $storage = $this->container->get('config.storage');
     $sync = $this->container->get('config.storage.sync');
     $uuid = $this->container->get('uuid');
 
-    $values_deleter = [
-      'id' => 'deleter',
-      'label' => 'Deleter',
+    $values_dependency = [
+      'id' => 'dependency',
+      'label' => 'Dependency',
       'weight' => 0,
       'uuid' => $uuid->generate(),
     ];
-    $storage->write($name_deleter, $values_deleter);
-    $values_deleter['label'] = 'Updated Deleter';
-    $sync->write($name_deleter, $values_deleter);
-    $values_deletee = [
-      'id' => 'deletee',
-      'label' => 'Deletee',
+    $storage->write($name_dependency, $values_dependency);
+    $values_dependency['label'] = 'Updated Dependency';
+    $sync->write($name_dependency, $values_dependency);
+    $values_dependent = [
+      'id' => 'dependent',
+      'label' => 'Dependent',
       'weight' => 0,
       'uuid' => $uuid->generate(),
-      // Add a dependency on deleter, to make sure that is synced first.
+      // Add a dependency on dependency, to make sure that is synced first.
       'dependencies' => [
-        'config' => [$name_deleter],
+        'config' => [$name_dependency],
       ],
     ];
-    $storage->write($name_deletee, $values_deletee);
-    $values_deletee['label'] = 'Updated Deletee';
-    $sync->write($name_deletee, $values_deletee);
+    $storage->write($name_dependent, $values_dependent);
+    $values_dependent['label'] = 'Updated Child';
+    $sync->write($name_dependent, $values_dependent);
 
     // Ensure that import will continue after the error.
     $values_other = [
@@ -323,10 +323,10 @@ class ConfigImporterTest extends KernelTestBase {
       'label' => 'Other',
       'weight' => 0,
       'uuid' => $uuid->generate(),
-      // Add a dependency on deleter, to make sure that is synced first. This
-      // will also be synced after the deletee due to alphabetical ordering.
+      // Add a dependency on dependency, to make sure that is synced first. This
+      // will also be synced after the dependent due to alphabetical ordering.
       'dependencies' => [
-        'config' => [$name_deleter],
+        'config' => [$name_dependency],
       ],
     ];
     $storage->write($name_other, $values_other);
@@ -337,8 +337,8 @@ class ConfigImporterTest extends KernelTestBase {
     $config_importer = $this->configImporter();
     $updates = $config_importer->getStorageComparer()->getChangelist('update');
     $expected = [
-      $name_deleter,
-      $name_deletee,
+      $name_dependency,
+      $name_dependent,
       $name_other,
     ];
     $this->assertSame($expected, $updates);
@@ -347,14 +347,14 @@ class ConfigImporterTest extends KernelTestBase {
     $config_importer->import();
 
     $entity_storage = \Drupal::entityTypeManager()->getStorage('config_test');
-    $deleter = $entity_storage->load('deleter');
-    $this->assertEquals('deleter', $deleter->id());
-    $this->assertEquals($values_deleter['uuid'], $deleter->uuid());
-    $this->assertEquals($values_deleter['label'], $deleter->label());
+    $dependency = $entity_storage->load('dependency');
+    $this->assertEquals('dependency', $dependency->id());
+    $this->assertEquals($values_dependency['uuid'], $dependency->uuid());
+    $this->assertEquals($values_dependency['label'], $dependency->label());
 
-    // The deletee was deleted in
+    // The dependent was deleted in
     // \Drupal\config_test\Entity\ConfigTest::postSave().
-    $this->assertNull($entity_storage->load('deletee'));
+    $this->assertNull($entity_storage->load('dependent'));
 
     $other = $entity_storage->load('other');
     $this->assertEquals('other', $other->id());
@@ -363,7 +363,7 @@ class ConfigImporterTest extends KernelTestBase {
 
     $logs = $config_importer->getErrors();
     $this->assertCount(1, $logs);
-    $this->assertEquals(new FormattableMarkup('Update target "@name" is missing.', ['@name' => $name_deletee]), $logs[0]);
+    $this->assertEquals(new FormattableMarkup('Update target "@name" is missing.', ['@name' => $name_dependent]), $logs[0]);
   }
 
   /**
@@ -373,35 +373,35 @@ class ConfigImporterTest extends KernelTestBase {
    * configuration tree imports. Therefore, any configuration updates that cause
    * secondary deletes should be reflected already in the staged configuration.
    */
-  public function testSecondaryUpdateDeletedDeleteeFirst() {
-    $name_deleter = 'config_test.dynamic.deleter';
-    $name_deletee = 'config_test.dynamic.deletee';
+  public function testSecondaryUpdateDeletedChildFirst() {
+    $name_dependency = 'config_test.dynamic.dependency';
+    $name_dependent = 'config_test.dynamic.dependent';
     $storage = $this->container->get('config.storage');
     $sync = $this->container->get('config.storage.sync');
     $uuid = $this->container->get('uuid');
 
-    $values_deleter = [
-      'id' => 'deleter',
-      'label' => 'Deleter',
+    $values_dependency = [
+      'id' => 'dependency',
+      'label' => 'Dependency',
       'weight' => 0,
       'uuid' => $uuid->generate(),
-      // Add a dependency on deletee, to make sure that is synced first.
+      // Add a dependency on dependent, to make sure that is synced first.
       'dependencies' => [
-        'config' => [$name_deletee],
+        'config' => [$name_dependent],
       ],
     ];
-    $storage->write($name_deleter, $values_deleter);
-    $values_deleter['label'] = 'Updated Deleter';
-    $sync->write($name_deleter, $values_deleter);
-    $values_deletee = [
-      'id' => 'deletee',
-      'label' => 'Deletee',
+    $storage->write($name_dependency, $values_dependency);
+    $values_dependency['label'] = 'Updated Dependency';
+    $sync->write($name_dependency, $values_dependency);
+    $values_dependent = [
+      'id' => 'dependent',
+      'label' => 'Dependent',
       'weight' => 0,
       'uuid' => $uuid->generate(),
     ];
-    $storage->write($name_deletee, $values_deletee);
-    $values_deletee['label'] = 'Updated Deletee';
-    $sync->write($name_deletee, $values_deletee);
+    $storage->write($name_dependent, $values_dependent);
+    $values_dependent['label'] = 'Updated Dependent';
+    $sync->write($name_dependent, $values_dependent);
 
     // Import.
     $config_importer = $this->configImporter();
@@ -409,10 +409,10 @@ class ConfigImporterTest extends KernelTestBase {
 
     $entity_storage = \Drupal::entityTypeManager()->getStorage('config_test');
     // Both entities are deleted. ConfigTest::postSave() causes updates of the
-    // deleter entity to delete the deletee entity. Since the deleter depends on
-    // the deletee, removing the deletee causes the deleter to be removed.
-    $this->assertNull($entity_storage->load('deleter'));
-    $this->assertNull($entity_storage->load('deletee'));
+    // dependency entity to delete the dependent entity. Since the dependency depends on
+    // the dependent, removing the dependent causes the dependency to be removed.
+    $this->assertNull($entity_storage->load('dependency'));
+    $this->assertNull($entity_storage->load('dependent'));
     $logs = $config_importer->getErrors();
     $this->assertCount(0, $logs);
   }
@@ -420,40 +420,40 @@ class ConfigImporterTest extends KernelTestBase {
   /**
    * Tests that secondary deletes for deleted files work as expected.
    */
-  public function testSecondaryDeletedDeleteeSecond() {
-    $name_deleter = 'config_test.dynamic.deleter';
-    $name_deletee = 'config_test.dynamic.deletee';
+  public function testSecondaryDeletedChildSecond() {
+    $name_dependency = 'config_test.dynamic.dependency';
+    $name_dependent = 'config_test.dynamic.dependent';
     $storage = $this->container->get('config.storage');
 
     $uuid = $this->container->get('uuid');
 
-    $values_deleter = [
-      'id' => 'deleter',
-      'label' => 'Deleter',
+    $values_dependency = [
+      'id' => 'dependency',
+      'label' => 'Dependency',
       'weight' => 0,
       'uuid' => $uuid->generate(),
-      // Add a dependency on deletee, to make sure this delete is synced first.
+      // Add a dependency on dependent, to make sure this delete is synced first.
       'dependencies' => [
-        'config' => [$name_deletee],
+        'config' => [$name_dependent],
       ],
     ];
-    $storage->write($name_deleter, $values_deleter);
-    $values_deletee = [
-      'id' => 'deletee',
-      'label' => 'Deletee',
+    $storage->write($name_dependency, $values_dependency);
+    $values_dependent = [
+      'id' => 'dependent',
+      'label' => 'Dependent',
       'weight' => 0,
       'uuid' => $uuid->generate(),
     ];
-    $storage->write($name_deletee, $values_deletee);
+    $storage->write($name_dependent, $values_dependent);
 
     // Import.
     $config_importer = $this->configImporter();
     $config_importer->import();
 
     $entity_storage = \Drupal::entityTypeManager()->getStorage('config_test');
-    $this->assertNull($entity_storage->load('deleter'));
-    $this->assertNull($entity_storage->load('deletee'));
-    // The deletee entity does not exist as the delete worked and although the
+    $this->assertNull($entity_storage->load('dependency'));
+    $this->assertNull($entity_storage->load('dependent'));
+    // The dependent entity does not exist as the delete worked and although the
     // delete occurred in \Drupal\config_test\Entity\ConfigTest::postDelete()
     // this does not matter.
     $logs = $config_importer->getErrors();

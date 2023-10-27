@@ -21,8 +21,8 @@ class ConfigModuleOverridesTest extends KernelTestBase {
   public function testSimpleModuleOverrides() {
     $GLOBALS['config_test_run_module_overrides'] = TRUE;
     $name = 'system.site';
-    $overridden_name = 'ZOMG overridden site name';
-    $non_overridden_name = 'ZOMG this name is on disk mkay';
+    $overridden_name = 'Wow overridden site name';
+    $non_overridden_name = 'Wow this name is on disk mkay';
     $overridden_slogan = 'Yay for overrides!';
     $non_overridden_slogan = 'Yay for defaults!';
     $config_factory = $this->container->get('config.factory');
