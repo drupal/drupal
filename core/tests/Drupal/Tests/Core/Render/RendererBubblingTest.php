@@ -452,6 +452,9 @@ class RendererBubblingTest extends RendererTestBase {
     // Mock the State service.
     $memory_state = new State(new KeyValueMemoryFactory());
     \Drupal::getContainer()->set('state', $memory_state);
+    $this->controllerResolver->expects($this->any())
+      ->method('getControllerFromDefinition')
+      ->willReturnArgument(0);
 
     // Simulate the theme system/Twig: a recursive call to Renderer::render(),
     // just like the theme system or a Twig template would have done.
