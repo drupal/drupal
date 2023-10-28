@@ -284,6 +284,17 @@ class NumberFieldTest extends BrowserTestBase {
     // Verify that the "content" attribute has been set to the value of the
     // field, and the prefix is being displayed.
     $this->assertSession()->elementTextContains('xpath', '//div[@content="' . $integer_value . '"]', 'ThePrefix' . $integer_value);
+
+    $field_configuration_url = 'entity_test/structure/entity_test/fields/entity_test.entity_test.' . $field_name;
+    $this->drupalGet($field_configuration_url);
+
+    // Tests Number validation messages.
+    $edit = [
+      'settings[min]' => 10,
+      'settings[max]' => 8,
+    ];
+    $this->submitForm($edit, 'Save settings');
+    $this->assertSession()->pageTextContains("The minimum value must be less than or equal to {$edit['settings[max]']}.");
   }
 
   /**

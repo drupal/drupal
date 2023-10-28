@@ -4,6 +4,8 @@ namespace Drupal\Tests\field\Kernel\Number;
 
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Field\Plugin\Field\FieldType\NumericItemBase;
+use Drupal\Core\Form\FormState;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
@@ -186,6 +188,70 @@ class NumberItemTest extends FieldKernelTestBase {
     yield ['decimal', 10, NULL, 9.999, TRUE, 'field_decimal: the value may be no less than 10.'];
     yield ['decimal', 1, 2, 2.5, TRUE, 'field_decimal: the value may be no greater than 2.'];
     yield ['decimal', 1, 2, 1.5, FALSE];
+  }
+
+  /**
+   * Tests the validation of minimum and maximum values.
+   *
+   * @param int|float|string $min
+   *   Min value to be tested.
+   * @param int|float|string $max
+   *   Max value to be tested.
+   * @param int|float|string $value
+   *   Value to be tested with min and max values.
+   * @param bool $hasError
+   *   Expected validation result.
+   * @param string $message
+   *   (optional) Error message result.
+   *
+   * @dataProvider dataTestMinMaxValue
+   */
+  public function testFormFieldMinMaxValue(int|float|string $min, int|float|string $max, int|float|string $value, bool $hasError, string $message = ''): void {
+    $element = [
+      '#type' => 'number',
+      '#title' => 'min',
+      '#default_value' => $min,
+      '#element_validate' => [[NumericItemBase::class, 'validateMinAndMaxConfig']],
+      '#description' => 'The minimum value that should be allowed in this field. Leave blank for no minimum.',
+      '#parents' => [],
+      '#name' => 'min',
+    ];
+
+    $form_state = new FormState();
+    $form_state->setValue('min', $value);
+    $form_state->setValue('settings', [
+      'min' => $min,
+      'max' => $max,
+      'prefix' => '',
+      'suffix' => '',
+      'precision' => 10,
+      'scale' => 2,
+    ]);
+    $completed_form = [];
+    NumericItemBase::validateMinAndMaxConfig($element, $form_state, $completed_form);
+    $errors = $form_state->getErrors();
+    $this->assertEquals($hasError, count($errors) > 0);
+    if ($errors) {
+      $error = current($errors);
+      $this->assertEquals($error, $message);
+    }
+  }
+
+  /**
+   * Data provider for testFormFieldMinMaxValue().
+   *
+   * @return \Generator
+   *   The test data.
+   */
+  public function dataTestMinMaxValue() {
+    yield [1, 10, 5, FALSE, ''];
+    yield [10, 5, 6, TRUE, 'The minimum value must be less than or equal to 5.'];
+    yield [1, 0, 6, TRUE, 'The minimum value must be less than or equal to 0.'];
+    yield [0, -2, 0.5, TRUE, 'The minimum value must be less than or equal to -2.'];
+    yield [-10, -20, -5, TRUE, 'The minimum value must be less than or equal to -20.'];
+    yield [1, '', -5, FALSE, ''];
+    yield ['', '', '', FALSE, ''];
+    yield ['2', '1', '', TRUE, 'The minimum value must be less than or equal to 1.'];
   }
 
 }
