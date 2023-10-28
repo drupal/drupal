@@ -15,6 +15,7 @@ use Drupal\Core\Render\Element\RenderCallbackInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Security\DoTrustedCallbackTrait;
 use Drupal\Core\Theme\ThemeManagerInterface;
+use Drupal\Core\Utility\CallableResolver;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -31,11 +32,11 @@ class Renderer implements RendererInterface {
   protected $theme;
 
   /**
-   * The controller resolver.
+   * The callable resolver.
    *
-   * @var \Drupal\Core\Controller\ControllerResolverInterface
+   * @var \Drupal\Core\Utility\CallableResolver
    */
-  protected $controllerResolver;
+  protected CallableResolver $callableResolver;
 
   /**
    * The element info.
@@ -99,8 +100,8 @@ class Renderer implements RendererInterface {
   /**
    * Constructs a new Renderer.
    *
-   * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
-   *   The controller resolver.
+   * @param \Drupal\Core\Utility\CallableResolver|\Drupal\Core\Controller\ControllerResolverInterface $callable_resolver
+   *   The callable resolver.
    * @param \Drupal\Core\Theme\ThemeManagerInterface $theme
    *   The theme manager.
    * @param \Drupal\Core\Render\ElementInfoManagerInterface $element_info
@@ -114,8 +115,12 @@ class Renderer implements RendererInterface {
    * @param array $renderer_config
    *   The renderer configuration array.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver, ThemeManagerInterface $theme, ElementInfoManagerInterface $element_info, PlaceholderGeneratorInterface $placeholder_generator, RenderCacheInterface $render_cache, RequestStack $request_stack, array $renderer_config) {
-    $this->controllerResolver = $controller_resolver;
+  public function __construct(ControllerResolverInterface|CallableResolver $callable_resolver, ThemeManagerInterface $theme, ElementInfoManagerInterface $element_info, PlaceholderGeneratorInterface $placeholder_generator, RenderCacheInterface $render_cache, RequestStack $request_stack, array $renderer_config) {
+    if ($callable_resolver instanceof ControllerResolverInterface) {
+      @trigger_error('Calling ' . __METHOD__ . '() with an argument of ControllerResolverInterface is deprecated in drupal:10.2.0 and is removed in drupal:11.0.0. Use \Drupal\Core\Utility\CallableResolver instead. See https://www.drupal.org/node/3369969', E_USER_DEPRECATED);
+      $callable_resolver = \Drupal::service('callable_resolver');
+    }
+    $this->callableResolver = $callable_resolver;
     $this->theme = $theme;
     $this->elementInfo = $element_info;
     $this->placeholderGenerator = $placeholder_generator;
@@ -843,22 +848,14 @@ class Renderer implements RendererInterface {
    * @see \Drupal\Core\Security\TrustedCallbackInterface
    */
   protected function doCallback($callback_type, $callback, array $args) {
-    if (is_string($callback)) {
-      $double_colon = strpos($callback, '::');
-      if ($double_colon === FALSE) {
-        $callback = $this->controllerResolver->getControllerFromDefinition($callback);
-      }
-      elseif ($double_colon > 0) {
-        $callback = explode('::', $callback, 2);
-      }
-    }
+    $callable = $this->callableResolver->getCallableFromDefinition($callback);
     $message = sprintf('Render %s callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface or be an anonymous function. The callback was %s. See https://www.drupal.org/node/2966725', $callback_type, '%s');
     // Add \Drupal\Core\Render\Element\RenderCallbackInterface as an extra
     // trusted interface so that:
     // - All public methods on Render elements are considered trusted.
     // - Helper classes that contain only callback methods can implement this
     //   instead of TrustedCallbackInterface.
-    return $this->doTrustedCallback($callback, $args, $message, TrustedCallbackInterface::THROW_EXCEPTION, RenderCallbackInterface::class);
+    return $this->doTrustedCallback($callable, $args, $message, TrustedCallbackInterface::THROW_EXCEPTION, RenderCallbackInterface::class);
   }
 
   /**

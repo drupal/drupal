@@ -15,8 +15,8 @@ class RendererCallbackTest extends RendererTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->controllerResolver->expects($this->any())
-      ->method('getControllerFromDefinition')
+    $this->callableResolver->expects($this->any())
+      ->method('getCallableFromDefinition')
       ->willReturnArgument(0);
   }
 
