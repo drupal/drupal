@@ -9,7 +9,6 @@ use Drupal\Core\Menu\MenuLinkTree;
 use Drupal\Core\Menu\MenuLinkTreeElement;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
-use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\Core\Menu\MenuLinkMock;
 use Drupal\Tests\UnitTestCase;
 
@@ -37,7 +36,7 @@ class MenuLinkTreeTest extends UnitTestCase {
       $this->createMock('\Drupal\Core\Menu\MenuLinkManagerInterface'),
       $this->createMock('\Drupal\Core\Routing\RouteProviderInterface'),
       $this->createMock('\Drupal\Core\Menu\MenuActiveTrailInterface'),
-      $this->createMock(CallableResolver::class)
+      $this->createMock('\Drupal\Core\Controller\ControllerResolverInterface')
     );
 
     $cache_contexts_manager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')

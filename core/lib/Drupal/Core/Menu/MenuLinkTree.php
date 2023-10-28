@@ -9,7 +9,6 @@ use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Routing\PreloadableRouteProviderInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Template\Attribute;
-use Drupal\Core\Utility\CallableResolver;
 
 /**
  * Implements the loading, transforming and rendering of menu link trees.
@@ -45,11 +44,11 @@ class MenuLinkTree implements MenuLinkTreeInterface {
   protected $menuActiveTrail;
 
   /**
-   * The callable resolver.
+   * The controller resolver.
    *
-   * @var \Drupal\Core\Utility\CallableResolver
+   * @var \Drupal\Core\Controller\ControllerResolverInterface
    */
-  protected CallableResolver $callableResolver;
+  protected $controllerResolver;
 
   /**
    * Constructs a \Drupal\Core\Menu\MenuLinkTree object.
@@ -62,19 +61,15 @@ class MenuLinkTree implements MenuLinkTreeInterface {
    *   The route provider to load routes by name.
    * @param \Drupal\Core\Menu\MenuActiveTrailInterface $menu_active_trail
    *   The active menu trail service.
-   * @param \Drupal\Core\Utility\CallableResolver|\Drupal\Core\Controller\ControllerResolverInterface $callable_resolver
-   *   The callable resolver.
+   * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
+   *   The controller resolver.
    */
-  public function __construct(MenuTreeStorageInterface $tree_storage, MenuLinkManagerInterface $menu_link_manager, RouteProviderInterface $route_provider, MenuActiveTrailInterface $menu_active_trail, ControllerResolverInterface|CallableResolver $callable_resolver) {
+  public function __construct(MenuTreeStorageInterface $tree_storage, MenuLinkManagerInterface $menu_link_manager, RouteProviderInterface $route_provider, MenuActiveTrailInterface $menu_active_trail, ControllerResolverInterface $controller_resolver) {
     $this->treeStorage = $tree_storage;
     $this->menuLinkManager = $menu_link_manager;
     $this->routeProvider = $route_provider;
     $this->menuActiveTrail = $menu_active_trail;
-    if ($callable_resolver instanceof ControllerResolverInterface) {
-      @trigger_error('Calling ' . __METHOD__ . '() with an argument of ControllerResolverInterface is deprecated in drupal:10.2.0 and is removed in drupal:11.0.0. Use \Drupal\Core\Utility\CallableResolver instead. See https://www.drupal.org/node/3395294', E_USER_DEPRECATED);
-      $callable_resolver = \Drupal::service('callable_resolver');
-    }
-    $this->callableResolver = $callable_resolver;
+    $this->controllerResolver = $controller_resolver;
   }
 
   /**
@@ -142,7 +137,8 @@ class MenuLinkTree implements MenuLinkTreeInterface {
    */
   public function transform(array $tree, array $manipulators) {
     foreach ($manipulators as $manipulator) {
-      $callable = $this->callableResolver->getCallableFromDefinition($manipulator['callable']);
+      $callable = $manipulator['callable'];
+      $callable = $this->controllerResolver->getControllerFromDefinition($callable);
       // Prepare the arguments for the menu tree manipulator callable; the first
       // argument is always the menu link tree.
       if (isset($manipulator['args'])) {
