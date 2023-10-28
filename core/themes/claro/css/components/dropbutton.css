@@ -140,18 +140,15 @@
  */
 
 .dropbutton__toggle {
-  border: var(--dropbutton-border-size) solid transparent !important;
-  border-inline-start: var(--dropbutton-border-size) solid white !important;
-}
-
-.dropbutton__toggle {
   position: absolute;
   z-index: 3;
   top: 0;
   right: 0; /* LTR */
   bottom: 0;
   width: var(--dropbutton-toggle-size);
-  height: var(--dropbutton-toggle-size); /* 1 */
+  height: var(--dropbutton-toggle-size);
+  border: var(--dropbutton-border-size) solid transparent !important; /* 1 */
+  border-inline-start: var(--dropbutton-border-size) solid white !important;
   border-radius: 0 var(--button-border-radius-size) var(--button-border-radius-size) 0; /* LTR */
   background: var(--button-bg-color);
   font-size: 1px; /* iOS Safari sets a minimum button-width based on font-size. */
@@ -262,10 +259,6 @@
  */
 
 .dropbutton__item:first-of-type > * {
-  border: var(--dropbutton-border-size) solid transparent !important;
-}
-
-.dropbutton__item:first-of-type > * {
   display: inline-block;
   margin: 0;
   padding: calc(var(--dropbutton-spacing-size) - var(--dropbutton-border-size)) calc(var(--space-l) - var(--dropbutton-border-size));
@@ -273,7 +266,8 @@
   text-align: center;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: var(--button-fg-color); /* 1 */
+  color: var(--button-fg-color);
+  border: var(--dropbutton-border-size) solid transparent !important; /* 1 */
   border-radius: var(--button-border-radius-size);
   background-color: var(--button-bg-color);
   font-size: var(--dropbutton-font-size);
@@ -393,16 +387,12 @@
 
 .dropbutton__item:first-of-type ~ .dropbutton__item > a,
 .dropbutton__item:first-of-type ~ .dropbutton__item > .button {
-  border: var(--dropbutton-border-size) solid transparent !important;
-}
-
-.dropbutton__item:first-of-type ~ .dropbutton__item > a,
-.dropbutton__item:first-of-type ~ .dropbutton__item > .button {
   position: relative;
   padding: calc(var(--dropbutton-spacing-size) - var(--dropbutton-border-size));
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: var(--color-gray-800); /* 1 */
+  color: var(--color-gray-800);
+  border: var(--dropbutton-border-size) solid transparent !important; /* 1 */
   border-radius: var(--dropbutton-border-radius-size);
   background: var(--color-white);
   box-shadow: 0;
@@ -452,10 +442,6 @@
 }
 
 .dropbutton__item:first-of-type ~ .dropbutton__item > *:focus {
-  border-color: var(--color-focus) !important;
-}
-
-.dropbutton__item:first-of-type ~ .dropbutton__item > *:focus {
-  /* 1 */
+  border-color: var(--color-focus) !important; /* 1 */
   box-shadow: inset 0 0 0 1px var(--color-focus), 0 0 0 1px var(--color-focus);
 }

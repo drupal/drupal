@@ -28,10 +28,6 @@
 .modules-table-filter .form-item__description,
 .permissions-table-filter .form-item__description {
   position: absolute !important;
-}
-
-.modules-table-filter .form-item__description,
-.permissions-table-filter .form-item__description {
   overflow: hidden;
   clip: rect(1px, 1px, 1px, 1px);
   width: 1px;

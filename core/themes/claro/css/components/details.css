@@ -216,7 +216,7 @@ td .claro-details {
 
 /* stylelint-disable-next-line unit-allowed-list */
 
-@media not all and (-webkit-min-device-pixel-ratio: 0), not all and (min-resolution: 0.001dpcm) {
+@media not all and (min-resolution: 0.001dpcm) {
   @supports (-webkit-appearance: none) {
     .claro-details__summary::before {
       transition: none;
@@ -362,7 +362,7 @@ td .claro-details {
 
 /* stylelint-disable-next-line unit-allowed-list */
 
-@media not all and (-webkit-min-device-pixel-ratio: 0), not all and (min-resolution: 0.001dpcm) {
+@media not all and (min-resolution: 0.001dpcm) {
   @supports (-webkit-appearance: none) {
     .claro-details__summary::after {
       transition: none;
