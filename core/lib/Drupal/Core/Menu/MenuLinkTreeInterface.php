@@ -68,7 +68,7 @@ interface MenuLinkTreeInterface {
    * @param array $manipulators
    *   The menu link tree manipulators to apply. Each is an array with keys:
    *   - callable: a callable or a string that can be resolved to a callable
-   *     by \Drupal\Core\Controller\ControllerResolverInterface::getControllerFromDefinition()
+   *     by Drupal\Core\Utility\CallableResolver::getCallableFromDefinition()
    *   - args: optional array of arguments to pass to the callable after $tree.
    *
    * @return \Drupal\Core\Menu\MenuLinkTreeElement[]
