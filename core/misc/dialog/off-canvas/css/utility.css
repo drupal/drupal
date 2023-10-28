@@ -18,25 +18,19 @@
 
 #drupal-off-canvas-wrapper .visually-hidden {
   position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-}
-
-#drupal-off-canvas-wrapper .visually-hidden {
   overflow: hidden;
   clip: rect(1px, 1px, 1px, 1px);
+  width: 1px !important;
+  height: 1px !important;
   word-wrap: normal;
 }
 
 #drupal-off-canvas-wrapper .visually-hidden.focusable:is(:active, :focus) {
   position: static !important;
-  width: auto !important;
-  height: auto !important;
-}
-
-#drupal-off-canvas-wrapper .visually-hidden.focusable:is(:active, :focus) {
   overflow: visible;
   clip: auto;
+  width: auto !important;
+  height: auto !important;
 }
 
 #drupal-off-canvas-wrapper .invisible {

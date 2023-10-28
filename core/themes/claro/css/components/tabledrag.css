@@ -291,7 +291,7 @@ body.drag {
 
 /* stylelint-disable-next-line unit-allowed-list */
 
-@media not all and (-webkit-min-device-pixel-ratio: 0), not all and (min-resolution: 0.001dpcm) {
+@media not all and (min-resolution: 0.001dpcm) {
   @supports (-webkit-appearance: none) {
     .tabledrag-cell-content .tree {
       overflow: visible;
@@ -309,15 +309,12 @@ body.drag {
  */
 
 .indentation {
-  background: none !important;
-}
-
-.indentation {
   position: relative;
   left: calc(var(--space-xs) * -0.5); /* LTR */
   float: left; /* LTR */
   width: calc(25rem / 16); /* 25px */
   height: calc(25rem / 16); /* 25px */
+  background: none !important;
   line-height: 0;
 }
 

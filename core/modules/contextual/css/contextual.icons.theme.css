@@ -28,13 +28,10 @@
  */
 
 .contextual .trigger {
+  /* Override the .focusable height: auto */
   width: 26px !important;
+  /* Override the .focusable height: auto */
   height: 26px !important;
-}
-
-.contextual .trigger {
-  /* Override the .focusable height: auto */
-  /* Override the .focusable height: auto */
   text-indent: -9999px;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3cg%3e%3cpath fill='%23bebebe' d='M14.545 3.042l-1.586-1.585c-.389-.389-1.025-.389-1.414 0l-1.293 1.293 3 3 1.293-1.293c.389-.389.389-1.026 0-1.415z'/%3e%3crect fill='%23bebebe' x='5.129' y='3.8' transform='matrix(-.707 -.707 .707 -.707 6.189 20.064)' width='4.243' height='9.899'/%3e%3cpath fill='%23bebebe' d='M.908 14.775c-.087.262.055.397.316.312l2.001-.667-1.65-1.646-.667 2.001z'/%3e%3c/g%3e%3c/svg%3e");
   background-repeat: no-repeat;

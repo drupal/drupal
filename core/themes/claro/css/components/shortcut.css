@@ -47,7 +47,6 @@
   border-radius: var(--shortcut-border-radius-size);
   background: var(--shortcut-bg-color);
   font-size: var(--font-size-label);
-  -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }
 
