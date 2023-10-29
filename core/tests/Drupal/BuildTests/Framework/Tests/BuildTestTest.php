@@ -74,13 +74,6 @@ class BuildTestTest extends BuildTestBase {
           ],
         ],
       ],
-      'vendor' => [
-        'composer' => [
-          'composer' => [
-            'installed.json' => '"items": {"things"}',
-          ],
-        ],
-      ],
       'modules' => [
         'my_module' => [
           'vendor' => [
