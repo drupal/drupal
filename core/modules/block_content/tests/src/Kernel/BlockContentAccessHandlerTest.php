@@ -447,7 +447,7 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
       NULL,
       AccessResultNeutral::class,
     ];
-    $cases['view all revisions:administer blocks'] = [
+    $cases['view all revisions:administer block content'] = [
       'view all revisions',
       TRUE,
       TRUE,
@@ -485,16 +485,16 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
       NULL,
       AccessResultNeutral::class,
     ];
-    $cases['revert:administer blocks:latest'] = [
+    $cases['revert:administer block content:latest'] = [
       'revert',
       TRUE,
       TRUE,
-      ['access block library'],
+      ['administer block content'],
       TRUE,
       NULL,
       AccessResultForbidden::class,
     ];
-    $cases['revert:administer blocks:historical'] = [
+    $cases['revert:administer block content:historical'] = [
       'revert',
       TRUE,
       TRUE,
@@ -507,7 +507,7 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
       'revert',
       TRUE,
       TRUE,
-      ['administer blocks'],
+      ['administer block content'],
       TRUE,
       NULL,
       AccessResultForbidden::class,
@@ -551,16 +551,16 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
       NULL,
       AccessResultNeutral::class,
     ];
-    $cases['delete revision:administer blocks:latest'] = [
+    $cases['delete revision:administer block content:latest'] = [
       'delete revision',
       TRUE,
       TRUE,
-      ['administer blocks'],
+      ['administer block content'],
       TRUE,
       NULL,
       AccessResultForbidden::class,
     ];
-    $cases['delete revision:administer blocks:historical'] = [
+    $cases['delete revision:administer block content:historical'] = [
       'delete revision',
       TRUE,
       TRUE,
@@ -573,7 +573,7 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
       'delete revision',
       TRUE,
       TRUE,
-      ['administer blocks'],
+      ['administer block content'],
       TRUE,
       NULL,
       AccessResultForbidden::class,

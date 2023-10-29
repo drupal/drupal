@@ -58,49 +58,40 @@ class BlockContentAccessControlHandler extends EntityAccessControlHandler implem
     assert($entity instanceof BlockContentInterface);
     $bundle = $entity->bundle();
     $forbidIfNotReusable = fn (): AccessResultInterface => AccessResult::forbiddenIf($entity->isReusable() === FALSE, sprintf('Block content must be reusable to use `%s` operation', $operation));
-    $access = match ($operation) {
-      // Allow view and update access to user with the 'edit any (type) block
-      // content' permission or the 'administer blocks' permission.
-      'view' => AccessResult::allowedIf($entity->isPublished())
-        ->orIf(AccessResult::allowedIfHasPermissions($account, [
+    $access = AccessResult::allowedIfHasPermissions($account, ['administer block content']);
+    if (!$access->isAllowed()) {
+      $access = match ($operation) {
+        // Allow view and update access to user with the 'edit any (type) block
+        // content' permission or the 'administer block content' permission.
+        'view' => AccessResult::allowedIf($entity->isPublished())
+          ->orIf(AccessResult::allowedIfHasPermissions($account, [
+            'access block library',
+          ])),
+        'update' => AccessResult::allowedIfHasPermissions($account, [
           'access block library',
-        ]))->orIf(AccessResult::allowedIfHasPermissions($account, [
-          'administer block content',
-        ])),
-      'update' => AccessResult::allowedIfHasPermissions($account, [
-        'access block library',
-        'edit any ' . $bundle . ' block content',
-      ])->orIf(AccessResult::allowedIfHasPermissions($account, [
-        'administer block content',
-      ])),
-      'delete' => AccessResult::allowedIfHasPermissions($account, [
-        'access block library',
-        'delete any ' . $bundle . ' block content',
-      ])->orIf(AccessResult::allowedIfHasPermissions($account, [
-        'administer block content',
-      ])),
-      // Revisions.
-      'view all revisions' => AccessResult::allowedIfHasPermissions($account, [
-        'access block library',
-        'view any ' . $bundle . ' block content history',
-      ])->orIf(AccessResult::allowedIfHasPermissions($account, [
-        'administer block content',
-      ])),
-      'revert' => AccessResult::allowedIfHasPermissions($account, [
-        'access block library',
-        'revert any ' . $bundle . ' block content revisions',
-      ])->orIf($forbidIfNotReusable()),
-      'delete revision' => AccessResult::allowedIfHasPermissions($account, [
-        'access block library',
-        'delete any ' . $bundle . ' block content revisions',
-      ])
-        ->orIf($forbidIfNotReusable())
-        ->orIf(AccessResult::allowedIfHasPermissions($account, [
-          'administer block content',
-        ])),
+          'edit any ' . $bundle . ' block content',
+        ]),
+        'delete' => AccessResult::allowedIfHasPermissions($account, [
+          'access block library',
+          'delete any ' . $bundle . ' block content',
+        ]),
+        // Revisions.
+        'view all revisions' => AccessResult::allowedIfHasPermissions($account, [
+          'access block library',
+          'view any ' . $bundle . ' block content history',
+        ]),
+        'revert' => AccessResult::allowedIfHasPermissions($account, [
+          'access block library',
+          'revert any ' . $bundle . ' block content revisions',
+        ])->orIf($forbidIfNotReusable()),
+        'delete revision' => AccessResult::allowedIfHasPermissions($account, [
+          'access block library',
+          'delete any ' . $bundle . ' block content revisions',
+        ])->orIf($forbidIfNotReusable()),
 
-      default => parent::checkAccess($entity, $operation, $account),
-    };
+        default => parent::checkAccess($entity, $operation, $account),
+      };
+    }
 
     // Add the entity as a cacheable dependency because access will at least be
     // determined by whether the block is reusable.
