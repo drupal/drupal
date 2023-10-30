@@ -2,12 +2,12 @@
 
 namespace Drupal\Core\Controller;
 
+use Drupal\Core\DependencyInjection\AutowireTrait;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Messenger\MessengerTrait;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -34,6 +34,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 abstract class ControllerBase implements ContainerInjectionInterface {
 
+  use AutowireTrait;
   use LoggerChannelTrait;
   use MessengerTrait;
   use RedirectDestinationTrait;
@@ -101,13 +102,6 @@ abstract class ControllerBase implements ContainerInjectionInterface {
    * @var \Drupal\Core\Form\FormBuilderInterface
    */
   protected $formBuilder;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static();
-  }
 
   /**
    * Retrieves the entity type manager.

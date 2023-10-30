@@ -13,7 +13,6 @@ use Drupal\Core\Url;
 use Drupal\node\NodeStorageInterface;
 use Drupal\node\NodeTypeInterface;
 use Drupal\node\NodeInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Returns responses for Node routes.
@@ -55,17 +54,6 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
     $this->dateFormatter = $date_formatter;
     $this->renderer = $renderer;
     $this->entityRepository = $entity_repository;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('date.formatter'),
-      $container->get('renderer'),
-      $container->get('entity.repository')
-    );
   }
 
   /**
