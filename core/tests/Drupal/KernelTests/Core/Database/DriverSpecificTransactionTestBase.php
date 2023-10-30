@@ -151,26 +151,151 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
   }
 
   /**
-   * Tests transaction rollback on a database that supports transactions.
-   *
-   * If the active connection does not support transactions, this test does
-   * nothing.
+   * Tests root transaction rollback.
    */
-  public function testTransactionRollBackSupported() {
-    try {
-      // Create two nested transactions. Roll back from the inner one.
-      $this->transactionOuterLayer('B', TRUE);
+  public function testRollbackRoot() {
+    $this->assertFalse($this->connection->inTransaction());
+    $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
 
-      // Neither of the rows we inserted in the two transaction layers
-      // should be present in the tables post-rollback.
-      $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'DavidB'])->fetchField();
-      $this->assertNotSame('24', $saved_age, 'Cannot retrieve DavidB row after commit.');
-      $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'DanielB'])->fetchField();
-      $this->assertNotSame('19', $saved_age, 'Cannot retrieve DanielB row after commit.');
-    }
-    catch (\Exception $e) {
-      $this->fail($e->getMessage());
-    }
+    // Start root transaction. Corresponds to 'BEGIN TRANSACTION' on the
+    // database.
+    $transaction = $this->connection->startTransaction();
+    $this->assertTrue($this->connection->inTransaction());
+    $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
+
+    // Insert a single row into the testing table.
+    $this->insertRow('David');
+    $this->assertRowPresent('David');
+
+    // Rollback. Since we are at the root, the transaction is closed.
+    // Corresponds to 'ROLLBACK' on the database.
+    $transaction->rollBack();
+    $this->assertRowAbsent('David');
+    $this->assertFalse($this->connection->inTransaction());
+    $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
+  }
+
+  /**
+   * Tests root transaction rollback failure when savepoint is open.
+   */
+  public function testRollbackRootWithActiveSavepoint() {
+    $this->assertFalse($this->connection->inTransaction());
+    $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
+
+    // Start root transaction. Corresponds to 'BEGIN TRANSACTION' on the
+    // database.
+    $transaction = $this->connection->startTransaction();
+    $this->assertTrue($this->connection->inTransaction());
+    $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
+
+    // Insert a single row into the testing table.
+    $this->insertRow('David');
+    $this->assertRowPresent('David');
+
+    // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_1'
+    // on the database.
+    $savepoint = $this->connection->startTransaction();
+    $this->assertTrue($this->connection->inTransaction());
+    $this->assertSame(2, $this->connection->transactionManager()->stackDepth());
+
+    // Try to rollback root. Since we a savepoint is active, this should fail.
+    $this->expectException(TransactionOutOfOrderException::class);
+    $this->expectExceptionMessageMatches("/^Error attempting rollback of .*\\\\drupal_transaction\\. Active stack: .*\\\\drupal_transaction > .*\\\\savepoint_1/");
+    $transaction->rollBack();
+  }
+
+  /**
+   * Tests savepoint transaction rollback.
+   */
+  public function testRollbackSavepoint() {
+    $this->assertFalse($this->connection->inTransaction());
+    $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
+
+    // Start root transaction. Corresponds to 'BEGIN TRANSACTION' on the
+    // database.
+    $transaction = $this->connection->startTransaction();
+    $this->assertTrue($this->connection->inTransaction());
+    $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
+
+    // Insert a row.
+    $this->insertRow('David');
+    $this->assertRowPresent('David');
+
+    // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_1'
+    // on the database.
+    $savepoint = $this->connection->startTransaction();
+    $this->assertTrue($this->connection->inTransaction());
+    $this->assertSame(2, $this->connection->transactionManager()->stackDepth());
+
+    // Insert a row.
+    $this->insertRow('Roger');
+    $this->assertRowPresent('David');
+    $this->assertRowPresent('Roger');
+
+    // Rollback to savepoint. It should remain open. Corresponds to 'ROLLBACK
+    // TO savepoint_1' on the database.
+    $savepoint->rollBack();
+    $this->assertRowPresent('David');
+    $this->assertRowAbsent('Roger');
+    $this->assertTrue($this->connection->inTransaction());
+    $this->assertSame(2, $this->connection->transactionManager()->stackDepth());
+
+    // Insert a row.
+    $this->insertRow('Syd');
+
+    // Commit root. Corresponds to 'COMMIT' on the database.
+    unset($transaction);
+    $this->assertRowPresent('David');
+    $this->assertRowAbsent('Roger');
+    $this->assertRowPresent('Syd');
+    $this->assertFalse($this->connection->inTransaction());
+    $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
+  }
+
+  /**
+   * Tests savepoint transaction rollback failure when later savepoints exist.
+   */
+  public function testRollbackSavepointWithLaterSavepoint() {
+    $this->assertFalse($this->connection->inTransaction());
+    $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
+
+    // Start root transaction. Corresponds to 'BEGIN TRANSACTION' on the
+    // database.
+    $transaction = $this->connection->startTransaction();
+    $this->assertTrue($this->connection->inTransaction());
+    $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
+
+    // Insert a row.
+    $this->insertRow('David');
+    $this->assertRowPresent('David');
+
+    // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_1'
+    // on the database.
+    $savepoint1 = $this->connection->startTransaction();
+    $this->assertTrue($this->connection->inTransaction());
+    $this->assertSame(2, $this->connection->transactionManager()->stackDepth());
+
+    // Insert a row.
+    $this->insertRow('Roger');
+    $this->assertRowPresent('David');
+    $this->assertRowPresent('Roger');
+
+    // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_2'
+    // on the database.
+    $savepoint2 = $this->connection->startTransaction();
+    $this->assertTrue($this->connection->inTransaction());
+    $this->assertSame(3, $this->connection->transactionManager()->stackDepth());
+
+    // Insert a row.
+    $this->insertRow('Syd');
+    $this->assertRowPresent('David');
+    $this->assertRowPresent('Roger');
+    $this->assertRowPresent('Syd');
+
+    // Try to rollback to savepoint 1. Out of order.
+    $this->expectException(TransactionOutOfOrderException::class);
+    $this->expectExceptionMessageMatches("/^Error attempting rollback of .*\\\\savepoint_1\\. Active stack: .*\\\\drupal_transaction > .*\\\\savepoint_1 > .*\\\\savepoint_2/");
+    $savepoint1->rollBack();
   }
 
   /**
@@ -389,55 +514,6 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->assertRowPresent('outer');
     $this->assertRowAbsent('inner');
     $this->assertRowPresent('outer-after-inner-rollback');
-
-    // Rollback the inner transaction after committing the outer one.
-    $this->cleanUp();
-    $transaction = $this->connection->startTransaction();
-    $this->insertRow('outer');
-    $transaction2 = $this->connection->startTransaction();
-    $this->insertRow('inner');
-    // Unset the outer (root) transaction, should commit.
-    unset($transaction);
-    $this->assertFalse($this->connection->inTransaction());
-    // Unpile the inner (savepoint) Transaction object, it should be a no-op
-    // anyway given it was dropped by the database already, and removed from
-    // our transaction stack.
-    $transaction2->rollBack();
-    unset($transaction2);
-    $this->assertFalse($this->connection->inTransaction(), 'Transaction closed after popping the inner transaction');
-    $this->assertRowPresent('outer');
-    $this->assertRowPresent('inner');
-
-    // Rollback the outer transaction while the inner transaction is active.
-    // In that case, an exception will be triggered because we cannot
-    // ensure that the final result will have any meaning.
-    $this->cleanUp();
-    $transaction = $this->connection->startTransaction();
-    $this->insertRow('outer');
-    $transaction2 = $this->connection->startTransaction();
-    $this->insertRow('inner');
-    $transaction3 = $this->connection->startTransaction();
-    $this->insertRow('inner2');
-    // Rollback the outer transaction.
-    try {
-      $transaction->rollBack();
-      unset($transaction);
-      $this->fail('Rolling back the outer transaction while the inner transaction is active resulted in an exception.');
-    }
-    catch (TransactionOutOfOrderException $e) {
-      // Expected exception; just continue testing.
-    }
-    // Rollback of the root Transaction failed, we are still in an active
-    // client transaction.
-    $this->assertTrue($this->connection->inTransaction());
-    // Release latest savepoint (=inner2) transaction.
-    unset($transaction3);
-    // Rollback remaining transactions in backwards order.
-    $transaction2->rollBack();
-    $transaction->rollBack();
-    $this->assertRowAbsent('outer');
-    $this->assertRowAbsent('inner');
-    $this->assertRowAbsent('inner2');
   }
 
   /**
@@ -714,7 +790,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $reflectionMethod->invoke($testConnection->transactionManager(), 'bar', new StackItem('qux', StackItemType::Savepoint));
 
     $this->expectException(\AssertionError::class);
-    $this->expectExceptionMessage('Transaction $stack was not empty');
+    $this->expectExceptionMessageMatches("/^Transaction .stack was not empty\\. Active stack: bar\\\\qux/");
     unset($testConnection);
     Database::closeConnection('test_fail');
   }
