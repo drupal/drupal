@@ -124,4 +124,14 @@ class PhpPasswordTest extends UnitTestCase {
     return $passwords;
   }
 
+  /**
+   * Tests password check in case provided hash is NULL.
+   *
+   * @covers ::check
+   */
+  public function testEmptyHash(): void {
+    $this->assertFalse($this->passwordHasher->check($this->password, NULL));
+    $this->assertFalse($this->passwordHasher->check($this->password, ''));
+  }
+
 }

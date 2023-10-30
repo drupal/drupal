@@ -242,6 +242,10 @@ abstract class PhpassHashedPasswordBase implements PasswordInterface {
    * {@inheritdoc}
    */
   public function check(#[\SensitiveParameter] $password, #[\SensitiveParameter] $hash) {
+    // Newly created accounts may have empty passwords.
+    if ($hash === NULL || $hash === '') {
+      return FALSE;
+    }
     if (substr($hash, 0, 2) == 'U$') {
       // This may be an updated password from user_update_7000(). Such hashes
       // have 'U' added as the first character and need an extra md5() (see the
