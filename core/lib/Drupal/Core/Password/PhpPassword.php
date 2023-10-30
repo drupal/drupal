@@ -45,6 +45,10 @@ class PhpPassword implements PasswordInterface {
     if (strlen($password) > static::PASSWORD_MAX_LENGTH) {
       return FALSE;
     }
+    // Newly created accounts may have empty passwords.
+    if ($hash === NULL || $hash === '') {
+      return FALSE;
+    }
 
     return password_verify($password, $hash);
   }

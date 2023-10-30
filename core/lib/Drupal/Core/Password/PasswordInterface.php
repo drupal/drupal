@@ -27,8 +27,8 @@ interface PasswordInterface {
    * Check whether a plain text password matches a hashed password.
    *
    * @param string $password
-   *   A plain-text password
-   * @param string $hash
+   *   A plain-text password.
+   * @param string|null $hash
    *   A hashed password.
    *
    * @return bool
@@ -46,7 +46,7 @@ interface PasswordInterface {
    * This method returns TRUE if the password was hashed with an older
    * algorithm.
    *
-   * @param string $hash
+   * @param string|null $hash
    *   The hash to be checked.
    *
    * @return bool

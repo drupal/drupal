@@ -114,4 +114,14 @@ class LegacyPasswordHashingTest extends UnitTestCase {
     $this->assertTrue($this->passwordHasher->check($this->password, $rehashed_password), 'Password check succeeds with re-hashed password with original hasher.');
   }
 
+  /**
+   * Tests password validation when the hash is NULL.
+   *
+   * @covers ::check
+   */
+  public function testEmptyHash(): void {
+    $this->assertFalse($this->passwordHasher->check($this->password, NULL));
+    $this->assertFalse($this->passwordHasher->check($this->password, ''));
+  }
+
 }
