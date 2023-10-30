@@ -1,0 +1,5 @@
+name: 'Logger Aware Autoconfigure Test'
+type: module
+description: 'Test logger aware auto-configuration support'
+package: Testing
+version: VERSION

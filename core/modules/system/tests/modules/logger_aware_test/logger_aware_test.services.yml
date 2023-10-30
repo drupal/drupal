@@ -1,0 +1,18 @@
+services:
+  _defaults:
+    autoconfigure: true
+
+  logger_aware_test.logger_aware_stub:
+    class: Drupal\logger_aware_test\LoggerAwareStub
+
+  logger.channel.logger_aware_test:
+    parent: logger.channel_base
+    arguments: ['logger_aware_test']
+
+  logger.channel.logger_stub:
+    class: Drupal\logger_aware_test\LoggerStub
+
+  logger_aware_test.logger_aware_existing:
+    class: Drupal\logger_aware_test\LoggerAwareStub
+    calls:
+      - [setLogger, ['@logger.channel.logger_stub']]
