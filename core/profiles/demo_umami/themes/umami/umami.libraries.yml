@@ -13,6 +13,7 @@ global:
       css/components/blocks/search/search-results.css: {}
       css/components/blocks/articles-aside/articles-aside.css: {}
       css/components/forms/contact.css: {}
+      css/components/forms/form.css: { weight: -10 }
       css/components/forms/content-moderation.css: {}
       css/components/content/node.css: {}
       css/components/content/full/node-full.css: {}
@@ -137,7 +138,6 @@ classy.base:
       css/classy/components/details.css: { weight: -10 }
       css/classy/components/exposed-filters.css: { weight: -10 }
       css/classy/components/field.css: { weight: -10 }
-      css/classy/components/form.css: { weight: -10 }
       css/classy/components/icons.css: { weight: -10 }
       css/classy/components/inline-form.css: { weight: -10 }
       css/classy/components/item-list.css: { weight: -10 }
