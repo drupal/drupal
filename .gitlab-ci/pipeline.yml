@@ -89,19 +89,40 @@ stages:
     - ln -s $CI_PROJECT_DIR /var/www/html/subdirectory
     - sudo service apache2 start
 
+.set-simpletest-db: &set-simpletest-db
+  - |
+    [[ $_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/$CI_PROJECT_DIR/sites/default/files/db.sqlite?module=sqlite
+    [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
+    [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
+    [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
+
+.set-directory-settings: &set-directory-settings
+  - |
+    mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
+    chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
+    sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
+
 .run-tests: &run-tests
   script:
-    # Determine DB driver.
-    - |
-      [[ $_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/$CI_PROJECT_DIR/sites/default/files/db.sqlite?module=sqlite
-      [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
-      [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
-      [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
-    - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
-    - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
-    - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
+    - *set-simpletest-db
+    - *set-directory-settings
     # Need to pass this along directly.
     - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --all --ci-parallel-node-index $CI_PARALLEL_NODE_INDEX --ci-parallel-node-total $CI_PARALLEL_NODE_TOTAL
+
+.run-repeat-class-test: &run-repeat-class-test
+  script:
+    - *set-simpletest-db
+    - *set-directory-settings
+    - echo "ℹ️ Running class ${REPEAT_TEST_CLASS}"
+    - |
+      if [[ $REPEAT_TEST_CLASS == "Drupal\Tests\Change\Me" ]]; then
+        echo '❗ You need to change the REPEAT_TEST_CLASS variable to an existing class before running the job.'
+        echo '   You just need to click on the job that you want to run (do not press the play button straight away) and then set the following:'
+        echo '   "Key" to "REPEAT_TEST_CLASS" and "Value" to "Drupal\Tests\ckeditor5\FunctionalJavascript\MediaLinkabilityTest"';
+        exit 1;
+      else
+        sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --concurrency "$CONCURRENCY" --repeat "100" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --class $REPEAT_TEST_CLASS
+      fi
 
 ################
 # Jobs
@@ -134,15 +155,8 @@ stages:
     - <<: *with-database
     - <<: *with-chrome
   script:
-    #  Determine DB driver.
-    - |
-      [[ $_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/subdirectory/sites/default/files/db.sqlite?module=sqlite
-      [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
-      [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
-      [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
-    - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
-    - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
-    - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
+    - *set-simpletest-db
+    - *set-directory-settings
     - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
     - git fetch -vn --depth=3 "$CI_MERGE_REQUEST_PROJECT_URL" "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
     - |
@@ -218,12 +232,8 @@ stages:
     - <<: *with-database
     - <<: *with-chrome
   script:
-    # Determine DB driver.
-    - |
-      [[ $_TARGET_DB == sqlite* ]] && export DRUPAL_TEST_DB_URL=sqlite://localhost/$CI_PROJECT_DIR/sites/default/files/db.sqlite?module=sqlite
-      [[ $_TARGET_DB == mysql* ]] && export DRUPAL_TEST_DB_URL=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
-      [[ $_TARGET_DB == mariadb* ]] && export DRUPAL_TEST_DB_URL=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
-      [[ $_TARGET_DB == pgsql* ]] && export DRUPAL_TEST_DB_URL=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
+    - *set-simpletest-db
+    - export DRUPAL_TEST_DB_URL=$SIMPLETEST_DB
     - cp ./core/.env.example ./core/.env
     # dotenv-safe/config does not support environment variables
     # @see https://github.com/rolodato/dotenv-safe/issues/126
@@ -246,3 +256,15 @@ stages:
       junit: ./nightwatch_output/*.xml
     paths:
       - ./nightwatch_output
+
+'🔁 Repeat Class Test':
+  <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *run-repeat-class-test, *default-job-settings ]
+  when: manual
+  interruptible: true
+  allow_failure: true
+  variables:
+    <<: *test-variables
+    CONCURRENCY: "$CONCURRENCY"
+    REPEAT_TEST_CLASS: 'Drupal\Tests\Change\Me'
+  services:
+    - <<: *with-database
