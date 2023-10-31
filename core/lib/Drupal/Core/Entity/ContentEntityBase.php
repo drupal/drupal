@@ -469,9 +469,12 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   public function preSave(EntityStorageInterface $storage) {
     // An entity requiring validation should not be saved if it has not been
     // actually validated.
-    assert(!$this->validationRequired || $this->validated, 'Entity validation was skipped.');
-
-    $this->validated = FALSE;
+    if ($this->validationRequired && !$this->validated) {
+      throw new \LogicException('Entity validation is required, but was skipped.');
+    }
+    else {
+      $this->validated = FALSE;
+    }
 
     parent::preSave($storage);
   }

@@ -1058,11 +1058,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         // the internal browser.
         define('DRUPAL_TEST_IN_CHILD_SITE', TRUE);
 
-        // Web tests are to be conducted with runtime assertions active.
-        assert_options(ASSERT_ACTIVE, TRUE);
-        // Force assertion failures to be thrown as exceptions.
-        assert_options(ASSERT_EXCEPTION, TRUE);
-
         // Log fatal errors to the test site directory.
         ini_set('log_errors', 1);
         ini_set('error_log', $app_root . '/' . $test_db->getTestSitePath() . '/error.log');

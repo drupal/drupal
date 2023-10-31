@@ -29,11 +29,7 @@
  * It is strongly recommended that you set zend.assertions=1 in the PHP.ini file
  * (It cannot be changed from .htaccess or runtime) on development machines and
  * to 0 or -1 in production.
- *
- * @see https://wiki.php.net/rfc/expectations
  */
-assert_options(ASSERT_ACTIVE, TRUE);
-assert_options(ASSERT_EXCEPTION, TRUE);
 
 /**
  * Enable local development services.
