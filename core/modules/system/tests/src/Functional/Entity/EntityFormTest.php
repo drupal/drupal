@@ -229,7 +229,7 @@ class EntityFormTest extends BrowserTestBase {
     $state->set('entity_test.form.validate.test', 'button-level');
     $this->drupalGet('entity_test/add');
     $this->submitForm([], 'Save');
-    $this->assertEquals('AssertionError: Entity validation was skipped.', $state->get('entity_test.form.save.exception'), 'Button-level validation handlers behave correctly.');
+    $this->assertEquals('Drupal\\Core\\Entity\\EntityStorageException: Entity validation is required, but was skipped.', $state->get('entity_test.form.save.exception'), 'Button-level validation handlers behave correctly.');
   }
 
   /**

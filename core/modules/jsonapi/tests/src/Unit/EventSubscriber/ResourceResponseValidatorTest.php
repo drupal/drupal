@@ -5,12 +5,10 @@ namespace Drupal\Tests\jsonapi\Unit\EventSubscriber;
 use Drupal\jsonapi\EventSubscriber\ResourceResponseValidator;
 use Drupal\jsonapi\ResourceType\ResourceType;
 use Drupal\jsonapi\Routing\Routes;
-use JsonSchema\Validator;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\rest\ResourceResponse;
 use Drupal\Tests\UnitTestCase;
-use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,47 +50,6 @@ class ResourceResponseValidatorTest extends UnitTestCase {
     );
     $subscriber->setValidator();
     $this->subscriber = $subscriber;
-  }
-
-  /**
-   * @covers ::doValidateResponse
-   */
-  public function testDoValidateResponse() {
-    $request = $this->createRequest(
-      'jsonapi.node--article.individual',
-      new ResourceType('node', 'article', NULL)
-    );
-
-    $response = $this->createResponse('{"data":null}');
-
-    // Capture the default assert settings.
-    $zend_assertions_default = ini_get('zend.assertions');
-    $assert_active_default = assert_options(ASSERT_ACTIVE);
-
-    // The validator *should* be called when asserts are active.
-    $validator = $this->prophesize(Validator::class);
-    $validator->check(Argument::any(), Argument::any())->shouldBeCalled('Validation should be run when asserts are active.');
-    $validator->isValid()->willReturn(TRUE);
-    $this->subscriber->setValidator($validator->reveal());
-
-    // Ensure asset is active.
-    ini_set('zend.assertions', 1);
-    assert_options(ASSERT_ACTIVE, 1);
-    $this->subscriber->doValidateResponse($response, $request);
-
-    // The validator should *not* be called when asserts are inactive.
-    $validator = $this->prophesize(Validator::class);
-    $validator->check(Argument::any(), Argument::any())->shouldNotBeCalled('Validation should not be run when asserts are not active.');
-    $this->subscriber->setValidator($validator->reveal());
-
-    // Ensure asset is inactive.
-    ini_set('zend.assertions', 0);
-    assert_options(ASSERT_ACTIVE, 0);
-    $this->subscriber->doValidateResponse($response, $request);
-
-    // Reset the original assert values.
-    ini_set('zend.assertions', $zend_assertions_default);
-    assert_options(ASSERT_ACTIVE, $assert_active_default);
   }
 
   /**

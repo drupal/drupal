@@ -21,9 +21,11 @@ class Handle {
    */
   public static function register() {
     // Since we're using exceptions, turn error warnings off.
+    // phpcs:ignore Generic.PHP.DeprecatedFunctions.Deprecated
     assert_options(ASSERT_WARNING, FALSE);
 
     // Turn exception throwing on.
+    // phpcs:ignore Generic.PHP.DeprecatedFunctions.Deprecated
     assert_options(ASSERT_EXCEPTION, TRUE);
   }
 

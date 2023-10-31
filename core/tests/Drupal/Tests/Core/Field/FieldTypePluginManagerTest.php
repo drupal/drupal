@@ -147,17 +147,14 @@ class FieldTypePluginManagerTest extends UnitTestCase {
     ]);
 
     $zend_assertions_default = ini_get('zend.assertions');
-    $assert_active_default = assert_options(ASSERT_ACTIVE);
 
     // Test behavior when assertions are not enabled.
     ini_set('zend.assertions', 0);
-    assert_options(ASSERT_ACTIVE, 0);
     $grouped_definitions = $this->fieldTypeManager->getGroupedDefinitions();
     $this->assertEquals(['General'], array_keys($grouped_definitions));
 
     // Test behavior when assertions are enabled.
     ini_set('zend.assertions', 1);
-    assert_options(ASSERT_ACTIVE, 1);
     $this->expectException(\AssertionError::class);
     try {
       $this->fieldTypeManager->getGroupedDefinitions();
@@ -165,7 +162,6 @@ class FieldTypePluginManagerTest extends UnitTestCase {
     catch (\Exception $e) {
       // Reset the original assert values.
       ini_set('zend.assertions', $zend_assertions_default);
-      assert_options(ASSERT_ACTIVE, $assert_active_default);
 
       throw $e;
     }

@@ -489,8 +489,8 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     // that trying to save a non-validated entity when validation is required
     // results in an exception.
     $this->assertTrue($this->entity->isValidationRequired());
-    $this->expectException(\AssertionError::class);
-    $this->expectExceptionMessage('Entity validation was skipped.');
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage('Entity validation is required, but was skipped.');
     $this->entity->save();
   }
 
