@@ -1,0 +1,6 @@
+deprecated_twig_template:
+  path: '/deprecated-twig-template'
+  defaults:
+    _controller: '\Drupal\deprecated_twig_template\Controller\DeprecatedTwigTemplateController::deprecatedTwigTemplate'
+  requirements:
+    _access: 'TRUE'
