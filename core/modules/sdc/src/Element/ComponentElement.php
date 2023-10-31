@@ -105,9 +105,14 @@ class ComponentElement extends RenderElement {
     $template .= sprintf('{%% embed \'%s\' %%}', $id);
     $template .= PHP_EOL;
     foreach ($slots as $slot_name => $slot_value) {
+      if (\is_scalar($slot_value)) {
+        $slot_value = [
+          "#plain_text" => (string) $slot_value,
+        ];
+      }
       if (!Utilities::isRenderArray($slot_value)) {
         $message = sprintf(
-          'Unable to render component "%s". A render array is expected for the slot "%s" when using the render element with the "#slots" property',
+          'Unable to render component "%s". A render array or a scalar is expected for the slot "%s" when using the render element with the "#slots" property',
           $id,
           $slot_name
         );
