@@ -1,0 +1,5 @@
+name: 'Deprecated Twig Template Test'
+type: module
+description: 'Provides a deprecated Twig template for testing purposes.'
+package: Testing
+version: VERSION
