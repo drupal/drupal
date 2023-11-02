@@ -80,7 +80,6 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $config = $this->config('system.maintenance');
     $permissions = $this->permissionHandler->getPermissions();
     $permission_label = $permissions['access site in maintenance mode']['title'];
     $form['maintenance_mode'] = [
@@ -92,7 +91,7 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
     $form['maintenance_mode_message'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Message to display when in maintenance mode'),
-      '#default_value' => $config->get('message'),
+      '#config_target' => 'system.maintenance:message',
     ];
 
     return parent::buildForm($form, $form_state);
@@ -102,10 +101,6 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->config('system.maintenance')
-      ->set('message', $form_state->getValue('maintenance_mode_message'))
-      ->save();
-
     $this->state->set('system.maintenance_mode', $form_state->getValue('maintenance_mode'));
     parent::submitForm($form, $form_state);
   }

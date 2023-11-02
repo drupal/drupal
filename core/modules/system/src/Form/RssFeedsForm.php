@@ -33,7 +33,7 @@ class RssFeedsForm extends ConfigFormBase {
     $form['feed_view_mode'] = [
       '#type' => 'select',
       '#title' => $this->t('Feed content'),
-      '#default_value' => $this->config('system.rss')->get('items.view_mode'),
+      '#config_target' => 'system.rss:items.view_mode',
       '#options' => [
         'title' => $this->t('Titles only'),
         'teaser' => $this->t('Titles plus teaser'),
@@ -43,17 +43,6 @@ class RssFeedsForm extends ConfigFormBase {
     ];
 
     return parent::buildForm($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->config('system.rss')
-      ->set('items.view_mode', $form_state->getValue('feed_view_mode'))
-      ->save();
-
-    parent::submitForm($form, $form_state);
   }
 
 }

@@ -5,6 +5,7 @@ namespace Drupal\media\Form;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Form\ConfigTarget;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\media\IFrameUrlHelper;
@@ -103,7 +104,7 @@ class MediaSettingsForm extends ConfigFormBase {
       '#title' => $this->t('iFrame domain'),
       '#size' => 40,
       '#maxlength' => 255,
-      '#default_value' => $domain,
+      '#config_target' => new ConfigTarget('media.settings', 'iframe_domain', toConfig: static::class . '::nullIfEmptyString'),
       '#description' => $this->t('Enter a different domain from which to serve oEmbed content, including the <em>http://</em> or <em>https://</em> prefix. This domain needs to point back to this site, or existing oEmbed content may not display correctly, or at all.'),
     ];
 
@@ -111,27 +112,23 @@ class MediaSettingsForm extends ConfigFormBase {
       '#prefix' => '<hr>',
       '#type' => 'checkbox',
       '#title' => $this->t('Standalone media URL'),
-      '#default_value' => $this->config('media.settings')->get('standalone_url'),
+      '#config_target' => 'media.settings:standalone_url',
       '#description' => $this->t("Allow users to access @media-entities at /media/{id}.", ['@media-entities' => $this->entityTypeManager->getDefinition('media')->getPluralLabel()]),
     ];
     return parent::buildForm($form, $form_state);
   }
 
   /**
-   * {@inheritdoc}
+   * Converts an empty string to NULL.
+   *
+   * @param string|null $value
+   *   The value to transform.
+   *
+   * @return string|null
+   *   The given string, or NULL if it was empty.
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    $iframe_domain = $form_state->getValue('iframe_domain');
-    // The empty string is not a valid URI, but NULL is allowed.
-    if ($iframe_domain === '') {
-      $iframe_domain = NULL;
-    }
-    $this->config('media.settings')
-      ->set('iframe_domain', $iframe_domain)
-      ->set('standalone_url', $form_state->getValue('standalone_url'))
-      ->save();
-
-    parent::submitForm($form, $form_state);
+  public static function nullIfEmptyString(?string $value): ?string {
+    return $value ?: NULL;
   }
 
 }
