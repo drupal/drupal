@@ -106,8 +106,6 @@ class PerformanceForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['#attached']['library'][] = 'system/drupal.system';
 
-    $config = $this->config('system.performance');
-
     $form['caching'] = [
       '#type' => 'details',
       '#title' => $this->t('Caching'),
@@ -121,7 +119,7 @@ class PerformanceForm extends ConfigFormBase {
     $form['caching']['page_cache_maximum_age'] = [
       '#type' => 'select',
       '#title' => $this->t('Browser and proxy cache maximum age'),
-      '#default_value' => $config->get('cache.page.max_age'),
+      '#config_target' => 'system.performance:cache.page.max_age',
       '#options' => $period,
       '#description' => $this->t('This is used as the value for max-age in Cache-Control headers.'),
     ];
@@ -148,13 +146,13 @@ class PerformanceForm extends ConfigFormBase {
     $form['bandwidth_optimization']['preprocess_css'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Aggregate CSS files'),
-      '#default_value' => $config->get('css.preprocess'),
+      '#config_target' => 'system.performance:css.preprocess',
       '#disabled' => $disabled,
     ];
     $form['bandwidth_optimization']['preprocess_js'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Aggregate JavaScript files'),
-      '#default_value' => $config->get('js.preprocess'),
+      '#config_target' => 'system.performance:js.preprocess',
       '#disabled' => $disabled,
     ];
 
@@ -167,12 +165,6 @@ class PerformanceForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->cssCollectionOptimizer->deleteAll();
     $this->jsCollectionOptimizer->deleteAll();
-
-    $this->config('system.performance')
-      ->set('cache.page.max_age', $form_state->getValue('page_cache_maximum_age'))
-      ->set('css.preprocess', $form_state->getValue('preprocess_css'))
-      ->set('js.preprocess', $form_state->getValue('preprocess_js'))
-      ->save();
 
     parent::submitForm($form, $form_state);
   }

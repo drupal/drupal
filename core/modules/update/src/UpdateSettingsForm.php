@@ -2,8 +2,8 @@
 
 namespace Drupal\update;
 
-use Drupal\Core\Config\Config;
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\ConfigTarget;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
@@ -33,12 +33,10 @@ class UpdateSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $config = $this->config('update.settings');
-
     $form['update_check_frequency'] = [
       '#type' => 'radios',
       '#title' => $this->t('Check for updates'),
-      '#default_value' => $config->get('check.interval_days'),
+      '#config_target' => 'update.settings:check.interval_days',
       '#options' => [
         '1' => $this->t('Daily'),
         '7' => $this->t('Weekly'),
@@ -49,22 +47,26 @@ class UpdateSettingsForm extends ConfigFormBase {
     $form['update_check_disabled'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Check for updates of uninstalled modules and themes'),
-      '#default_value' => $config->get('check.disabled_extensions'),
+      '#config_target' => 'update.settings:check.disabled_extensions',
     ];
 
-    $notification_emails = $config->get('notification.emails');
     $form['update_notify_emails'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Email addresses to notify when updates are available'),
       '#rows' => 4,
-      '#default_value' => implode("\n", $notification_emails),
+      '#config_target' => new ConfigTarget(
+        'update.settings',
+        'notification.emails',
+        static::class . '::arrayToMultiLineString',
+        static::class . '::multiLineStringToArray',
+      ),
       '#description' => $this->t('Whenever your site checks for available updates and finds new releases, it can notify a list of users via email. Put each address on a separate line. If blank, no emails will be sent.'),
     ];
 
     $form['update_notification_threshold'] = [
       '#type' => 'radios',
       '#title' => $this->t('Email notification threshold'),
-      '#default_value' => $config->get('notification.threshold'),
+      '#config_target' => 'update.settings:notification.threshold',
       '#options' => [
         'all' => $this->t('All newer versions'),
         'security' => $this->t('Only security updates'),
@@ -80,46 +82,6 @@ class UpdateSettingsForm extends ConfigFormBase {
     ];
 
     return parent::buildForm($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static function copyFormValuesToConfig(Config $config, FormStateInterface $form_state): void {
-    switch ($config->getName()) {
-      case 'update.settings':
-        $config
-          ->set('check.disabled_extensions', $form_state->getValue('update_check_disabled'))
-          ->set('check.interval_days', $form_state->getValue('update_check_frequency'))
-          ->set('notification.emails', array_map('trim', explode("\n", trim($form_state->getValue('update_notify_emails', '')))))
-          ->set('notification.threshold', $form_state->getValue('update_notification_threshold'));
-        break;
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static function mapConfigKeyToFormElementName(string $config_name, string $key): string {
-    switch ($config_name) {
-      case 'update.settings':
-        // A `type: sequence` of emails is mapped to a single textarea. Property
-        // paths are `notification.emails.0`, `notification.emails.1`, etc.
-        if (str_starts_with($key, 'notification.emails.')) {
-          return 'update_notify_emails';
-        }
-
-        return match ($key) {
-        'check.disabled_extensions' => 'update_check_disabled',
-          'check.interval_days' => 'update_check_frequency',
-          'notification.emails' => 'update_notify_emails',
-          'notification.threshold' => 'update_notification_threshold',
-          default => self::defaultMapConfigKeyToFormElementName($config_name, $key),
-        };
-
-        default:
-          throw new \InvalidArgumentException();
-    }
   }
 
   /**
@@ -149,6 +111,32 @@ class UpdateSettingsForm extends ConfigFormBase {
     }
 
     parent::submitForm($form, $form_state);
+  }
+
+  /**
+   * Prepares the submitted value to be stored in the notify_emails property.
+   *
+   * @param string $value
+   *   The submitted value.
+   *
+   * @return array
+   *   The value to be stored in config.
+   */
+  public static function multiLineStringToArray(string $value): array {
+    return array_map('trim', explode("\n", trim($value)));
+  }
+
+  /**
+   * Prepares the saved notify_emails property to be displayed in the form.
+   *
+   * @param array $value
+   *   The value saved in config.
+   *
+   * @return string
+   *   The value of the form element.
+   */
+  public static function arrayToMultiLineString(array $value): string {
+    return implode("\n", $value);
   }
 
 }

@@ -86,7 +86,6 @@ class AccountSettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
     $config = $this->config('user.settings');
-    $mail_config = $this->config('user.mail');
     $site_config = $this->config('system.site');
 
     $form['#attached']['library'][] = 'user/drupal.user.admin';
@@ -100,7 +99,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['anonymous_settings']['anonymous'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Name'),
-      '#default_value' => $config->get('anonymous'),
+      '#config_target' => 'user.settings:anonymous',
       '#description' => $this->t('The name used to indicate anonymous users.'),
       '#required' => TRUE,
     ];
@@ -126,7 +125,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['registration_cancellation']['user_register'] = [
       '#type' => 'radios',
       '#title' => $this->t('Who can register accounts?'),
-      '#default_value' => $config->get('register'),
+      '#config_target' => 'user.settings:register',
       '#options' => [
         UserInterface::REGISTER_ADMINISTRATORS_ONLY => $this->t('Administrators only'),
         UserInterface::REGISTER_VISITORS => $this->t('Visitors'),
@@ -136,18 +135,18 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['registration_cancellation']['user_email_verification'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Require email verification when a visitor creates an account'),
-      '#default_value' => $config->get('verify_mail'),
+      '#config_target' => 'user.settings:verify_mail',
       '#description' => $this->t('New users will be required to validate their email address prior to logging into the site, and will be assigned a system-generated password. With this setting disabled, users will be logged in immediately upon registering, and may select their own passwords during registration.'),
     ];
     $form['registration_cancellation']['user_password_strength'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Enable password strength indicator'),
-      '#default_value' => $config->get('password_strength'),
+      '#config_target' => 'user.settings:password_strength',
     ];
     $form['registration_cancellation']['user_cancel_method'] = [
       '#type' => 'radios',
       '#title' => $this->t('When cancelling a user account'),
-      '#default_value' => $config->get('cancel_method'),
+      '#config_target' => 'user.settings:cancel_method',
       '#description' => $this->t('Users with the %select-cancel-method or %administer-users <a href=":permissions-url">permissions</a> can override this default method.', ['%select-cancel-method' => $this->t('Select method for cancelling account'), '%administer-users' => $this->t('Administer users'), ':permissions-url' => Url::fromRoute('user.admin_permissions')->toString()]),
     ];
     $form['registration_cancellation']['user_cancel_method'] += user_cancel_methods();
@@ -164,7 +163,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['mail_notification_address'] = [
       '#type' => 'email',
       '#title' => $this->t('Notification email address'),
-      '#default_value' => $site_config->get('mail_notification'),
+      '#config_target' => 'system.site:mail_notification',
       '#description' => $this->t("The email address to be used as the 'from' address for all account notifications listed below. If <em>'Visitors, but administrator approval is required'</em> is selected above, a notification email will also be sent to this address for any new registrations. Leave empty to use the default system email address <em>(%site-email).</em>", ['%site-email' => $site_config->get('mail')]),
       '#maxlength' => 180,
     ];
@@ -187,14 +186,14 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_admin_created']['user_mail_register_admin_created_subject'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Subject'),
-      '#default_value' => $mail_config->get('register_admin_created.subject'),
+      '#config_target' => 'user.mail:register_admin_created.subject',
       '#required' => TRUE,
       '#maxlength' => 180,
     ];
     $form['email_admin_created']['user_mail_register_admin_created_body'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Body'),
-      '#default_value' => $mail_config->get('register_admin_created.body'),
+      '#config_target' => 'user.mail:register_admin_created.body',
       '#rows' => 15,
     ];
 
@@ -208,14 +207,14 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_pending_approval']['user_mail_register_pending_approval_subject'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Subject'),
-      '#default_value' => $mail_config->get('register_pending_approval.subject'),
+      '#config_target' => 'user.mail:register_pending_approval.subject',
       '#required' => TRUE,
       '#maxlength' => 180,
     ];
     $form['email_pending_approval']['user_mail_register_pending_approval_body'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Body'),
-      '#default_value' => $mail_config->get('register_pending_approval.body'),
+      '#config_target' => 'user.mail:register_pending_approval.body',
       '#rows' => 8,
     ];
 
@@ -229,14 +228,14 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_pending_approval_admin']['register_pending_approval_admin_subject'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Subject'),
-      '#default_value' => $mail_config->get('register_pending_approval_admin.subject'),
+      '#config_target' => 'user.mail:register_pending_approval_admin.subject',
       '#required' => TRUE,
       '#maxlength' => 180,
     ];
     $form['email_pending_approval_admin']['register_pending_approval_admin_body'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Body'),
-      '#default_value' => $mail_config->get('register_pending_approval_admin.body'),
+      '#config_target' => 'user.mail:register_pending_approval_admin.body',
       '#rows' => 8,
     ];
 
@@ -250,14 +249,14 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_no_approval_required']['user_mail_register_no_approval_required_subject'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Subject'),
-      '#default_value' => $mail_config->get('register_no_approval_required.subject'),
+      '#config_target' => 'user.mail:register_no_approval_required.subject',
       '#required' => TRUE,
       '#maxlength' => 180,
     ];
     $form['email_no_approval_required']['user_mail_register_no_approval_required_body'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Body'),
-      '#default_value' => $mail_config->get('register_no_approval_required.body'),
+      '#config_target' => 'user.mail:register_no_approval_required.body',
       '#rows' => 15,
     ];
 
@@ -271,14 +270,14 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_password_reset']['user_mail_password_reset_subject'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Subject'),
-      '#default_value' => $mail_config->get('password_reset.subject'),
+      '#config_target' => 'user.mail:password_reset.subject',
       '#required' => TRUE,
       '#maxlength' => 180,
     ];
     $form['email_password_reset']['user_mail_password_reset_body'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Body'),
-      '#default_value' => $mail_config->get('password_reset.body'),
+      '#config_target' => 'user.mail:password_reset.body',
       '#rows' => 12,
     ];
 
@@ -291,7 +290,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_activated']['user_mail_status_activated_notify'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Notify user when account is activated'),
-      '#default_value' => $config->get('notify.status_activated'),
+      '#config_target' => 'user.settings:notify.status_activated',
     ];
     $form['email_activated']['settings'] = [
       '#type' => 'container',
@@ -305,14 +304,14 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_activated']['settings']['user_mail_status_activated_subject'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Subject'),
-      '#default_value' => $mail_config->get('status_activated.subject'),
+      '#config_target' => 'user.mail:status_activated.subject',
       '#required' => TRUE,
       '#maxlength' => 180,
     ];
     $form['email_activated']['settings']['user_mail_status_activated_body'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Body'),
-      '#default_value' => $mail_config->get('status_activated.body'),
+      '#config_target' => 'user.mail:status_activated.body',
       '#rows' => 15,
     ];
 
@@ -325,7 +324,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_blocked']['user_mail_status_blocked_notify'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Notify user when account is blocked'),
-      '#default_value' => $config->get('notify.status_blocked'),
+      '#config_target' => 'user.settings:notify.status_blocked',
     ];
     $form['email_blocked']['settings'] = [
       '#type' => 'container',
@@ -339,14 +338,14 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_blocked']['settings']['user_mail_status_blocked_subject'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Subject'),
-      '#default_value' => $mail_config->get('status_blocked.subject'),
+      '#config_target' => 'user.mail:status_blocked.subject',
       '#required' => TRUE,
       '#maxlength' => 180,
     ];
     $form['email_blocked']['settings']['user_mail_status_blocked_body'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Body'),
-      '#default_value' => $mail_config->get('status_blocked.body'),
+      '#config_target' => 'user.mail:status_blocked.body',
       '#rows' => 3,
     ];
 
@@ -359,14 +358,14 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_cancel_confirm']['user_mail_cancel_confirm_subject'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Subject'),
-      '#default_value' => $mail_config->get('cancel_confirm.subject'),
+      '#config_target' => 'user.mail:cancel_confirm.subject',
       '#required' => TRUE,
       '#maxlength' => 180,
     ];
     $form['email_cancel_confirm']['user_mail_cancel_confirm_body'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Body'),
-      '#default_value' => $mail_config->get('cancel_confirm.body'),
+      '#config_target' => 'user.mail:cancel_confirm.body',
       '#rows' => 3,
     ];
 
@@ -379,7 +378,7 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_canceled']['user_mail_status_canceled_notify'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Notify user when account is canceled'),
-      '#default_value' => $config->get('notify.status_canceled'),
+      '#config_target' => 'user.settings:notify.status_canceled',
     ];
     $form['email_canceled']['settings'] = [
       '#type' => 'container',
@@ -393,59 +392,18 @@ class AccountSettingsForm extends ConfigFormBase {
     $form['email_canceled']['settings']['user_mail_status_canceled_subject'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Subject'),
-      '#default_value' => $mail_config->get('status_canceled.subject'),
+      '#config_target' => 'user.mail:status_canceled.subject',
       '#required' => TRUE,
       '#maxlength' => 180,
     ];
     $form['email_canceled']['settings']['user_mail_status_canceled_body'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Body'),
-      '#default_value' => $mail_config->get('status_canceled.body'),
+      '#config_target' => 'user.mail:status_canceled.body',
       '#rows' => 3,
     ];
 
     return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    parent::submitForm($form, $form_state);
-
-    $this->config('user.settings')
-      ->set('anonymous', $form_state->getValue('anonymous'))
-      ->set('register', $form_state->getValue('user_register'))
-      ->set('password_strength', $form_state->getValue('user_password_strength'))
-      ->set('verify_mail', $form_state->getValue('user_email_verification'))
-      ->set('cancel_method', $form_state->getValue('user_cancel_method'))
-      ->set('notify.status_activated', $form_state->getValue('user_mail_status_activated_notify'))
-      ->set('notify.status_blocked', $form_state->getValue('user_mail_status_blocked_notify'))
-      ->set('notify.status_canceled', $form_state->getValue('user_mail_status_canceled_notify'))
-      ->save();
-    $this->config('user.mail')
-      ->set('cancel_confirm.body', $form_state->getValue('user_mail_cancel_confirm_body'))
-      ->set('cancel_confirm.subject', $form_state->getValue('user_mail_cancel_confirm_subject'))
-      ->set('password_reset.body', $form_state->getValue('user_mail_password_reset_body'))
-      ->set('password_reset.subject', $form_state->getValue('user_mail_password_reset_subject'))
-      ->set('register_admin_created.body', $form_state->getValue('user_mail_register_admin_created_body'))
-      ->set('register_admin_created.subject', $form_state->getValue('user_mail_register_admin_created_subject'))
-      ->set('register_no_approval_required.body', $form_state->getValue('user_mail_register_no_approval_required_body'))
-      ->set('register_no_approval_required.subject', $form_state->getValue('user_mail_register_no_approval_required_subject'))
-      ->set('register_pending_approval.body', $form_state->getValue('user_mail_register_pending_approval_body'))
-      ->set('register_pending_approval.subject', $form_state->getValue('user_mail_register_pending_approval_subject'))
-      ->set('register_pending_approval_admin.body', $form_state->getValue('register_pending_approval_admin_body'))
-      ->set('register_pending_approval_admin.subject', $form_state->getValue('register_pending_approval_admin_subject'))
-      ->set('status_activated.body', $form_state->getValue('user_mail_status_activated_body'))
-      ->set('status_activated.subject', $form_state->getValue('user_mail_status_activated_subject'))
-      ->set('status_blocked.body', $form_state->getValue('user_mail_status_blocked_body'))
-      ->set('status_blocked.subject', $form_state->getValue('user_mail_status_blocked_subject'))
-      ->set('status_canceled.body', $form_state->getValue('user_mail_status_canceled_body'))
-      ->set('status_canceled.subject', $form_state->getValue('user_mail_status_canceled_subject'))
-      ->save();
-    $this->config('system.site')
-      ->set('mail_notification', $form_state->getValue('mail_notification_address'))
-      ->save();
   }
 
 }

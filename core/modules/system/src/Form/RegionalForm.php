@@ -5,6 +5,7 @@ namespace Drupal\system\Form;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Datetime\TimeZoneFormHelper;
+use Drupal\Core\Form\ConfigTarget;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Locale\CountryManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
@@ -69,7 +70,6 @@ class RegionalForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $countries = $this->countryManager->getList();
-    $system_date = $this->config('system.date');
 
     // Date settings:
     $zones = TimeZoneFormHelper::getOptionsListByRegion();
@@ -84,7 +84,7 @@ class RegionalForm extends ConfigFormBase {
       '#type' => 'select',
       '#title' => $this->t('Default country'),
       '#empty_value' => '',
-      '#default_value' => $system_date->get('country.default'),
+      '#config_target' => 'system.date:country.default',
       '#options' => $countries,
       '#attributes' => ['class' => ['country-detect']],
     ];
@@ -92,7 +92,7 @@ class RegionalForm extends ConfigFormBase {
     $form['locale']['date_first_day'] = [
       '#type' => 'select',
       '#title' => $this->t('First day of week'),
-      '#default_value' => $system_date->get('first_day'),
+      '#config_target' => 'system.date:first_day',
       '#options' => [0 => $this->t('Sunday'), 1 => $this->t('Monday'), 2 => $this->t('Tuesday'), 3 => $this->t('Wednesday'), 4 => $this->t('Thursday'), 5 => $this->t('Friday'), 6 => $this->t('Saturday')],
     ];
 
@@ -105,7 +105,11 @@ class RegionalForm extends ConfigFormBase {
     $form['timezone']['date_default_timezone'] = [
       '#type' => 'select',
       '#title' => $this->t('Default time zone'),
-      '#default_value' => $system_date->get('timezone.default') ?: date_default_timezone_get(),
+      '#config_target' => new ConfigTarget(
+        'system.date',
+        'timezone.default',
+        static::class . '::loadDefaultTimeZone',
+      ),
       '#options' => $zones,
     ];
 
@@ -113,16 +117,16 @@ class RegionalForm extends ConfigFormBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Prepares the saved timezone.default property to be displayed in the form.
+   *
+   * @param string $value
+   *   The value saved in config.
+   *
+   * @return string
+   *   The value of the form element.
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->config('system.date')
-      ->set('country.default', $form_state->getValue('site_default_country'))
-      ->set('first_day', $form_state->getValue('date_first_day'))
-      ->set('timezone.default', $form_state->getValue('date_default_timezone'))
-      ->save();
-
-    parent::submitForm($form, $form_state);
+  public static function loadDefaultTimeZone(string $value): string {
+    return $value ?: date_default_timezone_get();
   }
 
 }

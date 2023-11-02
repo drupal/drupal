@@ -70,12 +70,10 @@ class ImageToolkitForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $current_toolkit = $this->config('system.image')->get('toolkit');
-
     $form['image_toolkit'] = [
       '#type' => 'radios',
       '#title' => $this->t('Select an image processing toolkit'),
-      '#default_value' => $current_toolkit,
+      '#config_target' => 'system.image:toolkit',
       '#options' => [],
     ];
 
@@ -117,10 +115,6 @@ class ImageToolkitForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->config('system.image')
-      ->set('toolkit', $form_state->getValue('image_toolkit'))
-      ->save();
-
     // Call the form submit handler for each of the toolkits.
     foreach ($this->availableToolkits as $toolkit) {
       $toolkit->submitConfigurationForm($form, $form_state);
