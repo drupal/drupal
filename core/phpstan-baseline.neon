@@ -3574,41 +3574,9 @@ parameters:
 			path: tests/Drupal/Tests/Core/Security/DoTrustedCallbackTraitTest.php
 
 		-
-			message: """
-				#^Call to deprecated method assertObjectHasAttribute\\(\\) of class PHPUnit\\\\Framework\\\\Assert\\:
-				https\\://github\\.com/sebastianbergmann/phpunit/issues/4601$#
-			"""
-			count: 2
-			path: tests/Drupal/Tests/Core/TempStore/PrivateTempStoreTest.php
-
-		-
-			message: """
-				#^Call to deprecated method assertObjectNotHasAttribute\\(\\) of class PHPUnit\\\\Framework\\\\Assert\\:
-				https\\://github\\.com/sebastianbergmann/phpunit/issues/4601$#
-			"""
-			count: 1
-			path: tests/Drupal/Tests/Core/TempStore/PrivateTempStoreTest.php
-
-		-
 			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
 			count: 2
 			path: tests/Drupal/Tests/Core/TempStore/PrivateTempStoreTest.php
-
-		-
-			message: """
-				#^Call to deprecated method assertObjectHasAttribute\\(\\) of class PHPUnit\\\\Framework\\\\Assert\\:
-				https\\://github\\.com/sebastianbergmann/phpunit/issues/4601$#
-			"""
-			count: 1
-			path: tests/Drupal/Tests/Core/TempStore/SharedTempStoreTest.php
-
-		-
-			message: """
-				#^Call to deprecated method assertObjectNotHasAttribute\\(\\) of class PHPUnit\\\\Framework\\\\Assert\\:
-				https\\://github\\.com/sebastianbergmann/phpunit/issues/4601$#
-			"""
-			count: 1
-			path: tests/Drupal/Tests/Core/TempStore/SharedTempStoreTest.php
 
 		-
 			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
