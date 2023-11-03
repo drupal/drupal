@@ -36,8 +36,10 @@ settings:
     ckeditor5_imageResize:
       allow_resize: true
     ckeditor5_list:
-      reversed: false
-      startIndex: true
+      properties:
+        reversed: false
+        startIndex: true
+      multiBlock: true
     ckeditor5_sourceEditing:
       allowed_tags:
         - '<cite>'

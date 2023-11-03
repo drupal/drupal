@@ -1,0 +1,1 @@
+!function(o){const e=o.hy=o.hy||{};e.dictionary=Object.assign(e.dictionary||{},{"%0 of %1":"",Cancel:"Չեղարկել","Cannot upload file:":"",Clear:"","Remove color":"","Restore default":"","Rich Text Editor. Editing area: %0":"",Save:"","Show more items":""}),e.getPluralForm=function(o){return 1!=o}}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

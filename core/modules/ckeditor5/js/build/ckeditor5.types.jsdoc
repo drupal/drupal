@@ -215,12 +215,6 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-clipboard/src/dragdropexperimental.js
- *
- * @typedef {module:clipboard/dragdropexperimental} module:clipboard/dragdropexperimental~DragDropExperimental
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-clipboard/src/dragdroptarget.js
  *
  * @typedef {module:clipboard/dragdroptarget} module:clipboard/dragdroptarget~DragDropTarget
@@ -1223,6 +1217,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-image/src/imagesizeattributes.js
+ *
+ * @typedef {module:image/imagesizeattributes} module:image/imagesizeattributes~ImageSizeAttributes
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-image/src/imagestyle.js
  *
  * @typedef {module:image/imagestyle} module:image/imagestyle~ImageStyle
@@ -1556,6 +1556,30 @@
  * Declared in file @ckeditor/ckeditor5-list/src/liststyle.js
  *
  * @typedef {module:list/liststyle} module:list/liststyle~ListStyle
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/tododocumentlist.js
+ *
+ * @typedef {module:list/tododocumentlist} module:list/tododocumentlist~TodoDocumentList
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/tododocumentlist/checktododocumentlistcommand.js
+ *
+ * @typedef {module:list/tododocumentlist/checktododocumentlistcommand} module:list/tododocumentlist/checktododocumentlistcommand~CheckTodoDocumentListCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/tododocumentlist/todocheckboxchangeobserver.js
+ *
+ * @typedef {module:list/tododocumentlist/todocheckboxchangeobserver} module:list/tododocumentlist/todocheckboxchangeobserver~TodoCheckboxChangeObserver
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/tododocumentlist/tododocumentlistediting.js
+ *
+ * @typedef {module:list/tododocumentlist/tododocumentlistediting} module:list/tododocumentlist/tododocumentlistediting~TodoDocumentListEditing
  */
 
 /**
@@ -2135,6 +2159,18 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-ui/src/autocomplete/autocompleteview.js
+ *
+ * @typedef {module:ui/autocomplete/autocompleteview} module:ui/autocomplete/autocompleteview~AutocompleteView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ui/src/button/buttonlabelview.js
+ *
+ * @typedef {module:ui/button/buttonlabelview} module:ui/button/buttonlabelview~ButtonLabelView
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-ui/src/button/buttonview.js
  *
  * @typedef {module:ui/button/buttonview} module:ui/button/buttonview~ButtonView
@@ -2261,6 +2297,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-ui/src/highlightedtext/highlightedtextview.js
+ *
+ * @typedef {module:ui/highlightedtext/highlightedtextview} module:ui/highlightedtext/highlightedtextview~HighlightedTextView
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-ui/src/icon/iconview.js
  *
  * @typedef {module:ui/icon/iconview} module:ui/icon/iconview~IconView
@@ -2273,9 +2315,9 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-ui/src/input/inputview.js
+ * Declared in file @ckeditor/ckeditor5-ui/src/input/inputbase.js
  *
- * @typedef {module:ui/input/inputview} module:ui/input/inputview~InputView
+ * @typedef {module:ui/input/inputbase} module:ui/input/inputbase~InputBase
  */
 
 /**
@@ -2306,6 +2348,12 @@
  * Declared in file @ckeditor/ckeditor5-ui/src/labeledinput/labeledinputview.js
  *
  * @typedef {module:ui/labeledinput/labeledinputview} module:ui/labeledinput/labeledinputview~LabeledInputView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ui/src/list/listitemgroupview.js
+ *
+ * @typedef {module:ui/list/listitemgroupview} module:ui/list/listitemgroupview~ListItemGroupView
  */
 
 /**
@@ -2357,9 +2405,39 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-ui/src/search/searchresultsview.js
+ *
+ * @typedef {module:ui/search/searchresultsview} module:ui/search/searchresultsview~SearchResultsView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ui/src/search/text/searchtextqueryview.js
+ *
+ * @typedef {module:ui/search/text/searchtextqueryview} module:ui/search/text/searchtextqueryview~SearchTextQueryView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ui/src/search/text/searchtextview.js
+ *
+ * @typedef {module:ui/search/text/searchtextview} module:ui/search/text/searchtextview~SearchTextView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ui/src/spinner/spinnerview.js
+ *
+ * @typedef {module:ui/spinner/spinnerview} module:ui/spinner/spinnerview~SpinnerView
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-ui/src/template.js
  *
  * @typedef {module:ui/template} module:ui/template~Template
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ui/src/textarea/textareaview.js
+ *
+ * @typedef {module:ui/textarea/textareaview} module:ui/textarea/textareaview~TextareaView
  */
 
 /**
@@ -2585,21 +2663,9 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-utils/src/dom/getelementsintersectionrect.js
- *
- * @typedef {module:utils/dom/getelementsintersectionrect} module:utils/dom/getelementsintersectionrect~getElementsIntersectionRect
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-utils/src/dom/getpositionedancestor.js
  *
  * @typedef {module:utils/dom/getpositionedancestor} module:utils/dom/getpositionedancestor~getPositionedAncestor
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-utils/src/dom/getscrollableancestors.js
- *
- * @typedef {module:utils/dom/getscrollableancestors} module:utils/dom/getscrollableancestors~getScrollableAncestors
  */
 
 /**
