@@ -82,7 +82,10 @@
 
 .form-boolean:focus:active,
 .form-boolean:focus:hover {
-  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus), inset 0 0 0 1px var(--input-fg-color);
+  box-shadow:
+    0 0 0 2px var(--color-white),
+    0 0 0 5px var(--color-focus),
+    inset 0 0 0 1px var(--input-fg-color);
 }
 
 @media (forced-colors: active) {
@@ -105,12 +108,18 @@
 }
 
 .form-boolean--type-radio:checked:focus {
-  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus), inset 0 0 0 1px var(--input--focus-border-color);
+  box-shadow:
+    0 0 0 2px var(--color-white),
+    0 0 0 5px var(--color-focus),
+    inset 0 0 0 1px var(--input--focus-border-color);
 }
 
 .form-boolean--type-radio:checked:focus:active,
 .form-boolean--type-radio:checked:focus:hover {
-  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus), inset 0 0 0 1px var(--input-fg-color);
+  box-shadow:
+    0 0 0 2px var(--color-white),
+    0 0 0 5px var(--color-focus),
+    inset 0 0 0 1px var(--input-fg-color);
 }
 
 .form-boolean--type-radio:checked:active,
@@ -150,7 +159,10 @@
 .form-boolean.error:focus,
 .form-boolean.error:focus:active,
 .form-boolean.error:focus:hover {
-  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus), inset 0 0 0 1px var(--input--error-border-color);
+  box-shadow:
+    0 0 0 2px var(--color-white),
+    0 0 0 5px var(--color-focus),
+    inset 0 0 0 1px var(--input--error-border-color);
 }
 
 .form-boolean.error:checked:active,
@@ -172,7 +184,10 @@
 }
 
 .form-boolean--type-radio.error:checked:focus {
-  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus), inset 0 0 0 1px var(--input--error-border-color);
+  box-shadow:
+    0 0 0 2px var(--color-white),
+    0 0 0 5px var(--color-focus),
+    inset 0 0 0 1px var(--input--error-border-color);
 }
 
 /**
