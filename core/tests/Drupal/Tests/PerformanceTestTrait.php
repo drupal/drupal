@@ -218,47 +218,42 @@ trait PerformanceTestTrait {
     $nanoseconds_per_millisecond = 1000_000;
     $nanoseconds_per_microsecond = 1000;
 
-    $collector = $_ENV['OTEL_COLLECTOR'] ?? NULL;
-    if ($collector === NULL) {
+    $collector = getenv('OTEL_COLLECTOR');
+    if (!$collector) {
       return;
     }
-    $timestamp = NULL;
+    $first_request_timestamp = NULL;
+    $first_response_timestamp = NULL;
+    $request_wall_time = NULL;
+    $response_wall_time = NULL;
     $url = NULL;
-    $dom_loaded_timestamp_page = NULL;
-    $dom_loaded_timestamp_timeline = NULL;
-    $timestamp_since_os_boot = NULL;
     foreach ($messages as $message) {
       // Since chrome timestamps are since OS start, we take the first network
-      // request as '0' and calculate offsets against that.
-      if ($timestamp === NULL && $message['method'] === 'Network.requestWillBeSent') {
-        $url = $message['params']['request']['url'];
-        $timestamp = (int) ($message['params']['wallTime'] * $nanoseconds_per_second);
-        // Network timestamps are formatted as a second float with three point
-        // precision. Record this so it can be compared against other
-        // timestamps.
-        $timestamp_since_os_boot = (int) ($message['params']['timestamp'] * $nanoseconds_per_second);
-      }
-      // The DOM content loaded event is in both the 'page' and 'timeline'
-      // sections of the performance log in different formats. This lets us
-      // compare 'ts' and 'timestamp' which are not only in two different
-      // formats, but appear to start from slightly different points in time.
-      // By subtracting one from the other, we can generate an offset to apply
-      // to all other 'ts' timestamps. Note that if the two events actually
-      // happen at different times, then the offset will be wrong by that
-      // difference.
-      // See https://bugs.chromium.org/p/chromium/issues/detail?id=1463436
-      if ($dom_loaded_timestamp_page === NULL && $message['method'] === 'Page.domContentEventFired') {
-        $dom_loaded_timestamp_page = $message['params']['timestamp'] * $nanoseconds_per_second;
-      }
-      if ($dom_loaded_timestamp_timeline === NULL && $message['method'] === 'Tracing.dataCollected' && isset($message['params']['args']['data']['type']) && $message['params']['args']['data']['type'] === 'DOMContentLoaded') {
-        $dom_loaded_timestamp_timeline = $message['params']['ts'] * $nanoseconds_per_microsecond;
+      // request and response, determine the wall times of each, then calculate
+      // offsets from those for everything else.
+      if ($message['method'] === 'Tracing.dataCollected'
+        && isset($message['params']['name'])
+        && $message['params']['name'] === 'ResourceReceiveResponse') {
+        $first_response_timestamp = (int) ($message['params']['ts'] * $nanoseconds_per_microsecond);
+
+        // Get the actual timestamp of the response which is a millisecond unix
+        // epoch timestamp. The log doesn't provide this for the request.
+        $response_wall_time = (int) ($message['params']['args']['data']['responseTime'] * $nanoseconds_per_millisecond);
+
+        // 'requestTime' is in the format 'seconds since OS boot with
+        // microsecond precision'.
+        $first_request_timestamp = (int) ($message['params']['args']['data']['timing']['requestTime'] * $nanoseconds_per_second);
+        // By subtracting the request timestamp from the response wall time we
+        // get the request wall time.
+        $request_wall_time = ($response_wall_time - ($first_response_timestamp - $first_request_timestamp));
+        break;
       }
     }
-
-    $offset = $dom_loaded_timestamp_page - $dom_loaded_timestamp_timeline;
-    $entry = $this->getSession()->evaluateScript("window.performance.getEntriesByType('navigation')")[0];
-    $first_request_timestamp = $entry['requestStart'] * $nanoseconds_per_millisecond;
-    $first_response_timestamp = $entry['responseStart'] * $nanoseconds_per_millisecond;
+    if ($first_response_timestamp === NULL) {
+      // If the $first_response_timestamp is null, this means we got an
+      // incomplete log from chromedriver, mark the test as skipped.
+      $this->markTestSkipped('Incomplete log from chromedriver, giving up.');
+    }
 
     // @todo: get commit hash from an environment variable and add this as an
     // additional attribute.
@@ -278,58 +273,53 @@ trait PerformanceTestTrait {
     $tracer = $tracerProvider->getTracer('Drupal');
 
     $span = $tracer->spanBuilder('main')
-      ->setStartTimestamp($timestamp)
+      ->setStartTimestamp($request_wall_time)
       ->setAttribute('http.method', 'GET')
       ->setAttribute('http.url', $url)
       ->setSpanKind(SpanKind::KIND_SERVER)
       ->startSpan();
-    $last_timestamp = $first_byte_timestamp = (int) ($timestamp + ($first_response_timestamp - $first_request_timestamp));
+
+    $last_timestamp = $response_wall_time;
 
     try {
       $scope = $span->activate();
       $first_byte_span = $tracer->spanBuilder('firstByte')
-        ->setStartTimestamp($timestamp)
+        ->setStartTimestamp($request_wall_time)
         ->setAttribute('http.url', $url)
         ->startSpan();
-      $first_byte_span->end($first_byte_timestamp);
-      // Largest contentful paint is not available from
-      // window.performance::getEntriesByType() so use the performance log
-      // messages to get it instead.
+      $first_byte_span->end($response_wall_time);
       $lcp_timestamp = NULL;
       $fcp_timestamp = NULL;
       $lcp_size = 0;
       foreach ($messages as $message) {
         if ($message['method'] === 'Tracing.dataCollected' && $message['params']['name'] === 'firstContentfulPaint') {
           if (!isset($fcp_timestamp)) {
-            // Tracing timestamps are microseconds since OS boot. However they
-            // appear to start from a slightly different point from page
-            // timestamps. Apply an offset calculated from DOM content loaded.
-            // See https://bugs.chromium.org/p/chromium/issues/detail?id=1463436
-            $fcp_timestamp = ($message['params']['ts'] * $nanoseconds_per_microsecond) + $offset;
+            // Tracing timestamps are microseconds since OS boot.
+            $fcp_timestamp = $message['params']['ts'] * $nanoseconds_per_microsecond;
             $fcp_span = $tracer->spanBuilder('firstContentfulPaint')
-              ->setStartTimestamp($timestamp)
+              ->setStartTimestamp($request_wall_time)
               ->setAttribute('http.url', $url)
               ->startSpan();
-            $last_timestamp = $first_contentful_paint_timestamp = (int) ($timestamp + ($fcp_timestamp - $timestamp_since_os_boot));
-            $fcp_span->end($first_contentful_paint_timestamp);
+            $last_timestamp = $first_contentful_paint_wall_time = (int) ($request_wall_time + ($fcp_timestamp - $first_request_timestamp));
+            $fcp_span->end($first_contentful_paint_wall_time);
           }
         }
 
         // There can be multiple largestContentfulPaint candidates, remember
         // the largest one.
         if ($message['method'] === 'Tracing.dataCollected' && $message['params']['name'] === 'largestContentfulPaint::Candidate' && $message['params']['args']['data']['size'] > $lcp_size) {
-          $lcp_timestamp = ($message['params']['ts'] * $nanoseconds_per_microsecond) + $offset;
+          $lcp_timestamp = $message['params']['ts'] * $nanoseconds_per_microsecond;
           $lcp_size = $message['params']['args']['data']['size'];
         }
       }
       if (isset($lcp_timestamp)) {
         $lcp_span = $tracer->spanBuilder('largestContentfulPaint')
-          ->setStartTimestamp($timestamp)
+          ->setStartTimestamp($request_wall_time)
           ->setAttribute('http.url', $url)
           ->startSpan();
-        $last_timestamp = $largest_contentful_paint_timestamp = (int) ($timestamp + ($lcp_timestamp - $timestamp_since_os_boot));
+        $last_timestamp = $largest_contentful_paint_wall_time = (int) ($request_wall_time + ($lcp_timestamp - $first_request_timestamp));
         $lcp_span->setAttribute('lcp.size', $lcp_size);
-        $lcp_span->end($largest_contentful_paint_timestamp);
+        $lcp_span->end($largest_contentful_paint_wall_time);
       }
     }
     finally {
