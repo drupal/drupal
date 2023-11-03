@@ -280,8 +280,8 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
           return NULL;
         }
         $configuration = [];
-        $configuration['reversed'] = !empty($restrictions['allowed']['ol']['reversed']);
-        $configuration['startIndex'] = !empty($restrictions['allowed']['ol']['start']);
+        $configuration['properties']['reversed'] = !empty($restrictions['allowed']['ol']['reversed']);
+        $configuration['properties']['startIndex'] = !empty($restrictions['allowed']['ol']['start']);
         return $configuration;
 
       case 'media_media':

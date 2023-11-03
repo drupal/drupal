@@ -25,7 +25,10 @@ class ListPlugin extends CKEditor5PluginDefault implements CKEditor5PluginConfig
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return ['reversed' => TRUE, 'startIndex' => TRUE];
+    return [
+      'properties' => ['reversed' => TRUE, 'startIndex' => TRUE],
+      'multiBlock' => TRUE,
+    ];
   }
 
   /**
@@ -35,12 +38,17 @@ class ListPlugin extends CKEditor5PluginDefault implements CKEditor5PluginConfig
     $form['reversed'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Allow the user to reverse an ordered list'),
-      '#default_value' => $this->configuration['reversed'],
+      '#default_value' => $this->configuration['properties']['reversed'],
     ];
     $form['startIndex'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Allow the user to specify the start index of an ordered list'),
-      '#default_value' => $this->configuration['startIndex'],
+      '#default_value' => $this->configuration['properties']['startIndex'],
+    ];
+    $form['multiBlock'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Allow the user to create paragraphs in list items (or other block elements)'),
+      '#default_value' => $this->configuration['multiBlock'],
     ];
 
     return $form;
@@ -54,24 +62,25 @@ class ListPlugin extends CKEditor5PluginDefault implements CKEditor5PluginConfig
     $form_state->setValue('reversed', (bool) $form_value);
     $form_value = $form_state->getValue('startIndex');
     $form_state->setValue('startIndex', (bool) $form_value);
+    $form_value = $form_state->getValue('multiBlock');
+    $form_state->setValue('multiBlock', (bool) $form_value);
   }
 
   /**
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configuration['reversed'] = $form_state->getValue('reversed');
-    $this->configuration['startIndex'] = $form_state->getValue('startIndex');
+    $this->configuration['properties']['reversed'] = $form_state->getValue('reversed');
+    $this->configuration['properties']['startIndex'] = $form_state->getValue('startIndex');
+    $this->configuration['multiBlock'] = $form_state->getValue('multiBlock');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getDynamicPluginConfig(array $static_plugin_config, EditorInterface $editor): array {
-    $static_plugin_config['list']['properties'] = array_merge(
-      $static_plugin_config['list']['properties'],
-      $this->getConfiguration()
-    );
+    $static_plugin_config['list']['properties'] = $this->getConfiguration()['properties'] + $static_plugin_config['list']['properties'];
+    $static_plugin_config['list']['multiBlock'] = $this->getConfiguration()['multiBlock'];
     return $static_plugin_config;
   }
 
@@ -81,8 +90,8 @@ class ListPlugin extends CKEditor5PluginDefault implements CKEditor5PluginConfig
   public function getElementsSubset(): array {
     $subset = $this->getPluginDefinition()->getElements();
     $subset = array_diff($subset, ['<ol reversed start>']);
-    $reversed_enabled = $this->getConfiguration()['reversed'];
-    $start_index_enabled = $this->getConfiguration()['startIndex'];
+    $reversed_enabled = $this->getConfiguration()['properties']['reversed'];
+    $start_index_enabled = $this->getConfiguration()['properties']['startIndex'];
     $subset[] = "<ol" . ($reversed_enabled ? ' reversed' : '') . ($start_index_enabled ? ' start' : '') . '>';
     return $subset;
   }

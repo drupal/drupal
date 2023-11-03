@@ -89,8 +89,11 @@ class ConfigurablePluginTest extends KernelTestBase {
         ],
       ],
       'ckeditor5_list' => [
-        'reversed' => TRUE,
-        'startIndex' => TRUE,
+        'properties' => [
+          'reversed' => TRUE,
+          'startIndex' => TRUE,
+        ],
+        'multiBlock' => TRUE,
       ],
       'ckeditor5_alignment' => [
         'enabled_alignments' => [

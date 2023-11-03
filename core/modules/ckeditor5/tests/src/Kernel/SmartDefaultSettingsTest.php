@@ -691,8 +691,11 @@ class SmartDefaultSettingsTest extends KernelTestBase {
             'allow_resize' => TRUE,
           ],
           'ckeditor5_list' => [
-            'reversed' => FALSE,
-            'startIndex' => TRUE,
+            'properties' => [
+              'reversed' => FALSE,
+              'startIndex' => TRUE,
+            ],
+            'multiBlock' => TRUE,
           ],
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => [
@@ -842,7 +845,13 @@ class SmartDefaultSettingsTest extends KernelTestBase {
             ],
           ],
           'ckeditor5_imageResize' => ['allow_resize' => TRUE],
-          'ckeditor5_list' => ['reversed' => FALSE, 'startIndex' => TRUE],
+          'ckeditor5_list' => [
+            'properties' => [
+              'reversed' => FALSE,
+              'startIndex' => TRUE,
+            ],
+            'multiBlock' => TRUE,
+          ],
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => array_values(array_diff(
               $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_sourceEditing']['allowed_tags'],
@@ -884,7 +893,13 @@ class SmartDefaultSettingsTest extends KernelTestBase {
             ],
           ],
           'ckeditor5_imageResize' => ['allow_resize' => TRUE],
-          'ckeditor5_list' => ['reversed' => FALSE, 'startIndex' => TRUE],
+          'ckeditor5_list' => [
+            'properties' => [
+              'reversed' => FALSE,
+              'startIndex' => TRUE,
+            ],
+            'multiBlock' => TRUE,
+          ],
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_sourceEditing']['allowed_tags'],
           ],
@@ -918,7 +933,13 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         ],
         'plugins' => [
           'ckeditor5_imageResize' => ['allow_resize' => TRUE],
-          'ckeditor5_list' => ['reversed' => FALSE, 'startIndex' => TRUE],
+          'ckeditor5_list' => [
+            'properties' => [
+              'reversed' => FALSE,
+              'startIndex' => TRUE,
+            ],
+            'multiBlock' => TRUE,
+          ],
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => array_values(array_diff(
               $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_sourceEditing']['allowed_tags'],
@@ -1207,8 +1228,11 @@ class SmartDefaultSettingsTest extends KernelTestBase {
             ],
           ],
           'ckeditor5_list' => [
-            'reversed' => FALSE,
-            'startIndex' => TRUE,
+            'properties' => [
+              'reversed' => FALSE,
+              'startIndex' => TRUE,
+            ],
+            'multiBlock' => TRUE,
           ],
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => [
@@ -1316,8 +1340,11 @@ class SmartDefaultSettingsTest extends KernelTestBase {
             'allow_resize' => TRUE,
           ],
           'ckeditor5_list' => [
-            'reversed' => TRUE,
-            'startIndex' => TRUE,
+            'properties' => [
+              'reversed' => TRUE,
+              'startIndex' => TRUE,
+            ],
+            'multiBlock' => TRUE,
           ],
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => [],
@@ -1361,8 +1388,11 @@ class SmartDefaultSettingsTest extends KernelTestBase {
             ],
           ],
           'ckeditor5_list' => [
-            'reversed' => FALSE,
-            'startIndex' => TRUE,
+            'properties' => [
+              'reversed' => FALSE,
+              'startIndex' => TRUE,
+            ],
+            'multiBlock' => TRUE,
           ],
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => [

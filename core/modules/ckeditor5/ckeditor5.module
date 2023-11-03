@@ -24,6 +24,8 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\editor\EditorInterface;
 
+// cspell:ignore multiblock
+
 /**
  * Implements hook_help().
  */
@@ -629,6 +631,7 @@ function _ckeditor5_theme_css($theme = NULL): array {
 function ckeditor5_editor_presave(EditorInterface $editor) {
   if ($editor->getEditor() === 'ckeditor5') {
     $settings = $editor->getSettings();
+    // @see ckeditor5_post_update_code_block()
     if (in_array('codeBlock', $settings['toolbar']['items'], TRUE) && !isset($settings['plugins']['ckeditor5_codeBlock'])) {
       // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\CodeBlock::defaultConfiguration()
       $settings['plugins']['ckeditor5_codeBlock'] = [
@@ -649,7 +652,17 @@ function ckeditor5_editor_presave(EditorInterface $editor) {
           ['label' => 'XML', 'language' => 'xml'],
         ],
       ];
-      $editor->setSettings($settings);
     }
+
+    // @see ckeditor5_post_update_list_multiblock()
+    if (array_key_exists('ckeditor5_list', $settings['plugins']) && !array_key_exists('properties', $settings['plugins']['ckeditor5_list'])) {
+      // Update to the new config structure.
+      $settings['plugins']['ckeditor5_list'] = [
+        'properties' => $settings['plugins']['ckeditor5_list'],
+        'multiBlock' => TRUE,
+      ];
+    }
+
+    $editor->setSettings($settings);
   }
 }

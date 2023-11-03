@@ -5,7 +5,6 @@ namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 use Drupal\Component\Utility\Html;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\node\Entity\Node;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 
@@ -55,7 +54,11 @@ abstract class ImageTestBase extends CKEditor5TestBase {
    * @return string[]
    */
   protected function imageAttributes() {
-    return ['src' => base_path() . 'core/misc/druplicon.png'];
+    return [
+      'src' => base_path() . 'core/misc/druplicon.png',
+      'width' => '88',
+      'height' => '100',
+    ];
   }
 
   /**
@@ -365,7 +368,11 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     }
 
     // Make the test content has a block image and an inline image.
-    $img_tag = '<img ' . $this->imageAttributesAsString() . ' width="500" />';
+    $img_tag = preg_replace(
+      '/width="\d+" height="\d+"/',
+      'width="500"',
+      '<img ' . $this->imageAttributesAsString() . ' />'
+    );
     $this->host->body->value .= $img_tag . "<p>$img_tag</p>";
     $this->host->save();
 
@@ -538,6 +545,15 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
+    // Despite the absence of a `height` attribute on the `<img>`, CKEditor 5
+    // should generate an appropriate `height`, matching with the aspect ratio
+    // of the image.
+    $expected_computed_height = $width;
+    if (!str_ends_with($width, '%')) {
+      $ratio = $width / (int) $this->imageAttributes()['width'];
+      $expected_computed_height = (string) (int) round($ratio * (int) $this->imageAttributes()['height']);
+    }
+
     // Add image to the host body.
     $this->host->body->value = sprintf('<img data-foo="bar" alt="drupalimage test image" ' . $this->imageAttributesAsString() . ' width="%s" />', $width);
     $this->host->save();
@@ -548,16 +564,19 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     // Ensure that the image is upcast as expected. In the editing view, the
     // width attribute should downcast to an inline style on the container
     // element.
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.image[style] img'));
+    $assert_session->waitForElementVisible('css', ".ck-widget.image");
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', ".ck-widget.image[style] img"));
 
     // Ensure that the width attribute is retained on downcast.
     $editor_data = $this->getEditorDataAsDom();
-    $width_from_editor = $editor_data->getElementsByTagName('img')->item(0)->getAttribute('width');
-    $this->assertSame($width, $width_from_editor);
+    $img_in_editor = $editor_data->getElementsByTagName('img')->item(0);
+    $this->assertSame($width, $img_in_editor->getAttribute('width'));
+    $this->assertSame($expected_computed_height, $img_in_editor->getAttribute('height'));
 
-    // Save the node and ensure that the width attribute is retained.
+    // Save the node and ensure that the width attribute is retained, and ensure
+    // that a natural image ratio-respecting height attribute has been added.
     $page->pressButton('Save');
-    $this->assertNotEmpty($assert_session->waitForElement('css', "img[width='$width']"));
+    $this->assertNotEmpty($assert_session->waitForElement('css', "img[width='$width'][height='$expected_computed_height']"));
   }
 
   /**
@@ -587,7 +606,9 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $page->pressButton('Save');
 
     $src = $this->imageAttributes()['src'];
-    $this->assertEquals('<img ' . $this->imageAttributesAsString(TRUE) . ' alt="drupalimage test image" data-caption="Alpacas &lt;em&gt;are&lt;/em&gt; cute&lt;br&gt;really!">', Node::load(1)->get('body')->value);
+    $expected = '<img ' . $this->imageAttributesAsString(TRUE) . ' alt="drupalimage test image" data-caption="Alpacas &lt;em&gt;are&lt;/em&gt; cute&lt;br&gt;really!">';
+    $expected_dom = Html::load($expected);
+    $this->assertEquals($expected_dom->getElementsByTagName('body')->item(0)->C14N(), $editor_dom->getElementsByTagName('body')->item(0)->C14N());
     $assert_session->elementExists('xpath', '//figure/img[@src="' . $src . '" and not(@data-caption)]');
     $assert_session->responseContains('<figcaption>Alpacas <em>are</em> cute<br>really!</figcaption>');
   }

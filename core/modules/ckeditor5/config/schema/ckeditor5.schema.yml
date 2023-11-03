@@ -123,14 +123,23 @@ ckeditor5.plugin.ckeditor5_list:
   type: mapping
   label: List
   mapping:
-    reversed:
+    properties:
+      type: mapping
+      mapping:
+        label: 'Allowed list attributes'
+        reversed:
+          type: boolean
+          label: 'Allow reverse list'
+          constraints:
+            NotNull: []
+        startIndex:
+          type: boolean
+          label: 'Allow start index'
+          constraints:
+            NotNull: []
+    multiBlock:
       type: boolean
-      label: 'Allow reverse list'
-      constraints:
-        NotNull: []
-    startIndex:
-      type: boolean
-      label: 'Allow start index'
+      label: 'Allow blocks to be created in list items'
       constraints:
         NotNull: []
 

@@ -135,7 +135,7 @@ class CKEditor5Test extends CKEditor5TestBase {
     // required because \Drupal\Component\Utility\Xss::filter fails to parse
     // element attributes with unescaped entities in value.
     // @see https://www.drupal.org/project/drupal/issues/3227831
-    $this->assertEquals(sprintf('<img data-entity-uuid="%s" data-entity-type="file" src="%s" alt="&lt;/em&gt; Kittens &amp; llamas are cute">', $image_uuid, $image_url), Node::load(1)->get('body')->value);
+    $this->assertEquals(sprintf('<img data-entity-uuid="%s" data-entity-type="file" src="%s" width="40" height="20" alt="&lt;/em&gt; Kittens &amp; llamas are cute">', $image_uuid, $image_url), Node::load(1)->get('body')->value);
   }
 
   /**
@@ -575,11 +575,11 @@ JS;
     $uploaded_image = File::load(1);
     $image_url = $this->container->get('file_url_generator')->generateString($uploaded_image->getFileUri());
     $image_uuid = $uploaded_image->uuid();
-    $assert_session->elementExists('xpath', sprintf('//img[@src="%s" and @width and @height and @data-entity-uuid="%s" and @data-entity-type="file"]', $image_url, $image_uuid));
+    $assert_session->elementExists('xpath', sprintf('//img[@src="%s" and @width="40" and @height="20" and @data-entity-uuid="%s" and @data-entity-type="file"]', $image_url, $image_uuid));
 
     // Ensure that width, height, and length attributes are not stored in the
     // database.
-    $this->assertEquals(sprintf('<img data-entity-uuid="%s" data-entity-type="file" src="%s" alt="There is now alt text">', $image_uuid, $image_url), Node::load(1)->get('body')->value);
+    $this->assertEquals(sprintf('<img data-entity-uuid="%s" data-entity-type="file" src="%s" width="40" height="20" alt="There is now alt text">', $image_uuid, $image_url), Node::load(1)->get('body')->value);
 
     // Ensure that data-entity-uuid and data-entity-type attributes are upcasted
     // correctly to CKEditor model.
@@ -587,7 +587,7 @@ JS;
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-editor'));
     $page->pressButton('Save');
 
-    $assert_session->elementExists('xpath', sprintf('//img[@src="%s" and @width and @height and @data-entity-uuid="%s" and @data-entity-type="file"]', $image_url, $image_uuid));
+    $assert_session->elementExists('xpath', sprintf('//img[@src="%s" and @width="40" and @height="20" and @data-entity-uuid="%s" and @data-entity-type="file"]', $image_url, $image_uuid));
   }
 
   /**
@@ -635,8 +635,10 @@ JS;
         ],
         'plugins' => [
           'ckeditor5_list' => [
-            'reversed' => FALSE,
-            'startIndex' => FALSE,
+            'properties' => [
+              'reversed' => FALSE,
+              'startIndex' => FALSE,
+            ],
           ],
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => [],
@@ -678,7 +680,7 @@ JS;
     // Enable the reversed functionality.
     $editor = Editor::load('test_format');
     $settings = $editor->getSettings();
-    $settings['plugins']['ckeditor5_list']['reversed'] = TRUE;
+    $settings['plugins']['ckeditor5_list']['properties']['reversed'] = TRUE;
     $editor->setSettings($settings);
     $editor->save();
     $this->getSession()->reload();
@@ -693,7 +695,7 @@ JS;
     // Have both the reversed and the start index enabled.
     $editor = Editor::load('test_format');
     $settings = $editor->getSettings();
-    $settings['plugins']['ckeditor5_list']['startIndex'] = TRUE;
+    $settings['plugins']['ckeditor5_list']['properties']['startIndex'] = TRUE;
     $editor->setSettings($settings);
     $editor->save();
     $this->getSession()->reload();
