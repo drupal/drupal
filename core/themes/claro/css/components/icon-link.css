@@ -36,7 +36,9 @@
 }
 
 .icon-link:focus {
-  box-shadow: 0 0 0 1.5px var(--color-white), 0 0 0 3.5px var(--color-focus);
+  box-shadow:
+    0 0 0 1.5px var(--color-white),
+    0 0 0 3.5px var(--color-focus);
 }
 
 .icon-link:active,
@@ -46,5 +48,7 @@
 }
 
 .icon-link--small:focus {
-  box-shadow: 0 0 0 1px var(--color-white), 0 0 0 3px var(--color-focus);
+  box-shadow:
+    0 0 0 1px var(--color-white),
+    0 0 0 3px var(--color-focus);
 }

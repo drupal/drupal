@@ -216,6 +216,9 @@
 @media (min-width: 75rem) {
   html.js body:not(.is-always-mobile-nav) .primary-nav__menu--level-2,
   html.js body:not(.is-always-mobile-nav) .primary-nav__menu-🥕 {
-    transition: visibility 0.2s, transform 0.2s, opacity 0.2s;
+    transition:
+      visibility 0.2s,
+      transform 0.2s,
+      opacity 0.2s;
   }
 }

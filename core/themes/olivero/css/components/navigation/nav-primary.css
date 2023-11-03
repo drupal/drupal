@@ -158,7 +158,10 @@
   margin-block: 0;
   margin-inline-start: calc(-1 * var(--sp));
   padding-inline-start: var(--sp2-5);
-  transition: opacity 0.2s, visibility 0.2s, max-height 0.2s;
+  transition:
+    opacity 0.2s,
+    visibility 0.2s,
+    max-height 0.2s;
   opacity: 0;
   border-inline-start: solid var(--sp) var(--color--primary-50);
 }

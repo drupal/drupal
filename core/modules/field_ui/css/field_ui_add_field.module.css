@@ -120,7 +120,9 @@
 .field-option.hover,
 .subfield-option.hover {
   border-color: var(--color-gray);
-  box-shadow: inset 0 0 0 1px var(--color-gray), var(--details-box-shadow);
+  box-shadow:
+    inset 0 0 0 1px var(--color-gray),
+    var(--details-box-shadow);
 }
 
 .field-option:not(.selected, .error):hover .form-boolean,
@@ -132,13 +134,17 @@
 .field-option.selected,
 .subfield-option.selected {
   border-color: var(--color-blue);
-  box-shadow: inset 0 0 0 2px var(--color-blue), var(--details-box-shadow);
+  box-shadow:
+    inset 0 0 0 2px var(--color-blue),
+    var(--details-box-shadow);
 }
 
 .field-option.error,
 .subfield-option.error {
   border-color: var(--color-red);
-  box-shadow: inset 0 0 0 1px var(--color-red), var(--details-box-shadow);
+  box-shadow:
+    inset 0 0 0 1px var(--color-red),
+    var(--details-box-shadow);
 }
 
 .field-option .form-item__label.has-error,

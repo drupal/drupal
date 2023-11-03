@@ -59,7 +59,9 @@
   width: 100%;
   height: 0;
   content: "";
-  transition: opacity 0.2s, transform 0.2s;
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
   transform: translateY(0.3125rem);
   opacity: 0;
   /* Intentionally not using CSS logical properties. */
