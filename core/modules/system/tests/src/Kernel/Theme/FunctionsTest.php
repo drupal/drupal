@@ -480,8 +480,7 @@ class FunctionsTest extends KernelTestBase {
     // it.
     $render_array = $base_array;
     $html = \Drupal::service('renderer')->renderRoot($render_array);
-    $dom = new \DOMDocument();
-    $dom->loadHTML($html);
+    $dom = Html::load($html);
     $this->assertEquals(1, $dom->getElementsByTagName('ul')->length, 'One "ul" tag found in the rendered HTML.');
     $list_elements = $dom->getElementsByTagName('li');
     $this->assertEquals(3, $list_elements->length, 'Three "li" tags found in the rendered HTML.');
@@ -498,16 +497,14 @@ class FunctionsTest extends KernelTestBase {
     $child_html = \Drupal::service('renderer')->renderRoot($render_array['first_child']);
     $parent_html = \Drupal::service('renderer')->renderRoot($render_array);
     // First check the child HTML.
-    $dom = new \DOMDocument();
-    $dom->loadHTML($child_html);
+    $dom = Html::load($child_html);
     $this->assertEquals(1, $dom->getElementsByTagName('ul')->length, 'One "ul" tag found in the rendered child HTML.');
     $list_elements = $dom->getElementsByTagName('li');
     $this->assertEquals(2, $list_elements->length, 'Two "li" tags found in the rendered child HTML.');
     $this->assertEquals('Parent link copy', $list_elements->item(0)->nodeValue, 'First expected link found.');
     $this->assertEquals('First child link', $list_elements->item(1)->nodeValue, 'Second expected link found.');
     // Then check the parent HTML.
-    $dom = new \DOMDocument();
-    $dom->loadHTML($parent_html);
+    $dom = Html::load($parent_html);
     $this->assertEquals(1, $dom->getElementsByTagName('ul')->length, 'One "ul" tag found in the rendered parent HTML.');
     $list_elements = $dom->getElementsByTagName('li');
     $this->assertEquals(2, $list_elements->length, 'Two "li" tags found in the rendered parent HTML.');
