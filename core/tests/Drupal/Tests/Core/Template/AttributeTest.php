@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\Template;
 
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Template\Attribute;
@@ -9,7 +10,6 @@ use Drupal\Core\Template\AttributeArray;
 use Drupal\Core\Template\AttributeString;
 use Drupal\Core\Template\Loader\StringLoader;
 use Drupal\Tests\UnitTestCase;
-use Drupal\Component\Render\MarkupInterface;
 use Twig\Environment;
 
 /**
@@ -447,8 +447,7 @@ class AttributeTest extends UnitTestCase {
    *   The number of results that are found.
    */
   protected function getXPathResultCount($query, $html) {
-    $document = new \DOMDocument();
-    $document->loadHTML($html);
+    $document = Html::load($html);
     $xpath = new \DOMXPath($document);
 
     return $xpath->query($query)->length;

@@ -3,6 +3,8 @@
 namespace Drupal\Tests\Core\Utility;
 
 use Drupal\Component\Render\MarkupInterface;
+use Drupal\Component\Utility\Html;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\GeneratedButton;
 use Drupal\Core\GeneratedNoLink;
 use Drupal\Core\GeneratedUrl;
@@ -12,7 +14,6 @@ use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\LinkGenerator;
 use Drupal\Tests\UnitTestCase;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 
 /**
  * @coversDefaultClass \Drupal\Core\Utility\LinkGenerator
@@ -676,8 +677,7 @@ class LinkGeneratorTest extends UnitTestCase {
     }
 
     // Execute the query.
-    $document = new \DOMDocument();
-    $document->loadHTML($html);
+    $document = Html::load($html);
     $xpath = new \DOMXPath($document);
 
     self::assertEquals($count, $xpath->query($query)->length);
@@ -694,8 +694,7 @@ class LinkGeneratorTest extends UnitTestCase {
    * @internal
    */
   protected function assertNoXPathResults(string $query, string $html): void {
-    $document = new \DOMDocument();
-    $document->loadHTML($html);
+    $document = Html::load($html);
     $xpath = new \DOMXPath($document);
 
     self::assertFalse((bool) $xpath->query($query)->length);

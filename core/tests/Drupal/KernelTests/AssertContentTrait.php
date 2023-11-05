@@ -122,14 +122,12 @@ trait AssertContentTrait {
    */
   protected function parse() {
     if (!isset($this->elements)) {
-      // DOM can load HTML soup. But, HTML soup can throw warnings, suppress
-      // them.
-      $html_dom = new \DOMDocument();
-      @$html_dom->loadHTML('<?xml encoding="UTF-8">' . $this->getRawContent(), LIBXML_NOBLANKS);
-      if ($html_dom) {
+      $content = $this->getRawContent();
+      $dom = Html::load($content);
+      if ($dom) {
         // It's much easier to work with simplexml than DOM, luckily enough
         // we can just simply import our DOM tree.
-        $this->elements = simplexml_import_dom($html_dom);
+        $this->elements = @simplexml_import_dom($dom);
       }
     }
     $this->assertNotFalse($this->elements, 'The current HTML page should be available for DOM navigation.');

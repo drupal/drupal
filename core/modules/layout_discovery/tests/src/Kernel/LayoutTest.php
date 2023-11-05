@@ -71,7 +71,7 @@ class LayoutTest extends KernelTestBase {
     $build_id_input = $this->cssSelect('input[name="form_build_id"]')[0]->asXML();
     $form_id_input = '<input data-drupal-selector="edit-the-form-id" type="hidden" name="form_id" value="the_form_id"/>';
     $html[] = 'Test suffix';
-    $html[] = $build_id_input . $form_id_input . '</form>';
+    $html[] = $build_id_input . "\n" . $form_id_input . "\n" . '</form>';
 
     // Match the HTML to the full form element.
     $this->assertSame(implode("\n", $html), $this->cssSelect('#the-form-id')[0]->asXML());
