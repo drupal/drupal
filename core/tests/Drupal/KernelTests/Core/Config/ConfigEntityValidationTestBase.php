@@ -183,7 +183,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
           'fun_stuff' => ['star-trek.deep-space-nine'],
         ],
         [
-          'dependencies' => "'fun_stuff' is not a supported key.",
+          'dependencies.fun_stuff' => "'fun_stuff' is not a supported key.",
         ],
       ],
       'empty string in config dependencies' => [
