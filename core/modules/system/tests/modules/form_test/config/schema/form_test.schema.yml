@@ -5,3 +5,9 @@ form_test.object:
     bananas:
       type: string
       label: 'Bananas'
+    favorite_vegetable:
+      type: required_label
+      label: 'Favorite vegetable'
+    nemesis_vegetable:
+      type: required_label
+      label: 'Nemesis vegetable'
