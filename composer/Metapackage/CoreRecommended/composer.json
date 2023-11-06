@@ -37,6 +37,8 @@
         "symfony/error-handler": "~v6.4.0-BETA1",
         "symfony/event-dispatcher": "~v6.4.0-BETA1",
         "symfony/event-dispatcher-contracts": "~v3.3.0",
+        "symfony/filesystem": "~v6.4.0-BETA1",
+        "symfony/finder": "~v6.4.0-BETA1",
         "symfony/http-foundation": "~v6.4.0-BETA2",
         "symfony/http-kernel": "~v6.4.0-BETA2",
         "symfony/mailer": "~v6.4.0-BETA1",

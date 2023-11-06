@@ -83,8 +83,6 @@
         "symfony/browser-kit": "v6.4.0-BETA1",
         "symfony/css-selector": "v6.4.0-BETA1",
         "symfony/dom-crawler": "v6.4.0-BETA2",
-        "symfony/filesystem": "v6.4.0-BETA1",
-        "symfony/finder": "v6.4.0-BETA1",
         "symfony/lock": "v6.4.0-BETA2",
         "symfony/phpunit-bridge": "v6.4.0-BETA2",
         "symfony/polyfill-php82": "v1.28.0",
