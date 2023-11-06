@@ -528,3 +528,17 @@ form_test.javascript_states_form:
     _form: '\Drupal\form_test\Form\JavascriptStatesForm'
   requirements:
     _access: 'TRUE'
+
+form_test.tree_config_target:
+  path: '/form-test/tree-config-target'
+  defaults:
+    _form: '\Drupal\form_test\Form\TreeConfigTargetForm'
+  requirements:
+    _access: 'TRUE'
+
+form_test.incorrect_config_target:
+  path: '/form-test/incorrect-config-target'
+  defaults:
+    _form: '\Drupal\form_test\Form\IncorrectConfigTargetForm'
+  requirements:
+    _access: 'TRUE'

@@ -10,18 +10,6 @@ namespace Drupal\Core\Form;
 final class ConfigTarget {
 
   /**
-   * The name of the form element which maps to this config property.
-   *
-   * @var string
-   *
-   * @see \Drupal\Core\Form\ConfigFormBase::storeConfigKeyToFormElementMap()
-   *
-   * @internal
-   *   This property is for internal use only.
-   */
-  public string $elementName;
-
-  /**
    * The parents of the form element which maps to this config property.
    *
    * @var array
