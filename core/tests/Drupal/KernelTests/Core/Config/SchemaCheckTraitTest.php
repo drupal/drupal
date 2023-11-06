@@ -63,8 +63,8 @@ class SchemaCheckTraitTest extends KernelTestBase {
       'config_test.types:boolean' => 'non-scalar value but not defined as an array (such as mapping or sequence)',
       // Validation constraints violations.
       // @see \Drupal\Core\TypedData\TypedDataInterface::validate()
-      '0' => "[] 'new_key' is not a supported key.",
-      '1' => "[] 'new_array' is not a supported key.",
+      '0' => "[new_key] 'new_key' is not a supported key.",
+      '1' => "[new_array] 'new_array' is not a supported key.",
       '2' => '[boolean] This value should be of the correct primitive type.',
     ];
     $this->assertEquals($expected, $ret);
