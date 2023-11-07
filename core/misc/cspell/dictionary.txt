@@ -131,7 +131,6 @@ cacheability
 cacheable
 cachebackend
 cachebackends
-cacher
 cachetag
 cachetags
 cafr
@@ -139,8 +138,6 @@ callables
 callout
 camelid
 camelids
-canonicalized
-canonicalizing
 canvastext
 castable
 catalana
@@ -185,7 +182,6 @@ colour
 colspans
 columnschange
 comida
-commandline
 commenters
 commontest
 complote
@@ -213,7 +209,6 @@ csrftoken
 cssidentifier
 csslintrc
 csstools
-ctags
 cucurbitaceae
 curle
 curlopt
@@ -242,13 +237,8 @@ delayable
 deletedline
 delsp
 denormalizable
-denormalization
-denormalize
-denormalized
 denormalizer
 denormalizers
-denormalizes
-denormalizing
 dependee
 dependee's
 dependees
@@ -318,7 +308,6 @@ egulias
 eins
 elbonia
 elems
-embeddable
 encapsed
 endapply
 endautoescape
@@ -339,7 +328,6 @@ entitytype
 entityviewedit
 errmode
 errrf
-espagnol
 etag
 eurozone
 evenodd
@@ -393,7 +381,6 @@ formvalidation
 fouc
 fourcol
 fozzie
-fqcn
 fraîche
 frombracket
 frontpage
@@ -401,7 +388,6 @@ fudgy
 fulldata
 fulldate
 fulltext
-funciona
 functionaljavascripttest
 functionaltest
 funic
@@ -414,7 +400,6 @@ gids
 gloop
 gnumeric
 googleapis
-gotit
 greeking
 gripsmall
 groupable
@@ -479,9 +464,7 @@ jamo
 javascripts
 jessebeach
 johansson
-johndoe
 jqueryui
-jsonapi
 jsonlint
 jssdk
 jumplinks
@@ -491,7 +474,6 @@ kangarookitten
 kerneltest
 kernighan
 keyevent
-keyframes
 keyname
 keypresses
 keyvalue
@@ -552,7 +534,6 @@ maryjane
 matchout
 mathematica
 maxage
-maxdepth
 maximumred
 maxlifetime
 maynot
@@ -611,7 +592,6 @@ multistar
 multistep
 multivalue
 multivalued
-munge
 muun
 muuuh
 myclabs
@@ -640,7 +620,6 @@ nmsgstr
 nntp
 noaccess
 noadd
-noblanks
 nocache
 nocase
 nocookie
@@ -718,8 +697,6 @@ phpdocumentor
 phpfile
 phpserialize
 phpspec
-phpstan
-phpunit
 pianura
 pickable
 picturefill
@@ -811,11 +788,9 @@ refactorings
 refback
 referenceable
 referenceables
-referencer
 referencers
 referer
 refinable
-regexes
 reindexing
 reinject
 relname
@@ -823,7 +798,6 @@ relpersistence
 renderable
 renderables
 renderered
-renormalize
 reparenting
 reparsed
 replyto
@@ -918,7 +892,6 @@ stitle
 streamwrapper
 streamwrappers
 strikethrough
-stringable
 striptags
 strs
 sttid
@@ -1034,7 +1007,6 @@ textfile
 textformat
 textgroup
 textwithsummary
-themeable
 themename
 themer
 themers
@@ -1124,10 +1096,8 @@ unmanaged
 unmatch
 unminified
 unmoderated
-unoptimized
 unparseable
 unpermissioned
-unprefixed
 unpreloaded
 unpromote
 unpromoted
@@ -1148,12 +1118,10 @@ unsetting
 unshortened
 unsimplified
 unsticky
-unstripped
 untabbable
 untarring
 untrustable
 unvalidated
-unversioned
 unwrapper
 upcasted
 upcasting
@@ -1185,11 +1153,9 @@ webflo
 webhosting
 webmention
 webmozart
-webp
 webroot
 webservers
 webtest
-whitespaces
 widthx
 wmlscript
 wordprocessingml
