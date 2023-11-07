@@ -301,6 +301,7 @@ stages:
   <<: [ *with-yarn, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
+    <<: *default-lint-variables
     KUBERNETES_CPU_REQUEST: "2"
   script:
     - yarn --cwd=./core run -s lint:core-js-passing --format gitlab
@@ -312,6 +313,7 @@ stages:
   <<: [ *with-yarn, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
+    <<: *default-lint-variables
     KUBERNETES_CPU_REQUEST: "2"
   script:
     - yarn run --cwd=./core lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
@@ -323,6 +325,7 @@ stages:
   <<: [ *with-yarn, *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
+    <<: *default-lint-variables
     KUBERNETES_CPU_REQUEST: "2"
   script:
     - yarn run --cwd=./core build:css --check
@@ -332,6 +335,7 @@ stages:
   <<: [ *with-yarn, *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
+    <<: *default-lint-variables
     KUBERNETES_CPU_REQUEST: "2"
   script:
     - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
