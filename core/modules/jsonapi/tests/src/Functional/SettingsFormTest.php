@@ -29,15 +29,15 @@ class SettingsFormTest extends BrowserTestBase {
     $this->drupalGet('/admin/config/services/jsonapi');
 
     $page = $this->getSession()->getPage();
-    $page->selectFieldOption('read_only', 0);
+    $page->selectFieldOption('read_only', 'rw');
     $page->pressButton('Save configuration');
     $assert_session = $this->assertSession();
     $assert_session->pageTextContains('The configuration options have been saved.');
-    $assert_session->fieldValueEquals('read_only', 0);
+    $assert_session->fieldValueEquals('read_only', 'rw');
 
-    $page->selectFieldOption('read_only', 1);
+    $page->selectFieldOption('read_only', 'r');
     $page->pressButton('Save configuration');
-    $assert_session->fieldValueEquals('read_only', '1');
+    $assert_session->fieldValueEquals('read_only', 'r');
     $assert_session->pageTextContains('The configuration options have been saved.');
   }
 

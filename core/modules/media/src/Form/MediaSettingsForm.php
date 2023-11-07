@@ -104,7 +104,7 @@ class MediaSettingsForm extends ConfigFormBase {
       '#title' => $this->t('iFrame domain'),
       '#size' => 40,
       '#maxlength' => 255,
-      '#config_target' => new ConfigTarget('media.settings', 'iframe_domain', toConfig: static::class . '::nullIfEmptyString'),
+      '#config_target' => new ConfigTarget('media.settings', 'iframe_domain', toConfig: fn(?string $value) => $value ?: NULL),
       '#description' => $this->t('Enter a different domain from which to serve oEmbed content, including the <em>http://</em> or <em>https://</em> prefix. This domain needs to point back to this site, or existing oEmbed content may not display correctly, or at all.'),
     ];
 
@@ -116,19 +116,6 @@ class MediaSettingsForm extends ConfigFormBase {
       '#description' => $this->t("Allow users to access @media-entities at /media/{id}.", ['@media-entities' => $this->entityTypeManager->getDefinition('media')->getPluralLabel()]),
     ];
     return parent::buildForm($form, $form_state);
-  }
-
-  /**
-   * Converts an empty string to NULL.
-   *
-   * @param string|null $value
-   *   The value to transform.
-   *
-   * @return string|null
-   *   The given string, or NULL if it was empty.
-   */
-  public static function nullIfEmptyString(?string $value): ?string {
-    return $value ?: NULL;
   }
 
 }
