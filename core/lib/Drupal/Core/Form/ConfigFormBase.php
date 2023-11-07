@@ -99,7 +99,7 @@ abstract class ConfigFormBase extends FormBase {
 
       $value = $this->config($target->configName)->get($target->propertyPath);
       if ($target->fromConfig) {
-        $value = call_user_func($target->fromConfig, $value);
+        $value = ($target->fromConfig)($value);
       }
       $element['#default_value'] = $value;
     }
@@ -134,11 +134,10 @@ abstract class ConfigFormBase extends FormBase {
       $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
 
       $target = $element['#config_target'];
-      if (is_string($target)) {
-        $target = ConfigTarget::fromString($target);
+      if ($target instanceof ConfigTarget) {
+        $target = $target->configName . ':' . $target->propertyPath;
       }
-      $target->elementParents = $element['#parents'];
-      $map[$target->configName . ':' . $target->propertyPath] = $target;
+      $map[$target] = $element['#array_parents'];
       $form_state->set(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP, $map);
     }
     foreach (Element::children($element) as $key) {
@@ -158,7 +157,7 @@ abstract class ConfigFormBase extends FormBase {
     foreach ($this->getEditableConfigNames() as $config_name) {
       $config = $this->config($config_name);
       try {
-        static::copyFormValuesToConfig($config, $form_state);
+        static::copyFormValuesToConfig($config, $form_state, $form);
       }
       catch (\BadMethodCallException $e) {
         // Nothing to do: this config form does not yet use validation
@@ -193,7 +192,8 @@ abstract class ConfigFormBase extends FormBase {
         }
 
         if (isset($map["$config_name:$property_path"])) {
-          $form_element_name = implode('][', $map["$config_name:$property_path"]->elementParents);
+          $config_target = ConfigTarget::fromForm($map["$config_name:$property_path"], $form);
+          $form_element_name = implode('][', $config_target->elementParents);
         }
         else {
           // We cannot determine where to place the violation. The only option
@@ -264,7 +264,7 @@ abstract class ConfigFormBase extends FormBase {
     foreach ($this->getEditableConfigNames() as $config_name) {
       $config = $this->config($config_name);
       try {
-        static::copyFormValuesToConfig($config, $form_state);
+        static::copyFormValuesToConfig($config, $form_state, $form);
         $config->save();
       }
       catch (\BadMethodCallException $e) {
@@ -287,10 +287,12 @@ abstract class ConfigFormBase extends FormBase {
    *   The configuration being edited.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
+   * @param array $form
+   *   The form array.
    *
    * @see \Drupal\Core\Entity\EntityForm::copyFormValuesToEntity()
    */
-  private static function copyFormValuesToConfig(Config $config, FormStateInterface $form_state): void {
+  private static function copyFormValuesToConfig(Config $config, FormStateInterface $form_state, array $form): void {
     $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP);
     // If there's no map of config keys to form elements, this form does not
     // yet support config validation.
@@ -299,12 +301,12 @@ abstract class ConfigFormBase extends FormBase {
       throw new \BadMethodCallException();
     }
 
-    /** @var \Drupal\Core\Form\ConfigTarget $target */
-    foreach ($map as $target) {
+    foreach ($map as $element_parents) {
+      $target = ConfigTarget::fromForm($element_parents, $form);
       if ($target->configName === $config->getName()) {
         $value = $form_state->getValue($target->elementParents);
         if ($target->toConfig) {
-          $value = call_user_func($target->toConfig, $value);
+          $value = ($target->toConfig)($value);
         }
         $config->set($target->propertyPath, $value);
       }
