@@ -7,10 +7,10 @@ internal.backbone:
   #  - https://www.drupal.org/project/drupal/issues/3204011
   #  - https://www.drupal.org/project/drupal/issues/3204015
   remote: https://github.com/jashkenas/backbone
-  version: "1.4.1"
+  version: "1.5.0"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/jashkenas/backbone/1.4.1/LICENSE
+    url: https://raw.githubusercontent.com/jashkenas/backbone/1.5.0/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/backbone/backbone-min.js: { weight: -19, minified: true }
@@ -783,10 +783,10 @@ es6-promise:
 
 jquery:
   remote: https://github.com/jquery/jquery
-  version: "3.7.0"
+  version: "3.7.1"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/jquery/jquery/3.7.0/LICENSE.txt
+    url: https://raw.githubusercontent.com/jquery/jquery/3.7.1/LICENSE.txt
     gpl-compatible: true
   js:
     assets/vendor/jquery/jquery.min.js: { minified: true, weight: -20 }
@@ -875,10 +875,10 @@ sortable:
 
 tabbable:
   remote: https://github.com/focus-trap/tabbable
-  version: "6.1.2"
+  version: "6.2.0"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/focus-trap/tabbable/v6.1.2/LICENSE
+    url: https://raw.githubusercontent.com/focus-trap/tabbable/v6.2.0/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/tabbable/index.umd.min.js: { weight: -1, minified: true }
