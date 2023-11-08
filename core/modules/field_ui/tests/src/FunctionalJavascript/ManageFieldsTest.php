@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\field_ui\FunctionalJavascript;
 
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
@@ -323,6 +324,28 @@ class ManageFieldsTest extends WebDriverTestBase {
       // Assert that the field type options are displayed as per their weights.
       $this->assertSame($expected_field_types, $field_type_labels);
     }
+  }
+
+  /**
+   * Tests the form validation for allowed values field.
+   */
+  public function testAllowedValuesFormValidation() {
+    FieldStorageConfig::create([
+      'field_name' => 'field_text',
+      'entity_type' => 'node',
+      'type' => 'text',
+    ])->save();
+    FieldConfig::create([
+      'field_name' => 'field_text',
+      'entity_type' => 'node',
+      'bundle' => 'article',
+    ])->save();
+    $this->drupalGet('/admin/structure/types/manage/article/fields/node.article.field_text');
+    $page = $this->getSession()->getPage();
+    $page->findField('edit-field-storage-subform-cardinality-number')->setValue('-11');
+    $page->findButton('Save settings')->click();
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->pageTextContains('Limit must be higher than or equal to 1.');
   }
 
 }
