@@ -41,11 +41,12 @@ interface ThemeInstallerInterface {
    * Uninstalling a theme removes all related configuration (like blocks) and
    * invokes the 'themes_uninstalled' hook.
    *
+   * Themes are allowed to be uninstalled even when their code has been removed
+   * from the filesystem, this is because themes do not allow uninstall hooks to
+   * be defined.
+   *
    * @param array $theme_list
    *   The themes to uninstall.
-   *
-   * @throws \Drupal\Core\Extension\Exception\UnknownExtensionException
-   *   Thrown when trying to uninstall a theme that was not installed.
    *
    * @throws \InvalidArgumentException
    *   Thrown when trying to uninstall the admin theme, the default theme or
