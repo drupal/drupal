@@ -25,7 +25,7 @@
         "google/protobuf": "v3.25.0",
         "instaclick/php-webdriver": "1.4.16",
         "justinrainbow/json-schema": "v5.2.13",
-        "mglaman/phpstan-drupal": "1.2.0",
+        "mglaman/phpstan-drupal": "1.2.1",
         "micheh/phpcs-gitlab": "1.1.0",
         "mikey179/vfsstream": "v1.6.11",
         "myclabs/deep-copy": "1.11.1",
