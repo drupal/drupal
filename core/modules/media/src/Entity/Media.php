@@ -39,10 +39,13 @@ use Drupal\user\EntityOwnerTrait;
  *       "edit" = "Drupal\media\MediaForm",
  *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm",
  *       "delete-multiple-confirm" = "Drupal\Core\Entity\Form\DeleteMultipleForm",
+ *       "revision-delete" = \Drupal\Core\Entity\Form\RevisionDeleteForm::class,
+ *       "revision-revert" = \Drupal\Core\Entity\Form\RevisionRevertForm::class,
  *     },
  *     "views_data" = "Drupal\media\MediaViewsData",
  *     "route_provider" = {
  *       "html" = "Drupal\media\Routing\MediaRouteProvider",
+ *       "revision" = \Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider::class,
  *     }
  *   },
  *   base_table = "media",
@@ -80,6 +83,9 @@ use Drupal\user\EntityOwnerTrait;
  *     "delete-multiple-form" = "/media/delete",
  *     "edit-form" = "/media/{media}/edit",
  *     "revision" = "/media/{media}/revisions/{media_revision}/view",
+ *     "revision-delete-form" = "/media/{media}/revision/{media_revision}/delete",
+ *     "revision-revert-form" = "/media/{media}/revision/{media_revision}/revert",
+ *     "version-history" = "/media/{media}/revisions",
  *   }
  * )
  */
@@ -381,18 +387,13 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
   public function preSaveRevision(EntityStorageInterface $storage, \stdClass $record) {
     parent::preSaveRevision($storage, $record);
 
-    $is_new_revision = $this->isNewRevision();
-    if (!$is_new_revision && isset($this->original) && empty($record->revision_log_message)) {
+    if (!$this->isNewRevision() && isset($this->original) && empty($record->revision_log_message)) {
       // If we are updating an existing media item without adding a
       // new revision, we need to make sure $entity->revision_log_message is
       // reset whenever it is empty.
       // Therefore, this code allows us to avoid clobbering an existing log
       // entry with an empty one.
-      $record->revision_log_message = $this->original->revision_log_message->value;
-    }
-
-    if ($is_new_revision) {
-      $record->revision_created = self::getRequestTime();
+      $this->setRevisionLogMessage($this->original->getRevisionLogMessage());
     }
   }
 

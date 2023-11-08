@@ -177,7 +177,7 @@ class BlockContent extends EditorialContentEntityBase implements BlockContentInt
   public function preSaveRevision(EntityStorageInterface $storage, \stdClass $record) {
     parent::preSaveRevision($storage, $record);
 
-    if (!$this->isNewRevision() && isset($this->original) && (!isset($record->revision_log) || $record->revision_log === '')) {
+    if (!$this->isNewRevision() && isset($this->original) && empty($record->revision_log_message)) {
       // If we are updating an existing block_content without adding a new
       // revision and the user did not supply a revision log, keep the existing
       // one.
