@@ -82,6 +82,15 @@ class MediaPermissions implements ContainerInjectionInterface {
       "delete any $type_id media" => [
         'title' => $this->t('%type_name: Delete any media', $type_params),
       ],
+      "view any $type_id media revisions" => [
+        'title' => $this->t('%type_name: View any media revision pages', $type_params),
+      ],
+      "revert any $type_id media revisions" => [
+        'title' => $this->t('Revert %type_name: Revert media revisions', $type_params),
+      ],
+      "delete any $type_id media revisions" => [
+        'title' => $this->t('Delete %type_name: Delete media revisions', $type_params),
+      ],
     ];
   }
 

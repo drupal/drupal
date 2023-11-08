@@ -4,6 +4,7 @@ namespace Drupal\Tests\media\Functional;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\media\Entity\Media;
 use Drupal\media\MediaInterface;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
@@ -21,39 +22,58 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    $this->createMediaType('test', ['id' => 'test', 'label' => 'test']);
+  }
+
+  /**
+   * Creates a media item.
+   *
+   * @param string $title
+   *   Title of media item.
+   *
+   * @return \Drupal\media\Entity\Media
+   *   A media item.
+   */
+  protected function createMedia(string $title): Media {
+    $media = Media::create([
+      'bundle' => 'test',
+      'name' => $title,
+    ]);
+    $media->save();
+
+    return $media;
+  }
+
+  /**
    * Checks media revision operations.
    */
   public function testRevisions() {
     $assert = $this->assertSession();
 
-    /** @var \Drupal\Core\Entity\Sql\SqlContentEntityStorage $media_storage */
-    $media_storage = $this->container->get('entity_type.manager')->getStorage('media');
-
-    // Create a media type and media item.
-    $media_type = $this->createMediaType('test');
-    $media = $media_storage->create([
-      'bundle' => $media_type->id(),
-      'name' => 'Unnamed',
-    ]);
-    $media->save();
+    $media = $this->createMedia('Sample media');
+    $originalRevisionId = $media->getRevisionId();
 
     // You can access the revision page when there is only 1 revision.
-    $this->drupalGet('media/' . $media->id() . '/revisions/' . $media->getRevisionId() . '/view');
+    $this->drupalGet($media->toUrl('revision'));
     $assert->statusCodeEquals(200);
 
     // Create some revisions.
-    $media_revisions = [];
-    $media_revisions[] = clone $media;
     $revision_count = 3;
     for ($i = 0; $i < $revision_count; $i++) {
       $media->revision_log = $this->randomMachineName(32);
       $media = $this->createMediaRevision($media);
-      $media_revisions[] = clone $media;
     }
 
-    // Get the last revision for simple checks.
-    /** @var \Drupal\media\MediaInterface $media */
-    $media = end($media_revisions);
+    // Confirm that the last revision is the default revision.
+    $this->assertTrue($media->isDefaultRevision(), 'Last revision is the default.');
+
+    // Get the original revision for simple checks.
+    $media = \Drupal::entityTypeManager()->getStorage('media')
+      ->loadRevision($originalRevisionId);
 
     // Test permissions.
     $this->drupalLogin($this->nonAdminUser);
@@ -62,18 +82,22 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
 
     // Test 'view all media revisions' permission ('view media' permission is
     // needed as well).
-    user_role_revoke_permissions($role->id(), ['view media', 'view all media revisions']);
-    $this->drupalGet('media/' . $media->id() . '/revisions/' . $media->getRevisionId() . '/view');
+    user_role_revoke_permissions($role->id(), [
+      'view media',
+      'view all media revisions',
+    ]);
+    $this->drupalGet($media->toUrl('revision'));
     $assert->statusCodeEquals(403);
-    $this->grantPermissions($role, ['view media', 'view all media revisions']);
-    $this->drupalGet('media/' . $media->id() . '/revisions/' . $media->getRevisionId() . '/view');
+    $this->grantPermissions($role, ['view any test media revisions']);
+    $this->drupalGet($media->toUrl('revision'));
+    $assert->statusCodeEquals(200);
+    user_role_revoke_permissions($role->id(), ['view any test media revisions']);
+    $this->grantPermissions($role, ['view all media revisions']);
+    $this->drupalGet($media->toUrl('revision'));
     $assert->statusCodeEquals(200);
 
     // Confirm the revision page shows the correct title.
     $assert->pageTextContains($media->getName());
-
-    // Confirm that the last revision is the default revision.
-    $this->assertTrue($media->isDefaultRevision(), 'Last revision is the default.');
   }
 
   /**
@@ -207,6 +231,119 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
       ->execute();
 
     $this->assertSame($expected_revisions, (int) $count);
+  }
+
+  /**
+   * Creates a media with a revision.
+   *
+   * @param \Drupal\media\Entity\Media $media
+   *   The media object.
+   */
+  private function createMediaWithRevision(Media $media): void {
+    $media->setNewRevision();
+    $media->setName('1st changed title');
+    $media->setRevisionLogMessage('first revision');
+    // Set revision creation time to check the confirmation message while
+    // deleting or reverting a revision.
+    $media->setRevisionCreationTime((new \DateTimeImmutable('11 January 2009 4pm'))->getTimestamp());
+    $media->save();
+  }
+
+  /**
+   * Tests deleting a revision.
+   */
+  public function testRevisionDelete(): void {
+    $user = $this->drupalCreateUser([
+      'edit any test media',
+      'view any test media revisions',
+      'delete any test media revisions',
+    ]);
+    $this->drupalLogin($user);
+
+    $media = $this->createMedia('Sample media');
+    $this->createMediaWithRevision($media);
+    $originalRevisionId = $media->getRevisionId();
+
+    // Cannot delete latest revision.
+    $this->drupalGet($media->toUrl('revision-delete-form'));
+    $this->assertSession()->statusCodeEquals(403);
+
+    // Create a new revision.
+    $media->setNewRevision();
+    $media->setRevisionLogMessage('second revision')
+      ->setRevisionCreationTime((new \DateTimeImmutable('12 March 2012 5pm'))->getTimestamp())
+      ->setName('Sample media updated')
+      ->save();
+
+    $this->drupalGet($media->toUrl('version-history'));
+    $this->assertSession()->pageTextContains("First revision");
+    $this->assertSession()->pageTextContains("Second revision");
+    $this->assertSession()->elementsCount('css', 'table tbody tr', 3);
+
+    // Reload the previous revision, and ensure we can delete it in the UI.
+    $revision = \Drupal::entityTypeManager()->getStorage('media')
+      ->loadRevision($originalRevisionId);
+    $this->drupalGet($revision->toUrl('revision-delete-form'));
+    $this->assertSession()->pageTextContains('Are you sure you want to delete the revision from Sun, 01/11/2009 - 16:00?');
+    $this->submitForm([], 'Delete');
+    $this->assertSession()->pageTextNotContains("First revision");
+    $this->assertSession()->pageTextContains("Second revision");
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->addressEquals(sprintf('media/%s/revisions', $media->id()));
+    $this->assertSession()->pageTextContains('Revision from Sun, 01/11/2009 - 16:00 of test 1st changed title has been deleted.');
+    // Check that only two revisions exists, i.e. the original and the latest
+    // revision.
+    $this->assertSession()->elementsCount('css', 'table tbody tr', 2);
+  }
+
+  /**
+   * Tests reverting a revision.
+   */
+  public function testRevisionRevert(): void {
+    /** @var \Drupal\user\UserInterface $user */
+    $user = $this->drupalCreateUser([
+      'edit any test media',
+      'view any test media revisions',
+      'revert any test media revisions',
+    ]);
+    $this->drupalLogin($user);
+
+    $media = $this->createMedia('Initial title');
+    $this->createMediaWithRevision($media);
+    $originalRevisionId = $media->getRevisionId();
+    $originalRevisionLabel = $media->getName();
+
+    // Cannot revert latest revision.
+    $this->drupalGet($media->toUrl('revision-revert-form'));
+    $this->assertSession()->statusCodeEquals(403);
+
+    // Create a new revision.
+    $media->setNewRevision();
+    $media->setRevisionLogMessage('Second revision')
+      ->setRevisionCreationTime((new \DateTimeImmutable('12 March 2012 5pm'))->getTimestamp())
+      ->setName('Sample media updated')
+      ->save();
+
+    $this->drupalGet($media->toUrl('version-history'));
+    $this->assertSession()->pageTextContains("First revision");
+    $this->assertSession()->pageTextContains("Second revision");
+    $this->assertSession()->elementsCount('css', 'table tbody tr', 3);
+
+    // Reload the previous revision, and ensure we can revert to it in the UI.
+    $revision = \Drupal::entityTypeManager()->getStorage('media')
+      ->loadRevision($originalRevisionId);
+    $this->drupalGet($revision->toUrl('revision-revert-form'));
+    $this->assertSession()->pageTextContains('Are you sure you want to revert to the revision from Sun, 01/11/2009 - 16:00?');
+
+    $this->submitForm([], 'Revert');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('Copy of the revision from Sun, 01/11/2009 - 16:00');
+    $this->assertSession()->addressEquals(sprintf('media/%s/revisions', $media->id()));
+    $this->assertSession()->pageTextContains(sprintf('test %s has been reverted to the revision from Sun, 01/11/2009 - 16:00.', $originalRevisionLabel));
+    $this->assertSession()->elementsCount('css', 'table tbody tr', 4);
+    $this->drupalGet($media->toUrl('edit-form'));
+    // Check if the title is changed to the reverted revision.
+    $this->assertSession()->pageTextContains('1st changed title');
   }
 
 }

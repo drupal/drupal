@@ -65,7 +65,7 @@ class MediaTest extends ResourceTestBase {
   protected function setUpAuthorization($method) {
     switch ($method) {
       case 'GET':
-        $this->grantPermissionsToTestedRole(['view media']);
+        $this->grantPermissionsToTestedRole(['view media', 'view any camelids media revisions']);
         break;
 
       case 'POST':
