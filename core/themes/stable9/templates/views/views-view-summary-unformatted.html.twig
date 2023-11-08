@@ -18,7 +18,7 @@
  * @see template_preprocess_views_view_summary_unformatted()
  */
 #}
-{% for row in rows  %}
+{% for row in rows %}
   {{ options.inline ? '<span' : '<div' }} >
   {% if row.separator -%}
     {{ row.separator }}

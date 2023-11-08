@@ -100,7 +100,7 @@
               <div class="card__footer">
                 {% if theme.module_dependencies %}
                   <div class="theme-info__requires">
-                    {{ 'Requires: @module_dependencies'|t({ '@module_dependencies': theme.module_dependencies|render }) }}
+                    {{ 'Requires: @module_dependencies'|t({'@module_dependencies': theme.module_dependencies|render}) }}
                   </div>
                 {% endif %}
                 {# Display operation links only if the theme is compatible. #}

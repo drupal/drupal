@@ -35,7 +35,7 @@
     {{ label }}
   {% endif %}
   {% if prefix is not empty %}
-    <span class="form-item__prefix{{disabled == 'disabled' ? ' is-disabled'}}">{{ prefix }}</span>
+    <span class="form-item__prefix{{ disabled == 'disabled' ? ' is-disabled' }}">{{ prefix }}</span>
   {% endif %}
   {% if description_display == 'before' and description.content %}
     <div{{ description.attributes.addClass(description_classes) }}>
@@ -44,7 +44,7 @@
   {% endif %}
   {{ children }}
   {% if suffix is not empty %}
-    <span class="form-item__suffix{{disabled == 'disabled' ? ' is-disabled'}}">{{ suffix }}</span>
+    <span class="form-item__suffix{{ disabled == 'disabled' ? ' is-disabled' }}">{{ suffix }}</span>
   {% endif %}
   {% if label_display == 'after' %}
     {{ label }}

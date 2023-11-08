@@ -35,11 +35,11 @@
   ]
 %}
 
-<div{{attributes.addClass(classes)}}>
+<div{{ attributes.addClass(classes) }}>
   <div class="banner-block__inner">
     {{ title_prefix }}
     {% if label %}
-      <h2{{title_attributes}}>{{ label }}</h2>
+      <h2{{ title_attributes }}>{{ label }}</h2>
     {% endif %}
     {{ title_suffix }}
     {% block content %}

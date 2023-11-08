@@ -56,7 +56,7 @@
                     <li>{{ reason }}</li>
                   {%- endfor -%}
                   {%- if module.required_by -%}
-                    <li>{{ 'Required by: @module-list'|t({'@module-list': module.required_by|safe_join(', ') }) }}</li>
+                    <li>{{ 'Required by: @module-list'|t({'@module-list': module.required_by|safe_join(', ')}) }}</li>
                   {%- endif -%}
                 </ul>
               </div>

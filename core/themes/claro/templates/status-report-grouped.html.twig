@@ -33,7 +33,7 @@
                 ]
               %}
               <div{{ create_attribute({'class': summary_classes}) }} role="button">
-                {% if requirement.severity_title  %}
+                {% if requirement.severity_title %}
                   <span class="visually-hidden">{{ requirement.severity_title }}</span>
                 {% endif %}
                 {{ requirement.title }}

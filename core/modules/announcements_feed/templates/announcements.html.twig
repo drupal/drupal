@@ -20,7 +20,7 @@
         <li class="announcement announcement--standard">
           <div class="announcement__title">
             <a href="{{ announcement.url }}">{{ announcement.title }}</a>
-            <div class="announcement__date">{{ announcement.datePublishedTimestamp | format_date('short') }}</div>
+            <div class="announcement__date">{{ announcement.datePublishedTimestamp|format_date('short') }}</div>
           </div>
         </li>
       {% endfor %}

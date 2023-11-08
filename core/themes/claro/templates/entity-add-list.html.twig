@@ -29,7 +29,7 @@
       #}
       {% set bundle_attributes = bundle.add_link.url.getOption('attributes') ?: {} %}
       {% set link_attributes = create_attribute(bundle_attributes).addClass('admin-item__link') %}
-      <div{{ create_attribute({ class: item_classes }) }}>
+      <div{{ create_attribute({class: item_classes}) }}>
         <dt class="admin-item__title">
           <a href="{{ bundle.add_link.url }}"{{ link_attributes|without('href') }}>
             {{ bundle.add_link.text }}

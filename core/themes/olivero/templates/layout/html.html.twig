@@ -40,7 +40,7 @@
     <title>{{ head_title|safe_join(' | ') }}</title>
     <css-placeholder token="{{ placeholder_token }}">
     <js-placeholder token="{{ placeholder_token }}">
-    {% include '@olivero/includes/preload.twig' with { olivero_path: olivero_path } only %}
+    {% include '@olivero/includes/preload.twig' with {olivero_path: olivero_path} only %}
     {{ noscript_styles }}
   </head>
   <body{{ attributes.addClass(body_classes) }}>

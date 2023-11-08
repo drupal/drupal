@@ -46,15 +46,15 @@
             <div class="details-wrapper">
               <div class="details-description">
                 <div class="requirements">
-                  <div class="admin-requirements">{{ 'Machine name: <span dir="ltr" class="table-filter-text-source">@machine-name</span>'|t({'@machine-name': module.machine_name }) }}</div>
+                  <div class="admin-requirements">{{ 'Machine name: <span dir="ltr" class="table-filter-text-source">@machine-name</span>'|t({'@machine-name': module.machine_name}) }}</div>
                   {% if module.version %}
-                    <div class="admin-requirements">{{ 'Version: @module-version'|t({'@module-version': module.version }) }}</div>
+                    <div class="admin-requirements">{{ 'Version: @module-version'|t({'@module-version': module.version}) }}</div>
                   {% endif %}
                   {% if module.requires %}
-                    <div class="admin-requirements">{{ 'Requires: @module-list'|t({'@module-list': module.requires }) }}</div>
+                    <div class="admin-requirements">{{ 'Requires: @module-list'|t({'@module-list': module.requires}) }}</div>
                   {% endif %}
                   {% if module.required_by %}
-                    <div class="admin-requirements">{{ 'Required by: @module-list'|t({'@module-list': module.required_by }) }}</div>
+                    <div class="admin-requirements">{{ 'Required by: @module-list'|t({'@module-list': module.required_by}) }}</div>
                   {% endif %}
                 </div>
                 {% if module.links %}
