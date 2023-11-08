@@ -266,7 +266,7 @@ class ThemeInstaller implements ThemeInstallerInterface {
     $theme_config = $this->configFactory->getEditable('system.theme');
     $list = $this->themeHandler->listInfo();
     foreach ($theme_list as $key) {
-      if (!isset($list[$key])) {
+      if ($extension_config->get("theme.$key") === NULL) {
         throw new UnknownExtensionException("Unknown theme: $key.");
       }
       if ($key === $theme_config->get('default')) {
@@ -277,7 +277,7 @@ class ThemeInstaller implements ThemeInstallerInterface {
       }
       // Base themes cannot be uninstalled if sub themes are installed, and if
       // they are not uninstalled at the same time.
-      if (!empty($list[$key]->sub_themes)) {
+      if (isset($list[$key]) && !empty($list[$key]->sub_themes)) {
         foreach ($list[$key]->sub_themes as $sub_key => $sub_label) {
           if (isset($list[$sub_key]) && !in_array($sub_key, $theme_list, TRUE)) {
             throw new \InvalidArgumentException("The base theme $key cannot be uninstalled, because theme $sub_key depends on it.");
