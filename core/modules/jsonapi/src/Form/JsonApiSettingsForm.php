@@ -5,6 +5,7 @@ namespace Drupal\jsonapi\Form;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\ConfigTarget;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\RedundantEditableConfigNamesTrait;
 
 /**
  * Configure JSON:API settings for this site.
@@ -12,19 +13,13 @@ use Drupal\Core\Form\FormStateInterface;
  * @internal
  */
 class JsonApiSettingsForm extends ConfigFormBase {
+  use RedundantEditableConfigNamesTrait;
 
   /**
    * {@inheritdoc}
    */
   public function getFormId() {
     return 'jsonapi_settings';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getEditableConfigNames() {
-    return ['jsonapi.settings'];
   }
 
   /**

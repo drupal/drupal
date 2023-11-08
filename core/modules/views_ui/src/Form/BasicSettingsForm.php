@@ -7,6 +7,7 @@ use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\RedundantEditableConfigNamesTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -15,6 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class BasicSettingsForm extends ConfigFormBase {
+  use RedundantEditableConfigNamesTrait;
 
   /**
    * The theme handler.
@@ -55,13 +57,6 @@ class BasicSettingsForm extends ConfigFormBase {
    */
   public function getFormId() {
     return 'views_ui_admin_settings_basic';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getEditableConfigNames() {
-    return ['views.settings'];
   }
 
   /**

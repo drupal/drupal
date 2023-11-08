@@ -7,6 +7,7 @@ use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\RedundantEditableConfigNamesTrait;
 use Drupal\Core\StreamWrapper\AssetsStream;
 use Drupal\Core\StreamWrapper\PrivateStream;
 use Drupal\Core\StreamWrapper\PublicStream;
@@ -21,6 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class FileSystemForm extends ConfigFormBase {
+  use RedundantEditableConfigNamesTrait;
 
   /**
    * The date formatter service.
@@ -82,13 +84,6 @@ class FileSystemForm extends ConfigFormBase {
    */
   public function getFormId() {
     return 'system_file_system_settings';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getEditableConfigNames() {
-    return ['system.file'];
   }
 
   /**
