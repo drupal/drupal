@@ -44,7 +44,7 @@
       {{ content|without('name') }}
     </div>
     {% if not status %}
-      <div class="media-library-item__status">{{ "unpublished" | t }}</div>
+      <div class="media-library-item__status">{{ "unpublished"|t }}</div>
     {% endif %}
     <div{{ metadata_attributes.addClass('media-library-item__attributes') }}>
       <div class="media-library-item__name">

@@ -38,7 +38,7 @@
       {{ content|without('name') }}
     </div>
     {% if not status %}
-      {{ "unpublished" | t }}
+      {{ "unpublished"|t }}
     {% endif %}
     <div{{ metadata_attributes }}>
       {{ name }}

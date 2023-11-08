@@ -76,13 +76,13 @@
           ]
         %}
 
-        <li{{ item.attributes.addClass(item_classes).setAttribute('data-drupal-selector', is_top_level_menu and item.below ? 'primary-nav-menu-item-has-children': false) }}>
+        <li{{ item.attributes.addClass(item_classes).setAttribute('data-drupal-selector', is_top_level_menu and item.below ? 'primary-nav-menu-item-has-children' : false) }}>
           {#
             A unique HTML ID should be used, but that isn't available through
             Twig yet, so the |clean_id filter is used for now.
             @see https://www.drupal.org/project/drupal/issues/3115445
           #}
-          {% set aria_id = (aria_id ~ loop.index )|clean_id %}
+          {% set aria_id = (aria_id ~ loop.index)|clean_id %}
           {% set link_title %}
             <span class="primary-nav__menu-link-inner primary-nav__menu-link-inner--level-{{ menu_level + 1 }}">{{ item.title }}</span>
           {% endset %}

@@ -41,7 +41,7 @@
     {% endif %}
 
     {% if tip.list|length %}
-      <ul class="filter-tips {{ long ? 'filter-tips--long' : 'filter-tips--short'}}">
+      <ul class="filter-tips {{ long ? 'filter-tips--long' : 'filter-tips--short' }}">
       {% for item in tip.list %}
         {%
           set item_classes = [

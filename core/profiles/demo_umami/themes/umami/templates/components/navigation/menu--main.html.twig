@@ -46,7 +46,7 @@
   %}
   {% if items %}
     {% if menu_level == 0 %}
-      <ul{{ attributes.addClass(menu_classes).setAttribute('data-drupal-selector','menu-main') }}> {# 1. #}
+      <ul{{ attributes.addClass(menu_classes).setAttribute('data-drupal-selector', 'menu-main') }}> {# 1. #}
     {% else %}
       <ul{{ attributes.removeClass(menu_classes).addClass(submenu_classes) }}> {# 1. #}
     {% endif %}
