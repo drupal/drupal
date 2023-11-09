@@ -1383,6 +1383,11 @@ function _claro_preprocess_file_and_image_widget(array &$variables) {
   $variables['has_meta'] = $alt_is_visible || $title_is_visible || $display_is_visible || $description_is_visible;
   $variables['display'] = $display_is_visible;
 
+  // Handle the default checkbox display after the file is uploaded.
+  if (array_key_exists('display', $element)) {
+    $variables['data']['display']['#checked'] = $element['display']['#value'];
+  }
+
   // Render file upload input and upload button (or file name and remove button,
   // if the field is not empty) in an emphasized div.
   foreach ($variables['data'] as $key => $item) {
