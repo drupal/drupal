@@ -112,6 +112,7 @@ Breakpoint
 
 Cache
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
+- Kristiaan Van den Eynde 'kristiaanvandeneynde' https://www.drupal.org/u/kristiaanvandeneynde
 
 CKEditor 5
 - Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
