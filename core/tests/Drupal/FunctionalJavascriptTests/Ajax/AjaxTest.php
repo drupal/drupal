@@ -2,6 +2,7 @@
 
 namespace Drupal\FunctionalJavascriptTests\Ajax;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
@@ -37,7 +38,7 @@ class AjaxTest extends WebDriverTestBase {
     $assert = $this->assertSession();
     $assert->pageTextContains('Current theme: claro');
 
-    // Now click the modal, which should also use the admin theme.
+    // Now click the modal, which should use the front-end theme.
     $this->drupalGet('ajax-test/dialog');
     $assert->pageTextNotContains('Current theme: stable9');
     $this->clickLink('Link 8 (ajax)');
@@ -59,9 +60,11 @@ class AjaxTest extends WebDriverTestBase {
 
     // Insert a fake library into the already loaded library settings.
     $fake_library = 'fakeLibrary/fakeLibrary';
-    $session->evaluateScript("drupalSettings.ajaxPageState.libraries = drupalSettings.ajaxPageState.libraries + ',$fake_library';");
-
-    $libraries = $session->evaluateScript('drupalSettings.ajaxPageState.libraries');
+    $libraries = $session->evaluateScript("drupalSettings.ajaxPageState.libraries");
+    $libraries = UrlHelper::compressQueryParameter(UrlHelper::uncompressQueryParameter($libraries) . ',' . $fake_library);
+    $session->evaluateScript("drupalSettings.ajaxPageState.libraries = '$libraries';");
+    $ajax_page_state = $session->evaluateScript("drupalSettings.ajaxPageState");
+    $libraries = UrlHelper::uncompressQueryParameter($ajax_page_state['libraries']);
     // Test that the fake library is set.
     $this->assertStringContainsString($fake_library, $libraries);
 
@@ -70,21 +73,22 @@ class AjaxTest extends WebDriverTestBase {
     $assert->assertWaitOnAjaxRequest();
 
     // Test that the fake library is still set after the AJAX call.
-    $libraries = $session->evaluateScript('drupalSettings.ajaxPageState.libraries');
-    $this->assertStringContainsString($fake_library, $libraries);
+    $ajax_page_state = $session->evaluateScript("drupalSettings.ajaxPageState");
+    // Test that the fake library is set.
+    $this->assertStringContainsString($fake_library, UrlHelper::uncompressQueryParameter($ajax_page_state['libraries']));
 
     // Reload the page, this should reset the loaded libraries and remove the
     // fake library.
     $this->drupalGet('ajax-test/dialog');
-    $libraries = $session->evaluateScript('drupalSettings.ajaxPageState.libraries');
-    $this->assertStringNotContainsString($fake_library, $libraries);
+    $ajax_page_state = $session->evaluateScript("drupalSettings.ajaxPageState");
+    $this->assertStringNotContainsString($fake_library, UrlHelper::uncompressQueryParameter($ajax_page_state['libraries']));
 
     // Click on the AJAX link again, and the libraries should still not contain
     // the fake library.
     $this->clickLink('Link 8 (ajax)');
     $assert->assertWaitOnAjaxRequest();
-    $libraries = $session->evaluateScript('drupalSettings.ajaxPageState.libraries');
-    $this->assertStringNotContainsString($fake_library, $libraries);
+    $ajax_page_state = $session->evaluateScript("drupalSettings.ajaxPageState");
+    $this->assertStringNotContainsString($fake_library, UrlHelper::uncompressQueryParameter($ajax_page_state['libraries']));
   }
 
   /**

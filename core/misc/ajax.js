@@ -835,6 +835,7 @@
 
     // Allow Drupal to return new JavaScript and CSS files to load without
     // returning the ones already loaded.
+    // @see \Drupal\Core\StackMiddleWare\AjaxPageState
     // @see \Drupal\Core\Theme\AjaxBasePageNegotiator
     // @see \Drupal\Core\Asset\LibraryDependencyResolverInterface::getMinimalRepresentativeSubset()
     // @see system_js_settings_alter()

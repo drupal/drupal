@@ -43,17 +43,17 @@ class FieldTypeCategoriesIntegrationTest extends BrowserTestBase {
    */
   public function testLibrariesLoaded() {
     $this->drupalGet('admin/structure/types/manage/' . $this->drupalCreateContentType()->id() . '/fields/add-field');
-    $page_content = $this->getSession()->getPage()->getContent();
+    $settings = $this->getDrupalSettings();
     $css_libraries = [
-      'drupal.file-icon',
-      'drupal.text-icon',
-      'drupal.options-icon',
-      'drupal.comment-icon',
-      'drupal.link-icon',
+      'file/drupal.file-icon',
+      'text/drupal.text-icon',
+      'options/drupal.options-icon',
+      'comment/drupal.comment-icon',
+      'link/drupal.link-icon',
     ];
+    $libraries = explode(',', $settings['ajaxPageState']['libraries']);
     foreach ($css_libraries as $css_library) {
-      // Check if the library asset is present in the rendered HTML.
-      $this->assertStringContainsString($css_library, $page_content);
+      $this->assertContains($css_library, $libraries);
     }
   }
 

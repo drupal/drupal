@@ -3,6 +3,7 @@
 namespace Drupal\FunctionalJavascriptTests;
 
 use Behat\Mink\Exception\DriverException;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Runner\BaseTestRunner;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -218,8 +219,11 @@ abstract class WebDriverTestBase extends BrowserTestBase {
   }
 })();
 EndOfScript;
-
-    return $this->getSession()->evaluateScript($script) ?: [];
+    $settings = $this->getSession()->evaluateScript($script) ?: [];
+    if (isset($settings['ajaxPageState'])) {
+      $settings['ajaxPageState']['libraries'] = UrlHelper::uncompressQueryParameter($settings['ajaxPageState']['libraries']);
+    }
+    return $settings;
   }
 
   /**
