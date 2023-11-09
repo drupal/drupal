@@ -318,10 +318,18 @@ class FileWidget extends WidgetBase {
    */
   public static function value($element, $input, FormStateInterface $form_state) {
     if ($input) {
-      // Checkboxes lose their value when empty.
-      // If the display field is present make sure its unchecked value is saved.
       if (empty($input['display'])) {
-        $input['display'] = $element['#display_field'] ? 0 : 1;
+        // Updates the display field with the default value because
+        // #display_field is invisible.
+        if (empty($input['fids'])) {
+          $input['display'] = $element['#display_default'];
+        }
+        // Checkboxes lose their value when empty.
+        // If the display field is present, make sure its unchecked value is
+        // saved.
+        else {
+          $input['display'] = $element['#display_field'] ? 0 : 1;
+        }
       }
     }
 
