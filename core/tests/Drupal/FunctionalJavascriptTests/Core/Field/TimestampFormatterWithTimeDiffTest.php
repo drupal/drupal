@@ -86,6 +86,7 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
    * Tests the 'timestamp' formatter when is used with time difference setting.
    */
   public function testTimestampFormatterWithTimeDiff(): void {
+    $this->markTestSkipped("Skipped due to frequent random test failures. See https://www.drupal.org/project/drupal/issues/3400150");
     $this->drupalGet($this->entity->toUrl());
 
     // Unit testing Drupal.timeDiff.format(). Not using @dataProvider mechanism
@@ -136,6 +137,7 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
    * Tests the 'timestamp' formatter without refresh interval.
    */
   public function testNoRefreshInterval(): void {
+    $this->markTestSkipped("Skipped due to frequent random test failures. See https://www.drupal.org/project/drupal/issues/3400150");
     // Set the refresh interval to zero, meaning "no refresh".
     $display = EntityViewDisplay::load('entity_test.entity_test.default');
     $component = $display->getComponent('time_field');
