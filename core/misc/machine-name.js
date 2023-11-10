@@ -205,7 +205,13 @@
         // If it is editable, append an edit link.
         const $link = $(
           '<span class="admin-link"><button type="button" class="link" aria-label="'
-            .concat(Drupal.t('Edit machine name'), '">')
+            .concat(
+              Drupal.t('Edit machine name'),
+              '" data-drupal-selector="'.concat(
+                $target.data('drupal-selector'),
+              ),
+              '-machine-name-admin-link">',
+            )
             .concat(Drupal.t('Edit'), '</button></span>'),
         )
           .on('click', eventData, clickEditHandler)
