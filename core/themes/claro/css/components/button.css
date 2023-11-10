@@ -103,6 +103,11 @@
   font-weight: 900;
 }
 
+a.button:hover,
+a.button:active {
+  color: var(--button-fg-color);
+}
+
 /* Primary button style.s */
 
 .button--primary {
