@@ -9,6 +9,7 @@ This is just a www.test.com. paragraph with person@test.com. some http://www.tes
 http://www.test.com
 www.test.com
 person@test.com
+person@test
 <code>www.test.com</code>
 
 What about tags that don't exist <x>like x say www.test.com</x>? And what about tag <pooh>beginning www.test.com with p?</pooh>
@@ -25,6 +26,7 @@ The old URL filter has problems with <a title="kind of link www.example.com with
 <dt>www.test.com</dt>
 <dd>http://www.test.com</dd>
 <dd>person@test.com</dd>
+<dd>person@test</dd>
 <dt>check www.test.com</dt>
 <dd>this with some text around: http://www.test.com not so easy person@test.com now?</dd>
 </dl>

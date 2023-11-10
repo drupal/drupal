@@ -9,6 +9,7 @@ This is just a <a href="http://www.test.com">www.test.com</a>. paragraph with <a
 <a href="http://www.test.com">http://www.test.com</a>
 <a href="http://www.test.com">www.test.com</a>
 <a href="mailto:person@test.com">person@test.com</a>
+person@test
 <code>www.test.com</code>
 
 What about tags that don't exist <x>like x say <a href="http://www.test.com">www.test.com</a></x>? And what about tag <pooh>beginning <a href="http://www.test.com">www.test.com</a> with p?</pooh>
@@ -25,6 +26,7 @@ The old URL filter has problems with <a title="kind of link www.example.com with
 <dt><a href="http://www.test.com">www.test.com</a></dt>
 <dd><a href="http://www.test.com">http://www.test.com</a></dd>
 <dd><a href="mailto:person@test.com">person@test.com</a></dd>
+<dd>person@test</dd>
 <dt>check <a href="http://www.test.com">www.test.com</a></dt>
 <dd>this with some text around: <a href="http://www.test.com">http://www.test.com</a> not so easy <a href="mailto:person@test.com">person@test.com</a> now?</dd>
 </dl>
