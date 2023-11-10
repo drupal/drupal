@@ -408,7 +408,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
       }
     }
 
-    // Retrieve base field definitions from modules.
+    // Retrieve bundle field definitions from modules.
     $this->moduleHandler->invokeAllWith(
       'entity_bundle_field_info',
       function (callable $hook, string $module) use (&$bundle_field_definitions, $entity_type, $bundle, $base_field_definitions) {
