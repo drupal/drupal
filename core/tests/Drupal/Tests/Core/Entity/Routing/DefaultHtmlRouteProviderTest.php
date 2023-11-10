@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Entity\Routing\DefaultHtmlRouteProviderTest.
- */
-
 namespace Drupal\Tests\Core\Entity\Routing;
 
 use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;

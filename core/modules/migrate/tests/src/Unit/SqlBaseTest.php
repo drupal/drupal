@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\migrate\Unit\SqlBaseTest.
- */
-
 namespace Drupal\Tests\migrate\Unit;
 
 use Drupal\migrate\Plugin\MigrationInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Form\FormBuilderTest.
- */
-
 namespace Drupal\Tests\Core\Form;
 
 use Drupal\Component\Utility\Html;

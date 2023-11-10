@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Component\Assertion\InspectorTest.
- */
-
 namespace Drupal\Tests\Component\Assertion;
 
 use PHPUnit\Framework\TestCase;

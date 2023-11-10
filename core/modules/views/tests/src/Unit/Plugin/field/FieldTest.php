@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Unit\Plugin\field\FieldTest.
- */
-
 namespace Drupal\Tests\views\Unit\Plugin\field;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;

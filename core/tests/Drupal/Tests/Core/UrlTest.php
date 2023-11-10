@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\UrlTest.
- */
-
 namespace Drupal\Tests\Core;
 
 use Drupal\Component\Utility\UrlHelper;

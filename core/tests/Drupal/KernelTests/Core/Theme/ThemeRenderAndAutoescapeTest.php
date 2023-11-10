@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Theme\ThemeRenderAndAutoescapeTest.
- */
-
 namespace Drupal\KernelTests\Core\Theme;
 
 use Drupal\Component\Utility\Html;

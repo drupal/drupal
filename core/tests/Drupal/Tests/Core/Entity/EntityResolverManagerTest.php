@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Entity\EntityResolverManagerTest.
- */
-
 namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\Entity\EntityBase;
