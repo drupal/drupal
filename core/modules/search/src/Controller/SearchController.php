@@ -95,7 +95,7 @@ class SearchController extends ControllerBase {
       if ($plugin->isSearchExecutable()) {
         // Log the search.
         if ($this->config('search.settings')->get('logging')) {
-          $this->logger->notice('Searched %type for %keys.', ['%keys' => $keys, '%type' => $entity->label()]);
+          $this->logger->info('Searched %type for %keys.', ['%keys' => $keys, '%type' => $entity->label()]);
         }
 
         // Collect the search results.

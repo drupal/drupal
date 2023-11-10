@@ -133,14 +133,14 @@ class MailHandler implements MailHandlerInterface {
     }
 
     if (!$message->isPersonal()) {
-      $this->logger->notice('%sender-name (@sender-from) sent an email regarding %contact_form.', [
+      $this->logger->info('%sender-name (@sender-from) sent an email regarding %contact_form.', [
         '%sender-name' => $sender_cloned->getAccountName(),
         '@sender-from' => $sender_cloned->getEmail() ?? '',
         '%contact_form' => $contact_form->label(),
       ]);
     }
     else {
-      $this->logger->notice('%sender-name (@sender-from) sent %recipient-name an email.', [
+      $this->logger->info('%sender-name (@sender-from) sent %recipient-name an email.', [
         '%sender-name' => $sender_cloned->getAccountName(),
         '@sender-from' => $sender_cloned->getEmail(),
         '%recipient-name' => $message->getPersonalRecipient()->getAccountName(),
