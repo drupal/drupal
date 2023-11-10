@@ -47,7 +47,7 @@
 
     /* Ensure title does not wrap under image until necessary. */
     & + .node__title {
-      flex-basis: calc(100% - calc(4.5 * var(--sp)));
+      flex-basis: calc(100% - var(--sp4-5));
 
       @media (--lg) {
         flex-basis: auto;
@@ -59,8 +59,8 @@
     }
 
     & img {
-      width: calc(3.5 * var(--sp));
-      height: calc(3.5 * var(--sp));
+      width: var(--sp3-5);
+      height: var(--sp3-5);
       object-fit: cover;
       border-radius: 50%;
 
