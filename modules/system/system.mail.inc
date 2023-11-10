@@ -69,7 +69,7 @@ class DefaultMailSystem implements MailSystemInterface {
     // We suppress warnings and notices from mail() because of issues on some
     // hosts. The return value of this method will still indicate whether mail
     // was sent successfully.
-    if (!isset($_SERVER['WINDIR']) && strpos($_SERVER['SERVER_SOFTWARE'], 'Win32') === FALSE) {
+    if (!isset($_SERVER['WINDIR']) && (!isset($_SERVER['SERVER_SOFTWARE']) || strpos($_SERVER['SERVER_SOFTWARE'], 'Win32') === FALSE)) {
       // We validate the return path, unless it is equal to the site mail, which
       // we assume to be safe.
       if (isset($message['Return-Path']) && !ini_get('safe_mode') && (variable_get('site_mail', ini_get('sendmail_from')) === $message['Return-Path'] || self::_isShellSafe($message['Return-Path']))) {
