@@ -2,7 +2,9 @@
 
 namespace Drupal\Tests\path\Functional;
 
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 
@@ -59,17 +61,17 @@ class PathContentModerationTest extends BrowserTestBase {
     $this->drupalGet('admin/config/regional/language/detection');
     $this->submitForm($edit, 'Save settings');
 
-    // Enable translation for moderated node.
-    $edit = [
-      'entity_types[node]' => 1,
-      'settings[node][moderated][translatable]' => 1,
-      'settings[node][moderated][fields][path]' => 1,
-      'settings[node][moderated][fields][body]' => 1,
-      'settings[node][moderated][settings][language][language_alterable]' => 1,
-    ];
-    $this->drupalGet('admin/config/regional/content-language');
-    $this->submitForm($edit, 'Save configuration');
-    \Drupal::entityTypeManager()->clearCachedDefinitions();
+    // Enable translation for page.
+    $config = ContentLanguageSettings::loadByEntityTypeBundle('node', 'moderated');
+    $config->setDefaultLangcode(LanguageInterface::LANGCODE_SITE_DEFAULT);
+    $config->setLanguageAlterable(TRUE);
+    $config->save();
+
+    $content_translation_manager = $this->container->get('content_translation.manager');
+    $content_translation_manager->setEnabled('node', 'moderated', TRUE);
+    $content_translation_manager->setBundleTranslationSettings('node', 'moderated', [
+      'untranslatable_fields_hide' => FALSE,
+    ]);
   }
 
   /**
