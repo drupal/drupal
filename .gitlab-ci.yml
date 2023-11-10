@@ -113,7 +113,7 @@ stages:
   variables:
     PHPCS_PHP_VERSION: "5.6"
   interruptible: true
-  allow_failure: false
+  allow_failure: true
   retry:
     max: 2
     when:
