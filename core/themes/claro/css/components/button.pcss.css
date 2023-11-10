@@ -90,6 +90,11 @@
   }
 }
 
+a.button:hover,
+a.button:active {
+  color: var(--button-fg-color);
+}
+
 /* Primary button style.s */
 .button--primary {
   color: var(--button-fg-color--primary);
