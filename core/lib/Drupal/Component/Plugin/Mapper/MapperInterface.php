@@ -14,7 +14,7 @@ namespace Drupal\Component\Plugin\Mapper;
 interface MapperInterface {
 
   /**
-   * Gets a preconfigured instance of a plugin.
+   * Gets or creates a plugin instance that satisfies the given options.
    *
    * @param array $options
    *   An array of options that can be used to determine a suitable plugin to
