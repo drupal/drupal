@@ -2042,6 +2042,8 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
  *   - WATCHDOG_DEBUG: Debug-level messages.
  * @param $link
  *   A link to associate with the message.
+ *   SECURITY NOTE: Make sure your link is properly sanitized.
+ *   Use the l() function to generate secure links.
  *
  * @see watchdog_severity_levels()
  * @see hook_watchdog()

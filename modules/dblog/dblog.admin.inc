@@ -188,7 +188,7 @@ function dblog_event($id) {
       ),
       array(
         array('data' => t('Operations'), 'header' => TRUE),
-        $dblog->link,
+        filter_xss($dblog->link),
       ),
     );
     $build['dblog_table'] = array(
