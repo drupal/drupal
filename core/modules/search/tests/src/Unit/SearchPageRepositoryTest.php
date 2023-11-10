@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\search\Unit\SearchPageRepositoryTest.
- */
-
 namespace Drupal\Tests\search\Unit;
 
 use Drupal\Core\Entity\EntityTypeInterface;

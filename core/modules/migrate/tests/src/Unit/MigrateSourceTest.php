@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\migrate\Unit\MigrateSourceTest.
- */
-
 namespace Drupal\Tests\migrate\Unit;
 
 use Drupal\Core\Cache\CacheBackendInterface;

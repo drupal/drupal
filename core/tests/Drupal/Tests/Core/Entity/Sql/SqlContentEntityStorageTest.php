@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Entity\Sql\SqlContentEntityStorageTest.
- */
-
 namespace Drupal\Tests\Core\Entity\Sql;
 
 use Drupal\Core\Cache\MemoryCache\MemoryCache;

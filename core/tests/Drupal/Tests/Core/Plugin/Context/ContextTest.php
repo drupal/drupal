@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Plugin\Context\ContextTest.
- */
-
 namespace Drupal\Tests\Core\Plugin\Context;
 
 use Drupal\Core\Cache\CacheableDependencyInterface;

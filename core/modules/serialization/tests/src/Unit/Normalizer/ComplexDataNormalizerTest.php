@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\serialization\Unit\Normalizer\ComplexDataNormalizerTest.
- */
-
 namespace Drupal\Tests\serialization\Unit\Normalizer;
 
 use Drupal\Core\TypedData\ComplexDataInterface;

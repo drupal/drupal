@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Render\ElementInfoManagerTest.
- */
-
 namespace Drupal\Tests\Core\Render;
 
 use Drupal\Core\Render\ElementInfoManager;

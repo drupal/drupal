@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\migrate\Unit\Plugin\migrate\destination\EntityContentBaseTest.
- */
-
 namespace Drupal\Tests\migrate\Unit\Plugin\migrate\destination;
 
 use Drupal\Core\Entity\ContentEntityInterface;

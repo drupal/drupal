@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\field\Unit\FieldStorageConfigEntityUnitTest.
- */
-
 namespace Drupal\Tests\field\Unit;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

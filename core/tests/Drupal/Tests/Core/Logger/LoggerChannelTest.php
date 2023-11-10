@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Logger\LoggerChannelTest.
- */
-
 namespace Drupal\Tests\Core\Logger;
 
 use Drupal\Core\Logger\LoggerChannel;

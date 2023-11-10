@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Menu\LocalActionManagerTest.
- */
-
 namespace Drupal\Tests\Core\Menu;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
