@@ -34,7 +34,7 @@ class StyleSerializerKernelTest extends ViewsKernelTestBase {
   /**
    * @covers ::calculateDependencies
    */
-  public function testCalculateDepenencies() {
+  public function testCalculateDependencies() {
     /** @var \Drupal\views\Entity\View $view */
     $view = View::load('test_serializer_display_entity');
     $display = &$view->getDisplay('rest_export_1');

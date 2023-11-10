@@ -43,7 +43,7 @@ class RenderCacheIntegrationTest extends ViewsKernelTestBase {
    * Tests a field-based view's cache tags when using the "none" cache plugin.
    */
   public function testFieldBasedViewCacheTagsWithCachePluginNone() {
-    $view = Views::getview('entity_test_fields');
+    $view = Views::getView('entity_test_fields');
     $view->getDisplay()->overrideOption('cache', [
       'type' => 'none',
     ]);
@@ -56,7 +56,7 @@ class RenderCacheIntegrationTest extends ViewsKernelTestBase {
    * Tests a field-based view's cache tags when using the "tag" cache plugin.
    */
   public function testFieldBasedViewCacheTagsWithCachePluginTag() {
-    $view = Views::getview('entity_test_fields');
+    $view = Views::getView('entity_test_fields');
     $view->getDisplay()->overrideOption('cache', [
       'type' => 'tag',
     ]);
@@ -69,7 +69,7 @@ class RenderCacheIntegrationTest extends ViewsKernelTestBase {
    * Tests a field-based view's cache tags when using the "time" cache plugin.
    */
   public function testFieldBasedViewCacheTagsWithCachePluginTime() {
-    $view = Views::getview('entity_test_fields');
+    $view = Views::getView('entity_test_fields');
     $view->getDisplay()->overrideOption('cache', [
       'type' => 'time',
       'options' => [
@@ -91,7 +91,7 @@ class RenderCacheIntegrationTest extends ViewsKernelTestBase {
    * @internal
    */
   protected function assertCacheTagsForFieldBasedView(bool $do_assert_views_caches): void {
-    $view = Views::getview('entity_test_fields');
+    $view = Views::getView('entity_test_fields');
 
     // Empty result (no entities yet).
     $base_tags = ['config:views.view.entity_test_fields', 'entity_test_list'];
@@ -190,7 +190,7 @@ class RenderCacheIntegrationTest extends ViewsKernelTestBase {
    * Tests an entity-based view's cache tags when using the "none" cache plugin.
    */
   public function testEntityBasedViewCacheTagsWithCachePluginNone() {
-    $view = Views::getview('entity_test_row');
+    $view = Views::getView('entity_test_row');
     $view->getDisplay()->overrideOption('cache', [
       'type' => 'none',
     ]);
@@ -203,7 +203,7 @@ class RenderCacheIntegrationTest extends ViewsKernelTestBase {
    * Tests an entity-based view's cache tags when using the "tag" cache plugin.
    */
   public function testEntityBasedViewCacheTagsWithCachePluginTag() {
-    $view = Views::getview('entity_test_row');
+    $view = Views::getView('entity_test_row');
     $view->getDisplay()->overrideOption('cache', [
       'type' => 'tag',
     ]);
@@ -216,7 +216,7 @@ class RenderCacheIntegrationTest extends ViewsKernelTestBase {
    * Tests an entity-based view's cache tags when using the "time" cache plugin.
    */
   public function testEntityBasedViewCacheTagsWithCachePluginTime() {
-    $view = Views::getview('entity_test_row');
+    $view = Views::getView('entity_test_row');
     $view->getDisplay()->overrideOption('cache', [
       'type' => 'time',
       'options' => [
@@ -235,7 +235,7 @@ class RenderCacheIntegrationTest extends ViewsKernelTestBase {
    * @internal
    */
   protected function assertCacheTagsForEntityBasedView(bool $do_assert_views_caches): void {
-    $view = Views::getview('entity_test_row');
+    $view = Views::getView('entity_test_row');
 
     // Empty result (no entities yet).
     $base_tags = $base_render_tags = ['config:views.view.entity_test_row', 'entity_test_list'];

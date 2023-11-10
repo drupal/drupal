@@ -128,7 +128,7 @@ class PathLanguageUiTest extends PathTestBase {
     // Create another node, with no alias, to ensure non-language specific
     // aliases are loaded correctly.
     $node = $this->drupalCreateNode();
-    $this->drupalget($node->toUrl('edit-form'));
+    $this->drupalGet($node->toUrl('edit-form'));
     $this->submitForm([], 'Save');
     $this->assertSession()->pageTextNotContains('The alias is already in use.');
   }

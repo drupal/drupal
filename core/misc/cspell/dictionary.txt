@@ -16,7 +16,6 @@ alphadecimal
 alternatif
 amphibius
 ampm
-andif
 annot
 anonyme
 anothermodule
@@ -220,7 +219,6 @@ cádiz
 databasename
 datas
 datelist
-dateonly
 daterange
 datestamp
 datetimeiso
@@ -242,7 +240,6 @@ denormalizers
 dependee
 dependee's
 dependees
-depenencies
 deprioritize
 derivedfrom
 desaturate
@@ -288,7 +285,6 @@ drupalelementstyle
 drupalelementstylecommand
 drupalelementstyleediting
 drupalelementstyleui
-drupalget
 drupalhtmlbuilder
 drupalimage
 drupalin
@@ -394,8 +390,6 @@ funic
 furchtbar
 gabilondo
 gethttpclient
-getlist
-getview
 gids
 gloop
 gnumeric
@@ -410,7 +404,6 @@ guzzlehttp
 gzipped
 hande
 harkonnen
-hasdata
 hasher
 hashmarks
 hateoas
@@ -492,7 +485,6 @@ lamoids
 langcode
 langcodes
 languageswitcher
-lazybuilder
 libc
 libmysqlclient
 licious
@@ -504,7 +496,6 @@ linkability
 linkback
 linkgenerator
 linkification
-linksby
 linkset
 linktext
 lisu
@@ -660,7 +651,6 @@ opendocument
 openxmlformats
 optgroups
 optin
-optionchecker
 orgchart
 ossp
 otel
@@ -983,7 +973,6 @@ testfilename
 testfilter
 testfunc
 testfunction
-testget
 testgroups
 testid
 testitem
@@ -994,7 +983,6 @@ testload
 testlogger
 testname
 testproject
-testservice
 teststring
 testsuite
 testsuites
