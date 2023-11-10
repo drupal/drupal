@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\contact\Functional;
 
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -54,12 +56,11 @@ class ContactLanguageTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->fieldNotExists('edit-langcode-0-value');
 
-    // Enable language select from content language settings page.
-    $settings_path = 'admin/config/regional/content-language';
-    $edit['entity_types[contact_message]'] = TRUE;
-    $edit['settings[contact_message][feedback][settings][language][language_alterable]'] = TRUE;
-    $this->drupalGet($settings_path);
-    $this->submitForm($edit, 'Save configuration');
+    // Enable language select.
+    $config = ContentLanguageSettings::loadByEntityTypeBundle('contact_message', 'feedback');
+    $config->setDefaultLangcode(LanguageInterface::LANGCODE_SITE_DEFAULT);
+    $config->setLanguageAlterable(TRUE);
+    $config->save();
 
     // Ensure that contact form now shows the language select.
     $this->drupalGet('contact');
