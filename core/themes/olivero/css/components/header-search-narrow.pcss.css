@@ -25,7 +25,7 @@
 
   & input[type="search"] {
     width: calc(100% + var(--sp2));
-    height: calc(3 * var(--sp));
+    height: var(--sp3);
     padding-block: 0;
     padding-inline-start: var(--sp);
     padding-inline-end: var(--sp);
@@ -49,7 +49,7 @@
     }
 
     @media (--md) {
-      height: calc(4 * var(--sp));
+      height: var(--sp4);
       padding-inline-start: var(--sp2);
       padding-inline-end: var(--sp2);
     }

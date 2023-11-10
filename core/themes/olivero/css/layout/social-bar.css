@@ -30,7 +30,7 @@
   .social-bar__inner {
     position: relative;
     width: var(--content-left);
-    padding-block: calc(5 * var(--sp));
+    padding-block: var(--sp5);
     padding-inline-start: 0;
     padding-inline-end: 0;
   }
@@ -39,7 +39,7 @@
     position: fixed;
     inset-block-start: var(--sp6);
     inset-inline-start: 0;
-    height: calc(100vh - 6 * var(--sp));
+    height: calc(100vh - var(--sp6));
   }
 }
 

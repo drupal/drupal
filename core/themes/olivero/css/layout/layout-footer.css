@@ -26,7 +26,7 @@
 
 @media (min-width: 75rem) {
   .site-footer__inner {
-    padding-block: var(--sp4) calc(13 * var(--sp));
+    padding-block: var(--sp4) var(--sp13);
   }
 }
 

@@ -54,7 +54,9 @@
   --sp2: calc(2 * var(--sp));
   --sp2-5: calc(2.5 * var(--sp));
   --sp3: calc(3 * var(--sp));
+  --sp3-5: calc(3.5 * var(--sp));
   --sp4: calc(4 * var(--sp));
+  --sp4-5: calc(4.5 * var(--sp));
   --sp5: calc(5 * var(--sp));
   --sp6: calc(6 * var(--sp));
   --sp7: calc(7 * var(--sp));
@@ -63,6 +65,7 @@
   --sp10: calc(10 * var(--sp));
   --sp11: calc(11 * var(--sp));
   --sp12: calc(12 * var(--sp));
+  --sp13: calc(13 * var(--sp));
 
   /**
    * Gray colors.
@@ -116,7 +119,7 @@
   --color--green: #3fa21c;
 
   /* Header */
-  --header-height-wide-when-fixed: calc(6 * var(--sp));
+  --header-height-wide-when-fixed: var(--sp6);
 
   /* Width of slide out navigation */
   --mobile-nav-width: 31.25rem;
