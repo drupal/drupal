@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Component\Utility\VariableTest.
- */
-
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Variable;

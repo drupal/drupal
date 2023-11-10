@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Entity\EntityFieldManagerTest.
- */
-
 namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;

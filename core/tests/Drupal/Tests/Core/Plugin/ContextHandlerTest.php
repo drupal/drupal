@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Plugin\ContextHandlerTest.
- */
-
 namespace Drupal\Tests\Core\Plugin;
 
 use Drupal\Component\Plugin\ConfigurableInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Plugin\PluginBaseTest.
- */
-
 namespace Drupal\Tests\views\Kernel\Plugin;
 
 use Drupal\Core\Render\RenderContext;

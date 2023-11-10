@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Authentication\AuthenticationManagerTest.
- */
-
 namespace Drupal\Tests\Core\Authentication;
 
 use Drupal\Core\Authentication\AuthenticationCollector;

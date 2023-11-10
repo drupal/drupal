@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Unit\Plugin\display\PathPluginBaseTest.
- */
-
 namespace Drupal\Tests\views\Unit\Plugin\display;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

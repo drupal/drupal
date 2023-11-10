@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\DependencyInjection\Compiler\TaggedHandlersPassTest.
- */
-
 namespace Drupal\Tests\Core\DependencyInjection\Compiler;
 
 use Drupal\Core\DependencyInjection\Compiler\TaggedHandlersPass;

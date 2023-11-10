@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Unit\Plugin\pager\PagerPluginBaseTest.
- */
-
 namespace Drupal\Tests\views\Unit\Plugin\pager;
 
 use Drupal\Tests\UnitTestCase;

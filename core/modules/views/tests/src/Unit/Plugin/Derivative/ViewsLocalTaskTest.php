@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\views\Unit\Plugin\Derivative\ViewsLocalTaskTest.
- */
-
 namespace Drupal\Tests\views\Unit\Plugin\Derivative;
 
 use Drupal\Tests\UnitTestCase;

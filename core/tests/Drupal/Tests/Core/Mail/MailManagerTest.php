@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Mail\MailManagerTest.
- */
-
 namespace Drupal\Tests\Core\Mail;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

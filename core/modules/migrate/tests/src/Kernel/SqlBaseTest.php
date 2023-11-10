@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\migrate\Kernel\SqlBaseTest.
- */
-
 namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\Core\Database\Query\ConditionInterface;
