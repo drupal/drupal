@@ -978,6 +978,17 @@ function system_requirements($phase) {
     }
   }
 
+  // Display the deployment identifier if set.
+  if ($phase == 'runtime') {
+    if ($deployment_identifier = Settings::get('deployment_identifier')) {
+      $requirements['deployment identifier'] = [
+        'title' => t('Deployment identifier'),
+        'value' => $deployment_identifier,
+        'severity' => REQUIREMENT_INFO,
+      ];
+    }
+  }
+
   // Verify the update.php access setting
   if ($phase == 'runtime') {
     if (Settings::get('update_free_access')) {
