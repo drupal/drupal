@@ -105,13 +105,13 @@ class TermTranslationTest extends TaxonomyTestBase {
     $this->drupalLogin($this->drupalCreateUser(['create article content']));
 
     // Test terms are listed.
-    $this->drupalget('node/add/article');
+    $this->drupalGet('node/add/article');
     $this->assertSession()->pageTextContains('one');
     $this->assertSession()->pageTextContains('two');
     $this->assertSession()->pageTextContains('three');
 
     // Test terms translated are listed.
-    $this->drupalget('hu/node/add/article');
+    $this->drupalGet('hu/node/add/article');
     $this->assertSession()->pageTextContains('translatedOne');
     $this->assertSession()->pageTextContains('translatedTwo');
     $this->assertSession()->pageTextContains('translatedThree');

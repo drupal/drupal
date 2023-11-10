@@ -844,9 +844,9 @@ class RendererPlaceholdersTest extends RendererTestBase {
    * @covers ::render
    * @covers ::doRender
    *
-   * @see testNonScalarLazybuilderCallbackContext
+   * @see testNonScalarLazyBuilderCallbackContext
    */
-  public function testScalarLazybuilderCallbackContext() {
+  public function testScalarLazyBuilderCallbackContext() {
     $element = [];
     $element['#lazy_builder'] = [
       '\Drupal\Tests\Core\Render\PlaceholdersTest::callback',
@@ -868,7 +868,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
    * @covers ::render
    * @covers ::doRender
    */
-  public function testNonScalarLazybuilderCallbackContext() {
+  public function testNonScalarLazyBuilderCallbackContext() {
     $element = [];
     $element['#lazy_builder'] = [
       '\Drupal\Tests\Core\Render\PlaceholdersTest::callback',

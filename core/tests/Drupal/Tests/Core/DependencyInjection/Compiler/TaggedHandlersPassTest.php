@@ -131,7 +131,7 @@ class TaggedHandlersPassTest extends UnitTestCase {
    *
    * @covers ::process
    */
-  public function testserviceIdProcess() {
+  public function testServiceIdProcess() {
     $container = $this->buildContainer();
     $container
       ->register('consumer_id', __NAMESPACE__ . '\ValidConsumer')
@@ -188,7 +188,7 @@ class TaggedHandlersPassTest extends UnitTestCase {
    *
    * @covers ::process
    */
-  public function testserviceIdProcessPriority() {
+  public function testServiceIdProcessPriority() {
     $container = $this->buildContainer();
     $container
       ->register('consumer_id', __NAMESPACE__ . '\ValidConsumer')

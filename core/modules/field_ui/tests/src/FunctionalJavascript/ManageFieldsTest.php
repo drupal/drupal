@@ -293,7 +293,7 @@ class ManageFieldsTest extends WebDriverTestBase {
    * Tests the order in which the field types appear in the form.
    */
   public function testFieldTypeOrder() {
-    $this->drupalget('admin/structure/types/manage/article/fields/add-field');
+    $this->drupalGet('admin/structure/types/manage/article/fields/add-field');
     $page = $this->getSession()->getPage();
     $field_type_categories = [
       'selection_list',

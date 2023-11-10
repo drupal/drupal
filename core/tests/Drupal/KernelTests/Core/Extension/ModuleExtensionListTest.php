@@ -13,7 +13,7 @@ class ModuleExtensionListTest extends KernelTestBase {
   /**
    * @covers ::getList
    */
-  public function testGetlist() {
+  public function testGetList() {
     \Drupal::configFactory()->getEditable('core.extension')
       ->set('module.testing', 1000)
       ->set('profile', 'testing')

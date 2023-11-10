@@ -43,7 +43,7 @@ class ViewsPreprocessTest extends ViewsKernelTestBase {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
 
-    $view = Views::getview('test_preprocess');
+    $view = Views::getView('test_preprocess');
     $build = $view->buildRenderable();
     $renderer->renderRoot($build);
     $this->assertStringContainsString('class="entity-test--default entity-test__default', (string) $build['#markup']);

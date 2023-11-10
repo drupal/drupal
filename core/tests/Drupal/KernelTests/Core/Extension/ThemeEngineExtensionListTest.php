@@ -13,7 +13,7 @@ class ThemeEngineExtensionListTest extends KernelTestBase {
   /**
    * @covers ::getList
    */
-  public function testGetlist() {
+  public function testGetList() {
     // Confirm that all theme engines are available.
     $theme_engines = \Drupal::service('extension.list.theme_engine')->getList();
     $this->assertArrayHasKey('twig', $theme_engines);

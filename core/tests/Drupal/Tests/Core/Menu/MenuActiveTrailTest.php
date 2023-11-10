@@ -144,7 +144,7 @@ class MenuActiveTrailTest extends UnitTestCase {
     $this->requestStack->push($request);
     if ($links !== FALSE) {
       $this->menuLinkManager->expects($this->exactly(2))
-        ->method('loadLinksbyRoute')
+        ->method('loadLinksByRoute')
         ->with('baby_llama')
         ->willReturn($links);
     }
@@ -168,7 +168,7 @@ class MenuActiveTrailTest extends UnitTestCase {
       // We expect exactly two calls, one for the first call, and one after the
       // cache clearing below.
       $this->menuLinkManager->expects($this->exactly(2))
-        ->method('loadLinksbyRoute')
+        ->method('loadLinksByRoute')
         ->with('baby_llama')
         ->willReturn($links);
       if ($expected_link !== NULL) {
@@ -204,7 +204,7 @@ class MenuActiveTrailTest extends UnitTestCase {
     $this->requestStack->push($request);
 
     $this->menuLinkManager->expects($this->any())
-      ->method('loadLinksbyRoute')
+      ->method('loadLinksByRoute')
       ->with('baby_llama')
       ->willReturn($data[1]);
 
