@@ -150,7 +150,7 @@ class ContentLanguageSettingsForm extends FormBase {
 
       $form['settings'][$entity_type_id] = [
         '#title' => $label,
-        '#type' => 'container',
+        '#type' => 'details',
         '#entity_type' => $entity_type_id,
         '#theme' => 'language_content_settings_table',
         '#bundle_label' => $entity_type->getBundleLabel() ?: $label,
