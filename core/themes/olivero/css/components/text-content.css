@@ -139,7 +139,7 @@
   .text-content blockquote,
   .cke_editable blockquote {
     font-size: 2.5rem;
-    line-height: calc(3.5 * var(--sp));
+    line-height: var(--sp3-5);
   }
 }
 
