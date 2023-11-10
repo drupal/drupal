@@ -201,7 +201,7 @@ stages:
   <<: *default-stage
   variables:
     _TARGET_PHP: "7.4"
-    _TARGET_DB: "php-7.4-apache"
+    _TARGET_DB: "sqlite-3"
 
 # 'PHP 8.1 MariaDB 10.3.22':
 #   <<: *default-stage

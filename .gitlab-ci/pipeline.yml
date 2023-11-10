@@ -73,7 +73,7 @@ stages:
 .get-simpletest-db: &get-simpletest-db
   - |
     # Assume SQLite unless we have another known target.
-    export SIMPLETEST_DB=sqlite://localhost/subdirectory/sites/default/files/db.sqlite
+    export SIMPLETEST_DB=sqlite://localhost/$CI_PROJECT_DIR/sites/default/files/db.sqlite
     [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE
     [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE
     [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB
@@ -84,10 +84,10 @@ stages:
   - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
 
 .install-drupal: &install-drupal
-  - /usr/local/bin/drush si -y --db-url=$SIMPLETEST_DB --clean-url=0 --account-name=admin --account-pass=drupal --account-mail=admin@example.com
-  - /usr/local/bin/drush vset simpletest_clear_results '0'
-  - /usr/local/bin/drush vset simpletest_verbose '1'
-  - /usr/local/bin/drush en -y simpletest
+  - sudo -u www-data /usr/local/bin/drush si -y --db-url=$SIMPLETEST_DB --clean-url=0 --account-name=admin --account-pass=drupal --account-mail=admin@example.com
+  - sudo -u www-data /usr/local/bin/drush vset simpletest_clear_results '0'
+  - sudo -u www-data /usr/local/bin/drush vset simpletest_verbose '1'
+  - sudo -u www-data /usr/local/bin/drush en -y simpletest
 
 .run-tests: &run-tests
   script:
