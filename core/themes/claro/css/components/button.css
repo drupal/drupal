@@ -60,6 +60,7 @@
 .button:hover {
   -webkit-text-decoration: none;
   text-decoration: none;
+  color: var(--button-fg-color);
   background-color: var(--button--hover-bg-color);
 }
 
@@ -101,11 +102,6 @@
   padding-inline: 0 0.25em;
   content: "+";
   font-weight: 900;
-}
-
-a.button:hover,
-a.button:active {
-  color: var(--button-fg-color);
 }
 
 /* Primary button style.s */
