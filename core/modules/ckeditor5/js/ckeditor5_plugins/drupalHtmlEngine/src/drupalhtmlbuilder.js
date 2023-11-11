@@ -61,6 +61,8 @@ export default class DrupalHtmlBuilder {
       this._appendElement(node);
     } else if (node.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
       this._appendChildren(node);
+    } else if (node.nodeType === Node.COMMENT_NODE) {
+      this._appendComment(node);
     }
   }
 
@@ -140,6 +142,20 @@ export default class DrupalHtmlBuilder {
     container.textContent = node.textContent;
 
     this._append(container.innerHTML);
+  }
+
+  /**
+   * Appends a comment to the value.
+   *
+   * @param {DocumentFragment} node
+   *  A document fragment to be appended to the value.
+   *
+   * @private
+   */
+  _appendComment(node) {
+    this._append('<!--');
+    this._append(node.textContent);
+    this._append('-->');
   }
 
   /**
