@@ -2,14 +2,31 @@
 
 namespace Drupal\render_placeholder_message_test;
 
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Render\RenderContext;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class RenderPlaceholderMessageTestController implements ContainerAwareInterface, TrustedCallbackInterface {
+class RenderPlaceholderMessageTestController implements TrustedCallbackInterface, ContainerInjectionInterface {
 
-  use ContainerAwareTrait;
+  /**
+   * Constructs a new RenderPlaceholderMessageTestController object.
+   *
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer service.
+   */
+  public function __construct(protected RendererInterface $renderer) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('renderer'),
+    );
+  }
 
   /**
    * @return array
@@ -72,8 +89,7 @@ class RenderPlaceholderMessageTestController implements ContainerAwareInterface,
       '#create_placeholder' => TRUE,
     ];
 
-    /** @var \Drupal\Core\Render\RendererInterface $renderer */
-    $renderer = $this->container->get('renderer');
+    $renderer = $this->renderer;
     $renderer->executeInRenderContext(new RenderContext(), function () use (&$build, $renderer) {
       return $renderer->render($build, FALSE);
     });

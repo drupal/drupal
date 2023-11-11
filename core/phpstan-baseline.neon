@@ -2343,22 +2343,6 @@ parameters:
 
 		-
 			message: """
-				#^Class Drupal\\\\render_placeholder_message_test\\\\RenderPlaceholderMessageTestController implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: modules/system/tests/modules/render_placeholder_message_test/src/RenderPlaceholderMessageTestController.php
-
-		-
-			message: """
-				#^Usage of deprecated trait Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareTrait in class Drupal\\\\render_placeholder_message_test\\\\RenderPlaceholderMessageTestController\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: modules/system/tests/modules/render_placeholder_message_test/src/RenderPlaceholderMessageTestController.php
-
-		-
-			message: """
 				#^Class Drupal\\\\service_provider_test\\\\TestClass implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
 				since Symfony 6\\.4, use dependency injection instead$#
 			"""
