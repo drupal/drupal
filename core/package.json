@@ -60,7 +60,7 @@
     "backbone": "^1.5.0",
     "chokidar": "^3.3.1",
     "ckeditor5": "~40.0.0",
-    "cspell": "^7.3.8",
+    "cspell": "^8.0.0",
     "dotenv-safe": "^8.2.0",
     "eslint": "^8.53.0",
     "eslint-config-airbnb-base": "^15.0.0",
