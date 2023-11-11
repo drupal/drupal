@@ -71,7 +71,6 @@ bakeware
 barbar
 barchart
 barqux
-bartik
 basefield
 basepath
 basestrings
@@ -82,7 +81,6 @@ bebebe
 beforeclose
 beforecreate
 behat
-behaviour
 bergmann
 berne
 bgblue
@@ -224,7 +222,6 @@ datestamp
 datetimeiso
 datetimeplus
 daycount
-dblog
 dbtng
 dburl
 dealerdirect
@@ -278,7 +275,6 @@ drivertext
 dropbutton
 dropbuttons
 drudbal
-drupalci
 drupaldatetime
 drupaldevdays
 drupalelementstyle
@@ -295,8 +291,6 @@ drupalmedia
 drupalmediaediting
 drupalmediatoolbar
 drupalorg
-druplicon
-drush
 drépal
 détruire
 editables
@@ -482,8 +476,6 @@ kthxbai
 kword
 labely
 lamoids
-langcode
-langcodes
 languageswitcher
 libc
 libmysqlclient
@@ -639,8 +631,6 @@ nyans
 nœud
 oembed
 officedocument
-olivero
-olivero's
 omittable
 onecol
 oneplusfourgrid
@@ -841,7 +831,6 @@ shortlink
 siema
 silverlight
 silvie
-simpletest
 singlebyte
 sirbrillig
 sisko
@@ -952,7 +941,6 @@ tbodies
 tcomment
 tempfile
 templating
-tempstore
 tempuser
 tercera
 testajax
@@ -1047,7 +1035,6 @@ tzid
 uberawesome
 uids
 ulwa
-umami
 unaliased
 unallowed
 unassigning

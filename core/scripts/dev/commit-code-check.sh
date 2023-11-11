@@ -176,7 +176,7 @@ for FILE in $FILES; do
     CKEDITOR5_PLUGINS_CHANGED=1;
   fi;
 
-  if [[ $FILE == "core/misc/cspell/dictionary.txt" || $FILE == "core/.cspell.json" ]]; then
+  if [[ $FILE == "core/misc/cspell/dictionary.txt" || $FILE == "core/misc/cspell/drupal-dictionary.txt" ]]; then
     CSPELL_DICTIONARY_FILE_CHANGED=1;
   fi
 done
