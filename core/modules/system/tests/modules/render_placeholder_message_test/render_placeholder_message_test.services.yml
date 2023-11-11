@@ -1,0 +1,4 @@
+services:
+  render_placeholder_message_test.controller:
+    class: Drupal\render_placeholder_message_test\RenderPlaceholderMessageTestController
+    arguments: ['@renderer']
