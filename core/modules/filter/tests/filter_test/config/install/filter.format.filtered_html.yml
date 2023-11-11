@@ -2,14 +2,14 @@ name: 'Filtered HTML'
 format: filtered_html
 weight: 1
 filters:
-  filter_url:
-    id: filter_url
-    provider: filter
-    status: true
-    weight: -1
   filter_html:
     id: filter_html
     provider: filter
     status: true
     settings:
       allowed_html: '<p> <br> <strong> <a href hreflang>'
+  filter_url:
+    id: filter_url
+    provider: filter
+    status: true
+    weight: -1
