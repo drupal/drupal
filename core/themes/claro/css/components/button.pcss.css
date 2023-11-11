@@ -48,6 +48,7 @@
 
   &:hover {
     text-decoration: none;
+    color: var(--button-fg-color);
     background-color: var(--button--hover-bg-color);
   }
 
@@ -88,11 +89,6 @@
     content: "+";
     font-weight: 900;
   }
-}
-
-a.button:hover,
-a.button:active {
-  color: var(--button-fg-color);
 }
 
 /* Primary button style.s */
