@@ -12,7 +12,7 @@
 
 'use strict';
 
-const glob = require('glob');
+const { globSync } = require('glob');
 const log = require('./log');
 const fs = require('fs');
 
@@ -102,7 +102,7 @@ function processFile(filePath) {
   return false;
 }
 
-const definitions = glob.sync('./ckeditor5*/src/**/*.+(js|jsdoc)', globOptions).map(processFile);
+const definitions = globSync('./ckeditor5*/src/**/*.+(js|jsdoc)', globOptions).sort().map(processFile);
 // Filter definitions that do not match any regex.
 const existingDefinitions = definitions.filter((e) => !!e);
 

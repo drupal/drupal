@@ -1,5 +1,5 @@
 const path = require('path');
-const glob = require('glob');
+const { globSync } = require('glob');
 
 // Find directories which have Nightwatch tests in them.
 const regex = /(.*\/?tests\/?.*\/Nightwatch)\/.*/g;
@@ -12,15 +12,15 @@ const collectedFolders = {
 const searchDirectory = process.env.DRUPAL_NIGHTWATCH_SEARCH_DIRECTORY || '';
 const defaultIgnore = ['vendor/**'];
 
-glob
-  .sync('**/tests/**/Nightwatch/**/*.js', {
-    cwd: path.resolve(process.cwd(), `../${searchDirectory}`),
-    ignore: process.env.DRUPAL_NIGHTWATCH_IGNORE_DIRECTORIES
-      ? process.env.DRUPAL_NIGHTWATCH_IGNORE_DIRECTORIES.split(',').concat(
-          defaultIgnore,
-        )
-      : defaultIgnore,
-  })
+globSync('**/tests/**/Nightwatch/**/*.js', {
+  cwd: path.resolve(process.cwd(), `../${searchDirectory}`),
+  ignore: process.env.DRUPAL_NIGHTWATCH_IGNORE_DIRECTORIES
+    ? process.env.DRUPAL_NIGHTWATCH_IGNORE_DIRECTORIES.split(',').concat(
+        defaultIgnore,
+      )
+    : defaultIgnore,
+})
+  .sort()
   .forEach((file) => {
     let m = regex.exec(file);
     while (m !== null) {
