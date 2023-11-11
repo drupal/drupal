@@ -2,7 +2,7 @@
  * @file
  * Callback returning the list of files to copy to the assets/vendor directory.
  */
-const glob = require('glob');
+const { globSync } = require('glob');
 // There are a lot of CKEditor 5 packages, generate the list dynamically.
 // Drupal-specific mapping between CKEditor 5 name and Drupal library name.
 const ckeditor5PluginMapping = {
@@ -23,11 +23,11 @@ const ckeditor5PluginMapping = {
 module.exports = (packageFolder) => {
   const fileList = [];
   // Get all the CKEditor 5 packages.
-  const ckeditor5Dirs = glob.sync(`{${packageFolder}/@ckeditor/ckeditor5*,${packageFolder}/ckeditor5}`);
+  const ckeditor5Dirs = globSync(`{${packageFolder}/@ckeditor/ckeditor5*,${packageFolder}/ckeditor5}`).sort();
   for (const ckeditor5package of ckeditor5Dirs) {
     // Add all the files in the build/ directory to the process array for
     // copying.
-    const buildFiles = glob.sync(`${ckeditor5package}/build/**/*.js`, {
+    const buildFiles = globSync(`${ckeditor5package}/build/**/*.js`, {
       nodir: true,
     });
     if (buildFiles.length) {

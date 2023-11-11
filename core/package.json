@@ -70,7 +70,7 @@
     "eslint-plugin-jquery": "^1.5.1",
     "eslint-plugin-prettier": "^5.0.1",
     "eslint-plugin-yml": "^1.8.0",
-    "glob": "^8.0.3",
+    "glob": "10.3.5",
     "jquery": "~3.7.0",
     "jquery-form": "4.3.x",
     "jquery-ui": "1.13.x",
@@ -105,6 +105,7 @@
     "webpack-cli": "^5.1.3"
   },
   "resolutions": {
+    "glob/jackspeak": "2.1.1",
     "nightwatch/semver": "~7.5.2"
   },
   "browserslist": [
