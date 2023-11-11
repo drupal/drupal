@@ -1,0 +1,10 @@
+services:
+  http_kernel_test.test_middleware:
+    class: Drupal\http_kernel_test\HttpKernel\TestMiddleware
+    tags:
+      - { name: http_middleware }
+  http_kernel_test.test_middleware2:
+    class: Drupal\http_kernel_test\HttpKernel\TestMiddleware
+    arguments: ['test_argument']
+    tags:
+      - { name: http_middleware, priority: 20 }

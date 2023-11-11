@@ -144,7 +144,7 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
    */
   protected function assertHead(): void {
     // Discover the DOM element for the meta link.
-    $test_meta = $this->xpath('//head/meta[@test-attribute="testvalue"]');
+    $test_meta = $this->xpath('//head/meta[@test-attribute="test_value"]');
     $this->assertCount(1, $test_meta, 'There\'s only one test attribute.');
     // Grab the only DOM element.
     $test_meta = reset($test_meta);
@@ -152,7 +152,7 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
       $this->fail('Unable to find the head meta.');
     }
     else {
-      $this->assertEquals('testvalue', $test_meta->getAttribute('test-attribute'));
+      $this->assertEquals('test_value', $test_meta->getAttribute('test-attribute'));
     }
   }
 

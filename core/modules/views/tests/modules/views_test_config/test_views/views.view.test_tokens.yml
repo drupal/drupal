@@ -90,8 +90,8 @@ display:
         type: mini
         options:
           items_per_page: 2
-      title: 'Test token page with minipager'
-      path: test_tokens_minipager
+      title: 'Test token page with mini pager'
+      path: test_tokens_mini_pager
       display_extenders: {  }
       header:
         area:

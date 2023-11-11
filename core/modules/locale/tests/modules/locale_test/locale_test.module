@@ -202,11 +202,11 @@ function locale_test_tokens($type, $tokens, array $data = [], array $options = [
     foreach ($tokens as $name => $original) {
       switch ($name) {
         case 'security_test1':
-          $return[$original] = "javascript:alert('Mooooh!');";
+          $return[$original] = "javascript:alert('Hello!');";
           break;
 
         case 'security_test2':
-          $return[$original] = "<script>alert('Mooooh!');</script>";
+          $return[$original] = "<script>alert('Hello!');</script>";
           break;
       }
     }

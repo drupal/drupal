@@ -4,9 +4,9 @@ config_schema_test.some_schema:
   type: config_object
   label: 'Schema test data'
   mapping:
-    testitem:
+    test_item:
       label: 'Test item'
-    testlist:
+    test_list:
       label: 'Test list'
 
 config_schema_test.some_schema.with_parents:
@@ -20,7 +20,7 @@ config_schema_test.some_schema.with_parents:
         target_key:
           label: 'Key used in parent relation'
           type: string
-        testitem:
+        test_item:
           type: config_schema_test.some_schema.with_parents.[%parent.target_key]
     two_levels:
       label: 'Parenting two levels up'
@@ -33,7 +33,7 @@ config_schema_test.some_schema.with_parents:
           label: 'Wrapper'
           type: mapping
           mapping:
-            testitem:
+            test_item:
               type: config_schema_test.some_schema.with_parents.[%parent.%parent.target_key]
     three_levels:
       label: 'Parenting three levels up'
@@ -50,9 +50,8 @@ config_schema_test.some_schema.with_parents:
               label: 'Wrapper 2'
               type: mapping
               mapping:
-                testitem:
+                test_item:
                   type: config_schema_test.some_schema.with_parents.[%parent.%parent.%parent.target_key]
-
 config_schema_test.some_schema.with_parents.key_1:
   label: 'Test item nested one level'
   type: string
@@ -67,10 +66,10 @@ config_schema_test.some_schema.some_module.*.*:
   type: config_object
   label: 'Schema multiple filesystem marker test'
   mapping:
-    testid:
+    test_id:
       type: string
       label: 'ID'
-    testdescription:
+    test_description:
       type: text
       label: 'Description'
 
@@ -78,10 +77,10 @@ config_schema_test.wildcard_fallback.*:
   type: config_object
   label: 'Schema wildcard fallback test'
   mapping:
-    testid:
+    test_id:
       type: string
       label: 'ID'
-    testdescription:
+    test_description:
       type: text
       label: 'Description'
 

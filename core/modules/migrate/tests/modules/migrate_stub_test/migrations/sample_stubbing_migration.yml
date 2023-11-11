@@ -5,12 +5,12 @@ source:
   data_rows:
     - id: 17
       title: "Sample 1"
-      bodyvalue: "This is the body for ID 17"
-      bodyformat: "plain_text"
+      body_value: "This is the body for ID 17"
+      body_format: "plain_text"
     - id: 25
       title: "Sample 2"
-      bodyvalue: "This is the body for ID 25"
-      bodyformat: "plain_text"
+      body_value: "This is the body for ID 25"
+      body_format: "plain_text"
     - id: 33
       title: "Sample 3"
   ids:
@@ -18,8 +18,8 @@ source:
       type: integer
 process:
   title: title
-  body/0/value: bodyvalue
-  body/0/format: bodyformat
+  body/0/value: body_value
+  body/0/format: body_format
 destination:
   default_bundle: node_stub
   plugin: entity:node
