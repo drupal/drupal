@@ -83,6 +83,17 @@ ckeditor5_style:
     elements:
       - <$any-html5-element class>
 
+ckeditor5_htmlComments:
+  ckeditor5:
+    plugins:
+      - htmlSupport.HtmlComment
+  drupal:
+    label: HTML Comment support
+    elements: false
+    library: core/ckeditor5.htmlSupport
+    # @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface::getEnabledDefinitions()
+    conditions: []
+
 ckeditor5_arbitraryHtmlSupport:
   ckeditor5:
     plugins: [htmlSupport.GeneralHtmlSupport]

@@ -745,4 +745,47 @@ JS;
     $assert_session->responseContains('<p dir="ltr" lang="en">Hello World</p><p dir="rtl" lang="ar">مرحبا بالعالم</p>');
   }
 
+  /**
+   * Ensures that HTML comments are preserved in CKEditor 5.
+   */
+  public function testComments(): void {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    // Add a node with text rendered via the Plain Text format.
+    $this->drupalGet('node/add');
+    $page->fillField('title[0][value]', 'My test content');
+    $page->fillField('body[0][value]', '<!-- Hamsters, alpacas, llamas, and kittens are cute! --><p>This is a <em>test!</em></p>');
+    $page->pressButton('Save');
+
+    FilterFormat::create([
+      'format' => 'ckeditor5',
+      'name' => 'CKEditor 5 HTML comments test',
+      'roles' => [RoleInterface::AUTHENTICATED_ID],
+    ])->save();
+    Editor::create([
+      'format' => 'ckeditor5',
+      'editor' => 'ckeditor5',
+    ])->save();
+    $this->assertSame([], array_map(
+      function (ConstraintViolation $v) {
+        return (string) $v->getMessage();
+      },
+      iterator_to_array(CKEditor5::validatePair(
+        Editor::load('ckeditor5'),
+        FilterFormat::load('ckeditor5')
+      ))
+    ));
+
+    $this->drupalGet('node/1/edit');
+    $page->selectFieldOption('body[0][format]', 'ckeditor5');
+    $this->assertNotEmpty($assert_session->waitForText('Change text format?'));
+    $page->pressButton('Continue');
+
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-editor'));
+    $page->pressButton('Save');
+
+    $assert_session->responseContains('<!-- Hamsters, alpacas, llamas, and kittens are cute! --><p>This is a <em>test!</em></p>');
+  }
+
 }

@@ -84,7 +84,7 @@ module.exports = {
 
     drupalHtmlBuilder.appendNode(fragment);
 
-    assert.equal(drupalHtmlBuilder.build(), '<div>bar</div>');
+    assert.equal(drupalHtmlBuilder.build(), '<div>bar</div><!--bar-->');
   },
   'should return correct HTML from fragment with attributes': function () {
     const drupalHtmlBuilder = new DrupalHtmlBuilder();
