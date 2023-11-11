@@ -70,8 +70,8 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['class'] = Mapping::class;
     $expected['mapping']['langcode']['type'] = 'langcode';
     $expected['mapping']['_core']['type'] = '_core_config_info';
-    $expected['mapping']['testitem'] = ['label' => 'Test item'];
-    $expected['mapping']['testlist'] = ['label' => 'Test list'];
+    $expected['mapping']['test_item'] = ['label' => 'Test item'];
+    $expected['mapping']['test_list'] = ['label' => 'Test list'];
     $expected['type'] = 'config_schema_test.some_schema';
     $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
     $expected['unwrap_for_canonical_representation'] = TRUE;
@@ -80,7 +80,7 @@ class ConfigSchemaTest extends KernelTestBase {
 
     // Check type detection on elements with undefined types.
     $config = \Drupal::service('config.typed')->get('config_schema_test.some_schema');
-    $definition = $config->get('testitem')->getDataDefinition()->toArray();
+    $definition = $config->get('test_item')->getDataDefinition()->toArray();
     $expected = [];
     $expected['label'] = 'Test item';
     $expected['class'] = Undefined::class;
@@ -88,7 +88,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['definition_class'] = '\Drupal\Core\TypedData\DataDefinition';
     $expected['unwrap_for_canonical_representation'] = TRUE;
     $this->assertEquals($expected, $definition, 'Automatic type detected for a scalar is undefined.');
-    $definition = $config->get('testlist')->getDataDefinition()->toArray();
+    $definition = $config->get('test_list')->getDataDefinition()->toArray();
     $expected = [];
     $expected['label'] = 'Test list';
     $expected['class'] = Undefined::class;
@@ -251,10 +251,10 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['class'] = Mapping::class;
     $expected['mapping']['langcode']['type'] = 'langcode';
     $expected['mapping']['_core']['type'] = '_core_config_info';
-    $expected['mapping']['testid']['type'] = 'string';
-    $expected['mapping']['testid']['label'] = 'ID';
-    $expected['mapping']['testdescription']['type'] = 'text';
-    $expected['mapping']['testdescription']['label'] = 'Description';
+    $expected['mapping']['test_id']['type'] = 'string';
+    $expected['mapping']['test_id']['label'] = 'ID';
+    $expected['mapping']['test_description']['type'] = 'text';
+    $expected['mapping']['test_description']['label'] = 'Description';
     $expected['type'] = 'config_schema_test.some_schema.some_module.*.*';
     $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
     $expected['unwrap_for_canonical_representation'] = TRUE;
@@ -275,7 +275,7 @@ class ConfigSchemaTest extends KernelTestBase {
 
     // Test fetching parent one level up.
     $entry = $config_data->get('one_level');
-    $definition = $entry->get('testitem')->getDataDefinition()->toArray();
+    $definition = $entry->get('test_item')->getDataDefinition()->toArray();
     $expected = [
       'type' => 'config_schema_test.some_schema.with_parents.key_1',
       'label' => 'Test item nested one level',
@@ -287,7 +287,7 @@ class ConfigSchemaTest extends KernelTestBase {
 
     // Test fetching parent two levels up.
     $entry = $config_data->get('two_levels');
-    $definition = $entry->get('wrapper')->get('testitem')->getDataDefinition()->toArray();
+    $definition = $entry->get('wrapper')->get('test_item')->getDataDefinition()->toArray();
     $expected = [
       'type' => 'config_schema_test.some_schema.with_parents.key_2',
       'label' => 'Test item nested two levels',
@@ -299,7 +299,7 @@ class ConfigSchemaTest extends KernelTestBase {
 
     // Test fetching parent three levels up.
     $entry = $config_data->get('three_levels');
-    $definition = $entry->get('wrapper_1')->get('wrapper_2')->get('testitem')->getDataDefinition()->toArray();
+    $definition = $entry->get('wrapper_1')->get('wrapper_2')->get('test_item')->getDataDefinition()->toArray();
     $expected = [
       'type' => 'config_schema_test.some_schema.with_parents.key_3',
       'label' => 'Test item nested three levels',
@@ -525,10 +525,10 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['unwrap_for_canonical_representation'] = TRUE;
     $expected['mapping']['langcode']['type'] = 'langcode';
     $expected['mapping']['_core']['type'] = '_core_config_info';
-    $expected['mapping']['testid']['type'] = 'string';
-    $expected['mapping']['testid']['label'] = 'ID';
-    $expected['mapping']['testdescription']['type'] = 'text';
-    $expected['mapping']['testdescription']['label'] = 'Description';
+    $expected['mapping']['test_id']['type'] = 'string';
+    $expected['mapping']['test_id']['label'] = 'ID';
+    $expected['mapping']['test_description']['type'] = 'text';
+    $expected['mapping']['test_description']['label'] = 'Description';
     $expected['type'] = 'config_schema_test.wildcard_fallback.*';
     $expected['constraints'] = ['ValidKeys' => '<infer>'];
 

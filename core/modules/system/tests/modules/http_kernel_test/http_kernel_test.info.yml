@@ -1,5 +1,5 @@
 name: 'HttpKernel test'
 type: module
-description: 'Support module for httpkernel tests.'
+description: 'Support module for HttpKernel tests.'
 package: Testing
 version: VERSION

@@ -54,11 +54,11 @@ class LocaleStringIsSafeTest extends KernelTestBase {
     $tests_to_do = [
       1 => [
         'original' => 'Go to the <a href="[locale_test:security_test1]">frontpage</a>',
-        'replaced' => 'Go to the &lt;a href=&quot;javascript:alert(&amp;#039;Mooooh!&amp;#039;);&quot;&gt;frontpage&lt;/a&gt;',
+        'replaced' => 'Go to the &lt;a href=&quot;javascript:alert(&amp;#039;Hello!&amp;#039;);&quot;&gt;frontpage&lt;/a&gt;',
       ],
       2 => [
         'original' => 'Hello <strong>[locale_test:security_test2]</strong>!',
-        'replaced' => 'Hello &lt;strong&gt;&amp;lt;script&amp;gt;alert(&amp;#039;Mooooh!&amp;#039;);&amp;lt;/script&amp;gt;&lt;/strong&gt;!',
+        'replaced' => 'Hello &lt;strong&gt;&amp;lt;script&amp;gt;alert(&amp;#039;Hello!&amp;#039;);&amp;lt;/script&amp;gt;&lt;/strong&gt;!',
       ],
     ];
 

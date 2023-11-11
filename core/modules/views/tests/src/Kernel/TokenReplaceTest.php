@@ -85,7 +85,7 @@ class TokenReplaceTest extends ViewsKernelTestBase {
       '[view:label]' => 'Test tokens',
       '[view:description]' => 'Test view to token replacement tests.',
       '[view:id]' => 'test_tokens',
-      '[view:title]' => 'Test token page with minipager',
+      '[view:title]' => 'Test token page with mini pager',
       '[view:url]' => $view->getUrl(NULL, 'page_3')
         ->setAbsolute(TRUE)
         ->toString(),

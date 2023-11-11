@@ -6,6 +6,6 @@ label: 'Test type'
 description: 'Test type.'
 source: test
 source_configuration:
-  test_config_value: Kakec
+  test_config_value: Foo
 field_map:
   metadata_attribute: field_attribute_config_test

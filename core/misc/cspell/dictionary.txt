@@ -100,9 +100,7 @@ blockquotes
 blockrecipe
 blockrelated
 blocktest
-bodyformat
 bodyless
-bodyvalue
 boing
 bomofo
 bovigo
@@ -165,7 +163,6 @@ classname
 classtype
 cldr
 clearfix
-cleartype
 clicksorter
 clist
 closethick
@@ -416,7 +413,6 @@ hrefs
 htkey
 htmlcorrector
 httpheader
-httpkernel
 httplug
 httponly
 hustlin
@@ -456,7 +452,6 @@ jsonlint
 jssdk
 jumplinks
 justinrainbow
-kakec
 kangarookitten
 kerneltest
 kernighan
@@ -474,7 +469,6 @@ kristiaan
 kspread
 kthxbai
 kword
-labely
 lamoids
 languageswitcher
 libc
@@ -510,7 +504,6 @@ lundi
 lzma
 lzop
 macbinary
-madeup
 mainpage
 mank
 maryjane
@@ -540,7 +533,6 @@ mikey
 milli
 mimetypes
 minifyzombies
-minipager
 minusthick
 missingkey
 missingkeys
@@ -554,7 +546,6 @@ modernizr
 modulenarrow
 mojito
 montag
-mooooh
 msgctxt
 msgid
 msgstr
@@ -569,7 +560,6 @@ multifield
 multilanguage
 multipage
 multipass
-multipleforms
 multisite
 multistar
 multistep
@@ -657,7 +647,6 @@ pagecache
 pagetop
 pagina
 paramconverter
-parens
 parseable
 parsererror
 pastafazoul
@@ -953,7 +942,6 @@ testcase
 testcases
 testcontent
 testcontextawareblock
-testdescription
 testdialog
 testen
 testfield
@@ -962,11 +950,8 @@ testfilter
 testfunc
 testfunction
 testgroups
-testid
-testitem
 testk
 testkey
-testlist
 testload
 testlogger
 testname
@@ -974,7 +959,6 @@ testproject
 teststring
 testsuite
 testsuites
-testvalue
 textareas
 textboxes
 texte
@@ -1156,7 +1140,6 @@ yokotsoko
 yottabyte
 yottabytes
 yourmodule
-yowser
 yygroup
 zartan
 zettabyte

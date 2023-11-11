@@ -98,7 +98,7 @@ class OverriddenConfigurationTest extends SettingsTrayTestBase {
     $this->assertElementVisibleAfterWait('css', 'div:contains(The block configuration has been saved)');
     $web_assert->assertWaitOnAjaxRequest();
     // Confirm we did not save changes to the configuration.
-    $this->assertEquals('Labely label', \Drupal::configFactory()->get('system.menu.main')->get('label'));
+    $this->assertEquals('Foo label', \Drupal::configFactory()->get('system.menu.main')->get('label'));
     $this->assertEquals('Main navigation', \Drupal::configFactory()->getEditable('system.menu.main')->get('label'));
     $this->assertEquals($menu_with_overrides, \Drupal::configFactory()->get('system.menu.main')->get());
     $this->assertEquals($menu_without_overrides, \Drupal::configFactory()->getEditable('system.menu.main')->get());
@@ -138,14 +138,14 @@ class OverriddenConfigurationTest extends SettingsTrayTestBase {
     // Test a non-overridden block does show the form in the off-canvas dialog.
     $block = $this->placeBlock('system_powered_by_block', [
       'label_display' => 1,
-      'label' => 'Labely label',
+      'label' => 'Foo label',
     ]);
     $this->drupalGet('user');
     $block_selector = $this->getBlockSelector($block);
     // Confirm the block is marked as Settings Tray editable.
     $this->assertEquals('editable', $page->find('css', $block_selector)->getAttribute('data-drupal-settingstray'));
     // Confirm the label is not overridden.
-    $web_assert->elementContains('css', $block_selector, 'Labely label');
+    $web_assert->elementContains('css', $block_selector, 'Foo label');
     $this->openBlockForm($block_selector);
   }
 

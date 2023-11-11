@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\httpkernel_test\HttpKernel;
+namespace Drupal\http_kernel_test\HttpKernel;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
