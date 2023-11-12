@@ -45,7 +45,7 @@ class UserPictureInstance extends DrupalSqlBase {
     return [
       'file_directory' => 'The directory to store images..',
       'max_filesize' => 'The maximum allowed file size in KBs.',
-      'max_resolution' => "The maximum resolution.",
+      'max_resolution' => "The maximum dimensions.",
     ];
   }
 

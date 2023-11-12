@@ -148,7 +148,7 @@ class ImageWidget extends FileWidget {
     // Add image validation.
     $element['#upload_validators']['FileIsImage'] = [];
 
-    // Add upload resolution validation.
+    // Add upload dimensions validation.
     if ($field_settings['max_resolution'] || $field_settings['min_resolution']) {
       $element['#upload_validators']['FileImageDimensions'] = [
         'maxDimensions' => $field_settings['max_resolution'],
