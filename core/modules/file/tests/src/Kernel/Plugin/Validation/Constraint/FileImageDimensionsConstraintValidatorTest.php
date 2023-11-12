@@ -48,7 +48,7 @@ class FileImageDimensionsConstraintValidatorTest extends FileValidatorTestBase {
   }
 
   /**
-   * This ensures the resolution of a specific file is within bounds.
+   * This ensures the dimensions of a specific file is within bounds.
    *
    * The image will be resized if it's too large.
    *
@@ -66,7 +66,7 @@ class FileImageDimensionsConstraintValidatorTest extends FileValidatorTestBase {
       ],
     ];
     $violations = $this->validator->validate($this->nonImage, $validators);
-    $this->assertCount(0, $violations, 'Do not check the resolution on non files.');
+    $this->assertCount(0, $violations, 'Do not check the dimensions on non files.');
 
     // Minimum size.
     $validators = ['FileImageDimensions' => []];
