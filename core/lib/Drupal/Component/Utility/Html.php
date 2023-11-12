@@ -484,11 +484,10 @@ class Html {
       // @see https://html.spec.whatwg.org/multipage/embedded-content.html#attr-img-srcset
       // @see https://html.spec.whatwg.org/multipage/embedded-content.html#image-candidate-string
       $image_candidate_strings = explode(',', $node->getAttribute('srcset'));
-      $image_candidate_strings = array_map('trim', $image_candidate_strings);
-      for ($i = 0; $i < count($image_candidate_strings); $i++) {
-        $image_candidate_string = $image_candidate_strings[$i];
+      $image_candidate_strings = array_filter(array_map('trim', $image_candidate_strings));
+      foreach ($image_candidate_strings as $key => $image_candidate_string) {
         if ($image_candidate_string[0] === '/' && $image_candidate_string[1] !== '/') {
-          $image_candidate_strings[$i] = $scheme_and_host . $image_candidate_string;
+          $image_candidate_strings[$key] = $scheme_and_host . $image_candidate_string;
         }
       }
       $node->setAttribute('srcset', implode(', ', $image_candidate_strings));
