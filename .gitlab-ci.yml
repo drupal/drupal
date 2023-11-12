@@ -48,6 +48,9 @@ variables:
   CONCURRENCY: 32
   GIT_DEPTH: "3"
 
+.default-lint-variables: &default-lint-variables
+    _TARGET_PHP: "8.2"
+    _TARGET_DB: "sqlite-3"
 
 #############
 # Stages    #
@@ -72,9 +75,6 @@ stages:
       - stuck_or_timeout_failure
       - runner_system_failure
       - scheduler_failure
-  variables:
-    _TARGET_PHP: "8.2"
-    _TARGET_DB: "sqlite-3"
   image:
     name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
   rules:
@@ -226,6 +226,9 @@ stages:
 
 '📦️ Composer':
   <<: *default-job-settings-lint
+  variables:
+    <<: *default-lint-variables
+    KUBERNETES_CPU_REQUEST: "1"
   stage: 🏗️ Build
   cache:
     <<: *composer-cache
@@ -240,6 +243,9 @@ stages:
 
 '📦️ Yarn':
   <<: *default-job-settings-lint
+  variables:
+    <<: *default-lint-variables
+    KUBERNETES_CPU_REQUEST: "2"
   stage: 🏗️ Build
   cache:
     <<: *yarn-cache
@@ -259,24 +265,34 @@ stages:
 '🧹 PHP Coding standards (PHPCS)':
   <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
+  variables:
+    <<: *default-lint-variables
+    KUBERNETES_CPU_REQUEST: "16"
   script:
     - composer phpcs -- --report-junit=junit.xml --report-full --report-summary
 
 '🧹 PHP Static Analysis (phpstan)':
   <<: [ *with-composer-cache, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
+  variables:
+    <<: *default-lint-variables
+    KUBERNETES_CPU_REQUEST: "16"
   script:
     - php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > phpstan-quality-report.json
 
 '🧹 CSS linting (stylelint)':
   <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
   script:
     - yarn run --cwd=./core lint:css --color --custom-formatter node_modules/stylelint-junit-formatter > junit.xml
 
 '🧹 Compilation check':
   <<: [ *with-yarn-cache, *default-job-settings-lint ]
   stage: 🪄 Lint
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
   script:
     - yarn run --cwd=./core build:css --check
     - cd core && yarn run -s check:ckeditor5
@@ -284,12 +300,16 @@ stages:
 '🧹 JavaScript linting (eslint)':
   <<: [ *with-yarn-cache, *junit-artifacts, *default-job-settings-lint ]
   stage: 🪄 Lint
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
   script:
     - yarn --cwd=./core run -s lint:core-js-passing --format junit > junit.xml
 
 '📔 Spell-checking':
   <<: [ *with-yarn-cache, *default-job-settings-lint ]
   stage: 🪄 Lint
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
   script:
     - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
     - git fetch -vn --depth=$GIT_DEPTH "${CI_MERGE_REQUEST_PROJECT_URL:-origin}" "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
