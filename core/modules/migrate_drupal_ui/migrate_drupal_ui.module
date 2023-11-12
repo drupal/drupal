@@ -21,7 +21,7 @@ function migrate_drupal_ui_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Preparing the site') . '</dt>';
-      $output .= '<dd>' . t('You need to enable all modules on this site that are enabled on the previous site. For example, if you have used the Book module on the previous site then you must enable the Book module on this site for that data to be available on this site.') . '</dd>';
+      $output .= '<dd>' . t('You need to install all modules on this site that are installed on the previous site. For example, if you have used the Book module on the previous site then you must install the Book module on this site for that data to be available on this site.') . '</dd>';
       $output .= '<dt>' . t('Performing the upgrade') . '</dt>';
       $output .= '<dd>' . t('On the <a href=":upgrade">Upgrade</a> page, you are guided through performing the upgrade in several steps.',
           [':upgrade' => Url::fromRoute('migrate_drupal_ui.upgrade')->toString()]) . '</dd>';
