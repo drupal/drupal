@@ -89,7 +89,7 @@ function field_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Enabling field types, widgets, and formatters') . '</dt>';
-      $output .= '<dd>' . t('The Field module provides the infrastructure for fields; the field types, formatters, and widgets are provided by Drupal core or additional modules. Some of the modules are required; the optional modules can be enabled from the <a href=":modules">Extend administration page</a>. Additional fields, formatters, and widgets may be provided by contributed modules, which you can find in the <a href=":contrib">contributed module section of Drupal.org</a>.', [':modules' => Url::fromRoute('system.modules_list')->toString(), ':contrib' => 'https://www.drupal.org/project/modules']) . '</dd>';
+      $output .= '<dd>' . t('The Field module provides the infrastructure for fields; the field types, formatters, and widgets are provided by Drupal core or additional modules. Some of the modules are required; the optional modules can be installed from the <a href=":modules">Extend administration page</a>. Additional fields, formatters, and widgets may be provided by contributed modules, which you can find in the <a href=":contrib">contributed module section of Drupal.org</a>.', [':modules' => Url::fromRoute('system.modules_list')->toString(), ':contrib' => 'https://www.drupal.org/project/modules']) . '</dd>';
 
       $output .= '<h3>' . t('Field, widget, and formatter information') . '</h3>';
 
@@ -122,7 +122,7 @@ function field_help($route_name, RouteMatchInterface $route_match) {
       }
       if ($items) {
         $output .= '<dt>' . t('Provided by modules') . '</dt>';
-        $output .= '<dd>' . t('Here is a list of the currently enabled field, formatter, and widget modules:');
+        $output .= '<dd>' . t('Here is a list of the currently installed field, formatter, and widget modules:');
         $item_list = [
           '#theme' => 'item_list',
           '#items' => $items,
