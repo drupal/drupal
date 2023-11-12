@@ -64,8 +64,9 @@ interface EntityRepositoryInterface {
    *   (optional) An associative array of arbitrary data that can be useful to
    *   determine the proper fallback sequence.
    *
-   * @return \Drupal\Core\Entity\EntityInterface
-   *   An entity object for the translated data.
+   * @return \Drupal\Core\Entity\EntityInterface|null
+   *   An entity object for the translated data, or NULL if the requested
+   *   translation is missing, forbidden, or unavailable.
    *
    * @see \Drupal\Core\Language\LanguageManagerInterface::getFallbackCandidates()
    */
