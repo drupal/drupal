@@ -3,9 +3,7 @@
 namespace Drupal\jsonapi\Controller;
 
 use Drupal\Component\Render\PlainTextOutput;
-use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Utility\Environment;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -22,6 +20,7 @@ use Drupal\file\Plugin\Field\FieldType\FileFieldItemList;
 use Drupal\file\Upload\ContentDispositionFilenameParser;
 use Drupal\file\Upload\InputStreamFileWriterInterface;
 use Drupal\file\Validation\FileValidatorInterface;
+use Drupal\file\Validation\FileValidatorSettingsTrait;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\CannotWriteFileException;
 use Symfony\Component\HttpFoundation\File\Exception\NoFileException;
@@ -44,6 +43,8 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  * @internal This will be removed once https://www.drupal.org/project/drupal/issues/2940383 lands.
  */
 class TemporaryJsonapiFileFieldUploader {
+
+  use FileValidatorSettingsTrait;
 
   /**
    * The regex used to extract the filename from the content disposition header.
@@ -200,7 +201,7 @@ class TemporaryJsonapiFileFieldUploader {
       throw new HttpException(500, 'Destination file path is not writable');
     }
 
-    $validators = $this->getUploadValidators($field_definition);
+    $validators = $this->getFileUploadValidators($field_definition->getSettings());
 
     $prepared_filename = $this->prepareFilename($filename, $validators);
 
@@ -421,45 +422,6 @@ class TemporaryJsonapiFileFieldUploader {
     // text.
     $destination = PlainTextOutput::renderFromHtml($this->token->replace($destination, [], [], new BubbleableMetadata()));
     return $settings['uri_scheme'] . '://' . $destination;
-  }
-
-  /**
-   * Retrieves the upload validators for a field definition.
-   *
-   * This is copied from \Drupal\file\Plugin\Field\FieldType\FileItem as there
-   * is no entity instance available here that a FileItem would exist for.
-   *
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The field definition for which to get validators.
-   *
-   * @return array
-   *   An array suitable for passing to file_save_upload() or the file field
-   *   element's '#upload_validators' property.
-   */
-  protected function getUploadValidators(FieldDefinitionInterface $field_definition) {
-    $validators = [
-      // Add in our check of the file name length.
-      'FileNameLength' => [],
-    ];
-    $settings = $field_definition->getSettings();
-
-    // Cap the upload size according to the PHP limit.
-    $max_filesize = Bytes::toNumber(Environment::getUploadMaxSize());
-    if (!empty($settings['max_filesize'])) {
-      $max_filesize = min($max_filesize, Bytes::toNumber($settings['max_filesize']));
-    }
-
-    // There is always a file size limit due to the PHP server limit.
-    $validators['FileSizeLimit'] = ['fileLimit' => $max_filesize];
-
-    // Add the extension check if necessary.
-    if (!empty($settings['file_extensions'])) {
-      $validators['FileExtension'] = [
-        'extensions' => $settings['file_extensions'],
-      ];
-    }
-
-    return $validators;
   }
 
   /**

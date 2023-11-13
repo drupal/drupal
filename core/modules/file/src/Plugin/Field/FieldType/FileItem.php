@@ -15,6 +15,7 @@ use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
+use Drupal\file\Validation\FileValidatorSettingsTrait;
 
 /**
  * Plugin implementation of the 'file' field type.
@@ -34,6 +35,8 @@ use Drupal\Core\TypedData\DataDefinition;
  * )
  */
 class FileItem extends EntityReferenceItem {
+
+  use FileValidatorSettingsTrait;
 
   /**
    * {@inheritdoc}
@@ -327,24 +330,7 @@ class FileItem extends EntityReferenceItem {
    *   element's '#upload_validators' property.
    */
   public function getUploadValidators() {
-    $validators = [];
-    $settings = $this->getSettings();
-
-    // Cap the upload size according to the PHP limit.
-    $max_filesize = Bytes::toNumber(Environment::getUploadMaxSize());
-    if (!empty($settings['max_filesize'])) {
-      $max_filesize = min($max_filesize, Bytes::toNumber($settings['max_filesize']));
-    }
-
-    // There is always a file size limit due to the PHP server limit.
-    $validators['FileSizeLimit'] = ['fileLimit' => $max_filesize];
-
-    // Add the extension check if necessary.
-    if (!empty($settings['file_extensions'])) {
-      $validators['FileExtension'] = ['extensions' => $settings['file_extensions']];
-    }
-
-    return $validators;
+    return $this->getFileUploadValidators($this->getSettings());
   }
 
   /**
