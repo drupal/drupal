@@ -5,6 +5,7 @@
  * Install, update, and uninstall functions for the Forum module.
  */
 
+use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\taxonomy\Entity\Term;
 
@@ -161,6 +162,7 @@ function forum_schema() {
       'created' => ['created'],
       'last_comment_timestamp' => ['last_comment_timestamp'],
     ],
+    'primary key' => ['nid', 'tid'],
     'foreign keys' => [
       'tracked_node' => [
         'table' => 'node',
@@ -203,4 +205,40 @@ function forum_update_10100(&$sandbox = NULL) {
     ];
     $connection->schema()->changeField('forum_index', 'last_comment_timestamp', 'last_comment_timestamp', $new);
   }
+}
+
+/**
+ * Repopulate the forum index table.
+ */
+function forum_update_10101(&$sandbox = NULL): PluralTranslatableMarkup {
+  $query = \Drupal::database()->select('forum_index', 'fi')
+    ->fields('fi', ['nid', 'tid'])
+    ->groupBy('nid')
+    ->groupBy('tid');
+  $query->addExpression('count(*)', 'count');
+  $query->having('count(*) > 1');
+  $results = $query->execute();
+  $nids_to_rebuild = [];
+  foreach ($results as $row) {
+    \Drupal::database()->delete('forum_index')->condition('tid', $row->tid)->condition('nid', $row->nid)->execute();
+    $nids_to_rebuild[] = $row->nid;
+  }
+  \Drupal::state()->set('forum_update_10101_nids', $nids_to_rebuild);
+  return new PluralTranslatableMarkup(count($nids_to_rebuild), 'Removed 1 duplicate entry from forum_index', 'Removed @count duplicate entries from forum_index');
+}
+
+/**
+ * Add a primary key to forum_index.
+ */
+function forum_update_10102(&$sandbox = NULL) {
+  $connection = \Drupal::database();
+  if ($connection->schema()->tableExists('forum_index')) {
+    // Data in this table could have duplicates. The data can be re-constructed
+    // from other data in the site. To avoid duplicate key errors we delete any
+    // rows that are duplicates and then recreate them in a post-update hook.
+    // @see \forum_post_update_recreate_forum_index_rows().
+    $connection->schema()->addPrimaryKey('forum_index', ['nid', 'tid']);
+    return \t('Added primary key to the forum_index table.');
+  }
+  return \t('Index already exists');
 }
