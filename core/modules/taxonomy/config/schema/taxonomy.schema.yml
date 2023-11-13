@@ -13,6 +13,9 @@ taxonomy.settings:
     terms_per_page_admin:
       type: integer
       label: 'Number of terms per page'
+      constraints:
+        Range:
+          min: 1
 
 taxonomy.vocabulary.*:
   type: config_entity
