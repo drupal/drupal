@@ -233,6 +233,20 @@ function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $a
       if ($is_valid) {
         // First stage is a confirmation form, then login
         if ($action == 'login') {
+          if (variable_get('user_failed_login_identifier_uid_only', FALSE)) {
+            // Clear flood events based on the uid only if configured.
+            $identifier = $account->uid;
+          }
+          else {
+            // The default identifier is a combination of uid and IP address.
+            $identifier = $account->uid . '-' . ip_address();
+          }
+          // Only clear the user specific flood events. We cannot clear the more
+          // broad IP address flood events because that would open a
+          // vulnerability where an attacker with a valid account could use that
+          // to brute force other accounts.
+          flood_clear_event('failed_login_attempt_user', $identifier);
+
           // Set the new user.
           $user = $account;
           // user_login_finalize() also updates the login timestamp of the

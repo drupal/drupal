@@ -371,6 +371,13 @@ class UserLoginTestCase extends DrupalWebTestCase {
     // A login with the correct password should also result in a flood error
     // message.
     $this->assertFailedLogin($user1, 'ip');
+
+    // A login attempt after resetting the password should still fail, since the
+    // IP-based flood control count is not cleared after a password reset.
+    $this->resetUserPassword($user1);
+    $this->drupalLogout();
+    $this->assertFailedLogin($user1, 'ip');
+    $this->assertRaw(t('Sorry, too many failed login attempts from your IP address. This IP address is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', array('@url' => url('user/password'))));
   }
 
   /**
@@ -410,6 +417,12 @@ class UserLoginTestCase extends DrupalWebTestCase {
     // Try one more attempt for user 1, it should be rejected, even if the
     // correct password has been used.
     $this->assertFailedLogin($user1, 'user');
+    $this->resetUserPassword($user1);
+    $this->drupalLogout();
+
+    // Try to log in as user 1, it should be successful.
+    $this->drupalLogin($user1);
+    $this->assertRaw('Member for');
   }
 
   /**
@@ -484,6 +497,26 @@ class UserLoginTestCase extends DrupalWebTestCase {
       $this->assertText(t('Sorry, unrecognized username or password. Have you forgotten your password?'));
     }
   }
+
+  /**
+   * Resets the user password and logs the user in.
+   *
+   * @param object $user
+   *   The account to reset the password for.
+   */
+  protected function resetUserPassword($user) {
+    $this->drupalGet('user/password');
+    $edit['name'] = $user->name;
+    $this->drupalPost(NULL, $edit, 'E-mail new password');
+    $emails = $this->drupalGetMails();
+    $email = end($emails);
+    $urls = array();
+    preg_match('#.+user/reset/.+#', $email['body'], $urls);
+    $resetURL = $urls[0];
+    $this->drupalGet($resetURL);
+    $this->drupalPost(NULL, NULL, 'Log in');
+  }
+
 }
 
 /**
