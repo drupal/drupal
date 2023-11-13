@@ -261,5 +261,5 @@ services:
   jsonapi.file.uploader.field:
     class: Drupal\jsonapi\Controller\TemporaryJsonapiFileFieldUploader
     public: false
-    arguments: ['@logger.channel.file', '@file_system', '@file.mime_type.guesser', '@token', '@lock', '@config.factory', '@event_dispatcher', '@file.validator']
+    arguments: ['@logger.channel.file', '@file_system', '@file.mime_type.guesser', '@token', '@lock', '@config.factory', '@event_dispatcher', '@file.validator', '@file.input_stream_file_writer']
   Drupal\jsonapi\Controller\TemporaryJsonapiFileFieldUploader: '@jsonapi.file.uploader.field'

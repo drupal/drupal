@@ -17,6 +17,7 @@ use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Utility\Token;
 use Drupal\file\Entity\File;
+use Drupal\file\Upload\InputStreamFileWriterInterface;
 use Drupal\file\Validation\FileValidatorInterface;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
@@ -24,6 +25,9 @@ use Drupal\rest\Plugin\rest\resource\EntityResourceValidationTrait;
 use Drupal\rest\RequestHandler;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\File\Exception\CannotWriteFileException;
+use Symfony\Component\HttpFoundation\File\Exception\NoFileException;
+use Symfony\Component\HttpFoundation\File\Exception\UploadException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -142,6 +146,11 @@ class FileUploadResource extends ResourceBase {
   protected FileValidatorInterface $fileValidator;
 
   /**
+   * The input stream file writer.
+   */
+  protected InputStreamFileWriterInterface $inputStreamFileWriter;
+
+  /**
    * Constructs a FileUploadResource instance.
    *
    * @param array $configuration
@@ -174,8 +183,10 @@ class FileUploadResource extends ResourceBase {
    *   The event dispatcher service.
    * @param \Drupal\file\Validation\FileValidatorInterface|null $file_validator
    *   The file validator service.
+   * @param \Drupal\file\Upload\InputStreamFileWriterInterface|null $input_stream_file_writer
+   *   The input stream file writer.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, $serializer_formats, LoggerInterface $logger, FileSystemInterface $file_system, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, AccountInterface $current_user, $mime_type_guesser, Token $token, LockBackendInterface $lock, Config $system_file_config, EventDispatcherInterface $event_dispatcher, FileValidatorInterface $file_validator = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, $serializer_formats, LoggerInterface $logger, FileSystemInterface $file_system, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, AccountInterface $current_user, $mime_type_guesser, Token $token, LockBackendInterface $lock, Config $system_file_config, EventDispatcherInterface $event_dispatcher, FileValidatorInterface $file_validator = NULL, InputStreamFileWriterInterface $input_stream_file_writer = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     $this->fileSystem = $file_system;
     $this->entityTypeManager = $entity_type_manager;
@@ -191,6 +202,11 @@ class FileUploadResource extends ResourceBase {
       $file_validator = \Drupal::service('file.validator');
     }
     $this->fileValidator = $file_validator;
+    if (!$input_stream_file_writer) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $input_stream_file_writer argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/123', E_USER_DEPRECATED);
+      $input_stream_file_writer = \Drupal::service('file.input_stream_file_writer');
+    }
+    $this->inputStreamFileWriter = $input_stream_file_writer;
   }
 
   /**
@@ -212,7 +228,8 @@ class FileUploadResource extends ResourceBase {
       $container->get('lock'),
       $container->get('config.factory')->get('system.file'),
       $container->get('event_dispatcher'),
-      $container->get('file.validator')
+      $container->get('file.validator'),
+      $container->get('file.input_stream_file_writer')
     );
   }
 
@@ -341,48 +358,23 @@ class FileUploadResource extends ResourceBase {
    *   Thrown when input data cannot be read, the temporary file cannot be
    *   opened, or the temporary file cannot be written.
    */
-  protected function streamUploadData() {
-    // 'rb' is needed so reading works correctly on Windows environments too.
-    $file_data = fopen('php://input', 'rb');
-
-    $temp_file_path = $this->fileSystem->tempnam('temporary://', 'file');
-    $temp_file = fopen($temp_file_path, 'wb');
-
-    if ($temp_file) {
-      while (!feof($file_data)) {
-        $read = fread($file_data, static::BYTES_TO_READ);
-
-        if ($read === FALSE) {
-          // Close the file streams.
-          fclose($temp_file);
-          fclose($file_data);
-          $this->logger->error('Input data could not be read');
-          throw new HttpException(500, 'Input file data could not be read');
-        }
-
-        if (fwrite($temp_file, $read) === FALSE) {
-          // Close the file streams.
-          fclose($temp_file);
-          fclose($file_data);
-          $this->logger->error('Temporary file data for "%path" could not be written', ['%path' => $temp_file_path]);
-          throw new HttpException(500, 'Temporary file data could not be written');
-        }
-      }
-
-      // Close the temp file stream.
-      fclose($temp_file);
+  protected function streamUploadData(): string {
+    // Catch and throw the exceptions that REST expects.
+    try {
+      $temp_file_path = $this->inputStreamFileWriter->writeStreamToFile();
     }
-    else {
-      // Close the input file stream since we can't proceed with the upload.
-      // Don't try to close $temp_file since it's FALSE at this point.
-      fclose($file_data);
-      $this->logger->error('Temporary file "%path" could not be opened for file upload', ['%path' => $temp_file_path]);
-      throw new HttpException(500, 'Temporary file could not be opened');
+    catch (UploadException $e) {
+      $this->logger->error('Input data could not be read');
+      throw new HttpException(500, 'Input file data could not be read', $e);
     }
-
-    // Close the input stream.
-    fclose($file_data);
-
+    catch (CannotWriteFileException $e) {
+      $this->logger->error('Temporary file data for could not be written');
+      throw new HttpException(500, 'Temporary file data could not be written', $e);
+    }
+    catch (NoFileException $e) {
+      $this->logger->error('Temporary file could not be opened for file upload');
+      throw new HttpException(500, 'Temporary file could not be opened', $e);
+    }
     return $temp_file_path;
   }
 

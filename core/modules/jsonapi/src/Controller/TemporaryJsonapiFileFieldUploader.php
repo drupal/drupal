@@ -19,8 +19,12 @@ use Drupal\Core\Utility\Token;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\file\Plugin\Field\FieldType\FileFieldItemList;
+use Drupal\file\Upload\InputStreamFileWriterInterface;
 use Drupal\file\Validation\FileValidatorInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\File\Exception\CannotWriteFileException;
+use Symfony\Component\HttpFoundation\File\Exception\NoFileException;
+use Symfony\Component\HttpFoundation\File\Exception\UploadException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -112,6 +116,11 @@ class TemporaryJsonapiFileFieldUploader {
   protected FileValidatorInterface $fileValidator;
 
   /**
+   * The input stream file writer.
+   */
+  protected InputStreamFileWriterInterface $inputStreamFileWriter;
+
+  /**
    * Constructs a FileUploadResource instance.
    *
    * @param \Psr\Log\LoggerInterface $logger
@@ -126,12 +135,14 @@ class TemporaryJsonapiFileFieldUploader {
    *   The lock service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface|null $event_dispatcher
    *   (optional) The event dispatcher.
    * @param \Drupal\file\Validation\FileValidatorInterface|null $file_validator
    *   The file validator.
+   * @param \Drupal\file\Upload\InputStreamFileWriterInterface|null $input_stream_file_writer
+   *   The stream file uploader.
    */
-  public function __construct(LoggerInterface $logger, FileSystemInterface $file_system, $mime_type_guesser, Token $token, LockBackendInterface $lock, ConfigFactoryInterface $config_factory, EventDispatcherInterface $event_dispatcher = NULL, FileValidatorInterface $file_validator = NULL) {
+  public function __construct(LoggerInterface $logger, FileSystemInterface $file_system, $mime_type_guesser, Token $token, LockBackendInterface $lock, ConfigFactoryInterface $config_factory, EventDispatcherInterface $event_dispatcher = NULL, FileValidatorInterface $file_validator = NULL, InputStreamFileWriterInterface $input_stream_file_writer = NULL) {
     $this->logger = $logger;
     $this->fileSystem = $file_system;
     $this->mimeTypeGuesser = $mime_type_guesser;
@@ -147,6 +158,11 @@ class TemporaryJsonapiFileFieldUploader {
       $file_validator = \Drupal::service('file.validator');
     }
     $this->fileValidator = $file_validator;
+    if (!$input_stream_file_writer) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $input_stream_file_writer argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/123', E_USER_DEPRECATED);
+      $input_stream_file_writer = \Drupal::service('file.input_stream_file_writer');
+    }
+    $this->inputStreamFileWriter = $input_stream_file_writer;
   }
 
   /**
@@ -333,51 +349,22 @@ class TemporaryJsonapiFileFieldUploader {
    *   opened, or the temporary file cannot be written.
    */
   protected function streamUploadData() {
-    // 'rb' is needed so reading works correctly on Windows environments too.
-    $file_data = fopen('php://input', 'rb');
-
-    $temp_file_path = $this->fileSystem->tempnam('temporary://', 'file');
-    if ($temp_file_path === FALSE) {
-      $this->logger->error('Temporary file could not be created for file upload.');
-      throw new HttpException(500, 'Temporary file could not be created');
+    // Catch and throw the exceptions that JSON API module expects.
+    try {
+      $temp_file_path = $this->inputStreamFileWriter->writeStreamToFile();
     }
-    $temp_file = fopen($temp_file_path, 'wb');
-
-    if ($temp_file) {
-      while (!feof($file_data)) {
-        $read = fread($file_data, static::BYTES_TO_READ);
-
-        if ($read === FALSE) {
-          // Close the file streams.
-          fclose($temp_file);
-          fclose($file_data);
-          $this->logger->error('Input data could not be read');
-          throw new HttpException(500, 'Input file data could not be read.');
-        }
-
-        if (fwrite($temp_file, $read) === FALSE) {
-          // Close the file streams.
-          fclose($temp_file);
-          fclose($file_data);
-          $this->logger->error('Temporary file data for "%path" could not be written', ['%path' => $temp_file_path]);
-          throw new HttpException(500, 'Temporary file data could not be written.');
-        }
-      }
-
-      // Close the temp file stream.
-      fclose($temp_file);
+    catch (UploadException $e) {
+      $this->logger->error('Input data could not be read');
+      throw new HttpException(500, 'Input file data could not be read', $e);
     }
-    else {
-      // Close the input file stream since we can't proceed with the upload.
-      // Don't try to close $temp_file since it's FALSE at this point.
-      fclose($file_data);
-      $this->logger->error('Temporary file "%path" could not be opened for file upload.', ['%path' => $temp_file_path]);
-      throw new HttpException(500, 'Temporary file could not be opened');
+    catch (CannotWriteFileException $e) {
+      $this->logger->error('Temporary file data for could not be written');
+      throw new HttpException(500, 'Temporary file data could not be written', $e);
     }
-
-    // Close the input stream.
-    fclose($file_data);
-
+    catch (NoFileException $e) {
+      $this->logger->error('Temporary file could not be opened for file upload');
+      throw new HttpException(500, 'Temporary file could not be opened', $e);
+    }
     return $temp_file_path;
   }
 
