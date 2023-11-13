@@ -37,5 +37,4 @@ parameters:
     # Ignore common errors for now.
     - "#Drupal calls should be avoided in classes, use dependency injection instead#"
     - "#^Plugin definitions cannot be altered.#"
-    - "#^Missing cache backend declaration for performance.#"
     - "#^Class .* extends @internal class#"
