@@ -19,6 +19,7 @@ use Drupal\Core\Utility\Token;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\file\Plugin\Field\FieldType\FileFieldItemList;
+use Drupal\file\Upload\ContentDispositionFilenameParser;
 use Drupal\file\Upload\InputStreamFileWriterInterface;
 use Drupal\file\Validation\FileValidatorInterface;
 use Psr\Log\LoggerInterface;
@@ -26,7 +27,6 @@ use Symfony\Component\HttpFoundation\File\Exception\CannotWriteFileException;
 use Symfony\Component\HttpFoundation\File\Exception\NoFileException;
 use Symfony\Component\HttpFoundation\File\Exception\UploadException;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -49,6 +49,12 @@ class TemporaryJsonapiFileFieldUploader {
    * The regex used to extract the filename from the content disposition header.
    *
    * @var string
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+   *   \Drupal\file\Upload\ContentDispositionFilenameParser::REQUEST_HEADER_FILENAME_REGEX
+   *   instead.
+   *
+   * @see https://www.drupal.org/node/3380380
    */
   const REQUEST_HEADER_FILENAME_REGEX = '@\bfilename(?<star>\*?)=\"(?<filename>.+)\"@';
 
@@ -276,35 +282,16 @@ class TemporaryJsonapiFileFieldUploader {
    *
    * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
    *   Thrown when the 'Content-Disposition' request header is invalid.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+   *   \Drupal\file\Upload\ContentDispositionFilenameParser::parseFilename()
+   *   instead.
+   *
+   * @see https://www.drupal.org/node/3380380
    */
   public function validateAndParseContentDispositionHeader(Request $request) {
-    // First, check the header exists.
-    if (!$request->headers->has('content-disposition')) {
-      throw new BadRequestHttpException('"Content-Disposition" header is required. A file name in the format "filename=FILENAME" must be provided.');
-    }
-
-    $content_disposition = $request->headers->get('content-disposition');
-
-    // Parse the header value. This regex does not allow an empty filename.
-    // i.e. 'filename=""'. This also matches on a word boundary so other keys
-    // like 'not_a_filename' don't work.
-    if (!preg_match(static::REQUEST_HEADER_FILENAME_REGEX, $content_disposition, $matches)) {
-      throw new BadRequestHttpException('No filename found in "Content-Disposition" header. A file name in the format "filename=FILENAME" must be provided.');
-    }
-
-    // Check for the "filename*" format. This is currently unsupported.
-    if (!empty($matches['star'])) {
-      throw new BadRequestHttpException('The extended "filename*" format is currently not supported in the "Content-Disposition" header.');
-    }
-
-    // Don't validate the actual filename here, that will be done by the upload
-    // validators in validate().
-    // @see \Drupal\file\Plugin\rest\resource\FileUploadResource::validate()
-    $filename = $matches['filename'];
-
-    // Make sure only the filename component is returned. Path information is
-    // stripped as per https://tools.ietf.org/html/rfc6266#section-4.3.
-    return $this->fileSystem->basename($filename);
+    @trigger_error('Calling ' . __METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\file\Upload\ContentDispositionFilenameParser::parseFilename() instead. See https://www.drupal.org/node/3380380', E_USER_DEPRECATED);
+    return ContentDispositionFilenameParser::parseFilename($request);
   }
 
   /**

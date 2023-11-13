@@ -10,6 +10,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Drupal\file\Upload\ContentDispositionFilenameParser;
 use Drupal\jsonapi\Entity\EntityValidationTrait;
 use Drupal\jsonapi\JsonApiResource\JsonApiDocumentTopLevel;
 use Drupal\jsonapi\JsonApiResource\Link;
@@ -117,7 +118,7 @@ class FileUpload {
 
     static::ensureFileUploadAccess($this->currentUser, $field_definition, $entity);
 
-    $filename = $this->fileUploader->validateAndParseContentDispositionHeader($request);
+    $filename = ContentDispositionFilenameParser::parseFilename($request);
     $file = $this->fileUploader->handleFileUploadForField($field_definition, $filename, $this->currentUser);
 
     if ($file instanceof ConstraintViolationListInterface) {
@@ -167,7 +168,7 @@ class FileUpload {
 
     static::ensureFileUploadAccess($this->currentUser, $field_definition);
 
-    $filename = $this->fileUploader->validateAndParseContentDispositionHeader($request);
+    $filename = ContentDispositionFilenameParser::parseFilename($request);
     $file = $this->fileUploader->handleFileUploadForField($field_definition, $filename, $this->currentUser);
 
     if ($file instanceof ConstraintViolationListInterface) {
