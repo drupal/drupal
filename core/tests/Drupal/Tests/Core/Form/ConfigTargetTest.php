@@ -3,9 +3,14 @@
 namespace Drupal\Tests\Core\Form;
 
 use Drupal\Core\Config\Config;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\TypedConfigManagerInterface;
+use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\ConfigTarget;
 use Drupal\Core\Form\ToConfig;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\FormState;
+use Drupal\Core\Form\RedundantEditableConfigNamesTrait;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
 
@@ -14,6 +19,45 @@ use Prophecy\Argument;
  * @group Form
  */
 class ConfigTargetTest extends UnitTestCase {
+
+  /**
+   * @covers \Drupal\Core\Form\ConfigFormBase::storeConfigKeyToFormElementMap
+   */
+  public function testDuplicateTargetsNotAllowed(): void {
+    $form = [
+      'test' => [
+        '#type' => 'text',
+        '#default_value' => 'A test',
+        '#config_target' => new ConfigTarget('system.site', 'admin_compact_mode', 'intval', 'boolval'),
+        '#name' => 'test',
+        '#array_parents' => ['test'],
+      ],
+      'duplicate' => [
+        '#type' => 'text',
+        '#config_target' => new ConfigTarget('system.site', 'admin_compact_mode', 'intval', 'boolval'),
+        '#name' => 'duplicate',
+        '#array_parents' => ['duplicate'],
+      ],
+    ];
+
+    $test_form = new class(
+      $this->prophesize(ConfigFactoryInterface::class)->reveal(),
+      $this->prophesize(TypedConfigManagerInterface::class)->reveal(),
+    ) extends ConfigFormBase {
+      use RedundantEditableConfigNamesTrait;
+
+      public function getFormId() {
+        return 'test';
+      }
+
+    };
+    $form_state = new FormState();
+    $test_form->storeConfigKeyToFormElementMap($form['test'], $form_state);
+
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage('Two #config_targets both target "admin_compact_mode" in the "system.site" config: `$form[\'test\']` and `$form[\'duplicate\']`.');
+    $test_form->storeConfigKeyToFormElementMap($form['duplicate'], $form_state);
+  }
 
   /**
    * @covers ::fromForm
