@@ -5,9 +5,22 @@ form_test.object:
     bananas:
       type: string
       label: 'Bananas'
+    favorite_fruits:
+      type: sequence
+      label: 'Favorite fruits'
+      sequence:
+        type: required_label
+        label: 'Fruit'
     favorite_vegetable:
       type: required_label
       label: 'Favorite vegetable'
     nemesis_vegetable:
-      type: required_label
+      type: label
       label: 'Nemesis vegetable'
+    could_not_live_without:
+      type: string
+      label: 'Which could you not live without: vegetables or fruits?'
+      constraints:
+        Choice:
+          - fruits
+          - vegetables

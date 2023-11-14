@@ -27,6 +27,7 @@ class TreeConfigTargetForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['vegetables'] = [
       '#type' => 'details',
+      '#open' => TRUE,
       '#tree' => TRUE,
       '#input' => TRUE,
       '#title' => t('Vegetable preferences'),
@@ -40,7 +41,6 @@ class TreeConfigTargetForm extends ConfigFormBase {
     $form['vegetables']['nemesis'] = [
       '#type' => 'textfield',
       '#title' => t('Nemesis'),
-      '#default_value' => 'Broccoli',
       '#config_target' => 'form_test.object:nemesis_vegetable',
     ];
     return parent::buildForm($form, $form_state);
