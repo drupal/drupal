@@ -335,6 +335,14 @@ All arguments are long options.
               will be used. The default is that any unexpected silenced
               deprecation error will fail tests.
 
+  --ci-parallel-node-total
+
+              The total number of instances of this job running in parallel.
+
+  --ci-parallel-node-index
+
+              The index of the job in the job set.
+
   <test1>[,<test2>[,<test3> ...]]
 
               One or more tests to be run. By default, these are interpreted
