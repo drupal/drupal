@@ -150,8 +150,7 @@ services:
       - { name: cache.context }
   cache_context.route.menu_active_trails:
     class: Drupal\Core\Cache\Context\MenuActiveTrailsCacheContext
-    calls:
-      - [setContainer, ['@service_container']]
+    arguments: ['@menu.active_trail']
     tags:
       - { name: cache.context }
 
@@ -785,6 +784,7 @@ services:
     arguments: ['@plugin.manager.menu.link', '@current_route_match', '@cache.menu', '@lock']
     tags:
       - { name: needs_destruction }
+    lazy: true
   Drupal\Core\Menu\MenuActiveTrailInterface: '@menu.active_trail'
   menu.parent_form_selector:
     class: Drupal\Core\Menu\MenuParentFormSelector
