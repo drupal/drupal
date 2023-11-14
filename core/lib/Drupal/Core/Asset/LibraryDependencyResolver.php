@@ -86,7 +86,7 @@ class LibraryDependencyResolver implements LibraryDependencyResolverInterface {
     foreach ($libraries as $library) {
       $with_deps = $this->getLibrariesWithDependencies([$library]);
       // We don't need library itself listed in the dependencies.
-      $all_dependencies += array_diff($with_deps, [$library]);
+      $all_dependencies = array_unique(array_merge($all_dependencies, array_diff($with_deps, [$library])));
     }
 
     return array_values(array_diff($libraries, array_intersect($all_dependencies, $libraries)));
