@@ -296,22 +296,6 @@ parameters:
 			path: lib/Drupal/Core/Cache/ChainedFastBackendFactory.php
 
 		-
-			message: """
-				#^Class Drupal\\\\Core\\\\Cache\\\\Context\\\\MenuActiveTrailsCacheContext implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Cache/Context/MenuActiveTrailsCacheContext.php
-
-		-
-			message: """
-				#^Usage of deprecated trait Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareTrait in class Drupal\\\\Core\\\\Cache\\\\Context\\\\MenuActiveTrailsCacheContext\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Cache/Context/MenuActiveTrailsCacheContext.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 4
 			path: lib/Drupal/Core/Cache/DatabaseBackend.php
@@ -1176,22 +1160,6 @@ parameters:
 			message: "#^Method Drupal\\\\book\\\\BookOutline\\:\\:prevLink\\(\\) should return array but return statement is missing\\.$#"
 			count: 1
 			path: modules/book/src/BookOutline.php
-
-		-
-			message: """
-				#^Class Drupal\\\\book\\\\Cache\\\\BookNavigationCacheContext implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: modules/book/src/Cache/BookNavigationCacheContext.php
-
-		-
-			message: """
-				#^Usage of deprecated trait Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareTrait in class Drupal\\\\book\\\\Cache\\\\BookNavigationCacheContext\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: modules/book/src/Cache/BookNavigationCacheContext.php
 
 		-
 			message: "#^Method Drupal\\\\book\\\\Form\\\\BookOutlineForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
