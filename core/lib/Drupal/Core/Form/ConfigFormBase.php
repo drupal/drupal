@@ -97,11 +97,8 @@ abstract class ConfigFormBase extends FormBase {
         $target = ConfigTarget::fromString($target);
       }
 
-      $value = $this->configFactory()->getEditable($target->configName)->get($target->propertyPath);
-      if ($target->fromConfig) {
-        $value = ($target->fromConfig)($value);
-      }
-      $element['#default_value'] = $value;
+      $config = $this->configFactory()->getEditable($target->configName);
+      $element['#default_value'] = $target->getValue($config);
     }
 
     foreach (Element::children($element) as $key) {
@@ -138,7 +135,9 @@ abstract class ConfigFormBase extends FormBase {
       if (is_string($target)) {
         $target = ConfigTarget::fromString($target);
       }
-      $map[$target->configName][$target->propertyPath] = $element['#array_parents'];
+      foreach ($target->propertyPaths as $property_path) {
+        $map[$target->configName][$property_path] = $element['#array_parents'];
+      }
       $form_state->set(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP, $map);
     }
     foreach (Element::children($element) as $key) {
@@ -173,10 +172,10 @@ abstract class ConfigFormBase extends FormBase {
         $property_path = $violation->getPropertyPath();
         // Default to index 0.
         $index = 0;
-        // Detect if this is a sequence property path, and if so, determine the
-        // actual sequence index.
-        $matches = [];
-        if (preg_match("/.*\.(\d+)$/", $property_path, $matches) === 1) {
+
+        // Detect if this is a sequence item property path, and if so, attempt
+        // to fall back to the containing sequence's property path.
+        if (!isset($map[$config_name][$property_path]) && preg_match("/.*\.(\d+)$/", $property_path, $matches) === 1) {
           $index = intval($matches[1]);
           // The property path as known in the config key-to-form element map
           // will not have the sequence index in it.
@@ -282,13 +281,11 @@ abstract class ConfigFormBase extends FormBase {
 
     foreach ($map[$config->getName()] as $array_parents) {
       $target = ConfigTarget::fromForm($array_parents, $form);
-      if ($target->configName === $config->getName()) {
-        $value = $form_state->getValue($target->elementParents);
-        if ($target->toConfig) {
-          $value = ($target->toConfig)($value);
-        }
-        $config->set($target->propertyPath, $value);
+      if ($target->configName !== $config->getName()) {
+        continue;
       }
+      $value = $form_state->getValue($target->elementParents);
+      $target->setValue($config, $value, $form_state);
     }
   }
 
