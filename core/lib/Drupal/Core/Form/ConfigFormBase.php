@@ -136,6 +136,14 @@ abstract class ConfigFormBase extends FormBase {
         $target = ConfigTarget::fromString($target);
       }
       foreach ($target->propertyPaths as $property_path) {
+        if (isset($map[$target->configName][$property_path])) {
+          throw new \LogicException(sprintf('Two #config_targets both target "%s" in the "%s" config: `%s` and `%s`.',
+            $property_path,
+            $target->configName,
+            '$form[\'' . implode("']['", $map[$target->configName][$property_path]) . '\']',
+            '$form[\'' . implode("']['", $element['#array_parents']) . '\']',
+          ));
+        }
         $map[$target->configName][$property_path] = $element['#array_parents'];
       }
       $form_state->set(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP, $map);
