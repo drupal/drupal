@@ -88,7 +88,7 @@ class ExceptionLoggingSubscriber implements EventSubscriberInterface {
       'status_code' => $exception->getStatusCode(),
     ];
     $this->logger->get('client error')
-      ->log($error['severity_level'], Error::DEFAULT_ERROR_MESSAGE, $error);
+      ->warning(Error::DEFAULT_ERROR_MESSAGE, $error);
   }
 
   /**
