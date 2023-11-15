@@ -391,7 +391,7 @@ class FilterKernelTest extends KernelTestBase {
     $this->assertFilteredString($filter, $tests);
 
     // Very long string hitting PCRE limits.
-    $limit = max(ini_get('pcre.backtrack_limit'), ini_get('pcre.recursion_limit'));
+    $limit = max((int) ini_get('pcre.backtrack_limit'), (int) ini_get('pcre.recursion_limit'));
     $source = $this->randomMachineName($limit);
     $result = _filter_autop($source);
     $this->assertEquals($result, '<p>' . $source . "</p>\n", 'Line break filter can process very long strings.');
