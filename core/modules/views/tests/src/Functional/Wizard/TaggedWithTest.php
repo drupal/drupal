@@ -6,7 +6,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
+use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 
 /**
  * Tests the ability of the views wizard to create views filtered by taxonomy.
@@ -15,7 +15,7 @@ use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
  */
 class TaggedWithTest extends WizardTestBase {
 
-  use EntityReferenceTestTrait;
+  use EntityReferenceFieldCreationTrait;
 
   /**
    * Modules to enable.

@@ -23,7 +23,7 @@ use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\user\Entity\User;
-use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
+use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 
 /**
  * Tests the new entity API for the entity reference field type.
@@ -32,7 +32,7 @@ use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
  */
 class EntityReferenceItemTest extends FieldKernelTestBase {
 
-  use EntityReferenceTestTrait;
+  use EntityReferenceFieldCreationTrait;
 
   /**
    * Modules to install.

@@ -7,7 +7,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
-use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
+use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\views\Views;
 
@@ -18,7 +18,7 @@ use Drupal\views\Views;
  */
 class SelectionTest extends KernelTestBase {
 
-  use EntityReferenceTestTrait;
+  use EntityReferenceFieldCreationTrait;
   use NodeCreationTrait;
 
   /**

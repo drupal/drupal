@@ -6,7 +6,7 @@ use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\taxonomy\Entity\Term;
-use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
+use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 
 /**
  * Tests the Entity Query relationship API.
@@ -15,7 +15,7 @@ use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
  */
 class EntityQueryRelationshipTest extends EntityKernelTestBase {
 
-  use EntityReferenceTestTrait;
+  use EntityReferenceFieldCreationTrait;
 
   /**
    * Modules to enable.

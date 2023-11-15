@@ -7,7 +7,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\migrate\source\SqlBase;
 use Drupal\migrate\Plugin\RequirementsInterface;
-use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
+use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 
 /**
  * Tests the migration plugin manager.
@@ -17,7 +17,7 @@ use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
  */
 class MigrationPluginListTest extends KernelTestBase {
 
-  use EntityReferenceTestTrait;
+  use EntityReferenceFieldCreationTrait;
 
   /**
    * {@inheritdoc}
