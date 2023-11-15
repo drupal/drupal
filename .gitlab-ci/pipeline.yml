@@ -319,15 +319,13 @@ stages:
     - echo "DRUPAL_TEST_WEBDRIVER_HOSTNAME='localhost'" >> ./core/.env
     - echo "DRUPAL_TEST_WEBDRIVER_CHROME_ARGS='--disable-dev-shm-usage --disable-gpu --headless'" >> ./core/.env
     - echo "DRUPAL_TEST_WEBDRIVER_PORT='9515'" >> ./core/.env
-    - echo "DRUPAL_NIGHTWATCH_OUTPUT='"nightwatch_output"'" >> ./core/.env
-    - cat ./core/.env
-    - mkdir -p ./sites/simpletest ./sites/default/files /var/www/.cache/yarn /var/www/.yarn ./nightwatch_output
-    - chown -R www-data:www-data ./sites/simpletest ./sites/default/files /var/www/.cache/yarn /var/www/.yarn ./nightwatch_output ./core/.env
-    - sudo BABEL_DISABLE_CACHE=1 -u www-data yarn --cwd ./core test:nightwatch --workers=4
+    - echo "DRUPAL_NIGHTWATCH_OUTPUT='"../nightwatch_output"'" >> ./core/.env
+    - chown -R www-data:www-data ./sites /var/www
+    - sudo -u www-data yarn run --cwd=./core test:nightwatch --workers=4
   artifacts:
     when: always
     expire_in: 6 mos
     reports:
-      junit: ./nightwatch_output/*.xml
+      junit: ./nightwatch_output/**/*.xml
     paths:
       - ./nightwatch_output
