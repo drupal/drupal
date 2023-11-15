@@ -93,13 +93,18 @@ function _menu_ui_node_save(NodeInterface $node, array $values) {
   /** @var \Drupal\menu_link_content\MenuLinkContentInterface $entity */
   if (!empty($values['entity_id'])) {
     $entity = MenuLinkContent::load($values['entity_id']);
-    if ($entity->isTranslatable()) {
+    if ($entity->isTranslatable() && $node->isTranslatable()) {
       if (!$entity->hasTranslation($node->language()->getId())) {
         $entity = $entity->addTranslation($node->language()->getId(), $entity->toArray());
       }
       else {
         $entity = $entity->getTranslation($node->language()->getId());
       }
+    }
+    else {
+      // Ensure the entity matches the node language.
+      $entity = $entity->getUntranslated();
+      $entity->set($entity->getEntityType()->getKey('langcode'), $node->language()->getId());
     }
   }
   else {
