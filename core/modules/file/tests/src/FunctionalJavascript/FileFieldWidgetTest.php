@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\file\FunctionalJavascript;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\file\Entity\File;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
@@ -100,7 +99,7 @@ class FileFieldWidgetTest extends WebDriverTestBase {
         // Ensure we have the expected number of Remove buttons, and that they
         // are numbered sequentially.
         $buttons = $this->xpath('//input[@type="submit" and @value="Remove"]');
-        $this->assertCount($num_expected_remove_buttons, $buttons, new FormattableMarkup('There are %n "Remove" buttons displayed.', ['%n' => $num_expected_remove_buttons]));
+        $this->assertCount($num_expected_remove_buttons, $buttons, 'There are ' . $num_expected_remove_buttons . ' "Remove" buttons displayed.');
         foreach ($buttons as $i => $button) {
           $key = $i >= $remaining ? $i - $remaining : $i;
           $check_field_name = $field_name2;

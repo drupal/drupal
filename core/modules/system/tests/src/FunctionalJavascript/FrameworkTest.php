@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\system\FunctionalJavascript;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
@@ -43,9 +42,9 @@ class FrameworkTest extends WebDriverTestBase {
 
     // Verify that the base page doesn't have the settings and files that are to
     // be lazy loaded as part of the next requests.
-    $this->assertTrue(!isset($original_settings[$expected['setting_name']]), new FormattableMarkup('Page originally lacks the %setting, as expected.', ['%setting' => $expected['setting_name']]));
-    $this->assertNotContains($expected['library_1'], $original_libraries, new FormattableMarkup('Page originally lacks the %library library, as expected.', ['%library' => $expected['library_1']]));
-    $this->assertNotContains($expected['library_2'], $original_libraries, new FormattableMarkup('Page originally lacks the %library library, as expected.', ['%library' => $expected['library_2']]));
+    $this->assertTrue(!isset($original_settings[$expected['setting_name']]), "Page originally lacks the {$expected['setting_name']}, as expected.");
+    $this->assertNotContains($expected['library_1'], $original_libraries, "Page originally lacks the {$expected['library_1']} library, as expected.");
+    $this->assertNotContains($expected['library_2'], $original_libraries, "Page originally lacks the {$expected['library_2']} library, as expected.");
 
     // Submit the AJAX request without triggering files getting added.
     $page->pressButton('Submit');
@@ -54,9 +53,9 @@ class FrameworkTest extends WebDriverTestBase {
     $new_libraries = explode(',', $new_settings['ajaxPageState']['libraries']);
 
     // Verify the setting was not added when not expected.
-    $this->assertTrue(!isset($new_settings[$expected['setting_name']]), new FormattableMarkup('Page still lacks the %setting, as expected.', ['%setting' => $expected['setting_name']]));
-    $this->assertNotContains($expected['library_1'], $new_libraries, new FormattableMarkup('Page still lacks the %library library, as expected.', ['%library' => $expected['library_1']]));
-    $this->assertNotContains($expected['library_2'], $new_libraries, new FormattableMarkup('Page still lacks the %library library, as expected.', ['%library' => $expected['library_2']]));
+    $this->assertTrue(!isset($new_settings[$expected['setting_name']]), "Page still lacks the {$expected['setting_name']}, as expected.");
+    $this->assertNotContains($expected['library_1'], $new_libraries, "Page still lacks the {$expected['library_1']} library, as expected.");
+    $this->assertNotContains($expected['library_2'], $new_libraries, "Page still lacks the {$expected['library_2']} library, as expected.");
 
     // Submit the AJAX request and trigger adding files.
     $page->checkField('add_files');
@@ -67,11 +66,11 @@ class FrameworkTest extends WebDriverTestBase {
 
     // Verify the expected setting was added, both to drupalSettings, and as
     // the first AJAX command.
-    $this->assertSame($expected['setting_value'], $new_settings[$expected['setting_name']], new FormattableMarkup('Page now has the %setting.', ['%setting' => $expected['setting_name']]));
+    $this->assertSame($expected['setting_value'], $new_settings[$expected['setting_name']], "Page now has the {$expected['setting_name']}.");
 
     // Verify the expected CSS file was added, both to drupalSettings, and as
     // the second AJAX command for inclusion into the HTML.
-    $this->assertContains($expected['library_1'], $new_libraries, new FormattableMarkup('Page state now has the %library library.', ['%library' => $expected['library_1']]));
+    $this->assertContains($expected['library_1'], $new_libraries, "Page state now has the {$expected['library_1']} library.");
 
     // Verify the expected JS file was added, both to drupalSettings, and as
     // the third AJAX command for inclusion into the HTML. By testing for an
@@ -79,7 +78,7 @@ class FrameworkTest extends WebDriverTestBase {
     // unexpected JavaScript code, such as a jQuery.extend() that would
     // potentially clobber rather than properly merge settings, didn't
     // accidentally get added.
-    $this->assertContains($expected['library_2'], $new_libraries, new FormattableMarkup('Page state now has the %library library.', ['%library' => $expected['library_2']]));
+    $this->assertContains($expected['library_2'], $new_libraries, "Page state now has the {$expected['library_2']} library.");
   }
 
   /**
