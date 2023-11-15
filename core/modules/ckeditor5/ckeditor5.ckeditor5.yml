@@ -558,6 +558,9 @@ ckeditor5_image:
     config:
       image:
         toolbar: [drupalImageAlternativeText]
+        insert:
+          # Determine image type (inline or block) by insertion context.
+          type: auto
   drupal:
     label: Image
     class: \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Image
