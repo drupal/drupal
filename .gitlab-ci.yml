@@ -48,10 +48,7 @@ variables:
   CONCURRENCY: 24
   GIT_DEPTH: "3"
   PARENT_PIPELINE_ID: $CI_PIPELINE_ID
-
-.default-lint-variables: &default-lint-variables
-    _TARGET_PHP: "8.2"
-    _TARGET_DB: "sqlite-3"
+  _TARGET_PHP: "8.2"
 
 #############
 # Stages    #
@@ -62,12 +59,11 @@ stages:
   - 🗜️ Test
 
 #############
-# Templates #
+# Defaults  #
 #############
 
-.default-job-settings: &default-job-settings
+default:
   interruptible: true
-  allow_failure: false
   retry:
     max: 2
     when:
@@ -79,6 +75,10 @@ stages:
   image:
     name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
 
+#############
+# Templates #
+#############
+
 .with-composer: &with-composer
   needs:
     - '📦️ Composer'
@@ -88,18 +88,8 @@ stages:
     - '📦️ Yarn'
 
 .default-job-settings-lint: &default-job-settings-lint
-  <<: [*default-job-settings]
   rules:
     - if: $PERFORMANCE_TEST != "1"
-
-.junit-artifacts: &junit-artifacts
-  artifacts:
-    expose_as: junit
-    expire_in: 6 mos
-    paths:
-      - junit.xml
-    reports:
-      junit: junit.xml
 
 
 ################
@@ -227,9 +217,7 @@ stages:
 ################
 
 '📦️ Composer':
-  <<: *default-job-settings
   variables:
-    <<: *default-lint-variables
     KUBERNETES_CPU_REQUEST: "1"
   stage: 🏗️ Build
   cache:
@@ -249,9 +237,7 @@ stages:
       - composer install
 
 '📦️ Yarn':
-  <<: *default-job-settings
   variables:
-    <<: *default-lint-variables
     KUBERNETES_CPU_REQUEST: "2"
   stage: 🏗️ Build
   cache:
@@ -274,10 +260,9 @@ stages:
 ################
 
 '🧹 PHP Static Analysis (phpstan)':
-  <<: [ *with-composer, *junit-artifacts, *default-job-settings-lint ]
+  <<: [ *with-composer, *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
-    <<: *default-lint-variables
     KUBERNETES_CPU_REQUEST: "16"
   script:
     - php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > phpstan-quality-report.json
@@ -286,10 +271,9 @@ stages:
       codequality: phpstan-quality-report.json
 
 '🧹 PHP Coding standards (PHPCS)':
-  <<: [ *with-composer, *junit-artifacts, *default-job-settings-lint ]
+  <<: [ *with-composer, *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
-    <<: *default-lint-variables
     KUBERNETES_CPU_REQUEST: "16"
   script:
     - composer phpcs -- --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
@@ -298,10 +282,9 @@ stages:
       codequality: phpcs-quality-report.json
 
 '🧹 JavaScript linting (eslint)':
-  <<: [ *with-yarn, *junit-artifacts, *default-job-settings-lint ]
+  <<: [ *with-yarn, *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
-    <<: *default-lint-variables
     KUBERNETES_CPU_REQUEST: "2"
   script:
     - yarn --cwd=./core run -s lint:core-js-passing --format gitlab
@@ -310,10 +293,9 @@ stages:
       codequality: eslint-quality-report.json
 
 '🧹 CSS linting (stylelint)':
-  <<: [ *with-yarn, *junit-artifacts, *default-job-settings-lint ]
+  <<: [ *with-yarn, *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
-    <<: *default-lint-variables
     KUBERNETES_CPU_REQUEST: "2"
   script:
     - yarn run --cwd=./core lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
@@ -325,7 +307,6 @@ stages:
   <<: [ *with-yarn, *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
-    <<: *default-lint-variables
     KUBERNETES_CPU_REQUEST: "2"
   script:
     - yarn run --cwd=./core build:css --check
@@ -335,7 +316,6 @@ stages:
   <<: [ *with-yarn, *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
-    <<: *default-lint-variables
     KUBERNETES_CPU_REQUEST: "2"
   script:
     - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
