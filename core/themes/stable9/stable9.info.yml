@@ -296,6 +296,10 @@ libraries-override:
       theme:
         css/views_ui.admin.theme.css: css/views_ui/views_ui.admin.theme.css
         css/views_ui.contextual.css: css/views_ui/views_ui.contextual.css
+  field_ui/drupal.field_ui_table:
+    css:
+      theme:
+        css/field_ui_display_mode_table.css: css/field_ui/field_ui_display_mode_table.css
 
 libraries-extend:
   tour/tour:
