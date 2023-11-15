@@ -79,6 +79,10 @@ final class ComponentValidator {
       }
       return TRUE;
     }
+    // If there are no props, force casting to object instead of array.
+    if (($schema['properties'] ?? NULL) === []) {
+      $schema['properties'] = new \stdClass();
+    }
     $classes_per_prop = $this->getClassProps($schema);
     $missing_class_errors = [];
     foreach ($classes_per_prop as $prop_name => $class_types) {

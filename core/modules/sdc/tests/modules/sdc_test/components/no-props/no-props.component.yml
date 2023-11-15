@@ -1,0 +1,6 @@
+$schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
+name: No props
+description: Component without properties
+props:
+  type: object
+  properties: {}
