@@ -7,10 +7,8 @@ stages:
 # Templates #
 #############
 
-.default-job-settings: &default-job-settings
-  stage: 🗜️ Test
+default:
   interruptible: true
-  allow_failure: false
   retry:
     max: 2
     when:
@@ -21,17 +19,30 @@ stages:
       - scheduler_failure
   image:
     name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
+  before_script:
+  - |
+      ln -s $CI_PROJECT_DIR /var/www/html/subdirectory
+      sudo service apache2 start
+      [[ $_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/$CI_PROJECT_DIR/sites/default/files/db.sqlite?module=sqlite
+      [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
+      [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
+      [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
+      mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
+      chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
+      sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
+  artifacts:
+    when: always
+    expire_in: 6 mos
+    reports:
+      junit: ./sites/default/files/simpletest/phpunit-*.xml
+    paths:
+      - ./sites/default/files/simpletest/phpunit-*.xml
+      - ./sites/simpletest/browser_output
+
+.default-job-settings: &default-job-settings
+  stage: 🗜️ Test
   rules:
     - if: $CI_PIPELINE_SOURCE == "parent_pipeline" && $PERFORMANCE_TEST != "1"
-
-.junit-artifacts: &junit-artifacts
-  artifacts:
-    expose_as: junit
-    expire_in: 6 mos
-    paths:
-      - junit.xml
-    reports:
-      junit: junit.xml
 
 .with-composer: &with-composer
   needs:
@@ -45,7 +56,7 @@ stages:
     - pipeline: $PARENT_PIPELINE_ID
       job: '📦️ Yarn'
 
-.test-variables: &test-variables
+variables:
   FF_NETWORK_PER_BUILD: 1
   SIMPLETEST_BASE_URL: http://localhost/subdirectory
   DB_DRIVER: mysql
@@ -74,45 +85,13 @@ stages:
     - "--verbose"
     - "--whitelisted-ips="
 
-.phpunit-artifacts: &phpunit-artifacts
-  artifacts:
-    when: always
-    expire_in: 6 mos
-    reports:
-      junit: ./sites/default/files/simpletest/phpunit-*.xml
-    paths:
-      - ./sites/default/files/simpletest/phpunit-*.xml
-      - ./sites/simpletest/browser_output
-
-.setup-webroot: &setup-webserver
-  before_script:
-    - ln -s $CI_PROJECT_DIR /var/www/html/subdirectory
-    - sudo service apache2 start
-
-.set-simpletest-db: &set-simpletest-db
-  - |
-    [[ $_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/$CI_PROJECT_DIR/sites/default/files/db.sqlite?module=sqlite
-    [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
-    [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
-    [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
-
-.set-directory-settings: &set-directory-settings
-  - |
-    mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
-    chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
-    sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
-
 .run-tests: &run-tests
   script:
-    - *set-simpletest-db
-    - *set-directory-settings
     # Need to pass this along directly.
     - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --all --ci-parallel-node-index $CI_PARALLEL_NODE_INDEX --ci-parallel-node-total $CI_PARALLEL_NODE_TOTAL
 
 .run-repeat-class-test: &run-repeat-class-test
   script:
-    - *set-simpletest-db
-    - *set-directory-settings
     - echo "ℹ️ Running class ${REPEAT_TEST_CLASS}"
     - |
       if [[ $REPEAT_TEST_CLASS == "Drupal\Tests\Change\Me" ]]; then
@@ -135,29 +114,22 @@ stages:
 ################
 
 '🌐️️ PHPUnit Functional':
-  <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
+  <<: [ *with-composer, *run-tests, *default-job-settings ]
   parallel: 7
   variables:
-    <<: *test-variables
     TESTSUITE: PHPUnit-Functional
-    CONCURRENCY: "$CONCURRENCY"
     KUBERNETES_CPU_REQUEST: "24"
   services:
     - <<: *with-database
 
 '🩹 Test-only changes':
-  <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *default-job-settings ]
+  <<: [ *with-composer, *default-job-settings ]
   when: manual
-  interruptible: true
   allow_failure: true
-  variables:
-    <<: *test-variables
   services:
     - <<: *with-database
     - <<: *with-chrome
   script:
-    - *set-simpletest-db
-    - *set-directory-settings
     - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
     - git fetch -vn --depth=3 "$CI_MERGE_REQUEST_PROJECT_URL" "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
     - |
@@ -185,21 +157,18 @@ stages:
       fi
 
 '⚙️️ PHPUnit Kernel':
-  <<: [*with-composer, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
+  <<: [*with-composer, *run-tests, *default-job-settings ]
   parallel: 2
   variables:
-    <<: *test-variables
     TESTSUITE: PHPUnit-Kernel
-    CONCURRENCY: "$CONCURRENCY"
     KUBERNETES_CPU_REQUEST: "16"
   services:
     - <<: *with-database
 
 '🖱️️️ PHPUnit Functional Javascript':
-  <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
+  <<: [ *with-composer, *run-tests, *default-job-settings ]
   parallel: 2
   variables:
-    <<: *test-variables
     TESTSUITE: PHPUnit-FunctionalJavascript
     CONCURRENCY: 15
     KUBERNETES_CPU_REQUEST: "8"
@@ -208,37 +177,31 @@ stages:
     - <<: *with-chrome
 
 '👷️️️ PHPUnit Build':
-  <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
+  <<: [ *with-composer, *run-tests, *default-job-settings ]
   variables:
-    <<: *test-variables
     TESTSUITE: PHPUnit-Build
-    CONCURRENCY: "$CONCURRENCY"
     KUBERNETES_CPU_REQUEST: "2"
   services:
     - <<: *with-database
 
 '⚡️ PHPUnit Unit':
-  <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *run-tests, *default-job-settings ]
+  <<: [ *with-composer, *run-tests, *default-job-settings ]
   services:
     # There are some unit tests that need a database.
     # @todo Remove after https://www.drupal.org/project/drupal/issues/3386217
     - <<: *with-database
   variables:
-    <<: *test-variables
     TESTSUITE: PHPUnit-Unit
-    CONCURRENCY: "$CONCURRENCY"
     KUBERNETES_CPU_REQUEST: "16"
 
 '🦉️️️ Nightwatch':
-  <<: [ *with-composer-and-yarn, *setup-webserver, *default-job-settings ]
+  <<: [ *with-composer-and-yarn, *default-job-settings ]
   variables:
-    <<: *test-variables
     KUBERNETES_CPU_REQUEST: "3"
   services:
     - <<: *with-database
     - <<: *with-chrome
   script:
-    - *set-simpletest-db
     - export DRUPAL_TEST_DB_URL=$SIMPLETEST_DB
     - cp ./core/.env.example ./core/.env
     # dotenv-safe/config does not support environment variables
@@ -264,23 +227,19 @@ stages:
       - ./nightwatch_output
 
 '🔁 Repeat Class Test':
-  <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *run-repeat-class-test, *default-job-settings ]
+  <<: [ *with-composer, *run-repeat-class-test, *default-job-settings ]
   when: manual
-  interruptible: true
   allow_failure: true
   variables:
-    <<: *test-variables
-    CONCURRENCY: "$CONCURRENCY"
     REPEAT_TEST_CLASS: 'Drupal\Tests\Change\Me'
   services:
     - <<: *with-database
 
 '🚲 Performance tests':
-  <<: [ *with-composer, *phpunit-artifacts, *setup-webserver, *default-job-settings ]
+  <<: [ *with-composer, *default-job-settings ]
   rules:
     - if: $PERFORMANCE_TEST == "1"
   variables:
-    <<: *test-variables
     KUBERNETES_CPU_REQUEST: "24"
   services:
     - <<: *with-database
