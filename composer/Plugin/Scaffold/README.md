@@ -1,9 +1,14 @@
 # Drupal Composer Scaffold
 
-This project provides a composer plugin for placing scaffold files (like
-`index.php`, `update.php`, …) from the `drupal/core` project into their desired
-location inside the web root. Only individual files may be scaffolded with this
-plugin.
+This project provides a composer plugin making the Drupal core Composer package
+work correctly in a Composer project.
+
+This takes care of:
+  - Placing scaffold files (like `index.php`, `update.php`, …) from the
+    `drupal/core` project into their desired location inside the web root. Only
+    individual files may be scaffolded with this plugin.
+  - Writing an autoload.php file to the web root, which includes the Composer
+    autoload.php file.
 
 The purpose of scaffolding files is to allow Drupal sites to be fully managed by
 Composer, and still allow individual asset files to be placed in arbitrary
