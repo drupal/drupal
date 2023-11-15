@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests\Core\EventSubscriber;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\ErrorHandler\BufferingLogger;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,6 +48,18 @@ class ExceptionLoggingSubscriberTest extends KernelTestBase {
       503 => 'php',
     ];
 
+    $level_map = [
+      400 => RfcLogLevel::WARNING,
+      401 => RfcLogLevel::WARNING,
+      403 => RfcLogLevel::WARNING,
+      404 => RfcLogLevel::WARNING,
+      405 => RfcLogLevel::WARNING,
+      408 => RfcLogLevel::WARNING,
+      501 => RfcLogLevel::ERROR,
+      502 => RfcLogLevel::ERROR,
+      503 => RfcLogLevel::ERROR,
+    ];
+
     // Ensure that noting is logged.
     $this->assertEmpty($this->container->get($this->testLogServiceName)->cleanLogs());
 
@@ -60,11 +73,12 @@ class ExceptionLoggingSubscriberTest extends KernelTestBase {
     ini_set('error_log', $error_log);
 
     $expected_channels = array_values($channel_map);
+    $expected_levels = array_values($level_map);
 
     $logs = $this->container->get($this->testLogServiceName)->cleanLogs();
     foreach ($expected_channels as $key => $expected_channel) {
-      $log_message = $logs[$key][2]['channel'];
-      $this->assertEquals($expected_channel, $log_message);
+      $this->assertEquals($expected_channel, $logs[$key][2]['channel']);
+      $this->assertEquals($expected_levels[$key], $logs[$key][0]);
     }
   }
 
