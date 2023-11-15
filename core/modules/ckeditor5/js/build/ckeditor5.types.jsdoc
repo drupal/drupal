@@ -575,12 +575,6 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-engine/src/model/operation/operation.js
- *
- * @typedef {module:engine/model/operation/operation} module:engine/model/operation/operation~Operation
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-engine/src/model/operation/operationfactory.js
  *
  * @typedef {module:engine/model/operation/operationfactory} module:engine/model/operation/operationfactory~OperationFactory
@@ -1133,6 +1127,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-image/src/image/imageplaceholder.js
+ *
+ * @typedef {module:image/image/imageplaceholder} module:image/image/imageplaceholder~ImagePlaceholder
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-image/src/image/insertimagecommand.js
  *
  * @typedef {module:image/image/insertimagecommand} module:image/image/insertimagecommand~InsertImageCommand
@@ -1628,6 +1628,12 @@
  * Declared in file @ckeditor/ckeditor5-paste-from-office/src/filters/br.js
  *
  * @typedef {module:paste-from-office/filters/br} module:paste-from-office/filters/br~transformBlockBrsToParagraphs
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-paste-from-office/src/filters/removemsattributes.js
+ *
+ * @typedef {module:paste-from-office/filters/removemsattributes} module:paste-from-office/filters/removemsattributes~removeMSAttributes
  */
 
 /**
