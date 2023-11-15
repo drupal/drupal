@@ -44,6 +44,7 @@ final class ComponentRenderTest extends ComponentKernelTestBase {
     $this->checkRenderElementAlters();
     $this->checkSlots();
     $this->checkInvalidSlot();
+    $this->checkEmptyProps();
   }
 
   /**
@@ -333,6 +334,22 @@ final class ComponentRenderTest extends ComponentKernelTestBase {
     $this->expectException(InvalidComponentDataException::class);
     $this->expectExceptionMessage('Unable to render component "sdc_test:my-banner". A render array or a scalar is expected for the slot "banner_body" when using the render element with the "#slots" property');
     $this->renderComponentRenderArray($build);
+  }
+
+  /**
+   * Ensure that components can have 0 props.
+   */
+  public function checkEmptyProps(): void {
+    $build = [
+      '#type' => 'component',
+      '#component' => 'sdc_test:no-props',
+      '#props' => [],
+    ];
+    $crawler = $this->renderComponentRenderArray($build);
+    $this->assertEquals(
+      $crawler->filter('#sdc-wrapper')->innerText(),
+      'This is a test string.'
+    );
   }
 
   /**
