@@ -6,7 +6,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\node\Entity\NodeType;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
+use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 
 // cspell:ignore xyabz
 
@@ -17,7 +17,7 @@ use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
  */
 class EntityReferenceSelectionReferenceableTest extends KernelTestBase {
 
-  use EntityReferenceTestTrait;
+  use EntityReferenceFieldCreationTrait;
 
   /**
    * Bundle of 'entity_test_no_label' entity.

@@ -13,7 +13,7 @@ use Drupal\views\Views;
 use Drupal\comment\Entity\Comment;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\taxonomy\Entity\Term;
-use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
+use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 
 /**
  * Tests the default views provided by views.
@@ -23,7 +23,7 @@ use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 class DefaultViewsTest extends ViewTestBase {
 
   use CommentTestTrait;
-  use EntityReferenceTestTrait;
+  use EntityReferenceFieldCreationTrait;
 
   /**
    * Modules to enable.

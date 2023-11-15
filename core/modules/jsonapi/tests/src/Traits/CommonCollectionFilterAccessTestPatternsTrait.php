@@ -7,7 +7,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Url;
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
+use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\jsonapi\Functional\ResourceTestBase;
 use GuzzleHttp\RequestOptions;
 
@@ -16,7 +16,7 @@ use GuzzleHttp\RequestOptions;
  */
 trait CommonCollectionFilterAccessTestPatternsTrait {
 
-  use EntityReferenceTestTrait;
+  use EntityReferenceFieldCreationTrait;
 
   /**
    * Implements ::testCollectionFilterAccess() for pure permission-based access.

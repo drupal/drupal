@@ -8,7 +8,7 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
-use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
+use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
@@ -20,7 +20,7 @@ use Drupal\user\Entity\User;
  */
 class ValidReferenceConstraintValidatorTest extends EntityKernelTestBase {
 
-  use EntityReferenceTestTrait;
+  use EntityReferenceFieldCreationTrait;
   use ContentTypeCreationTrait;
 
   /**

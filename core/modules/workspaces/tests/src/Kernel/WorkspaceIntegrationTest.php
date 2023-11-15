@@ -9,7 +9,7 @@ use Drupal\entity_test\Entity\EntityTestMulRevPub;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\system\Form\SiteInformationForm;
-use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
+use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
@@ -27,7 +27,7 @@ use Drupal\workspaces\WorkspacePublishException;
 class WorkspaceIntegrationTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;
-  use EntityReferenceTestTrait;
+  use EntityReferenceFieldCreationTrait;
   use NodeCreationTrait;
   use UserCreationTrait;
   use ViewResultAssertionTrait;

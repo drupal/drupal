@@ -14,7 +14,7 @@ use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Drupal\entity_test\Entity\EntityTestLabel;
-use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
+use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 
 /**
  * Tests the formatters functionality.
@@ -23,7 +23,7 @@ use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
  */
 class EntityReferenceFormatterTest extends EntityKernelTestBase {
 
-  use EntityReferenceTestTrait;
+  use EntityReferenceFieldCreationTrait;
 
   /**
    * The entity type used in this test.

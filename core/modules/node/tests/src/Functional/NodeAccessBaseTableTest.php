@@ -6,7 +6,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\node\Entity\NodeType;
 use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
+use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 
 /**
  * Tests behavior of the node access subsystem if the base table is not node.
@@ -15,7 +15,7 @@ use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
  */
 class NodeAccessBaseTableTest extends NodeTestBase {
 
-  use EntityReferenceTestTrait;
+  use EntityReferenceFieldCreationTrait;
 
   /**
    * Modules to enable.

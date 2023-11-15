@@ -5,7 +5,7 @@ namespace Drupal\Tests\node\Functional;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
+use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 
 /**
  * Tests node view access cacheability with node grants.
@@ -14,7 +14,7 @@ use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
  */
 class NodeAccessCacheabilityWithNodeGrants extends BrowserTestBase {
 
-  use EntityReferenceTestTrait;
+  use EntityReferenceFieldCreationTrait;
 
   /**
    * {@inheritdoc}

@@ -8,7 +8,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 /**
  * Provides common functionality for the EntityReference test classes.
  */
-trait EntityReferenceTestTrait {
+trait EntityReferenceFieldCreationTrait {
 
   /**
    * Creates a field of an entity reference field storage on the specified bundle.

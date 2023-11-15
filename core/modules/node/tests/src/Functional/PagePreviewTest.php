@@ -11,7 +11,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\NodeType;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
+use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\RoleInterface;
 
@@ -22,7 +22,7 @@ use Drupal\user\RoleInterface;
  */
 class PagePreviewTest extends NodeTestBase {
 
-  use EntityReferenceTestTrait;
+  use EntityReferenceFieldCreationTrait;
   use CommentTestTrait;
   use TestFileCreationTrait {
     getTestFiles as drupalGetTestFiles;

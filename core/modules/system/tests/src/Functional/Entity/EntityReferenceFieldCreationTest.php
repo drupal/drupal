@@ -3,7 +3,7 @@
 namespace Drupal\Tests\system\Functional\Entity;
 
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
+use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 
 /**
@@ -13,7 +13,7 @@ use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
  */
 class EntityReferenceFieldCreationTest extends BrowserTestBase {
 
-  use EntityReferenceTestTrait;
+  use EntityReferenceFieldCreationTrait;
   use FieldUiTestTrait;
 
   /**
