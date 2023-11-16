@@ -109,7 +109,7 @@ class DrupalDateTimeTest extends UnitTestCase {
       ],
       [
         'input1' => DrupalDateTime::createFromFormat('U', 3600, $utc_tz, $settings),
-        'input2' => \DateTime::createFromFormat('U', 0),
+        'input2' => \DateTime::createFromFormat('U', '0'),
         'absolute' => FALSE,
         'expected' => $negative_1_hour,
       ],
@@ -121,7 +121,7 @@ class DrupalDateTimeTest extends UnitTestCase {
       ],
       [
         'input1' => DrupalDateTime::createFromFormat('U', 3600, $utc_tz, $settings),
-        'input2' => \DateTime::createFromFormat('U', 0),
+        'input2' => \DateTime::createFromFormat('U', '0'),
         'absolute' => TRUE,
         'expected' => $positive_1_hour,
       ],

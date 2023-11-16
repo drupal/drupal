@@ -70,7 +70,7 @@ class RendererRecursionTest extends RendererTestBase {
     $this->setUpRequest();
 
     $callable = function ($markup) {
-      $this->assertStringStartsWith('<drupal-render-placeholder', $markup, 'Rendered complex child output as expected, without the placeholder replaced, i.e. with just the placeholder.');
+      $this->assertStringStartsWith('<drupal-render-placeholder', (string) $markup, 'Rendered complex child output as expected, without the placeholder replaced, i.e. with just the placeholder.');
       return $markup;
     };
 
