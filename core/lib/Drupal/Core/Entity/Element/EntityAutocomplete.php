@@ -203,8 +203,7 @@ class EntityAutocomplete extends Textfield {
   public static function validateEntityAutocomplete(array &$element, FormStateInterface $form_state, array &$complete_form) {
     $value = NULL;
 
-    // Check the value for emptiness, but allow the use of (string) "0".
-    if ((!empty($element['#value']) || (is_string($element['#value']) && strlen($element['#value'])))) {
+    if (!empty($element['#value'])) {
       $options = $element['#selection_settings'] + [
         'target_type' => $element['#target_type'],
         'handler' => $element['#selection_handler'],
