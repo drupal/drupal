@@ -143,6 +143,36 @@ class DbLogTest extends BrowserTestBase {
   }
 
   /**
+   * Tests that the details page displays the backtrace for a logged \Throwable.
+   */
+  public function testOnError(): void {
+    // Log in as the admin user.
+    $this->drupalLogin($this->adminUser);
+
+    // Load a page that throws an exception in the controller, and includes its
+    // function arguments in the exception backtrace.
+    $this->drupalGet('error-test/trigger-exception');
+
+    // Load the details page for the most recent event logged by the "php"
+    // logger.
+    $query = Database::getConnection()->select('watchdog')
+      ->condition('type', 'php');
+    $query->addExpression('MAX([wid])');
+    $wid = $query->execute()->fetchField();
+    $this->drupalGet('admin/reports/dblog/event/' . $wid);
+
+    // Verify the page displays a dblog-event table with a "Type" header.
+    $table = $this->assertSession()->elementExists('xpath', "//table[@class='dblog-event']");
+    $type = "//tr/th[contains(text(), 'Type')]/../td";
+    $this->assertSession()->elementsCount('xpath', $type, 1, $table);
+
+    // Verify that the backtrace row exists and is HTML-encoded.
+    $backtrace = "//tr//pre[contains(@class, 'backtrace')]";
+    $this->assertCount(1, $table->findAll('xpath', $backtrace));
+    $this->assertSession()->responseContains('&lt;script&gt;alert(&#039;xss&#039;)&lt;/script&gt;');
+  }
+
+  /**
    * Tests that a 403 event is logged with the exception triggering it.
    */
   public function test403LogEventPage() {

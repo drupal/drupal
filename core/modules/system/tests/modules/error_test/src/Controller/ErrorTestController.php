@@ -68,9 +68,17 @@ class ErrorTestController extends ControllerBase {
 
   /**
    * Trigger an exception to test the exception handler.
+   *
+   * @param string $argument
+   *   A function argument which will be included in the exception backtrace.
+   *
+   * @throws \Exception
    */
-  public function triggerException() {
+  public function triggerException(string $argument = "<script>alert('xss')</script>"): void {
     define('SIMPLETEST_COLLECT_ERRORS', FALSE);
+    // Add function arguments to the exception backtrace.
+    ini_set('zend.exception_ignore_args', FALSE);
+    ini_set('zend.exception_string_param_max_len', 1024);
     throw new \Exception("Drupal & awesome");
   }
 
