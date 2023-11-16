@@ -170,7 +170,6 @@ cnenzrgre
 codesniffer
 colgroups
 colinodell
-collegehumor
 colonpos
 colour
 colspans
@@ -211,6 +210,7 @@ customly
 customrequest
 cweagans
 cádiz
+dailymotion
 databasename
 datas
 datelist

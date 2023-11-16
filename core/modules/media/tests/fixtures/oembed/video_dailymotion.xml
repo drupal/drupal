@@ -2,15 +2,15 @@
 <oembed>
   <type>video</type>
   <version>1.0</version>
-  <title>Let's Not Get a Drink Sometime</title>
+  <title>#d8rules - Support the Rules module for Drupal 8</title>
   <https/>
-  <author_name>CollegeHumor</author_name>
-  <author_url>http://www.collegehumor.com</author_url>
-  <provider_name>CollegeHumor</provider_name>
-  <provider_url>http://www.collegehumor.com</provider_url>
+  <author_name>Leepchic</author_name>
+  <author_url>https://www.dailymotion.com/leepchic</author_url>
+  <provider_name>Dailymotion</provider_name>
+  <provider_url>https://www.dailymotion.com</provider_url>
   <width>610</width>
   <height>343</height>
-  <html><h1>CollegeHumor works!</h1>
+  <html><h1>Dailymotion works!</h1>
   </html>
   <!-- The thumbnail URL does not contain a file extension, so we use
   this to test the oEmbed source plugin's thumbnail handling;

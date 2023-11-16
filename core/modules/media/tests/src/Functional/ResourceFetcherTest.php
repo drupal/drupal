@@ -43,9 +43,9 @@ class ResourceFetcherTest extends MediaFunctionalTestBase {
         'Drupal Rap Video - Schipulcon09',
       ],
       'XML resource' => [
-        'video_collegehumor.xml',
-        'CollegeHumor',
-        "Let's Not Get a Drink Sometime",
+        'video_dailymotion.xml',
+        'Dailymotion',
+        "#d8rules - Support the Rules module for Drupal 8",
       ],
     ];
   }
