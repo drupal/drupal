@@ -123,7 +123,7 @@ class ValidReferenceConstraintValidator extends ConstraintValidator implements C
     if ($target_ids) {
       // Get a list of pre-existing references.
       $previously_referenced_ids = [];
-      if ($value->getParent() && ($entity = $value->getEntity()) && !$entity->isNew()) {
+      if ($entity && !$entity->isNew()) {
         $existing_entity = $this->entityTypeManager->getStorage($entity->getEntityTypeId())->loadUnchanged($entity->id());
         foreach ($existing_entity->{$value->getFieldDefinition()->getName()}->getValue() as $item) {
           $previously_referenced_ids[$item['target_id']] = $item['target_id'];
