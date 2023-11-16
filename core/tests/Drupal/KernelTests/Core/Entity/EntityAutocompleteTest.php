@@ -106,9 +106,11 @@ class EntityAutocompleteTest extends EntityKernelTestBase {
     ];
     $this->assertSame($target, reset($data), 'Autocomplete returns an entity label containing a comma and a slash.');
 
-    $input = '';
-    $data = $this->getAutocompleteResult($input);
-    $this->assertSame([], $data, 'Autocomplete of empty string returns empty result');
+    // Test empty input.
+    foreach (['', NULL, FALSE, 0, 0.0] as $input) {
+      $data = $this->getAutocompleteResult($input);
+      $this->assertSame([], $data, 'Autocomplete of empty input returns empty result');
+    }
 
     $input = ',';
     $data = $this->getAutocompleteResult($input);
@@ -130,6 +132,12 @@ class EntityAutocompleteTest extends EntityKernelTestBase {
     $this->assertSame(Html::escape($entity_1->name->value), $data[0]['label'], 'Autocomplete returned the first matching entity');
     $this->assertSame(Html::escape($entity_2->name->value), $data[1]['label'], 'Autocomplete returned the second matching entity');
     $this->assertSame(Html::escape($entity_3->name->value), $data[2]['label'], 'Autocomplete returned the third matching entity');
+
+    // Try to autocomplete an entity label with the '0' character.
+    $input = '0';
+    $data = $this->getAutocompleteResult($input);
+    $this->assertSame(Html::escape($entity_1->name->value), $data[0]['label'], 'Autocomplete returned the first matching entity');
+    $this->assertSame(Html::escape($entity_2->name->value), $data[1]['label'], 'Autocomplete returned the second matching entity');
   }
 
   /**
