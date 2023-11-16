@@ -68,27 +68,27 @@ function system_token_info() {
   $request_time = \Drupal::time()->getRequestTime();
   $date['short'] = [
     'name' => t("Short format"),
-    'description' => t("A date in 'short' format. (%date)", ['%date' => $date_formatter->format($request_time, 'short')]),
+    'description' => t("The current date in 'short' format. (%date)", ['%date' => $date_formatter->format($request_time, 'short')]),
   ];
   $date['medium'] = [
     'name' => t("Medium format"),
-    'description' => t("A date in 'medium' format. (%date)", ['%date' => $date_formatter->format($request_time, 'medium')]),
+    'description' => t("The current date in 'medium' format. (%date)", ['%date' => $date_formatter->format($request_time, 'medium')]),
   ];
   $date['long'] = [
     'name' => t("Long format"),
-    'description' => t("A date in 'long' format. (%date)", ['%date' => $date_formatter->format($request_time, 'long')]),
+    'description' => t("The current date in 'long' format. (%date)", ['%date' => $date_formatter->format($request_time, 'long')]),
   ];
   $date['custom'] = [
     'name' => t("Custom format"),
-    'description' => t('A date in a custom format. See <a href="https://www.php.net/manual/datetime.format.php#refsect1-datetime.format-parameters">the PHP documentation</a> for details.'),
+    'description' => t('The current date in a custom format. See <a href="https://www.php.net/manual/datetime.format.php#refsect1-datetime.format-parameters">the PHP documentation</a> for details.'),
   ];
   $date['since'] = [
     'name' => t("Time-since"),
-    'description' => t("A date in 'time-since' format. (%date)", ['%date' => $date_formatter->formatTimeDiffSince($request_time - 360)]),
+    'description' => t("The current date in 'time-since' format. (%date)", ['%date' => $date_formatter->formatTimeDiffSince($request_time - 360)]),
   ];
   $date['raw'] = [
     'name' => t("Raw timestamp"),
-    'description' => t("A date in UNIX timestamp format (%date)", ['%date' => $request_time]),
+    'description' => t("The current date in UNIX timestamp format (%date)", ['%date' => $request_time]),
   ];
 
   return [
