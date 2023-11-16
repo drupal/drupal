@@ -92,6 +92,12 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
       $entity->save();
       $this->referencedEntities[] = $entity;
     }
+
+    $entity = EntityTest::create([
+      'name' => '0',
+    ]);
+    $entity->save();
+    $this->referencedEntities[] = $entity;
   }
 
   /**
@@ -184,6 +190,11 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
       '#tags' => TRUE,
     ];
 
+    $form['single_name_0'] = [
+      '#type' => 'entity_autocomplete',
+      '#target_type' => 'entity_test',
+    ];
+
     return $form;
   }
 
@@ -211,6 +222,7 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
         'tags_autocreate_specific_uid' => $this->getAutocompleteInput($this->referencedEntities[0]) . ', tags - autocreated entity label with specific uid, ' . $this->getAutocompleteInput($this->referencedEntities[1]),
         'single_string_id' => $this->getAutocompleteInput($this->referencedEntities[2]),
         'tags_string_id' => $this->getAutocompleteInput($this->referencedEntities[2]) . ', ' . $this->getAutocompleteInput($this->referencedEntities[3]),
+        'single_name_0' => $this->referencedEntities[4]->label(),
       ]);
     $form_builder = $this->container->get('form_builder');
     $form_builder->submitForm($this, $form_state);
@@ -271,6 +283,9 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
       ['target_id' => $this->referencedEntities[3]->id()],
     ];
     $this->assertEquals($expected, $form_state->getValue('tags_string_id'));
+
+    // Test the 'single_name_0' element.
+    $this->assertEquals($this->referencedEntities[4]->id(), $form_state->getValue('single_name_0'));
   }
 
   /**
