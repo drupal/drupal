@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * @file
+ * Helper module for the JavaScript AJAX request tests.
+ */
+
+/**
+ * Implements hook_page_attachments().
+ */
+function js_testing_ajax_request_test_page_attachments(array &$attachments) {
+  // Unconditionally attach an asset to the page.
+  $attachments['#attached']['library'][] = 'js_testing_ajax_request_test/track_ajax_requests';
+}

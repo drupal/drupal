@@ -173,7 +173,6 @@ class MediaPreviewTest extends MediaTestBase {
       else {
         // If the filter isn't enabled, there won't be an error, but the
         // preview shouldn't be rendered.
-        $assert_session->assertWaitOnAjaxRequest();
         $assert_session->elementNotExists('css', 'article.media');
       }
     }

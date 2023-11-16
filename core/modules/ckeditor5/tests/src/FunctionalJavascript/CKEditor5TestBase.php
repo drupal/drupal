@@ -66,20 +66,19 @@ abstract class CKEditor5TestBase extends WebDriverTestBase {
       // before CKEditor 5 can be enabled.
       $this->assertTrue($page->hasUncheckedField('filters[filter_html][status]'));
       $page->checkField('filters[filter_html][status]');
-      $assert_session->assertWaitOnAjaxRequest();
 
       // Add the tags that must be included in the html filter for CKEditor 5.
       $allowed_html_field = $assert_session->fieldExists('filters[filter_html][settings][allowed_html]');
       $allowed_html_field->setValue('<p> <br>');
     }
     $page->selectFieldOption('editor[editor]', $name);
+    $assert_session->assertExpectedAjaxRequest(1);
   }
 
   /**
    * Save the new text format.
    */
   public function saveNewTextFormat($page, $assert_session) {
-    $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Save configuration');
     $this->assertTrue($assert_session->waitForText('Added text format'), "Confirm new text format saved");
   }

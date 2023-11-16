@@ -292,7 +292,7 @@ JS;
 
     // This is needed to avoid an unfinished AJAX request error from tearDown()
     // because this test intentionally does not complete all AJAX requests.
-    $this->getSession()->executeScript("delete window.jQuery");
+    $this->getSession()->executeScript("delete window.drupalActiveXhrCount");
   }
 
   /**

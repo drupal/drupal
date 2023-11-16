@@ -55,10 +55,14 @@ class ConfigAccessTest extends SettingsTrayTestBase {
     // The site name field should not appear because the user doesn't have
     // permission.
     $web_assert->fieldNotExists('settings[site_information][site_name]');
+    $page_load_hash_1 = $this->getSession()->evaluateScript('window.performance.timeOrigin');
     $page->pressButton('Save Site branding');
+    // Pressing the button triggered no validation errors and an AJAX redirect
+    // that reloaded the page.
     $this->waitForOffCanvasToClose();
-    $this->assertElementVisibleAfterWait('css', 'div:contains(The block configuration has been saved)');
-    $web_assert->assertWaitOnAjaxRequest();
+    $page_load_hash_2 = $this->getSession()->evaluateScript('window.performance.timeOrigin');
+    $this->assertNotSame($page_load_hash_1, $page_load_hash_2);
+    $web_assert->elementExists('css', 'div:contains(The block configuration has been saved)');
     // Confirm we did not save changes to the configuration.
     $this->assertEquals('Drupal', \Drupal::configFactory()->getEditable('system.site')->get('name'));
 
@@ -86,9 +90,14 @@ class ConfigAccessTest extends SettingsTrayTestBase {
     // Edit menu form should not appear because the user doesn't have
     // permission.
     $web_assert->pageTextNotContains('Edit menu');
+    $page_load_hash_3 = $this->getSession()->evaluateScript('window.performance.timeOrigin');
     $page->pressButton('Save Main navigation');
-    $this->assertElementVisibleAfterWait('css', 'div:contains(The block configuration has been saved)');
-    $web_assert->assertWaitOnAjaxRequest();
+    $this->waitForOffCanvasToClose();
+    // Pressing the button triggered no validation errors and an AJAX redirect
+    // that reloaded the page.
+    $page_load_hash_4 = $this->getSession()->evaluateScript('window.performance.timeOrigin');
+    $this->assertNotSame($page_load_hash_3, $page_load_hash_4);
+    $web_assert->elementExists('css', 'div:contains(The block configuration has been saved)');
     // Confirm we did not save changes to the menu or the menu link.
     $this->assertEquals($menu_without_overrides, \Drupal::configFactory()->getEditable('system.menu.main')->get());
     $menu_link_content = MenuLinkContent::load($menu_link_content->id());

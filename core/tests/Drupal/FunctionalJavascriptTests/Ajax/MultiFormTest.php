@@ -73,9 +73,6 @@ class MultiFormTest extends WebDriverTestBase {
     // each form.
     $this->drupalGet('form-test/two-instances-of-same-form');
 
-    // Wait for javascript on the page to prepare the form attributes.
-    $this->assertSession()->assertWaitOnAjaxRequest();
-
     $session = $this->getSession();
     $page = $session->getPage();
     $fields = $page->findAll('xpath', $form_xpath . $field_xpath);

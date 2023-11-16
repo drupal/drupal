@@ -63,13 +63,10 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $filter_warning = 'CKEditor 5 only works with HTML-based text formats. The "A TYPE_MARKUP_LANGUAGE filter incompatible with CKEditor 5" (filter_incompatible) filter implies this text format is not HTML anymore.';
 
     $this->createNewTextFormat($page, $assert_session, 'unicorn');
-    $page->selectFieldOption('editor[editor]', 'unicorn');
-    $assert_session->assertWaitOnAjaxRequest();
     $page->checkField('filters[filter_html][status]');
     $page->checkField($incompatible_filter_name);
-    $assert_session->assertWaitOnAjaxRequest();
     $page->selectFieldOption('editor[editor]', 'ckeditor5');
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(2);
     $assert_session->pageTextContains($filter_warning);
 
     // Disable the incompatible filter.
@@ -134,12 +131,10 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $assert_session = $this->assertSession();
 
     $this->createNewTextFormat($page, $assert_session, 'unicorn');
-    $assert_session->assertWaitOnAjaxRequest();
 
     // Enable the HTML filter.
     $this->assertTrue($page->hasUncheckedField('filters[filter_html][status]'));
     $page->checkField('filters[filter_html][status]');
-    $assert_session->assertWaitOnAjaxRequest();
 
     // Confirm the allowed HTML tags are the defaults initially.
     $this->assertHtmlEsqueFieldValueEquals('filters[filter_html][settings][allowed_html]', $this->defaultElementsWhenUpdatingNotCkeditor5);
@@ -150,7 +145,6 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     // Return to the config form to confirm that switching text editors on
     // existing formats will properly switch allowed tags.
     $this->drupalGet('admin/config/content/formats/manage/unicorn');
-    $assert_session->assertWaitOnAjaxRequest();
     $this->assertHtmlEsqueFieldValueEquals('filters[filter_html][settings][allowed_html]', $this->defaultElementsWhenUpdatingNotCkeditor5);
 
     $page->selectFieldOption('editor[editor]', 'ckeditor5');
@@ -171,7 +165,6 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $assert_session = $this->assertSession();
 
     $this->createNewTextFormat($page, $assert_session);
-    $assert_session->assertWaitOnAjaxRequest();
 
     $allowed_html_field = $assert_session->fieldExists('filters[filter_html][settings][allowed_html]');
     $this->assertTrue($allowed_html_field->hasAttribute('readonly'));
@@ -244,7 +237,6 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $assert_session = $this->assertSession();
 
     $this->createNewTextFormat($page, $assert_session);
-    $assert_session->assertWaitOnAjaxRequest();
 
     // Confirm the "allowed tags" field is  read only, and the value
     // matches the tags required by CKEditor.
@@ -262,7 +254,6 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $this->assertSame($this->allowedElements, FilterFormat::load('ckeditor5')->filters('filter_html')->getConfiguration()['settings']['allowed_html']);
 
     $page->find('css', '[data-drupal-selector="edit-formats-ckeditor5"]')->clickLink('Configure');
-    $assert_session->assertWaitOnAjaxRequest();
 
     // Add the block quote plugin to the CKEditor 5 toolbar.
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-blockQuote'));
@@ -290,7 +281,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $this->assertHtmlEsqueFieldValueEquals('filters[filter_html][settings][allowed_html]', $allowed_with_blockquote);
 
     // Add the source editing plugin to the CKEditor 5 toolbar.
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-sourceEditing'));
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-available .ckeditor5-toolbar-item-sourceEditing'));
     $this->triggerKeyUp('.ckeditor5-toolbar-item-sourceEditing', 'ArrowDown');
     $assert_session->assertWaitOnAjaxRequest();
 
@@ -298,7 +289,6 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     // filter_html to include those additional tags.
     $assert_session->waitForText('Source editing');
     $page->find('css', '[href^="#edit-editor-settings-plugins-ckeditor5-sourceediting"]')->click();
-    $assert_session->assertWaitOnAjaxRequest();
     $assert_session->waitForText('Manually editable HTML tags');
     $source_edit_tags_field = $assert_session->fieldExists('editor[settings][plugins][ckeditor5_sourceEditing][allowed_tags]');
     $source_edit_tags_field->setValue('<aside>');
@@ -379,22 +369,20 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $this->assertTrue($page->hasUncheckedField('filters[media_embed][status]'));
     $this->assertNull($assert_session->waitForElementVisible('css', '[data-drupal-selector=edit-filters-media-embed-settings]', 0));
     $page->checkField('filters[media_embed][status]');
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(2);
     $this->assertNotNull($assert_session->waitForElementVisible('css', '[data-drupal-selector=edit-filters-media-embed-settings]', 0));
 
     $page->clickLink('Embed media');
-    $assert_session->assertWaitOnAjaxRequest();
     $page->checkField('filters[media_embed][settings][allowed_view_modes][view_mode_1]');
     $page->checkField('filters[media_embed][settings][allowed_view_modes][view_mode_2]');
 
     $allowed_with_media = $this->allowedElements . ' <drupal-media data-entity-type data-entity-uuid alt data-view-mode>';
     $allowed_with_media_without_view_mode = $this->allowedElements . ' <drupal-media data-entity-type data-entity-uuid alt>';
     $page->clickLink('Media');
-    $assert_session->waitForText('Allow the user to override the default view mode');
     $this->assertTrue($page->hasUncheckedField('editor[settings][plugins][media_media][allow_view_mode_override]'));
     $this->assertHtmlEsqueFieldValueEquals('filters[filter_html][settings][allowed_html]', $allowed_with_media_without_view_mode);
     $page->checkField('editor[settings][plugins][media_media][allow_view_mode_override]');
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(3);
     $this->assertHtmlEsqueFieldValueEquals('filters[filter_html][settings][allowed_html]', $allowed_with_media);
     $this->saveNewTextFormat($page, $assert_session);
     $assert_session->pageTextContains('Added text format ckeditor5.');
@@ -412,14 +400,14 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     // Ensure that data-align attribute is added to <drupal-media> when
     // filter_align is enabled.
     $page->checkField('filters[filter_align][status]');
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(1);
     $this->assertEquals($this->allowedElements . ' <drupal-media data-entity-type data-entity-uuid alt data-view-mode data-align>', $allowed_html_field->getValue());
 
     // Disable media embed.
     $this->assertTrue($page->hasCheckedField('filters[media_embed][status]'));
     $page->uncheckField('filters[media_embed][status]');
-    $assert_session->assertWaitOnAjaxRequest();
 
+    $assert_session->assertExpectedAjaxRequest(2);
     // Confirm allowed tags no longer has <drupal-media>.
     $this->assertHtmlEsqueFieldValueEquals('filters[filter_html][settings][allowed_html]', $this->allowedElements);
   }
@@ -490,8 +478,8 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $page->checkField('roles[authenticated]');
     $page->selectFieldOption('editor[editor]', 'ckeditor5');
     $assert_session->assertWaitOnAjaxRequest();
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-link'));
-    $this->triggerKeyUp('.ckeditor5-toolbar-item-link', 'ArrowDown');
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-available .ckeditor5-toolbar-item-underline'));
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-underline', 'ArrowDown');
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Save configuration');
     $this->assertTrue($assert_session->waitForText('The text format Basic HTML has been updated.'));

@@ -1,0 +1,5 @@
+name: 'AJAX request tracking'
+description: 'Tracks AJAX requests to allow JS tests to reliably wait and observe these.'
+type: module
+package: Testing
+version: VERSION

@@ -76,13 +76,11 @@ class ContextualLinksTest extends WebDriverTestBase {
     $this->container->get('module_installer')->install(['contextual_test']);
     // Test clicking contextual link without toolbar.
     $this->drupalGet('user');
-    $this->assertSession()->assertWaitOnAjaxRequest();
     $this->clickContextualLink('#block-branding', 'Test Link');
     $this->assertSession()->pageTextContains('Everything is contextual!');
 
     // Test click a contextual link that uses ajax.
     $this->drupalGet('user');
-    $this->assertSession()->assertWaitOnAjaxRequest();
     $current_page_string = 'NOT_RELOADED_IF_ON_PAGE';
     $this->getSession()->executeScript('document.body.appendChild(document.createTextNode("' . $current_page_string . '"));');
 
@@ -113,7 +111,7 @@ class ContextualLinksTest extends WebDriverTestBase {
     $this->container->get('module_installer')->install(['toolbar']);
     $this->grantPermissions(Role::load(Role::AUTHENTICATED_ID), ['access toolbar']);
     $this->drupalGet('user');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertExpectedAjaxRequest(1);
 
     // Click "Edit" in toolbar to show contextual links.
     $this->getSession()->getPage()->find('css', '.contextual-toolbar-tab button')->press();

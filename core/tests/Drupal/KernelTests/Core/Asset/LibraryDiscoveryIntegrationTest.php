@@ -86,14 +86,9 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
     $this->assertFalse($this->libraryDiscovery->getLibraryByName('core', 'drupal.progress'), 'Entire library correctly removed.');
 
     // Assert that overridden library asset still retains attributes.
-    $library = $this->libraryDiscovery->getLibraryByName('core', 'jquery');
-    foreach ($library['js'] as $definition) {
-      if ($definition['data'] == 'core/modules/system/tests/themes/test_theme/js/collapse.js') {
-        $this->assertTrue($definition['minified']);
-        $this->assertSame(-20, $definition['weight'], 'Previous attributes retained');
-        break;
-      }
-    }
+    $library = $this->libraryDiscovery->getLibraryByName('core', 'drupal.batch');
+    $this->assertSame('core/modules/system/tests/themes/test_theme/js/collapse.js', $library['js'][0]['data']);
+    $this->assertFalse($library['js'][0]['cache']);
   }
 
   /**
@@ -150,7 +145,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
     $this->assertAssetInLibrary('//my-server/my_theme/js/overridden.js', 'core', 'drupal.displace', 'js');
 
     // Assert an absolute URI.
-    $this->assertAssetInLibrary('http://example.com/my_theme/js/loadjs.min.js', 'core', 'loadjs', 'js');
+    $this->assertAssetInLibrary('http://example.com/my_theme/js/announce.js', 'core', 'drupal.announce', 'js');
   }
 
   /**

@@ -38,9 +38,9 @@ libraries-override:
       component:
         /core/themes/stable9/css/system/components/js.module.css: false
   # It works for JS as well.
-  core/jquery:
+  core/drupal.batch:
     js:
-      assets/vendor/jquery/jquery.min.js: js/collapse.js
+      misc/batch.js: js/collapse.js
   # Use Drupal-relative paths.
   core/drupal.dropbutton:
     css:
@@ -56,9 +56,9 @@ libraries-override:
     js:
       misc/displace.js: //my-server/my_theme/js/overridden.js
   # Use an absolute URI.
-  core/loadjs:
+  core/drupal.announce:
     js:
-      assets/vendor/loadjs/loadjs.min.js: http://example.com/my_theme/js/loadjs.min.js
+      misc/announce.js: http://example.com/my_theme/js/announce.js
 
 regions:
   content: Content

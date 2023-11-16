@@ -69,6 +69,7 @@ abstract class WebDriverTestBase extends BrowserTestBase {
    */
   protected function installModulesFromClassProperty(ContainerInterface $container) {
     self::$modules = [
+      'js_testing_ajax_request_test',
       'js_testing_log_test',
       'jquery_keyevent_polyfill_test',
     ];
@@ -100,7 +101,7 @@ abstract class WebDriverTestBase extends BrowserTestBase {
       }
       // Wait for all requests to finish. It is possible that an AJAX request is
       // still on-going.
-      $result = $this->getSession()->wait(5000, '(typeof(jQuery)=="undefined" || (0 === jQuery.active && 0 === jQuery(\':animated\').length))');
+      $result = $this->getSession()->wait(5000, 'window.drupalActiveXhrCount === 0 || typeof window.drupalActiveXhrCount === "undefined"');
       if (!$result) {
         // If the wait is unsuccessful, there may still be an AJAX request in
         // progress. If we tear down now, then this AJAX request may fail with

@@ -43,7 +43,6 @@ class DialogPositionTest extends WebDriverTestBase {
     // Close the dialog again.
     $closeButton = $page->find('css', '.ui-dialog-titlebar-close');
     $closeButton->click();
-    $assert_session->assertWaitOnAjaxRequest();
     $dialog = $page->find('css', '.ui-dialog');
     $this->assertNull($dialog, 'Dialog is closed after clicking the close button.');
 
@@ -51,7 +50,7 @@ class DialogPositionTest extends WebDriverTestBase {
     // finish as no Javascript errors should have been triggered. If there were
     // javascript errors the test will fail on that.
     $session->resizeWindow(625, 625);
-    $assert_session->assertWaitOnAjaxRequest();
+    usleep(5000);
   }
 
 }

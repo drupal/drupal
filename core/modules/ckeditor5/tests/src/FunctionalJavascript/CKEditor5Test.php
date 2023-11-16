@@ -295,8 +295,11 @@ JS;
     // Set correct value.
     $vertical_tab_link = $page->find('xpath', "//ul[contains(@class, 'vertical-tabs__menu')]/li/a[starts-with(@href, '#edit-editor-settings-plugins-ckeditor5-language')]");
     $vertical_tab_link->click();
-    $page->selectFieldOption('editor[settings][plugins][ckeditor5_language][language_list]', $option);
-    $assert_session->assertWaitOnAjaxRequest();
+    $select = $page->findField('editor[settings][plugins][ckeditor5_language][language_list]');
+    if ($select->getValue() !== $option) {
+      $select->selectOption($option);
+      $assert_session->assertWaitOnAjaxRequest();
+    }
     $page->pressButton('Save configuration');
     $assert_session->responseContains('The text format <em class="placeholder">ckeditor5</em> has been updated.');
   }
@@ -400,7 +403,6 @@ JS;
     $assert_session = $this->assertSession();
 
     $this->createNewTextFormat($page, $assert_session);
-    $assert_session->assertWaitOnAjaxRequest();
 
     // Initial vertical tabs: 3 for filters, 1 for CKE5 plugins.
     $this->assertSame([

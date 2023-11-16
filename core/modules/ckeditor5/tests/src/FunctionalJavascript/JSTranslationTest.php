@@ -46,9 +46,9 @@ class JSTranslationTest extends CKEditor5TestBase {
     $this->createNewTextFormat($page, $assert_session);
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-drupalMedia'));
     $this->click('#edit-filters-media-embed-status');
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(2);
     $this->triggerKeyUp('.ckeditor5-toolbar-item-drupalMedia', 'ArrowDown');
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(3);
     $this->saveNewTextFormat($page, $assert_session);
 
     $langcode = 'fr';
