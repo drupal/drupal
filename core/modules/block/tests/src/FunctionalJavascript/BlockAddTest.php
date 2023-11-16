@@ -40,7 +40,6 @@ class BlockAddTest extends WebDriverTestBase {
     $assert_session->selectExists('Theme')->selectOption('claro');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->selectExists('Region')->selectOption('pre_content');
-    $assert_session->assertWaitOnAjaxRequest();
     // Switch to a theme that doesn't contain the region selected above.
     $assert_session->selectExists('Theme')->selectOption('stark');
     $assert_session->assertWaitOnAjaxRequest();

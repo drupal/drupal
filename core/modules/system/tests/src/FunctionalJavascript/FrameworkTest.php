@@ -117,9 +117,10 @@ class FrameworkTest extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
     $assert = $this->assertSession();
 
+    $page_load_hash_1 = $this->getSession()->evaluateScript('window.performance.timeOrigin');
     $page->checkField('add_files');
     $page->pressButton('Submit');
-    $assert->assertWaitOnAjaxRequest();
+    $assert->assertExpectedAjaxRequest(1);
 
     // Verify that the resulting HTML does not load the overridden CSS file.
     // We add a "?" to the assertion, because drupalSettings may include
@@ -127,6 +128,8 @@ class FrameworkTest extends WebDriverTestBase {
     // in a LINK or STYLE tag, for which Drupal always adds a query string for
     // cache control.
     $assert->responseNotContains('js.module.css?');
+    $page_load_hash_2 = $this->getSession()->evaluateScript('window.performance.timeOrigin');
+    $this->assertSame($page_load_hash_1, $page_load_hash_2, 'Page was not reloaded; AJAX update occurred.');
   }
 
 }

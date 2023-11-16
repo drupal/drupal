@@ -76,7 +76,9 @@ class EditModeTest extends WebDriverTestBase {
 
       // After the page loaded we need to additionally wait until the settings
       // tray Ajax activity is done.
-      $web_assert->assertWaitOnAjaxRequest();
+      if ($page_get_count === 0) {
+        $web_assert->assertWaitOnAjaxRequest();
+      }
 
       if ($page_get_count == 0) {
         $unrestricted_tab_count = $this->getTabbableElementsCount();

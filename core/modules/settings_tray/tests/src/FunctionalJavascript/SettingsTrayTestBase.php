@@ -46,9 +46,7 @@ class SettingsTrayTestBase extends OffCanvasTestBase {
     $this->assertNotEmpty($contextual_link);
     // When page first loads Edit Mode is not triggered until first contextual
     // link is added.
-    $this->assertElementVisibleAfterWait('css', '.dialog-off-canvas-main-canvas.js-settings-tray-edit-mode');
-    // Ensure that all other Ajax activity is completed.
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', '.dialog-off-canvas-main-canvas.js-settings-tray-edit-mode'));
     $block = $this->getSession()->getPage()->find('css', $block_selector);
     $block->mouseOver();
     $block->click();
@@ -68,7 +66,6 @@ class SettingsTrayTestBase extends OffCanvasTestBase {
    * Disables edit mode by pressing edit button in the toolbar.
    */
   protected function disableEditMode() {
-    $this->assertSession()->assertWaitOnAjaxRequest();
     $this->pressToolbarEditButton();
     $this->assertEditModeDisabled();
   }

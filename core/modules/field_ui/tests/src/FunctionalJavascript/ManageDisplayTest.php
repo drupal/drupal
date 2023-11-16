@@ -136,7 +136,7 @@ class ManageDisplayTest extends WebDriverTestBase {
     // Ensure that fields can be hidden directly by dragging the element.
     $target = $page->find('css', '.region-hidden-message');
     $field_test_drag_handle->dragTo($target);
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(1);
 
     $button_save->click();
 
@@ -152,7 +152,6 @@ class ManageDisplayTest extends WebDriverTestBase {
     // Change the region to content using the region field.
     $this->assertEquals('hidden', $field_region->getValue());
     $field_region->setValue('content');
-    $assert_session->assertWaitOnAjaxRequest();
 
     // Confirm the region element retains focus after the AJAX update completes.
     $this->assertJsCondition('document.activeElement === document.querySelector("[name=\'fields[field_test][region]\']")');
@@ -160,7 +159,7 @@ class ManageDisplayTest extends WebDriverTestBase {
 
     // Change the format for the test field.
     $field_test_format_type->setValue('field_test_multiple');
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(1);
 
     // Confirm the format element retains focus after the AJAX update completes.
     $this->assertJsCondition('document.activeElement === document.querySelector("[name=\'fields[field_test][type]\']")');
@@ -175,7 +174,7 @@ class ManageDisplayTest extends WebDriverTestBase {
 
     // Open the settings form for the test field.
     $field_test_settings->click();
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(1);
 
     // Assert that the field added in
     // field_test_field_formatter_third_party_settings_form() is present.
@@ -185,7 +184,7 @@ class ManageDisplayTest extends WebDriverTestBase {
     // Change the value and submit the form to save the third party settings.
     $field_third_party->setValue('foo');
     $page->findButton('Update')->click();
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(2);
     $button_save->click();
 
     // Assert the third party settings.
@@ -202,32 +201,30 @@ class ManageDisplayTest extends WebDriverTestBase {
     // correctly.
     $field_test_format_type = $page->findField('fields[field_test][type]');
     $field_test_format_type->setValue('field_empty_setting');
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(1);
     $assert_session->responseNotContains('Default empty setting now has a value.');
     $this->assertTrue($field_test_settings->isVisible());
 
     // Set the empty_setting option to a non-empty value again and validate
     // the formatting summary now display's this correctly.
     $field_test_settings->click();
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(2);
     $field_empty_setting = $page->findField('fields[field_test][settings_edit_form][settings][field_empty_setting]');
     $field_empty_setting->setValue('non empty setting');
     $page->findButton('Update')->click();
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(3);
     $assert_session->responseContains('Default empty setting now has a value.');
 
     // Test the settings form behavior. An edit button should be present since
     // there are third party settings to configure.
     $field_test_format_type->setValue('field_no_settings');
-    $assert_session->assertWaitOnAjaxRequest();
     $this->assertTrue($field_test_settings->isVisible());
 
     // Make sure we can save the third party settings when there are no settings
     // available.
     $field_test_settings->click();
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(4);
     $page->findButton('Update')->click();
-    $assert_session->assertWaitOnAjaxRequest();
 
     // When a module providing third-party settings to a formatter (or widget)
     // is uninstalled, the formatter remains enabled but the provided settings,
@@ -241,7 +238,7 @@ class ManageDisplayTest extends WebDriverTestBase {
 
     // Ensure that third-party form elements are not present anymore.
     $field_test_settings->click();
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(1);
     $field_third_party = $page->findField('fields[field_test][settings_edit_form][third_party_settings][field_third_party_test][field_test_field_formatter_third_party_settings_form]');
     $this->assertEmpty($field_third_party);
 
@@ -300,7 +297,7 @@ class ManageDisplayTest extends WebDriverTestBase {
     ]);
 
     $field_test_type->setValue('test_field_widget_multiple');
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(1);
     $button_save->click();
 
     $this->drupalGet($manage_display);
@@ -324,7 +321,7 @@ class ManageDisplayTest extends WebDriverTestBase {
     $assert_session->responseContains('field_test_field_widget_settings_summary_alter');
 
     $field_test_settings->click();
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest(1);
 
     // Assert that the field added in
     // field_test_field_widget_third_party_settings_form() is present.
@@ -384,7 +381,6 @@ class ManageDisplayTest extends WebDriverTestBase {
     // Change the region to content using the region field.
     $this->assertEquals('hidden', $field_region->getValue());
     $field_region->setValue('content');
-    $assert_session->assertWaitOnAjaxRequest();
     $button_save->click();
 
     // Validate the change on the server.

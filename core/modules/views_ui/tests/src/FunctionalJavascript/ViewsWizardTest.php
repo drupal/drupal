@@ -73,8 +73,7 @@ class ViewsWizardTest extends WebDriverTestBase {
 
     // Select the entity type to display and test that the type selector is
     // shown when expected.
-    $page->selectFieldOption('show[wizard_key]', 'node');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSame('node', $page->findField('show[wizard_key]')->getValue());
     $this->assertNull($page->findField('show[type]'), 'The "of type" filter is not added for nodes when there are no node types.');
     $this->assertEquals('teasers', $page->findField('page[style][row_plugin]')->getValue(), 'The page display format shows the expected default value.');
     $this->assertEquals('titles_linked', $page->findField('block[style][row_plugin]')->getValue(), 'The block display format shows the expected default value.');
