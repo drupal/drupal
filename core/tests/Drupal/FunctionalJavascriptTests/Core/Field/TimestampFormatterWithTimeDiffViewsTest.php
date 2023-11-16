@@ -34,6 +34,7 @@ class TimestampFormatterWithTimeDiffViewsTest extends WebDriverTestBase {
    * Tests the timestamp formatter used with time difference setting in views.
    */
   public function testTimestampFormatterWithTimeDiff(): void {
+    $this->markTestSkipped("Skipped due to frequent random test failures. See https://www.drupal.org/project/drupal/issues/3400150");
     ViewTestData::createTestViews(self::class, ['views_test_formatter']);
 
     $data = $this->getRowData();
