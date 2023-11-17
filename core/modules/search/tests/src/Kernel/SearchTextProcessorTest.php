@@ -29,11 +29,11 @@ class SearchTextProcessorTest extends KernelTestBase {
     // and the odd-numbered lines we need to split into shorter chunks and
     // verify that text processing doesn't lose any characters.
     $input = file_get_contents($this->root . '/core/modules/search/tests/UnicodeTest.txt');
-    $basestrings = explode(chr(10), $input);
+    $base_strings = explode(chr(10), $input);
     $strings = [];
     $text_processor = \Drupal::service('search.text_processor');
     assert($text_processor instanceof SearchTextProcessorInterface);
-    foreach ($basestrings as $key => $string) {
+    foreach ($base_strings as $key => $string) {
       if ($key % 2) {
         // Even line - should simplify down to a space.
         $simplified = $text_processor->analyze($string);

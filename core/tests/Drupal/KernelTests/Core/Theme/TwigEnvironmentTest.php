@@ -204,17 +204,17 @@ TWIG;
 <div>Hello after</div>
 TWIG;
 
-    $tempfile = tempnam(sys_get_temp_dir(), '__METHOD__') . '.html.twig';
-    file_put_contents($tempfile, $template_before);
+    $template_file = tempnam(sys_get_temp_dir(), '__METHOD__') . '.html.twig';
+    file_put_contents($template_file, $template_before);
 
     /** @var \Drupal\Core\Template\TwigEnvironment $environment */
     $environment = \Drupal::service('twig');
 
-    $output = $environment->load(basename($tempfile))->render();
+    $output = $environment->load(basename($template_file))->render();
     $this->assertEquals($template_before, $output);
 
-    file_put_contents($tempfile, $template_after);
-    $output = $environment->load(basename($tempfile))->render();
+    file_put_contents($template_file, $template_after);
+    $output = $environment->load(basename($template_file))->render();
     $this->assertEquals($template_before, $output);
 
     $environment->invalidate();
@@ -225,7 +225,7 @@ TWIG;
     $property_reflection = $reflection->getProperty('templateClassPrefix');
     $property_reflection->setValue($environment, 'otherPrefix');
 
-    $output = $environment->load(basename($tempfile))->render();
+    $output = $environment->load(basename($template_file))->render();
     $this->assertEquals($template_after, $output);
   }
 

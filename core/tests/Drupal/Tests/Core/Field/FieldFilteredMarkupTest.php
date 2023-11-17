@@ -33,16 +33,16 @@ class FieldFilteredMarkupTest extends UnitTestCase {
     $data = [];
     $data[] = ['', '', FALSE];
     // Certain tags are filtered.
-    $data[] = ['<script>teststring</script>', 'teststring', TRUE];
+    $data[] = ['<script>test string</script>', 'test string', TRUE];
     // Certain tags are not filtered.
-    $data[] = ['<em>teststring</em>', '<em>teststring</em>', TRUE];
+    $data[] = ['<em>test string</em>', '<em>test string</em>', TRUE];
     // HTML will be normalized.
-    $data[] = ['<em>teststring', '<em>teststring</em>', TRUE];
+    $data[] = ['<em>test string', '<em>test string</em>', TRUE];
 
     // Even safe strings will be escaped.
     $safe_string = (new Prophet())->prophesize(MarkupInterface::class);
-    $safe_string->__toString()->willReturn('<script>teststring</script>');
-    $data[] = [$safe_string->reveal(), 'teststring', TRUE];
+    $safe_string->__toString()->willReturn('<script>test string</script>');
+    $data[] = [$safe_string->reveal(), 'test string', TRUE];
 
     return $data;
   }

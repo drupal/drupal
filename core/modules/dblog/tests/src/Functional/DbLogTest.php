@@ -826,14 +826,14 @@ class DbLogTest extends BrowserTestBase {
    */
   public function testTemporaryUser() {
     // Create a temporary user.
-    $tempuser = $this->drupalCreateUser();
-    $tempuser_uid = $tempuser->id();
+    $temporary_user = $this->drupalCreateUser();
+    $temporary_user_uid = $temporary_user->id();
 
     // Log in as the admin user.
     $this->drupalLogin($this->adminUser);
 
     // Generate a single watchdog entry.
-    $this->generateLogEntries(1, ['user' => $tempuser, 'uid' => $tempuser_uid]);
+    $this->generateLogEntries(1, ['user' => $temporary_user, 'uid' => $temporary_user_uid]);
     $query = Database::getConnection()->select('watchdog');
     $query->addExpression('MAX([wid])');
     $wid = $query->execute()->fetchField();
@@ -843,8 +843,8 @@ class DbLogTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Dblog test log message');
 
     // Delete the user.
-    $tempuser->delete();
-    $this->drupalGet('user/' . $tempuser_uid);
+    $temporary_user->delete();
+    $this->drupalGet('user/' . $temporary_user_uid);
     $this->assertSession()->statusCodeEquals(404);
 
     // Check if the full message displays on the details page.
