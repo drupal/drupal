@@ -282,6 +282,16 @@ services:
       - { name: cache.bin }
     factory: ['@cache_factory', 'get']
     arguments: [render]
+  cache.access_policy:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory: ['@cache_factory', 'get']
+    arguments: [access_policy]
+  cache.access_policy_memory:
+    class: Drupal\Core\Cache\MemoryCache\MemoryCache
+    tags:
+      - { name: cache_tags_invalidator }
   cache.data:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
@@ -294,6 +304,21 @@ services:
       - { name: cache.bin, default_backend: cache.backend.chainedfast }
     factory: ['@cache_factory', 'get']
     arguments: [discovery]
+  variation_cache.access_policy:
+    class: Drupal\Core\Cache\VariationCacheInterface
+    factory: ['@variation_cache_factory', 'get']
+    arguments: [access_policy]
+  # We cannot use the VariationCacheFactory here because that expects that the
+  # backend it should wrap a VariationCache around is a proper cache bin. The
+  # MemoryCache backend, however, is not so we cannot use the factory here.
+  #
+  # By instantiating a VariationCache via the container and tagging the cache
+  # it's wrapping as a cache tags invalidator, it does still behave the way we
+  # want it to, though.
+  variation_cache.access_policy_memory:
+    class: Drupal\Core\Cache\VariationCache
+    arguments: ['@request_stack', '@cache.access_policy_memory', '@cache_contexts_manager']
+  Drupal\Core\Cache\VariationCacheInterface: '@variation_cache.access_policy_memory'
   Drupal\Core\Asset\AssetQueryStringInterface: '@asset.query_string'
   asset.query_string:
     class: Drupal\Core\Asset\AssetQueryString
@@ -1546,6 +1571,12 @@ services:
     class: Drupal\Core\Session\AccountSwitcher
     arguments: ['@current_user', '@session_handler.write_safe']
   Drupal\Core\Session\AccountSwitcherInterface: '@account_switcher'
+  access_policy_processor:
+    class: Drupal\Core\Session\AccessPolicyProcessor
+    arguments: ['@variation_cache.access_policy', '@variation_cache.access_policy_memory', '@cache.access_policy_memory', '@current_user', '@account_switcher']
+    tags:
+      - { name: service_collector, call: addAccessPolicy, tag: access_policy }
+  Drupal\Core\Session\AccessPolicyChainInterface: '@access_policy_processor'
   permission_checker:
     class: Drupal\Core\Session\PermissionChecker
     arguments: ['@entity_type.manager']

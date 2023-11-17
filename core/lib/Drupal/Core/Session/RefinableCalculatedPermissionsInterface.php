@@ -1,0 +1,67 @@
+<?php
+
+namespace Drupal\Core\Session;
+
+use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
+
+/**
+ * Defines the refinable calculated permissions interface.
+ */
+interface RefinableCalculatedPermissionsInterface extends RefinableCacheableDependencyInterface, CalculatedPermissionsInterface {
+
+  /**
+   * Adds a calculated permission item.
+   *
+   * @param \Drupal\Core\Session\CalculatedPermissionsItemInterface $item
+   *   The calculated permission item.
+   * @param bool $overwrite
+   *   (optional) Whether to overwrite an item if there already is one for the
+   *   given identifier within the scope. Defaults to FALSE, meaning a merge
+   *   will take place instead.
+   *
+   * @return self
+   */
+  public function addItem(CalculatedPermissionsItemInterface $item, bool $overwrite = FALSE): self;
+
+  /**
+   * Removes a single calculated permission item from a given scope.
+   *
+   * @param string $scope
+   *   The scope name to remove the item from.
+   * @param string|int $identifier
+   *   The scope identifier to remove the item from.
+   *
+   * @return self
+   */
+  public function removeItem(string $scope, string|int $identifier): self;
+
+  /**
+   * Removes all of the calculated permission items, regardless of scope.
+   *
+   * @return $this
+   */
+  public function removeItems(): self;
+
+  /**
+   * Removes all of the calculated permission items for the given scope.
+   *
+   * @param string $scope
+   *   The scope name to remove the items for.
+   *
+   * @return self
+   */
+  public function removeItemsByScope(string $scope): self;
+
+  /**
+   * Merge another calculated permissions object into this one.
+   *
+   * This merges (not replaces) all permissions and cacheable metadata.
+   *
+   * @param \Drupal\Core\Session\CalculatedPermissionsInterface $other
+   *   The other calculated permissions object to merge into this one.
+   *
+   * @return self
+   */
+  public function merge(CalculatedPermissionsInterface $other): self;
+
+}
