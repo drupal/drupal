@@ -226,11 +226,11 @@ class DrupalDateTimeTest extends UnitTestCase {
 
     // Test retrieving a cloned copy of the wrapped \DateTime object, and that
     // altering it does not change the DrupalDateTime object.
-    $drupaldatetime = DrupalDateTime::createFromFormat('Y-m-d H:i:s', '2017-07-13 22:40:00', $new_york, ['langcode' => 'en']);
-    $this->assertEquals(1500000000, $drupaldatetime->getTimestamp());
-    $this->assertEquals('America/New_York', $drupaldatetime->getTimezone()->getName());
+    $drupal_date_time = DrupalDateTime::createFromFormat('Y-m-d H:i:s', '2017-07-13 22:40:00', $new_york, ['langcode' => 'en']);
+    $this->assertEquals(1500000000, $drupal_date_time->getTimestamp());
+    $this->assertEquals('America/New_York', $drupal_date_time->getTimezone()->getName());
 
-    $datetime = $drupaldatetime->getPhpDateTime();
+    $datetime = $drupal_date_time->getPhpDateTime();
     $this->assertInstanceOf('DateTime', $datetime);
     $this->assertEquals(1500000000, $datetime->getTimestamp());
     $this->assertEquals('America/New_York', $datetime->getTimezone()->getName());
@@ -238,8 +238,8 @@ class DrupalDateTimeTest extends UnitTestCase {
     $datetime->setTimestamp(1400000000)->setTimezone($berlin);
     $this->assertEquals(1400000000, $datetime->getTimestamp());
     $this->assertEquals('Europe/Berlin', $datetime->getTimezone()->getName());
-    $this->assertEquals(1500000000, $drupaldatetime->getTimestamp());
-    $this->assertEquals('America/New_York', $drupaldatetime->getTimezone()->getName());
+    $this->assertEquals(1500000000, $drupal_date_time->getTimestamp());
+    $this->assertEquals('America/New_York', $drupal_date_time->getTimezone()->getName());
   }
 
   /**

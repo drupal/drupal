@@ -240,13 +240,13 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
 
       // Repeat this with a different file that we do not have access to and
       // make sure that access is denied.
-      $file_noaccess = array_shift($files);
-      $original_uri_noaccess = $file_system->copy($file_noaccess->uri, $scheme . '://', FileSystemInterface::EXISTS_RENAME);
-      $generated_uri_noaccess = $scheme . '://styles/' . $this->style->id() . '/' . $scheme . '/' . $file_system->basename($original_uri_noaccess);
-      $this->assertFileDoesNotExist($generated_uri_noaccess);
-      $generate_url_noaccess = $this->style->buildUrl($original_uri_noaccess);
+      $file_no_access = array_shift($files);
+      $original_uri_no_access = $file_system->copy($file_no_access->uri, $scheme . '://', FileSystemInterface::EXISTS_RENAME);
+      $generated_uri_no_access = $scheme . '://styles/' . $this->style->id() . '/' . $scheme . '/' . $file_system->basename($original_uri_no_access);
+      $this->assertFileDoesNotExist($generated_uri_no_access);
+      $generate_url_no_access = $this->style->buildUrl($original_uri_no_access);
 
-      $this->drupalGet($generate_url_noaccess);
+      $this->drupalGet($generate_url_no_access);
       $this->assertSession()->statusCodeEquals(403);
       // Verify that images are not appended to the response.
       // Currently this test only uses PNG images.

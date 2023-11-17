@@ -34,8 +34,6 @@ arrowthick
 arrowthickstop
 arrr
 assertable
-attrval
-attrvals
 authless
 autocompletefocus
 autocompleteselect
@@ -73,7 +71,6 @@ barchart
 barqux
 basefield
 basepath
-basestrings
 basetheme
 bazbaz
 beatle
@@ -212,7 +209,6 @@ cweagans
 cádiz
 dailymotion
 databasename
-datas
 datelist
 daterange
 datestamp
@@ -272,7 +268,6 @@ drivertext
 dropbutton
 dropbuttons
 drudbal
-drupaldatetime
 drupaldevdays
 drupalelementstyle
 drupalelementstylecommand
@@ -380,7 +375,6 @@ functionaltest
 funic
 furchtbar
 gabilondo
-gethttpclient
 gids
 gloop
 gnumeric
@@ -582,7 +576,6 @@ negotiatiors
 newcol
 newfieldinitial
 newnode
-newterm
 newwin
 nids
 nightwatch
@@ -591,7 +584,6 @@ nikic
 nmsgid
 nmsgstr
 nntp
-noaccess
 noadd
 nocache
 nocase
@@ -746,7 +738,6 @@ rasterizable
 rasterizes
 rawurlencoded
 readmore
-readonlydir
 realpaths
 realword
 rebuilder
@@ -926,11 +917,8 @@ tabwidth
 tappable
 tarz
 taskless
-tbodies
 tcomment
-tempfile
 templating
-tempuser
 tercera
 testajax
 testattribute
@@ -956,14 +944,12 @@ testload
 testlogger
 testname
 testproject
-teststring
 testsuite
 testsuites
 textareas
 textboxes
 texte
 textfields
-textfile
 textformat
 textgroup
 textwithsummary
