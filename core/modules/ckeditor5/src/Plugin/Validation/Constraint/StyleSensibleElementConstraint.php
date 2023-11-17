@@ -39,4 +39,11 @@ class StyleSensibleElementConstraint extends Constraint {
    */
   public $conflictingDisabledPluginMessage = 'A style must only specify classes not supported by other plugins. The <code>@classes</code> classes on <code>@tag</code> are supported by the %plugin plugin. Remove this style and enable that plugin instead.';
 
+  /**
+   * When a Style is defined for a plugin that does not yet support Style.
+   *
+   * @var string
+   */
+  public $unsupportedTagMessage = 'The <code>@tag</code> tag is not yet supported by the Style plugin.';
+
 }

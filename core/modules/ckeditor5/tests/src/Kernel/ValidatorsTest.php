@@ -457,6 +457,40 @@ class ValidatorsTest extends KernelTestBase {
         'settings.plugins.ckeditor5_style.styles.0.element' => 'A style must only specify classes not supported by other plugins. The <code>text-align-justify</code> classes on <code>&lt;p&gt;</code> are already supported by the enabled <em class="placeholder">Alignment</em> plugin.',
       ],
     ];
+    $data['INVALID: Style plugin configured to add class to plugin-supported tag known to not work with Style … yet'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'drupalInsertImage',
+            'style',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_imageResize' => [
+            'allow_resize' => FALSE,
+          ],
+          'ckeditor5_style' => [
+            'styles' => [
+              // @see https://github.com/ckeditor/ckeditor5/issues/13778
+              [
+                'label' => 'Featured image',
+                'element' => '<img class="featured">',
+              ],
+              // @see https://www.drupal.org/project/drupal/issues/3398223
+              // @see https://github.com/ckeditor/ckeditor5/blob/39ad30090ead9dd2d54c3ac53d7f446ade9fd8ce/packages/ckeditor5-html-support/src/schemadefinitions.ts#L12-L50
+              [
+                'label' => 'Fancy linebreak',
+                'element' => '<br class="fancy">',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_style.styles.0.element' => 'The <code>&lt;img&gt;</code> tag is not yet supported by the Style plugin.',
+        'settings.plugins.ckeditor5_style.styles.1.element' => 'The <code>&lt;br&gt;</code> tag is not yet supported by the Style plugin.',
+      ],
+    ];
     $data['INVALID: Style plugin has multiple styles with same label'] = [
       'settings' => [
         'toolbar' => [
