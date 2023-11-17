@@ -27,6 +27,41 @@ class StyleSensibleElementConstraintValidator extends ConstraintValidator implem
   use TextEditorObjectDependentValidatorTrait;
 
   /**
+   * Tags whose plugins are known to not yet integrate with the Style plugin.
+   *
+   * To prevent the user from configuring the Style plugin and reasonably
+   * expecting it to work correctly for tags of plugins that are known to
+   * yet integrate with the Style plugin, generate a validation error for these.
+   */
+  protected const KNOWN_UNSUPPORTED_TAGS = [
+    // @see https://www.drupal.org/project/drupal/issues/3117172
+    '<drupal-media>',
+    // @see https://github.com/ckeditor/ckeditor5/issues/13778
+    '<img>',
+    // @see https://github.com/ckeditor/ckeditor5/blob/39ad30090ead9dd2d54c3ac53d7f446ade9fd8ce/packages/ckeditor5-html-support/src/schemadefinitions.ts#L12-L50
+    '<keygen>',
+    '<applet>',
+    '<basefont>',
+    '<isindex>',
+    '<hr>',
+    '<br>',
+    '<area>',
+    '<command>',
+    '<map>',
+    '<wbr>',
+    '<colgroup>',
+    '<col>',
+    '<datalist>',
+    '<track>',
+    '<source>',
+    '<option>',
+    '<param>',
+    '<optgroup>',
+    '<link>',
+    '<noscript>',
+  ];
+
+  /**
    * {@inheritdoc}
    *
    * @throws \Symfony\Component\Validator\Exception\UnexpectedTypeException
@@ -81,6 +116,16 @@ class StyleSensibleElementConstraintValidator extends ConstraintValidator implem
         ->setParameter('@tag', sprintf("<%s>", $tag))
         ->setParameter('@classes', implode(", ", $classes))
         ->setParameter('%plugin', $this->findStyleConflictingPluginLabel($style_element))
+        ->addViolation();
+    }
+
+    // Finally, while the configuration is technically valid if this point was
+    // reached, there are some known compatibility issues. Inform the user that
+    // for that reason, this configuration must be considered invalid.
+    $unsupported = $style_element->intersect(HTMLRestrictions::fromString(implode(' ', static::KNOWN_UNSUPPORTED_TAGS)));
+    if (!$unsupported->allowsNothing()) {
+      $this->context->buildViolation($constraint->unsupportedTagMessage)
+        ->setParameter('@tag', sprintf("<%s>", $tag))
         ->addViolation();
     }
   }
