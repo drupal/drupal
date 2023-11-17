@@ -27,19 +27,18 @@
           "https:\/\/*.twitter.com\/*\/status\/*"
         ],
         "url": "https:\/\/publish.twitter.com\/oembed"
-
       }
     ]
   },
   {
-    "provider_name": "CollegeHumor",
-    "provider_url": "http:\/\/www.collegehumor.com\/",
+    "provider_name": "Dailymotion",
+    "provider_url": "https:\/\/www.dailymotion.com\/",
     "endpoints": [
       {
         "schemes": [
-          "http:\/\/www.collegehumor.com\/video\/*"
+          "https:\/\/www.dailymotion.com\/video\/*"
         ],
-        "url": "http:\/\/www.collegehumor.com\/oembed.{format}",
+        "url": "https:\/\/www.dailymotion.com\/services\/oembed",
         "discovery": true
       }
     ]

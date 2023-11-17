@@ -46,9 +46,9 @@ class UrlResolverTest extends MediaFunctionalTestBase {
         'https://vimeo.com/14782834',
         'https://vimeo.com/api/oembed.json?url=https://vimeo.com/14782834',
       ],
-      'match by endpoint: CollegeHumor' => [
-        'http://www.collegehumor.com/video/40002870/lets-not-get-a-drink-sometime',
-        'http://www.collegehumor.com/oembed.json?url=http://www.collegehumor.com/video/40002870/lets-not-get-a-drink-sometime',
+      'match by endpoint: Dailymotion' => [
+        'https://www.dailymotion.com/video/x2vzluh',
+        'https://www.dailymotion.com/services/oembed?url=https://www.dailymotion.com/video/x2vzluh',
       ],
       'match by endpoint: Facebook' => [
         'https://www.facebook.com/facebook/videos/10153231379946729/',
@@ -105,13 +105,8 @@ class UrlResolverTest extends MediaFunctionalTestBase {
         'https://vimeo.com/api/oembed.json?url=video_vimeo.html',
       ],
       'XML resource' => [
-        'video_collegehumor.html',
-        // The endpoint does not explicitly declare that it supports XML, so
-        // only JSON support is assumed, which is why the discovered URL
-        // contains '.json'. However, the fetched HTML file contains a
-        // relationship to an XML representation of the resource, with the
-        // application/xml+oembed MIME type.
-        'http://www.collegehumor.com/oembed.json?url=video_collegehumor.html',
+        'video_dailymotion.html',
+        'https://www.dailymotion.com/services/oembed?url=video_dailymotion.html',
       ],
     ];
   }
