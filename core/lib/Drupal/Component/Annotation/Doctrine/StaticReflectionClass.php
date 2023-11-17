@@ -80,6 +80,18 @@ class StaticReflectionClass extends ReflectionClass
     }
 
     /**
+     * Determines if the class has the provided class attribute.
+     *
+     * @param string $attribute The attribute to check for.
+     *
+     * @return bool
+     */
+    public function hasClassAttribute(string $attribute)
+    {
+        return $this->staticReflectionParser->hasClassAttribute($attribute);
+    }
+
+    /**
      * {@inheritDoc}
      */
     #[\ReturnTypeWillChange]
