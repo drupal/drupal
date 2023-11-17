@@ -577,10 +577,14 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $container->setParameter('language.default_values', Language::$defaultValues);
 
     if ($this->strictConfigSchema) {
+      $test_file_name = (new \ReflectionClass($this))->getFileName();
+      // @todo Decide in https://www.drupal.org/project/drupal/issues/3395099 when/how to trigger deprecation errors or even failures for contrib modules.
+      $is_core_test = str_starts_with($test_file_name, $this->root . DIRECTORY_SEPARATOR . 'core');
       $container
         ->register('testing.config_schema_checker', ConfigSchemaChecker::class)
         ->addArgument(new Reference('config.typed'))
         ->addArgument($this->getConfigSchemaExclusions())
+        ->addArgument($is_core_test)
         ->addTag('event_subscriber');
     }
 
