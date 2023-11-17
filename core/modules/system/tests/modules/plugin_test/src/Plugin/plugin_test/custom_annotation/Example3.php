@@ -7,7 +7,7 @@ use Drupal\plugin_test\Plugin\Attribute\PluginExample;
 /**
  * Provides a test plugin with a custom attribute.
  */
-#[PluginExample(
+#[/* comment */PluginExample(
   id: "example_3",
   custom: "George"
 )]

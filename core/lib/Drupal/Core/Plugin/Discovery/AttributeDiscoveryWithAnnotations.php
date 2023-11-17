@@ -84,15 +84,23 @@ class AttributeDiscoveryWithAnnotations extends AttributeClassDiscovery {
     $finder = MockFileFinder::create($fileinfo->getPathName());
     $parser = new StaticReflectionParser($class, $finder, TRUE);
 
+    $reflection_class = $parser->getReflectionClass();
     // @todo Handle deprecating definitions discovery via annotations in
     // https://www.drupal.org/project/drupal/issues/3265945.
     /** @var \Drupal\Component\Annotation\AnnotationInterface $annotation */
-    if ($annotation = $this->getAnnotationReader()->getClassAnnotation($parser->getReflectionClass(), $this->pluginDefinitionAnnotationName)) {
+    if ($annotation = $this->getAnnotationReader()->getClassAnnotation($reflection_class, $this->pluginDefinitionAnnotationName)) {
       $this->prepareAnnotationDefinition($annotation, $class);
       return ['id' => $annotation->getId(), 'content' => $annotation->get()];
     }
 
-    return parent::parseClass($class, $fileinfo);
+    // Annotations use static reflection and are able to analyze a class that
+    // extends classes or uses traits that do not exist. Attribute discovery
+    // will trigger a fatal error with such classes, so only call it if the
+    // class has a class attribute.
+    if ($reflection_class->hasClassAttribute($this->pluginDefinitionAttributeName)) {
+      return parent::parseClass($class, $fileinfo);
+    }
+    return ['id' => NULL, 'content' => NULL];
   }
 
   /**
