@@ -9,7 +9,6 @@ use Drupal\Core\Routing\PathChangedHelper;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\update\UpdateFetcherInterface;
 use Drupal\update\UpdateManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -43,16 +42,6 @@ class UpdateController extends ControllerBase {
   public function __construct(UpdateManagerInterface $update_manager, RendererInterface $renderer) {
     $this->updateManager = $update_manager;
     $this->renderer = $renderer;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('update.manager'),
-      $container->get('renderer')
-    );
   }
 
   /**

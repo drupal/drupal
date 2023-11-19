@@ -11,7 +11,6 @@ use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\system\Form\ThemeExperimentalConfirmForm;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -58,18 +57,6 @@ class ThemeController extends ControllerBase {
     $this->themeList = $theme_list;
     $this->configFactory = $config_factory;
     $this->themeInstaller = $theme_installer;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('theme_handler'),
-      $container->get('extension.list.theme'),
-      $container->get('config.factory'),
-      $container->get('theme_installer')
-    );
   }
 
   /**

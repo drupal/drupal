@@ -7,7 +7,6 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Url;
 use Drupal\help\HelpTopicPluginManagerInterface;
 use Drupal\Core\Render\RendererInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -27,16 +26,6 @@ class HelpTopicPluginController extends ControllerBase {
    *   The renderer service.
    */
   public function __construct(protected HelpTopicPluginManagerInterface $helpTopicPluginManager, protected RendererInterface $renderer) {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('plugin.manager.help_topic'),
-      $container->get('renderer')
-    );
   }
 
   /**

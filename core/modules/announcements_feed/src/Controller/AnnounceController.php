@@ -7,7 +7,6 @@ namespace Drupal\announcements_feed\Controller;
 use Drupal\announcements_feed\AnnounceRenderer;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -26,15 +25,6 @@ class AnnounceController extends ControllerBase implements ContainerInjectionInt
   public function __construct(
     protected AnnounceRenderer $announceRenderer,
   ) {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container): AnnounceController {
-    return new static(
-      $container->get('announcements_feed.renderer'),
-    );
   }
 
   /**

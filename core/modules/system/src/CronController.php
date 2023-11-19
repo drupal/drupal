@@ -4,7 +4,6 @@ namespace Drupal\system;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\CronInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -27,13 +26,6 @@ class CronController extends ControllerBase {
    */
   public function __construct(CronInterface $cron) {
     $this->cron = $cron;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static($container->get('cron'));
   }
 
   /**

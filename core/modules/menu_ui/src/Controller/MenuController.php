@@ -6,7 +6,6 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Menu\MenuParentFormSelectorInterface;
 use Drupal\system\MenuInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -30,13 +29,6 @@ class MenuController extends ControllerBase {
    */
   public function __construct(MenuParentFormSelectorInterface $menu_parent_form) {
     $this->menuParentSelector = $menu_parent_form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static($container->get('menu.parent_form_selector'));
   }
 
   /**

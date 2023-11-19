@@ -12,7 +12,7 @@ use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\UserInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Controller for tracker pages.
@@ -68,26 +68,20 @@ class TrackerController extends ControllerBase {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    */
-  public function __construct(Connection $database, Connection $databaseReplica, CommentStatisticsInterface $commentStatistics, DateFormatterInterface $dateFormatter, EntityTypeManagerInterface $entityTypeManager) {
+  public function __construct(
+    Connection $database,
+    #[Autowire(service: 'database.replica')]
+    Connection $databaseReplica,
+    CommentStatisticsInterface $commentStatistics,
+    DateFormatterInterface $dateFormatter,
+    EntityTypeManagerInterface $entityTypeManager,
+  ) {
     $this->database = $database;
     $this->databaseReplica = $databaseReplica;
     $this->commentStatistics = $commentStatistics;
     $this->dateFormatter = $dateFormatter;
     $this->entityTypeManager = $entityTypeManager;
     $this->nodeStorage = $entityTypeManager->getStorage('node');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('database'),
-      $container->get('database.replica'),
-      $container->get('comment.statistics'),
-      $container->get('date.formatter'),
-      $container->get('entity_type.manager')
-    );
   }
 
   /**

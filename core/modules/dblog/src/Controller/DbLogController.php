@@ -17,7 +17,6 @@ use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Url;
 use Drupal\user\Entity\User;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Link;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -47,18 +46,6 @@ class DbLogController extends ControllerBase {
    * @var \Drupal\user\UserStorageInterface
    */
   protected $userStorage;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('database'),
-      $container->get('module_handler'),
-      $container->get('date.formatter'),
-      $container->get('form_builder')
-    );
-  }
 
   /**
    * Constructs a DbLogController object.

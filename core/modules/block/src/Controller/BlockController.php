@@ -6,7 +6,6 @@ use Drupal\Component\Utility\Html;
 use Drupal\block\BlockInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ThemeHandlerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -29,15 +28,6 @@ class BlockController extends ControllerBase {
    */
   public function __construct(ThemeHandlerInterface $theme_handler) {
     $this->themeHandler = $theme_handler;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('theme_handler')
-    );
   }
 
   /**

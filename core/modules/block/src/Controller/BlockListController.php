@@ -4,7 +4,6 @@ namespace Drupal\block\Controller;
 
 use Drupal\Core\Entity\Controller\EntityListController;
 use Drupal\Core\Extension\ThemeHandlerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -28,15 +27,6 @@ class BlockListController extends EntityListController {
    */
   public function __construct(ThemeHandlerInterface $theme_handler) {
     $this->themeHandler = $theme_handler;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('theme_handler')
-    );
   }
 
   /**

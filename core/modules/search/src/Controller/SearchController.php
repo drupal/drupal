@@ -8,7 +8,6 @@ use Drupal\Core\Render\RendererInterface;
 use Drupal\search\Form\SearchPageForm;
 use Drupal\search\SearchPageInterface;
 use Drupal\search\SearchPageRepositoryInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -49,16 +48,6 @@ class SearchController extends ControllerBase {
     $this->searchPageRepository = $search_page_repository;
     $this->logger = $this->getLogger('search');
     $this->renderer = $renderer;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('search.search_page_repository'),
-      $container->get('renderer')
-    );
   }
 
   /**
