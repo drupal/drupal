@@ -64,30 +64,15 @@ class BlockContentAccessControlHandler extends EntityAccessControlHandler implem
         // Allow view and update access to user with the 'edit any (type) block
         // content' permission or the 'administer block content' permission.
         'view' => AccessResult::allowedIf($entity->isPublished())
-          ->orIf(AccessResult::allowedIfHasPermissions($account, [
-            'access block library',
-          ])),
-        'update' => AccessResult::allowedIfHasPermissions($account, [
-          'access block library',
-          'edit any ' . $bundle . ' block content',
-        ]),
-        'delete' => AccessResult::allowedIfHasPermissions($account, [
-          'access block library',
-          'delete any ' . $bundle . ' block content',
-        ]),
+          ->orIf(AccessResult::allowedIfHasPermission($account, 'access block library')),
+        'update' => AccessResult::allowedIfHasPermission($account, 'edit any ' . $bundle . ' block content'),
+        'delete' => AccessResult::allowedIfHasPermission($account, 'delete any ' . $bundle . ' block content'),
         // Revisions.
-        'view all revisions' => AccessResult::allowedIfHasPermissions($account, [
-          'access block library',
-          'view any ' . $bundle . ' block content history',
-        ]),
-        'revert' => AccessResult::allowedIfHasPermissions($account, [
-          'access block library',
-          'revert any ' . $bundle . ' block content revisions',
-        ])->orIf($forbidIfNotReusable()),
-        'delete revision' => AccessResult::allowedIfHasPermissions($account, [
-          'access block library',
-          'delete any ' . $bundle . ' block content revisions',
-        ])->orIf($forbidIfNotReusable()),
+        'view all revisions' => AccessResult::allowedIfHasPermission($account, 'view any ' . $bundle . ' block content history'),
+        'revert' => AccessResult::allowedIfHasPermission($account, 'revert any ' . $bundle . ' block content revisions')
+          ->orIf($forbidIfNotReusable()),
+        'delete revision' => AccessResult::allowedIfHasPermission($account, 'delete any ' . $bundle . ' block content revisions')
+          ->orIf($forbidIfNotReusable()),
 
         default => parent::checkAccess($entity, $operation, $account),
       };

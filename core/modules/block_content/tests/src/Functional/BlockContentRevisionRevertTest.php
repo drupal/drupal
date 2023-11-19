@@ -21,7 +21,6 @@ class BlockContentRevisionRevertTest extends BlockContentTestBase {
    * {@inheritdoc}
    */
   protected $permissions = [
-    'access block library',
     'view any basic block content history',
     'revert any basic block content revisions',
   ];
