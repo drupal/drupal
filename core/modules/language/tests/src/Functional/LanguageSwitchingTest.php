@@ -7,6 +7,7 @@ use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Core\Url;
 
 // cspell:ignore publi publié
 
@@ -29,6 +30,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     'block',
     'language_test',
     'menu_ui',
+    'node',
   ];
 
   /**
@@ -48,6 +50,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     $admin_user = $this->drupalCreateUser([
       'administer blocks',
       'administer languages',
+      'administer site configuration',
       'access administration pages',
       'access content',
     ]);
@@ -81,6 +84,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     ]);
 
     $this->doTestLanguageBlockAuthenticated($block->label());
+    $this->doTestHomePageLinks($block->label());
     $this->doTestLanguageBlockAnonymous($block->label());
     $this->doTestLanguageBlock404($block->label(), 'system/404');
 
@@ -94,6 +98,68 @@ class LanguageSwitchingTest extends BrowserTestBase {
     //   enabled. This behavior is a bug will be fixed in
     //   https://www.drupal.org/project/drupal/issues/3349201.
     $this->doTestLanguageBlock404($block->label(), '<front>');
+  }
+
+  /**
+   * The home page link should be "/" or "/{language_prefix}".
+   *
+   * @param string $block_label
+   *   The label of the language switching block.
+   *
+   * @see self::testLanguageBlock()
+   */
+  protected function doTestHomePageLinks($block_label) {
+    // Create a node and set as home page.
+    $this->createHomePage();
+    // Go to home page.
+    $this->DrupalGet('<front>');
+    // The language switcher block should display.
+    $this->assertSession()->pageTextContains($block_label);
+    // Assert that each list item and anchor element has the appropriate data-
+    // attributes.
+    $language_switchers = $this->xpath('//div[@id=:id]/ul/li', [':id' => 'block-test-language-block']);
+    $list_items = [];
+    $anchors = [];
+    $labels = [];
+    foreach ($language_switchers as $list_item) {
+      $list_items[] = [
+        'hreflang' => $list_item->getAttribute('hreflang'),
+        'data-drupal-link-system-path' => $list_item->getAttribute('data-drupal-link-system-path'),
+      ];
+
+      $link = $list_item->find('xpath', 'a');
+      $anchors[] = [
+        'hreflang' => $link->getAttribute('hreflang'),
+        'data-drupal-link-system-path' => $link->getAttribute('data-drupal-link-system-path'),
+        'href' => $link->getAttribute('href'),
+      ];
+      $labels[] = $link->getText();
+    }
+    $expected_list_items = [
+      0 => [
+        'hreflang' => 'en',
+        'data-drupal-link-system-path' => '<front>',
+      ],
+      1 => [
+        'hreflang' => 'fr',
+        'data-drupal-link-system-path' => '<front>',
+      ],
+    ];
+    $this->assertSame($expected_list_items, $list_items, 'The list items have the correct attributes that will contain the correct home page links.');
+    $expected_anchors = [
+      0 => [
+        'hreflang' => 'en',
+        'data-drupal-link-system-path' => '<front>',
+        'href' => Url::fromRoute('<front>')->toString(),
+      ],
+      1 => [
+        'hreflang' => 'fr',
+        'data-drupal-link-system-path' => '<front>',
+        'href' => Url::fromRoute('<front>')->toString() . 'fr',
+      ],
+    ];
+    $this->assertSame($expected_anchors, $anchors, 'The anchors have the correct attributes that will link to the correct home page in that language.');
+    $this->assertSame(['English', 'français'], $labels, 'The language links labels are in their own language on the language switcher block.');
   }
 
   /**
@@ -504,7 +570,6 @@ class LanguageSwitchingTest extends BrowserTestBase {
    * Test that the language switching block does not expose restricted paths.
    */
   public function testRestrictedPaths(): void {
-    \Drupal::service('module_installer')->install(['node']);
     $entity_type_manager = \Drupal::entityTypeManager();
 
     // Add the French language.
@@ -631,6 +696,35 @@ class LanguageSwitchingTest extends BrowserTestBase {
   protected function saveNativeLanguageName($langcode, $label) {
     \Drupal::service('language.config_factory_override')
       ->getOverride($langcode, 'language.entity.' . $langcode)->set('label', $label)->save();
+  }
+
+  /**
+   * Create a node and set it as the home pages.
+   */
+  protected function createHomePage() {
+    $entity_type_manager = \Drupal::entityTypeManager();
+
+    // Create a node type and make it translatable.
+    $entity_type_manager->getStorage('node_type')
+      ->create([
+        'type' => 'page',
+        'name' => 'Page',
+      ])
+      ->save();
+
+    // Create a published node.
+    $node = $entity_type_manager->getStorage('node')
+      ->create([
+        'type' => 'page',
+        'title' => $this->randomMachineName(),
+        'status' => 1,
+      ]);
+    $node->save();
+
+    // Change the front page to /node/1.
+    $edit = ['site_frontpage' => '/node/1'];
+    $this->drupalGet('admin/config/system/site-information');
+    $this->submitForm($edit, 'Save configuration');
   }
 
 }
