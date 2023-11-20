@@ -338,7 +338,7 @@ function system_requirements($phase) {
     // errors, so warn about that when running Drupal on those versions.
     // @todo Remove this when \Drupal::MINIMUM_PHP is at least 8.1.6 in
     //   https://www.drupal.org/i/3305726.
-    if (version_compare(\Drupal::MINIMUM_PHP, '8.1.6') < 0) {
+    if (version_compare($phpversion, '8.1.6') < 0) {
       $requirements['php']['description'] = t('PHP %version has <a href=":bug_url">an OPcache bug that can cause fatal errors with class autoloading</a>. This can be fixed by upgrading to PHP 8.1.6 or later. See <a href="http://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal PHP requirements</a> page for more information.', [
         '%version' => $phpversion,
         ':bug_url' => 'https://github.com/php/php-src/issues/8164',

@@ -76,7 +76,7 @@ class PhpRequirementTest extends BrowserTestBase {
       // bug in OPcache.
       // @todo Remove this when \Drupal::MINIMUM_PHP is at least 8.1.6 in
       //   https://www.drupal.org/i/3305726.
-      if (version_compare(\Drupal::MINIMUM_PHP, '8.1.6') < 0) {
+      if (version_compare($phpversion, '8.1.6') < 0) {
         $this->assertSession()->pageTextContains("PHP $phpversion has an OPcache bug that can cause fatal errors with class autoloading. This can be fixed by upgrading to PHP 8.1.6 or later.");
         $this->assertSession()->linkExists('an OPcache bug that can cause fatal errors with class autoloading');
       }
