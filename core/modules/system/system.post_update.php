@@ -7,9 +7,10 @@
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Drupal\Core\Entity\EntityViewModeInterface;
 use Drupal\Core\Entity\EntityFormModeInterface;
+use Drupal\Core\Entity\EntityViewModeInterface;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\TimestampFormatter;
+use Drupal\Core\Site\Settings;
 
 /**
  * Implements hook_removed_post_updates().
@@ -165,4 +166,25 @@ function system_post_update_set_blank_log_url_to_null() {
 function system_post_update_mailer_dsn_settings() {
   $config = \Drupal::configFactory()->getEditable('system.mail');
   $config->set('mailer_dsn', 'sendmail://default')->save();
+}
+
+/**
+ * Fix path in README.txt in CONFIG_SYNC_DIRECTORY.
+ */
+function system_post_update_amend_config_sync_readme_url() {
+  $configuration_directory = Settings::get('config_sync_directory');
+  $readme_path = $configuration_directory . '/README.txt';
+  if (!file_exists($readme_path)) {
+    // No operation if the original file is not there.
+    return;
+  }
+  $writable = is_writable($readme_path) || (!file_exists($readme_path) && is_writable($configuration_directory));
+  if (!$writable) {
+    // Cannot write the README.txt file, nothing to do.
+    return;
+  }
+  $original_content = file_get_contents($readme_path);
+  $changed_content = str_replace('admin/config/development/configuration/sync', 'admin/config/development/configuration', $original_content);
+  file_put_contents($readme_path, $changed_content);
+  return \t('Amended configuration synchronization readme file content.');
 }

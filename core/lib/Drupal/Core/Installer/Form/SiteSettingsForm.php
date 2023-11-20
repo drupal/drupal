@@ -294,7 +294,7 @@ class SiteSettingsForm extends FormBase {
       // that they can later be added to git. Since this directory is
       // auto-created, we have to write out the README rather than just adding
       // it to the drupal core repo.
-      $text = 'This directory contains configuration to be imported into your Drupal site. To make this configuration active, visit admin/config/development/configuration/sync.' . ' For information about deploying configuration between servers, see https://www.drupal.org/documentation/administer/config';
+      $text = 'This directory contains configuration to be imported into your Drupal site. To make this configuration active, visit admin/config/development/configuration. For information about deploying configuration between servers, see https://www.drupal.org/documentation/administer/config';
       file_put_contents($config_sync_directory . '/README.txt', $text);
     }
 
