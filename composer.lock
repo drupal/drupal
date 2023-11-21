@@ -495,7 +495,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "93190a646897bad52a0ef4db3bc48e8fd434bc68"
+                "reference": "967ffef6237c9d04df7b1ddbc5a8ef1137d46e39"
             },
             "require": {
                 "asm89/stack-cors": "^2.1",
@@ -543,7 +543,7 @@
                 "twig/twig": "^3.5.0"
             },
             "conflict": {
-                "drush/drush": "<8.1.10"
+                "drush/drush": "<12.4.3"
             },
             "replace": {
                 "drupal/core-annotation": "self.version",
