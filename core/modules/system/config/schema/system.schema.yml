@@ -304,8 +304,45 @@ system.mail:
         type: string
         label: 'Interface'
     mailer_dsn:
-      type: string
+      type: mapping
       label: 'Symfony mailer transport DSN'
+      mapping:
+        scheme:
+          type: string
+          label: 'Scheme'
+          constraints:
+            NotBlank:
+              message: 'The mailer DSN must contain a scheme.'
+        host:
+          type: string
+          label: 'Host'
+          constraints:
+            NotBlank:
+              message: 'The mailer DSN must contain a host (use "default" by default).'
+        user:
+          type: string
+          nullable: true
+          label: 'User'
+        password:
+          type: string
+          nullable: true
+          label: 'Password'
+        port:
+          type: integer
+          nullable: true
+          label: 'Port'
+          constraints:
+            Range:
+              min: 0
+              max: 65535
+        options:
+          type: sequence
+          label: 'Options'
+          sequence:
+            type: string
+            label: Option
+            constraints:
+              NotNull: []
 
 system.theme.global:
   type: theme_settings

@@ -163,6 +163,19 @@ function system_post_update_set_blank_log_url_to_null() {
  * Add new default mail transport dsn.
  */
 function system_post_update_mailer_dsn_settings() {
+}
+
+/**
+ * Add new default mail transport dsn.
+ */
+function system_post_update_mailer_structured_dsn_settings() {
   $config = \Drupal::configFactory()->getEditable('system.mail');
-  $config->set('mailer_dsn', 'sendmail://default')->save();
+  $config->set('mailer_dsn', [
+    'scheme' => 'sendmail',
+    'host' => 'default',
+    'user' => NULL,
+    'password' => NULL,
+    'port' => NULL,
+    'options' => [],
+  ])->save();
 }

@@ -197,7 +197,14 @@ abstract class InstallerTestBase extends BrowserTestBase {
       $this->container->get('config.factory')
         ->getEditable('system.mail')
         ->set('interface.default', 'test_mail_collector')
-        ->set('mailer_dsn', 'null://null')
+        ->set('mailer_dsn', [
+          'scheme' => 'null',
+          'host' => 'null',
+          'user' => NULL,
+          'password' => NULL,
+          'port' => NULL,
+          'options' => [],
+        ])
         ->save();
 
       $this->installDefaultThemeFromClassProperty($this->container);
