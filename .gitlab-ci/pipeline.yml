@@ -30,6 +30,8 @@ default:
       mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
       chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
       sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
+  after_script:
+    - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
   artifacts:
     when: always
     expire_in: 6 mos
