@@ -430,8 +430,14 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // While this should be enforced via settings.php prior to installation,
     // some tests expect to be able to test mail system implementations.
     $GLOBALS['config']['system.mail']['interface']['default'] = 'test_mail_collector';
-    $GLOBALS['config']['system.mail']['mailer_dsn'] = 'null://null';
-
+    $GLOBALS['config']['system.mail']['mailer_dsn'] = [
+      'scheme' => 'null',
+      'host' => 'null',
+      'user' => NULL,
+      'password' => NULL,
+      'port' => NULL,
+      'options' => [],
+    ];
     // Manually configure the default file scheme so that modules that use file
     // functions don't have to install system and its configuration.
     // @see file_default_scheme()

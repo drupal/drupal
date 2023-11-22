@@ -65,8 +65,12 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
       'value' => 'test_mail_collector',
       'required' => TRUE,
     ];
-    $settings['config']['system.mail']['mailer_dsn'] = (object) [
-      'value' => 'null://null',
+    $settings['config']['system.mail']['mailer_dsn']['scheme'] = (object) [
+      'value' => 'null',
+      'required' => TRUE,
+    ];
+    $settings['config']['system.mail']['mailer_dsn']['host'] = (object) [
+      'value' => 'null',
       'required' => TRUE,
     ];
     $this->writeSettings($settings);

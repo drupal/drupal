@@ -19,8 +19,20 @@ process:
     plugin: static_map
     source: 'mail_system/default-system'
     map:
-      DefaultMailSystem: 'sendmail://default'
-      MailTestCase: 'null://null'
+      DefaultMailSystem:
+        scheme: 'sendmail'
+        host: 'default'
+        user: null
+        password: null
+        port: null
+        options: []
+      MailTestCase:
+        scheme: 'null'
+        host: 'null'
+        user: null
+        password: null
+        port: null
+        options: []
 destination:
   plugin: config
   config_name: system.mail
