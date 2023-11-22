@@ -507,7 +507,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
         'title' => 'SA title',
         'link' => 'http://example.com',
       ];
-      $responses[] = new Response('200', [], json_encode([$feed_item]));
+      $responses[] = new Response(200, [], json_encode([$feed_item]));
     }
     $this->setTestFeedResponses($responses);
   }
@@ -634,8 +634,8 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
       'link' => 'http://example.com',
     ];
     $this->setTestFeedResponses([
-      new Response('500', [], 'HTTPS failed'),
-      new Response('200', [], json_encode([$feed_item])),
+      new Response(500, [], 'HTTPS failed'),
+      new Response(200, [], json_encode([$feed_item])),
     ]);
     $advisories = $this->getAdvisories();
 
@@ -667,7 +667,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
    */
   public function testNoHttpFallback(): void {
     $this->setTestFeedResponses([
-      new Response('500', [], 'HTTPS failed'),
+      new Response(500, [], 'HTTPS failed'),
     ]);
 
     $exception_thrown = FALSE;

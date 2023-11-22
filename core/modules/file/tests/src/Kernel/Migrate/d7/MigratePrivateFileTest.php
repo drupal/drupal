@@ -34,7 +34,7 @@ class MigratePrivateFileTest extends MigrateDrupal7TestBase {
   protected function getFileMigrationInfo() {
     return [
       'path' => 'private://sites/default/private/Babylon5.txt',
-      'size' => '3',
+      'size' => 3,
       'base_path' => 'private://',
       'plugin_id' => 'd7_file_private',
     ];

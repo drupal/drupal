@@ -59,7 +59,7 @@ class FollowUpMigrationsTest extends MigrateDrupal7TestBase {
   protected function getFileMigrationInfo() {
     return [
       'path' => 'public://sites/default/files/cube.jpeg',
-      'size' => '3620',
+      'size' => 3620,
       'base_path' => 'public://',
       'plugin_id' => 'd7_file',
     ];

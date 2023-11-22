@@ -132,48 +132,48 @@ class MigrateTaxonomyTermTranslationTest extends MigrateDrupal7TestBase {
    */
   public function testTaxonomyTermTranslation() {
     // Forums vocabulary, no multilingual option.
-    $this->assertEntity(1, 'en', 'General discussion', 'sujet_de_discussion', NULL, NULL, '2', []);
-    $this->assertEntity(5, 'en', 'Custom Forum', 'sujet_de_discussion', 'Where the cool kids are.', NULL, '3', []);
-    $this->assertEntity(6, 'en', 'Games', 'sujet_de_discussion', NULL, NULL, '4', []);
-    $this->assertEntity(7, 'en', 'Minecraft', 'sujet_de_discussion', NULL, NULL, '1', ['6']);
-    $this->assertEntity(8, 'en', 'Half Life 3', 'sujet_de_discussion', NULL, NULL, '0', ['6']);
+    $this->assertEntity(1, 'en', 'General discussion', 'sujet_de_discussion', NULL, NULL, 2, []);
+    $this->assertEntity(5, 'en', 'Custom Forum', 'sujet_de_discussion', 'Where the cool kids are.', NULL, 3, []);
+    $this->assertEntity(6, 'en', 'Games', 'sujet_de_discussion', NULL, NULL, 4, []);
+    $this->assertEntity(7, 'en', 'Minecraft', 'sujet_de_discussion', NULL, NULL, 1, ['6']);
+    $this->assertEntity(8, 'en', 'Half Life 3', 'sujet_de_discussion', NULL, NULL, 0, ['6']);
 
     // Test vocabulary, field translation.
-    $this->assertEntity(2, 'en', 'Term1 (This is a real field!)', 'test_vocabulary', 'The first term. (This is a real field!)', 'filtered_html', '0', []);
-    $this->assertEntity(3, 'en', 'Term2', 'test_vocabulary', 'The second term.', 'filtered_html', '0', []);
-    $this->assertEntity(4, 'en', 'Term3 in plain old English', 'test_vocabulary', 'The third term in plain old English.', 'full_html', '0', ['3']);
+    $this->assertEntity(2, 'en', 'Term1 (This is a real field!)', 'test_vocabulary', 'The first term. (This is a real field!)', 'filtered_html', 0, []);
+    $this->assertEntity(3, 'en', 'Term2', 'test_vocabulary', 'The second term.', 'filtered_html', 0, []);
+    $this->assertEntity(4, 'en', 'Term3 in plain old English', 'test_vocabulary', 'The third term in plain old English.', 'full_html', 0, ['3']);
 
     // Tags vocabulary, no multilingual option.
-    $this->assertEntity(9, 'en', 'Benjamin Sisko', 'tags', 'Portrayed by Avery Brooks', 'filtered_html', '0', []);
-    $this->assertEntity(10, 'en', 'Kira Nerys', 'tags', 'Portrayed by Nana Visitor', 'filtered_html', '0', []);
-    $this->assertEntity(11, 'en', 'Dax', 'tags', 'Portrayed by Terry Farrell', 'filtered_html', '0', []);
-    $this->assertEntity(12, 'en', 'Jake Sisko', 'tags', 'Portrayed by Cirroc Lofton', 'filtered_html', '0', []);
-    $this->assertEntity(13, 'en', 'Gul Dukat', 'tags', 'Portrayed by Marc Alaimo', 'filtered_html', '0', []);
-    $this->assertEntity(14, 'en', 'Odo', 'tags', 'Portrayed by Rene Auberjonois', 'filtered_html', '0', []);
-    $this->assertEntity(15, 'en', 'Worf', 'tags', 'Portrayed by Michael Dorn', 'filtered_html', '0', []);
-    $this->assertEntity(16, 'en', "Miles O'Brien", 'tags', 'Portrayed by Colm Meaney', 'filtered_html', '0', []);
-    $this->assertEntity(17, 'en', 'Quark', 'tags', 'Portrayed by Armin Shimerman', 'filtered_html', '0', []);
-    $this->assertEntity(18, 'en', 'Elim Garak', 'tags', 'Portrayed by Andrew Robinson', 'filtered_html', '0', []);
+    $this->assertEntity(9, 'en', 'Benjamin Sisko', 'tags', 'Portrayed by Avery Brooks', 'filtered_html', 0, []);
+    $this->assertEntity(10, 'en', 'Kira Nerys', 'tags', 'Portrayed by Nana Visitor', 'filtered_html', 0, []);
+    $this->assertEntity(11, 'en', 'Dax', 'tags', 'Portrayed by Terry Farrell', 'filtered_html', 0, []);
+    $this->assertEntity(12, 'en', 'Jake Sisko', 'tags', 'Portrayed by Cirroc Lofton', 'filtered_html', 0, []);
+    $this->assertEntity(13, 'en', 'Gul Dukat', 'tags', 'Portrayed by Marc Alaimo', 'filtered_html', 0, []);
+    $this->assertEntity(14, 'en', 'Odo', 'tags', 'Portrayed by Rene Auberjonois', 'filtered_html', 0, []);
+    $this->assertEntity(15, 'en', 'Worf', 'tags', 'Portrayed by Michael Dorn', 'filtered_html', 0, []);
+    $this->assertEntity(16, 'en', "Miles O'Brien", 'tags', 'Portrayed by Colm Meaney', 'filtered_html', 0, []);
+    $this->assertEntity(17, 'en', 'Quark', 'tags', 'Portrayed by Armin Shimerman', 'filtered_html', 0, []);
+    $this->assertEntity(18, 'en', 'Elim Garak', 'tags', 'Portrayed by Andrew Robinson', 'filtered_html', 0, []);
 
     // Localized.
-    $this->assertEntity(19, 'en', 'Jupiter Station', 'vocablocalized', 'Holographic research.', 'filtered_html', '0', []);
-    $this->assertEntity(20, 'en', 'DS9', 'vocablocalized', 'Terok Nor', 'filtered_html', '0', []);
+    $this->assertEntity(19, 'en', 'Jupiter Station', 'vocablocalized', 'Holographic research.', 'filtered_html', 0, []);
+    $this->assertEntity(20, 'en', 'DS9', 'vocablocalized', 'Terok Nor', 'filtered_html', 0, []);
     /** @var \Drupal\taxonomy\TermInterface $entity */
     $entity = Term::load(20);
     $this->assertSame('Bajor', $entity->field_sector->value);
 
     // Translate.
-    $this->assertEntity(21, 'en', 'High council', 'vocabtranslate', NULL, NULL, '0', []);
+    $this->assertEntity(21, 'en', 'High council', 'vocabtranslate', NULL, NULL, 0, []);
     $entity = Term::load(21);
     $this->assertSame("K'mpec", $entity->field_chancellor->value);
 
-    $this->assertEntity(22, 'fr', 'fr - High council', 'vocabtranslate', NULL, NULL, '0', []);
+    $this->assertEntity(22, 'fr', 'fr - High council', 'vocabtranslate', NULL, NULL, 0, []);
     $entity = Term::load(22);
     $this->assertSame("fr - K'mpec", $entity->field_chancellor->value);
-    $this->assertEntity(23, 'is', 'is - High council', 'vocabtranslate', NULL, NULL, '0', []);
+    $this->assertEntity(23, 'is', 'is - High council', 'vocabtranslate', NULL, NULL, 0, []);
 
     // Fixed.
-    $this->assertEntity(24, 'fr', 'FR - Crewman', 'vocabfixed', NULL, NULL, '0', []);
+    $this->assertEntity(24, 'fr', 'FR - Crewman', 'vocabfixed', NULL, NULL, 0, []);
     $entity = Term::load(24);
     $this->assertSame('fr - specialist', $entity->field_training->value);
   }

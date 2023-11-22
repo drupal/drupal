@@ -110,7 +110,7 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
         ],
         'role_data' => [
           'anonymous' => [
-            'rid' => '1',
+            'rid' => 1,
             'valid' => [
               'access content',
               'use text format filtered_html',
@@ -120,7 +120,7 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
             ],
           ],
           'authenticated' => [
-            'rid' => '2',
+            'rid' => 2,
             'valid' => [
               'access content',
               'use text format filtered_html',
@@ -133,7 +133,7 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
             ],
           ],
           'migrate_test_role_1' => [
-            'rid' => '3',
+            'rid' => 3,
             'valid' => [
               'use text format full_html',
               'use text format php_code',
@@ -143,7 +143,7 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
             ],
           ],
           'migrate_test_role_2' => [
-            'rid' => '4',
+            'rid' => 4,
             'valid' => [
               'access content overview',
               'administer nodes',
@@ -166,7 +166,7 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
             ],
           ],
           'migrate_test_role_3_that_is_longer_than_thirty_two_characters' => [
-            'rid' => '5',
+            'rid' => 5,
             'valid' => [
               'use text format php_code',
             ],
@@ -200,7 +200,7 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
         ],
         'role_data' => [
           'anonymous' => [
-            'rid' => '1',
+            'rid' => 1,
             'valid' => [
               'access content',
               'use text format filtered_html',
@@ -210,7 +210,7 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
             ],
           ],
           'authenticated' => [
-            'rid' => '2',
+            'rid' => 2,
             'valid' => [
               'access comments',
               'access content',
@@ -223,7 +223,7 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
             ],
           ],
           'migrate_test_role_1' => [
-            'rid' => '3',
+            'rid' => 3,
             'valid' => [
               'use text format full_html',
               'use text format php_code',
@@ -233,7 +233,7 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
             ],
           ],
           'migrate_test_role_2' => [
-            'rid' => '4',
+            'rid' => 4,
             'valid' => [
               'access content overview',
               'administer contact forms',
@@ -256,7 +256,7 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
             ],
           ],
           'migrate_test_role_3_that_is_longer_than_thirty_two_characters' => [
-            'rid' => '5',
+            'rid' => 5,
             'valid' => [
               'use text format php_code',
             ],

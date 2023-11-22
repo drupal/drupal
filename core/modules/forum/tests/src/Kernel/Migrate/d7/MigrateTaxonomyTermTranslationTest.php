@@ -31,11 +31,11 @@ class MigrateTaxonomyTermTranslationTest extends TaxonomyTermTranslationTest {
    */
   public function testTaxonomyTermTranslation() {
     // Forums vocabulary, no multilingual option.
-    $this->assertEntity(1, 'en', 'General discussion', 'forums', NULL, NULL, '2', []);
-    $this->assertEntity(5, 'en', 'Custom Forum', 'forums', 'Where the cool kids are.', NULL, '3', []);
-    $this->assertEntity(6, 'en', 'Games', 'forums', NULL, NULL, '4', []);
-    $this->assertEntity(7, 'en', 'Minecraft', 'forums', NULL, NULL, '1', ['6']);
-    $this->assertEntity(8, 'en', 'Half Life 3', 'forums', NULL, NULL, '0', ['6']);
+    $this->assertEntity(1, 'en', 'General discussion', 'forums', NULL, NULL, 2, []);
+    $this->assertEntity(5, 'en', 'Custom Forum', 'forums', 'Where the cool kids are.', NULL, 3, []);
+    $this->assertEntity(6, 'en', 'Games', 'forums', NULL, NULL, 4, []);
+    $this->assertEntity(7, 'en', 'Minecraft', 'forums', NULL, NULL, 1, ['6']);
+    $this->assertEntity(8, 'en', 'Half Life 3', 'forums', NULL, NULL, 0, ['6']);
   }
 
 }
