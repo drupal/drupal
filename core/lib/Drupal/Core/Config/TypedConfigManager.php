@@ -217,7 +217,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
   }
 
   /**
-   * Gets fallback configuration schema name.
+   * Finds fallback configuration schema name.
    *
    * @param string $name
    *   Configuration name or key.
@@ -242,6 +242,21 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    *     block.settings.*
    *     block.*.*:*
    *     block.*
+   */
+  public function findFallback(string $name): ?string {
+    $fallback = $this->getFallbackName($name);
+    assert($fallback === NULL || str_ends_with($fallback, '.*'));
+    return $fallback;
+  }
+
+  /**
+   * Gets fallback configuration schema name.
+   *
+   * @param string $name
+   *   Configuration name or key.
+   *
+   * @return null|string
+   *   The resolved schema name for the given configuration name or key.
    */
   protected function getFallbackName($name) {
     // Check for definition of $name with filesystem marker.
