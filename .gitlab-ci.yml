@@ -281,10 +281,28 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "16"
   script:
-    - php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > phpstan-quality-report.json
+    # Rely on PHPStan caching to execute analysis multiple times without performance drawback.
+    # Output a copy in junit.
+    - php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > phpstan-quality-report.json || EXIT_CODE=$?
+    - php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress --error-format=junit > phpstan-junit.xml || true
+    - |
+      if [ -n "$EXIT_CODE" ]; then
+        # Output a copy in plain text for human logs.
+        php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress || true
+        # Generate a new baseline.
+        echo "Generating an PHPStan baseline file (available as job artifact)."
+        php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress --generate-baseline=./core/phpstan-baseline.neon || true
+        exit $EXIT_CODE
+      fi
+
   artifacts:
     reports:
       codequality: phpstan-quality-report.json
+      junit: phpstan-junit.xml
+    # Only store the baseline if the job fails.
+    when: on_failure
+    paths:
+      - core/phpstan-baseline.neon
 
 '🧹 PHP Coding standards (PHPCS)':
   <<: [ *with-composer, *default-job-settings-lint ]
