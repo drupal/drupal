@@ -38,8 +38,11 @@
           $dialog.trigger('dialogButtonsChange');
         }
 
-        // Force focus on the modal when the behavior is run.
-        $dialog.dialog('widget').trigger('focus');
+        // If the body element has focus, it means focus was effectively lost.
+        // In these instances, force focus on the dialog.
+        if (document.activeElement === document.body) {
+          $dialog.dialog('widget').trigger('focus');
+        }
       }
 
       const originalClose = settings.dialog.close;
