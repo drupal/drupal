@@ -125,7 +125,7 @@ default:
       allow_failure: true
 
 # Default configuration.
-'PHP 8.2 MySQL 8':
+'DEFAULT: PHP 8.2 MySQL 8':
   <<: *default-stage
   variables:
     _TARGET_PHP: "8.2"
@@ -136,6 +136,22 @@ default:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $PERFORMANCE_TEST == "1"
+
+'DEFAULT: Test-only':
+  <<: [ *default-stage, *with-composer ]
+  when: manual
+  allow_failure: true
+  variables:
+    _TARGET_PHP: "8.2"
+    _TARGET_DB: "mysql-8"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  trigger:
+    # Rely on the status of the child pipeline.
+    strategy: depend
+    include:
+      - local: .gitlab-ci/pipeline-test-only.yml
 
 # Run on commit, or manually.
 'PHP 8.1 MySQL 5.7':

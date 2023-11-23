@@ -20,16 +20,12 @@ default:
   image:
     name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
   before_script:
-  - |
-      ln -s $CI_PROJECT_DIR /var/www/html/subdirectory
-      sudo service apache2 start
+    - |
       [[ $_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/$CI_PROJECT_DIR/sites/default/files/db.sqlite?module=sqlite
       [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
       [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
       [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
-      mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
-      chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
-      sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
+    - $CI_PROJECT_DIR/.gitlab-ci/scripts/server-setup.sh
   after_script:
     - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
   artifacts:
@@ -132,34 +128,10 @@ variables:
     - <<: *with-database
     - <<: *with-chrome
   script:
-    - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
-    - git fetch -vn --depth=50 "$CI_MERGE_REQUEST_PROJECT_URL" "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
-    - |
-      echo "ℹ️ Changes from ${TARGET_BRANCH}"
-      git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --name-only
-      echo "If this list contains more files than what you changed, then you need to rebase your branch."
-      echo "1️⃣ Reverting non test changes"
-      if [[ $(git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --diff-filter=DM --name-only|grep -Ev "*/tests/*"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh) ]]; then
-        git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --diff-filter=DM --name-only|grep -Ev "*/tests/*"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
-          echo "↩️ Reverting $file";
-          git checkout refs/heads/${TARGET_BRANCH} -- $file;
-        done
-      fi
-      if [[ $(git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --diff-filter=A --name-only|grep -Ev "*/tests/*"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh) ]]; then
-        git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --diff-filter=A --name-only|grep -Ev "*/tests/*"|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
-          echo "🗑️️ Deleting $file";
-          git rm $file;
-        done
-      fi
-      echo "2️⃣ Running test changes for this branch"
-      if [[ $(git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --name-only|grep -E "Test.php$") ]]; then
-        for test in `git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --name-only|grep -E "Test.php$"`; do
-          sudo SIMPLETEST_BASE_URL="$SIMPLETEST_BASE_URL" SIMPLETEST_DB="$SIMPLETEST_DB" MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data ./vendor/bin/phpunit -c core $test --log-junit=./sites/default/files/simpletest/phpunit-`echo $test|sed 's/\//_/g' `.xml;
-        done;
-      fi
+    - $CI_PROJECT_DIR/.gitlab-ci/scripts/test-only.sh
 
 '⚙️️ PHPUnit Kernel':
-  <<: [*with-composer, *run-tests, *default-job-settings ]
+  <<: [ *with-composer, *run-tests, *default-job-settings ]
   parallel: 2
   variables:
     TESTSUITE: PHPUnit-Kernel

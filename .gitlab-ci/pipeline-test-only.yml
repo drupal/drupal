@@ -1,0 +1,57 @@
+# cspell:ignore drupaltestbot drupaltestbotpw
+
+stages:
+  - 🗜️ Test
+
+variables:
+  FF_NETWORK_PER_BUILD: 1
+  SIMPLETEST_BASE_URL: http://localhost/subdirectory
+  DB_DRIVER: mysql
+  MYSQL_ROOT_PASSWORD: root
+  MYSQL_DATABASE: mysql
+  MYSQL_USER: drupaltestbot
+  MYSQL_PASSWORD: drupaltestbotpw
+  POSTGRES_DB: drupaltestbot
+  POSTGRES_USER: drupaltestbot
+  POSTGRES_PASSWORD: drupaltestbotpw
+
+'🩹 Test-only changes':
+  stage: 🗜️ Test
+  interruptible: true
+  image:
+    name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline" && $PERFORMANCE_TEST != "1"
+  needs:
+    - pipeline: $PARENT_PIPELINE_ID
+      job: '📦️ Composer'
+  services:
+    - name: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB:production
+      alias: database
+    - name: $_CONFIG_DOCKERHUB_ROOT/chromedriver:production
+      alias: chrome
+      entrypoint:
+        - chromedriver
+        - "--no-sandbox"
+        - "--log-path=/tmp/chromedriver.log"
+        - "--verbose"
+        - "--whitelisted-ips="
+  before_script:
+    - |
+      [[ $_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/$CI_PROJECT_DIR/sites/default/files/db.sqlite?module=sqlite
+      [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
+      [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
+      [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
+    - $CI_PROJECT_DIR/.gitlab-ci/scripts/server-setup.sh
+  script:
+    - $CI_PROJECT_DIR/.gitlab-ci/scripts/test-only.sh
+  after_script:
+    - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
+  artifacts:
+    when: always
+    expire_in: 6 mos
+    reports:
+      junit: ./sites/default/files/simpletest/phpunit-*.xml
+    paths:
+      - ./sites/default/files/simpletest/phpunit-*.xml
+      - ./sites/simpletest/browser_output
