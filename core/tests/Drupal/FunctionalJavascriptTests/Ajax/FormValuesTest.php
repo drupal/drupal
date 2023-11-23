@@ -31,21 +31,36 @@ class FormValuesTest extends WebDriverTestBase {
 
   /**
    * Submits forms with select and checkbox elements via Ajax.
+   *
+   * @dataProvider formModeProvider
    */
-  public function testSimpleAjaxFormValue() {
+  public function testSimpleAjaxFormValue($form_mode) {
     $this->drupalGet('ajax_forms_test_get_form');
 
     $session = $this->getSession();
     $assertSession = $this->assertSession();
+
+    // Run the test both in a dialog and not in a dialog.
+    if ($form_mode === 'direct') {
+      $this->drupalGet('ajax_forms_test_get_form');
+    }
+    else {
+      $this->drupalGet('ajax_forms_test_dialog_form_link');
+      $assertSession->waitForElementVisible('css', '[data-once="ajax"]');
+      $this->clickLink("Open form in $form_mode");
+      $this->assertNotEmpty($assertSession->waitForElementVisible('css', '.ui-dialog [data-drupal-selector="edit-select"]'));
+    }
 
     // Verify form values of a select element.
     foreach (['green', 'blue', 'red'] as $item) {
       // Updating the field will trigger an AJAX request/response.
       $session->getPage()->selectFieldOption('select', $item);
 
-      // The AJAX command in the response will update the DOM
+      // The AJAX command in the response will update the DOM.
       $select = $assertSession->waitForElement('css', "div#ajax_selected_color:contains('$item')");
       $this->assertNotNull($select, "DataCommand has updated the page with a value of $item.");
+      $condition = "(typeof jQuery !== 'undefined' && jQuery('[data-drupal-selector=\"edit-select\"]').is(':focus'))";
+      $this->assertJsCondition($condition, 5000);
     }
 
     // Verify form values of a checkbox element.
@@ -95,6 +110,17 @@ class FormValuesTest extends WebDriverTestBase {
     // We need to reload the page to kill any unfinished AJAX calls before
     // tearDown() is called.
     $this->drupalGet('ajax_forms_test_get_form');
+  }
+
+  /**
+   * Data provider for testSimpleAjaxFormValue.
+   */
+  public function formModeProvider() {
+    return [
+      ['direct'],
+      ['dialog'],
+      ['off canvas dialog'],
+    ];
   }
 
 }

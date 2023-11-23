@@ -45,3 +45,11 @@ ajax_forms_test.ajax_element_form:
     _form: '\Drupal\ajax_forms_test\Form\AjaxFormsTestAjaxElementsForm'
   requirements:
     _access: 'TRUE'
+
+ajax_forms_test.dialog_form_link:
+  path: '/ajax_forms_test_dialog_form_link'
+  defaults:
+    _title: 'Dialog form link test'
+    _controller: '\Drupal\ajax_forms_test\Controller\DialogFormLink::makeDialogFormLink'
+  requirements:
+    _access: 'TRUE'
