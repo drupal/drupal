@@ -19,3 +19,6 @@ nightwatch.settings.json
 
 # Ignore dotenv
 .env
+
+# Ignore CSpell cache
+.cspellcache
