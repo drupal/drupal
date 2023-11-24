@@ -10,6 +10,7 @@ use Drupal\Core\GeneratedLink;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Render\RenderableInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Template\Attribute;
 use Drupal\Core\Template\Loader\StringLoader;
 use Drupal\Core\Template\TwigEnvironment;
 use Drupal\Core\Template\TwigExtension;
@@ -404,9 +405,10 @@ class TwigExtensionTest extends UnitTestCase {
       ['class' => ['kittens'], 'data-toggle' => 'modal', 'data-lang' => 'es'],
       ['id' => 'puppies', 'data-value' => 'foo', 'data-lang' => 'en'],
       [],
+      new Attribute(),
     ];
     $result = $twig->render($name, ['iterations' => $iterations]);
-    $expected = '<div class="kittens" data-toggle="modal" data-lang="es"></div><div id="puppies" data-value="foo" data-lang="en"></div><div></div>';
+    $expected = '<div class="kittens" data-toggle="modal" data-lang="es"></div><div id="puppies" data-value="foo" data-lang="en"></div><div></div><div></div>';
     $this->assertEquals($expected, $result);
 
     // Test default creation of empty attribute object and using its method.
