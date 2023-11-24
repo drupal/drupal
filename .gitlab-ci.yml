@@ -202,18 +202,11 @@ default:
     _TARGET_PHP: "8.3"
     _TARGET_DB: "sqlite-3"
 
-# Run daily, or manually.
-# 'PHP 8.1 MariaDB 10.3.22':
-#   <<: [ *default-stage, *run-daily ]
-#   variables:
-#     _TARGET_PHP: "8.1"
-#     _TARGET_DB: "mariadb-10.3.22"
-
-# 'PHP 8.1 MySQL 5.7 with updated deps':
-#   <<: [ *default-stage, *run-daily ]
-#   variables:
-#     _TARGET_PHP: "8.1"
-#     _TARGET_DB: "mysql-5.7"
+'PHP 8.1 MariaDB 10.3.22':
+  <<: [ *default-stage, *run-daily ]
+  variables:
+    _TARGET_PHP: "8.1"
+    _TARGET_DB: "mariadb-10.3.22"
 
 'PHP 8.1 PostgreSQL 14.1':
   <<: [ *default-stage, *run-daily ]
