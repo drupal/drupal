@@ -161,7 +161,6 @@ classtype
 cldr
 clearfix
 clicksorter
-clist
 closethick
 cnenzrgre
 codesniffer
@@ -824,7 +823,6 @@ sloopal
 smacss
 smalldatetime
 somecompany
-somelinks
 sortablejs
 sourceediting
 spacebar
@@ -921,7 +919,6 @@ tcomment
 templating
 tercera
 testajax
-testattribute
 testblock
 testbody
 testbot

@@ -119,7 +119,7 @@ class FunctionsTest extends KernelTestBase {
       [
         '#markup' => 'c',
         'child_list' => [
-          '#attributes' => ['id' => 'clist'],
+          '#attributes' => ['id' => 'c-list'],
           'ca',
           [
             '#markup' => 'cb',
@@ -155,7 +155,7 @@ class FunctionsTest extends KernelTestBase {
     $inner_cb .= '<li>cbb</li>';
     $inner_cb .= '</ul></div>';
 
-    $inner_c = '<div class="item-list"><ul id="clist">';
+    $inner_c = '<div class="item-list"><ul id="c-list">';
     $inner_c .= '<li>ca</li>';
     $inner_c .= '<li class="item-class-cb">cb' . $inner_cb . '</li>';
     $inner_c .= '<li>cc</li>';
@@ -196,7 +196,7 @@ class FunctionsTest extends KernelTestBase {
 
     // Verify that a list of links is properly rendered.
     $variables = [];
-    $variables['attributes'] = ['id' => 'somelinks'];
+    $variables['attributes'] = ['id' => 'some_links'];
     $variables['links'] = [
       'a link' => [
         'title' => 'A <link>',
@@ -226,7 +226,7 @@ class FunctionsTest extends KernelTestBase {
     ];
 
     $expected_links = '';
-    $expected_links .= '<ul id="somelinks">';
+    $expected_links .= '<ul id="some_links">';
     $expected_links .= '<li><a href="' . Url::fromUri('base:a/link')->toString() . '">' . Html::escape('A <link>') . '</a></li>';
     $expected_links .= '<li>' . Html::escape('Plain "text"') . '</li>';
     $expected_links .= '<li><span class="unescaped">' . Html::escape('potentially unsafe text that <should> be escaped') . '</span></li>';
@@ -266,7 +266,7 @@ class FunctionsTest extends KernelTestBase {
       'class' => ['a/class'],
     ];
     $expected_links = '';
-    $expected_links .= '<ul id="somelinks">';
+    $expected_links .= '<ul id="some_links">';
     $expected_links .= '<li><a href="' . Url::fromUri('base:a/link')->toString() . '">' . Html::escape('A <link>') . '</a></li>';
     $expected_links .= '<li><span class="a/class">' . Html::escape('Plain "text"') . '</span></li>';
     $expected_links .= '<li><span class="unescaped">' . Html::escape('potentially unsafe text that <should> be escaped') . '</span></li>';
@@ -282,7 +282,7 @@ class FunctionsTest extends KernelTestBase {
     \Drupal::currentUser()->setAccount(new UserSession(['uid' => 1]));
     $variables['set_active_class'] = TRUE;
     $expected_links = '';
-    $expected_links .= '<ul id="somelinks">';
+    $expected_links .= '<ul id="some_links">';
     $expected_links .= '<li><a href="' . Url::fromUri('base:a/link')->toString() . '">' . Html::escape('A <link>') . '</a></li>';
     $expected_links .= '<li><span class="a/class">' . Html::escape('Plain "text"') . '</span></li>';
     $expected_links .= '<li><span class="unescaped">' . Html::escape('potentially unsafe text that <should> be escaped') . '</span></li>';
@@ -317,7 +317,7 @@ class FunctionsTest extends KernelTestBase {
 
     // Verify that a list of links is properly rendered.
     $variables = [];
-    $variables['attributes'] = ['id' => 'somelinks'];
+    $variables['attributes'] = ['id' => 'some_links'];
     $variables['links'] = [
       [
         'title' => 'A <link>',
@@ -347,7 +347,7 @@ class FunctionsTest extends KernelTestBase {
     ];
 
     $expected_links = '';
-    $expected_links .= '<ul id="somelinks">';
+    $expected_links .= '<ul id="some_links">';
     $expected_links .= '<li><a href="' . Url::fromUri('base:a/link')->toString() . '">' . Html::escape('A <link>') . '</a></li>';
     $expected_links .= '<li>' . Html::escape('Plain "text"') . '</li>';
     $expected_links .= '<li><span class="unescaped">' . Html::escape('potentially unsafe text that <should> be escaped') . '</span></li>';
@@ -387,7 +387,7 @@ class FunctionsTest extends KernelTestBase {
       'class' => ['a/class'],
     ];
     $expected_links = '';
-    $expected_links .= '<ul id="somelinks">';
+    $expected_links .= '<ul id="some_links">';
     $expected_links .= '<li><a href="' . Url::fromUri('base:a/link')->toString() . '">' . Html::escape('A <link>') . '</a></li>';
     $expected_links .= '<li><span class="a/class">' . Html::escape('Plain "text"') . '</span></li>';
     $expected_links .= '<li><span class="unescaped">' . Html::escape('potentially unsafe text that <should> be escaped') . '</span></li>';
@@ -403,7 +403,7 @@ class FunctionsTest extends KernelTestBase {
     \Drupal::currentUser()->setAccount(new UserSession(['uid' => 1]));
     $variables['set_active_class'] = TRUE;
     $expected_links = '';
-    $expected_links .= '<ul id="somelinks">';
+    $expected_links .= '<ul id="some_links">';
     $expected_links .= '<li><a href="' . Url::fromUri('base:a/link')->toString() . '">' . Html::escape('A <link>') . '</a></li>';
     $expected_links .= '<li><span class="a/class">' . Html::escape('Plain "text"') . '</span></li>';
     $expected_links .= '<li><span class="unescaped">' . Html::escape('potentially unsafe text that <should> be escaped') . '</span></li>';
