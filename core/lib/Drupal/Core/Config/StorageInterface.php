@@ -32,7 +32,7 @@ interface StorageInterface {
    * @param string $name
    *   The name of a configuration object to load.
    *
-   * @return array|bool
+   * @return array|false
    *   The configuration data stored for the configuration object name. If no
    *   configuration data exists for the given name, FALSE is returned.
    */
