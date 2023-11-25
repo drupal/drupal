@@ -45,8 +45,9 @@ class InfoParserUnitTest extends UnitTestCase {
    */
   public function testInfoParserNonExisting() {
     vfsStream::setup('modules');
-    $info = $this->infoParser->parse(vfsStream::url('modules') . '/does_not_exist.info.txt');
-    $this->assertEmpty($info, 'Non existing info.yml returns empty array.');
+    $this->expectException('\Drupal\Core\Extension\InfoParserException');
+    $this->expectExceptionMessage('Unable to parse vfs://modules/does_not_exist.info.txt as it does not exist');
+    $this->infoParser->parse(vfsStream::url('modules') . '/does_not_exist.info.txt');
   }
 
   /**

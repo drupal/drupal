@@ -179,3 +179,7 @@ if (getenv('SYMFONY_DEPRECATIONS_HELPER') === FALSE) {
   $deprecation_ignore_filename = realpath(__DIR__ . "/../.deprecation-ignore.txt");
   putenv("SYMFONY_DEPRECATIONS_HELPER=ignoreFile=$deprecation_ignore_filename");
 }
+
+// Drupal expects to be run from its root directory. This ensures all test types
+// are consistent.
+chdir(dirname(__DIR__, 2));
