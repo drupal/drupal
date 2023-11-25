@@ -55,7 +55,7 @@ function demo_umami_toolbar() {
   // @todo This can be removed once a generic warning for experimental profiles
   //   has been introduced. https://www.drupal.org/project/drupal/issues/2934374
   $items['experimental-profile-warning'] = [
-    '#weight' => 999,
+    '#weight' => 3400,
     '#cache' => [
       'contexts' => ['route'],
     ],
