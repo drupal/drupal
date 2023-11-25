@@ -37,6 +37,7 @@ default:
     paths:
       - ./sites/default/files/simpletest/phpunit-*.xml
       - ./sites/simpletest/browser_output
+      - '*.log'
 
 .default-job-settings: &default-job-settings
   stage: 🗜️ Test
@@ -80,8 +81,7 @@ variables:
   entrypoint:
     - chromedriver
     - "--no-sandbox"
-    - "--log-path=/tmp/chromedriver.log"
-    - "--verbose"
+    - "--log-path=/builds/chromedriver.log"
     - "--whitelisted-ips="
 
 .run-tests: &run-tests
@@ -150,6 +150,9 @@ variables:
   services:
     - <<: *with-database
     - <<: *with-chrome
+  after_script:
+    - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
+    - cp /builds/chromedriver.log ./
 
 '👷️️️ PHPUnit Build':
   <<: [ *with-composer, *run-tests, *default-job-settings ]
@@ -191,6 +194,8 @@ variables:
     - echo "DRUPAL_NIGHTWATCH_OUTPUT='"../nightwatch_output"'" >> ./core/.env
     - chown -R www-data:www-data ./sites /var/www
     - sudo -u www-data yarn run --cwd=./core test:nightwatch --workers=4
+  after_script:
+    - cp /builds/chromedriver.log ./
   artifacts:
     when: always
     expire_in: 6 mos
@@ -198,6 +203,7 @@ variables:
       junit: ./nightwatch_output/**/*.xml
     paths:
       - ./nightwatch_output
+      - '*.log'
 
 '🔁 Repeat Class Test':
   <<: [ *with-composer, *run-repeat-class-test, *default-job-settings ]
