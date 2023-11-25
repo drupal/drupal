@@ -742,4 +742,40 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
     return $test_data;
   }
 
+  /**
+   * Tests access to the revision log field.
+   */
+  public function testRevisionLogFieldAccess(): void {
+    $admin = $this->createUser([
+      'administer media',
+      'view media',
+    ]);
+    $editor = $this->createUser([
+      'view all media revisions',
+      'view media',
+    ]);
+    $viewer = $this->createUser([
+      'view media',
+    ]);
+
+    $media_type = $this->createMediaType('test', [
+      'id' => 'test',
+    ]);
+
+    $entity = Media::create([
+      'status' => TRUE,
+      'bundle' => $media_type->id(),
+    ]);
+    $entity->save();
+    $this->assertTrue($entity->get('revision_log_message')->access('view', $admin));
+    $this->assertTrue($entity->get('revision_log_message')->access('view', $editor));
+    // revision_log_message field access can be granted with the "view revision"
+    // operation. "view revision" access is granted if the user is allowed to
+    // view the default revision of the media entity.
+    $this->assertTrue($entity->get('revision_log_message')->access('view', $viewer));
+    $entity->setUnpublished()->save();
+    \Drupal::entityTypeManager()->getAccessControlHandler('media')->resetCache();
+    $this->assertFalse($entity->get('revision_log_message')->access('view', $viewer));
+  }
+
 }

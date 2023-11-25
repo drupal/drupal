@@ -389,6 +389,17 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
    *   The access result.
    */
   protected function checkFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+    if (!$items instanceof FieldItemListInterface || $operation !== 'view') {
+      return AccessResult::allowed();
+    }
+    $entity = $items->getEntity();
+    $isRevisionLogField = $this->entityType instanceof ContentEntityTypeInterface && $field_definition->getName() === $this->entityType->getRevisionMetadataKey('revision_log_message');
+    if ($entity && $isRevisionLogField) {
+      // The revision log should only be visible to those who can view the
+      // revisions OR edit the entity.
+      return $entity->access('view revision', $account, TRUE)
+        ->orIf($entity->access('update', $account, TRUE));
+    }
     return AccessResult::allowed();
   }
 

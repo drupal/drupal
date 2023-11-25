@@ -68,7 +68,7 @@ class BlockContentAccessControlHandler extends EntityAccessControlHandler implem
         'update' => AccessResult::allowedIfHasPermission($account, 'edit any ' . $bundle . ' block content'),
         'delete' => AccessResult::allowedIfHasPermission($account, 'delete any ' . $bundle . ' block content'),
         // Revisions.
-        'view all revisions' => AccessResult::allowedIfHasPermission($account, 'view any ' . $bundle . ' block content history'),
+        'view revision', 'view all revisions' => AccessResult::allowedIfHasPermission($account, 'view any ' . $bundle . ' block content history'),
         'revert' => AccessResult::allowedIfHasPermission($account, 'revert any ' . $bundle . ' block content revisions')
           ->orIf($forbidIfNotReusable()),
         'delete revision' => AccessResult::allowedIfHasPermission($account, 'delete any ' . $bundle . ' block content revisions')
