@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\filter\Kernel;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -90,16 +89,16 @@ class FilterCrudTest extends KernelTestBase {
    * Verifies that a text format is properly stored.
    */
   public function verifyTextFormat($format) {
-    $t_args = ['%format' => $format->label()];
     $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
 
     // Verify the loaded filter has all properties.
     $filter_format = FilterFormat::load($format->id());
-    $this->assertEquals($format->id(), $filter_format->id(), new FormattableMarkup('filter_format_load: Proper format id for text format %format.', $t_args));
-    $this->assertEquals($format->label(), $filter_format->label(), new FormattableMarkup('filter_format_load: Proper title for text format %format.', $t_args));
-    $this->assertEquals($format->get('weight'), $filter_format->get('weight'), new FormattableMarkup('filter_format_load: Proper weight for text format %format.', $t_args));
+    $format_label = $format->label();
+    $this->assertEquals($format->id(), $filter_format->id(), "filter_format_load: Proper format id for text format $format_label.");
+    $this->assertEquals($format->label(), $filter_format->label(), "filter_format_load: Proper title for text format $format_label.");
+    $this->assertEquals($format->get('weight'), $filter_format->get('weight'), "filter_format_load: Proper weight for text format $format_label.");
     // Check that the filter was created in site default language.
-    $this->assertEquals($default_langcode, $format->language()->getId(), new FormattableMarkup('filter_format_load: Proper language code for text format %format.', $t_args));
+    $this->assertEquals($default_langcode, $format->language()->getId(), "filter_format_load: Proper language code for text format $format_label.");
 
     // Verify the permission exists and has the correct dependencies.
     $permissions = \Drupal::service('user.permissions')->getPermissions();

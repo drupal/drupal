@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\views\Kernel;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Component\Utility\Xss;
 use Drupal\node\Entity\NodeType;
@@ -134,7 +133,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
       if ($type == 'relationship') {
         continue;
       }
-      $this->assertGreaterThan(0, count($view->$type), new FormattableMarkup('Make sure a %type instance got instantiated.', ['%type' => $type]));
+      $this->assertGreaterThan(0, count($view->$type), "Make sure a $type instance got instantiated.");
     }
 
     // initHandlers() should create display handlers automatically as well.
@@ -448,7 +447,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
       $match = function ($value) use ($display) {
         return str_contains($value, $display->display['display_title']);
       };
-      $this->assertNotEmpty(array_filter($validate[$id], $match), new FormattableMarkup('Error message found for @id display', ['@id' => $id]));
+      $this->assertNotEmpty(array_filter($validate[$id], $match), "Error message found for $id display");
       $count++;
     }
 

@@ -479,7 +479,7 @@ class FunctionsTest extends KernelTestBase {
     // thing. We expect a single <ul> with appropriate links contained within
     // it.
     $render_array = $base_array;
-    $html = \Drupal::service('renderer')->renderRoot($render_array);
+    $html = (string) \Drupal::service('renderer')->renderRoot($render_array);
     $dom = Html::load($html);
     $this->assertEquals(1, $dom->getElementsByTagName('ul')->length, 'One "ul" tag found in the rendered HTML.');
     $list_elements = $dom->getElementsByTagName('li');
@@ -494,8 +494,8 @@ class FunctionsTest extends KernelTestBase {
     // sure we get two separate <ul>'s with the appropriate links contained
     // within each.
     $render_array = $base_array;
-    $child_html = \Drupal::service('renderer')->renderRoot($render_array['first_child']);
-    $parent_html = \Drupal::service('renderer')->renderRoot($render_array);
+    $child_html = (string) \Drupal::service('renderer')->renderRoot($render_array['first_child']);
+    $parent_html = (string) \Drupal::service('renderer')->renderRoot($render_array);
     // First check the child HTML.
     $dom = Html::load($child_html);
     $this->assertEquals(1, $dom->getElementsByTagName('ul')->length, 'One "ul" tag found in the rendered child HTML.');

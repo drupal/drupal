@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\views\Kernel\Handler;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
@@ -73,7 +72,7 @@ class AreaEntityTest extends ViewsKernelTestBase {
     foreach (array_keys($expected_entities) as $entity) {
       $this->assertNotEmpty($data['entity_' . $entity], "Views entity '$entity' should have a data area.");
       // Test that entity_type is set correctly in the area data.
-      $this->assertEquals($data['entity_' . $entity]['area']['entity_type'], $entity, new FormattableMarkup('Correct entity_type set for @entity', ['@entity' => $entity]));
+      $this->assertEquals($data['entity_' . $entity]['area']['entity_type'], $entity, "Correct entity_type set for $entity");
     }
 
     $expected_entities = array_filter($entity_types, function (EntityTypeInterface $type) {
