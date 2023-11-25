@@ -11,6 +11,7 @@ use Drupal\Core\Access\AccessResultForbidden;
 use Drupal\Core\Access\AccessResultNeutral;
 use Drupal\Core\Access\AccessResultReasonInterface;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 
@@ -22,6 +23,8 @@ use Drupal\user\Entity\User;
  * @group block_content
  */
 class BlockContentAccessHandlerTest extends KernelTestBase {
+
+  use UserCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -590,6 +593,28 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
     ];
 
     return $cases;
+  }
+
+  /**
+   * Tests revision log access.
+   */
+  public function testRevisionLogAccess(): void {
+    $admin = $this->createUser([
+      'administer block content',
+      'access content',
+    ]);
+    $editor = $this->createUser([
+      'access content',
+      'access block library',
+      'view any square block content history',
+    ]);
+    $viewer = $this->createUser([
+      'access content',
+    ]);
+
+    $this->assertTrue($this->blockEntity->get('revision_log')->access('view', $admin));
+    $this->assertTrue($this->blockEntity->get('revision_log')->access('view', $editor));
+    $this->assertFalse($this->blockEntity->get('revision_log')->access('view', $viewer));
   }
 
 }

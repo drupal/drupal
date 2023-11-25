@@ -36,4 +36,21 @@ class NodeJsonBasicAuthTest extends NodeResourceTestBase {
    */
   protected static $auth = 'basic_auth';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUpAuthorization($method) {
+    parent::setUpAuthorization($method);
+    $this->grantPermissionsToTestedRole(['view camelids revisions']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedNormalizedEntity() {
+    $entity = parent::getExpectedNormalizedEntity();
+    $entity['revision_log'] = [];
+    return $entity;
+  }
+
 }

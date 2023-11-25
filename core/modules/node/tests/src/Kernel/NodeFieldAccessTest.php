@@ -64,11 +64,21 @@ class NodeFieldAccessTest extends EntityKernelTestBase {
 
     // An administrator user. No user exists yet, ensure that the first user
     // does not have UID 1.
-    $content_admin_user = $this->createUser(['administer nodes'], NULL, FALSE, ['uid' => 2]);
+    $content_admin_user = $this->createUser(['administer nodes', 'access content'], values: ['uid' => 2]);
 
     // Two different editor users.
-    $page_creator_user = $this->createUser(['create page content', 'edit own page content', 'delete own page content']);
-    $page_manager_user = $this->createUser(['create page content', 'edit any page content', 'delete any page content']);
+    $page_creator_user = $this->createUser([
+      'create page content',
+      'edit own page content',
+      'delete own page content',
+      'access content',
+    ]);
+    $page_manager_user = $this->createUser([
+      'create page content',
+      'edit any page content',
+      'delete any page content',
+      'access content',
+    ]);
 
     // An unprivileged user.
     $page_unrelated_user = $this->createUser(['access content']);
@@ -88,15 +98,21 @@ class NodeFieldAccessTest extends EntityKernelTestBase {
       'uid' => $page_creator_user->id(),
       'type' => 'page',
     ]);
+    $node1->save();
+
     $node2 = Node::create([
       'title' => $this->randomMachineName(8),
       'uid' => $page_manager_user->id(),
       'type' => 'article',
+      'revision_log' => 'Updated to requirements',
     ]);
+    $node2->save();
+
     $node3 = Node::create([
       'title' => $this->randomMachineName(8),
       'type' => 'page',
     ]);
+    $node3->save();
 
     foreach ($this->administrativeFields as $field) {
 
@@ -144,8 +160,27 @@ class NodeFieldAccessTest extends EntityKernelTestBase {
     // Check the revision_log field on node 2 which has revisions enabled.
     $may_update = $node2->revision_log->access('edit', $content_admin_user);
     $this->assertTrue($may_update, 'A user with permission "administer nodes" can edit the revision_log field when revisions are enabled.');
+
     $may_update = $node2->revision_log->access('edit', $page_creator_user);
     $this->assertTrue($may_update, 'A user without permission "administer nodes" can edit the revision_log field when revisions are enabled.');
+
+    $may_view = $node2->revision_log->access('view', $content_admin_user);
+    $this->assertTrue($may_view, 'A user without permission "administer nodes" cannot view the revision_log field when revisions are enabled.');
+
+    // Page manager only has permissions to 'page', not 'article' content type.
+    $may_view = $node2->revision_log->access('view', $page_manager_user);
+    $this->assertFalse($may_view, 'A user without permission to the content type cannot view the revision_log field when revisions are enabled.');
+
+    $article_revision_manager_user = $this->createUser(['access content', 'view article revisions']);
+    $may_view = $node2->revision_log->access('view', $article_revision_manager_user);
+    $this->assertTrue($may_view, 'A user without permission "view article revisions" cannot view the revision_log field when revisions are enabled on article.');
+
+    $revision_manager_user = $this->createUser(['access content', 'view all revisions']);
+    $may_view = $node2->revision_log->access('view', $revision_manager_user);
+    $this->assertTrue($may_view, 'A user without permission "view all revisions" cannot view the revision_log field when revisions are enabled.');
+
+    $may_view = $node2->revision_log->access('view', $page_unrelated_user);
+    $this->assertFalse($may_view, 'A user with only permission "access content" cannot view the revision_log field when revisions are enabled.');
   }
 
 }

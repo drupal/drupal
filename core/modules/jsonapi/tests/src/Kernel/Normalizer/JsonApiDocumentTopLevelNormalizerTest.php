@@ -342,7 +342,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     $this->assertSame($this->term1->uuid(), $normalized['included'][1]['id']);
     $this->assertSame('taxonomy_term--tags', $normalized['included'][1]['type']);
     $this->assertSame($this->term1->label(), $normalized['included'][1]['attributes']['name']);
-    $this->assertCount(12, $normalized['included'][1]['attributes']);
+    $this->assertCount(11, $normalized['included'][1]['attributes']);
     $this->assertTrue(!isset($normalized['included'][1]['attributes']['created']));
     // Make sure that the cache tags for the includes and the requested entities
     // are bubbling as expected.
@@ -388,7 +388,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     $this->assertArrayNotHasKey('meta', $normalized);
     $this->assertEquals($this->user->uuid(), $normalized['included'][0]['id']);
     $this->assertCount(1, $normalized['included'][0]['attributes']);
-    $this->assertCount(12, $normalized['included'][1]['attributes']);
+    $this->assertCount(11, $normalized['included'][1]['attributes']);
     // Make sure that the cache tags for the includes and the requested entities
     // are bubbling as expected.
     $this->assertEqualsCanonicalizing(
