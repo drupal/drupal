@@ -45,6 +45,7 @@ install:
   - locale
   - config_translation
   - content_translation
+  - announcements_feed
 themes:
   - claro
   - umami
