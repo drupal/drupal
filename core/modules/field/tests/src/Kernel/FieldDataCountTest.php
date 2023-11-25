@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\field\Kernel;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\entity_test\Entity\EntityTest;
@@ -139,7 +138,7 @@ class FieldDataCountTest extends FieldKernelTestBase {
     /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = $this->container->get('entity_type.manager')->getStorage($entity_type);
     $entity = $storage->loadRevision($first_revision);
-    $this->assertCount($cardinality, $entity->{$this->fieldTestData->field_name_2}, new FormattableMarkup('Revision %revision_id: expected number of values.', ['%revision_id' => $first_revision]));
+    $this->assertCount($cardinality, $entity->{$this->fieldTestData->field_name_2}, "Revision $first_revision: expected number of values.");
   }
 
   /**

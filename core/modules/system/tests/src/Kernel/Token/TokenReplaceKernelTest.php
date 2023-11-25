@@ -3,7 +3,6 @@
 namespace Drupal\Tests\system\Kernel\Token;
 
 use Drupal\Core\Url;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\BubbleableMetadata;
@@ -48,7 +47,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
       $input = $test['prefix'] . '[site:name]' . $test['suffix'];
       $expected = $test['prefix'] . 'Drupal' . $test['suffix'];
       $output = $this->tokenService->replace($input, [], ['langcode' => $this->interfaceLanguage->getId()]);
-      $this->assertSame($expected, $output, new FormattableMarkup('Token recognized in string %string', ['%string' => $input]));
+      $this->assertSame($expected, $output, "Token recognized in string $input");
     }
 
     // Test token replacement when the string contains no tokens.
@@ -125,7 +124,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
     foreach ($tests as $input => $expected) {
       $bubbleable_metadata = new BubbleableMetadata();
       $output = $this->tokenService->replace($input, [], ['langcode' => $this->interfaceLanguage->getId()], $bubbleable_metadata);
-      $this->assertEquals($expected, $output, new FormattableMarkup('System site information token %token replaced.', ['%token' => $input]));
+      $this->assertEquals($expected, $output, "System site information token $input replaced.");
       $this->assertEquals($metadata_tests[$input], $bubbleable_metadata);
     }
 
@@ -171,7 +170,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
 
     foreach ($tests as $input => $expected) {
       $output = $this->tokenService->replace($input, ['date' => $date], ['langcode' => $this->interfaceLanguage->getId()]);
-      $this->assertEquals($expected, $output, new FormattableMarkup('Date token %token replaced.', ['%token' => $input]));
+      $this->assertEquals($expected, $output, "Date token $input replaced.");
     }
   }
 

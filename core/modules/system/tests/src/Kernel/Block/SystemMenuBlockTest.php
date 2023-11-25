@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\system\Kernel\Block;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Entity\Menu;
 use Drupal\block\Entity\Block;
@@ -226,7 +225,7 @@ class SystemMenuBlockTest extends KernelTestBase {
     foreach ($blocks as $id => $block) {
       $block_build = $block->build();
       $items = $block_build['#items'] ?? [];
-      $this->assertSame($no_active_trail_expectations[$id], $this->convertBuiltMenuToIdTree($items), new FormattableMarkup('Menu block %id with no active trail renders the expected tree.', ['%id' => $id]));
+      $this->assertSame($no_active_trail_expectations[$id], $this->convertBuiltMenuToIdTree($items), "Menu block $id with no active trail renders the expected tree.");
     }
 
     // Scenario 2: test all block instances when there's an active trail.
@@ -278,7 +277,7 @@ class SystemMenuBlockTest extends KernelTestBase {
     foreach ($blocks as $id => $block) {
       $block_build = $block->build();
       $items = $block_build['#items'] ?? [];
-      $this->assertSame($active_trail_expectations[$id], $this->convertBuiltMenuToIdTree($items), new FormattableMarkup('Menu block %id with an active trail renders the expected tree.', ['%id' => $id]));
+      $this->assertSame($active_trail_expectations[$id], $this->convertBuiltMenuToIdTree($items), "Menu block $id with an active trail renders the expected tree.");
     }
   }
 

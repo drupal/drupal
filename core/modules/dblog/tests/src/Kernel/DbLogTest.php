@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\dblog\Kernel;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\dblog\Functional\FakeLogEntries;
@@ -40,7 +39,7 @@ class DbLogTest extends KernelTestBase {
     $this->generateLogEntries($row_limit + 10);
     // Verify that the database log row count exceeds the row limit.
     $count = Database::getConnection()->select('watchdog')->countQuery()->execute()->fetchField();
-    $this->assertGreaterThan($row_limit, $count, new FormattableMarkup('Dblog row count of @count exceeds row limit of @limit', ['@count' => $count, '@limit' => $row_limit]));
+    $this->assertGreaterThan($row_limit, $count, "Dblog row count of $count exceeds row limit of $row_limit");
 
     // Get the number of enabled modules. Cron adds a log entry for each module.
     $implementation_count = 0;
@@ -52,12 +51,13 @@ class DbLogTest extends KernelTestBase {
     );
 
     $cron_detailed_count = $this->runCron();
-    $this->assertEquals($implementation_count + 2, $cron_detailed_count, new FormattableMarkup('Cron added @count of @expected new log entries', ['@count' => $cron_detailed_count, '@expected' => $implementation_count + 2]));
+    $expected_count = $implementation_count + 2;
+    $this->assertEquals($expected_count, $cron_detailed_count, "Cron added $cron_detailed_count of $expected_count new log entries");
 
     // Test disabling of detailed cron logging.
     $this->config('system.cron')->set('logging', 0)->save();
     $cron_count = $this->runCron();
-    $this->assertEquals(1, $cron_count, new FormattableMarkup('Cron added @count of @expected new log entries', ['@count' => $cron_count, '@expected' => 1]));
+    $this->assertEquals(1, $cron_count, "Cron added $cron_count of 1 new log entries");
   }
 
   /**

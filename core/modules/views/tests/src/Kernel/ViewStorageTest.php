@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\views\Kernel;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\views\Entity\View;
 use Drupal\views\Plugin\views\display\Page;
@@ -85,7 +84,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
     // expected properties.
     $this->assertInstanceOf(View::class, $view);
     foreach ($this->configProperties as $property) {
-      $this->assertNotNull($view->get($property), new FormattableMarkup('Property: @property loaded onto View.', ['@property' => $property]));
+      $this->assertNotNull($view->get($property), "Property: $property loaded onto View.");
     }
 
     // Check the displays have been loaded correctly from config display data.
@@ -101,7 +100,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
       // exists.
       $original_options = $data['display'][$key];
       foreach ($original_options as $orig_key => $value) {
-        $this->assertSame($display[$orig_key], $value, new FormattableMarkup('@key is identical to saved data', ['@key' => $key]));
+        $this->assertSame($display[$orig_key], $value, "$key is identical to saved data");
       }
     }
 
@@ -120,7 +119,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
     $this->assertInstanceOf(View::class, $created);
     // Check that the View contains all of the properties.
     foreach ($this->configProperties as $property) {
-      $this->assertTrue(property_exists($created, $property), new FormattableMarkup('Property: @property created on View.', ['@property' => $property]));
+      $this->assertTrue(property_exists($created, $property), "Property: $property created on View.");
     }
 
     // Create a new View instance with config values.
@@ -137,8 +136,8 @@ class ViewStorageTest extends ViewsKernelTestBase {
 
     // Test all properties except displays.
     foreach ($properties as $property) {
-      $this->assertNotNull($created->get($property), new FormattableMarkup('Property: @property created on View.', ['@property' => $property]));
-      $this->assertSame($values[$property], $created->get($property), new FormattableMarkup('Property value: @property matches configuration value.', ['@property' => $property]));
+      $this->assertNotNull($created->get($property), "Property: $property created on View.");
+      $this->assertSame($values[$property], $created->get($property), "Property value: $property matches configuration value.");
     }
 
     // Check the UUID of the loaded View.
@@ -209,14 +208,14 @@ class ViewStorageTest extends ViewsKernelTestBase {
     $random_title = $this->randomMachineName();
 
     $id = $view->addDisplay('page', $random_title);
-    $this->assertEquals('page_1', $id, new FormattableMarkup('Make sure the first display (%id_new) has the expected ID (%id)', ['%id_new' => $id, '%id' => 'page_1']));
+    $this->assertEquals('page_1', $id, "Make sure the first display ($id) has the expected ID (page_1)");
     $display = $view->get('display');
     $this->assertEquals($random_title, $display[$id]['display_title']);
 
     $random_title = $this->randomMachineName();
     $id = $view->addDisplay('page', $random_title);
     $display = $view->get('display');
-    $this->assertEquals('page_2', $id, new FormattableMarkup('Make sure the second display (%id_new) has the expected ID (%id)', ['%id_new' => $id, '%id' => 'page_2']));
+    $this->assertEquals('page_2', $id, "Make sure the second display ($id) has the expected ID (page_2)");
     $this->assertEquals($random_title, $display[$id]['display_title']);
 
     $id = $view->addDisplay('page');
@@ -325,14 +324,14 @@ class ViewStorageTest extends ViewsKernelTestBase {
     ];
 
     foreach ($config_properties as $property) {
-      $this->assertSame($view->storage->get($property), $copy->get($property), new FormattableMarkup('@property property is identical.', ['@property' => $property]));
+      $this->assertSame($view->storage->get($property), $copy->get($property), "$property property is identical.");
     }
 
     // Check the displays are the same.
     $copy_display = $copy->get('display');
     foreach ($view->storage->get('display') as $id => $display) {
       // assertIdentical will not work here.
-      $this->assertEquals($copy_display[$id], $display, new FormattableMarkup('The @display display has been copied correctly.', ['@display' => $id]));
+      $this->assertEquals($copy_display[$id], $display, "The $id display has been copied correctly.");
     }
   }
 
