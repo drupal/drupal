@@ -241,9 +241,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
     VarDumper::setHandler(TestVarDumper::class . '::cliHandler');
-
-    // Change the current dir to DRUPAL_ROOT.
-    chdir(static::getDrupalRoot());
   }
 
   /**
