@@ -38,9 +38,9 @@ Framework managers
 
 Release managers
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
+- Dave Long 'longwave' https://www.drupal.org/u/longwave
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
 - Victoria Spagnolo 'quietone' https://www.drupal.org/u/quietone
-- (provisional) Dave Long 'longwave' https://www.drupal.org/u/longwave
 
 Core JavaScript packages
 - Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
