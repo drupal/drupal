@@ -2717,11 +2717,6 @@ parameters:
 			path: modules/views/src/Plugin/views/field/Date.php
 
 		-
-			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\EntityField\\:\\:getFieldStorageDefinition\\(\\) should return Drupal\\\\Core\\\\Field\\\\FieldStorageDefinitionInterface but return statement is missing\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/field/EntityField.php
-
-		-
 			message: "#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\EntityField\\:\\:renderItems\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/field/EntityField.php
