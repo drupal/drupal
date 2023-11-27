@@ -116,7 +116,45 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
     $cache_metadata = CacheableMetadata::createFromRenderArray($build);
     $response->addCacheableDependency($cache_metadata);
 
+    // Set the HTTP headers and status code on the response if any bubbled.
+    if (!empty($build['#attached']['http_header'])) {
+      static::setHeaders($response, $build['#attached']['http_header']);
+    }
+
     return $response;
+  }
+
+  /**
+   * Sets headers on a response object.
+   *
+   * @param \Drupal\Core\Cache\CacheableResponse $response
+   *   The HTML response to update.
+   * @param array $headers
+   *   The headers to set, as an array. The items in this array should be as
+   *   follows:
+   *   - The header name.
+   *   - The header value.
+   *   - (optional) Whether to replace a current value with the new one, or add
+   *     it to the others. If the value is not replaced, it will be appended,
+   *     resulting in a header like this: 'Header: value1,value2'.
+   *
+   * @see \Drupal\Core\Render\HtmlResponseAttachmentsProcessor::setHeaders()
+   */
+  protected static function setHeaders(CacheableResponse $response, array $headers): void {
+    foreach ($headers as $values) {
+      $name = $values[0];
+      $value = $values[1];
+      $replace = !empty($values[2]);
+
+      // Drupal treats the HTTP response status code like a header, even though
+      // it really is not.
+      if (strtolower($name) === 'status') {
+        $response->setStatusCode($value);
+      }
+      else {
+        $response->headers->set($name, $value, $replace);
+      }
+    }
   }
 
   /**

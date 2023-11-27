@@ -928,12 +928,6 @@ function template_preprocess_views_view_rss(&$variables) {
   $variables['namespaces'] = new Attribute($style->namespaces);
   $variables['items'] = $items;
   $variables['channel_elements'] = $style->channel_elements;
-
-  // During live preview we don't want to output the header since the contents
-  // of the feed are being displayed inside a normal HTML page.
-  if (empty($variables['view']->live_preview)) {
-    $variables['view']->getResponse()->headers->set('Content-Type', 'application/rss+xml; charset=utf-8');
-  }
 }
 
 /**
@@ -995,12 +989,6 @@ function template_preprocess_views_view_opml(&$variables) {
   $variables['title'] = $title;
   $variables['items'] = $items;
   $variables['updated'] = gmdate(DATE_RFC2822, \Drupal::time()->getRequestTime());
-
-  // During live preview we don't want to output the header since the contents
-  // of the feed are being displayed inside a normal HTML page.
-  if (empty($variables['view']->live_preview)) {
-    $variables['view']->getResponse()->headers->set('Content-Type', 'text/xml; charset=utf-8');
-  }
 }
 
 /**

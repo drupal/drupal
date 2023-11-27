@@ -204,4 +204,38 @@ class DisplayFeedTest extends ViewTestBase {
     $this->assertSession()->statusCodeEquals(200);
   }
 
+  /**
+   * Tests the cacheability of the feed display.
+   */
+  public function testFeedCacheability(): void {
+    // Test as an anonymous user.
+    $this->drupalLogout();
+
+    // Set the page cache max age to a value greater than zero.
+    $config = $this->config('system.performance');
+    $config->set('cache.page.max_age', 300);
+    $config->save();
+
+    // Uninstall all page cache modules that could cache the HTTP response
+    // headers.
+    \Drupal::service('module_installer')->uninstall([
+      'page_cache',
+      'dynamic_page_cache',
+    ]);
+
+    // Reset all so that the config and module changes are active.
+    $this->resetAll();
+
+    $url = 'test-feed-display.xml';
+    $this->drupalGet($url);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->responseHeaderEquals('Cache-Control', 'max-age=300, public');
+    $this->assertSession()->responseHeaderEquals('Content-Type', 'application/rss+xml; charset=utf-8');
+
+    // Visit the page again to get the cached response.
+    $this->drupalGet($url);
+    $this->assertSession()->responseHeaderEquals('Cache-Control', 'max-age=300, public');
+    $this->assertSession()->responseHeaderEquals('Content-Type', 'application/rss+xml; charset=utf-8');
+  }
+
 }
