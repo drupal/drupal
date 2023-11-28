@@ -36,7 +36,7 @@ settings:
     ckeditor5_list:
       properties:
         reversed: false
-        startIndex: false
+        startIndex: true
       multiBlock: false
     ckeditor5_sourceEditing:
       allowed_tags:
@@ -47,16 +47,16 @@ settings:
         - '<a hreflang>'
         - '<blockquote cite>'
         - '<ul type>'
-        - '<ol type start>'
+        - '<ol type>'
         - '<h2 id>'
         - '<h3 id>'
         - '<h4 id>'
         - '<h5 id>'
         - '<h6 id>'
         - '<img src alt data-entity-type data-entity-uuid data-align data-caption width height loading>'
-        - '<drupal-media data-view-mode title>'
+        - '<drupal-media title>'
     media_media:
-      allow_view_mode_override: false
+      allow_view_mode_override: true
 image_upload:
   status: false
   scheme: public
