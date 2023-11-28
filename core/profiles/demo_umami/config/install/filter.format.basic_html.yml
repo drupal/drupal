@@ -63,6 +63,7 @@ filters:
     settings:
       default_view_mode: responsive_3x2
       allowed_view_modes:
+        medium_8_7: medium_8_7
         responsive_3x2: responsive_3x2
       allowed_media_types:
         audio: audio

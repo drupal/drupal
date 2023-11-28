@@ -119,7 +119,26 @@ function ckeditor5_post_update_list_multiblock(&$sandbox = []) {
       return FALSE;
     }
     $settings = $editor->getSettings();
+
     // @see ckeditor5_editor_presave()
     return array_key_exists('ckeditor5_list', $settings['plugins']);
+  });
+}
+
+/**
+ * Updates Text Editors using CKEditor 5 to native List "start" functionality.
+ */
+function ckeditor5_post_update_list_start_reversed(&$sandbox = []) {
+  $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
+  $config_entity_updater->update($sandbox, 'editor', function (Editor $editor): bool {
+    // Only try to update editors using CKEditor 5.
+    if ($editor->getEditor() !== 'ckeditor5') {
+      return FALSE;
+    }
+    $settings = $editor->getSettings();
+
+    // @see ckeditor5_editor_presave()
+    return in_array('numberedList', $settings['toolbar']['items'], TRUE)
+      && array_key_exists('ckeditor5_sourceEditing', $settings['plugins']);
   });
 }

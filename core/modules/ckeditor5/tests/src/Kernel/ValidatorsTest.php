@@ -578,6 +578,60 @@ class ValidatorsTest extends KernelTestBase {
       ],
       'violations' => [],
     ];
+    $data['INVALID: SourceEditing plugin configuration: <ol start type> must not be allowed because List can generate <ol reversed start>'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'numberedList',
+            'sourceEditing',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_list' => [
+            'properties' => [
+              'reversed' => TRUE,
+              'startIndex' => TRUE,
+            ],
+            'multiBlock' => TRUE,
+          ],
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => [
+              '<ol start type>',
+            ],
+          ],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.0' => 'The following attribute(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: <em class="placeholder">List (&lt;ol start&gt;)</em>.',
+      ],
+    ];
+    $data['INVALID: SourceEditing plugin configuration: <ol start type> must not be allowed because List can generate <ol start>'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'numberedList',
+            'sourceEditing',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_list' => [
+            'properties' => [
+              'reversed' => FALSE,
+              'startIndex' => FALSE,
+            ],
+            'multiBlock' => TRUE,
+          ],
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => [
+              '<ol start type>',
+            ],
+          ],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.0' => 'The following attribute(s) can optionally be supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: <em class="placeholder">List (&lt;ol start&gt;)</em>.',
+      ],
+    ];
 
     return $data;
   }
