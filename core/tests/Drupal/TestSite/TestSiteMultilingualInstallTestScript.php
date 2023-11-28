@@ -2,6 +2,8 @@
 
 namespace Drupal\TestSite;
 
+// cspell:ignore enregistrer
+
 /**
  * Setup file used by TestSiteApplicationTest.
  *

@@ -2,6 +2,8 @@
 
 namespace Drupal\FunctionalTests\Installer;
 
+// cspell:ignore enregistrer
+
 /**
  * Verifies that installing from existing configuration works.
  *

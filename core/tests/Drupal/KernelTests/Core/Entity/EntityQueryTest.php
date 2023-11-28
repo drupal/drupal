@@ -14,6 +14,8 @@ use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Symfony\Component\HttpFoundation\Request;
 
+// cspell:ignore merhaba siema xsiemax
+
 /**
  * Tests Entity Query functionality.
  *

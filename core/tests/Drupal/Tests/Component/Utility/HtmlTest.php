@@ -9,6 +9,8 @@ use Drupal\Component\Utility\Random;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
+// cspell:ignore répét répété
+
 /**
  * Tests \Drupal\Component\Utility\Html.
  *

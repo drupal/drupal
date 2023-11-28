@@ -501,8 +501,8 @@ class TypedDataTest extends KernelTestBase {
     // Test working with a simple map.
     $value = [
       'one' => 'eins',
-      'two' => 'zwei',
-      'three' => 'drei',
+      'two' => 'beta',
+      'three' => 'gamma',
     ];
     $definition = MapDataDefinition::create()
       ->setPropertyDefinition('one', DataDefinition::create('string'))
@@ -528,11 +528,11 @@ class TypedDataTest extends KernelTestBase {
     // Test getting and setting properties.
     $this->assertEquals('eins', $typed_data->get('one')->getValue());
     $this->assertEquals($value, $typed_data->toArray());
-    $typed_data->set('one', 'uno');
-    $this->assertEquals('uno', $typed_data->get('one')->getValue());
+    $typed_data->set('one', 'alpha');
+    $this->assertEquals('alpha', $typed_data->get('one')->getValue());
     // Make sure the update is reflected in the value of the map also.
     $value = $typed_data->getValue();
-    $this->assertEquals(['one' => 'uno', 'two' => 'zwei', 'three' => 'drei'], $value);
+    $this->assertEquals(['one' => 'alpha', 'two' => 'beta', 'three' => 'gamma'], $value);
 
     $properties = $typed_data->getProperties();
     $this->assertEquals(array_keys($value), array_keys($properties));
@@ -545,8 +545,8 @@ class TypedDataTest extends KernelTestBase {
     $this->assertEquals(['foo', 'one', 'two', 'three'], array_keys($typed_data->getValue()));
 
     // Test getting the string representation.
-    $typed_data->setValue(['one' => 'eins', 'two' => '', 'three' => 'drei']);
-    $this->assertEquals('eins, drei', $typed_data->getString());
+    $typed_data->setValue(['one' => 'eins', 'two' => '', 'three' => 'gamma']);
+    $this->assertEquals('eins, gamma', $typed_data->getString());
 
     // Test isEmpty and cloning.
     $this->assertFalse($typed_data->isEmpty());

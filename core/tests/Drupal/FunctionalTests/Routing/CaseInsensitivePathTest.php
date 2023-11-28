@@ -4,6 +4,8 @@ namespace Drupal\FunctionalTests\Routing;
 
 use Drupal\Tests\BrowserTestBase;
 
+// cspell:ignore ȅchȏ meΦω
+
 /**
  * Tests incoming path case insensitivity.
  *

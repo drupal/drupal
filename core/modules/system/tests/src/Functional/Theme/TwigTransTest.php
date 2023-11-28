@@ -6,6 +6,9 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\BrowserTestBase;
 use Twig\Error\SyntaxError;
 
+// cspell:ignore contaynz errrf herro kontex muun playsholdr starrrrr starzzzz
+// cspell:ignore sunz sunzzzzzzz txtzzzz
+
 /**
  * Tests Twig "trans" tags.
  *

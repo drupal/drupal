@@ -1,2 +1,3 @@
 # Clashes with default configuration provided by the config_test module.
+# cspell:ignore suis
 label: 'Je suis'
