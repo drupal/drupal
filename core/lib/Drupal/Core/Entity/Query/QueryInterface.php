@@ -4,6 +4,8 @@ namespace Drupal\Core\Entity\Query;
 
 use Drupal\Core\Database\Query\AlterableInterface;
 
+// cspell:ignore merhaba siema
+
 /**
  * Interface for entity queries.
  *

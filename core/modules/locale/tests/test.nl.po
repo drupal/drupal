@@ -18,7 +18,7 @@ msgstr "woensdag"
 msgid "Thursday"
 msgstr "donderdag"
 
-msgid "Extraday"
+msgid "Extra day"
 msgstr "extra dag"
 
 msgid "Friday"

@@ -10,6 +10,8 @@ use Drupal\Core\Site\Settings;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 
+// cspell:ignore suis
+
 /**
  * Tests configuration objects before and after module install and uninstall.
  *

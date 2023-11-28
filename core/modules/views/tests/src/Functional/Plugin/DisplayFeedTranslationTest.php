@@ -8,6 +8,8 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\WaitTerminateTestTrait;
 
+// cspell:ignore português
+
 /**
  * Tests the feed display plugin with translated content.
  *

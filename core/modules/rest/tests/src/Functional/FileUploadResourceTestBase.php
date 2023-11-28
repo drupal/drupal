@@ -16,6 +16,8 @@ use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
 
+// cspell:ignore èxample
+
 /**
  * Tests binary data file upload route.
  */

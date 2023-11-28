@@ -6,6 +6,8 @@ use Drupal\Component\Utility\Xss;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\views\Views;
 
+// cspell:ignore titel
+
 /**
  * Tests views title translation.
  *

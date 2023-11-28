@@ -149,6 +149,7 @@ class HtmlToTextTest extends BrowserTestBase {
       '<script type="text/javascript">Drupal</script>' => "Drupal\n",
       // A couple of tests for Unicode characters.
       '<q>I <em>will</em> be back…</q>' => "I /will/ be back…\n",
+      // cspell:disable-next-line
       'FrançAIS is ÜBER-åwesome' => "FrançAIS is ÜBER-åwesome\n",
     ];
 
