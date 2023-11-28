@@ -61,6 +61,11 @@ class PluginExistsConstraintValidatorTest extends KernelTestBase {
     $violations = $data->validate();
     $this->assertCount(1, $violations);
     $this->assertSame("The 'action_test_save_entity' plugin must implement or extend " . MenuInterface::class . '.', (string) $violations->get(0)->getMessage());
+
+    // No validation is attempted on a NULL value.
+    $data->setValue(NULL);
+    $violations = $data->validate();
+    $this->assertCount(0, $violations);
   }
 
 }
