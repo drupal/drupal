@@ -20,6 +20,10 @@ class PluginExistsConstraintValidator extends ConstraintValidator {
   public function validate(mixed $plugin_id, Constraint $constraint) {
     assert($constraint instanceof PluginExistsConstraint);
 
+    if ($plugin_id === NULL) {
+      return;
+    }
+
     $definition = $constraint->pluginManager->getDefinition($plugin_id, FALSE);
     // Some plugin managers provide fallbacks.
     if ($constraint->pluginManager instanceof FallbackPluginManagerInterface) {
