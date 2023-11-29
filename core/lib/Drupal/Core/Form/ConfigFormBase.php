@@ -40,12 +40,13 @@ abstract class ConfigFormBase extends FormBase {
    */
   public function __construct(
     ConfigFactoryInterface $config_factory,
-    protected ?TypedConfigManagerInterface $typedConfigManager = NULL,
+    protected $typedConfigManager = NULL,
   ) {
     $this->setConfigFactory($config_factory);
-    if ($this->typedConfigManager === NULL) {
-      @trigger_error('Calling ConfigFormBase::__construct() without the $typedConfigManager argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3373502', E_USER_DEPRECATED);
-      $this->typedConfigManager = \Drupal::service('config.typed');
+
+    if (!$typedConfigManager instanceof TypedConfigManagerInterface) {
+      $type = get_debug_type($typedConfigManager);
+      @trigger_error("Passing $type to the \$typedConfigManager parameter of ConfigFormBase::__construct() is deprecated in drupal:10.2.0 and must be an instance of \Drupal\Core\Config\TypedConfigManagerInterface in drupal:11.0.0. See https://www.drupal.org/node/3404140", E_USER_DEPRECATED);
     }
   }
 
@@ -57,6 +58,19 @@ abstract class ConfigFormBase extends FormBase {
       $container->get('config.factory'),
       $container->get('config.typed')
     );
+  }
+
+  /**
+   * Returns the typed config manager service.
+   *
+   * @return \Drupal\Core\Config\TypedConfigManagerInterface
+   *   The typed config manager service.
+   */
+  protected function typedConfigManager(): TypedConfigManagerInterface {
+    if ($this->typedConfigManager instanceof TypedConfigManagerInterface) {
+      return $this->typedConfigManager;
+    }
+    return \Drupal::service('config.typed');
   }
 
   /**
@@ -158,13 +172,11 @@ abstract class ConfigFormBase extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    assert($this->typedConfigManager instanceof TypedConfigManagerInterface);
-
     $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
     foreach (array_keys($map) as $config_name) {
       $config = $this->configFactory()->getEditable($config_name);
       static::copyFormValuesToConfig($config, $form_state, $form);
-      $typed_config = $this->typedConfigManager->createFromNameAndData($config_name, $config->getRawData());
+      $typed_config = $this->typedConfigManager()->createFromNameAndData($config_name, $config->getRawData());
 
       $violations = $typed_config->validate();
       // Rather than immediately applying all violation messages to the
