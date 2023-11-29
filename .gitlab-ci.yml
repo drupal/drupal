@@ -137,7 +137,7 @@ default:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $PERFORMANCE_TEST == "1"
 
-'DEFAULT: Test-only':
+'DEFAULT: Test-only (PHP 8.2 MySQL 8)':
   <<: [ *default-stage, *with-composer ]
   when: manual
   allow_failure: true
