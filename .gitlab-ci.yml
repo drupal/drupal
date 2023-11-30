@@ -43,7 +43,7 @@ include:
 
 variables:
   _TARGET_PHP: "8.1"
-  CONCURRENCY: 24
+  CONCURRENCY: 15
   GIT_DEPTH: "3"
 
 ################
@@ -112,6 +112,7 @@ stages:
   stage: 🪄 Lint
   variables:
     PHPCS_PHP_VERSION: "5.6"
+    KUBERNETES_CPU_REQUEST: "16"
   interruptible: true
   allow_failure: true
   retry:
@@ -203,8 +204,8 @@ stages:
     _TARGET_PHP: "7.4"
     _TARGET_DB: "sqlite-3"
 
-# 'PHP 8.1 MariaDB 10.3.22':
-#   <<: *default-stage
-#   variables:
-#    _TARGET_PHP: "8.1"
-#    _TARGET_DB: "mariadb-10.3.22"
+'PHP 8.1 MariaDB 10.3.22':
+  <<: *default-stage
+  variables:
+   _TARGET_PHP: "8.1"
+   _TARGET_DB: "mariadb-10.3.22"

@@ -77,6 +77,7 @@ stages:
     [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE
     [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE
     [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB
+  - echo "SIMPLETEST_DB = $SIMPLETEST_DB"
 
 .prepare-dirs: &prepare-dirs
   - mkdir -p ./sites/default/files ./sites/default/files/simpletest ./build/logs/junit
@@ -144,6 +145,7 @@ stages:
   variables:
     <<: *test-variables
     CONCURRENCY: "$CONCURRENCY"
+    KUBERNETES_CPU_REQUEST: "16"
 
 '🩹 Test-only changes':
   <<: [ *phpunit-artifacts, *setup-webserver, *run-test-only-tests, *default-job-settings ]
