@@ -103,6 +103,9 @@
             "Drupal\\Composer\\": "composer"
         }
     },
+    "conflict": {
+        "phpstan/phpstan": "1.10.45 || 1.10.46"
+    },
     "scripts": {
         "pre-install-cmd": "Drupal\\Composer\\Composer::ensureComposerVersion",
         "pre-update-cmd": "Drupal\\Composer\\Composer::ensureComposerVersion",
