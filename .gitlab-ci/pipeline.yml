@@ -146,7 +146,7 @@ variables:
   variables:
     TESTSUITE: PHPUnit-FunctionalJavascript
     CONCURRENCY: 15
-    KUBERNETES_CPU_REQUEST: "8"
+    KUBERNETES_CPU_REQUEST: "24"
   services:
     - <<: *with-database
     - <<: *with-chrome
@@ -175,7 +175,7 @@ variables:
 '🦉️️️ Nightwatch':
   <<: [ *with-composer-and-yarn, *default-job-settings ]
   variables:
-    KUBERNETES_CPU_REQUEST: "3"
+    KUBERNETES_CPU_REQUEST: "24"
   services:
     - <<: *with-database
     - <<: *with-chrome
