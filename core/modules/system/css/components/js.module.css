@@ -20,3 +20,16 @@
 .js .js-show {
   display: block;
 }
+
+/**
+ * Use the scripting media features for modern browsers to reduce layout shifts.
+ */
+@media (scripting: enabled) {
+  /* Extra specificity to override previous selector. */
+  .js-hide.js-hide {
+    display: none;
+  }
+  .js-show {
+    display: block;
+  }
+}
