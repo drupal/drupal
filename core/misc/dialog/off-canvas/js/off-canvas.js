@@ -279,9 +279,8 @@
         ];
 
       if (position === 'side' && width !== mainCanvasPadding) {
-        mainCanvasWrapper.style[
-          `padding-${Drupal.offCanvas.getEdge()}`
-        ] = `${width}px`;
+        mainCanvasWrapper.style[`padding-${Drupal.offCanvas.getEdge()}`] =
+          `${width}px`;
 
         $container.attr(`data-offset-${Drupal.offCanvas.getEdge()}`, width);
         displace();

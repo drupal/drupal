@@ -75,7 +75,7 @@
     "jquery-form": "4.3.x",
     "jquery-ui": "1.13.x",
     "js-cookie": "^3.0.5",
-    "jsdom": "^22.1.0",
+    "jsdom": "^23.0.0",
     "loadjs": "4.2.x",
     "minimist": "^1.2.8",
     "mkdirp": "^3.0.1",

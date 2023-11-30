@@ -193,15 +193,15 @@
           data.my[0] === 'left'
             ? -data.elemWidth
             : data.my[0] === 'right'
-            ? data.elemWidth
-            : 0;
+              ? data.elemWidth
+              : 0;
         const atOffset =
           // eslint-disable-next-line no-nested-ternary
           data.at[0] === 'left'
             ? data.targetWidth
             : data.at[0] === 'right'
-            ? -data.targetWidth
-            : 0;
+              ? -data.targetWidth
+              : 0;
         const offset = -2 * data.offset[0];
         let newOverRight;
         let newOverLeft;
@@ -247,15 +247,15 @@
         const myOffset = top
           ? -data.elemHeight
           : data.my[1] === 'bottom'
-          ? data.elemHeight
-          : 0;
+            ? data.elemHeight
+            : 0;
         const atOffset =
           // eslint-disable-next-line no-nested-ternary
           data.at[1] === 'top'
             ? data.targetHeight
             : data.at[1] === 'bottom'
-            ? -data.targetHeight
-            : 0;
+              ? -data.targetHeight
+              : 0;
         const offset = -2 * data.offset[1];
         let newOverTop;
         let newOverBottom;
@@ -462,8 +462,8 @@
         pos = regexHorizontal.test(pos[0])
           ? pos.concat(['center'])
           : regexVertical.test(pos[0])
-          ? ['center'].concat(pos)
-          : ['center', 'center'];
+            ? ['center'].concat(pos)
+            : ['center', 'center'];
       }
       pos[0] = regexHorizontal.test(pos[0]) ? pos[0] : 'center';
       pos[1] = regexVertical.test(pos[1]) ? pos[1] : 'center';
