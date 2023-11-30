@@ -103,27 +103,27 @@ stages:
     - *prepare-dirs
     - *install-drupal
     - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
-    - git fetch -vn --depth=3 "$CI_MERGE_REQUEST_PROJECT_URL" "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
+    - git fetch -vn --depth=50 "$CI_MERGE_REQUEST_PROJECT_URL" "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
     - |
       echo "ℹ️ Changes from ${TARGET_BRANCH}"
-      git diff refs/heads/${TARGET_BRANCH} --name-only
+      git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --name-only
       echo "1️⃣ Reverting non test changes"
-      if [[ $(git diff refs/heads/${TARGET_BRANCH} --diff-filter=DM --name-only|grep -Ev '.test$'|grep -v .gitlab-ci|grep -v scripts/run-tests.sh) ]]; then
-        git diff refs/heads/${TARGET_BRANCH} --diff-filter=DM --name-only|grep -Ev '.test$'|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
+      if [[ $(git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --diff-filter=DM --name-only|grep -Ev '.test$'|grep -v .gitlab-ci|grep -v scripts/run-tests.sh) ]]; then
+        git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --diff-filter=DM --name-only|grep -Ev '.test$'|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
           echo "↩️ Reverting $file"
           git checkout refs/heads/${TARGET_BRANCH} -- $file;
         done
       fi
       echo "2️⃣ Deleting new files"
-      if [[ $(git diff refs/heads/${TARGET_BRANCH} --diff-filter=A --name-only|grep -Ev '.test$'|grep -v .gitlab-ci|grep -v scripts/run-tests.sh) ]]; then
-        git diff refs/heads/${TARGET_BRANCH} --diff-filter=A --name-only|grep -Ev '.test$'|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
+      if [[ $(git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --diff-filter=A --name-only|grep -Ev '.test$'|grep -v .gitlab-ci|grep -v scripts/run-tests.sh) ]]; then
+        git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --diff-filter=A --name-only|grep -Ev '.test$'|grep -v .gitlab-ci|grep -v scripts/run-tests.sh|while read file;do
           echo "🗑️️ Deleting $file"
           git rm $file
         done
       fi
       echo "3️⃣ Running test changes for this branch"
-      if [[ $(git diff refs/heads/${TARGET_BRANCH} --name-only|grep -E '.test$') ]]; then
-        git diff refs/heads/${TARGET_BRANCH} --name-only|grep -E ".test$"|while read file;do
+      if [[ $(git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --name-only|grep -E '.test$') ]]; then
+        git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --name-only|grep -E ".test$"|while read file;do
           sudo -u www-data php ./scripts/run-tests.sh --color --concurrency "$CONCURRENCY" --url "$SIMPLETEST_BASE_URL" --verbose --fail-only --xml "$CI_PROJECT_DIR/sites/default/files/simpletest/test-only" --file "$file"
         done
       fi
