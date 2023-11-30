@@ -5,6 +5,7 @@ namespace Drupal\FunctionalTests\Update;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Site\Settings;
 
 /**
  * Tests the update path base class.
@@ -227,6 +228,13 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
    */
   public function testFixturesSetup() {
     $this->assertCount(3, $this->databaseDumpFiles);
+  }
+
+  /**
+   * Tests that settings are prepared correctly.
+   */
+  public function testPrepareSettings(): void {
+    $this->assertSame(1, Settings::get('entity_update_batch_size'));
   }
 
 }
