@@ -49,6 +49,12 @@ function translation_node_overview($node) {
         $links = language_negotiation_get_switch_links($type, $path);
         $options[] = empty($links->links[$langcode]['href']) ? l($text, $path) : l($text, $links->links[$langcode]['href'], $links->links[$langcode]);
       }
+      if (node_access('delete', $translation_node)) {
+        $text = t('delete');
+        $path = 'node/' . $translation_node->nid . '/delete';
+        $links = language_negotiation_get_switch_links($type, $path);
+        $options[] = empty($links->links[$langcode]['href']) ? l($text, $path) : l($text, $links->links[$langcode]['href'], $links->links[$langcode]);
+      }
       $status = $translation_node->status ? t('Published') : t('Not published');
       $status .= $translation_node->translate ? ' - <span class="marker">' . t('outdated') . '</span>' : '';
       if ($translation_node->nid == $tnid) {
