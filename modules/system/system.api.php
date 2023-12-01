@@ -2927,7 +2927,7 @@ function hook_file_update($file) {
     $file->filename = $file_user->name . '_' . $file->filename;
     $file->save();
 
-    watchdog('file', t('%source has been renamed to %destination', array('%source' => $old_filename, '%destination' => $file->filename)));
+    watchdog('file', '%source has been renamed to %destination', array('%source' => $old_filename, '%destination' => $file->filename));
   }
 }
 
@@ -2948,7 +2948,7 @@ function hook_file_copy($file, $source) {
     $file->filename = $file_user->name . '_' . $file->filename;
     $file->save();
 
-    watchdog('file', t('Copied file %source has been renamed to %destination', array('%source' => $source->filename, '%destination' => $file->filename)));
+    watchdog('file', 'Copied file %source has been renamed to %destination', array('%source' => $source->filename, '%destination' => $file->filename));
   }
 }
 
@@ -2969,7 +2969,7 @@ function hook_file_move($file, $source) {
     $file->filename = $file_user->name . '_' . $file->filename;
     $file->save();
 
-    watchdog('file', t('Moved file %source has been renamed to %destination', array('%source' => $source->filename, '%destination' => $file->filename)));
+    watchdog('file', 'Moved file %source has been renamed to %destination', array('%source' => $source->filename, '%destination' => $file->filename));
   }
 }
 
