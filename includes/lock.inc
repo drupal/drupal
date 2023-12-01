@@ -17,15 +17,14 @@
  * hook implementations to get and process data from all active modules, and
  * then delete the current data in the database to insert the new afterwards.
  *
- * This is a cooperative, advisory lock system. Any long-running operation
- * that could potentially be attempted in parallel by multiple requests should
- * try to acquire a lock before proceeding. By obtaining a lock, one request
- * notifies any other requests that a specific operation is in progress which
- * must not be executed in parallel.
+ * To avoid these types of conflicts, Drupal has a cooperative, advisory lock
+ * system. Any long-running operation that could potentially be attempted in
+ * parallel by multiple requests should try to acquire a lock before
+ * proceeding. By obtaining a lock, one request notifies any other requests that
+ * a specific operation is in progress which must not be executed in parallel.
  *
  * To use this API, pick a unique name for the lock. A sensible choice is the
- * name of the function performing the operation. A very simple example use of
- * this API:
+ * name of the function performing the operation. Here is a simple example:
  * @code
  * function mymodule_long_operation() {
  *   if (lock_acquire('mymodule_long_operation')) {
@@ -53,6 +52,26 @@
  *
  * lock_acquire() and lock_wait() will automatically break (delete) a lock
  * whose duration has exceeded the timeout specified when it was acquired.
+ *
+ * The following limitations in this implementation should be carefully noted:
+ * - Time: Timestamps are derived from the local system clock of the environment
+ *   the code is executing in. The orderly progression of time from this
+ *   viewpoint can be disrupted by external events such as NTP synchronization
+ *   and operator intervention. Where multiple web servers are involved in
+ *   serving the site, they will have their own independent clocks, introducing
+ *   another source of error in the time keeping process. Timeout values applied
+ *   to locks must therefore be considered approximate, and should not be relied
+ *   upon.
+ * - Uniqueness: Uniqueness of lock names is not enforced. The impact of the
+ *   use of a common lock name will depend on what processes and resources the
+ *   lock is being used to manage.
+ * - Sharing: There is limited support for resources shared across sites.
+ *   The locks are stored as rows in the semaphore table and, as such, they
+ *   have the same visibility as the table. If resources managed by a lock are
+ *   shared across sites then the semaphore table must be shared across sites
+ *   as well. This is a binary situation: either all resources are shared and
+ *   the semaphore table is shared or no resources are shared and the semaphore
+ *   table is not shared. Mixed mode operation is not supported.
  *
  * Alternative implementations of this API (such as APC) may be substituted
  * by setting the 'lock_inc' variable to an alternate include filepath. Since
