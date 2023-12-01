@@ -49,31 +49,6 @@ class ModuleUpdater extends Updater implements DrupalUpdaterInterface {
   }
 
   /**
-   * Return available database schema updates one a new version is installed.
-   */
-  public function getSchemaUpdates() {
-    require_once DRUPAL_ROOT . '/includes/install.inc';
-    require_once DRUPAL_ROOT . '/includes/update.inc';
-
-    if (_update_get_project_type($project) != 'module') {
-      return array();
-    }
-    module_load_include('install', $project);
-
-    if (!$updates = drupal_get_schema_versions($project)) {
-      return array();
-    }
-    $updates_to_run = array();
-    $modules_with_updates = update_get_update_list();
-    if ($updates = $modules_with_updates[$project]) {
-      if ($updates['start']) {
-        return $updates['pending'];
-      }
-    }
-    return array();
-  }
-
-  /**
    * Returns a list of post install actions.
    */
   public function postInstallTasks() {
