@@ -824,20 +824,29 @@ class UserPasswordResetTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Prefill the text box on incorrect login via link to password reset page.
+   * Tests the text box on incorrect login via link to password reset page.
    */
-  function testUserPasswordTextboxFilled() {
+  function testUserPasswordTextboxNotFilled() {
     $this->drupalGet('user/login');
     $edit = array(
       'name' => $this->randomName(),
       'pass' => $this->randomName(),
     );
     $this->drupalPost('user', $edit, t('Log in'));
-    $this->assertRaw(t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>',
+    // Verify we don't pass the username as a query parameter.
+    $this->assertNoRaw(t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>',
       array('@password' => url('user/password', array('query' => array('name' => $edit['name']))))));
+    $this->assertRaw(t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>',
+      array('@password' => url('user/password'))));
     unset($edit['pass']);
+    // Verify the field is empty by default.
+    $this->drupalGet('user/password');
+    $this->assertFieldByName('name', '', 'User name not found.');
+    // Ensure the name field value is not cached.
     $this->drupalGet('user/password', array('query' => array('name' => $edit['name'])));
     $this->assertFieldByName('name', $edit['name'], 'User name found.');
+    $this->drupalGet('user/password');
+    $this->assertNoFieldByName('name', $edit['name'], 'User name not found.');
   }
 
   /**

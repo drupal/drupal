@@ -2247,11 +2247,7 @@ function user_login_final_validate($form, &$form_state) {
       drupal_add_http_header('Status', '403 Forbidden');
     }
     else {
-      // Use $form_state['input']['name'] here to guarantee that we send
-      // exactly what the user typed in. $form_state['values']['name'] may have
-      // been modified by validation handlers that ran earlier than this one.
-      $query = isset($form_state['input']['name']) ? array('name' => $form_state['input']['name']) : array();
-      form_set_error('name', t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>', array('@password' => url('user/password', array('query' => $query)))));
+      form_set_error('name', t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>', array('@password' => url('user/password'))));
       watchdog('user', 'Login attempt failed for %user.', array('%user' => $form_state['values']['name']));
     }
   }
