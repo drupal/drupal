@@ -348,4 +348,16 @@ class ManageFieldsTest extends WebDriverTestBase {
     $this->assertSession()->pageTextContains('Limit must be higher than or equal to 1.');
   }
 
+  /**
+   * Tests the form validation for label field.
+   */
+  public function testLabelFieldFormValidation() {
+    $this->drupalGet('/admin/structure/types/manage/article/fields/add-field');
+    $page = $this->getSession()->getPage();
+    $page->findButton('Continue')->click();
+
+    $this->assertSession()->pageTextContains('You need to provide a label.');
+    $this->assertSession()->pageTextContains('You need to select a field type.');
+  }
+
 }
