@@ -754,6 +754,12 @@ class UserPasswordResetTestCase extends DrupalWebTestCase {
       array('%other_user' => $account->name, '%resetting_user' => $another_account->name, '!logout' => url('user/logout'))
     ));
 
+    // Verify that the invalid password reset page does not show the user name.
+    $attack_reset_url = "user/reset/" . $another_account->uid . "/1/1";
+    $this->drupalGet($attack_reset_url);
+    $this->assertNoText($another_account->name);
+    $this->assertText('The one-time login link you clicked is invalid.');
+
     // Test the link for a deleted user while logged in.
     user_delete($another_account->uid);
     $this->drupalGet($reset_url);
