@@ -254,7 +254,7 @@ class UrlHelper {
    *   TRUE or FALSE, where TRUE indicates an external path.
    */
   public static function isExternal($path) {
-    $colonpos = strpos($path, ':');
+    $colon_position = strpos($path, ':');
     // Some browsers treat \ as / so normalize to forward slashes.
     $path = str_replace('\\', '/', $path);
     // If the path starts with 2 slashes then it is always considered an
@@ -268,8 +268,8 @@ class UrlHelper {
       // Avoid calling static::stripDangerousProtocols() if there is any slash
       // (/), hash (#) or question_mark (?) before the colon (:) occurrence -
       // if any - as this would clearly mean it is not a URL.
-      || ($colonpos !== FALSE
-        && !preg_match('![/?#]!', substr($path, 0, $colonpos))
+      || ($colon_position !== FALSE
+        && !preg_match('![/?#]!', substr($path, 0, $colon_position))
         && static::stripDangerousProtocols($path) == $path);
   }
 
@@ -398,10 +398,10 @@ class UrlHelper {
     // Iteratively remove any invalid protocol found.
     do {
       $before = $uri;
-      $colonpos = strpos($uri, ':');
-      if ($colonpos > 0) {
+      $colon_position = strpos($uri, ':');
+      if ($colon_position > 0) {
         // We found a colon, possibly a protocol. Verify.
-        $protocol = substr($uri, 0, $colonpos);
+        $protocol = substr($uri, 0, $colon_position);
         // If a colon is preceded by a slash, question mark or hash, it cannot
         // possibly be part of the URL scheme. This must be a relative URL, which
         // inherits the (safe) protocol of the base document.
@@ -411,7 +411,7 @@ class UrlHelper {
         // Check if this is a disallowed protocol. Per RFC2616, section 3.2.3
         // (URI Comparison) scheme comparison must be case-insensitive.
         if (!isset($allowed_protocols[strtolower($protocol)])) {
-          $uri = substr($uri, $colonpos + 1);
+          $uri = substr($uri, $colon_position + 1);
         }
       }
     } while ($before != $uri);

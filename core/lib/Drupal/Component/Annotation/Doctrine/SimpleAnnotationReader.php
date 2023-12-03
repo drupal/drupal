@@ -122,9 +122,9 @@ final class SimpleAnnotationReader implements Reader
      */
     public function getClassAnnotation(\ReflectionClass $class, $annotationName)
     {
-        foreach ($this->getClassAnnotations($class) as $annot) {
-            if ($annot instanceof $annotationName) {
-                return $annot;
+        foreach ($this->getClassAnnotations($class) as $annotation) {
+            if ($annotation instanceof $annotationName) {
+                return $annotation;
             }
         }
 
@@ -136,9 +136,9 @@ final class SimpleAnnotationReader implements Reader
      */
     public function getMethodAnnotation(\ReflectionMethod $method, $annotationName)
     {
-        foreach ($this->getMethodAnnotations($method) as $annot) {
-            if ($annot instanceof $annotationName) {
-                return $annot;
+        foreach ($this->getMethodAnnotations($method) as $annotation) {
+            if ($annotation instanceof $annotationName) {
+                return $annotation;
             }
         }
 
@@ -150,9 +150,9 @@ final class SimpleAnnotationReader implements Reader
      */
     public function getPropertyAnnotation(\ReflectionProperty $property, $annotationName)
     {
-        foreach ($this->getPropertyAnnotations($property) as $annot) {
-            if ($annot instanceof $annotationName) {
-                return $annot;
+        foreach ($this->getPropertyAnnotations($property) as $annotation) {
+            if ($annotation instanceof $annotationName) {
+                return $annotation;
             }
         }
 
