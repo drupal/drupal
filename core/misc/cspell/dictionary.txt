@@ -16,7 +16,6 @@ alphadecimal
 alternatif
 amphibius
 ampm
-annot
 anonyme
 anothermodule
 antilop
@@ -47,7 +46,6 @@ autocreation
 autoescape
 autoescaped
 autoescaping
-autofix
 autogenerator
 autoloadable
 autoloaded
@@ -165,7 +163,6 @@ cnenzrgre
 codesniffer
 colgroups
 colinodell
-colonpos
 colour
 colspans
 columnschange
@@ -356,7 +353,6 @@ fouc
 fourcol
 fozzie
 fraîche
-frombracket
 frontpage
 fudgy
 fulldata
@@ -645,7 +641,6 @@ placeholdered
 placeholdering
 plid
 pluggable
-pluralforms
 plusthick
 poink
 porterstemmer
@@ -941,7 +936,6 @@ tongatapu
 toolkits
 toolongdomainexampledomainexampledomainexampledomainexampledomain
 toplevel
-topop
 torder
 totalcount
 touchevents

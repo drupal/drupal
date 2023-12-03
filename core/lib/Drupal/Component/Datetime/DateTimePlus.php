@@ -246,15 +246,15 @@ class DateTimePlus {
     // Tries to create a date from the format and use it if possible.
     // A regular try/catch won't work right here, if the value is
     // invalid it doesn't return an exception.
-    $datetimeplus = new static('', $timezone, $settings);
+    $datetime_plus = new static('', $timezone, $settings);
 
-    $date = \DateTime::createFromFormat($format, $time, $datetimeplus->getTimezone());
+    $date = \DateTime::createFromFormat($format, $time, $datetime_plus->getTimezone());
     if (!$date instanceof \DateTime) {
       throw new \InvalidArgumentException('The date cannot be created from a format.');
     }
     else {
-      $datetimeplus->setTimestamp($date->getTimestamp());
-      $datetimeplus->setTimezone($date->getTimezone());
+      $datetime_plus->setTimestamp($date->getTimestamp());
+      $datetime_plus->setTimezone($date->getTimezone());
 
       // Functions that parse date is forgiving, it might create a date that
       // is not exactly a match for the provided value, so test for that by
@@ -265,7 +265,7 @@ class DateTimePlus {
         throw new \UnexpectedValueException('The created date does not match the input value.');
       }
     }
-    return $datetimeplus;
+    return $datetime_plus;
   }
 
   /**

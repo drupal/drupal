@@ -574,14 +574,14 @@ function drupal_install_system($install_state) {
  *   An optional bitmask created from various FILE_* constants.
  * @param $type
  *   The type of file. Can be file (default), dir, or link.
- * @param bool $autofix
+ * @param bool $auto_fix
  *   (optional) Determines whether to attempt fixing the permissions according
  *   to the provided $mask. Defaults to TRUE.
  *
  * @return bool
  *   TRUE on success or FALSE on failure. A message is set for the latter.
  */
-function drupal_verify_install_file($file, $mask = NULL, $type = 'file', $autofix = TRUE) {
+function drupal_verify_install_file($file, $mask = NULL, $type = 'file', $auto_fix = TRUE) {
   $return = TRUE;
   // Check for files that shouldn't be there.
   if (isset($mask) && ($mask & FILE_NOT_EXIST) && file_exists($file)) {
@@ -603,7 +603,7 @@ function drupal_verify_install_file($file, $mask = NULL, $type = 'file', $autofi
         switch ($current_mask) {
           case FILE_EXIST:
             if (!file_exists($file)) {
-              if ($type == 'dir' && $autofix) {
+              if ($type == 'dir' && $auto_fix) {
                 drupal_install_mkdir($file, $mask);
               }
               if (!file_exists($file)) {
@@ -651,7 +651,7 @@ function drupal_verify_install_file($file, $mask = NULL, $type = 'file', $autofi
       }
     }
   }
-  if (!$return && $autofix) {
+  if (!$return && $auto_fix) {
     return drupal_install_fix_file($file, $mask);
   }
   return $return;
