@@ -992,13 +992,13 @@ class ConfigImporter {
     else {
       $config = new Config($name, $this->storageComparer->getTargetStorage($collection), $this->eventDispatcher, $this->typedConfigManager);
     }
+    if ($old_data = $this->storageComparer->getTargetStorage($collection)->read($name)) {
+      $config->initWithData($old_data);
+    }
     if ($op == 'delete') {
       $config->delete();
     }
     else {
-      if ($old_data = $this->storageComparer->getTargetStorage($collection)->read($name)) {
-        $config->initWithData($old_data);
-      }
       $data = $this->storageComparer->getSourceStorage($collection)->read($name);
       $config->setData($data ? $data : []);
       $config->save();
