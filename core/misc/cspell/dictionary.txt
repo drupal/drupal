@@ -168,7 +168,6 @@ colspans
 columnschange
 comida
 commenters
-commontest
 complote
 compositionend
 compositionstart
@@ -179,7 +178,6 @@ contentblock
 contextuals
 controlgroup
 conv
-coretest
 corge
 countquery
 cpio
@@ -288,9 +286,6 @@ endcode
 endembed
 endlink
 endmacro
-endofheader
-endofscript
-endpo
 endset
 endtrans
 enim
@@ -507,8 +502,6 @@ milli
 mimetypes
 minifyzombies
 minusthick
-missingkey
-missingkeys
 mlfr
 mlid
 mocktail
