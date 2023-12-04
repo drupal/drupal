@@ -404,7 +404,7 @@ class DbDumpCommand extends DbCommandBase {
     // The template contains an instruction for the file to be ignored by PHPCS.
     // This is because the files can be huge and coding standards are
     // irrelevant.
-    $script = <<<'ENDOFSCRIPT'
+    $script = <<<'END_OF_SCRIPT'
 <?php
 // phpcs:ignoreFile
 /**
@@ -430,7 +430,7 @@ if ($connection->databaseType() === 'mysql') {
 if ($connection->databaseType() === 'mysql') {
   $connection->query("SET sql_mode = '$sql_mode'");
 }
-ENDOFSCRIPT;
+END_OF_SCRIPT;
     return $script;
   }
 

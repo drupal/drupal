@@ -65,7 +65,7 @@ abstract class HelpTopicTranslatedTestBase extends BrowserTestBase {
     // Create a po file so we don't attempt to download one from
     // localize.drupal.org and to have a test translation that will not change.
     \Drupal::service('file_system')->mkdir($this->publicFilesDirectory . '/translations', NULL, TRUE);
-    $contents = <<<ENDPO
+    $contents = <<<PO
 msgid ""
 msgstr ""
 
@@ -78,7 +78,7 @@ msgstr "Übersetzung testen."
 msgid "Non-word-item to translate."
 msgstr "Non-word-german sdfwedrsdf."
 
-ENDPO;
+PO;
     $version = explode('.', \Drupal::VERSION)[0] . '.0.0';
     file_put_contents($this->publicFilesDirectory . "/translations/drupal-{$version}.de.po", $contents);
     return $parameters;

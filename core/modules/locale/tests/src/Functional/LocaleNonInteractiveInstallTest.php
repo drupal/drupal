@@ -46,14 +46,14 @@ class LocaleNonInteractiveInstallTest extends BrowserTestBase {
     // Create a po file so we don't attempt to download one from
     // localize.drupal.org and to have a test translation that will not change.
     \Drupal::service('file_system')->mkdir($this->publicFilesDirectory . '/translations', NULL, TRUE);
-    $contents = <<<ENDPO
+    $contents = <<<PO
 msgid ""
 msgstr ""
 
 msgid "Enter the password that accompanies your username."
 msgstr "Geben sie das Passwort für ihren Benutzernamen ein."
 
-ENDPO;
+PO;
     $version = $this->getVersionStringToTest();
     file_put_contents($this->publicFilesDirectory . "/translations/drupal-{$version}.de.po", $contents);
     return $parameters;

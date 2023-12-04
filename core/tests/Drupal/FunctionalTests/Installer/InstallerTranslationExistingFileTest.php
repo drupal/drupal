@@ -32,10 +32,10 @@ class InstallerTranslationExistingFileTest extends InstallerTestBase {
   protected function setUpLanguage() {
     // Place custom local translations in the translations directory.
     mkdir(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations', 0777, TRUE);
-    $po_contents = <<<ENDPO
+    $po_contents = <<<PO
 msgid ""
 msgstr ""
-ENDPO;
+PO;
     // Create a misnamed translation file that
     // \Drupal\Core\StringTranslation\Translator\FileTranslation::findTranslationFiles()
     // will not find.
