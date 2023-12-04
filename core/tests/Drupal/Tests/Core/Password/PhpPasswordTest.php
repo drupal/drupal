@@ -112,7 +112,7 @@ class PhpPasswordTest extends UnitTestCase {
 
     // Check a string of 3-byte UTF-8 characters, 510 byte long password is
     // allowed.
-    $len = floor(PasswordInterface::PASSWORD_MAX_LENGTH / 3);
+    $len = (int) floor(PasswordInterface::PASSWORD_MAX_LENGTH / 3);
     $diff = PasswordInterface::PASSWORD_MAX_LENGTH % 3;
     $passwords['utf8'] = [str_repeat('€', $len), TRUE];
     // 512 byte long password is allowed.

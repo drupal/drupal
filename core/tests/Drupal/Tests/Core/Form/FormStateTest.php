@@ -368,10 +368,10 @@ class FormStateTest extends UnitTestCase {
     $this->assertFalse($form_state->hasTemporaryValue('rainbow_sparkles'));
     $form_state->setTemporaryValue('rainbow_sparkles', 'yes please');
     $this->assertSame($form_state->getTemporaryValue('rainbow_sparkles'), 'yes please');
-    $this->assertTrue($form_state->hasTemporaryValue('rainbow_sparkles'), TRUE);
+    $this->assertTrue($form_state->hasTemporaryValue('rainbow_sparkles'));
     $form_state->setTemporaryValue(['rainbow_sparkles', 'magic_ponies'], 'yes please');
     $this->assertSame($form_state->getTemporaryValue(['rainbow_sparkles', 'magic_ponies']), 'yes please');
-    $this->assertTrue($form_state->hasTemporaryValue(['rainbow_sparkles', 'magic_ponies']), TRUE);
+    $this->assertTrue($form_state->hasTemporaryValue(['rainbow_sparkles', 'magic_ponies']));
   }
 
   /**

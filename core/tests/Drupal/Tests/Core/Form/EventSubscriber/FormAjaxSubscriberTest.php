@@ -195,7 +195,7 @@ class FormAjaxSubscriberTest extends UnitTestCase {
     $container->set('renderer', $renderer);
     \Drupal::setContainer($container);
 
-    $exception = new BrokenPostRequestException(32 * 1e6);
+    $exception = new BrokenPostRequestException((int) (32 * 1e6));
     $request = new Request([FormBuilderInterface::AJAX_FORM_REQUEST => TRUE]);
 
     $event = new ExceptionEvent($this->httpKernel, $request, HttpKernelInterface::MAIN_REQUEST, $exception);
