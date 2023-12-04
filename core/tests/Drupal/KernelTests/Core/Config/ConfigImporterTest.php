@@ -918,6 +918,16 @@ class ConfigImporterTest extends KernelTestBase {
     $this->assertSame(['key' => 'bar'], $event['current_config_data']);
     $this->assertSame(['key' => 'bar'], $event['raw_config_data']);
     $this->assertSame(['key' => 'foo'], $event['original_config_data']);
+
+    // Import the configuration that deletes 'config_events_test.test'.
+    $this->container->get('config.storage.sync')->delete('config_events_test.test');
+    $this->configImporter()->import();
+    $this->assertFalse($this->container->get('config.storage')->exists('config_events_test.test'));
+    $event = \Drupal::state()->get('config_events_test.event', []);
+    $this->assertSame(ConfigEvents::DELETE, $event['event_name']);
+    $this->assertSame([], $event['current_config_data']);
+    $this->assertSame([], $event['raw_config_data']);
+    $this->assertSame(['key' => 'bar'], $event['original_config_data']);
   }
 
   /**
