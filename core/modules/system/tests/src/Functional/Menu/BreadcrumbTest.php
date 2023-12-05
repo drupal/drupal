@@ -23,7 +23,14 @@ class BreadcrumbTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['menu_test', 'block'];
+  protected static $modules = [
+    'block',
+    'dblog',
+    'field_ui',
+    'filter_test',
+    'menu_test',
+    'olivero_test',
+  ];
 
   /**
    * An administrative user.
@@ -40,11 +47,9 @@ class BreadcrumbTest extends BrowserTestBase {
   protected $webUser;
 
   /**
-   * Test paths in the Standard profile.
-   *
-   * @var string
+   * {@inheritdoc}
    */
-  protected $profile = 'standard';
+  protected $defaultTheme = 'olivero';
 
   /**
    * {@inheritdoc}
@@ -52,6 +57,11 @@ class BreadcrumbTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    // Install 'claro' and configure it as administrative theme.
+    $this->container->get('theme_installer')->install(['claro']);
+    $this->config('system.theme')->set('admin', 'claro')->save();
+
+    $this->config('system.site')->set('page.front', '/node')->save();
     $perms = array_keys(\Drupal::service('user.permissions')->getPermissions());
     $this->adminUser = $this->drupalCreateUser($perms);
     $this->drupalLogin($this->adminUser);
@@ -156,12 +166,10 @@ class BreadcrumbTest extends BrowserTestBase {
     $this->assertBreadcrumb("admin/config/content/formats/manage/$format_id/disable", $trail);
 
     // Verify node breadcrumbs (without menu link).
-    $node1 = $this->drupalCreateNode();
+    $node1 = $this->drupalCreateNode(['type' => $type]);
     $nid1 = $node1->id();
     $trail = $home;
     $this->assertBreadcrumb("node/$nid1", $trail);
-    // Also verify that the node does not appear elsewhere (e.g., menu trees).
-    $this->assertSession()->linkNotExists($node1->getTitle());
     // Also verify that the node does not appear elsewhere (e.g., menu trees).
     $this->assertSession()->linkNotExists($node1->getTitle());
 
