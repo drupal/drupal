@@ -448,6 +448,15 @@ class FileValidatorTest extends DrupalWebTestCase {
       $this->assertTrue($info['height'] <= 5, 'Image scaled to correct height.', 'File');
 
       drupal_unlink('temporary://druplicon.png');
+
+      // Combine maximum and minimum size.
+      copy('misc/druplicon.png', 'temporary://druplicon.png');
+      $this->image->uri = 'temporary://druplicon.png';
+
+      $errors = file_validate_image_resolution($this->image, '10x5', '5x5');
+      $this->assertEqual(count($errors), 1, 'Got an error for an image that was too small after resizing to maximum size.', 'File');
+
+      drupal_unlink('temporary://druplicon.png');
     }
     else {
       // TODO: should check that the error is returned if no toolkit is available.
