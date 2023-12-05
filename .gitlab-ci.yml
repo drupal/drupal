@@ -132,7 +132,6 @@ stages:
     reports:
       codequality: phpcs-quality-report.json
   rules:
-    - <<: *run-on-commit
     - <<: *run-on-mr
   before_script:
     - echo "{}" > composer.json
