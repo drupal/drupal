@@ -38,11 +38,16 @@
           $dialog.trigger('dialogButtonsChange');
         }
 
-        // If the body element has focus, it means focus was effectively lost.
-        // In these instances, force focus on the dialog.
-        if (document.activeElement === document.body) {
-          $dialog.dialog('widget').trigger('focus');
-        }
+        setTimeout(function () {
+          // Account for pre-existing focus handling that may have already moved
+          // the focus inside the dialog.
+          if (!$dialog[0].contains(document.activeElement)) {
+            // Move focus to the first focusable element in the next event loop
+            // to allow dialog buttons to be changed first.
+            $dialog.dialog('instance')._focusedElement = null;
+            $dialog.dialog('instance')._focusTabbable();
+          }
+        }, 0);
       }
 
       const originalClose = settings.dialog.close;
