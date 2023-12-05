@@ -1,0 +1,6 @@
+name = "Field API Schema Alter Test"
+description = "Support module for the Field API schema alter tests."
+core = 7.x
+package = Testing
+version = VERSION
+hidden = TRUE

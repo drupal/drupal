@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the field_test_schema_alter module.
+ */
+
+/**
+ * Implements hook_field_schema_alter().
+ */
+function field_test_schema_alter_field_schema_alter(&$schema, $field) {
+  if ($field['type'] == 'test_field') {
+    // Alter the field type.
+    $schema['columns']['value']['type'] = 'float';
+    // Add an additional column of data.
+    $schema['columns']['additional_column'] = array(
+      'description' => "Additional column added to image field table.",
+      'type' => 'varchar',
+      'length' => 128,
+      'not null' => FALSE,
+    );
+  }
+}
