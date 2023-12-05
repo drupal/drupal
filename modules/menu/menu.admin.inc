@@ -346,10 +346,15 @@ function menu_edit_item($form, &$form_state, $type, $item, $menu) {
   );
 
   // Generate a list of possible parents (not including this link or descendants).
-  $options = menu_parent_options(menu_get_menus(), $item);
+  if ($type == 'add') {
+    $options = menu_parent_options(array($menu['menu_name'] => t($menu['title'])), $item);
+  }
+  else {
+    $options = menu_parent_options(menu_get_menus(), $item);
+  }
   $default = $item['menu_name'] . ':' . $item['plid'];
   if (!isset($options[$default])) {
-    $default = 'navigation:0';
+    $default = $item['menu_name'] . ':0';
   }
   $form['parent'] = array(
     '#type' => 'select',

@@ -328,6 +328,7 @@ class MenuTestCase extends DrupalWebTestCase {
     // View add menu link page.
     $this->drupalGet("admin/structure/menu/manage/$menu_name/add");
     $this->assertResponse(200);
+    $this->assertNoOption('edit-parent', 'management:0');
 
     $title = '!link_' . $this->randomName(16);
     $edit = array(
@@ -410,10 +411,13 @@ class MenuTestCase extends DrupalWebTestCase {
   function moveMenuLink($item, $plid, $menu_name) {
     $mlid = $item['mlid'];
 
+    $this->drupalGet("admin/structure/menu/item/$mlid/edit");
+    $this->assertOption('edit-parent', 'management:0');
+
     $edit = array(
       'parent' => $menu_name . ':' . $plid,
     );
-    $this->drupalPost("admin/structure/menu/item/$mlid/edit", $edit, t('Save'));
+    $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertResponse(200);
   }
 
@@ -678,6 +682,45 @@ class MenuTestCase extends DrupalWebTestCase {
     $this->assertNoText($title, 'Menu link to unpublished node is not visible to users without the "bypass node access" permission.');
   }
 
+  /**
+   * Asserts that a select option in the current page does not exist.
+   *
+   * @param $id
+   *   Id of select field to assert.
+   * @param $option
+   *   Option to assert.
+   * @param $message
+   *   Message to display.
+   * @return
+   *   TRUE on pass, FALSE on fail.
+   *
+   * @todo move to simpletest drupal_web_test_case.php.
+   */
+  protected function assertNoOption($id, $option, $message = '') {
+    $selects = $this->xpath('//select[@id=:id]', array(':id' => $id));
+    $options = $this->xpath('//select[@id=:id]//option[@value=:option]', array(':id' => $id, ':option' => $option));
+    return $this->assertTrue(isset($selects[0]) && !isset($options[0]), $message ? $message : t('Option @option for field @id does not exist.', array('@option' => $option, '@id' => $id)), t('Browser'));
+  }
+
+  /**
+   * Asserts that a select option in the current page exist.
+   *
+   * @param $id
+   *   Id of select field to assert.
+   * @param $option
+   *   Option to assert.
+   * @param $message
+   *   Message to display.
+   * @return
+   *   TRUE on pass, FALSE on fail.
+   *
+   * @todo move to simpletest drupal_web_test_case.php.
+   */
+  protected function assertOption($id, $option, $message = '') {
+    $selects = $this->xpath('//select[@id=:id]', array(':id' => $id));
+    $options = $this->xpath('//select[@id=:id]//option[@value=:option]', array(':id' => $id, ':option' => $option));
+    return $this->assertTrue(isset($selects[0]) && isset($options[0]), $message ? $message : t('Option @option for field @id does exist.', array('@option' => $option, '@id' => $id)), t('Browser'));
+  }
 }
 
 /**
