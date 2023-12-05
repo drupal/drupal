@@ -1660,7 +1660,7 @@ function _filter_xss_attributes($attr) {
     switch ($mode) {
       case 0:
         // Attribute name, href for instance.
-        if (preg_match('/^([-a-zA-Z]+)/', $attr, $match)) {
+        if (preg_match('/^([-a-zA-Z][-a-zA-Z0-9]*)/', $attr, $match)) {
           $attrname = strtolower($match[1]);
           $skip = (
             $attrname == 'style' ||
@@ -1670,7 +1670,7 @@ function _filter_xss_attributes($attr) {
             strlen($attrname) > 96
           );
           $working = $mode = 1;
-          $attr = preg_replace('/^[-a-zA-Z]+/', '', $attr);
+          $attr = preg_replace('/^[-a-zA-Z][-a-zA-Z0-9]*/', '', $attr);
         }
         break;
 

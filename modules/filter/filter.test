@@ -1160,6 +1160,9 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
 
     $f = filter_xss("Who&amp;amp;#039; Online");
     $this->assertNormalized($f, "who&amp;#039; online", 'HTML filter -- double encoded html entity number');
+
+    $f = filter_xss('<a data-a2a-url="foo">', array('a'));
+    $this->assertEqual($f, '<a data-a2a-url="foo">', 'Numeric data attribute is not stripped out');
   }
 
   /**
