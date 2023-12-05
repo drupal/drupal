@@ -534,6 +534,19 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     cache_clear_all();
     _locale_rebuild_js($langcode);
     $this->assertTrue($result = file_exists($js_file), format_string('JavaScript file rebuilt: %file', array('%file' => $result ? $js_file : 'not found')));
+
+    // Test if JavaScript translation contains a custom string override.
+    $string_override = $this->randomName();
+    variable_set('locale_custom_strings_' . $langcode, array('' => array($string_override => $string_override)));
+    _locale_rebuild_js($langcode);
+    $file = db_select('languages', 'l')
+      ->fields('l', array('javascript'))
+      ->condition('language', $langcode)
+      ->execute()
+      ->fetchObject();
+    $js_file = 'public://' . variable_get('locale_js_directory', 'languages') . '/' . $langcode . '_' . $file->javascript . '.js';
+    $content = file_get_contents($js_file);
+    $this->assertTrue(strpos($content, '"' . $string_override . '":"' . $string_override . '"') > 0);
   }
 
   /**

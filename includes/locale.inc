@@ -2058,6 +2058,14 @@ function _locale_rebuild_js($langcode = NULL) {
     $translations[$data->context][$data->source] = $data->translation;
   }
 
+  // Include custom string overrides.
+  $custom_strings = variable_get('locale_custom_strings_' . $language->language, array());
+  foreach ($custom_strings as $context => $strings) {
+    foreach ($strings as $source => $translation) {
+      $translations[$context][$source] = $translation;
+    }
+  }
+
   // Construct the JavaScript file, if there are translations.
   $data_hash = NULL;
   $data = $status = '';
