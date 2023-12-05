@@ -347,6 +347,7 @@ function image_field_widget_form(&$form, &$form_state, $field, $instance, $langc
     $extensions = isset($elements[$delta]['#upload_validators']['file_validate_extensions'][0]) ? $elements[$delta]['#upload_validators']['file_validate_extensions'][0] : implode(' ', $supported_extensions);
     $extensions = array_intersect(explode(' ', $extensions), $supported_extensions);
     $elements[$delta]['#upload_validators']['file_validate_extensions'][0] = implode(' ', $extensions);
+    $elements[$delta]['#upload_validators']['file_validate_is_image'] = array();
 
     // Add all extra functionality provided by the image widget.
     $elements[$delta]['#process'][] = 'image_field_widget_process';
