@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\BuildTests\Framework\Tests;
 
 use Drupal\BuildTests\QuickStart\QuickStartTestBase;
