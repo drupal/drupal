@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\BuildTests\Framework;
 
 use PHPUnit\Framework\SkippedTestError;
