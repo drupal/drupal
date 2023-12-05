@@ -460,7 +460,7 @@ function _mime_header_decode($matches) {
  *   The input $text, with all HTML entities decoded once.
  */
 function decode_entities($text) {
-  return html_entity_decode($text, ENT_QUOTES, 'UTF-8');
+  return html_entity_decode((string) $text, ENT_QUOTES, 'UTF-8');
 }
 
 /**
