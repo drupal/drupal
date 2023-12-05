@@ -2874,6 +2874,49 @@ class FieldCrudTestCase extends FieldTestCase {
   }
 }
 
+/**
+ * Tests that the field schema can be altered with hook_field_schema_alter().
+ */
+class FieldSchemaAlterTestCase extends FieldTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Field schema alteration tests',
+      'description' => 'Alter the schema for a given type of field.',
+      'group' => 'Field API',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('field_test', 'field_test_schema_alter');
+  }
+
+  /**
+   * Tests a hook_field_schema_alter() implementation.
+   *
+   * @see field_test_schema_alter_field_schema_alter()
+   */
+  function testImageFieldSchemaAlter() {
+    $test_field = array(
+      'field_name' => drupal_strtolower($this->randomName()),
+      'type' => 'test_field',
+    );
+    field_create_field($test_field);
+    $test_field_name = $test_field['field_name'];
+    $test_field_instance_settings = array(
+      'field_name' => $test_field_name,
+      'entity_type' => 'test_entity',
+      'bundle' => 'test_bundle',
+      'deleted' => 0,
+    );
+    $test_field_instance = field_create_instance($test_field_instance_settings);
+
+    $table_name = _field_sql_storage_tablename($test_field_instance);
+    $schema = drupal_get_schema($table_name, TRUE);
+    $this->assertEqual('float', $schema['fields'][$test_field_name .'_value']['type']);
+    $this->assertTrue(db_field_exists($table_name, $test_field_name .'_additional_column'));
+  }
+}
+
 class FieldInstanceCrudTestCase extends FieldTestCase {
   protected $field;
   protected $instance_definition;

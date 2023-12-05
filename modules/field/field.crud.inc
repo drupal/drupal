@@ -21,6 +21,26 @@
  */
 
 /**
+ * Retrieves the schema for a field.
+ *
+ * @param array $field
+ *   The field array to get the schema definition against.
+ * @return array
+ *   The field schema definition array.
+ */
+function field_retrieve_schema($field) {
+  // Make sure the installation API is available.
+  include_once DRUPAL_ROOT . '/includes/install.inc';
+  module_load_all_includes('install');
+  $schema = (array) module_invoke($field['module'], 'field_schema', $field);
+  $schema += array('columns' => array(), 'indexes' => array(), 'foreign keys' => array());
+  // Give other modules a chance to alter this definition.
+  // @see hook_field_schema_alter()
+  drupal_alter('field_schema', $schema, $field);
+  return $schema;
+}
+
+/**
  * Creates a field.
  *
  * This function does not bind the field to any bundle; use
@@ -130,9 +150,7 @@ function field_create_field($field) {
   $field['storage']['module'] = $storage_type['module'];
   $field['storage']['active'] = 1;
   // Collect storage information.
-  module_load_install($field['module']);
-  $schema = (array) module_invoke($field['module'], 'field_schema', $field);
-  $schema += array('columns' => array(), 'indexes' => array(), 'foreign keys' => array());
+  $schema = field_retrieve_schema($field);
   // 'columns' are hardcoded in the field type.
   $field['columns'] = $schema['columns'];
   // 'foreign keys' are hardcoded in the field type.
@@ -242,9 +260,7 @@ function field_update_field($field) {
 
   // Collect the new storage information, since what is in
   // $prior_field may no longer be right.
-  module_load_install($field['module']);
-  $schema = (array) module_invoke($field['module'], 'field_schema', $field);
-  $schema += array('columns' => array(), 'indexes' => array(), 'foreign keys' => array());
+  $schema = field_retrieve_schema($field);
   // 'columns' are hardcoded in the field type.
   $field['columns'] = $schema['columns'];
   // 'foreign keys' are hardcoded in the field type.
@@ -388,9 +404,7 @@ function field_read_fields($params = array(), $include_additional = array()) {
     module_invoke_all('field_read_field', $field);
 
     // Populate storage information.
-    module_load_install($field['module']);
-    $schema = (array) module_invoke($field['module'], 'field_schema', $field);
-    $schema += array('columns' => array(), 'indexes' => array());
+    $schema = field_retrieve_schema($field);
     $field['columns'] = $schema['columns'];
 
     $field_name = $field['field_name'];
@@ -469,6 +483,7 @@ function field_delete_field($field_name) {
  * @throws FieldException
  *
  * See: @link field Field API data structures @endlink.
+ * @see hook_field_schema_alter()
  */
 function field_create_instance($instance) {
   $field = field_read_field($instance['field_name']);
