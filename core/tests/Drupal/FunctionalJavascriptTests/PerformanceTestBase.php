@@ -18,6 +18,11 @@ class PerformanceTestBase extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
+  protected static $modules = ['performance_test'];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->doSetUpTasks();

@@ -2205,7 +2205,9 @@ abstract class Connection {
    *   The debug backtrace.
    */
   protected function getDebugBacktrace(): array {
-    return debug_backtrace();
+    // @todo: allow a backtrace including all arguments as an option.
+    // See https://www.drupal.org/project/drupal/issues/3401906
+    return debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
   }
 
 }
