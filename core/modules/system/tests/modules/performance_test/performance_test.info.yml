@@ -1,0 +1,5 @@
+name: 'Performance test'
+type: module
+description: 'Supports performance testing with PerformanceTestTrait'
+package: Testing
+version: VERSION

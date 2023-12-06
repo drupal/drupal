@@ -1,0 +1,9 @@
+services:
+  Drupal\performance_test\PerformanceDataCollector:
+    tags:
+      - { name: event_subscriber }
+      - { name: needs_destruction, priority: -1000 }
+  Drupal\performance_test\DatabaseEventEnabler:
+    arguments: ['@database']
+    tags:
+      - { name: http_middleware, priority: 1000, responder: true }
