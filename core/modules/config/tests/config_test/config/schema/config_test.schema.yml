@@ -206,3 +206,9 @@ config_test.validation:
             callback: [\Drupal\config_test\ConfigValidation, validateGiraffes]
     uuid:
       type: uuid
+
+    # @see \Drupal\KernelTests\Config\TypedConfigTest::testNotBlankInteractionWithNotNull()
+    string__not_blank:
+      type: string
+      constraints:
+        NotBlank: {}
