@@ -51,7 +51,7 @@
         "symfony/polyfill-mbstring": "~v1.28.0",
         "symfony/polyfill-php83": "~v1.28.0",
         "symfony/process": "~v6.4.0",
-        "symfony/psr-http-message-bridge": "~v2.3.1",
+        "symfony/psr-http-message-bridge": "~v6.4.0",
         "symfony/routing": "~v6.4.0",
         "symfony/serializer": "~v6.4.0",
         "symfony/service-contracts": "~v3.4.0",
