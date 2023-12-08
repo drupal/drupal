@@ -75,6 +75,9 @@ class FieldBlockTest extends WebDriverTestBase {
     $this->clickLink('Place block');
     $assert_session->assertWaitOnAjaxRequest();
 
+    // Ensure that focus is on the first focusable element on modal.
+    $this->assertJsCondition('document.activeElement === document.getElementsByClassName("block-filter-text")[0]');
+
     // Ensure that fields without any formatters are not available.
     $assert_session->pageTextNotContains('Password');
     // Ensure that non-display-configurable fields are not available.

@@ -104,9 +104,6 @@ class MediaLibrarySelectForm extends FieldPluginBase {
         'query' => $query,
       ],
       'callback' => [static::class, 'updateWidget'],
-      // The AJAX system automatically moves focus to the first tabbable
-      // element of the modal, so we need to disable refocus on the button.
-      'disable-refocus' => TRUE,
     ];
 
     $form['actions']['submit']['#value'] = $this->t('Insert selected');
