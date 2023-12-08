@@ -455,3 +455,14 @@ function menu_ui_system_breadcrumb_alter(Breadcrumb $breadcrumb, RouteMatchInter
     }
   }
 }
+
+/**
+ * Implements hook_theme().
+ */
+function menu_ui_theme(): array {
+  return [
+    'menu_link_form' => [
+      'render element' => 'form',
+    ],
+  ];
+}

@@ -1,0 +1,32 @@
+{#
+/**
+ * @file
+ * Theme override for a menu link form.
+ *
+ * Two-column template for the menu link add/edit form.
+ *
+ * This template will be used when a menu link form specifies
+ * 'menu_link_form' as its #theme callback. Otherwise, by default,
+ * menu_link add/edit forms will be themed by form.html.twig.
+ *
+ * Available variables:
+ * - form: The menu link add/edit form.
+ *
+ * @see claro_form_menu_link_content_form_alter()
+ */
+#}
+{% extends '@claro/form/form-two-columns.html.twig' %}
+{% block main %}
+  {{ form|without('advanced', 'menu_parent', 'actions') }}
+{% endblock %}
+
+{% block secondary %}
+<div class="entity-meta">
+  {{ form.menu_parent }}
+  {{ form.advanced }}
+</div>
+{% endblock %}
+
+{% block footer %}
+  {{ form.actions }}
+{% endblock %}

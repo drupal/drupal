@@ -77,13 +77,11 @@ global-styling:
     # attached, therefore it is always attached.
     - core/drupal.touchevents-test
 
-node-form:
+form-two-columns:
   version: VERSION
   css:
     layout:
-      css/layout/node-add.css: {}
-  dependencies:
-    - node/form
+      css/layout/form-two-columns.css: {}
 
 maintenance-page:
   version: VERSION
