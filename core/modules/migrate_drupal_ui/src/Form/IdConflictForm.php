@@ -142,14 +142,14 @@ class IdConflictForm extends MigrateUpgradeFormBase {
    */
   protected function i18nWarningForm(array &$form, array $conflicts) {
     $form['i18n'] = [
-      '#title' => $this->t('There is translated content of these types:'),
+      '#title' => $this->t('Check whether there is translated content of these types:'),
       '#theme' => 'item_list',
       '#items' => $this->formatConflicts($conflicts),
     ];
 
     $form['i18n_warning'] = [
       '#type' => 'markup',
-      '#markup' => '<p>' . $this->t('It looks like you are migrating translated content from your old site. Possible ID conflicts for translations are not automatically detected in the current version of Drupal. Refer to the <a target="_blank" href=":id-conflicts-handbook">upgrade handbook</a> for instructions on how to avoid ID conflicts with translated content.', [':id-conflicts-handbook' => 'https://www.drupal.org/docs/8/upgrade/known-issues-when-upgrading-from-drupal-6-or-7-to-drupal-8#id_conflicts']) . '</p>',
+      '#markup' => '<p>' . $this->t('Possible ID conflicts for translations are not automatically detected in the current version of Drupal. Refer to the <a target="_blank" href=":id-conflicts-handbook">Upgrading Drupal handbook</a> for instructions on how to avoid ID conflicts with translated content.', [':id-conflicts-handbook' => 'https://www.drupal.org/docs/upgrading-drupal/upgrading-from-drupal-6-or-drupal-7/known-issues-when-upgrading-from-drupal-6-or-7#id_conflicts']) . '</p>',
     ];
 
     return $form;
