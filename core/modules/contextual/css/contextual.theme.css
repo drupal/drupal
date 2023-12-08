@@ -97,6 +97,7 @@
   background-color: #fff;
   font-family: sans-serif;
   font-size: small;
+  font-weight: normal;
   line-height: 0.8em;
 }
 .touchevents .contextual-region .contextual .contextual-links a {
