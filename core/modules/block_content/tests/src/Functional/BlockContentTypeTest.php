@@ -233,7 +233,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
         $this->clickLink('foo');
         // Create a new block.
         $edit = ['info[0][value]' => $this->randomMachineName(8)];
-        $this->submitForm($edit, 'Save');
+        $this->submitForm($edit, 'Save and configure');
         $blocks = $storage->loadByProperties(['info' => $edit['info[0][value]']]);
         if (!empty($blocks)) {
           $block = reset($blocks);

@@ -95,10 +95,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $edit['info[0][value]'] = 'Test Block';
     $edit['body[0][value]'] = $this->randomMachineName(16);
     $this->drupalGet('block/add/basic');
-    $this->submitForm($edit, 'Save');
-
-    // Check that the Basic block has been created.
-    $this->assertSession()->pageTextContains('basic ' . $edit['info[0][value]'] . ' has been created.');
+    $this->submitForm($edit, 'Save and configure');
 
     // Save our block permanently
     $this->submitForm(['region' => 'content'], 'Save block');
@@ -141,6 +138,48 @@ class BlockContentCreationTest extends BlockContentTestBase {
       ->loadByProperties(['info' => $edit['info[0][value]']]);
     $block = reset($blocks);
     $this->assertNotEmpty($block, 'Content Block found in database.');
+  }
+
+  /**
+   * Tests the redirect workflow of creating a block_content and block.
+   */
+  public function testBlockContentFormSubmitHandlers() {
+    $this->drupalLogin($this->adminUser);
+
+    // Create a block and place in block layout.
+    $this->drupalGet('/admin/content/block');
+    $this->clickLink('Add content block');
+    // Verify destination URL, when clicking "Save and configure" this
+    // destination will be ignored.
+    $base = base_path();
+    $url = 'block/add?destination=' . $base . 'admin/content/block';
+    $this->assertSession()->addressEquals($url);
+    $edit = [];
+    $edit['info[0][value]'] = 'Test Block';
+    $edit['body[0][value]'] = $this->randomMachineName(16);
+    $this->submitForm($edit, 'Save and configure');
+    $this->assertSession()->pageTextContains('basic ' . $edit['info[0][value]'] . ' has been created.');
+    $this->assertSession()->pageTextContains('Configure block');
+
+    // Verify when editing a block "Save and configure" does not appear.
+    $this->drupalGet('/admin/content/block/1');
+    $this->assertSession()->buttonNotExists('Save and configure');
+
+    // Create a block but go back to block library.
+    $edit = [];
+    $edit['info[0][value]'] = 'Test Block';
+    $edit['body[0][value]'] = $this->randomMachineName(16);
+    $this->drupalGet('block/add/basic');
+    $this->submitForm($edit, 'Save');
+    // Check that the Basic block has been created.
+    $this->assertSession()->pageTextContains('basic ' . $edit['info[0][value]'] . ' has been created.');
+    $this->assertSession()->addressEquals('/admin/content/block');
+
+    // Test with user who doesn't have permission to place a block.
+    $this->drupalLogin($this->drupalCreateUser(['administer block content']));
+    $this->drupalGet('block/add/basic');
+    $this->assertSession()->buttonNotExists('Save and configure');
+
   }
 
   /**
