@@ -4,6 +4,7 @@ namespace Drupal\system\Controller;
 
 use Drupal\Core\Batch\BatchStorageInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +14,8 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
  * Controller routines for batch routes.
  */
 class BatchController implements ContainerInjectionInterface {
+
+  use StringTranslationTrait;
 
   /**
    * Constructs a new BatchController.
@@ -55,6 +58,19 @@ class BatchController implements ContainerInjectionInterface {
       return $output;
     }
     elseif (isset($output)) {
+      // Directly render a status message placeholder without any messages.
+      // Messages are not intended to be show on the batch page, but in the
+      // event an error in a AJAX callback the messages will be displayed.
+      // @todo Remove in https://drupal.org/i/3396099.
+      $output['batch_messages'] = [
+        '#theme' => 'status_messages',
+        '#message_list' => [],
+        '#status_headings' => [
+          'status' => $this->t('Status message'),
+          'error' => $this->t('Error message'),
+          'warning' => $this->t('Warning message'),
+        ],
+      ];
       $title = $output['#title'] ?? NULL;
       $page = [
         '#type' => 'page',

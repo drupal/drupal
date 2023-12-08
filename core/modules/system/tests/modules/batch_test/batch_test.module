@@ -191,6 +191,17 @@ function _batch_test_batch_7() {
 }
 
 /**
+ * Batch 8: Throws an exception.
+ */
+function _batch_test_batch_8(): array {
+  $batch_builder = (new BatchBuilder())
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->addOperation('_batch_test_callback_8', [FALSE])
+    ->addOperation('_batch_test_callback_8', [TRUE]);
+  return $batch_builder->toArray() + ['batch_test_id' => 'batch_8'];
+}
+
+/**
  * Implements callback_batch_operation().
  *
  * Tests the progress page theme.
