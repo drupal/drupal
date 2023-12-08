@@ -527,9 +527,6 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
           'type' => 'throbber',
           'message' => $this->t('Opening media library.'),
         ],
-        // The AJAX system automatically moves focus to the first tabbable
-        // element of the modal, so we need to disable refocus on the button.
-        'disable-refocus' => TRUE,
       ],
       // Allow the media library to be opened even if there are form errors.
       '#limit_validation_errors' => [],

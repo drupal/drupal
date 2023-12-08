@@ -1085,7 +1085,9 @@
     const focusChanged = Object.keys(response || {}).some((key) => {
       const { command, method } = response[key];
       return (
-        command === 'focusFirst' || (command === 'invoke' && method === 'focus')
+        command === 'focusFirst' ||
+        command === 'openDialog' ||
+        (command === 'invoke' && method === 'focus')
       );
     });
 
