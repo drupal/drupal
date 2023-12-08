@@ -212,7 +212,11 @@ td.is-active {
  */
 
 td > .form-item > .form-element,
-td > .ajax-new-content > .form-item > .form-element {
+td > .ajax-new-content > .form-item > .form-element,
+td > .form-item > .claro-autocomplete,
+td > .form-item > .claro-autocomplete > .form-element,
+td > .ajax-new-content > .form-item > .claro-autocomplete,
+td > .ajax-new-content > .form-item > .claro-autocomplete > .form-element {
   width: 100%;
 }
 
