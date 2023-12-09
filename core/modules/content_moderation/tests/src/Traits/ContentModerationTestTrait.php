@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\content_moderation\Traits;
 
 use Drupal\workflows\Entity\Workflow;
