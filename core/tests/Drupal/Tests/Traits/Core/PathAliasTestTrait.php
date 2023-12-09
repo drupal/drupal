@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Traits\Core;
 
 use Drupal\Core\Language\LanguageInterface;

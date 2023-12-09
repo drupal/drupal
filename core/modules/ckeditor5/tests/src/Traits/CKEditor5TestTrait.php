@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\ckeditor5\Traits;
 
 use Behat\Mink\Element\NodeElement;
