@@ -28,7 +28,7 @@ function update_script_test_requirements($phase) {
         $requirements['update_script_test'] = [
           'title' => 'Update script test',
           'value' => 'Error',
-          'description' => 'This is a requirements error provided by the update_script_test module.',
+          'description' => 'This is a (buggy description fixed in update_script_test_requirements_alter()) requirements error provided by the update_script_test module.',
           'severity' => REQUIREMENT_ERROR,
         ];
         break;
@@ -36,6 +36,15 @@ function update_script_test_requirements($phase) {
   }
 
   return $requirements;
+}
+
+/**
+ * Implements hook_requirements_alter().
+ */
+function update_script_test_requirements_alter(array &$requirements): void {
+  if (isset($requirements['update_script_test']) && $requirements['update_script_test']['severity'] === REQUIREMENT_ERROR) {
+    $requirements['update_script_test']['description'] = 'This is a requirements error provided by the update_script_test module.';
+  }
 }
 
 /**
