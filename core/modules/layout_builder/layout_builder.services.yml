@@ -37,6 +37,12 @@ services:
     arguments: ['@current_route_match']
     tags:
       - { name: cache.context }
+  layout_builder.extra_fields.invalidator:
+    class: Drupal\layout_builder\Cache\ExtraFieldBlockCacheTagInvalidator
+    arguments: ['@plugin.manager.block']
+    public: false
+    tags:
+      - { name: cache_tags_invalidator }
   layout_builder.sample_entity_generator:
     class: Drupal\layout_builder\Entity\LayoutBuilderSampleEntityGenerator
     arguments: ['@tempstore.shared', '@entity_type.manager']

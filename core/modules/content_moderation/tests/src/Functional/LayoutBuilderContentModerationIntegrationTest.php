@@ -43,11 +43,8 @@ class LayoutBuilderContentModerationIntegrationTest extends BrowserTestBase {
     //   https://www.drupal.org/project/drupal/issues/2917777.
     $this->drupalPlaceBlock('local_tasks_block');
 
-    $workflow = $this->createEditorialWorkflow();
-
-    // Add a new bundle and add an editorial workflow.
+    // Add a new bundle.
     $this->createContentType(['type' => 'bundle_with_section_field']);
-    $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'bundle_with_section_field');
 
     // Add a new block content bundle to the editorial workflow.
     BlockContentType::create([
@@ -57,14 +54,29 @@ class LayoutBuilderContentModerationIntegrationTest extends BrowserTestBase {
     ])->save();
     block_content_add_body_field('basic');
 
-    $workflow->getTypePlugin()->addEntityTypeAndBundle('block_content', 'basic');
-    $workflow->save();
-
     // Enable layout overrides.
     LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
       ->enableLayoutBuilder()
       ->setOverridable()
       ->save();
+    // Create a node before enabling the workflow on the bundle.
+    $node = $this->createNode([
+      'type' => 'bundle_with_section_field',
+      'title' => 'Pre-workflow node',
+      'body' => [
+        [
+          'value' => 'The first node body',
+        ],
+      ],
+    ]);
+    // View the node to ensure the new extra field blocks are not cached when
+    // the workflow is updated.
+    $this->drupalGet($node->toUrl());
+    // Add editorial workflow for the bundle.
+    $workflow = $this->createEditorialWorkflow();
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('block_content', 'basic');
+    $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'bundle_with_section_field');
+    $workflow->save();
 
     $this->drupalLogin($this->drupalCreateUser([
       'configure any layout',
