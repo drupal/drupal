@@ -12,6 +12,7 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Routing\ResettableStackedRouteMatchInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\views\Entity\Render\EntityTranslationRenderTrait;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -74,6 +75,13 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
   protected $messenger;
 
   /**
+   * The current route match service.
+   *
+   * @var \Drupal\Core\Routing\ResettableStackedRouteMatchInterface
+   */
+  protected ResettableStackedRouteMatchInterface $routeMatch;
+
+  /**
    * Constructs a new BulkForm object.
    *
    * @param array $configuration
@@ -90,10 +98,13 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
    *   The messenger.
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository.
+   * @param \Drupal\Core\Routing\ResettableStackedRouteMatchInterface $route_match
+   *   The current route match service.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, LanguageManagerInterface $language_manager, MessengerInterface $messenger, EntityRepositoryInterface $entity_repository) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, LanguageManagerInterface $language_manager, MessengerInterface $messenger, EntityRepositoryInterface $entity_repository, ResettableStackedRouteMatchInterface $route_match = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityTypeManager = $entity_type_manager;
@@ -101,6 +112,11 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
     $this->languageManager = $language_manager;
     $this->messenger = $messenger;
     $this->entityRepository = $entity_repository;
+    if (!$route_match) {
+      @trigger_error('Calling BulkForm::__construct() without the $route_match argument is deprecated in drupal:10.3.0 and the $route_match argument will be required in drupal:11.0.0. See https://www.drupal.org/node/3115868', E_USER_DEPRECATED);
+      $route_match = \Drupal::routeMatch();
+    }
+    $this->routeMatch = $route_match;
   }
 
   /**
@@ -114,7 +130,8 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
       $container->get('entity_type.manager'),
       $container->get('language_manager'),
       $container->get('messenger'),
-      $container->get('entity.repository')
+      $container->get('entity.repository'),
+      $container->get('current_route_match')
     );
   }
 
@@ -428,7 +445,8 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
         $options = [
           'query' => $this->getDestinationArray(),
         ];
-        $form_state->setRedirect($operation_definition['confirm_form_route_name'], [], $options);
+        $route_parameters = $this->routeMatch->getRawParameters()->all();
+        $form_state->setRedirect($operation_definition['confirm_form_route_name'], $route_parameters, $options);
       }
       else {
         // Don't display the message unless there are some elements affected and

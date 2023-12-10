@@ -1,0 +1,10 @@
+action_bulk_test.action.confirm:
+  path: '/node/{node}/confirm'
+  defaults:
+    _form: Drupal\action_bulk_test\Form\TestActionConfirmForm
+  requirements:
+    _access: 'TRUE'
+  options:
+    parameters:
+      node:
+        type: entity:node

@@ -5,6 +5,7 @@ namespace Drupal\Tests\user\Unit\Plugin\views\field;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Routing\ResettableStackedRouteMatchInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Plugin\views\field\UserBulkForm;
 
@@ -60,6 +61,8 @@ class UserBulkFormTest extends UnitTestCase {
 
     $messenger = $this->createMock('Drupal\Core\Messenger\MessengerInterface');
 
+    $route_match = $this->createMock(ResettableStackedRouteMatchInterface::class);
+
     $views_data = $this->getMockBuilder('Drupal\views\ViewsData')
       ->disableOriginalConstructor()
       ->getMock();
@@ -90,7 +93,7 @@ class UserBulkFormTest extends UnitTestCase {
     $definition['title'] = '';
     $options = [];
 
-    $user_bulk_form = new UserBulkForm([], 'user_bulk_form', $definition, $entity_type_manager, $language_manager, $messenger, $entity_repository);
+    $user_bulk_form = new UserBulkForm([], 'user_bulk_form', $definition, $entity_type_manager, $language_manager, $messenger, $entity_repository, $route_match);
     $user_bulk_form->init($executable, $display, $options);
 
     $reflected_actions = (new \ReflectionObject($user_bulk_form))->getProperty('actions');

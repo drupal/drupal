@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - action_bulk_test
+id: test_action
+label: 'Test action'
+type: node
+plugin: test_action
+configuration: {  }
