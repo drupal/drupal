@@ -176,6 +176,50 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
   }
 
   /**
+   * Tests root transaction rollback after savepoint rollback.
+   */
+  public function testRollbackRootAfterSavepointRollback() {
+    $this->assertFalse($this->connection->inTransaction());
+    $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
+
+    // Start root transaction. Corresponds to 'BEGIN TRANSACTION' on the
+    // database.
+    $transaction = $this->connection->startTransaction();
+    $this->assertTrue($this->connection->inTransaction());
+    $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
+
+    // Insert a single row into the testing table.
+    $this->insertRow('David');
+    $this->assertRowPresent('David');
+
+    // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_1'
+    // on the database.
+    $savepoint = $this->connection->startTransaction();
+    $this->assertTrue($this->connection->inTransaction());
+    $this->assertSame(2, $this->connection->transactionManager()->stackDepth());
+
+    // Insert a single row into the testing table.
+    $this->insertRow('Roger');
+    $this->assertRowPresent('David');
+    $this->assertRowPresent('Roger');
+
+    // Rollback savepoint. It should get released too. Corresponds to 'ROLLBACK
+    // TO savepoint_1' plus 'RELEASE savepoint_1' on the database.
+    $savepoint->rollBack();
+    $this->assertRowPresent('David');
+    $this->assertRowAbsent('Roger');
+    $this->assertTrue($this->connection->inTransaction());
+    $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
+
+    // Try to rollback root. No savepoint is active, this should succeed.
+    $transaction->rollBack();
+    $this->assertRowAbsent('David');
+    $this->assertRowAbsent('Roger');
+    $this->assertFalse($this->connection->inTransaction());
+    $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
+  }
+
+  /**
    * Tests root transaction rollback failure when savepoint is open.
    */
   public function testRollbackRootWithActiveSavepoint() {
@@ -232,13 +276,13 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->assertRowPresent('David');
     $this->assertRowPresent('Roger');
 
-    // Rollback to savepoint. It should remain open. Corresponds to 'ROLLBACK
-    // TO savepoint_1' on the database.
+    // Rollback savepoint. It should get released too. Corresponds to 'ROLLBACK
+    // TO savepoint_1' plus 'RELEASE savepoint_1' on the database.
     $savepoint->rollBack();
     $this->assertRowPresent('David');
     $this->assertRowAbsent('Roger');
     $this->assertTrue($this->connection->inTransaction());
-    $this->assertSame(2, $this->connection->transactionManager()->stackDepth());
+    $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
 
     // Insert a row.
     $this->insertRow('Syd');
@@ -250,6 +294,61 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->assertRowPresent('Syd');
     $this->assertFalse($this->connection->inTransaction());
     $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
+  }
+
+  /**
+   * Tests savepoint transaction duplicated rollback.
+   */
+  public function testRollbackTwiceSameSavepoint() {
+    $this->assertFalse($this->connection->inTransaction());
+    $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
+
+    // Start root transaction. Corresponds to 'BEGIN TRANSACTION' on the
+    // database.
+    $transaction = $this->connection->startTransaction();
+    $this->assertTrue($this->connection->inTransaction());
+    $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
+
+    // Insert a row.
+    $this->insertRow('David');
+    $this->assertRowPresent('David');
+
+    // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_1'
+    // on the database.
+    $savepoint = $this->connection->startTransaction();
+    $this->assertTrue($this->connection->inTransaction());
+    $this->assertSame(2, $this->connection->transactionManager()->stackDepth());
+
+    // Insert a row.
+    $this->insertRow('Roger');
+    $this->assertRowPresent('David');
+    $this->assertRowPresent('Roger');
+
+    // Rollback savepoint. It should get released too. Corresponds to 'ROLLBACK
+    // TO savepoint_1' plus 'RELEASE savepoint_1' on the database.
+    $savepoint->rollBack();
+    $this->assertRowPresent('David');
+    $this->assertRowAbsent('Roger');
+    $this->assertTrue($this->connection->inTransaction());
+    $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
+
+    // Insert a row.
+    $this->insertRow('Syd');
+
+    // Rollback savepoint again. Should fail since it was released already.
+    try {
+      $savepoint->rollBack();
+      $this->fail('Expected TransactionOutOfOrderException was not thrown');
+    }
+    catch (\Exception $e) {
+      $this->assertInstanceOf(TransactionOutOfOrderException::class, $e);
+      $this->assertMatchesRegularExpression("/^Error attempting rollback of .*\\\\savepoint_1\\. Active stack: .*\\\\drupal_transaction/", $e->getMessage());
+    }
+    $this->assertRowPresent('David');
+    $this->assertRowAbsent('Roger');
+    $this->assertRowPresent('Syd');
+    $this->assertTrue($this->connection->inTransaction());
+    $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
   }
 
   /**

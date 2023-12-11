@@ -318,9 +318,13 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
     if ($this->getConnectionTransactionState() === ClientConnectionTransactionState::Active) {
       if ($this->stackDepth() > 1 && $this->stack()[$id]->type === StackItemType::Savepoint) {
         // Rollback the client transaction to the savepoint when the Drupal
-        // transaction is not a root one. The savepoint and therefore the
-        // client connection remain active.
+        // transaction is not a root one. Then, release the savepoint too. The
+        // client connection remains active.
         $this->rollbackClientSavepoint($name);
+        $this->releaseClientSavepoint($name);
+        // The Transaction object remains open, and when it will get destructed
+        // no commit should happen. Void the stack item.
+        $this->voidStackItem($id);
       }
       elseif ($this->stackDepth() === 1 && $this->stack()[$id]->type === StackItemType::Root) {
         // If this was the root Drupal transaction, we can rollback the client
