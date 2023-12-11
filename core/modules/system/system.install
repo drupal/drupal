@@ -1797,6 +1797,12 @@ function system_update_10100(&$sandbox = NULL) {
   });
   if ($connection->databaseType() != 'sqlite') {
     foreach (array_keys($cache_tables) as $table) {
+      // If the table has no expire column there is nothing to do. This can
+      // happen if a site has tables starting with cache_ that are not cache
+      // bins.
+      if (!$schema->fieldExists($table, 'expire')) {
+        continue;
+      }
       // Truncate cache tables. They will be flushed anyway at the end of
       // database updates, but emptying the tables now will boost the schema
       // changes.
