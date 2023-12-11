@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\language\Functional;
 
+use Drupal\Core\Config\ConfigCollectionEvents;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 
@@ -91,7 +92,12 @@ class LanguageConfigOverrideImportTest extends BrowserTestBase {
     // Test that no config save event has been fired during the import because
     // language configuration overrides do not fire events.
     $event_recorder = \Drupal::state()->get('config_events_test.event', FALSE);
-    $this->assertFalse($event_recorder);
+    $this->assertSame([
+      'event_name' => ConfigCollectionEvents::SAVE_IN_COLLECTION,
+      'current_config_data' => ['name' => 'FR default site name'],
+      'original_config_data' => [],
+      'raw_config_data' => ['name' => 'FR default site name'],
+    ], $event_recorder);
 
     $this->drupalGet('fr');
     $this->assertSession()->pageTextContains('FR default site name');

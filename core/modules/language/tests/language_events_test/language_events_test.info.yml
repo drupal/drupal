@@ -1,0 +1,4 @@
+name: 'Language events test'
+type: module
+package: Testing
+version: VERSION

@@ -260,7 +260,8 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
 
     // Prime the cache and load the configuration with the correct overrides.
     $config = $this->get($new_name);
-    $this->eventDispatcher->dispatch(new ConfigRenameEvent($config, $old_name), ConfigEvents::RENAME);
+    $event_name = $this->storage->getCollectionName() === StorageInterface::DEFAULT_COLLECTION ? ConfigEvents::RENAME : ConfigCollectionEvents::RENAME_IN_COLLECTION;
+    $this->eventDispatcher->dispatch(new ConfigRenameEvent($config, $old_name), $event_name);
     return $this;
   }
 

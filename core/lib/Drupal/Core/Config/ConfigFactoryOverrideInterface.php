@@ -34,22 +34,32 @@ interface ConfigFactoryOverrideInterface {
    * it can have its own implementation of
    * \Drupal\Core\Config\StorableConfigBase. Configuration overriders can link
    * themselves to a configuration collection by listening to the
-   * \Drupal\Core\Config\ConfigEvents::COLLECTION_INFO event and adding the
-   * collections they are responsible for. Doing this will allow installation
-   * and synchronization to use the overrider's implementation of
-   * StorableConfigBase.
+   * \Drupal\Core\Config\ConfigCollectionEvents::COLLECTION_INFO event and
+   * adding the collections they are responsible for. Doing this will allow
+   * installation and synchronization to use the overrider's implementation of
+   * StorableConfigBase. Additionally, the overrider's implementation should
+   * trigger the appropriate event:
+   * - Saving and creating triggers ConfigCollectionEvents::SAVE_IN_COLLECTION.
+   * - Deleting triggers ConfigCollectionEvents::DELETE_IN_COLLECTION.
+   * - Renaming triggers ConfigCollectionEvents::RENAME_IN_COLLECTION.
    *
    * @see \Drupal\Core\Config\ConfigCollectionInfo
    * @see \Drupal\Core\Config\ConfigImporter::importConfig()
    * @see \Drupal\Core\Config\ConfigInstaller::createConfiguration()
+   * @see \Drupal\Core\Config\ConfigCollectionEvents::SAVE_IN_COLLECTION
+   * @see \Drupal\Core\Config\ConfigCollectionEvents::DELETE_IN_COLLECTION
+   * @see \Drupal\Core\Config\ConfigCollectionEvents::RENAME_IN_COLLECTION
    *
    * @param string $name
    *   The configuration object name.
    * @param string $collection
    *   The configuration collection.
    *
-   * @return \Drupal\Core\Config\StorableConfigBase
-   *   The configuration object for the provided name and collection.
+   * @return \Drupal\Core\Config\StorableConfigBase|null
+   *   The configuration object for the provided name and collection. NULL
+   *   should be returned when the overrider does not use configuration
+   *   collections. For example: a module that provides an overrider to avoid
+   *   storing API keys in config would not use collections.
    */
   public function createConfigObject($name, $collection = StorageInterface::DEFAULT_COLLECTION);
 

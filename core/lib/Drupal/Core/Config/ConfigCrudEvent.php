@@ -19,17 +19,17 @@ class ConfigCrudEvent extends Event {
   /**
    * Constructs a configuration event object.
    *
-   * @param \Drupal\Core\Config\Config $config
+   * @param \Drupal\Core\Config\StorableConfigBase $config
    *   Configuration object.
    */
-  public function __construct(Config $config) {
+  public function __construct(StorableConfigBase $config) {
     $this->config = $config;
   }
 
   /**
    * Gets configuration object.
    *
-   * @return \Drupal\Core\Config\Config
+   * @return \Drupal\Core\Config\StorableConfigBase
    *   The configuration object that caused the event to fire.
    */
   public function getConfig() {

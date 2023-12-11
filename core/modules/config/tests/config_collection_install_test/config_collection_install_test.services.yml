@@ -1,5 +1,5 @@
 services:
-  config_events_test.event_subscriber:
+  config_collection_install_test.event_subscriber:
     class: Drupal\config_collection_install_test\EventSubscriber
     arguments: ['@state']
     tags:

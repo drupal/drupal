@@ -3,6 +3,8 @@
 namespace Drupal\language\Config;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Config\ConfigCollectionEvents;
+use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\StorableConfigBase;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
@@ -62,6 +64,11 @@ class LanguageConfigOverride extends StorableConfigBase {
     // an update of configuration, but only for a specific language.
     Cache::invalidateTags($this->getCacheTags());
     $this->isNew = FALSE;
+    // Dispatch configuration override event as detailed in
+    // \Drupal\Core\Config\ConfigFactoryOverrideInterface::createConfigObject().
+    $this->eventDispatcher->dispatch(new ConfigCrudEvent($this), ConfigCollectionEvents::SAVE_IN_COLLECTION);
+    // Dispatch an event specifically for language configuration override
+    // changes.
     $this->eventDispatcher->dispatch(new LanguageConfigOverrideCrudEvent($this), LanguageConfigOverrideEvents::SAVE_OVERRIDE);
     $this->originalData = $this->data;
     return $this;
@@ -75,6 +82,11 @@ class LanguageConfigOverride extends StorableConfigBase {
     $this->storage->delete($this->name);
     Cache::invalidateTags($this->getCacheTags());
     $this->isNew = TRUE;
+    // Dispatch configuration override event as detailed in
+    // \Drupal\Core\Config\ConfigFactoryOverrideInterface::createConfigObject().
+    $this->eventDispatcher->dispatch(new ConfigCrudEvent($this), ConfigCollectionEvents::DELETE_IN_COLLECTION);
+    // Dispatch an event specifically for language configuration override
+    // changes.
     $this->eventDispatcher->dispatch(new LanguageConfigOverrideCrudEvent($this), LanguageConfigOverrideEvents::DELETE_OVERRIDE);
     $this->originalData = $this->data;
     return $this;

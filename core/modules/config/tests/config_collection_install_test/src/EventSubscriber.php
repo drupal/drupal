@@ -2,8 +2,8 @@
 
 namespace Drupal\config_collection_install_test;
 
+use Drupal\Core\Config\ConfigCollectionEvents;
 use Drupal\Core\Config\ConfigCollectionInfo;
-use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -27,7 +27,7 @@ class EventSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Reacts to the ConfigEvents::COLLECTION_INFO event.
+   * Reacts to the ConfigCollectionEvents::COLLECTION_INFO event.
    *
    * @param \Drupal\Core\Config\ConfigCollectionInfo $collection_info
    *   The configuration collection info event.
@@ -43,7 +43,7 @@ class EventSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents(): array {
-    $events[ConfigEvents::COLLECTION_INFO][] = ['addCollections'];
+    $events[ConfigCollectionEvents::COLLECTION_INFO][] = ['addCollections'];
     return $events;
   }
 

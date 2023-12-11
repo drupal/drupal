@@ -4,6 +4,7 @@ namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Config\ConfigCollectionEvents;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterException;
@@ -928,6 +929,44 @@ class ConfigImporterTest extends KernelTestBase {
     $this->assertSame([], $event['current_config_data']);
     $this->assertSame([], $event['raw_config_data']);
     $this->assertSame(['key' => 'bar'], $event['original_config_data']);
+  }
+
+  /**
+   * Tests events and collections during a config import.
+   */
+  public function testEventsAndCollectionsImport(): void {
+    $collections = [
+      'another_collection',
+      'collection.test1',
+      'collection.test2',
+    ];
+    // Set the event listener to return three possible collections.
+    // @see \Drupal\config_collection_install_test\EventSubscriber
+    \Drupal::state()->set('config_collection_install_test.collection_names', $collections);
+    $this->enableModules(['config_collection_install_test']);
+    $this->installConfig(['config_collection_install_test']);
+
+    // Export the configuration and uninstall the module to test installing it
+    // via configuration import.
+    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.sync'));
+    $this->container->get('module_installer')->uninstall(['config_collection_install_test']);
+    $this->assertEmpty($this->container->get('config.storage')->getAllCollectionNames());
+
+    \Drupal::state()->set('config_events_test.all_events', []);
+    $this->configImporter()->import();
+    $this->assertSame($collections, $this->container->get('config.storage')->getAllCollectionNames());
+
+    $all_events = \Drupal::state()->get('config_events_test.all_events');
+    $this->assertArrayHasKey('core.extension', $all_events[ConfigEvents::SAVE]);
+    // Ensure that config in collections does not have the regular configuration
+    // event triggered.
+    $this->assertArrayNotHasKey('config_collection_install_test.test', $all_events[ConfigEvents::SAVE]);
+    $this->assertCount(3, $all_events[ConfigCollectionEvents::SAVE_IN_COLLECTION]['config_collection_install_test.test']);
+    $event_collections = [];
+    foreach ($all_events[ConfigCollectionEvents::SAVE_IN_COLLECTION]['config_collection_install_test.test'] as $event) {
+      $event_collections[] = $event['current_config_data']['collection'];
+    }
+    $this->assertSame($collections, $event_collections);
   }
 
   /**

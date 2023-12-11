@@ -140,8 +140,13 @@ final class ConfigEvents {
    * @see \Drupal\Core\Config\ConfigFactoryOverrideBase
    *
    * @var string
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+   *    \Drupal\Core\Config\ConfigCollectionEvents::COLLECTION_INFO instead.
+   *
+   * @see https://www.drupal.org/node/3406105
    */
-  const COLLECTION_INFO = 'config.collection_info';
+  const COLLECTION_INFO = ConfigCollectionEvents::COLLECTION_INFO;
 
   /**
    * Name of the event fired just before importing configuration.

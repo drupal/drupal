@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Config;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\Schema\Ignore;
 use Drupal\Core\Config\Schema\Mapping;
 use Drupal\Core\Config\Schema\Sequence;
@@ -119,6 +120,47 @@ abstract class StorableConfigBase extends ConfigBase {
    */
   public function getStorage() {
     return $this->storage;
+  }
+
+  /**
+   * Gets original data from this configuration object.
+   *
+   * Original data is the data as it is immediately after loading from
+   * configuration storage before any changes. If this is a new configuration
+   * object it will be an empty array.
+   *
+   * @see \Drupal\Core\Config\Config::get()
+   *
+   * @param string $key
+   *   A string that maps to a key within the configuration data.
+   *
+   * @return mixed
+   *   The data that was requested.
+   */
+  public function getOriginal($key = '') {
+    $original_data = $this->originalData;
+
+    if (empty($key)) {
+      return $original_data;
+    }
+
+    $parts = explode('.', $key);
+    if (count($parts) == 1) {
+      return $original_data[$key] ?? NULL;
+    }
+
+    $value = NestedArray::getValue($original_data, $parts, $key_exists);
+    return $key_exists ? $value : NULL;
+  }
+
+  /**
+   * Gets the raw data without any manipulations.
+   *
+   * @return array
+   *   The raw data.
+   */
+  public function getRawData() {
+    return $this->data;
   }
 
   /**

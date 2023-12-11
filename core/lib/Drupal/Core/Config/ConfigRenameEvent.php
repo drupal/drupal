@@ -17,12 +17,12 @@ class ConfigRenameEvent extends ConfigCrudEvent {
   /**
    * Constructs the config rename event.
    *
-   * @param \Drupal\Core\Config\Config $config
+   * @param \Drupal\Core\Config\StorableConfigBase $config
    *   The configuration that has been renamed.
    * @param string $old_name
    *   The old configuration object name.
    */
-  public function __construct(Config $config, $old_name) {
+  public function __construct(StorableConfigBase $config, $old_name) {
     $this->config = $config;
     $this->oldName = $old_name;
   }

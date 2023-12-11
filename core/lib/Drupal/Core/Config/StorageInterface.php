@@ -7,6 +7,11 @@ namespace Drupal\Core\Config;
  *
  * Classes implementing this interface allow reading and writing configuration
  * data from and to the storage.
+ *
+ * Note: this should never be used directly to work with active configuration.
+ * The values returned from it do not have the expected overrides and writing
+ * directly to the storage does not trigger configuration events. Use the
+ * 'config.factory' service and the configuration objects it provides.
  */
 interface StorageInterface {
 
