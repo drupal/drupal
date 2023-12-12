@@ -9,6 +9,7 @@
     "require": {
         "php": ">=8.1.0",
         "doctrine/annotations": "^1.14",
+        "drupal/core-class-finder": "11.x-dev",
         "drupal/core-file-cache": "11.x-dev",
         "drupal/core-plugin": "11.x-dev",
         "drupal/core-utility": "11.x-dev"
