@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\filter\FunctionalJavascript;
 
 use Drupal\filter\Entity\FilterFormat;

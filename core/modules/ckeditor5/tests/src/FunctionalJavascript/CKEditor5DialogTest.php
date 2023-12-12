@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;

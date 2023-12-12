@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\block_content\Entity\BlockContentType;

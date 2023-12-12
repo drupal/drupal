@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\settings_tray\FunctionalJavascript;
 
 use Drupal\settings_tray_test\Plugin\Block\SettingsTrayFormAnnotationIsClassBlock;

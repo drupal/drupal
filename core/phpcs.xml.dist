@@ -274,8 +274,10 @@
     </properties>
     <!-- @todo Broaden this in https://www.drupal.org/project/drupal/issues/3400434 -->
     <!-- <include-pattern>*/tests/*</include-pattern> -->
-    <include-pattern>./tests/Drupal/BuildTests/*</include-pattern>
+    <include-pattern>*/tests/src/FunctionalJavascript/*</include-pattern>
     <include-pattern>*/tests/src/Traits/*</include-pattern>
+    <include-pattern>./tests/Drupal/BuildTests/*</include-pattern>
+    <include-pattern>./tests/Drupal/FunctionalJavascriptTests/*</include-pattern>
     <include-pattern>./tests/Drupal/Tests/*Trait.php</include-pattern>
     <include-pattern>./tests/Drupal/Tests/Traits/*</include-pattern>
     <exclude-pattern>./tests/Drupal/Tests/Listeners/*</exclude-pattern>

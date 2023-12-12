@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalJavascriptTests\TableDrag;
 
 use Behat\Mink\Element\NodeElement;
