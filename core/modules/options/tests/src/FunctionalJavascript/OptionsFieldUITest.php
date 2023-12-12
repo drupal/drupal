@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\options\FunctionalJavascript;
 
 use Drupal\field\Entity\FieldConfig;

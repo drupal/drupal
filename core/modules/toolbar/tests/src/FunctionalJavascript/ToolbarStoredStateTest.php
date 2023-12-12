@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\toolbar\FunctionalJavascript;
 
 use Drupal\Component\Serialization\Json;

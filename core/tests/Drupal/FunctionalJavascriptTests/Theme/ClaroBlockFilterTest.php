@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalJavascriptTests\Theme;
 
 use Drupal\Tests\block\FunctionalJavascript\BlockFilterTest;

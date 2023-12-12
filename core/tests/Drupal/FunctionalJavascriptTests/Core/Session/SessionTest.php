@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalJavascriptTests\Core\Session;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
