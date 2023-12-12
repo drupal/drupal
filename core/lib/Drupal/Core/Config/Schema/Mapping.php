@@ -119,8 +119,8 @@ class Mapping extends ArrayElement {
    *   - the corresponding value an array of the additional mapping keys that
    *     are supported for this resolved type
    *
-   * @see \Drupal\Core\Config\TypedConfigManager::replaceName()
-   * @see \Drupal\Core\Config\TypedConfigManager::replaceVariable()
+   * @see \Drupal\Core\Config\TypedConfigManager::resolveDynamicTypeName()
+   * @see \Drupal\Core\Config\TypedConfigManager::resolveExpression()
    * @see https://www.drupal.org/files/ConfigSchemaCheatSheet2.0.pdf
    */
   public function getDynamicallyValidKeys(): array {
