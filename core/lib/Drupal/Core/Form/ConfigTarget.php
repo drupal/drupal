@@ -36,20 +36,20 @@ final class ConfigTarget {
   /**
    * Transforms a value loaded from config before it gets displayed by the form.
    *
-   * @var \Closure|null
+   * @var callable|null
    *
    * @see ::getValue()
    */
-  public readonly ?\Closure $fromConfig;
+  public readonly mixed $fromConfig;
 
   /**
    * Transforms a value submitted by the form before it is set in the config.
    *
-   * @var \Closure|null
+   * @var callable|null
    *
    * @see ::setValue()
    */
-  public readonly ?\Closure $toConfig;
+  public readonly mixed $toConfig;
 
   /**
    * Constructs a ConfigTarget object.
@@ -86,8 +86,8 @@ final class ConfigTarget {
     ?callable $fromConfig = NULL,
     ?callable $toConfig = NULL,
   ) {
-    $this->fromConfig = $fromConfig ? $fromConfig(...) : NULL;
-    $this->toConfig = $toConfig ? $toConfig(...) : NULL;
+    $this->fromConfig = $fromConfig;
+    $this->toConfig = $toConfig;
 
     if (is_string($propertyPath)) {
       $propertyPath = [$propertyPath];
