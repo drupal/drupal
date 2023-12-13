@@ -1,0 +1,1 @@
+!function(i){const n=i["sr-latn"]=i["sr-latn"]||{};n.dictionary=Object.assign(n.dictionary||{},{"Show blocks":"Prikaži blokove"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

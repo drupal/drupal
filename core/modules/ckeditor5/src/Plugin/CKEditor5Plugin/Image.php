@@ -38,7 +38,12 @@ class Image extends CKEditor5PluginDefault implements CKEditor5PluginConfigurabl
           'headers' => ['Accept' => 'application/json', 'text/javascript'],
         ],
       ];
+      $config['image']['insert']['integrations'][] = 'upload';
     }
+    else {
+      $config['image']['insert']['integrations'][] = 'url';
+    }
+
     return $config;
   }
 

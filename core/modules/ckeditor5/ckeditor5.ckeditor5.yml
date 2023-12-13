@@ -561,6 +561,7 @@ ckeditor5_image:
         insert:
           # Determine image type (inline or block) by insertion context.
           type: auto
+          integrations: []
   drupal:
     label: Image
     class: \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Image
@@ -595,7 +596,7 @@ ckeditor5_imageUpload:
 ckeditor5_imageUrl:
   ckeditor5:
     plugins:
-      - image.ImageInsertUI
+      - image.ImageInsertViaUrl
   drupal:
     label: Image URL
     elements: false

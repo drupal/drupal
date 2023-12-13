@@ -1187,9 +1187,21 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-image/src/imageinsert/ui/imageinsertpanelview.js
+ * Declared in file @ckeditor/ckeditor5-image/src/imageinsert/imageinsertviaurlui.js
  *
- * @typedef {module:image/imageinsert/ui/imageinsertpanelview} module:image/imageinsert/ui/imageinsertpanelview~ImageInsertPanelView
+ * @typedef {module:image/imageinsert/imageinsertviaurlui} module:image/imageinsert/imageinsertviaurlui~ImageInsertViaUrlUI
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-image/src/imageinsert/ui/imageinsertformview.js
+ *
+ * @typedef {module:image/imageinsert/ui/imageinsertformview} module:image/imageinsert/ui/imageinsertformview~ImageInsertFormView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-image/src/imageinsert/ui/imageinserturlview.js
+ *
+ * @typedef {module:image/imageinsert/ui/imageinserturlview} module:image/imageinsert/ui/imageinserturlview~ImageInsertUrlView
  */
 
 /**
@@ -2573,6 +2585,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-utils/src/abortabledebounce.js
+ *
+ * @typedef {module:utils/abortabledebounce} module:utils/abortabledebounce~abortableDebounce
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-utils/src/areconnectedthroughproperties.js
  *
  * @typedef {module:utils/areconnectedthroughproperties} module:utils/areconnectedthroughproperties~areConnectedThroughProperties
@@ -2849,6 +2867,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-utils/src/retry.js
+ *
+ * @typedef {module:utils/retry} module:utils/retry~async
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-utils/src/splicearray.js
  *
  * @typedef {module:utils/splicearray} module:utils/splicearray~spliceArray
@@ -2882,6 +2906,12 @@
  * Declared in file @ckeditor/ckeditor5-utils/src/version.js
  *
  * @typedef {module:utils/version} module:utils/version~version
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-utils/src/wait.js
+ *
+ * @typedef {module:utils/wait} module:utils/wait~wait
  */
 
 /**
