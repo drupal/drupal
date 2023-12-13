@@ -12,23 +12,10 @@ class DrupalInsertImage extends Plugin {
    */
   init() {
     const { editor } = this;
+    // This component is a shell around CKEditor 5 upstream insertImage button
+    // to retain backwards compatibility.
     editor.ui.componentFactory.add('drupalInsertImage', () => {
-      // Use upstream insertImage component when ImageInsertUI is enabled. The
-      // upstream insertImage button supports inserting of external images
-      // and uploading images. Out-of-the-box Drupal only uses the insertImage
-      // button for inserting external images.
-      if (editor.plugins.has('ImageInsertUI')) {
-        return editor.ui.componentFactory.create('insertImage');
-      }
-      // If ImageInsertUI plugin is not enabled, fallback to using uploadImage
-      // upstream button.
-      if (editor.plugins.has('ImageUpload')) {
-        return editor.ui.componentFactory.create('uploadImage');
-      }
-
-      throw new Error(
-        'drupalInsertImage requires either ImageUpload or ImageInsertUI plugin to be enabled.',
-      );
+      return editor.ui.componentFactory.create('insertImage');
     });
   }
 
