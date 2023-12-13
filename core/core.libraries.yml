@@ -865,10 +865,10 @@ picturefill:
 
 sortable:
   remote: https://github.com/SortableJS/Sortable
-  version: "1.15.0"
+  version: "1.15.1"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/SortableJS/Sortable/1.15.0/LICENSE
+    url: https://raw.githubusercontent.com/SortableJS/Sortable/1.15.1/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/sortable/Sortable.min.js: { minified: true }

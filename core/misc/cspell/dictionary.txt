@@ -62,7 +62,6 @@ autowired
 autowiring
 backlink
 backlinks
-backreferences
 bakeware
 barbar
 barchart
@@ -76,6 +75,7 @@ bebebe
 beforeclose
 beforecreate
 behat
+behaviour
 bergmann
 berne
 bgblue
@@ -116,8 +116,6 @@ buttonset
 buttontext
 buytaert
 bytea
-cacheability
-cacheable
 cachebackend
 cachebackends
 cachetag
@@ -172,7 +170,6 @@ complote
 compositionend
 compositionstart
 configentity
-configurability
 configurator
 contentblock
 contextuals
@@ -236,7 +233,6 @@ dflt
 dialogsave
 diffchange
 differring
-discoverability
 displaymessage
 distro
 ditka
@@ -368,10 +364,8 @@ groupby
 groupname
 groupwise
 guzzlehttp
-gzipped
 hande
 harkonnen
-hasher
 hashmarks
 hateoas
 hexcode
@@ -395,7 +389,6 @@ icann
 iconwrap
 idconflict
 idekey
-idempotency
 iframes
 iframeupload
 imagecache
@@ -558,7 +551,6 @@ nntp
 noadd
 nocache
 nocase
-nocookie
 nodelist
 nodir
 nofields
@@ -633,7 +625,6 @@ pjpeg
 placeholdered
 placeholdering
 plid
-pluggable
 plusthick
 poink
 porterstemmer
@@ -703,9 +694,7 @@ rebuilder
 reclosed
 recolorable
 redeclaration
-refactorings
 refback
-referenceable
 referenceables
 referencers
 referer
