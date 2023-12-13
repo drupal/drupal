@@ -139,8 +139,31 @@ abstract class ConfigFormBase extends FormBase {
    *
    * @return array
    *   The processed element.
+   *
+   * @see \Drupal\Core\Form\ConfigFormBase::buildForm()
    */
   public function storeConfigKeyToFormElementMap(array $element, FormStateInterface $form_state): array {
+    // Empty the map to ensure the information is always correct after
+    // rebuilding the form.
+    $form_state->set(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP, []);
+
+    return $this->doStoreConfigMap($element, $form_state);
+  }
+
+  /**
+   * Helper method for #after_build callback ::storeConfigKeyToFormElementMap().
+   *
+   * @param array $element
+   *   The element being processed.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current form state.
+   *
+   * @return array
+   *   The processed element.
+   *
+   * @see \Drupal\Core\Form\ConfigFormBase::storeConfigKeyToFormElementMap()
+   */
+  protected function doStoreConfigMap(array $element, FormStateInterface $form_state): array {
     if (array_key_exists('#config_target', $element)) {
       $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
 
@@ -149,6 +172,12 @@ abstract class ConfigFormBase extends FormBase {
       if (is_string($target)) {
         $target = ConfigTarget::fromString($target);
       }
+      elseif ($target->toConfig instanceof \Closure || $target->fromConfig instanceof \Closure) {
+        // If the form is using closures as toConfig or fromConfig callables
+        // then form cannot be cached.
+        $form_state->disableCache();
+      }
+
       foreach ($target->propertyPaths as $property_path) {
         if (isset($map[$target->configName][$property_path])) {
           throw new \LogicException(sprintf('Two #config_targets both target "%s" in the "%s" config: `%s` and `%s`.',
@@ -163,7 +192,7 @@ abstract class ConfigFormBase extends FormBase {
       $form_state->set(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP, $map);
     }
     foreach (Element::children($element) as $key) {
-      $element[$key] = $this->storeConfigKeyToFormElementMap($element[$key], $form_state);
+      $element[$key] = $this->doStoreConfigMap($element[$key], $form_state);
     }
     return $element;
   }
