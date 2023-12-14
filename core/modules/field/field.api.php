@@ -58,6 +58,24 @@ function hook_field_info_alter(&$info) {
 }
 
 /**
+ * Alters the UI field definitions.
+ *
+ * This hook can be used for altering field definitions available in the UI
+ * dynamically per entity type. For example, it can be used to hide field types
+ * that are incompatible with an entity type.
+ *
+ * @param array $ui_definitions
+ *   Definition of all field types that can be added via UI.
+ * @param string $entity_type_id
+ *   The entity type id.
+ */
+function hook_field_info_entity_type_ui_definitions_alter(array &$ui_definitions, string $entity_type_id) {
+  if ($entity_type_id === 'node') {
+    unset($ui_definitions['field_type_not_compatible_with_node']);
+  }
+}
+
+/**
  * Perform alterations on preconfigured field options.
  *
  * @param array $options

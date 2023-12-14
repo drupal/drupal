@@ -150,7 +150,9 @@ class FieldStorageAddForm extends FormBase {
     ];
 
     $field_type_options = $unique_definitions = [];
-    $grouped_definitions = $this->fieldTypePluginManager->getGroupedDefinitions($this->fieldTypePluginManager->getUiDefinitions(), 'label', 'id');
+    $ui_definitions = $this->fieldTypePluginManager->getUiDefinitions();
+    \Drupal::moduleHandler()->alter('field_info_entity_type_ui_definitions', $ui_definitions, $this->entityTypeId);
+    $grouped_definitions = $this->fieldTypePluginManager->getGroupedDefinitions($ui_definitions, 'label', 'id');
     $category_definitions = $this->fieldTypeCategoryManager->getDefinitions();
     // Invoke a hook to get category properties.
     foreach ($grouped_definitions as $category => $field_types) {

@@ -15,6 +15,7 @@
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\field\FieldStorageConfigInterface;
 
 require_once __DIR__ . '/field_test.entity.inc';
@@ -213,5 +214,14 @@ function field_test_field_ui_preconfigured_options_alter(array &$options, $field
     $options['custom_options']['entity_view_display']['settings'] = [
       'test_formatter_setting_multiple' => 'altered dummy test string',
     ];
+  }
+}
+
+/**
+ * Implements hook_field_info_entity_type_ui_definitions_alter().
+ */
+function field_test_field_info_entity_type_ui_definitions_alter(array &$ui_definitions, string $entity_type_id) {
+  if ($entity_type_id === 'node') {
+    $ui_definitions['boolean']['label'] = new TranslatableMarkup('Boolean (overridden by alter)');
   }
 }
