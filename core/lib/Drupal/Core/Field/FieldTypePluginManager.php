@@ -229,6 +229,15 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
   /**
    * {@inheritdoc}
    */
+  public function getEntityTypeUiDefinitions(string $entity_type_id): array {
+    $ui_definitions = $this->getUiDefinitions();
+    $this->moduleHandler->alter('field_info_entity_type_ui_definitions', $ui_definitions, $entity_type_id);
+    return $ui_definitions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getPreconfiguredOptions($field_type) {
     $options = [];
     $class = $this->getPluginClass($field_type);

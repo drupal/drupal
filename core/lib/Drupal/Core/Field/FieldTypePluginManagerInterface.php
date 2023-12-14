@@ -114,6 +114,20 @@ interface FieldTypePluginManagerInterface extends PluginManagerInterface, Catego
   public function getUiDefinitions();
 
   /**
+   * Get the field type definitions that can be added via UI for an entity type.
+   *
+   * @param string $entity_type_id
+   *   The entity type id.
+   *
+   * @return array
+   *   An array of field type definitions.
+   *
+   * @see \Drupal\Core\Field\FieldTypePluginManagerInterface::getUiDefinitions()
+   * @see hook_field_info_entity_type_ui_definitions_alter()
+   */
+  public function getEntityTypeUiDefinitions(string $entity_type_id): array;
+
+  /**
    * Returns preconfigured field options for a field type.
    *
    * This is a wrapper around

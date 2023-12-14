@@ -345,4 +345,15 @@ class ManageFieldsTest extends BrowserTestBase {
     $this->assertSession()->elementTextContains('css', '#edit-field-storage', 'Greetings from Drupal\field_test\Plugin\Field\FieldType\TestItem::storageSettingsForm');
   }
 
+  /**
+   * Tests hook_field_info_entity_type_ui_definitions_alter().
+   */
+  public function testFieldUiDefinitionsAlter() {
+    $user = $this->drupalCreateUser(['administer node fields']);
+    $node_type = $this->drupalCreateContentType();
+    $this->drupalLogin($user);
+    $this->drupalGet('/admin/structure/types/manage/' . $node_type->id() . '/fields/add-field');
+    $this->assertSession()->pageTextContains('Boolean (overridden by alter)');
+  }
+
 }

@@ -111,6 +111,18 @@ class FieldTypePluginManagerTest extends FieldKernelTestBase {
   }
 
   /**
+   * Tests UI definitions per entity type.
+   */
+  public function testUiDefinitionsPerEntityType() {
+    /** @var \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager */
+    $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
+    $definitions = $field_type_manager->getEntityTypeUiDefinitions('node');
+    $this->assertEquals('Boolean (overridden by alter)', (string) $definitions['boolean']['label']);
+    $definitions = $field_type_manager->getEntityTypeUiDefinitions('entity_test');
+    $this->assertEquals('Boolean', (string) $definitions['boolean']['label']);
+  }
+
+  /**
    * Enable all core modules.
    */
   protected function enableAllCoreModules() {

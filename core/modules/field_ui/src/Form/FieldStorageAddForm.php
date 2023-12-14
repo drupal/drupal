@@ -150,7 +150,7 @@ class FieldStorageAddForm extends FormBase {
     ];
 
     $field_type_options = $unique_definitions = [];
-    $grouped_definitions = $this->fieldTypePluginManager->getGroupedDefinitions($this->fieldTypePluginManager->getUiDefinitions(), 'label', 'id');
+    $grouped_definitions = $this->fieldTypePluginManager->getGroupedDefinitions($this->fieldTypePluginManager->getEntityTypeUiDefinitions($this->entityTypeId), 'label', 'id');
     $category_definitions = $this->fieldTypeCategoryManager->getDefinitions();
     // Invoke a hook to get category properties.
     foreach ($grouped_definitions as $category => $field_types) {
