@@ -28,7 +28,7 @@
   top: 0;
   left: 0.6667em; /* LTR */
   display: block;
-  width: 1.25rem;
+  width: 1.538em;
   height: 100%;
   content: "";
   background-color: transparent;
@@ -226,7 +226,7 @@
   }
   .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon::before {
     left: 0.6667em; /* LTR */
-    width: 1.25rem;
+    width: 1.538em;
     background-size: 100% auto;
   }
   .no-svg .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon::before {
