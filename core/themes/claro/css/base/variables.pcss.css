@@ -156,7 +156,6 @@
   /*
    * Details.
    */
-  --details-bg-color: rgba(243, 244, 249, 0.4);
   --details-border-color: var(--color-gray-100);
   --details-summary-shadow-color: var(--color-focus);
   --details-summary-focus-border-size: var(--focus-border-size);
