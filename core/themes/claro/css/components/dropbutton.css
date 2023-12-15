@@ -46,13 +46,8 @@
 
 .form-actions .dropbutton-wrapper,
 .field-actions .dropbutton-wrapper {
-  margin: var(--space-xs) var(--space-m) var(--space-xs) 0;
-}
-
-[dir="rtl"] .form-actions .dropbutton-wrapper,
-[dir="rtl"] .field-actions .dropbutton-wrapper {
-  margin-right: 0;
-  margin-left: var(--space-m);
+  margin-block: var(--space-xs);
+  margin-inline: var(--space-m) 0;
 }
 
 .dropbutton-widget {
@@ -71,17 +66,10 @@
 .dropbutton {
   display: block;
   overflow: visible;
-  margin: 0;
-  list-style: none;
-}
-
-[dir="rtl"] .dropbutton {
-  margin: 0;
-}
-
-.dropbutton {
   min-width: 6rem; /* Help mitigate long dropbutton text from obscuring other dropbuttons. */
   height: var(--dropbutton-toggle-size);
+  margin: 0;
+  list-style: none;
 }
 
 .dropbutton-widget {
@@ -108,7 +96,7 @@
   white-space: nowrap;
 }
 
-[dir="rtl"] .dropbutton--multiple .dropbutton__item:first-of-type {
+[dir="rtl"] :is(.dropbutton--multiple .dropbutton__item:first-of-type) {
   margin-right: 0;
   margin-left: calc(var(--dropbutton-toggle-size) + var(--dropbutton-toggle-size-spacing));
 }
@@ -120,7 +108,7 @@
   white-space: nowrap;
 }
 
-[dir="rtl"].no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type {
+[dir="rtl"] :is(.no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type) {
   margin-right: 0;
   margin-left: calc(var(--dropbutton-small-toggle-size) + var(--dropbutton-toggle-size-spacing));
 }
@@ -130,7 +118,7 @@
   white-space: nowrap;
 }
 
-[dir="rtl"].no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__item:first-of-type {
+[dir="rtl"] :is(.no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__item:first-of-type) {
   margin-right: 0;
   margin-left: calc(var(--dropbutton-extrasmall-toggle-size) + var(--dropbutton-toggle-size-spacing));
 }
@@ -195,7 +183,7 @@
   transform: translate(50%, -50%) rotate(180deg);
 }
 
-[dir="rtl"] .dropbutton-wrapper.open .dropbutton__toggle::before {
+[dir="rtl"] :is(.dropbutton-wrapper.open .dropbutton__toggle::before) {
   transform: translate(50%, -50%) rotate(-180deg);
 }
 
@@ -225,11 +213,10 @@
     height: 0.5625rem;
     margin-top: calc(0.5625rem / (2 * -1.41429));
     transform: translate(50%, -50%) rotate(135deg); /* LTR */
-    border: 0.125rem solid;
     border-width: 0.125rem 0.125rem 0 0;
+    border-style: solid;
     background: none;
   }
-
   .dropbutton-wrapper.open .dropbutton__toggle::before {
     margin-top: calc(0.5625rem / (2 * 1.41429));
     transform: translate(50%, -50%) rotate(315deg);
@@ -279,15 +266,13 @@
 }
 
 .dropbutton--multiple .dropbutton__item:first-of-type > * {
-  padding-right: calc(var(--dropbutton-spacing-size) - var(--dropbutton-border-size));
-  padding-left: calc(var(--dropbutton-spacing-size) - var(--dropbutton-border-size));
+  padding-inline: calc(var(--dropbutton-spacing-size) - var(--dropbutton-border-size));
 }
 
 /* Variants */
 
 .no-touchevents .dropbutton--small .dropbutton__item:first-of-type > * {
-  padding-top: calc(var(--dropbutton-small-spacing-size) - var(--dropbutton-border-size));
-  padding-bottom: calc(var(--dropbutton-small-spacing-size) - var(--dropbutton-border-size));
+  padding-block: calc(var(--dropbutton-small-spacing-size) - var(--dropbutton-border-size));
   font-size: var(--dropbutton-small-font-size);
   line-height: var(--dropbutton-small-line-height);
 }
@@ -370,7 +355,7 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
-.dropbutton__item:first-of-type ~ .dropbutton__item ~ .dropbutton__item {
+:is(.dropbutton__item:first-of-type ~ .dropbutton__item) ~ .dropbutton__item {
   border-top: 0;
 }
 
