@@ -133,6 +133,12 @@ claro.tabledrag:
   js:
     js/tabledrag.js: {}
 
+drupal.node.preview:
+  version: VERSION
+  css:
+    theme:
+      css/components/node-preview.css: {}
+
 tour-styling:
   version: VERSION
   css:

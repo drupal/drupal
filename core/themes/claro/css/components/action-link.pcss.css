@@ -494,3 +494,19 @@
     }
   }
 }
+
+.action-link--icon-chevron-left {
+  &::before {
+    display: block;
+    content: "";
+    background-image: url("../../images/icons/545560/pager-prev.svg");
+  }
+}
+
+@media (min-width: 30em) {
+  .action-link--icon-chevron-left {
+    &::before {
+      display: inline-block;
+    }
+  }
+}

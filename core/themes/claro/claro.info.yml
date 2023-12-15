@@ -136,6 +136,8 @@ libraries-extend:
     - claro/ajax
   user/drupal.user:
     - claro/form.password-confirm
+  node/drupal.node.preview:
+    - claro/drupal.node.preview
   views/views.module:
     - claro/views
   media/media_embed_ckeditor_theme:
