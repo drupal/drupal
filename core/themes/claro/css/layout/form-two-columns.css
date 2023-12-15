@@ -28,7 +28,13 @@
   .layout-region--footer {
     grid-column: 1;
     margin-inline: auto;
-    width: min(52rem, 100%);
+    width: var(--layout-region-edit-width);
+  }
+
+  /* When the layout has vertical tabs */
+  .layout-region--main:has(.vertical-tabs),
+  .layout-region--main:has(.vertical-tabs) ~ .layout-region--footer {
+    width: var(--layout-region-edit-extended-width);
   }
 
   /* Push sidebar down to horizontal align with form section. */
