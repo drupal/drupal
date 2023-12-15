@@ -12,3 +12,14 @@ int: 99
 # octal: 0775
 string: string
 string_int: '1'
+# To validate all types can be nullable.
+nullable_array: null
+nullable_boolean: ~
+nullable_exp: null
+nullable_float: ~
+nullable_float_as_integer: null
+nullable_hex: ~
+nullable_int: null
+nullable_octal: ~
+nullable_string: null
+nullable_string_int: ~

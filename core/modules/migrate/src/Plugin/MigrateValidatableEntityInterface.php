@@ -4,8 +4,6 @@ namespace Drupal\migrate\Plugin;
 
 use Drupal\Core\Entity\FieldableEntityInterface;
 
-// cspell:ignore validatable
-
 /**
  * To implement by a destination plugin that should provide entity validation.
  *

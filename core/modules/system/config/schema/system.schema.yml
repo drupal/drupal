@@ -226,9 +226,16 @@ system.menu.*:
     description:
       type: label
       label: 'Menu description'
+      # @see \Drupal\menu_ui\MenuForm::form()
+      nullable: true
+      constraints:
+        Length:
+          max: 512
     locked:
       type: boolean
-      label: ''
+      label: 'Locked'
+  constraints:
+    FullyValidatable: ~
 
 system.action.*:
   type: config_entity

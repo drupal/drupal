@@ -11,6 +11,7 @@ use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Config\Schema\Undefined;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\TypedData\TypedDataManager;
+use Drupal\Core\Validation\Plugin\Validation\Constraint\FullyValidatableConstraint;
 
 /**
  * Manages config schema type plugins.
@@ -120,6 +121,35 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
         $data_definition[$key] = $value;
       }
     }
+
+    // All values are optional by default (meaning they can be NULL), except for
+    // mappings and sequences. A sequence can only be NULL when `nullable: true`
+    // is set on the config schema type definition. This is unintuitive and
+    // contradicts Drupal core's documentation.
+    // @see https://www.drupal.org/node/2264179
+    // @see https://www.drupal.org/node/1978714
+    // To gradually evolve configuration schemas in the Drupal ecosystem to be
+    // validatable, this needs to be clarified in a non-disruptive way. Any
+    // config schema type definition — that is, a top-level entry in a
+    // *.schema.yml file — can opt into stricter behavior, whereby a property
+    // cannot be NULL unless it specifies `nullable: true`, by adding
+    // `FullyValidatable` as a top-level validation constraint.
+    // @see https://www.drupal.org/node/3364108
+    // @see https://www.drupal.org/node/3364109
+    // @see \Drupal\Core\TypedData\TypedDataManager::getDefaultConstraints()
+    if ($parent) {
+      $root_type_has_opted_in = FALSE;
+      foreach ($parent->getRoot()->getConstraints() as $constraint) {
+        if ($constraint instanceof FullyValidatableConstraint) {
+          $root_type_has_opted_in = TRUE;
+          break;
+        }
+      }
+      if ($root_type_has_opted_in) {
+        $data_definition->setRequired(!isset($data_definition['nullable']) || $data_definition['nullable'] === FALSE);
+      }
+    }
+
     return $data_definition;
   }
 

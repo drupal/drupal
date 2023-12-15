@@ -284,6 +284,16 @@ class ConfigCRUDTest extends KernelTestBase {
       // 'octal' => 0775,
       'string' => 'string',
       'string_int' => '1',
+      'nullable_array' => NULL,
+      'nullable_boolean' => NULL,
+      'nullable_exp' => NULL,
+      'nullable_float' => NULL,
+      'nullable_float_as_integer' => NULL,
+      'nullable_hex' => NULL,
+      'nullable_int' => NULL,
+      'nullable_octal' => NULL,
+      'nullable_string' => NULL,
+      'nullable_string_int' => NULL,
     ];
     $data = ['_core' => ['default_config_hash' => Crypt::hashBase64(serialize($data))]] + $data;
     $this->assertSame($data, $config->get());

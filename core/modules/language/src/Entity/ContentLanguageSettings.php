@@ -33,7 +33,10 @@ use Drupal\language\ContentLanguageSettingsInterface;
  *     "default_langcode",
  *     "language_alterable",
  *   },
- *   list_cache_tags = { "rendered" }
+ *   list_cache_tags = { "rendered" },
+ *   constraints = {
+ *     "ImmutableProperties" = {"id", "target_entity_type_id", "target_bundle"},
+ *   },
  * )
  */
 class ContentLanguageSettings extends ConfigEntityBase implements ContentLanguageSettingsInterface {

@@ -98,6 +98,56 @@ config_test.types:
     string_int:
       type: string
       label: 'String integer'
+    # All the above types, but now nullable.
+    nullable_array:
+      type: sequence
+      label: 'Nullable array'
+      nullable: true
+      sequence:
+        type: string
+        label: 'Item'
+    nullable_boolean:
+      type: boolean
+      label: 'Nullable boolean'
+      nullable: true
+    nullable_exp:
+      type: float
+      label: 'Nullable exponential'
+      nullable: true
+    nullable_float:
+      type: float
+      label: 'Nullable float'
+      nullable: true
+    nullable_float_as_integer:
+      type: float
+      label: 'Float'
+      nullable: true
+    nullable_hex:
+      type: integer
+      label: 'Nullable hexadecimal'
+      nullable: true
+    nullable_int:
+      type: integer
+      label: 'Nullable integer'
+      nullable: true
+    nullable_octal:
+      type: integer
+      label: 'Nullable octal'
+      nullable: true
+    nullable_string:
+      type: string
+      label: 'Nullable string'
+      nullable: true
+    nullable_string_int:
+      type: string
+      label: 'Nullable string integer'
+      nullable: true
+
+# cspell:ignore validatable
+config_test.types.fully_validatable:
+  type: config_test.types
+  constraints:
+    FullyValidatable: ~
 
 config_test.no_status.default:
   type: config_object
