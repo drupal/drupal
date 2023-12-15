@@ -208,7 +208,7 @@ function media_form_field_ui_field_storage_add_form_alter(&$form, FormStateInter
     'file_upload',
     'field_ui:entity_reference:media',
   ];
-  if (in_array($form_state->getValue('selected_field_type'), $field_types)) {
+  if (in_array($form_state->getValue('new_storage_type'), $field_types)) {
     $form['group_field_options_wrapper']['description_wrapper'] = [
       '#type' => 'item',
       '#markup' => $description_text,

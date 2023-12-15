@@ -115,23 +115,27 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     $this->config('field_ui.settings')->set('field_prefix', '')->save();
 
     $label = 'Disallowed field';
-    $edit = [
-      'label' => $label,
+    $edit1 = [
       'new_storage_type' => 'test_field',
+    ];
+    $edit2 = [
+      'label' => $label,
     ];
 
     // Try with an entity key.
-    $edit['field_name'] = 'title';
+    $edit2['field_name'] = 'title';
     $bundle_path = 'admin/structure/types/manage/' . $this->contentType;
     $this->drupalGet("{$bundle_path}/fields/add-field");
-    $this->submitForm($edit, 'Continue');
+    $this->submitForm($edit1, 'Continue');
+    $this->submitForm($edit2, 'Continue');
     $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
 
     // Try with a base field.
-    $edit['field_name'] = 'sticky';
+    $edit2['field_name'] = 'sticky';
     $bundle_path = 'admin/structure/types/manage/' . $this->contentType;
     $this->drupalGet("{$bundle_path}/fields/add-field");
-    $this->submitForm($edit, 'Continue');
+    $this->submitForm($edit1, 'Continue');
+    $this->submitForm($edit2, 'Continue');
     $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
   }
 
@@ -219,9 +223,13 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
             ->elementExists('css', "[name='new_storage_type'][value='$field_type']");
         }
         catch (ElementNotFoundException) {
-          if ($this->getFieldFromGroup($field_type)) {
+          if ($group = $this->getFieldFromGroup($field_type)) {
+            $this->assertSession()
+              ->elementExists('css', "[name='new_storage_type'][value='$group']");
+            $this->submitForm(['new_storage_type' => $group], 'Continue');
             $this->assertSession()
               ->elementExists('css', "[name='group_field_options_wrapper'][value='$field_type']");
+            $this->submitForm([], 'Back');
           }
         }
       }
@@ -240,9 +248,12 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     $url = 'admin/structure/types/manage/' . $this->contentType . '/fields/add-field';
     $this->drupalGet($url);
     $edit = [
+      'new_storage_type' => 'boolean',
+    ];
+    $this->submitForm($edit, 'Continue');
+    $edit = [
       'label' => $this->randomMachineName(),
       'field_name' => 'tags',
-      'new_storage_type' => 'boolean',
     ];
     $this->submitForm($edit, 'Continue');
 
@@ -384,12 +395,16 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     $field_exceed_max_length_input = $this->randomMachineName(23);
 
     // Try to create the field.
-    $edit = [
+    $edit1 = [
+      'new_storage_type' => 'test_field',
+    ];
+    $edit2 = [
       'label' => $field_exceed_max_length_label,
       'field_name' => $field_exceed_max_length_input,
     ];
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/add-field');
-    $this->submitForm($edit, 'Continue');
+    $this->submitForm($edit1, 'Continue');
+    $this->submitForm($edit2, 'Continue');
     $this->assertSession()->pageTextContains('Machine-readable name cannot be longer than 22 characters but is currently 23 characters long.');
 
     // Create a valid field.

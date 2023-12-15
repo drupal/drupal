@@ -49,8 +49,9 @@ class MediaReferenceFieldHelpTest extends MediaJavascriptTestBase {
     // visible.
     $assert_session->elementExists('css', "[name='new_storage_type'][value='boolean']");
     $page->find('css', "[name='new_storage_type'][value='boolean']")->getParent()->click();
-    $assert_session->assertWaitOnAjaxRequest();
+    $page->pressButton('Continue');
     $assert_session->pageTextNotContains($help_text);
+    $page->pressButton('Back');
 
     // Select each of the Reference, File upload field groups and verify their
     // descriptions are now visible and match the expected text.
@@ -58,8 +59,9 @@ class MediaReferenceFieldHelpTest extends MediaJavascriptTestBase {
       $assert_session->elementExists('css', "[name='new_storage_type'][value='$field_group']");
       $page->find('css', "[name='new_storage_type'][value='$field_group']")->getParent()->click();
 
-      $assert_session->assertWaitOnAjaxRequest();
+      $page->pressButton('Continue');
       $assert_session->pageTextContains($help_text);
+      $page->pressButton('Back');
     }
   }
 
