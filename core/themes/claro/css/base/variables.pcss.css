@@ -243,4 +243,9 @@
    * Breadcrumb.
    */
   --breadcrumb-height: 1.25rem;
+  /**
+   * Layout.
+   */
+  --layout-region-edit-width: min(960px, 100%);
+  --layout-region-edit-extended-width: min(1088px, 100%);
 }
