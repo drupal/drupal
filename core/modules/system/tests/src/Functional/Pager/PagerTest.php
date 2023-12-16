@@ -73,7 +73,7 @@ class PagerTest extends BrowserTestBase {
     $element = $this->assertSession()->elementExists('xpath', '//li[contains(@class, "pager__item--last")]/a');
     preg_match('@page=(\d+)@', $element->getAttribute('href'), $matches);
     $current_page = (int) $matches[1];
-    $this->drupalGet($GLOBALS['base_root'] . parse_url($this->getUrl())['path'] . $element->getAttribute('href'), ['external' => TRUE]);
+    $this->drupalGet($this->getAbsoluteUrl(parse_url($this->getUrl())['path'] . $element->getAttribute('href')), ['external' => TRUE]);
     $this->assertPagerItems($current_page);
 
     // Verify the pager does not render on a list without pagination.
@@ -181,7 +181,7 @@ class PagerTest extends BrowserTestBase {
     // (1-indexed) and resulting query parameter
     foreach ($test_data as $data) {
       $input_query = str_replace(' ', '%20', $data['input_query']);
-      $this->drupalGet($GLOBALS['base_root'] . parse_url($this->getUrl())['path'] . $input_query, ['external' => TRUE]);
+      $this->drupalGet($this->getAbsoluteUrl(parse_url($this->getUrl())['path'] . $input_query), ['external' => TRUE]);
       foreach ([0, 1, 4] as $pager_element) {
         $active_page = $this->cssSelect("div.test-pager-{$pager_element} ul.pager__items li.is-active:contains('{$data['expected_page'][$pager_element]}')");
         $destination = str_replace('%2C', ',', $active_page[0]->find('css', 'a')->getAttribute('href'));
