@@ -127,7 +127,6 @@
                 "[web-root]/.eslintrc.json": "assets/scaffold/files/eslintrc.json",
                 "[web-root]/.ht.router.php": "assets/scaffold/files/ht.router.php",
                 "[web-root]/.htaccess": "assets/scaffold/files/htaccess",
-                "[web-root]/.user.ini": "assets/scaffold/files/user.ini",
                 "[web-root]/example.gitignore": "assets/scaffold/files/example.gitignore",
                 "[web-root]/index.php": "assets/scaffold/files/index.php",
                 "[web-root]/INSTALL.txt": "assets/scaffold/files/drupal.INSTALL.txt",
