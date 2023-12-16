@@ -723,8 +723,14 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
  * @return string|false
  *   A string indicating which upload progress system is available. Either "apc"
  *   or "uploadprogress". If neither are available, returns FALSE.
+ *
+ * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+ *    extension_loaded('uploadprogress') instead.
+ *
+ * @see https://www.drupal.org/node/3397577
  */
 function file_progress_implementation() {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use extension_loaded(\'uploadprogress\') instead. See https://www.drupal.org/node/3397577', E_USER_DEPRECATED);
   static $implementation;
   if (!isset($implementation)) {
     $implementation = FALSE;

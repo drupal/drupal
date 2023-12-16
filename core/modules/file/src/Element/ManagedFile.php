@@ -276,19 +276,17 @@ class ManagedFile extends FormElement {
     ];
 
     // Add progress bar support to the upload if possible.
-    if ($element['#progress_indicator'] == 'bar' && $implementation = file_progress_implementation()) {
+    if ($element['#progress_indicator'] == 'bar' && extension_loaded('uploadprogress')) {
       $upload_progress_key = mt_rand();
 
-      if ($implementation == 'uploadprogress') {
-        $element['UPLOAD_IDENTIFIER'] = [
-          '#type' => 'hidden',
-          '#value' => $upload_progress_key,
-          '#attributes' => ['class' => ['file-progress']],
-          // Uploadprogress extension requires this field to be at the top of
-          // the form.
-          '#weight' => -20,
-        ];
-      }
+      $element['UPLOAD_IDENTIFIER'] = [
+        '#type' => 'hidden',
+        '#value' => $upload_progress_key,
+        '#attributes' => ['class' => ['file-progress']],
+        // Uploadprogress extension requires this field to be at the top of
+        // the form.
+        '#weight' => -20,
+      ];
 
       // Add the upload progress callback.
       $element['upload_button']['#ajax']['progress']['url'] = Url::fromRoute('file.ajax_progress', ['key' => $upload_progress_key]);
