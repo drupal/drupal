@@ -1,9 +1,9 @@
 #
-# Apache/PHP/Drupal settings:
+# Apache/mod_php/Drupal settings:
 #
 
 # Protect files and directories from prying eyes.
-<FilesMatch "\.(engine|inc|install|make|module|profile|po|sh|.*sql|theme|twig|tpl(\.php)?|xtmpl|yml)(~|\.sw[op]|\.bak|\.orig|\.save)?$|^(\.(?!well-known).*|Entries.*|Repository|Root|Tag|Template|composer\.(json|lock)|web\.config|yarn\.lock|package\.json)$|^#.*#$|\.php(~|\.sw[op]|\.bak|\.orig|\.save)$">
+<FilesMatch "\.(engine|inc|install|make|module|profile|po|sh|.*sql|theme|twig|tpl(\.php)?|xtmpl|yml)(~|\.sw[op]|\.bak|\.orig|\.save)?$|^(\.(?!well-known).*|Entries.*|Repository|Root|Tag|Template|composer\.(json|lock)|web\.config|yarn\.lock|package\.json|\.user\.ini)$|^#.*#$|\.php(~|\.sw[op]|\.bak|\.orig|\.save)$">
   <IfModule mod_authz_core.c>
     Require all denied
   </IfModule>
@@ -24,8 +24,11 @@ AddEncoding gzip svgz
 
 # Most of the following PHP settings cannot be changed at runtime. See
 # sites/default/default.settings.php and
-# Drupal\Core\DrupalKernel::bootEnvironment() for settings that can be
-# changed at runtime.
+# Drupal\Core\DrupalKernel::bootEnvironment() for settings that can be changed
+# at runtime.
+#
+# PHP only reads settings from this file if it is running as an Apache module.
+# If PHP is running as a CGI script, see .user.ini.
 <IfModule mod_php.c>
   php_value assert.active                   0
 </IfModule>

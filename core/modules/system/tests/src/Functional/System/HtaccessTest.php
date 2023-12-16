@@ -98,6 +98,7 @@ class HtaccessTest extends BrowserTestBase {
     // Ensure web server configuration files cannot be accessed.
     $file_paths["$path/.htaccess"] = 403;
     $file_paths["$path/web.config"] = 403;
+    $file_paths["$path/.user.ini"] = 403;
 
     return $file_paths;
   }
