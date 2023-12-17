@@ -1336,7 +1336,7 @@ services:
       - { name: access_check, applies_to: _access_theme }
   access_check.custom:
     class: Drupal\Core\Access\CustomAccessCheck
-    arguments: ['@controller_resolver', '@access_arguments_resolver_factory']
+    arguments: ['@callable_resolver', '@access_arguments_resolver_factory']
     tags:
       - { name: access_check, applies_to: _custom_access }
   access_check.csrf:
