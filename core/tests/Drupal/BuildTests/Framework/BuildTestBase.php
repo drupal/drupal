@@ -7,6 +7,7 @@ namespace Drupal\BuildTests\Framework;
 use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\Mink\Mink;
 use Behat\Mink\Session;
+use Composer\InstalledVersions;
 use Drupal\Component\FileSystem\FileSystem as DrupalFilesystem;
 use Drupal\Tests\DrupalTestBrowser;
 use Drupal\Tests\PhpUnitCompatibilityTrait;
@@ -557,7 +558,7 @@ abstract class BuildTestBase extends TestCase {
 
     $fs = new SymfonyFilesystem();
     $options = ['override' => TRUE, 'delete' => FALSE];
-    $fs->mirror($this->getDrupalRoot(), $working_path, $iterator, $options);
+    $fs->mirror($this->getComposerRoot(), $working_path, $iterator, $options);
   }
 
   /**
@@ -577,14 +578,16 @@ abstract class BuildTestBase extends TestCase {
    *   A Finder object ready to iterate over core codebase.
    */
   public function getCodebaseFinder() {
+    $drupal_root = $this->getWorkingPathDrupalRoot() ?? '';
     $finder = new Finder();
     $finder->files()
+      ->followLinks()
       ->ignoreUnreadableDirs()
-      ->in($this->getDrupalRoot())
-      ->notPath('#^sites/default/files#')
-      ->notPath('#^sites/simpletest#')
-      ->notPath('#^core/node_modules#')
-      ->notPath('#^sites/default/settings\..*php#')
+      ->in($this->getComposerRoot())
+      ->notPath("#^{$drupal_root}sites/default/files#")
+      ->notPath("#^{$drupal_root}sites/simpletest#")
+      ->notPath("#^{$drupal_root}core/node_modules#")
+      ->notPath("#^{$drupal_root}sites/default/settings\..*php#")
       ->ignoreDotFiles(FALSE)
       ->ignoreVCS(FALSE);
     return $finder;
@@ -596,8 +599,53 @@ abstract class BuildTestBase extends TestCase {
    * @return string
    *   The full path to the root of this Drupal codebase.
    */
-  protected function getDrupalRoot() {
-    return realpath(dirname(__DIR__, 5));
+  public function getDrupalRoot() {
+    // Given this code is in the drupal/core package, $core cannot be NULL.
+    /** @var string $core */
+    $core = InstalledVersions::getInstallPath('drupal/core');
+    return realpath(dirname($core));
+  }
+
+  /**
+   * Gets the path to the Composer root directory.
+   *
+   * @return string
+   *   The absolute path to the Composer root directory.
+   */
+  public function getComposerRoot(): string {
+    $root = InstalledVersions::getRootPackage();
+    return realpath($root['install_path']);
+  }
+
+  /**
+   * Gets the path to Drupal root in the workspace directory.
+   *
+   * @return string
+   *   The absolute path to the Drupal root directory in the workspace.
+   */
+  public function getWorkspaceDrupalRoot(): string {
+    $dir = $this->getWorkspaceDirectory();
+    $drupal_root = $this->getWorkingPathDrupalRoot();
+    if ($drupal_root !== NULL) {
+      $dir = $dir . DIRECTORY_SEPARATOR . $drupal_root;
+    }
+    return $dir;
+  }
+
+  /**
+   * Gets the working path for Drupal core.
+   *
+   * @return string|null
+   *   The relative path to Drupal's root directory or NULL if it is the same
+   *   as the composer root directory.
+   */
+  public function getWorkingPathDrupalRoot(): ?string {
+    $composer_root = $this->getComposerRoot();
+    $drupal_root = $this->getDrupalRoot();
+    if ($composer_root === $drupal_root) {
+      return NULL;
+    }
+    return (new SymfonyFilesystem())->makePathRelative($drupal_root, $composer_root);
   }
 
 }
