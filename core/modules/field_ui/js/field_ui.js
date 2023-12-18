@@ -31,47 +31,6 @@
               '.js-form-item-existing-storage-label label',
           )
           .addClass('js-form-required form-required');
-
-        const $newFieldType = $form.find('select[name="new_storage_type"]');
-        const $existingStorageName = $form.find(
-          'select[name="existing_storage_name"]',
-        );
-        const $existingStorageLabel = $form.find(
-          'input[name="existing_storage_label"]',
-        );
-
-        // When the user selects a new field type, clear the "existing field"
-        // selection.
-        $newFieldType.on('change', function () {
-          if (this.value !== '') {
-            // Reset the "existing storage name" selection.
-            if ($existingStorageName.length) {
-              $existingStorageName[0].value = '';
-              $existingStorageName.trigger('change');
-            }
-          }
-        });
-
-        // When the user selects an existing storage name, clear the "new field
-        // type" selection and populate the 'existing_storage_label' element.
-        $existingStorageName.on('change', function () {
-          const { value } = this;
-          if (value !== '') {
-            if ($newFieldType.length) {
-              // Reset the "new field type" selection.
-              $newFieldType[0].value = '';
-              $newFieldType.trigger('change');
-            }
-
-            // Pre-populate the "existing storage label" element.
-            if (
-              typeof drupalSettings.existingFieldLabels[value] !== 'undefined'
-            ) {
-              $existingStorageLabel[0].value =
-                drupalSettings.existingFieldLabels[value];
-            }
-          }
-        });
       }
     },
   };

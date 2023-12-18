@@ -100,13 +100,6 @@ class FieldStorageAddForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
-    return 'field_ui_field_storage_add_form';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager'),
@@ -116,6 +109,13 @@ class FieldStorageAddForm extends FormBase {
       $container->get('tempstore.private')->get('field_ui'),
       $container->get('plugin.manager.field.field_type_category'),
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormId() {
+    return 'field_ui_field_storage_add_form';
   }
 
   /**
@@ -156,8 +156,8 @@ class FieldStorageAddForm extends FormBase {
       'field_ui/drupal.field_ui.manage_fields',
       'core/drupal.ajax',
     ];
-    // The group info is stored in new_storage_type.
-    if ($form_state->getValue('new_storage_type')) {
+
+    if ($form_state->hasValue('new_storage_type')) {
       // A group is already selected. Show field types for that group.
       $this->addFieldOptionsForGroup($form, $form_state);
     }
@@ -167,6 +167,127 @@ class FieldStorageAddForm extends FormBase {
     }
 
     return $form;
+  }
+
+  /**
+   * Save field type definitions and categories in the form state.
+   *
+   * Get all field type definitions and store each one twice:
+   * - field_type_options: each field type is indexed by its category plugin ID
+   *   or its label.
+   * - unique_definitions: each field type is indexed by its category and name.
+   *
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  protected function processFieldDefinitions(FormStateInterface $form_state): void {
+    $field_type_options = $unique_definitions = [];
+    $grouped_definitions = $this->fieldTypePluginManager
+      ->getGroupedDefinitions($this->fieldTypePluginManager->getEntityTypeUiDefinitions($this->entityTypeId), 'label', 'id');
+    foreach ($grouped_definitions as $category => $field_types) {
+      foreach ($field_types as $name => $field_type) {
+        $definition = ['unique_identifier' => $name] + $field_type;
+        $category_info = $this->fieldTypeCategoryManager
+          ->createInstance($field_type['category'], $definition);
+        $definition['display_as_group'] = !($category_info instanceof FallbackFieldTypeCategory);
+        $id = $this->fieldTypeCategoryManager->hasDefinition($category)
+          ? $category_info->getPluginId()
+          : (string) $field_type['label'];
+        $field_type_options[$id] = $definition;
+        $unique_definitions[$category][$name] = $definition;
+      }
+    }
+
+    $form_state->set('field_type_options', $field_type_options);
+    $form_state->set('unique_definitions', $unique_definitions);
+  }
+
+  /**
+   * Adds ungrouped field types and field type groups to the form.
+   *
+   * When a group is selected, the related fields are shown when the form is
+   * rebuilt.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  protected function addGroupFieldOptions(array &$form, FormStateInterface $form_state): void {
+    $field_type_options_radios = [];
+    foreach ($form_state->get('field_type_options') as $id => $field_type) {
+      /** @var  \Drupal\Core\Field\FieldTypeCategoryInterface $category_info */
+      $category_info = $this->fieldTypeCategoryManager
+        ->createInstance($field_type['category'], $field_type);
+      $display_as_group = $field_type['display_as_group'];
+      $cleaned_class_name = Html::getClass($field_type['unique_identifier']);
+      $field_type_options_radios[$id] = [
+        '#type' => 'container',
+        '#attributes' => [
+          'class' => ['field-option', 'js-click-to-select'],
+        ],
+        '#weight' => $category_info->getWeight(),
+        'thumb' => [
+          '#type' => 'container',
+          '#attributes' => [
+            'class' => ['field-option__thumb'],
+          ],
+          'icon' => [
+            '#type' => 'container',
+            '#attributes' => [
+              'class' => [
+                'field-option__icon',
+                $display_as_group ? "field-icon-$field_type[category]" : "field-icon-$cleaned_class_name",
+              ],
+            ],
+          ],
+        ],
+        'radio' => [
+          '#type' => 'radio',
+          '#title' => $category_info->getLabel(),
+          '#parents' => ['new_storage_type'],
+          '#title_display' => 'before',
+          '#description_display' => 'before',
+          '#theme_wrappers' => ['form_element__new_storage_type'],
+          // If it is a category, set return value as the category label.
+          // Otherwise, set it as the field type id.
+          '#return_value' => $display_as_group ? $field_type['category'] : $field_type['unique_identifier'],
+          '#attributes' => [
+            'class' => ['field-option-radio'],
+          ],
+          '#description' => [
+            '#type' => 'container',
+            '#attributes' => [
+              'class' => ['field-option__description'],
+            ],
+            '#markup' => $category_info->getDescription(),
+          ],
+          '#variant' => 'field-option',
+        ],
+      ];
+
+      if ($libraries = $category_info->getLibraries()) {
+        $field_type_options_radios[$id]['#attached']['library'] = $libraries;
+      }
+    }
+    uasort($field_type_options_radios, [SortArray::class, 'sortByWeightProperty']);
+
+    $form['add-label'] = [
+      '#type' => 'label',
+      '#title' => $this->t('Choose a type of field'),
+      '#required' => TRUE,
+    ];
+
+    $form['add'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => 'add-field-container',
+      ],
+    ];
+    $form['add']['new_storage_type'] = $field_type_options_radios;
+
+    $form['actions']['submit']['#validate'][] = '::validateGroupOrField';
+    $form['actions']['submit']['#submit'][] = '::rebuildWithOptions';
   }
 
   /**
@@ -206,7 +327,7 @@ class FieldStorageAddForm extends FormBase {
       '#required' => FALSE,
     ];
 
-    $form['actions']['submit']['#validate'][] = '::validateAddNew';
+    $form['actions']['submit']['#validate'][] = '::validateFieldType';
 
     $form['actions']['back'] = [
       '#type' => 'submit',
@@ -220,9 +341,11 @@ class FieldStorageAddForm extends FormBase {
       '#type' => 'value',
       '#value' => $new_storage_type,
     ];
+
     if (!isset($new_storage_type) || !$field_type_options[$new_storage_type]['display_as_group']) {
       return;
     }
+
     // Create a wrapper for all the field options to be provided.
     $form['group_field_options_wrapper'] = [
       '#prefix' => '<div id="group-field-options-wrapper" class="group-field-options-wrapper">',
@@ -240,18 +363,19 @@ class FieldStorageAddForm extends FormBase {
       ],
     ];
 
-    $unique_definitions = $form_state->get('unique_definitions');
+    $unique_definitions = $form_state->get('unique_definitions')[$new_storage_type] ?? [];
     $group_field_options = [];
-    foreach ($unique_definitions[$new_storage_type] as $option_key => $option) {
+    foreach ($unique_definitions as $option) {
+      $identifier = $option['unique_identifier'];
       $radio_element = [
         '#type' => 'radio',
         '#theme_wrappers' => ['form_element__new_storage_type'],
         '#title' => $option['label'],
         '#description' => [
           '#theme' => 'item_list',
-          '#items' => $unique_definitions[$new_storage_type][$option_key]['description'],
+          '#items' => $option['description'],
         ],
-        '#id' => $option['unique_identifier'],
+        '#id' => $identifier,
         '#weight' => $option['weight'],
         '#parents' => ['group_field_options_wrapper'],
         '#attributes' => [
@@ -262,150 +386,16 @@ class FieldStorageAddForm extends FormBase {
           'class' => ['js-click-to-select', 'subfield-option'],
         ],
         '#variant' => 'field-suboption',
+        '#return_value' => $identifier,
       ];
-      $radio_element['#return_value'] = $option['unique_identifier'];
-      if ((string) $option['unique_identifier'] === 'entity_reference') {
+      if ($identifier === 'entity_reference') {
         $radio_element['#title'] = 'Other';
         $radio_element['#weight'] = 10;
       }
-      $group_field_options[$option['unique_identifier']] = $radio_element;
+      $group_field_options[$identifier] = $radio_element;
     }
     uasort($group_field_options, [SortArray::class, 'sortByWeightProperty']);
     $form['group_field_options_wrapper']['fields'] += $group_field_options;
-  }
-
-  /**
-   * Adds ungrouped field types and field type groups to the form.
-   *
-   * When a group is selected, the related fields are shown when the form is
-   * rebuilt.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   */
-  protected function addGroupFieldOptions(array &$form, FormStateInterface $form_state): void {
-    $field_type_options = $form_state->get('field_type_options');
-    $field_type_options_radios = [];
-    foreach ($field_type_options as $id => $field_type) {
-      /** @var  \Drupal\Core\Field\FieldTypeCategoryInterface $category_info */
-      $category_info = $this->fieldTypeCategoryManager->createInstance($field_type['category'], $field_type);
-      $display_as_group = $field_type['display_as_group'];
-      $cleaned_class_name = Html::getClass($field_type['unique_identifier']);
-      $field_type_options_radios[$id] = [
-        '#type' => 'container',
-        '#attributes' => [
-          'class' => ['field-option', 'js-click-to-select'],
-          'checked' => $this->getRequest()->request->get('new_storage_type') !== NULL && $this->getRequest()->request->get('new_storage_type') == ($display_as_group ? $field_type['category'] : $field_type['unique_identifier']),
-        ],
-        '#weight' => $category_info->getWeight(),
-        'thumb' => [
-          '#type' => 'container',
-          '#attributes' => [
-            'class' => ['field-option__thumb'],
-          ],
-          'icon' => [
-            '#type' => 'container',
-            '#attributes' => [
-              'class' => ['field-option__icon', $display_as_group ?
-                "field-icon-$field_type[category]" : "field-icon-$cleaned_class_name",
-              ],
-            ],
-          ],
-        ],
-        'radio' => [
-          '#type' => 'radio',
-          '#title' => $category_info->getLabel(),
-          '#parents' => ['new_storage_type'],
-          '#title_display' => 'before',
-          '#description_display' => 'before',
-          '#theme_wrappers' => ['form_element__new_storage_type'],
-          // If it is a category, set return value as the category label,
-          // otherwise, set it as the field type id.
-          '#return_value' => $display_as_group ? $field_type['category'] : $field_type['unique_identifier'],
-          '#attributes' => [
-            'class' => ['field-option-radio'],
-          ],
-          '#description' => [
-            '#type' => 'container',
-            '#attributes' => [
-              'class' => ['field-option__description'],
-            ],
-            '#markup' => $category_info->getDescription(),
-          ],
-          '#variant' => 'field-option',
-        ],
-      ];
-
-      if ($libraries = $category_info->getLibraries()) {
-        $field_type_options_radios[$id]['#attached']['library'] = $libraries;
-      }
-    }
-    uasort($field_type_options_radios, [SortArray::class, 'sortByWeightProperty']);
-
-    $form['add-label'] = [
-      '#type' => 'label',
-      '#title' => $this->t('Choose a type of field'),
-      '#required' => TRUE,
-    ];
-
-    $form['add'] = [
-      '#type' => 'container',
-      '#attributes' => [
-        'class' => 'add-field-container',
-      ],
-    ];
-    $form['add']['new_storage_type'] = $field_type_options_radios;
-
-    $form['group_submit'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Change field group'),
-      '#limit_validation_errors' => [],
-      '#attributes' => [
-        'class' => ['js-hide'],
-      ],
-      '#submit' => [[static::class, 'rebuildWithOptions']],
-    ];
-
-    $form['actions']['submit']['#validate'][] = '::validateGroupOrField';
-    $form['actions']['submit']['#submit'][] = '::rebuildWithOptions';
-  }
-
-  /**
-   * Save field type definitions and categories in the form state.
-   *
-   * Get all field type definitions and store each one twice:
-   * - field_type_options: each field type is indexed by its category plugin ID
-   *   or its label.
-   * - unique_definitions: each field type is indexed by its category and name.
-   *
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   */
-  protected function processFieldDefinitions(FormStateInterface $form_state): void {
-    $field_type_options = $unique_definitions = [];
-    $grouped_definitions = $this->fieldTypePluginManager->getGroupedDefinitions($this->fieldTypePluginManager->getEntityTypeUiDefinitions($this->entityTypeId), 'label', 'id');
-    // Invoke a hook to get category properties.
-    foreach ($grouped_definitions as $category => $field_types) {
-      foreach ($field_types as $name => $field_type) {
-        $definition = ['unique_identifier' => $name] + $field_type;
-        $category_info = $this->fieldTypeCategoryManager
-          ->createInstance($field_type['category'], $definition);
-        $definition['display_as_group'] = !($category_info instanceof FallbackFieldTypeCategory);
-        if ($this->fieldTypeCategoryManager->hasDefinition($category)) {
-          $id = $category_info->getPluginId();
-        }
-        else {
-          $id = (string) $field_type['label'];
-        }
-        $field_type_options[$id] = $definition;
-        $unique_definitions[$category][$name] = $definition;
-      }
-    }
-
-    $form_state->set('field_type_options', $field_type_options);
-    $form_state->set('unique_definitions', $unique_definitions);
   }
 
   /**
@@ -430,7 +420,7 @@ class FieldStorageAddForm extends FormBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
-  public function validateAddNew(array $form, FormStateInterface $form_state) {
+  public function validateFieldType(array $form, FormStateInterface $form_state) {
     // Missing label.
     if (!$form_state->getValue('label')) {
       $form_state->setErrorByName('label', $this->t('Add new field: you need to provide a label.'));
@@ -466,15 +456,15 @@ class FieldStorageAddForm extends FormBase {
       'entity_type' => $this->entityTypeId,
       'bundle' => $this->bundle,
     ];
-    $default_options = [];
 
     // Check if we're dealing with a preconfigured field.
-    if (strpos($field_storage_type, 'field_ui:') === 0) {
+    if (str_starts_with($field_storage_type, 'field_ui:')) {
       [, $field_type, $preset_key] = explode(':', $field_storage_type, 3);
       $default_options = $this->getNewFieldDefaults($field_type, $preset_key);
     }
     else {
       $field_type = $field_storage_type;
+      $default_options = [];
     }
     $field_values += [
       ...$default_options['field_config'] ?? [],
@@ -493,7 +483,9 @@ class FieldStorageAddForm extends FormBase {
     ];
 
     try {
-      $field_storage_entity = $this->entityTypeManager->getStorage('field_storage_config')->create($field_storage_values);
+      $field_storage_entity = $this->entityTypeManager
+        ->getStorage('field_storage_config')
+        ->create($field_storage_values);
     }
     catch (\Exception $e) {
       $this->messenger()->addError($this->t('There was a problem creating field %label: @message', ['%label' => $values['label'], '@message' => $e->getMessage()]));
