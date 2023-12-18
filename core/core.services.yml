@@ -7,6 +7,7 @@ parameters:
   # \Drupal\Core\Cache\ListCacheBinsPass::process() will override this but defining this allows the cache system to
   # function properly before that runs.
   cache_default_bin_backends: []
+  memory_cache_default_bin_backends: []
   session.storage.options:
     gc_probability: 1
     gc_divisor: 100
@@ -194,7 +195,7 @@ services:
 
   cache_factory:
     class: Drupal\Core\Cache\CacheFactory
-    arguments: ['@settings', '%cache_default_bin_backends%']
+    arguments: ['@settings', '%cache_default_bin_backends%', '%memory_cache_default_bin_backends%']
     calls:
       - [setContainer, ['@service_container']]
   Drupal\Core\Cache\CacheFactoryInterface: '@cache_factory'
@@ -239,6 +240,8 @@ services:
     arguments: ['@cache_tags.invalidator.checksum']
   cache.backend.memory:
     class: Drupal\Core\Cache\MemoryBackendFactory
+  cache.backend.memory.memory:
+    class: Drupal\Core\Cache\MemoryCache\MemoryCacheFactory
   # A special cache bin that does not persist beyond the length of the request.
   cache.static:
     class: Drupal\Core\Cache\CacheBackendInterface
@@ -289,9 +292,11 @@ services:
     factory: ['@cache_factory', 'get']
     arguments: [access_policy]
   cache.access_policy_memory:
-    class: Drupal\Core\Cache\MemoryCache\MemoryCache
+    class: Drupal\Core\Cache\CacheBackendInterface
     tags:
-      - { name: cache_tags_invalidator }
+      - { name: cache.bin.memory, default_backend: cache.backend.memory.memory }
+    factory: ['@cache_factory', 'get']
+    arguments: [access_policy_memory]
   cache.data:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
@@ -308,17 +313,10 @@ services:
     class: Drupal\Core\Cache\VariationCacheInterface
     factory: ['@variation_cache_factory', 'get']
     arguments: [access_policy]
-  # We cannot use the VariationCacheFactory here because that expects that the
-  # backend it should wrap a VariationCache around is a proper cache bin. The
-  # MemoryCache backend, however, is not so we cannot use the factory here.
-  #
-  # By instantiating a VariationCache via the container and tagging the cache
-  # it's wrapping as a cache tags invalidator, it does still behave the way we
-  # want it to, though.
   variation_cache.access_policy_memory:
-    class: Drupal\Core\Cache\VariationCache
-    arguments: ['@request_stack', '@cache.access_policy_memory', '@cache_contexts_manager']
-  Drupal\Core\Cache\VariationCacheInterface: '@variation_cache.access_policy_memory'
+    class: Drupal\Core\Cache\VariationCacheInterface
+    factory: ['@variation_cache_factory', 'get']
+    arguments: [access_policy_memory]
   Drupal\Core\Asset\AssetQueryStringInterface: '@asset.query_string'
   asset.query_string:
     class: Drupal\Core\Asset\AssetQueryString

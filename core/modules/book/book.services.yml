@@ -41,7 +41,11 @@ services:
     arguments: ['@book.outline_storage', '@entity_type.manager', '@string_translation']
     lazy: true
   book.memory_cache:
-    class: Drupal\Core\Cache\MemoryCache\MemoryCache
+    class: Drupal\Core\Cache\MemoryCache\MemoryCacheInterface
+    tags:
+      - { name: cache.bin.memory, default_backend: cache.backend.memory.memory }
+    factory: ['@cache_factory', 'get']
+    arguments: [memory_cache]
   book.backend_chained_cache:
     class: Drupal\Core\Cache\BackendChain
     calls:
@@ -50,4 +54,4 @@ services:
     tags:
       # This tag ensures that Drupal's cache_tags.invalidator service
       # invalidates also this cache data.
-      - { name: cache.bin }
+      - { name: cache.bin.memory }

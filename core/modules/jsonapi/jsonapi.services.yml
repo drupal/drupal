@@ -125,8 +125,11 @@ services:
 
   # Cache.
   cache.jsonapi_memory:
-    class: Drupal\Core\Cache\MemoryCache\MemoryCache
-    public: false
+    class: Drupal\Core\Cache\MemoryCache\MemoryCacheInterface
+    tags:
+      - { name: cache.bin.memory, default_backend: cache.backend.memory.memory }
+    factory: ['@cache_factory', 'get']
+    arguments: [jsonapi_memory]
 
   # A chained cache with an in-memory cache as the first layer and a database-
   # backed cache as the fallback is used. The first layer (memory) is necessary
@@ -138,7 +141,7 @@ services:
     calls:
       - [appendBackend, ['@cache.jsonapi_memory']]
       - [appendBackend, ['@cache.default']]
-    tags: [{ name: cache.bin }]
+    tags: [{ name: cache.bin.memory }]
   cache.jsonapi_normalizations:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:

@@ -68,10 +68,12 @@ class CacheTagsInvalidator implements CacheTagsInvalidatorInterface {
    */
   protected function getInvalidatorCacheBins() {
     $bins = [];
-    foreach ($this->container->getParameter('cache_bins') as $service_id => $bin) {
-      $service = $this->container->get($service_id);
-      if ($service instanceof CacheTagsInvalidatorInterface) {
-        $bins[$bin] = $service;
+    foreach (['cache_bins', 'memory_cache_bins'] as $parameter) {
+      foreach ($this->container->getParameter($parameter) as $service_id => $bin) {
+        $service = $this->container->get($service_id);
+        if ($service instanceof CacheTagsInvalidatorInterface) {
+          $bins[$bin] = $service;
+        }
       }
     }
     return $bins;

@@ -41,10 +41,20 @@ class CacheTagsInvalidatorTest extends UnitTestCase {
     // a fatal error.
     $non_invalidator_cache_bin = $this->createMock('\Drupal\Core\Cache\CacheBackendInterface');
 
+    // Repeat the above for memory cache bins.
+    $invalidator_memory_cache_bin = $this->createMock('\Drupal\Core\Cache\CacheTagsInvalidator');
+    $invalidator_memory_cache_bin->expects($this->once())
+      ->method('invalidateTags')
+      ->with(['node:1']);
+    $non_invalidator_memory_cache_bin = $this->createMock('\Drupal\Core\Cache\CacheBackendInterface');
+
     $container = new Container();
     $container->set('cache.invalidator_cache_bin', $invalidator_cache_bin);
     $container->set('cache.non_invalidator_cache_bin', $non_invalidator_cache_bin);
+    $container->set('cache.invalidator_memory_cache_bin', $invalidator_memory_cache_bin);
+    $container->set('cache.non_invalidator_memory_cache_bin', $non_invalidator_memory_cache_bin);
     $container->setParameter('cache_bins', ['cache.invalidator_cache_bin' => 'invalidator_cache_bin', 'cache.non_invalidator_cache_bin' => 'non_invalidator_cache_bin']);
+    $container->setParameter('memory_cache_bins', ['cache.invalidator_memory_cache_bin' => 'invalidator_memory_cache_bin', 'cache.non_invalidator_memory_cache_bin' => 'non_invalidator_memory_cache_bin']);
     $cache_tags_invalidator->setContainer($container);
 
     $invalidator = $this->createMock('\Drupal\Core\Cache\CacheTagsInvalidator');
