@@ -18,7 +18,6 @@ class MigrateBlockContentTranslationTest extends MigrateDrupal6TestBase {
     'book',
     'block',
     'comment',
-    'forum',
     'views',
     'block_content',
     'config_translation',
