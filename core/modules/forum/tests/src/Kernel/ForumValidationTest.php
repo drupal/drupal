@@ -65,7 +65,7 @@ class ForumValidationTest extends EntityKernelTestBase {
     $forum_post->set('taxonomy_forums', $container);
     $violations = $forum_post->validate();
     $this->assertCount(1, $violations);
-    $this->assertEquals(t('The item %forum is a forum container, not a forum. Select one of the forums below instead.', ['%forum' => $container->label()]), $violations[0]->getMessage());
+    $this->assertEquals(sprintf('The item %s is a forum container, not a forum. Select one of the forums below instead.', $container->label()), $violations[0]->getMessage());
   }
 
 }

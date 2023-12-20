@@ -84,9 +84,7 @@ class UniqueValuesConstraintValidatorTest extends KernelTestBase {
     $violations = $entity->validate();
     $this->assertCount(1, $violations);
     $this->assertEquals('field_test_text.2', $violations[0]->getPropertyPath());
-    $this->assertEquals(t('A unique field entity with unique_field_test %value already exists.', [
-      '%value' => $value,
-    ]), $violations[0]->getMessage());
+    $this->assertEquals(sprintf('A unique field entity with unique_field_test %s already exists.', $value), $violations[0]->getMessage());
 
     // Create another entity with two values, but one value is existing.
     $definition = [
@@ -101,9 +99,7 @@ class UniqueValuesConstraintValidatorTest extends KernelTestBase {
     $violations = $entity->validate();
     $this->assertCount(1, $violations);
     $this->assertEquals('field_test_text.1', $violations[0]->getPropertyPath());
-    $this->assertEquals(t('A unique field entity with unique_field_test %value already exists.', [
-      '%value' => $definition['field_test_text'][1],
-    ]), $violations[0]->getMessage());
+    $this->assertEquals(sprintf('A unique field entity with unique_field_test %s already exists.', $definition['field_test_text'][1]), $violations[0]->getMessage());
 
   }
 
@@ -135,9 +131,7 @@ class UniqueValuesConstraintValidatorTest extends KernelTestBase {
     $violations = $entity->validate();
     $this->assertCount(1, $violations);
     $this->assertEquals('field_test_reference.1', $violations[0]->getPropertyPath());
-    $this->assertEquals(t('A unique field entity with unique_reference_test %value already exists.', [
-      '%value' => $definition['field_test_reference'][1],
-    ]), $violations[0]->getMessage());
+    $this->assertEquals(sprintf('A unique field entity with unique_reference_test %s already exists.', $definition['field_test_reference'][1]), $violations[0]->getMessage());
 
     // Create entity with two references for the testing field.
     $definition = [
@@ -181,9 +175,7 @@ class UniqueValuesConstraintValidatorTest extends KernelTestBase {
     $violations = $entity->validate();
     $this->assertCount(1, $violations);
     $this->assertEquals('field_test_reference.1', $violations[0]->getPropertyPath());
-    $this->assertEquals(t('A unique field entity with unique_reference_test %value already exists.', [
-      '%value' => $definition['field_test_reference'][1],
-    ]), $violations[0]->getMessage());
+    $this->assertEquals(sprintf('A unique field entity with unique_reference_test %s already exists.', $definition['field_test_reference'][1]), $violations[0]->getMessage());
 
   }
 
@@ -209,9 +201,7 @@ class UniqueValuesConstraintValidatorTest extends KernelTestBase {
     $violations = $entity->validate();
     $this->assertCount(1, $violations);
     $this->assertEquals('field_test_text.1', $violations[0]->getPropertyPath());
-    $this->assertEquals(t('A unique field entity with unique_field_test %value already exists.', [
-      '%value' => $definition['field_test_text'][1],
-    ]), $violations[0]->getMessage());
+    $this->assertEquals(sprintf('A unique field entity with unique_field_test %s already exists.', $definition['field_test_text'][1]), $violations[0]->getMessage());
 
     // Create entity with two different values for the testing field.
     $definition = [
@@ -233,9 +223,7 @@ class UniqueValuesConstraintValidatorTest extends KernelTestBase {
     $violations = $entity->validate();
     $this->assertCount(1, $violations);
     $this->assertEquals('field_test_text.2', $violations[0]->getPropertyPath());
-    $this->assertEquals(t('A unique field entity with unique_field_test %value already exists.', [
-      '%value' => $definition['field_test_text'][0],
-    ]), $violations[0]->getMessage());
+    $this->assertEquals(sprintf('A unique field entity with unique_field_test %s already exists.', $definition['field_test_text'][0]), $violations[0]->getMessage());
 
   }
 
@@ -277,13 +265,9 @@ class UniqueValuesConstraintValidatorTest extends KernelTestBase {
     $violations = $entity->validate();
     $this->assertCount(2, $violations);
     $this->assertEquals('field_test_text.1', $violations[0]->getPropertyPath());
-    $this->assertEquals(t('A unique field entity with unique_field_test %value already exists.', [
-      '%value' => $definition['field_test_text'][1],
-    ]), $violations[0]->getMessage());
+    $this->assertEquals(sprintf('A unique field entity with unique_field_test %s already exists.', $definition['field_test_text'][1]), $violations[0]->getMessage());
     $this->assertEquals('field_test_text.2', $violations[1]->getPropertyPath());
-    $this->assertEquals(t('A unique field entity with unique_field_test %value already exists.', [
-      '%value' => $definition['field_test_text'][2],
-    ]), $violations[1]->getMessage());
+    $this->assertEquals(sprintf('A unique field entity with unique_field_test %s already exists.', $definition['field_test_text'][2]), $violations[1]->getMessage());
 
     // Create new entity with two identical values and one existing value in unique field.
     $definition = [
@@ -298,13 +282,9 @@ class UniqueValuesConstraintValidatorTest extends KernelTestBase {
     $violations = $entity->validate();
     $this->assertCount(2, $violations);
     $this->assertEquals('field_test_text.1', $violations[0]->getPropertyPath());
-    $this->assertEquals(t('A unique field entity with unique_field_test %value already exists.', [
-      '%value' => $definition['field_test_text'][1],
-    ]), $violations[0]->getMessage());
+    $this->assertEquals(sprintf('A unique field entity with unique_field_test %s already exists.', $definition['field_test_text'][1]), $violations[0]->getMessage());
     $this->assertEquals('field_test_text.2', $violations[1]->getPropertyPath());
-    $this->assertEquals(t('A unique field entity with unique_field_test %value already exists.', [
-      '%value' => $definition['field_test_text'][2],
-    ]), $violations[1]->getMessage());
+    $this->assertEquals(sprintf('A unique field entity with unique_field_test %s already exists.', $definition['field_test_text'][2]), $violations[1]->getMessage());
 
   }
 
