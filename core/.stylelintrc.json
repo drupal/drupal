@@ -11,13 +11,11 @@
     "custom-property-pattern": "^[a-z][-_a-z0-9IE]*$",
     "declaration-block-no-redundant-longhand-properties": null,
     "function-url-quotes": null,
-    "function-whitespace-after": null,
     "hue-degree-notation": "number",
     "import-notation": "string",
     "no-descending-specificity": null,
     "no-duplicate-selectors": null,
     "no-unknown-animations": true,
-    "max-line-length": null,
     "media-feature-name-no-unknown": [true, {
       "ignoreMediaFeatureNames": [
         "prefers-reduced-motion"
