@@ -13,7 +13,7 @@ class FallbackFieldTypeCategory extends FieldTypeCategory {
   public function __construct(array $configuration, string $plugin_id, array $plugin_definition) {
     $plugin_id = $configuration['unique_identifier'];
     $plugin_definition = [
-      'label' => $configuration['label'] ?? '',
+      'label' => $configuration['label'],
       'description' => $configuration['description'] ?? '',
       'weight' => $configuration['weight'] ?? 0,
     ] + $plugin_definition;
