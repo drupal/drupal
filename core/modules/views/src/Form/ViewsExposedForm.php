@@ -67,14 +67,6 @@ class ViewsExposedForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    // Don't show the form when batch operations are in progress.
-    if (($batch = batch_get()) && isset($batch['current_set'])) {
-      return [
-        // Set the theme callback to be nothing to avoid errors in template_preprocess_views_exposed_form().
-        '#theme' => '',
-      ];
-    }
-
     // Make sure that we validate because this form might be submitted
     // multiple times per page.
     $form_state->setValidationEnforced();
