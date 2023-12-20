@@ -47,6 +47,20 @@ display:
           plugin_id: field
           entity_type: node
           entity_field: title
+        created:
+          id: created
+          table: node_field_data
+          field: created
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: created
+          plugin_id: field
+          type: timestamp
+          settings:
+            date_format: custom
+            custom_date_format: 'Y-m-d'
         body:
           id: body
           table: node__body
@@ -315,7 +329,7 @@ display:
           link_field: view_node
           description_field: body
           creator_field: title
-          date_field: title
+          date_field: created
           guid_field_options:
             guid_field: view_node
             guid_field_is_permalink: true
