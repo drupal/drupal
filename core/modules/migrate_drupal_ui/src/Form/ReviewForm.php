@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate_drupal_ui\Form;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
@@ -76,11 +77,25 @@ class ReviewForm extends MigrateUpgradeFormBase {
    *   The config factory service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
+   * @param \Drupal\Component\Datetime\TimeInterface|null $time
+   *   The time service.
    */
-  public function __construct(StateInterface $state, MigrationPluginManagerInterface $migration_plugin_manager, PrivateTempStoreFactory $tempstore_private, MigrationState $migrationState, ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler) {
+  public function __construct(
+    StateInterface $state,
+    MigrationPluginManagerInterface $migration_plugin_manager,
+    PrivateTempStoreFactory $tempstore_private,
+    MigrationState $migrationState,
+    ConfigFactoryInterface $config_factory,
+    ModuleHandlerInterface $module_handler,
+    protected ?TimeInterface $time = NULL,
+  ) {
     parent::__construct($config_factory, $migration_plugin_manager, $state, $tempstore_private);
     $this->migrationState = $migrationState;
     $this->moduleHandler = $module_handler;
+    if ($this->time === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $time argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3301971', E_USER_DEPRECATED);
+      $this->time = \Drupal::service('datetime.time');
+    }
   }
 
   /**
@@ -93,7 +108,8 @@ class ReviewForm extends MigrateUpgradeFormBase {
       $container->get('tempstore.private'),
       $container->get('migrate_drupal.migration_state'),
       $container->get('config.factory'),
-      $container->get('module_handler')
+      $container->get('module_handler'),
+      $container->get('datetime.time'),
     );
   }
 
@@ -249,7 +265,7 @@ class ReviewForm extends MigrateUpgradeFormBase {
     batch_set($batch_builder->toArray());
     $form_state->setRedirect('<front>');
     $this->store->set('step', 'overview');
-    $this->state->set('migrate_drupal_ui.performed', REQUEST_TIME);
+    $this->state->set('migrate_drupal_ui.performed', $this->time->getRequestTime());
   }
 
   /**

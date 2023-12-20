@@ -2,6 +2,7 @@
 
 namespace Drupal\content_translation;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
@@ -123,8 +124,21 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    *   The installed entity definition repository service.
    * @param \Drupal\Core\Routing\RedirectDestinationInterface|null $redirectDestination
    *   The request stack.
+   * @param \Drupal\Component\Datetime\TimeInterface|null $time
+   *   The time service.
    */
-  public function __construct(EntityTypeInterface $entity_type, LanguageManagerInterface $language_manager, ContentTranslationManagerInterface $manager, EntityTypeManagerInterface $entity_type_manager, AccountInterface $current_user, MessengerInterface $messenger, DateFormatterInterface $date_formatter, EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository, protected ?RedirectDestinationInterface $redirectDestination = NULL) {
+  public function __construct(
+    EntityTypeInterface $entity_type,
+    LanguageManagerInterface $language_manager,
+    ContentTranslationManagerInterface $manager,
+    EntityTypeManagerInterface $entity_type_manager,
+    AccountInterface $current_user,
+    MessengerInterface $messenger,
+    DateFormatterInterface $date_formatter,
+    EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository,
+    protected ?RedirectDestinationInterface $redirectDestination = NULL,
+    protected ?TimeInterface $time = NULL,
+  ) {
     $this->entityTypeId = $entity_type->id();
     $this->entityType = $entity_type;
     $this->languageManager = $language_manager;
@@ -137,6 +151,10 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     if ($this->redirectDestination === NULL) {
       @trigger_error('Calling ContentTranslationHandler::__construct() without the $redirectDestination argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3375487', E_USER_DEPRECATED);
       $this->redirectDestination = \Drupal::service('redirect.destination');
+    }
+    if ($this->time === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $time argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3301971', E_USER_DEPRECATED);
+      $this->time = \Drupal::service('datetime.time');
     }
   }
 
@@ -153,7 +171,8 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
       $container->get('messenger'),
       $container->get('date.formatter'),
       $container->get('entity.last_installed_schema.repository'),
-      $container->get('redirect.destination')
+      $container->get('redirect.destination'),
+      $container->get('datetime.time'),
     );
   }
 
@@ -536,7 +555,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
         '#description' => t('Leave blank for %anonymous.', ['%anonymous' => \Drupal::config('user.settings')->get('anonymous')]),
       ];
 
-      $date = $new_translation ? REQUEST_TIME : $metadata->getCreatedTime();
+      $date = $new_translation ? $this->time->getRequestTime() : $metadata->getCreatedTime();
       $form['content_translation']['created'] = [
         '#type' => 'textfield',
         '#title' => t('Authored on'),
@@ -706,7 +725,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     $metadata = $this->manager->getTranslationMetadata($entity);
     $metadata->setAuthor(!empty($values['uid']) ? User::load($values['uid']) : User::load(0));
     $metadata->setPublished(!empty($values['status']));
-    $metadata->setCreatedTime(!empty($values['created']) ? strtotime($values['created']) : REQUEST_TIME);
+    $metadata->setCreatedTime(!empty($values['created']) ? strtotime($values['created']) : $this->time->getRequestTime());
 
     $metadata->setOutdated(!empty($values['outdated']));
     if (!empty($values['retranslate'])) {
@@ -753,7 +772,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     // handler as well and have the same logic like in the Form API.
     if ($entity->hasField('content_translation_changed')) {
       $metadata = $this->manager->getTranslationMetadata($entity);
-      $metadata->setChangedTime(REQUEST_TIME);
+      $metadata->setChangedTime($this->time->getRequestTime());
     }
   }
 

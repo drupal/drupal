@@ -2,6 +2,7 @@
 
 namespace Drupal\toolbar\Controller;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Cache\CacheableMetadata;
@@ -10,11 +11,28 @@ use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\toolbar\Ajax\SetSubtreesCommand;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Defines a controller for the toolbar module.
  */
 class ToolbarController extends ControllerBase implements TrustedCallbackInterface {
+
+  /**
+   * Constructs a ToolbarController object.
+   *
+   * @param \Drupal\Component\Datetime\TimeInterface|null $time
+   *   The time service.
+   */
+  public function __construct(
+    #[Autowire(service: 'datetime.time')]
+    protected ?TimeInterface $time = NULL
+  ) {
+    if ($this->time === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $time argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3301971', E_USER_DEPRECATED);
+      $this->time = \Drupal::service('datetime.time');
+    }
+  }
 
   /**
    * Returns an AJAX response to render the toolbar subtrees.
@@ -35,7 +53,7 @@ class ToolbarController extends ControllerBase implements TrustedCallbackInterfa
     $response->setMaxAge($max_age);
 
     $expires = new \DateTime();
-    $expires->setTimestamp(REQUEST_TIME + $max_age);
+    $expires->setTimestamp($this->time->getRequestTime() + $max_age);
     $response->setExpires($expires);
 
     return $response;

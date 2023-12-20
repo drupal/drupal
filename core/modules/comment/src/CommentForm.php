@@ -74,10 +74,17 @@ class CommentForm extends ContentEntityForm {
    *   The entity type bundle service.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
-   *   The entity field manager service.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface|null $entity_field_manager
+   *   (optional) The entity field manager service.
    */
-  public function __construct(EntityRepositoryInterface $entity_repository, AccountInterface $current_user, RendererInterface $renderer, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL, EntityFieldManagerInterface $entity_field_manager = NULL) {
+  public function __construct(
+    EntityRepositoryInterface $entity_repository,
+    AccountInterface $current_user,
+    RendererInterface $renderer,
+    EntityTypeBundleInfoInterface $entity_type_bundle_info,
+    TimeInterface $time,
+    EntityFieldManagerInterface $entity_field_manager = NULL,
+  ) {
     parent::__construct($entity_repository, $entity_type_bundle_info, $time);
     $this->currentUser = $current_user;
     $this->renderer = $renderer;
@@ -286,7 +293,7 @@ class CommentForm extends ContentEntityForm {
       $comment->setCreatedTime($form_state->getValue('date')->getTimestamp());
     }
     else {
-      $comment->setCreatedTime(REQUEST_TIME);
+      $comment->setCreatedTime($this->time->getRequestTime());
     }
     // Empty author ID should revert to anonymous.
     $author_id = $form_state->getValue('uid');
