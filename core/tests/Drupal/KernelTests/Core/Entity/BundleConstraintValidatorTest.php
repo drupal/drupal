@@ -69,7 +69,7 @@ class BundleConstraintValidatorTest extends KernelTestBase {
 
     // Make sure the information provided by a violation is correct.
     $violation = $violations[0];
-    $this->assertEquals(t('The entity must be of bundle %bundle.', ['%bundle' => implode(', ', (array) $bundle)]), $violation->getMessage(), 'The message for invalid value is correct.');
+    $this->assertEquals(sprintf('The entity must be of bundle %s.', implode(', ', (array) $bundle)), $violation->getMessage(), 'The message for invalid value is correct.');
     $this->assertEquals($typed_data, $violation->getRoot(), 'Violation root is correct.');
     $this->assertEquals($page_node, $violation->getInvalidValue(), 'The invalid value is set correctly in the violation.');
   }

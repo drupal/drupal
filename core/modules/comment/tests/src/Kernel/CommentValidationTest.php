@@ -271,10 +271,7 @@ class CommentValidationTest extends EntityKernelTestBase {
     $violations = $node2->validate();
     $this->assertCount(1, $violations);
     $this->assertEquals('entity_reference_comment.0.target_id', $violations[0]->getPropertyPath());
-    $this->assertEquals(t('This entity (%type: %name) cannot be referenced.', [
-      '%type' => $comment1->getEntityTypeId(),
-      '%name' => $comment1->id(),
-    ]), $violations[0]->getMessage());
+    $this->assertEquals(sprintf('This entity (%s: %s) cannot be referenced.', $comment1->getEntityTypeId(), $comment1->id()), $violations[0]->getMessage());
 
     $this->drupalSetCurrentUser($comment_admin_user);
     $this->assertEquals(\Drupal::currentUser()->id(), $comment_admin_user->id());

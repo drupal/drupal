@@ -183,10 +183,10 @@ class FieldCrudTest extends FieldKernelTestBase {
     $this->assertCount(2, $violations, 'Two violations found when using a null and outside the range value.');
 
     $this->assertEquals($field_name . '.0.value', $violations[0]->getPropertyPath());
-    $this->assertEquals(t('%name does not accept the value @value.', ['%name' => $field_name, '@value' => -2]), $violations[0]->getMessage());
+    $this->assertEquals(sprintf('%s does not accept the value -2.', $field_name), $violations[0]->getMessage());
 
     $this->assertEquals($field_name . '.0.value', $violations[1]->getPropertyPath());
-    $this->assertEquals(t('This value should be between %min and %max.', ['%min' => 0, '%max' => 32]), $violations[1]->getMessage());
+    $this->assertEquals('This value should be between 0 and 32.', $violations[1]->getMessage());
 
     // Check that a value that is not specifically restricted but outside the
     // range triggers the expected violation.
@@ -194,7 +194,7 @@ class FieldCrudTest extends FieldKernelTestBase {
     $violations = $entity->validate();
     $this->assertCount(1, $violations, 'Violations found when using value outside the range.');
     $this->assertEquals($field_name . '.0.value', $violations[0]->getPropertyPath());
-    $this->assertEquals(t('This value should be between %min and %max.', ['%min' => 0, '%max' => 32]), $violations[0]->getMessage());
+    $this->assertEquals('This value should be between 0 and 32.', $violations[0]->getMessage());
   }
 
   /**
