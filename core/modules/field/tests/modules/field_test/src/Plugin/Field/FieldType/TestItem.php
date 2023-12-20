@@ -14,7 +14,6 @@ use Drupal\Core\Field\FieldItemBase;
  * @FieldType(
  *   id = "test_field",
  *   label = @Translation("Test field"),
- *   description = @Translation("Dummy field type used for tests."),
  *   default_widget = "test_field_widget",
  *   default_formatter = "field_test_default"
  * )
