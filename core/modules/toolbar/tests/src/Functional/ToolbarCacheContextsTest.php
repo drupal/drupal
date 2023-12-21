@@ -95,11 +95,11 @@ class ToolbarCacheContextsTest extends BrowserTestBase {
     $this->assertToolbarCacheContexts(['user.permissions'], 'Expected cache contexts found with contextual module enabled.');
     \Drupal::service('module_installer')->uninstall(['contextual']);
 
-    // Test with the tour module enabled.
-    $this->installExtraModules(['tour']);
-    $this->adminUser2 = $this->drupalCreateUser(array_merge($this->perms, ['access tour']));
-    $this->assertToolbarCacheContexts(['user.permissions'], 'Expected cache contexts found with tour module enabled.');
-    \Drupal::service('module_installer')->uninstall(['tour']);
+    // Test with the comment module enabled.
+    $this->installExtraModules(['comment']);
+    $this->adminUser2 = $this->drupalCreateUser(array_merge($this->perms, ['access comments']));
+    $this->assertToolbarCacheContexts(['user.permissions'], 'Expected cache contexts found with comment module enabled.');
+    \Drupal::service('module_installer')->uninstall(['comment']);
   }
 
   /**
