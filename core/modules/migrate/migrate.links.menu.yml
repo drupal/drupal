@@ -1,0 +1,6 @@
+migrate.messages:
+  title: Migration messages
+  parent: system.admin_reports
+  description: View the migration messages.
+  route_name: migrate.messages
+  weight: 0

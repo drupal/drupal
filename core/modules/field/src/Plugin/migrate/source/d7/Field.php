@@ -59,6 +59,7 @@ class Field extends DrupalSqlBase {
     return [
       'id' => $this->t('The field ID.'),
       'field_name' => $this->t('The field name.'),
+      'entity_type' => $this->t('Entity type'),
       'type' => $this->t('The field type.'),
       'module' => $this->t('The module that implements the field type.'),
       'active' => $this->t('The field status.'),

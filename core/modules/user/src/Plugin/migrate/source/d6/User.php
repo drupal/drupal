@@ -115,16 +115,20 @@ class User extends DrupalSqlBase {
       'data' => $this->t('User data'),
     ];
 
-    // Possible field added by Date contributed module.
-    // @see https://api.drupal.org/api/drupal/modules%21user%21user.install/function/user_update_7002/7
-    if ($this->getDatabase()->schema()->fieldExists('users', 'timezone_name')) {
-      $fields['timezone_name'] = $this->t('Timezone (Date)');
-    }
+    // The database connection may not exist, for example, when building
+    // the Migrate Message form.
+    if ($source_database = $this->database) {
+      // Possible field added by Date contributed module.
+      // @see https://api.drupal.org/api/drupal/modules%21user%21user.install/function/user_update_7002/7
+      if ($source_database->schema()->fieldExists('users', 'timezone_name')) {
+        $fields['timezone_name'] = $this->t('Timezone (Date)');
+      }
 
-    // Possible field added by Event contributed module.
-    // @see https://api.drupal.org/api/drupal/modules%21user%21user.install/function/user_update_7002/7
-    if ($this->getDatabase()->schema()->fieldExists('users', 'timezone_id')) {
-      $fields['timezone_id'] = $this->t('Timezone (Event)');
+      // Possible field added by Event contributed module.
+      // @see https://api.drupal.org/api/drupal/modules%21user%21user.install/function/user_update_7002/7
+      if ($source_database->schema()->fieldExists('users', 'timezone_id')) {
+        $fields['timezone_id'] = $this->t('Timezone (Event)');
+      }
     }
 
     return $fields;

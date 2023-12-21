@@ -105,13 +105,19 @@ class MenuLink extends DrupalSqlBase {
       'p9' => $this->t('The ninth mlid in the materialized path. See p1.'),
       'updated' => $this->t('Flag that indicates that this link was generated during the update from Drupal 5.'),
     ];
-    $schema = $this->getDatabase()->schema();
-    if ($schema->fieldExists('menu_links', 'language')) {
-      $fields['language'] = $this->t("Menu link language code.");
+
+    // The database connection may not exist, for example, when building
+    // the Migrate Message form.
+    if ($source_database = $this->database) {
+      $schema = $source_database->schema();
+      if ($schema->fieldExists('menu_links', 'language')) {
+        $fields['language'] = $this->t("Menu link language code.");
+      }
+      if ($schema->fieldExists('menu_links', 'i18n_tsid')) {
+        $fields['i18n_tsid'] = $this->t("Translation set id.");
+      }
     }
-    if ($schema->fieldExists('menu_links', 'i18n_tsid')) {
-      $fields['i18n_tsid'] = $this->t("Translation set id.");
-    }
+
     return $fields;
   }
 

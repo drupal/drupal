@@ -1,0 +1,11 @@
+id: d7_menu_test
+label: Test display of upgrade messages
+migration_tags:
+  - Drupal 7
+source:
+  plugin: d7_menu_test
+process:
+  message: site_offline_message
+destination:
+  plugin: config
+  config_name: test.settings

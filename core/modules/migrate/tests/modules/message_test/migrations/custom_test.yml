@@ -1,0 +1,13 @@
+id: custom_test
+label: Test display of upgrade messages
+source:
+  plugin: embedded_data
+  data_rows:
+    - id: 0
+  ids:
+    id:
+      type: integer
+process:
+  id: id
+destination:
+  plugin: null

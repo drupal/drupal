@@ -1,0 +1,15 @@
+migrate.messages:
+  path: '/admin/reports/migration-messages'
+  defaults:
+    _controller: '\Drupal\migrate\Controller\MigrateMessageController::overview'
+    _title: 'Migration messages'
+  requirements:
+    _permission: 'view migration messages'
+
+migrate.messages.detail:
+  path: '/admin/reports/migration-messages/{migration_id}'
+  defaults:
+    _controller: '\Drupal\migrate\Controller\MigrateMessageController::details'
+    _title_callback: '\Drupal\migrate\Controller\MigrateMessageController::title'
+  requirements:
+    _permission: 'view migration messages'

@@ -1,0 +1,9 @@
+id: custom_test_db
+label: Test display of upgrade messages
+source:
+  plugin: extension
+  name: i18n_menu
+process:
+  id: id
+destination:
+  plugin: null

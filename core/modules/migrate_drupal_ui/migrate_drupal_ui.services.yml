@@ -1,0 +1,5 @@
+services:
+  migrate_drupal_ui.route_subscriber:
+    class: Drupal\migrate_drupal_ui\Routing\MigrateDrupalUiRouteSubscriber
+    tags:
+      - { name: event_subscriber }
