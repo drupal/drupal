@@ -140,7 +140,9 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
       return ($number < $threshold);
     }
     catch (\Exception $e) {
-      $this->catchException($e);
+      if (!$this->ensureTableExists()) {
+        throw $e;
+      }
       return TRUE;
     }
   }
