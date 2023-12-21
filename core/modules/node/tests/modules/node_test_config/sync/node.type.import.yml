@@ -1,7 +1,7 @@
 type: import
 name: Import
 description: 'Import description.'
-help: ''
+help: null
 new_revision: false
 display_submitted: true
 preview_mode: 1

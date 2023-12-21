@@ -7,7 +7,7 @@ dependencies:
 name: 'Forum topic'
 type: forum
 description: 'A <em>forum topic</em> starts a new discussion thread within a forum.'
-help: ''
+help: null
 new_revision: false
 preview_mode: 1
 display_submitted: true

@@ -204,6 +204,23 @@ class NodeTypeForm extends BundleEntityFormBase {
   /**
    * {@inheritdoc}
    */
+  public function buildEntity(array $form, FormStateInterface $form_state) {
+    /** @var \Drupal\node\NodeTypeInterface $entity */
+    $entity = parent::buildEntity($form, $form_state);
+
+    // The description and help text cannot be empty strings.
+    if (trim($form_state->getValue('description')) === '') {
+      $entity->set('description', NULL);
+    }
+    if (trim($form_state->getValue('help')) === '') {
+      $entity->set('help', NULL);
+    }
+    return $entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function save(array $form, FormStateInterface $form_state) {
     $type = $this->entity;
     $type->setNewRevision($form_state->getValue(['options', 'revision']));

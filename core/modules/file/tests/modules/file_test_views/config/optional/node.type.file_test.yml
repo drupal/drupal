@@ -1,7 +1,7 @@
 type: file_test
 name: File test
 description: 'Bundle for testing file relationships.'
-help: ''
+help: null
 new_revision: true
 display_submitted: true
 preview_mode: 1

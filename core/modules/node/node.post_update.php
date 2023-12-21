@@ -5,6 +5,27 @@
  * Post update functions for Node.
  */
 
+use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+use Drupal\node\NodeTypeInterface;
+
+/**
+ * Converts empty `description` and `help` in content types to NULL.
+ */
+function node_post_update_set_node_type_description_and_help_to_null(array &$sandbox): void {
+  \Drupal::classResolver(ConfigEntityUpdater::class)
+    ->update($sandbox, 'node_type', function (NodeTypeInterface $node_type): bool {
+      // Content types' `help` and `description` fields must be stored as NULL
+      // at the config level if they are empty.
+      if (trim($node_type->getDescription()) === '') {
+        $node_type->set('description', NULL);
+      }
+      if (trim($node_type->getHelp()) === '') {
+        $node_type->set('help', NULL);
+      }
+      return TRUE;
+    });
+}
+
 /**
  * Implements hook_removed_post_updates().
  */

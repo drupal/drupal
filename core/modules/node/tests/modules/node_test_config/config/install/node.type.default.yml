@@ -3,7 +3,7 @@ status: true
 name: Default
 type: default
 description: 'Default description.'
-help: ''
+help: null
 new_revision: true
 preview_mode: 1
 display_submitted: true

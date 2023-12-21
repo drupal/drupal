@@ -11,6 +11,8 @@ node.settings:
 node.type.*:
   type: config_entity
   label: 'Content type'
+  constraints:
+    FullyValidatable: ~
   mapping:
     name:
       type: required_label
@@ -26,15 +28,28 @@ node.type.*:
     description:
       type: text
       label: 'Description'
+      nullable: true
+      constraints:
+        NotBlank:
+          allowNull: true
     help:
       type: text
       label: 'Explanation or submission guidelines'
+      nullable: true
+      constraints:
+        NotBlank:
+          allowNull: true
     new_revision:
       type: boolean
       label: 'Whether a new revision should be created by default'
     preview_mode:
       type: integer
       label: 'Preview before submitting'
+      constraints:
+        # These are the values of the DRUPAL_DISABLED, DRUPAL_OPTIONAL, and
+        # DRUPAL_REQUIRED constants.
+        # @see \Drupal\node\NodeTypeForm::form()
+        Choice: [0, 1, 2]
     display_submitted:
       type: boolean
       label: 'Display setting for author and date Submitted by post information'
