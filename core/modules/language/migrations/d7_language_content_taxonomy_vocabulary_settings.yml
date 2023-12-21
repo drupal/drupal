@@ -18,6 +18,22 @@ process:
     -
       plugin: skip_on_empty
       method: row
+  _skip:
+    -
+      plugin: concat
+      source:
+        - 'constants/target_type'
+        - '@target_bundle'
+      delimiter: .
+    -
+      plugin: migration_lookup
+      migration: d7_entity_translation_settings
+    -
+      plugin: callback
+      callable: is_null
+    -
+      plugin: skip_on_empty
+      method: row
   # State is the value in the i18n_mode column of taxonomy_vocabulary table
   # 0: No multilingual options.
   # 1: Localize. Localizable object. Run through the localization system
@@ -54,3 +70,6 @@ migration_dependencies:
   required:
     - language
     - d7_taxonomy_vocabulary
+  optional:
+    - d7_language_content_settings
+    - d7_entity_translation_settings
