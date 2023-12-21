@@ -9,6 +9,11 @@ use Drupal\editor\EditorInterface;
 /**
  * Defines the configured text editor entity.
  *
+ * An Editor entity is created when a filter format entity (Text format) is
+ * saved after selecting an editor plugin (eg: CKEditor). The ID of the
+ * Editor entity will be same as the ID of the filter format entity in which
+ * the editor plugin was selected.
+ *
  * @ConfigEntityType(
  *   id = "editor",
  *   label = @Translation("Text editor"),
