@@ -79,6 +79,11 @@ class ExceptionLoggingSubscriberTest extends KernelTestBase {
     foreach ($expected_channels as $key => $expected_channel) {
       $this->assertEquals($expected_channel, $logs[$key][2]['channel']);
       $this->assertEquals($expected_levels[$key], $logs[$key][0]);
+
+      // Verify that @backtrace_string is removed from client error.
+      if ($logs[$key][2]['channel'] === 'client error') {
+        $this->assertArrayNotHasKey('@backtrace_string', $logs[$key][2]);
+      }
     }
   }
 
