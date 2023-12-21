@@ -287,7 +287,6 @@ use Drupal\node\Entity\NodeType;
  * - hook_entity_build_defaults_alter()
  *
  * View builders for some types override these hooks, notably:
- * - The Tour view builder does not invoke any hooks.
  * - The Block view builder invokes hook_block_view_alter() and
  *   hook_block_view_BASE_BLOCK_ID_alter(). Note that in other view builders,
  *   the view alter hooks are run later in the process.

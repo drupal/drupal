@@ -8,6 +8,9 @@ use Drupal\Component\Utility\Html;
 
 /**
  * Provides a Tour view builder.
+ *
+ * Note: Does not invoke any alter hooks. In other view
+ * builders, the view alter hooks are run later in the process
  */
 class TourViewBuilder extends EntityViewBuilder {
 
