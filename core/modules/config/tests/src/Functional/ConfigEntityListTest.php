@@ -58,11 +58,17 @@ class ConfigEntityListTest extends BrowserTestBase {
     $this->assertInstanceOf(ConfigTest::class, $entity);
 
     // Test getOperations() method.
+    $edit_url = $entity->toUrl()->setOption('query', $this->getRedirectDestination()->getAsArray());
+    $edit_url->setOption('attributes', ['aria-label' => 'Edit ' . $entity->label()]);
+
+    $delete_url = $entity->toUrl('delete-form')->setOption('query', $this->getRedirectDestination()->getAsArray());
+    $delete_url->setOption('attributes', ['aria-label' => 'Delete ' . $entity->label()]);
+
     $expected_operations = [
       'edit' => [
         'title' => 'Edit',
         'weight' => 10,
-        'url' => $entity->toUrl()->setOption('query', $this->getRedirectDestination()->getAsArray()),
+        'url' => $edit_url,
       ],
       'disable' => [
         'title' => 'Disable',
@@ -79,7 +85,7 @@ class ConfigEntityListTest extends BrowserTestBase {
             'width' => 880,
           ]),
         ],
-        'url' => $entity->toUrl('delete-form')->setOption('query', $this->getRedirectDestination()->getAsArray()),
+        'url' => $delete_url,
       ],
     ];
 
@@ -140,11 +146,16 @@ class ConfigEntityListTest extends BrowserTestBase {
     $entity = $list['default'];
 
     // Test getOperations() method.
+    $edit_url = $entity->toUrl()->setOption('query', $this->getRedirectDestination()->getAsArray());
+    $edit_url->setOption('attributes', ['aria-label' => 'Edit ' . $entity->label()]);
+
+    $delete_url = $entity->toUrl('delete-form')->setOption('query', $this->getRedirectDestination()->getAsArray());
+    $delete_url->setOption('attributes', ['aria-label' => 'Delete ' . $entity->label()]);
     $expected_operations = [
       'edit' => [
         'title' => 'Edit',
         'weight' => 10,
-        'url' => $entity->toUrl()->setOption('query', $this->getRedirectDestination()->getAsArray()),
+        'url' => $edit_url,
       ],
       'delete' => [
         'title' => 'Delete',
@@ -156,7 +167,41 @@ class ConfigEntityListTest extends BrowserTestBase {
             'width' => 880,
           ]),
         ],
-        'url' => $entity->toUrl('delete-form')->setOption('query', $this->getRedirectDestination()->getAsArray()),
+        'url' => $delete_url,
+      ],
+    ];
+
+    $actual_operations = $controller->getOperations($entity);
+    // Sort the operations to normalize link order.
+    uasort($actual_operations, ['Drupal\Component\Utility\SortArray', 'sortByWeightElement']);
+    $this->assertEquals($expected_operations, $actual_operations, 'The operations are identical.');
+
+    // Test getOperations when label doesn't exist.
+    $entity->set('label', '');
+    $entity->save();
+
+    $edit_url = $entity->toUrl()->setOption('query', $this->getRedirectDestination()->getAsArray());
+    $edit_url->setOption('attributes', ['aria-label' => 'Edit ' . $entity->bundle() . ' ' . $entity->id()]);
+
+    $delete_url = $entity->toUrl('delete-form')->setOption('query', $this->getRedirectDestination()->getAsArray());
+    $delete_url->setOption('attributes', ['aria-label' => 'Delete ' . $entity->bundle() . ' ' . $entity->id()]);
+    $expected_operations = [
+      'edit' => [
+        'title' => 'Edit',
+        'weight' => 10,
+        'url' => $edit_url,
+      ],
+      'delete' => [
+        'title' => 'Delete',
+        'weight' => 100,
+        'attributes' => [
+          'class' => ['use-ajax'],
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => Json::encode([
+            'width' => 880,
+          ]),
+        ],
+        'url' => $delete_url,
       ],
     ];
 
