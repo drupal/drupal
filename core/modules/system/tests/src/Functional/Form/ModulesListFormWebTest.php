@@ -9,6 +9,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests \Drupal\system\Form\ModulesListForm.
  *
  * @group Form
+ * @group #slow
  */
 class ModulesListFormWebTest extends BrowserTestBase {
 
