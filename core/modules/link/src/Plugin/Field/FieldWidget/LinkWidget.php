@@ -184,14 +184,28 @@ class LinkWidget extends WidgetBase {
     /** @var \Drupal\link\LinkItemInterface $item */
     $item = $items[$delta];
 
+    $display_uri = NULL;
+    if (!$item->isEmpty()) {
+      try {
+        // The current field value could have been entered by a different user.
+        // However, if it is inaccessible to the current user, do not display it
+        // to them.
+        if (\Drupal::currentUser()->hasPermission('link to any page') || $item->getUrl()->access()) {
+          $display_uri = static::getUriAsDisplayableString($item->uri);
+        }
+      }
+      catch (\InvalidArgumentException $e) {
+        // If $item->uri is invalid, show value as is, so the user can see what
+        // to edit.
+        // @todo Add logging here in https://www.drupal.org/project/drupal/issues/3348020
+        $display_uri = $item->uri;
+      }
+    }
     $element['uri'] = [
       '#type' => 'url',
       '#title' => $this->t('URL'),
       '#placeholder' => $this->getSetting('placeholder_url'),
-      // The current field value could have been entered by a different user.
-      // However, if it is inaccessible to the current user, do not display it
-      // to them.
-      '#default_value' => (!$item->isEmpty() && (\Drupal::currentUser()->hasPermission('link to any page') || $item->getUrl()->access())) ? static::getUriAsDisplayableString($item->uri) : NULL,
+      '#default_value' => $display_uri,
       '#element_validate' => [[static::class, 'validateUriElement']],
       '#maxlength' => 2048,
       '#required' => $element['#required'],
