@@ -6,6 +6,8 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\PagerSelectExtender;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
  * Tests the pager query select extender.
@@ -141,6 +143,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
     $request->query->replace([
       'page' => '3, 2, 1, 0',
     ]);
+    $request->setSession(new Session(new MockArraySessionStorage()));
     \Drupal::getContainer()->get('request_stack')->push($request);
 
     $connection = Database::getConnection();

@@ -24,6 +24,7 @@ use Drupal\TestTools\TestVarDumper;
 use GuzzleHttp\Cookie\CookieJar;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\VarDumper\VarDumper;
 
 /**
@@ -445,6 +446,19 @@ abstract class BrowserTestBase extends TestCase {
    */
   protected function tearDown(): void {
     parent::tearDown();
+
+    if ($this->container) {
+      // Cleanup mock session started in DrupalKernel::preHandle().
+      try {
+        /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
+        $session = $this->container->get('request_stack')->getSession();
+        $session->clear();
+        $session->save();
+      }
+      catch (SessionNotFoundException) {
+        @trigger_error('Pushing requests without a session onto the request_stack is deprecated in drupal:10.3.0 and an error will be thrown from drupal:11.0.0. See https://www.drupal.org/node/3337193', E_USER_DEPRECATED);
+      }
+    }
 
     // Destroy the testing kernel.
     if (isset($this->kernel)) {

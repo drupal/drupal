@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 // cspell:ignore attribute\'close
 
@@ -77,6 +79,7 @@ class FormActionXssTest extends KernelTestBase implements FormInterface {
     $request_stack->pop();
     $request_stack->pop();
     $request = Request::create($original_request->getSchemeAndHttpHost() . '/test/"injected=\'attribute\'close="');
+    $request->setSession(new Session(new MockArraySessionStorage()));
     $request_stack->push($request);
 
     $form = \Drupal::formBuilder()->getForm($this);
