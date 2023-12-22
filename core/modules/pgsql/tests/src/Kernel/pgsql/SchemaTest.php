@@ -307,4 +307,60 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
 
   }
 
+  /**
+   * Tests the method tableExists().
+   */
+  public function testTableExists() {
+    $table_name = 'test_table';
+    $table_specification = [
+      'fields' => [
+        'id'  => [
+          'type' => 'int',
+          'default' => NULL,
+        ],
+      ],
+    ];
+    $this->schema->createTable($table_name, $table_specification);
+    $prefixed_table_name = $this->connection->getPrefix($table_name) . $table_name;
+
+    // Three different calls to the method Schema::tableExists() with an
+    // unprefixed table name.
+    $this->assertTrue($this->schema->tableExists($table_name));
+    $this->assertTrue($this->schema->tableExists($table_name, TRUE));
+    $this->assertFalse($this->schema->tableExists($table_name, FALSE));
+
+    // Three different calls to the method Schema::tableExists() with a
+    // prefixed table name.
+    $this->assertFalse($this->schema->tableExists($prefixed_table_name));
+    $this->assertFalse($this->schema->tableExists($prefixed_table_name, TRUE));
+    $this->assertTrue($this->schema->tableExists($prefixed_table_name, FALSE));
+  }
+
+  /**
+   * Tests renaming a table where the new index name is equal to the table name.
+   */
+  public function testRenameTableWithNewIndexNameEqualsTableName() {
+    // Special table names for colliding with the PostgreSQL new index name.
+    $table_name_old = 'some_new_table_name__id__idx';
+    $table_name_new = 'some_new_table_name';
+    $table_specification = [
+      'fields' => [
+        'id'  => [
+          'type' => 'int',
+          'default' => NULL,
+        ],
+      ],
+      'indexes' => [
+        'id' => ['id'],
+      ],
+    ];
+    $this->schema->createTable($table_name_old, $table_specification);
+
+    // Renaming the table can fail for PostgreSQL, when a new index name is
+    // equal to the old table name.
+    $this->schema->renameTable($table_name_old, $table_name_new);
+
+    $this->assertTrue($this->schema->tableExists($table_name_new));
+  }
+
 }

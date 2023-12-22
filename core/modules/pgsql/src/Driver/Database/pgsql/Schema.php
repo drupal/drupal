@@ -506,8 +506,8 @@ EOD;
   /**
    * {@inheritdoc}
    */
-  public function tableExists($table) {
-    $prefixInfo = $this->getPrefixInfo($table, TRUE);
+  public function tableExists($table, $add_prefix = TRUE) {
+    $prefixInfo = $this->getPrefixInfo($table, $add_prefix);
 
     return (bool) $this->connection->query("SELECT 1 FROM pg_tables WHERE schemaname = :schema AND tablename = :table", [':schema' => $prefixInfo['schema'], ':table' => $prefixInfo['table']])->fetchField();
   }
@@ -586,7 +586,11 @@ EOD;
         preg_match('/^' . preg_quote($table_name) . '__(.*)__' . preg_quote($index_type) . '/', $index->indexname, $matches);
         $index_name = $matches[1];
       }
-      $this->connection->query('ALTER INDEX "' . $this->defaultSchema . '"."' . $index->indexname . '" RENAME TO ' . $this->ensureIdentifiersLength($new_name, $index_name, $index_type));
+      // The renaming of an index will fail when the there exists an table with
+      // the same name as the renamed index.
+      if (!$this->tableExists($this->ensureIdentifiersLength($new_name, $index_name, $index_type), FALSE)) {
+        $this->connection->query('ALTER INDEX "' . $this->defaultSchema . '"."' . $index->indexname . '" RENAME TO ' . $this->ensureIdentifiersLength($new_name, $index_name, $index_type));
+      }
     }
 
     // Ensure the new table name does not include schema syntax.

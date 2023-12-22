@@ -62,8 +62,8 @@ class MigrationConfigurationTraitTest extends UnitTestCase {
         'schema_version' => '1678',
         'exception' => NULL,
         'table_map' => [
-          ['system', TRUE],
-          ['key_value', FALSE],
+          ['system', TRUE, TRUE],
+          ['key_value', TRUE, FALSE],
         ],
       ],
       'D6' => [
@@ -71,8 +71,8 @@ class MigrationConfigurationTraitTest extends UnitTestCase {
         'schema_version' => '6057',
         'exception' => NULL,
         'table_map' => [
-          ['system', TRUE],
-          ['key_value', FALSE],
+          ['system', TRUE, TRUE],
+          ['key_value', TRUE, FALSE],
         ],
       ],
       'D7' => [
@@ -80,8 +80,8 @@ class MigrationConfigurationTraitTest extends UnitTestCase {
         'schema_version' => '7065',
         'exception' => NULL,
         'table_map' => [
-          ['system', TRUE],
-          ['key_value', FALSE],
+          ['system', TRUE, TRUE],
+          ['key_value', TRUE, FALSE],
         ],
       ],
       'D8' => [
@@ -89,8 +89,8 @@ class MigrationConfigurationTraitTest extends UnitTestCase {
         'schema_version' => serialize('8976'),
         'exception' => NULL,
         'table_map' => [
-          ['system', FALSE],
-          ['key_value', TRUE],
+          ['system', TRUE, FALSE],
+          ['key_value', TRUE, TRUE],
         ],
       ],
       'D9' => [
@@ -98,8 +98,8 @@ class MigrationConfigurationTraitTest extends UnitTestCase {
         'schema_version' => serialize('9270'),
         'exception' => NULL,
         'table_map' => [
-          ['system', FALSE],
-          ['key_value', TRUE],
+          ['system', TRUE, FALSE],
+          ['key_value', TRUE, TRUE],
         ],
       ],
       'Not drupal' => [
@@ -107,8 +107,8 @@ class MigrationConfigurationTraitTest extends UnitTestCase {
         'schema_version' => "not drupal I guess",
         'exception' => NULL,
         'table_map' => [
-          ['system', FALSE],
-          ['key_value', FALSE],
+          ['system', TRUE, FALSE],
+          ['key_value', TRUE, FALSE],
         ],
       ],
       'D5 almost' => [
@@ -116,8 +116,8 @@ class MigrationConfigurationTraitTest extends UnitTestCase {
         'schema_version' => '123',
         'exception' => NULL,
         'table_map' => [
-          ['system', TRUE],
-          ['key_value', FALSE],
+          ['system', TRUE, TRUE],
+          ['key_value', TRUE, FALSE],
         ],
       ],
       'D5/6/7 Exception' => [
@@ -125,8 +125,8 @@ class MigrationConfigurationTraitTest extends UnitTestCase {
         'schema_version' => NULL,
         'exception' => new DatabaseExceptionWrapper(),
         'table_map' => [
-          ['system', TRUE],
-          ['key_value', FALSE],
+          ['system', TRUE, TRUE],
+          ['key_value', TRUE, FALSE],
         ],
       ],
       'D8/9 Exception' => [
@@ -134,8 +134,8 @@ class MigrationConfigurationTraitTest extends UnitTestCase {
         'schema_version' => NULL,
         'exception' => new DatabaseExceptionWrapper(),
         'table_map' => [
-          ['system', FALSE],
-          ['key_value', TRUE],
+          ['system', TRUE, FALSE],
+          ['key_value', TRUE, TRUE],
         ],
       ],
     ];

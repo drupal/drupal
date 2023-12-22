@@ -161,12 +161,14 @@ abstract class Schema implements PlaceholderInterface {
    *
    * @param $table
    *   The name of the table in drupal (no prefixing).
+   * @param bool $add_prefix
+   *   Boolean to indicate whether the table name needs to be prefixed.
    *
    * @return bool
    *   TRUE if the given table exists, otherwise FALSE.
    */
-  public function tableExists($table) {
-    $condition = $this->buildTableNameCondition($table);
+  public function tableExists($table, bool $add_prefix = TRUE) {
+    $condition = $this->buildTableNameCondition($table, '=', $add_prefix);
     $condition->compile($this->connection, $this);
     // Normally, we would heartily discourage the use of string
     // concatenation for conditionals like this however, we
