@@ -135,10 +135,11 @@ EOF;
     }
 
     \Drupal::service('file_system')->prepareDirectory($path, FileSystemInterface::CREATE_DIRECTORY);
+    $fileUri = $path . '/' . $filename;
     $file = File::create([
       'uid' => 1,
       'filename' => $filename,
-      'uri' => $path . '/' . $filename,
+      'uri' => $fileUri,
       'filemime' => 'text/x-gettext-translation',
       'timestamp' => $timestamp,
     ]);
@@ -146,6 +147,9 @@ EOF;
     file_put_contents($file->getFileUri(), $po_header . $text);
     touch(\Drupal::service('file_system')->realpath($file->getFileUri()), $timestamp);
     $file->save();
+
+    $this->assertTrue(file_exists($fileUri));
+    $this->assertEquals($timestamp, filemtime($fileUri));
   }
 
   /**
