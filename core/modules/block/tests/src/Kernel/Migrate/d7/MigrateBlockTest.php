@@ -34,7 +34,6 @@ class MigrateBlockTest extends MigrateDrupal7TestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->installEntitySchema('path_alias');
 
     // Install the themes used for this test.
     $this->installEntitySchema('block_content');

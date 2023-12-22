@@ -13,13 +13,6 @@ use Drupal\views\Plugin\views\PluginBase;
 class PluginInstanceTest extends ViewsKernelTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = [
-    'path_alias',
-  ];
-
-  /**
    * All views plugin types.
    *
    * @var array

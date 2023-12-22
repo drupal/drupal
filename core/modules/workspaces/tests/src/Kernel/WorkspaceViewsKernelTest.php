@@ -20,7 +20,7 @@ class WorkspaceViewsKernelTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['views_ui', 'workspaces', 'path_alias'];
+  protected static $modules = ['views_ui', 'workspaces'];
 
   /**
    * Tests creating a view of workspace entities.

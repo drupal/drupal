@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\menu_link_content\Kernel;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\KernelTests\KernelTestBase;
@@ -42,6 +43,17 @@ class PathAliasMenuLinkContentTest extends KernelTestBase {
     // Ensure that the weight of module_link_content is higher than system.
     // @see menu_link_content_install()
     module_set_weight('menu_link_content', 1);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function register(ContainerBuilder $container) {
+    parent::register($container);
+
+    $definition = $container->getDefinition('path_alias.path_processor');
+    $definition
+      ->addTag('path_processor_inbound', ['priority' => 100]);
   }
 
   /**
