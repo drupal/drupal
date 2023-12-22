@@ -9,6 +9,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests the theme UI.
  *
  * @group Theme
+ * @group #slow
  */
 class ThemeUiTest extends BrowserTestBase {
 

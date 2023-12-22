@@ -13,6 +13,7 @@ use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
  * Tests the Options field UI functionality.
  *
  * @group options
+ * @group #slow
  */
 class OptionsFieldUITest extends WebDriverTestBase {
 
