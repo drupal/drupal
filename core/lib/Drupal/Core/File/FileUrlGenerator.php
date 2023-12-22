@@ -211,7 +211,6 @@ class FileUrlGenerator implements FileUrlGeneratorInterface {
     // instead of a port number.
     $request = $this->requestStack->getCurrentRequest();
     $host = $request->getHost();
-    $scheme = $request->getScheme();
     $port = $request->getPort() ?: 80;
 
     // Files may be accessible on a different port than the web request.
@@ -220,20 +219,15 @@ class FileUrlGenerator implements FileUrlGeneratorInterface {
       return $file_url;
     }
 
-    if (('http' == $scheme && $port == 80) || ('https' == $scheme && $port == 443)) {
-      $http_host = $host;
-    }
-    else {
-      $http_host = $host . ':' . $port;
-    }
-
     // If this should not be a root-relative path but relative to the drupal
     // base path, add it to the host to be removed from the URL as well.
-    if (!$root_relative) {
-      $http_host .= $request->getBasePath();
-    }
+    $base_path = !$root_relative ? $request->getBasePath() : '';
 
-    return preg_replace('|^https?://' . preg_quote($http_host, '|') . '|', '', $file_url);
+    $host = preg_quote($host, '@');
+    $port = preg_quote($port, '@');
+    $base_path = preg_quote($base_path, '@');
+
+    return preg_replace("@^https?://{$host}(:{$port})?{$base_path}($|/)@", '/', $file_url);
   }
 
 }
