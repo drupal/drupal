@@ -83,6 +83,8 @@ class ConfigTest extends TestCase {
 
   /**
    * @covers ::getAllCleanupPaths
+   *
+   * @runInSeparateProcess
    */
   public function testMixedCaseConfigCleanupPackages() {
     // Root package has configuration in extra.
