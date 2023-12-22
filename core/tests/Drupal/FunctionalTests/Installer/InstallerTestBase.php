@@ -15,8 +15,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
  * Base class for testing the interactive installer.
@@ -120,7 +118,6 @@ abstract class InstallerTestBase extends BrowserTestBase {
     // server information so that XDebug works.
     // @see install_begin_request()
     $request = Request::create($GLOBALS['base_url'] . '/core/install.php', 'GET', [], $_COOKIE, [], $_SERVER);
-    $request->setSession(new Session(new MockArraySessionStorage()));
     $this->container = new ContainerBuilder();
     $request_stack = new RequestStack();
     $request_stack->push($request);

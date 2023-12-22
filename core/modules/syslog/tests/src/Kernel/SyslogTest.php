@@ -4,8 +4,6 @@ namespace Drupal\Tests\syslog\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
  * Test syslog logger functionality.
@@ -32,7 +30,6 @@ class SyslogTest extends KernelTestBase {
 
     $request = Request::create('/page-not-found', 'GET', [], [], [], ['REMOTE_ADDR' => '1.2.3.4']);
     $request->headers->set('Referer', 'other-site');
-    $request->setSession(new Session(new MockArraySessionStorage()));
     \Drupal::requestStack()->push($request);
 
     $user = $this->getMockBuilder('Drupal\Core\Session\AccountInterface')->getMock();

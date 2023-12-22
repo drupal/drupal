@@ -4,8 +4,6 @@ namespace Drupal\KernelTests\Core\File;
 
 use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
  * @coversDefaultClass \Drupal\Core\File\FileUrlGenerator
@@ -156,7 +154,6 @@ class FileUrlGeneratorTest extends FileTestBase {
 
     // Create a mock Request for transformRelative().
     $request = Request::create($GLOBALS['base_url']);
-    $request->setSession(new Session(new MockArraySessionStorage()));
     $this->container->get('request_stack')->push($request);
     \Drupal::setContainer($this->container);
 
@@ -186,7 +183,6 @@ class FileUrlGeneratorTest extends FileTestBase {
 
     // Create a mock Request for transformRelative().
     $request = Request::create($GLOBALS['base_url']);
-    $request->setSession(new Session(new MockArraySessionStorage()));
     $this->container->get('request_stack')->push($request);
     \Drupal::setContainer($this->container);
 
@@ -204,7 +200,6 @@ class FileUrlGeneratorTest extends FileTestBase {
 
     // Create a mock Request for transformRelative().
     $request = Request::create($GLOBALS['base_url']);
-    $request->setSession(new Session(new MockArraySessionStorage()));
     $this->container->get('request_stack')->push($request);
     \Drupal::setContainer($this->container);
 

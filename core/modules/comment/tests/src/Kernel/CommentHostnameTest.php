@@ -6,8 +6,6 @@ use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
  * Tests the hostname base field.
@@ -31,7 +29,6 @@ class CommentHostnameTest extends KernelTestBase {
   public function testGetDefaultHostname() {
     // Create a fake request to be used for testing.
     $request = Request::create('/', 'GET', [], [], [], ['REMOTE_ADDR' => '203.0.113.1']);
-    $request->setSession(new Session(new MockArraySessionStorage()));
     /** @var \Symfony\Component\HttpFoundation\RequestStack $stack */
     $stack = $this->container->get('request_stack');
     $stack->push($request);

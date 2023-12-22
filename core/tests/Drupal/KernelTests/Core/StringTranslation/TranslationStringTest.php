@@ -58,10 +58,8 @@ class TranslationStringTest extends KernelTestBase {
     // Reboot the container so that different services are injected and the new
     // settings are picked.
     $kernel = $this->container->get('kernel');
-    // @todo This used to call shutdown() and boot(). rebuildContainer() is
-    // needed until we stop pushing the request twice and only popping it once.
-    // @see https://www.drupal.org/i/2613044
-    $kernel->rebuildContainer();
+    $kernel->shutdown();
+    $kernel->boot();
     $settings = Settings::getAll();
     $settings['locale_custom_strings_de'] = ['' => ['Example @number' => 'Example @number translated']];
     // Recreate the settings static.

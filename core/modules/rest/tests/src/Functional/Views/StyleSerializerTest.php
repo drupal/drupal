@@ -16,8 +16,6 @@ use Drupal\views\Entity\View;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Views;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
  * Tests the serializer style plugin.
@@ -596,7 +594,6 @@ class StyleSerializerTest extends ViewTestBase {
     // We set up a request so it looks like a request in the live preview.
     $request = new Request();
     $request->query->add([MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']);
-    $request->setSession(new Session(new MockArraySessionStorage()));
     /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
     $request_stack = \Drupal::service('request_stack');
     $request_stack->push($request);

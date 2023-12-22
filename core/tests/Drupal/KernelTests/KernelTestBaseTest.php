@@ -11,7 +11,6 @@ use Drupal\user\Entity\Role;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
 use PHPUnit\Framework\SkippedTestError;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @coversDefaultClass \Drupal\KernelTests\KernelTestBase
@@ -234,34 +233,6 @@ class KernelTestBaseTest extends KernelTestBase {
   public function testBootKernel() {
     $this->assertNull($this->container->get('request_stack')->getParentRequest(), 'There should only be one request on the stack');
     $this->assertEquals('public', \Drupal::config('system.file')->get('default_scheme'));
-  }
-
-  /**
-   * Tests that a usable session is on the request.
-   *
-   * @covers ::bootKernel
-   */
-  public function testSessionOnRequest(): void {
-    /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
-    $session = $this->container->get('request_stack')->getSession();
-
-    $session->set('some-val', 'do-not-cleanup');
-    $this->assertEquals('do-not-cleanup', $session->get('some-val'));
-
-    $session->set('some-other-val', 'do-cleanup');
-    $this->assertEquals('do-cleanup', $session->remove('some-other-val'));
-  }
-
-  /**
-   * Tests deprecation of modified request stack lacking a session.
-   *
-   * @covers ::tearDown
-   *
-   * @group legacy
-   */
-  public function testDeprecatedSessionMissing(): void {
-    $this->expectDeprecation('Pushing requests without a session onto the request_stack is deprecated in drupal:10.3.0 and an error will be thrown from drupal:11.0.0. See https://www.drupal.org/node/3337193');
-    $this->container->get('request_stack')->push(Request::create('/'));
   }
 
   /**

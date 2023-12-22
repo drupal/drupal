@@ -68,10 +68,8 @@ class TwigIncludeTest extends KernelTestBase {
     $twig_config = $this->container->getParameter('twig.config');
     $twig_config['allowed_file_extensions'][] = 'sql';
     $this->twigConfig = $twig_config;
-    // @todo This used to call shutdown() and boot(). rebuildContainer() is
-    // needed until we stop pushing the request twice and only popping it once.
-    // @see https://www.drupal.org/i/2613044
-    $this->container->get('kernel')->rebuildContainer();
+    $this->container->get('kernel')->shutdown();
+    $this->container->get('kernel')->boot();
     /** @var \Drupal\Core\Template\Loader\FilesystemLoader $loader */
     $loader = \Drupal::service('twig.loader.filesystem');
     $source = $loader->getSourceContext('@__main__\/core/tests/fixtures/files/sql-2.sql');
@@ -82,10 +80,8 @@ class TwigIncludeTest extends KernelTestBase {
     $this->assertSame(['css', 'html', 'js', 'svg', 'twig', 'sql'], \Drupal::getContainer()->getParameter('twig.config')['allowed_file_extensions']);
     unset($twig_config['allowed_file_extensions']);
     $this->twigConfig = $twig_config;
-    // @todo This used to call shutdown() and boot(). rebuildContainer() is
-    // needed until we stop pushing the request twice and only popping it once.
-    // @see https://www.drupal.org/i/2613044
-    $this->container->get('kernel')->rebuildContainer();
+    $this->container->get('kernel')->shutdown();
+    $this->container->get('kernel')->boot();
     $this->assertArrayNotHasKey('allowed_file_extensions', \Drupal::getContainer()->getParameter('twig.config'));
     /** @var \Drupal\Core\Template\Loader\FilesystemLoader $loader */
     $loader = \Drupal::service('twig.loader.filesystem');
@@ -112,10 +108,8 @@ class TwigIncludeTest extends KernelTestBase {
     // Allow files with no extension.
     $twig_config['allowed_file_extensions'] = ['twig', ''];
     $this->twigConfig = $twig_config;
-    // @todo This used to call shutdown() and boot(). rebuildContainer() is
-    // needed until we stop pushing the request twice and only popping it once.
-    // @see https://www.drupal.org/i/2613044
-    $this->container->get('kernel')->rebuildContainer();
+    $this->container->get('kernel')->shutdown();
+    $this->container->get('kernel')->boot();
     /** @var \Drupal\Core\Template\Loader\FilesystemLoader $loader */
     $loader = \Drupal::service('twig.loader.filesystem');
     $source = $loader->getSourceContext('@__main__\/' . $this->siteDirectory . '/test_file');

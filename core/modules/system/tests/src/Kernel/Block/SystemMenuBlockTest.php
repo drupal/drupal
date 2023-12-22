@@ -11,8 +11,6 @@ use Drupal\Tests\Core\Menu\MenuLinkMock;
 use Drupal\user\Entity\User;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -235,7 +233,6 @@ class SystemMenuBlockTest extends KernelTestBase {
     $request = new Request();
     $request->attributes->set(RouteObjectInterface::ROUTE_NAME, 'example3');
     $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, $route);
-    $request->setSession(new Session(new MockArraySessionStorage()));
     $this->container->get('request_stack')->push($request);
     // \Drupal\Core\Menu\MenuActiveTrail uses the cache collector pattern, which
     // includes static caching. Since this second scenario simulates a second
@@ -303,7 +300,6 @@ class SystemMenuBlockTest extends KernelTestBase {
     $request = new Request();
     $request->attributes->set(RouteObjectInterface::ROUTE_NAME, $active_route);
     $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, $route);
-    $request->setSession(new Session(new MockArraySessionStorage()));
     $this->container->get('request_stack')->push($request);
 
     $block_build = $block->build();

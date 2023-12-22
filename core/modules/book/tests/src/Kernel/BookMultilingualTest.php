@@ -14,8 +14,6 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUser;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -273,9 +271,7 @@ class BookMultilingualTest extends KernelTestBase {
    *   is used instead of the content language.
    */
   protected function setCurrentLanguage(string $langcode): void {
-    $request = Request::create("http://$langcode.book.test.domain/");
-    $request->setSession(new Session(new MockArraySessionStorage()));
-    \Drupal::requestStack()->push($request);
+    \Drupal::requestStack()->push(Request::create("http://$langcode.book.test.domain/"));
     $language_manager = $this->container->get('language_manager');
     $language_manager->reset();
     $current_user = \Drupal::currentUser();

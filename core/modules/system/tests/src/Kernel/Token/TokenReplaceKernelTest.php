@@ -7,8 +7,6 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\BubbleableMetadata;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
  * Tests token replacement.
@@ -139,7 +137,6 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
       'SERVER_NAME' => 'http://localhost',
     ];
     $request = Request::create('/subdir/', 'GET', [], [], [], $server);
-    $request->setSession(new Session(new MockArraySessionStorage()));
     $request->server->add($server);
     $request_stack->push($request);
     $bubbleable_metadata = new BubbleableMetadata();

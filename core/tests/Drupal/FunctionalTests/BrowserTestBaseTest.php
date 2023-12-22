@@ -11,7 +11,6 @@ use Drupal\Tests\StreamCapturer;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 use Drupal\user\Entity\Role;
 use PHPUnit\Framework\ExpectationFailedException;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests BrowserTestBase functionality.
@@ -520,30 +519,6 @@ class BrowserTestBaseTest extends BrowserTestBase {
     unlink($this->siteDirectory . '/.htkey');
     $this->drupalGet($install_url);
     $this->assertSession()->statusCodeEquals(403);
-  }
-
-  /**
-   * Tests that a usable session is on the request in test-runner.
-   */
-  public function testSessionOnRequest(): void {
-    /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
-    $session = $this->container->get('request_stack')->getSession();
-
-    $session->set('some-val', 'do-not-cleanup');
-    $this->assertEquals('do-not-cleanup', $session->get('some-val'));
-
-    $session->set('some-other-val', 'do-cleanup');
-    $this->assertEquals('do-cleanup', $session->remove('some-other-val'));
-  }
-
-  /**
-   * Tests deprecation of modified request stack lacking a session.
-   *
-   * @group legacy
-   */
-  public function testDeprecatedSessionMissing(): void {
-    $this->expectDeprecation('Pushing requests without a session onto the request_stack is deprecated in drupal:10.3.0 and an error will be thrown from drupal:11.0.0. See https://www.drupal.org/node/3337193');
-    $this->container->get('request_stack')->push(Request::create('/'));
   }
 
   /**
