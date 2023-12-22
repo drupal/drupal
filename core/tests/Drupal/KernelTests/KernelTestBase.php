@@ -591,16 +591,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
         ->addTag('event_subscriber');
     }
 
-    if ($container->hasDefinition('path_alias.path_processor')) {
-      // The alias-based processor requires the path_alias entity schema to be
-      // installed, so we prevent it from being registered to the path processor
-      // manager. We do this by removing the tags that the compiler pass looks
-      // for. This means that the URL generator can safely be used within tests.
-      $container->getDefinition('path_alias.path_processor')
-        ->clearTag('path_processor_inbound')
-        ->clearTag('path_processor_outbound');
-    }
-
     // Relax the password hashing cost in tests to avoid performance issues.
     if ($container->hasDefinition('password')) {
       $container->getDefinition('password')

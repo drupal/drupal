@@ -32,7 +32,7 @@ class Stable9LibraryOverrideTest extends StableLibraryOverrideTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system', 'user', 'path_alias'];
+  protected static $modules = ['system', 'user'];
 
   /**
    * {@inheritdoc}

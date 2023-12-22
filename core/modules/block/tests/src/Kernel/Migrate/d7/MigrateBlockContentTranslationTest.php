@@ -37,6 +37,7 @@ class MigrateBlockContentTranslationTest extends MigrateDrupal7TestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('block_content');
+    $this->installEntitySchema('path_alias');
     $this->installConfig(['block']);
     $this->installConfig(['block_content']);
     $this->container->get('theme_installer')->install(['stark']);
