@@ -26,6 +26,43 @@ require_once __DIR__ . '/locale.translation.inc';
 /**
  * Implements callback_batch_operation().
  *
+ * Checks for changed project versions, and cleans-up data from the old version.
+ * For example when a module is updated. This will make the translation import
+ * system use translations that match the current version.
+ *
+ * @param string $project
+ *   Machine name of the project for which to check the translation status.
+ * @param string $langcode
+ *   Language code of the language for which to check the translation.
+ * @param array|\ArrayAccess $context
+ *   The batch context.
+ */
+function locale_translation_batch_version_check(string $project, string $langcode, array|\ArrayAccess &$context) {
+  $locale_project = \Drupal::service('locale.project')->get($project);
+
+  if (empty($locale_project)) {
+    return;
+  }
+
+  $status = \Drupal::keyValue('locale.translation_status')->get($project);
+  if (!isset($status[$langcode])) {
+    return;
+  }
+
+  if ($locale_project['version'] == $status[$langcode]->version) {
+    return;
+  }
+
+  \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
+  locale_translation_status_delete_projects([$project]);
+  locale_translate_delete_translation_files([$project]);
+
+  $context['message'] = t('Checked version of %project.', ['%project' => $project]);
+}
+
+/**
+ * Implements callback_batch_operation().
+ *
  * Checks the presence and creation time po translation files in located at
  * remote server location and local file system.
  *
