@@ -179,9 +179,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
     /** @var \Drupal\Core\Config\ConfigInstaller $config_installer */
     $config_installer = \Drupal::service('config.installer');
     $sync_status = $config_installer->isSyncing();
-    if ($sync_status) {
-      $source_storage = $config_installer->getSourceStorage();
-    }
     $modules_installed = [];
     foreach ($module_list as $module) {
       $enabled = $extension_config->get("module.$module") !== NULL;
@@ -268,7 +265,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         }
 
         // Allow modules to react prior to the installation of a module.
-        $this->moduleHandler->invokeAll('module_preinstall', [$module]);
+        $this->moduleHandler->invokeAll('module_preinstall', [$module, $sync_status]);
 
         // Now install the module's schema if necessary.
         $this->installSchema($module);
@@ -326,12 +323,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
         // Install default configuration of the module.
         $config_installer = \Drupal::service('config.installer');
-        if ($sync_status) {
-          $config_installer
-            ->setSyncing(TRUE)
-            ->setSourceStorage($source_storage);
-        }
-        \Drupal::service('config.installer')->installDefaultConfig('module', $module);
+        $config_installer->installDefaultConfig('module', $module);
 
         // If the module has no current updates, but has some that were
         // previously removed, set the version to the value of
@@ -467,7 +459,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       }
 
       // Allow modules to react prior to the uninstallation of a module.
-      $this->moduleHandler->invokeAll('module_preuninstall', [$module]);
+      $this->moduleHandler->invokeAll('module_preuninstall', [$module, $sync_status]);
 
       // Uninstall the module.
       $this->moduleHandler->loadInclude($module, 'install');
@@ -604,10 +596,17 @@ class ModuleInstaller implements ModuleInstallerInterface {
   /**
    * Updates the kernel module list.
    *
-   * @param string $module_filenames
+   * @param string[] $module_filenames
    *   The list of installed modules.
    */
   protected function updateKernel($module_filenames) {
+    // Save current state of config installer, so it can be restored after the
+    // container is rebuilt.
+    /** @var \Drupal\Core\Config\ConfigInstallerInterface $config_installer */
+    $config_installer = $this->kernel->getContainer()->get('config.installer');
+    $sync_status = $config_installer->isSyncing();
+    $source_storage = $config_installer->getSourceStorage();
+
     // This reboots the kernel to register the module's bundle and its services
     // in the service container. The $module_filenames argument is taken over as
     // %container.modules% parameter, which is passed to a fresh ModuleHandler
@@ -619,6 +618,13 @@ class ModuleInstaller implements ModuleInstallerInterface {
     $this->moduleHandler = $container->get('module_handler');
     $this->connection = $container->get('database');
     $this->updateRegistry = $container->get('update.update_hook_registry');
+
+    // Restore state of config installer.
+    if ($sync_status) {
+      $container->get('config.installer')
+        ->setSyncing(TRUE)
+        ->setSourceStorage($source_storage);
+    }
   }
 
   /**

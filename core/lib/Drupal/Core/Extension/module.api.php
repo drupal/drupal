@@ -161,8 +161,15 @@ function hook_system_info_alter(array &$info, \Drupal\Core\Extension\Extension $
  *
  * @param string $module
  *   The name of the module about to be installed.
+ * @param bool $is_syncing
+ *   TRUE if the module is being installed as part of a configuration import. In
+ *   these cases, your hook implementation needs to carefully consider what
+ *   changes, if any, it should make. For example, it should not make any
+ *   changes to configuration objects or configuration entities. Those changes
+ *   should be made earlier and exported so during import there's no need to
+ *   do them again.
  */
-function hook_module_preinstall($module) {
+function hook_module_preinstall($module, bool $is_syncing) {
   mymodule_cache_clear();
 }
 
@@ -252,8 +259,14 @@ function hook_install($is_syncing) {
  *
  * @param string $module
  *   The name of the module about to be uninstalled.
+ * @param bool $is_syncing
+ *   TRUE if the module is being uninstalled as part of a configuration import.
+ *   In these cases, your hook implementation needs to carefully consider what
+ *   changes to configuration objects or configuration entities. Those changes
+ *   should be made earlier and exported so during import there's no need to
+ *   do them again.
  */
-function hook_module_preuninstall($module) {
+function hook_module_preuninstall($module, bool $is_syncing) {
   mymodule_cache_clear();
 }
 

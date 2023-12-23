@@ -829,6 +829,50 @@ class ConfigImporterTest extends KernelTestBase {
     $this->assertTrue($state['entity_state::predelete'], 'ConfigEntity::isSyncing() returns TRUE');
     $this->assertTrue($state['global_state::delete'], '\Drupal::isConfigSyncing() returns TRUE');
     $this->assertTrue($state['entity_state::delete'], 'ConfigEntity::isSyncing() returns TRUE');
+
+    // Test that isSyncing is TRUE in hook_module_preinstall() when installing
+    // module via config import.
+    $extensions = $sync->read('core.extension');
+    // First, install system_test so that its hook_module_preinstall() will run
+    // when module_test is installed.
+    $this->container->get('module_installer')->install(['system_test']);
+    // Add module_test and system_test to the enabled modules to be imported,
+    // so that module_test gets installed on import and system_test does not get
+    // uninstalled.
+    $extensions['module']['module_test'] = 0;
+    $extensions['module']['system_test'] = 0;
+    $extensions['module'] = module_config_sort($extensions['module']);
+    $sync->write('core.extension', $extensions);
+    $this->configImporter->reset()->import();
+
+    // Syncing values stored in state by hook_module_preinstall should be TRUE
+    // when module is installed via config import.
+    $this->assertTrue(\Drupal::state()->get('system_test_preinstall_module_config_installer_syncing'), '\Drupal::isConfigSyncing() in system_test_module_preinstall() returns TRUE');
+    $this->assertTrue(\Drupal::state()->get('system_test_preinstall_module_syncing_param'), 'system_test_module_preinstall() $is_syncing value is TRUE');
+
+    // Syncing value stored in state by uninstall hooks should be FALSE
+    // when uninstalling outside of config import.
+    $this->container->get('module_installer')->uninstall(['module_test']);
+    $this->assertFalse(\Drupal::state()->get('system_test_preuninstall_module_config_installer_syncing'), '\Drupal::isConfigSyncing() in system_test_module_preuninstall() returns FALSE');
+    $this->assertFalse(\Drupal::state()->get('system_test_preuninstall_module_syncing_param'), 'system_test_module_preuninstall() $is_syncing value is FALSE');
+    $this->assertFalse(\Drupal::state()->get('system_test_modules_uninstalled_config_installer_syncing'), '\Drupal::isConfigSyncing() in system_test_modules_uninstalled returns FALSE');
+    $this->assertFalse(\Drupal::state()->get('system_test_modules_uninstalled_syncing_param'), 'system_test_modules_uninstalled $is_syncing value is FALSE');
+
+    // Syncing value stored in state by hook_module_preinstall should be FALSE
+    // when installing outside of config import.
+    $this->container->get('module_installer')->install(['module_test']);
+    $this->assertFalse(\Drupal::state()->get('system_test_preinstall_module_config_installer_syncing'), '\Drupal::isConfigSyncing() in system_test_module_preinstall() returns TRUE');
+    $this->assertFalse(\Drupal::state()->get('system_test_preinstall_module_syncing_param'), 'system_test_module_preinstall() $is_syncing value is TRUE');
+
+    // Uninstall module_test via config import. Syncing value stored in state
+    // by uninstall hooks should be TRUE.
+    unset($extensions['module']['module_test']);
+    $sync->write('core.extension', $extensions);
+    $this->configImporter->reset()->import();
+    $this->assertTrue(\Drupal::state()->get('system_test_preuninstall_module_config_installer_syncing'), '\Drupal::isConfigSyncing() in system_test_module_preuninstall() returns TRUE');
+    $this->assertTrue(\Drupal::state()->get('system_test_preuninstall_module_syncing_param'), 'system_test_module_preuninstall() $is_syncing value is TRUE');
+    $this->assertTrue(\Drupal::state()->get('system_test_modules_uninstalled_config_installer_syncing'), '\Drupal::isConfigSyncing() in system_test_modules_uninstalled returns TRUE');
+    $this->assertTrue(\Drupal::state()->get('system_test_modules_uninstalled_syncing_param'), 'system_test_modules_uninstalled $is_syncing value is TRUE');
   }
 
   /**

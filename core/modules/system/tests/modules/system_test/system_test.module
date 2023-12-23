@@ -35,12 +35,20 @@ function system_test_modules_installed($modules) {
 /**
  * Implements hook_modules_uninstalled().
  */
-function system_test_modules_uninstalled($modules) {
+function system_test_modules_uninstalled($modules, $is_syncing) {
   if (\Drupal::state()->get('system_test.verbose_module_hooks')) {
     foreach ($modules as $module) {
       \Drupal::messenger()->addStatus(t('hook_modules_uninstalled fired for @module', ['@module' => $module]));
     }
   }
+
+  // Save the config.installer isSyncing() value to state to check that it is
+  // correctly set when installing module during config import.
+  \Drupal::state()->set('system_test_modules_uninstalled_config_installer_syncing', \Drupal::service('config.installer')->isSyncing());
+
+  // Save the $is_syncing parameter value to state to check that it is correctly
+  // set when installing module during config import.
+  \Drupal::state()->set('system_test_modules_uninstalled_syncing_param', $is_syncing);
 }
 
 /**
@@ -132,14 +140,30 @@ function system_test_filetransfer_info() {
 /**
  * Implements hook_module_preinstall().
  */
-function system_test_module_preinstall($module) {
+function system_test_module_preinstall($module, bool $is_syncing) {
   \Drupal::messenger()->addStatus('system_test_preinstall_module called');
   \Drupal::state()->set('system_test_preinstall_module', $module);
+
+  // Save the config.installer isSyncing() value to state to check that it is
+  // correctly set when installing module during config import.
+  \Drupal::state()->set('system_test_preinstall_module_config_installer_syncing', \Drupal::service('config.installer')->isSyncing());
+
+  // Save the $is_syncing parameter value to state to check that it is correctly
+  // set when installing module during config import.
+  \Drupal::state()->set('system_test_preinstall_module_syncing_param', $is_syncing);
 }
 
 /**
  * Implements hook_module_preuninstall().
  */
-function system_test_module_preuninstall($module) {
+function system_test_module_preuninstall($module, bool $is_syncing) {
   \Drupal::state()->set('system_test_preuninstall_module', $module);
+
+  // Save the config.installer isSyncing() value to state to check that it is
+  // correctly set when uninstalling module during config import.
+  \Drupal::state()->set('system_test_preuninstall_module_config_installer_syncing', \Drupal::service('config.installer')->isSyncing());
+
+  // Save the $is_syncing parameter value to state to check that it is correctly
+  // set when installing module during config import.
+  \Drupal::state()->set('system_test_preuninstall_module_syncing_param', $is_syncing);
 }
