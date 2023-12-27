@@ -37,6 +37,7 @@ class MigrateBlockNoBlockContentTest extends MigrateDrupal7TestBase {
     $this->container->get('theme_installer')->install(['olivero', 'claro']);
 
     $this->installConfig(static::$modules);
+    $this->installEntitySchema('path_alias');
 
     // Set Olivero and Claro as the default public and admin theme.
     $config = $this->config('system.theme');

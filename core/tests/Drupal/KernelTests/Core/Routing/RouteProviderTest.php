@@ -5,7 +5,6 @@ namespace Drupal\KernelTests\Core\Routing;
 use ColinODell\PsrTestLogger\TestLogger;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Database\Database;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Routing\MatcherDumper;
@@ -104,19 +103,6 @@ class RouteProviderTest extends KernelTestBase {
     $this->installEntitySchema('path_alias');
 
     $this->logger = new TestLogger();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function register(ContainerBuilder $container) {
-    parent::register($container);
-
-    // Read the incoming path alias for these tests.
-    if ($container->hasDefinition('path_alias.path_processor')) {
-      $definition = $container->getDefinition('path_alias.path_processor');
-      $definition->addTag('path_processor_inbound');
-    }
   }
 
   /**
