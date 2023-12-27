@@ -7,6 +7,8 @@ namespace Drupal\Tests\file\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
  * Tests the file requirements.
@@ -69,6 +71,7 @@ class RequirementsTest extends KernelTestBase {
    */
   private function setServerSoftware(?string $software): void {
     $request = new Request();
+    $request->setSession(new Session(new MockArraySessionStorage()));
     if (is_string($software)) {
       $request->server->set('SERVER_SOFTWARE', $software);
     }

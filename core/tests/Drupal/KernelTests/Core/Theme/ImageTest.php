@@ -4,6 +4,8 @@ namespace Drupal\KernelTests\Core\Theme;
 
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
  * Tests built-in image theme functions.
@@ -43,6 +45,7 @@ class ImageTest extends KernelTestBase {
     // the Request containing the correct hostname. KernelTestBase doesn't set
     // it, so push another request onto the stack to ensure it's correct.
     $request = Request::create('/', 'GET', [], [], [], $_SERVER);
+    $request->setSession(new Session(new MockArraySessionStorage()));
     $this->container = \Drupal::service('kernel')->getContainer();
     $this->container->get('request_stack')->push($request);
 

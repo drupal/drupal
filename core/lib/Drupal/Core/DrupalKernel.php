@@ -28,6 +28,8 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
@@ -581,6 +583,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       (array) Settings::get(RequestSanitizer::SANITIZE_INPUT_SAFE_KEYS, []),
       (bool) Settings::get(RequestSanitizer::SANITIZE_LOG, FALSE)
     );
+
+    // Ensure that there is a session on every request.
+    if (!$request->hasSession()) {
+      $this->initializeEphemeralSession($request);
+    }
 
     $this->loadLegacyIncludes();
 
@@ -1636,6 +1643,25 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // Normalize an empty string to a NULL value.
     return $config['profile'] ?? NULL;
+  }
+
+  /**
+   * Initializes a session backed by in-memory store and puts it on the request.
+   *
+   * A simple in-memory store is sufficient for command line tools and tests.
+   * Web requests will be processed by the session middleware where the mock
+   * session is replaced by a session object backed with persistent storage and
+   * a real session handler.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
+   *
+   * @see \Drupal\Core\StackMiddleware\Session::handle()
+   */
+  protected function initializeEphemeralSession(Request $request): void {
+    $session = new Session(new MockArraySessionStorage());
+    $session->start();
+    $request->setSession($session);
   }
 
 }

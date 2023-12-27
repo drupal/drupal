@@ -49,19 +49,42 @@ class Session implements HttpKernelInterface {
    * {@inheritdoc}
    */
   public function handle(Request $request, $type = self::MAIN_REQUEST, $catch = TRUE): Response {
+    // Initialize and start a session for web requests. Command line tools and
+    // the parent site in functional tests must continue to use the ephemeral
+    // session initialized and started in DrupalKernel::preHandle().
     if ($type === self::MAIN_REQUEST && PHP_SAPI !== 'cli') {
-      $session = $this->container->get($this->sessionServiceName);
-      $session->start();
-      $request->setSession($session);
+      $this->initializePersistentSession($request);
     }
 
     $result = $this->httpKernel->handle($request, $type, $catch);
 
-    if ($type === self::MAIN_REQUEST && $request->hasSession()) {
+    if ($type === self::MAIN_REQUEST && PHP_SAPI !== 'cli' && $request->hasSession()) {
       $request->getSession()->save();
     }
 
     return $result;
+  }
+
+  /**
+   * Initializes a session backed by persistent store and puts it on the request.
+   *
+   * Sessions for web requests need to be backed by a persistent session store
+   * and a real session handler (responsible for session cookie management).
+   * In contrast, a simple in-memory store is sufficient for command line tools
+   * and tests. Hence, the persistent session should only ever be placed on web
+   * requests while command line tools and the parent site in functional tests
+   * must continue to use the ephemeral session initialized in
+   * DrupalKernel::preHandle().
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
+   *
+   * @see \Drupal\Core\DrupalKernel::preHandle()
+   */
+  protected function initializePersistentSession(Request $request): void {
+    $session = $this->container->get($this->sessionServiceName);
+    $session->start();
+    $request->setSession($session);
   }
 
 }

@@ -13,6 +13,8 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 // cspell:ignore merhaba siema xsiemax
 
@@ -464,6 +466,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $request->query->replace([
       'page' => '0,2',
     ]);
+    $request->setSession(new Session(new MockArraySessionStorage()));
     \Drupal::getContainer()->get('request_stack')->push($request);
     $this->queryResults = $this->storage
       ->getQuery()
@@ -500,6 +503,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       'sort' => 'asc',
       'order' => 'Type',
     ]);
+    $request->setSession(new Session(new MockArraySessionStorage()));
     \Drupal::getContainer()->get('request_stack')->push($request);
 
     $header = [
