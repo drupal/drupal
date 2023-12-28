@@ -125,7 +125,7 @@ class FinishResponseSubscriberTest extends UnitTestCase {
     $finishSubscriber->onRespond($event);
 
     $this->assertEquals(['en'], $response->headers->all('Content-language'));
-    // 'X-Content-Type-Options' will be unconditionally set by the core.
+    // 'X-Content-Type-Options' will be unconditionally set by core.
     $this->assertEquals(['nosniff'], $response->headers->all('X-Content-Type-Options'));
     $this->assertEquals(['DENY'], $response->headers->all('X-Frame-Options'));
   }
