@@ -123,8 +123,10 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     // different from the declared content-type, since that can lead to
     // XSS and other vulnerabilities.
     // https://owasp.org/www-project-secure-headers
-    $response->headers->set('X-Content-Type-Options', 'nosniff', FALSE);
-    $response->headers->set('X-Frame-Options', 'SAMEORIGIN', FALSE);
+    $response->headers->set('X-Content-Type-Options', 'nosniff');
+    if (!$response->headers->has('X-Frame-Options')) {
+      $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
+    }
 
     // If the current response isn't an implementation of the
     // CacheableResponseInterface, we assume that a Response is either
