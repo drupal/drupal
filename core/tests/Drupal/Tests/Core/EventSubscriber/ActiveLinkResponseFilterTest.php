@@ -91,8 +91,8 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
     $attributes = [
       'data-drupal-link-system-path' => 'my-front-page',
     ];
-    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes];
-    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes + ['hreflang' => 'en']];
+    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes + ['aria-current' => 'page']];
+    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes + ['hreflang' => 'en', 'aria-current' => 'page']];
     // Matching path, plus all non-matching variations.
     $situations[] = ['context' => $context, 'is active' => FALSE, 'attributes' => $attributes + ['hreflang' => 'nl']];
     $situations[] = ['context' => $context, 'is active' => FALSE, 'attributes' => $attributes + ['data-drupal-link-query' => '{"foo":"bar"}']];
@@ -105,8 +105,8 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
     $attributes = [
       'data-drupal-link-system-path' => '<front>',
     ];
-    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes];
-    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes + ['hreflang' => 'en']];
+    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes + ['aria-current' => 'page']];
+    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes + ['hreflang' => 'en', 'aria-current' => 'page']];
     // Special matching path, plus all non-matching variations.
     $situations[] = ['context' => $context, 'is active' => FALSE, 'attributes' => $attributes + ['hreflang' => 'nl']];
     $situations[] = ['context' => $context, 'is active' => FALSE, 'attributes' => $attributes + ['data-drupal-link-query' => '{"foo":"bar"}']];
@@ -128,8 +128,8 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
     $attributes = [
       'data-drupal-link-system-path' => 'llama',
     ];
-    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes];
-    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes + ['hreflang' => 'nl']];
+    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes + ['aria-current' => 'page']];
+    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes + ['hreflang' => 'nl', 'aria-current' => 'page']];
     // Matching path, plus all non-matching variations.
     $situations[] = ['context' => $context, 'is active' => FALSE, 'attributes' => $attributes + ['hreflang' => 'en']];
     $situations[] = ['context' => $context, 'is active' => FALSE, 'attributes' => $attributes + ['data-drupal-link-query' => '{"foo":"bar"}']];
@@ -163,8 +163,8 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
     $attributes = [
       'data-drupal-link-system-path' => 'llama',
     ];
-    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes + ['data-drupal-link-query' => Json::encode(['foo' => 'bar'])]];
-    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes + ['hreflang' => 'nl', 'data-drupal-link-query' => Json::encode(['foo' => 'bar'])]];
+    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes + ['aria-current' => 'page', 'data-drupal-link-query' => Json::encode(['foo' => 'bar'])]];
+    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes + ['hreflang' => 'nl', 'aria-current' => 'page', 'data-drupal-link-query' => Json::encode(['foo' => 'bar'])]];
     // Matching path, plus all non-matching variations.
     $situations[] = ['context' => $context, 'is active' => FALSE, 'attributes' => $attributes + ['hreflang' => 'en', 'data-drupal-link-query' => Json::encode(['foo' => 'bar'])]];
     $situations[] = ['context' => $context, 'is active' => FALSE, 'attributes' => $attributes + ['hreflang' => 'nl', 'data-drupal-link-query' => ""]];
@@ -191,8 +191,8 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
     $attributes = [
       'data-drupal-link-system-path' => 'llama',
     ];
-    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes + ['data-drupal-link-query' => Json::encode(['foo' => 'bar'])]];
-    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes + ['hreflang' => 'nl', 'data-drupal-link-query' => Json::encode(['foo' => 'bar'])]];
+    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes + ['aria-current' => 'page', 'data-drupal-link-query' => Json::encode(['foo' => 'bar'])]];
+    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes + ['hreflang' => 'nl', 'aria-current' => 'page', 'data-drupal-link-query' => Json::encode(['foo' => 'bar'])]];
     // Matching path, plus all non-matching variations.
     $situations[] = ['context' => $context, 'is active' => FALSE, 'attributes' => $attributes + ['hreflang' => 'en', 'data-drupal-link-query' => Json::encode(['foo' => 'bar'])]];
     $situations[] = ['context' => $context, 'is active' => FALSE, 'attributes' => $attributes + ['data-drupal-link-query' => ""]];
@@ -223,8 +223,8 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
     $attributes = [
       'data-drupal-link-system-path' => 'my-front-page',
     ];
-    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes + ['data-drupal-link-query' => Json::encode(['foo' => 'bar'])]];
-    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes + ['hreflang' => 'en', 'data-drupal-link-query' => Json::encode(['foo' => 'bar'])]];
+    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes + ['aria-current' => 'page', 'data-drupal-link-query' => Json::encode(['foo' => 'bar'])]];
+    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes + ['hreflang' => 'en', 'aria-current' => 'page', 'data-drupal-link-query' => Json::encode(['foo' => 'bar'])]];
     // Matching path, plus all non-matching variations.
     $situations[] = ['context' => $context, 'is active' => FALSE, 'attributes' => $attributes + ['hreflang' => 'nl', 'data-drupal-link-query' => Json::encode(['foo' => 'bar'])]];
     $situations[] = ['context' => $context, 'is active' => FALSE, 'attributes' => $attributes + ['data-drupal-link-query' => ""]];
@@ -235,8 +235,8 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
     $attributes = [
       'data-drupal-link-system-path' => '<front>',
     ];
-    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes + ['data-drupal-link-query' => Json::encode(['foo' => 'bar'])]];
-    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes + ['hreflang' => 'en', 'data-drupal-link-query' => Json::encode(['foo' => 'bar'])]];
+    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes + ['aria-current' => 'page', 'data-drupal-link-query' => Json::encode(['foo' => 'bar'])]];
+    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes + ['hreflang' => 'en', 'aria-current' => 'page', 'data-drupal-link-query' => Json::encode(['foo' => 'bar'])]];
     // Special matching path, plus all non-matching variations.
     $situations[] = ['context' => $context, 'is active' => FALSE, 'attributes' => $attributes + ['hreflang' => 'nl', 'data-drupal-link-query' => Json::encode(['foo' => 'bar'])]];
     $situations[] = ['context' => $context, 'is active' => FALSE, 'attributes' => $attributes + ['data-drupal-link-query' => ""]];
@@ -255,7 +255,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
       'data-drupal-link-system-path' => 'my-front-page',
       'data-drupal-link-query' => Json::encode(['baz' => 'qux', 'foo' => 'bar']),
     ];
-    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes];
+    $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes + ['aria-current' => 'page']];
 
     // Loop over the surrounding HTML variations.
     $data = [];
@@ -311,7 +311,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
       2 => TRUE,
       3 => 'en',
       4 => [],
-      5 => '<a data-drupal-link-system-path="&lt;front&gt;" class="is-active">Once</a> <a data-drupal-link-system-path="&lt;front&gt;" class="is-active">Twice</a>',
+      5 => '<a data-drupal-link-system-path="&lt;front&gt;" class="is-active" aria-current="page">Once</a> <a data-drupal-link-system-path="&lt;front&gt;" class="is-active" aria-current="page">Twice</a>',
     ];
 
     // Test cases to verify that the 'is-active' class is added when on the
@@ -320,9 +320,9 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
     // - the matching path (the resolved front page path)
     // - the special matching path ('<front>')
     $front_special_link = '<a data-drupal-link-system-path="&lt;front&gt;">Front</a>';
-    $front_special_link_active = '<a data-drupal-link-system-path="&lt;front&gt;" class="is-active">Front</a>';
+    $front_special_link_active = '<a data-drupal-link-system-path="&lt;front&gt;" class="is-active" aria-current="page">Front</a>';
     $front_path_link = '<a data-drupal-link-system-path="my-front-page">Front Path</a>';
-    $front_path_link_active = '<a data-drupal-link-system-path="my-front-page" class="is-active">Front Path</a>';
+    $front_path_link_active = '<a data-drupal-link-system-path="my-front-page" class="is-active" aria-current="page">Front Path</a>';
     $data[] = [
       0 => $front_path_link . ' ' . $front_special_link,
       1 => 'my-front-page',
@@ -343,7 +343,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
     // Test cases to verify that links to the front page do not get the
     // 'is-active' class when not on the front page.
     $other_link = '<a data-drupal-link-system-path="other-page">Other page</a>';
-    $other_link_active = '<a data-drupal-link-system-path="other-page" class="is-active">Other page</a>';
+    $other_link_active = '<a data-drupal-link-system-path="other-page" class="is-active" aria-current="page">Other page</a>';
     $data['<front>-and-other-link-on-other-path'] = [
       0 => $front_special_link . ' ' . $other_link,
       1 => 'other-page',
