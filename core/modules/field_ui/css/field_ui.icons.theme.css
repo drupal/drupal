@@ -31,6 +31,3 @@
 .field-icon-reference {
   background-image: url("data:image/svg+xml,%3csvg height='36' viewBox='0 0 36 36' width='36' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='m10.98 9v4.98h5.52v3.06h-9v6h-5.52v9.96h14.04v-9.96h-5.52v-3.06h15v3.06h-5.52v9.96h14.04v-9.96h-5.52v-6h-9v-3.06h5.52v-9.96h-14.04zm11.026.015-.016 1.995h-7.98l-.016-1.995-.016-1.995h8.044zm-8.986 18.975v2.01h-8.04v-4.02h8.04zm18 0v2.01h-8.04v-4.02h8.04z' fill='%2355565b'/%3e%3c/svg%3e");
 }
-.field-icon-daterange {
-  background-image: url("data:image/svg+xml,%3csvg height='36' viewBox='0 0 36 36' width='36' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='m27 3.6h7.2c.9941 0 1.8.8059 1.8 1.8v28.8c0 .9941-.8059 1.8-1.8 1.8h-32.4c-.994104 0-1.8-.8059-1.8-1.8v-28.8c0-.9941.805896-1.8 1.8-1.8h7.2v-3.6h3.6v3.6h10.8v-3.6h3.6zm-23.4 10.8v18h28.8v-18zm3.6 3.6h3.6v3.6h-3.6zm9 0h3.6v3.6h-3.6zm9 0h3.6v3.6h-3.6z' fill='%2355565b'/%3e%3c/svg%3e");
-}

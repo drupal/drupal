@@ -5,7 +5,6 @@
  * Field hooks to implement a datetime field that stores a start and end date.
  */
 
-use Drupal\Core\Field\FieldTypeCategoryManagerInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 
@@ -27,13 +26,4 @@ function datetime_range_help($route_name, RouteMatchInterface $route_match) {
       $output .= '</dl>';
       return $output;
   }
-}
-
-/**
- * Implements hook_field_type_category_info_alter().
- */
-function datetime_range_field_type_category_info_alter(&$definitions) {
-  // The `datetime_range` field type belongs in the `general` category, so the
-  // libraries need to be attached using an alter hook.
-  $definitions[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY]['libraries'][] = 'datetime_range/drupal.datetime_range-icon';
 }
