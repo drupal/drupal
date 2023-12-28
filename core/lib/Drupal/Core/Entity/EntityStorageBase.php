@@ -585,8 +585,9 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    * @param \Drupal\Core\Entity\Query\QueryInterface $entity_query
    *   EntityQuery instance.
    * @param array $values
-   *   An associative array of properties of the entity, where the keys are the
-   *   property names and the values are the values those properties must have.
+   *   An associative array where the keys are the property names and the
+   *   values are the values those properties must have. If a property takes
+   *   multiple values, passing an array of values will produce an IN condition.
    */
   protected function buildPropertyQuery(QueryInterface $entity_query, array $values) {
     foreach ($values as $name => $value) {
