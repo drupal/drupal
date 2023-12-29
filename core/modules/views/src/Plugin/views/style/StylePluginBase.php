@@ -347,7 +347,7 @@ abstract class StylePluginBase extends PluginBase {
       ];
 
       if ($this->usesFields()) {
-        $form['row_class']['#description'] .= ' ' . $this->t('You may use field tokens from as per the "Replacement patterns" used in "Rewrite the output of this field" for all fields.');
+        $form['row_class']['#description'] .= ' ' . $this->t('You may use field tokens as per the "Replacement patterns" used in "Rewrite the output of this field" for all fields.');
       }
 
       $form['default_row_class'] = [

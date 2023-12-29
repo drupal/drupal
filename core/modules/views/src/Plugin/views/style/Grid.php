@@ -78,7 +78,7 @@ class Grid extends StylePluginBase {
       '#default_value' => $this->options['col_class_custom'],
     ];
     if ($this->usesFields()) {
-      $form['col_class_custom']['#description'] .= ' ' . $this->t('You may use field tokens from as per the "Replacement patterns" used in "Rewrite the output of this field" for all fields.');
+      $form['col_class_custom']['#description'] .= ' ' . $this->t('You may use field tokens as per the "Replacement patterns" used in "Rewrite the output of this field" for all fields.');
     }
     $form['row_class_default'] = [
       '#title' => $this->t('Default row classes'),
@@ -93,7 +93,7 @@ class Grid extends StylePluginBase {
       '#default_value' => $this->options['row_class_custom'],
     ];
     if ($this->usesFields()) {
-      $form['row_class_custom']['#description'] .= ' ' . $this->t('You may use field tokens from as per the "Replacement patterns" used in "Rewrite the output of this field" for all fields.');
+      $form['row_class_custom']['#description'] .= ' ' . $this->t('You may use field tokens as per the "Replacement patterns" used in "Rewrite the output of this field" for all fields.');
     }
   }
 
