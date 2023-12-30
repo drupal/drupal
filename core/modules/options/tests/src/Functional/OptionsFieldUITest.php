@@ -306,14 +306,15 @@ class OptionsFieldUITest extends FieldTestBase {
     $field_storage = FieldStorageConfig::loadByName('node', $this->fieldName);
     $this->assertSame($field_storage->getSetting('allowed_values'), ['zero' => 'Zero']);
 
-    // Check that string values with dots can not be used.
+    // Check that string values with special characters can be used.
     $input = [
       'field_storage[subform][settings][allowed_values][table][0][item][key]' => 'zero',
       'field_storage[subform][settings][allowed_values][table][0][item][label]' => 'Zero',
-      'field_storage[subform][settings][allowed_values][table][1][item][key]' => 'example.com',
+      'field_storage[subform][settings][allowed_values][table][1][item][key]' => '.example #example',
       'field_storage[subform][settings][allowed_values][table][1][item][label]' => 'Example',
     ];
-    $this->assertAllowedValuesInput($input, 'The machine-readable name must contain only lowercase letters, numbers, and underscores.', 'String value with dot is not supported.');
+    $array = ['zero' => 'Zero', '.example #example' => 'Example'];
+    $this->assertAllowedValuesInput($input, $array, '');
 
     // Check that the same key can only be used once.
     $input = [
