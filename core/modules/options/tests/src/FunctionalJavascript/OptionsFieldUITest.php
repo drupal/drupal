@@ -376,6 +376,37 @@ JS;
   }
 
   /**
+   * Tests `list_string` machine name with special characters.
+   */
+  public function testMachineNameSpecialCharacters() {
+    $this->fieldName = 'field_options_text';
+    $this->createOptionsField('list_string');
+    $this->drupalGet($this->adminPath);
+
+    $label_element_name = "field_storage[subform][settings][allowed_values][table][0][item][label]";
+    $this->getSession()->getPage()->fillField($label_element_name, 'Hello world');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->exposeOptionMachineName(1);
+
+    $key_element_name = "field_storage[subform][settings][allowed_values][table][0][item][key]";
+
+    // Ensure that the machine name was generated correctly.
+    $this->assertSession()->fieldValueEquals($key_element_name, 'hello_world');
+
+    // Ensure that the machine name can be overridden with a value that includes
+    // special characters.
+    $this->getSession()->getPage()->fillField($key_element_name, '.hello #world');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->getSession()->getPage()->pressButton('Save settings');
+    $this->assertSession()->statusMessageContains("Saved {$this->fieldName} configuration.");
+
+    // Ensure that the machine name was saved correctly.
+    $allowed_values = FieldStorageConfig::loadByName('node', $this->fieldName)
+      ->getSetting('allowed_values');
+    $this->assertSame(['.hello #world'], array_keys($allowed_values));
+  }
+
+  /**
    * Assert the count of the allowed values rows.
    *
    * @param int $expected_count
