@@ -40,7 +40,7 @@
 .form-actions .dropbutton-wrapper,
 .field-actions .dropbutton-wrapper {
   margin-block: var(--space-xs);
-  margin-inline: var(--space-m) 0;
+  margin-inline: 0 var(--space-m);
 }
 
 .dropbutton-widget {
