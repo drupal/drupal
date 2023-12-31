@@ -130,10 +130,19 @@ trait AssertPageCacheContextsAndTagsTrait {
   protected function assertCacheContexts(array $expected_contexts, $message = NULL, $include_default_contexts = TRUE) {
     if ($include_default_contexts) {
       $default_contexts = ['languages:language_interface', 'theme'];
-      // Add the user.permission context to the list of default contexts except
-      // when user is already there.
+      // Add the user based contexts to the list of default contexts except when
+      // user is already there.
       if (!in_array('user', $expected_contexts)) {
         $default_contexts[] = 'user.permissions';
+
+        if (!in_array('user.roles', $expected_contexts)) {
+          // The system_page_attachments() hook is only called when dealing with
+          // the HtmlRenderer, so check the Content-Type header.
+          // @see \Drupal\Core\Render\MainContent\HtmlRenderer::invokePageAttachmentHooks()
+          if ($this->getSession()->getResponseHeader('Content-Type') === 'text/html; charset=UTF-8') {
+            $default_contexts[] = 'user.roles:authenticated';
+          }
+        }
       }
       $expected_contexts = Cache::mergeContexts($expected_contexts, $default_contexts);
     }

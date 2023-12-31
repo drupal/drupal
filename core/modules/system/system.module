@@ -672,6 +672,7 @@ function system_page_attachments(array &$page) {
   // @see \Drupal\Core\Utility\LinkGenerator::generate()
   // @see template_preprocess_links()
   // @see \Drupal\Core\EventSubscriber\ActiveLinkResponseFilter
+  $page['#cache']['contexts'][] = 'user.roles:authenticated';
   if (\Drupal::currentUser()->isAuthenticated()) {
     $page['#attached']['library'][] = 'core/drupal.active-link';
   }
