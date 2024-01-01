@@ -93,15 +93,16 @@
    */
   Drupal.behaviors.states = {
     attach(context, settings) {
-      const $states = $(context).find('[data-drupal-states]');
-      const il = $states.length;
+      const elements = once('states', '[data-drupal-states]', context);
+      const il = elements.length;
+
       for (let i = 0; i < il; i++) {
         const config = JSON.parse(
-          $states[i].getAttribute('data-drupal-states'),
+          elements[i].getAttribute('data-drupal-states'),
         );
         Object.keys(config || {}).forEach((state) => {
           new states.Dependent({
-            element: $($states[i]),
+            element: $(elements[i]),
             state: states.State.sanitize(state),
             constraints: config[state],
           });
@@ -120,7 +121,7 @@
    *
    * @constructor Drupal.states.Dependent
    *
-   * @param {object} args
+   * @param {{state: Drupal.states.state, constraints: *, element: (*|jQuery|HTMLElement)}} args
    *   Object with the following keys (all of which are required)
    * @param {jQuery} args.element
    *   A jQuery object of the dependent element
