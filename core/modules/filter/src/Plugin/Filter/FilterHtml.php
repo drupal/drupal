@@ -7,6 +7,9 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
+use Masterminds\HTML5\Parser\DOMTreeBuilder;
+use Masterminds\HTML5\Parser\Scanner;
+use Masterminds\HTML5\Parser\Tokenizer;
 
 /**
  * Provides a filter to limit allowed HTML tags.
@@ -258,7 +261,20 @@ class FilterHtml extends FilterBase {
     $star_protector = '__zqh6vxfbk3cg__';
     $html = str_replace('*', $star_protector, $html);
 
-    $dom = Html::load($html);
+    // Use HTML5 parser with a custom tokenizer to correctly parse tags that
+    // normally use text mode, such as iframe.
+    $events = new DOMTreeBuilder(FALSE, ['disable_html_ns' => TRUE]);
+    $scanner = new Scanner('<body>' . $html);
+    $parser = new class($scanner, $events) extends Tokenizer {
+
+      public function setTextMode($textMode, $untilTag = NULL) {
+        // Do nothing, we never enter text mode.
+      }
+
+    };
+    $parser->parse();
+
+    $dom = $events->document();
     $xpath = new \DOMXPath($dom);
     foreach ($xpath->query('//body//*') as $node) {
       $tag = $node->tagName;
