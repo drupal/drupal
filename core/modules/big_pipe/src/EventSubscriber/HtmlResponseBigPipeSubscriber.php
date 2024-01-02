@@ -82,8 +82,6 @@ class HtmlResponseBigPipeSubscriber implements EventSubscriberInterface {
       $content = $response->getContent();
       $content = str_replace('<drupal-big-pipe-scripts-bottom-marker>', '', $content);
       $response->setContent($content);
-      // FinishResponseSubscriber::setContentLengthHeader() already ran.
-      $response->headers->set('Content-Length', strlen($content), TRUE);
     }
 
     // If there are neither BigPipe placeholders nor no-JS BigPipe placeholders,
@@ -95,9 +93,6 @@ class HtmlResponseBigPipeSubscriber implements EventSubscriberInterface {
 
     $big_pipe_response = new BigPipeResponse($response);
     $big_pipe_response->setBigPipeService($this->getBigPipeService($event));
-
-    // A BigPipe response's length is impossible to predict.
-    $big_pipe_response->headers->remove('Content-Length');
 
     $event->setResponse($big_pipe_response);
   }

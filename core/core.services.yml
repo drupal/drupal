@@ -914,6 +914,11 @@ services:
   argument_resolver.default:
     class: Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver
     public: false
+  http_middleware.content_length:
+    class: Drupal\Core\StackMiddleware\ContentLength
+    tags:
+      # Must run before the page_cache and big_pipe middleware.
+      - { name: http_middleware, priority: 140 }
   http_middleware.ajax_page_state:
     class: Drupal\Core\StackMiddleware\AjaxPageState
     tags:

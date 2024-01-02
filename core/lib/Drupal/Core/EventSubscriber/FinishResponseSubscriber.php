@@ -301,40 +301,6 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Sets the Content-Length header on the response.
-   *
-   * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
-   *   The event to process.
-   *
-   * @see \Symfony\Component\HttpFoundation\Response::prepare()
-   * @see https://www.rfc-editor.org/rfc/rfc9110.html#name-content-length
-   */
-  public function setContentLengthHeader(ResponseEvent $event): void {
-    $response = $event->getResponse();
-
-    if ($response->isInformational() || $response->isEmpty()) {
-      return;
-    }
-
-    if ($response->headers->has('Transfer-Encoding')) {
-      return;
-    }
-
-    // Drupal cannot set the correct content length header when there is a
-    // server error.
-    if ($response->isServerError()) {
-      return;
-    }
-
-    $content = $response->getContent();
-    if ($content === FALSE) {
-      return;
-    }
-
-    $response->headers->set('Content-Length', strlen($content), TRUE);
-  }
-
-  /**
    * Registers the methods in this class that should be listeners.
    *
    * @return array
@@ -345,10 +311,6 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     // There is no specific reason for choosing 16 beside it should be executed
     // before ::onRespond().
     $events[KernelEvents::RESPONSE][] = ['onAllResponds', 16];
-    // Run very late, after all other response subscribers have run. However,
-    // any response subscribers that convert a response to a streamed response
-    // must run after this and undo what this does.
-    $events[KernelEvents::RESPONSE][] = ['setContentLengthHeader', -1024];
     return $events;
   }
 
