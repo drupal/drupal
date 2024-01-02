@@ -23,3 +23,8 @@ services:
     class: Drupal\big_pipe\EventSubscriber\NoBigPipeRouteAlterSubscriber
     tags:
       - { name: event_subscriber }
+  http_middleware.big_pipe:
+    class: \Drupal\big_pipe\StackMiddleware\ContentLength
+    tags:
+      # Must run after the content_length middleware.
+      - { name: http_middleware, priority: 150 }

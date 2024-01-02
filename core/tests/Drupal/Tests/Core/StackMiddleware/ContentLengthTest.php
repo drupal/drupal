@@ -1,52 +1,37 @@
 <?php
 
-namespace Drupal\Tests\Core\EventSubscriber;
+declare(strict_types=1);
 
-use Drupal\Core\Cache\Context\CacheContextsManager;
-use Drupal\Core\EventSubscriber\FinishResponseSubscriber;
-use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\PageCache\RequestPolicyInterface;
-use Drupal\Core\PageCache\ResponsePolicyInterface;
+namespace Drupal\Tests\Core\StackMiddleware;
+
+use Drupal\Core\StackMiddleware\ContentLength;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * @coversDefaultClass \Drupal\Core\EventSubscriber\FinishResponseSubscriber
- * @group EventSubscriber
+ * @coversDefaultClass \Drupal\Core\StackMiddleware\ContentLength
+ * @group Middleware
  */
-class FinishResponserSubscriberTest extends UnitTestCase {
+class ContentLengthTest extends UnitTestCase {
 
   /**
-   * @covers ::setContentLengthHeader
+   * @covers ::handle
    * @dataProvider providerTestSetContentLengthHeader
    */
-  public function testSetContentLengthHeader(false|int $expected_header, Response $response) {
-    $event_subscriber = new FinishResponseSubscriber(
-      $this->prophesize(LanguageManagerInterface::class)->reveal(),
-      $this->getConfigFactoryStub(),
-      $this->prophesize(RequestPolicyInterface::class)->reveal(),
-      $this->prophesize(ResponsePolicyInterface::class)->reveal(),
-      $this->prophesize(CacheContextsManager::class)->reveal()
-    );
-
-    $event = new ResponseEvent(
-      $this->prophesize(HttpKernelInterface::class)->reveal(),
-      $this->prophesize(Request::class)->reveal(),
-      HttpKernelInterface::MAIN_REQUEST,
-      $response
-    );
-
-    $event_subscriber->setContentLengthHeader($event);
+  public function testHandle(false|int $expected_header, Response $response) {
+    $kernel = $this->prophesize(HttpKernelInterface::class);
+    $request = Request::create('/');
+    $kernel->handle($request, HttpKernelInterface::MAIN_REQUEST, TRUE)->willReturn($response);
+    $middleware = new ContentLength($kernel->reveal());
+    $response = $middleware->handle($request);
     if ($expected_header === FALSE) {
-      $this->assertFalse($event->getResponse()->headers->has('Content-Length'));
+      $this->assertFalse($response->headers->has('Content-Length'));
+      return;
     }
-    else {
-      $this->assertSame((string) $expected_header, $event->getResponse()->headers->get('Content-Length'));
-    }
+    $this->assertSame((string) $expected_header, $response->headers->get('Content-Length'));
   }
 
   public function providerTestSetContentLengthHeader() {
