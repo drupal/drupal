@@ -3,6 +3,7 @@
 namespace Drupal\Tests\mysql\Kernel\mysql;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Exception\SchemaTableColumnSizeTooLargeException;
 use Drupal\Core\Database\Exception\SchemaTableKeyTooLargeException;
 use Drupal\Core\Database\SchemaException;
@@ -309,6 +310,34 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
         ],
       ],
     ]);
+  }
+
+  /**
+   * Tests adding a primary key when sql_generate_invisible_primary_key is on.
+   */
+  public function testGeneratedInvisiblePrimaryKey(): void {
+    $is_maria = method_exists($this->connection, 'isMariaDb') && $this->connection->isMariaDb();
+    if ($this->connection->databaseType() !== 'mysql' || $is_maria || version_compare($this->connection->version(), '8.0.30', '<')) {
+      $this->markTestSkipped('This test only runs on MySQL 8.0.30 and above');
+    }
+    try {
+      $this->connection->query("SET sql_generate_invisible_primary_key = 1;")->execute();
+    }
+    catch (DatabaseExceptionWrapper $e) {
+      $this->markTestSkipped('This test requires the SESSION_VARIABLES_ADMIN privilege.');
+    }
+    $this->schema->createTable('test_primary_key', [
+      'fields' => [
+        'foo'  => [
+          'type' => 'varchar',
+          'length' => 1,
+        ],
+      ],
+    ]);
+    $this->schema->addField('test_primary_key', 'id', [
+      'type' => 'serial',
+      'not null' => TRUE,
+    ], ['primary key' => ['id']]);
   }
 
 }
