@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Plugin\Fixtures\Plugin\DataType;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;

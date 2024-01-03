@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\announcements_feed\Unit;
 
 use Drupal\Tests\UnitTestCase;

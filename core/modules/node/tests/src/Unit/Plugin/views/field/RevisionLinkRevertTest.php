@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\node\Unit\Plugin\views\field;
 
 use Drupal\Core\Access\AccessManagerInterface;

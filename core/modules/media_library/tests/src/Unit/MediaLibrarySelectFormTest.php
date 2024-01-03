@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\media_library\Unit;
 
 use Drupal\Core\Form\FormStateInterface;

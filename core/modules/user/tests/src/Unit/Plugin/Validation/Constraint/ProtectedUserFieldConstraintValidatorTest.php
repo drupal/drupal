@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\user\Unit\Plugin\Validation\Constraint;
 
 use Drupal\Tests\UnitTestCase;

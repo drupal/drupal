@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Unit\Plugin\argument_default;
 
 use Drupal\Core\Path\CurrentPathStack;

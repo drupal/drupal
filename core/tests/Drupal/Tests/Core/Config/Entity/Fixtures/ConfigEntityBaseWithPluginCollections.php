@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Config\Entity\Fixtures;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;

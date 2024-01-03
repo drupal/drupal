@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\config_translation\Unit;
 
 use Drupal\config_translation\ConfigFieldMapper;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Condition;
 
 use Drupal\Component\Plugin\Exception\ContextException;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\path\Unit\migrate\process;
 
 use Drupal\path\Plugin\migrate\process\PathSetTranslated;

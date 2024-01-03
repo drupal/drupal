@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace com\example\PluginNamespace;
 
 use Drupal\Component\Plugin\Attribute\Plugin;

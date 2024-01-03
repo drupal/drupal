@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\TypedData;
 
 use Drupal\Core\Cache\NullBackend;

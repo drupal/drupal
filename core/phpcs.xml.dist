@@ -276,11 +276,15 @@
     <!-- <include-pattern>*/tests/*</include-pattern> -->
     <include-pattern>*/tests/src/FunctionalJavascript/*</include-pattern>
     <include-pattern>*/tests/src/Traits/*</include-pattern>
+    <include-pattern>*/tests/src/Unit/*</include-pattern>
     <include-pattern>./tests/Drupal/BuildTests/*</include-pattern>
     <include-pattern>./tests/Drupal/FunctionalJavascriptTests/*</include-pattern>
+    <include-pattern>./tests/Drupal/Tests/*/*.php</include-pattern>
     <include-pattern>./tests/Drupal/Tests/*Trait.php</include-pattern>
     <include-pattern>./tests/Drupal/Tests/Traits/*</include-pattern>
     <exclude-pattern>./tests/Drupal/Tests/Listeners/*</exclude-pattern>
+    <exclude-pattern>./tests/Drupal/Tests/*/Fixture/*</exclude-pattern>
+    <exclude-pattern>./tests/Drupal/Tests/*/fixtures/*</exclude-pattern>
   </rule>
 
   <!-- Squiz sniffs -->

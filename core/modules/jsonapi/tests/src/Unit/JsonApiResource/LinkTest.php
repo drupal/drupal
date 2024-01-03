@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Unit\JsonApiResource;
 
 use Drupal\Core\Cache\CacheableMetadata;

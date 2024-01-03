@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // Some class named Entity in the global namespace
 /**
  * This class is a near-copy of

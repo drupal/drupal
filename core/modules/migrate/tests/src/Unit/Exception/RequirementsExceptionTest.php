@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Unit\Exception;
 
 use Drupal\migrate\Exception\RequirementsException;
