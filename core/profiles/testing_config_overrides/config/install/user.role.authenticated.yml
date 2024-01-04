@@ -2,10 +2,10 @@ langcode: en
 status: true
 dependencies:
   module:
-    - tour
+    - entity_test_install
 id: authenticated
 label: 'Authenticated user'
 weight: 1
 is_admin: false
 permissions:
-  - 'access tour'
+  - 'administer entity_test_bundle content'

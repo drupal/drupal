@@ -5,4 +5,4 @@ protected_property: Default
 status: true
 dependencies:
   module:
-    - tour
+    - entity_test

@@ -1,0 +1,7 @@
+name: 'Entity test install'
+type: module
+description: 'Provides optional install config for entity_test.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:entity_test
