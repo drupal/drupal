@@ -687,7 +687,7 @@ function hook_theme_suggestions_HOOK(array $variables) {
  * node and taxonomy term templates based on the user being logged in.
  *
  * @code
- * function MYMODULE_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
+ * function MYMODULE_theme_suggestions_alter(array &$suggestions, array &$variables, $hook) {
  *   if (\Drupal::currentUser()->isAuthenticated() && in_array($hook, array('node', 'taxonomy_term'))) {
  *     $suggestions[] = $hook . '__' . 'logged_in';
  *   }
@@ -699,8 +699,8 @@ function hook_theme_suggestions_HOOK(array $variables) {
  *   An array of alternate, more specific names for template files, passed by
  *   reference.
  * @param array $variables
- *   An array of variables passed to the theme hook. Note that this hook is
- *   invoked before any variable preprocessing.
+ *   An array of variables passed to the theme hook, passed by reference. Note
+ *   that this hook is invoked before any variable preprocessing.
  * @param string $hook
  *   The base hook name. For example, if '#theme' => 'node__article' is called,
  *   then $hook will be 'node', not 'node__article'. The specific hook called
@@ -709,7 +709,7 @@ function hook_theme_suggestions_HOOK(array $variables) {
  *
  * @see hook_theme_suggestions_HOOK_alter()
  */
-function hook_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
+function hook_theme_suggestions_alter(array &$suggestions, array &$variables, $hook) {
   // Add an interface-language specific suggestion to all theme hooks.
   $suggestions[] = $hook . '__' . \Drupal::languageManager()->getCurrentLanguage()->getId();
 }
@@ -750,15 +750,15 @@ function hook_theme_suggestions_alter(array &$suggestions, array $variables, $ho
  * @endcode
  *
  * @param array $suggestions
- *   An array of theme suggestions.
+ *   An array of theme suggestions, passed by reference.
  * @param array $variables
- *   An array of variables passed to the theme hook. Note that this hook is
- *   invoked before any preprocessing.
+ *   An array of variables passed to the theme hook, passed by reference. Note
+ *   that this hook is invoked before any preprocessing.
  *
  * @see hook_theme_suggestions_alter()
  * @see hook_theme_suggestions_HOOK()
  */
-function hook_theme_suggestions_HOOK_alter(array &$suggestions, array $variables) {
+function hook_theme_suggestions_HOOK_alter(array &$suggestions, array &$variables) {
   if (empty($variables['header'])) {
     $suggestions[] = 'hookname__no_header';
   }

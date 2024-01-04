@@ -32,7 +32,7 @@ function theme_test_theme($existing, $type, $theme, $path) {
     'variables' => [],
   ];
   $items['theme_test_general_suggestions'] = [
-    'variables' => [],
+    'variables' => ['module_hook' => 'theme_test_theme', 'theme_hook' => 'none'],
   ];
   $items['theme_test_foo'] = [
     'variables' => ['foo' => NULL],

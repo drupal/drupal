@@ -368,7 +368,7 @@ class ThemeManager implements ThemeManagerInterface {
    * @internal
    *   This method may change at any time. It is not for use outside this class.
    */
-  protected function buildThemeHookSuggestions(string $hook, string $info_base_hook, array $variables): array {
+  protected function buildThemeHookSuggestions(string $hook, string $info_base_hook, array &$variables): array {
     // Set base hook for later use. For example if '#theme' => 'node__article'
     // is called, we run hook_theme_suggestions_node_alter() rather than
     // hook_theme_suggestions_node__article_alter(), and also pass in the base
