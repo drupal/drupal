@@ -1,0 +1,5 @@
+id: testing_config_overrides_module
+label: Testing Config Overrides optional configuration
+dependencies:
+  module:
+    - entity_test

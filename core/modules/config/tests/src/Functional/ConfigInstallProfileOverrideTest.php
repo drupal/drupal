@@ -5,10 +5,10 @@ namespace Drupal\Tests\config\Functional;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Config\InstallStorage;
+use Drupal\entity_test\Entity\EntityTestBundle;
+use Drupal\system\Entity\Action;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Config\FileStorage;
-use Drupal\system\Entity\Action;
-use Drupal\tour\Entity\Tour;
 use Drupal\user\Entity\Role;
 
 /**
@@ -87,18 +87,20 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
     $this->assertEquals('Cancel the selected user account(s)', $action->label(), 'Default configuration that is not overridden is not affected.');
 
     // Ensure that optional configuration can be overridden.
-    $tour = Tour::load('language');
-    $this->assertCount(1, $tour->getTips(), 'Optional configuration can be overridden. The language tour only has one tip');
-    $tour = Tour::load('language-add');
-    $this->assertCount(3, $tour->getTips(), 'Optional configuration that is not overridden is not affected.');
+    $config_test = \Drupal::entityTypeManager()->getStorage('entity_test_bundle')->load('install_test');
+    $this->assertEquals('Optional configuration can be overridden.', $config_test->label());
+    $config_test = \Drupal::entityTypeManager()->getStorage('entity_test_bundle')->load('install_test2');
+    $this->assertEquals('Optional configuration that is not overridden.', $config_test->label());
 
     // Ensure the optional configuration is installed. Note that the overridden
-    // language tour has a dependency on this tour so it has to exist.
-    $this->assertInstanceOf(Tour::class, Tour::load('testing_config_overrides_module'));
+    // EntityTestBundle config with ID testing_config_overrides has a
+    // dependency on EntityTestBundle with ID testing_config_overrides_module,
+    // so it has to exist.
+    $this->assertInstanceOf(EntityTestBundle::class, \Drupal::entityTypeManager()->getStorage('entity_test_bundle')->load('testing_config_overrides_module'));
 
     // Ensure that optional configuration from a profile is created if
     // dependencies are met.
-    $this->assertEquals('Config override test', Tour::load('testing_config_overrides')->label());
+    $this->assertEquals('Config override test', \Drupal::entityTypeManager()->getStorage('entity_test_bundle')->load('testing_config_overrides')->label());
 
     // Ensure that optional configuration from a profile is not created if
     // dependencies are not met. Cannot use the entity system since the entity
@@ -140,10 +142,10 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
     $config_test_storage = \Drupal::entityTypeManager()->getStorage('config_test');
     $this->assertNull($config_test_storage->load('completely_new'));
 
-    // Ensure the authenticated role has the access tour permission.
+    // Ensure the authenticated role has the access entity_test_bundle permission.
     $role = Role::load(Role::AUTHENTICATED_ID);
-    $this->assertTrue($role->hasPermission('access tour'), 'The Authenticated role has the "access tour" permission.');
-    $this->assertEquals(['module' => ['tour']], $role->getDependencies());
+    $this->assertTrue($role->hasPermission('administer entity_test_bundle content'), 'The Authenticated role has the "administer entity_test_bundle content" permission.');
+    $this->assertEquals(['module' => ['entity_test']], $role->getDependencies());
   }
 
 }
