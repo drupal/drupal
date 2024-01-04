@@ -133,7 +133,13 @@ class MappingTest extends KernelTestBase {
       case 'editor.editor.funky':
         $this->enableModules(['filter', 'editor', 'ckeditor5']);
         FilterFormat::create(['format' => 'funky', 'name' => 'Funky'])->save();
-        Editor::create(['format' => 'funky', 'editor' => 'ckeditor5'])->save();
+        Editor::create([
+          'format' => 'funky',
+          'editor' => 'ckeditor5',
+          'image_upload' => [
+            'status' => FALSE,
+          ],
+        ])->save();
         break;
 
       case 'field.field.node.forum.comment_forum':

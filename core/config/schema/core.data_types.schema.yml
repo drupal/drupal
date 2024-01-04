@@ -51,7 +51,8 @@ mapping:
   definition_class: '\Drupal\Core\TypedData\MapDataDefinition'
   mapping: {}
   constraints:
-    # By default, only allow the explicitly listed mapping keys.
+    # By default, allow the explicitly listed mapping keys, and require their
+    # presence unless `requiredKey: false` is specified.
     ValidKeys: '<infer>'
 sequence:
   label: Sequence

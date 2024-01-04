@@ -83,6 +83,9 @@ field_formatter:
       type: field.formatter.settings.[%parent.type]
       label: 'Settings'
     third_party_settings:
+      # Third party settings are always optional: they're an optional extension
+      # point.
+      requiredKey: false
       type: sequence
       label: 'Third party settings'
       sequence:
@@ -138,6 +141,9 @@ core.entity_form_display.*.*.*:
             type: field.widget.settings.[%parent.type]
             label: 'Settings'
           third_party_settings:
+            # Third party settings are always optional: they're an optional extension
+            # point.
+            requiredKey: false
             type: sequence
             label: 'Third party settings'
             sequence:

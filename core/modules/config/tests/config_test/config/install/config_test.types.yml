@@ -23,3 +23,7 @@ nullable_int: null
 nullable_octal: ~
 nullable_string: null
 nullable_string_int: ~
+# To test required vs optional keys.
+mapping_with_only_required_keys: {}
+mapping_with_some_required_keys: {}
+mapping_with_only_optional_keys: {}

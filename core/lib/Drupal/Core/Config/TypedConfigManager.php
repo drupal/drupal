@@ -7,9 +7,12 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\Schema\ConfigSchemaAlterException;
 use Drupal\Core\Config\Schema\ConfigSchemaDiscovery;
+use Drupal\Core\Config\Schema\SequenceDataDefinition;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Config\Schema\Undefined;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\TypedData\MapDataDefinition;
+use Drupal\Core\TypedData\TraversableTypedDataInterface;
 use Drupal\Core\TypedData\TypedDataManager;
 use Drupal\Core\Validation\Plugin\Validation\Constraint\FullyValidatableConstraint;
 
@@ -138,11 +141,43 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
     // @see https://www.drupal.org/node/3364109
     // @see \Drupal\Core\TypedData\TypedDataManager::getDefaultConstraints()
     if ($parent) {
+      $root_type = $parent->getRoot()->getDataDefinition()->getDataType();
       $root_type_has_opted_in = FALSE;
       foreach ($parent->getRoot()->getConstraints() as $constraint) {
         if ($constraint instanceof FullyValidatableConstraint) {
           $root_type_has_opted_in = TRUE;
           break;
+        }
+      }
+      // If this is a dynamically typed property path, then not only must the
+      // (absolute) root type be considered, but also the (relative) static root
+      // type: the resolved type.
+      // For example, `block.block.*:settings` has a dynamic type defined:
+      // `block.settings.[%parent.plugin]`, but `block.block.*:plugin` does not.
+      // Consequently, the value at the `plugin` property path depends only on
+      // the `block.block.*` config schema type and hence only that config
+      // schema type must have the `FullyValidatable` constraint, because it
+      // defines which value are required.
+      // In contrast, the `block.block.*:settings` property path depends on
+      // whichever dynamic type `block.settings.[%parent.plugin]` resolved to,
+      // to be able to know which values are required. Therefore that resolved
+      // type determines which values are required and whether it is fully
+      // validatable.
+      // So for example the `block.settings.system_branding_block` config schema
+      // type would also need to have the `FullyValidatable` constraint to
+      // consider its schema-defined keys to require values:
+      // - use_site_logo
+      // - use_site_name
+      // - use_site_slogan
+      $static_type_root = TypedConfigManager::getStaticTypeRoot($parent);
+      $static_type_root_type = $static_type_root->getDataDefinition()->getDataType();
+      if ($root_type !== $static_type_root_type) {
+        $root_type_has_opted_in = FALSE;
+        foreach ($static_type_root->getConstraints() as $c) {
+          if ($c instanceof FullyValidatableConstraint) {
+            $root_type_has_opted_in = TRUE;
+            break;
+          }
         }
       }
       if ($root_type_has_opted_in) {
@@ -151,6 +186,52 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
     }
 
     return $data_definition;
+  }
+
+  /**
+   * Gets the static type root for a config schema object.
+   *
+   * @param \Drupal\Core\TypedData\TraversableTypedDataInterface $object
+   *   A config schema object to get the static type root for.
+   *
+   * @return \Drupal\Core\TypedData\TraversableTypedDataInterface
+   *   The ancestral config schema object at which the static type root lies:
+   *   either the first ancestor with a dynamic type (for example:
+   *   `block.block.*:settings`, which has the `block.settings.[%parent.plugin]`
+   *   type) or the (absolute) root of the config object (in this example:
+   *   `block.block.*`).
+   */
+  public static function getStaticTypeRoot(TraversableTypedDataInterface $object): TraversableTypedDataInterface {
+    $root = $object->getRoot();
+    $static_type_root = NULL;
+
+    while ($static_type_root === NULL && $object !== $root) {
+      // Use the parent data definition to determine the type of this mapping
+      // (including the dynamic placeholders). For example:
+      // - `editor.settings.[%parent.editor]`
+      // - `editor.image_upload_settings.[status]`.
+      $parent_data_def = $object->getParent()->getDataDefinition();
+      $original_mapping_type = match (TRUE) {
+        $parent_data_def instanceof MapDataDefinition => $parent_data_def->toArray()['mapping'][$object->getName()]['type'],
+        $parent_data_def instanceof SequenceDataDefinition => $parent_data_def->toArray()['sequence']['type'],
+        default => throw new \LogicException('Invalid config schema detected.'),
+      };
+
+      // If this mapping's type was dynamically defined, then this is the static
+      // type root inside which all types are statically defined.
+      if (str_contains($original_mapping_type, ']')) {
+        $static_type_root = $object;
+        break;
+      }
+
+      $object = $object->getParent();
+    }
+
+    // Either the discovered static type root is not the actual root, or no
+    // static type root was found and it is the root config object.
+    assert(($static_type_root !== NULL && $static_type_root !== $root) || ($static_type_root === NULL && $object->getParent() === NULL));
+
+    return $static_type_root ?? $root;
   }
 
   /**

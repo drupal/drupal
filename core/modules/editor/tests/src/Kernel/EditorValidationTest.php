@@ -92,4 +92,17 @@ class EditorValidationTest extends ConfigEntityValidationTestBase {
     ]);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function testRequiredPropertyKeysMissing(?array $additional_expected_validation_errors_when_missing = NULL): void {
+    parent::testRequiredPropertyKeysMissing([
+      'dependencies' => [
+        // @see ::testInvalidDependencies()
+        // @see \Drupal\Core\Config\Plugin\Validation\Constraint\RequiredConfigDependenciesConstraintValidator
+        '' => 'This text editor requires a text format.',
+      ],
+    ]);
+  }
+
 }

@@ -373,6 +373,8 @@ system.advisories:
 block.settings.system_branding_block:
   type: block_settings
   label: 'Branding block'
+  constraints:
+    FullyValidatable: ~
   mapping:
     use_site_logo:
       type: boolean
@@ -401,6 +403,8 @@ block.settings.system_menu_block:*:
 block.settings.local_tasks_block:
   type: block_settings
   label: 'Tabs block'
+  constraints:
+    FullyValidatable: ~
   mapping:
     primary:
       type: boolean
