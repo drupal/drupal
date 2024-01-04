@@ -503,7 +503,7 @@ function system_requirements($phase) {
     }
   }
 
-  if ($phase === 'runtime') {
+  if ($phase === 'runtime' && PHP_SAPI !== 'cli') {
     if (!function_exists('fastcgi_finish_request') && !function_exists('litespeed_finish_request') && !ob_get_status()) {
       $requirements['output_buffering'] = [
         'title' => t('Output Buffering'),
