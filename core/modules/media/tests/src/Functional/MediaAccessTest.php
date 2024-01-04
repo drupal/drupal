@@ -106,7 +106,9 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $this->assertNoCacheContext('user');
     $this->assertCacheContext('user.permissions');
     $assert_session->statusCodeEquals(200);
-    $user_media->setUnpublished()->save();
+    $previous_revision = $user_media->getLoadedRevisionId();
+    $user_media->setUnpublished()->setNewRevision();
+    $user_media->save();
     $this->drupalGet('media/' . $user_media->id());
     $this->assertCacheContext('user.permissions');
     $assert_session->statusCodeEquals(403);
@@ -116,6 +118,43 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $this->drupalGet('media/' . $user_media->id());
     $this->assertCacheContext('user');
     $assert_session->statusCodeEquals(200);
+
+    // Test revision access - logged-in user.
+    $this->grantPermissions($role, ['view all media revisions']);
+    $this->drupalGet('media/' . $user_media->id() . '/revisions');
+    $this->assertCacheContext('user');
+    $assert_session->statusCodeEquals(200);
+    $this->drupalGet('media/' . $user_media->id() . '/revisions/' . $user_media->getRevisionId() . '/view');
+    $this->assertCacheContext('user');
+    $assert_session->statusCodeEquals(200);
+    $this->drupalGet('media/' . $user_media->id() . '/revisions/' . $previous_revision . '/view');
+    $this->assertCacheContext('user.permissions');
+    $assert_session->statusCodeEquals(200);
+    $role->revokePermission('view own unpublished media')->save();
+    $this->drupalGet('media/' . $user_media->id() . '/revisions/' . $user_media->getRevisionId() . '/view');
+    $this->assertCacheContext('user.permissions');
+    $assert_session->statusCodeEquals(403);
+
+    $user_media->setPublished()->setNewRevision();
+    $user_media->save();
+
+    // Revision access - logged-out user.
+    $this->drupalLogout();
+    $this->drupalGet('media/' . $user_media->id() . '/revisions');
+    $assert_session->statusCodeEquals(403);
+    $this->drupalGet('media/' . $user_media->id() . '/revisions/' . $user_media->getRevisionId() . '/view');
+    $assert_session->statusCodeEquals(403);
+    $this->drupalGet('media/' . $user_media->id() . '/revisions/' . $previous_revision . '/view');
+    $assert_session->statusCodeEquals(403);
+
+    // Reverse revision access testing changes.
+    $role
+      ->revokePermission('view all media revisions')
+      ->grantPermission('view own unpublished media')
+      ->save();
+    $user_media->setPublished()->setNewRevision();
+    $user_media->save();
+    $this->drupalLogin($this->nonAdminUser);
 
     // Test 'create media' permission.
     $this->drupalGet('media/add/' . $media_type->id());

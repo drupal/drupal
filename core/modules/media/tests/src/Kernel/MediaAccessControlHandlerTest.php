@@ -483,7 +483,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'view all revisions',
       AccessResult::neutral(),
       ['user.permissions'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['admins can view all revisions'] = [
@@ -496,12 +496,12 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       TRUE,
     ];
     $test_data['view all revisions with view bundle permission'] = [
-      ['view any test media revisions'],
-      [],
+      ['view any test media revisions', 'view media'],
+      ['status' => TRUE],
       'view all revisions',
       AccessResult::allowed(),
       ['user.permissions'],
-      [],
+      ['media:1'],
       TRUE,
     ];
     // Revert revisions:
@@ -769,10 +769,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
     $entity->save();
     $this->assertTrue($entity->get('revision_log_message')->access('view', $admin));
     $this->assertTrue($entity->get('revision_log_message')->access('view', $editor));
-    // revision_log_message field access can be granted with the "view revision"
-    // operation. "view revision" access is granted if the user is allowed to
-    // view the default revision of the media entity.
-    $this->assertTrue($entity->get('revision_log_message')->access('view', $viewer));
+    $this->assertFalse($entity->get('revision_log_message')->access('view', $viewer));
     $entity->setUnpublished()->save();
     \Drupal::entityTypeManager()->getAccessControlHandler('media')->resetCache();
     $this->assertFalse($entity->get('revision_log_message')->access('view', $viewer));
