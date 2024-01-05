@@ -95,28 +95,28 @@ class ConfigEntityType extends EntityType implements ConfigEntityTypeInterface {
    * {@inheritdoc}
    */
   public function getBaseTable() {
-    return FALSE;
+    return NULL;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getRevisionDataTable() {
-    return FALSE;
+    return NULL;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getRevisionTable() {
-    return FALSE;
+    return NULL;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getDataTable() {
-    return FALSE;
+    return NULL;
   }
 
   /**
