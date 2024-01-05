@@ -123,4 +123,35 @@ class NodeAccessTest extends NodeAccessTestBase {
     $this->assertNodeAccess(['random_operation' => FALSE], $node, $web_user);
   }
 
+  /**
+   * Tests node grants for queries with node access checks and base table join.
+   */
+  public function testQueryWithBaseTableJoin(): void {
+    $this->enableModules(['node_access_test_empty']);
+    $this->drupalCreateNode(['type' => 'page']);
+    $this->drupalCreateNode(['type' => 'page']);
+
+    $container = \Drupal::getContainer();
+    $container->get('current_user')->setAccount($this->drupalCreateUser());
+
+    $query = \Drupal::database()->select('node_field_data', 'n');
+    // Intentionally add a left join of the base table on the base table with a
+    // failing condition. This can, for example, happen in views with non
+    // required relations.
+    $query->leftJoin('node_field_data', 'nc', 'n.changed = nc.nid');
+    $query->addTag('node_access');
+
+    $this->assertEquals(2, $query->countQuery()->execute()->fetchField());
+
+    $query = \Drupal::database()->select('node_field_data', 'n');
+    // Use a Condition object to do the left join to test that this is handled
+    // correctly.
+    $join_cond = (\Drupal::database()->condition('AND'))->where('[n].[changed] = [n].[changed]');
+    $join_cond->compile(\Drupal::database(), $query);
+    $query->leftJoin('node_field_data', 'nc', (string) $join_cond);
+    $query->addTag('node_access');
+
+    $this->assertEquals(4, $query->countQuery()->execute()->fetchField());
+  }
+
 }
