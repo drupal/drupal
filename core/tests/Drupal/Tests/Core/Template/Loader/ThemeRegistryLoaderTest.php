@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Template\Loader;
 
 use Drupal\Core\Template\Loader\ThemeRegistryLoader;

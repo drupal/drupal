@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Common;
 
 use Drupal\Component\Utility\Tags;

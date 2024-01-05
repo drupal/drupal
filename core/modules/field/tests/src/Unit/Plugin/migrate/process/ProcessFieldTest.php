@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field\Unit\Plugin\migrate\process;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\datetime\Unit\Plugin\migrate\field;
 
 use Drupal\datetime\Plugin\migrate\field\DateField;

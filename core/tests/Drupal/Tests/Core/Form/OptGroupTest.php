@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Form;
 
 use Drupal\Tests\UnitTestCase;

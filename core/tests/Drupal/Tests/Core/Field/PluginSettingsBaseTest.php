@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Field;
 
 use Drupal\Core\Field\PluginSettingsBase;

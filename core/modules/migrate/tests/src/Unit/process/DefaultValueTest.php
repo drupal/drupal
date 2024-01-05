@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\migrate\Plugin\migrate\process\DefaultValue;

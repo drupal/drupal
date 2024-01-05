@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\user\Unit\Menu;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;

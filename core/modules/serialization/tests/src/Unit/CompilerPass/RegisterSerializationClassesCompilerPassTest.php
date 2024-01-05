@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\serialization\Unit\CompilerPass;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;

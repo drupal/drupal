@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\sdc\Unit;
 
 use Drupal\Core\Template\Attribute;

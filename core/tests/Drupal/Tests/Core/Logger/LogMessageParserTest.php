@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Logger;
 
 use Drupal\Core\Logger\LogMessageParser;

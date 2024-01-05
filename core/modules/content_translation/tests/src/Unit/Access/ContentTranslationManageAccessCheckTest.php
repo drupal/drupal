@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\content_translation\Unit\Access;
 
 use Drupal\content_translation\Access\ContentTranslationManageAccessCheck;

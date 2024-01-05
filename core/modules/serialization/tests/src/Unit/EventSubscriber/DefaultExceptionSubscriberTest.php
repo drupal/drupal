@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\serialization\Unit\EventSubscriber;
 
 use Drupal\serialization\Encoder\JsonEncoder;

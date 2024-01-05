@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Timer;

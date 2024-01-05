@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Entity\KeyValueStore;
 
 use Drupal\Core\Cache\MemoryCache\MemoryCache;

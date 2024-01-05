@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\link\Unit\Plugin\Validation\Constraint;
 
 use Drupal\link\Plugin\Validation\Constraint\LinkAccessConstraint;
