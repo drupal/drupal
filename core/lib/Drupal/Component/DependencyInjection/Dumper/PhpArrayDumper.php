@@ -2,6 +2,7 @@
 
 namespace Drupal\Component\DependencyInjection\Dumper;
 
+use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -33,6 +34,9 @@ class PhpArrayDumper extends OptimizedPhpArrayDumper {
     $code = [];
 
     foreach ($collection as $key => $value) {
+      if ($value instanceof IteratorArgument) {
+        $value = $value->getValues();
+      }
       if (is_array($value)) {
         $code[$key] = $this->dumpCollection($value);
       }
