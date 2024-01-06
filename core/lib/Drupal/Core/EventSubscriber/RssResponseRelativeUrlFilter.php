@@ -60,7 +60,7 @@ class RssResponseRelativeUrlFilter implements EventSubscriberInterface {
     foreach ($rss_dom->getElementsByTagName('description') as $node) {
       $html_markup = $node->nodeValue;
       if (!empty($html_markup)) {
-        $node->nodeValue = Html::transformRootRelativeUrlsToAbsolute($html_markup, $request->getSchemeAndHttpHost());
+        $node->replaceChild($rss_dom->createTextNode(Html::transformRootRelativeUrlsToAbsolute($html_markup, $request->getSchemeAndHttpHost())), $node->firstChild);
       }
     }
 
