@@ -3,6 +3,8 @@
 menu_ui.settings:
   type: config_object
   label: 'Menu settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     override_parent_selector:
       type: boolean

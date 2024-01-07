@@ -2,6 +2,8 @@
 comment.settings:
   type: config_object
   label: 'Comment settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     log_ip_addresses:
       type: boolean
