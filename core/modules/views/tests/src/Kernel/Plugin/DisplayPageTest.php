@@ -177,7 +177,7 @@ class DisplayPageTest extends ViewsKernelTestBase {
     $this->setRawContent($output);
     $result = $this->xpath('//div[@class=:class]/a', [':class' => 'more-link']);
     $this->assertEquals(Url::fromRoute('view.test_display_more.page_1')->toString(), $result[0]->attributes()->href, 'The right more link is shown.');
-    $this->assertEquals($expected_more_text, trim($result[0][0]), 'The right link text is shown.');
+    $this->assertEquals($expected_more_text, trim((string) $result[0][0]), 'The right link text is shown.');
 
     // Test the renderMoreLink method directly. This could be directly unit
     // tested.
@@ -186,7 +186,7 @@ class DisplayPageTest extends ViewsKernelTestBase {
     $this->setRawContent($more_link);
     $result = $this->xpath('//div[@class=:class]/a', [':class' => 'more-link']);
     $this->assertEquals(Url::fromRoute('view.test_display_more.page_1')->toString(), $result[0]->attributes()->href, 'The right more link is shown.');
-    $this->assertEquals($expected_more_text, trim($result[0][0]), 'The right link text is shown.');
+    $this->assertEquals($expected_more_text, trim((string) $result[0][0]), 'The right link text is shown.');
 
     // Test the useMoreText method directly. This could be directly unit
     // tested.

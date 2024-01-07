@@ -172,7 +172,7 @@ class AreaEntityTest extends ViewsKernelTestBase {
     $this->setRawContent($renderer->renderRoot($preview));
     $view_class = 'js-view-dom-id-' . $view->dom_id;
     $result = $this->xpath('//div[@class = "' . $view_class . '"]/footer[1]');
-    $this->assertStringNotContainsString($entities[2]->label(), $result[0], 'The rendered entity does not appear in the footer of the view.');
+    $this->assertStringNotContainsString($entities[2]->label(), (string) $result[0], 'The rendered entity does not appear in the footer of the view.');
 
     // Test the available view mode options.
     $form = [];

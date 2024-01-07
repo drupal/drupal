@@ -286,7 +286,7 @@ class StyleTest extends ViewsKernelTestBase {
     $view->style_plugin->options['row_class'] = $random_name . " test-token-{{ name }}";
 
     $output = $view->preview();
-    $html_dom = $this->getHtmlDom($this->container->get('renderer')->renderRoot($output));
+    $html_dom = $this->getHtmlDom((string) $this->container->get('renderer')->renderRoot($output));
 
     $rows = $html_dom->body->div->div;
     $count = 0;

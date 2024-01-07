@@ -185,7 +185,7 @@ class FileEntityFormatterTest extends KernelTestBase {
       '#file' => $file,
     ];
 
-    $output = \Drupal::service('renderer')->renderRoot($file_link);
+    $output = (string) \Drupal::service('renderer')->renderRoot($file_link);
     $this->assertStringContainsString($this->fileUrlGenerator->generate('dummy-external-readonly://file-query-string?foo=bar')->toUriString(), $output);
   }
 

@@ -48,7 +48,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
         '@op' => $op,
       ]);
 
-      $this->assertEquals($object->access($op, $account), $result, $message);
+      $this->assertEquals($object->access($op, $account), $result, (string) $message);
     }
   }
 

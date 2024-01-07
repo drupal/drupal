@@ -155,7 +155,7 @@ abstract class FieldKernelTestBase extends KernelTestBase {
   protected function entityValidateAndSave(EntityInterface $entity) {
     $violations = $entity->validate();
     if ($violations->count()) {
-      $this->fail($violations);
+      $this->fail((string) $violations);
     }
     else {
       $entity->save();

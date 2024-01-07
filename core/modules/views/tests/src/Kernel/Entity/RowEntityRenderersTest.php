@@ -386,7 +386,7 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
     foreach ($expected as $index => $expected_output) {
       if (!empty($view->result[$index])) {
         $build = $view->rowPlugin->render($view->result[$index]);
-        $output = \Drupal::service('renderer')->renderRoot($build);
+        $output = (string) \Drupal::service('renderer')->renderRoot($build);
         $result = str_contains($output, $expected_output);
         if (!$result) {
           break;

@@ -483,7 +483,7 @@ class ContentTranslationFieldSyncRevisionTest extends EntityKernelTestBase {
    *
    * @internal
    */
-  protected function assertLatestRevisionFieldValues(int $entity_id, array $expected_values): void {
+  protected function assertLatestRevisionFieldValues(string $entity_id, array $expected_values): void {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $this->storage->loadRevision($this->storage->getLatestRevisionId($entity_id));
     @[$revision_id, $target_id_en, $target_id_it, $alt_en, $alt_it] = $expected_values;

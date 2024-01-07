@@ -405,41 +405,41 @@ class FieldFieldTest extends ViewsKernelTestBase {
     $this->assertEquals("1, 3", $executable->getStyle()->getField(0, 'field_test_multiple'));
     $this->assertEquals("1", $executable->getStyle()->getField(0, 'field_test_multiple_1'));
     $this->assertEquals("3", $executable->getStyle()->getField(0, 'field_test_multiple_2'));
-    $this->assertEquals($date_formatter->format($this->testUsers[0]->getCreatedTime(), 'custom', 'Y'), trim(strip_tags($executable->getStyle()->getField(0, 'created'))));
-    $this->assertEquals($date_formatter->format($this->testUsers[0]->getCreatedTime(), 'custom', 'H:i:s'), trim(strip_tags($executable->getStyle()->getField(0, 'created_1'))));
-    $this->assertEquals($date_formatter->format($this->testUsers[0]->getCreatedTime(), 'fallback'), trim(strip_tags($executable->getStyle()->getField(0, 'created_2'))));
+    $this->assertEquals($date_formatter->format($this->testUsers[0]->getCreatedTime(), 'custom', 'Y'), trim(strip_tags((string) $executable->getStyle()->getField(0, 'created'))));
+    $this->assertEquals($date_formatter->format($this->testUsers[0]->getCreatedTime(), 'custom', 'H:i:s'), trim(strip_tags((string) $executable->getStyle()->getField(0, 'created_1'))));
+    $this->assertEquals($date_formatter->format($this->testUsers[0]->getCreatedTime(), 'fallback'), trim(strip_tags((string) $executable->getStyle()->getField(0, 'created_2'))));
 
     $this->assertEquals($this->testUsers[1]->getTimeZone(), $executable->getStyle()->getField(1, 'timezone'));
     $this->assertEquals("7, 0", $executable->getStyle()->getField(1, 'field_test_multiple'));
     $this->assertEquals("7", $executable->getStyle()->getField(1, 'field_test_multiple_1'));
     $this->assertEquals("0", $executable->getStyle()->getField(1, 'field_test_multiple_2'));
-    $this->assertEquals($date_formatter->format($this->testUsers[1]->getCreatedTime(), 'custom', 'Y'), trim(strip_tags($executable->getStyle()->getField(1, 'created'))));
-    $this->assertEquals($date_formatter->format($this->testUsers[1]->getCreatedTime(), 'custom', 'H:i:s'), trim(strip_tags($executable->getStyle()->getField(1, 'created_1'))));
-    $this->assertEquals($date_formatter->format($this->testUsers[1]->getCreatedTime(), 'fallback'), trim(strip_tags($executable->getStyle()->getField(1, 'created_2'))));
+    $this->assertEquals($date_formatter->format($this->testUsers[1]->getCreatedTime(), 'custom', 'Y'), trim(strip_tags((string) $executable->getStyle()->getField(1, 'created'))));
+    $this->assertEquals($date_formatter->format($this->testUsers[1]->getCreatedTime(), 'custom', 'H:i:s'), trim(strip_tags((string) $executable->getStyle()->getField(1, 'created_1'))));
+    $this->assertEquals($date_formatter->format($this->testUsers[1]->getCreatedTime(), 'fallback'), trim(strip_tags((string) $executable->getStyle()->getField(1, 'created_2'))));
 
     $this->assertEquals($this->testUsers[2]->getTimeZone(), $executable->getStyle()->getField(2, 'timezone'));
     $this->assertEquals("3, 5", $executable->getStyle()->getField(2, 'field_test_multiple'));
     $this->assertEquals("3", $executable->getStyle()->getField(2, 'field_test_multiple_1'));
     $this->assertEquals("5", $executable->getStyle()->getField(2, 'field_test_multiple_2'));
-    $this->assertEquals($date_formatter->format($this->testUsers[2]->getCreatedTime(), 'custom', 'Y'), trim(strip_tags($executable->getStyle()->getField(2, 'created'))));
-    $this->assertEquals($date_formatter->format($this->testUsers[2]->getCreatedTime(), 'custom', 'H:i:s'), trim(strip_tags($executable->getStyle()->getField(2, 'created_1'))));
-    $this->assertEquals($date_formatter->format($this->testUsers[2]->getCreatedTime(), 'fallback'), trim(strip_tags($executable->getStyle()->getField(2, 'created_2'))));
+    $this->assertEquals($date_formatter->format($this->testUsers[2]->getCreatedTime(), 'custom', 'Y'), trim(strip_tags((string) $executable->getStyle()->getField(2, 'created'))));
+    $this->assertEquals($date_formatter->format($this->testUsers[2]->getCreatedTime(), 'custom', 'H:i:s'), trim(strip_tags((string) $executable->getStyle()->getField(2, 'created_1'))));
+    $this->assertEquals($date_formatter->format($this->testUsers[2]->getCreatedTime(), 'fallback'), trim(strip_tags((string) $executable->getStyle()->getField(2, 'created_2'))));
 
     $this->assertEquals($this->testUsers[3]->getTimeZone(), $executable->getStyle()->getField(3, 'timezone'));
     $this->assertEquals("9, 9", $executable->getStyle()->getField(3, 'field_test_multiple'));
     $this->assertEquals("9", $executable->getStyle()->getField(3, 'field_test_multiple_1'));
     $this->assertEquals("9", $executable->getStyle()->getField(3, 'field_test_multiple_2'));
-    $this->assertEquals($date_formatter->format($this->testUsers[3]->getCreatedTime(), 'custom', 'Y'), trim(strip_tags($executable->getStyle()->getField(3, 'created'))));
-    $this->assertEquals($date_formatter->format($this->testUsers[3]->getCreatedTime(), 'custom', 'H:i:s'), trim(strip_tags($executable->getStyle()->getField(3, 'created_1'))));
-    $this->assertEquals($date_formatter->format($this->testUsers[3]->getCreatedTime(), 'fallback'), trim(strip_tags($executable->getStyle()->getField(3, 'created_2'))));
+    $this->assertEquals($date_formatter->format($this->testUsers[3]->getCreatedTime(), 'custom', 'Y'), trim(strip_tags((string) $executable->getStyle()->getField(3, 'created'))));
+    $this->assertEquals($date_formatter->format($this->testUsers[3]->getCreatedTime(), 'custom', 'H:i:s'), trim(strip_tags((string) $executable->getStyle()->getField(3, 'created_1'))));
+    $this->assertEquals($date_formatter->format($this->testUsers[3]->getCreatedTime(), 'fallback'), trim(strip_tags((string) $executable->getStyle()->getField(3, 'created_2'))));
 
     $this->assertEquals($this->testUsers[4]->getTimeZone(), $executable->getStyle()->getField(4, 'timezone'));
     $this->assertEquals("9, 0", $executable->getStyle()->getField(4, 'field_test_multiple'));
     $this->assertEquals("9", $executable->getStyle()->getField(4, 'field_test_multiple_1'));
     $this->assertEquals("0", $executable->getStyle()->getField(4, 'field_test_multiple_2'));
-    $this->assertEquals($date_formatter->format($this->testUsers[4]->getCreatedTime(), 'custom', 'Y'), trim(strip_tags($executable->getStyle()->getField(4, 'created'))));
-    $this->assertEquals($date_formatter->format($this->testUsers[4]->getCreatedTime(), 'custom', 'H:i:s'), trim(strip_tags($executable->getStyle()->getField(4, 'created_1'))));
-    $this->assertEquals($date_formatter->format($this->testUsers[4]->getCreatedTime(), 'fallback'), trim(strip_tags($executable->getStyle()->getField(4, 'created_2'))));
+    $this->assertEquals($date_formatter->format($this->testUsers[4]->getCreatedTime(), 'custom', 'Y'), trim(strip_tags((string) $executable->getStyle()->getField(4, 'created'))));
+    $this->assertEquals($date_formatter->format($this->testUsers[4]->getCreatedTime(), 'custom', 'H:i:s'), trim(strip_tags((string) $executable->getStyle()->getField(4, 'created_1'))));
+    $this->assertEquals($date_formatter->format($this->testUsers[4]->getCreatedTime(), 'fallback'), trim(strip_tags((string) $executable->getStyle()->getField(4, 'created_2'))));
   }
 
   /**

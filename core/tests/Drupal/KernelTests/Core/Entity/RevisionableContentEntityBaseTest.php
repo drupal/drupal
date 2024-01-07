@@ -53,7 +53,7 @@ class RevisionableContentEntityBaseTest extends EntityKernelTestBase {
 
     // Create the second revision.
     $entity->setNewRevision(TRUE);
-    $random_timestamp = rand(1e8, 2e8);
+    $random_timestamp = rand(100_000_000, 200_000_000);
     $this->createRevision($entity, $user, $random_timestamp, 'This is my log message');
 
     $revision_id = $entity->getRevisionId();
@@ -68,14 +68,14 @@ class RevisionableContentEntityBaseTest extends EntityKernelTestBase {
     $this->assertEquals('This is my log message', $entity->getRevisionLogMessage());
 
     // Create the third revision.
-    $random_timestamp = rand(1e8, 2e8);
+    $random_timestamp = rand(100_000_000, 200_000_000);
     $this->createRevision($entity, $user, $random_timestamp, 'This is my log message');
     $this->assertItemsTableCount(3, $definition);
     $revision_ids[] = $entity->getRevisionId();
 
     // Create another 3 revisions.
     foreach (range(1, 3) as $count) {
-      $timestamp = rand(1e8, 2e8);
+      $timestamp = rand(100_000_000, 200_000_000);
       $this->createRevision($entity, $user, $timestamp, 'This is my log message number: ' . $count);
       $revision_ids[] = $entity->getRevisionId();
     }

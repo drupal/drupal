@@ -193,7 +193,7 @@ class FilterCombineTest extends ViewsKernelTestBase {
 
     // Confirm that the query with multiple filters used the "CONCAT_WS"
     // operator.
-    $this->assertStringContainsString('CONCAT_WS(', $view->query->query());
+    $this->assertStringContainsString('CONCAT_WS(', (string) $view->query->query());
   }
 
   /**
@@ -279,7 +279,7 @@ class FilterCombineTest extends ViewsKernelTestBase {
 
     // Confirm that the query with single filter does not use the "CONCAT_WS"
     // operator.
-    $this->assertStringNotContainsString('CONCAT_WS(', $view->query->query());
+    $this->assertStringNotContainsString('CONCAT_WS(', (string) $view->query->query());
   }
 
   /**
