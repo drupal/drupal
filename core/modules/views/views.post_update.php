@@ -137,3 +137,14 @@ function views_post_update_taxonomy_filter_user_context(?array &$sandbox = NULL)
     return $view_config_updater->needsTaxonomyTermFilterUpdate($view);
   });
 }
+
+/**
+ * Adds a default pager heading.
+ */
+function views_post_update_pager_heading(?array &$sandbox = NULL): void {
+  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
+  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater): bool {
+    return $view_config_updater->needsPagerHeadingUpdate($view);
+  });
+}

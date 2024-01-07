@@ -57,4 +57,60 @@ class ViewsPreprocessTest extends ViewsKernelTestBase {
     $this->assertStringContainsString('attributes: class="entity-test--default and-another-class entity-test__default', $markup);
   }
 
+  /**
+   * Tests template_preprocess_views_mini_pager() when an empty pagination_heading_level value is passed.
+   *
+   * @covers ::template_preprocess_views_mini_pager
+   */
+  public function testEmptyPaginationHeadingLevelSet() {
+    require_once $this->root . '/core/modules/views/views.theme.inc';
+    $variables = [
+      'tags' => [],
+      'quantity' => 9,
+      'element' => 0,
+      'pagination_heading_level' => '',
+      'parameters' => [],
+    ];
+    template_preprocess_views_mini_pager($variables);
+
+    $this->assertEquals('h4', $variables['pagination_heading_level']);
+  }
+
+  /**
+   * Tests template_preprocess_views_mini_pager() when no pagination_heading_level is passed.
+   *
+   * @covers ::template_preprocess_views_mini_pager
+   */
+  public function testPaginationHeadingLevelNotSet() {
+    require_once $this->root . '/core/modules/views/views.theme.inc';
+    $variables = [
+      'tags' => [],
+      'quantity' => 9,
+      'element' => 0,
+      'parameters' => [],
+    ];
+    template_preprocess_views_mini_pager($variables);
+
+    $this->assertEquals('h4', $variables['pagination_heading_level']);
+  }
+
+  /**
+   * Tests template_preprocess_views_mini_pager() when a pagination_heading_level value is passed.
+   *
+   * @covers ::template_preprocess_views_mini_pager
+   */
+  public function testPaginationHeadingLevelSet() {
+    require_once $this->root . '/core/modules/views/views.theme.inc';
+    $variables = [
+      'tags' => [],
+      'quantity' => 9,
+      'element' => 0,
+      'pagination_heading_level' => 'h5',
+      'parameters' => [],
+    ];
+    template_preprocess_views_mini_pager($variables);
+
+    $this->assertEquals('h5', $variables['pagination_heading_level']);
+  }
+
 }

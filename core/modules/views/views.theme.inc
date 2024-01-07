@@ -1041,12 +1041,17 @@ function template_preprocess_views_exposed_form(&$variables) {
  *   An associative array containing:
  *   - tags: Provides link text for the next/previous links.
  *   - element: The pager's id.
+ *   - pagination_heading_level: An optional heading level for the pager.
  *   - parameters: Any extra GET parameters that should be retained, such as
  *     exposed input.
  */
 function template_preprocess_views_mini_pager(&$variables) {
   /** @var \Drupal\Core\Pager\PagerManagerInterface $pager_manager */
   $pager_manager = \Drupal::service('pager.manager');
+
+  if (empty($variables['pagination_heading_level'])) {
+    $variables['pagination_heading_level'] = 'h4';
+  }
 
   $tags = &$variables['tags'];
   $element = $variables['element'];

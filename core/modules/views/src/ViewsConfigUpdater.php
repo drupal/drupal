@@ -150,6 +150,9 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       if ($this->processDefaultArgumentSkipUrlUpdate($handler, $handler_type)) {
         $changed = TRUE;
       }
+      if ($this->processDefaultPagerHeadingUpdate($handler, $handler_type)) {
+        $changed = TRUE;
+      }
       if ($this->addLabelIfMissing($view)) {
         $changed = TRUE;
       }
@@ -234,14 +237,33 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
   protected function processDisplayHandlers(ViewEntityInterface $view, $return_on_changed, callable $handler_processor) {
     $changed = FALSE;
     $displays = $view->get('display');
-    $handler_types = ['field', 'argument', 'sort', 'relationship', 'filter'];
+    $handler_types = [
+      'field' => 'fields',
+      'argument' => 'arguments',
+      'sort' => 'sorts',
+      'relationship' => 'relationships',
+      'filter' => 'filters',
+      'pager' => 'pager',
+    ];
+
+    $compound_display_handlers = [
+      'pager',
+    ];
 
     foreach ($displays as $display_id => &$display) {
-      foreach ($handler_types as $handler_type) {
-        $handler_type_plural = $handler_type . 's';
-        if (!empty($display['display_options'][$handler_type_plural])) {
-          foreach ($display['display_options'][$handler_type_plural] as $key => &$handler) {
-            if ($handler_processor($handler, $handler_type, $key, $display_id)) {
+      foreach ($handler_types as $handler_type => $handler_type_lookup) {
+        if (!empty($display['display_options'][$handler_type_lookup])) {
+          if (in_array($handler_type_lookup, $compound_display_handlers)) {
+            if ($handler_processor($display['display_options'][$handler_type_lookup], $handler_type, NULL, $display_id)) {
+              $changed = TRUE;
+              if ($return_on_changed) {
+                return $changed;
+              }
+            }
+            continue;
+          }
+          foreach ($display['display_options'][$handler_type_lookup] as $key => &$handler) {
+            if (is_array($handler) && $handler_processor($handler, $handler_type, $key, $display_id)) {
               $changed = TRUE;
               if ($return_on_changed) {
                 return $changed;
@@ -524,6 +546,46 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       $changed = TRUE;
     }
     return $changed;
+  }
+
+  /**
+   * Checks for each view if pagination_heading_level needs to be added.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The view entity.
+   *
+   * @return bool
+   *   TRUE if the view has any displays that need to have
+   *   pagination_heading_level added.
+   */
+  public function needsPagerHeadingUpdate(ViewEntityInterface $view): bool {
+    return $this->processDisplayHandlers($view, FALSE, function (&$handler, $handler_type) {
+      return $this->processDefaultPagerHeadingUpdate($handler, $handler_type);
+    });
+  }
+
+  /**
+   * Processes displays and adds pagination_heading_level if necessary.
+   *
+   * @param $compound_handler
+   *   A compound display handler.
+   * @param string $handler_type
+   *   The handler type.
+   *
+   * @return bool
+   *   Whether the handler was updated.
+   */
+  public function processDefaultPagerHeadingUpdate(array &$compound_handler, string $handler_type): bool {
+    $allow_pager_type_update = [
+      'mini',
+      'full',
+    ];
+
+    if ($handler_type === 'pager' && in_array($compound_handler['type'], $allow_pager_type_update) && !isset($compound_handler['options']['pagination_heading_level'])) {
+      $compound_handler['options']['pagination_heading_level'] = 'h4';
+      return TRUE;
+    }
+    return FALSE;
   }
 
 }

@@ -86,10 +86,12 @@ class Full extends SqlBase {
       3 => $this->options['tags']['next'],
       4 => $this->options['tags']['last'],
     ];
+
     return [
       '#theme' => $this->themeFunctions(),
       '#tags' => $tags,
       '#element' => $this->options['id'],
+      '#pagination_heading_level' => parent::getHeadingLevel(),
       '#parameters' => $input,
       '#quantity' => $this->options['quantity'],
       '#route_name' => !empty($this->view->live_preview) ? '<current>' : '<none>',

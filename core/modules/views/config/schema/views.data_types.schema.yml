@@ -582,6 +582,9 @@ views_pager:
     offset:
       type: integer
       label: 'Offset'
+    pagination_heading_level:
+      type: string
+      label: 'Pager header element'
     items_per_page:
       type: integer
       label: 'Items per page'
@@ -593,6 +596,9 @@ views_pager_sql:
     items_per_page:
       type: integer
       label: 'Items per page'
+    pagination_heading_level:
+      type: string
+      label: 'Pager header element'
     total_pages:
       type: integer
       label: 'Number of pages'

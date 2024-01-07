@@ -90,7 +90,13 @@ function views_theme($existing, $type, $theme, $path) {
 
   // Our extra version of pager
   $hooks['views_mini_pager'] = $base + [
-    'variables' => ['tags' => [], 'quantity' => 9, 'element' => 0, 'parameters' => []],
+    'variables' => [
+      'tags' => [],
+      'quantity' => 9,
+      'element' => 0,
+      'pagination_heading_level' => 'h4',
+      'parameters' => [],
+    ],
   ];
 
   $variables = [
@@ -121,6 +127,7 @@ function views_theme($existing, $type, $theme, $path) {
       'tags' => [],
       'quantity' => 9,
       'element' => 0,
+      'pagination_heading_level' => 'h4',
       'parameters' => [],
     ],
   ];

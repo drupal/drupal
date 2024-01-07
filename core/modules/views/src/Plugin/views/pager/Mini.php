@@ -93,10 +93,12 @@ class Mini extends SqlBase {
       1 => $this->options['tags']['previous'],
       3 => $this->options['tags']['next'],
     ];
+
     return [
       '#theme' => $this->themeFunctions(),
       '#tags' => $tags,
       '#element' => $this->options['id'],
+      '#pagination_heading_level' => parent::getHeadingLevel(),
       '#parameters' => $input,
       '#route_name' => !empty($this->view->live_preview) ? '<current>' : '<none>',
     ];
