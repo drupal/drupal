@@ -260,7 +260,7 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
     // Check that the recursive rendering stops after it reaches the specified
     // limit.
     $build = $view_builder->view($referencing_entity_1, 'default');
-    $output = $renderer->renderRoot($build);
+    $output = (string) $renderer->renderRoot($build);
 
     // The title of entity_test entities is printed twice by default, so we have
     // to multiply the formatter's recursive rendering protection limit by 2.
@@ -279,14 +279,14 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
     $referencing_entity_2->save();
 
     $build = $view_builder->view($referencing_entity_2, 'default');
-    $output = $renderer->renderRoot($build);
+    $output = (string) $renderer->renderRoot($build);
 
     $actual_occurrences = substr_count($output, $referencing_entity_2->label());
     $this->assertEquals($expected_occurrences, $actual_occurrences);
 
     // Now render both entities at the same time and check again.
     $build = $view_builder->viewMultiple([$referencing_entity_1, $referencing_entity_2], 'default');
-    $output = $renderer->renderRoot($build);
+    $output = (string) $renderer->renderRoot($build);
 
     $actual_occurrences = substr_count($output, $referencing_entity_1->label());
     $this->assertEquals($expected_occurrences, $actual_occurrences);

@@ -294,7 +294,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
       $this->stepIndex = $index;
       $revision_id = call_user_func_array([$this, 'doEditStep'], $step);
     }
-    return $revision_id;
+    return (int) $revision_id;
   }
 
   /**

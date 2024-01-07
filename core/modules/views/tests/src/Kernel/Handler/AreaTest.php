@@ -75,7 +75,7 @@ class AreaTest extends ViewsKernelTestBase {
 
     // Check whether the strings exist in the output and are sanitized.
     $output = $view->preview();
-    $output = $this->container->get('renderer')->renderRoot($output);
+    $output = (string) $this->container->get('renderer')->renderRoot($output);
     $this->assertStringContainsString(Xss::filterAdmin($header_string), $output, 'Views header exists in the output and is sanitized');
     $this->assertStringContainsString(Xss::filterAdmin($footer_string), $output, 'Views footer exists in the output and is sanitized');
     $this->assertStringContainsString(Xss::filterAdmin($empty_string), $output, 'Views empty exists in the output and is sanitized');
@@ -94,7 +94,7 @@ class AreaTest extends ViewsKernelTestBase {
     $this->assertCount(0, $handlers);
 
     $output = $view->preview();
-    $output = \Drupal::service('renderer')->renderRoot($output);
+    $output = (string) \Drupal::service('renderer')->renderRoot($output);
     // The area output should not be present since access was denied.
     $this->assertStringNotContainsString('a custom string', $output);
     $view->destroy();
@@ -116,7 +116,7 @@ class AreaTest extends ViewsKernelTestBase {
     $handlers = $view->display_handler->getHandlers('empty');
 
     $output = $view->preview();
-    $output = \Drupal::service('renderer')->renderRoot($output);
+    $output = (string) \Drupal::service('renderer')->renderRoot($output);
     $this->assertStringContainsString('a custom string', $output);
     $this->assertCount(1, $handlers);
   }

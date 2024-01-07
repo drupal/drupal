@@ -185,7 +185,7 @@ class RenderElementTypesTest extends KernelTestBase {
     ];
 
     foreach ($elements as $element) {
-      $xml = new \SimpleXMLElement(\Drupal::service('renderer')->renderRoot($element['value']));
+      $xml = new \SimpleXMLElement((string) \Drupal::service('renderer')->renderRoot($element['value']));
       $result = $xml->xpath($element['expected']);
       $this->assertNotEmpty($result, '"' . $element['name'] . '" input rendered correctly.');
     }
@@ -216,7 +216,7 @@ class RenderElementTypesTest extends KernelTestBase {
     ];
 
     foreach ($elements as $element) {
-      $xml = new \SimpleXMLElement(\Drupal::service('renderer')->renderRoot($element['value']));
+      $xml = new \SimpleXMLElement((string) \Drupal::service('renderer')->renderRoot($element['value']));
       $result = $xml->xpath($element['expected']);
       $this->assertNotEmpty($result, '"' . $element['name'] . '" is rendered correctly.');
     }
@@ -232,7 +232,7 @@ class RenderElementTypesTest extends KernelTestBase {
       'expected' => '//div[@class="compact-link"]/a[contains(@href, "admin/compact?") and text()="Show descriptions"]',
     ];
 
-    $xml = new \SimpleXMLElement(\Drupal::service('renderer')->renderRoot($element['value']));
+    $xml = new \SimpleXMLElement((string) \Drupal::service('renderer')->renderRoot($element['value']));
     $result = $xml->xpath($element['expected']);
     $this->assertNotEmpty($result, '"' . $element['name'] . '" is rendered correctly.');
   }

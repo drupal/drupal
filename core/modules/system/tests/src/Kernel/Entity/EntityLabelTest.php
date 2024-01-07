@@ -41,11 +41,11 @@ class EntityLabelTest extends KernelTestBase {
       // string. Special cases may need to be added to this test in the future
       // if an acronym is in a different position in the label.
       $first_word = strtok($label_string, " ");
-      $remaining_string = strtolower(strstr($label_string, " "));
+      $remaining_string = strtolower((string) strstr($label_string, " "));
       $this->assertEquals($first_word . $remaining_string, $label_string);
 
       $first_word = strtok($collection_label_string, " ");
-      $remaining_string = strtolower(strstr($collection_label_string, " "));
+      $remaining_string = strtolower((string) strstr($collection_label_string, " "));
       $this->assertEquals($first_word . $remaining_string, $collection_label_string);
     }
   }

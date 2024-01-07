@@ -161,7 +161,7 @@ class SelectionTest extends KernelTestBase {
     foreach ($result as $node_type => $values) {
       foreach ($values as $nid => $label) {
         $this->assertSame($node_type, $this->nodes[$nid]->bundle());
-        $this->assertSame(trim(strip_tags($label)), Html::escape($this->nodes[$nid]->label()));
+        $this->assertSame(trim(strip_tags((string) $label)), Html::escape($this->nodes[$nid]->label()));
       }
     }
   }

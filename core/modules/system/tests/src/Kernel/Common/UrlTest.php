@@ -31,12 +31,12 @@ class UrlTest extends KernelTestBase {
     $path = "<SCRIPT>alert('XSS')</SCRIPT>";
     $encoded_path = "%3CSCRIPT%3Ealert%28%27XSS%27%29%3C/SCRIPT%3E";
 
-    $link = Link::fromTextAndUrl($text, Url::fromUserInput('/' . $path))->toString();
+    $link = (string) Link::fromTextAndUrl($text, Url::fromUserInput('/' . $path))->toString();
     $this->assertStringContainsString($encoded_path, $link, "XSS attack $path was filtered by \\Drupal\\Core\\Utility\\LinkGeneratorInterface::generate().");
     $this->assertStringNotContainsString($path, $link, "XSS attack $path was filtered by \\Drupal\\Core\\Utility\\LinkGeneratorInterface::generate().");
 
     // Test \Drupal\Core\Url.
-    $link = Url::fromUri('base:' . $path)->toString();
+    $link = (string) Url::fromUri('base:' . $path)->toString();
     $this->assertStringContainsString($encoded_path, $link, "XSS attack $path was filtered by #theme");
     $this->assertStringNotContainsString($path, $link, "XSS attack $path was filtered by #theme");
   }
@@ -95,17 +95,17 @@ class UrlTest extends KernelTestBase {
     $hreflang_override_link = $hreflang_link;
     $hreflang_override_link['#options']['attributes']['hreflang'] = 'foo';
 
-    $rendered = $renderer->renderRoot($hreflang_link);
+    $rendered = (string) $renderer->renderRoot($hreflang_link);
     $this->assertTrue($this->hasAttribute('hreflang', $rendered, $langcode), "hreflang attribute with value $langcode is present on a rendered link when langcode is provided in the render array.");
 
-    $rendered = $renderer->renderRoot($hreflang_override_link);
+    $rendered = (string) $renderer->renderRoot($hreflang_override_link);
     $this->assertTrue($this->hasAttribute('hreflang', $rendered, 'foo'), 'hreflang attribute with value foo is present on a rendered link when @hreflang is provided in the render array.');
 
     // Test adding a custom class in links produced by
     // \Drupal\Core\Utility\LinkGeneratorInterface::generate() and #type 'link'.
     // Test the link generator.
     $class_l = $this->randomMachineName();
-    $link_l = Link::fromTextAndUrl($this->randomMachineName(), Url::fromRoute('common_test.destination', [], ['attributes' => ['class' => [$class_l]]]))->toString();
+    $link_l = (string) Link::fromTextAndUrl($this->randomMachineName(), Url::fromRoute('common_test.destination', [], ['attributes' => ['class' => [$class_l]]]))->toString();
     $this->assertTrue($this->hasAttribute('class', $link_l, $class_l), "Custom class $class_l is present on link when requested by Link::toString()");
 
     // Test #type.
@@ -120,7 +120,7 @@ class UrlTest extends KernelTestBase {
         ],
       ],
     ];
-    $link_theme = $renderer->renderRoot($type_link);
+    $link_theme = (string) $renderer->renderRoot($type_link);
     $this->assertTrue($this->hasAttribute('class', $link_theme, $class_theme), "Custom class $class_theme is present on link when requested by #type");
   }
 

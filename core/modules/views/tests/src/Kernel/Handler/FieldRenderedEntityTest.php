@@ -128,7 +128,7 @@ class FieldRenderedEntityTest extends ViewsKernelTestBase {
     $renderer = \Drupal::service('renderer');
     $renderer->renderPlain($build);
     for ($i = 1; $i <= 3; $i++) {
-      $view_field = $view->style_plugin->getField($i - 1, 'rendered_entity');
+      $view_field = (string) $view->style_plugin->getField($i - 1, 'rendered_entity');
       $search_result = str_contains($view_field, "Test $i");
       $this->assertFalse($search_result, "The text 'Test $i' not found in the view.");
     }
@@ -201,7 +201,7 @@ class FieldRenderedEntityTest extends ViewsKernelTestBase {
     $renderer = \Drupal::service('renderer');
     $renderer->renderPlain($build);
     for ($i = 1; $i <= 3; $i++) {
-      $view_field = $view->style_plugin->getField($i - 1, 'rendered_entity');
+      $view_field = (string) $view->style_plugin->getField($i - 1, 'rendered_entity');
       $search_result = str_contains($view_field, "Test $i");
       $this->assertTrue($search_result, "The text 'Test $i' found in the view.");
     }

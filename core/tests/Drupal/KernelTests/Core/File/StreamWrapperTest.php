@@ -120,8 +120,8 @@ class StreamWrapperTest extends FileTestBase {
     $this->assertNotFalse($handle, 'Able to open a file for appending, reading and writing.');
 
     // Attempt to change options on the file stream: should all fail.
-    $this->assertFalse(@stream_set_blocking($handle, 0), 'Unable to set to non blocking using a local stream wrapper.');
-    $this->assertFalse(@stream_set_blocking($handle, 1), 'Unable to set to blocking using a local stream wrapper.');
+    $this->assertFalse(@stream_set_blocking($handle, FALSE), 'Unable to set to non blocking using a local stream wrapper.');
+    $this->assertFalse(@stream_set_blocking($handle, TRUE), 'Unable to set to blocking using a local stream wrapper.');
     $this->assertFalse(@stream_set_timeout($handle, 1), 'Unable to set read time out using a local stream wrapper.');
     $this->assertEquals(-1 /*EOF*/, @stream_set_write_buffer($handle, 512), 'Unable to set write buffer using a local stream wrapper.');
 
