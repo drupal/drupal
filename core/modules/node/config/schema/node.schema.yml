@@ -3,8 +3,6 @@
 node.settings:
   type: config_object
   label: 'Node settings'
-  constraints:
-    FullyValidatable: ~
   mapping:
     use_admin_theme:
       type: boolean

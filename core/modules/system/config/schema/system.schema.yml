@@ -48,8 +48,6 @@ system.site:
 system.maintenance:
   type: config_object
   label: 'Maintenance mode'
-  constraints:
-    FullyValidatable: ~
   mapping:
     message:
       type: text
@@ -432,8 +430,6 @@ condition.plugin.response_status:
 system.feature_flags:
   type: config_object
   label: 'System Feature Flags'
-  constraints:
-    FullyValidatable: ~
   mapping:
     linkset_endpoint:
       type: boolean

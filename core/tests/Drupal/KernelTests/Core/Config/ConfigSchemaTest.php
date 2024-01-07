@@ -125,10 +125,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['type'] = 'system.maintenance';
     $expected['definition_class'] = '\Drupal\Core\TypedData\MapDataDefinition';
     $expected['unwrap_for_canonical_representation'] = TRUE;
-    $expected['constraints'] = [
-      'ValidKeys' => '<infer>',
-      'FullyValidatable' => NULL,
-    ];
+    $expected['constraints'] = ['ValidKeys' => '<infer>'];
     $this->assertEquals($expected, $definition, 'Retrieved the right metadata for system.maintenance');
 
     // Mixed schema with ignore elements.
