@@ -526,7 +526,7 @@ function locale_js_translate(array $files = [], $language_interface = NULL) {
   foreach ($files as $filepath) {
     if (!in_array($filepath, $parsed)) {
       // Don't parse our own translations files.
-      if (substr($filepath, 0, strlen($dir)) != $dir) {
+      if (!str_starts_with($filepath, $dir)) {
         _locale_parse_js_file($filepath);
         $parsed[] = $filepath;
         $new_files = TRUE;

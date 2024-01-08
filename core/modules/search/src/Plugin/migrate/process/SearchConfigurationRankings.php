@@ -23,7 +23,7 @@ class SearchConfigurationRankings extends ProcessPluginBase {
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     $return = NULL;
     foreach ($row->getSource() as $name => $rank) {
-      if (substr($name, 0, 10) == 'node_rank_' && is_numeric($rank)) {
+      if (str_starts_with($name, 'node_rank_') && is_numeric($rank)) {
         $return[substr($name, 10)] = $rank;
       }
     }

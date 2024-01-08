@@ -119,7 +119,7 @@ class FieldTypePluginManagerTest extends FieldKernelTestBase {
     /** @var \Drupal\Core\Extension\ModuleHandlerInterface $module_handler */
     $module_handler = $this->container->get('module_handler');
     $module_list = array_filter(array_keys($module_list), function ($module) use ($module_handler, $module_list) {
-      return !$module_handler->moduleExists($module) && substr($module_list[$module]->getPath(), 0, 4) === 'core';
+      return !$module_handler->moduleExists($module) && str_starts_with($module_list[$module]->getPath(), 'core');
     });
     $this->enableModules($module_list);
   }

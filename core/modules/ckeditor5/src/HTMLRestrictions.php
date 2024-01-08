@@ -1116,7 +1116,7 @@ final class HTMLRestrictions {
    *   TRUE if it is a wildcard, otherwise FALSE.
    */
   private static function isWildcardTag(string $tag_name): bool {
-    return substr($tag_name, 0, 1) === '$' && array_key_exists($tag_name, self::WILDCARD_ELEMENT_METHODS);
+    return str_starts_with($tag_name, '$') && array_key_exists($tag_name, self::WILDCARD_ELEMENT_METHODS);
   }
 
   /**

@@ -55,7 +55,7 @@ class MigrateDestinationPluginManager extends MigratePluginManager {
    * A specific createInstance method is necessary to pass the migration on.
    */
   public function createInstance($plugin_id, array $configuration = [], MigrationInterface $migration = NULL) {
-    if (substr($plugin_id, 0, 7) == 'entity:' && !$this->entityTypeManager->getDefinition(substr($plugin_id, 7), FALSE)) {
+    if (str_starts_with($plugin_id, 'entity:') && !$this->entityTypeManager->getDefinition(substr($plugin_id, 7), FALSE)) {
       $plugin_id = 'null';
     }
     return parent::createInstance($plugin_id, $configuration, $migration);

@@ -154,7 +154,7 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
   public function createSqlAlias($field, $sql_field) {
     $alias = str_replace('.', '_', $sql_field);
     // If the alias contains of field_*_value remove the _value at the end.
-    if (substr($alias, 0, 6) === 'field_' && substr($field, -6) !== '_value' && substr($alias, -6) === '_value') {
+    if (str_starts_with($alias, 'field_') && substr($field, -6) !== '_value' && substr($alias, -6) === '_value') {
       $alias = substr($alias, 0, -6);
     }
     return $alias;

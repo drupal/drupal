@@ -713,8 +713,7 @@ function _filter_autop($text) {
   $output = '';
   foreach ($chunks as $i => $chunk) {
     if ($i % 2) {
-      $comment = (substr($chunk, 0, 4) == '<!--');
-      if ($comment) {
+      if (str_starts_with($chunk, '<!--')) {
         // Nothing to do, this is a comment.
         $output .= $chunk;
         continue;

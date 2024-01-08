@@ -82,7 +82,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
     // The file in Composer's bin dir is a *nix link, which does not work when
     // extracted from a tarball and generally not on Windows.
     $command = $vendor_dir . '/phpunit/phpunit/phpunit';
-    if (substr(PHP_OS, 0, 3) == 'WIN') {
+    if (str_starts_with(PHP_OS, 'WIN')) {
       // On Windows it is necessary to run the script using the PHP executable.
       $php_executable_finder = new PhpExecutableFinder();
       $php = $php_executable_finder->find();

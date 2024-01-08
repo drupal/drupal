@@ -44,7 +44,7 @@ class EntityResourcePostRouteSubscriber implements EventSubscriberInterface {
       // We only care about REST resource config entities for the
       // \Drupal\rest\Plugin\rest\resource\EntityResource plugin.
       $plugin_id = $resource_config->toArray()['plugin_id'];
-      if (substr($plugin_id, 0, 6) !== 'entity') {
+      if (!str_starts_with($plugin_id, 'entity')) {
         continue;
       }
 
