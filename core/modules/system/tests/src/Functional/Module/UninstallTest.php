@@ -3,7 +3,6 @@
 namespace Drupal\Tests\system\Functional\Module;
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
@@ -158,7 +157,7 @@ class UninstallTest extends BrowserTestBase {
     // cleared during the uninstall.
     \Drupal::cache()->set('uninstall_test', 'test_uninstall_page', Cache::PERMANENT);
     $cached = \Drupal::cache()->get('uninstall_test');
-    $this->assertEquals('test_uninstall_page', $cached->data, new FormattableMarkup('Cache entry found: @bin', ['@bin' => $cached->data]));
+    $this->assertEquals('test_uninstall_page', $cached->data, "Cache entry found: $cached->data");
 
     $this->submitForm([], 'Uninstall');
     $this->assertSession()->pageTextContains('The selected modules have been uninstalled.');

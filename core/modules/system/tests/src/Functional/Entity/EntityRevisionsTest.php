@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\system\Functional\Entity;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -149,8 +148,8 @@ class EntityRevisionsTest extends BrowserTestBase {
       // Check that the fields and properties contain new content.
       // Verify that the revision ID changed.
       $this->assertGreaterThan($legacy_revision_id, $entity->revision_id->value);
-      $this->assertNotEquals($legacy_name, $entity->name->value, new FormattableMarkup('%entity_type: Name changed.', ['%entity_type' => $entity_type]));
-      $this->assertNotEquals($legacy_text, $entity->translatable_test_field->value, new FormattableMarkup('%entity_type: Text changed.', ['%entity_type' => $entity_type]));
+      $this->assertNotEquals($legacy_name, $entity->name->value, "$entity_type: Name changed.");
+      $this->assertNotEquals($legacy_text, $entity->translatable_test_field->value, "$entity_type: Text changed.");
     }
 
     $revisions = $storage->loadMultipleRevisions($revision_ids);
@@ -159,22 +158,22 @@ class EntityRevisionsTest extends BrowserTestBase {
       $entity_revision = $revisions[$revision_ids[$i]];
 
       // Check if properties and fields contain the revision specific content.
-      $this->assertEquals($revision_ids[$i], $entity_revision->revision_id->value, new FormattableMarkup('%entity_type: Revision ID matches.', ['%entity_type' => $entity_type]));
-      $this->assertEquals($values['en'][$i]['name'], $entity_revision->name->value, new FormattableMarkup('%entity_type: Name matches.', ['%entity_type' => $entity_type]));
-      $this->assertEquals($values['en'][$i]['translatable_test_field'][0], $entity_revision->translatable_test_field[0]->value, new FormattableMarkup('%entity_type: Text matches.', ['%entity_type' => $entity_type]));
-      $this->assertEquals($values['en'][$i]['translatable_test_field'][1], $entity_revision->translatable_test_field[1]->value, new FormattableMarkup('%entity_type: Text matches.', ['%entity_type' => $entity_type]));
+      $this->assertEquals($revision_ids[$i], $entity_revision->revision_id->value, "$entity_type: Revision ID matches.");
+      $this->assertEquals($values['en'][$i]['name'], $entity_revision->name->value, "$entity_type: Name matches.");
+      $this->assertEquals($values['en'][$i]['translatable_test_field'][0], $entity_revision->translatable_test_field[0]->value, "$entity_type: Text matches.");
+      $this->assertEquals($values['en'][$i]['translatable_test_field'][1], $entity_revision->translatable_test_field[1]->value, "$entity_type: Text matches.");
 
       // Check the translated values.
       if ($entity->getEntityType()->isTranslatable()) {
         $revision_translation = $entity_revision->getTranslation('de');
-        $this->assertEquals($values['de'][$i]['name'], $revision_translation->name->value, new FormattableMarkup('%entity_type: Name matches.', ['%entity_type' => $entity_type]));
-        $this->assertEquals($values['de'][$i]['translatable_test_field'][0], $revision_translation->translatable_test_field[0]->value, new FormattableMarkup('%entity_type: Text matches.', ['%entity_type' => $entity_type]));
-        $this->assertEquals($values['de'][$i]['translatable_test_field'][1], $revision_translation->translatable_test_field[1]->value, new FormattableMarkup('%entity_type: Text matches.', ['%entity_type' => $entity_type]));
+        $this->assertEquals($values['de'][$i]['name'], $revision_translation->name->value, "$entity_type: Name matches.");
+        $this->assertEquals($values['de'][$i]['translatable_test_field'][0], $revision_translation->translatable_test_field[0]->value, "$entity_type: Text matches.");
+        $this->assertEquals($values['de'][$i]['translatable_test_field'][1], $revision_translation->translatable_test_field[1]->value, "$entity_type: Text matches.");
       }
 
       // Check non-revisioned values are loaded.
-      $this->assertTrue(isset($entity_revision->created->value), new FormattableMarkup('%entity_type: Non-revisioned field is loaded.', ['%entity_type' => $entity_type]));
-      $this->assertEquals($values['en'][2]['created'], $entity_revision->created->value, new FormattableMarkup('%entity_type: Non-revisioned field value is the same between revisions.', ['%entity_type' => $entity_type]));
+      $this->assertTrue(isset($entity_revision->created->value), "$entity_type: Non-revisioned field is loaded.");
+      $this->assertEquals($values['en'][2]['created'], $entity_revision->created->value, "$entity_type: Non-revisioned field value is the same between revisions.");
     }
 
     // Confirm the correct revision text appears in the edit form.

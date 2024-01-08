@@ -586,14 +586,14 @@ class FieldWebTest extends ViewTestBase {
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($name_field, $row) {
       return $name_field->advancedRender($row);
     });
-    $this->assertSubString($output, $trimmed_name, new FormattableMarkup('Make sure the trimmed output (@trimmed) appears in the rendered output (@output).', ['@trimmed' => $trimmed_name, '@output' => $output]));
-    $this->assertNotSubString($output, $row->views_test_data_name, new FormattableMarkup("Make sure the untrimmed value (@untrimmed) shouldn't appear in the rendered output (@output).", ['@untrimmed' => $row->views_test_data_name, '@output' => $output]));
+    $this->assertSubString($output, $trimmed_name, "Make sure the trimmed output ($trimmed_name) appears in the rendered output ($output).");
+    $this->assertNotSubString($output, $row->views_test_data_name, "Make sure the untrimmed value ($row->views_test_data_name) shouldn't appear in the rendered output ($output).");
 
     $name_field->options['alter']['max_length'] = 9;
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($name_field, $row) {
       return $name_field->advancedRender($row);
     });
-    $this->assertSubString($output, $trimmed_name, new FormattableMarkup('Make sure the untrimmed (@untrimmed) output appears in the rendered output  (@output).', ['@trimmed' => $trimmed_name, '@output' => $output]));
+    $this->assertSubString($output, $trimmed_name, "Make sure the untrimmed ($trimmed_name) output appears in the rendered output  ($output).");
 
     // Take word_boundary into account for the tests.
     $name_field->options['alter']['max_length'] = 5;

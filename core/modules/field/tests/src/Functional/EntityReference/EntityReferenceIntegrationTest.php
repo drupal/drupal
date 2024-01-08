@@ -204,7 +204,7 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
     $entity = current($this->container->get('entity_type.manager')->getStorage(
     $this->entityType)->loadByProperties(['name' => $entity_name]));
 
-    $this->assertNotEmpty($entity, new FormattableMarkup('%entity_type: Entity found in the database.', ['%entity_type' => $this->entityType]));
+    $this->assertNotEmpty($entity, "$this->entityType: Entity found in the database.");
 
     $this->assertEquals($referenced_entities[0]->id(), $entity->{$this->fieldName}->target_id);
     $this->assertEquals($referenced_entities[0]->id(), $entity->{$this->fieldName}->entity->id());
