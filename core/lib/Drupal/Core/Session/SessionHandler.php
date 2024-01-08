@@ -45,16 +45,14 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  #[\ReturnTypeWillChange]
-  public function open(string $save_path, string $name) {
+  public function open(string $save_path, string $name): bool {
     return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  #[\ReturnTypeWillChange]
-  public function read(#[\SensitiveParameter] string $sid) {
+  public function read(#[\SensitiveParameter] string $sid): string|false {
     $data = '';
     if (!empty($sid)) {
       // Read the session data from the database.
@@ -68,8 +66,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  #[\ReturnTypeWillChange]
-  public function write(#[\SensitiveParameter] string $sid, $value) {
+  public function write(#[\SensitiveParameter] string $sid, string $value): bool {
     $request = $this->requestStack->getCurrentRequest();
     $fields = [
       'uid' => $request->getSession()->get('uid', 0),
@@ -87,16 +84,14 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  #[\ReturnTypeWillChange]
-  public function close() {
+  public function close(): bool {
     return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  #[\ReturnTypeWillChange]
-  public function destroy(#[\SensitiveParameter] string $sid) {
+  public function destroy(#[\SensitiveParameter] string $sid): bool {
     // Delete session data.
     $this->connection->delete('sessions')
       ->condition('sid', Crypt::hashBase64($sid))
@@ -108,8 +103,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  #[\ReturnTypeWillChange]
-  public function gc(int $lifetime) {
+  public function gc(int $lifetime): int|false {
     // Be sure to adjust 'php_value session.gc_maxlifetime' to a large enough
     // value. For example, if you want user sessions to stay in your database
     // for three weeks before deleting them, you need to set gc_maxlifetime
