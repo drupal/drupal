@@ -86,7 +86,7 @@ function demo_umami_toolbar() {
   // Show warning only on administration pages.
   $admin_context = \Drupal::service('router.admin_context');
   if ($admin_context->isAdminRoute()) {
-    $link_to_help_page = \Drupal::moduleHandler()->moduleExists('help') && \Drupal::currentUser()->hasPermission('access administration pages');
+    $link_to_help_page = \Drupal::moduleHandler()->moduleExists('help') && \Drupal::currentUser()->hasPermission('access help pages');
     $items['experimental-profile-warning']['#type'] = 'toolbar_item';
     $items['experimental-profile-warning']['tab'] = [
       '#type' => 'inline_template',
