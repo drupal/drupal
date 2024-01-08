@@ -88,7 +88,7 @@ class UserAgent {
       // first occurrence of '-' otherwise we get a non-existing language zh.
       // All other languages use a langcode without a '-', so we can safely
       // split on the first occurrence of it.
-      if (strlen($langcode) > 7 && (substr($langcode, 0, 7) == 'zh-hant' || substr($langcode, 0, 7) == 'zh-hans')) {
+      if (strlen($langcode) > 7 && (str_starts_with($langcode, 'zh-hant') || str_starts_with($langcode, 'zh-hans'))) {
         $generic_tag = substr($langcode, 0, 7);
       }
       else {

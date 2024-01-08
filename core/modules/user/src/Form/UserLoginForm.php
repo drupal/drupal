@@ -217,7 +217,7 @@ class UserLoginForm extends FormBase {
           // Now check the actual limit for the user. Default is to allow 5
           // failed attempts every 6 hours. This means we check the flood table
           // twice if flood control has already been triggered by a previous
-          // login attempt, bu this should be the less common case.
+          // login attempt, but this should be the less common case.
           if (!$this->userFloodControl->isAllowed('user.failed_login_user', $flood_config->get('user_limit'), $flood_config->get('user_window'), $identifier)) {
             $form_state->set('flood_control_triggered', 'user');
             return;

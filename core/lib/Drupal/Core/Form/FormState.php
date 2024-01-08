@@ -1192,7 +1192,7 @@ class FormState implements FormStateInterface {
    * {@inheritdoc}
    */
   public function prepareCallback($callback) {
-    if (is_string($callback) && substr($callback, 0, 2) == '::') {
+    if (is_string($callback) && str_starts_with($callback, '::')) {
       $callback = [$this->getFormObject(), substr($callback, 2)];
     }
     return $callback;

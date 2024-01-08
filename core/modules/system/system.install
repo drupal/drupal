@@ -1426,7 +1426,7 @@ function system_requirements($phase) {
   // file names. There is no definite root directory depth below which Drupal is
   // guaranteed to function correctly on Windows. Since problems are likely
   // with more than 100 characters in the Drupal root path, show an error.
-  if (substr(PHP_OS, 0, 3) == 'WIN') {
+  if (str_starts_with(PHP_OS, 'WIN')) {
     $depth = strlen(realpath(DRUPAL_ROOT . '/' . PublicStream::basePath()));
     if ($depth > 120) {
       $requirements['max_path_on_windows'] = [

@@ -98,7 +98,7 @@ abstract class FileTestBase extends KernelTestBase {
     // read/write/execute bits. On Windows, chmod() ignores the "group" and
     // "other" bits, and fileperms() returns the "user" bits in all three
     // positions. $expected_mode is updated to reflect this.
-    if (substr(PHP_OS, 0, 3) == 'WIN') {
+    if (str_starts_with(PHP_OS, 'WIN')) {
       // Reset the "group" and "other" bits.
       $expected_mode = $expected_mode & 0700;
       // Shift the "user" bits to the "group" and "other" positions also.
@@ -134,7 +134,7 @@ abstract class FileTestBase extends KernelTestBase {
     // read/write/execute bits. On Windows, chmod() ignores the "group" and
     // "other" bits, and fileperms() returns the "user" bits in all three
     // positions. $expected_mode is updated to reflect this.
-    if (substr(PHP_OS, 0, 3) == 'WIN') {
+    if (str_starts_with(PHP_OS, 'WIN')) {
       // Reset the "group" and "other" bits.
       $expected_mode = $expected_mode & 0700;
       // Shift the "user" bits to the "group" and "other" positions also.

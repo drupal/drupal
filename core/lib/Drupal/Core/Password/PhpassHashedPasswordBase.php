@@ -246,7 +246,7 @@ abstract class PhpassHashedPasswordBase implements PasswordInterface {
     if ($hash === NULL || $hash === '') {
       return FALSE;
     }
-    if (substr($hash, 0, 2) == 'U$') {
+    if (str_starts_with($hash, 'U$')) {
       // This may be an updated password from user_update_7000(). Such hashes
       // have 'U' added as the first character and need an extra md5() (see the
       // Drupal 7 documentation).
@@ -293,7 +293,7 @@ abstract class PhpassHashedPasswordBase implements PasswordInterface {
     }
 
     // Check whether this was an updated password.
-    if ((substr($hash, 0, 3) != '$S$') || (strlen($hash) != static::HASH_LENGTH)) {
+    if (!str_starts_with($hash, '$S$') || (strlen($hash) != static::HASH_LENGTH)) {
       return TRUE;
     }
     // Ensure that $count_log2 is within set bounds.

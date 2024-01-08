@@ -86,7 +86,7 @@ class DialogRenderer implements MainContentRendererInterface {
       // If the target was nominated in the incoming options, use that.
       $target = $options['target'];
       // Ensure the target includes the #.
-      if (substr($target, 0, 1) != '#') {
+      if (!str_starts_with($target, '#')) {
         $target = '#' . $target;
       }
       // This shouldn't be passed on to jQuery.ui.dialog.

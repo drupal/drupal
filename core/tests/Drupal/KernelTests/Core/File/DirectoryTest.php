@@ -77,7 +77,7 @@ class DirectoryTest extends FileTestBase {
     // Make sure directory actually exists.
     $this->assertDirectoryExists($directory);
     $file_system = \Drupal::service('file_system');
-    if (substr(PHP_OS, 0, 3) != 'WIN') {
+    if (!str_starts_with(PHP_OS, 'WIN')) {
       // PHP on Windows doesn't support any kind of useful read-only mode for
       // directories. When executing a chmod() on a directory, PHP only sets the
       // read-only flag, which doesn't prevent files to actually be written

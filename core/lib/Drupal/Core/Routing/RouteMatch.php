@@ -149,7 +149,7 @@ class RouteMatch implements RouteMatchInterface {
       // Route defaults that do not start with a leading "_" are also
       // parameters, even if they are not included in path or host patterns.
       foreach ($route->getDefaults() as $name => $value) {
-        if (!isset($names[$name]) && substr($name, 0, 1) !== '_') {
+        if (!isset($names[$name]) && !str_starts_with($name, '_')) {
           $names[$name] = $name;
         }
       }
