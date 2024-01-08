@@ -40,7 +40,7 @@
  * @see https://www.drupal.org/node/2948698
  */
 function module_load_include($type, $module, $name = NULL) {
-  @trigger_error("module_load_include() is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. Instead, you should use \Drupal::moduleHandler()->loadInclude(). Note that including code from uninstalled extensions is no longer supported. See https://www.drupal.org/project/drupal/issues/697946", E_USER_DEPRECATED);
+  @trigger_error("module_load_include() is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. Instead, you should use \Drupal::moduleHandler()->loadInclude(). Note that including code from uninstalled extensions is no longer supported. See https://www.drupal.org/node/2948698", E_USER_DEPRECATED);
   if (!isset($name)) {
     $name = $module;
   }
