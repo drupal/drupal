@@ -275,4 +275,12 @@ class UpdateSemverCoreTest extends UpdateSemverCoreTestBase {
     $this->assertSession()->pageTextContains('There is a security update available for your version of Drupal.');
   }
 
+  /**
+   * Tests when a dev release does not have a date.
+   */
+  public function testDevNoReleaseDate() {
+    $this->setProjectInstalledVersion('8.0.x-dev');
+    $this->refreshUpdateStatus([$this->updateProject => 'dev-no-date']);
+  }
+
 }
