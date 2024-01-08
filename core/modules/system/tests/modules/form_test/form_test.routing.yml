@@ -57,14 +57,14 @@ form_test.route8:
 form_test.autocomplete_1:
   path: '/form-test/autocomplete-1'
   defaults:
-    controller: '\Drupal\form_test\AutocompleteController::autocomplete1'
+    _controller: '\Drupal\form_test\AutocompleteController::delayed_autocomplete'
   requirements:
     _permission: 'access autocomplete test'
 
 form_test.autocomplete_2:
   path: '/form-test/autocomplete-2/{param}'
   defaults:
-    controller: '\Drupal\form_test\AutocompleteController::autocomplete1'
+    _controller: '\Drupal\form_test\AutocompleteController::delayed_autocomplete'
   requirements:
     _permission: 'access autocomplete test'
 
