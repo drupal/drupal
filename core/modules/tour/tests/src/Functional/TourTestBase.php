@@ -51,7 +51,7 @@ abstract class TourTestBase extends BrowserTestBase {
       return;
     }
     if ($tip_count > 0 && $expectEmpty) {
-      $this->fail(sprintf('No tips were expected but %d were found', $tip_count));
+      $this->fail("No tips were expected but $tip_count were found");
     }
     $this->assertGreaterThan(0, $tip_count);
 

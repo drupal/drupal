@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\system\Functional\System;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Tests\BrowserTestBase;
@@ -30,17 +29,17 @@ class SitesDirectoryHardeningTest extends BrowserTestBase {
     $settings_file = $this->settingsFile($site_path);
 
     // First, we check based on what the initial install has set.
-    $this->assertTrue(drupal_verify_install_file($site_path, FILE_NOT_WRITABLE, 'dir'), new FormattableMarkup('Verified permissions for @file.', ['@file' => $site_path]));
+    $this->assertTrue(drupal_verify_install_file($site_path, FILE_NOT_WRITABLE, 'dir'), "Verified permissions for $site_path.");
 
     // We intentionally don't check for settings.local.php as that file is
     // not created by Drupal.
-    $this->assertTrue(drupal_verify_install_file($settings_file, FILE_EXIST | FILE_READABLE | FILE_NOT_WRITABLE), new FormattableMarkup('Verified permissions for @file.', ['@file' => $settings_file]));
+    $this->assertTrue(drupal_verify_install_file($settings_file, FILE_EXIST | FILE_READABLE | FILE_NOT_WRITABLE), "Verified permissions for $settings_file.");
 
     $this->makeWritable($site_path);
     $this->checkSystemRequirements();
 
-    $this->assertTrue(drupal_verify_install_file($site_path, FILE_NOT_WRITABLE, 'dir'), new FormattableMarkup('Verified permissions for @file after manual permissions change.', ['@file' => $site_path]));
-    $this->assertTrue(drupal_verify_install_file($settings_file, FILE_EXIST | FILE_READABLE | FILE_NOT_WRITABLE), new FormattableMarkup('Verified permissions for @file after manual permissions change.', ['@file' => $settings_file]));
+    $this->assertTrue(drupal_verify_install_file($site_path, FILE_NOT_WRITABLE, 'dir'), "Verified permissions for $site_path after manual permissions change.");
+    $this->assertTrue(drupal_verify_install_file($settings_file, FILE_EXIST | FILE_READABLE | FILE_NOT_WRITABLE), "Verified permissions for $settings_file after manual permissions change.");
   }
 
   /**

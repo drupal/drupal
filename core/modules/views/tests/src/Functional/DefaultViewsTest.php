@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\views\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -155,8 +154,7 @@ class DefaultViewsTest extends ViewTestBase {
 
         $view->execute();
 
-        $tokens = ['@name' => $name, '@display_id' => $display_id];
-        $this->assertTrue($view->executed, new FormattableMarkup('@name:@display_id has been executed.', $tokens));
+        $this->assertTrue($view->executed, "$name:$display_id has been executed.");
 
         $this->assertNotEmpty($view->result);
         $view->destroy();

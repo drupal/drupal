@@ -96,7 +96,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     foreach ($values[$default_langcode] as $property => $value) {
       $stored_value = $this->getValue($translation, $property, $default_langcode);
       $value = is_array($value) ? $value[0]['value'] : $value;
-      $message = new FormattableMarkup('@property correctly stored in the default language.', ['@property' => $property]);
+      $message = "$property correctly stored in the default language.";
       $this->assertEquals($value, $stored_value, $message);
     }
 
@@ -136,11 +136,10 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
 
     $author_field_name = $entity->hasField('content_translation_uid') ? 'content_translation_uid' : 'uid';
     if ($entity->getFieldDefinition($author_field_name)->isTranslatable()) {
-      $this->assertEquals($this->translator->id(), $metadata_target_translation->getAuthor()->id(), new FormattableMarkup('Author of the target translation @langcode correctly stored for translatable owner field.', ['@langcode' => $langcode]));
+      $this->assertEquals($this->translator->id(), $metadata_target_translation->getAuthor()->id(), "Author of the target translation $langcode correctly stored for translatable owner field.");
 
       $this->assertNotEquals($metadata_target_translation->getAuthor()->id(), $metadata_source_translation->getAuthor()->id(),
-        new FormattableMarkup('Author of the target translation @target different from the author of the source translation @source for translatable owner field.',
-          ['@target' => $langcode, '@source' => $default_langcode]));
+        "Author of the target translation $langcode different from the author of the source translation $default_langcode for translatable owner field.");
     }
     else {
       $this->assertEquals($this->editor->id(), $metadata_target_translation->getAuthor()->id(), 'Author of the entity remained untouched after translation for non translatable owner field.');
@@ -205,7 +204,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
       foreach ($property_values as $property => $value) {
         $stored_value = $this->getValue($translation, $property, $langcode);
         $value = is_array($value) ? $value[0]['value'] : $value;
-        $message = new FormattableMarkup('%property correctly stored with language %language.', ['%property' => $property, '%language' => $langcode]);
+        $message = "$property correctly stored with language $langcode.";
         $this->assertEquals($value, $stored_value, $message);
       }
     }

@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\content_translation\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -218,13 +217,13 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
       $value = $values[$default_langcode][$item->target_id];
       $source_item = $translation->{$this->fieldName}->get($delta);
       $assert = $item->target_id == $source_item->target_id && $item->alt == $value['alt'] && $item->title == $value['title'];
-      $this->assertTrue($assert, new FormattableMarkup('Field item @fid has been successfully synchronized.', ['@fid' => $item->target_id]));
+      $this->assertTrue($assert, "Field item $item->target_id has been successfully synchronized.");
       $fids[$item->target_id] = TRUE;
     }
 
     // Check that the dropped value is the right one.
     $removed_fid = $this->files[0]->fid;
-    $this->assertTrue(!isset($fids[$removed_fid]), new FormattableMarkup('Field item @fid has been correctly removed.', ['@fid' => $removed_fid]));
+    $this->assertTrue(!isset($fids[$removed_fid]), "Field item $removed_fid has been correctly removed.");
 
     // Add back an item for the dropped value and perform synchronization again.
     $values[$langcode][$removed_fid] = [
@@ -248,7 +247,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
       $value = $values[$fid_langcode][$item->target_id];
       $source_item = $translation->{$this->fieldName}->get($delta);
       $assert = $item->target_id == $source_item->target_id && $item->alt == $value['alt'] && $item->title == $value['title'];
-      $this->assertTrue($assert, new FormattableMarkup('Field item @fid has been successfully synchronized.', ['@fid' => $item->target_id]));
+      $this->assertTrue($assert, "Field item $item->target_id has been successfully synchronized.");
     }
   }
 

@@ -3,7 +3,6 @@
 namespace Drupal\FunctionalTests\Update;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Site\Settings;
 
@@ -39,7 +38,7 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
     /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_hook_registry');
     foreach (['user' => 9301, 'node' => 8700, 'system' => 8901, 'update_test_schema' => 8000] as $module => $schema) {
-      $this->assertEquals($schema, $update_registry->getInstalledVersion($module), new FormattableMarkup('Module @module schema is @schema', ['@module' => $module, '@schema' => $schema]));
+      $this->assertEquals($schema, $update_registry->getInstalledVersion($module), "Module $module schema is $schema");
     }
 
     // Ensure that all {router} entries can be unserialized. If they cannot be

@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\filter\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\filter\Entity\FilterFormat;
@@ -156,7 +155,7 @@ class FilterHtmlImageSecureTest extends BrowserTestBase {
           $this->assertEquals($converted, $element->getAttribute('src'));
         }
       }
-      $this->assertTrue($found, new FormattableMarkup('@image was found.', ['@image' => $image]));
+      $this->assertTrue($found, "$image was found.");
     }
   }
 

@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\language\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUI;
 use Drupal\Tests\BrowserTestBase;
@@ -139,7 +138,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
     foreach ($this->languageManager()->getDefinedLanguageTypes() as $type) {
       $langcode = $last[$type];
       $value = $type == LanguageInterface::TYPE_CONTENT || str_contains($type, 'test') ? 'it' : 'en';
-      $this->assertEquals($langcode, $value, new FormattableMarkup('The negotiated language for %type is %language', ['%type' => $type, '%language' => $value]));
+      $this->assertEquals($langcode, $value, "The negotiated language for $type is $value");
     }
 
     // Uninstall language_test and check that everything is set back to the
@@ -149,7 +148,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
 
     // Check that only the core language types are available.
     foreach ($this->languageManager()->getDefinedLanguageTypes() as $type) {
-      $this->assertStringNotContainsString('test', $type, new FormattableMarkup('The %type language is still available', ['%type' => $type]));
+      $this->assertStringNotContainsString('test', $type, "The $type language is still available");
     }
 
     // Check that fixed language types are properly configured, even those
@@ -175,7 +174,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
       if (!in_array($type, $configurable) && isset($info['fixed'])) {
         $negotiation = $this->config('language.types')->get('negotiation.' . $type . '.enabled');
         $equal = array_keys($negotiation) === array_values($info['fixed']);
-        $this->assertTrue($equal, new FormattableMarkup('language negotiation for %type is properly set up', ['%type' => $type]));
+        $this->assertTrue($equal, "language negotiation for $type is properly set up");
       }
     }
   }

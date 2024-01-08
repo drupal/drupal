@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\forum\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\taxonomy\Entity\Term;
@@ -63,7 +62,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
   protected function assertUrlOutboundAlter(string $original, string $final): void {
     // Test outbound altering.
     $result = $this->container->get('path_processor_manager')->processOutbound($original);
-    $this->assertSame($final, $result, new FormattableMarkup('Altered outbound URL %original, expected %final, and got %result.', ['%original' => $original, '%final' => $final, '%result' => $result]));
+    $this->assertSame($final, $result, "Altered outbound URL $original, expected $final, and got $result.");
   }
 
   /**
@@ -79,7 +78,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
   protected function assertUrlInboundAlter(string $original, string $final): void {
     // Test inbound altering.
     $result = $this->container->get('path_alias.manager')->getPathByAlias($original);
-    $this->assertSame($final, $result, new FormattableMarkup('Altered inbound URL %original, expected %final, and got %result.', ['%original' => $original, '%final' => $final, '%result' => $result]));
+    $this->assertSame($final, $result, "Altered inbound URL $original, expected $final, and got $result.");
   }
 
 }

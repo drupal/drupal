@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\system\Functional\Entity\EntityReferenceSelection;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Language\LanguageInterface;
@@ -99,7 +98,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
     foreach ($tests as $test) {
       foreach ($test['arguments'] as $arguments) {
         $result = call_user_func_array([$handler, 'getReferenceableEntities'], $arguments);
-        $this->assertEquals($test['result'], $result, new FormattableMarkup('Valid result set returned by @handler.', ['@handler' => $handler_name]));
+        $this->assertEquals($test['result'], $result, "Valid result set returned by $handler_name.");
 
         $result = call_user_func_array([$handler, 'countReferenceableEntities'], $arguments);
         if (!empty($test['result'])) {
@@ -110,7 +109,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
           $count = 0;
         }
 
-        $this->assertEquals($count, $result, new FormattableMarkup('Valid count returned by @handler.', ['@handler' => $handler_name]));
+        $this->assertEquals($count, $result, "Valid count returned by $handler_name.");
       }
     }
   }
