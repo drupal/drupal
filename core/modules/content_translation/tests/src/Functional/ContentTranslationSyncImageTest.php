@@ -11,6 +11,7 @@ use Drupal\Tests\TestFileCreationTrait;
 /**
  * Tests the field synchronization behavior for the image field.
  *
+ * @covers ::_content_translation_form_language_content_settings_form_alter
  * @group content_translation
  */
 class ContentTranslationSyncImageTest extends ContentTranslationTestBase {

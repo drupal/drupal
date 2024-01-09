@@ -3,13 +3,17 @@
 namespace Drupal\Tests\language\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\language\Traits\LanguageTestTrait;
 
 /**
  * Tests the content translation settings language selector options.
  *
+ * @covers \Drupal\language\Form\ContentLanguageSettingsForm
  * @group language
  */
 class LanguageSelectorTranslatableTest extends BrowserTestBase {
+
+  use LanguageTestTrait;
 
   /**
    * Modules to enable.
@@ -69,9 +73,7 @@ class LanguageSelectorTranslatableTest extends BrowserTestBase {
    */
   public function testLanguageStringSelector() {
     // Add another language.
-    $edit = ['predefined_langcode' => 'es'];
-    $this->drupalGet('admin/config/regional/language/add');
-    $this->submitForm($edit, 'Add language');
+    static::createLanguageFromLangcode('es');
 
     // Translate the string English in Spanish (Inglés). Override config entity.
     $name_translation = 'Inglés';

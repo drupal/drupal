@@ -3,11 +3,12 @@
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
-use Drupal\node\Entity\Node;
+use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase;
+use Drupal\Tests\language\Traits\LanguageTestTrait;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\node\Entity\Node;
 
 /**
  * Tests the Node Translation UI.
@@ -16,6 +17,8 @@ use Drupal\language\Entity\ConfigurableLanguage;
  * @group #slow
  */
 class NodeTranslationUITest extends ContentTranslationUITestBase {
+
+  use LanguageTestTrait;
 
   /**
    * {@inheritdoc}
@@ -74,10 +77,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $this->drupalPlaceBlock('help_block', ['region' => 'content']);
 
     // Display the language selector.
-    $this->drupalLogin($this->administrator);
-    $edit = ['language_configuration[language_alterable]' => TRUE];
-    $this->drupalGet('admin/structure/types/manage/article');
-    $this->submitForm($edit, 'Save');
+    static::enableBundleTranslation('node', 'article');
     $this->drupalLogin($this->translator);
   }
 
@@ -564,9 +564,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $this->submitForm($edit, 'Save');
 
     // Make the image field non-translatable.
-    $edit = ['settings[node][article][fields][field_image]' => FALSE];
-    $this->drupalGet('admin/config/regional/content-language');
-    $this->submitForm($edit, 'Save configuration');
+    static::setFieldTranslatable('node', 'article', 'field_image', FALSE);
 
     // Create a node.
     $nid = $this->createEntity(['title' => 'Node with multi-value image field en title'], 'en');

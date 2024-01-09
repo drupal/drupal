@@ -3,6 +3,7 @@
 namespace Drupal\Tests\file\Functional;
 
 use Drupal\file\Entity\File;
+use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
 
 /**
  * Uploads files to translated nodes.
@@ -10,6 +11,8 @@ use Drupal\file\Entity\File;
  * @group file
  */
 class FileOnTranslatedEntityTest extends FileFieldTestBase {
+
+  use ContentTranslationTestTrait;
 
   /**
    * {@inheritdoc}
@@ -64,24 +67,12 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
     $this->drupalLogin($admin_user);
 
     // Add a second and third language.
-    $edit = [];
-    $edit['predefined_langcode'] = 'fr';
-    $this->drupalGet('admin/config/regional/language/add');
-    $this->submitForm($edit, 'Add language');
-
-    $edit = [];
-    $edit['predefined_langcode'] = 'nl';
-    $this->drupalGet('admin/config/regional/language/add');
-    $this->submitForm($edit, 'Add language');
+    static::createLanguageFromLangcode('fr');
+    static::createLanguageFromLangcode('nl');
 
     // Enable translation for "Basic page" nodes.
-    $edit = [
-      'entity_types[node]' => 1,
-      'settings[node][page][translatable]' => 1,
-      "settings[node][page][fields][$this->fieldName]" => 1,
-    ];
-    $this->drupalGet('admin/config/regional/content-language');
-    $this->submitForm($edit, 'Save configuration');
+    static::enableContentTranslation('node', 'page');
+    static::setFieldTranslatable('node', 'page', $this->fieldName, 1);
   }
 
   /**
