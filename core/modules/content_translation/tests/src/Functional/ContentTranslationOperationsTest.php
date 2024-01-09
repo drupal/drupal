@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\content_translation\Functional;
 
-use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\Tests\language\Traits\LanguageTestTrait;
 use Drupal\Tests\node\Functional\NodeTestBase;
 use Drupal\user\Entity\Role;
 
@@ -12,6 +12,8 @@ use Drupal\user\Entity\Role;
  * @group content_translation
  */
 class ContentTranslationOperationsTest extends NodeTestBase {
+
+  use LanguageTestTrait;
 
   /**
    * A base user.
@@ -54,7 +56,7 @@ class ContentTranslationOperationsTest extends NodeTestBase {
     // Enable additional languages.
     $langcodes = ['es', 'ast'];
     foreach ($langcodes as $langcode) {
-      ConfigurableLanguage::createFromLangcode($langcode)->save();
+      static::createLanguageFromLangcode($langcode);
     }
 
     // Enable translation for the current entity type and ensure the change is
@@ -129,8 +131,7 @@ class ContentTranslationOperationsTest extends NodeTestBase {
     $this->drupalLogin($this->baseUser2);
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->linkByHrefExists('node/' . $node->id() . '/translations');
-    $this->drupalGet('admin/config/regional/content-language');
-    $this->submitForm(['settings[node][article][translatable]' => FALSE], 'Save configuration');
+    static::disableBundleTranslation('node', 'article');
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->linkByHrefNotExists('node/' . $node->id() . '/translations');
   }

@@ -2,14 +2,13 @@
 
 namespace Drupal\Tests\menu_ui\Functional;
 
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\system\Entity\Menu;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
 
 /**
  * Add, edit, and delete a node with menu link.
@@ -17,6 +16,8 @@ use Drupal\Tests\BrowserTestBase;
  * @group menu_ui
  */
 class MenuUiNodeTest extends BrowserTestBase {
+
+  use ContentTranslationTestTrait;
 
   /**
    * An editor user.
@@ -287,7 +288,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     // Setup languages.
     $langcodes = ['de'];
     foreach ($langcodes as $langcode) {
-      ConfigurableLanguage::createFromLangcode($langcode)->save();
+      static::createLanguageFromLangcode($langcode);
     }
     array_unshift($langcodes, \Drupal::languageManager()->getDefaultLanguage()->getId());
 
@@ -303,29 +304,9 @@ class MenuUiNodeTest extends BrowserTestBase {
       $languages[$langcode] = ConfigurableLanguage::load($langcode);
     }
 
-    // Enable translation for page.
-    $config = ContentLanguageSettings::loadByEntityTypeBundle('node', 'page');
-    $config->setDefaultLangcode(LanguageInterface::LANGCODE_SITE_DEFAULT);
-    $config->setLanguageAlterable(TRUE);
-    $config->save();
-
-    $content_translation_manager = $this->container->get('content_translation.manager');
-    $content_translation_manager->setEnabled('node', 'page', TRUE);
-    $content_translation_manager->setBundleTranslationSettings('node', 'page', [
-      'untranslatable_fields_hide' => FALSE,
-    ]);
-
-    // Enable translation for menu_link_content.
-    $config = ContentLanguageSettings::loadByEntityTypeBundle('menu_link_content', 'menu_link_content');
-    $config->setDefaultLangcode(LanguageInterface::LANGCODE_SITE_DEFAULT);
-    $config->setLanguageAlterable(TRUE);
-    $config->save();
-
-    $content_translation_manager = $this->container->get('content_translation.manager');
-    $content_translation_manager->setEnabled('menu_link_content', 'menu_link_content', TRUE);
-    $content_translation_manager->setBundleTranslationSettings('menu_link_content', 'menu_link_content', [
-      'untranslatable_fields_hide' => FALSE,
-    ]);
+    // Enable translation for pages and menu link content..
+    $this->enableContentTranslation('node', 'page');
+    $this->enableContentTranslation('menu_link_content', 'menu_link_content');
 
     $this->rebuildContainer();
 

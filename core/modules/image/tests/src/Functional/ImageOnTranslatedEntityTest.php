@@ -3,6 +3,7 @@
 namespace Drupal\Tests\image\Functional;
 
 use Drupal\file\Entity\File;
+use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
@@ -12,6 +13,7 @@ use Drupal\Tests\TestFileCreationTrait;
  */
 class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
 
+  use ContentTranslationTestTrait;
   use TestFileCreationTrait {
     getTestFiles as drupalGetTestFiles;
     compareFiles as drupalCompareFiles;
@@ -69,15 +71,8 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
     $this->drupalLogin($admin_user);
 
     // Add a second and third language.
-    $edit = [];
-    $edit['predefined_langcode'] = 'fr';
-    $this->drupalGet('admin/config/regional/language/add');
-    $this->submitForm($edit, 'Add language');
-
-    $edit = [];
-    $edit['predefined_langcode'] = 'nl';
-    $this->drupalGet('admin/config/regional/language/add');
-    $this->submitForm($edit, 'Add language');
+    static::createLanguageFromLangcode('fr');
+    static::createLanguageFromLangcode('nl');
   }
 
   /**
@@ -85,18 +80,8 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
    */
   public function testSyncedImages() {
     // Enable translation for "Basic page" nodes.
-    $edit = [
-      'entity_types[node]' => 1,
-      'settings[node][basic_page][translatable]' => 1,
-      "settings[node][basic_page][fields][$this->fieldName]" => 1,
-      "settings[node][basic_page][columns][$this->fieldName][file]" => 1,
-      // Explicitly disable alt and title since the javascript disables the
-      // checkboxes on the form.
-      "settings[node][basic_page][columns][$this->fieldName][alt]" => FALSE,
-      "settings[node][basic_page][columns][$this->fieldName][title]" => FALSE,
-    ];
-    $this->drupalGet('admin/config/regional/content-language');
-    $this->submitForm($edit, 'Save configuration');
+    $this->enableContentTranslation('node', 'basic_page');
+    static::setFieldTranslatable('node', 'basic_page', $this->fieldName, TRUE);
 
     // Verify that the image field on the "Basic basic" node type is
     // translatable.

@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\workspaces\Functional;
 
-use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
 use Drupal\Tests\WaitTerminateTestTrait;
 use Drupal\workspaces\Entity\Workspace;
 
@@ -15,6 +15,7 @@ use Drupal\workspaces\Entity\Workspace;
  */
 class PathWorkspacesTest extends BrowserTestBase {
 
+  use ContentTranslationTestTrait;
   use WorkspaceTestUtilities;
   use WaitTerminateTestTrait;
 
@@ -40,7 +41,7 @@ class PathWorkspacesTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    ConfigurableLanguage::createFromLangcode('ro')->save();
+    static::createLanguageFromLangcode('ro');
     $this->rebuildContainer();
 
     // Create a content type.
@@ -57,16 +58,7 @@ class PathWorkspacesTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save settings');
 
     // Enable translation for article node.
-    $edit = [
-      'entity_types[node]' => 1,
-      'settings[node][article][translatable]' => 1,
-      'settings[node][article][fields][path]' => 1,
-      'settings[node][article][fields][body]' => 1,
-      'settings[node][article][settings][language][language_alterable]' => 1,
-    ];
-    $this->drupalGet('admin/config/regional/content-language');
-    $this->submitForm($edit, 'Save configuration');
-    \Drupal::entityTypeManager()->clearCachedDefinitions();
+    static::enableContentTranslation('node', 'article');
 
     $this->setupWorkspaceSwitcherBlock();
 
