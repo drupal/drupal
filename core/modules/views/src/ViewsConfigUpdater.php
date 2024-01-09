@@ -588,4 +588,36 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
     return FALSE;
   }
 
+  /**
+   * Checks for entity view display cache tags from rendered entity fields.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The View to update.
+   *
+   * @return bool
+   *   TRUE if view has rendered_entity fields.
+   */
+  public function needsRenderedEntityFieldUpdate(ViewEntityInterface $view): bool {
+    return $this->processDisplayHandlers($view, TRUE, function (&$handler, $handler_type) {
+      return $this->processRenderedEntityFieldHandler($handler, $handler_type);
+    });
+  }
+
+  /**
+   * Processes rendered_entity type fields.
+   *
+   * @param array $handler
+   *   A display handler.
+   * @param string $handler_type
+   *   The handler type.
+   *
+   * @return bool
+   *   Whether the handler was updated.
+   */
+  protected function processRenderedEntityFieldHandler(array &$handler, string $handler_type): bool {
+    // Force view re-save if using rendered entity field.
+    $plugin_id = $handler['plugin_id'] ?? '';
+    return $handler_type === 'field' && $plugin_id === 'rendered_entity';
+  }
+
 }

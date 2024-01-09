@@ -155,17 +155,9 @@ class RenderedEntity extends FieldPluginBase implements CacheableDependencyInter
    * {@inheritdoc}
    */
   public function getCacheTags() {
-    $view_display_storage = $this->entityTypeManager->getStorage('entity_view_display');
-    $view_displays = $view_display_storage->loadMultiple($view_display_storage
-      ->getQuery()
-      ->condition('targetEntityType', $this->getEntityTypeId())
-      ->execute());
-
-    $tags = [];
-    foreach ($view_displays as $view_display) {
-      $tags[] = $view_display->getCacheTags();
-    }
-    return array_merge(...$tags);
+    // On render, tags that get invalidated on entity view display save are
+    // bubbled up, so there is no need to add view display cache tags here.
+    return [];
   }
 
   /**

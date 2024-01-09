@@ -110,7 +110,8 @@ display:
       contexts:
         - 'languages:language_interface'
         - 'user.node_grants:view'
-      tags: {  }
+      tags:
+        - 'config:core.entity_view_display.node.article.default'
   page_1:
     id: page_1
     display_title: Page
@@ -125,7 +126,8 @@ display:
       contexts:
         - 'languages:language_interface'
         - 'user.node_grants:view'
-      tags: {  }
+      tags:
+        - 'config:core.entity_view_display.node.article.default'
   page_2:
     id: page_2
     display_title: Page
@@ -140,7 +142,8 @@ display:
       contexts:
         - 'languages:language_interface'
         - 'user.node_grants:view'
-      tags: {  }
+      tags:
+        - 'config:core.entity_view_display.node.article.default'
   page_3:
     id: page_3
     display_title: Page
@@ -155,7 +158,8 @@ display:
       contexts:
         - 'languages:language_interface'
         - 'user.node_grants:view'
-      tags: {  }
+      tags:
+        - 'config:core.entity_view_display.node.article.default'
   page_4:
     id: page_4
     display_title: Page
@@ -170,7 +174,8 @@ display:
       contexts:
         - 'languages:language_interface'
         - 'user.node_grants:view'
-      tags: {  }
+      tags:
+        - 'config:core.entity_view_display.node.article.default'
   page_5:
     id: page_5
     display_title: Page
@@ -185,7 +190,8 @@ display:
       contexts:
         - 'languages:language_interface'
         - 'user.node_grants:view'
-      tags: {  }
+      tags:
+        - 'config:core.entity_view_display.node.article.default'
   page_6:
     id: page_6
     display_title: Page
@@ -200,4 +206,5 @@ display:
       contexts:
         - 'languages:language_interface'
         - 'user.node_grants:view'
-      tags: {  }
+      tags:
+        - 'config:core.entity_view_display.node.article.default'

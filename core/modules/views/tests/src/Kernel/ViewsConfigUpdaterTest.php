@@ -80,6 +80,34 @@ class ViewsConfigUpdaterTest extends ViewsKernelTestBase {
   }
 
   /**
+   * @covers ::needsRenderedEntityFieldUpdate
+   */
+  public function testNeedsRenderedEntityFieldUpdate(): void {
+    $config_updater = $this->container
+      ->get('class_resolver')
+      ->getInstanceFromDefinition(ViewsConfigUpdater::class);
+    assert($config_updater instanceof ViewsConfigUpdater);
+    $test_view = $this->loadTestView('views.view.test_entity_field_renderered_entity');
+    $needs_update = $config_updater->needsRenderedEntityFieldUpdate($test_view);
+    $test_view->save();
+    $this->assertTrue($needs_update);
+
+    $displays = [
+      'default',
+      'page_1',
+      'page_2',
+      'page_3',
+      'page_4',
+      'page_5',
+      'page_6',
+    ];
+    foreach ($displays as $display) {
+      $display = $test_view->getDisplay($display);
+      self::assertEmpty($display['cache_metadata']['tags']);
+    }
+  }
+
+  /**
    * Loads a test view.
    *
    * @param string $view_id
