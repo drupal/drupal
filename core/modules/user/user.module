@@ -580,9 +580,9 @@ function user_cancel_url(UserInterface $account, $options = []) {
  */
 function user_pass_rehash(UserInterface $account, $timestamp) {
   $data = $timestamp;
-  $data .= $account->getLastLoginTime();
-  $data .= $account->id();
-  $data .= $account->getEmail();
+  $data .= ':' . $account->getLastLoginTime();
+  $data .= ':' . $account->id();
+  $data .= ':' . $account->getEmail();
   return Crypt::hmacBase64($data, Settings::getHashSalt() . $account->getPassword());
 }
 
