@@ -42,6 +42,7 @@ class TranslationLinkTest extends ContentTranslationTestBase {
     $this->entityTypeId = 'user';
 
     parent::setUp();
+    $this->doSetup();
 
     // Assign user 1  a language code so that the entity can be translated.
     $user = User::load(1);

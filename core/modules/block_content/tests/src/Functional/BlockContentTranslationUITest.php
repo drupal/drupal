@@ -51,6 +51,7 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
     $this->bundle = 'basic';
     $this->testLanguageSelector = FALSE;
     parent::setUp();
+    $this->doSetup();
 
     $this->drupalPlaceBlock('page_title_block');
   }

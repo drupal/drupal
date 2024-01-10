@@ -32,6 +32,7 @@ class ContentTranslationUntranslatableFieldsTest extends ContentTranslationPendi
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->doSetup();
 
     // Configure one field as untranslatable.
     $this->drupalLogin($this->administrator);

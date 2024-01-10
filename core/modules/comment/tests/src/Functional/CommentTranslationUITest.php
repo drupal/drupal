@@ -71,6 +71,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
     $this->testLanguageSelector = FALSE;
     $this->subject = $this->randomMachineName();
     parent::setUp();
+    $this->doSetup();
   }
 
   /**
