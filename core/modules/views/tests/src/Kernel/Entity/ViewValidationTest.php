@@ -9,6 +9,7 @@ use Drupal\views\Entity\View;
  * Tests validation of view entities.
  *
  * @group views
+ * @group #slow
  */
 class ViewValidationTest extends ConfigEntityValidationTestBase {
 

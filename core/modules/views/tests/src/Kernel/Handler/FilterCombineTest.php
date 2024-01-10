@@ -9,6 +9,7 @@ use Drupal\views\Views;
  * Tests the combine filter handler.
  *
  * @group views
+ * @group #slow
  *
  * @coversDefaultClass \Drupal\views\Plugin\views\filter\Combine
  */

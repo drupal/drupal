@@ -18,6 +18,7 @@ use Drupal\layout_builder\SectionStorage\SectionStorageDefinition;
  * @coversDefaultClass \Drupal\layout_builder\Plugin\SectionStorage\DefaultsSectionStorage
  *
  * @group layout_builder
+ * @group #slow
  */
 class DefaultsSectionStorageTest extends KernelTestBase {
 
