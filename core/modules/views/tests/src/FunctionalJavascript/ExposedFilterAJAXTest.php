@@ -69,6 +69,7 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
       'access content',
       'access content overview',
       'edit any page content',
+      'view the administration theme',
     ]);
     $this->drupalLogin($user);
   }
@@ -121,6 +122,28 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
     $this->assertSession()->pageTextContains('Page One');
     $this->assertSession()->pageTextContains('Page Two');
     $this->assertFalse($session->getPage()->hasButton('Reset'));
+  }
+
+  /**
+   * Tests if exposed filtering via AJAX theme negotiation works.
+   */
+  public function testExposedFilteringThemeNegotiation(): void {
+    // Install 'claro' and configure it as administrative theme.
+    $this->container->get('theme_installer')->install(['claro']);
+    $this->config('system.theme')->set('admin', 'claro')->save();
+
+    // Visit the View page.
+    $this->drupalGet('admin/content');
+
+    // Search for "Page One".
+    $this->submitForm(['title' => 'Page One'], 'Filter');
+    $this->assertSession()->assertExpectedAjaxRequest(1);
+
+    // Verify that the theme is the 'claro' admin theme and not the default
+    // theme ('stark').
+    $settings = $this->getDrupalSettings();
+    $this->assertNotNull($settings['ajaxPageState']['theme_token']);
+    $this->assertEquals('claro', $settings['ajaxPageState']['theme']);
   }
 
   /**
