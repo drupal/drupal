@@ -10,6 +10,7 @@ use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
  * Tests validation of Layout Builder's entity_view_display entities.
  *
  * @group layout_builder
+ * @group #slow
  */
 class LayoutBuilderEntityViewDisplayValidationTest extends ConfigEntityValidationTestBase {
 

@@ -12,6 +12,7 @@ use Drupal\KernelTests\KernelTestBase;
  * @see \Drupal\Core\Template\TwigNodeCheckDeprecations
  * @group Twig
  * @group legacy
+ * @group #slow
  */
 class TwigDeprecationsTest extends KernelTestBase {
 

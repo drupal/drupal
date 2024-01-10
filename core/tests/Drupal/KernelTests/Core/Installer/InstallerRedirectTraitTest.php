@@ -15,6 +15,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @coversDefaultClass \Drupal\Core\Installer\InstallerRedirectTrait
  *
  * @group Installer
+ * @group #slow
  */
 class InstallerRedirectTraitTest extends KernelTestBase {
 

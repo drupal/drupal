@@ -18,6 +18,7 @@ use PHPUnit\Framework\SkippedTestError;
  * @group PHPUnit
  * @group Test
  * @group KernelTests
+ * @group #slow
  */
 class KernelTestBaseTest extends KernelTestBase {
 

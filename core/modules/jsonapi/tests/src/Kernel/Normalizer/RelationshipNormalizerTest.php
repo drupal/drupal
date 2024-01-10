@@ -21,6 +21,7 @@ use Drupal\user\Entity\User;
 /**
  * @coversDefaultClass \Drupal\jsonapi\Normalizer\RelationshipNormalizer
  * @group jsonapi
+ * @group #slow
  *
  * @internal
  */
