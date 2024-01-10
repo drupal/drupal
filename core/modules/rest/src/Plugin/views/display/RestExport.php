@@ -2,6 +2,7 @@
 
 namespace Drupal\rest\Plugin\views\display;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheableResponse;
 use Drupal\Core\Form\FormStateInterface;
@@ -296,7 +297,7 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
     $options['auth'] = [
       'category' => 'path',
       'title' => $this->t('Authentication'),
-      'value' => views_ui_truncate($auth, 24),
+      'value' => Unicode::truncate($auth, 24, FALSE, TRUE),
     ];
 
     // Remove css/exposed form settings, as they are not used for the data

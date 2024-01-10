@@ -5,6 +5,7 @@ namespace Drupal\views\Plugin\views\display;
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
@@ -1119,7 +1120,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       ];
     }
 
-    $display_comment = views_ui_truncate($this->getOption('display_comment'), 80);
+    $display_comment = Unicode::truncate($this->getOption('display_comment'), 80, TRUE, TRUE);
     $options['display_comment'] = [
       'category' => 'other',
       'title' => $this->t('Administrative comment'),
@@ -1135,7 +1136,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     $options['title'] = [
       'category' => 'title',
       'title' => $this->t('Title'),
-      'value' => views_ui_truncate($title, 32),
+      'value' => Unicode::truncate($title, 32, FALSE, TRUE),
       'desc' => $this->t('Change the title that this display will use.'),
     ];
 

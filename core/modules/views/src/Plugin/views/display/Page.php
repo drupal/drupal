@@ -2,6 +2,7 @@
 
 namespace Drupal\views\Plugin\views\display;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -239,7 +240,7 @@ class Page extends PathPluginBase {
     $options['menu'] = [
       'category' => 'page',
       'title' => $this->t('Menu'),
-      'value' => views_ui_truncate($menu_str, 24),
+      'value' => Unicode::truncate($menu_str, 24, FALSE, TRUE),
     ];
 
     // This adds a 'Settings' link to the style_options setting if the style

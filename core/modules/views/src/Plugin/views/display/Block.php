@@ -2,6 +2,7 @@
 
 namespace Drupal\views\Plugin\views\display;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Url;
 use Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface;
 use Drupal\Core\Block\BlockManagerInterface;
@@ -162,12 +163,12 @@ class Block extends DisplayPluginBase {
     $options['block_description'] = [
       'category' => 'block',
       'title' => $this->t('Block name'),
-      'value' => views_ui_truncate($block_description, 24),
+      'value' => Unicode::truncate($block_description, 24, FALSE, TRUE),
     ];
     $options['block_category'] = [
       'category' => 'block',
       'title' => $this->t('Block category'),
-      'value' => views_ui_truncate($block_category, 24),
+      'value' => Unicode::truncate($block_category, 24, FALSE, TRUE),
     ];
 
     $filtered_allow = array_filter($this->getOption('allow'));

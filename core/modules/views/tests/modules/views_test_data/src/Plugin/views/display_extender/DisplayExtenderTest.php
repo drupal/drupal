@@ -2,6 +2,7 @@
 
 namespace Drupal\views_test_data\Plugin\views\display_extender;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\display_extender\DisplayExtenderPluginBase;
 
@@ -50,7 +51,7 @@ class DisplayExtenderTest extends DisplayExtenderPluginBase {
     $options['test_extender_test_option'] = [
       'category' => 'display_extender_test',
       'title' => $this->t('Test option'),
-      'value' => views_ui_truncate($this->options['test_extender_test_option'], 24),
+      'value' => Unicode::truncate($this->options['test_extender_test_option'], 24, FALSE, TRUE),
     ];
   }
 

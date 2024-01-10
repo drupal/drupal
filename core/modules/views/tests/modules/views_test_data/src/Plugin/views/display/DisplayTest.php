@@ -2,6 +2,7 @@
 
 namespace Drupal\views_test_data\Plugin\views\display;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -63,7 +64,7 @@ class DisplayTest extends DisplayPluginBase {
     $options['test_option'] = [
       'category' => 'display_test',
       'title' => $this->t('Test option'),
-      'value' => views_ui_truncate($test_option, 24),
+      'value' => Unicode::truncate($test_option, 24, FALSE, TRUE),
     ];
   }
 
