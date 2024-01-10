@@ -10,6 +10,7 @@ use Drupal\user\Entity\Role;
  *
  * @group help
  * @group legacy
+ * @group #slow
  *
  * @see help_post_update_add_permissions_to_roles()
  */
