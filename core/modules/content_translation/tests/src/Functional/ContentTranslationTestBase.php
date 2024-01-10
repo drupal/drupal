@@ -83,11 +83,9 @@ abstract class ContentTranslationTestBase extends BrowserTestBase {
   protected $manager;
 
   /**
-   * {@inheritdoc}
+   * Completes preparation for content translation tests.
    */
-  protected function setUp(): void {
-    parent::setUp();
-
+  protected function doSetup(): void {
     $this->setupLanguages();
     $this->setupBundle();
     $this->enableTranslation();

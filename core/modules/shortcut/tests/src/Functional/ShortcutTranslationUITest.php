@@ -43,6 +43,7 @@ class ShortcutTranslationUITest extends ContentTranslationUITestBase {
     $this->entityTypeId = 'shortcut';
     $this->bundle = 'default';
     parent::setUp();
+    $this->doSetup();
   }
 
   /**

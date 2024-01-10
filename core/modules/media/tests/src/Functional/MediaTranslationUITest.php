@@ -49,6 +49,7 @@ class MediaTranslationUITest extends ContentTranslationUITestBase {
     $this->entityTypeId = 'media';
     $this->bundle = 'test';
     parent::setUp();
+    $this->doSetup();
   }
 
   /**

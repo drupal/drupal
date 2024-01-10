@@ -44,6 +44,14 @@ class ContentTranslationMetadataFieldsTest extends ContentTranslationTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    $this->doSetup();
+  }
+
+  /**
    * Tests skipping setting non translatable metadata fields.
    */
   public function testSkipUntranslatable() {

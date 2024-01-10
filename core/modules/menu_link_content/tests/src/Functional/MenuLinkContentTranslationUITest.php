@@ -41,6 +41,7 @@ class MenuLinkContentTranslationUITest extends ContentTranslationUITestBase {
     $this->entityTypeId = 'menu_link_content';
     $this->bundle = 'menu_link_content';
     parent::setUp();
+    $this->doSetup();
   }
 
   /**

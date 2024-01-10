@@ -74,6 +74,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->doSetup();
 
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_reference',
