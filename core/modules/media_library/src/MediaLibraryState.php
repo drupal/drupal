@@ -114,12 +114,7 @@ class MediaLibraryState extends ParameterBag implements CacheableDependencyInter
       throw new BadRequestHttpException("Invalid media library parameters specified.");
     }
 
-    // Remove ajax_page_state as it is irrelevant.
-    // @todo: Review other parameters passed
-    // See https://www.drupal.org/project/drupal/issues/3396650
-    if ($query->has('ajax_page_state')) {
-      $query->remove('ajax_page_state');
-    }
+    // @todo: Review parameters passed and remove irrelevant ones in https://www.drupal.org/i/3396650
 
     // Once we have validated the required parameters, we restore the parameters
     // from the request since there might be additional values.

@@ -705,7 +705,7 @@ class ViewExecutable {
 
       $this->exposed_input = \Drupal::request()->query->all();
       // unset items that are definitely not our input:
-      foreach (['page', 'q', 'ajax_page_state'] as $key) {
+      foreach (['page', 'q'] as $key) {
         if (isset($this->exposed_input[$key])) {
           unset($this->exposed_input[$key]);
         }

@@ -68,7 +68,7 @@ class AjaxPageStateTest extends BrowserTestBase {
   public function testDrupalSettingsIsNotLoaded() {
     $this->drupalGet('node',
       [
-        "query" =>
+        'query' =>
           [
             'ajax_page_state' => [
               'libraries' => UrlHelper::compressQueryParameter('core/drupalSettings'),
