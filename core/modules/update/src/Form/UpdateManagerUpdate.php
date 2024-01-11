@@ -92,14 +92,14 @@ class UpdateManagerUpdate extends FormBase {
     $form['#attached']['library'][] = 'update/drupal.update.admin';
 
     // This will be a nested array. The first key is the kind of project, which
-    // can be either 'enabled', 'disabled', 'manual' (projects which require
-    // manual updates, such as core). Then, each subarray is an array of
+    // can be either 'installed', 'uninstalled', 'manual' (projects which
+    // require manual updates, such as core). Then, each subarray is an array of
     // projects of that type, indexed by project short name, and containing an
     // array of data for cells in that project's row in the appropriate table.
     $projects = [];
 
     // This stores the actual download link we're going to update from for each
-    // project in the form, regardless of if it's enabled or disabled.
+    // project in the form, regardless of if it's installed or uninstalled.
     $form['project_downloads'] = ['#tree' => TRUE];
     $this->moduleHandler->loadInclude('update', 'inc', 'update.compare');
     $project_data = update_calculate_project_data($available);
@@ -129,7 +129,7 @@ class UpdateManagerUpdate extends FormBase {
       else {
         $project_name = $name;
       }
-      if ($project['project_type'] == 'theme' || $project['project_type'] == 'theme-disabled') {
+      if ($project['project_type'] == 'theme' || $project['project_type'] == 'theme-uninstalled') {
         $project_name .= ' ' . $this->t('(Theme)');
       }
 
@@ -238,12 +238,12 @@ class UpdateManagerUpdate extends FormBase {
         switch ($project['project_type']) {
           case 'module':
           case 'theme':
-            $projects['enabled'][$name] = $entry;
+            $projects['installed'][$name] = $entry;
             break;
 
-          case 'module-disabled':
-          case 'theme-disabled':
-            $projects['disabled'][$name] = $entry;
+          case 'module-uninstalled':
+          case 'theme-uninstalled':
+            $projects['uninstalled'][$name] = $entry;
             break;
         }
       }
@@ -270,22 +270,22 @@ class UpdateManagerUpdate extends FormBase {
       'recommended_version' => $this->t('Recommended version'),
     ];
 
-    if (!empty($projects['enabled'])) {
+    if (!empty($projects['installed'])) {
       $form['projects'] = [
         '#type' => 'tableselect',
         '#header' => $headers,
-        '#options' => $projects['enabled'],
+        '#options' => $projects['installed'],
       ];
-      if (!empty($projects['disabled'])) {
+      if (!empty($projects['uninstalled'])) {
         $form['projects']['#prefix'] = '<h2>' . $this->t('Installed') . '</h2>';
       }
     }
 
-    if (!empty($projects['disabled'])) {
-      $form['disabled_projects'] = [
+    if (!empty($projects['uninstalled'])) {
+      $form['uninstalled_projects'] = [
         '#type' => 'tableselect',
         '#header' => $headers,
-        '#options' => $projects['disabled'],
+        '#options' => $projects['uninstalled'],
         '#weight' => 1,
         '#prefix' => '<h2>' . $this->t('Uninstalled') . '</h2>',
       ];
@@ -293,7 +293,7 @@ class UpdateManagerUpdate extends FormBase {
 
     // If either table has been printed yet, we need a submit button and to
     // validate the checkboxes.
-    if (!empty($projects['enabled']) || !empty($projects['disabled'])) {
+    if (!empty($projects['installed']) || !empty($projects['uninstalled'])) {
       $form['actions'] = ['#type' => 'actions'];
       $form['actions']['submit'] = [
         '#type' => 'submit',
@@ -357,12 +357,12 @@ class UpdateManagerUpdate extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if (!$form_state->isValueEmpty('projects')) {
-      $enabled = array_filter($form_state->getValue('projects'));
+      $installed = array_filter($form_state->getValue('projects'));
     }
-    if (!$form_state->isValueEmpty('disabled_projects')) {
-      $disabled = array_filter($form_state->getValue('disabled_projects'));
+    if (!$form_state->isValueEmpty('uninstalled_projects')) {
+      $uninstalled = array_filter($form_state->getValue('uninstalled_projects'));
     }
-    if (empty($enabled) && empty($disabled)) {
+    if (empty($installed) && empty($uninstalled)) {
       $form_state->setErrorByName('projects', $this->t('You must select at least one project to update.'));
     }
   }
@@ -373,7 +373,7 @@ class UpdateManagerUpdate extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->moduleHandler->loadInclude('update', 'inc', 'update.manager');
     $projects = [];
-    foreach (['projects', 'disabled_projects'] as $type) {
+    foreach (['projects', 'uninstalled_projects'] as $type) {
       if (!$form_state->isValueEmpty($type)) {
         $projects = array_merge($projects, array_keys(array_filter($form_state->getValue($type))));
       }
