@@ -15,17 +15,17 @@ class EditorDialogSave implements CommandInterface {
   /**
    * An array of values that will be passed back to the editor by the dialog.
    *
-   * @var string
+   * @var array
    */
-  protected $values;
+  protected array $values;
 
   /**
    * Constructs an EditorDialogSave object.
    *
-   * @param string $values
+   * @param array $values
    *   The values that should be passed to the form constructor in Drupal.
    */
-  public function __construct($values) {
+  public function __construct(array $values) {
     $this->values = $values;
   }
 
