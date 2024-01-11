@@ -25,7 +25,6 @@ class HandlerAllTest extends ViewTestBase {
    * @var array
    */
   protected static $modules = [
-    'book',
     'block',
     'comment',
     'contact',

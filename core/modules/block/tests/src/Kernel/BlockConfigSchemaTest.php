@@ -20,7 +20,6 @@ class BlockConfigSchemaTest extends KernelTestBase {
    */
   protected static $modules = [
     'block',
-    'book',
     'block_content',
     'comment',
     'node',
@@ -56,7 +55,6 @@ class BlockConfigSchemaTest extends KernelTestBase {
     $this->installEntitySchema('block_content');
     $this->installEntitySchema('taxonomy_term');
     $this->installEntitySchema('node');
-    $this->installSchema('book', ['book']);
     $this->container->get('theme_installer')->install(['stark']);
   }
 
