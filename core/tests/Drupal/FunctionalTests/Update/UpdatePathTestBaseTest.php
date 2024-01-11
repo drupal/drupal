@@ -224,16 +224,10 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
   }
 
   /**
-   * Tests the database fixtures are setup correctly.
+   * Tests that setup is done correctly.
    */
-  public function testFixturesSetup() {
+  public function testSetup() {
     $this->assertCount(3, $this->databaseDumpFiles);
-  }
-
-  /**
-   * Tests that settings are prepared correctly.
-   */
-  public function testPrepareSettings(): void {
     $this->assertSame(1, Settings::get('entity_update_batch_size'));
   }
 
