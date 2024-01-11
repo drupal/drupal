@@ -210,8 +210,8 @@ class NodeTypeTest extends NodeTestBase {
     $locked = \Drupal::state()->get('node.type.locked');
     $locked['default'] = 'default';
     \Drupal::state()->set('node.type.locked', $locked);
-    // Call to flush all caches after installing the forum module in the same
-    // way installing a module through the UI does.
+    // Call to flush all caches after installing the node_test_config module in
+    // the same way installing a module through the UI does.
     $this->resetAll();
     $this->drupalGet('admin/structure/types/manage/default');
     $this->assertSession()->linkNotExists('Delete');

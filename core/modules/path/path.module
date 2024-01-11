@@ -148,7 +148,7 @@ function path_field_widget_single_element_form_alter(&$element, FormStateInterfa
     }
 
     if ($field_name === 'path') {
-      $element['value']['#description'] = t('Specify the existing path you wish to alias. For example: /node/28, /forum/1, /taxonomy/term/1.');
+      $element['value']['#description'] = t('Specify the existing path you wish to alias. For example: /node/28, /media/1, /taxonomy/term/1.');
     }
 
     if ($field_name === 'alias') {

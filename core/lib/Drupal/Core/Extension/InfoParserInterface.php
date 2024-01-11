@@ -40,7 +40,7 @@ interface InfoParserInterface {
    *     can contain "x" as a wildcard. Examples: (>=8.22, <8.28), (8.x-3.x).
    * - package: The name of the package of modules this module belongs to.
    *
-   * See forum.info.yml for an example of a module .info.yml file.
+   * See node.info.yml for an example of a module .info.yml file.
    *
    * Information stored in a theme .info.yml file:
    * - screenshot: Path to screenshot relative to the theme's .info.yml file.

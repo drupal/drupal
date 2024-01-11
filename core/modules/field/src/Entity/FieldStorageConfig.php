@@ -161,7 +161,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    * are no remaining fields using them. If multiple modules provide bundles
    * which need to use the same field storage then setting this to TRUE will
    * preserve the field storage regardless of what happens to the bundles. The
-   * classic use case for this is node body field storage since Book, Forum, the
+   * classic use case for this is node body field storage since Book, the
    * Standard profile and bundle (node type) creation through the UI all use
    * same field storage.
    *

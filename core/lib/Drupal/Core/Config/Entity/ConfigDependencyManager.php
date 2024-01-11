@@ -68,11 +68,11 @@ use Drupal\Component\Graph\Graph;
  *
  * If an extension author wants a configuration entity to depend on something
  * that is not calculable then they can add these dependencies to the enforced
- * dependencies key. For example, the Forum module provides the forum node type
- * and in order for it to be deleted when the forum module is uninstalled it has
- * an enforced dependency on the module. The dependency on the Forum module can
- * not be calculated since there is nothing inherent in the state of the node
- * type configuration entity that depends on functionality provided by the Forum
+ * dependencies key. For example, a custom module that provides a node type can
+ * have that type deleted when the module is uninstalled, if it has an enforced
+ * dependency on the module. The dependency on the custom module can not be
+ * calculated since there is nothing inherent in the state of the node type
+ * configuration entity that depends on functionality provided by the custom
  * module.
  *
  * Once declared properly, dependencies are saved to the configuration entity's
