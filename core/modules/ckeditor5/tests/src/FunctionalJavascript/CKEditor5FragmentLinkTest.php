@@ -100,8 +100,6 @@ class CKEditor5FragmentLinkTest extends WebDriverTestBase {
 
     $this->drupalGet('node/add/page');
 
-    $session->getPage();
-
     // Add a bottom margin to the title field to be sure the body field is not
     // visible.
     $session->executeScript("document.getElementById('edit-title-0-value').style.marginBottom = window.innerHeight*2 +'px';");
