@@ -201,3 +201,14 @@ function system_post_update_amend_config_sync_readme_url() {
   file_put_contents($readme_path, $changed_content);
   return \t('Amended configuration synchronization readme file content.');
 }
+
+/**
+ * Adds default value for the mail_notification config parameter.
+ */
+function system_post_update_mail_notification_setting() {
+  $config = \Drupal::configFactory()->getEditable('system.site');
+  // If the value doesn't exist it always returns NULL.
+  if (is_null($config->get('mail_notification'))) {
+    $config->set('mail_notification', NULL)->save();
+  }
+}

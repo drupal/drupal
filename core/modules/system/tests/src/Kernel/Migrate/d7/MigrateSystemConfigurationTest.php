@@ -118,6 +118,7 @@ class MigrateSystemConfigurationTest extends MigrateDrupal7TestBase {
       'admin_compact_mode' => TRUE,
       'weight_select_max' => 100,
       'default_langcode' => 'en',
+      'mail_notification' => NULL,
     ],
   ];
 

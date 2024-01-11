@@ -10,3 +10,4 @@ page:
 admin_compact_mode: false
 weight_select_max: 91
 default_langcode: en
+mail_notification: null
