@@ -46,7 +46,7 @@ abstract class DatabaseTestBase extends KernelTestBase {
         'age' => 25,
       ])
       ->values([
-        'name' => 'Fozzie',
+        'name' => 'Ernie',
         'age' => NULL,
       ])
       ->values([

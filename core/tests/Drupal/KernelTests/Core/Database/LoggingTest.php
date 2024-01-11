@@ -200,7 +200,7 @@ class LoggingTest extends DatabaseTestBase {
         ],
       ],
       [
-        'file' => '/var/www/libraries/drudbal/lib/Statement.php',
+        'file' => '/var/www/libraries/test/lib/Statement.php',
         'line' => 264,
         'function' => 'log',
         'class' => 'Drupal\\Core\\Database\\Log',
@@ -211,7 +211,7 @@ class LoggingTest extends DatabaseTestBase {
         ],
       ],
       [
-        'file' => '/var/www/libraries/drudbal/lib/Connection.php',
+        'file' => '/var/www/libraries/test/lib/Connection.php',
         'line' => 213,
         'function' => 'execute',
         'class' => 'Drupal\\Driver\\Database\\dbal\\Statement',
@@ -323,7 +323,7 @@ class LoggingTest extends DatabaseTestBase {
         [
           'class' => 'Drupal\\Driver\\Database\\dbal\\Statement',
           'function' => 'execute',
-          'file' => '/var/www/libraries/drudbal/lib/Statement.php',
+          'file' => '/var/www/libraries/test/lib/Statement.php',
           'line' => 264,
           'type' => '->',
           'args' => [

@@ -12,6 +12,8 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\Container;
 
+// cspell:ignore cnenzrgre
+
 /**
  * @coversDefaultClass \Drupal\Core\Cache\Context\CacheContextsManager
  * @group Cache

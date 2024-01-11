@@ -548,7 +548,7 @@ class UpdateScriptTest extends BrowserTestBase {
    * Data provider for ::testMissingExtension().
    *
    * @return array[]
-   *   Set of testcases to pass to the test method.
+   *   Set of test cases to pass to the test method.
    */
   public function providerMissingExtension(): array {
     return [

@@ -235,7 +235,7 @@ class SelectTest extends DatabaseTestBase {
       ->execute()->fetchCol();
 
     $this->assertCount(1, $names, 'Correct number of records found with NULL age.');
-    $this->assertEquals('Fozzie', $names[0], 'Correct record returned for NULL age.');
+    $this->assertEquals('Ernie', $names[0], 'Correct record returned for NULL age.');
   }
 
   /**

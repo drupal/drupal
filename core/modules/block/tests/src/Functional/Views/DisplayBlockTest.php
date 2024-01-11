@@ -292,7 +292,7 @@ class DisplayBlockTest extends ViewTestBase {
   }
 
   /**
-   * Tests the various testcases of empty block rendering.
+   * Tests the various test cases of empty block rendering.
    */
   public function testBlockEmptyRendering() {
     $url = new Url('test_page_test.test_page');

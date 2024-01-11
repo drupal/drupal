@@ -43,9 +43,9 @@ class DistributionProfileExistingSettingsTest extends InstallerTestBase {
       ],
     ];
     // File API functions are not available yet.
-    $path = $this->siteDirectory . '/profiles/my_distro';
+    $path = $this->siteDirectory . '/profiles/my_distribution';
     mkdir($path, 0777, TRUE);
-    file_put_contents("$path/my_distro.info.yml", Yaml::encode($this->info));
+    file_put_contents("$path/my_distribution.info.yml", Yaml::encode($this->info));
 
     // Pre-configure hash salt.
     // Any string is valid, so simply use the class name of this test.
@@ -120,11 +120,11 @@ class DistributionProfileExistingSettingsTest extends InstallerTestBase {
     $this->assertSession()->pageTextContains($this->rootUser->getAccountName());
 
     // Confirm that Drupal recognizes this distribution as the current profile.
-    $this->assertEquals('my_distro', \Drupal::installProfile());
-    $this->assertEquals('my_distro', $this->config('core.extension')->get('profile'), 'The install profile has been written to core.extension configuration.');
+    $this->assertEquals('my_distribution', \Drupal::installProfile());
+    $this->assertEquals('my_distribution', $this->config('core.extension')->get('profile'), 'The install profile has been written to core.extension configuration.');
 
     $this->rebuildContainer();
-    $this->assertEquals('my_distro', \Drupal::installProfile());
+    $this->assertEquals('my_distribution', \Drupal::installProfile());
   }
 
 }

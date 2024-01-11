@@ -19,7 +19,7 @@ class ContextualUnitTest extends KernelTestBase {
   protected static $modules = ['contextual'];
 
   /**
-   * Provides testcases for both test functions.
+   * Provides test cases for both test functions.
    *
    * Used in testContextualLinksToId() and testContextualIdToLinks().
    *
