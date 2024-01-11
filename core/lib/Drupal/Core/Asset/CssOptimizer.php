@@ -106,8 +106,8 @@ class CssOptimizer implements AssetOptimizerInterface {
    * color.module enabled themes with CSS aggregation turned off.
    *
    * Note: the only reason this method is public is so color.module can call it;
-   * it is not on the AssetOptimizerInterface, so future refactorings can make
-   * it protected.
+   * it is not on the AssetOptimizerInterface, so any future refactoring can
+   * make it protected.
    *
    * @param $file
    *   Name of the stylesheet to be processed.
@@ -271,8 +271,8 @@ class CssOptimizer implements AssetOptimizerInterface {
    * Prefixes all paths within a CSS file for processFile().
    *
    * Note: the only reason this method is public is so color.module can call it;
-   * it is not on the AssetOptimizerInterface, so future refactorings can make
-   * it protected.
+   * it is not on the AssetOptimizerInterface, so any future refactoring can
+   * make it protected.
    *
    * @param array $matches
    *   An array of matches by a preg_replace_callback() call that scans for

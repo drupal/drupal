@@ -35,7 +35,7 @@ class PathProcessorFront implements InboundPathProcessorInterface {
     if ($path === '/') {
       $path = $this->config->get('system.site')->get('page.front');
       if (empty($path)) {
-        // We have to return a valid path but / won't be routable and config
+        // We have to return a valid path but / does not have a route and config
         // might be broken so stop execution.
         throw new NotFoundHttpException();
       }

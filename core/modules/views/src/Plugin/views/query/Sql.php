@@ -1293,10 +1293,10 @@ class Sql extends QueryPluginBase {
   }
 
   /**
-   * Generates a query and a countquery from all of the information supplied.
+   * Generates a query and count query from all of the information supplied.
    *
    * @param $get_count
-   *   Provide a countquery if this is true, otherwise provide a normal query.
+   *   Provide a countQuery if this is true, otherwise provide a normal query.
    */
   public function query($get_count = FALSE) {
     // Check query distinct value.

@@ -223,8 +223,8 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
   /**
    * Gets the names of all fields edited in the form.
    *
-   * If the entity form customly adds some fields to the form (i.e. without
-   * using the form display), it needs to add its fields here and override
+   * If a custom entity form adds some fields to the form (i.e. without using
+   * the form display), it needs to add its fields here and override
    * flagViolations() for displaying the violations.
    *
    * @param \Drupal\Core\Form\FormStateInterface $form_state
@@ -240,8 +240,8 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
   /**
    * Flags violations for the current form.
    *
-   * If the entity form customly adds some fields to the form (i.e. without
-   * using the form display), it needs to add its fields to array returned by
+   * If a custom entity form adds some fields to the form (i.e. without using
+   * the form display), it needs to add its fields to array returned by
    * getEditedFieldNames() and overwrite this method in order to show any
    * violations for those fields; e.g.:
    * @code

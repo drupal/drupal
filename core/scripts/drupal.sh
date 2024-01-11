@@ -22,7 +22,7 @@ if (in_array('--help', $_SERVER['argv']) || empty($_SERVER['argv'])) {
 Execute a Drupal page from the shell.
 
 Usage:        {$script} [OPTIONS] "<URI>"
-Example:      {$script} "http://mysite.org/node"
+Example:      {$script} "http://my-site.org/node"
 
 All arguments are long options.
 

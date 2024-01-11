@@ -17,7 +17,7 @@ class UrlHelper {
   protected static $allowedProtocols = ['http', 'https'];
 
   /**
-   * Parses an array into a valid, rawurlencoded query string.
+   * Parses an array into a valid query string encoded with rawurlencode().
    *
    * Function rawurlencode() is RFC3986 compliant, and as a consequence RFC3987
    * compliant. The latter defines the required format of "URLs" in HTML5.
@@ -34,8 +34,8 @@ class UrlHelper {
    *   nested items. Defaults to an empty string.
    *
    * @return string
-   *   A rawurlencoded string which can be used as or appended to the URL query
-   *   string.
+   *   A string encoded with rawurlencode() which can be used as or appended to
+   *   the URL query string.
    *
    * @ingroup php_wrappers
    */

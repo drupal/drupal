@@ -26,7 +26,7 @@ namespace Drupal\Component\PhpStorage;
  * at the cost of an additional system call for every load() and exists().
  *
  * The containing directory is created with the same name as the virtual file
- * name (slashes replaced with hashmarks) to assist with debugging, since the
+ * name (slashes replaced with hash marks) to assist with debugging, since the
  * file itself is stored with a name that's meaningless to humans.
  */
 class MTimeProtectedFileStorage extends MTimeProtectedFastFileStorage {

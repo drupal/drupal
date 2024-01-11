@@ -60,10 +60,10 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
   protected $groupOperator;
 
   /**
-   * Generate a query and a countquery from all of the information supplied.
+   * Generate a query and a countQuery from all of the information supplied.
    *
    * @param $get_count
-   *   Provide a countquery if this is true, otherwise provide a normal query.
+   *   Provide a countQuery if this is true, otherwise provide a normal query.
    */
   public function query($get_count = FALSE) {}
 

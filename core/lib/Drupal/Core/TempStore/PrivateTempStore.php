@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * A PrivateTempStore can be used to make temporary, non-cache data available
  * across requests. The data for the PrivateTempStore is stored in one
  * key/value collection. PrivateTempStore data expires automatically after a
- * given timeframe.
+ * given time frame.
  *
  * The PrivateTempStore is different from a cache, because the data in it is not
  * yet saved permanently and so it cannot be rebuilt. Typically, the
