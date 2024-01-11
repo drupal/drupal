@@ -220,7 +220,7 @@ class FileUploadHandler {
     }
 
     // A file URI may already have a trailing slash or look like "public://".
-    if (substr($destination, -1) != '/') {
+    if (!str_ends_with($destination, '/')) {
       $destination .= '/';
     }
 

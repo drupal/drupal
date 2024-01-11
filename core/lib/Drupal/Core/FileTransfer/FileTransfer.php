@@ -312,7 +312,7 @@ abstract class FileTransfer {
   public function sanitizePath($path) {
     // Windows path sanitization.
     $path = str_replace('\\', '/', $path);
-    if (substr($path, -1) == '/') {
+    if (str_ends_with($path, '/')) {
       $path = substr($path, 0, -1);
     }
     return $path;

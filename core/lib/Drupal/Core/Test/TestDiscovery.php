@@ -273,10 +273,10 @@ class TestDiscovery {
       // We don't want to discover abstract TestBase classes, traits or
       // interfaces. They can be deprecated and will call @trigger_error()
       // during discovery.
-      return substr($file_name, -4) === '.php' &&
-        substr($file_name, -12) !== 'TestBase.php' &&
-        substr($file_name, -9) !== 'Trait.php' &&
-        substr($file_name, -13) !== 'Interface.php';
+      return str_ends_with($file_name, '.php') &&
+        !str_ends_with($file_name, 'TestBase.php') &&
+        !str_ends_with($file_name, 'Trait.php') &&
+        !str_ends_with($file_name, 'Interface.php');
     });
     $files = new \RecursiveIteratorIterator($filter);
     $classes = [];

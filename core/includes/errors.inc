@@ -67,7 +67,7 @@ function _drupal_error_handler_real($error_level, $message, $filename, $line) {
     // As __toString() methods must not throw exceptions (recoverable errors)
     // in PHP, we allow them to trigger a fatal error by emitting a user error
     // using trigger_error().
-    $to_string = $error_level == E_USER_ERROR && substr($caller['function'], -strlen('__toString()')) == '__toString()';
+    $to_string = $error_level == E_USER_ERROR && str_ends_with($caller['function'], '__toString()');
     _drupal_log_error([
       '%type' => isset($types[$error_level]) ? $severity_msg : 'Unknown error',
       // The standard PHP error handler considers that the error messages

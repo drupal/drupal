@@ -35,7 +35,7 @@ class DataReferenceDefinition extends DataDefinition implements DataReferenceDef
    * {@inheritdoc}
    */
   public static function createFromDataType($data_type) {
-    if (substr($data_type, -strlen('_reference')) != '_reference') {
+    if (!str_ends_with($data_type, '_reference')) {
       throw new \InvalidArgumentException('Data type must be of the form "{TARGET_TYPE}_reference"');
     }
     // Cut of the _reference suffix.

@@ -596,7 +596,7 @@ class FileSystem implements FileSystemInterface {
     }
 
     // A URI or path may already have a trailing slash or look like "public://".
-    if (substr($directory, -1) == '/') {
+    if (str_ends_with($directory, '/')) {
       $separator = '';
     }
     else {
@@ -711,7 +711,7 @@ class FileSystem implements FileSystemInterface {
       while (FALSE !== ($filename = readdir($handle))) {
         // Skip this file if it matches the nomask or starts with a dot.
         if ($filename[0] != '.' && !(preg_match($options['nomask'], $filename))) {
-          if (substr($dir, -1) == '/') {
+          if (str_ends_with($dir, '/')) {
             $uri = "$dir$filename";
           }
           else {

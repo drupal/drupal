@@ -210,7 +210,7 @@ class FileCopy extends FileProcessBase implements ContainerFactoryPluginInterfac
    */
   protected function getDirectory($uri) {
     $dir = $this->fileSystem->dirname($uri);
-    if (substr($dir, -3) == '://') {
+    if (str_ends_with($dir, '://')) {
       return $this->fileSystem->realpath($dir);
     }
     return $dir;

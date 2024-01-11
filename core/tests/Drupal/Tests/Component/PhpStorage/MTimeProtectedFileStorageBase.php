@@ -81,7 +81,7 @@ abstract class MTimeProtectedFileStorageBase extends PhpStorageTestBase {
     $name = 'test.php';
     $php->save($name, '<?php');
     $expected_root_directory = $this->directory . '/test';
-    if (substr($name, -4) === '.php') {
+    if (str_ends_with($name, '.php')) {
       $expected_directory = $expected_root_directory . '/' . substr($name, 0, -4);
     }
     else {

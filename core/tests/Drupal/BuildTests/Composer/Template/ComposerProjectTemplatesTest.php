@@ -425,7 +425,7 @@ JSON;
       // Strip off "-dev";
       $version_towards = substr($version, 0, -4);
 
-      if (substr($version_towards, -2) !== '.0') {
+      if (!str_ends_with($version_towards, '.0')) {
         // If the current version is developing towards an x.y.z release where
         // z is not 0, it means that the x.y.0 has already been released, and
         // only stable changes are permitted on the branch.

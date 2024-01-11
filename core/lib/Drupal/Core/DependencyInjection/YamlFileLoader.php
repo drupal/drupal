@@ -484,7 +484,7 @@ class YamlFileLoader
                 $invalidBehavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE;
             }
 
-            if ('=' === substr($value, -1)) {
+            if (str_ends_with($value, '=')) {
                 $value = substr($value, 0, -1);
             }
 

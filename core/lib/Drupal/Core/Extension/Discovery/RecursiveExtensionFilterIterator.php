@@ -156,14 +156,14 @@ class RecursiveExtensionFilterIterator extends \RecursiveFilterIterator {
       // config module to be overridden/replaced in a profile/site directory
       // (whereas it must be located directly in a modules directory).
       if ($name == 'config') {
-        return substr($this->current()->getPathname(), -14) == 'modules/config';
+        return str_ends_with($this->current()->getPathname(), 'modules/config');
       }
       // Accept the directory unless the folder is skipped.
       return !in_array($name, $this->skippedFolders, TRUE);
     }
     else {
       // Only accept extension info files.
-      return substr($name, -9) == '.info.yml';
+      return str_ends_with($name, '.info.yml');
     }
   }
 

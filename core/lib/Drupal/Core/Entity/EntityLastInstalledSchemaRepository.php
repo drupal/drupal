@@ -69,7 +69,7 @@ class EntityLastInstalledSchemaRepository implements EntityLastInstalledSchemaRe
 
     // Filter out field storage definitions.
     $filtered_keys = array_filter(array_keys($all_definitions), function ($key) {
-        return substr($key, -12) === '.entity_type';
+        return str_ends_with($key, '.entity_type');
     });
     $entity_type_definitions = array_intersect_key($all_definitions, array_flip($filtered_keys));
 

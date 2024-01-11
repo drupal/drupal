@@ -144,7 +144,7 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
 
     // Load the database(s).
     foreach ($this->databaseDumpFiles as $file) {
-      if (substr($file, -3) == '.gz') {
+      if (str_ends_with($file, '.gz')) {
         $file = "compress.zlib://$file";
       }
       require $file;
