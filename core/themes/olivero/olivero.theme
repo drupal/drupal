@@ -646,9 +646,20 @@ function olivero_form_views_exposed_form_alter(&$form) {
 function _olivero_hex_to_hsl(string $hex_string) {
   // Convert hexcode pairs to rgb values (0-255).
   $hex_val = trim($hex_string, '#');
-  $r0 = hexdec($hex_val[0] . $hex_val[1]);
-  $g0 = hexdec($hex_val[2] . $hex_val[3]);
-  $b0 = hexdec($hex_val[4] . $hex_val[5]);
+
+  $r0 = $g0 = $b0 = '00';
+
+  if (strlen($hex_val) === 6) {
+    $r0 = hexdec($hex_val[0] . $hex_val[1]);
+    $g0 = hexdec($hex_val[2] . $hex_val[3]);
+    $b0 = hexdec($hex_val[4] . $hex_val[5]);
+  }
+
+  if (strlen($hex_val) === 3) {
+    $r0 = hexdec($hex_val[0] . $hex_val[0]);
+    $g0 = hexdec($hex_val[1] . $hex_val[1]);
+    $b0 = hexdec($hex_val[2] . $hex_val[2]);
+  }
 
   // Convert rgb's 0-255 to decimal values.
   $r = fdiv($r0, 255);

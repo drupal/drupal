@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Component\Utility\Color;
 
 /**
  * Implements hook_form_FORM_ID_alter() for system_theme_settings.
@@ -107,10 +108,11 @@ function olivero_form_system_theme_settings_alter(&$form, FormStateInterface $fo
       '#maxlength' => 7,
       '#size' => 10,
       '#title' => t($title),
-      '#description' => t('Enter color in full hexadecimal format (#abc123).') . '<br/>' . t('Derivatives will be formed from this color.'),
+      '#description' => t('Enter color in hexadecimal format (#abc123).') . '<br/>' . t('Derivatives will be formed from this color.'),
       '#default_value' => theme_get_setting($key),
       '#attributes' => [
-        'pattern' => '^#[a-fA-F0-9]{6}',
+        // Regex copied from Color::validateHex()
+        'pattern' => '^[#]?([0-9a-fA-F]{3}){1,2}$',
       ],
       '#wrapper_attributes' => [
         'data-drupal-selector' => 'olivero-color-picker',
@@ -123,7 +125,7 @@ function olivero_form_system_theme_settings_alter(&$form, FormStateInterface $fo
  * Validation handler for the Olivero system_theme_settings form.
  */
 function olivero_theme_settings_validate($form, FormStateInterface $form_state) {
-  if (!preg_match('/^#[a-fA-F0-9]{6}$/', $form_state->getValue('base_primary_color'))) {
+  if (!Color::validateHex($form_state->getValue('base_primary_color'))) {
     $form_state->setErrorByName('base_primary_color', t('Colors must be 7-character string specifying a color hexadecimal format.'));
   }
 }
