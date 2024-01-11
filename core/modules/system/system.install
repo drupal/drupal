@@ -122,7 +122,7 @@ function system_requirements($phase) {
     // Warn if any experimental modules are installed.
     if (!empty($experimental_modules)) {
       $requirements['experimental_modules'] = [
-        'title' => t('Experimental modules enabled'),
+        'title' => t('Experimental modules installed'),
         'value' => t('Experimental modules found: %module_list. <a href=":url">Experimental modules</a> are provided for testing purposes only. Use at your own risk.', ['%module_list' => implode(', ', $experimental_modules), ':url' => 'https://www.drupal.org/core/experimental']),
         'severity' => REQUIREMENT_WARNING,
       ];
@@ -133,7 +133,7 @@ function system_requirements($phase) {
         $deprecated_modules_link_list[] = (string) Link::fromTextAndUrl($deprecated_module['name'], Url::fromUri($deprecated_module['lifecycle_link']))->toString();
       }
       $requirements['deprecated_modules'] = [
-        'title' => t('Deprecated modules enabled'),
+        'title' => t('Deprecated modules installed'),
         'value' => t('Deprecated modules found: %module_list.', [
           '%module_list' => Markup::create(implode(', ', $deprecated_modules_link_list)),
         ]),
@@ -141,7 +141,7 @@ function system_requirements($phase) {
       ];
     }
 
-    // Gather all obsolete and experimental themes being enabled.
+    // Gather all obsolete and experimental themes being installed.
     $experimental_themes = [];
     $deprecated_themes = [];
     $installed_themes = \Drupal::service('theme_handler')->listInfo();
@@ -168,23 +168,23 @@ function system_requirements($phase) {
       }
     }
 
-    // Warn if any experimental themes are enabled.
+    // Warn if any experimental themes are installed.
     if (!empty($experimental_themes)) {
       $requirements['experimental_themes'] = [
-        'title' => t('Experimental themes enabled'),
+        'title' => t('Experimental themes installed'),
         'value' => t('Experimental themes found: %theme_list. Experimental themes are provided for testing purposes only. Use at your own risk.', ['%theme_list' => implode(', ', $experimental_themes)]),
         'severity' => REQUIREMENT_WARNING,
       ];
     }
 
-    // Warn if any deprecated themes are enabled.
+    // Warn if any deprecated themes are installed.
     if (!empty($deprecated_themes)) {
       foreach ($deprecated_themes as $deprecated_theme) {
         $deprecated_themes_link_list[] = (string) Link::fromTextAndUrl($deprecated_theme['name'], Url::fromUri($deprecated_theme['lifecycle_link']))->toString();
 
       }
       $requirements['deprecated_themes'] = [
-        'title' => t('Deprecated themes enabled'),
+        'title' => t('Deprecated themes installed'),
         'value' => t('Deprecated themes found: %theme_list.', [
           '%theme_list' => Markup::create(implode(', ', $deprecated_themes_link_list)),
         ]),
@@ -192,13 +192,13 @@ function system_requirements($phase) {
       ];
     }
 
-    // Warn if any obsolete extensions (themes or modules) are enabled.
+    // Warn if any obsolete extensions (themes or modules) are installed.
     if (!empty($obsolete_extensions)) {
       foreach ($obsolete_extensions as $obsolete_extension) {
         $obsolete_extensions_link_list[] = (string) Link::fromTextAndUrl($obsolete_extension['name'], Url::fromUri($obsolete_extension['lifecycle_link']))->toString();
       }
       $requirements['obsolete_extensions'] = [
-        'title' => t('Obsolete extensions enabled'),
+        'title' => t('Obsolete extensions installed'),
         'value' => t('Obsolete extensions found: %extensions. Obsolete extensions are provided only so that they can be uninstalled cleanly. You should immediately <a href=":uninstall_url">uninstall these extensions</a> since they may be removed in a future release.', [
           '%extensions' => Markup::create(implode(', ', $obsolete_extensions_link_list)),
           ':uninstall_url' => Url::fromRoute('system.modules_uninstall')->toString(),
@@ -1379,7 +1379,7 @@ function system_requirements($phase) {
   }
 
   // When the database driver is provided by a module, then check that the
-  // providing module is enabled.
+  // providing module is installed.
   if ($phase === 'runtime' || $phase === 'update') {
     $connection = Database::getConnection();
     $provider = $connection->getProvider();
@@ -1390,11 +1390,11 @@ function system_requirements($phase) {
         $pending_updates = $post_update_registry->getPendingUpdateInformation();
         if (!in_array('enable_provider_database_driver', array_keys($pending_updates['system']['pending'] ?? []), TRUE)) {
           // Only show the warning when the post update function has run and
-          // the module that is providing the database driver is not enabled.
+          // the module that is providing the database driver is not installed.
           $requirements['database_driver_provided_by_module'] = [
             'title' => t('Database driver provided by module'),
-            'value' => t('Not enabled'),
-            'description' => t('The current database driver is provided by the module: %module. The module is currently not enabled. You should immediately <a href=":enable">enable</a> the module.', ['%module' => $provider, ':enable' => Url::fromRoute('system.modules_list')->toString()]),
+            'value' => t('Not installed'),
+            'description' => t('The current database driver is provided by the module: %module. The module is currently not installed. You should immediately <a href=":install">install</a> the module.', ['%module' => $provider, ':install' => Url::fromRoute('system.modules_list')->toString()]),
             'severity' => REQUIREMENT_ERROR,
           ];
         }

@@ -69,10 +69,10 @@ class DatabaseDriverProvidedByModuleTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/status');
     $this->assertSession()->statusCodeEquals(200);
 
-    // The module driver_test is not enabled and is providing to current
+    // The module driver_test is not installed and is providing to current
     // database driver. Check that the correct error is shown.
     $this->assertSession()->pageTextContains('Database driver provided by module');
-    $this->assertSession()->pageTextContains('The current database driver is provided by the module: driver_test. The module is currently not enabled. You should immediately enable the module.');
+    $this->assertSession()->pageTextContains('The current database driver is provided by the module: driver_test. The module is currently not installed. You should immediately install the module.');
   }
 
 }

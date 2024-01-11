@@ -92,7 +92,7 @@ class ThemeUiTest extends BrowserTestBase {
     $this->drupalGet('admin/appearance');
     $assert_module_enabled_message = function ($enabled_modules) {
       $count = count($enabled_modules);
-      $module_enabled_text = $count === 1 ? "{$this->testModules[$enabled_modules[0]]} has been enabled." : $count . " modules have been enabled:";
+      $module_enabled_text = $count === 1 ? "{$this->testModules[$enabled_modules[0]]} has been installed." : $count . " modules have been installed:";
       $this->assertSession()->pageTextContains($module_enabled_text);
     };
     // All the modules should be listed as disabled.

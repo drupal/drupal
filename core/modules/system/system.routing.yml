@@ -288,7 +288,7 @@ system.modules_list_confirm:
   path: '/admin/modules/list/confirm'
   defaults:
     _form: '\Drupal\system\Form\ModulesListConfirmForm'
-    _title: 'Some required modules must be enabled'
+    _title: 'Some required modules must be installed'
   requirements:
     _permission: 'administer modules'
 

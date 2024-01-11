@@ -80,7 +80,7 @@ class ModulesListConfirmForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Some required modules must be enabled');
+    return $this->t('Some required modules must be installed');
   }
 
   /**
@@ -146,7 +146,7 @@ class ModulesListConfirmForm extends ConfirmFormBase {
       // Display a list of required modules that have to be installed as well
       // but were not manually selected.
       foreach ($this->modules['dependencies'] as $module => $dependencies) {
-        $items[] = $this->formatPlural(count($dependencies), 'You must enable the @required module to install @module.', 'You must enable the @required modules to install @module.', [
+        $items[] = $this->formatPlural(count($dependencies), 'You must install the @required module to install @module.', 'You must install the @required modules to install @module.', [
           '@module' => $this->modules['install'][$module],
           // It is safe to implode this because module names are not translated
           // markup and so will not be double-escaped.

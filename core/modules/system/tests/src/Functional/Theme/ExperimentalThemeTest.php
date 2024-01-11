@@ -104,7 +104,7 @@ class ExperimentalThemeTest extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('The following themes are experimental: Experimental dependency test');
 
     // There should be a message about enabling dependencies.
-    $this->assertSession()->pageTextContains('You must enable the Experimental test theme to install Experimental dependency test');
+    $this->assertSession()->pageTextContains('You must install the Experimental test theme to install Experimental dependency test');
 
     // Enable the theme and confirm that it worked.
     $this->submitForm([], 'Continue');

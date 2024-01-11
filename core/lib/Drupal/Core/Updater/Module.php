@@ -130,7 +130,7 @@ class Module extends Updater implements UpdaterInterface {
       ],
       $default_options + [
         '#url' => Url::fromRoute('system.modules_list'),
-        '#title' => t('Enable newly added modules'),
+        '#title' => t('Install newly added modules'),
       ],
       $default_options + [
         '#url' => Url::fromRoute('system.admin'),

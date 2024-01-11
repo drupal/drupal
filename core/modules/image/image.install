@@ -61,7 +61,7 @@ function image_requirements($phase) {
       'image.toolkit' => [
         'title' => t('Image toolkit'),
         'value' => t('None'),
-        'description' => t("No image toolkit is configured on the site. Check PHP installed extensions or add a contributed toolkit that doesn't require a PHP extension. Make sure that at least one valid image toolkit is enabled."),
+        'description' => t("No image toolkit is configured on the site. Check PHP installed extensions or add a contributed toolkit that doesn't require a PHP extension. Make sure that at least one valid image toolkit is installed."),
         'severity' => REQUIREMENT_ERROR,
       ],
     ];

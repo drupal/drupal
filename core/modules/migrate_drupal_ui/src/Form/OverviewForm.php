@@ -51,7 +51,7 @@ class OverviewForm extends MigrateUpgradeFormBase {
 
     $info[] = $this->t('Make sure that <strong>access to the database</strong> for the old site is available from this new site.');
     $info[] = $this->t('<strong>If the old site has private files</strong>, a copy of its files directory must also be accessible on the host of this new site.');
-    $info[] = $this->t('<strong>Enable all modules on this new site</strong> that are enabled on the old site. For example, if the old site uses the Book module, then enable the Book module on this new site so that the existing data can be imported to it.');
+    $info[] = $this->t('<strong>Install all modules on this new site</strong> that are enabled on the old site. For example, if the old site uses the Book module, then install the Book module on this new site so that the existing data can be imported to it.');
     $info[] = $this->t('<strong>Do not add any content to the new site</strong> before upgrading. Any existing content is likely to be overwritten by the upgrade process. See <a href=":url">the upgrade preparation guide</a>.', [
       ':url' => 'https://www.drupal.org/docs/8/upgrade/preparing-an-upgrade#do_not_create_content',
     ]);

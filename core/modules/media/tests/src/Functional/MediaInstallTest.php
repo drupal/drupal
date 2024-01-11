@@ -43,7 +43,7 @@ class MediaInstallTest extends BrowserTestBase {
     $page->checkField('modules[media][enable]');
     $page->pressButton('Install');
     $assert_session->pageTextNotContains('could not be moved/copied because a file by that name already exists in the destination directory');
-    $assert_session->pageTextContains('Module Media has been enabled');
+    $assert_session->pageTextContains('Module Media has been installed');
   }
 
 }

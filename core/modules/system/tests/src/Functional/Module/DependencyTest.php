@@ -45,7 +45,7 @@ class DependencyTest extends ModuleTestBase {
     $edit['modules[content_translation][enable]'] = 'content_translation';
     $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
-    $this->assertSession()->pageTextContains('Some required modules must be enabled');
+    $this->assertSession()->pageTextContains('Some required modules must be installed');
 
     $this->assertModules(['content_translation', 'language'], FALSE);
 
@@ -53,7 +53,7 @@ class DependencyTest extends ModuleTestBase {
     $this->assertNoModuleConfig('language');
 
     $this->submitForm([], 'Continue');
-    $this->assertSession()->pageTextContains('2 modules have been enabled: Content Translation, Language.');
+    $this->assertSession()->pageTextContains('2 modules have been installed: Content Translation, Language.');
     $this->assertModules(['content_translation', 'language'], TRUE);
 
     // Assert that the language YAML files were created.
@@ -151,7 +151,7 @@ class DependencyTest extends ModuleTestBase {
     $edit['modules[system_no_module_version_dependency_test][enable]'] = 'system_no_module_version_dependency_test';
     $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
-    $this->assertSession()->pageTextContains('2 modules have been enabled: System no module version dependency test, System no module version test.');
+    $this->assertSession()->pageTextContains('2 modules have been installed: System no module version dependency test, System no module version test.');
 
     // Ensure status report is working.
     $this->drupalLogin($this->createUser(['administer site configuration']));
@@ -257,7 +257,7 @@ class DependencyTest extends ModuleTestBase {
     $this->assertModules(['dblog'], FALSE);
     // Note that dependencies are sorted alphabetically in the confirmation
     // message.
-    $this->assertSession()->pageTextContains('You must enable the Configuration Manager, Help modules to install Database Logging.');
+    $this->assertSession()->pageTextContains('You must install the Configuration Manager, Help modules to install Database Logging.');
 
     $edit['modules[config][enable]'] = 'config';
     $edit['modules[help][enable]'] = 'help';

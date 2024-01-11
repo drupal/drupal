@@ -44,16 +44,16 @@ trait ModulesEnabledTrait {
     if ($url->access($this->currentUser())) {
       return $this->formatPlural(
         count($modules),
-        'Module %name has been enabled. Configure <a href=":link">related permissions</a>.',
-        '@count modules have been enabled: %names. Configure <a href=":link">related permissions</a>.',
+        'Module %name has been installed. Configure <a href=":link">related permissions</a>.',
+        '@count modules have been installed: %names. Configure <a href=":link">related permissions</a>.',
         $t_args + [':link' => $url->toString()]
       );
     }
 
     return $this->formatPlural(
       count($modules),
-      'Module %name has been enabled.',
-      '@count modules have been enabled: %names.',
+      'Module %name has been installed.',
+      '@count modules have been installed: %names.',
       $t_args
     );
   }
