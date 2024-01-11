@@ -173,7 +173,7 @@ class ConfigSingleExportForm extends FormBase {
       foreach ($entity_storage->loadMultiple() as $entity) {
         $entity_id = $entity->id();
         if ($label = $entity->label()) {
-          $names[$entity_id] = new TranslatableMarkup('@label (@id)', ['@label' => $label, '@id' => $entity_id]);
+          $names[$entity_id] = new TranslatableMarkup('@id (@label)', ['@label' => $label, '@id' => $entity_id]);
         }
         else {
           $names[$entity_id] = $entity_id;

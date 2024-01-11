@@ -278,7 +278,7 @@ EOD;
     // Verify that the fallback date format config entity is selected when
     // specified in the URL.
     $this->drupalGet('admin/config/development/configuration/single/export/date_format/fallback');
-    $option_node = $this->assertSession()->optionExists("config_name", 'Fallback date format (fallback)');
+    $option_node = $this->assertSession()->optionExists("config_name", 'fallback (Fallback date format)');
     $this->assertTrue($option_node->isSelected());
     $fallback_date = \Drupal::entityTypeManager()->getStorage('date_format')->load('fallback');
     $yaml_text = $this->assertSession()->fieldExists('export')->getValue();
