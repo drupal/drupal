@@ -14,6 +14,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests forum module uninstallation.
  *
  * @group forum
+ * @group #slow
  */
 class ForumUninstallTest extends BrowserTestBase {
 
