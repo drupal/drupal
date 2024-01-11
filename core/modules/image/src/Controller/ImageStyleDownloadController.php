@@ -95,6 +95,8 @@ class ImageStyleDownloadController extends FileDownloadController {
    *   The file scheme, defaults to 'private'.
    * @param \Drupal\image\ImageStyleInterface $image_style
    *   The image style to deliver.
+   * @param string $required_derivative_scheme
+   *   The required scheme for the derivative image.
    *
    * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|\Symfony\Component\HttpFoundation\Response
    *   The transferred file as response or some error response.
@@ -106,7 +108,7 @@ class ImageStyleDownloadController extends FileDownloadController {
    * @throws \Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException
    *   Thrown when the file is still being generated.
    */
-  public function deliver(Request $request, $scheme, ImageStyleInterface $image_style) {
+  public function deliver(Request $request, $scheme, ImageStyleInterface $image_style, string $required_derivative_scheme) {
     $target = $request->query->get('file');
     $image_uri = $scheme . '://' . $target;
     $image_uri = $this->streamWrapperManager->normalizeUri($image_uri);
@@ -153,6 +155,10 @@ class ImageStyleDownloadController extends FileDownloadController {
 
     $derivative_uri = $image_style->buildUri($image_uri);
     $derivative_scheme = $this->streamWrapperManager->getScheme($derivative_uri);
+
+    if ($required_derivative_scheme !== $derivative_scheme) {
+      throw new AccessDeniedHttpException("The scheme for this image doesn't match the scheme for the original image");
+    }
 
     if ($token_is_valid) {
       $is_public = ($scheme !== 'private');

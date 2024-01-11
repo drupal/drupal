@@ -50,6 +50,7 @@ image.style_private:
   path: '/system/files/styles/{image_style}/{scheme}'
   defaults:
     _controller:  '\Drupal\image\Controller\ImageStyleDownloadController::deliver'
+    required_derivative_scheme: 'private'
   requirements:
     _access: 'TRUE'
 
