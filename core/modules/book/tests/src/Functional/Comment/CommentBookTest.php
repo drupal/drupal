@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\comment\Functional;
+namespace Drupal\Tests\book\Functional\Comment;
 
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Tests\CommentTestTrait;
@@ -11,7 +11,7 @@ use Drupal\comment\Entity\Comment;
 /**
  * Tests visibility of comments on book pages.
  *
- * @group comment
+ * @group book
  */
 class CommentBookTest extends BrowserTestBase {
 
