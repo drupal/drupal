@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * A SharedTempStore can be used to make temporary, non-cache data available
  * across requests. The data for the SharedTempStore is stored in one key/value
  * collection. SharedTempStore data expires automatically after a given
- * timeframe.
+ * time frame.
  *
  * The SharedTempStore is different from a cache, because the data in it is not
  * yet saved permanently and so it cannot be rebuilt. Typically, the

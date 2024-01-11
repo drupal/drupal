@@ -24,18 +24,18 @@
  * 'sites/default' will be used.
  *
  * For example, for a fictitious site installed at
- * https://www.drupal.org:8080/mysite/test/, the 'settings.php' file is searched
+ * https://www.drupal.org:8080/my-site/test/, the 'settings.php' file is searched
  * for in the following directories:
  *
- * - sites/8080.www.drupal.org.mysite.test
- * - sites/www.drupal.org.mysite.test
- * - sites/drupal.org.mysite.test
- * - sites/org.mysite.test
+ * - sites/8080.www.drupal.org.my-site.test
+ * - sites/www.drupal.org.my-site.test
+ * - sites/drupal.org.my-site.test
+ * - sites/org.my-site.test
  *
- * - sites/8080.www.drupal.org.mysite
- * - sites/www.drupal.org.mysite
- * - sites/drupal.org.mysite
- * - sites/org.mysite
+ * - sites/8080.www.drupal.org.my-site
+ * - sites/www.drupal.org.my-site
+ * - sites/drupal.org.my-site
+ * - sites/org.my-site
  *
  * - sites/8080.www.drupal.org
  * - sites/www.drupal.org
@@ -46,8 +46,8 @@
  *
  * Note that if you are installing on a non-standard port number, prefix the
  * hostname with that number. For example,
- * https://www.drupal.org:8080/mysite/test/ could be loaded from
- * sites/8080.www.drupal.org.mysite.test/.
+ * https://www.drupal.org:8080/my-site/test/ could be loaded from
+ * sites/8080.www.drupal.org.my-site.test/.
  *
  * @see example.sites.php
  * @see \Drupal\Core\DrupalKernel::getSitePath()

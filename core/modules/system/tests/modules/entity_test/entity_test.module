@@ -32,7 +32,7 @@ const ENTITY_TEST_TYPES_REVISABLE = 1;
 const ENTITY_TEST_TYPES_MULTILINGUAL = 2;
 
 /**
- * Filter that limits test entity list to routeable ones.
+ * Filter that limits test entity list to ones that can be routed.
  */
 const ENTITY_TEST_TYPES_ROUTING = 3;
 

@@ -30,7 +30,7 @@ use Drupal\Component\Utility\ToStringTrait;
  * @method $this setDate(int $year, int $month, int $day)
  * @method $this setISODate(int $year, int $week, int $day = 1)
  * @method $this setTime(int $hour, int $minute, int $second = 0, int $microseconds = 0)
- * @method $this setTimestamp(int $unixtimestamp)
+ * @method $this setTimestamp(int $unix_timestamp)
  * @method $this setTimezone(\DateTimeZone $timezone)
  * @method $this sub(\DateInterval $interval)
  * @method int getOffset()

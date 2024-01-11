@@ -512,7 +512,7 @@ class ViewUI implements ViewEntityInterface {
   }
 
   /**
-   * Add the list of queries run during render to buildinfo.
+   * Add the list of queries run during render to build info.
    *
    * @see ViewUI::startQueryCapture()
    */

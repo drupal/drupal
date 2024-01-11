@@ -17,7 +17,7 @@ class PageViewTest extends NodeTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Tests an anonymous and unpermissioned user attempting to edit the node.
+   * Tests editing a node by users with various access permissions.
    */
   public function testPageView() {
     // Create a node to view.

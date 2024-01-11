@@ -313,7 +313,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
   }
 
   /**
-   * Called to determine what to tell the clicksorter.
+   * Called to determine what to tell the click sorter.
    */
   public function clickSort($order) {
     // No column selected, can't continue.
