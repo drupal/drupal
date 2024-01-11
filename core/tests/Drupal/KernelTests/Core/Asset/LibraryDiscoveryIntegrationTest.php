@@ -128,6 +128,29 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
   }
 
   /**
+   * Tests libraries overrides with multiple parent themes.
+   */
+  public function testLibrariesOverridesMultiple() {
+    /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
+    $theme_installer = $this->container->get('theme_installer');
+    $theme_installer->install(['test_basetheme']);
+    $theme_installer->install(['test_subtheme']);
+    $theme_installer->install(['test_subsubtheme']);
+
+    /** @var \Drupal\Core\Theme\ThemeInitializationInterface $theme_initializer */
+    $theme_initializer = $this->container->get('theme.initialization');
+    $active_theme = $theme_initializer->initTheme('test_subsubtheme');
+
+    $libraries_override = $active_theme->getLibrariesOverride();
+    $expected_order = [
+      'core/modules/system/tests/themes/test_basetheme',
+      'core/modules/system/tests/themes/test_subtheme',
+      'core/modules/system/tests/themes/test_subsubtheme',
+    ];
+    $this->assertEquals($expected_order, array_keys($libraries_override));
+  }
+
+  /**
    * Tests library assets with other ways for specifying paths.
    */
   public function testLibrariesOverrideOtherAssetLibraryNames() {

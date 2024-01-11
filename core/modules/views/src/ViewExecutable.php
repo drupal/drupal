@@ -1485,7 +1485,7 @@ class ViewExecutable {
     // @todo In the long run, it would be great to execute a view without
     //   the theme system at all. See https://www.drupal.org/node/2322623.
     $active_theme = \Drupal::theme()->getActiveTheme();
-    $themes = array_keys($active_theme->getBaseThemeExtensions());
+    $themes = array_reverse(array_keys($active_theme->getBaseThemeExtensions()));
     $themes[] = $active_theme->getName();
 
     // Check for already-cached output.
