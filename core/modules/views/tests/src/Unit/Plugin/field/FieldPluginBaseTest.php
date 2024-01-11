@@ -315,13 +315,11 @@ class FieldPluginBaseTest extends UnitTestCase {
    * @dataProvider providerTestRenderAsLinkWithPathAndOptions
    * @covers ::renderAsLink
    */
-  public function testRenderAsLinkWithPathAndOptions($path, $alter, $link_html, $final_html = NULL) {
+  public function testRenderAsLinkWithPathAndOptions($path, $alter, $final_html) {
     $alter += [
       'make_link' => TRUE,
       'path' => $path,
     ];
-
-    $final_html = $final_html ?? $link_html;
 
     $this->setUpUrlIntegrationServices();
     $this->setupDisplayWithEmptyArgumentsAndFields();
@@ -342,7 +340,7 @@ class FieldPluginBaseTest extends UnitTestCase {
   public function providerTestRenderAsLinkWithPathAndOptions() {
     $data = [];
     // Simple path with default options.
-    $data[] = ['test-path', [], [], '<a href="/test-path">value</a>'];
+    $data[] = ['test-path', [], '<a href="/test-path">value</a>'];
     // Add a fragment.
     $data[] = ['test-path', ['fragment' => 'test'], '<a href="/test-path#test">value</a>'];
     // Rel attributes.
@@ -371,14 +369,14 @@ class FieldPluginBaseTest extends UnitTestCase {
     $entity_type_id = 'node';
     $data[] = ['test-path', ['entity_type' => $entity_type_id], '<a href="/test-path">value</a>'];
     // prefix
-    $data[] = ['test-path', ['prefix' => 'test_prefix'], '<a href="/test-path">value</a>', 'test_prefix<a href="/test-path">value</a>'];
+    $data[] = ['test-path', ['prefix' => 'test_prefix'], 'test_prefix<a href="/test-path">value</a>'];
     // suffix.
-    $data[] = ['test-path', ['suffix' => 'test_suffix'], '<a href="/test-path">value</a>', '<a href="/test-path">value</a>test_suffix'];
+    $data[] = ['test-path', ['suffix' => 'test_suffix'], '<a href="/test-path">value</a>test_suffix'];
 
     // External URL.
-    $data[] = ['https://www.example.com', [], [], '<a href="https://www.example.com">value</a>'];
-    $data[] = ['www.example.com', ['external' => TRUE], [], '<a href="http://www.example.com">value</a>'];
-    $data[] = ['', ['external' => TRUE], [], 'value'];
+    $data[] = ['https://www.example.com', [], '<a href="https://www.example.com">value</a>'];
+    $data[] = ['www.example.com', ['external' => TRUE], '<a href="http://www.example.com">value</a>'];
+    $data[] = ['', ['external' => TRUE], 'value'];
 
     return $data;
   }
@@ -389,13 +387,11 @@ class FieldPluginBaseTest extends UnitTestCase {
    * @dataProvider providerTestRenderAsLinkWithUrlAndOptions
    * @covers ::renderAsLink
    */
-  public function testRenderAsLinkWithUrlAndOptions(Url $url, $alter, Url $expected_url, $url_path, Url $expected_link_url, $link_html, $final_html = NULL) {
+  public function testRenderAsLinkWithUrlAndOptions(Url $url, $alter, Url $expected_url, $url_path, Url $expected_link_url, $final_html) {
     $alter += [
       'make_link' => TRUE,
       'url' => $url,
     ];
-
-    $final_html = $final_html ?? $link_html;
 
     $this->setUpUrlIntegrationServices();
     $this->setupDisplayWithEmptyArgumentsAndFields();
@@ -516,11 +512,11 @@ class FieldPluginBaseTest extends UnitTestCase {
 
     // Test prefix.
     $url = Url::fromRoute('test_route');
-    $data[] = [$url, ['prefix' => 'test_prefix'], clone $url, '/test-path', clone $url, '<a href="/test-path">value</a>', 'test_prefix<a href="/test-path">value</a>'];
+    $data[] = [$url, ['prefix' => 'test_prefix'], clone $url, '/test-path', clone $url, 'test_prefix<a href="/test-path">value</a>'];
 
     // Test suffix.
     $url = Url::fromRoute('test_route');
-    $data[] = [$url, ['suffix' => 'test_suffix'], clone $url, '/test-path', clone $url, '<a href="/test-path">value</a>', '<a href="/test-path">value</a>test_suffix'];
+    $data[] = [$url, ['suffix' => 'test_suffix'], clone $url, '/test-path', clone $url, '<a href="/test-path">value</a>test_suffix'];
 
     return $data;
   }
