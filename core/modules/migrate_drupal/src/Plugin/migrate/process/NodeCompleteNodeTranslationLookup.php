@@ -30,6 +30,10 @@ class NodeCompleteNodeTranslationLookup extends ProcessPluginBase {
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     if (is_array($value) && count($value) === 3) {
+      // If the language is 'und' then the node was not translated.
+      if ($value[2] === 'und') {
+        return NULL;
+      }
       unset($value[1]);
       return array_values($value);
     }
