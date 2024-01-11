@@ -14,6 +14,8 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Template\Attribute;
 
+// cspell:ignore fooalert
+
 /**
  * @coversDefaultClass \Drupal\Core\Render\Renderer
  * @group Render
@@ -359,20 +361,20 @@ class RendererTest extends RendererTestBase {
 
     // Theme suggestion is not implemented, #markup should be rendered.
     $build = [
-      '#theme' => ['suggestionnotimplemented'],
+      '#theme' => ['suggestion_not_implemented'],
       '#markup' => 'foo',
     ];
     $setup_code = function () {
       $this->themeManager->expects($this->once())
         ->method('render')
-        ->with(['suggestionnotimplemented'], $this->anything())
+        ->with(['suggestion_not_implemented'], $this->anything())
         ->willReturn(FALSE);
     };
     $data[] = [$build, 'foo', $setup_code];
 
     // Tests unimplemented theme suggestion, child #markup should be rendered.
     $build = [
-      '#theme' => ['suggestionnotimplemented'],
+      '#theme' => ['suggestion_not_implemented'],
       'child' => [
         '#markup' => 'foo',
       ],
@@ -380,7 +382,7 @@ class RendererTest extends RendererTestBase {
     $setup_code = function () {
       $this->themeManager->expects($this->once())
         ->method('render')
-        ->with(['suggestionnotimplemented'], $this->anything())
+        ->with(['suggestion_not_implemented'], $this->anything())
         ->willReturn(FALSE);
     };
     $data[] = [$build, 'foo', $setup_code];

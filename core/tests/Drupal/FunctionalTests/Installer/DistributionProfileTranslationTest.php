@@ -50,9 +50,9 @@ class DistributionProfileTranslationTest extends InstallerTestBase {
       ],
     ];
     // File API functions are not available yet.
-    $path = $this->root . DIRECTORY_SEPARATOR . $this->siteDirectory . '/profiles/my_distro';
+    $path = $this->root . DIRECTORY_SEPARATOR . $this->siteDirectory . '/profiles/my_distribution';
     mkdir($path, 0777, TRUE);
-    file_put_contents("$path/my_distro.info.yml", Yaml::encode($this->info));
+    file_put_contents("$path/my_distribution.info.yml", Yaml::encode($this->info));
 
     // Place a custom local translation in the translations directory.
     mkdir($this->root . '/' . $this->siteDirectory . '/files/translations', 0777, TRUE);

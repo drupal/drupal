@@ -449,18 +449,18 @@ EOF;
 
   public function providerTestGetPhpunitTestSuite() {
     $data = [];
-    $data['simpletest-webtest'] = ['\Drupal\rest\Tests\NodeTest', FALSE];
+    $data['simpletest-web test'] = ['\Drupal\rest\Tests\NodeTest', FALSE];
     $data['module-unittest'] = [static::class, 'Unit'];
-    $data['module-kerneltest'] = ['\Drupal\KernelTests\Core\Theme\TwigMarkupInterfaceTest', 'Kernel'];
-    $data['module-functionaltest'] = ['\Drupal\FunctionalTests\BrowserTestBaseTest', 'Functional'];
-    $data['module-functionaljavascripttest'] = ['\Drupal\Tests\toolbar\FunctionalJavascript\ToolbarIntegrationTest', 'FunctionalJavascript'];
+    $data['module-kernel test'] = ['\Drupal\KernelTests\Core\Theme\TwigMarkupInterfaceTest', 'Kernel'];
+    $data['module-functional test'] = ['\Drupal\FunctionalTests\BrowserTestBaseTest', 'Functional'];
+    $data['module-functional javascript test'] = ['\Drupal\Tests\toolbar\FunctionalJavascript\ToolbarIntegrationTest', 'FunctionalJavascript'];
     $data['core-unittest'] = ['\Drupal\Tests\ComposerIntegrationTest', 'Unit'];
     $data['core-unittest2'] = ['Drupal\Tests\Core\DrupalTest', 'Unit'];
     $data['core-unittest3'] = ['Drupal\Tests\Scripts\TestSiteApplicationTest', 'Unit'];
-    $data['core-kerneltest'] = ['\Drupal\KernelTests\KernelTestBaseTest', 'Kernel'];
-    $data['core-functionaltest'] = ['\Drupal\FunctionalTests\ExampleTest', 'Functional'];
-    $data['core-functionaljavascripttest'] = ['\Drupal\FunctionalJavascriptTests\ExampleTest', 'FunctionalJavascript'];
-    $data['core-buildtest'] = ['\Drupal\BuildTests\Framework\Tests\BuildTestTest', 'Build'];
+    $data['core-kernel test'] = ['\Drupal\KernelTests\KernelTestBaseTest', 'Kernel'];
+    $data['core-functional test'] = ['\Drupal\FunctionalTests\ExampleTest', 'Functional'];
+    $data['core-functional javascript test'] = ['\Drupal\FunctionalJavascriptTests\ExampleTest', 'FunctionalJavascript'];
+    $data['core-build test'] = ['\Drupal\BuildTests\Framework\Tests\BuildTestTest', 'Build'];
 
     return $data;
   }

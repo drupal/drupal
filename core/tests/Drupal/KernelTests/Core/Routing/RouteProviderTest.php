@@ -369,8 +369,8 @@ class RouteProviderTest extends KernelTestBase {
     $this->fixtures->createTables($connection);
 
     $collection = new RouteCollection();
-    $collection->add('poink', new Route('/some/path/{value}', [
-      'value' => 'poink',
+    $collection->add('foo', new Route('/some/path/{value}', [
+      'value' => 'foo',
     ]));
 
     $dumper = new MatcherDumper($connection, $this->state, $this->logger, 'test_routes');
@@ -390,7 +390,7 @@ class RouteProviderTest extends KernelTestBase {
       }
 
       $this->assertCount(1, $routes, 'The correct number of routes was found.');
-      $this->assertNotNull($routes->get('poink'), 'The first matching route was found.');
+      $this->assertNotNull($routes->get('foo'), 'The first matching route was found.');
     }
     catch (ResourceNotFoundException $e) {
       $this->fail('No matching route found with default argument value.');
@@ -407,8 +407,8 @@ class RouteProviderTest extends KernelTestBase {
     $this->fixtures->createTables($connection);
 
     $collection = new RouteCollection();
-    $collection->add('poink', new Route('/some/path/{value}', [
-      'value' => 'poink',
+    $collection->add('foo', new Route('/some/path/{value}', [
+      'value' => 'foo',
     ]));
     $collection->add('Lassie', new Route('/some/path/here'));
 
@@ -429,7 +429,7 @@ class RouteProviderTest extends KernelTestBase {
       }
 
       $this->assertCount(1, $routes, 'The correct number of routes was found.');
-      $this->assertNotNull($routes->get('poink'), 'The first matching route was found.');
+      $this->assertNotNull($routes->get('foo'), 'The first matching route was found.');
     }
     catch (ResourceNotFoundException $e) {
       $this->fail('No matching route found with default argument value.');
@@ -446,8 +446,8 @@ class RouteProviderTest extends KernelTestBase {
     $this->fixtures->createTables($connection);
 
     $collection = new RouteCollection();
-    $collection->add('poink', new Route('/some/path/{value}', [
-      'value' => 'poink',
+    $collection->add('foo', new Route('/some/path/{value}', [
+      'value' => 'foo',
     ]));
     $collection->add('Lassie', new Route('/some/path/here'));
     $collection->add('eep', new Route('/something/completely/different'));
@@ -465,9 +465,9 @@ class RouteProviderTest extends KernelTestBase {
       $routes_array = $routes->all();
 
       $this->assertCount(2, $routes, 'The correct number of routes was found.');
-      $this->assertEquals(['Lassie', 'poink'], array_keys($routes_array), 'Ensure the fitness was taken into account.');
+      $this->assertEquals(['Lassie', 'foo'], array_keys($routes_array), 'Ensure the fitness was taken into account.');
       $this->assertNotNull($routes->get('Lassie'), 'The first matching route was found.');
-      $this->assertNotNull($routes->get('poink'), 'The second matching route was found.');
+      $this->assertNotNull($routes->get('foo'), 'The second matching route was found.');
       $this->assertNull($routes->get('eep'), 'Non-matching route was not found.');
     }
     catch (ResourceNotFoundException $e) {
@@ -485,9 +485,9 @@ class RouteProviderTest extends KernelTestBase {
     $this->fixtures->createTables($connection);
 
     $collection = new RouteCollection();
-    $collection->add('poink', new Route('/some/{value}/path'));
+    $collection->add('foo', new Route('/some/{value}/path'));
     // Add a second route matching the same path pattern.
-    $collection->add('poink2', new Route('/some/{object}/path'));
+    $collection->add('foo2', new Route('/some/{object}/path'));
     $collection->add('Lassie', new Route('/some/here/path'));
     $collection->add('eep', new Route('/something/completely/different'));
 
@@ -504,9 +504,9 @@ class RouteProviderTest extends KernelTestBase {
       $routes_array = $routes->all();
 
       $this->assertCount(2, $routes, 'The correct number of routes was found.');
-      $this->assertEquals(['poink', 'poink2'], array_keys($routes_array), 'Ensure the fitness and name were taken into account in the sort.');
-      $this->assertNotNull($routes->get('poink'), 'The first matching route was found.');
-      $this->assertNotNull($routes->get('poink2'), 'The second matching route was found.');
+      $this->assertEquals(['foo', 'foo2'], array_keys($routes_array), 'Ensure the fitness and name were taken into account in the sort.');
+      $this->assertNotNull($routes->get('foo'), 'The first matching route was found.');
+      $this->assertNotNull($routes->get('foo2'), 'The second matching route was found.');
       $this->assertNull($routes->get('eep'), 'Non-matching route was not found.');
     }
     catch (ResourceNotFoundException $e) {
@@ -524,7 +524,7 @@ class RouteProviderTest extends KernelTestBase {
     $this->fixtures->createTables($connection);
 
     $collection = new RouteCollection();
-    $collection->add('poink', new Route('/some/path/{value}'));
+    $collection->add('foo', new Route('/some/path/{value}'));
 
     $dumper = new MatcherDumper($connection, $this->state, $this->logger, 'test_routes');
     $dumper->addRoutes($collection);

@@ -6,8 +6,8 @@
     <testsuite name="Drupal\Tests\Core\Cache\BackendChainImplementationUnitTest" file="/home/chx/www/system/core/tests/Drupal/Tests/Core/Cache/BackendChainImplementationUnitTest.php" namespace="Drupal\Tests\Core\Cache" fullPackage="Drupal.Tests.Core.Cache" tests="0" assertions="0" failures="0" errors="0" time="0.000000"/>
     <testsuite name="Drupal\Tests\Core\Cache\NullBackendTest" file="/home/chx/www/system/core/tests/Drupal/Tests/Core/Cache/NullBackendTest.php" namespace="Drupal\Tests\Core\Cache" fullPackage="Drupal.Tests.Core.Cache" tests="0" assertions="0" failures="0" errors="0" time="0.000000"/>
     <testsuite name="Drupal\Tests\Core\Extension\ModuleHandlerUnitTest" file="/home/chx/www/system/core/tests/Drupal/Tests/Core/Extension/ModuleHandlerUnitTest.php" namespace="Drupal\Tests\Core\Extension" fullPackage="Drupal.Tests.Core.Extension" tests="1" assertions="0" failures="0" errors="1" time="0.002680">
-      <testcase name="testloadInclude" class="Drupal\Tests\Core\Extension\ModuleHandlerUnitTest" file="/home/chx/www/system/core/tests/Drupal/Tests/Core/Extension/ModuleHandlerUnitTest.php" line="37" assertions="0" time="0.002680">
-        <error type="PHPUnit_Framework_Error_Notice">Drupal\Tests\Core\Extension\ModuleHandlerUnitTest::testloadInclude
+      <testcase name="testLoadInclude" class="Drupal\Tests\Core\Extension\ModuleHandlerUnitTest" file="/home/chx/www/system/core/tests/Drupal/Tests/Core/Extension/ModuleHandlerUnitTest.php" line="37" assertions="0" time="0.002680">
+        <error type="PHPUnit_Framework_Error_Notice">Drupal\Tests\Core\Extension\ModuleHandlerUnitTest::testLoadInclude
 Undefined index: foo
 
 /home/chx/www/system/core/lib/Drupal/Core/Extension/ModuleHandler.php:219
@@ -17,7 +17,7 @@ Undefined index: foo
     </testsuite>
     <testsuite name="Drupal\Tests\Core\NestedArrayUnitTest" file="/home/chx/www/system/core/tests/Drupal/Tests/Core/NestedArrayUnitTest.php" namespace="Drupal\Tests\Core" fullPackage="Drupal.Tests.Core" tests="0" assertions="0" failures="0" errors="0" time="0.000000"/>
     <testsuite name="Drupal\breakpoint\Tests\BreakpointMediaQueryTest" file="/home/chx/www/system/core/modules/breakpoint/tests/Drupal/breakpoint/Tests/BreakpointMediaQueryTest.php" namespace="Drupal\breakpoint\Tests" fullPackage="Drupal.breakpoint.Tests" tests="0" assertions="0" failures="0" errors="0" time="0.000000"/>
-    <testsuite name="Drupal\Tests\Core\Route\RoleAccessCheckTest" file="/var/www/d8/core/tests/Drupal/Tests/Core/Route/RoleAccessCheckTestkTest.php" namespace="Drupal\Tests\Core\Route" fullPackage="Drupal.Tests.Core.Route" tests="3" assertions="3" failures="3" errors="0" time="0.009176">
+    <testsuite name="Drupal\Tests\Core\Route\RoleAccessCheckTest" file="/var/www/d8/core/tests/Drupal/Tests/Core/Route/RoleAccessCheckTestTest.php" namespace="Drupal\Tests\Core\Route" fullPackage="Drupal.Tests.Core.Route" tests="3" assertions="3" failures="3" errors="0" time="0.009176">
       <testsuite name="Drupal\Tests\Core\Route\RoleAccessCheckTest::testRoleAccess" tests="3" assertions="3" failures="3" errors="0" time="0.009176">
         <testcase name="testRoleAccess with data set #0" assertions="1" time="0.004519">
           <failure type="PHPUnit_Framework_ExpectationFailedException">Drupal\Tests\Core\Route\RoleAccessCheckTest::testRoleAccess with data set #0 ('role_test_1', array(Drupal\user\Entity\User, Drupal\user\Entity\User))
