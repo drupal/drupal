@@ -205,9 +205,9 @@ class StorageComparer implements StorageComparerInterface {
    *   The change operation performed. Either delete, create, rename, or update.
    * @param array $changes
    *   Array of changes to add to the changelist.
-   * @param array $sort_order
-   *   Array to sort that can be used to sort the changelist. This array must
-   *   contain all the items that are in the change list.
+   * @param array|null $sort_order
+   *   (optional) Array to sort that can be used to sort the changelist. This
+   *   array must contain all the items that are in the change list.
    */
   protected function addChangeList($collection, $op, array $changes, array $sort_order = NULL) {
     // Only add changes that aren't already listed.

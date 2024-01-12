@@ -66,6 +66,14 @@ interface StorageComparerInterface {
   public function getChangelist($op = NULL, $collection = StorageInterface::DEFAULT_COLLECTION);
 
   /**
+   * Calculates the differences.
+   *
+   * @return $this
+   *   An object which implements the StorageComparerInterface.
+   */
+  public function createChangelist();
+
+  /**
    * Recalculates the differences.
    *
    * @return $this
