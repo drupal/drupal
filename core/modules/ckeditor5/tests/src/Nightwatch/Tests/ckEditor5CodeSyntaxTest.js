@@ -1,7 +1,10 @@
 module.exports = {
   '@tags': ['core', 'ckeditor5'],
   before(browser) {
-    browser.drupalInstall({ installProfile: 'minimal' });
+    browser
+      .drupalInstall({ installProfile: 'minimal' })
+      .drupalInstallModule('ckeditor5', true)
+      .drupalInstallModule('field_ui');
   },
   after(browser) {
     browser.drupalUninstall();
@@ -9,17 +12,6 @@ module.exports = {
   'Verify code block configured languages are respected': (browser) => {
     browser.drupalLoginAsAdmin(() => {
       browser
-        // Enable required modules.
-        .drupalRelativeURL('/admin/modules')
-        .click('[name="modules[ckeditor5][enable]"]')
-        .click('[name="modules[field_ui][enable]"]')
-        .submitForm('input[type="submit"]') // Submit module form.
-        .waitForElementVisible(
-          '.system-modules-confirm-form input[value="Continue"]',
-        )
-        .submitForm('input[value="Continue"]') // Confirm installation of dependencies.
-        .waitForElementVisible('.system-modules', 10000)
-
         // Create new input format.
         .drupalRelativeURL('/admin/config/content/formats/add')
         .waitForElementVisible('[data-drupal-selector="edit-name"]')
