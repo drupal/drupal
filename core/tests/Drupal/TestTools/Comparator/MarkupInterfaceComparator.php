@@ -13,7 +13,7 @@ class MarkupInterfaceComparator extends Comparator {
   /**
    * {@inheritdoc}
    */
-  public function accepts($expected, $actual) {
+  public function accepts($expected, $actual): bool {
     // If at least one argument is a MarkupInterface object, we take over and
     // convert to strings before comparing.
     return ($expected instanceof MarkupInterface && $actual instanceof MarkupInterface) ||
@@ -24,7 +24,7 @@ class MarkupInterfaceComparator extends Comparator {
   /**
    * {@inheritdoc}
    */
-  public function assertEquals($expected, $actual, $delta = 0.0, $canonicalize = FALSE, $ignoreCase = FALSE) {
+  public function assertEquals($expected, $actual, $delta = 0.0, $canonicalize = FALSE, $ignoreCase = FALSE): void {
     if (is_scalar($expected) && is_scalar($actual)) {
       throw new \LogicException(__METHOD__ . '() should not be called directly. Use TestCase::assertEquals() instead');
     }
