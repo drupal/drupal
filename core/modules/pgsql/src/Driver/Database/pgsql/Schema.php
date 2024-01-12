@@ -358,7 +358,7 @@ EOD;
     }
 
     if (!empty($spec['unsigned'])) {
-      $sql .= " CHECK ($name >= 0)";
+      $sql .= ' CHECK ("' . $name . '" >= 0)';
     }
 
     if (isset($spec['not null'])) {

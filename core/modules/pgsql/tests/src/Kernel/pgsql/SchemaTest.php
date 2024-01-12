@@ -307,4 +307,22 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
 
   }
 
+  /**
+   * Tests column name escaping in field constraints.
+   */
+  public function testUnsignedField(): void {
+    $table_name = 'unsigned_table';
+    $table_spec = [
+      'fields' => [
+        'order' => [
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ],
+      ],
+      'primary key' => ['order'],
+    ];
+    $this->schema->createTable($table_name, $table_spec);
+  }
+
 }
