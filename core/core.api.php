@@ -2042,9 +2042,8 @@ function hook_condition_info_alter(array &$definitions) {
  *     An array of optional parameters supplied by the caller of
  *     MailManagerInterface->mail() that is used to build the message before
  *     hook_mail_alter() is invoked.
- *   - 'language':
- *     The language object used to build the message before hook_mail_alter()
- *     is invoked.
+ *   - 'langcode':
+ *     The langcode used to build the message before invoking hook_mail_alter().
  *   - 'send':
  *     Set to FALSE to abort sending this email message.
  *
