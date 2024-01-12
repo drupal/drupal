@@ -346,7 +346,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Tests the deconstructor to be sure that necessary objects are removed.
+   * Tests the destructor to be sure that necessary objects are removed.
    */
   public function testDestroy() {
     $view = Views::getView('test_destroy');

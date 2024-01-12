@@ -44,7 +44,7 @@ abstract class YamlTestBase extends TestCase {
   }
 
   /**
-   * Some data that should be able to be de-serialized.
+   * Some data that should be able to be deserialized.
    */
   public function providerDecodeTests() {
     $data = [
@@ -83,7 +83,7 @@ jquery.ui.accordion:
   }
 
   /**
-   * Tests different boolean serialization and de-serialization.
+   * Tests different boolean serialization and deserialization.
    */
   public function providerBoolTest() {
     return [
