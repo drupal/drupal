@@ -129,14 +129,13 @@ class PathProcessorLanguage implements InboundPathProcessorInterface, OutboundPa
    *   The scope of the processors: "inbound" or "outbound".
    */
   protected function initProcessors($scope) {
-    $interface = '\Drupal\Core\PathProcessor\\' . Unicode::ucfirst($scope) . 'PathProcessorInterface';
+    $interface = 'Drupal\Core\PathProcessor\\' . Unicode::ucfirst($scope) . 'PathProcessorInterface';
     $this->processors[$scope] = [];
     $weights = [];
     foreach ($this->languageManager->getLanguageTypes() as $type) {
       foreach ($this->negotiator->getNegotiationMethods($type) as $method_id => $method) {
         if (!isset($this->processors[$scope][$method_id])) {
-          $reflector = new \ReflectionClass($method['class']);
-          if ($reflector->implementsInterface($interface)) {
+          if (is_subclass_of($method['class'], $interface)) {
             $this->processors[$scope][$method_id] = $this->negotiator->getNegotiationMethodInstance($method_id);
             $weights[$method_id] = $method['weight'];
           }

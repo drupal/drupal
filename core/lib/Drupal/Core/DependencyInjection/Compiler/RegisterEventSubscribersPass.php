@@ -4,6 +4,7 @@ namespace Drupal\Core\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Registers all event subscribers to the event dispatcher.
@@ -27,9 +28,8 @@ class RegisterEventSubscribersPass implements CompilerPassInterface {
       // the service is created by a factory.
       $class = $container->getDefinition($id)->getClass();
 
-      $refClass = new \ReflectionClass($class);
-      $interface = 'Symfony\Component\EventDispatcher\EventSubscriberInterface';
-      if (!$refClass->implementsInterface($interface)) {
+      $interface = EventSubscriberInterface::class;
+      if (!is_subclass_of($class, $interface)) {
         throw new \InvalidArgumentException(sprintf('Service "%s" must implement interface "%s".', $id, $interface));
       }
 
