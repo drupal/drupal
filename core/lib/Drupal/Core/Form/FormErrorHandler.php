@@ -110,6 +110,7 @@ class FormErrorHandler implements FormErrorHandlerInterface {
     // modify the original form. When processing grouped elements a reference to
     // the complete form is needed.
     if (empty($elements)) {
+      // cspell:disable-next-line
       // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.VariableRedeclaration
       $elements = &$form;
     }

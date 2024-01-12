@@ -8,7 +8,7 @@ use Drupal\Core\Queue\Memory;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Queues and dequeues a set of items to check the basic queue functionality.
+ * Queues and unqueues a set of items to check the basic queue functionality.
  *
  * @group Queue
  */
@@ -41,7 +41,7 @@ class QueueTest extends KernelTestBase {
   }
 
   /**
-   * Queues and dequeues a set of items to check the basic queue functionality.
+   * Queues and unqueues a set of items to check the basic queue functionality.
    *
    * @param \Drupal\Core\Queue\QueueInterface $queue1
    *   An instantiated queue object.

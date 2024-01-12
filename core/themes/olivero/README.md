@@ -1,6 +1,6 @@
 # About Olivero
 
-Olivero is the default theme for Drupal 10. It is a flexible, recolorable theme
+Olivero is the default theme for Drupal 10. It is a flexible, colorable theme
 with a responsive and mobile-first layout, supporting 13 regions.
 
 The Olivero theme is named after Rachel Olivero, a member of our community who
