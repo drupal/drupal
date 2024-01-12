@@ -6,6 +6,8 @@ use Drupal\Core\StackMiddleware\StackedHttpKernel;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\TerminableInterface;
 
 /**
  * Provides a compiler pass for stacked HTTP kernels.
@@ -100,7 +102,14 @@ class StackedKernelPass implements CompilerPassInterface {
         $first_responder = FALSE;
       }
       elseif ($first_responder) {
+        // Use interface proxying to allow middleware classes declared final
+        // to be set as lazy.
         $decorator->setLazy(TRUE);
+        foreach ([HttpKernelInterface::class, TerminableInterface::class] as $interface) {
+          if (is_a($decorator->getClass(), $interface, TRUE)) {
+            $decorator->addTag('proxy', ['interface' => $interface]);
+          }
+        }
       }
 
       $decorated_id = $id;

@@ -12,7 +12,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 /**
  * Defines a big pipe middleware that removes Content-Length headers.
  */
-class ContentLength implements HttpKernelInterface {
+final class ContentLength implements HttpKernelInterface {
 
   /**
    * Constructs a new ContentLength instance.

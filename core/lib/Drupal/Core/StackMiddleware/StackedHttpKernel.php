@@ -53,6 +53,9 @@ class StackedHttpKernel implements HttpKernelInterface, TerminableInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   * @return void
    */
   public function terminate(Request $request, Response $response) {
     $previous = NULL;
