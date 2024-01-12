@@ -51,47 +51,47 @@ module.exports = {
       .drupalRelativeURL('/admin/appearance/settings/olivero')
       .waitForElementVisible(selectors.schemePicker)
       .click(`${selectors.schemePicker} option[value="firehouse"]`)
-      .assert.value(
+      .assert.valueEquals(
         selectors.primaryColor.text,
         colorSchemes.firehouse.base_primary_color,
       )
-      .assert.value(
+      .assert.valueEquals(
         selectors.primaryColor.color,
         colorSchemes.firehouse.base_primary_color,
       )
       .click(`${selectors.schemePicker} option[value="ice"]`)
-      .assert.value(
+      .assert.valueEquals(
         selectors.primaryColor.text,
         colorSchemes.ice.base_primary_color,
       )
-      .assert.value(
+      .assert.valueEquals(
         selectors.primaryColor.color,
         colorSchemes.ice.base_primary_color,
       )
       .click(`${selectors.schemePicker} option[value="plum"]`)
-      .assert.value(
+      .assert.valueEquals(
         selectors.primaryColor.text,
         colorSchemes.plum.base_primary_color,
       )
-      .assert.value(
+      .assert.valueEquals(
         selectors.primaryColor.color,
         colorSchemes.plum.base_primary_color,
       )
       .click(`${selectors.schemePicker} option[value="slate"]`)
-      .assert.value(
+      .assert.valueEquals(
         selectors.primaryColor.text,
         colorSchemes.slate.base_primary_color,
       )
-      .assert.value(
+      .assert.valueEquals(
         selectors.primaryColor.color,
         colorSchemes.slate.base_primary_color,
       )
       .click(`${selectors.schemePicker} option[value="default"]`)
-      .assert.value(
+      .assert.valueEquals(
         selectors.primaryColor.text,
         colorSchemes.default.base_primary_color,
       )
-      .assert.value(
+      .assert.valueEquals(
         selectors.primaryColor.color,
         colorSchemes.default.base_primary_color,
       );
@@ -102,11 +102,11 @@ module.exports = {
       .waitForElementVisible(selectors.primaryColor.text)
       .waitForElementVisible(selectors.primaryColor.color)
       .updateValue(selectors.primaryColor.text, '#ff0000')
-      .assert.value(selectors.primaryColor.color, '#ff0000')
+      .assert.valueEquals(selectors.primaryColor.color, '#ff0000')
       .updateValue(selectors.primaryColor.text, '#00ff00')
-      .assert.value(selectors.primaryColor.color, '#00ff00')
+      .assert.valueEquals(selectors.primaryColor.color, '#00ff00')
       .updateValue(selectors.primaryColor.text, '#0000ff')
-      .assert.value(selectors.primaryColor.color, '#0000ff');
+      .assert.valueEquals(selectors.primaryColor.color, '#0000ff');
   },
   'Olivero Settings - color selections impact olivero theme': (browser) => {
     browser

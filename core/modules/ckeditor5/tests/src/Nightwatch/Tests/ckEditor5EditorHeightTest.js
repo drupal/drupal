@@ -28,7 +28,10 @@ module.exports = {
           '[data-drupal-selector="edit-editor-settings-toolbar"]',
         )
         .click('.ckeditor5-toolbar-button-sourceEditing') // Select the Source Editing button.
-        .keys(browser.Keys.DOWN) // Hit the down arrow key to move it to the toolbar.
+        // Hit the down arrow key to move it to the toolbar.
+        .perform(function () {
+          return this.actions().sendKeys(browser.Keys.ARROW_DOWN);
+        })
         // Wait for new source editing vertical tab to be present before continuing.
         .waitForElementVisible(
           '[href*=edit-editor-settings-plugins-ckeditor5-sourceediting]',

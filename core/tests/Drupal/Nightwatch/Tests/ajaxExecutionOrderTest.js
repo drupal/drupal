@@ -12,7 +12,7 @@ module.exports = {
       .waitForElementVisible('body', 1000)
       .click('[data-drupal-selector="edit-test-execution-order-button"]')
       .waitForElementVisible('#ajax_test_form_promise_wrapper', 1000)
-      .assert.containsText(
+      .assert.textContains(
         '#ajax_test_form_promise_wrapper',
         '12345',
         'Ajax commands execution order confirmed',
