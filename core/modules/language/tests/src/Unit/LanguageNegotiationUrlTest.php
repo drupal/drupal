@@ -157,6 +157,71 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
   }
 
   /**
+   * Tests outbound path processing for neutral languages.
+   *
+   * @dataProvider providerNeutralLanguages
+   */
+  public function testNeutralLanguages($langcode, $expected_langcode) {
+    if ($expected_langcode) {
+      $this->languageManager->expects($this->once())
+        ->method('getCurrentLanguage')
+        ->willReturn($this->languages['en']);
+    }
+
+    $config = $this->getConfigFactoryStub([
+      'language.negotiation' => [
+        'url' => [
+          'source' => LanguageNegotiationUrl::CONFIG_PATH_PREFIX,
+          'prefixes' => [
+            'de' => 'de',
+            'en' => 'en',
+          ],
+        ],
+      ],
+    ]);
+
+    $request = Request::create('/foo', 'GET');
+    $method = new LanguageNegotiationUrl();
+    $method->setLanguageManager($this->languageManager);
+    $method->setConfig($config);
+    $method->setCurrentUser($this->user);
+    $this->assertNull($method->getLangcode($request));
+
+    $language = $this->createMock(LanguageInterface::class);
+    $language->expects($this->any())
+      ->method('getId')
+      ->willReturn($langcode);
+    $cacheability = new BubbleableMetadata();
+    $options = [
+      'language' => $language,
+    ];
+    $method->processOutbound('foo', $options, $request, $cacheability);
+    $expected_cacheability = new BubbleableMetadata();
+    if ($expected_langcode) {
+      $this->assertSame($expected_langcode . '/', $options['prefix']);
+      $expected_cacheability->setCacheContexts(['languages:' . LanguageInterface::TYPE_URL]);
+    }
+    else {
+      $this->assertFalse(isset($options['prefix']));
+    }
+    $this->assertEquals($expected_cacheability, $cacheability);
+  }
+
+  /**
+   * Provides data for the neutral language test.
+   *
+   * @return array
+   *   An array of data for checking path prefix negotiation for neutral
+   *   languages.
+   */
+  public function providerNeutralLanguages() {
+    return [
+      [LanguageInterface::LANGCODE_NOT_APPLICABLE, NULL],
+      [LanguageInterface::LANGCODE_NOT_SPECIFIED, 'en'],
+    ];
+  }
+
+  /**
    * Tests domain language negotiation and outbound path processing.
    *
    * @dataProvider providerTestDomain

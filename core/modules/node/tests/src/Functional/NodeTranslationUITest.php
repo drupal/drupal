@@ -602,7 +602,6 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   public function testUrlPrefixOnLanguageNeutralContent() {
     $this->drupalLogin($this->administrator);
     $neutral_langcodes = [
-      LanguageInterface::LANGCODE_NOT_APPLICABLE,
       LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ];
     foreach ($neutral_langcodes as $langcode) {

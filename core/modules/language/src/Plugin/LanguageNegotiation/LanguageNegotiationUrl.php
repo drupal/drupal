@@ -130,10 +130,7 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
     }
     $languages = array_flip(array_keys($this->languageManager->getLanguages()));
     // Language can be passed as an option, or we go for current URL language.
-    if (!isset($options['language']) || ($options['language'] instanceof LanguageInterface && in_array($options['language']->getId(), [
-      LanguageInterface::LANGCODE_NOT_SPECIFIED,
-      LanguageInterface::LANGCODE_NOT_APPLICABLE,
-    ]))) {
+    if (!isset($options['language']) || ($options['language'] instanceof LanguageInterface && $options['language']->getId() == LanguageInterface::LANGCODE_NOT_SPECIFIED)) {
       $language_url = $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_URL);
       $options['language'] = $language_url;
     }
