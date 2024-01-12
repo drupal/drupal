@@ -524,14 +524,6 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     $form_state->set('ckeditor5_is_active', $already_using_ckeditor5);
     $form_state->set('ckeditor5_is_selected', $form_state->getValue(['editor', 'editor']) === 'ckeditor5');
 
-    // Disable inline form errors when using CKEditor 5 because it prevents
-    // useful error messages from vertical tabs from being visible to the user.
-    // @todo Remove this workaround in
-    //   https://www.drupal.org/project/drupal/issues/3263668
-    if ($form_state->get('ckeditor5_is_selected')) {
-      $element['#disable_inline_form_errors'] = TRUE;
-    }
-
     return $element;
   }
 
