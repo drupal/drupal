@@ -73,16 +73,23 @@ module.exports = {
         },
       )
       // Assert that search form is still visible when focus is on disclosure button.
-      .keys(browser.Keys.SHIFT)
-      .keys(browser.Keys.TAB)
+      .perform(function () {
+        return this.actions()
+          .keyDown(browser.Keys.SHIFT)
+          .sendKeys(browser.Keys.TAB);
+      })
       .pause(50)
       .isVisible(searchWideSelector)
       // Assert that search form is NOT visible when focus moves back to menu item.
-      .keys(browser.Keys.TAB)
+      .perform(function () {
+        return this.actions().sendKeys(browser.Keys.TAB);
+      })
       .pause(50)
       .waitForElementNotVisible(searchWideSelector)
-      // Release all keys.
-      .keys(browser.Keys.NULL);
+      // Release SHIFT key.
+      .perform(function () {
+        return this.actions().keyUp(browser.Keys.SHIFT);
+      });
   },
   'search narrow form is accessible': (browser) => {
     browser
