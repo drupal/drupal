@@ -48,7 +48,7 @@ variables:
   CONCURRENCY: 24
   GIT_DEPTH: "3"
   PARENT_PIPELINE_ID: $CI_PIPELINE_ID
-  _TARGET_PHP: "8.2"
+  _TARGET_PHP: "8.3"
 
 #############
 # Stages    #
@@ -127,10 +127,10 @@ default:
       allow_failure: true
 
 # Default configuration.
-'DEFAULT: PHP 8.2 MySQL 8':
+'DEFAULT: PHP 8.3 MySQL 8':
   <<: *default-stage
   variables:
-    _TARGET_PHP: "8.2"
+    _TARGET_PHP: "8.3"
     _TARGET_DB: "mysql-8"
     PERFORMANCE_TEST: $PERFORMANCE_TEST
     OTEL_COLLECTOR: $OTEL_COLLECTOR
@@ -144,12 +144,12 @@ default:
     - if: $PERFORMANCE_TEST == "1"
 
 # Special job for MRs for test-only checks.
-'DEFAULT: Test-only (PHP 8.2 MySQL 8)':
+'DEFAULT: Test-only (PHP 8.3 MySQL 8)':
   <<: [ *default-stage, *with-composer ]
   when: manual
   allow_failure: true
   variables:
-    _TARGET_PHP: "8.2"
+    _TARGET_PHP: "8.3"
     _TARGET_DB: "mysql-8"
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -192,10 +192,10 @@ default:
     _TARGET_PHP: "8.2"
     _TARGET_DB: "sqlite-3"
 
-'PHP 8.3 MySQL 8':
+'PHP 8.2 MySQL 8':
   <<: [ *default-stage, *run-on-mr ]
   variables:
-    _TARGET_PHP: "8.3"
+    _TARGET_PHP: "8.2"
     _TARGET_DB: "mysql-8"
 
 'PHP 8.3 PostgreSQL 16':
@@ -232,7 +232,7 @@ default:
 # The value set in the "needs" property will determine the order in the sequence.
 '[Commit] PHP 8.1 MySQL 5.7':
   extends: 'PHP 8.1 MySQL 5.7'
-  needs: [ 'DEFAULT: PHP 8.2 MySQL 8' ]
+  needs: [ 'PHP 8.2 MySQL 8' ]
   <<: [ *run-on-commit ]
 
 '[Commit] PHP 8.2 PostgreSQL 16':
@@ -249,7 +249,7 @@ default:
 # The value set in the "needs" property will determine the order in the sequence.
 '[Daily] PHP 8.2 PostgreSQL 14.1':
   extends: 'PHP 8.2 PostgreSQL 14.1'
-  needs: [ 'DEFAULT: PHP 8.2 MySQL 8' ]
+  needs: [ 'PHP 8.2 MySQL 8' ]
   <<: [ *run-daily ]
 
 '[Daily] PHP 8.2 PostgreSQL 15':
@@ -258,7 +258,7 @@ default:
   <<: [ *run-daily ]
 
 '[Daily] PHP 8.3 MySQL 8':
-  extends: 'PHP 8.3 MySQL 8'
+  extends: 'DEFAULT: PHP 8.3 MySQL 8'
   needs: [ '[Daily] PHP 8.2 PostgreSQL 15' ]
   <<: [ *run-daily ]
 
