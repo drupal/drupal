@@ -2,7 +2,6 @@
 
 namespace Drupal\KernelTests\Core\Installer;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Extension\ProfileExtensionList;
 use Drupal\Core\StringTranslation\Translator\FileTranslation;
 use Drupal\KernelTests\KernelTestBase;
@@ -33,9 +32,9 @@ class InstallerLanguageTest extends KernelTestBase {
     $file_translation = new FileTranslation('core/tests/fixtures/files/translations', $this->container->get('file_system'));
     foreach ($expected_translation_files as $langcode => $files_expected) {
       $files_found = $file_translation->findTranslationFiles($langcode);
-      $this->assertSameSize($files_expected, $files_found, new FormattableMarkup('@count installer languages found.', ['@count' => count($files_expected)]));
+      $this->assertSameSize($files_expected, $files_found, count($files_expected) . ' installer languages found.');
       foreach ($files_found as $file) {
-        $this->assertContains($file->filename, $files_expected, new FormattableMarkup('@file found.', ['@file' => $file->filename]));
+        $this->assertContains($file->filename, $files_expected, $file->filename . ' found.');
       }
     }
   }
