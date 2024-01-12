@@ -52,4 +52,17 @@ interface MigrateProcessInterface extends PluginInspectionInterface {
    */
   public function multiple();
 
+  /**
+   * Determines if the pipeline should stop processing.
+   *
+   * @return bool
+   *   A boolean value indicating if the pipeline processing should stop.
+   */
+  public function isPipelineStopped(): bool;
+
+  /**
+   * Resets the internal data of a plugin.
+   */
+  public function reset(): void;
+
 }

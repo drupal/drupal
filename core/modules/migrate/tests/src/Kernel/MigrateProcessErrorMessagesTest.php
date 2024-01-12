@@ -150,6 +150,7 @@ class MigrateProcessErrorMessagesTest extends MigrateTestBase {
     $error_plugin_prophecy = $this->prophesize(MigrateProcessInterface::class);
     $error_plugin_prophecy->getPluginDefinition()->willReturn(['plugin_id' => 'test_error']);
     $error_plugin_prophecy->getPluginId()->willReturn('test_error');
+    $error_plugin_prophecy->reset()->shouldBeCalled();
     $error_plugin_prophecy->transform(Argument::cetera())->willThrow(new MigrateException('Process exception.'));
 
     $this->processPluginManager->createInstance('get', Argument::cetera())

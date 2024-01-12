@@ -31,6 +31,13 @@ use Drupal\migrate\Plugin\MigrateProcessInterface;
 abstract class ProcessPluginBase extends PluginBase implements MigrateProcessInterface {
 
   /**
+   * Determines if processing of the pipeline is stopped.
+   *
+   * @var bool
+   */
+  protected bool $stopPipeline = FALSE;
+
+  /**
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
@@ -51,6 +58,27 @@ abstract class ProcessPluginBase extends PluginBase implements MigrateProcessInt
    */
   public function multiple() {
     return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isPipelineStopped(): bool {
+    return $this->stopPipeline;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function reset(): void {
+    $this->stopPipeline = FALSE;
+  }
+
+  /**
+   * Stops pipeline processing after this plugin finishes.
+   */
+  protected function stopPipeline(): void {
+    $this->stopPipeline = TRUE;
   }
 
 }
