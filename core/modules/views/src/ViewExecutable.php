@@ -687,7 +687,7 @@ class ViewExecutable {
   /**
    * Figures out what the exposed input for this view is.
    *
-   * They will be taken from \Drupal::request()->query or from
+   * They will be taken from $this->request->query or from
    * something previously set on the view.
    *
    * @return string[]
@@ -697,13 +697,13 @@ class ViewExecutable {
    * @see self::setExposedInput()
    */
   public function getExposedInput() {
-    // Fill our input either from \Drupal::request()->query or from something
+    // Fill our input either from $this->request->query or from something
     // previously set on the view.
     if (empty($this->exposed_input)) {
       // Ensure that we can call the method at any point in time.
       $this->initDisplay();
 
-      $this->exposed_input = \Drupal::request()->query->all();
+      $this->exposed_input = $this->request->query->all();
       // unset items that are definitely not our input:
       foreach (['page', 'q'] as $key) {
         if (isset($this->exposed_input[$key])) {
@@ -713,7 +713,7 @@ class ViewExecutable {
 
       // If we have no input at all, check for remembered input via session.
       if (empty($this->exposed_input) && $this->request->hasSession()) {
-        $session = \Drupal::request()->getSession();
+        $session = $this->request->getSession();
         // If filters are not overridden, store the 'remember' settings on the
         // default display. If they are, store them on this display. This way,
         // multiple displays in the same view can share the same filters and

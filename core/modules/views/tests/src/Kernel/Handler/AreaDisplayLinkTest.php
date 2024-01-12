@@ -14,7 +14,6 @@ use Drupal\views\Views;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
@@ -169,9 +168,7 @@ class AreaDisplayLinkTest extends ViewsKernelTestBase {
       MainContentViewSubscriber::WRAPPER_FORMAT => 1,
     ]);
     $request->setSession(new Session(new MockArraySessionStorage()));
-    $request_stack = new RequestStack();
-    $request_stack->push($request);
-    $this->container->set('request_stack', $request_stack);
+    $view->setRequest($request);
     $view->destroy();
     $view->setDisplay('page_1');
     $view->setCurrentPage(2);
