@@ -1,25 +1,47 @@
 <?php
 
-namespace Drupal\Tests\node\Functional;
+namespace Drupal\Tests\node\Kernel;
+
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\node\Entity\NodeType;
+use Drupal\Tests\node\Traits\NodeCreationTrait;
 
 /**
  * Tests node template suggestions.
  *
  * @group node
  */
-class NodeTemplateSuggestionsTest extends NodeTestBase {
+class NodeTemplateSuggestionsTest extends KernelTestBase {
+
+  use NodeCreationTrait;
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
-  protected $defaultTheme = 'stark';
+  protected static $modules = [
+    'node',
+    'user',
+    'system',
+  ];
 
   /**
    * Tests if template_preprocess_node() generates the correct suggestions.
    */
-  public function testNodeThemeHookSuggestions() {
+  public function testNodeThemeHookSuggestions(): void {
+    $this->installEntitySchema('user');
+    $this->installEntitySchema('node');
+
+    $this->installConfig(['system']);
+
+    NodeType::create([
+      'type' => 'page',
+      'name' => 'Page',
+    ])->save();
+
     // Create node to be rendered.
-    $node = $this->drupalCreateNode();
+    $node = $this->createNode();
     $view_mode = 'full';
 
     // Simulate theming of the node.
