@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\TestTools\Extension;
 
 use Symfony\Component\Process\ExecutableFinder;
