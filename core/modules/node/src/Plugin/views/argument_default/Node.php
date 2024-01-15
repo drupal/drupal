@@ -60,7 +60,9 @@ class Node extends ArgumentDefaultPluginBase implements CacheableDependencyInter
    * {@inheritdoc}
    */
   public function getArgument() {
-    if (($node = $this->routeMatch->getParameter('node')) && $node instanceof NodeInterface) {
+    // Get the node object from current route.
+    $node = $this->routeMatch->getParameter('node') ?? $this->routeMatch->getParameter('node_preview');
+    if ($node instanceof NodeInterface) {
       return $node->id();
     }
   }

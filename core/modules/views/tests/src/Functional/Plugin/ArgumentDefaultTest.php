@@ -168,6 +168,12 @@ class ArgumentDefaultTest extends ViewTestBase {
     $this->assertSession()->elementTextContains('xpath', '//*[@id="block-' . $id . '"]', $node1->getTitle());
     $this->drupalGet('node/' . $node2->id());
     $this->assertSession()->elementTextContains('xpath', '//*[@id="block-' . $id . '"]', $node2->getTitle());
+
+    // Check the view from node preview page.
+    $node3 = $this->drupalCreateNode(['title' => 'Title 1', 'type' => 'page']);
+    $this->drupalGet($node3->toUrl('edit-form'));
+    $this->submitForm(['title[0][value]' => 'Title 2'], 'Preview');
+    $this->assertSession()->elementTextContains('xpath', '//*[@id="block-' . $id . '"]', $node3->getTitle());
   }
 
   /**
