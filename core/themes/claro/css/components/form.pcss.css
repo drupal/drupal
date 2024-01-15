@@ -123,6 +123,12 @@ tr .form-item,
   align-items: flex-start;
   margin-block: var(--space-xs);
 
+  & .form-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs) 0;
+  }
+
   & .button,
   & .action-link {
     margin-block: var(--space-xs);
