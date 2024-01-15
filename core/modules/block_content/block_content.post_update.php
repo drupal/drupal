@@ -5,6 +5,7 @@
  * Post update functions for Content Block.
  */
 
+use Drupal\block_content\BlockContentTypeInterface;
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\user\Entity\Role;
 use Drupal\views\Entity\View;
@@ -79,4 +80,15 @@ function block_content_post_update_sort_permissions(&$sandbox = NULL) {
     }
     return FALSE;
   });
+}
+
+/**
+ * Update configuration for revision type.
+ */
+function block_content_post_update_revision_type(&$sandbox = NULL) {
+  \Drupal::classResolver(ConfigEntityUpdater::class)
+    ->update($sandbox, 'block_content_type', function (BlockContentTypeInterface $block_content_type) {
+      $block_content_type->set('revision', (bool) $block_content_type->get('revision'));
+      return TRUE;
+    });
 }

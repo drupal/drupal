@@ -11,8 +11,14 @@ block_content.type.*:
       type: required_label
       label: 'Label'
     revision:
-      type: integer
-      label: 'Create new revision'
+      type: boolean
+      label: 'Whether a new revision should be created by default'
     description:
       type: text
       label: 'Description'
+      nullable: true
+      constraints:
+        NotBlank:
+          allowNull: true
+  constraints:
+    FullyValidatable: ~

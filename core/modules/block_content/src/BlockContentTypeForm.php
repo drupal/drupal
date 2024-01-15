@@ -3,6 +3,7 @@
 namespace Drupal\block_content;
 
 use Drupal\Core\Entity\BundleEntityFormBase;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\language\Entity\ContentLanguageSettings;
@@ -89,6 +90,17 @@ class BlockContentTypeForm extends BundleEntityFormBase {
     ];
 
     return $this->protectBundleIdElement($form);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state) {
+    // An empty description violates config schema.
+    if (trim($form_state->getValue('description', '')) === '') {
+      $form_state->unsetValue('description');
+    }
+    parent::copyFormValuesToEntity($entity, $form, $form_state);
   }
 
   /**

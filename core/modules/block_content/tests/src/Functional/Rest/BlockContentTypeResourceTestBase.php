@@ -55,7 +55,7 @@ abstract class BlockContentTypeResourceTestBase extends ConfigEntityResourceTest
       'id' => 'pascal',
       'label' => 'Pascal',
       'langcode' => 'en',
-      'revision' => 0,
+      'revision' => FALSE,
       'status' => TRUE,
       'uuid' => $this->entity->uuid(),
     ];

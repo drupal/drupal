@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\block_content\Functional\Update;
 
+use Drupal\block_content\Entity\BlockContentType;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\user\Entity\User;
 use Drupal\views\Entity\View;
@@ -20,6 +21,32 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz',
     ];
+  }
+
+  /**
+   * Tests converting block types' `revision` flag to boolean.
+   */
+  public function testConvertBlockContentTypeRevisionFlagToBoolean(): void {
+    $no_new_revisions = BlockContentType::create([
+      'id' => 'no_new_revisions',
+      'label' => 'Does not create new revisions',
+      'revision' => 0,
+    ]);
+    $no_new_revisions->trustData()->save();
+    $new_revisions = BlockContentType::create([
+      'id' => 'new_revisions',
+      'label' => 'Creates new revisions',
+      'revision' => 1,
+    ]);
+    $new_revisions->trustData()->save();
+    // Ensure that an integer was stored, so we can be sure that the update
+    // path converts it to a boolean.
+    $this->assertSame(0, $no_new_revisions->get('revision'));
+    $this->assertSame(1, $new_revisions->get('revision'));
+
+    $this->runUpdates();
+    $this->assertFalse(BlockContentType::load('no_new_revisions')->get('revision'));
+    $this->assertTrue(BlockContentType::load('new_revisions')->get('revision'));
   }
 
   /**

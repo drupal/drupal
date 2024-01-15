@@ -3,5 +3,5 @@ status: true
 dependencies: {  }
 id: basic
 label: 'Basic block'
-revision: 0
+revision: false
 description: 'A basic block contains a title and a body.'
