@@ -233,6 +233,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
     if ($revision_table) {
       $data[$revision_table]['table']['group'] = $this->t('@entity_type revision', ['@entity_type' => $this->entityType->getLabel()]);
       $data[$revision_table]['table']['provider'] = $this->entityType->getProvider();
+      $data[$revision_table]['table']['entity revision'] = TRUE;
 
       $views_revision_base_table = $revision_table;
       if ($revision_data_table) {
