@@ -19,9 +19,9 @@ use Drupal\settings_tray\Block\BlockEntitySettingTrayForm;
 function settings_tray_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.settings_tray':
-      $output = '<h3>' . t('About') . '</h3>';
+      $output = '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Settings Tray module allows users with the <a href=":administer_block_permission">Administer blocks</a> and <a href=":contextual_permission">Use contextual links</a> permissions to edit blocks without visiting a separate page. For more information, see the <a href=":handbook_url">online documentation for the Settings Tray module</a>.', [':handbook_url' => 'https://www.drupal.org/documentation/modules/settings_tray', ':administer_block_permission' => Url::fromRoute('user.admin_permissions.module', ['modules' => 'block'])->toString(), ':contextual_permission' => Url::fromRoute('user.admin_permissions.module', ['modules' => 'contextual'])->toString()]) . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Editing blocks in place') . '</dt>';
       $output .= '<dd>';

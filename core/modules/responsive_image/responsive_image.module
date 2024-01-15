@@ -23,9 +23,9 @@ function responsive_image_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.responsive_image':
       $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Responsive Image module provides an image formatter that allows browsers to select which image file to display based on media queries or which image file types the browser supports, using the HTML 5 picture and source elements and/or the sizes, srcset and type attributes. For more information, see the <a href=":responsive_image">online documentation for the Responsive Image module</a>.', [':responsive_image' => 'https://www.drupal.org/documentation/modules/responsive_image']) . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Defining responsive image styles') . '</dt>';
       $output .= '<dd>' . t('By creating responsive image styles you define which options the browser has in selecting which image file to display. In most cases this means providing different image sizes based on the viewport size. On the <a href=":responsive_image_style">Responsive image styles</a> page, click <em>Add responsive image style</em> to create a new style. First choose a label, a fallback image style and a breakpoint group and click Save.', [':responsive_image_style' => Url::fromRoute('entity.responsive_image_style.collection')->toString()]) . '</dd>';

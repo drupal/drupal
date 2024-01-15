@@ -34,10 +34,10 @@ function help_help($route_name, RouteMatchInterface $route_match) {
       $module_handler = \Drupal::moduleHandler();
       $locale_help = ($module_handler->moduleExists('locale')) ? Url::fromRoute('help.page', ['name' => 'locale'])->toString() : '#';
       $search_help = ($module_handler->moduleExists('search')) ? Url::fromRoute('help.page', ['name' => 'search'])->toString() : '#';
-      $output = '<h3>' . t('About') . '</h3>';
+      $output = '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Help module generates <a href=":help-page">Help topics and reference pages</a> to guide you through the use and configuration of modules, and provides a Help block with page-level help. The reference pages are a starting point for <a href=":handbook">Drupal.org online documentation</a> pages that contain more extensive and up-to-date information, are annotated with user-contributed comments, and serve as the definitive reference point for all Drupal documentation. For more information, see the <a href=":help">online documentation for the Help module</a>.', [':help' => 'https://www.drupal.org/documentation/modules/help/', ':handbook' => 'https://www.drupal.org/documentation', ':help-page' => Url::fromRoute('help.main')->toString()]) . '</p>';
       $output .= '<p>' . t('Help topics provided by modules and themes are also part of the Help module. If the core Search module is installed, these topics are searchable. For more information, see the <a href=":online">online documentation, Help Topic Standards</a>.', [':online' => 'https://www.drupal.org/docs/develop/managing-a-drupalorg-theme-module-or-distribution-project/documenting-your-project/help-topic-standards']) . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Providing a help reference') . '</dt>';
       $output .= '<dd>' . t('The Help module displays explanations for using each module listed on the main <a href=":help">Help reference page</a>.', [':help' => Url::fromRoute('help.main')->toString()]) . '</dd>';

@@ -14,9 +14,9 @@ use Drupal\Core\Url;
 function page_cache_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.page_cache':
-      $output = '<h3>' . t('About') . '</h3>';
+      $output = '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Internal Page Cache module caches pages for anonymous users in the database. For more information, see the <a href=":pagecache-documentation">online documentation for the Internal Page Cache module</a>.', [':pagecache-documentation' => 'https://www.drupal.org/documentation/modules/internal_page_cache']) . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Speeding up your site') . '</dt>';
       $output .= '<dd>' . t('Pages requested by anonymous users are stored the first time they are requested and then are reused. Depending on your site configuration and the amount of your web traffic tied to anonymous visitors, the caching system may significantly increase the speed of your site.') . '</dd>';

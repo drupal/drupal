@@ -153,9 +153,9 @@ function locale_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.locale':
       $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Interface Translation module allows you to translate interface text (<em>strings</em>) into different languages, and to switch between them for the display of interface text. It uses the functionality provided by the <a href=":language">Language module</a>. For more information, see the <a href=":doc-url">online documentation for the Interface Translation module</a>.', [':doc-url' => 'https://www.drupal.org/documentation/modules/locale/', ':language' => Url::fromRoute('help.page', ['name' => 'language'])->toString()]) . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Importing translation files') . '</dt>';
       $output .= '<dd>' . t('Translation files with translated interface text are imported automatically when languages are added on the <a href=":languages">Languages</a> page, or when modules or themes are installed. On the <a href=":locale-settings">Interface translation settings</a> page, the <em>Translation source</em> can be restricted to local files only, or to include the <a href=":server">Drupal translation server</a>. Although modules and themes may not be fully translated in all languages, new translations become available frequently. You can specify whether and how often to check for translation file updates and whether to overwrite existing translations on the <a href=":locale-settings">Interface translation settings</a> page. You can also manually import a translation file on the <a href=":import">Interface translation import</a> page.', [':import' => Url::fromRoute('locale.translate_import')->toString(), ':locale-settings' => Url::fromRoute('locale.settings')->toString(), ':languages' => Url::fromRoute('entity.configurable_language.collection')->toString(), ':server' => 'https://localize.drupal.org']) . '</dd>';

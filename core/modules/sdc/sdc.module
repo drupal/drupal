@@ -29,7 +29,7 @@ use Drupal\sdc\ComponentPluginManager;
 function sdc_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.sdc':
-      $output = '<h3>' . t('About') . '</h3>';
+      $output = '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('Single Directory Components is a module that aims to simplify the front-end development workflow, and improve maintainability of core and contrib themes. For more information, see the <a href=":docs">online documentation for the Single Directory Components module</a>.', [
         ':docs' => 'https://www.drupal.org/docs/develop/theming-drupal/using-single-directory-components',
       ]) . '</p>';

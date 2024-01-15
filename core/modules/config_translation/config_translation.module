@@ -18,9 +18,9 @@ function config_translation_help($route_name, RouteMatchInterface $route_match) 
   switch ($route_name) {
     case 'help.page.config_translation':
       $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Configuration Translation module allows you to translate configuration text; for example, the site name, vocabularies, menus, or date formats. Together with the modules <a href=":language">Language</a>, <a href=":content-translation">Content Translation</a>, and <a href=":locale">Interface Translation</a>, it allows you to build multilingual websites. For more information, see the <a href=":doc_url">online documentation for the Configuration Translation module</a>.', [':doc_url' => 'https://www.drupal.org/documentation/modules/config_translation', ':config' => Url::fromRoute('help.page', ['name' => 'config'])->toString(), ':language' => Url::fromRoute('help.page', ['name' => 'language'])->toString(), ':locale' => Url::fromRoute('help.page', ['name' => 'locale'])->toString(), ':content-translation' => (\Drupal::moduleHandler()->moduleExists('content_translation')) ? Url::fromRoute('help.page', ['name' => 'content_translation'])->toString() : '#']) . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Enabling translation') . '</dt>';
       $output .= '<dd>' . t('In order to translate configuration, the website must have at least two <a href=":url">languages</a>.', [':url' => Url::fromRoute('entity.configurable_language.collection')->toString()]) . '</dd>';

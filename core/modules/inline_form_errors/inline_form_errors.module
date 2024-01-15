@@ -15,9 +15,9 @@ function inline_form_errors_help($route_name, RouteMatchInterface $route_match) 
   switch ($route_name) {
     case 'help.page.inline_form_errors':
       $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Inline Form Errors module makes it easier for users to identify which errors need to be resolved by providing a summary of all errors and by placing the individual error messages next to the form elements themselves. For more information, see the <a href=":inline_form_error">online documentation for the Inline Form Errors module</a>.', [':inline_form_error' => 'https://www.drupal.org/docs/8/core/modules/inline-form-errors']) . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Displaying error messages') . '</dt>';
       $output .= '<dd>' . t('When a form is not filled in correctly (for example, if a required field is left blank), a warning message is displayed at the top of the form. This message links to the affected form elements, and individual error messages are displayed next to each form element.') . '</dd>';

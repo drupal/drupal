@@ -28,9 +28,9 @@ use Drupal\views\ViewExecutable;
 function media_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.media':
-      $output = '<h3>' . t('About') . '</h3>';
+      $output = '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Media module manages the creation, editing, deletion, settings, and display of media. Items are typically images, documents, slideshows, YouTube videos, tweets, Instagram photos, etc. You can reference media items from any other content on your site. For more information, see the <a href=":media">online documentation for the Media module</a>.', [':media' => 'https://www.drupal.org/docs/8/core/modules/media']) . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Creating media items') . '</dt>';
       $output .= '<dd>' . t('When a new media item is created, the Media module records basic information about it, including the author, date of creation, and the <a href=":media-type">media type</a>. It also manages the <em>publishing options</em>, which define whether or not the item is published. Default settings can be configured for each type of media on your site.', [':media-type' => Url::fromRoute('entity.media_type.collection')->toString()]) . '</dd>';
@@ -52,7 +52,7 @@ function media_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dt>' . t('Adding media to other content') . '</dt>';
       $output .= '<dd>' . t('Users with permission to administer content types can add media support by adding a media reference field to the content type on the content type administration page. (The same is true of block types, taxonomy terms, user profiles, and other content that supports fields.) A media reference field can refer to any configured media type. It is possible to allow multiple media types in the same field.') . '</dd>';
       $output .= '</dl>';
-      $output .= '<h3>' . t('Differences between Media, File, and Image reference fields') . '</h3>';
+      $output .= '<h2>' . t('Differences between Media, File, and Image reference fields') . '</h2>';
       $output .= '<p>' . t('<em>Media</em> reference fields offer several advantages over basic <em>File</em> and <em>Image</em> references:') . '</p>';
       $output .= '<ul>';
       $output .= '<li>' . t('Media reference fields can reference multiple media types in the same field.') . '</li>';

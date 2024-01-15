@@ -17,9 +17,9 @@ function syslog_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.syslog':
       $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Syslog module logs events by sending messages to the logging facility of your web server\'s operating system. Syslog is an operating system administrative logging tool that provides valuable information for use in system management and security auditing. Most suited to medium and large sites, Syslog provides filtering tools that allow messages to be routed by type and severity. For more information, see the <a href=":syslog">online documentation for the Syslog module</a>, as well as PHP\'s documentation pages for the <a href="http://php.net/manual/function.openlog.php">openlog</a> and <a href="http://php.net/manual/function.syslog.php">syslog</a> functions.', [':syslog' => 'https://www.drupal.org/documentation/modules/syslog']) . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Logging for UNIX, Linux, and Mac OS X') . '</dt>';
       $output .= '<dd>' . t('On UNIX, Linux, and Mac OS X, you will find the configuration in the file <em>/etc/syslog.conf</em>, or in <em>/etc/rsyslog.conf</em> or in the directory <em>/etc/rsyslog.d</em>. These files define the routing configuration. Messages can be flagged with the codes <code>LOG_LOCAL0</code> through <code>LOG_LOCAL7</code>. For information on Syslog facilities, severity levels, and how to set up <em>syslog.conf</em> or <em>rsyslog.conf</em>, see the <em>syslog.conf</em> or <em>rsyslog.conf</em> manual page on your command line.') . '</dd>';

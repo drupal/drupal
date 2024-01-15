@@ -25,9 +25,9 @@ function field_ui_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.field_ui':
       $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Field UI module provides an administrative user interface (UI) for managing and displaying fields. Fields can be attached to most content entity sub-types. Different field types, widgets, and formatters are provided by the modules installed on your site, and managed by the Field module. For background information and terminology related to fields and entities, see the <a href=":field">Field module help page</a>. For more information about the Field UI, see the <a href=":field_ui_docs">online documentation for the Field UI module</a>.', [':field' => Url::fromRoute('help.page', ['name' => 'field'])->toString(), ':field_ui_docs' => 'https://www.drupal.org/documentation/modules/field-ui']) . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Creating a field') . '</dt>';
       $output .= '<dd>' . t('On the <em>Manage fields</em> page for your entity type or sub-type, you can add, configure, and delete fields for that entity type or sub-type. Each field has a <em>machine name</em>, which is used internally to identify the field and must be unique across an entity type; once a field is created, you cannot change the machine name. Most fields have two types of settings. The field-level settings depend on the field type, and affect how the data in the field is stored. Once they are set, they can no longer be changed; examples include how many data values are allowed for the field and where files are stored. The sub-type-level settings are specific to each entity sub-type the field is used on, and they can be changed later; examples include the field label, help text, default value, and whether the field is required or not. You can return to these settings by choosing the <em>Edit</em> link for the field from the <em>Manage fields</em> page.');

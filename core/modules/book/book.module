@@ -24,9 +24,9 @@ use Drupal\Core\Template\Attribute;
 function book_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.book':
-      $output = '<h3>' . t('About') . '</h3>';
+      $output = '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Book module is used for creating structured, multi-page content, such as site resource guides, manuals, and wikis. It allows you to create content that has chapters, sections, subsections, or any similarly-tiered structure. Installing the module creates a new content type <em>Book page</em>. For more information, see the <a href=":book">online documentation for the Book module</a>.', [':book' => 'https://www.drupal.org/documentation/modules/book']) . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Adding and managing book content') . '</dt>';
       $output .= '<dd>' . t('Books have a hierarchical structure, called a <em>book outline</em>. Each book outline can have nested pages up to nine levels deep. Multiple content types can be configured to behave as a book outline. From the content edit form, it is possible to add a page to a book outline or create a new book.') . '</dd>';

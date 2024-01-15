@@ -18,9 +18,9 @@ function statistics_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.statistics':
       $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Statistics module shows you how often content is viewed. This is useful in determining which pages of your site are most popular. For more information, see the <a href=":statistics_do">online documentation for the Statistics module</a>.', [':statistics_do' => 'https://www.drupal.org/documentation/modules/statistics/']) . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Displaying popular content') . '</dt>';
       $output .= '<dd>' . t('The module includes a <em>Popular content</em> block that displays the most viewed pages today and for all time, and the last content viewed. To use the block, enable <em>Count content views</em> on the <a href=":statistics-settings">Statistics page</a>, and then you can enable and configure the block on the <a href=":blocks">Block layout page</a>.', [':statistics-settings' => Url::fromRoute('statistics.settings')->toString(), ':blocks' => (\Drupal::moduleHandler()->moduleExists('block')) ? Url::fromRoute('block.admin_display')->toString() : '#']) . '</dd>';

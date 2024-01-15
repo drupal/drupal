@@ -16,9 +16,9 @@ function config_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.config':
       $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Configuration Manager module provides a user interface for importing and exporting configuration changes between installations of your website in different environments. Configuration is stored in YAML format. For more information, see the <a href=":url">online documentation for the Configuration Manager module</a>.', [':url' => 'https://www.drupal.org/documentation/administer/config']) . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Exporting the full configuration') . '</dt>';
       $output .= '<dd>' . t('You can create and download an archive consisting of all your site\'s configuration exported as <em>*.yml</em> files on the <a href=":url">Export</a> page.', [':url' => Url::fromRoute('config.export_full')->toString()]) . '</dd>';

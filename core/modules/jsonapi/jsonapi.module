@@ -83,7 +83,7 @@ const JSONAPI_FILTER_AMONG_OWN = 'filter_among_own';
 function jsonapi_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.jsonapi':
-      $output = '<h3>' . t('About') . '</h3>';
+      $output = '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The JSON:API module is a fully compliant implementation of the <a href=":spec">JSON:API Specification</a>. By following shared conventions, you can increase productivity, take advantage of generalized tooling, and focus on what matters: your application. Clients built around JSON:API are able to take advantage of features like efficient response caching, which can sometimes eliminate network requests entirely. For more information, see the <a href=":docs">online documentation for the JSON:API module</a>.', [
         ':spec' => 'https://jsonapi.org',
         ':docs' => 'https://www.drupal.org/docs/8/modules/json-api',
