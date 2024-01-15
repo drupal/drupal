@@ -221,6 +221,9 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
         $this->cacheBackend->delete($this->cacheKey);
       }
     }
+    if ($this->discovery instanceof CachedDiscoveryInterface) {
+      $this->discovery->clearCachedDefinitions();
+    }
     $this->definitions = NULL;
   }
 
@@ -255,6 +258,9 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    * {@inheritdoc}
    */
   public function useCaches($use_caches = FALSE) {
+    if ($this->discovery instanceof CachedDiscoveryInterface) {
+      $this->discovery->useCaches($use_caches);
+    }
     $this->useCaches = $use_caches;
     if (!$use_caches) {
       $this->definitions = NULL;
