@@ -3,17 +3,24 @@
 namespace Drupal\Core\StreamWrapper;
 
 use Drupal\Core\Site\Settings;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  * Provides a StreamWrapper manager.
  *
  * @see \Drupal\Core\StreamWrapper\StreamWrapperInterface
  */
-class StreamWrapperManager implements ContainerAwareInterface, StreamWrapperManagerInterface {
+class StreamWrapperManager implements StreamWrapperManagerInterface {
 
-  use ContainerAwareTrait;
+  /**
+   * Constructs a StreamWrapperManager object.
+   *
+   * @param \Psr\Container\ContainerInterface $container
+   *   The stream wrapper service locator.
+   */
+  public function __construct(
+    protected readonly ContainerInterface $container,
+  ) {}
 
   /**
    * Contains stream wrapper info.
