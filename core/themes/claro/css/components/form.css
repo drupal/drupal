@@ -141,6 +141,13 @@ tr .form-item,
   margin-block: var(--space-xs);
 }
 
+.form-actions .form-wrapper,
+.field-actions .form-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs) 0;
+}
+
 .form-actions .button,
 .field-actions .button,
 .form-actions .action-link,
