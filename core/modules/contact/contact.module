@@ -22,9 +22,9 @@ function contact_help($route_name, RouteMatchInterface $route_match) {
       $block_page = \Drupal::moduleHandler()->moduleExists('block') ? Url::fromRoute('block.admin_display')->toString() : '#';
       $contact_page = Url::fromRoute('entity.contact_form.collection')->toString();
       $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Contact module allows visitors to contact registered users on your site, using the personal contact form, and also allows you to set up site-wide contact forms. For more information, see the <a href=":contact">online documentation for the Contact module</a>.', [':contact' => 'https://www.drupal.org/documentation/modules/contact']) . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Using the personal contact form') . '</dt>';
       $output .= '<dd>' . t("Site visitors can email registered users on your site by using the personal contact form, without knowing or learning the email address of the recipient. When a site visitor is viewing a user profile, the viewer will see a <em>Contact</em> tab or link, which leads to the personal contact form. The personal contact link is not shown when you are viewing your own profile, and users must have both <em>View user information</em> (to see user profiles) and <em>Use users' personal contact forms</em> permission to see the link. The user whose profile is being viewed must also have their personal contact form enabled (this is a user account setting); viewers with <em>Administer users</em> permission can bypass this setting.") . '</dd>';

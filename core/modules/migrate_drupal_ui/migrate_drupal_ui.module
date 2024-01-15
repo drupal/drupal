@@ -15,10 +15,10 @@ function migrate_drupal_ui_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.migrate_drupal_ui':
       $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Migrate Drupal UI module provides a simple user interface to perform an upgrade from an earlier version of Drupal. For more information, see the <a href=":migrate">online documentation for the Migrate Drupal UI module</a>.',
           [':migrate' => 'https://www.drupal.org/upgrade/migrate']) . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Preparing the site') . '</dt>';
       $output .= '<dd>' . t('You need to install all modules on this site that are installed on the previous site. For example, if you have used the Book module on the previous site then you must install the Book module on this site for that data to be available on this site.') . '</dd>';

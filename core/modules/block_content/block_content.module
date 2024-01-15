@@ -21,9 +21,9 @@ function block_content_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.block_content':
       $field_ui = \Drupal::moduleHandler()->moduleExists('field_ui') ? Url::fromRoute('help.page', ['name' => 'field_ui'])->toString() : '#';
       $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Block Content module allows you to create and manage custom <em>block types</em> and <em>content-containing blocks</em>. For more information, see the <a href=":online-help">online documentation for the Block Content module</a>.', [':online-help' => 'https://www.drupal.org/documentation/modules/block_content']) . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Creating and managing block types') . '</dt>';
       $output .= '<dd>' . t('Users with the <em>Administer blocks</em> permission can create and edit block types with fields and display settings, from the <a href=":types">Block types</a> page under the Structure menu. For more information about managing fields and display settings, see the <a href=":field-ui">Field UI module help</a> and <a href=":field">Field module help</a>.', [':types' => Url::fromRoute('entity.block_content_type.collection')->toString(), ':field-ui' => $field_ui, ':field' => Url::fromRoute('help.page', ['name' => 'field'])->toString()]) . '</dd>';

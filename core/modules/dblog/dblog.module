@@ -22,9 +22,9 @@ function dblog_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.dblog':
       $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Database Logging module logs system events in the Drupal database. For more information, see the <a href=":dblog">online documentation for the Database Logging module</a>.', [':dblog' => 'https://www.drupal.org/documentation/modules/dblog']) . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Monitoring your site') . '</dt>';
       $output .= '<dd>' . t('The Database Logging module allows you to view an event log on the <a href=":dblog">Recent log messages</a> page. The log is a chronological list of recorded events containing usage data, performance data, errors, warnings and operational information. Administrators should check the log on a regular basis to ensure their site is working properly.', [':dblog' => Url::fromRoute('dblog.overview')->toString()]) . '</dd>';

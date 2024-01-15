@@ -14,7 +14,7 @@ function workflows_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.workflows':
       $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Workflows module provides a UI and an API for creating workflows content. This lets site admins define workflows and their states, and then define transitions between those states. For more information, see the <a href=":workflow">online documentation for the Workflows module</a>.', [':workflow' => 'https://www.drupal.org/documentation/modules/workflows']) . '</p>';
       $output .= '<h4>' . t('Workflow') . '</h4>';
       $output .= '<p>' . t('A collection of states and transitions between those states.') . '</p>';

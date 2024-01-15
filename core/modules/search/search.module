@@ -19,9 +19,9 @@ function search_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.search':
       $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Search module provides the ability to set up search pages based on plugins provided by other modules. In Drupal core, there are two page-type plugins: the Content page type provides keyword searching for content managed by the Node module, and the Users page type provides keyword searching for registered users. Contributed modules may provide other page-type plugins. For more information, see the <a href=":search-module">online documentation for the Search module</a>.', [':search-module' => 'https://www.drupal.org/documentation/modules/search']) . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Configuring search pages') . '</dt>';
       $output .= '<dd>' . t('To configure search pages, visit the <a href=":search-settings">Search pages page</a>. In the Search pages section, you can add a new search page, edit the configuration of existing search pages, enable and disable search pages, and choose the default search page. Each enabled search page has a URL path starting with <em>search</em>, and each will appear as a tab or local task link on the <a href=":search-url">search page</a>; you can configure the text that is shown in the tab. In addition, some search page plugins have additional settings that you can configure for each search page.', [':search-settings' => Url::fromRoute('entity.search_page.collection')->toString(), ':search-url' => Url::fromRoute('search.view')->toString()]) . '</dd>';

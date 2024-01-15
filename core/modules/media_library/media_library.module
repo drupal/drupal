@@ -33,7 +33,7 @@ use Drupal\views\ViewExecutable;
 function media_library_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.media_library':
-      $output = '<h3>' . t('About') . '</h3>';
+      $output = '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Media Library module provides a rich, visual interface for managing media, and allows media to be reused in entity reference fields or embedded into text content. It overrides the <a href=":media-collection">media administration page</a>, allowing users to toggle between the existing table-style interface and a new grid-style interface for browsing and performing administrative operations on media.', [
         ':media-collection' => Url::fromRoute('entity.media.collection')->toString(),
       ]) . '</p>';
@@ -41,10 +41,10 @@ function media_library_help($route_name, RouteMatchInterface $route_match) {
         ':media-help' => Url::fromRoute('help.page', ['name' => 'media'])->toString(),
         ':media-library-handbook' => 'https://www.drupal.org/docs/8/core/modules/media-library-module',
       ]) . '</p>';
-      $output .= '<h3>' . t('Selection dialog') . '</h3>';
+      $output .= '<h2>' . t('Selection dialog') . '</h2>';
       $output .= '<p>' . t('When selecting media for an entity reference field or a text editor, Media Library opens a modal dialog to help users easily find and select media. The modal dialog can toggle between a grid-style and table-style interface, and new media items can be uploaded directly into it.') . '</p>';
       $output .= '<p>' . t('Within the dialog, media items are divided up by type. If more than one media type can be selected by the user, the available types will be displayed as a set of vertical tabs. To users who have appropriate permissions, each media type may also present a short form allowing you to upload or create new media items of that type.') . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Grid-style vs. table-style interface') . '</dt>';
       $output .= '<dd>' . t('The Media Library module provides a new grid-style interface for the media administration page that displays media as thumbnails, with minimal textual information, allowing users to visually browse media in their site. The existing table-style interface is better suited to displaying additional information about media items, in addition to being more accessible to users with assistive technology.') . '</dd>';
@@ -53,7 +53,7 @@ function media_library_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dt>' . t('Embedding media in text content') . '</dt>';
       $output .= '<dd>' . t('To use the media library within CKEditor, you must add the "Insert from Media Library" button to the CKEditor toolbar, and enable the "Embed media" filter in the text format associated with the text editor.') . '</dd>';
       $output .= '</dl>';
-      $output .= '<h3>' . t('Customize') . '</h3>';
+      $output .= '<h2>' . t('Customize') . '</h2>';
       $output .= '<ul>';
       $output .= '<li>';
       if (\Drupal::moduleHandler()->moduleExists('views_ui') && \Drupal::currentUser()->hasPermission('administer views')) {

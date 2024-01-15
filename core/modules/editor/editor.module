@@ -27,9 +27,9 @@ function editor_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.editor':
       $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Text Editor module provides a framework that other modules (such as <a href=":ckeditor5">CKEditor5 module</a>) can use to provide toolbars and other functionality that allow users to format text more easily than typing HTML tags directly. For more information, see the <a href=":documentation">online documentation for the Text Editor module</a>.', [':documentation' => 'https://www.drupal.org/documentation/modules/editor', ':ckeditor5' => (\Drupal::moduleHandler()->moduleExists('ckeditor5')) ? Url::fromRoute('help.page', ['name' => 'ckeditor5'])->toString() : '#']) . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Installing text editors') . '</dt>';
       $output .= '<dd>' . t('The Text Editor module provides a framework for managing editors. To use it, you also need to install a text editor. This can either be the core <a href=":ckeditor5">CKEditor5 module</a>, which can be installed on the <a href=":extend">Extend page</a>, or a contributed module for any other text editor. When installing a contributed text editor module, be sure to check the installation instructions, because you will most likely need to download an external library as well as the Drupal module.', [':ckeditor5' => (\Drupal::moduleHandler()->moduleExists('ckeditor5')) ? Url::fromRoute('help.page', ['name' => 'ckeditor5'])->toString() : '#', ':extend' => Url::fromRoute('system.modules_list')->toString()]) . '</dd>';

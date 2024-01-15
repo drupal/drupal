@@ -34,7 +34,7 @@ function forum_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.forum':
       $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Forum module lets you create threaded discussion forums with functionality similar to other message board systems. In a forum, users post topics and threads in nested hierarchies, allowing discussions to be categorized and grouped.') . '</p>';
       $output .= '<p>' . t('The Forum module adds and uses a content type called <em>Forum topic</em>. For background information on content types, see the <a href=":node_help">Node module help page</a>.', [':node_help' => Url::fromRoute('help.page', ['name' => 'node'])->toString()]) . '</p>';
       $output .= '<p>' . t('A forum is represented by a hierarchical structure, consisting of:');
@@ -46,7 +46,7 @@ function forum_help($route_name, RouteMatchInterface $route_match) {
       $output .= '</ul>';
       $output .= '</p>';
       $output .= '<p>' . t('For more information, see the <a href=":forum">online documentation for the Forum module</a>.', [':forum' => 'https://www.drupal.org/documentation/modules/forum']) . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Setting up the forum structure') . '</dt>';
       $output .= '<dd>' . t('Visit the <a href=":forums">Forums page</a> to set up containers and forums to hold your discussion topics.', [':forums' => Url::fromRoute('forum.overview')->toString()]) . '</dd>';

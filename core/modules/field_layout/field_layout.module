@@ -23,7 +23,7 @@ use Drupal\field_layout\Form\FieldLayoutEntityViewDisplayEditForm;
 function field_layout_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.field_layout':
-      $output = '<h3>' . t('About') . '</h3>';
+      $output = '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Field Layout module allows you to arrange fields into regions on forms and displays of entities such as nodes and users.') . '</p>';
       $output .= '<p>' . t('For more information, see the <a href=":field-layout-documentation">online documentation for the Field Layout module</a>.', [':field-layout-documentation' => 'https://www.drupal.org/documentation/modules/field_layout']) . '</p>';
       return $output;

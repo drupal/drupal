@@ -39,9 +39,9 @@ function content_moderation_help($route_name, RouteMatchInterface $route_match) 
     // Main module help for the content_moderation module.
     case 'help.page.content_moderation':
       $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Content Moderation module allows you to expand on Drupal\'s "unpublished" and "published" states for content. It allows you to have a published version that is live, but have a separate working copy that is undergoing review before it is published. This is achieved by using <a href=":workflows">Workflows</a> to apply different states and transitions to entities as needed. For more information, see the <a href=":content_moderation">online documentation for the Content Moderation module</a>.', [':content_moderation' => 'https://www.drupal.org/documentation/modules/content_moderation', ':workflows' => Url::fromRoute('help.page', ['name' => 'workflows'])->toString()]) . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Applying workflows') . '</dt>';
       $output .= '<dd>' . t('Content Moderation allows you to apply <a href=":workflows">Workflows</a> to content, content blocks, and other <a href=":field_help" title="Field module help, with background on content entities">content entities</a>, to provide more fine-grained publishing options. For example, a Basic page might have states such as Draft and Published, with allowed transitions such as Draft to Published (making the current revision "live"), and Published to Draft (making a new draft revision of published content).', [':workflows' => Url::fromRoute('help.page', ['name' => 'workflows'])->toString(), ':field_help' => Url::fromRoute('help.page', ['name' => 'field'])->toString()]) . '</dd>';

@@ -23,9 +23,9 @@ function filter_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.filter':
       $output = '';
-      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<h2>' . t('About') . '</h2>';
       $output .= '<p>' . t('The Filter module allows administrators to configure text formats. Text formats change how HTML tags and other text will be <em>processed and displayed</em> in the site. They are used to transform text, and also help to defend your website against potentially damaging input from malicious users. Visual text editors can be associated with text formats by using the <a href=":editor_help">Text Editor module</a>. For more information, see the <a href=":filter_do">online documentation for the Filter module</a>.', [':filter_do' => 'https://www.drupal.org/documentation/modules/filter/', ':editor_help' => (\Drupal::moduleHandler()->moduleExists('editor')) ? Url::fromRoute('help.page', ['name' => 'editor'])->toString() : '#']) . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Managing text formats') . '</dt>';
       $output .= '<dd>' . t('You can create and edit text formats on the <a href=":formats">Text formats page</a> (if the Text Editor module is installed, this page is named Text formats and editors). One text format is included by default: Plain text (which removes all HTML tags). Additional text formats may be created during installation. You can create a text format by clicking "<a href=":add_format">Add text format</a>".', [':formats' => Url::fromRoute('filter.admin_overview')->toString(), ':add_format' => Url::fromRoute('filter.format_add')->toString()]) . '</dd>';
