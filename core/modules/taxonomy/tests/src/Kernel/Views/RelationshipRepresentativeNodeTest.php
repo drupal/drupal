@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\taxonomy\Functional\Views;
+namespace Drupal\Tests\taxonomy\Kernel\Views;
 
 use Drupal\views\Views;
 
@@ -14,19 +14,14 @@ class RelationshipRepresentativeNodeTest extends TaxonomyTestBase {
   /**
    * Views used by this test.
    *
-   * @var array
+   * @var string[]
    */
   public static $testViews = ['test_groupwise_term'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * Tests the relationship.
    */
-  public function testRelationship() {
+  public function testRelationship(): void {
     $view = Views::getView('test_groupwise_term');
     $this->executeView($view);
     $map = ['node_field_data_taxonomy_term_field_data_nid' => 'nid', 'tid' => 'tid'];
