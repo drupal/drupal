@@ -113,7 +113,7 @@ chromedriver using port 4444, and keep it running:
 * To run only core tests, run `yarn test:nightwatch --tag core`
 * To skip running core tests, run `yarn test:nightwatch --skiptags core`
 * To run a single test, run e.g.
-  `yarn test:nightwatch tests/Drupal/Nightwatch/Tests/exampleTest.js`
+  `yarn test:nightwatch tests/Drupal/Nightwatch/Tests/loginTest.js`
 * To run a11y tests for both the admin and default themes.
   `yarn test:nightwatch --tag a11y`
 * To run a11y tests for the admin theme only.
