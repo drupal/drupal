@@ -21,6 +21,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
@@ -235,6 +236,9 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       return NULL;
     }
     catch (AccessDeniedHttpException $e) {
+      return NULL;
+    }
+    catch (NotFoundHttpException $e) {
       return NULL;
     }
   }
