@@ -1,10 +1,9 @@
 <?php
 
-namespace Drupal\Tests\views\Functional\Handler;
+namespace Drupal\Tests\views\Kernel\Handler;
 
-use Drupal\Tests\views\Functional\ViewTestBase;
+use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Tests the time interval handler.
@@ -12,61 +11,49 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  * @group views
  * @see \Drupal\views\Plugin\views\field\TimeInterval
  */
-class FieldTimeIntervalTest extends ViewTestBase {
-
-  use StringTranslationTrait;
+class FieldTimeIntervalTest extends ViewsKernelTestBase {
 
   /**
    * Views used by this test.
    *
-   * @var array
+   * @var string[]
    */
   public static $testViews = ['test_view'];
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected static $modules = [
+    'node_test_views',
+  ];
 
   /**
    * Ages dataset.
-   *
-   * @var array
    */
-  protected $ages = [
+  protected array $ages = [
     [0, '0 sec', 2],
     [1000, '16 min', 1],
     [1000000, '1 week 4 days 13 hours 46 min', 4],
-    // DateFormatter::formatInterval will output 2 because there are no weeks.
     [100000000, '3 years 2 months', 5],
     [NULL, '', 3],
   ];
 
   /**
-   * {@inheritdoc}
+   * Tests the TimeInterval handler.
    */
-  protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
-    parent::setUp($import_test_views, $modules);
-
-    $this->enableViewsTestModule();
-  }
-
-  /**
-   * Test TimeInterval handler.
-   */
-  public function testFieldTimeInterval() {
+  public function testFieldTimeInterval(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
     $this->executeView($view);
     foreach ($view->result as $delta => $row) {
-      [$value, $formatted_value, $granularity] = $this->ages[$delta];
+      [, $formatted_value, $granularity] = $this->ages[$delta];
       $view->field['age']->options['granularity'] = $granularity;
       $this->assertEquals($formatted_value, $view->field['age']->advancedRender($row));
     }
   }
 
   /**
-   * Overrides \Drupal\views\Tests\ViewUnitTestBase::schemaDefinition().
+   * {@inheritdoc}
    */
   protected function schemaDefinition() {
     $schema_definition = parent::schemaDefinition();
@@ -75,7 +62,7 @@ class FieldTimeIntervalTest extends ViewTestBase {
   }
 
   /**
-   * Overrides \Drupal\views\Tests\ViewUnitTestBase::viewsData().
+   * {@inheritdoc}
    */
   protected function viewsData() {
     $data = parent::viewsData();
@@ -84,7 +71,7 @@ class FieldTimeIntervalTest extends ViewTestBase {
   }
 
   /**
-   * Overrides \Drupal\views\Tests\ViewUnitTestBase::dataSet().
+   * {@inheritdoc}
    */
   protected function dataSet() {
     $data_set = parent::dataSet();
