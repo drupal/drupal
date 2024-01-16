@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
-git fetch -vn --depth=50 "$CI_MERGE_REQUEST_PROJECT_URL" "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
+git fetch -vn --depth=50 origin "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
 
 echo "ℹ️ Changes from ${TARGET_BRANCH}"
 git diff ${CI_MERGE_REQUEST_DIFF_BASE_SHA} --name-only
