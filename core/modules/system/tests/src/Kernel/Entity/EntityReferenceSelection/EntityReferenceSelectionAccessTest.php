@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\system\Functional\Entity\EntityReferenceSelection;
+namespace Drupal\Tests\system\Kernel\Entity\EntityReferenceSelection;
 
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Component\Utility\Html;
@@ -117,7 +117,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
   /**
    * Tests the node-specific overrides of the entity handler.
    */
-  public function testNodeHandler() {
+  public function testNodeHandler(): void {
     $selection_options = [
       'target_type' => 'node',
       'handler' => 'default',
@@ -241,7 +241,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
   /**
    * Tests the user-specific overrides of the entity handler.
    */
-  public function testUserHandler() {
+  public function testUserHandler(): void {
     $selection_options = [
       'target_type' => 'user',
       'handler' => 'default',
@@ -400,7 +400,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
   /**
    * Tests the comment-specific overrides of the entity handler.
    */
-  public function testCommentHandler() {
+  public function testCommentHandler(): void {
     $selection_options = [
       'target_type' => 'comment',
       'handler' => 'default',
@@ -558,7 +558,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
   /**
    * Tests the term-specific overrides of the selection handler.
    */
-  public function testTermHandler() {
+  public function testTermHandler(): void {
     // Create a 'Tags' vocabulary.
     Vocabulary::create([
       'name' => 'Tags',
@@ -702,7 +702,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
   /**
    * Tests the selection handler for the media entity type.
    */
-  public function testMediaHandler() {
+  public function testMediaHandler(): void {
     $selection_options = [
       'target_type' => 'media',
       'handler' => 'default',
