@@ -1,23 +1,29 @@
 <?php
 
-namespace Drupal\Tests\system\Functional\Mail;
+declare(strict_types=1);
+
+namespace Drupal\Tests\system\Unit\Mail;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\Core\Site\Settings;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests for \Drupal\Core\Mail\MailFormatHelper::htmlToText().
  *
  * @group Mail
  */
-class HtmlToTextTest extends BrowserTestBase {
+class HtmlToTextTest extends UnitTestCase {
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  public function setUp(): void {
+    parent::setUp();
+    $GLOBALS['base_path'] = '/';
+    $GLOBALS['base_url'] = 'http://localhost';
+  }
 
   /**
    * Converts a string to its PHP source equivalent for display in test messages.
@@ -29,7 +35,7 @@ class HtmlToTextTest extends BrowserTestBase {
    *   An HTML representation of the text string that, when displayed in a
    *   browser, represents the PHP source code equivalent of $text.
    */
-  protected function stringToHtml($text) {
+  protected function stringToHtml($text): string {
     return '"' .
       str_replace(
         ["\n", ' '],
@@ -65,7 +71,7 @@ class HtmlToTextTest extends BrowserTestBase {
   /**
    * Tests supported tags of \Drupal\Core\Mail\MailFormatHelper::htmlToText().
    */
-  public function testTags() {
+  public function testTags(): void {
     global $base_path, $base_url;
     $tests = [
       // @todo Trailing linefeeds should be trimmed.
@@ -161,7 +167,7 @@ class HtmlToTextTest extends BrowserTestBase {
   /**
    * Tests allowing tags in \Drupal\Core\Mail\MailFormatHelper::htmlToText().
    */
-  public function testDrupalHtmlToTextArgs() {
+  public function testDrupalHtmlToTextArgs(): void {
     // The second parameter of \Drupal\Core\Mail\MailFormatHelper::htmlToText()
     // overrules the allowed tags.
     $this->assertHtmlToText(
@@ -195,7 +201,7 @@ class HtmlToTextTest extends BrowserTestBase {
   /**
    * Tests that whitespace is collapsed.
    */
-  public function testDrupalHtmlToTextCollapsesWhitespace() {
+  public function testDrupalHtmlToTextCollapsesWhitespace(): void {
     $input = "<p>Drupal  Drupal\n\nDrupal<pre>Drupal  Drupal\n\nDrupal</pre>Drupal  Drupal\n\nDrupal</p>";
     // @todo The whitespace should be collapsed.
     $collapsed = "Drupal  Drupal\n\nDrupalDrupal  Drupal\n\nDrupalDrupal  Drupal\n\nDrupal\n\n";
@@ -210,7 +216,7 @@ class HtmlToTextTest extends BrowserTestBase {
   /**
    * Tests the conversion of block-level HTML tags to plaintext with newlines.
    */
-  public function testDrupalHtmlToTextBlockTagToNewline() {
+  public function testDrupalHtmlToTextBlockTagToNewline(): void {
     $input = <<<'EOT'
 [text]
 <blockquote>[blockquote]</blockquote>
@@ -246,7 +252,7 @@ EOT;
   /**
    * Tests that headers are properly separated from surrounding text.
    */
-  public function testHeaderSeparation() {
+  public function testHeaderSeparation(): void {
     $html = 'Drupal<h1>Drupal</h1>Drupal';
     // @todo There should be more space above the header than below it.
     $text = "Drupal\n======== Drupal ==============================================================\n\nDrupal\n";
@@ -271,7 +277,7 @@ EOT;
   /**
    * Tests that footnote references are properly generated.
    */
-  public function testFootnoteReferences() {
+  public function testFootnoteReferences(): void {
     global $base_path, $base_url;
     $source = <<<EOT
 <a href="http://www.example.com/node/1">Host and path</a>
@@ -300,7 +306,7 @@ EOT;
   /**
    * Tests the plaintext conversion of different whitespace combinations.
    */
-  public function testDrupalHtmlToTextParagraphs() {
+  public function testDrupalHtmlToTextParagraphs(): void {
     $tests = [];
     $tests[] = [
       'html' => "<p>line 1<br />\nline 2<br />line 3\n<br />line 4</p><p>paragraph</p>",
@@ -329,7 +335,7 @@ EOT;
    * RFC 821 says, "The maximum total length of a text line including the
    * <CRLF> is 1000 characters."
    */
-  public function testVeryLongLineWrap() {
+  public function testVeryLongLineWrap(): void {
     $input = 'Drupal<br /><p>' . str_repeat('x', 2100) . '</p><br />Drupal';
     $output = MailFormatHelper::htmlToText($input);
     $eol = Settings::get('mail_line_endings', PHP_EOL);
@@ -350,7 +356,7 @@ EOT;
    *
    * @see \Drupal\Core\Mail\MailFormatHelper::wrapMail()
    */
-  public function testRemoveTrailingWhitespace() {
+  public function testRemoveTrailingWhitespace(): void {
     $text = "Hi there! \nEarth";
     $mail_lines = explode("\n", MailFormatHelper::wrapMail($text));
     $this->assertNotEquals(" ", substr($mail_lines[0], -1), 'Trailing whitespace removed.');
@@ -364,7 +370,7 @@ EOT;
    *
    * @see \Drupal\Core\Mail\MailFormatHelper::wrapMail()
    */
-  public function testUsenetSignature() {
+  public function testUsenetSignature(): void {
     $text = "Hi there!\n-- \nEarth";
     $mail_lines = explode("\n", MailFormatHelper::wrapMail($text));
     $this->assertEquals("-- ", $mail_lines[1], 'Trailing whitespace not removed for dash-dash-space signatures.');
