@@ -210,7 +210,15 @@ const MachineNameTestArray = [
 ];
 module.exports = {
   before(browser) {
-    browser.drupalInstall().drupalInstallModule('form_test', true);
+    browser.drupalInstall().drupalLoginAsAdmin(() => {
+      browser
+        .drupalRelativeURL('/admin/modules')
+        .setValue('input[type="search"]', 'FormAPI')
+        .waitForElementVisible('input[name="modules[form_test][enable]"]', 1000)
+        .click('input[name="modules[form_test][enable]"]')
+        .click('input[type="submit"]') // Submit module form.
+        .click('input[type="submit"]'); // Confirm installation of dependencies.
+    });
   },
   after(browser) {
     browser.drupalUninstall();
