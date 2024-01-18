@@ -1,32 +1,29 @@
 <?php
 
-namespace Drupal\Tests\system\Functional\Common;
+namespace Drupal\Tests\system\Kernel\Common;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests alteration of arguments passed to \Drupal::moduleHandler->alter().
  *
  * @group Common
  */
-class AlterTest extends BrowserTestBase {
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  protected static $modules = ['block', 'common_test'];
+class AlterTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected static $modules = [
+    'block',
+    'common_test',
+    'system',
+  ];
 
   /**
    * Tests if the theme has been altered.
    */
-  public function testDrupalAlter() {
+  public function testDrupalAlter(): void {
     // This test depends on Olivero, so make sure that it is always the current
     // active theme.
     \Drupal::service('theme_installer')->install(['olivero']);
@@ -52,7 +49,6 @@ class AlterTest extends BrowserTestBase {
 
     // Verify alteration of multiple arguments.
     $array_copy = $array;
-    $array_expected = ['foo' => 'Drupal theme'];
     $entity_copy = clone $entity;
     $entity_expected = clone $entity;
     $entity_expected->foo = 'Drupal theme';
