@@ -717,6 +717,106 @@ class FieldPluginBaseTest extends UnitTestCase {
   }
 
   /**
+   * @dataProvider providerTestGetRenderTokensWithQuery
+   * @covers ::getRenderTokens
+   * @covers ::getTokenValuesRecursive
+   */
+  public function testGetRenderTokensWithQuery(array $query_params, array $expected): void {
+    $request = new Request($query_params);
+    $this->executable->expects($this->any())
+      ->method('getRequest')
+      ->willReturn($request);
+
+    $field = $this->setupTestField(['id' => 'id']);
+    $field->last_render = 'last rendered output';
+    $this->display->expects($this->any())
+      ->method('getHandlers')
+      ->willReturnMap([
+        ['argument', []],
+        ['field', ['id' => $field]],
+      ]);
+
+    $this->assertEquals($expected, $field->getRenderTokens([]));
+  }
+
+  /**
+   * Data provider for ::testGetRenderTokensWithQuery().
+   *
+   * @return array
+   *   Test data.
+   */
+  public function providerTestGetRenderTokensWithQuery(): array {
+    $data = [];
+    // No query parameters.
+    $data[] = [
+      [],
+      [
+        '{{ id }}' => 'last rendered output',
+      ],
+    ];
+    // Invalid query parameters.
+    $data[] = [
+      [
+        '&invalid' => [
+          'a' => 1,
+          'b' => [1, 2],
+          1 => 2,
+        ],
+        'invalid.entry' => 'ignore me',
+      ],
+      [
+        '{{ id }}' => 'last rendered output',
+      ],
+    ];
+    // Process only valid query parameters.
+    $data[] = [
+      [
+        'foo' => [
+          'a' => 'value',
+          'b' => 'value',
+          'c.d' => 'invalid argument',
+          '&invalid' => 'invalid argument',
+        ],
+        'bar' => [
+          'a' => 'value',
+          'b' => [
+            'c' => 'value',
+          ],
+        ],
+      ],
+      [
+        '{{ id }}' => 'last rendered output',
+        '{{ arguments.foo.a }}' => 'value',
+        '{{ arguments.foo.b }}' => 'value',
+        '{{ arguments.bar.a }}' => 'value',
+        '{{ arguments.bar.b.c }}' => 'value',
+      ],
+    ];
+    // Supports numeric keys.
+    $data[] = [
+      [
+        'multiple' => [
+          1,
+          2,
+          3,
+        ],
+        1 => '',
+        3 => '&amp; encoded_value',
+      ],
+      [
+        '{{ id }}' => 'last rendered output',
+        '{{ arguments.multiple.0 }}' => '1',
+        '{{ arguments.multiple.1 }}' => '2',
+        '{{ arguments.multiple.2 }}' => '3',
+        '{{ arguments.1 }}' => '',
+        '{{ arguments.3 }}' => '& encoded_value',
+      ],
+    ];
+
+    return $data;
+  }
+
+  /**
    * Ensures proper token replacement when generating CSS classes.
    *
    * @covers ::elementClasses
