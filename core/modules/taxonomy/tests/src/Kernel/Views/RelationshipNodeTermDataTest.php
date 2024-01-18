@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\taxonomy\Functional\Views;
+namespace Drupal\Tests\taxonomy\Kernel\Views;
 
 use Drupal\views\Views;
 use Drupal\views\ViewExecutable;
@@ -15,18 +15,17 @@ class RelationshipNodeTermDataTest extends TaxonomyTestBase {
   /**
    * Views used by this test.
    *
-   * @var array
+   * @var string[]
    */
   public static $testViews = ['test_taxonomy_node_term_data'];
 
   /**
-   * {@inheritdoc}
+   * Tests relations limited by vocabulary.
+   *
+   * @covers \Drupal\taxonomy\Plugin\views\relationship\NodeTermData::calculateDependencies
    */
-  protected $defaultTheme = 'stark';
-
-  public function testViewsHandlerRelationshipNodeTermData() {
+  public function testViewsHandlerRelationshipNodeTermData(): void {
     $view = Views::getView('test_taxonomy_node_term_data');
-    // Tests \Drupal\taxonomy\Plugin\views\relationship\NodeTermData::calculateDependencies().
     $expected = [
       'config' => ['core.entity_view_mode.node.teaser'],
       'module' => [
@@ -54,7 +53,6 @@ class RelationshipNodeTermDataTest extends TaxonomyTestBase {
       ->save();
 
     $view = Views::getView('test_taxonomy_node_term_data');
-    // Tests \Drupal\taxonomy\Plugin\views\relationship\NodeTermData::calculateDependencies().
     $expected['config'][] = 'taxonomy.vocabulary.views_testing_tags';
     $this->assertSame($expected, $view->getDependencies());
     $this->executeView($view, [$this->term1->id(), $this->term2->id()]);
@@ -64,7 +62,7 @@ class RelationshipNodeTermDataTest extends TaxonomyTestBase {
   /**
    * Tests that the 'taxonomy_term_access' tag is added to the Views query.
    */
-  public function testTag() {
+  public function testTag(): void {
     // Change the view to test relation limited by vocabulary.
     $this->config('views.view.test_taxonomy_node_term_data')
       ->set('display.default.display_options.relationships.term_node_tid.vids', ['views_testing_tags'])
