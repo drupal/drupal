@@ -1,7 +1,12 @@
 <?php
 
-namespace Drupal\Tests\node\Functional\Views;
+namespace Drupal\Tests\node\Kernel\Views;
 
+use Drupal\node\Entity\NodeType;
+use Drupal\Tests\node\Traits\NodeCreationTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
+use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
+use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 
 /**
@@ -9,63 +14,62 @@ use Drupal\views\Views;
  *
  * @group node
  */
-class PathPluginTest extends NodeTestBase {
+class PathPluginTest extends ViewsKernelTestBase {
 
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  protected static $modules = ['node'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
+  use NodeCreationTrait;
+  use UserCreationTrait;
 
   /**
    * Views used by this test.
    *
-   * @var array
+   * @var string[]
    */
   public static $testViews = ['test_node_path_plugin'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'node',
+    'node_test_views',
+    'user',
+  ];
 
   /**
    * Contains all nodes used by this test.
    *
    * @var \Drupal\node\Entity\Node[]
    */
-  protected $nodes;
+  protected array $nodes;
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE, $modules = ['node_test_views']): void {
-    parent::setUp($import_test_views, $modules);
+  protected function setUp($import_test_views = TRUE): void {
+    parent::setUp($import_test_views);
 
-    $this->drupalCreateContentType(['type' => 'article']);
+    $this->installEntitySchema('user');
+    $this->installEntitySchema('node');
+    $this->installSchema('node', ['node_access']);
+    ViewTestData::createTestViews(static::class, ['node_test_views']);
+
+    \Drupal::currentUser()->setAccount($this->createUser(['access content']));
+
+    NodeType::create([
+      'type' => 'article',
+      'name' => 'Article',
+    ])->save();
 
     // Create two nodes.
     for ($i = 0; $i < 2; $i++) {
-      $this->nodes[] = $this->drupalCreateNode(
-        [
-          'type' => 'article',
-          'body' => [
-            [
-              'value' => $this->randomMachineName(42),
-              'format' => filter_default_format(),
-              'summary' => $this->randomMachineName(),
-            ],
-          ],
-        ]
-      );
+      $this->nodes[] = $this->createNode(['type' => 'article']);
     }
   }
 
   /**
    * Tests the node path plugin functionality when converted to entity link.
    */
-  public function testPathPlugin() {
+  public function testPathPlugin(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $view = Views::getView('test_node_path_plugin');
