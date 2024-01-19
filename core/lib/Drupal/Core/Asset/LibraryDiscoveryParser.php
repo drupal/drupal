@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Asset;
 
+use Drupal\Component\FileCache\FileCacheFactory;
+use Drupal\Component\FileCache\FileCacheInterface;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Asset\Exception\IncompleteLibraryDefinitionException;
@@ -62,6 +64,13 @@ class LibraryDiscoveryParser {
   protected $extensionPathResolver;
 
   /**
+   * The file cache.
+   *
+   * @var \Drupal\Component\FileCache\FileCacheInterface
+   */
+  protected FileCacheInterface $fileCache;
+
+  /**
    * Constructs a new LibraryDiscoveryParser instance.
    *
    * @param string $root
@@ -84,6 +93,7 @@ class LibraryDiscoveryParser {
     $this->streamWrapperManager = $stream_wrapper_manager;
     $this->librariesDirectoryFileFinder = $libraries_directory_file_finder;
     $this->extensionPathResolver = $extension_path_resolver;
+    $this->fileCache = FileCacheFactory::get('library_parser');
   }
 
   /**
@@ -358,13 +368,19 @@ class LibraryDiscoveryParser {
     $libraries = [];
 
     $library_file = $path . '/' . $extension . '.libraries.yml';
-    if (file_exists($this->root . '/' . $library_file)) {
-      try {
-        $libraries = Yaml::decode(file_get_contents($this->root . '/' . $library_file)) ?? [];
-      }
-      catch (InvalidDataTypeException $e) {
-        // Rethrow a more helpful exception to provide context.
-        throw new InvalidLibraryFileException(sprintf('Invalid library definition in %s: %s', $library_file, $e->getMessage()), 0, $e);
+    $library_path = $this->root . '/' . $library_file;
+
+    if (file_exists($library_path)) {
+      $libraries = $this->fileCache->get($library_path);
+      if ($libraries === NULL) {
+        try {
+          $libraries = Yaml::decode(file_get_contents($this->root . '/' . $library_file)) ?? [];
+          $this->fileCache->set($library_path, $libraries);
+        }
+        catch (InvalidDataTypeException $e) {
+          // Rethrow a more helpful exception to provide context.
+          throw new InvalidLibraryFileException(sprintf('Invalid library definition in %s: %s', $library_file, $e->getMessage()), 0, $e);
+        }
       }
     }
 

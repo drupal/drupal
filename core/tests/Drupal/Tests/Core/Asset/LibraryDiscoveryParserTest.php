@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Asset;
 
+use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Core\Asset\Exception\IncompleteLibraryDefinitionException;
 use Drupal\Core\Asset\Exception\InvalidLibraryFileException;
 use Drupal\Core\Asset\Exception\LibraryDefinitionMissingLicenseException;
@@ -111,8 +112,16 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
    * Tests that basic functionality works for getLibraryByName.
    *
    * @covers ::buildByExtension
+   *
+   * @runInSeparateProcess
    */
   public function testBuildByExtensionSimple() {
+    FileCacheFactory::setPrefix('testing');
+    // Use the default file cache configuration.
+    FileCacheFactory::setConfiguration([
+      'library_parser' => [],
+    ]);
+    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager, $this->streamWrapperManager, $this->librariesDirectoryFileFinder, $this->extensionPathResolver);
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('moduleExists')
       ->with('example_module')
@@ -135,6 +144,10 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
 
     // Ensures that VERSION is replaced by the current core version.
     $this->assertEquals(\Drupal::VERSION, $library['version']);
+
+    // Ensure that the expected FileCache entry exists.
+    $cache = FileCacheFactory::get('library_parser')->get($path . '/example_module.libraries.yml');
+    $this->assertArrayHasKey('example', $cache);
   }
 
   /**
