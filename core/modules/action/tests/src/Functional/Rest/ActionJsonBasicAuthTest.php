@@ -1,17 +1,15 @@
 <?php
 
-namespace Drupal\Tests\system\Functional\Rest;
+namespace Drupal\Tests\action\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
-use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
 
 /**
- * @group rest
+ * @group action
  */
-class ActionXmlBasicAuthTest extends ActionResourceTestBase {
+class ActionJsonBasicAuthTest extends ActionResourceTestBase {
 
   use BasicAuthResourceTestTrait;
-  use XmlEntityNormalizationQuirksTrait;
 
   /**
    * {@inheritdoc}
@@ -26,12 +24,12 @@ class ActionXmlBasicAuthTest extends ActionResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $format = 'xml';
+  protected static $format = 'json';
 
   /**
    * {@inheritdoc}
    */
-  protected static $mimeType = 'text/xml; charset=UTF-8';
+  protected static $mimeType = 'application/json';
 
   /**
    * {@inheritdoc}

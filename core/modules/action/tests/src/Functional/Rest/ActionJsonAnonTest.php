@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\Tests\system\Functional\Rest;
+namespace Drupal\Tests\action\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 
 /**
- * @group rest
+ * @group action
  */
 class ActionJsonAnonTest extends ActionResourceTestBase {
 

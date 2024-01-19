@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\system\Functional\Rest;
+namespace Drupal\Tests\action\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 use Drupal\system\Entity\Action;

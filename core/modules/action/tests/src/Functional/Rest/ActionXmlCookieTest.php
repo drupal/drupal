@@ -1,12 +1,12 @@
 <?php
 
-namespace Drupal\Tests\system\Functional\Rest;
+namespace Drupal\Tests\action\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
 
 /**
- * @group rest
+ * @group action
  */
 class ActionXmlCookieTest extends ActionResourceTestBase {
 

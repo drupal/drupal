@@ -1,15 +1,16 @@
 <?php
 
-namespace Drupal\Tests\jsonapi\Functional;
+namespace Drupal\Tests\action\Functional\Jsonapi;
 
 use Drupal\Core\Url;
+use Drupal\Tests\jsonapi\Functional\ConfigEntityResourceTestBase;
 use Drupal\system\Entity\Action;
 use Drupal\user\RoleInterface;
 
 /**
  * JSON:API integration test for the "Action" config entity type.
  *
- * @group jsonapi
+ * @group action
  * @group #slow
  */
 class ActionTest extends ConfigEntityResourceTestBase {

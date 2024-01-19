@@ -71,6 +71,9 @@ class TestCoverageTest extends KernelTestBase {
       $possible_paths = [
         'Drupal\Tests\jsonapi\Functional\CLASSTest',
         '\Drupal\Tests\\' . $module_name . '\Functional\Jsonapi\CLASSTest',
+        // For entities defined in the system module with Jsonapi tests in
+        // another module.
+        '\Drupal\Tests\\' . $info->id() . '\Functional\Jsonapi\CLASSTest',
       ];
       foreach ($possible_paths as $path) {
         $missing_tests = [];

@@ -24,7 +24,6 @@ class ConfigEntityImportTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'action',
     'block',
     'config_test',
     'filter',
@@ -38,7 +37,7 @@ class ConfigEntityImportTest extends KernelTestBase {
    * Runs test methods for each module within a single test run.
    */
   public function testConfigUpdateImport() {
-    $this->installConfig(['action', 'block', 'filter', 'image']);
+    $this->installConfig(['block', 'filter', 'image']);
     $this->container->get('theme_installer')->install(['olivero']);
     $config_storage = $this->container->get('config.storage');
     // Ensure the 'system.site' config.

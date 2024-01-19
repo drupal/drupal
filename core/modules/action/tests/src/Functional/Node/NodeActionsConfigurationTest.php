@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\node\Functional;
+namespace Drupal\Tests\action\Functional\Node;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Tests\BrowserTestBase;
@@ -10,7 +10,7 @@ use Drupal\user\Entity\User;
 /**
  * Tests configuration of actions provided by the Node module.
  *
- * @group node
+ * @group action
  */
 class NodeActionsConfigurationTest extends BrowserTestBase {
 
