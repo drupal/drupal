@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\system\Functional\Theme;
 
-use Drupal\Core\Serialization\Yaml;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\TestTools\Extension\InfoWriterTrait;
 
 /**
  * Tests the theme UI.
@@ -12,6 +12,7 @@ use Drupal\Tests\BrowserTestBase;
  * @group #slow
  */
 class ThemeUiTest extends BrowserTestBase {
+  use InfoWriterTrait;
 
   /**
    * {@inheritdoc}
@@ -345,18 +346,18 @@ class ThemeUiTest extends BrowserTestBase {
     $compatible_info = $info + ['core_version_requirement' => '*'];
     $incompatible_info = $info + ['core_version_requirement' => '^1'];
 
-    file_put_contents($file_path, Yaml::encode($compatible_info));
+    $this->writeInfoFile($file_path, $compatible_info);
     $this->drupalGet('admin/appearance');
     $this->assertSession()->pageTextNotContains($incompatible_themes_message);
     $page->clickLink("Install $theme_name theme");
     $assert_session->addressEquals('admin/appearance');
     $assert_session->pageTextContains("The $theme_name theme has been installed");
 
-    file_put_contents($file_path, Yaml::encode($incompatible_info));
+    $this->writeInfoFile($file_path, $incompatible_info);
     $this->drupalGet('admin/appearance');
     $this->assertSession()->pageTextContains($incompatible_themes_message);
 
-    file_put_contents($file_path, Yaml::encode($compatible_info));
+    $this->writeInfoFile($file_path, $compatible_info);
     $this->drupalGet('admin/appearance');
     $this->assertSession()->pageTextNotContains($incompatible_themes_message);
 
@@ -364,7 +365,7 @@ class ThemeUiTest extends BrowserTestBase {
     // displayed for themes that are not installed.
     $this->uninstallTheme($theme_name);
 
-    file_put_contents($file_path, Yaml::encode($incompatible_info));
+    $this->writeInfoFile($file_path, $incompatible_info);
     $this->drupalGet('admin/appearance');
     $this->assertSession()->pageTextNotContains($incompatible_themes_message);
   }

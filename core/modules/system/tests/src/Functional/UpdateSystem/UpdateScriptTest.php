@@ -7,6 +7,7 @@ use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;
+use Drupal\TestTools\Extension\InfoWriterTrait;
 
 /**
  * Tests the update script access and functionality.
@@ -15,7 +16,7 @@ use Drupal\Tests\RequirementsPageTrait;
  * @group #slow
  */
 class UpdateScriptTest extends BrowserTestBase {
-
+  use InfoWriterTrait;
   use RequirementsPageTrait;
 
   protected const HANDBOOK_MESSAGE = 'Review the suggestions for resolving this incompatibility to repair your installation, and then re-run update.php.';
@@ -252,7 +253,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $folder_path = \Drupal::getContainer()->getParameter('site.path') . "/{$extension_type}s/$extension_machine_names[0]";
     $file_path = "$folder_path/$extension_machine_names[0].info.yml";
     mkdir($folder_path, 0777, TRUE);
-    file_put_contents($file_path, Yaml::encode($base_info + $correct_info));
+    $this->writeInfoFile($file_path, $base_info + $correct_info);
     $this->enableExtensions($extension_type, $extension_machine_names, [$extension_name]);
     $this->assertInstalledExtensionsConfig($extension_type, $extension_machine_names);
 
@@ -262,13 +263,13 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->assertUpdateWithNoErrors([$test_error_text], $extension_type, $extension_machine_names);
 
     // Change the values in the info.yml and confirm updating is not possible.
-    file_put_contents($file_path, Yaml::encode($base_info + $breaking_info));
+    $this->writeInfoFile($file_path, $base_info + $breaking_info);
     $this->drupalGet($this->statusReportUrl);
     $this->assertErrorOnUpdates([$test_error_text], $extension_type, $extension_machine_names, $test_error_urls);
 
     // Fix the values in the info.yml file and confirm updating is possible
     // again.
-    file_put_contents($file_path, Yaml::encode($base_info + $correct_info));
+    $this->writeInfoFile($file_path, $base_info + $correct_info);
     $this->drupalGet($this->statusReportUrl);
     $this->assertUpdateWithNoErrors([$test_error_text], $extension_type, $extension_machine_names);
   }

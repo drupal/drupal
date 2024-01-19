@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\system\Functional\Form;
 
-use Drupal\Core\Serialization\Yaml;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\TestTools\Extension\InfoWriterTrait;
 
 /**
  * Tests \Drupal\system\Form\ModulesListForm.
@@ -12,6 +12,7 @@ use Drupal\Tests\BrowserTestBase;
  * @group #slow
  */
 class ModulesListFormWebTest extends BrowserTestBase {
+  use InfoWriterTrait;
 
   /**
    * {@inheritdoc}
@@ -178,17 +179,17 @@ BROKEN;
     $compatible_info = $info + ['core_version_requirement' => '*'];
     $incompatible_info = $info + ['core_version_requirement' => '^1'];
 
-    file_put_contents($file_path, Yaml::encode($compatible_info));
+    $this->writeInfoFile($file_path, $compatible_info);
     $edit = ['modules[changing_module][enable]' => 'changing_module'];
     $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
     $this->assertSession()->pageTextContains('Module Module that changes has been installed.');
 
-    file_put_contents($file_path, Yaml::encode($incompatible_info));
+    $this->writeInfoFile($file_path, $incompatible_info);
     $this->drupalGet('admin/modules');
     $this->assertSession()->pageTextContains($incompatible_modules_message);
 
-    file_put_contents($file_path, Yaml::encode($compatible_info));
+    $this->writeInfoFile($file_path, $compatible_info);
     $this->drupalGet('admin/modules');
     $this->assertSession()->pageTextNotContains($incompatible_modules_message);
 
@@ -200,7 +201,7 @@ BROKEN;
     $this->submitForm([], 'Uninstall');
     $this->assertSession()->pageTextContains('The selected modules have been uninstalled.');
 
-    file_put_contents($file_path, Yaml::encode($incompatible_info));
+    $this->writeInfoFile($file_path, $incompatible_info);
     $this->drupalGet('admin/modules');
     $this->assertSession()->pageTextNotContains($incompatible_modules_message);
   }
