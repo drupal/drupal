@@ -1,32 +1,25 @@
 <?php
 
-namespace Drupal\Tests\system\Functional\Theme;
+namespace Drupal\Tests\system\Kernel\Theme;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests adding Twig loaders.
  *
  * @group Theme
  */
-class TwigLoaderTest extends BrowserTestBase {
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  protected static $modules = ['twig_loader_test'];
+class TwigLoaderTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected static $modules = ['twig_loader_test'];
 
   /**
    * Tests adding an additional twig loader to the loader chain.
    */
-  public function testTwigLoaderAddition() {
+  public function testTwigLoaderAddition(): void {
     $environment = \Drupal::service('twig');
 
     $template = $environment->load('kittens');
