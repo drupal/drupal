@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - config_mapping_test
+name: 'config_mapping_test topic'
+type: config_mapping_test
+description: 'A <em>config_mapping_test topic</em> starts a new discussion thread within a config_mapping_test.'
+help: null
+new_revision: false
+preview_mode: 1
+display_submitted: true

@@ -1,0 +1,8 @@
+name: Config mapping test
+type: module
+description: 'Test configuration mapping.'
+dependencies:
+  - drupal:node
+  - drupal:comment
+package: Core
+version: VERSION
