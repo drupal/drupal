@@ -1,11 +1,12 @@
 <?php
 
-namespace Drupal\Tests\image\Functional;
+namespace Drupal\Tests\image\Kernel;
 
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\file\Entity\File;
+use Drupal\file\FileRepository;
 use Drupal\image\Entity\ImageStyle;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
@@ -13,7 +14,7 @@ use Drupal\Tests\TestFileCreationTrait;
  *
  * @group image
  */
-class FileMoveTest extends BrowserTestBase {
+class FileMoveTest extends KernelTestBase {
 
   use TestFileCreationTrait {
     getTestFiles as drupalGetTestFiles;
@@ -21,36 +22,43 @@ class FileMoveTest extends BrowserTestBase {
   }
 
   /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  protected static $modules = ['image'];
-
-  /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected static $modules = [
+    'file',
+    'image',
+    'system',
+    'user',
+  ];
 
   /**
    * The file repository service.
-   *
-   * @var \Drupal\file\FileRepository
    */
-  protected $fileRepository;
+  protected FileRepository $fileRepository;
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
+
+    $this->installConfig(['system']);
+    $this->installEntitySchema('file');
+    $this->installEntitySchema('user');
+    $this->installSchema('file', ['file_usage']);
+
+    ImageStyle::create([
+      'name' => 'main_style',
+      'label' => 'Main',
+    ])->save();
+
     $this->fileRepository = $this->container->get('file.repository');
   }
 
   /**
    * Tests moving a randomly generated image.
    */
-  public function testNormal() {
+  public function testNormal(): void {
     // Pick a file for testing.
     $file = File::create((array) current($this->drupalGetTestFiles('image')));
 
@@ -64,7 +72,7 @@ class FileMoveTest extends BrowserTestBase {
     // Check if derivative image exists.
     $this->assertFileExists($derivative_uri);
 
-    // Clone the object so we don't have to worry about the function changing
+    // Clone the object, so we don't have to worry about the function changing
     // our reference copy.
     $desired_filepath = 'public://' . $this->randomMachineName();
     $result = $this->fileRepository->move(clone $file, $desired_filepath, FileSystemInterface::EXISTS_ERROR);
