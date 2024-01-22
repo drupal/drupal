@@ -2471,7 +2471,7 @@ function user_pass_rehash($password, $timestamp, $login, $uid, $mail = '') {
     $mail = $account->mail;
   }
 
-  return drupal_hmac_base64($timestamp . $login . $uid . $mail, drupal_get_hash_salt() . $password);
+  return drupal_hmac_base64($timestamp . ':' . $login . ':' . $uid . ':' . $mail, drupal_get_hash_salt() . $password);
 }
 
 /**

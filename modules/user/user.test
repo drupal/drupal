@@ -935,6 +935,31 @@ class UserPasswordResetTestCase extends DrupalWebTestCase {
     $this->assertText('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.');
   }
 
+  /**
+   * Test uniqueness of output from user_pass_rehash() with no passwords.
+   */
+  function testUniqueHashNoPasswordValue() {
+    $timestamp = REQUEST_TIME;
+
+    // Minimal user objects are sufficient.
+    $user = drupal_anonymous_user();
+    $user->login = $timestamp - 1000;
+    $user->pass = '';
+
+    $user_a = clone $user;
+    $user_a->uid = 12;
+    $user_a->mail = '3user@example.com';
+
+    $user_b = clone $user;
+    $user_b->uid = 123;
+    $user_b->mail = 'user@example.com';
+
+    $hash_a = user_pass_rehash($user_a->pass, $timestamp, $user_a->login, $user_a->uid, $user_a->mail);
+    $hash_b = user_pass_rehash($user_b->pass, $timestamp, $user_b->login, $user_b->uid, $user_b->mail);
+
+    $this->assertNotEqual($hash_a, $hash_b, "No user_pass_rehash() hash collision for different users with no stored password.");
+  }
+
 }
 
 /**
