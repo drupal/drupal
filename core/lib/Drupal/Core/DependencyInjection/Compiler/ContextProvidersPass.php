@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
  *    context.repository service uses the service_id_collector pattern instead
  *    so this is no longer needed.
  *
- * @see https://www.drupal.org/node/3395641
+ * @see https://www.drupal.org/node/3416153
  */
 class ContextProvidersPass implements CompilerPassInterface {
 
