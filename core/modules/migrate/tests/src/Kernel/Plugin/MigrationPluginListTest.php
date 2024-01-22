@@ -49,6 +49,7 @@ class MigrationPluginListTest extends KernelTestBase {
     'path',
     'search',
     'shortcut',
+    // @todo Remove statistics in https://www.drupal.org/project/drupal/issues/3341092
     'statistics',
     'syslog',
     'system',

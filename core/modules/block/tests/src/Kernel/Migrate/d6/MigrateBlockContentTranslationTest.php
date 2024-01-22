@@ -24,7 +24,6 @@ class MigrateBlockContentTranslationTest extends MigrateDrupal6TestBase {
     'language',
     'locale',
     'path_alias',
-    'statistics',
     'taxonomy',
   ];
 

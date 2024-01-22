@@ -19,7 +19,6 @@ class IdConflictTest extends MigrateUpgradeExecuteTestBase {
     'content_translation',
     'language',
     'migrate_drupal_ui',
-    'statistics',
     'telephone',
   ];
 

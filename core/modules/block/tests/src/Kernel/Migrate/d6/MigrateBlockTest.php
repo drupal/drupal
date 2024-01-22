@@ -24,7 +24,6 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
     'taxonomy',
     'node',
     'path_alias',
-    'statistics',
   ];
 
   /**
@@ -301,13 +300,14 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
 
     // Check migrate messages.
     $messages = iterator_to_array($this->getMigration('d6_block')->getIdMap()->getMessages());
-    $this->assertCount(6, $messages);
+    $this->assertCount(7, $messages);
     $this->assertSame($messages[0]->message, 'Schema errors for block.block.block_1 with the following errors: 0 [dependencies.theme.0] Theme &#039;bluemarine&#039; is not installed.');
     $this->assertSame($messages[1]->message, "d6_block:visibility: The block with bid '13' from module 'block' will have no PHP or request_path visibility configuration.");
     $this->assertSame($messages[2]->message, 'Schema errors for block.block.aggregator with the following errors: block.block.aggregator:settings.block_count missing schema, block.block.aggregator:settings.feed missing schema, 0 [settings.feed] &#039;feed&#039; is not a supported key., 1 [settings] &#039;block_count&#039; is an unknown key because plugin is aggregator_feed_block (see config schema type block.settings.*).');
     $this->assertSame($messages[3]->message, 'Schema errors for block.block.book with the following errors: block.block.book:settings.block_mode missing schema, 0 [settings.block_mode] &#039;block_mode&#039; is not a supported key.');
     $this->assertSame('Schema errors for block.block.forum with the following errors: block.block.forum:settings.block_count missing schema, 0 [settings] &#039;block_count&#039; is an unknown key because plugin is forum_active_block (see config schema type block.settings.*).', $messages[4]->message);
     $this->assertSame('Schema errors for block.block.forum_1 with the following errors: block.block.forum_1:settings.block_count missing schema, 0 [settings] &#039;block_count&#039; is an unknown key because plugin is forum_new_block (see config schema type block.settings.*).', $messages[5]->message);
+    $this->assertSame('Schema errors for block.block.statistics with the following errors: block.block.statistics:settings.top_day_num missing schema, block.block.statistics:settings.top_all_num missing schema, block.block.statistics:settings.top_last_num missing schema, 0 [settings.top_day_num] &#039;top_day_num&#039; is not a supported key., 1 [settings.top_all_num] &#039;top_all_num&#039; is not a supported key., 2 [settings.top_last_num] &#039;top_last_num&#039; is not a supported key.', $messages[6]->message);
   }
 
 }

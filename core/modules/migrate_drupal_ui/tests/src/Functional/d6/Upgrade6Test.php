@@ -24,7 +24,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     'datetime_range',
     'language',
     'migrate_drupal_ui',
-    'statistics',
     'telephone',
     'update',
   ];
@@ -153,7 +152,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'Path',
       'Profile translation',
       'Search',
-      'Statistics',
       'String translation',
       'Synchronize translations',
       'System',
@@ -185,6 +183,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'Aggregator',
       'Book',
       'Forum',
+      'Statistics',
     ];
   }
 
