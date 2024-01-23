@@ -45,9 +45,6 @@ class OpenOffCanvasDialogCommand extends OpenDialogCommand {
     $this->dialogOptions['draggable'] = FALSE;
     $this->dialogOptions['drupalAutoButtons'] = FALSE;
     $this->dialogOptions['drupalOffCanvasPosition'] = $position;
-    // @todo drupal.ajax.js does not respect drupalAutoButtons properly, pass an
-    //   empty set of buttons until https://www.drupal.org/node/2793343 is in.
-    $this->dialogOptions['buttons'] = [];
     if (empty($dialog_options['dialogClass'])) {
       $this->dialogOptions['dialogClass'] = "ui-dialog-off-canvas ui-dialog-position-$position";
     }

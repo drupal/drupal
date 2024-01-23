@@ -34,7 +34,6 @@ class OpenOffCanvasDialogCommandTest extends UnitTestCase {
         'resizable' => 'w',
         'draggable' => FALSE,
         'drupalAutoButtons' => FALSE,
-        'buttons' => [],
         'dialogClass' => 'ui-dialog-off-canvas ui-dialog-position-' . $position,
         'classes' => ['ui-dialog-content' => 'drupal-off-canvas-reset'],
         'width' => 300,
