@@ -7,3 +7,8 @@ services:
     arguments: ['@database']
     tags:
       - { name: http_middleware, priority: 1000, responder: true }
+  performance_test.cache_factory:
+    class: Drupal\performance_test\Cache\CacheFactoryDecorator
+    public: false
+    decorates: cache_factory
+    arguments: ['@performance_test.cache_factory.inner', '@Drupal\performance_test\PerformanceDataCollector']

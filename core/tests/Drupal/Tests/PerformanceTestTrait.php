@@ -124,26 +124,21 @@ trait PerformanceTestTrait {
       $cache_set_count = 0;
       $cache_delete_count = 0;
       foreach ($performance_test_data['database_events'] as $event) {
-        if (isset($event->caller['class']) && is_a(str_replace('\\\\', '\\', $event->caller['class']), '\Drupal\Core\Cache\DatabaseBackend', TRUE)) {
-          $method = strtolower($event->caller['function']);
-          if (str_contains($method, 'get')) {
-            $cache_get_count++;
-          }
-          elseif (str_contains($method, 'set')) {
-            $cache_set_count++;
-          }
-          elseif (str_contains($method, 'delete')) {
-            $cache_delete_count++;
-          }
-          elseif ($event->caller['function'] === 'ensureBinExists') {
-            // Don't record anything for ensureBinExists().
-          }
-          else {
-            throw new \Exception("Tried to record a cache operation but did not recognize {$event->caller['function']}");
-          }
-        }
-        else {
+        // Don't log queries from the database cache backend because they're
+        // logged separately as cache operations.
+        if (!(isset($event->caller['class']) && is_a(str_replace('\\\\', '\\', $event->caller['class']), '\Drupal\Core\Cache\DatabaseBackend', TRUE))) {
           $query_count++;
+        }
+      }
+      foreach ($performance_test_data['cache_operations'] as $operation) {
+        if (in_array($operation['operation'], ['get', 'getMultiple'], TRUE)) {
+          $cache_get_count++;
+        }
+        elseif (in_array($operation['operation'], ['set', 'setMultiple'], TRUE)) {
+          $cache_set_count++;
+        }
+        elseif (in_array($operation['operation'], ['delete', 'deleteMultiple'], TRUE)) {
+          $cache_delete_count++;
         }
       }
       $performance_data->setQueryCount($query_count);
@@ -344,6 +339,9 @@ trait PerformanceTestTrait {
       $performance_test_data = $collection->get('performance_test_data');
       $query_events = $performance_test_data['database_events'] ?? [];
       foreach ($query_events as $key => $event) {
+        if (isset($event->caller['class']) && is_a(str_replace('\\\\', '\\', $event->caller['class']), '\Drupal\Core\Cache\DatabaseBackend', TRUE)) {
+          continue;
+        }
         // Use the first part of the database query for the span name.
         $query_span = $tracer->spanBuilder(substr($event->queryString, 0, 64))
           ->setStartTimestamp((int) ($event->startTime * $nanoseconds_per_second))
@@ -353,6 +351,17 @@ trait PerformanceTestTrait {
           ->startSpan();
         $query_span->end((int) ($event->time * $nanoseconds_per_second));
       }
+      $cache_operations = $performance_test_data['cache_operations'] ?? [];
+      foreach ($cache_operations as $operation) {
+        $cache_span = $tracer->spanBuilder($operation['operation'] . ' ' . $operation['bin'])
+          ->setStartTimestamp((int) ($operation['start'] * $nanoseconds_per_second))
+          ->setAttribute('cache.operation', $operation['operation'])
+          ->setAttribute('cache.cids', $operation['cids'])
+          ->setAttribute('cache.bin', $operation['bin'])
+          ->startSpan();
+        $cache_span->end((int) ($operation['stop'] * $nanoseconds_per_second));
+      }
+
       $lcp_timestamp = NULL;
       $fcp_timestamp = NULL;
       $lcp_size = 0;
