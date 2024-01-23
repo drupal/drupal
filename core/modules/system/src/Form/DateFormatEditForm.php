@@ -28,7 +28,7 @@ class DateFormatEditForm extends DateFormatFormBase {
   public function __construct(DateFormatterInterface $date_formatter, ConfigEntityStorageInterface $date_format_storage, protected ?TimeInterface $time = NULL) {
     parent::__construct($date_formatter, $date_format_storage);
     if ($this->time === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $time argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3301971', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . ' without the $time argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3112298', E_USER_DEPRECATED);
       $this->time = \Drupal::service('datetime.time');
     }
   }
