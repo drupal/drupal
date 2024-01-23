@@ -37,3 +37,11 @@ dialog_renderer_test.collapsed_opener:
     _title: 'Collapsed Openers'
   requirements:
     _access: 'TRUE'
+
+dialog_renderer_test.modal_form:
+  path: '/dialog_renderer-form'
+  defaults:
+    _form: '\Drupal\dialog_renderer_test\Form\TestForm'
+    _title: 'Modal Form'
+  requirements:
+    _access: 'TRUE'
