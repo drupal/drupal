@@ -120,7 +120,7 @@ class AjaxFormPageCacheTest extends WebDriverTestBase {
     $this->drupalGet('ajax_validation_test');
     // Changing the value of the textfield will trigger an AJAX
     // request/response.
-    $field = $this->getSession()->getPage()->findField('drivertext');
+    $field = $this->getSession()->getPage()->findField('driver_text');
     $field->setValue('some dumb text');
     $field->blur();
 

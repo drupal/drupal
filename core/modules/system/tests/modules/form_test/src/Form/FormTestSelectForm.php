@@ -136,9 +136,9 @@ class FormTestSelectForm extends FormBase {
     // option groups sorted, some left alone, and at least one with #sort_start
     // set to a non-default value.
     $sortable_options = $this->makeSortableOptions('sso');
-    $sortable_options['sso_zzgroup']['#sort_options'] = TRUE;
-    $sortable_options['sso_xxgroup']['#sort_options'] = TRUE;
-    $sortable_options['sso_xxgroup']['#sort_start'] = 1;
+    $sortable_options['sso_zz_group']['#sort_options'] = TRUE;
+    $sortable_options['sso_xx_group']['#sort_options'] = TRUE;
+    $sortable_options['sso_xx_group']['#sort_start'] = 1;
     // Do not use a sort start on this one.
     $form['sorted'] = [
       '#type' => 'select',
@@ -149,7 +149,7 @@ class FormTestSelectForm extends FormBase {
     // Add a select to test sorting with a -NONE- option included,
     // and #sort_start set.
     $sortable_none_options = $this->makeSortableOptions('sno');
-    $sortable_none_options['sno_zzgroup']['#sort_options'] = TRUE;
+    $sortable_none_options['sno_zz_group']['#sort_options'] = TRUE;
     $form['sorted_none'] = [
       '#type' => 'select',
       '#options' => $sortable_none_options,
@@ -160,11 +160,11 @@ class FormTestSelectForm extends FormBase {
 
     // Add a select to test sorting with a -NONE- option included,
     // and #sort_start not set.
-    $sortable_none_nostart_options = $this->makeSortableOptions('snn');
-    $sortable_none_nostart_options['snn_zzgroup']['#sort_options'] = TRUE;
-    $form['sorted_none_nostart'] = [
+    $sortable_none_no_start_options = $this->makeSortableOptions('snn');
+    $sortable_none_no_start_options['snn_zz_group']['#sort_options'] = TRUE;
+    $form['sorted_none_no_start'] = [
       '#type' => 'select',
-      '#options' => $sortable_none_nostart_options,
+      '#options' => $sortable_none_no_start_options,
       '#sort_options' => TRUE,
       '#empty_value' => 'snn_empty',
     ];
@@ -189,17 +189,17 @@ class FormTestSelectForm extends FormBase {
       // that labels are cast to strings before sorting.
       $prefix . '_first_element' => new TranslatableMarkup('first element'),
       $prefix . '_second' => new TranslatableMarkup('second element'),
-      $prefix . '_zzgroup' => [
+      $prefix . '_zz_group' => [
         $prefix . '_gc' => new TranslatableMarkup('group c'),
         $prefix . '_ga' => new TranslatableMarkup('group a'),
         $prefix . '_gb' => 'group b',
       ],
-      $prefix . '_yygroup' => [
+      $prefix . '_yy_group' => [
         $prefix . '_ge' => new TranslatableMarkup('group e'),
         $prefix . '_gd' => new TranslatableMarkup('group d'),
         $prefix . '_gf' => new TranslatableMarkup('group f'),
       ],
-      $prefix . '_xxgroup' => [
+      $prefix . '_xx_group' => [
         $prefix . '_gz' => new TranslatableMarkup('group z'),
         $prefix . '_gi' => new TranslatableMarkup('group i'),
         $prefix . '_gh' => new TranslatableMarkup('group h'),

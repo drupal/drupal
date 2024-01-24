@@ -30,9 +30,9 @@ class ElementsContainerTest extends BrowserTestBase {
     $this->drupalGet('form-test/optional-container');
     $assertSession = $this->assertSession();
     $assertSession->elementNotExists('css', 'div.empty_optional');
-    $assertSession->elementExists('css', 'div.empty_nonoptional');
+    $assertSession->elementExists('css', 'div.empty_non_optional');
     $assertSession->elementExists('css', 'div.nonempty_optional');
-    $assertSession->elementExists('css', 'div.nonempty_nonoptional');
+    $assertSession->elementExists('css', 'div.nonempty_non_optional');
   }
 
 }

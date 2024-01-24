@@ -233,9 +233,7 @@ downcasting
 doxygen
 dragtable
 drillable
-drivernumber
 drivertest
-drivertext
 dropbutton
 dropbuttons
 drupaldevdays
@@ -530,10 +528,8 @@ nojs
 nolink
 nomask
 nonconfigurable
-nonoptional
 noquotes
 nosniff
-nostart
 notexisting
 notnull
 notsimpletest
@@ -767,7 +763,6 @@ subchild
 subclassing
 subcompile
 subcondition
-subcontainer
 subdir
 subelements
 subform
@@ -995,7 +990,6 @@ xmlhttp
 xmlhttprequest
 xpsdocument
 xtmpl
-xxgroup
 yamls
 yarhar
 yarr
@@ -1003,7 +997,6 @@ yearless
 yokotsoko
 yottabyte
 yottabytes
-yygroup
 zartan
 zettabyte
 zettabytes
@@ -1012,4 +1005,3 @@ zoneinfo
 zoomin
 zoomout
 zxvf
-zzgroup
