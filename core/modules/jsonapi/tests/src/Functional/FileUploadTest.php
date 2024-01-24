@@ -521,6 +521,7 @@ class FileUploadTest extends ResourceTestBase {
     \Drupal::service('router.builder')->rebuild();
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->testFileUploadInvalidFileType();
     $this->testPostFileUploadInvalidHeaders();
     $this->testFileUploadLargerFileSize();
     $this->testFileUploadMaliciousExtension();
@@ -570,11 +571,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * Tests using the file upload route with an invalid file type.
    */
-  public function testFileUploadInvalidFileType() {
-    \Drupal::service('router.builder')->rebuild();
-    $this->setUpAuthorization('POST');
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
-
+  protected function testFileUploadInvalidFileType() {
     $uri = Url::fromUri('base:' . static::$postUri);
 
     // Test with a JSON file.
