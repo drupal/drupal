@@ -10,6 +10,7 @@ use Drupal\Tests\field\Functional\FieldTestBase;
  * Tests the Options field UI functionality.
  *
  * @group options
+ * @group #slow
  */
 class OptionsFieldUITest extends FieldTestBase {
 

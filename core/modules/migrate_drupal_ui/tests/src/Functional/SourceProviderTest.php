@@ -6,6 +6,7 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional;
  * Tests that a missing source provider error message is displayed.
  *
  * @group migrate_drupal_ui
+ * @group #slow
  */
 class SourceProviderTest extends MigrateUpgradeTestBase {
 

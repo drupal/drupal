@@ -10,6 +10,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests converting JavaScript time zone abbreviations to time zone identifiers.
  *
  * @group Datetime
+ * @group #slow
  */
 class TimeZoneAbbreviationRouteTest extends BrowserTestBase {
 

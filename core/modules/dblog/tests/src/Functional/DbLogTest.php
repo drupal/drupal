@@ -17,6 +17,7 @@ use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
  * Verifies log entries and user access based on permissions.
  *
  * @group dblog
+ * @group #slow
  */
 class DbLogTest extends BrowserTestBase {
   use FakeLogEntries;

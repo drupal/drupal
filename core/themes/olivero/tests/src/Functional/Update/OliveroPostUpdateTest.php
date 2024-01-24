@@ -8,6 +8,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests the update path for Olivero.
  *
  * @group Update
+ * @group #slow
  */
 class OliveroPostUpdateTest extends UpdatePathTestBase {
 

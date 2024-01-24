@@ -12,6 +12,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests the entity form.
  *
  * @group Entity
+ * @group #slow
  */
 class EntityFormTest extends BrowserTestBase {
 

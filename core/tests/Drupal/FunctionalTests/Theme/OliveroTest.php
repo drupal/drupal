@@ -9,6 +9,7 @@ use Drupal\menu_link_content\Entity\MenuLinkContent;
  * Tests the Olivero theme.
  *
  * @group olivero
+ * @group #slow
  */
 class OliveroTest extends BrowserTestBase {
 

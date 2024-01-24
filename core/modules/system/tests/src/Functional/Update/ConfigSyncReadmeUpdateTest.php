@@ -9,6 +9,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests update to readme inside the configuration synchronization directory.
  *
  * @group Update
+ * @group #slow
  */
 class ConfigSyncReadmeUpdateTest extends UpdatePathTestBase {
 

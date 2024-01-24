@@ -16,6 +16,7 @@ use Drupal\node\Entity\Node;
  * Tests Daterange field functionality.
  *
  * @group datetime
+ * @group #slow
  */
 class DateRangeFieldTest extends DateTestBase {
 

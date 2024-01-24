@@ -10,6 +10,7 @@ use Drupal\views\Views;
  * @see Drupal\dblog\Tests\DbLogTest
  *
  * @group dblog
+ * @group #slow
  */
 class DbLogViewsTest extends DbLogTest {
 

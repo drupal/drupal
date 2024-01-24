@@ -10,6 +10,7 @@ use Drupal\search\Entity\SearchPage;
  * Tests merging help topics module when the module is not installed.
  *
  * @group Update
+ * @group #slow
  */
 class HelpTopicsMerge extends UpdatePathTestBase {
 
