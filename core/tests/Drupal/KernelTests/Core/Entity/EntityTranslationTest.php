@@ -14,6 +14,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
  * Tests entity translation functionality.
  *
  * @group Entity
+ * @group #slow
  */
 class EntityTranslationTest extends EntityLanguageTestBase {
 

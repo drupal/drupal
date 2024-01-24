@@ -9,6 +9,7 @@ use Drupal\field\Entity\FieldStorageConfig;
  * Tests validation of field_config entities.
  *
  * @group field
+ * @group #slow
  */
 class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
 
