@@ -1,25 +1,21 @@
 <?php
 
-namespace Drupal\Tests\config\Functional;
+namespace Drupal\Tests\config\Kernel;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests default configuration provided by a module that does not own it.
  *
  * @group config
  */
-class ConfigOtherModuleTest extends BrowserTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
+class ConfigOtherModuleTest extends KernelTestBase {
 
   /**
    * Tests enabling the provider of the default configuration first.
    */
-  public function testInstallOtherModuleFirst() {
+  public function testInstallOtherModuleFirst(): void {
     $this->installModule('config_other_module_config_test');
 
     // Check that the config entity doesn't exist before the config_test module
@@ -42,6 +38,7 @@ class ConfigOtherModuleTest extends BrowserTestBase {
     // Install the module that provides the entity type again. This installs the
     // default configuration.
     $this->installModule('config_test');
+    /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $other_module_config_entity */
     $other_module_config_entity = $this->getStorage()->load('other_module_test');
     $this->assertNotEmpty($other_module_config_entity, "Default configuration has been recreated.");
 
@@ -100,7 +97,7 @@ class ConfigOtherModuleTest extends BrowserTestBase {
   /**
    * Tests enabling the provider of the config entity type first.
    */
-  public function testInstallConfigEntityModuleFirst() {
+  public function testInstallConfigEntityModuleFirst(): void {
     $this->installModule('config_test');
     $this->assertNull($this->getStorage()->load('other_module_test'), 'Default configuration provided by config_other_module_config_test does not exist.');
 
@@ -111,7 +108,7 @@ class ConfigOtherModuleTest extends BrowserTestBase {
   /**
    * Tests uninstalling Node module removes views which are dependent on it.
    */
-  public function testUninstall() {
+  public function testUninstall(): void {
     $this->installModule('views');
     $this->assertNull($this->getStorage('view')->load('frontpage'), 'After installing Views, frontpage view which is dependant on the Node and Views modules does not exist.');
     $this->installModule('node');
@@ -126,7 +123,7 @@ class ConfigOtherModuleTest extends BrowserTestBase {
    * @param string $module
    *   The module name.
    */
-  protected function installModule($module) {
+  protected function installModule(string $module): void {
     $this->container->get('module_installer')->install([$module]);
     $this->container = \Drupal::getContainer();
   }
@@ -137,7 +134,7 @@ class ConfigOtherModuleTest extends BrowserTestBase {
    * @param string $module
    *   The module name.
    */
-  protected function uninstallModule($module) {
+  protected function uninstallModule(string $module): void {
     $this->container->get('module_installer')->uninstall([$module]);
     $this->container = \Drupal::getContainer();
   }
@@ -152,7 +149,7 @@ class ConfigOtherModuleTest extends BrowserTestBase {
    * @return \Drupal\Core\Entity\EntityStorageInterface
    *   The entity type's storage.
    */
-  protected function getStorage($entity_type_id = 'config_test') {
+  protected function getStorage(string $entity_type_id = 'config_test'): EntityStorageInterface {
     return \Drupal::entityTypeManager()->getStorage($entity_type_id);
   }
 
