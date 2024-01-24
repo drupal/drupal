@@ -13,6 +13,7 @@ use Drupal\field\Entity\FieldStorageConfig;
  * Tests field storage create, read, update, and delete.
  *
  * @group field
+ * @group #slow
  */
 class FieldStorageCrudTest extends FieldKernelTestBase {
 
