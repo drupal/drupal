@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Drupal\Tests\announcements_feed\FunctionalJavascript;
 
 use Drupal\announce_feed_test\AnnounceTestHttpClientMiddleware;
+use Drupal\block\BlockInterface;
+use Drupal\Core\Access\AccessResultAllowed;
+use Drupal\Core\Access\AccessResultNeutral;
+use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
@@ -30,9 +34,9 @@ class AnnounceBlockTest extends WebDriverTestBase {
   /**
    * The announce block instance.
    *
-   * @var \Drupal\block\Entity\Block
+   * @var \Drupal\block\BlockInterface
    */
-  protected $announceBlock;
+  protected BlockInterface $announceBlock;
 
   /**
    * {@inheritdoc}
@@ -48,11 +52,13 @@ class AnnounceBlockTest extends WebDriverTestBase {
   /**
    * Testing announce feed block visibility.
    */
-  public function testAnnounceWithoutPermission() {
-    // User with "access announcements" permission.
+  public function testAnnounceWithoutPermission(): void {
+    // User with "access announcements" permission and anonymous session.
     $account = $this->drupalCreateUser([
       'access announcements',
     ]);
+    $anonymous_account = new AnonymousUserSession();
+
     $this->drupalLogin($account);
     $this->drupalGet('<front>');
 
@@ -65,6 +71,12 @@ class AnnounceBlockTest extends WebDriverTestBase {
     $this->drupalLogout();
     $assert_session->pageTextNotContains('Announcements Feed');
 
+    // Test access() method return type.
+    $this->assertTrue($this->announceBlock->getPlugin()->access($account));
+    $this->assertInstanceOf(AccessResultAllowed::class, $this->announceBlock->getPlugin()->access($account, TRUE));
+
+    $this->assertFalse($this->announceBlock->getPlugin()->access($anonymous_account));
+    $this->assertInstanceOf(AccessResultNeutral::class, $this->announceBlock->getPlugin()->access($anonymous_account, TRUE));
   }
 
 }
