@@ -1,7 +1,12 @@
 <?php
 
-namespace Drupal\Tests\node\Functional\Views;
+namespace Drupal\Tests\node\Kernel\Views;
 
+use Drupal\node\Entity\NodeType;
+use Drupal\Tests\node\Traits\NodeCreationTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
+use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
+use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 
 /**
@@ -10,45 +15,61 @@ use Drupal\views\Views;
  * @group node
  * @see \Drupal\node\Plugin\views\row\NodeRow
  */
-class RowPluginTest extends NodeTestBase {
+class RowPluginTest extends ViewsKernelTestBase {
 
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  protected static $modules = ['node'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
+  use NodeCreationTrait;
+  use UserCreationTrait;
 
   /**
    * Views used by this test.
    *
-   * @var array
+   * @var string[]
    */
   public static $testViews = ['test_node_row_plugin'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'field',
+    'filter',
+    'node',
+    'node_test_views',
+    'text',
+    'user',
+  ];
+
+  /**
    * Contains all nodes used by this test.
    *
-   * @var array
+   * @var \Drupal\node\Entity\Node[]
    */
-  protected $nodes;
+  protected array $nodes;
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE, $modules = ['node_test_views']): void {
-    parent::setUp($import_test_views, $modules);
+  protected function setUp($import_test_views = TRUE): void {
+    parent::setUp($import_test_views);
 
-    $this->drupalCreateContentType(['type' => 'article']);
+    $this->installEntitySchema('user');
+    $this->installEntitySchema('node');
+    $this->installSchema('node', ['node_access']);
+    $this->installConfig(['field', 'filter', 'node']);
+    ViewTestData::createTestViews(static::class, ['node_test_views']);
+
+    \Drupal::currentUser()->setAccount($this->createUser(['access content']));
+
+    $node_type = NodeType::create([
+      'type' => 'article',
+      'name' => 'Article',
+    ]);
+    $node_type->save();
+    node_add_body_field($node_type);
 
     // Create two nodes.
     for ($i = 0; $i < 2; $i++) {
-      $this->nodes[] = $this->drupalCreateNode(
+      $this->nodes[] = $this->createNode(
         [
           'type' => 'article',
           'body' => [
@@ -66,7 +87,7 @@ class RowPluginTest extends NodeTestBase {
   /**
    * Tests the node row plugin.
    */
-  public function testRowPlugin() {
+  public function testRowPlugin(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $view = Views::getView('test_node_row_plugin');
@@ -89,7 +110,7 @@ class RowPluginTest extends NodeTestBase {
     $output = $renderer->renderRoot($output);
     foreach ($this->nodes as $node) {
       $this->assertStringContainsString($node->body->summary, $output, 'Make sure the teaser appears in the output of the view.');
-      $this->assertStringNotContainsString($node->body->value, $output, 'Make sure the full text does not appears in the output of the view if teaser is set as viewmode.');
+      $this->assertStringNotContainsString($node->body->value, $output);
     }
   }
 
