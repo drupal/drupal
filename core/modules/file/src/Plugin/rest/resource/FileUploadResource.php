@@ -208,7 +208,7 @@ class FileUploadResource extends ResourceBase {
     }
     $this->fileValidator = $file_validator;
     if (!$input_stream_file_writer) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $input_stream_file_writer argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/123', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $input_stream_file_writer argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3380607', E_USER_DEPRECATED);
       $input_stream_file_writer = \Drupal::service('file.input_stream_file_writer');
     }
     $this->inputStreamFileWriter = $input_stream_file_writer;
