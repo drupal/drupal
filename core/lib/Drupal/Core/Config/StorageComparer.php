@@ -112,13 +112,21 @@ class StorageComparer implements StorageComparerInterface {
       $target_storage = $target_storage->createCollection(StorageInterface::DEFAULT_COLLECTION);
     }
 
-    // Wrap the source storage in a static cache so that multiple reads of the
-    // same raw configuration object are not costly.
-    $this->sourceCacheStorage = new MemoryBackend();
-    $this->sourceStorage = new CachedStorage(
-      $source_storage,
-      $this->sourceCacheStorage
-    );
+    if ($source_storage instanceof FileStorage) {
+      // FileStorage has its own static cache so that multiple reads of the
+      // same raw configuration object are not costly.
+      $this->sourceCacheStorage = new NullBackend('storage_comparer');
+      $this->sourceStorage = $source_storage;
+    }
+    else {
+      // Wrap the source storage in a static cache so that multiple reads of the
+      // same raw configuration object are not costly.
+      $this->sourceCacheStorage = new MemoryBackend();
+      $this->sourceStorage = new CachedStorage(
+        $source_storage,
+        $this->sourceCacheStorage
+      );
+    }
 
     $this->targetCacheStorage = new MemoryBackend();
     $this->targetStorage = $target_storage;
