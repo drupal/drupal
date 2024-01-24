@@ -67,10 +67,10 @@ class FormTestVerticalTabsAccessForm extends FormBase {
       '#title' => t('Field 4'),
       '#default_value' => TRUE,
     ];
-    $form['container']['subcontainer'] = [
+    $form['container']['sub_container'] = [
       '#type' => 'container',
     ];
-    $form['container']['subcontainer']['field5'] = [
+    $form['container']['sub_container']['field5'] = [
       '#type' => 'checkbox',
       '#title' => t('Field 5'),
       '#default_value' => TRUE,
@@ -119,7 +119,7 @@ class FormTestVerticalTabsAccessForm extends FormBase {
       $form_state->setErrorByName('container][field4', t('This checkbox inside a container does not have its default value.'));
     }
     if (empty($values['field5'])) {
-      $form_state->setErrorByName('container][subcontainer][field5', t('This checkbox inside a nested container does not have its default value.'));
+      $form_state->setErrorByName('container][sub_container][field5', t('This checkbox inside a nested container does not have its default value.'));
     }
     if (empty($values['field5'])) {
       $form_state->setErrorByName('tab3][field6', t('This checkbox inside a vertical tab whose fieldset access is allowed does not have its default value.'));

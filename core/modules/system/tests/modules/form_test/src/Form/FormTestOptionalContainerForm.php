@@ -29,9 +29,9 @@ class FormTestOptionalContainerForm extends FormBase {
       '#attributes' => ['class' => ['empty_optional']],
       '#optional' => TRUE,
     ];
-    $form['empty_nonoptional'] = [
+    $form['empty_non_optional'] = [
       '#type' => 'container',
-      '#attributes' => ['class' => ['empty_nonoptional']],
+      '#attributes' => ['class' => ['empty_non_optional']],
       '#optional' => FALSE,
     ];
 
@@ -43,12 +43,12 @@ class FormTestOptionalContainerForm extends FormBase {
     ];
     $form['nonempty_optional']['child_1'] = [];
 
-    $form['nonempty_nonoptional'] = [
+    $form['nonempty_non_optional'] = [
       '#type' => 'container',
-      '#attributes' => ['class' => ['nonempty_nonoptional']],
+      '#attributes' => ['class' => ['nonempty_non_optional']],
       '#optional' => FALSE,
     ];
-    $form['nonempty_nonoptional']['child_2'] = [];
+    $form['nonempty_non_optional']['child_2'] = [];
 
     return $form;
   }
