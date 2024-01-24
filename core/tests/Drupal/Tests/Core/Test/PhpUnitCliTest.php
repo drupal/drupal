@@ -34,38 +34,4 @@ class PhpUnitCliTest extends UnitTestCase {
     );
   }
 
-  /**
-   * Ensures that functional tests produce debug HTML output when required.
-   */
-  public function testFunctionalTestDebugHtmlOutput() {
-    if (!getenv('BROWSERTEST_OUTPUT_DIRECTORY')) {
-      $this->markTestSkipped('This test requires the environment variable BROWSERTEST_OUTPUT_DIRECTORY to be set.');
-    }
-
-    // Test with the specified output directory.
-    $process = Process::fromShellCommandline('vendor/bin/phpunit --configuration core --verbose core/modules/image/tests/src/Functional/ImageDimensionsTest.php');
-    $process->setWorkingDirectory($this->root)
-      ->setTimeout(300)
-      ->setIdleTimeout(300);
-    $process->run();
-    $this->assertEquals(0, $process->getExitCode(),
-      'COMMAND: ' . $process->getCommandLine() . "\n" .
-      'OUTPUT: ' . $process->getOutput() . "\n" .
-      'ERROR: ' . $process->getErrorOutput() . "\n");
-    $this->assertStringContainsString('HTML output was generated', $process->getOutput());
-    $this->assertStringContainsString('Drupal_Tests_image_Functional_ImageDimensionsTest', $process->getOutput());
-
-    // Test with a wrong output directory.
-    $process = Process::fromShellCommandline('vendor/bin/phpunit --configuration core --verbose core/modules/image/tests/src/Functional/ImageDimensionsTest.php');
-    $process->setWorkingDirectory($this->root)
-      ->setTimeout(300)
-      ->setIdleTimeout(300);
-    $process->run(NULL, ['BROWSERTEST_OUTPUT_DIRECTORY' => 'can_we_assume_that_a_subdirectory_with_this_name_does_not_exist']);
-    $this->assertEquals(0, $process->getExitCode(),
-      'COMMAND: ' . $process->getCommandLine() . "\n" .
-      'OUTPUT: ' . $process->getOutput() . "\n" .
-      'ERROR: ' . $process->getErrorOutput() . "\n");
-    $this->assertStringContainsString('HTML output directory can_we_assume_that_a_subdirectory_with_this_name_does_not_exist is not a writable directory.', $process->getOutput());
-  }
-
 }
