@@ -134,7 +134,7 @@ class OverridesSectionStorageTest extends UnitTestCase {
       [],
     ];
     $data['with value, without layout'] = [
-      FALSE,
+      TRUE,
       'my_entity_type',
       'my_entity_type.entity_without_layout',
       [],

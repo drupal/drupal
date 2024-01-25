@@ -188,7 +188,9 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
    *   The route defaults array.
    *
    * @return \Drupal\Core\Entity\EntityInterface|null
-   *   The entity for the route, or NULL if none exist.
+   *   The entity for the route, or NULL if none exist. The entity is not
+   *   guaranteed to be fieldable, or contain the necessary field for this
+   *   section storage plugin.
    *
    * @see \Drupal\layout_builder\SectionStorageInterface::deriveContextsFromRoute()
    * @see \Drupal\Core\ParamConverter\ParamConverterInterface::convert()
@@ -206,9 +208,7 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
     }
 
     $entity = $this->entityRepository->getActive($entity_type_id, $entity_id);
-    if ($entity instanceof FieldableEntityInterface && $entity->hasField(static::FIELD_NAME)) {
-      return $entity;
-    }
+    return ($entity instanceof FieldableEntityInterface) ? $entity : NULL;
   }
 
   /**
@@ -359,6 +359,8 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
 
     // Access also depends on the default being enabled.
     $result = $result->andIf($this->getDefaultSectionStorage()->access($operation, $account, TRUE));
+    // Access also depends on the default layout being overridable.
+    $result = $result->andIf(AccessResult::allowedIf($this->getDefaultSectionStorage()->isOverridable())->addCacheableDependency($this->getDefaultSectionStorage()));
     $result = $this->handleTranslationAccess($result, $operation, $account);
     return $return_as_object ? $result : $result->isAllowed();
   }

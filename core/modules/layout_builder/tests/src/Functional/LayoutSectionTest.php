@@ -236,7 +236,7 @@ class LayoutSectionTest extends BrowserTestBase {
     $node->save();
 
     $this->drupalGet($node->toUrl('canonical')->toString() . '/layout');
-    $this->assertSession()->statusCodeEquals(404);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
   /**
