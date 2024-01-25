@@ -88,7 +88,7 @@ class SqlContentEntityStorageSchemaColumnTest extends KernelTestBase {
 
     // Create an entity with field data.
     $this->entity = EntityTestRev::create([
-      'user_id' => mt_rand(1, 10),
+      'user_id' => 2,
       'name' => $this->randomMachineName(),
       $field_name => $this->randomString(),
     ]);

@@ -138,7 +138,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
     // Populate the test entity with some random initial values.
     $values = [
       'name' => $this->randomMachineName(),
-      'user_id' => mt_rand(1, 128),
+      'user_id' => 2,
       'langcode' => $default_langcode,
     ];
     $entity = \Drupal::entityTypeManager()

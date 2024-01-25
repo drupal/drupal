@@ -39,7 +39,8 @@ class TempStoreDatabaseTest extends KernelTestBase {
     );
     $collection = $this->randomMachineName();
 
-    // Create two mock users.
+    // Create two mock user IDs. Note that the user IDs are intentionally
+    // random, which is not what we normally do in tests.
     for ($i = 0; $i <= 1; $i++) {
       $users[$i] = mt_rand(500, 5000000);
 
