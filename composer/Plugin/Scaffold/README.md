@@ -19,7 +19,7 @@ possible; for example, a project layout very similar to the current
 [drupal-composer/drupal-project](https://github.com/drupal-composer/drupal-scaffold)
 template will also be provided. When one of these projects is used, the user
 should be able to use `composer require` and `composer update` on a Drupal site
-immediately after untarring the downloaded archive.
+immediately after extracting the downloaded archive.
 
 Note that the dependencies of a Drupal site are only able to scaffold files if
 explicitly granted that right in the top-level composer.json file. See

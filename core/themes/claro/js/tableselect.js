@@ -123,8 +123,9 @@
         '[data-drupal-table-row-spacer] { display: none; }';
 
       if (!this.ignoreScrollEvent) {
-        // Remove the timeout that unhides the spacer. If this function is called,
-        // then scrolling is still happening and spacers should stay hidden.
+        // Remove the timeout that un-hides the spacer. If this function is
+        // called, then scrolling is still happening and spacers should stay
+        // hidden.
         clearTimeout(this.scrollingTimeout);
 
         // Shortly after scrolling tops, the spacer is re-added.

@@ -251,7 +251,7 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
    *
    * @param array $source_id_values
    *   The source identifier keyed values of the records, e.g. ['nid' => 5].
-   *   If unkeyed, the first count($source_id_values) keys will be assumed.
+   *   If un-keyed, the first count($source_id_values) keys will be assumed.
    *
    * @return array
    *   An array of arrays of destination identifier values.

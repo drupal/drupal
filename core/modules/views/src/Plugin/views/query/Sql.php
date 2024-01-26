@@ -581,7 +581,7 @@ class Sql extends QueryPluginBase {
    * table.
    *
    * @param $table
-   *   The unaliased name of the table to ensure.
+   *   The un-aliased name of the table to ensure.
    * @param $relationship
    *   The relationship to ensure the table links to. Each relationship will
    *   get a unique instance of the table being added. If not specified,

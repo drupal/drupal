@@ -382,7 +382,7 @@ function template_preprocess_username(&$variables) {
   }
 
   // Set the name to a formatted name that is safe for printing and
-  // that won't break tables by being too long. Keep an unshortened,
+  // that won't break tables by being too long. Keep an un-shortened,
   // unsanitized version, in case other preprocess functions want to implement
   // their own shortening logic or add markup. If they do so, they must ensure
   // that $variables['name'] is safe for printing.

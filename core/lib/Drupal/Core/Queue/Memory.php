@@ -5,7 +5,7 @@ namespace Drupal\Core\Queue;
 /**
  * Static queue implementation.
  *
- * This allows "undelayed" variants of processes relying on the Queue
+ * This allows "un-delayed" variants of processes relying on the Queue
  * interface. The queue data resides in memory. It should only be used for
  * items that will be queued and dequeued within a given page request.
  *

@@ -72,7 +72,8 @@ class SearchExcerptTest extends KernelTestBase {
    *
    * Excerpting should handle keywords that are matched only after going through
    * text analysis. This test passes keywords that match simplified words
-   * and compares them with strings that contain the original unsimplified word.
+   * and compares them with strings that contain the original un-simplified
+   * word.
    */
   public function testSearchExcerptSimplified() {
     $start_time = microtime(TRUE);
