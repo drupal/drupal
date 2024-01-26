@@ -25,6 +25,7 @@ editor.settings.ckeditor5:
       sequence:
         type: ckeditor5.plugin.[%key]
   constraints:
+    FullyValidatable: ~
     # Each enabled CKEditor 5 plugin that implements \Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableInterface
     # must exist in here.
     CKEditor5EnabledConfigurablePlugins: []
@@ -33,6 +34,8 @@ editor.settings.ckeditor5:
 ckeditor5.plugin.ckeditor5_language:
   type: mapping
   label: 'Language'
+  constraints:
+    FullyValidatable: ~
   mapping:
     language_list:
       type: string
@@ -54,6 +57,8 @@ ckeditor5.plugin.ckeditor5_language:
 ckeditor5.plugin.ckeditor5_heading:
   type: mapping
   label: Headings
+  constraints:
+    FullyValidatable: ~
   mapping:
     enabled_headings:
       type: sequence
@@ -73,6 +78,8 @@ ckeditor5.plugin.ckeditor5_heading:
 ckeditor5.plugin.ckeditor5_imageResize:
   type: mapping
   label: Image Resize
+  constraints:
+    FullyValidatable: ~
   mapping:
     allow_resize:
       type: boolean
@@ -84,6 +91,8 @@ ckeditor5.plugin.ckeditor5_imageResize:
 ckeditor5.plugin.ckeditor5_sourceEditing:
   type: mapping
   label: Source Editing
+  constraints:
+    FullyValidatable: ~
   mapping:
     allowed_tags:
       type: sequence
@@ -100,6 +109,8 @@ ckeditor5.plugin.ckeditor5_sourceEditing:
 ckeditor5.plugin.ckeditor5_alignment:
   type: mapping
   label: Alignments
+  constraints:
+    FullyValidatable: ~
   mapping:
     enabled_alignments:
       type: sequence
@@ -122,6 +133,8 @@ ckeditor5.plugin.ckeditor5_alignment:
 ckeditor5.plugin.ckeditor5_list:
   type: mapping
   label: List
+  constraints:
+    FullyValidatable: ~
   mapping:
     properties:
       type: mapping
@@ -147,6 +160,8 @@ ckeditor5.plugin.ckeditor5_list:
 ckeditor5.plugin.media_media:
   type: mapping
   label: Media
+  constraints:
+    FullyValidatable: ~
   mapping:
     allow_view_mode_override:
       type: boolean
@@ -158,6 +173,8 @@ ckeditor5.plugin.media_media:
 ckeditor5.plugin.ckeditor5_codeBlock:
   type: mapping
   label: Code Block
+  constraints:
+    FullyValidatable: ~
   mapping:
     languages:
       type: sequence
@@ -183,6 +200,8 @@ ckeditor5.plugin.ckeditor5_codeBlock:
 ckeditor5.plugin.ckeditor5_style:
   type: mapping
   label: Style
+  constraints:
+    FullyValidatable: ~
   mapping:
     styles:
       type: sequence
