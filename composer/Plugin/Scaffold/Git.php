@@ -2,6 +2,8 @@
 
 namespace Drupal\Composer\Plugin\Scaffold;
 
+// cspell:ignore unmatch
+
 use Composer\IO\IOInterface;
 use Composer\Util\ProcessExecutor;
 

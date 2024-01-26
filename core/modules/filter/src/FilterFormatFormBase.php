@@ -61,7 +61,7 @@ abstract class FilterFormatFormBase extends EntityForm {
     }
 
     // Create filter plugin instances for all available filters, including both
-    // enabled/configured ones as well as new and not yet unconfigured ones.
+    // enabled/configured ones as well as new and not yet configured ones.
     $filters = $format->filters();
     foreach ($filters as $filter_id => $filter) {
       // When a filter is missing, it is replaced by the null filter. Remove it

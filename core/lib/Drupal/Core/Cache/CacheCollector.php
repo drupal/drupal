@@ -187,7 +187,7 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
    *   The key that was requested.
    * @param bool $persist
    *   (optional) Whether the offset should be persisted or not, defaults to
-   *   TRUE. When called with $persist = FALSE the offset will be unflagged so
+   *   TRUE. When called with $persist = FALSE the offset will be un-flagged so
    *   that it will not be written at the end of the request.
    */
   protected function persist($key, $persist = TRUE) {

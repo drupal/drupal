@@ -251,7 +251,7 @@ class ComposerProjectTemplatesTest extends ComposerBuildTestBase {
     $this->assertCommandSuccessful();
     // Check the output of the project creation for the absence of warnings
     // about any non-allowed composer plugins.
-    // Note: There are different warnings for unallowed composer plugins
+    // Note: There are different warnings for disallowed composer plugins
     // depending on running in non-interactive mode or not. It seems the Drupal
     // CI environment always forces composer commands to run in the
     // non-interactive mode. The only thing these messages have in common is the

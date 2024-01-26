@@ -44,7 +44,7 @@ class LayoutSectionItem extends FieldItemBase {
    */
   public function __get($name) {
     // @todo \Drupal\Core\Field\FieldItemBase::__get() does not return default
-    //   values for uninstantiated properties. This will forcibly instantiate
+    //   values for un-instantiated properties. This will forcibly instantiate
     //   all properties with the side-effect of a performance hit, resolve
     //   properly in https://www.drupal.org/node/2413471.
     $this->getProperties();

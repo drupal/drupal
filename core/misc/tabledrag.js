@@ -608,7 +608,7 @@
               previousRow.matches('.draggable')
             ) {
               // Swap with the previous row (unless previous row is the first
-              // one and undraggable).
+              // one and un-draggable).
               self.rowObject.swap('before', previousRow);
               self.rowObject.interval = null;
               self.rowObject.indent(0);

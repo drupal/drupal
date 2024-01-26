@@ -308,7 +308,7 @@ class MailFormatHelper {
       }
     }
     if (!$line_is_mime_header) {
-      // Use soft-breaks only for purely quoted or unindented text.
+      // Use soft-breaks only for purely quoted or un-indented text.
       $line = wordwrap($line, 77 - $values['length'], $values['soft'] ? " \n" : "\n");
     }
     // Break really long words at the maximum width allowed.

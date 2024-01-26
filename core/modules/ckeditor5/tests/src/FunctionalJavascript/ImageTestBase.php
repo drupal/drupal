@@ -125,7 +125,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
           "<p>$img_tag</p>",
           $expected_upcast_behavior_when_wrapped_in_block_element === 'inline' ? "<p>$img_tag</p>" : $img_tag,
         ],
-        // Image tag wrapped with an unallowed paragraph-like element (<div).
+        // Image tag wrapped with a disallowed paragraph-like element (<div).
         // When inline is the expected upcast behavior, it will wrap in <p>
         // because it still must wrap in a paragraph-like element, and <p> is
         // available to be that element.
