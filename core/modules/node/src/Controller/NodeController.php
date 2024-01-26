@@ -142,6 +142,11 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
    *   An array as expected by \Drupal\Core\Render\RendererInterface::render().
    */
   public function revisionOverview(NodeInterface $node) {
+    // Always use the latest revision in the current content language to
+    // determine if this node has translations. This supports showing the
+    // correct translation revisions for translations that only have.
+    // non-default revisions.
+    $node = $this->entityRepository->getActive($node->getEntityTypeId(), $node->id());
     $langcode = $node->language()->getId();
     $language_name = $node->language()->getName();
     $languages = $node->getTranslationLanguages();
@@ -152,7 +157,6 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
     $header = [$this->t('Revision'), $this->t('Operations')];
 
     $rows = [];
-    $default_revision = $node->getRevisionId();
     $current_revision_displayed = FALSE;
 
     foreach ($this->getRevisionIds($node, $node_storage) as $vid) {
@@ -173,7 +177,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
         // revision, if it was the default revision, as its values for the
         // current language will be the same of the current default revision in
         // this case.
-        $is_current_revision = $vid == $default_revision || (!$current_revision_displayed && $revision->wasDefaultRevision());
+        $is_current_revision = $revision->isDefaultRevision() || (!$current_revision_displayed && $revision->wasDefaultRevision());
         if (!$is_current_revision) {
           $link = Link::fromTextAndUrl($date, new Url('entity.node.revision', ['node' => $node->id(), 'node_revision' => $vid]))->toString();
         }
