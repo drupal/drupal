@@ -295,6 +295,15 @@ function entity_test_entity_form_mode_info_alter(&$form_modes) {
 }
 
 /**
+ * Implements hook_ENTITY_TYPE_view_mode_alter().
+ */
+function entity_test_entity_test_view_mode_alter(string &$view_mode, EntityInterface $entity): void {
+  if ($view_mode == 'entity_test.vm_alter_test') {
+    $view_mode = 'entity_test.vm_alter_full';
+  }
+}
+
+/**
  * Implements hook_entity_extra_field_info().
  */
 function entity_test_entity_extra_field_info() {

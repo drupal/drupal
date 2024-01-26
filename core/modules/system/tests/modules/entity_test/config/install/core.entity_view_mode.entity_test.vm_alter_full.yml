@@ -1,0 +1,8 @@
+status: false
+dependencies:
+  module:
+    - entity_test
+id: entity_test.vm_alter_full
+label: "View mode alter : Full"
+targetEntityType: entity_test
+cache: true

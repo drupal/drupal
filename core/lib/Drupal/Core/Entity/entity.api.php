@@ -1696,6 +1696,23 @@ function hook_entity_view_mode_alter(&$view_mode, \Drupal\Core\Entity\EntityInte
 }
 
 /**
+ * Change the view mode of a specific entity type currently being displayed.
+ *
+ * @param string $view_mode
+ *   The view_mode currently displaying the entity.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity that is being viewed.
+ *
+ * @ingroup entity_crud
+ */
+function hook_ENTITY_TYPE_view_mode_alter(string &$view_mode, \Drupal\Core\Entity\EntityInterface $entity): void {
+  // Change the view mode to teaser.
+  if ($view_mode == 'full') {
+    $view_mode = 'teaser';
+  }
+}
+
+/**
  * Alter entity renderable values before cache checking during rendering.
  *
  * Invoked for a specific entity type.
