@@ -27,7 +27,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['form_test', 'big_pipe'];
+  protected static $modules = ['form_test'];
 
   /**
    * {@inheritdoc}
