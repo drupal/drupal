@@ -3,7 +3,6 @@
 namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Core\Site\Settings;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -12,7 +11,6 @@ use Drupal\Tests\BrowserTestBase;
  * @group system
  */
 class SitesDirectoryHardeningTest extends BrowserTestBase {
-  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
