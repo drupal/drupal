@@ -11,7 +11,6 @@ use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\toolbar\Ajax\SetSubtreesCommand;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Defines a controller for the toolbar module.
@@ -25,7 +24,6 @@ class ToolbarController extends ControllerBase implements TrustedCallbackInterfa
    *   The time service.
    */
   public function __construct(
-    #[Autowire(service: 'datetime.time')]
     protected ?TimeInterface $time = NULL
   ) {
     if ($this->time === NULL) {

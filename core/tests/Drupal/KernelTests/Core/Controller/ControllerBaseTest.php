@@ -26,6 +26,7 @@ class ControllerBaseTest extends KernelTestBase {
    * @covers ::create
    */
   public function testCreate() {
+    /** @var \Drupal\system_test\Controller\SystemTestController $controller */
     $controller = $this->container->get('class_resolver')->getInstanceFromDefinition(SystemTestController::class);
 
     $property = new \ReflectionProperty(SystemTestController::class, 'lock');
@@ -36,6 +37,10 @@ class ControllerBaseTest extends KernelTestBase {
 
     $property = new \ReflectionProperty(SystemTestController::class, 'currentUser');
     $this->assertSame($this->container->get('current_user'), $property->getValue($controller));
+
+    // Test nullables types.
+    $this->assertSame($this->container->get('page_cache_kill_switch'), $controller->killSwitch);
+    $this->assertSame($this->container->get('page_cache_kill_switch'), $controller->killSwitch2);
   }
 
   /**
