@@ -1792,8 +1792,9 @@ function _install_prepare_import($langcodes, $server_pattern) {
     if (is_object($file)) {
       $filename = $file->filename;
       preg_match('/drupal-([0-9a-z\.-]+)\.' . $langcode . '\.po/', $filename, $matches);
-      // Get the version information.
-      if ($version = $matches[1]) {
+      // Get the version information. Custom translation files may not have a
+      // version number.
+      if (isset($matches[1]) && $version = $matches[1]) {
         $info = _install_get_version_info($version);
         // Picking the first file does not necessarily result in the right file. So
         // we check if at least the major version number is available.
