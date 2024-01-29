@@ -570,7 +570,7 @@
         // Search through the search texts in the form for matching text.
         this.options.forEach((option) => {
           function hasWord(word) {
-            return option.searchText.indexOf(word) !== -1;
+            return option.searchText.includes(word);
           }
 
           let found = true;

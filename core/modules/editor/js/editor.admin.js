@@ -240,7 +240,7 @@
         }
 
         // The simple case: no wildcard in property value.
-        if (propertyValue.indexOf('*') === -1) {
+        if (!propertyValue.includes('*')) {
           if (
             universe.hasOwnProperty(tag) &&
             universe[tag].hasOwnProperty(key)

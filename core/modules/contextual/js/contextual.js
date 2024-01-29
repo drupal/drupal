@@ -104,7 +104,7 @@
     )}`;
     $contextual.find('.contextual-links a').each(function () {
       const url = this.getAttribute('href');
-      const glue = url.indexOf('?') === -1 ? '?' : '&';
+      const glue = url.includes('?') ? '&' : '?';
       this.setAttribute('href', url + glue + destination);
     });
 

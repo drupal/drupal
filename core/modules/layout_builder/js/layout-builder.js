@@ -44,8 +44,7 @@
          */
         const toggleBlockEntry = (index, link) => {
           const $link = $(link);
-          const textMatch =
-            link.textContent.toLowerCase().indexOf(query) !== -1;
+          const textMatch = link.textContent.toLowerCase().includes(query);
           // Checks if a category is currently hidden.
           // Toggles the category on if so.
           if (
