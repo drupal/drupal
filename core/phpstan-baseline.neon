@@ -3378,11 +3378,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/Controller/ControllerResolverTest.php
 
 		-
-			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
-			count: 3
-			path: tests/Drupal/Tests/Core/Cron/CronSuspendQueueDelayTest.php
-
-		-
 			message: """
 				#^Call to deprecated method expectError\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
 				https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#
