@@ -27,8 +27,8 @@ trait ConfigFormBaseTrait {
    *
    * @param string $name
    *   The name of the configuration object to retrieve. The name corresponds to
-   *   a configuration file. For @code \Drupal::config('book.admin') @endcode,
-   *   the config object returned will contain the contents of book.admin
+   *   a configuration file. For @code \Drupal::config('my_module.admin') @endcode,
+   *   the config object returned will contain the contents of node.admin
    *   configuration file.
    *
    * @return \Drupal\Core\Config\Config|\Drupal\Core\Config\ImmutableConfig

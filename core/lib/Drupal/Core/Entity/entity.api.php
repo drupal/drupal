@@ -523,7 +523,6 @@ use Drupal\node\Entity\NodeType;
  * general information about configuration.)
  *
  * There are several good examples of this in Drupal Core:
- * - The Book module defines a content type in node.type.book.yml
  * - The Standard install profile defines Page and Article content types in
  *   node.type.page.yml and node.type.article.yml, a Tags vocabulary in
  *   taxonomy.vocabulary.tags.yml, and a Node comment type in

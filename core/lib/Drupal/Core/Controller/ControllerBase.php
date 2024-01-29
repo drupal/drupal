@@ -147,13 +147,13 @@ abstract class ControllerBase implements ContainerInjectionInterface {
    * Retrieves a configuration object.
    *
    * This is the main entry point to the configuration API. Calling
-   * @code $this->config('book.admin') @endcode will return a configuration
-   * object in which the book module can store its administrative settings.
+   * @code $this->config('my_module.admin') @endcode will return a configuration
+   * object in which the my_module module can store its administrative settings.
    *
    * @param string $name
    *   The name of the configuration object to retrieve. The name corresponds to
-   *   a configuration file. For @code \Drupal::config('book.admin') @endcode,
-   *   the config object returned will contain the contents of book.admin
+   *   a configuration file. For @code \Drupal::config('my_module.admin') @endcode,
+   *   the config object returned will contain the contents of my_module.admin
    *   configuration file.
    *
    * @return \Drupal\Core\Config\Config
