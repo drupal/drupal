@@ -69,7 +69,7 @@
 
     // If there are multiple views this might've ended up showing up multiple
     // times.
-    if (ajaxPath.constructor.toString().indexOf('Array') !== -1) {
+    if (ajaxPath.constructor.toString().includes('Array')) {
       ajaxPath = ajaxPath[0];
     }
 

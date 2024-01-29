@@ -619,7 +619,7 @@
 
     // Ensure that we have a valid URL by adding ? when no query parameter is
     // yet available, otherwise append using &.
-    if (ajax.options.url.indexOf('?') === -1) {
+    if (!ajax.options.url.includes('?')) {
       ajax.options.url += '?';
     } else {
       ajax.options.url += '&';
