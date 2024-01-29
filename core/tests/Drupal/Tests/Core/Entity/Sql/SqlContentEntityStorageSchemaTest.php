@@ -1536,12 +1536,12 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ]);
 
     // The original indexes should be dropped before the new one is added.
-    $this->dbSchemaHandler->expects($this->exactly(3))
+    $indexes = ['entity_test__b588603cb9', 'entity_test__removed_field', 'entity_test__b588603cb9'];
+    $this->dbSchemaHandler->expects($this->exactly(count($indexes)))
       ->method('dropIndex')
-      ->withConsecutive(
-        ['entity_test', 'entity_test__b588603cb9'],
-        ['entity_test', 'entity_test__removed_field'],
-      );
+      ->with('entity_test', $this->callback(function ($index) use (&$indexes) {
+        return array_shift($indexes) === $index;
+      }));
 
     $this->dbSchemaHandler->expects($this->atLeastOnce())
       ->method('fieldExists')
