@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\image\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
@@ -167,18 +166,13 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       $uuids[$effect->getPluginId()] = $uuid;
       $effect_configuration = $effect->getConfiguration();
       foreach ($effect_edits[$effect->getPluginId()] as $field => $value) {
-        $this->assertEquals($effect_configuration['data'][$field], $value, new FormattableMarkup('The %field field in the %effect effect has the correct value of %value.', ['%field' => $field, '%effect' => $effect->getPluginId(), '%value' => $value]));
+        $this->assertEquals($effect_configuration['data'][$field], $value, "The $field field in the {$effect->getPluginId()} effect has the correct value of $value.");
       }
     }
 
     // Assert that every effect was saved.
     foreach (array_keys($effect_edits) as $effect_name) {
-      $this->assertTrue(isset($uuids[$effect_name]), new FormattableMarkup(
-        'A %effect_name effect was saved with ID %uuid',
-        [
-          '%effect_name' => $effect_name,
-          '%uuid' => $uuids[$effect_name],
-        ]));
+      $this->assertTrue(isset($uuids[$effect_name]), "A $effect_name effect was saved with ID $uuids[$effect_name]");
     }
 
     // Image style overview form (ordering and renaming).
@@ -212,7 +206,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Create an image to make sure it gets flushed after saving.
     $image_path = $this->createSampleImage($style);
-    $this->assertEquals(1, $this->getImageCount($style), new FormattableMarkup('Image style %style image %file successfully generated.', ['%style' => $style->label(), '%file' => $image_path]));
+    $this->assertEquals(1, $this->getImageCount($style), "Image style {$style->label()} image $image_path successfully generated.");
 
     $this->drupalGet($style_path);
     $this->submitForm($edit, 'Save');
@@ -231,7 +225,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Check that the image was flushed after updating the style.
     // This is especially important when renaming the style. Make sure that
     // the old image directory has been deleted.
-    $this->assertEquals(0, $this->getImageCount($style), new FormattableMarkup('Image style %style was flushed after renaming the style and updating the order of effects.', ['%style' => $style->label()]));
+    $this->assertEquals(0, $this->getImageCount($style), "Image style {$style->label()} was flushed after renaming the style and updating the order of effects.");
 
     // Load the style by the new name with the new weights.
     $style = ImageStyle::load($style_name);
@@ -252,7 +246,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Create an image to make sure it gets flushed after deleting an effect.
     $image_path = $this->createSampleImage($style);
-    $this->assertEquals(1, $this->getImageCount($style), new FormattableMarkup('Image style %style image %file successfully generated.', ['%style' => $style->label(), '%file' => $image_path]));
+    $this->assertEquals(1, $this->getImageCount($style), "Image style {$style->label()} image $image_path successfully generated.");
 
     // Delete the 'image_crop' effect from the style.
     $this->drupalGet($style_path . '/effects/' . $uuids['image_crop'] . '/delete');
@@ -267,12 +261,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // actually deleted.
     $entity_type_manager = $this->container->get('entity_type.manager');
     $style = $entity_type_manager->getStorage('image_style')->loadUnchanged($style->id());
-    $this->assertFalse($style->getEffects()->has($uuids['image_crop']), new FormattableMarkup(
-      'Effect with ID %uuid no longer found on image style %style',
-      [
-        '%uuid' => $uuids['image_crop'],
-        '%style' => $style->label(),
-      ]));
+    $this->assertFalse($style->getEffects()->has($uuids['image_crop']), "Effect with ID {$uuids['image_crop']} no longer found on image style {$style->label()}");
 
     // Additional test on Rotate effect, for transparent background.
     $edit = [
@@ -297,7 +286,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $directory = 'public://styles/' . $style_name;
     $this->assertDirectoryDoesNotExist($directory);
 
-    $this->assertNull(ImageStyle::load($style_name), new FormattableMarkup('Image style %style successfully deleted.', ['%style' => $style->label()]));
+    $this->assertNull(ImageStyle::load($style_name), "Image style {$style->label()} successfully deleted.");
 
     // Test empty text when there are no image styles.
 

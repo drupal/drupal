@@ -487,7 +487,7 @@ class DbLogTest extends BrowserTestBase {
       $ids[] = $row->wid;
     }
     $count_before = (isset($ids)) ? count($ids) : 0;
-    $this->assertGreaterThan(0, $count_before, new FormattableMarkup('DBLog contains @count records for @name', ['@count' => $count_before, '@name' => $user->getAccountName()]));
+    $this->assertGreaterThan(0, $count_before, "DBLog contains $count_before records for {$user->getAccountName()}");
 
     // Log in the admin user.
     $this->drupalLogin($this->adminUser);

@@ -398,11 +398,7 @@ class FormTest extends BrowserTestBase {
       'zero_checkbox_off' => 0,
     ];
     foreach ($expected_values as $widget => $expected_value) {
-      $this->assertSame($values[$widget], $expected_value, new FormattableMarkup('Checkbox %widget returns expected value (expected: %expected, got: %value)', [
-        '%widget' => var_export($widget, TRUE),
-        '%expected' => var_export($expected_value, TRUE),
-        '%value' => var_export($values[$widget], TRUE),
-      ]));
+      $this->assertSame($values[$widget], $expected_value, sprintf('Checkbox %s returns expected value (expected: %s, got: %s)', var_export($widget, TRUE), var_export($expected_value, TRUE), var_export($values[$widget], TRUE)));
     }
   }
 
@@ -475,7 +471,7 @@ class FormTest extends BrowserTestBase {
       'multiple_no_default_required' => ['three' => 'three'],
     ];
     foreach ($expected as $key => $value) {
-      $this->assertSame($value, $values[$key], new FormattableMarkup('@name: @actual is equal to @expected.', ['@name' => $key, '@actual' => var_export($values[$key], TRUE), '@expected' => var_export($value, TRUE)]));
+      $this->assertSame($value, $values[$key], sprintf('%s: %s is equal to %s.', $key, var_export($values[$key], TRUE), var_export($value, TRUE)));
     }
   }
 
@@ -775,7 +771,7 @@ class FormTest extends BrowserTestBase {
     // the disabled container.
     $actual_count = count($disabled_elements);
     $expected_count = 44;
-    $this->assertEquals($expected_count, $actual_count, new FormattableMarkup('Found @actual elements with disabled property (expected @expected).', ['@actual' => count($disabled_elements), '@expected' => $expected_count]));
+    $this->assertEquals($expected_count, $actual_count, sprintf('Found %s elements with disabled property (expected %s).', count($disabled_elements), $expected_count));
 
     // Mink does not "see" hidden elements, so we need to set the value of the
     // hidden element directly.
@@ -812,7 +808,7 @@ class FormTest extends BrowserTestBase {
           // Checkboxes values are not filtered out.
           $values[$key] = array_filter($values[$key]);
         }
-        $this->assertSame($expected_value, $values[$key], new FormattableMarkup('Default value for %type: expected %expected, returned %returned.', ['%type' => $key, '%expected' => var_export($expected_value, TRUE), '%returned' => var_export($values[$key], TRUE)]));
+        $this->assertSame($expected_value, $values[$key], sprintf('Default value for %s: expected %s, returned %s.', $key, var_export($expected_value, TRUE), var_export($values[$key], TRUE)));
       }
 
       // Recurse children.

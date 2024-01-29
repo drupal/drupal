@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\views_ui\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\views\Views;
 
 /**
@@ -104,8 +103,8 @@ class CustomBooleanTest extends UITestBase {
       $view = Views::getView('test_view');
       $output = $view->preview();
       $output = \Drupal::service('renderer')->renderRoot($output);
-      $this->{$values['test']}($values['true'], (string) $output, new FormattableMarkup('Expected custom boolean TRUE value %value in output for %type', ['%value' => $values['true'], '%type' => $type]));
-      $this->{$values['test']}($values['false'], (string) $output, new FormattableMarkup('Expected custom boolean FALSE value %value in output for %type', ['%value' => $values['false'], '%type' => $type]));
+      $this->{$values['test']}($values['true'], (string) $output, "Expected custom boolean TRUE value {$values['true']} in output for $type");
+      $this->{$values['test']}($values['false'], (string) $output, "Expected custom boolean FALSE value {$values['false']} in output for $type");
     }
   }
 
@@ -178,8 +177,8 @@ class CustomBooleanTest extends UITestBase {
       $view = Views::getView('test_view');
       $output = $view->preview();
       $output = \Drupal::service('renderer')->renderRoot($output);
-      $this->{$values['test']}($values['true'], (string) $output, new FormattableMarkup('Expected custom boolean TRUE value %value in output for %type', ['%value' => $values['true'], '%type' => $type]));
-      $this->{$values['test']}($values['false'], (string) $output, new FormattableMarkup('Expected custom boolean FALSE value %value in output for %type', ['%value' => $values['false'], '%type' => $type]));
+      $this->{$values['test']}($values['true'], (string) $output, "Expected custom boolean TRUE value {$values['true']} in output for $type");
+      $this->{$values['test']}($values['false'], (string) $output, "Expected custom boolean FALSE value {$values['false']} in output for $type");
 
       // Assert that we are using the correct template.
       $this->assertStringContainsString('llama', (string) $output);
