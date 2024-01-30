@@ -5,8 +5,8 @@ namespace Drupal\media\OEmbed;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheBackendInterface;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\RequestOptions;
+use Psr\Http\Client\ClientExceptionInterface;
 
 // cspell:ignore nocdata
 
@@ -68,7 +68,7 @@ class ResourceFetcher implements ResourceFetcherInterface {
         RequestOptions::TIMEOUT => 5,
       ]);
     }
-    catch (TransferException $e) {
+    catch (ClientExceptionInterface $e) {
       throw new ResourceException('Could not retrieve the oEmbed resource.', $url, [], $e);
     }
 

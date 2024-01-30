@@ -7,7 +7,7 @@ use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Utility\Error;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\TransferException;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -104,7 +104,7 @@ class UpdateFetcher implements UpdateFetcherInterface {
         ->get($url, ['headers' => ['Accept' => 'text/xml']])
         ->getBody();
     }
-    catch (TransferException $exception) {
+    catch (ClientExceptionInterface $exception) {
       Error::logException($this->logger, $exception);
       if ($with_http_fallback && !str_contains($url, "http://")) {
         $url = str_replace('https://', 'http://', $url);

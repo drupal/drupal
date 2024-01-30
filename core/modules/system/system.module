@@ -35,7 +35,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\LocalStream;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\Url;
-use GuzzleHttp\Exception\TransferException;
+use Psr\Http\Client\ClientExceptionInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
@@ -1145,7 +1145,7 @@ function system_retrieve_file($url, $destination = NULL, $managed = FALSE, $repl
       $local = $file_system->saveData($data, $path, $replace);
     }
   }
-  catch (TransferException $exception) {
+  catch (ClientExceptionInterface $exception) {
     \Drupal::messenger()->addError(t('Failed to fetch file due to error "%error"', ['%error' => $exception->getMessage()]));
     return FALSE;
   }

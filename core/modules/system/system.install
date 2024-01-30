@@ -28,7 +28,7 @@ use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\Error;
-use GuzzleHttp\Exception\TransferException;
+use Psr\Http\Client\ClientExceptionInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 // cspell:ignore quickedit
@@ -1706,7 +1706,7 @@ function _system_advisories_requirements(array &$requirements): void {
   try {
     $advisories = $fetcher->getSecurityAdvisories(TRUE, 5);
   }
-  catch (TransferException $exception) {
+  catch (ClientExceptionInterface $exception) {
     $requirements['system_advisories']['title'] = t('Critical security announcements');
     $requirements['system_advisories']['severity'] = REQUIREMENT_WARNING;
     $requirements['system_advisories']['description'] = ['#theme' => 'system_security_advisories_fetch_error_message'];

@@ -25,7 +25,7 @@ use Drupal\media\MediaTypeInterface;
 use Drupal\media\OEmbed\ResourceFetcherInterface;
 use Drupal\media\OEmbed\UrlResolverInterface;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\TransferException;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -441,7 +441,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
         return $local_thumbnail_uri;
       }
     }
-    catch (TransferException $e) {
+    catch (ClientExceptionInterface $e) {
       $this->logger->warning('Failed to download remote thumbnail file due to "%error".', [
         '%error' => $e->getMessage(),
       ]);

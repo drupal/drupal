@@ -8,7 +8,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\TransferException;
+use Psr\Http\Client\ClientExceptionInterface;
 
 /**
  * Retrieves and caches information about oEmbed providers.
@@ -100,7 +100,7 @@ class ProviderRepository implements ProviderRepositoryInterface {
     try {
       $response = $this->httpClient->request('GET', $this->providersUrl);
     }
-    catch (TransferException $e) {
+    catch (ClientExceptionInterface  $e) {
       if (isset($stored['data'])) {
         // Use the stale data to fall back gracefully, but warn site
         // administrators that we used stale data.

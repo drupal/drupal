@@ -11,7 +11,7 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Url;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Exception\TransferException;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
@@ -354,7 +354,7 @@ function locale_translation_download_source($source_file, $directory = 'temporar
       return $file;
     }
   }
-  catch (TransferException $exception) {
+  catch (ClientExceptionInterface $exception) {
     \Drupal::messenger()->addError(t('Failed to fetch file due to error "%error"', ['%error' => $exception->getMessage()]));
   }
   catch (FileException | InvalidStreamWrapperException $e) {

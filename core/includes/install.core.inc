@@ -35,12 +35,12 @@ use Drupal\Core\Url;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Core\Routing\RouteObjectInterface;
+use Psr\Http\Client\ClientExceptionInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Route;
 use Drupal\user\Entity\User;
-use GuzzleHttp\Exception\TransferException;
 
 /**
  * Do not run the task during the current installation request.
@@ -1446,9 +1446,10 @@ function install_retrieve_file($uri, $destination) {
       return FALSE;
     }
   }
-  catch (TransferException $e) {
+  catch (ClientExceptionInterface) {
     return FALSE;
   }
+
   return file_put_contents($path, $data) !== FALSE;
 }
 
@@ -1466,7 +1467,7 @@ function install_check_localization_server($uri) {
     \Drupal::httpClient()->head($uri);
     return TRUE;
   }
-  catch (TransferException $e) {
+  catch (ClientExceptionInterface) {
     return FALSE;
   }
 }
