@@ -6,4 +6,3 @@ hidden: true
 install:
   - locale
   - locale_test_translate
-  - tour
