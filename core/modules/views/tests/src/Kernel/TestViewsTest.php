@@ -29,11 +29,7 @@ class TestViewsTest extends KernelTestBase {
    * @var array
    */
   protected static $modules = [
-    // `node.type.book` config entity is a config dependency.
-    // @see core/modules/book/tests/modules/book_test_views/test_views/views.view.test_book_view.yml
-    'book',
     // For NodeType config entities to exist, its module must be installed.
-    // @see book_entity_type_build()
     'node',
     // The `DRUPAL_OPTIONAL` constant is used by the NodeType config entity type
     // and only available if the system module is installed.
@@ -127,9 +123,6 @@ class TestViewsTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    // `node.type.book` config entity is a config dependency.
-    // @see core/modules/book/tests/modules/book_test_views/test_views/views.view.test_book_view.yml
-    $this->installConfig('book');
     // `field.storage.node.body` config entity is a config dependency. It is one
     // of the default config of the Node module.
     // @see core/modules/node/tests/modules/node_test_views/test_views/views.view.test_node_tokens.yml

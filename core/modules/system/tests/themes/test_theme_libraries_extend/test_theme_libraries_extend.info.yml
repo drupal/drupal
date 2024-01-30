@@ -4,7 +4,7 @@ description: 'Test Theme with libraries-extend'
 version: VERSION
 base theme: starterkit_theme
 libraries-extend:
-  starterkit_theme/book-navigation:
+  starterkit_theme/test-navigation:
     - test_theme_libraries_extend/extend_one
     - test_theme_libraries_extend/extend_two
   core/drupal.dialog:
