@@ -113,6 +113,9 @@ class Rss extends RssPluginBase {
     $build = \Drupal::entityTypeManager()
       ->getViewBuilder('node')
       ->view($node, $build_mode);
+    // Add rss key to cache to differentiate this from other caches.
+    $build['#cache']['keys'][] = 'view_rss';
+
     unset($build['#theme']);
 
     if (!empty($node->rss_namespaces)) {
