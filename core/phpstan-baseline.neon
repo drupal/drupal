@@ -676,22 +676,6 @@ parameters:
 
 		-
 			message: """
-				#^Class Drupal\\\\Core\\\\EventSubscriber\\\\KernelDestructionSubscriber implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/EventSubscriber/KernelDestructionSubscriber.php
-
-		-
-			message: """
-				#^Usage of deprecated trait Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareTrait in class Drupal\\\\Core\\\\EventSubscriber\\\\KernelDestructionSubscriber\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/EventSubscriber/KernelDestructionSubscriber.php
-
-		-
-			message: """
 				#^Call to deprecated method getFromDriverName\\(\\) of class Drupal\\\\Core\\\\Extension\\\\DatabaseDriverList\\:
 				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
 				  DatabaseDriverList\\:\\:get\\(\\) instead, passing a database driver namespace\\.$#

@@ -60,9 +60,7 @@ class UserRequestSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents(): array {
-    // Should go before other subscribers start to write their caches. Notably
-    // before \Drupal\Core\EventSubscriber\KernelDestructionSubscriber to
-    // prevent instantiation of destructed services.
+    // Should go before other subscribers start to write their caches.
     $events[KernelEvents::TERMINATE][] = ['onKernelTerminate', 300];
     return $events;
   }

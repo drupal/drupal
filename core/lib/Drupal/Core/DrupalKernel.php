@@ -685,14 +685,21 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @return void
    */
   public function terminate(Request $request, Response $response) {
-    // Only run terminate() when essential services have been set up properly
-    // by preHandle() before.
-    if (FALSE === $this->prepared) {
-      return;
-    }
-
     if ($this->getHttpKernel() instanceof TerminableInterface) {
-      $this->getHttpKernel()->terminate($request, $response);
+      // Only run terminate() when essential services have been set up properly
+      // by preHandle() before.
+      if ($this->prepared === TRUE) {
+        $this->getHttpKernel()->terminate($request, $response);
+      }
+      // For destructable services, always call the destruct method if they were
+      // initialized during the request. Destruction is not necessary if the
+      // service was not used.
+      foreach ($this->container->getParameter('kernel.destructable_services') as $id) {
+        if ($this->container->initialized($id)) {
+          $service = $this->container->get($id);
+          $service->destruct();
+        }
+      }
     }
   }
 

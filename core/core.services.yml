@@ -1492,10 +1492,6 @@ services:
     class: Drupal\Core\StreamWrapper\TemporaryStream
     tags:
       - { name: stream_wrapper, scheme: temporary }
-  kernel_destruct_subscriber:
-    class: Drupal\Core\EventSubscriber\KernelDestructionSubscriber
-    calls:
-      - [setContainer, ['@service_container']]
   image.toolkit.manager:
     class: Drupal\Core\ImageToolkit\ImageToolkitManager
     arguments: ['@config.factory']
