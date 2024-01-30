@@ -26,7 +26,6 @@ use Drupal\Core\Installer\Form\SiteSettingsForm;
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
-use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StringTranslation\Translator\FileTranslation;
 use Drupal\Core\StackMiddleware\ReverseProxyMiddleware;
@@ -359,16 +358,6 @@ function install_begin_request($class_loader, &$install_state) {
   $container
     ->register('string_translation', 'Drupal\Core\StringTranslation\TranslationManager')
     ->addArgument(new Reference('language.default'));
-
-  // Register the stream wrapper manager.
-  $container
-    ->register('stream_wrapper_manager', 'Drupal\Core\StreamWrapper\StreamWrapperManager')
-    ->addMethodCall('setContainer', [new Reference('service_container')]);
-  $container
-    ->register('file_system', 'Drupal\Core\File\FileSystem')
-    ->addArgument(new Reference('stream_wrapper_manager'))
-    ->addArgument(Settings::getInstance())
-    ->addArgument((new LoggerChannelFactory())->get('file'));
 
   // Register the database driver extension list provider.
   $container
