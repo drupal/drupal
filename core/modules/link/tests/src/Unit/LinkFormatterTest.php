@@ -147,7 +147,6 @@ class LinkFormatterTest extends UnitTestCase {
       [
         '#type' => 'link',
         '#title' => 'http://example.com',
-        '#options' => [],
         '#url' => $expectedUrl,
       ],
     ], $elements);

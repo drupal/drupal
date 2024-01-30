@@ -205,16 +205,15 @@ class LinkFormatter extends FormatterBase {
         }
       }
       else {
+        // Skip the #options to prevent duplications of query parameters.
         $element[$delta] = [
           '#type' => 'link',
           '#title' => $link_title,
-          '#options' => $url->getOptions(),
+          '#url' => $url,
         ];
-        $element[$delta]['#url'] = $url;
 
         if (!empty($item->_attributes)) {
-          $element[$delta]['#options'] += ['attributes' => []];
-          $element[$delta]['#options']['attributes'] += $item->_attributes;
+          $element[$delta]['#attributes'] = $item->_attributes;
           // Unset field item attributes since they have been included in the
           // formatter output and should not be rendered in the field template.
           unset($item->_attributes);
