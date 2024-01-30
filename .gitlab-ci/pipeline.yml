@@ -147,7 +147,7 @@ variables:
 
 '⚙️️ PHPUnit Kernel':
   <<: [ *with-composer, *run-tests, *default-job-settings ]
-  parallel: 2
+  parallel: 3
   variables:
     TESTSUITE: PHPUnit-Kernel
     KUBERNETES_CPU_REQUEST: "16"
