@@ -136,13 +136,6 @@ class Link extends RenderElement {
    *       // passing in to links.html.twig.
    *     ),
    *   ),
-   *   'statistics' => array(
-   *     '#theme' => 'links__node__statistics',
-   *     '#links' => array(
-   *       // An array of links associated with node statistics, suitable for
-   *       // passing in to links.html.twig.
-   *     ),
-   *   ),
    *   'translation' => array(
    *     '#theme' => 'links__node__translation',
    *     '#links' => array(
