@@ -106,6 +106,10 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
       ])->save();
     }
 
+    // Ensure the bundles under test exist, to avoid config validation errors.
+    entity_test_create_bundle('custom_bundle');
+    entity_test_create_bundle('some_bundle');
+
     // Fixed language.
     ContentLanguageSettings::loadByEntityTypeBundle('entity_test', 'custom_bundle')
       ->setLanguageAlterable(TRUE)

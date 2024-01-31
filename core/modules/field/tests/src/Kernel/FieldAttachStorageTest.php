@@ -84,8 +84,8 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
       1 => 'test_bundle_1',
       2 => 'test_bundle_2',
     ];
-    entity_test_create_bundle($bundles[1]);
-    entity_test_create_bundle($bundles[2]);
+    entity_test_create_bundle($bundles[1], entity_type: $entity_type);
+    entity_test_create_bundle($bundles[2], entity_type: $entity_type);
     // Define 3 fields:
     // - field_1 is in bundle_1 and bundle_2,
     // - field_2 is in bundle_1,
@@ -361,7 +361,12 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
     $this->assertCount(4, $entity->{$this->fieldTestData->field_name}, 'First field got loaded');
     $this->assertCount(1, $entity->{$field_name}, 'Second field got loaded');
 
-    // Delete the bundle.
+    // Delete the bundle. The form display has to be deleted first to prevent
+    // schema errors when fields attached to the deleted bundle are themselves
+    // deleted, which triggers an update of the form display.
+    $this->container->get('entity_display.repository')
+      ->getFormDisplay($entity_type, $this->fieldTestData->field->getTargetBundle())
+      ->delete();
     entity_test_delete_bundle($this->fieldTestData->field->getTargetBundle(), $entity_type);
 
     // Verify no data gets loaded

@@ -3,7 +3,9 @@
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Field\Entity\BaseFieldOverride;
+use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
  * Tests validation of base_field_override entities.
@@ -13,10 +15,12 @@ use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
  */
 class BaseFieldOverrideValidationTest extends ConfigEntityValidationTestBase {
 
+  use ContentTypeCreationTrait;
+
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['user'];
+  protected static $modules = ['entity_test', 'field', 'node', 'text', 'user'];
 
   /**
    * {@inheritdoc}
@@ -24,11 +28,29 @@ class BaseFieldOverrideValidationTest extends ConfigEntityValidationTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $fields = $this->container->get('entity_field.manager')
-      ->getBaseFieldDefinitions('user');
+    $this->installConfig('node');
+    $this->createContentType(['type' => 'one']);
+    $this->createContentType(['type' => 'another']);
 
-    $this->entity = BaseFieldOverride::createFromBaseFieldDefinition(reset($fields), 'user');
+    EntityTestBundle::create(['id' => 'one'])->save();
+    EntityTestBundle::create(['id' => 'another'])->save();
+
+    $fields = $this->container->get('entity_field.manager')
+      ->getBaseFieldDefinitions('node');
+
+    $this->entity = BaseFieldOverride::createFromBaseFieldDefinition(reset($fields), 'one');
     $this->entity->save();
+  }
+
+  /**
+   * Tests that the target bundle of the field is checked.
+   */
+  public function testTargetBundleMustExist(): void {
+    $this->entity->set('bundle', 'nope');
+    $this->assertValidationErrors([
+      '' => "The 'bundle' property cannot be changed.",
+      'bundle' => "The 'nope' bundle does not exist on the 'node' entity type.",
+    ]);
   }
 
   /**
@@ -40,7 +62,10 @@ class BaseFieldOverrideValidationTest extends ConfigEntityValidationTestBase {
     // settings from the *old* field_type won't match the config schema for the
     // settings of the *new* field_type.
     $this->entity->set('settings', []);
-    parent::testImmutableProperties($valid_values);
+    parent::testImmutableProperties([
+      'entity_type' => 'entity_test_with_bundle',
+      'bundle' => 'another',
+    ]);
   }
 
 }

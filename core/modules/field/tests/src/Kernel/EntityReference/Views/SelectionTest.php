@@ -73,6 +73,10 @@ class SelectionTest extends KernelTestBase {
       $this->nodes[$node->id()] = $node;
     }
 
+    // Ensure the bundle to which the field is attached actually exists, or we
+    // will get config validation errors.
+    entity_test_create_bundle('test_bundle');
+
     // Create an entity reference field.
     $handler_settings = [
       'view' => [

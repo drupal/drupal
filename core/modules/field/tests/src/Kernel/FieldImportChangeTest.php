@@ -26,6 +26,8 @@ class FieldImportChangeTest extends FieldKernelTestBase {
    * Tests importing an updated field.
    */
   public function testImportChange() {
+    entity_test_create_bundle('test_bundle');
+
     $this->installConfig(['field_test_config']);
     $field_storage_id = 'field_test_import';
     $field_id = "entity_test.entity_test.$field_storage_id";

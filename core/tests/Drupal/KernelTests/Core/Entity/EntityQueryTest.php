@@ -96,7 +96,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       do {
         $bundle = $this->randomMachineName();
       } while ($bundles && strtolower($bundles[0]) >= strtolower($bundle));
-      entity_test_create_bundle($bundle);
+      entity_test_create_bundle($bundle, entity_type: $field_storage->getTargetEntityTypeId());
       foreach ($field_storages as $field_storage) {
         FieldConfig::create([
           'field_storage' => $field_storage,
@@ -562,6 +562,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     ]);
     $field_storage->save();
     $bundle = $this->randomMachineName();
+    entity_test_create_bundle($bundle);
     FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => $bundle,
@@ -813,6 +814,7 @@ class EntityQueryTest extends EntityKernelTestBase {
    */
   public function testCaseSensitivity() {
     $bundle = $this->randomMachineName();
+    entity_test_create_bundle($bundle, entity_type: 'entity_test_mulrev');
 
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_ci',

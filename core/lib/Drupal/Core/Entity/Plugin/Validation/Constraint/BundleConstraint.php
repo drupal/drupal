@@ -7,6 +7,9 @@ use Symfony\Component\Validator\Constraint;
 /**
  * Checks if a value is a valid entity type.
  *
+ * This differs from the `EntityBundleExists` constraint in that checks that the
+ * validated value is an *entity* of a particular bundle.
+ *
  * @Constraint(
  *   id = "Bundle",
  *   label = @Translation("Bundle", context = "Validation"),

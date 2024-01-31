@@ -54,6 +54,9 @@ class NodeAccessTest extends ModerationStateTestBase {
     parent::setUp();
     $this->drupalLogin($this->adminUser);
     $this->createContentTypeFromUi('Moderated content', 'moderated_content', FALSE);
+    // Ensure the statically cached entity bundle info is aware of the content
+    // type that was just created in the UI.
+    $this->container->get('entity_type.bundle.info')->clearCachedBundles();
     $this->grantUserPermissionToCreateContentOfType($this->adminUser, 'moderated_content');
 
     // Add the private field to the node type.

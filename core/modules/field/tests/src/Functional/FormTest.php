@@ -669,6 +669,9 @@ class FormTest extends FieldTestBase {
     $user = $this->drupalCreateUser(['administer entity_test content']);
     $this->drupalLogin($user);
 
+    // Ensure that the 'bar' bundle exists, to avoid config validation errors.
+    entity_test_create_bundle('bar', entity_type: 'entity_test_base_field_display');
+
     FieldStorageConfig::create([
       'entity_type' => 'entity_test_base_field_display',
       'field_name' => 'foo',

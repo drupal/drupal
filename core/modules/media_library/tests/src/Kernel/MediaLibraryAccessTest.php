@@ -4,8 +4,8 @@ namespace Drupal\Tests\media_library\Kernel;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultReasonInterface;
-use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestBundle;
+use Drupal\entity_test\Entity\EntityTestWithBundle;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
@@ -50,7 +50,7 @@ class MediaLibraryAccessTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('file');
     $this->installSchema('file', 'file_usage');
-    $this->installEntitySchema('entity_test');
+    $this->installEntitySchema('entity_test_with_bundle');
     $this->installEntitySchema('filter_format');
     $this->installEntitySchema('media');
     $this->installConfig([
@@ -67,7 +67,7 @@ class MediaLibraryAccessTest extends KernelTestBase {
     $field_storage = FieldStorageConfig::create([
       'type' => 'entity_reference',
       'field_name' => 'field_test_media',
-      'entity_type' => 'entity_test',
+      'entity_type' => 'entity_test_with_bundle',
       'settings' => [
         'target_type' => 'media',
       ],
@@ -92,7 +92,7 @@ class MediaLibraryAccessTest extends KernelTestBase {
 
     // Create a media library state to test access.
     $state = MediaLibraryState::create('media_library.opener.field_widget', ['file', 'image'], 'file', 2, [
-      'entity_type_id' => 'entity_test',
+      'entity_type_id' => 'entity_test_with_bundle',
       'bundle' => 'test',
       'field_name' => 'field_test_media',
     ]);
@@ -187,7 +187,7 @@ class MediaLibraryAccessTest extends KernelTestBase {
     /** @var \Drupal\media_library\MediaLibraryUiBuilder $ui_builder */
     $ui_builder = $this->container->get('media_library.ui_builder');
 
-    $forbidden_entity = EntityTest::create([
+    $forbidden_entity = EntityTestWithBundle::create([
       'type' => 'test',
       // This label will automatically cause an access denial.
       // @see \Drupal\entity_test\EntityTestAccessControlHandler::checkAccess()
@@ -206,7 +206,7 @@ class MediaLibraryAccessTest extends KernelTestBase {
     $access_result = $ui_builder->checkAccess($this->createUser(), $state);
     $this->assertAccess($access_result, FALSE, NULL, [], ['url.query_args']);
 
-    $neutral_entity = EntityTest::create([
+    $neutral_entity = EntityTestWithBundle::create([
       'type' => 'test',
       // This label will result in neutral access.
       // @see \Drupal\entity_test\EntityTestAccessControlHandler::checkAccess()
@@ -262,7 +262,7 @@ class MediaLibraryAccessTest extends KernelTestBase {
   public function testFieldWidgetEntityFieldAccess(string $field_type) {
     $field_storage = FieldStorageConfig::create([
       'type' => $field_type,
-      'entity_type' => 'entity_test',
+      'entity_type' => 'entity_test_with_bundle',
       // The media_library_test module will deny access to this field.
       // @see media_library_test_entity_field_access()
       'field_name' => 'field_media_no_access',
@@ -286,7 +286,7 @@ class MediaLibraryAccessTest extends KernelTestBase {
 
     // Test that access is denied even without an entity to work with.
     $state = MediaLibraryState::create('media_library.opener.field_widget', ['file', 'image'], 'file', 2, [
-      'entity_type_id' => 'entity_test',
+      'entity_type_id' => 'entity_test_with_bundle',
       'bundle' => 'test',
       'field_name' => $field_storage->getName(),
     ]);
@@ -294,7 +294,7 @@ class MediaLibraryAccessTest extends KernelTestBase {
     $this->assertAccess($access_result, FALSE, 'Field access denied by test module', [], ['url.query_args', 'user.permissions']);
 
     // Assert that field access is also checked with a real entity.
-    $entity = EntityTest::create([
+    $entity = EntityTestWithBundle::create([
       'type' => 'test',
       'name' => $this->randomString(),
     ]);
@@ -323,7 +323,7 @@ class MediaLibraryAccessTest extends KernelTestBase {
 
     // Create a media library state to test access.
     $state = MediaLibraryState::create('media_library.opener.field_widget', ['file', 'image'], 'file', 2, [
-      'entity_type_id' => 'entity_test',
+      'entity_type_id' => 'entity_test_with_bundle',
       'bundle' => 'test',
       'field_name' => 'field_test_media',
     ]);

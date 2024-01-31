@@ -117,6 +117,8 @@ language.content_settings.*.*:
     target_bundle:
       type:  string
       label: 'Bundle'
+      constraints:
+        EntityBundleExists: '%parent.target_entity_type_id'
     default_langcode:
       type: langcode
       label: 'Default language'

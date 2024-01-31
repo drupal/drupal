@@ -36,7 +36,7 @@ class FieldEntitySettingsTest extends KernelTestBase {
     /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
     $field_storage = FieldStorageConfig::create([
       'type' => 'integer',
-      'entity_type' => 'entity_test',
+      'entity_type' => 'entity_test_with_bundle',
       'field_name' => 'test',
     ]);
     $field = FieldConfig::create([
@@ -95,10 +95,10 @@ class FieldEntitySettingsTest extends KernelTestBase {
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'test_reference',
       'type' => 'entity_reference',
-      'entity_type' => 'entity_test',
+      'entity_type' => 'entity_test_with_bundle',
       'cardinality' => 1,
       'settings' => [
-        'target_type' => 'entity_test',
+        'target_type' => 'entity_test_with_bundle',
       ],
     ]);
     $field_storage->save();
@@ -111,10 +111,10 @@ class FieldEntitySettingsTest extends KernelTestBase {
         'handler' => 'default',
       ],
     ]);
-    $this->assertSame('default:entity_test', $field->getSetting('handler'));
+    $this->assertSame('default:entity_test_with_bundle', $field->getSetting('handler'));
     // If the handler is changed, it should be normalized again on pre-save.
     $field->setSetting('handler', 'default')->save();
-    $this->assertSame('default:entity_test', $field->getSetting('handler'));
+    $this->assertSame('default:entity_test_with_bundle', $field->getSetting('handler'));
   }
 
 }

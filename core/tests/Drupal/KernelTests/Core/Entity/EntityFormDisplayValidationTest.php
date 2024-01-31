@@ -3,9 +3,13 @@
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
-use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Entity\Entity\EntityFormMode;
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
+use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
  * Tests validation of entity_form_display entities.
@@ -13,7 +17,9 @@ use Drupal\field\Entity\FieldStorageConfig;
  * @group Entity
  * @group Validation
  */
-class EntityFormDisplayValidationTest extends EntityFormModeValidationTest {
+class EntityFormDisplayValidationTest extends ConfigEntityValidationTestBase {
+
+  use ContentTypeCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -23,15 +29,29 @@ class EntityFormDisplayValidationTest extends EntityFormModeValidationTest {
   /**
    * {@inheritdoc}
    */
+  protected static $modules = ['entity_test', 'field', 'node', 'text', 'user'];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
-    $this->entity = EntityFormDisplay::create([
-      'targetEntityType' => 'user',
-      'bundle' => 'user',
-      // The mode was created by the parent class.
-      'mode' => 'test',
-    ]);
+    $this->installConfig('node');
+    $this->createContentType(['type' => 'one']);
+    $this->createContentType(['type' => 'two']);
+
+    EntityTestBundle::create(['id' => 'one'])->save();
+    EntityTestBundle::create(['id' => 'two'])->save();
+
+    EntityFormMode::create([
+      'id' => 'node.test',
+      'label' => 'Test',
+      'targetEntityType' => 'node',
+    ])->save();
+
+    $this->entity = $this->container->get(EntityDisplayRepositoryInterface::class)
+      ->getFormDisplay('node', 'one', 'test');
     $this->entity->save();
   }
 
@@ -40,7 +60,6 @@ class EntityFormDisplayValidationTest extends EntityFormModeValidationTest {
    */
   public function testMultilineTextFieldWidgetPlaceholder(): void {
     // First, create a field for which widget settings exist.
-    $this->enableModules(['field', 'text']);
     $text_field_storage_config = FieldStorageConfig::create([
       'type' => 'text_with_summary',
       'field_name' => 'novel',
@@ -74,6 +93,27 @@ class EntityFormDisplayValidationTest extends EntityFormModeValidationTest {
     ]);
 
     $this->assertValidationErrors([]);
+  }
+
+  /**
+   * Tests that the target bundle of the entity form display is checked.
+   */
+  public function testTargetBundleMustExist(): void {
+    $this->entity->set('bundle', 'superhero');
+    $this->assertValidationErrors([
+      '' => "The 'bundle' property cannot be changed.",
+      'bundle' => "The 'superhero' bundle does not exist on the 'node' entity type.",
+    ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testImmutableProperties(array $valid_values = []): void {
+    parent::testImmutableProperties([
+      'targetEntityType' => 'entity_test_with_bundle',
+      'bundle' => 'two',
+    ]);
   }
 
 }

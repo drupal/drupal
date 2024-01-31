@@ -499,6 +499,8 @@ field_config_base:
     bundle:
       type: string
       label: 'Bundle'
+      constraints:
+        EntityBundleExists: '%parent.entity_type'
     label:
       type: required_label
       label: 'Label'

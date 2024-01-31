@@ -7,6 +7,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\Schema\ConfigSchemaAlterException;
 use Drupal\Core\Config\Schema\ConfigSchemaDiscovery;
+use Drupal\Core\Config\Schema\TypeResolver;
 use Drupal\Core\Config\Schema\SequenceDataDefinition;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Config\Schema\Undefined;
@@ -108,7 +109,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
       if (isset($name)) {
         $replace['%key'] = $name;
       }
-      $type = $this->resolveDynamicTypeName($type, $replace);
+      $type = TypeResolver::resolveDynamicTypeName($type, $replace);
       // Remove the type from the definition so that it is replaced with the
       // concrete type from schema definitions.
       unset($definition['type']);
@@ -288,7 +289,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
 
       // Replace dynamic portions of the definition type.
       if (!empty($replacements) && strpos($definition['type'], ']')) {
-        $sub_type = $this->determineType($this->resolveDynamicTypeName($definition['type'], $replacements), $definitions);
+        $sub_type = $this->determineType(TypeResolver::resolveDynamicTypeName($definition['type'], $replacements), $definitions);
         $sub_definition = $definitions[$sub_type];
         if (isset($definitions[$sub_type]['type'])) {
           $sub_merge = $this->getDefinition($definitions[$sub_type]['type'], $exception_on_invalid);
@@ -395,45 +396,8 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
   /**
    * Replaces dynamic type expressions in configuration type.
    *
-   * The configuration type name may contain one or more expressions to be
-   * replaced, enclosed in square brackets like '[name]' or '[%parent.id]' and
-   * will follow the replacement rules defined by the resolveExpression()
-   * method.
-   *
-   * @param string $type
-   *   Configuration type, potentially with expressions in square brackets.
-   * @param array $data
-   *   Configuration data for the element.
-   *
-   * @return string
-   *   Configuration type name with all expressions resolved.
-   */
-  protected function resolveDynamicTypeName(string $type, array $data): string {
-    // Parse the expressions in the dynamic type, if any.
-    if (preg_match_all("/\[(.*)\]/U", $type, $matches)) {
-      // Build our list of '[value]' => replacement.
-      $replace = [];
-      foreach (array_combine($matches[0], $matches[1]) as $key => $value) {
-        $replace[$key] = $this->resolveExpression($value, $data);
-      }
-      return strtr($type, $replace);
-    }
-    else {
-      // No expressions: nothing to resolve.
-      return $type;
-    }
-  }
-
-  /**
-   * Replaces dynamic type expressions in configuration type.
-   *
-   * The configuration type name may contain one or more expressions to be
-   * replaced, enclosed in square brackets like '[name]' or '[%parent.id]' and
-   * will follow the replacement rules defined by the resolveExpression()
-   * method.
-   *
    * @param string $name
-   *   Configuration type, potentially with expressions in square brackets.
+   *   Configuration type, potentially with expressions in square brackets.f
    * @param array $data
    *   Configuration data for the element.
    *
@@ -441,112 +405,18 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    *   Configuration type name with all expressions resolved.
    *
    * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
-   *   ::resolveDynamicTypeName() instead.
+   *   \Drupal\Core\Config\Schema\TypeResolver::resolveDynamicTypeName::resolveDynamicTypeName()
+   *   instead.
    *
    * @see https://www.drupal.org/node/3408266
    */
   protected function replaceName($name, $data) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use ::resolveDynamicTypeName() instead. See https://www.drupal.org/node/3408266', E_USER_DEPRECATED);
-    return $this->resolveDynamicTypeName($name, $data);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Config\Schema\TypeResolver::resolveDynamicTypeName() instead. See https://www.drupal.org/node/3408266', E_USER_DEPRECATED);
+    return TypeResolver::resolveDynamicTypeName($name, $data);
   }
 
   /**
    * Resolves a dynamic type expression using configuration data.
-   *
-   * Dynamic type names are nested configuration keys containing expressions to
-   * be replaced by the value at the property path that the expression is
-   * pointing at. The expression may contain the following special strings:
-   * - '%key', will be replaced by the element's key.
-   * - '%parent', to reference the parent element.
-   * - '%type', to reference the schema definition type. Can only be used in
-   *   combination with %parent.
-   *
-   * There may be nested configuration keys separated by dots or more complex
-   * patterns like '%parent.name' which references the 'name' value of the
-   * parent element.
-   *
-   * Example expressions:
-   * - 'name.subkey', indicates a nested value of the current element.
-   * - '%parent.name', will be replaced by the 'name' value of the parent.
-   * - '%parent.%key', will be replaced by the parent element's key.
-   * - '%parent.%type', will be replaced by the schema type of the parent.
-   * - '%parent.%parent.%type', will be replaced by the schema type of the
-   *   parent's parent.
-   *
-   * @param string $expression
-   *   Expression to be resolved.
-   * @param array $data
-   *   Configuration data for the element.
-   *
-   * @return string
-   *   The value the expression resolves to, or the given expression if it
-   *   cannot be resolved.
-   *
-   * @todo Validate the expression in https://www.drupal.org/project/drupal/issues/3392903
-   */
-  protected function resolveExpression(string $expression, array $data): string {
-    assert(!str_contains($expression, '[') && !str_contains($expression, ']'));
-    $parts = explode('.', $expression);
-    // Process each value part, one at a time.
-    while ($name = array_shift($parts)) {
-      if (!is_array($data) || !isset($data[$name])) {
-        // Key not found, return original value
-        return $expression;
-      }
-      elseif (!$parts) {
-        $expression = $data[$name];
-        if (is_bool($expression)) {
-          $expression = (int) $expression;
-        }
-        // If no more parts left, this is the final property.
-        return (string) $expression;
-      }
-      else {
-        // Get nested value and continue processing.
-        if ($name == '%parent') {
-          /** @var \Drupal\Core\Config\Schema\ArrayElement $parent */
-          // Switch replacement values with values from the parent.
-          $parent = $data['%parent'];
-          $data = $parent->getValue();
-          $data['%type'] = $parent->getDataDefinition()->getDataType();
-          // The special %parent and %key values now need to point one level up.
-          if ($new_parent = $parent->getParent()) {
-            $data['%parent'] = $new_parent;
-            $data['%key'] = $new_parent->getName();
-          }
-        }
-        else {
-          $data = $data[$name];
-        }
-      }
-    }
-
-    // Satisfy PHPStan, which cannot interpret the loop.
-    return $expression;
-  }
-
-  /**
-   * Resolves a dynamic type expression using configuration data.
-   *
-   * Dynamic type names are nested configuration keys containing expressions to
-   * be replaced by the value at the property path that the expression is
-   * pointing at. The expression may contain the following special strings:
-   * - '%key', will be replaced by the element's key.
-   * - '%parent', to reference the parent element.
-   * - '%type', to reference the schema definition type. Can only be used in
-   *   combination with %parent.
-   *
-   * There may be nested configuration keys separated by dots or more complex
-   * patterns like '%parent.name' which references the 'name' value of the
-   * parent element.
-   *
-   * Example expressions:
-   * - 'name.subkey', indicates a nested value of the current element.
-   * - '%parent.name', will be replaced by the 'name' value of the parent.
-   * - '%parent.%key', will be replaced by the parent element's key.
-   * - '%parent.%type', will be replaced by the schema type of the parent.
-   * - '%parent.%parent.%type', will be replaced by the schema type of the
-   *   parent's parent.
    *
    * @param string $value
    *   Expression to be resolved.
@@ -558,13 +428,14 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    *   cannot be resolved.
    *
    * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
-   *   ::resolveExpression() instead.
+   *   \Drupal\Core\Config\Schema\TypeResolver::resolveDynamicTypeName::resolveExpression()
+   *   instead.
    *
    * @see https://www.drupal.org/node/3408266
    */
   protected function replaceVariable($value, $data) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use ::resolveExpression() instead. See https://www.drupal.org/node/3408266', E_USER_DEPRECATED);
-    return $this->resolveExpression($value, $data);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Config\Schema\TypeResolver::resolveExpression() instead. See https://www.drupal.org/node/3408266', E_USER_DEPRECATED);
+    return TypeResolver::resolveExpression($value, $data);
   }
 
   /**
@@ -606,6 +477,50 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
     $definition = $this->getDefinition($config_name);
     $data_definition = $this->buildDataDefinition($definition, $config_data);
     return $this->create($data_definition, $config_data, $config_name);
+  }
+
+  /**
+   * Resolves a dynamic type name.
+   *
+   * @param string $type
+   *   Configuration type, potentially with expressions in square brackets.
+   * @param array $data
+   *   Configuration data for the element.
+   *
+   * @return string
+   *   Configuration type name with all expressions resolved.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+   *   \Drupal\Core\Config\Schema\TypeResolver::resolveDynamicTypeName()
+   *   instead.
+   *
+   * @see https://www.drupal.org/node/3413264
+   */
+  protected function resolveDynamicTypeName(string $type, array $data): string {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Config\Schema\TypeResolver::' . __FUNCTION__ . '() instead. See https://www.drupal.org/node/3413264', E_USER_DEPRECATED);
+    return TypeResolver::resolveDynamicTypeName($type, $data);
+  }
+
+  /**
+   * Resolves a dynamic expression.
+   *
+   * @param string $expression
+   *   Expression to be resolved.
+   * @param array|\Drupal\Core\TypedData\TypedDataInterface $data
+   *   Configuration data for the element.
+   *
+   * @return string
+   *   The value the expression resolves to, or the given expression if it
+   *   cannot be resolved.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+   *   \Drupal\Core\Config\Schema\TypeResolver::resolveExpression() instead.
+   *
+   * @see https://www.drupal.org/node/3413264
+   */
+  protected function resolveExpression(string $expression, array $data): string {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Config\Schema\TypeResolver::' . __FUNCTION__ . '() instead. See https://www.drupal.org/node/3413264', E_USER_DEPRECATED);
+    return TypeResolver::resolveExpression($expression, $data);
   }
 
 }

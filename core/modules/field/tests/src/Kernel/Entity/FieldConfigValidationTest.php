@@ -2,8 +2,11 @@
 
 namespace Drupal\Tests\field\Kernel\Entity;
 
+use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
  * Tests validation of field_config entities.
@@ -11,7 +14,14 @@ use Drupal\field\Entity\FieldStorageConfig;
  * @group field
  * @group #slow
  */
-class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
+class FieldConfigValidationTest extends ConfigEntityValidationTestBase {
+
+  use ContentTypeCreationTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['field', 'node', 'entity_test', 'text', 'user'];
 
   /**
    * {@inheritdoc}
@@ -19,14 +29,14 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
   protected function setUp(): void {
     parent::setUp();
 
-    // The field storage was created in the parent method.
-    $field_storage = $this->entity;
+    $this->installConfig('node');
+    $this->createContentType(['type' => 'one']);
+    $this->createContentType(['type' => 'another']);
 
-    $this->entity = FieldConfig::create([
-      'field_storage' => $field_storage,
-      'bundle' => 'user',
-    ]);
-    $this->entity->save();
+    EntityTestBundle::create(['id' => 'one'])->save();
+    EntityTestBundle::create(['id' => 'another'])->save();
+
+    $this->entity = FieldConfig::loadByName('node', 'one', 'body');
   }
 
   /**
@@ -88,6 +98,17 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
   }
 
   /**
+   * Tests that the target bundle of the field is checked.
+   */
+  public function testTargetBundleMustExist(): void {
+    $this->entity->set('bundle', 'nope');
+    $this->assertValidationErrors([
+      '' => "The 'bundle' property cannot be changed.",
+      'bundle' => "The 'nope' bundle does not exist on the 'node' entity type.",
+    ]);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function testImmutableProperties(array $valid_values = []): void {
@@ -96,7 +117,10 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
     // settings from the *old* field_type won't match the config schema for the
     // settings of the *new* field_type.
     $this->entity->set('settings', []);
-    parent::testImmutableProperties($valid_values);
+    parent::testImmutableProperties([
+      'entity_type' => 'entity_test_with_bundle',
+      'bundle' => 'another',
+    ]);
   }
 
   /**
