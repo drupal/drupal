@@ -7,6 +7,7 @@
  * All Drupal code is released under the GNU General Public License.
  * See COPYRIGHT.txt and LICENSE.txt files in the "core" directory.
  */
+# Adding this comment to create patch
 
 use Drupal\Core\DrupalKernel;
 use Symfony\Component\HttpFoundation\Request;
