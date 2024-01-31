@@ -330,6 +330,12 @@ class FileUploadResource extends ResourceBase {
     }
 
     $file->setFileUri($file_uri);
+    // Update the filename with any changes as a result of security or renaming
+    // due to an existing file.
+    // @todo Remove this duplication by replacing with FileUploadHandler. See
+    // https://www.drupal.org/project/drupal/issues/3401734
+    $file->setFilename($this->fileSystem->basename($file->getFileUri()));
+
     // Move the file to the correct location after validation. Use
     // FileSystemInterface::EXISTS_ERROR as the file location has already been
     // determined above in FileSystem::getDestinationFilename().

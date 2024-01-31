@@ -249,7 +249,7 @@ class FileUploadTest extends ResourceTestBase {
     // header with no 'file' prefix.
     $response = $this->fileRequest($uri, $this->testFileData, ['Content-Disposition' => 'filename="example.txt"']);
     $this->assertSame(201, $response->getStatusCode());
-    $expected = $this->getExpectedDocument(2, 'example_0.txt');
+    $expected = $this->getExpectedDocument(2, 'example_0.txt', TRUE);
     $this->assertResponseData($expected, $response);
 
     // Check the actual file data.
@@ -340,7 +340,7 @@ class FileUploadTest extends ResourceTestBase {
       'data' => [
         0 => $this->getExpectedDocument(1, 'existing.txt', TRUE, TRUE)['data'],
         1 => $this->getExpectedDocument(2, 'example.txt', TRUE, TRUE)['data'],
-        2 => $this->getExpectedDocument(3, 'example_0.txt', FALSE, TRUE)['data'],
+        2 => $this->getExpectedDocument(3, 'example_0.txt', TRUE, TRUE)['data'],
       ],
     ];
     $this->assertResponseData($expected, $response);
@@ -448,7 +448,7 @@ class FileUploadTest extends ResourceTestBase {
     $this->assertSame(201, $response->getStatusCode());
 
     // Loading expected normalized data for file 2, the duplicate file.
-    $expected = $this->getExpectedDocument(2, 'example_0.txt');
+    $expected = $this->getExpectedDocument(2, 'example_0.txt', TRUE);
     $this->assertResponseData($expected, $response);
 
     // Check the actual file data.
