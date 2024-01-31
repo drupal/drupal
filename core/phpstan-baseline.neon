@@ -2079,11 +2079,6 @@ parameters:
 			path: modules/pgsql/src/Update10101.php
 
 		-
-			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
-			count: 1
-			path: modules/pgsql/tests/src/Unit/SchemaTest.php
-
-		-
 			message: "#^Variable \\$responsive_image_styles in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/responsive_image/src/Plugin/Field/FieldFormatter/ResponsiveImageFormatter.php
