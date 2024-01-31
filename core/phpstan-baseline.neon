@@ -3356,11 +3356,6 @@ parameters:
 		-
 			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
 			count: 1
-			path: tests/Drupal/Tests/Core/Extension/ModuleHandlerTest.php
-
-		-
-			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
-			count: 1
 			path: tests/Drupal/Tests/Core/Form/FormCacheTest.php
 
 		-
