@@ -5,6 +5,9 @@ namespace Drupal\Core\Field;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\SortArray;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\FocusFirstCommand;
+use Drupal\Core\Ajax\InsertCommand;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\Element;
@@ -280,7 +283,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
           '#name' => strtr($id_prefix, '-', '_') . '_add_more',
           '#value' => t('Add another item'),
           '#attributes' => ['class' => ['field-add-more-submit']],
-          '#limit_validation_errors' => [array_merge($parents, [$field_name])],
+          '#limit_validation_errors' => [],
           '#submit' => [[static::class, 'addMoreSubmit']],
           '#ajax' => [
             'callback' => [static::class, 'addMoreAjax'],
@@ -349,10 +352,18 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
 
     // Add a DIV around the delta receiving the Ajax effect.
     $delta = $element['#max_delta'];
-    $element[$delta]['#prefix'] = '<div class="ajax-new-content">' . ($element[$delta]['#prefix'] ?? '');
+    // Construct an attribute to add to div for use as selector to set the focus on.
+    $button_parent = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
+    $focus_attribute = 'data-drupal-selector="field-' . $button_parent['#field_name'] . '-more-focus-target"';
+    $element[$delta]['#prefix'] = '<div class="ajax-new-content" ' . $focus_attribute . '>' . ($element[$delta]['#prefix'] ?? '');
     $element[$delta]['#suffix'] = ($element[$delta]['#suffix'] ?? '') . '</div>';
 
-    return $element;
+    // Turn render array into response with AJAX commands.
+    $response = new AjaxResponse();
+    $response->addCommand(new InsertCommand(NULL, $element));
+    // Add command to set the focus on first focusable element within the div.
+    $response->addCommand(new FocusFirstCommand("[$focus_attribute]"));
+    return $response;
   }
 
   /**
