@@ -125,8 +125,8 @@ ckeditor5.plugin.ckeditor5_list:
   mapping:
     properties:
       type: mapping
+      label: 'Allowed list attributes'
       mapping:
-        label: 'Allowed list attributes'
         reversed:
           type: boolean
           label: 'Allow reverse list'
