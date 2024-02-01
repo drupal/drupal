@@ -321,23 +321,16 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
       6 => new MenuLinkTreeElement($links[6], FALSE, 2, FALSE, []),
     ]);
 
-    $query = $this->createMock('Drupal\Core\Entity\Query\QueryInterface');
-    $query->expects($this->once())
-      ->method('accessCheck')
-      ->with(TRUE);
-    $query->expects($this->exactly(2))
-      ->method('condition')
-      ->withConsecutive(
-        ['nid', [1, 2, 3, 4]],
-        ['status', NodeInterface::PUBLISHED],
-      );
-    $query->expects($this->once())
-      ->method('execute')
-      ->willReturn([1, 2, 4]);
+    $query = $this->prophesize('Drupal\Core\Entity\Query\QueryInterface');
+    $query->accessCheck(TRUE)->shouldBeCalled();
+    $query->condition('nid', [1, 2, 3, 4], 'IN')->shouldBeCalled();
+    $query->condition('status', NodeInterface::PUBLISHED)->shouldBeCalled();
+    $query->execute()->willReturn([1, 2, 4]);
+
     $storage = $this->createMock(EntityStorageInterface::class);
     $storage->expects($this->once())
       ->method('getQuery')
-      ->willReturn($query);
+      ->willReturn($query->reveal());
     $this->entityTypeManager->expects($this->once())
       ->method('getStorage')
       ->with('node')
