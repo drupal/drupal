@@ -151,14 +151,14 @@ class ContentEntityFormFieldValidationFilteringTest extends BrowserTestBase {
     $assert_session->elementExists('css', 'input#edit-test-file-0-remove-button');
 
     // Make the 'Test multiple' field required and check that adding another
-    // item throws a validation error.
+    // item does not throw a validation error.
     $field_config = FieldConfig::loadByName($this->entityTypeId, $this->entityTypeId, $this->fieldNameMultiple);
     $field_config->setRequired(TRUE);
     $field_config->save();
 
     $this->drupalGet($this->entityTypeId . '/add');
     $this->submitForm([], 'Add another item');
-    $assert_session->pageTextContains('Test multiple (value 1) field is required.');
+    $assert_session->pageTextNotContains('Test multiple (value 1) field is required.');
 
     // Check that saving the form without entering any value for the required
     // field still throws the proper validation errors.
