@@ -2820,11 +2820,6 @@ parameters:
 			path: modules/views/tests/src/Kernel/RenderCacheIntegrationTest.php
 
 		-
-			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
-			count: 10
-			path: modules/views/tests/src/Unit/ViewsDataTest.php
-
-		-
 			message: "#^Variable \\$relationship_handler in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/views_ui/src/Form/Ajax/ConfigHandler.php

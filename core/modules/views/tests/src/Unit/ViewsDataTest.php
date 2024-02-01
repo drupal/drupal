@@ -220,23 +220,33 @@ class ViewsDataTest extends UnitTestCase {
 
     // The cache should only be called once (before the clear() call) as get
     // will get all table data in the first get().
-    $this->cacheBackend->expects($this->exactly(4))
+    $gets = [
+      'views_data:en',
+      "views_data:$random_table_name:en",
+      'views_data:en',
+      "views_data:$random_table_name:en",
+    ];
+    $this->cacheBackend->expects($this->exactly(count($gets)))
       ->method('get')
-      ->withConsecutive(
-        ['views_data:en'],
-        ["views_data:$random_table_name:en"],
-        ['views_data:en'],
-        ["views_data:$random_table_name:en"],
-      )
+      ->with($this->callback(function (string $key) use (&$gets): bool {
+        return $key === array_shift($gets);
+      }))
       ->willReturn(FALSE);
-    $this->cacheBackend->expects($this->exactly(4))
+
+    $sets = [
+      'views_data:en', $expected_views_data,
+      "views_data:$random_table_name:en", [],
+      'views_data:en', $expected_views_data,
+      "views_data:$random_table_name:en", [],
+    ];
+    $this->cacheBackend->expects($this->exactly(count($sets) / 2))
       ->method('set')
-      ->withConsecutive(
-        ['views_data:en', $expected_views_data],
-        ["views_data:$random_table_name:en", []],
-        ['views_data:en', $expected_views_data],
-        ["views_data:$random_table_name:en", []],
-      );
+      ->with($this->callback(function (string $key) use (&$sets): bool {
+        return $key === array_shift($sets);
+      }), $this->callback(function (array $data) use (&$sets): bool {
+        return $data === array_shift($sets);
+      }));
+
     $this->cacheTagsInvalidator->expects($this->once())
       ->method('invalidateTags')
       ->with(['views_data']);
@@ -303,12 +313,12 @@ class ViewsDataTest extends UnitTestCase {
       ->method('alter')
       ->with('views_data', $this->viewsDataWithProvider());
 
-    $this->cacheBackend->expects($this->exactly(2))
+    $gets = ["views_data:$table_name:en", 'views_data:en'];
+    $this->cacheBackend->expects($this->exactly(count($gets)))
       ->method('get')
-      ->withConsecutive(
-        ["views_data:$table_name:en"],
-        ['views_data:en'],
-      )
+      ->with($this->callback(function (string $key) use (&$gets): bool {
+        return $key === array_shift($gets);
+      }))
       ->willReturn(FALSE);
 
     $views_data = $this->viewsData->get($table_name);
@@ -337,12 +347,12 @@ class ViewsDataTest extends UnitTestCase {
       ->method('alter')
       ->with('views_data', $this->viewsDataWithProvider());
 
-    $this->cacheBackend->expects($this->exactly(2))
+    $gets = ["views_data:$random_table_name:en", 'views_data:en'];
+    $this->cacheBackend->expects($this->exactly(count($gets)))
       ->method('get')
-      ->withConsecutive(
-        ["views_data:$random_table_name:en"],
-        ['views_data:en'],
-      )
+      ->with($this->callback(function (string $key) use (&$gets): bool {
+        return $key === array_shift($gets);
+      }))
       ->willReturn(FALSE);
 
     // All views data should be requested on the first try.
@@ -362,18 +372,24 @@ class ViewsDataTest extends UnitTestCase {
 
     $this->setupMockedModuleHandler();
 
-    $this->cacheBackend->expects($this->exactly(2))
+    $gets = ['views_data:views_test_data:en', 'views_data:en'];
+    $this->cacheBackend->expects($this->exactly(count($gets)))
       ->method('get')
-      ->withConsecutive(
-        ['views_data:views_test_data:en'],
-        ['views_data:en'],
-      );
-    $this->cacheBackend->expects($this->exactly(2))
+      ->with($this->callback(function (string $key) use (&$gets): bool {
+        return $key === array_shift($gets);
+      }));
+
+    $sets = [
+      'views_data:en', $expected_views_data,
+      'views_data:views_test_data:en', $expected_views_data['views_test_data'],
+    ];
+    $this->cacheBackend->expects($this->exactly(count($sets) / 2))
       ->method('set')
-      ->withConsecutive(
-        ['views_data:en', $expected_views_data],
-        ['views_data:views_test_data:en', $expected_views_data['views_test_data']],
-      );
+      ->with($this->callback(function (string $key) use (&$sets): bool {
+        return $key === array_shift($sets);
+      }), $this->callback(function (array $data) use (&$sets): bool {
+        return $data === array_shift($sets);
+      }));
 
     // Request the same table 5 times. The caches are empty at this point, so
     // what will happen is that it will first check for a cache entry for the
@@ -430,12 +446,12 @@ class ViewsDataTest extends UnitTestCase {
       ->method('invokeAllWith');
 
     // Setup a warm cache backend for a single table.
-    $this->cacheBackend->expects($this->exactly(2))
+    $gets = ['views_data:views_test_data_2:en', 'views_data:en'];
+    $this->cacheBackend->expects($this->exactly(count($gets)))
       ->method('get')
-      ->withConsecutive(
-        ['views_data:views_test_data_2:en'],
-        ['views_data:en'],
-      )
+      ->with($this->callback(function (string $key) use (&$gets): bool {
+        return $key === array_shift($gets);
+      }))
       ->willReturnOnConsecutiveCalls(
         FALSE,
         (object) ['data' => $expected_views_data],
@@ -469,12 +485,12 @@ class ViewsDataTest extends UnitTestCase {
       ->method('invokeAllWith');
 
     // Setup a warm cache backend for a single table.
-    $this->cacheBackend->expects($this->exactly(2))
+    $gets = ["views_data:$non_existing_table:en", 'views_data:en'];
+    $this->cacheBackend->expects($this->exactly(count($gets)))
       ->method('get')
-      ->withConsecutive(
-        ["views_data:$non_existing_table:en"],
-        ['views_data:en'],
-      )
+      ->with($this->callback(function (string $key) use (&$gets): bool {
+        return $key === array_shift($gets);
+      }))
       ->willReturnOnConsecutiveCalls(
         FALSE,
         (object) ['data' => $expected_views_data],
@@ -587,24 +603,29 @@ class ViewsDataTest extends UnitTestCase {
     $table_name_2 = 'views_test_data_2';
 
     // Setup a warm cache backend for all table data, but not single tables.
-    $this->cacheBackend->expects($this->exactly(3))
+    $gets = ["views_data:$table_name:en", 'views_data:en', "views_data:$table_name_2:en"];
+    $this->cacheBackend->expects($this->exactly(count($gets)))
       ->method('get')
-      ->withConsecutive(
-        ["views_data:$table_name:en"],
-        ['views_data:en'],
-        ["views_data:$table_name_2:en"],
-      )
+      ->with($this->callback(function (string $key) use (&$gets): bool {
+        return $key === array_shift($gets);
+      }))
       ->willReturnOnConsecutiveCalls(
         FALSE,
         (object) ['data' => $expected_views_data],
         FALSE,
       );
-    $this->cacheBackend->expects($this->exactly(2))
+
+    $sets = [
+      "views_data:$table_name:en", $expected_views_data[$table_name],
+      "views_data:$table_name_2:en", $expected_views_data[$table_name_2],
+    ];
+    $this->cacheBackend->expects($this->exactly(count($sets) / 2))
       ->method('set')
-      ->withConsecutive(
-        ["views_data:$table_name:en", $expected_views_data[$table_name]],
-        ["views_data:$table_name_2:en", $expected_views_data[$table_name_2]],
-      );
+      ->with($this->callback(function (string $key) use (&$sets): bool {
+        return $key === array_shift($sets);
+      }), $this->callback(function (array $data) use (&$sets): bool {
+        return $data === array_shift($sets);
+      }));
 
     $this->assertSame($expected_views_data[$table_name], $this->viewsData->get($table_name));
     $this->assertSame($expected_views_data[$table_name_2], $this->viewsData->get($table_name_2));
