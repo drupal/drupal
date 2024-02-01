@@ -57,7 +57,7 @@ class CronQueueTest extends KernelTestBase {
   /**
    * A logger for testing.
    *
-   * @var \PHPUnit\Framework\MockObject\MockObject|\Psr\Log\LoggerInterface
+   * @var \Prophecy\Prophecy\ObjectProphecy|\Psr\Log\LoggerInterface
    */
   protected $logger;
 
@@ -66,7 +66,7 @@ class CronQueueTest extends KernelTestBase {
    */
   protected function setUp(): void {
     // Setup logger before register() is called.
-    $this->logger = $this->createMock(LoggerInterface::class);
+    $this->logger = $this->prophesize(LoggerInterface::class);
     parent::setUp();
 
     $this->connection = Database::getConnection();
@@ -173,23 +173,20 @@ class CronQueueTest extends KernelTestBase {
    * @see \Drupal\cron_queue_test\Plugin\QueueWorker\CronQueueTestException
    */
   public function testUncaughtExceptions() {
-    $this->logger->expects($this->atLeast(2))
-      ->method('log')
-      ->withConsecutive(
-        [
-          $this->equalTo(RfcLogLevel::ERROR),
-          $this->equalTo('%type: @message in %function (line %line of %file).'),
-          $this->callback(function ($args) {
-            return $args['@message'] === 'That is not supposed to happen.' &&
-              $args['exception'] instanceof \Exception;
-          }),
-        ],
-        [
-          $this->equalTo(RfcLogLevel::INFO),
-          $this->equalTo('Cron run completed.'),
-          $this->anything(),
-        ],
-      );
+    $this->logger->log(
+      RfcLogLevel::ERROR,
+      '%type: @message in %function (line %line of %file).',
+      Argument::that(function ($args) {
+        return $args['@message'] === 'That is not supposed to happen.'
+          && $args['exception'] instanceof \Exception;
+      })
+    )->shouldBeCalled();
+
+    $this->logger->log(
+      RfcLogLevel::INFO,
+      'Cron run completed.',
+      Argument::cetera()
+    )->shouldBeCalled();
 
     // Get the queue to test the normal Exception.
     $queue = $this->container->get('queue')->get(CronQueueTestException::PLUGIN_ID);
@@ -226,22 +223,19 @@ class CronQueueTest extends KernelTestBase {
    * @covers \Drupal\Core\Queue\SuspendQueueException
    */
   public function testSuspendQueueException(): void {
-    $this->logger->expects($this->atLeast(2))
-      ->method('log')
-      ->withConsecutive(
-        [
-          $this->equalTo(RfcLogLevel::DEBUG),
-          $this->equalTo('A worker for @queue queue suspended further processing of the queue.'),
-          $this->callback(function ($args) {
-            return $args['@queue'] === CronQueueTestSuspendQueue::PLUGIN_ID;
-          }),
-        ],
-        [
-          $this->equalTo(RfcLogLevel::INFO),
-          $this->equalTo('Cron run completed.'),
-          $this->anything(),
-        ],
-      );
+    $this->logger->log(
+      RfcLogLevel::DEBUG,
+      'A worker for @queue queue suspended further processing of the queue.',
+      Argument::that(function ($args) {
+        return $args['@queue'] === CronQueueTestSuspendQueue::PLUGIN_ID;
+      })
+    )->shouldBeCalled();
+
+    $this->logger->log(
+      RfcLogLevel::INFO,
+      'Cron run completed.',
+      Argument::cetera()
+    )->shouldBeCalled();
 
     // Get the queue to test the specific SuspendQueueException.
     $queue = \Drupal::queue(CronQueueTestSuspendQueue::PLUGIN_ID);
@@ -348,9 +342,9 @@ class CronQueueTest extends KernelTestBase {
    */
   public function register(ContainerBuilder $container) {
     parent::register($container);
-    $container->register('test_logger', get_class($this->logger))
+    $container->register('test_logger', get_class($this->logger->reveal()))
       ->addTag('logger');
-    $container->set('test_logger', $this->logger);
+    $container->set('test_logger', $this->logger->reveal());
   }
 
 }
