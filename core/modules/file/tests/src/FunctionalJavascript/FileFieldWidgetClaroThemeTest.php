@@ -15,6 +15,7 @@ use Drupal\Core\Url;
  * @see _claro_preprocess_file_and_image_widget()
  *
  * @group file
+ * @group #slow
  */
 class FileFieldWidgetClaroThemeTest extends FileFieldWidgetTest {
 

@@ -10,6 +10,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  * Tests the JavaScript functionality of the module filter.
  *
  * @group system
+ * @group #slow
  */
 class ModuleFilterTest extends WebDriverTestBase {
 
