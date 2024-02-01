@@ -1535,11 +1535,6 @@ parameters:
 			path: modules/image/tests/src/Functional/ImageStyleFlushTest.php
 
 		-
-			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
-			count: 2
-			path: modules/inline_form_errors/tests/src/Unit/FormErrorHandlerTest.php
-
-		-
 			message: "#^Variable \\$reason in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/jsonapi/src/Context/FieldResolver.php
@@ -3342,11 +3337,6 @@ parameters:
 			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Form/FormCacheTest.php
-
-		-
-			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Form/FormErrorHandlerTest.php
 
 		-
 			message: """
