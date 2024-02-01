@@ -14,6 +14,7 @@ use Drupal\Core\Entity\EntityTypeRepositoryInterface;
 use Drupal\Core\Language\Language;
 use Drupal\entity_test\Entity\EntityTestMul;
 use Drupal\Tests\UnitTestCase;
+use Prophecy\Argument;
 
 /**
  * @coversDefaultClass \Drupal\Core\Entity\EntityBase
@@ -74,7 +75,7 @@ class EntityUnitTest extends UnitTestCase {
   /**
    * The mocked cache tags invalidator.
    *
-   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface|\Prophecy\Prophecy\ObjectProphecy
    */
   protected $cacheTagsInvalidator;
 
@@ -117,13 +118,13 @@ class EntityUnitTest extends UnitTestCase {
       ->with('en')
       ->willReturn(new Language(['id' => 'en']));
 
-    $this->cacheTagsInvalidator = $this->createMock('Drupal\Core\Cache\CacheTagsInvalidator');
+    $this->cacheTagsInvalidator = $this->prophesize('Drupal\Core\Cache\CacheTagsInvalidator');
 
     $container = new ContainerBuilder();
     $container->set('entity_type.manager', $this->entityTypeManager);
     $container->set('uuid', $this->uuid);
     $container->set('language_manager', $this->languageManager);
-    $container->set('cache_tags.invalidator', $this->cacheTagsInvalidator);
+    $container->set('cache_tags.invalidator', $this->cacheTagsInvalidator->reveal());
     \Drupal::setContainer($container);
 
     $this->entity = new EntityBaseTest($this->values, $this->entityTypeId);
@@ -401,56 +402,28 @@ class EntityUnitTest extends UnitTestCase {
    * @covers ::postSave
    */
   public function testPostSave() {
-    $this->cacheTagsInvalidator->expects($this->exactly(2))
-      ->method('invalidateTags')
-      ->withConsecutive([
-        [
-          // List cache tag.
-          $this->entityTypeId . '_list',
-        ],
-      ],
-      [
-        [
-          // List cache tag.
-          $this->entityTypeId . '_list',
-          // Own cache tag.
-          $this->entityTypeId . ':' . $this->values['id'],
-        ],
-      ]);
-
     // This method is internal, so check for errors on calling it only.
     $storage = $this->createMock('\Drupal\Core\Entity\EntityStorageInterface');
 
     // A creation should trigger the invalidation of the "list" cache tag.
     $this->entity->postSave($storage, FALSE);
+    $this->cacheTagsInvalidator->invalidateTags([
+      $this->entityTypeId . '_list',
+    ])->shouldHaveBeenCalledOnce();
+
     // An update should trigger the invalidation of both the "list" and the
     // "own" cache tags.
     $this->entity->postSave($storage, TRUE);
+    $this->cacheTagsInvalidator->invalidateTags([
+      $this->entityTypeId . '_list',
+      $this->entityTypeId . ':' . $this->values['id'],
+    ])->shouldHaveBeenCalledOnce();
   }
 
   /**
    * @covers ::postSave
    */
   public function testPostSaveBundle() {
-    $this->cacheTagsInvalidator->expects($this->exactly(2))
-      ->method('invalidateTags')
-      ->withConsecutive([
-        [
-          // List cache tag.
-          $this->entityTypeId . '_list',
-          $this->entityTypeId . '_list:' . $this->entity->bundle(),
-        ],
-      ],
-      [
-        [
-          // List cache tag.
-          $this->entityTypeId . '_list',
-          $this->entityTypeId . '_list:' . $this->entity->bundle(),
-          // Own cache tag.
-          $this->entityTypeId . ':' . $this->values['id'],
-        ],
-      ]);
-
     $this->entityType->expects($this->atLeastOnce())
       ->method('hasKey')
       ->with('bundle')
@@ -462,9 +435,19 @@ class EntityUnitTest extends UnitTestCase {
     // A creation should trigger the invalidation of the global list cache tag
     // and the one for the bundle.
     $this->entity->postSave($storage, FALSE);
+    $this->cacheTagsInvalidator->invalidateTags([
+      $this->entityTypeId . '_list',
+      $this->entityTypeId . '_list:' . $this->entity->bundle(),
+    ])->shouldHaveBeenCalledOnce();
+
     // An update should trigger the invalidation of the "list", bundle list and
     // the "own" cache tags.
     $this->entity->postSave($storage, TRUE);
+    $this->cacheTagsInvalidator->invalidateTags([
+      $this->entityTypeId . '_list',
+      $this->entityTypeId . '_list:' . $this->entity->bundle(),
+      $this->entityTypeId . ':' . $this->values['id'],
+    ])->shouldHaveBeenCalledOnce();
   }
 
   /**
@@ -502,12 +485,6 @@ class EntityUnitTest extends UnitTestCase {
    * @covers ::postDelete
    */
   public function testPostDelete() {
-    $this->cacheTagsInvalidator->expects($this->once())
-      ->method('invalidateTags')
-      ->with([
-        $this->entityTypeId . '_list',
-        $this->entityTypeId . ':' . $this->values['id'],
-      ]);
     $storage = $this->createMock('\Drupal\Core\Entity\EntityStorageInterface');
     $storage->expects($this->once())
       ->method('getEntityType')
@@ -515,24 +492,17 @@ class EntityUnitTest extends UnitTestCase {
 
     $entities = [$this->values['id'] => $this->entity];
     $this->entity->postDelete($storage, $entities);
+
+    $this->cacheTagsInvalidator->invalidateTags([
+      $this->entityTypeId . '_list',
+      $this->entityTypeId . ':' . $this->values['id'],
+    ])->shouldHaveBeenCalledOnce();
   }
 
   /**
    * @covers ::postDelete
    */
   public function testPostDeleteBundle() {
-    $this->cacheTagsInvalidator->expects($this->once())
-      ->method('invalidateTags')
-      // with() also asserts on the order of array values and array keys that
-      // is something we should avoid here.
-      ->willReturnCallback(function (array $tags) {
-        self::assertEqualsCanonicalizing([
-          $this->entityTypeId . '_list',
-          $this->entityTypeId . ':' . $this->values['id'],
-          $this->entityTypeId . '_list:' . $this->entity->bundle(),
-        ], $tags);
-        return NULL;
-      });
     $this->entityType->expects($this->atLeastOnce())
       ->method('hasKey')
       ->with('bundle')
@@ -544,6 +514,14 @@ class EntityUnitTest extends UnitTestCase {
 
     $entities = [$this->values['id'] => $this->entity];
     $this->entity->postDelete($storage, $entities);
+
+    // We avoid asserting on the order of array values, just that the values
+    // all exist.
+    $this->cacheTagsInvalidator->invalidateTags(Argument::allOf(
+      Argument::containing($this->entityTypeId . '_list'),
+      Argument::containing($this->entityTypeId . ':' . $this->values['id']),
+      Argument::containing($this->entityTypeId . '_list:' . $this->entity->bundle()),
+    ))->shouldHaveBeenCalledOnce();
   }
 
   /**

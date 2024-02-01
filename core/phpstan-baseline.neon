@@ -3305,11 +3305,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/DependencyInjection/DependencySerializationTest.php
 
 		-
-			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/Entity/EntityUnitTest.php
-
-		-
 			message: "#^Trying to mock an undefined method getRevisionId\\(\\) on class Drupal\\\\Tests\\\\Core\\\\Entity\\\\UrlTestEntity\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Entity/EntityUrlTest.php
