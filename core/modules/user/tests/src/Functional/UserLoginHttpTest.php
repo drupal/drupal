@@ -183,7 +183,7 @@ class UserLoginHttpTest extends BrowserTestBase {
 
     $response = $this->loginRequest($name, $pass, $format);
     $this->assertEquals(200, $response->getStatusCode());
-    $result_data = $this->serializer->decode($response->getBody(), $format);
+    $result_data = $this->serializer->decode((string) $response->getBody(), $format);
     $this->assertEquals($name, $result_data['current_user']['name']);
     $this->assertEquals($account->id(), $result_data['current_user']['uid']);
     $this->assertEquals($account->getRoles(), $result_data['current_user']['roles']);
@@ -192,7 +192,7 @@ class UserLoginHttpTest extends BrowserTestBase {
     // Logging in while already logged in results in a 403 with helpful message.
     $response = $this->loginRequest($name, $pass, $format);
     $this->assertSame(403, $response->getStatusCode());
-    $this->assertSame(['message' => 'This route can only be accessed by anonymous users.'], $this->serializer->decode($response->getBody(), $format));
+    $this->assertSame(['message' => 'This route can only be accessed by anonymous users.'], $this->serializer->decode((string) $response->getBody(), $format));
 
     $response = $client->get($login_status_url, ['cookies' => $this->cookies]);
     $this->assertHttpResponse($response, 200, UserAuthenticationController::LOGGED_IN);
@@ -315,7 +315,7 @@ class UserLoginHttpTest extends BrowserTestBase {
 
     // IP limit has reached to its limit. Even valid user credentials will fail.
     $response = $this->loginRequest($user->getAccountName(), $user->passRaw, $format);
-    $this->assertHttpResponseWithMessage($response, '403', 'Access is blocked because of IP based flood prevention.', $format);
+    $this->assertHttpResponseWithMessage($response, 403, 'Access is blocked because of IP based flood prevention.', $format);
     $last_log = $database->select('watchdog', 'w')
       ->fields('w', ['message'])
       ->condition('type', 'user')
@@ -392,7 +392,7 @@ class UserLoginHttpTest extends BrowserTestBase {
 
       // A successful login will reset the per-user flood control count.
       $response = $this->loginRequest($user1->getAccountName(), $user1->passRaw, $format);
-      $result_data = $this->serializer->decode($response->getBody(), $format);
+      $result_data = $this->serializer->decode((string) $response->getBody(), $format);
       $this->logoutRequest($format, $result_data['logout_token']);
 
       // Try 3 failed logins for user 1, they will not trigger flood control.
@@ -475,7 +475,7 @@ class UserLoginHttpTest extends BrowserTestBase {
 
     $response = $this->loginRequest($name, $pass, $format);
     $this->assertEquals(200, $response->getStatusCode());
-    $result_data = $this->serializer->decode($response->getBody(), $format);
+    $result_data = $this->serializer->decode((string) $response->getBody(), $format);
 
     $logout_token = $result_data['logout_token'];
 

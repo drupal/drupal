@@ -111,7 +111,7 @@ class DisplayTest extends ViewTestBase {
     $view->style_plugin->setUsesRowPlugin(FALSE);
 
     $output = $view->preview();
-    $output = $renderer->renderRoot($output);
+    $output = (string) $renderer->renderRoot($output);
 
     $this->assertStringContainsString('<h1></h1>', $output, 'An empty value for test_option found in output.');
 
@@ -120,7 +120,7 @@ class DisplayTest extends ViewTestBase {
     $view->save();
 
     $output = $view->preview();
-    $output = $renderer->renderRoot($output);
+    $output = (string) $renderer->renderRoot($output);
 
     // Test we have our custom <h1> tag in the output of the view.
     $this->assertStringContainsString('<h1>Test option title</h1>', $output, 'The test_option value found in display output title.');
@@ -219,7 +219,7 @@ class DisplayTest extends ViewTestBase {
     $view->display_handler->setOption('link_url', 'node');
     $this->executeView($view);
     $output = $view->preview();
-    $output = $renderer->renderRoot($output);
+    $output = (string) $renderer->renderRoot($output);
     $this->assertStringContainsString('/node', $output, 'The read more link with href "/node" was found.');
 
     // Test more link with leading slash.
@@ -227,7 +227,7 @@ class DisplayTest extends ViewTestBase {
     $view->display_handler->setOption('link_url', '/node');
     $this->executeView($view);
     $output = $view->preview();
-    $output = $renderer->renderRoot($output);
+    $output = (string) $renderer->renderRoot($output);
     $this->assertStringContainsString('/node', $output, 'The read more link with href "/node" was found.');
 
     // Test more link with absolute URL.
@@ -235,7 +235,7 @@ class DisplayTest extends ViewTestBase {
     $view->display_handler->setOption('link_url', 'http://example.com');
     $this->executeView($view);
     $output = $view->preview();
-    $output = $renderer->renderRoot($output);
+    $output = (string) $renderer->renderRoot($output);
     $this->assertStringContainsString('http://example.com', $output, 'The read more link with href "http://example.com" was found.');
 
     // Test more link with query parameters in the URL.
@@ -243,7 +243,7 @@ class DisplayTest extends ViewTestBase {
     $view->display_handler->setOption('link_url', 'node?page=1&foo=bar');
     $this->executeView($view);
     $output = $view->preview();
-    $output = $renderer->renderRoot($output);
+    $output = (string) $renderer->renderRoot($output);
     $this->assertStringContainsString('/node?page=1&amp;foo=bar', $output, 'The read more link with href "/node?page=1&foo=bar" was found.');
 
     // Test more link with fragment in the URL.
@@ -251,7 +251,7 @@ class DisplayTest extends ViewTestBase {
     $view->display_handler->setOption('link_url', 'node#target');
     $this->executeView($view);
     $output = $view->preview();
-    $output = $renderer->renderRoot($output);
+    $output = (string) $renderer->renderRoot($output);
     $this->assertStringContainsString('/node#target', $output, 'The read more link with href "/node#target" was found.');
 
     // Test more link with arguments.
@@ -264,7 +264,7 @@ class DisplayTest extends ViewTestBase {
     $view->setArguments([22]);
     $this->executeView($view);
     $output = $view->preview();
-    $output = $renderer->renderRoot($output);
+    $output = (string) $renderer->renderRoot($output);
     $this->assertStringContainsString('/node?date=22&amp;foo=bar', $output, 'The read more link with href "/node?date=22&foo=bar" was found.');
 
     // Test more link with 1 dimension array query parameters with arguments.
@@ -277,7 +277,7 @@ class DisplayTest extends ViewTestBase {
     $view->setArguments([22]);
     $this->executeView($view);
     $output = $view->preview();
-    $output = $renderer->renderRoot($output);
+    $output = (string) $renderer->renderRoot($output);
     $this->assertStringContainsString('/node?f%5B0%5D=foo%3Abar&amp;f%5B1%5D=foo%3A22', $output, 'The read more link with href "/node?f[0]=foo:bar&f[1]=foo:22" was found.');
 
     // Test more link with arguments in path.
@@ -285,7 +285,7 @@ class DisplayTest extends ViewTestBase {
     $view->setArguments([22]);
     $this->executeView($view);
     $output = $view->preview();
-    $output = $renderer->renderRoot($output);
+    $output = (string) $renderer->renderRoot($output);
     $this->assertStringContainsString('/node/22?date=22&amp;foo=bar', $output, 'The read more link with href "/node/22?date=22&foo=bar" was found.');
 
     // Test more link with arguments in fragment.
@@ -293,7 +293,7 @@ class DisplayTest extends ViewTestBase {
     $view->setArguments([22]);
     $this->executeView($view);
     $output = $view->preview();
-    $output = $renderer->renderRoot($output);
+    $output = (string) $renderer->renderRoot($output);
     $this->assertStringContainsString('/node?date=22&amp;foo=bar#22', $output, 'The read more link with href "/node?date=22&foo=bar#22" was found.');
   }
 

@@ -269,19 +269,19 @@ class TrackerTest extends BrowserTestBase {
 
     // Verify that the history metadata is updated.
     $this->drupalGet('activity');
-    $this->assertHistoryMetadata($node->id(), $node->getChangedTime(), $node->get('comment')->last_comment_timestamp);
+    $this->assertHistoryMetadata($node->id(), $node->getChangedTime(), (int) $node->get('comment')->last_comment_timestamp);
     $this->drupalGet('activity/' . $this->user->id());
-    $this->assertHistoryMetadata($node->id(), $node->getChangedTime(), $node->get('comment')->last_comment_timestamp);
+    $this->assertHistoryMetadata($node->id(), $node->getChangedTime(), (int) $node->get('comment')->last_comment_timestamp);
     $this->drupalGet('user/' . $this->user->id() . '/activity');
-    $this->assertHistoryMetadata($node->id(), $node->getChangedTime(), $node->get('comment')->last_comment_timestamp);
+    $this->assertHistoryMetadata($node->id(), $node->getChangedTime(), (int) $node->get('comment')->last_comment_timestamp);
 
     // Log out, now verify that the metadata is still there, but the library is
     // not.
     $this->drupalLogout();
     $this->drupalGet('activity');
-    $this->assertHistoryMetadata($node->id(), $node->getChangedTime(), $node->get('comment')->last_comment_timestamp, FALSE);
+    $this->assertHistoryMetadata($node->id(), $node->getChangedTime(), (int) $node->get('comment')->last_comment_timestamp, FALSE);
     $this->drupalGet('user/' . $this->user->id() . '/activity');
-    $this->assertHistoryMetadata($node->id(), $node->getChangedTime(), $node->get('comment')->last_comment_timestamp, FALSE);
+    $this->assertHistoryMetadata($node->id(), $node->getChangedTime(), (int) $node->get('comment')->last_comment_timestamp, FALSE);
   }
 
   /**
@@ -459,7 +459,7 @@ class TrackerTest extends BrowserTestBase {
    * indicators, as well as the "x new" replies link to the tracker.
    * We do this in JavaScript to prevent breaking the render cache.
    *
-   * @param int $node_id
+   * @param string|int $node_id
    *   A node ID, that must exist as a data-history-node-id attribute
    * @param int $node_timestamp
    *   A node timestamp, that must exist as a data-history-node-timestamp
@@ -472,7 +472,7 @@ class TrackerTest extends BrowserTestBase {
    *
    * @internal
    */
-  public function assertHistoryMetadata(int $node_id, int $node_timestamp, int $node_last_comment_timestamp, bool $library_is_present = TRUE): void {
+  public function assertHistoryMetadata(string|int $node_id, int $node_timestamp, int $node_last_comment_timestamp, bool $library_is_present = TRUE): void {
     $settings = $this->getDrupalSettings();
     $this->assertSame($library_is_present, isset($settings['ajaxPageState']) && in_array('tracker/history', explode(',', $settings['ajaxPageState']['libraries'])), 'drupal.tracker-history library is present.');
     $this->assertSession()->elementsCount('xpath', '//table/tbody/tr/td[@data-history-node-id="' . $node_id . '" and @data-history-node-timestamp="' . $node_timestamp . '"]', 1);

@@ -80,7 +80,7 @@ class ConfigInstallProfileUnmetDependenciesTest extends InstallerTestBase {
         mkdir($dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
       }
       else {
-        copy($item, $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+        copy((string) $item, $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
       }
     }
 
