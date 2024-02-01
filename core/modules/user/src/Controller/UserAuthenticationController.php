@@ -29,14 +29,14 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    *
    * @var string
    */
-  const LOGGED_IN = 1;
+  const LOGGED_IN = '1';
 
   /**
    * String sent in responses, to describe the user as being logged out.
    *
    * @var string
    */
-  const LOGGED_OUT = 0;
+  const LOGGED_OUT = '0';
 
   /**
    * The user flood control service.
