@@ -45,7 +45,7 @@ class FormCacheTest extends UnitTestCase {
   /**
    * The mocked module handler.
    *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Prophecy\Prophecy\ObjectProphecy
    */
   protected $moduleHandler;
 
@@ -100,7 +100,7 @@ class FormCacheTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $this->moduleHandler = $this->prophesize('Drupal\Core\Extension\ModuleHandlerInterface');
 
     $this->formCacheStore = $this->createMock('Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface');
     $this->formStateCacheStore = $this->createMock('Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface');
@@ -121,7 +121,7 @@ class FormCacheTest extends UnitTestCase {
     $this->requestStack = $this->createMock('\Symfony\Component\HttpFoundation\RequestStack');
     $this->requestPolicy = $this->createMock('\Drupal\Core\PageCache\RequestPolicyInterface');
 
-    $this->formCache = new FormCache($this->root, $this->keyValueExpirableFactory, $this->moduleHandler, $this->account, $this->csrfToken, $this->logger, $this->requestStack, $this->requestPolicy);
+    $this->formCache = new FormCache($this->root, $this->keyValueExpirableFactory, $this->moduleHandler->reveal(), $this->account, $this->csrfToken, $this->logger, $this->requestStack, $this->requestPolicy);
   }
 
   /**
@@ -313,12 +313,10 @@ class FormCacheTest extends UnitTestCase {
         ],
       ],
     ];
-    $this->moduleHandler->expects($this->exactly(2))
-      ->method('loadInclude')
-      ->withConsecutive(
-        ['a_module', 'the_type', 'some_name'],
-        ['another_module', 'inc', 'another_module'],
-      );
+    $this->moduleHandler->loadInclude('a_module', 'the_type', 'some_name')
+      ->shouldBeCalledOnce();
+    $this->moduleHandler->loadInclude('another_module', 'inc', 'another_module')
+      ->shouldBeCalledOnce();
     $this->formStateCacheStore->expects($this->once())
       ->method('get')
       ->with($form_build_id)

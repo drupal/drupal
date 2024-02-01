@@ -3329,11 +3329,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/EventSubscriber/SpecialAttributesRouteSubscriberTest.php
 
 		-
-			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Form/FormCacheTest.php
-
-		-
 			message: """
 				#^Call to deprecated method getConfig\\(\\) of class GuzzleHttp\\\\Client\\:
 				Client\\:\\:getConfig will be removed in guzzlehttp/guzzle\\:8\\.0\\.$#
