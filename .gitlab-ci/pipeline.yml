@@ -83,6 +83,7 @@ variables:
     - "--no-sandbox"
     - "--log-path=/builds/chromedriver.log"
     - "--whitelisted-ips="
+    - "--allowed-origins=*"
 
 .run-tests: &run-tests
   script:
@@ -221,6 +222,9 @@ variables:
     - if: $PERFORMANCE_TEST == "1"
   variables:
     KUBERNETES_CPU_REQUEST: "24"
+    MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-dev-shm-usage","--disable-gpu","--headless","--no-sandbox"]}}, "http://chrome:9515"]'
+  tags:
+    - performance-test-runner
   services:
     - <<: *with-database
     - <<: *with-chrome
@@ -235,4 +239,4 @@ variables:
     - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
     - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
     - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
-    - for run in {1..3}; do sudo SIMPLETEST_BASE_URL="$SIMPLETEST_BASE_URL" SIMPLETEST_DB="$SIMPLETEST_DB" MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" OTEL_COLLECTOR="$OTEL_COLLECTOR" -u www-data ./vendor/bin/phpunit -c core --group OpenTelemetry --log-junit=./sites/default/files/simpletest/phpunit-performance.xml; done
+    - for run in {1..3}; do sudo SIMPLETEST_BASE_URL="http://$HOSTNAME/subdirectory" SIMPLETEST_DB="$SIMPLETEST_DB" MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" OTEL_COLLECTOR="$OTEL_COLLECTOR" -u www-data ./vendor/bin/phpunit --verbose -c core --group OpenTelemetry --log-junit=./sites/default/files/simpletest/phpunit-performance.xml; done
