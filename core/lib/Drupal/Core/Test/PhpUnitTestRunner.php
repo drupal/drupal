@@ -6,6 +6,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Process\PhpExecutableFinder;
+use Symfony\Component\Process\Process;
 
 /**
  * Run PHPUnit-based tests.
@@ -106,37 +107,36 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
    *   (optional) The output by running the phpunit command. If provided, this
    *   array will contain the lines output by the command.
    *
-   * @return string
-   *   The results as returned by exec().
-   *
    * @internal
    */
-  public function runCommand(array $unescaped_test_classnames, string $phpunit_file, int &$status = NULL, array &$output = NULL): string {
+  public function runCommand(array $unescaped_test_classnames, string $phpunit_file, int &$status = NULL, array &$output = NULL): void {
     global $base_url;
     // Setup an environment variable containing the database connection so that
     // functional tests can connect to the database.
-    putenv('SIMPLETEST_DB=' . Database::getConnectionInfoAsUrl());
+    $process_environment_variables = [
+      'SIMPLETEST_DB' => Database::getConnectionInfoAsUrl(),
+    ];
 
     // Setup an environment variable containing the base URL, if it is available.
     // This allows functional tests to browse the site under test. When running
     // tests via CLI, core/phpunit.xml.dist or core/scripts/run-tests.sh can set
     // this variable.
     if ($base_url) {
-      putenv('SIMPLETEST_BASE_URL=' . $base_url);
-      putenv('BROWSERTEST_OUTPUT_DIRECTORY=' . $this->workingDirectory);
+      $process_environment_variables['SIMPLETEST_BASE_URL'] = $base_url;
+      $process_environment_variables['BROWSERTEST_OUTPUT_DIRECTORY'] = $this->workingDirectory;
     }
     $phpunit_bin = $this->phpUnitCommand();
 
     $command = [
       $phpunit_bin,
       '--log-junit',
-      escapeshellarg($phpunit_file),
+      $phpunit_file,
     ];
 
     // Optimized for running a single test.
     if (count($unescaped_test_classnames) == 1) {
       $class = new \ReflectionClass($unescaped_test_classnames[0]);
-      $command[] = escapeshellarg($class->getFileName());
+      $command[] = $class->getFileName();
     }
     else {
       // Double escape namespaces so they'll work in a regexp.
@@ -147,25 +147,15 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
       $filter_string = implode("|", $escaped_test_classnames);
       $command = array_merge($command, [
         '--filter',
-        escapeshellarg($filter_string),
+        $filter_string,
       ]);
     }
 
-    // Need to change directories before running the command so that we can use
-    // relative paths in the configuration file's exclusions.
-    $old_cwd = getcwd();
-    chdir($this->appRoot . "/core");
-
-    // exec in a subshell so that the environment is isolated.
-    $ret = exec(implode(" ", $command), $output, $status);
-
-    chdir($old_cwd);
-    putenv('SIMPLETEST_DB=');
-    if ($base_url) {
-      putenv('SIMPLETEST_BASE_URL=');
-      putenv('BROWSERTEST_OUTPUT_DIRECTORY=');
-    }
-    return $ret;
+    $process = new Process($command, \Drupal::root() . "/core", $process_environment_variables);
+    $process->setTimeout(300);
+    $process->run();
+    $output = explode("\n", $process->getOutput());
+    $status = $process->getExitCode();
   }
 
   /**
