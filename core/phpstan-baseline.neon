@@ -3088,11 +3088,6 @@ parameters:
 			path: tests/Drupal/BuildTests/Framework/Tests/ExternalCommandRequirementTest.php
 
 		-
-			message: "#^Variable \\$rawResult on left side of \\?\\? always exists and is not nullable\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalJavascriptTests/WebDriverCurlService.php
-
-		-
 			message: "#^Variable \\$found might not be defined\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Cache/ApcuBackendTest.php
