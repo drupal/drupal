@@ -5,6 +5,8 @@
  * Test module.
  */
 
+declare(strict_types=1);
+
 /**
  * Returns an array to test nested merge in invoke all.
  */
