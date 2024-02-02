@@ -147,45 +147,45 @@ class FileUploadTest extends ResourceTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @requires module irrelevant_for_this_test
    */
-  public function testGetIndividual() {}
+  public function testGetIndividual() {
+    $this->markTestSkipped('Irrelevant for this test');
+  }
 
   /**
    * {@inheritdoc}
-   *
-   * @requires module irrelevant_for_this_test
    */
-  public function testPostIndividual() {}
+  public function testPostIndividual() {
+    $this->markTestSkipped('Irrelevant for this test');
+  }
 
   /**
    * {@inheritdoc}
-   *
-   * @requires module irrelevant_for_this_test
    */
-  public function testPatchIndividual() {}
+  public function testPatchIndividual() {
+    $this->markTestSkipped('Irrelevant for this test');
+  }
 
   /**
    * {@inheritdoc}
-   *
-   * @requires module irrelevant_for_this_test
    */
-  public function testDeleteIndividual() {}
+  public function testDeleteIndividual() {
+    $this->markTestSkipped('Irrelevant for this test');
+  }
 
   /**
    * {@inheritdoc}
-   *
-   * @requires module irrelevant_for_this_test
    */
-  public function testCollection() {}
+  public function testCollection() {
+    $this->markTestSkipped('Irrelevant for this test');
+  }
 
   /**
    * {@inheritdoc}
-   *
-   * @requires module irrelevant_for_this_test
    */
-  public function testRelationships() {}
+  public function testRelationships() {
+    $this->markTestSkipped('Irrelevant for this test');
+  }
 
   /**
    * {@inheritdoc}
