@@ -21,7 +21,7 @@ interface ShortcutSetStorageInterface extends ConfigEntityStorageInterface {
   public function assignUser(ShortcutSetInterface $shortcut_set, $account);
 
   /**
-   * Unassigns a user from any shortcut set they may have been assigned to.
+   * Un-assigns a user from any shortcut set they may have been assigned to.
    *
    * The user will go back to using whatever default set applies.
    *

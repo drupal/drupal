@@ -184,7 +184,7 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
    */
   public function isEntityValidationRequired(FieldableEntityInterface $entity) {
     // Prioritize the entity method over migration config because it won't be
-    // possible to save that entity unvalidated.
+    // possible to save that entity non validated.
     /* @see \Drupal\Core\Entity\ContentEntityBase::preSave() */
     return $entity->isValidationRequired() || !empty($this->configuration['validate']);
   }

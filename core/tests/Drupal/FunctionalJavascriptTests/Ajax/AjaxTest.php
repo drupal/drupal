@@ -111,7 +111,7 @@ class AjaxTest extends WebDriverTestBase {
       'svg' => '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><rect x="0" y="0" height="10" width="10" fill="green"></rect></svg>',
       'empty' => '',
     ];
-    $render_multiple_root_unwrapper = [
+    $render_multiple_root_unwrap = [
       'mixed' => ' foo <!-- COMMENT -->  foo bar<div class="a class"><p>some string</p></div> additional not wrapped strings, <!-- ANOTHER COMMENT --> <p>final string</p>',
       'top-level-only' => '<div>element #1</div><div>element #2</div>',
       'top-level-only-pre-whitespace' => ' <div>element #1</div><div>element #2</div> ',
@@ -121,14 +121,14 @@ class AjaxTest extends WebDriverTestBase {
 
     // This is temporary behavior for BC reason.
     $render_multiple_root_wrapper = [];
-    foreach ($render_multiple_root_unwrapper as $key => $render) {
+    foreach ($render_multiple_root_unwrap as $key => $render) {
       $render_multiple_root_wrapper["$key--effect"] = '<div>' . $render . '</div>';
     }
 
     $expected_renders = array_merge(
       $render_single_root,
       $render_multiple_root_wrapper,
-      $render_multiple_root_unwrapper
+      $render_multiple_root_unwrap
     );
 
     // Checking default process of wrapping Ajax content.

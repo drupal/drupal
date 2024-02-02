@@ -199,7 +199,7 @@ abstract class RendererTestBase extends UnitTestCase {
    * paths, etc. for JavaScript replacement of content or assets. In this test,
    * the #lazy_builder callback PlaceholdersTest::callback() renders the context
    * inside test HTML, so using any random string would sometimes cause random
-   * test failures because the test output would be unparseable. Instead, we
+   * test failures because the test output would not be parseable. Instead, we
    * provide random tokens for replacement.
    *
    * @see PlaceholdersTest::callback()

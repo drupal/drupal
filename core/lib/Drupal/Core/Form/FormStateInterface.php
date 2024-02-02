@@ -301,7 +301,7 @@ interface FormStateInterface {
   /**
    * Returns the form values as they were submitted by the user.
    *
-   * These are raw and unvalidated, so should not be used without a thorough
+   * These are raw and non validated, so should not be used without a thorough
    * understanding of security implications. In almost all cases, code should
    * use self::getValues() and self::getValue() exclusively.
    *
@@ -314,7 +314,7 @@ interface FormStateInterface {
    * Sets the form values as though they were submitted by a user.
    *
    * @param array $user_input
-   *   An associative array of raw and unvalidated values.
+   *   An associative array of raw and non validated values.
    *
    * @return $this
    */

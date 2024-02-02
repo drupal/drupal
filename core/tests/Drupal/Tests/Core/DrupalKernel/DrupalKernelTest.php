@@ -170,7 +170,7 @@ class FakeAutoloader {
   }
 
   /**
-   * Unregisters this instance as an autoloader.
+   * Deregisters this instance as an autoloader.
    */
   public function unregister() {
     spl_autoload_unregister([$this, 'loadClass']);

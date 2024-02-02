@@ -172,7 +172,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
   }
 
   /**
-   * Tests unassigning a shortcut set.
+   * Tests un-assigning a shortcut set.
    */
   public function testShortcutSetUnassign() {
     $new_set = $this->generateShortcutSet($this->randomMachineName());
