@@ -176,14 +176,14 @@ interface FormBuilderInterface {
    *   $form_state build info array so that the reference can be preserved. For
    *   example, a form builder function with the following signature:
    *   @code
-   *   function mymodule_form($form, FormStateInterface &$form_state, &$object) {
+   *   function my_module_form($form, FormStateInterface &$form_state, &$object) {
    *   }
    *   @endcode
    *   would be called via self::submitForm() as follows:
    *   @code
    *   $form_state->setValues($my_form_values);
    *   $form_state->addBuildInfo('args', [&$object]);
-   *   \Drupal::formBuilder()->submitForm('mymodule_form', $form_state);
+   *   \Drupal::formBuilder()->submitForm('my_module_form', $form_state);
    *   @endcode
    * phpcs:enable
    */

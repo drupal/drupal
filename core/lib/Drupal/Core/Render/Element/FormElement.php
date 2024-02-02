@@ -160,15 +160,15 @@ abstract class FormElement extends RenderElement implements FormElementInterface
    * and #autocomplete_query_parameters properties if present.
    *
    * For example, suppose your autocomplete route name is
-   * 'mymodule.autocomplete' and its path is
-   * '/mymodule/autocomplete/{a}/{b}'. In a form array, you would create a text
+   * 'my_module.autocomplete' and its path is
+   * '/my_module/autocomplete/{a}/{b}'. In a form array, you would create a text
    * field with properties:
    * @code
-   * '#autocomplete_route_name' => 'mymodule.autocomplete',
+   * '#autocomplete_route_name' => 'my_module.autocomplete',
    * '#autocomplete_route_parameters' => array('a' => $some_key, 'b' => $some_id),
    * @endcode
    * If the user types "keywords" in that field, the full path called would be:
-   * 'mymodule_autocomplete/$some_key/$some_id?q=keywords'
+   * 'my_module_autocomplete/$some_key/$some_id?q=keywords'
    *
    * @param array $element
    *   The form element to process. Properties used:

@@ -64,10 +64,10 @@ class MailTest extends KernelTestBase {
     $this->assertInstanceOf(TestPhpMailFailure::class, $mail_backend);
 
     // Add a module-specific mail backend.
-    $this->config('system.mail')->set('interface.mymodule_testkey', 'test_mail_collector')->save();
+    $this->config('system.mail')->set('interface.my_module_testkey', 'test_mail_collector')->save();
 
     // Get the added MailInterface class instance.
-    $mail_backend = \Drupal::service('plugin.manager.mail')->getInstance(['module' => 'mymodule', 'key' => 'testkey']);
+    $mail_backend = \Drupal::service('plugin.manager.mail')->getInstance(['module' => 'my_module', 'key' => 'testkey']);
 
     // Assert whether the added mail backend is an instance of the expected
     // class.

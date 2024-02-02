@@ -371,7 +371,7 @@ function drupal_maintenance_theme() {
  *
  * Example:
  * @code
- * function mymodule_log_stream_handle($new_handle = NULL) {
+ * function my_module_log_stream_handle($new_handle = NULL) {
  *   static $handle;
  *   if (isset($new_handle)) {
  *     $handle = $new_handle;

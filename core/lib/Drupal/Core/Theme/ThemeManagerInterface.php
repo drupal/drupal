@@ -91,7 +91,7 @@ interface ThemeManagerInterface {
    *     'unalterable' => $unalterable,
    *     'foo' => 'bar',
    *   );
-   *   $this->alter('mymodule_data', $alterable1, $alterable2, $context);
+   *   $this->alter('my_module_data', $alterable1, $alterable2, $context);
    * @endcode
    *
    * Note that objects are always passed by reference. If it is absolutely
@@ -101,7 +101,7 @@ interface ThemeManagerInterface {
    *   $context = array(
    *     'unalterable_object' => clone $object,
    *   );
-   *   $this->alter('mymodule_data', $data, $context);
+   *   $this->alter('my_module_data', $data, $context);
    * @endcode
    *
    * @param string|array $type

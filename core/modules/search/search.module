@@ -108,7 +108,7 @@ function search_cron() {
  *
  * If your module needs to provide a more complicated search form, then you
  * need to implement it yourself. In that case, you may wish to define it as a
- * local task (tab) under the /search page (e.g. /search/mymodule) so that users
+ * local task (tab) under the /search page (e.g. /search/my_module) so that users
  * can easily find it.
  *
  * @see plugin_api

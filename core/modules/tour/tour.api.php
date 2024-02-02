@@ -52,7 +52,7 @@ function hook_tour_tips_alter(array &$tour_tips, \Drupal\Core\Entity\EntityInter
 function hook_tour_tips_info_alter(&$info) {
   // Swap out the class used for this tip plugin.
   if (isset($info['text'])) {
-    $info['class'] = 'Drupal\mymodule\Plugin\tour\tip\MyCustomTipPlugin';
+    $info['class'] = 'Drupal\my_module\Plugin\tour\tip\MyCustomTipPlugin';
   }
 }
 

@@ -17,7 +17,6 @@ alternatif
 amphibius
 ampm
 anonyme
-anothermodule
 antilop
 anyall
 applix
@@ -498,7 +497,6 @@ multivalue
 multivalued
 muuuh
 myclabs
-mymodule
 mysqladmin
 mysqldump
 mystarterkit

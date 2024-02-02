@@ -6,15 +6,13 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 use Drupal\KernelTests\KernelTestBase;
 
-// cSpell:ignore mymodule mydriver
-
 /**
  * Base class for driver specific kernel tests.
  *
  * Driver specific tests should be created in the
- * \Drupal\Tests\mymodule\Kernel\mydriver namespace, and their execution will
- * only occur when the database driver of the SUT is provided by 'mymodule' and
- * named 'mydriver'.
+ * \Drupal\Tests\my_module\Kernel\my_driver namespace, and their execution will
+ * only occur when the database driver of the SUT is provided by 'my_module' and
+ * named 'my_driver'.
  */
 abstract class DriverSpecificKernelTestBase extends KernelTestBase {
 

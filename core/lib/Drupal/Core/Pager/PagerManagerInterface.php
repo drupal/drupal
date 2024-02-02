@@ -43,18 +43,18 @@ interface PagerManagerInterface {
    * that invokes an external datastore with an SQL-like syntax:
    * @code
    *   // First find the total number of items and initialize the pager.
-   *   $total = mymodule_select("SELECT COUNT(*) FROM data WHERE status = 1")->result();
-   *   $num_per_page = \Drupal::config('mymodule.settings')->get('num_per_page');
+   *   $total = my_module_select("SELECT COUNT(*) FROM data WHERE status = 1")->result();
+   *   $num_per_page = \Drupal::config('my_module.settings')->get('num_per_page');
    *   $pager = \Drupal::service('pager.manager')->createPager($total, $num_per_page);
    *   $page = $pager->getCurrentPage();
    *
    *   // Next, retrieve the items for the current page and put them into a
    *   // render array.
    *   $offset = $num_per_page * $page;
-   *   $result = mymodule_select("SELECT * FROM data " . $where . " LIMIT %d, %d", $offset, $num_per_page)->fetchAll();
+   *   $result = my_module_select("SELECT * FROM data " . $where . " LIMIT %d, %d", $offset, $num_per_page)->fetchAll();
    *   $render = [];
    *   $render[] = [
-   *     '#theme' => 'mymodule_results',
+   *     '#theme' => 'my_module_results',
    *     '#result' => $result,
    *   ];
    *
@@ -76,9 +76,9 @@ interface PagerManagerInterface {
    *   // page of results that will exist within the set.
    *   $pager_manager = \Drupal::service('pager.manager');
    *   $page = $pager_manager->findPage();
-   *   $num_per_page = \Drupal::config('mymodule.settings')->get('num_per_page');
+   *   $num_per_page = \Drupal::config('my_module.settings')->get('num_per_page');
    *   $offset = $num_per_page * $page;
-   *   $result = mymodule_remote_search($keywords, $offset, $num_per_page);
+   *   $result = my_module_remote_search($keywords, $offset, $num_per_page);
    *
    *   // Now that we have the total number of results, initialize the pager.
    *   $pager_manager = \Drupal::service('pager.manager');

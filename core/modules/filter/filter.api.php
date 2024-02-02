@@ -52,7 +52,7 @@ function hook_filter_secure_image_alter(&$image) {
  *   The format object of the format being disabled.
  */
 function hook_filter_format_disable($format) {
-  mymodule_cache_rebuild();
+  my_module_cache_rebuild();
 }
 
 /**

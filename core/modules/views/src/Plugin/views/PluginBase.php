@@ -24,8 +24,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * - theme: the theme implementation to use in the plugin. This must be the
  *   name of the template file (without template engine extension). The file
  *   has to be placed in the module's templates folder.
- *   Example: theme = "mymodule_row" of module "mymodule" will implement
- *   mymodule-row.html.twig in the [..]/modules/mymodule/templates folder.
+ *   Example: theme = "my_module_row" of module "my_module" will implement
+ *   my_module-row.html.twig in the [..]/modules/my_module/templates folder.
  * - register_theme: (optional) When set to TRUE (default) the theme is
  *   registered automatically. When set to FALSE the plugin reuses an existing
  *   theme implementation, defined by another module or views plugin.

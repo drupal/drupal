@@ -24,12 +24,12 @@ namespace Drupal\Core\Lock;
  * To use this API, pick a unique name for the lock. A sensible choice is the
  * name of the function performing the operation. Here is a simple example:
  * @code
- * function mymodule_long_operation() {
+ * function my_module_long_operation() {
  *   $lock = \Drupal::lock();
- *   if ($lock->acquire('mymodule_long_operation')) {
+ *   if ($lock->acquire('my_module_long_operation')) {
  *     // Do the long operation here.
  *     // ...
- *     $lock->release('mymodule_long_operation');
+ *     $lock->release('my_module_long_operation');
  *   }
  * }
  * @endcode

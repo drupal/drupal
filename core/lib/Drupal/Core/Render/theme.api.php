@@ -687,7 +687,7 @@ function hook_theme_suggestions_HOOK(array $variables) {
  * node and taxonomy term templates based on the user being logged in.
  *
  * @code
- * function MYMODULE_theme_suggestions_alter(array &$suggestions, array &$variables, $hook) {
+ * function MY_MODULE_theme_suggestions_alter(array &$suggestions, array &$variables, $hook) {
  *   if (\Drupal::currentUser()->isAuthenticated() && in_array($hook, array('node', 'taxonomy_term'))) {
  *     $suggestions[] = $hook . '__' . 'logged_in';
  *   }
@@ -741,7 +741,7 @@ function hook_theme_suggestions_alter(array &$suggestions, array &$variables, $h
  * In the following example, we provide an alternative template suggestion to
  * node templates based on the user being logged in.
  * @code
- * function MYMODULE_theme_suggestions_node_alter(array &$suggestions, array $variables) {
+ * function MY_MODULE_theme_suggestions_node_alter(array &$suggestions, array $variables) {
  *   if (\Drupal::currentUser()->isAuthenticated()) {
  *     $suggestions[] = 'node__logged_in';
  *   }
@@ -869,7 +869,7 @@ function hook_element_info_alter(array &$info) {
  */
 function hook_element_plugin_alter(array &$definitions) {
   // Use a custom class for the LayoutBuilder element.
-  $definitions['layout_builder']['class'] = '\Drupal\mymodule\Element\MyLayoutBuilderElement';
+  $definitions['layout_builder']['class'] = '\Drupal\my_module\Element\MyLayoutBuilderElement';
 }
 
 /**
@@ -1133,7 +1133,7 @@ function hook_page_attachments_alter(array &$attachments) {
  *   A renderable array representing the top of the page.
  */
 function hook_page_top(array &$page_top) {
-  $page_top['mymodule'] = ['#markup' => 'This is the top.'];
+  $page_top['my_module'] = ['#markup' => 'This is the top.'];
 }
 
 /**
@@ -1143,7 +1143,7 @@ function hook_page_top(array &$page_top) {
  *   A renderable array representing the bottom of the page.
  */
 function hook_page_bottom(array &$page_bottom) {
-  $page_bottom['mymodule'] = ['#markup' => 'This is the bottom.'];
+  $page_bottom['my_module'] = ['#markup' => 'This is the bottom.'];
 }
 
 /**

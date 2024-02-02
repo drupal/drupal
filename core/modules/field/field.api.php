@@ -53,7 +53,7 @@
 function hook_field_info_alter(&$info) {
   // Change the default widget for fields of type 'foo'.
   if (isset($info['foo'])) {
-    $info['foo']['default_widget'] = 'mymodule_widget';
+    $info['foo']['default_widget'] = 'my_module_widget';
   }
 }
 
@@ -249,9 +249,9 @@ function hook_field_widget_single_element_form_alter(array &$element, \Drupal\Co
  */
 function hook_field_widget_single_element_WIDGET_TYPE_form_alter(array &$element, \Drupal\Core\Form\FormStateInterface $form_state, array $context) {
   // Code here will only act on widgets of type WIDGET_TYPE.  For example,
-  // hook_field_widget_single_element_mymodule_autocomplete_form_alter() will
-  // only act on widgets of type 'mymodule_autocomplete'.
-  $element['#autocomplete_route_name'] = 'mymodule.autocomplete_route';
+  // hook_field_widget_single_element_my_module_autocomplete_form_alter() will
+  // only act on widgets of type 'my_module_autocomplete'.
+  $element['#autocomplete_route_name'] = 'my_module.autocomplete_route';
 }
 
 /**

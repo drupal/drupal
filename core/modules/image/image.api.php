@@ -38,7 +38,7 @@ function hook_image_effect_info_alter(&$effects) {
  */
 function hook_image_style_flush($style, $path = NULL) {
   // Empty cached data that contains information about the style.
-  \Drupal::cache('mymodule')->deleteAll();
+  \Drupal::cache('my_module')->deleteAll();
 }
 
 /**

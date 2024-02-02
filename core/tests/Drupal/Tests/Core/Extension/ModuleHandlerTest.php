@@ -340,7 +340,7 @@ class ModuleHandlerTest extends UnitTestCase {
       ->with('hook')
       ->willReturnOnConsecutiveCalls(
         [],
-        ['mymodule' => FALSE],
+        ['my_module' => FALSE],
       );
 
     // ModuleHandler::buildImplementationInfo mock returns no implementations.

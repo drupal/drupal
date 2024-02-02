@@ -34,7 +34,7 @@ use Drupal\Core\Session\AccountInterface;
  * language (which by default inherits the interface language's values)
  * configurable:
  * @code
- * function mymodule_language_types_info_alter(&$language_types) {
+ * function my_module_language_types_info_alter(&$language_types) {
  *   unset($language_types[LanguageInterface::TYPE_CONTENT]['fixed']);
  * }
  * @endcode
@@ -69,7 +69,7 @@ use Drupal\Core\Session\AccountInterface;
  * hook_language_negotiation_info_alter(). Here is an example snippet that lets
  * path prefixes be ignored for administrative paths:
  * @code
- * function mymodule_language_negotiation_info_alter(&$negotiation_info) {
+ * function my_module_language_negotiation_info_alter(&$negotiation_info) {
  *   // Replace the original plugin with our own implementation.
  *   $method_id = \Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl::METHOD_ID;
  *   $negotiation_info[$method_id]['class'] = 'Drupal\my_module\Plugin\LanguageNegotiation\MyLanguageNegotiationUrl';

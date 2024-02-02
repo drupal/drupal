@@ -43,8 +43,8 @@ use Drupal\help\HelpTopicPluginManager as CoreHelpTopicPluginManager;
  * derived plugins, and a 'deriver' property giving the name of a class
  * implementing \Drupal\Component\Plugin\Derivative\DeriverInterface. Example:
  * @code
- * mymodule_prefix:
- *   deriver: 'Drupal\mymodule\Plugin\Deriver\HelpTopicDeriver'
+ * my_module_prefix:
+ *   deriver: 'Drupal\my_module\Plugin\Deriver\HelpTopicDeriver'
  * @endcode
  *
  * @ingroup help_docs

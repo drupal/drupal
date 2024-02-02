@@ -48,8 +48,8 @@ use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
  * derived plugins, and a 'deriver' property giving the name of a class
  * implementing \Drupal\Component\Plugin\Derivative\DeriverInterface. Example:
  * @code
- * mymodule_prefix:
- *   deriver: 'Drupal\mymodule\Plugin\Deriver\HelpTopicDeriver'
+ * my_module_prefix:
+ *   deriver: 'Drupal\my_module\Plugin\Deriver\HelpTopicDeriver'
  * @endcode
  *
  * @ingroup help_docs
@@ -123,7 +123,7 @@ class HelpTopicPluginManager extends DefaultPluginManager implements HelpTopicPl
       $discovery = new HelpTopicDiscovery($all_directories);
 
       // Also allow modules/profiles to extend help topic discovery to their
-      // own plugins and derivers, in mymodule.help_topics.yml files.
+      // own plugins and derivers, in my_module.help_topics.yml files.
       $discovery = new YamlDiscoveryDecorator($discovery, 'help_topics', $module_directories);
       $discovery = new ContainerDerivativeDiscoveryDecorator($discovery);
       $this->discovery = $discovery;

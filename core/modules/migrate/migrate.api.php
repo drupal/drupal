@@ -155,9 +155,9 @@ use Drupal\migrate\Row;
  */
 function hook_migrate_prepare_row(Row $row, MigrateSourceInterface $source, MigrationInterface $migration) {
   if ($migration->id() == 'd6_filter_formats') {
-    $value = $source->getDatabase()->query('SELECT [value] FROM {variable} WHERE [name] = :name', [':name' => 'mymodule_filter_foo_' . $row->getSourceProperty('format')])->fetchField();
+    $value = $source->getDatabase()->query('SELECT [value] FROM {variable} WHERE [name] = :name', [':name' => 'my_module_filter_foo_' . $row->getSourceProperty('format')])->fetchField();
     if ($value) {
-      $row->setSourceProperty('settings:mymodule:foo', unserialize($value));
+      $row->setSourceProperty('settings:my_module:foo', unserialize($value));
     }
   }
 }
@@ -178,9 +178,9 @@ function hook_migrate_prepare_row(Row $row, MigrateSourceInterface $source, Migr
  * @ingroup migration
  */
 function hook_migrate_MIGRATION_ID_prepare_row(Row $row, MigrateSourceInterface $source, MigrationInterface $migration) {
-  $value = $source->getDatabase()->query('SELECT [value] FROM {variable} WHERE [name] = :name', [':name' => 'mymodule_filter_foo_' . $row->getSourceProperty('format')])->fetchField();
+  $value = $source->getDatabase()->query('SELECT [value] FROM {variable} WHERE [name] = :name', [':name' => 'my_module_filter_foo_' . $row->getSourceProperty('format')])->fetchField();
   if ($value) {
-    $row->setSourceProperty('settings:mymodule:foo', unserialize($value));
+    $row->setSourceProperty('settings:my_module:foo', unserialize($value));
   }
 }
 

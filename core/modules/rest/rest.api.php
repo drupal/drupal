@@ -20,9 +20,9 @@ function hook_rest_resource_alter(&$definitions) {
   if (isset($definitions['entity:node'])) {
     // We want to handle REST requests regarding nodes with our own plugin
     // class.
-    $definitions['entity:node']['class'] = 'Drupal\mymodule\Plugin\rest\resource\NodeResource';
+    $definitions['entity:node']['class'] = 'Drupal\my_module\Plugin\rest\resource\NodeResource';
     // Serialized nodes should be expanded to my specific node class.
-    $definitions['entity:node']['serialization_class'] = 'Drupal\mymodule\Entity\MyNode';
+    $definitions['entity:node']['serialization_class'] = 'Drupal\my_module\Entity\MyNode';
   }
   // We don't want Views to show up in the array of plugins at all.
   unset($definitions['entity:view']);

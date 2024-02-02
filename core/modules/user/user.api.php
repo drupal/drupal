@@ -99,7 +99,7 @@ function hook_user_cancel_methods_alter(&$methods) {
   unset($methods['user_cancel_reassign']);
 
   // Add a custom zero-out method.
-  $methods['mymodule_zero_out'] = [
+  $methods['my_module_zero_out'] = [
     'title' => t('Delete the account and remove all content.'),
     'description' => t('All your content will be replaced by empty strings.'),
     // access should be used for administrative methods only.
