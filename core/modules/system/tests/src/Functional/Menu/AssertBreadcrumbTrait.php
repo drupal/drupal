@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\system\Functional\Menu;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 
@@ -97,13 +96,13 @@ trait AssertBreadcrumbTrait {
     // No parts must be left, or an expected "Home" will always pass.
     $pass = ($pass && empty($parts));
 
-    $this->assertTrue($pass, new FormattableMarkup('Expected breadcrumb %parts on @path but found %found.', [
-      '%parts' => implode(' » ', $trail),
-      '%found' => implode(' » ', array_map(function (array $item) {
+    $this->assertTrue($pass, sprintf('Expected breadcrumb %s on %s but found %s.',
+      implode(' » ', $trail),
+      $this->getUrl(),
+      implode(' » ', array_map(function (array $item) {
         return $item['text'];
       }, $found)),
-      '@path' => $this->getUrl(),
-    ]));
+    ));
   }
 
   /**

@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\comment\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
@@ -149,8 +148,7 @@ class CommentLanguageTest extends BrowserTestBase {
           ->range(0, 1)
           ->execute();
         $comment = Comment::load(reset($cids));
-        $args = ['%node_language' => $node_langcode, '%comment_language' => $comment->langcode->value, '%langcode' => $langcode];
-        $this->assertEquals($langcode, $comment->langcode->value, new FormattableMarkup('The comment posted with content language %langcode and belonging to the node with language %node_language has language %comment_language', $args));
+        $this->assertEquals($langcode, $comment->langcode->value, "The comment posted with content language $langcode and belonging to the node with language $node_langcode has language {$comment->langcode->value}");
         $this->assertEquals($comment_values[$node_langcode][$langcode], $comment->comment_body->value, 'Comment body correctly stored.');
       }
     }
