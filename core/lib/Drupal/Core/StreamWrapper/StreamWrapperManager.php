@@ -176,7 +176,7 @@ class StreamWrapperManager implements StreamWrapperManagerInterface {
   }
 
   /**
-   * Unregisters the tagged stream wrappers.
+   * Deregisters the tagged stream wrappers.
    *
    * Internal use only.
    */

@@ -925,8 +925,8 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
    */
   protected static function getNewMediaItems(array $element, FormStateInterface $form_state) {
     // Get the new media IDs passed to our hidden button. We need to use the
-    // actual user input, since when #limit_validation_errors is used, the
-    // unvalidated user input is not added to the form state.
+    // actual user input, since when #limit_validation_errors is used, any
+    // non validated user input is not added to the form state.
     // @see FormValidator::handleErrorsWithLimitedValidation()
     $values = $form_state->getUserInput();
     $path = $element['#parents'];
@@ -961,7 +961,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     // Default to using the current selection if the form is new.
     $path = $element['#parents'];
     // We need to use the actual user input, since when #limit_validation_errors
-    // is used, the unvalidated user input is not added to the form state.
+    // is used, the non validated user input is not added to the form state.
     // @see FormValidator::handleErrorsWithLimitedValidation()
     $values = NestedArray::getValue($form_state->getUserInput(), $path);
     $selection = $values['selection'] ?? [];

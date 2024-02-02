@@ -38,9 +38,9 @@ class NodeAccessRecordsTest extends NodeAccessTestBase {
     $this->assertEquals('test_article_realm', $records[0]->realm, 'Grant with article_realm acquired for node without alteration.');
     $this->assertEquals(1, $records[0]->gid, 'Grant with gid = 1 acquired for node without alteration.');
 
-    // Create an unpromoted "Basic page" node.
+    // Create an un-promoted "Basic page" node.
     $node2 = $this->drupalCreateNode(['type' => 'page', 'promote' => 0]);
-    $this->assertNotEmpty(Node::load($node2->id()), 'Unpromoted basic page node created.');
+    $this->assertNotEmpty(Node::load($node2->id()), 'Un-promoted basic page node created.');
 
     // Check to see if grants added by node_test_node_access_records made it in.
     $records = $connection->select('node_access', 'na')
@@ -52,9 +52,9 @@ class NodeAccessRecordsTest extends NodeAccessTestBase {
     $this->assertEquals('test_page_realm', $records[0]->realm, 'Grant with page_realm acquired for node without alteration.');
     $this->assertEquals(1, $records[0]->gid, 'Grant with gid = 1 acquired for node without alteration.');
 
-    // Create an unpromoted, unpublished "Basic page" node.
+    // Create an un-promoted, unpublished "Basic page" node.
     $node3 = $this->drupalCreateNode(['type' => 'page', 'promote' => 0, 'status' => 0]);
-    $this->assertNotEmpty(Node::load($node3->id()), 'Unpromoted, unpublished basic page node created.');
+    $this->assertNotEmpty(Node::load($node3->id()), 'Un-promoted, unpublished basic page node created.');
 
     // Check to see if grants added by node_test_node_access_records made it in.
     $records = $connection->select('node_access', 'na')

@@ -35,7 +35,7 @@ interface FormValidatorInterface {
    *   in case of a validation error. If a validation handler alters the form
    *   structure, it is responsible for validating the values of changed form
    *   elements in $form_state->getValues() to prevent form submit handlers from
-   *   receiving unvalidated values.
+   *   receiving non validated values.
    * @param $form_state
    *   The current state of the form. The current user-submitted data is stored
    *   in $form_state->getValues(), though form validation functions are passed

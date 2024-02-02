@@ -307,8 +307,8 @@ interface FormBuilderInterface {
    * run before user input for its child elements is processed, and because of
    * the Form API security of user input processing with respect to #access and
    * #disabled described above, this generally means that #process functions
-   * should not use an element's (unvalidated) #value to affect the #disabled or
-   * #access of child elements. Use-cases where a developer may be tempted to
+   * should not use an element's (non validated) #value to affect the #disabled
+   * or #access of child elements. Use-cases where a developer may be tempted to
    * implement such conditional logic usually fall into one of two categories:
    * - Where user input from the current submission must affect the structure of
    *   a form, including properties like #access and #disabled that affect how

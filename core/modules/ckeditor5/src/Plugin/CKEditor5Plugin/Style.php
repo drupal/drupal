@@ -68,11 +68,11 @@ class Style extends CKEditor5PluginDefault implements CKEditor5PluginConfigurabl
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     // Match the config schema structure at ckeditor5.plugin.ckeditor5_style.
     $form_value = $form_state->getValue('styles');
-    [$styles, $unparseable_lines] = self::parseStylesFormValue($form_value);
-    if (!empty($unparseable_lines)) {
-      $line_numbers = array_keys($unparseable_lines);
+    [$styles, $invalid_lines] = self::parseStylesFormValue($form_value);
+    if (!empty($invalid_lines)) {
+      $line_numbers = array_keys($invalid_lines);
       $form_state->setError($form['styles'], $this->formatPlural(
-        count($unparseable_lines),
+        count($invalid_lines),
         'Line @line-number does not contain a valid value. Enter a valid CSS selector containing one or more classes, followed by a pipe symbol and a label.',
         'Lines @line-numbers do not contain a valid value. Enter a valid CSS selector containing one or more classes, followed by a pipe symbol and a label.',
         [
@@ -104,7 +104,7 @@ class Style extends CKEditor5PluginDefault implements CKEditor5PluginConfigurabl
    * @see \Drupal\ckeditor5\Plugin\CKEditor4To5Upgrade\Core::mapCKEditor4SettingsToCKEditor5Configuration()
    */
   public static function parseStylesFormValue(string $form_value): array {
-    $unparseable_lines = [];
+    $invalid_lines = [];
 
     $lines = explode("\n", $form_value);
     $styles = [];
@@ -120,7 +120,7 @@ class Style extends CKEditor5PluginDefault implements CKEditor5PluginConfigurabl
       $selector_matches = [];
       // @see https://www.w3.org/TR/CSS2/syndata.html#:~:text=In%20CSS%2C%20identifiers%20(including%20element,hyphen%20followed%20by%20a%20digit
       if (!preg_match('/^([a-z][0-9a-zA-Z\-]*)((\.[a-zA-Z0-9\x{00A0}-\x{FFFF}\-_]+)+)$/u', $selector, $selector_matches)) {
-        $unparseable_lines[$index + 1] = $line;
+        $invalid_lines[$index + 1] = $line;
         continue;
       }
 
@@ -134,7 +134,7 @@ class Style extends CKEditor5PluginDefault implements CKEditor5PluginConfigurabl
         'element' => $normalized->toCKEditor5ElementsArray()[0],
       ];
     }
-    return [$styles, $unparseable_lines];
+    return [$styles, $invalid_lines];
   }
 
   /**

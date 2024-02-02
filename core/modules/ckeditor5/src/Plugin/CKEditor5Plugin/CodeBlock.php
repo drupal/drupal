@@ -45,11 +45,11 @@ class CodeBlock extends CKEditor5PluginDefault implements CKEditor5PluginConfigu
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     $form_value = $form_state->getValue('languages');
-    [$styles, $unparseable_lines] = self::parseLanguagesFromValue($form_value);
-    if (!empty($unparseable_lines)) {
-      $line_numbers = array_keys($unparseable_lines);
+    [$styles, $not_parseable_lines] = self::parseLanguagesFromValue($form_value);
+    if (!empty($not_parseable_lines)) {
+      $line_numbers = array_keys($not_parseable_lines);
       $form_state->setError($form['languages'], $this->formatPlural(
-        count($unparseable_lines),
+        count($not_parseable_lines),
         'Line @line-number does not contain a valid value. Enter a valid language key followed by a pipe symbol and a label.',
         'Lines @line-numbers do not contain a valid value. Enter a valid language key followed by a pipe symbol and a label.',
         [
@@ -73,7 +73,7 @@ class CodeBlock extends CKEditor5PluginDefault implements CKEditor5PluginConfigu
    *   - language: the key for the language
    */
   protected static function parseLanguagesFromValue(string $form_value): array {
-    $unparseable_lines = [];
+    $not_parseable_lines = [];
 
     $lines = explode("\n", $form_value);
     $languages = [];
@@ -90,7 +90,7 @@ class CodeBlock extends CKEditor5PluginDefault implements CKEditor5PluginConfigu
         'language' => $language,
       ];
     }
-    return [$languages, $unparseable_lines];
+    return [$languages, $not_parseable_lines];
   }
 
   /**
