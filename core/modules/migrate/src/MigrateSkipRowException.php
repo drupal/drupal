@@ -4,6 +4,10 @@ namespace Drupal\migrate;
 
 /**
  * This exception is thrown when a row should be skipped.
+ *
+ * This exception should be used in Migrate process plugins. Throwing it in a
+ * source plugin may cause unexpected results in the count of rows processed.
+ * And throwing it in a destination plugin causes an error.
  */
 class MigrateSkipRowException extends \Exception {
 
