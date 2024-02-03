@@ -5,6 +5,8 @@
  * Builds placeholder replacement tokens for taxonomy terms and vocabularies.
  */
 
+use Drupal\Core\Datetime\Entity\DateFormat;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\taxonomy\Entity\Vocabulary;
 
@@ -78,6 +80,11 @@ function taxonomy_token_info() {
     'description' => t("The parent term of the taxonomy term, if one exists."),
     'type' => 'term',
   ];
+  $term['changed'] = [
+    'name' => t("Date changed"),
+    'description' => t("The date the taxonomy was most recently updated."),
+    'type' => 'date',
+  ];
 
   return [
     'types' => $types,
@@ -93,6 +100,14 @@ function taxonomy_token_info() {
  */
 function taxonomy_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
   $token_service = \Drupal::token();
+
+  if (isset($options['langcode'])) {
+    $url_options['language'] = \Drupal::languageManager()->getLanguage($options['langcode']);
+    $langcode = $options['langcode'];
+  }
+  else {
+    $langcode = LanguageInterface::LANGCODE_DEFAULT;
+  }
 
   $replacements = [];
   if ($type == 'term' && !empty($data['term'])) {
@@ -140,6 +155,12 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
             $replacements[$original] = $parent->getName();
           }
           break;
+
+        case 'changed':
+          $date_format = DateFormat::load('medium');
+          $bubbleable_metadata->addCacheableDependency($date_format);
+          $replacements[$original] = \Drupal::service('date.formatter')->format($term->getChangedTime(), 'medium', '', NULL, $langcode);
+          break;
       }
     }
 
@@ -154,6 +175,10 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
         $parent = array_pop($parents);
         $replacements += $token_service->generate('term', $vocabulary_tokens, ['term' => $parent], $options, $bubbleable_metadata);
       }
+    }
+
+    if ($changed_tokens = $token_service->findWithPrefix($tokens, 'changed')) {
+      $replacements += $token_service->generate('date', $changed_tokens, ['date' => $term->getChangedTime()], $options, $bubbleable_metadata);
     }
   }
 
