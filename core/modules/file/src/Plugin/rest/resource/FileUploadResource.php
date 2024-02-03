@@ -79,6 +79,12 @@ class FileUploadResource extends ResourceBase {
    * The amount of bytes to read in each iteration when streaming file data.
    *
    * @var int
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+   * \Drupal\file\Upload\InputStreamFileWriterInterface::DEFAULT_BYTES_TO_READ
+   * instead.
+   *
+   * @see https://www.drupal.org/node/3380607
    */
   const BYTES_TO_READ = 8192;
 
