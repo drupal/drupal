@@ -15,7 +15,6 @@ use Drupal\Core\Session\AccessPolicyBase;
 use Drupal\Core\Session\AccessPolicyProcessor;
 use Drupal\Core\Session\AccessPolicyScopeException;
 use Drupal\Core\Session\CalculatedPermissions;
-use Drupal\Core\Session\CalculatedPermissionsInterface;
 use Drupal\Core\Session\CalculatedPermissionsItem;
 use Drupal\Core\Session\RefinableCalculatedPermissions;
 use Drupal\Core\Session\RefinableCalculatedPermissionsInterface;
@@ -427,7 +426,7 @@ class FooAccessPolicy extends AccessPolicyBase {
     return $scope === 'foo' || $scope === 'anything';
   }
 
-  public function calculatePermissions(AccountInterface $account, string $scope): CalculatedPermissionsInterface {
+  public function calculatePermissions(AccountInterface $account, string $scope): RefinableCalculatedPermissionsInterface {
     $calculated_permissions = parent::calculatePermissions($account, $scope);
     return $calculated_permissions->addItem(new CalculatedPermissionsItem(['foo', 'bar'], TRUE, $scope, 1));
   }
@@ -444,7 +443,7 @@ class BarAccessPolicy extends AccessPolicyBase {
     return $scope === 'bar' || $scope === 'anything';
   }
 
-  public function calculatePermissions(AccountInterface $account, string $scope): CalculatedPermissionsInterface {
+  public function calculatePermissions(AccountInterface $account, string $scope): RefinableCalculatedPermissionsInterface {
     $calculated_permissions = parent::calculatePermissions($account, $scope);
     return $calculated_permissions->addItem(new CalculatedPermissionsItem(['foo', 'bar'], FALSE, $scope, 1));
   }
@@ -461,7 +460,7 @@ class BazAccessPolicy extends AccessPolicyBase {
     return $scope === 'baz';
   }
 
-  public function calculatePermissions(AccountInterface $account, string $scope): CalculatedPermissionsInterface {
+  public function calculatePermissions(AccountInterface $account, string $scope): RefinableCalculatedPermissionsInterface {
     $calculated_permissions = parent::calculatePermissions($account, $scope);
     return $calculated_permissions->addItem(new CalculatedPermissionsItem(['baz'], FALSE, 'baz', 1));
   }
@@ -507,7 +506,7 @@ class AlwaysAddsAccessPolicy extends AccessPolicyBase {
     return TRUE;
   }
 
-  public function calculatePermissions(AccountInterface $account, string $scope): CalculatedPermissionsInterface {
+  public function calculatePermissions(AccountInterface $account, string $scope): RefinableCalculatedPermissionsInterface {
     $calculated_permissions = parent::calculatePermissions($account, $scope);
     return $calculated_permissions->addItem(new CalculatedPermissionsItem(['always'], FALSE, 'always', 1));
   }

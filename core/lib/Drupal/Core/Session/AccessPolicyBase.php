@@ -17,7 +17,7 @@ abstract class AccessPolicyBase implements AccessPolicyInterface {
   /**
    * {@inheritdoc}
    */
-  public function calculatePermissions(AccountInterface $account, string $scope): CalculatedPermissionsInterface {
+  public function calculatePermissions(AccountInterface $account, string $scope): RefinableCalculatedPermissionsInterface {
     return (new RefinableCalculatedPermissions())->addCacheContexts($this->getPersistentCacheContexts());
   }
 

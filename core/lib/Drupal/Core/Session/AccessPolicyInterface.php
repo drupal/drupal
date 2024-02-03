@@ -42,10 +42,10 @@ interface AccessPolicyInterface {
    * @param string $scope
    *   The scope to calculate the permissions for.
    *
-   * @return \Drupal\Core\Session\CalculatedPermissionsInterface
+   * @return \Drupal\Core\Session\RefinableCalculatedPermissionsInterface
    *   An object representing the permissions within the given scope.
    */
-  public function calculatePermissions(AccountInterface $account, string $scope): CalculatedPermissionsInterface;
+  public function calculatePermissions(AccountInterface $account, string $scope): RefinableCalculatedPermissionsInterface;
 
   /**
    * Alter the permissions after all policies have finished building them.
