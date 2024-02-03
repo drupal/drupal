@@ -26,6 +26,7 @@ class MediaEmbedFilterDisabledIntegrationsTest extends MediaEmbedFilterTestBase 
     parent::setUp();
 
     $this->container->get('current_user')
+      ->getAccount()
       ->addRole($this->drupalCreateRole([
         'access contextual links',
       ]));

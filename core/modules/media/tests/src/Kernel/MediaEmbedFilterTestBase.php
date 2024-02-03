@@ -86,7 +86,7 @@ abstract class MediaEmbedFilterTestBase extends KernelTestBase {
       'access content',
       'view media',
     ]);
-    $this->container->set('current_user', $user);
+    $this->container->get('current_user')->setAccount($user);
 
     $this->image = File::create([
       'uri' => $this->getTestFiles('image')[0]->uri,
