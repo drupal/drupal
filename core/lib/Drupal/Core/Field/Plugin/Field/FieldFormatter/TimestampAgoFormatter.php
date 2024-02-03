@@ -128,7 +128,7 @@ class TimestampAgoFormatter extends FormatterBase {
       '#description' => $this->t('How many time interval units should be shown in the formatted output.'),
       '#default_value' => $this->getSetting('granularity') ?: 2,
       '#min' => 1,
-      '#max' => 6,
+      '#max' => 7,
     ];
 
     return $form;
@@ -140,8 +140,8 @@ class TimestampAgoFormatter extends FormatterBase {
   public function settingsSummary() {
     $summary = parent::settingsSummary();
 
-    $future_date = new DrupalDateTime('1 year 1 month 1 week 1 day 1 hour 1 minute');
-    $past_date = new DrupalDateTime('-1 year -1 month -1 week -1 day -1 hour -1 minute');
+    $future_date = new DrupalDateTime('1 year 1 month 1 week 1 day 1 hour 1 minute 1 second');
+    $past_date = new DrupalDateTime('-1 year -1 month -1 week -1 day -1 hour -1 minute -1 second');
     $granularity = $this->getSetting('granularity');
     $options = [
       'granularity' => $granularity,

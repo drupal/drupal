@@ -146,7 +146,7 @@ class TimestampFormatterTest extends KernelTestBase {
   public function testTimestampAgoFormatter() {
     $data = [];
 
-    foreach ([1, 2, 3, 4, 5, 6] as $granularity) {
+    foreach ([1, 2, 3, 4, 5, 6, 7] as $granularity) {
       $data[] = [
         'future_format' => '@interval hence',
         'past_format' => '@interval ago',
