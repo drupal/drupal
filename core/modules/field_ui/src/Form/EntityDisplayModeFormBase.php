@@ -87,6 +87,7 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
       '#title' => $this->t('Name'),
       '#maxlength' => 100,
       '#default_value' => $this->entity->label(),
+      '#required' => TRUE,
     ];
 
     $form['description'] = [

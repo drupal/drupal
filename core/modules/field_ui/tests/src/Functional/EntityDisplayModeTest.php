@@ -64,6 +64,8 @@ class EntityDisplayModeTest extends BrowserTestBase {
 
     // Test adding a view mode including dots in machine_name.
     $this->clickLink('Test entity');
+    // Check if 'Name' field is required.
+    $this->assertTrue($this->getSession()->getPage()->findField('label')->hasClass('required'));
     $edit = [
       'id' => $this->randomMachineName() . '.' . $this->randomMachineName(),
       'label' => $this->randomString(),
@@ -118,6 +120,8 @@ class EntityDisplayModeTest extends BrowserTestBase {
 
     // Test adding a view mode including dots in machine_name.
     $this->clickLink('Test entity');
+    // Check if 'Name' field is required.
+    $this->assertTrue($this->getSession()->getPage()->findField('label')->hasClass('required'));
     $edit = [
       'id' => $this->randomMachineName() . '.' . $this->randomMachineName(),
       'label' => $this->randomString(),
