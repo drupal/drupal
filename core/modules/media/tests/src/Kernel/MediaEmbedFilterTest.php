@@ -136,6 +136,7 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
     // Are we testing as a user who is allowed to view the embedded entity?
     if ($allowed_to_view_unpublished) {
       $this->container->get('current_user')
+        ->getAccount()
         ->addRole($this->drupalCreateRole(['view own unpublished media']));
     }
 

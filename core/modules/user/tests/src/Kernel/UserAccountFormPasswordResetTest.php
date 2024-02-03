@@ -41,7 +41,7 @@ class UserAccountFormPasswordResetTest extends KernelTestBase {
     $this->user->save();
 
     // Set current user.
-    $this->container->set('current_user', $this->user);
+    $this->container->get('current_user')->setAccount($this->user);
     // Install the router table and then rebuild.
     \Drupal::service('router.builder')->rebuild();
   }
