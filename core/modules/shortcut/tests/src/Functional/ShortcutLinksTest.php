@@ -15,6 +15,7 @@ use Drupal\views\Entity\View;
  * Create, view, edit, delete, and change shortcut links.
  *
  * @group shortcut
+ * @group #slow
  */
 class ShortcutLinksTest extends ShortcutTestBase {
 

@@ -11,6 +11,7 @@ use Drupal\field\Entity\FieldStorageConfig;
  * Tests the creation of telephone fields.
  *
  * @group telephone
+ * @group #slow
  */
 class TelephoneFieldTest extends BrowserTestBase {
 
