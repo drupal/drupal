@@ -426,6 +426,7 @@ lnumber
 loadjs
 localemark
 localetranslatedirty
+logicalcpu
 lolspeak
 longblob
 longerthan
