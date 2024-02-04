@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Logger;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Logger\LogMessageParser;
 use Drupal\Tests\UnitTestCase;
 
@@ -40,37 +41,61 @@ class LogMessageParserTest extends UnitTestCase {
    */
   public function providerTestParseMessagePlaceholders() {
     return [
-      // PSR3 only message.
-      [
+      'PSR3-style placeholder' => [
         ['message' => 'User {username} created', 'context' => ['username' => 'Dries']],
         ['message' => 'User @username created', 'context' => ['@username' => 'Dries']],
       ],
-      // PSR3 style mixed in a format_string style message.
-      [
+      'PSR3- and FormattableMarkup-style placeholders' => [
         ['message' => 'User {username} created @time', 'context' => ['username' => 'Dries', '@time' => 'now']],
         ['message' => 'User @username created @time', 'context' => ['@username' => 'Dries', '@time' => 'now']],
       ],
-      // format_string style message only.
-      [
+      'FormattableMarkup-style placeholder' => [
         ['message' => 'User @username created', 'context' => ['@username' => 'Dries']],
         ['message' => 'User @username created', 'context' => ['@username' => 'Dries']],
       ],
-      // Message without placeholders but wildcard characters.
-      [
+      'Wildcard characters' => [
         ['message' => 'User W-\\};~{&! created @', 'context' => ['' => '']],
         ['message' => 'User W-\\};~{&! created @', 'context' => []],
       ],
-      // Message with double PSR3 style messages.
-      [
+      'Multiple PSR3-style placeholders' => [
         ['message' => 'Test {with} two {{encapsuled}} strings', 'context' => ['with' => 'together', 'encapsuled' => 'awesome']],
         ['message' => 'Test @with two {@encapsuled} strings', 'context' => ['@with' => 'together', '@encapsuled' => 'awesome']],
       ],
-
-      // Test removal of unexpected placeholders like ! while allowed
-      // placeholders beginning with @, % and : are preserved.
-      [
+      'Disallowed placeholder' => [
         ['message' => 'Test placeholder with :url and old !bang parameter', 'context' => [':url' => 'https://example.com', '!bang' => 'foo bar']],
         ['message' => 'Test placeholder with :url and old !bang parameter', 'context' => [':url' => 'https://example.com']],
+      ],
+      'Stringable object placeholder' => [
+        ['message' => 'object @b', 'context' => ['@b' => new FormattableMarkup('convertible', [])]],
+        ['message' => 'object @b', 'context' => ['@b' => 'convertible']],
+      ],
+      'Non-placeholder context value' => [
+        ['message' => 'message', 'context' => ['not_a_placeholder' => new \stdClass()]],
+        ['message' => 'message', 'context' => []],
+      ],
+      'Non-stringable array placeholder' => [
+        ['message' => 'array @a', 'context' => ['@a' => []]],
+        ['message' => 'array @a', 'context' => []],
+      ],
+      'Non-stringable object placeholder' => [
+        ['message' => 'object @b', 'context' => ['@b' => new \stdClass()]],
+        ['message' => 'object @b', 'context' => []],
+      ],
+      'Non-stringable closure placeholder' => [
+        ['message' => 'closure @c', 'context' => ['@c' => function () {}]],
+        ['message' => 'closure @c', 'context' => []],
+      ],
+      'Non-stringable resource placeholder' => [
+        ['message' => 'resource @r', 'context' => ['@r' => fopen('php://memory', 'r+')]],
+        ['message' => 'resource @r', 'context' => []],
+      ],
+      'Non-stringable placeholder is not the first placeholder' => [
+        ['message' => 'mixed @a @b @c', 'context' => ['@a' => 123, '@b' => [1], '@c' => TRUE]],
+        ['message' => 'mixed @a @b @c', 'context' => ['@a' => 123, '@c' => TRUE]],
+      ],
+      'NULL and Boolean placeholders are considered stringable' => [
+        ['message' => 'mixed @a @b @c', 'context' => ['@a' => NULL, '@b' => TRUE, '@c' => FALSE]],
+        ['message' => 'mixed @a @b @c', 'context' => ['@a' => NULL, '@b' => TRUE, '@c' => FALSE]],
       ],
     ];
   }
