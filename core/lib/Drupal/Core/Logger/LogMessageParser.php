@@ -29,9 +29,16 @@ class LogMessageParser implements LogMessageParserInterface {
           $key = '@' . $key;
         }
       }
+      // To be considered a valid placeholder, the key should be in
+      // \Drupal\Component\Render\FormattableMarkup style and the variable
+      // should be a string, number, or \Stringable object. For historical
+      // reasons, Boolean and NULL placeholders are also allowed; NULL
+      // placeholders are deprecated and may throw an error in the future.
+      // @see https://www.drupal.org/node/3318826
       if (!empty($key) && ($key[0] === '@' || $key[0] === '%' || $key[0] === ':')) {
-        // The key is now in \Drupal\Component\Render\FormattableMarkup style.
-        $variables[$key] = $variable;
+        if (is_scalar($variable) || is_null($variable) || $variable instanceof \Stringable) {
+          $variables[$key] = $variable;
+        }
       }
     }
 
