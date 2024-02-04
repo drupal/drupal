@@ -210,7 +210,7 @@ abstract class JsonApiFunctionalTestBase extends BrowserTestBase {
    * @return \Psr\Http\Message\ResponseInterface
    *   The request response.
    *
-   * @throws \GuzzleHttp\Exception\GuzzleException
+   * @throws \Psr\Http\Client\ClientExceptionInterface
    *
    * @see \GuzzleHttp\ClientInterface::request
    */

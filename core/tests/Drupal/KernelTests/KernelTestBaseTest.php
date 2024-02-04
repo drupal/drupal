@@ -5,12 +5,12 @@ namespace Drupal\KernelTests;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Utility\Random;
 use Drupal\Core\Database\Database;
-use GuzzleHttp\Exception\GuzzleException;
 use Drupal\Tests\StreamCapturer;
 use Drupal\user\Entity\Role;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
 use PHPUnit\Framework\SkippedTestError;
+use Psr\Http\Client\ClientExceptionInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -177,7 +177,7 @@ class KernelTestBaseTest extends KernelTestBase {
     }
     catch (\Throwable $e) {
       // Ignore any HTTP errors, any other exception is considered an error.
-      self::assertInstanceOf(GuzzleException::class, $e, sprintf('Asserting that a possible exception is thrown. Got "%s" with message: "%s".', get_class($e), $e->getMessage()));
+      self::assertInstanceOf(ClientExceptionInterface::class, $e, sprintf('Asserting that a possible exception is thrown. Got "%s" with message: "%s".', get_class($e), $e->getMessage()));
     }
   }
 
