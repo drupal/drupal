@@ -5,6 +5,7 @@ namespace Drupal\Core;
 use Composer\Autoload\ClassLoader;
 use Drupal\Component\EventDispatcher\Event;
 use Drupal\Component\FileCache\FileCacheFactory;
+use Drupal\Component\Serialization\PhpSerialize;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\DatabaseBackend;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
@@ -76,11 +77,20 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       ],
       'cache.container' => [
         'class' => 'Drupal\Core\Cache\DatabaseBackend',
-        'arguments' => ['@database', '@cache_tags_provider.container', 'container', DatabaseBackend::MAXIMUM_NONE],
+        'arguments' => [
+          '@database',
+          '@cache_tags_provider.container',
+          'container',
+          '@serialization.phpserialize',
+          DatabaseBackend::MAXIMUM_NONE,
+        ],
       ],
       'cache_tags_provider.container' => [
         'class' => 'Drupal\Core\Cache\DatabaseCacheTagsChecksum',
         'arguments' => ['@database'],
+      ],
+      'serialization.phpserialize' => [
+        'class' => PhpSerialize::class,
       ],
     ],
   ];
