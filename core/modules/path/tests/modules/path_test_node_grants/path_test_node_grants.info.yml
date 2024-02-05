@@ -1,0 +1,5 @@
+name: 'Path test with node grants'
+type: module
+description: 'Tests URL alias with hook_node_grants implementation'
+package: Testing
+version: VERSION
