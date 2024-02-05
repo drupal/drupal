@@ -11,6 +11,7 @@ use Drupal\Core\Routing\RouteBuildEvent;
 use Drupal\Core\Routing\RouteCompiler;
 use Drupal\Core\Routing\RoutingEvents;
 use Drupal\Tests\UnitTestCase;
+use Prophecy\Argument;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -44,7 +45,7 @@ class RouteBuilderTest extends UnitTestCase {
   /**
    * The mocked event dispatcher.
    *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface|\Prophecy\Prophecy\ObjectProphecy
    */
   protected $dispatcher;
 
@@ -82,7 +83,8 @@ class RouteBuilderTest extends UnitTestCase {
 
     $this->dumper = $this->createMock('Drupal\Core\Routing\MatcherDumperInterface');
     $this->lock = $this->createMock('Drupal\Core\Lock\LockBackendInterface');
-    $this->dispatcher = $this->createMock('\Symfony\Contracts\EventDispatcher\EventDispatcherInterface');
+    $this->dispatcher = $this->prophesize('\Symfony\Contracts\EventDispatcher\EventDispatcherInterface');
+    $this->dispatcher->dispatch(Argument::cetera(), Argument::cetera())->willReturnArgument(0);
     $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->controllerResolver = $this->createMock('Drupal\Core\Controller\ControllerResolverInterface');
     $this->yamlDiscovery = $this->getMockBuilder('\Drupal\Core\Discovery\YamlDiscovery')
@@ -90,7 +92,7 @@ class RouteBuilderTest extends UnitTestCase {
       ->getMock();
     $this->checkProvider = $this->createMock('\Drupal\Core\Access\CheckProviderInterface');
 
-    $this->routeBuilder = new TestRouteBuilder($this->dumper, $this->lock, $this->dispatcher, $this->moduleHandler, $this->controllerResolver, $this->checkProvider);
+    $this->routeBuilder = new TestRouteBuilder($this->dumper, $this->lock, $this->dispatcher->reveal(), $this->moduleHandler, $this->controllerResolver, $this->checkProvider);
     $this->routeBuilder->setYamlDiscovery($this->yamlDiscovery);
   }
 
@@ -161,12 +163,10 @@ class RouteBuilderTest extends UnitTestCase {
     $route_build_event = new RouteBuildEvent($route_collection);
 
     // Ensure that the alter routes events are fired.
-    $this->dispatcher->expects($this->atLeast(2))
-      ->method('dispatch')
-      ->withConsecutive(
-        [$route_build_event, RoutingEvents::DYNAMIC],
-        [$route_build_event, RoutingEvents::ALTER],
-      );
+    $this->dispatcher->dispatch($route_build_event, RoutingEvents::DYNAMIC)
+      ->shouldBeCalled();
+    $this->dispatcher->dispatch($route_build_event, RoutingEvents::ALTER)
+      ->shouldBeCalled();
 
     // Ensure that access checks are set.
     $this->checkProvider->expects($this->once())
@@ -231,12 +231,10 @@ class RouteBuilderTest extends UnitTestCase {
     $route_build_event = new RouteBuildEvent($route_collection_filled);
 
     // Ensure that the alter routes events are fired.
-    $this->dispatcher->expects($this->atLeast(2))
-      ->method('dispatch')
-      ->withConsecutive(
-        [$route_build_event, RoutingEvents::DYNAMIC],
-        [$route_build_event, RoutingEvents::ALTER],
-      );
+    $this->dispatcher->dispatch($route_build_event, RoutingEvents::DYNAMIC)
+      ->shouldBeCalled();
+    $this->dispatcher->dispatch($route_build_event, RoutingEvents::ALTER)
+      ->shouldBeCalled();
 
     // Ensure that access checks are set.
     $this->checkProvider->expects($this->once())
@@ -313,12 +311,10 @@ class RouteBuilderTest extends UnitTestCase {
     $route_collection_filled->add('test_route.override', new Route('/test_route_override', [], [], ['compiler_class' => 'Class\Does\Not\Exist']));
     $route_collection_filled->add('test_route', new Route('/test_route', [], [], ['compiler_class' => RouteCompiler::class]));
     $route_build_event = new RouteBuildEvent($route_collection_filled);
-    $this->dispatcher->expects($this->atLeast(2))
-      ->method('dispatch')
-      ->withConsecutive(
-        [$route_build_event, RoutingEvents::DYNAMIC],
-        [$route_build_event, RoutingEvents::ALTER],
-      );
+    $this->dispatcher->dispatch($route_build_event, RoutingEvents::DYNAMIC)
+      ->shouldBeCalled();
+    $this->dispatcher->dispatch($route_build_event, RoutingEvents::ALTER)
+      ->shouldBeCalled();
 
     $this->assertTrue($this->routeBuilder->rebuild());
   }
