@@ -695,7 +695,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @return void
    */
   public function terminate(Request $request, Response $response) {
-    if ($this->getHttpKernel() instanceof TerminableInterface) {
+    if ($this->booted && $this->getHttpKernel() instanceof TerminableInterface) {
       // Only run terminate() when essential services have been set up properly
       // by preHandle() before.
       if ($this->prepared === TRUE) {
