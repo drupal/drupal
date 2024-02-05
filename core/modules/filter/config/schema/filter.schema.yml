@@ -46,14 +46,11 @@ filter.format.*:
       label: 'Dependencies'
 
 filter_settings.*:
-  type: sequence
+  type: mapping
   label: 'Filter settings'
-  sequence:
-    type: string
-    label: 'Value'
 
 filter_settings.filter_html:
-  type: filter
+  type: mapping
   label: 'Filter HTML'
   mapping:
     allowed_html:
@@ -66,9 +63,8 @@ filter_settings.filter_html:
       type: boolean
       label: 'HTML nofollow'
 
-
 filter_settings.filter_url:
-  type: filter
+  type: mapping
   label: 'Filter URL'
   mapping:
     filter_url_length:

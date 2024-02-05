@@ -119,7 +119,7 @@ media.source.field_aware:
       label: 'Source field'
 
 filter_settings.media_embed:
-  type: filter
+  type: mapping
   label: 'Media Embed'
   mapping:
     default_view_mode:

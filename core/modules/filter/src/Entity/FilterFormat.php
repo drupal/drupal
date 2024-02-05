@@ -208,6 +208,11 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
       // read and there is a minimal changeset. If the save is not trusted then
       // the configuration will be sorted by StorableConfigBase.
       ksort($this->filters);
+      // Ensure the filter configuration is well-formed.
+      array_walk($this->filters, function (array &$config, string $filter): void {
+        $config['id'] ??= $filter;
+        $config['provider'] ??= $this->filters($filter)->getPluginDefinition()['provider'];
+      });
     }
 
     assert(is_string($this->label()), 'Filter format label is expected to be a string.');

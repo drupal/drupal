@@ -1,7 +1,7 @@
 # Schema for the configuration files of the Filter test module.
 
 filter_settings.filter_test_restrict_tags_and_attributes:
-  type: filter
+  type: mapping
   label: 'Filter to restrict HTML tags and attributes'
   mapping:
     restrictions:

@@ -131,6 +131,20 @@ abstract class FilterFormatFormBase extends EntityForm {
         '#attributes' => ['class' => ['filter-order-weight']],
       ];
 
+      // Ensure the resulting FilterFormat complies with `type: filter`.
+      // @see core.data_types.schema.yml
+      // @see \Drupal\filter\FilterFormatFormBase::submitForm()
+      $form['filters']['order'][$name]['id'] = [
+        '#type' => 'value',
+        '#value' => $filter->getPluginId(),
+        '#parents' => ['filters', $name, 'id'],
+      ];
+      $form['filters']['order'][$name]['provider'] = [
+        '#type' => 'value',
+        '#value' => $filter->provider,
+        '#parents' => ['filters', $name, 'provider'],
+      ];
+
       // Retrieve the settings form of the filter plugin. The plugin should not be
       // aware of the text format. Therefore, it only receives a set of minimal
       // base properties to allow advanced implementations to work.
