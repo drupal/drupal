@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Contains hook implementations for the Path test with node grants module.
+ */
+
+use Drupal\Core\Session\AccountInterface;
+
+/**
+ * Implements hook_node_grants().
+ */
+function path_test_node_grants_node_grants(AccountInterface $account, $operation): array {
+  $grants = [];
+  return $grants;
+}
