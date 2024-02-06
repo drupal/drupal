@@ -253,7 +253,11 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
       $definition = $this->getDefinition($entity_type_id);
       $class = $definition->getHandlerClass($handler_type);
       if (!$class) {
-        throw new InvalidPluginDefinitionException($entity_type_id, sprintf('The "%s" entity type did not specify a %s handler.', $entity_type_id, $handler_type));
+        $handlers = $definition->getHandlerClasses();
+        if (!isset($handlers[$handler_type])) {
+          throw new InvalidPluginDefinitionException($entity_type_id, sprintf('The "%s" entity type did not specify a %s handler.', $entity_type_id, $handler_type));
+        }
+        throw new InvalidPluginDefinitionException($entity_type_id, sprintf('The %s handler of the "%s" entity type specifies a non-existent class "%s".', $handler_type, $entity_type_id, $handlers[$handler_type]));
       }
       $this->handlers[$handler_type][$entity_type_id] = $this->createHandlerInstance($class, $definition);
     }
