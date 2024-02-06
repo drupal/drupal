@@ -14,9 +14,6 @@ details {
 details > .details-wrapper {
   padding: 0.5em 1.5em;
 }
-/* @todo Regression: The summary of noncollapsible details are no longer
-     vertically aligned with the .details-wrapper in browsers without native
-     details support. */
 summary {
   padding: 0.2em 0.5em;
   cursor: pointer;
