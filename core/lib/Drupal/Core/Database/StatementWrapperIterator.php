@@ -3,6 +3,7 @@
 namespace Drupal\Core\Database;
 
 use Drupal\Core\Database\Event\StatementExecutionEndEvent;
+use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 
 // cSpell:ignore maxlen driverdata INOUT
@@ -108,8 +109,27 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
       $this->connection->dispatchEvent($startEvent);
     }
 
-    $return = $this->clientStatement->execute($args);
-    $this->markResultsetIterable($return);
+    try {
+      $return = $this->clientStatement->execute($args);
+      $this->markResultsetIterable($return);
+    }
+    catch (\Exception $e) {
+      if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionFailureEvent::class)) {
+        $this->connection->dispatchEvent(new StatementExecutionFailureEvent(
+          $startEvent->statementObjectId,
+          $startEvent->key,
+          $startEvent->target,
+          $startEvent->queryString,
+          $startEvent->args,
+          $startEvent->caller,
+          $startEvent->time,
+          get_class($e),
+          $e->getCode(),
+          $e->getMessage(),
+        ));
+      }
+      throw $e;
+    }
 
     if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionEndEvent::class)) {
       $this->connection->dispatchEvent(new StatementExecutionEndEvent(

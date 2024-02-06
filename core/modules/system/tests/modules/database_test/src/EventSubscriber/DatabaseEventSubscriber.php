@@ -3,6 +3,7 @@
 namespace Drupal\database_test\EventSubscriber;
 
 use Drupal\Core\Database\Event\StatementExecutionEndEvent;
+use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -22,6 +23,11 @@ class DatabaseEventSubscriber implements EventSubscriberInterface {
   public int $countStatementEnds = 0;
 
   /**
+   * A counter of failed statement executions.
+   */
+  public int $countStatementFailures = 0;
+
+  /**
    * A map of statements being executed.
    */
   public array $statementIdsInExecution = [];
@@ -33,6 +39,7 @@ class DatabaseEventSubscriber implements EventSubscriberInterface {
     return [
       StatementExecutionStartEvent::class => 'onStatementExecutionStart',
       StatementExecutionEndEvent::class => 'onStatementExecutionEnd',
+      StatementExecutionFailureEvent::class => 'onStatementExecutionFailure',
     ];
   }
 
@@ -56,6 +63,17 @@ class DatabaseEventSubscriber implements EventSubscriberInterface {
   public function onStatementExecutionEnd(StatementExecutionEndEvent $event): void {
     unset($this->statementIdsInExecution[$event->statementObjectId]);
     $this->countStatementEnds++;
+  }
+
+  /**
+   * Subscribes to a statement execution failure event.
+   *
+   * @param \Drupal\Core\Database\Event\StatementExecutionFailureEvent $event
+   *   The database event.
+   */
+  public function onStatementExecutionFailure(StatementExecutionFailureEvent $event): void {
+    unset($this->statementIdsInExecution[$event->statementObjectId]);
+    $this->countStatementFailures++;
   }
 
 }

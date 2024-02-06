@@ -2,7 +2,9 @@
 
 namespace Drupal\KernelTests\Core\Database;
 
+use Drupal\Core\Database\Event\StatementEvent;
 use Drupal\Core\Database\Event\StatementExecutionEndEvent;
+use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use Drupal\database_test\EventSubscriber\DatabaseEventSubscriber;
 
@@ -56,23 +58,40 @@ class DatabaseEventTest extends DatabaseTestBase {
     $this->assertTrue($this->connection->isEventEnabled(StatementExecutionStartEvent::class));
     $this->assertTrue($this->connection->isEventEnabled(StatementExecutionEndEvent::class));
 
-    // Disable both events, no more events captured.
-    $this->connection->disableEvents([
-      StatementExecutionStartEvent::class,
-      StatementExecutionEndEvent::class,
-    ]);
-    $this->connection->query('SELECT * FROM {test}');
-    $this->assertSame(2, $subscriber->countStatementStarts);
+    // Enable the statement execution failure event and execute a failing
+    // query.
+    $this->connection->enableEvents([StatementExecutionFailureEvent::class]);
+    try {
+      $this->connection->query('bananas on the palm tree');
+      $this->fail('An exception was expected, but was not thrown');
+    }
+    catch (\Exception $e) {
+      // Expected, keep going.
+    }
+    $this->assertSame(3, $subscriber->countStatementStarts);
     $this->assertSame(1, $subscriber->countStatementEnds);
+    $this->assertSame(1, $subscriber->countStatementFailures);
+    $this->assertEmpty($subscriber->statementIdsInExecution);
+    $this->assertTrue($this->connection->isEventEnabled(StatementExecutionStartEvent::class));
+    $this->assertTrue($this->connection->isEventEnabled(StatementExecutionEndEvent::class));
+    $this->assertTrue($this->connection->isEventEnabled(StatementExecutionFailureEvent::class));
+
+    // Disable all events, no more events captured.
+    $this->connection->disableEvents(StatementEvent::all());
+    $this->connection->query('SELECT * FROM {test}');
+    $this->assertSame(3, $subscriber->countStatementStarts);
+    $this->assertSame(1, $subscriber->countStatementEnds);
+    $this->assertSame(1, $subscriber->countStatementFailures);
     $this->assertEmpty($subscriber->statementIdsInExecution);
     $this->assertFalse($this->connection->isEventEnabled(StatementExecutionStartEvent::class));
     $this->assertFalse($this->connection->isEventEnabled(StatementExecutionEndEvent::class));
+    $this->assertFalse($this->connection->isEventEnabled(StatementExecutionFailureEvent::class));
 
     // Enable the statement execution end only, no events captured since the
     // start event is required before the end one can be fired.
     $this->connection->enableEvents([StatementExecutionEndEvent::class]);
     $this->connection->query('SELECT * FROM {test}');
-    $this->assertSame(2, $subscriber->countStatementStarts);
+    $this->assertSame(3, $subscriber->countStatementStarts);
     $this->assertSame(1, $subscriber->countStatementEnds);
     $this->assertEmpty($subscriber->statementIdsInExecution);
     $this->assertFalse($this->connection->isEventEnabled(StatementExecutionStartEvent::class));
