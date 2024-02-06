@@ -7,6 +7,8 @@ use Drupal\Core\Config\StorageTransformerException;
 use Drupal\Core\Lock\NullLockBackend;
 use Drupal\KernelTests\KernelTestBase;
 
+// cspell:ignore arrr
+
 /**
  * Tests the export storage manager.
  *

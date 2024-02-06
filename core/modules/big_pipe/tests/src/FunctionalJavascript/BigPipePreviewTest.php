@@ -6,6 +6,8 @@ namespace Drupal\Tests\big_pipe\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
+// cspell:ignore yarhar
+
 /**
  * Tests placeholder preview functionality.
  *

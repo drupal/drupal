@@ -4,6 +4,8 @@ namespace Drupal\Tests\config\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 
+// cspell:ignore arrr
+
 /**
  * Tests the user interface for importing/exporting transformed configuration.
  *

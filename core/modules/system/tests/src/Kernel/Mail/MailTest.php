@@ -13,6 +13,8 @@ use Drupal\file\Entity\File;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system_mail_failure_test\Plugin\Mail\TestPhpMailFailure;
 
+// cspell:ignore drépal
+
 /**
  * Performs tests on the pluggable mailing framework.
  *

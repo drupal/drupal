@@ -8,7 +8,7 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Language\LanguageInterface;
 
-// cspell:ignore chien chiens januari lundi moutons műveletek svibanj
+// cspell:ignore chien chiens deutsch januari lundi moutons műveletek svibanj
 
 /**
  * Tests the import of locale files.

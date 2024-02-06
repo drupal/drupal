@@ -14,10 +14,7 @@ ajaxing
 allwords
 alphadecimal
 alternatif
-amphibius
 ampm
-anonyme
-antilop
 anyall
 applix
 archiver
@@ -30,7 +27,6 @@ arrowreturnthick
 arrowstop
 arrowthick
 arrowthickstop
-arrr
 assertable
 autocompletefocus
 autocompleteselect
@@ -138,7 +134,6 @@ chumillas
 chvotes
 cidhash
 cids
-cillum
 circlesmall
 ckeditor
 classloader
@@ -182,7 +177,6 @@ curlopt
 customevent
 customrequest
 cweagans
-cádiz
 dailymotion
 databasename
 datelist
@@ -212,7 +206,6 @@ desaturates
 desaturating
 descoping
 destructable
-deutsch
 devel
 deviantart
 dflt
@@ -226,7 +219,6 @@ dnumber
 dockerhub
 docroot
 docroots
-dolore
 dotenv
 downcasting
 doxygen
@@ -250,11 +242,9 @@ drupalmedia
 drupalmediaediting
 drupalmediatoolbar
 drupalorg
-drépal
 détruire
 editables
 egulias
-eins
 elbonia
 elems
 encapsed
@@ -266,7 +256,6 @@ endlink
 endmacro
 endset
 endtrans
-enim
 enoki
 entitytype
 entityviewedit
@@ -925,7 +914,6 @@ userinfo
 userref
 vampirize
 varchar
-veniam
 versionable
 versionless
 verygreatdrupalmodule
@@ -957,8 +945,6 @@ xmlhttprequest
 xpsdocument
 xtmpl
 yamls
-yarhar
-yarr
 yearless
 yokotsoko
 yottabyte

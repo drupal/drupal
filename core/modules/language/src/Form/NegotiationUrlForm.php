@@ -12,6 +12,8 @@ use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 
+// cspell:ignore deutsch
+
 /**
  * Configure the URL language negotiation method for this site.
  *

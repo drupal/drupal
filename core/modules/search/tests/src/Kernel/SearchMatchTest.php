@@ -8,6 +8,8 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\search\SearchIndexInterface;
 use Drupal\search\SearchQuery;
 
+// cspell:ignore cillum dolore enim veniam
+
 /**
  * Indexes content and queries it.
  *

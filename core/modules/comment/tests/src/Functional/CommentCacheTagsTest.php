@@ -14,6 +14,8 @@ use Drupal\Tests\system\Functional\Entity\EntityWithUriCacheTagsTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
+// cspell:ignore amphibius
+
 /**
  * Tests the Comment entity's cache tags.
  *

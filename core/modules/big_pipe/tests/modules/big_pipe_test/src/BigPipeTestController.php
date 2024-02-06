@@ -6,6 +6,11 @@ use Drupal\big_pipe\Render\BigPipeMarkup;
 use Drupal\big_pipe_test\EventSubscriber\BigPipeTestSubscriber;
 use Drupal\Core\Security\TrustedCallbackInterface;
 
+// cspell:ignore yarhar
+
+/**
+ * Returns responses for Big Pipe routes.
+ */
 class BigPipeTestController implements TrustedCallbackInterface {
 
   /**

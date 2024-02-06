@@ -6,6 +6,8 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\KernelTests\KernelTestBase;
 
+// cspell:ignore yarhar
+
 /**
  * Tests #attached assets: attached asset libraries and JavaScript settings.
  *

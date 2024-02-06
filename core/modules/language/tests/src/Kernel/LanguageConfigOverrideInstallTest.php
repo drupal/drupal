@@ -7,6 +7,8 @@ use Drupal\language\Config\LanguageConfigOverrideEvents;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\KernelTests\KernelTestBase;
 
+// cspell:ignore deutsch
+
 /**
  * Ensures the language config overrides can be installed.
  *

@@ -20,6 +20,8 @@ use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\file\Entity\File;
 use Drupal\KernelTests\KernelTestBase;
 
+// cspell:ignore eins
+
 /**
  * Tests the functionality of all core data types.
  *
