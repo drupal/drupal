@@ -304,7 +304,7 @@
      */
     verifyConstraints(constraints, selector) {
       let result;
-      if ($.isArray(constraints)) {
+      if (Array.isArray(constraints)) {
         // This constraint is an array (OR or XOR).
         const hasXor = $.inArray('xor', constraints) === -1;
         const len = constraints.length;
