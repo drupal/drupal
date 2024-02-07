@@ -315,11 +315,11 @@ class EntityResource {
 
     $body = Json::decode($request->getContent());
     $data = $body['data'];
-    if ($data['id'] != $entity->uuid()) {
+    if (!isset($data['id']) || $data['id'] != $entity->uuid()) {
       throw new BadRequestHttpException(sprintf(
         'The selected entity (%s) does not match the ID in the payload (%s).',
         $entity->uuid(),
-        $data['id']
+        $data['id'] ?? '',
       ));
     }
     $data += ['attributes' => [], 'relationships' => []];
