@@ -68,13 +68,6 @@ class DatabaseBackend implements CacheBackendInterface {
   protected $checksumProvider;
 
   /**
-   * The serializer to use.
-   *
-   * @var \Drupal\Component\Serialization\ObjectAwareSerializationInterface
-   */
-  protected ObjectAwareSerializationInterface $serializer;
-
-  /**
    * Constructs a DatabaseBackend object.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -93,7 +86,7 @@ class DatabaseBackend implements CacheBackendInterface {
     Connection $connection,
     CacheTagsChecksumInterface $checksum_provider,
     $bin,
-    ObjectAwareSerializationInterface|int|string|null $serializer = NULL,
+    protected ObjectAwareSerializationInterface|int|string|null $serializer = NULL,
     $max_rows = NULL,
   ) {
     // All cache tables should be prefixed with 'cache_'.
@@ -102,16 +95,15 @@ class DatabaseBackend implements CacheBackendInterface {
     $this->bin = $bin;
     $this->connection = $connection;
     $this->checksumProvider = $checksum_provider;
-    if (is_int($serializer) || is_string($serializer)) {
+    if (is_int($this->serializer) || is_string($this->serializer)) {
       @trigger_error('Calling ' . __METHOD__ . ' with the $max_rows as 3rd argument is deprecated in drupal:10.3.0 and it will be the 4th argument in drupal:11.0.0. See https://www.drupal.org/node/3014684', E_USER_DEPRECATED);
-      $max_rows = $serializer;
-      $serializer = \Drupal::service('serialization.phpserialize');
+      $max_rows = $this->serializer;
+      $this->serializer = \Drupal::service('serialization.phpserialize');
     }
-    elseif ($serializer === NULL) {
+    elseif ($this->serializer === NULL) {
       @trigger_error('Calling ' . __METHOD__ . ' without the $serializer argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3014684', E_USER_DEPRECATED);
-      $serializer = \Drupal::service('serialization.phpserialize');
+      $this->serializer = \Drupal::service('serialization.phpserialize');
     }
-    $this->serializer = $serializer;
     $this->maxRows = $max_rows === NULL ? static::DEFAULT_MAX_ROWS : $max_rows;
   }
 
