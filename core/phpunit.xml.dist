@@ -22,7 +22,7 @@
     <ini name="memory_limit" value="-1"/>
     <!-- Example SIMPLETEST_BASE_URL value: http://localhost -->
     <env name="SIMPLETEST_BASE_URL" value=""/>
-    <!-- Example SIMPLETEST_DB value: mysql://username:password@localhost/databasename#table_prefix -->
+    <!-- Example SIMPLETEST_DB value: mysql://username:password@localhost/database_name#table_prefix -->
     <env name="SIMPLETEST_DB" value=""/>
     <!-- Example BROWSERTEST_OUTPUT_DIRECTORY value: /path/to/webroot/sites/simpletest/browser_output -->
     <env name="BROWSERTEST_OUTPUT_DIRECTORY" value=""/>

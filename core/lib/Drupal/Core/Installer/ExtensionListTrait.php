@@ -43,7 +43,7 @@ trait ExtensionListTrait {
     elseif (isset(static::$staticAddedPathNames[$extension_name])) {
       return static::$staticAddedPathNames[$extension_name];
     }
-    elseif (($path_names = $this->getPathnames()) && isset($path_names[$extension_name])) {
+    elseif (($path_names = $this->getPathNames()) && isset($path_names[$extension_name])) {
       // Ensure we don't have to do path scanning more than really needed.
       foreach ($path_names as $extension => $path_name) {
         static::$staticAddedPathNames[$extension] = $path_name;

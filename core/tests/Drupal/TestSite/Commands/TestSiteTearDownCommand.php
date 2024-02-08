@@ -32,7 +32,7 @@ class TestSiteTearDownCommand extends Command {
       ->addOption('db-url', NULL, InputOption::VALUE_OPTIONAL, 'URL for database. Defaults to the environment variable SIMPLETEST_DB.', getenv('SIMPLETEST_DB'))
       ->addOption('keep-lock', NULL, InputOption::VALUE_NONE, 'Keeps the database prefix lock. Useful for ensuring test isolation when running concurrent tests.')
       ->addUsage('test12345678')
-      ->addUsage('test12345678 --db-url "mysql://username:password@localhost/databasename#table_prefix"')
+      ->addUsage('test12345678 --db-url "mysql://username:password@localhost/database_name#table_prefix"')
       ->addUsage('test12345678 --keep-lock');
   }
 

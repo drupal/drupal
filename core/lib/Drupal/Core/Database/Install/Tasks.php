@@ -313,7 +313,7 @@ abstract class Tasks {
       '#title' => t('Host'),
       '#default_value' => empty($database['host']) ? 'localhost' : $database['host'],
       '#size' => 45,
-      // Hostnames can be 255 characters long.
+      // Host names can be 255 characters long.
       '#maxlength' => 255,
       '#required' => TRUE,
     ];

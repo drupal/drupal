@@ -98,7 +98,7 @@ use Drupal\Core\Access\AccessResult;
  * revision ID. The `rel` negotiator takes a version argument which is either
  * the string `latest-version` or the string `working-copy`.
  *
- * In the future, other negotiatiors may be developed, such as negotiatiors that
+ * In the future, other negotiators may be developed, such as negotiators that
  * are UUID-, timestamp-, or workspace-based.
  *
  * To illustrate how a particular entity revision is requested, imagine a node

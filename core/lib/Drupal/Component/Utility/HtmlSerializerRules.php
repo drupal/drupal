@@ -6,6 +6,8 @@ namespace Drupal\Component\Utility;
 
 use Masterminds\HTML5\Serializer\OutputRules;
 
+// cspell:ignore drupalhtmlbuilder
+
 /**
  * Drupal-specific HTML5 serializer rules.
  *

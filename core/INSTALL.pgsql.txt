@@ -19,10 +19,10 @@ Note that the database must be created with UTF-8 (Unicode) encoding.
 
    This step is only necessary if you don't already have a database set up
    (e.g., by your host) or want to create a new database for use with Drupal
-   only. The following command creates a new database named 'databasename',
+   only. The following command creates a new database named 'database_name',
    which is owned by the previously created 'username':
 
-     createdb --encoding=UTF8 --owner=username databasename
+     createdb --encoding=UTF8 --owner=username database_name
 
    If there are no errors, then the command was successful.
 

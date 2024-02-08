@@ -137,12 +137,12 @@ class ExtensionListTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getPathnames
+   * @covers ::getPathNames
    */
-  public function testGetPathnames() {
+  public function testGetPathNames() {
     $test_extension_list = $this->setupTestExtensionList();
 
-    $filenames = $test_extension_list->getPathnames();
+    $filenames = $test_extension_list->getPathNames();
     $this->assertEquals([
       'test_name' => 'example/test_name/test_name.info.yml',
     ], $filenames);
@@ -189,7 +189,7 @@ class ExtensionListTest extends UnitTestCase {
     $this->assertEquals('example/test_name', $path);
     $pathname = $test_extension_list->getPathname('test_name');
     $this->assertEquals('example/test_name/test_name.info.yml', $pathname);
-    $filenames = $test_extension_list->getPathnames();
+    $filenames = $test_extension_list->getPathNames();
     $this->assertEquals([
       'test_name' => 'example/test_name/test_name.info.yml',
     ], $filenames);
@@ -201,7 +201,7 @@ class ExtensionListTest extends UnitTestCase {
     $this->assertEquals('example/test_name', $path);
     $pathname = $test_extension_list->getPathname('test_name');
     $this->assertEquals('example/test_name/test_name.info.yml', $pathname);
-    $filenames = $test_extension_list->getPathnames();
+    $filenames = $test_extension_list->getPathNames();
     $this->assertEquals([
       'test_name' => 'example/test_name/test_name.info.yml',
     ], $filenames);

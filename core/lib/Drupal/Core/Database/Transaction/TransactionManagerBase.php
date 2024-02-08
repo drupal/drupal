@@ -33,11 +33,11 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
    * additional savepoints, and release any savepoint in the sequence. When
    * this happens, the database will implicitly release all the savepoints
    * created after the one released. Given Drupal implementation of the
-   * Transaction objects, we cannot force descoping of the corresponding
-   * Transaction savepoint objects from the manager, because they live in the
-   * scope of the calling code. This stack ensures that when an outlived
-   * Transaction object gets out of scope, it will not try to release on the
-   * database a savepoint that no longer exists.
+   * Transaction objects, we cannot force reducing the scope of the
+   * corresponding Transaction savepoint objects from the manager, because they
+   * live in the scope of the calling code. This stack ensures that when an
+   * outlived Transaction object gets out of scope, it will not try to release
+   * on the database a savepoint that no longer exists.
    *
    * Differently, rollbacks are strictly being checked for LIFO order: if a
    * rollback is requested against a savepoint that is not the last created,

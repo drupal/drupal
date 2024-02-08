@@ -189,7 +189,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected $containerNeedsDumping;
 
   /**
-   * List of discovered services.yml pathnames.
+   * List of discovered services.yml path names.
    *
    * This is a nested array whose top-level keys are 'app' and 'site', denoting
    * the origin of a service provider. Site-specific providers have to be

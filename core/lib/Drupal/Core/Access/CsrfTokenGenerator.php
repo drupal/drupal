@@ -87,8 +87,8 @@ class CsrfTokenGenerator {
       return FALSE;
     }
     $value = $this->computeToken($seed, $value);
-    // PHP 8.0 strictly typehints for hash_equals. Maintain BC until we can
-    // enforce scalar typehints on this method.
+    // PHP 8.0 strictly type hints for hash_equals. Maintain BC until we can
+    // enforce scalar type hints on this method.
     if (!is_string($token)) {
       return FALSE;
     }

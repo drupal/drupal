@@ -163,7 +163,7 @@ class TestDiscovery {
     // Prevent expensive class loader lookups for each reflected test class by
     // registering the complete classmap of test classes to the class loader.
     // This also ensures that test classes are loaded from the discovered
-    // pathnames; a namespace/classname mismatch will throw an exception.
+    // path names; a namespace/classname mismatch will throw an exception.
     $this->classLoader->addClassMap($classmap);
 
     foreach ($classmap as $classname => $pathname) {
@@ -213,7 +213,7 @@ class TestDiscovery {
    *
    * @return array
    *   A classmap containing all discovered class files; i.e., a map of
-   *   fully-qualified classnames to pathnames.
+   *   fully-qualified classnames to path names.
    */
   public function findAllClassFiles($extension = NULL) {
     $classmap = [];
@@ -247,7 +247,7 @@ class TestDiscovery {
    *
    * @return array
    *   An associative array whose keys are fully-qualified class names and whose
-   *   values are corresponding filesystem pathnames.
+   *   values are corresponding filesystem path names.
    *
    * @throws \InvalidArgumentException
    *   If $namespace_prefix does not end in a namespace separator (backslash).

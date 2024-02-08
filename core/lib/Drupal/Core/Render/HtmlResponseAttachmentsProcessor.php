@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Render;
 
+// cspell:ignore turbolinks
+
 use Drupal\Core\Asset\AssetCollectionRendererInterface;
 use Drupal\Core\Asset\AssetResolverInterface;
 use Drupal\Core\Asset\AttachedAssets;

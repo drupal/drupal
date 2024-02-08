@@ -1357,7 +1357,7 @@ function system_requirements($phase) {
     ];
   }
 
-  // See if trusted hostnames have been configured, and warn the user if they
+  // See if trusted host names have been configured, and warn the user if they
   // are not set.
   if ($phase == 'runtime') {
     $trusted_host_patterns = Settings::get('trusted_host_patterns');

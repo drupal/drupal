@@ -8,6 +8,8 @@ use Drupal\Core\Database\Install\Tasks as InstallTasks;
 use Drupal\mysql\Driver\Database\mysql\Connection;
 use Drupal\Core\Database\DatabaseNotFoundException;
 
+// cspell:ignore libmysqlclient
+
 /**
  * Specifies installation tasks for MySQL and equivalent databases.
  */

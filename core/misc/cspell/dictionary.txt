@@ -178,7 +178,6 @@ customevent
 customrequest
 cweagans
 dailymotion
-databasename
 datelist
 daterange
 datestamp
@@ -204,7 +203,6 @@ desaturate
 desaturated
 desaturates
 desaturating
-descoping
 destructable
 devel
 deviantart
@@ -257,7 +255,6 @@ endmacro
 endset
 endtrans
 enoki
-entitytype
 entityviewedit
 errmode
 etag
@@ -293,7 +290,6 @@ fieldlinks
 fieldnames
 fieldsets
 filemime
-filesort
 filesystems
 filetransfer
 findwith
@@ -339,7 +335,6 @@ hmac
 hoglet
 hookname
 hosters
-hostnames
 hrefs
 htkey
 htmlcorrector
@@ -379,7 +374,6 @@ johansson
 jqueryui
 jsonlint
 jssdk
-jumplinks
 justinrainbow
 kangarookitten
 kernighan
@@ -397,7 +391,6 @@ kword
 lamoids
 languageswitcher
 libc
-libmysqlclient
 licious
 lified
 lightninggreen
@@ -478,7 +471,6 @@ multibyte
 multicardinality
 multifield
 multilanguage
-multipage
 multipass
 multisite
 multistar
@@ -494,7 +486,6 @@ namespacing
 navs
 ndocs
 necolas
-negotiatiors
 newcol
 newfieldinitial
 newnode
@@ -559,7 +550,6 @@ parseable
 parsererror
 pastafazoul
 pathauto
-pathnames
 pcre
 pcss
 peast
@@ -718,7 +708,6 @@ smalldatetime
 somecompany
 sortablejs
 sourceediting
-spacebar
 specialchars
 spiffiness
 splitbutton
@@ -863,12 +852,9 @@ trgm
 trid
 troopal
 truecolor
-turbolinks
 twistie
 twocol
 typehint
-typehinted
-typehints
 tzid
 uids
 ulwa
@@ -903,12 +889,10 @@ untabbable
 upcasted
 upcasting
 updateprogress
-updatetype
 uploaders
 uploadprogress
 upscaling
 urandom
-usecase
 userid
 userinfo
 userref

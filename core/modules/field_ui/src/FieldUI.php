@@ -30,7 +30,7 @@ class FieldUI {
   }
 
   /**
-   * Returns the next redirect path in a multipage sequence.
+   * Returns the next redirect path in a multi-page sequence.
    *
    * @param array $destinations
    *   An array of destinations to redirect to.

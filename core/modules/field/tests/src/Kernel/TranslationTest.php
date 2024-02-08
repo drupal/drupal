@@ -7,9 +7,9 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
- * Tests multilanguage fields logic.
+ * Tests multilingual fields logic.
  *
- * The following tests will check the multilanguage logic in field handling.
+ * The following tests will check the multilingual logic in field handling.
  *
  * @group field
  */

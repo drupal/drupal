@@ -7,7 +7,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
- * Tests multilanguage fields logic that require a full environment.
+ * Tests multilingual fields logic that require a full environment.
  *
  * @group field
  */

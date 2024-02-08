@@ -346,7 +346,7 @@ class Drupal {
    * an object of a class that implements
    * \Drupal\Core\DependencyInjection\ContainerInjectionInterface.
    *
-   * One common usecase is to provide a class which contains the actual code
+   * One common use case is to provide a class which contains the actual code
    * of a hook implementation, without having to create a service.
    *
    * @param string $class

@@ -16,6 +16,8 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\RouteCollection;
 use Drupal\Core\Database\Connection;
 
+// cspell:ignore filesort
+
 /**
  * A Route Provider front-end for all Drupal-stored routes.
  */

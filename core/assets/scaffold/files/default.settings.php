@@ -77,7 +77,7 @@
  *
  * @code
  * $databases['default']['default'] = [
- *   'database' => 'databasename',
+ *   'database' => 'database_name',
  *   'username' => 'sql_username',
  *   'password' => 'sql_password',
  *   'host' => 'localhost',
@@ -193,7 +193,7 @@ $databases = [];
  * @code
  *   $databases['default']['default'] = [
  *     'driver' => 'pgsql',
- *     'database' => 'databasename',
+ *     'database' => 'database_name',
  *     'username' => 'sql_username',
  *     'password' => 'sql_password',
  *     'host' => 'localhost',
@@ -215,7 +215,7 @@ $databases = [];
  *     'driver' => 'my_driver',
  *     'namespace' => 'Drupal\my_module\Driver\Database\my_driver',
  *     'autoload' => 'modules/my_module/src/Driver/Database/my_driver/',
- *     'database' => 'databasename',
+ *     'database' => 'database_name',
  *     'username' => 'sql_username',
  *     'password' => 'sql_password',
  *     'host' => 'localhost',
@@ -230,7 +230,7 @@ $databases = [];
  *     'driver' => 'my_driver',
  *     'namespace' => 'Drupal\my_module\Driver\Database\my_driver',
  *     'autoload' => 'modules/my_module/src/Driver/Database/my_driver/',
- *     'database' => 'databasename',
+ *     'database' => 'database_name',
  *     'username' => 'sql_username',
  *     'password' => 'sql_password',
  *     'host' => 'localhost',

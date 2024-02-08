@@ -9,6 +9,8 @@ use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+// cspell:ignore updatetype
+
 /**
  * Provides all and missing update implementations.
  *

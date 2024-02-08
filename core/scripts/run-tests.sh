@@ -271,7 +271,7 @@ All arguments are long options.
               Required when running tests without a Drupal installation that
               contains default database connection info in settings.php.
               Examples:
-                mysql://username:password@localhost/databasename#table_prefix
+                mysql://username:password@localhost/database_name#table_prefix
                 sqlite://localhost/relative/path/db.sqlite
                 sqlite://localhost//absolute/path/db.sqlite
 
