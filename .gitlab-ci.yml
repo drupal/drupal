@@ -139,7 +139,7 @@ stages:
     - composer require --dev drupal/coder:^8.2@stable micheh/phpcs-gitlab phpcompatibility/php-compatibility dealerdirect/phpcodesniffer-composer-installer
     - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
   script:
-    - git fetch -vn --depth=$GIT_DEPTH "${CI_MERGE_REQUEST_PROJECT_URL:-origin}" "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
+    - git fetch -vn --depth=$GIT_DEPTH origin "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
     - export MODIFIED=`git diff --name-only refs/heads/$TARGET_BRANCH|while read r;do echo "$CI_PROJECT_DIR/$r";done|tr "\n" " "`
     - echo -e "$MODIFIED" | tr " " "\n"
     - echo "If this list contains more files than what you changed, then you need to rebase your branch."
