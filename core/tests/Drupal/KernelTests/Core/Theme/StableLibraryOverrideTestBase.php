@@ -121,10 +121,15 @@ abstract class StableLibraryOverrideTestBase extends KernelTestBase {
     $modules = \Drupal::moduleHandler()->getModuleList();
     $module_list = array_keys($modules);
     sort($module_list);
-    $this->assertEquals($this->allModules, $module_list, 'All core modules are installed.');
+    // Remove deprecated module Tour.
+    $module_list = array_diff($module_list, ['tour']);
+    $all_modules = array_diff($this->allModules, ['tour']);
+    $this->assertEquals($all_modules, $module_list, 'All core modules are installed.');
 
     $libraries['core'] = $this->libraryDiscovery->getLibrariesByExtension('core');
 
+    // Remove deprecated module Tour.
+    unset($modules['tour']);
     foreach ($modules as $module_name => $module) {
       $library_file = $module->getPath() . '/' . $module_name . '.libraries.yml';
       if (is_file($this->root . '/' . $library_file)) {

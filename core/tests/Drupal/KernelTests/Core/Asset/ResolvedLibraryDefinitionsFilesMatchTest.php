@@ -207,7 +207,10 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
     $extensions = $modules;
     $module_list = array_keys($modules);
     sort($module_list);
-    $this->assertEquals($this->allModules, $module_list, 'All core modules are installed.');
+    // Remove deprecated module Tour.
+    $module_list = array_diff($module_list, ['tour']);
+    $all_modules = array_diff($this->allModules, ['tour']);
+    $this->assertEquals($all_modules, $module_list, 'All core modules are installed.');
 
     $themes = $this->themeHandler->listInfo();
     $extensions += $themes;
@@ -216,7 +219,8 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
     $this->assertEquals($this->allThemes, $theme_list, 'All core themes are installed.');
 
     $libraries['core'] = $this->libraryDiscovery->getLibrariesByExtension('core');
-
+    // Remove deprecated module Tour.
+    unset($extensions['tour']);
     foreach ($extensions as $extension_name => $extension) {
       $library_file = $extension->getPath() . '/' . $extension_name . '.libraries.yml';
       if (is_file($this->root . '/' . $library_file)) {
