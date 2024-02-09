@@ -18,6 +18,10 @@ image.style.*:
             type: uuid
           id:
             type: string
+            constraints:
+              PluginExists:
+                manager: plugin.manager.image.effect
+                interface: 'Drupal\image\ImageEffectInterface'
           weight:
             type: integer
           data:

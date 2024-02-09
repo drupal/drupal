@@ -29,6 +29,7 @@ class TestViewsTest extends KernelTestBase {
    * @var array
    */
   protected static $modules = [
+    'views',
     // For NodeType config entities to exist, its module must be installed.
     'node',
     // The `DRUPAL_OPTIONAL` constant is used by the NodeType config entity type
@@ -116,6 +117,9 @@ class TestViewsTest extends KernelTestBase {
     // `history` is a module dependency.
     // @see core/modules/views/tests/modules/views_test_config/test_views/views.view.test_history.yml
     'history',
+    // The `image` module is required by at least one of the Node module's
+    // views.
+    'image',
   ];
 
   /**

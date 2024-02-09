@@ -79,6 +79,10 @@ rest.resource.*:
     plugin_id:
       type: string
       label: 'REST resource plugin id'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.rest
+          interface: 'Drupal\rest\Plugin\ResourceInterface'
     granularity:
       type: string
       label: 'REST resource configuration granularity'

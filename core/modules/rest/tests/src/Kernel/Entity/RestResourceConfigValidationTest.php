@@ -38,4 +38,14 @@ class RestResourceConfigValidationTest extends ConfigEntityValidationTestBase {
     $this->entity->save();
   }
 
+  /**
+   * Tests that the resource plugin ID is validated.
+   */
+  public function testInvalidPluginId(): void {
+    $this->entity->set('plugin_id', 'non_existent');
+    $this->assertValidationErrors([
+      'plugin_id' => "The 'non_existent' plugin does not exist.",
+    ]);
+  }
+
 }

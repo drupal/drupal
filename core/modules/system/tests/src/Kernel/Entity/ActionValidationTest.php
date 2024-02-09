@@ -41,4 +41,14 @@ class ActionValidationTest extends ConfigEntityValidationTestBase {
     return $cases;
   }
 
+  /**
+   * Tests that the action plugin ID is validated.
+   */
+  public function testInvalidPluginId(): void {
+    $this->entity->set('plugin', 'non_existent');
+    $this->assertValidationErrors([
+      'plugin' => "The 'non_existent' plugin does not exist.",
+    ]);
+  }
+
 }

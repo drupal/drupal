@@ -32,3 +32,33 @@ function views_test_config_views_post_render(ViewExecutable $view, &$output, Cac
     $output['#cache']['tags'][] = 'foo';
   }
 }
+
+function _views_test_config_disable_broken_handler(array &$definitions, string $handler_type): void {
+  if (in_array($handler_type, \Drupal::state()->get('views_test_config_disable_broken_handler', []))) {
+    unset($definitions['broken']);
+  }
+}
+
+function views_test_config_views_plugins_area_alter(array &$definitions): void {
+  _views_test_config_disable_broken_handler($definitions, 'area');
+}
+
+function views_test_config_views_plugins_argument_alter(array &$definitions): void {
+  _views_test_config_disable_broken_handler($definitions, 'argument');
+}
+
+function views_test_config_views_plugins_field_alter(array &$definitions): void {
+  _views_test_config_disable_broken_handler($definitions, 'field');
+}
+
+function views_test_config_views_plugins_filter_alter(array &$definitions): void {
+  _views_test_config_disable_broken_handler($definitions, 'filter');
+}
+
+function views_test_config_views_plugins_relationship_alter(array &$definitions): void {
+  _views_test_config_disable_broken_handler($definitions, 'relationship');
+}
+
+function views_test_config_views_plugins_sort_alter(array &$definitions): void {
+  _views_test_config_disable_broken_handler($definitions, 'sort');
+}

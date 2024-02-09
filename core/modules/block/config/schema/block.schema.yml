@@ -33,6 +33,10 @@ block.block.*:
         PluginExists:
           manager: plugin.manager.block
           interface: Drupal\Core\Block\BlockPluginInterface
+          # Block plugin IDs may not be valid in blocks that are backed by
+          # block_content entities that don't exist yet. Therefore, it's okay
+          # to consider the fallback plugin ID as valid.
+          allowFallback: true
     settings:
       type: block.settings.[%parent.plugin]
     visibility:

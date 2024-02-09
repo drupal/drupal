@@ -265,6 +265,10 @@ system.action.*:
     plugin:
       type: string
       label: 'Plugin'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.action
+          interface: 'Drupal\Core\Action\ActionInterface'
     configuration:
       type: action.configuration.[%parent.plugin]
 
@@ -316,6 +320,10 @@ system.mail:
       sequence:
         type: string
         label: 'Interface'
+        constraints:
+          PluginExists:
+            manager: plugin.manager.mail
+            interface: 'Drupal\Core\Mail\MailInterface'
     mailer_dsn:
       type: mapping
       label: 'Symfony mailer transport DSN'

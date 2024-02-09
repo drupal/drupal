@@ -10,3 +10,6 @@ views.area.test_example:
     custom_access:
       type: boolean
       label: 'Should access to the area be allowed'
+
+views.cache.non_existent:
+  type: views_cache

@@ -25,6 +25,10 @@ views_display:
         type:
           type: string
           label: 'Pager type'
+          constraints:
+            PluginExists:
+              manager: plugin.manager.views.pager
+              interface: 'Drupal\views\Plugin\views\pager\PagerPluginBase'
         options:
           type: views.pager.[%parent.type]
     exposed_form:
@@ -34,6 +38,10 @@ views_display:
         type:
           type: string
           label: 'Exposed form type'
+          constraints:
+            PluginExists:
+              manager: plugin.manager.views.exposed_form
+              interface: 'Drupal\views\Plugin\views\exposed_form\ExposedFormPluginInterface'
         options:
           label: 'Options'
           type: views.exposed_form.[%parent.type]
@@ -44,6 +52,9 @@ views_display:
         type:
           type: string
           label: 'Access type'
+          constraints:
+            PluginExists:
+              manager: plugin.manager.views.access
         options:
           type: views.access.[%parent.type]
     cache:
@@ -88,6 +99,10 @@ views_display:
         type:
           type: string
           label: 'Type'
+          constraints:
+            PluginExists:
+              manager: plugin.manager.views.style
+              interface: 'Drupal\views\Plugin\views\style\StylePluginBase'
         options:
           type: views.style.[%parent.type]
     row:
@@ -97,6 +112,9 @@ views_display:
         type:
           type: string
           label: 'Row type'
+          constraints:
+            PluginExists:
+              manager: plugin.manager.views.row
         options:
           type: views.row.[%parent.type]
     query:
@@ -106,6 +124,9 @@ views_display:
         type:
           type: string
           label: 'Query type'
+          constraints:
+            PluginExists:
+              manager: plugin.manager.views.query
         options:
           type: views.query.[%parent.type]
     defaults:
@@ -274,6 +295,12 @@ views_sort:
     plugin_id:
       type: string
       label: 'Plugin ID'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.views.sort
+          # @todo Remove this line and fix all views in core which use invalid
+          # sort plugins in https://drupal.org/i/3387325.
+          allowFallback: true
 
 views_sort_expose:
   type: mapping
@@ -298,6 +325,12 @@ views_area:
     plugin_id:
       type: string
       label: 'Plugin ID'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.views.area
+          # @todo Remove this line and fix all views in core which use invalid
+          # area plugins in https://drupal.org/i/3387325.
+          allowFallback: true
 
 views_handler:
   type: mapping
@@ -359,6 +392,9 @@ views_argument:
     default_argument_type:
       type: string
       label: 'Type'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.views.argument_default
     default_argument_options:
       type: views.argument_default.[%parent.default_argument_type]
       label: 'Default argument options'
@@ -388,6 +424,9 @@ views_argument:
         type:
           type: string
           label: 'Validator'
+          constraints:
+            PluginExists:
+              manager: plugin.manager.views.argument_validator
         fail:
           type: string
           label: 'Action to take if filter value does not validate'
@@ -415,6 +454,12 @@ views_argument:
     plugin_id:
       type: string
       label: 'Plugin ID'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.views.argument
+          # @todo Remove this line and fix all views in core which use invalid
+          # argument plugins in https://drupal.org/i/3387325.
+          allowFallback: true
 
 views_exposed_form:
   type: mapping
@@ -574,6 +619,12 @@ views_field:
     plugin_id:
       type: string
       label: 'Plugin ID'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.views.field
+          # @todo Remove this line and fix all views in core which use invalid
+          # field plugins in https://drupal.org/i/3387325.
+          allowFallback: true
 
 views_pager:
   type: mapping
@@ -780,6 +831,12 @@ views_filter:
     plugin_id:
       type: string
       label: 'Plugin ID'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.views.filter
+          # @todo Remove this line and fix all views in core which use invalid
+          # filter plugins in https://drupal.org/i/3387325.
+          allowFallback: true
 
 views_filter_group_item:
   type: mapping
@@ -804,6 +861,15 @@ views_relationship:
     required:
       type: boolean
       label: 'Require this relationship'
+    plugin_id:
+      type: string
+      label: 'The plugin ID'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.views.relationship
+          # @todo Remove this line and fix all views in core which use invalid
+          # relationship plugins in https://drupal.org/i/3387325.
+          allowFallback: true
 
 views_query:
   type: mapping
@@ -831,6 +897,9 @@ views_cache:
     type:
       type: string
       label: 'Cache type'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.views.cache
 
 views_display_extender:
   type: mapping

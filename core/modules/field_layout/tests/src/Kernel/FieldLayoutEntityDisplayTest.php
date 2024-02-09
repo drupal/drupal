@@ -19,6 +19,7 @@ class FieldLayoutEntityDisplayTest extends KernelTestBase {
     'field_layout',
     'entity_test',
     'field_layout_test',
+    'field_test',
     'system',
   ];
 
@@ -34,7 +35,7 @@ class FieldLayoutEntityDisplayTest extends KernelTestBase {
       'mode' => 'default',
       'status' => TRUE,
       'content' => [
-        'foo' => ['type' => 'visible'],
+        'foo' => ['type' => 'field_no_settings'],
         'name' => ['type' => 'hidden', 'region' => 'content'],
       ],
       'hidden' => [
@@ -60,7 +61,7 @@ class FieldLayoutEntityDisplayTest extends KernelTestBase {
       'mode' => 'default',
       'content' => [
         'foo' => [
-          'type' => 'visible',
+          'type' => 'field_no_settings',
         ],
       ],
       'hidden' => [
@@ -99,7 +100,7 @@ class FieldLayoutEntityDisplayTest extends KernelTestBase {
     ];
     // The field was moved to the default region.
     $expected['content']['foo'] = [
-      'type' => 'visible',
+      'type' => 'field_no_settings',
       'region' => 'main',
       'weight' => -4,
       'settings' => [],

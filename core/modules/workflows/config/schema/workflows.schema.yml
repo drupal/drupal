@@ -11,6 +11,10 @@ workflows.workflow.*:
     type:
       type: string
       label: 'Workflow type'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.workflows.type
+          interface: 'Drupal\workflows\WorkflowTypeInterface'
     type_settings:
       type: workflow.type_settings.[%parent.type]
 

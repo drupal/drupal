@@ -24,6 +24,10 @@ field.storage.*.*:
     type:
       type: string
       label: 'Type'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.field.field_type
+          interface: '\Drupal\Core\Field\FieldItemInterface'
     settings:
       type: field.storage_settings.[%parent.type]
     module:

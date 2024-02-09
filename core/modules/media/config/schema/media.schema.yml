@@ -37,6 +37,10 @@ media.type.*:
     source:
       type: string
       label: 'Source'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.media.source
+          interface: 'Drupal\media\MediaSourceInterface'
     queue_thumbnail_downloads:
       type: boolean
       label: 'Whether the thumbnail downloads should be queued'

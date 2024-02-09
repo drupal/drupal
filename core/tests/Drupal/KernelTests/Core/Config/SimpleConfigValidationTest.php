@@ -149,4 +149,27 @@ class SimpleConfigValidationTest extends KernelTestBase {
     }
   }
 
+  /**
+   * Tests that plugin IDs in simple config are validated.
+   *
+   * @param string $config_name
+   *   The name of the config object to validate.
+   * @param string $property
+   *   The property path to set. This will receive the value 'non_existent' and
+   *   is expected to raise a "plugin does not exist" error.
+   *
+   * @testWith ["system.mail", "interface.0"]
+   */
+  public function testInvalidPluginId(string $config_name, string $property): void {
+    $config = $this->config($config_name);
+
+    $violations = $this->container->get('config.typed')
+      ->createFromNameAndData($config_name, $config->set($property, 'non_existent')->get())
+      ->validate();
+
+    $this->assertCount(1, $violations);
+    $this->assertSame($property, $violations[0]->getPropertyPath());
+    $this->assertSame("The 'non_existent' plugin does not exist.", (string) $violations[0]->getMessage());
+  }
+
 }

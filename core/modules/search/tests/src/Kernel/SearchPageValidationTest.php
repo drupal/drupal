@@ -31,4 +31,14 @@ class SearchPageValidationTest extends ConfigEntityValidationTestBase {
     $this->entity->save();
   }
 
+  /**
+   * Tests that the search plugin ID is validated.
+   */
+  public function testInvalidPluginId(): void {
+    $this->entity->set('plugin', 'non_existent');
+    $this->assertValidationErrors([
+      'plugin' => "The 'non_existent' plugin does not exist.",
+    ]);
+  }
+
 }

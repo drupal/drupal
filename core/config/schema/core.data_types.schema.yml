@@ -198,6 +198,10 @@ filter:
     id:
       type: string
       label: 'ID'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.filter
+          interface: 'Drupal\filter\Plugin\FilterInterface'
     provider:
       type: string
       label: 'Provider'
@@ -425,6 +429,10 @@ condition.plugin:
     id:
       type: string
       label: 'ID'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.condition
+          interface: 'Drupal\Core\Condition\ConditionInterface'
     negate:
       type: boolean
       label: 'Negate'
@@ -527,6 +535,10 @@ field_config_base:
     field_type:
       type: string
       label: 'Field type'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.field.field_type
+          interface: '\Drupal\Core\Field\FieldItemInterface'
 
 core.base_field_override.*.*.*:
   type: field_config_base
@@ -711,6 +723,13 @@ field.field_settings.entity_reference:
     handler:
       type: string
       label: 'Reference method'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.entity_reference_selection
+          interface: 'Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface'
+          # @todo Remove this line and explicitly require valid entity reference
+          # selection plugin IDs in https://drupal.org/i/3420198.
+          allowFallback: true
     handler_settings:
       type: entity_reference_selection.[%parent.handler]
       label: 'Entity reference selection plugin settings'

@@ -25,8 +25,11 @@ class PluginExistsConstraintValidator extends ConstraintValidator {
     }
 
     $definition = $constraint->pluginManager->getDefinition($plugin_id, FALSE);
-    // Some plugin managers provide fallbacks.
-    if ($constraint->pluginManager instanceof FallbackPluginManagerInterface) {
+    // Some plugin managers provide fallbacks. In most cases, the use of a
+    // fallback plugin ID suggests that the given plugin ID is invalid in some
+    // way, so by default, we don't consider fallback plugin IDs as valid,
+    // although that can be overridden by the `allowFallback` option if needed.
+    if ($constraint->pluginManager instanceof FallbackPluginManagerInterface && $constraint->allowFallback) {
       $fallback_plugin_id = $constraint->pluginManager->getFallbackPluginId($plugin_id);
       $definition = $constraint->pluginManager->getDefinition($fallback_plugin_id, FALSE);
     }

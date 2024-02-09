@@ -225,3 +225,9 @@ function field_test_field_info_entity_type_ui_definitions_alter(array &$ui_defin
     $ui_definitions['boolean']['label'] = new TranslatableMarkup('Boolean (overridden by alter)');
   }
 }
+
+function field_test_entity_reference_selection_alter(array &$definitions): void {
+  if (\Drupal::state()->get('field_test_disable_broken_entity_reference_handler')) {
+    unset($definitions['broken']);
+  }
+}

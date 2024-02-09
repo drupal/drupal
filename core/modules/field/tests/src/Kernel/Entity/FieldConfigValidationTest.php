@@ -120,6 +120,7 @@ class FieldConfigValidationTest extends ConfigEntityValidationTestBase {
     parent::testImmutableProperties([
       'entity_type' => 'entity_test_with_bundle',
       'bundle' => 'another',
+      'field_type' => 'string',
     ]);
   }
 
@@ -146,6 +147,42 @@ class FieldConfigValidationTest extends ConfigEntityValidationTestBase {
         // @see \Drupal\Core\Config\Plugin\Validation\Constraint\RequiredConfigDependenciesConstraintValidator
         '' => 'This field requires a field storage.',
       ],
+    ]);
+  }
+
+  /**
+   * Tests that the field type plugin's existence is validated.
+   */
+  public function testFieldTypePluginIsValidated(): void {
+    // The `field_type` property is immutable, so we need to clone the entity in
+    // order to cleanly change its immutable properties.
+    $this->entity = $this->entity->createDuplicate()
+      // We need to clear the current settings, or we will get validation errors
+      // because the old settings are not supported by the new field type.
+      ->set('settings', [])
+      ->set('field_type', 'invalid');
+
+    $this->assertValidationErrors([
+      'field_type' => "The 'invalid' plugin does not exist.",
+    ]);
+  }
+
+  /**
+   * Tests that entity reference selection handler plugin IDs are validated.
+   */
+  public function testEntityReferenceSelectionHandlerIsValidated(): void {
+    $this->container->get('state')
+      ->set('field_test_disable_broken_entity_reference_handler', TRUE);
+    $this->enableModules(['field_test']);
+
+    // The `field_type` property is immutable, so we need to clone the entity in
+    // order to cleanly change its immutable properties.
+    $this->entity = $this->entity->createDuplicate()
+      ->set('field_type', 'entity_reference')
+      ->set('settings', ['handler' => 'non_existent']);
+
+    $this->assertValidationErrors([
+      'settings.handler' => "The 'non_existent' plugin does not exist.",
     ]);
   }
 

@@ -20,6 +20,10 @@ layout_builder.section:
     layout_id:
       type: string
       label: 'Layout ID'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.core.layout
+          interface: '\Drupal\Core\Layout\LayoutInterface'
     layout_settings:
       type: layout_plugin.settings.[%parent.layout_id]
       label: 'Layout settings'

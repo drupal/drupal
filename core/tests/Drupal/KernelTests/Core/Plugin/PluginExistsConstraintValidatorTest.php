@@ -2,6 +2,8 @@
 
 namespace Drupal\KernelTests\Core\Plugin;
 
+use Drupal\Component\Plugin\FallbackPluginManagerInterface;
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Action\ActionInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\KernelTests\KernelTestBase;
@@ -66,6 +68,44 @@ class PluginExistsConstraintValidatorTest extends KernelTestBase {
     $data->setValue(NULL);
     $violations = $data->validate();
     $this->assertCount(0, $violations);
+  }
+
+  /**
+   * Tests that fallback plugin IDs can be considered valid or invalid.
+   */
+  public function testFallbackPluginIds(): void {
+    $plugin_manager = $this->prophesize(PluginManagerInterface::class)
+      ->willImplement(FallbackPluginManagerInterface::class);
+    $plugin_manager->getFallbackPluginId('non_existent')
+      ->shouldBeCalledOnce()
+      ->willReturn('broken');
+    $plugin_manager->getDefinition('non_existent', FALSE)
+      ->shouldBeCalled()
+      ->willReturn(NULL);
+    $plugin_manager->getDefinition('broken', FALSE)
+      ->shouldBeCalled()
+      ->willReturn(['id' => 'broken']);
+    $this->container->set('plugin.manager.test_fallback', $plugin_manager->reveal());
+
+    // If fallback plugin IDs are allowed, then an invalid plugin ID should not
+    // raise an error.
+    $definition = DataDefinition::create('string')
+      ->addConstraint('PluginExists', [
+        'manager' => 'plugin.manager.test_fallback',
+        'allowFallback' => TRUE,
+      ]);
+    $data = $this->container->get('typed_data_manager')->create($definition);
+    $data->setValue('non_existent');
+    $this->assertCount(0, $data->validate());
+
+    // If fallback plugin IDs are not considered valid (the default behavior),
+    // then we should get a validation error.
+    $definition->addConstraint('PluginExists', [
+      'manager' => 'plugin.manager.test_fallback',
+    ]);
+    $violations = $data->validate();
+    $this->assertCount(1, $violations);
+    $this->assertSame("The 'non_existent' plugin does not exist.", (string) $violations->get(0)->getMessage());
   }
 
 }

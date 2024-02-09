@@ -107,7 +107,7 @@ display:
           admin_label: ''
           entity_type: node
           entity_field: sticky
-          plugin_id: boolean
+          plugin_id: standard
           order: DESC
           expose:
             label: ''
