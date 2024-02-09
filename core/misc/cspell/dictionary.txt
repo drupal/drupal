@@ -464,7 +464,6 @@ metatags
 mglaman
 micheh
 mikey
-milli
 mimetypes
 minifyzombies
 minusthick
