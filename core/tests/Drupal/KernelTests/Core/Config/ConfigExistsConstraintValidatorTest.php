@@ -40,6 +40,10 @@ class ConfigExistsConstraintValidatorTest extends KernelTestBase {
 
     $this->installConfig('system');
     $this->assertCount(0, $data->validate());
+
+    // NULL should not trigger a validation error: a value may be nullable.
+    $data->setValue(NULL);
+    $this->assertCount(0, $data->validate());
   }
 
 }
