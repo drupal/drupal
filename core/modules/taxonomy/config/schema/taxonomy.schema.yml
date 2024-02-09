@@ -40,6 +40,9 @@ taxonomy.vocabulary.*:
     weight:
       type: integer
       label: 'Weight'
+    new_revision:
+      type: boolean
+      label: 'Whether a new revision should be created by default'
 
 field.formatter.settings.entity_reference_rss_category:
   type: mapping

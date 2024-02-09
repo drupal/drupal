@@ -5,6 +5,8 @@
  * Post update functions for Taxonomy.
  */
 
+use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+
 /**
  * Implements hook_removed_post_updates().
  */
@@ -18,4 +20,14 @@ function taxonomy_removed_post_updates() {
     'taxonomy_post_update_configure_status_field_widget' => '9.0.0',
     'taxonomy_post_update_clear_views_argument_validator_plugins_cache' => '10.0.0',
   ];
+}
+
+/**
+ * Re-save Taxonomy configurations with new_revision config.
+ */
+function taxonomy_post_update_set_new_revision(&$sandbox = NULL) {
+  \Drupal::classResolver(ConfigEntityUpdater::class)
+    ->update($sandbox, 'taxonomy_vocabulary', function () {
+        return TRUE;
+    });
 }

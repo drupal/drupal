@@ -5,3 +5,4 @@ name: 'Recipe category'
 vid: recipe_category
 description: 'Use this taxonomy to group recipes of the same type together.'
 weight: 0
+new_revision: false

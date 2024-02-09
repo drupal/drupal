@@ -5,9 +5,33 @@
  * Install, update and uninstall functions for the taxonomy module.
  */
 
+use Drupal\Core\Entity\Form\RevisionDeleteForm;
+use Drupal\Core\Entity\Form\RevisionRevertForm;
+use Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
 /**
  * Implements hook_update_last_removed().
  */
 function taxonomy_update_last_removed() {
   return 8702;
+}
+
+/**
+ * Update entity definition to handle revision routes.
+ */
+function taxonomy_update_10100(&$sandbox = NULL): TranslatableMarkup {
+  $entityDefinitionUpdateManager = \Drupal::entityDefinitionUpdateManager();
+  $definition = $entityDefinitionUpdateManager->getEntityType('taxonomy_term');
+  $routeProviders = $definition->get('route_provider');
+  $routeProviders['revision'] = RevisionHtmlRouteProvider::class;
+  $definition
+    ->setFormClass('revision-delete', RevisionDeleteForm::class)
+    ->setFormClass('revision-revert', RevisionRevertForm::class)
+    ->set('route_provider', $routeProviders)
+    ->setLinkTemplate('revision-delete-form', '/taxonomy/term/{taxonomy_term}/revision/{taxonomy_term}/delete')
+    ->setLinkTemplate('revision-revert-form', '/taxonomy/term/{taxonomy_term}/revision/{taxonomy_term}/revert')
+    ->setLinkTemplate('version-history', '/taxonomy/term/{taxonomy_term}/revisions');
+  $entityDefinitionUpdateManager->updateEntityType($definition);
+  return \t('Added revision routes to Taxonomy Term entity type.');
 }

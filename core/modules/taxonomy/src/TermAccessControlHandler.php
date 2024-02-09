@@ -46,6 +46,25 @@ class TermAccessControlHandler extends EntityAccessControlHandler {
 
         return AccessResult::neutral()->setReason("The following permissions are required: 'delete terms in {$entity->bundle()}' OR 'administer taxonomy'.");
 
+      case 'view revision':
+      case 'view all revisions':
+        if ($account->hasPermission("view term revisions in {$entity->bundle()}") || $account->hasPermission("view all taxonomy revisions")) {
+          return AccessResult::allowed()->cachePerPermissions();
+        }
+        return AccessResult::neutral()->setReason("The following permissions are required: 'view revisions in {$entity->bundle()}' OR 'view all taxonomy revisions'.");
+
+      case 'revert':
+        if (($account->hasPermission("revert term revisions in {$entity->bundle()}") && $account->hasPermission("edit terms in {$entity->bundle()}")) || $account->hasPermission("revert all taxonomy revisions")) {
+          return AccessResult::allowed()->cachePerPermissions();
+        }
+        return AccessResult::neutral()->setReason("The following permissions are required: 'revert term revisions in {$entity->bundle()}' OR 'revert all taxonomy revisions'.");
+
+      case 'delete revision':
+        if (($account->hasPermission("delete term revisions in {$entity->bundle()}") && $account->hasPermission("delete terms in {$entity->bundle()}")) || $account->hasPermission("delete all taxonomy revisions")) {
+          return AccessResult::allowed()->cachePerPermissions();
+        }
+        return AccessResult::neutral()->setReason("The following permissions are required: 'delete term revisions in {$entity->bundle()}' OR 'delete all taxonomy revisions'.");
+
       default:
         // No opinion.
         return AccessResult::neutral()->cachePerPermissions();

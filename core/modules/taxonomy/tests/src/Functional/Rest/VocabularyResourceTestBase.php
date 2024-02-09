@@ -55,6 +55,7 @@ abstract class VocabularyResourceTestBase extends ConfigEntityResourceTestBase {
       'name' => 'Llama',
       'description' => NULL,
       'weight' => 0,
+      'new_revision' => FALSE,
     ];
   }
 
