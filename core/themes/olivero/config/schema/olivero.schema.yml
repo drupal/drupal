@@ -18,9 +18,23 @@ olivero.settings:
     mobile_menu_all_widths:
       type: integer
       label: 'Mobile menu all widths'
+      constraints:
+        Choice:
+          # @see olivero_preprocess_html()
+          # Set to 1 to enable the mobile menu toggle at all widths.
+          choices:
+            - 0
+            - 1
     site_branding_bg_color:
       type: string
       label: 'Site branding background color'
+      constraints:
+        Choice:
+          # @see olivero_form_system_theme_settings_alter()
+          choices:
+            - "default"
+            - "gray"
+            - "white"
     base_primary_color:
       type: color_hex
       label: 'Base Primary Color'

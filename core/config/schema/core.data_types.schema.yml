@@ -126,6 +126,18 @@ date_format:
 color_hex:
   type: string
   label: 'Color'
+  constraints:
+    # TRICKY: this cannot reuse the Color::validateHex() logic because:
+    # 1. Color::validateHex() would not allow NULL, but this constraint does.
+    #    (Anything in config can be marked optional, so NULL must never trigger
+    #    a validation error) Color::validateHex() does not allow this.
+    # 2. The Regex constraint is something that an external tool (no matter
+    #    whether that's something generating/validating Drupal config or a
+    #    JSON:API/REST/GraphQL/… client) to also correctly validate this.
+    Regex:
+      # Regex copied from Color::validateHex()
+      pattern: '/^[#]?([0-9a-fA-F]{3}){1,2}$/'
+      message: "%value is not a valid hexadecimal color."
 
 # Machine-readable identifier that can only contain certain characters.
 machine_name:

@@ -6,13 +6,11 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Component\Utility\Color;
 
 /**
  * Implements hook_form_FORM_ID_alter() for system_theme_settings.
  */
 function olivero_form_system_theme_settings_alter(&$form, FormStateInterface $form_state) {
-  $form['#validate'][] = 'olivero_theme_settings_validate';
   $form['#attached']['library'][] = 'olivero/color-picker';
 
   $color_config = [
@@ -62,7 +60,7 @@ function olivero_form_system_theme_settings_alter(&$form, FormStateInterface $fo
   $form['olivero_settings']['olivero_utilities']['mobile_menu_all_widths'] = [
     '#type' => 'checkbox',
     '#title' => t('Enable mobile menu at all widths'),
-    '#default_value' => theme_get_setting('mobile_menu_all_widths'),
+    '#config_target' => 'olivero.settings:mobile_menu_all_widths',
     '#description' => t('Enables the mobile menu toggle at all widths.'),
   ];
   $form['olivero_settings']['olivero_utilities']['site_branding_bg_color'] = [
@@ -73,7 +71,7 @@ function olivero_form_system_theme_settings_alter(&$form, FormStateInterface $fo
       'gray' => t('Gray'),
       'white' => t('White'),
     ],
-    '#default_value' => theme_get_setting('site_branding_bg_color'),
+    '#config_target' => 'olivero.settings:site_branding_bg_color',
   ];
   $form['olivero_settings']['olivero_utilities']['olivero_color_scheme'] = [
     '#type' => 'fieldset',
@@ -109,7 +107,7 @@ function olivero_form_system_theme_settings_alter(&$form, FormStateInterface $fo
       '#size' => 10,
       '#title' => t($title),
       '#description' => t('Enter color in hexadecimal format (#abc123).') . '<br/>' . t('Derivatives will be formed from this color.'),
-      '#default_value' => theme_get_setting($key),
+      '#config_target' => "olivero.settings:$key",
       '#attributes' => [
         // Regex copied from Color::validateHex()
         'pattern' => '^[#]?([0-9a-fA-F]{3}){1,2}$',
@@ -118,14 +116,5 @@ function olivero_form_system_theme_settings_alter(&$form, FormStateInterface $fo
         'data-drupal-selector' => 'olivero-color-picker',
       ],
     ];
-  }
-}
-
-/**
- * Validation handler for the Olivero system_theme_settings form.
- */
-function olivero_theme_settings_validate($form, FormStateInterface $form_state) {
-  if (!Color::validateHex($form_state->getValue('base_primary_color'))) {
-    $form_state->setErrorByName('base_primary_color', t('Colors must be 7-character string specifying a color hexadecimal format.'));
   }
 }
