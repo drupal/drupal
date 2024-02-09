@@ -115,23 +115,3 @@ function tour_tour_insert($entity) {
 function tour_tour_update($entity) {
   \Drupal::service('plugin.manager.tour.tip')->clearCachedDefinitions();
 }
-
-/**
- * Implements hook_library_info_alter().
- */
-function tour_library_info_alter(&$libraries, $extension) {
-  if ($extension === 'tour') {
-    $theme = \Drupal::service('theme.manager')->getActiveTheme()->getName();
-    $base_theme = FALSE;
-    if ($theme && !\Drupal::service('theme_handler')->listInfo()[$theme]) {
-      $base_theme = \Drupal::service('theme_handler')->listInfo()[$theme]->base_theme;
-    }
-    if (in_array('claro', [$theme, $base_theme])) {
-      $libraries['tour']['dependencies'][] = 'tour/tour-claro-styling';
-    }
-    elseif (in_array('stable9', [$theme, $base_theme])) {
-      $libraries['tour']['dependencies'][] = 'tour/tour-stable9-styling';
-    }
-  }
-
-}

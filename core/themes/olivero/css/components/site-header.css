@@ -14,7 +14,7 @@
   position: relative;
   /**
    * Ensure mobile site header is always above other elements including
-   * contextual links.
+   * contextual links, and Tour.
    */
   z-index: 101;
 }

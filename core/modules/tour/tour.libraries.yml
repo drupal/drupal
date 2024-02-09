@@ -16,17 +16,3 @@ tour-styling:
   css:
     component:
       css/tour.module.css: { media: screen }
-
-tour-claro-styling:
-  version: VERSION
-  css:
-    theme:
-      css/theme/claro-tour.theme.css: {}
-
-tour-stable9-styling:
-  version: VERSION
-  js:
-    js/theme/tour.js: {}
-  css:
-    theme:
-      css/theme/stable9-tour.module.css: {}
