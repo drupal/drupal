@@ -3,7 +3,12 @@
 automated_cron.settings:
   type: config_object
   label: 'Automated cron settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     interval:
       type: integer
       label: 'Run cron every'
+      constraints:
+        Range:
+          min: 0
