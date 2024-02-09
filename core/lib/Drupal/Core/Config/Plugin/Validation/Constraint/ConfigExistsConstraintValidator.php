@@ -43,6 +43,11 @@ class ConfigExistsConstraintValidator extends ConstraintValidator implements Con
    * {@inheritdoc}
    */
   public function validate(mixed $name, Constraint $constraint) {
+    // This constraint may be used to validate nullable (optional) values.
+    if ($name === NULL) {
+      return;
+    }
+
     if (!in_array($name, $this->configFactory->listAll(), TRUE)) {
       $this->context->addViolation($constraint->message, ['@name' => $name]);
     }
