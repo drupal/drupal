@@ -7,8 +7,3 @@ dblog.settings:
     row_limit:
       type: integer
       label: 'Database log messages to keep'
-      constraints:
-        Range:
-          min: 0
-  constraints:
-    FullyValidatable: ~
