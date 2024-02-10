@@ -24,7 +24,7 @@
       /**
        * Create a summary for checkboxes in the provided context.
        *
-       * @param {HTMLDocument|HTMLElement} context
+       * @param {Document|HTMLElement} context
        *   A context where one would find checkboxes to summarize.
        *
        * @return {string}

@@ -71,7 +71,7 @@ window.Drupal = { behaviors: {}, locale: {} };
    *
    * @callback Drupal~behaviorAttach
    *
-   * @param {HTMLDocument|HTMLElement} context
+   * @param {Document|HTMLElement} context
    *   An element to detach behaviors from.
    * @param {?object} settings
    *   An object containing settings for the current context. It is rarely used.
@@ -84,7 +84,7 @@ window.Drupal = { behaviors: {}, locale: {} };
    *
    * @callback Drupal~behaviorDetach
    *
-   * @param {HTMLDocument|HTMLElement} context
+   * @param {Document|HTMLElement} context
    *   An element to attach behaviors to.
    * @param {object} settings
    *   An object containing settings for the current context.
@@ -143,7 +143,7 @@ window.Drupal = { behaviors: {}, locale: {} };
    *   }
    * };
    *
-   * @param {HTMLDocument|HTMLElement} [context=document]
+   * @param {Document|HTMLElement} [context=document]
    *   An element to attach behaviors to.
    * @param {object} [settings=drupalSettings]
    *   An object containing settings for the current context. If none is given,
@@ -183,7 +183,7 @@ window.Drupal = { behaviors: {}, locale: {} };
    * implementation, i.e. `once.remove('behaviorName', selector, context)`,
    * to ensure the behavior is detached only from previously processed elements.
    *
-   * @param {HTMLDocument|HTMLElement} [context=document]
+   * @param {Document|HTMLElement} [context=document]
    *   An element to detach behaviors from.
    * @param {object} [settings=drupalSettings]
    *   An object containing settings for the current context. If none given,
