@@ -21,14 +21,12 @@ class PhpUnitCliTest extends UnitTestCase {
     // The goal here is to successfully generate the list, without any
     // duplicate namespace errors or so forth. This keeps us from committing
     // tests which don't break under run-tests.sh, but do break under the
-    // PHPUnit CLI test runner tool.
+    // phpunit test runner tool.
     $process = Process::fromShellCommandline('vendor/bin/phpunit --configuration core --verbose --list-tests');
     $process->setWorkingDirectory($this->root)
       ->setTimeout(300)
       ->setIdleTimeout(300);
-    // We disable deprecations since we do not care about them in this test,
-    // and deprecated classes will trigger an error when loading.
-    $process->run(NULL, ['SYMFONY_DEPRECATIONS_HELPER' => 'disabled']);
+    $process->run();
     $this->assertEquals(0, $process->getExitCode(),
       'COMMAND: ' . $process->getCommandLine() . "\n" .
       'OUTPUT: ' . $process->getOutput() . "\n" .
