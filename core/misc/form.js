@@ -295,7 +295,7 @@
     } else {
       url = window.location;
     }
-    const hash = url.hash.substr(1);
+    const hash = url.hash.substring(1);
     if (hash) {
       const $target = $(`#${hash}`);
       $('body').trigger('formFragmentLinkClickOrHashChange', [$target]);

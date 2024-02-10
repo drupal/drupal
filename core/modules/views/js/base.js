@@ -106,7 +106,7 @@
     const chars = ['#', '?', '&'];
     for (let i = 0; i < chars.length; i++) {
       if (href.includes(chars[i])) {
-        href = href.substr(0, href.indexOf(chars[i]));
+        href = href.substring(0, href.indexOf(chars[i]));
       }
     }
     return href;
