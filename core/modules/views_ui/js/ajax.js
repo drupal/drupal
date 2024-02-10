@@ -194,7 +194,7 @@
       $(once('views-ajax', '#views-tabset a')).on('click', function () {
         const href = $(this).attr('href');
         // Cut of #views-tabset.
-        const displayId = href.substr(11);
+        const displayId = href.substring(11);
         const viewsPreviewId = document.querySelector(
           '#views-live-preview #preview-display-id',
         );

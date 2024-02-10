@@ -221,7 +221,7 @@
         this.target.each(function (i) {
           // Ensure that the maxlength is not exceeded by prepopulating the field.
           const maxlength = $(this).attr('maxlength') - suffix.length;
-          this.value = transliterated.substr(0, maxlength) + suffix;
+          this.value = transliterated.substring(0, maxlength) + suffix;
         });
       },
 
