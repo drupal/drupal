@@ -193,22 +193,6 @@ parameters:
 			path: lib/Drupal/Core/Access/AccessResult.php
 
 		-
-			message: """
-				#^Class Drupal\\\\Core\\\\Access\\\\CheckProvider implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Access/CheckProvider.php
-
-		-
-			message: """
-				#^Usage of deprecated trait Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareTrait in class Drupal\\\\Core\\\\Access\\\\CheckProvider\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Access/CheckProvider.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\Access\\\\CsrfRequestHeaderAccessCheck\\:\\:applies\\(\\) should return bool but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Access/CsrfRequestHeaderAccessCheck.php

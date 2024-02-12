@@ -3,17 +3,14 @@
 namespace Drupal\Core\Access;
 
 use Drupal\Core\Routing\Access\AccessInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Loads access checkers from the container.
  */
-class CheckProvider implements CheckProviderInterface, ContainerAwareInterface {
-
-  use ContainerAwareTrait;
+class CheckProvider implements CheckProviderInterface {
 
   /**
    * Array of registered access check service ids.
@@ -56,6 +53,29 @@ class CheckProvider implements CheckProviderInterface, ContainerAwareInterface {
   protected $dynamicRequirementMap;
 
   /**
+   * Constructs a CheckProvider object.
+   *
+   * @param array|null $dynamic_requirements_map
+   *   An array to map dynamic requirement keys to service IDs.
+   * @param \Psr\Container\ContainerInterface|null $container
+   *   The check provider service locator.
+   */
+  public function __construct(
+    array $dynamic_requirements_map = NULL,
+    protected ?ContainerInterface $container = NULL,
+  ) {
+    $this->dynamicRequirementMap = $dynamic_requirements_map;
+    if (is_null($this->dynamicRequirementMap)) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $dynamic_requirements_map argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3416353', E_USER_DEPRECATED);
+      $this->dynamicRequirementMap = \Drupal::getContainer()->getParameter('dynamic_access_check_services');
+    }
+    if (!$this->container) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $container argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3416353', E_USER_DEPRECATED);
+      $this->container = \Drupal::getContainer();
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function addCheckService($service_id, $service_method, array $applies_checks = [], $needs_incoming_request = FALSE) {
@@ -80,7 +100,6 @@ class CheckProvider implements CheckProviderInterface, ContainerAwareInterface {
    * {@inheritdoc}
    */
   public function setChecks(RouteCollection $routes) {
-    $this->loadDynamicRequirementMap();
     foreach ($routes as $route) {
       if ($checks = $this->applies($route)) {
         $route->setOption('_access_checks', $checks);

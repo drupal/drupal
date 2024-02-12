@@ -1308,8 +1308,7 @@ services:
   Drupal\Core\Access\AccessManagerInterface: '@access_manager'
   access_manager.check_provider:
     class: Drupal\Core\Access\CheckProvider
-    calls:
-      - [setContainer, ['@service_container']]
+    arguments: ['%dynamic_access_check_services%']
     public: false
   Drupal\Core\Access\CheckProviderInterface: '@access_manager.check_provider'
   access_check.default:

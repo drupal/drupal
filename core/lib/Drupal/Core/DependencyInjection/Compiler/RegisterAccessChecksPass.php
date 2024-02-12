@@ -3,8 +3,10 @@
 namespace Drupal\Core\DependencyInjection\Compiler;
 
 use Drupal\Core\Access\AccessCheckInterface;
+use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Adds services tagged 'access_check' to the access_manager service.
@@ -18,6 +20,7 @@ class RegisterAccessChecksPass implements CompilerPassInterface {
     if (!$container->hasDefinition('access_manager')) {
       return;
     }
+    $services = [];
     $dynamic_access_check_services = [];
     // Add services tagged 'access_check' to the access_manager service.
     $access_manager = $container->getDefinition('access_manager.check_provider');
@@ -43,7 +46,10 @@ class RegisterAccessChecksPass implements CompilerPassInterface {
       if (in_array(AccessCheckInterface::class, class_implements($class), TRUE)) {
         $dynamic_access_check_services[] = $id;
       }
+
+      $services[$id] = new Reference($id);
     }
+    $access_manager->addArgument(ServiceLocatorTagPass::register($container, $services));
 
     $container->setParameter('dynamic_access_check_services', $dynamic_access_check_services);
   }
