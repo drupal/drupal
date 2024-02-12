@@ -8,6 +8,7 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Entity\EntityViewMode;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\user\RoleInterface;
 use Drupal\filter\Entity\FilterFormat;
 
@@ -238,6 +239,16 @@ class CommentInterfaceTest extends CommentTestBase {
     $body_text2 = 'AQuickBrownFoxJumpedOverTheLazyDog';
     $comment2 = $this->postComment(NULL, $body_text2, '', TRUE);
     $this->assertEquals('AQuickBrownFoxJumpedOverTheL…', $comment2->getSubject());
+
+    // Make the body field non required.
+    $comment_body_field = FieldConfig::loadByName('comment', 'comment', 'comment_body');
+    $comment_body_field->setRequired(FALSE)->save();
+    // Try to post a comment without any value in body and subject fields.
+    $this->drupalGet('node/' . $this->node->id());
+    // Ensure that there are no PHP errors or warnings when automatically
+    // generating the subject. This occurs when the comment body is empty.
+    $comment2 = $this->postComment(NULL, '', '', TRUE);
+    $this->assertEquals('(No subject)', $comment2->getSubject());
   }
 
   /**

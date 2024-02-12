@@ -313,7 +313,7 @@ class CommentForm extends ContentEntityForm {
     // Validate the comment's subject. If not specified, extract from comment
     // body.
     if (trim($comment->getSubject()) == '') {
-      if ($comment->hasField('comment_body')) {
+      if ($comment->hasField('comment_body') && !$comment->comment_body->isEmpty()) {
         // The body may be in any format, so:
         // 1) Filter it into HTML
         // 2) Strip out all HTML tags
@@ -323,7 +323,7 @@ class CommentForm extends ContentEntityForm {
       }
       // Edge cases where the comment body is populated only by HTML tags will
       // require a default subject.
-      if ($comment->getSubject() == '') {
+      if (trim($comment->getSubject()) == '') {
         $comment->setSubject($this->t('(No subject)'));
       }
     }
