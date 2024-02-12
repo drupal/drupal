@@ -375,35 +375,49 @@ default:
       codequality: phpcs-quality-report.json
 
 '🧹 JavaScript linting (eslint)':
-  <<: [ *with-yarn, *default-job-settings-lint ]
+  <<: [ *with-yarn ]
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
+  # Run on push, or on MRs if CSS files have changed, or manually.
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - core/package.json
+        - core/yarn.lock
+        - "**/*.js"
+        - "**/*.yml"
+    - when: manual
+      allow_failure: true
   script:
+    - yarn --cwd=./core run -s check:ckeditor5
     - yarn --cwd=./core run -s lint:core-js-passing --format gitlab
   artifacts:
     reports:
       codequality: eslint-quality-report.json
 
 '🧹 CSS linting (stylelint)':
-  <<: [ *with-yarn, *default-job-settings-lint ]
+  <<: [ *with-yarn ]
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
+  # Run on push, or on MRs if CSS files have changed, or manually.
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - core/package.json
+        - core/yarn.lock
+        - "**/*.css"
+    - when: manual
+      allow_failure: true
   script:
+    - yarn run --cwd=./core build:css --check
     - yarn run --cwd=./core lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
   artifacts:
     reports:
       codequality: stylelint-quality-report.json
-
-'🧹 Compilation check':
-  <<: [ *with-yarn, *default-job-settings-lint ]
-  stage: 🪄 Lint
-  variables:
-    KUBERNETES_CPU_REQUEST: "2"
-  script:
-    - yarn run --cwd=./core build:css --check
-    - cd core && yarn run -s check:ckeditor5
 
 '📔 Spell-checking':
   <<: [ *with-yarn, *default-job-settings-lint ]
