@@ -328,7 +328,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Join against another table in the database.
    *
-   * This method does the "hard" work of queuing up a table to be joined against.
+   * This method does the "hard" work of queueing up a table to be joined against.
    * In some cases, that may include dipping into the Schema API to find the necessary
    * fields on which to join.
    *
