@@ -152,7 +152,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
     }
 
     $process = new Process($command, \Drupal::root() . "/core", $process_environment_variables);
-    $process->setTimeout(300);
+    $process->setTimeout(NULL);
     $process->run();
     $output = explode("\n", $process->getOutput());
     $status = $process->getExitCode();
