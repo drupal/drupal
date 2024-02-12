@@ -44,8 +44,7 @@ class ControllerResolverTest extends UnitTestCase {
     parent::setUp();
 
     $this->container = new ContainerBuilder();
-    $class_resolver = new ClassResolver();
-    $class_resolver->setContainer($this->container);
+    $class_resolver = new ClassResolver($this->container);
     $callable_resolver = new CallableResolver($class_resolver);
     $this->controllerResolver = new ControllerResolver($callable_resolver);
   }

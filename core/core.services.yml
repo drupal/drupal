@@ -689,8 +689,7 @@ services:
   Drupal\Core\Cache\MemoryCache\MemoryCacheInterface: '@entity.memory_cache'
   entity_type.manager:
     class: Drupal\Core\Entity\EntityTypeManager
-    arguments: ['@container.namespaces', '@module_handler', '@cache.discovery', '@string_translation', '@class_resolver', '@entity.last_installed_schema.repository']
-    parent: container.trait
+    arguments: ['@container.namespaces', '@module_handler', '@cache.discovery', '@string_translation', '@class_resolver', '@entity.last_installed_schema.repository', '@service_container']
     tags:
       - { name: plugin_manager_cache_clear }
   Drupal\Core\Entity\EntityTypeManagerInterface: '@entity_type.manager'
@@ -874,8 +873,7 @@ services:
   Symfony\Component\HttpKernel\Controller\ControllerResolverInterface: '@controller_resolver'
   class_resolver:
     class: Drupal\Core\DependencyInjection\ClassResolver
-    calls:
-      - [setContainer, ['@service_container']]
+    arguments: ['@service_container']
   Drupal\Core\DependencyInjection\ClassResolverInterface: '@class_resolver'
   callable_resolver:
     class: Drupal\Core\Utility\CallableResolver

@@ -2,15 +2,28 @@
 
 namespace Drupal\Core\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Implements the class resolver interface supporting class names and services.
  */
-class ClassResolver implements ClassResolverInterface, ContainerAwareInterface {
+class ClassResolver implements ClassResolverInterface {
+
   use DependencySerializationTrait;
-  use ContainerAwareTrait;
+
+  /**
+   * Constructs a new ClassResolver object.
+   *
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface|null $container
+   *   The service container.
+   */
+  public function __construct(protected ?ContainerInterface $container = NULL) {
+    if ($this->container === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $container argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3419963', E_USER_DEPRECATED);
+      $this->container = \Drupal::getContainer();
+    }
+  }
 
   /**
    * {@inheritdoc}
@@ -37,6 +50,20 @@ class ClassResolver implements ClassResolverInterface, ContainerAwareInterface {
     }
 
     return $instance;
+  }
+
+  /**
+   * Sets the service container.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0.
+   *    Instead, you should pass the container as an argument in the
+   *    __construct() method.
+   *
+   * @see https://www.drupal.org/node/3419963
+   */
+  public function setContainer(?ContainerInterface $container): void {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Instead, you should pass the container as an argument in the __construct() method. See https://www.drupal.org/node/3419963', E_USER_DEPRECATED);
+    $this->container = $container;
   }
 
 }
