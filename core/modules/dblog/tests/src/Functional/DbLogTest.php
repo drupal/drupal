@@ -304,6 +304,7 @@ class DbLogTest extends BrowserTestBase {
     $edit['dblog_row_limit'] = $row_limit;
     $this->drupalGet('admin/config/development/logging');
     $this->submitForm($edit, 'Save configuration');
+    $this->assertSession()->statusMessageContains('The configuration options have been saved.');
     $this->assertSession()->statusCodeEquals(200);
 
     // Check row limit variable.
