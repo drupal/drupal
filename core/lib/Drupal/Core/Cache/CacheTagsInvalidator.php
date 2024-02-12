@@ -3,14 +3,11 @@
 namespace Drupal\Core\Cache;
 
 use Drupal\Component\Assertion\Inspector;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * Passes cache tag events to classes that wish to respond to them.
  */
 class CacheTagsInvalidator implements CacheTagsInvalidatorInterface {
-
-  use ContainerAwareTrait;
 
   /**
    * Holds an array of cache tags invalidators.
@@ -18,6 +15,13 @@ class CacheTagsInvalidator implements CacheTagsInvalidatorInterface {
    * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface[]
    */
   protected $invalidators = [];
+
+  /**
+   * Holds an array of cache bins that support invalidations.
+   *
+   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface[]
+   */
+  protected array $bins = [];
 
   /**
    * {@inheritdoc}
@@ -31,7 +35,7 @@ class CacheTagsInvalidator implements CacheTagsInvalidatorInterface {
     }
 
     // Additionally, notify each cache bin if it implements the service.
-    foreach ($this->getInvalidatorCacheBins() as $bin) {
+    foreach ($this->bins as $bin) {
       $bin->invalidateTags($tags);
     }
   }
@@ -60,23 +64,15 @@ class CacheTagsInvalidator implements CacheTagsInvalidatorInterface {
   }
 
   /**
-   * Returns all cache bins that need to be notified about invalidations.
+   * Adds a cache bin.
    *
-   * @return \Drupal\Core\Cache\CacheTagsInvalidatorInterface[]
-   *   An array of cache backend objects that implement the invalidator
-   *   interface, keyed by their cache bin.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $bin
+   *   A cache bin.
    */
-  protected function getInvalidatorCacheBins() {
-    $bins = [];
-    foreach (['cache_bins', 'memory_cache_bins'] as $parameter) {
-      foreach ($this->container->getParameter($parameter) as $service_id => $bin) {
-        $service = $this->container->get($service_id);
-        if ($service instanceof CacheTagsInvalidatorInterface) {
-          $bins[$bin] = $service;
-        }
-      }
+  public function addBin(CacheBackendInterface $bin): void {
+    if ($bin instanceof CacheTagsInvalidatorInterface) {
+      $this->bins[] = $bin;
     }
-    return $bins;
   }
 
 }

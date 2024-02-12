@@ -281,14 +281,6 @@ parameters:
 
 		-
 			message: """
-				#^Usage of deprecated trait Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareTrait in class Drupal\\\\Core\\\\Cache\\\\CacheTagsInvalidator\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Cache/CacheTagsInvalidator.php
-
-		-
-			message: """
 				#^Usage of deprecated trait Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareTrait in class Drupal\\\\Core\\\\Cache\\\\ChainedFastBackendFactory\\:
 				since Symfony 6\\.4, use dependency injection instead$#
 			"""

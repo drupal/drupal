@@ -180,7 +180,7 @@ class TaggedHandlersPass implements CompilerPassInterface {
     foreach ($this->tagCache[$tag] ?? [] as $id => $attributes) {
       // Validate the interface.
       $handler = $container->getDefinition($id);
-      if (!is_subclass_of($handler->getClass(), $interface)) {
+      if (!is_a($handler->getClass(), $interface, TRUE)) {
         throw new LogicException("Service '$id' for consumer '$consumer_id' does not implement $interface.");
       }
       $handlers[$id] = $attributes[0]['priority'] ?? 0;
