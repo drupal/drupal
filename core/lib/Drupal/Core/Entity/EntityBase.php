@@ -167,12 +167,13 @@ abstract class EntityBase implements EntityInterface {
     // Use the canonical link template by default, or edit-form if there is not
     // a canonical one.
     if ($rel === NULL) {
-      $rel_candidates = array_intersect(
-        ['canonical', 'edit-form'],
-        array_flip($link_templates),
-      );
-      $rel = array_shift($rel_candidates);
-      if ($rel === NULL) {
+      if (isset($link_templates['canonical'])) {
+        $rel = 'canonical';
+      }
+      elseif (isset($link_templates['edit-form'])) {
+        $rel = 'edit-form';
+      }
+      else {
         throw new UndefinedLinkTemplateException("Cannot generate default URL because no link template 'canonical' or 'edit-form' was found for the '{$this->getEntityTypeId()}' entity type");
       }
     }
