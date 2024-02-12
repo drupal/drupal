@@ -3348,11 +3348,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
 
 		-
-			message: "#^Call to deprecated method withConsecutive\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\Builder\\\\InvocationMocker\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/UrlTest.php
-
-		-
 			message: """
 				#^Class Drupal\\\\Tests\\\\Core\\\\Utility\\\\MockContainerAware implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
 				since Symfony 6\\.4, use dependency injection instead$#

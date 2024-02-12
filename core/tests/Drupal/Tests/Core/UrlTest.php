@@ -120,21 +120,17 @@ class UrlTest extends UnitTestCase {
   public function testUrlFromRequest() {
     $this->router->expects($this->exactly(3))
       ->method('matchRequest')
-      ->withConsecutive(
-        [$this->getRequestConstraint('/node')],
-        [$this->getRequestConstraint('/node/1')],
-        [$this->getRequestConstraint('/node/2/edit')],
-      )
-      ->willReturnOnConsecutiveCalls([
-        RouteObjectInterface::ROUTE_NAME => 'view.frontpage.page_1',
-        '_raw_variables' => new InputBag(),
-      ], [
-        RouteObjectInterface::ROUTE_NAME => 'node_view',
-        '_raw_variables' => new InputBag(['node' => '1']),
-      ], [
-        RouteObjectInterface::ROUTE_NAME => 'node_edit',
-        '_raw_variables' => new InputBag(['node' => '2']),
-      ]);
+      ->willReturnCallback(function (Request $request) {
+        [$route_name, $vars] = match($request->getPathInfo()) {
+          '/node' => ['view.frontpage.page_1', []],
+          '/node/1' => ['node_view', ['node' => '1']],
+          '/node/2/edit' => ['node_edit', ['node' => '2']],
+        };
+        return [
+          RouteObjectInterface::ROUTE_NAME => $route_name,
+          '_raw_variables' => new InputBag($vars),
+        ];
+      });
 
     $urls = [];
     foreach ($this->map as $index => $values) {
@@ -145,21 +141,6 @@ class UrlTest extends UnitTestCase {
       $urls[$index] = $url;
     }
     return $urls;
-  }
-
-  /**
-   * This constraint checks whether a Request object has the right path.
-   *
-   * @param string $path
-   *   The path.
-   *
-   * @return \PHPUnit\Framework\Constraint\Callback
-   *   The constraint checks whether a Request object has the right path.
-   */
-  protected function getRequestConstraint($path) {
-    return $this->callback(function (Request $request) use ($path) {
-      return $request->getPathInfo() == $path;
-    });
   }
 
   /**
