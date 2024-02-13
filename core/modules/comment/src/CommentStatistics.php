@@ -2,6 +2,7 @@
 
 namespace Drupal\comment;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -59,15 +60,31 @@ class CommentStatistics implements CommentStatisticsInterface {
    *   The entity type manager.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
+   * @param \Drupal\Component\Datetime\TimeInterface|null|\Drupal\Core\Database\Connection $time
+   *   The time service.
    * @param \Drupal\Core\Database\Connection|null $database_replica
    *   (Optional) the replica database connection.
    */
-  public function __construct(Connection $database, AccountInterface $current_user, EntityTypeManagerInterface $entity_type_manager, StateInterface $state, Connection $database_replica = NULL) {
+  public function __construct(
+    Connection $database,
+    AccountInterface $current_user,
+    EntityTypeManagerInterface $entity_type_manager,
+    StateInterface $state,
+    protected TimeInterface|Connection|null $time = NULL,
+    Connection $database_replica = NULL,
+  ) {
     $this->database = $database;
-    $this->databaseReplica = $database_replica ?: $database;
     $this->currentUser = $current_user;
     $this->entityTypeManager = $entity_type_manager;
     $this->state = $state;
+    if (!$time || $time instanceof Connection) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.3.0 and it will be the 4th argument in drupal:11.0.0. See https://www.drupal.org/node/3387233', E_USER_DEPRECATED);
+      if ($time instanceof Connection) {
+        $database_replica = $time;
+      }
+      $this->time = \Drupal::service(TimeInterface::class);
+    }
+    $this->databaseReplica = $database_replica ?: $database;
   }
 
   /**
@@ -129,8 +146,8 @@ class CommentStatistics implements CommentStatisticsInterface {
         // EntityOwnerInterface or author is not set.
         $last_comment_uid = $this->currentUser->id();
       }
-      // Default to REQUEST_TIME when entity does not have a changed property.
-      $last_comment_timestamp = REQUEST_TIME;
+      // Default to request time when entity does not have a changed property.
+      $last_comment_timestamp = $this->time->getRequestTime();
       // @todo Make comment statistics language aware and add some tests. See
       //   https://www.drupal.org/node/2318875
       if ($entity instanceof EntityChangedInterface) {
@@ -251,8 +268,8 @@ class CommentStatistics implements CommentStatisticsInterface {
           'cid' => 0,
           'comment_count' => 0,
           // Use the changed date of the entity if it's set, or default to
-          // REQUEST_TIME.
-          'last_comment_timestamp' => ($entity instanceof EntityChangedInterface) ? $entity->getChangedTimeAcrossTranslations() : REQUEST_TIME,
+          // request time.
+          'last_comment_timestamp' => ($entity instanceof EntityChangedInterface) ? $entity->getChangedTimeAcrossTranslations() : $this->time->getRequestTime(),
           'last_comment_name' => '',
           'last_comment_uid' => $last_comment_uid,
         ])

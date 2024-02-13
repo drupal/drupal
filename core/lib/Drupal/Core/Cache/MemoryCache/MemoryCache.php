@@ -35,7 +35,7 @@ class MemoryCache extends MemoryBackend implements MemoryCacheInterface {
       return FALSE;
     }
     // Check expire time.
-    $cache->valid = $cache->expire == static::CACHE_PERMANENT || $cache->expire >= $this->getRequestTime();
+    $cache->valid = $cache->expire == static::CACHE_PERMANENT || $cache->expire >= $this->time->getRequestTime();
 
     if (!$allow_invalid && !$cache->valid) {
       return FALSE;
@@ -54,7 +54,7 @@ class MemoryCache extends MemoryBackend implements MemoryCacheInterface {
     $this->cache[$cid] = (object) [
       'cid' => $cid,
       'data' => $data,
-      'created' => $this->getRequestTime(),
+      'created' => $this->time->getRequestTime(),
       'expire' => $expire,
       'tags' => $tags,
     ];

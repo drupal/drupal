@@ -2,6 +2,7 @@
 
 namespace Drupal\user\EventSubscriber;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\Settings;
@@ -35,10 +36,16 @@ class UserRequestSubscriber implements EventSubscriberInterface {
    *   The current user.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
+   * @param \Drupal\Component\Datetime\TimeInterface|null $time
+   *   The time service.
    */
-  public function __construct(AccountInterface $account, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(AccountInterface $account, EntityTypeManagerInterface $entity_type_manager, protected ?TimeInterface $time = NULL) {
     $this->account = $account;
     $this->entityTypeManager = $entity_type_manager;
+    if (!$time) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3387233', E_USER_DEPRECATED);
+      $this->time = \Drupal::service(TimeInterface::class);
+    }
   }
 
   /**
@@ -48,11 +55,11 @@ class UserRequestSubscriber implements EventSubscriberInterface {
    *   The event to process.
    */
   public function onKernelTerminate(TerminateEvent $event) {
-    if ($this->account->isAuthenticated() && REQUEST_TIME - $this->account->getLastAccessedTime() > Settings::get('session_write_interval', 180)) {
+    if ($this->account->isAuthenticated() && $this->time->getRequestTime() - $this->account->getLastAccessedTime() > Settings::get('session_write_interval', 180)) {
       // Do that no more than once per 180 seconds.
       /** @var \Drupal\user\UserStorageInterface $storage */
       $storage = $this->entityTypeManager->getStorage('user');
-      $storage->updateLastAccessTimestamp($this->account, REQUEST_TIME);
+      $storage->updateLastAccessTimestamp($this->account, $this->time->getRequestTime());
     }
   }
 

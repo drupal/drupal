@@ -105,7 +105,8 @@
             "lib/Drupal/Core/DrupalKernel.php",
             "lib/Drupal/Core/DrupalKernelInterface.php",
             "lib/Drupal/Core/Installer/InstallerRedirectTrait.php",
-            "lib/Drupal/Core/Site/Settings.php"
+            "lib/Drupal/Core/Site/Settings.php",
+            "lib/Drupal/Component/Datetime/Time.php"
         ],
         "files": [
             "includes/bootstrap.inc"

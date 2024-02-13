@@ -10,7 +10,7 @@ services:
   Drupal\update\UpdateManagerInterface: '@update.manager'
   update.processor:
     class: Drupal\update\UpdateProcessor
-    arguments: ['@config.factory', '@queue', '@update.fetcher', '@state', '@private_key', '@keyvalue', '@keyvalue.expirable']
+    arguments: ['@config.factory', '@queue', '@update.fetcher', '@state', '@private_key', '@keyvalue', '@keyvalue.expirable', '@datetime.time']
   Drupal\update\UpdateProcessorInterface: '@update.processor'
   update.fetcher:
     class: Drupal\update\UpdateFetcher

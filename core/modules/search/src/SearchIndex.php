@@ -2,6 +2,7 @@
 
 namespace Drupal\search;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
@@ -60,13 +61,26 @@ class SearchIndex implements SearchIndexInterface {
    *   The cache tags invalidator.
    * @param \Drupal\search\SearchTextProcessorInterface $text_processor
    *   The text processor.
+   * @param \Drupal\Component\Datetime\TimeInterface|null $time
+   *   The time service
    */
-  public function __construct(ConfigFactoryInterface $config_factory, Connection $connection, Connection $replica, CacheTagsInvalidatorInterface $cache_tags_invalidator, SearchTextProcessorInterface $text_processor) {
+  public function __construct(
+    ConfigFactoryInterface $config_factory,
+    Connection $connection,
+    Connection $replica,
+    CacheTagsInvalidatorInterface $cache_tags_invalidator,
+    SearchTextProcessorInterface $text_processor,
+    protected ?TimeInterface $time = NULL,
+  ) {
     $this->configFactory = $config_factory;
     $this->connection = $connection;
     $this->replica = $replica;
     $this->cacheTagsInvalidator = $cache_tags_invalidator;
     $this->textProcessor = $text_processor;
+    if (!$time) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3387233', E_USER_DEPRECATED);
+      $this->time = \Drupal::service(TimeInterface::class);
+    }
   }
 
   /**
@@ -265,7 +279,7 @@ class SearchIndex implements SearchIndexInterface {
 
     try {
       $query = $this->connection->update('search_dataset')
-        ->fields(['reindex' => REQUEST_TIME])
+        ->fields(['reindex' => $this->time->getRequestTime()])
         // Only mark items that were not previously marked for reindex, so that
         // marked items maintain their priority by request time.
         ->condition('reindex', 0);

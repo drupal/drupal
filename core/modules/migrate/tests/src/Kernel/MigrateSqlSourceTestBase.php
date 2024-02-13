@@ -5,6 +5,7 @@ namespace Drupal\Tests\migrate\Kernel;
 use Drupal\Core\Cache\MemoryCounterBackendFactory;
 use Drupal\sqlite\Driver\Database\sqlite\Connection;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Base class for tests of Migrate source plugins that use a database.
@@ -16,7 +17,9 @@ abstract class MigrateSqlSourceTestBase extends MigrateSourceTestBase {
    */
   public function register(ContainerBuilder $container) {
     parent::register($container);
-    $container->register('cache_factory', MemoryCounterBackendFactory::class);
+    $container
+      ->register('cache_factory', MemoryCounterBackendFactory::class)
+      ->addArgument(new Reference('datetime.time'));
   }
 
   /**

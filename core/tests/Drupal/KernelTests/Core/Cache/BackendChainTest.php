@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Cache;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\BackendChain;
 use Drupal\Core\Cache\MemoryBackend;
 
@@ -16,10 +17,11 @@ class BackendChainTest extends GenericCacheBackendUnitTestBase {
     $chain = new BackendChain();
 
     // We need to create some various backends in the chain.
+    $time = \Drupal::service(TimeInterface::class);
     $chain
-      ->appendBackend(new MemoryBackend())
-      ->prependBackend(new MemoryBackend())
-      ->appendBackend(new MemoryBackend());
+      ->appendBackend(new MemoryBackend($time))
+      ->prependBackend(new MemoryBackend($time))
+      ->appendBackend(new MemoryBackend($time));
 
     \Drupal::service('cache_tags.invalidator')->addInvalidator($chain);
 

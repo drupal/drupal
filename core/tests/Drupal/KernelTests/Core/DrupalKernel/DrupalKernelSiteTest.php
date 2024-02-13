@@ -28,6 +28,11 @@ class DrupalKernelSiteTest extends KernelTestBase {
     $class = __CLASS__;
     $doc = <<<EOD
 services:
+  _defaults:
+    autowire: true
+  Symfony\Component\HttpFoundation\RequestStack: ~
+  Drupal\Component\Datetime\TimeInterface:
+    class: Drupal\Component\Datetime\Time
   # Add a new service.
   site.service.yml:
     class: $class

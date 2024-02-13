@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Cache;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\DatabaseBackend;
 
 /**
@@ -32,7 +33,14 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
    *   A new DatabaseBackend object.
    */
   protected function createCacheBackend($bin) {
-    return new DatabaseBackend($this->container->get('database'), $this->container->get('cache_tags.invalidator.checksum'), $bin, $this->container->get('serialization.phpserialize'), static::$maxRows);
+    return new DatabaseBackend(
+      $this->container->get('database'),
+      $this->container->get('cache_tags.invalidator.checksum'),
+      $bin,
+      $this->container->get('serialization.phpserialize'),
+      \Drupal::service(TimeInterface::class),
+      static::$maxRows,
+    );
   }
 
   /**

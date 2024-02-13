@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Cache;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\PhpBackend;
 
 /**
@@ -18,8 +19,7 @@ class PhpBackendTest extends GenericCacheBackendUnitTestBase {
    *   A new PhpBackend object.
    */
   protected function createCacheBackend($bin) {
-    $backend = new PhpBackend($bin, \Drupal::service('cache_tags.invalidator.checksum'));
-    return $backend;
+    return new PhpBackend($bin, \Drupal::service('cache_tags.invalidator.checksum'), \Drupal::service(TimeInterface::class));
   }
 
 }

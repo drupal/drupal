@@ -10,7 +10,7 @@ services:
 
   search.index:
     class: Drupal\search\SearchIndex
-    arguments: ['@config.factory', '@database','@database.replica', '@cache_tags.invalidator', '@search.text_processor']
+    arguments: ['@config.factory', '@database','@database.replica', '@cache_tags.invalidator', '@search.text_processor', '@datetime.time']
     tags:
       - { name: backend_overridable }
   Drupal\search\SearchIndexInterface: '@search.index'

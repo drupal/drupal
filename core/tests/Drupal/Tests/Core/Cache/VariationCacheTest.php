@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Cache;
 
+use Drupal\Component\Datetime\Time;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheRedirect;
 use Drupal\Core\Cache\Context\CacheContextsManager;
@@ -125,7 +126,7 @@ class VariationCacheTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->requestStack = $this->prophesize(RequestStack::class);
-    $this->memoryBackend = new MemoryBackend();
+    $this->memoryBackend = new MemoryBackend(new Time());
     $this->cacheContextsManager = $this->prophesize(CacheContextsManager::class);
 
     $housing_type = &$this->housingType;

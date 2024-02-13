@@ -39,7 +39,7 @@ services:
       - { name: event_subscriber }
   user_last_access_subscriber:
     class: Drupal\user\EventSubscriber\UserRequestSubscriber
-    arguments: ['@current_user', '@entity_type.manager']
+    arguments: ['@current_user', '@entity_type.manager', '@datetime.time']
     tags:
       - { name: event_subscriber }
   theme.negotiator.admin_theme:

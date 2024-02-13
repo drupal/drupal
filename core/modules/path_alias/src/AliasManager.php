@@ -2,6 +2,7 @@
 
 namespace Drupal\path_alias;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -102,12 +103,24 @@ class AliasManager implements AliasManagerInterface {
    *   The language manager.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   Cache backend.
+   * @param \Drupal\Component\Datetime\TimeInterface|null $time
+   *   The time service.
    */
-  public function __construct(AliasRepositoryInterface $alias_repository, AliasWhitelistInterface $whitelist, LanguageManagerInterface $language_manager, CacheBackendInterface $cache) {
+  public function __construct(
+    AliasRepositoryInterface $alias_repository,
+    AliasWhitelistInterface $whitelist,
+    LanguageManagerInterface $language_manager,
+    CacheBackendInterface $cache,
+    protected ?TimeInterface $time = NULL,
+  ) {
     $this->pathAliasRepository = $alias_repository;
     $this->languageManager = $language_manager;
     $this->whitelist = $whitelist;
     $this->cache = $cache;
+    if (!$time) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3387233', E_USER_DEPRECATED);
+      $this->time = \Drupal::service(TimeInterface::class);
+    }
   }
 
   /**
@@ -140,7 +153,7 @@ class AliasManager implements AliasManagerInterface {
       }
 
       $twenty_four_hours = 60 * 60 * 24;
-      $this->cache->set($this->cacheKey, $path_lookups, $this->getRequestTime() + $twenty_four_hours);
+      $this->cache->set($this->cacheKey, $path_lookups, $this->time->getRequestTime() + $twenty_four_hours);
     }
   }
 
@@ -291,9 +304,15 @@ class AliasManager implements AliasManagerInterface {
    * Wrapper method for REQUEST_TIME constant.
    *
    * @return int
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+   *   the $this->time->getRequestTime() service instead.
+   *
+   * @see https://www.drupal.org/node/3387233
    */
   protected function getRequestTime() {
-    return defined('REQUEST_TIME') ? REQUEST_TIME : (int) $_SERVER['REQUEST_TIME'];
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use the $this->time->getRequestTime() instead. See https://www.drupal.org/node/3387233', E_USER_DEPRECATED);
+    return $this->time->getRequestTime();
   }
 
 }

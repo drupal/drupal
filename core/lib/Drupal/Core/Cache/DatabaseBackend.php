@@ -4,6 +4,7 @@ namespace Drupal\Core\Cache;
 
 use Drupal\Component\Serialization\ObjectAwareSerializationInterface;
 use Drupal\Component\Assertion\Inspector;
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseException;
@@ -78,6 +79,8 @@ class DatabaseBackend implements CacheBackendInterface {
    *   The cache bin for which the object is created.
    * @param \Drupal\Component\Serialization\ObjectAwareSerializationInterface|int|string|null $serializer
    *   (optional) The serializer to use.
+   * @param \Drupal\Component\Datetime\TimeInterface|int|string|null $time
+   *   The time service.
    * @param int $max_rows
    *   (optional) The maximum number of rows that are allowed in this cache bin
    *   table.
@@ -87,6 +90,7 @@ class DatabaseBackend implements CacheBackendInterface {
     CacheTagsChecksumInterface $checksum_provider,
     $bin,
     protected ObjectAwareSerializationInterface|int|string|null $serializer = NULL,
+    protected TimeInterface|int|string|null $time = NULL,
     $max_rows = NULL,
   ) {
     // All cache tables should be prefixed with 'cache_'.
@@ -103,6 +107,13 @@ class DatabaseBackend implements CacheBackendInterface {
     elseif ($this->serializer === NULL) {
       @trigger_error('Calling ' . __METHOD__ . ' without the $serializer argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3014684', E_USER_DEPRECATED);
       $this->serializer = \Drupal::service('serialization.phpserialize');
+    }
+    if (!$this->time instanceof TimeInterface) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.3.0 and it will be the 5th argument in drupal:11.0.0. See https://www.drupal.org/node/3387233', E_USER_DEPRECATED);
+      if (is_int($time) || is_string($time)) {
+        $max_rows = $time;
+      }
+      $this->time = \Drupal::service(TimeInterface::class);
     }
     $this->maxRows = $max_rows === NULL ? static::DEFAULT_MAX_ROWS : $max_rows;
   }
@@ -174,7 +185,7 @@ class DatabaseBackend implements CacheBackendInterface {
     $cache->tags = $cache->tags ? explode(' ', $cache->tags) : [];
 
     // Check expire time.
-    $cache->valid = $cache->expire == Cache::PERMANENT || $cache->expire >= REQUEST_TIME;
+    $cache->valid = $cache->expire == Cache::PERMANENT || $cache->expire >= $this->time->getRequestTime();
 
     // Check if invalidateTags() has been called with any of the item's tags.
     if (!$this->checksumProvider->isValid($cache->checksum, $cache->tags)) {
@@ -363,9 +374,10 @@ class DatabaseBackend implements CacheBackendInterface {
     $cids = array_values(array_map([$this, 'normalizeCid'], $cids));
     try {
       // Update in chunks when a large array is passed.
+      $requestTime = $this->time->getRequestTime();
       foreach (array_chunk($cids, 1000) as $cids_chunk) {
         $this->connection->update($this->bin)
-          ->fields(['expire' => REQUEST_TIME - 1])
+          ->fields(['expire' => $requestTime - 1])
           ->condition('cid', $cids_chunk, 'IN')
           ->execute();
       }
@@ -381,7 +393,7 @@ class DatabaseBackend implements CacheBackendInterface {
   public function invalidateAll() {
     try {
       $this->connection->update($this->bin)
-        ->fields(['expire' => REQUEST_TIME - 1])
+        ->fields(['expire' => $this->time->getRequestTime() - 1])
         ->execute();
     }
     catch (\Exception $e) {
@@ -412,7 +424,7 @@ class DatabaseBackend implements CacheBackendInterface {
 
       $this->connection->delete($this->bin)
         ->condition('expire', Cache::PERMANENT, '<>')
-        ->condition('expire', REQUEST_TIME, '<')
+        ->condition('expire', $this->time->getRequestTime(), '<')
         ->execute();
     }
     catch (\Exception $e) {

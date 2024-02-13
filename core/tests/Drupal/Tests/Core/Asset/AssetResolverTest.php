@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Asset;
 
+use Drupal\Component\Datetime\Time;
 use Drupal\Core\Asset\AssetResolver;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Core\Asset\AttachedAssetsInterface;
@@ -116,7 +117,7 @@ class AssetResolverTest extends UnitTestCase {
     $this->languageManager->expects($this->any())
       ->method('getCurrentLanguage')
       ->will($this->onConsecutiveCalls($english, $english, $japanese, $japanese));
-    $this->cache = new TestMemoryBackend();
+    $this->cache = new TestMemoryBackend(new Time());
 
     $this->assetResolver = new AssetResolver($this->libraryDiscovery, $this->libraryDependencyResolver, $this->moduleHandler, $this->themeManager, $this->languageManager, $this->cache);
   }

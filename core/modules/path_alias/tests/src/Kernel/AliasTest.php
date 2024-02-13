@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\path_alias\Kernel;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\MemoryCounterBackend;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\KernelTests\KernelTestBase;
@@ -358,11 +359,11 @@ class AliasTest extends KernelTestBase {
    * Tests the alias whitelist.
    */
   public function testWhitelist() {
-    $memoryCounterBackend = new MemoryCounterBackend();
+    $memoryCounterBackend = new MemoryCounterBackend(\Drupal::service(TimeInterface::class));
 
     // Create AliasManager and Path object.
     $whitelist = new AliasWhitelist('path_alias_whitelist', $memoryCounterBackend, $this->container->get('lock'), $this->container->get('state'), $this->container->get('path_alias.repository'));
-    $aliasManager = new AliasManager($this->container->get('path_alias.repository'), $whitelist, $this->container->get('language_manager'), $memoryCounterBackend);
+    $aliasManager = new AliasManager($this->container->get('path_alias.repository'), $whitelist, $this->container->get('language_manager'), $memoryCounterBackend, $this->container->get(TimeInterface::class));
 
     // No alias for user and admin yet, so should be NULL.
     $this->assertNull($whitelist->get('user'));
@@ -419,7 +420,7 @@ class AliasTest extends KernelTestBase {
    * Tests situation where the whitelist cache is deleted mid-request.
    */
   public function testWhitelistCacheDeletionMidRequest() {
-    $memoryCounterBackend = new MemoryCounterBackend();
+    $memoryCounterBackend = new MemoryCounterBackend(\Drupal::service(TimeInterface::class));
 
     // Create AliasManager and Path object.
     $whitelist = new AliasWhitelist('path_alias_whitelist', $memoryCounterBackend, $this->container->get('lock'), $this->container->get('state'), $this->container->get('path_alias.repository'));

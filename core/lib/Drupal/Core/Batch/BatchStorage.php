@@ -58,7 +58,7 @@ class BatchStorage implements BatchStorageInterface {
     $this->session = $session;
     $this->csrfToken = $csrf_token;
     if (!$time) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3220378', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3220378', E_USER_DEPRECATED);
       $time = \Drupal::service('datetime.time');
     }
     $this->time = $time;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Cache;
 
+use Drupal\Component\Datetime\Time;
 use Drupal\Core\Cache\BackendChain;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\MemoryBackend;
@@ -52,9 +53,10 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
     parent::setUp();
 
     // Set up three memory backends to be used in the chain.
-    $this->firstBackend = new MemoryBackend();
-    $this->secondBackend = new MemoryBackend();
-    $this->thirdBackend = new MemoryBackend();
+    $time = new Time();
+    $this->firstBackend = new MemoryBackend($time);
+    $this->secondBackend = new MemoryBackend($time);
+    $this->thirdBackend = new MemoryBackend($time);
 
     // Set an initial fixed dataset for all testing. The next three data
     // collections will test two edge cases (last backend has the data, and

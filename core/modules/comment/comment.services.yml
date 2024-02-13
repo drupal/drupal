@@ -11,8 +11,9 @@ services:
   Drupal\comment\CommentManagerInterface: '@comment.manager'
 
   comment.statistics:
+    autowire: true
     class: Drupal\comment\CommentStatistics
-    arguments: ['@database', '@current_user', '@entity_type.manager', '@state', '@database.replica']
+    arguments: ['@database', '@current_user', '@entity_type.manager', '@state', '@datetime.time', '@database.replica']
     tags:
       - { name: backend_overridable }
   Drupal\comment\CommentStatisticsInterface: '@comment.statistics'
