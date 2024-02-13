@@ -38,6 +38,8 @@ class BlockDragTest extends WebDriverTestBase {
    * Tests drag and drop blocks.
    */
   public function testDragAndDropBlocks() {
+    // Resize window to work around https://github.com/bitovi/syn/issues/164.
+    $this->getSession()->resizeWindow(1024, 2048);
     $this->drupalGet('admin/structure/block');
     $assertSession = $this->assertSession();
     $session = $this->getSession();

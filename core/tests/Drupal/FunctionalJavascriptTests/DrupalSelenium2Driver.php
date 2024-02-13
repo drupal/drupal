@@ -6,6 +6,7 @@ namespace Drupal\FunctionalJavascriptTests;
 
 use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Exception\DriverException;
+use WebDriver\Element;
 use WebDriver\Exception;
 use WebDriver\Exception\UnknownError;
 use WebDriver\ServiceFactory;
@@ -144,12 +145,13 @@ class DrupalSelenium2Driver extends Selenium2Driver {
     $not_clickable_exception = NULL;
     $result = $this->waitFor(10, function () use (&$not_clickable_exception, $xpath, $value) {
       try {
+        $element = $this->getWebDriverSession()->element('xpath', $xpath);
         // \Behat\Mink\Driver\Selenium2Driver::setValue() will call .blur() on
         // the element, modify that to trigger the "input" and "change" events
         // instead. They indicate the value has changed, rather than implying
         // user focus changes. This script only runs when Drupal javascript has
         // been loaded.
-        $this->executeJsOnXpath($xpath, <<<JS
+        $this->executeJsOnElement($element, <<<JS
 if (typeof Drupal !== 'undefined') {
   var node = {{ELEMENT}};
   var original = node.blur;
@@ -165,6 +167,12 @@ if (typeof Drupal !== 'undefined') {
   };
 }
 JS);
+        if (!is_string($value) && strtolower($element->name()) === 'input' && in_array(strtolower($element->attribute('type')), ['text', 'number', 'radio'], TRUE)) {
+          // @todo Trigger deprecation in
+          //   https://www.drupal.org/project/drupal/issues/3421105.
+          $value = (string) $value;
+        }
+
         parent::setValue($xpath, $value);
         return TRUE;
       }
@@ -229,6 +237,28 @@ JS);
       // - https://github.com/minkphp/MinkSelenium2Driver/issues/97
       // - https://github.com/minkphp/MinkSelenium2Driver/issues/51
     }
+  }
+
+  /**
+   * Executes JS on a given element.
+   *
+   * @param \WebDriver\Element $element
+   *   The webdriver element.
+   * @param string $script
+   *   The script to execute.
+   *
+   * @return mixed
+   *   The result of executing the script.
+   */
+  private function executeJsOnElement(Element $element, string $script) {
+    $script = str_replace('{{ELEMENT}}', 'arguments[0]', $script);
+
+    $options = [
+      'script' => $script,
+      'args' => [$element],
+    ];
+
+    return $this->getWebDriverSession()->execute($options);
   }
 
 }

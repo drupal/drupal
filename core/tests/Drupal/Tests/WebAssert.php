@@ -139,6 +139,11 @@ class WebAssert extends MinkWebAssert {
    *   When the element doesn't exist.
    */
   public function buttonExists($button, TraversableElement $container = NULL) {
+    if (!is_string($button)) {
+      // @todo Trigger deprecation in
+      //   https://www.drupal.org/project/drupal/issues/3421105.
+      $button = (string) $button;
+    }
     $container = $container ?: $this->session->getPage();
     $node = $container->findButton($button);
 
@@ -916,6 +921,51 @@ class WebAssert extends MinkWebAssert {
     }
 
     return $selector;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function responseHeaderEquals($name, $value) {
+    if (!is_string($name)) {
+      // @todo Trigger deprecation in
+      //   https://www.drupal.org/project/drupal/issues/3421105.
+      $name = (string) $name;
+    }
+    if ($value === NULL) {
+      // @todo Trigger deprecation in
+      //   https://www.drupal.org/project/drupal/issues/3421105.
+      $this->responseHeaderDoesNotExist($name);
+      return;
+    }
+    if (!is_string($value)) {
+      $value = (string) $value;
+    }
+    parent::responseHeaderEquals($name, $value);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function pageTextContains($text) {
+    if (!is_string($text)) {
+      // @todo Trigger deprecation in
+      //   https://www.drupal.org/project/drupal/issues/3421105.
+      $text = (string) $text;
+    }
+    parent::pageTextContains($text);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function fieldValueEquals(string $field, $value, TraversableElement $container = NULL) {
+    if (!is_string($value)) {
+      // @todo Trigger deprecation in
+      //   https://www.drupal.org/project/drupal/issues/3421105.
+      $value = (string) $value;
+    }
+    parent::fieldValueEquals($field, $value, $container);
   }
 
 }

@@ -15,9 +15,9 @@
         "drupal/core-vendor-hardening": "self.version"
     },
     "require-dev": {
-        "behat/mink": "^1.10",
-        "behat/mink-browserkit-driver": "^2.1",
-        "behat/mink-selenium2-driver": "^1.4",
+        "behat/mink": "^1.11",
+        "behat/mink-browserkit-driver": "^2.2",
+        "behat/mink-selenium2-driver": "^1.7",
         "colinodell/psr-testlogger": "^1.2",
         "composer/composer": "^2.6.4",
         "drupal/coder": "^8.3.10",

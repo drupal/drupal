@@ -8,9 +8,9 @@
     },
     "require": {
         "drupal/core": "11.x-dev",
-        "behat/mink": "v1.10.0",
-        "behat/mink-browserkit-driver": "v2.1.0",
-        "behat/mink-selenium2-driver": "v1.6.0",
+        "behat/mink": "v1.11.0",
+        "behat/mink-browserkit-driver": "v2.2.0",
+        "behat/mink-selenium2-driver": "v1.7.0",
         "colinodell/psr-testlogger": "v1.3.0",
         "composer/ca-bundle": "1.3.7",
         "composer/class-map-generator": "1.1.0",
