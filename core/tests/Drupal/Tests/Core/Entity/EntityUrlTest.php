@@ -120,6 +120,7 @@ class EntityUrlTest extends UnitTestCase {
   public function testToUrlDefaultException(): void {
     $values = ['id' => $this->entityId];
     $entity = $this->getEntity(UrlTestEntity::class, $values);
+    $this->entityType->getUriCallback()->willReturn(NULL);
 
     $this->expectException(UndefinedLinkTemplateException::class);
     $this->expectExceptionMessage("Cannot generate default URL because no link template 'canonical' or 'edit-form' was found for the '" . $this->entityTypeId . "' entity type");
@@ -408,6 +409,9 @@ class EntityUrlTest extends UnitTestCase {
 
     /** @var \Drupal\Core\Url $url */
     $url = $entity->toUrl('canonical');
+    $this->assertUrl('<none>', [], $entity, TRUE, $url);
+
+    $url = $entity->toUrl();
     $this->assertUrl('<none>', [], $entity, TRUE, $url);
   }
 
