@@ -164,6 +164,13 @@ abstract class EntityBase implements EntityInterface {
     // The links array might contain URI templates set in annotations.
     $link_templates = $this->linkTemplates();
 
+    // Links pointing to the current revision point to the actual entity. So
+    // instead of using the 'revision' link, use the 'canonical' link.
+    if ($rel === 'revision' && $this instanceof RevisionableInterface && $this->isDefaultRevision()) {
+      $rel = 'canonical';
+    }
+
+    $exception_message = "No link template '$rel' found for the '{$this->getEntityTypeId()}' entity type";
     // Use the canonical link template by default, or edit-form if there is not
     // a canonical one.
     if ($rel === NULL) {
@@ -174,14 +181,8 @@ abstract class EntityBase implements EntityInterface {
         $rel = 'edit-form';
       }
       else {
-        throw new UndefinedLinkTemplateException("Cannot generate default URL because no link template 'canonical' or 'edit-form' was found for the '{$this->getEntityTypeId()}' entity type");
+        $exception_message = "Cannot generate default URL because no link template 'canonical' or 'edit-form' was found for the '{$this->getEntityTypeId()}' entity type";
       }
-    }
-
-    // Links pointing to the current revision point to the actual entity. So
-    // instead of using the 'revision' link, use the 'canonical' link.
-    if ($rel === 'revision' && $this instanceof RevisionableInterface && $this->isDefaultRevision()) {
-      $rel = 'canonical';
     }
 
     if (isset($link_templates[$rel])) {
@@ -207,7 +208,7 @@ abstract class EntityBase implements EntityInterface {
         $uri = call_user_func($uri_callback, $this);
       }
       else {
-        throw new UndefinedLinkTemplateException("No link template '$rel' found for the '{$this->getEntityTypeId()}' entity type");
+        throw new UndefinedLinkTemplateException($exception_message);
       }
     }
 
