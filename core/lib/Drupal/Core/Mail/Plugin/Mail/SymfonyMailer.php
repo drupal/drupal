@@ -3,9 +3,11 @@
 namespace Drupal\Core\Mail\Plugin\Mail;
 
 use Drupal\Component\Render\MarkupInterface;
+use Drupal\Core\Mail\Attribute\Mail;
 use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\Core\Mail\MailInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Utility\Error;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -48,13 +50,12 @@ use Symfony\Component\Mime\Email;
  *
  * @see https://symfony.com/doc/current/mailer.html#using-built-in-transports
  *
- * @Mail(
- *   id = "symfony_mailer",
- *   label = @Translation("Symfony mailer (Experimental)"),
- * )
- *
  * @internal
  */
+#[Mail(
+  id: 'symfony_mailer',
+  label: new TranslatableMarkup('Symfony mailer (Experimental)'),
+)]
 class SymfonyMailer implements MailInterface, ContainerFactoryPluginInterface {
 
   /**
