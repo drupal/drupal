@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\views\Functional\Handler;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Render\RenderContext;
@@ -637,10 +636,10 @@ class FieldWebTest extends ViewTestBase {
       });
 
       if ($tuple['trimmed']) {
-        $this->assertNotSubString($output, $tuple['value'], new FormattableMarkup('The untrimmed value (@untrimmed) should not appear in the trimmed output (@output).', ['@untrimmed' => $tuple['value'], '@output' => $output]));
+        $this->assertNotSubString($output, $tuple['value'], "The untrimmed value ({$tuple['value']}) should not appear in the trimmed output ($output).");
       }
       if (!empty($tuple['trimmed_value'])) {
-        $this->assertSubString($output, $tuple['trimmed_value'], new FormattableMarkup('The trimmed value (@trimmed) should appear in the trimmed output (@output).', ['@trimmed' => $tuple['trimmed_value'], '@output' => $output]));
+        $this->assertSubString($output, $tuple['trimmed_value'], "The trimmed value ({$tuple['trimmed_value']}) should appear in the trimmed output ($output).");
       }
     }
 

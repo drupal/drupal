@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\tour\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -61,7 +60,7 @@ abstract class TourTestBase extends BrowserTestBase {
     foreach ($tips as $tip) {
       if (!empty($tip['data-id'])) {
         $elements = $this->getSession()->getPage()->findAll('css', '#' . $tip['data-id']);
-        $this->assertCount(1, $elements, new FormattableMarkup('Found corresponding page element for tour tip with id #%data-id', ['%data-id' => $tip['data-id']]));
+        $this->assertCount(1, $elements, sprintf('Found corresponding page element for tour tip with id #%s', $tip['data-id']));
       }
       elseif (!empty($tip['data-class'])) {
         $elements = $this->getSession()->getPage()->findAll('css', '.' . $tip['data-class']);
