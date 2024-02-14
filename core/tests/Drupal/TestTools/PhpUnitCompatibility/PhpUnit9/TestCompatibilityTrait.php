@@ -9,4 +9,11 @@ namespace Drupal\TestTools\PhpUnitCompatibility\PhpUnit9;
  */
 trait TestCompatibilityTrait {
 
+  /**
+   * Get test name.
+   */
+  public function name(): string {
+    return $this->getName();
+  }
+
 }

@@ -80,7 +80,7 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
   protected function getPluginClass() {
     $annotations = Test::parseTestMethodAnnotations(
       static::class,
-      $this->getName()
+      $this->name()
     );
 
     if (isset($annotations['class']['covers'])) {

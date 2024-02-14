@@ -20,7 +20,7 @@ abstract class ConfigEntityResourceTestBase extends EntityResourceTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    if (in_array($this->getName(), static::SKIP_METHODS, TRUE)) {
+    if (in_array($this->name(), static::SKIP_METHODS, TRUE)) {
       // Skip before installing Drupal to prevent unnecessary use of resources.
       $this->markTestSkipped("Not yet supported for config entities.");
     }

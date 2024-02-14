@@ -8,6 +8,7 @@ use Composer\Util\Filesystem;
 use Drupal\Tests\Composer\Plugin\Scaffold\AssertUtilsTrait;
 use Drupal\Tests\Composer\Plugin\Scaffold\ExecTrait;
 use Drupal\Tests\Composer\Plugin\Scaffold\Fixtures;
+use Drupal\Tests\PhpUnitCompatibilityTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -27,6 +28,7 @@ class ScaffoldUpgradeTest extends TestCase {
 
   use AssertUtilsTrait;
   use ExecTrait;
+  use PhpUnitCompatibilityTrait;
 
   /**
    * The Fixtures object.
@@ -58,7 +60,7 @@ class ScaffoldUpgradeTest extends TestCase {
     if (str_contains($composerVersionLine, 'Composer version 2')) {
       $this->markTestSkipped('We cannot run the scaffold upgrade test with Composer 2 until we have a stable version of drupal/core-composer-scaffold to start from that we can install with Composer 2.x.');
     }
-    $this->fixturesDir = $this->fixtures->tmpDir($this->getName());
+    $this->fixturesDir = $this->fixtures->tmpDir($this->name());
     $replacements = ['SYMLINK' => 'false', 'PROJECT_ROOT' => $this->fixtures->projectRoot()];
     $this->fixtures->cloneFixtureProjects($this->fixturesDir, $replacements);
     $topLevelProjectDir = 'drupal-drupal';

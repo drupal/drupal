@@ -8,6 +8,7 @@ use Composer\Util\Filesystem;
 use Drupal\Tests\Composer\Plugin\Scaffold\AssertUtilsTrait;
 use Drupal\Tests\Composer\Plugin\Scaffold\Fixtures;
 use Drupal\Tests\Composer\Plugin\Scaffold\ScaffoldTestResult;
+use Drupal\Tests\PhpUnitCompatibilityTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -20,6 +21,7 @@ use PHPUnit\Framework\TestCase;
  */
 class ScaffoldTest extends TestCase {
   use AssertUtilsTrait;
+  use PhpUnitCompatibilityTrait;
 
   /**
    * The root of this project.
@@ -65,7 +67,7 @@ class ScaffoldTest extends TestCase {
     // a directory will be created in the system's temporary directory.
     $this->fixturesDir = getenv('SCAFFOLD_FIXTURE_DIR');
     if (!$this->fixturesDir) {
-      $this->fixturesDir = $this->fixtures->tmpDir($this->getName());
+      $this->fixturesDir = $this->fixtures->tmpDir($this->name());
     }
   }
 
