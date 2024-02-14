@@ -759,7 +759,6 @@ subrequest's
 subrequests
 subresults
 subselect
-subshell
 substrategies
 subsubtheme
 subtheme
@@ -901,7 +900,6 @@ versionable
 versionless
 verygreatdrupalmodule
 vfsstream
-viewmode
 viewports
 vocabs
 wcag

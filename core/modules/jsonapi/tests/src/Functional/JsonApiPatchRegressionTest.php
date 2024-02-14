@@ -18,8 +18,6 @@ use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 use GuzzleHttp\RequestOptions;
 
-// cspell:ignore llamalovers catcuddlers Cuddlers
-
 /**
  * JSON:API regression tests.
  *

@@ -21,8 +21,6 @@ use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 use GuzzleHttp\RequestOptions;
 
-// cspell:ignore llamalovers catcuddlers Cuddlers
-
 /**
  * JSON:API regression tests.
  *

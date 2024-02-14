@@ -10,7 +10,7 @@ use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Symfony\Component\Validator\ConstraintViolation;
 
-// cspell:ignore gramma sourceediting
+// cspell:ignore sourceediting
 
 /**
  * @internal
