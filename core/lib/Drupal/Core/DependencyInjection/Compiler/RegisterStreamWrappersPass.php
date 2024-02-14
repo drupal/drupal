@@ -23,12 +23,17 @@ class RegisterStreamWrappersPass implements CompilerPassInterface {
     $stream_wrapper_manager = $container->getDefinition('stream_wrapper_manager');
 
     $services = [];
-    foreach ($container->findTaggedServiceIds('stream_wrapper') as $id => $attributes) {
+    foreach ($container->findTaggedServiceIds('stream_wrapper') as $id => $tags) {
       $class = $container->getDefinition($id)->getClass();
-      $scheme = $attributes[0]['scheme'];
-
-      $stream_wrapper_manager->addMethodCall('addStreamWrapper', [$id, $class, $scheme]);
-
+      // Loop through all the tags for this stream wrapper as we may have
+      // multiple schemes.
+      foreach ($tags as $attributes) {
+        $stream_wrapper_manager->addMethodCall('addStreamWrapper', [
+          $id,
+          $class,
+          $attributes['scheme'],
+        ]);
+      }
       $services[$id] = new Reference($id);
     }
     $stream_wrapper_manager->addArgument(ServiceLocatorTagPass::register($container, $services));
