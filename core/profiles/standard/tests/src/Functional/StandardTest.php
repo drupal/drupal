@@ -5,6 +5,7 @@ namespace Drupal\Tests\standard\Functional;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\Component\Utility\Html;
 use Drupal\editor\Entity\Editor;
+use Drupal\image\Entity\ImageStyle;
 use Drupal\media\Entity\MediaType;
 use Drupal\media\Plugin\media\Source\Image;
 use Drupal\Tests\SchemaCheckTestTrait;
@@ -190,6 +191,14 @@ class StandardTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Max 650x650');
     $this->assertSession()->pageTextContains('Max 1300x1300');
     $this->assertSession()->pageTextContains('Max 2600x2600');
+
+    // Make sure all image styles has webp conversion as last effect.
+    foreach (ImageStyle::loadMultiple() as $style) {
+      $effects = $style->getEffects()->getInstanceIds();
+      $last = $style->getEffects()->get(end($effects));
+      $this->assertSame('image_convert', $last->getConfiguration()['id']);
+      $this->assertSame('webp', $last->getConfiguration()['data']['extension']);
+    }
 
     // Verify certain routes' responses are cacheable by Dynamic Page Cache, to
     // ensure these responses are very fast for authenticated users.
