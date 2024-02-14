@@ -2741,7 +2741,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       'all' => $relationship_field_names,
     ];
     if (count($relationship_field_names) > 1) {
-      $about_half_the_fields = floor(count($relationship_field_names) / 2);
+      $about_half_the_fields = (int) floor(count($relationship_field_names) / 2);
       $field_sets['some'] = array_slice($relationship_field_names, $about_half_the_fields);
 
       $nested_includes = $this->getNestedIncludePaths();
@@ -3334,7 +3334,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $field_names = array_keys($this->entity->toArray());
     $field_sets = [
       'empty' => [],
-      'some' => array_slice($field_names, floor(count($field_names) / 2)),
+      'some' => array_slice($field_names, (int) floor(count($field_names) / 2)),
       'all' => $field_names,
     ];
     if ($this->entity instanceof EntityOwnerInterface) {

@@ -386,7 +386,7 @@ class PagerTest extends ViewTestBase {
     $view->setAjaxEnabled(TRUE);
     $view->pager = NULL;
     $output = $view->render();
-    $output = \Drupal::service('renderer')->renderRoot($output);
+    $output = (string) \Drupal::service('renderer')->renderRoot($output);
     $this->assertEquals(0, preg_match('/<ul class="pager">/', $output), 'The pager is not rendered.');
   }
 

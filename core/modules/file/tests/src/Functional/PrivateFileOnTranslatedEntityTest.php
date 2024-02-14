@@ -64,7 +64,7 @@ class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
 
     // Enable translation for "Basic page" nodes.
     static::enableContentTranslation('node', 'page');
-    static::setFieldTranslatable('node', 'page', $this->fieldName, 1);
+    static::setFieldTranslatable('node', 'page', $this->fieldName, TRUE);
   }
 
   /**

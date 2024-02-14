@@ -81,19 +81,19 @@ class BigPipeTest extends BrowserTestBase {
 
     // 1. No session (anonymous).
     $this->drupalGet(Url::fromRoute('<front>'));
-    $this->assertSessionCookieExists(FALSE);
-    $this->assertBigPipeNoJsCookieExists(FALSE);
+    $this->assertSessionCookieExists('0');
+    $this->assertBigPipeNoJsCookieExists('0');
     $this->assertSession()->responseNotContains('<noscript><meta http-equiv="Refresh" content="0; URL=');
     $this->assertSession()->responseNotContains($no_js_to_js_markup);
 
     // 2. Session (authenticated).
     $this->drupalLogin($this->rootUser);
-    $this->assertSessionCookieExists(TRUE);
-    $this->assertBigPipeNoJsCookieExists(FALSE);
+    $this->assertSessionCookieExists('1');
+    $this->assertBigPipeNoJsCookieExists('0');
     $this->assertSession()->responseContains('<noscript><meta http-equiv="Refresh" content="0; URL=' . base_path() . 'big_pipe/no-js?destination=' . UrlHelper::encodePath(base_path() . 'user/1?check_logged_in=1') . '" />' . "\n" . '</noscript>');
     $this->assertSession()->responseNotContains($no_js_to_js_markup);
     $this->assertBigPipeNoJsMetaRefreshRedirect();
-    $this->assertBigPipeNoJsCookieExists(TRUE);
+    $this->assertBigPipeNoJsCookieExists('1');
     $this->assertSession()->responseNotContains('<noscript><meta http-equiv="Refresh" content="0; URL=');
     $this->assertSession()->responseContains($no_js_to_js_markup);
     $this->drupalLogout();
@@ -104,12 +104,12 @@ class BigPipeTest extends BrowserTestBase {
     // 3. Session (anonymous).
     $this->drupalGet(Url::fromRoute('user.login', [], ['query' => ['trigger_session' => 1]]));
     $this->drupalGet(Url::fromRoute('user.login'));
-    $this->assertSessionCookieExists(TRUE);
-    $this->assertBigPipeNoJsCookieExists(FALSE);
+    $this->assertSessionCookieExists('1');
+    $this->assertBigPipeNoJsCookieExists('0');
     $this->assertSession()->responseContains('<noscript><meta http-equiv="Refresh" content="0; URL=' . base_path() . 'big_pipe/no-js?destination=' . base_path() . 'user/login" />' . "\n" . '</noscript>');
     $this->assertSession()->responseNotContains($no_js_to_js_markup);
     $this->assertBigPipeNoJsMetaRefreshRedirect();
-    $this->assertBigPipeNoJsCookieExists(TRUE);
+    $this->assertBigPipeNoJsCookieExists('1');
     $this->assertSession()->responseNotContains('<noscript><meta http-equiv="Refresh" content="0; URL=');
     $this->assertSession()->responseContains($no_js_to_js_markup);
 
@@ -118,14 +118,14 @@ class BigPipeTest extends BrowserTestBase {
 
     // Edge case: route with '_no_big_pipe' option.
     $this->drupalGet(Url::fromRoute('no_big_pipe'));
-    $this->assertSessionCookieExists(FALSE);
-    $this->assertBigPipeNoJsCookieExists(FALSE);
+    $this->assertSessionCookieExists('0');
+    $this->assertBigPipeNoJsCookieExists('0');
     $this->assertSession()->responseNotContains('<noscript><meta http-equiv="Refresh" content="0; URL=');
     $this->assertSession()->responseNotContains($no_js_to_js_markup);
     $this->drupalLogin($this->rootUser);
     $this->drupalGet(Url::fromRoute('no_big_pipe'));
-    $this->assertSessionCookieExists(TRUE);
-    $this->assertBigPipeNoJsCookieExists(FALSE);
+    $this->assertSessionCookieExists('1');
+    $this->assertBigPipeNoJsCookieExists('0');
     $this->assertSession()->responseNotContains('<noscript><meta http-equiv="Refresh" content="0; URL=');
     $this->assertSession()->responseNotContains($no_js_to_js_markup);
   }
@@ -145,8 +145,8 @@ class BigPipeTest extends BrowserTestBase {
     $this->config('system.logging')->set('error_level', ERROR_REPORTING_HIDE)->save();
 
     $this->drupalLogin($this->rootUser);
-    $this->assertSessionCookieExists(TRUE);
-    $this->assertBigPipeNoJsCookieExists(FALSE);
+    $this->assertSessionCookieExists('1');
+    $this->assertBigPipeNoJsCookieExists('0');
 
     $connection = Database::getConnection();
     $log_count = $connection->select('watchdog')->countQuery()->execute()->fetchField();
@@ -236,8 +236,8 @@ class BigPipeTest extends BrowserTestBase {
     $this->config('system.logging')->set('error_level', ERROR_REPORTING_HIDE)->save();
 
     $this->drupalLogin($this->rootUser);
-    $this->assertSessionCookieExists(TRUE);
-    $this->assertBigPipeNoJsCookieExists(FALSE);
+    $this->assertSessionCookieExists('1');
+    $this->assertBigPipeNoJsCookieExists('0');
 
     // By calling performMetaRefresh() here, we simulate JavaScript being
     // disabled, because as far as the BigPipe module is concerned, it is
@@ -245,7 +245,7 @@ class BigPipeTest extends BrowserTestBase {
     // @see setUp()
     // @see performMetaRefresh()
     $this->performMetaRefresh();
-    $this->assertBigPipeNoJsCookieExists(TRUE);
+    $this->assertBigPipeNoJsCookieExists('1');
 
     $this->drupalGet(Url::fromRoute('big_pipe_test'));
     $this->assertBigPipeResponseHeadersPresent();
@@ -296,8 +296,8 @@ class BigPipeTest extends BrowserTestBase {
    */
   public function testBigPipeMultiOccurrencePlaceholders() {
     $this->drupalLogin($this->rootUser);
-    $this->assertSessionCookieExists(TRUE);
-    $this->assertBigPipeNoJsCookieExists(FALSE);
+    $this->assertSessionCookieExists('1');
+    $this->assertBigPipeNoJsCookieExists('0');
 
     // By not calling performMetaRefresh() here, we simulate JavaScript being
     // enabled, because as far as the BigPipe module is concerned, JavaScript is
@@ -321,7 +321,7 @@ class BigPipeTest extends BrowserTestBase {
     // @see setUp()
     // @see performMetaRefresh()
     $this->performMetaRefresh();
-    $this->assertBigPipeNoJsCookieExists(TRUE);
+    $this->assertBigPipeNoJsCookieExists('1');
     $this->drupalGet(Url::fromRoute('big_pipe_test_multi_occurrence'));
     $this->assertSession()->pageTextContains('The count is 1.');
     $this->assertSession()->responseNotContains('The count is 2.');
