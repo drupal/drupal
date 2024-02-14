@@ -25,7 +25,7 @@ class ReflectionFactoryTest extends TestCase {
    *   - $plugin_definition parameter to getInstanceArguments().
    *   - $configuration parameter to getInstanceArguments().
    */
-  public function providerGetInstanceArguments() {
+  public static function providerGetInstanceArguments() {
     return [
       [
         ['arguments_plugin_id'],

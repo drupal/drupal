@@ -68,7 +68,7 @@ class MediaEmbedFilterTranslationTest extends MediaEmbedFilterTestBase {
   /**
    * Data provider for testTranslationSelection().
    */
-  public function providerTranslationSituations() {
+  public static function providerTranslationSituations() {
     $embedded_entity_translation_languages = ['en', 'pt-br'];
 
     foreach (['en', 'pt-br', 'nl'] as $text_langcode) {

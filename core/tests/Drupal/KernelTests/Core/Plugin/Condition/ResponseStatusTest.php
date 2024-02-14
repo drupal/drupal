@@ -77,7 +77,7 @@ class ResponseStatusTest extends KernelTestBase {
   /**
    * Provides test data for testConditions.
    */
-  public function providerTestConditions() {
+  public static function providerTestConditions() {
     // Default values with 200 response code.
     yield [
       'status_codes' => [],

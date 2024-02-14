@@ -169,7 +169,7 @@ class ContentModerationStateTest extends KernelTestBase {
   /**
    * Test cases for basic moderation test.
    */
-  public function basicModerationTestCases() {
+  public static function basicModerationTestCases() {
     return [
       'Nodes' => [
         'node',
@@ -480,7 +480,7 @@ class ContentModerationStateTest extends KernelTestBase {
   /**
    * Test cases for ::testModerationWithSpecialLanguages().
    */
-  public function moderationWithSpecialLanguagesTestCases() {
+  public static function moderationWithSpecialLanguagesTestCases() {
     return [
       'Not specified to not specified' => [
         LanguageInterface::LANGCODE_NOT_SPECIFIED,

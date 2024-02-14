@@ -33,7 +33,7 @@ class FieldLinkTest extends UnitTestCase {
   /**
    * Data provider for testCanonicalizeUri.
    */
-  public function canonicalizeUriDataProvider() {
+  public static function canonicalizeUriDataProvider() {
     return [
       'Simple front-page' => [
         '<front>',

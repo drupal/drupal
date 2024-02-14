@@ -137,7 +137,7 @@ class ThemeExtensionListTest extends UnitTestCase {
    * @return array
    *   An array of theme test data.
    */
-  public function providerTestGetBaseThemes() {
+  public static function providerTestGetBaseThemes() {
     $data = [];
 
     // Tests a theme without any base theme.

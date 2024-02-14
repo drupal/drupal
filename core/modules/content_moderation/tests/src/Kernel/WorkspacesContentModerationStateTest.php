@@ -155,7 +155,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
   /**
    * Test cases for basic moderation test.
    */
-  public function basicModerationTestCases() {
+  public static function basicModerationTestCases() {
     return [
       'Nodes' => [
         'node',

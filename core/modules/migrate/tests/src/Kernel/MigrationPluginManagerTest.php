@@ -52,7 +52,7 @@ class MigrationPluginManagerTest extends MigrateTestBase {
   /**
    * Data provider for testCreateInstancesByTag.
    */
-  public function providerCreateInstanceByTag() {
+  public static function providerCreateInstanceByTag() {
     return [
       'get test' => [
         'test',

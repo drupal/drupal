@@ -48,7 +48,7 @@ class ShortcutLocalTasksTest extends LocalTaskIntegrationTestBase {
   /**
    * Provides a list of routes to test.
    */
-  public function getShortcutPageRoutes() {
+  public static function getShortcutPageRoutes() {
     return [
       ['entity.user.canonical'],
       ['entity.user.edit_form'],

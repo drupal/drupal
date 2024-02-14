@@ -80,7 +80,7 @@ YAML;
     $yaml_file_loader->load('vfs://drupal/modules/example/example.yml');
   }
 
-  public function providerTestExceptions() {
+  public static function providerTestExceptions() {
     return [
       '_defaults must be an array' => [<<<YAML
 services:

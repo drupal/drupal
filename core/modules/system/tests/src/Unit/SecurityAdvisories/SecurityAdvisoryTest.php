@@ -47,7 +47,7 @@ class SecurityAdvisoryTest extends UnitTestCase {
   /**
    * Data provider for testCreateFromArray().
    */
-  public function providerCreateFromArray(): array {
+  public static function providerCreateFromArray(): array {
     return [
       // For 'is_psa' the return value should converted to any array.
       [
@@ -110,7 +110,7 @@ class SecurityAdvisoryTest extends UnitTestCase {
   /**
    * Data provider for testCreateFromArrayMissingField().
    */
-  public function providerCreateFromArrayMissingField(): array {
+  public static function providerCreateFromArrayMissingField(): array {
     return [
       'title' => ['title'],
       'link' => ['link'],
@@ -148,7 +148,7 @@ class SecurityAdvisoryTest extends UnitTestCase {
   /**
    * Data provider for testCreateFromArrayInvalidField().
    */
-  public function providerCreateFromArrayInvalidField(): array {
+  public static function providerCreateFromArrayInvalidField(): array {
     return [
       'title' => ['title', 'This value should be of type string.'],
       'link' => ['link', 'This value should be of type string.'],

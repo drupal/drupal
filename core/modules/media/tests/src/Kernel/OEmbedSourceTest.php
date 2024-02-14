@@ -50,7 +50,7 @@ class OEmbedSourceTest extends MediaKernelTestBase {
    * @return array
    *   Sets of arguments to pass to the test method.
    */
-  public function providerThumbnailUri(): array {
+  public static function providerThumbnailUri(): array {
     return [
       'no query string, extension in URL' => [
         'internal:/core/misc/druplicon.png',

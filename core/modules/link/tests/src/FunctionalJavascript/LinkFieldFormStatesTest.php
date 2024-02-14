@@ -64,7 +64,7 @@ class LinkFieldFormStatesTest extends WebDriverTestBase {
   /**
    * Provides data for ::testLinkFieldJSFormStates.
    */
-  public function linkFieldFormStatesData() {
+  public static function linkFieldFormStatesData() {
     return [
       'Fill uri, keep title empty' => [
         'https://example.com',

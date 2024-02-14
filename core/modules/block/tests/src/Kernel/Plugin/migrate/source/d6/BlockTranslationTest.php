@@ -21,7 +21,7 @@ class BlockTranslationTest extends BlockTest {
   /**
    * {@inheritdoc}
    */
-  public function providerSource() {
+  public static function providerSource() {
     // Test data is the same as BlockTest, but with the addition of i18n_blocks.
     $tests = parent::providerSource();
 

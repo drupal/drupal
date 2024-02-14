@@ -68,7 +68,7 @@ class BlockPageVariantTest extends UnitTestCase {
       ->getMock();
   }
 
-  public function providerBuild() {
+  public static function providerBuild() {
     $blocks_config = [
       'block1' => [
         // region, is main content block, is messages block, is title block

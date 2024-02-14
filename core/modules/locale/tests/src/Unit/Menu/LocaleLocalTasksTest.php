@@ -38,7 +38,7 @@ class LocaleLocalTasksTest extends LocalTaskIntegrationTestBase {
   /**
    * Provides a list of routes to test.
    */
-  public function getLocalePageRoutes() {
+  public static function getLocalePageRoutes() {
     return [
       ['locale.translate_page'],
       ['locale.translate_import'],

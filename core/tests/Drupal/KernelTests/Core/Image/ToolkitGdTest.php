@@ -105,7 +105,7 @@ class ToolkitGdTest extends KernelTestBase {
   /**
    * Data provider for ::testManipulations().
    */
-  public function providerTestImageFiles(): array {
+  public static function providerTestImageFiles(): array {
     // Typically the corner colors will be unchanged. These colors are in the
     // order of top-left, top-right, bottom-right, bottom-left.
     $default_corners = [static::RED, static::GREEN, static::BLUE, static::TRANSPARENT];
@@ -390,7 +390,7 @@ class ToolkitGdTest extends KernelTestBase {
   /**
    * Data provider for ::testCreateImageFromScratch().
    */
-  public function providerSupportedImageTypes(): array {
+  public static function providerSupportedImageTypes(): array {
     return [
       [IMAGETYPE_PNG],
       [IMAGETYPE_GIF],

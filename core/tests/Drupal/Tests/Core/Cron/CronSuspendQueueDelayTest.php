@@ -285,7 +285,7 @@ final class CronSuspendQueueDelayTest extends UnitTestCase {
    * @return array
    *   Scenarios for testing.
    */
-  public function providerSuspendQueueThreshold(): array {
+  public static function providerSuspendQueueThreshold(): array {
     $scenarios = [];
     $scenarios['cron will wait for the queue, and rerun'] = [
       15.0,

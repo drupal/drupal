@@ -121,7 +121,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
      *     - aliases as returned by ContainerBuilder.
      *     - aliases as expected in the container definition.
      */
-    public function getAliasesDataProvider() {
+    public static function getAliasesDataProvider() {
       return [
         [[], []],
         [
@@ -166,7 +166,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
      *     - parameters as expected in the container definition.
      *     - frozen value
      */
-    public function getParametersDataProvider() {
+    public static function getParametersDataProvider() {
       return [
         [[], [], TRUE],
         [
@@ -546,7 +546,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $this->assertEquals(static::serializeDefinition($data), $dump['services']['foo'], 'Expected definition matches dump.');
     }
 
-    public function publicPrivateDataProvider() {
+    public static function publicPrivateDataProvider() {
       return [
         [TRUE],
         [FALSE],
@@ -688,7 +688,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
      *     - expected final value.
      *     - escaped value in service definition.
      */
-    public function percentsEscapeProvider() {
+    public static function percentsEscapeProvider() {
       return [
         ['%foo%', '%%foo%%'],
         ['foo%bar%', 'foo%%bar%%'],

@@ -41,7 +41,7 @@ class PhpTransliterationTest extends TestCase {
    *   An array of arrays, each containing the parameters for
    *   self::testRemoveDiacritics().
    */
-  public function providerTestPhpTransliterationRemoveDiacritics() {
+  public static function providerTestPhpTransliterationRemoveDiacritics() {
     // cSpell:disable
     return [
       // Test all characters in the Unicode range 0x00bf to 0x017f.

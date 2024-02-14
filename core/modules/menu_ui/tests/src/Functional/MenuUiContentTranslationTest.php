@@ -101,7 +101,7 @@ class MenuUiContentTranslationTest extends BrowserTestBase {
    * @return array
    *   Data sets to test keyed by data set label.
    */
-  public function provideChangeContentToPseudoLanguageData() {
+  public static function provideChangeContentToPseudoLanguageData() {
     return [
       'und' => ['langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED],
       'zxx' => ['langcode' => LanguageInterface::LANGCODE_NOT_APPLICABLE],

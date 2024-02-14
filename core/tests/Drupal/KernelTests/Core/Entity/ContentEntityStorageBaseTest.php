@@ -41,7 +41,7 @@ class ContentEntityStorageBaseTest extends KernelTestBase {
   /**
    * Provides test data for testCreate().
    */
-  public function providerTestCreate() {
+  public static function providerTestCreate() {
     return [
       ['scalar' => 'test_bundle'],
       ['array keyed by delta' => [0 => ['value' => 'test_bundle']]],

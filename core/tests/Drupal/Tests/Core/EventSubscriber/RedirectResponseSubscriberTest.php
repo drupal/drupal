@@ -151,7 +151,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
   /**
    * Data provider for testDestinationRedirectToExternalUrl().
    */
-  public function providerTestDestinationRedirectToExternalUrl() {
+  public static function providerTestDestinationRedirectToExternalUrl() {
     return [
       'absolute external url' => [new Request(['destination' => 'http://example.com']), 'http://example.com'],
       'absolute external url with folder' => [new Request(['destination' => 'http://example.com/foobar']), 'http://example.com/foobar'],
@@ -180,7 +180,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
   /**
    * Data provider for testDestinationRedirectWithInvalidUrl().
    */
-  public function providerTestDestinationRedirectWithInvalidUrl() {
+  public static function providerTestDestinationRedirectWithInvalidUrl() {
     $data = [];
     $data[] = [new Request(['destination' => '//example:com'])];
     $data[] = [new Request(['destination' => '//example:com/test'])];

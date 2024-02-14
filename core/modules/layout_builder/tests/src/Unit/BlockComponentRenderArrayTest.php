@@ -47,7 +47,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
   /**
    * Data provider for test functions that should test block types.
    */
-  public function providerBlockTypes() {
+  public static function providerBlockTypes() {
     return [
       [TRUE],
       [FALSE],

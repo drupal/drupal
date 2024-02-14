@@ -20,7 +20,7 @@ class TermTranslationTest extends TermTest {
   /**
    * {@inheritdoc}
    */
-  public function providerSource() {
+  public static function providerSource() {
     $tests = [];
 
     // Ignore i18_modes 0 and 1, get i18n_mode 4.

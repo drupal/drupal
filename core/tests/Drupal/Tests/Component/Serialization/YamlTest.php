@@ -125,7 +125,7 @@ class YamlTest extends TestCase {
   /**
    * Data provider that lists all YAML files in core.
    */
-  public function providerYamlFilesInCore() {
+  public static function providerYamlFilesInCore() {
     $files = [];
     $dirs = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(__DIR__ . '/../../../../../', \RecursiveDirectoryIterator::FOLLOW_SYMLINKS));
     foreach ($dirs as $dir) {

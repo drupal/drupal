@@ -112,7 +112,7 @@ class BlockRepositoryTest extends UnitTestCase {
     $this->assertEquals($expected_blocks, $result);
   }
 
-  public function providerBlocksConfig() {
+  public static function providerBlocksConfig() {
     $blocks_config = [
       'block1' => [
         AccessResult::allowed(), 'top', 0,

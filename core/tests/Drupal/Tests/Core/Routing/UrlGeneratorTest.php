@@ -360,7 +360,7 @@ class UrlGeneratorTest extends UnitTestCase {
   /**
    * Provides test data for testAliasGenerationWithOptions.
    */
-  public function providerTestAliasGenerationWithOptions() {
+  public static function providerTestAliasGenerationWithOptions() {
     $data = [];
     // Extra parameters should appear in the query string.
     $data[] = [
@@ -517,7 +517,7 @@ class UrlGeneratorTest extends UnitTestCase {
   /**
    * Data provider for ::testNoPath().
    */
-  public function providerTestNoPath() {
+  public static function providerTestNoPath() {
     return [
       // Empty options.
       [[], ''],

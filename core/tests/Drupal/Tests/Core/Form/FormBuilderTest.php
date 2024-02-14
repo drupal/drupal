@@ -175,7 +175,7 @@ class FormBuilderTest extends FormTestBase {
   /**
    * Provides test data for testHandleFormStateResponse().
    */
-  public function formStateResponseProvider() {
+  public static function formStateResponseProvider() {
     return [
       ['Symfony\Component\HttpFoundation\Response', 'response'],
       ['Symfony\Component\HttpFoundation\RedirectResponse', 'redirect'],
@@ -335,7 +335,7 @@ class FormBuilderTest extends FormTestBase {
   /**
    * Data provider for ::testBuildFormWithTriggeringElement().
    */
-  public function providerTestBuildFormWithTriggeringElement() {
+  public static function providerTestBuildFormWithTriggeringElement() {
     $plain_text = 'Other submit value';
     $markup = 'Other submit <input> value';
     return [
@@ -649,7 +649,7 @@ class FormBuilderTest extends FormTestBase {
    *
    * @return array
    */
-  public function providerTestChildAccessInheritance() {
+  public static function providerTestChildAccessInheritance() {
     $data = [];
 
     $element = [
@@ -789,7 +789,7 @@ class FormBuilderTest extends FormTestBase {
     $this->assertSame($expected, $is_safe);
   }
 
-  public function providerTestValueCallableIsSafe() {
+  public static function providerTestValueCallableIsSafe() {
     $data = [];
     $data['string_no_slash'] = [
       'Drupal\Core\Render\Element\Token::valueCallback',
@@ -866,7 +866,7 @@ class FormBuilderTest extends FormTestBase {
     }
   }
 
-  public function providerTestInvalidToken() {
+  public static function providerTestInvalidToken() {
     $data = [];
     $data['authenticated_invalid'] = [TRUE, FALSE, TRUE];
     $data['authenticated_valid'] = [FALSE, TRUE, TRUE];
@@ -926,7 +926,7 @@ class FormBuilderTest extends FormTestBase {
    *
    * @return array
    */
-  public function providerTestFormTokenCacheability() {
+  public static function providerTestFormTokenCacheability() {
     return [
       'token:none,authenticated:true' => [NULL, TRUE, ['contexts' => ['user.roles:authenticated']], ['max-age' => 0], 'post'],
       'token:none,authenticated:false' => [NULL, FALSE, ['contexts' => ['user.roles:authenticated']], NULL, 'post'],

@@ -40,7 +40,7 @@ class BlockSettingsTest extends UnitTestCase {
   /**
    * Provides data for testTransform.
    */
-  public function providerTestTransform() {
+  public static function providerTestTransform() {
     return [
       'title set' => [
         [

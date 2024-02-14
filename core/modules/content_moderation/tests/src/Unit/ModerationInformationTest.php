@@ -146,7 +146,7 @@ class ModerationInformationTest extends UnitTestCase {
   /**
    * Data provider for several tests.
    */
-  public function providerWorkflow() {
+  public static function providerWorkflow() {
     return [
       [NULL, FALSE],
       ['workflow', TRUE],

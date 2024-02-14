@@ -19,7 +19,7 @@ class HeadingPluginTest extends UnitTestCase {
   /**
    * Provides a list of configs to test.
    */
-  public function providerGetDynamicPluginConfig(): array {
+  public static function providerGetDynamicPluginConfig(): array {
     // Prepare headings matching ckeditor5.ckeditor5.yml to also protect
     // against unexpected changes to the YAML file given the YAML file is used
     // to generate the dynamic plugin configuration.

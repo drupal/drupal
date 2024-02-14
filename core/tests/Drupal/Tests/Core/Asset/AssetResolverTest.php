@@ -146,7 +146,7 @@ class AssetResolverTest extends UnitTestCase {
     $this->assertCount($expected_cache_item_count * 2, $this->cache->getAllCids());
   }
 
-  public function providerAttachedAssets() {
+  public static function providerAttachedAssets() {
     $time = time();
     return [
       'same libraries, different timestamps' => [

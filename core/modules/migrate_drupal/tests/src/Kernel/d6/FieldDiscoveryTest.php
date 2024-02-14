@@ -136,7 +136,7 @@ class FieldDiscoveryTest extends MigrateDrupal6TestBase {
    * @return array
    *   The data.
    */
-  public function addAllFieldProcessesAltersData() {
+  public static function addAllFieldProcessesAltersData() {
     return [
       'Field Formatter' => [
         'field_plugin_method' => 'alterFieldFormatterMigration',

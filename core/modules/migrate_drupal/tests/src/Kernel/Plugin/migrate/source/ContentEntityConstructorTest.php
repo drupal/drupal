@@ -40,7 +40,7 @@ class ContentEntityConstructorTest extends KernelTestBase {
   /**
    * Provides data for constructor tests.
    */
-  public function providerTestConstructor() {
+  public static function providerTestConstructor() {
     return [
       'entity type missing' => [
         [],

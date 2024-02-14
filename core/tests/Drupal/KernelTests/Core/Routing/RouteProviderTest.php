@@ -204,7 +204,7 @@ class RouteProviderTest extends KernelTestBase {
   /**
    * Data provider for testMixedCasePaths()
    */
-  public function providerMixedCaseRoutePaths() {
+  public static function providerMixedCaseRoutePaths() {
     // cSpell:disable
     return [
       ['/path/one', 'route_a'],
@@ -254,7 +254,7 @@ class RouteProviderTest extends KernelTestBase {
   /**
    * Data provider for testMixedCasePaths()
    */
-  public function providerDuplicateRoutePaths() {
+  public static function providerDuplicateRoutePaths() {
     // When matching routes with the same fit the route with the lowest-sorting
     // name should end up first in the resulting route collection.
     return [

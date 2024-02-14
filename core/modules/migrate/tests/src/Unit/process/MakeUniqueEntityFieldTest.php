@@ -118,7 +118,7 @@ class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
   /**
    * Data provider for testMakeUniqueEntityField().
    */
-  public function providerTestMakeUniqueEntityField() {
+  public static function providerTestMakeUniqueEntityField() {
     return [
       // Tests no duplication.
       [0],

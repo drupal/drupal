@@ -43,7 +43,7 @@ class StreamWrapperManagerTest extends KernelTestBase {
   /**
    * Data provider.
    */
-  public function providerTestUriScheme() {
+  public static function providerTestUriScheme() {
     $data = [];
     $data[] = [
       'public://filename',

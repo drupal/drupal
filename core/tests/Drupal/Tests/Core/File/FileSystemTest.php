@@ -113,7 +113,7 @@ class FileSystemTest extends UnitTestCase {
     $this->assertSame($expected, $this->fileSystem->basename($uri, $suffix));
   }
 
-  public function providerTestBasename() {
+  public static function providerTestBasename() {
     $data = [];
     $data[] = [
       'public://nested/dir',

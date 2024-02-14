@@ -47,7 +47,7 @@ class SessionConfigurationTest extends UnitTestCase {
    * @return array
    *   Test data
    */
-  public function providerTestGeneratedCookieDomain() {
+  public static function providerTestGeneratedCookieDomain() {
     return [
       ['http://example.com/path/index.php', '.example.com'],
       ['http://www.example.com/path/index.php', '.www.example.com'],
@@ -86,7 +86,7 @@ class SessionConfigurationTest extends UnitTestCase {
    * @return array
    *   Test data
    */
-  public function providerTestEnforcedCookieDomain() {
+  public static function providerTestEnforcedCookieDomain() {
     return [
       ['http://example.com/path/index.php', '.example.com'],
       ['http://www.example.com/path/index.php', '.example.com'],
@@ -152,7 +152,7 @@ class SessionConfigurationTest extends UnitTestCase {
    * @return array
    *   Test data
    */
-  public function providerTestCookieSecure() {
+  public static function providerTestCookieSecure() {
     return [
       ['http://example.com/path/index.php', FALSE],
       ['https://www.example.com/path/index.php', TRUE],
@@ -185,7 +185,7 @@ class SessionConfigurationTest extends UnitTestCase {
    * @return array
    *   Test data
    */
-  public function providerTestGeneratedSessionName() {
+  public static function providerTestGeneratedSessionName() {
     $data = [
       ['http://example.com/path/index.php', 'SESS', 'example.com'],
       ['http://www.example.com/path/index.php', 'SESS', 'www.example.com'],
@@ -233,7 +233,7 @@ class SessionConfigurationTest extends UnitTestCase {
    * @return array
    *   Test data
    */
-  public function providerTestEnforcedSessionName() {
+  public static function providerTestEnforcedSessionName() {
     $data = [
       ['http://example.com/path/index.php', 'SESS', '.example.com'],
       ['http://www.example.com/path/index.php', 'SESS', '.example.com'],
@@ -279,7 +279,7 @@ class SessionConfigurationTest extends UnitTestCase {
    * @return array
    *   Test data
    */
-  public function providerTestConstructorDefaultSettings() {
+  public static function providerTestConstructorDefaultSettings() {
     return [
       [[], 48, 6],
       [['sid_length' => 100], 100, 6],

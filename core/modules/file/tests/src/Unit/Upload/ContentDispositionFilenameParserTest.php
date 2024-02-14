@@ -62,7 +62,7 @@ class ContentDispositionFilenameParserTest extends UnitTestCase {
   /**
    * A data provider for invalid headers.
    */
-  public function invalidHeaderProvider(): array {
+  public static function invalidHeaderProvider(): array {
     return [
       'multiple' => ['file; filename=""'],
       'empty' => ['filename=""'],

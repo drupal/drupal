@@ -42,7 +42,7 @@ class UriItemTest extends UnitTestCase {
    * @return array
    *   Test cases.
    */
-  public function providerMaxLength(): array {
+  public static function providerMaxLength(): array {
     return [
       '32' => [32],
       '255' => [255],

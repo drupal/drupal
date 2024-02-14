@@ -100,7 +100,7 @@ class TagTest extends ViewsKernelTestBase {
    * @return array[]
    *   The data set.
    */
-  public function providerViewsUiAutocompleteIndividualTags() {
+  public static function providerViewsUiAutocompleteIndividualTags() {
     return [
       'tag' => ['comma', 'comma'],
       'case insensitive tag' => ['comma', 'COMMA'],

@@ -639,7 +639,7 @@ class FieldTest extends UnitTestCase {
   /**
    * Provides test data for testPrepareItemsByDelta().
    */
-  public function providerTestPrepareItemsByDelta() {
+  public static function providerTestPrepareItemsByDelta() {
     $data = [];
 
     // Let's display all values.
@@ -706,7 +706,7 @@ class FieldTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerSortOrders() {
+  public static function providerSortOrders() {
     return [
       ['asc'],
       ['desc'],

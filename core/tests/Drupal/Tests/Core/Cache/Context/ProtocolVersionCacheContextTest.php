@@ -32,7 +32,7 @@ class ProtocolVersionCacheContextTest extends UnitTestCase {
   /**
    * Provides a list of query arguments and expected cache contexts.
    */
-  public function providerTestGetContext() {
+  public static function providerTestGetContext() {
     return [
       ['HTTP/1.0', 'HTTP/1.0'],
       ['HTTP/1.1', 'HTTP/1.1'],

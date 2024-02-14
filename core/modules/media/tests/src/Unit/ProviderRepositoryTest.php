@@ -166,7 +166,7 @@ END;
    * @return array[]
    *   Sets of arguments to pass to the test method.
    */
-  public function providerInvalidResponse(): array {
+  public static function providerInvalidResponse(): array {
     return [
       'expired' => [
         -86400,

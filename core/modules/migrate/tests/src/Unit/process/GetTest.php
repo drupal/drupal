@@ -97,7 +97,7 @@ class GetTest extends MigrateProcessTestCase {
    *
    * @return array
    */
-  public function integerValuesDataProvider() {
+  public static function integerValuesDataProvider() {
     return [
       [
         'source' => [0 => 0, 1 => 'test'],

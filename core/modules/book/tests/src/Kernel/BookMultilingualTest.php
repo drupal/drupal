@@ -256,7 +256,7 @@ class BookMultilingualTest extends KernelTestBase {
   /**
    * Data provider for ::testMultilingualBooks().
    */
-  public function langcodesProvider() {
+  public static function langcodesProvider() {
     return [
       [self::LANGCODE],
       ['en'],

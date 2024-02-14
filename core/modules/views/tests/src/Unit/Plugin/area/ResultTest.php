@@ -92,7 +92,7 @@ class ResultTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestResultArea() {
+  public static function providerTestResultArea() {
     return [
       ['@label', 'ResultTest'],
       ['@start', '1'],

@@ -181,7 +181,7 @@ class UpdateMailTest extends UnitTestCase {
    *   - TRUE if the user is authorized.
    *   - An array of message body strings.
    */
-  public function providerTestUpdateEmail(): array {
+  public static function providerTestUpdateEmail(): array {
     return [
       'all' => [
         'all',

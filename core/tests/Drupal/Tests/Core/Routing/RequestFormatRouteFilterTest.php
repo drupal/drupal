@@ -35,7 +35,7 @@ class RequestFormatRouteFilterTest extends UnitTestCase {
     $this->assertSame($expected_filtered_collection, array_keys($collection->all()));
   }
 
-  public function filterProvider() {
+  public static function filterProvider() {
     $route_without_format = new Route('/test');
     $route_with_format = new Route('/test');
     $route_with_format->setRequirement('_format', 'json');

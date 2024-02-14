@@ -186,7 +186,7 @@ class MediaPreviewTest extends MediaTestBase {
   /**
    * Data provider for ::testEmbedPreviewAccess.
    */
-  public function previewAccessProvider() {
+  public static function previewAccessProvider() {
     return [
       'media_embed filter enabled' => [
         TRUE,

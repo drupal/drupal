@@ -145,7 +145,7 @@ class NumberTest extends TestCase {
    *     - The integer value.
    *     - The alphadecimal value.
    */
-  public function providerTestConversions() {
+  public static function providerTestConversions() {
     return [
       [0, '00'],
       [1, '01'],

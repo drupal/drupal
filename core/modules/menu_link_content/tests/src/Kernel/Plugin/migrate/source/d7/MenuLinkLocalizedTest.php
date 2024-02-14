@@ -22,7 +22,7 @@ class MenuLinkLocalizedTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function providerSource() {
+  public static function providerSource() {
     $tests = [];
     $tests[0]['source_data']['menu_links'] = [
       [

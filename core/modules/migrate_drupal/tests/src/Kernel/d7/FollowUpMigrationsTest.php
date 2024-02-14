@@ -119,7 +119,7 @@ class FollowUpMigrationsTest extends MigrateDrupal7TestBase {
   /**
    * Data provider for testEntityReferenceTranslations().
    */
-  public function providerTestEntityReferenceTranslations() {
+  public static function providerTestEntityReferenceTranslations() {
     return [
       [
         ['d7_node', 'd7_node_translation'],

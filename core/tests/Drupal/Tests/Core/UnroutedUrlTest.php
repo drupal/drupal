@@ -78,7 +78,7 @@ class UnroutedUrlTest extends UnitTestCase {
   /**
    * Data provider for testFromUri().
    */
-  public function providerFromUri() {
+  public static function providerFromUri() {
     return [
       // [$uri, $is_external]
       // An external URI.
@@ -112,7 +112,7 @@ class UnroutedUrlTest extends UnitTestCase {
   /**
    * Data provider for testFromInvalidUri().
    */
-  public function providerFromInvalidUri() {
+  public static function providerFromInvalidUri() {
     return [
       // Schemeless paths.
       ['test'],

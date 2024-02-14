@@ -103,7 +103,7 @@ class UploadedFileValidatorTest extends KernelTestBase {
   /**
    * Data provider for ::testValidateFail.
    */
-  public function validateProvider(): array {
+  public static function validateProvider(): array {
     return [
       'ini size' => [
         \UPLOAD_ERR_INI_SIZE,

@@ -55,7 +55,7 @@ class ThemeRenderAndAutoescapeTest extends KernelTestBase {
   /**
    * Provide test examples.
    */
-  public function providerTestThemeRenderAndAutoescape() {
+  public static function providerTestThemeRenderAndAutoescape() {
     return [
       'empty string unchanged' => ['', ''],
       'simple string unchanged' => ['ab', 'ab'],

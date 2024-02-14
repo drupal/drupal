@@ -71,7 +71,7 @@ class MigrationTest extends KernelTestBase {
   /**
    * Provides data for testing invalid process pipeline.
    */
-  public function getProcessPluginsExceptionMessageProvider() {
+  public static function getProcessPluginsExceptionMessageProvider() {
     return [
       [
         'Null' =>

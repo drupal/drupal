@@ -39,7 +39,7 @@ class LogMessageParserTest extends UnitTestCase {
   /**
    * Data provider for testParseMessagePlaceholders().
    */
-  public function providerTestParseMessagePlaceholders() {
+  public static function providerTestParseMessagePlaceholders() {
     return [
       'PSR3-style placeholder' => [
         ['message' => 'User {username} created', 'context' => ['username' => 'Dries']],

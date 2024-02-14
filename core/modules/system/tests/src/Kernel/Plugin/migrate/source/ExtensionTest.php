@@ -20,7 +20,7 @@ class ExtensionTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function providerSource() {
+  public static function providerSource() {
     $test = [];
 
     $test[0]['source_data']['system'] = [

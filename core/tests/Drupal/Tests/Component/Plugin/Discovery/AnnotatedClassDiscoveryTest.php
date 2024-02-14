@@ -24,7 +24,7 @@ class AnnotatedClassDiscoveryTest extends TestCase {
    *
    * @var string[]
    */
-  public function provideBadAnnotations() {
+  public static function provideBadAnnotations() {
     return [
       ['addtogroup'],
       ['code'],

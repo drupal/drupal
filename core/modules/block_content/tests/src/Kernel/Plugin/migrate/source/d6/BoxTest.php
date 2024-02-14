@@ -20,7 +20,7 @@ class BoxTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function providerSource() {
+  public static function providerSource() {
     $tests = [];
 
     $tests[0]['source_data']['boxes'] = [

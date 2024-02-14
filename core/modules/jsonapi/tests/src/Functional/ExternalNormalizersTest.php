@@ -182,7 +182,7 @@ class ExternalNormalizersTest extends BrowserTestBase {
    * @return array
    *   Test cases.
    */
-  public function providerTestFormatAgnosticNormalizers() {
+  public static function providerTestFormatAgnosticNormalizers() {
     return [
       'Format-agnostic @FieldType-level normalizers SHOULD NOT be able to affect the JSON:API normalization' => [
         'jsonapi_test_field_type',

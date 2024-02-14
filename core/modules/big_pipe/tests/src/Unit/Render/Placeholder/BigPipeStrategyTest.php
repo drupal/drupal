@@ -63,7 +63,7 @@ class BigPipeStrategyTest extends UnitTestCase {
   /**
    * @see \Drupal\big_pipe_test\BigPipePlaceholderTestCases
    */
-  public function placeholdersProvider() {
+  public static function placeholdersProvider() {
     $cases = BigPipePlaceholderTestCases::cases();
 
     // Generate $placeholders variable as expected by

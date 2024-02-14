@@ -62,7 +62,7 @@ class CKEditor5Test extends UnitTestCase {
    * @return array[]
    *   An array with the property path and expected form item name.
    */
-  public function providerPathsToFormNames(): array {
+  public static function providerPathsToFormNames(): array {
     return [
       'validation error targeting toolbar items' => [
         'settings.toolbar.items',

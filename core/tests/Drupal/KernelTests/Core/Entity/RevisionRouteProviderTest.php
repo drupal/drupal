@@ -104,7 +104,7 @@ class RevisionRouteProviderTest extends KernelTestBase {
    * @return array
    *   Data for testing.
    */
-  public function providerOperationAccessRevisionRoutes(): array {
+  public static function providerOperationAccessRevisionRoutes(): array {
     $data = [];
 
     $data['view revision'] = [

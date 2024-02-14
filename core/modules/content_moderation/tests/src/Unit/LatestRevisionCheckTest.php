@@ -105,7 +105,7 @@ class LatestRevisionCheckTest extends UnitTestCase {
   /**
    * Data provider for testLastAccessPermissions().
    */
-  public function accessSituationProvider() {
+  public static function accessSituationProvider() {
     return [
       // Node with global permissions and latest version.
       [Node::class, 'node', TRUE, ['view latest version', 'view any unpublished content'], FALSE, AccessResultAllowed::class],

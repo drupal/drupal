@@ -41,7 +41,7 @@ class PathProcessorFrontTest extends UnitTestCase {
   /**
    * Inbound paths and expected results.
    */
-  public function providerProcessInbound() {
+  public static function providerProcessInbound() {
     return [
       'accessing frontpage' => ['/node', '/', '/node'],
       'accessing non frontpage' => ['/node', '/user', '/user'],

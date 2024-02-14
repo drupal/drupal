@@ -20,7 +20,7 @@ class RoleTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function providerSource() {
+  public static function providerSource() {
     $expected = [
       [
         'rid' => 1,

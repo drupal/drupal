@@ -200,7 +200,7 @@ class MigrationProvidersExistTest extends MigrateDrupalTestBase {
    * @return array
    *   Array of plugin definitions.
    */
-  public function fieldPluginDefinitionsProvider() {
+  public static function fieldPluginDefinitionsProvider() {
     return [
       'missing_core_scenario' => [
         'definitions' => [

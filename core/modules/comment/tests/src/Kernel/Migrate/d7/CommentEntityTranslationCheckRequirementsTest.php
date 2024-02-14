@@ -46,7 +46,7 @@ class CommentEntityTranslationCheckRequirementsTest extends MigrateDrupal7TestBa
    *
    * @return string[][]
    */
-  public function providerTestCheckRequirements() {
+  public static function providerTestCheckRequirements() {
     return [
       ['comment'],
       ['node'],

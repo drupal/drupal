@@ -48,7 +48,7 @@ class ContentModerationPermissionsTest extends KernelTestBase {
    * @return array
    *   Content moderation permissions based test cases.
    */
-  public function permissionsTestCases() {
+  public static function permissionsTestCases() {
     return [
       'Simple Content Moderation Workflow' => [
         [

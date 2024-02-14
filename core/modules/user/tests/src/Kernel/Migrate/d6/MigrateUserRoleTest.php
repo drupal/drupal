@@ -100,7 +100,7 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
   /**
    * Data provider for user role migration tests.
    */
-  public function providerTestUserRole() {
+  public static function providerTestUserRole() {
     return [
       'filter only' => [
         'modules' => [],

@@ -44,7 +44,7 @@ class TextItemBaseTest extends KernelTestBase {
   /**
    * Data provider for testTextFieldSampleValue.
    */
-  public function providerTextFieldSampleValue() {
+  public static function providerTextFieldSampleValue() {
     return [
       [
         1,

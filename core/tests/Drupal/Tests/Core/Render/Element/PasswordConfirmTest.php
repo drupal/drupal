@@ -27,7 +27,7 @@ class PasswordConfirmTest extends UnitTestCase {
   /**
    * Data provider for testValueCallback().
    */
-  public function providerTestValueCallback() {
+  public static function providerTestValueCallback() {
     $data = [];
     $data[] = [['pass1' => '', 'pass2' => ''], [], NULL];
     $data[] = [['pass1' => '', 'pass2' => ''], ['#default_value' => ['pass2' => 'value']], NULL];

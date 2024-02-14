@@ -59,7 +59,7 @@ class MachineNameControllerTest extends UnitTestCase {
    *     - An array of request parameters.
    *     - The expected content of the JSONresponse.
    */
-  public function providerTestMachineNameController() {
+  public static function providerTestMachineNameController() {
     // cspell:ignore äwesome
     $valid_data = [
       [['text' => 'Bob', 'langcode' => 'en'], '"Bob"'],

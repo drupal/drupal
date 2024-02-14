@@ -36,7 +36,7 @@ class UnicodeTest extends TestCase {
    * @return array
    *   An array containing a string and its uppercase first version.
    */
-  public function providerUcfirst() {
+  public static function providerUcfirst() {
     // cSpell:disable
     return [
       ['tHe QUIcK bRoWn', 'THe QUIcK bRoWn'],
@@ -67,7 +67,7 @@ class UnicodeTest extends TestCase {
    * @return array
    *   An array containing a string and its lowercase version.
    */
-  public function providerLcfirst() {
+  public static function providerLcfirst() {
     // cSpell:disable
     return [
       ['tHe QUIcK bRoWn', 'tHe QUIcK bRoWn'],
@@ -98,7 +98,7 @@ class UnicodeTest extends TestCase {
    * @return array
    *   An array containing a string and its capitalized version.
    */
-  public function providerUcwords() {
+  public static function providerUcwords() {
     // cSpell:disable
     return [
       ['tHe QUIcK bRoWn', 'THe QUIcK BRoWn'],
@@ -136,7 +136,7 @@ class UnicodeTest extends TestCase {
    *     - (optional) Boolean for the $wordsafe flag. Defaults to FALSE.
    *     - (optional) Boolean for the $add_ellipsis flag. Defaults to FALSE.
    */
-  public function providerTruncate() {
+  public static function providerTruncate() {
     // cSpell:disable
     $tests = [
       ['frànçAIS is über-åwesome', 24, 'frànçAIS is über-åwesome'],
@@ -229,7 +229,7 @@ EOF;
    *   An array of arrays, each containing the parameters to
    *   self::testTruncateBytes().
    */
-  public function providerTestTruncateBytes() {
+  public static function providerTestTruncateBytes() {
     return [
       // String shorter than max length.
       ['Short string', 42, 'Short string'],
@@ -266,7 +266,7 @@ EOF;
    *   An array of arrays, each containing the parameters for
    *   self::testValidateUtf8().
    */
-  public function providerTestValidateUtf8() {
+  public static function providerTestValidateUtf8() {
     return [
       // Empty string.
       ['', TRUE, 'An empty string did not validate.'],
@@ -303,7 +303,7 @@ EOF;
    *   An array of arrays, each containing the parameters to
    *   self::testConvertUtf8().  }
    */
-  public function providerTestConvertToUtf8() {
+  public static function providerTestConvertToUtf8() {
     return [
       [chr(0x97), 'Windows-1252', '—'],
       [chr(0x99), 'Windows-1252', '™'],

@@ -25,7 +25,7 @@ class SelectExtenderTest extends KernelTestBase {
    *   - The database driver namespace.
    *   - The namespaced class name for which to extend.
    */
-  public function providerExtend(): array {
+  public static function providerExtend(): array {
     return [
       [
         'Drupal\Core\Database\Query\PagerSelectExtender',

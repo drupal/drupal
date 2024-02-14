@@ -100,7 +100,7 @@ class EntityPermissionsFormTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestPermissionsByProvider() {
+  public static function providerTestPermissionsByProvider() {
     return [
       'direct dependency' => ['node.type.article', TRUE],
       'indirect dependency' => ['core.entity_view_display.node.article.full', TRUE],

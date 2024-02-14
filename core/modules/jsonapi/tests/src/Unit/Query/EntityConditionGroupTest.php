@@ -41,7 +41,7 @@ class EntityConditionGroupTest extends UnitTestCase {
   /**
    * Data provider for testConstruct.
    */
-  public function constructProvider() {
+  public static function constructProvider() {
     return [
       [['conjunction' => 'AND', 'members' => []]],
       [['conjunction' => 'OR', 'members' => []]],

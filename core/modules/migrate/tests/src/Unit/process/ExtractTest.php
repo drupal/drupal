@@ -84,7 +84,7 @@ class ExtractTest extends MigrateProcessTestCase {
   /**
    * Data provider for testExtractDefault.
    */
-  public function providerExtractDefault() {
+  public static function providerExtractDefault() {
     return [
       [
         ['foo' => 'bar'],
@@ -140,7 +140,7 @@ class ExtractTest extends MigrateProcessTestCase {
   /**
    * Provides data for the testExtractInvalid.
    */
-  public function providerTestExtractInvalid() {
+  public static function providerTestExtractInvalid() {
     $xml_str = <<<XML
     <xml version='1.0'?>
       <authors>

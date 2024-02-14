@@ -46,7 +46,7 @@ final class FilterImageLazyLoadTest extends UnitTestCase {
    * @return array
    *   An array of test data.
    */
-  public function providerHtml(): array {
+  public static function providerHtml(): array {
     return [
       'lazy loading attribute already added' => [
         'input' => '<p><img src="foo.png" loading="lazy"></p>',

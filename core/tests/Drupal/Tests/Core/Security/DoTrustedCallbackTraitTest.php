@@ -29,7 +29,7 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
   /**
    * Data provider for ::testTrustedCallbacks().
    */
-  public function providerTestTrustedCallbacks() {
+  public static function providerTestTrustedCallbacks() {
     $closure = function () {
       return 'test';
     };
@@ -58,7 +58,7 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
   /**
    * Data provider for ::testUntrustedCallbacks().
    */
-  public function providerTestUntrustedCallbacks() {
+  public static function providerTestUntrustedCallbacks() {
     $tests['TrustedCallbackInterface_object'] = [[new TrustedMethods(), 'unTrustedCallback'], TrustedInterface::class];
     $tests['TrustedCallbackInterface_static_string'] = ['\Drupal\Tests\Core\Security\TrustedMethods::unTrustedCallback', TrustedInterface::class];
     $tests['TrustedCallbackInterface_static_array'] = [[TrustedMethods::class, 'unTrustedCallback'], TrustedInterface::class];
@@ -99,7 +99,7 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
   /**
    * Data provider for tests of ::doTrustedCallback $error_type argument.
    */
-  public function errorTypeProvider() {
+  public static function errorTypeProvider() {
     $tests['untrusted_object'] = [[new UntrustedObject(), 'callback']];
     $tests['untrusted_object_static_string'] = ['Drupal\Tests\Core\Security\UntrustedObject::callback'];
     $tests['untrusted_object_static_array'] = [[UntrustedObject::class, 'callback']];

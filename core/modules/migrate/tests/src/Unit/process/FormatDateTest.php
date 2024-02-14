@@ -103,7 +103,7 @@ class FormatDateTest extends MigrateProcessTestCase {
    * @return array
    *   Array of date formats and actual/expected values.
    */
-  public function datesDataProvider() {
+  public static function datesDataProvider() {
     return [
       'datetime_date' => [
         'configuration' => [

@@ -21,7 +21,7 @@ class ContextDefinitionTest extends UnitTestCase {
   /**
    * Very simple data provider.
    */
-  public function providerGetDataDefinition() {
+  public static function providerGetDataDefinition() {
     return [
       [TRUE],
       [FALSE],
@@ -163,7 +163,7 @@ class ContextDefinitionTest extends UnitTestCase {
   /**
    * Data provider for testGetConstraint.
    */
-  public function providerGetConstraint() {
+  public static function providerGetConstraint() {
     return [
       [NULL, [], 'nonexistent_constraint_name'],
       [

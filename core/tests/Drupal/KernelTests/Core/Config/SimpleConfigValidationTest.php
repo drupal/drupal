@@ -78,7 +78,7 @@ class SimpleConfigValidationTest extends KernelTestBase {
    * @return array[]
    *   The test cases.
    */
-  public function providerSpecialCharacters(): array {
+  public static function providerSpecialCharacters(): array {
     $data = [];
 
     for ($code_point = 0; $code_point < 32; $code_point++) {

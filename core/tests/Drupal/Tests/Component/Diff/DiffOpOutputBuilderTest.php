@@ -26,7 +26,7 @@ class DiffOpOutputBuilderTest extends TestCase {
    *   - An array of strings to change from.
    *   - An array of strings to change to.
    */
-  public function provideTestDiff(): array {
+  public static function provideTestDiff(): array {
     return [
       'empty' => [[], [], []],
       'add' => [[new DiffOpAdd(['a'])], [], ['a']],

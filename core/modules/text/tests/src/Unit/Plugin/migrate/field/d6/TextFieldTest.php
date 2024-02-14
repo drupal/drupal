@@ -126,7 +126,7 @@ class TextFieldTest extends UnitTestCase {
   /**
    * Data provider for testGetFieldType().
    */
-  public function getFieldTypeProvider() {
+  public static function getFieldTypeProvider() {
     return [
       ['string_long', 'text_textfield', ['text_processing' => FALSE]],
       ['string', 'text_textfield', [

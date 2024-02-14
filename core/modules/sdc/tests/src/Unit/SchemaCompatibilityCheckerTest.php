@@ -50,7 +50,7 @@ final class SchemaCompatibilityCheckerTest extends UnitTestCase {
    * @return array[]
    *   The batches of data.
    */
-  public function dataProviderIsCompatible(): array {
+  public static function dataProviderIsCompatible(): array {
     $schema = [
       'type' => 'object',
       'required' => ['text'],

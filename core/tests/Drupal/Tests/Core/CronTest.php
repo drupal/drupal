@@ -172,7 +172,7 @@ class CronTest extends UnitTestCase {
   /**
    * Data provider for ::testProcessQueues() method.
    */
-  public function processQueuesTestData() {
+  public static function processQueuesTestData() {
     return [
       ['Complete', 'assertFalse', 0],
       ['Exception', 'assertTrue', 1],

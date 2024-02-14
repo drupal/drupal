@@ -34,7 +34,7 @@ class FilterPluginBaseTest extends UnitTestCase {
    * @return array
    *   The data set.
    */
-  public function acceptExposedInputProvider() {
+  public static function acceptExposedInputProvider() {
     return [
       'not-exposed' => [TRUE, ['exposed' => FALSE], []],
       'exposed-no-input' => [TRUE, ['exposed' => TRUE], []],

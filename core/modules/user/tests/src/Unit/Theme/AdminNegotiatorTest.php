@@ -35,7 +35,7 @@ class AdminNegotiatorTest extends UnitTestCase {
   /**
    * Provides a list of theme names to test.
    */
-  public function getThemes() {
+  public static function getThemes() {
     return [
       ['claro', 'claro'],
       [NULL, NULL],

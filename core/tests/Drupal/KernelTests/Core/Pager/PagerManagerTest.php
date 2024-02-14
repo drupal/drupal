@@ -81,7 +81,7 @@ class PagerManagerTest extends KernelTestBase {
    *   - Array of elements to pass to PagerManager::createPager().
    *   - The expected value returned by PagerManager::getMaxPagerElementId().
    */
-  public function providerTestGetMaxPagerElementId(): array {
+  public static function providerTestGetMaxPagerElementId(): array {
     return [
       'no_pager' => [[], -1],
       'single_pager' => [[0], 0],

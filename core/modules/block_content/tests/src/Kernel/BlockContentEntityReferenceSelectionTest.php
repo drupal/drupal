@@ -177,7 +177,7 @@ class BlockContentEntityReferenceSelectionTest extends KernelTestBase {
   /**
    * Provides possible fields and condition types.
    */
-  public function fieldConditionProvider() {
+  public static function fieldConditionProvider() {
     $cases = [];
     foreach (['base', 'group', 'nested_group'] as $condition_type) {
       foreach ([TRUE, FALSE] as $reusable) {

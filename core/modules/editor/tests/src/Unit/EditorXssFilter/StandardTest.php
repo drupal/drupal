@@ -58,7 +58,7 @@ class StandardTest extends UnitTestCase {
    *
    * @see \Drupal\Tests\editor\Unit\editor\EditorXssFilter\StandardTest::testFilterXss()
    */
-  public function providerTestFilterXss() {
+  public static function providerTestFilterXss() {
     $data = [];
     $data[] = ['<p>Hello, world!</p><unknown>Pink Fairy Armadillo</unknown>', '<p>Hello, world!</p><unknown>Pink Fairy Armadillo</unknown>'];
     $data[] = ['<p style="color:red">Hello, world!</p><unknown>Pink Fairy Armadillo</unknown>', '<p>Hello, world!</p><unknown>Pink Fairy Armadillo</unknown>'];
@@ -580,7 +580,7 @@ xss:ex/*XSS*//*/*/pression(alert("XSS"))\'>',
    *     - The assertion message.
    *     - (optional) The disallowed HTML tags to be passed to \Drupal\Component\Utility\Xss::filter().
    */
-  public function providerTestBlackListMode() {
+  public static function providerTestBlackListMode() {
     return [
       [
         '<unknown style="visibility:hidden">Pink Fairy Armadillo</unknown><video src="gerenuk.mp4"><script>alert(0)</script>',

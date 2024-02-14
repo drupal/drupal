@@ -57,7 +57,7 @@ class DeprecatedAssetsTest extends KernelTestBase {
    * @return array
    *   See description above.
    */
-  public function deprecatedLibrariesProvider(): array {
+  public static function deprecatedLibrariesProvider(): array {
     return [
       'Tests deprecation of library core/js-cookie' => [
         'core',

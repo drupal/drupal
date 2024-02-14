@@ -360,7 +360,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    *   - A bool whether to provide a bundle-specific definition.
    *   - A bool whether to provide an entity type-specific definition.
    */
-  public function providerTestTypedData(): array {
+  public static function providerTestTypedData(): array {
     return [
       'Entity data definition derivative with entity type and bundle' => [
         TRUE,
@@ -534,7 +534,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    *   - Language code for $activeLanguage.
    *   - Fields array for $fields.
    */
-  public function providerGet() {
+  public static function providerGet() {
     return [
       // Populated fields array.
       ['result', 'field_name', 'langcode', ['field_name' => ['langcode' => 'result']]],
@@ -596,7 +596,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    *     Drupal\Core\Field\FieldDefinitionInterface object will be mocked for
    *     each name.
    */
-  public function providerGetFields() {
+  public static function providerGetFields() {
     return [
       [[], FALSE, FALSE, []],
       [['field' => 'field', 'field2' => 'field2'], TRUE, FALSE, ['field', 'field2']],

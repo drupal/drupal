@@ -55,7 +55,7 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
    *
    * @return array
    */
-  public function providerRender() {
+  public static function providerRender() {
     return [
       'Vimeo video' => [
         'https://vimeo.com/7073899',

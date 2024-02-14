@@ -128,7 +128,7 @@ class CallableResolverTest extends UnitTestCase {
   /**
    * Test cases for ::testCallbackResolverExceptionHandling.
    */
-  public function callableResolverExceptionHandlingTestCases() {
+  public static function callableResolverExceptionHandlingTestCases() {
     return [
       'String function' => [
         'not_a_callable',

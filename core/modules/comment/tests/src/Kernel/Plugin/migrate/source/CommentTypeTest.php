@@ -21,7 +21,7 @@ class CommentTypeTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function providerSource() {
+  public static function providerSource() {
     $node_type_rows = [
       [
         'type' => 'page',

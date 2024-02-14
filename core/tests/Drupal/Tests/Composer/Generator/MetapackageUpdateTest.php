@@ -22,7 +22,7 @@ class MetapackageUpdateTest extends TestCase {
   /**
    * Provides test data for testUpdated.
    */
-  public function updatedTestData() {
+  public static function updatedTestData() {
     return [
       [
         DrupalCoreRecommendedBuilder::class,

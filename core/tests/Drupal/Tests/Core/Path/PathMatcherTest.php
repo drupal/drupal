@@ -57,7 +57,7 @@ class PathMatcherTest extends UnitTestCase {
    * @return array
    *   A nested array of pattern arrays and path arrays.
    */
-  public function getMatchPathData() {
+  public static function getMatchPathData() {
     return [
       [
         // Single absolute paths.

@@ -248,7 +248,7 @@ class AccessManagerTest extends UnitTestCase {
    *
    * @see \Drupal\Tests\Core\Access\AccessManagerTest::testCheckConjunctions()
    */
-  public function providerTestCheckConjunctions() {
+  public static function providerTestCheckConjunctions() {
     $access_allow = AccessResult::allowed();
     $access_deny = AccessResult::neutral();
     $access_kill = AccessResult::forbidden();
@@ -507,7 +507,7 @@ class AccessManagerTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerCheckException() {
+  public static function providerCheckException() {
     return [
       [[1]],
       ['string'],

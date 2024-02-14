@@ -138,7 +138,7 @@ class ManageFieldsMultipleTypesTest extends ManageFieldsFunctionalTestBase {
    * @return array
    *   Test cases.
    */
-  public function entityTypesProvider() {
+  public static function entityTypesProvider() {
     return [
       'node' => [
         'entity_type' => 'node',

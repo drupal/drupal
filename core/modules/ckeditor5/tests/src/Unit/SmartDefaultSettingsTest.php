@@ -34,7 +34,7 @@ class SmartDefaultSettingsTest extends UnitTestCase {
    *
    * @return \Generator
    */
-  public function providerSurplusScore(): \Generator {
+  public static function providerSurplusScore(): \Generator {
     $needed = new HTMLRestrictions(['code' => FALSE]);
 
     yield 'surplus: 1 tag, 1 attribute, 1 attribute with wildcard restriction' => [
@@ -92,7 +92,7 @@ class SmartDefaultSettingsTest extends UnitTestCase {
    *
    * @return \Generator
    */
-  public function providerCandidates(): \Generator {
+  public static function providerCandidates(): \Generator {
     $generate_definition = function (string $label_and_id, array $overrides): CKEditor5PluginDefinition {
       $annotation = [
         'provider' => 'test',

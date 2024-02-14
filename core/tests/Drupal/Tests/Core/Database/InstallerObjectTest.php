@@ -59,7 +59,7 @@ class InstallerObjectTest extends UnitTestCase {
    *   - namespace: The namespace providing the driver.
    *   - class: The fully qualified class name of the expected install task.
    */
-  public function providerDbInstallerObject() {
+  public static function providerDbInstallerObject() {
     return [
       // A driver only in the core namespace.
       ['mysql', "Drupal\\mysql\\Driver\\Database\\mysql", MysqlInstallTasks::class],

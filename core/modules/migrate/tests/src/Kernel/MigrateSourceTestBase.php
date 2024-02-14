@@ -48,7 +48,7 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
    *     counted.
    *   - (optional) Array of configuration options for the plugin under test.
    */
-  abstract public function providerSource();
+  abstract public static function providerSource();
 
   /**
    * {@inheritdoc}

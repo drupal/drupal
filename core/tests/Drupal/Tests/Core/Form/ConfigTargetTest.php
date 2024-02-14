@@ -97,7 +97,7 @@ class ConfigTargetTest extends UnitTestCase {
     $this->assertSame($expected, $form_state->isCached());
   }
 
-  public function providerTestFormCacheable(): array {
+  public static function providerTestFormCacheable(): array {
     $closure = fn (bool $something): string => $something ? 'Yes' : 'No';
     return [
       'No callables' => [TRUE, NULL, NULL],
@@ -164,7 +164,7 @@ class ConfigTargetTest extends UnitTestCase {
     ConfigTarget::fromForm($array_parents, $form);
   }
 
-  public function providerTestFromFormException(): array {
+  public static function providerTestFromFormException(): array {
     return [
       'No #config_target' => [
         [
@@ -215,7 +215,7 @@ class ConfigTargetTest extends UnitTestCase {
     new ConfigTarget(...$arguments);
   }
 
-  public function providerMultiTargetWithoutCallables(): \Generator {
+  public static function providerMultiTargetWithoutCallables(): \Generator {
     yield "neither callable" => ['foo.settings', ['a', 'b']];
     yield "only fromConfig" => ['foo.settings', ['a', 'b'], "intval"];
     yield "only toConfig" => ['foo.settings', ['a', 'b'], NULL, "intval"];

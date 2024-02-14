@@ -186,7 +186,7 @@ class LoggingTest extends DatabaseTestBase {
    *
    * @see ::testContribDriverLog()
    */
-  public function providerContribDriverLog() {
+  public static function providerContribDriverLog() {
     $stack = [
       [
         'file' => '/var/www/core/lib/Drupal/Core/Database/Log.php',

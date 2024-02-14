@@ -340,7 +340,7 @@ JS;
    *   - The method which should be used to add another row to the table. The
    *     possible values are 'Press button', 'Enter button' or 'Enter element'.
    */
-  public function providerTestOptionsAllowedValues() {
+  public static function providerTestOptionsAllowedValues() {
     $type_cases = [
       'List integer' => [
         'list_integer',

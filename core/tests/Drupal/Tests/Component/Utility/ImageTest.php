@@ -44,7 +44,7 @@ class ImageTest extends TestCase {
    *
    * @see testScaleDimensions()
    */
-  public function providerTestScaleDimensions() {
+  public static function providerTestScaleDimensions() {
     // Define input / output datasets to test different branch conditions.
     $tests = [];
 

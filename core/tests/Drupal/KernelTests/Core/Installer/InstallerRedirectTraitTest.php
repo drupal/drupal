@@ -29,7 +29,7 @@ class InstallerRedirectTraitTest extends KernelTestBase {
    *   - Whether or not there is database connection info.
    *   - Whether or not there exists a sessions table in the database.
    */
-  public function providerShouldRedirectToInstaller() {
+  public static function providerShouldRedirectToInstaller() {
     return [
       [TRUE, DatabaseNotFoundException::class, FALSE, FALSE],
       [TRUE, DatabaseNotFoundException::class, TRUE, FALSE],

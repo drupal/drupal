@@ -19,7 +19,7 @@ class ListPluginTest extends UnitTestCase {
   /**
    * Provides a list of configs to test.
    */
-  public function providerGetDynamicPluginConfig(): array {
+  public static function providerGetDynamicPluginConfig(): array {
     return [
       'startIndex is false' => [
         [

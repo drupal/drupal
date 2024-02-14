@@ -57,7 +57,7 @@ class AnnounceFetcherUnitTest extends UnitTestCase {
   /**
    * Data for the testValidateUrl.
    */
-  public function urlProvider(): array {
+  public static function urlProvider(): array {
     return [
       ['https://www.drupal.org', TRUE],
       ['https://drupal.org', TRUE],

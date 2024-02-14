@@ -189,7 +189,7 @@ class EntityTypeBundleInfoTest extends UnitTestCase {
    * @return array
    *   Test data.
    */
-  public function providerTestGetBundleInfo() {
+  public static function providerTestGetBundleInfo() {
     return [
       [
         'apple',

@@ -26,7 +26,7 @@ class ComponentsTaggedReleaseTest extends ComposerBuildTestBase {
    *   - Second element is the resulting constraint which should be present in
    *     the component core dependencies.
    */
-  public function providerVersionConstraint(): array {
+  public static function providerVersionConstraint(): array {
     return [
       // [Tag, constraint]
       '1.0.x-dev' => ['1.0.x-dev', '1.0.x-dev'],

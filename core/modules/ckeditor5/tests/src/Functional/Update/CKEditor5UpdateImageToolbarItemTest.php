@@ -146,7 +146,7 @@ class CKEditor5UpdateImageToolbarItemTest extends UpdatePathTestBase {
    * @return array
    *   The test cases.
    */
-  public function provider(): array {
+  public static function provider(): array {
     // There are 3 aspects that need to be verified, each can be true or false,
     // making for 8 test cases in total.
     $test_cases = [];

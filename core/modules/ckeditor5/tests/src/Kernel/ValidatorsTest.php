@@ -110,7 +110,7 @@ class ValidatorsTest extends KernelTestBase {
   /**
    * Provides a list of Text Editor config entities using CKEditor 5 to test.
    */
-  public function provider(): array {
+  public static function provider(): array {
     $data = [];
     $data['CKEditor5::getDefaultSettings()'] = [
       // @see ::test()
@@ -703,7 +703,7 @@ class ValidatorsTest extends KernelTestBase {
   /**
    * Provides a list of Text Editor + Text Format pairs to test.
    */
-  public function providerPair(): array {
+  public static function providerPair(): array {
     // cspell:ignore donk
     $data = [];
     $data['INVALID: allow_view_mode_override condition not met: filter must be configured to allow 2 or more view modes'] = [

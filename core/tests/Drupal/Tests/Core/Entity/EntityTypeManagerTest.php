@@ -157,7 +157,7 @@ class EntityTypeManagerTest extends UnitTestCase {
    * @return array
    *   Test data.
    */
-  public function providerTestHasHandler() {
+  public static function providerTestHasHandler() {
     return [
       ['apple', TRUE],
       ['banana', FALSE],
@@ -288,7 +288,7 @@ class EntityTypeManagerTest extends UnitTestCase {
    * @return array
    *   Test data.
    */
-  public function provideMissingHandlerData() : array {
+  public static function provideMissingHandlerData() : array {
     return [
       'missing_handler' => [
         'test_entity_type',
@@ -391,7 +391,7 @@ class EntityTypeManagerTest extends UnitTestCase {
    * @return array
    *   Test data.
    */
-  public function providerTestGetDefinition() {
+  public static function providerTestGetDefinition() {
     return [
       ['apple', TRUE],
       ['banana', TRUE],

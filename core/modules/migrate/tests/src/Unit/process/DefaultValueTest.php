@@ -32,7 +32,7 @@ class DefaultValueTest extends MigrateProcessTestCase {
    *
    * @return array
    */
-  public function defaultValueDataProvider() {
+  public static function defaultValueDataProvider() {
     return [
       'strict_true_value_populated_array' => [
         'configuration' => [

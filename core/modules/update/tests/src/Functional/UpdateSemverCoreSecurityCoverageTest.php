@@ -74,7 +74,7 @@ class UpdateSemverCoreSecurityCoverageTest extends UpdateSemverCoreTestBase {
    *   - 10.4.0
    *   - 10.5.0
    */
-  public function securityCoverageMessageProvider() {
+  public static function securityCoverageMessageProvider() {
     $release_coverage_message = 'Visit the release cycle overview for more information on supported releases.';
     $coverage_ended_message = 'Coverage has ended';
     $update_asap_message = 'Update to a supported minor as soon as possible to continue receiving security updates.';

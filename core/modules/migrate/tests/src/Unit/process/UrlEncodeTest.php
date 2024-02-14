@@ -28,7 +28,7 @@ class UrlEncodeTest extends MigrateTestCase {
    * @return array
    *   An array of URLs to test.
    */
-  public function urlDataProvider() {
+  public static function urlDataProvider() {
     return [
       'A URL with no characters requiring encoding' => ['http://example.com/normal_url.html', 'http://example.com/normal_url.html'],
       'The definitive use case - encoding spaces in URLs' => ['http://example.com/url with spaces.html', 'http://example.com/url%20with%20spaces.html'],

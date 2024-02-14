@@ -49,7 +49,7 @@ class RouteTest extends KernelTestBase {
    *   An array of arrays, where the first element is the input to the Route
    *   process plugin, and the second is the expected results.
    */
-  public function providerTestRoute() {
+  public static function providerTestRoute() {
     // Internal link tests.
     // Valid link path and options.
     $values[0] = [
@@ -214,7 +214,7 @@ class RouteTest extends KernelTestBase {
    *   An array of arrays, where the first element is the input to the Route
    *   process plugin, and the second is the expected results.
    */
-  public function providerTestRouteWithParamQuery() {
+  public static function providerTestRouteWithParamQuery() {
     $values = [];
     $expected = [];
     // Valid link path with query options and parameters.

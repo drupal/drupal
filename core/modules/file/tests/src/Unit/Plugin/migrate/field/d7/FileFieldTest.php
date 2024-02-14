@@ -70,7 +70,7 @@ class FileFieldTest extends UnitTestCase {
   /**
    * Data provider for testGetFieldType().
    */
-  public function getFieldTypeProvider() {
+  public static function getFieldTypeProvider() {
     return [
       ['image', 'imagefield_widget'],
       ['file', 'filefield_widget'],

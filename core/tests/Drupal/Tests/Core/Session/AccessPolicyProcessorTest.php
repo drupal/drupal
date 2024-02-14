@@ -220,7 +220,7 @@ class AccessPolicyProcessorTest extends UnitTestCase {
    * @return array
    *   A list of testAccountSwitcher method arguments.
    */
-  public function accountSwitcherProvider() {
+  public static function accountSwitcherProvider() {
     $cases['no-user-context-no-current-user'] = [
       'has_user_context' => FALSE,
       'is_current_user' => FALSE,
@@ -301,7 +301,7 @@ class AccessPolicyProcessorTest extends UnitTestCase {
    * @return array
    *   A list of testAccountSwitcher method arguments.
    */
-  public function cachingProvider() {
+  public static function cachingProvider() {
     $cases = [
       'no-cache' => [FALSE, FALSE],
       'static-cache-hit' => [FALSE, TRUE],

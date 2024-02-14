@@ -20,7 +20,7 @@ class SearchPageTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function providerSource() {
+  public static function providerSource() {
     $tests[0]['source_data'] = [
       'variable' => [
         [

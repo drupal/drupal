@@ -83,7 +83,7 @@ class MigrateFieldPluginManagerTest extends MigrateDrupalTestBase {
    * @return array
    *   The data.
    */
-  public function nonExistentPluginExceptionsData() {
+  public static function nonExistentPluginExceptionsData() {
     return [
       'D7 Filefield' => [
         'core' => 7,

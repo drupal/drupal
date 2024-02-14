@@ -111,7 +111,7 @@ class ProcessFieldTest extends MigrateTestCase {
    *   - The MigrateException message to expect.
    *   - Whether the field plugin is not found.
    */
-  public function providerTestTransform() {
+  public static function providerTestTransform() {
     return [
       // Tests the getFieldType() method.
       [

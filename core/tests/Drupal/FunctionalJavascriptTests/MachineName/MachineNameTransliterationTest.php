@@ -70,7 +70,7 @@ class MachineNameTransliterationTest extends WebDriverTestBase {
    *
    * @return array
    */
-  public function machineNameInputOutput(): array {
+  public static function machineNameInputOutput(): array {
     return [
       // cSpell:disable
       ['en', 'Bob', 'bob'],

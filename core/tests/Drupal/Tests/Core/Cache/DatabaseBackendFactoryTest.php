@@ -37,7 +37,7 @@ class DatabaseBackendFactoryTest extends UnitTestCase {
     $this->assertSame($expected_max_rows_bar, $database_backend_factory->get('bar')->getMaxRows());
   }
 
-  public function getProvider() {
+  public static function getProvider() {
     return [
       'default' => [
         [],

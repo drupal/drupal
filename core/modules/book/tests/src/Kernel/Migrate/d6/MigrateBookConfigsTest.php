@@ -32,7 +32,7 @@ class MigrateBookConfigsTest extends MigrateDrupal6TestBase {
    * @return array
    *   The data for each test scenario.
    */
-  public function providerBookSettings() {
+  public static function providerBookSettings() {
     return [
       // d6_book_settings was renamed to book_settings, but use the old alias to
       // prove that it works.

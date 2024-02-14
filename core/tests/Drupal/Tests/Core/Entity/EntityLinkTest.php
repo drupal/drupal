@@ -115,7 +115,7 @@ class EntityLinkTest extends UnitTestCase {
   /**
    * Provides test data for testLink().
    */
-  public function providerTestLink() {
+  public static function providerTestLink() {
     $data = [];
     $data[] = [
       'some_entity_label',

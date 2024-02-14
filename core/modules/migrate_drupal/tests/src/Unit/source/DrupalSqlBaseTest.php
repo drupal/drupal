@@ -133,7 +133,7 @@ class DrupalSqlBaseTest extends MigrateTestCase {
   /**
    * Provides data for testMinimumVersion.
    */
-  public function providerMinimumVersion() {
+  public static function providerMinimumVersion() {
     return [
       'minimum less than schema' => [
         TRUE,

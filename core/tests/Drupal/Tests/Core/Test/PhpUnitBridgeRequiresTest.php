@@ -35,7 +35,7 @@ class PhpUnitBridgeRequiresTest extends UnitTestCase {
   /**
    * Data provider for ::testWillNeverRun().
    */
-  public function providerTestWillNeverRun(): array {
+  public static function providerTestWillNeverRun(): array {
     return [
       ['this_will_never_run'],
     ];

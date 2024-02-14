@@ -584,7 +584,7 @@ class AccessResultTest extends UnitTestCase {
    *   does not implement CacheableDependencyInterface, then the result won't
    *   either. This is the case for bullets 3, 6 and 9 in the set above.
    */
-  public function andOrCacheabilityPropagationProvider() {
+  public static function andOrCacheabilityPropagationProvider() {
     // ct: cacheable=true, cf: cacheable=false, un: uncacheable.
     // Note: the test cases that have a "un" access result as the first operand
     // test UncacheableTestAccessResult, not AccessResult. However, we
@@ -940,7 +940,7 @@ class AccessResultTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestAllowedIfHasPermissions() {
+  public static function providerTestAllowedIfHasPermissions() {
     $access_result = AccessResult::allowedIf(FALSE);
     $data[] = [[], 'AND', $access_result];
     $data[] = [[], 'OR', $access_result];

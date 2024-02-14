@@ -19,7 +19,7 @@ class AlignmentPluginTest extends UnitTestCase {
   /**
    * Provides a list of configs to test.
    */
-  public function providerGetDynamicPluginConfig(): array {
+  public static function providerGetDynamicPluginConfig(): array {
     return [
       'All alignments' => [
         Alignment::DEFAULT_CONFIGURATION,

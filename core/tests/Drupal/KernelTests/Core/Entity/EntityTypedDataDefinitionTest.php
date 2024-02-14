@@ -171,7 +171,7 @@ class EntityTypedDataDefinitionTest extends KernelTestBase {
   /**
    * Provides test cases for testEntityDefinitionIsInternal.
    */
-  public function entityDefinitionIsInternalProvider() {
+  public static function entityDefinitionIsInternalProvider() {
     return [
       'internal' => [TRUE, TRUE],
       'external' => [FALSE, FALSE],

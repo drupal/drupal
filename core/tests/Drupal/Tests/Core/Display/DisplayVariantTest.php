@@ -87,7 +87,7 @@ class DisplayVariantTest extends UnitTestCase {
   /**
    * Provides test data for testGetConfiguration().
    */
-  public function providerTestGetConfiguration() {
+  public static function providerTestGetConfiguration() {
     $data = [];
     $data[] = [
       [],

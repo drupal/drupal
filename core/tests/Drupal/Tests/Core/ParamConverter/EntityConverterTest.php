@@ -169,7 +169,7 @@ class EntityConverterTest extends UnitTestCase {
   /**
    * Provides test data for testApplies()
    */
-  public function providerTestApplies() {
+  public static function providerTestApplies() {
     $data = [];
     $data[] = [['type' => 'entity:foo'], 'foo', new Route('/test/{foo}/bar'), FALSE];
     $data[] = [['type' => 'entity:entity_test'], 'foo', new Route('/test/{foo}/bar'), TRUE];
@@ -203,7 +203,7 @@ class EntityConverterTest extends UnitTestCase {
   /**
    * Provides test data for testConvert.
    */
-  public function providerTestConvert() {
+  public static function providerTestConvert() {
     $data = [];
     // Existing entity type.
     $data[] = ['valid_id', ['type' => 'entity:entity_test'], ['foo' => 'valid_id'], (object) ['id' => 'valid_id']];

@@ -175,7 +175,7 @@ class MappingTest extends KernelTestBase {
    *
    * @return \Generator
    */
-  public function providerMappingInterpretation(): \Generator {
+  public static function providerMappingInterpretation(): \Generator {
     $available_block_settings_types = [
       'block.settings.field_block:*:*:*' => [
         'formatter',

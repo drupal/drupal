@@ -221,7 +221,7 @@ class MediaLinkabilityTest extends MediaTestBase {
     $this->assertEmpty($xpath->query('//a'));
   }
 
-  public function providerLinkability(): array {
+  public static function providerLinkability(): array {
     return [
       'restricted' => [FALSE],
       'unrestricted' => [TRUE],

@@ -333,7 +333,7 @@ class RowTest extends UnitTestCase {
    * @return array
    *   The keys and expected values.
    */
-  public function getDataProvider() {
+  public static function getDataProvider() {
     return [
       ['source_key_1', 'source_value_1'],
       ['source_key_2', 'source_value_2'],
@@ -377,7 +377,7 @@ class RowTest extends UnitTestCase {
    * @return array
    *   The keys and expected values.
    */
-  public function getMultipleDataProvider() {
+  public static function getMultipleDataProvider() {
     return [
       'Single Key' => [
         'keys' => ['source_key_1'],

@@ -88,7 +88,7 @@ class EntityRevisionParamConverterTest extends UnitTestCase {
   /**
    * Provides test data for testConvert.
    */
-  public function providerTestConvert() {
+  public static function providerTestConvert() {
     $data = [];
     // Existing entity type.
     $data[] = ['valid_id', ['type' => 'entity_revision:entity_test'], ['test_revision' => 'valid_id'], (object) ['revision_id' => 'valid_id']];

@@ -45,7 +45,7 @@ class UpdateReportTest extends KernelTestBase {
    * @return array
    *   Array of $variables for template_preprocess_update_report().
    */
-  public function providerTemplatePreprocessUpdateReport() {
+  public static function providerTemplatePreprocessUpdateReport() {
     return [
       '$variables with data not set' => [
         [],

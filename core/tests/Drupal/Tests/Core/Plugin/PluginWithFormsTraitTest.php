@@ -30,7 +30,7 @@ class PluginWithFormsTraitTest extends UnitTestCase {
   /**
    * @return array
    */
-  public function providerGetFormClass() {
+  public static function providerGetFormClass() {
     $block_plugin_without_forms = new TestClass([], 'block_plugin_without_forms', [
       'provider' => 'block_test',
     ]);

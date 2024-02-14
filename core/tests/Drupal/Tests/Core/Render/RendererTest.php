@@ -666,7 +666,7 @@ class RendererTest extends RendererTestBase {
    *
    * @return array
    */
-  public function providerRenderTwice() {
+  public static function providerRenderTwice() {
     return [
       [
         [
@@ -720,7 +720,7 @@ class RendererTest extends RendererTestBase {
    *
    * @return array
    */
-  public function providerAccessValues() {
+  public static function providerAccessValues() {
     return [
       [FALSE],
       [TRUE],
@@ -795,7 +795,7 @@ class RendererTest extends RendererTestBase {
    *
    * @return array
    */
-  public function providerRenderCache() {
+  public static function providerRenderCache() {
     return [
       'full access' => [
         NULL,
@@ -903,7 +903,7 @@ class RendererTest extends RendererTestBase {
     }
   }
 
-  public function providerTestRenderCacheMaxAge() {
+  public static function providerTestRenderCacheMaxAge() {
     return [
       [0, FALSE, NULL],
       [60, TRUE, (int) $_SERVER['REQUEST_TIME'] + 60],
@@ -973,7 +973,7 @@ class RendererTest extends RendererTestBase {
    *   An array of associative arrays of expected results keyed by property
    *   name.
    */
-  public function providerTestRenderCacheProperties() {
+  public static function providerTestRenderCacheProperties() {
     return [
       [[]],
       [['child1' => 0, 'child2' => 0, '#custom_property' => 0, '#custom_property_array' => 0]],
@@ -998,7 +998,7 @@ class RendererTest extends RendererTestBase {
     $this->assertEquals($build, $expected);
   }
 
-  public function providerTestAddCacheableDependency() {
+  public static function providerTestAddCacheableDependency() {
     return [
       // Empty render array, typical default cacheability.
       [

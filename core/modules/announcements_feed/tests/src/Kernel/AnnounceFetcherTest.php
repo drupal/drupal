@@ -68,7 +68,7 @@ class AnnounceFetcherTest extends AnnounceTestBase {
   /**
    * Data provider for testShowAnnouncements().
    */
-  public function providerShowAnnouncements(): array {
+  public static function providerShowAnnouncements(): array {
     return [
       '1' => [
         'feed_item' => [

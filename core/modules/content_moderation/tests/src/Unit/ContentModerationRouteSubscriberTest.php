@@ -69,7 +69,7 @@ class ContentModerationRouteSubscriberTest extends UnitTestCase {
   /**
    * Data provider for ::testSetLatestRevisionFlag.
    */
-  public function setLatestRevisionFlagTestCases() {
+  public static function setLatestRevisionFlagTestCases() {
     return [
       'Entity parameter not on an entity form' => [
         [],

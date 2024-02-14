@@ -67,7 +67,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestMerge() {
+  public static function providerTestMerge() {
     return [
       // Second operand is a BubbleableMetadata object.
       // All empty.
@@ -118,7 +118,7 @@ class BubbleableMetadataTest extends UnitTestCase {
   /**
    * Provides test data for testAddAttachments().
    */
-  public function providerTestAddAttachments() {
+  public static function providerTestAddAttachments() {
     return [
       [new BubbleableMetadata(), [], new BubbleableMetadata()],
       [new BubbleableMetadata(), ['library' => ['core/foo']], (new BubbleableMetadata())->setAttachments(['library' => ['core/foo']])],
@@ -140,7 +140,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestApplyTo() {
+  public static function providerTestApplyTo() {
     $data = [];
 
     $empty_metadata = new BubbleableMetadata();
@@ -204,7 +204,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestCreateFromRenderArray() {
+  public static function providerTestCreateFromRenderArray() {
     $data = [];
 
     $empty_metadata = new BubbleableMetadata();
@@ -398,7 +398,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestMergeAttachmentsHtmlHeadMerging() {
+  public static function providerTestMergeAttachmentsHtmlHeadMerging() {
     $meta = [
       '#tag' => 'meta',
       '#attributes' => [
@@ -471,7 +471,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestMergeAttachmentsHtmlHeadLinkMerging() {
+  public static function providerTestMergeAttachmentsHtmlHeadLinkMerging() {
     $rel = [
       'rel' => 'rel',
       'href' => 'http://rel.example.com',
@@ -537,7 +537,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestMergeAttachmentsHttpHeaderMerging() {
+  public static function providerTestMergeAttachmentsHttpHeaderMerging() {
     $content_type = [
       'Content-Type',
       'application/rss+xml; charset=utf-8',

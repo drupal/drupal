@@ -40,7 +40,7 @@ class UserMailDefaultsTest extends KernelTestBase {
    * @return array
    *   Array of arrays containing the set of user mail configuration keys.
    */
-  public function userMailsProvider() {
+  public static function userMailsProvider() {
     return [
       ['cancel_confirm'],
       ['password_reset'],

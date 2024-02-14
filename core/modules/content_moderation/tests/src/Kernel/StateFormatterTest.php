@@ -64,7 +64,7 @@ class StateFormatterTest extends KernelTestBase {
   /**
    * Test cases for testStateFieldFormatter().
    */
-  public function formatterTestCases() {
+  public static function formatterTestCases() {
     return [
       'Draft State' => [
         'draft',

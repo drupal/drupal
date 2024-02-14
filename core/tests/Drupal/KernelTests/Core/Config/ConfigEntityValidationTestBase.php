@@ -201,7 +201,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
    * @return array[]
    *   The test cases.
    */
-  public function providerConfigDependenciesValidation(): array {
+  public static function providerConfigDependenciesValidation(): array {
     return [
       'valid dependency types' => [
         [

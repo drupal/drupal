@@ -20,7 +20,7 @@ class ConfigTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function providerSource() {
+  public static function providerSource() {
     $data = [];
 
     // The source database tables.

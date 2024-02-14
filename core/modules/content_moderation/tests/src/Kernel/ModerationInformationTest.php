@@ -97,7 +97,7 @@ class ModerationInformationTest extends KernelTestBase {
   /**
    * Test cases for ::testIsDefaultRevisionPublished.
    */
-  public function isDefaultRevisionPublishedTestCases() {
+  public static function isDefaultRevisionPublishedTestCases() {
     return [
       'Draft to draft' => [
         'draft',

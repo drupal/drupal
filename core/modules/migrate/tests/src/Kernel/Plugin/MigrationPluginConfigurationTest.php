@@ -39,7 +39,7 @@ class MigrationPluginConfigurationTest extends KernelTestBase {
   /**
    * Provide configuration data for testing.
    */
-  public function mergeProvider() {
+  public static function mergeProvider() {
     return [
       // Tests adding new configuration to a migration.
       [

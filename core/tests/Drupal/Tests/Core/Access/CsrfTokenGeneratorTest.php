@@ -157,7 +157,7 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
    * @return array
    *   An array of data used by the test.
    */
-  public function providerTestValidateParameterTypes() {
+  public static function providerTestValidateParameterTypes() {
     return [
       [[], ''],
       [TRUE, 'foo'],
@@ -189,7 +189,7 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
    * @return array
    *   An array of data used by the test.
    */
-  public function providerTestInvalidParameterTypes() {
+  public static function providerTestInvalidParameterTypes() {
     return [
       [NULL, new \stdClass()],
       [0, []],

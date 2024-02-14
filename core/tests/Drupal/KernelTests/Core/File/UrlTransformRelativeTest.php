@@ -43,7 +43,7 @@ class UrlTransformRelativeTest extends KernelTestBase {
     $this->assertSame($expected, \Drupal::service('file_url_generator')->transformRelative($url, $root_relative));
   }
 
-  public function providerFileUrlTransformRelative() {
+  public static function providerFileUrlTransformRelative() {
     $data = [
       'http' => [
         'example.com',

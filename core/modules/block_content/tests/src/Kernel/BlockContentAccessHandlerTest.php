@@ -191,7 +191,7 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
   /**
    * Data provider for testAccess().
    */
-  public function providerTestAccess(): array {
+  public static function providerTestAccess(): array {
     $cases = [
       'view:published:reusable' => [
         'view',

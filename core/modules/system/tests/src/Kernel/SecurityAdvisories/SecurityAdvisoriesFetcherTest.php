@@ -89,7 +89,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
   /**
    * Data provider for testShowAdvisories().
    */
-  public function providerShowAdvisories(): array {
+  public static function providerShowAdvisories(): array {
     return [
       'contrib:exact:non-psa' => [
         'feed_item' => [
@@ -257,7 +257,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
   /**
    * Data provider for testIgnoreAdvisories().
    */
-  public function providerIgnoreAdvisories(): array {
+  public static function providerIgnoreAdvisories(): array {
     return [
       'contrib:not-exact:non-psa' => [
         'feed_item' => [

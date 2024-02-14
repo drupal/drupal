@@ -48,7 +48,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
   /**
    * Provides data to test methods that take a single boolean argument.
    */
-  public function providerSingleBooleanArgument() {
+  public static function providerSingleBooleanArgument() {
     return [
       [TRUE],
       [FALSE],
@@ -283,7 +283,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
   /**
    * Provides data to self::testGetLimitValidationErrors() and self::testGetLimitValidationErrors().
    */
-  public function providerLimitValidationErrors() {
+  public static function providerLimitValidationErrors() {
     return [
       [NULL],
       [
@@ -322,7 +322,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
   /**
    * Provides data to self::testIsMethodType().
    */
-  public function providerIsMethodType() {
+  public static function providerIsMethodType() {
     return [
       [TRUE, 'GET'],
       [TRUE, 'POST'],
@@ -346,7 +346,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
   /**
    * Provides data to self::testSetMethod().
    */
-  public function providerSetRequestMethod() {
+  public static function providerSetRequestMethod() {
     return [
       ['GET'],
       ['POST'],
@@ -662,7 +662,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
   /**
    * Provides data to self::testSetTemporaryValue().
    */
-  public function providerSetTemporaryValue() {
+  public static function providerSetTemporaryValue() {
     return [
       ['FOO', 'BAR'],
       ['FOO', NULL],
@@ -700,7 +700,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
   /**
    * Provides data to self::testGetTemporaryValue().
    */
-  public function providerGetTemporaryValue() {
+  public static function providerGetTemporaryValue() {
     return [
       [TRUE, 'FOO', 'BAR'],
       [TRUE, 'FOO', NULL],
@@ -732,7 +732,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
   /**
    * Provides data to self::testHasTemporaryValue().
    */
-  public function providerHasTemporaryValue() {
+  public static function providerHasTemporaryValue() {
     return [
       [TRUE, 'FOO'],
       [FALSE, 'FOO'],
@@ -866,7 +866,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
   /**
    * Provides data to self::testLoadInclude().
    */
-  public function providerLoadInclude() {
+  public static function providerLoadInclude() {
     return [
       // Existing files.
       [__FILE__, 'foo', 'inc', 'foo'],
@@ -1298,7 +1298,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
   /**
    * Provides data to self::testGetRedirect().
    */
-  public function providerGetRedirect() {
+  public static function providerGetRedirect() {
     return [
       [NULL],
       [FALSE],

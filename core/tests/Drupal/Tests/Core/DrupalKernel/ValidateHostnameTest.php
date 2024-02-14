@@ -28,7 +28,7 @@ class ValidateHostnameTest extends UnitTestCase {
   /**
    * Provides test data for testValidateHostname().
    */
-  public function providerTestValidateHostname() {
+  public static function providerTestValidateHostname() {
     $data = [];
 
     // Verifies that DrupalKernel::validateHostname() prevents invalid

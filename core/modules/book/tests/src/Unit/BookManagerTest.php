@@ -104,7 +104,7 @@ class BookManagerTest extends UnitTestCase {
    * @return array
    *   The test data.
    */
-  public function providerTestGetBookParents() {
+  public static function providerTestGetBookParents() {
     $empty = [
       'p1' => 0,
       'p2' => 0,

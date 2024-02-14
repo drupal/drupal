@@ -90,7 +90,7 @@ class MigrationPluginManagerTest extends UnitTestCase {
   /**
    * Provide dependency data for testing.
    */
-  public function dependencyProvider() {
+  public static function dependencyProvider() {
     return [
       // Just one migration, with no dependencies.
       [

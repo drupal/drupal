@@ -113,7 +113,7 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
    * @return array
    *   An array of data for checking path prefix negotiation.
    */
-  public function providerTestPathPrefix() {
+  public static function providerTestPathPrefix() {
     $path_prefix_configuration[] = [
       'prefix' => 'de',
       'prefixes' => [
@@ -214,7 +214,7 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
    *   An array of data for checking path prefix negotiation for neutral
    *   languages.
    */
-  public function providerNeutralLanguages() {
+  public static function providerNeutralLanguages() {
     return [
       [LanguageInterface::LANGCODE_NOT_APPLICABLE, NULL],
       [LanguageInterface::LANGCODE_NOT_SPECIFIED, 'en'],
@@ -263,7 +263,7 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
    * @return array
    *   An array of data for checking domain negotiation.
    */
-  public function providerTestDomain() {
+  public static function providerTestDomain() {
 
     $domain_configuration[] = [
       'http_host' => 'example.de',

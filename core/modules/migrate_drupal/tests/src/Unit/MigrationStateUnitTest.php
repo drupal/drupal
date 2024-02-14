@@ -91,7 +91,7 @@ class MigrationStateUnitTest extends UnitTestCase {
   /**
    * Data provider for testGetUpgradeStates.
    */
-  public function providerGetUpgradeStates() {
+  public static function providerGetUpgradeStates() {
 
     // Tests multiple scenarios:
     // Not enabled and not declared.

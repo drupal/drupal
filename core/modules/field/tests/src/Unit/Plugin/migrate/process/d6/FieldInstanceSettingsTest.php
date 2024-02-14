@@ -44,7 +44,7 @@ class FieldInstanceSettingsTest extends UnitTestCase {
   /**
    * Provides field settings for testGetSettings().
    */
-  public function getSettingsProvider() {
+  public static function getSettingsProvider() {
     return [
       'imagefield size set' => [
         'imagefield_widget',

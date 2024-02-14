@@ -118,7 +118,7 @@ JS;
    * @return array
    *   The test cases.
    */
-  public function providerAllowingExtraAttributes(): array {
+  public static function providerAllowingExtraAttributes(): array {
     $general_test_case_markup = '<div class="llama" data-llama="🦙"><p data-llama="🦙">The <a href="https://example.com/pirate" class="button" data-grammar="subject">pirate</a> is <a href="https://example.com/irate" class="use-ajax" data-grammar="adjective">irate</a>.</p></div>';
     return [
       'no extra attributes allowed' => [

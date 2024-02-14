@@ -99,7 +99,7 @@ class WildcardHtmlSupportTest extends KernelTestBase {
     $this->assertEquals($expected_ghs_configuration, $ghs_configuration);
   }
 
-  public function providerGhsConfiguration(): array {
+  public static function providerGhsConfiguration(): array {
     return [
       'empty source editing' => [
         '<p> <br>',

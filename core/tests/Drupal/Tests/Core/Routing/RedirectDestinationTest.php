@@ -96,7 +96,7 @@ class RedirectDestinationTest extends UnitTestCase {
     $this->assertEquals(['destination' => $expected_destination], $this->redirectDestination->getAsArray());
   }
 
-  public function providerGet() {
+  public static function providerGet() {
     $data = [];
 
     $request = Request::create('/');

@@ -33,7 +33,7 @@ class UserMailNotifyTest extends EntityKernelTestBase {
    *
    * @return array
    */
-  public function userMailsProvider() {
+  public static function userMailsProvider() {
     return [
       'cancel confirm notification' => [
         'cancel_confirm',

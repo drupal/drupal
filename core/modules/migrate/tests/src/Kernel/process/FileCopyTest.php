@@ -109,7 +109,7 @@ class FileCopyTest extends FileTestBase {
   /**
    * Provides the source and destination path files.
    */
-  public function providerSuccessfulReuse() {
+  public static function providerSuccessfulReuse() {
     return [
       [
         'local_source_path' => static::getDrupalRoot() . '/core/tests/fixtures/files/image-test.jpg',

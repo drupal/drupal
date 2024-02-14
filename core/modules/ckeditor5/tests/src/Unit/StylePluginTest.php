@@ -18,7 +18,7 @@ class StylePluginTest extends UnitTestCase {
   /**
    * Provides a list of configs to test.
    */
-  public function providerGetDynamicPluginConfig(): array {
+  public static function providerGetDynamicPluginConfig(): array {
     return [
       'default configuration (empty)' => [
         [

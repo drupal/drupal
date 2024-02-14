@@ -42,7 +42,7 @@ class HtmlTagTest extends RendererTestBase {
   /**
    * Data provider for preRenderHtmlTag test.
    */
-  public function providerPreRenderHtmlTag() {
+  public static function providerPreRenderHtmlTag() {
     $tags = [];
 
     // Value prefix/suffix.

@@ -33,7 +33,7 @@ class ConfigLocalTasksTest extends LocalTaskIntegrationTestBase {
   /**
    * Provides a list of routes to test.
    */
-  public function getConfigAdminRoutes() {
+  public static function getConfigAdminRoutes() {
     return [
       ['config.sync', [['config.sync', 'config.import', 'config.export']]],
       ['config.import_full', [['config.sync', 'config.import', 'config.export'], ['config.import_full', 'config.import_single']]],

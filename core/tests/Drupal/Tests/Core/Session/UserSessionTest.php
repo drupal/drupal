@@ -30,7 +30,7 @@ class UserSessionTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestHasPermission() {
+  public static function providerTestHasPermission() {
     $data = [];
     $data[] = ['example permission', ['user_one', 'user_two'], ['user_last']];
     $data[] = ['another example permission', ['user_two'], ['user_one', 'user_last']];

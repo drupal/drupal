@@ -33,7 +33,7 @@ class RegexDirectoryIteratorTest extends TestCase {
   /**
    * Provider for self::testRegexDirectoryIterator().
    */
-  public function providerTestRegexDirectoryIterator() {
+  public static function providerTestRegexDirectoryIterator() {
     return [
       [
         [

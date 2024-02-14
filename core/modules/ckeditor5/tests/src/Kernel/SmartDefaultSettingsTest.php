@@ -649,7 +649,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
    * @return \Generator
    *   Test scenarios.
    */
-  public function provider() {
+  public static function provider() {
     $basic_html_test_case = [
       'format_id' => 'basic_html',
       'filters_to_drop' => [],

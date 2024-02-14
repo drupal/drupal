@@ -106,7 +106,7 @@ class RevisionViewTest extends BrowserTestBase {
   /**
    * Data provider for testRevisionPage.
    */
-  public function providerRevisionPage(): array {
+  public static function providerRevisionPage(): array {
     return [
       ['entity_test_rev', 'Revision of revision 1, view revision'],
       ['entity_test_revlog', 'Revision of revision 1, view revision from Sun, 01/11/2009 - 16:00'],

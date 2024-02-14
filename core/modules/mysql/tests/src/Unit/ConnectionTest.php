@@ -99,7 +99,7 @@ class ConnectionTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerVersionAndIsMariaDb(): array {
+  public static function providerVersionAndIsMariaDb(): array {
     return [
       // MariaDB.
       [

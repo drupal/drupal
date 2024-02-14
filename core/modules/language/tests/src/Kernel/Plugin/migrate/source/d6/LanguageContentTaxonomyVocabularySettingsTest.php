@@ -21,7 +21,7 @@ class LanguageContentTaxonomyVocabularySettingsTest extends MigrateSqlSourceTest
   /**
    * {@inheritdoc}
    */
-  public function providerSource() {
+  public static function providerSource() {
     $tests = [];
 
     // The source data.

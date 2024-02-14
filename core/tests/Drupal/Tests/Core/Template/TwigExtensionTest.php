@@ -121,7 +121,7 @@ class TwigExtensionTest extends UnitTestCase {
    *   An array of test data each containing of a twig template string and
    *   a boolean expecting whether the path will be safe.
    */
-  public function providerTestEscaping() {
+  public static function providerTestEscaping() {
     return [
       ['{{ path("foo") }}', FALSE],
       ['{{ path("foo", {}) }}', FALSE],
@@ -377,7 +377,7 @@ class TwigExtensionTest extends UnitTestCase {
   /**
    * Data provider for ::testRenderVarEarlyReturn().
    */
-  public function providerTestRenderVarEarlyReturn() {
+  public static function providerTestRenderVarEarlyReturn() {
     return [
       'null' => ['', NULL],
       'empty array' => ['', []],
@@ -449,7 +449,7 @@ class TwigExtensionTest extends UnitTestCase {
    *
    * @return \Iterator
    */
-  public function providerTestTwigAddSuggestionFilter(): \Iterator {
+  public static function providerTestTwigAddSuggestionFilter(): \Iterator {
     yield 'suggestion should be added' => [
       [
         '#theme' => 'kitten',
@@ -565,7 +565,7 @@ class TwigExtensionTest extends UnitTestCase {
    *
    * @return \Iterator
    */
-  public function providerTestTwigAddClass(): \Iterator {
+  public static function providerTestTwigAddClass(): \Iterator {
     yield 'should add a class on element' => [
       ['#type' => 'container'],
       'my-class',
@@ -615,7 +615,7 @@ class TwigExtensionTest extends UnitTestCase {
    *
    * @return \Iterator
    */
-  public function providerTestTwigSetAttribute(): \Iterator {
+  public static function providerTestTwigSetAttribute(): \Iterator {
     yield 'should add attributes on element' => [
       ['#theme' => 'image'],
       'title',

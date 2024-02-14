@@ -46,7 +46,7 @@ class TrustedHostsRequestFactoryTest extends UnitTestCase {
    *   TrustedHostsRequestFactory::createRequest().
    *   - A string containing the expected host of the created request.
    */
-  public function providerTestCreateRequest() {
+  public static function providerTestCreateRequest() {
     $tests = [];
     $tests[] = ['example.com', [], 'example.com'];
     $tests[] = ['localhost', [], 'localhost'];

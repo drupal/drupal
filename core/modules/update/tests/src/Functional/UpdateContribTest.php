@@ -643,7 +643,7 @@ class UpdateContribTest extends UpdateTestBase {
    *   - 8.x-1.1
    *   - 8.x-1.0
    */
-  public function securityUpdateAvailabilityProvider() {
+  public static function securityUpdateAvailabilityProvider() {
     return [
       // Security releases available for module major release 1.
       // No releases for next major.

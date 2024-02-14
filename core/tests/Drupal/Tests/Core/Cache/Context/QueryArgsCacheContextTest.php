@@ -31,7 +31,7 @@ class QueryArgsCacheContextTest extends UnitTestCase {
   /**
    * Provides a list of query arguments and expected cache contexts.
    */
-  public function providerTestGetContext() {
+  public static function providerTestGetContext() {
     return [
       [[], NULL, ''],
       [[], 'foo', ''],

@@ -21,7 +21,7 @@ class NodeTranslationTest extends NodeTest {
   /**
    * {@inheritdoc}
    */
-  public function providerSource() {
+  public static function providerSource() {
     // Get the source data from parent.
     $tests = parent::providerSource();
 

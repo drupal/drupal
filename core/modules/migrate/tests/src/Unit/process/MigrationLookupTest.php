@@ -100,7 +100,7 @@ class MigrationLookupTest extends MigrationLookupTestCase {
    * @return array
    *   Empty values.
    */
-  public function skipInvalidDataProvider() {
+  public static function skipInvalidDataProvider() {
     return [
       'Empty String' => [''],
       'Boolean False' => [FALSE],
@@ -144,7 +144,7 @@ class MigrationLookupTest extends MigrationLookupTestCase {
    * @return array
    *   Empty values.
    */
-  public function noSkipValidDataProvider() {
+  public static function noSkipValidDataProvider() {
     return [
       'Integer Zero' => [0],
       'String Zero' => ['0'],
@@ -186,7 +186,7 @@ class MigrationLookupTest extends MigrationLookupTestCase {
    * @return array
    *   The data.
    */
-  public function successfulLookupDataProvider() {
+  public static function successfulLookupDataProvider() {
     return [
       // Test data for scalar to scalar.
       [

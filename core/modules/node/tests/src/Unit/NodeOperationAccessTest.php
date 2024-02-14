@@ -129,7 +129,7 @@ class NodeOperationAccessTest extends UnitTestCase {
    * @return array
    *   Data for testing.
    */
-  public function providerTestRevisionOperations() {
+  public static function providerTestRevisionOperations() {
     $data = [];
 
     // Tests 'bypass node access' never works on revision operations.

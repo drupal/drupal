@@ -143,7 +143,7 @@ class EntityTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestTokens() {
+  public static function providerTestTokens() {
     return [
       ['{{ raw_arguments.test1 }}', 5],
       ['{{ arguments.test2 }}', 6],

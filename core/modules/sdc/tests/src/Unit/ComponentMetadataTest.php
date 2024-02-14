@@ -54,7 +54,7 @@ final class ComponentMetadataTest extends UnitTestCaseTest {
    * @return array[]
    *   The batches of data.
    */
-  public function dataProviderMetadata(): array {
+  public static function dataProviderMetadata(): array {
     return [
       'minimal example without schemas' => [
         [

@@ -80,7 +80,7 @@ class BlockContentLocalTasksTest extends LocalTaskIntegrationTestBase {
   /**
    * Provides a list of routes to test.
    */
-  public function getBlockContentListingRoutes() {
+  public static function getBlockContentListingRoutes() {
     return [
       ['entity.block_content.collection', 'system.admin_content'],
     ];

@@ -31,7 +31,7 @@ class PathParentCacheContextTest extends UnitTestCase {
   /**
    * Provides a list of paths and expected cache contexts.
    */
-  public function providerTestGetContext() {
+  public static function providerTestGetContext() {
     return [
       ['/some/path', 'some'],
       ['/some/other-path', 'some'],

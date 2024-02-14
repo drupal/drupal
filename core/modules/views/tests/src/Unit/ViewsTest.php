@@ -209,7 +209,7 @@ class ViewsTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestGetApplicableViews() {
+  public static function providerTestGetApplicableViews() {
     return [
       ['type_a', [['test_view_1', 'type_a']]],
       ['type_b', [['test_view_2', 'type_b']]],

@@ -35,7 +35,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
    *
    * @see \Drupal\Core\EventSubscriber\ActiveLinkResponseFilter::setLinkActiveClass()
    */
-  public function providerTestSetLinkActiveClass() {
+  public static function providerTestSetLinkActiveClass() {
     // Define all the variations that *don't* affect whether or not an
     // "is-active" class is set, but that should remain unchanged:
     // - surrounding HTML

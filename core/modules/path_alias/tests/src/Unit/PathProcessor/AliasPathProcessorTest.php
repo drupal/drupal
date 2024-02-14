@@ -83,7 +83,7 @@ class AliasPathProcessorTest extends UnitTestCase {
   /**
    * @return array
    */
-  public function providerTestProcessOutbound() {
+  public static function providerTestProcessOutbound() {
     return [
       ['internal-url', [], 'url-alias'],
       ['internal-url', ['alias' => TRUE], 'internal-url'],

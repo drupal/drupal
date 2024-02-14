@@ -26,7 +26,7 @@ class ContextualUnitTest extends KernelTestBase {
    * @return array[]
    *   Test cases.
    */
-  public function contextualLinksDataProvider(): array {
+  public static function contextualLinksDataProvider(): array {
     $tests['one group, one dynamic path argument, no metadata'] = [
       [
         'node' => [

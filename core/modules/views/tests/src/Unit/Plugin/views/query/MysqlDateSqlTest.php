@@ -63,7 +63,7 @@ class MysqlDateSqlTest extends UnitTestCase {
   /**
    * Provider for date formatting test.
    */
-  public function providerTestGetDateFormat() {
+  public static function providerTestGetDateFormat() {
     return [
       ['foo.field', 'Y-y-M-m', '%Y-%y-%b-%m'],
       ['bar.field', 'n-F D d l', '%c-%M %a %d %W'],

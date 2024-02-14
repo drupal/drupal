@@ -218,7 +218,7 @@ class RegistryTest extends UnitTestCase {
   /**
    * Provides test data to ::testPostProcessExtension().
    */
-  public function providerTestPostProcessExtension() {
+  public static function providerTestPostProcessExtension() {
     // This is test data for unit testing
     // \Drupal\Core\Theme\Registry::postProcessExtension(), not what happens
     // before it. Therefore, for all test data:

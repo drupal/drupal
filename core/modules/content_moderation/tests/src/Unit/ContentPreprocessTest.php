@@ -29,7 +29,7 @@ class ContentPreprocessTest extends UnitTestCase {
   /**
    * Data provider for self::testIsLatestVersionPage().
    */
-  public function routeNodeProvider() {
+  public static function routeNodeProvider() {
     return [
       ['entity.node.canonical', 1, 1, FALSE, 'Not on the latest version tab route.'],
       ['entity.node.latest_version', 1, 1, TRUE, 'On the latest version tab route, with the route node.'],

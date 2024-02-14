@@ -23,7 +23,7 @@ class SpecialAttributesRouteSubscriberTest extends UnitTestCase {
    * @return array
    *   An array of invalid routes.
    */
-  public function providerTestOnRouteBuildingInvalidVariables() {
+  public static function providerTestOnRouteBuildingInvalidVariables() {
     // Build an array of mock route objects based on paths.
     $routes = [];
     $paths = [
@@ -49,7 +49,7 @@ class SpecialAttributesRouteSubscriberTest extends UnitTestCase {
    * @return array
    *   An array of valid routes.
    */
-  public function providerTestOnRouteBuildingValidVariables() {
+  public static function providerTestOnRouteBuildingValidVariables() {
     // Build an array of mock route objects based on paths.
     $routes = [];
     $paths = [

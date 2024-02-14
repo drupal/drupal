@@ -167,7 +167,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
   /**
    * Provides test data for testUserNameAccess().
    */
-  public function userNameProvider() {
+  public static function userNameProvider() {
     $name_access = [
       // The viewer user is allowed to see user names on all accounts.
       [
@@ -218,7 +218,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
   /**
    * Provides test data for testHiddenUserSettings().
    */
-  public function hiddenUserSettingsProvider() {
+  public static function hiddenUserSettingsProvider() {
     $access_info = [];
 
     $fields = [
@@ -285,7 +285,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
   /**
    * Provides test data for testAdminFieldAccess().
    */
-  public function adminFieldAccessProvider() {
+  public static function adminFieldAccessProvider() {
     $access_info = [];
 
     $fields = [
@@ -335,7 +335,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
   /**
    * Provides test data for passwordAccessProvider().
    */
-  public function passwordAccessProvider() {
+  public static function passwordAccessProvider() {
     $pass_access = [
       [
         'viewer' => 'viewer',
@@ -380,7 +380,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
   /**
    * Provides test data for testCreatedAccess().
    */
-  public function createdAccessProvider() {
+  public static function createdAccessProvider() {
     $created_access = [
       [
         'viewer' => 'viewer',
@@ -419,7 +419,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
   /**
    * Provides test data for testNonExistingFieldAccess().
    */
-  public function NonExistingFieldAccessProvider() {
+  public static function NonExistingFieldAccessProvider() {
     $created_access = [
       [
         'viewer' => 'viewer',

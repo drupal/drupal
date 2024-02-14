@@ -510,7 +510,7 @@ class MigrateExecutableTest extends MigrateTestCase {
    * @return array
    *   The test cases.
    */
-  public function providerTestRollback() {
+  public static function providerTestRollback() {
     return [
       'Rollback delete' => [
         'ID map records' => [

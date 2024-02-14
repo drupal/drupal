@@ -63,7 +63,7 @@ class PostgresqlDateSqlTest extends UnitTestCase {
   /**
    * Provider for date formatting test.
    */
-  public function providerTestGetDateFormat() {
+  public static function providerTestGetDateFormat() {
     return [
       ['foo.field', 'Y-y-M-m', 'YYYY-YY-Mon-MM'],
       ['bar.field', 'n-F D d l', 'MM-Month Dy DD Day'],

@@ -91,7 +91,7 @@ class MediaThumbnailFormatterTest extends MediaKernelTestBase {
    *
    * @return array[]
    */
-  public function providerTestSettingsSummary(): array {
+  public static function providerTestSettingsSummary(): array {
     return [
       'link to content' => [
         [

@@ -51,7 +51,7 @@ class LinkExternalProtocolsConstraintValidatorTest extends UnitTestCase {
   /**
    * Data provider for ::testValidate.
    */
-  public function providerValidate() {
+  public static function providerValidate() {
     $data = [];
 
     // Test allowed protocols.

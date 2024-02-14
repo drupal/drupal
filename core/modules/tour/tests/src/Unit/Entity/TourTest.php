@@ -46,7 +46,7 @@ class TourTest extends UnitTestCase {
   /**
    * Provides sample routes for testing.
    */
-  public function routeProvider() {
+  public static function routeProvider() {
     return [
       // Simple match.
       [

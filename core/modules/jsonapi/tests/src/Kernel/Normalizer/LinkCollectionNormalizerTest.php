@@ -168,7 +168,7 @@ class LinkCollectionNormalizerTest extends KernelTestBase {
    *
    * @return array[]
    */
-  public function linkAccessTestData() {
+  public static function linkAccessTestData() {
     return [
       'the edit-form link is present because uid 2 has access to the targeted resource (its own edit form)' => [
         'uid' => 2,

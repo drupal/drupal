@@ -128,7 +128,7 @@ class ResourceIdentifierNormalizerTest extends UnitTestCase {
    * @return array
    *   The data for the test method.
    */
-  public function denormalizeProvider() {
+  public static function denormalizeProvider() {
     return [
       [
         ['data' => [['type' => 'lorem--dummy_bundle', 'id' => '4e6cb61d-4f04-437f-99fe-42c002393658']]],
@@ -168,7 +168,7 @@ class ResourceIdentifierNormalizerTest extends UnitTestCase {
    * @return array
    *   The input data for the test method.
    */
-  public function denormalizeInvalidResourceProvider() {
+  public static function denormalizeInvalidResourceProvider() {
     return [
       [
         [

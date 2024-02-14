@@ -75,7 +75,7 @@ class TrustedRedirectResponseTest extends UnitTestCase {
   /**
    * @return array
    */
-  public function providerCreateFromRedirectResponse() {
+  public static function providerCreateFromRedirectResponse() {
     return [
       'cacheable-with-tags' => [(new CacheableRedirectResponse('/example'))->addCacheableDependency((new CacheableMetadata())->addCacheTags(['foo']))],
       'cacheable-with-max-age-0' => [(new CacheableRedirectResponse('/example'))->addCacheableDependency((new CacheableMetadata())->setCacheMaxAge(0))],

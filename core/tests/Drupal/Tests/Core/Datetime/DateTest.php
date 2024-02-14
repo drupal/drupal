@@ -124,7 +124,7 @@ class DateTest extends UnitTestCase {
   /**
    * Provides some test data for the format interval test.
    */
-  public function providerTestFormatInterval() {
+  public static function providerTestFormatInterval() {
     $data = [
       // Checks for basic seconds.
       [1, 1, '1 sec'],

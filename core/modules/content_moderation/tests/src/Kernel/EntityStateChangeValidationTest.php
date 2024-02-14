@@ -364,7 +364,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
   /**
    * Test cases for ::testTransitionAccessValidation.
    */
-  public function transitionAccessValidationTestCases() {
+  public static function transitionAccessValidationTestCases() {
     return [
       'Invalid transition, no permissions validated' => [
         [],
