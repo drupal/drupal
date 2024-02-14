@@ -3,10 +3,18 @@
 filter.settings:
   type: config_object
   label: 'Filter settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
+    # @todo Simple config cannot have dependencies on any other config. Remove this in https://www.drupal.org/project/drupal/issues/1932544.
     fallback_format:
-      type: string
+      type: machine_name
       label: 'Fallback text format'
+      # Filter format machine names can be up to 255 characters.
+      # @see \Drupal\filter\FilterFormatFormBase::form()
+      constraints:
+        Length:
+          max: 255
     always_show_fallback_choice:
       type: boolean
       label: 'Always show fallback choice'
