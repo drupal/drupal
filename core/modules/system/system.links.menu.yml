@@ -23,7 +23,7 @@ system.themes_page:
   weight: -6
 system.modules_list:
   title: Extend
-  description: 'Add and enable modules to extend site functionality.'
+  description: 'Add and install modules to extend site functionality.'
   parent: system.admin
   route_name: system.modules_list
   weight: -2

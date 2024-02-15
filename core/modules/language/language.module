@@ -404,7 +404,7 @@ function language_tour_tips_alter(array &$tour_tips, EntityInterface $entity) {
         $additional_overview = t("This page also provides an overview of how much of the site's interface has been translated for each configured language.");
       }
       else {
-        $additional_overview = t("If the Interface Translation module is enabled, this page will provide an overview of how much of the site's interface has been translated for each configured language.");
+        $additional_overview = t("If the Interface Translation module is installed, this page will provide an overview of how much of the site's interface has been translated for each configured language.");
       }
       $tour_tip->set('body', $tour_tip->get('body') . '<p>' . $additional_overview . '</p>');
     }
@@ -418,7 +418,7 @@ function language_tour_tips_alter(array &$tour_tips, EntityInterface $entity) {
         $additional_modules[] = Drupal::service('module_handler')->getName('content_translation');
       }
       if (!empty($additional_modules)) {
-        $additional_continue = t('Depending on your site features, additional modules that you might want to enable are:') . '<ul>';
+        $additional_continue = t('Depending on your site features, additional modules that you might want to install are:') . '<ul>';
         foreach ($additional_modules as $additional_module) {
           $additional_continue .= '<li>' . $additional_module . '</li>';
         }

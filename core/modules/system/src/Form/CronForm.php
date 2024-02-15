@@ -123,7 +123,7 @@ class CronForm extends FormBase {
 
     if (!$this->moduleHandler->moduleExists('automated_cron')) {
       $form['automated_cron'] = [
-        '#markup' => $this->t('Enable the <em>Automated Cron</em> module to allow cron execution at the end of a server response.'),
+        '#markup' => $this->t('Install the <em>Automated Cron</em> module to allow cron execution at the end of a server response.'),
       ];
     }
 
