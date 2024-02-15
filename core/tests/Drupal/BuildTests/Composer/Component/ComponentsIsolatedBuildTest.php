@@ -25,13 +25,13 @@ class ComponentsIsolatedBuildTest extends ComposerBuildTestBase {
    * @return array
    *   An array with relative paths to the component paths.
    */
-  public function provideComponentPaths(): array {
+  public static function provideComponentPaths(): array {
     $data = [];
     // During the dataProvider phase, there is not a workspace directory yet.
     // So we will find relative paths and assemble them with the workspace
     // path later.
-    $drupal_root = $this->getDrupalRoot();
-    $composer_json_finder = $this->getComponentPathsFinder($drupal_root);
+    $drupal_root = self::getDrupalRootStatic();
+    $composer_json_finder = self::getComponentPathsFinder($drupal_root);
 
     /** @var \Symfony\Component\Finder\SplFileInfo $path */
     foreach ($composer_json_finder->getIterator() as $path) {

@@ -600,6 +600,16 @@ abstract class BuildTestBase extends TestCase {
    *   The full path to the root of this Drupal codebase.
    */
   public function getDrupalRoot() {
+    return self::getDrupalRootStatic();
+  }
+
+  /**
+   * Get the root path of this Drupal codebase.
+   *
+   * @return string
+   *   The full path to the root of this Drupal codebase.
+   */
+  public static function getDrupalRootStatic() {
     // Given this code is in the drupal/core package, $core cannot be NULL.
     /** @var string $core */
     $core = InstalledVersions::getInstallPath('drupal/core');
